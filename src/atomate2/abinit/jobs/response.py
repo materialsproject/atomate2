@@ -34,6 +34,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 __all__ = [
+    "ResponseMaker",
     "DdkMaker",
     "DdeMaker",
     "DteMaker",
@@ -43,9 +44,58 @@ __all__ = [
     "run_rf",
 ]
 
+@dataclass
+class ResponseMaker(BaseAbinitMaker):
+    """Maker to create a job with a Response Function ABINIT calculation.
+        The type of RF is defined by the self.calc_type attribute.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    """
+
+    calc_type: str | None = None
+    name: str = "RF calculation"
+    input_set_generator: AbinitInputGenerator | None = None
+
+    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
+        ScfConvergenceWarning,
+    )
+
+    @job
+    def make(
+        self,
+        structure: Structure | None = None,
+        prev_outputs: str | list[str] | None = None,
+        restart_from: str | list[str] | None = None,
+        history: JobHistory | None = None,
+        perturbation: dict | None = None,
+    ) -> Job:
+        """
+        Run a RF ABINIT job. The type of RF is defined by self.calc_type.
+
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object
+        perturbation : dict
+            Direction of the perturbation for the RF calculation.
+            Abipy format.
+        """
+        if perturbation:
+            self.input_set_generator.factory_kwargs.update({f"{self.calc_type.lower()}_pert": perturbation})
+
+        return super().make.original(
+            self,
+            structure=structure,
+            prev_outputs=prev_outputs,
+            restart_from=restart_from,
+            history=history,
+        )
 
 @dataclass
-class DdkMaker(BaseAbinitMaker):
+class DdkMaker(ResponseMaker):
     """Maker to create a job with a DDK ABINIT calculation.
 
     Parameters
@@ -62,40 +112,9 @@ class DdkMaker(BaseAbinitMaker):
         NscfConvergenceWarning,
     )
 
-    @job
-    def make(
-        self,
-        structure: Structure | None = None,
-        prev_outputs: str | list[str] | None = None,
-        restart_from: str | list[str] | None = None,
-        history: JobHistory | None = None,
-        perturbation: dict | None = None,
-    ) -> Job:
-        """
-        Run a DDK ABINIT job.
-
-        Parameters
-        ----------
-        structure : .Structure
-            A pymatgen structure object
-        perturbation : dict
-            Direction of the perturbation for the DDK calculation.
-            Abipy format.
-        """
-        if perturbation:
-            self.input_set_generator.factory_kwargs.update({"ddk_pert": perturbation})
-
-        return super().make.original(
-            self,
-            structure=structure,
-            prev_outputs=prev_outputs,
-            restart_from=restart_from,
-            history=history,
-        )
-
 
 @dataclass
-class DdeMaker(BaseAbinitMaker):
+class DdeMaker(ResponseMaker):
     """Maker to create a job with a DDE ABINIT calculation.
 
     Parameters
@@ -112,40 +131,9 @@ class DdeMaker(BaseAbinitMaker):
         ScfConvergenceWarning,
     )
 
-    @job
-    def make(
-        self,
-        structure: Structure | None = None,
-        prev_outputs: str | list[str] | None = None,
-        restart_from: str | list[str] | None = None,
-        history: JobHistory | None = None,
-        perturbation: dict | None = None,
-    ) -> Job:
-        """
-        Run a DDE ABINIT job.
-
-        Parameters
-        ----------
-        structure : .Structure
-            A pymatgen structure object
-        perturbation : dict
-            Direction of the perturbation for the DDE calculation.
-            Abipy format.
-        """
-        if perturbation:
-            self.input_set_generator.factory_kwargs.update({"dde_pert": perturbation})
-
-        return super().make.original(
-            self,
-            structure=structure,
-            prev_outputs=prev_outputs,
-            restart_from=restart_from,
-            history=history,
-        )
-
 
 @dataclass
-class DteMaker(BaseAbinitMaker):
+class DteMaker(ResponseMaker):
     """Maker to create a job with a DTE ABINIT calculation.
 
     Parameters
@@ -161,37 +149,6 @@ class DteMaker(BaseAbinitMaker):
     CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
         ScfConvergenceWarning,
     )
-
-    @job
-    def make(
-        self,
-        structure: Structure | None = None,
-        prev_outputs: str | list[str] | None = None,
-        restart_from: str | list[str] | None = None,
-        history: JobHistory | None = None,
-        perturbation: dict | None = None,
-    ) -> Job:
-        """
-        Run a DTE ABINIT job.
-
-        Parameters
-        ----------
-        structure : .Structure
-            A pymatgen structure object
-        perturbation : dict
-            Direction of the perturbation for the DTE calculation.
-            Abipy format.
-        """
-        if perturbation:
-            self.input_set_generator.factory_kwargs.update({"dte_pert": perturbation})
-
-        return super().make.original(
-            self,
-            structure=structure,
-            prev_outputs=prev_outputs,
-            restart_from=restart_from,
-            history=history,
-        )
 
 
 @job
