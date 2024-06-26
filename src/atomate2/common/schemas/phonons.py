@@ -329,8 +329,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # Produces all force constants
         phonon.produce_force_constants(forces=set_of_forces)
 
+        if kwargs.get("filename_phonopy_yaml") is None:
+            kwargs["filename_phonopy_yaml"] = "phonopy.yaml"
+
         # with phonopy.load("phonopy.yaml") the phonopy API can be used
-        phonon.save("phonopy.yaml")
+        phonon.save(kwargs.get("filename_phonopy_yaml"))
 
         # get phonon band structure
         kpath_dict, kpath_concrete = PhononBSDOSDoc.get_kpath(

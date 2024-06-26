@@ -49,6 +49,8 @@ class BaseGruneisenMaker(Maker):
         Maker used to perform phonon computations
     perc_vol: float
         Percent volume to shrink and expand ground state structure
+    plot_kwargs: dict
+        Keyword arguments passed to :obj:`compute_gruneisen_param`.
     """
 
     name: str = "Gruneisen flow"
@@ -63,6 +65,7 @@ class BaseGruneisenMaker(Maker):
     )
     perc_vol: float = 0.01
     mesh: list = field(default_factory=lambda: [20, 20, 20])
+    plot_kwargs: dict = field(default_factory=dict)
 
     def make(self, structure: Structure) -> Flow:
         """
@@ -119,20 +122,30 @@ class BaseGruneisenMaker(Maker):
         )  # store opt struct of expanded volume
 
         phonon_yaml_dirs = dict.fromkeys(("ground", "plus", "minus"), None)
+        phonon_imaginary_modes = dict.fromkeys(("ground", "plus", "minus"), None)
         for st in opt_struct:
             # phonon run for all 3 optimized structures (ground state, expanded, shrunk)
             phonon_job = self.phonon_maker.make(structure=opt_struct[st])
+
+            # change default phonopy.yaml file name to ensure workflow can be
+            # run with MLIPs without having to create folders
+            # Also prevent overwriting and easier to identify yaml file belong
+            # to corresponding phonon run
+            phonon_job.jobs[-1].function_kwargs.update(
+                filename_phonopy_yaml=f"{st}_phonopy.yaml"
+            )
             jobs.append(phonon_job)
             # store each phonon run task doc
             phonon_yaml_dirs[st] = phonon_job.output.jobdirs.taskdoc_run_job_dir
-
-        # Todo: Add kwargs and possibly a Gruneisen schema
+            phonon_imaginary_modes[st] = phonon_job.output.has_imaginary_modes
 
         # get Gruneisen parameter from phonon runs yaml with phonopy api
         get_gru = compute_gruneisen_param(
             phonopy_yaml_paths_dict=phonon_yaml_dirs,
             mesh=self.mesh,
             structure=opt_struct["ground"],
+            phonon_imaginary_modes_info=phonon_imaginary_modes,
+            **self.plot_kwargs,
         )
 
         jobs.append(get_gru)
