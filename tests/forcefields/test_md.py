@@ -17,6 +17,7 @@ from atomate2.forcefields.md import (
     GAPMDMaker,
     M3GNetMDMaker,
     MACEMDMaker,
+    NEPMDMaker,
     NequipMDMaker,
 )
 
@@ -25,15 +26,18 @@ name_to_maker = {
     "M3GNet": M3GNetMDMaker,
     "MACE": MACEMDMaker,
     "GAP": GAPMDMaker,
+    "NEP": NEPMDMaker,
     "Nequip": NequipMDMaker,
 }
 
 
 @pytest.mark.parametrize(
     "ff_name",
-    ["CHGNet", "M3GNet", "MACE", "GAP", "Nequip"],
+    ["CHGNet", "M3GNet", "MACE", "GAP", "NEP", "Nequip"],
 )
-def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, clean_dir):
+def test_ml_ff_md_maker(
+    ff_name, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
+):
     n_steps = 5
 
     ref_energies_per_atom = {
@@ -41,6 +45,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
         "M3GNet": -5.387282371520996,
         "MACE": -5.311369895935059,
         "GAP": -5.391255755606209,
+        "NEP": -3.966232215741286,
         "Nequip": -8.84670181274414,
     }
 
@@ -54,6 +59,11 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
             "args_str": "IP GAP",
             "param_filename": str(test_dir / "forcefields" / "gap" / "gap_file.xml"),
         }
+    elif ff_name == "NEP":
+        calculator_kwargs = {
+            "model_filename": test_dir / "forcefields" / "nep" / "nep.txt"
+        }
+        unit_cell_structure = al2_au_structure.copy()
     elif ff_name == "Nequip":
         calculator_kwargs = {
             "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
