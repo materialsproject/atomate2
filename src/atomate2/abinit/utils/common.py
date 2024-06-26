@@ -425,7 +425,7 @@ def get_event_report(ofile: File, mpiabort_file: File) -> EventReport | None:
                     report.append(last_abort_event)
                 else:
                     report.append(last_abort_event)
-    except Exception as exc:
+    except (ValueError, RuntimeError, Exception) as exc:
         # Return a report with an error entry with info on the exception.
         logger.critical(f"{ofile}: Exception while parsing ABINIT events:\n {exc!s}")
         return parser.report_exception(ofile.path, exc)

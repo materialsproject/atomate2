@@ -88,11 +88,7 @@ class MagneticOrderingsBuilder(Builder):
         self.ensure_indexes()
 
         criteria = dict(self.query)
-        criteria.update(
-            {
-                "metadata.ordering": {"$exists": True},
-            }
-        )
+        criteria.update({"metadata.ordering": {"$exists": True}})
         self.logger.info("Grouping by formula...")
         num_formulas = len(
             self.tasks.distinct("output.formula_pretty", criteria=criteria)
