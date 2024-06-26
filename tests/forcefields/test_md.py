@@ -60,6 +60,12 @@ def test_ml_ff_md_maker(
             "param_filename": str(test_dir / "forcefields" / "gap" / "gap_file.xml"),
         }
     elif ff_name == "NEP":
+        # NOTE: The test NEP model is specifically trained on 16 elemental metals
+        # thus a new Al2Au structure is added.
+        # The NEP model used for the tests is licensed under a
+        # [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
+        # and downloaded from https://doi.org/10.5281/zenodo.10081677
+        # Also cite the original work if you use this specific model : https://arxiv.org/abs/2311.04732
         calculator_kwargs = {
             "model_filename": test_dir / "forcefields" / "nep" / "nep.txt"
         }

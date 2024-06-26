@@ -300,8 +300,12 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
 def test_nep_static_maker(al2_au_structure: Structure, test_dir: Path):
     task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
-    # NOTE the test NEP model is specifically trained on 16 elemental metals
-    # thus new structure is added
+    # NOTE: The test NEP model is specifically trained on 16 elemental metals
+    # thus a new Al2Au structure is added.
+    # The NEP model used for the tests is licensed under a
+    # [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
+    # and downloaded from https://doi.org/10.5281/zenodo.10081677
+    # Also cite the original work if you use this specific model : https://arxiv.org/abs/2311.04732
     job = NEPStaticMaker(
         task_document_kwargs=task_doc_kwargs,
         calculator_kwargs={
@@ -329,6 +333,13 @@ def test_nep_relax_maker(
     relax_cell: bool,
     fix_symmetry: bool,
 ):
+    # NOTE: The test NEP model is specifically trained on 16 elemental metals
+    # thus a new Al2Au structure is added.
+    # The NEP model used for the tests is licensed under a
+    # [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
+    # and downloaded from https://doi.org/10.5281/zenodo.10081677
+    # Also cite the original work if you use this specific model : https://arxiv.org/abs/2311.04732
+
     # generate job
     job = NEPRelaxMaker(
         steps=25,

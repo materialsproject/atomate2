@@ -340,7 +340,7 @@ class NEPMDMaker(ForceFieldMDMaker):
     name: str = f"{MLFF.NEP} MD"
     force_field_name: str = f"{MLFF.NEP}"
     calculator_kwargs: dict = field(
-        default_factory=lambda: {"model_filename": "gap.xml"}
+        default_factory=lambda: {"model_filename": "nep.txt"}
     )
 
 
