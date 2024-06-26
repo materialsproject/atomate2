@@ -89,16 +89,16 @@ class DfptFlowMaker(Maker):
         """Process post-init configuration."""
 
         if self.dde_maker and not self.ddk_maker:
-            raise ValueError("DDK caculations are required to continue 
-                with the DDE calculations. Either provide a DDK Maker 
+            raise ValueError("DDK caculations are required to continue \
+                with the DDE calculations. Either provide a DDK Maker \
                 or remove the DDE one.")
         if self.dte_maker and not self.dde_maker:
-            raise ValueError("DDE caculations are required to continue 
-                with the DTE calculations. Either provide a DDE Maker 
+            raise ValueError("DDE caculations are required to continue \
+                with the DTE calculations. Either provide a DDE Maker \
                 or remove the DTE one.")
         if self.mrgddb_maker and not self.dde_maker:
-            raise ValueError("DDE caculations are required to produce
-                DDB files to be merged. Either provide a DDE Maker 
+            raise ValueError("DDE caculations are required to produce \
+                DDB files to be merged. Either provide a DDE Maker \
                 or remove the MrgddbMaker.")
 
 

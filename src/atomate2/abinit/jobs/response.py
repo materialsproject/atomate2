@@ -254,7 +254,7 @@ def generate_dte_perts(
 @job
 def run_rf(
     perturbations: list[dict],
-    rf_maker: BaseAbinitMaker = field(default_factory=BaseAbinitMaker) # TODO: change to generic ResponseMaker
+    rf_maker: BaseAbinitMaker = field(default_factory=BaseAbinitMaker), # TODO: change to generic ResponseMaker
     prev_outputs: list[str] | None = None,
 ) -> Flow:
     """
@@ -283,13 +283,6 @@ def run_rf(
 
         if isinstance(rf_maker, DdeMaker):
             rf_job = update_user_abinit_settings(rf_job, {'irdddk': 1, 'ird1wf': 0})
-            rf_job = update_user_abinit_settings(
-                rf_job, {"tolvrs": 1e-1}
-            )  # VT TO REMOVE TOLVRS ONLY FOR TESTING
-        if isinstance(rf_maker, DdkMaker):
-            rf_job = update_user_abinit_settings(
-                rf_job, {"tolwfr": 1e-1}
-            )  # VT TO REMOVE TOLWFR ONLY FOR TESTING
 
         rf_jobs.append(rf_job)
         outputs["dirs"].append(rf_job.output.dir_name)  # TODO: determine outputs
