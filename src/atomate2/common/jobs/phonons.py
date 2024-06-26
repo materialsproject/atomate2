@@ -188,6 +188,15 @@ def generate_phonon_displacements(
 
     supercells = phonon.supercells_with_displacements
 
+    from monty.serialization import dumpfn
+
+    # Convert back to pymatgen structure
+    structures_pymatgen = [get_pmg_structure(cell) for cell in supercells]
+    for i in range(len(structures_pymatgen)):
+        structures_pymatgen[i].to(f"POSCAR_{i}", "poscar")
+
+    dumpfn(structures_pymatgen, f"perturbed_structures.json")
+
     return [get_pmg_structure(cell) for cell in supercells]
 
 
