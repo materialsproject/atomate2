@@ -209,7 +209,7 @@ class Atomate2Settings(BaseSettings):
         description="Config file for task manager of abipy.",
     )
     ABINIT_MAX_RESTARTS: int = Field(
-        5, description="Maximum number of restarts of a job."
+        0, description="Maximum number of restarts of a job."
     )
 
     model_config = SettingsConfigDict(env_prefix=_ENV_PREFIX)

@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import os
 import pandas as pd
+import numpy as np
 from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional, Union
@@ -15,6 +16,7 @@ if TYPE_CHECKING:
 from abipy.electrons.gsr import GsrFile
 from abipy.electrons.scr import ScrFile
 from abipy.electrons.gw import SigresFile
+from abipy.electrons.bse import MdfFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.math import Matrix3D, Vector3D
@@ -70,6 +72,8 @@ class CalculationOutput(BaseModel):
         The conduction band minimum in eV (if system is not metallic
     vbm: float
         The valence band maximum in eV (if system is not metallic)
+    emacro: abipy Function1D object
+        Macroscopic dielectric function 
     """
 
     energy: float = Field(
@@ -95,7 +99,7 @@ class CalculationOutput(BaseModel):
     bandgap: Optional[float] = Field(
         None, description="The band gap from the calculation in eV"
     )
-    direct_bandgap: Optional[float] = Field(
+    direct_gap: Optional[float] = Field(
         None, description="The direct band gap from the calculation in eV"
     )
     cbm: Optional[float] = Field(
@@ -108,15 +112,17 @@ class CalculationOutput(BaseModel):
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    qp_corr_vbm: Optional[float] = Field(
+    emacro: Optional[list] = Field(
         None,
-        description="The valence band maximum, or HOMO for molecules, in eV "
-        "(if system is not metallic)",
+        description="Macroscopic dielectric function",
     )
-    qp_corr_cbm: Optional[float] = Field(
+    mbpt_sciss: Optional[float] = Field(
         None,
-        description="The valence band maximum, or HOMO for molecules, in eV "
-        "(if system is not metallic)",
+        description="Scissor shift (scalar) obtained from GW calculation",
+    )
+    bandlims: Optional[list] = Field(
+        None,
+        description="Minimum and Maximum energies of each bands",
     )
 
     class Config:
@@ -143,23 +149,33 @@ class CalculationOutput(BaseModel):
 
         # In case no conduction bands were included
         try:
+            vbm = output.ebands.get_edge_state("vbm").eig
             cbm = output.ebands.get_edge_state("cbm").eig
             bandgap = output.ebands.fundamental_gaps[
                 0
             ].energy  # [0] for one spin channel only
-            direct_bandgap = output.ebands.direct_gaps[0].energy
+            direct_gap = output.ebands.direct_gaps[0].energy
         except ValueError:
             cbm = None
             bandgap = None
-            direct_bandgap = None
+            direct_gap = None
+
+        bandlims=[]
+        for spin in output.ebands.spins:
+            for iband in range(output.ebands.nband):
+                enemin=output.ebands.enemin(spin=spin,band=iband)-vbm
+                enemax=output.ebands.enemax(spin=spin,band=iband)-vbm
+                bandlims.append([spin, iband, enemin, enemax])
 
         electronic_output = {
             "efermi": float(output.ebands.fermie),
-            "vbm": output.ebands.get_edge_state("vbm").eig,
+            "vbm": vbm,
             "cbm": cbm,
             "bandgap": bandgap,
-            "direct_bandgap": direct_bandgap,
+            "direct_gap": direct_gap,
+            "bandlims": bandlims, 
         }
+
 
         forces = None
         if output.cart_forces is not None:
@@ -196,40 +212,11 @@ class CalculationOutput(BaseModel):
         """
         structure = output.structure  # final structure by default for GSR
 
-        # In case no conduction bands were included
-        try:
-            cbm = output.ebands.get_edge_state("cbm").eig
-            bandgap = output.ebands.fundamental_gaps[
-                0
-            ].energy  # [0] for one spin channel only
-            direct_bandgap = output.ebands.direct_gaps[0].energy
-        except ValueError:
-            cbm = None
-            bandgap = None
-            direct_bandgap = None
-
-        electronic_output = {
-            "efermi": float(output.ebands.fermie),
-            "vbm": output.ebands.get_edge_state("vbm").eig,
-            "cbm": cbm,
-            "bandgap": bandgap,
-            "direct_bandgap": direct_bandgap,
-        }
-
-        #forces = None
-        #if output.cart_forces is not None:
-        #    forces = output.cart_forces.tolist()
-
-        #stress = None
-        #if output.cart_stress_tensor is not None:
-        #    stress = output.cart_stress_tensor.tolist()
         return cls(
             structure=structure,
             energy=0.0,
             energy_per_atom=0.0,
-            **electronic_output,
-            #forces=forces,
-            #stress=stress,
+            efermi=0.0,
         )
     @classmethod
     def from_abinit_sig(
@@ -255,32 +242,50 @@ class CalculationOutput(BaseModel):
         icbm=output.ebands.get_edge_state("cbm")
         vbm=output.get_qpcorr(ivbm.spin, ivbm.kpoint, ivbm.band).re_qpe
         cbm=output.get_qpcorr(icbm.spin, icbm.kpoint, icbm.band).re_qpe
+        ks_gap=icbm.eig-ivbm.eig
         bandgap=cbm-vbm
-        direct_bandgap=None
+        mbpt_sciss=bandgap-ks_gap   
         electronic_output = {
             "efermi": float(output.ebands.fermie),
             "vbm": vbm, 
             "cbm": cbm,
             "bandgap": bandgap,
-            "direct_bandgap": direct_bandgap,
+            "mbpt_sciss": mbpt_sciss,
         }
-        #forces = None
-        #if output.cart_forces is not None:
-        #    forces = output.cart_forces.tolist()
-
-        #stress = None
-        #if output.cart_stress_tensor is not None:
-        #    stress = output.cart_stress_tensor.tolist()
-
-        #qp_data=output.get_dataframe()
         return cls(
             structure=structure,
             energy=0.0,
             energy_per_atom=0.0,
             **electronic_output,
-            #qp_data=qp_data,
-            #forces=forces,
-            #stress=stress,
+        )
+    @classmethod
+    def from_abinit_mdf(
+        cls,
+        output: MdfFile,  # Must use auto_load kwarg when passed
+    ) -> CalculationOutput:
+        """
+        Create an Abinit output document from Abinit outputs.
+
+        Parameters
+        ----------
+        output: .AbinitOutput
+            An AbinitOutput object.
+
+        Returns
+        -------
+        The Abinit calculation output document.
+        """
+        structure = output.structure  # final structure by default for GSR
+        gw_eps=output.get_mdf(mdf_type="exc").emacro_avg
+        emacromesh=gw_eps.mesh
+        emacrovalues=gw_eps.values.imag
+        emacro=[emacromesh, emacrovalues]
+        return cls(
+            structure=structure,
+            energy=0.0,
+            energy_per_atom=0.0,
+            efermi=0.0,
+            emacro=emacro
         )
 
 
@@ -333,6 +338,7 @@ class Calculation(BaseModel):
         abinit_gsr_file: Path | str = "out_GSR.nc",
         abinit_scr_file: Path | str = "out_SCR.nc",
         abinit_sig_file: Path | str = "out_SIGRES.nc",
+        abinit_mdf_file: Path | str = "out_MDF.nc",
         abinit_log_file: Path | str = LOG_FILE_NAME,
         abinit_abort_file: Path | str = MPIABORTFILE,
 
@@ -362,6 +368,7 @@ class Calculation(BaseModel):
         abinit_gsr_file = dir_name / abinit_gsr_file
         abinit_scr_file = dir_name / abinit_scr_file
         abinit_sig_file = dir_name / abinit_sig_file
+        abinit_mdf_file = dir_name / abinit_mdf_file
         abinit_log_file = dir_name / abinit_log_file
         abinit_abort_file = dir_name / abinit_abort_file
         if os.path.isfile(abinit_gsr_file):
@@ -376,6 +383,10 @@ class Calculation(BaseModel):
             abinit_sig = SigresFile.from_file(abinit_sig_file)
             output_doc = CalculationOutput.from_abinit_sig(abinit_sig)
             abinit_version = abinit_sig.abinit_version
+        elif os.path.isfile(abinit_mdf_file):
+            abinit_mdf = MdfFile.from_file(abinit_mdf_file)
+            output_doc = CalculationOutput.from_abinit_mdf(abinit_mdf)
+            abinit_version = abinit_mdf.abinit_version
         else:
             print("No ouput file found.")
 

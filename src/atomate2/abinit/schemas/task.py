@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import json
 import logging
+import numpy as np
+from scipy.integrate import simpson
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Optional, TypeVar, Union
 
 from abipy.abio.inputs import AbinitInput
+from abipy.core.func1d import Function1D
 from abipy.flowtk import events
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
@@ -102,6 +105,9 @@ class OutputDoc(BaseModel):
     bandgap: Optional[float] = Field(
         None, description="The DFT bandgap for the last calculation"
     )
+    direct_gap: Optional[float] = Field(
+        None, description="The direct DFT bandgap for the last calculation"
+    )
     cbm: Optional[float] = Field(None, description="CBM for this calculation")
     vbm: Optional[float] = Field(None, description="VBM for this calculation")
     forces: Optional[list[Vector3D]] = Field(
@@ -110,6 +116,17 @@ class OutputDoc(BaseModel):
     stress: Optional[Matrix3D] = Field(
         None, description="Stress on the unit cell from the last calculation"
     )
+    emacro: Optional[list] = Field(
+        None, description="Macroscopic dielectric function"
+    )
+    mbpt_sciss: Optional[float] = Field(
+        None, description="Scissor shift (scalar) from GW calculation"
+    )
+    bandlims: Optional[list] = Field(
+        None, description="Minimum and Maximum energies of each bands"
+    )
+    class Config:
+        arbitrary_types_allowed = True
 
     @classmethod
     def from_abinit_calc_doc(cls, calc_doc: Calculation) -> OutputDoc:
@@ -130,10 +147,14 @@ class OutputDoc(BaseModel):
             energy=calc_doc.output.energy,
             energy_per_atom=calc_doc.output.energy_per_atom,
             bandgap=calc_doc.output.bandgap,
+            direct_gap=calc_doc.output.direct_gap,
             cbm=calc_doc.output.cbm,
             vbm=calc_doc.output.vbm,
             forces=calc_doc.output.forces,
             stress=calc_doc.output.stress,
+            emacro=calc_doc.output.emacro,
+            mbpt_sciss=calc_doc.output.mbpt_sciss,
+            bandlims=calc_doc.output.bandlims,
         )
 
 
@@ -368,6 +389,8 @@ def _find_abinit_files(
                 abinit_files["abinit_scr_file"] = Path(file).relative_to(path)
             if file.match(f"*outdata/out_SIGRES{suffix}*"):
                 abinit_files["abinit_sig_file"] = Path(file).relative_to(path)
+            if file.match(f"*outdata/out_MDF{suffix}*"):
+                abinit_files["abinit_mdf_file"] = Path(file).relative_to(path)
         return abinit_files
 
     for task_name in task_names:
@@ -404,7 +427,7 @@ class ConvergenceSummary(BaseModel):
     convergence_field_name: str = Field(
         None, description="The name of the input setting to study convergence against"
     )
-    convergence_criterion_value: float = Field(
+    convergence_criterion_value: Union[float, list] = Field(
         None, description="The output value of the convergence criterion"
     )
     convergence_field_value: Any = Field(
@@ -447,6 +470,23 @@ class ConvergenceSummary(BaseModel):
 
         with open(convergence_file) as f:
             convergence_data = json.load(f)
+        if type(convergence_data["criterion_values"][-1]) is list:
+            old_data=np.array(convergence_data["criterion_values"][-2])
+            new_data=np.array(convergence_data["criterion_values"][-1])
+            mesh0=old_data[0]
+            mesh=new_data[0]
+            values0=old_data[1]
+            values=new_data[1]
+            values1=np.interp(mesh0, mesh, values)
+            delta=abs(values1-values0)
+            delarea=simpson(delta) 
+            area=simpson(values0)
+            actual_epsilon=delarea/area
+        if type(convergence_data["criterion_values"][-1]) is float:
+            actual_epsilon=abs(
+                     convergence_data["criterion_values"][-1]
+                    - convergence_data["criterion_values"][-2]
+                )
 
         return cls(
             structure=calc_doc.output.structure,
@@ -456,8 +496,5 @@ class ConvergenceSummary(BaseModel):
             convergence_criterion_value=convergence_data["criterion_values"][-1],
             convergence_field_value=convergence_data["convergence_field_values"][-1],
             asked_epsilon=convergence_data["asked_epsilon"],
-            actual_epsilon=abs(
-                convergence_data["criterion_values"][-2]
-                - convergence_data["criterion_values"][-1]
-            ),
+            actual_epsilon=actual_epsilon,
         )

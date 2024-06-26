@@ -164,7 +164,6 @@ class BaseAbinitMaker(Maker):
             history=history,
             wall_time=self.wall_time,
         )
-
         # Write abinit input set
         write_abinit_input_set(
             structure=structure,

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import logging
 import json
+import numpy as np
+from scipy.integrate import simpson
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
@@ -17,7 +19,8 @@ from abipy.flowtk.events import (
 from jobflow import Job, job, Maker, Response, Flow
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
-from atomate2.abinit.powerups import update_user_abinit_settings
+from atomate2.abinit.powerups import update_user_abinit_settings, update_user_kpoints_settings
+from pymatgen.io.abinit.abiobjects import KSampling
 from atomate2.abinit.schemas.task import AbinitTaskDoc, ConvergenceSummary 
 from atomate2.abinit.sets.core import (
     LineNonSCFSetGenerator,
@@ -240,7 +243,8 @@ class ConvergenceMaker(Maker):
     def make(
         self, 
         structure: Structure,
-        prev_outputs: str | Path = None):
+        prev_outputs: str | list[str] | Path = None
+        ):
         """A top-level flow controlling convergence iteration
 
         Parameters
@@ -256,7 +260,7 @@ class ConvergenceMaker(Maker):
         self,
         structure: Structure,
         prev_dir: str | Path = None,
-        prev_outputs: str | Path = None,
+        prev_outputs: str | list[str] | Path = None,
     ) -> Response:
         """
         Runs several jobs with changing inputs consecutively to investigate
@@ -277,6 +281,7 @@ class ConvergenceMaker(Maker):
         # getting the calculation index
         idx = 0
         converged = False
+        num_prev_outputs=len(prev_outputs)
         if prev_dir is not None:
             prev_dir = prev_dir.split(":")[-1]
             convergence_file = Path(prev_dir) / CONVERGENCE_FILE_NAME
@@ -290,23 +295,32 @@ class ConvergenceMaker(Maker):
 
         if idx < self.last_idx and not converged:
             # finding next jobs
-            base_job = self.maker.make(structure, prev_outputs=prev_outputs)
-            next_base_job = update_user_abinit_settings(flow=base_job, abinit_updates={self.convergence_field: self.convergence_steps[idx]})
+            if self.convergence_field=="kppa":
+                next_base_job = self.maker.make(
+                        structure,
+                        prev_outputs=prev_outputs, 
+                        kppa=self.convergence_steps[idx])
+                print(idx,self.convergence_steps[idx])   
+            else:
+                base_job = self.maker.make(
+                        structure, 
+                        prev_outputs=prev_outputs)
+                next_base_job = update_user_abinit_settings(
+                        flow=base_job, 
+                        abinit_updates={
+                        self.convergence_field: self.convergence_steps[idx]})
             next_base_job.append_name(append_str=f" {idx}")
-
             update_file_job = self.update_convergence_file(
                 prev_dir=prev_dir,
                 job_dir=next_base_job.output.dir_name,
-                output=next_base_job.output,
-            )
-
+                output=next_base_job.output)
+            prev_outputs=prev_outputs[:num_prev_outputs]
             next_job = self.convergence_iteration(
-                structure, prev_dir=next_base_job.output.dir_name, prev_outputs=prev_outputs,
-            )
-
+                structure, 
+                prev_dir=next_base_job.output.dir_name, 
+                prev_outputs=prev_outputs)
             replace_flow = Flow(
-                [next_base_job, update_file_job, next_job], output=next_base_job.output
-            )
+                [next_base_job, update_file_job, next_job], output=next_base_job.output)
             return Response(detour=replace_flow, output=replace_flow.output)
         else:
             task_doc = AbinitTaskDoc.from_directory(prev_dir)
@@ -343,20 +357,32 @@ class ConvergenceMaker(Maker):
             }
         convergence_data["convergence_field_values"].append(self.convergence_steps[idx])
         convergence_data["criterion_values"].append(
-            getattr(output.output, self.criterion_name)
+            getattr(output.output, self.criterion_name) 
         )
         convergence_data["idx"] = idx
-
         if len(convergence_data["criterion_values"]) > 1:
             # checking for convergence
-            convergence_data["converged"] = (
-                abs(
-                    convergence_data["criterion_values"][-1]
-                    - convergence_data["criterion_values"][-2]
+            if type(convergence_data["criterion_values"][-1]) is list:
+                old_data=np.array(convergence_data["criterion_values"][-2])
+                new_data=np.array(convergence_data["criterion_values"][-1])
+                mesh0=old_data[0]
+                mesh=new_data[0]
+                values0=old_data[1]
+                values=new_data[1]
+                values1=np.interp(mesh0, mesh, values)
+                delta=abs(values1-values0)
+                delarea=simpson(delta) 
+                area=simpson(values0)
+                print(delarea/area) 
+                convergence_data["converged"] = bool(delarea/area < self.epsilon)
+            if type(convergence_data["criterion_values"][-1]) is float:
+                convergence_data["converged"] = bool(
+                    abs(
+                         convergence_data["criterion_values"][-1]
+                        - convergence_data["criterion_values"][-2]
+                    )
+                    < self.epsilon
                 )
-                < self.epsilon
-            )
-
         job_dir = job_dir.split(":")[-1]
         convergence_file = Path(job_dir) / CONVERGENCE_FILE_NAME
         with open(convergence_file, "w") as f:
