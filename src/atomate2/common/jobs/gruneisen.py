@@ -116,7 +116,7 @@ def compute_gruneisen_param(
 
     return GruneisenParameterDocument(
         gruneisen_parameter_inputs=gruneisen_parameter_inputs,
-        phonon_imaginary_modes_info=phonon_imaginary_modes_info,
+        phonon_runs_has_imaginary_modes=phonon_imaginary_modes_info,
         gruneisen_parameter=gruneisen_parameter,
         gruneisen_band_structure=gruneisen_band_structure,
         derived_properties=derived_properties,
