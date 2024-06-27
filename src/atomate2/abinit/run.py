@@ -13,10 +13,11 @@ from atomate2.abinit.utils.common import (
     INPUT_FILE_NAME,
     LOG_FILE_NAME,
     MRGDDB_INPUT_FILE_NAME,
+    ANADDB_INPUT_FILE_NAME,
     STDERR_FILE_NAME,
 )
 
-__all__ = ["run_abinit", "run_mrgddb"]
+__all__ = ["run_abinit", "run_mrgddb", "run_anaddb"]
 
 
 SLEEP_TIME_STEP = 30
@@ -97,6 +98,52 @@ def run_mrgddb(
 
     with (
         open(MRGDDB_INPUT_FILE_NAME) as stdin,
+        open(LOG_FILE_NAME, "w") as stdout,
+        open(STDERR_FILE_NAME, "w") as stderr,
+    ):
+        process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)  # noqa: S603
+
+        if wall_time is not None:
+            while True:
+                time.sleep(SLEEP_TIME_STEP)
+                if process.poll() is not None:
+                    break
+                current_time = time.time()
+                remaining_time = max_end_time - current_time
+                if remaining_time < 5 * SLEEP_TIME_STEP:
+                    process.terminate()
+
+        process.wait()
+    return
+
+def run_anaddb(
+    anaddb_cmd: str = None,
+    mpirun_cmd: str = None,
+    wall_time: int = None,
+    start_time: float = None,
+) -> None:
+    """Run anaddb."""
+    anaddb_cmd = anaddb_cmd or SETTINGS.ABINIT_ANADDB_CMD
+    mpirun_cmd = mpirun_cmd or SETTINGS.ABINIT_MPIRUN_CMD
+    command = []
+    if mpirun_cmd:
+        command.extend(mpirun_cmd.split())
+        command.extend(["-n", "1"])
+    command.extend([anaddb_cmd, "--nostrict"])
+    start_time = start_time or time.time()
+
+    max_end_time = 0.0
+    if wall_time is not None:
+        anaddb_timelimit = wall_time
+        if anaddb_timelimit > 480:
+            # TODO: allow tuning this timelimit buffer for anaddb,
+            #  e.g. using a config variable or possibly per job
+            anaddb_timelimit -= 240
+        command.extend(["--timelimit", time2slurm(anaddb_timelimit)])
+        max_end_time = start_time + wall_time
+
+    with (
+        open(ANADDB_INPUT_FILE_NAME) as stdin,
         open(LOG_FILE_NAME, "w") as stdout,
         open(STDERR_FILE_NAME, "w") as stderr,
     ):

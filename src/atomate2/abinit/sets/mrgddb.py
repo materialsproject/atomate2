@@ -114,9 +114,6 @@ class MrgddbInputSet(InputSet):
 
         return indir, outdir, tmpdir
 
-    def runlevel(self) -> set[str]:
-        """Get the set of strings defining the calculation type."""
-        return self.abinit_input.runlevel
 
     def deepcopy(self) -> MrgddbInputSet:
         """Deep copy of the input set."""

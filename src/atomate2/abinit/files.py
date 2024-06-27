@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 
     from atomate2.abinit.sets.base import AbinitInputGenerator
     from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator
+    from atomate2.abinit.sets.anaddb import AnaddbInputGenerator
 
 __all__ = [
     "out_to_in",
@@ -28,6 +29,7 @@ __all__ = [
     "load_abinit_input",
     "write_abinit_input_set",
     "write_mrgddb_input_set",
+    "write_anaddb_input_set",
 ]
 
 logger = logging.getLogger(__name__)
@@ -177,3 +179,31 @@ def write_mrgddb_input_set(
         )
 
     mrgis.write_input(directory=directory, make_dir=True, overwrite=False)
+
+def write_anaddb_input_set(
+    input_set_generator: AnaddbInputGenerator,
+    prev_outputs: str | Path | list[str] | None = None,
+    directory: str | Path = ".",
+) -> None:
+    """Write the anaddb input using a given generator.
+
+    Parameters
+    ----------
+    input_set_generator
+        The input generator used to write the anaddb inputs.
+    prev_outputs
+        The list of previous directories needed for the calculation.
+    directory
+        Directory in which to write the abinit inputs.
+    """
+    anais = input_set_generator.get_input_set(
+        prev_outputs=prev_outputs,
+        workdir=directory,
+    )
+    if not anais.validate():
+        raise RuntimeError(
+            "AnaddbInputSet is not valid. Some previous outputs \
+        do not exist."
+        )
+
+    anais.write_input(directory=directory, make_dir=True, overwrite=False)
