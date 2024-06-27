@@ -41,16 +41,15 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
                                                                 " part of the free energies"
                                                                 " and other properties have been computed", )
 
-    # bulk_modulus: Optional[list[float]] = Field(None, description="")
-    # thermal_expansion: Optional[list[float]] = Field(None, description="")
-    # helmholtz_volume: Optional[list[float]] = Field(None, description="")
-    # volume_temperature: Optional[list[float]] = Field(None, description="")
-    # gibbs_temperature: Optional[list[float]] = Field(None, description="")
-    # bulk_modulus_temperature: Optional[list[float]] = Field(None, description="")
-    # heat_capacity_P_numerical: Optional[list[float]] = Field(None, description="")
-    # heat_capacity_P_polyfit: Optional[list[float]] = Field(None, description="")
-    # gruneisen_temperature: Optional[list[float]] = Field(None, description="")
-
+    bulk_modulus: Optional[list[float]] = Field(None, description="")
+    thermal_expansion: Optional[list[float]] = Field(None, description="")
+    helmholtz_volume: Optional[list[list[float]]] = Field(None, description="")
+    volume_temperature: Optional[list[float]] = Field(None, description="")
+    gibbs_temperature: Optional[list[float]] = Field(None, description="")
+    bulk_modulus_temperature: Optional[list[float]] = Field(None, description="")
+    heat_capacity_P_numerical: Optional[list[float]] = Field(None, description="")
+    heat_capacity_P_polyfit: Optional[list[float]] = Field(None, description="")
+    gruneisen_temperature: Optional[list[float]] = Field(None, description="")
 
 
     @classmethod
@@ -85,23 +84,20 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         qha.plot_gibbs_temperature().savefig("gibbs_temperature.eps")
         qha.plot_bulk_modulus_temperature().savefig("bulk_modulus_temperature.eps")
         qha.plot_heat_capacity_P_numerical().savefig("heat_capacity_P_numerical.eps")
-        qha.plot_heat_capacity_P_polyfit().savefig("heat_capacity_P_polyfit.eps")
+        #qha.plot_heat_capacity_P_polyfit().savefig("heat_capacity_P_polyfit.eps")
         qha.plot_gruneisen_temperature().savefig("gruneisen_temperature.eps")
 
 
 
         return cls.from_structure(structure=structure,
                                   meta_structure=structure,
-                                  # bulk_modulus = qha.bulk_modulus,
-                                  # thermal_expansion=qha.thermal_expansion,
-                                  # helmholtz_volume=qha.helmholtz_volume,
-                                  # volume_temperature=qha.volume_temperature,
-                                  # gibbs_temperature=qha.gibbs_temperature,
-                                  # bulk_modulus_temperature=qha.bulk_modulus_temperature,
-                                  # heat_capacity_P_numerical=qha.heat_capacity_P_numerical,
-                                  # heat_capacity_P_polyfit=qha.heat_capacity_P_polyfit,
-                                  # gruneisen_temperature=qha.gruneisen_temperature,
-
-
-                                  ) # TODO: should return some output doc  # have to think about how it should look like  # need to check
+                                  bulk_modulus = qha.bulk_modulus,
+                                  thermal_expansion=qha.thermal_expansion,
+                                  helmholtz_volume=qha.helmholtz_volume,
+                                  volume_temperature=qha.volume_temperature,
+                                  gibbs_temperature=qha.gibbs_temperature,
+                                  bulk_modulus_temperature=qha.bulk_modulus_temperature,
+                                  heat_capacity_P_numerical=qha.heat_capacity_P_numerical,
+                                  gruneisen_temperature=qha.gruneisen_temperature,
+                                  )
 

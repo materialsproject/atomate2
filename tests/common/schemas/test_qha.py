@@ -59,7 +59,7 @@ def test_analyze_free_energy(clean_dir, test_dir):
         temperatures = [v["temperature"] for v in thermal_properties]
         cv = [v["heat_capacity"] for v in thermal_properties]
         entropy = [v["entropy"] for v in thermal_properties]
-        fe = [v["free_energy"] for v in thermal_properties]
+        fe = [v["free_energy"]*1000.0 for v in thermal_properties]
 
         phonon_docs.append(
             PhononBSDOSDoc(free_energies=fe, heat_capacities=cv, entropies=entropy, temperatures=temperatures,

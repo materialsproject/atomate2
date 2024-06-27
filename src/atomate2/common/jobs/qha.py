@@ -95,7 +95,8 @@ def analyze_free_energy(phonon_outputs, structure) -> Flow:
             # check if imaginary modes
             if not output.has_imaginary_modes:
                 electronic_energies[itemp].append(output.total_dft_energy * output.formula_units)
-                free_energies[itemp].append(output.free_energies[itemp] * output.formula_units)
+                # convert from J/mol in kJ/mol
+                free_energies[itemp].append(output.free_energies[itemp] * output.formula_units/1000.0)
                 heat_capacities[itemp].append(output.heat_capacities[itemp] * output.formula_units)
                 entropies[itemp].append(output.entropies[itemp] * output.formula_units)
 
