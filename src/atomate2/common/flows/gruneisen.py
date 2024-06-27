@@ -1,7 +1,8 @@
-"""Flows for calculating Grüneisen-Parameters."""
+"""Flows for calculating Grueneisen-Parameters."""
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -11,28 +12,29 @@ from atomate2.common.jobs.gruneisen import (
     compute_gruneisen_param,
     shrink_expand_structure,
 )
-from atomate2.forcefields.flows.phonons import PhononMaker
-from atomate2.forcefields.jobs import CHGNetRelaxMaker, ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
+    from atomate2.aims.jobs.base import BaseAimsMaker
+    from atomate2.common.flows.phonons import BasePhononMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 @dataclass
-class BaseGruneisenMaker(Maker):
+class BaseGruneisenMaker(Maker, ABC):
     """
-    Maker to calculate gruneisen parameters.
+    Maker to calculate Grueneisen parameters with DFT/force field code and Phonopy.
 
-    Calculate the harmonic phonons of a material for and compute gruneisen parameters.
+    Calculate the harmonic phonons of a material for and compute Grueneisen parameters.
     Initially, a tight structural relaxation is performed to obtain a structure without
     forces on the atoms. The optimized structure (ground state) is further expanded and
     shrunk by 1 % of its volume. Subsequently, supercells with one displaced atom are
     generated for all the three structures (ground state, expanded and shrunk volume)
     and accurate forces are computed for these structures. With the help of phonopy,
     these forces are then converted into a dynamical matrix. This dynamical matrix of
-    three structures is then used as input phonopy gruneisen api and gruneisen
+    three structures is then used as input phonopy Grueneisen api to compute Grueneisen
     parameters are computed.
 
 
@@ -40,39 +42,51 @@ class BaseGruneisenMaker(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    bulk_relax_maker: .BaseVaspMaker or None
+    bulk_relax_maker: .ForceFieldRelaxMaker, .BaseAimsMaker, .BaseVaspMaker, or None
         A maker to perform an initial tight relaxation on the bulk.
-    const_vol_relax_maker: .BaseVaspMaker or None
-        A maker to perform a tight relaxation on the expanded and
-        shrunk structures at constant volume.
+    code: str
+        determines the dft or force field code.
+    const_vol_relax_maker: .ForceFieldRelaxMaker, .BaseAimsMaker,
+        .BaseVaspMaker, or None. A maker to perform a tight relaxation
+        on the expanded and shrunk structures at constant volume.
+    kpath_scheme: str
+        scheme to generate kpoints. Please be aware that
+        you can only use seekpath with any kind of cell
+        Otherwise, please use the standard primitive structure
+        Available schemes are:
+        "seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro".
+        "seekpath" and "hinuma" are the same definition but
+        seekpath can be used with any kind of unit cell as
+        it relies on phonopy to handle the relationship
+        to the primitive cell and not pymatgen
+    mesh: tuple
+        Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
     phonon_maker: .PhononMaker
         Maker used to perform phonon computations
     perc_vol: float
         Percent volume to shrink and expand ground state structure
-    plot_kwargs: dict
+    compute_gruneisen_param_kwargs: dict
         Keyword arguments passed to :obj:`compute_gruneisen_param`.
     """
 
-    name: str = "Gruneisen flow"
-    bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker()
-    )
-    const_vol_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(relax_cell=False)
-    )
-    phonon_maker: PhononMaker = field(
-        default_factory=lambda: PhononMaker(name="Phonon run", bulk_relax_maker=None)
-    )
+    name: str = "Gruneisen"
+    bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = None
+    code: str = None
+    const_vol_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker = None
+    kpath_scheme: str = "seekpath"
+    phonon_maker: BasePhononMaker = None
     perc_vol: float = 0.01
-    mesh: list = field(default_factory=lambda: [20, 20, 20])
-    plot_kwargs: dict = field(default_factory=dict)
+    mesh: tuple = field(default_factory=lambda: (20, 20, 20))
+    compute_gruneisen_param_kwargs: dict = field(default_factory=dict)
+    symprec: float = 1e-4
 
     def make(self, structure: Structure) -> Flow:
         """
         Optimizes structure and runs phonon computations.
 
         Phonon computations are run for ground state, expanded and shrunk
-        volume structures.
+        volume structures. Then, Grueneisen parameters are computed from
+        this three phonon runs.
 
         Parameters
         ----------
@@ -128,11 +142,15 @@ class BaseGruneisenMaker(Maker):
             phonon_job = self.phonon_maker.make(structure=opt_struct[st])
 
             # change default phonopy.yaml file name to ensure workflow can be
-            # run with MLIPs without having to create folders
-            # Also prevent overwriting and easier to identify yaml file belong
+            # run without having to create folders, thus
+            # prevent overwriting and easier to identify yaml file belong
             # to corresponding phonon run
             phonon_job.jobs[-1].function_kwargs.update(
-                filename_phonopy_yaml=f"{st}_phonopy.yaml"
+                filename_phonopy_yaml=f"{st}_phonopy.yaml",
+                filename_band_yaml=f"{st}_phonon_band_structure.yaml",
+                filename_dos_yaml=f"{st}_phonon_dos.yaml",
+                filename_bs=f"{st}_phonon_band_structure.pdf",
+                filename_dos=f"{st}_phonon_dos.pdf",
             )
             jobs.append(phonon_job)
             # store each phonon run task doc
@@ -141,13 +159,28 @@ class BaseGruneisenMaker(Maker):
 
         # get Gruneisen parameter from phonon runs yaml with phonopy api
         get_gru = compute_gruneisen_param(
-            phonopy_yaml_paths_dict=phonon_yaml_dirs,
+            code=self.code,
+            kpath_scheme=self.kpath_scheme,
             mesh=self.mesh,
+            phonopy_yaml_paths_dict=phonon_yaml_dirs,
             structure=opt_struct["ground"],
+            symprec=self.symprec,
             phonon_imaginary_modes_info=phonon_imaginary_modes,
-            **self.plot_kwargs,
+            **self.compute_gruneisen_param_kwargs,
         )
 
         jobs.append(get_gru)
 
         return Flow(jobs, output=get_gru.output)
+
+    @property
+    @abstractmethod
+    def prev_calc_dir_argname(self) -> str | None:
+        """Name of argument informing static maker of previous calculation directory.
+
+        As this differs between different DFT codes (e.g., VASP, CP2K), it
+        has been left as a property to be implemented by the inheriting class.
+
+        Note: this is only applicable if a relax_maker is specified; i.e., two
+        calculations are performed for each ordering (relax -> static)
+        """
