@@ -76,16 +76,22 @@ def analyze_free_energy(phonon_outputs, structure) -> Flow:
     entropies = []
     temperatures = []
 
+    volume=[]
+    for output in phonon_outputs:
+        # check if imaginary modes
+        if not output.has_imaginary_modes:
+            volume.append(output.volume_per_formula_unit * output.formula_units)
+
     for itemp, temp in enumerate(phonon_outputs[0].temperatures):
         temperatures.append(float(temp))
-        volume = []
+        sorted_volume = []
         electronic_energies.append([])
         free_energies.append([])
         heat_capacities.append([])
         entropies.append([])
         stress = []
 
-        for output in phonon_outputs:
+        for vol, output in sorted(zip(volume,phonon_outputs)):
             # check if imaginary modes
             if not output.has_imaginary_modes:
                 electronic_energies[itemp].append(output.total_dft_energy * output.formula_units)
@@ -93,9 +99,15 @@ def analyze_free_energy(phonon_outputs, structure) -> Flow:
                 heat_capacities[itemp].append(output.heat_capacities[itemp] * output.formula_units)
                 entropies[itemp].append(output.entropies[itemp] * output.formula_units)
 
-                volume.append(output.volume_per_formula_unit * output.formula_units)
+                sorted_volume.append(output.volume_per_formula_unit * output.formula_units)
                 stress.append(output.stress)
-    return PhononQHADoc.from_phonon_runs(volumes=volume, free_energies=free_energies, electronic_energies=electronic_energies,
+
+
+
+    print(sorted_volume)
+    print(electronic_energies)
+    print(free_energies)
+    return PhononQHADoc.from_phonon_runs(volumes=sorted_volume, free_energies=free_energies, electronic_energies=electronic_energies,
                                          entropies=entropies, heat_capacities=heat_capacities, stresses=stress,
                                          temperatures=temperatures, structure=structure)
 

@@ -37,83 +37,21 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
 
     structure: Optional[Structure] = Field(None, description="Structure of Materials Project.")
 
-    # free_energies: Optional[list[float]] = Field(
-    #     None,
-    #     description="vibrational part of the free energies in J/mol per "
-    #     "formula unit for temperatures in temperature_list",
-    # )
-    #
-    # heat_capacities: Optional[list[float]] = Field(
-    #     None,
-    #     description="heat capacities in J/K/mol per "
-    #     "formula unit for temperatures in temperature_list",
-    # )
-    #
-    # internal_energies: Optional[list[float]] = Field(
-    #     None,
-    #     description="internal energies in J/mol per "
-    #     "formula unit for temperatures in temperature_list",
-    # )
-    # entropies: Optional[list[float]] = Field(
-    #     None,
-    #     description="entropies in J/(K*mol) per formula unit"
-    #     "for temperatures in temperature_list ",
-    # )
-    #
-    # temperatures: Optional[list[int]] = Field(
-    #     None,
-    #     description="temperatures at which the vibrational"
-    #     " part of the free energies"
-    #     " and other properties have been computed",
-    # )
-    #
-    # total_dft_energy: Optional[float] = Field("total DFT energy per formula unit in eV")
-    #
-    # stress: Optional[Matrix3D] = Field("The stress on the structure.")
-    #
-    # volume_per_formula_unit: Optional[float] = Field("volume per formula unit in Angstrom**3")
-    #
-    # formula_units: Optional[int] = Field("Formula units per cell")
-    #
-    # has_imaginary_modes: Optional[bool] = Field(
-    #     None, description="if true, structure has imaginary modes"
-    # )
-    #
-    # # needed, e.g. to compute Grueneisen parameter etc
-    # force_constants: Optional[ForceConstants] = Field(
-    #     None, description="Force constants between every pair of atoms in the structure"
-    # )
-    #
-    # born: Optional[list[Matrix3D]] = Field(
-    #     None,
-    #     description="born charges as computed from phonopy. Only for symmetrically "
-    #     "different atoms",
-    # )
-    #
-    # epsilon_static: Optional[Matrix3D] = Field(
-    #     None, description="The high-frequency dielectric constant"
-    # )
-    #
-    # supercell_matrix: Matrix3D = Field("matrix describing the supercell")
-    # primitive_matrix: Matrix3D = Field(
-    #     "matrix describing relationship to primitive cell"
-    # )
-    #
-    # code: str = Field("String describing the code for the computation")
-    #
-    # phonopy_settings: PhononComputationalSettings = Field(
-    #     "Field including settings for Phonopy"
-    # )
-    #
-    # thermal_displacement_data: Optional[ThermalDisplacementData] = Field(
-    #     "Includes all data of the computation of the thermal displacements"
-    # )
-    #
-    # jobdirs: Optional[PhononJobDirs] = Field(
-    #     "Field including all relevant job directories"
-    # )
-    #
-    # uuids: Optional[PhononUUIDs] = Field("Field including all relevant uuids")
+    temperatures: Optional[list[float]] = Field(None, description="temperatures at which the vibrational"
+                                                                " part of the free energies"
+                                                                " and other properties have been computed", )
+
+    # bulk_modulus: Optional[list[float]] = Field(None, description="")
+    # thermal_expansion: Optional[list[float]] = Field(None, description="")
+    # helmholtz_volume: Optional[list[float]] = Field(None, description="")
+    # volume_temperature: Optional[list[float]] = Field(None, description="")
+    # gibbs_temperature: Optional[list[float]] = Field(None, description="")
+    # bulk_modulus_temperature: Optional[list[float]] = Field(None, description="")
+    # heat_capacity_P_numerical: Optional[list[float]] = Field(None, description="")
+    # heat_capacity_P_polyfit: Optional[list[float]] = Field(None, description="")
+    # gruneisen_temperature: Optional[list[float]] = Field(None, description="")
+
+
 
     @classmethod
     def from_phonon_runs(cls, structure: Structure,
@@ -132,25 +70,39 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         **kwargs:
             additional arguments
         """
+        # TODO: figure out how to treat the stresses!
+
         # put this into a schema and use this information there
         # generate plots and save the data in a schema
         qha = PhonopyQHA(volumes=np.array(volumes), electronic_energies=np.array(electronic_energies),
                          temperatures=np.array(temperatures), free_energy=np.array(free_energies),
                          cv=np.array(heat_capacities), entropy=np.array(entropies))
 
-        qha.plot_helmholtz_volume().savefig("helmholtzvolume.eps")
-        # qha.plot_volume_temperature().show()
-        qha.plot_thermal_expansion().savefig("thermalexpansion.eps")
-        # plot = qha.plot_volume_expansion()
-        # if plot:
-        #     plot.show()
-        # qha.plot_gibbs_temperature().show()
-        # qha.plot_bulk_modulus_temperature().show()
-        # qha.plot_heat_capacity_P_numerical().show()
-        # qha.plot_heat_capacity_P_polyfit().show()
-        # qha.plot_gruneisen_temperature().show()
         print(qha.thermal_expansion)
+        # create some plots here
+        qha.plot_helmholtz_volume().savefig("helmholtz_volume.eps")
+        qha.plot_volume_temperature().savefig("volume_temperature.eps")
+        qha.plot_thermal_expansion().savefig("thermal_expansion.eps")
+        qha.plot_gibbs_temperature().savefig("gibbs_temperature.eps")
+        qha.plot_bulk_modulus_temperature().savefig("bulk_modulus_temperature.eps")
+        qha.plot_heat_capacity_P_numerical().savefig("heat_capacity_P_numerical.eps")
+        qha.plot_heat_capacity_P_polyfit().savefig("heat_capacity_P_polyfit.eps")
+        qha.plot_gruneisen_temperature().savefig("gruneisen_temperature.eps")
+
+
 
         return cls.from_structure(structure=structure,
-                                  meta_structure=structure) # TODO: should return some output doc  # have to think about how it should look like  # need to check
+                                  meta_structure=structure,
+                                  # bulk_modulus = qha.bulk_modulus,
+                                  # thermal_expansion=qha.thermal_expansion,
+                                  # helmholtz_volume=qha.helmholtz_volume,
+                                  # volume_temperature=qha.volume_temperature,
+                                  # gibbs_temperature=qha.gibbs_temperature,
+                                  # bulk_modulus_temperature=qha.bulk_modulus_temperature,
+                                  # heat_capacity_P_numerical=qha.heat_capacity_P_numerical,
+                                  # heat_capacity_P_polyfit=qha.heat_capacity_P_polyfit,
+                                  # gruneisen_temperature=qha.gruneisen_temperature,
+
+
+                                  ) # TODO: should return some output doc  # have to think about how it should look like  # need to check
 

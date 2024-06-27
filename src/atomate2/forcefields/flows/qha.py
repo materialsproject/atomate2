@@ -54,7 +54,7 @@ class CHGNetQhaMaker(CommonQhaMaker):
     # TODO understand why inheritance does not work here?
     eos_relax_maker: Maker = field(default_factory=lambda: CHGNetRelaxMaker(relax_cell=False))
     static_maker: Maker = None
-    phonon_maker:  Maker = field(default_factory=PhononMaker)
+    phonon_maker:  Maker = field(default_factory=lambda: PhononMaker(bulk_relax_maker=CHGNetRelaxMaker(relax_cell=False, relax_kwargs={"fmax": 0.00001}) ))
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
     # postprocessor: EOSPostProcessor = field(default_factory=PostProcessEosEnergy)

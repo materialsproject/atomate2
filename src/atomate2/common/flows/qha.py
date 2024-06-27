@@ -97,7 +97,7 @@ class CommonQhaMaker(Maker):
 
         # Todo: reuse postprocessor from equation of state to make fits of free energy curves
         # get free energy fits and perform qha
-        analysis = analyze_free_energy(phonon_jobs.output)
+        analysis = analyze_free_energy(phonon_jobs.output, structure=structure)
 
 
 
