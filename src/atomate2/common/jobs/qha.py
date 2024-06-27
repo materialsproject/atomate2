@@ -104,9 +104,6 @@ def analyze_free_energy(phonon_outputs, structure) -> Flow:
 
 
 
-    print(sorted_volume)
-    print(electronic_energies)
-    print(free_energies)
     return PhononQHADoc.from_phonon_runs(volumes=sorted_volume, free_energies=free_energies, electronic_energies=electronic_energies,
                                          entropies=entropies, heat_capacities=heat_capacities, stresses=stress,
                                          temperatures=temperatures, structure=structure)

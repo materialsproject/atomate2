@@ -78,7 +78,6 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
                          temperatures=np.array(temperatures), free_energy=np.array(free_energies),
                          cv=np.array(heat_capacities), entropy=np.array(entropies))
 
-        print(qha.thermal_expansion)
         # create some plots here
         qha.plot_helmholtz_volume().savefig("helmholtz_volume.eps")
         qha.plot_volume_temperature().savefig("volume_temperature.eps")
