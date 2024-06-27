@@ -3,9 +3,10 @@ from jobflow import run_locally
 from yaml import CLoader as Loader
 
 from atomate2.common.jobs.phonons import PhononBSDOSDoc
+from atomate2.common.jobs.qha import PhononQHADoc
 from atomate2.common.jobs.qha import analyze_free_energy
 
-
+from pymatgen.core.structure import Structure
 def test_analyze_free_energy(clean_dir, test_dir):
     # The following code and the test files have been adapted from Phonopy
     # Copyright (C) 2015 Atsushi Togo
@@ -42,6 +43,8 @@ def test_analyze_free_energy(clean_dir, test_dir):
     # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     # POSSIBILITY OF SUCH DAMAGE.
 
+    structure=Structure.from_file(f"{test_dir}/forcefields/qha/POSCAR")
+
     volumes = []
     energies = []
     for line in open(f"{test_dir}/forcefields/qha/e-v.dat"):
@@ -62,10 +65,8 @@ def test_analyze_free_energy(clean_dir, test_dir):
             PhononBSDOSDoc(free_energies=fe, heat_capacities=cv, entropies=entropy, temperatures=temperatures,
                            total_dft_energy=energy, volume_per_formula_unit=volume, formula_units=1))
 
-    job = analyze_free_energy(phonon_docs)
+    job = analyze_free_energy(phonon_docs, structure)
 
-    responses=run_locally(job)
-    print(responses)
-    result = responses[job.uuid][1].output
-    assert result == False
-    #assert isinstance(result, QHADoc)
+    responses=run_locally(job, create_folders=True)
+
+    assert isinstance(responses[job.uuid][1].output, PhononQHADoc)

@@ -18,7 +18,7 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.transformations.advanced_transformations import (CubicSupercellTransformation, )
 from atomate2.common.jobs.eos import PostProcessEosEnergy
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
-
+from atomate2.common.schemas.qha import PhononQHADoc
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -56,7 +56,7 @@ def get_phonon_jobs(phonon_maker, output: dict) -> Flow:
 @job(
     output_schema=PhononQHADoc,
 )
-def analyze_free_energy(phonon_outputs) -> Flow:
+def analyze_free_energy(phonon_outputs, structure) -> Flow:
     """
     Job that analyzes the free energy from all phonon runs
 
@@ -86,10 +86,8 @@ def analyze_free_energy(phonon_outputs) -> Flow:
         stress = []
 
         for output in phonon_outputs:
-            # convert all units to eV, normalize per formula unit
             # check if imaginary modes
             if not output.has_imaginary_modes:
-                print(type(output.total_dft_energy))
                 electronic_energies[itemp].append(output.total_dft_energy * output.formula_units)
                 free_energies[itemp].append(output.free_energies[itemp] * output.formula_units)
                 heat_capacities[itemp].append(output.heat_capacities[itemp] * output.formula_units)
@@ -97,27 +95,9 @@ def analyze_free_energy(phonon_outputs) -> Flow:
 
                 volume.append(output.volume_per_formula_unit * output.formula_units)
                 stress.append(output.stress)
-
-    # put this into a schema and use this information there
-    # generate plots and save the data in a schema
-    qha = PhonopyQHA(volumes=np.array(volume), electronic_energies=np.array(electronic_energies),
-                     temperatures=np.array(temperatures), free_energy=np.array(free_energies),
-                     cv=np.array(heat_capacities), entropy=np.array(entropies))
-
-    qha.plot_helmholtz_volume().savefig("helmholtzvolume.eps")
-    # qha.plot_volume_temperature().show()
-    qha.plot_thermal_expansion().savefig("thermalexpansion.eps")
-    # plot = qha.plot_volume_expansion()
-    # if plot:
-    #     plot.show()
-    # qha.plot_gibbs_temperature().show()
-    # qha.plot_bulk_modulus_temperature().show()
-    # qha.plot_heat_capacity_P_numerical().show()
-    # qha.plot_heat_capacity_P_polyfit().show()
-    # qha.plot_gruneisen_temperature().show()
-    print(qha.thermal_expansion)
-
-    return qha.bulk_modulus_temperature  # TODO: should return some output doc  # have to think about how it should look like  # need to check
+    return PhononQHADoc.from_phonon_runs(volumes=volume, free_energies=free_energies, electronic_energies=electronic_energies,
+                                         entropies=entropies, heat_capacities=heat_capacities, stresses=stress,
+                                         temperatures=temperatures, structure=structure)
 
 # @job
 # def get_qha_results(fit_output):
