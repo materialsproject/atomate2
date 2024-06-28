@@ -120,15 +120,12 @@ def compute_gruneisen_param(
         labels_dict=kpath_dict,
     )
     gp_bs_plot = GruneisenPhononBSPlotter(bs=gruneisen_band_structure)
-    # gruneisen_band_plot = compute_gruneisen_param_kwargs.get(
-    #     "gruneisen_bs", "gruneisen_band.pdf"
-    # )
+
     GruneisenParameterDocument.get_gruneisen_weighted_bandstructure(
         gruneisen_band_symline_plotter=gp_bs_plot,
         save_fig=True,
         **compute_gruneisen_param_kwargs,
     )
-    # gp_bs_plot.save_plot_gs(filename=gruneisen_band_plot, img_format="pdf")
 
     gruneisen_parameter_inputs = {
         "ground": phonopy_yaml_paths_dict["ground"],
