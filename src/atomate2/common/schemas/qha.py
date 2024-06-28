@@ -16,9 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
-    """Collection of all data produced by the phonon workflow."""
-
-    # TODO: think about normalization. At the moment, it is not per formula unit
+    """Collection of all data produced by the qha workflow."""
 
     structure: Optional[Structure] = Field(
         None, description="Structure of Materials Project."
@@ -32,7 +30,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     )
 
     bulk_modulus: Optional[list[float]] = Field(
-        None, description="Bulk modulus computed without phonon contribution."
+        None, description="Bulk modulus in GPa computed without phonon contribution."
     )
     thermal_expansion: Optional[list[float]] = Field(
         None,
@@ -41,22 +39,25 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     )
     helmholtz_volume: Optional[list[list[float]]] = Field(
         None,
-        description="Free_energies at temperatures and volumes."
+        description="Free energies at temperatures and volumes."
         "shape (temperatures, volumes)",
     )
     volume_temperature: Optional[list[float]] = Field(
-        None, description="Volumes at temperatures." "Shape: (temperatures, )"
+        None,
+        description="Volumes in Angstrom^3 at temperatures." "Shape: (temperatures, )",
     )
     gibbs_temperature: Optional[list[float]] = Field(
         None,
-        description="Gibbs free energies at temperatures." "Shape: (temperatures, )",
+        description="Gibbs free energies in eV at temperatures."
+        "Shape: (temperatures, )",
     )
     bulk_modulus_temperature: Optional[list[float]] = Field(
-        None, description="Bulk modulus at temperature." "Shape: (temperatures, )"
+        None,
+        description="Bulk modulus in GPa  at temperature." "Shape: (temperatures, )",
     )
     heat_capacity_p_numerical: Optional[list[float]] = Field(
         None,
-        description="Heat capacities at constant pressure at temperatures."
+        description="Heat capacities in J/K/mol at constant pressure at temperatures."
         "Shape: (temperatures, )",
     )
     gruneisen_temperature: Optional[list[float]] = Field(
@@ -64,7 +65,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         description="Gruneisen parameters at temperatures." "Shape: (temperatures, )",
     )
     pressure: Optional[float] = Field(
-        None, description="Pressure at GPA at which Gibb's energy was computed"
+        None, description="Pressure in GPA at which Gibb's energy was computed"
     )
     t_max: Optional[float] = Field(
         None,
