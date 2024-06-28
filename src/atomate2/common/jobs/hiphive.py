@@ -609,6 +609,7 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
                     (order == 3 and n_doff < 1500) or
                     (order == 4 and n_doff < 1000)
                     ):
+                    logger.info(f"adding n_doff = {n_doff} to the n_doff list")
                     n_doffs_list.append(n_doff)
                 elif (
                     (order == 2 and n_doff > 1000) or
@@ -623,6 +624,12 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
                     n_doffs_list = n_doffs_list[:cutoff_index + 1]
                     break
             except UnboundLocalError:
+                logger.info(f"UnboundLocalError for cutoff = {cutoff}")
+                # find the index of the cutoff in the cutoffs_to_check list
+                cutoff_index = np.where(cutoffs_to_check == cutoff)[0][0]
+                logger.info(cutoff_index)
+                # remove only the cutoff corresponding to the index from the list
+                cutoffs_to_check = np.delete(cutoffs_to_check, cutoff_index)
                 continue
 
         # Find the closest cutoff to the target
