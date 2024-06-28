@@ -367,9 +367,9 @@ def test_generator_set_kpt_vars(abinit_test_dir):
     abinit_input = load_abinit_input(
         os.path.join(abinit_test_dir, "abinit_inputs"), fname="abinit_input_Si.json"
     )
-    aig._set_kpt_vars(abinit_input, {"grid_density": 300})
+    aig._set_kpt_vars(abinit_input, {"grid_density": 300})  # noqa: SLF001
     assert np.array_equal(abinit_input["ngkpt"], [5, 5, 5])
 
-    aig._set_kpt_vars(abinit_input, {"line_density": 10})
+    aig._set_kpt_vars(abinit_input, {"line_density": 10})  # noqa: SLF001
     assert abinit_input["nkpt"] == 92
     assert "ngkpt" not in abinit_input
