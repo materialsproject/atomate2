@@ -33,8 +33,7 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from emmet.core.math import Matrix3D
-    from pymatgen.core.structure import Structure
+    from pymatgen.core.structure import Structure  # type: ignore  # noqa: PGH003
 
     from atomate2.vasp.flows.core import DoubleRelaxMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -139,6 +138,7 @@ class BaseHiphiveMaker(Maker, ABC):
     # If renormalization is performed,
     # T_RENORM overrides T_KLAT for lattice thermal conductivity
     T_KLAT: ClassVar[dict] = {"min":100,"max":1000,"step":100}
+    # T_KLAT: list[int] = field(default_factory=lambda: [100, 200, 300])
     FIT_METHOD = "rfe" #least-squares #omp #rfe #elasticnet
     RENORM_METHOD = "least_squares" # pseudoinverse refit least_squares
     RENORM_NCONFIG = 5  # Changed from 50
@@ -151,7 +151,7 @@ class BaseHiphiveMaker(Maker, ABC):
         mpid: str,
         structure: Structure,
         bulk_modulus: float,
-        supercell_matrix: Matrix3D | None = None,
+        supercell_matrix: list[list[int]] | None = None,
         fit_method: str | None = FIT_METHOD,
         disp_cut: float | None = None,
         cutoffs: list[list[float]] | None = None,
@@ -182,7 +182,7 @@ class BaseHiphiveMaker(Maker, ABC):
             The A pymatgen structure of the material.
         bulk_modulus (float):
             Bulk modulus of the material in GPa.
-        supercell_matrix (Matrix3D, optional):
+        supercell_matrix (list[list[int]], optional):
             Supercell transformation matrix, default is None.
         fit_method (str, optional):
             Method for fitting force constants using hiphive, default is None.
@@ -233,7 +233,7 @@ class BaseHiphiveMaker(Maker, ABC):
             bulk_kwargs = {}
             if self.prev_calc_dir_argname is not None:
                 bulk_kwargs[self.prev_calc_dir_argname] = prev_dir
-            bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)
+            bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)  # type: ignore[misc]
             bulk.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
             jobs.append(bulk)
             outputs.append(bulk.output)
