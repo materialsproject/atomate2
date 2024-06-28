@@ -49,16 +49,6 @@ def test_gruneisen_wf_ff(clean_dir, si_structure: Structure, tmp_path: Path):
     assert isinstance(gp_doc.gruneisen_parameter_inputs, GruneisenInputDirs)
     assert isinstance(gp_doc.phonon_runs_has_imaginary_modes, PhononRunsImaginaryModes)
 
-    # check if plots are generated
+    # check if plots are generated in specified directory / thus testing kwargs as well
     assert Path(f"{tmp_path}/gruneisen_mesh.pdf").exists()
     assert Path(f"{tmp_path}/gruneisen_band.pdf").exists()
-
-    # check derived properties
-    # (commenting out as large deviations observed on multiple runs,
-    # probably cause of extremely low accuracy)
-
-    # assert gp_doc.derived_properties.average_gruneisen == pytest.approx(653.763792,
-    # abs=1E-4)
-    # assert gp_doc.derived_properties.thermal_conductivity_slack == pytest.approx(
-    #     0.00011488, abs=1E-4
-    # )
