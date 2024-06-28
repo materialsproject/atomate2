@@ -320,13 +320,13 @@ class Calculation(BaseModel):
             logger.critical(msg)
 
         instance = cls(
-                dir_name=str(dir_name),
-                task_name=task_name,
-                abinit_version=abinit_out.version,
-                has_abinit_completed=has_abinit_completed,
-                completed_at=completed_at,
-                output=output_doc,
-                event_report=report,
-            )
+            dir_name=str(dir_name),
+            task_name=task_name,
+            abinit_version=abinit_out.version,
+            has_abinit_completed=has_abinit_completed,
+            completed_at=completed_at,
+            output=output_doc,
+            event_report=report,
+        )
 
         return instance, None  # abinit_objects,

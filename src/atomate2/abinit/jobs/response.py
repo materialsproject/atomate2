@@ -276,7 +276,7 @@ def run_rf(
     rf_jobs = []
     outputs: dict[str, list] = {"dirs": []}
 
-    if isinstance(rf_maker, DdeMaker) or isinstance(rf_maker, DteMaker):
+    if isinstance(rf_maker, (DdeMaker, DteMaker)):
         prev_outputs = [item for sublist in prev_outputs for item in sublist]
 
     for ipert, pert in enumerate(perturbations):
