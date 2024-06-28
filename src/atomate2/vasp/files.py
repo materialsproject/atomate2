@@ -39,7 +39,7 @@ def copy_vasp_outputs(
 
     For folders containing multiple calculations (e.g., suffixed with relax1, relax2,
     etc), this function will only copy the files with the highest numbered suffix and
-    the suffix will be removed. Additional vasp files will be also be copied with the
+    the suffix will be removed. Additional vasp files will be also be  copied with the
     same suffix applied. Lastly, this function will gunzip any gzipped files.
 
     Parameters
@@ -106,10 +106,8 @@ def copy_vasp_outputs(
     if relax_ext:
         all_files = optional_files + required_files
         files_to_rename = {
-            file.name.replace(".gz", ""): file.name.replace(relax_ext, "").replace(
-                ".gz", ""
-            )
-            for file in all_files
+            k.name.replace(".gz", ""): k.name.replace(relax_ext, "").replace(".gz", "")
+            for k in all_files
         }
         rename_files(files_to_rename, allow_missing=True, file_client=file_client)
 
@@ -234,17 +232,6 @@ def copy_hiphive_outputs(
     directory_listing = file_client.listdir(src_dir, host=src_host)
     optional_files = []
 
-    for loop in range(1, 100):
-        for file in [
-            f"structure_data_{loop}.json",
-            f"perturbed_structures_{loop}.json",
-            f"perturbed_forces_{loop}.json",
-            f"perturbed_forces_{loop}_new.json",
-        ]:
-            found_file = get_zfile(directory_listing, file, allow_missing=True)
-            if found_file is not None:
-                optional_files.append(found_file)
-
     for file in [
         "cluster_space.cs",
         "force_constants.fcs",
@@ -259,6 +246,7 @@ def copy_hiphive_outputs(
         "structure_data.json",
         "perturbed_structures.json",
         "perturbed_forces.json",
+        "perturbed_forces_new.json",
         "fc2.hdf5",
         "fc3.hdf5",
         "FORCE_CONSTANTS_2ND",
