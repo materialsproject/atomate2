@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Maker
 
 from atomate2.common.flows.eos import CommonEosMaker
-from atomate2.common.flows.phonons import BasePhononMaker
 from atomate2.common.jobs.qha import analyze_free_energy, get_phonon_jobs
 
 if TYPE_CHECKING:
@@ -17,24 +16,46 @@ if TYPE_CHECKING:
 
     from pymatgen.core import Structure
 
+    from atomate2.common.flows.phonons import BasePhononMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+    from atomate2.vasp.jobs.base import BaseVaspMaker
+
 
 @dataclass
 class CommonQhaMaker(Maker, ABC):
     """
     Use the quasi-harmonic approximation.
 
-    First relax a structure using relax_maker.
+    First relax a structure.
     Then we scale the relaxed structure, and
     then compute harmonic phonons for each scaled
     structure with Phonopy.
-    Finally, we compute the Gibb's free energy.
+    Finally, we compute the Gibb's free energy and
+    other thermodynamic properties available from
+    the quasi-harmonic approximation.
 
     Note: We do not consider electronic free energies so far.
     This might be problematic for metals (see e.g.,
     Wolverton and Zunger, Phys. Rev. B, 52, 8813 (1994).)
 
+    Note: Magnetic Materials have never been computed with
+    this workflow.
+
     Parameters
     ----------
+
+    name: str
+    initial_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker
+    eos_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker
+    phonon_displacement_maker: ForceFieldRelaxMaker | BaseVaspMaker
+    phonon_static_maker: ForceFieldRelaxMaker | BaseVaspMaker
+    phonon_maker_kwargs: dict
+    linear_strain: tuple[float, float]
+    number_of_frames: int
+    t_max: float | None
+    pressure: float | None
+    ignore_imaginary_modes: bool
+
     name : str
         Name of the flows produced by this maker.
     initial_relax_maker : .Maker | None
@@ -54,22 +75,26 @@ class CommonQhaMaker(Maker, ABC):
     #    Whether to store the information about transformations. Unfortunately
     #    needed at present to handle issues with emmet and pydantic validation
     #    TODO: remove this when clash is fixed
+    linear_strain: tuple[float, float] = (-0.05, 0.05)
+    number_of_frames: int = 6
+    t_max: float | None = None
+    pressure: float | None = None
+    ignore_imaginary_modes: bool = False
     """
 
     name: str = "QHA Maker"
-    initial_relax_maker: Maker = None
-    eos_relax_maker: Maker = None
-    # eos_maker_kwargs
-    # switch to initialize the static maker only
-    phonon_displacement_maker: Maker = None
-    phonon_static_maker: Maker = None
+    initial_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    eos_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    phonon_displacement_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    phonon_static_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
     phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
     t_max: float | None = None
     pressure: float | None = None
-    # TODO:
     ignore_imaginary_modes: bool = False
+    # TODO: implement advanced handling of
+    #  imaginary modes in phonon runs (i.e., fitting procedures)
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
         """Run an EOS flow.
