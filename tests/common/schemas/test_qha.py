@@ -1,6 +1,6 @@
-from ruamel.yaml import YAML
 from jobflow import run_locally
 from pymatgen.core.structure import Structure
+from ruamel.yaml import YAML
 
 from atomate2.common.jobs.phonons import PhononBSDOSDoc
 from atomate2.common.jobs.qha import PhononQHADoc, analyze_free_energy
@@ -46,7 +46,7 @@ def test_analyze_free_energy(clean_dir, test_dir):
 
     volumes = []
     energies = []
-    with open(f"{test_dir}/forcefields/qha/e-v.dat", "r") as f:
+    with open(f"{test_dir}/forcefields/qha/e-v.dat") as f:
         for line in f:
             v, e = line.split()
             volumes.append(float(v))
@@ -56,7 +56,7 @@ def test_analyze_free_energy(clean_dir, test_dir):
     for index, energy, volume in zip(range(-5, 6), energies, volumes):
         filename = f"{test_dir}/forcefields/qha/thermal_properties.yaml-{index!s}"
         yaml = YAML()
-        with open(filename,"r") as f:
+        with open(filename) as f:
             thermal_properties = yaml.load(f)["thermal_properties"]
 
         temperatures = [v["temperature"] for v in thermal_properties]
