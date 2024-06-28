@@ -396,8 +396,10 @@ class BaseHiphiveMaker(Maker, ABC):
             if not renormalize:
                 if isinstance(temperatures, dict):
                     pass
-                elif type(temperatures) in [list, np.ndarray]:
-                    assert all(np.diff(temperatures) == np.diff(temperatures)[0])
+                elif isinstance(temperatures, (list, np.ndarray)) and not all(
+                    np.diff(temperatures) == np.diff(temperatures)[0]
+                ):
+                    raise ValueError("Temperature differences are not consistent.")
                 lattice_thermal_conductivity = run_lattice_thermal_conductivity(
                     renormalized=renormalize,
                     temperature=temperatures,

@@ -214,8 +214,8 @@ def get_displaced_structures(
         logger.info(f"distance_{idx % 6} = {distance}")
 
         # set the random seed for reproducibility
-        # np.random.seed(idx // 6 % 6)
-        np.random.seed(3)
+        # 6 is the number of fixed_displs
+        rng = np.random.default_rng(seed=(idx // 6 % 6))
 
         total_inds = list(enumerate(atoms))
         logger.info(f"total_inds = {total_inds}")
@@ -223,18 +223,20 @@ def get_displaced_structures(
         # if you want to select specific species instead, then use the following code
         # Li_inds = [i for i, a in enumerate(atoms) if a.symbol == 'Li']
 
-        def generate_normal_displacement(distance: float, n: int) -> np.ndarray:
-            directions = np.random.normal(size=(n, 3))
+        def generate_normal_displacement(
+                distance: float, n: int, rng: np.random.Generator
+            ) -> np.ndarray:
+            directions = rng.normal(size=(n, 3))
             normalizer = np.linalg.norm(directions, axis=1, keepdims=True)
-            distance_normal_distribution = np.random.normal(
+            distance_normal_distribution = rng.normal(
                 distance, distance/5, size=(n, 1)
-                )
+            )
             displacements = distance_normal_distribution * directions / normalizer
             logger.info(f"displacements = {displacements}")
             return displacements
 
         # Generate displacements
-        disp_normal = generate_normal_displacement(distance, len(total_inds))
+        disp_normal = generate_normal_displacement(distance, len(total_inds), rng)
         mean_displacements = np.linalg.norm(disp_normal, axis=1).mean()
         logger.info(f"mean_displacements = {mean_displacements}")
 
@@ -1146,20 +1148,17 @@ def _run_cutoffs(
     fcs = fcp.get_force_constants(supercell_atoms)
     logger.info(f"FCS generated for cutoff {i}, {cutoffs}")
 
-    try:
-        return {
-            "cutoffs": cutoffs,
-            "rmse_test": opt.rmse_test,
-            "cluster_space": sc.cluster_space,
-            "parameters": parameters,
-            "force_constants": fcs,
-            "force_constants_potential": fcp,
-            "imaginary": imaginary,
-            "cs_dofs": cs_dofs,
-            "n_imaginary": n_imaginary,
-        }
-    except Exception:
-        return {}
+    return {
+        "cutoffs": cutoffs,
+        "rmse_test": opt.rmse_test,
+        "cluster_space": sc.cluster_space,
+        "parameters": parameters,
+        "force_constants": fcs,
+        "force_constants_potential": fcp,
+        "imaginary": imaginary,
+        "cs_dofs": cs_dofs,
+        "n_imaginary": n_imaginary,
+    }
 
 
 def get_structure_container(
@@ -1210,20 +1209,19 @@ def get_structure_container(
                     f"{std_forces}")
         if not separate_fit:  # fit all
             sc.add_structure(structure)
-        else:  # fit separately
-            if param2 is None:  # for harmonic fitting
-                if mean_displacements < disp_cut:
-                    logger.info("We are in harmonic fitting if statement")
-                    # logger.info(f"mean_disp = {mean_displacements}")
-                    logger.info(f"mean_forces = {mean_forces}")
-                    sc.add_structure(structure)
-            else:  # for anharmonic fitting
-                if mean_displacements >= disp_cut:
-                    logger.info("We are in anharmonic fitting if statement")
-                    # logger.info(f"mean_disp = {mean_displacements}")
-                    logger.info(f"mean_forces = {mean_forces}")
-                    sc.add_structure(structure)
-                    saved_structures.append(structure)
+        # for harmonic fitting
+        elif separate_fit and param2 is None and mean_displacements < disp_cut:
+            logger.info("We are in harmonic fitting if statement")
+            # logger.info(f"mean_disp = {mean_displacements}")
+            logger.info(f"mean_forces = {mean_forces}")
+            sc.add_structure(structure)
+        # for anharmonic fitting
+        elif separate_fit and param2 is not None and mean_displacements >= disp_cut:
+            logger.info("We are in anharmonic fitting if statement")
+            # logger.info(f"mean_disp = {mean_displacements}")
+            logger.info(f"mean_forces = {mean_forces}")
+            sc.add_structure(structure)
+            saved_structures.append(structure)
 
     logger.info("final shape of fit matrix (total # of atoms in all added"
                 f"supercells, n_dofs) = (rows, columns) = {sc.data_shape}")
@@ -1422,9 +1420,9 @@ def gruneisen(
     gruneisen.set_sampling_mesh(phonopy.mesh_numbers,is_gamma_center=True)
     gruneisen.run()
     grun = gruneisen.get_gruneisen_parameters() # (nptk,nmode,3,3)
-    omega = gruneisen._frequencies
+    omega = gruneisen._frequencies  # noqa: SLF001
     # qp = gruneisen._qpoints
-    kweight = gruneisen._weights
+    kweight = gruneisen._weights  # noqa: SLF001
 
     grun_tot = [get_total_grun(omega, grun, kweight, temp) for temp in temperature]
     grun_tot = np.nan_to_num(np.array(grun_tot))
@@ -1553,14 +1551,14 @@ def run_thermal_cond_solver(
     if renormalized:
         if not isinstance(temperature, (int, float)):
             raise TypeError("temperature must be an int or float")
-    else:
-        if isinstance(temperature, dict):
-            if not all(k in temperature for k in ["t_min", "t_max", "t_step"]):
-                raise ValueError("Temperature dict must contain 't_min', 't_max',"
-                                 "and 't_step'")
-        elif not isinstance(temperature, (int, float)):
-            raise ValueError("Unsupported temperature type, must be int, float,"
-                             "or dict")
+    elif isinstance(temperature, dict):
+        if not all(k in temperature for k in ["t_min", "t_max", "t_step"]):
+            raise ValueError("Temperature dict must contain 't_min', 't_max',"
+                            "and 't_step'")
+    elif not isinstance(temperature, (int, float)):
+        raise ValueError("Unsupported temperature type, must be int, float,"
+                        "or dict")
+
 
     logger.info("Creating control dict")
 
@@ -1585,7 +1583,7 @@ def run_thermal_cond_solver(
         "shengbte_err.txt", "w", buffering=1
     ) as f_err:
         # use line buffering for stderr
-        return_code = subprocess.call(therm_cond_solver_cmd, stdout=f_std, stderr=f_err)
+        return_code = subprocess.call(therm_cond_solver_cmd, stdout=f_std, stderr=f_err) # noqa: S603
 
     logger.info(
         f"Command {therm_cond_solver_cmd}"
@@ -1808,16 +1806,15 @@ def run_hiphive_renormalization(
         else:
             thermal_keys = ["temperature","free_energy","entropy","heat_capacity",
                         "free_energy_correction_S","free_energy_correction_SC"]
+    elif perform_ti_flag:
+        thermal_keys = ["temperature","free_energy","entropy","heat_capacity",
+                    "gruneisen","thermal_expansion","expansion_fraction",
+                    "free_energy_correction_S","free_energy_correction_SC",
+                    "free_energy_correction_TI"]
     else:
-        if perform_ti_flag:
-            thermal_keys = ["temperature","free_energy","entropy","heat_capacity",
-                        "gruneisen","thermal_expansion","expansion_fraction",
-                        "free_energy_correction_S","free_energy_correction_SC",
-                        "free_energy_correction_TI"]
-        else:
-            thermal_keys = ["temperature","free_energy","entropy","heat_capacity",
-                        "gruneisen","thermal_expansion","expansion_fraction",
-                        "free_energy_correction_S","free_energy_correction_SC"]
+        thermal_keys = ["temperature","free_energy","entropy","heat_capacity",
+                    "gruneisen","thermal_expansion","expansion_fraction",
+                    "free_energy_correction_S","free_energy_correction_SC"]
 
     td_thermal_data = {key: [] for key in thermal_keys}
 

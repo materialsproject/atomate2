@@ -114,7 +114,6 @@ class BaseElasticMaker(Maker, ABC):
             if self.prev_calc_dir_argname is not None:
                 bulk_kwargs[self.prev_calc_dir_argname] = prev_dir
             bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)
-            bulk.update_config({"manager_config": {"_fworker": "gpu_fworker"}}) #TODO remove this line
             jobs.append(bulk)
             structure = bulk.output.structure
             prev_dir = bulk.output.dir_name

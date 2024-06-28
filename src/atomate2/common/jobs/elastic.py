@@ -146,7 +146,6 @@ def run_elastic_deformations(
             elastic_job_kwargs[prev_dir_argname] = prev_dir
         # create the job
         relax_job = elastic_relax_maker.make(deformed_structure, **elastic_job_kwargs)
-        relax_job.update_config({"manager_config": {"_fworker": "gpu_reg_fworker"}}) #TODO remove this line
         relax_job.append_name(f" {idx + 1}/{len(deformations)}")
         relaxations.append(relax_job)
 

@@ -185,7 +185,7 @@ def generate_phonon_displacements(
     for i in range(len(structures_pymatgen)):
         structures_pymatgen[i].to(f"POSCAR_{i}", "poscar")
 
-    dumpfn(structures_pymatgen, f"perturbed_structures.json")
+    dumpfn(structures_pymatgen, "perturbed_structures.json")
 
     return [get_pmg_structure(cell) for cell in supercells]
 
@@ -317,9 +317,11 @@ def run_phonon_displacements(
         )
 
         if isinstance(phonon_maker, BaseVaspMaker):
-            phonon_job.update_config({"manager_config": {"_fworker": "gpu_reg_fworker"}}) # change to gpu_reg_fworker
+            phonon_job.update_config(
+                {"manager_config": {"_fworker": "gpu_reg_fworker"}})
         elif isinstance(phonon_maker, ForceFieldStaticMaker):
-            phonon_job.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
+            phonon_job.update_config(
+                {"manager_config": {"_fworker": "gpu_fworker"}})
 
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(len(displacements)))
@@ -334,9 +336,11 @@ def run_phonon_displacements(
             else:
                 phonon_job = phonon_maker.make(displacement)
             if isinstance(phonon_maker, BaseVaspMaker):
-                phonon_job.update_config({"manager_config": {"_fworker": "gpu_reg_fworker"}}) # change to gpu_reg_fworker
+                phonon_job.update_config(
+                    {"manager_config": {"_fworker": "gpu_reg_fworker"}})
             elif isinstance(phonon_maker, ForceFieldStaticMaker):
-                phonon_job.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
+                phonon_job.update_config(
+                    {"manager_config": {"_fworker": "gpu_fworker"}})
             phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
 
             # we will add some meta data

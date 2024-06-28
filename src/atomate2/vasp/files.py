@@ -209,7 +209,7 @@ def copy_hiphive_outputs(
     src_dir: Path | str,
     src_host: str | None = None,
     file_client: FileClient | None = None,
-):
+) -> None:
     """
     Copy Non-VASP output files to the current directory.
 

@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import ClassVar
 
 from atomate2.common.flows.hiphive import BaseHiphiveMaker
 from atomate2.forcefields.jobs import (

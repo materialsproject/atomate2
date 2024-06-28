@@ -426,17 +426,14 @@ class VaspInputGenerator(InputGenerator):
             ispin=ispin,
         )
         site_properties = structure.site_properties
-        # poscar = Poscar(
-        #     structure,
-        #     velocities=site_properties.get("velocities"),
-        #     predictor_corrector=site_properties.get("predictor_corrector"),
-        #     predictor_corrector_preamble=structure.properties.get(
-        #         "predictor_corrector_preamble"
-        #     ),
-        #     lattice_velocities=structure.properties.get("lattice_velocities"),
-        # )
         poscar = Poscar(
             structure,
+            velocities=site_properties.get("velocities"),
+            predictor_corrector=site_properties.get("predictor_corrector"),
+            predictor_corrector_preamble=structure.properties.get(
+                "predictor_corrector_preamble"
+            ),
+            lattice_velocities=structure.properties.get("lattice_velocities"),
         )
         return VaspInputSet(
             incar=incar,
