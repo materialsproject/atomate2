@@ -182,8 +182,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
     total_dft_energy: Optional[float] = Field("total DFT energy per formula unit in eV")
 
-    stress: Optional[Matrix3D] = Field("The stress on the structure.")
-
     volume_per_formula_unit: Optional[float] = Field(
         "volume per formula unit in Angstrom**3"
     )
@@ -245,7 +243,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         total_dft_energy: float,
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
-        stress: Matrix3D = None,
         **kwargs,
     ) -> Self:
         """Generate collection of phonon data.
@@ -495,7 +492,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             if kwargs["store_force_constants"]
             else None,
             born=borns.tolist() if borns is not None else None,
-            stress=stress if stress is not None else None,
             epsilon_static=epsilon.tolist() if epsilon is not None else None,
             supercell_matrix=phonon.supercell_matrix.tolist(),
             primitive_matrix=phonon.primitive_matrix.tolist(),

@@ -273,7 +273,6 @@ class BasePhononMaker(Maker, ABC):
             )
             jobs.append(static_job)
             total_dft_energy = static_job.output.output.energy
-            stress = static_job.output.output.stress
             static_run_job_dir = static_job.output.dir_name
             static_run_uuid = static_job.output.uuid
             prev_dir = static_job.output.dir_name
@@ -284,7 +283,6 @@ class BasePhononMaker(Maker, ABC):
             )
             jobs.append(compute_total_energy_job)
             total_dft_energy = compute_total_energy_job.output
-            stress = None
 
         # get a phonon object from phonopy
         displacements = generate_phonon_displacements(
@@ -349,7 +347,6 @@ class BasePhononMaker(Maker, ABC):
             born_run_uuid=born_run_uuid,
             optimization_run_job_dir=optimization_run_job_dir,
             optimization_run_uuid=optimization_run_uuid,
-            stress=stress,
             create_thermal_displacements=self.create_thermal_displacements,
             store_force_constants=self.store_force_constants,
             **self.generate_frequencies_eigenvectors_kwargs,

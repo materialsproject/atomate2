@@ -198,7 +198,6 @@ def generate_frequencies_eigenvectors(
     total_dft_energy: float,
     epsilon_static: Matrix3D = None,
     born: Matrix3D = None,
-    stress: Matrix3D = None,
     **kwargs,
 ) -> PhononBSDOSDoc:
     """
@@ -230,8 +229,6 @@ def generate_frequencies_eigenvectors(
         The high-frequency dielectric constant
     born: Matrix3D
         Born charges
-    stress: Optional[Matrix3D]
-        stress tensor
     kwargs: dict
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
     """
@@ -250,7 +247,6 @@ def generate_frequencies_eigenvectors(
         total_dft_energy=total_dft_energy,
         epsilon_static=epsilon_static,
         born=born,
-        stress=stress,
         **kwargs,
     )
 
