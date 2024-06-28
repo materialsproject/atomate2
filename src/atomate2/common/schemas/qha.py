@@ -50,7 +50,8 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     heat_capacity_P_numerical: Optional[list[float]] = Field(None, description="")
     heat_capacity_P_polyfit: Optional[list[float]] = Field(None, description="")
     gruneisen_temperature: Optional[list[float]] = Field(None, description="")
-
+    pressure: Optional[float] = Field(None, description="Pressure at GPA at which Gibb's energy was computed")
+    t_max: Optional[float] = Field(None, description="Maximum temperature in K until which Free energy volume curves are evaluated")
 
     @classmethod
     def from_phonon_runs(cls, structure: Structure,
@@ -59,7 +60,8 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
                          free_energies,
                          heat_capacities,
                          entropies,
-                         stresses,
+                         t_max=None,
+                         pressure=None,
                          **kwargs, ) -> Self:
         """Generate qha results.
 
@@ -69,13 +71,12 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         **kwargs:
             additional arguments
         """
-        # TODO: figure out how to treat the stresses!
 
         # put this into a schema and use this information there
         # generate plots and save the data in a schema
         qha = PhonopyQHA(volumes=np.array(volumes), electronic_energies=np.array(electronic_energies),
                          temperatures=np.array(temperatures), free_energy=np.array(free_energies),
-                         cv=np.array(heat_capacities), entropy=np.array(entropies))
+                         cv=np.array(heat_capacities), entropy=np.array(entropies), t_max=t_max, pressure=pressure)
 
         # create some plots here
         qha.plot_helmholtz_volume().savefig("helmholtz_volume.eps")
@@ -99,5 +100,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
                                   bulk_modulus_temperature=qha.bulk_modulus_temperature,
                                   heat_capacity_P_numerical=qha.heat_capacity_P_numerical,
                                   gruneisen_temperature=qha.gruneisen_temperature,
+                                  pressure=pressure,
+                                  t_max=t_max,
                                   )
 

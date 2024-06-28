@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.common.flows.eos import CommonEosMaker
-from atomate2.forcefields.jobs import CHGNetRelaxMaker, M3GNetRelaxMaker, MACERelaxMaker
+from atomate2.forcefields.jobs import CHGNetRelaxMaker, M3GNetRelaxMaker, MACERelaxMaker, CHGNetStaticMaker
 from atomate2.forcefields.flows.phonons import PhononMaker
 if TYPE_CHECKING:
     from pathlib import Path
@@ -49,13 +49,23 @@ class CHGNetQhaMaker(CommonQhaMaker):
         #    TODO: remove this when clash is fixed
         """
 
+    # copy this to the common maker as well
     name: str = "CHGNet QHA Maker"
     initial_relax_maker: Maker = field(default_factory=CHGNetRelaxMaker)
     # TODO understand why inheritance does not work here?
-    eos_relax_maker: Maker = field(default_factory=lambda: CHGNetRelaxMaker(relax_cell=False))
-    static_maker: Maker = None
-    phonon_maker:  Maker = field(default_factory=lambda: PhononMaker(bulk_relax_maker=CHGNetRelaxMaker(relax_cell=False, relax_kwargs={"fmax": 0.00001}) ))
+    eos_relax_maker: Maker = field(default_factory=lambda: CHGNetRelaxMaker(relax_cell=False, relax_kwargs={"fmax": 0.00001}))
+    # eos_maker_kwargs
+    # switch to initialize the static maker only
+    phonon_displacement_maker:  Maker = field(default_factory=CHGNetStaticMaker)
+    phonon_static_maker: Maker = field(default_factory=CHGNetStaticMaker)
+    phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
-    # postprocessor: EOSPostProcessor = field(default_factory=PostProcessEosEnergy)
-    # _store_transformation_information: bool = False
+    pressure: float|None = None
+    t_max: float|None =None
+    ignore_imaginary_modes:bool = False
+
+    def initialize_phonon_maker(self, phonon_displacement_maker, phonon_static_maker, bulk_relax_maker,
+                                phonon_maker_kwargs) -> PhononMaker | None:
+        return PhononMaker(phonon_displacement_maker=phonon_displacement_maker,static_energy_maker=phonon_static_maker,
+                           bulk_relax_maker=bulk_relax_maker, **phonon_maker_kwargs)

@@ -56,7 +56,7 @@ def get_phonon_jobs(phonon_maker, output: dict) -> Flow:
 @job(
     output_schema=PhononQHADoc,
 )
-def analyze_free_energy(phonon_outputs, structure) -> Flow:
+def analyze_free_energy(phonon_outputs, structure, t_max=None, pressure=None, ignore_imaginary_modes=False) -> Flow:
     """
     Job that analyzes the free energy from all phonon runs
 
@@ -89,25 +89,24 @@ def analyze_free_energy(phonon_outputs, structure) -> Flow:
         free_energies.append([])
         heat_capacities.append([])
         entropies.append([])
-        stress = []
 
         for vol, output in sorted(zip(volume,phonon_outputs)):
             # check if imaginary modes
-            if not output.has_imaginary_modes:
+            if (not output.has_imaginary_modes) or ignore_imaginary_modes:
+                # TODO: check all units!!!
                 electronic_energies[itemp].append(output.total_dft_energy * output.formula_units)
                 # convert from J/mol in kJ/mol
                 free_energies[itemp].append(output.free_energies[itemp] * output.formula_units/1000.0)
                 heat_capacities[itemp].append(output.heat_capacities[itemp] * output.formula_units)
                 entropies[itemp].append(output.entropies[itemp] * output.formula_units)
-
                 sorted_volume.append(output.volume_per_formula_unit * output.formula_units)
-                stress.append(output.stress)
+
 
 
 
     return PhononQHADoc.from_phonon_runs(volumes=sorted_volume, free_energies=free_energies, electronic_energies=electronic_energies,
-                                         entropies=entropies, heat_capacities=heat_capacities, stresses=stress,
-                                         temperatures=temperatures, structure=structure)
+                                         entropies=entropies, heat_capacities=heat_capacities,
+                                         temperatures=temperatures, structure=structure, t_max=t_max, pressure=pressure)
 
 # @job
 # def get_qha_results(fit_output):

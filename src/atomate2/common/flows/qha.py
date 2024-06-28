@@ -13,7 +13,7 @@ from atomate2.common.jobs.eos import PostProcessEosEnergy, apply_strain_to_struc
 from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.flows.phonons import BasePhononMaker
 from atomate2.common.jobs.qha import get_phonon_jobs, analyze_free_energy
-
+from abc import ABC, abstractmethod
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class CommonQhaMaker(Maker):
+class CommonQhaMaker(Maker,ABC):
     """
     Use the quasi-harmonic approximation.
 
@@ -64,13 +64,17 @@ class CommonQhaMaker(Maker):
     name: str = "QHA Maker"
     initial_relax_maker: Maker = None
     eos_relax_maker: Maker = None
-    static_maker: Maker = None
-    phonon_maker: Maker = None
+    # eos_maker_kwargs
+    # switch to initialize the static maker only
+    phonon_displacement_maker: Maker = None
+    phonon_static_maker: Maker = None
+    phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
-
-    # postprocessor: EOSPostProcessor = field(default_factory=PostProcessEosEnergy)
-    # _store_transformation_information: bool = False
+    t_max: float|None = None
+    pressure: float|None =None
+    # TODO:
+    ignore_imaginary_modes: bool = False
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
         """Run an EOS flow.
@@ -88,17 +92,29 @@ class CommonQhaMaker(Maker):
         """
         # In this way, one can easily exchange makers and enforce postprocessor None
         self.eos = CommonEosMaker(initial_relax_maker=self.initial_relax_maker, eos_relax_maker=self.eos_relax_maker,
-                                  static_maker=self.static_maker, postprocessor=None,
+                                  static_maker=None, postprocessor=None,
                                   number_of_frames=self.number_of_frames)
-
+        self.phonon_maker=self.initialize_phonon_maker(phonon_displacement_maker=self.phonon_displacement_maker, phonon_static_maker=self.phonon_static_maker, bulk_relax_maker=None, phonon_maker_kwargs=self.phonon_maker_kwargs)
         eos_job = self.eos.make(structure)
         # Todo: think about whether to keep the tight relax here
         phonon_jobs = get_phonon_jobs(self.phonon_maker, eos_job.output)
 
         # Todo: reuse postprocessor from equation of state to make fits of free energy curves
         # get free energy fits and perform qha
-        analysis = analyze_free_energy(phonon_jobs.output, structure=structure)
+        analysis = analyze_free_energy(phonon_jobs.output, structure=structure, t_max=self.t_max, pressure=self.pressure, ignore_imaginary_modes=self.ignore_imaginary_modes)
 
 
 
         return Flow([eos_job, phonon_jobs, analysis])
+
+
+    @abstractmethod
+    def initialize_phonon_maker(self, phonon_displacement_maker, phonon_static_maker, bulk_relax_maker, phonon_maker_kwargs)->BasePhononMaker|None:
+        """
+
+        :param phonon_displacement_maker:
+        :param phonon_static_maker:
+        :param bulk_relax_maker:
+        :param phonon_maker_kwargs:
+        :return:
+        """
