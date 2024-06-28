@@ -59,7 +59,8 @@ def compute_gruneisen_param(
 
     Requires phonopy yaml files from ground, expanded and contracted structures
 
-    phonopy_yaml_paths_dict: optimized pymatgen structure obj
+    phonopy_yaml_paths_dict: phonopy yaml files path for ground, expanded and
+        contracted structure phonon runs
     phonon_imaginary_modes_info: dict with bool indicating if structure
         has imaginary modes
     mesh: sampling mesh
