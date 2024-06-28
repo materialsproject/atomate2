@@ -1,4 +1,4 @@
-"""Schemas for phonon documents."""
+"""Schemas for qha documents."""
 
 from __future__ import annotations
 
