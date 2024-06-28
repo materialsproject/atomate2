@@ -181,6 +181,7 @@ def write_mrgddb_input_set(
     mrgis.write_input(directory=directory, make_dir=True, overwrite=False)
 
 def write_anaddb_input_set(
+    structure: Structure,
     input_set_generator: AnaddbInputGenerator,
     prev_outputs: str | Path | list[str] | None = None,
     directory: str | Path = ".",
@@ -197,8 +198,8 @@ def write_anaddb_input_set(
         Directory in which to write the abinit inputs.
     """
     anais = input_set_generator.get_input_set(
+        structure=structure,
         prev_outputs=prev_outputs,
-        workdir=directory,
     )
     if not anais.validate():
         raise RuntimeError(

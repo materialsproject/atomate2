@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import logging
 import os
+import numpy as np
 from datetime import datetime
 from pathlib import Path
 
 # from typing import Type, TypeVar, Union, Optional, List
 from typing import Any, Optional, Union
 
-from abipy.dfpt.ddb import DdbFile
+import abipy.core.abinit_units as abu
+from abipy.dfpt.anaddbnc import AnaddbNcFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.structure import StructureMetadata
@@ -25,67 +27,77 @@ logger = logging.getLogger(__name__)
 
 
 class CalculationOutput(BaseModel):
-    """Document defining Mrgddb calculation outputs.
+    """Document defining Anaddb calculation outputs.
 
     Parameters
     ----------
     structure: Structure
         The final pymatgen Structure of the system
+    dijk: list (3x3x3)
+        The conventional static SHG tensor in pm/V (Chi^(2)/2)
+    epsinf: list (3x3)
+        The electronic contribution to the dielectric tensor
     """
 
     structure: Union[Structure] = Field(
         None, description="The final structure from the calculation"
     )
+    dijk: Optional[list] = Field(
+        None, description="Conventional SHG tensor in pm/V (Chi^(2)/2)"
+    )
+    epsinf: Optional[list] = Field(
+        None, description="Electronic contribution to the dielectric tensor"
+    )
 
     @classmethod
-    def from_abinit_outddb(
+    def from_abinit_anaddb(
         cls,
-        output: DdbFile,
+        output: AnaddbNcFile,
     ) -> CalculationOutput:
         """
-        Create an Mrgddb output document from the merged Abinit out_DDB file.
+        Create an Anaddb output document from an AnaddbNcFile.
 
         Parameters
         ----------
-        output: .DdbFile
-            A DdbFile object.
+        output: .AnaddbNcFile
+            An AnaddbNcFile object.
 
         Returns
         -------
-        The Mrgddb calculation output document.
+        The Anaddb calculation output document.
         """
         structure = output.structure
+        dijk = list(output.dchide * 16 * np.pi**2 * abu.Bohr_Ang**2 \
+                    * 1e-8 * abu.eps0 / abu.e_Cb) # for pm/V units (SI)
+        epsinf = list(output.epsinf)
 
         return cls(
             structure=structure,
+            dijk=dijk,
+            epsinf=epsinf,
         )
 
 
 class Calculation(BaseModel):
-    """Full Mrgddb calculation (inputs) and outputs.
+    """Full anaddb calculation (inputs) and outputs.
 
     Parameters
     ----------
     dir_name: str
-        The directory for this Mrgddb calculation
-    ddb_version: str
-        DDB version
-    has_mrgddb_completed: .TaskState
-        Whether Mrgddb completed the merge successfully
+        The directory for this anaddb calculation
+    has_anaddb_completed: .TaskState
+        Whether anaddb completed the merge successfully
     output: .CalculationOutput
-        The Mrgddb calculation output
+        The anaddb calculation output
     completed_at: str
         Timestamp for when the merge was completed
     output_file_paths: Dict[str, str]
-        Paths (relative to dir_name) of the Mrgddb output files
+        Paths (relative to dir_name) of the anaddb output files
         associated with this calculation
     """
 
     dir_name: str = Field(None, description="The directory for this Abinit calculation")
-    ddb_version: str = Field(
-        None, description="Abinit version used to perform the calculation"
-    )
-    has_mrgddb_completed: TaskState = Field(
+    has_anaddb_completed: TaskState = Field(
         None, description="Whether Abinit completed the calculation successfully"
     )
     output: Optional[CalculationOutput] = Field(
@@ -108,11 +120,11 @@ class Calculation(BaseModel):
         cls,
         dir_name: Path | str,
         task_name: str,
-        abinit_outddb_file: Path | str = "out_DDB",
-        abinit_mrglog_file: Path | str = "run.log",
+        abinit_anaddb_file: Path | str = "out_anaddb.nc",
+        abinit_analog_file: Path | str = "run.log",
     ) -> tuple[Calculation, dict[AbinitObject, dict]]:
         """
-        Create a Mrgddb calculation document from a directory and file paths.
+        Create a anaddb calculation document from a directory and file paths.
 
         Parameters
         ----------
@@ -120,38 +132,38 @@ class Calculation(BaseModel):
             The directory containing the calculation outputs.
         task_name: str
             The task name.
-        abinit_outddb_file: Path or str
+        abinit_anaddb_file: Path or str
             Path to the merged DDB file, relative to dir_name.
-        abinit_mrglog_file: Path or str
-            Path to the main log of mrgddb job, relative to dir_name.
+        abinit_analog_file: Path or str
+            Path to the main log of anaddb job, relative to dir_name.
 
         Returns
         -------
         .Calculation
-            A Mrgddb calculation document.
+            A anaddb calculation document.
         """
         dir_name = Path(dir_name)
-        abinit_outddb_file = dir_name / abinit_outddb_file
+        abinit_anaddb_file = dir_name / abinit_anaddb_file
 
         output_doc = None
-        if abinit_outddb_file.exists():
-            abinit_outddb = DdbFile.from_file(abinit_outddb_file)
-            output_doc = CalculationOutput.from_abinit_outddb(abinit_outddb)
+        if abinit_anaddb_file.exists():
+            abinit_anaddb = AnaddbNcFile.from_file(abinit_anaddb_file)
+            output_doc = CalculationOutput.from_abinit_anaddb(abinit_anaddb)
 
             completed_at = str(
-                datetime.fromtimestamp(os.stat(abinit_outddb_file).st_mtime)
+                datetime.fromtimestamp(os.stat(abinit_anaddb_file).st_mtime)
             )
 
         report = None
-        has_mrgddb_completed = TaskState.FAILED
+        has_anaddb_completed = TaskState.FAILED
         try:
             report = get_event_report(
-                ofile=File(abinit_mrglog_file), mpiabort_file=File("whatever")
+                ofile=File(abinit_analog_file), mpiabort_file=File("whatever")
             )
-            if report.run_completed or abinit_outddb_file.exists():
-                # VT: abinit_outddb_file should not be necessary but
+            if report.run_completed or abinit_anaddb_file.exists():
+                # VT: abinit_anaddb_file should not be necessary but
                 # report.run_completed is False even when it completed...
-                has_mrgddb_completed = TaskState.SUCCESS
+                has_anaddb_completed = TaskState.SUCCESS
 
         except Exception as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"
@@ -161,8 +173,7 @@ class Calculation(BaseModel):
             cls(
                 dir_name=str(dir_name),
                 task_name=task_name,
-                ddb_version=str(abinit_outddb.version),
-                has_mrgddb_completed=has_mrgddb_completed,
+                has_anaddb_completed=has_anaddb_completed,
                 completed_at=completed_at,
                 output=output_doc,
                 event_report=report,
@@ -172,15 +183,25 @@ class Calculation(BaseModel):
 
 
 class OutputDoc(BaseModel):
-    """Summary of the outputs for a Mrgddb calculation.
+    """Summary of the outputs for a anaddb calculation.
 
     Parameters
     ----------
     structure: Structure
         The final pymatgen Structure of the final system
+    dijk: list (3x3x3)
+        The conventional static SHG tensor in pm/V (Chi^(2)/2)
+    epsinf: list (3x3)
+        The electronic contribution to the dielectric tensor
     """
 
     structure: Union[Structure] = Field(None, description="The output structure object")
+    dijk: Optional[list] = Field(
+        None, description="Conventional SHG tensor in pm/V (Chi^(2)/2)"
+    )
+    epsinf: Optional[list] = Field(
+        None, description="Electronic contribution to the dielectric tensor"
+    )
 
     @classmethod
     def from_abinit_calc_doc(cls, calc_doc: Calculation) -> OutputDoc:
@@ -189,7 +210,7 @@ class OutputDoc(BaseModel):
         Parameters
         ----------
         calc_doc: .Calculation
-            A Mrgddb calculation document.
+            A anaddb calculation document.
 
         Returns
         -------
@@ -198,11 +219,13 @@ class OutputDoc(BaseModel):
         """
         return cls(
             structure=calc_doc.output.structure,
+            dijk=calc_doc.output.dijk,
+            epsinf=calc_doc.output.epsinf,
         )
 
 
-class MrgddbTaskDoc(StructureMetadata):
-    """Definition of task document about an Mrgddb Job.
+class AnaddbTaskDoc(StructureMetadata):
+    """Definition of task document about an anaddb Job.
 
     Parameters
     ----------
@@ -259,8 +282,8 @@ class MrgddbTaskDoc(StructureMetadata):
         dir_name: Path | str,
         additional_fields: dict[str, Any] = None,
         **abinit_calculation_kwargs,
-    ) -> MrgddbTaskDoc:
-        """Create a task document from a directory containing Abinit/Mrgddb files.
+    ) -> AnaddbTaskDoc:
+        """Create a task document from a directory containing Abinit/anaddb files.
 
         Parameters
         ----------
@@ -274,7 +297,7 @@ class MrgddbTaskDoc(StructureMetadata):
 
         Returns
         -------
-        .MrgddbTaskDoc
+        .AnaddbTaskDoc
             A task document for the calculation.
         """
         logger.info(f"Getting task doc in: {dir_name}")
@@ -333,7 +356,7 @@ class MrgddbTaskDoc(StructureMetadata):
             # "input": InputDoc.from_abinit_calc_doc(calcs_reversed[0]),
             "meta_structure": calcs_reversed[-1].output.structure,
             "output": OutputDoc.from_abinit_calc_doc(calcs_reversed[-1]),
-            "state": calcs_reversed[-1].has_mrgddb_completed,
+            "state": calcs_reversed[-1].has_anaddb_completed,
             "structure": calcs_reversed[-1].output.structure,
             "tags": tags,
         }
@@ -354,10 +377,10 @@ def _find_abinit_files(
         abinit_files = {}
         for file in files:
             # Here we make assumptions about the output file naming
-            if file.match(f"*outdata/out_DDB{suffix}*"):
-                abinit_files["abinit_outddb_file"] = Path(file).relative_to(path)
+            if file.match(f"*outdata/out_anaddb.nc{suffix}*"):
+                abinit_files["abinit_anaddb_file"] = Path(file).relative_to(path)
             elif file.match(f"*run.log{suffix}*"):
-                abinit_files["abinit_mrglog_file"] = Path(file).relative_to(path)
+                abinit_files["abinit_analog_file"] = Path(file).relative_to(path)
 
         return abinit_files
 

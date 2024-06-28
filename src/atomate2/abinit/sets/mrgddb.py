@@ -139,7 +139,7 @@ class MrgddbInputGenerator(AbiBroadInputGenerator):
         be linked. An example is (f"{NSCF}:WFK",).
     """
 
-    calc_type: str = "mrgddb_merge"
+    calc_type: str = "mrgddb"
     prev_outputs_deps: tuple = (f"{DDE}:DDB", f"{DTE}:DDB")
 
     def get_input_set(

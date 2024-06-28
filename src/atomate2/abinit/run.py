@@ -129,7 +129,7 @@ def run_anaddb(
     if mpirun_cmd:
         command.extend(mpirun_cmd.split())
         command.extend(["-n", "1"])
-    command.extend([anaddb_cmd, "--nostrict"])
+    command.extend([anaddb_cmd, "anaddb.in"])
     start_time = start_time or time.time()
 
     max_end_time = 0.0
@@ -147,7 +147,8 @@ def run_anaddb(
         open(LOG_FILE_NAME, "w") as stdout,
         open(STDERR_FILE_NAME, "w") as stderr,
     ):
-        process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)  # noqa: S603
+        #process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)  # noqa: S603
+        process = subprocess.Popen(command, stdout=stdout, stderr=stderr)  # noqa: S603
 
         if wall_time is not None:
             while True:

@@ -9,6 +9,7 @@ from jobflow import Flow, Maker
 
 from atomate2.abinit.jobs.core import StaticMaker
 from atomate2.abinit.jobs.mrgddb import MrgddbMaker
+from atomate2.abinit.jobs.anaddb import AnaddbMaker, AnaddbDfptDteMaker
 from atomate2.abinit.jobs.response import (
     DdeMaker,
     DdkMaker,
@@ -79,6 +80,7 @@ class DfptFlowMaker(Maker):
     )  # | VT: replace by bool?
     dte_maker: BaseAbinitMaker | None = field(default_factory=DteMaker)  # |
     mrgddb_maker: Maker | None = field(default_factory=MrgddbMaker)  # |
+    anaddb_maker: Maker | None = field(default_factory=AnaddbMaker)  # |
     use_ddk_sym: bool | None = False
     use_dde_sym: bool | None = False
     dte_skip_permutations: bool | None = False
@@ -100,6 +102,10 @@ class DfptFlowMaker(Maker):
             raise ValueError("DDE caculations are required to produce \
                 DDB files to be merged. Either provide a DDE Maker \
                 or remove the MrgddbMaker.")
+        if self.anaddb_maker and not self.mrgddb_maker:
+            raise ValueError("Anaddb should be used to analyze a merged DDB. \
+                Either provide a Mrgddb Maker \
+                or remove the AnaddbMaker.")
 
 
     def make(
@@ -193,6 +199,16 @@ class DfptFlowMaker(Maker):
 
             jobs.append(mrgddb_job)
 
+        if self.anaddb_maker:
+            # analyze a merged DDB.
+
+            anaddb_job = self.anaddb_maker.make(
+                structure=mrgddb_job.output.structure,
+                prev_outputs=[[mrgddb_job.output.dir_name]],
+            )
+
+            jobs.append(anaddb_job)
+
         # TODO: implement the possibility of other DFPT WFs (phonons,...)
         # if self.wfq_maker:
         #     ...
@@ -214,6 +230,7 @@ class ShgFlowMaker(DfptFlowMaker):
     """
     
     name: str = "DFPT Chi2 SHG"
+    anaddb_maker: Maker | None = field(default_factory=AnaddbDfptDteMaker)
 
     # VT: a post-init is the only way I found to apply these changes 
     # to the static job
