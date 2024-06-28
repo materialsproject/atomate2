@@ -45,21 +45,23 @@ class CommonQhaMaker(Maker, ABC):
     ----------
 
     name: str
-    initial_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker
-    eos_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker
-    phonon_displacement_maker: ForceFieldRelaxMaker | BaseVaspMaker
-    phonon_static_maker: ForceFieldRelaxMaker | BaseVaspMaker
+        Name of the flows produced by this maker.
+    initial_relax_maker: .ForceFieldRelaxMaker | .BaseVaspMaker | None
+        Maker to relax the input structure.
+    eos_relax_maker: .ForceFieldRelaxMaker | .BaseVaspMaker | None
+        Maker to relax deformed structures for the EOS fit.
+    phonon_displacement_maker: .ForceFieldStaticMaker | .BaseVaspMaker | None
+    phonon_static_maker: .ForceFieldStaticMaker | .BaseVaspMaker | None
     phonon_maker_kwargs: dict
     linear_strain: tuple[float, float]
+        Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames: int
+        Number of strain calculations to do for EOS fit, default = 6.
     t_max: float | None
+
     pressure: float | None
     ignore_imaginary_modes: bool
 
-    name : str
-        Name of the flows produced by this maker.
-    initial_relax_maker : .Maker | None
-        Maker to relax the input structure, defaults to None (no initial relaxation).
     eos_relax_maker : .Maker
         Maker to relax deformed structures for the EOS fit.
     phonon_static_maker : .Maker | None
@@ -95,6 +97,7 @@ class CommonQhaMaker(Maker, ABC):
     ignore_imaginary_modes: bool = False
     # TODO: implement advanced handling of
     #  imaginary modes in phonon runs (i.e., fitting procedures)
+    # TODO: add option to change eos fit
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
         """Run an EOS flow.
