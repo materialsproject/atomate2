@@ -1,9 +1,7 @@
 """Schemas for qha documents."""
 
-from __future__ import annotations
-
 import logging
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 from emmet.core.structure import StructureMetadata
@@ -102,7 +100,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         entropies: list[list[float]],
         t_max: float = None,
         pressure: float = None,
-        formula_units: int | None = None,
+        formula_units: Union[int, None] = None,
     ) -> Self:
         """Generate qha results.
 
