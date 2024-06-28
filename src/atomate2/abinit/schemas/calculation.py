@@ -4,12 +4,9 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, Union
-
-if TYPE_CHECKING:
-    pass
+from typing import Optional, Union
 
 from abipy.abio.outputs import AbinitOutputFile
 from abipy.electrons.gsr import GsrFile
@@ -19,6 +16,7 @@ from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
+from typing_extensions import Self
 
 from atomate2.abinit.utils.common import (
     LOG_FILE_NAME,
@@ -122,9 +120,8 @@ class CalculationOutput(BaseModel):
     def from_abinit_gsr(
         cls,
         output: GsrFile,  # Must use auto_load kwarg when passed
-    ) -> CalculationOutput:
-        """
-        Create an Abinit output document from Abinit outputs.
+    ) -> Self:
+        """Create an Abinit output document from Abinit outputs.
 
         Parameters
         ----------
@@ -299,7 +296,9 @@ class Calculation(BaseModel):
                     exists. This means that there is no output, \
                     which is not normal.")
 
-        completed_at = str(datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime))
+        completed_at = str(
+            datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime, tz=timezone.utc)
+        )
 
         report = None
         has_abinit_completed = TaskState.FAILED
@@ -316,7 +315,7 @@ class Calculation(BaseModel):
             if report.run_completed:
                 has_abinit_completed = TaskState.SUCCESS
 
-        except Exception as exc:
+        except (ValueError, RuntimeError, Exception) as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
 

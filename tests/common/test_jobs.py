@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 from jobflow import run_locally
 from pymatgen.core import Structure
@@ -44,7 +44,9 @@ def test_retrieve_structure_from_materials_project():
     assert isinstance(output, Structure)
 
     # test stored data is in expected format
-    datetime.strptime(stored_data["database_version"], "%Y.%m.%d")
+    datetime.strptime(stored_data["database_version"], "%Y.%m.%d").replace(
+        tzinfo=timezone.utc
+    )
     assert stored_data["task_id"].startswith("mp-")
 
     job = retrieve_structure_from_materials_project(

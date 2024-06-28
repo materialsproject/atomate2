@@ -87,11 +87,11 @@ def test_abinit_input_set_write_input(abinit_test_dir):
         assert os.path.isdir("testdir/tmpdata")
         assert "run.abi" in dirlist
         assert "abinit_input.json" in dirlist
-        with open("testdir/run.abi") as f:
-            abistr = f.read()
+        with open("testdir/run.abi") as file:
+            abistr = file.read()
             assert "ecut" in abistr
-        with open("testdir/abinit_input.json") as f:
-            abijsonstr = f.read()
+        with open("testdir/abinit_input.json") as file:
+            abijsonstr = file.read()
             assert "@module" in abijsonstr
         with pytest.raises(FileExistsError):
             ais.write_input("testdir", overwrite=False)
@@ -132,8 +132,8 @@ def test_abinit_input_set_write_input(abinit_test_dir):
         assert os.path.exists(in_den)
         assert os.path.isfile(in_den)
         assert not os.path.islink(in_den)
-        with open("testdir/run.abi") as f:
-            abistr = f.read()
+        with open("testdir/run.abi") as file:
+            abistr = file.read()
             assert "irdden 1" in abistr
         del ais.abinit_input["irdden"]
 
@@ -367,9 +367,9 @@ def test_generator_set_kpt_vars(abinit_test_dir):
     abinit_input = load_abinit_input(
         os.path.join(abinit_test_dir, "abinit_inputs"), fname="abinit_input_Si.json"
     )
-    aig._set_kpt_vars(abinit_input, {"grid_density": 300})
+    aig._set_kpt_vars(abinit_input, {"grid_density": 300})  # noqa: SLF001
     assert np.array_equal(abinit_input["ngkpt"], [5, 5, 5])
 
-    aig._set_kpt_vars(abinit_input, {"line_density": 10})
+    aig._set_kpt_vars(abinit_input, {"line_density": 10})  # noqa: SLF001
     assert abinit_input["nkpt"] == 92
     assert "ngkpt" not in abinit_input

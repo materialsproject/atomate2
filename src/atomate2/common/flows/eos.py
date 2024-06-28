@@ -62,8 +62,7 @@ class CommonEosMaker(Maker):
     _store_transformation_information: bool = False
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
-        """
-        Run an EOS flow.
+        """Run an EOS flow.
 
         Parameters
         ----------

@@ -11,6 +11,7 @@ from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 from pymatgen.core.trajectory import Trajectory
+from typing_extensions import Self
 
 from atomate2.forcefields import MLFF
 
@@ -54,6 +55,16 @@ class InputDoc(BaseModel):
     relax_cell: bool = Field(
         None,
         description="Whether cell lattice was allowed to change during relaxation.",
+    )
+    fix_symmetry: bool = Field(
+        None,
+        description=(
+            "Whether to fix the symmetry of the structure during relaxation. "
+            "Refines the symmetry of the initial structure."
+        ),
+    )
+    symprec: float = Field(
+        None, description="Tolerance for symmetry finding in case of fix_symmetry."
     )
     steps: int = Field(
         None, description="Maximum number of steps allowed during relaxation."
@@ -151,12 +162,13 @@ class ForceFieldTaskDocument(StructureMetadata):
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
+        fix_symmetry: bool = False,
+        symprec: float = 1e-2,
         ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "structure"),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         **task_document_kwargs,
-    ) -> "ForceFieldTaskDocument":
-        """
-        Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
+    ) -> Self:
+        """Create a ForceFieldTaskDocument for a Task that has ASE-compatible outputs.
 
         Parameters
         ----------
@@ -166,6 +178,10 @@ class ForceFieldTaskDocument(StructureMetadata):
             The outputted results from the task.
         relax_cell : bool
             Whether the cell shape/volume was allowed to change during the task.
+        fix_symmetry : bool
+            Whether to fix the symmetry of the structure during relaxation.
+        symprec : float
+            Tolerance for symmetry finding in case of fix_symmetry.
         steps : int
             Maximum number of ionic steps allowed during relaxation.
         relax_kwargs : dict
@@ -199,6 +215,8 @@ class ForceFieldTaskDocument(StructureMetadata):
         input_doc = InputDoc(
             structure=input_structure,
             relax_cell=relax_cell,
+            fix_symmetry=fix_symmetry,
+            symprec=symprec,
             steps=steps,
             relax_kwargs=relax_kwargs,
             optimizer_kwargs=optimizer_kwargs,

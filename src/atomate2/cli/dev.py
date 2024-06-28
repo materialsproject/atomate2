@@ -141,7 +141,7 @@ def vasp_test_data(test_dir: str | Path, additional_file: list[str]) -> None:
         [f"  {v}  ->  {k}" for k, v in original_mapping.items()]
     )
 
-    run_vasp_kwargs = {k: {"incar_settings": ["NSW", "ISMEAR"]} for k in mapping}
+    run_vasp_kwargs = {key: {"incar_settings": ["NSW", "ISMEAR"]} for key in mapping}
     run_vasp_kwargs_str = pformat(run_vasp_kwargs).replace("\n", "\n    ")
 
     test_function_str = f"""Test files generated in test_data.
@@ -221,8 +221,8 @@ def abinit_script_maker() -> None:
         "save_abinit_maker(maker)",
         "",
     ]
-    with open(script_fname, "w") as f:
-        f.write("\n".join(out))
+    with open(script_fname, "w") as file:
+        file.write("\n".join(out))
 
 
 @dev.command(context_settings={"help_option_names": ["-h", "--help"]})
@@ -584,17 +584,17 @@ class Test{maker_name}:
 
 def save_abinit_maker(maker: Maker) -> None:
     """Save maker, the script used to create it and additional metadata."""
-    import datetime
     import inspect
     import json
     import shutil
     import subprocess
     import warnings
+    from datetime import datetime, timezone
 
     caller_frame = inspect.stack()[1]
     caller_filename_full = caller_frame.filename
-    with open(caller_filename_full) as f:
-        script_str = f.read()
+    with open(caller_filename_full) as file:
+        script_str = file.read()
     git = shutil.which("git")
     author = None
     author_mail = None
@@ -627,16 +627,16 @@ def save_abinit_maker(maker: Maker) -> None:
                 "You may want to manually set it in the 'maker.json' file.",
                 stacklevel=2,
             )
-    with open("maker.json", "w") as f:
+    with open("maker.json", "w") as file:
         json.dump(
             {
                 "author": author,
                 "author_mail": author_mail,
-                "created_on": str(datetime.datetime.now()),
+                "created_on": str(datetime.now(tz=timezone.utc)),
                 "maker": jsanitize(maker.as_dict()),
                 "script": script_str,
             },
-            f,
+            file,
         )
 
 
