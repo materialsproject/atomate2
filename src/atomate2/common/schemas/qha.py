@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     """Collection of all data produced by the phonon workflow."""
 
+    # TODO: think about normalization. At the moment, it is not per formula unit
+
     structure: Optional[Structure] = Field(
         None, description="Structure of Materials Project."
     )
@@ -27,14 +29,38 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         " and other properties have been computed",
     )
 
-    bulk_modulus: Optional[list[float]] = Field(None, description="")
-    thermal_expansion: Optional[list[float]] = Field(None, description="")
-    helmholtz_volume: Optional[list[list[float]]] = Field(None, description="")
-    volume_temperature: Optional[list[float]] = Field(None, description="")
-    gibbs_temperature: Optional[list[float]] = Field(None, description="")
-    bulk_modulus_temperature: Optional[list[float]] = Field(None, description="")
-    heat_capacity_p_numerical: Optional[list[float]] = Field(None, description="")
-    gruneisen_temperature: Optional[list[float]] = Field(None, description="")
+    bulk_modulus: Optional[list[float]] = Field(
+        None, description="Bulk modulus computed without phonon contribution."
+    )
+    thermal_expansion: Optional[list[float]] = Field(
+        None,
+        description="Thermal expansion coefficients at temperatures."
+        "Shape=(temperatures, ). ",
+    )
+    helmholtz_volume: Optional[list[list[float]]] = Field(
+        None,
+        description="Free_energies at temperatures and volumes."
+        "shape (temperatures, volumes)",
+    )
+    volume_temperature: Optional[list[float]] = Field(
+        None, description="Volumes at temperatures." "Shape: (temperatures, )"
+    )
+    gibbs_temperature: Optional[list[float]] = Field(
+        None,
+        description="Gibbs free energies at temperatures." "Shape: (temperatures, )",
+    )
+    bulk_modulus_temperature: Optional[list[float]] = Field(
+        None, description="Bulk modulus at temperature." "Shape: (temperatures, )"
+    )
+    heat_capacity_p_numerical: Optional[list[float]] = Field(
+        None,
+        description="Heat capacities at constant pressure at temperatures."
+        "Shape: (temperatures, )",
+    )
+    gruneisen_temperature: Optional[list[float]] = Field(
+        None,
+        description="Gruneisen parameters at temperatures." "Shape: (temperatures, )",
+    )
     pressure: Optional[float] = Field(
         None, description="Pressure at GPA at which Gibb's energy was computed"
     )
@@ -43,6 +69,23 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         description="Maximum temperature in K up to"
         " which free energy volume curves are evaluated",
     )
+    volumes: Optional[list[float]] = Field(None, description="Volumes in Angstrom^3.")
+    free_energies: Optional[list[list[float]]] = Field(
+        None,
+        description="List of free energies in J/mol for per formula unit. "
+        "Shape: (temperatuers, volumes)",
+    )
+    heat_capacities: Optional[list[list[float]]] = Field(
+        None,
+        description="List of heat capacities in J/K/mol  per formula unit. "
+        "Shape: (temperatuers, volumes)",
+    )
+    entropies: Optional[list[list[float]]] = Field(
+        None,
+        description="List of entropies in J/(K*mol) per formula unit. "
+        "Shape: (temperatuers, volumes) ",
+    )
+    formula_units: Optional[int] = Field(None, description="Formula units")
 
     @classmethod
     def from_phonon_runs(
@@ -56,6 +99,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         entropies: list[list[float]],
         t_max: float = None,
         pressure: float = None,
+        formula_units: int | None = None,
     ) -> Self:
         """Generate qha results.
 
@@ -111,4 +155,10 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
             gruneisen_temperature=qha.gruneisen_temperature,
             pressure=pressure,
             t_max=t_max,
+            temperatures=temperatures,
+            volumes=volumes,
+            free_energies=np.array(np.array(free_energies) * 1000.0).tolist(),
+            heat_capacities=heat_capacities,
+            entropies=entropies,
+            formula_units=formula_units,
         )

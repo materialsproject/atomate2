@@ -180,13 +180,15 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         " and other properties have been computed",
     )
 
-    total_dft_energy: Optional[float] = Field("total DFT energy per formula unit in eV")
-
-    volume_per_formula_unit: Optional[float] = Field(
-        "volume per formula unit in Angstrom**3"
+    total_dft_energy: Optional[float] = Field(
+        None, description="total DFT energy per formula unit in eV"
     )
 
-    formula_units: Optional[int] = Field("Formula units per cell")
+    volume_per_formula_unit: Optional[float] = Field(
+        None, description="volume per formula unit in Angstrom**3"
+    )
+
+    formula_units: Optional[int] = Field(None, description="Formula units per cell")
 
     has_imaginary_modes: Optional[bool] = Field(
         None, description="if true, structure has imaginary modes"
@@ -207,26 +209,33 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         None, description="The high-frequency dielectric constant"
     )
 
-    supercell_matrix: Matrix3D = Field("matrix describing the supercell")
-    primitive_matrix: Matrix3D = Field(
-        "matrix describing relationship to primitive cell"
+    supercell_matrix: Optional[Matrix3D] = Field(
+        None, description="matrix describing the supercell"
+    )
+    primitive_matrix: Optional[Matrix3D] = Field(
+        None, description="matrix describing relationship to primitive cell"
     )
 
-    code: str = Field("String describing the code for the computation")
+    code: Optional[str] = Field(
+        None, description="String describing the code for the computation"
+    )
 
-    phonopy_settings: PhononComputationalSettings = Field(
-        "Field including settings for Phonopy"
+    phonopy_settings: Optional[PhononComputationalSettings] = Field(
+        None, description="Field including settings for Phonopy"
     )
 
     thermal_displacement_data: Optional[ThermalDisplacementData] = Field(
-        "Includes all data of the computation of the thermal displacements"
+        None,
+        description="Includes all data of the computation of the thermal displacements",
     )
 
     jobdirs: Optional[PhononJobDirs] = Field(
-        "Field including all relevant job directories"
+        None, description="Field including all relevant job directories"
     )
 
-    uuids: Optional[PhononUUIDs] = Field("Field including all relevant uuids")
+    uuids: Optional[PhononUUIDs] = Field(
+        None, description="Field including all relevant uuids"
+    )
 
     @classmethod
     def from_forces_born(

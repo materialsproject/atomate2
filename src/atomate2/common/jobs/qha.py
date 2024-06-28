@@ -67,7 +67,7 @@ def analyze_free_energy(
     heat_capacities: list[list[float]] = []
     entropies: list[list[float]] = []
     temperatures: list[float] = []
-
+    formula_units: list[int] = []
     volume: list[float] = [
         output.volume_per_formula_unit * output.formula_units
         for output in phonon_outputs
@@ -84,20 +84,16 @@ def analyze_free_energy(
         for _, output in sorted(zip(volume, phonon_outputs)):
             # check if imaginary modes
             if (not output.has_imaginary_modes) or ignore_imaginary_modes:
-                electronic_energies[itemp].append(
-                    output.total_dft_energy * output.formula_units
-                )
+                electronic_energies[itemp].append(output.total_dft_energy)
                 # convert from J/mol in kJ/mol
-                free_energies[itemp].append(
-                    output.free_energies[itemp] * output.formula_units / 1000.0
-                )
-                heat_capacities[itemp].append(
-                    output.heat_capacities[itemp] * output.formula_units
-                )
-                entropies[itemp].append(output.entropies[itemp] * output.formula_units)
-                sorted_volume.append(
-                    output.volume_per_formula_unit * output.formula_units
-                )
+                free_energies[itemp].append(output.free_energies[itemp] / 1000.0)
+                heat_capacities[itemp].append(output.heat_capacities[itemp])
+                entropies[itemp].append(output.entropies[itemp])
+                sorted_volume.append(output.volume_per_formula_unit)
+                formula_units.append(output.formula_units)
+
+    if len(set(formula_units)) != 1:
+        raise ValueError("There should be only one formula unit.")
 
     return PhononQHADoc.from_phonon_runs(
         volumes=sorted_volume,
@@ -109,4 +105,5 @@ def analyze_free_energy(
         structure=structure,
         t_max=t_max,
         pressure=pressure,
+        formula_units=next(iter(set(formula_units))),
     )
