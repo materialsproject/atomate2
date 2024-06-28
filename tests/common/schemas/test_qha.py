@@ -42,11 +42,11 @@ def test_analyze_free_energy(clean_dir, test_dir):
     # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     # POSSIBILITY OF SUCH DAMAGE.
 
-    structure = Structure.from_file(f"{test_dir}/forcefields/qha/POSCAR")
+    structure = Structure.from_file(f"{test_dir}/qha/POSCAR")
 
     volumes = []
     energies = []
-    with open(f"{test_dir}/forcefields/qha/e-v.dat") as f:
+    with open(f"{test_dir}/qha/e-v.dat") as f:
         for line in f:
             v, e = line.split()
             volumes.append(float(v))
@@ -54,7 +54,7 @@ def test_analyze_free_energy(clean_dir, test_dir):
 
     phonon_docs = []
     for index, energy, volume in zip(range(-5, 6), energies, volumes):
-        filename = f"{test_dir}/forcefields/qha/thermal_properties.yaml-{index!s}"
+        filename = f"{test_dir}/qha/thermal_properties.yaml-{index!s}"
         yaml = YAML()
         with open(filename) as f:
             thermal_properties = yaml.load(f)["thermal_properties"]
