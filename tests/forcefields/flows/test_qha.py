@@ -1,21 +1,11 @@
-import os
 from pathlib import Path
 
 import torch
 from jobflow import run_locally
-from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
-from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
-from pymatgen.phonon.dos import PhononDos
 
-from atomate2.common.schemas.phonons import (
-    PhononBSDOSDoc,
-    PhononComputationalSettings,
-    PhononJobDirs,
-    PhononUUIDs,
-)
-from atomate2.forcefields.flows.qha import CHGNetQhaMaker
 from atomate2.common.schemas.qha import PhononQHADoc
+from atomate2.forcefields.flows.qha import CHGNetQhaMaker
 
 
 def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
@@ -23,7 +13,20 @@ def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
     torch.set_default_dtype(torch.float32)
 
     # to do: make the workflow more adaptable, try to reduce run times
-    flow = CHGNetQhaMaker(number_of_frames=5, ignore_imaginary_modes=True, phonon_maker_kwargs={"min_length":10, "store_force_constants":False, "generate_frequencies_eigenvectors_kwargs":{"tol_imaginary_modes": 5e-1, "tmin":0, "tmax":1000, "tstep":10}}).make(si_structure)
+    flow = CHGNetQhaMaker(
+        number_of_frames=5,
+        ignore_imaginary_modes=True,
+        phonon_maker_kwargs={
+            "min_length": 10,
+            "store_force_constants": False,
+            "generate_frequencies_eigenvectors_kwargs": {
+                "tol_imaginary_modes": 5e-1,
+                "tmin": 0,
+                "tmax": 1000,
+                "tstep": 10,
+            },
+        },
+    ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)

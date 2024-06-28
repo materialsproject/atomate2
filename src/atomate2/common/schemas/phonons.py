@@ -184,7 +184,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
     stress: Optional[Matrix3D] = Field("The stress on the structure.")
 
-    volume_per_formula_unit: Optional[float] = Field("volume per formula unit in Angstrom**3")
+    volume_per_formula_unit: Optional[float] = Field(
+        "volume per formula unit in Angstrom**3"
+    )
 
     formula_units: Optional[int] = Field("Formula units per cell")
 
@@ -473,10 +475,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             total_dft_energy / formula_units if total_dft_energy is not None else None
         )
 
-        volume_per_formula_unit = (
-            structure.volume / formula_units
-        )
-
+        volume_per_formula_unit = structure.volume / formula_units
 
         return cls.from_structure(
             structure=structure,

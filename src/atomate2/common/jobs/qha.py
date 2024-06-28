@@ -2,31 +2,17 @@
 
 from __future__ import annotations
 
-import contextlib
 import logging
-import warnings
 from typing import TYPE_CHECKING
 
-import numpy as np
 from jobflow import Flow, Response, job
-from phonopy import Phonopy
-from phonopy.api_qha import PhonopyQHA
-from pymatgen.core import Structure
-from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
-from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
-from pymatgen.phonon.dos import PhononDos
-from pymatgen.transformations.advanced_transformations import (CubicSupercellTransformation, )
-from atomate2.common.jobs.eos import PostProcessEosEnergy
-from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
+
 from atomate2.common.schemas.qha import PhononQHADoc
+
 if TYPE_CHECKING:
-    from pathlib import Path
+    from pymatgen.core.structure import Structure
 
-    from emmet.core.math import Matrix3D
-
-    from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.forcefields.jobs import ForceFieldStaticMaker
-    from atomate2.vasp.jobs.base import BaseVaspMaker
+    from atomate2.common.schemas.phonons import PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +42,13 @@ def get_phonon_jobs(phonon_maker, output: dict) -> Flow:
 @job(
     output_schema=PhononQHADoc,
 )
-def analyze_free_energy(phonon_outputs, structure, t_max=None, pressure=None, ignore_imaginary_modes=False) -> Flow:
+def analyze_free_energy(
+    phonon_outputs: list[PhononBSDOSDoc],
+    structure: Structure,
+    t_max: float = None,
+    pressure: float = None,
+    ignore_imaginary_modes: bool = False,
+) -> Flow:
     """
     Job that analyzes the free energy from all phonon runs
 
@@ -67,16 +59,15 @@ def analyze_free_energy(phonon_outputs, structure, t_max=None, pressure=None, ig
     structure: Structure object
         Corresponding structure object.
     """
-
     # only add free energies if there are no imaginary modes
     # tolerance has to be tested
-    electronic_energies = []
-    free_energies = []
-    heat_capacities = []
-    entropies = []
-    temperatures = []
+    electronic_energies: list[list[float]] = []
+    free_energies: list[list[float]] = []
+    heat_capacities: list[list[float]] = []
+    entropies: list[list[float]] = []
+    temperatures: list[float] = []
 
-    volume=[]
+    volume: list[float] = []
     for output in phonon_outputs:
         # check if imaginary modes
         if not output.has_imaginary_modes:
@@ -90,23 +81,37 @@ def analyze_free_energy(phonon_outputs, structure, t_max=None, pressure=None, ig
         heat_capacities.append([])
         entropies.append([])
 
-        for vol, output in sorted(zip(volume,phonon_outputs)):
+        for vol, output in sorted(zip(volume, phonon_outputs)):
             # check if imaginary modes
             if (not output.has_imaginary_modes) or ignore_imaginary_modes:
                 # TODO: check all units!!!
-                electronic_energies[itemp].append(output.total_dft_energy * output.formula_units)
+                electronic_energies[itemp].append(
+                    output.total_dft_energy * output.formula_units
+                )
                 # convert from J/mol in kJ/mol
-                free_energies[itemp].append(output.free_energies[itemp] * output.formula_units/1000.0)
-                heat_capacities[itemp].append(output.heat_capacities[itemp] * output.formula_units)
+                free_energies[itemp].append(
+                    output.free_energies[itemp] * output.formula_units / 1000.0
+                )
+                heat_capacities[itemp].append(
+                    output.heat_capacities[itemp] * output.formula_units
+                )
                 entropies[itemp].append(output.entropies[itemp] * output.formula_units)
-                sorted_volume.append(output.volume_per_formula_unit * output.formula_units)
+                sorted_volume.append(
+                    output.volume_per_formula_unit * output.formula_units
+                )
 
+    return PhononQHADoc.from_phonon_runs(
+        volumes=sorted_volume,
+        free_energies=free_energies,
+        electronic_energies=electronic_energies,
+        entropies=entropies,
+        heat_capacities=heat_capacities,
+        temperatures=temperatures,
+        structure=structure,
+        t_max=t_max,
+        pressure=pressure,
+    )
 
-
-
-    return PhononQHADoc.from_phonon_runs(volumes=sorted_volume, free_energies=free_energies, electronic_energies=electronic_energies,
-                                         entropies=entropies, heat_capacities=heat_capacities,
-                                         temperatures=temperatures, structure=structure, t_max=t_max, pressure=pressure)
 
 # @job
 # def get_qha_results(fit_output):

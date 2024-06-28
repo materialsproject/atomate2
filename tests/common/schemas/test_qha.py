@@ -1,12 +1,12 @@
 import yaml
 from jobflow import run_locally
+from pymatgen.core.structure import Structure
 from yaml import CLoader as Loader
 
 from atomate2.common.jobs.phonons import PhononBSDOSDoc
-from atomate2.common.jobs.qha import PhononQHADoc
-from atomate2.common.jobs.qha import analyze_free_energy
+from atomate2.common.jobs.qha import PhononQHADoc, analyze_free_energy
 
-from pymatgen.core.structure import Structure
+
 def test_analyze_free_energy(clean_dir, test_dir):
     # The following code and the test files have been adapted from Phonopy
     # Copyright (C) 2015 Atsushi Togo
@@ -43,7 +43,7 @@ def test_analyze_free_energy(clean_dir, test_dir):
     # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     # POSSIBILITY OF SUCH DAMAGE.
 
-    structure=Structure.from_file(f"{test_dir}/forcefields/qha/POSCAR")
+    structure = Structure.from_file(f"{test_dir}/forcefields/qha/POSCAR")
 
     volumes = []
     energies = []
@@ -54,19 +54,29 @@ def test_analyze_free_energy(clean_dir, test_dir):
 
     phonon_docs = []
     for index, energy, volume in zip(range(-5, 6), energies, volumes):
-        filename = f"{test_dir}/forcefields/qha/thermal_properties.yaml-{str(index)}"
-        thermal_properties = yaml.load(open(filename), Loader=Loader)["thermal_properties"]
+        filename = f"{test_dir}/forcefields/qha/thermal_properties.yaml-{index!s}"
+        thermal_properties = yaml.load(open(filename), Loader=Loader)[
+            "thermal_properties"
+        ]
         temperatures = [v["temperature"] for v in thermal_properties]
         cv = [v["heat_capacity"] for v in thermal_properties]
         entropy = [v["entropy"] for v in thermal_properties]
-        fe = [v["free_energy"]*1000.0 for v in thermal_properties]
+        fe = [v["free_energy"] * 1000.0 for v in thermal_properties]
 
         phonon_docs.append(
-            PhononBSDOSDoc(free_energies=fe, heat_capacities=cv, entropies=entropy, temperatures=temperatures,
-                           total_dft_energy=energy, volume_per_formula_unit=volume, formula_units=1))
+            PhononBSDOSDoc(
+                free_energies=fe,
+                heat_capacities=cv,
+                entropies=entropy,
+                temperatures=temperatures,
+                total_dft_energy=energy,
+                volume_per_formula_unit=volume,
+                formula_units=1,
+            )
+        )
 
     job = analyze_free_energy(phonon_docs, structure)
 
-    responses=run_locally(job, create_folders=True)
+    responses = run_locally(job, create_folders=True)
 
     assert isinstance(responses[job.uuid][1].output, PhononQHADoc)

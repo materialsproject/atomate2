@@ -81,7 +81,9 @@ class CommonEosMaker(Maker):
             ("relax", "static") if self.static_maker else ("relax",)
         )
         flow_output: dict[str, dict] = {
-            key: {quantity: [] for quantity in ("energy", "volume", "stress", "structure")}
+            key: {
+                quantity: [] for quantity in ("energy", "volume", "stress", "structure")
+            }
             for key in job_types
         }
 
