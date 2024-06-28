@@ -1,4 +1,5 @@
 """Functions dealing with FHI-aims files."""
+
 from __future__ import annotations
 
 import logging
@@ -17,8 +18,6 @@ if TYPE_CHECKING:
     from pymatgen.io.aims.sets.base import AimsInputGenerator
 
 logger = logging.getLogger(__name__)
-
-__all__ = ["copy_aims_outputs", "write_aims_input_set", "cleanup_aims_outputs"]
 
 
 @auto_fileclient
@@ -52,7 +51,7 @@ def copy_aims_outputs(
     logger.info(f"Copying FHI-aims inputs from {src_dir}")
     directory_listing = file_client.listdir(src_dir, host=src_host)
     # additional files like bands, DOS, *.cube, whatever
-    additional_files = additional_aims_files if additional_aims_files else []
+    additional_files = additional_aims_files or []
 
     # copy files
     # (no need to copy aims.out by default; it can be added to additional_aims_files

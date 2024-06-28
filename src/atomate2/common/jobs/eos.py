@@ -90,8 +90,7 @@ class EOSPostProcessor(MSONable):
             for job_type in self._use_job_types
         ):
             raise ValueError(
-                f"{self.__class__} requires {self.min_data_points} "
-                "frames to fit an EOS."
+                f"{type(self)} requires {self.min_data_points} frames to fit an EOS."
             )
 
         self.sort_by_quantity()
@@ -99,8 +98,7 @@ class EOSPostProcessor(MSONable):
 
     @job
     def make(self, eos_flow_output: dict[str, Any]) -> Job:
-        """
-        Run the fit as a jobflow job.
+        """Run the fit as a jobflow job.
 
         Parameters
         ----------
@@ -253,8 +251,7 @@ class PostProcessEosPressure(EOSPostProcessor):
         )
 
     def _initial_fit(self) -> dict:
-        """
-        Generate initial polynomial fit for p(V) curve.
+        """Generate initial polynomial fit for p(V) curve.
 
         p(V) / V = a + b V + c V**2
         """
@@ -320,9 +317,9 @@ class PostProcessEosPressure(EOSPostProcessor):
 
             self.results[jobtype]["EOS"] = {}
             if ierr not in (1, 2, 3, 4):
-                self.results[jobtype]["EOS"][
-                    "exception"
-                ] = "Optimal EOS parameters not found."
+                self.results[jobtype]["EOS"]["exception"] = (
+                    "Optimal EOS parameters not found."
+                )
             else:
                 for i, key in enumerate(["b0", "b1", "v0"]):
                     self.results[jobtype]["EOS"][key] = eos_params[i]

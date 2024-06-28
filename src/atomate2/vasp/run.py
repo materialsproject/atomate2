@@ -42,7 +42,7 @@ if TYPE_CHECKING:
     from emmet.core.tasks import TaskDoc
 
 
-_DEFAULT_HANDLERS = (
+DEFAULT_HANDLERS = (
     VaspErrorHandler(),
     MeshSymmetryErrorHandler(),
     UnconvergedErrorHandler(),
@@ -87,7 +87,7 @@ def run_vasp(
     vasp_gamma_cmd: str = SETTINGS.VASP_GAMMA_CMD,
     max_errors: int = SETTINGS.VASP_CUSTODIAN_MAX_ERRORS,
     scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
-    handlers: Sequence[ErrorHandler] = _DEFAULT_HANDLERS,
+    handlers: Sequence[ErrorHandler] = DEFAULT_HANDLERS,
     validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
     wall_time: int | None = None,
     vasp_job_kwargs: dict[str, Any] = None,

@@ -1,20 +1,29 @@
 import os
 
 import pytest
+from ase.build import bulk
 from ase.calculators.lj import LennardJones
 from ase.optimize import BFGS
+from ase.spacegroup.symmetrize import check_symmetry
 from numpy.testing import assert_allclose
-from pymatgen.io.ase import AseAtomsAdaptor
+from pymatgen.core import Structure
 
-from atomate2.forcefields.utils import FrechetCellFilter, Relaxer, TrajectoryObserver
+from atomate2.forcefields import MLFF
+from atomate2.forcefields.utils import (
+    FrechetCellFilter,
+    Relaxer,
+    TrajectoryObserver,
+    ase_calculator,
+)
 
 
 def test_safe_import():
     assert FrechetCellFilter is None or FrechetCellFilter.__module__ == "ase.filters"
 
 
-def test_trajectory_observer(si_structure, test_dir, tmp_dir):
-    atoms = AseAtomsAdaptor.get_atoms(structure=si_structure, calculator=LennardJones())
+def test_trajectory_observer(si_structure: Structure, test_dir, tmp_dir):
+    atoms = si_structure.to_ase_atoms()
+    atoms.set_calculator(LennardJones())
 
     traj = TrajectoryObserver(atoms)
 
@@ -41,14 +50,14 @@ def test_trajectory_observer(si_structure, test_dir, tmp_dir):
     ]
     assert_allclose(traj.stresses[0], expected_stresses, atol=1e-8)
 
-    save_file_name = "log_file.json.gz"
+    save_file_name = "log_file.traj"
     traj.save(save_file_name)
     assert os.path.isfile(save_file_name)
 
 
 @pytest.mark.parametrize(
     ("optimizer", "traj_file"),
-    [("BFGS", None), (None, None), (BFGS, "log_file.json.gz")],
+    [("BFGS", None), (None, None), (BFGS, "log_file.traj")],
 )
 def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
     if FrechetCellFilter:
@@ -109,11 +118,48 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
         for key in expected_lattice
     } == pytest.approx(expected_lattice)
 
-    assert relax_output["trajectory"].energies[-1] == pytest.approx(expected_energy)
+    assert relax_output["trajectory"].frame_properties[-1]["energy"] == pytest.approx(
+        expected_energy
+    )
 
-    assert_allclose(relax_output["trajectory"].forces[-1], expected_forces)
+    assert_allclose(
+        relax_output["trajectory"].frame_properties[-1]["forces"], expected_forces
+    )
 
-    assert_allclose(relax_output["trajectory"].stresses[-1], expected_stresses)
+    assert_allclose(
+        relax_output["trajectory"].frame_properties[-1]["stress"], expected_stresses
+    )
 
     if traj_file:
         assert os.path.isfile(traj_file)
+
+
+@pytest.mark.parametrize(("force_field"), ["CHGNet", "MACE"])
+def test_ext_load(force_field: str):
+    decode_dict = {
+        "CHGNet": {"@module": "chgnet.model.dynamics", "@callable": "CHGNetCalculator"},
+        "MACE": {"@module": "mace.calculators", "@callable": "mace_mp"},
+    }[force_field]
+    calc_from_decode = ase_calculator(decode_dict)
+    calc_from_preset = ase_calculator(str(MLFF(force_field)))
+    assert type(calc_from_decode) == type(calc_from_preset)
+    assert calc_from_decode.name == calc_from_preset.name
+    assert calc_from_decode.parameters == calc_from_preset.parameters == {}
+
+
+@pytest.mark.parametrize(("fix_symmetry"), [True, False])
+def test_fix_symmetry(fix_symmetry):
+    # adapted from the example at https://wiki.fysik.dtu.dk/ase/ase/constraints.html#the-fixsymmetry-class
+    relaxer = Relaxer(
+        calculator=LennardJones(), relax_cell=True, fix_symmetry=fix_symmetry
+    )
+    atoms_al = bulk("Al", "bcc", a=2 / 3**0.5, cubic=True)
+    atoms_al = atoms_al * (2, 2, 2)
+    atoms_al.positions[0, 0] += 1e-7
+    symmetry_init = check_symmetry(atoms_al, 1e-6)
+    final_struct: Structure = relaxer.relax(atoms=atoms_al, steps=1)["final_structure"]
+    symmetry_final = check_symmetry(final_struct.to_ase_atoms(), 1e-6)
+    if fix_symmetry:
+        assert symmetry_init["number"] == symmetry_final["number"] == 229
+    else:
+        assert symmetry_init["number"] != symmetry_final["number"] == 99

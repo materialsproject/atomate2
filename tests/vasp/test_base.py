@@ -4,8 +4,8 @@ import pytest
 from custodian.vasp.handlers import ErrorHandler
 from pymatgen.core import Lattice, Structure
 
-from atomate2.vasp.run import _DEFAULT_HANDLERS
-from atomate2.vasp.sets.base import _get_magmoms
+from atomate2.vasp.run import DEFAULT_HANDLERS
+from atomate2.vasp.sets.base import get_magmoms
 
 
 @pytest.mark.parametrize("magmoms", [None, {"Co": 0.8, "Fe": 2.2}])
@@ -27,7 +27,7 @@ def test_get_magmoms(
     msg = "Co without an oxidation state is initialized as low spin by default"
     # check there are no warnings
     with pytest.warns(None if magmoms else UserWarning) as warns:
-        out = _get_magmoms(struct, magmoms=magmoms, config_magmoms=config_magmoms)
+        out = get_magmoms(struct, magmoms=magmoms, config_magmoms=config_magmoms)
 
         expected_magmoms = list(
             (magmoms or config_magmoms or {"Co": 0.6, "Fe": 0.6}).values()
@@ -40,7 +40,7 @@ def test_get_magmoms(
 
 def test_get_magmoms_with_specie() -> None:
     # Setting the species to Co2+ and Fe3+ will change the `site.specie` to
-    # `Specie` instead of `Element`.  This will allow us to test the part of
+    # `Specie` instead of `Element`. This will allow us to test the part of
     # the code that checks for `Specie.spin`.
     # @jmmshn
     struct = Structure(
@@ -51,10 +51,10 @@ def test_get_magmoms_with_specie() -> None:
     site = struct.sites[0]
     assert not hasattr(site, "magmom")
     assert struct[0].specie.spin is None
-    out = _get_magmoms(struct)
+    out = get_magmoms(struct)
     assert out == [0.6, 0.6]
 
 
 def test_default_handlers():
-    assert len(_DEFAULT_HANDLERS) >= 8
-    assert all(isinstance(handler, ErrorHandler) for handler in _DEFAULT_HANDLERS)
+    assert len(DEFAULT_HANDLERS) >= 8
+    assert all(isinstance(handler, ErrorHandler) for handler in DEFAULT_HANDLERS)

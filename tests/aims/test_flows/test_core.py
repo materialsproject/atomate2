@@ -1,4 +1,5 @@
 """Test core FHI-aims workflows"""
+
 import os
 
 import pytest

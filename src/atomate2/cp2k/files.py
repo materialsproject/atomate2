@@ -38,7 +38,7 @@ def copy_cp2k_outputs(
 
     For folders containing multiple calculations (e.g., suffixed with relax1, relax2,
     etc), this function will only copy the files with the highest numbered suffix and
-    the suffix will be removed. Additional cp2k files will be also be  copied with the
+    the suffix will be removed. Additional cp2k files will be also be copied with the
     same suffix applied. Lastly, this function will gunzip any gzipped files.
 
     Parameters
@@ -62,7 +62,7 @@ def copy_cp2k_outputs(
     relax_ext = get_largest_relax_extension(src_dir, src_host, file_client=file_client)
     directory_listing = file_client.listdir(src_dir, host=src_host)
     restart_file = None
-    additional_cp2k_files = additional_cp2k_files if additional_cp2k_files else []
+    additional_cp2k_files = additional_cp2k_files or []
 
     # find required files
     o = Cp2kOutput(src_dir / get_zfile(directory_listing, "cp2k.out"), auto_load=False)
@@ -102,8 +102,10 @@ def copy_cp2k_outputs(
     # rename files to remove relax extension
     if relax_ext:
         files_to_rename = {
-            k.name.replace(".gz", ""): k.name.replace(relax_ext, "").replace(".gz", "")
-            for k in all_files
+            file.name.replace(".gz", ""): file.name.replace(relax_ext, "").replace(
+                ".gz", ""
+            )
+            for file in all_files
         }
         rename_files(files_to_rename, allow_missing=True, file_client=file_client)
 

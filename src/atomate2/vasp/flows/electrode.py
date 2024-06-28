@@ -78,6 +78,6 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
             self.static_maker.task_document_kwargs.get("store_volumetric_data", [])
         )
         store_volumetric_data.extend(["aeccar0", "aeccar2"])
-        self.static_maker.task_document_kwargs[
-            "store_volumetric_data"
-        ] = store_volumetric_data
+        self.static_maker.task_document_kwargs["store_volumetric_data"] = (
+            store_volumetric_data
+        )
