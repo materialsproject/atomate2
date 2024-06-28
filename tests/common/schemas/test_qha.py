@@ -55,6 +55,7 @@ def test_analyze_free_energy(clean_dir, test_dir):
     phonon_docs = []
     for index, energy, volume in zip(range(-5, 6), energies, volumes):
         filename = f"{test_dir}/forcefields/qha/thermal_properties.yaml-{index!s}"
+
         thermal_properties = yaml.load(open(filename), Loader=Loader)[
             "thermal_properties"
         ]

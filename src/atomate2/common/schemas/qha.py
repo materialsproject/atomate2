@@ -33,38 +33,47 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     volume_temperature: Optional[list[float]] = Field(None, description="")
     gibbs_temperature: Optional[list[float]] = Field(None, description="")
     bulk_modulus_temperature: Optional[list[float]] = Field(None, description="")
-    heat_capacity_P_numerical: Optional[list[float]] = Field(None, description="")
-    heat_capacity_P_polyfit: Optional[list[float]] = Field(None, description="")
+    heat_capacity_p_numerical: Optional[list[float]] = Field(None, description="")
     gruneisen_temperature: Optional[list[float]] = Field(None, description="")
     pressure: Optional[float] = Field(
         None, description="Pressure at GPA at which Gibb's energy was computed"
     )
     t_max: Optional[float] = Field(
         None,
-        description="Maximum temperature in K until which Free energy volume curves are evaluated",
+        description="Maximum temperature in K up to"
+        " which free energy volume curves are evaluated",
     )
 
     @classmethod
     def from_phonon_runs(
         cls,
         structure: Structure,
-        volumes,
-        temperatures,
-        electronic_energies,
-        free_energies,
-        heat_capacities,
-        entropies,
-        t_max=None,
-        pressure=None,
-        **kwargs,
+        volumes: list[float],
+        temperatures: list[float],
+        electronic_energies: list[list[float]],
+        free_energies: list[list[float]],
+        heat_capacities: list[list[float]],
+        entropies: list[list[float]],
+        t_max: float = None,
+        pressure: float = None,
     ) -> Self:
         """Generate qha results.
 
         Parameters
         ----------
         structure: Structure object
-        **kwargs:
-            additional arguments
+        volumes: list of floats
+        temperatures: list of floats
+        electronic_energies: list of list of floats
+        free_energies: list of list of floats
+        heat_capacities: list of list of floats
+        entropies: list of list of floats
+        t_max: float
+        pressure: float
+
+        Returns
+        -------
+        .PhononQHADoc
         """
         # put this into a schema and use this information there
         # generate plots and save the data in a schema
@@ -98,7 +107,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
             volume_temperature=qha.volume_temperature,
             gibbs_temperature=qha.gibbs_temperature,
             bulk_modulus_temperature=qha.bulk_modulus_temperature,
-            heat_capacity_P_numerical=qha.heat_capacity_P_numerical,
+            heat_capacity_p_numerical=qha.heat_capacity_P_numerical,
             gruneisen_temperature=qha.gruneisen_temperature,
             pressure=pressure,
             t_max=t_max,

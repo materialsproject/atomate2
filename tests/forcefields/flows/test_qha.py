@@ -12,7 +12,6 @@ def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
     torch.set_default_dtype(torch.float32)
 
-    # to do: make the workflow more adaptable, try to reduce run times
     flow = CHGNetQhaMaker(
         number_of_frames=5,
         ignore_imaginary_modes=True,
@@ -34,6 +33,9 @@ def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
     # # validate the outputs
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
     assert isinstance(ph_bs_dos_doc, PhononQHADoc)
+
+    # TODO: add more checks!
+
     #
     # assert_allclose(
     #     ph_bs_dos_doc.free_energies,

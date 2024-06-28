@@ -1,4 +1,4 @@
-"""Define common EOS flow agnostic to electronic-structure code."""
+"""Define common QHA flow agnostic to electronic-structure code."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
@@ -43,13 +43,13 @@ class CommonQhaMaker(Maker, ABC):
 
     Parameters
     ----------
-
     name: str
         Name of the flows produced by this maker.
     initial_relax_maker: .ForceFieldRelaxMaker | .BaseVaspMaker | None
         Maker to relax the input structure.
     eos_relax_maker: .ForceFieldRelaxMaker | .BaseVaspMaker | None
         Maker to relax deformed structures for the EOS fit.
+        The volume has to be fixed!
     phonon_displacement_maker: .ForceFieldStaticMaker | .BaseVaspMaker | None
     phonon_static_maker: .ForceFieldStaticMaker | .BaseVaspMaker | None
     phonon_maker_kwargs: dict
@@ -58,37 +58,19 @@ class CommonQhaMaker(Maker, ABC):
     number_of_frames: int
         Number of strain calculations to do for EOS fit, default = 6.
     t_max: float | None
-
+        Maximum temperature until which the QHA will be performed
     pressure: float | None
+        Pressure at which the QHA will be performed (default None, no pressure)
     ignore_imaginary_modes: bool
-
-    eos_relax_maker : .Maker
-        Maker to relax deformed structures for the EOS fit.
-    phonon_static_maker : .Maker | None
-        Maker to generate statics after each relaxation, defaults to None.
-    strain : tuple[float]
-        Percentage linear strain to apply as a deformation, default = -5% to 5%.
-    number_of_frames : int
-        Number of strain calculations to do for EOS fit, default = 6.
-    #postprocessor : .atomate2.common.jobs.EOSPostProcessor
-    #    Optional postprocessing step, defaults to
-    #    `atomate2.common.jobs.PostProcessEosEnergy`.
-    #_store_transformation_information : .bool = False
-    #    Whether to store the information about transformations. Unfortunately
-    #    needed at present to handle issues with emmet and pydantic validation
-    #    TODO: remove this when clash is fixed
-    linear_strain: tuple[float, float] = (-0.05, 0.05)
-    number_of_frames: int = 6
-    t_max: float | None = None
-    pressure: float | None = None
-    ignore_imaginary_modes: bool = False
+        By default, volumes where the harmonic phonon approximation shows imaginary
+        will be ignored
     """
 
     name: str = "QHA Maker"
     initial_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
     eos_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
-    phonon_displacement_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
-    phonon_static_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
     phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
@@ -128,11 +110,9 @@ class CommonQhaMaker(Maker, ABC):
             phonon_maker_kwargs=self.phonon_maker_kwargs,
         )
         eos_job = self.eos.make(structure)
-        # Todo: think about whether to keep the tight relax here
-        phonon_jobs = get_phonon_jobs(self.phonon_maker, eos_job.output)
-
-        # Todo: reuse postprocessor from equation of state to make fits of free energy curves
-        # get free energy fits and perform qha
+        phonon_jobs = get_phonon_jobs(
+            phonon_maker=self.phonon_maker, eos_output=eos_job.output
+        )
         analysis = analyze_free_energy(
             phonon_jobs.output,
             structure=structure,
@@ -146,16 +126,28 @@ class CommonQhaMaker(Maker, ABC):
     @abstractmethod
     def initialize_phonon_maker(
         self,
-        phonon_displacement_maker,
-        phonon_static_maker,
-        bulk_relax_maker,
-        phonon_maker_kwargs,
+        phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None,
+        phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None,
+        bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None,
+        phonon_maker_kwargs: dict,
     ) -> BasePhononMaker | None:
-        """
+        """Initialize phonon maker.
 
-        :param phonon_displacement_maker:
-        :param phonon_static_maker:
-        :param bulk_relax_maker:
-        :param phonon_maker_kwargs:
-        :return:
+        This implementation will be different for
+        any newly implemented QHAMaker.
+
+        Parameters
+        ----------
+        phonon_displacement_maker: ForceFieldStaticMaker|BaseVaspMaker|None
+            Maker for displacement calculations.
+        phonon_static_maker: ForceFieldStaticMaker|BaseVaspMaker|None
+            Maker for additional static calculations.
+        bulk_relax_maker: : ForceFieldRelaxMaker|BaseVaspMaker|None
+            Maker for optimization. Here: None.
+        phonon_maker_kwargs: dict
+            Additional keyword arguments for phonon maker.
+
+        Returns
+        -------
+        .BasePhononMaker
         """
