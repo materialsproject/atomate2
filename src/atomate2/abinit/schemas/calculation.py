@@ -251,7 +251,7 @@ class Calculation(BaseModel):
         abinit_log_file: Path | str = LOG_FILE_NAME,
         abinit_abort_file: Path | str = MPIABORTFILE,
         abinit_out_file: Path | str = OUTPUT_FILE_NAME,
-    ) -> tuple[Calculation, dict[AbinitObject, dict]]:
+    ) -> tuple[Self, dict[AbinitObject, dict]]:
         """
         Create an Abinit calculation document from a directory and file paths.
 
@@ -319,8 +319,7 @@ class Calculation(BaseModel):
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
 
-        return (
-            cls(
+        instance = cls(
                 dir_name=str(dir_name),
                 task_name=task_name,
                 abinit_version=abinit_out.version,
@@ -328,6 +327,6 @@ class Calculation(BaseModel):
                 completed_at=completed_at,
                 output=output_doc,
                 event_report=report,
-            ),
-            None,  # abinit_objects,
-        )
+            )
+
+        return instance, None  # abinit_objects,

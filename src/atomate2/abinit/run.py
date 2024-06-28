@@ -67,7 +67,6 @@ def run_abinit(
                     process.terminate()
 
         process.wait()
-    return
 
 
 def run_mrgddb(
@@ -114,7 +113,6 @@ def run_mrgddb(
                     process.terminate()
 
         process.wait()
-    return
 
 
 def run_anaddb(
@@ -162,4 +160,3 @@ def run_anaddb(
                     process.terminate()
 
         process.wait()
-    return
