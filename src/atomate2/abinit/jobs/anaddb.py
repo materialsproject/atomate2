@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING
 
 import jobflow
 from jobflow import Maker, Response, job
@@ -14,16 +14,14 @@ from atomate2 import SETTINGS
 from atomate2.abinit.files import write_anaddb_input_set
 from atomate2.abinit.jobs.base import setup_job
 from atomate2.abinit.run import run_anaddb
-from atomate2.abinit.schemas.calculation import TaskState
 from atomate2.abinit.schemas.anaddb import AnaddbTaskDoc
+from atomate2.abinit.schemas.calculation import TaskState
 from atomate2.abinit.sets.anaddb import (
+    AnaddbDfptDteInputGenerator,
     AnaddbInputGenerator,
-    AnaddbDfptDteInputGenerator
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-
     from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
@@ -48,7 +46,6 @@ class AnaddbMaker(Maker):
         default_factory=AnaddbInputGenerator
     )
     wall_time: int | None = None
-
 
     @property
     def calc_type(self) -> str:
@@ -153,9 +150,10 @@ class AnaddbMaker(Maker):
             replace=new_job,
         )
 
+
 @dataclass
 class AnaddbDfptDteMaker(AnaddbMaker):
-    """Maker to create a job to analyze a DDB file with the utility anaddb 
+    """Maker to create a job to analyze a DDB file with the utility anaddb
         to get info from DFPT calculations with the DTE.
 
     Parameters

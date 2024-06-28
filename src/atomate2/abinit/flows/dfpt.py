@@ -5,11 +5,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from abipy.abio.factories import scf_for_phonons
 from jobflow import Flow, Maker
 
+from atomate2.abinit.jobs.anaddb import AnaddbDfptDteMaker, AnaddbMaker
 from atomate2.abinit.jobs.core import StaticMaker
 from atomate2.abinit.jobs.mrgddb import MrgddbMaker
-from atomate2.abinit.jobs.anaddb import AnaddbMaker, AnaddbDfptDteMaker
 from atomate2.abinit.jobs.response import (
     DdeMaker,
     DdkMaker,
@@ -19,12 +20,7 @@ from atomate2.abinit.jobs.response import (
     generate_dte_perts,
     run_rf,
 )
-from atomate2.abinit.powerups import (
-    update_factory_kwargs,
-    update_user_abinit_settings,
-    update_user_kpoints_settings,
-)
-from abipy.abio.factories import scf_for_phonons
+from atomate2.abinit.powerups import update_factory_kwargs, update_user_abinit_settings
 from atomate2.abinit.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
@@ -73,7 +69,11 @@ class DfptFlowMaker(Maker):
     """
 
     name: str = "DFPT"
-    static_maker: BaseAbinitMaker = field(default_factory=lambda: StaticMaker(input_set_generator=StaticSetGenerator(factory=scf_for_phonons)))
+    static_maker: BaseAbinitMaker = field(
+        default_factory=lambda: StaticMaker(
+            input_set_generator=StaticSetGenerator(factory=scf_for_phonons)
+        )
+    )
     ddk_maker: BaseAbinitMaker | None = field(default_factory=DdkMaker)  # |
     dde_maker: BaseAbinitMaker | None = field(
         default_factory=DdeMaker
@@ -89,24 +89,30 @@ class DfptFlowMaker(Maker):
 
     def __post_init__(self) -> None:
         """Process post-init configuration."""
-
         if self.dde_maker and not self.ddk_maker:
-            raise ValueError("DDK caculations are required to continue \
+            raise ValueError(
+                "DDK calculations are required to continue \
                 with the DDE calculations. Either provide a DDK Maker \
-                or remove the DDE one.")
+                or remove the DDE one."
+            )
         if self.dte_maker and not self.dde_maker:
-            raise ValueError("DDE caculations are required to continue \
+            raise ValueError(
+                "DDE calculations are required to continue \
                 with the DTE calculations. Either provide a DDE Maker \
-                or remove the DTE one.")
+                or remove the DTE one."
+            )
         if self.mrgddb_maker and not self.dde_maker:
-            raise ValueError("DDE caculations are required to produce \
+            raise ValueError(
+                "DDE calculations are required to produce \
                 DDB files to be merged. Either provide a DDE Maker \
-                or remove the MrgddbMaker.")
+                or remove the MrgddbMaker."
+            )
         if self.anaddb_maker and not self.mrgddb_maker:
-            raise ValueError("Anaddb should be used to analyze a merged DDB. \
+            raise ValueError(
+                "Anaddb should be used to analyze a merged DDB. \
                 Either provide a Mrgddb Maker \
-                or remove the AnaddbMaker.")
-
+                or remove the AnaddbMaker."
+            )
 
     def make(
         self,
@@ -215,6 +221,7 @@ class DfptFlowMaker(Maker):
 
         return Flow(jobs, output=jobs[-1].output, name=self.name)  # TODO: fix outputs
 
+
 @dataclass
 class ShgFlowMaker(DfptFlowMaker):
     """
@@ -228,30 +235,32 @@ class ShgFlowMaker(DfptFlowMaker):
     name : str
         Name of the flows produced by this maker.
     """
-    
+
     name: str = "DFPT Chi2 SHG"
     anaddb_maker: Maker | None = field(default_factory=AnaddbDfptDteMaker)
 
-    # VT: a post-init is the only way I found to apply these changes 
+    # VT: a post-init is the only way I found to apply these changes
     # to the static job
     def __post_init__(self) -> None:
         """Process post-init configuration."""
-
         super().__post_init__()
 
         # To avoid metallic case=occopt=3 which is not okay wrt. DFPT \
         # and occopt 1 with spin polarization requires spinmagntarget
         self.static_maker = update_factory_kwargs(
-                                self.static_maker, {"smearing": "nosmearing",
-                                                    "spin_mode": "unpolarized",
-                                                    "kppa": 3000,
-                                                   }
-                            )
-        self.static_maker = update_user_abinit_settings( self.static_maker,{
-                                'nstep': 500,
-                                'toldfe': 1e-22,
-                                'autoparal': 1,
-                                'npfft': 1,
-                                }
-                            )
-
+            self.static_maker,
+            {
+                "smearing": "nosmearing",
+                "spin_mode": "unpolarized",
+                "kppa": 3000,
+            },
+        )
+        self.static_maker = update_user_abinit_settings(
+            self.static_maker,
+            {
+                "nstep": 500,
+                "toldfe": 1e-22,
+                "autoparal": 1,
+                "npfft": 1,
+            },
+        )

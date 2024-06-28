@@ -50,7 +50,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class AbiBroadInputGenerator(InputGenerator):
     """
-    A class to generate input sets for Abinit and related utilies.
+    A class to generate input sets for Abinit and related utilities.
 
     Parameters
     ----------
@@ -110,6 +110,7 @@ class AbiBroadInputGenerator(InputGenerator):
         in_file = in_file.replace(OUTDATAFILE_PREFIX, INDATAFILE_PREFIX, 1)
 
         return os.path.basename(in_file).replace("WFQ", "WFK", 1)
+
     @staticmethod
     def resolve_dep_exts(prev_dir: str, exts: list[str]) -> tuple:
         """Return irdvars and corresponding file for a given dependency.
@@ -172,6 +173,7 @@ class AbiBroadInputGenerator(InputGenerator):
             logger.error(msg)
             raise InitializationError(msg)
         return irdvars, inp_files
+
 
 class AbinitInputSet(InputSet):
     """
@@ -840,4 +842,3 @@ def _combine_kpoints(*kpoints_objects: KSampling) -> KSampling:
         kpts_weights=weights,
         comment="Combined k-points",
     )
-

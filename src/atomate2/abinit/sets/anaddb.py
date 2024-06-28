@@ -10,37 +10,24 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
 
-import numpy as np
-from abipy.abio.inputs import AbinitInput, MultiDataset, AnaddbInput
-from abipy.flowtk.psrepos import get_repo_from_name
-from abipy.flowtk.utils import Directory, irdvars_for_ext
+from abipy.abio.inputs import AnaddbInput
+from abipy.flowtk.utils import Directory
 from monty.json import MontyEncoder, jsanitize
-from pymatgen.io.abinit.abiobjects import KSampling, KSamplingModes
-from pymatgen.io.abinit.pseudos import Pseudo, PseudoTable
-from pymatgen.io.core import InputGenerator, InputSet
-from pymatgen.io.vasp import Kpoints
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pymatgen.symmetry.bandstructure import HighSymmKpath
+from pymatgen.io.abinit.abiobjects import KSampling
+from pymatgen.io.core import InputSet
 
+from atomate2.abinit.files import out_to_in
 from atomate2.abinit.sets.base import AbiBroadInputGenerator
-from atomate2 import SETTINGS
-from atomate2.abinit.files import fname2ext, load_abinit_input, out_to_in
 from atomate2.abinit.utils.common import (
-    INDATA_PREFIX,
-    INDATAFILE_PREFIX,
-    INDIR_NAME,
     ANADDB_INPUT_FILE_NAME,
-    OUTDATA_PREFIX,
-    OUTDATAFILE_PREFIX,
+    INDATA_PREFIX,
+    INDIR_NAME,
     OUTDIR_NAME,
-    TMPDATA_PREFIX,
     TMPDIR_NAME,
-    InitializationError,
-    get_final_structure,
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
+    from collections.abc import Iterable
 
     from pymatgen.core.structure import Structure
 
@@ -181,7 +168,6 @@ class AnaddbInputSet(InputSet):
         """
         return self.anaddb_input.remove_vars(keys=keys, strict=strict)
 
-
     def set_structure(self, structure: Any) -> Structure:
         """Set the structure for this input set.
 
@@ -245,7 +231,9 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
     user_abinit_settings: dict = field(default_factory=dict)
     user_kpoints_settings: dict | KSampling = field(default_factory=dict)
     restart_from_deps: str | tuple | None = field(default_factory=tuple)
-    prev_outputs_deps: str | tuple | None = field(default_factory=lambda: ("MRGDDB:DDB",))
+    prev_outputs_deps: str | tuple | None = field(
+        default_factory=lambda: ("MRGDDB:DDB",)
+    )
     factory_prev_inputs_kwargs: dict | None = None
 
     def get_input_set(
@@ -278,22 +266,23 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
             raise RuntimeError(
                 f"Previous outputs not allowed for {self.__class__.__name__}."
             )
-        irdvars, files = self.resolve_deps(prev_outputs, self.prev_outputs_deps, check_runlevel=False)
+        irdvars, files = self.resolve_deps(
+            prev_outputs, self.prev_outputs_deps, check_runlevel=False
+        )
         input_files.extend(files)
         anaddb_input = self.get_anaddb_input(
             structure=structure,
             prev_outputs=prev_outputs,
         )
 
-        anaddb_input.set_vars({"ddb_filepath":f'"{INDATA_PREFIX}_DDB"'})
-        #anaddb_input["ddb_filepath"] = (f'"{INDATA_PREFIX}_DDB"',)
-        #anaddb_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
+        anaddb_input.set_vars({"ddb_filepath": f'"{INDATA_PREFIX}_DDB"'})
+        # anaddb_input["ddb_filepath"] = (f'"{INDATA_PREFIX}_DDB"',)
+        # anaddb_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
 
         return AnaddbInputSet(
             anaddb_input=anaddb_input,
             input_files=input_files,
         )
-
 
     def get_anaddb_input(
         self,
@@ -351,9 +340,13 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
 
         return generated_input
 
+
 def anaddbinp_dfpt_dte(structure, anaddb_kwargs=None):
-    anaddb_input = AnaddbInput.dfpt(structure=structure, dte=True, anaddb_kwargs=anaddb_kwargs)
+    anaddb_input = AnaddbInput.dfpt(
+        structure=structure, dte=True, anaddb_kwargs=anaddb_kwargs
+    )
     return anaddb_input
+
 
 @dataclass
 class AnaddbDfptDteInputGenerator(AnaddbInputGenerator):

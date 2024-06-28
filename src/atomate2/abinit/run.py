@@ -10,10 +10,10 @@ from abipy.flowtk.qutils import time2slurm
 
 from atomate2 import SETTINGS
 from atomate2.abinit.utils.common import (
+    ANADDB_INPUT_FILE_NAME,
     INPUT_FILE_NAME,
     LOG_FILE_NAME,
     MRGDDB_INPUT_FILE_NAME,
-    ANADDB_INPUT_FILE_NAME,
     STDERR_FILE_NAME,
 )
 
@@ -116,6 +116,7 @@ def run_mrgddb(
         process.wait()
     return
 
+
 def run_anaddb(
     anaddb_cmd: str = None,
     mpirun_cmd: str = None,
@@ -147,7 +148,7 @@ def run_anaddb(
         open(LOG_FILE_NAME, "w") as stdout,
         open(STDERR_FILE_NAME, "w") as stderr,
     ):
-        #process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)  # noqa: S603
+        # process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)
         process = subprocess.Popen(command, stdout=stdout, stderr=stderr)  # noqa: S603
 
         if wall_time is not None:

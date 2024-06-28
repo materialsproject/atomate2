@@ -44,6 +44,7 @@ __all__ = [
     "run_rf",
 ]
 
+
 @dataclass
 class ResponseMaker(BaseAbinitMaker):
     """Maker to create a job with a Response Function ABINIT calculation.
@@ -84,7 +85,9 @@ class ResponseMaker(BaseAbinitMaker):
             Abipy format.
         """
         if perturbation:
-            self.input_set_generator.factory_kwargs.update({f"{self.calc_type.lower()}_pert": perturbation})
+            self.input_set_generator.factory_kwargs.update(
+                {f"{self.calc_type.lower()}_pert": perturbation}
+            )
 
         return super().make.original(
             self,
@@ -93,6 +96,7 @@ class ResponseMaker(BaseAbinitMaker):
             restart_from=restart_from,
             history=history,
         )
+
 
 @dataclass
 class DdkMaker(ResponseMaker):
@@ -254,7 +258,9 @@ def generate_dte_perts(
 @job
 def run_rf(
     perturbations: list[dict],
-    rf_maker: BaseAbinitMaker = field(default_factory=BaseAbinitMaker), # TODO: change to generic ResponseMaker
+    rf_maker: BaseAbinitMaker = field(
+        default_factory=BaseAbinitMaker
+    ),  # TODO: change to generic ResponseMaker
     prev_outputs: list[str] | None = None,
 ) -> Flow:
     """
@@ -267,7 +273,6 @@ def run_rf(
     rf_maker : Maker to create a job with a Response Function ABINIT calculation.
     prev_outputs : a list of previous output directories
     """
-
     rf_jobs = []
     outputs: dict[str, list] = {"dirs": []}
 
@@ -282,7 +287,7 @@ def run_rf(
         rf_job.append_name(f"{ipert+1}/{len(perturbations)}")
 
         if isinstance(rf_maker, DdeMaker):
-            rf_job = update_user_abinit_settings(rf_job, {'irdddk': 1, 'ird1wf': 0})
+            rf_job = update_user_abinit_settings(rf_job, {"irdddk": 1, "ird1wf": 0})
 
         rf_jobs.append(rf_job)
         outputs["dirs"].append(rf_job.output.dir_name)  # TODO: determine outputs

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import logging
 import os
-import numpy as np
 from datetime import datetime
 from pathlib import Path
 
@@ -12,6 +11,7 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 import abipy.core.abinit_units as abu
+import numpy as np
 from abipy.dfpt.anaddbnc import AnaddbNcFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
@@ -67,8 +67,9 @@ class CalculationOutput(BaseModel):
         The Anaddb calculation output document.
         """
         structure = output.structure
-        dijk = list(output.dchide * 16 * np.pi**2 * abu.Bohr_Ang**2 \
-                    * 1e-8 * abu.eps0 / abu.e_Cb) # for pm/V units (SI)
+        dijk = list(
+            output.dchide * 16 * np.pi**2 * abu.Bohr_Ang**2 * 1e-8 * abu.eps0 / abu.e_Cb
+        )  # for pm/V units (SI)
         epsinf = list(output.epsinf)
 
         return cls(

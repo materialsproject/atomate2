@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING
 
 import jobflow
 from jobflow import Maker, Response, job
@@ -19,8 +19,6 @@ from atomate2.abinit.schemas.mrgddb import MrgddbTaskDoc
 from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-
     from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
@@ -49,7 +47,6 @@ class MrgddbMaker(Maker):
     )
     # input_set_generator: MrgddbInputGenerator = MrgddbInputGenerator()
     wall_time: int | None = None
-
 
     @property
     def calc_type(self) -> str:

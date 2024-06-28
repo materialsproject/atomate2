@@ -11,19 +11,15 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from abipy.abio.input_tags import DDE, DTE
-from abipy.flowtk.utils import Directory, irdvars_for_ext
-from pymatgen.io.core import InputGenerator, InputSet
+from abipy.flowtk.utils import Directory
+from pymatgen.io.core import InputSet
 
 from atomate2.abinit.sets.base import AbiBroadInputGenerator
-from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.utils.common import (
-    INDATAFILE_PREFIX,
     INDIR_NAME,
     MRGDDB_INPUT_FILE_NAME,
-    OUTDATAFILE_PREFIX,
     OUTDIR_NAME,
     TMPDIR_NAME,
-    InitializationError,
 )
 
 if TYPE_CHECKING:
@@ -113,7 +109,6 @@ class MrgddbInputSet(InputSet):
         tmpdir.makedirs()
 
         return indir, outdir, tmpdir
-
 
     def deepcopy(self) -> MrgddbInputSet:
         """Deep copy of the input set."""
@@ -222,4 +217,3 @@ class MrgddbInputGenerator(AbiBroadInputGenerator):
             generated_input += f"{file_path}"
 
         return generated_input
-

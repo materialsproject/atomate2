@@ -19,9 +19,9 @@ if TYPE_CHECKING:
     from abipy.abio.inputs import AbinitInput
     from pymatgen.core.structure import Structure
 
+    from atomate2.abinit.sets.anaddb import AnaddbInputGenerator
     from atomate2.abinit.sets.base import AbinitInputGenerator
     from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator
-    from atomate2.abinit.sets.anaddb import AnaddbInputGenerator
 
 __all__ = [
     "out_to_in",
@@ -179,6 +179,7 @@ def write_mrgddb_input_set(
         )
 
     mrgis.write_input(directory=directory, make_dir=True, overwrite=False)
+
 
 def write_anaddb_input_set(
     structure: Structure,
