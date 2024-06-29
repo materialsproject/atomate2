@@ -76,8 +76,8 @@ def test_analyze_free_energy(clean_dir, test_dir):
             )
         )
 
-    job = analyze_free_energy(phonon_docs, structure)
+    final_job = analyze_free_energy(phonon_docs, structure)
 
-    responses = run_locally(job, create_folders=True)
+    responses = run_locally(final_job, create_folders=True)
 
-    assert isinstance(responses[job.uuid][1].output, PhononQHADoc)
+    assert isinstance(responses[final_job.uuid][1].output, PhononQHADoc)

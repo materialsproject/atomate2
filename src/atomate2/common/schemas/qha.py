@@ -132,6 +132,11 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
             t_max=t_max,
             pressure=pressure,
         )
+        # Phonopy messes with the warnings
+        # Turns all warnings into errors
+        import warnings
+        warnings.filterwarnings("default")
+
 
         # create some plots here
         qha.plot_helmholtz_volume().savefig("helmholtz_volume.eps")
