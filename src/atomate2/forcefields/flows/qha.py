@@ -46,6 +46,9 @@ class CHGNetQhaMaker(CommonQhaMaker):
     ignore_imaginary_modes: bool
         By default, volumes where the harmonic phonon approximation shows imaginary
         will be ignored
+    eos_type: str
+        Equation of State type used for the fitting. Defaults to vinet.
+
 
     """
 
@@ -70,6 +73,7 @@ class CHGNetQhaMaker(CommonQhaMaker):
     pressure: float | None = None
     t_max: float | None = None
     ignore_imaginary_modes: bool = False
+    eos_type: str = "vinet"
 
     def initialize_phonon_maker(
         self,

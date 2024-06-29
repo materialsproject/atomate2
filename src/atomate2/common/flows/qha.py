@@ -64,6 +64,8 @@ class CommonQhaMaker(Maker, ABC):
     ignore_imaginary_modes: bool
         By default, volumes where the harmonic phonon approximation shows imaginary
         will be ignored
+    eos_type: str
+        Equation of State type used for the fitting. Defaults to vinet.
     """
 
     name: str = "QHA Maker"
@@ -77,6 +79,7 @@ class CommonQhaMaker(Maker, ABC):
     t_max: float | None = None
     pressure: float | None = None
     ignore_imaginary_modes: bool = False
+    eos_type: str = "vinet"
     # TODO: implement advanced handling of
     #  imaginary modes in phonon runs (i.e., fitting procedures)
     # TODO: add option to change eos fit
@@ -119,6 +122,7 @@ class CommonQhaMaker(Maker, ABC):
             t_max=self.t_max,
             pressure=self.pressure,
             ignore_imaginary_modes=self.ignore_imaginary_modes,
+            eos_type=self.eos_type,
         )
 
         return Flow([eos_job, phonon_jobs, analysis])

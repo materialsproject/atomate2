@@ -50,15 +50,23 @@ def analyze_free_energy(
     t_max: float = None,
     pressure: float = None,
     ignore_imaginary_modes: bool = False,
+    eos_type: str = "vinet",
 ) -> Flow:
     """Analyze the free energy from all phonon runs.
 
     Parameters
     ----------
-    total_dft_energy_per_formula_unit: float
-        Total DFT energy in eV per formula unit.
+    phonon_outputs: list[PhononBSDOSDoc]
+        list of PhononBSDOSDoc objects
     structure: Structure object
         Corresponding structure object.
+    t_max: float
+        Max temperature for QHA in Kelvin.
+    pressure: float
+        Pressure for QHA in GPa.
+    ignore_imaginary_modes: bool
+        If True, all free energies will be used
+        for EOS fit
     """
     # only add free energies if there are no imaginary modes
     # tolerance has to be tested
@@ -106,4 +114,5 @@ def analyze_free_energy(
         t_max=t_max,
         pressure=pressure,
         formula_units=next(iter(set(formula_units))),
+        eos_type=eos_type,
     )

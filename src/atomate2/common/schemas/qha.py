@@ -101,6 +101,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         t_max: float = None,
         pressure: float = None,
         formula_units: Union[int, None] = None,
+        eos_type: str = "vinet",
     ) -> Self:
         """Generate qha results.
 
@@ -115,6 +116,8 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         entropies: list of list of floats
         t_max: float
         pressure: float
+        eos_type: string
+            determines eos type used for the fit
 
         Returns
         -------
@@ -131,6 +134,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
             entropy=np.array(entropies),
             t_max=t_max,
             pressure=pressure,
+            eos=eos_type,
         )
         # Phonopy messes with the warnings
         # Turns all warnings into errors
