@@ -123,24 +123,23 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         -------
         .PhononQHADoc
         """
-        # put this into a schema and use this information there
-        # generate plots and save the data in a schema
-        qha = PhonopyQHA(
-            volumes=np.array(volumes),
-            electronic_energies=np.array(electronic_energies),
-            temperatures=np.array(temperatures),
-            free_energy=np.array(free_energies),
-            cv=np.array(heat_capacities),
-            entropy=np.array(entropies),
-            t_max=t_max,
-            pressure=pressure,
-            eos=eos_type,
-        )
-        # Phonopy messes with the warnings
-        # Turns all warnings into errors
         import warnings
 
-        warnings.filterwarnings("default")
+        with warnings.catch_warnings():
+            # Phonopy messes with the warnings
+            # Turns all warnings into errors
+
+            qha = PhonopyQHA(
+                volumes=np.array(volumes),
+                electronic_energies=np.array(electronic_energies),
+                temperatures=np.array(temperatures),
+                free_energy=np.array(free_energies),
+                cv=np.array(heat_capacities),
+                entropy=np.array(entropies),
+                t_max=t_max,
+                pressure=pressure,
+                eos=eos_type,
+            )
 
         # create some plots here
         qha.plot_helmholtz_volume().savefig("helmholtz_volume.eps")
