@@ -218,7 +218,7 @@ def test_analyze_free_energy_small(clean_dir, test_dir):
         ],
         atol=1e-8,
     )
-    assert qha_doc.pressure == None
+    assert qha_doc.pressure is None
     assert qha_doc.volumes == [
         56.51,
         58.31,
