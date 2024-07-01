@@ -90,7 +90,7 @@ strict = [
     "cclib==1.8.1",
     "chgnet==0.3.8",
     "click==8.1.7",
-    "custodian==2024.4.18",
+    "custodian==2024.6.24",
     "dscribe==2.1.1",
     "emmet-core==0.82.2",
     "ijson==3.3.0",
