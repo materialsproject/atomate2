@@ -67,7 +67,7 @@ class AbiBroadInputGenerator(InputGenerator):
     """
 
     calc_type: str
-    prev_outputs_deps: tuple
+    prev_outputs_deps: str | tuple | None
 
     def check_format_prev_dirs(
         self, prev_dirs: str | tuple | list | Path | None
@@ -134,7 +134,7 @@ class AbiBroadInputGenerator(InputGenerator):
                     raise RuntimeError("Should not occur.")
                 if files is not None:
                     inp_files = [
-                        (f.path, AbinitInputGenerator._get_in_file_name(f.path))
+                        (f.path, AbiBroadInputGenerator._get_in_file_name(f.path))
                         for f in files
                     ]
                     irdvars = irdvars_for_ext(ext)
@@ -148,7 +148,7 @@ class AbiBroadInputGenerator(InputGenerator):
                 if os.path.exists(out_den):
                     irdvars = irdvars_for_ext("DEN")
                     inp_files.append(
-                        (out_den, AbinitInputGenerator._get_in_file_name(out_den))
+                        (out_den, AbiBroadInputGenerator._get_in_file_name(out_den))
                     )
                     break
                 last_timden = prev_outdir.find_last_timden_file()
@@ -165,7 +165,7 @@ class AbiBroadInputGenerator(InputGenerator):
                 irdvars = irdvars_for_ext(ext)
                 if out_file:
                     inp_files.append(
-                        (out_file, AbinitInputGenerator._get_in_file_name(out_file))
+                        (out_file, AbiBroadInputGenerator._get_in_file_name(out_file))
                     )
                     break
         else:

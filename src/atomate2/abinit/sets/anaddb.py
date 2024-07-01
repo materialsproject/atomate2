@@ -7,13 +7,11 @@ import json
 import logging
 import os
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
 
 from abipy.abio.inputs import AnaddbInput
 from abipy.flowtk.utils import Directory
 from monty.json import MontyEncoder, jsanitize
-from pymatgen.io.abinit.abiobjects import KSampling
 from pymatgen.io.core import InputSet
 
 from atomate2.abinit.files import out_to_in
@@ -28,8 +26,10 @@ from atomate2.abinit.utils.common import (
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+    from pathlib import Path
 
     from pymatgen.core.structure import Structure
+    from pymatgen.io.abinit.abiobjects import KSampling
 
 
 logger = logging.getLogger(__name__)
@@ -341,13 +341,41 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
         return generated_input
 
 
-def anaddbinp_dfpt_dte(structure, anaddb_kwargs=None):
-    anaddb_input = AnaddbInput.dfpt(
-        structure=structure, dte=True, anaddb_kwargs=anaddb_kwargs
-    )
-    return anaddb_input
+def anaddbinp_dfpt_dte(
+    structure: Structure, anaddb_kwargs: None | dict = None
+) -> AnaddbInput:
+    """
+    Generate the AnaddbInput to retrieve information from the DTE.
+
+    Parameters
+    ----------
+    structure
+        A structure.
+    anaddb_kwargs
+        A dictionary with additional anaddb keywords to set.
+
+    Returns
+    -------
+        An AnaddbInput
+
+    """
+    return AnaddbInput.dfpt(structure=structure, dte=True, anaddb_kwargs=anaddb_kwargs)
 
 
 @dataclass
 class AnaddbDfptDteInputGenerator(AnaddbInputGenerator):
+    """
+    A class to generate the AnaddbInput to retrieve information from the DTE.
+
+    Parameters
+    ----------
+    factory
+        A callable to generate the AnaddbInput for DTE DFPT.
+
+    Returns
+    -------
+        An AnaddbInput
+
+    """
+
     factory: Callable = anaddbinp_dfpt_dte

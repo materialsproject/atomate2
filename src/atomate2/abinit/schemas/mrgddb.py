@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 # from typing import Type, TypeVar, Union, Optional, List
 from typing import Any, Optional, Union
 
-from abipy.dfpt.ddb import DdbFile
+from abipy.dfpt.ddb import DdbError, DdbFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.structure import StructureMetadata
@@ -139,7 +139,9 @@ class Calculation(BaseModel):
             output_doc = CalculationOutput.from_abinit_outddb(abinit_outddb)
 
             completed_at = str(
-                datetime.fromtimestamp(os.stat(abinit_outddb_file).st_mtime)
+                datetime.fromtimestamp(
+                    os.stat(abinit_outddb_file).st_mtime, tz=timezone.utc
+                )
             )
 
         report = None
@@ -153,7 +155,7 @@ class Calculation(BaseModel):
                 # report.run_completed is False even when it completed...
                 has_mrgddb_completed = TaskState.SUCCESS
 
-        except Exception as exc:
+        except (DdbError, Exception) as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
 

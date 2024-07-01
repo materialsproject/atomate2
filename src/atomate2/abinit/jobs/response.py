@@ -47,11 +47,12 @@ __all__ = [
 
 @dataclass
 class ResponseMaker(BaseAbinitMaker):
-    """Maker to create a job with a Response Function ABINIT calculation.
-        The type of RF is defined by the self.calc_type attribute.
+    """Maker for a Response Function ABINIT calculation job.
 
     Parameters
     ----------
+    calc_type : str
+        The type of RF.
     name : str
         The job name.
     """
@@ -258,9 +259,7 @@ def generate_dte_perts(
 @job
 def run_rf(
     perturbations: list[dict],
-    rf_maker: BaseAbinitMaker = field(
-        default_factory=BaseAbinitMaker
-    ),  # TODO: change to generic ResponseMaker
+    rf_maker: ResponseMaker,
     prev_outputs: list[str] | None = None,
 ) -> Flow:
     """

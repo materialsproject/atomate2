@@ -22,6 +22,8 @@ from atomate2.abinit.sets.anaddb import (
 )
 
 if TYPE_CHECKING:
+    from pymatgen.core.structure import Structure
+
     from atomate2.abinit.utils.history import JobHistory
 
 logger = logging.getLogger(__name__)
@@ -153,8 +155,7 @@ class AnaddbMaker(Maker):
 
 @dataclass
 class AnaddbDfptDteMaker(AnaddbMaker):
-    """Maker to create a job to analyze a DDB file with the utility anaddb
-        to get info from DFPT calculations with the DTE.
+    """Maker to get info from DFPT calculations (with DTE) from a merged DDB file.
 
     Parameters
     ----------

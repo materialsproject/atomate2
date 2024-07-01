@@ -7,7 +7,6 @@ import logging
 import os
 import time
 from dataclasses import dataclass
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from abipy.abio.input_tags import DDE, DTE
@@ -24,6 +23,7 @@ from atomate2.abinit.utils.common import (
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+    from pathlib import Path
 
 __all__ = ["MrgddbInputSet", "MrgddbInputGenerator"]
 

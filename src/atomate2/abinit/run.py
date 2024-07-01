@@ -10,7 +10,6 @@ from abipy.flowtk.qutils import time2slurm
 
 from atomate2 import SETTINGS
 from atomate2.abinit.utils.common import (
-    ANADDB_INPUT_FILE_NAME,
     INPUT_FILE_NAME,
     LOG_FILE_NAME,
     MRGDDB_INPUT_FILE_NAME,
@@ -142,7 +141,7 @@ def run_anaddb(
         max_end_time = start_time + wall_time
 
     with (
-        open(ANADDB_INPUT_FILE_NAME) as stdin,
+        # open(ANADDB_INPUT_FILE_NAME) as stdin,
         open(LOG_FILE_NAME, "w") as stdout,
         open(STDERR_FILE_NAME, "w") as stderr,
     ):

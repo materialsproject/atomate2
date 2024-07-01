@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 # from typing import Type, TypeVar, Union, Optional, List
@@ -13,6 +13,7 @@ from typing import Any, Optional, Union
 import abipy.core.abinit_units as abu
 import numpy as np
 from abipy.dfpt.anaddbnc import AnaddbNcFile
+from abipy.dfpt.ddb import AnaddbError
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.structure import StructureMetadata
@@ -152,7 +153,9 @@ class Calculation(BaseModel):
             output_doc = CalculationOutput.from_abinit_anaddb(abinit_anaddb)
 
             completed_at = str(
-                datetime.fromtimestamp(os.stat(abinit_anaddb_file).st_mtime)
+                datetime.fromtimestamp(
+                    os.stat(abinit_anaddb_file).st_mtime, tz=timezone.utc
+                )
             )
 
         report = None
@@ -166,7 +169,7 @@ class Calculation(BaseModel):
                 # report.run_completed is False even when it completed...
                 has_anaddb_completed = TaskState.SUCCESS
 
-        except Exception as exc:
+        except (AnaddbError, Exception) as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
 

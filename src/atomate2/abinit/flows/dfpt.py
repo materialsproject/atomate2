@@ -225,8 +225,7 @@ class DfptFlowMaker(Maker):
 @dataclass
 class ShgFlowMaker(DfptFlowMaker):
     """
-    Maker to generate a DFPT flow to compute the static nonlinear optical
-            susceptibility tensor for the second-harmonic generation with abinit.
+    Maker to compute the static NLO SHG tensor.
 
     The classmethods allow to tailor the flow for specific configurations.
 
