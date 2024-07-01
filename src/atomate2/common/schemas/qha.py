@@ -167,7 +167,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
             f".{kwargs.get('plot_type','eps')}"
         )
         qha.plot_heat_capacity_P_numerical().savefig(
-            f"{kwargs.get('heat_capacity_P_numerical_plot', 'heat_capacity_P_numerical')}"
+            f"{kwargs.get('heat_capacity_plot', 'heat_capacity_P_numerical')}"
             f".{kwargs.get('plot_type','eps')}"
         )
         # qha.plot_heat_capacity_P_polyfit().savefig("heat_capacity_P_polyfit.eps")
@@ -201,7 +201,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         )
         qha.write_heat_capacity_P_numerical(
             filename=kwargs.get(
-                "heat_capacity_P_numerical_datafile", "heat_capacity_P_numerical.dat"
+                "heat_capacity_datafile", "heat_capacity_P_numerical.dat"
             )
         )
         qha.write_gruneisen_temperature(
