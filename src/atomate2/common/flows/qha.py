@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker
 
@@ -19,6 +19,8 @@ if TYPE_CHECKING:
     from atomate2.common.flows.phonons import BasePhononMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
+
+supported_eos = frozenset(("vinet", "birch_murnaghan", "murnaghan"))
 
 
 @dataclass
@@ -79,7 +81,7 @@ class CommonQhaMaker(Maker, ABC):
     t_max: float | None = None
     pressure: float | None = None
     ignore_imaginary_modes: bool = False
-    eos_type: str = "vinet"
+    eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
     # TODO: implement advanced handling of
     #  imaginary modes in phonon runs (i.e., fitting procedures)
     # TODO: add option to change eos fit
@@ -98,6 +100,12 @@ class CommonQhaMaker(Maker, ABC):
         -------
         .Flow, a QHA flow
         """
+        if self.eos_type not in supported_eos:
+            raise ValueError(
+                "EOS not supported.",
+                "Please choose 'vinet', 'birch_murnaghan', 'murnaghan'",
+            )
+
         # In this way, one can easily exchange makers and enforce postprocessor None
         self.eos = CommonEosMaker(
             initial_relax_maker=self.initial_relax_maker,

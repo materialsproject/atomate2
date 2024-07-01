@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from atomate2.common.flows.qha import CommonQhaMaker
 from atomate2.forcefields.flows.phonons import PhononMaker
@@ -46,7 +46,7 @@ class CHGNetQhaMaker(CommonQhaMaker):
     ignore_imaginary_modes: bool
         By default, volumes where the harmonic phonon approximation shows imaginary
         will be ignored
-    eos_type: str
+    eos_type: supported_eos
         Equation of State type used for the fitting. Defaults to vinet.
 
 
@@ -73,7 +73,7 @@ class CHGNetQhaMaker(CommonQhaMaker):
     pressure: float | None = None
     t_max: float | None = None
     ignore_imaginary_modes: bool = False
-    eos_type: str = "vinet"
+    eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
 
     def initialize_phonon_maker(
         self,

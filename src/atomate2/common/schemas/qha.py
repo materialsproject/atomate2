@@ -142,6 +142,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
             )
 
         # create some plots here
+        # add kwargs to change the names and file types
         qha.plot_helmholtz_volume().savefig("helmholtz_volume.eps")
         qha.plot_volume_temperature().savefig("volume_temperature.eps")
         qha.plot_thermal_expansion().savefig("thermal_expansion.eps")
@@ -150,6 +151,8 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         qha.plot_heat_capacity_P_numerical().savefig("heat_capacity_P_numerical.eps")
         # qha.plot_heat_capacity_P_polyfit().savefig("heat_capacity_P_polyfit.eps")
         qha.plot_gruneisen_temperature().savefig("gruneisen_temperature.eps")
+
+        # write files as well - might be easier for plotting
 
         return cls.from_structure(
             structure=structure,
