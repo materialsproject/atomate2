@@ -27,7 +27,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         " and other properties have been computed",
     )
 
-    bulk_modulus: Optional[list[float]] = Field(
+    bulk_modulus: Optional[float] = Field(
         None, description="Bulk modulus in GPa computed without phonon contribution."
     )
     thermal_expansion: Optional[list[float]] = Field(
@@ -157,7 +157,8 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         return cls.from_structure(
             structure=structure,
             meta_structure=structure,
-            bulk_modulus=qha.bulk_modulus,
+            bulk_modulus=qha.bulk_modulus[0],  # all bulk moduli are the same
+            # (if electronic effects are not treated)
             thermal_expansion=qha.thermal_expansion,
             helmholtz_volume=qha.helmholtz_volume,
             volume_temperature=qha.volume_temperature,
