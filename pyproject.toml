@@ -82,29 +82,29 @@ strict = [
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
     "cclib==1.8.1",
-    "chgnet==0.3.5",
+    "chgnet==0.3.8",
     "click==8.1.7",
     "custodian==2024.4.18",
     "dscribe==2.1.1",
     "emmet-core==0.82.2",
-    "ijson==3.2.3",
+    "ijson==3.3.0",
     "jobflow==0.1.17",
     "lobsterpy==0.4.4",
     "mace-torch>=0.3.3",
-    "matgl==1.1.1",
+    "matgl==1.1.2",
     "monty==2024.5.24",
     "mp-api==0.41.2",
     "numpy",
-    "phonopy==2.23.1",
-    "pydantic-settings==2.2.1",
-    "pydantic==2.7.2",
+    "phonopy==2.24.3",
+    "pydantic-settings==2.3.3",
+    "pydantic==2.7.4",
     "pymatgen-analysis-defects==2024.5.11",
-    "pymatgen==2024.5.31",
-    "python-ulid==2.6.0",
+    "pymatgen==2024.6.10",
+    "python-ulid==2.7.0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "torch==2.2.1",
-    "typing-extensions==4.12.1",
+    "typing-extensions==4.12.2",
 ]
 
 [project.scripts]
@@ -165,15 +165,14 @@ select = ["ALL"]
 ignore = [
     "ANN002",
     "ANN003",
-    "ANN101",  # missing self type annotation
-    "ANN102",
+    "ANN101", # missing self type annotation
+    "ANN102", # missing cls annotation
     "ANN401",
-    "ARG002",  # unused method argument
-    "BLE001",
+    "ARG002", # unused method argument
+    # "BLE001",
     "C408",    # Unnecessary (dict/list/tuple) call - remove call
     "C901",    # function too complex
     "COM812",  # trailing comma missing
-    "DTZ",     # datetime-tz-now
     "EM",      # exception message must not use f-string literal
     "ERA001",  # found commented out code
     "FBT001",
@@ -183,7 +182,11 @@ ignore = [
     "ISC001",
     "PD011",   # pandas-use-of-dot-values
     "PERF203", # try-except-in-loop
-    "PLR",     # pylint-refactor
+    "PLR0911", # too many returns
+    "PLR0912", # too many branches
+    "PLR0913", # too many arguments
+    "PLR0915", # too many local statements
+    "PLR2004",
     "PT004",   # pytest-missing-fixture-name-underscore
     "PT006",   # pytest-parametrize-names-wrong-type
     "PT013",   # pytest-incorrect-pytest-import
@@ -191,7 +194,6 @@ ignore = [
     "RUF013",  # implicit-optional
     "S324",    # use of insecure hash function
     "S507",    # paramiko auto trust
-    "SLF",     # private member accessed outside class
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
 ]
@@ -204,7 +206,7 @@ docstring-code-format = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"**/tests/*" = ["ANN", "ARG001", "D", "INP001", "S101"]
+"**/tests/*" = ["ANN", "ARG001", "D", "INP001", "PLR2004", "S101"]
 # flake8-type-checking (TCH): things inside TYPE_CHECKING aren't available
 #     at runtime and so can't be used by pydantic models
 # flake8-future-annotations (FA): pipe operator for type unions only work in pydantic models in python 3.10+
