@@ -760,6 +760,9 @@ class VaspInputGenerator(InputGenerator):
             # If length is in kpoints settings use Kpoints.automatic
             return Kpoints.automatic(kconfig["length"])
 
+        if kconfig.get("gamma_only"):
+            return Kpoints()
+
         base_kpoints = None
         if kconfig.get("line_density"):
             # handle line density generation
@@ -941,9 +944,11 @@ def _get_u_param(
         # lookup specific LDAU if specified for most_electroneg atom
         return [lda_config[most_electroneg].get(sym, 0) for sym in poscar.site_symbols]
     return [
-        lda_config.get(sym, 0)
-        if isinstance(lda_config.get(sym, 0), (float, int))
-        else 0
+        (
+            lda_config.get(sym, 0)
+            if isinstance(lda_config.get(sym, 0), (float, int))
+            else 0
+        )
         for sym in poscar.site_symbols
     ]
 
