@@ -240,6 +240,21 @@ class Atomate2Settings(BaseSettings):
         "parsing QChem directories useful for storing duplicate of FW.json",
     )
 
+    # ShengBTE settings
+    SHENGBTE_CMD: str = Field(
+        "ShengBTE", description="Command to run 3 phonon ShengBTE."
+    )
+
+    # AlmaBTE settings
+    ALMABTE_CMD: str = Field(
+        "ShengBTE", description="Command to run 4 phonon AlmaBTE."
+    )
+
+    # Phono3py settings
+    PHONO3PY_CMD: str = Field(
+        "phono3py", description="Command to run phono3py."
+    )
+
     @model_validator(mode="before")
     @classmethod
     def load_default_settings(cls, values: dict[str, Any]) -> dict[str, Any]:

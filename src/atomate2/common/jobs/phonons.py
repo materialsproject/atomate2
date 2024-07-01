@@ -19,6 +19,8 @@ from pymatgen.transformations.advanced_transformations import (
 )
 
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
+from atomate2.forcefields.jobs import ForceFieldStaticMaker
+from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -26,8 +28,6 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.forcefields.jobs import ForceFieldStaticMaker
-    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 logger = logging.getLogger(__name__)
@@ -178,6 +178,15 @@ def generate_phonon_displacements(
 
     supercells = phonon.supercells_with_displacements
 
+    from monty.serialization import dumpfn
+
+    # Convert back to pymatgen structure
+    structures_pymatgen = [get_pmg_structure(cell) for cell in supercells]
+    for i in range(len(structures_pymatgen)):
+        structures_pymatgen[i].to(f"POSCAR_{i}", "poscar")
+
+    dumpfn(structures_pymatgen, "perturbed_structures.json")
+
     return [get_pmg_structure(cell) for cell in supercells]
 
 
@@ -290,6 +299,7 @@ def run_phonon_displacements(
         "forces": [],
         "uuids": [],
         "dirs": [],
+        "structure": []
     }
     phonon_job_kwargs = {}
     if prev_dir is not None and prev_dir_argname is not None:
@@ -305,17 +315,32 @@ def run_phonon_displacements(
         phonon_job.update_maker_kwargs(
             {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
         )
+
+        if isinstance(phonon_maker, BaseVaspMaker):
+            phonon_job.update_config(
+                {"manager_config": {"_fworker": "gpu_reg_fworker"}})
+        elif isinstance(phonon_maker, ForceFieldStaticMaker):
+            phonon_job.update_config(
+                {"manager_config": {"_fworker": "gpu_fworker"}})
+
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(len(displacements)))
         outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)
         outputs["dirs"] = [phonon_job.output.dir_name] * len(displacements)
         outputs["forces"] = phonon_job.output.output.all_forces
+        outputs["structure"].append(phonon_job.output.output.structure)
     else:
         for idx, displacement in enumerate(displacements):
             if prev_dir is not None:
                 phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
             else:
                 phonon_job = phonon_maker.make(displacement)
+            if isinstance(phonon_maker, BaseVaspMaker):
+                phonon_job.update_config(
+                    {"manager_config": {"_fworker": "gpu_reg_fworker"}})
+            elif isinstance(phonon_maker, ForceFieldStaticMaker):
+                phonon_job.update_config(
+                    {"manager_config": {"_fworker": "gpu_fworker"}})
             phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
 
             # we will add some meta data
@@ -335,6 +360,7 @@ def run_phonon_displacements(
             outputs["uuids"].append(phonon_job.output.uuid)
             outputs["dirs"].append(phonon_job.output.dir_name)
             outputs["forces"].append(phonon_job.output.output.forces)
+            outputs["structure"].append(phonon_job.output.output.structure)
 
     displacement_flow = Flow(phonon_jobs, outputs)
     return Response(replace=displacement_flow)
