@@ -102,6 +102,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         pressure: float = None,
         formula_units: Union[int, None] = None,
         eos_type: str = "vinet",
+        **kwargs,
     ) -> Self:
         """Generate qha results.
 
@@ -118,6 +119,8 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         pressure: float
         eos_type: string
             determines eos type used for the fit
+        kwargs: dict
+            Additional keywords to pass to this method
 
         Returns
         -------
@@ -143,14 +146,31 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
 
         # create some plots here
         # add kwargs to change the names and file types
-        qha.plot_helmholtz_volume().savefig("helmholtz_volume.eps")
-        qha.plot_volume_temperature().savefig("volume_temperature.eps")
-        qha.plot_thermal_expansion().savefig("thermal_expansion.eps")
-        qha.plot_gibbs_temperature().savefig("gibbs_temperature.eps")
-        qha.plot_bulk_modulus_temperature().savefig("bulk_modulus_temperature.eps")
-        qha.plot_heat_capacity_P_numerical().savefig("heat_capacity_P_numerical.eps")
+        qha.plot_helmholtz_volume().savefig(
+            kwargs.get("helmholtz_volume_filename", "helmholtz_volume.eps")
+        )
+        qha.plot_volume_temperature().savefig(
+            kwargs.get("volume_temperature_filename", "volume_temperature.eps")
+        )
+        qha.plot_thermal_expansion().savefig(
+            kwargs.get("thermal_expansion_filename", "thermal_expansion.eps")
+        )
+        qha.plot_gibbs_temperature().savefig(
+            kwargs.get("gibbs_temperature_filename", "gibbs_temperature.eps")
+        )
+        qha.plot_bulk_modulus_temperature().savefig(
+            kwargs.get("bulk_modulus_temperature", "bulk_modulus_temperature.eps")
+        )
+        qha.plot_heat_capacity_P_numerical().savefig(
+            kwargs.get(
+                "heat_capacity_P_numerical_filename.eps",
+                "heat_capacity_P_numerical.eps",
+            )
+        )
         # qha.plot_heat_capacity_P_polyfit().savefig("heat_capacity_P_polyfit.eps")
-        qha.plot_gruneisen_temperature().savefig("gruneisen_temperature.eps")
+        qha.plot_gruneisen_temperature().savefig(
+            kwargs.get("gruneisen_temperature_filname", "gruneisen_temperature.eps")
+        )
 
         # write files as well - might be easier for plotting
 

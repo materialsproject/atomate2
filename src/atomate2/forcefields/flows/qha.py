@@ -74,6 +74,7 @@ class CHGNetQhaMaker(CommonQhaMaker):
     t_max: float | None = None
     ignore_imaginary_modes: bool = False
     eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
+    analyze_free_energy_kwargs: dict = field(default_factory=dict)
 
     def initialize_phonon_maker(
         self,

@@ -82,9 +82,9 @@ class CommonQhaMaker(Maker, ABC):
     pressure: float | None = None
     ignore_imaginary_modes: bool = False
     eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
+    analyze_free_energy_kwargs: dict = field(default_factory=dict)
     # TODO: implement advanced handling of
     #  imaginary modes in phonon runs (i.e., fitting procedures)
-    # TODO: add option to change eos fit
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
         """Run an EOS flow.
@@ -131,6 +131,7 @@ class CommonQhaMaker(Maker, ABC):
             pressure=self.pressure,
             ignore_imaginary_modes=self.ignore_imaginary_modes,
             eos_type=self.eos_type,
+            **self.analyze_free_energy_kwargs,
         )
 
         return Flow([eos_job, phonon_jobs, analysis])

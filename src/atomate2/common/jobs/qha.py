@@ -51,6 +51,7 @@ def analyze_free_energy(
     pressure: float = None,
     ignore_imaginary_modes: bool = False,
     eos_type: str = "vinet",
+    **kwargs,
 ) -> Flow:
     """Analyze the free energy from all phonon runs.
 
@@ -67,6 +68,8 @@ def analyze_free_energy(
     ignore_imaginary_modes: bool
         If True, all free energies will be used
         for EOS fit
+    kwargs: dict
+        Additional keywords to pass to this job
     """
     # only add free energies if there are no imaginary modes
     # tolerance has to be tested
@@ -115,4 +118,5 @@ def analyze_free_energy(
         pressure=pressure,
         formula_units=next(iter(set(formula_units))),
         eos_type=eos_type,
+        **kwargs,
     )
