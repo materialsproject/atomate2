@@ -147,29 +147,60 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         # create some plots here
         # add kwargs to change the names and file types
         qha.plot_helmholtz_volume().savefig(
-            kwargs.get("helmholtz_volume_filename", "helmholtz_volume.eps")
+            f"{kwargs.get('helmholtz_volume_filename', 'helmholtz_volume')}.{kwargs.get('plot_type','eps')}"
         )
         qha.plot_volume_temperature().savefig(
-            kwargs.get("volume_temperature_filename", "volume_temperature.eps")
+            f"{kwargs.get('volume_temperature_plot', 'volume_temperature')}.{kwargs.get('plot_type','eps')}"
         )
         qha.plot_thermal_expansion().savefig(
-            kwargs.get("thermal_expansion_filename", "thermal_expansion.eps")
+            f"{kwargs.get('thermal_expansion_plot', 'thermal_expansion.eps')}.{kwargs.get('plot_type','eps')}"
         )
         qha.plot_gibbs_temperature().savefig(
-            kwargs.get("gibbs_temperature_filename", "gibbs_temperature.eps")
+            f"{kwargs.get('gibbs_temperature_plot', 'gibbs_temperature')}.{kwargs.get('plot_type','eps')}"
         )
         qha.plot_bulk_modulus_temperature().savefig(
-            kwargs.get("bulk_modulus_temperature", "bulk_modulus_temperature.eps")
+            f"{kwargs.get('bulk_modulus_plot', 'bulk_modulus_temperature')}.{kwargs.get('plot_type','eps')}"
         )
         qha.plot_heat_capacity_P_numerical().savefig(
-            kwargs.get(
-                "heat_capacity_P_numerical_filename.eps",
-                "heat_capacity_P_numerical.eps",
-            )
+            f"{kwargs.get('heat_capacity_P_numerical_plot','heat_capacity_P_numerical')}.{kwargs.get('plot_type','eps')}"
         )
         # qha.plot_heat_capacity_P_polyfit().savefig("heat_capacity_P_polyfit.eps")
         qha.plot_gruneisen_temperature().savefig(
-            kwargs.get("gruneisen_temperature_filname", "gruneisen_temperature.eps")
+            f"{kwargs.get('gruneisen_temperature_plot', 'gruneisen_temperature')}.{kwargs.get('plot_type','eps')}"
+        )
+
+        qha.write_helmholtz_volume(
+            filename=kwargs.get("helmholtz_volume_datafile", "helmholtz_volume.dat")
+        )
+        qha.write_helmholtz_volume_fitted(
+            filename=kwargs.get(
+                "helmholtz_volume_fitted_datafile", "helmholtz_volume_fitted.dat"
+            ),
+            thin_number=kwargs.get("thin_number", 10),
+        )
+        qha.write_volume_temperature(
+            filename=kwargs.get("volume_temperature_datafile", "volume_temperature.dat")
+        )
+        qha.write_thermal_expansion(
+            filename=kwargs.get("thermal_expansion_datafile", "thermal_expansion.dat")
+        )
+        qha.write_gibbs_temperature(
+            filename=kwargs.get("gibbs_temperature_datafile", "gibbs_temperature.dat")
+        )
+        qha.write_gruneisen_temperature(
+            filename=kwargs.get(
+                "gruneisen_temperature_datafile", "gruneisen_temperature.dat"
+            )
+        )
+        qha.write_heat_capacity_P_numerical(
+            filename=kwargs.get(
+                "heat_capacity_P_numerical_datafile", "heat_capacity_P_numerical.dat"
+            )
+        )
+        qha.write_gruneisen_temperature(
+            filename=kwargs.get(
+                "gruneisen_temperature_datafile", "gruneisen_temperature.dat"
+            )
         )
 
         # write files as well - might be easier for plotting
