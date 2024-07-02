@@ -3,15 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from pymatgen.io.vasp.inputs import Kpoints, KpointsSupportedModes
 
 from atomate2.vasp.sets.base import VaspInputGenerator
-
-if TYPE_CHECKING:
-    from pymatgen.core import Structure
-    from pymatgen.io.vasp import Outcar, Vasprun
 
 SPECIAL_KPOINT = Kpoints(
     comment="special k-point",
@@ -42,28 +37,9 @@ class ChargeStateRelaxSetGenerator(VaspInputGenerator):
     use_structure_charge: bool = True
     user_kpoints_settings: dict | Kpoints = field(default_factory=SPECIAL_KPOINT)
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -99,28 +75,9 @@ class ChargeStateStaticSetGenerator(VaspInputGenerator):
     use_structure_charge: bool = True
     user_kpoints_settings: dict | Kpoints = field(default_factory=SPECIAL_KPOINT)
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -155,28 +112,9 @@ class HSEChargeStateRelaxSetGenerator(VaspInputGenerator):
     use_structure_charge: bool = True
     user_kpoints_settings: dict | Kpoints = field(default_factory=SPECIAL_KPOINT)
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -219,28 +157,9 @@ class HSEChargeStateStaticSetGenerator(VaspInputGenerator):
     use_structure_charge: bool = True
     user_kpoints_settings: dict | Kpoints = field(default_factory=SPECIAL_KPOINT)
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------

@@ -15,7 +15,7 @@ def test_matpes_static_flow_maker(mock_vasp, clean_dir, vasp_test_dir):
         "MatPES GGA static": pre_relax_dir,
         "MatPES meta-GGA static": "matpes_static_flow/r2scan_static",
     }
-    si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR")
+    si_struct = Structure.from_file(f"{vasp_test_dir}/{pre_relax_dir}/inputs/POSCAR.gz")
 
     mock_vasp(ref_paths)
 

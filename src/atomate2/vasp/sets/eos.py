@@ -8,24 +8,14 @@ MP GGA compatible, and MP meta-GGA compatible
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from importlib.resources import files as import_files
 from typing import TYPE_CHECKING
 
-from monty.serialization import loadfn
+from pymatgen.io.vasp.sets import MPRelaxSet, MPScanRelaxSet
 
 from atomate2.vasp.sets.base import VaspInputGenerator
 
 if TYPE_CHECKING:
-    from pymatgen.core import Structure
-    from pymatgen.io.vasp import Outcar, Vasprun
-
-
-_BASE_MP_GGA_RELAX_SET = loadfn(
-    import_files("atomate2.vasp.sets") / "BaseMPGGASet.yaml"
-)
-_BASE_MP_R2SCAN_RELAX_SET = loadfn(
-    import_files("atomate2.vasp.sets") / "BaseMPR2SCANRelaxSet.yaml"
-)
+    from pymatgen.io.vasp import Kpoints
 
 
 @dataclass
@@ -37,28 +27,9 @@ class EosSetGenerator(VaspInputGenerator):
     auto_kspacing: bool = False
     inherit_incar: bool = False
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -86,33 +57,14 @@ class EosSetGenerator(VaspInputGenerator):
 class MPLegacyEosRelaxSetGenerator(VaspInputGenerator):
     """Class to generate atomate1-MP-compatible VASP GGA EOS relax input sets."""
 
-    config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
+    config_dict: dict = field(default_factory=lambda: MPRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
     inherit_incar: bool = False
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -130,30 +82,11 @@ class MPLegacyEosRelaxSetGenerator(VaspInputGenerator):
             "LWAVE": True,
         }
 
-    def get_kpoints_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = 0.0,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def kpoints_updates(self) -> dict | Kpoints:
         """Get updates to the kpoints configuration for a non-self consistent VASP job.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -167,33 +100,14 @@ class MPLegacyEosRelaxSetGenerator(VaspInputGenerator):
 class MPLegacyEosStaticSetGenerator(EosSetGenerator):
     """Class to generate atomate1-MP-compatible VASP GGA EOS relax input sets."""
 
-    config_dict: dict = field(default_factory=lambda: _BASE_MP_GGA_RELAX_SET)
+    config_dict: dict = field(default_factory=lambda: MPRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
     inherit_incar: bool = False
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -221,33 +135,14 @@ class MPLegacyEosStaticSetGenerator(EosSetGenerator):
 class MPGGAEosRelaxSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP GGA EOS relax input sets."""
 
-    config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    config_dict: dict = field(default_factory=lambda: MPScanRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
     inherit_incar: bool = False
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -275,33 +170,14 @@ class MPGGAEosRelaxSetGenerator(VaspInputGenerator):
 class MPGGAEosStaticSetGenerator(EosSetGenerator):
     """Class to generate MP-compatible VASP GGA EOS relax input sets."""
 
-    config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    config_dict: dict = field(default_factory=lambda: MPScanRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
     inherit_incar: bool = False
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for a relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -328,33 +204,14 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
 class MPMetaGGAEosStaticSetGenerator(VaspInputGenerator):
     """Class to generate MP-compatible VASP Meta-GGA static input sets."""
 
-    config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    config_dict: dict = field(default_factory=lambda: MPScanRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
     inherit_incar: bool = False
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for this calculation type.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -389,34 +246,15 @@ class MPMetaGGAEosRelaxSetGenerator(VaspInputGenerator):
         otherwise it will increase with bandgap up to a max of 0.44.
     """
 
-    config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    config_dict: dict = field(default_factory=lambda: MPScanRelaxSet.CONFIG)
     bandgap_tol: float = 1e-4
     auto_ismear: bool = False
     auto_kspacing: bool = False
     inherit_incar: bool = False
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for this calculation type.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------
@@ -453,34 +291,15 @@ class MPMetaGGAEosPreRelaxSetGenerator(VaspInputGenerator):
         otherwise it will increase with bandgap up to a max of 0.44.
     """
 
-    config_dict: dict = field(default_factory=lambda: _BASE_MP_R2SCAN_RELAX_SET)
+    config_dict: dict = field(default_factory=lambda: MPScanRelaxSet.CONFIG)
     bandgap_tol: float = 1e-4
     auto_ismear: bool = False
     auto_kspacing: bool = False
     inherit_incar: bool = False
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
+    @property
+    def incar_updates(self) -> dict:
         """Get updates to the INCAR for this calculation type.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
 
         Returns
         -------

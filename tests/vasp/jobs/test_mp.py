@@ -49,7 +49,7 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
         "MP meta-GGA static": "Si_mp_meta_gga_relax/r2scan_final_static",
     }
     si_struct = Structure.from_file(
-        f"{vasp_test_dir}/Si_mp_meta_gga_relax/r2scan_final_static/inputs/POSCAR"
+        f"{vasp_test_dir}/Si_mp_meta_gga_relax/r2scan_final_static/inputs/POSCAR.gz"
     )
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
@@ -58,7 +58,7 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     job = MPMetaGGAStaticMaker(
-        input_set_generator=MPMetaGGARelaxSetGenerator(auto_kspacing=0.8249)
+        input_set_generator=MPMetaGGARelaxSetGenerator(bandgap=0.8249)
     ).make(si_struct)
 
     # ensure flow runs successfully
@@ -76,7 +76,7 @@ def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
         "MP meta-GGA relax": "Si_mp_meta_gga_relax/r2scan_relax",
     }
     si_struct = Structure.from_file(
-        f"{vasp_test_dir}/Si_mp_meta_gga_relax/r2scan_final_static/inputs/POSCAR"
+        f"{vasp_test_dir}/Si_mp_meta_gga_relax/r2scan_final_static/inputs/POSCAR.gz"
     )
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
@@ -87,7 +87,7 @@ def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     job = MPMetaGGARelaxMaker(
-        input_set_generator=MPMetaGGARelaxSetGenerator(auto_kspacing=0.4786)
+        input_set_generator=MPMetaGGARelaxSetGenerator(bandgap=0.4786)
     ).make(si_struct)
 
     # ensure flow runs successfully
@@ -105,13 +105,11 @@ def test_mp_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
         "MP GGA relax": "Si_mp_gga_relax/GGA_Relax_1",
     }
     si_struct = Structure.from_file(
-        f"{vasp_test_dir}/Si_mp_gga_relax/GGA_Relax_1/inputs/POSCAR"
+        f"{vasp_test_dir}/Si_mp_gga_relax/GGA_Relax_1/inputs/POSCAR.gz"
     )
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {
-        key: {"incar_settings": ["LWAVE", "LCHARG"]} for key in ref_paths
-    }
+    fake_run_vasp_kwargs = {key: {"incar_settings": ["LWAVE"]} for key in ref_paths}
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 

@@ -92,7 +92,7 @@ class BaseCp2kMaker(Maker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputGenerator
+    input_set_generator : .Cp2kInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_cp2k_input_set`.

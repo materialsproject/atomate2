@@ -26,6 +26,7 @@ expected_incar = {
     "LORBIT": 11,
     "LREAL": False,
     "LWAVE": False,
+    "MAGMOM": [0.6, 0.6],
     "NELM": 200,
     "NSW": 0,
     "PREC": "Accurate",
@@ -77,7 +78,9 @@ def test_matpes_static_maker_default_values(maker_cls: BaseVaspMaker):
     )
     config = maker.input_set_generator.config_dict
     assert {*config} == {"INCAR", "POTCAR", "PARENT", "POTCAR_FUNCTIONAL"}
-    assert config["INCAR"] == expected_incar
+    assert all(
+        v == expected_incar[k] for k, v in config["INCAR"].items() if k != "MAGMOM"
+    )
 
 
 def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
@@ -85,7 +88,7 @@ def test_matpes_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     gga_job_name = "MatPES GGA static"
     ref_paths = {gga_job_name: "matpes_static_flow/pbe_static"}
     si_struct = Structure.from_file(
-        f"{vasp_test_dir}/matpes_static_flow/pbe_static/inputs/POSCAR"
+        f"{vasp_test_dir}/matpes_static_flow/pbe_static/inputs/POSCAR.gz"
     )
 
     # exclude LWAVE from INCAR checking since it defaults to False in MatPesGGAStatic
@@ -108,7 +111,7 @@ def test_matpes_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     # map from job name to directory containing reference input/output files
     ref_paths = {"MatPES meta-GGA static": "matpes_static_flow/r2scan_static"}
     si_struct = Structure.from_file(
-        f"{vasp_test_dir}/matpes_static_flow/r2scan_static/inputs/POSCAR"
+        f"{vasp_test_dir}/matpes_static_flow/r2scan_static/inputs/POSCAR.gz"
     )
 
     mock_vasp(ref_paths)

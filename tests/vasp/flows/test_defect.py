@@ -43,7 +43,7 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     si_defect = Structure.from_file(
-        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR"
+        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR.gz"
     )
 
     # generate flow
@@ -88,7 +88,7 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     si_defect = Structure.from_file(
-        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR"
+        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR.gz"
     )
 
     ccd_maker = ConfigurationCoordinateMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))

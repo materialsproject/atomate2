@@ -35,7 +35,7 @@ def test_mp_gga_eos_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     structure = Structure.from_file(
-        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax']}/inputs/POSCAR"
+        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax']}/inputs/POSCAR.gz"
     )
     maker = MPGGAEosRelaxMaker()
     job = maker.make(structure)
@@ -67,7 +67,7 @@ def test_mp_gga_eos_static_maker(mock_vasp, clean_dir, vasp_test_dir):
         f"mp-149-PBE-EOS_Deformation_Relax_0/outputs/POSCAR.gz"
     )
     structure = Structure.from_file(
-        f"{vasp_test_dir}/Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0/inputs/POSCAR"
+        f"{vasp_test_dir}/Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0/inputs/POSCAR.gz"
     )
     assert input_structure == structure
 

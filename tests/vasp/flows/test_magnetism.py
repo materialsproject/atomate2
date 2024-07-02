@@ -11,7 +11,12 @@ from atomate2.common.schemas.magnetism import MagneticOrderingsDocument
 
 def test_magnetic_orderings(mock_vasp, clean_dir, test_dir):
     structure = Structure.from_file(
-        test_dir / "vasp" / "MgMn2O4_magnetic" / "relax_1_3_(fm)" / "inputs" / "POSCAR"
+        test_dir
+        / "vasp"
+        / "MgMn2O4_magnetic"
+        / "relax_1_3_(fm)"
+        / "inputs"
+        / "POSCAR.gz"
     )
 
     ref_paths = {
