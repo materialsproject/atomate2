@@ -269,6 +269,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         **kwargs:
             additional arguments
         """
+        additional_fields = kwargs.get("additional_fields", {})
         factor = get_factor(code)
         # This opens the opportunity to add support for other codes
         # that are supported by phonopy
@@ -466,7 +467,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             total_dft_energy / formula_units if total_dft_energy is not None else None
         )
 
-        return cls.from_structure(
+        doc = cls.from_structure(
             structure=structure,
             meta_structure=structure,
             phonon_bandstructure=bs_symm_line,
@@ -513,6 +514,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 "kpoint_density_dos": kpoint_density_dos,
             },
         )
+
+        return doc.model_copy(update=additional_fields)
 
     @staticmethod
     def get_kpath(
