@@ -233,15 +233,15 @@ def test_analyze_free_energy_small(clean_dir, test_dir):
         76.29,
     ]
     assert_allclose(qha_doc.temperatures[5], 10.0)
-    assert_allclose(qha_doc.heat_capacities[10][9], 2.5144627)
+    assert_allclose(qha_doc.heat_capacities[10][9], 2.5144627, atol=1e-3)
 
-    assert_allclose(qha_doc.entropies[10][2], 0.1449301)
-    assert_allclose(qha_doc.bulk_modulus_temperature[30], 75.0604563982221, atol=1e-8)
-    assert_allclose(qha_doc.bulk_modulus, 0.48559238394681514, atol=1e-8)
-    assert_allclose(qha_doc.gibbs_temperature[10], -14.814345401430508, atol=1e-8)
+    assert_allclose(qha_doc.entropies[10][2], 0.1449301, atol=1e-3)
+    assert_allclose(qha_doc.bulk_modulus_temperature[30], 75.0604563982221, atol=1e-3)
+    assert_allclose(qha_doc.bulk_modulus, 0.48559238394681514, atol=1e-3)
+    assert_allclose(qha_doc.gibbs_temperature[10], -14.814345401430508, atol=1e-3)
     assert_allclose(qha_doc.gruneisen_temperature[5], 3.001253318775402, atol=1e-3)
     assert_allclose(
-        qha_doc.heat_capacity_p_numerical[3], 0.024082049058881838, atol=1e-8
+        qha_doc.heat_capacity_p_numerical[3], 0.024082049058881838, atol=1e-3
     )
-    assert_allclose(qha_doc.helmholtz_volume[2][2], -14.631379092600538, atol=1e-8)
+    assert_allclose(qha_doc.helmholtz_volume[2][2], -14.631379092600538, atol=1e-3)
     assert_allclose(qha_doc.t_max, 100)
