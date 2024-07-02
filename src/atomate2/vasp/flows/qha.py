@@ -1,4 +1,4 @@
-"""Define QHA flow for forcefields."""
+"""Define QHA flow for VASP."""
 
 from __future__ import annotations
 
@@ -6,15 +6,18 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
 from atomate2.common.flows.qha import CommonQhaMaker
+from atomate2.vasp.flows.phonons import PhononMaker
+
+from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
+from atomate2.vasp.jobs.eos import EosRelaxMaker
+from atomate2.vasp.sets.core import TightRelaxSetGenerator
 from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.forcefields.jobs import CHGNetRelaxMaker, CHGNetStaticMaker
 
-if TYPE_CHECKING:
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
 
 @dataclass
-class CHGNetQhaMaker(CommonQhaMaker):
+class QhaMaker(CommonQhaMaker):
     """
     Perform quasi-harmonic approximation.
 
@@ -27,13 +30,13 @@ class CHGNetQhaMaker(CommonQhaMaker):
     ----------
     name: str
         Name of the flows produced by this maker.
-    initial_relax_maker: .ForceFieldRelaxMaker | None
+    initial_relax_maker: .TightRelaxMaker | None
         Maker to relax the input structure.
-    eos_relax_maker: .ForceFieldRelaxMaker | None
+    eos_relax_maker: .TightRelaxMaker | None
         Maker to relax deformed structures for the EOS fit.
         The volume has to be fixed!
-    phonon_displacement_maker: .ForceFieldStaticMaker | None
-    phonon_static_maker: .ForceFieldStaticMaker | None
+    phonon_displacement_maker: .StaticMaker | None
+    phonon_static_maker: .StaticMaker | None
     phonon_maker_kwargs: dict
     linear_strain: tuple[float, float]
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
@@ -52,20 +55,20 @@ class CHGNetQhaMaker(CommonQhaMaker):
 
     """
 
-    name: str = "CHGNet QHA Maker"
-    initial_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=CHGNetRelaxMaker
+    name: str = "VASP QHA Maker"
+    initial_relax_maker: TightRelaxMaker | None = field(
+        default_factory=TightRelaxMaker
     )
-    eos_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(
-            relax_cell=False, relax_kwargs={"fmax": 0.00001}
-        )
+    eos_relax_maker: TightRelaxMaker | None = field(
+        default_factory=lambda: EosRelaxMaker(
+            input_set_generator=TightRelaxSetGenerator(
+                user_incar_settings={"ISIF": 2},
+            )))
+    phonon_displacement_maker: StaticMaker | None = field(
+        default_factory=StaticMaker
     )
-    phonon_displacement_maker: ForceFieldStaticMaker | None = field(
-        default_factory=CHGNetStaticMaker
-    )
-    phonon_static_maker: ForceFieldStaticMaker | None = field(
-        default_factory=CHGNetStaticMaker
+    phonon_static_maker: StaticMaker | None = field(
+        default_factory=StaticMaker
     )
     phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
@@ -78,9 +81,9 @@ class CHGNetQhaMaker(CommonQhaMaker):
 
     def initialize_phonon_maker(
         self,
-        phonon_displacement_maker: ForceFieldStaticMaker,
-        phonon_static_maker: ForceFieldStaticMaker,
-        bulk_relax_maker: ForceFieldRelaxMaker,
+        phonon_displacement_maker: StaticMaker,
+        phonon_static_maker: StaticMaker,
+        bulk_relax_maker: TightRelaxMaker|None,
         phonon_maker_kwargs: dict,
     ) -> PhononMaker | None:
         """Initialize Phonon Maker.
@@ -119,4 +122,4 @@ class CHGNetQhaMaker(CommonQhaMaker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
-        return
+        return "prev_dir"

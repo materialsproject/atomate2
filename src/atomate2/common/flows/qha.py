@@ -121,6 +121,8 @@ class CommonQhaMaker(Maker, ABC):
             phonon_maker_kwargs=self.phonon_maker_kwargs,
         )
         eos_job = self.eos.make(structure)
+
+        # should I pass prev_dirs?
         phonon_jobs = get_phonon_jobs(
             phonon_maker=self.phonon_maker, eos_output=eos_job.output
         )
