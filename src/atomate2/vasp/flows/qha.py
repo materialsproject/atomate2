@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 from atomate2.common.flows.qha import CommonQhaMaker
-from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.vasp.flows.phonons import PhononMaker
 from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
 from atomate2.vasp.jobs.eos import EosRelaxMaker
