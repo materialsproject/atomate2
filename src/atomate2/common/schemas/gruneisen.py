@@ -5,6 +5,7 @@ from typing import Optional
 
 import matplotlib.pyplot as plt
 from emmet.core.structure import StructureMetadata
+from matplotlib import colors
 from matplotlib.colors import LinearSegmentedColormap
 from pydantic import BaseModel, Field
 from pymatgen.phonon.gruneisen import (
@@ -95,7 +96,7 @@ class GruneisenParameterDocument(StructureMetadata):
         save_fig: bool to switch plot saving
         kwargs: kwargs to adjust plotter
         """
-        u = freq_units(kwargs.get("units", "thz"))
+        u = freq_units(kwargs.get("units", "THz"))
         ax = pretty_plot(12, 8)
         gruneisen_band_symline_plotter._make_ticks(ax)  # noqa: SLF001
 
@@ -108,6 +109,21 @@ class GruneisenParameterDocument(StructureMetadata):
         )
 
         data = gruneisen_band_symline_plotter.bs_plot_data()
+
+        # Collect all Grüneisen parameter values
+        all_gruneisen_values = []
+        for dists_inx, _ in enumerate(data["distances"]):
+            for band_idx in range(gruneisen_band_symline_plotter.n_bands):
+                all_gruneisen_values.extend(data["gruneisen"][dists_inx][band_idx])
+
+        # Normalize colormap based on the global Grüneisen parameter values
+        norm = colors.SymLogNorm(
+            vmin=min(all_gruneisen_values),
+            vmax=max(all_gruneisen_values),
+            linthresh=1e-2,
+            linscale=1,
+        )
+
         for (dists_inx, dists), (_, freqs) in zip(
             enumerate(data["distances"]), enumerate(data["frequency"])
         ):
@@ -117,19 +133,21 @@ class GruneisenParameterDocument(StructureMetadata):
                     data["gruneisen"][dists_inx][band_idx][idx]
                     for idx in range(len(data["distances"][dists_inx]))
                 ]
-                ax.plot(dists, ys, c="black", alpha=0.4)
-                sc = ax.scatter(dists, ys, c=ys_gru, cmap=cmap, marker="o", s=1)
+                sc = ax.scatter(
+                    dists, ys, c=ys_gru, cmap=cmap, norm=norm, marker="o", s=1
+                )
 
         # Main X and Y Labels
         ax.set_xlabel(r"$\mathrm{Wave\ Vector}$", fontsize=30)
-        units = kwargs.get("units", "thz")
+        units = kwargs.get("units", "THz")
         ax.set_ylabel(f"Frequencies ({units})", fontsize=30)
         # X range (K)
         # last distance point
         x_max = data["distances"][-1][-1]
         ax.set_xlim(0, x_max)
 
-        plt.colorbar(sc, ax=ax)
+        cbar = plt.colorbar(sc, ax=ax)
+        cbar.set_label(r"$\gamma \ \mathrm{(logarithmized)}$", fontsize=30)
         plt.tight_layout()
         gruneisen_band_plot = kwargs.get("gruneisen_bs", "gruneisen_band.pdf")
         if save_fig:
