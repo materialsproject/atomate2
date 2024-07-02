@@ -434,6 +434,11 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
 
             calculator = Potential(**kwargs)
 
+        elif calculator_name == MLFF.NEP:
+            from calorine.calculators import CPUNEP
+
+            calculator = CPUNEP(**kwargs)
+
         elif calculator_name == MLFF.Nequip:
             from nequip.ase import NequIPCalculator
 
