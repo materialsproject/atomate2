@@ -1,19 +1,11 @@
-from pathlib import Path
-
 from emmet.core.qc_tasks import TaskDoc
 from jobflow import run_locally
-from pymatgen.core.structure import Molecule
 from pytest import approx
 
 from atomate2.qchem.jobs.core import FreqMaker, OptMaker, SinglePointMaker
 
-current_directory = Path(__file__).resolve().parent
-file_name = current_directory / "H2O.xyz"
 
-H2O = Molecule.from_file(file_name)
-
-
-def test_single_point_maker(mock_qchem, clean_dir):
+def test_single_point_maker(mock_qchem, clean_dir, h2o_molecule):
     # mapping from job name to directory containing test files
     ref_paths = {"single point": "water_single_point"}
 
@@ -25,7 +17,7 @@ def test_single_point_maker(mock_qchem, clean_dir):
     mock_qchem(ref_paths, fake_run_qchem_kwargs)
 
     # generate job
-    job = SinglePointMaker().make(H2O)
+    job = SinglePointMaker().make(h2o_molecule)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -36,12 +28,12 @@ def test_single_point_maker(mock_qchem, clean_dir):
     assert output1.output.final_energy == approx(-76.4451488262)
 
 
-def test_opt_maker(mock_qchem, clean_dir):
+def test_opt_maker(mock_qchem, clean_dir, h2o_molecule):
     ref_paths = {"optimization": "water_optimization"}
     fake_run_qchem_kwargs = {}
     mock_qchem(ref_paths, fake_run_qchem_kwargs)
 
-    job = OptMaker().make(H2O)
+    job = OptMaker().make(h2o_molecule)
 
     responses = run_locally(job, create_folders=True, ensure_success=True)
     opt_geometry = {
@@ -83,12 +75,12 @@ def test_opt_maker(mock_qchem, clean_dir):
     assert output1.output.final_energy == approx(-76.450849061819)
 
 
-def test_freq(mock_qchem, clean_dir):
+def test_freq(mock_qchem, clean_dir, h2o_molecule):
     ref_paths = {"frequency": "water_frequency"}
     fake_run_qchem_kwargs = {}
     mock_qchem(ref_paths, fake_run_qchem_kwargs)
 
-    job = FreqMaker().make(H2O)
+    job = FreqMaker().make(h2o_molecule)
 
     responses = run_locally(job, create_folders=True, ensure_success=True)
     ref_freqs = [1643.03, 3446.82, 3524.32]
