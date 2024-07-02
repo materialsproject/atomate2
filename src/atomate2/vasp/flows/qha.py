@@ -3,17 +3,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 
 from atomate2.common.flows.qha import CommonQhaMaker
+from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.vasp.flows.phonons import PhononMaker
-
-from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
+from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
 from atomate2.vasp.jobs.eos import EosRelaxMaker
 from atomate2.vasp.sets.core import TightRelaxSetGenerator
-from atomate2.forcefields.flows.phonons import PhononMaker
-from atomate2.forcefields.jobs import CHGNetRelaxMaker, CHGNetStaticMaker
-
 
 
 @dataclass
@@ -56,20 +53,16 @@ class QhaMaker(CommonQhaMaker):
     """
 
     name: str = "VASP QHA Maker"
-    initial_relax_maker: TightRelaxMaker | None = field(
-        default_factory=TightRelaxMaker
-    )
+    initial_relax_maker: TightRelaxMaker | None = field(default_factory=TightRelaxMaker)
     eos_relax_maker: TightRelaxMaker | None = field(
         default_factory=lambda: EosRelaxMaker(
             input_set_generator=TightRelaxSetGenerator(
                 user_incar_settings={"ISIF": 2},
-            )))
-    phonon_displacement_maker: StaticMaker | None = field(
-        default_factory=StaticMaker
+            )
+        )
     )
-    phonon_static_maker: StaticMaker | None = field(
-        default_factory=StaticMaker
-    )
+    phonon_displacement_maker: StaticMaker | None = field(default_factory=StaticMaker)
+    phonon_static_maker: StaticMaker | None = field(default_factory=StaticMaker)
     phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
@@ -83,7 +76,7 @@ class QhaMaker(CommonQhaMaker):
         self,
         phonon_displacement_maker: StaticMaker,
         phonon_static_maker: StaticMaker,
-        bulk_relax_maker: TightRelaxMaker|None,
+        bulk_relax_maker: TightRelaxMaker | None,
         phonon_maker_kwargs: dict,
     ) -> PhononMaker | None:
         """Initialize Phonon Maker.
@@ -113,7 +106,7 @@ class QhaMaker(CommonQhaMaker):
         )
 
     @property
-    def prev_calc_dir_argname(self) -> None:
+    def prev_calc_dir_argname(self) -> str:
         """Name of argument informing static maker of previous calculation directory.
 
         As this differs between different DFT codes (e.g., VASP, CP2K), it
