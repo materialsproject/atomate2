@@ -4,6 +4,7 @@ import logging
 from typing import Optional
 
 import matplotlib.pyplot as plt
+import numpy as np
 from emmet.core.structure import StructureMetadata
 from matplotlib import colors
 from matplotlib.colors import LinearSegmentedColormap
@@ -110,16 +111,14 @@ class GruneisenParameterDocument(StructureMetadata):
 
         data = gruneisen_band_symline_plotter.bs_plot_data()
 
-        # Collect all Grüneisen parameter values
-        all_gruneisen_values = []
-        for dists_inx, _ in enumerate(data["distances"]):
-            for band_idx in range(gruneisen_band_symline_plotter.n_bands):
-                all_gruneisen_values.extend(data["gruneisen"][dists_inx][band_idx])
+        # extract min and max Grüneisen parameter values
+        max_gruneisen = np.array(data["gruneisen"]).max()
+        min_gruneisen = np.array(data["gruneisen"]).min()
 
-        # Normalize colormap based on the global Grüneisen parameter values
+        # LogNormalize colormap based on the min and max Grüneisen parameter values
         norm = colors.SymLogNorm(
-            vmin=min(all_gruneisen_values),
-            vmax=max(all_gruneisen_values),
+            vmin=min_gruneisen,
+            vmax=max_gruneisen,
             linthresh=1e-2,
             linscale=1,
         )
