@@ -42,6 +42,8 @@ class QhaMaker(CommonQhaMaker):
         Maximum temperature until which the QHA will be performed
     pressure: float | None
         Pressure at which the QHA will be performed (default None, no pressure)
+    skip_analysis: bool
+        Skips the analysis step and only performs EOS and phonon computations.
     ignore_imaginary_modes: bool
         By default, volumes where the harmonic phonon approximation shows imaginary
         will be ignored
@@ -68,6 +70,7 @@ class QhaMaker(CommonQhaMaker):
     pressure: float | None = None
     t_max: float | None = None
     ignore_imaginary_modes: bool = False
+    skip_analysis: bool = False
     eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
     analyze_free_energy_kwargs: dict = field(default_factory=dict)
 

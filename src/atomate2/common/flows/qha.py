@@ -63,6 +63,8 @@ class CommonQhaMaker(Maker, ABC):
         Maximum temperature until which the QHA will be performed
     pressure: float | None
         Pressure at which the QHA will be performed (default None, no pressure)
+    skip_analysis: bool
+        Skips the analysis step and only performs EOS and phonon computations.
     ignore_imaginary_modes: bool
         By default, volumes where the harmonic phonon approximation shows imaginary
         will be ignored
@@ -81,6 +83,7 @@ class CommonQhaMaker(Maker, ABC):
     t_max: float | None = None
     pressure: float | None = None
     ignore_imaginary_modes: bool = False
+    skip_analysis: bool = False
     eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
     analyze_free_energy_kwargs: dict = field(default_factory=dict)
     # TODO: implement advanced handling of
@@ -106,6 +109,8 @@ class CommonQhaMaker(Maker, ABC):
                 "Please choose 'vinet', 'birch_murnaghan', 'murnaghan'",
             )
 
+        qha_jobs = []
+
         # In this way, one can easily exchange makers and enforce postprocessor None
         self.eos = CommonEosMaker(
             initial_relax_maker=self.initial_relax_maker,
@@ -121,22 +126,25 @@ class CommonQhaMaker(Maker, ABC):
             phonon_maker_kwargs=self.phonon_maker_kwargs,
         )
         eos_job = self.eos.make(structure)
-
+        qha_jobs.append(eos_job)
         # should I pass prev_dirs?
         phonon_jobs = get_phonon_jobs(
             phonon_maker=self.phonon_maker, eos_output=eos_job.output
         )
-        analysis = analyze_free_energy(
-            phonon_jobs.output,
-            structure=structure,
-            t_max=self.t_max,
-            pressure=self.pressure,
-            ignore_imaginary_modes=self.ignore_imaginary_modes,
-            eos_type=self.eos_type,
-            **self.analyze_free_energy_kwargs,
-        )
+        qha_jobs.append(phonon_jobs)
+        if not self.skip_analysis:
+            analysis = analyze_free_energy(
+                phonon_jobs.output,
+                structure=structure,
+                t_max=self.t_max,
+                pressure=self.pressure,
+                ignore_imaginary_modes=self.ignore_imaginary_modes,
+                eos_type=self.eos_type,
+                **self.analyze_free_energy_kwargs,
+            )
+            qha_jobs.append(analysis)
 
-        return Flow([eos_job, phonon_jobs, analysis])
+        return Flow(qha_jobs)
 
     @abstractmethod
     def initialize_phonon_maker(
