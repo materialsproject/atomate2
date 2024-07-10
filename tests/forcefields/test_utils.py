@@ -175,7 +175,7 @@ def test_m3gnet_pot(test_dir):
         stress_weight=2.0,
     )
 
-    m3gnet_default_pot = ase_calculator(  # uses "M3GNet-MP-2021.2.8-PES" per default
+    m3gnet_default = ase_calculator(  # uses "M3GNet-MP-2021.2.8-PES" per default
         calculator_meta="MLFF.M3GNet", stress_weight=2.0
     )
 
@@ -184,6 +184,6 @@ def test_m3gnet_pot(test_dir):
 
     assert str(m3gnet_pes_calc.potential) == str(m3gnet_calculator.potential)
     # casting necessary because <class 'matgl.apps.pes.Potential'> can't be compared
-    assert str(m3gnet_pes_calc.potential) != str(m3gnet_default_pot.potential)
+    assert str(m3gnet_pes_calc.potential) != str(m3gnet_default.potential)
     assert m3gnet_pes_calc.stress_weight == m3gnet_calculator.stress_weight
-    assert m3gnet_pes_calc.stress_weight == m3gnet_default_pot.stress_weight
+    assert m3gnet_pes_calc.stress_weight == m3gnet_default.stress_weight
