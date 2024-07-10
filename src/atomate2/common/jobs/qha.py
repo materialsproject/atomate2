@@ -18,7 +18,9 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-@job
+@job(
+    data=[PhononBSDOSDoc],
+)
 def get_phonon_jobs(phonon_maker: BasePhononMaker, eos_output: dict) -> Flow:
     """
     Start all relevant phonon jobs.
