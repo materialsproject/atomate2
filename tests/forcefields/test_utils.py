@@ -165,7 +165,7 @@ def test_fix_symmetry(fix_symmetry):
         assert symmetry_init["number"] != symmetry_final["number"] == 99
 
 
-def test_m3gnet_pot(test_dir):
+def test_m3gnet_pot():
     import matgl
     from matgl.ext.ase import PESCalculator
 
