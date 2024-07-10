@@ -148,32 +148,32 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         # add kwargs to change the names and file types
         qha.plot_helmholtz_volume().savefig(
             f"{kwargs.get('helmholtz_volume_filename','helmholtz_volume')}"
-            f".{kwargs.get('plot_type','eps')}"
+            f".{kwargs.get('plot_type','pdf')}"
         )
         qha.plot_volume_temperature().savefig(
             f"{kwargs.get('volume_temperature_plot','volume_temperature')}"
-            f".{kwargs.get('plot_type','eps')}"
+            f".{kwargs.get('plot_type','pdf')}"
         )
         qha.plot_thermal_expansion().savefig(
-            f"{kwargs.get('thermal_expansion_plot','thermal_expansion.eps')}"
-            f".{kwargs.get('plot_type','eps')}"
+            f"{kwargs.get('thermal_expansion_plot','thermal_expansion')}"
+            f".{kwargs.get('plot_type','pdf')}"
         )
         qha.plot_gibbs_temperature().savefig(
             f"{kwargs.get('gibbs_temperature_plot', 'gibbs_temperature')}"
-            f".{kwargs.get('plot_type','eps')}"
+            f".{kwargs.get('plot_type','pdf')}"
         )
         qha.plot_bulk_modulus_temperature().savefig(
             f"{kwargs.get('bulk_modulus_plot', 'bulk_modulus_temperature')}"
-            f".{kwargs.get('plot_type','eps')}"
+            f".{kwargs.get('plot_type','pdf')}"
         )
         qha.plot_heat_capacity_P_numerical().savefig(
             f"{kwargs.get('heat_capacity_plot', 'heat_capacity_P_numerical')}"
-            f".{kwargs.get('plot_type','eps')}"
+            f".{kwargs.get('plot_type','pdf')}"
         )
         # qha.plot_heat_capacity_P_polyfit().savefig("heat_capacity_P_polyfit.eps")
         qha.plot_gruneisen_temperature().savefig(
             f"{kwargs.get('gruneisen_temperature_plot', 'gruneisen_temperature')}"
-            f".{kwargs.get('plot_type','eps')}"
+            f".{kwargs.get('plot_type','pdf')}"
         )
 
         qha.write_helmholtz_volume(
