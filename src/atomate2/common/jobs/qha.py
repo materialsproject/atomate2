@@ -7,13 +7,13 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Response, job
 
+from atomate2.common.schemas.phonons import PhononBSDOSDoc
 from atomate2.common.schemas.qha import PhononQHADoc
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
-    from atomate2.common.schemas.phonons import PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
 
