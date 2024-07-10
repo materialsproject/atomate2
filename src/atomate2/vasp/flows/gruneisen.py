@@ -6,9 +6,9 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.common.flows.gruneisen import BaseGruneisenMaker
-from atomate2.vasp.flows.phonons import PhononMaker
-from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
+from atomate2.vasp.flows.phonons import PhononMaker
+from atomate2.vasp.jobs.core import TightRelaxMaker
 from atomate2.vasp.sets.core import TightRelaxSetGenerator
 
 if TYPE_CHECKING:
@@ -63,7 +63,9 @@ class GruneisenMaker(BaseGruneisenMaker):
     """
 
     name: str = "Gruneisen"
-    bulk_relax_maker: TightRelaxMaker | None = field(default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker()))
+    bulk_relax_maker: TightRelaxMaker | None = field(
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
+    )
     code: str = "vasp"
     # TODO: double relax maker?
 
@@ -71,7 +73,9 @@ class GruneisenMaker(BaseGruneisenMaker):
         default_factory=lambda: TightRelaxMaker(
             input_set_generator=TightRelaxSetGenerator(
                 user_incar_settings={"ISIF": 2},
-            )))
+            )
+        )
+    )
     kpath_scheme: str = "seekpath"
     phonon_maker: BasePhononMaker = field(
         default_factory=lambda: PhononMaker(bulk_relax_maker=None)
