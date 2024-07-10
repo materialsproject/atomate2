@@ -44,6 +44,7 @@ def get_phonon_jobs(phonon_maker: BasePhononMaker, eos_output: dict) -> Flow:
 
 @job(
     output_schema=PhononQHADoc,
+    data=["free_energies", "heat_capacities", "entropies", "helmholtz_volume"],
 )
 def analyze_free_energy(
     phonon_outputs: list[PhononBSDOSDoc],
