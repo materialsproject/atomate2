@@ -117,6 +117,7 @@ class BaseGruneisenMaker(Maker, ABC):
         const_vol_struct_plus = self.const_vol_relax_maker.make(
             structure=struct_dict.output["plus"]
         )
+        const_vol_struct_plus.append_name(" plus")
         # add relax job at constant volume for expanded structure
         jobs.append(const_vol_struct_plus)
 
@@ -128,6 +129,7 @@ class BaseGruneisenMaker(Maker, ABC):
         const_vol_struct_minus = self.const_vol_relax_maker.make(
             structure=struct_dict.output["minus"]
         )
+        const_vol_struct_minus.append_name(" minus")
         # add relax job at constant volume for shrunk structure
         jobs.append(const_vol_struct_minus)
 
@@ -140,7 +142,7 @@ class BaseGruneisenMaker(Maker, ABC):
         for st in opt_struct:
             # phonon run for all 3 optimized structures (ground state, expanded, shrunk)
             phonon_job = self.phonon_maker.make(structure=opt_struct[st])
-
+            phonon_job.append_name(f" {st}")
             # change default phonopy.yaml file name to ensure workflow can be
             # run without having to create folders, thus
             # prevent overwriting and easier to identify yaml file belong
