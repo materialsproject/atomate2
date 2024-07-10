@@ -169,15 +169,13 @@ def test_m3gnet_pot():
     import matgl
     from matgl.ext.ase import PESCalculator
 
-    m3gnet_calculator = ase_calculator(
-        calculator_meta="MLFF.M3GNet",
-        path="M3GNet-MP-2021.2.8-DIRECT-PES",
-        stress_weight=2.0,
-    )
+    kwargs_calc = {"path": "M3GNet-MP-2021.2.8-DIRECT-PES", "stress_weight": 2.0}
+    kwargs_default = {"stress_weight": 2.0}
 
-    m3gnet_default = ase_calculator(  # uses "M3GNet-MP-2021.2.8-PES" per default
-        calculator_meta="MLFF.M3GNet", stress_weight=2.0
-    )
+    m3gnet_calculator = ase_calculator(calculator_meta="MLFF.M3GNet", **kwargs_calc)
+
+    # uses "M3GNet-MP-2021.2.8-PES" per default
+    m3gnet_default = ase_calculator(calculator_meta="MLFF.M3GNet", **kwargs_default)
 
     potential = matgl.load_model("M3GNet-MP-2021.2.8-DIRECT-PES")
     m3gnet_pes_calc = PESCalculator(potential=potential, stress_weight=2.0)
