@@ -41,7 +41,7 @@ def shrink_expand_structure(structure: Structure, perc_vol: float) -> Response:
 
 
 @job(
-    output=GruneisenParameterDocument,
+    output_schema=GruneisenParameterDocument,
     data=[GruneisenParameter, GruneisenPhononBandStructureSymmLine],
 )
 def compute_gruneisen_param(
