@@ -691,6 +691,7 @@ class LobsterTightStaticSetGenerator(LobsterSet):
         base_incar_updates = super().incar_updates
         base_incar_updates.update(
             EDIFF=1e-7,
+            ISPIN=1,
             LAECHG=False,
             LREAL=False,
             LVTOT=False,
