@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
-from pymatgen.io.vasp.sets import VaspInputSet, MPRelaxSet, MPScanRelaxSet
+from pymatgen.io.vasp.sets import MPRelaxSet, MPScanRelaxSet, VaspInputSet
 
 from atomate2 import SETTINGS
 
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from pymatgen.io.vasp import Kpoints
     from pymatgen.io.vasp.sets import UserPotcarFunctional
 
-_BASE_VASP_SET = {**MPScanRelaxSet()._config_dict, "KPOINTS": {}}
+_BASE_VASP_SET = {**MPScanRelaxSet()._config_dict, "KPOINTS": {}}  # noqa: SLF001
 _ATOMATE2_BASE_VASP_SET_UPDATES = {
     "INCAR": {
         "ALGO": "Fast",
@@ -22,7 +22,11 @@ _ATOMATE2_BASE_VASP_SET_UPDATES = {
         "LREAL": False,
         "KSPACING": None,
         "METAGGA": None,
-        **{k: v for k,v in MPRelaxSet()._config_dict["INCAR"].items() if k.startswith("LDAU")}
+        **{
+            k: v
+            for k, v in MPRelaxSet()._config_dict["INCAR"].items()  # noqa: SLF001
+            if k.startswith("LDAU")
+        },
     },
     "KPOINTS": {"reciprocal_density": 64, "reciprocal_density_metal": 200},
     "POTCAR": {
@@ -39,7 +43,7 @@ _ATOMATE2_BASE_VASP_SET_UPDATES = {
         "Os": "Os",
         "Re": "Re",
         "Ti": "Ti_sv",
-        "V": "V_sv"
+        "V": "V_sv",
     },
 }
 for k, updates in _ATOMATE2_BASE_VASP_SET_UPDATES.items():
@@ -48,6 +52,7 @@ for k, updates in _ATOMATE2_BASE_VASP_SET_UPDATES.items():
             _BASE_VASP_SET[k].pop(g)
         else:
             _BASE_VASP_SET[k][g] = v
+
 
 @dataclass
 class VaspInputGenerator(VaspInputSet):
