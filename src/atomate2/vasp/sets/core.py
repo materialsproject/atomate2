@@ -648,17 +648,15 @@ class MDSetGenerator(VaspInputGenerator):
             supported = tuple(defaults)
             raise ValueError(f"Expect {ensemble=} to be one of {supported}") from err
 
+
 @dataclass
 class LobsterTightStaticSetGenerator(LobsterSet):
-
     """
     Class to generate well-converged statics for LOBSTER analysis.
 
-    
     Parameters
     ----------
-
-    structure : Structure 
+    structure : Structure
         input structure.
     isym : int
         ISYM entry for INCAR, only isym=-1 and isym=0 are allowed
@@ -678,10 +676,11 @@ class LobsterTightStaticSetGenerator(LobsterSet):
         e.g. {"Fe": "Fe_pv", "O": "O"}; if not supplied, a standard basis is used.
     **kwargs: Other kwargs supported by VaspInputSet.
     """
-    reciprocal_density : int = 400
+
+    reciprocal_density: int = 400
 
     @property
-    def incar_updates(self) -> dict[str,Any]:
+    def incar_updates(self) -> dict[str, Any]:
         """Get updates to the INCAR for a molecular dynamics job.
 
         Returns
@@ -690,14 +689,14 @@ class LobsterTightStaticSetGenerator(LobsterSet):
             A dictionary of updates to apply.
         """
         base_incar_updates = super().incar_updates
-        base_incar_updates.update(**{
-            "EDIFF": 1e-7,
-            "LAECHG": False,
-            "LREAL": False,
-            "LVTOT": False,
-            "ALGO": "Normal",
-            "LCHARG": False,
-            "LWAVE": True,
-            "ISYM": 0,
-        })
-        return base_incar_updates        
+        base_incar_updates.update(
+            EDIFF=1e-7,
+            LAECHG=False,
+            LREAL=False,
+            LVTOT=False,
+            ALGO="Normal",
+            LCHARG=False,
+            LWAVE=True,
+            ISYM=0,
+        )
+        return base_incar_updates

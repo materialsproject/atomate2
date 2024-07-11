@@ -25,7 +25,6 @@ from atomate2.vasp.jobs.mp import (
     MPMetaGGAStaticMaker,
     MPPreRelaxMaker,
 )
-from atomate2.vasp.sets.mp import MPGGAStaticSetGenerator
 
 logger = logging.getLogger(__name__)
 
