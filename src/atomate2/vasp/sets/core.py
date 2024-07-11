@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from pymatgen.core.periodic_table import Element
+from pymatgen.io.vasp.sets import LobsterSet
 
 from atomate2.vasp.sets.base import VaspInputGenerator
 
@@ -646,3 +647,57 @@ class MDSetGenerator(VaspInputGenerator):
         except KeyError as err:
             supported = tuple(defaults)
             raise ValueError(f"Expect {ensemble=} to be one of {supported}") from err
+
+@dataclass
+class LobsterTightStaticSetGenerator(LobsterSet):
+
+    """
+    Class to generate well-converged statics for LOBSTER analysis.
+
+    
+    Parameters
+    ----------
+
+    structure : Structure 
+        input structure.
+    isym : int
+        ISYM entry for INCAR, only isym=-1 and isym=0 are allowed
+    ismear : int
+        ISMEAR entry for INCAR, only ismear=-5 and ismear=0 are allowed
+    reciprocal_density : int
+        Density of k-mesh by reciprocal volume
+    user_supplied_basis : dict
+        dict including basis functions for all elements in
+        structure, e.g. {"Fe": "3d 3p 4s", "O": "2s 2p"}; if not supplied, a
+        standard basis is used
+    address_basis_file : str
+        address to a file similar to "BASIS_PBE_54_standard.yaml"
+        in pymatgen.io.lobster.lobster_basis
+    user_potcar_settings :dict
+        dict including potcar settings for all elements in structure,
+        e.g. {"Fe": "Fe_pv", "O": "O"}; if not supplied, a standard basis is used.
+    **kwargs: Other kwargs supported by VaspInputSet.
+    """
+    reciprocal_density : int = 400
+
+    @property
+    def incar_updates(self) -> dict[str,Any]:
+        """Get updates to the INCAR for a molecular dynamics job.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        base_incar_updates = super().incar_updates
+        base_incar_updates.update(**{
+            "EDIFF": 1e-7,
+            "LAECHG": False,
+            "LREAL": False,
+            "LVTOT": False,
+            "ALGO": "Normal",
+            "LCHARG": False,
+            "LWAVE": True,
+            "ISYM": 0,
+        })
+        return base_incar_updates        
