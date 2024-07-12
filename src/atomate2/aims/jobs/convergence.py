@@ -97,7 +97,7 @@ class ConvergenceMaker(Maker):
                 "convergence_field_values": [],
                 "epsilon": self.epsilon,
             }
-        convergence_data.update({"idx": idx, "converged": converged})
+        convergence_data.update(idx=idx, converged=converged)
 
         if prev_dir is not None:
             split_prev_dir = str(prev_dir).split(":")[-1]

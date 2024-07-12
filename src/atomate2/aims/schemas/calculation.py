@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import Sequence
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional, Union
 
@@ -95,7 +95,7 @@ class CalculationOutput(BaseModel):
         None, description="The final structure from the calculation"
     )
 
-    efermi: float = Field(
+    efermi: Optional[float] = Field(
         None, description="The Fermi level from the calculation in eV"
     )
 
@@ -151,16 +151,14 @@ class CalculationOutput(BaseModel):
         structure = output.final_structure
 
         electronic_output = {
-            "efermi": output.fermi_energy,
+            "efermi": getattr(output, "fermi_energy", None),
             "vbm": output.vbm,
             "cbm": output.cbm,
             "bandgap": output.band_gap,
             "direct_bandgap": output.direct_band_gap,
         }
 
-        forces = None
-        if output.forces is not None:
-            forces = output.forces
+        forces = getattr(output, "forces", None)
 
         stress = None
         if output.stress is not None:
@@ -293,7 +291,9 @@ class Calculation(BaseModel):
         volumetric_files = [] if volumetric_files is None else volumetric_files
         aims_output = AimsOutput.from_outfile(aims_output_file)
 
-        completed_at = str(datetime.fromtimestamp(os.stat(aims_output_file).st_mtime))
+        completed_at = str(
+            datetime.fromtimestamp(os.stat(aims_output_file).st_mtime, tz=timezone.utc)
+        )
 
         output_file_paths = _get_output_file_paths(volumetric_files)
         aims_objects: dict[AimsObject, Any] = _get_volumetric_data(
