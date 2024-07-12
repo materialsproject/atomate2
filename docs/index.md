@@ -4,6 +4,7 @@
 user/index
 user/install
 user/running-workflows
+user/docs-schemas-emmet
 user/fireworks
 user/codes/index
 ```
