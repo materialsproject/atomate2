@@ -192,7 +192,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
 @dataclass
 class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     """
-    Maker to perform a relaxation using the CHGNet universal ML force field.
+    Maker to perform a relaxation using the CHGNet ML force field.
 
     Parameters
     ----------
@@ -257,7 +257,7 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
 @dataclass
 class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     """
-    Maker to perform a relaxation using the M3GNet universal ML force field.
+    Maker to perform a relaxation using the M3GNet ML force field.
 
     Parameters
     ----------
@@ -389,7 +389,7 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
 @dataclass
 class MACERelaxMaker(ForceFieldRelaxMaker):
     """
-    Base Maker to calculate forces and stresses using a MACE potential.
+    Maker to perform a relaxation using the MACE ML force field.
 
     Parameters
     ----------
@@ -434,7 +434,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
 @dataclass
 class MACEStaticMaker(ForceFieldStaticMaker):
     """
-    Base Maker to calculate forces and stresses using a MACE potential.
+    Maker to calculate forces and stresses using the MACE force field.
 
     Parameters
     ----------
