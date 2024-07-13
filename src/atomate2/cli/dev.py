@@ -599,14 +599,14 @@ def save_abinit_maker(maker: Maker) -> None:
     author = None
     author_mail = None
     if git:
-        name = subprocess.run(
-            "git config user.name".split(),  # noqa: S603
+        name = subprocess.run(  # noqa: S603
+            "git config user.name".split(),
             capture_output=True,
             encoding="utf-8",
             check=True,
         )
-        mail = subprocess.run(
-            "git config user.email".split(),  # noqa: S603
+        mail = subprocess.run(  # noqa: S603
+            "git config user.email".split(),
             capture_output=True,
             encoding="utf-8",
             check=True,
