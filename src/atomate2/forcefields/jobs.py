@@ -458,6 +458,83 @@ class MACEStaticMaker(ForceFieldStaticMaker):
 
 
 @dataclass
+class SevenNetRelaxMaker(ForceFieldRelaxMaker):
+    """
+    Maker to perform a relaxation using the SevenNet ML force field.
+
+    Published in https://pubs.acs.org/doi/10.1021/acs.jctc.4c00190.
+    pip install git+https://github.com/MDIL-SNU/SevenNet
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    relax_cell : bool = True
+        Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator. E.g. the "model"
+        key configures which checkpoint to load with mace.calculators.MACECalculator().
+        Can be a URL starting with https://. If not set, loads the universal MACE-MP
+        trained for Matbench Discovery on the MPtrj dataset available at
+        https://figshare.com/articles/dataset/22715158.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = f"{MLFF.SevenNet} relax"
+    force_field_name: str = f"{MLFF.SevenNet}"
+    relax_cell: bool = True
+    fix_symmetry: bool = False
+    symprec: float = 1e-2
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+
+
+@dataclass
+class SevenNetStaticMaker(ForceFieldStaticMaker):
+    """
+    Maker to calculate forces and stresses using the SevenNet force field.
+
+    Published in https://pubs.acs.org/doi/10.1021/acs.jctc.4c00190.
+    pip install git+https://github.com/MDIL-SNU/SevenNet
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator. E.g. the "model"
+        key configures which checkpoint to load with mace.calculators.MACECalculator().
+        Can be a URL starting with https://. If not set, loads the universal MACE-MP
+        trained for Matbench Discovery on the MPtrj dataset available at
+        https://figshare.com/articles/dataset/22715158.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = f"{MLFF.SevenNet} static"
+    force_field_name: str = f"{MLFF.SevenNet}"
+    task_document_kwargs: dict = field(default_factory=dict)
+
+
+@dataclass
 class GAPRelaxMaker(ForceFieldRelaxMaker):
     """
     Base Maker to calculate forces and stresses using a GAP potential.

@@ -440,6 +440,12 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
 
             calculator = NequIPCalculator.from_deployed_model(**kwargs)
 
+        elif calculator_name == MLFF.SevenNet:
+            # pip install git+https://github.com/MDIL-SNU/SevenNet
+            from sevenn.sevennet_calculator import SevenNetCalculator
+
+            calculator = SevenNetCalculator(**kwargs)
+
     elif isinstance(calculator_meta, dict):
         calc_cls = MontyDecoder().decode(json.dumps(calculator_meta))
         calculator = calc_cls(**kwargs)
