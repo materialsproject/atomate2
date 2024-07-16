@@ -13,8 +13,21 @@ def test_ddk_run_silicon_carbide_standard(mock_abinit, abinit_test_dir, clean_di
     maker_info = loadfn(test_dir / "maker.json.gz")
     maker = maker_info["maker"]
     ref_paths = loadfn(test_dir / "ref_paths.json.gz")
+
+    from pathlib import Path
+
+    from monty.shutil import copy_r, decompress_dir, remove
+
+    path_tmp_prev_outputs = Path(os.getcwd()) / "prev_outputs"
+    if path_tmp_prev_outputs.exists():
+        remove(path_tmp_prev_outputs)
+    os.mkdir(path_tmp_prev_outputs)
+    copy_r(src=test_dir / "prev_outputs", dst=path_tmp_prev_outputs)
+    decompress_dir(path_tmp_prev_outputs)
+
     prev_outputs = [
-        test_dir / "prev_outputs" / subdir
+        #    test_dir / "prev_outputs" / subdir
+        path_tmp_prev_outputs / subdir
         for subdir in next(os.walk(test_dir / "prev_outputs"))[1]
     ]
 
@@ -44,8 +57,21 @@ def test_dde_run_silicon_carbide_standard(mock_abinit, abinit_test_dir, clean_di
     maker_info = loadfn(test_dir / "maker.json.gz")
     maker = maker_info["maker"]
     ref_paths = loadfn(test_dir / "ref_paths.json.gz")
+
+    from pathlib import Path
+
+    from monty.shutil import copy_r, decompress_dir, remove
+
+    path_tmp_prev_outputs = Path(os.getcwd()) / "prev_outputs"
+    if path_tmp_prev_outputs.exists():
+        remove(path_tmp_prev_outputs)
+    os.mkdir(path_tmp_prev_outputs)
+    copy_r(src=test_dir / "prev_outputs", dst=path_tmp_prev_outputs)
+    decompress_dir(path_tmp_prev_outputs)
+
     prev_outputs = [
-        test_dir / "prev_outputs" / subdir
+        #    test_dir / "prev_outputs" / subdir
+        path_tmp_prev_outputs / subdir
         for subdir in next(os.walk(test_dir / "prev_outputs"))[1]
     ]
 
