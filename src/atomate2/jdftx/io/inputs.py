@@ -28,7 +28,7 @@ __credits__ = "Xiaohui Qu"
 logger = logging.getLogger(__name__)
 
 
-class JdftInput(InputFile):
+class JdftxInput(InputFile):
     """
     An object representing a JDFTx input file. JdftInput attributes represent different sections of a JDFTx input file.
     To add a new section one needs to modify __init__, __str__, from_string and add static methods

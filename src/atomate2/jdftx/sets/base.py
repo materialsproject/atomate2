@@ -27,7 +27,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
 from atomate2 import SETTINGS
-from atomate2.jdftx.io.inputs import JdftInput
+from atomate2.jdftx.io.inputs import JdftxInput
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -37,31 +37,29 @@ if TYPE_CHECKING:
 _BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
 
 
-class JdftInputSet(InputSet):
+class JdftxInputSet(InputSet):
     """
     A class to represent a JDFTx input file as a JDFTx InputSet.
 
     Parameters
     ----------
-    jdftinput
-        A JdftInput object
+    jdftxinput
+        A JdftxInput object
     """
 
-    def __init__(
-        jdftinput: 
+    def __init__( 
+        self,
+        jdftxinput: JdftxInput
     ) -> None:
-        self.incar = incar
-        self.poscar = poscar
-        self.potcar = potcar
-        self.kpoints = kpoints
-        self.optional_files = optional_files or {}
+        self.jdftxinput = jdftxinput
 
-    def write_input(
+
+    def write_input( # TODO implement conversion from inputs to in file. Should be the get_str() method
+                     # on the JdftxInput class
         self,
         directory: str | Path,
         make_dir: bool = True,
         overwrite: bool = True,
-        potcar_spec: bool = False,
     ) -> None:
         """Write VASP input files to a directory.
 
@@ -183,9 +181,9 @@ class JdftInputSet(InputSet):
 
 
 @dataclass
-class VaspInputGenerator(InputGenerator):
+class JdftxInputGenerator(InputGenerator):
     """
-    A class to generate VASP input sets.
+    A class to generate JDFTx input sets.
 
     .. Note::
        Get the magmoms using the following precedence.
@@ -364,8 +362,8 @@ class VaspInputGenerator(InputGenerator):
         structure: Structure = None,
         prev_dir: str | Path = None,
         potcar_spec: bool = False,
-    ) -> VaspInputSet:
-        """Get a VASP input set.
+    ) -> JdftxInputSet:
+        """Get a JDFTx input set.
 
         Note, if both ``structure`` and ``prev_dir`` are set, then the structure
         specified will be preferred over the final structure from the last VASP run.
@@ -385,8 +383,8 @@ class VaspInputGenerator(InputGenerator):
 
         Returns
         -------
-        VaspInputSet
-            A VASP input set.
+        JdftxInputSet
+            A JDFTx input set.
         """
         structure, prev_incar, bandgap, ispin, vasprun, outcar = self._get_previous(
             structure, prev_dir
@@ -421,11 +419,12 @@ class VaspInputGenerator(InputGenerator):
             ),
             lattice_velocities=structure.properties.get("lattice_velocities"),
         )
-        return VaspInputSet(
-            incar=incar,
-            kpoints=kpoints,
-            poscar=poscar,
-            potcar=self._get_potcar(structure, potcar_spec=potcar_spec),
+        return JdftxInputSet(
+            inputs=inputs # TODO need to wait on Jacob's specification
+            # incar=incar,
+            # kpoints=kpoints,
+            # poscar=poscar,
+            # potcar=self._get_potcar(structure, potcar_spec=potcar_spec),
         )
 
     def get_incar_updates(
