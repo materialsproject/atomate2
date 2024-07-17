@@ -3,7 +3,7 @@ default_language_version:
 exclude: ^(.github/|tests/test_data/abinit/)
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.4.4
+  rev: v0.4.10
   hooks:
   - id: ruff
     args: [--fix]
@@ -38,7 +38,7 @@ repos:
     - tokenize-rt==4.1.0
     - types-paramiko
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.2.6
+  rev: v2.3.0
   hooks:
   - id: codespell
     stages: [commit, commit-msg]

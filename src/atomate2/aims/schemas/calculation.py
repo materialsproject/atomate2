@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import os
 from collections.abc import Sequence
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional, Union
 
@@ -326,7 +326,9 @@ class Calculation(BaseModel):
         )
         aims_output = AimsOutput.from_outfile(aims_output_file)
 
-        completed_at = str(datetime.fromtimestamp(os.stat(aims_output_file).st_mtime))
+        completed_at = str(
+            datetime.fromtimestamp(os.stat(aims_output_file).st_mtime, tz=timezone.utc)
+        )
 
         output_file_paths = _get_output_file_paths(volumetric_files)
         aims_objects: dict[AimsObject, Any] = _get_volumetric_data(
