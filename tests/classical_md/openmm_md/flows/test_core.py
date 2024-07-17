@@ -63,8 +63,9 @@ def test_hdf5_writing(interchange, tmp_path, run_job):
         n_steps=3,
         temp_steps=1,
         platform_name="CPU",
-        traj_file_type="h5",
+        traj_file_type="h5md",
         report_velocities=True,
+        traj_interval=1,
     )
 
     # Run the AnnealMaker flow
@@ -75,9 +76,9 @@ def test_hdf5_writing(interchange, tmp_path, run_job):
     calc_output_names = [calc.output.traj_file for calc in task_doc.calcs_reversed]
     assert len(list(tmp_path.iterdir())) == 5
     assert set(calc_output_names) == {
-        "trajectory3_h5",
-        "trajectory2_h5",
-        "trajectory_h5",
+        "trajectory3.h5md",
+        "trajectory2.h5md",
+        "trajectory.h5md",
     }
 
 
