@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import time
+import warnings
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -23,7 +24,7 @@ from openmm.app import StateDataReporter
 from openmm.unit import kelvin, picoseconds
 
 from atomate2.classical_md.core import openff_job
-from atomate2.classical_md.utils import increment_name
+from atomate2.classical_md.utils import increment_name, task_reports
 
 if TYPE_CHECKING:
     from openmm.app.simulation import Simulation
@@ -204,19 +205,44 @@ class BaseOpenMMMaker(Maker):
         traj_file_name = self._resolve_attr("traj_file_name", prev_task)
         traj_file_type = self._resolve_attr("traj_file_type", prev_task)
         report_velocities = self._resolve_attr("report_velocities", prev_task)
+
         if has_steps & (traj_interval > 0):
-            if report_velocities:
-                raise ValueError("Reporting velocities is not currently supported.")
+            writer_kwargs = {}
+            # these are the only file types that support velocities
+            if traj_file_type in ["h5md", "nc", "ncdf"]:
+                writer_kwargs["velocities"] = report_velocities
+                writer_kwargs["forces"] = False
+            elif report_velocities and traj_file_type not in ["trr"]:
+                raise ValueError(
+                    f"File type {traj_file_type} does not support velocities as"
+                    f"of MDAnalysis 2.7.0. Select another file type"
+                    f"or do not attempt to report velocities."
+                )
 
             traj_file = dir_name / f"{traj_file_name}.{traj_file_type}"
-            if traj_file.exists():
+
+            if traj_file.exists() and task_reports(prev_task, "traj"):
                 self.traj_file_name = increment_name(traj_file_name)
 
-            traj_reporter = MDAReporter(
+            # TODO: MDA 2.7.0 has a bug that prevents velocity reporting
+            #  this is a stop gap measure before MDA 2.8.0 is released
+            kwargs = dict(
                 file=str(dir_name / f"{self.traj_file_name}.{traj_file_type}"),
                 reportInterval=traj_interval,
                 enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
             )
+            if report_velocities:
+                # assert package version
+
+                kwargs["writer_kwargs"] = writer_kwargs
+                warnings.warn(
+                    "Reporting velocities is only supported with the"
+                    "development version of MDAnalysis, >= 2.8.0, "
+                    "proceed with caution.",
+                    stacklevel=1,
+                )
+            traj_reporter = MDAReporter(**kwargs)
+
             sim.reporters.append(traj_reporter)
 
         # add state reporter
@@ -224,7 +250,7 @@ class BaseOpenMMMaker(Maker):
         state_file_name = self._resolve_attr("state_file_name", prev_task)
         if has_steps & (state_interval > 0):
             state_file = dir_name / f"{state_file_name}.csv"
-            if state_file.exists():
+            if state_file.exists() and task_reports(prev_task, "state"):
                 self.state_file_name = increment_name(state_file_name)
 
             state_reporter = StateDataReporter(

@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 import openff.toolkit as tk
 from emmet.core.classical_md import MoleculeSpec
+from emmet.core.classical_md.openmm import OpenMMTaskDocument  # noqa: TCH002
 from pymatgen.core import Element, Molecule
 from pymatgen.io.openff import create_openff_mol
 
@@ -166,6 +167,18 @@ def increment_name(file_name: str) -> str:
     position = re_match.start(1)
     new_count = int(re_match.group(1) or 1) + 1
     return f"{file_name[:position]}{new_count}"
+
+
+def task_reports(task: OpenMMTaskDocument, traj_or_state: str = "traj") -> bool:
+    """Check if a task reports trajectories or states."""
+    calc_input = task.calcs_reversed[0].input
+    if traj_or_state == "traj":
+        report_freq = calc_input.traj_interval
+    elif traj_or_state == "state":
+        report_freq = calc_input.state_interval
+    else:
+        raise ValueError("traj_or_state must be 'traj' or 'state'")
+    return calc_input.n_steps >= report_freq
 
 
 def calculate_elyte_composition(

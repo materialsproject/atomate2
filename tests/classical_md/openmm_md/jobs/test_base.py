@@ -1,6 +1,7 @@
 import copy
 
 import numpy as np
+import pytest
 from emmet.core.classical_md import ClassicalMDTaskDocument
 from emmet.core.classical_md.openmm import Calculation, CalculationInput
 from jobflow import Flow, Job
@@ -148,6 +149,36 @@ def test_make(interchange, temp_dir, run_job):
     assert calc.completed_at is not None
     assert calc.task_name == "base openmm job"
     assert calc.calc_type == "BaseOpenMMMaker"
+
+
+def test_make_w_velocities(interchange, temp_dir, run_job):
+    # monkey patch to allow running the test without openmm
+    def do_nothing(self, sim):
+        pass
+
+    BaseOpenMMMaker.run_openmm = do_nothing
+
+    maker1 = BaseOpenMMMaker(
+        n_steps=1000,
+        report_velocities=True,
+    )
+
+    with pytest.raises(RuntimeError):
+        run_job(maker1.make(interchange, output_dir=temp_dir))
+        # run_job(base_job)
+
+    maker2 = BaseOpenMMMaker(
+        n_steps=1000,
+        report_velocities=True,
+        traj_file_type="h5md",
+    )
+
+    base_job = maker2.make(interchange, output_dir=temp_dir)
+    task_doc = run_job(base_job)
+
+    # Assert the calculation details
+    calc = task_doc.calcs_reversed[0]
+    assert calc.input.report_velocities is True
 
 
 def test_make_from_prev(temp_dir, run_job):
