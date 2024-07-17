@@ -237,6 +237,9 @@ class Calculation(BaseModel):
     has_aims_completed: TaskState = Field(
         None, description="Whether FHI-aims completed the calculation successfully"
     )
+    completed: bool = Field(
+        None, description="Whether FHI-aims completed the calculation successfully"
+    )
     input: CalculationInput = Field(None, description="The FHI-aims calculation input")
     output: CalculationOutput = Field(
         None, description="The FHI-aims calculation output"
@@ -318,7 +321,9 @@ class Calculation(BaseModel):
         with open(str(dir_name / "parameters.json")) as pj:
             aims_parameters = json.load(pj)
 
-        input_doc = CalculationInput(aims_geo_in.structure, aims_parameters)
+        input_doc = CalculationInput(
+            structure=aims_geo_in.structure, parameters=aims_parameters
+        )
         aims_output = AimsOutput.from_outfile(aims_output_file)
 
         completed_at = str(datetime.fromtimestamp(os.stat(aims_output_file).st_mtime))
@@ -351,6 +356,7 @@ class Calculation(BaseModel):
             task_name=task_name,
             aims_version=aims_output.aims_version,
             has_aims_completed=has_aims_completed,
+            completed=has_aims_completed == TaskState.SUCCESS,
             completed_at=completed_at,
             output=output_doc,
             input=input_doc,
