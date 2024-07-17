@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import jobflow
+import numpy as np
 from jobflow import Maker, Response, job
 
 from atomate2 import SETTINGS
@@ -28,9 +29,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-__all__ = [
-    "AnaddbMaker",
-]
+__all__ = ["AnaddbMaker", "AnaddbDfptDteMaker"]
 
 
 @dataclass
@@ -71,7 +70,8 @@ class AnaddbMaker(Maker):
             A JobHistory object containing the history of this job.
         """
         # Flatten the list of previous outputs dir
-        prev_outputs = [item for sublist in prev_outputs for item in sublist]
+        # prev_outputs = [item for sublist in prev_outputs for item in sublist]
+        prev_outputs = list(np.hstack(prev_outputs))
 
         # Setup job and get general job configuration
         config = setup_job(

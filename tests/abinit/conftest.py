@@ -17,6 +17,8 @@ _ABINIT_FILES = ("run.abi", "abinit_input.json")
 _FAKE_RUN_ABINIT_KWARGS = {}
 _MRGDDB_FILES = "mrgddb.in"
 _FAKE_RUN_MRGDDB_KWARGS = {}
+_ANADDB_FILES = ("anaddb.in", "anaddb_input.json")
+_FAKE_RUN_ANADDB_KWARGS = {}
 
 
 @pytest.fixture(scope="session")
@@ -195,7 +197,7 @@ def mock_mrgddb(mocker, abinit_test_dir, abinit_integration_tests):
             index = CURRENT_JOB.job.index
             ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
             check_mrgddb_inputs(ref_path)
-            fake_run_mrgddb(ref_path)
+            fake_run_abinit(ref_path)
 
         mocker.patch.object(atomate2.abinit.run, "run_mrgddb", mock_run_mrgddb)
         mocker.patch.object(atomate2.abinit.jobs.mrgddb, "run_mrgddb", mock_run_mrgddb)
@@ -211,26 +213,6 @@ def mock_mrgddb(mocker, abinit_test_dir, abinit_integration_tests):
     mocker.stopall()
     _REF_PATHS.clear()
     _FAKE_RUN_MRGDDB_KWARGS.clear()
-
-
-def fake_run_mrgddb(ref_path: str | Path):
-    """
-    Emulate running Mrgddb.
-
-    Parameters
-    ----------
-    ref_path
-        Path to reference directory with Mrgddb input files in the folder named 'inputs'
-        and output files in the folder named 'outputs'.
-    """
-    logger.info("Running fake Mrgddb.")
-
-    ref_path = Path(ref_path)
-
-    copy_abinit_outputs(ref_path)
-
-    # pretend to run Mrgddb by copying pre-generated outputs from reference dir
-    logger.info("Generated fake Mrgddb outputs")
 
 
 def check_mrgddb_inputs(
@@ -268,6 +250,118 @@ def check_mrgddb_in(ref_path: str | Path):
         ].decode()  # Only keep the "outdata/out_DDB\n" from the path
 
     assert str_in == ref_str, "'mrgddb.in' is different from reference."
+
+
+@pytest.fixture()
+def mock_anaddb(mocker, abinit_test_dir, abinit_integration_tests):
+    """
+    This fixture allows one to mock running Anaddb.
+
+    It works by monkeypatching (replacing) calls to run_anaddb.
+
+    The primary idea is that instead of running Anaddb to generate the output files,
+    reference files will be copied into the directory instead.
+    """
+    import atomate2.abinit.files
+    import atomate2.abinit.jobs.anaddb
+    import atomate2.abinit.run
+
+    # Wrap the write_anaddb_input_set so that we can check inputs after calling it
+    def wrapped_write_anaddb_input_set(*args, **kwargs):
+        from jobflow import CURRENT_JOB
+
+        name = CURRENT_JOB.job.name
+        index = CURRENT_JOB.job.index
+        ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
+
+        atomate2.abinit.files.write_anaddb_input_set(*args, **kwargs)
+        check_anaddb_inputs(ref_path)
+
+    mocker.patch.object(
+        atomate2.abinit.jobs.anaddb,
+        "write_anaddb_input_set",
+        wrapped_write_anaddb_input_set,
+    )
+
+    if not abinit_integration_tests:
+        # Mock anaddb run (i.e. this will copy reference files)
+        def mock_run_anaddb(wall_time=None, start_time=None):
+            from jobflow import CURRENT_JOB
+
+            name = CURRENT_JOB.job.name
+            index = CURRENT_JOB.job.index
+            ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
+            check_anaddb_inputs(ref_path)
+            fake_run_abinit(ref_path)
+
+        mocker.patch.object(atomate2.abinit.run, "run_anaddb", mock_run_anaddb)
+        mocker.patch.object(atomate2.abinit.jobs.anaddb, "run_anaddb", mock_run_anaddb)
+
+        def _run(ref_paths, fake_run_anaddb_kwargs=None):
+            if fake_run_anaddb_kwargs is None:
+                fake_run_anaddb_kwargs = {}
+            _REF_PATHS.update(ref_paths)
+            _FAKE_RUN_ANADDB_KWARGS.update(fake_run_anaddb_kwargs)
+
+        yield _run
+
+    mocker.stopall()
+    _REF_PATHS.clear()
+    _FAKE_RUN_ANADDB_KWARGS.clear()
+
+
+def check_anaddb_inputs(
+    ref_path: str | Path,
+    check_inputs: Sequence[Literal["anaddb.in"]] = _ANADDB_FILES,
+):
+    ref_path = Path(ref_path)
+
+    if "anaddb.in" in check_inputs:
+        check_anaddb_in(ref_path)
+
+    if "anaddb_input.json" in check_inputs:
+        check_anaddb_input_json(ref_path)
+
+    logger.info("Verified inputs successfully")
+
+
+def convert_file_to_dict(file_path):
+    import gzip
+
+    result_dict = {}
+
+    if file_path.endswith(".gz"):
+        file_opener = gzip.open
+        mode = "rt"  # read text mode for gzip
+    else:
+        file_opener = open
+        mode = "r"
+
+    with file_opener(file_path, mode) as file:
+        for line in file:
+            key, value = line.split()
+            try:
+                result_dict[key] = int(value)  # Assuming values are integers
+            except ValueError:
+                result_dict[key] = str(value)  # Fall back to string if not an integer
+    return result_dict
+
+
+def check_anaddb_in(ref_path: str | Path):
+    user = convert_file_to_dict("anaddb.in")
+    ref = convert_file_to_dict(str(ref_path / "inputs" / "anaddb.in.gz"))
+    assert user == ref, "'anaddb.in' is different from reference."
+
+
+def check_anaddb_input_json(ref_path: str | Path):
+    from abipy.abio.inputs import AnaddbInput
+    from monty.serialization import loadfn
+
+    user = loadfn("anaddb_input.json")
+    assert isinstance(user, AnaddbInput)
+    ref = loadfn(ref_path / "inputs" / "anaddb_input.json.gz")
+    assert user.structure == ref.structure
+    assert user == ref
 
 
 def copy_abinit_outputs(ref_path: str | Path):
