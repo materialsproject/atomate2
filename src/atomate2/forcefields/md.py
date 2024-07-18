@@ -334,6 +334,17 @@ class ForceFieldMDMaker(Maker):
 
 
 @dataclass
+class NEPMDMaker(ForceFieldMDMaker):
+    """Perform an MD run with NEP."""
+
+    name: str = f"{MLFF.NEP} MD"
+    force_field_name: str = f"{MLFF.NEP}"
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {"model_filename": "nep.txt"}
+    )
+
+
+@dataclass
 class MACEMDMaker(ForceFieldMDMaker):
     """Perform an MD run with MACE."""
 
