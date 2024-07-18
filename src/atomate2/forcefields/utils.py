@@ -421,7 +421,8 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             import matgl
             from matgl.ext.ase import PESCalculator
 
-            potential = matgl.load_model("M3GNet-MP-2021.2.8-PES")
+            path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
+            potential = matgl.load_model(path)
             calculator = PESCalculator(potential, **kwargs)
 
         elif calculator_name == MLFF.MACE:
