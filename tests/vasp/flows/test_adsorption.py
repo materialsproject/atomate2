@@ -8,16 +8,32 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
     # mapping from job name to directory containing test files
     ref_paths = {
         "bulk relaxation maker - bulk relaxation job": "Au_adsorption/bulk_relax",
-        "molecule relaxation maker - molecule relaxation job": "Au_adsorption/mol_relax",
-        "adsorption relaxation maker - slab relaxation job": "Au_adsorption/slab_relax",
+        "molecule relaxation maker - molecule relaxation job": (
+            "Au_adsorption/mol_relax"
+        ),
+        "adsorption relaxation maker - slab relaxation job": (
+            "Au_adsorption/slab_relax"
+        ),
         "molecule static maker - molecule static job": "Au_adsorption/mol_static",
         "adsorption static maker - slab static job": "Au_adsorption/slab_static",
-        "adsorption relaxation maker - configuration 0": "Au_adsorption/ads_relax_1_3",
-        "adsorption relaxation maker - configuration 1": "Au_adsorption/ads_relax_2_3",
-        "adsorption relaxation maker - configuration 2": "Au_adsorption/ads_relax_3_3",
-        "adsorption static maker - static configuration 0": "Au_adsorption/ads_static_1_3",
-        "adsorption static maker - static configuration 1": "Au_adsorption/ads_static_2_3",
-        "adsorption static maker - static configuration 2": "Au_adsorption/ads_static_3_3",
+        "adsorption relaxation maker - configuration 0": (
+            "Au_adsorption/ads_relax_1_3"
+        ),
+        "adsorption relaxation maker - configuration 1": (
+            "Au_adsorption/ads_relax_2_3"
+        ),
+        "adsorption relaxation maker - configuration 2": (
+            "Au_adsorption/ads_relax_3_3"
+        ),
+        "adsorption static maker - static configuration 0": (
+            "Au_adsorption/ads_static_1_3"
+        ),
+        "adsorption static maker - static configuration 1": (
+            "Au_adsorption/ads_static_2_3"
+        ),
+        "adsorption static maker - static configuration 2": (
+            "Au_adsorption/ads_static_3_3"
+        ),
     }
 
     fake_run_vasp_kwargs = {
@@ -47,11 +63,12 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
     # Run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
-    job_names = []
-    for job_uuid, job_responses in responses.items():
-        for response_index, response in job_responses.items():
-            if hasattr(response.output, "task_label"):
-                job_names.append(response.output.task_label)
+    job_names = [
+        response.output.task_label
+        for job_responses in responses.values()
+        for response in job_responses.values()
+        if hasattr(response.output, "task_label")
+    ]
 
     expected_job_names = [
         "bulk relaxation maker - bulk relaxation job",
@@ -69,13 +86,13 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
     for actual_name in expected_job_names:
         assert actual_name in job_names, f"Job '{actual_name}' not found."
 
-    assert (
-        flow[-1].uuid in responses
-    ), "adsorption calculation job not found in responses"
+    assert flow[-1].uuid in responses, "ads calculation job not found"
 
     adsorption_calculation_job = responses.get(flow[-1].uuid)
-    for response_index, response in adsorption_calculation_job.items():
-        adsorption_energy = response.output.get("adsorption_energy")
+    adsorption_energy = [
+        response.output.get("adsorption_energy")
+        for response in adsorption_calculation_job.values()
+    ]
     assert adsorption_energy == [
         -3.0084328299999967,
         -2.9288308699999916,

@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Response, job
 from pymatgen.analysis.adsorption import AdsorbateSiteFinder
@@ -208,7 +208,7 @@ def adsorption_calculations(
     adslabs_data: dict[str, list],
     molecule_dft_energy: float,
     slab_dft_energy: float,
-) -> list:
+) -> dict[str, list[Any]]:
     """Calculate the adsorption energies by subtracting the energies of
     the adsorbate, slab, and adsorbate-slab.
 
@@ -262,15 +262,12 @@ def adsorption_calculations(
     )
     sorted_combined_outputs = sorted(combined_outputs, key=lambda x: x[2])
 
-    # Reconstruct sorted outputs
-    sorted_outputs = {
+    return {
         "adsorption_configuration": [item[0] for item in sorted_combined_outputs],
         "configuration_number": [item[1] for item in sorted_combined_outputs],
         "adsorption_energy": [item[2] for item in sorted_combined_outputs],
         "dirs": [item[3] for item in sorted_combined_outputs],
     }
-
-    return sorted_outputs
 
 
 @dataclass
