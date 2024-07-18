@@ -1319,7 +1319,7 @@ def _get_strong_bonds(
 def read_saved_json(
     filename: str, pymatgen_objs: bool = True, query: str = "structure"
 ) -> dict[str, Any]:
-    """
+    r"""
     Read the data from  \*.json.gz files corresponding to query.
 
     Uses ijson to parse specific keys(memory efficient)
