@@ -299,6 +299,79 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
 
 
 @dataclass
+class NEPRelaxMaker(ForceFieldRelaxMaker):
+    """
+    Base Maker to calculate forces and stresses using a NEP potential.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    relax_cell : bool = True
+        Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`Relaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = f"{MLFF.NEP} relax"
+    force_field_name: str = f"{MLFF.NEP}"
+    relax_cell: bool = True
+    fix_symmetry: bool = False
+    symprec: float = 1e-2
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {
+            "model_filename": "nep.txt",
+        }
+    )
+    task_document_kwargs: dict = field(default_factory=dict)
+
+
+@dataclass
+class NEPStaticMaker(ForceFieldStaticMaker):
+    """
+    Base Maker to calculate forces and stresses using a NEP potential.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str
+        The name of the force field.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = f"{MLFF.NEP} static"
+    force_field_name: str = f"{MLFF.NEP}"
+    task_document_kwargs: dict = field(default_factory=dict)
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {
+            "model_filename": "nep.txt",
+        }
+    )
+
+
+@dataclass
 class NequipRelaxMaker(ForceFieldRelaxMaker):
     """
     Maker to perform a relaxation using a Nequip force field.
