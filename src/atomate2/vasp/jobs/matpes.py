@@ -10,10 +10,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.matpes import (
-    MatPesGGAStaticSetGenerator,
-    MatPesMetaGGAStaticSetGenerator,
-)
+from pymatgen.io.vasp.sets import MatPESStaticSet
 
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
@@ -50,7 +47,7 @@ class MatPesGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MatPES GGA static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MatPesGGAStaticSetGenerator
+        default_factory=MatPESStaticSet
     )
 
 
@@ -85,5 +82,8 @@ class MatPesMetaGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MatPES meta-GGA static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MatPesMetaGGAStaticSetGenerator
+        default_factory = lambda : MatPESStaticSet(
+            xc_functional="R2SCAN",
+            user_incar_settings={"GGA": None}
+        )
     )
