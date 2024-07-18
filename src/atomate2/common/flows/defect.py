@@ -182,6 +182,7 @@ class FormationEnergyMaker(Maker, ABC):
         lattice relaxation, you should manually set the grid size.
 
         .. code-block:: python
+
             relax_set = MPRelaxSet(defect.get_supercell_structure())
             ng, ngf = relax_set.calculate_ng()
             params = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
@@ -217,32 +218,35 @@ class FormationEnergyMaker(Maker, ABC):
         energy diagrams.
 
         .. note::
-        Once we remove the requirement for explicit bulk supercell calculations,
-        this setting will be removed. It is only needed because the bulk supercell
-        locpot is currently needed for the finite-size correction calculation.
+            Once we remove the requirement for explicit bulk supercell calculations,
+            this setting will be removed. It is only needed because the bulk supercell
+            locpot is currently needed for the finite-size correction calculation.
 
         Output format for the DefectEntry data:
+
         .. code-block:: python
-        [
-            {
-                'bulk_dir_name': 'computer1:/folder1',
-                'bulk_locpot': {...},
-                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
-                'defect_dir_name': 'computer1:/folder2',
-                'defect_entry': {...},
-                'defect_locpot': {...},
-                'defect_uuid': 'e9af2725-d63c-49b8-a01f-391540211750'
-            },
-            {
-                'bulk_dir_name': 'computer1:/folder3',
-                'bulk_locpot': {...},
-                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
-                'defect_dir_name': 'computer1:/folder4',
-                'defect_entry': {...},
-                'defect_locpot': {...},
-                'defect_uuid': 'a1c31095-0494-4eed-9862-95311f80a993'
-            }
-        ]
+
+            [
+                {
+                    'bulk_dir_name': 'computer1:/folder1',
+                    'bulk_locpot': {...},
+                    'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
+                    'defect_dir_name': 'computer1:/folder2',
+                    'defect_entry': {...},
+                    'defect_locpot': {...},
+                    'defect_uuid': 'e9af2725-d63c-49b8-a01f-391540211750'
+                },
+                {
+                    'bulk_dir_name': 'computer1:/folder3',
+                    'bulk_locpot': {...},
+                    'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
+                    'defect_dir_name': 'computer1:/folder4',
+                    'defect_entry': {...},
+                    'defect_locpot': {...},
+                    'defect_uuid': 'a1c31095-0494-4eed-9862-95311f80a993'
+                }
+            ]
+
     """
 
     defect_relax_maker: Maker
