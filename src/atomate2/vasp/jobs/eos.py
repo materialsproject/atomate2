@@ -2,25 +2,25 @@
 Module to define EOS jobs using the default atomate2 parameters.
 
 Some jobs have prefixes to indicate their purpose:
-- MPLegacy: for consistency with the atomate 1 implementation, or
-[LDMWP] K. Latimer, S. Dwaraknath, K. Mathew, D. Winston, and K.A. Persson,
-npj Comput. Materials 4, 40 (2018),
-DOI: 10.1038/s41524-018-0091-x
+
+* MPLegacy: for consistency with the atomate 1 implementation, or
+  [LDMWP] K. Latimer, S. Dwaraknath, K. Mathew, D. Winston, and K.A. Persson,
+  npj Comput. Materials 4, 40 (2018),
+  DOI: 10.1038/s41524-018-0091-x
 
 Also see the original atomate workflows
 
-- atomate.vasp.workflows.base.wf_bulk_modulus:
-https://github.com/hackingmaterials/atomate/blob/main/atomate/vasp/workflows/presets/core.py#L564
-- atomate.vasp.workflows.base.bulk_modulus.get_wf_bulk_modulus:
-https://github.com/hackingmaterials/atomate/blob/main/atomate/vasp/workflows/base/bulk_modulus.py#L21
+* atomate.vasp.workflows.base.wf_bulk_modulus:
+  https://github.com/hackingmaterials/atomate/blob/main/atomate/vasp/workflows/presets/core.py#L564
+* atomate.vasp.workflows.base.bulk_modulus.get_wf_bulk_modulus:
+  https://github.com/hackingmaterials/atomate/blob/main/atomate/vasp/workflows/base/bulk_modulus.py#L21
 
 These WFs are interesting that the k-point density is **extremely** high
 despite the convergence tests in the SI of the Latimer et al. paper not
-showing strong sensitivity when
-    "number of k-points per reciprocal atom" >= 3,000
+showing strong sensitivity when "number of k-points per reciprocal atom" >= 3,000
 
-- MPGGA: MP-compatible PBE-GGA jobs
-- MPMetaGGA: MP-compatible r2SCAN meta-GGA jobs
+* MPGGA: MP-compatible PBE-GGA jobs
+* MPMetaGGA: MP-compatible r2SCAN meta-GGA jobs
 
 MPGGA and MPMetaGGA jobs use the highest k-point density in standard MP jobs,
 KSPACING = 0.22, which is comparable to
