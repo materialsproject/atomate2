@@ -2,7 +2,7 @@
 
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from shutil import which
 from typing import Any, Optional, Union
@@ -87,9 +87,9 @@ class CalculationInput(BaseModel):
     @classmethod
     def remove_unnecessary(cls, atomic_kind_info: dict) -> dict:
         """Remove unnecessary entry from atomic_kind_info."""
-        for k in atomic_kind_info:
-            if "total_pseudopotential_energy" in atomic_kind_info[k]:
-                del atomic_kind_info[k]["total_pseudopotential_energy"]
+        for key in atomic_kind_info:
+            if "total_pseudopotential_energy" in atomic_kind_info[key]:
+                del atomic_kind_info[key]["total_pseudopotential_energy"]
         return atomic_kind_info
 
     @field_validator("dft", mode="before")
@@ -364,7 +364,9 @@ class Calculation(BaseModel):
 
         volumetric_files = [] if volumetric_files is None else volumetric_files
         cp2k_output = Cp2kOutput(cp2k_output_file, auto_load=True)
-        completed_at = str(datetime.fromtimestamp(os.stat(cp2k_output_file).st_mtime))
+        completed_at = str(
+            datetime.fromtimestamp(os.stat(cp2k_output_file).st_mtime, tz=timezone.utc)
+        )
 
         output_file_paths = _get_output_file_paths(volumetric_files)
         cp2k_objects: dict[Cp2kObject, Any] = _get_volumetric_data(

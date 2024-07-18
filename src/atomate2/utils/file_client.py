@@ -273,8 +273,8 @@ class FileClient:
         """
         try:
             os.symlink(src_filename, dest_filename)
-        except OSError as e:
-            if e.errno == errno.EEXIST:
+        except OSError as exc:
+            if exc.errno == errno.EEXIST:
                 os.remove(dest_filename)
                 os.symlink(src_filename, dest_filename)
             else:
@@ -546,9 +546,9 @@ def get_ssh_connection(
         ssh_config = paramiko.SSHConfig().from_path(str(config_filename))
 
         host_config = ssh_config.lookup(hostname)  # type: ignore[attr-defined]
-        for k in ("hostname", "user", "port"):
-            if k in host_config:
-                config[k.replace("user", "username")] = host_config[k]
+        for key in ("hostname", "user", "port"):
+            if key in host_config:
+                config[key.replace("user", "username")] = host_config[key]
 
         if "proxycommand" in host_config:
             config["sock"] = paramiko.ProxyCommand(host_config["proxycommand"])

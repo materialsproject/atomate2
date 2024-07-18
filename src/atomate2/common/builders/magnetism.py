@@ -39,7 +39,7 @@ class MagneticOrderingsBuilder(Builder):
     structure_match_ltol : float
         Numerical length tolerance for structure equivalence. Default is 0.3
     structure_match_angle_tol : float
-        Numerical  angle tolerance in degrees for structure equivalence. Default is 5.
+        Numerical angle tolerance in degrees for structure equivalence. Default is 5.
     **kwargs : dict
         Keyword arguments that will be passed to the Builder init.
     """
@@ -56,7 +56,7 @@ class MagneticOrderingsBuilder(Builder):
     ) -> None:
         self.tasks = tasks
         self.magnetic_orderings = magnetic_orderings
-        self.query = query if query else {}
+        self.query = query or {}
         self.structure_match_stol = structure_match_stol
         self.structure_match_ltol = structure_match_ltol
         self.structure_match_angle_tol = structure_match_angle_tol
@@ -88,11 +88,7 @@ class MagneticOrderingsBuilder(Builder):
         self.ensure_indexes()
 
         criteria = dict(self.query)
-        criteria.update(
-            {
-                "metadata.ordering": {"$exists": True},
-            }
-        )
+        criteria.update({"metadata.ordering": {"$exists": True}})
         self.logger.info("Grouping by formula...")
         num_formulas = len(
             self.tasks.distinct("output.formula_pretty", criteria=criteria)

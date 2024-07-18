@@ -72,7 +72,7 @@ class MagneticOrderingsMaker(Maker, ABC):
         relaxations will be skipped (i.e., only static calculations are performed).
     default_magmoms : dict | None
         Optional default mapping of magnetic elements to their initial magnetic moments
-        in µB. Generally these are chosen to be high-spin, since they can relax to a
+        in μB. Generally these are chosen to be high-spin, since they can relax to a
         low-spin configuration during a DFT electronic configuration. If None, will use
         the default values provided in pymatgen/analysis/magnetism/default_magmoms.yaml.
     strategies : tuple[str]
