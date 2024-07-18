@@ -1,5 +1,4 @@
-License
-=======
+# License
 
 `atomate2` is developed under a modified BSD license, reproduced below:
 
@@ -51,3 +50,4 @@ modify, prepare derivative works, incorporate into other computer
 software, distribute, and sublicense such enhancements or derivative
 works thereof, in binary and source code form.
 ```
+

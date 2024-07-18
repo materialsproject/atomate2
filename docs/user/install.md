@@ -296,7 +296,7 @@ This is the command that you would use to run VASP with parallelization
 
 The directory structure of `<<INSTALL_DIR>>/config` should now look like
 
-```txt
+```
 config
 ├── jobflow.yaml
 └── atomate2.yaml
