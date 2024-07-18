@@ -55,6 +55,7 @@ if TYPE_CHECKING:
     from ase import Atoms
     from ase.calculators.calculator import Calculator
     from ase.filters import Filter
+    from ase.io.trajectory import TrajectoryReader
     from ase.optimize.optimize import Optimizer
 
 OPTIMIZERS = {
@@ -72,7 +73,7 @@ OPTIMIZERS = {
 def _get_pymatgen_trajectory_from_observer(
     trajectory_observer: Any, frame_property_keys: list[str]
 ) -> PmgTrajectory:
-    to_singluar = {"energies": "energy", "stresses": "stress"}
+    to_singular = {"energies": "energy", "stresses": "stress"}
 
     if hasattr(trajectory_observer, "as_dict"):
         traj = trajectory_observer.as_dict()
@@ -94,7 +95,7 @@ def _get_pymatgen_trajectory_from_observer(
 
     frame_properties = [
         {
-            to_singluar.get(key, key): traj[key][idx]
+            to_singular.get(key, key): traj[key][idx]
             for key in frame_property_keys
             if key in traj
         }
@@ -115,8 +116,7 @@ class TrajectoryObserver:
     """
 
     def __init__(self, atoms: Atoms, store_md_outputs: bool = False) -> None:
-        """
-        Initialize the Observer.
+        """Initialize the Observer.
 
         Parameters
         ----------
@@ -197,7 +197,9 @@ class TrajectoryObserver:
         elif fmt == "ase":
             self.to_ase_trajectory(filename=filename)
 
-    def to_ase_trajectory(self, filename: str | None = "atoms.traj") -> AseTrajectory:
+    def to_ase_trajectory(
+        self, filename: str | None = "atoms.traj"
+    ) -> TrajectoryReader:
         """
         Convert to an ASE .Trajectory.
 
@@ -224,8 +226,8 @@ class TrajectoryObserver:
                 kwargs["magmom"] = self.magmoms[idx]
 
             atoms.calc = SinglePointCalculator(atoms=atoms, **kwargs)
-            with AseTrajectory(filename, "a" if idx > 0 else "w", atoms=atoms) as f:
-                f.write()
+            with AseTrajectory(filename, "a" if idx > 0 else "w", atoms=atoms) as file:
+                file.write()
 
         return AseTrajectory(filename, "r")
 
@@ -293,8 +295,7 @@ class Relaxer:
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
     ) -> None:
-        """
-        Initialize the Relaxer.
+        """Initialize the Relaxer.
 
         Parameters
         ----------
@@ -359,8 +360,7 @@ class Relaxer:
         if self.fix_symmetry:
             atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
         atoms.set_calculator(self.calculator)
-        stream = sys.stdout if verbose else io.StringIO()
-        with contextlib.redirect_stdout(stream):
+        with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell:
                 atoms = cell_filter(atoms)
@@ -421,7 +421,8 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             import matgl
             from matgl.ext.ase import PESCalculator
 
-            potential = matgl.load_model("M3GNet-MP-2021.2.8-PES")
+            path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
+            potential = matgl.load_model(path)
             calculator = PESCalculator(potential, **kwargs)
 
         elif calculator_name == MLFF.MACE:
@@ -440,8 +441,8 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             calculator = NequIPCalculator.from_deployed_model(**kwargs)
 
     elif isinstance(calculator_meta, dict):
-        _calculator = MontyDecoder().decode(json.dumps(calculator_meta))
-        calculator = _calculator(**kwargs)
+        calc_cls = MontyDecoder().decode(json.dumps(calculator_meta))
+        calculator = calc_cls(**kwargs)
 
     return calculator
 

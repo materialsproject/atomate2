@@ -356,7 +356,7 @@ class AbinitInputGenerator(InputGenerator):
         else:
             if prev_outputs is not None and not self.prev_outputs_deps:
                 raise RuntimeError(
-                    f"Previous outputs not allowed for {self.__class__.__name__}."
+                    f"Previous outputs not allowed for {type(self).__name__}."
                 )
             abinit_input = self.get_abinit_input(
                 structure=structure,
@@ -541,8 +541,7 @@ class AbinitInputGenerator(InputGenerator):
         kpoints_settings: dict | KSampling | None = None,
         input_index: int | None = None,
     ) -> AbinitInput:
-        """
-        Generate the AbinitInput for the input set.
+        """Generate the AbinitInput for the input set.
 
         Uses the defined factory function and additional parameters from user
         and subclasses.
@@ -574,7 +573,7 @@ class AbinitInputGenerator(InputGenerator):
         if self.factory_prev_inputs_kwargs:
             if not prev_outputs:
                 raise RuntimeError(
-                    f"No previous_outputs. Required for {self.__class__.__name__}."
+                    f"No previous_outputs. Required for {type(self).__name__}."
                 )
 
             # TODO consider cases where structure might be defined even if
@@ -589,18 +588,16 @@ class AbinitInputGenerator(InputGenerator):
             )
             total_factory_kwargs.update(abinit_inputs)
 
-        else:
-            # TODO check if this should be removed or the check be improved
-            if structure is None:
-                msg = (
-                    f"Structure is mandatory for {self.__class__.__name__} "
-                    f"generation since no previous output is used."
-                )
-                raise RuntimeError(msg)
+        elif structure is None:
+            msg = (
+                f"Structure is mandatory for {type(self).__name__} "
+                f"generation since no previous output is used."
+            )
+            raise RuntimeError(msg)
 
         if not self.prev_outputs_deps and prev_outputs:
             msg = (
-                f"Previous outputs not allowed for {self.__class__.__name__} "
+                f"Previous outputs not allowed for {type(self).__name__} "
                 "Consider if restart_from argument of get_input_set method "
                 "can fit your needs instead."
             )
