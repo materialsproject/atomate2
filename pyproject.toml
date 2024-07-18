@@ -51,6 +51,7 @@ defects = [
 ]
 forcefields = [
     "ase>=3.22.1",
+    "calorine<=2.2.1",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.1.1",
@@ -82,6 +83,7 @@ strict = [
     # must use >= for ase to not uninstall main branch install in CI
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
+    "calorine==2.2.1",
     "cclib==1.8.1",
     "chgnet==0.3.8",
     "click==8.1.7",
