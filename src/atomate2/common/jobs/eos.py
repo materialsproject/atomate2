@@ -26,6 +26,8 @@ class EOSPostProcessor(MSONable):
     """
     Fit data to an EOS.
 
+    Parameters
+    ----------
     name : str
         Name of the class
     eos_attrs : tuple[str,...]
@@ -72,16 +74,19 @@ class EOSPostProcessor(MSONable):
         Parameters
         ----------
         eos_flow_output : dict
-            Volume, energy, and (optionally) stress and pressure data in dict form,
-            {
-                "relax" <required> and "static" <optional> : {
-                    "energy": list, <required>
-                    "volume": list, <required>
-                    "stress": list <optional>
-                },
-                "initial_<key>": {"E0": float, "V0": float} <optional>,
-                    for <key> in ("relax", "static")
-            }
+            Volume, energy, and (optionally) stress and pressure data in dict
+            form::
+
+                {
+                    "relax" <required> and "static" <optional> : {
+                        "energy": list, <required>
+                        "volume": list, <required>
+                        "stress": list <optional>
+                    },
+                    "initial_<key>": {"E0": float, "V0": float} <optional>,
+                        for <key> in ("relax", "static")
+                }
+
         """
         self.results.update(eos_flow_output)
         self._use_job_types = [key for key in self.job_types if self.results.get(key)]
@@ -103,16 +108,19 @@ class EOSPostProcessor(MSONable):
         Parameters
         ----------
         eos_flow_output : dict
-            Volume, energy, and (optionally) stress and pressure data in dict form,
-            {
-                "relax" <required> and "static" <optional> : {
-                    "energy": list, <required>
-                    "volume": list, <required>
-                    "stress": list <optional>
-                },
-                "initial_<key>": {"E0": float, "V0": float} <optional>,
-                    for <key> in ("relax", "static")
-            }
+            Volume, energy, and (optionally) stress and pressure data in dict
+            form::
+
+                {
+                    "relax" <required> and "static" <optional> : {
+                        "energy": list, <required>
+                        "volume": list, <required>
+                        "stress": list <optional>
+                    },
+                    "initial_<key>": {"E0": float, "V0": float} <optional>,
+                        for <key> in ("relax", "static")
+                }
+
         """
         self.fit(eos_flow_output)
         return self.results
@@ -125,16 +133,19 @@ class PostProcessEosEnergy(EOSPostProcessor):
     Parameters
     ----------
     eos_flow_output : dict
-        Volume, energy, and (optionally) stress and pressure data in dict form,
-        {
-            "relax" <required> and "static" <optional> : {
-                "energy": list, <required>
-                "volume": list, <required>
-                "stress": list <optional>
-            },
-            "initial_<key>": {"E0": float, "V0": float} <optional>,
-                for <key> in ("relax", "static")
-        }
+        Volume, energy, and (optionally) stress and pressure data in dict
+        form::
+
+            {
+                "relax" <required> and "static" <optional> : {
+                    "energy": list, <required>
+                    "volume": list, <required>
+                    "stress": list <optional>
+                },
+                "initial_<key>": {"E0": float, "V0": float} <optional>,
+                    for <key> in ("relax", "static")
+            }
+
     name : str
         Name of the class
     eos_attrs : tuple[str,...]
@@ -158,7 +169,7 @@ class PostProcessEosEnergy(EOSPostProcessor):
     )
 
     def eval(self) -> None:
-        """Fit the input data to each EOS in `self.eos_models."""
+        """Fit the input data to each EOS in ``self.eos_models``."""
         for jobtype in self._use_job_types:
             self.results[jobtype]["EOS"] = {}
             for eos_name in self.eos_models:
@@ -181,16 +192,19 @@ class PostProcessEosPressure(EOSPostProcessor):
     Parameters
     ----------
     eos_flow_output : dict
-        Volume, energy, and (optionally) stress and pressure data in dict form,
-        {
-            "relax" <required> and "static" <optional> : {
-                "energy": list, <required>
-                "volume": list, <required>
-                "stress": list <optional>
-            },
-            "initial_<key>": {"E0": float, "V0": float} <optional>,
-                for <key> in ("relax", "static")
-        }
+        Volume, energy, and (optionally) stress and pressure data in dict
+        form::
+
+            {
+                "relax" <required> and "static" <optional> : {
+                    "energy": list, <required>
+                    "volume": list, <required>
+                    "stress": list <optional>
+                },
+                "initial_<key>": {"E0": float, "V0": float} <optional>,
+                    for <key> in ("relax", "static")
+            }
+
     name : str
         Name of the class
     eos_attrs : tuple[str,...]
@@ -201,8 +215,10 @@ class PostProcessEosPressure(EOSPostProcessor):
         Minimum number of data points needed to perform a fit.
 
     If only stresses are specified, it is assumed that the elements of "stress"
-    are 3 x 3 tensors, and the pressure is computed as
+    are 3 x 3 tensors, and the pressure is computed as::
+
         pressure = Trace(stress tensor)/3
+
     The overall sign is irrelevant for a successful fit, as the overall sign
     of the pressure indicates internal/external stress.
     """
@@ -232,14 +248,18 @@ class PostProcessEosPressure(EOSPostProcessor):
         -------
         float : the BM pressure
 
-        BM EOS for E(V) has the form
+        BM EOS for E(V) has the form::
+
             E(V) = E0 + 9 B0 V0 / 16 * (
                 (B1 - 4)*eta**6 + (14 - 3*B1)*eta**4 + (3*B1 - 16)*eta**2 + 6 - B1
             )
             eta = (V0/V)**(1/3).
-        This function computes p = - dE / dV via the chain rule,
+
+        This function computes p = - dE / dV via the chain rule,::
+
             p = d E / d eta * (- d eta / dV)
             = eta**4/(3*V0) * d E / d eta
+
         """
         eta = (v0 / volume) ** (1.0 / 3.0)
         return (
@@ -253,7 +273,8 @@ class PostProcessEosPressure(EOSPostProcessor):
     def _initial_fit(self) -> dict:
         """Generate initial polynomial fit for p(V) curve.
 
-        p(V) / V = a + b V + c V**2
+        ::
+            p(V) / V = a + b V + c V**2
         """
         init_pars = {}
         for jobtype in self._use_job_types:
@@ -337,9 +358,12 @@ def apply_strain_to_structure(structure: Structure, deformations: list) -> list:
     deformations: list[.Deformation]
         A list of deformations to apply **independently** to the input
         structure, in anticipation of performing an EOS fit.
-        Deformations should be of the form of a 3x3 matrix, e.g.,
+        Deformations should be of the form of a 3x3 matrix, e.g.,::
+
         [[1.2, 0., 0.], [0., 1.2, 0.], [0., 0., 1.2]]
-        or
+
+        or::
+
         ((1.2, 0., 0.), (0., 1.2, 0.), (0., 0., 1.2))
 
     Returns

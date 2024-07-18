@@ -72,7 +72,7 @@ napoleon_use_rtype = True
 napoleon_use_ivar = True
 
 # The suffix(es) of source filenames.
-source_suffix = [".rst", ".md"]
+source_suffix = {".rst": "restructuredtext", ".md": "restructuredtext"}
 
 mathjax3_config = {
     "tex": {
@@ -92,10 +92,10 @@ latex_elements = {
 """
 }
 language = "en"
-html_extra_path = ["images/badge.svg"]
+# html_extra_path = ["images/badge.svg"]
 html_static_path = ["_static"]
 html_css_files = ["custom.css", "github.css"]
-suppress_warnings = "etoc.toctree"
+suppress_warnings = ["etoc.toctree"]
 
 # autodoc options
 autosummary_imported_members = False
@@ -172,6 +172,5 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3.8", None),
     "matplotlib": ("https://matplotlib.org/stable/", None),
     "networkx": ("https://networkx.org/documentation/stable/", None),
-    "monty": ("https://materialsvirtuallab.github.io/monty/", None),
     "jobflow": ("https://materialsproject.github.io/jobflow", None),
 }
