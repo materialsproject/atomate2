@@ -90,6 +90,15 @@ def mock_vasp(
 
     For examples, see the tests in tests/vasp/makers/core.py.
     """
+    yield from _mock_vasp(monkeypatch, vasp_test_dir)
+
+
+def _mock_vasp(
+    monkeypatch: MonkeyPatch, vasp_test_dir: Path
+) -> Generator[Callable[[Any, Any], Any], None, None]:
+    """
+    Isolated version of the mock_vasp fixture that can be used in other contexts.
+    """
 
     def mock_run_vasp(*args, **kwargs):
         name = CURRENT_JOB.job.name
@@ -100,7 +109,6 @@ def mock_vasp(
                 f"no reference directory found for job {name!r}; "
                 f"reference paths received={_REF_PATHS}"
             ) from None
-
         fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
 
     get_input_set_orig = VaspInputGenerator.get_input_set
