@@ -87,3 +87,10 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         assert actual_name in job_names, f"Job '{actual_name}' not found."
 
     assert flow[-1].uuid in responses, "ads calculation job not found"
+
+    adsorption_calculation_job = responses.get(flow[-1].uuid)
+    adsorption_energy = [
+        response.output.get("adsorption_energy")
+        for response in adsorption_calculation_job.values()
+    ]
+    assert isinstance(adsorption_energy, list)
