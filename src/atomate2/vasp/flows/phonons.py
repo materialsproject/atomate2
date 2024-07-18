@@ -123,7 +123,7 @@ class PhononMaker(BasePhononMaker):
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
-    store_force_constants: bool = True
+    store_force_constants: bool = False
     socket: bool = False
     code: str = "vasp"
     bulk_relax_maker: BaseVaspMaker | None = field(
