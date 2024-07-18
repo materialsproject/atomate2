@@ -142,23 +142,23 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
 
             [
                 {
-                    'bulk_dir_name': 'computer1:/folder1',
-                    'bulk_locpot': {...},
-                    'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
-                    'defect_dir_name': 'computer1:/folder2',
-                    'defect_entry': {...},
-                    'defect_locpot': {...},
-                    'defect_uuid': 'e9af2725-d63c-49b8-a01f-391540211750'
+                    "bulk_dir_name": "computer1:/folder1",
+                    "bulk_locpot": {...},
+                    "bulk_uuid": "48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3",
+                    "defect_dir_name": "computer1:/folder2",
+                    "defect_entry": {...},
+                    "defect_locpot": {...},
+                    "defect_uuid": "e9af2725-d63c-49b8-a01f-391540211750",
                 },
                 {
-                    'bulk_dir_name': 'computer1:/folder3',
-                    'bulk_locpot': {...},
-                    'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
-                    'defect_dir_name': 'computer1:/folder4',
-                    'defect_entry': {...},
-                    'defect_locpot': {...},
-                    'defect_uuid': 'a1c31095-0494-4eed-9862-95311f80a993'
-                }
+                    "bulk_dir_name": "computer1:/folder3",
+                    "bulk_locpot": {...},
+                    "bulk_uuid": "48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3",
+                    "defect_dir_name": "computer1:/folder4",
+                    "defect_entry": {...},
+                    "defect_locpot": {...},
+                    "defect_uuid": "a1c31095-0494-4eed-9862-95311f80a993",
+                },
             ]
 
     """
