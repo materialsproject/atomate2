@@ -94,3 +94,11 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         for response in adsorption_calculation_job.values()
     ]
     assert isinstance(adsorption_energy, list)
+
+    adsorption_energy.sort()
+
+    assert adsorption_energy == [
+        -3.0084328299999967,
+        -2.9288308699999916,
+        -2.092973299999997,
+    ], "adsorption energy is inaccurate or not found in response"
