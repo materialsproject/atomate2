@@ -69,9 +69,14 @@ def test_matpes_static_maker_default_values(maker_cls: BaseVaspMaker):
     maker = maker_cls()
     is_meta = "Meta" in maker_cls.__name__
     assert maker.name == f"MatPES {'meta-' if is_meta else ''}GGA static"
-    assert isinstance(maker.input_set_generator,MatPESStaticSet)
+    assert isinstance(maker.input_set_generator, MatPESStaticSet)
     if is_meta:
-        assert maker.input_set_generator._config_dict["INCAR"].get("METAGGA") == "R2SCAN"
+        assert (
+            maker.input_set_generator._config_dict[  # noqa: SLF001
+                "INCAR"
+            ].get("METAGGA")
+            == "R2SCAN"
+        )
     config = maker.input_set_generator.config_dict
     assert {*config} == {"INCAR", "POTCAR", "PARENT", "POTCAR_FUNCTIONAL"}
     assert all(
