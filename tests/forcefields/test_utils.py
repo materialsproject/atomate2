@@ -142,7 +142,7 @@ def test_ext_load(force_field: str):
     }[force_field]
     calc_from_decode = ase_calculator(decode_dict)
     calc_from_preset = ase_calculator(str(MLFF(force_field)))
-    assert type(calc_from_decode) == type(calc_from_preset)
+    assert type(calc_from_decode) is type(calc_from_preset)
     assert calc_from_decode.name == calc_from_preset.name
     assert calc_from_decode.parameters == calc_from_preset.parameters == {}
 
