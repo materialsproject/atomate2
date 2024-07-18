@@ -48,8 +48,8 @@ def test_static_generator_get_input_set(si_structure):
 #         assert len(dirlist) == 6
 #         assert "abinit_input_set_generator.json" in dirlist
 #         assert "abinit_input.json" in dirlist
-#         with open("first_run/run.abi", "r") as f:
-#             runabi1_str = f.read()
+#         with open("first_run/run.abi") as file:
+#             runabi1_str = file.read()
 #         assert "ecut 8.5" in runabi1_str
 #         assert "nband 13" in runabi1_str
 #         assert "occopt 5" in runabi1_str
@@ -76,8 +76,8 @@ def test_static_generator_get_input_set(si_structure):
 #         )
 #         assert os.path.islink(indenpath)
 #         assert os.readlink(indenpath) == outdenpath
-#         with open("second_run/run.abi", "r") as f:
-#             runabi2_str = f.read()
+#         with open("second_run/run.abi") as file:
+#             runabi2_str = file.read()
 #         assert "ecut 8.5" in runabi2_str
 #         assert "nband 8" in runabi2_str
 #         assert "occopt" not in runabi2_str
@@ -101,8 +101,8 @@ def test_static_generator_get_input_set(si_structure):
 #         )
 #         assert os.path.islink(inwfkpath)
 #         assert os.readlink(inwfkpath) == outwfkpath
-#         with open("second_run_bis/run.abi", "r") as f:
-#             runabi3_str = f.read()
+#         with open("second_run_bis/run.abi") as file:
+#             runabi3_str = file.read()
 #         assert "ecut 8.5" in runabi3_str
 #         assert "nband 13" in runabi3_str
 #         assert "occopt 5" in runabi3_str

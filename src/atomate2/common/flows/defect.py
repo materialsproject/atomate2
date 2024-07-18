@@ -167,7 +167,7 @@ class FormationEnergyMaker(Maker, ABC):
         A maker to perform a atomic-position-only relaxation on the defect charge
         states. Since these calculations are expensive and the settings might get
         messy, it is recommended for each implementation of this maker to check
-        some of the most important settings in the `relax_maker`.  Please see
+        some of the most important settings in the `relax_maker`. Please see
         `FormationEnergyMaker.validate_maker` for more details.
 
     bulk_relax_maker: Maker
@@ -182,6 +182,7 @@ class FormationEnergyMaker(Maker, ABC):
         lattice relaxation, you should manually set the grid size.
 
         .. code-block:: python
+
             relax_set = MPRelaxSet(defect.get_supercell_structure())
             ng, ngf = relax_set.calculate_ng()
             params = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
@@ -217,32 +218,35 @@ class FormationEnergyMaker(Maker, ABC):
         energy diagrams.
 
         .. note::
-        Once we remove the requirement for explicit bulk supercell calculations,
-        this setting will be removed.  It is only needed because the bulk supercell
-        locpot is currently needed for the finite-size correction calculation.
+            Once we remove the requirement for explicit bulk supercell calculations,
+            this setting will be removed. It is only needed because the bulk supercell
+            locpot is currently needed for the finite-size correction calculation.
 
         Output format for the DefectEntry data:
+
         .. code-block:: python
-        [
-            {
-                'bulk_dir_name': 'computer1:/folder1',
-                'bulk_locpot': {...},
-                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
-                'defect_dir_name': 'computer1:/folder2',
-                'defect_entry': {...},
-                'defect_locpot': {...},
-                'defect_uuid': 'e9af2725-d63c-49b8-a01f-391540211750'
-            },
-            {
-                'bulk_dir_name': 'computer1:/folder3',
-                'bulk_locpot': {...},
-                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
-                'defect_dir_name': 'computer1:/folder4',
-                'defect_entry': {...},
-                'defect_locpot': {...},
-                'defect_uuid': 'a1c31095-0494-4eed-9862-95311f80a993'
-            }
-        ]
+
+            [
+                {
+                    "bulk_dir_name": "computer1:/folder1",
+                    "bulk_locpot": {...},
+                    "bulk_uuid": "48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3",
+                    "defect_dir_name": "computer1:/folder2",
+                    "defect_entry": {...},
+                    "defect_locpot": {...},
+                    "defect_uuid": "e9af2725-d63c-49b8-a01f-391540211750",
+                },
+                {
+                    "bulk_dir_name": "computer1:/folder3",
+                    "bulk_locpot": {...},
+                    "bulk_uuid": "48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3",
+                    "defect_dir_name": "computer1:/folder4",
+                    "defect_entry": {...},
+                    "defect_locpot": {...},
+                    "defect_uuid": "a1c31095-0494-4eed-9862-95311f80a993",
+                },
+            ]
+
     """
 
     defect_relax_maker: Maker
@@ -280,7 +284,7 @@ class FormationEnergyMaker(Maker, ABC):
             If provided, the bulk supercell calculation will be skipped.
         supercell_matrix: NDArray | None
             The supercell transformation matrix. If None, the supercell matrix
-            will be computed automatically.  If `bulk_supercell_dir` is provided,
+            will be computed automatically. If `bulk_supercell_dir` is provided,
             this parameter will be ignored.
         defect_index : int | str
             Additional index to give unique names to the defect calculations.

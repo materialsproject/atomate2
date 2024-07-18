@@ -188,7 +188,7 @@ def test_set_kspacing_and_auto_ismear(
 ):
     static_set = MPMetaGGARelaxSetGenerator(auto_ismear=True, auto_kspacing=True)
 
-    incar = static_set._get_incar(
+    incar = static_set._get_incar(  # noqa: SLF001
         structure=struct_no_magmoms,
         kpoints=None,
         previous_incar=None,

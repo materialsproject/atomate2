@@ -41,7 +41,7 @@ def test_get_magmoms(
 
 def test_get_magmoms_with_specie() -> None:
     # Setting the species to Co2+ and Fe3+ will change the `site.specie` to
-    # `Specie` instead of `Element`.  This will allow us to test the part of
+    # `Specie` instead of `Element`. This will allow us to test the part of
     # the code that checks for `Specie.spin`.
     # @jmmshn
     struct = Structure(

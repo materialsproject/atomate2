@@ -22,6 +22,7 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
 
+    from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -60,6 +61,11 @@ class BaseElasticMaker(Maker, ABC):
         bulk relaxation.
     elastic_relax_maker : .BaseVaspMaker or .ForceFieldRelaxMaker
         Maker used to generate elastic relaxations.
+    max_failed_deformations: int or float
+        Maximum number of deformations allowed to fail to proceed with the fitting
+        of the elastic tensor. If an int the absolute number of deformations. If
+        a float between 0 an 1 the maximum fraction of deformations. If None any
+        number of deformations allowed.
     generate_elastic_deformations_kwargs : dict
         Keyword arguments passed to :obj:`generate_elastic_deformations`.
     fit_elastic_tensor_kwargs : dict
@@ -72,10 +78,11 @@ class BaseElasticMaker(Maker, ABC):
     order: int = 2
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
-    bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = None
-    elastic_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker = (
+    bulk_relax_maker: BaseAimsMaker | BaseVaspMaker | ForceFieldRelaxMaker | None = None
+    elastic_relax_maker: BaseAimsMaker | BaseVaspMaker | ForceFieldRelaxMaker = (
         None  # constant volume optimization
     )
+    max_failed_deformations: int | float | None = None
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
@@ -87,7 +94,8 @@ class BaseElasticMaker(Maker, ABC):
         equilibrium_stress: Matrix3D = None,
         conventional: bool = False,
     ) -> Flow:
-        """Make flow to calculate the elastic constant.
+        """
+        Make flow to calculate the elastic constant.
 
         Parameters
         ----------
@@ -139,6 +147,8 @@ class BaseElasticMaker(Maker, ABC):
             equilibrium_stress=equilibrium_stress,
             order=self.order,
             symprec=self.symprec if self.sym_reduce else None,
+            stress_sign_factor=self.stress_sign_correction,
+            max_failed_deformations=self.max_failed_deformations,
             **self.fit_elastic_tensor_kwargs,
             **self.task_document_kwargs,
         )
@@ -153,6 +163,17 @@ class BaseElasticMaker(Maker, ABC):
             output=fit_tensor.output,
             name=self.name,
         )
+
+    @property
+    def stress_sign_correction(self) -> float:
+        r"""Correct the sign of the stress tensor.
+
+        This is done because VASP defines the stress tensor to be
+            \sigma_ij = -\partial E / \partial n_ij
+        and FHI-aims defines it to be
+            \sigma_ij = \partial E / \partial n_ij
+        """
+        return 1.0
 
     @property
     @abstractmethod

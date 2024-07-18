@@ -296,7 +296,7 @@ This is the command that you would use to run VASP with parallelization
 
 The directory structure of `<<INSTALL_DIR>>/config` should now look like
 
-```txt
+```
 config
 ├── jobflow.yaml
 └── atomate2.yaml
@@ -456,6 +456,8 @@ See the following pages for more information on the topics we covered here:
 
 - To see how to run and customize the existing Workflows in atomate2, try the
   [](running_workflows) tutorial (suggested next step).
+- To learn more about `TaskDocument` and how `atomate2` organizes output data, review
+  the [Introduction to task documents, schemas, and emmet](docs_schemas_emmet.md) tutorial.
 - To see how to manage and execute many workflows at once, try the
   [](atomate2_fireWorks) tutorial.
 

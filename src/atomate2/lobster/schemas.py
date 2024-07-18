@@ -729,7 +729,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
     @classmethod
     @requires(
         Analysis,
-        "LobsterTaskDocument requires `lobsterpy` and `ijson` to function properly. "
+        "LobsterTaskDocument requires lobsterpy and ijson to function properly. "
         "Please reinstall atomate2 using atomate2[lobster]",
     )
     def from_directory(
@@ -1319,8 +1319,8 @@ def _get_strong_bonds(
 def read_saved_json(
     filename: str, pymatgen_objs: bool = True, query: str = "structure"
 ) -> dict[str, Any]:
-    """
-    Read the data from  *.json.gz file corresponding to query.
+    r"""
+    Read the data from  \*.json.gz files corresponding to query.
 
     Uses ijson to parse specific keys(memory efficient)
 
