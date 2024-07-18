@@ -216,9 +216,7 @@ def test_lobster_task_doc_saved_jsons(lobster_test_dir):
         if "dos" in cba_key and json_data[cba_key]:
             assert isinstance(json_data[cba_key], LobsterCompleteDos)
 
-        if (cba_key == "all_bonds" or cba_key == "cation_anion_bonds") and json_data[
-            cba_key
-        ]:
+        if cba_key in ("all_bonds", "cation_anion_bonds") and json_data[cba_key]:
             assert isinstance(
                 json_data[cba_key]["lobsterpy_data"], CondensedBondingAnalysis
             )
@@ -238,9 +236,7 @@ def test_lobster_task_doc_saved_jsons(lobster_test_dir):
         if "dos" in cba_key and json_data[cba_key]:
             assert isinstance(json_data[cba_key], dict)
 
-        if (cba_key == "all_bonds" or cba_key == "cation_anion_bonds") and json_data[
-            cba_key
-        ]:
+        if cba_key in ("all_bonds", "cation_anion_bonds") and json_data[cba_key]:
             for cohp_data in json_data[cba_key]["lobsterpy_data"]["cohp_plot_data"][
                 "data"
             ].values():
@@ -304,10 +300,9 @@ def test_lobster_task_doc_saved_jsons(lobster_test_dir):
                 assert isinstance(cohp_data, Cohp)
 
         if (
-            task_doc_key == "cohp_data"
-            or task_doc_key == "cobi_data"
-            or task_doc_key == "coop_data"
-        ) and json_data[task_doc_key]:
+            task_doc_key in {"cohp_data", "cobi_data", "coop_data"}
+            and json_data[task_doc_key]
+        ):
             assert isinstance(json_data[task_doc_key], CompleteCohp)
 
     # delete the computational data json after the test
