@@ -1,4 +1,4 @@
-"""Defines the phonon workflows for FHI-aims."""
+"""Defines the anharmonicity quantification workflows for FHI-aims."""
 
 from __future__ import annotations
 
