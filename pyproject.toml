@@ -51,6 +51,7 @@ defects = [
 ]
 forcefields = [
     "ase>=3.23.0",
+    "calorine<=2.2.1",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.1.1",
@@ -80,6 +81,7 @@ tests = [
 strict = [
     "PyYAML==6.0.1",
     "ase==3.23.0",
+    "calorine==2.2.1",
     "cclib==1.8.1",
     "chgnet==0.3.8",
     "click==8.1.7",
@@ -192,6 +194,7 @@ ignore = [
     "PTH",     # prefer Pathlib to os.path
     "RUF013",  # implicit-optional
     "S324",    # use of insecure hash function
+    "S603",    # use of insecure subprocess
     "S507",    # paramiko auto trust
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
