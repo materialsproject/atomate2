@@ -24,6 +24,7 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir, mock_jobflow_settings)
     from jobflow import OutputReference, run_locally
     from monty.serialization import loadfn
     from pymatgen.core import Structure
+    from pymatgen.io.vasp.sets import MPScanRelaxSet, MPScanStaticSet
 
     from atomate2.vasp.flows.core import RelaxMaker, StaticMaker
     from atomate2.vasp.flows.electrode import ElectrodeInsertionMaker
@@ -31,7 +32,6 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir, mock_jobflow_settings)
         update_user_incar_settings,
         update_user_kpoints_settings,
     )
-    from pymatgen.io.vasp.sets import MPScanRelaxSet, MPScanStaticSet
     # mock the default setting
 
     # mapping from job name to directory containing test files

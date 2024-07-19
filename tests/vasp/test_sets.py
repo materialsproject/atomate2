@@ -1,8 +1,9 @@
 import pytest
 from pymatgen.core import Lattice, Species, Structure
+from pymatgen.io.vasp.sets import MPScanRelaxSet
 
 from atomate2.vasp.sets.core import StaticSetGenerator
-from pymatgen.io.vasp.sets import MPScanRelaxSet
+
 
 @pytest.fixture(scope="module")
 def struct_no_magmoms() -> Structure:

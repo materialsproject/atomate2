@@ -4,6 +4,7 @@ import pytest
 from emmet.core.tasks import TaskDoc
 from jobflow import Maker, run_locally
 from pymatgen.core import Structure
+from pymatgen.io.vasp.sets import MPScanRelaxSet
 
 from atomate2.vasp.flows.mp import (
     MPGGADoubleRelaxMaker,
@@ -11,7 +12,7 @@ from atomate2.vasp.flows.mp import (
     MPMetaGGADoubleRelaxStaticMaker,
 )
 from atomate2.vasp.jobs.mp import MPMetaGGARelaxMaker, MPPreRelaxMaker
-from pymatgen.io.vasp.sets import MPScanRelaxSet
+
 
 @pytest.mark.parametrize("name", ["test", None])
 @pytest.mark.parametrize(

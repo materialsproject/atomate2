@@ -221,7 +221,7 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
                 "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
                 "LCHARG": True,
                 "LWAVE": False,
-                "LVHAR": None, # not needed, unset
+                "LVHAR": None,  # not needed, unset
                 "LELF": False,  # prevents KPAR > 1
             },
         )
