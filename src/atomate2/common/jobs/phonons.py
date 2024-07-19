@@ -57,10 +57,14 @@ def get_total_energy_per_cell(
 
 @job
 def get_supercell_size(
-    structure: Structure, min_length: float, prefer_90_degrees: bool, **kwargs
+    structure: Structure,
+    min_length: float,
+    max_length: float,
+    prefer_90_degrees: bool,
+    **kwargs,
 ) -> list[list[float]]:
     """
-    Determine supercell size with given min_length.
+    Determine supercell size with given min_length and max_length.
 
     Parameters
     ----------
@@ -68,16 +72,22 @@ def get_supercell_size(
         Input structure that will be used to determine supercell
     min_length: float
         minimum length of cell in Angstrom
+    max_length: float
+        maximum length of cell in Angstrom
     prefer_90_degrees: bool
         if True, the algorithm will try to find a cell with 90 degree angles first
     **kwargs:
         Additional parameters that can be set.
     """
     kwargs.setdefault("force_diagonal", False)
+    kwargs.setdefault("allow_orthorhombic", False)
     common_kwds = dict(
         min_length=min_length,
+        max_length=max_length,
         min_atoms=kwargs.get("min_atoms"),
+        max_atoms=kwargs.get("max_atoms"),  # not sure if I have to set this, too
         force_diagonal=kwargs["force_diagonal"],
+        allow_orthorhombic=kwargs["allow_orthorhombic"],
     )
 
     if not prefer_90_degrees:
