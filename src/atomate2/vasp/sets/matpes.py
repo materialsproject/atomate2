@@ -17,7 +17,6 @@ if TYPE_CHECKING:
 
 
 @dataclass
-@deprecated(replacement=MatPESStaticSet, deadline=(2025, 1, 1))
 class MatPesGGAStaticSetGenerator(MatPESStaticSet):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
@@ -25,22 +24,31 @@ class MatPesGGAStaticSetGenerator(MatPESStaticSet):
     auto_ismear: bool = False
     auto_kspacing: bool = False
 
+    @deprecated(replacement=MatPESStaticSet, deadline=(2025, 1, 1))
+    def __post_init__(self) -> None:
+        """Raise deprecation warning and validate."""
+        super().__post_init__()
+
 
 @dataclass
-@deprecated(
-    replacement=MatPESStaticSet,
-    deadline=(2025, 1, 1),
-    message=(
-        "Ensure that you use the `xc_functional = 'R2SCAN'` "
-        "option when instantiating the class."
-    ),
-)
 class MatPesMetaGGAStaticSetGenerator(MatPESStaticSet):
     """Class to generate MP-compatible VASP meta-GGA static input sets."""
 
     xc_functional: Literal["R2SCAN", "PBE", "PBE+U"] = "R2SCAN"
     auto_ismear: bool = False
     auto_kspacing: bool = False
+
+    @deprecated(
+        replacement=MatPESStaticSet,
+        deadline=(2025, 1, 1),
+        message=(
+            "Ensure that you use the `xc_functional = 'R2SCAN'` "
+            "option when instantiating the class."
+        ),
+    )
+    def __post_init__(self) -> None:
+        """Raise deprecation warning and validate."""
+        super().__post_init__()
 
     @property
     def incar_updates(self) -> dict:

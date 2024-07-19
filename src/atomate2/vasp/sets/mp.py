@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from monty.dev import deprecated
 from pymatgen.io.vasp.sets import (
     MPRelaxSet,
     MPScanRelaxSet,
@@ -39,6 +40,11 @@ class MPGGARelaxSetGenerator(MPRelaxSet):
     force_gamma: bool = True
     auto_metal_kpoints: bool = True
 
+    @deprecated(replacement=MPRelaxSet, deadline=(2025, 1, 1))
+    def __post_init__(self) -> None:
+        """Raise deprecation warning and validate."""
+        super().__post_init__()
+
 
 @dataclass
 class MPGGAStaticSetGenerator(MPStaticSet):
@@ -51,6 +57,11 @@ class MPGGAStaticSetGenerator(MPStaticSet):
     force_gamma: bool = True
     auto_metal_kpoints: bool = True
 
+    @deprecated(replacement=MPStaticSet, deadline=(2025, 1, 1))
+    def __post_init__(self) -> None:
+        """Raise deprecation warning and validate."""
+        super().__post_init__()
+
 
 @dataclass
 class MPMetaGGAStaticSetGenerator(MPScanStaticSet):
@@ -60,6 +71,11 @@ class MPMetaGGAStaticSetGenerator(MPScanStaticSet):
     auto_kspacing: bool = True
     bandgap_tol: float = 1e-4
     inherit_incar: bool | None = False
+
+    @deprecated(replacement=MPScanStaticSet, deadline=(2025, 1, 1))
+    def __post_init__(self) -> None:
+        """Raise deprecation warning and validate."""
+        super().__post_init__()
 
     @property
     def incar_updates(self) -> dict:
@@ -101,6 +117,11 @@ class MPMetaGGARelaxSetGenerator(MPScanRelaxSet):
     auto_ismear: bool = False
     auto_kspacing: bool = True
     inherit_incar: bool | None = False
+
+    @deprecated(replacement=MPScanRelaxSet, deadline=(2025, 1, 1))
+    def __post_init__(self) -> None:
+        """Raise deprecation warning and validate."""
+        super().__post_init__()
 
     @property
     def incar_updates(self) -> dict:

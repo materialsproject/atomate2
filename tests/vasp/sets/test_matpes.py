@@ -15,7 +15,9 @@ from atomate2.vasp.sets.matpes import (
     [MatPesGGAStaticSetGenerator, MatPesMetaGGAStaticSetGenerator],
 )
 def test_matpes_sets(set_generator: VaspInputGenerator) -> None:
-    matpes_set: VaspInputGenerator = set_generator()
+    with pytest.warns(FutureWarning):
+        matpes_set: VaspInputGenerator = set_generator()
+
     assert {*matpes_set.as_dict()} >= {
         "@class",
         "@module",
