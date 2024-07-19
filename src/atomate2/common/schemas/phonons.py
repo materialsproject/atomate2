@@ -27,6 +27,7 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
+from typing_extensions import Self
 
 from atomate2.aims.utils.units import omegaToTHz
 
@@ -163,7 +164,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
     internal_energies: Optional[list[float]] = Field(
         None,
-        description="internal energies in  J/mol per "
+        description="internal energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
     entropies: Optional[list[float]] = Field(
@@ -237,9 +238,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
         **kwargs,
-    ) -> "PhononBSDOSDoc":
-        """
-        Generate collection of phonon data.
+    ) -> Self:
+        """Generate collection of phonon data.
 
         Parameters
         ----------
@@ -448,7 +448,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 phonon.thermal_displacement_matrices.write_cif(
                     phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
                 )
-            _disp_mat = phonon._thermal_displacement_matrices
+            _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
             tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
 
             tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
@@ -518,8 +518,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
     def get_kpath(
         structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
     ) -> tuple:
-        """
-        Get high-symmetry points in k-space in phonopy format.
+        """Get high-symmetry points in k-space in phonopy format.
 
         Parameters
         ----------
@@ -538,7 +537,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             kpath = high_symm_kpath.kpath
         elif kpath_scheme == "seekpath":
             high_symm_kpath = KPathSeek(structure, symprec=symprec, **kpath_kwargs)
-            kpath = high_symm_kpath._kpath
+            kpath = high_symm_kpath._kpath  # noqa: SLF001
+        else:
+            raise ValueError(f"Unexpected {kpath_scheme=}")
 
         path = copy.deepcopy(kpath["path"])
 
