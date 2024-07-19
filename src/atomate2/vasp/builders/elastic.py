@@ -148,9 +148,9 @@ class ElasticBuilder(Builder):
         grouped = _group_deformations(tasks, self.structure_match_tol)
 
         elastic_docs = []
-        for tasks in grouped:
+        for group in grouped:
             elastic_doc = _get_elastic_document(
-                tasks, self.symprec, self.fitting_method
+                group, self.symprec, self.fitting_method
             )
             elastic_docs.append(elastic_doc)
 

@@ -67,7 +67,9 @@ def vasp_test_data(test_dir: str | Path, additional_file: list[str]) -> None:
 
     outputs = loadfn("outputs.json")
 
-    task_labels = [o["output"].task_label for o in outputs if isinstance(o, TaskDoc)]
+    task_labels = [
+        o.output.task_label for o in outputs if isinstance(o.output, TaskDoc)
+    ]
 
     if len(task_labels) != len(set(task_labels)):
         raise ValueError("Not all jobs have unique names")
@@ -75,13 +77,13 @@ def vasp_test_data(test_dir: str | Path, additional_file: list[str]) -> None:
     original_mapping = {}
     mapping = {}
     for output in outputs:
-        if not isinstance(output["output"], TaskDoc):
+        if not isinstance(output.output, TaskDoc):
             # this is not a VASP job
             continue
 
-        job_name = output["output"].task_label
-        orig_job_dir = strip_hostname(output["output"].dir_name)
-        folder_name = output["output"].task_label.replace("/", "_").replace(" ", "_")
+        job_name = output.output.task_label
+        orig_job_dir = strip_hostname(output.output.dir_name)
+        folder_name = output.output.task_label.replace("/", "_").replace(" ", "_")
 
         if len(task_labels) == 1:
             # only testing a single job
@@ -600,13 +602,13 @@ def save_abinit_maker(maker: Maker) -> None:
     author_mail = None
     if git:
         name = subprocess.run(
-            "git config user.name".split(),  # noqa: S603
+            "git config user.name".split(),
             capture_output=True,
             encoding="utf-8",
             check=True,
         )
         mail = subprocess.run(
-            "git config user.email".split(),  # noqa: S603
+            "git config user.email".split(),
             capture_output=True,
             encoding="utf-8",
             check=True,
