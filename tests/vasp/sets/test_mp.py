@@ -21,7 +21,8 @@ from atomate2.vasp.sets.mp import (
     ],
 )
 def test_mp_sets(set_generator: VaspInputGenerator) -> None:
-    mp_set: VaspInputGenerator = set_generator()
+    with pytest.warns(FutureWarning):
+        mp_set: VaspInputGenerator = set_generator()
     assert {*mp_set.as_dict()} >= {
         "@class",
         "@module",
