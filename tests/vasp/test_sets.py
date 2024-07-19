@@ -172,24 +172,27 @@ def test_set_u_params(structure, request) -> None:
 
 
 @pytest.mark.parametrize(
-    "bandgap, expected_params",
+    "bandgap, bandgap_tol, expected_params",
     [
-        (0, {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}),
-        (0.1, {"KSPACING": 0.26969561, "ISMEAR": -5, "SIGMA": 0.05}),
-        (1, {"KSPACING": 0.30235235, "ISMEAR": -5, "SIGMA": 0.05}),
-        (2, {"KSPACING": 0.34935513, "ISMEAR": -5, "SIGMA": 0.05}),
-        (5, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
-        (10, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
+        (0, 1.0e-4, {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}),
+        (0.1, 1.0e-4, {"KSPACING": 0.26969561, "ISMEAR": -5, "SIGMA": 0.05}),
+        (0.1, 0.1, {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}),
+        (0.1, 0.2, {"KSPACING": 0.22, "ISMEAR": 2, "SIGMA": 0.2}),
+        (1, 1.0e-4, {"KSPACING": 0.30235235, "ISMEAR": -5, "SIGMA": 0.05}),
+        (2, 1.0e-4, {"KSPACING": 0.34935513, "ISMEAR": -5, "SIGMA": 0.05}),
+        (5, 1.0e-4, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
+        (10, 1.0e-4, {"KSPACING": 0.44, "ISMEAR": -5, "SIGMA": 0.05}),
     ],
 )
-def test_set_kspacing_and_auto_ismear(
-    struct_no_magmoms, bandgap, expected_params, monkeypatch
+def test_set_kspacing_bandgap_tol_and_auto_ismear(
+    struct_no_magmoms, bandgap, bandgap_tol, expected_params, monkeypatch
 ):
     static_set = MPScanRelaxSet(
         auto_ismear=True,
         auto_kspacing=True,
         structure=struct_no_magmoms,
         bandgap=bandgap,
+        bandgap_tol=bandgap_tol,
     )
 
     incar = static_set.incar
