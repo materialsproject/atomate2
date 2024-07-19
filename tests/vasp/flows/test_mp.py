@@ -11,8 +11,7 @@ from atomate2.vasp.flows.mp import (
     MPMetaGGADoubleRelaxStaticMaker,
 )
 from atomate2.vasp.jobs.mp import MPMetaGGARelaxMaker, MPPreRelaxMaker
-from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
-
+from pymatgen.io.vasp.sets import MPScanRelaxSet
 
 @pytest.mark.parametrize("name", ["test", None])
 @pytest.mark.parametrize(
@@ -61,7 +60,7 @@ def test_mp_meta_gga_double_relax_static(mock_vasp, clean_dir, vasp_test_dir):
         relax_maker2=MPMetaGGARelaxMaker(
             # TODO write better test for bandgap_tol since it isn't actually used by
             # mock_vasp. this just tests it can be passed without error
-            input_set_generator=MPMetaGGARelaxSetGenerator(bandgap_tol=0.1)
+            input_set_generator=MPScanRelaxSet(bandgap_tol=0.1)
         )
     ).make(si_struct)
 

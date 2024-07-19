@@ -2,8 +2,7 @@ import pytest
 from pymatgen.core import Lattice, Species, Structure
 
 from atomate2.vasp.sets.core import StaticSetGenerator
-from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
-
+from pymatgen.io.vasp.sets import MPScanRelaxSet
 
 @pytest.fixture(scope="module")
 def struct_no_magmoms() -> Structure:
@@ -185,7 +184,7 @@ def test_set_u_params(structure, request) -> None:
 def test_set_kspacing_and_auto_ismear(
     struct_no_magmoms, bandgap, expected_params, monkeypatch
 ):
-    static_set = MPMetaGGARelaxSetGenerator(
+    static_set = MPScanRelaxSet(
         auto_ismear=True,
         auto_kspacing=True,
         structure=struct_no_magmoms,

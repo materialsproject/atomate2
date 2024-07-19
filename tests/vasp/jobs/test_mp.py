@@ -9,7 +9,7 @@ from atomate2.vasp.jobs.mp import (
     MPMetaGGAStaticMaker,
     MPPreRelaxMaker,
 )
-from atomate2.vasp.sets.mp import MPMetaGGARelaxSetGenerator
+from pymatgen.io.vasp.sets import MPScanRelaxSet
 
 expected_incar = {
     "ISIF": 3,
@@ -58,7 +58,7 @@ def test_mp_meta_gga_static_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     job = MPMetaGGAStaticMaker(
-        input_set_generator=MPMetaGGARelaxSetGenerator(bandgap=0.8249)
+        input_set_generator=MPScanRelaxSet(bandgap=0.8249,user_incar_settings={"LWAVE": True, "LCHARG": True})
     ).make(si_struct)
 
     # ensure flow runs successfully
@@ -87,7 +87,7 @@ def test_mp_meta_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     job = MPMetaGGARelaxMaker(
-        input_set_generator=MPMetaGGARelaxSetGenerator(bandgap=0.4786)
+        input_set_generator=MPScanRelaxSet(bandgap=0.4786,user_incar_settings={"LWAVE": True, "LCHARG": True})
     ).make(si_struct)
 
     # ensure flow runs successfully

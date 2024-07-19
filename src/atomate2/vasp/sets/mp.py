@@ -93,7 +93,7 @@ class MPMetaGGAStaticSetGenerator(MPScanStaticSet):
                 "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
                 "LCHARG": True,
                 "LWAVE": False,
-                "LVHAR": None,  # this is not needed
+                "LVHAR": False,  # this is not needed
                 "LELF": False,  # prevents KPAR > 1
             }
         )

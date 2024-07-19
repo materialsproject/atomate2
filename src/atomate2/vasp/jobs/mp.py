@@ -132,7 +132,6 @@ class MPPreRelaxMaker(BaseVaspMaker):
                 "GGA": "PS",
                 "LWAVE": True,
                 "LCHARG": True,
-                "LVHAR": None,  # this is not needed
                 "LELF": False,  # prevents KPAR > 1
                 "METAGGA": None,
             },
@@ -177,7 +176,6 @@ class MPMetaGGARelaxMaker(BaseVaspMaker):
                 "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
                 "LCHARG": True,
                 "LWAVE": True,
-                "LVHAR": None,  # this is not needed
                 "LELF": False,  # prevents KPAR > 1
             },
         )
@@ -223,7 +221,7 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
                 "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
                 "LCHARG": True,
                 "LWAVE": False,
-                "LVHAR": None,  # this is not needed
+                "LVHAR": None, # not needed, unset
                 "LELF": False,  # prevents KPAR > 1
             },
         )
