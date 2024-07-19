@@ -2,24 +2,21 @@
 
 from __future__ import annotations
 
-import os
 import re
 import tempfile
 import time
+import warnings
 import xml.etree.ElementTree as ElementTree
 from pathlib import Path
 
-import openff.toolkit as tk
-from openff.interchange.components._packmol import pack_box
-from openff.units import unit
+import openff.toolkit as tk  # noqa: TCH002
 from openmm import System  # noqa: TCH002
 from openmm.app import ForceField
+from openmm.app.forcefield import PME
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-
-from atomate2.classical_md.utils import create_mol_spec_list
 
 
 def increment_atom_types_and_classes(
@@ -91,22 +88,13 @@ def increment_atom_types_and_classes(
 
 
 def create_system_from_xml(
-    input_mol_specs: list[dict], mass_density: float, xml_files: list[Path | str]
+    topology: tk.Topology,
+    xml_files: list[Path | str],
 ) -> System:
     """Create an OpenMM system from a list of molecule specifications and XML files."""
     xml_paths = [Path(file) for file in xml_files]
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        mol_specs = create_mol_spec_list(input_mol_specs)
-
-        pack_box_kwargs: dict = {}
-        topology = pack_box(
-            molecules=[tk.Molecule.from_json(spec.openff_mol) for spec in mol_specs],
-            number_of_copies=[spec.count for spec in mol_specs],
-            mass_density=mass_density * unit.grams / unit.milliliter,
-            **pack_box_kwargs,
-        )
-
         openmm_topology = topology.to_openmm()
 
         incremented_xml_files = []
@@ -119,56 +107,67 @@ def create_system_from_xml(
         for i, xml_path in enumerate(incremented_xml_files[1:]):
             ff.loadFile(xml_path, resname_prefix=f"{i + 1}")
 
-        return ff.createSystem(openmm_topology)
+        return ff.createSystem(openmm_topology, nonbondedMethod=PME)
 
 
-def download_opls_xml(smiles: str, output_file: str | Path) -> None:
+def download_opls_xml(
+    names_smiles: dict[str, str], output_dir: str | Path, overwrite_files: bool = False
+) -> None:
     """Download an OPLS-AA/M XML file from the LigParGen website using Selenium."""
     # Initialize the Chrome driver
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
-    try:
-        # Specify the directory where you want to download files
-        with tempfile.TemporaryDirectory() as tmpdir:
-            download_dir = tmpdir
+    for name, smiles in names_smiles.items():
+        final_file = Path(output_dir) / f"{name}.xml"
+        if final_file.exists() and not overwrite_files:
+            continue
+        try:
+            # Specify the directory where you want to download files
+            with tempfile.TemporaryDirectory() as tmpdir:
+                download_dir = tmpdir
 
-            # Set up Chrome options
-            chrome_options = webdriver.ChromeOptions()
-            prefs = {"download.default_directory": download_dir}
-            chrome_options.add_experimental_option("prefs", prefs)
+                # Set up Chrome options
+                chrome_options = webdriver.ChromeOptions()
+                prefs = {"download.default_directory": download_dir}
+                chrome_options.add_experimental_option("prefs", prefs)
 
-            # Initialize Chrome with the options
-            driver = webdriver.Chrome(options=chrome_options)
+                # Initialize Chrome with the options
+                driver = webdriver.Chrome(options=chrome_options)
 
-            # Open the first webpage
-            driver.get("https://zarbi.chem.yale.edu/ligpargen/")
+                # Open the first webpage
+                driver.get("https://zarbi.chem.yale.edu/ligpargen/")
 
-            # Find the SMILES input box and enter the SMILES code
-            smiles_input = driver.find_element(By.ID, "smiles")
-            smiles_input.send_keys(smiles)
+                # Find the SMILES input box and enter the SMILES code
+                smiles_input = driver.find_element(By.ID, "smiles")
+                smiles_input.send_keys(smiles)
 
-            # Find and click the "Submit Molecule" button
-            submit_button = driver.find_element(
-                By.XPATH,
-                '//button[@type="submit" and contains(text(), "Submit Molecule")]',
+                # Find and click the "Submit Molecule" button
+                submit_button = driver.find_element(
+                    By.XPATH,
+                    '//button[@type="submit" and contains(text(), "Submit Molecule")]',
+                )
+                submit_button.click()
+
+                # Wait for the second page to load
+                # time.sleep(2)  # Adjust this delay as needed based on the loading time
+
+                # Find and click the "XML" button under Downloads and OpenMM
+                xml_button = driver.find_element(
+                    By.XPATH, '//input[@type="submit" and @value="XML"]'
+                )
+                xml_button.click()
+
+                # Wait for the file to download
+                time.sleep(0.3)  # Adjust as needed based on the download time
+
+                file = next(Path(tmpdir).iterdir())
+                # copy downloaded file to output_file using os
+                Path(file).rename(final_file)
+
+        except Exception as e:
+            warnings.warn(
+                f"{name} ({smiles}) failed to download because an error occurred: {e}",
+                stacklevel=1,
             )
-            submit_button.click()
 
-            # Wait for the second page to load
-            # time.sleep(2)  # Adjust this delay as needed based on the loading time
-
-            # Find and click the "XML" button under Downloads and OpenMM
-            xml_button = driver.find_element(
-                By.XPATH, '//input[@type="submit" and @value="XML"]'
-            )
-            xml_button.click()
-
-            # Wait for the file to download
-            time.sleep(1)  # Adjust this delay as needed based on the download time
-
-            file = next(Path(tmpdir).iterdir())
-            # copy downloaded file to output_file using os
-            os.rename(file, output_file)
-
-    finally:
-        driver.quit()
+    driver.quit()
