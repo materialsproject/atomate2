@@ -6,17 +6,26 @@ import re
 import tempfile
 import time
 import warnings
-import xml.etree.ElementTree as ElementTree
 from pathlib import Path
+from xml.etree import ElementTree
 
 import openff.toolkit as tk  # noqa: TCH002
 from openmm import System  # noqa: TCH002
 from openmm.app import ForceField
 from openmm.app.forcefield import PME
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
+
+try:
+    from selenium import webdriver
+    from selenium.webdriver.chrome.service import Service as ChromeService
+    from selenium.webdriver.common.by import By
+    from webdriver_manager.chrome import ChromeDriverManager
+
+except ImportError:
+    warnings.warn(
+        "The `selenium` package is not installed. "
+        "Please install it using `pip install selenium`.",
+        stacklevel=1,
+    )
 
 
 def increment_atom_types_and_classes(
@@ -164,7 +173,7 @@ def download_opls_xml(
                 # copy downloaded file to output_file using os
                 Path(file).rename(final_file)
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             warnings.warn(
                 f"{name} ({smiles}) failed to download because an error occurred: {e}",
                 stacklevel=1,
