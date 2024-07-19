@@ -14,6 +14,7 @@ from pymatgen.core.units import kb
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 
 from atomate2.aims.schemas.calculation import Calculation
+from atomate2.aims.utils.units import omegaToTHz
 from atomate2.common.schemas.anharmonicity import AnharmonicityDoc
 
 if TYPE_CHECKING:
@@ -27,14 +28,6 @@ if TYPE_CHECKING:
 
 
 logger = logging.getLogger(__name__)
-
-# Constants
-EV = 1.60217733e-19  # [J]
-AA = 1e-10  # [m]
-AMU = 1.66053904e-27  # [kg]
-THZ = 1e12  # [1/s]
-PI = np.pi
-OMEGA_TO_THZ = (EV / AA**2 / AMU) ** 0.5 / THZ / 2 / PI  # 15.633302 THz
 
 
 @job
@@ -301,7 +294,7 @@ def get_sigma_a_per_mode(
     # Projecting the forces
     dynamical_matrix = build_dynmat(force_constants, structure)
     eig_val, eig_vec = np.linalg.eigh(dynamical_matrix)
-    eig_val = np.sqrt(np.abs(eig_val)) * OMEGA_TO_THZ
+    eig_val = np.sqrt(np.abs(eig_val)) * omegaToTHz
     eig_val = eig_val[3:]
     # Projection matrix P
     p = eig_vec.T
