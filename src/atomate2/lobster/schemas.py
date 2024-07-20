@@ -563,14 +563,14 @@ class CalcQualitySummary(BaseModel):
         """
         dir_name = Path(dir_name)
         calc_quality_kwargs = calc_quality_kwargs or {}
-        band_overlaps_path = Path(zpath(str((dir_name / "bandOverlaps.lobster").as_posix())))
+        band_overlaps_path = Path(
+            zpath(str((dir_name / "bandOverlaps.lobster").as_posix()))
+        )
         charge_path = Path(zpath(str((dir_name / "CHARGE.lobster").as_posix())))
         doscar_path = Path(
-            zpath(
-                str((dir_name / "DOSCAR.LSO.lobster").as_posix()))
-                if Path(zpath(str((dir_name / "DOSCAR.LSO.lobster").as_posix()))).exists()
-                else Path(zpath(str((dir_name / "DOSCAR.lobster").as_posix()))
-            )
+            zpath(str((dir_name / "DOSCAR.LSO.lobster").as_posix()))
+            if Path(zpath(str((dir_name / "DOSCAR.LSO.lobster").as_posix()))).exists()
+            else Path(zpath(str((dir_name / "DOSCAR.lobster").as_posix())))
         )
         lobsterin_path = Path(zpath(str((dir_name / "lobsterin").as_posix())))
         lobsterout_path = Path(zpath(str((dir_name / "lobsterout").as_posix())))
@@ -787,7 +787,9 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         dir_name = Path(dir_name)
 
         # Read in lobsterout and lobsterin
-        lobsterout_doc = Lobsterout(Path(zpath(str((dir_name / "lobsterout").as_posix())))).get_doc()
+        lobsterout_doc = Lobsterout(
+            Path(zpath(str((dir_name / "lobsterout").as_posix())))
+        ).get_doc()
         lobster_out = LobsteroutModel(**lobsterout_doc)
         lobster_in = LobsterinModel(
             **Lobsterin.from_file(Path(zpath(str((dir_name / "lobsterin").as_posix()))))
@@ -802,10 +804,18 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         coopcar_path = Path(zpath(str((dir_name / "COOPCAR.lobster").as_posix())))
         doscar_path = Path(zpath(str((dir_name / "DOSCAR.lobster").as_posix())))
         structure_path = Path(zpath(str((dir_name / "POSCAR").as_posix())))
-        madelung_energies_path = Path(zpath(str((dir_name / "MadelungEnergies.lobster").as_posix())))
-        site_potentials_path = Path(zpath(str((dir_name / "SitePotentials.lobster").as_posix())))
-        gross_populations_path = Path(zpath(str((dir_name / "GROSSPOP.lobster").as_posix())))
-        band_overlaps_path = Path(zpath(str((dir_name / "bandOverlaps.lobster").as_posix())))
+        madelung_energies_path = Path(
+            zpath(str((dir_name / "MadelungEnergies.lobster").as_posix()))
+        )
+        site_potentials_path = Path(
+            zpath(str((dir_name / "SitePotentials.lobster").as_posix()))
+        )
+        gross_populations_path = Path(
+            zpath(str((dir_name / "GROSSPOP.lobster").as_posix()))
+        )
+        band_overlaps_path = Path(
+            zpath(str((dir_name / "bandOverlaps.lobster").as_posix()))
+        )
 
         icohp_list = icoop_list = icobi_list = None
         if icohplist_path.exists():
