@@ -6,7 +6,7 @@ import copy
 import time
 import warnings
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, NoReturn
 
@@ -169,6 +169,9 @@ class BaseOpenMMMaker(Maker):
 
         self._update_interchange(interchange, sim, prev_task)
 
+        # leaving the MDAReporter makes the builders fail
+        for reporter in sim.reporters:
+            del reporter
         del sim
 
         task_doc = self._create_task_doc(interchange, elapsed_time, dir_name, prev_task)
@@ -470,7 +473,7 @@ class BaseOpenMMMaker(Maker):
                 elapsed_time=elapsed_time,
                 embed_traj=self._resolve_attr("embed_traj", prev_task),
             ),
-            completed_at=str(datetime.now()),
+            completed_at=str(datetime.now(tz=timezone.utc)),
             task_name=job_name,
             calc_type=self.__class__.__name__,
         )
@@ -490,5 +493,5 @@ class BaseOpenMMMaker(Maker):
             force_field=prev_task.force_field,
             task_name=calc.task_name,
             task_type="test",
-            last_updated=datetime.now(),
+            last_updated=datetime.now(tz=timezone.utc),
         )
