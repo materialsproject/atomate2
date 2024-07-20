@@ -170,7 +170,8 @@ class BaseOpenMMMaker(Maker):
         self._update_interchange(interchange, sim, prev_task)
 
         # leaving the MDAReporter makes the builders fail
-        for reporter in sim.reporters:
+        for _ in range(len(sim.reporters)):
+            reporter = sim.reporters.pop()
             del reporter
         del sim
 
