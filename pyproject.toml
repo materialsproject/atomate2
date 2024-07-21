@@ -51,6 +51,7 @@ defects = [
 ]
 forcefields = [
     "ase>=3.22.1",
+    "calorine<=2.2.1",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.1.1",
@@ -63,10 +64,10 @@ docs = [
     "furo==2024.5.6",
     "ipython==8.26.0",
     "jsonschema[format]",
-    "myst_parser==2.0.0",
+    "myst_parser==3.0.1",
     "numpydoc==1.7.0",
     "sphinx-copybutton==0.5.2",
-    "sphinx==7.4.0",
+    "sphinx==7.4.6",
     "sphinx_design==0.6.0",
 ]
 dev = ["pre-commit>=2.12.1"]
@@ -75,12 +76,14 @@ tests = [
     "pytest-cov==5.0.0",
     "pytest-mock==3.14.0",
     "pytest==8.0.2",
+    "nbmake==1.5.3"
 ]
 strict = [
     "PyYAML==6.0.1",
     # must use >= for ase to not uninstall main branch install in CI
     # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
     "ase>=3.22.1",
+    "calorine==2.2.1",
     "cclib==1.8.1",
     "chgnet==0.3.8",
     "click==8.1.7",
@@ -193,6 +196,7 @@ ignore = [
     "PTH",     # prefer Pathlib to os.path
     "RUF013",  # implicit-optional
     "S324",    # use of insecure hash function
+    "S603",    # use of insecure subprocess
     "S507",    # paramiko auto trust
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
