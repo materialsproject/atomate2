@@ -90,9 +90,11 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
 
     adsorption_calculation_job = responses.get(flow[-1].uuid)
     adsorption_energy = [
-        response.output.get("adsorption_energy")
+        energy
         for response in adsorption_calculation_job.values()
+        for energy in response.output.get("adsorption_energy", [])
     ]
+
     assert isinstance(adsorption_energy, list)
 
     adsorption_energy.sort()
