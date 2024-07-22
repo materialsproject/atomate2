@@ -56,7 +56,8 @@ forcefields = [
     "mace-torch>=0.3.3",
     "matgl>=1.1.1",
     "quippy-ase>=0.9.14",
-    "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
+    "torch-runstats>=0.2.0", # transitive dependency for NequIP
+    "torch<=2.2.1",          # incompatibility with dgl if newer versions are used
 ]
 docs = [
     "FireWorks==2.0.3",
@@ -106,7 +107,8 @@ strict = [
     "python-ulid==2.7.0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
-    "torch==2.2.1",
+    "torch-runstats>=0.2.0",                # transitive dependency for NequIP
+    "torch==2.2.1",                         # incompatibility with dgl if newer versions are used
     "typing-extensions==4.12.2",
 ]
 
