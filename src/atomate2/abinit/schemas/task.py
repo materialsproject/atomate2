@@ -304,7 +304,7 @@ class AbinitTaskDoc(StructureMetadata):
         abinit_objects = all_abinit_objects[-1]
         included_objects = None
         if abinit_objects:
-            included_objects = list(abinit_objects.keys())
+            included_objects = list(abinit_objects)
 
         # rewrite the original structure save!
 
@@ -379,6 +379,8 @@ def _find_abinit_files(
                 abinit_files["abinit_abort_file"] = Path(file).relative_to(path)
             elif file.match(f"*{OUTPUT_FILE_NAME}{suffix}*"):
                 abinit_files["abinit_out_file"] = Path(file).relative_to(path)
+            elif file.match(f"*outdata/out_DDB{suffix}*"):
+                abinit_files["abinit_outddb_file"] = Path(file).relative_to(path)
 
         return abinit_files
 

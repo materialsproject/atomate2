@@ -16,12 +16,14 @@ from atomate2 import SETTINGS
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
 from atomate2.abinit.schemas.calculation import TaskState
+from atomate2.abinit.schemas.mrgddb import DdbFileStr
 from atomate2.abinit.schemas.task import AbinitTaskDoc
 from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+    from typing import Callable
 
     from abipy.flowtk.events import AbinitCriticalWarning
     from pymatgen.core.structure import Structure
@@ -99,6 +101,53 @@ def setup_job(
     )
 
 
+_DATA_OBJECTS = [  # either str (TaskDoc fields) or MSONable class
+    # BandStructure,
+    # BandStructureSymmLine,
+    # DOS,
+    # Dos,
+    # CompleteDos,
+    # VolumetricData,
+    # Trajectory,
+    DdbFileStr,
+]
+
+
+def abinit_job(method: Callable) -> job:
+    """
+    Decorate the ``make`` method of CP2K job makers.
+
+    This is a thin wrapper around :obj:`~jobflow.core.job.job` that configures common
+    settings for all CP2K jobs. For example, it ensures that large data objects
+    (band structures, density of states, Cubes, etc) are all stored in the
+    atomate2 data store. It also configures the output schema to be a CP2K
+    :obj:`.TaskDocument`.
+
+    Any makers that return CP2K jobs (not flows) should decorate the ``make`` method
+    with @cp2k_job. For example:
+
+    .. code-block:: python
+
+        class MyCp2kMaker(BaseCp2kMaker):
+            @cp2k_job
+            def make(structure):
+                # code to run Cp2k job.
+                pass
+
+    Parameters
+    ----------
+    method : callable
+        A BaseCp2kMaker.make method. This should not be specified directly and is
+        implied by the decorator.
+
+    Returns
+    -------
+    callable
+        A decorated version of the make function that will generate Cp2k jobs.
+    """
+    return job(method, data=_DATA_OBJECTS, output_schema=AbinitTaskDoc)
+
+
 @dataclass
 class BaseAbinitMaker(Maker):
     """
@@ -136,7 +185,7 @@ class BaseAbinitMaker(Maker):
         """Get the type of calculation for this maker."""
         return self.input_set_generator.calc_type
 
-    @job
+    @abinit_job
     def make(
         self,
         structure: Structure | None = None,

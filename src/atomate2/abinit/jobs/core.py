@@ -12,9 +12,8 @@ from abipy.flowtk.events import (
     RelaxConvergenceWarning,
     ScfConvergenceWarning,
 )
-from jobflow import Job, job
 
-from atomate2.abinit.jobs.base import BaseAbinitMaker
+from atomate2.abinit.jobs.base import BaseAbinitMaker, abinit_job
 from atomate2.abinit.sets.core import (
     LineNonSCFSetGenerator,
     NonSCFSetGenerator,
@@ -27,6 +26,7 @@ from atomate2.abinit.sets.core import (
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+    from jobflow import Job
     from pymatgen.core.structure import Structure
 
     from atomate2.abinit.sets.base import AbinitInputGenerator
@@ -114,7 +114,7 @@ class NonSCFMaker(BaseAbinitMaker):
         NscfConvergenceWarning,
     )
 
-    @job
+    @abinit_job
     def make(
         self,
         structure: Structure | None = None,

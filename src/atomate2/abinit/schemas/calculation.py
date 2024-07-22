@@ -6,9 +6,10 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from abipy.abio.outputs import AbinitOutputFile
+from abipy.dfpt.ddb import DdbFile
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
@@ -18,6 +19,7 @@ from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from typing_extensions import Self
 
+from atomate2.abinit.schemas.mrgddb import DdbFileStr
 from atomate2.abinit.utils.common import (
     LOG_FILE_NAME,
     MPIABORTFILE,
@@ -44,6 +46,7 @@ class AbinitObject(ValueEnum):
     ELECTRON_DENSITY = "electron_density"  # e_density
     WFN = "wfn"  # Wavefunction file
     TRAJECTORY = "trajectory"
+    DDBFILESTR = "ddbfilestr"  # DDB file as string
 
 
 class CalculationOutput(BaseModel):
@@ -251,6 +254,7 @@ class Calculation(BaseModel):
         abinit_log_file: Path | str = LOG_FILE_NAME,
         abinit_abort_file: Path | str = MPIABORTFILE,
         abinit_out_file: Path | str = OUTPUT_FILE_NAME,
+        abinit_outddb_file: Path | str = "out_DDB",
     ) -> tuple[Self, dict[AbinitObject, dict]]:
         """
         Create an Abinit calculation document from a directory and file paths.
@@ -278,6 +282,14 @@ class Calculation(BaseModel):
         abinit_log_file = dir_name / abinit_log_file
         abinit_abort_file = dir_name / abinit_abort_file
         abinit_out_file = dir_name / abinit_out_file
+        abinit_outddb_file = dir_name / abinit_outddb_file
+
+        abinit_objects: dict[AbinitObject, Any] = {}
+        if abinit_outddb_file.exists():
+            abinit_outddb = DdbFile.from_file(abinit_outddb_file)
+            abinit_objects[AbinitObject.DDBFILESTR] = DdbFileStr.from_ddbfile(  # type: ignore[index]
+                abinit_outddb
+            )
 
         output_doc = None
         if abinit_out_file.exists():
@@ -329,4 +341,4 @@ class Calculation(BaseModel):
             event_report=report,
         )
 
-        return instance, None  # abinit_objects,
+        return (instance, abinit_objects)

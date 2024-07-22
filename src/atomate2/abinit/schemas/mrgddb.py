@@ -6,22 +6,53 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-
-# from typing import Type, TypeVar, Union, Optional, List
 from typing import Any, Optional, Union
 
 from abipy.dfpt.ddb import DdbError, DdbFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.structure import StructureMetadata
+from jobflow.utils import ValueEnum
+from monty.json import MSONable
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
+from typing_extensions import Self
 
-from atomate2.abinit.schemas.calculation import AbinitObject, TaskState
 from atomate2.abinit.utils.common import get_event_report
 from atomate2.utils.path import get_uri, strip_hostname
 
 logger = logging.getLogger(__name__)
+
+
+class TaskState(ValueEnum):
+    """Mrgddb calculation state."""
+
+    SUCCESS = "successful"
+    FAILED = "failed"
+    UNCONVERGED = "unconverged"
+
+
+# need to inherit from MSONable to be stored in the data store
+# I tried to combine it with @dataclass, but didn't work...
+class DdbFileStr(MSONable):
+    """Object storing the raw string of a DDB file."""
+
+    def __init__(self, ddbfilepath: str | Path, ddb_as_str: str) -> None:
+        self.ddbfilepath: str | Path = ddbfilepath
+        self.ddb_as_str: str = ddb_as_str
+
+    @classmethod
+    def from_ddbfile(cls, ddbfile: DdbFile) -> Self:
+        """Create a DdbFileStr object from the native DdbFile abipy object."""
+        with open(ddbfile.filepath) as f:
+            ddb_as_str = f.read()
+        return cls(ddbfilepath=ddbfile.filepath, ddb_as_str=ddb_as_str)
+
+
+class MrgddbObject(ValueEnum):
+    """Types of Mrgddb data objects."""
+
+    DDBFILESTR = "ddbfilestr"  # DDB file as string
 
 
 class CalculationOutput(BaseModel):
@@ -110,7 +141,7 @@ class Calculation(BaseModel):
         task_name: str,
         abinit_outddb_file: Path | str = "out_DDB",
         abinit_mrglog_file: Path | str = "run.log",
-    ) -> tuple[Calculation, dict[AbinitObject, dict]]:
+    ) -> tuple[Calculation, dict[MrgddbObject, dict]]:
         """
         Create a Mrgddb calculation document from a directory and file paths.
 
@@ -134,8 +165,12 @@ class Calculation(BaseModel):
         abinit_outddb_file = dir_name / abinit_outddb_file
 
         output_doc = None
+        mrgddb_objects: dict[MrgddbObject, Any] = {}
         if abinit_outddb_file.exists():
             abinit_outddb = DdbFile.from_file(abinit_outddb_file)
+            mrgddb_objects[MrgddbObject.DDBFILESTR] = DdbFileStr.from_ddbfile(  # type: ignore[index]
+                abinit_outddb
+            )
             output_doc = CalculationOutput.from_abinit_outddb(abinit_outddb)
 
             completed_at = str(
@@ -169,7 +204,7 @@ class Calculation(BaseModel):
                 output=output_doc,
                 event_report=report,
             ),
-            None,  # abinit_objects,
+            mrgddb_objects,
         )
 
 
@@ -218,9 +253,9 @@ class MrgddbTaskDoc(StructureMetadata):
         Final output structure from the task
     state: .TaskState
         State of this task
-    included_objects: List[.AbinitObject]
+    included_objects: List[.MrgddbObject]
         List of Abinit objects included with this task document
-    abinit_objects: Dict[.AbinitObject, Any]
+    abinit_objects: Dict[.MrgddbObject, Any]
         Abinit objects associated with this task
     task_label: str
         A description of the task
@@ -244,11 +279,11 @@ class MrgddbTaskDoc(StructureMetadata):
     event_report: Optional[events.EventReport] = Field(
         None, description="Event report of this abinit job."
     )
-    included_objects: Optional[list[AbinitObject]] = Field(
-        None, description="List of Abinit objects included with this task document"
+    included_objects: Optional[list[MrgddbObject]] = Field(
+        None, description="List of Mrgddb objects included with this task document"
     )
-    abinit_objects: Optional[dict[AbinitObject, Any]] = Field(
-        None, description="Abinit objects associated with this task"
+    mrgddb_objects: Optional[dict[MrgddbObject, Any]] = Field(
+        None, description="Mrgddb objects associated with this task"
     )
     task_label: Optional[str] = Field(None, description="A description of the task")
     tags: Optional[list[str]] = Field(
@@ -291,13 +326,13 @@ class MrgddbTaskDoc(StructureMetadata):
             raise FileNotFoundError("No Abinit files found!")
 
         calcs_reversed = []
-        all_abinit_objects = []
+        all_mrgddb_objects = []
         for task_name, files in task_files.items():
-            calc_doc, abinit_objects = Calculation.from_abinit_files(
+            calc_doc, mrgddb_objects = Calculation.from_abinit_files(
                 dir_name, task_name, **files, **abinit_calculation_kwargs
             )
             calcs_reversed.append(calc_doc)
-            all_abinit_objects.append(abinit_objects)
+            all_mrgddb_objects.append(mrgddb_objects)
 
         tags = additional_fields.get("tags")
 
@@ -308,10 +343,10 @@ class MrgddbTaskDoc(StructureMetadata):
 
         # only store objects from last calculation
         # TODO: make this an option
-        abinit_objects = all_abinit_objects[-1]
+        mrgddb_objects = all_mrgddb_objects[-1]
         included_objects = None
-        if abinit_objects:
-            included_objects = list(abinit_objects.keys())
+        if mrgddb_objects:
+            included_objects = list(mrgddb_objects)
 
         # rewrite the original structure save!
 
@@ -326,12 +361,12 @@ class MrgddbTaskDoc(StructureMetadata):
         ddict = doc.dict()
 
         data = {
-            "abinit_objects": abinit_objects,
             "calcs_reversed": calcs_reversed,
             "completed_at": calcs_reversed[-1].completed_at,
             "dir_name": dir_name,
             "event_report": calcs_reversed[-1].event_report,
             "included_objects": included_objects,
+            "mrgddb_objects": mrgddb_objects,
             # "input": InputDoc.from_abinit_calc_doc(calcs_reversed[0]),
             "meta_structure": calcs_reversed[-1].output.structure,
             "output": OutputDoc.from_abinit_calc_doc(calcs_reversed[-1]),

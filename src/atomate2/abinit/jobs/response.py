@@ -14,7 +14,7 @@ from abipy.flowtk.events import (
 )
 from jobflow import Flow, Job, Response, job
 
-from atomate2.abinit.jobs.base import BaseAbinitMaker
+from atomate2.abinit.jobs.base import BaseAbinitMaker, abinit_job
 from atomate2.abinit.powerups import update_user_abinit_settings
 from atomate2.abinit.sets.response import (
     DdeSetGenerator,
@@ -65,7 +65,7 @@ class ResponseMaker(BaseAbinitMaker):
         ScfConvergenceWarning,
     )
 
-    @job
+    @abinit_job
     def make(
         self,
         structure: Structure | None = None,
