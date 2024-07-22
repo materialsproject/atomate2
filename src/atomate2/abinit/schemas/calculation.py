@@ -279,6 +279,7 @@ class Calculation(BaseModel):
         abinit_out_file: Path | str = OUTPUT_FILE_NAME,
         abinit_outddb_file: Path | str = "out_DDB",
         abinit_outpot_file: Path | str = "out_POT",
+        store_pot_files: bool = False,
     ) -> tuple[Self, dict[AbinitObject, dict]]:
         """
         Create an Abinit calculation document from a directory and file paths.
@@ -290,11 +291,19 @@ class Calculation(BaseModel):
         task_name: str
             The task name.
         abinit_gsr_file: Path or str
-            Path to the GSR output of abinit job, relative to dir_name.
+            Path to the GSR output of the abinit job, relative to dir_name.
         abinit_log_file: Path or str
-            Path to the main log of abinit job, relative to dir_name.
+            Path to the main log of the abinit job, relative to dir_name.
         abinit_abort_file: Path or str
             Path to the main abort file of abinit job, relative to dir_name.
+        abinit_out_file: Path or str
+            Path to the main output file of the abinit job, relative to dir_name.
+        abinit_outddb_file: Path or str
+            Path to the output _DDB file of the abinit job, relative to dir_name.
+        abinit_outpot_file: Path or str
+            Path to the output _POT file of the abinit job, relative to dir_name.
+        store_pot_files: bool
+            True if the files _POT should be saved.
 
         Returns
         -------
@@ -315,7 +324,7 @@ class Calculation(BaseModel):
             abinit_objects[AbinitObject.DDBFILESTR] = DdbFileStr.from_ddbfile(  # type: ignore[index]
                 abinit_outddb
             )
-        if abinit_outpot_file.exists():
+        if abinit_outpot_file.exists() and store_pot_files:
             abinit_objects[AbinitObject.POTFILEBSTR] = PotFileBStr.from_potfilepath(  # type: ignore[index]
                 abinit_outpot_file
             )

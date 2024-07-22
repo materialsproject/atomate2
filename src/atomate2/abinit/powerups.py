@@ -224,3 +224,42 @@ def update_generator_attributes(
     }
 
     return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
+
+
+def update_taskdoc(
+    flow: Job | Flow | Maker,
+    taskdoc_updates: dict[str, Any],
+    name_filter: str | None = None,
+    class_filter: type[Maker] | None = BaseAbinitMaker,
+) -> Job | Flow | Maker:
+    """
+    Update any attribute of any AbinitTaskDoc in the flow.
+
+    Alternatively, if a Maker is supplied, the attributes of the maker will
+    be updated.
+
+    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
+    happen in place.
+
+    Parameters
+    ----------
+    flow : .Job or .Flow or .Maker
+        A job, flow or Maker.
+    taskdoc_updates : dict
+        The updates to apply to the input generator.
+    name_filter : str or None
+        A filter for the name of the jobs.
+    class_filter : Maker or None
+        A filter for the BaseAbinitMaker class used to generate the flows. Note the
+        class filter will match any subclasses.
+
+    Returns
+    -------
+    Job or Flow or Maker
+        A copy of the input flow/job/maker modified to use the updated factory settings.
+    """
+    dict_mod_updates = {
+        f"task_document_kwargs->{k}": v for k, v in taskdoc_updates.items()
+    }
+
+    return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
