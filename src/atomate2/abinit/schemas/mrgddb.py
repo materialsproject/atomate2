@@ -52,7 +52,7 @@ class DdbFileStr(MSONable):
 class MrgddbObject(ValueEnum):
     """Types of Mrgddb data objects."""
 
-    DDBFILESTR = "ddbfilestr"  # DDB file as string
+    DDBFILESTR = "ddb"  # DDB file as string
 
 
 class CalculationOutput(BaseModel):

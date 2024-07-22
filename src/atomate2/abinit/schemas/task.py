@@ -381,6 +381,8 @@ def _find_abinit_files(
                 abinit_files["abinit_out_file"] = Path(file).relative_to(path)
             elif file.match(f"*outdata/out_DDB{suffix}*"):
                 abinit_files["abinit_outddb_file"] = Path(file).relative_to(path)
+            elif file.match(f"*outdata/out_POT{suffix}*"):
+                abinit_files["abinit_outpot_file"] = Path(file).relative_to(path)
 
         return abinit_files
 
