@@ -171,6 +171,8 @@ def increment_name(file_name: str) -> str:
 
 def task_reports(task: OpenMMTaskDocument, traj_or_state: str = "traj") -> bool:
     """Check if a task reports trajectories or states."""
+    if not task.calcs_reversed:
+        return False
     calc_input = task.calcs_reversed[0].input
     if traj_or_state == "traj":
         report_freq = calc_input.traj_interval
