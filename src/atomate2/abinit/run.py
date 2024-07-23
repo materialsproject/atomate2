@@ -99,7 +99,7 @@ def run_mrgddb(
         open(LOG_FILE_NAME, "w") as stdout,
         open(STDERR_FILE_NAME, "w") as stderr,
     ):
-        process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)  # noqa: S603
+        process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)
 
         if wall_time is not None:
             while True:
@@ -146,7 +146,7 @@ def run_anaddb(
         open(STDERR_FILE_NAME, "w") as stderr,
     ):
         # process = subprocess.Popen(command, stdin=stdin, stdout=stdout, stderr=stderr)
-        process = subprocess.Popen(command, stdout=stdout, stderr=stderr)  # noqa: S603
+        process = subprocess.Popen(command, stdout=stdout, stderr=stderr)
 
         if wall_time is not None:
             while True:
