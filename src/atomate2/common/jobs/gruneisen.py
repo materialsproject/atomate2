@@ -144,7 +144,7 @@ def compute_gruneisen_param(
     minus = phonopy.load(Path(phonopy_yaml_paths_dict["minus"]) / "minus_phonopy.yaml")
 
     gru = PhonopyGruneisen(phonon=ground, phonon_plus=plus, phonon_minus=minus)
-    print(type(mesh))
+
     if type(mesh) is tuple:
         gru.set_mesh(
             mesh=mesh,
