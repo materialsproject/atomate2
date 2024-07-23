@@ -1,4 +1,7 @@
+import openff.toolkit as tk
 import pytest
+from openff.interchange.components._packmol import pack_box
+from openff.units import unit
 
 from atomate2.classical_md.opls_utils import create_system_from_xml, download_opls_xml
 
@@ -21,14 +24,19 @@ def test_create_system_from_xml(classical_md_data):
     # download_opls_xml("CCO", opls_xmls / "CCO.xml")
     # download_opls_xml("CO", opls_xmls / "CO.xml")
 
-    mol_specs_dicts = [
-        {"smile": "CCO", "count": 10, "name": "ethanol", "charge_method": "mmff94"},
-        {"smile": "CO", "count": 20, "name": "water", "charge_method": "mmff94"},
+    mol_specs = [
+        {"smile": "CCO", "count": 10},
+        {"smile": "CO", "count": 20},
     ]
 
+    topology = pack_box(
+        molecules=[tk.Molecule.from_smiles(spec["smile"]) for spec in mol_specs],
+        number_of_copies=[spec["count"] for spec in mol_specs],
+        mass_density=0.8 * unit.grams / unit.milliliter,
+    )
+
     create_system_from_xml(
-        mol_specs_dicts,
-        1.0,
+        topology,
         [
             opls_xmls / "CCO.xml",
             opls_xmls / "CO.xml",

@@ -23,7 +23,7 @@ try:
 except ImportError:
     warnings.warn(
         "The `selenium` package is not installed. "
-        "Please install it using `pip install selenium`.",
+        "It's required to run the opls web scraper.",
         stacklevel=1,
     )
 
