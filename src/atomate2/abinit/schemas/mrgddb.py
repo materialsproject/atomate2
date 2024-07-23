@@ -13,11 +13,10 @@ from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.structure import StructureMetadata
 from jobflow.utils import ValueEnum
-from monty.json import MSONable
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
-from typing_extensions import Self
 
+from atomate2.abinit.schemas.outfiles import AbinitStoredFile
 from atomate2.abinit.utils.common import get_event_report
 from atomate2.utils.path import get_uri, strip_hostname
 
@@ -32,27 +31,27 @@ class TaskState(ValueEnum):
     UNCONVERGED = "unconverged"
 
 
-# need to inherit from MSONable to be stored in the data store
-# I tried to combine it with @dataclass, but didn't work...
-class DdbFileStr(MSONable):
-    """Object storing the raw string of a DDB file."""
+# # need to inherit from MSONable to be stored in the data store
+# # I tried to combine it with @dataclass, but didn't work...
+# class DdbFileStr(MSONable):
+#     """Object storing the raw string of a DDB file."""
 
-    def __init__(self, ddbfilepath: str | Path, ddb_as_str: str) -> None:
-        self.ddbfilepath: str | Path = ddbfilepath
-        self.ddb_as_str: str = ddb_as_str
+#     def __init__(self, ddbfilepath: str | Path, ddb_as_str: str) -> None:
+#         self.ddbfilepath: str | Path = ddbfilepath
+#         self.ddb_as_str: str = ddb_as_str
 
-    @classmethod
-    def from_ddbfile(cls, ddbfile: DdbFile) -> Self:
-        """Create a DdbFileStr object from the native DdbFile abipy object."""
-        with open(ddbfile.filepath) as f:
-            ddb_as_str = f.read()
-        return cls(ddbfilepath=ddbfile.filepath, ddb_as_str=ddb_as_str)
+#     @classmethod
+#     def from_ddbfile(cls, ddbfile: DdbFile) -> Self:
+#         """Create a DdbFileStr object from the native DdbFile abipy object."""
+#         with open(ddbfile.filepath) as f:
+#             ddb_as_str = f.read()
+#         return cls(ddbfilepath=ddbfile.filepath, ddb_as_str=ddb_as_str)
 
 
 class MrgddbObject(ValueEnum):
     """Types of Mrgddb data objects."""
 
-    DDBFILESTR = "ddb"  # DDB file as string
+    DDBFILE = "ddb"  # DDB file as string
 
 
 class CalculationOutput(BaseModel):
@@ -168,8 +167,8 @@ class Calculation(BaseModel):
         mrgddb_objects: dict[MrgddbObject, Any] = {}
         if abinit_outddb_file.exists():
             abinit_outddb = DdbFile.from_file(abinit_outddb_file)
-            mrgddb_objects[MrgddbObject.DDBFILESTR] = DdbFileStr.from_ddbfile(  # type: ignore[index]
-                abinit_outddb
+            mrgddb_objects[MrgddbObject.DDBFILE] = AbinitStoredFile.from_file(  # type: ignore[index]
+                filepath=abinit_outddb_file, data_type=str
             )
             output_doc = CalculationOutput.from_abinit_outddb(abinit_outddb)
 

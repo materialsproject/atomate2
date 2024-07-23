@@ -16,7 +16,8 @@ from atomate2.abinit.files import write_mrgddb_input_set
 from atomate2.abinit.jobs.base import setup_job
 from atomate2.abinit.run import run_mrgddb
 from atomate2.abinit.schemas.calculation import TaskState
-from atomate2.abinit.schemas.mrgddb import DdbFileStr, MrgddbTaskDoc
+from atomate2.abinit.schemas.mrgddb import MrgddbTaskDoc
+from atomate2.abinit.schemas.outfiles import AbinitStoredFile
 from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator
 
 if TYPE_CHECKING:
@@ -31,7 +32,7 @@ __all__ = [
 ]
 
 _MRGDDB_DATA_OBJECTS = [
-    DdbFileStr,
+    AbinitStoredFile,
 ]
 
 

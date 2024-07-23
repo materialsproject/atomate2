@@ -9,18 +9,16 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 from abipy.abio.outputs import AbinitOutputFile
-from abipy.dfpt.ddb import DdbFile
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
-from monty.json import MSONable
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from typing_extensions import Self
 
-from atomate2.abinit.schemas.mrgddb import DdbFileStr
+from atomate2.abinit.schemas.outfiles import AbinitStoredFile
 from atomate2.abinit.utils.common import (
     LOG_FILE_NAME,
     MPIABORTFILE,
@@ -29,27 +27,6 @@ from atomate2.abinit.utils.common import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-class PotFileBStr(MSONable):
-    """Object storing the raw binary string of a POT file."""
-
-    def __init__(
-        self, potfilepath: str | Path, potfilename: str, pot_as_bstr: bytes
-    ) -> None:
-        self.potfilepath = potfilepath
-        self.potfilename = potfilename
-        self.pot_as_bstr = pot_as_bstr
-
-    @classmethod
-    def from_potfilepath(cls, potfilepath: str | Path) -> Self:
-        """Create a PotFileBStr by directly reading the file."""
-        with open(potfilepath, "rb") as f:
-            pot_as_bstr = f.read()
-        potfilename = Path(potfilepath).name
-        return cls(
-            potfilepath=potfilepath, potfilename=potfilename, pot_as_bstr=pot_as_bstr
-        )
 
 
 class TaskState(ValueEnum):
@@ -68,8 +45,8 @@ class AbinitObject(ValueEnum):
     ELECTRON_DENSITY = "electron_density"  # e_density
     WFN = "wfn"  # Wavefunction file
     TRAJECTORY = "trajectory"
-    DDBFILESTR = "ddb"  # DDB file as string
-    POTFILEBSTR = "potential"  # POT file as b-string
+    DDBFILE = "ddb"  # DDB file as string
+    POTENTIAL = "potential"  # POT file as b-string
 
 
 class CalculationOutput(BaseModel):
@@ -320,13 +297,12 @@ class Calculation(BaseModel):
 
         abinit_objects: dict[AbinitObject, Any] = {}
         if abinit_outddb_file.exists():
-            abinit_outddb = DdbFile.from_file(abinit_outddb_file)
-            abinit_objects[AbinitObject.DDBFILESTR] = DdbFileStr.from_ddbfile(  # type: ignore[index]
-                abinit_outddb
+            abinit_objects[AbinitObject.DDBFILE] = AbinitStoredFile.from_file(  # type: ignore[index]
+                filepath=abinit_outddb_file, data_type=str
             )
         if abinit_outpot_file.exists() and store_pot_files:
-            abinit_objects[AbinitObject.POTFILEBSTR] = PotFileBStr.from_potfilepath(  # type: ignore[index]
-                abinit_outpot_file
+            abinit_objects[AbinitObject.POTENTIAL] = AbinitStoredFile.from_file(  # type: ignore[index]
+                filepath=abinit_outpot_file, data_type=bytes
             )
 
         output_doc = None

@@ -15,8 +15,8 @@ from jobflow import Maker, Response, job
 from atomate2 import SETTINGS
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
-from atomate2.abinit.schemas.calculation import PotFileBStr, TaskState
-from atomate2.abinit.schemas.mrgddb import DdbFileStr
+from atomate2.abinit.schemas.calculation import TaskState
+from atomate2.abinit.schemas.outfiles import AbinitStoredFile
 from atomate2.abinit.schemas.task import AbinitTaskDoc
 from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
@@ -109,8 +109,9 @@ _DATA_OBJECTS = [  # either str (TaskDoc fields) or MSONable class
     # CompleteDos,
     # VolumetricData,
     # Trajectory,
-    DdbFileStr,
-    PotFileBStr,
+    # DdbFileStr,
+    # PotFileBStr,
+    AbinitStoredFile,
 ]
 
 
