@@ -15,6 +15,8 @@ from atomate2.common.jobs.gruneisen import (
 )
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from pymatgen.core.structure import Structure
 
     from atomate2.aims.jobs.base import BaseAimsMaker
@@ -83,7 +85,7 @@ class BaseGruneisenMaker(Maker, ABC):
     compute_gruneisen_param_kwargs: dict = field(default_factory=dict)
     symprec: float = 1e-4
 
-    def make(self, structure: Structure) -> Flow:
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
         Optimizes structure and runs phonon computations.
 
@@ -100,25 +102,34 @@ class BaseGruneisenMaker(Maker, ABC):
 
         # initialize an dict to store optimized structures
         opt_struct = dict.fromkeys(("ground", "plus", "minus"), None)
-
+        prev_dir_dict = dict.fromkeys(("ground", "plus", "minus"), None)
         if (
             self.bulk_relax_maker is not None
         ):  # Optional job to relax the initial structure
-            bulk = self.bulk_relax_maker.make(structure)
+            bulk_kwargs = {}
+            if self.prev_calc_dir_argname is not None:
+                bulk_kwargs[self.prev_calc_dir_argname] = prev_dir
+            bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)
             jobs.append(bulk)
             opt_struct["ground"] = bulk.output.structure
+            prev_dir = bulk.output.dir_name
+            prev_dir_dict["ground"] = bulk.output.dir_name
         else:
             opt_struct["ground"] = structure
+            prev_dir_dict["ground"] = prev_dir
 
         # Add job to get expanded and shrunk volume structures
         struct_dict = shrink_expand_structure(
             structure=bulk.output.structure, perc_vol=self.perc_vol
         )
         jobs.append(struct_dict)
+        const_vol_relax_maker_kwargs = {}
+        if self.prev_calc_dir_argname is not None:
+            const_vol_relax_maker_kwargs[self.prev_calc_dir_argname] = prev_dir
 
         # get expanded structure
         const_vol_struct_plus = self.const_vol_relax_maker.make(
-            structure=struct_dict.output["plus"]
+            structure=struct_dict.output["plus"], **const_vol_relax_maker_kwargs
         )
         const_vol_struct_plus.append_name(" plus")
         # add relax job at constant volume for expanded structure
@@ -130,7 +141,7 @@ class BaseGruneisenMaker(Maker, ABC):
 
         # get shrunk structure
         const_vol_struct_minus = self.const_vol_relax_maker.make(
-            structure=struct_dict.output["minus"]
+            structure=struct_dict.output["minus"], **const_vol_relax_maker_kwargs
         )
         const_vol_struct_minus.append_name(" minus")
         # add relax job at constant volume for shrunk structure
@@ -139,6 +150,8 @@ class BaseGruneisenMaker(Maker, ABC):
         opt_struct["minus"] = (
             const_vol_struct_minus.output.structure
         )  # store opt struct of expanded volume
+        prev_dir_dict["plus"] = const_vol_struct_plus.output.dir_name
+        prev_dir_dict["minus"] = const_vol_struct_minus.output.dir_name
         self.phonon_maker = self.initialize_phonon_maker(
             phonon_displacement_maker=self.phonon_displacement_maker,
             phonon_static_maker=None,
@@ -146,9 +159,13 @@ class BaseGruneisenMaker(Maker, ABC):
             phonon_maker_kwargs=self.phonon_maker_kwargs,
             symprec=self.symprec,
         )
-
+        # go over a dict of prev_dir and use it in the maker
         phonon_jobs = run_phonon_jobs(
-            opt_struct, self.phonon_maker, symprec=self.symprec
+            opt_struct,
+            self.phonon_maker,
+            symprec=self.symprec,
+            prev_calc_dir_argname=self.prev_calc_dir_argname,
+            prev_dir_dict=prev_dir_dict,
         )
         jobs.append(phonon_jobs)
         # might not work well, put this into a job

@@ -50,6 +50,8 @@ def run_phonon_jobs(
     opt_struct: dict,
     phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
     symprec: float = SETTINGS.SYMPREC,
+    prev_calc_dir_argname: str = None,
+    prev_dir_dict: dict = None,
 ) -> Response:
     """Run all phonon jobs if the symmetry stayed the same.
 
@@ -57,6 +59,8 @@ def run_phonon_jobs(
         with the keys ground, plus, minus
     phonon_maker: BaseVaspMaker | ForceFieldStaticMaker
     symprec: symmetry precision
+    prev_calc_dir_argname: argname of previous calculation directory
+    prev_dir_dict: dict
     """
     symmetry = []
     for st in opt_struct:
@@ -69,7 +73,10 @@ def run_phonon_jobs(
         phonon_imaginary_modes = dict.fromkeys(("ground", "plus", "minus"), None)
         for st in opt_struct:
             # phonon run for all 3 optimized structures (ground state, expanded, shrunk)
-            phonon_job = phonon_maker.make(structure=opt_struct[st])
+            phonon_kwargs = {}
+            if prev_calc_dir_argname is not None:
+                phonon_kwargs[prev_calc_dir_argname] = prev_dir_dict[st]
+            phonon_job = phonon_maker.make(structure=opt_struct[st], **phonon_kwargs)
             phonon_job.append_name(f" {st}")
             # change default phonopy.yaml file name to ensure workflow can be
             # run without having to create folders, thus
