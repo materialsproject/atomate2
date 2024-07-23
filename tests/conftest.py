@@ -103,6 +103,11 @@ def si_diamond(test_dir):
 
 
 @pytest.fixture()
+def al2_au_structure(test_dir):
+    return Structure.from_file(test_dir / "structures" / "Al2Au.cif")
+
+
+@pytest.fixture()
 def sr_ti_o3_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "SrTiO3.cif")
 
