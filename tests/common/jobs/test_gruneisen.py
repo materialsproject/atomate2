@@ -27,6 +27,7 @@ def test_shrink_expand_structure(clean_dir, si_structure: Structure):
 
 def test_compute_gruneisen_param(clean_dir, test_dir):
     job = compute_gruneisen_param(
+        mesh=(20, 20, 20),
         code="vasp",
         phonopy_yaml_paths_dict={
             "ground": str((test_dir / "vasp/Si_gruneisen/").as_posix()),
