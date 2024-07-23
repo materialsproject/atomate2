@@ -67,18 +67,22 @@ class GruneisenMaker(BaseGruneisenMaker):
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker())
     )
     code: str = "vasp"
-    # TODO: double relax maker?
+    # TODO: double relax maker?, yes
 
     const_vol_relax_maker: TightRelaxMaker | None = field(
-        default_factory=lambda: TightRelaxMaker(
-            input_set_generator=TightRelaxSetGenerator(
-                user_incar_settings={"ISIF": 2},
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(
+            TightRelaxMaker(
+                input_set_generator=TightRelaxSetGenerator(
+                    user_incar_settings={"ISIF": 2},
+                )
             )
         )
     )
     kpath_scheme: str = "seekpath"
     phonon_maker: BasePhononMaker = field(
-        default_factory=lambda: PhononMaker(bulk_relax_maker=None)
+        default_factory=lambda: PhononMaker(
+            bulk_relax_maker=None, static_energy_maker=None
+        )
     )
     perc_vol: float = 0.01
     mesh: tuple = field(default_factory=lambda: (20, 20, 20))
