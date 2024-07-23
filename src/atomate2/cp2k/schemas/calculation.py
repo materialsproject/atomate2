@@ -16,7 +16,7 @@ from pymatgen.core.units import Ha_to_eV
 from pymatgen.electronic_structure.bandstructure import BandStructure
 from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.common import VolumetricData
-from pymatgen.io.cp2k.inputs import BasisFile, DataFile, PotentialFile
+from pymatgen.io.cp2k.inputs import BasisFile, Cp2kInput, DataFile, PotentialFile
 from pymatgen.io.cp2k.outputs import Cp2kOutput, parse_energy_file
 from typing_extensions import Self
 
@@ -71,7 +71,9 @@ class CalculationInput(BaseModel):
         None, description="Description of parameters used for each atomic kind"
     )
 
-    cp2k_input: dict = Field(None, description="The cp2k input used for this task")
+    cp2k_input: Union[dict, Cp2kInput] = Field(
+        None, description="The cp2k input used for this task"
+    )
 
     dft: dict = Field(
         None,
@@ -170,7 +172,7 @@ class CalculationOutput(BaseModel):
     ionic_steps: list[dict[str, Any]] = Field(
         None, description="Energy, forces, and structure for each ionic step"
     )
-    locpot: dict[int, list[float]] = Field(
+    locpot: Union[dict[int, list[float]], None] = Field(
         None, description="Average of the local potential along the crystal axes"
     )
     run_stats: RunStatistics = Field(

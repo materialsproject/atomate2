@@ -16,6 +16,8 @@ from atomate2.forcefields.jobs import (
     M3GNetStaticMaker,
     MACERelaxMaker,
     MACEStaticMaker,
+    NEPRelaxMaker,
+    NEPStaticMaker,
     NequipRelaxMaker,
     NequipStaticMaker,
 )
@@ -293,6 +295,79 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
     assert output1.output.energy == approx(-10.8523, rel=1e-4)
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("quippy-ase")
+
+
+def test_nep_static_maker(al2_au_structure: Structure, test_dir: Path):
+    task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
+
+    # NOTE: The test NEP model is specifically trained on 16 elemental metals
+    # thus a new Al2Au structure is added.
+    # The NEP model used for the tests is licensed under a
+    # [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
+    # and downloaded from https://doi.org/10.5281/zenodo.10081677
+    # Also cite the original work if you use this specific model : https://arxiv.org/abs/2311.04732
+    job = NEPStaticMaker(
+        task_document_kwargs=task_doc_kwargs,
+        calculator_kwargs={
+            "model_filename": test_dir / "forcefields" / "nep" / "nep.txt"
+        },
+    ).make(al2_au_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validation the outputs of the job
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    assert output1.output.energy == approx(-47.65972, rel=1e-4)
+    assert output1.output.n_steps == 1
+
+
+@pytest.mark.parametrize(
+    ("relax_cell", "fix_symmetry"),
+    [(True, False), (False, True)],
+)
+def test_nep_relax_maker(
+    al2_au_structure: Structure,
+    test_dir: Path,
+    relax_cell: bool,
+    fix_symmetry: bool,
+):
+    # NOTE: The test NEP model is specifically trained on 16 elemental metals
+    # thus a new Al2Au structure is added.
+    # The NEP model used for the tests is licensed under a
+    # [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
+    # and downloaded from https://doi.org/10.5281/zenodo.10081677
+    # Also cite the original work if you use this specific model : https://arxiv.org/abs/2311.04732
+
+    # generate job
+    job = NEPRelaxMaker(
+        steps=25,
+        optimizer_kwargs={"optimizer": "BFGSLineSearch"},
+        relax_cell=relax_cell,
+        fix_symmetry=fix_symmetry,
+        calculator_kwargs={
+            "model_filename": test_dir / "forcefields" / "nep" / "nep.txt"
+        },
+    ).make(al2_au_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validate the outputs of the job
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    if relax_cell:
+        assert output1.output.energy == approx(-47.6727, rel=1e-3)
+        assert output1.output.n_steps == 3
+    else:
+        assert output1.output.energy == approx(-47.659721, rel=1e-4)
+        assert output1.output.n_steps == 2
+
+    # fix_symmetry makes no difference for this structure relaxer combo
+    # just testing that passing fix_symmetry doesn't break
+    final_spg_num = output1.output.structure.get_space_group_info()[1]
+    assert final_spg_num == 225
 
 
 def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):

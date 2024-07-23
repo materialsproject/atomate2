@@ -1,5 +1,4 @@
-License
-=======
+# License
 
 `atomate2` is developed under a modified BSD license, reproduced below:
 
