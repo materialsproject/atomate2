@@ -9,7 +9,7 @@ import phonopy
 from jobflow import Flow, Response, job
 from phonopy.api_gruneisen import PhonopyGruneisen
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
-from pymatgen.io.phonopy import get_gruneisen_ph_bs_symm_line, get_gruneisenparameter
+from pymatgen.io.phonopy import get_gruneisen_ph_bs_symm_line, get_gruneisenparameter,     get_pmg_structure
 from pymatgen.io.vasp import Kpoints
 from pymatgen.phonon.gruneisen import (
     GruneisenParameter,
@@ -140,6 +140,7 @@ def compute_gruneisen_param(
     minus = phonopy.load(Path(phonopy_yaml_paths_dict["minus"]) / "minus_phonopy.yaml")
 
     gru = PhonopyGruneisen(phonon=ground, phonon_plus=plus, phonon_minus=minus)
+    print(type(mesh))
     if type(mesh) is tuple:
         gru.set_mesh(
             mesh=mesh,
@@ -152,9 +153,10 @@ def compute_gruneisen_param(
                 "is_mesh_symmetry", True
             ),
         )
-    elif type(mesh) is float:
+    else:
+        # kpoint mesh relative to primitive cell
         kpoint = Kpoints.automatic_density(
-            structure=ground, kppa=mesh, force_gamma=True
+            structure=get_pmg_structure(ground.primitive), kppa=mesh, force_gamma=True
         )
         gru.set_mesh(
             mesh=kpoint.kpts[0],
