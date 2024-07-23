@@ -3,6 +3,7 @@
 import base64
 import os
 from pathlib import Path
+from typing import Optional, Union
 
 from monty.json import MSONable
 from typing_extensions import Self
@@ -11,7 +12,9 @@ from typing_extensions import Self
 class AbinitStoredFile(MSONable):
     """Wrap a file to store its raw data."""
 
-    def __init__(self, data: str | bytes, source_filepath: str | Path) -> None:
+    def __init__(
+        self, data: Union[str, bytes], source_filepath: Union[str, Path]
+    ) -> None:
         self.data = data
         self.source_filepath = source_filepath
 
@@ -39,7 +42,7 @@ class AbinitStoredFile(MSONable):
         return cls(data=data, source_filepath=d["source_filepath"])
 
     @classmethod
-    def from_file(cls, filepath: str | Path, data_type: str | type) -> Self:
+    def from_file(cls, filepath: Union[str, Path], data_type: Union[str, type]) -> Self:
         """Create an AbinitStoredFile from the original file."""
         source_filepath = os.path.abspath(filepath)
         if data_type in {"bytes", bytes}:
@@ -68,7 +71,7 @@ class AbinitStoredFile(MSONable):
         """Return the extension of the source file."""
         return str(self.source_filepath).split("_")[-1]
 
-    def write(self, filepath: str | Path = None) -> None:
+    def write(self, filepath: Optional[Union[str, Path]] = None) -> None:
         """Write the data into a file."""
         filepath = filepath or self.filename
         if self.data_type == "bytes":
