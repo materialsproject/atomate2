@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from atomate2.common.flows.gruneisen import BaseGruneisenMaker
 from atomate2.forcefields.flows.phonons import PhononMaker
-from atomate2.forcefields.jobs import CHGNetRelaxMaker, ForceFieldRelaxMaker
-
-if TYPE_CHECKING:
-    from atomate2.common.flows.phonons import BasePhononMaker
+from atomate2.forcefields.jobs import (
+    CHGNetRelaxMaker,
+    CHGNetStaticMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
+)
 
 
 @dataclass
@@ -52,8 +53,8 @@ class GruneisenMaker(BaseGruneisenMaker):
         to the primitive cell and not pymatgen
     mesh: tuple
         Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
-    phonon_maker: .PhononMaker
-        Maker used to perform phonon computations
+    phonon_displacement_maker: .ForceFieldStaticMaker | None
+    phonon_maker_kwargs: dict
     perc_vol: float
         Percent volume to shrink and expand ground state structure
     compute_gruneisen_param_kwargs: dict
@@ -71,9 +72,10 @@ class GruneisenMaker(BaseGruneisenMaker):
         )
     )
     kpath_scheme: str = "seekpath"
-    phonon_maker: BasePhononMaker = field(
-        default_factory=lambda: PhononMaker(bulk_relax_maker=None)
+    phonon_displacement_maker: ForceFieldStaticMaker | None = field(
+        default_factory=CHGNetStaticMaker
     )
+    phonon_maker_kwargs: dict = field(default_factory=dict)
     perc_vol: float = 0.01
     mesh: tuple = field(default_factory=lambda: (20, 20, 20))
     compute_gruneisen_param_kwargs: dict = field(default_factory=dict)
@@ -90,3 +92,38 @@ class GruneisenMaker(BaseGruneisenMaker):
         calculations are performed for each ordering (relax -> static)
         """
         return
+
+    def initialize_phonon_maker(
+        self,
+        phonon_displacement_maker: ForceFieldStaticMaker,
+        phonon_static_maker: ForceFieldStaticMaker,
+        bulk_relax_maker: ForceFieldRelaxMaker,
+        phonon_maker_kwargs: dict,
+        symprec: float = 1e-4,
+    ) -> PhononMaker | None:
+        """Initialize Phonon Maker.
+
+        Parameters
+        ----------
+        phonon_displacement_maker: .ForceFieldStaticMaker|None
+            Computes Forces for displaced structures in
+            harmonic phonon runs
+        phonon_static_maker: .ForceFieldStaticMaker|None
+            Additional static maker to compute
+            energies and volume after optimization
+        bulk_relax_maker: .ForceFieldRelaxMaker|None
+            Relax Maker for Phonon Run. Typically None.
+        phonon_maker_kwargs: dict
+            Dict to set additional info for phonons.
+
+        Returns
+        -------
+        .PhononMaker
+        """
+        return PhononMaker(
+            phonon_displacement_maker=phonon_displacement_maker,
+            static_energy_maker=phonon_static_maker,
+            bulk_relax_maker=bulk_relax_maker,
+            symprec=symprec,
+            **phonon_maker_kwargs,
+        )

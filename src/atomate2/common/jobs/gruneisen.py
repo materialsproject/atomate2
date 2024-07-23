@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import phonopy
-from jobflow import Response, job
+from jobflow import Flow, Response, job
 from phonopy.api_gruneisen import PhonopyGruneisen
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from pymatgen.io.phonopy import get_gruneisen_ph_bs_symm_line, get_gruneisenparameter
@@ -15,12 +15,18 @@ from pymatgen.phonon.gruneisen import (
     GruneisenPhononBandStructureSymmLine,
 )
 from pymatgen.phonon.plotter import GruneisenPhononBSPlotter, GruneisenPlotter
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
+from atomate2 import SETTINGS
 from atomate2.common.schemas.gruneisen import GruneisenParameterDocument
 from atomate2.common.schemas.phonons import PhononBSDOSDoc
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
+
+    from atomate2.aims.jobs.base import BaseAimsMaker
+    from atomate2.forcefields.jobs import ForceFieldStaticMaker
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 @job
@@ -38,6 +44,51 @@ def shrink_expand_structure(structure: Structure, perc_vol: float) -> Response:
     minus_struct.scale_lattice(volume=structure.volume * (1 - perc_vol))
 
     return Response(output={"plus": plus_struct, "minus": minus_struct})
+
+
+@job(data=[PhononBSDOSDoc])
+def run_phonon_jobs(
+    opt_struct: dict,
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker | BaseAimsMaker = None,
+    symprec=SETTINGS.SYMPREC,
+) -> Response:
+    symmetry = []
+    for st in opt_struct:
+        sga = SpacegroupAnalyzer(opt_struct[st], symprec=symprec)
+        symmetry.append(sga.get_space_group_number())
+    set_symmetry = list(set(symmetry))
+    if len(set_symmetry) == 1:
+        jobs = []
+        phonon_yaml_dirs = dict.fromkeys(("ground", "plus", "minus"), None)
+        phonon_imaginary_modes = dict.fromkeys(("ground", "plus", "minus"), None)
+        for st in opt_struct:
+            # phonon run for all 3 optimized structures (ground state, expanded, shrunk)
+            phonon_job = phonon_maker.make(structure=opt_struct[st])
+            phonon_job.append_name(f" {st}")
+            # change default phonopy.yaml file name to ensure workflow can be
+            # run without having to create folders, thus
+            # prevent overwriting and easier to identify yaml file belong
+            # to corresponding phonon run
+            phonon_job.jobs[-1].function_kwargs.update(
+                filename_phonopy_yaml=f"{st}_phonopy.yaml",
+                filename_band_yaml=f"{st}_phonon_band_structure.yaml",
+                filename_dos_yaml=f"{st}_phonon_dos.yaml",
+                filename_bs=f"{st}_phonon_band_structure.pdf",
+                filename_dos=f"{st}_phonon_dos.pdf",
+            )
+            jobs.append(phonon_job)
+            # store each phonon run task doc
+            phonon_yaml_dirs[st] = phonon_job.output.jobdirs.taskdoc_run_job_dir
+            phonon_imaginary_modes[st] = phonon_job.output.has_imaginary_modes
+
+        return Response(
+            replace=Flow(jobs),
+            output={
+                "phonon_yaml": phonon_yaml_dirs,
+                "imaginary_modes": phonon_imaginary_modes,
+            },
+        )
+    return Response(output={"space_groups": set_symmetry}, stop_jobflow=True)
 
 
 @job(

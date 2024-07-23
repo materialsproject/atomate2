@@ -10,6 +10,7 @@ from jobflow import Flow, Maker
 
 from atomate2.common.jobs.gruneisen import (
     compute_gruneisen_param,
+    run_phonon_jobs,
     shrink_expand_structure,
 )
 
@@ -18,7 +19,7 @@ if TYPE_CHECKING:
 
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.common.flows.phonons import BasePhononMaker
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
@@ -61,8 +62,8 @@ class BaseGruneisenMaker(Maker, ABC):
         to the primitive cell and not pymatgen
     mesh: tuple
         Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
-    phonon_maker: .PhononMaker
-        Maker used to perform phonon computations
+    phonon_displacement_maker: .ForceFieldStaticMaker | .BaseVaspMaker | None
+    phonon_maker_kwargs: dict
     perc_vol: float
         Percent volume to shrink and expand ground state structure
     compute_gruneisen_param_kwargs: dict
@@ -74,7 +75,9 @@ class BaseGruneisenMaker(Maker, ABC):
     code: str = None
     const_vol_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker = None
     kpath_scheme: str = "seekpath"
-    phonon_maker: BasePhononMaker = None
+    phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    phonon_maker_kwargs: dict = field(default_factory=dict)
     perc_vol: float = 0.01
     mesh: tuple = field(default_factory=lambda: (20, 20, 20))
     compute_gruneisen_param_kwargs: dict = field(default_factory=dict)
@@ -136,38 +139,29 @@ class BaseGruneisenMaker(Maker, ABC):
         opt_struct["minus"] = (
             const_vol_struct_minus.output.structure
         )  # store opt struct of expanded volume
+        self.phonon_maker = self.initialize_phonon_maker(
+            phonon_displacement_maker=self.phonon_displacement_maker,
+            phonon_static_maker=None,
+            bulk_relax_maker=None,
+            phonon_maker_kwargs=self.phonon_maker_kwargs,
+            symprec=self.symprec,
+        )
 
-        phonon_yaml_dirs = dict.fromkeys(("ground", "plus", "minus"), None)
-        phonon_imaginary_modes = dict.fromkeys(("ground", "plus", "minus"), None)
-        for st in opt_struct:
-            # phonon run for all 3 optimized structures (ground state, expanded, shrunk)
-            phonon_job = self.phonon_maker.make(structure=opt_struct[st])
-            phonon_job.append_name(f" {st}")
-            # change default phonopy.yaml file name to ensure workflow can be
-            # run without having to create folders, thus
-            # prevent overwriting and easier to identify yaml file belong
-            # to corresponding phonon run
-            phonon_job.jobs[-1].function_kwargs.update(
-                filename_phonopy_yaml=f"{st}_phonopy.yaml",
-                filename_band_yaml=f"{st}_phonon_band_structure.yaml",
-                filename_dos_yaml=f"{st}_phonon_dos.yaml",
-                filename_bs=f"{st}_phonon_band_structure.pdf",
-                filename_dos=f"{st}_phonon_dos.pdf",
-            )
-            jobs.append(phonon_job)
-            # store each phonon run task doc
-            phonon_yaml_dirs[st] = phonon_job.output.jobdirs.taskdoc_run_job_dir
-            phonon_imaginary_modes[st] = phonon_job.output.has_imaginary_modes
+        phonon_jobs = run_phonon_jobs(
+            opt_struct, self.phonon_maker, symprec=self.symprec
+        )
+        jobs.append(phonon_jobs)
+        # might not work well, put this into a job
 
         # get Gruneisen parameter from phonon runs yaml with phonopy api
         get_gru = compute_gruneisen_param(
             code=self.code,
             kpath_scheme=self.kpath_scheme,
             mesh=self.mesh,
-            phonopy_yaml_paths_dict=phonon_yaml_dirs,
+            phonopy_yaml_paths_dict=phonon_jobs.output["phonon_yaml"],
             structure=opt_struct["ground"],
             symprec=self.symprec,
-            phonon_imaginary_modes_info=phonon_imaginary_modes,
+            phonon_imaginary_modes_info=phonon_jobs.output["imaginary_modes"],
             **self.compute_gruneisen_param_kwargs,
         )
 
@@ -185,4 +179,33 @@ class BaseGruneisenMaker(Maker, ABC):
 
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
+        """
+
+    @abstractmethod
+    def initialize_phonon_maker(
+        self,
+        phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None,
+        phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None,
+        bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None,
+        phonon_maker_kwargs: dict,
+        symprec: float = 1e-4,
+    ) -> BasePhononMaker | None:
+        """Initialize phonon maker.
+        This implementation will be different for
+        any newly implemented QHAMaker.
+
+        Parameters
+        ----------
+        phonon_displacement_maker: ForceFieldStaticMaker|BaseVaspMaker|None
+            Maker for displacement calculations.
+        phonon_static_maker: ForceFieldStaticMaker|BaseVaspMaker|None
+            Maker for additional static calculations.
+        bulk_relax_maker: : ForceFieldRelaxMaker|BaseVaspMaker|None
+            Maker for optimization. Here: None.
+        phonon_maker_kwargs: dict
+            Additional keyword arguments for phonon maker.
+
+        Returns
+        -------
+        .BasePhononMaker
         """

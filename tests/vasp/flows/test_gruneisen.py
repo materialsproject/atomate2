@@ -14,7 +14,6 @@ from atomate2.common.schemas.gruneisen import (
     PhononRunsImaginaryModes,
 )
 from atomate2.vasp.flows.gruneisen import GruneisenMaker
-from atomate2.vasp.flows.phonons import PhononMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 
 
@@ -34,15 +33,14 @@ def test_gruneisen_wf_vasp(clean_dir, mock_vasp, si_diamond: Structure, tmp_path
     mock_vasp(ref_paths)
 
     flow = GruneisenMaker(
-        phonon_maker=PhononMaker(
-            create_thermal_displacements=False,
-            store_force_constants=False,
-            prefer_90_degrees=False,
-            min_length=10,
-            born_maker=None,
-            static_energy_maker=None,
-            bulk_relax_maker=None,
-        ),
+        symprec=1e-4,
+        phonon_maker_kwargs={
+            "create_thermal_displacements": False,
+            "store_force_constants": False,
+            "prefer_90_degrees": False,
+            "min_length": 10,
+            "born_maker": None,
+        },
         compute_gruneisen_param_kwargs={
             "gruneisen_mesh": f"{tmp_path}/gruneisen_mesh.pdf",
             "gruneisen_bs": f"{tmp_path}/gruneisen_band.pdf",
