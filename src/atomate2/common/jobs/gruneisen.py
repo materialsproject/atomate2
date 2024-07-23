@@ -10,6 +10,7 @@ from jobflow import Flow, Response, job
 from phonopy.api_gruneisen import PhonopyGruneisen
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from pymatgen.io.phonopy import get_gruneisen_ph_bs_symm_line, get_gruneisenparameter
+from pymatgen.io.vasp import Kpoints
 from pymatgen.phonon.gruneisen import (
     GruneisenParameter,
     GruneisenPhononBandStructureSymmLine,
@@ -114,7 +115,7 @@ def compute_gruneisen_param(
     phonon_imaginary_modes_info: dict,
     kpath_scheme: str,
     symprec: float,
-    mesh: tuple = (20, 20, 20),
+    mesh: tuple | float = (20, 20, 20),
     structure: Structure = None,
     **compute_gruneisen_param_kwargs,
 ) -> GruneisenParameterDocument:
@@ -127,7 +128,7 @@ def compute_gruneisen_param(
         contracted structure phonon runs
     phonon_imaginary_modes_info: dict with bool indicating if structure
         has imaginary modes
-    mesh: sampling mesh
+    mesh: sampling mesh, or kpoint density
     structure: pymatgen structure object at ground state
     compute_gruneisen_param_kwargs: kwargs for phonopy Grueneisen
         api and pymatgen plotters
@@ -139,13 +140,33 @@ def compute_gruneisen_param(
     minus = phonopy.load(Path(phonopy_yaml_paths_dict["minus"]) / "minus_phonopy.yaml")
 
     gru = PhonopyGruneisen(phonon=ground, phonon_plus=plus, phonon_minus=minus)
-    gru.set_mesh(
-        mesh=mesh,
-        shift=compute_gruneisen_param_kwargs.get("shift", None),
-        is_gamma_center=compute_gruneisen_param_kwargs.get("is_gamma_center", False),
-        is_time_reversal=compute_gruneisen_param_kwargs.get("is_time_reversal", True),
-        is_mesh_symmetry=compute_gruneisen_param_kwargs.get("is_mesh_symmetry", True),
-    )
+    if type(mesh) is tuple:
+        gru.set_mesh(
+            mesh=mesh,
+            shift=compute_gruneisen_param_kwargs.get("shift", None),
+            is_gamma_center=compute_gruneisen_param_kwargs.get("is_gamma_center", True),
+            is_time_reversal=compute_gruneisen_param_kwargs.get(
+                "is_time_reversal", True
+            ),
+            is_mesh_symmetry=compute_gruneisen_param_kwargs.get(
+                "is_mesh_symmetry", True
+            ),
+        )
+    elif type(mesh) is float:
+        kpoint = Kpoints.automatic_density(
+            structure=ground, kppa=mesh, force_gamma=True
+        )
+        gru.set_mesh(
+            mesh=kpoint.kpts[0],
+            shift=compute_gruneisen_param_kwargs.get("shift", None),
+            is_gamma_center=compute_gruneisen_param_kwargs.get("is_gamma_center", True),
+            is_time_reversal=compute_gruneisen_param_kwargs.get(
+                "is_time_reversal", True
+            ),
+            is_mesh_symmetry=compute_gruneisen_param_kwargs.get(
+                "is_mesh_symmetry", True
+            ),
+        )
     gruneisen_mesh_yaml = compute_gruneisen_param_kwargs.get(
         "filename_mesh_yaml", "gruneisen_mesh.yaml"
     )

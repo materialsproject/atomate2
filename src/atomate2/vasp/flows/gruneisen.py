@@ -51,9 +51,10 @@ class GruneisenMaker(BaseGruneisenMaker):
         seekpath can be used with any kind of unit cell as
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
-    mesh: tuple
+    mesh: tuple|float
         Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
-        phonon_displacement_maker: .StaticMaker | None
+        Or float to indicate a kpoint density.
+    phonon_displacement_maker: .StaticMaker | None
     phonon_static_maker: .StaticMaker | None
     phonon_maker_kwargs: dict
     perc_vol: float
@@ -83,7 +84,7 @@ class GruneisenMaker(BaseGruneisenMaker):
     )
     phonon_maker_kwargs: dict = field(default_factory=dict)
     vol: float = 0.01
-    mesh: tuple = field(default_factory=lambda: (20, 20, 20))
+    mesh: tuple | float = 7_000
     compute_gruneisen_param_kwargs: dict = field(default_factory=dict)
     symprec: float = 1e-4
 
