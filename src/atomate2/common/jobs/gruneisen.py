@@ -24,7 +24,6 @@ from atomate2.common.schemas.phonons import PhononBSDOSDoc
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
-    from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.forcefields.jobs import ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -49,9 +48,16 @@ def shrink_expand_structure(structure: Structure, perc_vol: float) -> Response:
 @job(data=[PhononBSDOSDoc])
 def run_phonon_jobs(
     opt_struct: dict,
-    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker | BaseAimsMaker = None,
-    symprec=SETTINGS.SYMPREC,
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
+    symprec: float = SETTINGS.SYMPREC,
 ) -> Response:
+    """Run all phonon jobs if the symmetry stayed the same.
+
+    opt_struct: dict including all optimized structures
+        with the keys ground, plus, minus
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker
+    symprec: symmetry precision
+    """
     symmetry = []
     for st in opt_struct:
         sga = SpacegroupAnalyzer(opt_struct[st], symprec=symprec)

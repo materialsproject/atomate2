@@ -191,8 +191,9 @@ class BaseGruneisenMaker(Maker, ABC):
         symprec: float = 1e-4,
     ) -> BasePhononMaker | None:
         """Initialize phonon maker.
+
         This implementation will be different for
-        any newly implemented QHAMaker.
+        any newly implemented GruneisenMaker
 
         Parameters
         ----------
