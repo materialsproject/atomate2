@@ -292,4 +292,6 @@ def run_rf(
         outputs["dirs"].append(rf_job.output.dir_name)  # TODO: determine outputs
 
     rf_flow = Flow(rf_jobs, outputs)
+    # TODO: maybe use smth else than replace to allow run_rf and rf_maker
+    # to run with different config, see if okay with dependencies, etc
     return Response(replace=rf_flow)
