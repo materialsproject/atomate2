@@ -83,7 +83,7 @@ def test_generate_faux_interchange(classical_md_data, run_job):
     assert task_doc.molecule_specs[1].count == 300
 
 
-def test_make_from_prev(classical_md_data, temp_dir, run_job):
+def test_make_from_prev(classical_md_data, run_job):
     mol_specs = [
         create_mol_spec("CCO", 10, name="ethanol", charge_method="mmff94"),
         create_mol_spec("CO", 300, name="water", charge_method="mmff94"),
@@ -105,16 +105,12 @@ def test_make_from_prev(classical_md_data, temp_dir, run_job):
     BaseOpenMMMaker.run_openmm = do_nothing
 
     # Call the make method
-    base_job = maker.make(
-        inter_job.output.interchange,
-        output_dir=temp_dir,
-        prev_task=inter_job.output,
-    )
+    base_job = maker.make(inter_job.output.interchange, prev_task=inter_job.output)
 
     run_job(Flow([inter_job, base_job]))
 
 
-def test_evolve_simulation(classical_md_data, temp_dir, run_job):
+def test_evolve_simulation(classical_md_data, run_job):
     mol_specs = [
         create_mol_spec("CCO", 10, name="ethanol", charge_method="mmff94"),
         create_mol_spec("CO", 300, name="water", charge_method="mmff94"),
@@ -134,7 +130,7 @@ def test_evolve_simulation(classical_md_data, temp_dir, run_job):
     initial_position = initial_state.getPositions(asNumpy=True)
 
     maker = EnergyMinimizationMaker(max_iterations=1)
-    min_job = maker.make(interchange, output_dir=temp_dir)
+    min_job = maker.make(interchange)
 
     task_doc2 = run_job(min_job)
     interchange_str2 = task_doc2.interchange.decode("utf-8")

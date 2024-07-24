@@ -127,7 +127,7 @@ def test_make(interchange, temp_dir, run_job):
     BaseOpenMMMaker.run_openmm = do_nothing
 
     # Call the make method
-    base_job = maker.make(interchange, output_dir=temp_dir)
+    base_job = maker.make(interchange)
     assert isinstance(base_job, Job)
 
     task_doc = run_job(base_job)
@@ -135,12 +135,12 @@ def test_make(interchange, temp_dir, run_job):
     # Assert the specific values in the task document
     assert isinstance(task_doc, ClassicalMDTaskDocument)
     assert task_doc.state == "successful"
-    assert task_doc.dir_name == str(temp_dir)
+    # assert task_doc.dir_name == str(temp_dir)
     assert len(task_doc.calcs_reversed) == 1
 
     # Assert the calculation details
     calc = task_doc.calcs_reversed[0]
-    assert calc.dir_name == str(temp_dir)
+    # assert calc.dir_name == str(temp_dir)
     assert calc.has_openmm_completed is True
     assert calc.input.n_steps == 1000
     assert calc.input.step_size == 0.002
@@ -155,7 +155,7 @@ def test_make(interchange, temp_dir, run_job):
     assert calc.calc_type == "BaseOpenMMMaker"
 
 
-def test_make_w_velocities(interchange, temp_dir, run_job):
+def test_make_w_velocities(interchange, run_job):
     # monkey patch to allow running the test without openmm
     def do_nothing(self, sim):
         pass
@@ -168,7 +168,7 @@ def test_make_w_velocities(interchange, temp_dir, run_job):
     )
 
     with pytest.raises(RuntimeError):
-        run_job(maker1.make(interchange, output_dir=temp_dir))
+        run_job(maker1.make(interchange))
         # run_job(base_job)
 
     maker2 = BaseOpenMMMaker(
@@ -177,7 +177,7 @@ def test_make_w_velocities(interchange, temp_dir, run_job):
         traj_file_type="h5md",
     )
 
-    base_job = maker2.make(interchange, output_dir=temp_dir)
+    base_job = maker2.make(interchange)
     task_doc = run_job(base_job)
 
     # Assert the calculation details
@@ -185,7 +185,7 @@ def test_make_w_velocities(interchange, temp_dir, run_job):
     assert calc.input.report_velocities is True
 
 
-def test_make_from_prev(temp_dir, run_job):
+def test_make_from_prev(run_job):
     mol_specs_dicts = [
         {"smiles": "CCO", "count": 50, "name": "ethanol", "charge_method": "mmff94"},
         {"smiles": "O", "count": 300, "name": "water", "charge_method": "mmff94"},
@@ -202,10 +202,6 @@ def test_make_from_prev(temp_dir, run_job):
     BaseOpenMMMaker.run_openmm = do_nothing
 
     # Call the make method
-    base_job = maker.make(
-        inter_job.output.interchange,
-        output_dir=temp_dir,
-        prev_task=inter_job.output,
-    )
+    base_job = maker.make(inter_job.output.interchange, prev_task=inter_job.output)
 
     run_job(Flow([inter_job, base_job]))

@@ -1,5 +1,6 @@
+from pathlib import Path
+
 import numpy as np
-import pytest
 from emmet.core.classical_md import ClassicalMDTaskDocument
 from emmet.core.classical_md.openmm import OpenMMTaskDocument
 from jobflow import Flow
@@ -14,7 +15,7 @@ from atomate2.classical_md.openmm.jobs import (
 )
 
 
-def test_anneal_maker(interchange, tmp_path, run_job):
+def test_anneal_maker(interchange, run_job):
     # Create an instance of AnnealMaker with custom parameters
     anneal_maker = OpenMMFlowMaker.anneal_flow(
         name="test_anneal",
@@ -27,7 +28,7 @@ def test_anneal_maker(interchange, tmp_path, run_job):
     )
 
     # Run the AnnealMaker flow
-    anneal_flow = anneal_maker.make(interchange, output_dir=tmp_path)
+    anneal_flow = anneal_maker.make(interchange)
 
     task_doc = run_job(anneal_flow)
 
@@ -55,8 +56,8 @@ def test_anneal_maker(interchange, tmp_path, run_job):
     assert lower_temp_job.maker.temp_steps == 1
 
 
-@pytest.mark.skip("Reporting to HDF5 is broken in MDA upstream.")
-def test_hdf5_writing(interchange, tmp_path, run_job):
+# @pytest.mark.skip("Reporting to HDF5 is broken in MDA upstream.")
+def test_hdf5_writing(interchange, run_job):
     # Create an instance of AnnealMaker with custom parameters
     anneal_maker = OpenMMFlowMaker.anneal_flow(
         name="test_anneal",
@@ -69,12 +70,12 @@ def test_hdf5_writing(interchange, tmp_path, run_job):
     )
 
     # Run the AnnealMaker flow
-    anneal_flow = anneal_maker.make(interchange, output_dir=tmp_path)
+    anneal_flow = anneal_maker.make(interchange)
 
     task_doc = run_job(anneal_flow)
 
     calc_output_names = [calc.output.traj_file for calc in task_doc.calcs_reversed]
-    assert len(list(tmp_path.iterdir())) == 5
+    assert len(list(Path(task_doc.dir_name).iterdir())) == 5
     assert set(calc_output_names) == {
         "trajectory3.h5md",
         "trajectory2.h5md",
@@ -82,7 +83,7 @@ def test_hdf5_writing(interchange, tmp_path, run_job):
     }
 
 
-def test_production_maker(interchange, tmp_path, run_job):
+def test_production_maker(interchange, run_job):
     # Create an instance of ProductionMaker with custom parameters
     production_maker = OpenMMFlowMaker(
         name="test_production",
@@ -96,7 +97,7 @@ def test_production_maker(interchange, tmp_path, run_job):
     )
 
     # Run the ProductionMaker flow
-    production_flow = production_maker.make(interchange, output_dir=tmp_path)
+    production_flow = production_maker.make(interchange)
     task_doc = run_job(production_flow)
 
     # Check the output task document
@@ -143,21 +144,21 @@ def test_production_maker(interchange, tmp_path, run_job):
 
     interchange = Interchange.parse_raw(task_doc.interchange)
     topology = interchange.to_openmm_topology()
-    u = Universe(topology, str(tmp_path / "trajectory5.dcd"))
+    u = Universe(topology, str(Path(task_doc.dir_name) / "trajectory5.dcd"))
 
     assert len(u.trajectory) == 5
 
 
-def test_traj_blob_embed(interchange, tmp_path, run_job):
+def test_traj_blob_embed(interchange, run_job, tmp_path):
     nvt = NVTMaker(n_steps=2, traj_interval=1, embed_traj=True)
 
     # Run the ProductionMaker flow
-    nvt_job = nvt.make(interchange, output_dir=tmp_path)
+    nvt_job = nvt.make(interchange)
     task_doc = run_job(nvt_job)
 
     interchange = Interchange.parse_raw(task_doc.interchange)
     topology = interchange.to_openmm_topology()
-    u = Universe(topology, str(tmp_path / "trajectory.dcd"))
+    u = Universe(topology, str(Path(task_doc.dir_name) / "trajectory.dcd"))
 
     assert len(u.trajectory) == 2
 
@@ -172,7 +173,7 @@ def test_traj_blob_embed(interchange, tmp_path, run_job):
 
     assert np.all(u.atoms.positions == u2.atoms.positions)
 
-    with open(tmp_path / "taskdoc.json") as file:
+    with open(Path(task_doc.dir_name) / "taskdoc.json") as file:
         json_data = file.read()
 
     task_doc_parsed = OpenMMTaskDocument.parse_raw(json_data)

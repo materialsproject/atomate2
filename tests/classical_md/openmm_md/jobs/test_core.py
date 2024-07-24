@@ -9,18 +9,18 @@ from atomate2.classical_md.openmm.jobs import (
 )
 
 
-def test_energy_minimization_maker(interchange, temp_dir, run_job):
+def test_energy_minimization_maker(interchange, run_job):
     maker = EnergyMinimizationMaker(max_iterations=1)
-    base_job = maker.make(interchange, output_dir=temp_dir)
+    base_job = maker.make(interchange)
     task_doc = run_job(base_job)
     new_interchange = Interchange.parse_raw(task_doc.interchange)
 
     assert np.any(new_interchange.positions != interchange.positions)
 
 
-def test_npt_maker(interchange, temp_dir, run_job):
+def test_npt_maker(interchange, run_job):
     maker = NPTMaker(n_steps=10, pressure=0.1, pressure_update_frequency=1)
-    base_job = maker.make(interchange, output_dir=temp_dir)
+    base_job = maker.make(interchange)
     task_doc = run_job(base_job)
     new_interchange = Interchange.parse_raw(task_doc.interchange)
 
@@ -29,9 +29,9 @@ def test_npt_maker(interchange, temp_dir, run_job):
     assert np.any(new_interchange.box != interchange.box)
 
 
-def test_nvt_maker(interchange, temp_dir, run_job):
+def test_nvt_maker(interchange, run_job):
     maker = NVTMaker(n_steps=10, state_interval=1)
-    base_job = maker.make(interchange, output_dir=temp_dir)
+    base_job = maker.make(interchange)
     task_doc = run_job(base_job)
     new_interchange = Interchange.parse_raw(task_doc.interchange)
 
@@ -46,9 +46,9 @@ def test_nvt_maker(interchange, temp_dir, run_job):
     assert calc_output.steps_reported == list(range(1, 11))
 
 
-def test_temp_change_maker(interchange, temp_dir, run_job):
+def test_temp_change_maker(interchange, run_job):
     maker = TempChangeMaker(n_steps=10, temperature=310, temp_steps=10)
-    base_job = maker.make(interchange, output_dir=temp_dir)
+    base_job = maker.make(interchange)
     task_doc = run_job(base_job)
     new_interchange = Interchange.parse_raw(task_doc.interchange)
 

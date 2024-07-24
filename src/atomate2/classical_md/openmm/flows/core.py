@@ -11,8 +11,6 @@ from atomate2.classical_md.openmm.jobs.core import NVTMaker, TempChangeMaker
 from atomate2.classical_md.utils import create_list_summing_to
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from emmet.core.classical_md import ClassicalMDTaskDocument
     from openff.interchange import Interchange
 
@@ -43,7 +41,6 @@ class OpenMMFlowMaker:
         self,
         interchange: Interchange | bytes,
         prev_task: ClassicalMDTaskDocument | None = None,
-        output_dir: str | Path | None = None,
     ) -> Flow:
         """Run the production simulation using the provided Interchange object.
 
@@ -75,7 +72,6 @@ class OpenMMFlowMaker:
             job = maker.make(
                 interchange=interchange,
                 prev_task=prev_task,
-                output_dir=output_dir,
             )
             interchange = job.output.interchange
             prev_task = job.output

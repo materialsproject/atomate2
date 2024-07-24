@@ -14,9 +14,15 @@ from atomate2.classical_md.utils import create_mol_spec, merge_specs_by_name_and
 
 
 @pytest.fixture()
-def run_job():
+def temp_dir():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        yield Path(temp_dir)
+
+
+@pytest.fixture()
+def run_job(temp_dir):
     def run_job(job):
-        response_dict = run_locally(job, ensure_success=True)
+        response_dict = run_locally(job, ensure_success=True, root_dir=temp_dir)
         return list(response_dict.values())[-1][1].output
 
     return run_job
@@ -94,12 +100,6 @@ def interchange():
         ],
         allow_nonintegral_charges=True,
     )
-
-
-@pytest.fixture()
-def temp_dir():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        yield Path(temp_dir)
 
 
 @pytest.fixture()

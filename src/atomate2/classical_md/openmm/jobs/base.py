@@ -122,7 +122,6 @@ class BaseOpenMMMaker(Maker):
         self,
         interchange: Interchange | FauxInterchange | bytes,
         prev_task: OpenMMTaskDocument | None = None,
-        output_dir: str | Path | None = None,
     ) -> Response:
         """Run an OpenMM calculation.
 
@@ -148,9 +147,8 @@ class BaseOpenMMMaker(Maker):
         """
         interchange = self._load_interchange(interchange)
 
-        dir_name = Path(
-            output_dir or getattr(prev_task, "dir_name", None) or Path.cwd()
-        )
+        dir_name = Path.cwd()
+
         dir_name.mkdir(exist_ok=True, parents=True)
 
         sim = self._create_simulation(interchange, prev_task)
