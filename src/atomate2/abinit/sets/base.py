@@ -325,9 +325,9 @@ class AbinitInputGenerator(InputGenerator):
         ----------
         structure : Structure
             Pymatgen Structure object.
-        restart_from : str | Path | list | tuple
+        restart_from : str or Path or list or tuple
             Directory or list/tuple of 1 directory to restart from.
-        prev_outputs : str | Path | list | tuple
+        prev_outputs : str or Path or list or tuple
             Directory or list/tuple of directories needed as dependencies for the
                 AbinitInputSet generated.
         """
