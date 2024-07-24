@@ -12,19 +12,12 @@ def test_qha(mock_vasp, clean_dir, si_diamond: Structure):
     # mapping from job name to directory containing test files
     ref_paths = {
         "EOS equilibrium relaxation": "Si_qha/EOS_equilibrum_relaxation",
-        "static 1/1": "Si_qha/static_1_1",
+        "phonon static 1/1 eos deformation 1": "Si_qha/static_1_1",
         "static eos deformation 1": "Si_qha/static_eos_deformation_1",
     }
 
-    # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
-    fake_run_vasp_kwargs = {
-        "EOS equilibrium relaxation": {"incar_settings": ["NSW", "ISMEAR"]},
-        "static 1/1": {"incar_settings": ["NSW", "ISMEAR"]},
-        "static eos deformation 1": {"incar_settings": ["NSW", "ISMEAR", "ISIF"]},
-    }
-
     # automatically use fake VASP and write POTCAR.spec during the test
-    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+    mock_vasp(ref_paths)
 
     qha_maker = QhaMaker(
         number_of_frames=0,

@@ -9,6 +9,7 @@ from atomate2.common.flows.qha import CommonQhaMaker
 from atomate2.vasp.flows.phonons import PhononMaker
 from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
 from atomate2.vasp.jobs.eos import EosRelaxMaker
+from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 from atomate2.vasp.sets.core import TightRelaxSetGenerator
 
 
@@ -62,7 +63,9 @@ class QhaMaker(CommonQhaMaker):
             )
         )
     )
-    phonon_displacement_maker: StaticMaker | None = field(default_factory=StaticMaker)
+    phonon_displacement_maker: StaticMaker | None = field(
+        default_factory=PhononDisplacementMaker
+    )
     phonon_static_maker: StaticMaker | None = field(default_factory=StaticMaker)
     phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
