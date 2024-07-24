@@ -60,9 +60,9 @@ counts, and names (optional) of the molecules we want to include.
 from atomate2.classical_md.core import generate_interchange
 
 mol_specs_dicts = [
-    {"smile": "O", "count": 200, "name": "water"},
-    {"smile": "CCO", "count": 10, "name": "ethanol"},
-    {"smile": "C1=C(C=C(C(=C1O)O)O)C(=O)O", "count": 1, "name": "gallic_acid"},
+    {"smiles": "O", "count": 200, "name": "water"},
+    {"smiles": "CCO", "count": 10, "name": "ethanol"},
+    {"smiles": "C1=C(C=C(C(=C1O)O)O)C(=O)O", "count": 1, "name": "gallic_acid"},
 ]
 
 gallic_interchange_job = generate_interchange(mol_specs_dicts, 1.3)
@@ -111,10 +111,10 @@ pf6 = Molecule(
 pf6_charges = np.array([1.34, -0.39, -0.39, -0.39, -0.39, -0.39, -0.39])
 
 mol_specs_dicts = [
-    {"smile": "C1COC(=O)O1", "count": 100, "name": "EC"},
-    {"smile": "CCOC(=O)OC", "count": 100, "name": "EMC"},
+    {"smiles": "C1COC(=O)O1", "count": 100, "name": "EC"},
+    {"smiles": "CCOC(=O)OC", "count": 100, "name": "EMC"},
     {
-        "smile": "F[P-](F)(F)(F)(F)F",
+        "smiles": "F[P-](F)(F)(F)(F)F",
         "count": 50,
         "name": "PF6",
         "partial_charges": pf6_charges,
@@ -122,7 +122,7 @@ mol_specs_dicts = [
         "charge_scaling": 0.8,
         "charge_method": "RESP",
     },
-    {"smile": "[Li+]", "count": 50, "name": "Li", "charge_scaling": 0.8},
+    {"smiles": "[Li+]", "count": 50, "name": "Li", "charge_scaling": 0.8},
 ]
 
 elyte_interchange_job = generate_interchange(mol_specs_dicts, 1.3)

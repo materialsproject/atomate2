@@ -24,7 +24,7 @@ from openmm.unit import kelvin, picoseconds
 from atomate2.classical_md.core import openff_job
 from atomate2.classical_md.utils import (
     create_mol_spec_list,
-    merge_specs_by_name_and_smile,
+    merge_specs_by_name_and_smiles,
 )
 
 try:
@@ -208,7 +208,7 @@ def generate_faux_interchange(
     # TODO: warn if using unsupported properties
     mol_specs = create_mol_spec_list(input_mol_specs)
 
-    mol_specs = merge_specs_by_name_and_smile(mol_specs)
+    mol_specs = merge_specs_by_name_and_smiles(mol_specs)
 
     pack_box_kwargs = pack_box_kwargs or {}
     topology = pack_box(

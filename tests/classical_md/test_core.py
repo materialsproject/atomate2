@@ -35,8 +35,8 @@ def test_generate_interchange(mol_specs_small, run_job):
 
     # Test with mol_specs as a list of dicts
     mol_specs_dicts = [
-        {"smile": "CCO", "count": 10, "name": "ethanol", "charge_method": "mmff94"},
-        {"smile": "O", "count": 20, "name": "water", "charge_method": "mmff94"},
+        {"smiles": "CCO", "count": 10, "name": "ethanol", "charge_method": "mmff94"},
+        {"smiles": "O", "count": 20, "name": "water", "charge_method": "mmff94"},
     ]
     job = generate_interchange(mol_specs_dicts, mass_density, force_field)
     task_doc = run_job(job)

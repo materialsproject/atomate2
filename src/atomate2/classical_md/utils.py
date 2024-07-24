@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 
 def create_mol_spec(
-    smile: str,
+    smiles: str,
     count: int,
     name: str = None,
     charge_scaling: float = 1,
@@ -33,7 +33,7 @@ def create_mol_spec(
 
     Parameters
     ----------
-    smile : str
+    smiles : str
         The SMILES string of the molecule.
     count : int
         The number of molecules to create.
@@ -59,7 +59,7 @@ def create_mol_spec(
         charge_method = "custom" if partial_charges is not None else "am1bcc"
 
     openff_mol = create_openff_mol(
-        smile,
+        smiles,
         geometry,
         charge_scaling,
         partial_charges,
@@ -68,7 +68,7 @@ def create_mol_spec(
 
     # create mol_spec
     return MoleculeSpec(
-        name=(name or smile),
+        name=(name or smiles),
         count=count,
         charge_scaling=charge_scaling,
         charge_method=charge_method,
@@ -111,7 +111,7 @@ def create_mol_spec_list(
     return mol_specs
 
 
-def merge_specs_by_name_and_smile(mol_specs: list[MoleculeSpec]) -> list[MoleculeSpec]:
+def merge_specs_by_name_and_smiles(mol_specs: list[MoleculeSpec]) -> list[MoleculeSpec]:
     """Merge MoleculeSpecs with the same name and SMILES string.
 
     Groups MoleculeSpecs by their name and SMILES string, and merges the counts of specs

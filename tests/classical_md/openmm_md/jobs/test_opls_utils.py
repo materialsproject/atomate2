@@ -50,12 +50,12 @@ def test_create_system_from_xml(classical_md_data):
     # download_opls_xml("CO", opls_xmls / "CO.xml")
 
     mol_specs = [
-        {"smile": "CCO", "count": 10},
-        {"smile": "CO", "count": 20},
+        {"smiles": "CCO", "count": 10},
+        {"smiles": "CO", "count": 20},
     ]
 
     topology = pack_box(
-        molecules=[tk.Molecule.from_smiles(spec["smile"]) for spec in mol_specs],
+        molecules=[tk.Molecule.from_smiles(spec["smiles"]) for spec in mol_specs],
         number_of_copies=[spec["count"] for spec in mol_specs],
         mass_density=0.8 * unit.grams / unit.milliliter,
     )

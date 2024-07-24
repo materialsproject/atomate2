@@ -10,7 +10,7 @@ from openff.interchange.components._packmol import pack_box
 from openff.toolkit import ForceField
 from openff.units import unit
 
-from atomate2.classical_md.utils import create_mol_spec, merge_specs_by_name_and_smile
+from atomate2.classical_md.utils import create_mol_spec, merge_specs_by_name_and_smiles
 
 
 @pytest.fixture()
@@ -84,7 +84,7 @@ def interchange():
         mass_density=0.8 * unit.grams / unit.milliliter,
     )
 
-    mol_specs = merge_specs_by_name_and_smile(mol_specs)
+    mol_specs = merge_specs_by_name_and_smiles(mol_specs)
 
     return Interchange.from_smirnoff(
         force_field=ForceField("openff_unconstrained-2.1.1.offxml"),

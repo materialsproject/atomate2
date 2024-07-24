@@ -15,7 +15,7 @@ from openff.units import unit
 
 from atomate2.classical_md.utils import (
     create_mol_spec_list,
-    merge_specs_by_name_and_smile,
+    merge_specs_by_name_and_smiles,
 )
 
 
@@ -108,7 +108,7 @@ def generate_interchange(
     create valid MoleculeSpec objects.
     - The function sorts the molecule specifications based on their SMILES string
     and name before packing the box.
-    - The function uses the merge_specs_by_name_and_smile function to merge molecule
+    - The function uses the merge_specs_by_name_and_smiles function to merge molecule
     specifications with the same name and SMILES string.
     - The function currently does not support passing a list of force fields due to
     limitations in the OpenFF Toolkit.
@@ -123,7 +123,7 @@ def generate_interchange(
         **pack_box_kwargs,
     )
 
-    mol_specs = merge_specs_by_name_and_smile(mol_specs)
+    mol_specs = merge_specs_by_name_and_smiles(mol_specs)
 
     # TODO: ForceField doesn't currently support iterables, fix this
     # force_field: str | Path | List[str | Path] = "openff_unconstrained-2.1.1.offxml",

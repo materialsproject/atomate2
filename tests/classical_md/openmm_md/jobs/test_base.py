@@ -18,11 +18,11 @@ def test_add_reporters(interchange, temp_dir):
     maker = BaseOpenMMMaker(
         traj_interval=100, state_interval=50, wrap_traj=True, n_steps=1
     )
-    sim = maker._create_simulation(interchange)
+    sim = maker._create_simulation(interchange)  # noqa: SLF001
     dir_name = temp_dir / "test_output"
     dir_name.mkdir()
 
-    maker._add_reporters(sim, dir_name)
+    maker._add_reporters(sim, dir_name)  # noqa: SLF001
 
     assert len(sim.reporters) == 2
     assert isinstance(sim.reporters[0], MDAReporter)
@@ -40,15 +40,15 @@ def test_resolve_attr():
         calcs_reversed=[Calculation(input=CalculationInput(step_size=0.002))]
     )
 
-    assert maker._resolve_attr("temperature") == 301
-    assert maker._resolve_attr("friction_coefficient") == 2
-    assert maker._resolve_attr("step_size", prev_task) == 0.002
-    assert maker._resolve_attr("platform_name") == "CPU"
+    assert maker._resolve_attr("temperature") == 301  # noqa: SLF001
+    assert maker._resolve_attr("friction_coefficient") == 2  # noqa: SLF001
+    assert maker._resolve_attr("step_size", prev_task) == 0.002  # noqa: SLF001
+    assert maker._resolve_attr("platform_name") == "CPU"  # noqa: SLF001
 
 
 def test_create_integrator():
     maker = BaseOpenMMMaker(temperature=300, friction_coefficient=2, step_size=0.002)
-    integrator = maker._create_integrator()
+    integrator = maker._create_integrator()  # noqa: SLF001
 
     assert isinstance(integrator, LangevinMiddleIntegrator)
     assert integrator.getTemperature() == 300 * kelvin
@@ -59,7 +59,7 @@ def test_create_integrator():
 def test_create_simulation(interchange):
     maker = BaseOpenMMMaker()
 
-    sim = maker._create_simulation(interchange)
+    sim = maker._create_simulation(interchange)  # noqa: SLF001
 
     assert isinstance(sim, Simulation)
     assert isinstance(sim.integrator, LangevinMiddleIntegrator)
@@ -69,7 +69,7 @@ def test_create_simulation(interchange):
 def test_update_interchange(interchange):
     interchange = copy.deepcopy(interchange)
     maker = BaseOpenMMMaker(wrap_traj=True)
-    sim = maker._create_simulation(interchange)
+    sim = maker._create_simulation(interchange)  # noqa: SLF001
     start_positions = interchange.positions
     start_velocities = interchange.velocities
     start_box = interchange.box
@@ -77,7 +77,7 @@ def test_update_interchange(interchange):
     # Run the simulation for one step
     sim.step(1)
 
-    maker._update_interchange(interchange, sim, None)
+    maker._update_interchange(interchange, sim, None)  # noqa: SLF001
 
     assert interchange.positions.shape == start_positions.shape
     assert interchange.velocities.shape == (1170, 3)
@@ -92,7 +92,11 @@ def test_create_task_doc(interchange, temp_dir):
     dir_name = temp_dir / "test_output"
     dir_name.mkdir()
 
-    task_doc = maker._create_task_doc(interchange, elapsed_time=10.5, dir_name=dir_name)
+    task_doc = maker._create_task_doc(  # noqa: SLF001
+        interchange,
+        elapsed_time=10.5,
+        dir_name=dir_name,
+    )
 
     assert isinstance(task_doc, ClassicalMDTaskDocument)
     assert task_doc.dir_name == str(dir_name)
@@ -183,8 +187,8 @@ def test_make_w_velocities(interchange, temp_dir, run_job):
 
 def test_make_from_prev(temp_dir, run_job):
     mol_specs_dicts = [
-        {"smile": "CCO", "count": 50, "name": "ethanol", "charge_method": "mmff94"},
-        {"smile": "O", "count": 300, "name": "water", "charge_method": "mmff94"},
+        {"smiles": "CCO", "count": 50, "name": "ethanol", "charge_method": "mmff94"},
+        {"smiles": "O", "count": 300, "name": "water", "charge_method": "mmff94"},
     ]
     inter_job = generate_interchange(mol_specs_dicts, 1)
 

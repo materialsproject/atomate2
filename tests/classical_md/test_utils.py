@@ -22,7 +22,7 @@ from atomate2.classical_md.utils import (
     counts_from_masses,
     create_mol_spec,
     increment_name,
-    merge_specs_by_name_and_smile,
+    merge_specs_by_name_and_smiles,
 )
 
 
@@ -63,7 +63,7 @@ def test_molgraph_to_openff_cco(mol_files):
 
 
 @pytest.mark.parametrize(
-    "xyz_path, smile, map_values",
+    "xyz_path, smiles, map_values",
     [
         ("CCO_xyz", "CCO", [0, 1, 2, 3, 4, 5, 6, 7, 8]),
         ("FEC_r_xyz", "O=C1OC[C@@H](F)O1", [0, 1, 2, 3, 4, 6, 7, 9, 8, 5]),
@@ -71,10 +71,10 @@ def test_molgraph_to_openff_cco(mol_files):
         ("PF6_xyz", "F[P-](F)(F)(F)(F)F", [1, 0, 2, 3, 4, 5, 6]),
     ],
 )
-def test_get_atom_map(xyz_path, smile, map_values, mol_files):
+def test_get_atom_map(xyz_path, smiles, map_values, mol_files):
     mol = pymatgen.core.Molecule.from_file(mol_files[xyz_path])
     inferred_mol = infer_openff_mol(mol)
-    openff_mol = tk.Molecule.from_smiles(smile)
+    openff_mol = tk.Molecule.from_smiles(smiles)
     isomorphic, atom_map = get_atom_map(inferred_mol, openff_mol)
     assert isomorphic
     assert map_values == list(atom_map.values())
@@ -115,10 +115,10 @@ def test_assign_partial_charges(mol_files):
 
 
 def test_create_openff_mol(mol_files):
-    smile = "CCO"
+    smiles = "CCO"
     geometry = mol_files["CCO_xyz"]
     partial_charges = np.load(mol_files["CCO_charges"])
-    openff_mol = create_openff_mol(smile, geometry, 1.0, partial_charges, "am1bcc")
+    openff_mol = create_openff_mol(smiles, geometry, 1.0, partial_charges, "am1bcc")
     assert isinstance(openff_mol, tk.Molecule)
     assert openff_mol.n_atoms == 9
     assert openff_mol.n_bonds == 8
@@ -126,10 +126,10 @@ def test_create_openff_mol(mol_files):
 
 
 def test_create_mol_spec(mol_files):
-    smile, count, name, geometry = "CCO", 10, "ethanol", mol_files["CCO_xyz"]
+    smiles, count, name, geometry = "CCO", 10, "ethanol", mol_files["CCO_xyz"]
     partial_charges = np.load(mol_files["CCO_charges"])
     mol_spec = create_mol_spec(
-        smile, count, name, 1.0, "am1bcc", geometry, partial_charges
+        smiles, count, name, 1.0, "am1bcc", geometry, partial_charges
     )
     assert isinstance(mol_spec, MoleculeSpec)
     assert mol_spec.name == name
@@ -139,26 +139,26 @@ def test_create_mol_spec(mol_files):
     assert isinstance(tk.Molecule.from_json(mol_spec.openff_mol), tk.Molecule)
 
 
-def test_merge_specs_by_name_and_smile(mol_files):
-    smile1, count1, name1, geometry1 = "CCO", 5, "ethanol", mol_files["CCO_xyz"]
+def test_merge_specs_by_name_and_smiles(mol_files):
+    smiles1, count1, name1, geometry1 = "CCO", 5, "ethanol", mol_files["CCO_xyz"]
     partial_charges1 = np.load(mol_files["CCO_charges"])
     mol_spec1 = create_mol_spec(
-        smile1, count1, name1, 1.0, "am1bcc", geometry1, partial_charges1
+        smiles1, count1, name1, 1.0, "am1bcc", geometry1, partial_charges1
     )
 
-    smile2, count2, name2, geometry2 = "CCO", 8, "ethanol", mol_files["CCO_xyz"]
+    smiles2, count2, name2, geometry2 = "CCO", 8, "ethanol", mol_files["CCO_xyz"]
     partial_charges2 = np.load(mol_files["CCO_charges"])
     mol_spec2 = create_mol_spec(
-        smile2, count2, name2, 1.0, "am1bcc", geometry2, partial_charges2
+        smiles2, count2, name2, 1.0, "am1bcc", geometry2, partial_charges2
     )
 
     mol_specs = [mol_spec1, mol_spec2]
-    merged_specs = merge_specs_by_name_and_smile(mol_specs)
+    merged_specs = merge_specs_by_name_and_smiles(mol_specs)
     assert len(merged_specs) == 1
     assert merged_specs[0].count == count1 + count2
 
     mol_specs[1].name = "ethanol2"
-    merged_specs = merge_specs_by_name_and_smile(mol_specs)
+    merged_specs = merge_specs_by_name_and_smiles(mol_specs)
     assert len(merged_specs) == 2
     assert merged_specs[0].name == name1
     assert merged_specs[0].count == count1

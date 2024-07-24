@@ -446,7 +446,6 @@ class BaseOpenMMMaker(Maker):
         prev_task : Optional[OpenMMTaskDocument]
             The previous task document.
         """
-        # TODO: update this to accept FauxInterchange
         state = sim.context.getState(
             getPositions=True,
             getVelocities=True,
