@@ -14,12 +14,13 @@ from emmet.core.classical_md.openmm import (
     Calculation,
     CalculationInput,
     CalculationOutput,
+    FauxInterchange,
     OpenMMTaskDocument,
 )
 from jobflow import Maker, Response
 from mdareporter.mdareporter import MDAReporter
 from openff.interchange import Interchange
-from openmm import Integrator, LangevinMiddleIntegrator, Platform
+from openmm import Integrator, LangevinMiddleIntegrator, Platform, XmlSerializer
 from openmm.app import StateDataReporter
 from openmm.unit import kelvin, picoseconds
 
@@ -119,7 +120,7 @@ class BaseOpenMMMaker(Maker):
     @openff_job
     def make(
         self,
-        interchange: Interchange | bytes,
+        interchange: Interchange | FauxInterchange | bytes,
         prev_task: OpenMMTaskDocument | None = None,
         output_dir: str | Path | None = None,
     ) -> Response:
@@ -131,8 +132,8 @@ class BaseOpenMMMaker(Maker):
 
         Parameters
         ----------
-        interchange : Union[Interchange, str]
-            An Interchange object or a JSON string of the Interchange object.
+        interchange : Union[Interchange, FauxInterchange, str]
+            An Interchange object, FauxInterchange object or byte encoded equivalent.
         prev_task : Optional[OpenMMTaskDocument]
             The previous task document.
         output_dir : Optional[Union[str, Path]]
@@ -145,13 +146,7 @@ class BaseOpenMMMaker(Maker):
         Response
             A response object containing the output task document.
         """
-        # this is needed because interchange is currently using pydantic.v1
-        if isinstance(interchange, bytes):
-            interchange = interchange.decode("utf-8")
-        if isinstance(interchange, str):
-            interchange = Interchange.parse_raw(interchange)
-        else:
-            interchange = copy.deepcopy(interchange)
+        interchange = self._load_interchange(interchange)
 
         dir_name = Path(
             output_dir or getattr(prev_task, "dir_name", None) or Path.cwd()
@@ -182,6 +177,38 @@ class BaseOpenMMMaker(Maker):
             file.write(task_doc.json())
 
         return Response(output=task_doc)
+
+    def _load_interchange(
+        self, interchange: Interchange | FauxInterchange | bytes
+    ) -> Interchange:
+        """Load an Interchange object from a JSON string or bytes.
+
+        This method loads an Interchange object from a JSON string or bytes
+        representation. It is used to convert interchange data to an Interchange
+        object for use in the OpenMM simulation.
+
+        Parameters
+        ----------
+        interchange : Union[Interchange, str]
+            An Interchange object or a JSON string of the Interchange object.
+
+        Returns
+        -------
+        Interchange
+            The loaded Interchange object.
+        """
+        if isinstance(interchange, bytes):
+            interchange_str = interchange.decode("utf-8")
+            interchange = Interchange.parse_raw(interchange_str)
+
+            # we try this because a FauxInterchange will parse to a valid
+            # object with missing positions
+            if interchange.positions is None:
+                interchange = FauxInterchange.parse_raw(interchange_str)
+
+        else:
+            interchange = copy.deepcopy(interchange)
+        return interchange
 
     def _add_reporters(
         self,
@@ -419,14 +446,18 @@ class BaseOpenMMMaker(Maker):
         prev_task : Optional[OpenMMTaskDocument]
             The previous task document.
         """
+        # TODO: update this to accept FauxInterchange
         state = sim.context.getState(
             getPositions=True,
             getVelocities=True,
             enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
         )
-        interchange.positions = state.getPositions(asNumpy=True)
-        interchange.velocities = state.getVelocities(asNumpy=True)
-        interchange.box = state.getPeriodicBoxVectors(asNumpy=True)
+        if isinstance(interchange, Interchange):
+            interchange.positions = state.getPositions(asNumpy=True)
+            interchange.velocities = state.getVelocities(asNumpy=True)
+            interchange.box = state.getPeriodicBoxVectors(asNumpy=True)
+        elif isinstance(interchange, FauxInterchange):
+            interchange.state = XmlSerializer.serialize(state)
 
     def _create_task_doc(
         self,
