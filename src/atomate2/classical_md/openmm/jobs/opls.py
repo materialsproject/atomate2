@@ -242,7 +242,7 @@ def generate_faux_interchange(
         state=TaskState.SUCCESS,
         interchange=interchange_bytes,
         molecule_specs=mol_specs,
-        force_field="opls",
+        force_field="opls",  # TODO: change to flexible value
         tags=tags,
     )
 
