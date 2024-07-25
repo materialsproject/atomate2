@@ -115,8 +115,8 @@ def run_phonon_jobs(
                 "imaginary_modes": phonon_imaginary_modes,
             },
         )
-    logging.log(
-        "Different space groups were detected for the optimized structures."
+    logger.warning(
+        msg="Different space groups were detected for the optimized structures."
         "Please try a different symprec."
     )
     return Response(output={"error": "different space groups"}, stop_jobflow=True)
@@ -175,12 +175,12 @@ def compute_gruneisen_param(
     .GruneisenParameterDocument
     """
     return GruneisenParameterDocument.from_phonon_yamls(
-        code,
-        compute_gruneisen_param_kwargs,
-        kpath_scheme,
-        mesh,
-        phonon_imaginary_modes_info,
-        phonopy_yaml_paths_dict,
-        structure,
-        symprec,
+        code=code,
+        compute_gruneisen_param_kwargs=compute_gruneisen_param_kwargs,
+        kpath_scheme=kpath_scheme,
+        mesh=mesh,
+        phonon_imaginary_modes_info=phonon_imaginary_modes_info,
+        phonopy_yaml_paths_dict=phonopy_yaml_paths_dict,
+        structure=structure,
+        symprec=symprec,
     )
