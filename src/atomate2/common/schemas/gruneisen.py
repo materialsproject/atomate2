@@ -104,27 +104,24 @@ class GruneisenParameterDocument(StructureMetadata):
 
     @staticmethod
     def from_phonon_yamls(
-        code: str,
+        phonopy_yaml_paths_dict: dict,
+        structure: Structure,
         kpath_scheme: str,
         mesh: Union[float, int, tuple[float, float, float]],
         phonon_imaginary_modes_info: dict,
-        phonopy_yaml_paths_dict: dict,
-        structure: Structure,
         symprec: float,
+        code: str,
         compute_gruneisen_param_kwargs: dict,
     ):
         """Generate the GruneisenParameterDocument from phonopy yamls.
 
         Parameters
         ----------
-        code: str
-            Code to compute forces
         phonopy_yaml_paths_dict:
             phonopy yaml files path for ground, expanded and
             contracted structure phonon runs
-        phonon_imaginary_modes_info:
-            dict with bool indicating if structure
-            has imaginary modes
+        structure: .Structure
+            pymatgen structure object at ground state
         kpath_scheme: str
             scheme to generate kpoints. Please be aware that
             you can only use seekpath with any kind of cell
@@ -135,12 +132,15 @@ class GruneisenParameterDocument(StructureMetadata):
             seekpath can be used with any kind of unit cell as
             it relies on phonopy to handle the relationship
             to the primitive cell and not pymatgen
-        symprec: float
-            Symmetry precision for symmetry checks and phonon runs.
         mesh: float or int or tuple(int, int, int)
             kpoint density (float, int) or sampling mesh (tuple(int, int, int))
-        structure: .Structure
-            pymatgen structure object at ground state
+        phonon_imaginary_modes_info:
+            dict with bool indicating if structure
+            has imaginary modes
+        symprec: float
+            Symmetry precision for symmetry checks and phonon runs.
+        code: str
+            Code to compute forces
         compute_gruneisen_param_kwargs:
             kwargs for phonopy Grueneisen
             api and pymatgen plotters
