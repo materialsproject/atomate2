@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Response, job
@@ -19,6 +20,8 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
+
+logger = logging.getLogger(__name__)
 
 
 @job
@@ -112,7 +115,11 @@ def run_phonon_jobs(
                 "imaginary_modes": phonon_imaginary_modes,
             },
         )
-    return Response(output={"space_groups": set_symmetry}, stop_jobflow=True)
+    logging.log(
+        "Different space groups were detected for the optimized structures."
+        "Please try a different symprec."
+    )
+    return Response(output={"error": "different space groups"}, stop_jobflow=True)
 
 
 @job(

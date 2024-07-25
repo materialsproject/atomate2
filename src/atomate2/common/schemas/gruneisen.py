@@ -112,6 +112,45 @@ class GruneisenParameterDocument(StructureMetadata):
         structure,
         symprec,
     ):
+        """
+
+        Parameters
+        ----------
+
+        Parameters
+        ----------
+        code: str
+            Code to compute forces
+        phonopy_yaml_paths_dict:
+            phonopy yaml files path for ground, expanded and
+            contracted structure phonon runs
+        phonon_imaginary_modes_info:
+            dict with bool indicating if structure
+            has imaginary modes
+        kpath_scheme: str
+            scheme to generate kpoints. Please be aware that
+            you can only use seekpath with any kind of cell
+            Otherwise, please use the standard primitive structure
+            Available schemes are:
+            "seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro".
+            "seekpath" and "hinuma" are the same definition but
+            seekpath can be used with any kind of unit cell as
+            it relies on phonopy to handle the relationship
+            to the primitive cell and not pymatgen
+        symprec: float
+            Symmetry precision for symmetry checks and phonon runs.
+        mesh: float or int or tuple(int, int, int)
+            kpoint density (float, int) or sampling mesh (tuple(int, int, int))
+        structure: .Structure
+            pymatgen structure object at ground state
+        compute_gruneisen_param_kwargs:
+            kwargs for phonopy Grueneisen
+            api and pymatgen plotters
+
+        Returns
+        -------
+        .GruneisenParameterDocument
+        """
         # TODO: directly put required info into document?
         ground = phonopy.load(
             Path(phonopy_yaml_paths_dict["ground"]) / "ground_phonopy.yaml"
