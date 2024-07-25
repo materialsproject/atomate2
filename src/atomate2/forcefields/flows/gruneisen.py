@@ -51,7 +51,7 @@ class GruneisenMaker(BaseGruneisenMaker):
         Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
         Or float to indicate a kpoint density.
     phonon_maker: .PhononMaker
-        PhononMaker to compute the phonons. It's bulk_relax_maker should be switched off.
+        PhononMaker to run the phonon workflow.
     perc_vol: float
         Percent volume to shrink and expand ground state structure
     compute_gruneisen_param_kwargs: dict

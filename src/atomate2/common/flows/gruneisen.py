@@ -68,7 +68,7 @@ class BaseGruneisenMaker(Maker, ABC):
         Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
         Or an int or float to indicate a kpoint density.
     phonon_maker: .BasePhononMaker
-        PhononMaker to compute phonons
+        PhononMaker to run the phonon workflow.
     perc_vol: float
         Percent volume to shrink and expand ground state structure
     compute_gruneisen_param_kwargs: dict
@@ -198,18 +198,24 @@ class BaseGruneisenMaker(Maker, ABC):
         calculations are performed for each ordering (relax -> static)
         """
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Tests settings during the initialisation."""
         if self.phonon_maker.bulk_relax_maker is not None:
             warnings.warn(
                 "An additional bulk_relax_maker has been added "
                 "to the phonon workflow. Please be aware "
-                "that the volume needs to be kept fixed."
+                "that the volume needs to be kept fixed.",
+                stacklevel=2,
             )
         if self.phonon_maker.symprec != self.symprec:
             warnings.warn(
                 "You are using different symmetry precisions "
                 "in the phonon makers and other parts of the "
-                "Grüneisen workflow."
+                "Grüneisen workflow.",
+                stacklevel=2,
             )
         if self.phonon_maker.static_energy_maker is not None:
-            warnings.warn("The static energy maker " "is not needed for this workflow.")
+            warnings.warn(
+                "The static energy maker " "is not needed for " "this workflow.",
+                stacklevel=2,
+            )
