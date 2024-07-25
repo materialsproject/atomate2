@@ -86,7 +86,7 @@ class BaseGruneisenMaker(Maker, ABC):
     phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
     phonon_maker_kwargs: dict = field(default_factory=dict)
     perc_vol: float = 0.01
-    mesh: tuple | float = 7_000
+    mesh: tuple | int | float = 7_000
     compute_gruneisen_param_kwargs: dict = field(default_factory=dict)
     symprec: float = 1e-4
 

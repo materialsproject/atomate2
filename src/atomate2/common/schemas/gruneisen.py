@@ -2,7 +2,7 @@
 
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,6 +13,7 @@ from matplotlib.colors import LinearSegmentedColormap
 from phonopy.api_gruneisen import PhonopyGruneisen
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from pydantic import BaseModel, Field
+from pymatgen.core.structure import Structure
 from pymatgen.io.phonopy import (
     get_gruneisen_ph_bs_symm_line,
     get_gruneisenparameter,
@@ -103,19 +104,16 @@ class GruneisenParameterDocument(StructureMetadata):
 
     @staticmethod
     def from_phonon_yamls(
-        code,
-        compute_gruneisen_param_kwargs,
-        kpath_scheme,
-        mesh,
-        phonon_imaginary_modes_info,
-        phonopy_yaml_paths_dict,
-        structure,
-        symprec,
+        code: str,
+        kpath_scheme: str,
+        mesh: Union[float, int, tuple[float, float, float]],
+        phonon_imaginary_modes_info: dict,
+        phonopy_yaml_paths_dict: dict,
+        structure: Structure,
+        symprec: float,
+        compute_gruneisen_param_kwargs: dict,
     ):
-        """
-
-        Parameters
-        ----------
+        """Generate the GruneisenParameterDocument from phonopy yamls.
 
         Parameters
         ----------
@@ -151,7 +149,6 @@ class GruneisenParameterDocument(StructureMetadata):
         -------
         .GruneisenParameterDocument
         """
-        # TODO: directly put required info into document?
         ground = phonopy.load(
             Path(phonopy_yaml_paths_dict["ground"]) / "ground_phonopy.yaml"
         )
@@ -163,7 +160,7 @@ class GruneisenParameterDocument(StructureMetadata):
         if type(mesh) is tuple:
             gru.set_mesh(
                 mesh=mesh,
-                shift=compute_gruneisen_param_kwargs.get("shift", None),
+                shift=compute_gruneisen_param_kwargs.get("shift"),
                 is_gamma_center=compute_gruneisen_param_kwargs.get(
                     "is_gamma_center", True
                 ),
@@ -183,7 +180,7 @@ class GruneisenParameterDocument(StructureMetadata):
             )
             gru.set_mesh(
                 mesh=kpoint.kpts[0],
-                shift=compute_gruneisen_param_kwargs.get("shift", None),
+                shift=compute_gruneisen_param_kwargs.get("shift"),
                 is_gamma_center=compute_gruneisen_param_kwargs.get(
                     "is_gamma_center", True
                 ),
