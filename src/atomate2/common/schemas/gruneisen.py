@@ -268,9 +268,18 @@ class GruneisenParameterDocument(StructureMetadata):
     ) -> None:
         """Save a phonon band structure weighted with Grueneisen parameters.
 
-        gruneisen_band_symline_plotter: pymatgen GruneisenPhononBSPlotter obj
-        save_fig: bool to switch plot saving
-        kwargs: kwargs to adjust plotter
+        Parameters
+        ----------
+        gruneisen_band_symline_plotter: GruneisenPhononBSPlotter
+            pymatgen GruneisenPhononBSPlotter obj
+        save_fig: bool
+            bool to save plots
+        kwargs: dict
+            keyword arguments to adjust plotter
+
+        Returns
+        -------
+        None
         """
         u = freq_units(kwargs.get("units", "THz"))
         ax = pretty_plot(12, 8)
