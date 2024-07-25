@@ -7,9 +7,12 @@ from dataclasses import dataclass, field
 from atomate2.common.flows.gruneisen import BaseGruneisenMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.flows.phonons import PhononMaker
-from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
+from atomate2.vasp.jobs.core import (
+    StaticMaker,
+    TightRelaxConstVolMaker,
+    TightRelaxMaker,
+)
 from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
-from atomate2.vasp.sets.core import TightRelaxSetGenerator
 
 # TODO: treat prev_vasp_dir correctly
 
@@ -71,11 +74,7 @@ class GruneisenMaker(BaseGruneisenMaker):
 
     const_vol_relax_maker: TightRelaxMaker | None = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(
-            TightRelaxMaker(
-                input_set_generator=TightRelaxSetGenerator(
-                    user_incar_settings={"ISIF": 2},
-                )
-            )
+            TightRelaxConstVolMaker()
         )
     )
     kpath_scheme: str = "seekpath"
