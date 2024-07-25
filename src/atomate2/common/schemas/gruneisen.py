@@ -30,6 +30,7 @@ from pymatgen.phonon.plotter import (
     freq_units,
 )
 from pymatgen.util.plotting import pretty_plot
+from typing_extensions import Self
 
 from atomate2.common.schemas.phonons import PhononBSDOSDoc
 
@@ -102,8 +103,9 @@ class GruneisenParameterDocument(StructureMetadata):
         None, description="Properties derived from the Grueneisen parameter."
     )
 
-    @staticmethod
+    @classmethod
     def from_phonon_yamls(
+        cls,
         phonopy_yaml_paths_dict: dict,
         structure: Structure,
         kpath_scheme: str,
@@ -112,7 +114,7 @@ class GruneisenParameterDocument(StructureMetadata):
         symprec: float,
         code: str,
         compute_gruneisen_param_kwargs: dict,
-    ):
+    ) -> Self:
         """Generate the GruneisenParameterDocument from phonopy yamls.
 
         Parameters
@@ -250,7 +252,7 @@ class GruneisenParameterDocument(StructureMetadata):
             "average_gruneisen": average_gruneisen,
             "thermal_conductivity_slack": thermal_conductivity_slack,
         }
-        return GruneisenParameterDocument.from_structure(
+        return cls.from_structure(
             meta_structure=structure,
             code=code,
             gruneisen_parameter_inputs=gruneisen_parameter_inputs,
