@@ -107,7 +107,7 @@ class GruneisenParameterDocument(StructureMetadata):
         phonopy_yaml_paths_dict: dict,
         structure: Structure,
         kpath_scheme: str,
-        mesh: Union[float, int, tuple[float, float, float]],
+        mesh: Union[float, tuple[float, float, float]],
         phonon_imaginary_modes_info: dict,
         symprec: float,
         code: str,
