@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.common.flows.phonons import BasePhononMaker
+from atomate2.common.utils import PHONON_SYM_PREC
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
 from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
@@ -114,7 +115,7 @@ class PhononMaker(BasePhononMaker):
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = 1e-4
+    symprec: float = PHONON_SYM_PREC
     displacement: float = 0.01
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True

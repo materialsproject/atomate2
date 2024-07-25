@@ -11,6 +11,7 @@ from atomate2.aims.jobs.phonons import (
     PhononDisplacementMakerSocket,
 )
 from atomate2.common.flows.phonons import BasePhononMaker
+from atomate2.common.utils import PHONON_SYM_PREC
 
 if TYPE_CHECKING:
     from atomate2.aims.jobs.base import BaseAimsMaker
@@ -112,7 +113,7 @@ class PhononMaker(BasePhononMaker):
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = 1e-4
+    symprec: float = PHONON_SYM_PREC
     displacement: float = 0.01
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True

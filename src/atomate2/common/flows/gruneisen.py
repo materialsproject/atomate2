@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -13,6 +14,7 @@ from atomate2.common.jobs.gruneisen import (
     run_phonon_jobs,
     shrink_expand_structure,
 )
+from atomate2.common.utils import PHONON_SYM_PREC
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -21,7 +23,7 @@ if TYPE_CHECKING:
 
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.common.flows.phonons import BasePhononMaker
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
@@ -65,10 +67,8 @@ class BaseGruneisenMaker(Maker, ABC):
     mesh: tuple or float
         Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
         Or an int or float to indicate a kpoint density.
-    phonon_displacement_maker: .ForceFieldStaticMaker or .BaseVaspMaker or None
-        StaticMaker to compute energies and forces in the finite displacement method
-    phonon_maker_kwargs: dict
-        Keyword arguments to pass to the PhononMaker (e.g., to change the BornMaker).
+    phonon_maker: .BasePhononMaker
+        PhononMaker to compute phonons
     perc_vol: float
         Percent volume to shrink and expand ground state structure
     compute_gruneisen_param_kwargs: dict
@@ -82,13 +82,11 @@ class BaseGruneisenMaker(Maker, ABC):
     code: str = None
     const_vol_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker = None
     kpath_scheme: str = "seekpath"
-    phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
-    phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
-    phonon_maker_kwargs: dict = field(default_factory=dict)
+    phonon_maker: BasePhononMaker = None
     perc_vol: float = 0.01
     mesh: tuple[float, float, float] | float = 7_000
     compute_gruneisen_param_kwargs: dict = field(default_factory=dict)
-    symprec: float = 1e-4
+    symprec: float = PHONON_SYM_PREC
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """
@@ -161,13 +159,6 @@ class BaseGruneisenMaker(Maker, ABC):
         )  # store opt struct of expanded volume
         prev_dir_dict["plus"] = const_vol_struct_plus.output.dir_name
         prev_dir_dict["minus"] = const_vol_struct_minus.output.dir_name
-        self.phonon_maker = self.initialize_phonon_maker(
-            phonon_displacement_maker=self.phonon_displacement_maker,
-            phonon_static_maker=None,
-            bulk_relax_maker=None,
-            phonon_maker_kwargs=self.phonon_maker_kwargs,
-            symprec=self.symprec,
-        )
         # go over a dict of prev_dir and use it in the maker
         phonon_jobs = run_phonon_jobs(
             opt_struct,
@@ -207,32 +198,18 @@ class BaseGruneisenMaker(Maker, ABC):
         calculations are performed for each ordering (relax -> static)
         """
 
-    @abstractmethod
-    def initialize_phonon_maker(
-        self,
-        phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None,
-        phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None,
-        bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None,
-        phonon_maker_kwargs: dict,
-        symprec: float = 1e-4,
-    ) -> BasePhononMaker | None:
-        """Initialize phonon maker.
-
-        This implementation will be different for
-        any newly implemented GruneisenMaker
-
-        Parameters
-        ----------
-        phonon_displacement_maker: ForceFieldStaticMaker|BaseVaspMaker|None
-            Maker for displacement calculations.
-        phonon_static_maker: ForceFieldStaticMaker|BaseVaspMaker|None
-            Maker for additional static calculations.
-        bulk_relax_maker: : ForceFieldRelaxMaker|BaseVaspMaker|None
-            Maker for optimization. Here: None.
-        phonon_maker_kwargs: dict
-            Additional keyword arguments for phonon maker.
-
-        Returns
-        -------
-        .BasePhononMaker
-        """
+    def __post_init__(self):
+        if self.phonon_maker.bulk_relax_maker is not None:
+            warnings.warn(
+                "An additional bulk_relax_maker has been added "
+                "to the phonon workflow. Please be aware "
+                "that the volume needs to be kept fixed."
+            )
+        if self.phonon_maker.symprec != self.symprec:
+            warnings.warn(
+                "You are using different symmetry precisions "
+                "in the phonon makers and other parts of the "
+                "Grüneisen workflow."
+            )
+        if self.phonon_maker.static_energy_maker is not None:
+            warnings.warn("The static energy maker " "is not needed for this workflow.")

@@ -16,6 +16,7 @@ from atomate2.common.jobs.phonons import (
     run_phonon_displacements,
 )
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
+from atomate2.common.utils import PHONON_SYM_PREC
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -127,7 +128,7 @@ class BasePhononMaker(Maker, ABC):
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = 1e-4
+    symprec: float = PHONON_SYM_PREC
     displacement: float = 0.01
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True

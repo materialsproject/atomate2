@@ -11,6 +11,8 @@ from monty.serialization import loadfn
 if TYPE_CHECKING:
     from pathlib import Path
 
+PHONON_SYM_PREC = 1e-4
+
 
 def get_transformations(
     transformations: tuple[str, ...], params: tuple[dict, ...] | None

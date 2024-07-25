@@ -5,14 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from atomate2.common.flows.gruneisen import BaseGruneisenMaker
+from atomate2.common.utils import PHONON_SYM_PREC
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.flows.phonons import PhononMaker
-from atomate2.vasp.jobs.core import (
-    StaticMaker,
-    TightRelaxConstVolMaker,
-    TightRelaxMaker,
-)
-from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
+from atomate2.vasp.jobs.core import TightRelaxConstVolMaker, TightRelaxMaker
 
 # TODO: treat prev_vasp_dir correctly
 
@@ -54,12 +50,11 @@ class GruneisenMaker(BaseGruneisenMaker):
         seekpath can be used with any kind of unit cell as
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
-    mesh: tuple|float
+    mesh: tuple or float
         Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
         Or float to indicate a kpoint density.
-    phonon_displacement_maker: .StaticMaker | None
-    phonon_static_maker: .StaticMaker | None
-    phonon_maker_kwargs: dict
+    phonon_maker: .PhononMaker
+        PhononMaker to run the phonon workflow.
     perc_vol: float
         Percent volume to shrink and expand ground state structure
     compute_gruneisen_param_kwargs: dict
@@ -78,14 +73,15 @@ class GruneisenMaker(BaseGruneisenMaker):
         )
     )
     kpath_scheme: str = "seekpath"
-    phonon_displacement_maker: PhononDisplacementMaker | None = field(
-        default_factory=PhononDisplacementMaker
+    phonon_maker: PhononMaker | None = field(
+        default_factory=lambda: PhononMaker(
+            bulk_relax_maker=None, static_energy_maker=None
+        )
     )
-    phonon_maker_kwargs: dict = field(default_factory=dict)
     vol: float = 0.01
     mesh: tuple | float = 7_000
     compute_gruneisen_param_kwargs: dict = field(default_factory=dict)
-    symprec: float = 1e-4
+    symprec = PHONON_SYM_PREC
 
     @property
     def prev_calc_dir_argname(self) -> str:
@@ -98,38 +94,3 @@ class GruneisenMaker(BaseGruneisenMaker):
         calculations are performed for each ordering (relax -> static)
         """
         return "prev_dir"
-
-    def initialize_phonon_maker(
-        self,
-        phonon_displacement_maker: PhononDisplacementMaker,
-        phonon_static_maker: StaticMaker,
-        bulk_relax_maker: TightRelaxMaker | None,
-        phonon_maker_kwargs: dict,
-        symprec: float = 1e-4,
-    ) -> PhononMaker | None:
-        """Initialize Phonon Maker.
-
-        Parameters
-        ----------
-        phonon_displacement_maker: .ForceFieldStaticMaker|None
-            Computes Forces for displaced structures in
-            harmonic phonon runs
-        phonon_static_maker: .ForceFieldStaticMaker|None
-            Additional static maker to compute
-            energies and volume after optimization
-        bulk_relax_maker: .ForceFieldRelaxMaker|None
-            Relax Maker for Phonon Run. Typically None.
-        phonon_maker_kwargs: dict
-            Dict to set additional info for phonons.
-
-        Returns
-        -------
-        .PhononMaker
-        """
-        return PhononMaker(
-            phonon_displacement_maker=phonon_displacement_maker,
-            static_energy_maker=phonon_static_maker,
-            bulk_relax_maker=bulk_relax_maker,
-            symprec=symprec,
-            **phonon_maker_kwargs,
-        )
