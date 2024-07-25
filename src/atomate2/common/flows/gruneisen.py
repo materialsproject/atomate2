@@ -62,15 +62,19 @@ class BaseGruneisenMaker(Maker, ABC):
         seekpath can be used with any kind of unit cell as
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
-    mesh: tuple|float
+    mesh: tuple or float
         Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
-        Or float to indicate a kpoint density.
-    phonon_displacement_maker: .ForceFieldStaticMaker | .BaseVaspMaker | None
+        Or an int or float to indicate a kpoint density.
+    phonon_displacement_maker: .ForceFieldStaticMaker or .BaseVaspMaker or None
+        StaticMaker to compute energies and forces in the finite displacement method
     phonon_maker_kwargs: dict
+        Keyword arguments to pass to the PhononMaker (e.g., to change the BornMaker).
     perc_vol: float
         Percent volume to shrink and expand ground state structure
     compute_gruneisen_param_kwargs: dict
         Keyword arguments passed to :obj:`compute_gruneisen_param`.
+    symprec: float
+        Symmetry precision for symmetry checks and phonon runs.
     """
 
     name: str = "Gruneisen"
@@ -96,8 +100,12 @@ class BaseGruneisenMaker(Maker, ABC):
 
         Parameters
         ----------
-        structure: Structure
-
+        structure : Structure
+            A pymatgen structure object. Please start with a structure
+            that is nearly fully optimized as the internal optimizers
+            have very strict settings!
+        prev_dir : str or Path or None
+            A previous calculation directory to use for copying outputs.
         """
         jobs = []  # initialize an empty list for jobs to be run
 
