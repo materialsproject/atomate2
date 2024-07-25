@@ -196,9 +196,10 @@ class BaseOpenMMMaker(Maker):
             The loaded Interchange object.
         """
         if isinstance(interchange, bytes):
-            interchange_str = interchange.decode("utf-8")
+            interchange = interchange.decode("utf-8")
+        if isinstance(interchange, str):
+            interchange_str = interchange
             interchange = Interchange.parse_raw(interchange_str)
-
             # we try this because a FauxInterchange will parse to a valid
             # object with missing positions
             if interchange.positions is None:
