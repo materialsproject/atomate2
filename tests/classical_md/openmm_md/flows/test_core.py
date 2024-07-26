@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import numpy as np
+import pytest
 from emmet.core.classical_md import ClassicalMDTaskDocument
 from emmet.core.classical_md.openmm import OpenMMTaskDocument
 from jobflow import Flow
@@ -180,3 +181,37 @@ def test_traj_blob_embed(interchange, run_job, tmp_path):
     parsed_output = task_doc_parsed.calcs_reversed[0].output
 
     assert parsed_output.traj_blob == calc_output.traj_blob
+
+
+@pytest.mark.skip("for local testing and debugging")
+def test_fireworks(interchange):
+    # Create an instance of ProductionMaker with custom parameters
+
+    production_maker = OpenMMFlowMaker(
+        name="test_production",
+        tags=["test"],
+        makers=[
+            EnergyMinimizationMaker(max_iterations=1),
+            NPTMaker(n_steps=5, pressure=1.0, state_interval=1, traj_interval=1),
+            OpenMMFlowMaker.anneal_flow(anneal_temp=400, final_temp=300, n_steps=5),
+            NVTMaker(n_steps=5),
+        ],
+    )
+
+    interchange_json = interchange.json()
+    interchange_bytes = interchange_json.encode("utf-8")
+
+    # Run the ProductionMaker flow
+    production_flow = production_maker.make(interchange_bytes)
+
+    from fireworks import LaunchPad
+    from jobflow.managers.fireworks import flow_to_workflow
+
+    wf = flow_to_workflow(production_flow)
+
+    lpad = LaunchPad.auto_load()
+    lpad.add_wf(wf)
+
+    # from fireworks.core.rocket_launcher import launch_rocket
+    #
+    # launch_rocket(lpad)
