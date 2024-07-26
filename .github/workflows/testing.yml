@@ -31,6 +31,9 @@ jobs:
           - 27017:27017
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
