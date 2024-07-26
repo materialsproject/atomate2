@@ -57,7 +57,11 @@ forcefields = [
     "quippy-ase>=0.9.14",
     "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
 ]
-classical_md = ["openmm-mdanalysis-reporter>=0.1.0"]
+classical_md = [
+    "mdanalysis>=2.7.0",
+    "openmm>=8.1.0",
+    "openmm-mdanalysis-reporter>=0.1.0",
+]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
