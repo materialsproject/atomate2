@@ -70,6 +70,6 @@ def test_phonon_maker_initialization_with_all_mlff(
             else:
                 assert isinstance(relax_calc, Calculator), f"{type(relax_calc)=}"
         except Exception as exc:
-            # TODO this requires py3.11
-            exc.add_note(f"Failed to initialize PhononMaker with {mlff=} makers")
-            raise
+            raise RuntimeError(
+                f"Failed to initialize PhononMaker with {mlff=} makers"
+            ) from exc
