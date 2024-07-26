@@ -61,6 +61,7 @@ def get_supercell_size(
     min_length: float,
     max_length: float,
     prefer_90_degrees: bool,
+    allow_orthorhombic: bool = False,
     **kwargs,
 ) -> list[list[float]]:
     """
@@ -76,23 +77,25 @@ def get_supercell_size(
         maximum length of cell in Angstrom
     prefer_90_degrees: bool
         if True, the algorithm will try to find a cell with 90 degree angles first
+    allow_orthorhombic: bool
+        if True, orthorhombic supercells are allowed
     **kwargs:
         Additional parameters that can be set.
     """
     kwargs.setdefault("force_diagonal", False)
-    kwargs.setdefault("allow_orthorhombic", False)
     common_kwds = dict(
         min_length=min_length,
         max_length=max_length,
         min_atoms=kwargs.get("min_atoms"),
-        max_atoms=kwargs.get("max_atoms"),  # not sure if I have to set this, too
         force_diagonal=kwargs["force_diagonal"],
-        allow_orthorhombic=kwargs["allow_orthorhombic"],
     )
 
     if not prefer_90_degrees:
         transformation = CubicSupercellTransformation(
-            **common_kwds, max_atoms=kwargs.get("max_atoms"), force_90_degrees=False
+            **common_kwds,
+            max_atoms=kwargs.get("max_atoms"),
+            force_90_degrees=False,
+            allow_orthorhombic=allow_orthorhombic,
         )
         transformation.apply_transformation(structure=structure)
     else:
@@ -102,12 +105,16 @@ def get_supercell_size(
                 max_atoms=kwargs.get("max_atoms", 1200),
                 force_90_degrees=True,
                 angle_tolerance=kwargs.get("angle_tolerance", 1e-2),
+                allow_orthorhombic=allow_orthorhombic,
             )
             transformation.apply_transformation(structure=structure)
 
         except AttributeError:
             transformation = CubicSupercellTransformation(
-                **common_kwds, max_atoms=kwargs.get("max_atoms"), force_90_degrees=False
+                **common_kwds,
+                max_atoms=kwargs.get("max_atoms"),
+                force_90_degrees=False,
+                allow_orthorhombic=allow_orthorhombic,
             )
             transformation.apply_transformation(structure=structure)
 
