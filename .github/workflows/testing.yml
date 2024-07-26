@@ -79,8 +79,8 @@ jobs:
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
         run: |
-        micromamba activate a2
-        pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
+          micromamba activate a2
+          pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
       - name: Test Notebooks
         run: pytest --nbmake ./tutorials
