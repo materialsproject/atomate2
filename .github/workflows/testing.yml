@@ -54,21 +54,7 @@ jobs:
 
       - name: Install conda dependencies
         run: |
-          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit openff-interchange --yes
-
-#      - name: Install enumlib
-#        run: |
-#          cd ..
-#          git clone --recursive https://github.com/msg-byu/enumlib.git
-#          cd enumlib/symlib/src
-#          export F90=gfortran
-#          make
-#          cd ../../src
-#          make enum.x
-#          sudo mv enum.x /usr/local/bin/
-#          cd ..
-#          sudo cp aux_src/makeStr.py /usr/local/bin/
-#        continue-on-error: true # This is not critical to succeed.
+          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==3.1.1 openff-interchange==0.3.22 --yes
 
       - name: Install dependencies
         run: |
