@@ -46,7 +46,6 @@ jobs:
         run: |
           micromamba create -n a2 python=${{ matrix.python-version }} --yes
 
-
       - name: Install conda dependencies
         run: |
           micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit openff-interchange --yes
