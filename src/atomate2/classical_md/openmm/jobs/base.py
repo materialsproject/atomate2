@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import copy
 import time
 import warnings
@@ -195,12 +196,16 @@ class BaseOpenMMMaker(Maker):
         Interchange
             The loaded Interchange object.
         """
+        if isinstance(interchange, str):
+            # fireworks is mangling the interchange bytes and converting them
+            # into a string, this converts it back to bytes
+            interchange = ast.literal_eval(interchange)
         if isinstance(interchange, bytes):
             interchange = interchange.decode("utf-8")
-        if isinstance(interchange, str):
+
             interchange_str = interchange
             interchange = Interchange.parse_raw(interchange_str)
-            # we try this because a FauxInterchange will parse to a valid
+            # a FauxInterchange will parse but with positions missing
             # object with missing positions
             if interchange.positions is None:
                 interchange = FauxInterchange.parse_raw(interchange_str)
