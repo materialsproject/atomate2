@@ -49,6 +49,9 @@ jobs:
         run: |
           micromamba create -n a2 python=${{ matrix.python-version }} --yes
 
+      - name: Install uv
+        run: micromamba run -n pmg pip install uv
+
       - name: Install conda dependencies
         run: |
           micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit openff-interchange --yes
@@ -74,21 +77,21 @@ jobs:
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           # ase needed to get FrechetCellFilter used by ML force fields
-          pip install git+https://gitlab.com/ase/ase
-          pip install .[strict,tests,abinit,classical_md]
-          pip install torch-runstats
-          pip install --no-deps nequip==0.5.6
+          uv pip install git+https://gitlab.com/ase/ase
+          uv pip install .[strict,tests,abinit,classical_md]
+          uv pip install torch-runstats
+          uv pip install --no-deps nequip==0.5.6
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
         run: |
           micromamba activate a2
-          pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
+          uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
       - name: Test Notebooks
         run: | 
           micromamba activate a2
-          pytest --nbmake ./tutorials -ignore=./tutorials/openmm_tutorial.ipynb
+          pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb
 
       - name: Test
         env:
