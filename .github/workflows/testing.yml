@@ -83,12 +83,16 @@ jobs:
           pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
       - name: Test Notebooks
-        run: pytest --nbmake ./tutorials
+        run: | 
+          micromamba activate a2
+          pytest --nbmake ./tutorials
 
       - name: Test
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: micromamba run -n a2 pytest --cov=atomate2 --cov-report=xml --ignore=tests/classical_md
+        run: |
+          micromamba activate a2
+          pytest --cov=atomate2 --cov-report=xml --ignore=tests/classical_md
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
