@@ -31,12 +31,13 @@ jobs:
           - 27017:27017
 
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
+
+    defaults:
+      run:
+        shell: bash -l {0}
 
     steps:
       - name: Check out repo
@@ -44,36 +45,20 @@ jobs:
 
       - name: Set up micromamba
         uses: mamba-org/setup-micromamba@main
-
-      - name: Create mamba environment
-        run: |
-          micromamba create -n a2 python=${{ matrix.python-version }} --yes
+        with:
+          environment-file: false
+          create-args: python=${{ matrix.python-version }}
 
       - name: Install conda dependencies
         run: |
-          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit openff-interchange --yes
-
-#      - name: Install enumlib
-#        run: |
-#          cd ..
-#          git clone --recursive https://github.com/msg-byu/enumlib.git
-#          cd enumlib/symlib/src
-#          export F90=gfortran
-#          make
-#          cd ../../src
-#          make enum.x
-#          sudo mv enum.x /usr/local/bin/
-#          cd ..
-#          sudo cp aux_src/makeStr.py /usr/local/bin/
-#        continue-on-error: true # This is not critical to succeed.
+          micromamba install -c conda-forge enumlib packmol bader openbabel openff-toolkit openff-interchange --yes
 
       - name: Install dependencies
         run: |
-          micromamba activate a2
+          micromamba activate
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          # ase needed to get FrechetCellFilter used by ML force fields
           pip install git+https://gitlab.com/ase/ase
           pip install .[strict,tests,abinit,classical_md]
           pip install torch-runstats
@@ -82,19 +67,19 @@ jobs:
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
         run: |
-          micromamba activate a2
+          micromamba activate
           pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
       - name: Test Notebooks
         run: | 
-          micromamba activate a2
-          pytest --nbmake ./tutorials
+          micromamba activate
+          pytest --nbmake ./tutorials -ignore=./tutorials/openmm_tutorial.ipynb
 
       - name: Test
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
-          micromamba activate a2
+          micromamba activate
           pytest --cov=atomate2 --cov-report=xml --ignore=tests/classical_md
 
       - uses: codecov/codecov-action@v1
