@@ -83,6 +83,9 @@ jobs:
         micromamba activate a2
         pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
+      - name: Test Notebooks
+        run: pytest --nbmake ./tutorials
+
       - name: Test
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
