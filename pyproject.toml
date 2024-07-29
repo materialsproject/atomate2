@@ -209,7 +209,7 @@ isort.known-first-party = ["atomate2"]
 isort.split-on-trailing-comma = false
 
 [tool.ruff.format]
-docstring-code-format = true
+# docstring-code-format = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]

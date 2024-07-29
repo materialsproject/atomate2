@@ -16,6 +16,8 @@ from atomate2.forcefields.jobs import (
     CHGNetStaticMaker,
     ForceFieldRelaxMaker,
     ForceFieldStaticMaker,
+    MACERelaxMaker,
+    MACEStaticMaker
 )
 
 logger = logging.getLogger(__name__)
@@ -68,13 +70,13 @@ class HiphiveMaker(BaseHiphiveMaker):
 
     name: str = "Lattice-Dynamics-FORCE_FIELD"
     static_energy_maker: ForceFieldStaticMaker | None = field(
-        default_factory=CHGNetStaticMaker
+        default_factory=MACEStaticMaker
     )
     bulk_relax_maker: ForceFieldRelaxMaker = field(
-        default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
+        default_factory=lambda: MACERelaxMaker(relax_kwargs={"fmax": 0.00001})
     )
     phonon_displacement_maker: ForceFieldStaticMaker = field(
-        default_factory=CHGNetStaticMaker
+        default_factory=MACEStaticMaker
     )
     # ff_displacement_maker: ForceFieldStaticMaker = field(
     #     default_factory=CHGNetStaticMaker
