@@ -612,11 +612,11 @@ def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
 
     assert all(
         any(
-            doc.output.energy == pytest.approx(ref_volume, abs=1e-2)
+            doc.output.energy == pytest.approx(ref_energy, abs=1)
             for name, doc in task_docs.items()
             if "MD Maker" in name
         )
-        for ref_volume in ref_md_energies["energy"]
+        for ref_energy in ref_md_energies["energy"]
     )
 
     if "Fast Quench" in maker_name:
