@@ -1,6 +1,6 @@
 import openff.toolkit as tk
 import pytest
-from emmet.core.classical_md.openmm import FauxInterchange
+from emmet.core.classical_md.openmm import OpenMMInterchange
 from jobflow import Flow
 from openff.interchange.components._packmol import pack_box
 from openff.units import unit
@@ -11,7 +11,7 @@ from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.classical_md.openmm.jobs.opls import (
     create_system_from_xml,
     download_opls_xml,
-    generate_faux_interchange,
+    generate_openmm_interchange,
 )
 from atomate2.classical_md.utils import create_mol_spec
 
@@ -63,7 +63,7 @@ def test_create_system_from_xml(classical_md_data):
     create_system_from_xml(topology, ff_xmls)
 
 
-def test_generate_faux_interchange(classical_md_data, run_job):
+def test_generate_openmm_interchange(classical_md_data, run_job):
     mol_specs = [
         create_mol_spec("CCO", 10, name="ethanol", charge_method="mmff94"),
         create_mol_spec("CO", 300, name="water", charge_method="mmff94"),
@@ -74,7 +74,7 @@ def test_generate_faux_interchange(classical_md_data, run_job):
         (classical_md_data / "opls_xml_files" / "CO.xml").read_text(),
     ]
 
-    job = generate_faux_interchange(mol_specs, 1.0, ff_xmls)
+    job = generate_openmm_interchange(mol_specs, 1.0, ff_xmls)
     task_doc = run_job(job)
     assert len(task_doc.molecule_specs) == 2
     assert task_doc.molecule_specs[0].name == "ethanol"
@@ -93,7 +93,7 @@ def test_make_from_prev(classical_md_data, run_job):
         (classical_md_data / "opls_xml_files" / "CCO.xml").read_text(),
         (classical_md_data / "opls_xml_files" / "CO.xml").read_text(),
     ]
-    inter_job = generate_faux_interchange(mol_specs, 1, ff_xmls)
+    inter_job = generate_openmm_interchange(mol_specs, 1, ff_xmls)
 
     # Create an instance of BaseOpenMMMaker
     maker = BaseOpenMMMaker(n_steps=10)
@@ -120,11 +120,11 @@ def test_evolve_simulation(classical_md_data, run_job):
         (classical_md_data / "opls_xml_files" / "CCO.xml").read_text(),
         (classical_md_data / "opls_xml_files" / "CO.xml").read_text(),
     ]
-    inter_job = generate_faux_interchange(mol_specs, 1, ff_xmls)
+    inter_job = generate_openmm_interchange(mol_specs, 1, ff_xmls)
 
     task_doc = run_job(inter_job)
     interchange_str = task_doc.interchange.decode("utf-8")
-    interchange = FauxInterchange.parse_raw(interchange_str)
+    interchange = OpenMMInterchange.parse_raw(interchange_str)
 
     initial_state = XmlSerializer.deserialize(interchange.state)
     initial_position = initial_state.getPositions(asNumpy=True)
@@ -134,7 +134,7 @@ def test_evolve_simulation(classical_md_data, run_job):
 
     task_doc2 = run_job(min_job)
     interchange_str2 = task_doc2.interchange.decode("utf-8")
-    interchange2 = FauxInterchange.parse_raw(interchange_str2)
+    interchange2 = OpenMMInterchange.parse_raw(interchange_str2)
 
     final_state = XmlSerializer.deserialize(interchange2.state)
     final_position = final_state.getPositions(asNumpy=True)

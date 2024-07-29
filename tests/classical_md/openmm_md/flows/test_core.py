@@ -84,7 +84,7 @@ def test_hdf5_writing(interchange, run_job):
     }
 
 
-def test_production_maker(interchange, run_job):
+def test_flow_maker(interchange, run_job):
     # Create an instance of ProductionMaker with custom parameters
     production_maker = OpenMMFlowMaker(
         name="test_production",

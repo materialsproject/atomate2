@@ -15,7 +15,7 @@ from emmet.core.classical_md.openmm import (
     Calculation,
     CalculationInput,
     CalculationOutput,
-    FauxInterchange,
+    OpenMMInterchange,
     OpenMMTaskDocument,
 )
 from jobflow import Maker, Response
@@ -121,7 +121,7 @@ class BaseOpenMMMaker(Maker):
     @openff_job
     def make(
         self,
-        interchange: Interchange | FauxInterchange | bytes,
+        interchange: Interchange | OpenMMInterchange | bytes,
         prev_task: OpenMMTaskDocument | None = None,
     ) -> Response:
         """Run an OpenMM calculation.
@@ -132,14 +132,10 @@ class BaseOpenMMMaker(Maker):
 
         Parameters
         ----------
-        interchange : Union[Interchange, FauxInterchange, str]
-            An Interchange object, FauxInterchange object or byte encoded equivalent.
+        interchange : Union[Interchange, OpenMMInterchange, str]
+            An Interchange object, OpenMMInterchange object or byte encoded equivalent.
         prev_task : Optional[OpenMMTaskDocument]
             The previous task document.
-        output_dir : Optional[Union[str, Path]]
-            The directory to save the output files.
-            Resolution order is output_dir > prev_task.dir_name > Path.cwd(). Will
-            create a directory if needed.
 
         Returns
         -------
@@ -178,7 +174,7 @@ class BaseOpenMMMaker(Maker):
         return Response(output=task_doc)
 
     def _load_interchange(
-        self, interchange: Interchange | FauxInterchange | bytes
+        self, interchange: Interchange | OpenMMInterchange | bytes
     ) -> Interchange:
         """Load an Interchange object from a JSON string or bytes.
 
@@ -204,11 +200,11 @@ class BaseOpenMMMaker(Maker):
             interchange = interchange.decode("utf-8")
 
             interchange_str = interchange
-            interchange = Interchange.parse_raw(interchange_str)
-            # a FauxInterchange will parse but with positions missing
-            # object with missing positions
-            if interchange.positions is None:
-                interchange = FauxInterchange.parse_raw(interchange_str)
+            try:
+                interchange = Interchange.parse_raw(interchange_str)
+            except:  # noqa: E722
+                # parse with openmm instead
+                interchange = OpenMMInterchange.parse_raw(interchange_str)
 
         else:
             interchange = copy.deepcopy(interchange)
@@ -459,7 +455,7 @@ class BaseOpenMMMaker(Maker):
             interchange.positions = state.getPositions(asNumpy=True)
             interchange.velocities = state.getVelocities(asNumpy=True)
             interchange.box = state.getPeriodicBoxVectors(asNumpy=True)
-        elif isinstance(interchange, FauxInterchange):
+        elif isinstance(interchange, OpenMMInterchange):
             interchange.state = XmlSerializer.serialize(state)
 
     def _create_task_doc(

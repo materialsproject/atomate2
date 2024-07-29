@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import io
 import re
 import tempfile
 import time
@@ -9,9 +10,10 @@ import warnings
 from pathlib import Path
 from xml.etree import ElementTree
 
+import numpy as np
 import openff.toolkit as tk
 from emmet.core.classical_md import ClassicalMDTaskDocument, MoleculeSpec
-from emmet.core.classical_md.openmm import FauxInterchange
+from emmet.core.classical_md.openmm import OpenMMInterchange
 from emmet.core.vasp.task_valid import TaskState
 from jobflow import Response
 from openff.interchange.components._packmol import pack_box
@@ -19,6 +21,7 @@ from openff.units import unit
 from openmm import Context, LangevinMiddleIntegrator, System, XmlSerializer
 from openmm.app import ForceField
 from openmm.app.forcefield import PME
+from openmm.app.pdbxfile import PDBxFile
 from openmm.unit import kelvin, picoseconds
 
 from atomate2.classical_md.core import openff_job
@@ -197,14 +200,14 @@ def download_opls_xml(
 
 
 @openff_job
-def generate_faux_interchange(
+def generate_openmm_interchange(
     input_mol_specs: list[MoleculeSpec | dict],
     mass_density: float,
     ff_xmls: list[str],
     pack_box_kwargs: dict = None,
     tags: list[str] = None,
 ) -> Response:
-    """Generate a FauxInterchange with arbitrary XML files."""
+    """Generate a OpenMMInterchange with arbitrary XML files."""
     # TODO: warn if using unsupported properties
     mol_specs = create_mol_spec_list(input_mol_specs)
 
@@ -229,10 +232,17 @@ def generate_faux_interchange(
     context.setPositions(topology.get_positions().magnitude / 10)
     state = context.getState(getPositions=True)
 
-    interchange = FauxInterchange(
+    with io.StringIO() as s:
+        PDBxFile.writeFile(
+            topology.to_openmm(), np.zeros(shape=(topology.n_atoms, 3)), file=s
+        )
+        s.seek(0)
+        pdb = s.read()
+
+    interchange = OpenMMInterchange(
         system=XmlSerializer.serialize(system),
         state=XmlSerializer.serialize(state),
-        topology=topology.to_json(),
+        topology=pdb,
     )
 
     interchange_json = interchange.json()
