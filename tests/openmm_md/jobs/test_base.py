@@ -2,8 +2,8 @@ import copy
 
 import numpy as np
 import pytest
-from emmet.core.classical_md import ClassicalMDTaskDocument
-from emmet.core.classical_md.openmm import Calculation, CalculationInput
+from emmet.core.openff import ClassicalMDTaskDocument
+from emmet.core.openmm import Calculation, CalculationInput
 from jobflow import Flow, Job
 from mdareporter import MDAReporter
 from openmm.app import Simulation, StateDataReporter

@@ -11,7 +11,7 @@ from atomate2.openff.utils import create_list_summing_to
 from atomate2.openmm.jobs.core import NVTMaker, TempChangeMaker
 
 if TYPE_CHECKING:
-    from emmet.core.classical_md import ClassicalMDTaskDocument
+    from emmet.core.openff import ClassicalMDTaskDocument
     from openff.interchange import Interchange
 
     from atomate2.openmm.jobs.base import BaseOpenMMMaker

@@ -2,8 +2,8 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from emmet.core.classical_md import ClassicalMDTaskDocument
-from emmet.core.classical_md.openmm import OpenMMTaskDocument
+from emmet.core.openff import ClassicalMDTaskDocument
+from emmet.core.openmm import OpenMMTaskDocument
 from jobflow import Flow
 from MDAnalysis import Universe
 from openff.interchange import Interchange

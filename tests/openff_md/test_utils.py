@@ -2,7 +2,7 @@ import numpy as np
 import openff.toolkit as tk
 import pymatgen
 import pytest
-from emmet.core.classical_md import MoleculeSpec
+from emmet.core.openff import MoleculeSpec
 from openff.interchange import Interchange
 from openff.toolkit.topology import Topology
 from openff.toolkit.topology.molecule import Molecule

@@ -1,4 +1,4 @@
-from emmet.core.classical_md import ClassicalMDTaskDocument, MoleculeSpec
+from emmet.core.openff import ClassicalMDTaskDocument, MoleculeSpec
 from openff.interchange import Interchange
 
 from atomate2.openff.core import generate_interchange

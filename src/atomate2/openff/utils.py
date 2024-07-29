@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 import openff.toolkit as tk
-from emmet.core.classical_md import MoleculeSpec
-from emmet.core.classical_md.openmm import OpenMMTaskDocument  # noqa: TCH002
+from emmet.core.openff import MoleculeSpec
+from emmet.core.openmm import OpenMMTaskDocument  # noqa: TCH002
 from pymatgen.core import Element, Molecule
 from pymatgen.io.openff import create_openff_mol
 

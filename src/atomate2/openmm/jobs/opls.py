@@ -12,8 +12,8 @@ from xml.etree import ElementTree
 
 import numpy as np
 import openff.toolkit as tk
-from emmet.core.classical_md import ClassicalMDTaskDocument, MoleculeSpec
-from emmet.core.classical_md.openmm import OpenMMInterchange
+from emmet.core.openff import ClassicalMDTaskDocument, MoleculeSpec
+from emmet.core.openmm import OpenMMInterchange
 from emmet.core.vasp.task_valid import TaskState
 from jobflow import Response
 from openff.interchange.components._packmol import pack_box

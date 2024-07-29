@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, NoReturn
 
-from emmet.core.classical_md.openmm import (
+from emmet.core.openmm import (
     Calculation,
     CalculationInput,
     CalculationOutput,

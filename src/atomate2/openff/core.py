@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Callable
 
 import openff.toolkit as tk
-from emmet.core.classical_md import ClassicalMDTaskDocument, MoleculeSpec
+from emmet.core.openff import ClassicalMDTaskDocument, MoleculeSpec
 from emmet.core.vasp.task_valid import TaskState
 from jobflow import Response, job
 from openff.interchange import Interchange

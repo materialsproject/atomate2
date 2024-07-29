@@ -1,6 +1,6 @@
 import openff.toolkit as tk
 import pytest
-from emmet.core.classical_md.openmm import OpenMMInterchange
+from emmet.core.openmm import OpenMMInterchange
 from jobflow import Flow
 from openff.interchange.components._packmol import pack_box
 from openff.units import unit

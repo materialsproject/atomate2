@@ -13,7 +13,7 @@ from atomate2.openff.utils import create_list_summing_to
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
 
 if TYPE_CHECKING:
-    from emmet.core.classical_md.openmm import OpenMMTaskDocument
+    from emmet.core.openmm import OpenMMTaskDocument
     from openmm.app import Simulation
 
 
