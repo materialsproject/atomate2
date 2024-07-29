@@ -14,3 +14,4 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     NEP = "NEP"
     Nequip = "Nequip"
     Pyace = "Pyace"
+    SevenNet = "SevenNet"
