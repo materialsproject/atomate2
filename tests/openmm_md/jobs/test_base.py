@@ -10,8 +10,8 @@ from openmm.app import Simulation, StateDataReporter
 from openmm.openmm import LangevinMiddleIntegrator
 from openmm.unit import kelvin, picoseconds
 
-from atomate2.classical_md.core import generate_interchange
-from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
+from atomate2.openff.core import generate_interchange
+from atomate2.openmm.jobs.base import BaseOpenMMMaker
 
 
 def test_add_reporters(interchange, temp_dir):

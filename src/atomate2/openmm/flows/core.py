@@ -7,14 +7,14 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow
 
-from atomate2.classical_md.openmm.jobs.core import NVTMaker, TempChangeMaker
-from atomate2.classical_md.utils import create_list_summing_to
+from atomate2.openff.utils import create_list_summing_to
+from atomate2.openmm.jobs.core import NVTMaker, TempChangeMaker
 
 if TYPE_CHECKING:
     from emmet.core.classical_md import ClassicalMDTaskDocument
     from openff.interchange import Interchange
 
-    from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
+    from atomate2.openmm.jobs.base import BaseOpenMMMaker
 
 
 @dataclass

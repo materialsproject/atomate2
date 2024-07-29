@@ -8,12 +8,8 @@ from jobflow import Flow
 from MDAnalysis import Universe
 from openff.interchange import Interchange
 
-from atomate2.classical_md.openmm.flows.core import OpenMMFlowMaker
-from atomate2.classical_md.openmm.jobs import (
-    EnergyMinimizationMaker,
-    NPTMaker,
-    NVTMaker,
-)
+from atomate2.openmm.flows.core import OpenMMFlowMaker
+from atomate2.openmm.jobs import EnergyMinimizationMaker, NPTMaker, NVTMaker
 
 
 def test_anneal_maker(interchange, run_job):

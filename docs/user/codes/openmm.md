@@ -57,7 +57,7 @@ counts, and names (optional) of the molecules we want to include.
 
 
 ```python
-from atomate2.classical_md.core import generate_interchange
+from atomate2.openff.core import generate_interchange
 
 mol_specs_dicts = [
     {"smiles": "O", "count": 200, "name": "water"},
@@ -69,13 +69,13 @@ gallic_interchange_job = generate_interchange(mol_specs_dicts, 1.3)
 ```
 
 If you are wondering what arguments are allowed in the dictionaries, check
-out the `create_mol_spec` function in the `atomate2.classical_md.utils`
+out the `create_mol_spec` function in the `atomate2.openff.utils`
 module. Under the hood, this is being called on each mol_spec dict.
 Meaning the code below is functionally identical to the code above.
 
 
 ```python
-from atomate2.classical_md.utils import create_mol_spec
+from atomate2.openff.utils import create_mol_spec
 
 mols_specs = [create_mol_spec(**mol_spec_dict) for mol_spec_dict in mol_specs_dicts]
 
@@ -144,8 +144,8 @@ Finally, we create our production flow and link to the `generate_interchange` jo
 yielding a production ready molecular dynamics workflow.
 
 ```python
-from atomate2.classical_md.openmm.flows.core import OpenMMFlowMaker
-from atomate2.classical_md.openmm.jobs.core import (
+from atomate2.openmm.flows.core import OpenMMFlowMaker
+from atomate2.openmm.jobs.core import (
     EnergyMinimizationMaker,
     NPTMaker,
     NVTMaker,
@@ -215,7 +215,7 @@ configurations. Below we dig in to some of the more advanced options.
 <details>
 <summary>Learn more about the configuration of OpenMM simulations</summary>
 
-All OpenMM jobs, i.e. anything in `atomate2.classical_md.openmm.jobs`, inherits
+All OpenMM jobs, i.e. anything in `atomate2.openmm.jobs`, inherits
 from the `BaseOpenMMMaker` class. `BaseOpenMMMaker` is highly configurable, you
 can change the timestep, temperature, reporting frequencies, output types, and
 a range of other properties. See the docstring for the full list of options.
@@ -230,7 +230,7 @@ maker, 3) the default value (as shown below).
 
 
 ```python
-from atomate2.classical_md.openmm.jobs.base import OPENMM_MAKER_DEFAULTS
+from atomate2.openmm.jobs.base import OPENMM_MAKER_DEFAULTS
 
 print(OPENMM_MAKER_DEFAULTS)
 ```
@@ -481,7 +481,7 @@ scope of this tutorial. Consult the tutorials in SolvationAnalysis and MDAnalysi
 for more information.
 
 ```python
-from atomate2.classical_md.core import ClassicalMDTaskDocument
+from atomate2.openff.core import ClassicalMDTaskDocument
 from emmet.builders.classical_md.utils import create_universe, create_solute
 from openff.interchange import Interchange
 

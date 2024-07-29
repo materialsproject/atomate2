@@ -24,11 +24,8 @@ from openmm.app.forcefield import PME
 from openmm.app.pdbxfile import PDBxFile
 from openmm.unit import kelvin, picoseconds
 
-from atomate2.classical_md.core import openff_job
-from atomate2.classical_md.utils import (
-    create_mol_spec_list,
-    merge_specs_by_name_and_smiles,
-)
+from atomate2.openff.core import openff_job
+from atomate2.openff.utils import create_mol_spec_list, merge_specs_by_name_and_smiles
 
 try:
     from selenium import webdriver

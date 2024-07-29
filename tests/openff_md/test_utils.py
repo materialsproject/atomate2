@@ -17,7 +17,7 @@ from pymatgen.io.openff import (
     mol_graph_to_openff_mol,
 )
 
-from atomate2.classical_md.utils import (
+from atomate2.openff.utils import (
     counts_from_box_size,
     counts_from_masses,
     create_mol_spec,
@@ -238,10 +238,7 @@ def test_increment_file_name():
 
 
 def test_calculate_elyte_composition():
-    from atomate2.classical_md.utils import (
-        calculate_elyte_composition,
-        counts_from_masses,
-    )
+    from atomate2.openff.utils import calculate_elyte_composition, counts_from_masses
 
     vol_ratio = {"O": 0.5, "CCO": 0.5}
     salts = {"[Li+]": 1.0, "F[P-](F)(F)(F)(F)F": 1.0}

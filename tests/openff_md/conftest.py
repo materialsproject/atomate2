@@ -10,7 +10,7 @@ from openff.interchange.components._packmol import pack_box
 from openff.toolkit import ForceField
 from openff.units import unit
 
-from atomate2.classical_md.utils import create_mol_spec, merge_specs_by_name_and_smiles
+from atomate2.openff.utils import create_mol_spec, merge_specs_by_name_and_smiles
 
 
 @pytest.fixture()
@@ -37,13 +37,13 @@ def mol_specs_small():
 
 
 @pytest.fixture()
-def classical_md_data(test_dir):
-    return test_dir / "classical_md"
+def openff_data(test_dir):
+    return test_dir / "openff"
 
 
 @pytest.fixture()
-def mol_files(classical_md_data):
-    geo_dir = classical_md_data / "molecule_charge_files"
+def mol_files(openff_data):
+    geo_dir = openff_data / "molecule_charge_files"
     return {
         "CCO_xyz": str(geo_dir / "CCO.xyz"),
         "CCO_charges": str(geo_dir / "CCO.npy"),
@@ -100,8 +100,3 @@ def interchange():
         ],
         allow_nonintegral_charges=True,
     )
-
-
-@pytest.fixture()
-def output_dir(test_dir):
-    return test_dir / "classical_md" / "output_dir"

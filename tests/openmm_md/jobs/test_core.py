@@ -1,7 +1,7 @@
 import numpy as np
 from openff.interchange import Interchange
 
-from atomate2.classical_md.openmm.jobs import (
+from atomate2.openmm.jobs import (
     EnergyMinimizationMaker,
     NPTMaker,
     NVTMaker,

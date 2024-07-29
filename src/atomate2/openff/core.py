@@ -13,10 +13,7 @@ from openff.interchange.components._packmol import pack_box
 from openff.toolkit import ForceField
 from openff.units import unit
 
-from atomate2.classical_md.utils import (
-    create_mol_spec_list,
-    merge_specs_by_name_and_smiles,
-)
+from atomate2.openff.utils import create_mol_spec_list, merge_specs_by_name_and_smiles
 
 
 def openff_job(method: Callable) -> job:

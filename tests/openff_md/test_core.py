@@ -1,7 +1,7 @@
 from emmet.core.classical_md import ClassicalMDTaskDocument, MoleculeSpec
 from openff.interchange import Interchange
 
-from atomate2.classical_md.core import generate_interchange
+from atomate2.openff.core import generate_interchange
 
 
 def test_generate_interchange(mol_specs_small, run_job):

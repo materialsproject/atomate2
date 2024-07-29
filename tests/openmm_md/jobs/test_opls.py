@@ -6,14 +6,14 @@ from openff.interchange.components._packmol import pack_box
 from openff.units import unit
 from openmm import XmlSerializer
 
-from atomate2.classical_md.openmm.jobs import EnergyMinimizationMaker
-from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
-from atomate2.classical_md.openmm.jobs.opls import (
+from atomate2.openff.utils import create_mol_spec
+from atomate2.openmm.jobs import EnergyMinimizationMaker
+from atomate2.openmm.jobs.base import BaseOpenMMMaker
+from atomate2.openmm.jobs.opls import (
     create_system_from_xml,
     download_opls_xml,
     generate_openmm_interchange,
 )
-from atomate2.classical_md.utils import create_mol_spec
 
 # skip with pytest
 
@@ -36,8 +36,8 @@ def test_download_xml(temp_dir):
 # incremented_xml_files.append(incremented_file)
 
 
-def test_create_system_from_xml(classical_md_data):
-    opls_xmls = classical_md_data / "opls_xml_files"
+def test_create_system_from_xml(openmm_data):
+    opls_xmls = openmm_data / "opls_xml_files"
 
     # load strings of xml files into dict
     ff_xmls = [
@@ -63,15 +63,15 @@ def test_create_system_from_xml(classical_md_data):
     create_system_from_xml(topology, ff_xmls)
 
 
-def test_generate_openmm_interchange(classical_md_data, run_job):
+def test_generate_openmm_interchange(openmm_data, run_job):
     mol_specs = [
         create_mol_spec("CCO", 10, name="ethanol", charge_method="mmff94"),
         create_mol_spec("CO", 300, name="water", charge_method="mmff94"),
     ]
 
     ff_xmls = [
-        (classical_md_data / "opls_xml_files" / "CCO.xml").read_text(),
-        (classical_md_data / "opls_xml_files" / "CO.xml").read_text(),
+        (openmm_data / "opls_xml_files" / "CCO.xml").read_text(),
+        (openmm_data / "opls_xml_files" / "CO.xml").read_text(),
     ]
 
     job = generate_openmm_interchange(mol_specs, 1.0, ff_xmls)
@@ -83,15 +83,15 @@ def test_generate_openmm_interchange(classical_md_data, run_job):
     assert task_doc.molecule_specs[1].count == 300
 
 
-def test_make_from_prev(classical_md_data, run_job):
+def test_make_from_prev(openmm_data, run_job):
     mol_specs = [
         create_mol_spec("CCO", 10, name="ethanol", charge_method="mmff94"),
         create_mol_spec("CO", 300, name="water", charge_method="mmff94"),
     ]
 
     ff_xmls = [
-        (classical_md_data / "opls_xml_files" / "CCO.xml").read_text(),
-        (classical_md_data / "opls_xml_files" / "CO.xml").read_text(),
+        (openmm_data / "opls_xml_files" / "CCO.xml").read_text(),
+        (openmm_data / "opls_xml_files" / "CO.xml").read_text(),
     ]
     inter_job = generate_openmm_interchange(mol_specs, 1, ff_xmls)
 
@@ -110,15 +110,15 @@ def test_make_from_prev(classical_md_data, run_job):
     run_job(Flow([inter_job, base_job]))
 
 
-def test_evolve_simulation(classical_md_data, run_job):
+def test_evolve_simulation(openmm_data, run_job):
     mol_specs = [
         create_mol_spec("CCO", 10, name="ethanol", charge_method="mmff94"),
         create_mol_spec("CO", 300, name="water", charge_method="mmff94"),
     ]
 
     ff_xmls = [
-        (classical_md_data / "opls_xml_files" / "CCO.xml").read_text(),
-        (classical_md_data / "opls_xml_files" / "CO.xml").read_text(),
+        (openmm_data / "opls_xml_files" / "CCO.xml").read_text(),
+        (openmm_data / "opls_xml_files" / "CO.xml").read_text(),
     ]
     inter_job = generate_openmm_interchange(mol_specs, 1, ff_xmls)
 

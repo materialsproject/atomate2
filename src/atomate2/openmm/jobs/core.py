@@ -9,8 +9,8 @@ import numpy as np
 from openmm import Integrator, LangevinMiddleIntegrator, MonteCarloBarostat
 from openmm.unit import atmosphere, kelvin, kilojoules_per_mole, nanometer, picoseconds
 
-from atomate2.classical_md.openmm.jobs.base import BaseOpenMMMaker
-from atomate2.classical_md.utils import create_list_summing_to
+from atomate2.openff.utils import create_list_summing_to
+from atomate2.openmm.jobs.base import BaseOpenMMMaker
 
 if TYPE_CHECKING:
     from emmet.core.classical_md.openmm import OpenMMTaskDocument

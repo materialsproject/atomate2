@@ -25,8 +25,8 @@ from openmm import Integrator, LangevinMiddleIntegrator, Platform, XmlSerializer
 from openmm.app import StateDataReporter
 from openmm.unit import kelvin, picoseconds
 
-from atomate2.classical_md.core import openff_job
-from atomate2.classical_md.utils import increment_name, task_reports
+from atomate2.openff.core import openff_job
+from atomate2.openff.utils import increment_name, task_reports
 
 if TYPE_CHECKING:
     from openmm.app.simulation import Simulation
@@ -59,7 +59,7 @@ class BaseOpenMMMaker(Maker):
 
     In general, any missing values will be taken from the
     previous task, if possible, and the default values defined in
-    atomate2.classical_md.openmm.OPENMM_MAKER_DEFAULTS, if not.
+    atomate2.openmm.OPENMM_MAKER_DEFAULTS, if not.
 
     Attributes
     ----------
