@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from typing import Literal
 
 
+@deprecated(replacement=MatPESStaticSet, deadline=(2025, 1, 1))
 @dataclass
 class MatPesGGAStaticSetGenerator(MatPESStaticSet):
     """Class to generate MP-compatible VASP GGA static input sets."""
@@ -24,12 +25,16 @@ class MatPesGGAStaticSetGenerator(MatPESStaticSet):
     auto_ismear: bool = False
     auto_kspacing: bool = False
 
-    @deprecated(replacement=MatPESStaticSet, deadline=(2025, 1, 1))
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
         super().__post_init__()
 
 
+@deprecated(
+    replacement=MatPESStaticSet,
+    deadline=(2025, 1, 1),
+    message="Be sure to use `xc_functional = 'R2SCAN'` when instantiating the class.",
+)
 @dataclass
 class MatPesMetaGGAStaticSetGenerator(MatPESStaticSet):
     """Class to generate MP-compatible VASP meta-GGA static input sets."""
@@ -38,14 +43,6 @@ class MatPesMetaGGAStaticSetGenerator(MatPESStaticSet):
     auto_ismear: bool = False
     auto_kspacing: bool = False
 
-    @deprecated(
-        replacement=MatPESStaticSet,
-        deadline=(2025, 1, 1),
-        message=(
-            "Ensure that you use the `xc_functional = 'R2SCAN'` "
-            "option when instantiating the class."
-        ),
-    )
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
         super().__post_init__()

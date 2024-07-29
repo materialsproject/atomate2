@@ -19,6 +19,7 @@ from pymatgen.io.vasp.sets import (
 )
 
 
+@deprecated(replacement=MPRelaxSet, deadline=(2025, 1, 1))
 @dataclass
 class MPGGARelaxSetGenerator(MPRelaxSet):
     """Class to generate MP-compatible VASP GGA relaxation input sets.
@@ -40,12 +41,12 @@ class MPGGARelaxSetGenerator(MPRelaxSet):
     force_gamma: bool = True
     auto_metal_kpoints: bool = True
 
-    @deprecated(replacement=MPRelaxSet, deadline=(2025, 1, 1))
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
         super().__post_init__()
 
 
+@deprecated(replacement=MPStaticSet, deadline=(2025, 1, 1))
 @dataclass
 class MPGGAStaticSetGenerator(MPStaticSet):
     """Class to generate MP-compatible VASP GGA static input sets."""
@@ -57,12 +58,12 @@ class MPGGAStaticSetGenerator(MPStaticSet):
     force_gamma: bool = True
     auto_metal_kpoints: bool = True
 
-    @deprecated(replacement=MPStaticSet, deadline=(2025, 1, 1))
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
         super().__post_init__()
 
 
+@deprecated(replacement=MPScanStaticSet, deadline=(2025, 1, 1))
 @dataclass
 class MPMetaGGAStaticSetGenerator(MPScanStaticSet):
     """Class to generate MP-compatible VASP GGA static input sets."""
@@ -72,7 +73,6 @@ class MPMetaGGAStaticSetGenerator(MPScanStaticSet):
     bandgap_tol: float = 1e-4
     inherit_incar: bool | None = False
 
-    @deprecated(replacement=MPScanStaticSet, deadline=(2025, 1, 1))
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
         super().__post_init__()
@@ -100,6 +100,7 @@ class MPMetaGGAStaticSetGenerator(MPScanStaticSet):
         return updates
 
 
+@deprecated(replacement=MPScanRelaxSet, deadline=(2025, 1, 1))
 @dataclass
 class MPMetaGGARelaxSetGenerator(MPScanRelaxSet):
     """Class to generate MP-compatible VASP metaGGA relaxation input sets.
@@ -118,7 +119,6 @@ class MPMetaGGARelaxSetGenerator(MPScanRelaxSet):
     auto_kspacing: bool = True
     inherit_incar: bool | None = False
 
-    @deprecated(replacement=MPScanRelaxSet, deadline=(2025, 1, 1))
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
         super().__post_init__()
