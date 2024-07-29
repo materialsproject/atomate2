@@ -99,7 +99,7 @@ class HiphiveMaker(BaseHiphiveMaker):
     phonon_displacement_maker: BaseVaspMaker | None = field(
         default_factory=lambda:PhononDisplacementMaker(
             input_set_generator = StaticSetGenerator(
-            user_kpoints_settings={"reciprocal_density": 500},
+            user_kpoints_settings={"reciprocal_density": 100},
             user_incar_settings={
                 "ADDGRID": True,
                 "ALGO": "Normal",
