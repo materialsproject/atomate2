@@ -33,6 +33,7 @@ _FAKE_RUN_VASP_KWARGS: dict[str, dict] = {}
 def zpath(path: str | Path) -> Path:
     return Path(monty_zpath(str(path)))
 
+
 @pytest.fixture(scope="session")
 def vasp_test_dir(test_dir):
     return test_dir / "vasp"
