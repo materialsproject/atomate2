@@ -449,7 +449,7 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             # pip install git+https://github.com/MDIL-SNU/SevenNet
             from sevenn.sevennet_calculator import SevenNetCalculator
 
-            calculator = SevenNetCalculator(**kwargs)
+            calculator = SevenNetCalculator(**{"model": "7net-0"} | kwargs)
 
     elif isinstance(calculator_meta, dict):
         calc_cls = MontyDecoder().decode(json.dumps(calculator_meta))

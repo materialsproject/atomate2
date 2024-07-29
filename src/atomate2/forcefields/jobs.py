@@ -337,9 +337,7 @@ class NEPRelaxMaker(ForceFieldRelaxMaker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
-        default_factory=lambda: {
-            "model_filename": "nep.txt",
-        }
+        default_factory=lambda: {"model_filename": "nep.txt"}
     )
     task_document_kwargs: dict = field(default_factory=dict)
 
@@ -365,9 +363,7 @@ class NEPStaticMaker(ForceFieldStaticMaker):
     force_field_name: str = f"{MLFF.NEP}"
     task_document_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
-        default_factory=lambda: {
-            "model_filename": "nep.txt",
-        }
+        default_factory=lambda: {"model_filename": "nep.txt"}
     )
 
 
