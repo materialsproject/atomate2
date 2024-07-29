@@ -11,7 +11,12 @@ import numpy as np
 from emmet.core.structure import StructureMetadata
 from monty.dev import requires
 from monty.json import MontyDecoder, jsanitize
-from monty.os.path import zpath
+# -------
+# TODO: remove this kludge when monty is fixed
+from monty.os.path import zpath as monty_zpath
+zpath = lambda x : monty_zpath(str(x))
+# -------
+
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
