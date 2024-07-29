@@ -219,7 +219,10 @@ class DfptFlowMaker(Maker):
         # if self.wfq_maker:
         #     ...
 
-        return Flow(jobs, output=jobs[-1].output, name=self.name)  # TODO: fix outputs
+        # return Flow(jobs, output=jobs[-1].output, name=self.name)  # TODO: fix outputs
+        return Flow(
+            jobs, output=[j.output for j in jobs], name=self.name
+        )  # TODO: fix outputs
 
 
 @dataclass
