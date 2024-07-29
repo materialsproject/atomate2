@@ -338,9 +338,9 @@ class PostProcessEosPressure(EOSPostProcessor):
 
             self.results[jobtype]["EOS"] = {}
             if ierr not in (1, 2, 3, 4):
-                self.results[jobtype]["EOS"]["exception"] = (
-                    "Optimal EOS parameters not found."
-                )
+                self.results[jobtype]["EOS"][
+                    "exception"
+                ] = "Optimal EOS parameters not found."
             else:
                 for i, key in enumerate(["b0", "b1", "v0"]):
                     self.results[jobtype]["EOS"][key] = eos_params[i]
@@ -396,7 +396,9 @@ def _apply_strain_to_structure(structure: Structure, deformations: list) -> list
         structure, in anticipation of performing an EOS fit.
         Deformations should be of the form of a 3x3 matrix, e.g.,
         [[1.2, 0., 0.], [0., 1.2, 0.], [0., 0., 1.2]]
-        or
+
+        or::
+
         ((1.2, 0., 0.), (0., 1.2, 0.), (0., 0., 1.2))
 
     Returns
@@ -428,9 +430,9 @@ class MPMorphPVPostProcess(PostProcessEosPressure):
             )
             self.results[jobtype]["EOS"] = {}
             if ierr not in (1, 2, 3, 4):
-                self.results[jobtype]["EOS"]["exception"] = (
-                    "Optimal EOS parameters not found."
-                )
+                self.results[jobtype]["EOS"][
+                    "exception"
+                ] = "Optimal EOS parameters not found."
             else:
                 for i, key in enumerate(["b0", "b1", "v0"]):
                     self.results[jobtype]["EOS"][key] = eos_params[i]
