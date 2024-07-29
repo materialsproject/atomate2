@@ -42,6 +42,7 @@ The most important settings to consider are:
 - `VASP_VDW_KERNEL_DIR`: The path to the VASP Van der Waals kernel.
 
 (vasp_workflows)=
+
 ## List of VASP workflows
 
 ```{eval-rst}
@@ -237,7 +238,6 @@ The current implementation of the workflow does not consider the initial magneti
 for the determination of the symmetry of the structure; therefore, they are removed from the structure.
 ```
 
-
 ```{note}
 It is heavily recommended to symmetrize the structure before passing it to
 this flow. Otherwise, a different space group might be detected and too
@@ -367,6 +367,7 @@ for number, (key, cohp) in enumerate(
     plotter.add_cohp(key, cohp)
     plotter.save_plot(f"plots_cation_anion_bonds{number}.pdf")
 ```
+
 #### Running the LOBSTER workflow without database and with one job script only
 
 It is also possible to run the VASP-LOBSTER workflow with a minimal setup.
@@ -403,7 +404,6 @@ The `LOBSTER_CMD` now needs an additional export of the number of threads.
 VASP_CMD: <<VASP_CMD>>
 LOBSTER_CMD: OMP_NUM_THREADS=48 <<LOBSTER_CMD>>
 ```
-
 
 (modifying_input_sets)=
 Modifying input sets

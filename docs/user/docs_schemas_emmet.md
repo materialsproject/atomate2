@@ -24,14 +24,14 @@ To complete this tutorial, you need
 * A working installation of `atomate2`
 * (optional) to complete the [running workflows](running-workflows.md) tutorial.
 
-## How `atomate2` stores and organizes data.
+## How `atomate2` stores and organizes data
 
 As explained in [Configure calculation output database](install.md#configure-calculation-output-database), `atomate2`
 stores the results of every `Job` in a database. More specifically, `atomate2` uses a
 [`maggma.Store`](https://materialsproject.github.io/maggma/getting_started/stores/) to interface with a data storage backend
 (usually MongoDB). Data is stored in a `JSON`-like or python `dict`-like format, which you can think of as a list of
 dictionaries, where each dictionary represents one `Job`. Each dictionary in the list is called a "document",
-so "document" refers to the output data from a single `Job `.
+so "document" refers to the output data from a single `Job`.
 
 To facilitate automated processing and analysis, it's important that every document follows a
 consistent format. That's where schemas (also called "Document Models") come in.
@@ -66,14 +66,14 @@ examine the `docs` store after running this `Job`, we will see something similar
 ]
 ```
 
-
 This document follows a schema (`JobStoreDocument`, defined [here](https://github.com/materialsproject/jobflow/blob/main/src/jobflow/core/schemas.py))
 that contains information about the `Job`, such as:
- - `uuid`: a unique identifier for the `Job`
- - `output`: The actual job output (e.g., calculation results). We'll examine this in the next section.
- - `completed_at`: The time the job was completed.
- - `name`: The name of the job (in this case "relax" because we did a structure relaxation)
- - `@module`, `@class`, `@version`: These keys store the specific origin and version of the document model so that it can
+
+* `uuid`: a unique identifier for the `Job`
+* `output`: The actual job output (e.g., calculation results). We'll examine this in the next section.
+* `completed_at`: The time the job was completed.
+* `name`: The name of the job (in this case "relax" because we did a structure relaxation)
+* `@module`, `@class`, `@version`: These keys store the specific origin and version of the document model so that it can
   be easily re-created from the `dict`.
 
 Because every `atomate2` document is first created as a `JobStoreDocument` before being inserted into the database,
@@ -145,14 +145,15 @@ You can also generate `TaskDoc` from VASP calculations that you have run manuall
 #### Structure Metadata
 
 The root level of the `TaskDoc` has keys containing basic structural information including:
- - `nsites`: The number of sites
- - `composition`: Full composition for the material.
- - `elements`: List of elements in the material.
- - `formula_pretty`: Cleaned representation of the formula.
- - `chemsys`: dash-delimited string of elements in the material.
+
+* `nsites`: The number of sites
+* `composition`: Full composition for the material.
+* `elements`: List of elements in the material.
+* `formula_pretty`: Cleaned representation of the formula.
+* `chemsys`: dash-delimited string of elements in the material.
 
 And more. These keys illustrate another principle of Document Models -- they are
-**hierarchical**. Specifically, the structure metadata keys are populated by _another_ `pydantic` schema called
+**hierarchical**. Specifically, the structure metadata keys are populated by *another* `pydantic` schema called
 [StructureMetadata](https://github.com/materialsproject/emmet/blob/efc0b22ff835b11b1c825cbc93d4bbebf84a0d91/emmet-core/emmet/core/structure.py#L18)
 defined in `emmet`. So the `TaskDoc` schema comprises several subsidiary models that organize different types of
 information, as discussed further below.
@@ -190,10 +191,10 @@ example from our structure relaxation:
 
 #### Calculation metadata: `dir_name`, `run_stats`, `task_label`, and `task_type`
 
-- `task_label`: A user-definable label for the specific calculation
-- `task_type`: A standardized label specifying the specific type of calculation being performed.
-- `dir_name`: The path of the directory in which input/output files were written
-- `run_stats`: Information about the walltime, cpu time, and computational resources utilized.
+* `task_label`: A user-definable label for the specific calculation
+* `task_type`: A standardized label specifying the specific type of calculation being performed.
+* `dir_name`: The path of the directory in which input/output files were written
+* `run_stats`: Information about the walltime, cpu time, and computational resources utilized.
 
 ```json
 "task_type": "Structure Optimization",
@@ -281,9 +282,6 @@ Much like `input`, the `output` key is populated by a nested schema called [`Out
             },
 
 ```
-
-
-
 
 #### `custodian` and `orig_inputs`
 
@@ -415,7 +413,6 @@ There is some redundancy in the information stored in `input`, `output`, and `ca
 `input` and `output` capture summary information about the first and last steps of the `Job`, whereas
 `calcs_reversed` records practically every detail of all the intermediate steps.
 
-
 ```{note}
 The `TaskDoc` `calcs_reversed` section is designed to capture **all the information that can be obtained from a VASP OUTCAR**
 (or `vasprun.xml`). Therefore, if you query your output data from the `atomate2` database, you should not need to
@@ -439,17 +436,19 @@ in `atomate2` itself.
 Here is a partial listing of the codes and calculation types currently supported in `emmet-core`:
 
 Software:
-  - VASP
-  - Q-Chem
-  - FEFF
-  - OpenMM
+
+* VASP
+* Q-Chem
+* FEFF
+* OpenMM
 
 Calculation Types:
-  - Structure optimization
-  - Static / single point energy
-  - Frequency
-  - Band structure
-  - Elastic tensor
+
+* Structure optimization
+* Static / single point energy
+* Frequency
+* Band structure
+* Elastic tensor
 
 ### Code-agnostic document models for analysis
 
