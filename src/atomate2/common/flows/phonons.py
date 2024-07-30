@@ -128,7 +128,7 @@ class BasePhononMaker(Maker, ABC):
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = SETTINGS.PHONON_SYM_PREC
+    symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
