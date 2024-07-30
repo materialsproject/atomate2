@@ -213,7 +213,7 @@ def test_phonon_default_flow(si, tmp_path, mock_aims, species_dir):
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
-    aims_sd = os.environ.get("AIMS_SPECIES_DIR", None)
+    aims_sd = os.environ.get("AIMS_SPECIES_DIR")
     os.environ["AIMS_SPECIES_DIR"] = str(species_dir / "light")
 
     maker = PhononMaker()
@@ -275,7 +275,7 @@ def test_phonon_default_socket_flow(si, tmp_path, mock_aims, species_dir):
 
     from atomate2.aims.flows.phonons import PhononMaker
 
-    aims_sd = os.environ.get("AIMS_SPECIES_DIR", None)
+    aims_sd = os.environ.get("AIMS_SPECIES_DIR")
     os.environ["AIMS_SPECIES_DIR"] = str(species_dir / "light")
 
     # mapping from job name to directory containing test files

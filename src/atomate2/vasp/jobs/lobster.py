@@ -14,7 +14,7 @@ from atomate2.lobster.jobs import LobsterMaker
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.powerups import update_user_incar_settings
-from atomate2.vasp.sets.core import StaticSetGenerator
+from atomate2.vasp.sets.core import LobsterTightStaticSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -58,20 +58,7 @@ class LobsterStaticMaker(BaseVaspMaker):
 
     name: str = "static_run"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: StaticSetGenerator(
-            auto_ispin=True,
-            user_kpoints_settings={"reciprocal_density": 400},
-            user_incar_settings={
-                "EDIFF": 1e-7,
-                "LAECHG": False,
-                "LREAL": False,
-                "LVTOT": False,
-                "ALGO": "Normal",
-                "LCHARG": False,
-                "LWAVE": True,
-                "ISYM": 0,
-            },
-        )
+        default_factory=LobsterTightStaticSetGenerator
     )
 
 
@@ -103,14 +90,12 @@ def get_basis_infos(
     """
     # this logic enables handling of a flow or a simple maker
     try:
-        potcar_symbols = vasp_maker.static_maker.input_set_generator._get_potcar(  # noqa: SLF001
-            structure=structure, potcar_spec=True
-        )
-
+        vis = vasp_maker.static_maker.input_set_generator
     except AttributeError:
-        potcar_symbols = vasp_maker.input_set_generator._get_potcar(  # noqa: SLF001
-            structure=structure, potcar_spec=True
-        )
+        vis = vasp_maker.input_set_generator
+
+    vis.structure = structure
+    potcar_symbols = vis.potcar_symbols
 
     # get data from LobsterInput
     list_basis_dict = Lobsterin.get_all_possible_basis_functions(
