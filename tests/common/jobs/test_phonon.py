@@ -51,7 +51,7 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
         responses[job2.uuid][1].output, [[2, -1, 0], [0, 3, 0], [-1, -1, 2]]
     )
 
-    
+
 def test_phonon_maker_initialization_with_all_mlff(
     si_structure: Structure, test_dir: Path
 ):
