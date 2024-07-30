@@ -114,7 +114,7 @@ strict = [
     "torch==2.2.1",
     "typing-extensions==4.12.2",
     "mdanalysis==2.7.0",
-    "openmm==8.1.0",
+    "openmm>=8.1.0",
     "openmm-mdanalysis-reporter==0.1.0",
 ]
 
