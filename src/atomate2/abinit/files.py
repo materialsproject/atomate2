@@ -238,8 +238,6 @@ def del_gzip_files(
         for root, dirs, _ in os.walk(dz):
             recursiv_dirs_to_zip.extend([Path(root) / d for d in dirs])
 
-    print("TEST") # VT
-    print(recursiv_dirs_to_zip) # VT
     if to_del:
         if include_files_to_del is None:
             include_files_to_del = [

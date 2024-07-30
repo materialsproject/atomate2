@@ -256,7 +256,7 @@ class Calculation(BaseModel):
         abinit_out_file: Path | str = OUTPUT_FILE_NAME,
         abinit_outddb_file: Path | str = "out_DDB",
         abinit_outpot_file: Path | str = "out_POT",
-        files_to_store: list | None = ["DDB"],
+        files_to_store: list | None = None,
     ) -> tuple[Self, dict[AbinitObject, dict]]:
         """
         Create an Abinit calculation document from a directory and file paths.
@@ -297,7 +297,7 @@ class Calculation(BaseModel):
 
         abinit_objects: dict[AbinitObject, Any] = {}
         if files_to_store is None:
-            files_to_store = []
+            files_to_store = ["DDB"]
         if abinit_outddb_file.exists() and "DDB" in files_to_store:
             abinit_objects[AbinitObject.DDBFILE] = AbinitStoredFile.from_file(  # type: ignore[index]
                 filepath=abinit_outddb_file, data_type=str
