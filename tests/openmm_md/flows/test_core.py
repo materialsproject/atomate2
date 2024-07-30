@@ -32,7 +32,7 @@ def test_anneal_maker(interchange, run_job):
     # Check the output task document
     assert isinstance(task_doc, ClassicalMDTaskDocument)
     assert task_doc.state == "successful"
-    assert len(task_doc.calcs_reversed) == 3
+    assert len(task_doc.calcs_reversed) == 1
 
     # Check the individual jobs in the flow
     raise_temp_job = anneal_flow.jobs[0]
@@ -67,6 +67,7 @@ def test_hdf5_writing(interchange, run_job):
     )
 
     # Run the AnnealMaker flow
+    anneal_maker.collect_jobs = True
     anneal_flow = anneal_maker.make(interchange)
 
     task_doc = run_job(anneal_flow)
@@ -101,6 +102,8 @@ def test_flow_maker(interchange, run_job):
     assert isinstance(task_doc, ClassicalMDTaskDocument)
     assert task_doc.state == "successful"
     assert len(task_doc.calcs_reversed) == 6
+    assert task_doc.calcs_reversed[-1].task_name == "energy minimization"
+    assert task_doc.calcs_reversed[0].task_name == "nvt simulation"
     assert task_doc.tags == ["test"]
     assert len(task_doc.job_uuids) == 6
     assert task_doc.job_uuids[0] is not None

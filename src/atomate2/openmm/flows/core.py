@@ -5,8 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from emmet.core.openmm import OpenMMTaskDocument
-from jobflow import Flow, Response
+from emmet.core.openmm import Calculation, OpenMMTaskDocument
+from jobflow import Flow, Job, Response
 
 from atomate2.openff.core import openff_job
 from atomate2.openff.utils import create_list_summing_to
@@ -19,25 +19,48 @@ if TYPE_CHECKING:
     from atomate2.openmm.jobs.base import BaseOpenMMMaker
 
 
+def _get_calcs_reversed(job: Job | Flow) -> list[Calculation | list]:
+    """Unwrap a nested list of calcs from jobs or flows."""
+    if isinstance(job, Flow):
+        return [_get_calcs_reversed(sub_job) for sub_job in job.jobs]
+    return job.output.calcs_reversed
+
+
+def _flatten_calcs(nested_calcs: list) -> list[Calculation]:
+    """Flattening nested calcs."""
+    flattened = []
+    for item in nested_calcs:
+        if isinstance(item, list):
+            flattened.extend(_flatten_calcs(item))
+        else:
+            flattened.append(item)
+    return flattened
+
+
 @dataclass
 class OpenMMFlowMaker:
     """Run a production simulation.
 
-    This flexible flow links together any flows of OpenMM jobs.
+    This flexible flow links together any flows of OpenMM jobs in
+    a linear sequence
 
     Attributes
     ----------
     name : str
         The name of the production job. Default is "production".
     tags : list[str]
-        Tags to apply to the final job.
+        Tags to apply to the final job. Will only be applied if collect_jobs is True.
     makers: list[BaseOpenMMMaker]
         A list of makers to string together.
+    collect_jobs : bool
+        If True, a final job is added that collects all jobs into a single
+        task document.
     """
 
     name: str = "flexible"
     tags: list[str] = field(default_factory=list)
     makers: list[BaseOpenMMMaker | OpenMMFlowMaker] = field(default_factory=list)
+    collect_jobs: bool = True
 
     def make(
         self,
@@ -67,6 +90,7 @@ class OpenMMFlowMaker:
 
         jobs: list = []
         job_uuids: list = []
+        calcs_reversed = []
         for maker in self.makers:
             job = maker.make(
                 interchange=interchange,
@@ -75,36 +99,47 @@ class OpenMMFlowMaker:
             interchange = job.output.interchange
             prev_task = job.output
             jobs.append(job)
+
             if isinstance(job, Flow):
-                # ignore the last job because it is a collect_jobs
-                job_uuids.extend(job.job_uuids[:-1])
-                # job_uuids.append(job.output.job_uuids)
+                job_uuids.extend(job.job_uuids)
             else:
                 job_uuids.append(job.uuid)
 
-        # convert above in dict syntax
+            calcs_reversed.append(_get_calcs_reversed(job))
 
-        @openff_job
-        def organize_flow_output(**kwargs) -> Response:
-            task_doc = OpenMMTaskDocument(**kwargs)
-            return Response(output=task_doc)
+        if self.collect_jobs:
 
-        final_collect = organize_flow_output(
-            tags=self.tags or None,
-            dir_name=prev_task.dir_name,
-            state=prev_task.state,
-            job_uuids=job_uuids,
-            calcs_reversed=prev_task.calcs_reversed,
-            interchange=interchange,
-            molecule_specs=prev_task.molecule_specs,
-            force_field=prev_task.force_field,
-            last_updated=prev_task.last_updated,
-        )
-        jobs.append(final_collect)
+            @openff_job
+            def organize_flow_output(**kwargs) -> Response:
+                if "calcs_reversed" in kwargs:
+                    # this must be done here because we cannot unwrap the calcs
+                    # when they are an output reference
+                    kwargs["calcs_reversed"] = _flatten_calcs(kwargs["calcs_reversed"])
+                    kwargs["calcs_reversed"].reverse()
+                task_doc = OpenMMTaskDocument(**kwargs)
+                return Response(output=task_doc)
 
+            final_collect = organize_flow_output(
+                tags=self.tags or None,
+                dir_name=prev_task.dir_name,
+                state=prev_task.state,
+                job_uuids=job_uuids,
+                calcs_reversed=calcs_reversed,
+                interchange=prev_task.interchange,
+                molecule_specs=prev_task.molecule_specs,
+                force_field=prev_task.force_field,
+                task_type="collect",
+                last_updated=prev_task.last_updated,
+            )
+            jobs.append(final_collect)
+
+            return Flow(
+                jobs,
+                output=final_collect.output,
+            )
         return Flow(
             jobs,
-            output=final_collect.output,
+            output=prev_task,
         )
 
     @classmethod
@@ -176,5 +211,8 @@ class OpenMMFlowMaker:
             **kwargs,
         )
         return cls(
-            name=name, tags=tags, makers=[raise_temp_maker, nvt_maker, lower_temp_maker]
+            name=name,
+            tags=tags,
+            makers=[raise_temp_maker, nvt_maker, lower_temp_maker],
+            collect_jobs=False,
         )
