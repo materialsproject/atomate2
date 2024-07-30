@@ -101,17 +101,17 @@ class OpenMMFlowMaker:
             prev_task = job.output
             jobs.append(job)
 
+            # collect the uuids and calcs for the final collect job
             if isinstance(job, Flow):
                 job_uuids.extend(job.job_uuids)
             else:
                 job_uuids.append(job.uuid)
-
             calcs_reversed.append(_get_calcs_reversed(job))
 
         if self.collect_jobs:
 
             @openff_job
-            def organize_flow_output(**kwargs) -> Response:
+            def collect_outputs(**kwargs) -> Response:
                 if "calcs_reversed" in kwargs:
                     # this must be done here because we cannot unwrap the calcs
                     # when they are an output reference
@@ -125,7 +125,7 @@ class OpenMMFlowMaker:
 
                 return Response(output=task_doc)
 
-            final_collect = organize_flow_output(
+            final_collect = collect_outputs(
                 tags=self.tags or None,
                 dir_name=prev_task.dir_name,
                 state=prev_task.state,
