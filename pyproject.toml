@@ -59,6 +59,12 @@ forcefields = [
     "sevenn>=0.9.3",
     "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
 ]
+anharmonicphonons = [
+    "phonopy>=2.21.0",
+	"hiphive @ git+https://gitlab.com/jsyony37/hiphive.git@personal#egg=hiphive",
+    "f90nml==1.4.4",
+    "spglib>=2.2.0",
+	"ase>=3.22.1",]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
@@ -110,6 +116,7 @@ strict = [
     "sevenn==0.9.3",
     "torch==2.2.1",
     "typing-extensions==4.12.2",
+    "python-ulid==2.2.0",
 ]
 
 [project.scripts]
@@ -208,7 +215,7 @@ isort.known-first-party = ["atomate2"]
 isort.split-on-trailing-comma = false
 
 [tool.ruff.format]
-docstring-code-format = true
+# docstring-code-format = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
