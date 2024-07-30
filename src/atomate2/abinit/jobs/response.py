@@ -115,6 +115,7 @@ class DdkMaker(ResponseMaker):
 
     CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
         NscfConvergenceWarning,
+        ScfConvergenceWarning,
     )
 
 

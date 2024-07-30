@@ -2,21 +2,25 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import os
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from abipy.flowtk.utils import abi_extensions
+from jobflow.core.job import job
 from monty.serialization import loadfn
 
 from atomate2.abinit.utils.common import INDIR_NAME
+from atomate2.common.files import delete_files, gzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
-    from pathlib import Path
 
     from abipy.abio.inputs import AbinitInput
+    from jobflow.core.reference import OutputReference
     from pymatgen.core.structure import Structure
 
     from atomate2.abinit.sets.anaddb import AnaddbInputGenerator
@@ -209,3 +213,49 @@ def write_anaddb_input_set(
         )
 
     anais.write_input(directory=directory, make_dir=True, overwrite=False)
+
+
+@job
+def del_gzip_files(
+    output: list | OutputReference,
+    exclude_files_from_zip: list | None = None,
+    to_del: bool = True,
+    exclude_files_from_del: list | None = None,
+    include_files_to_del: list | None = None,
+) -> None:
+    dirs_to_zip = []
+    if not isinstance(output, list):  # in case of a single Job
+        output = [output]
+    for o in output:
+        with contextlib.suppress(TypeError, AttributeError):
+            dirs_to_zip.append(o.dir_name)
+        with contextlib.suppress(TypeError, AttributeError):
+            dirs_to_zip.extend(o["dirs"])
+
+    for dz in dirs_to_zip:
+        for root, dirs, _ in os.walk(dz):
+            recursiv_dirs_to_zip = [Path(root) / d for d in dirs]
+        recursiv_dirs_to_zip.append(Path(dz))
+
+    if to_del:
+        if isinstance(include_files_to_del, None):
+            include_files_to_del = [
+                "*WFK*",
+                "*1WF*",
+                "*EVK*",
+                "*EIG*",
+                "*DEN*",
+                "*OUT*",
+                "*POT*",
+                "*EBANDS*",
+            ]
+        for dz in recursiv_dirs_to_zip:
+            delete_files(
+                directory=dz,
+                include_files=include_files_to_del,
+                exclude_files=exclude_files_from_del,
+                allow_missing=True,
+            )
+
+    for dz in recursiv_dirs_to_zip:
+        gzip_files(directory=dz, exclude_files=exclude_files_from_zip, force=True)
