@@ -16,17 +16,19 @@ from atomate2.vasp.jobs.core import TightRelaxConstVolMaker, TightRelaxMaker
 @dataclass
 class GruneisenMaker(BaseGruneisenMaker):
     """
-    Maker to calculate Grueneisen parameters with a force field and Phonopy.
+    Maker to calculate Grueneisen parameters with VASP and Phonopy.
 
-    Calculate the harmonic phonons of a material for and compute Grueneisen parameters.
+    Calculate Grueneisen parameters by a finite volume change approach based on
+    harmonic phonons.
     Initially, a tight structural relaxation is performed to obtain a structure without
     forces on the atoms. The optimized structure (ground state) is further expanded and
     shrunk by 1 % of its volume. Subsequently, supercells with one displaced atom are
     generated for all the three structures (ground state, expanded and shrunk volume)
     and accurate forces are computed for these structures. With the help of phonopy,
     these forces are then converted into a dynamical matrix. This dynamical matrix of
-    three structures is then used as input phonopy Grueneisen api to compute Grueneisen
-    parameters are computed.
+    three structures is then used as an input for the phonopy Grueneisen api
+    to compute Grueneisen parameters.
+
 
 
     Parameters
