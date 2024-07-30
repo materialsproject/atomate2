@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from emmet.core.openmm import Calculation, OpenMMTaskDocument
@@ -116,7 +117,12 @@ class OpenMMFlowMaker:
                     # when they are an output reference
                     kwargs["calcs_reversed"] = _flatten_calcs(kwargs["calcs_reversed"])
                     kwargs["calcs_reversed"].reverse()
+
                 task_doc = OpenMMTaskDocument(**kwargs)
+
+                with open(Path(task_doc.dir_name) / "taskdoc.json", "w") as file:
+                    file.write(task_doc.json())
+
                 return Response(output=task_doc)
 
             final_collect = organize_flow_output(
