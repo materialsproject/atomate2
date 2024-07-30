@@ -214,8 +214,8 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             input_gen = relax_maker.input_set_generator
             if input_gen.use_structure_charge is False:
                 raise ValueError("use_structure_charge should be set to True")
-            isif_ = input_gen.get_incar_updates(None).get("ISIF", None)
-            isif = input_gen.user_incar_settings.get("ISIF", isif_)
+            default_isif = input_gen.incar_updates.get("ISIF")
+            isif = input_gen.user_incar_settings.get("ISIF", default_isif)
             if isif != 2:
                 raise ValueError("ISIF should be set to 2")
             return relax_maker

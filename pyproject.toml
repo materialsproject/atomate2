@@ -30,11 +30,11 @@ dependencies = [
     "custodian>=2024.4.18",
     "emmet-core==0.82.2",
     "jobflow>=0.1.11",
-    "monty>=2024.2.2",
+    "monty>=2024.7.30",
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.4.13",
+    "pymatgen>=2024.6.4",
 ]
 
 [project.optional-dependencies]
@@ -50,7 +50,7 @@ defects = [
     "python-ulid",
 ]
 forcefields = [
-    "ase>=3.22.1",
+    "ase>=3.23.0",
     "calorine<=2.2.1",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
@@ -87,9 +87,7 @@ tests = [
 ]
 strict = [
     "PyYAML==6.0.1",
-    # must use >= for ase to not uninstall main branch install in CI
-    # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
-    "ase>=3.22.1",
+    "ase==3.23.0",
     "calorine==2.2.1",
     "cclib==1.8.1",
     "chgnet==0.3.8",
@@ -102,7 +100,7 @@ strict = [
     "lobsterpy==0.4.5",
     "mace-torch>=0.3.3",
     "matgl==1.1.2",
-    "monty==2024.5.24",
+    "monty==2024.7.30",
     "mp-api==0.41.2",
     "numpy",
     "phonopy==2.26.6",
