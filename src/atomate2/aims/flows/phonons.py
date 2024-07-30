@@ -5,13 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from atomate2 import SETTINGS
 from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
 from atomate2.aims.jobs.phonons import (
     PhononDisplacementMaker,
     PhononDisplacementMakerSocket,
 )
 from atomate2.common.flows.phonons import BasePhononMaker
-from atomate2.common.utils import PHONON_SYM_PREC
 
 if TYPE_CHECKING:
     from atomate2.aims.jobs.base import BaseAimsMaker
@@ -113,7 +113,7 @@ class PhononMaker(BasePhononMaker):
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = PHONON_SYM_PREC
+    symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True

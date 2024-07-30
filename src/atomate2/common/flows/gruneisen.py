@@ -9,12 +9,12 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
+from atomate2 import SETTINGS
 from atomate2.common.jobs.gruneisen import (
     compute_gruneisen_param,
     run_phonon_jobs,
     shrink_expand_structure,
 )
-from atomate2.common.utils import PHONON_SYM_PREC
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -88,7 +88,7 @@ class BaseGruneisenMaker(Maker, ABC):
     perc_vol: float = 0.01
     mesh: tuple[float, float, float] | float = 7_000
     compute_gruneisen_param_kwargs: dict = field(default_factory=dict)
-    symprec: float = PHONON_SYM_PREC
+    symprec: float = SETTINGS.PHONON_SYMPREC
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """

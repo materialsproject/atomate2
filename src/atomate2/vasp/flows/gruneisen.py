@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from atomate2 import SETTINGS
 from atomate2.common.flows.gruneisen import BaseGruneisenMaker
-from atomate2.common.utils import PHONON_SYM_PREC
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.flows.phonons import PhononMaker
 from atomate2.vasp.jobs.core import TightRelaxConstVolMaker, TightRelaxMaker
@@ -61,6 +61,8 @@ class GruneisenMaker(BaseGruneisenMaker):
         Percent volume to shrink and expand ground state structure
     compute_gruneisen_param_kwargs: dict
         Keyword arguments passed to :obj:`compute_gruneisen_param`.
+    symprec: float
+        Symmetry precision for symmetry checks and phonon runs.
     """
 
     name: str = "Gruneisen"
@@ -83,7 +85,7 @@ class GruneisenMaker(BaseGruneisenMaker):
     vol: float = 0.01
     mesh: tuple | float = 7_000
     compute_gruneisen_param_kwargs: dict = field(default_factory=dict)
-    symprec = PHONON_SYM_PREC
+    symprec = SETTINGS.PHONON_SYMPREC
 
     @property
     def prev_calc_dir_argname(self) -> str:

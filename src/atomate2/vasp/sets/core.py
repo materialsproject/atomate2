@@ -9,13 +9,13 @@ from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from pymatgen.core.periodic_table import Element
+from pymatgen.io.vasp import Outcar, Vasprun
 
 from atomate2.vasp.sets.base import VaspInputGenerator
 
 if TYPE_CHECKING:
     from emmet.core.math import Vector3D
     from pymatgen.core import Structure
-    from pymatgen.io.vasp import Outcar, Vasprun
 
 
 logger = logging.getLogger(__name__)
