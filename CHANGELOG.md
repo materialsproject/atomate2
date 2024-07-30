@@ -1,5 +1,14 @@
 # Change log
 
+## v0.0.15
+
+## New Features 🎉
+* Transition VASP calculations to use input sets defined in pymatgen by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/854
+
+### Bug Fixes 🐛
+* Increase k-point density for MP GGA static calculations to close issue https://github.com/materialsproject/atomate2/issues/844 by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/854
+* Adds missing MAGMOMs for MatPES jobs by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/854
+
 ## v0.0.14
 
 ### New Features 🎉
