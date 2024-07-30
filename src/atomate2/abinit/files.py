@@ -232,13 +232,16 @@ def del_gzip_files(
         with contextlib.suppress(TypeError, AttributeError):
             dirs_to_zip.extend(o["dirs"])
 
+    recursiv_dirs_to_zip = []
     for dz in dirs_to_zip:
-        for root, dirs, _ in os.walk(dz):
-            recursiv_dirs_to_zip = [Path(root) / d for d in dirs]
         recursiv_dirs_to_zip.append(Path(dz))
+        for root, dirs, _ in os.walk(dz):
+            recursiv_dirs_to_zip.extend([Path(root) / d for d in dirs])
 
+    print("TEST") # VT
+    print(recursiv_dirs_to_zip) # VT
     if to_del:
-        if isinstance(include_files_to_del, None):
+        if include_files_to_del is None:
             include_files_to_del = [
                 "*WFK*",
                 "*1WF*",
