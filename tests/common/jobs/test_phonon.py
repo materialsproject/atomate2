@@ -12,7 +12,9 @@ from atomate2.forcefields.utils import MLFF
 
 
 def test_phonon_get_supercell_size(clean_dir, si_structure: Structure):
-    job = get_supercell_size(si_structure, min_length=18, prefer_90_degrees=True)
+    job = get_supercell_size(
+        si_structure, min_length=18, max_length=25, prefer_90_degrees=True
+    )
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
