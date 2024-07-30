@@ -518,7 +518,7 @@ class BaseOpenMMMaker(Maker):
             tags=tags,
             dir_name=str(dir_name),
             state="successful",
-            calcs_reversed=[calc] + (prev_task.calcs_reversed or []),
+            calcs_reversed=[calc],
             interchange=interchange_bytes,
             molecule_specs=prev_task.molecule_specs,
             force_field=prev_task.force_field,
