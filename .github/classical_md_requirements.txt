@@ -1,8 +1,0 @@
-# for consistency, should align with pyproject.toml
-openmm>=8.1.0
-openff-toolkit>=0.14.0
-openff-interchange>=0.3.22
-packmol>=20.2.2
-openbabel>=3.1.1
-mdanalysis>=2.7.0
-# openmm-mdanalysis-reporter>=0.1.0 needed but only available on pip
