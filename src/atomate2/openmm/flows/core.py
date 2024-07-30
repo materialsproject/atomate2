@@ -5,8 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import Flow
+from emmet.core.openmm import OpenMMTaskDocument
+from jobflow import Flow, Response
 
+from atomate2.openff.core import openff_job
 from atomate2.openff.utils import create_list_summing_to
 from atomate2.openmm.jobs.core import NVTMaker, TempChangeMaker
 
@@ -64,11 +66,8 @@ class OpenMMFlowMaker:
             raise ValueError("At least one maker must be included")
 
         jobs: list = []
-        for i, maker in enumerate(self.makers):
-            # last job
-            if i == len(self.makers) - 1:
-                maker.tags = (maker.tags or []) + (self.tags or []) or None
-
+        job_uuids: list = []
+        for maker in self.makers:
             job = maker.make(
                 interchange=interchange,
                 prev_task=prev_task,
@@ -76,10 +75,36 @@ class OpenMMFlowMaker:
             interchange = job.output.interchange
             prev_task = job.output
             jobs.append(job)
+            if isinstance(job, Flow):
+                # ignore the last job because it is a collect_jobs
+                job_uuids.extend(job.job_uuids[:-1])
+                # job_uuids.append(job.output.job_uuids)
+            else:
+                job_uuids.append(job.uuid)
+
+        # convert above in dict syntax
+
+        @openff_job
+        def organize_flow_output(**kwargs) -> Response:
+            task_doc = OpenMMTaskDocument(**kwargs)
+            return Response(output=task_doc)
+
+        final_collect = organize_flow_output(
+            tags=self.tags or None,
+            dir_name=prev_task.dir_name,
+            state=prev_task.state,
+            job_uuids=job_uuids,
+            calcs_reversed=prev_task.calcs_reversed,
+            interchange=interchange,
+            molecule_specs=prev_task.molecule_specs,
+            force_field=prev_task.force_field,
+            last_updated=prev_task.last_updated,
+        )
+        jobs.append(final_collect)
 
         return Flow(
             jobs,
-            output=jobs[-1].output,
+            output=final_collect.output,
         )
 
     @classmethod

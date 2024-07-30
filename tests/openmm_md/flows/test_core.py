@@ -102,6 +102,8 @@ def test_flow_maker(interchange, run_job):
     assert task_doc.state == "successful"
     assert len(task_doc.calcs_reversed) == 6
     assert task_doc.tags == ["test"]
+    assert len(task_doc.job_uuids) == 6
+    assert task_doc.job_uuids[0] is not None
 
     # Check the individual jobs in the flow
     energy_job = production_flow.jobs[0]
