@@ -24,16 +24,13 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir, mock_jobflow_settings)
     from jobflow import OutputReference, run_locally
     from monty.serialization import loadfn
     from pymatgen.core import Structure
+    from pymatgen.io.vasp.sets import MPScanRelaxSet, MPScanStaticSet
 
     from atomate2.vasp.flows.core import RelaxMaker, StaticMaker
     from atomate2.vasp.flows.electrode import ElectrodeInsertionMaker
     from atomate2.vasp.powerups import (
         update_user_incar_settings,
         update_user_kpoints_settings,
-    )
-    from atomate2.vasp.sets.mp import (
-        MPMetaGGARelaxSetGenerator,
-        MPMetaGGAStaticSetGenerator,
     )
     # mock the default setting
 
@@ -67,9 +64,9 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir, mock_jobflow_settings)
     # create the workflow
     struct = Structure.from_file(test_dir / "vasp/H_Graphite/C4.vasp")
     h_entry = loadfn(test_dir / "vasp/H_Graphite/H_entry.json")
-    single_relax_maker = RelaxMaker(input_set_generator=MPMetaGGARelaxSetGenerator())
+    single_relax_maker = RelaxMaker(input_set_generator=MPScanRelaxSet())
     static_maker = StaticMaker(
-        input_set_generator=MPMetaGGAStaticSetGenerator(), task_document_kwargs={}
+        input_set_generator=MPScanStaticSet(), task_document_kwargs={}
     )
 
     maker = ElectrodeInsertionMaker(

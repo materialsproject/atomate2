@@ -11,7 +11,9 @@ import numpy as np
 from emmet.core.structure import StructureMetadata
 from monty.dev import requires
 from monty.json import MontyDecoder, jsanitize
-from monty.os.path import zpath
+
+# TODO: remove this kludge when monty is fixed
+from monty.os.path import zpath as monty_zpath
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.electronic_structure.cohp import Cohp, CompleteCohp
@@ -43,6 +45,11 @@ except ImportError:
 
 
 logger = logging.getLogger(__name__)
+
+
+def zpath(pathname: Union[str, Path]) -> str:
+    """Kludge to fix monty zpath bug."""
+    return monty_zpath(str(pathname))
 
 
 class LobsteroutModel(BaseModel):
