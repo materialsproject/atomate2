@@ -247,6 +247,19 @@ adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
 
+### Gruneisen parameter workflow
+
+Calculates mode-dependent Grüneisen parameters with the help of Phonopy.
+
+Initially, a tight structural relaxation is performed to obtain a structure without
+forces on the atoms. The optimized structure (ground state) is further expanded and
+shrunk by 1 % (default) of its volume.
+Subsequently, supercells with one displaced atom are generated for all the three structures
+(ground state, expanded and shrunk volume) and accurate forces are computed for these structures.
+With the help of phonopy, these forces are then converted into a dynamical matrix.
+The dynamical matrices of three structures are then used as an input to the phonopy Grueneisen api
+to compute mode-dependent Grueneisen parameters.
+
 ### LOBSTER
 
 Perform bonding analysis with [LOBSTER](http://cohp.de/) and [LobsterPy](https://github.com/jageo/lobsterpy)
