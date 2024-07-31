@@ -285,15 +285,7 @@ class BulkRelaxMaker(BaseVaspMaker):
     name: str = "bulk relaxation maker - "
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: RelaxSetGenerator(
-            user_kpoints_settings=Kpoints.from_dict(
-                {
-                    "nkpoints": 0,
-                    "generation_style": "Gamma",
-                    "kpoints": [[11, 11, 11]],
-                    "usershift": [0, 0, 0],
-                    "comment": "Automatic mesh",
-                }
-            ),
+            user_kpoints_settings={"reciprocal_density": 200},
             user_incar_settings={
                 "ISIF": 3,
                 "ENCUT": 700,
@@ -399,15 +391,7 @@ class SlabRelaxMaker(BaseVaspMaker):
     name: str = "adsorption relaxation maker - "
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: RelaxSetGenerator(
-            user_kpoints_settings=Kpoints.from_dict(
-                {
-                    "nkpoints": 0,
-                    "generation_style": "Gamma",
-                    "kpoints": [[3, 3, 1]],
-                    "usershift": [0, 0, 0],
-                    "comment": "Automatic mesh",
-                }
-            ),
+            user_kpoints_settings={"reciprocal_density": 200},
             user_incar_settings={
                 "ISIF": 2,
                 "ENCUT": 700,
@@ -437,15 +421,7 @@ class SlabStaticMaker(BaseVaspMaker):
     name: str = "adsorption static maker - "
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings=Kpoints.from_dict(
-                {
-                    "nkpoints": 0,
-                    "generation_style": "Gamma",
-                    "kpoints": [[3, 3, 1]],
-                    "usershift": [0, 0, 0],
-                    "comment": "Automatic mesh",
-                }
-            ),
+            user_kpoints_settings={"reciprocal_density": 200},
             user_incar_settings={
                 "ENCUT": 700,
                 "IBRION": -1,
