@@ -21,7 +21,7 @@ from openff.units import unit
 from openmm import Context, LangevinMiddleIntegrator, System, XmlSerializer
 from openmm.app import ForceField
 from openmm.app.forcefield import PME
-from openmm.app.pdbxfile import PDBxFile
+from openmm.app.pdbfile import PDBFile
 from openmm.unit import kelvin, picoseconds
 
 from atomate2.openff.core import openff_job
@@ -230,7 +230,7 @@ def generate_openmm_interchange(
     state = context.getState(getPositions=True)
 
     with io.StringIO() as s:
-        PDBxFile.writeFile(
+        PDBFile.writeFile(
             topology.to_openmm(), np.zeros(shape=(topology.n_atoms, 3)), file=s
         )
         s.seek(0)
