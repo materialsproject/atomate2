@@ -104,6 +104,7 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         "adsorption static maker - static configuration 1",
         "adsorption static maker - static configuration 2",
     ]
+
     for actual_name in expected_job_names:
         assert actual_name in job_names, f"Job '{actual_name}' not found."
 
