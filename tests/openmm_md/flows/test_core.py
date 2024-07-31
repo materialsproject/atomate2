@@ -67,7 +67,7 @@ def test_hdf5_writing(interchange, run_job):
     )
 
     # Run the AnnealMaker flow
-    anneal_maker.collect_jobs = True
+    anneal_maker.collect_outputs = True
     anneal_flow = anneal_maker.make(interchange)
 
     task_doc = run_job(anneal_flow)

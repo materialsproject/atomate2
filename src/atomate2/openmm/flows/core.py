@@ -38,6 +38,23 @@ def _flatten_calcs(nested_calcs: list) -> list[Calculation]:
     return flattened
 
 
+@openff_job
+def _collect_outputs(**kwargs) -> Response:
+    """Reformat the output of the OpenMMFlowMaker into a OpenMMTaskDocument."""
+    if "calcs_reversed" in kwargs:
+        # this must be done here because we cannot unwrap the calcs
+        # when they are an output reference
+        kwargs["calcs_reversed"] = _flatten_calcs(kwargs["calcs_reversed"])
+        kwargs["calcs_reversed"].reverse()
+
+    task_doc = OpenMMTaskDocument(**kwargs)
+
+    with open(Path(task_doc.dir_name) / "taskdoc.json", "w") as file:
+        file.write(task_doc.json())
+
+    return Response(output=task_doc)
+
+
 @dataclass
 class OpenMMFlowMaker:
     """Run a production simulation.
@@ -53,7 +70,7 @@ class OpenMMFlowMaker:
         Tags to apply to the final job. Will only be applied if collect_jobs is True.
     makers: list[BaseOpenMMMaker]
         A list of makers to string together.
-    collect_jobs : bool
+    collect_outputs : bool
         If True, a final job is added that collects all jobs into a single
         task document.
     """
@@ -61,7 +78,8 @@ class OpenMMFlowMaker:
     name: str = "flexible"
     tags: list[str] = field(default_factory=list)
     makers: list[BaseOpenMMMaker | OpenMMFlowMaker] = field(default_factory=list)
-    collect_jobs: bool = True
+    collect_outputs: bool = True
+    final_task_type: str = "collect"
 
     def make(
         self,
@@ -108,24 +126,8 @@ class OpenMMFlowMaker:
                 job_uuids.append(job.uuid)
             calcs_reversed.append(_get_calcs_reversed(job))
 
-        if self.collect_jobs:
-
-            @openff_job
-            def collect_outputs(**kwargs) -> Response:
-                if "calcs_reversed" in kwargs:
-                    # this must be done here because we cannot unwrap the calcs
-                    # when they are an output reference
-                    kwargs["calcs_reversed"] = _flatten_calcs(kwargs["calcs_reversed"])
-                    kwargs["calcs_reversed"].reverse()
-
-                task_doc = OpenMMTaskDocument(**kwargs)
-
-                with open(Path(task_doc.dir_name) / "taskdoc.json", "w") as file:
-                    file.write(task_doc.json())
-
-                return Response(output=task_doc)
-
-            final_collect = collect_outputs(
+        if self.collect_outputs:
+            collect_job = _collect_outputs(
                 tags=self.tags or None,
                 dir_name=prev_task.dir_name,
                 state=prev_task.state,
@@ -134,14 +136,14 @@ class OpenMMFlowMaker:
                 interchange=prev_task.interchange,
                 molecule_specs=prev_task.molecule_specs,
                 force_field=prev_task.force_field,
-                task_type="collect",
+                task_type=self.final_task_type,
                 last_updated=prev_task.last_updated,
             )
-            jobs.append(final_collect)
+            jobs.append(collect_job)
 
             return Flow(
                 jobs,
-                output=final_collect.output,
+                output=collect_job.output,
             )
         return Flow(
             jobs,
@@ -220,5 +222,5 @@ class OpenMMFlowMaker:
             name=name,
             tags=tags,
             makers=[raise_temp_maker, nvt_maker, lower_temp_maker],
-            collect_jobs=False,
+            collect_outputs=False,
         )
