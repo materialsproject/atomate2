@@ -102,28 +102,9 @@ class TightRelaxSetGenerator(VaspInputGenerator):
 class TightRelaxConstVolSetGenerator(VaspInputGenerator):
     """Class to generate constant volume tight VASP relaxation input sets."""
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
-        """Get updates to the INCAR for a tight relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
+    @property
+    def incar_updates(self) -> dict:
+        """Get updates to the INCAR for a static VASP job.
 
         Returns
         -------
