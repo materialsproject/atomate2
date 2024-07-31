@@ -16,7 +16,6 @@ from atomate2.abinit.jobs.response import (
     DdkMaker,
     DteMaker,
     generate_dde_perts,
-    generate_ddk_perts,
     generate_dte_perts,
     run_rf,
 )
@@ -132,19 +131,22 @@ class DfptFlowMaker(Maker):
         jobs = [static_job]
 
         if self.ddk_maker:
-            # generate the perturbations for the DDK calculations
-            ddk_perts = generate_ddk_perts(
-                gsinput=static_job.output.input.abinit_input,
-                use_symmetries=self.use_ddk_sym,
-            )
-            jobs.append(ddk_perts)
 
-            # perform the DDK calculations
-            ddk_calcs = run_rf(
-                perturbations=ddk_perts.output,
-                rf_maker=self.ddk_maker,
-                prev_outputs=static_job.output.dir_name,
-            )
+            # the use of symmetries is not implemented for DDK
+            perturbations = [{"idir": 1}, {"idir": 2}, {"idir": 3}]
+            ddk_jobs = []
+            outputs: dict[str, list] = {"dirs": []}
+            for ipert, pert in enumerate(perturbations):
+                ddk_job = self.ddk_maker.make(
+                    perturbation=pert,
+                    prev_outputs=static_job.output.dir_name,
+                )
+                ddk_job.append_name(f"{ipert+1}/{len(perturbations)}")
+
+                ddk_jobs.append(ddk_job)
+                outputs["dirs"].append(ddk_job.output.dir_name)
+
+            ddk_calcs = Flow(ddk_jobs, outputs)
             jobs.append(ddk_calcs)
 
         if self.dde_maker:
@@ -225,9 +227,7 @@ class DfptFlowMaker(Maker):
 @dataclass
 class ShgFlowMaker(DfptFlowMaker):
     """
-    Maker to compute the static NLO SHG tensor.
-
-    The classmethods allow to tailor the flow for specific configurations.
+    Maker to compute the static DFPT second-harmonic generation tensor.
 
     Parameters
     ----------

@@ -1,4 +1,4 @@
-"""Response function jobs for running ABINIT calculations."""
+"""Jobs for running ABINIT response to perturbations."""
 
 from __future__ import annotations
 
@@ -58,9 +58,9 @@ class ResponseMaker(BaseAbinitMaker):
         The job name.
     """
 
-    calc_type: str | None = None
+    calc_type: str = "RF"
     name: str = "RF calculation"
-    input_set_generator: AbinitInputGenerator | None = None
+    input_set_generator: AbinitInputGenerator
 
     CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
         ScfConvergenceWarning,
@@ -159,34 +159,6 @@ class DteMaker(ResponseMaker):
 
 
 @job
-def generate_ddk_perts(
-    gsinput: AbinitInput,
-    # TODO: or gsinput via prev_outputs?
-    use_symmetries: bool | None = False,
-    qpt: list | None = None,
-) -> list[dict[str, int]]:
-    """
-    Generate the perturbations for the DDK calculations.
-
-    Parameters
-    ----------
-    gsinput : an |AbinitInput| representing a ground state calculation,
-        likely the SCF performed to get the WFK.
-    use_symmetries : True if only the irreducible perturbations should
-        be returned, False otherwise.
-    qpt: qpoint of the phonon in reduced coordinates. Used to shift the k-mesh
-        if qpt is not passed, gsinput must already contain "qpt"
-        otherwise an exception is raised.
-    """
-    if use_symmetries:
-        perts = gsinput.abiget_irred_phperts(qpt=qpt)  # TODO: quid manager?
-    else:
-        perts = [{"idir": 1}, {"idir": 2}, {"idir": 3}]
-
-    return perts
-
-
-@job
 def generate_dde_perts(
     gsinput: AbinitInput,
     # TODO: or gsinput via prev_outputs?
@@ -203,6 +175,9 @@ def generate_dde_perts(
         be returned, False otherwise.
     """
     if use_symmetries:
+        gsinput = gsinput.deepcopy()
+        gsinput.pop_vars(["autoparal"])
+        gsinput.pop_par_vars(all=True)
         perts = gsinput.abiget_irred_ddeperts()  # TODO: quid manager?
     else:
         perts = [{"idir": 1}, {"idir": 2}, {"idir": 3}]
@@ -232,7 +207,8 @@ def generate_dte_perts(
     """
     # Call Abinit to get the list of irreducible perturbations
     gsinput = gsinput.deepcopy()
-    gsinput.pop_vars(["autoparal", "npfft"])
+    gsinput.pop_vars(["autoparal"])
+    gsinput.pop_par_vars(all=True)
     perts = gsinput.abiget_irred_dteperts(
         phonon_pert=phonon_pert,
     )  # TODO: quid manager?
@@ -293,6 +269,5 @@ def run_rf(
         outputs["dirs"].append(rf_job.output.dir_name)  # TODO: determine outputs
 
     rf_flow = Flow(rf_jobs, outputs)
-    # TODO: maybe use smth else than replace to allow run_rf and rf_maker
-    # to run with different config, see if okay with dependencies, etc
+
     return Response(replace=rf_flow)

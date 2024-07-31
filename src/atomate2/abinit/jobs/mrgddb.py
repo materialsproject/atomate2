@@ -38,35 +38,35 @@ _MRGDDB_DATA_OBJECTS = [
 
 def mrgddb_job(method: Callable) -> job:
     """
-    Decorate the ``make`` method of CP2K job makers.
+    Decorate the ``make`` method of mrgddb job makers.
 
     This is a thin wrapper around :obj:`~jobflow.core.job.job` that configures common
-    settings for all CP2K jobs. For example, it ensures that large data objects
+    settings for all mrgddb jobs. For example, it ensures that large data objects
     (band structures, density of states, Cubes, etc) are all stored in the
-    atomate2 data store. It also configures the output schema to be a CP2K
+    atomate2 data store. It also configures the output schema to be a mrgddb
     :obj:`.TaskDocument`.
 
-    Any makers that return CP2K jobs (not flows) should decorate the ``make`` method
-    with @cp2k_job. For example:
+    Any makers that return mrgddb jobs (not flows) should decorate the ``make`` method
+    with @mrgddb_job. For example:
 
     .. code-block:: python
 
-        class MyCp2kMaker(BaseCp2kMaker):
-            @cp2k_job
+        class MyMrgddbMaker(MrgddbMaker):
+            @mrgddb_job
             def make(structure):
-                # code to run Cp2k job.
+                # code to run mrgddb job.
                 pass
 
     Parameters
     ----------
     method : callable
-        A BaseCp2kMaker.make method. This should not be specified directly and is
+        A BaseMrgddbMaker.make method. This should not be specified directly and is
         implied by the decorator.
 
     Returns
     -------
     callable
-        A decorated version of the make function that will generate Cp2k jobs.
+        A decorated version of the make function that will generate mrgddb jobs.
     """
     return job(method, data=_MRGDDB_DATA_OBJECTS, output_schema=MrgddbTaskDoc)
 
@@ -101,7 +101,7 @@ class MrgddbMaker(Maker):
         self,
         prev_outputs: list[str] | None = None,
         history: JobHistory | None = None,
-    ) -> jobflow.Flow | jobflow.Job:
+    ) -> jobflow.Response:
         """
         Return a MRGDDB jobflow.Job.
 
@@ -144,51 +144,6 @@ class MrgddbMaker(Maker):
         )
         task_doc.task_label = self.name
 
-        return self.get_response(
-            task_document=task_doc,
-            history=config.history,
-            max_restarts=SETTINGS.ABINIT_MAX_RESTARTS,
-            prev_outputs=prev_outputs,
-        )
-
-    def get_response(
-        self,
-        task_document: MrgddbTaskDoc,
-        history: JobHistory,
-        max_restarts: int = 5,
-        prev_outputs: str | tuple | list | Path | None = None,
-    ) -> Response:
-        """Get new job to restart mrgddb calculation."""
-        if task_document.state == TaskState.SUCCESS:
-            return Response(
-                output=task_document,
-            )
-
-        # if history.run_number > max_restarts:
-        #    # TODO: check here if we should stop jobflow or children or
-        #    #  if we should throw an error.
-        #    unconverged_error = UnconvergedError(
-        #        self,
-        #        msg=f"Unconverged after {history.run_number} runs.",
-        #        mrgddb_input=task_document.mrgddb_input,
-        #        history=history,
-        #    )
-        #    return Response(
-        #        output=task_document,
-        #        stop_children=True,
-        #        stop_jobflow=True,
-        #        stored_data={"error": unconverged_error},
-        #    )
-
-        logger.info("Getting restart job.")
-
-        new_job = self.make(
-            structure=task_document.structure,
-            prev_outputs=prev_outputs,
-            history=history,
-        )
-
         return Response(
-            output=task_document,
-            replace=new_job,
+            output=task_doc,
         )

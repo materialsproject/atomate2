@@ -53,13 +53,13 @@ class AnaddbMaker(Maker):
         """Get the type of calculation for this maker."""
         return self.input_set_generator.calc_type
 
-    @job
+    @job(output_schema=AnaddbTaskDoc)
     def make(
         self,
         structure: Structure,
         prev_outputs: str | list[str] | None = None,
         history: JobHistory | None = None,
-    ) -> jobflow.Flow | jobflow.Job:
+    ) -> jobflow.Response:
         """
         Return an AnaDDB jobflow.Job.
 
@@ -100,53 +100,8 @@ class AnaddbMaker(Maker):
         )
         task_doc.task_label = self.name
 
-        return self.get_response(
-            task_document=task_doc,
-            history=config.history,
-            max_restarts=SETTINGS.ABINIT_MAX_RESTARTS,
-            prev_outputs=prev_outputs,
-        )
-
-    def get_response(
-        self,
-        task_document: AnaddbTaskDoc,
-        history: JobHistory,
-        max_restarts: int = 5,
-        prev_outputs: str | tuple | list | Path | None = None,
-    ) -> Response:
-        """Get new job to restart anaddb calculation."""
-        if task_document.state == TaskState.SUCCESS:
-            return Response(
-                output=task_document,
-            )
-
-        # if history.run_number > max_restarts:
-        #    # TODO: check here if we should stop jobflow or children or
-        #    #  if we should throw an error.
-        #    unconverged_error = UnconvergedError(
-        #        self,
-        #        msg=f"Unconverged after {history.run_number} runs.",
-        #        anaddb_input=task_document.anaddb_input,
-        #        history=history,
-        #    )
-        #    return Response(
-        #        output=task_document,
-        #        stop_children=True,
-        #        stop_jobflow=True,
-        #        stored_data={"error": unconverged_error},
-        #    )
-
-        logger.info("Getting restart job.")
-
-        new_job = self.make(
-            structure=task_document.structure,
-            prev_outputs=prev_outputs,
-            history=history,
-        )
-
         return Response(
-            output=task_document,
-            replace=new_job,
+            output=task_doc
         )
 
 

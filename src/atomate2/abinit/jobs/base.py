@@ -117,35 +117,35 @@ _DATA_OBJECTS = [  # either str (TaskDoc fields) or MSONable class
 
 def abinit_job(method: Callable) -> job:
     """
-    Decorate the ``make`` method of CP2K job makers.
+    Decorate the ``make`` method of ABINIT job makers.
 
     This is a thin wrapper around :obj:`~jobflow.core.job.job` that configures common
-    settings for all CP2K jobs. For example, it ensures that large data objects
-    (band structures, density of states, Cubes, etc) are all stored in the
-    atomate2 data store. It also configures the output schema to be a CP2K
+    settings for all abinit jobs. For example, it ensures that large data objects
+    (band structures, density of states, DDB, etc) are all stored in the
+    atomate2 data store. It also configures the output schema to be an Abinit
     :obj:`.TaskDocument`.
 
-    Any makers that return CP2K jobs (not flows) should decorate the ``make`` method
-    with @cp2k_job. For example:
+    Any makers that return Abinit jobs (not flows) should decorate the ``make`` method
+    with @abinit_job. For example:
 
     .. code-block:: python
 
-        class MyCp2kMaker(BaseCp2kMaker):
-            @cp2k_job
+        class MyAbinitMaker(BaseAbinitMaker):
+            @abinit_job
             def make(structure):
-                # code to run Cp2k job.
+                # code to run abinit job.
                 pass
 
     Parameters
     ----------
     method : callable
-        A BaseCp2kMaker.make method. This should not be specified directly and is
+        A BaseAbinitMaker.make method. This should not be specified directly and is
         implied by the decorator.
 
     Returns
     -------
     callable
-        A decorated version of the make function that will generate Cp2k jobs.
+        A decorated version of the make function that will generate Abinit jobs.
     """
     return job(method, data=_DATA_OBJECTS, output_schema=AbinitTaskDoc)
 

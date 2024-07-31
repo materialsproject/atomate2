@@ -215,6 +215,8 @@ def write_anaddb_input_set(
     anais.write_input(directory=directory, make_dir=True, overwrite=False)
 
 
+# TODO: atm does not take the directories of the generate..., run_rf,
+# store_inputs, and its own directory into account...
 @job
 def del_gzip_files(
     output: list | OutputReference,
