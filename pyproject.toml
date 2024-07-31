@@ -96,7 +96,7 @@ strict = [
     "dscribe==2.1.1",
     "emmet-core==0.82.2",
     "ijson==3.3.0",
-    "jobflow==0.1.17",
+    "jobflow==0.1.18",
     "lobsterpy==0.4.5",
     "mace-torch>=0.3.3",
     "matgl==1.1.2",
