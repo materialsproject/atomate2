@@ -15,7 +15,7 @@ from monty.json import MontyEncoder, jsanitize
 from pymatgen.io.core import InputSet
 
 from atomate2.abinit.files import out_to_in
-from atomate2.abinit.sets.base import AbiBroadInputGenerator
+from atomate2.abinit.sets.base import AbinitMixinInputGenerator
 from atomate2.abinit.utils.common import (
     ANADDB_INPUT_FILE_NAME,
     INDATA_PREFIX,
@@ -29,7 +29,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core.structure import Structure
-    from pymatgen.io.abinit.abiobjects import KSampling
 
 
 logger = logging.getLogger(__name__)
@@ -182,7 +181,7 @@ class AnaddbInputSet(InputSet):
 
 
 @dataclass
-class AnaddbInputGenerator(AbiBroadInputGenerator):
+class AnaddbInputGenerator(AbinitMixinInputGenerator):
     """
     A class to generate Anaddb input sets.
 
@@ -195,16 +194,6 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
         after it has been generated from the factory function. This will override
         any value or default previously set. Set a value to None to remove it
         from the input.
-    user_kpoints_settings
-        Allow user to override kpoints setting by supplying a dict. E.g.,
-        ``{"reciprocal_density": 1000}``. User can also supply a KSampling object.
-    restart_from_deps:
-        Defines the files that needs to be linked from previous calculations in
-        case of restart. The format is a tuple where each element is a list of
-        "|" separated run levels (as defined in the AbinitInput object) followed
-        by a colon and a list of "|" list of extensions of files that needs to
-        be linked. The runlevel defines the type of calculations from which the
-        file can be linked. An example is (f"{NSCF}:WFK",).
     prev_outputs_deps
         Defines the files that needs to be linked from previous calculations and
         are required for the execution of the current calculation.
@@ -213,12 +202,6 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
         a list of "|" list of extensions of files that needs to be linked.
         The runlevel defines the type of calculations from which the file can
         be linked. An example is (f"{NSCF}:WFK",).
-    factory_prev_inputs_kwargs
-        A dictionary defining the source of the of one or more previous
-        AbinitInput in case they are required by a factory to build a new
-        AbinitInput. The key should match the name of the argument of the factory
-        function and the value should be a tuple with the runlevels of the
-        compatible types of AbinitInput that can be used.
     force_gamma
         Force gamma centered kpoint generation.
     symprec
@@ -229,12 +212,9 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
     calc_type: str = "anaddb"
     factory_kwargs: dict = field(default_factory=dict)
     user_abinit_settings: dict = field(default_factory=dict)
-    user_kpoints_settings: dict | KSampling = field(default_factory=dict)
-    restart_from_deps: str | tuple | None = field(default_factory=tuple)
     prev_outputs_deps: str | tuple | None = field(
         default_factory=lambda: ("MRGDDB:DDB",)
     )
-    factory_prev_inputs_kwargs: dict | None = None
 
     def get_input_set(
         self,
@@ -243,7 +223,7 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
     ) -> AnaddbInputSet:
         """Generate an AnaddbInputSet object.
 
-        Here we assume that restart_from is a directory and prev_outputs is
+        Here we assume that and prev_outputs is
         a list of directories. We also assume there is an abinit_input.json file
         in each of these directories containing the AbinitInput object used to
         execute abinit.
@@ -252,9 +232,6 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
         ----------
         structure : Structure
             Pymatgen Structure object.
-        restart_from : str or Path or list or tuple
-            Directory (as a str or Path) or list/tuple of 1 directory (as a str
-            or Path) to restart from.
         prev_outputs : str or Path or list or tuple
             Directory (as a str or Path) or list/tuple of directories (as a str
             or Path) needed as dependencies for the AbinitInputSet generated.
@@ -290,7 +267,6 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
         prev_outputs: list[str] | None = None,
         abinit_settings: dict | None = None,
         factory_kwargs: dict | None = None,
-        kpoints_settings: dict | KSampling | None = None,
     ) -> AnaddbInput:
         """
         Generate the AnaddbInput for the input set.
@@ -308,9 +284,6 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
             A dictionary with additional abinit keywords to set.
         factory_kwargs
             A dictionary with additional factory keywords to set.
-        kpoints_settings
-            A dictionary or a KSampling object with additional settings
-            for the k-points.
 
         Returns
         -------
@@ -319,11 +292,7 @@ class AnaddbInputGenerator(AbiBroadInputGenerator):
         total_factory_kwargs = dict(self.factory_kwargs) if self.factory_kwargs else {}
 
         if not self.prev_outputs_deps and prev_outputs:
-            msg = (
-                f"Previous outputs not allowed for {self.__class__.__name__} "
-                "Consider if restart_from argument of get_input_set method "
-                "can fit your needs instead."
-            )
+            msg = f"Previous outputs not allowed for {self.__class__.__name__} "
             raise RuntimeError(msg)
 
         if structure:
@@ -379,3 +348,5 @@ class AnaddbDfptDteInputGenerator(AnaddbInputGenerator):
     """
 
     factory: Callable = anaddbinp_dfpt_dte
+    # partial does not a __name__ so cannot jsanitize...
+    # factory: Callable = partial(AnaddbInput.dfpt, dte=True)

@@ -79,9 +79,6 @@ class AbinitStoredFile(MSONable):
         elif self.data_type == "str":
             write_type = "w"
         else:
-            raise TypeError(
-                "The data type is neither bytes nor string,\
-                            does it make sense to write it into a file?"
-            )
+            raise TypeError(f"The data type {self.data_type} is not supported.")
         with open(filepath, write_type) as f:
             f.write(self.data)

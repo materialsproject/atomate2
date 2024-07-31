@@ -80,7 +80,9 @@ def run_mrgddb(
     command = []
     if mpirun_cmd:
         command.extend(mpirun_cmd.split())
-        command.extend(["-n", "1"])
+        if command[-1] != "-n":
+            command.append("-n")
+        command.append("1")
     command.extend([mrgddb_cmd, "--nostrict"])
     start_time = start_time or time.time()
 
@@ -91,7 +93,6 @@ def run_mrgddb(
             # TODO: allow tuning this timelimit buffer for mrgddb,
             #  e.g. using a config variable or possibly per job
             mrgddb_timelimit -= 240
-        command.extend(["--timelimit", time2slurm(mrgddb_timelimit)])
         max_end_time = start_time + wall_time
 
     with (
@@ -126,7 +127,9 @@ def run_anaddb(
     command = []
     if mpirun_cmd:
         command.extend(mpirun_cmd.split())
-        command.extend(["-n", "1"])
+        if command[-1] != "-n":
+            command.append("-n")
+        command.append("1")
     command.extend([anaddb_cmd, "anaddb.in"])
     start_time = start_time or time.time()
 
@@ -137,7 +140,6 @@ def run_anaddb(
             # TODO: allow tuning this timelimit buffer for anaddb,
             #  e.g. using a config variable or possibly per job
             anaddb_timelimit -= 240
-        command.extend(["--timelimit", time2slurm(anaddb_timelimit)])
         max_end_time = start_time + wall_time
 
     with (

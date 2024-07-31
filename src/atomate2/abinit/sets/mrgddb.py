@@ -13,7 +13,7 @@ from abipy.abio.input_tags import DDE, DTE
 from abipy.flowtk.utils import Directory
 from pymatgen.io.core import InputSet
 
-from atomate2.abinit.sets.base import AbiBroadInputGenerator
+from atomate2.abinit.sets.base import AbinitMixinInputGenerator
 from atomate2.abinit.utils.common import (
     INDIR_NAME,
     MRGDDB_INPUT_FILE_NAME,
@@ -116,7 +116,7 @@ class MrgddbInputSet(InputSet):
 
 
 @dataclass
-class MrgddbInputGenerator(AbiBroadInputGenerator):
+class MrgddbInputGenerator(AbinitMixinInputGenerator):
     """
     A class to generate Mrgddb input sets.
 

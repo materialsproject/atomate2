@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from abipy.dfpt.ddb import DdbError, DdbFile
+from abipy.dfpt.ddb import DdbFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.structure import StructureMetadata
@@ -181,17 +181,17 @@ class Calculation(BaseModel):
         report = None
         has_mrgddb_completed = TaskState.FAILED
         try:
-            report = get_event_report(
-                ofile=File(abinit_mrglog_file), mpiabort_file=File("whatever")
-            )
+            report = get_event_report(ofile=File(abinit_mrglog_file))
             if report.run_completed or abinit_outddb_file.exists():
-                # VT: abinit_outddb_file should not be necessary but
+                # VT: abinit_outddb_file.exists is necessary since
                 # report.run_completed is False even when it completed...
                 has_mrgddb_completed = TaskState.SUCCESS
 
-        except (DdbError, Exception) as exc:
-            msg = f"{cls} exception while parsing event_report:\n{exc}"
+        # except (DdbError, Exception) as exc:
+        except Exception as exc:
+            msg = f"{cls} exception while parsing mrgddb event_report:\n{exc}"
             logger.critical(msg)
+            logging.exception(msg)
 
         return (
             cls(
@@ -366,9 +366,7 @@ class MrgddbTaskDoc(StructureMetadata):
             "event_report": calcs_reversed[-1].event_report,
             "included_objects": included_objects,
             "mrgddb_objects": mrgddb_objects,
-            # "input": InputDoc.from_abinit_calc_doc(calcs_reversed[0]),
             "meta_structure": calcs_reversed[-1].output.structure,
-            "output": OutputDoc.from_abinit_calc_doc(calcs_reversed[-1]),
             "state": calcs_reversed[-1].has_mrgddb_completed,
             "structure": calcs_reversed[-1].output.structure,
             "tags": tags,

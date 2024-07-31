@@ -48,7 +48,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class AbiBroadInputGenerator(InputGenerator):
+class AbinitMixinInputGenerator(InputGenerator):
     """
     A class to generate input sets for Abinit and related utilities.
 
@@ -134,7 +134,7 @@ class AbiBroadInputGenerator(InputGenerator):
                     raise RuntimeError("Should not occur.")
                 if files is not None:
                     inp_files = [
-                        (f.path, AbiBroadInputGenerator._get_in_file_name(f.path))
+                        (f.path, AbinitMixinInputGenerator._get_in_file_name(f.path))
                         for f in files
                     ]
                     irdvars = irdvars_for_ext(ext)
@@ -148,7 +148,7 @@ class AbiBroadInputGenerator(InputGenerator):
                 if os.path.exists(out_den):
                     irdvars = irdvars_for_ext("DEN")
                     inp_files.append(
-                        (out_den, AbiBroadInputGenerator._get_in_file_name(out_den))
+                        (out_den, AbinitMixinInputGenerator._get_in_file_name(out_den))
                     )
                     break
                 last_timden = prev_outdir.find_last_timden_file()
@@ -165,7 +165,10 @@ class AbiBroadInputGenerator(InputGenerator):
                 irdvars = irdvars_for_ext(ext)
                 if out_file:
                     inp_files.append(
-                        (out_file, AbiBroadInputGenerator._get_in_file_name(out_file))
+                        (
+                            out_file,
+                            AbinitMixinInputGenerator._get_in_file_name(out_file),
+                        )
                     )
                     break
         else:
@@ -375,7 +378,7 @@ def as_pseudo_table(pseudos: str | Sequence[Pseudo]) -> PseudoTable:
 
 
 @dataclass
-class AbinitInputGenerator(AbiBroadInputGenerator):
+class AbinitInputGenerator(AbinitMixinInputGenerator):
     """
     A class to generate Abinit input sets.
 

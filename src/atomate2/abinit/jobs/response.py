@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import numpy as np
 import itertools
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
+import numpy as np
 from abipy.flowtk.events import (
     AbinitCriticalWarning,
     NscfConvergenceWarning,
@@ -16,7 +16,6 @@ from abipy.flowtk.events import (
 from jobflow import Flow, Job, Response, job
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker, abinit_job
-from atomate2.abinit.powerups import update_user_abinit_settings
 from atomate2.abinit.sets.response import (
     DdeSetGenerator,
     DdkSetGenerator,
@@ -39,7 +38,6 @@ __all__ = [
     "DdkMaker",
     "DdeMaker",
     "DteMaker",
-    "generate_ddk_perts",
     "generate_dde_perts",
     "generate_dte_perts",
     "run_rf",
@@ -261,9 +259,6 @@ def run_rf(
             prev_outputs=prev_outputs,
         )
         rf_job.append_name(f"{ipert+1}/{len(perturbations)}")
-
-        if isinstance(rf_maker, DdeMaker):
-            rf_job = update_user_abinit_settings(rf_job, {"irdddk": 1, "ird1wf": 0})
 
         rf_jobs.append(rf_job)
         outputs["dirs"].append(rf_job.output.dir_name)  # TODO: determine outputs

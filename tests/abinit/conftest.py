@@ -222,34 +222,34 @@ def check_mrgddb_inputs(
     ref_path = Path(ref_path)
 
     if "mrgddb.in" in check_inputs:
-        check_mrgddb_in(ref_path)
+        from monty.io import zopen
+
+        with open("mrgddb.in") as file:
+            str_in = file.readlines()
+        str_in.pop(1)
+
+        with zopen(ref_path / "inputs" / "mrgddb.in.gz", "r") as file:
+            ref_str = file.readlines()
+        ref_str.pop(1)
+
+        assert (
+            str_in[1] == ref_str[1].decode()
+        ), "'mrgddb.in' is different from reference."
+
+        str_in.pop(1)
+        ref_str.pop(1)
+
+        for i, _ in enumerate(str_in):
+            str_in[i] = str_in[i][
+                -16:
+            ]  # Only keep the "outdata/out_DDB\n" from the path
+            ref_str[i] = ref_str[i][
+                -16:
+            ].decode()  # Only keep the "outdata/out_DDB\n" from the path
+
+        assert str_in == ref_str, "'mrgddb.in' is different from reference."
 
     logger.info("Verified inputs successfully")
-
-
-def check_mrgddb_in(ref_path: str | Path):
-    from monty.io import zopen
-
-    with open("mrgddb.in") as file:
-        str_in = file.readlines()
-    str_in.pop(1)
-
-    with zopen(ref_path / "inputs" / "mrgddb.in.gz", "r") as file:
-        ref_str = file.readlines()
-    ref_str.pop(1)
-
-    assert str_in[1] == ref_str[1].decode(), "'mrgddb.in' is different from reference."
-
-    str_in.pop(1)
-    ref_str.pop(1)
-
-    for i, _ in enumerate(str_in):
-        str_in[i] = str_in[i][-16:]  # Only keep the "outdata/out_DDB\n" from the path
-        ref_str[i] = ref_str[i][
-            -16:
-        ].decode()  # Only keep the "outdata/out_DDB\n" from the path
-
-    assert str_in == ref_str, "'mrgddb.in' is different from reference."
 
 
 @pytest.fixture()

@@ -8,15 +8,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import jobflow
-import numpy as np
 from jobflow import Maker, Response, job
 
-from atomate2 import SETTINGS
 from atomate2.abinit.files import write_anaddb_input_set
 from atomate2.abinit.jobs.base import setup_job
 from atomate2.abinit.run import run_anaddb
 from atomate2.abinit.schemas.anaddb import AnaddbTaskDoc
-from atomate2.abinit.schemas.calculation import TaskState
 from atomate2.abinit.sets.anaddb import (
     AnaddbDfptDteInputGenerator,
     AnaddbInputGenerator,
@@ -69,7 +66,6 @@ class AnaddbMaker(Maker):
         history : JobHistory
             A JobHistory object containing the history of this job.
         """
-
         # Setup job and get general job configuration
         config = setup_job(
             structure=None,
@@ -100,9 +96,7 @@ class AnaddbMaker(Maker):
         )
         task_doc.task_label = self.name
 
-        return Response(
-            output=task_doc
-        )
+        return Response(output=task_doc)
 
 
 @dataclass

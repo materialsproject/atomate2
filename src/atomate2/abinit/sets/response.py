@@ -10,7 +10,7 @@ from abipy.abio.factories import (
     ddkpert_from_gsinput,
     dtepert_from_gsinput,
 )
-from abipy.abio.input_tags import DDE, DDK, DTE, MOLECULAR_DYNAMICS, RELAX, SCF
+from abipy.abio.input_tags import DDE, DDK, DTE, SCF
 
 if TYPE_CHECKING:
     from pymatgen.io.abinit import PseudoTable
@@ -22,9 +22,6 @@ __all__ = [
     "DdeSetGenerator",
     "DteSetGenerator",
 ]
-
-
-GS_RESTART_FROM_DEPS: tuple = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:WFK|DEN",)
 
 
 @dataclass
@@ -49,6 +46,9 @@ class DdeSetGenerator(StaticSetGenerator):
     prev_outputs_deps: tuple = (f"{SCF}:WFK", f"{DDK}:1WF")
     factory_prev_inputs_kwargs: dict | None = field(
         default_factory=lambda: {"gs_input": (SCF,)}
+    )
+    user_abinit_settings: dict = field(
+        default_factory=lambda: {"irdddk": 1, "ird1wf": 0}
     )
 
 

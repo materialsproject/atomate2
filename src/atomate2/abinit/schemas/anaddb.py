@@ -13,7 +13,6 @@ from typing import Any, Optional, Union
 import abipy.core.abinit_units as abu
 import numpy as np
 from abipy.dfpt.anaddbnc import AnaddbNcFile
-from abipy.dfpt.ddb import AnaddbError
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.structure import StructureMetadata
@@ -161,17 +160,14 @@ class Calculation(BaseModel):
         report = None
         has_anaddb_completed = TaskState.FAILED
         try:
-            report = get_event_report(
-                ofile=File(abinit_analog_file), mpiabort_file=File("whatever")
-            )
-            if report.run_completed or abinit_anaddb_file.exists():
-                # VT: abinit_anaddb_file should not be necessary but
-                # report.run_completed is False even when it completed...
+            report = get_event_report(ofile=File(abinit_analog_file))
+            if report.run_completed:
                 has_anaddb_completed = TaskState.SUCCESS
 
-        except (AnaddbError, Exception) as exc:
+        except Exception as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
+            logging.exception(msg)
 
         return (
             cls(

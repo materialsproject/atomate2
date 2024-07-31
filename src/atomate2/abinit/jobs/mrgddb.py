@@ -11,11 +11,9 @@ import jobflow
 import numpy as np
 from jobflow import Maker, Response, job
 
-from atomate2 import SETTINGS
 from atomate2.abinit.files import write_mrgddb_input_set
 from atomate2.abinit.jobs.base import setup_job
 from atomate2.abinit.run import run_mrgddb
-from atomate2.abinit.schemas.calculation import TaskState
 from atomate2.abinit.schemas.mrgddb import MrgddbTaskDoc
 from atomate2.abinit.schemas.outfiles import AbinitStoredFile
 from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator

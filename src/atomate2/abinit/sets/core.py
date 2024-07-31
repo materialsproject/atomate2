@@ -11,8 +11,8 @@ from abipy.abio.factories import (
     ebands_from_gsinput,
     ion_ioncell_relax_input,
     nscf_from_gsinput,
-    scf_input,
     scf_for_phonons,
+    scf_input,
 )
 from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
 
@@ -68,21 +68,27 @@ class StaticSetGenerator(AbinitInputGenerator):
             kpoints_settings=kpoints_settings,
         )
 
+
 @dataclass
 class ShgStaticSetGenerator(StaticSetGenerator):
-    """Class to generate static SCF input sets adapted to DFPT SHG computation"""
+    """Class to generate static SCF input sets adapted to DFPT SHG computation."""
+
     factory: Callable = scf_for_phonons
-    factory_kwargs: dict = field(default_factory=lambda: {
-                "smearing": "nosmearing",
-                "spin_mode": "unpolarized",
-                "kppa": 3000,})
+    factory_kwargs: dict = field(
+        default_factory=lambda: {
+            "smearing": "nosmearing",
+            "spin_mode": "unpolarized",
+            "kppa": 3000,
+        }
+    )
 
     user_abinit_settings: dict = field(
         default_factory=lambda: {
-                "nstep": 500,
-                "toldfe": 1e-22,
-                "autoparal": 1,
-                "npfft": 1,}
+            "nstep": 500,
+            "toldfe": 1e-22,
+            "autoparal": 1,
+            "npfft": 1,
+        }
     )
 
 

@@ -19,8 +19,7 @@ from atomate2.abinit.jobs.response import (
     generate_dte_perts,
     run_rf,
 )
-from atomate2.abinit.powerups import update_factory_kwargs, update_user_abinit_settings
-from atomate2.abinit.sets.core import StaticSetGenerator, ShgStaticSetGenerator
+from atomate2.abinit.sets.core import ShgStaticSetGenerator, StaticSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -52,9 +51,6 @@ class DfptFlowMaker(Maker):
         The maker to use for the DTE calculations.
     mrgddb_maker : .Maker
         The maker to merge the DDE and DTE DDB.
-    use_ddk_sym : bool
-        True if only the irreducible DDK perturbations should be considered,
-            False otherwise.
     use_dde_sym : bool
         True if only the irreducible DDE perturbations should be considered,
             False otherwise.
@@ -76,7 +72,6 @@ class DfptFlowMaker(Maker):
     dte_maker: BaseAbinitMaker | None = field(default_factory=DteMaker)  # |
     mrgddb_maker: Maker | None = field(default_factory=MrgddbMaker)  # |
     anaddb_maker: Maker | None = field(default_factory=AnaddbMaker)  # |
-    use_ddk_sym: bool | None = False
     use_dde_sym: bool = True
     dte_skip_permutations: bool | None = False
 
@@ -131,7 +126,6 @@ class DfptFlowMaker(Maker):
         jobs = [static_job]
 
         if self.ddk_maker:
-
             # the use of symmetries is not implemented for DDK
             perturbations = [{"idir": 1}, {"idir": 2}, {"idir": 3}]
             ddk_jobs = []
@@ -167,7 +161,7 @@ class DfptFlowMaker(Maker):
 
         if self.dte_maker:
             phonon_pert = False
-            
+
             # To uncomment once there is a PhononMaker or something similar
             # if self.ph_maker:
             #     phonon_pert = True
@@ -239,7 +233,5 @@ class ShgFlowMaker(DfptFlowMaker):
     anaddb_maker: Maker | None = field(default_factory=AnaddbDfptDteMaker)
     use_dde_sym: bool = False
     static_maker: BaseAbinitMaker = field(
-        default_factory=lambda: StaticMaker(
-            input_set_generator=ShgStaticSetGenerator()
-        )
+        default_factory=lambda: StaticMaker(input_set_generator=ShgStaticSetGenerator())
     )

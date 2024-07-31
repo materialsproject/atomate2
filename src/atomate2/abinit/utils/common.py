@@ -380,7 +380,9 @@ def get_final_structure(dir_name: Path | str) -> Structure:
     raise RuntimeError("Could not get final structure.")
 
 
-def get_event_report(ofile: File, mpiabort_file: File) -> EventReport | None:
+def get_event_report(
+    ofile: File, mpiabort_file: File | None = None
+) -> EventReport | None:
     """Get report from abinit calculation.
 
     This analyzes the main output file for possible Errors or Warnings.
@@ -401,7 +403,7 @@ def get_event_report(ofile: File, mpiabort_file: File) -> EventReport | None:
     parser = events.EventsParser()
 
     if not ofile.exists:
-        if not mpiabort_file.exists:
+        if not mpiabort_file or not mpiabort_file.exists:
             return None
         # ABINIT abort file without log!
 
@@ -411,7 +413,7 @@ def get_event_report(ofile: File, mpiabort_file: File) -> EventReport | None:
         report = parser.parse(ofile.path)
 
         # Add events found in the ABI_MPIABORTFILE.
-        if mpiabort_file.exists:
+        if mpiabort_file and mpiabort_file.exists:
             logger.critical("Found ABI_MPIABORTFILE!")
             abort_report = parser.parse(mpiabort_file.path)
             if len(abort_report) == 0:

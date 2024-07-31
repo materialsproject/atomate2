@@ -116,7 +116,7 @@ def load_abinit_input(
     abinit_input_file = os.path.join(dirpath, f"{fname}")
     if not os.path.exists(abinit_input_file):
         raise NotImplementedError(
-            f"Cannot load AbinitInput from directory without {fname} file."
+            f"Cannot load AbinitInput from directory {dirpath} without {fname} file."
         )
 
     return loadfn(abinit_input_file)
