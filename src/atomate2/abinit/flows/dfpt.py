@@ -21,7 +21,7 @@ from atomate2.abinit.jobs.response import (
     run_rf,
 )
 from atomate2.abinit.powerups import update_factory_kwargs, update_user_abinit_settings
-from atomate2.abinit.sets.core import StaticSetGenerator
+from atomate2.abinit.sets.core import StaticSetGenerator, ShgStaticSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -62,10 +62,6 @@ class DfptFlowMaker(Maker):
     dte_skip_permutations: Since the current version of abinit always performs
         all the permutations of the perturbations, even if only one is asked,
         if True avoids the creation of inputs that will produce duplicated outputs.
-    dte_phonon_pert: is True also the phonon perturbations will be considered.
-        Default False.
-    dte_ixc: Value of ixc variable. Used to overwrite the default value read
-        from pseudos.
     """
 
     name: str = "DFPT"
@@ -82,10 +78,8 @@ class DfptFlowMaker(Maker):
     mrgddb_maker: Maker | None = field(default_factory=MrgddbMaker)  # |
     anaddb_maker: Maker | None = field(default_factory=AnaddbMaker)  # |
     use_ddk_sym: bool | None = False
-    use_dde_sym: bool | None = False
+    use_dde_sym: bool = True
     dte_skip_permutations: bool | None = False
-    dte_phonon_pert: bool | None = False
-    dte_ixc: int | None = None
 
     def __post_init__(self) -> None:
         """Process post-init configuration."""
@@ -101,11 +95,10 @@ class DfptFlowMaker(Maker):
                 with the DTE calculations. Either provide a DDE Maker \
                 or remove the DTE one."
             )
-        if self.mrgddb_maker and not self.dde_maker:
+        if self.dte_maker and self.use_dde_sym:
             raise ValueError(
-                "DDE calculations are required to produce \
-                DDB files to be merged. Either provide a DDE Maker \
-                or remove the MrgddbMaker."
+                "DTE calculations require all the DDE perturbations, \
+                the use of symmetries is not allowed."
             )
         if self.anaddb_maker and not self.mrgddb_maker:
             raise ValueError(
@@ -166,17 +159,22 @@ class DfptFlowMaker(Maker):
             dde_calcs = run_rf(
                 perturbations=dde_perts.output,
                 rf_maker=self.dde_maker,
-                prev_outputs=[[static_job.output.dir_name], ddk_calcs.output["dirs"]],
+                prev_outputs=[static_job.output.dir_name, ddk_calcs.output["dirs"]],
             )
             jobs.append(dde_calcs)
 
         if self.dte_maker:
+            phonon_pert = False
+            
+            # To uncomment once there is a PhononMaker or something similar
+            # if self.ph_maker:
+            #     phonon_pert = True
+
             # generate the perturbations for the DTE calculations
             dte_perts = generate_dte_perts(
                 gsinput=static_job.output.input.abinit_input,
                 skip_permutations=self.dte_skip_permutations,
-                phonon_pert=self.dte_phonon_pert,
-                ixc=self.dte_ixc,
+                phonon_pert=phonon_pert,
             )
             jobs.append(dte_perts)
 
@@ -185,8 +183,7 @@ class DfptFlowMaker(Maker):
                 perturbations=dte_perts.output,
                 rf_maker=self.dte_maker,
                 prev_outputs=[
-                    [static_job.output.dir_name],
-                    # ddk_calcs.output["dirs"], #not sure this is needed
+                    static_job.output.dir_name,
                     dde_calcs.output["dirs"],
                 ],
             )
@@ -210,7 +207,7 @@ class DfptFlowMaker(Maker):
 
             anaddb_job = self.anaddb_maker.make(
                 structure=mrgddb_job.output.structure,
-                prev_outputs=[[mrgddb_job.output.dir_name]],
+                prev_outputs=mrgddb_job.output.dir_name,
             )
 
             jobs.append(anaddb_job)
@@ -240,29 +237,9 @@ class ShgFlowMaker(DfptFlowMaker):
 
     name: str = "DFPT Chi2 SHG"
     anaddb_maker: Maker | None = field(default_factory=AnaddbDfptDteMaker)
-
-    # VT: a post-init is the only way I found to apply these changes
-    # to the static job
-    def __post_init__(self) -> None:
-        """Process post-init configuration."""
-        super().__post_init__()
-
-        # To avoid metallic case=occopt=3 which is not okay wrt. DFPT \
-        # and occopt 1 with spin polarization requires spinmagntarget
-        self.static_maker = update_factory_kwargs(
-            self.static_maker,
-            {
-                "smearing": "nosmearing",
-                "spin_mode": "unpolarized",
-                "kppa": 3000,
-            },
+    use_dde_sym: bool = False
+    static_maker: BaseAbinitMaker = field(
+        default_factory=lambda: StaticMaker(
+            input_set_generator=ShgStaticSetGenerator()
         )
-        self.static_maker = update_user_abinit_settings(
-            self.static_maker,
-            {
-                "nstep": 500,
-                "toldfe": 1e-22,
-                "autoparal": 1,
-                "npfft": 1,
-            },
-        )
+    )

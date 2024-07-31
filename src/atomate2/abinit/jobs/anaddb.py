@@ -57,7 +57,7 @@ class AnaddbMaker(Maker):
     def make(
         self,
         structure: Structure,
-        prev_outputs: list[str] | None = None,
+        prev_outputs: str | list[str] | None = None,
         history: JobHistory | None = None,
     ) -> jobflow.Flow | jobflow.Job:
         """
@@ -69,9 +69,6 @@ class AnaddbMaker(Maker):
         history : JobHistory
             A JobHistory object containing the history of this job.
         """
-        # Flatten the list of previous outputs dir
-        # prev_outputs = [item for sublist in prev_outputs for item in sublist]
-        prev_outputs = list(np.hstack(prev_outputs))
 
         # Setup job and get general job configuration
         config = setup_job(

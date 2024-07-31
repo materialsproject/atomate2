@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import numpy as np
 import itertools
 import logging
 from dataclasses import dataclass, field
@@ -215,7 +216,6 @@ def generate_dte_perts(
     # TODO: or gsinput via prev_outputs?
     skip_permutations: bool | None = False,
     phonon_pert: bool | None = False,
-    ixc: int | None = None,
 ) -> list[dict[str, int]]:
     """
     Generate the perturbations for the DTE calculations.
@@ -229,14 +229,12 @@ def generate_dte_perts(
         if True avoids the creation of inputs that will produce duplicated outputs.
     phonon_pert: is True also the phonon perturbations will be considered.
         Default False.
-    ixc: Value of ixc variable. Used to overwrite the default value read
-        from pseudos.
     """
     # Call Abinit to get the list of irreducible perturbations
     gsinput = gsinput.deepcopy()
     gsinput.pop_vars(["autoparal", "npfft"])
     perts = gsinput.abiget_irred_dteperts(
-        phonon_pert=phonon_pert, ixc=ixc
+        phonon_pert=phonon_pert,
     )  # TODO: quid manager?
 
     if skip_permutations:
@@ -261,7 +259,7 @@ def generate_dte_perts(
 def run_rf(
     perturbations: list[dict],
     rf_maker: ResponseMaker,
-    prev_outputs: list[str] | None = None,
+    prev_outputs: str | list[str] | None = None,
 ) -> Flow:
     """
     Run the RF calculations.
@@ -277,7 +275,9 @@ def run_rf(
     outputs: dict[str, list] = {"dirs": []}
 
     if isinstance(rf_maker, (DdeMaker, DteMaker)):
-        prev_outputs = [item for sublist in prev_outputs for item in sublist]
+        # Flatten the list of previous outputs dir
+        # prev_outputs = [item for sublist in prev_outputs for item in sublist]
+        prev_outputs = list(np.hstack(prev_outputs))
 
     for ipert, pert in enumerate(perturbations):
         rf_job = rf_maker.make(
