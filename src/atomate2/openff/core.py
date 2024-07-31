@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Callable
 
 import openff.toolkit as tk
@@ -148,11 +149,18 @@ def generate_interchange(
     interchange_json = interchange.json()
     interchange_bytes = interchange_json.encode("utf-8")
 
+    dir_name = Path.cwd()
+
     task_doc = ClassicalMDTaskDocument(
+        dir_name=str(dir_name),
         state=TaskState.SUCCESS,
         interchange=interchange_bytes,
         molecule_specs=mol_specs,
         force_field=force_field,
         tags=tags,
     )
+
+    with open(dir_name / "taskdoc.json", "w") as file:
+        file.write(task_doc.json())
+
     return Response(output=task_doc)

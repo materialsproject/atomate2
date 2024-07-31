@@ -245,12 +245,18 @@ def generate_openmm_interchange(
     interchange_json = interchange.json()
     interchange_bytes = interchange_json.encode("utf-8")
 
+    dir_name = Path.cwd()
+
     task_doc = ClassicalMDTaskDocument(
+        dir_name=str(dir_name),
         state=TaskState.SUCCESS,
         interchange=interchange_bytes,
         molecule_specs=mol_specs,
         force_field="opls",  # TODO: change to flexible value
         tags=tags,
     )
+
+    with open(dir_name / "taskdoc.json", "w") as file:
+        file.write(task_doc.json())
 
     return Response(output=task_doc)

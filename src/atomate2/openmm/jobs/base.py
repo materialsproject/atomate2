@@ -122,7 +122,7 @@ class BaseOpenMMMaker(Maker):
     def make(
         self,
         interchange: Interchange | OpenMMInterchange | bytes,
-        prev_task: OpenMMTaskDocument | None = None,
+        prev_dir: str | None = None,
     ) -> Response:
         """Run an OpenMM calculation.
 
@@ -134,19 +134,23 @@ class BaseOpenMMMaker(Maker):
         ----------
         interchange : Union[Interchange, OpenMMInterchange, str]
             An Interchange object, OpenMMInterchange object or byte encoded equivalent.
-        prev_task : Optional[OpenMMTaskDocument]
-            The previous task document.
+        prev_task : Optional[str]
+            The directory of the previous task.
 
         Returns
         -------
         Response
             A response object containing the output task document.
         """
+        prev_task = (
+            OpenMMTaskDocument.parse_file(Path(prev_dir) / "taskdoc.json")
+            if prev_dir
+            else None
+        )
+
         interchange = self._load_interchange(interchange)
 
         dir_name = Path.cwd()
-
-        dir_name.mkdir(exist_ok=True, parents=True)
 
         sim = self._create_simulation(interchange, prev_task)
 

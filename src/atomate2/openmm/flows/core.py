@@ -14,7 +14,6 @@ from atomate2.openff.utils import create_list_summing_to
 from atomate2.openmm.jobs.core import NVTMaker, TempChangeMaker
 
 if TYPE_CHECKING:
-    from emmet.core.openff import ClassicalMDTaskDocument
     from openff.interchange import Interchange
 
     from atomate2.openmm.jobs.base import BaseOpenMMMaker
@@ -39,15 +38,24 @@ def _flatten_calcs(nested_calcs: list) -> list[Calculation]:
 
 
 @openff_job
-def _collect_outputs(**kwargs) -> Response:
+def _collect_outputs(
+    prev_dir: str,
+    tags: list[str] | None,
+    job_uuids: list[str],
+    calcs_reversed: list[Calculation | list],
+    task_type: str,
+) -> Response:
     """Reformat the output of the OpenMMFlowMaker into a OpenMMTaskDocument."""
-    if "calcs_reversed" in kwargs:
-        # this must be done here because we cannot unwrap the calcs
-        # when they are an output reference
-        kwargs["calcs_reversed"] = _flatten_calcs(kwargs["calcs_reversed"])
-        kwargs["calcs_reversed"].reverse()
+    task_doc = OpenMMTaskDocument.parse_file(Path(prev_dir) / "taskdoc.json")
 
-    task_doc = OpenMMTaskDocument(**kwargs)
+    # this must be done here because we cannot unwrap the calcs
+    # when they are an output reference
+    calcs = _flatten_calcs(calcs_reversed)
+    calcs.reverse()
+    task_doc.calcs_reversed = calcs
+    task_doc.tags = tags
+    task_doc.job_uuids = job_uuids
+    task_doc.task_type = task_type
 
     with open(Path(task_doc.dir_name) / "taskdoc.json", "w") as file:
         file.write(task_doc.json())
@@ -60,7 +68,7 @@ class OpenMMFlowMaker:
     """Run a production simulation.
 
     This flexible flow links together any flows of OpenMM jobs in
-    a linear sequence
+    a linear sequence.
 
     Attributes
     ----------
@@ -84,7 +92,7 @@ class OpenMMFlowMaker:
     def make(
         self,
         interchange: Interchange | bytes,
-        prev_task: ClassicalMDTaskDocument | None = None,
+        prev_dir: str | None = None,
     ) -> Flow:
         """Run the production simulation using the provided Interchange object.
 
@@ -94,8 +102,7 @@ class OpenMMFlowMaker:
             The Interchange object containing the system
             to simulate.
         prev_task : Optional[ClassicalMDTaskDocument]
-            The previous task to use as
-            a starting point for the production simulation.
+            The directory of the previous task.
         output_dir : Optional[Union[str, Path]]
             The directory to write reporter files to.
 
@@ -113,10 +120,10 @@ class OpenMMFlowMaker:
         for maker in self.makers:
             job = maker.make(
                 interchange=interchange,
-                prev_task=prev_task,
+                prev_dir=prev_dir,
             )
             interchange = job.output.interchange
-            prev_task = job.output
+            prev_dir = job.output.dir_name
             jobs.append(job)
 
             # collect the uuids and calcs for the final collect job
@@ -128,16 +135,11 @@ class OpenMMFlowMaker:
 
         if self.collect_outputs:
             collect_job = _collect_outputs(
+                prev_dir,
                 tags=self.tags or None,
-                dir_name=prev_task.dir_name,
-                state=prev_task.state,
                 job_uuids=job_uuids,
                 calcs_reversed=calcs_reversed,
-                interchange=prev_task.interchange,
-                molecule_specs=prev_task.molecule_specs,
-                force_field=prev_task.force_field,
                 task_type=self.final_task_type,
-                last_updated=prev_task.last_updated,
             )
             jobs.append(collect_job)
 
@@ -147,7 +149,7 @@ class OpenMMFlowMaker:
             )
         return Flow(
             jobs,
-            output=prev_task,
+            output=job.output,
         )
 
     @classmethod

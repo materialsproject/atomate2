@@ -165,7 +165,7 @@ production_maker = OpenMMFlowMaker(
 
 production_flow = production_maker.make(
     elyte_interchange_job.output.interchange,
-    prev_task=elyte_interchange_job.output,
+    prev_dir=elyte_interchange_job.output.dir_name,
     output_dir="./tutorial_system",
 )
 
@@ -273,7 +273,7 @@ production_maker = OpenMMFlowMaker(
 
 production_flow = production_maker.make(
     elyte_interchange_job.output.interchange,
-    prev_task=elyte_interchange_job.output,
+    prev_dir=elyte_interchange_job.output.dir_name,
     output_dir="./tutorial_system",
 )
 
@@ -449,7 +449,7 @@ for i in range(4):
 
     production_flow = production_maker.make(
         setup.output.interchange,
-        prev_task=setup.output,
+        prev_dir=setup.output.dir_name,
         output_dir=f"/pscratch/sd/o/oac/openmm_runs/{i}",
     )
     flows.append(Flow([setup, production_flow]))

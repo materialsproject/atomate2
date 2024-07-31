@@ -202,6 +202,10 @@ def test_make_from_prev(run_job):
     BaseOpenMMMaker.run_openmm = do_nothing
 
     # Call the make method
-    base_job = maker.make(inter_job.output.interchange, prev_task=inter_job.output)
+    base_job = maker.make(
+        inter_job.output.interchange, prev_dir=inter_job.output.dir_name
+    )
 
-    run_job(Flow([inter_job, base_job]))
+    task_doc = run_job(Flow([inter_job, base_job]))
+
+    assert task_doc.molecule_specs is not None
