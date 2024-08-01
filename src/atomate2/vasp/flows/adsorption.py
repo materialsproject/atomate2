@@ -7,7 +7,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Job, Maker
-from pymatgen.io.vasp import Kpoints
 
 from atomate2.vasp.jobs.adsorption import (
     BulkRelaxMaker,
@@ -89,8 +88,6 @@ class AdsorptionMaker(Maker):
         min_slab_size: float = 10.0,
         min_lw: float = 10.0,
         surface_idx: tuple[int, int, int] = (0, 0, 1),
-        bulk_kpoints_kwargs: dict = None,
-        slab_kpoints_kwargs: dict = None,
         prev_dir_mol: str | Path | None = None,
         prev_dir_bulk: str | Path | None = None,
     ) -> Flow:
@@ -125,18 +122,6 @@ class AdsorptionMaker(Maker):
 
         jobs: list[Job] = []
         joblog: dict[str, dict[str, Any]] = defaultdict(dict)
-
-        if bulk_kpoints_kwargs:
-            self.bulk_relax_maker.write_input_set_kwargs.update(
-                {"kpoints": Kpoints.from_dict(bulk_kpoints_kwargs)}
-            )
-        if slab_kpoints_kwargs:
-            self.slab_relax_maker.write_input_set_kwargs.update(
-                {"kpoints": Kpoints.from_dict(slab_kpoints_kwargs)}
-            )
-            self.slab_static_maker.write_input_set_kwargs.update(
-                {"kpoints": Kpoints.from_dict(slab_kpoints_kwargs)}
-            )
 
         if self.mol_relax_maker:
             mol_optimize_job = self.mol_relax_maker.make(

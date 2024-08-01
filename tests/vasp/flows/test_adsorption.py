@@ -56,29 +56,11 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         test_dir / "vasp/Au_adsorption/bulk_relax/inputs/POSCAR"
     )
 
-    bulk_kpoints_kwargs = {
-        "nkpoints": 0,
-        "generation_style": "Gamma",
-        "kpoints": [[11, 11, 11]],
-        "usershift": [0, 0, 0],
-        "comment": "Automatic mesh",
-    }
-
-    slab_kpoints_kwargs = {
-        "nkpoints": 0,
-        "generation_style": "Gamma",
-        "kpoints": [[3, 3, 1]],
-        "usershift": [0, 0, 0],
-        "comment": "Automatic mesh",
-    }
-
     flow = AdsorptionMaker().make(
         molecule=molecule,
         structure=bulk_structure,
         min_lw=5.0,
         min_slab_size=4.0,
-        bulk_kpoints_kwargs=bulk_kpoints_kwargs,
-        slab_kpoints_kwargs=slab_kpoints_kwargs,
     )
 
     # Run the flow or job and ensure that it finished running successfully
