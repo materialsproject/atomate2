@@ -7,33 +7,17 @@ from atomate2.vasp.flows.adsorption import AdsorptionMaker
 def test_adsorption(mock_vasp, clean_dir, test_dir):
     # mapping from job name to directory containing test files
     ref_paths = {
-        "bulk relaxation maker - bulk relaxation job": "Au_adsorption/bulk_relax",
-        "molecule relaxation maker - molecule relaxation job": (
-            "Au_adsorption/mol_relax"
-        ),
-        "adsorption relaxation maker - slab relaxation job": (
-            "Au_adsorption/slab_relax"
-        ),
-        "molecule static maker - molecule static job": "Au_adsorption/mol_static",
-        "adsorption static maker - slab static job": "Au_adsorption/slab_static",
-        "adsorption relaxation maker - configuration 0": (
-            "Au_adsorption/ads_relax_1_3"
-        ),
-        "adsorption relaxation maker - configuration 1": (
-            "Au_adsorption/ads_relax_2_3"
-        ),
-        "adsorption relaxation maker - configuration 2": (
-            "Au_adsorption/ads_relax_3_3"
-        ),
-        "adsorption static maker - static configuration 0": (
-            "Au_adsorption/ads_static_1_3"
-        ),
-        "adsorption static maker - static configuration 1": (
-            "Au_adsorption/ads_static_2_3"
-        ),
-        "adsorption static maker - static configuration 2": (
-            "Au_adsorption/ads_static_3_3"
-        ),
+        "bulk_relax_maker__bulk_relax_job": "Au_adsorption/bulk_relax",
+        "mol_relax_maker__mol_relax_job": "Au_adsorption/mol_relax",
+        "mol_static_maker__mol_static_job": "Au_adsorption/mol_static",
+        "slab_relax_maker__slab_relax_job": "Au_adsorption/slab_relax",
+        "slab_static_maker__slab_static_job": "Au_adsorption/slab_static",
+        "slab_relax_maker__adsconfig_0": ("Au_adsorption/ads_relax_1_3"),
+        "slab_relax_maker__adsconfig_1": ("Au_adsorption/ads_relax_2_3"),
+        "slab_relax_maker__adsconfig_2": ("Au_adsorption/ads_relax_3_3"),
+        "slab_static_maker__static_adsconfig__0": ("Au_adsorption/ads_static_1_3"),
+        "slab_static_maker__static_adsconfig__1": ("Au_adsorption/ads_static_2_3"),
+        "slab_static_maker__static_adsconfig__2": ("Au_adsorption/ads_static_3_3"),
     }
 
     fake_run_vasp_kwargs = {
