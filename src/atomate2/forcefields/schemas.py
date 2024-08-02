@@ -42,7 +42,6 @@ class ForceFieldTaskDocument(AseTaskDocument):
 
     def model_post_init(self, __context: Any) -> None:
         """Find forcefield version and name from defined attrs."""
-
         if (self.forcefield_name is None) and (self.ase_calculator_name is not None):
             self.forcefield_name = self.ase_calculator_name
 
