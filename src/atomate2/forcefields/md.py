@@ -25,11 +25,12 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from scipy.interpolate import interp1d
 from scipy.linalg import schur
 
+from atomate2.ase.schemas import AseResult
+from atomate2.ase.utils import TrajectoryObserver
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.jobs import forcefield_job
-from atomate2.forcefields.schemas import ForcefieldResult, ForceFieldTaskDocument
+from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import (
-    TrajectoryObserver,
     ase_calculator,
     revert_default_dtype,
 )
@@ -316,7 +317,7 @@ class ForceFieldMDMaker(Maker):
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
-            ForcefieldResult(
+            AseResult(
                 final_structure=structure,
                 trajectory=md_observer.to_pymatgen_trajectory(None),
             ),
