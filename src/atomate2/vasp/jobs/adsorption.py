@@ -108,7 +108,6 @@ def generate_slab(
         hydrogen, translate=True, min_lw=min_lw
     )
     # slab_only = remove_adsorbate(ads_slabs[0])
-
     return remove_adsorbate(ads_slabs[0])
 
 
@@ -184,14 +183,16 @@ def run_adslabs_job(
     ads_outputs = defaultdict(list)
 
     for i, ad_structure in enumerate(adslab_structures):
-        ads_job = relax_maker.make(ad_structure)
+        ads_job = relax_maker.make(structure=ad_structure, prev_dir=None)
         ads_job.append_name(f"adsconfig_{i}")
 
         adsorption_jobs.append(ads_job)
         ads_outputs["configuration_number"].append(i)
         ads_outputs["relaxed_structures"].append(ads_job.output.structure)
 
-        static_job = static_maker.make(ads_job.output.structure)
+        static_job = static_maker.make(
+            structure=ads_job.output.structure, prev_dir=None
+        )
         static_job.append_name(f"static_adsconfig_{i}")
         adsorption_jobs.append(static_job)
 
@@ -222,8 +223,6 @@ def adsorption_calculations(
         The Miller index [h, k, l] of the surface.
     adslab_structures: list[Structure]
         The list of all possible configurations of slab structures with adsorbates.
-    ads_outputs: dict[str, list]
-        The outputs of the adsorption calculations.
     molecule_dft_energy: float
         The static energy of the molecule.
     slab_dft_energy: float
