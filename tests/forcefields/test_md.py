@@ -107,11 +107,11 @@ def test_ml_ff_md_maker(
 
     # Check that the trajectory has expected physical properties
     assert task_doc.included_objects == ["trajectory"]
-    assert len(task_doc.forcefield_objects["trajectory"]) == n_steps + 1
+    assert len(task_doc.objects["trajectory"]) == n_steps + 1
     assert all(
         key in step
         for key in ("energy", "forces", "stress", "velocities", "temperature")
-        for step in task_doc.forcefield_objects["trajectory"].frame_properties
+        for step in task_doc.objects["trajectory"].frame_properties
     )
 
 
@@ -146,9 +146,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
         assert all(
             np.all(
                 traj_from_file.frame_properties[idx][key]
-                == task_doc.forcefield_objects["trajectory"]
-                .frame_properties[idx]
-                .get(key)
+                == task_doc.objects["trajectory"].frame_properties[idx].get(key)
             )
             for key in ("energy", "temperature", "forces", "velocities")
             for idx in range(n_steps + 1)
@@ -166,9 +164,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
         assert all(
             np.all(
                 traj_as_dict[idx - 1][key]
-                == task_doc.forcefield_objects["trajectory"]
-                .frame_properties[idx]
-                .get(key)
+                == task_doc.objects["trajectory"].frame_properties[idx].get(key)
             )
             for key in ("energy", "temperature", "forces", "velocities")
             for idx in range(1, n_steps + 1)
@@ -244,8 +240,7 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
     task_doc = response[next(iter(response))][1].output
 
     temp_history = [
-        step["temperature"]
-        for step in task_doc.forcefield_objects["trajectory"].frame_properties
+        step["temperature"] for step in task_doc.objects["trajectory"].frame_properties
     ]
 
     assert temp_history[-1] > temp_schedule[0]
