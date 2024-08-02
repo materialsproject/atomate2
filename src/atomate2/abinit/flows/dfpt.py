@@ -159,7 +159,7 @@ class DfptFlowMaker(Maker):
 
             # perform the DDE calculations
             dde_calcs = run_rf(
-                perturbations=dde_perts.output['perts'],
+                perturbations=dde_perts.output["perts"],
                 rf_maker=self.dde_maker,
                 prev_outputs=[static_job.output.dir_name, ddk_calcs.output["dirs"]],
             )
@@ -182,7 +182,7 @@ class DfptFlowMaker(Maker):
 
             # perform the DTE calculations
             dte_calcs = run_rf(
-                perturbations=dte_perts.output['perts'],
+                perturbations=dte_perts.output["perts"],
                 rf_maker=self.dte_maker,
                 prev_outputs=[
                     static_job.output.dir_name,
