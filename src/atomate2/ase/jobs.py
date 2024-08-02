@@ -1,18 +1,19 @@
 """Define general ASE-calculator jobs."""
 from __future__ import annotations
 
+from ase.io import Trajectory as AseTrajectory
 from dataclasses import dataclass, field
 from jobflow import Maker, job
 import logging
 import os
+from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from typing import TYPE_CHECKING
 
-from ase.io import Trajectory as AseTrajectory
-from atomate2.ase.schemas import AseTaskDocument
-from atomate2.ase.utils import AseRelaxer
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
-logger = logging.getLogger(__name__)
+from atomate2.ase.schemas import AseTaskDocument, AseResult
+from atomate2.ase.utils import AseRelaxer
+
+logger = logging.getLogger(__name__) 
 
 _ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
 
@@ -87,7 +88,7 @@ class AseRelaxMaker(Maker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.AseTaskDocument()`.
     """
 
     name: str = "ASE relaxation"
@@ -102,10 +103,39 @@ class AseRelaxMaker(Maker):
 
     @ase_job
     def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
+        self, structure : Structure, prev_dir : str | Path | None = None
     ) -> AseTaskDocument:
         """
-        Relax a structure using ASE.
+        Relax a structure using ASE as a job.
+
+        Parameters
+        ----------
+        structure: .Structure
+            pymatgen structure.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
+        """
+        return AseTaskDocument.from_ase_compatible_result(
+            getattr(self.calculator,"name",self.calculator.__class__),
+            self._make(structure, prev_dir = prev_dir),
+            self.relax_cell,
+            self.steps,
+            self.relax_kwargs,
+            self.optimizer_kwargs,
+            self.fix_symmetry,
+            self.symprec,
+            **self.task_document_kwargs,
+        )
+
+    def _make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> AseResult:
+        """
+        Relax a structure using ASE, not as a job.
+
+        This method exists to permit child classes to redefine `make`
+        for different output schemas.
 
         Parameters
         ----------
@@ -129,19 +159,7 @@ class AseRelaxMaker(Maker):
             symprec=self.symprec,
             **self.optimizer_kwargs,
         )
-        result = relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
-
-        return AseTaskDocument.from_ase_compatible_result(
-            getattr(self.calculator,"name",self.calculator.__class__),
-            result,
-            self.relax_cell,
-            self.steps,
-            self.relax_kwargs,
-            self.optimizer_kwargs,
-            self.fix_symmetry,
-            self.symprec,
-            **self.task_document_kwargs,
-        )
+        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
 
     @property
     def calculator(self) -> Calculator:
@@ -149,6 +167,34 @@ class AseRelaxMaker(Maker):
         return NotImplemented
     
 class LennardJonesRelaxMaker(AseRelaxMaker):
+    """
+    Relax a structure with a Lennard-Jones 6-12 potential.
+
+    This serves mostly as an example of how to create atomate2
+    jobs with existing ASE calculators, and test purposes.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    relax_cell : bool = True
+        Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.AseTaskDocument()`.
+    """
 
     name: str = "Lennard-Jones 6-12 relaxation"
 
@@ -158,6 +204,31 @@ class LennardJonesRelaxMaker(AseRelaxMaker):
         return LennardJones(**self.calculator_kwargs)
 
 class GFNxTBRelaxMaker(AseRelaxMaker):
+    """
+    Relax a structure with TBLite (GFN-xTB).
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    relax_cell : bool = True
+        Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.AseTaskDocument()`.
+    """
 
     name: str = "GFNxTB relaxation"
     calculator_kwargs: dict = field(
