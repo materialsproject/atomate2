@@ -1,0 +1,3 @@
+# Treat WSWQ files as vendored to exclude them when calculating repo languages on GitHub
+tests/test_data/vasp/Si_config_coord/finite_diff_q*/outputs/WSWQ.* linguist-vendored
+**/POTCAR.spec linguist-vendored

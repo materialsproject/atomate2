@@ -1,0 +1,70 @@
+*.py[cod]
+
+# doc builds
+docs/_build/*
+docs/_build/*/*
+docs/_build/*/*/*
+docs_build/*
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.eggs
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# Pycharm
+.idea/*
+
+# doc html folder
+
+temp_dir
+
+run_data
+amset.log
+
+examples/*/*.png
+examples/*/*transport*
+examples/*/*mesh*
+
+test-vasp
+docs_build
+docs/src/reference/atomate2.*
+docs/reference/atomate2.*
+
+.vscode/
+
+.DS_Store
+
+# see https://github.com/materialsproject/atomate2/issues/345
+*.doctrees*
+
+.ipynb_checkpoints

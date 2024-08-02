@@ -1,0 +1,37 @@
+name: pre-commit-auto-update
+
+on:
+  schedule:
+    - cron: "0 0 1,14,28 * *"
+  workflow_dispatch:
+
+jobs:
+  auto-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.9
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit autoupdate
+        run: pre-commit autoupdate
+
+      - name: Run pre-commit
+        run: pre-commit run --all || true
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: update/pre-commit-hooks
+          title: Auto-update pre-commit hooks
+          commit-message: Auto-update pre-commit hooks
+          body: Update versions of tools in pre-commit config to latest versions.
+          labels: dependencies

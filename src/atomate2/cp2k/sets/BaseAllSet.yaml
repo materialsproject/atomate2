@@ -1,0 +1,36 @@
+#
+# Base settings for GAPW (All-electron calculations)
+#
+
+KPOINTS:
+  reciprocal_density: 0
+
+cp2k_input:
+
+  basis_and_potential:
+    basis_type: "DZVP-ALL"
+    potential_type: ALL
+
+  # Precision
+  eps_default: 1.0e-12
+  eps_pgf_orb: 1.0e-16
+
+  #SCF Behavior
+  eps_scf: 1.0e-06
+  max_scf: 200
+  ot: false
+  smearing: false
+
+  # Printing behavior
+  print_bandstructure: false
+  print_dos: false
+  print_e_density: false
+  print_mo_cubes: false
+  print_pdos: false
+  print_v_hartree: false
+
+  # Multigrid behavior
+  cutoff: 0 # Auto
+  ngrids: 5
+  progression_factor: 3
+  rel_cutoff: 50
