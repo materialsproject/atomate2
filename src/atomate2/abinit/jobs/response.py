@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import os
 import itertools
 import logging
+import os
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, ClassVar
 from pathlib import Path
+from typing import TYPE_CHECKING, Any, ClassVar
 
 import numpy as np
 from abipy.flowtk.events import (
@@ -163,7 +163,7 @@ def generate_dde_perts(
     gsinput: AbinitInput,
     # TODO: or gsinput via prev_outputs?
     use_symmetries: bool | None = False,
-) -> list[dict[str, int]]:
+) -> dict[str, dict]:
     """
     Generate the perturbations for the DDE calculations.
 
@@ -183,7 +183,8 @@ def generate_dde_perts(
         perts = [{"idir": 1}, {"idir": 2}, {"idir": 3}]
 
     outputs = {"perts": perts}
-    outputs['dir_name'] = Path(os.getcwd()) # to make the dir of run_rf accessible
+    # to make the dir of generate... accessible
+    outputs["dir_name"] = Path(os.getcwd())
     return outputs
 
 
@@ -193,7 +194,7 @@ def generate_dte_perts(
     # TODO: or gsinput via prev_outputs?
     skip_permutations: bool | None = False,
     phonon_pert: bool | None = False,
-) -> list[dict[str, int]]:
+) -> dict[str, dict]:
     """
     Generate the perturbations for the DTE calculations.
 
@@ -231,7 +232,7 @@ def generate_dte_perts(
         perts = reduced_perts
 
     outputs = {"perts": perts}
-    outputs['dir_name'] = Path(os.getcwd()) # to make the dir of run_rf accessible
+    outputs["dir_name"] = Path(os.getcwd())  # to make the dir of run_rf accessible
     return outputs
 
 
@@ -252,7 +253,7 @@ def run_rf(
     prev_outputs : a list of previous output directories
     """
     rf_jobs = []
-    outputs: dict[str, list] = {"dirs": []}
+    outputs: dict[str, Any] = {"dirs": []}
 
     if isinstance(rf_maker, (DdeMaker, DteMaker)):
         # Flatten the list of previous outputs dir
@@ -269,7 +270,7 @@ def run_rf(
         rf_jobs.append(rf_job)
         outputs["dirs"].append(rf_job.output.dir_name)  # TODO: determine outputs
 
-    outputs['dir_name'] = Path(os.getcwd()) # to make the dir of run_rf accessible
+    outputs["dir_name"] = Path(os.getcwd())  # to make the dir of run_rf accessible
     rf_flow = Flow(rf_jobs, outputs)
 
     return Response(replace=rf_flow)

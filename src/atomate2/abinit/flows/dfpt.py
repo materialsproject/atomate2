@@ -136,7 +136,8 @@ class DfptFlowMaker(Maker):
                     prev_outputs=static_job.output.dir_name,
                 )
                 # next line throws :
-                # File "/gpfs/home/acad/ucl-modl/vtrinque/Softwares/jobflow/src/jobflow/utils/find.py", line 84, in _lookup
+                # File "/gpfs/home/acad/ucl-modl/vtrinque/Software/jobflow/src
+                # /jobflow/utils/find.py", line 84, in _lookup
                 #     if key in obj:
                 # TypeError: unhashable type: 'dict'
                 # with key being {'append_str': '1/3', 'prepend': False}

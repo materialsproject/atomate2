@@ -234,7 +234,7 @@ def del_gzip_files(
         with contextlib.suppress(TypeError, AttributeError, KeyError):
             dirs_to_zip.extend(o["dirs"])
         with contextlib.suppress(TypeError, AttributeError, KeyError):
-            dirs_to_zip.append(o["dir_name"]) # to zip run_rf and generate_perts
+            dirs_to_zip.append(o["dir_name"])  # to zip run_rf and generate_perts
 
     recursiv_dirs_to_zip = []
     for dz in dirs_to_zip:
