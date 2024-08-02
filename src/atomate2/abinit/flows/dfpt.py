@@ -135,7 +135,13 @@ class DfptFlowMaker(Maker):
                     perturbation=pert,
                     prev_outputs=static_job.output.dir_name,
                 )
-                ddk_job.append_name(f"{ipert+1}/{len(perturbations)}")
+                # next line throws :
+                # File "/gpfs/home/acad/ucl-modl/vtrinque/Softwares/jobflow/src/jobflow/utils/find.py", line 84, in _lookup
+                #     if key in obj:
+                # TypeError: unhashable type: 'dict'
+                # with key being {'append_str': '1/3', 'prepend': False}
+                # ddk_job.append_name(f"{ipert+1}/{len(perturbations)}")
+                ddk_job.name = ddk_job.name + f"{ipert+1}/{len(perturbations)}"
 
                 ddk_jobs.append(ddk_job)
                 outputs["dirs"].append(ddk_job.output.dir_name)
