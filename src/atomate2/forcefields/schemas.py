@@ -42,7 +42,9 @@ class ForceFieldTaskDocument(AseTaskDocument):
 
     def model_post_init(self, __context: Any) -> None:
         """Find forcefield version and name from defined attrs."""
-        self.forcefield_name = getattr(self,"forcefield_name",self.ase_calculator_name)
+        self.forcefield_name = getattr(
+            self, "forcefield_name", self.ase_calculator_name
+        )
 
         # map force field name to its package name
         pkg_names = {
@@ -56,7 +58,7 @@ class ForceFieldTaskDocument(AseTaskDocument):
             }.items()
         }
 
-        if (pkg_name := pkg_names.get(self.forcefield_name)):
+        if pkg_name := pkg_names.get(self.forcefield_name):
             import importlib.metadata
 
             self.forcefield_version = importlib.metadata.version(pkg_name)
