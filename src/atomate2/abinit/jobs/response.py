@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import os
 import itertools
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
+from pathlib import Path
 
 import numpy as np
 from abipy.flowtk.events import (
@@ -180,7 +182,9 @@ def generate_dde_perts(
     else:
         perts = [{"idir": 1}, {"idir": 2}, {"idir": 3}]
 
-    return perts
+    outputs = {"perts": perts}
+    outputs['dir_name'] = Path(os.getcwd()) # to make the dir of run_rf accessible
+    return outputs
 
 
 @job
@@ -226,7 +230,9 @@ def generate_dte_perts(
 
         perts = reduced_perts
 
-    return perts
+    outputs = {"perts": perts}
+    outputs['dir_name'] = Path(os.getcwd()) # to make the dir of run_rf accessible
+    return outputs
 
 
 @job
@@ -263,6 +269,7 @@ def run_rf(
         rf_jobs.append(rf_job)
         outputs["dirs"].append(rf_job.output.dir_name)  # TODO: determine outputs
 
+    outputs['dir_name'] = Path(os.getcwd()) # to make the dir of run_rf accessible
     rf_flow = Flow(rf_jobs, outputs)
 
     return Response(replace=rf_flow)
