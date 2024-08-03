@@ -133,9 +133,7 @@ class JDFTXOutfile(ClassPrintFormatter):
     atom_coords_final: list[list[float]] = None
     atom_coords: list[list[float]] = None
 
-    needs_qshift: bool = False
     has_solvation: bool = False
-    qshift: list[float] = None
 
     @classmethod
     def from_file(cls, file_name: str):
@@ -194,7 +192,7 @@ class JDFTXOutfile(ClassPrintFormatter):
                 raise ValueError('BGW wire Coulomb truncation must be periodic in z!')
 
             if truncation_type == 'error':
-                raise ValueError('BGW cannot handle this truncation!')
+                raise ValueError('Problem with this truncation!')
             if truncation_type == 'spherical':
                 line = find_key('Initialized spherical truncation of radius', text)
                 instance.truncation_radius = float(text[line].split()[5]) / ANG2BOHR
