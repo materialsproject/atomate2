@@ -3,15 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
-
-from atomate2.vasp.sets.core import MDSetGenerator
-
-if TYPE_CHECKING:
-    from pymatgen.core import Structure
-    from pymatgen.io.vasp import Outcar, Vasprun
 
 from pymatgen.io.vasp import Kpoints
+
+from atomate2.vasp.sets.core import MDSetGenerator
 
 
 @dataclass
@@ -65,7 +60,7 @@ class MPMorphMDSetGenerator(MDSetGenerator):
                 "GGA": "PS",
                 "LPLANE": False,  # LPLANE is recommended to be False on Cray machines (https://www.vasp.at/wiki/index.php/LPLANE)
                 "LDAUPRINT": 0,
-                "MAGMOM": None,  # Compatability with non-spin polarized calculations
+                "MAGMOM": None,  # Compatibility with non-spin polarized calculations
             }
         )
 
