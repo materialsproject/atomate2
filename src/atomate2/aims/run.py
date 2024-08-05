@@ -40,7 +40,7 @@ def run_aims(
     aims_cmd = expandvars(aims_cmd)
 
     logger.info(f"Running command: {aims_cmd}")
-    return_code = subprocess.call(["/bin/bash", "-c", aims_cmd], env=os.environ)  # noqa: S603
+    return_code = subprocess.call(["/bin/bash", "-c", aims_cmd], env=os.environ)
     logger.info(f"{aims_cmd} finished running with return code: {return_code}")
 
 
