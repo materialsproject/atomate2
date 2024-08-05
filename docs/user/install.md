@@ -267,6 +267,30 @@ from) by clicking "Network Access" (under "Security" in the left hand menu) and 
 "Add IP address".
 ````
 
+````{note}
+If you do not have access to a Mongo database, you can run `atomate2` using a local `.json` file
+to store outputs using the following `jobflow.yaml` file.
+
+```yaml
+JOB_STORE:
+  docs_store:
+    type: JSONStore
+    uri: <<PATH>>
+    read_only: True
+  additional_stores:
+    data:
+      type: JSONStore
+      uri: <<PATH>>
+      read_only: True
+```
+
+The user doesn't need to have the file at the given `<<PATH>>`, since we have set `read_only: True`.
+In case the file isn't available, a new file with the name mentioned in the `<<PATH>>` will be generated.
+
+**Note that this approach has limitations - it cannot handle simultaneous writes and so is not suitable for very high throughput work.**
+````
+
+
 Atomate2 uses two database collections, one for small documents (such as elastic
 tensors, structures, and energies) called the `docs` store and another for large
 documents such as band structures and density of states called the `data` store.
