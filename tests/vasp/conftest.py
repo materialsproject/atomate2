@@ -263,12 +263,9 @@ def check_poscar(ref_path: Path):
     user_frac_coords = user_poscar.structure.frac_coords
     ref_frac_coords = ref_poscar.structure.frac_coords
 
-<<<<<<< HEAD
-=======
     # In some cases, the ordering of sites can change when copying input files.
     # To account for this, we check that the sites are the same, within a tolerance,
     # while accounting for PBC.
->>>>>>> upstream/main
     coord_match = [
         len(find_in_coord_list_pbc(ref_frac_coords, coord, atol=1e-3)) > 0
         for coord in user_frac_coords
@@ -276,11 +273,7 @@ def check_poscar(ref_path: Path):
     if (
         user_poscar.natoms != ref_poscar.natoms
         or user_poscar.site_symbols != ref_poscar.site_symbols
-<<<<<<< HEAD
-        or not coord_match
-=======
         or not all(coord_match)
->>>>>>> upstream/main
     ):
         raise ValueError(
             f"POSCAR files are inconsistent\n\n{ref_poscar_path!s}\n{ref_poscar}"
