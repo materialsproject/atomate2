@@ -1,5 +1,3 @@
-import os
-
 import numpy as np
 import pytest
 from jobflow import run_locally
@@ -13,10 +11,8 @@ from atomate2.aims.jobs.phonons import (
     PhononDisplacementMakerSocket,
 )
 
-cwd = os.getcwd()
 
-
-def test_anharmonic_quantification_oneshot(si, tmp_path, mock_aims, species_dir):
+def test_anharmonic_quantification_oneshot(si, clean_dir, mock_aims, species_dir):
     # mapping from job name to directory containing test files
     ref_paths = {
         "Relaxation calculation": "phonon-relax-si",
@@ -70,14 +66,12 @@ def test_anharmonic_quantification_oneshot(si, tmp_path, mock_aims, species_dir)
     )
 
     # run the flow or job and ensure that it finished running successfully
-    os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    os.chdir(cwd)
     dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
     assert np.round(dct["one-shot"], 3) == 0.104
 
 
-def test_anharmonic_quantification_full(si, tmp_path, mock_aims, species_dir):
+def test_anharmonic_quantification_full(si, clean_dir, mock_aims, species_dir):
     ref_paths = {
         "Relaxation calculation": "phonon-relax-si-full",
         "phonon static aims 1/1": "phonon-disp-si-full",
@@ -132,14 +126,12 @@ def test_anharmonic_quantification_full(si, tmp_path, mock_aims, species_dir):
     )
 
     # run the flow or job and ensure that it finished running successfully
-    os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    os.chdir(cwd)
     dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
     assert pytest.approx(dct["full"], 0.001) == 0.12012
 
 
-def test_mode_resolved_anharmonic_quantification(si, tmp_path, mock_aims, species_dir):
+def test_mode_resolved_anharmonic_quantification(si, clean_dir, mock_aims, species_dir):
     # mapping from job name to directory containing test files
     ref_paths = {
         "Relaxation calculation": "phonon-relax-mode-resolved",
@@ -199,9 +191,7 @@ def test_mode_resolved_anharmonic_quantification(si, tmp_path, mock_aims, specie
     )
 
     # run the flow or job and ensure that it finished running successfully
-    os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    os.chdir(cwd)
     mode_resolved_vals = responses[flow.job_uuids[-1]][1].output.sigma_dict[
         "mode-resolved"
     ]
@@ -213,7 +203,7 @@ def test_mode_resolved_anharmonic_quantification(si, tmp_path, mock_aims, specie
 
 
 def test_atom_resolved_anharmonic_quantification(
-    nacl, tmp_path, mock_aims, species_dir
+    nacl, clean_dir, mock_aims, species_dir
 ):
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -270,9 +260,7 @@ def test_atom_resolved_anharmonic_quantification(
     )
 
     # run the flow or job and ensure that it finished running successfully
-    os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    os.chdir(cwd)
     nacl_sigma_vals = responses[flow.job_uuids[-1]][1].output.sigma_dict[
         "atom-resolved"
     ]
@@ -282,7 +270,7 @@ def test_atom_resolved_anharmonic_quantification(
 
 
 @pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
-def test_anharmonic_quantification_socket_oneshot(si, tmp_path, species_dir):
+def test_anharmonic_quantification_socket_oneshot(si, clean_dir, species_dir):
     # mapping from job name to directory containing test files
     parameters = {
         "species_dir": (species_dir / "light").as_posix(),
@@ -322,8 +310,6 @@ def test_anharmonic_quantification_socket_oneshot(si, tmp_path, species_dir):
     )
 
     # run the flow or job and ensure that it finished running successfully
-    os.chdir(tmp_path)
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-    os.chdir(cwd)
     dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
     assert pytest.approx(dct["one-shot"], 0.01) == 0.127

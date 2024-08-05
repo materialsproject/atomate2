@@ -30,6 +30,24 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+class ImaginaryModeError(Exception):
+    """Exception raised when an imaginary mode is detected.
+
+    Attributes
+    ----------
+    largest_mode:
+        The largest eigenmode to check the sign of
+    message:
+        Explanation of the error
+    """
+
+    def __init__(self, largest_mode: float) -> None:
+        self.largest_mode = largest_mode
+        self.message = f"""Structure has imaginary modes: the largest optical
+                        eigenmode {largest_mode} < 0.0001"""
+        super().__init__(self.message)
+
+
 @job
 def get_phonon_supercell(phonon_doc: PhononBSDOSDoc) -> Structure:
     """Get the phonon supercell of a structure.
@@ -199,9 +217,12 @@ def displace_structure(
 
     masses = np.array([site.species.weight for site in phonon_supercell.sites])
     dynamical_matrix = build_dynmat(force_constants, phonon_supercell)
+    eig_val, eig_vec = get_eigens(dynamical_matrix)
 
-    eig_val, eig_vec = np.linalg.eigh(dynamical_matrix)
-    eig_val = np.sqrt(eig_val[3:])
+    # Check for imaginary modes
+    if eig_val[3] < 0.0001:
+        raise ImaginaryModeError(eig_val[3])
+    eig_val = eig_val[3:]
     x_acs = eig_vec[:, 3:].reshape((-1, 3, len(eig_val)))
 
     # gauge eigenvectors: largest value always positive
@@ -266,6 +287,25 @@ def build_dynmat(
     return force_constants_2d * rminv[:, None] * rminv[None, :]
 
 
+def get_eigens(dynmat: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Calculate the eigenmodes and eigenfrequencies from the dynamical matrix.
+
+    Parameters
+    ----------
+    dynmat: np.ndarray
+        Dynamical matrix
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        Tuple with first element being the array of eigenmodes and the second being the
+        matrix of eigenfrequencies
+    """
+    eig_val, eig_vec = np.linalg.eigh(dynmat)
+    eig_val = np.sqrt(eig_val)
+    return (eig_val, eig_vec)
+
+
 def get_sigma_a_per_mode(
     force_constants: ForceConstants,
     structure: Structure,
@@ -293,9 +333,8 @@ def get_sigma_a_per_mode(
     """
     # Projecting the forces
     dynamical_matrix = build_dynmat(force_constants, structure)
-    eig_val, eig_vec = np.linalg.eigh(dynamical_matrix)
-    eig_val = np.sqrt(np.abs(eig_val)) * omegaToTHz
-    eig_val = eig_val[3:]
+    eig_val, eig_vec = get_eigens(dynamical_matrix)
+    eig_val = eig_val[3:] * omegaToTHz
     # Projection matrix P
     p = eig_vec.T
     masses = np.array([site.species.weight for site in structure.sites])
