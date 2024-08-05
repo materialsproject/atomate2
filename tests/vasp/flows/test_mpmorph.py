@@ -16,6 +16,7 @@ from atomate2.vasp.flows.mpmorph import (
     MPMorphVaspMDSlowQuenchMaker,
     MPMorphVaspMDFastQuenchMaker,
 )
+from pymatgen.io.vasp.sets import VaspInputSet
 
 
 def _get_uuid_from_job(job, dct):
