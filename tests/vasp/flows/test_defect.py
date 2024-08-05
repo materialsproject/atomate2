@@ -24,16 +24,16 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     ref_paths = {
         "relax q1": "Si_config_coord/relax_q1",
         "relax q2": "Si_config_coord/relax_q2",
-        "static q1 0": "Si_config_coord/static_q1_0",
-        "static q1 1": "Si_config_coord/static_q1_1",
-        "static q1 2": "Si_config_coord/static_q1_2",
-        "static q1 3": "Si_config_coord/static_q1_3",
-        "static q1 4": "Si_config_coord/static_q1_4",
-        "static q2 0": "Si_config_coord/static_q2_0",
-        "static q2 1": "Si_config_coord/static_q2_1",
-        "static q2 2": "Si_config_coord/static_q2_2",
-        "static q2 3": "Si_config_coord/static_q2_3",
-        "static q2 4": "Si_config_coord/static_q2_4",
+        "static q1 0 q1": "Si_config_coord/static_q1_0",
+        "static q1 1 q1": "Si_config_coord/static_q1_1",
+        "static q1 2 q1": "Si_config_coord/static_q1_2",
+        "static q1 3 q1": "Si_config_coord/static_q1_3",
+        "static q1 4 q1": "Si_config_coord/static_q1_4",
+        "static q2 0 q2": "Si_config_coord/static_q2_0",
+        "static q2 1 q2": "Si_config_coord/static_q2_1",
+        "static q2 2 q2": "Si_config_coord/static_q2_2",
+        "static q2 3 q2": "Si_config_coord/static_q2_3",
+        "static q2 4 q2": "Si_config_coord/static_q2_4",
         "finite diff q1": "Si_config_coord/finite_diff_q1",
         "finite diff q2": "Si_config_coord/finite_diff_q2",
     }
@@ -43,7 +43,7 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     si_defect = Structure.from_file(
-        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR"
+        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR.gz"
     )
 
     # generate flow
@@ -69,16 +69,16 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     ref_paths = {
         "relax q1": "Si_config_coord/relax_q1",
         "relax q2": "Si_config_coord/relax_q2",
-        "static q1 0": "Si_config_coord/static_q1_0",
-        "static q1 1": "Si_config_coord/static_q1_1",
-        "static q1 2": "Si_config_coord/static_q1_2",
-        "static q1 3": "Si_config_coord/static_q1_3",
-        "static q1 4": "Si_config_coord/static_q1_4",
-        "static q2 0": "Si_config_coord/static_q2_0",
-        "static q2 1": "Si_config_coord/static_q2_1",
-        "static q2 2": "Si_config_coord/static_q2_2",
-        "static q2 3": "Si_config_coord/static_q2_3",
-        "static q2 4": "Si_config_coord/static_q2_4",
+        "static q1 0 q1": "Si_config_coord/static_q1_0",
+        "static q1 1 q1": "Si_config_coord/static_q1_1",
+        "static q1 2 q1": "Si_config_coord/static_q1_2",
+        "static q1 3 q1": "Si_config_coord/static_q1_3",
+        "static q1 4 q1": "Si_config_coord/static_q1_4",
+        "static q2 0 q2": "Si_config_coord/static_q2_0",
+        "static q2 1 q2": "Si_config_coord/static_q2_1",
+        "static q2 2 q2": "Si_config_coord/static_q2_2",
+        "static q2 3 q2": "Si_config_coord/static_q2_3",
+        "static q2 4 q2": "Si_config_coord/static_q2_4",
         "finite diff q1": "Si_config_coord/finite_diff_q1",
         "finite diff q2": "Si_config_coord/finite_diff_q2",
     }
@@ -88,7 +88,7 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     si_defect = Structure.from_file(
-        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR"
+        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR.gz"
     )
 
     ccd_maker = ConfigurationCoordinateMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
