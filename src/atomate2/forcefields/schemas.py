@@ -77,6 +77,6 @@ class ForceFieldTaskDocument(AseTaskDocument):
             self.forcefield_version = importlib.metadata.version(pkg_name)
 
     @property
-    def forcefield_objects(self) -> dict[AseObject, Any] | None:
+    def forcefield_objects(self) -> Optional[dict[AseObject, Any]]:
         """Alias `objects` attr for backwards compatibility."""
         return self.objects
