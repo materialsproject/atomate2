@@ -1,12 +1,22 @@
 """Schema definitions for force field tasks."""
 
+from emmet.core.utils import ValueEnum
 from typing import Any, Optional
-
 from pydantic import Field
 
-from atomate2.ase.schemas import AseObject, AseTaskDocument
+from atomate2.ase.schemas import AseObject, AseResult, AseTaskDocument
 from atomate2.forcefields import MLFF
+from monty.dev import deprecated
 
+@deprecated(replacement=AseResult,deadline=(2025,1,1))
+class ForcefieldResult(AseResult):
+    """Schema to store outputs; deprecated."""
+    pass
+
+@deprecated(replacement=AseObject,deadline=(2025,1,1))
+class ForcefieldObject(ValueEnum):
+    """Types of force-field output data objects."""
+    TRAJECTORY = "trajectory"
 
 class ForceFieldTaskDocument(AseTaskDocument):
     """Document containing information on structure manipulation using a force field."""
@@ -61,3 +71,8 @@ class ForceFieldTaskDocument(AseTaskDocument):
             import importlib.metadata
 
             self.forcefield_version = importlib.metadata.version(pkg_name)
+
+    @property
+    def forcefield_objects(self):
+        """Alias `objects` attr for backwards compatibility."""
+        return self.objects
