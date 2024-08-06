@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from generic_tags import BoolTag, StrTag, IntTag, FloatTag, TagContainer, MultiformatTag
+from .generic_tags import BoolTag, StrTag, IntTag, FloatTag, TagContainer, MultiformatTag
 
 
 #simple dictionaries deepcopied multiple times into MASTER_TAG_LIST later for different tags

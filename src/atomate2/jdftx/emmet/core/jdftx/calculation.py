@@ -1,4 +1,4 @@
-"""Core definitions of a QChem calculation document."""
+"""Core definitions of a JDFTx calculation document."""
 
 # mypy: ignore-errors
 
