@@ -145,7 +145,7 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         )
     task_docs = {}
     for uuid, job_name in uuids.items():
-        for i, mp_job_name in enumerate(main_mp_morph_job_names):
+        for _i, mp_job_name in enumerate(main_mp_morph_job_names):
             if mp_job_name in job_name:
                 task_docs[mp_job_name] = response[uuid][1].output
                 break
@@ -175,7 +175,10 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         for ref_volume in ref_volumes
     )
 
-    # check temperature of each MD equilibrate run and production run #NOTE: Temperature flucations are a lot in most MDs, this is designed to check if MD is injected with approximately the right temperature, and that's why tolerance is so high
+    # check temperature of each MD equilibrate run and production run
+    # NOTE: Temperature flucations are a lot in most MDs,
+    # this is designed to check if MD is injected with approximately
+    # the right temperature, and that's why tolerance is so high
     assert all(
         doc.forcefield_objects["trajectory"].frame_properties[0]["temperature"]
         == pytest.approx(temp, abs=50)
@@ -186,7 +189,8 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         "trajectory"
     ].frame_properties[0]["temperature"] == pytest.approx(temp, abs=50)
 
-    # check that MD Maker Energies are close # TODO: This may be unnecessary because it changes from model to model
+    # check that MD Maker Energies are close
+    # TODO: This may be unnecessary because it changes from model to model
     assert task_docs["MD Maker 1"].output.energy == pytest.approx(-130, abs=5)
     assert task_docs["MD Maker 2"].output.energy == pytest.approx(-325, abs=5)
     assert task_docs["MD Maker 3"].output.energy == pytest.approx(-329, abs=5)
@@ -220,9 +224,10 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         )
         # check that the temperature is correct
 
-        ref_tempature = [
-            T for T in range(quench_start_temp, quench_end_temp, -quench_temp_steps)
-        ]
+        ref_tempature = list(
+            range(quench_start_temp, quench_end_temp, -quench_temp_steps)
+        )
+
         assert all(
             any(
                 doc.forcefield_objects["trajectory"].frame_properties[0]["temperature"]
