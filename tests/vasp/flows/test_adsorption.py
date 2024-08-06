@@ -15,9 +15,9 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         "slab_relax_maker__adsconfig_0": ("Au_adsorption/ads_relax_1_3"),
         "slab_relax_maker__adsconfig_1": ("Au_adsorption/ads_relax_2_3"),
         "slab_relax_maker__adsconfig_2": ("Au_adsorption/ads_relax_3_3"),
-        "slab_static_maker__static_adsconfig__0": ("Au_adsorption/ads_static_1_3"),
-        "slab_static_maker__static_adsconfig__1": ("Au_adsorption/ads_static_2_3"),
-        "slab_static_maker__static_adsconfig__2": ("Au_adsorption/ads_static_3_3"),
+        "slab_static_maker__static_adsconfig_0": ("Au_adsorption/ads_static_1_3"),
+        "slab_static_maker__static_adsconfig_1": ("Au_adsorption/ads_static_2_3"),
+        "slab_static_maker__static_adsconfig_2": ("Au_adsorption/ads_static_3_3"),
     }
 
     fake_run_vasp_kwargs = {
@@ -66,9 +66,9 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         "slab_relax_maker__adsconfig_0",
         "slab_relax_maker__adsconfig_1",
         "slab_relax_maker__adsconfig_2",
-        "slab_static_maker__static_adsconfig__0",
-        "slab_static_maker__static_adsconfig__1",
-        "slab_static_maker__static_adsconfig__2",
+        "slab_static_maker__static_adsconfig_0",
+        "slab_static_maker__static_adsconfig_1",
+        "slab_static_maker__static_adsconfig_2",
     ]
 
     for actual_name in expected_job_names:
@@ -88,7 +88,7 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
     adsorption_energy.sort()
 
     assert adsorption_energy == [
-        -3.0084328299999967,
-        -2.9288308699999916,
-        -2.092973299999997,
+        -3.0666021499999943,
+        -2.9407460899999904,
+        -2.0976731399999906,
     ], "adsorption energy is inaccurate or not found in response"

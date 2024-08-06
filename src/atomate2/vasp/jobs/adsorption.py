@@ -12,6 +12,7 @@ from pymatgen.analysis.adsorption import AdsorbateSiteFinder
 from pymatgen.core import Element, Molecule, Structure
 from pymatgen.core.surface import SlabGenerator
 from pymatgen.io.vasp import Kpoints
+from pymatgen.io.vasp.sets import MPRelaxSet
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
@@ -143,7 +144,7 @@ class SlabRelaxMaker(BaseVaspMaker):
 
     name: str = "slab_relax_maker__"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: RelaxSetGenerator(
+        default_factory=lambda: MPRelaxSet(
             user_kpoints_settings={"reciprocal_density": 200},
             user_incar_settings={
                 "ISIF": 2,
