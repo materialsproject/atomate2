@@ -32,32 +32,19 @@ name_to_maker = {
 )
 def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
     ref_paths = {
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": 
-            "Si_mp_morph/BaseVaspMPMorph/Si_0.8",
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2": 
-            "Si_mp_morph/BaseVaspMPMorph/Si_1.0",
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3": 
-            "Si_mp_morph/BaseVaspMPMorph/Si_1.2",
-        "MP Morph VASP MD Maker production run": 
-            "Si_mp_morph/BaseVaspMPMorph/Si_prod",
-        "MP Morph VASP MD Maker Slow Quench production run": 
-            "Si_mp_morph/BaseVaspMPMorph/Si_prod",
-        "MP Morph VASP MD Maker Fast Quench production run":
-            "Si_mp_morph/BaseVaspMPMorph/Si_prod",
-        "Vasp Slow Quench MD Maker 900K": 
-            "Si_mp_morph/BaseVaspMPMorph/Si_900K",
-        "Vasp Slow Quench MD Maker 800K": 
-            "Si_mp_morph/BaseVaspMPMorph/Si_800K",
-        "Vasp Slow Quench MD Maker 700K": 
-            "Si_mp_morph/BaseVaspMPMorph/Si_700K",
-        "Vasp Slow Quench MD Maker 600K": 
-            "Si_mp_morph/BaseVaspMPMorph/Si_600K",
-        "MP pre-relax": 
-            "Si_mp_morph/BaseVaspMPMorph/pre_relax",
-        "MP meta-GGA relax": 
-            "Si_mp_morph/BaseVaspMPMorph/relax",
-        "MP meta-GGA static": 
-            "Si_mp_morph/BaseVaspMPMorph/static",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": "Si_mp_morph/BaseVaspMPMorph/Si_0.8",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2": "Si_mp_morph/BaseVaspMPMorph/Si_1.0",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3": "Si_mp_morph/BaseVaspMPMorph/Si_1.2",
+        "MP Morph VASP MD Maker production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
+        "MP Morph VASP MD Maker Slow Quench production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
+        "MP Morph VASP MD Maker Fast Quench production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
+        "Vasp Slow Quench MD Maker 900K": "Si_mp_morph/BaseVaspMPMorph/Si_900K",
+        "Vasp Slow Quench MD Maker 800K": "Si_mp_morph/BaseVaspMPMorph/Si_800K",
+        "Vasp Slow Quench MD Maker 700K": "Si_mp_morph/BaseVaspMPMorph/Si_700K",
+        "Vasp Slow Quench MD Maker 600K": "Si_mp_morph/BaseVaspMPMorph/Si_600K",
+        "MP pre-relax": "Si_mp_morph/BaseVaspMPMorph/pre_relax",
+        "MP meta-GGA relax": "Si_mp_morph/BaseVaspMPMorph/relax",
+        "MP meta-GGA static": "Si_mp_morph/BaseVaspMPMorph/static",
     }
 
     mock_vasp(ref_paths)
@@ -267,12 +254,9 @@ def _get_uuid_from_job(job, dct):
 
 def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
     ref_paths = {
-        "Equilibrium Volume Maker molecular dynamics 1": 
-            "Si_mp_morph/Si_0.8",
-        "Equilibrium Volume Maker molecular dynamics 2": 
-            "Si_mp_morph/Si_1.0",
-        "Equilibrium Volume Maker molecular dynamics 3": 
-            "Si_mp_morph/Si_1.2",
+        "Equilibrium Volume Maker molecular dynamics 1": "Si_mp_morph/Si_0.8",
+        "Equilibrium Volume Maker molecular dynamics 2": "Si_mp_morph/Si_1.0",
+        "Equilibrium Volume Maker molecular dynamics 3": "Si_mp_morph/Si_1.2",
     }
 
     mock_vasp(ref_paths)
@@ -362,14 +346,10 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
     ref_paths = {
-        "Equilibrium Volume Maker molecular dynamics 1": 
-            "Si_mp_morph/recursion/Si_3.48",
-        "Equilibrium Volume Maker molecular dynamics 2": 
-            "Si_mp_morph/recursion/Si_4.35",
-        "Equilibrium Volume Maker molecular dynamics 3": 
-            "Si_mp_morph/recursion/Si_5.22",
-        "Equilibrium Volume Maker molecular dynamics 4": 
-            "Si_mp_morph/recursion/Si_6.80",
+        "Equilibrium Volume Maker molecular dynamics 1": "Si_mp_morph/recursion/Si_3.48",
+        "Equilibrium Volume Maker molecular dynamics 2": "Si_mp_morph/recursion/Si_4.35",
+        "Equilibrium Volume Maker molecular dynamics 3": "Si_mp_morph/recursion/Si_5.22",
+        "Equilibrium Volume Maker molecular dynamics 4": "Si_mp_morph/recursion/Si_6.80",
     }
 
     mock_vasp(ref_paths)
@@ -458,14 +438,10 @@ def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir)
 
 def test_mp_morph_maker(mock_vasp, clean_dir, vasp_test_dir):
     ref_paths = {
-        "Equilibrium Volume Maker molecular dynamics 1": 
-            "Si_mp_morph/Si_0.8",
-        "Equilibrium Volume Maker molecular dynamics 2": 
-            "Si_mp_morph/Si_1.0",
-        "Equilibrium Volume Maker molecular dynamics 3": 
-            "Si_mp_morph/Si_1.2",
-        "MP Morph md production run": 
-            "Si_mp_morph/Si_prod",
+        "Equilibrium Volume Maker molecular dynamics 1": "Si_mp_morph/Si_0.8",
+        "Equilibrium Volume Maker molecular dynamics 2": "Si_mp_morph/Si_1.0",
+        "Equilibrium Volume Maker molecular dynamics 3": "Si_mp_morph/Si_1.2",
+        "MP Morph md production run": "Si_mp_morph/Si_prod",
     }
 
     mock_vasp(ref_paths)
@@ -543,14 +519,10 @@ def test_mp_morph_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 def test_mpmorph_vasp_maker(mock_vasp, clean_dir, vasp_test_dir):
     ref_paths = {
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": 
-            "Si_mp_morph/Si_0.8",
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2": 
-            "Si_mp_morph/Si_1.0",
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3": 
-            "Si_mp_morph/Si_1.2",
-        "MP Morph VASP MD Maker production run":
-            "Si_mp_morph/Si_prod",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": "Si_mp_morph/Si_0.8",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2": "Si_mp_morph/Si_1.0",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3": "Si_mp_morph/Si_1.2",
+        "MP Morph VASP MD Maker production run": "Si_mp_morph/Si_prod",
     }
 
     mock_vasp(ref_paths)
