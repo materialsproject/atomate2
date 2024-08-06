@@ -13,18 +13,22 @@ Most ab-initio codes rely on input files read from disk. The `InputSet` class au
 
 While generally the input classes are supposed to be part of `pymatgen` during development it is recommended to include them in `atomate2` at first to facilitate rapid iteration. Once mature, they can be moved to `pymatgen` or to a `pymatgen` [addon package](https://.org/addons). When implementing your own input classes take note of the recommendations and rules in the pymatgen documentation [[1](https://pymatgen.org/pymatgen.io.html#module-pymatgen.io.core), [2](https://pymatgen.org/pymatgen.io.vasp.html#module-pymatgen.io.vasp.sets)].
 
-The `InputGenerators` interact with the atomate2 workflows through `Makers`. Each `Maker` for a code that requires input files, sets its `input_set_generator` parameter during initialization. For example, for the `RelaxMaker`, the default `input_set_generator` is the `RelaxSetGenerator`, but of course, users can provide or modify any `VaspInputGenerator` and provide it as input to a Maker.
+The `InputGenerators` interact with the atomate2 workflows through `Makers`. Each `Maker` for a code that requires input files, sets its `input_set_generator` parameter during initialization. For example, for the `RelaxMaker`, the default `input_set_generator` is the `RelaxSetGenerator`, but of course, users can provide or modify any `VaspInputGenerator` and provide it as input to a Maker. 
 
 In the following, we will delve into the specifics of how `InputSets` and `InputGenerators` are used in atomate2, showcasing the `VaspInputGenerator` and `VaspInputSet` as examples.
 
 ## Example: VaspInputFiles/Sets/Generators
-The VaspInputSets are defined in the `atomate2.vasp.sets` module and all inherit from the base `VaspInputSet`, which typically consists of an `INCAR`, `KPOINTS`, `POSCAR`, and `POTCAR` object, i.e., all the files required to run a VASP calculation.
-The base `VaspInputSet` implements the standard methods `write_input()` to write the respective files to a directory, `from_directory()` to read in an `InputSet` from a previous calculation, and `is_valid()` to confirm the internal consistency of the `VaspInputSet`.
-The `VaspInputGenerator` defines all the logic required to generate input files for the `atomate2` VASP workflows.
+```{Note}
+Note that for historical reasons there is some inconsistency in naming scheme of the Vasp classes.The `VaspInputSet` class in pymatgen corresponds to an `InputGenerator` class and to be consistent with atomate2 it has an alias `VaspInputGenerator`. We will refer to it by its alias. Due to the same reason what would normally be the `InputSet` class is named `VaspInput`.
+```
+The `VaspInput` class, defined in the `pymatgen.io.vasp.inputs` module, consists of an `INCAR`, `KPOINTS`, `POSCAR`, and `POTCAR` object, i.e., all the files required to run a VASP calculation. While these inherit from `MSONable` when adding `InputFiles` for a new code the `InputFile` class should be used.
 
-The input files are generated starting from the `_BASE_VASP_SET` as the default. Default `InputSets` are defined as YAML files in `atomate2`.
+The base `VaspInput` implements the standard methods `write_input()` to write the respective files to a directory, `from_directory()` to read in an `InputSet` from a previous calculation, and `is_valid()` to confirm the internal consistency of the `VaspInputSet`. 
+The `VaspInputGenerator` defines all the logic required to generate input files for the materials project, `atomate2` and other VASP workflows.
 
- For VASP, `atomate2` provides default settings for PBEsol calculations as well as settings for PBE and R2Scan calculations with the parameters of the Materials Project. These default `InputSets` combined with the logic in the respective `InputGenerator` aim to be reliable for a large majority of calculations.
+Default `InputSets` are defined as YAML files in `pymatgen.io.vasp`. The input files in atomate2 are generated starting from the `_BASE_VASP_SET` as the default that implements some changes to the `MPRelaxSet` and `MPScanRelaxSet`.
+
+ For VASP, `atomate2` provides default settings for PBEsol calculations as well as settings for PBE and R2Scan calculations with the parameters of the Materials Project and some legacy settings compatible with atomate1 (e.g. equation of state workflow). These default `InputSets` combined with the logic in the respective `InputGenerator` aim to be reliable for a large majority of calculations.
 
 The `VaspInputGenerator` applies multiple layers of modifications to the default settings, taking into account results from provided previous calculations, the specific type of calculation being conducted, user inputs, and the input `Structure`.
 
