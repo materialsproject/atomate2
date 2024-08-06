@@ -1,14 +1,13 @@
 # mypy: ignore-errors
 
-""" Core definition of a Q-Chem Task Document """
+""" Core definition of a JDFTx Task Document """
 from typing import Any, Dict, List, Optional
 import logging
 import re
 from collections import OrderedDict
 from pydantic import BaseModel, Field
 from custodian.qchem.jobs import QCJob
-from pymatgen.core.structure import Molecule
-from pymatgen.io.qchem.inputs import QCInput
+from atomate2.jdftx.io.inputs import JdftxInput
 from monty.serialization import loadfn
 from typing import Type, TypeVar, Union
 from emmet.core.structure import MoleculeMetadata
@@ -20,7 +19,7 @@ from emmet.core.qchem.calc_types import (
 )
 from emmet.core.qchem.calculation import Calculation, CalculationInput
 
-from emmet.core.qchem.task import QChemStatus
+from atomate2.jdftx.emmet.core.jdftx.task import JDFTxStatus
 
 
 __author__ = (

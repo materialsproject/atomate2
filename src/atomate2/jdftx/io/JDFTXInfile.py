@@ -19,9 +19,9 @@ from monty.json import MontyDecoder, MSONable
 from pymatgen.util.io_utils import clean_lines
 from pymatgen.core import Structure
 
-from generic_tags import flatten_list
-from JDFTXInfile_master_format import get_tag_object
-from JDFTXInfile_master_format import MASTER_TAG_LIST, __TAG_LIST__, __WANNIER_TAGS__, __PHONON_TAGS__
+from .generic_tags import flatten_list
+from .JDFTXInfile_master_format import get_tag_object
+from .JDFTXInfile_master_format import MASTER_TAG_LIST, __TAG_LIST__, __WANNIER_TAGS__, __PHONON_TAGS__
 
 if TYPE_CHECKING:
     from typing import Any

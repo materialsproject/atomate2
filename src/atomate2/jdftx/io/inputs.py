@@ -10,7 +10,8 @@ from monty.io import zopen
 from pymatgen.core import Molecule, Structure
 from pymatgen.io.core import InputFile
 
-from .utils import lower_and_check_unique, read_pattern, read_table_pattern
+#TODO functions are currently not implemented in utils. Remove these?
+# from .utils import lower_and_check_unique, read_pattern, read_table_pattern
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -56,9 +57,10 @@ class JdftxInput(InputFile):
         svp: dict | None = None,
         pcm_nonels: dict | None = None,
     ):
+        #TODO update docustring for JDFTx
         """
         Args:
-            molecule (pymatgen Molecule object, list of Molecule objects, or "read"):
+            structure (pymatgen Structure object or "read"):
                 Input molecule(s). molecule can be set as a pymatgen Molecule object, a list of such
                 Molecule objects, or as the string "read". "read" can be used in multi_job QChem input
                 files where the molecule is read in from the previous calculation.
