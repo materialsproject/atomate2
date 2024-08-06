@@ -58,17 +58,17 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
     ]
 
     expected_job_names = [
-        "bulk relaxation maker - bulk relaxation job",
-        "molecule relaxation maker - molecule relaxation job",
-        "adsorption relaxation maker - slab relaxation job",
-        "molecule static maker - molecule static job",
-        "adsorption static maker - slab static job",
-        "adsorption relaxation maker - configuration 0",
-        "adsorption relaxation maker - configuration 1",
-        "adsorption relaxation maker - configuration 2",
-        "adsorption static maker - static configuration 0",
-        "adsorption static maker - static configuration 1",
-        "adsorption static maker - static configuration 2",
+        "bulk_relax_maker__bulk_relax_job",
+        "mol_relax_maker__mol_relax_job",
+        "mol_static_maker__mol_static_job",
+        "slab_relax_maker__slab_relax_job",
+        "slab_static_maker__slab_static_job",
+        "slab_relax_maker__adsconfig_0",
+        "slab_relax_maker__adsconfig_1",
+        "slab_relax_maker__adsconfig_2",
+        "slab_static_maker__static_adsconfig__0",
+        "slab_static_maker__static_adsconfig__1",
+        "slab_static_maker__static_adsconfig__2",
     ]
 
     for actual_name in expected_job_names:

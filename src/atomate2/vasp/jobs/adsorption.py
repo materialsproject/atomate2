@@ -19,7 +19,174 @@ from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
 
+
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class BulkRelaxMaker(BaseVaspMaker):
+    """Maker for molecule relaxation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the relaxation calculation.
+    """
+
+    name: str = "bulk_relax_maker__"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: RelaxSetGenerator(
+            user_kpoints_settings={"reciprocal_density": 200},
+            user_incar_settings={
+                "ISIF": 3,
+                "ENCUT": 700,
+                "GGA": "RP",
+                "EDIFF": 1e-5,
+                "LDAU": False,
+                "NSW": 300,
+                "NELM": 500,
+            },
+            auto_ispin=True,
+        )
+    )
+
+
+@dataclass
+class MolRelaxMaker(BaseVaspMaker):
+    """Maker for molecule relaxation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the relaxation calculation.
+    """
+
+    name: str = "mol_relax_maker__"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: RelaxSetGenerator(
+            user_kpoints_settings=Kpoints.from_dict(
+                {
+                    "nkpoints": 0,
+                    "generation_style": "Gamma",
+                    "kpoints": [[3, 3, 3]],
+                    "usershift": [0, 0, 0],
+                    "comment": "Automatic mesh",
+                }
+            ),
+            user_incar_settings={
+                "ISIF": 2,
+                "ENCUT": 700,
+                "GGA": "RP",
+                "EDIFF": 1e-5,
+                "LDAU": False,
+                "NSW": 300,
+                "NELM": 500,
+            },
+            auto_ispin=True,
+        )
+    )
+
+
+@dataclass
+class MolStaticMaker(BaseVaspMaker):
+    """Maker for molecule static energy calculation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the static energy calculation.
+    """
+
+    name: str = "mol_static_maker__"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: StaticSetGenerator(
+            user_kpoints_settings=Kpoints.from_dict(
+                {
+                    "nkpoints": 0,
+                    "generation_style": "Gamma",
+                    "kpoints": [[3, 3, 3]],
+                    "usershift": [0, 0, 0],
+                    "comment": "Automatic mesh",
+                }
+            ),
+            user_incar_settings={
+                "ENCUT": 700,
+                "IBRION": -1,
+                "GGA": "RP",
+                "EDIFF": 1e-7,
+                "LDAU": False,
+                "NSW": 0,
+                "NELM": 500,
+            },
+            auto_ispin=True,
+        )
+    )
+
+
+@dataclass
+class SlabRelaxMaker(BaseVaspMaker):
+    """Maker for adsorption slab relaxation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the relaxation calculation.
+    """
+
+    name: str = "slab_relax_maker__"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: RelaxSetGenerator(
+            user_kpoints_settings={"reciprocal_density": 200},
+            user_incar_settings={
+                "ISIF": 2,
+                "ENCUT": 700,
+                "GGA": "RP",
+                "EDIFF": 1e-5,
+                "LDAU": False,
+                "NSW": 300,
+                "NELM": 500,
+            },
+            auto_ispin=True,
+        )
+    )
+
+
+@dataclass
+class SlabStaticMaker(BaseVaspMaker):
+    """Maker for slab static energy calculation.
+
+    Parameters
+    ----------
+    name: str
+        The name of the flow produced by the maker.
+    input_set_generator: VaspInputGenerator
+        The input set generator for the static energy calculation.
+    """
+
+    name: str = "slab_static_maker__"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: StaticSetGenerator(
+            user_kpoints_settings={"reciprocal_density": 200},
+            user_incar_settings={
+                "ENCUT": 700,
+                "IBRION": -1,
+                "GGA": "RP",
+                "EDIFF": 1e-7,
+                "LDAU": False,
+                "NSW": 0,
+                "NELM": 500,
+            },
+            auto_ispin=True,
+        )
+    )
 
 
 def get_boxed_molecule(molecule: Molecule) -> Structure:
@@ -267,169 +434,3 @@ def adsorption_calculations(
         "adsorption_energy": [item[2] for item in sorted_combined_outputs],
         "dirs": [item[3] for item in sorted_combined_outputs],
     }
-
-
-@dataclass
-class BulkRelaxMaker(BaseVaspMaker):
-    """Maker for molecule relaxation.
-
-    Parameters
-    ----------
-    name: str
-        The name of the flow produced by the maker.
-    input_set_generator: VaspInputGenerator
-        The input set generator for the relaxation calculation.
-    """
-
-    name: str = "bulk_relax_maker__"
-    input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: RelaxSetGenerator(
-            user_kpoints_settings={"reciprocal_density": 200},
-            user_incar_settings={
-                "ISIF": 3,
-                "ENCUT": 700,
-                "GGA": "RP",
-                "EDIFF": 1e-5,
-                "LDAU": False,
-                "NSW": 300,
-                "NELM": 500,
-            },
-            auto_ispin=True,
-        )
-    )
-
-
-@dataclass
-class MolRelaxMaker(BaseVaspMaker):
-    """Maker for molecule relaxation.
-
-    Parameters
-    ----------
-    name: str
-        The name of the flow produced by the maker.
-    input_set_generator: VaspInputGenerator
-        The input set generator for the relaxation calculation.
-    """
-
-    name: str = "mol_relax_maker__"
-    input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: RelaxSetGenerator(
-            user_kpoints_settings=Kpoints.from_dict(
-                {
-                    "nkpoints": 0,
-                    "generation_style": "Gamma",
-                    "kpoints": [[3, 3, 3]],
-                    "usershift": [0, 0, 0],
-                    "comment": "Automatic mesh",
-                }
-            ),
-            user_incar_settings={
-                "ISIF": 2,
-                "ENCUT": 700,
-                "GGA": "RP",
-                "EDIFF": 1e-5,
-                "LDAU": False,
-                "NSW": 300,
-                "NELM": 500,
-            },
-            auto_ispin=True,
-        )
-    )
-
-
-@dataclass
-class MolStaticMaker(BaseVaspMaker):
-    """Maker for molecule static energy calculation.
-
-    Parameters
-    ----------
-    name: str
-        The name of the flow produced by the maker.
-    input_set_generator: VaspInputGenerator
-        The input set generator for the static energy calculation.
-    """
-
-    name: str = "mol_static_maker__"
-    input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings=Kpoints.from_dict(
-                {
-                    "nkpoints": 0,
-                    "generation_style": "Gamma",
-                    "kpoints": [[3, 3, 3]],
-                    "usershift": [0, 0, 0],
-                    "comment": "Automatic mesh",
-                }
-            ),
-            user_incar_settings={
-                "ENCUT": 700,
-                "IBRION": -1,
-                "GGA": "RP",
-                "EDIFF": 1e-7,
-                "LDAU": False,
-                "NSW": 0,
-                "NELM": 500,
-            },
-            auto_ispin=True,
-        )
-    )
-
-
-@dataclass
-class SlabRelaxMaker(BaseVaspMaker):
-    """Maker for adsorption slab relaxation.
-
-    Parameters
-    ----------
-    name: str
-        The name of the flow produced by the maker.
-    input_set_generator: VaspInputGenerator
-        The input set generator for the relaxation calculation.
-    """
-
-    name: str = "slab_relax_maker__"
-    input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: RelaxSetGenerator(
-            user_kpoints_settings={"reciprocal_density": 200},
-            user_incar_settings={
-                "ISIF": 2,
-                "ENCUT": 700,
-                "GGA": "RP",
-                "EDIFF": 1e-5,
-                "LDAU": False,
-                "NSW": 300,
-                "NELM": 500,
-            },
-            auto_ispin=True,
-        )
-    )
-
-
-@dataclass
-class SlabStaticMaker(BaseVaspMaker):
-    """Maker for slab static energy calculation.
-
-    Parameters
-    ----------
-    name: str
-        The name of the flow produced by the maker.
-    input_set_generator: VaspInputGenerator
-        The input set generator for the static energy calculation.
-    """
-
-    name: str = "slab_static_maker__"
-    input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: StaticSetGenerator(
-            user_kpoints_settings={"reciprocal_density": 200},
-            user_incar_settings={
-                "ENCUT": 700,
-                "IBRION": -1,
-                "GGA": "RP",
-                "EDIFF": 1e-7,
-                "LDAU": False,
-                "NSW": 0,
-                "NELM": 500,
-            },
-            auto_ispin=True,
-        )
-    )

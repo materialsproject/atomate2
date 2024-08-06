@@ -209,7 +209,7 @@ class AdsorptionMaker(Maker):
         jobs += [run_ads_calculation]
         ads_outputs = run_ads_calculation.output
 
-        joblog["job8: run_ads_calculations"]["output"] = ads_outputs.as_dict()
+        joblog["job8: run_ads_calculations"]["output"] = ads_outputs
 
         adsorption_calc = adsorption_calculations(
             adslab_structures=adslab_structures,
