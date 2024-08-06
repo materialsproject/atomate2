@@ -64,7 +64,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         temperature: float = 300,
         one_shot_approx: bool = True,
         seed: int | None = None,
-        atom_resolved: bool = False,
+        element_resolved: bool = False,
         mode_resolved: bool = False,
         n_samples: int = 1,
     ) -> Flow:
@@ -108,7 +108,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         seed: Optional[int]
             Seed to use for the random number generator
             (only used if one_shot_approx == False). Set to None by default.
-        atom_resolved: bool
+        element_resolved: bool
             If true, calculate the atom-resolved sigma^A. This is false by default.
         mode_resolved: bool
             If true, calculate the mode-resolved sigma^A. This is false by default.
@@ -138,7 +138,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             temperature,
             one_shot_approx,
             seed,
-            atom_resolved,
+            element_resolved,
             mode_resolved,
             n_samples,
         )
@@ -162,7 +162,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         temperature: float = 300,
         one_shot_approx: bool = True,
         seed: int | None = None,
-        atom_resolved: bool = False,
+        element_resolved: bool = False,
         mode_resolved: bool = False,
         n_samples: int = 1,
     ) -> Flow:
@@ -183,7 +183,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         seed: Optional[int]
             Seed to use for the random number generator
             (only used if one_shot_approx == False). Default is None.
-        atom_resolved: bool
+        element_resolved: bool
             If true, calculate the atom-resolved sigma^A. This is false by default.
         mode_resolved: bool
             If true, calculate the mode-resolved sigma^A. This is false by default.
@@ -249,7 +249,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             phonon_doc.force_constants,
             phonon_supercell,
             one_shot_approx,
-            atom_resolved,
+            element_resolved,
             mode_resolved,
         )
         jobs.append(sigma_calcs)

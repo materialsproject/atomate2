@@ -70,12 +70,15 @@ def get_phonon_supercell(phonon_doc: PhononBSDOSDoc) -> Structure:
     return get_pmg_structure(phonon.supercell)
 
 
-def get_sigma_per_atom(
+def get_sigma_per_element(
     structure: Structure,
     forces_dft: np.ndarray,
     forces_harmonic: np.ndarray,
 ) -> list[tuple[str, float]]:
-    """Compute the atom-resolved sigma^A measure.
+    """Compute an element-resolved sigma^A.
+
+    Every element type in the structure will have a
+    sigma^A value calculated for it.
 
     Parameters
     ----------
@@ -424,7 +427,7 @@ def get_sigmas(
     force_constants: ForceConstants,
     structure: Structure,
     one_shot: bool,
-    atom_resolved: bool = False,
+    element_resolved: bool = False,
     mode_resolved: bool = False,
 ) -> dict:
     """Get the desired sigma^A measures.
@@ -442,8 +445,8 @@ def get_sigmas(
     one_shot: bool
         If true, find the one-shot approximation. If false, find the
         full sigma^A number.
-    atom_resolved: bool
-        If true, resolve sigma^A to the different atoms.
+    element_resolved: bool
+        If true, resolve sigma^A to the different elements.
         Default is false.
     mode_resolved: bool
         If true, resolve sigma^A to the different modes.
@@ -473,8 +476,8 @@ def get_sigmas(
             dft_forces,
             harmonic_forces,
         )
-    if atom_resolved:
-        sigma_dict["atom-resolved"] = get_sigma_per_atom(
+    if element_resolved:
+        sigma_dict["element-resolved"] = get_sigma_per_element(
             structure,
             dft_forces,
             harmonic_forces,

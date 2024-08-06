@@ -54,6 +54,7 @@ forcefields = [
     "calorine<=2.2.1",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
+    "torchdata<=0.7.1", # TODO: remove when issue fixed
     "matgl>=1.1.1",
     "quippy-ase>=0.9.14",
     "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
@@ -94,6 +95,7 @@ strict = [
     "jobflow==0.1.17",
     "lobsterpy==0.4.5",
     "mace-torch>=0.3.3",
+    "torchdata==0.7.1", # TODO: remove when issue fixed
     "matgl==1.1.2",
     "monty==2024.5.24",
     "mp-api==0.41.2",

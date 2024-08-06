@@ -202,7 +202,7 @@ def test_mode_resolved_anharmonic_quantification(si, clean_dir, mock_aims, speci
     assert pytest.approx(sigmas.std(), 0.01) == 0.213
 
 
-def test_atom_resolved_anharmonic_quantification(
+def test_element_resolved_anharmonic_quantification(
     nacl, clean_dir, mock_aims, species_dir
 ):
     # mapping from job name to directory containing test files
@@ -256,13 +256,13 @@ def test_atom_resolved_anharmonic_quantification(
     flow = maker.make(
         nacl,
         supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
-        atom_resolved=True,
+        element_resolved=True,
     )
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     nacl_sigma_vals = responses[flow.job_uuids[-1]][1].output.sigma_dict[
-        "atom-resolved"
+        "element-resolved"
     ]
     nacl_sigma_rounded = [(arr[0], np.round(arr[1], 3)) for arr in nacl_sigma_vals]
     assert ("Na", 0.076) in nacl_sigma_rounded
