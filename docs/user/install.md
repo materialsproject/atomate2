@@ -175,6 +175,16 @@ To install the packages run:
 pip install atomate2
 ```
 
+If you would like to use more specialized capabilities of `atomate2` such as the phonon, Lobster or force field workflows, you would need to run one of
+
+```bash
+pip install atomate2[phonons]
+pip install atomate2[lobster]
+pip install atomate2[forcefields]
+```
+
+See [`pyproject.toml`](https://github.com/materialsproject/atomate2/blob/main/pyproject.toml) for all available optional dependency sets. More detailed instructions can be found under [dev installation](../dev/dev_install.md).
+
 ## Configure calculation output database
 
 The next step is to configure your MongoDB database that will be used to store
@@ -286,7 +296,7 @@ This is the command that you would use to run VASP with parallelization
 
 The directory structure of `<<INSTALL_DIR>>/config` should now look like
 
-```txt
+```
 config
 ├── jobflow.yaml
 └── atomate2.yaml
@@ -446,6 +456,8 @@ See the following pages for more information on the topics we covered here:
 
 - To see how to run and customize the existing Workflows in atomate2, try the
   [](running_workflows) tutorial (suggested next step).
+- To learn more about `TaskDocument` and how `atomate2` organizes output data, review
+  the [Introduction to task documents, schemas, and emmet](docs_schemas_emmet.md) tutorial.
 - To see how to manage and execute many workflows at once, try the
   [](atomate2_fireWorks) tutorial.
 

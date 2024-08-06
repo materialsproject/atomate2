@@ -27,6 +27,7 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
+from typing_extensions import Self
 
 from atomate2.aims.utils.units import omegaToTHz
 
@@ -128,7 +129,7 @@ class PhononJobDirs(BaseModel):
         None, description="Directory where optimization run was performed."
     )
     taskdoc_run_job_dir: Optional[str] = Field(
-        None, description="Directory where taskdoc was generated."
+        None, description="Directory where task doc was generated."
     )
 
 
@@ -163,7 +164,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
     internal_energies: Optional[list[float]] = Field(
         None,
-        description="internal energies in  J/mol per "
+        description="internal energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
     entropies: Optional[list[float]] = Field(
@@ -237,9 +238,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
         **kwargs,
-    ) -> "PhononBSDOSDoc":
-        """
-        Generate collection of phonon data.
+    ) -> Self:
+        """Generate collection of phonon data.
 
         Parameters
         ----------
@@ -269,6 +269,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         **kwargs:
             additional arguments
         """
+        additional_fields = kwargs.get("additional_fields", {})
         factor = get_factor(code)
         # This opens the opportunity to add support for other codes
         # that are supported by phonopy
@@ -284,7 +285,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         if cell.magnetic_moments is not None and primitive_matrix == "auto":
             if np.any(cell.magnetic_moments != 0.0):
                 raise ValueError(
-                    "For materials with magnetic moments specified "
+                    "For materials with magnetic moments, "
                     "use_symmetrized_structure must be 'primitive'"
                 )
             cell.magnetic_moments = None
@@ -329,8 +330,12 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # Produces all force constants
         phonon.produce_force_constants(forces=set_of_forces)
 
-        # with phonon.load("phonopy.yaml") the phonopy API can be used
-        phonon.save("phonopy.yaml")
+        filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
+        # if kwargs.get("filename_phonopy_yaml") is None:
+        #    kwargs["filename_phonopy_yaml"] = "phonopy.yaml"
+
+        # with phonopy.load("phonopy.yaml") the phonopy API can be used
+        phonon.save(filename_phonopy_yaml)
 
         # get phonon band structure
         kpath_dict, kpath_concrete = PhononBSDOSDoc.get_kpath(
@@ -345,7 +350,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         )
 
         # phonon band structures will always be computed
-        filename_band_yaml = "phonon_band_structure.yaml"
+        filename_band_yaml = kwargs.get(
+            "filename_band_yaml", "phonon_band_structure.yaml"
+        )
+        # filename_band_yaml = "phonon_band_structure.yaml"
 
         # TODO: potentially add kwargs to avoid computation of eigenvectors
         phonon.run_band_structure(
@@ -359,9 +367,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             filename_band_yaml, labels_dict=kpath_dict, has_nac=born is not None
         )
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
-
         new_plotter.save_plot(
-            "phonon_band_structure.eps", units=kwargs.get("units", "THz")
+            filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
+            units=kwargs.get("units", "THz"),
         )
 
         # will determine if imaginary modes are present in the structure
@@ -374,7 +382,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             bs_symm_line.write_phononwebsite("phonon_website.json")
 
         # get phonon density of states
-        filename_dos_yaml = "phonon_dos.yaml"
+        filename_dos_yaml = kwargs.get("filename_dos_yaml", "phonon_dos.yaml")
+        # filename_dos_yaml = "phonon_dos.yaml"
 
         kpoint_density_dos = kwargs.get("kpoint_density_dos", 7_000)
         kpoint = Kpoints.automatic_density(
@@ -383,13 +392,18 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             force_gamma=True,
         )
         phonon.run_mesh(kpoint.kpts[0])
-        phonon.run_total_dos()
+        phonon_dos_sigma = kwargs.get("phonon_dos_sigma", None)
+        dos_use_tetrahedron_method = kwargs.get("dos_use_tetrahedron_method", True)
+        phonon.run_total_dos(
+            sigma=phonon_dos_sigma, use_tetrahedron_method=dos_use_tetrahedron_method
+        )
         phonon.write_total_dos(filename=filename_dos_yaml)
         dos = get_ph_dos(filename_dos_yaml)
         new_plotter_dos = PhononDosPlotter()
         new_plotter_dos.add_dos(label="total", dos=dos)
         new_plotter_dos.save_plot(
-            filename="phonon_dos.eps", units=kwargs.get("units", "THz")
+            filename=kwargs.get("filename_dos", "phonon_dos.pdf"),
+            units=kwargs.get("units", "THz"),
         )
 
         # compute vibrational part of free energies per formula unit
@@ -447,7 +461,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 phonon.thermal_displacement_matrices.write_cif(
                     phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
                 )
-            _disp_mat = phonon._thermal_displacement_matrices
+            _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
             tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
 
             tdisp_mat_cif = _disp_mat.thermal_displacement_matrices_cif.tolist()
@@ -465,7 +479,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             total_dft_energy / formula_units if total_dft_energy is not None else None
         )
 
-        return cls.from_structure(
+        doc = cls.from_structure(
             structure=structure,
             meta_structure=structure,
             phonon_bandstructure=bs_symm_line,
@@ -513,12 +527,13 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             },
         )
 
+        return doc.model_copy(update=additional_fields)
+
     @staticmethod
     def get_kpath(
         structure: Structure, kpath_scheme: str, symprec: float, **kpath_kwargs
     ) -> tuple:
-        """
-        Get high-symmetry points in k-space in phonopy format.
+        """Get high-symmetry points in k-space in phonopy format.
 
         Parameters
         ----------
@@ -537,7 +552,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             kpath = high_symm_kpath.kpath
         elif kpath_scheme == "seekpath":
             high_symm_kpath = KPathSeek(structure, symprec=symprec, **kpath_kwargs)
-            kpath = high_symm_kpath._kpath
+            kpath = high_symm_kpath._kpath  # noqa: SLF001
+        else:
+            raise ValueError(f"Unexpected {kpath_scheme=}")
 
         path = copy.deepcopy(kpath["path"])
 

@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core import Structure
+    from typing_extensions import Self
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -40,8 +41,7 @@ class MultiMDMaker(Maker):
         prev_dir: str | Path | None = None,
         prev_traj_ids: list[str] | None = None,
     ) -> Flow:
-        """
-        Create a flow with several chained MD runs.
+        """Create a flow with several chained MD runs.
 
         Parameters
         ----------
@@ -59,11 +59,11 @@ class MultiMDMaker(Maker):
         """
         md_job = None
         md_jobs = []
-        for idx, maker in enumerate(self.md_makers, 1):
-            if md_job is None:
-                md_structure = structure
-                md_prev_dir = prev_dir
-            else:
+        md_structure = structure
+        md_prev_dir = prev_dir
+
+        for idx, maker in enumerate(self.md_makers, start=1):
+            if md_job is not None:
                 md_structure = md_job.output.structure
                 md_prev_dir = md_job.output.dir_name
             md_job = maker.make(md_structure, prev_dir=md_prev_dir)
@@ -83,8 +83,7 @@ class MultiMDMaker(Maker):
         return Flow(md_jobs, output_job.output, name=self.name)
 
     def restart_from_uuid(self, md_ref: str | OutputReference) -> Flow:
-        """
-        Create a flow from the output reference of another MultiMDMaker.
+        """Create a flow from the output reference of another MultiMDMaker.
 
         The last output will be used as the starting point and the reference to
         all the previous steps will be included in the final document.
@@ -117,9 +116,8 @@ class MultiMDMaker(Maker):
         start_temp: float,
         end_temp: float | None = None,
         **kwargs,
-    ) -> MultiMDMaker:
-        """
-        Create an instance of the Maker based on the standard parameters.
+    ) -> Self:
+        """Create an instance of the Maker based on the standard parameters.
 
         Set values in the Flow maker, the Job Maker and the VaspInputGenerator,
         using them to create the final instance of the Maker.

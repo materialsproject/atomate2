@@ -172,8 +172,7 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
         structure: Structure,
         prev_input: Cp2kInput = None,
     ) -> dict:
-        """
-        Get updates to the kpoints configuration for a non-self consistent VASP job.
+        """Get updates to the kpoints configuration for a non-self consistent VASP job.
 
         Note, these updates will be ignored if the user has set user_kpoint_settings.
 

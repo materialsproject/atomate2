@@ -40,8 +40,7 @@ class Cp2kDrone(AbstractDrone):
         TaskDocument
             A CP2K task document.
         """
-        if path is None:
-            path = Path.cwd()
+        path = path or Path.cwd()
 
         try:
             doc = TaskDocument.from_directory(path, **self.task_document_kwargs)
@@ -55,8 +54,7 @@ class Cp2kDrone(AbstractDrone):
         return doc
 
     def get_valid_paths(self, path: tuple[str, list[str], list[str]]) -> list[str]:
-        """
-        Get valid paths to assimilate.
+        """Get valid paths to assimilate.
 
         There are some restrictions on the valid directory structures:
 

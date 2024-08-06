@@ -12,7 +12,7 @@ from atomate2.vasp.jobs.eos import MPGGAEosStaticMaker
 expected_incar_relax = {
     "ISIF": 3,
     "IBRION": 2,
-    "EDIFF": 1.0e-6,
+    "EDIFF": 1e-6,
     "ISMEAR": 0,
     "SIGMA": 0.05,
     "LMAXMIX": 6,
@@ -45,7 +45,7 @@ def test_mp_eos_double_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     }
 
     structure = Structure.from_file(
-        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1']}/inputs/POSCAR"
+        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1']}/inputs/POSCAR.gz"
     )
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
@@ -61,10 +61,12 @@ def test_mp_eos_double_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     for uuid in responses:
         assert isinstance(responses[uuid][1].output, TaskDoc)
 
-    taskdocs = [responses[uuid][1].output for uuid in responses]
+    task_docs = [responses[uuid][1].output for uuid in responses]
 
     # ensure that output structure of first relaxation is fed to second
-    assert structure_equality(taskdocs[1].input.structure, taskdocs[0].output.structure)
+    assert structure_equality(
+        task_docs[1].input.structure, task_docs[0].output.structure
+    )
 
     assert len(responses) == len(ref_paths)
 
@@ -75,7 +77,7 @@ def test_mp_eos_maker(
     mock_vasp,
     clean_dir,
     vasp_test_dir,
-    nframes: int = 2,
+    n_frames: int = 2,
     linear_strain: tuple = (-0.05, 0.05),
 ):
     base_ref_path = "Si_EOS_MP_GGA/"
@@ -90,7 +92,7 @@ def test_mp_eos_maker(
             f"mp-149-PBE-EOS_MP_GGA_relax_{idx + 1}"
         )
 
-    for idx in range(nframes):
+    for idx in range(n_frames):
         ref_paths[f"EOS MP GGA relax deformation {idx}"] = (
             f"mp-149-PBE-EOS_Deformation_Relax_{idx}"
         )
@@ -119,13 +121,13 @@ def test_mp_eos_maker(
         )
 
     structure = Structure.from_file(
-        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1']}/inputs/POSCAR"
+        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1']}/inputs/POSCAR.gz"
     )
 
     # cannot perform least-squares fit for four parameters with only 3 data points
     flow = MPGGAEosMaker(
         static_maker=static_maker,
-        number_of_frames=nframes,
+        number_of_frames=n_frames,
         linear_strain=linear_strain,
         postprocessor=PostProcessEosPressure(),
         _store_transformation_information=False,

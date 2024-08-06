@@ -1,6 +1,6 @@
 """A collection of helper utils found in atomate2 package."""
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def datetime_str() -> str:
@@ -12,4 +12,4 @@ def datetime_str() -> str:
     str
         The current time.
     """
-    return str(datetime.utcnow())
+    return str(datetime.now(tz=timezone.utc))

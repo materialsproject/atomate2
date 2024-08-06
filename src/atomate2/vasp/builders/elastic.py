@@ -63,7 +63,7 @@ class ElasticBuilder(Builder):
     ) -> None:
         self.tasks = tasks
         self.elasticity = elasticity
-        self.query = query if query else {}
+        self.query = query or {}
         self.kwargs = kwargs
         self.symprec = symprec
         self.fitting_method = fitting_method
@@ -79,8 +79,7 @@ class ElasticBuilder(Builder):
         self.elasticity.ensure_index("last_updated")
 
     def get_items(self) -> Generator:
-        """
-        Get all items to process into elastic documents.
+        """Get all items to process into elastic documents.
 
         Yields
         ------
@@ -149,9 +148,9 @@ class ElasticBuilder(Builder):
         grouped = _group_deformations(tasks, self.structure_match_tol)
 
         elastic_docs = []
-        for tasks in grouped:
+        for group in grouped:
             elastic_doc = _get_elastic_document(
-                tasks, self.symprec, self.fitting_method
+                group, self.symprec, self.fitting_method
             )
             elastic_docs.append(elastic_doc)
 
