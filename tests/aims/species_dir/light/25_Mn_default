@@ -1,0 +1,87 @@
+################################################################################
+#
+#  FHI-aims code project
+#  VB, Fritz-Haber Institut, 2010
+#
+#  Suggested "light" defaults for Mn atom (to be pasted into control.in file)
+#  Be sure to double-check any results obtained with these settings for post-processing,
+#  e.g., with the "tight" defaults and larger basis sets.
+#
+################################################################################
+  species        Mn
+#     global species definitions
+    nucleus             25
+    mass                54.938045
+#
+    l_hartree           4
+#
+    cut_pot             3.5          1.5  1.0
+    basis_dep_cutoff    1e-4
+#
+    radial_base         50 5.0
+    radial_multiplier   1
+    angular_grids       specified
+      division   0.4222   50
+      division   0.8072  110
+      division   1.0787  194
+      division   1.2927  302
+#      division   1.4573  434
+#      division   1.8560  590
+#      division   1.8945  770
+#      division   1.9339  974
+#      division   2.3905 1202
+      outer_grid   302
+################################################################################
+#
+#  Definition of "minimal" basis
+#
+################################################################################
+#     valence basis states
+    valence      4  s   2.
+    valence      3  p   6.
+    valence      3  d   5.
+#     ion occupancy
+    ion_occ      4  s   1.
+    ion_occ      3  p   6.
+    ion_occ      3  d   4.
+################################################################################
+#
+#  Suggested additional basis functions. For production calculations,
+#  uncomment them one after another (the most important basis functions are
+#  listed first).
+#
+#  Constructed for dimers: 1.40 A, 1.60 A, 2.10 A, 2.75 A, 3.75 A
+#
+################################################################################
+#  "First tier" - improvements: -466.21 meV to -15.27 meV
+     hydro 4 f 9.6
+     hydro 3 d 3.2
+     hydro 2 p 2
+#     hydro 5 g 13.6
+     hydro 3 s 3.3
+#  "Second tier" - improvements: -21.45 meV to -1.55 meV
+#     hydro 3 d 6
+#     hydro 6 h 19.2
+#     hydro 4 f 6.4
+#     hydro 4 f 17.2
+#     hydro 3 p 3.1
+#     hydro 3 d 6.2
+#     hydro 5 g 10.8
+#     hydro 3 s 3.8
+#  "Third tier" - improvements: -1.38 meV to -0.13 meV
+#     hydro 5 p 8.6   -1.38 meV
+#     hydro 6 h 16    -0.73 meV
+#     hydro 3 d 10.8  -0.43 meV
+#     hydro 5 f 6.8   # forced: -0.26 meV
+#     hydro 5 g 6.4   # forced: -0.21 meV
+#     hydro 5 s 9.8   # forced: -0.13 meV
+#  Further functions: improvements -0.32 meV and below
+#     hydro 3 p 19.6  # -0.32 meV
+#     hydro 5 f 28.4  # -0.20 meV
+#     hydro 4 f 26    # -0.08 meV
+#     hydro 3 p 3.5
+#     hydro 5 g 14.8
+#     hydro 5 s 9
+#     hydro 4 p 16.8
+#     hydro 6 h 18
+#     hydro 4 d 13.6

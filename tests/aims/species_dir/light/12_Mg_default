@@ -1,0 +1,75 @@
+################################################################################
+#
+#  FHI-aims code project
+#  VB, Fritz-Haber Institut, 2009
+#
+#  Suggested "light" defaults for Mg atom (to be pasted into control.in file)
+#  Be sure to double-check any results obtained with these settings for post-processing,
+#  e.g., with the "tight" defaults and larger basis sets.
+#
+################################################################################
+  species        Mg
+#     global species definitions
+    nucleus             12
+    mass                24.3050
+#
+    l_hartree           4
+#
+    cut_pot             4.0          1.5  1.0
+    basis_dep_cutoff    1e-4
+#
+    radial_base         40 5.5
+    radial_multiplier   1
+    angular_grids       specified
+      division   0.7029   50
+      division   0.9689  110
+      division   1.1879  194
+      division   1.3129  302
+#      division   1.4867  434
+#      division   1.6018  590
+#      division   1.8611  770
+#      division   1.9576  974
+#      division   2.2261 1202
+#      outer_grid   974
+      outer_grid   302
+################################################################################
+#
+#  Definition of "minimal" basis
+#
+################################################################################
+#     valence basis states
+    valence      3  s   2.
+    valence      2  p   6.
+#     ion occupancy
+    ion_occ      2  s   2.
+    ion_occ      2  p   6.
+################################################################################
+#
+#  Suggested additional basis functions. For production calculations,
+#  uncomment them one after another (the most important basis functions are
+#  listed first).
+#
+#  Constructed for dimers: 2.125 A, 2.375 A, 2.875 A, 3.375 A, 4.5 A
+#
+################################################################################
+#  "First tier" - improvements: -230.76 meV to -21.94 meV
+     hydro 2 p 1.5
+     ionic 3 d auto
+     hydro 3 s 2.4
+#  "Second tier" - improvements: -5.43 meV to -1.64 meV
+#     hydro 4 f 4.3
+#     hydro 2 p 3.4
+#     hydro 4 s 11.2
+#     hydro 3 d 6.2
+#  "Third tier" - improvements: -0.92 meV to -0.22 meV
+#     hydro 2 s 0.6
+#     hydro 3 p 4.8
+#     hydro 4 f 7.4
+#     hydro 5 g 6.6
+#     hydro 2 p 1.6
+#     hydro 3 d 1.8
+#  "Fourth tier" - improvements: -0.09 meV to -0.05 meV
+#     hydro 4 p 0.45
+#     hydro 5 g 10.4
+#     hydro 2 s 12.4
+#     hydro 4 d 1.7

@@ -79,7 +79,6 @@ def enumerate_magnetic_orderings(
         truncate_by_symmetry=truncate_by_symmetry,
         transformation_kwargs=transformation_kwargs,
     )
-
     return enumerator.ordered_structures, enumerator.ordered_structure_origins
 
 

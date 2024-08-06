@@ -1,0 +1,1 @@
+{"xc": "pbe", "relativistic": "atomic_zora scalar", "species_dir": "/home/purcellt/git/atomate2_test/tests/aims/species_dir/light", "spin": "collinear", "output": ["mulliken", "mulliken"], "k_grid": [2, 2, 2]}
