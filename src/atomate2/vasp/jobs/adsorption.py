@@ -15,7 +15,8 @@ from pymatgen.io.vasp import Kpoints
 from pymatgen.io.vasp.sets import MPRelaxSet
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
+
+# from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
@@ -38,7 +39,7 @@ class BulkRelaxMaker(BaseVaspMaker):
 
     name: str = "bulk_relax_maker__"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: RelaxSetGenerator(
+        default_factory=lambda: MPRelaxSet(
             user_kpoints_settings={"reciprocal_density": 200},
             user_incar_settings={
                 "ISIF": 3,
@@ -68,7 +69,7 @@ class MolRelaxMaker(BaseVaspMaker):
 
     name: str = "mol_relax_maker__"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: RelaxSetGenerator(
+        default_factory=lambda: MPRelaxSet(
             user_kpoints_settings=Kpoints.from_dict(
                 {
                     "nkpoints": 0,
@@ -106,7 +107,7 @@ class MolStaticMaker(BaseVaspMaker):
 
     name: str = "mol_static_maker__"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: StaticSetGenerator(
+        default_factory=lambda: MPRelaxSet(
             user_kpoints_settings=Kpoints.from_dict(
                 {
                     "nkpoints": 0,
@@ -174,7 +175,7 @@ class SlabStaticMaker(BaseVaspMaker):
 
     name: str = "slab_static_maker__"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: StaticSetGenerator(
+        default_factory=lambda: MPRelaxSet(
             user_kpoints_settings={"reciprocal_density": 200},
             user_incar_settings={
                 "ENCUT": 700,
