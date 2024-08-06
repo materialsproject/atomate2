@@ -57,7 +57,6 @@ forcefields = [
     "matgl>=1.1.1",
     "quippy-ase>=0.9.14",
     "sevenn>=0.9.3",
-    "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
 ]
 docs = [
     "FireWorks==2.0.3",
