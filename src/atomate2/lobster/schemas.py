@@ -1302,7 +1302,7 @@ def _get_strong_bonds(
     else:
         prop = "icohp"
 
-    bond_dict = {}
+    bond_dict: dict[str, dict[str, float | str]] = {}
     for idx, lab in enumerate(bond_labels_unique):
         label = lab.split("-")
         label.sort()
@@ -1312,24 +1312,20 @@ def _get_strong_bonds(
             if label == rel_bnd_list:
                 if prop == "icohp":
                     index = np.argmin(sep_icohp[idx])
-                    bond_dict.update(
-                        {
-                            rel_bnd: {
-                                "bond_strength": min(sep_icohp[idx]),
-                                "length": sep_lengths[idx][index],
-                            }
+                    bond_dict |= {
+                        rel_bnd: {
+                            "bond_strength": min(sep_icohp[idx]),
+                            "length": sep_lengths[idx][index],
                         }
-                    )
+                    }
                 else:
                     index = np.argmax(sep_icohp[idx])
-                    bond_dict.update(
-                        {
-                            rel_bnd: {
-                                "bond_strength": max(sep_icohp[idx]),
-                                "length": sep_lengths[idx][index],
-                            }
+                    bond_dict |= {
+                        rel_bnd: {
+                            "bond_strength": max(sep_icohp[idx]),
+                            "length": sep_lengths[idx][index],
                         }
-                    )
+                    }
     return bond_dict
 
 

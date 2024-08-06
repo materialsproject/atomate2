@@ -173,7 +173,6 @@ ignore = [
     "ANN401",
     "ARG002", # unused method argument
     # "BLE001",
-    "C408",    # Unnecessary (dict/list/tuple) call - remove call
     "C901",    # function too complex
     "COM812",  # trailing comma missing
     "EM",      # exception message must not use f-string literal
