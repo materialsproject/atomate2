@@ -287,7 +287,7 @@ JOB_STORE:
 The user doesn't need to have the file at the given `<<PATH>>`, since we have set `read_only: True`.
 In case the file isn't available, a new file with the name mentioned in the `<<PATH>>` will be generated.
 
-**Note that this approach has limitations - it cannot handle simultaneous writes and so is not suitable for very high throughput work.**
+**Note that this approach has limitations - it cannot handle simultaneous writes and so is not suitable for high-throughput work.**
 ````
 
 
