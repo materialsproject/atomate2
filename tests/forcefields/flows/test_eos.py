@@ -7,9 +7,9 @@ from atomate2.forcefields import MLFF
 from atomate2.forcefields.flows.eos import CHGNetEosMaker, M3GNetEosMaker, MACEEosMaker
 
 ff_maker_map = {
-    MLFF.CHGNet: CHGNetEosMaker,
-    MLFF.M3GNet: M3GNetEosMaker,
-    MLFF.MACE: MACEEosMaker,
+    MLFF.CHGNet.value: CHGNetEosMaker,
+    MLFF.M3GNet.value: M3GNetEosMaker,
+    MLFF.MACE.value: MACEEosMaker,
 }
 
 
