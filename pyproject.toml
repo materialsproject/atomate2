@@ -30,11 +30,11 @@ dependencies = [
     "custodian>=2024.4.18",
     "emmet-core==0.82.2",
     "jobflow>=0.1.11",
-    "monty>=2024.2.2",
+    "monty>=2024.7.30",
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.4.13",
+    "pymatgen>=2024.6.4",
 ]
 
 [project.optional-dependencies]
@@ -50,40 +50,39 @@ defects = [
     "python-ulid",
 ]
 forcefields = [
-    "ase>=3.22.1",
+    "ase>=3.23.0",
     "calorine<=2.2.1",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "torchdata<=0.7.1", # TODO: remove when issue fixed
     "matgl>=1.1.1",
     "quippy-ase>=0.9.14",
+    "sevenn>=0.9.3",
     "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
 ]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
-    "furo==2024.5.6",
+    "furo==2024.7.18",
     "ipython==8.26.0",
     "jsonschema[format]",
     "myst_parser==3.0.1",
     "numpydoc==1.7.0",
     "sphinx-copybutton==0.5.2",
-    "sphinx==7.4.6",
+    "sphinx==7.4.7",
     "sphinx_design==0.6.0",
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = [
     "FireWorks==2.0.3",
+    "nbmake==1.5.4",
     "pytest-cov==5.0.0",
     "pytest-mock==3.14.0",
     "pytest==8.0.2",
-    "nbmake==1.5.3"
 ]
 strict = [
     "PyYAML==6.0.1",
-    # must use >= for ase to not uninstall main branch install in CI
-    # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
-    "ase>=3.22.1",
+    "ase==3.23.0",
     "calorine==2.2.1",
     "cclib==1.8.1",
     "chgnet==0.3.8",
@@ -92,22 +91,23 @@ strict = [
     "dscribe==2.1.1",
     "emmet-core==0.82.2",
     "ijson==3.3.0",
-    "jobflow==0.1.17",
+    "jobflow==0.1.18",
     "lobsterpy==0.4.5",
     "mace-torch>=0.3.3",
     "torchdata==0.7.1", # TODO: remove when issue fixed
     "matgl==1.1.2",
-    "monty==2024.5.24",
+    "monty==2024.7.30",
     "mp-api==0.41.2",
     "numpy",
-    "phonopy==2.26.5",
+    "phonopy==2.26.6",
     "pydantic-settings==2.3.4",
     "pydantic==2.8.2",
-    "pymatgen-analysis-defects==2024.5.11",
+    "pymatgen-analysis-defects==2024.7.19",
     "pymatgen==2024.6.10",
     "python-ulid==2.7.0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
+    "sevenn==0.9.3",
     "torch==2.2.1",
     "typing-extensions==4.12.2",
 ]
@@ -198,8 +198,8 @@ ignore = [
     "PTH",     # prefer Pathlib to os.path
     "RUF013",  # implicit-optional
     "S324",    # use of insecure hash function
-    "S603",    # use of insecure subprocess
     "S507",    # paramiko auto trust
+    "S603",    # use of insecure subprocess
     "TD",      # TODOs
     "TRY003",  # long message outside exception class
 ]
