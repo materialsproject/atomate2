@@ -1302,7 +1302,7 @@ def _get_strong_bonds(
     else:
         prop = "icohp"
 
-    bond_dict: dict[str, dict[str, float | str]] = {}
+    bond_dict: dict[str, dict[str, Union[float, str]]] = {}
     for idx, lab in enumerate(bond_labels_unique):
         label = lab.split("-")
         label.sort()
