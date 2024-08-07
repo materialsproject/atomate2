@@ -54,10 +54,9 @@ forcefields = [
     "calorine<=2.2.1",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
-    "matgl>=1.1.1",
+    "matgl>=1.1.3",
     "quippy-ase>=0.9.14",
     "sevenn>=0.9.3",
-    "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
 ]
 anharmonicphonons = [
     "phonopy>=2.21.0",
@@ -99,7 +98,7 @@ strict = [
     "jobflow==0.1.18",
     "lobsterpy==0.4.5",
     "mace-torch>=0.3.3",
-    "matgl==1.1.2",
+    "matgl==1.1.3",
     "monty==2024.7.30",
     "mp-api==0.41.2",
     "numpy",
@@ -205,7 +204,7 @@ ignore = [
     "S324",    # use of insecure hash function
     "S507",    # paramiko auto trust
     "S603",    # use of insecure subprocess
-    "TD",      # TODOs
+    "TD",      # todos
     "TRY003",  # long message outside exception class
 ]
 pydocstyle.convention = "numpy"
