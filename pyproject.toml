@@ -60,6 +60,10 @@ forcefields = [
     "sevenn>=0.9.3",
     "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
 ]
+ase = [
+    "ase>=3.23.0",
+    "tblite>=0.3.0",
+]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
@@ -108,6 +112,7 @@ strict = [
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "sevenn==0.9.3",
+    "tblite==0.3.0",
     "torch==2.2.1",
     "typing-extensions==4.12.2",
 ]
