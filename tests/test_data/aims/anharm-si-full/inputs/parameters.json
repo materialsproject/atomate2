@@ -1,0 +1,1 @@
+{"xc": "pbe", "relativistic": "atomic_zora scalar", "compute_forces": true, "species_dir": "/Users/kevinbeck/Software/fhi-aims.231212/species_defaults/defaults_2020/light", "rlsy_symmetry": null, "sc_accuracy_rho": 1e-06, "sc_accuracy_forces": 0.0001, "k_grid": [6, 6, 6]}

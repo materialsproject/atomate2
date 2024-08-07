@@ -1,0 +1,81 @@
+################################################################################
+#
+#  FHI-aims code project
+#  VB, Fritz-Haber Institut, 2009
+#
+#  Suggested "light" defaults for Cl atom (to be pasted into control.in file)
+#  Be sure to double-check any results obtained with these settings for post-processing,
+#  e.g., with the "tight" defaults and larger basis sets.
+#
+#  2020/09/08 Added f function to "light" after reinspection of Delta test outcomes.
+#             This was done for all of Al-Cl and is a tricky decision since it makes
+#             "light" calculations measurably more expensive for these elements.
+#             Nevertheless, outcomes for P, S, Cl (and to some extent, Si) appear
+#             to justify this choice.
+#
+################################################################################
+  species        Cl
+#     global species definitions
+    nucleus             17
+    mass                35.453
+#
+    l_hartree           4
+#
+    cut_pot             3.5          1.5  1.0
+    basis_dep_cutoff    1e-4
+#
+    radial_base         45 5.0
+    radial_multiplier   1
+    angular_grids       specified
+      division   0.4412  110
+      division   0.5489  194
+      division   0.6734  302
+#      division   0.7794  434
+#      division   0.9402  590
+#      division   1.0779  770
+#      division   1.1792  974
+#      outer_grid  974
+      outer_grid  302
+################################################################################
+#
+#  Definition of "minimal" basis
+#
+################################################################################
+#     valence basis states
+    valence      3  s   2.
+    valence      3  p   5.
+#     ion occupancy
+    ion_occ      3  s   1.
+    ion_occ      3  p   4.
+################################################################################
+#
+#  Suggested additional basis functions. For production calculations,
+#  uncomment them one after another (the most important basis functions are
+#  listed first).
+#
+#  Constructed for dimers: 1.65 A, 2.0 A, 2.5 A, 3.25 A, 4.0 A
+#
+################################################################################
+#  "First tier" - improvements: -429.57 meV to -15.03 meV
+     ionic 3 d auto
+     hydro 2 p 1.9
+     hydro 4 f 7.4
+     ionic 3 s auto
+#     hydro 5 g 10.4
+#  "Second tier" - improvements: -7.84 meV to -0.48 meV
+#     hydro 3 d 3.3
+#     hydro 5 f 9.8
+#     hydro 1 s 0.75
+#     hydro 5 g 11.2
+#     hydro 4 p 10.4
+#  "Third tier" - improvements: -1.00 meV to -0.12 meV
+#     hydro 4 d 12.8
+#     hydro 4 f 4.6
+#     hydro 4 d 10.8
+#     hydro 2 s 1.8
+#     hydro 3 p 3
+#  Further functions that fell out - improvements: -0.10 meV and below
+#     hydro 5 f 14.4
+#     hydro 4 s 12.8
+#     hydro 3 d 11.6
+#     hydro 4 s 4.1
