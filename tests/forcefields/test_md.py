@@ -266,7 +266,6 @@ def test_press_schedule(ff_name, si_structure, clean_dir):
         },
     ).make(structure)
     run_locally(job, ensure_success=True)
-    # task_doc = response[next(iter(response))][1].output
 
     traj_from_file = loadfn("md_traj.json.gz")
 

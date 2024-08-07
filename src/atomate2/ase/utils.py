@@ -141,8 +141,8 @@ class TrajectoryObserver:
             None
         """
         filename = str(filename) if filename is not None else None
-        if fmt == "pmg":
-            self.to_pymatgen_trajectory(filename=filename)
+        if fmt in {"pmg","xdatcar"}:
+            self.to_pymatgen_trajectory(filename=filename, file_format=fmt)
         elif fmt == "ase":
             self.to_ase_trajectory(filename=filename)
 
@@ -181,7 +181,7 @@ class TrajectoryObserver:
         return AseTrajectory(filename, "r")
 
     def to_pymatgen_trajectory(
-        self, filename: str | None = "trajectory.json.gz"
+        self, filename: str | None = "trajectory.json.gz", file_format : Literal["pmg","xdatcar"] = "pmg"
     ) -> PmgTrajectory:
         """
         Convert the trajectory to a pymatgen .Trajectory object.
@@ -191,6 +191,9 @@ class TrajectoryObserver:
         filename : str or None
             Name of the file to write the pymatgen trajectory to.
             If None, no file is written.
+        file_format : str
+            If "pmg", writes a pymatgen .Trajectory object to file
+            If "xdatcar", writes a VASP-format XDATCAR object to file
         """
         frame_property_keys = ["energy", "forces", "stress"]
         if self._store_magmoms:
@@ -231,7 +234,10 @@ class TrajectoryObserver:
         )
 
         if filename:
-            dumpfn(pmg_traj, filename)
+            if file_format == "pmg":
+                dumpfn(pmg_traj, filename)
+            elif file_format == "xdatcar":
+                pmg_traj.write_Xdatcar(filename=filename)
 
         return pmg_traj
 

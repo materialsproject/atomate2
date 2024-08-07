@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+import contextlib
 from dataclasses import dataclass, field
+import io
+import sys
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -106,9 +109,11 @@ class AseMDMaker(Maker):
     traj_file : str | Path | None = None
         If a str or Path, the name of the file to save the MD trajectory to.
         If None, the trajectory is not written to disk
-    traj_file_fmt : Literal["ase","pmg"]
-        The format of the trajectory file to write. If "ase", writes an
-        ASE trajectory, if "pmg", writes a Pymatgen trajectory.
+    traj_file_fmt : Literal["ase","pmg","xdatcar"]
+        The format of the trajectory file to write.
+        If "ase", writes an ASE .Trajectory.
+        If "pmg", writes a Pymatgen .Trajectory.
+        If "xdatcar, writes a VASP-style XDATCAR
     traj_interval : int
         The step interval for saving the trajectories.
     mb_velocity_seed : int | None = None
@@ -122,6 +127,8 @@ class AseMDMaker(Maker):
         Options to pass to the TaskDoc. Default choice
             {"store_trajectory": "partial", "ionic_step_data": ("energy",),}
         is consistent with atomate2.vasp.md.MDMaker
+    verbose : bool = False
+        Whether to print stdout to screen during the MD run.
     """
 
     name: str = "ASE MD"
@@ -145,6 +152,7 @@ class AseMDMaker(Maker):
             "ionic_step_data": ("energy",),  # energy is required in ionic steps
         }
     )
+    verbose : bool = False
 
     @staticmethod
     def _interpolate_quantity(values: Sequence | np.ndarray, n_pts: int) -> np.ndarray:
@@ -329,7 +337,8 @@ class AseMDMaker(Maker):
             dyn.set_stress(self.p_schedule[dyn.nsteps] * 1e3 * units.bar)
 
         md_runner.attach(_callback, interval=1)
-        md_runner.run(steps=self.n_steps)
+        with contextlib.redirect_stdout(sys.stdout if self.verbose else io.StringIO()):
+            md_runner.run(steps=self.n_steps)
 
         if self.traj_file is not None:
             md_observer.save(filename=self.traj_file, fmt=self.traj_file_fmt)
@@ -372,6 +381,22 @@ class GFNxTBMDMaker(AseMDMaker):
     See `atomate2.ase.md.AseMDMaker` for full documentation.
     """
     name: str = "GFNn-xTB MD"
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {
+            "method": "GFN1-xTB",
+            "charge": None,
+            "multiplicity": None,
+            "accuracy": 1.0,
+            "guess": "sad",
+            "max_iterations": 250,
+            "mixer_damping": 0.4,
+            "electric_field": None,
+            "spin_polarization": None,
+            "electronic_temperature": 300.0,
+            "cache_api": True,
+            "verbosity": 1,
+        }
+    )
 
     @property
     def calculator(self) -> Calculator:
