@@ -198,7 +198,7 @@ ignore = [
     "S324",    # use of insecure hash function
     "S507",    # paramiko auto trust
     "S603",    # use of insecure subprocess
-    "TD",      # TODOs
+    "TD",      # todos
     "TRY003",  # long message outside exception class
 ]
 pydocstyle.convention = "numpy"
