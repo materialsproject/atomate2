@@ -255,11 +255,9 @@ class ForceFieldTaskDocument(StructureMetadata):
             # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
             if "magmoms" in trajectory.frame_properties[idx]:
                 _ionic_step_data.update(
-                    {
-                        "magmoms": trajectory.frame_properties[idx]["magmoms"]
-                        if "magmoms" in ionic_step_data
-                        else None
-                    }
+                    magmoms=trajectory.frame_properties[idx]["magmoms"]
+                    if "magmoms" in ionic_step_data
+                    else None
                 )
 
             ionic_step = IonicStep(
@@ -287,17 +285,14 @@ class ForceFieldTaskDocument(StructureMetadata):
         )
 
         # map force field name to its package name
-        pkg_names = {
-            str(k): v
-            for k, v in {
-                MLFF.M3GNet: "matgl",
-                MLFF.CHGNet: "chgnet",
-                MLFF.MACE: "mace-torch",
-                MLFF.GAP: "quippy-ase",
-                MLFF.Nequip: "nequip",
-            }.items()
+        model_to_pkg_map = {
+            MLFF.M3GNet: "matgl",
+            MLFF.CHGNet: "chgnet",
+            MLFF.MACE: "mace-torch",
+            MLFF.GAP: "quippy-ase",
+            MLFF.Nequip: "nequip",
         }
-        pkg_name = pkg_names.get(forcefield_name)
+        pkg_name = {str(k): v for k, v in model_to_pkg_map.items()}.get(forcefield_name)
         if pkg_name:
             import importlib.metadata
 
