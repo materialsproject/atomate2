@@ -24,9 +24,12 @@ class MatPesGGAStaticSetGenerator(MatPESStaticSet):
     xc_functional: Literal["R2SCAN", "PBE", "PBE+U"] = "PBE"
     auto_ismear: bool = False
     auto_kspacing: bool = False
+    symprec: float | None = None
 
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
+        if self.symprec is not None:
+            self.sym_prec = self.symprec
         super().__post_init__()
 
 
@@ -42,9 +45,12 @@ class MatPesMetaGGAStaticSetGenerator(MatPESStaticSet):
     xc_functional: Literal["R2SCAN", "PBE", "PBE+U"] = "R2SCAN"
     auto_ismear: bool = False
     auto_kspacing: bool = False
+    symprec: float | None = None
 
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
+        if self.symprec is not None:
+            self.sym_prec = self.symprec
         super().__post_init__()
 
     @property

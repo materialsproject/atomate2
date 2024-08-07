@@ -13,6 +13,10 @@ from atomate2.ase.jobs import (
 )
 from atomate2.ase.schemas import AseTaskDocument
 
+try:
+    from tblite.ase import TBLite
+except ImportError:
+    TBLite = None
 
 def test_lennard_jones_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):
     job = LennardJonesRelaxMaker(
@@ -40,6 +44,7 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
     assert output.structure == fcc_ne_structure
 
 
+@pytest.mark.skipif(condition = TBLite is None, reason = "TBLite must be installed.")
 def test_gfn_xtb_relax_maker(si_structure):
     job = GFNxTBRelaxMaker(
         calculator_kwargs={
@@ -57,7 +62,7 @@ def test_gfn_xtb_relax_maker(si_structure):
     assert output.is_force_converged
     assert isinstance(output, AseTaskDocument)
 
-
+@pytest.mark.skipif(condition = TBLite is None, reason = "TBLite must be installed.")
 def test_gfn_xtb_static_maker(si_structure):
     job = GFNxTBStaticMaker(
         calculator_kwargs={

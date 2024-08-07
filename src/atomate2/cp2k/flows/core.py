@@ -251,7 +251,7 @@ class HybridFlowMaker(Maker):
         }
         if self.initialize_with_pbe:
             updates["activate_hybrid"].update(
-                {"screen_on_initial_p": True, "screen_p_forces": True}
+                screen_on_initial_p=True, screen_p_forces=True
             )
         self.hybrid_maker.input_set_generator.user_input_settings = recursive_update(
             updates, self.hybrid_maker.input_set_generator.user_input_settings

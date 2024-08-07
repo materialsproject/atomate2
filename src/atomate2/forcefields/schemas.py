@@ -60,18 +60,15 @@ class ForceFieldTaskDocument(AseTaskDocument):
             self.forcefield_name = self.ase_calculator_name
 
         # map force field name to its package name
-        pkg_names = {
-            str(k): v
-            for k, v in {
-                MLFF.M3GNet: "matgl",
-                MLFF.CHGNet: "chgnet",
-                MLFF.MACE: "mace-torch",
-                MLFF.GAP: "quippy-ase",
-                MLFF.Nequip: "nequip",
-            }.items()
+        model_to_pkg_map = {
+            MLFF.M3GNet: "matgl",
+            MLFF.CHGNet: "chgnet",
+            MLFF.MACE: "mace-torch",
+            MLFF.GAP: "quippy-ase",
+            MLFF.Nequip: "nequip",
         }
 
-        if pkg_name := pkg_names.get(self.forcefield_name):
+        if pkg_name := {str(k): v for k, v in model_to_pkg_map.items()}.get(self.forcefield_name):
             import importlib.metadata
 
             self.forcefield_version = importlib.metadata.version(pkg_name)

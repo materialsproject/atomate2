@@ -234,7 +234,7 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
         traj_file=None,
         dynamics="nose-hoover",
         temperature=temp_schedule,
-        ase_md_kwargs=dict(ttime=50.0 * units.fs, pfactor=None),
+        ase_md_kwargs={"ttime": 50.0 * units.fs, "pfactor": None},
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output
@@ -260,10 +260,10 @@ def test_press_schedule(ff_name, si_structure, clean_dir):
         traj_file_fmt="pmg",
         dynamics="nose-hoover",
         pressure=press_schedule,
-        ase_md_kwargs=dict(
-            ttime=50.0 * units.fs,
-            pfactor=(75.0 * units.fs) ** 2 * units.GPa,
-        ),
+        ase_md_kwargs={
+            "ttime": 50.0 * units.fs,
+            "pfactor": (75.0 * units.fs) ** 2 * units.GPa,
+        },
     ).make(structure)
     run_locally(job, ensure_success=True)
     # task_doc = response[next(iter(response))][1].output
