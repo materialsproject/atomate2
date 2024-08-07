@@ -197,6 +197,7 @@ class FreqMaker(BaseQCMaker):
 
     name: str = "frequency"
     input_set_generator: QCInputGenerator = field(default_factory=FreqSetGenerator)
+    task_type: str = "Frequency Analysis"
 
 
 @dataclass
