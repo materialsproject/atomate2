@@ -63,7 +63,7 @@ def get_average_volume_from_mp(composition: Composition) -> float:
         entries = [
             entry
             for entry in _entries
-            if set(composition).intersection(set(entry.structure.composition)) > 1
+            if len(set(composition).intersection(set(entry.structure.composition))) > 1
         ]
 
         vols = [entry.structure.volume / entry.structure.num_sites for entry in entries]
@@ -120,6 +120,8 @@ def get_random_packed_structure(
                 packmol_seed=packmol_seed,
             )
         )
+    if isinstance(composition, str):
+        composition = Composition(composition)
 
     if isinstance(vol_per_atom_source, (float, int)):
         vol_per_atom = vol_per_atom_source

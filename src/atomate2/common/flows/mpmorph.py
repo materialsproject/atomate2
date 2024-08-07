@@ -484,6 +484,17 @@ class AmorphousLimitMaker(Maker):
 
     name: str = "Amorphous Limit Maker"
     mpmorph_maker: MPMorphMDMaker = field(default_factory=MPMorphMDMaker)
+    quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
+    packmol_opts: dict = field(
+        default_factory=lambda: {
+            "target_atoms": 100,
+            "vol_exp": 1.2,
+            "tol": 2.0,
+            "return_as_job": True,
+            "vol_per_atom_source": "mp",
+            "packmol_seed": 1,
+        }
+    )
 
     def make(
         self,
@@ -514,11 +525,21 @@ class AmorphousLimitMaker(Maker):
             if composition is None:
                 raise ValueError("Either structure or composition must be provided.")
 
-            from atomate2.common.jobs.structure_gen import get_random_packed
+            from atomate2.common.jobs.mpmorph import get_random_packed_structure
 
-            structure = get_random_packed(composition)
+            structure = get_random_packed_structure(composition, **self.packmol_opts)
 
         mpmorph_flow = self.mpmorph_maker.make(structure=structure, prev_dir=prev_dir)
+
+        if self.quench_maker:
+            quench_flow = self.quench_maker.make(
+                structure=mpmorph_flow.output.structure,
+                prev_dir=mpmorph_flow.output.dir_name,
+            )
+            return Flow(
+                [mpmorph_flow, quench_flow],
+                name=self.name,
+            )
         return Flow(
             [mpmorph_flow],
             name=self.name,
