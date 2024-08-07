@@ -45,7 +45,7 @@ def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure):
 @pytest.mark.parametrize(
     "calculator_name", ["LJ"]
 )
-def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure):
+def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_dir):
 
     name_to_maker= {
         "LJ": LennardJonesMDMaker,
