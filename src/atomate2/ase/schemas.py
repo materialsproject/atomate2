@@ -156,8 +156,12 @@ class AseTaskDocument(StructureMetadata):
         ),
     )
 
-    energy_downhill : Optional[bool] = Field(
-        None, description="Whether the total energy in the final frame is less than in the initial frame."
+    energy_downhill: Optional[bool] = Field(
+        None,
+        description=(
+            "Whether the total energy in the final frame "
+            "is less than in the initial frame."
+        ),
     )
 
     @classmethod
@@ -303,6 +307,6 @@ class AseTaskDocument(StructureMetadata):
             included_objects=list(objects.keys()),
             objects=objects,
             is_force_converged=result.get("is_force_converged"),
-            energy_downhill = result.get("energy_downhill"),
+            energy_downhill=result.get("energy_downhill"),
             **task_document_kwargs,
         )

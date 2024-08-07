@@ -360,5 +360,6 @@ class AseRelaxer:
             final_structure=struct,
             trajectory=traj,
             is_force_converged=is_force_conv,
-            energy_downhill = traj.frame_properties[-1]["energy"] < traj.frame_properties[0]["energy"]
+            energy_downhill=traj.frame_properties[-1]["energy"]
+            < traj.frame_properties[0]["energy"],
         )

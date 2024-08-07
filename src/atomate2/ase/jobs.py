@@ -207,11 +207,12 @@ class LennardJonesRelaxMaker(AseRelaxMaker):
 
         return LennardJones(**self.calculator_kwargs)
 
+
 @dataclass
 class LennardJonesStaticMaker(LennardJonesRelaxMaker):
     """
     Single-point Lennard-Jones 6-12 potential calculation.
-    
+
     Parameters
     ----------
     name : str
@@ -234,8 +235,10 @@ class LennardJonesStaticMaker(LennardJonesRelaxMaker):
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.AseTaskDocument()`.
     """
-    name : str = "Lennard-Jones 6-12 static"
-    steps : int = 1
+
+    name: str = "Lennard-Jones 6-12 static"
+    steps: int = 1
+
 
 @dataclass
 class GFNxTBRelaxMaker(AseRelaxMaker):
@@ -253,7 +256,7 @@ class GFNxTBRelaxMaker(AseRelaxMaker):
     If you use GFN2-xTB, consider citing:
     C. Bannwarth, S. Ehlert, and S. Grimme
     J. Chem. Theory Comput. 15, 1652 (2019)
-    
+
     Parameters
     ----------
     name : str
@@ -299,6 +302,7 @@ class GFNxTBRelaxMaker(AseRelaxMaker):
     def calculator(self) -> Calculator:
         """GFN-xTB / TBLite calculator."""
         from tblite.ase import TBLite
+
         return TBLite(atoms=None, **self.calculator_kwargs)
 
 
@@ -318,7 +322,7 @@ class GFNxTBStaticMaker(GFNxTBRelaxMaker):
     If you use GFN2-xTB, consider citing:
     C. Bannwarth, S. Ehlert, and S. Grimme
     J. Chem. Theory Comput. 15, 1652 (2019)
-    
+
     Parameters
     ----------
     name : str
@@ -341,5 +345,6 @@ class GFNxTBStaticMaker(GFNxTBRelaxMaker):
     task_document_kwargs : dict
         Additional keyword args passed to :obj:`.AseTaskDocument()`.
     """
-    name : str = "GFN-xTB static"
-    steps : int = 1
+
+    name: str = "GFN-xTB static"
+    steps: int = 1
