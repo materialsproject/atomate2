@@ -31,21 +31,38 @@ name_to_maker = {
     ],
 )
 def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
-    ref_paths = {
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": "Si_mp_morph/BaseVaspMPMorph/Si_0.8",
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2": "Si_mp_morph/BaseVaspMPMorph/Si_1.0",
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3": "Si_mp_morph/BaseVaspMPMorph/Si_1.2",
-        "MP Morph VASP MD Maker production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
-        "MP Morph VASP MD Maker Slow Quench production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
-        "MP Morph VASP MD Maker Fast Quench production run": "Si_mp_morph/BaseVaspMPMorph/Si_prod",
-        "Vasp Slow Quench MD Maker 900K": "Si_mp_morph/BaseVaspMPMorph/Si_900K",
-        "Vasp Slow Quench MD Maker 800K": "Si_mp_morph/BaseVaspMPMorph/Si_800K",
-        "Vasp Slow Quench MD Maker 700K": "Si_mp_morph/BaseVaspMPMorph/Si_700K",
-        "Vasp Slow Quench MD Maker 600K": "Si_mp_morph/BaseVaspMPMorph/Si_600K",
-        "MP pre-relax": "Si_mp_morph/BaseVaspMPMorph/pre_relax",
-        "MP meta-GGA relax": "Si_mp_morph/BaseVaspMPMorph/relax",
-        "MP meta-GGA static": "Si_mp_morph/BaseVaspMPMorph/static",
-    }
+    job_names = [
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3",
+        "MP Morph VASP MD Maker production run",
+        "MP Morph VASP MD Maker Slow Quench production run",
+        "MP Morph VASP MD Maker Fast Quench production run",
+        "Vasp Slow Quench MD Maker 900K",
+        "Vasp Slow Quench MD Maker 800K",
+        "Vasp Slow Quench MD Maker 700K",
+        "Vasp Slow Quench MD Maker 600K",
+        "MP pre-relax",
+        "MP meta-GGA relax",
+        "MP meta-GGA static",
+    ]
+    job_paths = [
+        "Si_mp_morph/BaseVaspMPMorph/Si_0.8",
+        "Si_mp_morph/BaseVaspMPMorph/Si_1.0",
+        "Si_mp_morph/BaseVaspMPMorph/Si_1.2",
+        "Si_mp_morph/BaseVaspMPMorph/Si_prod",
+        "Si_mp_morph/BaseVaspMPMorph/Si_prod",
+        "Si_mp_morph/BaseVaspMPMorph/Si_prod",
+        "Si_mp_morph/BaseVaspMPMorph/Si_900K",
+        "Si_mp_morph/BaseVaspMPMorph/Si_800K",
+        "Si_mp_morph/BaseVaspMPMorph/Si_700K",
+        "Si_mp_morph/BaseVaspMPMorph/Si_600K",
+        "Si_mp_morph/BaseVaspMPMorph/pre_relax",
+        "Si_mp_morph/BaseVaspMPMorph/relax",
+        "Si_mp_morph/BaseVaspMPMorph/static",
+    ]
+
+    ref_paths = dict(zip(job_names, job_paths))
 
     mock_vasp(ref_paths)
 
@@ -253,11 +270,18 @@ def _get_uuid_from_job(job, dct):
 
 
 def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
-    ref_paths = {
-        "Equilibrium Volume Maker molecular dynamics 1": "Si_mp_morph/Si_0.8",
-        "Equilibrium Volume Maker molecular dynamics 2": "Si_mp_morph/Si_1.0",
-        "Equilibrium Volume Maker molecular dynamics 3": "Si_mp_morph/Si_1.2",
-    }
+    job_names = [
+        "Equilibrium Volume Maker molecular dynamics 1",
+        "Equilibrium Volume Maker molecular dynamics 2",
+        "Equilibrium Volume Maker molecular dynamics 3",
+    ]
+    job_paths = [
+        "Si_mp_morph/Si_0.8",
+        "Si_mp_morph/Si_1.0",
+        "Si_mp_morph/Si_1.2",
+    ]
+
+    ref_paths = dict(zip(job_names, job_paths))
 
     mock_vasp(ref_paths)
 
@@ -308,49 +332,24 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
     assert isinstance(responses[uuids[4]][1].output, Structure)
     assert responses[uuids[4]][1].output.volume == pytest.approx(171.51227)
 
-    """
-    assert responses[uuids[0]][1].output == {
-        "relax": {
-            "energy": [-13.44200043, -35.97470303, -32.48531985],
-            "volume": [82.59487098351644, 161.31810738968053, 278.7576895693679],
-            "stress": [
-                [
-                    [2026.77697447, -180.19246839, -207.37762676],
-                    [-180.1924744, 1441.18625768, 27.8884401],
-                    [-207.37763076, 27.8884403, 1899.32511191],
-                ],
-                [
-                    [36.98140157, 35.7070696, 76.84918574],
-                    [35.70706985, 42.81953297, -25.20830843],
-                    [76.84918627, -25.20830828, 10.40947728],
-                ],
-                [
-                    [-71.39703139, -5.93838689, -5.13934938],
-                    [-5.93838689, -72.87372166, -3.0206588],
-                    [-5.13934928, -3.0206586, -57.65692738],
-                ],
-            ],
-            "pressure": [1789.0961146866666, 30.070137273333334, -67.30922681],
-            "EOS": {
-                "b0": 424.97840444799994,
-                "b1": 4.686114896027117,
-                "v0": 171.51226566279973,
-            },
-        },
-        "V0": 171.51226566279973,
-        "Vmax": 278.7576895693679,
-        "Vmin": 82.59487098351644,
-    }
-    """
-
 
 def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
-    ref_paths = {
-        "Equilibrium Volume Maker molecular dynamics 1": "Si_mp_morph/recursion/Si_3.48",
-        "Equilibrium Volume Maker molecular dynamics 2": "Si_mp_morph/recursion/Si_4.35",
-        "Equilibrium Volume Maker molecular dynamics 3": "Si_mp_morph/recursion/Si_5.22",
-        "Equilibrium Volume Maker molecular dynamics 4": "Si_mp_morph/recursion/Si_6.80",
-    }
+
+    job_names = [
+        "Equilibrium Volume Maker molecular dynamics 1",
+        "Equilibrium Volume Maker molecular dynamics 2",
+        "Equilibrium Volume Maker molecular dynamics 3",
+        "Equilibrium Volume Maker molecular dynamics 4",
+    ]
+
+    job_paths = [
+        "Si_mp_morph/recursion/Si_3.48",
+        "Si_mp_morph/recursion/Si_4.35",
+        "Si_mp_morph/recursion/Si_5.22",
+        "Si_mp_morph/recursion/Si_6.80",
+    ]
+
+    ref_paths = dict(zip(job_names, job_paths))
 
     mock_vasp(ref_paths)
 
@@ -518,12 +517,21 @@ def test_mp_morph_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_mpmorph_vasp_maker(mock_vasp, clean_dir, vasp_test_dir):
-    ref_paths = {
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1": "Si_mp_morph/Si_0.8",
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2": "Si_mp_morph/Si_1.0",
-        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3": "Si_mp_morph/Si_1.2",
-        "MP Morph VASP MD Maker production run": "Si_mp_morph/Si_prod",
-    }
+    job_names = [
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 1",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 2",
+        "MP Morph VASP Equilibrium Volume Maker MPMorph MD Maker 3",
+        "MP Morph VASP MD Maker production run",
+    ]
+
+    job_paths = [
+        "Si_mp_morph/Si_0.8",
+        "Si_mp_morph/Si_1.0",
+        "Si_mp_morph/Si_1.2",
+        "Si_mp_morph/Si_prod",
+    ]
+
+    ref_paths = dict(zip(job_names, job_paths))
 
     mock_vasp(ref_paths)
 
