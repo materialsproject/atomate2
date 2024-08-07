@@ -213,7 +213,7 @@ class GruneisenParameterDocument(StructureMetadata):
         kpath_dict, kpath_concrete = PhononBSDOSDoc.get_kpath(
             structure=structure, kpath_scheme=kpath_scheme, symprec=symprec
         )
-        qpoints, connections = get_band_qpoints_and_path_connections(
+        qpoints, _connections = get_band_qpoints_and_path_connections(
             kpath_concrete,
             npoints=compute_gruneisen_param_kwargs.get("npoints_band", 101),
         )

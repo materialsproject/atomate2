@@ -86,18 +86,14 @@ class MPMetaGGAStaticSetGenerator(MPScanStaticSet):
         dict
             A dictionary of updates to apply.
         """
-        updates = super().incar_updates
-        updates.update(
-            {
-                "ALGO": "FAST",
-                "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
-                "LCHARG": True,
-                "LWAVE": False,
-                "LVHAR": False,  # this is not needed
-                "LELF": False,  # prevents KPAR > 1
-            }
-        )
-        return updates
+        return super().incar_updates | {
+            "ALGO": "FAST",
+            "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
+            "LCHARG": True,
+            "LWAVE": False,
+            "LVHAR": False,  # this is not needed
+            "LELF": False,  # prevents KPAR > 1
+        }
 
 
 @deprecated(replacement=MPScanRelaxSet, deadline=(2025, 1, 1))

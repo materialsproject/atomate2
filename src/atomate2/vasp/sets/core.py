@@ -275,9 +275,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
         if self.optics:
             # LREAL not supported with LOPTICS = True; automatic NEDOS usually
             # underestimates, so set it explicitly
-            updates.update(
-                {"LOPTICS": True, "LREAL": False, "CSHIFT": 1e-5, "NEDOS": 2000}
-            )
+            updates.update(LOPTICS=True, LREAL=False, CSHIFT=1e-5, NEDOS=2000)
 
         updates["MAGMOM"] = None
 
@@ -748,16 +746,14 @@ class LobsterTightStaticSetGenerator(LobsterSet):
         dict
             A dictionary of updates to apply.
         """
-        base_incar_updates = super().incar_updates
-        base_incar_updates.update(
-            EDIFF=1e-7,
-            ISPIN=1,
-            LAECHG=False,
-            LREAL=False,
-            LVTOT=False,
-            ALGO="Normal",
-            LCHARG=False,
-            LWAVE=True,
-            ISYM=0,
-        )
-        return base_incar_updates
+        return super().incar_updates | {
+            "EDIFF": 1e-7,
+            "ISPIN": 1,
+            "LAECHG": False,
+            "LREAL": False,
+            "LVTOT": False,
+            "ALGO": "Normal",
+            "LCHARG": False,
+            "LWAVE": True,
+            "ISYM": 0,
+        }

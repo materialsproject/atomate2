@@ -23,18 +23,18 @@ def test_thermal_displacement_data():
 
 
 def test_phonon_bs_dos_doc():
-    kwargs = dict(
-        total_dft_energy=None,
-        supercell_matrix=np.eye(3),
-        primitive_matrix=np.eye(3),
-        code="test",
-        phonopy_settings=PhononComputationalSettings(
+    kwargs = {
+        "total_dft_energy": None,
+        "supercell_matrix": np.eye(3),
+        "primitive_matrix": np.eye(3),
+        "code": "test",
+        "phonopy_settings": PhononComputationalSettings(
             npoints_band=1, kpath_scheme="test", kpoint_density_dos=1
         ),
-        thermal_displacement_data=None,
-        jobdirs=None,
-        uuids=None,
-    )
+        "thermal_displacement_data": None,
+        "jobdirs": None,
+        "uuids": None,
+    }
     doc = PhononBSDOSDoc(**kwargs)
     # check validation raises no errors
     validated = PhononBSDOSDoc.model_validate_json(json.dumps(doc, cls=MontyEncoder))
