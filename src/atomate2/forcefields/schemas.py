@@ -68,7 +68,9 @@ class ForceFieldTaskDocument(AseTaskDocument):
             MLFF.Nequip: "nequip",
         }
 
-        if pkg_name := {str(k): v for k, v in model_to_pkg_map.items()}.get(self.forcefield_name):
+        if pkg_name := {str(k): v for k, v in model_to_pkg_map.items()}.get(
+            self.forcefield_name
+        ):
             import importlib.metadata
 
             self.forcefield_version = importlib.metadata.version(pkg_name)

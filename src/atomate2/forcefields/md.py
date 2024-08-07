@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure
 
+
 @dataclass
 class ForceFieldMDMaker(AseMDMaker):
     """
@@ -111,7 +112,7 @@ class ForceFieldMDMaker(AseMDMaker):
             added to match the method signature of other makers.
         """
         with revert_default_dtype():
-            md_result = self._make(structure,prev_dir=prev_dir)
+            md_result = self._make(structure, prev_dir=prev_dir)
 
         self.task_document_kwargs = self.task_document_kwargs or {}
 

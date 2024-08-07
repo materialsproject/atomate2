@@ -127,7 +127,9 @@ class TrajectoryObserver:
         return self.atoms.get_potential_energy()
 
     def save(
-        self, filename: str | PathLike | None, fmt: Literal["pmg", "ase"] = "ase"
+        self,
+        filename: str | PathLike | None,
+        fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
     ) -> None:
         """
         Save the trajectory file using monty.serialization.
@@ -141,8 +143,8 @@ class TrajectoryObserver:
             None
         """
         filename = str(filename) if filename is not None else None
-        if fmt in {"pmg","xdatcar"}:
-            self.to_pymatgen_trajectory(filename=filename, file_format=fmt)
+        if fmt in {"pmg", "xdatcar"}:
+            self.to_pymatgen_trajectory(filename=filename, file_format=fmt)  # type: ignore[arg-type]
         elif fmt == "ase":
             self.to_ase_trajectory(filename=filename)
 
@@ -181,7 +183,9 @@ class TrajectoryObserver:
         return AseTrajectory(filename, "r")
 
     def to_pymatgen_trajectory(
-        self, filename: str | None = "trajectory.json.gz", file_format : Literal["pmg","xdatcar"] = "pmg"
+        self,
+        filename: str | None = "trajectory.json.gz",
+        file_format: Literal["pmg", "xdatcar"] = "pmg",
     ) -> PmgTrajectory:
         """
         Convert the trajectory to a pymatgen .Trajectory object.

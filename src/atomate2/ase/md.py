@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
 import contextlib
-from dataclasses import dataclass, field
 import io
 import sys
+from collections.abc import Sequence
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -23,7 +23,6 @@ from ase.md.velocitydistribution import (
     ZeroRotation,
 )
 from ase.md.verlet import VelocityVerlet
-
 from jobflow import Maker
 from pymatgen.io.ase import AseAtomsAdaptor
 from scipy.interpolate import interp1d
@@ -32,7 +31,6 @@ from scipy.linalg import schur
 from atomate2.ase.jobs import ase_job
 from atomate2.ase.schemas import AseResult, AseTaskDocument
 from atomate2.ase.utils import TrajectoryObserver
-
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -152,7 +150,7 @@ class AseMDMaker(Maker):
             "ionic_step_data": ("energy",),  # energy is required in ionic steps
         }
     )
-    verbose : bool = False
+    verbose: bool = False
 
     @staticmethod
     def _interpolate_quantity(values: Sequence | np.ndarray, n_pts: int) -> np.ndarray:
@@ -241,7 +239,7 @@ class AseMDMaker(Maker):
 
         return AseTaskDocument.from_ase_compatible_result(
             getattr(self.calculator, "name", self.calculator.__class__),
-            self._make(structure,prev_dir=prev_dir),
+            self._make(structure, prev_dir=prev_dir),
             relax_cell=(self.ensemble == "npt"),
             steps=self.n_steps,
             relax_kwargs=None,
@@ -253,7 +251,7 @@ class AseMDMaker(Maker):
         self,
         structure: Structure,
         prev_dir: str | Path | None = None,
-    ) -> AseTaskDocument:
+    ) -> AseResult:
         """
         Perform MD on a structure using ASE without jobflow.
 
@@ -351,11 +349,12 @@ class AseMDMaker(Maker):
             final_structure=structure,
             trajectory=md_observer.to_pymatgen_trajectory(filename=None),
         )
-    
+
     @property
     def calculator(self) -> Calculator:
         """ASE calculator, to be overwritten by user."""
         return NotImplemented
+
 
 @dataclass
 class LennardJonesMDMaker(AseMDMaker):
@@ -364,6 +363,7 @@ class LennardJonesMDMaker(AseMDMaker):
 
     See `atomate2.ase.md.AseMDMaker` for full documentation.
     """
+
     name: str = "Lennard-Jones 6-12 MD"
 
     @property
@@ -372,7 +372,8 @@ class LennardJonesMDMaker(AseMDMaker):
         from ase.calculators.lj import LennardJones
 
         return LennardJones(**self.calculator_kwargs)
-    
+
+
 @dataclass
 class GFNxTBMDMaker(AseMDMaker):
     """
@@ -380,6 +381,7 @@ class GFNxTBMDMaker(AseMDMaker):
 
     See `atomate2.ase.md.AseMDMaker` for full documentation.
     """
+
     name: str = "GFNn-xTB MD"
     calculator_kwargs: dict = field(
         default_factory=lambda: {
