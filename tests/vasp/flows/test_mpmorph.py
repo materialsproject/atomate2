@@ -334,7 +334,6 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 
 def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
-
     job_names = [
         "Equilibrium Volume Maker molecular dynamics 1",
         "Equilibrium Volume Maker molecular dynamics 2",
