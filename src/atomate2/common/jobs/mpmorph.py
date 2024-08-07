@@ -40,6 +40,10 @@ def get_average_volume_from_mp(composition: Composition) -> float:
     composition : Composition
         The target composition.
 
+    Returns
+    -------
+    float
+        The average volume per atom for the composition.
     """
     with MPRester() as mpr:
         comp_entries = mpr.get_entries(composition.reduced_formula, inc_structure=True)
@@ -107,7 +111,13 @@ def get_random_packed_structure(
     packmol_output_dir : str | Path | None
         The directory to output the packmol files to. If None, a
         temporary directory is used and will be removed after.
+
+    Returns
+    -------
+    Structure | Job
+        The random packed structure.
     """
+
     if return_as_job:
         return job(
             get_random_packed_structure(
