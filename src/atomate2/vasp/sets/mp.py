@@ -40,9 +40,12 @@ class MPGGARelaxSetGenerator(MPRelaxSet):
     bandgap_tol: float = None
     force_gamma: bool = True
     auto_metal_kpoints: bool = True
+    symprec: float | None = None
 
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
+        if self.symprec is not None:
+            self.sym_prec = self.symprec
         super().__post_init__()
 
 
@@ -57,9 +60,12 @@ class MPGGAStaticSetGenerator(MPStaticSet):
     inherit_incar: bool | None = False
     force_gamma: bool = True
     auto_metal_kpoints: bool = True
+    symprec: float | None = None
 
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
+        if self.symprec is not None:
+            self.sym_prec = self.symprec
         super().__post_init__()
 
 
@@ -72,9 +78,12 @@ class MPMetaGGAStaticSetGenerator(MPScanStaticSet):
     auto_kspacing: bool = True
     bandgap_tol: float = 1e-4
     inherit_incar: bool | None = False
+    symprec: float | None = None
 
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
+        if self.symprec is not None:
+            self.sym_prec = self.symprec
         super().__post_init__()
 
     @property
@@ -114,9 +123,12 @@ class MPMetaGGARelaxSetGenerator(MPScanRelaxSet):
     auto_ismear: bool = False
     auto_kspacing: bool = True
     inherit_incar: bool | None = False
+    symprec: float | None = None
 
     def __post_init__(self) -> None:
         """Raise deprecation warning and validate."""
+        if self.symprec is not None:
+            self.sym_prec = self.symprec
         super().__post_init__()
 
     @property
