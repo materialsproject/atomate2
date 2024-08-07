@@ -175,27 +175,7 @@ class LennardJonesRelaxMaker(AseRelaxMaker):
     This serves mostly as an example of how to create atomate2
     jobs with existing ASE calculators, and test purposes.
 
-    Parameters
-    ----------
-    name : str
-        The job name.
-    relax_cell : bool = True
-        Whether to allow the cell shape/volume to change during relaxation.
-    fix_symmetry : bool = False
-        Whether to fix the symmetry during relaxation.
-        Refines the symmetry of the initial structure.
-    symprec : float = 1e-2
-        Tolerance for symmetry finding in case of fix_symmetry.
-    steps : int
-        Maximum number of ionic steps allowed during relaxation.
-    relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
-    optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
-    calculator_kwargs : dict
-        Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
-        Additional keyword args passed to :obj:`.AseTaskDocument()`.
+    See `atomate2.ase.AseRelaxMaker` for further documentation.
     """
 
     name: str = "Lennard-Jones 6-12 relaxation"
@@ -213,27 +193,7 @@ class LennardJonesStaticMaker(LennardJonesRelaxMaker):
     """
     Single-point Lennard-Jones 6-12 potential calculation.
 
-    Parameters
-    ----------
-    name : str
-        The job name.
-    relax_cell : bool = True
-        Whether to allow the cell shape/volume to change during relaxation.
-    fix_symmetry : bool = False
-        Whether to fix the symmetry during relaxation.
-        Refines the symmetry of the initial structure.
-    symprec : float = 1e-2
-        Tolerance for symmetry finding in case of fix_symmetry.
-    steps : int
-        Maximum number of ionic steps allowed during relaxation.
-    relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
-    optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
-    calculator_kwargs : dict
-        Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
-        Additional keyword args passed to :obj:`.AseTaskDocument()`.
+    See `atomate2.ase.AseRelaxMaker` for further documentation.
     """
 
     name: str = "Lennard-Jones 6-12 static"
@@ -257,27 +217,7 @@ class GFNxTBRelaxMaker(AseRelaxMaker):
     C. Bannwarth, S. Ehlert, and S. Grimme
     J. Chem. Theory Comput. 15, 1652 (2019)
 
-    Parameters
-    ----------
-    name : str
-        The job name.
-    relax_cell : bool = True
-        Whether to allow the cell shape/volume to change during relaxation.
-    fix_symmetry : bool = False
-        Whether to fix the symmetry during relaxation.
-        Refines the symmetry of the initial structure.
-    symprec : float = 1e-2
-        Tolerance for symmetry finding in case of fix_symmetry.
-    steps : int
-        Maximum number of ionic steps allowed during relaxation.
-    relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
-    optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
-    calculator_kwargs : dict
-        Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
-        Additional keyword args passed to :obj:`.AseTaskDocument()`.
+    See `atomate2.ase.AseRelaxMaker` for further documentation.
     """
 
     name: str = "GFN-xTB relaxation"
@@ -311,39 +251,7 @@ class GFNxTBStaticMaker(GFNxTBRelaxMaker):
     """
     Single-point GFNn-xTB calculation.
 
-    If you use TBLite in your work, consider citing:
-    H. Neugebauer, B. Bädorf, S. Ehlert, A. Hansen, and S. Grimme,
-    J. Comput. Chem. 44, 2120 (2023).
-
-    If you use GFN1-xTB, consider citing:
-    S. Grimme, C. Bannwarth, and P. Shushkov,
-    J. Chem. Theory Comput. 13, 1989 (2017).
-
-    If you use GFN2-xTB, consider citing:
-    C. Bannwarth, S. Ehlert, and S. Grimme
-    J. Chem. Theory Comput. 15, 1652 (2019)
-
-    Parameters
-    ----------
-    name : str
-        The job name.
-    relax_cell : bool = True
-        Whether to allow the cell shape/volume to change during relaxation.
-    fix_symmetry : bool = False
-        Whether to fix the symmetry during relaxation.
-        Refines the symmetry of the initial structure.
-    symprec : float = 1e-2
-        Tolerance for symmetry finding in case of fix_symmetry.
-    steps : int
-        Maximum number of ionic steps allowed during relaxation.
-    relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
-    optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
-    calculator_kwargs : dict
-        Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
-        Additional keyword args passed to :obj:`.AseTaskDocument()`.
+    See `atomate2.ase.{AseRelaxMaker, GFNxTBRelaxMaker}` for further documentation.
     """
 
     name: str = "GFN-xTB static"
