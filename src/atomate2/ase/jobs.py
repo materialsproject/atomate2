@@ -167,6 +167,7 @@ class AseRelaxMaker(Maker):
         return NotImplemented
 
 
+@dataclass
 class LennardJonesRelaxMaker(AseRelaxMaker):
     """
     Relax a structure with a Lennard-Jones 6-12 potential.
@@ -206,11 +207,53 @@ class LennardJonesRelaxMaker(AseRelaxMaker):
 
         return LennardJones(**self.calculator_kwargs)
 
+@dataclass
+class LennardJonesStaticMaker(LennardJonesRelaxMaker):
+    """
+    Single-point Lennard-Jones 6-12 potential calculation.
+    
+    Parameters
+    ----------
+    name : str
+        The job name.
+    relax_cell : bool = True
+        Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.AseTaskDocument()`.
+    """
+    name : str = "Lennard-Jones 6-12 static"
+    steps : int = 1
 
+@dataclass
 class GFNxTBRelaxMaker(AseRelaxMaker):
     """
     Relax a structure with TBLite (GFN-xTB).
 
+    If you use TBLite in your work, consider citing:
+    H. Neugebauer, B. Bädorf, S. Ehlert, A. Hansen, and S. Grimme,
+    J. Comput. Chem. 44, 2120 (2023).
+
+    If you use GFN1-xTB, consider citing:
+    S. Grimme, C. Bannwarth, and P. Shushkov,
+    J. Chem. Theory Comput. 13, 1989 (2017).
+
+    If you use GFN2-xTB, consider citing:
+    C. Bannwarth, S. Ehlert, and S. Grimme
+    J. Chem. Theory Comput. 15, 1652 (2019)
+    
     Parameters
     ----------
     name : str
@@ -234,10 +277,10 @@ class GFNxTBRelaxMaker(AseRelaxMaker):
         Additional keyword args passed to :obj:`.AseTaskDocument()`.
     """
 
-    name: str = "GFNxTB relaxation"
+    name: str = "GFN-xTB relaxation"
     calculator_kwargs: dict = field(
         default_factory=lambda: {
-            "method": "GFN2-xTB",
+            "method": "GFN1-xTB",
             "charge": None,
             "multiplicity": None,
             "accuracy": 1.0,
@@ -256,5 +299,47 @@ class GFNxTBRelaxMaker(AseRelaxMaker):
     def calculator(self) -> Calculator:
         """GFN-xTB / TBLite calculator."""
         from tblite.ase import TBLite
-
         return TBLite(atoms=None, **self.calculator_kwargs)
+
+
+@dataclass
+class GFNxTBStaticMaker(GFNxTBRelaxMaker):
+    """
+    Single-point GFNn-xTB calculation.
+
+    If you use TBLite in your work, consider citing:
+    H. Neugebauer, B. Bädorf, S. Ehlert, A. Hansen, and S. Grimme,
+    J. Comput. Chem. 44, 2120 (2023).
+
+    If you use GFN1-xTB, consider citing:
+    S. Grimme, C. Bannwarth, and P. Shushkov,
+    J. Chem. Theory Comput. 13, 1989 (2017).
+
+    If you use GFN2-xTB, consider citing:
+    C. Bannwarth, S. Ehlert, and S. Grimme
+    J. Chem. Theory Comput. 15, 1652 (2019)
+    
+    Parameters
+    ----------
+    name : str
+        The job name.
+    relax_cell : bool = True
+        Whether to allow the cell shape/volume to change during relaxation.
+    fix_symmetry : bool = False
+        Whether to fix the symmetry during relaxation.
+        Refines the symmetry of the initial structure.
+    symprec : float = 1e-2
+        Tolerance for symmetry finding in case of fix_symmetry.
+    steps : int
+        Maximum number of ionic steps allowed during relaxation.
+    relax_kwargs : dict
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
+    optimizer_kwargs : dict
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
+    task_document_kwargs : dict
+        Additional keyword args passed to :obj:`.AseTaskDocument()`.
+    """
+    name : str = "GFN-xTB static"
+    steps : int = 1

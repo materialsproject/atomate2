@@ -31,6 +31,7 @@ class AseResult(dict):
             "final_structure": None,
             "trajectory": None,
             "is_force_converged": None,
+            "energy_downhill": None,
             **kwargs,
         }
         super().__init__(**kwargs)
@@ -153,6 +154,10 @@ class AseTaskDocument(StructureMetadata):
             "Whether the calculation is converged with respect "
             "to interatomic forces."
         ),
+    )
+
+    energy_downhill : Optional[bool] = Field(
+        None, description="Whether the total energy in the final frame is less than in the initial frame."
     )
 
     @classmethod
@@ -298,5 +303,6 @@ class AseTaskDocument(StructureMetadata):
             included_objects=list(objects.keys()),
             objects=objects,
             is_force_converged=result.get("is_force_converged"),
+            energy_downhill = result.get("energy_downhill"),
             **task_document_kwargs,
         )
