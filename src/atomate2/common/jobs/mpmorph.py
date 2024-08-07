@@ -1,18 +1,46 @@
+"""Define get_random_packed_structure function.
+
+This file generalizes the MPMorph workflows of
+https://github.com/materialsproject/mpmorph
+originally written in atomate for VASP only to a more general
+code agnostic form.
+
+For information about the current flows, contact:
+- Bryant Li (@BryantLi-BLI)
+- Aaron Kaplan (@esoteric-ephemera)
+- Max Gallant (@mcgalcode)
+"""
+
 from __future__ import annotations
 
-from jobflow import job
-
-from mp_api.client import MPRester
-from pymatgen.io.packmol import PackmolBoxGen
-from pymatgen.core import Composition
-import numpy as np
-from pymatgen.core import Molecule, Structure
 from tempfile import TemporaryDirectory
-from pathlib import Path
+from typing import TYPE_CHECKING
+
+import numpy as np
+from jobflow import job
+from mp_api.client import MPRester
+from pymatgen.core import Composition, Molecule, Structure
+from pymatgen.io.packmol import PackmolBoxGen
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def get_average_volume_from_mp(composition: Composition) -> float:
-    """TODO: Add docstring"""
+    """
+    Get the average volume per atom for a given composition from the
+    Materials Project API.
+
+    This function will make API calls to the Materials Project.
+    Check Materials Project API documentation for more
+    information https://next-gen.materialsproject.org/api.
+
+    Parameters
+    ----------
+    composition : Composition
+        The target composition.
+
+    """
     with MPRester() as mpr:
         comp_entries = mpr.get_entries(composition.reduced_formula, inc_structure=True)
 
@@ -43,24 +71,46 @@ def get_average_volume_from_mp(composition: Composition) -> float:
     return np.mean(vols)
 
 
-def get_random_packed(
-    composition: Composition,
-    target_atoms: int,
-    vol_exp=1.0,
-    tol=2.0,
-    return_as_job=False,
+def get_random_packed_structure(
+    composition: Composition | str,
+    target_atoms: int = 100,
+    vol_exp: float = 1.0,
+    tol: float = 2.0,
+    return_as_job: bool = False,
     vol_per_atom_source: float | str = "mp",
-    ignore_oxidadation_states: bool = False,
     packmol_seed: int = 1,
     packmol_output_dir: str | Path | None = None,
 ) -> Structure:
-    """ "
-    TODO: Add docstring
     """
+    Generate a random packed structure with a target number of atoms.
+    Designed to make amorphous/glassy structures.
 
+    Parameters
+    ----------
+    composition : Composition | str
+        The composition of the target structure.
+    target_atoms : int
+        The target number of atoms in the structure.
+    vol_exp : float
+        The volume expansion factor to apply to the structure.
+    tol : float
+        The tolerance to apply to the box size.
+    return_as_job : bool
+        Whether to return the structure as a jobflow job object.
+    vol_per_atom_source : float | str
+        If float - the volume per atom used to generate lattice size
+        If str - "mp" to use the Materials Project API to estimate volume per atom.
+        If str - "icsd" to use the ICSD database to estimate volume per atom.
+        (Not yet implemented)
+    packmol_seed : int
+        The seed to use for the packmol random number generator.
+    packmol_output_dir : str | Path | None
+        The directory to output the packmol files to. If None, a
+        temporary directory is used and will be removed after.
+    """
     if return_as_job:
         return job(
-            get_random_packed(
+            get_random_packed_structure(
                 composition,
                 target_atoms,
                 vol_exp=vol_exp,
@@ -89,7 +139,6 @@ def get_random_packed(
     }
 
     with TemporaryDirectory() as tmpdir:
-
         molecules = []
         for element, num_sites in supercell_composition.items():
             xyz_file = f"{tmpdir}/{element}.xyz"
