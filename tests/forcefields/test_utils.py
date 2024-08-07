@@ -154,7 +154,7 @@ def test_fix_symmetry(fix_symmetry):
         calculator=LennardJones(), relax_cell=True, fix_symmetry=fix_symmetry
     )
     atoms_al = bulk("Al", "bcc", a=2 / 3**0.5, cubic=True)
-    atoms_al = atoms_al * (2, 2, 2)
+    atoms_al *= 2, 2, 2
     atoms_al.positions[0, 0] += 1e-7
     symmetry_init = check_symmetry(atoms_al, 1e-6)
     final_struct: Structure = relaxer.relax(atoms=atoms_al, steps=1)["final_structure"]

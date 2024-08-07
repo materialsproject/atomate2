@@ -451,7 +451,6 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             calculator = pyace.PyACECalculator(**kwargs)
 
         elif calculator_name == MLFF.SevenNet:
-            # pip install git+https://github.com/MDIL-SNU/SevenNet
             from sevenn.sevennet_calculator import SevenNetCalculator
 
             calculator = SevenNetCalculator(**{"model": "7net-0"} | kwargs)

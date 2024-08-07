@@ -74,11 +74,11 @@ def get_supercell_size(
         Additional parameters that can be set.
     """
     kwargs.setdefault("force_diagonal", False)
-    common_kwds = dict(
-        min_length=min_length,
-        min_atoms=kwargs.get("min_atoms"),
-        force_diagonal=kwargs["force_diagonal"],
-    )
+    common_kwds = {
+        "min_length": min_length,
+        "min_atoms": kwargs.get("min_atoms"),
+        "force_diagonal": kwargs["force_diagonal"],
+    }
 
     if not prefer_90_degrees:
         transformation = CubicSupercellTransformation(
