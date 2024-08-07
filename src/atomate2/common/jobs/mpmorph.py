@@ -28,8 +28,7 @@ if TYPE_CHECKING:
 
 def get_average_volume_from_mp(composition: Composition) -> float:
     """
-    Get the average volume per atom for a given composition from the
-    Materials Project API.
+    Get the average volume per atom for a given composition from the Materials Project.
 
     This function will make API calls to the Materials Project.
     Check Materials Project API documentation for more
@@ -87,6 +86,7 @@ def get_random_packed_structure(
 ) -> Structure:
     """
     Generate a random packed structure with a target number of atoms.
+
     Designed to make amorphous/glassy structures.
 
     Parameters
@@ -117,7 +117,6 @@ def get_random_packed_structure(
     Structure | Job
         The random packed structure.
     """
-
     if return_as_job:
         return job(
             get_random_packed_structure(
