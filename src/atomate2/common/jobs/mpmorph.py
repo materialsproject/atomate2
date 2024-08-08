@@ -13,17 +13,19 @@ For information about the current flows, contact:
 
 from __future__ import annotations
 
+from importlib.resources import files as import_resource_file
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING
 
 import numpy as np
-from jobflow import job
+from jobflow import Job
 from pymatgen.core import Composition, Molecule, Structure
 from pymatgen.io.packmol import PackmolBoxGen
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+_DEFAULT_ICSD_AVG_VOL_FILE = import_resource_file("atomate2.common.jobs") / "ICSD_expt_inorg_ordered_avg_vol.json.gz"
 
 def get_average_volume_from_mp(composition: Composition, mp_api_key : str | None = None) -> float:
     """
@@ -93,7 +95,7 @@ def _get_chem_env_key_from_composition(composition: Composition, ignore_oxi_stat
     
     Returns
     -----------
-    Chemical environment returned as a dunder-separated string, such as "Cu__Al+__Cl-" 
+    Chemical environment returned as a dunder-separated string, such as "Ag+__Cu2+__N5+__O2-" 
     """
     comp = composition
     if ignore_oxi_states:
@@ -142,13 +144,10 @@ def get_average_volume_from_icsd(
     Average volume as a float
     """
 
-    from importlib.resources import files as import_resource_file
     from itertools import combinations
     from monty.serialization import loadfn
 
-    icsd_chem_env_file = icsd_chem_env_file or (
-        import_resource_file("atomate2.common.jobs") / "ICSD_expt_inorg_ordered_avg_vol.json.gz"
-    )
+    icsd_chem_env_file = icsd_chem_env_file or _DEFAULT_ICSD_AVG_VOL_FILE
     icsd_vols = loadfn(icsd_chem_env_file)[
         "without_oxi" if ignore_oxi_states else "with_oxi"
     ]
@@ -181,7 +180,7 @@ def get_random_packed_structure(
     db_kwargs : dict | None = None,
     packmol_seed: int = 1,
     packmol_output_dir: str | Path | None = None,
-) -> Structure:
+) -> Structure | Job :
     """
     Generate a random packed structure with a target number of atoms.
 
@@ -217,16 +216,17 @@ def get_random_packed_structure(
         The random packed structure.
     """
     if return_as_job:
-        return job(
-            get_random_packed_structure(
-                composition,
-                target_atoms,
-                vol_exp=vol_exp,
-                tol=tol,
-                return_as_job=False,
-                vol_per_atom_source=vol_per_atom_source,
-                packmol_seed=packmol_seed,
-            )
+        return Job(
+            get_random_packed_structure,
+            function_kwargs = {
+                "composition" : composition,
+                "target_atoms" : target_atoms,
+                "vol_exp" : vol_exp,
+                "tol": tol,
+                "return_as_job": False,
+                "vol_per_atom_source": vol_per_atom_source,
+                "packmol_seed": packmol_seed,
+            }
         )
     if isinstance(composition, str):
         composition = Composition(composition)
