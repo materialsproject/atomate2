@@ -18,7 +18,6 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from jobflow import job
-from mp_api.client import MPRester
 from pymatgen.core import Composition, Molecule, Structure
 from pymatgen.io.packmol import PackmolBoxGen
 
@@ -26,7 +25,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-def get_average_volume_from_mp(composition: Composition) -> float:
+def get_average_volume_from_mp(composition: Composition, mp_api_key : str | None = None) -> float:
     """
     Get the average volume per atom for a given composition from the Materials Project.
 
@@ -38,13 +37,17 @@ def get_average_volume_from_mp(composition: Composition) -> float:
     ----------
     composition : Composition
         The target composition.
+    mp_api_key : str or None
+        The user's MP API key.
 
     Returns
     -------
     float
         The average volume per atom for the composition.
     """
-    with MPRester() as mpr:
+    from mp_api.client import MPRester
+
+    with MPRester(api_key=mp_api_key) as mpr:
         comp_entries = mpr.get_entries(composition.reduced_formula, inc_structure=True)
 
     vols = None
@@ -73,6 +76,100 @@ def get_average_volume_from_mp(composition: Composition) -> float:
 
     return np.mean(vols)
 
+def _get_chem_env_key_from_composition(composition: Composition, ignore_oxi_states : bool = True) -> str:
+    """
+    Get chemical environment as a string for ICSD avg volume determination.
+
+    Parameters
+    -----------
+    composition : .Composition
+        Structure composition
+    ignore_oxi_states : bool = True
+        Whether to ignore oxidation states assigned to sites in the structure,
+        both in the input composition and ICSD structures.
+
+        Note that 0+ / 0- oxidation states are treated identically even
+        when ignore_oxi_states = False.
+    
+    Returns
+    -----------
+    Chemical environment returned as a dunder-separated string, such as "Cu__Al+__Cl-" 
+    """
+    comp = composition
+    if ignore_oxi_states:
+        comp = comp.remove_charges()
+    chem_env = "__".join(sorted(set(comp.as_dict())))
+    for char in ["+","-"]:
+        chem_env = chem_env.replace(f"0{char}","")
+    return chem_env
+
+def get_average_volume_from_icsd(
+    composition : Composition,
+    ignore_oxi_states: bool = True,
+    icsd_chem_env_file : str | Path | None = None,
+) -> float:
+    """
+    Get average volume for a chemical environment from ICSD data.
+
+    The ICSD data is for "reasonable", ordered, experimental inorganic solids.
+
+    Parameters
+    -----------
+    composition : .Composition
+        Structure composition
+    ignore_oxi_states : bool = True
+        Whether to ignore oxidation states assigned to sites in the structure,
+        both in the input composition and ICSD structures.
+
+        Note that 0+ / 0- oxidation states are treated identically even
+        when ignore_oxi_states = False.
+    icsd_chem_env_file : str | Path | None = None
+        The file path to the ICSD chemical environments file.
+        For the user to subsitute their own values, this should be a dict of the form:
+        ```
+        {
+            k : {
+                <chemical environment> : {
+                    "avg_vol": float,
+                    "count": int, # number of structures in the average
+                }
+            } for k in ("with_oxi", "without_oxi")
+        }
+        ```
+    
+    Returns
+    -----------
+    Average volume as a float
+    """
+
+    from importlib.resources import files as import_resource_file
+    from itertools import combinations
+    from monty.serialization import loadfn
+
+    icsd_chem_env_file = icsd_chem_env_file or (
+        import_resource_file("atomate2.common.jobs") / "ICSD_expt_inorg_ordered_avg_vol.json.gz"
+    )
+    icsd_vols = loadfn(icsd_chem_env_file)[
+        "without_oxi" if ignore_oxi_states else "with_oxi"
+    ]
+
+    chem_env_key = _get_chem_env_key_from_composition(composition,ignore_oxi_states=ignore_oxi_states)
+    if (avg_vol := icsd_vols.get(chem_env_key)) is not None:
+        return avg_vol["avg_vol"]
+
+    vols = []
+    counts = 0
+    for ielt in range(2,len(composition)):
+        for combo in combinations(composition,ielt):
+            chem_env_key = _get_chem_env_key_from_composition(
+                Composition({spec: 1 for spec in combo}),
+                ignore_oxi_states=ignore_oxi_states
+            )
+            if (avg_vol := icsd_vols.get(chem_env_key)) is not None:
+                vols.append(avg_vol["avg_vol"] * avg_vol["count"])
+                counts += avg_vol["count"]
+
+    return sum(vols)/counts
 
 def get_random_packed_structure(
     composition: Composition | str,
@@ -81,6 +178,7 @@ def get_random_packed_structure(
     tol: float = 2.0,
     return_as_job: bool = False,
     vol_per_atom_source: float | str = "mp",
+    db_kwargs : dict | None = None,
     packmol_seed: int = 1,
     packmol_output_dir: str | Path | None = None,
 ) -> Structure:
@@ -105,7 +203,8 @@ def get_random_packed_structure(
         If float - the volume per atom used to generate lattice size
         If str - "mp" to use the Materials Project API to estimate volume per atom.
         If str - "icsd" to use the ICSD database to estimate volume per atom.
-        (Not yet implemented)
+    db_kwargs : dict | None = None
+        kwargs to pass to the volume-determining function.
     packmol_seed : int
         The seed to use for the packmol random number generator.
     packmol_output_dir : str | Path | None
@@ -132,11 +231,18 @@ def get_random_packed_structure(
     if isinstance(composition, str):
         composition = Composition(composition)
 
+    db_kwargs = db_kwargs or {}
     if isinstance(vol_per_atom_source, (float, int)):
         vol_per_atom = vol_per_atom_source
 
-    elif vol_per_atom_source == "mp":
-        vol_per_atom = get_average_volume_from_mp(composition)
+    elif vol_per_atom_source.lower() == "mp":
+        vol_per_atom = get_average_volume_from_mp(composition,**db_kwargs)
+
+    elif vol_per_atom_source.lower() == "icsd":
+        vol_per_atom = get_average_volume_from_icsd(composition,**db_kwargs)
+    
+    else:
+        raise ValueError(f"Unknown volume per atom oracle: {vol_per_atom_source}.")
 
     formula, _ = composition.get_integer_formula_and_factor()
     integer_composition = Composition(formula)
