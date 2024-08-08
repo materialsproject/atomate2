@@ -3,17 +3,18 @@
 from __future__ import annotations
 
 import logging
-import os
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from ase.io import Trajectory as AseTrajectory
 from ase.units import GPa as _GPa_to_eV_per_A3
-from jobflow import Maker, job
-from pymatgen.core.trajectory import Trajectory
+from jobflow import job
+from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
+from atomate2.ase.jobs import AseRelaxMaker
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
-from atomate2.forcefields.utils import Relaxer, ase_calculator, revert_default_dtype
+from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -24,7 +25,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-_FORCEFIELD_DATA_OBJECTS = [Trajectory]
+_FORCEFIELD_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
 
 
 def forcefield_job(method: Callable) -> job:
@@ -64,7 +65,7 @@ def forcefield_job(method: Callable) -> job:
 
 
 @dataclass
-class ForceFieldRelaxMaker(Maker):
+class ForceFieldRelaxMaker(AseRelaxMaker):
     """
     Base Maker to calculate forces and stresses using any force field.
 
@@ -88,9 +89,9 @@ class ForceFieldRelaxMaker(Maker):
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
     optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer()`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
@@ -123,26 +124,12 @@ class ForceFieldRelaxMaker(Maker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-        if self.steps < 0:
-            logger.warning(
-                "WARNING: A negative number of steps is not possible. "
-                "Behavior may vary..."
-            )
-        self.task_document_kwargs.setdefault("dir_name", os.getcwd())
-
         with revert_default_dtype():
-            relaxer = Relaxer(
-                self.calculator,
-                relax_cell=self.relax_cell,
-                fix_symmetry=self.fix_symmetry,
-                symprec=self.symprec,
-                **self.optimizer_kwargs,
-            )
-            result = relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
+            ase_result = self._make(structure, prev_dir=prev_dir)
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
-            result,
+            ase_result,
             self.relax_cell,
             self.steps,
             self.relax_kwargs,
@@ -208,9 +195,9 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
     optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer()`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
@@ -275,9 +262,9 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
     optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer()`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
@@ -319,9 +306,9 @@ class NEPRelaxMaker(ForceFieldRelaxMaker):
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
     optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer()`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
@@ -388,9 +375,9 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
     optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer()`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
@@ -476,9 +463,9 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
     optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer()`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator. E.g. the "model"
         key configures which checkpoint to load with mace.calculators.MACECalculator().
@@ -550,9 +537,9 @@ class SevenNetRelaxMaker(ForceFieldRelaxMaker):
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
     optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer()`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator. E.g. the "model"
         key configures which checkpoint to load with mace.calculators.MACECalculator().
@@ -624,9 +611,9 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     steps : int
         Maximum number of ionic steps allowed during relaxation.
     relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer.relax`.
     optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer()`.
+        Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
