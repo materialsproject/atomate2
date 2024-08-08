@@ -61,7 +61,7 @@ forcefields = [
 ]
 ase = [
     "ase>=3.23.0",
-    "tblite>=0.3.0",
+    "tblite>=0.3.0; python_version<'3.12'",
 ]
 docs = [
     "FireWorks==2.0.3",
@@ -111,7 +111,7 @@ strict = [
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "sevenn==0.9.3",
-    "tblite==0.3.0",
+    "tblite==0.3.0; python_version<'3.12'",
     "torch==2.2.1",
     "typing-extensions==4.12.2",
 ]

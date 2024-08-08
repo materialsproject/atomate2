@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 import pytest
 from jobflow import run_locally
 
@@ -47,6 +49,7 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
 
 @pytest.mark.skipif(condition=TBLite is None, reason="TBLite must be installed.")
 def test_gfn_xtb_relax_maker(si_structure):
+    os.environ["OMP_NUM_THREADS"] = "1"
     job = GFNxTBRelaxMaker(
         calculator_kwargs={
             "method": "GFN1-xTB",
@@ -66,6 +69,7 @@ def test_gfn_xtb_relax_maker(si_structure):
 
 @pytest.mark.skipif(condition=TBLite is None, reason="TBLite must be installed.")
 def test_gfn_xtb_static_maker(si_structure):
+    os.environ["OMP_NUM_THREADS"] = "1"
     job = GFNxTBStaticMaker(
         calculator_kwargs={
             "method": "GFN2-xTB",

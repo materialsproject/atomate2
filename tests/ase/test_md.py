@@ -50,6 +50,7 @@ def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_
         "LJ": LennardJonesMDMaker,
         "GFN-xTB": GFNxTBMDMaker,
     }
+    os.environ["OMP_NUM_THREADS"] = "1"
 
     reference_energies = {
         "LJ": 0.01705592581943574,
