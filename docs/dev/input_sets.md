@@ -19,7 +19,7 @@ In the following, we will delve into the specifics of how `InputSets` and `Input
 
 ## Example: VaspInputFiles/Sets/Generators
 ```{Note}
-Note that for historical reasons there is some inconsistency in naming scheme of the Vasp classes.The `VaspInputSet` class in pymatgen corresponds to an `InputGenerator` class and to be consistent with atomate2 it has an alias `VaspInputGenerator`. We will refer to it by its alias. Due to the same reason what would normally be the `InputSet` class is named `VaspInput`.
+Note that for historical reasons there is some inconsistency in the naming scheme of the Vasp classes.The `VaspInputSet` class in pymatgen corresponds to an `InputGenerator` class and to be consistent with atomate2 it has an alias `VaspInputGenerator`. We will refer to it by its alias. Due to the same reason, what would normally be the `InputSet` class is named `VaspInput`.
 ```
 The `VaspInput` class, defined in the `pymatgen.io.vasp.inputs` module, consists of an `INCAR`, `KPOINTS`, `POSCAR`, and `POTCAR` object, i.e., all the files required to run a VASP calculation. While these inherit from `MSONable` when adding `InputFiles` for a new code the `InputFile` class should be used.
 
