@@ -97,6 +97,7 @@ class ResponseMaker(BaseAbinitMaker):
             prev_outputs=prev_outputs,
             restart_from=restart_from,
             history=history,
+            stop_jobflow=True,
         )
 
 

@@ -194,6 +194,7 @@ class BaseAbinitMaker(Maker):
         prev_outputs: str | Path | list[str] | None = None,
         restart_from: str | Path | list[str] | None = None,
         history: JobHistory | None = None,
+        stop_jobflow: bool = False,
     ) -> jobflow.Job:
         """Get an ABINIT jobflow.Job.
 
@@ -249,6 +250,7 @@ class BaseAbinitMaker(Maker):
             history=config.history,
             max_restarts=SETTINGS.ABINIT_MAX_RESTARTS,
             prev_outputs=prev_outputs,
+            stop_jobflow=stop_jobflow,
         )
 
     def get_response(
@@ -257,6 +259,7 @@ class BaseAbinitMaker(Maker):
         history: JobHistory,
         max_restarts: int = 5,
         prev_outputs: str | tuple | list | Path | None = None,
+        stop_jobflow: bool = False,
     ) -> Response:
         """Get new job to restart abinit calculation."""
         if task_document.state == TaskState.SUCCESS:
@@ -276,7 +279,7 @@ class BaseAbinitMaker(Maker):
             return Response(
                 output=task_document,
                 stop_children=True,
-                stop_jobflow=False,
+                stop_jobflow=stop_jobflow,
                 stored_data={"error": unconverged_error},
             )
 
