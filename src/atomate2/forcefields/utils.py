@@ -445,6 +445,11 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
 
             calculator = NequIPCalculator.from_deployed_model(**kwargs)
 
+        elif calculator_name == MLFF.Pyace:
+            import pyace
+
+            calculator = pyace.PyACECalculator(**kwargs)
+
         elif calculator_name == MLFF.SevenNet:
             from sevenn.sevennet_calculator import SevenNetCalculator
 

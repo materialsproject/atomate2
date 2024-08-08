@@ -676,3 +676,45 @@ class GAPStaticMaker(ForceFieldStaticMaker):
             "param_filename": "gap.xml",
         }
     )
+
+
+@dataclass
+class PyACERelaxMaker(ForceFieldRelaxMaker):
+    """Base Maker to calculate forces and stresses using a PyACE potential."""
+
+    name: str = "py-ace relax"
+    force_field_name: str = "Py-ACE"
+    relax_cell: bool = True
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
+
+    def _calculator(self) -> Calculator:
+        import pyace
+
+        return pyace.PyACECalculator(**self.calculator_kwargs)
+
+
+@dataclass
+class LJRelaxMaker(ForceFieldRelaxMaker):
+    """Base Maker to calculate forces and stresses using a Lennard-Jones potential."""
+
+    name: str = "LJ relax"
+
+    def _calculator(self) -> Calculator:
+        from ase.calculators.lj import LennardJones
+
+        return LennardJones(**self.calculator_kwargs)
+
+
+@dataclass
+class LJStaticMaker(ForceFieldStaticMaker):
+    """Base Maker to calculate forces and stresses using a Lennard-Jones potential."""
+
+    name: str = "LJ static"
+
+    def _calculator(self) -> Calculator:
+        from ase.calculators.lj import LennardJones
+
+        return LennardJones(**self.calculator_kwargs)
