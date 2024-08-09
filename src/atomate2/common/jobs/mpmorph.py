@@ -159,7 +159,7 @@ def get_average_volume_from_icsd(
     icsd_chem_env_file = icsd_chem_env_file or _DEFAULT_ICSD_AVG_VOL_FILE
     icsd_avg_vols = read_json(icsd_chem_env_file)
 
-    def get_entry_from_dict(chem_env: str) -> dict[str] | None:
+    def get_entry_from_dict(chem_env: str) -> dict | None:
         data = icsd_avg_vols[icsd_avg_vols["chem_env"] == chem_env]
         data = data[
             data["with_oxi"]
@@ -167,7 +167,8 @@ def get_average_volume_from_icsd(
             else ~data["with_oxi"]
         ]
         if len(data) > 0:
-            return {k: list(data[k])[0] for k in ("avg_vol", "count")}
+            return {k: data[k].squeeze() for k in ("avg_vol", "count")}
+        return None
 
     chem_env_key = _get_chem_env_key_from_composition(
         composition, ignore_oxi_states=ignore_oxi_states
@@ -183,7 +184,7 @@ def get_average_volume_from_icsd(
                 Composition({spec: 1 for spec in combo}),
                 ignore_oxi_states=ignore_oxi_states,
             )
-            print(chem_env_key, get_entry_from_dict(chem_env_key), ignore_oxi_states)
+
             if (avg_vol := get_entry_from_dict(chem_env_key)) is not None:
                 vols.append(avg_vol["avg_vol"] * avg_vol["count"])
                 counts += avg_vol["count"]
