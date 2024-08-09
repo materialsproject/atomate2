@@ -2,9 +2,10 @@ import os
 from functools import wraps
 import math
 import numpy as np
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import scipy.constants as const
 from data import atom_valence_electrons
+from pymatgen.core import Structure
 
 
 HA2EV = 2.0 * const.value('Rydberg constant times hc in eV')
@@ -39,7 +40,8 @@ def read_file(file_name: str) -> list[str]:
 def find_key(key_input, tempfile):
     #finds line where key occurs in stored input, last instance
     key_input = str(key_input)
-    line = len(tempfile)                  #default to end
+    # line = len(tempfile)                  #default to end
+    line = None
     for i in range(0,len(tempfile)):
         if key_input in tempfile[i]:
             line = i
@@ -65,6 +67,13 @@ def find_first_range_key(key_input, tempfile, startline=0, endline=-1, skip_poun
     if not L:
         L = [len(tempfile)]
     return L
+
+def key_exists(key_input, tempfile):
+    line = find_key(key_input, tempfile)
+    if line == None:
+        return False
+    else:
+        return True
 
 def find_all_key(key_input, tempfile, startline = 0):
     #DEPRECATED: NEED TO REMOVE INSTANCES OF THIS FUNCTION AND SWITCH WITH find_first_range_key
@@ -134,6 +143,9 @@ class JDFTXOutfile(ClassPrintFormatter):
     atom_coords: list[list[float]] = None
 
     has_solvation: bool = False
+
+    Ecomponents: dict = field(default_factory=dict)
+    is_gc: bool = False # is it a grand canonical calculation
 
     @classmethod
     def from_file(cls, file_name: str):
@@ -302,7 +314,24 @@ class JDFTXOutfile(ClassPrintFormatter):
         instance.a, instance.b, instance.c = np.sum(instance.lattice**2, axis = 1)**0.5
 
         instance.has_solvation = instance.check_solvation()
+
+        # Cooper added
+        line = find_key("# Energy components:", text)
+        instance.is_gc = key_exists('target-mu', text)
+        instance.Ecomponents = instance.read_ecomponents(line, text)
         return instance
+    
+    @property
+    def structure(self):
+        latt = self.lattice
+        coords = self.atom_coords_final
+        elements = self.atom_elements
+        structure = Structure(
+            lattice=latt,
+            species=elements,
+            coords=coords
+        )
+        return structure
 
     def calculate_filling(broadening_type, broadening, eig, EFermi):
         #most broadening implementations do not have the denominator factor of 2, but JDFTx does currently
@@ -334,3 +363,18 @@ class JDFTXOutfile(ClassPrintFormatter):
         #don't need a write method since will never do that
         return NotImplementedError('There is no need to write a JDFTx out file')
 
+    def read_ecomponents(self, line:int, text:str): # might
+        Ecomponents = {}
+        if self.is_gc == True:
+            final_E_type = "G"
+        else:
+            final_E_type = "F"
+        for tmp_line in text[line+1:]:
+            chars = tmp_line.strip().split()
+            if tmp_line.startswith("--"):
+                continue
+            E_type = chars[0]
+            Energy = float(chars[-1]) * HA2EV
+            Ecomponents.update({E_type:Energy})
+            if E_type == final_E_type:
+                return Ecomponents

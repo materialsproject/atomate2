@@ -10,7 +10,8 @@ from custodian.qchem.jobs import QCJob
 from atomate2.jdftx.io.inputs import JdftxInput
 from monty.serialization import loadfn
 from typing import Type, TypeVar, Union
-from emmet.core.structure import MoleculeMetadata
+from pymatgen.core.structure import Structure
+from emmet.core.structure import StructureMetadata
 from pathlib import Path
 from emmet.core.qchem.calc_types import (
     LevelOfTheory,
@@ -32,143 +33,28 @@ _T = TypeVar("_T", bound="TaskDoc")
 
 
 class OutputDoc(BaseModel):
-    initial_molecule: Molecule = Field(None, description="Input Molecule object")
-    optimized_molecule: Optional[Molecule] = Field(
-        None, description="Optimized Molecule object"
+    initial_structure: Structure = Field(None, description="Input Structure object")
+    optimized_structure: Optional[Structure] = Field(
+        None, description="Optimized Structure object"
     )
-
-    # TODO: Discuss with Evan if these go here
-    # species_hash: str = Field(
-    #     None,
-    #     description="Weisfeiler Lehman (WL) graph hash using the atom species as the graph node attribute.",
-    # )
-    # coord_hash: str = Field(
-    #     None,
-    #     description="Weisfeiler Lehman (WL) graph hash using the atom coordinates as the graph node attribute.",
-    # )
-
-    # last_updated: datetime = Field(
-    #     None,
-    #     description = "Timestamp for the most recent calculation for this QChem task document",
-    # )
-
-    final_energy: float = Field(
-        None, description="Final electronic energy for the calculation (units: Hartree)"
+    energy: float = Field(..., description="Total Energy in units of eV.")
+    forces: Optional[List[List[float]]] = Field(
+        None, description="The force on each atom in units of eV/A^2."
     )
-    enthalpy: Optional[float] = Field(
-        None, description="Total enthalpy of the molecule (units: kcal/mol)"
-    )
-    entropy: Optional[float] = Field(
-        None, description="Total entropy of the molecule (units: cal/mol-K"
-    )
-    dipoles: Optional[Dict[str, Any]] = Field(
-        None, description="Dipolar information from the output"
-    )
-    mulliken: Optional[List[Any]] = Field(
-        None, description="Mulliken atomic partial charges and partial spins"
-    )
-    resp: Optional[Union[List[float], List[Any]]] = Field(
-        None,
-        description="Restrained Electrostatic Potential (RESP) atomic partial charges",
-    )
-    nbo: Optional[Dict[str, Any]] = Field(
-        None, description="Natural Bonding Orbital (NBO) output"
-    )
-
-    frequencies: Optional[Union[Dict[str, Any], List]] = Field(
-        None,
-        description="The list of calculated frequencies if job type is freq (units: cm^-1)",
-    )
-
-    frequency_modes: Optional[Union[List, str]] = Field(
-        None,
-        description="The list of calculated frequency mode vectors if job type is freq",
-    )
-
-    @classmethod
-    def from_qchem_calc_doc(cls, calc_doc: Calculation) -> "OutputDoc":
-        """
-        Create a summary of QChem calculation outputs from a QChem calculation document.
-
-        Parameters
-        ----------
-        calc_doc
-            A QChem calculation document.
-        kwargs
-            Any other additional keyword arguments
-
-        Returns
-        --------
-        OutputDoc
-            The calculation output summary
-        """
-        return cls(
-            initial_molecule=calc_doc.input.initial_molecule,
-            optimized_molecule=calc_doc.output.optimized_molecule,
-            # species_hash = self.species_hash, #The three entries post this needs to be checked again
-            # coord_hash = self.coord_hash,
-            # last_updated = self.last_updated,
-            final_energy=calc_doc.output.final_energy,
-            dipoles=calc_doc.output.dipoles,
-            enthalpy=calc_doc.output.enthalpy,
-            entropy=calc_doc.output.entropy,
-            mulliken=calc_doc.output.mulliken,
-            resp=calc_doc.output.resp,
-            nbo=calc_doc.output.nbo_data,
-            frequencies=calc_doc.output.frequencies,
-            frequency_modes=calc_doc.output.frequency_modes,
-        )
 
 
 class InputDoc(BaseModel):
-    initial_molecule: Molecule = Field(
+    structure: Structure = Field(
         None,
         title="Input Structure",
         description="Input molecule and calc details for the QChem calculation",
     )
 
-    prev_rem_params: Optional[Dict[str, Any]] = Field(
+    parameters: Optional[Dict] = Field(
         None,
-        description="Parameters from a previous qchem calculation in the series",
+        description="JDFTx calculation parameters",
     )
 
-    rem: Dict[str, Any] = Field(
-        None,
-        description="Parameters from the rem section of the current QChem calculation",
-    )
-
-    level_of_theory: Optional[Union[str, LevelOfTheory]] = Field(
-        None, description="Level of theory used in the qchem calculation"
-    )
-
-    task_type: Optional[Union[str, TaskType]] = Field(
-        None,
-        description="The type of the QChem calculation : optimization, single point ... etc.",
-    )
-
-    tags: Union[List[str], None] = Field(
-        [], title="tag", description="Metadata tagged to a given task."
-    )
-
-    solvation_lot_info: Optional[Union[Dict[str, Any], str]] = Field(
-        None,
-        description="Str or Dict representation of the solvent method used for the calculation",
-    )
-
-    special_run_type: Optional[str] = Field(
-        None, description="Special workflow name (if applicable)"
-    )
-
-    smiles: Optional[str] = Field(
-        None,
-        description="Simplified molecular-input line-entry system (SMILES) string for the molecule involved "
-        "in this calculation.",
-    )
-
-    calc_type: Optional[Union[str, CalcType]] = Field(
-        None,
-        description="A combined dictionary representation of the task type along with the level of theory used",
-    )
 
     @classmethod
     def from_qchem_calc_doc(cls, calc_doc: Calculation) -> "InputDoc":
@@ -225,16 +111,16 @@ class CustodianDoc(BaseModel):
 # AnalysisDoc? Is there a scope for AnalysisDoc in QChem?
 
 
-class TaskDoc(MoleculeMetadata):
+class TaskDoc(StructureMetadata):
     """
-    Calculation-level details about QChem calculations that would eventually take over the TaskDocument implementation
+    Calculation-level details about JDFTx calculations
     """
 
     dir_name: Optional[Union[str, Path]] = Field(
         None, description="The directory for this QChem task"
     )
 
-    state: Optional[QChemStatus] = Field(
+    state: Optional[JDFTxStatus] = Field(
         None, description="State of this QChem calculation"
     )
 
@@ -324,7 +210,7 @@ class TaskDoc(MoleculeMetadata):
         task_files = _find_qchem_files(dir_name)
 
         if len(task_files) == 0:
-            raise FileNotFoundError("No QChem files found!")
+            raise FileNotFoundError("No JDFTx files found!")
 
         critic2 = {}
         custom_smd = {}

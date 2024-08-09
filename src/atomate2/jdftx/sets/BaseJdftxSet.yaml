@@ -49,6 +49,7 @@ symmetries: none
 ion-species: GBRV_v1.5/$ID_pbe_v1.uspp
 
 ### Output Files ###
+dump-name: $VAR
 dump: 
   - freq: End
     var: Dtot

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 from pymatgen.core.periodic_table import Element
 
-from atomate2.jdftx.sets.base import JdftInputGenerator
+from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 if TYPE_CHECKING:
     from emmet.core.math import Vector3D
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 @dataclass
-class RelaxSetGenerator(JdftInputGenerator):
+class RelaxSetGenerator(JdftxInputGenerator):
     """Class to generate VASP relaxation input sets."""
 
     def get_incar_updates(
