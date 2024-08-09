@@ -5,6 +5,7 @@ from shutil import which
 import pytest
 from jobflow import run_locally
 from monty.serialization import loadfn
+from pandas import read_json
 from pymatgen.core import Composition
 
 from atomate2.common.jobs.mpmorph import (
@@ -16,7 +17,7 @@ from atomate2.common.jobs.mpmorph import (
 
 
 def test_get_average_volume_from_icsd():
-    avg_vols = loadfn(_DEFAULT_ICSD_AVG_VOL_FILE)
+    avg_vols = read_json(_DEFAULT_ICSD_AVG_VOL_FILE)
 
     comp = Composition({"Ag+": 4, "Cu2+": 2, "O2-": 4})
 
@@ -27,7 +28,16 @@ def test_get_average_volume_from_icsd():
             _get_chem_env_key_from_composition(comp, ignore_oxi_states=ignore_oxi)
             == chem_env
         )
-        assert chem_env in avg_vols[("without" if ignore_oxi else "with") + "_oxi"]
+        assert (
+            len(
+                avg_vols[
+                    (avg_vols["chem_env"] == chem_env)
+                    & (~avg_vols["with_oxi"] if ignore_oxi else avg_vols["with_oxi"])
+                ]
+            )
+            > 0
+        )
+
         assert get_average_volume_from_icsd(
             comp, ignore_oxi_states=ignore_oxi
         ) == pytest.approx(ref_vols[ignore_oxi])

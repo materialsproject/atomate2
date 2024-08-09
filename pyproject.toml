@@ -122,6 +122,7 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 
 [tool.setuptools.package-data]
 atomate2 = ["py.typed"]
+"atomate2.common.jobs" = ["*.json.gz"]
 "atomate2.vasp.sets" = ["*.yaml"]
 "atomate2.cp2k.sets" = ["*.yaml"]
 "atomate2.cp2k.schemas.calc_types" = ["*.yaml"]

@@ -141,12 +141,10 @@ def get_average_volume_from_icsd(
         For the user to substitute their own values, this should be a dict of the form:
         ```
         {
-            k : {
-                <chemical environment> : {
-                    "avg_vol": float,
-                    "count": int, # number of structures in the average
-                }
-            } for k in ("with_oxi", "without_oxi")
+            "chem_env": list[str],
+            "avg_vol": list[float].
+            "count": list[int],
+            "with_oxi": list[bool],
         }
         ```
 
@@ -156,17 +154,25 @@ def get_average_volume_from_icsd(
     """
     from itertools import combinations
 
-    from monty.serialization import loadfn
+    from pandas import read_json
 
     icsd_chem_env_file = icsd_chem_env_file or _DEFAULT_ICSD_AVG_VOL_FILE
-    icsd_vols = loadfn(icsd_chem_env_file)[
-        "without_oxi" if ignore_oxi_states else "with_oxi"
-    ]
+    icsd_avg_vols = read_json(icsd_chem_env_file)
+
+    def get_entry_from_dict(chem_env: str) -> dict[str] | None:
+        data = icsd_avg_vols[icsd_avg_vols["chem_env"] == chem_env]
+        data = data[
+            data["with_oxi"]
+            if (not ignore_oxi_states and len(data[data["with_oxi"]]) > 0)
+            else ~data["with_oxi"]
+        ]
+        if len(data) > 0:
+            return {k: list(data[k])[0] for k in ("avg_vol", "count")}
 
     chem_env_key = _get_chem_env_key_from_composition(
         composition, ignore_oxi_states=ignore_oxi_states
     )
-    if (avg_vol := icsd_vols.get(chem_env_key)) is not None:
+    if (avg_vol := get_entry_from_dict(chem_env_key)) is not None:
         return avg_vol["avg_vol"]
 
     vols = []
@@ -177,7 +183,8 @@ def get_average_volume_from_icsd(
                 Composition({spec: 1 for spec in combo}),
                 ignore_oxi_states=ignore_oxi_states,
             )
-            if (avg_vol := icsd_vols.get(chem_env_key)) is not None:
+            print(chem_env_key, get_entry_from_dict(chem_env_key), ignore_oxi_states)
+            if (avg_vol := get_entry_from_dict(chem_env_key)) is not None:
                 vols.append(avg_vol["avg_vol"] * avg_vol["count"])
                 counts += avg_vol["count"]
 
