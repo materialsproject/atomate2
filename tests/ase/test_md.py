@@ -6,7 +6,7 @@ import pytest
 from jobflow import run_locally
 
 from atomate2.ase.md import GFNxTBMDMaker, LennardJonesMDMaker
-from atomate2.ase.schemas import AseTaskDocument
+from atomate2.ase.schemas import AseStructureTaskDoc
 
 _mb_velocity_seed = 2820285082114
 
@@ -37,7 +37,7 @@ def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure):
     response = run_locally(md_job)
     output = response[md_job.uuid][1].output
 
-    assert isinstance(output, AseTaskDocument)
+    assert isinstance(output, AseStructureTaskDoc)
     assert output.output.energy_per_atom == pytest.approx(
         reference_energies[calculator_name]
     )
@@ -80,7 +80,7 @@ def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_
     response = run_locally(md_job)
     output = response[md_job.uuid][1].output
 
-    assert isinstance(output, AseTaskDocument)
+    assert isinstance(output, AseStructureTaskDoc)
     assert output.output.energy_per_atom == pytest.approx(
         reference_energies[calculator_name]
     )

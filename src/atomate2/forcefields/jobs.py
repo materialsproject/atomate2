@@ -126,16 +126,16 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
         """
         with revert_default_dtype():
             ase_result = self._make(structure, prev_dir=prev_dir)
+        self.task_document_kwargs.update({"relax_cell": self.relax_cell})
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
             ase_result,
-            self.relax_cell,
             self.steps,
-            self.relax_kwargs,
-            self.optimizer_kwargs,
-            self.fix_symmetry,
-            self.symprec,
+            relax_kwargs=self.relax_kwargs,
+            optimizer_kwargs=self.optimizer_kwargs,
+            fix_symmetry=self.fix_symmetry,
+            symprec=self.symprec,
             **self.task_document_kwargs,
         )
 

@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import contextlib
 import io
+import os
 import sys
 import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np
+from ase import Atoms
 from ase.calculators.calculator import PropertyNotImplementedError
 from ase.calculators.singlepoint import SinglePointCalculator
 from ase.constraints import FixSymmetry
@@ -40,7 +42,6 @@ if TYPE_CHECKING:
     from os import PathLike
     from typing import Literal
 
-    from ase import Atoms
     from ase.calculators.calculator import Calculator
     from ase.filters import Filter
     from ase.io.trajectory import TrajectoryReader
@@ -76,17 +77,29 @@ class TrajectoryObserver:
             None
         """
         self.atoms = atoms
+        self._is_periodic = any(atoms.pbc)
         self.energies: list[float] = []
         self.forces: list[np.ndarray] = []
+
+        self._calc_kwargs = {
+            "stress": (
+                "stress" in self.atoms.calc.implemented_properties
+                and self._is_periodic
+            ),
+            "magmoms": True,
+            "velocities": False,
+            "temperature": False,
+        }
         self.stresses: list[np.ndarray] = []
 
-        self._store_magmoms = True
         self.magmoms: list[np.ndarray] = []
 
         self.atom_positions: list[np.ndarray] = []
         self.cells: list[np.ndarray] = []
 
         self._store_md_outputs = store_md_outputs
+        if store_md_outputs:
+            self._calc_kwargs.update({k: True for k in {"velocities","temperature"} })
         # `self.{velocities,temperatures}` always initialized,
         # but data is only stored / saved to trajectory for MD runs
         self.velocities: list[np.ndarray] = []
@@ -99,15 +112,17 @@ class TrajectoryObserver:
         # MD needs kinetic energy parts of stress, relaxations do not
         # When _store_md_outputs is True, ideal gas contribution to
         # stress is included.
-        self.stresses.append(
-            self.atoms.get_stress(include_ideal_gas=self._store_md_outputs)
-        )
+        # Only store stress for periodic systems.
+        if self._calc_kwargs["stress"]:
+            self.stresses.append(
+                self.atoms.get_stress(include_ideal_gas=self._store_md_outputs)
+            )
 
-        if self._store_magmoms:
+        if self._calc_kwargs["magmoms"]:
             try:
                 self.magmoms.append(self.atoms.get_magnetic_moments())
             except PropertyNotImplementedError:
-                self._store_magmoms = False
+                self._calc_kwargs["magmoms"] = False
 
         self.atom_positions.append(self.atoms.get_positions())
         self.cells.append(self.atoms.get_cell()[:])
@@ -171,9 +186,10 @@ class TrajectoryObserver:
             kwargs = {
                 "energy": self.energies[idx],
                 "forces": self.forces[idx],
-                "stress": self.stresses[idx],
             }
-            if self._store_magmoms:
+            if self._calc_kwargs["stress"]:
+                kwargs["stress"] = self.stresses[idx]
+            if self._calc_kwargs["magmoms"]:
                 kwargs["magmom"] = self.magmoms[idx]
 
             atoms.calc = SinglePointCalculator(atoms=atoms, **kwargs)
@@ -199,28 +215,37 @@ class TrajectoryObserver:
             If "pmg", writes a pymatgen .Trajectory object to file
             If "xdatcar", writes a VASP-format XDATCAR object to file
         """
-        frame_property_keys = ["energy", "forces", "stress"]
-        if self._store_magmoms:
-            frame_property_keys += ["magmoms"]
-        if self._store_md_outputs:
-            frame_property_keys += ["velocities", "temperature"]
+        frame_property_keys = ["energy", "forces"]
+        for k in {"stress", "magmoms", "velocities", "temperature"}:
+            if self._calc_kwargs[k]:
+                frame_property_keys += [k]
 
         to_singular = {"energies": "energy", "stresses": "stress"}
 
         traj = self.as_dict() if hasattr(self, "as_dict") else self.__dict__
 
         n_md_steps = len(traj["cells"])
-        species = AseAtomsAdaptor.get_structure(traj["atoms"]).species
+        species = AseAtomsAdaptor.get_structure(traj["atoms"],cls = Structure if self._is_periodic else Molecule).species
 
-        structures = [
-            Structure(
-                lattice=traj["cells"][idx],
-                coords=traj["atom_positions"][idx],
-                species=species,
-                coords_are_cartesian=True,
-            )
-            for idx in range(n_md_steps)
-        ]
+        if self._is_periodic:
+            frames = [
+                Structure(
+                    lattice=traj["cells"][idx],
+                    coords=traj["atom_positions"][idx],
+                    species=species,
+                    coords_are_cartesian=True,
+                )
+                for idx in range(n_md_steps)
+            ]
+        else:
+            frames = [
+                Molecule(
+                    species,
+                    coords = traj["atom_positions"][idx],
+                    charge = getattr(traj["atoms"],"charge",0),
+                    spin_multiplicity=getattr(traj["atoms"],"spin_multiplicity",None),
+                ) for idx in range(n_md_steps)
+            ]
 
         frame_properties = [
             {
@@ -231,8 +256,9 @@ class TrajectoryObserver:
             for idx in range(n_md_steps)
         ]
 
-        pmg_traj = PmgTrajectory.from_structures(
-            structures,
+        traj_method = "from_structures" if self._is_periodic else "from_molecules"
+        pmg_traj = getattr(PmgTrajectory,traj_method)(
+            frames,
             frame_properties=frame_properties,
             constant_lattice=False,
         )
@@ -257,7 +283,7 @@ class TrajectoryObserver:
             "atomic_number": self.atoms.get_atomic_numbers(),
         }
 
-        if self._store_magmoms:
+        if self._calc_kwargs["magmoms"]:
             traj_dict["magmoms"] = self.magmoms
 
         if self._store_md_outputs:
@@ -342,6 +368,12 @@ class AseRelaxer:
         -------
             dict including optimized structure and the trajectory
         """
+
+        is_mol = (
+            isinstance(atoms,Molecule)
+            or (isinstance(atoms,Atoms) and all(not pbc for pbc in atoms.pbc))
+        )
+
         if isinstance(atoms, (Structure, Molecule)):
             atoms = self.ase_adaptor.get_atoms(atoms)
         if self.fix_symmetry:
@@ -360,16 +392,17 @@ class AseRelaxer:
         if isinstance(atoms, cell_filter):
             atoms = atoms.atoms
 
-        struct = self.ase_adaptor.get_structure(atoms)
+        struct = self.ase_adaptor.get_structure(atoms,cls = Molecule if is_mol else Structure)
         traj = obs.to_pymatgen_trajectory(None)
         is_force_conv = all(
             np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
             for idx in range(len(struct))
         )
         return AseResult(
-            final_structure=struct,
+            final_ionic_config=struct,
             trajectory=traj,
             is_force_converged=is_force_conv,
             energy_downhill=traj.frame_properties[-1]["energy"]
             < traj.frame_properties[0]["energy"],
+            dir_name = os.getcwd()
         )

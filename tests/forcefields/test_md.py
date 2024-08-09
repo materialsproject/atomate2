@@ -101,7 +101,7 @@ def test_ml_ff_md_maker(
     # Check that the ionic steps have the expected physical properties
     assert all(
         key in step.model_dump()
-        for key in ("energy", "forces", "stress", "structure")
+        for key in ("energy", "forces", "stress", "ionic_configuration")
         for step in task_doc.output.ionic_steps
     )
 
@@ -189,10 +189,11 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
             dynamics=dyn,
             n_steps=50,
             traj_file=None,
+            task_document_kwargs={"ionic_step_data": ("energy","forces","stress","structure")}
         ).make(si_structure)
 
         response = run_locally(job, ensure_success=True)
-        output[key] = response[next(iter(response))][1].output
+        output[key] = response[job.uuid][1].output
 
     # check that energy and volume are constants
     assert output["from_str"].output.energy == pytest.approx(-10.6, abs=0.1)
@@ -203,13 +204,13 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
         step.energy == pytest.approx(-10.6, abs=0.1)
         for step in output["from_str"].output.ionic_steps
     )
-
     # ensure that output is consistent if molecular dynamics object is specified
     # as str or as MolecularDynamics object
     for attr in ("energy", "forces", "stress", "structure"):
         vals = {
             key: getattr(output[key].output, attr) for key in ("from_str", "from_dyn")
         }
+
         if isinstance(vals["from_str"], float):
             assert vals["from_str"] == pytest.approx(vals["from_dyn"])
         elif isinstance(vals["from_str"], Structure):

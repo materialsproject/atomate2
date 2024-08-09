@@ -9,9 +9,10 @@ from typing import TYPE_CHECKING
 
 from ase.io import Trajectory as AseTrajectory
 from jobflow import Maker, job
+from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
-from atomate2.ase.schemas import AseResult, AseTaskDocument
+from atomate2.ase.schemas import AseResult, AseTaskDoc
 from atomate2.ase.utils import AseRelaxer
 
 logger = logging.getLogger(__name__)
@@ -23,7 +24,9 @@ if TYPE_CHECKING:
     from typing import Callable
 
     from ase.calculators.calculator import Calculator
-    from pymatgen.core import Structure
+    from pymatgen.core import Molecule
+
+    from atomate2.ase.schemas import AseStructureTaskDoc, AseMoleculeTaskDoc
 
 
 def ase_job(method: Callable) -> job:
@@ -33,7 +36,7 @@ def ase_job(method: Callable) -> job:
     This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
     settings for all ASE jobs. For example, it ensures that large data objects
     (currently only trajectories) are all stored in the atomate2 data store.
-    It also configures the output schema to be a AseTaskDocument :obj:`.TaskDoc`.
+    It also configures the output schema to be a AseStructureTaskDoc :obj:`.TaskDoc`.
 
     Any makers that return ASE jobs (not flows) should decorate the
     ``make`` method with @ase_job. For example:
@@ -57,7 +60,7 @@ def ase_job(method: Callable) -> job:
     callable
         A decorated version of the make function that will generate forcefield jobs.
     """
-    return job(method, data=_ASE_DATA_OBJECTS, output_schema=AseTaskDocument)
+    return job(method, data=_ASE_DATA_OBJECTS)#, output_schema=AseStructureTaskDoc)
 
 
 @dataclass
@@ -88,7 +91,7 @@ class AseRelaxMaker(Maker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict
-        Additional keyword args passed to :obj:`.AseTaskDocument()`.
+        Additional keyword args passed to :obj:`.AseStructureTaskDoc()`.
     """
 
     name: str = "ASE relaxation"
@@ -103,44 +106,50 @@ class AseRelaxMaker(Maker):
 
     @ase_job
     def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> AseTaskDocument:
+        self, ionic_configuration: Structure | Molecule, prev_dir: str | Path | None = None
+    ) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
         """
-        Relax a structure using ASE as a job.
+        Relax a structure or molecule using ASE as a job.
 
         Parameters
         ----------
-        structure: .Structure
-            pymatgen structure.
+        ionic_configuration: .Structure or .Molecule
+            pymatgen structure or molecule
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
+
+        Return
+        --------
+
         """
-        return AseTaskDocument.from_ase_compatible_result(
+        if isinstance(ionic_configuration,Structure):
+            self.task_document_kwargs.update({"relax_cell": self.relax_cell})
+
+        return AseTaskDoc.from_ase_compatible_result(
             getattr(self.calculator, "name", self.calculator.__class__),
-            self._make(structure, prev_dir=prev_dir),
-            self.relax_cell,
+            self._make(ionic_configuration, prev_dir=prev_dir),
             self.steps,
-            self.relax_kwargs,
-            self.optimizer_kwargs,
-            self.fix_symmetry,
-            self.symprec,
+            relax_kwargs = self.relax_kwargs,
+            optimizer_kwargs = self.optimizer_kwargs,
+            fix_symmetry = self.fix_symmetry,
+            symprec = self.symprec,
             **self.task_document_kwargs,
-        )
+        ).to_meta_task_doc()
 
     def _make(
-        self, structure: Structure, prev_dir: str | Path | None = None
+        self, ionic_configuration: Structure | Molecule, prev_dir: str | Path | None = None
     ) -> AseResult:
         """
-        Relax a structure using ASE, not as a job.
+        Relax a structure or molecule using ASE, not as a job.
 
         This method exists to permit child classes to redefine `make`
         for different output schemas.
 
         Parameters
         ----------
-        structure: .Structure
-            pymatgen structure.
+        ionic_configuration: .Structure or .Molecule
+            pymatgen structure or molecule.
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
@@ -150,7 +159,6 @@ class AseRelaxMaker(Maker):
                 "WARNING: A negative number of steps is not possible. "
                 "Behavior may vary..."
             )
-        self.task_document_kwargs.setdefault("dir_name", os.getcwd())
 
         relaxer = AseRelaxer(
             self.calculator,
@@ -159,7 +167,7 @@ class AseRelaxMaker(Maker):
             symprec=self.symprec,
             **self.optimizer_kwargs,
         )
-        return relaxer.relax(structure, steps=self.steps, **self.relax_kwargs)
+        return relaxer.relax(ionic_configuration, steps=self.steps, **self.relax_kwargs)
 
     @property
     def calculator(self) -> Calculator:

@@ -13,7 +13,7 @@ from atomate2.ase.jobs import (
     LennardJonesRelaxMaker,
     LennardJonesStaticMaker,
 )
-from atomate2.ase.schemas import AseTaskDocument
+from atomate2.ase.schemas import AseStructureTaskDoc
 
 try:
     from tblite.ase import TBLite
@@ -31,7 +31,7 @@ def test_lennard_jones_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):
 
     assert output.structure.volume == pytest.approx(22.304245)
     assert output.output.energy == pytest.approx(-0.018494767)
-    assert isinstance(output, AseTaskDocument)
+    assert isinstance(output, AseStructureTaskDoc)
 
 
 def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
@@ -43,7 +43,7 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
 
     assert output.output.energy == pytest.approx(-0.0179726955438795)
     assert output.structure.volume == pytest.approx(24.334)
-    assert isinstance(output, AseTaskDocument)
+    assert isinstance(output, AseStructureTaskDoc)
     assert output.structure == fcc_ne_structure
 
 
@@ -64,7 +64,7 @@ def test_gfn_xtb_relax_maker(si_structure):
     assert output.output.energy == pytest.approx(-87.63153322348951)
     assert output.energy_downhill
     assert output.is_force_converged
-    assert isinstance(output, AseTaskDocument)
+    assert isinstance(output, AseStructureTaskDoc)
 
 
 @pytest.mark.skipif(condition=TBLite is None, reason="TBLite must be installed.")
@@ -81,5 +81,5 @@ def test_gfn_xtb_static_maker(si_structure):
 
     assert output.structure.volume == pytest.approx(40.88829274510334)
     assert output.output.energy == pytest.approx(-85.12729944654562)
-    assert isinstance(output, AseTaskDocument)
+    assert isinstance(output, AseStructureTaskDoc)
     assert output.structure == si_structure
