@@ -34,7 +34,7 @@ dependencies = [
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen@git+https://github.com/materialsproject/pymatgen.git@8e392947348c75220cfb79309fe8fc9745edc580",  # has to be adjusted with new pymatgen release
+    "pymatgen>=2024.8.8",
 ]
 
 [project.optional-dependencies]
@@ -101,7 +101,7 @@ strict = [
     "pydantic-settings==2.3.4",
     "pydantic==2.8.2",
     "pymatgen-analysis-defects==2024.7.19",
-    "pymatgen@git+https://github.com/materialsproject/pymatgen.git@8e392947348c75220cfb79309fe8fc9745edc580",  # has to be adjusted with new pymatgen release
+    "pymatgen>=2024.8.8",
     "python-ulid==2.7.0",
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
