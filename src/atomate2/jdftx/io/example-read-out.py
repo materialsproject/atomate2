@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
 from JDFTXOutfile import JDFTXOutfile
+from pathlib import Path
 
-
-filename = 'jdftx.out'
+path = Path(__file__)
+filename = path.parents[0] / Path("jdftx.out")
 jout = JDFTXOutfile.from_file(filename)
-print(jout)
-
+# print(jout)
+print(jout.structure)
+print(jout.Ecomponents)
+print(jout.is_gc)

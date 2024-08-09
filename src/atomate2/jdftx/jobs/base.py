@@ -8,7 +8,7 @@ from pathlib import Path
 from shutil import which
 from typing import TYPE_CHECKING, Callable
 
-from emmet.core.tasks import TaskDoc
+from atomate2.jdftx.emmet.jdftx_tasks import TaskDoc
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from pymatgen.core.trajectory import Trajectory
@@ -19,7 +19,7 @@ from pymatgen.electronic_structure.bandstructure import (
 from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
 
-from atomate2 import SETTINGS
+from atomate2 import SETTINGS #TODO we can add JDFTx workflow default settings this way
 from atomate2.common.files import gzip_output_folder
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
@@ -36,7 +36,7 @@ _CHARGEMOL_EXE_EXISTS = bool(
     or which("chargemol")
 )
 
-_DATA_OBJECTS = [ # TODO just store trajectory
+_DATA_OBJECTS = [ # TODO update relevant list for JDFTx
     BandStructure,
     BandStructureSymmLine,
     DOS,
@@ -51,95 +51,56 @@ _DATA_OBJECTS = [ # TODO just store trajectory
     "bandstructure",  # FIX: BandStructure is not currently MSONable
 ]
 
-# Input files. Partially from https://www.vasp.at/wiki/index.php/Category:Input_files
-# Exclude those that are also outputs
-_INPUT_FILES = [ # TODO implement file names from Jacob
-    "DYNMATFULL",
-    "ICONST",
-    "INCAR",
-    "KPOINTS",
-    "KPOINTS OPT",
-    "ML_AB",
-    "ML_FF",
-    "PENALTYPOT",
-    "POSCAR",
-    "POTCAR",
-    "QPOINTS",
+_INPUT_FILES = [
+    "inputs.in",
+    "inputs.lattice",
+    "inputs.ionpos",
 ]
 
 # Output files. Partially from https://www.vasp.at/wiki/index.php/Category:Output_files
-_OUTPUT_FILES = [ # TODO implement file names from Jacob
-    "AECCAR0",
-    "AECCAR1",
-    "AECCAR2",
-    "BSEFATBAND",
-    "CHG",
-    "CHGCAR",
-    "CONTCAR",
-    "DOSCAR",
-    "EIGENVAL",
-    "ELFCAR",
-    "HILLSPOT",
-    "IBZKPT",
-    "LOCPOT",
-    "ML_ABN",
-    "ML_FFN",
-    "ML_HIS",
-    "ML_LOGFILE",
-    "ML_REG",
-    "OSZICAR",
-    "OUTCAR",
-    "PARCHG",
-    "PCDAT",
-    "POT",
-    "PROCAR",
-    "PROOUT",
-    "REPORT",
-    "TMPCAR",
-    "vasprun.xml",
-    "vaspout.h5",
-    "vaspwave.h5",
-    "W*.tmp",
-    "WAVECAR",
-    "WAVEDER",
-    "WFULL*.tmp",
-    "XDATCAR",
+_OUTPUT_FILES = [ # TODO finish this list
+    "out.log",
+    "Ecomponents",
+    "wfns",
+    "bandProjections",
+    "boundCharge",
+    "lattice",
+    "ionpos",
 ]
 
 # Files to zip: inputs, outputs and additionally generated files
 _FILES_TO_ZIP = (
     _INPUT_FILES
     + _OUTPUT_FILES
-    + [f"{name}.orig" for name in _INPUT_FILES]
-    + ["vasp.out", "custodian.json"]
+    + "custodian.json" # probably won't have this output 
 )
 
 
-def vasp_job(method: Callable) -> job:
+def jdftx_job(method: Callable) -> job:
     """
-    Decorate the ``make`` method of VASP job makers.
+    Decorate the ``make`` method of JDFTx job makers.
 
     This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
-    settings for all VASP jobs. For example, it ensures that large data objects
+    settings for all JDFTx jobs. For example, it ensures that large data objects
     (band structures, density of states, LOCPOT, CHGCAR, etc) are all stored in the
     atomate2 data store. It also configures the output schema to be a VASP
     :obj:`.TaskDoc`.
 
-    Any makers that return VASP jobs (not flows) should decorate the ``make`` method
-    with @vasp_job. For example:
+    Any makers that return JDFTx jobs (not flows) should decorate the ``make`` method
+    with @jdftx_job. For example:
 
     .. code-block:: python
 
-        class MyVaspMaker(BaseVaspMaker):
-            @vasp_job
+        class MyJjdftxMaker(BaseJdftxMaker):
+            @jdftx_job
             def make(structure):
-                # code to run VASP job.
+                # code to run JDFTx job.
                 pass
 
     Parameters
     ----------
     method : callable
-        A BaseVaspMaker.make method. This should not be specified directly and is
+        A BaseJdftxMaker.make method. This should not be specified directly and is
         implied by the decorator.
 
     Returns
@@ -151,7 +112,7 @@ def vasp_job(method: Callable) -> job:
 
 
 @dataclass
-class BaseVaspMaker(Maker):
+class BaseJdftxMaker(Maker):
     """
     Base VASP job maker.
 
@@ -179,7 +140,7 @@ class BaseVaspMaker(Maker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "base vasp job"
+    name: str = "base JDFTx job"
     input_set_generator: JdftxInputGenerator = field(default_factory=JdftxInputGenerator)
     write_input_set_kwargs: dict = field(default_factory=dict)
     copy_vasp_kwargs: dict = field(default_factory=dict)
@@ -188,11 +149,11 @@ class BaseVaspMaker(Maker):
     stop_children_kwargs: dict = field(default_factory=dict)
     write_additional_data: dict = field(default_factory=dict)
 
-    @vasp_job
+    @jdftx_job
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
     ) -> Response:
-        """Run a VASP calculation.
+        """Run a JDFTx calculation.
 
         Parameters
         ----------
@@ -204,7 +165,7 @@ class BaseVaspMaker(Maker):
         Returns
         -------
             Response: A response object containing the output, detours and stop
-                commands of the VASP run.
+                commands of the JDFTx run.
         """
         # copy previous inputs
         from_prev = prev_dir is not None
@@ -226,7 +187,7 @@ class BaseVaspMaker(Maker):
         run_vasp(**self.run_vasp_kwargs)
 
         # parse vasp outputs
-        task_doc = get_vasp_task_document(Path.cwd(), **self.task_document_kwargs)
+        task_doc = get_jdftx_task_document(Path.cwd(), **self.task_document_kwargs)
         task_doc.task_label = self.name
 
         # decide whether child jobs should proceed
@@ -246,46 +207,46 @@ class BaseVaspMaker(Maker):
         )
 
 
-def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
-    """Get VASP Task Document using atomate2 settings."""
-    kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
+def get_jdftx_task_document(path: Path | str, **kwargs) -> TaskDoc:
+    """Get JDFTx Task Document using atomate2 settings."""
+    # kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
 
-    kwargs.setdefault(
-        "volume_change_warning_tol", SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
-    )
+    # kwargs.setdefault(
+    #     "volume_change_warning_tol", SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
+    # )
 
-    if SETTINGS.VASP_RUN_BADER:
-        kwargs.setdefault("run_bader", _BADER_EXE_EXISTS)
-        if not _BADER_EXE_EXISTS:
-            warnings.warn(
-                f"{SETTINGS.VASP_RUN_BADER=} but bader executable not found on path",
-                stacklevel=1,
-            )
-    if SETTINGS.VASP_RUN_DDEC6:
-        # if VASP_RUN_DDEC6 is True but _CHARGEMOL_EXE_EXISTS is False, just silently
-        # skip running DDEC6
-        run_ddec6: bool | str = _CHARGEMOL_EXE_EXISTS
-        if run_ddec6 and isinstance(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR, str):
-            # if DDEC6_ATOMIC_DENSITIES_DIR is a string and directory at that path
-            # exists, use as path to the atomic densities
-            if Path(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR).is_dir():
-                run_ddec6 = SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR
-            else:
-                # if the directory doesn't exist, warn the user and skip running DDEC6
-                warnings.warn(
-                    f"{SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR=} does not exist, skipping "
-                    "DDEC6",
-                    stacklevel=1,
-                )
-        kwargs.setdefault("run_ddec6", run_ddec6)
+    # if SETTINGS.VASP_RUN_BADER:
+    #     kwargs.setdefault("run_bader", _BADER_EXE_EXISTS)
+    #     if not _BADER_EXE_EXISTS:
+    #         warnings.warn(
+    #             f"{SETTINGS.VASP_RUN_BADER=} but bader executable not found on path",
+    #             stacklevel=1,
+    #         )
+    # if SETTINGS.VASP_RUN_DDEC6:
+    #     # if VASP_RUN_DDEC6 is True but _CHARGEMOL_EXE_EXISTS is False, just silently
+    #     # skip running DDEC6
+    #     run_ddec6: bool | str = _CHARGEMOL_EXE_EXISTS
+    #     if run_ddec6 and isinstance(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR, str):
+    #         # if DDEC6_ATOMIC_DENSITIES_DIR is a string and directory at that path
+    #         # exists, use as path to the atomic densities
+    #         if Path(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR).is_dir():
+    #             run_ddec6 = SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR
+    #         else:
+    #             # if the directory doesn't exist, warn the user and skip running DDEC6
+    #             warnings.warn(
+    #                 f"{SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR=} does not exist, skipping "
+    #                 "DDEC6",
+    #                 stacklevel=1,
+    #             )
+    #     kwargs.setdefault("run_ddec6", run_ddec6)
 
-        if not _CHARGEMOL_EXE_EXISTS:
-            warnings.warn(
-                f"{SETTINGS.VASP_RUN_DDEC6=} but chargemol executable not found on "
-                "path",
-                stacklevel=1,
-            )
+    #     if not _CHARGEMOL_EXE_EXISTS:
+    #         warnings.warn(
+    #             f"{SETTINGS.VASP_RUN_DDEC6=} but chargemol executable not found on "
+    #             "path",
+    #             stacklevel=1,
+    #         )
 
-    kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
+    # kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
 
     return TaskDoc.from_directory(path, **kwargs)

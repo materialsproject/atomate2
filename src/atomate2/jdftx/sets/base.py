@@ -23,6 +23,7 @@ from pymatgen.io.vasp.sets import (
     get_valid_magmom_struct,
     get_vasprun_outcar,
 )
+from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile #TODO update this to the pymatgen module
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 
@@ -34,7 +35,7 @@ if TYPE_CHECKING:
 
     from pymatgen.core import Structure
 
-_BASE_VASP_SET = loadfn(get_mod_path("atomate2.vasp.sets") / "BaseVaspSet.yaml")
+_BASE_JDFTX_SET = loadfn(get_mod_path("atomate2.jdftx.sets") / "BaseJdftxSet.yaml")
 
 
 class JdftxInputSet(InputSet):
@@ -54,14 +55,13 @@ class JdftxInputSet(InputSet):
         self.jdftxinput = jdftxinput
 
 
-    def write_input( # TODO implement conversion from inputs to in file. Should be the get_str() method
-                     # on the JdftxInput class
+    def write_input(
         self,
         directory: str | Path,
         make_dir: bool = True,
         overwrite: bool = True,
     ) -> None:
-        """Write VASP input files to a directory.
+        """Write JDFTx input file to a directory.
 
         Parameters
         ----------
@@ -72,34 +72,21 @@ class JdftxInputSet(InputSet):
         overwrite
             Whether to overwrite an input file if it already exists.
         """
+        infile = "inputs.in"
         directory = Path(directory)
         if make_dir:
             os.makedirs(directory, exist_ok=True)
 
-        inputs = {"INCAR": self.incar, "KPOINTS": self.kpoints, "POSCAR": self.poscar}
-        inputs.update(self.optional_files)
+        if not overwrite and (directory / infile).exists():
+            raise FileExistsError(f"{directory / infile} already exists.")
 
-        if isinstance(self.potcar, Potcar):
-            inputs["POTCAR"] = self.potcar
-        else:
-            inputs["POTCAR.spec"] = "\n".join(self.potcar)
-
-        for key, val in inputs.items():
-            if val is not None and (overwrite or not (directory / key).exists()):
-                with zopen(directory / key, mode="wt") as file:
-                    if isinstance(val, Poscar):
-                        # write POSCAR with more significant figures
-                        file.write(val.get_str(significant_figures=16))
-                    else:
-                        file.write(str(val))
-            elif not overwrite and (directory / key).exists():
-                raise FileExistsError(f"{directory / key} already exists.")
+        self.jdftxinput.write_file(filename=(directory / infile))
 
     @staticmethod
     def from_directory(
         directory: str | Path, optional_files: dict = None
-    ) -> VaspInputSet:
-        """Load a set of VASP inputs from a directory.
+    ) -> JdftxInputSet:
+        """Load a set of JDFTx inputs from a directory.
 
         Note that only the standard INCAR, POSCAR, POTCAR and KPOINTS files are read
         unless optional_filenames is specified.
@@ -290,10 +277,9 @@ class JdftxInputGenerator(InputGenerator):
     force_gamma: bool = True
     symprec: float = SETTINGS.SYMPREC
     vdw: str = None
-    # copy _BASE_VASP_SET to ensure each class instance has its own copy
+    # copy _BASE_JDFTX_SET to ensure each class instance has its own copy
     # otherwise in-place changes can affect other instances
-    config_dict: dict = field(default_factory=lambda: _BASE_VASP_SET)
-    inherit_incar: bool = None
+    config_dict: dict = field(default_factory=lambda: _BASE_JDFTX_SET)
 
     def __post_init__(self) -> None:
         """Post init formatting of arguments."""
@@ -354,14 +340,10 @@ class JdftxInputGenerator(InputGenerator):
             for k, v in self.user_potcar_settings.items():
                 self.config_dict["POTCAR"][k] = v
 
-        if self.inherit_incar is None:
-            self.inherit_incar = SETTINGS.VASP_INHERIT_INCAR
-
     def get_input_set(
         self,
         structure: Structure = None,
         prev_dir: str | Path = None,
-        potcar_spec: bool = False,
     ) -> JdftxInputSet:
         """Get a JDFTx input set.
 
@@ -374,57 +356,29 @@ class JdftxInputGenerator(InputGenerator):
             A structure.
         prev_dir
             A previous directory to generate the input set from.
-        potcar_spec
-            Instead of generating a Potcar object, use a list of potcar symbols. This
-            will be written as a "POTCAR.spec" file. This is intended to help sharing an
-            input set with people who might not have a license to specific Potcar files.
-            Given a "POTCAR.spec", the specific POTCAR file can be re-generated using
-            pymatgen with the "generate_potcar" function in the pymatgen CLI.
 
         Returns
         -------
         JdftxInputSet
             A JDFTx input set.
         """
-        structure, prev_incar, bandgap, ispin, vasprun, outcar = self._get_previous(
-            structure, prev_dir
-        )
-        prev_incar = prev_incar if self.inherit_incar else {}
-        kwds = {
-            "structure": structure,
-            "prev_incar": prev_incar,
-            "bandgap": bandgap,
-            "vasprun": vasprun,
-            "outcar": outcar,
-        }
-        incar_updates = self.get_incar_updates(**kwds)
-        kpoints_updates = self.get_kpoints_updates(**kwds)
-        kspacing = self._kspacing(incar_updates)
-        kpoints = self._get_kpoints(structure, kpoints_updates, kspacing, bandgap)
-        incar = self._get_incar(
+        # _get_previous will load in default values and structure from specified
+        # directory. If prev_dir isn't specified, it'll return none
+        if prev_dir != None:
+            structure, prev_inputs = self._get_previous(
+                structure, prev_dir
+            )
+        # prev_incar = prev_incar if self.inherit_incar else {} # TODO do we want an inherit_incar bool equivalent
+        # input_updates = self.get_incar_updates(**kwds)
+        # kspacing = self._kspacing(incar_updates)
+        # kpoints = self._get_kpoints(structure, kpoints_updates, kspacing)
+        jdftinputs = self._get_jdftxinputs(
             structure,
-            kpoints,
-            prev_incar,
-            incar_updates,
-            bandgap=bandgap,
-            ispin=ispin,
-        )
-        site_properties = structure.site_properties
-        poscar = Poscar(
-            structure,
-            velocities=site_properties.get("velocities"),
-            predictor_corrector=site_properties.get("predictor_corrector"),
-            predictor_corrector_preamble=structure.properties.get(
-                "predictor_corrector_preamble"
-            ),
-            lattice_velocities=structure.properties.get("lattice_velocities"),
+            # kpoints,
+            # prev_incar,
         )
         return JdftxInputSet(
-            inputs=inputs # TODO need to wait on Jacob's specification
-            # incar=incar,
-            # kpoints=kpoints,
-            # poscar=poscar,
-            # potcar=self._get_potcar(structure, potcar_spec=potcar_spec),
+            jdftxinput=jdftinputs # TODO make the inputs object above and pass it here
         )
 
     def get_incar_updates(
@@ -511,7 +465,7 @@ class JdftxInputGenerator(InputGenerator):
 
         return n_electrons - (structure.charge if self.use_structure_charge else 0)
 
-    def _get_previous(
+    def _get_previous( # TODO adapt this for JDFTx
         self, structure: Structure = None, prev_dir: str | Path = None
     ) -> tuple:
         """Load previous calculation outputs and decide which structure to use."""
@@ -557,7 +511,7 @@ class JdftxInputGenerator(InputGenerator):
         structure = structure if structure is not None else prev_structure
         structure = self._get_structure(structure)
 
-        return structure, prev_incar, bandgap, ispin, vasprun, outcar
+        return structure, prev_inputs
 
     def _get_structure(self, structure: Structure) -> Structure:
         """Get the standardized structure."""
@@ -575,133 +529,22 @@ class JdftxInputGenerator(InputGenerator):
             get_valid_magmom_struct(structure, spin_mode="auto", inplace=True)
         return structure
 
-    def _get_potcar(self, structure: Structure, potcar_spec: bool = False) -> Potcar:
-        """Get the POTCAR."""
-        elements = [a[0] for a in groupby([s.specie.symbol for s in structure])]
-        potcar_symbols = [self.config_dict["POTCAR"].get(el, el) for el in elements]
-
-        if potcar_spec:
-            return potcar_symbols
-
-        potcar = Potcar(potcar_symbols, functional=self.potcar_functional)
-
-        # warn if the selected POTCARs do not correspond to the chosen potcar_functional
-        for psingle in potcar:
-            if self.potcar_functional not in psingle.identify_potcar()[0]:
-                warnings.warn(
-                    f"POTCAR data with symbol {psingle.symbol} is not known by pymatgen"
-                    " to correspond with the selected potcar_functional "
-                    f"{self.potcar_functional}. This POTCAR is known to correspond with"
-                    f" functionals {psingle.identify_potcar(mode='data')[0]}. Please "
-                    "verify that you are using the right POTCARs!",
-                    BadInputSetWarning,
-                    stacklevel=1,
-                )
-        return potcar
-
-    def _get_incar(
+    def _get_jdftxinputs(
         self,
-        structure: Structure,
-        kpoints: Kpoints,
-        previous_incar: dict = None,
-        incar_updates: dict = None,
-        bandgap: float = None,
-        ispin: int = None,
-    ) -> Incar:
-        """Get the INCAR."""
-        previous_incar = previous_incar or {}
-        incar_updates = incar_updates or {}
-        incar_settings = dict(self.config_dict["INCAR"])
-        config_magmoms = incar_settings.get("MAGMOM", {})
-        auto_updates = {}
-
-        # apply user incar settings to SETTINGS not to INCAR
-        _apply_incar_updates(incar_settings, self.user_incar_settings)
+        structure: Structure=None,
+        kpoints: Kpoints=None,
+        incar_updates: dict=None, # ignore this for now
+    ) -> JDFTXInfile:
+        """Get the JDFTx input file object"""
+        default_inputs = dict(self.config_dict)
 
         # generate incar
-        incar = Incar()
-        for key, val in incar_settings.items():
-            if key == "MAGMOM":
-                incar[key] = get_magmoms(
-                    structure,
-                    magmoms=self.user_incar_settings.get("MAGMOM", {}),
-                    config_magmoms=config_magmoms,
-                )
-            elif key in ("LDAUU", "LDAUJ", "LDAUL") and incar_settings.get(
-                "LDAU", False
-            ):
-                incar[key] = _get_u_param(key, val, structure)
-            elif key.startswith("EDIFF") and key != "EDIFFG":
-                incar["EDIFF"] = _get_ediff(key, val, structure, incar_settings)
-            else:
-                incar[key] = val
-        _set_u_params(incar, incar_settings, structure)
+        print(default_inputs)
 
-        # apply previous incar settings, be careful not to override user_incar_settings
-        # also skip LDAU/MAGMOM as structure may have changed.
-        skip = list(self.user_incar_settings)
-        skip += ["MAGMOM", "NUPDOWN", "LDAUU", "LDAUL", "LDAUJ", "LMAXMIX"]
-        _apply_incar_updates(incar, previous_incar, skip=skip)
 
-        if self.constrain_total_magmom:
-            nupdown = sum(mag if abs(mag) > 0.6 else 0 for mag in incar["MAGMOM"])
-            if abs(nupdown - round(nupdown)) > 1e-5:
-                warnings.warn(
-                    "constrain_total_magmom was set to True, but the sum of MAGMOM "
-                    "values is not an integer. NUPDOWN is meant to set the spin "
-                    "multiplet and should typically be an integer. You are likely "
-                    "better off changing the values of MAGMOM or simply setting "
-                    "NUPDOWN directly in your INCAR settings.",
-                    UserWarning,
-                    stacklevel=1,
-                )
-            auto_updates["NUPDOWN"] = nupdown
+        jdftxinputs = JDFTXInfile.from_dict(default_inputs)
 
-        if self.use_structure_charge:
-            auto_updates["NELECT"] = self.get_nelect(structure)
-
-        # handle auto ISPIN
-        if ispin is not None and "ISPIN" not in self.user_incar_settings:
-            auto_updates["ISPIN"] = ispin
-
-        if self.auto_ismear:
-            bandgap_tol = getattr(self, "bandgap_tol", SETTINGS.BANDGAP_TOL)
-            if bandgap is None:
-                # don't know if we are a metal or insulator so set ISMEAR and SIGMA to
-                # be safe with the most general settings
-                auto_updates.update(ISMEAR=0, SIGMA=0.2)
-            elif bandgap <= bandgap_tol:
-                auto_updates.update(ISMEAR=2, SIGMA=0.2)  # metal
-            else:
-                auto_updates.update(ISMEAR=-5, SIGMA=0.05)  # insulator
-
-        if self.auto_lreal:
-            auto_updates["LREAL"] = _get_recommended_lreal(structure)
-
-        if self.auto_kspacing is False:
-            bandgap = None  # don't auto-set KSPACING based on bandgap
-        elif isinstance(self.auto_kspacing, float):
-            # interpret auto_kspacing as bandgap and set KSPACING based on user input
-            bandgap = self.auto_kspacing
-
-        _set_kspacing(incar, incar_settings, self.user_incar_settings, bandgap, kpoints)
-
-        # apply updates from auto options, careful not to override user_incar_settings
-        _apply_incar_updates(incar, auto_updates, skip=list(self.user_incar_settings))
-
-        # apply updates from inputset generator
-        _apply_incar_updates(incar, incar_updates, skip=list(self.user_incar_settings))
-
-        # Remove unused INCAR parameters
-        _remove_unused_incar_params(incar, skip=list(self.user_incar_settings))
-
-        # Finally, re-apply `self.user_incar_settings` to make sure any accidentally
-        # overwritten settings are changed back to the intended values.
-        # skip dictionary parameters to avoid dictionaries appearing in the INCAR
-        skip = ["LDAUU", "LDAUJ", "LDAUL", "MAGMOM"]
-        _apply_incar_updates(incar, self.user_incar_settings, skip=skip)
-
-        return incar
+        return jdftxinputs
 
     def _get_kpoints(
         self,
@@ -868,259 +711,3 @@ class JdftxInputGenerator(InputGenerator):
         return self.user_incar_settings.get(
             key, incar_updates.get(key, self.config_dict["INCAR"].get(key))
         )
-
-
-def get_magmoms(
-    structure: Structure,
-    magmoms: dict[str, float] = None,
-    config_magmoms: dict[str, float] = None,
-) -> list[float]:
-    """Get the mamgoms using the following precedence.
-
-    1. user incar settings
-    2. magmoms in input struct
-    3. spins in input struct
-    4. job config dict
-    5. set all magmoms to 0.6
-    """
-    magmoms = magmoms or {}
-    config_magmoms = config_magmoms or {}
-    mag = []
-    msg = (
-        "Co without an oxidation state is initialized as low spin by default in "
-        "Atomate2. If this default behavior is not desired, please set the spin on the "
-        "magmom on the site directly to ensure correct initialization."
-    )
-    for site in structure:
-        specie = str(site.specie)
-        if specie in magmoms:
-            mag.append(magmoms.get(specie))
-        elif hasattr(site, "magmom"):
-            mag.append(site.magmom)
-        elif hasattr(site.specie, "spin") and site.specie.spin is not None:
-            mag.append(site.specie.spin)
-        elif specie in config_magmoms:
-            if site.specie.symbol == "Co" and config_magmoms[specie] <= 1.0:
-                warnings.warn(msg, stacklevel=2)
-            mag.append(config_magmoms.get(specie))
-        else:
-            if site.specie.symbol == "Co":
-                warnings.warn(msg, stacklevel=2)
-            mag.append(magmoms.get(site.specie.symbol, 0.6))
-    return mag
-
-
-def _get_u_param(
-    lda_param: str, lda_config: dict[str, Any], structure: Structure
-) -> list[float]:
-    """Get U parameters."""
-    comp = structure.composition
-    elements = sorted((el for el in comp.elements if comp[el] > 0), key=lambda e: e.X)
-    most_electroneg = elements[-1].symbol
-    poscar = Poscar(structure)
-
-    if hasattr(structure[0], lda_param.lower()):
-        m = {site.specie.symbol: getattr(site, lda_param.lower()) for site in structure}
-        return [m[sym] for sym in poscar.site_symbols]
-    if isinstance(lda_config.get(most_electroneg, 0), dict):
-        # lookup specific LDAU if specified for most_electroneg atom
-        return [lda_config[most_electroneg].get(sym, 0) for sym in poscar.site_symbols]
-    return [
-        lda_config.get(sym, 0)
-        if isinstance(lda_config.get(sym, 0), (float, int))
-        else 0
-        for sym in poscar.site_symbols
-    ]
-
-
-def _get_ediff(
-    param: str, value: str | float, structure: Structure, incar_settings: dict[str, Any]
-) -> float:
-    """Get EDIFF."""
-    if incar_settings.get("EDIFF") is None and param == "EDIFF_PER_ATOM":
-        return float(value) * structure.num_sites
-    return float(incar_settings["EDIFF"])
-
-
-def _set_u_params(
-    incar: Incar, incar_settings: dict[str, Any], structure: Structure
-) -> None:
-    """Modify INCAR for use with U parameters."""
-    has_u = incar_settings.get("LDAU") and sum(incar["LDAUU"]) > 0
-
-    if not has_u:
-        ldau_keys = [key for key in incar if key.startswith("LDAU")]
-        for key in ldau_keys:
-            incar.pop(key, None)
-
-    # Modify LMAXMIX if you have d or f electrons present. Note that if the user
-    # explicitly sets LMAXMIX in settings it will override this logic (setdefault keeps
-    # current value). Previously, this was only set if Hubbard U was enabled as per the
-    # VASP manual but following an investigation it was determined that this would lead
-    # to a significant difference between SCF -> NonSCF even without Hubbard U enabled.
-    # Thanks to Andrew Rosen for investigating and reporting.
-    blocks = [site.specie.block for site in structure]
-    if "f" in blocks:  # contains f-electrons
-        incar.setdefault("LMAXMIX", 6)
-    elif "d" in blocks:  # contains d-electrons
-        incar.setdefault("LMAXMIX", 4)
-
-
-def _apply_incar_updates(
-    incar: dict[str, Any], updates: dict[str, Any], skip: Sequence[str] = ()
-) -> None:
-    """
-    Apply updates to an INCAR file.
-
-    Parameters
-    ----------
-    incar
-        An incar.
-    updates
-        Updates to apply.
-    skip
-        Keys to skip.
-    """
-    for key, val in updates.items():
-        if key in skip:
-            continue
-
-        if val is None:
-            incar.pop(key, None)
-        else:
-            incar[key] = val
-
-
-def _remove_unused_incar_params(
-    incar: dict[str, Any], skip: Sequence[str] = ()
-) -> None:
-    """
-    Remove INCAR parameters that are not actively used by VASP.
-
-    Parameters
-    ----------
-    incar
-        An incar.
-    skip
-        Keys to skip.
-    """
-    # Turn off IBRION/ISIF/POTIM if NSW = 0
-    opt_flags = ["EDIFFG", "IBRION", "ISIF", "POTIM"]
-    if incar.get("NSW", 0) == 0:
-        for opt_flag in opt_flags:
-            if opt_flag not in skip:
-                incar.pop(opt_flag, None)
-
-    # Remove MAGMOMs if they aren't used
-    if incar.get("ISPIN", 1) == 1 and "MAGMOM" not in skip:
-        incar.pop("MAGMOM", None)
-
-    # Turn off +U flags if +U is not even used
-    ldau_flags = ("LDAUU", "LDAUJ", "LDAUL", "LDAUTYPE")
-    if not incar.get("LDAU"):
-        for ldau_flag in ldau_flags:
-            if ldau_flag not in skip:
-                incar.pop(ldau_flag, None)
-
-
-def _combine_kpoints(*kpoints_objects: Kpoints) -> Kpoints:
-    """Combine k-points files together."""
-    labels, kpoints, weights = [], [], []
-
-    recip_mode = Kpoints.supported_modes.Reciprocal
-    for kpoints_object in filter(None, kpoints_objects):
-        if kpoints_object.style != recip_mode:
-            raise ValueError(
-                f"Can only combine kpoints with style {recip_mode}, "
-                f"got {kpoints_object.style}"
-            )
-        labels.append(kpoints_object.labels or [""] * len(kpoints_object.kpts))
-
-        weights.append(kpoints_object.kpts_weights)
-        kpoints.append(kpoints_object.kpts)
-
-    labels = np.concatenate(labels).tolist()
-    weights = np.concatenate(weights).tolist()
-    kpoints = np.concatenate(kpoints)
-    return Kpoints(
-        comment="Combined k-points",
-        style=recip_mode,
-        num_kpts=len(kpoints),
-        kpts=kpoints,
-        labels=labels,
-        kpts_weights=weights,
-    )
-
-
-def _get_ispin(vasprun: Vasprun | None, outcar: Outcar | None) -> int:
-    """Get value of ISPIN depending on the magnetisation in the OUTCAR and vasprun."""
-    if outcar is not None and outcar.magnetization is not None:
-        # Turn off spin when magmom for every site is smaller than 0.02.
-        site_magmom = np.array([i["tot"] for i in outcar.magnetization])
-        return 2 if np.any(np.abs(site_magmom) > 0.02) else 1
-    if vasprun is not None:
-        return 2 if vasprun.is_spin else 1
-    return 2
-
-
-def _get_recommended_lreal(structure: Structure) -> str | bool:
-    """Get recommended LREAL flag based on the structure."""
-    return "Auto" if structure.num_sites > 16 else False
-
-
-def _get_kspacing(bandgap: float, tol: float = 1e-4) -> float:
-    """Get KSPACING based on a band gap."""
-    if bandgap <= tol:  # metallic
-        return 0.22
-
-    rmin = max(1.5, 25.22 - 2.87 * bandgap)  # Eq. 25
-    kspacing = 2 * np.pi * 1.0265 / (rmin - 1.0183)  # Eq. 29
-
-    # cap kspacing at a max of 0.44, per internal benchmarking
-    return min(kspacing, 0.44)
-
-
-def _set_kspacing(
-    incar: Incar,
-    incar_settings: dict,
-    user_incar_settings: dict,
-    bandgap: float | None,
-    kpoints: Kpoints | None,
-) -> Incar:
-    """
-    Set KSPACING in an INCAR.
-
-    if kpoints is not None then unset any KSPACING
-    if kspacing set in user_incar_settings then use that
-    if auto_kspacing then do that
-    if kspacing is set in config use that.
-    if from_prev is True, ISMEAR will be set according to the band gap.
-    """
-    if kpoints is not None:
-        # unset KSPACING as we are using a KPOINTS file
-        incar.pop("KSPACING", None)
-
-        # Ensure adequate number of KPOINTS are present for the tetrahedron method
-        # (ISMEAR=-5). If KSPACING is in the INCAR file the number of kpoints is not
-        # known before calling VASP, but a warning is raised when the KSPACING value is
-        # > 0.5 (2 reciprocal Angstrom). An error handler in Custodian is available to
-        # correct overly large KSPACING values (small number of kpoints) if necessary.
-        if np.prod(kpoints.kpts) < 4 and incar.get("ISMEAR", 0) == -5:
-            incar["ISMEAR"] = 0
-
-    elif "KSPACING" in user_incar_settings:
-        incar["KSPACING"] = user_incar_settings["KSPACING"]
-
-    elif incar_settings.get("KSPACING") and isinstance(bandgap, (int, float)):
-        # will always default to 0.22 in first run as one
-        # cannot be sure if one treats a metal or
-        # semiconductor/insulator
-        incar["KSPACING"] = _get_kspacing(bandgap)
-        # This should default to ISMEAR=0 if band gap is not known (first computation)
-        # if not from_prev:
-        #     # be careful to not override user_incar_settings
-
-    elif incar_settings.get("KSPACING"):
-        incar["KSPACING"] = incar_settings["KSPACING"]
-
-    return incar

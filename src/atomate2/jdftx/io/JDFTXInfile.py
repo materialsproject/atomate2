@@ -19,9 +19,9 @@ from monty.json import MontyDecoder, MSONable
 from pymatgen.util.io_utils import clean_lines
 from pymatgen.core import Structure
 
-from generic_tags import flatten_list
-from JDFTXInfile_master_format import get_tag_object
-from JDFTXInfile_master_format import MASTER_TAG_LIST, __TAG_LIST__, __WANNIER_TAGS__, __PHONON_TAGS__
+from .generic_tags import flatten_list
+from .JDFTXInfile_master_format import get_tag_object
+from .JDFTXInfile_master_format import MASTER_TAG_LIST, __TAG_LIST__, __WANNIER_TAGS__, __PHONON_TAGS__
 
 if TYPE_CHECKING:
     from typing import Any
@@ -196,6 +196,15 @@ class JDFTXInfile(dict, MSONable):
             else:  #then append line like normal
                 gathered_string.append(line)
         return gathered_string
+
+    @property
+    def structure(self):
+        """
+        return a pymatgen Structure object
+        """
+        jdftstructure = self.to_pmg_structure()
+        structure = jdftstructure.structure
+        return structure
 
     @classmethod
     def from_str(cls, string: str, dont_require_structure: bool = False, sort_tags: bool = True) -> Self:

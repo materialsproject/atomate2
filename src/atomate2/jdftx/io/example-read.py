@@ -2,15 +2,17 @@
 
 import sys
 import numpy as np
+import pathlib
 
-from JDFTXInfile import JDFTXInfile
+from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
 
 
 #read file example
-filename = 'input-simple1.in'
+p = pathlib.Path(__file__)
+filename = p.parents[0] / pathlib.Path("input-simple1.in")
 jin1 = JDFTXInfile.from_file(filename)
 print(jin1)
-jin1.write_file('test-write.in')
+# jin1.write_file('test-write.in')
 print('===============================================================')
 
 
@@ -42,7 +44,7 @@ water_tagdict = {
     'elec-n-bands': 20,
     'elec-ex-corr': 'gga-PBE',
     'dump-name': 'jdft.$VAR',
-    'dump': {'freq': 'End', 'var': 'State'},
+    'dump': {'freq': 'End', 'var': 'State'}, # TODO add support for dump lists
     }
 jin2 = JDFTXInfile.from_dict(water_tagdict)
 print(jin2)
