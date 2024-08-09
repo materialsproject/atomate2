@@ -1,5 +1,7 @@
 """Schema definitions for force field tasks."""
+
 from __future__ import annotations
+
 from typing import Any, Optional
 
 from emmet.core.utils import ValueEnum
@@ -69,7 +71,13 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
         optimizer_kwargs: dict = None,
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
-        ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "ionic_config"),
+        ionic_step_data: tuple = (
+            "energy",
+            "forces",
+            "magmoms",
+            "stress",
+            "ionic_config",
+        ),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         **task_document_kwargs,
     ) -> ForceFieldTaskDocument:
@@ -100,20 +108,22 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
         """
         ase_task_doc = AseTaskDoc.from_ase_compatible_result(
             ase_calculator_name=ase_calculator_name,
-            result = result,
-            fix_symmetry = fix_symmetry,
+            result=result,
+            fix_symmetry=fix_symmetry,
             symprec=symprec,
-            steps = steps,
+            steps=steps,
             relax_kwargs=relax_kwargs,
             optimizer_kwargs=optimizer_kwargs,
             ionic_step_data=ionic_step_data,
             store_trajectory=store_trajectory,
-            **task_document_kwargs
+            **task_document_kwargs,
         )
         ff_kwargs = {
-            "forcefield_name": task_document_kwargs.get("forcefield_name",ase_calculator_name)
+            "forcefield_name": task_document_kwargs.get(
+                "forcefield_name", ase_calculator_name
+            )
         }
-        
+
         # map force field name to its package name
         model_to_pkg_map = {
             MLFF.M3GNet: "matgl",
@@ -130,8 +140,8 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
 
             ff_kwargs["forcefield_version"] = importlib.metadata.version(pkg_name)
 
-        return cls.from_ase_task_doc(ase_task_doc,**ff_kwargs)
-    
+        return cls.from_ase_task_doc(ase_task_doc, **ff_kwargs)
+
     @property
     def forcefield_objects(self) -> Optional[dict[AseObject, Any]]:
         """Alias `objects` attr for backwards compatibility."""

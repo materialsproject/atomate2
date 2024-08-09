@@ -15,14 +15,24 @@ from typing import Any, Optional
 from ase.stress import voigt_6_to_full_3x3_stress
 from ase.units import GPa
 from emmet.core.math import Matrix3D, Vector3D
-from emmet.core.structure import StructureMetadata, MoleculeMetadata
+from emmet.core.structure import MoleculeMetadata, StructureMetadata
 from emmet.core.utils import ValueEnum
 from emmet.core.vasp.calculation import StoreTrajectoryOption
-from pydantic import BaseModel, Field, AliasPath
-from pymatgen.core import Structure, Molecule
+from pydantic import BaseModel, Field
+from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
-_task_doc_translation_keys = {"input","output","ase_calculator_name","dir_name","included_objects","objects","is_force_converged","energy_downhill"}
+_task_doc_translation_keys = {
+    "input",
+    "output",
+    "ase_calculator_name",
+    "dir_name",
+    "included_objects",
+    "objects",
+    "is_force_converged",
+    "energy_downhill",
+}
+
 
 class AseResult(dict):
     """Schema to store outputs in ForceFieldTaskDocument."""
@@ -44,19 +54,26 @@ class AseObject(ValueEnum):
 
     TRAJECTORY = "trajectory"
 
-class AseBaseModel(BaseModel):
 
-    ionic_configuration: Optional[Structure | Molecule] = Field(None, description="The ionic configuration at this step.")
-    structure : Optional[Structure] = Field(None, description="The structure at this step.")
-    molecule : Optional[Molecule] = Field(None, description="The molecule at this step.")
-    
+class AseBaseModel(BaseModel):
+    """Base document class for ASE input and output."""
+
+    ionic_configuration: Optional[Structure | Molecule] = Field(
+        None, description="The ionic configuration at this step."
+    )
+    structure: Optional[Structure] = Field(
+        None, description="The structure at this step."
+    )
+    molecule: Optional[Molecule] = Field(None, description="The molecule at this step.")
+
     def model_post_init(self, __context: Any) -> None:
         """Establish alias to structure and molecule fields."""
-        if self.structure is None and isinstance(self.ionic_configuration,Structure):
+        if self.structure is None and isinstance(self.ionic_configuration, Structure):
             self.structure = self.ionic_configuration
-        elif self.molecule is None and isinstance(self.ionic_configuration,Molecule):
+        elif self.molecule is None and isinstance(self.ionic_configuration, Molecule):
             self.molecule = self.ionic_configuration
-    
+
+
 class IonicStep(AseBaseModel):
     """Document defining the information at each ionic step."""
 
@@ -66,8 +83,9 @@ class IonicStep(AseBaseModel):
     )
     stress: Optional[Matrix3D] = Field(None, description="The stress on the lattice.")
     magmoms: Optional[list[float]] = Field(
-        None, description = "On-site magnetic moments."
+        None, description="On-site magnetic moments."
     )
+
 
 class OutputDoc(AseBaseModel):
     """The outputs of this job."""
@@ -76,12 +94,15 @@ class OutputDoc(AseBaseModel):
 
     energy_per_atom: float = Field(
         None,
-        description="Energy per atom of the final ionic configuration in units of eV/atom.",
+        description="Energy per atom of the final ionic configuration "
+        "in units of eV/atom.",
     )
 
     forces: Optional[list[Vector3D]] = Field(
         None,
-        description="The force on each atom in units of eV/A for the final ionic configuration.",
+        description=(
+            "The force on each atom in units of eV/A for the final ionic configuration."
+        ),
     )
 
     # NOTE: units for stresses were converted to kbar (* -10 from standard output)
@@ -101,7 +122,7 @@ class OutputDoc(AseBaseModel):
 
 class InputDoc(AseBaseModel):
     """The inputs used to run this job."""
-    
+
     relax_cell: Optional[bool] = Field(
         None,
         description="Whether cell lattice was allowed to change during relaxation.",
@@ -125,7 +146,8 @@ class InputDoc(AseBaseModel):
     optimizer_kwargs: Optional[dict] = Field(
         None, description="Keyword arguments passed to the relaxer's optimizer."
     )
-    
+
+
 class AseStructureTaskDoc(StructureMetadata):
     """Document containing information on structure manipulation using ASE."""
 
@@ -137,9 +159,7 @@ class AseStructureTaskDoc(StructureMetadata):
         None, description="The input information used to run this job."
     )
 
-    output: OutputDoc = Field(
-        None, description="The output information from this job."
-    )
+    output: OutputDoc = Field(None, description="The output information from this job.")
 
     ase_calculator_name: str = Field(
         None,
@@ -172,9 +192,11 @@ class AseStructureTaskDoc(StructureMetadata):
             "is less than in the initial frame."
         ),
     )
-    
+
     @classmethod
-    def from_ase_task_doc(cls, ase_task_doc : AseTaskDoc, **task_document_kwargs) -> AseStructureTaskDoc:
+    def from_ase_task_doc(
+        cls, ase_task_doc: AseTaskDoc, **task_document_kwargs
+    ) -> AseStructureTaskDoc:
         """Create an AseStructureTaskDoc for a task that has ASE-compatible outputs.
 
         Parameters
@@ -184,7 +206,9 @@ class AseStructureTaskDoc(StructureMetadata):
         task_document_kwargs : dict
             Additional keyword args passed to :obj:`.AseStructureTaskDoc()`.
         """
-        task_document_kwargs.update({k: getattr(ase_task_doc,k) for k in _task_doc_translation_keys})
+        task_document_kwargs.update(
+            {k: getattr(ase_task_doc, k) for k in _task_doc_translation_keys}
+        )
         task_document_kwargs["structure"] = ase_task_doc.ionic_configuration
         return cls(**task_document_kwargs)
 
@@ -192,17 +216,13 @@ class AseStructureTaskDoc(StructureMetadata):
 class AseMoleculeTaskDoc(MoleculeMetadata):
     """Document containing information on molecule manipulation using ASE."""
 
-    molecule: Structure = Field(
-        None, description="Final output molecule from the task"
-    )
+    molecule: Structure = Field(None, description="Final output molecule from the task")
 
     input: InputDoc = Field(
         None, description="The input information used to run this job."
     )
 
-    output: OutputDoc = Field(
-        None, description="The output information from this job."
-    )
+    output: OutputDoc = Field(None, description="The output information from this job.")
 
     ase_calculator_name: str = Field(
         None,
@@ -236,6 +256,7 @@ class AseMoleculeTaskDoc(MoleculeMetadata):
         ),
     )
 
+
 class AseTaskDoc(AseBaseModel):
     """Document containing information on generic ASE jobs."""
 
@@ -243,9 +264,7 @@ class AseTaskDoc(AseBaseModel):
         None, description="The input information used to run this job."
     )
 
-    output: OutputDoc = Field(
-        None, description="The output information from this job."
-    )
+    output: OutputDoc = Field(None, description="The output information from this job.")
 
     ase_calculator_name: str = Field(
         None,
@@ -289,7 +308,13 @@ class AseTaskDoc(AseBaseModel):
         optimizer_kwargs: dict = None,
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
-        ionic_step_data: tuple = ("energy", "forces", "magmoms", "stress", "ionic_config"),
+        ionic_step_data: tuple = (
+            "energy",
+            "forces",
+            "magmoms",
+            "stress",
+            "ionic_config",
+        ),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         **task_document_kwargs,
     ) -> AseTaskDoc:
@@ -349,7 +374,7 @@ class AseTaskDoc(AseBaseModel):
         if steps <= 1:
             steps = 1
             n_steps = 1
-            
+
             if isinstance(input_config, Structure):
                 traj_method = "from_structures"
             elif isinstance(input_config, Molecule):
@@ -378,7 +403,9 @@ class AseTaskDoc(AseBaseModel):
                 for key in ("energy", "forces", "stress")
             }
 
-            current_config = trajectory[idx] if "ionic_config" in ionic_step_data else None
+            current_config = (
+                trajectory[idx] if "ionic_config" in ionic_step_data else None
+            )
 
             # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
             if "magmoms" in trajectory.frame_properties[idx]:
@@ -416,39 +443,37 @@ class AseTaskDoc(AseBaseModel):
         )
 
         return cls(
-            ionic_configuration = output_config,
-            input = input_doc,
-            output = output_doc,
-            ase_calculator_name = ase_calculator_name,
+            ionic_configuration=output_config,
+            input=input_doc,
+            output=output_doc,
+            ase_calculator_name=ase_calculator_name,
             included_objects=list(objects.keys()),
             objects=objects,
             is_force_converged=result.get("is_force_converged"),
             energy_downhill=result.get("energy_downhill"),
-            dir_name = result.get("dir_name"),
+            dir_name=result.get("dir_name"),
             **task_document_kwargs,
         )
-    
+
     def to_meta_task_doc(self) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
         """
         Get structure and molecule specific ASE task docs.
 
         Returns
-        ---------
+        -------
         AseStructureTaskDoc or AseMoleculeTaskDoc depending on ionic_configuration
         """
-
-        kwargs = {
-            k: getattr(self,k,None)
-            for k in _task_doc_translation_keys
-        }
-        if isinstance(self.ionic_configuration,Structure):
+        kwargs = {k: getattr(self, k, None) for k in _task_doc_translation_keys}
+        if isinstance(self.ionic_configuration, Structure):
             meta_class = AseStructureTaskDoc
             k = "structure"
-            if (relax_cell := getattr(self,"relax_cell",None)):
+            if relax_cell := getattr(self, "relax_cell", None):
                 kwargs.update({"relax_cell": relax_cell})
         elif isinstance(self.ionic_configuration, Molecule):
             meta_class = AseMoleculeTaskDoc
             k = "molecule"
-        kwargs.update({k: self.ionic_configuration, f"meta_{k}": self.ionic_configuration})
+        kwargs.update(
+            {k: self.ionic_configuration, f"meta_{k}": self.ionic_configuration}
+        )
 
-        return getattr(meta_class,f"from_{k}")(**kwargs)
+        return getattr(meta_class, f"from_{k}")(**kwargs)

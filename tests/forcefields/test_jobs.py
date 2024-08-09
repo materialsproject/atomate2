@@ -101,7 +101,6 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
         assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00303572, rel=1e-2)
 
     # check the force_field_task_doc attributes
-    print("hoopla",responses[job.uuid][1].output.dir_name)
     assert Path(responses[job.uuid][1].output.dir_name).exists()
 
 

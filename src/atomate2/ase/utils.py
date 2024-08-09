@@ -83,8 +83,7 @@ class TrajectoryObserver:
 
         self._calc_kwargs = {
             "stress": (
-                "stress" in self.atoms.calc.implemented_properties
-                and self._is_periodic
+                "stress" in self.atoms.calc.implemented_properties and self._is_periodic
             ),
             "magmoms": True,
             "velocities": False,
@@ -99,7 +98,7 @@ class TrajectoryObserver:
 
         self._store_md_outputs = store_md_outputs
         if store_md_outputs:
-            self._calc_kwargs.update({k: True for k in {"velocities","temperature"} })
+            self._calc_kwargs.update({k: True for k in ("velocities", "temperature")})
         # `self.{velocities,temperatures}` always initialized,
         # but data is only stored / saved to trajectory for MD runs
         self.velocities: list[np.ndarray] = []
@@ -216,7 +215,7 @@ class TrajectoryObserver:
             If "xdatcar", writes a VASP-format XDATCAR object to file
         """
         frame_property_keys = ["energy", "forces"]
-        for k in {"stress", "magmoms", "velocities", "temperature"}:
+        for k in ("stress", "magmoms", "velocities", "temperature"):
             if self._calc_kwargs[k]:
                 frame_property_keys += [k]
 
@@ -225,7 +224,9 @@ class TrajectoryObserver:
         traj = self.as_dict() if hasattr(self, "as_dict") else self.__dict__
 
         n_md_steps = len(traj["cells"])
-        species = AseAtomsAdaptor.get_structure(traj["atoms"],cls = Structure if self._is_periodic else Molecule).species
+        species = AseAtomsAdaptor.get_structure(
+            traj["atoms"], cls=Structure if self._is_periodic else Molecule
+        ).species
 
         if self._is_periodic:
             frames = [
@@ -241,10 +242,11 @@ class TrajectoryObserver:
             frames = [
                 Molecule(
                     species,
-                    coords = traj["atom_positions"][idx],
-                    charge = getattr(traj["atoms"],"charge",0),
-                    spin_multiplicity=getattr(traj["atoms"],"spin_multiplicity",None),
-                ) for idx in range(n_md_steps)
+                    coords=traj["atom_positions"][idx],
+                    charge=getattr(traj["atoms"], "charge", 0),
+                    spin_multiplicity=getattr(traj["atoms"], "spin_multiplicity", None),
+                )
+                for idx in range(n_md_steps)
             ]
 
         frame_properties = [
@@ -257,7 +259,7 @@ class TrajectoryObserver:
         ]
 
         traj_method = "from_structures" if self._is_periodic else "from_molecules"
-        pmg_traj = getattr(PmgTrajectory,traj_method)(
+        pmg_traj = getattr(PmgTrajectory, traj_method)(
             frames,
             frame_properties=frame_properties,
             constant_lattice=False,
@@ -368,10 +370,8 @@ class AseRelaxer:
         -------
             dict including optimized structure and the trajectory
         """
-
-        is_mol = (
-            isinstance(atoms,Molecule)
-            or (isinstance(atoms,Atoms) and all(not pbc for pbc in atoms.pbc))
+        is_mol = isinstance(atoms, Molecule) or (
+            isinstance(atoms, Atoms) and all(not pbc for pbc in atoms.pbc)
         )
 
         if isinstance(atoms, (Structure, Molecule)):
@@ -392,7 +392,9 @@ class AseRelaxer:
         if isinstance(atoms, cell_filter):
             atoms = atoms.atoms
 
-        struct = self.ase_adaptor.get_structure(atoms,cls = Molecule if is_mol else Structure)
+        struct = self.ase_adaptor.get_structure(
+            atoms, cls=Molecule if is_mol else Structure
+        )
         traj = obs.to_pymatgen_trajectory(None)
         is_force_conv = all(
             np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
@@ -404,5 +406,5 @@ class AseRelaxer:
             is_force_converged=is_force_conv,
             energy_downhill=traj.frame_properties[-1]["energy"]
             < traj.frame_properties[0]["energy"],
-            dir_name = os.getcwd()
+            dir_name=os.getcwd(),
         )

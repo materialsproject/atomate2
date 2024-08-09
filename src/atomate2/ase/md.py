@@ -25,8 +25,8 @@ from ase.md.velocitydistribution import (
 )
 from ase.md.verlet import VelocityVerlet
 from jobflow import Maker
+from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
-from pymatgen.core.structure import Structure, Molecule
 from scipy.interpolate import interp1d
 from scipy.linalg import schur
 
@@ -40,7 +40,7 @@ if TYPE_CHECKING:
 
     from ase.calculators.calculator import Calculator
 
-    from atomate2.ase.schemas import AseStructureTaskDoc, AseMoleculeTaskDoc
+    from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
 _valid_dynamics: dict[str, tuple[str, ...]] = {
     "nve": ("velocityverlet",),
@@ -58,10 +58,10 @@ _preset_dynamics: dict = {
     "npt_nose-hoover": NPT,
 }
 
-_preset_dynamics_defaults : dict = {
+_preset_dynamics_defaults: dict = {
     "nve": "velocityverlet",
     "nvt": "langevin",
-    "npt": "nose-hoover"
+    "npt": "nose-hoover",
 }
 
 
@@ -279,13 +279,15 @@ class AseMDMaker(Maker):
         self._get_ensemble_defaults()
 
         if self.time_step is None:
-            # If a ionic_configuration contains an isotope of hydrogen, set default `time_step`
-            # to 0.5 fs, and 2 fs otherwise.
-            has_h_isotope = any(element.Z == 1 for element in ionic_configuration.composition)
+            # If a ionic_configuration contains an isotope of hydrogen,
+            # set default `time_step` to 0.5 fs, and 2 fs otherwise.
+            has_h_isotope = any(
+                element.Z == 1 for element in ionic_configuration.composition
+            )
             self.time_step = 0.5 if has_h_isotope else 2.0
 
         initial_velocities = ionic_configuration.site_properties.get("velocities")
-        
+
         if isinstance(self.dynamics, str):
             # Use known dynamics if `self.dynamics` is a str
             self.dynamics = self.dynamics.lower()
@@ -348,14 +350,17 @@ class AseMDMaker(Maker):
         if self.traj_file is not None:
             md_observer.save(filename=self.traj_file, fmt=self.traj_file_fmt)
 
-        ionic_configuration = AseAtomsAdaptor.get_structure(atoms,cls = Structure if isinstance(ionic_configuration,Structure) else Molecule)
+        ionic_configuration = AseAtomsAdaptor.get_structure(
+            atoms,
+            cls=Structure if isinstance(ionic_configuration, Structure) else Molecule,
+        )
 
         self.task_document_kwargs = self.task_document_kwargs or {}
 
         return AseResult(
             final_ionic_config=ionic_configuration,
             trajectory=md_observer.to_pymatgen_trajectory(filename=None),
-            dir_name = os.getcwd()
+            dir_name=os.getcwd(),
         )
 
     @property

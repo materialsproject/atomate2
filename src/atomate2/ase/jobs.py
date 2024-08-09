@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-import os
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -26,7 +25,7 @@ if TYPE_CHECKING:
     from ase.calculators.calculator import Calculator
     from pymatgen.core import Molecule
 
-    from atomate2.ase.schemas import AseStructureTaskDoc, AseMoleculeTaskDoc
+    from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
 
 def ase_job(method: Callable) -> job:
@@ -60,7 +59,7 @@ def ase_job(method: Callable) -> job:
     callable
         A decorated version of the make function that will generate forcefield jobs.
     """
-    return job(method, data=_ASE_DATA_OBJECTS)#, output_schema=AseStructureTaskDoc)
+    return job(method, data=_ASE_DATA_OBJECTS)  # , output_schema=AseStructureTaskDoc)
 
 
 @dataclass
@@ -106,7 +105,9 @@ class AseRelaxMaker(Maker):
 
     @ase_job
     def make(
-        self, ionic_configuration: Structure | Molecule, prev_dir: str | Path | None = None
+        self,
+        ionic_configuration: Structure | Molecule,
+        prev_dir: str | Path | None = None,
     ) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
         """
         Relax a structure or molecule using ASE as a job.
@@ -123,22 +124,24 @@ class AseRelaxMaker(Maker):
         --------
 
         """
-        if isinstance(ionic_configuration,Structure):
+        if isinstance(ionic_configuration, Structure):
             self.task_document_kwargs.update({"relax_cell": self.relax_cell})
 
         return AseTaskDoc.from_ase_compatible_result(
             getattr(self.calculator, "name", self.calculator.__class__),
             self._make(ionic_configuration, prev_dir=prev_dir),
             self.steps,
-            relax_kwargs = self.relax_kwargs,
-            optimizer_kwargs = self.optimizer_kwargs,
-            fix_symmetry = self.fix_symmetry,
-            symprec = self.symprec,
+            relax_kwargs=self.relax_kwargs,
+            optimizer_kwargs=self.optimizer_kwargs,
+            fix_symmetry=self.fix_symmetry,
+            symprec=self.symprec,
             **self.task_document_kwargs,
         ).to_meta_task_doc()
 
     def _make(
-        self, ionic_configuration: Structure | Molecule, prev_dir: str | Path | None = None
+        self,
+        ionic_configuration: Structure | Molecule,
+        prev_dir: str | Path | None = None,
     ) -> AseResult:
         """
         Relax a structure or molecule using ASE, not as a job.

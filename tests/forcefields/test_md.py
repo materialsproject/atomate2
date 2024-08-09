@@ -189,7 +189,9 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
             dynamics=dyn,
             n_steps=50,
             traj_file=None,
-            task_document_kwargs={"ionic_step_data": ("energy","forces","stress","structure")}
+            task_document_kwargs={
+                "ionic_step_data": ("energy", "forces", "stress", "structure")
+            },
         ).make(si_structure)
 
         response = run_locally(job, ensure_success=True)
