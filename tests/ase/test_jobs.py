@@ -6,6 +6,7 @@ import os
 
 import pytest
 from jobflow import run_locally
+from pymatgen.core import Molecule
 
 from atomate2.ase.jobs import (
     GFNxTBRelaxMaker,
@@ -13,7 +14,7 @@ from atomate2.ase.jobs import (
     LennardJonesRelaxMaker,
     LennardJonesStaticMaker,
 )
-from atomate2.ase.schemas import AseStructureTaskDoc
+from atomate2.ase.schemas import AseStructureTaskDoc, AseMoleculeTaskDoc
 
 try:
     from tblite.ase import TBLite
@@ -48,38 +49,55 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
 
 
 @pytest.mark.skipif(condition=TBLite is None, reason="TBLite must be installed.")
-def test_gfn_xtb_relax_maker(si_structure):
+def test_gfn_xtb_relax_maker(h2o_3uud_trimer):
     os.environ["OMP_NUM_THREADS"] = "1"
     job = GFNxTBRelaxMaker(
         calculator_kwargs={
-            "method": "GFN1-xTB",
+            "method": "GFN2-xTB",
         },
         relax_kwargs={"fmax": 0.01},
-    ).make(si_structure)
+    ).make(h2o_3uud_trimer)
 
     response = run_locally(job)
     output = response[job.uuid][1].output
 
-    assert output.structure.volume == pytest.approx(46.36854064419928)
-    assert output.output.energy == pytest.approx(-87.63153322348951)
+    expected_relaxed_molecule = Molecule.from_str("""9
+H6 O3
+O -1.405082 -0.755173 -0.152341
+H -0.494514 -1.024689 -0.365082
+H -1.748321 -1.406728 0.460615
+O 1.379213 -0.766691 -0.269151
+H 1.162911 0.173598 -0.132786
+H 1.968668 -1.011288 0.445777
+O 0.020787 1.592087 0.237523
+H -0.701636 0.940936 0.196638
+H -0.181997 2.257930 -0.421222""",
+        fmt = "xyz"
+    )
+    for isite,site in enumerate(expected_relaxed_molecule):
+        assert output.molecule[isite].species == site.species
+        assert all(
+            output.molecule[isite].coords[i] == pytest.approx(site.coords[i],abs=1.e-5)
+            for i in range(3)
+        )
+    assert output.output.energy_per_atom == pytest.approx(-46.06280925889291)
     assert output.energy_downhill
     assert output.is_force_converged
-    assert isinstance(output, AseStructureTaskDoc)
+    assert isinstance(output, AseMoleculeTaskDoc)
 
 
 @pytest.mark.skipif(condition=TBLite is None, reason="TBLite must be installed.")
-def test_gfn_xtb_static_maker(si_structure):
+def test_gfn_xtb_static_maker(h2o_3uud_trimer):
     os.environ["OMP_NUM_THREADS"] = "1"
     job = GFNxTBStaticMaker(
         calculator_kwargs={
             "method": "GFN2-xTB",
         },
-    ).make(si_structure)
+    ).make(h2o_3uud_trimer)
 
     response = run_locally(job)
     output = response[job.uuid][1].output
 
-    assert output.structure.volume == pytest.approx(40.88829274510334)
-    assert output.output.energy == pytest.approx(-85.12729944654562)
-    assert isinstance(output, AseStructureTaskDoc)
-    assert output.structure == si_structure
+    assert output.output.energy_per_atom == pytest.approx(-46.05920227158222)
+    assert isinstance(output, AseMoleculeTaskDoc)
+    assert output.molecule == h2o_3uud_trimer

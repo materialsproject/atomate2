@@ -381,7 +381,7 @@ class AseRelaxer:
         atoms.set_calculator(self.calculator)
         with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
             obs = TrajectoryObserver(atoms)
-            if self.relax_cell:
+            if self.relax_cell and (not is_mol):
                 atoms = cell_filter(atoms)
             optimizer = self.opt_class(atoms, **kwargs)
             optimizer.attach(obs, interval=interval)

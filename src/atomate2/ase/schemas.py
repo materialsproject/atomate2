@@ -10,7 +10,7 @@ Copyright (c) 2022, Materials Virtual Lab.
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from ase.stress import voigt_6_to_full_3x3_stress
 from ase.units import GPa
@@ -58,7 +58,7 @@ class AseObject(ValueEnum):
 class AseBaseModel(BaseModel):
     """Base document class for ASE input and output."""
 
-    ionic_configuration: Optional[Structure | Molecule] = Field(
+    ionic_configuration: Optional[Union[Structure, Molecule]] = Field(
         None, description="The ionic configuration at this step."
     )
     structure: Optional[Structure] = Field(
@@ -216,7 +216,7 @@ class AseStructureTaskDoc(StructureMetadata):
 class AseMoleculeTaskDoc(MoleculeMetadata):
     """Document containing information on molecule manipulation using ASE."""
 
-    molecule: Structure = Field(None, description="Final output molecule from the task")
+    molecule: Molecule = Field(None, description="Final output molecule from the task")
 
     input: InputDoc = Field(
         None, description="The input information used to run this job."
@@ -455,7 +455,7 @@ class AseTaskDoc(AseBaseModel):
             **task_document_kwargs,
         )
 
-    def to_meta_task_doc(self) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
+    def to_meta_task_doc(self) -> Union[AseStructureTaskDoc, AseMoleculeTaskDoc]:
         """
         Get structure and molecule specific ASE task docs.
 
