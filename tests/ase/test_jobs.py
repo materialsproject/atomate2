@@ -14,7 +14,7 @@ from atomate2.ase.jobs import (
     LennardJonesRelaxMaker,
     LennardJonesStaticMaker,
 )
-from atomate2.ase.schemas import AseStructureTaskDoc, AseMoleculeTaskDoc
+from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
 try:
     from tblite.ase import TBLite
@@ -61,7 +61,8 @@ def test_gfn_xtb_relax_maker(h2o_3uud_trimer):
     response = run_locally(job)
     output = response[job.uuid][1].output
 
-    expected_relaxed_molecule = Molecule.from_str("""9
+    expected_relaxed_molecule = Molecule.from_str(
+        """9
 H6 O3
 O -1.405082 -0.755173 -0.152341
 H -0.494514 -1.024689 -0.365082
@@ -72,12 +73,13 @@ H 1.968668 -1.011288 0.445777
 O 0.020787 1.592087 0.237523
 H -0.701636 0.940936 0.196638
 H -0.181997 2.257930 -0.421222""",
-        fmt = "xyz"
+        fmt="xyz",
     )
-    for isite,site in enumerate(expected_relaxed_molecule):
+    for isite, site in enumerate(expected_relaxed_molecule):
         assert output.molecule[isite].species == site.species
         assert all(
-            output.molecule[isite].coords[i] == pytest.approx(site.coords[i],abs=1.e-5)
+            output.molecule[isite].coords[i]
+            == pytest.approx(site.coords[i], abs=1.0e-5)
             for i in range(3)
         )
     assert output.output.energy_per_atom == pytest.approx(-46.06280925889291)

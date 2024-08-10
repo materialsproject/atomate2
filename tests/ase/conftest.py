@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from pymatgen.core import Lattice, Structure, Molecule
+from pymatgen.core import Lattice, Molecule, Structure
 
 
 @pytest.fixture()
@@ -28,9 +28,11 @@ def lj_fcc_ne_pars() -> dict[str, float]:
         "epsilon": 2.330e-03,
     }
 
+
 @pytest.fixture()
 def h2o_3uud_trimer() -> Molecule:
-    return Molecule.from_str("""9
+    return Molecule.from_str(
+        """9
 # 3UUD water trimer from BEGDB, http://www.begdb.org/index.php?action=oneMolecule&state=show&id=4180
 O  -1.38183  -0.79188  -0.17297
 H  -0.45433  -1.10048  -0.23187
@@ -41,5 +43,5 @@ H   1.93037  -1.04028   0.45363
 O   0.01887   1.60382   0.21583
 H  -0.73003   0.98002   0.13523
 H  -0.21183   2.34962  -0.35147""",
-fmt = "xyz"
-)
+        fmt="xyz",
+    )
