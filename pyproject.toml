@@ -81,7 +81,7 @@ tests = [
 strict = [
     "PyYAML==6.0.2",
     "ase==3.23.0",
-    "calorine==2.2.1",
+    "calorine==2.3.1",
     "cclib==1.8.1",
     "chgnet==0.3.8",
     "click==8.1.7",
