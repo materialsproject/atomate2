@@ -65,7 +65,7 @@ docs = [
     "ipython==8.26.0",
     "jsonschema[format]",
     "myst_parser==4.0.0",
-    "numpydoc==1.7.0",
+    "numpydoc==1.8.0",
     "sphinx-copybutton==0.5.2",
     "sphinx==7.4.7",
     "sphinx_design==0.6.0",
