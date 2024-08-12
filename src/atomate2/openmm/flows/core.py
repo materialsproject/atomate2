@@ -38,7 +38,7 @@ def _flatten_calcs(nested_calcs: list) -> list[Calculation]:
 
 
 @openff_job
-def _collect_outputs(
+def collect_outputs(
     prev_dir: str,
     tags: list[str] | None,
     job_uuids: list[str],
@@ -134,7 +134,7 @@ class OpenMMFlowMaker:
             calcs_reversed.append(_get_calcs_reversed(job))
 
         if self.collect_outputs:
-            collect_job = _collect_outputs(
+            collect_job = collect_outputs(
                 prev_dir,
                 tags=self.tags or None,
                 job_uuids=job_uuids,
