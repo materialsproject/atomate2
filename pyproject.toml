@@ -70,7 +70,7 @@ docs = [
     "furo==2024.7.18",
     "ipython==8.26.0",
     "jsonschema[format]",
-    "myst_parser==3.0.1",
+    "myst_parser==4.0.0",
     "numpydoc==1.7.0",
     "sphinx-copybutton==0.5.2",
     "sphinx==7.4.7",
