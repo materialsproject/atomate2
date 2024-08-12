@@ -416,6 +416,12 @@ class GFNxTBMDMaker(AseMDMaker):
     @property
     def calculator(self) -> Calculator:
         """GFN-xTB / TBLite calculator."""
-        from tblite.ase import TBLite
+        try:
+            from tblite.ase import TBLite
+        except ImportError:
+            raise ImportError(
+                "TBLite must be installed; please install TBLite using\n"
+                "`pip install -c conda-forge tblite-python`"
+            )
 
         return TBLite(atoms=None, **self.calculator_kwargs)

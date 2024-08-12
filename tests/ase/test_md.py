@@ -1,4 +1,9 @@
-"""Test ASE MD implementation."""
+"""
+Test ASE MD implementation.
+
+Most of the heavy tests of the AseMDMaker class are via forcefields
+Light tests here to validate that base classes work as intended
+"""
 
 import os
 
@@ -8,18 +13,19 @@ from jobflow import run_locally
 from atomate2.ase.md import GFNxTBMDMaker, LennardJonesMDMaker
 from atomate2.ase.schemas import AseStructureTaskDoc
 
+try:
+    from tblite.ase import TBLite
+except ImportError:
+    TBLite = None
+
+name_to_maker = {"LJ": LennardJonesMDMaker,}
+if TBLite is not None:
+    name_to_maker["GFN-xTB"] = GFNxTBMDMaker
+
 _mb_velocity_seed = 2820285082114
 
-# Most of the heavy tests of the AseMDMaker class are via forcefields
-# Light tests here to validate the classes work as intended
-
-
-@pytest.mark.parametrize("calculator_name", ["LJ", "GFN-xTB"])
+@pytest.mark.parametrize("calculator_name", list(name_to_maker))
 def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure):
-    name_to_maker = {
-        "LJ": LennardJonesMDMaker,
-        "GFN-xTB": GFNxTBMDMaker,
-    }
 
     reference_energies = {
         "LJ": -0.0179726955438795,
@@ -46,10 +52,6 @@ def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure):
 
 @pytest.mark.parametrize("calculator_name", ["LJ"])
 def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_dir):
-    name_to_maker = {
-        "LJ": LennardJonesMDMaker,
-        "GFN-xTB": GFNxTBMDMaker,
-    }
     os.environ["OMP_NUM_THREADS"] = "1"
 
     reference_energies = {
