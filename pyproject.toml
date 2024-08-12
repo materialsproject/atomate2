@@ -85,7 +85,7 @@ tests = [
     "pytest==8.0.2",
 ]
 strict = [
-    "PyYAML==6.0.1",
+    "PyYAML==6.0.2",
     "ase==3.23.0",
     "calorine==2.2.1",
     "cclib==1.8.1",
