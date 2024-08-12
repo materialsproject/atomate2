@@ -248,7 +248,7 @@ class GFNxTBRelaxMaker(AseRelaxMaker):
             "verbosity": 1,
         }
     )
-    
+
     @property
     def calculator(self) -> Calculator:
         """GFN-xTB / TBLite calculator."""
@@ -258,9 +258,10 @@ class GFNxTBRelaxMaker(AseRelaxMaker):
             raise ImportError(
                 "TBLite must be installed; please install TBLite using\n"
                 "`pip install -c conda-forge tblite-python`"
-            )
+            ) from None
 
         return TBLite(atoms=None, **self.calculator_kwargs)
+
 
 @dataclass
 class GFNxTBStaticMaker(GFNxTBRelaxMaker):

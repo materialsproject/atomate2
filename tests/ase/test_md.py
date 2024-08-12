@@ -18,15 +18,15 @@ try:
 except ImportError:
     TBLite = None
 
-name_to_maker = {"LJ": LennardJonesMDMaker,}
+name_to_maker = {"LJ": LennardJonesMDMaker}
 if TBLite is not None:
     name_to_maker["GFN-xTB"] = GFNxTBMDMaker
 
 _mb_velocity_seed = 2820285082114
 
+
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))
 def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure):
-
     reference_energies = {
         "LJ": -0.0179726955438795,
         "GFN-xTB": -160.93692979071128,

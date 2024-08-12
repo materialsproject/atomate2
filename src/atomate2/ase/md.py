@@ -422,6 +422,6 @@ class GFNxTBMDMaker(AseMDMaker):
             raise ImportError(
                 "TBLite must be installed; please install TBLite using\n"
                 "`pip install -c conda-forge tblite-python`"
-            )
+            ) from None
 
         return TBLite(atoms=None, **self.calculator_kwargs)
