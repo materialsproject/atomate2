@@ -33,6 +33,7 @@ _DEFAULT_MP_AVG_VOL_FILE = str(
     import_resource_file("atomate2.common.jobs") / "mp_avg_vol.json.gz"
 )
 
+
 def get_average_volume_from_mp_api(
     composition: Composition, mp_api_key: str | None = None
 ) -> float:
@@ -86,8 +87,10 @@ def get_average_volume_from_mp_api(
 
     return np.mean(vols)
 
+
 def get_average_volume_from_mp_cached(
-    composition : Composition, cache_file : str | Path | None = None,
+    composition: Composition,
+    cache_file: str | Path | None = None,
 ) -> float:
     """
     Get the average volume per atom for a given composition from cached MP data.
@@ -110,13 +113,12 @@ def get_average_volume_from_mp_cached(
     return get_average_volume_from_icsd(
         composition,
         ignore_oxi_states=True,
-        icsd_chem_env_file=cache_file or _DEFAULT_MP_AVG_VOL_FILE
+        icsd_chem_env_file=cache_file or _DEFAULT_MP_AVG_VOL_FILE,
     )
 
+
 def get_average_volume_from_mp(
-    composition : Composition,
-    use_cached : bool = True,
-    **kwargs
+    composition: Composition, use_cached: bool = True, **kwargs
 ) -> float:
     """
     Get the average volume per atom for a given composition from MP data.
@@ -141,8 +143,9 @@ def get_average_volume_from_mp(
         The average volume per atom for the composition.
     """
     if use_cached:
-        return get_average_volume_from_mp_cached(composition,**kwargs)
-    return get_average_volume_from_mp_api(composition,**kwargs)
+        return get_average_volume_from_mp_cached(composition, **kwargs)
+    return get_average_volume_from_mp_api(composition, **kwargs)
+
 
 def _get_chem_env_key_from_composition(
     composition: Composition, ignore_oxi_states: bool = True
