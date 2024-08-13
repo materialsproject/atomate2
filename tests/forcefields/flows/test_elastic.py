@@ -10,10 +10,10 @@ from atomate2.forcefields.jobs import MACERelaxMaker
 def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir):
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
     model_path = f"{test_dir}/forcefields/mace/MACE.model"
-    common_kwds = dict(
-        calculator_kwargs={"model": model_path, "default_dtype": "float64"},
-        relax_kwargs={"fmax": 0.00001},
-    )
+    common_kwds = {
+        "calculator_kwargs": {"model": model_path, "default_dtype": "float64"},
+        "relax_kwargs": {"fmax": 0.00001},
+    }
 
     flow = ElasticMaker(
         bulk_relax_maker=MACERelaxMaker(**common_kwds, relax_cell=True),
