@@ -88,6 +88,7 @@ def get_supercell_size(
         max_length=max_length,
         min_atoms=kwargs.get("min_atoms"),
         force_diagonal=kwargs["force_diagonal"],
+        step_size=kwargs["step_size"],
     )
 
     if not prefer_90_degrees:
