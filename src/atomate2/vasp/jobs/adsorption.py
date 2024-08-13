@@ -36,7 +36,6 @@ class BulkRelaxMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator
         The input set generator for the relaxation calculation.
     """
-
     name: str = "bulk_relax_maker__"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPRelaxSet(
@@ -66,7 +65,6 @@ class MolRelaxMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator
         The input set generator for the relaxation calculation.
     """
-
     name: str = "mol_relax_maker__"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPRelaxSet(
@@ -104,7 +102,6 @@ class MolStaticMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator
         The input set generator for the static energy calculation.
     """
-
     name: str = "mol_static_maker__"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPRelaxSet(

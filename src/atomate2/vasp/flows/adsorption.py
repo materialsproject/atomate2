@@ -57,7 +57,6 @@ class AdsorptionMaker(Maker):
     mol_static_maker: BaseVaspMaker
         Maker for molecule static energy calculation.
     """  # noqa: E501
-
     name: str = "adsorption workflow"
 
     mol_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
