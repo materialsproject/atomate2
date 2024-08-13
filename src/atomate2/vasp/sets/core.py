@@ -16,7 +16,7 @@ from atomate2.vasp.sets.base import VaspInputGenerator
 if TYPE_CHECKING:
     from emmet.core.math import Vector3D
     from pymatgen.core import Structure
-    from pymatgen.io.vasp import Kpoints
+    from pymatgen.io.vasp import Kpoints, Outcar, Vasprun
 
 
 logger = logging.getLogger(__name__)
@@ -38,6 +38,40 @@ class RelaxSetGenerator(VaspInputGenerator):
         return {"NSW": 99, "LCHARG": False, "ISIF": 3, "IBRION": 2}
 
 
+class RelaxConstVolSetGenerator(VaspInputGenerator):
+    """Class to generate VASP constant volume relaxation input sets."""
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = None,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """Get updates to the INCAR for a constant volume relaxation job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        return {"NSW": 99, "LCHARG": False, "ISIF": 2, "IBRION": 2}
+
+
 @dataclass
 class TightRelaxSetGenerator(VaspInputGenerator):
     """Class to generate tight VASP relaxation input sets."""
@@ -54,6 +88,32 @@ class TightRelaxSetGenerator(VaspInputGenerator):
         return {
             "IBRION": 2,
             "ISIF": 3,
+            "ENCUT": 700,
+            "EDIFF": 1e-7,
+            "LAECHG": False,
+            "EDIFFG": -0.001,
+            "LREAL": False,
+            "NSW": 99,
+            "LCHARG": False,
+        }
+
+
+@dataclass
+class TightRelaxConstVolSetGenerator(VaspInputGenerator):
+    """Class to generate constant volume tight VASP relaxation input sets."""
+
+    @property
+    def incar_updates(self) -> dict:
+        """Get updates to the INCAR for a static VASP job.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        return {
+            "IBRION": 2,
+            "ISIF": 2,
             "ENCUT": 700,
             "EDIFF": 1e-7,
             "LAECHG": False,
@@ -215,9 +275,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
         if self.optics:
             # LREAL not supported with LOPTICS = True; automatic NEDOS usually
             # underestimates, so set it explicitly
-            updates.update(
-                {"LOPTICS": True, "LREAL": False, "CSHIFT": 1e-5, "NEDOS": 2000}
-            )
+            updates.update(LOPTICS=True, LREAL=False, CSHIFT=1e-5, NEDOS=2000)
 
         updates["MAGMOM"] = None
 
@@ -688,16 +746,14 @@ class LobsterTightStaticSetGenerator(LobsterSet):
         dict
             A dictionary of updates to apply.
         """
-        base_incar_updates = super().incar_updates
-        base_incar_updates.update(
-            EDIFF=1e-7,
-            ISPIN=1,
-            LAECHG=False,
-            LREAL=False,
-            LVTOT=False,
-            ALGO="Normal",
-            LCHARG=False,
-            LWAVE=True,
-            ISYM=0,
-        )
-        return base_incar_updates
+        return super().incar_updates | {
+            "EDIFF": 1e-7,
+            "ISPIN": 1,
+            "LAECHG": False,
+            "LREAL": False,
+            "LVTOT": False,
+            "ALGO": "Normal",
+            "LCHARG": False,
+            "LWAVE": True,
+            "ISYM": 0,
+        }
