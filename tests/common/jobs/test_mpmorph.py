@@ -10,20 +10,31 @@ from pymatgen.core import Composition
 
 from atomate2.common.jobs.mpmorph import (
     _DEFAULT_ICSD_AVG_VOL_FILE,
+    _DEFAULT_MP_AVG_VOL_FILE,
     _get_chem_env_key_from_composition,
     get_average_volume_from_icsd,
+    get_average_volume_from_mp,
     get_random_packed_structure,
 )
 
 
-def test_get_average_volume_from_icsd():
+@pytest.mark.parametrize("db, ignore_oxi_states", [("icsd",[True,False],), ("mp",[True],)])
+def test_get_average_volume_from_icsd(db: str, ignore_oxi_states : list[bool]):
     avg_vols = read_json(_DEFAULT_ICSD_AVG_VOL_FILE)
 
-    comp = Composition({"Ag+": 4, "Cu2+": 2, "O2-": 4})
+    comp = Composition({"Ag+": 1, "Cl5+": 1, "O2-": 3})
 
-    ref_vols = {0: 13.246317640839177, 1: 12.797510860470629}
-    for ignore_oxi in [True, False]:
-        chem_env = "Ag__Cu__O" if ignore_oxi else "Ag+__Cu2+__O2-"
+    if db == "icsd":
+        ref_vols = {0: 14.204405661000004, 1: 14.244954961061925}
+        get_avg_vol_func = get_average_volume_from_icsd
+    elif db == "mp":
+        ref_vols = {1: 17.845894151307604}
+        get_avg_vol_func = lambda comp, ignore_oxi_states : get_average_volume_from_mp(comp)
+    else:
+        raise ValueError(f"Unknown database {db}")
+
+    for ignore_oxi in ignore_oxi_states:
+        chem_env = "Ag__Cl__O" if ignore_oxi else "Ag+__Cl5+__O2-"
         assert (
             _get_chem_env_key_from_composition(comp, ignore_oxi_states=ignore_oxi)
             == chem_env
@@ -38,19 +49,22 @@ def test_get_average_volume_from_icsd():
             > 0
         )
 
-        assert get_average_volume_from_icsd(
+        assert get_avg_vol_func(
             comp, ignore_oxi_states=ignore_oxi
         ) == pytest.approx(ref_vols[ignore_oxi])
 
-    comp = Composition({"Ag+": 2, "Cu2+": 2, "Cl-": 6})
-    ref_vols = {0: 19.471460609572503, 1: 18.989196360342223}
-    for ignore_oxi in [True, False]:
+    comp = Composition({"Ag+": 1, "Cu2+": 1, "Cl-": 3})
+    if db == "icsd":
+        ref_vols = {0: 19.471460609572503, 1: 18.989196360342223}
+    elif db == "mp":
+        ref_vols = {1: 21.972236147327344}
+    for ignore_oxi in ignore_oxi_states:
         chem_env = "Ag__Cl__Cu" if ignore_oxi else "Ag+__Cl-__Cu2+"
         assert (
             _get_chem_env_key_from_composition(comp, ignore_oxi_states=ignore_oxi)
             == chem_env
         )
-        assert get_average_volume_from_icsd(
+        assert get_avg_vol_func(
             comp, ignore_oxi_states=ignore_oxi
         ) == pytest.approx(ref_vols[ignore_oxi])
 
