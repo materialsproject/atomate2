@@ -49,23 +49,28 @@ class ImaginaryModeError(Exception):
 
 
 @job
-def get_phonon_supercell(phonon_doc: PhononBSDOSDoc) -> Structure:
+def get_phonon_supercell(
+    structure: Structure,
+    supercell_matrix: np.ndarray,
+) -> Structure:
     """Get the phonon supercell of a structure.
 
     Parameters
     ----------
-    phonon_doc: PhononBSDOSDoc
-        The output of a phonopy workflow
+    structure: Structure
+        The structure to get phonon supercell for
+    supercell_matrix: np.ndarray
+        Supercell matrix for the phonon
 
     Returns
     -------
     Structure
         The phonopy structure
     """
-    cell = get_phonopy_structure(phonon_doc.structure)
+    cell = get_phonopy_structure(structure)
     phonon = Phonopy(
         cell,
-        phonon_doc.supercell_matrix,
+        supercell_matrix,
     )
     return get_pmg_structure(phonon.supercell)
 
@@ -105,6 +110,7 @@ def get_sigma_per_element(
         forces_harmonic = np.expand_dims(forces_harmonic, axis=0)
 
     atom_numbers = np.array([site.specie.number for site in structure.sites])
+
     if np.shape(forces_dft)[1] == 3 * structure.num_sites:
         atom_numbers = atom_numbers.repeat(3)
 
