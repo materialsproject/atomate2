@@ -171,7 +171,7 @@ def get_structure_group_doc(
 ) -> Response:
     """Take in `ComputedEntry` and return a `StructureGroupDoc`."""
     for ient in computed_entries:
-        if not (entry_id := str(entry_id)).startswith("mp-"):
+        if not (entry_id := str(ient.entry_id)).startswith("mp-"):
             entry_id = "mp-0000000"
         ient.data["material_id"] = entry_id
     return StructureGroupDoc.from_grouped_entries(
@@ -185,7 +185,7 @@ def get_insertion_electrode_doc(
 ) -> Response:
     """Return a `InsertionElectrodeDoc`."""
     for ient in computed_entries:
-        if not (entry_id := str(entry_id)).startswith("mp-"):
+        if not (entry_id := str(ient.entry_id)).startswith("mp-"):
             entry_id = "mp-0000000"
         ient.data["material_id"] = entry_id
     return InsertionElectrodeDoc.from_entries(
