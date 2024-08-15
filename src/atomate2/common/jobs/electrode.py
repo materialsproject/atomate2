@@ -187,7 +187,7 @@ def get_insertion_electrode_doc(
     """Return a `InsertionElectrodeDoc`."""
     for idx, ient in enumerate(computed_entries):
         if not (entry_id := str(ient.entry_id)).startswith("mp-"):
-            entry_id =f"mp-{idx+1}"
+            entry_id = f"mp-{idx+1}"
         ient.data["material_id"] = entry_id
     return InsertionElectrodeDoc.from_entries(
         computed_entries, working_ion_entry, battery_id=None
