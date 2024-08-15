@@ -154,13 +154,13 @@ def get_computed_entries(
         return multi
     # keep the [1] for now, if jobflow supports NamedTuple, we can do this much cleaner
     s_ = RelaxJobSummary._make(single)
-    s_.entry.entry_id = s_.uuid
+    s_.entry.entry_id = "mp-0000000"
     ent = ComputedStructureEntry(
         structure=s_.structure,
         energy=s_.entry.energy,
         parameters=s_.entry.parameters,
         data=s_.entry.data,
-        entry_id=s_.uuid,
+        entry_id="mp-0000000",
     )
     return [*multi, ent]
 
@@ -171,7 +171,9 @@ def get_structure_group_doc(
 ) -> Response:
     """Take in `ComputedEntry` and return a `StructureGroupDoc`."""
     for ient in computed_entries:
-        ient.data["material_id"] = ient.entry_id
+        if not (entry_id := str(entry_id)).startswith("mp-"):
+            entry_id = "mp-0000000"
+        ient.data["material_id"] = entry_id
     return StructureGroupDoc.from_grouped_entries(
         computed_entries, ignored_specie=ignored_species
     )
@@ -183,7 +185,9 @@ def get_insertion_electrode_doc(
 ) -> Response:
     """Return a `InsertionElectrodeDoc`."""
     for ient in computed_entries:
-        ient.data["material_id"] = ient.entry_id
+        if not (entry_id := str(entry_id)).startswith("mp-"):
+            entry_id = "mp-0000000"
+        ient.data["material_id"] = entry_id
     return InsertionElectrodeDoc.from_entries(
         computed_entries, working_ion_entry, battery_id=None
     )
