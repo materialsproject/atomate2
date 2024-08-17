@@ -22,9 +22,6 @@ workflows using simple Python functions. Features of atomate2 include
 - It automatically keeps meticulous records of jobs, their directories, runtime
   parameters, and more.
 
-**Note**: Atomate2 is primarily built to work with the [VASP] electronic structure
-software, but we are actively working on adding more codes.
-
 ## Workflows
 
 Some of the workflows available in atomate2 are:
