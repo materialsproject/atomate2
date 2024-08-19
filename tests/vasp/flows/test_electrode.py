@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 
-def test_electrode_makers(mock_vasp, clean_dir, test_dir, mock_jobflow_settings):
+def test_electrode_makers(mock_vasp, clean_dir, test_dir):
     from emmet.core.electrode import InsertionElectrodeDoc
     from jobflow import OutputReference, run_locally
     from monty.serialization import loadfn
@@ -14,7 +14,6 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir, mock_jobflow_settings)
         update_user_incar_settings,
         update_user_kpoints_settings,
     )
-    # mock the default setting
 
     # mapping from job name to directory containing test files
     ref_paths = {
