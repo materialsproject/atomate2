@@ -101,7 +101,8 @@ class OutputDoc(AseBaseModel):
     forces: Optional[list[Vector3D]] = Field(
         None,
         description=(
-            "The force on each atom in units of eV/A for the final molecule or structure."
+            "The force on each atom in units of eV/A for the final molecule "
+            "or structure."
         ),
     )
 
@@ -472,8 +473,6 @@ class AseTaskDoc(AseBaseModel):
         elif isinstance(self.mol_or_struct, Molecule):
             meta_class = AseMoleculeTaskDoc
             k = "molecule"
-        kwargs.update(
-            {k: self.mol_or_struct, f"meta_{k}": self.mol_or_struct}
-        )
+        kwargs.update({k: self.mol_or_struct, f"meta_{k}": self.mol_or_struct})
 
         return getattr(meta_class, f"from_{k}")(**kwargs)

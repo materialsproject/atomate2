@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import contextlib
-from enum import Enum
-from importlib import import_module
 import io
 import os
 import sys
 from collections.abc import Sequence
 from dataclasses import dataclass, field
+from enum import Enum
+from importlib import import_module
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -39,7 +39,8 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
-class DYNAMICS_PRESETS(Enum):
+
+class DynamicsPresets(Enum):
     """Define mappings between MD ensembles and thermo-/baro-stats."""
 
     nve_velocityverlet = "ase.md.verlet.VelocityVerlet"
@@ -48,17 +49,19 @@ class DYNAMICS_PRESETS(Enum):
     nvt_langevin = "ase.md.langevin.Langevin"
     nvt_nose_hoover = "ase.md.npt.NPT"
     npt_berendsen = "ase.md.nptberendsen.NPTBerendsen"
-    npt_nose_hoover = "ase.md.npt.NPT"
+    npt_nose_hoover = "ase.md.npt.NPT"  # noqa: PIE796
 
-class DEFAULT_DYNAMICS(Enum):
+
+class DefaultDynamics(Enum):
     """Define default dynamics objects for ASE MD runs."""
 
     nve = "velocityverlet"
     nvt = "langevin"
     npt = "nose-hoover"
 
-_valid_dynamics : dict[str,set[str]]= {}
-for preset in DYNAMICS_PRESETS.__members__:
+
+_valid_dynamics: dict[str, set[str]] = {}
+for preset in DynamicsPresets.__members__:
     ensemble = preset.split("_")[0]
     thermostat = "-".join(preset.split("_")[1:])
     if ensemble not in _valid_dynamics:
@@ -211,7 +214,7 @@ class AseMDMaker(Maker):
     def _get_ensemble_defaults(self) -> None:
         """Update ASE MD kwargs with defaults consistent with VASP MD."""
         self.ase_md_kwargs = self.ase_md_kwargs or {}
-        self.dynamics = self.dynamics or DEFAULT_DYNAMICS[self.ensemble].value
+        self.dynamics = self.dynamics or DefaultDynamics[self.ensemble].value
 
         if self.ensemble == "nve":
             self.ase_md_kwargs.pop("temperature", None)
@@ -283,9 +286,7 @@ class AseMDMaker(Maker):
         if self.time_step is None:
             # If a mol_or_struct contains an isotope of hydrogen,
             # set default `time_step` to 0.5 fs, and 2 fs otherwise.
-            has_h_isotope = any(
-                element.Z == 1 for element in mol_or_struct.composition
-            )
+            has_h_isotope = any(element.Z == 1 for element in mol_or_struct.composition)
             self.time_step = 0.5 if has_h_isotope else 2.0
 
         initial_velocities = mol_or_struct.site_properties.get("velocities")
@@ -300,8 +301,12 @@ class AseMDMaker(Maker):
                     " ".join(_valid_dynamics[self.ensemble])
                 )
 
-            _dyn_mod_path = DYNAMICS_PRESETS[f"{self.ensemble}_{self.dynamics.replace('-','_')}"].value.split(".")
-            dynamics = getattr(import_module(".".join(_dyn_mod_path[:-1])),_dyn_mod_path[-1])
+            _dyn_mod_path = DynamicsPresets[
+                f"{self.ensemble}_{self.dynamics.replace('-','_')}"
+            ].value.split(".")
+            dynamics = getattr(
+                import_module(".".join(_dyn_mod_path[:-1])), _dyn_mod_path[-1]
+            )
 
         elif issubclass(self.dynamics, MolecularDynamics):
             # Allow user to explicitly run ASE Dynamics class
@@ -310,7 +315,9 @@ class AseMDMaker(Maker):
         atoms = mol_or_struct.to_ase_atoms()
 
         if dynamics is NPT:
-            # Note that until dynamics is instantiated, isinstance(dynamics,NPT) is False
+            # Note that until dynamics is instantiated,
+            # `isinstance(dynamics,NPT)` is False
+
             # ASE NPT implementation requires upper triangular cell
             schur_decomp, _ = schur(atoms.get_cell(complete=True), output="complex")
             atoms.set_cell(schur_decomp.real, scale_atoms=True)
