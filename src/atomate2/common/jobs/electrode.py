@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import logging
+from ulid import ULID
 from typing import TYPE_CHECKING, Callable, NamedTuple
 
 from emmet.core.electrode import InsertionElectrodeDoc
 from emmet.core.structure_group import StructureGroupDoc
+from emmet.core.mpid import MPID
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
 from pymatgen.entries.computed_entries import ComputedStructureEntry
@@ -154,14 +156,23 @@ def get_computed_entries(
         return multi
     # keep the [1] for now, if jobflow supports NamedTuple, we can do this much cleaner
     s_ = RelaxJobSummary._make(single)
-    temp_mpid = f"mp-{len(multi) + 1}"
-    s_.entry.entry_id = temp_mpid
+
+    # Ensure that the entry_id is an acceptable MPID
+    try:
+        entry_id = MPID(s_.uuid)
+    except ValueError:
+        entry_id = ULID()
+    s_.entry.entry_id = str(entry_id)
+
+    # Store UUID for provenance
+    s_.entry.data["UUID"] = s_.uuid
+
     ent = ComputedStructureEntry(
         structure=s_.structure,
         energy=s_.entry.energy,
         parameters=s_.entry.parameters,
         data=s_.entry.data,
-        entry_id=temp_mpid,
+        entry_id=s_.entry.entry_id,
     )
     return [*multi, ent]
 
@@ -171,10 +182,8 @@ def get_structure_group_doc(
     computed_entries: list[ComputedEntry], ignored_species: str
 ) -> Response:
     """Take in `ComputedEntry` and return a `StructureGroupDoc`."""
-    for idx, ient in enumerate(computed_entries):
-        if not (entry_id := str(ient.entry_id)).startswith("mp-"):
-            entry_id = f"mp-{idx+1}"
-        ient.data["material_id"] = entry_id
+    for ient in computed_entries:
+        ient.data["material_id"] = ient.entry_id
     return StructureGroupDoc.from_grouped_entries(
         computed_entries, ignored_specie=ignored_species
     )
@@ -185,10 +194,8 @@ def get_insertion_electrode_doc(
     computed_entries: ComputedEntry, working_ion_entry: ComputedEntry
 ) -> Response:
     """Return a `InsertionElectrodeDoc`."""
-    for idx, ient in enumerate(computed_entries):
-        if not (entry_id := str(ient.entry_id)).startswith("mp-"):
-            entry_id = f"mp-{idx+1}"
-        ient.data["material_id"] = entry_id
+    for ient in computed_entries:
+        ient.data["material_id"] = ient.entry_id
     return InsertionElectrodeDoc.from_entries(
         computed_entries, working_ion_entry, battery_id=None
     )
