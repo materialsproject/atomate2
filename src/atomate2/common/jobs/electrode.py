@@ -3,15 +3,15 @@
 from __future__ import annotations
 
 import logging
-from ulid import ULID
 from typing import TYPE_CHECKING, Callable, NamedTuple
 
 from emmet.core.electrode import InsertionElectrodeDoc
-from emmet.core.structure_group import StructureGroupDoc
 from emmet.core.mpid import MPID
+from emmet.core.structure_group import StructureGroupDoc
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
 from pymatgen.entries.computed_entries import ComputedStructureEntry
+from ulid import ULID
 
 if TYPE_CHECKING:
     from pathlib import Path

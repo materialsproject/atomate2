@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+
 def test_electrode_makers(mock_vasp, clean_dir, test_dir, mock_jobflow_settings):
     from emmet.core.electrode import InsertionElectrodeDoc
     from jobflow import OutputReference, run_locally
