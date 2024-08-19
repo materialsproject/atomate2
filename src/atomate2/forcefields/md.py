@@ -34,8 +34,8 @@ class ForceFieldMDMaker(AseMDMaker):
     For the rest of preset dynamics (`_valid_dynamics`) and custom dynamics inherited
     from ASE (`MolecularDynamics`), the user can specify the dynamics as a string or an
     ASE class into the `dynamics` attribute. In this case, please consult the ASE
-    documentation for the parameters and units to pass into the ASE MD function through
-    `ase_md_kwargs`.
+    documentation for the parameters and units to pass into the ASE .MolecularDynamics
+    function through `ase_md_kwargs`.
 
     Parameters
     ----------
@@ -65,7 +65,8 @@ class ForceFieldMDMaker(AseMDMaker):
         See _valid_dynamics for a list of pre-defined options when
         specifying dynamics as a string.
     ase_md_kwargs : dict | None = None
-        Options except for temperature and pressure to pass into the ASE MD function
+        Options except for temperature and pressure to pass into the ASE
+        .MolecularDynamics function
     calculator_kwargs : dict
         kwargs to pass to the ASE calculator class
     traj_file : str | Path | None = None
@@ -112,7 +113,7 @@ class ForceFieldMDMaker(AseMDMaker):
             added to match the method signature of other makers.
         """
         with revert_default_dtype():
-            md_result = self._make(structure, prev_dir=prev_dir)
+            md_result = self.run_ase(structure, prev_dir=prev_dir)
 
         self.task_document_kwargs = self.task_document_kwargs or {}
 

@@ -19,7 +19,7 @@ class ForcefieldResult(AseResult):
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
-        self["final_structure"] = self.pop("final_ionic_config")
+        self["final_structure"] = self.pop("final_mol_or_struct")
 
 
 @deprecated(replacement=AseObject, deadline=(2025, 1, 1))
@@ -76,7 +76,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             "forces",
             "magmoms",
             "stress",
-            "ionic_config",
+            "mol_or_struct",
         ),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         **task_document_kwargs,

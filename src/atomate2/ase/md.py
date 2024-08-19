@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import contextlib
+from enum import Enum
+from importlib import import_module
 import io
 import os
 import sys
@@ -12,18 +14,13 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from ase import units
-from ase.md.andersen import Andersen
-from ase.md.langevin import Langevin
 from ase.md.md import MolecularDynamics
 from ase.md.npt import NPT
-from ase.md.nptberendsen import NPTBerendsen
-from ase.md.nvtberendsen import NVTBerendsen
 from ase.md.velocitydistribution import (
     MaxwellBoltzmannDistribution,
     Stationary,
     ZeroRotation,
 )
-from ase.md.verlet import VelocityVerlet
 from jobflow import Maker
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -42,27 +39,31 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
-_valid_dynamics: dict[str, tuple[str, ...]] = {
-    "nve": ("velocityverlet",),
-    "nvt": ("nose-hoover", "langevin", "andersen", "berendsen"),
-    "npt": ("nose-hoover", "berendsen"),
-}
+class DYNAMICS_PRESETS(Enum):
+    """Define mappings between MD ensembles and thermo-/baro-stats."""
 
-_preset_dynamics: dict = {
-    "nve_velocityverlet": VelocityVerlet,
-    "nvt_andersen": Andersen,
-    "nvt_berendsen": NVTBerendsen,
-    "nvt_langevin": Langevin,
-    "nvt_nose-hoover": NPT,
-    "npt_berendsen": NPTBerendsen,
-    "npt_nose-hoover": NPT,
-}
+    nve_velocityverlet = "ase.md.verlet.VelocityVerlet"
+    nvt_andersen = "ase.md.andersen.Andersen"
+    nvt_berendsen = "ase.md.nvtberendsen.NVTBerendsen"
+    nvt_langevin = "ase.md.langevin.Langevin"
+    nvt_nose_hoover = "ase.md.npt.NPT"
+    npt_berendsen = "ase.md.nptberendsen.NPTBerendsen"
+    npt_nose_hoover = "ase.md.npt.NPT"
 
-_preset_dynamics_defaults: dict = {
-    "nve": "velocityverlet",
-    "nvt": "langevin",
-    "npt": "nose-hoover",
-}
+class DEFAULT_DYNAMICS(Enum):
+    """Define default dynamics objects for ASE MD runs."""
+
+    nve = "velocityverlet"
+    nvt = "langevin"
+    npt = "nose-hoover"
+
+_valid_dynamics : dict[str,set[str]]= {}
+for preset in DYNAMICS_PRESETS.__members__:
+    ensemble = preset.split("_")[0]
+    thermostat = "-".join(preset.split("_")[1:])
+    if ensemble not in _valid_dynamics:
+        _valid_dynamics[ensemble] = set()
+    _valid_dynamics[ensemble].add(thermostat)
 
 
 @dataclass
@@ -81,8 +82,8 @@ class AseMDMaker(Maker):
     For the rest of preset dynamics (`_valid_dynamics`) and custom dynamics inherited
     from ASE (`MolecularDynamics`), the user can specify the dynamics as a string or an
     ASE class into the `dynamics` attribute. In this case, please consult the ASE
-    documentation for the parameters and units to pass into the ASE MD function through
-    `ase_md_kwargs`.
+    documentation for the parameters and units to pass into the ASE .MolecularDynamics
+    function through `ase_md_kwargs`.
 
     Parameters
     ----------
@@ -110,7 +111,8 @@ class AseMDMaker(Maker):
         See _valid_dynamics for a list of pre-defined options when
         specifying dynamics as a string.
     ase_md_kwargs : dict | None = None
-        Options except for temperature and pressure to pass into the ASE MD function
+        Options except for temperature and pressure to pass into the ASE
+        .MolecularDynamics function
     calculator_kwargs : dict
         kwargs to pass to the ASE calculator class
     traj_file : str | Path | None = None
@@ -209,7 +211,7 @@ class AseMDMaker(Maker):
     def _get_ensemble_defaults(self) -> None:
         """Update ASE MD kwargs with defaults consistent with VASP MD."""
         self.ase_md_kwargs = self.ase_md_kwargs or {}
-        self.dynamics = self.dynamics or _preset_dynamics_defaults[self.ensemble]
+        self.dynamics = self.dynamics or DEFAULT_DYNAMICS[self.ensemble].value
 
         if self.ensemble == "nve":
             self.ase_md_kwargs.pop("temperature", None)
@@ -231,7 +233,7 @@ class AseMDMaker(Maker):
     @ase_job
     def make(
         self,
-        ionic_configuration: Structure | Molecule,
+        mol_or_struct: Molecule | Structure,
         prev_dir: str | Path | None = None,
     ) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
         """
@@ -239,8 +241,8 @@ class AseMDMaker(Maker):
 
         Parameters
         ----------
-        ionic_configuration: .Structure or .Molecule
-            pymatgen structure or molecule
+        mol_or_struct: .Molecule or .Structure
+            pymatgen molecule or structure
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
             added to match the method signature of other makers.
@@ -249,16 +251,16 @@ class AseMDMaker(Maker):
 
         return AseTaskDoc.from_ase_compatible_result(
             getattr(self.calculator, "name", self.calculator.__class__),
-            self._make(ionic_configuration, prev_dir=prev_dir),
+            self.run_ase(mol_or_struct, prev_dir=prev_dir),
             steps=self.n_steps,
             relax_kwargs=None,
             optimizer_kwargs=None,
             **self.task_document_kwargs,
         ).to_meta_task_doc()
 
-    def _make(
+    def run_ase(
         self,
-        ionic_configuration: Structure | Molecule,
+        mol_or_struct: Molecule | Structure,
         prev_dir: str | Path | None = None,
     ) -> AseResult:
         """
@@ -269,8 +271,8 @@ class AseMDMaker(Maker):
 
         Parameters
         ----------
-        ionic_configuration: .Structure or .Molecule
-            pymatgen structure or molecule
+        mol_or_struct: .Molecule or .Structure
+            pymatgen molecule or structure
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
             added to match the method signature of other makers.
@@ -279,14 +281,14 @@ class AseMDMaker(Maker):
         self._get_ensemble_defaults()
 
         if self.time_step is None:
-            # If a ionic_configuration contains an isotope of hydrogen,
+            # If a mol_or_struct contains an isotope of hydrogen,
             # set default `time_step` to 0.5 fs, and 2 fs otherwise.
             has_h_isotope = any(
-                element.Z == 1 for element in ionic_configuration.composition
+                element.Z == 1 for element in mol_or_struct.composition
             )
             self.time_step = 0.5 if has_h_isotope else 2.0
 
-        initial_velocities = ionic_configuration.site_properties.get("velocities")
+        initial_velocities = mol_or_struct.site_properties.get("velocities")
 
         if isinstance(self.dynamics, str):
             # Use known dynamics if `self.dynamics` is a str
@@ -298,16 +300,17 @@ class AseMDMaker(Maker):
                     " ".join(_valid_dynamics[self.ensemble])
                 )
 
-            md_func = _preset_dynamics[f"{self.ensemble}_{self.dynamics}"]
+            _dyn_mod_path = DYNAMICS_PRESETS[f"{self.ensemble}_{self.dynamics.replace('-','_')}"].value.split(".")
+            dynamics = getattr(import_module(".".join(_dyn_mod_path[:-1])),_dyn_mod_path[-1])
 
         elif issubclass(self.dynamics, MolecularDynamics):
             # Allow user to explicitly run ASE Dynamics class
-            md_func = self.dynamics
+            dynamics = self.dynamics
 
-        atoms = ionic_configuration.to_ase_atoms()
+        atoms = mol_or_struct.to_ase_atoms()
 
-        if md_func is NPT:
-            # Note that until md_func is instantiated, isinstance(md_func,NPT) is False
+        if dynamics is NPT:
+            # Note that until dynamics is instantiated, isinstance(dynamics,NPT) is False
             # ASE NPT implementation requires upper triangular cell
             schur_decomp, _ = schur(atoms.get_cell(complete=True), output="complex")
             atoms.set_cell(schur_decomp.real, scale_atoms=True)
@@ -329,7 +332,7 @@ class AseMDMaker(Maker):
 
         md_observer = TrajectoryObserver(atoms, store_md_outputs=True)
 
-        md_runner = md_func(
+        md_runner = dynamics(
             atoms=atoms, timestep=self.time_step * units.fs, **self.ase_md_kwargs
         )
 
@@ -350,15 +353,15 @@ class AseMDMaker(Maker):
         if self.traj_file is not None:
             md_observer.save(filename=self.traj_file, fmt=self.traj_file_fmt)
 
-        ionic_configuration = AseAtomsAdaptor.get_structure(
+        mol_or_struct = AseAtomsAdaptor.get_structure(
             atoms,
-            cls=Structure if isinstance(ionic_configuration, Structure) else Molecule,
+            cls=Structure if isinstance(mol_or_struct, Structure) else Molecule,
         )
 
         self.task_document_kwargs = self.task_document_kwargs or {}
 
         return AseResult(
-            final_ionic_config=ionic_configuration,
+            final_mol_or_struct=mol_or_struct,
             trajectory=md_observer.to_pymatgen_trajectory(filename=None),
             dir_name=os.getcwd(),
         )

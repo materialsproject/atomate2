@@ -125,7 +125,7 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
                 added to match the method signature of other makers.
         """
         with revert_default_dtype():
-            ase_result = self._make(structure, prev_dir=prev_dir)
+            ase_result = self.run_ase(structure, prev_dir=prev_dir)
         self.task_document_kwargs.update({"relax_cell": self.relax_cell})
 
         return ForceFieldTaskDocument.from_ase_compatible_result(

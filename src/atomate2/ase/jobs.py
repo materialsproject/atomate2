@@ -106,7 +106,7 @@ class AseRelaxMaker(Maker):
     @ase_job
     def make(
         self,
-        ionic_configuration: Structure | Molecule,
+        mol_or_struct: Molecule | Structure,
         prev_dir: str | Path | None = None,
     ) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
         """
@@ -114,8 +114,8 @@ class AseRelaxMaker(Maker):
 
         Parameters
         ----------
-        ionic_configuration: .Structure or .Molecule
-            pymatgen structure or molecule
+        mol_or_struct: .Molecule or .Structure
+            pymatgen molecule or structure
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
@@ -124,12 +124,12 @@ class AseRelaxMaker(Maker):
         --------
 
         """
-        if isinstance(ionic_configuration, Structure):
+        if isinstance(mol_or_struct, Structure):
             self.task_document_kwargs.update({"relax_cell": self.relax_cell})
 
         return AseTaskDoc.from_ase_compatible_result(
             getattr(self.calculator, "name", self.calculator.__class__),
-            self._make(ionic_configuration, prev_dir=prev_dir),
+            self.run_ase(mol_or_struct, prev_dir=prev_dir),
             self.steps,
             relax_kwargs=self.relax_kwargs,
             optimizer_kwargs=self.optimizer_kwargs,
@@ -138,9 +138,9 @@ class AseRelaxMaker(Maker):
             **self.task_document_kwargs,
         ).to_meta_task_doc()
 
-    def _make(
+    def run_ase(
         self,
-        ionic_configuration: Structure | Molecule,
+        mol_or_struct: Structure | Molecule,
         prev_dir: str | Path | None = None,
     ) -> AseResult:
         """
@@ -151,8 +151,8 @@ class AseRelaxMaker(Maker):
 
         Parameters
         ----------
-        ionic_configuration: .Structure or .Molecule
-            pymatgen structure or molecule.
+        mol_or_struct: .Molecule or .Structure
+            pymatgen molecule or structure
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
@@ -170,7 +170,7 @@ class AseRelaxMaker(Maker):
             symprec=self.symprec,
             **self.optimizer_kwargs,
         )
-        return relaxer.relax(ionic_configuration, steps=self.steps, **self.relax_kwargs)
+        return relaxer.relax(mol_or_struct, steps=self.steps, **self.relax_kwargs)
 
     @property
     def calculator(self) -> Calculator:

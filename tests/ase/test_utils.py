@@ -114,7 +114,7 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
         return
 
     assert {
-        key: getattr(relax_output["final_ionic_config"].lattice, key)
+        key: getattr(relax_output["final_mol_or_struct"].lattice, key)
         for key in expected_lattice
     } == pytest.approx(expected_lattice)
 
@@ -145,7 +145,7 @@ def test_fix_symmetry(fix_symmetry):
     atoms_al.positions[0, 0] += 1e-7
     symmetry_init = check_symmetry(atoms_al, 1e-6)
     final_struct: Structure = relaxer.relax(atoms=atoms_al, steps=1)[
-        "final_ionic_config"
+        "final_mol_or_struct"
     ]
     symmetry_final = check_symmetry(final_struct.to_ase_atoms(), 1e-6)
     if fix_symmetry:

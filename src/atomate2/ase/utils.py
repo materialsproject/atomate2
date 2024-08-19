@@ -347,7 +347,7 @@ class AseRelaxer:
         **kwargs,
     ) -> AseResult:
         """
-        Relax the structure.
+        Relax the molecule or structure.
 
         Parameters
         ----------
@@ -401,7 +401,7 @@ class AseRelaxer:
             for idx in range(len(struct))
         )
         return AseResult(
-            final_ionic_config=struct,
+            final_mol_or_struct=struct,
             trajectory=traj,
             is_force_converged=is_force_conv,
             energy_downhill=traj.frame_properties[-1]["energy"]

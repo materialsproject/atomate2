@@ -39,7 +39,7 @@ class AseResult(dict):
 
     def __init__(self, **kwargs: Any) -> None:
         kwargs = {
-            "final_ionic_config": None,
+            "final_mol_or_struct": None,
             "trajectory": None,
             "is_force_converged": None,
             "energy_downhill": None,
@@ -58,8 +58,8 @@ class AseObject(ValueEnum):
 class AseBaseModel(BaseModel):
     """Base document class for ASE input and output."""
 
-    ionic_configuration: Optional[Union[Structure, Molecule]] = Field(
-        None, description="The ionic configuration at this step."
+    mol_or_struct: Optional[Union[Structure, Molecule]] = Field(
+        None, description="The molecule or structure at this step."
     )
     structure: Optional[Structure] = Field(
         None, description="The structure at this step."
@@ -68,10 +68,10 @@ class AseBaseModel(BaseModel):
 
     def model_post_init(self, __context: Any) -> None:
         """Establish alias to structure and molecule fields."""
-        if self.structure is None and isinstance(self.ionic_configuration, Structure):
-            self.structure = self.ionic_configuration
-        elif self.molecule is None and isinstance(self.ionic_configuration, Molecule):
-            self.molecule = self.ionic_configuration
+        if self.structure is None and isinstance(self.mol_or_struct, Structure):
+            self.structure = self.mol_or_struct
+        elif self.molecule is None and isinstance(self.mol_or_struct, Molecule):
+            self.molecule = self.mol_or_struct
 
 
 class IonicStep(AseBaseModel):
@@ -94,14 +94,14 @@ class OutputDoc(AseBaseModel):
 
     energy_per_atom: float = Field(
         None,
-        description="Energy per atom of the final ionic configuration "
+        description="Energy per atom of the final molecule or structure "
         "in units of eV/atom.",
     )
 
     forces: Optional[list[Vector3D]] = Field(
         None,
         description=(
-            "The force on each atom in units of eV/A for the final ionic configuration."
+            "The force on each atom in units of eV/A for the final molecule or structure."
         ),
     )
 
@@ -131,7 +131,7 @@ class InputDoc(AseBaseModel):
         None,
         description=(
             "Whether to fix the symmetry of the atoms during relaxation. "
-            "Refines the symmetry of the initial ionic configuration."
+            "Refines the symmetry of the initial molecule or structure."
         ),
     )
     symprec: float = Field(
@@ -209,7 +209,7 @@ class AseStructureTaskDoc(StructureMetadata):
         task_document_kwargs.update(
             {k: getattr(ase_task_doc, k) for k in _task_doc_translation_keys}
         )
-        task_document_kwargs["structure"] = ase_task_doc.ionic_configuration
+        task_document_kwargs["structure"] = ase_task_doc.mol_or_struct
         return cls(**task_document_kwargs)
 
 
@@ -313,7 +313,7 @@ class AseTaskDoc(AseBaseModel):
             "forces",
             "magmoms",
             "stress",
-            "ionic_config",
+            "mol_or_struct",
         ),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         **task_document_kwargs,
@@ -358,10 +358,10 @@ class AseTaskDoc(AseBaseModel):
                     ]
                 )
 
-        input_config = trajectory[0]
+        input_mol_or_struct = trajectory[0]
 
         input_doc = InputDoc(
-            ionic_configuration=input_config,
+            mol_or_struct=input_mol_or_struct,
             fix_symmetry=fix_symmetry,
             symprec=symprec,
             steps=steps,
@@ -375,22 +375,22 @@ class AseTaskDoc(AseBaseModel):
             steps = 1
             n_steps = 1
 
-            if isinstance(input_config, Structure):
+            if isinstance(input_mol_or_struct, Structure):
                 traj_method = "from_structures"
-            elif isinstance(input_config, Molecule):
+            elif isinstance(input_mol_or_struct, Molecule):
                 traj_method = "from_molecules"
 
             trajectory = getattr(PmgTrajectory, traj_method)(
-                [input_config],
+                [input_mol_or_struct],
                 frame_properties=[trajectory.frame_properties[0]],
                 constant_lattice=False,
             )
-            output_config = input_config
+            output_mol_or_struct = input_mol_or_struct
         else:
-            output_config = result["final_ionic_config"]
+            output_mol_or_struct = result["final_mol_or_struct"]
 
         final_energy = trajectory.frame_properties[-1]["energy"]
-        final_energy_per_atom = final_energy / len(input_config)
+        final_energy_per_atom = final_energy / len(input_mol_or_struct)
         final_forces = trajectory.frame_properties[-1]["forces"]
         final_stress = trajectory.frame_properties[-1].get("stress")
 
@@ -403,8 +403,8 @@ class AseTaskDoc(AseBaseModel):
                 for key in ("energy", "forces", "stress")
             }
 
-            current_config = (
-                trajectory[idx] if "ionic_config" in ionic_step_data else None
+            current_mol_or_struct = (
+                trajectory[idx] if "mol_or_struct" in ionic_step_data else None
             )
 
             # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
@@ -418,7 +418,7 @@ class AseTaskDoc(AseBaseModel):
                 )
 
             ionic_step = IonicStep(
-                ionic_configuration=current_config,
+                mol_or_struct=current_mol_or_struct,
                 **_ionic_step_data,
             )
 
@@ -433,7 +433,7 @@ class AseTaskDoc(AseBaseModel):
             objects[AseObject.TRAJECTORY] = trajectory  # type: ignore[index]
 
         output_doc = OutputDoc(
-            ionic_configuration=output_config,
+            mol_or_struct=output_mol_or_struct,
             energy=final_energy,
             energy_per_atom=final_energy_per_atom,
             forces=final_forces,
@@ -443,7 +443,7 @@ class AseTaskDoc(AseBaseModel):
         )
 
         return cls(
-            ionic_configuration=output_config,
+            mol_or_struct=output_mol_or_struct,
             input=input_doc,
             output=output_doc,
             ase_calculator_name=ase_calculator_name,
@@ -461,19 +461,19 @@ class AseTaskDoc(AseBaseModel):
 
         Returns
         -------
-        AseStructureTaskDoc or AseMoleculeTaskDoc depending on ionic_configuration
+        AseStructureTaskDoc or AseMoleculeTaskDoc depending on mol_or_struct
         """
         kwargs = {k: getattr(self, k, None) for k in _task_doc_translation_keys}
-        if isinstance(self.ionic_configuration, Structure):
+        if isinstance(self.mol_or_struct, Structure):
             meta_class = AseStructureTaskDoc
             k = "structure"
             if relax_cell := getattr(self, "relax_cell", None):
                 kwargs.update({"relax_cell": relax_cell})
-        elif isinstance(self.ionic_configuration, Molecule):
+        elif isinstance(self.mol_or_struct, Molecule):
             meta_class = AseMoleculeTaskDoc
             k = "molecule"
         kwargs.update(
-            {k: self.ionic_configuration, f"meta_{k}": self.ionic_configuration}
+            {k: self.mol_or_struct, f"meta_{k}": self.mol_or_struct}
         )
 
         return getattr(meta_class, f"from_{k}")(**kwargs)
