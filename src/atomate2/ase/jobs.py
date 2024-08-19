@@ -127,7 +127,7 @@ class AseRelaxMaker(Maker):
         if isinstance(mol_or_struct, Structure):
             self.task_document_kwargs.update({"relax_cell": self.relax_cell})
 
-        return AseTaskDoc.from_ase_compatible_result(
+        return AseTaskDoc.to_mol_or_struct_metadata_doc(
             getattr(self.calculator, "name", self.calculator.__class__),
             self.run_ase(mol_or_struct, prev_dir=prev_dir),
             self.steps,
@@ -136,7 +136,7 @@ class AseRelaxMaker(Maker):
             fix_symmetry=self.fix_symmetry,
             symprec=self.symprec,
             **self.task_document_kwargs,
-        ).to_meta_task_doc()
+        )
 
     def run_ase(
         self,

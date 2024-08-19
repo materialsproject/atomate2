@@ -252,14 +252,14 @@ class AseMDMaker(Maker):
         """
         self.task_document_kwargs = self.task_document_kwargs or {}
 
-        return AseTaskDoc.from_ase_compatible_result(
+        return AseTaskDoc.to_mol_or_struct_metadata_doc(
             getattr(self.calculator, "name", self.calculator.__class__),
             self.run_ase(mol_or_struct, prev_dir=prev_dir),
             steps=self.n_steps,
             relax_kwargs=None,
             optimizer_kwargs=None,
             **self.task_document_kwargs,
-        ).to_meta_task_doc()
+        )
 
     def run_ase(
         self,

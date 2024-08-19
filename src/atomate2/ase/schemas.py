@@ -327,12 +327,12 @@ class AseTaskDoc(AseBaseModel):
             Name of the ASE calculator used.
         result : dict
             The output results from the task.
+        steps : int
+            Maximum number of ionic steps allowed during relaxation.
         fix_symmetry : bool
             Whether to fix the symmetry of the ions during relaxation.
         symprec : float
             Tolerance for symmetry finding in case of fix_symmetry.
-        steps : int
-            Maximum number of ionic steps allowed during relaxation.
         relax_kwargs : dict
             Keyword arguments that will get passed to :obj:`Relaxer.relax`.
         optimizer_kwargs : dict
@@ -456,23 +456,40 @@ class AseTaskDoc(AseBaseModel):
             **task_document_kwargs,
         )
 
-    def to_meta_task_doc(self) -> Union[AseStructureTaskDoc, AseMoleculeTaskDoc]:
+    @classmethod
+    def to_mol_or_struct_metadata_doc(
+        cls, ase_calculator_name: str, result: dict, steps: int, **task_document_kwargs
+    ) -> Union[AseStructureTaskDoc, AseMoleculeTaskDoc]:
         """
         Get structure and molecule specific ASE task docs.
 
+        Parameters
+        ----------
+        ase_calculator_name : str
+            Name of the ASE calculator used.
+        result : dict
+            The output results from the task.
+        steps : int
+            Maximum number of ionic steps allowed during relaxation.
+        task_document_kwargs : dict
+            Additional keyword args passed to :obj:`.AseTaskDoc()`.
+
         Returns
         -------
-        AseStructureTaskDoc or AseMoleculeTaskDoc depending on mol_or_struct
+        AseStructureTaskDoc or AseMoleculeTaskDoc depending on `self.mol_or_struct`
         """
-        kwargs = {k: getattr(self, k, None) for k in _task_doc_translation_keys}
-        if isinstance(self.mol_or_struct, Structure):
+        task_doc = cls.from_ase_compatible_result(
+            ase_calculator_name, result, steps, **task_document_kwargs
+        )
+        kwargs = {k: getattr(task_doc, k, None) for k in _task_doc_translation_keys}
+        if isinstance(task_doc.mol_or_struct, Structure):
             meta_class = AseStructureTaskDoc
             k = "structure"
-            if relax_cell := getattr(self, "relax_cell", None):
+            if relax_cell := getattr(task_doc, "relax_cell", None):
                 kwargs.update({"relax_cell": relax_cell})
-        elif isinstance(self.mol_or_struct, Molecule):
+        elif isinstance(task_doc.mol_or_struct, Molecule):
             meta_class = AseMoleculeTaskDoc
             k = "molecule"
-        kwargs.update({k: self.mol_or_struct, f"meta_{k}": self.mol_or_struct})
+        kwargs.update({k: task_doc.mol_or_struct, f"meta_{k}": task_doc.mol_or_struct})
 
         return getattr(meta_class, f"from_{k}")(**kwargs)
