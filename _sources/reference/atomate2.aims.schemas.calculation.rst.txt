@@ -1,0 +1,67 @@
+atomate2.aims.schemas.calculation
+=================================
+
+.. automodule:: atomate2.aims.schemas.calculation
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      ensure_stress_full
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      AimsObject
+      Calculation
+      CalculationOutput
+      STORE_VOLUMETRIC_DATA
+      TYPE_CHECKING
+      TaskState
+
+

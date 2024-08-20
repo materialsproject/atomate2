@@ -7,8 +7,6 @@ atomate2.common.jobs.utils
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -20,8 +18,6 @@ atomate2.common.jobs.utils
       structure_to_primitive
 
 
-
-   
 
 
 
@@ -46,13 +42,5 @@ atomate2.common.jobs.utils
       :nosignatures:
    
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

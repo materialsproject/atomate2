@@ -1,0 +1,46 @@
+atomate2.common.schemas.magnetism
+=================================
+
+.. automodule:: atomate2.common.schemas.magnetism
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MagneticOrderingInput
+      MagneticOrderingOutput
+      MagneticOrderingRelaxation
+      MagneticOrderingsDocument
+
+

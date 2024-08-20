@@ -1,0 +1,6 @@
+forcefield\_job
+===============
+
+.. currentmodule:: atomate2.forcefields.jobs
+
+.. autofunction:: forcefield_job

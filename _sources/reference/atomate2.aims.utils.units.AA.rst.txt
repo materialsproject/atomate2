@@ -1,0 +1,6 @@
+AA
+==
+
+.. currentmodule:: atomate2.aims.utils.units
+
+.. autodata:: AA

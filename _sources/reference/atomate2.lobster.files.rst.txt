@@ -7,8 +7,6 @@ atomate2.lobster.files
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -18,8 +16,6 @@ atomate2.lobster.files
       copy_lobster_files
 
 
-
-   
 
 
 
@@ -50,13 +46,5 @@ atomate2.lobster.files
       LOBSTEROUTPUT_FILES
       TYPE_CHECKING
       VASP_OUTPUT_FILES
-
-
-
-
-   
-   
-   
-
 
 

@@ -1,0 +1,8 @@
+TightConstVolRelaxMaker
+=======================
+
+.. currentmodule:: atomate2.vasp.jobs.core
+
+.. autoclass:: TightConstVolRelaxMaker
+   :show-inheritance:
+   :members:

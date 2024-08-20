@@ -1,0 +1,8 @@
+JobType
+=======
+
+.. currentmodule:: atomate2.qchem.run
+
+.. autoclass:: JobType
+   :show-inheritance:
+   :members:

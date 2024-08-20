@@ -1,0 +1,6 @@
+cleanup\_cp2k\_outputs
+======================
+
+.. currentmodule:: atomate2.cp2k.files
+
+.. autofunction:: cleanup_cp2k_outputs

@@ -1,0 +1,6 @@
+zpath
+=====
+
+.. currentmodule:: atomate2.lobster.schemas
+
+.. autofunction:: zpath

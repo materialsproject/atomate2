@@ -1,0 +1,8 @@
+FreqMaker
+=========
+
+.. currentmodule:: atomate2.qchem.jobs.core
+
+.. autoclass:: FreqMaker
+   :show-inheritance:
+   :members:

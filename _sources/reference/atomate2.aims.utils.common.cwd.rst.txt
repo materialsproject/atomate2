@@ -1,0 +1,6 @@
+cwd
+===
+
+.. currentmodule:: atomate2.aims.utils.common
+
+.. autofunction:: cwd

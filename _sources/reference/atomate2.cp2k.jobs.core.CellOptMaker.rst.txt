@@ -1,0 +1,8 @@
+CellOptMaker
+============
+
+.. currentmodule:: atomate2.cp2k.jobs.core
+
+.. autoclass:: CellOptMaker
+   :show-inheritance:
+   :members:

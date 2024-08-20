@@ -1,0 +1,30 @@
+atomate2.abinit.flows
+=====================
+
+.. automodule:: atomate2.abinit.flows
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   core

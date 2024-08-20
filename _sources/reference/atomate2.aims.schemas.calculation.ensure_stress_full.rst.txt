@@ -1,0 +1,6 @@
+ensure\_stress\_full
+====================
+
+.. currentmodule:: atomate2.aims.schemas.calculation
+
+.. autofunction:: ensure_stress_full

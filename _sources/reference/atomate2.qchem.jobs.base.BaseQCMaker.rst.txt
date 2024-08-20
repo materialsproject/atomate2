@@ -1,0 +1,8 @@
+BaseQCMaker
+===========
+
+.. currentmodule:: atomate2.qchem.jobs.base
+
+.. autoclass:: BaseQCMaker
+   :show-inheritance:
+   :members:

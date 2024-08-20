@@ -1,0 +1,8 @@
+NEPMDMaker
+==========
+
+.. currentmodule:: atomate2.forcefields.md
+
+.. autoclass:: NEPMDMaker
+   :show-inheritance:
+   :members:

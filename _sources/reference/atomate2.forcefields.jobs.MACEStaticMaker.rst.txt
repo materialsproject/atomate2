@@ -1,0 +1,8 @@
+MACEStaticMaker
+===============
+
+.. currentmodule:: atomate2.forcefields.jobs
+
+.. autoclass:: MACEStaticMaker
+   :show-inheritance:
+   :members:

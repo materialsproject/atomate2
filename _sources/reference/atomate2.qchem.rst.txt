@@ -1,0 +1,34 @@
+﻿atomate2.qchem
+==============
+
+.. automodule:: atomate2.qchem
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   drones
+   files
+   jobs
+   run
+   sets

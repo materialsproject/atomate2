@@ -7,11 +7,7 @@ atomate2.vasp.flows.phonons
 
 
 
-   
 
-
-
-   
 
 
 
@@ -37,13 +33,5 @@ atomate2.vasp.flows.phonons
    
       PhononMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

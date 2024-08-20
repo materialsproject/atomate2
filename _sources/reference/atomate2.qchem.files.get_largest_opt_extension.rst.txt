@@ -1,0 +1,6 @@
+get\_largest\_opt\_extension
+============================
+
+.. currentmodule:: atomate2.qchem.files
+
+.. autofunction:: get_largest_opt_extension

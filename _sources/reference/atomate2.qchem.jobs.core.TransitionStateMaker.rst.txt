@@ -1,0 +1,8 @@
+TransitionStateMaker
+====================
+
+.. currentmodule:: atomate2.qchem.jobs.core
+
+.. autoclass:: TransitionStateMaker
+   :show-inheritance:
+   :members:

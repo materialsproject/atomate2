@@ -7,11 +7,7 @@ atomate2.vasp.flows.mp
 
 
 
-   
 
-
-
-   
 
 
 
@@ -53,13 +49,5 @@ atomate2.vasp.flows.mp
       MPMetaGGADoubleRelaxStaticMaker
       MPVaspLobsterMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

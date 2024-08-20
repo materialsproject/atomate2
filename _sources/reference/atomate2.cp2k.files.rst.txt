@@ -1,0 +1,48 @@
+atomate2.cp2k.files
+===================
+
+.. automodule:: atomate2.cp2k.files
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      cleanup_cp2k_outputs
+      copy_cp2k_outputs
+      get_largest_relax_extension
+      write_cp2k_input_set
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+

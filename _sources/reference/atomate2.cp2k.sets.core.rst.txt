@@ -1,0 +1,65 @@
+atomate2.cp2k.sets.core
+=======================
+
+.. automodule:: atomate2.cp2k.sets.core
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      CellOptSetGenerator
+      HybridCellOptSetGenerator
+      HybridRelaxSetGenerator
+      HybridStaticSetGenerator
+      MDSetGenerator
+      NonSCFSetGenerator
+      RelaxSetGenerator
+      StaticSetGenerator
+      TYPE_CHECKING
+
+

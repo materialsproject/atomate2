@@ -7,11 +7,7 @@ atomate2.vasp.flows
 
 
 
-   
 
-
-
-   
 
 
 
@@ -19,13 +15,6 @@ atomate2.vasp.flows
    
    
    
-   
-   
-   
-
-
-
-
    
    
    
@@ -38,16 +27,16 @@ atomate2.vasp.flows
    :toctree:
    :recursive:
 
-   atomate2.vasp.flows.amset
-   atomate2.vasp.flows.core
-   atomate2.vasp.flows.defect
-   atomate2.vasp.flows.elastic
-   atomate2.vasp.flows.electrode
-   atomate2.vasp.flows.elph
-   atomate2.vasp.flows.eos
-   atomate2.vasp.flows.lobster
-   atomate2.vasp.flows.matpes
-   atomate2.vasp.flows.md
-   atomate2.vasp.flows.mp
-   atomate2.vasp.flows.phonons
-
+   amset
+   core
+   defect
+   elastic
+   electrode
+   elph
+   eos
+   gruneisen
+   lobster
+   matpes
+   md
+   mp
+   phonons

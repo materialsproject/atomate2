@@ -1,0 +1,6 @@
+updates
+=======
+
+.. currentmodule:: atomate2.vasp.sets.base
+
+.. autodata:: updates

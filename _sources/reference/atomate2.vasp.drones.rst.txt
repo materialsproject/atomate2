@@ -7,11 +7,7 @@ atomate2.vasp.drones
 
 
 
-   
 
-
-
-   
 
 
 
@@ -33,13 +29,5 @@ atomate2.vasp.drones
       :nosignatures:
    
       VaspDrone
-
-
-
-
-   
-   
-   
-
 
 

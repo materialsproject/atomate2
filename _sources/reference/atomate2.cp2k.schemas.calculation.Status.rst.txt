@@ -1,0 +1,8 @@
+Status
+======
+
+.. currentmodule:: atomate2.cp2k.schemas.calculation
+
+.. autoclass:: Status
+   :show-inheritance:
+   :members:

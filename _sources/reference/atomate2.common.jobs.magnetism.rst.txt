@@ -1,0 +1,46 @@
+atomate2.common.jobs.magnetism
+==============================
+
+.. automodule:: atomate2.common.jobs.magnetism
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      enumerate_magnetic_orderings
+      postprocess_orderings
+      run_ordering_calculations
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+

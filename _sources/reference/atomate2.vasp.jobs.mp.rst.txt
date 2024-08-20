@@ -7,11 +7,7 @@ atomate2.vasp.jobs.mp
 
 
 
-   
 
-
-
-   
 
 
 
@@ -53,13 +49,5 @@ atomate2.vasp.jobs.mp
       MPMetaGGAStaticMaker
       MPPreRelaxMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

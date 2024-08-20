@@ -1,0 +1,60 @@
+atomate2.cp2k.schemas.task
+==========================
+
+.. automodule:: atomate2.cp2k.schemas.task
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      AnalysisSummary
+      AtomicKind
+      AtomicKindSummary
+      InputSummary
+      OutputSummary
+      TaskDocument
+
+

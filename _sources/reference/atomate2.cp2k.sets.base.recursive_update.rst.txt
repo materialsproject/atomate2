@@ -1,0 +1,6 @@
+recursive\_update
+=================
+
+.. currentmodule:: atomate2.cp2k.sets.base
+
+.. autofunction:: recursive_update

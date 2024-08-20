@@ -1,0 +1,8 @@
+OptMaker
+========
+
+.. currentmodule:: atomate2.qchem.jobs.core
+
+.. autoclass:: OptMaker
+   :show-inheritance:
+   :members:

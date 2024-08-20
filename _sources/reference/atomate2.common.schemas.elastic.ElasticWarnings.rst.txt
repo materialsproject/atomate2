@@ -1,0 +1,8 @@
+ElasticWarnings
+===============
+
+.. currentmodule:: atomate2.common.schemas.elastic
+
+.. autoclass:: ElasticWarnings
+   :show-inheritance:
+   :members:

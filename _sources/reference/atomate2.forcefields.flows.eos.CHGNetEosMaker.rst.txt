@@ -1,0 +1,8 @@
+CHGNetEosMaker
+==============
+
+.. currentmodule:: atomate2.forcefields.flows.eos
+
+.. autoclass:: CHGNetEosMaker
+   :show-inheritance:
+   :members:

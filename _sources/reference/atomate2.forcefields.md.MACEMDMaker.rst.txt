@@ -1,0 +1,8 @@
+MACEMDMaker
+===========
+
+.. currentmodule:: atomate2.forcefields.md
+
+.. autoclass:: MACEMDMaker
+   :show-inheritance:
+   :members:

@@ -1,0 +1,51 @@
+atomate2.cp2k.sets.base
+=======================
+
+.. automodule:: atomate2.cp2k.sets.base
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      recursive_update
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      Cp2kAllElectronInputGenerator
+      Cp2kInputGenerator
+      Cp2kInputSet
+
+

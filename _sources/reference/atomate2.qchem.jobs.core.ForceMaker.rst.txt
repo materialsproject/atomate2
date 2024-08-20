@@ -1,0 +1,8 @@
+ForceMaker
+==========
+
+.. currentmodule:: atomate2.qchem.jobs.core
+
+.. autoclass:: ForceMaker
+   :show-inheritance:
+   :members:

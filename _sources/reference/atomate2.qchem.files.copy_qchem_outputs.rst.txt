@@ -1,0 +1,6 @@
+copy\_qchem\_outputs
+====================
+
+.. currentmodule:: atomate2.qchem.files
+
+.. autofunction:: copy_qchem_outputs

@@ -1,0 +1,32 @@
+atomate2.cp2k.schemas
+=====================
+
+.. automodule:: atomate2.cp2k.schemas
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   calc_types
+   calculation
+   task

@@ -1,0 +1,50 @@
+atomate2.cp2k.run
+=================
+
+.. automodule:: atomate2.cp2k.run
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      run_cp2k
+      should_stop_children
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      JobType
+      TYPE_CHECKING
+
+

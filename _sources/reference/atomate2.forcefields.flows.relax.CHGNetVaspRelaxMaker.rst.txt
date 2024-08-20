@@ -1,0 +1,8 @@
+CHGNetVaspRelaxMaker
+====================
+
+.. currentmodule:: atomate2.forcefields.flows.relax
+
+.. autoclass:: CHGNetVaspRelaxMaker
+   :show-inheritance:
+   :members:

@@ -7,11 +7,7 @@ atomate2.vasp.sets.matpes
 
 
 
-   
 
-
-
-   
 
 
 
@@ -23,8 +19,6 @@ atomate2.vasp.sets.matpes
    
    
       
-   
-   
    
    
    
@@ -43,13 +37,5 @@ atomate2.vasp.sets.matpes
       MatPesGGAStaticSetGenerator
       MatPesMetaGGAStaticSetGenerator
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

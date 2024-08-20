@@ -7,11 +7,7 @@ atomate2.common.flows
 
 
 
-   
 
-
-
-   
 
 
 
@@ -19,13 +15,6 @@ atomate2.common.flows
    
    
    
-   
-   
-   
-
-
-
-
    
    
    
@@ -38,9 +27,10 @@ atomate2.common.flows
    :toctree:
    :recursive:
 
-   atomate2.common.flows.defect
-   atomate2.common.flows.elastic
-   atomate2.common.flows.electrode
-   atomate2.common.flows.eos
-   atomate2.common.flows.phonons
-
+   defect
+   elastic
+   electrode
+   eos
+   gruneisen
+   magnetism
+   phonons

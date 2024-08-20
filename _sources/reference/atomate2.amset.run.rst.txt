@@ -7,8 +7,6 @@ atomate2.amset.run
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -21,27 +19,17 @@ atomate2.amset.run
 
 
 
-   
-
-
-
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-
-
 
 
    
    
    
-
+   
+   
+   
+   
+   
+   
+   
 
 

@@ -1,0 +1,30 @@
+atomate2.common.builders
+========================
+
+.. automodule:: atomate2.common.builders
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   magnetism

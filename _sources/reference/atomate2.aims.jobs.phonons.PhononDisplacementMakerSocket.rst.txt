@@ -1,0 +1,8 @@
+PhononDisplacementMakerSocket
+=============================
+
+.. currentmodule:: atomate2.aims.jobs.phonons
+
+.. autoclass:: PhononDisplacementMakerSocket
+   :show-inheritance:
+   :members:

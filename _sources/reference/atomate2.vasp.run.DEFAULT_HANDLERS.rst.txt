@@ -1,0 +1,6 @@
+DEFAULT\_HANDLERS
+=================
+
+.. currentmodule:: atomate2.vasp.run
+
+.. autodata:: DEFAULT_HANDLERS

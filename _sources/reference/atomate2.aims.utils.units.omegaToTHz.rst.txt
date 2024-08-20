@@ -1,0 +1,6 @@
+omegaToTHz
+==========
+
+.. currentmodule:: atomate2.aims.utils.units
+
+.. autodata:: omegaToTHz

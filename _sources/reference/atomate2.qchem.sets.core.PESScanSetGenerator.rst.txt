@@ -1,0 +1,8 @@
+PESScanSetGenerator
+===================
+
+.. currentmodule:: atomate2.qchem.sets.core
+
+.. autoclass:: PESScanSetGenerator
+   :show-inheritance:
+   :members:

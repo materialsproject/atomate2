@@ -1,0 +1,8 @@
+OptSetGenerator
+===============
+
+.. currentmodule:: atomate2.qchem.sets.core
+
+.. autoclass:: OptSetGenerator
+   :show-inheritance:
+   :members:

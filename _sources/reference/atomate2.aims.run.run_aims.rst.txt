@@ -1,0 +1,6 @@
+run\_aims
+=========
+
+.. currentmodule:: atomate2.aims.run
+
+.. autofunction:: run_aims

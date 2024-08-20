@@ -1,0 +1,46 @@
+atomate2.aims.files
+===================
+
+.. automodule:: atomate2.aims.files
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      cleanup_aims_outputs
+      copy_aims_outputs
+      write_aims_input_set
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+

@@ -1,0 +1,38 @@
+atomate2.common.builders.magnetism
+==================================
+
+.. automodule:: atomate2.common.builders.magnetism
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MagneticOrderingsBuilder
+      TYPE_CHECKING
+
+

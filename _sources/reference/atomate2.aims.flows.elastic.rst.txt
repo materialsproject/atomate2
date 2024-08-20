@@ -1,0 +1,37 @@
+atomate2.aims.flows.elastic
+===========================
+
+.. automodule:: atomate2.aims.flows.elastic
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      ElasticMaker
+      TYPE_CHECKING
+
+

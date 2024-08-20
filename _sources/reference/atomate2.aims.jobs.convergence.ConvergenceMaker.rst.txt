@@ -1,0 +1,8 @@
+ConvergenceMaker
+================
+
+.. currentmodule:: atomate2.aims.jobs.convergence
+
+.. autoclass:: ConvergenceMaker
+   :show-inheritance:
+   :members:

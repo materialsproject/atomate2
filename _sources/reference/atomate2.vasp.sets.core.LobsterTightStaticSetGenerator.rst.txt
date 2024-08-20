@@ -1,0 +1,8 @@
+LobsterTightStaticSetGenerator
+==============================
+
+.. currentmodule:: atomate2.vasp.sets.core
+
+.. autoclass:: LobsterTightStaticSetGenerator
+   :show-inheritance:
+   :members:

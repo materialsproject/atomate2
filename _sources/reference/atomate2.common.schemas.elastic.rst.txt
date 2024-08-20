@@ -7,14 +7,21 @@ atomate2.common.schemas.elastic
 
 
 
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
    
+      expand_strains
+
+
 
 
 
    
-
-
-
+      
+   
    
       
    
@@ -45,14 +52,7 @@ atomate2.common.schemas.elastic
       DerivedProperties
       ElasticDocument
       ElasticTensorDocument
+      ElasticWarnings
       FittingData
-
-
-
-
-   
-   
-   
-
 
 

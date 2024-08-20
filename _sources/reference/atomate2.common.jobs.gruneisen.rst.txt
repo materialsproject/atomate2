@@ -1,0 +1,46 @@
+atomate2.common.jobs.gruneisen
+==============================
+
+.. automodule:: atomate2.common.jobs.gruneisen
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      compute_gruneisen_param
+      run_phonon_jobs
+      shrink_expand_structure
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+

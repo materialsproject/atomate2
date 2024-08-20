@@ -1,0 +1,30 @@
+﻿atomate2.cli
+============
+
+.. automodule:: atomate2.cli
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   dev

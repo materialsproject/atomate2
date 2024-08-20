@@ -1,0 +1,8 @@
+QCInputSet
+==========
+
+.. currentmodule:: atomate2.qchem.sets.base
+
+.. autoclass:: QCInputSet
+   :show-inheritance:
+   :members:

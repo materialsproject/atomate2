@@ -7,11 +7,7 @@ atomate2.vasp.sets.base
 
 
 
-   
 
-
-
-   
 
 
 
@@ -22,24 +18,24 @@ atomate2.vasp.sets.base
       
    
    
+   
+   
+   
+   
+   
+   
+   
+   
       
    
    
+      
    
    
+      
    
    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
+      
    
 
 
@@ -51,14 +47,9 @@ atomate2.vasp.sets.base
    
       TYPE_CHECKING
       VaspInputGenerator
-      VaspInputSet
-
-
-
-
-   
-   
-   
-
+      g
+      k
+      updates
+      v
 
 

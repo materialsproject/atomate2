@@ -1,0 +1,8 @@
+ElasticMaker
+============
+
+.. currentmodule:: atomate2.aims.flows.elastic
+
+.. autoclass:: ElasticMaker
+   :show-inheritance:
+   :members:

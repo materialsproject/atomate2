@@ -1,0 +1,6 @@
+GruneisenParameterDocument
+==========================
+
+.. currentmodule:: atomate2.common.schemas.gruneisen
+
+.. autopydantic_model:: GruneisenParameterDocument

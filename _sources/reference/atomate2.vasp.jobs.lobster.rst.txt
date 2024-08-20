@@ -7,8 +7,6 @@ atomate2.vasp.jobs.lobster
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -21,8 +19,6 @@ atomate2.vasp.jobs.lobster
       update_user_incar_settings_maker
 
 
-
-   
 
 
 
@@ -52,13 +48,5 @@ atomate2.vasp.jobs.lobster
    
       LobsterStaticMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

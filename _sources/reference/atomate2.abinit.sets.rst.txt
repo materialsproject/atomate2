@@ -1,0 +1,31 @@
+atomate2.abinit.sets
+====================
+
+.. automodule:: atomate2.abinit.sets
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   base
+   core

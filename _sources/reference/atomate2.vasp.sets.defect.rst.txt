@@ -7,17 +7,10 @@ atomate2.vasp.sets.defect
 
 
 
-   
 
 
 
-   
 
-
-
-   
-      
-   
    
       
    
@@ -48,14 +41,5 @@ atomate2.vasp.sets.defect
       ChargeStateStaticSetGenerator
       HSEChargeStateRelaxSetGenerator
       HSEChargeStateStaticSetGenerator
-      TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

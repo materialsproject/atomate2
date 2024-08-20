@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.aims.utils.bands
+
+.. autodata:: TYPE_CHECKING

@@ -1,0 +1,44 @@
+atomate2.qchem.files
+====================
+
+.. automodule:: atomate2.qchem.files
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      copy_qchem_outputs
+      get_largest_opt_extension
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+

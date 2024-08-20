@@ -7,11 +7,7 @@ atomate2.vasp.flows.matpes
 
 
 
-   
 
-
-
-   
 
 
 
@@ -37,13 +33,5 @@ atomate2.vasp.flows.matpes
    
       MatPesStaticFlowMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

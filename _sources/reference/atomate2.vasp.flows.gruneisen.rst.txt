@@ -1,0 +1,33 @@
+atomate2.vasp.flows.gruneisen
+=============================
+
+.. automodule:: atomate2.vasp.flows.gruneisen
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      GruneisenMaker
+
+

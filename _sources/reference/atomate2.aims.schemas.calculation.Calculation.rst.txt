@@ -1,0 +1,6 @@
+Calculation
+===========
+
+.. currentmodule:: atomate2.aims.schemas.calculation
+
+.. autopydantic_model:: Calculation

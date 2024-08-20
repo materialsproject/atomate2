@@ -7,8 +7,6 @@ atomate2.utils.log
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -19,24 +17,14 @@ atomate2.utils.log
 
 
 
-   
-
-
-
-   
-   
-   
-   
-   
-   
-   
-
-
 
 
    
    
    
-
+   
+   
+   
+   
 
 

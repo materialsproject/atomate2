@@ -1,0 +1,8 @@
+ForceFieldRelaxMaker
+====================
+
+.. currentmodule:: atomate2.forcefields.jobs
+
+.. autoclass:: ForceFieldRelaxMaker
+   :show-inheritance:
+   :members:

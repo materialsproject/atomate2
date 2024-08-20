@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.cp2k.jobs.base
+
+.. autodata:: TYPE_CHECKING

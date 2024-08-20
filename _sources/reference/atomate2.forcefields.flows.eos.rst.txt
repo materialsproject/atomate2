@@ -1,0 +1,45 @@
+atomate2.forcefields.flows.eos
+==============================
+
+.. automodule:: atomate2.forcefields.flows.eos
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      CHGNetEosMaker
+      M3GNetEosMaker
+      MACEEosMaker
+      TYPE_CHECKING
+
+

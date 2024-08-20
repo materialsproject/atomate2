@@ -1,0 +1,37 @@
+﻿atomate2.abinit
+===============
+
+.. automodule:: atomate2.abinit
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   files
+   flows
+   jobs
+   powerups
+   run
+   schemas
+   sets
+   utils

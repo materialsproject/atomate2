@@ -1,0 +1,6 @@
+write\_aims\_input\_set
+=======================
+
+.. currentmodule:: atomate2.aims.files
+
+.. autofunction:: write_aims_input_set

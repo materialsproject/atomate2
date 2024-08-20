@@ -1,0 +1,8 @@
+MDSetGenerator
+==============
+
+.. currentmodule:: atomate2.cp2k.sets.core
+
+.. autoclass:: MDSetGenerator
+   :show-inheritance:
+   :members:

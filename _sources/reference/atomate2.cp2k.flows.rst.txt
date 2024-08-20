@@ -1,0 +1,30 @@
+atomate2.cp2k.flows
+===================
+
+.. automodule:: atomate2.cp2k.flows
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   core

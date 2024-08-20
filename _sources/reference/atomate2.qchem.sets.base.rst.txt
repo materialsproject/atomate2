@@ -1,0 +1,44 @@
+atomate2.qchem.sets.base
+========================
+
+.. automodule:: atomate2.qchem.sets.base
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      QCInputGenerator
+      QCInputSet
+      TYPE_CHECKING
+
+

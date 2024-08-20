@@ -7,11 +7,7 @@ atomate2.common.flows.phonons
 
 
 
-   
 
-
-
-   
 
 
 
@@ -41,13 +37,5 @@ atomate2.common.flows.phonons
       BasePhononMaker
       SUPPORTED_CODES
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

@@ -7,11 +7,7 @@ atomate2.common.flows.defect
 
 
 
-   
 
-
-
-   
 
 
 
@@ -45,13 +41,5 @@ atomate2.common.flows.defect
       DEFAULT_DISTORTIONS
       FormationEnergyMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

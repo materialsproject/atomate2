@@ -1,0 +1,8 @@
+AimsObject
+==========
+
+.. currentmodule:: atomate2.aims.schemas.calculation
+
+.. autoclass:: AimsObject
+   :show-inheritance:
+   :members:

@@ -1,0 +1,31 @@
+atomate2.abinit.jobs
+====================
+
+.. automodule:: atomate2.abinit.jobs
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   base
+   core

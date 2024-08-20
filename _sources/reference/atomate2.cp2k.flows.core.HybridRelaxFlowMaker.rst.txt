@@ -1,0 +1,8 @@
+HybridRelaxFlowMaker
+====================
+
+.. currentmodule:: atomate2.cp2k.flows.core
+
+.. autoclass:: HybridRelaxFlowMaker
+   :show-inheritance:
+   :members:

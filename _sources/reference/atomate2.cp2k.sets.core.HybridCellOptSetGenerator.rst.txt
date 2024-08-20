@@ -1,0 +1,8 @@
+HybridCellOptSetGenerator
+=========================
+
+.. currentmodule:: atomate2.cp2k.sets.core
+
+.. autoclass:: HybridCellOptSetGenerator
+   :show-inheritance:
+   :members:

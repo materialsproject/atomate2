@@ -1,0 +1,6 @@
+PARAMS\_JSON\_FILE\_NAME
+========================
+
+.. currentmodule:: atomate2.aims.utils.common
+
+.. autodata:: PARAMS_JSON_FILE_NAME

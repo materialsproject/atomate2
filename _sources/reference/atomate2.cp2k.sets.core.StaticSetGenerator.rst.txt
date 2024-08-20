@@ -1,0 +1,8 @@
+StaticSetGenerator
+==================
+
+.. currentmodule:: atomate2.cp2k.sets.core
+
+.. autoclass:: StaticSetGenerator
+   :show-inheritance:
+   :members:

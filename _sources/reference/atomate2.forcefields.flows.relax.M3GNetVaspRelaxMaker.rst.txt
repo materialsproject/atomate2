@@ -1,0 +1,8 @@
+M3GNetVaspRelaxMaker
+====================
+
+.. currentmodule:: atomate2.forcefields.flows.relax
+
+.. autoclass:: M3GNetVaspRelaxMaker
+   :show-inheritance:
+   :members:

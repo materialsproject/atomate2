@@ -7,11 +7,7 @@ atomate2.vasp.schemas
 
 
 
-   
 
-
-
-   
 
 
 
@@ -19,13 +15,6 @@ atomate2.vasp.schemas
    
    
    
-   
-   
-   
-
-
-
-
    
    
    
@@ -38,7 +27,6 @@ atomate2.vasp.schemas
    :toctree:
    :recursive:
 
-   atomate2.vasp.schemas.defect
-   atomate2.vasp.schemas.elph
-   atomate2.vasp.schemas.md
-
+   defect
+   elph
+   md

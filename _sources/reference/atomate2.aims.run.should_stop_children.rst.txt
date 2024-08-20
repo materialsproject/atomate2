@@ -1,0 +1,6 @@
+should\_stop\_children
+======================
+
+.. currentmodule:: atomate2.aims.run
+
+.. autofunction:: should_stop_children

@@ -1,0 +1,8 @@
+Relaxer
+=======
+
+.. currentmodule:: atomate2.forcefields.utils
+
+.. autoclass:: Relaxer
+   :show-inheritance:
+   :members:

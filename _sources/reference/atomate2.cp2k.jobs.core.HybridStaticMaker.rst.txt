@@ -1,0 +1,8 @@
+HybridStaticMaker
+=================
+
+.. currentmodule:: atomate2.cp2k.jobs.core
+
+.. autoclass:: HybridStaticMaker
+   :show-inheritance:
+   :members:

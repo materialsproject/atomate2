@@ -1,0 +1,6 @@
+add\_metadata\_to\_flow
+=======================
+
+.. currentmodule:: atomate2.cp2k.powerups
+
+.. autofunction:: add_metadata_to_flow

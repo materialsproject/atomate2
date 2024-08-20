@@ -1,0 +1,61 @@
+atomate2.aims.utils.units
+=========================
+
+.. automodule:: atomate2.aims.utils.units
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      AA
+      AMU
+      EV
+      PI
+      THZ
+      ev_per_A3_to_kbar
+      omegaToTHz
+      pi
+
+

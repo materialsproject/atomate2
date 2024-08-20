@@ -1,0 +1,6 @@
+run\_ordering\_calculations
+===========================
+
+.. currentmodule:: atomate2.common.jobs.magnetism
+
+.. autofunction:: run_ordering_calculations

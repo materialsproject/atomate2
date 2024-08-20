@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.aims.run
+
+.. autodata:: TYPE_CHECKING

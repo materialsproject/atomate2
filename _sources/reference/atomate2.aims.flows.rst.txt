@@ -1,0 +1,34 @@
+atomate2.aims.flows
+===================
+
+.. automodule:: atomate2.aims.flows
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   core
+   elastic
+   eos
+   gw
+   phonons

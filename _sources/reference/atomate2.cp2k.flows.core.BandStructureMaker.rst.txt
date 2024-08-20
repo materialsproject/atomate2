@@ -1,0 +1,8 @@
+BandStructureMaker
+==================
+
+.. currentmodule:: atomate2.cp2k.flows.core
+
+.. autoclass:: BandStructureMaker
+   :show-inheritance:
+   :members:

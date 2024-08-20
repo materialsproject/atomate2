@@ -1,0 +1,59 @@
+atomate2.aims.utils.common
+==========================
+
+.. automodule:: atomate2.aims.utils.common
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      cwd
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      CONTROL_FILE_NAME
+      GEOMETRY_FILE_NAME
+      OUTPUT_FILE_NAME
+      PARAMS_JSON_FILE_NAME
+      TMPDIR_NAME
+
+

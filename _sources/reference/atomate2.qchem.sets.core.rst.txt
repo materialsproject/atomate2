@@ -1,0 +1,53 @@
+atomate2.qchem.sets.core
+========================
+
+.. automodule:: atomate2.qchem.sets.core
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      ForceSetGenerator
+      FreqSetGenerator
+      OptSetGenerator
+      PESScanSetGenerator
+      SinglePointSetGenerator
+      TransitionStateSetGenerator
+
+

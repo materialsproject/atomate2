@@ -1,0 +1,8 @@
+ForceSetGenerator
+=================
+
+.. currentmodule:: atomate2.qchem.sets.core
+
+.. autoclass:: ForceSetGenerator
+   :show-inheritance:
+   :members:

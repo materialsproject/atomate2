@@ -1,0 +1,8 @@
+BaseCp2kMaker
+=============
+
+.. currentmodule:: atomate2.cp2k.jobs.base
+
+.. autoclass:: BaseCp2kMaker
+   :show-inheritance:
+   :members:

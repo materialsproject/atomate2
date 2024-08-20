@@ -7,8 +7,6 @@ atomate2.utils.path
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -21,26 +19,16 @@ atomate2.utils.path
 
 
 
-   
-
-
-
-   
-   
-   
-   
-   
-   
-   
-   
-   
-
-
 
 
    
    
    
-
+   
+   
+   
+   
+   
+   
 
 

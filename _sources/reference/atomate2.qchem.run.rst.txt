@@ -1,0 +1,49 @@
+atomate2.qchem.run
+==================
+
+.. automodule:: atomate2.qchem.run
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      run_qchem
+      should_stop_children
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      JobType
+      TYPE_CHECKING
+
+

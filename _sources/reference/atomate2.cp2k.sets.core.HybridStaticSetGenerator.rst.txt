@@ -1,0 +1,8 @@
+HybridStaticSetGenerator
+========================
+
+.. currentmodule:: atomate2.cp2k.sets.core
+
+.. autoclass:: HybridStaticSetGenerator
+   :show-inheritance:
+   :members:

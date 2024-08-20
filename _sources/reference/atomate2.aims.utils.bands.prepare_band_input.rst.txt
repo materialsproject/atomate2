@@ -1,0 +1,6 @@
+prepare\_band\_input
+====================
+
+.. currentmodule:: atomate2.aims.utils.bands
+
+.. autofunction:: prepare_band_input

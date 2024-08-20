@@ -1,0 +1,41 @@
+atomate2.forcefields.flows.relax
+================================
+
+.. automodule:: atomate2.forcefields.flows.relax
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      CHGNetVaspRelaxMaker
+      M3GNetVaspRelaxMaker
+      TYPE_CHECKING
+
+

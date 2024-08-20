@@ -1,0 +1,6 @@
+OUTPUT\_FILE\_NAME
+==================
+
+.. currentmodule:: atomate2.aims.utils.common
+
+.. autodata:: OUTPUT_FILE_NAME

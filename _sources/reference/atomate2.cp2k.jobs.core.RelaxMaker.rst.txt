@@ -1,0 +1,8 @@
+RelaxMaker
+==========
+
+.. currentmodule:: atomate2.cp2k.jobs.core
+
+.. autoclass:: RelaxMaker
+   :show-inheritance:
+   :members:

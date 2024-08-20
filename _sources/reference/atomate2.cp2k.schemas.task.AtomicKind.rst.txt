@@ -1,0 +1,6 @@
+AtomicKind
+==========
+
+.. currentmodule:: atomate2.cp2k.schemas.task
+
+.. autopydantic_model:: AtomicKind

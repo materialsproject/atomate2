@@ -1,0 +1,8 @@
+ForceFieldMDMaker
+=================
+
+.. currentmodule:: atomate2.forcefields.md
+
+.. autoclass:: ForceFieldMDMaker
+   :show-inheritance:
+   :members:

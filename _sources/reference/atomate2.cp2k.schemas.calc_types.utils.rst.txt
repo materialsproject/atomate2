@@ -1,0 +1,34 @@
+atomate2.cp2k.schemas.calc\_types.utils
+=======================================
+
+.. automodule:: atomate2.cp2k.schemas.calc_types.utils
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      calc_type
+      run_type
+      task_type
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+

@@ -7,8 +7,6 @@ atomate2.common.utils
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -21,8 +19,6 @@ atomate2.common.utils
       parse_transformations
 
 
-
-   
 
 
 
@@ -48,13 +44,5 @@ atomate2.common.utils
       :nosignatures:
    
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

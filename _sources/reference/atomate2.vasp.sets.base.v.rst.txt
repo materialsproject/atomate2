@@ -1,0 +1,6 @@
+v
+=
+
+.. currentmodule:: atomate2.vasp.sets.base
+
+.. autodata:: v

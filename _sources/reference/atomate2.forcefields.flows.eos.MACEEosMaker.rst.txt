@@ -1,0 +1,8 @@
+MACEEosMaker
+============
+
+.. currentmodule:: atomate2.forcefields.flows.eos
+
+.. autoclass:: MACEEosMaker
+   :show-inheritance:
+   :members:

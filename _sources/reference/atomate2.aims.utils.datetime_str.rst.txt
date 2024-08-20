@@ -1,0 +1,6 @@
+datetime\_str
+=============
+
+.. currentmodule:: atomate2.aims.utils
+
+.. autofunction:: datetime_str

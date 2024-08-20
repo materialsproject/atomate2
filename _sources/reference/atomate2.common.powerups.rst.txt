@@ -7,8 +7,6 @@ atomate2.common.powerups
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -19,8 +17,6 @@ atomate2.common.powerups
       update_custodian_handlers
 
 
-
-   
 
 
 
@@ -44,13 +40,5 @@ atomate2.common.powerups
       :nosignatures:
    
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

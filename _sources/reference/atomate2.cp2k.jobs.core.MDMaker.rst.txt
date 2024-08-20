@@ -1,0 +1,8 @@
+MDMaker
+=======
+
+.. currentmodule:: atomate2.cp2k.jobs.core
+
+.. autoclass:: MDMaker
+   :show-inheritance:
+   :members:

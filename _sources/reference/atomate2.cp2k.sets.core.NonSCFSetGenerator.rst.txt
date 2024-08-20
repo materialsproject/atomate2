@@ -1,0 +1,8 @@
+NonSCFSetGenerator
+==================
+
+.. currentmodule:: atomate2.cp2k.sets.core
+
+.. autoclass:: NonSCFSetGenerator
+   :show-inheritance:
+   :members:

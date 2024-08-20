@@ -1,0 +1,8 @@
+RelaxSetGenerator
+=================
+
+.. currentmodule:: atomate2.cp2k.sets.core
+
+.. autoclass:: RelaxSetGenerator
+   :show-inheritance:
+   :members:

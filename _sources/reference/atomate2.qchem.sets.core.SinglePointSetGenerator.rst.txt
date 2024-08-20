@@ -1,0 +1,8 @@
+SinglePointSetGenerator
+=======================
+
+.. currentmodule:: atomate2.qchem.sets.core
+
+.. autoclass:: SinglePointSetGenerator
+   :show-inheritance:
+   :members:

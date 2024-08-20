@@ -7,11 +7,7 @@ atomate2.vasp.flows.elph
 
 
 
-   
 
-
-
-   
 
 
 
@@ -49,13 +45,5 @@ atomate2.vasp.flows.elph
       ElectronPhononMaker
       HSEElectronPhononMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

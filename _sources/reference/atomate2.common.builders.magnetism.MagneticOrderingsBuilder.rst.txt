@@ -1,0 +1,8 @@
+MagneticOrderingsBuilder
+========================
+
+.. currentmodule:: atomate2.common.builders.magnetism
+
+.. autoclass:: MagneticOrderingsBuilder
+   :show-inheritance:
+   :members:

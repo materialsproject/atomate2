@@ -1,0 +1,8 @@
+BaseGruneisenMaker
+==================
+
+.. currentmodule:: atomate2.common.flows.gruneisen
+
+.. autoclass:: BaseGruneisenMaker
+   :show-inheritance:
+   :members:

@@ -1,0 +1,6 @@
+ForceFieldTaskDocument
+======================
+
+.. currentmodule:: atomate2.forcefields.schemas
+
+.. autopydantic_model:: ForceFieldTaskDocument

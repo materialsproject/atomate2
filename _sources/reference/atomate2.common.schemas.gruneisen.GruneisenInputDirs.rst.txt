@@ -1,0 +1,6 @@
+GruneisenInputDirs
+==================
+
+.. currentmodule:: atomate2.common.schemas.gruneisen
+
+.. autopydantic_model:: GruneisenInputDirs

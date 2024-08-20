@@ -1,0 +1,6 @@
+OutputDoc
+=========
+
+.. currentmodule:: atomate2.forcefields.schemas
+
+.. autopydantic_model:: OutputDoc

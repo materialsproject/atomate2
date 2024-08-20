@@ -1,0 +1,6 @@
+compute\_gruneisen\_param
+=========================
+
+.. currentmodule:: atomate2.common.jobs.gruneisen
+
+.. autofunction:: compute_gruneisen_param

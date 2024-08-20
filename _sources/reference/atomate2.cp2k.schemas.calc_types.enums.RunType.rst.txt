@@ -1,0 +1,8 @@
+RunType
+=======
+
+.. currentmodule:: atomate2.cp2k.schemas.calc_types.enums
+
+.. autoclass:: RunType
+   :show-inheritance:
+   :members:

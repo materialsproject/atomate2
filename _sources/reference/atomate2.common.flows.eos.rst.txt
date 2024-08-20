@@ -7,11 +7,7 @@ atomate2.common.flows.eos
 
 
 
-   
 
-
-
-   
 
 
 
@@ -37,13 +33,5 @@ atomate2.common.flows.eos
    
       CommonEosMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

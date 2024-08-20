@@ -1,0 +1,6 @@
+TMPDIR\_NAME
+============
+
+.. currentmodule:: atomate2.aims.utils.common
+
+.. autodata:: TMPDIR_NAME

@@ -1,0 +1,6 @@
+write\_cp2k\_input\_set
+=======================
+
+.. currentmodule:: atomate2.cp2k.files
+
+.. autofunction:: write_cp2k_input_set

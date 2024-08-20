@@ -1,0 +1,33 @@
+atomate2.aims.flows.gw
+======================
+
+.. automodule:: atomate2.aims.flows.gw
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      GWConvergenceMaker
+
+

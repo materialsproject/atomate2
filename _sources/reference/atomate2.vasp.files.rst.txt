@@ -7,8 +7,6 @@ atomate2.vasp.files
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -20,8 +18,6 @@ atomate2.vasp.files
       write_vasp_input_set
 
 
-
-   
 
 
 
@@ -46,13 +42,5 @@ atomate2.vasp.files
       :nosignatures:
    
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

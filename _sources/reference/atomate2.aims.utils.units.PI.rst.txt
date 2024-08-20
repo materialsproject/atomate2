@@ -1,0 +1,6 @@
+PI
+==
+
+.. currentmodule:: atomate2.aims.utils.units
+
+.. autodata:: PI

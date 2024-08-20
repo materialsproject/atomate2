@@ -1,0 +1,6 @@
+cleanup\_aims\_outputs
+======================
+
+.. currentmodule:: atomate2.aims.files
+
+.. autofunction:: cleanup_aims_outputs

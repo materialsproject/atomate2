@@ -1,0 +1,6 @@
+CONTROL\_FILE\_NAME
+===================
+
+.. currentmodule:: atomate2.aims.utils.common
+
+.. autodata:: CONTROL_FILE_NAME

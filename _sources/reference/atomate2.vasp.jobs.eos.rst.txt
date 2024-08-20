@@ -7,14 +7,18 @@ atomate2.vasp.jobs.eos
 
 
 
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
    
+      copy_wavecar
 
 
 
-   
 
 
-
    
       
    
@@ -41,6 +45,7 @@ atomate2.vasp.jobs.eos
    
    
       
+   
    
    
    
@@ -65,13 +70,5 @@ atomate2.vasp.jobs.eos
       MPMetaGGAEosRelaxMaker
       MPMetaGGAEosStaticMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

@@ -1,0 +1,46 @@
+atomate2.qchem.jobs.base
+========================
+
+.. automodule:: atomate2.qchem.jobs.base
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      qchem_job
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      BaseQCMaker
+      TYPE_CHECKING
+
+

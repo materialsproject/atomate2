@@ -1,0 +1,6 @@
+ase\_calculator
+===============
+
+.. currentmodule:: atomate2.forcefields.utils
+
+.. autofunction:: ase_calculator

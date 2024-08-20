@@ -1,0 +1,8 @@
+SevenNetStaticMaker
+===================
+
+.. currentmodule:: atomate2.forcefields.jobs
+
+.. autoclass:: SevenNetStaticMaker
+   :show-inheritance:
+   :members:

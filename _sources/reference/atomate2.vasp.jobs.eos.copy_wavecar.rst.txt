@@ -1,0 +1,6 @@
+copy\_wavecar
+=============
+
+.. currentmodule:: atomate2.vasp.jobs.eos
+
+.. autofunction:: copy_wavecar

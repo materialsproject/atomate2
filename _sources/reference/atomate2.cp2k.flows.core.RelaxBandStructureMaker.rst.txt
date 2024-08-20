@@ -1,0 +1,8 @@
+RelaxBandStructureMaker
+=======================
+
+.. currentmodule:: atomate2.cp2k.flows.core
+
+.. autoclass:: RelaxBandStructureMaker
+   :show-inheritance:
+   :members:

@@ -7,11 +7,7 @@ atomate2.vasp.sets.eos
 
 
 
-   
 
-
-
-   
 
 
 
@@ -65,13 +61,5 @@ atomate2.vasp.sets.eos
       MPMetaGGAEosRelaxSetGenerator
       MPMetaGGAEosStaticSetGenerator
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

@@ -7,11 +7,7 @@ atomate2.common.analysis
 
 
 
-   
 
-
-
-   
 
 
 
@@ -19,13 +15,6 @@ atomate2.common.analysis
    
    
    
-   
-   
-   
-
-
-
-
    
    
    
@@ -38,5 +27,4 @@ atomate2.common.analysis
    :toctree:
    :recursive:
 
-   atomate2.common.analysis.elastic
-
+   elastic

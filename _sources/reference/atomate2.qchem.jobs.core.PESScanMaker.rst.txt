@@ -1,0 +1,8 @@
+PESScanMaker
+============
+
+.. currentmodule:: atomate2.qchem.jobs.core
+
+.. autoclass:: PESScanMaker
+   :show-inheritance:
+   :members:

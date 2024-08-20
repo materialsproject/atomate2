@@ -1,0 +1,8 @@
+HybridStaticFlowMaker
+=====================
+
+.. currentmodule:: atomate2.cp2k.flows.core
+
+.. autoclass:: HybridStaticFlowMaker
+   :show-inheritance:
+   :members:

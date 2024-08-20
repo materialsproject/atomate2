@@ -1,0 +1,33 @@
+atomate2.forcefields.flows.phonons
+==================================
+
+.. automodule:: atomate2.forcefields.flows.phonons
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      PhononMaker
+
+

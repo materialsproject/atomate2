@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.common.builders.magnetism
+
+.. autodata:: TYPE_CHECKING

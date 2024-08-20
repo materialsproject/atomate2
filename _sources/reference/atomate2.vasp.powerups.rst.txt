@@ -7,8 +7,6 @@ atomate2.vasp.powerups
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -26,31 +24,21 @@ atomate2.vasp.powerups
 
 
 
-   
-
-
-
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-
-
 
 
    
    
    
-
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
 
 

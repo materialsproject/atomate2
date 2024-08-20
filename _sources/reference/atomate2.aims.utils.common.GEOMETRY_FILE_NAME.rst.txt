@@ -1,0 +1,6 @@
+GEOMETRY\_FILE\_NAME
+====================
+
+.. currentmodule:: atomate2.aims.utils.common
+
+.. autodata:: GEOMETRY_FILE_NAME

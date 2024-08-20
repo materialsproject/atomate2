@@ -1,0 +1,8 @@
+HybridRelaxSetGenerator
+=======================
+
+.. currentmodule:: atomate2.cp2k.sets.core
+
+.. autoclass:: HybridRelaxSetGenerator
+   :show-inheritance:
+   :members:

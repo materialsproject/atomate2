@@ -1,0 +1,6 @@
+expand\_strains
+===============
+
+.. currentmodule:: atomate2.common.schemas.elastic
+
+.. autofunction:: expand_strains

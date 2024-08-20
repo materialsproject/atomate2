@@ -1,0 +1,31 @@
+atomate2.aims.schemas
+=====================
+
+.. automodule:: atomate2.aims.schemas
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   calculation
+   task

@@ -1,0 +1,48 @@
+atomate2.cp2k.jobs.base
+=======================
+
+.. automodule:: atomate2.cp2k.jobs.base
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      cp2k_job
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      BaseCp2kMaker
+      TYPE_CHECKING
+
+

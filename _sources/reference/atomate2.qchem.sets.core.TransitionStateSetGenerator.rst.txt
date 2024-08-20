@@ -1,0 +1,8 @@
+TransitionStateSetGenerator
+===========================
+
+.. currentmodule:: atomate2.qchem.sets.core
+
+.. autoclass:: TransitionStateSetGenerator
+   :show-inheritance:
+   :members:

@@ -1,0 +1,6 @@
+MagneticOrderingInput
+=====================
+
+.. currentmodule:: atomate2.common.schemas.magnetism
+
+.. autopydantic_model:: MagneticOrderingInput

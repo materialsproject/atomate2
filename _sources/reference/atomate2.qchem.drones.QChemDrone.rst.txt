@@ -1,0 +1,8 @@
+QChemDrone
+==========
+
+.. currentmodule:: atomate2.qchem.drones
+
+.. autoclass:: QChemDrone
+   :show-inheritance:
+   :members:

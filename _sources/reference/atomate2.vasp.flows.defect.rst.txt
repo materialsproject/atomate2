@@ -7,11 +7,7 @@ atomate2.vasp.flows.defect
 
 
 
-   
 
-
-
-   
 
 
 
@@ -57,13 +53,5 @@ atomate2.vasp.flows.defect
       GRID_KEYS
       NonRadiativeMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

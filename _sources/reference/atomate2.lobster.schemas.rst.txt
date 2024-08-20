@@ -7,8 +7,6 @@ atomate2.lobster.schemas
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -16,13 +14,12 @@ atomate2.lobster.schemas
       :nosignatures:
    
       read_saved_json
+      zpath
 
 
 
-   
 
 
-
    
       
    
@@ -76,6 +73,7 @@ atomate2.lobster.schemas
    
    
       
+   
    
    
    
@@ -114,13 +112,5 @@ atomate2.lobster.schemas
       SiteInfo
       Sites
       StrongestBonds
-
-
-
-
-   
-   
-   
-
 
 

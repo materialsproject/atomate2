@@ -7,8 +7,6 @@ atomate2.lobster.run
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -18,8 +16,6 @@ atomate2.lobster.run
       run_lobster
 
 
-
-   
 
 
 
@@ -48,13 +44,5 @@ atomate2.lobster.run
    
       JobType
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

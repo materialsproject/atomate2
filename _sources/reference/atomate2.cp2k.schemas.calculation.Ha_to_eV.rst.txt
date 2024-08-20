@@ -1,0 +1,6 @@
+Ha\_to\_eV
+==========
+
+.. currentmodule:: atomate2.cp2k.schemas.calculation
+
+.. autodata:: Ha_to_eV

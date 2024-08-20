@@ -1,0 +1,6 @@
+run\_phonon\_jobs
+=================
+
+.. currentmodule:: atomate2.common.jobs.gruneisen
+
+.. autofunction:: run_phonon_jobs

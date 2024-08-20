@@ -1,0 +1,8 @@
+NEPRelaxMaker
+=============
+
+.. currentmodule:: atomate2.forcefields.jobs
+
+.. autoclass:: NEPRelaxMaker
+   :show-inheritance:
+   :members:

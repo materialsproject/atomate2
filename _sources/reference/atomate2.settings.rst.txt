@@ -7,16 +7,13 @@
 
 
 
-   
 
-
-
-   
 
 
 
    
       
+   
    
    
    
@@ -34,13 +31,5 @@
       :nosignatures:
    
       Atomate2Settings
-
-
-
-
-   
-   
-   
-
 
 

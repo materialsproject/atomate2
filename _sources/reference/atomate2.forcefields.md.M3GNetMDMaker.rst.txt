@@ -1,0 +1,8 @@
+M3GNetMDMaker
+=============
+
+.. currentmodule:: atomate2.forcefields.md
+
+.. autoclass:: M3GNetMDMaker
+   :show-inheritance:
+   :members:

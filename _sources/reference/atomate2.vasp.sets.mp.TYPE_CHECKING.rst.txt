@@ -1,6 +1,0 @@
-TYPE\_CHECKING
-==============
-
-.. currentmodule:: atomate2.vasp.sets.mp
-
-.. autodata:: TYPE_CHECKING

@@ -7,8 +7,6 @@ atomate2.common.jobs.defect
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -25,8 +23,6 @@ atomate2.common.jobs.defect
       spawn_energy_curve_calcs
 
 
-
-   
 
 
 
@@ -60,13 +56,5 @@ atomate2.common.jobs.defect
    
       CCDInput
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

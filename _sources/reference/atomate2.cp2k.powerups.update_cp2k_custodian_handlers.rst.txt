@@ -1,0 +1,6 @@
+update\_cp2k\_custodian\_handlers
+=================================
+
+.. currentmodule:: atomate2.cp2k.powerups
+
+.. autofunction:: update_cp2k_custodian_handlers

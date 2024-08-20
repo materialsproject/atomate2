@@ -1,0 +1,6 @@
+run\_qchem
+==========
+
+.. currentmodule:: atomate2.qchem.run
+
+.. autofunction:: run_qchem

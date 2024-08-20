@@ -1,0 +1,6 @@
+qchem\_job
+==========
+
+.. currentmodule:: atomate2.qchem.jobs.base
+
+.. autofunction:: qchem_job

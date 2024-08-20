@@ -1,0 +1,8 @@
+RelaxConstVolMaker
+==================
+
+.. currentmodule:: atomate2.vasp.jobs.core
+
+.. autoclass:: RelaxConstVolMaker
+   :show-inheritance:
+   :members:

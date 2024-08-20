@@ -1,0 +1,8 @@
+ForcefieldResult
+================
+
+.. currentmodule:: atomate2.forcefields.schemas
+
+.. autoclass:: ForcefieldResult
+   :show-inheritance:
+   :members:

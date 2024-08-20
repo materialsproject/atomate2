@@ -1,0 +1,31 @@
+atomate2.abinit.schemas
+=======================
+
+.. automodule:: atomate2.abinit.schemas
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   calculation
+   task

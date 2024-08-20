@@ -1,0 +1,6 @@
+cp2k\_job
+=========
+
+.. currentmodule:: atomate2.cp2k.jobs.base
+
+.. autofunction:: cp2k_job

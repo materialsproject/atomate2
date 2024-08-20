@@ -1,0 +1,8 @@
+CalcType
+========
+
+.. currentmodule:: atomate2.cp2k.schemas.calc_types.enums
+
+.. autoclass:: CalcType
+   :show-inheritance:
+   :members:

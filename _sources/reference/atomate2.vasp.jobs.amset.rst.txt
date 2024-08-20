@@ -7,8 +7,6 @@ atomate2.vasp.jobs.amset
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -21,8 +19,6 @@ atomate2.vasp.jobs.amset
       run_amset_deformations
 
 
-
-   
 
 
 
@@ -65,13 +61,5 @@ atomate2.vasp.jobs.amset
       HSEStaticDeformationMaker
       StaticDeformationMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

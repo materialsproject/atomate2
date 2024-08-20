@@ -1,0 +1,8 @@
+SinglePointMaker
+================
+
+.. currentmodule:: atomate2.qchem.jobs.core
+
+.. autoclass:: SinglePointMaker
+   :show-inheritance:
+   :members:

@@ -1,0 +1,6 @@
+shrink\_expand\_structure
+=========================
+
+.. currentmodule:: atomate2.common.jobs.gruneisen
+
+.. autofunction:: shrink_expand_structure

@@ -1,0 +1,6 @@
+enumerate\_magnetic\_orderings
+==============================
+
+.. currentmodule:: atomate2.common.jobs.magnetism
+
+.. autofunction:: enumerate_magnetic_orderings

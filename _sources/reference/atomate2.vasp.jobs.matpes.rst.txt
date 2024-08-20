@@ -7,11 +7,7 @@ atomate2.vasp.jobs.matpes
 
 
 
-   
 
-
-
-   
 
 
 
@@ -41,13 +37,5 @@ atomate2.vasp.jobs.matpes
       MatPesGGAStaticMaker
       MatPesMetaGGAStaticMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

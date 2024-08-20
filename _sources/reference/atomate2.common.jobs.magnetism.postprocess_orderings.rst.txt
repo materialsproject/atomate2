@@ -1,0 +1,6 @@
+postprocess\_orderings
+======================
+
+.. currentmodule:: atomate2.common.jobs.magnetism
+
+.. autofunction:: postprocess_orderings

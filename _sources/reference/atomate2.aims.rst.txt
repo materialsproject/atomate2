@@ -1,0 +1,35 @@
+﻿atomate2.aims
+=============
+
+.. automodule:: atomate2.aims
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   files
+   flows
+   jobs
+   run
+   schemas
+   utils

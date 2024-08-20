@@ -1,0 +1,8 @@
+CellOptSetGenerator
+===================
+
+.. currentmodule:: atomate2.cp2k.sets.core
+
+.. autoclass:: CellOptSetGenerator
+   :show-inheritance:
+   :members:

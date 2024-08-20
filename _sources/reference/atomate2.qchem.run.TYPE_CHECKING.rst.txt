@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.qchem.run
+
+.. autodata:: TYPE_CHECKING

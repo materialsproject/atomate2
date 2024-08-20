@@ -1,0 +1,6 @@
+run\_type
+=========
+
+.. currentmodule:: atomate2.cp2k.schemas.calc_types.utils
+
+.. autofunction:: run_type

@@ -7,11 +7,7 @@ atomate2.vasp.flows.amset
 
 
 
-   
 
-
-
-   
 
 
 
@@ -47,13 +43,5 @@ atomate2.vasp.flows.amset
       HSEVaspAmsetMaker
       TYPE_CHECKING
       VaspAmsetMaker
-
-
-
-
-   
-   
-   
-
 
 

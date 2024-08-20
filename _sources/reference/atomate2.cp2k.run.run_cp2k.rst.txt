@@ -1,0 +1,6 @@
+run\_cp2k
+=========
+
+.. currentmodule:: atomate2.cp2k.run
+
+.. autofunction:: run_cp2k

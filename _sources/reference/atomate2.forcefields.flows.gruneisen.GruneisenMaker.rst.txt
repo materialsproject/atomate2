@@ -1,0 +1,8 @@
+GruneisenMaker
+==============
+
+.. currentmodule:: atomate2.forcefields.flows.gruneisen
+
+.. autoclass:: GruneisenMaker
+   :show-inheritance:
+   :members:

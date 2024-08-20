@@ -1,0 +1,8 @@
+TightRelaxConstVolSetGenerator
+==============================
+
+.. currentmodule:: atomate2.vasp.sets.core
+
+.. autoclass:: TightRelaxConstVolSetGenerator
+   :show-inheritance:
+   :members:

@@ -1,0 +1,8 @@
+FreqSetGenerator
+================
+
+.. currentmodule:: atomate2.qchem.sets.core
+
+.. autoclass:: FreqSetGenerator
+   :show-inheritance:
+   :members:

@@ -1,0 +1,6 @@
+revert\_default\_dtype
+======================
+
+.. currentmodule:: atomate2.forcefields.utils
+
+.. autofunction:: revert_default_dtype

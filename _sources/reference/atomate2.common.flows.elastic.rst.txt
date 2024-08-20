@@ -7,11 +7,7 @@ atomate2.common.flows.elastic
 
 
 
-   
 
-
-
-   
 
 
 
@@ -37,13 +33,5 @@ atomate2.common.flows.elastic
    
       BaseElasticMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

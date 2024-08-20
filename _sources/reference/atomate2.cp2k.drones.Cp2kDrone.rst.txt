@@ -1,0 +1,8 @@
+Cp2kDrone
+=========
+
+.. currentmodule:: atomate2.cp2k.drones
+
+.. autoclass:: Cp2kDrone
+   :show-inheritance:
+   :members:

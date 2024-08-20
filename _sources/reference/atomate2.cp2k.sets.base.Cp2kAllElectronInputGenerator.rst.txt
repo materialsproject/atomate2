@@ -1,0 +1,8 @@
+Cp2kAllElectronInputGenerator
+=============================
+
+.. currentmodule:: atomate2.cp2k.sets.base
+
+.. autoclass:: Cp2kAllElectronInputGenerator
+   :show-inheritance:
+   :members:

@@ -1,0 +1,8 @@
+PhononMaker
+===========
+
+.. currentmodule:: atomate2.aims.flows.phonons
+
+.. autoclass:: PhononMaker
+   :show-inheritance:
+   :members:

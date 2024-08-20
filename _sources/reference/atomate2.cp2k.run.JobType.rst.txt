@@ -1,0 +1,8 @@
+JobType
+=======
+
+.. currentmodule:: atomate2.cp2k.run
+
+.. autoclass:: JobType
+   :show-inheritance:
+   :members:

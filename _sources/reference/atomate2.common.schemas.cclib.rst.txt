@@ -7,8 +7,6 @@ atomate2.common.schemas.cclib
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -19,13 +17,10 @@ atomate2.common.schemas.cclib
 
 
 
-   
-
 
 
    
       
-   
    
    
    
@@ -45,13 +40,5 @@ atomate2.common.schemas.cclib
       :nosignatures:
    
       TaskDocument
-
-
-
-
-   
-   
-   
-
 
 

@@ -7,11 +7,7 @@ atomate2.vasp.schemas.elph
 
 
 
-   
 
-
-
-   
 
 
 
@@ -39,13 +35,5 @@ atomate2.vasp.schemas.elph
    
       ElectronPhononRenormalisationDoc
       RawElectronicData
-
-
-
-
-   
-   
-   
-
 
 

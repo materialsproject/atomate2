@@ -1,0 +1,8 @@
+Cp2kInputGenerator
+==================
+
+.. currentmodule:: atomate2.cp2k.sets.base
+
+.. autoclass:: Cp2kInputGenerator
+   :show-inheritance:
+   :members:

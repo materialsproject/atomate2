@@ -1,0 +1,6 @@
+OPTIMIZERS
+==========
+
+.. currentmodule:: atomate2.forcefields.utils
+
+.. autodata:: OPTIMIZERS

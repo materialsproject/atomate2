@@ -1,0 +1,31 @@
+atomate2.qchem.sets
+===================
+
+.. automodule:: atomate2.qchem.sets
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   base
+   core

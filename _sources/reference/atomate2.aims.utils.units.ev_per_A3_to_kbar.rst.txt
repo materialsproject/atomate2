@@ -1,0 +1,6 @@
+ev\_per\_A3\_to\_kbar
+=====================
+
+.. currentmodule:: atomate2.aims.utils.units
+
+.. autodata:: ev_per_A3_to_kbar

@@ -1,0 +1,8 @@
+DoubleRelaxMaker
+================
+
+.. currentmodule:: atomate2.aims.flows.core
+
+.. autoclass:: DoubleRelaxMaker
+   :show-inheritance:
+   :members:

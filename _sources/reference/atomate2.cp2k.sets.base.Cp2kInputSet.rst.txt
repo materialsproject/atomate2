@@ -1,0 +1,8 @@
+Cp2kInputSet
+============
+
+.. currentmodule:: atomate2.cp2k.sets.base
+
+.. autoclass:: Cp2kInputSet
+   :show-inheritance:
+   :members:

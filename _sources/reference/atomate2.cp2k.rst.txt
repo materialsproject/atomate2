@@ -1,0 +1,38 @@
+﻿atomate2.cp2k
+=============
+
+.. automodule:: atomate2.cp2k
+
+   
+
+
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   builders
+   drones
+   files
+   flows
+   jobs
+   powerups
+   run
+   schemas
+   sets

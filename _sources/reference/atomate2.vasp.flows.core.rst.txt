@@ -7,11 +7,7 @@ atomate2.vasp.flows.core
 
 
 
-   
 
-
-
-   
 
 
 
@@ -73,13 +69,5 @@ atomate2.vasp.flows.core
       RelaxBandStructureMaker
       TYPE_CHECKING
       UniformBandStructureMaker
-
-
-
-
-   
-   
-   
-
 
 

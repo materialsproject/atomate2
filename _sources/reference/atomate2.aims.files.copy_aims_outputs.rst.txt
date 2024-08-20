@@ -1,0 +1,6 @@
+copy\_aims\_outputs
+===================
+
+.. currentmodule:: atomate2.aims.files
+
+.. autofunction:: copy_aims_outputs

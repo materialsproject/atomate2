@@ -1,0 +1,8 @@
+Cp2kObject
+==========
+
+.. currentmodule:: atomate2.cp2k.schemas.calculation
+
+.. autoclass:: Cp2kObject
+   :show-inheritance:
+   :members:

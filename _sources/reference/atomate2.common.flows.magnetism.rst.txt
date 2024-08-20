@@ -1,0 +1,38 @@
+atomate2.common.flows.magnetism
+===============================
+
+.. automodule:: atomate2.common.flows.magnetism
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MagneticOrderingsMaker
+      TYPE_CHECKING
+
+

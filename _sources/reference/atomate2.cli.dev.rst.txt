@@ -1,0 +1,6 @@
+dev
+===
+
+.. currentmodule:: atomate2.cli
+
+.. autodata:: dev

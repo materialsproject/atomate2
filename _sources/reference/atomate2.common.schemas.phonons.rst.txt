@@ -7,8 +7,6 @@ atomate2.common.schemas.phonons
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -18,8 +16,6 @@ atomate2.common.schemas.phonons
       get_factor
 
 
-
-   
 
 
 
@@ -70,13 +66,5 @@ atomate2.common.schemas.phonons
       ThermalDisplacementData
       VaspToTHz
       omegaToTHz
-
-
-
-
-   
-   
-   
-
 
 

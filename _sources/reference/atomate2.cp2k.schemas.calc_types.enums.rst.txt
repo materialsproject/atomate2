@@ -1,0 +1,41 @@
+atomate2.cp2k.schemas.calc\_types.enums
+=======================================
+
+.. automodule:: atomate2.cp2k.schemas.calc_types.enums
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      CalcType
+      RunType
+      TaskType
+
+

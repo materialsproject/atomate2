@@ -7,8 +7,6 @@ atomate2.utils.file\_client
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -19,8 +17,6 @@ atomate2.utils.file\_client
       get_ssh_connection
 
 
-
-   
 
 
 
@@ -48,13 +44,5 @@ atomate2.utils.file\_client
    
       FileClient
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

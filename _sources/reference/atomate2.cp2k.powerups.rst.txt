@@ -1,0 +1,36 @@
+atomate2.cp2k.powerups
+======================
+
+.. automodule:: atomate2.cp2k.powerups
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      add_metadata_to_flow
+      update_cp2k_custodian_handlers
+      update_user_input_settings
+      update_user_kpoints_settings
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+

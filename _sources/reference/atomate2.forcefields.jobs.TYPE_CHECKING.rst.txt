@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.forcefields.jobs
+
+.. autodata:: TYPE_CHECKING

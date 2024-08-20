@@ -1,0 +1,65 @@
+atomate2.cp2k.schemas.calculation
+=================================
+
+.. automodule:: atomate2.cp2k.schemas.calculation
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      Calculation
+      CalculationInput
+      CalculationOutput
+      Cp2kObject
+      Ha_to_eV
+      RunStatistics
+      Status
+
+

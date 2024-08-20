@@ -7,8 +7,6 @@ atomate2.common.jobs.eos
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -18,8 +16,6 @@ atomate2.common.jobs.eos
       apply_strain_to_structure
 
 
-
-   
 
 
 
@@ -54,13 +50,5 @@ atomate2.common.jobs.eos
       PostProcessEosEnergy
       PostProcessEosPressure
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

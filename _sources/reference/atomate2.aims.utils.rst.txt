@@ -1,0 +1,41 @@
+atomate2.aims.utils
+===================
+
+.. automodule:: atomate2.aims.utils
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      datetime_str
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   bands
+   common
+   units

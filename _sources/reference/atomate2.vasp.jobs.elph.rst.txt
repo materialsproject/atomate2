@@ -7,8 +7,6 @@ atomate2.vasp.jobs.elph
 
 
 
-   
-
    .. rubric:: Functions
 
    .. autosummary::
@@ -19,8 +17,6 @@ atomate2.vasp.jobs.elph
       run_elph_displacements
 
 
-
-   
 
 
 
@@ -56,13 +52,5 @@ atomate2.vasp.jobs.elph
       DEFAULT_MIN_SUPERCELL_LENGTH
       SupercellElectronPhononDisplacedStructureMaker
       TYPE_CHECKING
-
-
-
-
-   
-   
-   
-
 
 

@@ -1,0 +1,8 @@
+HybridCellOptFlowMaker
+======================
+
+.. currentmodule:: atomate2.cp2k.flows.core
+
+.. autoclass:: HybridCellOptFlowMaker
+   :show-inheritance:
+   :members:
