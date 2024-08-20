@@ -56,7 +56,7 @@ def cp2k_test_outputs(test_dir):
     return Path(test_dir / "cp2k").glob("*/outputs")
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_cp2k(monkeypatch, cp2k_test_dir):
     """
     This fixture allows one to mock (fake) running CP2K.
@@ -169,7 +169,7 @@ def fake_run_cp2k(
     logger.info("Generated fake cp2k outputs")
 
 
-@pytest.fixture()
+@pytest.fixture
 def check_input():
     from pymatgen.io.cp2k.inputs import Cp2kInput
 
