@@ -78,9 +78,6 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     convergence_md_maker : EquilibrateVolumeMaker
         MDMaker to generate the equilibrium volumer searcher;
         inherits from EquilibriumVolumeMaker and ForceFieldMDMaker (MLFF)
-    production_md_maker : ForceFieldMDMaker
-        MDMaker to generate the production run(s);
-        inherits from ForceFieldMDMaker (MLFF)
     quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
         SlowQuenchMaker - MLFFMDMaker that quenchs structure from
         high to low temperature
@@ -96,6 +93,9 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             "quench_end_temperature": 500,
             "quench_start_temperature": 3000,
         }
+    production_md_maker : ForceFieldMDMaker
+        MDMaker to generate the production run(s);
+        inherits from ForceFieldMDMaker (MLFF)
     """
 
     name: str = "MP Morph MLFF MD Maker"
@@ -119,11 +119,13 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             },
             class_filter=ForceFieldMDMaker,
         )
-        self.convergence_md_maker = EquilibriumVolumeMaker(
-            name="MP Morph MLFF Equilibrium Volume Maker",
-            md_maker=self.md_maker,
-            postprocessor=MPMorphEVPostProcess(),
-        )  # TODO: check EV versus PV
+        if self.convergence_md_maker is None:
+            # Default to equilibrium volume maker
+            self.convergence_md_maker = EquilibriumVolumeMaker(
+                name="MP Morph MLFF Equilibrium Volume Maker",
+                md_maker=self.md_maker,
+                postprocessor=MPMorphEVPostProcess(),
+            )  # TODO: check EV versus PV
 
         self.production_md_maker = self.md_maker.update_kwargs(
             update=dict(
