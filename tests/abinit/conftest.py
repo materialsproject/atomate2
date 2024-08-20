@@ -27,7 +27,7 @@ def abinit_integration_tests(pytestconfig):
     return pytestconfig.getoption("abinit_integration")
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
     """
     This fixture allows one to mock running ABINIT.

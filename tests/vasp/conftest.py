@@ -44,7 +44,7 @@ def lobster_test_dir(test_dir):
     return test_dir / "lobster"
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_vasp(
     monkeypatch: MonkeyPatch, vasp_test_dir: Path
 ) -> Generator[Callable[[Any, Any], Any], None, None]:
