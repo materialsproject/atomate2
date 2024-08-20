@@ -37,7 +37,7 @@ _task_doc_translation_keys = {
 
 
 class AseResult(BaseModel):
-    """Schema to store outputs in ForceFieldTaskDocument."""
+    """Schema to store outputs in AseTaskDocument."""
 
     final_mol_or_struct: Optional[Union[Structure, Molecule]] = Field(
         None, description="The molecule or structure in the final trajectory frame."
@@ -67,9 +67,13 @@ class AseResult(BaseModel):
         None, description="The directory where the calculation was run"
     )
 
-    def __getitem__(self, key: Any) -> Any:
+    def __getitem__(self, name: str) -> Any:
         """Make fields subscriptable for backwards compatibility."""
-        return getattr(self, key)
+        return getattr(self, name)
+
+    def __setitem__(self, name: str, value: Any) -> None:
+        """Allow dict-style item assignment for backwards compatibility."""
+        setattr(self, name, value)
 
 
 class AseObject(ValueEnum):
