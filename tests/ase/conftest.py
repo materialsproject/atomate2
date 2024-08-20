@@ -4,7 +4,7 @@ import pytest
 from pymatgen.core import Lattice, Molecule, Structure
 
 
-@pytest.fixture()
+@pytest.fixture
 def fcc_ne_structure(a0: float = 4.6) -> Structure:
     """Generic fcc Ne structure for testing LJ jobs."""
     return Structure(
@@ -14,7 +14,7 @@ def fcc_ne_structure(a0: float = 4.6) -> Structure:
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def lj_fcc_ne_pars() -> dict[str, float]:
     """
     LJ parameters optimized to reproduce experimentally reported
@@ -29,7 +29,7 @@ def lj_fcc_ne_pars() -> dict[str, float]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def h2o_3uud_trimer() -> Molecule:
     return Molecule.from_str(
         """9
