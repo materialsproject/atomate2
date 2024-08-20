@@ -1,25 +1,7 @@
 from __future__ import annotations
 
-from unittest import mock
 
-import pytest
-from jobflow.settings import JobflowSettings
-
-
-@pytest.fixture()
-def mock_jobflow_settings(memory_jobstore):
-    """Set the UID_TYPE to "ulid" to make sure the documents can be sorted.
-
-    See: https://github.com/materialsproject/jobflow/issues/519#issuecomment-1906850096
-    """
-
-    settings = JobflowSettings(JOB_STORE=memory_jobstore, UID_TYPE="ulid")
-
-    with mock.patch("jobflow.SETTINGS", settings):
-        yield
-
-
-def test_electrode_makers(mock_vasp, clean_dir, test_dir, mock_jobflow_settings):
+def test_electrode_makers(mock_vasp, clean_dir, test_dir):
     from emmet.core.electrode import InsertionElectrodeDoc
     from jobflow import OutputReference, run_locally
     from monty.serialization import loadfn
@@ -32,7 +14,6 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir, mock_jobflow_settings)
         update_user_incar_settings,
         update_user_kpoints_settings,
     )
-    # mock the default setting
 
     # mapping from job name to directory containing test files
     ref_paths = {
