@@ -6,6 +6,7 @@ import contextlib
 import io
 import os
 import sys
+import time
 import warnings
 from typing import TYPE_CHECKING
 
@@ -385,7 +386,9 @@ class AseRelaxer:
                 atoms = cell_filter(atoms)
             optimizer = self.opt_class(atoms, **kwargs)
             optimizer.attach(obs, interval=interval)
+            t_i = time.perf_counter()
             optimizer.run(fmax=fmax, steps=steps)
+            t_f = time.perf_counter()
             obs()
         if traj_file is not None:
             obs.save(traj_file)
@@ -407,4 +410,5 @@ class AseRelaxer:
             energy_downhill=traj.frame_properties[-1]["energy"]
             < traj.frame_properties[0]["energy"],
             dir_name=os.getcwd(),
+            elapsed_time=t_f - t_i,
         )

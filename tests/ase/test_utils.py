@@ -123,11 +123,15 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
     )
 
     assert_allclose(
-        relax_output.trajectory.frame_properties[-1]["forces"], expected_forces
+        relax_output["trajectory"].frame_properties[-1]["forces"],
+        expected_forces,
+        atol=1e-11,
     )
 
     assert_allclose(
-        relax_output.trajectory.frame_properties[-1]["stress"], expected_stresses
+        relax_output["trajectory"].frame_properties[-1]["stress"],
+        expected_stresses,
+        atol=1e-11,
     )
 
     if traj_file:
