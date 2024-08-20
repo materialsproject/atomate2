@@ -67,6 +67,10 @@ class AseResult(BaseModel):
         None, description="The directory where the calculation was run"
     )
 
+    elapsed_time: Optional[float] = Field(
+        None, description="The time taken to run the calculation."
+    )
+
     def __getitem__(self, name: str) -> Any:
         """Make fields subscriptable for backwards compatibility."""
         return getattr(self, name)
@@ -325,6 +329,8 @@ class AseTaskDoc(AseBaseModel):
             "is less than in the initial frame."
         ),
     )
+
+    tags: Optional[list[str]] = Field(None, description="List of tags for the task.")
 
     @classmethod
     def from_ase_compatible_result(
