@@ -67,6 +67,10 @@ class AseResult(BaseModel):
         None, description="The directory where the calculation was run"
     )
 
+    def __getitem__(self, key: Any) -> Any:
+        """Make fields subscriptable for backwards compatibility."""
+        return getattr(self, key)
+
 
 class AseObject(ValueEnum):
     """Types of ASE data objects."""
