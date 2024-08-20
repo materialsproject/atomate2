@@ -9,9 +9,10 @@ Copyright (c) 2022, Materials Virtual Lab.
 """
 
 from __future__ import annotations
-
+from pathlib import Path
 from typing import Any, Optional, Union
 
+from ase.io import Trajectory as AseTrajectory
 from ase.stress import voigt_6_to_full_3x3_stress
 from ase.units import GPa
 from emmet.core.math import Matrix3D, Vector3D
@@ -34,20 +35,28 @@ _task_doc_translation_keys = {
 }
 
 
-class AseResult(dict):
+class AseResult(BaseModel):
     """Schema to store outputs in ForceFieldTaskDocument."""
 
-    def __init__(self, **kwargs: Any) -> None:
-        kwargs = {
-            "final_mol_or_struct": None,
-            "trajectory": None,
-            "is_force_converged": None,
-            "energy_downhill": None,
-            "dir_name": None,
-            **kwargs,
-        }
-        super().__init__(**kwargs)
+    final_mol_or_struct : Optional[Union[Structure, Molecule]] = Field(
+        None, description="The molecule or structure in the final trajectory frame."
+    )
 
+    trajectory : Optional[Union[AseTrajectory,PmgTrajectory]] = Field(
+        None, description = "The relaxation or molecular dynamics trajectory."
+    )
+
+    is_force_converged : Optional[bool] = Field(
+        None, description = "Whether the calculation is converged with respect to interatomic forces."
+    )
+
+    energy_downhill : Optional[bool] = Field(
+        None, description = "Whether the final trajectory frame has lower total energy than the initial frame."
+    )
+
+    dir_name : Optional[Union[str, Path]] = Field(
+        None, description = "The directory where the calculation was run"
+    )
 
 class AseObject(ValueEnum):
     """Types of ASE data objects."""
@@ -188,10 +197,7 @@ class AseStructureTaskDoc(StructureMetadata):
 
     energy_downhill: Optional[bool] = Field(
         None,
-        description=(
-            "Whether the total energy in the final frame "
-            "is less than in the initial frame."
-        ),
+        description="Whether the final trajectory frame has lower total energy than the initial frame.",
     )
 
     @classmethod
@@ -303,7 +309,7 @@ class AseTaskDoc(AseBaseModel):
     def from_ase_compatible_result(
         cls,
         ase_calculator_name: str,
-        result: dict,
+        result: AseResult,
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
@@ -325,7 +331,7 @@ class AseTaskDoc(AseBaseModel):
         ----------
         ase_calculator_name : str
             Name of the ASE calculator used.
-        result : dict
+        result : AseResult
             The output results from the task.
         steps : int
             Maximum number of ionic steps allowed during relaxation.
@@ -344,7 +350,7 @@ class AseTaskDoc(AseBaseModel):
         task_document_kwargs : dict
             Additional keyword args passed to :obj:`.AseTaskDoc()`.
         """
-        trajectory = result["trajectory"]
+        trajectory = result.trajectory
 
         n_steps = len(trajectory)
 
@@ -388,7 +394,7 @@ class AseTaskDoc(AseBaseModel):
             )
             output_mol_or_struct = input_mol_or_struct
         else:
-            output_mol_or_struct = result["final_mol_or_struct"]
+            output_mol_or_struct = result.final_mol_or_struct
 
         final_energy = trajectory.frame_properties[-1]["energy"]
         final_energy_per_atom = final_energy / len(input_mol_or_struct)
@@ -450,15 +456,15 @@ class AseTaskDoc(AseBaseModel):
             ase_calculator_name=ase_calculator_name,
             included_objects=list(objects.keys()),
             objects=objects,
-            is_force_converged=result.get("is_force_converged"),
-            energy_downhill=result.get("energy_downhill"),
-            dir_name=result.get("dir_name"),
+            is_force_converged=result.is_force_converged,
+            energy_downhill=result.energy_downhill,
+            dir_name=result.dir_name,
             **task_document_kwargs,
         )
 
     @classmethod
     def to_mol_or_struct_metadata_doc(
-        cls, ase_calculator_name: str, result: dict, steps: int, **task_document_kwargs
+        cls, ase_calculator_name: str, result: AseResult, steps: int, **task_document_kwargs
     ) -> Union[AseStructureTaskDoc, AseMoleculeTaskDoc]:
         """
         Get structure and molecule specific ASE task docs.
@@ -467,7 +473,7 @@ class AseTaskDoc(AseBaseModel):
         ----------
         ase_calculator_name : str
             Name of the ASE calculator used.
-        result : dict
+        result : AseResult
             The output results from the task.
         steps : int
             Maximum number of ionic steps allowed during relaxation.

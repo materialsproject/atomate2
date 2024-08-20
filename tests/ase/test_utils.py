@@ -114,20 +114,20 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
         return
 
     assert {
-        key: getattr(relax_output["final_mol_or_struct"].lattice, key)
+        key: getattr(relax_output.final_mol_or_struct.lattice, key)
         for key in expected_lattice
     } == pytest.approx(expected_lattice)
 
-    assert relax_output["trajectory"].frame_properties[-1]["energy"] == pytest.approx(
+    assert relax_output.trajectory.frame_properties[-1]["energy"] == pytest.approx(
         expected_energy
     )
 
     assert_allclose(
-        relax_output["trajectory"].frame_properties[-1]["forces"], expected_forces
+        relax_output.trajectory.frame_properties[-1]["forces"], expected_forces
     )
 
     assert_allclose(
-        relax_output["trajectory"].frame_properties[-1]["stress"], expected_stresses
+        relax_output.trajectory.frame_properties[-1]["stress"], expected_stresses
     )
 
     if traj_file:
@@ -144,9 +144,7 @@ def test_fix_symmetry(fix_symmetry):
     atoms_al = atoms_al * (2, 2, 2)
     atoms_al.positions[0, 0] += 1e-7
     symmetry_init = check_symmetry(atoms_al, 1e-6)
-    final_struct: Structure = relaxer.relax(atoms=atoms_al, steps=1)[
-        "final_mol_or_struct"
-    ]
+    final_struct: Structure = relaxer.relax(atoms=atoms_al, steps=1).final_mol_or_struct
     symmetry_final = check_symmetry(final_struct.to_ase_atoms(), 1e-6)
     if fix_symmetry:
         assert symmetry_init["number"] == symmetry_final["number"] == 229

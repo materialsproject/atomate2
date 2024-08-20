@@ -8,19 +8,22 @@ from emmet.core.utils import ValueEnum
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from monty.dev import deprecated
 from pydantic import Field
+from pymatgen.core import Structure
 
 from atomate2.ase.schemas import AseObject, AseResult, AseStructureTaskDoc, AseTaskDoc
 from atomate2.forcefields import MLFF
-
 
 @deprecated(replacement=AseResult, deadline=(2025, 1, 1))
 class ForcefieldResult(AseResult):
     """Schema to store outputs; deprecated."""
 
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__(**kwargs)
-        self["final_structure"] = self.pop("final_mol_or_struct")
+    final_structure : Optional[Structure] = Field(
+        None, description = "The structure in the final trajectory frame."
+    )
 
+    def model_post_init(self,__context: Any) -> None:
+        """ Populate final_structure attr."""
+        self.final_structure = getattr(self,"final_structure",self.final_mol_or_struct)
 
 @deprecated(replacement=AseObject, deadline=(2025, 1, 1))
 class ForcefieldObject(ValueEnum):
@@ -65,7 +68,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
     def from_ase_compatible_result(
         cls,
         ase_calculator_name: str,
-        result: dict,
+        result: AseResult,
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
@@ -87,7 +90,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
         ----------
         ase_calculator_name : str
             Name of the ASE calculator used.
-        result : dict
+        result : AseResult
             The output results from the task.
         fix_symmetry : bool
             Whether to fix the symmetry of the ions during relaxation.
