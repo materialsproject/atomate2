@@ -9,6 +9,7 @@ Copyright (c) 2022, Materials Virtual Lab.
 """
 
 from __future__ import annotations
+
 from pathlib import Path
 from typing import Any, Optional, Union
 
@@ -38,25 +39,34 @@ _task_doc_translation_keys = {
 class AseResult(BaseModel):
     """Schema to store outputs in ForceFieldTaskDocument."""
 
-    final_mol_or_struct : Optional[Union[Structure, Molecule]] = Field(
+    final_mol_or_struct: Optional[Union[Structure, Molecule]] = Field(
         None, description="The molecule or structure in the final trajectory frame."
     )
 
-    trajectory : Optional[Union[AseTrajectory,PmgTrajectory]] = Field(
-        None, description = "The relaxation or molecular dynamics trajectory."
+    trajectory: Optional[Union[AseTrajectory, PmgTrajectory]] = Field(
+        None, description="The relaxation or molecular dynamics trajectory."
     )
 
-    is_force_converged : Optional[bool] = Field(
-        None, description = "Whether the calculation is converged with respect to interatomic forces."
+    is_force_converged: Optional[bool] = Field(
+        None,
+        description=(
+            "Whether the calculation is converged with respect "
+            "to interatomic forces."
+        ),
     )
 
-    energy_downhill : Optional[bool] = Field(
-        None, description = "Whether the final trajectory frame has lower total energy than the initial frame."
+    energy_downhill: Optional[bool] = Field(
+        None,
+        description=(
+            "Whether the final trajectory frame has lower total "
+            "energy than the initial frame."
+        ),
     )
 
-    dir_name : Optional[Union[str, Path]] = Field(
-        None, description = "The directory where the calculation was run"
+    dir_name: Optional[Union[str, Path]] = Field(
+        None, description="The directory where the calculation was run"
     )
+
 
 class AseObject(ValueEnum):
     """Types of ASE data objects."""
@@ -197,7 +207,10 @@ class AseStructureTaskDoc(StructureMetadata):
 
     energy_downhill: Optional[bool] = Field(
         None,
-        description="Whether the final trajectory frame has lower total energy than the initial frame.",
+        description=(
+            "Whether the final trajectory frame has lower total "
+            "energy than the initial frame."
+        ),
     )
 
     @classmethod
@@ -464,7 +477,11 @@ class AseTaskDoc(AseBaseModel):
 
     @classmethod
     def to_mol_or_struct_metadata_doc(
-        cls, ase_calculator_name: str, result: AseResult, steps: int, **task_document_kwargs
+        cls,
+        ase_calculator_name: str,
+        result: AseResult,
+        steps: int,
+        **task_document_kwargs,
     ) -> Union[AseStructureTaskDoc, AseMoleculeTaskDoc]:
         """
         Get structure and molecule specific ASE task docs.
