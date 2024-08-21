@@ -260,6 +260,9 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
         Total number of steps for the production run(s); default 10000 steps
     production_md_maker : LJMDMaker
         LJMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
+    quench_maker : SlowQuenchMLFFMDMaker
+        Using the LJMDMaker to perform SlowQuenchMLFFMDMaker with the default settings
+        Check SlowQuenchMLFFMDMaker for more information.
     """
 
     name: str = "MP Morph LJ MD Maker Slow Quench"
@@ -271,15 +274,14 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
     production_md_maker: LJMDMaker = field(
         default_factory=lambda: LJMDMaker(name="Production Run LJ MD Maker")
     )
-    quench_maker: SlowQuenchMLFFMDMaker = field(default_factory=SlowQuenchMLFFMDMaker)
-    quench_maker_kwargs: dict[str, Any] = field(
-        default_factory=lambda: {
-            "md_maker": LJMDMaker(name="LJ MD Maker"),
-            "quench_n_steps": 1000,
-            "quench_temperature_step": 500,
-            "quench_end_temperature": 500,
-            "quench_start_temperature": 3000,
-        }
+    quench_maker: SlowQuenchMLFFMDMaker = field(
+        default_factory=lambda: SlowQuenchMLFFMDMaker(
+            md_maker=LJMDMaker(name="LJ MD Maker"),
+            quench_n_steps=1000,
+            quench_temperature_step=500,
+            quench_end_temperature=500,
+            quench_start_temperature=3000,
+        )
     )
 
 
@@ -308,6 +310,9 @@ class MPMorphFastQuenchLJMDMaker(MPMorphMLFFMDMaker):
         Total number of steps for the production run(s); default 10000 steps
     production_md_maker : LJMDMaker
         LJMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
+    quench_maker : FastQuenchMLFFMDMaker
+        Using the LJMDMaker to perform FastQuenchMLFFMDMaker with the default settings
+        Check FastQuenchMLFFMDMaker for more information.
     """
 
     name: str = "MP Morph LJ MD Maker Fast Quench"
@@ -393,6 +398,9 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
         Total number of steps for the production run(s); default 10000 steps
     production_md_maker : CHGNetMDMaker
         CHGNetMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
+    quench_maker : SlowQuenchMLFFMDMaker
+        Using the CHGNetMDMaker to perform SlowQuenchMLFFMDMaker with the default settings
+        Check SlowQuenchMLFFMDMaker for more information.
     """
 
     name: str = "MP Morph CHGNet MD Maker Slow Quench"
@@ -407,16 +415,13 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
         default_factory=lambda: CHGNetMDMaker(name="Production Run CHGNet MD Maker")
     )
     quench_maker: SlowQuenchMLFFMDMaker = field(
-        default_factory=lambda: SlowQuenchMLFFMDMaker(md_maker=CHGNetMDMaker())
-    )
-    quench_maker_kwargs: dict[str, Any] = field(
-        default_factory=lambda: {
-            "md_maker": CHGNetMDMaker(name="CHGNet MD Maker"),
-            "quench_n_steps": 1000,
-            "quench_temperature_step": 500,
-            "quench_end_temperature": 500,
-            "quench_start_temperature": 3000,
-        }
+        default_factory=lambda: SlowQuenchMLFFMDMaker(
+            md_maker=CHGNetMDMaker(name="CHGNet MD Maker"),
+            quench_n_steps=1000,
+            quench_temperature_step=500,
+            quench_end_temperature=500,
+            quench_start_temperature=3000,
+        )
     )
 
 
@@ -445,6 +450,9 @@ class MPMorphFastQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
         Total number of steps for the production run(s); default 10000 steps
     production_md_maker : CHGNetMDMaker
         CHGNetMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
+    quench_maker : FastQuenchMLFFMDMaker
+        Using the CHGNetMDMaker to perform FastQuenchMLFFMDMaker with the default settings
+        Check FastQuenchMLFFMDMaker for more information.
     """
 
     name: str = "MP Morph CHGNet MD Maker Fast Quench"
@@ -532,6 +540,9 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
         Total number of steps for the production run(s); default 10000 steps
     production_md_maker : M3GNetMDMaker
         M3GNetMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
+    quench_maker : SlowQuenchMLFFMDMaker
+        Using the M3GNetMDMaker to perform SlowQuenchMLFFMDMaker with the default settings
+        Check SlowQuenchMLFFMDMaker for more information.
     """
 
     name: str = "MP Morph M3GNet MD Maker Slow Quench"
@@ -546,16 +557,13 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
         default_factory=lambda: M3GNetMDMaker(name="Production Run M3GNet MD Maker")
     )
     quench_maker: SlowQuenchMLFFMDMaker = field(
-        default_factory=lambda: SlowQuenchMLFFMDMaker(md_maker=M3GNetMDMaker())
-    )
-    quench_maker_kwargs: dict[str, Any] = field(
-        default_factory=lambda: {
-            "md_maker": M3GNetMDMaker(name="M3GNet MD Maker"),
-            "quench_n_steps": 1000,
-            "quench_temperature_step": 500,
-            "quench_end_temperature": 500,
-            "quench_start_temperature": 3000,
-        }
+        default_factory=lambda: SlowQuenchMLFFMDMaker(
+            md_maker=M3GNetMDMaker(name="M3GNet MD Maker"),
+            quench_n_steps=1000,
+            quench_temperature_step=500,
+            quench_end_temperature=500,
+            quench_start_temperature=3000,
+        )
     )
 
 
@@ -584,6 +592,9 @@ class MPMorphFastQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
         Total number of steps for the production run(s); default 10000 steps
     production_md_maker : M3GNetMDMaker
         M3GNetMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
+    quench_maker : FastQuenchMLFFMDMaker
+        Using the M3GNetMDMaker to perform FastQuenchMLFFMDMaker with the default settings
+        Check FastQuenchMLFFMDMaker for more information.
     """
 
     name: str = "MP Morph M3GNet MD Maker Fast Quench"
@@ -671,6 +682,9 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
         Total number of steps for the production run(s); default 10000 steps
     production_md_maker : MACEMDMaker
         MACEMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
+    quench_maker : SlowQuenchMLFFMDMaker
+        Using the MACEMDMaker to perform SlowQuenchMLFFMDMaker with the default settings
+        Check SlowQuenchMLFFMDMaker for more information.
     """
 
     name: str = "MP Morph MACE MD Maker Slow Quench"
@@ -685,16 +699,13 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
         default_factory=lambda: MACEMDMaker(name="Production Run MACE MD Maker")
     )
     quench_maker: SlowQuenchMLFFMDMaker = field(
-        default_factory=lambda: SlowQuenchMLFFMDMaker(md_maker=MACEMDMaker())
-    )
-    quench_maker_kwargs: dict[str, Any] = field(
-        default_factory=lambda: {
-            "md_maker": MACEMDMaker(name="MACE MD Maker"),
-            "quench_n_steps": 1000,
-            "quench_temperature_step": 500,
-            "quench_end_temperature": 500,
-            "quench_start_temperature": 3000,
-        }
+        default_factory=lambda: SlowQuenchMLFFMDMaker(
+            md_maker=MACEMDMaker(name="MACE MD Maker"),
+            quench_n_steps=1000,
+            quench_temperature_step=500,
+            quench_end_temperature=500,
+            quench_start_temperature=3000,
+        )
     )
 
 
@@ -723,6 +734,9 @@ class MPMorphFastQuenchMACEMDMaker(MPMorphMLFFMDMaker):
         Total number of steps for the production run(s); default 10000 steps
     production_md_maker : MACEMDMaker
         MACEMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
+    quench_maker : FastQuenchMLFFMDMaker
+        Using the MACEMDMaker to perform FastQuenchMLFFMDMaker with the default settings
+        Check FastQuenchMLFFMDMaker for more information.
     """
 
     name: str = "MP Morph MACE MD Maker Fast Quench"
