@@ -34,7 +34,7 @@ def pytest_addoption(parser):
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def si():
     return Structure(
         lattice=Lattice(
@@ -43,6 +43,7 @@ def si():
         species=["Si", "Si"],
         coords=[[0, 0, 0], [0.25, 0.25, 0.25]],
     )
+
 
 
 @pytest.fixture()
@@ -79,7 +80,7 @@ def ref_path():
     return test_dir.resolve()
 
 
-@pytest.fixture()
+@pytest.fixture
 def should_mock_aims(request):
     try:
         return not request.config.getoption("--generate-test-data")
@@ -87,7 +88,7 @@ def should_mock_aims(request):
         return True
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_aims(monkeypatch, ref_path, should_mock_aims):
     """
     This fixture allows one to mock (fake) running FHI-aims.

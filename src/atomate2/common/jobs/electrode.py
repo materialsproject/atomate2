@@ -6,10 +6,12 @@ import logging
 from typing import TYPE_CHECKING, Callable, NamedTuple
 
 from emmet.core.electrode import InsertionElectrodeDoc
+from emmet.core.mpid import MPID
 from emmet.core.structure_group import StructureGroupDoc
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
 from pymatgen.entries.computed_entries import ComputedStructureEntry
+from ulid import ULID
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -154,13 +156,23 @@ def get_computed_entries(
         return multi
     # keep the [1] for now, if jobflow supports NamedTuple, we can do this much cleaner
     s_ = RelaxJobSummary._make(single)
-    s_.entry.entry_id = s_.uuid
+
+    # Ensure that the entry_id is an acceptable MPID
+    try:
+        entry_id = MPID(s_.uuid)
+    except ValueError:
+        entry_id = ULID()
+    s_.entry.entry_id = str(entry_id)
+
+    # Store UUID for provenance
+    s_.entry.data["UUID"] = s_.uuid
+
     ent = ComputedStructureEntry(
         structure=s_.structure,
         energy=s_.entry.energy,
         parameters=s_.entry.parameters,
         data=s_.entry.data,
-        entry_id=s_.uuid,
+        entry_id=s_.entry.entry_id,
     )
     return [*multi, ent]
 
