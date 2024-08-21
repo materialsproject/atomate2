@@ -96,16 +96,27 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
         temp: float | tuple[float, float],
         prev_dir: str | Path | None = None,
     ) -> Flow | Job:
-        """Call the MD maker to create the MD jobs for VASP Only."""
-        begining_temp, ending_temp = temp if isinstance(temp, tuple) else (temp, temp)
+        """Call the VASP MD maker.
+        
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object.
+        temp : float
+            The temperature in Kelvin.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from.
+
+        Returns
+        ----------
+        A slow quench .Flow or .Job
+        """
+        incar_updates = {"NSW": self.quench_n_steps,}
+        incar_updates["TEBEG"], incar_updates["TEEND"] = temp if isinstance(temp, tuple) else (temp, temp)
 
         self.md_maker = update_user_incar_settings(
             flow=self.md_maker,
-            incar_updates={
-                "TEBEG": begining_temp,
-                "TEEND": ending_temp,
-                "NSW": self.quench_n_steps,
-            },
+            incar_updates=incar_updates,
         )
         self.md_maker = self.md_maker.update_kwargs(
             update={"name": f"Vasp Slow Quench MD Maker {temp}K"}

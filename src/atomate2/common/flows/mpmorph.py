@@ -19,10 +19,9 @@ from typing import TYPE_CHECKING, Literal
 import numpy as np
 from jobflow import Flow, Maker, Response, job
 
-# from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.eos import MPMorphPVPostProcess, _apply_strain_to_structure
 from atomate2.forcefields.md import ForceFieldMDMaker
-from atomate2.vasp.jobs.md import MDMaker
+from atomate2.vasp.jobs.md import MDMaker as VaspMDMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -47,6 +46,8 @@ class EquilibriumVolumeMaker(Maker):
         Maker to perform NVT MD runs
     postprocessor : atomate2.common.jobs.eos.EOSPostProcessor
         Postprocessing step to fit the EOS
+    initial_strain : float | tuple[float,float] = 0.2
+        Initial percentage linear strain to the apply to the structure
     min_strain : float, default = 0.5
         Minimum absolute percentage linear strain to apply to the structure
     max_attempts : int | None = 20
@@ -58,6 +59,7 @@ class EquilibriumVolumeMaker(Maker):
     name: str = "Equilibrium Volume Maker"
     md_maker: Maker | None = None
     postprocessor: EOSPostProcessor = field(default_factory=MPMorphPVPostProcess)
+    initial_strain : float = 0.2
     min_strain: float = 0.5
     max_attempts: int | None = 20
     energy_average_frames: int = 1
@@ -86,7 +88,9 @@ class EquilibriumVolumeMaker(Maker):
         .Flow, an MPMorph flow
         """
         if working_outputs is None:
-            linear_strain = np.linspace(-0.2, 0.2, self.postprocessor.min_data_points)
+            if isinstance(self.initial_strain,(float,int)):
+                self.initial_strain = tuple((-1)**(i+1)*abs(self.initial_strain) for i in range(2))
+            linear_strain = np.linspace(*self.initial_strain, self.postprocessor.min_data_points)
             working_outputs = {
                 "relax": {
                     key: [] for key in ("energies", "volume", "stress", "pressure")
@@ -212,10 +216,8 @@ class MPMorphMDMaker(Maker):
         MDMaker to generate the production run(s)
     """
 
-    name: str = "MP Morph md"
-    convergence_md_maker: EquilibriumVolumeMaker | None = (
-        None  # check logic on this line
-    )
+    name: str = "Base MPMorph MD"
+    convergence_md_maker: Maker | None = None  # check logic on this line
     # May need to fix next two into ForceFieldMDMakers later..)
     production_md_maker: Maker | None = None
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
@@ -348,7 +350,7 @@ class FastQuenchMaker(Maker):
 
 
 @dataclass
-class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
+class SlowQuenchMaker(Maker):
     """Slow quench from high to low temperature structures.
 
     Quenches a provided structure with a molecular dynamics
@@ -456,14 +458,23 @@ class SlowQuenchMaker(Maker):  # Works only for VASP and MLFFs
     ) -> Flow | Job:
         """Call MD maker for slow quench.
 
-        TODO write docstr
+        To be implemented in subclasses.
+
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object.
+        temp : float
+            The temperature in Kelvin.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from.
+
+        Returns
+        ----------
+        A slow quench .Flow or .Job
         """
-        if not isinstance(self.md_maker, (MDMaker, ForceFieldMDMaker)):
-            raise TypeError(
-                "***WORK IN PROGRESS*** md_maker must be "
-                "an MDMaker or ForceFieldMDMaker."
-            )
-        return self.md_maker.make(structure, prev_dir)
+        return NotImplemented
+
 
 
 @dataclass
