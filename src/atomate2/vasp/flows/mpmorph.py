@@ -311,14 +311,14 @@ class MPMorphVaspMDSlowQuenchMaker(BaseMPMorphVaspMDMaker):
 
     md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
     production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
-    quench_maker: SlowQuenchVaspMaker = field(default_factory=SlowQuenchVaspMaker)
-    quench_maker_kwargs: dict[str, Any] = field(
-        default_factory=lambda: {
-            "quench_n_steps": 1000,
-            "quench_temperature_step": 500,
-            "quench_end_temperature": 500,
-            "quench_start_temperature": 3000,
-        }
+    quench_maker: SlowQuenchVaspMaker = field(
+        default_factory=lambda: SlowQuenchVaspMaker(
+            BaseMPMorphMDMaker(name="Slow Quench VASP Maker"),
+            quench_n_steps=1000,
+            quench_temperature_step=500,
+            quench_end_temperature=500,
+            quench_start_temperature=3000,
+        )
     )
 
 
