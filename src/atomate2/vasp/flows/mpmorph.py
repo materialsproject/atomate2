@@ -138,9 +138,10 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
                     "NSW": self.steps_convergence,
                 },
             )
-        self.convergence_md_maker = EquilibriumVolumeMaker(
-            name="MP Morph VASP Equilibrium Volume Maker", md_maker=self.md_maker
-        )
+        if self.convergence_md_maker is None:
+            self.convergence_md_maker = EquilibriumVolumeMaker(
+                name="MP Morph VASP Equilibrium Volume Maker", md_maker=self.md_maker
+            )
 
         if self.steps_single_production_run is None:
             self.steps_single_production_run = self.steps_total_production
