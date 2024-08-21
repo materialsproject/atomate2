@@ -12,6 +12,7 @@ from phonopy import Phonopy
 from pymatgen.core import Structure
 from pymatgen.core.units import kb
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2.aims.schemas.calculation import Calculation
 from atomate2.aims.utils.units import omegaToTHz
@@ -73,6 +74,76 @@ def get_phonon_supercell(
         supercell_matrix,
     )
     return get_pmg_structure(phonon.supercell)
+
+
+def get_sigma_per_site(
+    structure: Structure,
+    forces_dft: np.ndarray,
+    forces_harmonic: np.ndarray,
+) -> list[tuple]:
+    """Compute a site-resolved sigma^A.
+
+    This will calculate a sigma^A value for every
+    site in the structure.
+
+    Parameters
+    ----------
+    structure: Structure
+        The structure to use for the calculation
+    forces_dft: np.ndarray
+        DFT calculated forces
+    forces_harmonic: np.ndarray
+        Harmonic approximation of the forces
+
+    Returns
+    -------
+    list[tuple]
+        List of tuples in the form
+        ({wyckoff symbol: sites}, sigma^A) for
+        all the sites in the structure
+    """
+    # Ensure that DFT and harmonic forces are in np format
+    forces_dft = np.array(forces_dft)
+    forces_harmonic = np.array(forces_harmonic)
+
+    # Check shapes of forces
+    if len(np.shape(forces_dft)) == 2:
+        forces_dft = np.expand_dims(forces_dft, axis=0)
+        forces_harmonic = np.expand_dims(forces_harmonic, axis=0)
+
+    sg_analyzer = SpacegroupAnalyzer(structure)
+    sym_dataset = sg_analyzer.get_symmetry_dataset()
+    wycks = np.array(sym_dataset.wyckoffs)
+    sites = np.array(structure.sites)
+
+    if np.shape(forces_dft)[1] == 3 * structure.num_sites:
+        sites = sites.repeat(3)
+        wycks = wycks.repeat(3)
+
+    unique_sites = np.unique(wycks)
+    site_to_wyckoff: dict = {wyck: [] for wyck in unique_sites}
+    for idx, val in enumerate(wycks):
+        site_to_wyckoff[val].append(sites[idx])
+
+    sigma_sites = []
+    for s in unique_sites:
+        mask = wycks == s
+        f_dft = forces_dft[:, mask]
+        f_ha = forces_harmonic[:, mask]
+        f_anharm = f_dft - f_ha
+        sigma_sites.append(calc_sigma_a(f_anharm, f_dft))
+
+    return [
+        (
+            {
+                list(site_to_wyckoff.keys())[i]: site_to_wyckoff[
+                    list(site_to_wyckoff.keys())[i]
+                ]
+            },
+            sigma_sites[i],
+        )
+        for i in range(len(sigma_sites))
+    ]
 
 
 def get_sigma_per_element(
@@ -435,6 +506,7 @@ def get_sigmas(
     one_shot: bool,
     element_resolved: bool = False,
     mode_resolved: bool = False,
+    site_resolved: bool = False,
 ) -> dict:
     """Get the desired sigma^A measures.
 
@@ -456,6 +528,9 @@ def get_sigmas(
         Default is false.
     mode_resolved: bool
         If true, resolve sigma^A to the different modes.
+        Default is false.
+    site_resolved: bool
+        If true, resolve sigma^A to the different sites.
         Default is false.
 
     Returns
@@ -484,6 +559,12 @@ def get_sigmas(
         )
     if element_resolved:
         sigma_dict["element-resolved"] = get_sigma_per_element(
+            structure,
+            dft_forces,
+            harmonic_forces,
+        )
+    if site_resolved:
+        sigma_dict["site-resolved"] = get_sigma_per_site(
             structure,
             dft_forces,
             harmonic_forces,

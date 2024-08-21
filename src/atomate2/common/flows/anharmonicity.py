@@ -66,6 +66,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         seed: int | None = None,
         element_resolved: bool = False,
         mode_resolved: bool = False,
+        site_resolved: bool = False,
         n_samples: int = 1,
     ) -> Flow:
         """Make the anharmonicity calculation flow.
@@ -112,6 +113,9 @@ class BaseAnharmonicityMaker(Maker, ABC):
             If true, calculate the atom-resolved sigma^A. This is false by default.
         mode_resolved: bool
             If true, calculate the mode-resolved sigma^A. This is false by default.
+        site_resolved: bool
+            If true, resolve sigma^A to the different sites.
+            Default is false.
         n_samples: int
             Number of times displaced structures are sampled.
             Must be >= 1 and cannot be used when one_shot_approx == True.
@@ -140,6 +144,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             seed,
             element_resolved,
             mode_resolved,
+            site_resolved,
             n_samples,
         )
 
@@ -164,6 +169,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         seed: int | None = None,
         element_resolved: bool = False,
         mode_resolved: bool = False,
+        site_resolved: bool = False,
         n_samples: int = 1,
     ) -> Flow:
         """Create an anharmonicity workflow from a phonon calculation.
@@ -187,6 +193,9 @@ class BaseAnharmonicityMaker(Maker, ABC):
             If true, calculate the atom-resolved sigma^A. This is false by default.
         mode_resolved: bool
             If true, calculate the mode-resolved sigma^A. This is false by default.
+        site_resolved: bool
+            If true, resolve sigma^A to the different sites.
+            Default is false.
         n_samples: int
             Number of times displaced structures are sampled.
             Must be >= 1 and cannot be used when one_shot_approx == True.
@@ -206,7 +215,10 @@ class BaseAnharmonicityMaker(Maker, ABC):
             )
 
         jobs = []
-        phonon_supercell_job = get_phonon_supercell(phonon_doc)
+        phonon_supercell_job = get_phonon_supercell(
+            phonon_doc.structure,
+            phonon_doc.supercell_matrix,
+        )
         jobs.append(phonon_supercell_job)
 
         phonon_supercell = phonon_supercell_job.output
@@ -251,6 +263,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             one_shot_approx,
             element_resolved,
             mode_resolved,
+            site_resolved,
         )
         jobs.append(sigma_calcs)
         sigma_a_vals = sigma_calcs.output
