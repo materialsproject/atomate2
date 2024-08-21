@@ -433,9 +433,11 @@ class AseTaskDoc(AseBaseModel):
         ionic_steps = []
         for idx in range(n_steps):
             _ionic_step_data = {
-                key: trajectory.frame_properties[idx].get(key)
-                if key in ionic_step_data
-                else None
+                key: (
+                    trajectory.frame_properties[idx].get(key)
+                    if key in ionic_step_data
+                    else None
+                )
                 for key in ("energy", "forces", "stress")
             }
 
@@ -447,9 +449,11 @@ class AseTaskDoc(AseBaseModel):
             if "magmoms" in trajectory.frame_properties[idx]:
                 _ionic_step_data.update(
                     {
-                        "magmoms": trajectory.frame_properties[idx]["magmoms"]
-                        if "magmoms" in ionic_step_data
-                        else None
+                        "magmoms": (
+                            trajectory.frame_properties[idx]["magmoms"]
+                            if "magmoms" in ionic_step_data
+                            else None
+                        )
                     }
                 )
 
