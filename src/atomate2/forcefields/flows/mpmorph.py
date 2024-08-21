@@ -175,7 +175,21 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
         temp: float | tuple[float, float],
         prev_dir: str | Path | None = None,
     ) -> Flow | Job:
-        """Call the MD maker to create the MD jobs for MLFF Only."""
+        """Call the MLFF MD maker.
+        
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object.
+        temp : float
+            The temperature in Kelvin.
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from.
+
+        Returns
+        ----------
+        A slow quench .Flow or .Job
+        """
         self.md_maker = self.md_maker.update_kwargs(
             update={
                 "name": f"Slow quench MLFF MD Maker {temp}K",

@@ -1,4 +1,4 @@
-"""Define get_random_packed_structure function.
+"""Define utility functions for amorphous structure equilibration.
 
 This file generalizes the MPMorph workflows of
 https://github.com/materialsproject/mpmorph
@@ -257,11 +257,11 @@ def get_average_volume_from_icsd(
 def get_random_packed_structure(
     composition: Composition | str,
     target_atoms: int = 100,
-    vol_exp: float = 1.0,
+    vol_multiply: float = 1.0,
     tol: float = 2.0,
     return_as_job: bool = False,
     vol_per_atom_source: float | str = "mp",
-    db_kwargs: dict | None = None,
+    db_kwargs: dict | None = {"use_cached": True},
     packmol_seed: int = 1,
     packmol_output_dir: str | Path | None = None,
 ) -> Structure | Job:
@@ -269,6 +269,7 @@ def get_random_packed_structure(
     Generate a random packed structure with a target number of atoms.
 
     Designed to make amorphous/glassy structures.
+    Defaults to using cached MP data.
 
     Parameters
     ----------
@@ -276,8 +277,8 @@ def get_random_packed_structure(
         The composition of the target structure.
     target_atoms : int
         The target number of atoms in the structure.
-    vol_exp : float
-        The volume expansion factor to apply to the structure.
+    vol_multiply : float
+        The factor to multiply the strcuture volume by.
     tol : float
         The tolerance to apply to the box size.
     return_as_job : bool
@@ -305,7 +306,7 @@ def get_random_packed_structure(
             function_kwargs={
                 "composition": composition,
                 "target_atoms": target_atoms,
-                "vol_exp": vol_exp,
+                "vol_multiply": vol_multiply,
                 "tol": tol,
                 "return_as_job": False,
                 "vol_per_atom_source": vol_per_atom_source,
@@ -326,7 +327,7 @@ def get_random_packed_structure(
         vol_per_atom = get_average_volume_from_icsd(composition, **db_kwargs)
 
     else:
-        raise ValueError(f"Unknown volume per atom oracle: {vol_per_atom_source}.")
+        raise ValueError(f"Unknown volume per atom source: {vol_per_atom_source}.")
 
     formula, _ = composition.get_integer_formula_and_factor()
     integer_composition = Composition(formula)
@@ -347,7 +348,7 @@ def get_random_packed_structure(
                 f.write("1\ncomment\n" + element + " 0.0 0.0 0.0\n")
             molecules.append({"name": element, "number": num_sites, "coords": xyz_file})
 
-        box_scale = (vol_per_atom * full_cell_composition.num_atoms * vol_exp) ** (
+        box_scale = (vol_per_atom * full_cell_composition.num_atoms * vol_multiply) ** (
             1 / 3
         )
         box_lower_bound = tol / 2

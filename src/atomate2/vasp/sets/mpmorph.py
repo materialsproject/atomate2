@@ -4,15 +4,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from pymatgen.io.vasp import Kpoints
+from pymatgen.io.vasp.sets import MPMDSet
 
 from atomate2.vasp.sets.core import MDSetGenerator
 
 
 @dataclass
-class MPMorphMDSetGenerator(MDSetGenerator):
+class MPMorphMDSetGenerator(MPMDSet):
     """
     Class to generate VASP molecular dynamics input sets for amorphous materials.
+
+    This class wraps around pymatgen's `.MPMDSet` by adding sensible
+    ensemble defaults from atomate2's `.MDSetGenerator`.
 
     Parameters
     ----------
@@ -24,6 +27,9 @@ class MPMorphMDSetGenerator(MDSetGenerator):
         Final temperature. The VASP `TEEND` parameter.
     nsteps
         Number of time steps for simulations. The VASP `NSW` parameter.
+    spin_polarized
+        Whether to do spin polarized calculations.
+        The VASP ISPIN parameter. Defaults to False.
     time_step
         The time step (in femtosecond) for the simulation. The VASP `POTIM` parameter.
     **kwargs
@@ -36,6 +42,7 @@ class MPMorphMDSetGenerator(MDSetGenerator):
     auto_lreal: bool = False
     inherit_incar: bool | None = False
     ensemble: str = "nvt"
+    spin_polarized : bool = False
     time_step: float = 2
     nsteps: int = 2000
 
@@ -50,32 +57,12 @@ class MPMorphMDSetGenerator(MDSetGenerator):
             A dictionary of updates to apply.
         """
         updates = super().incar_updates
-        updates.update(
-            {
-                "ISPIN": 1,  # Do not consider magnetism in AIMD simulations
-                # Perform calculation in real space for AIMD due to large unit cell size
-                "LREAL": "Auto",
-                "LAECHG": False,  # Don't need AECCAR for AIMD
-                "EDIFFG": None,  # Does not apply to MD simulations, see: https://www.vasp.at/wiki/index.php/EDIFFG
-                "GGA": "PS",
-                "LPLANE": False,  # LPLANE is recommended to be False on Cray machines (https://www.vasp.at/wiki/index.php/LPLANE)
-                "LDAUPRINT": 0,
-                "MAGMOM": None,  # Compatibility with non-spin polarized calculations
-            }
-        )
+        updates.update({
+            "LAECHG": False,
+            "EDIFFG": None,
+            **MDSetGenerator._get_ensemble_defaults(self.structure, self.ensemble)
+        })
+        if self.spin_polarized:
+            updates.update(MAGMOM = None)
 
         return updates
-
-    @property
-    def kpoints_updates(self) -> dict:
-        """
-        Get updates to the kpoints configuration for a non-self consistent VASP job.
-
-        Note, these updates will be ignored if the user has set user_kpoint_settings.
-
-        Returns
-        -------
-        dict
-            A dictionary of updates to apply to the KPOINTS config.
-        """
-        return Kpoints()
