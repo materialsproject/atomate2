@@ -201,7 +201,7 @@ class BaseGruneisenMaker(Maker, ABC):
         """
 
     def __post_init__(self) -> None:
-        """Test settings during the initialisation."""
+        """Test settings during the initialization."""
         if self.phonon_maker.bulk_relax_maker is not None:
             warnings.warn(
                 "An additional bulk_relax_maker has been added "
@@ -218,6 +218,6 @@ class BaseGruneisenMaker(Maker, ABC):
             )
         if self.phonon_maker.static_energy_maker is not None:
             warnings.warn(
-                "The static energy maker " "is not needed for " "this workflow.",
+                "The static energy maker is not needed for this workflow.",
                 stacklevel=2,
             )
