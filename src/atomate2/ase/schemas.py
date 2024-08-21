@@ -33,6 +33,7 @@ _task_doc_translation_keys = {
     "objects",
     "is_force_converged",
     "energy_downhill",
+    "tags",
 }
 
 
@@ -227,6 +228,8 @@ class AseStructureTaskDoc(StructureMetadata):
         ),
     )
 
+    tags: Optional[list[str]] = Field(None, description="List of tags for the task.")
+
     @classmethod
     def from_ase_task_doc(
         cls, ase_task_doc: AseTaskDoc, **task_document_kwargs
@@ -289,6 +292,8 @@ class AseMoleculeTaskDoc(MoleculeMetadata):
             "is less than in the initial frame."
         ),
     )
+
+    tags: Optional[list[str]] = Field(None, description="List of tags for the task.")
 
 
 class AseTaskDoc(AseBaseModel):

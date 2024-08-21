@@ -374,7 +374,7 @@ class AseMDMaker(Maker):
             final_mol_or_struct=mol_or_struct,
             trajectory=md_observer.to_pymatgen_trajectory(filename=None),
             dir_name=os.getcwd(),
-            run_time=t_f - t_i,
+            elapsed_time=t_f - t_i,
         )
 
     @property
