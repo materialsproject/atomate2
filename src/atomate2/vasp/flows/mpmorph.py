@@ -83,21 +83,12 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
     convergence_md_maker : EquilibrateVolumeMaker
         MDMaker to generate the equilibrium volumer searcher;
         inherits from EquilibriumVolumeMaker and MDMaker (VASP)
-    production_md_maker : BaseMPMorphMDMaker
-        MDMaker to generate the production run(s);
-        inherits from MDMaker (VASP) or MultiMDMaker
     quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
         SlowQuenchMaker - MDMaker that quenches structure from high to low temperature
         FastQuenchMaker - DoubleRelaxMaker + Static that "quenches" structure at 0K
-    quench_maker_kwargs : dict or None (default)
-        If a dict, options to pass to `quench_maker`.
-        Check atomate2.common.flows.mpmorph for SlowQuenchMaker docstring
-        Example: quench_maker_kwargs = {
-            "quench_n_steps": 1000,
-            "quench_temperature_step": 500,
-            "quench_end_temperature": 500,
-            "quench_start_temperature": 3000,
-        }
+    production_md_maker : BaseMPMorphMDMaker
+        MDMaker to generate the production run(s);
+        inherits from MDMaker (VASP) or MultiMDMaker
     """
 
     name: str = "MP Morph VASP Skeleton MD Maker"
@@ -112,7 +103,6 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
     production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
 
     quench_maker: FastQuenchVaspMaker | SlowQuenchVaspMaker | None = None
-    quench_maker_kwargs: dict[str, Any] | None = None
 
     def _post_init_update(self) -> None:
         """Ensure that VASP input sets correctly set temperature."""
@@ -163,12 +153,6 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
                 replace=MultiMDMaker(
                     md_makers=[self.production_md_maker for _ in range(n_prod_md_steps)]
                 )
-            )
-
-        self.quench_maker_kwargs = self.quench_maker_kwargs or {}
-        if len(self.quench_maker_kwargs) > 0:
-            self.quench_maker = self.quench_maker.update_kwargs(
-                update=self.quench_maker_kwargs, class_filter=type(self.quench_maker)
             )
 
 

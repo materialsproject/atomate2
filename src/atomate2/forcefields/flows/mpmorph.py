@@ -83,16 +83,6 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
         high to low temperature
         FastQuenchMaker - DoubleRelaxMaker + Static that "quenches"
         structure to 0K
-    quench_maker_kwargs : dict or None (default)
-        If a dict, options to pass to `quench_maker`.
-        Check atomate2.common.flows.mpmorph for SlowQuenchMaker docstring
-        Example for MLFFs: quench_maker_kwargs = {
-            "md_maker": LJMDMaker(name="LJ MD Maker"),
-            "quench_n_steps": 1000,
-            "quench_temperature_step": 500,
-            "quench_end_temperature": 500,
-            "quench_start_temperature": 3000,
-        }
     production_md_maker : ForceFieldMDMaker
         MDMaker to generate the production run(s);
         inherits from ForceFieldMDMaker (MLFF)
@@ -108,7 +98,6 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     production_md_maker: ForceFieldMDMaker = field(default_factory=ForceFieldMDMaker)
 
     quench_maker: FastQuenchMLFFMDMaker | SlowQuenchMLFFMDMaker | None = None
-    quench_maker_kwargs: dict[str, Any] | None = None
 
     def _post_init_update(self) -> None:
         """Ensure that forcefield makers correctly set temperature."""
@@ -134,12 +123,6 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
                 n_steps=self.steps_total_production,
             )
         )
-
-        self.quench_maker_kwargs = self.quench_maker_kwargs or {}
-        if len(self.quench_maker_kwargs) > 0:
-            self.quench_maker = self.quench_maker.update_kwargs(
-                update=self.quench_maker_kwargs, class_filter=type(self.quench_maker)
-            )
 
 
 @dataclass
@@ -177,21 +160,7 @@ class SlowQuenchMLFFMDMaker(SlowQuenchMaker):
         temp: float | tuple[float, float],
         prev_dir: str | Path | None = None,
     ) -> Flow | Job:
-        """Call the MLFF MD maker.
-        
-        Parameters
-        ----------
-        structure : .Structure
-            A pymatgen structure object.
-        temp : float
-            The temperature in Kelvin.
-        prev_dir : str or Path or None
-            A previous calculation directory to copy output files from.
-
-        Returns
-        ----------
-        A slow quench .Flow or .Job
-        """
+        """Call the MD maker to create the MD jobs for MLFF Only."""
         self.md_maker = self.md_maker.update_kwargs(
             update={
                 "name": f"Slow quench MLFF MD Maker {temp}K",
