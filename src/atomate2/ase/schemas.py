@@ -147,6 +147,8 @@ class OutputDoc(AseBaseModel):
         None, description="Step-by-step trajectory of the relaxation."
     )
 
+    elapsed_time: Optional[float] = Field("The time taken to run the calculation.")
+
     n_steps: int = Field(
         None, description="total number of steps needed in the relaxation."
     )
@@ -473,6 +475,7 @@ class AseTaskDoc(AseBaseModel):
             forces=final_forces,
             stress=final_stress,
             ionic_steps=ionic_steps,
+            elapsed_time=result.elapsed_time,
             n_steps=n_steps,
         )
 
