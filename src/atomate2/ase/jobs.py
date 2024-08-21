@@ -16,7 +16,7 @@ from atomate2.ase.utils import AseRelaxer
 
 logger = logging.getLogger(__name__)
 
-_ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
+_ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, "ionic_steps"]
 
 if TYPE_CHECKING:
     from pathlib import Path

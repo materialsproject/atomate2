@@ -33,6 +33,7 @@ _task_doc_translation_keys = {
     "objects",
     "is_force_converged",
     "energy_downhill",
+    "tags",
 }
 
 
@@ -65,6 +66,10 @@ class AseResult(BaseModel):
 
     dir_name: Optional[Union[str, Path]] = Field(
         None, description="The directory where the calculation was run"
+    )
+
+    elapsed_time: Optional[float] = Field(
+        None, description="The time taken to run the calculation."
     )
 
     def __getitem__(self, name: str) -> Any:
@@ -142,6 +147,8 @@ class OutputDoc(AseBaseModel):
     ionic_steps: list[IonicStep] = Field(
         None, description="Step-by-step trajectory of the relaxation."
     )
+
+    elapsed_time: Optional[float] = Field("The time taken to run the calculation.")
 
     n_steps: int = Field(
         None, description="total number of steps needed in the relaxation."
@@ -221,6 +228,8 @@ class AseStructureTaskDoc(StructureMetadata):
         ),
     )
 
+    tags: Optional[list[str]] = Field(None, description="List of tags for the task.")
+
     @classmethod
     def from_ase_task_doc(
         cls, ase_task_doc: AseTaskDoc, **task_document_kwargs
@@ -284,6 +293,8 @@ class AseMoleculeTaskDoc(MoleculeMetadata):
         ),
     )
 
+    tags: Optional[list[str]] = Field(None, description="List of tags for the task.")
+
 
 class AseTaskDoc(AseBaseModel):
     """Document containing information on generic ASE jobs."""
@@ -325,6 +336,8 @@ class AseTaskDoc(AseBaseModel):
             "is less than in the initial frame."
         ),
     )
+
+    tags: Optional[list[str]] = Field(None, description="List of tags for the task.")
 
     @classmethod
     def from_ase_compatible_result(
@@ -425,9 +438,11 @@ class AseTaskDoc(AseBaseModel):
         ionic_steps = []
         for idx in range(n_steps):
             _ionic_step_data = {
-                key: trajectory.frame_properties[idx].get(key)
-                if key in ionic_step_data
-                else None
+                key: (
+                    trajectory.frame_properties[idx].get(key)
+                    if key in ionic_step_data
+                    else None
+                )
                 for key in ("energy", "forces", "stress")
             }
 
@@ -439,9 +454,11 @@ class AseTaskDoc(AseBaseModel):
             if "magmoms" in trajectory.frame_properties[idx]:
                 _ionic_step_data.update(
                     {
-                        "magmoms": trajectory.frame_properties[idx]["magmoms"]
-                        if "magmoms" in ionic_step_data
-                        else None
+                        "magmoms": (
+                            trajectory.frame_properties[idx]["magmoms"]
+                            if "magmoms" in ionic_step_data
+                            else None
+                        )
                     }
                 )
 
@@ -467,6 +484,7 @@ class AseTaskDoc(AseBaseModel):
             forces=final_forces,
             stress=final_stress,
             ionic_steps=ionic_steps,
+            elapsed_time=result.elapsed_time,
             n_steps=n_steps,
         )
 

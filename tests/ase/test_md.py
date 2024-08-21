@@ -38,12 +38,14 @@ def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure):
         temperature=1000,
         ensemble="nvt",
         n_steps=100,
+        task_document_kwargs={"tags": ["test"], "store_trajectory": "partial"},
     ).make(fcc_ne_structure)
 
     response = run_locally(md_job)
     output = response[md_job.uuid][1].output
 
     assert isinstance(output, AseStructureTaskDoc)
+    assert output.tags == ["test"]
     assert output.output.energy_per_atom == pytest.approx(
         reference_energies[calculator_name]
     )

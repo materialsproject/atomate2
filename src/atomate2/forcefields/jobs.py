@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-_FORCEFIELD_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
+_FORCEFIELD_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, "ionic_steps"]
 
 
 def forcefield_job(method: Callable) -> job:

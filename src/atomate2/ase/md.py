@@ -6,6 +6,7 @@ import contextlib
 import io
 import os
 import sys
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from enum import Enum
@@ -355,7 +356,9 @@ class AseMDMaker(Maker):
 
         md_runner.attach(_callback, interval=1)
         with contextlib.redirect_stdout(sys.stdout if self.verbose else io.StringIO()):
+            t_i = time.perf_counter()
             md_runner.run(steps=self.n_steps)
+            t_f = time.perf_counter()
 
         if self.traj_file is not None:
             md_observer.save(filename=self.traj_file, fmt=self.traj_file_fmt)
@@ -371,6 +374,7 @@ class AseMDMaker(Maker):
             final_mol_or_struct=mol_or_struct,
             trajectory=md_observer.to_pymatgen_trajectory(filename=None),
             dir_name=os.getcwd(),
+            elapsed_time=t_f - t_i,
         )
 
     @property
