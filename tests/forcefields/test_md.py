@@ -82,7 +82,8 @@ def test_ml_ff_md_maker(
         n_steps=n_steps,
         traj_file="md_traj.json.gz",
         traj_file_fmt="pmg",
-        task_document_kwargs={"store_trajectory": "partial"},
+        store_trajectory="partial",
+        ionic_step_data=("energy", "forces", "stress", "mol_or_struct"),
         calculator_kwargs=calculator_kwargs,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
@@ -101,7 +102,7 @@ def test_ml_ff_md_maker(
     # Check that the ionic steps have the expected physical properties
     assert all(
         key in step.model_dump()
-        for key in ("energy", "forces", "stress", "mol_or_struct")
+        for key in ("energy", "forces", "stress", "mol_or_struct", "structure")
         for step in task_doc.output.ionic_steps
     )
 
@@ -189,9 +190,7 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
             dynamics=dyn,
             n_steps=50,
             traj_file=None,
-            task_document_kwargs={
-                "ionic_step_data": ("energy", "forces", "stress", "structure")
-            },
+            ionic_step_data=("energy", "forces", "stress", "structure"),
         ).make(si_structure)
 
         response = run_locally(job, ensure_success=True)

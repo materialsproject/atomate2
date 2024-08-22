@@ -86,6 +86,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             "mol_or_struct",
         ),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
+        tags: list[str] | None = None,
         **task_document_kwargs,
     ) -> ForceFieldTaskDocument:
         """Create an AseTaskDoc for a task that has ASE-compatible outputs.
@@ -110,6 +111,8 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             Which data to save from each ionic step.
         store_trajectory:
             whether to set the StoreTrajectoryOption
+        tags : list[str] or None
+            A list of tags for the task.
         task_document_kwargs : dict
             Additional keyword args passed to :obj:`.AseTaskDoc()`.
         """
@@ -123,6 +126,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             optimizer_kwargs=optimizer_kwargs,
             ionic_step_data=ionic_step_data,
             store_trajectory=store_trajectory,
+            tags=tags,
             **task_document_kwargs,
         )
         ff_kwargs = {

@@ -7,8 +7,8 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from ase.io import Trajectory as AseTrajectory
+from emmet.core.vasp.calculation import StoreTrajectoryOption
 from jobflow import Maker, job
-from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.ase.schemas import AseResult, AseTaskDoc
@@ -16,54 +16,89 @@ from atomate2.ase.utils import AseRelaxer
 
 logger = logging.getLogger(__name__)
 
-_ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, "ionic_steps"]
-
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Callable
 
     from ase.calculators.calculator import Calculator
-    from pymatgen.core import Molecule
+    from pymatgen.core import Molecule, Structure
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
-
-def ase_job(method: Callable) -> job:
-    """
-    Decorate the ``make`` method of ASE job makers.
-
-    This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
-    settings for all ASE jobs. For example, it ensures that large data objects
-    (currently only trajectories) are all stored in the atomate2 data store.
-    It also configures the output schema to be a AseStructureTaskDoc :obj:`.TaskDoc`.
-
-    Any makers that return ASE jobs (not flows) should decorate the
-    ``make`` method with @ase_job. For example:
-
-    .. code-block:: python
-
-        class MyAseMaker(Maker):
-            @ase_job
-            def make(structure):
-                # code to run ase job.
-                pass
-
-    Parameters
-    ----------
-    method : callable
-        A Maker.make method. This should not be specified directly and is
-        implied by the decorator.
-
-    Returns
-    -------
-    callable
-        A decorated version of the make function that will generate forcefield jobs.
-    """
-    return job(method, data=_ASE_DATA_OBJECTS)  # , output_schema=AseStructureTaskDoc)
+_ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
 
 
 @dataclass
-class AseRelaxMaker(Maker):
+class AseMaker(Maker):
+    """
+    Define basic template of ASE-based jobs.
+
+    This class defines two functions relevant attributes
+    for the ASE TaskDoc schemas, as well as two methods
+    that must be implemented in subclasses:
+        1. `calculator`: the ASE .Calculator object
+        2. `run_ase`: which actually makes the call to ASE.
+
+    Parameters
+    ----------
+    name: str
+        The name of the job
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
+    ionic_step_data : tuple[str,...] or None
+        Quantities to store in the TaskDocument ionic_steps.
+        Possible options are "struct_or_mol", "energy",
+        "forces", "stress", and "magmoms".
+        "structure" and "molecule" are aliases for "struct_or_mol".
+    store_trajectory : emmet .StoreTrajectoryOption = "no"
+        Whether to store trajectory information ("no") or complete trajectories
+        ("partial" or "full", which are identical).
+    tags : list[str] or None
+        A list of tags for the task.
+    """
+
+    name: str = "ASE maker"
+    calculator_kwargs: dict = field(default_factory=dict)
+    ionic_step_data: tuple[str, ...] | None = (
+        "energy",
+        "forces",
+        "magmoms",
+        "stress",
+        "mol_or_struct",
+    )
+    store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO
+    tags: list[str] | None = None
+
+    def run_ase(
+        self,
+        mol_or_struct: Structure | Molecule,
+        prev_dir: str | Path | None = None,
+    ) -> AseResult:
+        """
+        Run ASE, method to be implemented in subclasses.
+
+        This method exists to permit subclasses to redefine `make`
+        for different output schemas.
+
+        Parameters
+        ----------
+        mol_or_struct: .Molecule or .Structure
+            pymatgen molecule or structure
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
+        """
+        return NotImplemented
+
+    @property
+    def calculator(self) -> Calculator:
+        """ASE calculator, method to be implemented in subclasses."""
+        return NotImplemented
+
+
+@dataclass
+class AseRelaxMaker(AseMaker):
     """
     Base Maker to calculate forces and stresses using any ASE calculator.
 
@@ -79,7 +114,7 @@ class AseRelaxMaker(Maker):
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
         Refines the symmetry of the initial structure.
-    symprec : float = 1e-2
+    symprec : float | None = 1e-2
         Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
@@ -89,21 +124,27 @@ class AseRelaxMaker(Maker):
         Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
-        Additional keyword args passed to :obj:`.AseStructureTaskDoc()`.
+    ionic_step_data : tuple[str,...] or None
+        Quantities to store in the TaskDocument ionic_steps.
+        Possible options are "struct_or_mol", "energy",
+        "forces", "stress", and "magmoms".
+        "structure" and "molecule" are aliases for "struct_or_mol".
+    store_trajectory : emmet .StoreTrajectoryOption = "no"
+        Whether to store trajectory information ("no") or complete trajectories
+        ("partial" or "full", which are identical).
+    tags : list[str] or None
+        A list of tags for the task.
     """
 
     name: str = "ASE relaxation"
     relax_cell: bool = True
     fix_symmetry: bool = False
-    symprec: float = 1e-2
+    symprec: float | None = 1e-2
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
-    calculator_kwargs: dict = field(default_factory=dict)
-    task_document_kwargs: dict = field(default_factory=dict)
 
-    @ase_job
+    @job(data=_ASE_DATA_OBJECTS)
     def make(
         self,
         mol_or_struct: Molecule | Structure,
@@ -120,22 +161,22 @@ class AseRelaxMaker(Maker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
 
-        Return
-        --------
-
+        Returns
+        -------
+        AseStructureTaskDoc or AseMoleculeTaskDoc
         """
-        if isinstance(mol_or_struct, Structure):
-            self.task_document_kwargs.update({"relax_cell": self.relax_cell})
-
         return AseTaskDoc.to_mol_or_struct_metadata_doc(
             getattr(self.calculator, "name", self.calculator.__class__),
             self.run_ase(mol_or_struct, prev_dir=prev_dir),
             self.steps,
             relax_kwargs=self.relax_kwargs,
             optimizer_kwargs=self.optimizer_kwargs,
+            relax_cell=self.relax_cell,
             fix_symmetry=self.fix_symmetry,
-            symprec=self.symprec,
-            **self.task_document_kwargs,
+            symprec=self.symprec if self.fix_symmetry else None,
+            ionic_step_data=self.ionic_step_data,
+            store_trajectory=self.store_trajectory,
+            tags=self.tags,
         )
 
     def run_ase(
@@ -145,9 +186,6 @@ class AseRelaxMaker(Maker):
     ) -> AseResult:
         """
         Relax a structure or molecule using ASE, not as a job.
-
-        This method exists to permit child classes to redefine `make`
-        for different output schemas.
 
         Parameters
         ----------
@@ -171,11 +209,6 @@ class AseRelaxMaker(Maker):
             **self.optimizer_kwargs,
         )
         return relaxer.relax(mol_or_struct, steps=self.steps, **self.relax_kwargs)
-
-    @property
-    def calculator(self) -> Calculator:
-        """ASE calculator, can be overwritten by user."""
-        return NotImplemented
 
 
 @dataclass

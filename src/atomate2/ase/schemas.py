@@ -69,7 +69,7 @@ class AseResult(BaseModel):
     )
 
     elapsed_time: Optional[float] = Field(
-        None, description="The time taken to run the ASE calculator."
+        None, description="The time taken to run the ASE calculation in seconds."
     )
 
     def __getitem__(self, name: str) -> Any:
@@ -85,6 +85,7 @@ class AseObject(ValueEnum):
     """Types of ASE data objects."""
 
     TRAJECTORY = "trajectory"
+    IONIC_STEPS = "ionic_steps"
 
 
 class AseBaseModel(BaseModel):
@@ -109,7 +110,7 @@ class AseBaseModel(BaseModel):
 class IonicStep(AseBaseModel):
     """Document defining the information at each ionic step."""
 
-    energy: float = Field(None, description="The free energy.")
+    energy: Optional[float] = Field(None, description="The free energy.")
     forces: Optional[list[list[float]]] = Field(
         None, description="The forces on each atom."
     )
@@ -148,7 +149,9 @@ class OutputDoc(AseBaseModel):
         None, description="Step-by-step trajectory of the relaxation."
     )
 
-    elapsed_time: Optional[float] = Field("The time taken to run the ASE calculator.")
+    elapsed_time: Optional[float] = Field(
+        None, description="The time taken to run the ASE calculation in seconds."
+    )
 
     n_steps: int = Field(
         None, description="total number of steps needed in the relaxation."
@@ -169,7 +172,7 @@ class InputDoc(AseBaseModel):
             "Refines the symmetry of the initial molecule or structure."
         ),
     )
-    symprec: float = Field(
+    symprec: Optional[float] = Field(
         None, description="Tolerance for symmetry finding in case of fix_symmetry."
     )
     steps: int = Field(
@@ -337,7 +340,7 @@ class AseTaskDoc(AseBaseModel):
         ),
     )
 
-    tags: Optional[list[str]] = Field(None, description="List of tags for the task.")
+    tags: Optional[list[str]] = Field(None, description="A list of tags for the task.")
 
     @classmethod
     def from_ase_compatible_result(
@@ -347,9 +350,10 @@ class AseTaskDoc(AseBaseModel):
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
+        relax_cell: bool = True,
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
-        ionic_step_data: tuple = (
+        ionic_step_data: tuple[str, ...] | None = (
             "energy",
             "forces",
             "magmoms",
@@ -357,6 +361,7 @@ class AseTaskDoc(AseBaseModel):
             "mol_or_struct",
         ),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
+        tags: list[str] | None = None,
         **task_document_kwargs,
     ) -> AseTaskDoc:
         """Create an AseTaskDoc for a task that has ASE-compatible outputs.
@@ -369,6 +374,8 @@ class AseTaskDoc(AseBaseModel):
             The output results from the task.
         steps : int
             Maximum number of ionic steps allowed during relaxation.
+        relax_cell : bool = True
+            Whether to allow the cell shape/volume to change during relaxation.
         fix_symmetry : bool
             Whether to fix the symmetry of the ions during relaxation.
         symprec : float
@@ -377,10 +384,13 @@ class AseTaskDoc(AseBaseModel):
             Keyword arguments that will get passed to :obj:`Relaxer.relax`.
         optimizer_kwargs : dict
             Keyword arguments that will get passed to :obj:`Relaxer()`.
-        ionic_step_data : tuple
+        ionic_step_data : tuple or None
             Which data to save from each ionic step.
-        store_trajectory:
-            whether to set the StoreTrajectoryOption
+        store_trajectory: emmet .StoreTrajectoryOption
+            Whether to store trajectory information ("no") or complete trajectories
+            ("partial" or "full", which are identical).
+        tags : list[str] or None
+            A list of tags for the task.
         task_document_kwargs : dict
             Additional keyword args passed to :obj:`.AseTaskDoc()`.
         """
@@ -403,6 +413,7 @@ class AseTaskDoc(AseBaseModel):
 
         input_doc = InputDoc(
             mol_or_struct=input_mol_or_struct,
+            relax_cell=relax_cell,
             fix_symmetry=fix_symmetry,
             symprec=symprec,
             steps=steps,
@@ -436,38 +447,44 @@ class AseTaskDoc(AseBaseModel):
         final_stress = trajectory.frame_properties[-1].get("stress")
 
         ionic_steps = []
-        for idx in range(n_steps):
-            _ionic_step_data = {
-                key: (
-                    trajectory.frame_properties[idx].get(key)
-                    if key in ionic_step_data
+        if ionic_step_data is not None and len(ionic_step_data) > 0:
+            for idx in range(n_steps):
+                _ionic_step_data = {
+                    key: (
+                        trajectory.frame_properties[idx].get(key)
+                        if key in ionic_step_data
+                        else None
+                    )
+                    for key in ("energy", "forces", "stress")
+                }
+
+                current_mol_or_struct = (
+                    trajectory[idx]
+                    if any(
+                        v in ionic_step_data
+                        for v in ("mol_or_struct", "structure", "molecule")
+                    )
                     else None
                 )
-                for key in ("energy", "forces", "stress")
-            }
 
-            current_mol_or_struct = (
-                trajectory[idx] if "mol_or_struct" in ionic_step_data else None
-            )
+                # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
+                if "magmoms" in trajectory.frame_properties[idx]:
+                    _ionic_step_data.update(
+                        {
+                            "magmoms": (
+                                trajectory.frame_properties[idx]["magmoms"]
+                                if "magmoms" in ionic_step_data
+                                else None
+                            )
+                        }
+                    )
 
-            # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
-            if "magmoms" in trajectory.frame_properties[idx]:
-                _ionic_step_data.update(
-                    {
-                        "magmoms": (
-                            trajectory.frame_properties[idx]["magmoms"]
-                            if "magmoms" in ionic_step_data
-                            else None
-                        )
-                    }
+                ionic_step = IonicStep(
+                    mol_or_struct=current_mol_or_struct,
+                    **_ionic_step_data,
                 )
 
-            ionic_step = IonicStep(
-                mol_or_struct=current_mol_or_struct,
-                **_ionic_step_data,
-            )
-
-            ionic_steps.append(ionic_step)
+                ionic_steps.append(ionic_step)
 
         objects: dict[AseObject, Any] = {}
         if store_trajectory != StoreTrajectoryOption.NO:
@@ -498,6 +515,7 @@ class AseTaskDoc(AseBaseModel):
             is_force_converged=result.is_force_converged,
             energy_downhill=result.energy_downhill,
             dir_name=result.dir_name,
+            tags=tags,
             **task_document_kwargs,
         )
 

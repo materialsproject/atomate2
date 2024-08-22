@@ -25,10 +25,8 @@ from atomate2.forcefields.schemas import ForceFieldTaskDocument
 
 
 def test_chgnet_static_maker(si_structure):
-    task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
-
     # generate job
-    job = CHGNetStaticMaker(task_document_kwargs=task_doc_kwargs).make(si_structure)
+    job = CHGNetStaticMaker(ionic_step_data=("structure", "energy")).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -105,10 +103,8 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
 
 
 def test_m3gnet_static_maker(si_structure):
-    task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
-
     # generate job
-    job = M3GNetStaticMaker(task_document_kwargs=task_doc_kwargs).make(si_structure)
+    job = M3GNetStaticMaker(ionic_step_data=("structure", "energy")).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -153,12 +149,11 @@ mace_paths = pytest.mark.parametrize(
 
 @mace_paths
 def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
-    task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
-
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = MACEStaticMaker(
-        calculator_kwargs={"model": model}, task_document_kwargs=task_doc_kwargs
+        ionic_step_data=("structure", "energy"),
+        calculator_kwargs={"model": model},
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -274,16 +269,14 @@ def test_mace_relax_maker(
 def test_gap_static_maker(si_structure: Structure, test_dir):
     importorskip("quippy")
 
-    task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
-
     # generate job
     # Test files have been provided by @YuanbinLiu (University of Oxford)
     job = GAPStaticMaker(
+        ionic_step_data=("structure", "energy"),
         calculator_kwargs={
             "args_str": "IP GAP",
             "param_filename": str(test_dir / "forcefields" / "gap" / "gap_file.xml"),
         },
-        task_document_kwargs=task_doc_kwargs,
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -298,8 +291,6 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
 
 
 def test_nep_static_maker(al2_au_structure: Structure, test_dir: Path):
-    task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
-
     # NOTE: The test NEP model is specifically trained on 16 elemental metals
     # thus a new Al2Au structure is added.
     # The NEP model used for the tests is licensed under a
@@ -307,7 +298,7 @@ def test_nep_static_maker(al2_au_structure: Structure, test_dir: Path):
     # and downloaded from https://doi.org/10.5281/zenodo.10081677
     # Also cite the original work if you use this specific model : https://arxiv.org/abs/2311.04732
     job = NEPStaticMaker(
-        task_document_kwargs=task_doc_kwargs,
+        ionic_step_data=("structure", "energy"),
         calculator_kwargs={
             "model_filename": test_dir / "forcefields" / "nep" / "nep.txt"
         },
@@ -372,12 +363,11 @@ def test_nep_relax_maker(
 
 def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     importorskip("nequip")
-    task_doc_kwargs = {"ionic_step_data": ("structure", "energy")}
 
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = NequipStaticMaker(
-        task_document_kwargs=task_doc_kwargs,
+        ionic_step_data=("structure", "energy"),
         calculator_kwargs={
             "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
         },

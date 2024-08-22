@@ -22,13 +22,14 @@ from ase.md.velocitydistribution import (
     Stationary,
     ZeroRotation,
 )
-from jobflow import Maker
+from emmet.core.vasp.calculation import StoreTrajectoryOption
+from jobflow import job
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 from scipy.interpolate import interp1d
 from scipy.linalg import schur
 
-from atomate2.ase.jobs import ase_job
+from atomate2.ase.jobs import _ASE_DATA_OBJECTS, AseMaker
 from atomate2.ase.schemas import AseResult, AseTaskDoc
 from atomate2.ase.utils import TrajectoryObserver
 
@@ -71,7 +72,7 @@ for preset in DynamicsPresets.__members__:
 
 
 @dataclass
-class AseMDMaker(Maker):
+class AseMDMaker(AseMaker):
     """
     Perform MD with the Atomic Simulation Environment (ASE).
 
@@ -119,6 +120,16 @@ class AseMDMaker(Maker):
         .MolecularDynamics function
     calculator_kwargs : dict
         kwargs to pass to the ASE calculator class
+    ionic_step_data : tuple[str,...] or None
+        Quantities to store in the TaskDocument ionic_steps.
+        Possible options are "struct_or_mol", "energy",
+        "forces", "stress", and "magmoms".
+        "structure" and "molecule" are aliases for "struct_or_mol".
+    store_trajectory : emmet .StoreTrajectoryOption = "partial"
+        Whether to store trajectory information ("no") or complete trajectories
+        ("partial" or "full", which are identical).
+    tags : list[str] or None
+        A list of tags for the task.
     traj_file : str | Path | None = None
         If a str or Path, the name of the file to save the MD trajectory to.
         If None, the trajectory is not written to disk
@@ -129,17 +140,13 @@ class AseMDMaker(Maker):
         If "xdatcar, writes a VASP-style XDATCAR
     traj_interval : int
         The step interval for saving the trajectories.
-    mb_velocity_seed : int | None = None
+    mb_velocity_seed : int or None
         If an int, a random number seed for generating initial velocities
         from a Maxwell-Boltzmann distribution.
     zero_linear_momentum : bool = False
         Whether to initialize the atomic velocities with zero linear momentum
     zero_angular_momentum : bool = False
         Whether to initialize the atomic velocities with zero angular momentum
-    task_document_kwargs: dict
-        Options to pass to the TaskDoc. Default choice
-            {"store_trajectory": "partial", "ionic_step_data": ("energy",),}
-        is consistent with atomate2.vasp.md.MDMaker
     verbose : bool = False
         Whether to print stdout to screen during the MD run.
     """
@@ -153,18 +160,14 @@ class AseMDMaker(Maker):
     pressure: float | Sequence | np.ndarray | None = None
     ase_md_kwargs: dict | None = None
     calculator_kwargs: dict = field(default_factory=dict)
+    ionic_step_data: tuple[str, ...] | None = None
+    store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.PARTIAL
     traj_file: str | Path | None = None
     traj_file_fmt: Literal["pmg", "ase"] = "ase"
     traj_interval: int = 1
     mb_velocity_seed: int | None = None
     zero_linear_momentum: bool = False
     zero_angular_momentum: bool = False
-    task_document_kwargs: dict = field(
-        default_factory=lambda: {
-            "store_trajectory": "partial",
-            "ionic_step_data": ("energy",),  # energy is required in ionic steps
-        }
-    )
     verbose: bool = False
 
     @staticmethod
@@ -234,7 +237,7 @@ class AseMDMaker(Maker):
                 10.0 * 1e-3 / units.fs,  # Same default as in VASP: 10 ps^-1
             )
 
-    @ase_job
+    @job(data=[*_ASE_DATA_OBJECTS, "output.ionic_steps"])
     def make(
         self,
         mol_or_struct: Molecule | Structure,
@@ -251,15 +254,17 @@ class AseMDMaker(Maker):
             A previous calculation directory to copy output files from. Unused, just
             added to match the method signature of other makers.
         """
-        self.task_document_kwargs = self.task_document_kwargs or {}
-
         return AseTaskDoc.to_mol_or_struct_metadata_doc(
             getattr(self.calculator, "name", self.calculator.__class__),
             self.run_ase(mol_or_struct, prev_dir=prev_dir),
             steps=self.n_steps,
             relax_kwargs=None,
             optimizer_kwargs=None,
-            **self.task_document_kwargs,
+            fix_symmetry=False,
+            symprec=None,
+            ionic_step_data=self.ionic_step_data,
+            store_trajectory=self.store_trajectory,
+            tags=self.tags,
         )
 
     def run_ase(
@@ -367,8 +372,6 @@ class AseMDMaker(Maker):
             atoms,
             cls=Structure if isinstance(mol_or_struct, Structure) else Molecule,
         )
-
-        self.task_document_kwargs = self.task_document_kwargs or {}
 
         return AseResult(
             final_mol_or_struct=mol_or_struct,
