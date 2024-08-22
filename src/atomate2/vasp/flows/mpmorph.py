@@ -31,6 +31,9 @@ from atomate2.vasp.jobs.mpmorph import (
     FastQuenchVaspMaker,
     SlowQuenchVaspMaker,
 )
+
+from atomate2.vasp.jobs.base import BaseVaspMaker
+from atomate2.vasp.flows.mp import MPGGADoubleRelaxStaticMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 
 if TYPE_CHECKING:
@@ -70,7 +73,7 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
         default 300K.
         Use only for lowering temperarture for production run
     md_maker : BaseMPMorphMDMaker
-        MDMaker to generate the molecular dynamics jobs specifically for MPMorph AIMD;
+        MDMaker or MultiMDMaker to generate the molecular dynamics jobs specifically for MPMorph AIMD;
         inherits from MDMaker (VASP)
     steps_convergence: int | None = None
         Defaults to 5000 steps unless specified
@@ -98,9 +101,11 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
     steps_single_production_run: int | None = 5000
     steps_total_production: int = 10000
 
-    md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
+    md_maker: MDMaker | MultiMDMaker = field(default_factory=BaseMPMorphMDMaker)
     convergence_md_maker: EquilibriumVolumeMaker | None = None
-    production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
+    production_md_maker: MDMaker | MultiMDMaker = field(
+        default_factory=BaseMPMorphMDMaker
+    )
 
     quench_maker: FastQuenchVaspMaker | SlowQuenchVaspMaker | None = None
 
@@ -329,7 +334,8 @@ class MPMorphVaspMDFastQuenchMaker(BaseMPMorphVaspMDMaker):
 
     Calculates the equilibrium volume of a structure at a given temperature.
     A convergence fitting for the volume and finally a production run at a
-    given temperature.
+    given temperature. Runs a "Fast Quench" at 0K using a double relaxation
+    plus static.
 
     Check atomate2.common.flows.mpmorph for MPMorphMDMaker
 
@@ -374,7 +380,7 @@ class MPMorphVaspMDFastQuenchMaker(BaseMPMorphVaspMDMaker):
 
     md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
     production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
-    quench_maker: FastQuenchVaspMaker = field(default_factory=FastQuenchVaspMaker)
+    quench_maker: BaseVaspMaker = field(default_factory=MPGGADoubleRelaxStaticMaker)
 
 
 # TODO: Below is first version of MPMorphVaspMDMaker;
