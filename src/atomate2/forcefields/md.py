@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
+import warnings
 
 from atomate2.ase.md import AseMDMaker
 from atomate2.forcefields import MLFF
@@ -69,6 +70,14 @@ class ForceFieldMDMaker(AseMDMaker):
         .MolecularDynamics function
     calculator_kwargs : dict
         kwargs to pass to the ASE calculator class
+    ionic_step_data : tuple[str,...] or None
+        Quantities to store in the TaskDocument ionic_steps.
+        Acceptable options are "struct_or_mol", "energy", "forces", "stress", and "magmoms"
+    store_trajectory : emmet .StoreTrajectoryOption = "partial"
+        Whether to store trajectory information ("no") or complete trajectories
+        ("partial" or "full", which are identical).
+    tags : list[str] or None
+        A list of tags for the task.
     traj_file : str | Path | None = None
         If a str or Path, the name of the file to save the MD trajectory to.
         If None, the trajectory is not written to disk
@@ -79,21 +88,20 @@ class ForceFieldMDMaker(AseMDMaker):
         If "xdatcar, writes a VASP-style XDATCAR
     traj_interval : int
         The step interval for saving the trajectories.
-    mb_velocity_seed : int | None = None
+    mb_velocity_seed : int or None
         If an int, a random number seed for generating initial velocities
         from a Maxwell-Boltzmann distribution.
     zero_linear_momentum : bool = False
         Whether to initialize the atomic velocities with zero linear momentum
     zero_angular_momentum : bool = False
         Whether to initialize the atomic velocities with zero angular momentum
-    task_document_kwargs: dict
-        Options to pass to the TaskDoc. Default choice
-            {"store_trajectory": "partial", "ionic_step_data": ("energy",),}
-        is consistent with atomate2.vasp.md.MDMaker
+    task_document_kwargs: dict or None (deprecated)
+        Options to pass to the TaskDoc.
     """
 
     name: str = "Forcefield MD"
     force_field_name: str = f"{MLFF.Forcefield}"
+    task_document_kwargs : dict = None
 
     @forcefield_job
     def make(
@@ -116,6 +124,12 @@ class ForceFieldMDMaker(AseMDMaker):
             md_result = self.run_ase(structure, prev_dir=prev_dir)
 
         self.task_document_kwargs = self.task_document_kwargs or {}
+        if len(self.task_document_kwargs) > 0:
+            warnings.warn(
+                "`task_document_kwargs` is now deprecated, please use the top-level "
+                "attributes `ionic_step_data` and `store_trajectory`",
+                DeprecationWarning
+            )
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
@@ -124,6 +138,11 @@ class ForceFieldMDMaker(AseMDMaker):
             steps=self.n_steps,
             relax_kwargs=None,
             optimizer_kwargs=None,
+            fix_symmetry = False,
+            symprec = None,
+            ionic_step_data = self.ionic_step_data,
+            store_trajectory = self.store_trajectory,
+            tags = self.tags,
             **self.task_document_kwargs,
         )
 

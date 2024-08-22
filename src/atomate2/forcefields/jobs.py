@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
-
+import warnings
 from ase.io import Trajectory as AseTrajectory
 from ase.units import GPa as _GPa_to_eV_per_A3
 from jobflow import job
@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from typing import Callable
 
     from ase.calculators.calculator import Calculator
+    from emmet.core.vasp.calculation import StoreTrajectoryOption
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
@@ -84,7 +85,7 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
         Refines the symmetry of the initial structure.
-    symprec : float = 1e-2
+    symprec : float | None = 1e-2
         Tolerance for symmetry finding in case of fix_symmetry.
     steps : int
         Maximum number of ionic steps allowed during relaxation.
@@ -94,7 +95,15 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
         Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    ionic_step_data : tuple[str,...] or None
+        Quantities to store in the TaskDocument ionic_steps.
+        Acceptable options are "struct_or_mol", "energy", "forces", "stress", and "magmoms"
+    store_trajectory : emmet .StoreTrajectoryOption = "no"
+        Whether to store trajectory information ("no") or complete trajectories
+        ("partial" or "full", which are identical).
+    tags : list[str] or None
+        A list of tags for the task.
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -102,7 +111,7 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
     force_field_name: str = f"{MLFF.Forcefield}"
     relax_cell: bool = True
     fix_symmetry: bool = False
-    symprec: float = 1e-2
+    symprec: float | None = 1e-2
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
@@ -126,7 +135,13 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
         """
         with revert_default_dtype():
             ase_result = self.run_ase(structure, prev_dir=prev_dir)
-        self.task_document_kwargs.update({"relax_cell": self.relax_cell})
+
+        if len(self.task_document_kwargs) > 0:
+            warnings.warn(
+                "`task_document_kwargs` is now deprecated, please use the top-level "
+                "attributes `ionic_step_data` and `store_trajectory`",
+                DeprecationWarning
+            )
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.force_field_name,
@@ -134,8 +149,12 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
             self.steps,
             relax_kwargs=self.relax_kwargs,
             optimizer_kwargs=self.optimizer_kwargs,
+            relax_cell = self.relax_cell,
             fix_symmetry=self.fix_symmetry,
-            symprec=self.symprec,
+            symprec=self.symprec if self.fix_symmetry else None,
+            ionic_step_data=self.ionic_step_data,
+            store_trajectory=self.store_trajectory,
+            tags = self.tags,
             **self.task_document_kwargs,
         )
 
@@ -162,7 +181,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -200,7 +219,7 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -229,7 +248,7 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
         The job name.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -267,7 +286,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -311,7 +330,7 @@ class NEPRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -342,7 +361,7 @@ class NEPStaticMaker(ForceFieldStaticMaker):
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -380,7 +399,7 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -408,7 +427,7 @@ class NequipStaticMaker(ForceFieldStaticMaker):
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -430,7 +449,7 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -472,7 +491,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         Can be a URL starting with https://. If not set, loads the universal MACE-MP
         trained for Matbench Discovery on the MPtrj dataset available at
         https://figshare.com/articles/dataset/22715158.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -504,7 +523,7 @@ class MACEStaticMaker(ForceFieldStaticMaker):
         Can be a URL starting with https://. If not set, loads the universal MACE-MP
         trained for Matbench Discovery on the MPtrj dataset available at
         https://figshare.com/articles/dataset/22715158.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -546,7 +565,7 @@ class SevenNetRelaxMaker(ForceFieldRelaxMaker):
         Can be a URL starting with https://. If not set, loads the universal MACE-MP
         trained for Matbench Discovery on the MPtrj dataset available at
         https://figshare.com/articles/dataset/22715158.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -581,7 +600,7 @@ class SevenNetStaticMaker(ForceFieldStaticMaker):
         Can be a URL starting with https://. If not set, loads the universal MACE-MP
         trained for Matbench Discovery on the MPtrj dataset available at
         https://figshare.com/articles/dataset/22715158.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -616,7 +635,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
         Keyword arguments that will get passed to :obj:`AseRelaxer()`.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
@@ -650,7 +669,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
+    task_document_kwargs : dict (deprecated)
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
