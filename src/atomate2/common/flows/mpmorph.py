@@ -59,7 +59,7 @@ class EquilibriumVolumeMaker(Maker):
     name: str = "Equilibrium Volume Maker"
     md_maker: Maker | None = None
     postprocessor: EOSPostProcessor = field(default_factory=MPMorphPVPostProcess)
-    initial_strain : float = 0.2
+    initial_strain: float = 0.2
     min_strain: float = 0.5
     max_attempts: int | None = 20
     energy_average_frames: int = 1
@@ -88,9 +88,13 @@ class EquilibriumVolumeMaker(Maker):
         .Flow, an MPMorph flow
         """
         if working_outputs is None:
-            if isinstance(self.initial_strain,(float,int)):
-                self.initial_strain = tuple((-1)**(i+1)*abs(self.initial_strain) for i in range(2))
-            linear_strain = np.linspace(*self.initial_strain, self.postprocessor.min_data_points)
+            if isinstance(self.initial_strain, (float, int)):
+                self.initial_strain = tuple(
+                    (-1) ** (i + 1) * abs(self.initial_strain) for i in range(2)
+                )
+            linear_strain = np.linspace(
+                *self.initial_strain, self.postprocessor.min_data_points
+            )
             working_outputs = {
                 "relax": {
                     key: [] for key in ("energies", "volume", "stress", "pressure")
@@ -209,11 +213,11 @@ class MPMorphMDMaker(Maker):
         Name of the flows produced by this maker.
     convergence_md_maker : EquilibrateVolumeMaker
         MDMaker to generate the equilibrium volumer searcher
+    production_md_maker : Maker
+        MDMaker to generate the production run(s)
     quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
         SlowQuenchMaker - MDMaker that quenchs structure from high to low temperature
         FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
-    production_md_maker : Maker
-        MDMaker to generate the production run(s)
     """
 
     name: str = "Base MPMorph MD"
@@ -476,7 +480,6 @@ class SlowQuenchMaker(Maker):
         return NotImplemented
 
 
-
 @dataclass
 class AmorphousLimitMaker(Maker):
     """Create an amorphous structure and equilibrate with MPMorph.
@@ -495,7 +498,6 @@ class AmorphousLimitMaker(Maker):
 
     name: str = "Amorphous Limit Maker"
     mpmorph_maker: MPMorphMDMaker = field(default_factory=MPMorphMDMaker)
-    quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
     packmol_opts: dict = field(
         default_factory=lambda: {
             "target_atoms": 100,
