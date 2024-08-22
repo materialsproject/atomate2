@@ -144,7 +144,7 @@ class OutputDoc(AseBaseModel):
         None, description="The stress on the cell in units of kbar (in Voigt notation)."
     )
 
-    ionic_steps: list[IonicStep] | dict = Field(
+    ionic_steps: Union[list[IonicStep], dict] = Field(
         None, description="Step-by-step trajectory of the relaxation."
     )
 
