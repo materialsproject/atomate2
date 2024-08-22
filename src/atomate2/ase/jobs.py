@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 from ase.io import Trajectory as AseTrajectory
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from jobflow import Maker, job
-from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.ase.schemas import AseResult, AseTaskDoc
@@ -21,11 +20,12 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from ase.calculators.calculator import Calculator
-    from pymatgen.core import Molecule
+    from pymatgen.core import Molecule, Structure
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
 _ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
+
 
 @dataclass
 class AseMaker(Maker):
@@ -33,7 +33,7 @@ class AseMaker(Maker):
     Define basic template of ASE-based jobs.
 
     This class defines two functions relevant attributes
-    for the ASE TaskDoc schemas, as well as two methods 
+    for the ASE TaskDoc schemas, as well as two methods
     that must be implemented in subclasses:
         1. `calculator`: the ASE .Calculator object
         2. `run_ase`: which actually makes the call to ASE.
@@ -48,18 +48,27 @@ class AseMaker(Maker):
         Keyword arguments that will get passed to the ASE calculator.
     ionic_step_data : tuple[str,...] or None
         Quantities to store in the TaskDocument ionic_steps.
-        Acceptable options are "struct_or_mol", "energy", "forces", "stress", and "magmoms"
+        Possible options are "struct_or_mol", "energy",
+        "forces", "stress", and "magmoms".
+        "structure" and "molecule" are aliases for "struct_or_mol".
     store_trajectory : emmet .StoreTrajectoryOption = "no"
         Whether to store trajectory information ("no") or complete trajectories
         ("partial" or "full", which are identical).
     tags : list[str] or None
         A list of tags for the task.
     """
+
     name: str = "ASE maker"
     calculator_kwargs: dict = field(default_factory=dict)
-    ionic_step_data : tuple[str,...] | None = ("energy","forces","magmoms","stress","mol_or_struct",)
-    store_trajectory : StoreTrajectoryOption = StoreTrajectoryOption.NO
-    tags : list[str] | None = None
+    ionic_step_data: tuple[str, ...] | None = (
+        "energy",
+        "forces",
+        "magmoms",
+        "stress",
+        "mol_or_struct",
+    )
+    store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO
+    tags: list[str] | None = None
 
     def run_ase(
         self,
@@ -117,7 +126,9 @@ class AseRelaxMaker(AseMaker):
         Keyword arguments that will get passed to the ASE calculator.
     ionic_step_data : tuple[str,...] or None
         Quantities to store in the TaskDocument ionic_steps.
-        Acceptable options are "struct_or_mol", "energy", "forces", "stress", and "magmoms"
+        Possible options are "struct_or_mol", "energy",
+        "forces", "stress", and "magmoms".
+        "structure" and "molecule" are aliases for "struct_or_mol".
     store_trajectory : emmet .StoreTrajectoryOption = "no"
         Whether to store trajectory information ("no") or complete trajectories
         ("partial" or "full", which are identical).
@@ -151,22 +162,21 @@ class AseRelaxMaker(AseMaker):
                 added to match the method signature of other makers.
 
         Returns
-        --------
+        -------
         AseStructureTaskDoc or AseMoleculeTaskDoc
         """
-
         return AseTaskDoc.to_mol_or_struct_metadata_doc(
             getattr(self.calculator, "name", self.calculator.__class__),
             self.run_ase(mol_or_struct, prev_dir=prev_dir),
             self.steps,
             relax_kwargs=self.relax_kwargs,
             optimizer_kwargs=self.optimizer_kwargs,
-            relax_cell = self.relax_cell,
+            relax_cell=self.relax_cell,
             fix_symmetry=self.fix_symmetry,
             symprec=self.symprec if self.fix_symmetry else None,
-            ionic_step_data = self.ionic_step_data,
-            store_trajectory = self.store_trajectory,
-            tags = self.tags,
+            ionic_step_data=self.ionic_step_data,
+            store_trajectory=self.store_trajectory,
+            tags=self.tags,
         )
 
     def run_ase(
@@ -199,6 +209,7 @@ class AseRelaxMaker(AseMaker):
             **self.optimizer_kwargs,
         )
         return relaxer.relax(mol_or_struct, steps=self.steps, **self.relax_kwargs)
+
 
 @dataclass
 class LennardJonesRelaxMaker(AseRelaxMaker):

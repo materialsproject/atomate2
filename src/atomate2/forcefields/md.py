@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
-import warnings
+
+from jobflow import job
 
 from atomate2.ase.md import AseMDMaker
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.jobs import forcefield_job
+from atomate2.forcefields.jobs import _FORCEFIELD_DATA_OBJECTS
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
 
@@ -72,7 +74,9 @@ class ForceFieldMDMaker(AseMDMaker):
         kwargs to pass to the ASE calculator class
     ionic_step_data : tuple[str,...] or None
         Quantities to store in the TaskDocument ionic_steps.
-        Acceptable options are "struct_or_mol", "energy", "forces", "stress", and "magmoms"
+        Possible options are "struct_or_mol", "energy",
+        "forces", "stress", and "magmoms".
+        "structure" and "molecule" are aliases for "struct_or_mol".
     store_trajectory : emmet .StoreTrajectoryOption = "partial"
         Whether to store trajectory information ("no") or complete trajectories
         ("partial" or "full", which are identical).
@@ -101,9 +105,12 @@ class ForceFieldMDMaker(AseMDMaker):
 
     name: str = "Forcefield MD"
     force_field_name: str = f"{MLFF.Forcefield}"
-    task_document_kwargs : dict = None
+    task_document_kwargs: dict = None
 
-    @forcefield_job
+    @job(
+        data=[*_FORCEFIELD_DATA_OBJECTS, "output.ionic_steps"],
+        output_schema=ForceFieldTaskDocument,
+    )
     def make(
         self,
         structure: Structure,
@@ -128,7 +135,8 @@ class ForceFieldMDMaker(AseMDMaker):
             warnings.warn(
                 "`task_document_kwargs` is now deprecated, please use the top-level "
                 "attributes `ionic_step_data` and `store_trajectory`",
-                DeprecationWarning
+                category=DeprecationWarning,
+                stacklevel=1,
             )
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
@@ -138,11 +146,11 @@ class ForceFieldMDMaker(AseMDMaker):
             steps=self.n_steps,
             relax_kwargs=None,
             optimizer_kwargs=None,
-            fix_symmetry = False,
-            symprec = None,
-            ionic_step_data = self.ionic_step_data,
-            store_trajectory = self.store_trajectory,
-            tags = self.tags,
+            fix_symmetry=False,
+            symprec=None,
+            ionic_step_data=self.ionic_step_data,
+            store_trajectory=self.store_trajectory,
+            tags=self.tags,
             **self.task_document_kwargs,
         )
 

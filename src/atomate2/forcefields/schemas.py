@@ -34,7 +34,7 @@ class ForcefieldObject(ValueEnum):
     """Types of force-field output data objects."""
 
     TRAJECTORY = "trajectory"
-    
+
 
 class ForceFieldTaskDocument(AseStructureTaskDoc):
     """Document containing information on structure manipulation using a force field."""
@@ -86,7 +86,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             "mol_or_struct",
         ),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
-        tags : list[str] | None = None,
+        tags: list[str] | None = None,
         **task_document_kwargs,
     ) -> ForceFieldTaskDocument:
         """Create an AseTaskDoc for a task that has ASE-compatible outputs.
@@ -126,7 +126,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             optimizer_kwargs=optimizer_kwargs,
             ionic_step_data=ionic_step_data,
             store_trajectory=store_trajectory,
-            tags = tags,
+            tags=tags,
             **task_document_kwargs,
         )
         ff_kwargs = {

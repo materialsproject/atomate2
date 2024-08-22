@@ -122,7 +122,9 @@ class AseMDMaker(AseMaker):
         kwargs to pass to the ASE calculator class
     ionic_step_data : tuple[str,...] or None
         Quantities to store in the TaskDocument ionic_steps.
-        Acceptable options are "struct_or_mol", "energy", "forces", "stress", and "magmoms"
+        Possible options are "struct_or_mol", "energy",
+        "forces", "stress", and "magmoms".
+        "structure" and "molecule" are aliases for "struct_or_mol".
     store_trajectory : emmet .StoreTrajectoryOption = "partial"
         Whether to store trajectory information ("no") or complete trajectories
         ("partial" or "full", which are identical).
@@ -158,8 +160,8 @@ class AseMDMaker(AseMaker):
     pressure: float | Sequence | np.ndarray | None = None
     ase_md_kwargs: dict | None = None
     calculator_kwargs: dict = field(default_factory=dict)
-    ionic_step_data : tuple[str,...] | None = None
-    store_trajectory : StoreTrajectoryOption = StoreTrajectoryOption.PARTIAL
+    ionic_step_data: tuple[str, ...] | None = None
+    store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.PARTIAL
     traj_file: str | Path | None = None
     traj_file_fmt: Literal["pmg", "ase"] = "ase"
     traj_interval: int = 1
@@ -235,7 +237,7 @@ class AseMDMaker(AseMaker):
                 10.0 * 1e-3 / units.fs,  # Same default as in VASP: 10 ps^-1
             )
 
-    @job(data=_ASE_DATA_OBJECTS + ["output.ionic_steps"])
+    @job(data=[*_ASE_DATA_OBJECTS, "output.ionic_steps"])
     def make(
         self,
         mol_or_struct: Molecule | Structure,
@@ -252,20 +254,19 @@ class AseMDMaker(AseMaker):
             A previous calculation directory to copy output files from. Unused, just
             added to match the method signature of other makers.
         """
-
         return AseTaskDoc.to_mol_or_struct_metadata_doc(
             getattr(self.calculator, "name", self.calculator.__class__),
             self.run_ase(mol_or_struct, prev_dir=prev_dir),
             steps=self.n_steps,
             relax_kwargs=None,
             optimizer_kwargs=None,
-            fix_symmetry = False,
-            symprec = None,
-            ionic_step_data = self.ionic_step_data,
-            store_trajectory = self.store_trajectory,
-            tags = self.tags,
+            fix_symmetry=False,
+            symprec=None,
+            ionic_step_data=self.ionic_step_data,
+            store_trajectory=self.store_trajectory,
+            tags=self.tags,
         )
-    
+
     def run_ase(
         self,
         mol_or_struct: Molecule | Structure,

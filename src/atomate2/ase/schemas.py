@@ -86,7 +86,7 @@ class AseObject(ValueEnum):
 
     TRAJECTORY = "trajectory"
     IONIC_STEPS = "ionic_steps"
-    
+
 
 class AseBaseModel(BaseModel):
     """Base document class for ASE input and output."""
@@ -149,7 +149,9 @@ class OutputDoc(AseBaseModel):
         None, description="Step-by-step trajectory of the relaxation."
     )
 
-    elapsed_time: Optional[float] = Field(None, description="The time taken to run the calculation in seconds.")
+    elapsed_time: Optional[float] = Field(
+        None, description="The time taken to run the calculation in seconds."
+    )
 
     n_steps: int = Field(
         None, description="total number of steps needed in the relaxation."
@@ -348,10 +350,10 @@ class AseTaskDoc(AseBaseModel):
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
-        relax_cell : bool = True,
+        relax_cell: bool = True,
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
-        ionic_step_data: tuple[str,...] | None = (
+        ionic_step_data: tuple[str, ...] | None = (
             "energy",
             "forces",
             "magmoms",
@@ -359,7 +361,7 @@ class AseTaskDoc(AseBaseModel):
             "mol_or_struct",
         ),
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
-        tags : list[str] | None = None,
+        tags: list[str] | None = None,
         **task_document_kwargs,
     ) -> AseTaskDoc:
         """Create an AseTaskDoc for a task that has ASE-compatible outputs.
@@ -411,7 +413,7 @@ class AseTaskDoc(AseBaseModel):
 
         input_doc = InputDoc(
             mol_or_struct=input_mol_or_struct,
-            relax_cell = relax_cell,
+            relax_cell=relax_cell,
             fix_symmetry=fix_symmetry,
             symprec=symprec,
             steps=steps,
@@ -457,9 +459,12 @@ class AseTaskDoc(AseBaseModel):
                 }
 
                 current_mol_or_struct = (
-                    trajectory[idx] if any(
-                        v in ionic_step_data for v in ("mol_or_struct", "structure","molecule")
-                    ) else None
+                    trajectory[idx]
+                    if any(
+                        v in ionic_step_data
+                        for v in ("mol_or_struct", "structure", "molecule")
+                    )
+                    else None
                 )
 
                 # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
@@ -480,7 +485,7 @@ class AseTaskDoc(AseBaseModel):
                 )
 
                 ionic_steps.append(ionic_step)
-            
+
         objects: dict[AseObject, Any] = {}
         if store_trajectory != StoreTrajectoryOption.NO:
             # For VASP calculations, the PARTIAL trajectory option removes
@@ -510,7 +515,7 @@ class AseTaskDoc(AseBaseModel):
             is_force_converged=result.is_force_converged,
             energy_downhill=result.energy_downhill,
             dir_name=result.dir_name,
-            tags = tags,
+            tags=tags,
             **task_document_kwargs,
         )
 

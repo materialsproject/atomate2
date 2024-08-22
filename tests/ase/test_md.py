@@ -38,8 +38,8 @@ def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure):
         temperature=1000,
         ensemble="nvt",
         n_steps=100,
-        tags = ["test"],
-        store_trajectory = "partial",
+        tags=["test"],
+        store_trajectory="partial",
     ).make(fcc_ne_structure)
 
     response = run_locally(md_job)
@@ -73,8 +73,8 @@ def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_
         dynamics="nose-hoover",
         traj_file="XDATCAR",
         traj_file_fmt="xdatcar",
-        store_trajectory = "partial",
-        ionic_step_data = ("energy","stress",),
+        store_trajectory="partial",
+        ionic_step_data=("energy", "stress"),
     ).make(structure)
 
     response = run_locally(md_job)

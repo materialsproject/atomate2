@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import logging
+import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
-import warnings
+
 from ase.io import Trajectory as AseTrajectory
 from ase.units import GPa as _GPa_to_eV_per_A3
 from jobflow import job
@@ -21,7 +22,6 @@ if TYPE_CHECKING:
     from typing import Callable
 
     from ase.calculators.calculator import Calculator
-    from emmet.core.vasp.calculation import StoreTrajectoryOption
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
@@ -97,7 +97,9 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
         Keyword arguments that will get passed to the ASE calculator.
     ionic_step_data : tuple[str,...] or None
         Quantities to store in the TaskDocument ionic_steps.
-        Acceptable options are "struct_or_mol", "energy", "forces", "stress", and "magmoms"
+        Possible options are "struct_or_mol", "energy",
+        "forces", "stress", and "magmoms".
+        "structure" and "molecule" are aliases for "struct_or_mol".
     store_trajectory : emmet .StoreTrajectoryOption = "no"
         Whether to store trajectory information ("no") or complete trajectories
         ("partial" or "full", which are identical).
@@ -140,7 +142,8 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
             warnings.warn(
                 "`task_document_kwargs` is now deprecated, please use the top-level "
                 "attributes `ionic_step_data` and `store_trajectory`",
-                DeprecationWarning
+                category=DeprecationWarning,
+                stacklevel=1,
             )
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
@@ -149,12 +152,12 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
             self.steps,
             relax_kwargs=self.relax_kwargs,
             optimizer_kwargs=self.optimizer_kwargs,
-            relax_cell = self.relax_cell,
+            relax_cell=self.relax_cell,
             fix_symmetry=self.fix_symmetry,
             symprec=self.symprec if self.fix_symmetry else None,
             ionic_step_data=self.ionic_step_data,
             store_trajectory=self.store_trajectory,
-            tags = self.tags,
+            tags=self.tags,
             **self.task_document_kwargs,
         )
 
