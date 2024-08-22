@@ -45,8 +45,7 @@ def si():
     )
 
 
-
-@pytest.fixture()
+@pytest.fixture
 def nacl():
     return Structure(
         lattice=Lattice(
@@ -61,7 +60,7 @@ def nacl():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def o2():
     return Molecule(species=["O", "O"], coords=[[0, 0, 0.622978], [0, 0, -0.622978]])
 
