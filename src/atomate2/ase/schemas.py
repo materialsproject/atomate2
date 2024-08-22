@@ -69,7 +69,7 @@ class AseResult(BaseModel):
     )
 
     elapsed_time: Optional[float] = Field(
-        None, description="The time taken to run the calculation."
+        None, description="The time taken to run the ASE calculator."
     )
 
     def __getitem__(self, name: str) -> Any:
@@ -144,11 +144,11 @@ class OutputDoc(AseBaseModel):
         None, description="The stress on the cell in units of kbar (in Voigt notation)."
     )
 
-    ionic_steps: list[IonicStep] = Field(
+    ionic_steps: list[IonicStep] | dict = Field(
         None, description="Step-by-step trajectory of the relaxation."
     )
 
-    elapsed_time: Optional[float] = Field("The time taken to run the calculation.")
+    elapsed_time: Optional[float] = Field("The time taken to run the ASE calculator.")
 
     n_steps: int = Field(
         None, description="total number of steps needed in the relaxation."
