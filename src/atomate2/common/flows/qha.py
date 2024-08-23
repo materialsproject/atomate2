@@ -114,7 +114,6 @@ class CommonQhaMaker(Maker, ABC):
         # In this way, one can easily exchange makers and enforce postprocessor None
         # add this to an abstract method so that prev_dir is handled correctly
 
-        # initialize this in each of the classes and remove the postprocessor and static maker
         self.eos = CommonEosMaker(
             initial_relax_maker=self.initial_relax_maker,
             eos_relax_maker=self.eos_relax_maker,
