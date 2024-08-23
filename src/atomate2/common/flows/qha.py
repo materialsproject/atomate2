@@ -122,7 +122,6 @@ class CommonQhaMaker(Maker, ABC):
             number_of_frames=self.number_of_frames,
         )
 
-        # initialize this in each of the classes and remove the postprocessor and static maker
         eos_job = self.eos.make(structure)
         qha_jobs.append(eos_job)
         # should I pass prev_dirs?
