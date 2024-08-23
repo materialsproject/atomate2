@@ -13,7 +13,7 @@ changelog:
         - enhancement
     - title: Documentation 📖
       labels:
-        - documentation
+        - docs
     - title: House-Keeping 🧹
       labels:
         - house-keeping
