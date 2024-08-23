@@ -106,37 +106,11 @@ class ConfigurationCoordinateMaker(Maker):
         dir2 = relax2.output.dir_name
         struct1 = relax1.output.structure
         struct2 = relax2.output.structure
+        add_info1 = {"relaxed_uuid": relax1.uuid, "distorted_uuid": relax2.uuid}
+        add_info2 = {"relaxed_uuid": relax2.uuid, "distorted_uuid": relax1.uuid}
 
-        deformations1 = spawn_energy_curve_calcs(
-            struct1,
-            struct2,
-            distortions=self.distortions,
-            static_maker=self.static_maker,
-            prev_dir=dir1,
-            add_name="q1",
-            add_info={"relaxed_uuid": relax1.uuid, "distorted_uuid": relax2.uuid},
-        )
-
-        deformations2 = spawn_energy_curve_calcs(
-            struct2,
-            struct1,
-            distortions=self.distortions,
-            static_maker=self.static_maker,
-            prev_dir=dir2,
-            add_name="q2",
-            add_info={"relaxed_uuid": relax2.uuid, "distorted_uuid": relax1.uuid},
-        )
-
-        deformations1.append_name(" q1")
-        deformations2.append_name(" q2")
-
-        # distortion index with smallest absolute value
-        min_abs_index = min(
-            range(len(self.distortions)), key=lambda i: abs(self.distortions[i])
-        )
-
-        ccd_job = get_ccd_documents(
-            deformations1.output, deformations2.output, undistorted_index=min_abs_index
+        deformations1, deformations2, ccd_job = self.get_deformation_and_ccd_jobs(
+            struct1, struct2, dir1, dir2, add_info1, add_info2
         )
 
         return Flow(
@@ -152,6 +126,122 @@ class ConfigurationCoordinateMaker(Maker):
             name=name,
         )
 
+    def make_from_relaxed_structures(
+        self,
+        structure1: Structure,
+        structure2: Structure,
+    ) -> Flow:
+        """
+        Make a job for the calculation of the configuration coordinate diagram.
+
+        Parameters
+        ----------
+        structure1
+            The relaxed structure for charge state 1.
+        structure2
+            The relaxed structure for charge state 2.
+
+        Returns
+        -------
+        Flow
+            The full workflow for the calculation of the configuration coordinate
+            diagram.
+        """
+        # use a more descriptive name when possible
+        if not isinstance(structure1, OutputReference):
+            name = f"{self.name}: {structure1.formula}"
+            if not (
+                isinstance(structure1, OutputReference)
+                or isinstance(structure2, OutputReference)
+            ):
+                name = (
+                    f"{self.name}: {structure1.formula}"
+                    "({structure1.charge}-{structure2.charge})"
+                )
+
+        deformations1, deformations2, ccd_job = self.get_deformation_and_ccd_jobs(
+            structure1, structure2
+        )
+
+        return Flow(
+            jobs=[
+                deformations1,
+                deformations2,
+                ccd_job,
+            ],
+            output=ccd_job.output,
+            name=name,
+        )
+
+    def get_deformation_and_ccd_jobs(
+        self,
+        struct1: Structure,
+        struct2: Structure,
+        dir1: str | None = None,
+        dir2: str | None = None,
+        add_info1: dict | None = None,
+        add_info2: dict | None = None,
+    ) -> tuple[Job, Job, Job]:
+        """Get the deformation and CCD jobs for the given structures.
+
+        Parameters
+        ----------
+        struct1: Structure
+            The first structure.
+        struct2: Structure
+            The second structure.
+        dir1: str
+            The directory of the first structure.
+        dir2: str
+            The directory of the second structure.
+        add_info1: dict
+            Additional information to write
+        add_info2: dict
+            Additional information to write
+
+        Returns
+        -------
+        deformations1: Job
+            The deformation job for the first structure.
+        deformations2: Job
+            The deformation job for the second structure.
+        ccd_job: Job
+            The Job to construct the CCD document.
+        """
+        deformations1 = spawn_energy_curve_calcs(
+            struct1,
+            struct2,
+            distortions=self.distortions,
+            static_maker=self.static_maker,
+            prev_dir=dir1,
+            add_name="q1",
+            add_info=add_info1,
+        )
+
+        deformations2 = spawn_energy_curve_calcs(
+            struct2,
+            struct1,
+            distortions=self.distortions,
+            static_maker=self.static_maker,
+            prev_dir=dir2,
+            add_name="q2",
+            add_info=add_info2,
+        )
+
+        deformations1.append_name(" q1")
+        deformations2.append_name(" q2")
+
+        # distortion index with smallest absolute value
+        min_abs_index = min(
+            range(len(self.distortions)), key=lambda i: abs(self.distortions[i])
+        )
+
+        ccd_job = get_ccd_documents(
+            deformations1.output, deformations2.output, undistorted_index=min_abs_index
+        )
+
+        return deformations1, deformations2, ccd_job
+
 
 @dataclass
 class FormationEnergyMaker(Maker, ABC):
@@ -160,6 +250,15 @@ class FormationEnergyMaker(Maker, ABC):
     Maker class to calculate formation energy diagrams. The main settings for
     this maker is the `defect_relax_maker` which contains the settings for the atomic
     relaxations that each defect supercell will undergo.
+
+    This maker can be used as a stand-alone maker to calculate all of the data
+    needed to populate the `DefectEntry` object. However, for you can also use this
+    maker with `uc_bulk` set to True (also set `collect_defect_entry_data` to False
+    and `bulk_relax_maker` to None).  This will skip the bulk supercell calculations
+    assuming that bulk unit cell calculations are of high enough quality to be used
+    directly.  In these cases, the bulk SC electrostatic potentials need to be
+    constructed without running a separate bulk SC calculation.  This is currently
+    implemented through the grid re-sampling tools in `mp-pyrho`.
 
     Attributes
     ----------
@@ -182,11 +281,16 @@ class FormationEnergyMaker(Maker, ABC):
         lattice relaxation, you should manually set the grid size.
 
         .. code-block:: python
+
             relax_set = MPRelaxSet(defect.get_supercell_structure())
             ng, ngf = relax_set.calculate_ng()
             params = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
             ng_settings = dict(zip(params, ng + ngf))
             relax_maker = update_user_incar_settings(relax_maker, ng_settings)
+
+    uc_bulk: bool
+        If True, skip the bulk supercell calculation and only perform the defect
+        supercell calculations. This is useful for large-scale defect databases.
 
     name: str
         The name of the flow created by this maker.
@@ -217,36 +321,40 @@ class FormationEnergyMaker(Maker, ABC):
         energy diagrams.
 
         .. note::
-        Once we remove the requirement for explicit bulk supercell calculations,
-        this setting will be removed. It is only needed because the bulk supercell
-        locpot is currently needed for the finite-size correction calculation.
+            Once we remove the requirement for explicit bulk supercell calculations,
+            this setting will be removed. It is only needed because the bulk supercell
+            locpot is currently needed for the finite-size correction calculation.
 
         Output format for the DefectEntry data:
+
         .. code-block:: python
-        [
-            {
-                'bulk_dir_name': 'computer1:/folder1',
-                'bulk_locpot': {...},
-                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
-                'defect_dir_name': 'computer1:/folder2',
-                'defect_entry': {...},
-                'defect_locpot': {...},
-                'defect_uuid': 'e9af2725-d63c-49b8-a01f-391540211750'
-            },
-            {
-                'bulk_dir_name': 'computer1:/folder3',
-                'bulk_locpot': {...},
-                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
-                'defect_dir_name': 'computer1:/folder4',
-                'defect_entry': {...},
-                'defect_locpot': {...},
-                'defect_uuid': 'a1c31095-0494-4eed-9862-95311f80a993'
-            }
-        ]
+
+            [
+                {
+                    "bulk_dir_name": "computer1:/folder1",
+                    "bulk_locpot": {...},
+                    "bulk_uuid": "48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3",
+                    "defect_dir_name": "computer1:/folder2",
+                    "defect_entry": {...},
+                    "defect_locpot": {...},
+                    "defect_uuid": "e9af2725-d63c-49b8-a01f-391540211750",
+                },
+                {
+                    "bulk_dir_name": "computer1:/folder3",
+                    "bulk_locpot": {...},
+                    "bulk_uuid": "48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3",
+                    "defect_dir_name": "computer1:/folder4",
+                    "defect_entry": {...},
+                    "defect_locpot": {...},
+                    "defect_uuid": "a1c31095-0494-4eed-9862-95311f80a993",
+                },
+            ]
+
     """
 
     defect_relax_maker: Maker
     bulk_relax_maker: Maker | None = None
+    uc_bulk: bool = False
     name: str = "formation energy"
     relax_radius: float | str | None = None
     perturb: float | None = None
@@ -256,8 +364,15 @@ class FormationEnergyMaker(Maker, ABC):
     def __post_init__(self) -> None:
         """Apply post init updates."""
         self.validate_maker()
-        if self.bulk_relax_maker is None:
-            self.bulk_relax_maker = self.defect_relax_maker
+        if self.uc_bulk:
+            if self.bulk_relax_maker is not None:
+                raise ValueError("bulk_relax_maker should be None when uc_bulk is True")
+            if self.collect_defect_entry_data:
+                raise ValueError(
+                    "collect_defect_entry_data should be False when uc_bulk is True"
+                )
+        else:
+            self.bulk_relax_maker = self.bulk_relax_maker or self.defect_relax_maker
 
     def make(
         self,
@@ -292,27 +407,41 @@ class FormationEnergyMaker(Maker, ABC):
             The workflow to calculate the formation energy diagram.
         """
         jobs = []
-        if bulk_supercell_dir is None:
-            get_sc_job = bulk_supercell_calculation(
-                uc_structure=defect.structure,
-                relax_maker=self.bulk_relax_maker,
-                sc_mat=supercell_matrix,
-                get_planar_locpot=self.get_planar_locpot,
-            )
-            sc_mat = get_sc_job.output["sc_mat"]
-            lattice = get_sc_job.output["sc_struct"].lattice
-            bulk_supercell_dir = get_sc_job.output["dir_name"]
+        if not self.uc_bulk:
+            if bulk_supercell_dir is None:
+                get_sc_job = bulk_supercell_calculation(
+                    uc_structure=defect.structure,
+                    relax_maker=self.bulk_relax_maker,
+                    sc_mat=supercell_matrix,
+                    get_planar_locpot=self.get_planar_locpot,
+                )
+                sc_mat = get_sc_job.output["sc_mat"]
+                lattice = get_sc_job.output["sc_struct"].lattice
+                bulk_supercell_dir = get_sc_job.output["dir_name"]
+                sc_uuid = get_sc_job.output["uuid"]
+            else:
+                # all additional reader functions need to be in this job
+                # b/c they might receive Response objects instead of data.
+                get_sc_job = get_supercell_from_prv_calc(
+                    uc_structure=defect.structure,
+                    prv_calc_dir=bulk_supercell_dir,
+                    sc_entry_and_locpot_from_prv=self.sc_entry_and_locpot_from_prv,
+                    sc_mat_ref=supercell_matrix,
+                )
+                sc_mat = get_sc_job.output["sc_mat"]
+                lattice = get_sc_job.output["lattice"]
+                sc_uuid = get_sc_job.output["uuid"]
+            jobs.append(get_sc_job)
         else:
-            # all additional reader functions need to be in this job
-            # b/c they might receive Response objects instead of data.
-            get_sc_job = get_supercell_from_prv_calc(
-                uc_structure=defect.structure,
-                prv_calc_dir=bulk_supercell_dir,
-                sc_entry_and_locpot_from_prv=self.sc_entry_and_locpot_from_prv,
-                sc_mat_ref=supercell_matrix,
-            )
-            sc_mat = get_sc_job.output["sc_mat"]
-            lattice = get_sc_job.output["lattice"]
+            if bulk_supercell_dir is not None:
+                raise ValueError(
+                    "bulk_supercell_dir should be None when uc_bulk is True."
+                    "We will be using a uc bulk calculation, so no bulk supercell "
+                    "is needed."
+                )
+            sc_mat = supercell_matrix
+            lattice = None
+            sc_uuid = None
 
         spawn_output = spawn_defect_q_jobs(
             defect=defect,
@@ -323,13 +452,26 @@ class FormationEnergyMaker(Maker, ABC):
             add_info={
                 "bulk_supercell_dir": bulk_supercell_dir,
                 "bulk_supercell_matrix": sc_mat,
-                "bulk_supercell_uuid": get_sc_job.uuid,
+                "bulk_supercell_uuid": sc_uuid,
             },
             relax_radius=self.relax_radius,
             perturb=self.perturb,
             validate_charge=self.validate_charge,
         )
-        jobs.extend([get_sc_job, spawn_output])
+
+        if self.uc_bulk:
+            # run the function here so we can get the charge state
+            # calculations ASAP
+            response = spawn_output.function(
+                *spawn_output.function_args, **spawn_output.function_kwargs
+            )
+            jobs.append(response.replace)
+            output_ = response.output
+        else:
+            # execute this as job so you can string a single bulk sc with multiple
+            # defect scs
+            jobs.append(spawn_output)
+            output_ = spawn_output.output
 
         if self.collect_defect_entry_data:
             collection_job = get_defect_entry(
@@ -340,7 +482,7 @@ class FormationEnergyMaker(Maker, ABC):
 
         return Flow(
             jobs=jobs,
-            output=spawn_output.output,
+            output=output_,
             name=self.name,
         )
 

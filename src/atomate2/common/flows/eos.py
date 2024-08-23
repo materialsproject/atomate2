@@ -82,7 +82,8 @@ class CommonEosMaker(Maker):
         )
         flow_output: dict[str, dict] = {
             key: {
-                quantity: [] for quantity in ("energy", "volume", "stress", "structure")
+                quantity: []
+                for quantity in ("energy", "volume", "stress", "structure", "dir_name")
             }
             for key in job_types
         }
@@ -168,8 +169,8 @@ class CommonEosMaker(Maker):
                 flow_output[key]["energy"] += [output.energy]
                 flow_output[key]["volume"] += [output.structure.volume]
                 flow_output[key]["stress"] += [output.stress]
-                # TODO: make this potentially optional?
                 flow_output[key]["structure"] += [output.structure]
+                flow_output[key]["dir_name"] += [jobs[key][idx].output.dir_name]
 
         if self.postprocessor is not None:
             min_points = self.postprocessor.min_data_points

@@ -1,16 +1,15 @@
 """Define common QHA flow agnostic to electronic-structure code."""
 
 from __future__ import annotations
-
+import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker
 
-from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.qha import analyze_free_energy, get_phonon_jobs
-
+from atomate2.common.flows.eos import CommonEosMaker
 if TYPE_CHECKING:
     from pathlib import Path
 
@@ -73,11 +72,12 @@ class CommonQhaMaker(Maker, ABC):
     """
 
     name: str = "QHA Maker"
-    initial_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
-    eos_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
-    phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
-    phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
-    phonon_maker_kwargs: dict = field(default_factory=dict)
+    #initial_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    #eos_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    phonon_maker: BasePhononMaker | None= None
+    #phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    #phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    #phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
     t_max: float | None = None
@@ -112,19 +112,13 @@ class CommonQhaMaker(Maker, ABC):
         qha_jobs = []
 
         # In this way, one can easily exchange makers and enforce postprocessor None
-        self.eos = CommonEosMaker(
-            initial_relax_maker=self.initial_relax_maker,
-            eos_relax_maker=self.eos_relax_maker,
-            static_maker=None,
-            postprocessor=None,
-            number_of_frames=self.number_of_frames,
-        )
-        self.phonon_maker = self.initialize_phonon_maker(
-            phonon_displacement_maker=self.phonon_displacement_maker,
-            phonon_static_maker=self.phonon_static_maker,
-            bulk_relax_maker=None,
-            phonon_maker_kwargs=self.phonon_maker_kwargs,
-        )
+        # add this to an abstract method so that prev_dir is handled correctly
+
+        # initialize this in each of the classes and remove the postprocessor and static maker
+        self.eos = CommonEosMaker(initial_relax_maker=self.initial_relax_maker, eos_relax_maker=self.eos_relax_maker,
+        static_maker=None, postprocessor=None, number_of_frames=self.number_of_frames)
+
+        # initialize this in each of the classes and remove the postprocessor and static maker
         eos_job = self.eos.make(structure)
         qha_jobs.append(eos_job)
         # should I pass prev_dirs?
@@ -146,35 +140,28 @@ class CommonQhaMaker(Maker, ABC):
 
         return Flow(qha_jobs)
 
-    @abstractmethod
-    def initialize_phonon_maker(
-        self,
-        phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None,
-        phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None,
-        bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None,
-        phonon_maker_kwargs: dict,
-    ) -> BasePhononMaker | None:
-        """Initialize phonon maker.
-
-        This implementation will be different for
-        any newly implemented QHAMaker.
-
-        Parameters
-        ----------
-        phonon_displacement_maker: ForceFieldStaticMaker|BaseVaspMaker|None
-            Maker for displacement calculations.
-        phonon_static_maker: ForceFieldStaticMaker|BaseVaspMaker|None
-            Maker for additional static calculations.
-        bulk_relax_maker: : ForceFieldRelaxMaker|BaseVaspMaker|None
-            Maker for optimization. Here: None.
-        phonon_maker_kwargs: dict
-            Additional keyword arguments for phonon maker.
-
-        Returns
-        -------
-        .BasePhononMaker
-
-        """
+    def __post_init__(self) -> None:
+        """Test settings during the initialisation."""
+        if self.phonon_maker.bulk_relax_maker is not None:
+            warnings.warn(
+                "An additional bulk_relax_maker has been added "
+                "to the phonon workflow. Please be aware "
+                "that the volume needs to be kept fixed.",
+                stacklevel=2,
+            )
+        if self.phonon_maker.symprec != self.symprec:
+            warnings.warn(
+                "You are using different symmetry precisions "
+                "in the phonon makers and other parts of the "
+                "QHA workflow.",
+                stacklevel=2,
+            )
+        if self.phonon_maker.static_energy_maker is None:
+            warnings.warn(
+                "A static energy maker " "is needed for " "this workflow."
+                " Please add the static_energy_maker.",
+                stacklevel=2,
+            )
 
     @property
     @abstractmethod

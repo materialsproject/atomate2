@@ -11,9 +11,9 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
+from pymatgen.io.vasp.sets import MatPESStaticSet
 
 from atomate2.vasp.jobs.matpes import MatPesGGAStaticMaker, MatPesMetaGGAStaticMaker
-from atomate2.vasp.sets.matpes import MatPesGGAStaticSetGenerator
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -43,7 +43,7 @@ class MatPesStaticFlowMaker(Maker):
     name: str = "MatPES static flow"
     static1: Maker | None = field(
         default_factory=lambda: MatPesGGAStaticMaker(
-            input_set_generator=MatPesGGAStaticSetGenerator(
+            input_set_generator=MatPESStaticSet(
                 # write WAVECAR so we can use as pre-conditioned starting point for
                 # static2/3
                 user_incar_settings={"LWAVE": True}
@@ -62,7 +62,7 @@ class MatPesStaticFlowMaker(Maker):
     static3: Maker | None = field(
         default_factory=lambda: MatPesGGAStaticMaker(
             name="MatPES GGA+U static",
-            input_set_generator=MatPesGGAStaticSetGenerator(
+            input_set_generator=MatPESStaticSet(
                 user_incar_settings={"LDAU:": True},  # enable +U corrections
             ),
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)},
