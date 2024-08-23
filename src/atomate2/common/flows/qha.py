@@ -11,8 +11,6 @@ from jobflow import Flow, Maker
 
 from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.qha import analyze_free_energy, get_phonon_jobs
-from atomate2.forcefields.jobs import ForceFieldRelaxMaker
-from atomate2.vasp.jobs.core import BaseVaspMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -20,6 +18,8 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
+    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+    from atomate2.vasp.jobs.core import BaseVaspMaker
 
 supported_eos = frozenset(("vinet", "birch_murnaghan", "murnaghan"))
 
