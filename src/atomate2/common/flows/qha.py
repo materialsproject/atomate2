@@ -1,6 +1,7 @@
 """Define common QHA flow agnostic to electronic-structure code."""
 
 from __future__ import annotations
+
 import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
@@ -8,16 +9,15 @@ from typing import TYPE_CHECKING, Literal
 
 from jobflow import Flow, Maker
 
-from atomate2.common.jobs.qha import analyze_free_energy, get_phonon_jobs
 from atomate2.common.flows.eos import CommonEosMaker
+from atomate2.common.jobs.qha import analyze_free_energy, get_phonon_jobs
+
 if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
-    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 supported_eos = frozenset(("vinet", "birch_murnaghan", "murnaghan"))
 
@@ -72,12 +72,12 @@ class CommonQhaMaker(Maker, ABC):
     """
 
     name: str = "QHA Maker"
-    #initial_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
-    #eos_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
-    phonon_maker: BasePhononMaker | None= None
-    #phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
-    #phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
-    #phonon_maker_kwargs: dict = field(default_factory=dict)
+    # initial_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    # eos_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    phonon_maker: BasePhononMaker | None = None
+    # phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    # phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    # phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
     t_max: float | None = None
@@ -115,8 +115,13 @@ class CommonQhaMaker(Maker, ABC):
         # add this to an abstract method so that prev_dir is handled correctly
 
         # initialize this in each of the classes and remove the postprocessor and static maker
-        self.eos = CommonEosMaker(initial_relax_maker=self.initial_relax_maker, eos_relax_maker=self.eos_relax_maker,
-        static_maker=None, postprocessor=None, number_of_frames=self.number_of_frames)
+        self.eos = CommonEosMaker(
+            initial_relax_maker=self.initial_relax_maker,
+            eos_relax_maker=self.eos_relax_maker,
+            static_maker=None,
+            postprocessor=None,
+            number_of_frames=self.number_of_frames,
+        )
 
         # initialize this in each of the classes and remove the postprocessor and static maker
         eos_job = self.eos.make(structure)
@@ -149,16 +154,18 @@ class CommonQhaMaker(Maker, ABC):
                 "that the volume needs to be kept fixed.",
                 stacklevel=2,
             )
-        if self.phonon_maker.symprec != self.symprec:
-            warnings.warn(
-                "You are using different symmetry precisions "
-                "in the phonon makers and other parts of the "
-                "QHA workflow.",
-                stacklevel=2,
-            )
+        # if self.phonon_maker.symprec != self.symprec:
+        #     warnings.warn(
+        #         "You are using different symmetry precisions "
+        #         "in the phonon makers and other parts of the "
+        #         "QHA workflow.",
+        #         stacklevel=2,
+        #     )
         if self.phonon_maker.static_energy_maker is None:
             warnings.warn(
-                "A static energy maker " "is needed for " "this workflow."
+                "A static energy maker "
+                "is needed for "
+                "this workflow."
                 " Please add the static_energy_maker.",
                 stacklevel=2,
             )

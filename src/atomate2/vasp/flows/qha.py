@@ -7,9 +7,8 @@ from typing import Literal
 
 from atomate2.common.flows.qha import CommonQhaMaker
 from atomate2.vasp.flows.phonons import PhononMaker
-from atomate2.vasp.jobs.core import StaticMaker, TightRelaxMaker
+from atomate2.vasp.jobs.core import TightRelaxMaker
 from atomate2.vasp.jobs.eos import EosRelaxMaker
-from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 from atomate2.vasp.sets.core import TightRelaxSetGenerator
 
 
@@ -63,11 +62,9 @@ class QhaMaker(CommonQhaMaker):
             )
         )
     )
-    phonon_displacement_maker: StaticMaker | None = field(
-        default_factory=PhononDisplacementMaker
+    phonon_maker: PhononMaker | None = field(
+        default_factory=lambda: PhononMaker(bulk_relax_maker=None)
     )
-    phonon_static_maker: StaticMaker | None = field(default_factory=StaticMaker)
-    phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
     pressure: float | None = None
@@ -76,39 +73,6 @@ class QhaMaker(CommonQhaMaker):
     skip_analysis: bool = False
     eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
     analyze_free_energy_kwargs: dict = field(default_factory=dict)
-
-    def initialize_phonon_maker(
-        self,
-        phonon_displacement_maker: StaticMaker,
-        phonon_static_maker: StaticMaker,
-        bulk_relax_maker: TightRelaxMaker | None,
-        phonon_maker_kwargs: dict,
-    ) -> PhononMaker | None:
-        """Initialize Phonon Maker.
-
-        Parameters
-        ----------
-        phonon_displacement_maker: .ForceFieldStaticMaker|None
-            Computes Forces for displaced structures in
-            harmonic phonon runs
-        phonon_static_maker: .ForceFieldStaticMaker|None
-            Additional static maker to compute
-            energies and volume after optimization
-        bulk_relax_maker: .ForceFieldRelaxMaker|None
-            Relax Maker for Phonon Run. Typically None.
-        phonon_maker_kwargs: dict
-            Dict to set additional info for phonons.
-
-        Returns
-        -------
-        .PhononMaker
-        """
-        return PhononMaker(
-            phonon_displacement_maker=phonon_displacement_maker,
-            static_energy_maker=phonon_static_maker,
-            bulk_relax_maker=bulk_relax_maker,
-            **phonon_maker_kwargs,
-        )
 
     @property
     def prev_calc_dir_argname(self) -> str:

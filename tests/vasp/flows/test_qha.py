@@ -1,6 +1,7 @@
 from jobflow import run_locally
 from pymatgen.core.structure import Structure
 
+from atomate2.vasp.flows.phonons import PhononMaker
 from atomate2.vasp.flows.qha import QhaMaker
 from atomate2.vasp.powerups import (
     update_user_incar_settings,
@@ -21,7 +22,7 @@ def test_qha(mock_vasp, clean_dir, si_diamond: Structure):
 
     qha_maker = QhaMaker(
         number_of_frames=0,
-        phonon_maker_kwargs={"min_length": 8, "born_maker": None},
+        phonon_maker=PhononMaker(min_length=8, born_maker=None, bulk_relax_maker=None),
         ignore_imaginary_modes=True,
         skip_analysis=True,
     ).make(structure=si_diamond)
