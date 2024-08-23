@@ -25,6 +25,7 @@ def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
                 "tmax": 1000,
                 "tstep": 10,
             },
+            bulk_relax_maker=False,
         ),
     ).make(si_structure)
 
