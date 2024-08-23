@@ -31,9 +31,9 @@ class QhaMaker(CommonQhaMaker):
     eos_relax_maker: .TightRelaxMaker | None
         Maker to relax deformed structures for the EOS fit.
         The volume has to be fixed!
-    phonon_displacement_maker: .StaticMaker | None
-    phonon_static_maker: .StaticMaker | None
-    phonon_maker_kwargs: dict
+    phonon_maker: .PhononMaker
+        Maker to compute phonons. The volume has to be fixed!
+        The beforehand relaxation could be switched off.
     linear_strain: tuple[float, float]
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames: int

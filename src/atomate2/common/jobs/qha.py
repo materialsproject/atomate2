@@ -112,6 +112,8 @@ def analyze_free_energy(
                 sorted_volume.append(output.volume_per_formula_unit)
                 formula_units.append(output.formula_units)
 
+    # potentially implement a space group check in the future
+
     if len(set(formula_units)) != 1:
         raise ValueError("There should be only one formula unit.")
 

@@ -11,6 +11,8 @@ from jobflow import Flow, Maker
 
 from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.qha import analyze_free_energy, get_phonon_jobs
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+from atomate2.vasp.jobs.core import BaseVaspMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -51,9 +53,9 @@ class CommonQhaMaker(Maker, ABC):
     eos_relax_maker: .ForceFieldRelaxMaker | .BaseVaspMaker | None
         Maker to relax deformed structures for the EOS fit.
         The volume has to be fixed!
-    phonon_displacement_maker: .ForceFieldStaticMaker | .BaseVaspMaker | None
-    phonon_static_maker: .ForceFieldStaticMaker | .BaseVaspMaker | None
-    phonon_maker_kwargs: dict
+    phonon_maker: .BasePhononMaker | None
+        Maker to compute phonons. The volume has to be fixed!
+        The beforehand relaxation could be switched off.
     linear_strain: tuple[float, float]
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames: int
@@ -72,12 +74,9 @@ class CommonQhaMaker(Maker, ABC):
     """
 
     name: str = "QHA Maker"
-    # initial_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
-    # eos_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    initial_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    eos_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
     phonon_maker: BasePhononMaker | None = None
-    # phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
-    # phonon_static_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
-    # phonon_maker_kwargs: dict = field(default_factory=dict)
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
     t_max: float | None = None
@@ -112,8 +111,6 @@ class CommonQhaMaker(Maker, ABC):
         qha_jobs = []
 
         # In this way, one can easily exchange makers and enforce postprocessor None
-        # add this to an abstract method so that prev_dir is handled correctly
-
         self.eos = CommonEosMaker(
             initial_relax_maker=self.initial_relax_maker,
             eos_relax_maker=self.eos_relax_maker,
@@ -124,7 +121,7 @@ class CommonQhaMaker(Maker, ABC):
 
         eos_job = self.eos.make(structure)
         qha_jobs.append(eos_job)
-        # should I pass prev_dirs?
+
         phonon_jobs = get_phonon_jobs(
             phonon_maker=self.phonon_maker, eos_output=eos_job.output
         )
