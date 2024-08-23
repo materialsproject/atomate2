@@ -18,14 +18,14 @@ def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
         ignore_imaginary_modes=True,
         phonon_maker=PhononMaker(
             min_length=10,
-            store_force_constants=False, bulk_relax_maker=None,
+            store_force_constants=False,
+            bulk_relax_maker=None,
             generate_frequencies_eigenvectors_kwargs={
                 "tol_imaginary_modes": 5e-1,
                 "tmin": 0,
                 "tmax": 1000,
                 "tstep": 10,
             },
-
         ),
     ).make(si_structure)
 
