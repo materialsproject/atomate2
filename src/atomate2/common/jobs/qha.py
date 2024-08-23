@@ -36,7 +36,12 @@ def get_phonon_jobs(phonon_maker: BasePhononMaker, eos_output: dict) -> Flow:
     phonon_jobs = []
     outputs = []
     for istructure, structure in enumerate(eos_output["relax"]["structure"]):
-        phonon_job = phonon_maker.make(structure)
+        if eos_output["relax"]["dir_name"][istructure] is not None:
+            phonon_job = phonon_maker.make(
+                structure, prev_dir=eos_output["relax"]["dir_name"][istructure]
+            )
+        else:
+            phonon_job = phonon_maker.make(structure)
         phonon_job.append_name(f" eos deformation {istructure + 1}")
         phonon_jobs.append(phonon_job)
         outputs.append(phonon_job.output)
