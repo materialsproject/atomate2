@@ -108,7 +108,7 @@ class ForceFieldMDMaker(AseMDMaker):
     task_document_kwargs: dict = None
 
     @job(
-        data=[*_FORCEFIELD_DATA_OBJECTS, "output.ionic_steps"],
+        data=[*_FORCEFIELD_DATA_OBJECTS, "ionic_steps"],
         output_schema=ForceFieldTaskDocument,
     )
     def make(

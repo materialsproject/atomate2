@@ -237,7 +237,7 @@ class AseMDMaker(AseMaker):
                 10.0 * 1e-3 / units.fs,  # Same default as in VASP: 10 ps^-1
             )
 
-    @job(data=[*_ASE_DATA_OBJECTS, "output.ionic_steps"])
+    @job(data=[*_ASE_DATA_OBJECTS, "ionic_steps"])
     def make(
         self,
         mol_or_struct: Molecule | Structure,

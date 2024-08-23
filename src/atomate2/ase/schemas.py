@@ -145,6 +145,8 @@ class OutputDoc(AseBaseModel):
         None, description="The stress on the cell in units of kbar (in Voigt notation)."
     )
 
+    # NOTE: the ionic_steps can also be a dict when these are in blob storage and
+    #       retrieved as objects.
     ionic_steps: Union[list[IonicStep], dict] = Field(
         None, description="Step-by-step trajectory of the relaxation."
     )
