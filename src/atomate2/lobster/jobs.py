@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 _FILES_TO_ZIP = [*LOBSTEROUTPUT_FILES, "lobsterin", *VASP_OUTPUT_FILES]
 
 
+
 @dataclass
 class LobsterMaker(Maker):
     """
