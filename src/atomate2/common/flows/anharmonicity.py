@@ -252,8 +252,6 @@ class BaseAnharmonicityMaker(Maker, ABC):
         )
         jobs.append(force_calcs)
 
-        sigma_a_vals = {}
-
         # Calculate all desired sigma^A types
         sigma_calcs = get_sigmas(
             force_calcs.output[0],
