@@ -105,7 +105,7 @@ strict = [
     "quippy-ase==0.9.14",
     "seekpath==2.1.0",
     "sevenn==0.9.3",
-    "torch==2.2.1",
+    "torch==2.4.0",
     "typing-extensions==4.12.2",
 ]
 
