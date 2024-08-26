@@ -2,6 +2,7 @@ from jobflow import run_locally
 from pymatgen.core.structure import Structure
 
 from atomate2.lobster.jobs import LobsterMaker
+from atomate2.lobster.flows import AdvancedLobsterMaker
 from atomate2.lobster.schemas import LobsterTaskDocument
 from atomate2.vasp.flows.lobster import VaspLobsterMaker
 from atomate2.vasp.flows.mp import MPVaspLobsterMaker
@@ -328,9 +329,7 @@ def test_mp_vasp_lobstermaker(
 
     assert isinstance(task_doc, LobsterTaskDocument)
 
-def test_improved_lobster_maker(
-    mock_vasp, mock_lobster, clean_dir, memory_jobstore, si_structure: Structure
-):
+def test_improved_lobster_maker(mock_vasp, mock_lobster, clean_dir, memory_jobstore, si_structure: Structure):
     # mapping from job name to directory containing test files
     ref_paths = {
         "relax 1": "Si_lobster_uniform/relax_1",
@@ -385,10 +384,11 @@ def test_improved_lobster_maker(
     mock_lobster(ref_paths_lobster, fake_run_lobster_kwargs)
 
     job = VaspLobsterMaker(
-        lobster_maker=LobsterMaker(
+        lobster_maker=AdvancedLobsterMaker(lobster_maker_1=LobsterMaker(
             task_document_kwargs={
                 "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10},
                 "add_coxxcar_to_task_document": True,
+                "skip_calc_quality":True,
             },
             user_lobsterin_settings={
                 "COHPstartEnergy": -5.0,
@@ -396,8 +396,20 @@ def test_improved_lobster_maker(
                 "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
             },
         ),
-        delete_wavecars=False,
-    ).make(si_structure)
+        lobster_maker_2=LobsterMaker(
+            task_document_kwargs={
+                "calc_quality_kwargs": {"potcar_symbols": ["Si"], "n_bins": 10},
+                "add_coxxcar_to_task_document": True,
+                "skip_calc_quality": True,
+            },
+            user_lobsterin_settings={
+                "COHPstartEnergy": -5.0,
+                "COHPEndEnergy": 5.0,
+                "cohpGenerator": "from 0.1 to 3.0 orbitalwise",
+            },
+        )),
+    delete_wavecars = False).make(si_structure)
+
     job = update_user_incar_settings(job, {"NPAR": 4})
 
     # run the flow or job and ensure that it finished running successfully

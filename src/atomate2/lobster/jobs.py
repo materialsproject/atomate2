@@ -70,6 +70,7 @@ class LobsterMaker(Maker):
         self,
         wavefunction_dir: str | Path = None,
         basis_dict: dict | None = None,
+        cohp_between_dict: dict | None = None,
     ) -> LobsterTaskDocument:
         """Run a LOBSTER calculation.
 
@@ -79,6 +80,8 @@ class LobsterMaker(Maker):
             A directory containing a WAVEFUNCTION and other outputs needed for Lobster
         basis_dict: dict
             A dict including information on the basis set
+        cohp_between_dict: dict
+            A dict including information on the bonds that should be analysed.
         """
         # copy previous inputs # VASP for example
         copy_lobster_files(wavefunction_dir)
@@ -93,6 +96,13 @@ class LobsterMaker(Maker):
                 # basis function can only be changed with the help of a yaml file
                 if key != "basisfunctions":
                     lobsterin[key] = parameter
+
+        if cohp_between_dict:
+            # add code to only compute specific interactions
+            # ideally used without cohpgenerator for speedup
+            # cohpbetween
+            pass
+
 
         lobsterin.write_lobsterin("lobsterin")
 
@@ -112,3 +122,11 @@ class LobsterMaker(Maker):
             Path.cwd(),
             **self.task_document_kwargs,
         )
+
+
+@job
+def retrieve_relevant_bonds(condensed_bonding_analysis):
+    logging.log("test")
+    print(condensed_bonding_analysis.sites)
+
+    return None

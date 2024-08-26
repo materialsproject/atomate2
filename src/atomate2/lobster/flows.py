@@ -6,7 +6,7 @@ import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from jobflow import Maker, job
+from jobflow import Maker, job, Flow
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 from pymatgen.io.lobster import Bandoverlaps, Icohplist, Lobsterin
@@ -18,9 +18,10 @@ from atomate2.lobster.files import (
     VASP_OUTPUT_FILES,
     copy_lobster_files,
 )
-from atomate2.lobster.jobs import LobsterMaker
+from atomate2.lobster.jobs import LobsterMaker, retrieve_relevant_bonds
 from atomate2.lobster.run import run_lobster
 from atomate2.lobster.schemas import LobsterTaskDocument
+
 
 logger = logging.getLogger(__name__)
 
@@ -75,9 +76,16 @@ class AdvancedLobsterMaker(Maker):
         basis_dict: dict
             A dict including information on the basis set
         """
+        # TODO: why is calc quality failing?
         jobs=[]
-        lobster_maker=LobsterMaker().make(wavefunction_dir, basis_dict)
-        jobs.append(lobster_maker)
+        lobster_1=self.lobster_maker_1.make(wavefunction_dir, basis_dict)
+        jobs.append(lobster_1)
 
         # code to postprocess the lobster data and identify relevant bonds
+        # switch between cation, anion modes and potentially different ways to indentify the bonds
+        cohp_between_dict=retrieve_relevant_bonds(lobster_1.output.lobsterpy_data)
 
+        # think about how to modify the input dict during the run time
+        lobster_2 = self.lobster_maker_2.make(wavefunction_dir, basis_dict, cohp_between_dict)
+        jobs.append(lobster_2)
+        return Flow(jobs=jobs, output=lobster_2.output)
