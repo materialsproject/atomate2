@@ -60,6 +60,9 @@ class ResponseMaker(BaseAbinitMaker):
 
     calc_type: str = "RF"
     name: str = "RF calculation"
+    task_document_kwargs: dict = field(
+        default_factory=lambda: {"files_to_store": ["DDB"]}
+    )
     input_set_generator: AbinitInputGenerator
 
     CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (

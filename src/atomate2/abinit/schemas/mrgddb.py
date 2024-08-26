@@ -9,16 +9,14 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 from abipy.dfpt.ddb import DdbFile
-from abipy.flowtk import events
-from abipy.flowtk.utils import File
 from emmet.core.structure import StructureMetadata
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 
 from atomate2.abinit.schemas.outfiles import AbinitStoredFile
-from atomate2.abinit.utils.common import get_event_report
-from atomate2.utils.path import get_uri, strip_hostname
+from atomate2.abinit.utils.common import get_mrgddb_report
+from atomate2.utils.path import get_uri
 
 logger = logging.getLogger(__name__)
 
@@ -124,9 +122,6 @@ class Calculation(BaseModel):
     completed_at: str = Field(
         None, description="Timestamp for when the calculation was completed"
     )
-    event_report: events.EventReport = Field(
-        None, description="Event report of this abinit job."
-    )
     output_file_paths: Optional[dict[str, str]] = Field(
         None,
         description="Paths (relative to dir_name) of the Abinit output files "
@@ -181,10 +176,9 @@ class Calculation(BaseModel):
         report = None
         has_mrgddb_completed = TaskState.FAILED
         try:
-            report = get_event_report(ofile=File(abinit_mrglog_file))
-            if report.run_completed or abinit_outddb_file.exists():
-                # VT: abinit_outddb_file.exists is necessary since
-                # report.run_completed is False even when it completed...
+            report = get_mrgddb_report(logfile=abinit_mrglog_file)
+
+            if report["run_completed"] and abinit_outddb_file.exists():
                 has_mrgddb_completed = TaskState.SUCCESS
 
         # except (DdbError, Exception) as exc:
@@ -201,7 +195,6 @@ class Calculation(BaseModel):
                 has_mrgddb_completed=has_mrgddb_completed,
                 completed_at=completed_at,
                 output=output_doc,
-                event_report=report,
             ),
             mrgddb_objects,
         )
@@ -275,9 +268,6 @@ class MrgddbTaskDoc(StructureMetadata):
         None, description="Final output atoms from the task"
     )
     state: Optional[TaskState] = Field(None, description="State of this task")
-    event_report: Optional[events.EventReport] = Field(
-        None, description="Event report of this abinit job."
-    )
     included_objects: Optional[list[MrgddbObject]] = Field(
         None, description="List of Mrgddb objects included with this task document"
     )
@@ -336,9 +326,6 @@ class MrgddbTaskDoc(StructureMetadata):
         tags = additional_fields.get("tags")
 
         dir_name = get_uri(dir_name)  # convert to full uri path
-        dir_name = strip_hostname(
-            dir_name
-        )  # VT: TODO to put here?necessary with laptop at least...
 
         # only store objects from last calculation
         # TODO: make this an option
@@ -363,7 +350,6 @@ class MrgddbTaskDoc(StructureMetadata):
             "calcs_reversed": calcs_reversed,
             "completed_at": calcs_reversed[-1].completed_at,
             "dir_name": dir_name,
-            "event_report": calcs_reversed[-1].event_report,
             "included_objects": included_objects,
             "mrgddb_objects": mrgddb_objects,
             "meta_structure": calcs_reversed[-1].output.structure,

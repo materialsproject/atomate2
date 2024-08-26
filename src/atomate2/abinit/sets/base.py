@@ -37,6 +37,7 @@ from atomate2.abinit.utils.common import (
     InitializationError,
     get_final_structure,
 )
+from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
@@ -118,6 +119,7 @@ class AbinitMixinInputGenerator(InputGenerator):
         This method assumes that prev_dir is in the correct format,
         i.e. a directory as a str or Path.
         """
+        prev_dir = strip_hostname(prev_dir)  # TODO: to FileCLient?
         prev_outdir = Directory(os.path.join(prev_dir, OUTDIR_NAME))
         inp_files = []
 
@@ -540,7 +542,8 @@ class AbinitInputGenerator(AbinitMixinInputGenerator):
         a list of directories as str or Path.
         """
         abinit_inputs = {}
-        for prev_dir in prev_dirs:
+        for prev_d in prev_dirs:
+            prev_dir = strip_hostname(prev_d)  # TODO: to FileCLient?
             abinit_input = load_abinit_input(prev_dir)
             for var_name, runlevels in prev_inputs_kwargs.items():
                 if abinit_input.runlevel and abinit_input.runlevel.intersection(

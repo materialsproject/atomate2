@@ -15,6 +15,7 @@ from monty.serialization import loadfn
 from atomate2.abinit.utils.common import INDIR_NAME
 from atomate2.common.files import delete_files, gzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
+from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -34,6 +35,7 @@ __all__ = [
     "write_abinit_input_set",
     "write_mrgddb_input_set",
     "write_anaddb_input_set",
+    "del_gzip_files",
 ]
 
 logger = logging.getLogger(__name__)
@@ -50,8 +52,8 @@ def fname2ext(filepath: Path | str) -> None | str:
     if "_" not in filename:
         return None
     ext = filename.split("_")[-1].replace(".nc", "")
-    if "1WF" in ext:  # VT
-        ext = "1WF"  # VT
+    if "1WF" in ext:
+        ext = "1WF"
     if ext not in ALL_ABIEXTS:
         return None
     return ext
@@ -113,6 +115,7 @@ def load_abinit_input(
     AbinitInput
         The AbinitInput object.
     """
+    dirpath = strip_hostname(dirpath)  # TODO: to FileCLient?
     abinit_input_file = os.path.join(dirpath, f"{fname}")
     if not os.path.exists(abinit_input_file):
         raise NotImplementedError(
@@ -220,11 +223,31 @@ def write_anaddb_input_set(
 @job
 def del_gzip_files(
     output: list | OutputReference,
-    exclude_files_from_zip: list | None = None,
+    exclude_files_from_zip: list[str | Path] | None = None,
     to_del: bool = True,
-    exclude_files_from_del: list | None = None,
-    include_files_to_del: list | None = None,
+    exclude_files_from_del: list[str | Path] | None = None,
+    include_files_to_del: list[str | Path] | None = None,
 ) -> None:
+    r"""Delete and gzip files from a previous Job or Flow.
+
+    Parameters
+    ----------
+    output
+        The OutputReference or the list of OutputReference of the Job/Flow
+        that needs its files deleted/compressed.
+    exclude_files_from_zip
+        Filenames to exclude from the compression.
+        Supports glob file matching, e.g., "\*.dat".
+    to_del: bool = True,
+        Activates the deletion of the files or not.
+    exclude_files_from_del
+        Filenames to exclude from the compression.
+        Supports glob file matching, e.g., "\*.dat".
+    include_files_to_del
+        Filenames to include as a list of str or Path objects given relative to
+        directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
+        in the directory will be deleted.
+    """
     dirs_to_zip = []
     if not isinstance(output, list):  # in case of a single Job
         output = [output]
@@ -258,11 +281,15 @@ def del_gzip_files(
             ]
         for dz in recursiv_dirs_to_zip:
             delete_files(
-                directory=dz,
+                directory=strip_hostname(dz),
                 include_files=include_files_to_del,
                 exclude_files=exclude_files_from_del,
                 allow_missing=True,
             )
 
     for dz in recursiv_dirs_to_zip:
-        gzip_files(directory=dz, exclude_files=exclude_files_from_zip, force=True)
+        gzip_files(
+            directory=strip_hostname(dz),
+            exclude_files=exclude_files_from_zip,
+            force=True,
+        )

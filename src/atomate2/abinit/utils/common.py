@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from abipy.abio.outputs import AbinitOutputFile
@@ -15,8 +16,6 @@ from monty.json import MSONable
 from monty.serialization import MontyDecoder
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from abipy.abio.inputs import AbinitInput
     from abipy.core.structure import Structure
     from abipy.flowtk.events import EventReport
@@ -435,3 +434,28 @@ def get_event_report(
         return parser.report_exception(ofile.path, exc)
     else:
         return report
+
+
+def get_mrgddb_report(
+    logfile: str | Path,
+) -> dict:
+    """Get report from mrgddb.
+
+    This returns a dict with a "run_completed" key that is True
+    if "completed successfully" is present in the log.
+
+    Parameters
+    ----------
+    logfile : File
+        Output file to be parsed. Should be either the log file (stdout).
+
+    Returns
+    -------
+    dict
+        dict with bool "run_completed" key.
+    """
+    if not Path(logfile).exists:
+        return {"run_completed": False}
+    with open(str(logfile)) as f:
+        last_line = f.readlines()[-1]
+    return {"run_completed": "completed successfully" in last_line}

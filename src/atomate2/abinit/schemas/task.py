@@ -20,7 +20,7 @@ from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.schemas.calculation import AbinitObject, Calculation, TaskState
 from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE, OUTPUT_FILE_NAME
 from atomate2.utils.datetime import datetime_str
-from atomate2.utils.path import get_uri, strip_hostname
+from atomate2.utils.path import get_uri
 
 logger = logging.getLogger(__name__)
 
@@ -295,9 +295,6 @@ class AbinitTaskDoc(StructureMetadata):
         tags = additional_fields.get("tags")
 
         dir_name = get_uri(dir_name)  # convert to full uri path
-        dir_name = strip_hostname(
-            dir_name
-        )  # VT: TODO to put here?necessary with laptop at least...
 
         # only store objects from last calculation
         # TODO: make this an option

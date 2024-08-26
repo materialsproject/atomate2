@@ -21,7 +21,7 @@ from pymatgen.core.structure import Structure
 
 from atomate2.abinit.schemas.calculation import AbinitObject, TaskState
 from atomate2.abinit.utils.common import get_event_report
-from atomate2.utils.path import get_uri, strip_hostname
+from atomate2.utils.path import get_uri
 
 logger = logging.getLogger(__name__)
 
@@ -323,9 +323,6 @@ class AnaddbTaskDoc(StructureMetadata):
         tags = additional_fields.get("tags")
 
         dir_name = get_uri(dir_name)  # convert to full uri path
-        dir_name = strip_hostname(
-            dir_name
-        )  # VT: TODO to put here?necessary with laptop at least...
 
         # only store objects from last calculation
         # TODO: make this an option

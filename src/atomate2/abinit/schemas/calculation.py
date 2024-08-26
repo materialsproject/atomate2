@@ -297,7 +297,7 @@ class Calculation(BaseModel):
 
         abinit_objects: dict[AbinitObject, Any] = {}
         if files_to_store is None:
-            files_to_store = ["DDB"]
+            files_to_store = []
         if abinit_outddb_file.exists() and "DDB" in files_to_store:
             abinit_objects[AbinitObject.DDBFILE] = AbinitStoredFile.from_file(  # type: ignore[index]
                 filepath=abinit_outddb_file, data_type=str
