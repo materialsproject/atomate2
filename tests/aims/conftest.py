@@ -46,6 +46,21 @@ def si():
 
 
 @pytest.fixture
+def nacl():
+    return Structure(
+        lattice=Lattice(
+            [
+                [3.422015, 0.0, 1.975702],
+                [1.140671, 3.226306, 1.975702],
+                [0.0, 0.0, 3.951402],
+            ]
+        ),
+        species=["Na", "Cl"],
+        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+    )
+
+
+@pytest.fixture
 def o2():
     return Molecule(species=["O", "O"], coords=[[0, 0, 0.622978], [0, 0, -0.622978]])
 
