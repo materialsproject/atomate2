@@ -1,3 +1,4 @@
+import numpy as np
 import openff.toolkit as tk
 import pytest
 from emmet.core.openmm import OpenMMInterchange
@@ -10,6 +11,7 @@ from atomate2.openff.utils import create_mol_spec
 from atomate2.openmm.jobs import EnergyMinimizationMaker
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.openmm.jobs.opls import (
+    XMLMoleculeFF,
     create_system_from_xml,
     download_opls_xml,
     generate_openmm_interchange,
@@ -27,22 +29,11 @@ def test_download_xml(temp_dir):
     assert (temp_dir / "CCO.xml").exists()
 
 
-# xml_path = Path(f"{tmpdir}/{i}.xml")
-# with open(xml_path, "w") as f:
-#     f.write(xml_string)
-#
-# incremented_file = Path(f"{tmpdir}/{i}_incremented.xml")
-# increment_atom_types_and_classes(xml_path, incremented_file, int(i * 1000))
-# incremented_xml_files.append(incremented_file)
-
-
 def test_create_system_from_xml(openmm_data):
-    opls_xmls = openmm_data / "opls_xml_files"
-
     # load strings of xml files into dict
     ff_xmls = [
-        (opls_xmls / "CCO.xml").read_text(),
-        (opls_xmls / "CO.xml").read_text(),
+        XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CCO.xml"),
+        XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CO.xml"),
     ]
 
     # uncomment to regenerate data
@@ -70,17 +61,24 @@ def test_generate_openmm_interchange(openmm_data, run_job):
     ]
 
     ff_xmls = [
-        (openmm_data / "opls_xml_files" / "CCO.xml").read_text(),
-        (openmm_data / "opls_xml_files" / "CO.xml").read_text(),
+        (openmm_data / "opls_xml_files" / "CCO.xml"),
+        (openmm_data / "opls_xml_files" / "CO.xml"),
     ]
 
-    job = generate_openmm_interchange(mol_specs, 1.0, ff_xmls)
+    job = generate_openmm_interchange(
+        mol_specs, 1.0, ff_xmls, xml_method_and_scaling=("cm1a-lbcc", 1.14)
+    )
     task_doc = run_job(job)
     assert len(task_doc.molecule_specs) == 2
     assert task_doc.molecule_specs[0].name == "ethanol"
     assert task_doc.molecule_specs[0].count == 10
     assert task_doc.molecule_specs[1].name == "water"
     assert task_doc.molecule_specs[1].count == 300
+    co = tk.Molecule.from_json(task_doc.molecule_specs[1].openff_mol)
+    assert np.allclose(
+        co.partial_charges.magnitude,
+        np.array([-0.5873, -0.0492, 0.0768, 0.0768, 0.4061, 0.0768]),  # from file
+    )
 
 
 def test_make_from_prev(openmm_data, run_job):
@@ -90,8 +88,8 @@ def test_make_from_prev(openmm_data, run_job):
     ]
 
     ff_xmls = [
-        (openmm_data / "opls_xml_files" / "CCO.xml").read_text(),
-        (openmm_data / "opls_xml_files" / "CO.xml").read_text(),
+        (openmm_data / "opls_xml_files" / "CCO.xml"),
+        (openmm_data / "opls_xml_files" / "CO.xml"),
     ]
     inter_job = generate_openmm_interchange(mol_specs, 1, ff_xmls)
 
@@ -121,8 +119,8 @@ def test_evolve_simulation(openmm_data, run_job):
     ]
 
     ff_xmls = [
-        (openmm_data / "opls_xml_files" / "CCO.xml").read_text(),
-        (openmm_data / "opls_xml_files" / "CO.xml").read_text(),
+        (openmm_data / "opls_xml_files" / "CCO.xml"),
+        (openmm_data / "opls_xml_files" / "CO.xml"),
     ]
     inter_job = generate_openmm_interchange(mol_specs, 1, ff_xmls)
 
@@ -144,3 +142,52 @@ def test_evolve_simulation(openmm_data, run_job):
     final_position = final_state.getPositions(asNumpy=True)
 
     assert not (final_position == initial_position).all()
+
+
+def test_xml_molecule_from_file(openmm_data):
+    xml_mol = XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CO.xml")
+
+    assert isinstance(str(xml_mol), str)
+    assert len(str(xml_mol)) > 100
+
+
+def test_to_openff_molecule(openmm_data):
+    xml_mol = XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CO.xml")
+
+    mol = xml_mol.to_openff_molecule()
+    assert len(mol.atoms) == 6
+    assert len(mol.bonds) == 5
+
+
+def test_assign_partial_charges_w_mol(openmm_data):
+    xml_mol = XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CO.xml")
+
+    openff_mol = tk.Molecule()
+
+    atom_c00 = openff_mol.add_atom(6, 0, is_aromatic=False)
+    atom_h02 = openff_mol.add_atom(1, 0, is_aromatic=False)
+    atom_h03 = openff_mol.add_atom(1, 0, is_aromatic=False)
+    atom_h04 = openff_mol.add_atom(1, 0, is_aromatic=False)
+    atom_h05 = openff_mol.add_atom(1, 0, is_aromatic=False)
+    atom_o01 = openff_mol.add_atom(8, 0, is_aromatic=False)
+
+    openff_mol.add_bond(atom_c00, atom_o01, bond_order=1, is_aromatic=False)
+    openff_mol.add_bond(atom_c00, atom_h02, bond_order=1, is_aromatic=False)
+    openff_mol.add_bond(atom_c00, atom_h03, bond_order=1, is_aromatic=False)
+    openff_mol.add_bond(atom_c00, atom_h04, bond_order=1, is_aromatic=False)
+    openff_mol.add_bond(atom_o01, atom_h05, bond_order=1, is_aromatic=False)
+
+    openff_mol.assign_partial_charges("mmff94")
+
+    xml_mol.assign_partial_charges(openff_mol)
+    assert xml_mol.partial_charges[0] > 0.2  # C
+    assert xml_mol.partial_charges[1] < -0.3  # O
+    assert xml_mol.partial_charges[5] > 0.1  # alcohol H
+
+
+def test_assign_partial_charges_w_method(openmm_data):
+    xml_mol = XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CO.xml")
+    xml_mol.assign_partial_charges("mmff94")
+    assert xml_mol.partial_charges[0] > 0.2  # C
+    assert xml_mol.partial_charges[1] < -0.3  # O
+    assert xml_mol.partial_charges[5] > 0.1  # alcohol H
