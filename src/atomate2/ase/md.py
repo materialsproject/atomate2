@@ -383,7 +383,7 @@ class AseMDMaker(AseMaker):
     @property
     def calculator(self) -> Calculator:
         """ASE calculator, to be overwritten by user."""
-        return NotImplemented
+        raise NotImplementedError
 
 
 @dataclass

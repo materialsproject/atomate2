@@ -89,12 +89,12 @@ class AseMaker(Maker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-        return NotImplemented
+        raise NotImplementedError
 
     @property
     def calculator(self) -> Calculator:
         """ASE calculator, method to be implemented in subclasses."""
-        return NotImplemented
+        raise NotImplementedError
 
 
 @dataclass
