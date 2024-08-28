@@ -42,8 +42,15 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
     """
     calculator = None
 
-    if isinstance(calculator_meta, str) and calculator_meta in map(str, MLFF):
-        calculator_name = MLFF(calculator_meta.split("MLFF.")[-1])
+    if isinstance(calculator_meta, str):
+        valid_calculators = [name.split("MLFF.")[-1] for name in map(str, MLFF)]
+
+        if "MLFF." in calculator_meta:
+            calculator_name = MLFF(calculator_meta.split("MLFF.")[-1])
+        elif calculator_meta in valid_calculators:
+            calculator_name = MLFF(calculator_meta)
+        else:
+            raise ValueError(f"Could not create calculator from {calculator_meta}.")
 
         if calculator_name == MLFF.CHGNet:
             from chgnet.model.dynamics import CHGNetCalculator

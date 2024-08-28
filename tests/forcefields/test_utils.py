@@ -17,6 +17,18 @@ def test_ext_load(force_field: str):
     assert calc_from_decode.parameters == calc_from_preset.parameters == {}
 
 
+def test_raises_error():
+    with pytest.raises(ValueError, match="Could not create"):
+        ase_calculator("not_a_calculator")
+
+
+@pytest.mark.parametrize(("force_field"), ["CHGNet", "MACE"])
+def test_accepts_stubs(force_field: str):
+    calculator1 = ase_calculator("MACE")
+    calculator2 = ase_calculator(str(MLFF.MACE))
+    assert calculator1.name == calculator2.name
+
+
 def test_m3gnet_pot():
     import matgl
     from matgl.ext.ase import PESCalculator
