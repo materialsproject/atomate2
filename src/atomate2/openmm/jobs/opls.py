@@ -13,8 +13,8 @@ from xml.etree.ElementTree import tostring
 
 import numpy as np
 import openff.toolkit as tk
-from emmet.core.openff import ClassicalMDTaskDocument, MoleculeSpec
-from emmet.core.openmm import OpenMMInterchange
+from emmet.core.openff import MoleculeSpec
+from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
 from emmet.core.vasp.task_valid import TaskState
 from jobflow import Response
 from openff.interchange.components._packmol import pack_box
@@ -27,8 +27,8 @@ from openmm.unit import kelvin, picoseconds
 from pymatgen.core import Element
 from pymatgen.io.openff import get_atom_map
 
-from atomate2.openff.core import openff_job
 from atomate2.openff.utils import create_mol_spec, merge_specs_by_name_and_smiles
+from atomate2.openmm.jobs.base import openmm_job
 
 
 class XMLMoleculeFF:
@@ -228,7 +228,7 @@ def download_opls_xml(
     driver.quit()
 
 
-@openff_job
+@openmm_job
 def generate_openmm_interchange(
     input_mol_specs: list[MoleculeSpec | dict],
     mass_density: float,
@@ -361,7 +361,7 @@ def generate_openmm_interchange(
 
     dir_name = Path.cwd()
 
-    task_doc = ClassicalMDTaskDocument(
+    task_doc = OpenMMTaskDocument(
         dir_name=str(dir_name),
         state=TaskState.SUCCESS,
         interchange=interchange_bytes,

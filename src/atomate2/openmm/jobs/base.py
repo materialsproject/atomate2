@@ -9,7 +9,7 @@ import warnings
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, NoReturn
+from typing import TYPE_CHECKING, Any, Callable, NoReturn
 
 from emmet.core.openmm import (
     Calculation,
@@ -18,14 +18,13 @@ from emmet.core.openmm import (
     OpenMMInterchange,
     OpenMMTaskDocument,
 )
-from jobflow import Maker, Response
+from jobflow import Maker, Response, job
 from mdareporter.mdareporter import MDAReporter
 from openff.interchange import Interchange
 from openmm import Integrator, LangevinMiddleIntegrator, Platform, XmlSerializer
 from openmm.app import StateDataReporter
 from openmm.unit import kelvin, picoseconds
 
-from atomate2.openff.core import openff_job
 from atomate2.openff.utils import increment_name, task_reports
 
 if TYPE_CHECKING:
@@ -46,6 +45,42 @@ OPENMM_MAKER_DEFAULTS = {
     "traj_file_type": "dcd",
     "embed_traj": False,
 }
+
+
+def openmm_job(method: Callable) -> job:
+    """Decorate the ``make`` method of ClassicalMD job makers.
+
+    This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
+    settings for all ClassicalMD jobs. Namely, configures the output schema to be a
+    :obj:`.ClassicalMDTaskDocument`.
+
+    Any makers that return classical md jobs (not flows) should decorate the ``make``
+    method with @openff_job. For example:
+
+    .. code-block:: python
+
+        class MyClassicalMDMaker(BaseOpenMMMaker):
+            @openff_job
+            def make(structure):
+                # code to run OpenMM job.
+                pass
+
+    Parameters
+    ----------
+    method : callable
+        A BaseVaspMaker.make method. This should not be specified directly and is
+        implied by the decorator.
+
+    Returns
+    -------
+    callable
+        A decorated version of the make function that will generate jobs.
+    """
+    return job(
+        method,
+        output_schema=OpenMMTaskDocument,
+        data=["interchange", "traj_blob"],
+    )
 
 
 @dataclass
@@ -118,7 +153,7 @@ class BaseOpenMMMaker(Maker):
     traj_file_type: str | None = field(default=None)
     embed_traj: bool | None = field(default=None)
 
-    @openff_job
+    @openmm_job
     def make(
         self,
         interchange: Interchange | OpenMMInterchange | bytes,

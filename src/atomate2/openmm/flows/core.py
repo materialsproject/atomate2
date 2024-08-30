@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING
 from emmet.core.openmm import Calculation, OpenMMTaskDocument
 from jobflow import Flow, Job, Response
 
-from atomate2.openff.core import openff_job
 from atomate2.openff.utils import create_list_summing_to
+from atomate2.openmm.jobs.base import openmm_job
 from atomate2.openmm.jobs.core import NVTMaker, TempChangeMaker
 
 if TYPE_CHECKING:
@@ -37,7 +37,7 @@ def _flatten_calcs(nested_calcs: list) -> list[Calculation]:
     return flattened
 
 
-@openff_job
+@openmm_job
 def collect_outputs(
     prev_dir: str,
     tags: list[str] | None,
