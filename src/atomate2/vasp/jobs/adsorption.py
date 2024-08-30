@@ -73,7 +73,7 @@ class MolRelaxMaker(BaseVaspMaker):
                 {
                     "nkpoints": 0,
                     "generation_style": "Gamma",
-                    "kpoints": [[3, 3, 3]],
+                    "kpoints": [[1, 1, 1]],
                     "usershift": [0, 0, 0],
                     "comment": "Automatic mesh",
                 }
@@ -111,7 +111,7 @@ class MolStaticMaker(BaseVaspMaker):
                 {
                     "nkpoints": 0,
                     "generation_style": "Gamma",
-                    "kpoints": [[3, 3, 3]],
+                    "kpoints": [[1, 1, 1]],
                     "usershift": [0, 0, 0],
                     "comment": "Automatic mesh",
                 }
