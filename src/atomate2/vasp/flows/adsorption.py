@@ -25,9 +25,6 @@ if TYPE_CHECKING:
 
     from pymatgen.core.structure import Molecule, Structure
 
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
-    from atomate2.vasp.jobs.base import BaseVaspMaker
-
 
 @dataclass
 class AdsorptionMaker(Maker):
@@ -56,37 +53,31 @@ class AdsorptionMaker(Maker):
         Maker for slab static energy calculation.
     mol_static_maker: BaseVaspMaker
         Maker for molecule static energy calculation.
+    min_vacuum: float
+        The minimum size of the vacuum region. In Angstroms or number of hkl planes.
+    min_slab_size: float
+        The minimum size of layers of the slab. In Angstroms or number of hkl planes.
+    min_lw: float
+        Minimum length and width of the slab
+    surface_idx: tuple
+        Miller index [h, k, l] of plane parallel to surface.
     """  # noqa: E501
 
     name: str = "adsorption workflow"
-    mol_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
-        default_factory=MolRelaxMaker
-    )
-
-    mol_static_maker: BaseVaspMaker | ForceFieldStaticMaker | None = field(
-        default_factory=MolStaticMaker
-    )
-
-    bulk_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
-        default_factory=BulkRelaxMaker
-    )
-
-    slab_relax_maker: BaseVaspMaker | ForceFieldRelaxMaker | None = field(
-        default_factory=SlabRelaxMaker
-    )
-
-    slab_static_maker: BaseVaspMaker | ForceFieldStaticMaker | None = field(
-        default_factory=SlabStaticMaker
-    )
+    mol_relax_maker: Maker | None = field(default_factory=MolRelaxMaker)
+    mol_static_maker: Maker | None = field(default_factory=MolStaticMaker)
+    bulk_relax_maker: Maker | None = field(default_factory=BulkRelaxMaker)
+    slab_relax_maker: Maker | None = field(default_factory=SlabRelaxMaker)
+    slab_static_maker: Maker | None = field(default_factory=SlabStaticMaker)
+    min_vacuum: float = 20.0
+    min_slab_size: float = 10.0
+    min_lw: float = 10.0
+    surface_idx: tuple[int, int, int] = (0, 0, 1)
 
     def make(
         self,
         molecule: Molecule,
         structure: Structure,
-        min_vacuum: float = 20.0,
-        min_slab_size: float = 10.0,
-        min_lw: float = 10.0,
-        surface_idx: tuple[int, int, int] = (0, 0, 1),
         prev_dir_mol: str | Path | None = None,
         prev_dir_bulk: str | Path | None = None,
     ) -> Flow:
@@ -99,14 +90,6 @@ class AdsorptionMaker(Maker):
             A pymatgen molecule object. The molecule to be adsorbed.
         structure: Structure
             A pymatgen structure object. The bulk structure to be used for slab generation.
-        min_vacuum: float
-            The minimum size of the vacuum region. In Angstroms or number of hkl planes.
-        min_slab_size: float
-            The minimum size of layers of the slab. In Angstroms or number of hkl planes.
-        min_lw: float
-            Minimum length and width of the slab
-        surface_idx: tuple
-            Miller index [h, k, l] of plane parallel to surface.
         prev_dir_mol: str or Path or None
             A previous VASP calculation directory to copy output files from.
         prev_dir_bulk: str or Path or None
@@ -157,10 +140,10 @@ class AdsorptionMaker(Maker):
 
         generate_slab_structure = generate_slab(
             bulk_structure=optimized_bulk,
-            min_slab_size=min_slab_size,
-            surface_idx=surface_idx,
-            min_vacuum_size=min_vacuum,
-            min_lw=min_lw,
+            min_slab_size=self.min_slab_size,
+            surface_idx=self.surface_idx,
+            min_vacuum_size=self.min_vacuum,
+            min_lw=self.min_lw,
         )
 
         jobs += [generate_slab_structure]
@@ -171,10 +154,10 @@ class AdsorptionMaker(Maker):
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
             molecule_structure=molecule,
-            min_slab_size=min_slab_size,
-            surface_idx=surface_idx,
-            min_vacuum_size=min_vacuum,
-            min_lw=min_lw,
+            min_slab_size=self.min_slab_size,
+            surface_idx=self.surface_idx,
+            min_vacuum_size=self.min_vacuum,
+            min_lw=self.min_lw,
         )
         jobs += [generate_adslabs_structures]
         adslab_structures = generate_adslabs_structures.output
