@@ -559,7 +559,7 @@ class BaseOpenMMMaker(Maker):
             state="successful",
             calcs_reversed=[calc],
             interchange=interchange_bytes,
-            molecule_specs=prev_task.molecule_specs,
+            interchange_meta=prev_task.interchange_meta,
             force_field=prev_task.force_field,
             task_name=calc.task_name,
             task_type="test",

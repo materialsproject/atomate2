@@ -69,12 +69,13 @@ def test_generate_openmm_interchange(openmm_data, run_job):
         mol_specs, 1.0, ff_xmls, xml_method_and_scaling=("cm1a-lbcc", 1.14)
     )
     task_doc = run_job(job)
-    assert len(task_doc.molecule_specs) == 2
-    assert task_doc.molecule_specs[0].name == "ethanol"
-    assert task_doc.molecule_specs[0].count == 10
-    assert task_doc.molecule_specs[1].name == "water"
-    assert task_doc.molecule_specs[1].count == 300
-    co = tk.Molecule.from_json(task_doc.molecule_specs[1].openff_mol)
+    molecule_specs = task_doc.interchange_meta
+    assert len(molecule_specs) == 2
+    assert molecule_specs[0].name == "ethanol"
+    assert molecule_specs[0].count == 10
+    assert molecule_specs[1].name == "water"
+    assert molecule_specs[1].count == 300
+    co = tk.Molecule.from_json(molecule_specs[1].openff_mol)
     assert np.allclose(
         co.partial_charges.magnitude,
         np.array([-0.5873, -0.0492, 0.0768, 0.0768, 0.4061, 0.0768]),  # from file
@@ -109,7 +110,7 @@ def test_make_from_prev(openmm_data, run_job):
 
     task_doc = run_job(Flow([inter_job, base_job]))
 
-    assert task_doc.molecule_specs is not None
+    assert task_doc.interchange_meta is not None
 
 
 def test_evolve_simulation(openmm_data, run_job):

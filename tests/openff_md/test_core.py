@@ -23,7 +23,7 @@ def test_generate_interchange(mol_specs_small, run_job):
     assert topology.n_atoms == 150
     assert topology.n_bonds == 120
 
-    molecule_specs = task_doc.molecule_specs
+    molecule_specs = task_doc.interchange_meta
     assert len(molecule_specs) == 2
     assert all(isinstance(spec, MoleculeSpec) for spec in molecule_specs)
     assert molecule_specs[0].name == "ethanol"
@@ -40,11 +40,12 @@ def test_generate_interchange(mol_specs_small, run_job):
     ]
     job = generate_interchange(mol_specs_dicts, mass_density, force_field)
     task_doc = run_job(job)
-    assert len(task_doc.molecule_specs) == 2
-    assert task_doc.molecule_specs[0].name == "ethanol"
-    assert task_doc.molecule_specs[0].count == 10
-    assert task_doc.molecule_specs[1].name == "water"
-    assert task_doc.molecule_specs[1].count == 20
+    molecule_specs = task_doc.interchange_meta
+    assert len(molecule_specs) == 2
+    assert molecule_specs[0].name == "ethanol"
+    assert molecule_specs[0].count == 10
+    assert molecule_specs[1].name == "water"
+    assert molecule_specs[1].count == 20
 
 
 def test_generate_interchange_salt(mol_specs_salt, run_job):
@@ -55,8 +56,9 @@ def test_generate_interchange_salt(mol_specs_salt, run_job):
     job = generate_interchange(mol_specs, mass_density, force_field)
     task_doc = run_job(job)
 
-    assert len(task_doc.molecule_specs) == 4
-    assert task_doc.molecule_specs[1].name == "ethanol"
-    assert task_doc.molecule_specs[1].count == 10
-    assert task_doc.molecule_specs[2].name == "water"
-    assert task_doc.molecule_specs[2].count == 20
+    molecule_specs = task_doc.interchange_meta
+    assert len(molecule_specs) == 4
+    assert molecule_specs[1].name == "ethanol"
+    assert molecule_specs[1].count == 10
+    assert molecule_specs[2].name == "water"
+    assert molecule_specs[2].count == 20

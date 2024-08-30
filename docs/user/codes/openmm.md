@@ -487,7 +487,7 @@ from openff.interchange import Interchange
 
 ec_emc_taskdoc = ClassicalMDTaskDocument.parse_file("tutorial_system/taskdoc.json")
 interchange = Interchange.parse_raw(ec_emc_taskdoc.interchange)
-mol_specs = ec_emc_taskdoc.molecule_specs
+mol_specs = ec_emc_taskdoc.interchange_meta
 
 u = create_universe(
     interchange,

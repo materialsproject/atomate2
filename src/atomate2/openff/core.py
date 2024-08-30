@@ -155,7 +155,7 @@ def generate_interchange(
         dir_name=str(dir_name),
         state=TaskState.SUCCESS,
         interchange=interchange_bytes,
-        molecule_specs=mol_specs,
+        interchange_meta=mol_specs,
         force_field=force_field,
         tags=tags,
     )
