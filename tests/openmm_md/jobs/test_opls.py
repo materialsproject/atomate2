@@ -10,14 +10,12 @@ from openmm import XmlSerializer
 from atomate2.openff.utils import create_mol_spec
 from atomate2.openmm.jobs import EnergyMinimizationMaker
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
-from atomate2.openmm.jobs.opls import (
+from atomate2.openmm.jobs.generate import generate_openmm_interchange
+from atomate2.openmm.utils import (
     XMLMoleculeFF,
     create_system_from_xml,
     download_opls_xml,
-    generate_openmm_interchange,
 )
-
-# skip with pytest
 
 
 @pytest.mark.skip("annoying test")
