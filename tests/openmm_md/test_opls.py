@@ -124,6 +124,14 @@ def test_evolve_simulation(openmm_data, run_job):
     inter_job = generate_openmm_interchange(mol_specs, 1, ff_xmls)
 
     task_doc = run_job(inter_job)
+
+    # test that opls charges are not being used
+    co = tk.Molecule.from_json(task_doc.interchange_meta[1].openff_mol)
+    assert not np.allclose(
+        co.partial_charges.magnitude,
+        np.array([-0.5873, -0.0492, 0.0768, 0.0768, 0.4061, 0.0768]),  # from file
+    )
+
     interchange_str = task_doc.interchange.decode("utf-8")
     interchange = OpenMMInterchange.parse_raw(interchange_str)
 
