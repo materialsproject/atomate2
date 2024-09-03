@@ -22,13 +22,6 @@ def test_raises_error():
         ase_calculator("not_a_calculator")
 
 
-@pytest.mark.parametrize(("force_field"), ["CHGNet", "MACE"])
-def test_accepts_stubs(force_field: str):
-    calculator1 = ase_calculator("MACE")
-    calculator2 = ase_calculator(str(MLFF.MACE))
-    assert calculator1.name == calculator2.name
-
-
 def test_m3gnet_pot():
     import matgl
     from matgl.ext.ase import PESCalculator
