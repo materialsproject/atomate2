@@ -757,3 +757,52 @@ class LobsterTightStaticSetGenerator(LobsterSet):
             "LWAVE": True,
             "ISYM": 0,
         }
+
+@dataclass
+class NebSetGenerator(VaspInputGenerator):
+    """
+    Class to generate VASP NEB input sets.
+
+    Parameters
+    ----------
+    num_images : int
+        Number of NEB images to use.
+    climbing_image : bool
+        Whether to enable defaults for climbing image NEB.
+    **kwargs
+        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
+    """
+
+
+    auto_ismear: bool = False
+    auto_kspacing : bool = False
+    inherit_incar : bool = False
+    num_images: int = 1
+    climbing_image: bool = True
+
+    @property
+    def incar_updates(self) -> dict:
+        """Get updates to the INCAR for an NEB job.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        updates = {
+            "ISIF": 2,
+            "SPRING": -5,
+            "IMAGES": self.num_images,
+            "PREC": "Normal",
+            "NSW": 99,
+            "LCHARG": False,
+            "IBRION": 2,
+        }
+        if self.climbing_image:
+            updates.update({
+                "LCLIMB": True,
+                "IOPT": 1,
+                "IBRION": 3,
+                "POTIM": 0,
+            })
+        return updates

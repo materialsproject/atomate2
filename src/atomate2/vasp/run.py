@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+from glob import glob
 import logging
 import shlex
 import subprocess
-from os.path import expandvars
+from os.path import expandvars, exists
 from typing import TYPE_CHECKING, Any
 
 from custodian import Custodian
+from custodian.custodian import Validator
 from custodian.vasp.handlers import (
     FrozenJobErrorHandler,
     IncorrectSmearingHandler,
@@ -23,7 +25,7 @@ from custodian.vasp.handlers import (
     VaspErrorHandler,
     WalltimeHandler,
 )
-from custodian.vasp.jobs import VaspJob
+from custodian.vasp.jobs import VaspJob, VaspNEBJob
 from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
 from jobflow.utils import ValueEnum
 
@@ -66,6 +68,7 @@ class JobType(ValueEnum):
       :obj:`.VaspJob.metagga_opt_run`.
     - ``FULL_OPT``: Custodian full optimization run from
       :obj:`.VaspJob.full_opt_run`.
+    - ``NEB``: Run a VASP NEB job.
     """
 
     DIRECT = "direct"
@@ -73,6 +76,7 @@ class JobType(ValueEnum):
     DOUBLE_RELAXATION = "double relaxation"
     METAGGA_OPT = "metagga opt"
     FULL_OPT = "full opt"
+    NEB = "neb"
 
 
 def run_vasp(
@@ -82,7 +86,7 @@ def run_vasp(
     max_errors: int = SETTINGS.VASP_CUSTODIAN_MAX_ERRORS,
     scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
     handlers: Sequence[ErrorHandler] = DEFAULT_HANDLERS,
-    validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
+    validators: Sequence[Validator] | None = _DEFAULT_VALIDATORS,
     wall_time: int | None = None,
     vasp_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
@@ -118,6 +122,10 @@ def run_vasp(
     """
     vasp_job_kwargs = vasp_job_kwargs or {}
     custodian_kwargs = custodian_kwargs or {}
+    validators = validators or (
+        _DEFAULT_VALIDATORS if job_type != JobType.NEB
+        else tuple(VaspNebFilesValidator() if isinstance(v,VaspFilesValidator) else v for v in _DEFAULT_VALIDATORS)
+    )
 
     vasp_cmd = expandvars(vasp_cmd)
     vasp_gamma_cmd = expandvars(vasp_gamma_cmd)
@@ -142,6 +150,8 @@ def run_vasp(
         jobs = VaspJob.metagga_opt_run(split_vasp_cmd, **vasp_job_kwargs)
     elif job_type == JobType.FULL_OPT:
         jobs = VaspJob.full_opt_run(split_vasp_cmd, **vasp_job_kwargs)
+    elif job_type == JobType.NEB:
+        jobs = [VaspNEBJob(split_vasp_cmd, **vasp_job_kwargs)]
     else:
         raise ValueError(f"Unsupported {job_type=}")
 
@@ -198,3 +208,27 @@ def should_stop_children(
         )
 
     raise RuntimeError(f"Unknown option for {handle_unsuccessful=}")
+
+
+class VaspNebFilesValidator(Validator):
+    """
+    Validate VASP files for NEB jobs.
+
+    Analog of custodian's VaspFilesValidator for NEB runs.
+    """
+
+    def check(self):
+        """
+        Check that VASP ran in each NEB image directory.
+        
+        This validator ensures that CONTCAR, OSZICAR, and OUTCAR
+        files are created in each NEB image directory, consistent
+        with VaspFilesValidator.
+
+        VASP does not create these files in the endpoint directories.
+        """
+        return any(
+            not exists(f"{image_dir}/{vasp_file}")
+            for vasp_file in {"CONTCAR", "OSZICAR", "OUTCAR"}
+            for image_dir in sorted(glob("[0-9][0-9]"))[1:-1]
+        )
