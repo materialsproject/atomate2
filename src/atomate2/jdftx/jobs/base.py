@@ -21,9 +21,9 @@ from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
 
 from atomate2 import SETTINGS
 from atomate2.common.files import gzip_output_folder
+from atomate2.jdftx.sets.base import JdftxInputGenerator
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
-from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
@@ -36,7 +36,7 @@ _CHARGEMOL_EXE_EXISTS = bool(
     or which("chargemol")
 )
 
-_DATA_OBJECTS = [ # TODO just store trajectory
+_DATA_OBJECTS = [  # TODO just store trajectory
     BandStructure,
     BandStructureSymmLine,
     DOS,
@@ -53,7 +53,7 @@ _DATA_OBJECTS = [ # TODO just store trajectory
 
 # Input files. Partially from https://www.vasp.at/wiki/index.php/Category:Input_files
 # Exclude those that are also outputs
-_INPUT_FILES = [ # TODO implement file names from Jacob
+_INPUT_FILES = [  # TODO implement file names from Jacob
     "DYNMATFULL",
     "ICONST",
     "INCAR",
@@ -68,7 +68,7 @@ _INPUT_FILES = [ # TODO implement file names from Jacob
 ]
 
 # Output files. Partially from https://www.vasp.at/wiki/index.php/Category:Output_files
-_OUTPUT_FILES = [ # TODO implement file names from Jacob
+_OUTPUT_FILES = [  # TODO implement file names from Jacob
     "AECCAR0",
     "AECCAR1",
     "AECCAR2",
@@ -180,7 +180,9 @@ class BaseVaspMaker(Maker):
     """
 
     name: str = "base vasp job"
-    input_set_generator: JdftxInputGenerator = field(default_factory=JdftxInputGenerator)
+    input_set_generator: JdftxInputGenerator = field(
+        default_factory=JdftxInputGenerator
+    )
     write_input_set_kwargs: dict = field(default_factory=dict)
     copy_vasp_kwargs: dict = field(default_factory=dict)
     run_vasp_kwargs: dict = field(default_factory=dict)
