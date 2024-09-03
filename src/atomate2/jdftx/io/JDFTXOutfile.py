@@ -4,7 +4,7 @@ import math
 import numpy as np
 from dataclasses import dataclass, field
 import scipy.constants as const
-from data import atom_valence_electrons
+from atomate2.jdftx.io.data import atom_valence_electrons
 from pymatgen.core import Structure
 
 
