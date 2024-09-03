@@ -87,6 +87,9 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
         calc_cls = MontyDecoder().decode(json.dumps(calculator_meta))
         calculator = calc_cls(**kwargs)
 
+    if calculator is None:
+        raise ValueError("Could not create ASE calculator.")
+
     return calculator
 
 

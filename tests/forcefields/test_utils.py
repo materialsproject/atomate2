@@ -17,6 +17,11 @@ def test_ext_load(force_field: str):
     assert calc_from_decode.parameters == calc_from_preset.parameters == {}
 
 
+def test_raises_error():
+    with pytest.raises(ValueError, match="Could not create"):
+        ase_calculator("not_a_calculator")
+
+
 def test_m3gnet_pot():
     import matgl
     from matgl.ext.ase import PESCalculator
