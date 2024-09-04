@@ -2,6 +2,7 @@ from pathlib import Path
 from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile, HA2EV
 from pytest import approx
 import pytest
+from typing import 
 
 ex_files_dir = Path(__file__).parents[0] / "example_files"
 
@@ -16,6 +17,7 @@ known = {
     "kgrid": (6, 6, 1),
     "Emin": -3.836283*HA2EV,
     "HOMO": -0.212435*HA2EV,
+    "EFermi": -0.209509*HA2EV,
     "LUMO": -0.209424*HA2EV,
     "Emax": 0.113409*HA2EV,
     "Egap": 0.003011*HA2EV,
@@ -37,7 +39,7 @@ known = {
 }
 
 @pytest.mark.parametrize("filename", [ex_files_dir / Path("jdftx.out")])
-def test_JDFTXOutfile_fromfile(filename):
+def test_JDFTXOutfile_fromfile(filename,):
     # filename = ex_files_dir / Path("jdftx.out")
     jout = JDFTXOutfile.from_file(filename)
     assert jout.Nspin == known["Nspin"]
