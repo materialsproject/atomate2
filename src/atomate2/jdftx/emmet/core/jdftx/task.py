@@ -1,25 +1,24 @@
 # mypy: ignore-errors
 
-""" Core definition of a Q-Chem Task Document """
-from typing import Any, Dict, List, Optional, Callable
+"""Core definition of a Q-Chem Task Document"""
 
-from pydantic import BaseModel, Field
-from pymatgen.core.structure import Molecule
+from typing import Any, Callable, Dict, List, Optional
 
-from emmet.core.structure import MoleculeMetadata
-from emmet.core.task import BaseTaskDocument
-from emmet.core.utils import ValueEnum
 from emmet.core.qchem.calc_types import (
-    LevelOfTheory,
     CalcType,
+    LevelOfTheory,
     TaskType,
     calc_type,
     level_of_theory,
-    task_type,
-    solvent,
     lot_solvent_string,
+    solvent,
+    task_type,
 )
-
+from emmet.core.structure import MoleculeMetadata
+from emmet.core.task import BaseTaskDocument
+from emmet.core.utils import ValueEnum
+from pydantic import BaseModel, Field
+from pymatgen.core.structure import Molecule
 
 __author__ = "Evan Spotte-Smith <ewcspottesmith@lbl.gov>"
 
@@ -227,7 +226,6 @@ def filter_task_type(
     :param sort_by: Function used to sort (default None)
     :return: Filtered (sorted) list of entries
     """
-
     filtered = [f for f in entries if f["task_type"] == task_type]
 
     if sort_by is not None:

@@ -3,36 +3,27 @@
 # mypy: ignore-errors
 
 import logging
+import re
+import warnings
+from collections import OrderedDict
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
-import warnings
-from pydantic import field_validator, BaseModel, Field, ConfigDict
-from datetime import datetime
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile # TODO change to pymatgen modules
-from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
-from pymatgen.core.structure import Structure
-from collections import OrderedDict
-import re
-
-from emmet.core.qchem.calc_types import (
-    LevelOfTheory,
-    CalcType,
-    TaskType,
-)
-from emmet.core.qchem.calc_types.calc_types import (
-    FUNCTIONALS,
-    BASIS_SETS,
-)
+from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
+from emmet.core.qchem.calc_types.calc_types import BASIS_SETS, FUNCTIONALS
 
 # from emmet.core.qchem.calc_types.em_utils import (
 #     level_of_theory,
 #     task_type,
 #     calc_type,
 # )
-
 from emmet.core.qchem.task import QChemStatus
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pymatgen.core.structure import Molecule
+from pymatgen.io.qchem.inputs import QCInput
+from pymatgen.io.qchem.outputs import QCOutput
 
 functional_synonyms = {
     "b97mv": "b97m-v",
@@ -81,11 +72,10 @@ class CalculationInput(BaseModel):
             A QCInput object.
 
         Returns
-        --------
+        -------
         CalculationInput
             The input document.
         """
-
         return cls(
             structure=jdftxinput.structure,
             parameters=jdftxinput.as_dict(),
@@ -116,7 +106,7 @@ class CalculationOutput(BaseModel):
             A QCOutput object.
 
         Returns
-        --------
+        -------
         CalculationOutput
             The output document.
         """
@@ -211,7 +201,6 @@ class Calculation(BaseModel):
         Calculation
             A QChem calculation document.
         """
-
         dir_name = Path(dir_name)
         qcinput_file = dir_name / qcinput_file
         qcoutput_file = dir_name / qcoutput_file
@@ -355,7 +344,6 @@ def level_of_theory(
         parameters: Dict of Q-Chem input parameters
 
     """
-
     funct_raw = parameters.rem.get("method")
     basis_raw = parameters.rem.get("basis")
 
