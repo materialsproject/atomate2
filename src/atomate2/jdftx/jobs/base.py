@@ -21,9 +21,9 @@ from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
 
 from atomate2 import SETTINGS #TODO we can add JDFTx workflow default settings this way
 from atomate2.common.files import gzip_output_folder
+from atomate2.jdftx.sets.base import JdftxInputGenerator
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.run import run_vasp, should_stop_children
-from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
