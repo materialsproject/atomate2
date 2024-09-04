@@ -201,4 +201,4 @@ def write_vasp_input_set(
                 Path(filename).unlink()
 
     logger.info("Writing VASP input set.")
-    vis.write_input(directory, potcar_spec=potcar_spec, **kwargs)
+    vis.write_input(directory, **kwargs)

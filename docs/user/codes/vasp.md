@@ -42,6 +42,7 @@ The most important settings to consider are:
 - `VASP_VDW_KERNEL_DIR`: The path to the VASP Van der Waals kernel.
 
 (vasp_workflows)=
+
 ## List of VASP workflows
 
 ```{eval-rst}
@@ -237,7 +238,6 @@ The current implementation of the workflow does not consider the initial magneti
 for the determination of the symmetry of the structure; therefore, they are removed from the structure.
 ```
 
-
 ```{note}
 It is heavily recommended to symmetrize the structure before passing it to
 this flow. Otherwise, a different space group might be detected and too
@@ -246,6 +246,19 @@ It is recommended to check the convergence parameters here and
 adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
+
+### Gruneisen parameter workflow
+
+Calculates mode-dependent Grüneisen parameters with the help of Phonopy.
+
+Initially, a tight structural relaxation is performed to obtain a structure without
+forces on the atoms. The optimized structure (ground state) is further expanded and
+shrunk by 1 % (default) of its volume.
+Subsequently, supercells with one displaced atom are generated for all the three structures
+(ground state, expanded and shrunk volume) and accurate forces are computed for these structures.
+With the help of phonopy, these forces are then converted into a dynamical matrix.
+The dynamical matrices of three structures are then used as an input to the phonopy Grueneisen api
+to compute mode-dependent Grueneisen parameters.
 
 ### LOBSTER
 
@@ -367,6 +380,7 @@ for number, (key, cohp) in enumerate(
     plotter.add_cohp(key, cohp)
     plotter.save_plot(f"plots_cation_anion_bonds{number}.pdf")
 ```
+
 #### Running the LOBSTER workflow without database and with one job script only
 
 It is also possible to run the VASP-LOBSTER workflow with a minimal setup.
@@ -403,7 +417,6 @@ The `LOBSTER_CMD` now needs an additional export of the number of threads.
 VASP_CMD: <<VASP_CMD>>
 LOBSTER_CMD: OMP_NUM_THREADS=48 <<LOBSTER_CMD>>
 ```
-
 
 (modifying_input_sets)=
 Modifying input sets

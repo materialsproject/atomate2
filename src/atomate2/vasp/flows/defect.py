@@ -74,10 +74,11 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
     this maker is the `relax_maker` which contains the settings for the atomic
     relaxations that each defect supercell will undergo. The `relax_maker`
     uses a `ChargeStateRelaxSetGenerator` by default but more complex makers
-    like the `HSE_DOUBLE_RELAX` can be used for more accurate (but expensive)
+    like the ``HSE_DOUBLE_RELAX`` can be used for more accurate (but expensive)
     calculations.
-    If the `validate_maker` is set to True, the maker will check for some basic
-    settings in the `relax_maker` to make sure the calculations are done correctly.
+
+    If the ``validate_maker`` is set to True, the maker will check for some basic
+    settings in the ``relax_maker`` to make sure the calculations are done correctly.
 
     Attributes
     ----------
@@ -86,10 +87,10 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         states. Since these calculations are expensive and the settings might get
         messy, it is recommended for each implementation of this maker to check
         some of the most important settings in the `relax_maker`. Please see
-        `FormationEnergyMaker.validate_maker` for more details.
+        ``FormationEnergyMaker.validate_maker`` for more details.
 
     bulk_relax_maker: Maker
-        If None, the same `defect_relax_maker` will be used for the bulk supercell.
+        If None, the same ``defect_relax_maker`` will be used for the bulk supercell.
         A maker to used to perform the bulk supercell calculation. For marginally
         converged calculations, it might be desirable to perform an additional
         lattice relaxation on the bulk supercell to make sure the energies are more
@@ -100,6 +101,7 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         lattice relaxation, you should manually set the grid size.
 
         .. code-block:: python
+
             relax_set = MPRelaxSet(defect.get_supercell_structure())
             ng, ngf = relax_set.calculate_ng()
             params = ["NGX", "NGY", "NGZ", "NGXF", "NGYF", "NGZF"]
@@ -128,32 +130,37 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
         energy diagrams.
 
         .. note::
-        Once we remove the requirement for explicit bulk supercell calculations,
-        this setting will be removed. It is only needed because the bulk supercell
-        locpot is currently needed for the finite-size correction calculation.
+
+            Once we remove the requirement for explicit bulk supercell
+            calculations, this setting will be removed. It is only needed because
+            the bulk supercell locpot is currently needed for the finite-size
+            correction calculation.
 
         Output format for the DefectEntry data:
+
         .. code-block:: python
-        [
-            {
-                'bulk_dir_name': 'computer1:/folder1',
-                'bulk_locpot': {...},
-                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
-                'defect_dir_name': 'computer1:/folder2',
-                'defect_entry': {...},
-                'defect_locpot': {...},
-                'defect_uuid': 'e9af2725-d63c-49b8-a01f-391540211750'
-            },
-            {
-                'bulk_dir_name': 'computer1:/folder3',
-                'bulk_locpot': {...},
-                'bulk_uuid': '48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3',
-                'defect_dir_name': 'computer1:/folder4',
-                'defect_entry': {...},
-                'defect_locpot': {...},
-                'defect_uuid': 'a1c31095-0494-4eed-9862-95311f80a993'
-            }
-        ]
+
+            [
+                {
+                    "bulk_dir_name": "computer1:/folder1",
+                    "bulk_locpot": {...},
+                    "bulk_uuid": "48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3",
+                    "defect_dir_name": "computer1:/folder2",
+                    "defect_entry": {...},
+                    "defect_locpot": {...},
+                    "defect_uuid": "e9af2725-d63c-49b8-a01f-391540211750",
+                },
+                {
+                    "bulk_dir_name": "computer1:/folder3",
+                    "bulk_locpot": {...},
+                    "bulk_uuid": "48fb6da7-dc2b-4dcb-b1c8-1203c0f72ce3",
+                    "defect_dir_name": "computer1:/folder4",
+                    "defect_entry": {...},
+                    "defect_locpot": {...},
+                    "defect_uuid": "a1c31095-0494-4eed-9862-95311f80a993",
+                },
+            ]
+
     """
 
     defect_relax_maker: BaseVaspMaker = field(
@@ -207,8 +214,8 @@ class FormationEnergyMaker(defect_flows.FormationEnergyMaker):
             input_gen = relax_maker.input_set_generator
             if input_gen.use_structure_charge is False:
                 raise ValueError("use_structure_charge should be set to True")
-            isif_ = input_gen.get_incar_updates(None).get("ISIF", None)
-            isif = input_gen.user_incar_settings.get("ISIF", isif_)
+            default_isif = input_gen.incar_updates.get("ISIF")
+            isif = input_gen.user_incar_settings.get("ISIF", default_isif)
             if isif != 2:
                 raise ValueError("ISIF should be set to 2")
             return relax_maker
