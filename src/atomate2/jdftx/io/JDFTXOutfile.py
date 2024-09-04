@@ -172,6 +172,21 @@ class JDFTXOutfile(ClassPrintFormatter):
     is_converged: bool = None #TODO implement this
 
     @classmethod
+    def _get_start_lines(cls, text:str, start_key="*************** JDFTx"):
+        '''
+        Get the line numbers corresponding to the beginning of seperate JDFTx calculations
+        (in case of multiple calculations appending the same out file)
+
+        Args:
+            text: output of read_file for out file
+        '''
+        start_lines = []
+        for i, line in enumerate(text):
+            if start_key in line:
+                start_lines.append(i)
+        return start_lines
+
+    @classmethod
     def _get_prefix(cls, text: str) -> str:
         '''
         Get output prefix from the out file
@@ -304,6 +319,42 @@ class JDFTXOutfile(ClassPrintFormatter):
         varsdict["Emax"] = float(text[line+5].split()[1]) * Ha_to_eV
         varsdict["Egap"] = float(text[line+6].split()[2]) * Ha_to_eV
         return varsdict
+    
+    @classmethod
+    def _get_pp_type(cls, text:str):
+        '''
+        '''
+        skey = "Reading pseudopotential file"
+        line = find_key(skey)
+        ppfile_example = text[line].split(skey)[1].split(":")[0].strip("'")
+        pptype = None
+        readable = ["GBRV", "SG15"]
+        for _pptype in readable:
+            if _pptype in ppfile_example:
+                if not pptype is None:
+                    if ppfile_example.index(pptype) < ppfile_example.index(_pptype):
+                        pptype = _pptype
+                    else:
+                        pass
+                else:
+                    pptype = _pptype
+        if pptype is None:
+            raise ValueError(f"Could not determine pseudopotential type from file name {ppfile_example}")
+        return pptype
+    
+    @classmethod
+    def _get_pseudopotvars(cls, text:str):
+        startline = find_key('---------- Setting up pseudopotentials ----------', text)
+        endline = find_first_range_key('Initialized ', text, startline = startline)[0]
+        lines = find_all_key('valence electrons', text)
+        try:
+            atom_total_elec = [int(float(text[x].split()[0])) for x in lines]
+            pp_type = 'SG15'
+        except:
+            pp_type = 'GBRV'
+            raise ValueError('SG15 valence electron reading failed, make sure right pseudopotentials were used!')
+        total_elec_dict = dict(zip(instance.atom_types, atom_total_elec))
+        instance.pp_type = pp_type
 
     @classmethod
     def from_file(cls, file_name: str):
