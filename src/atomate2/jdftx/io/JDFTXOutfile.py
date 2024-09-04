@@ -171,8 +171,7 @@ class JDFTXOutfile(ClassPrintFormatter):
     trajectory_ecomponents: list[dict] = None
     is_converged: bool = None #TODO implement this
 
-    @classmethod
-    def _get_start_lines(cls, text:str, start_key="*************** JDFTx"):
+    def _get_start_lines(text:str, start_key="*************** JDFTx"):
         '''
         Get the line numbers corresponding to the beginning of seperate JDFTx calculations
         (in case of multiple calculations appending the same out file)
@@ -186,8 +185,7 @@ class JDFTXOutfile(ClassPrintFormatter):
                 start_lines.append(i)
         return start_lines
 
-    @classmethod
-    def _get_prefix(cls, text: str) -> str:
+    def _get_prefix(text: str) -> str:
         '''
         Get output prefix from the out file
 
@@ -201,8 +199,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             prefix = dumpname.split('.')[0]
         return prefix
     
-    @classmethod
-    def _set_spinvars(cls, text: str) -> tuple[str, int]:
+    def _get_spinvars(text: str) -> tuple[str, int]:
         '''
         Set spintype and Nspin from out file text for instance
 
@@ -220,8 +217,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             raise NotImplementedError('have not considered this spin yet')
         return spintype, Nspin
     
-    @classmethod
-    def _get_broadeningvars(cls, text:str) -> tuple[str, float]:
+    def _get_broadeningvars(text:str) -> tuple[str, float]:
         '''
         Get broadening type and value from out file text
 
@@ -237,8 +233,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             broadening = 0
         return broadening_type, broadening
     
-    @classmethod
-    def _get_truncationvars(cls, text:str) -> tuple[str, float]:
+    def _get_truncationvars(text:str) -> tuple[str, float]:
         '''
         Get truncation type and value from out file text
 
@@ -267,8 +262,7 @@ class JDFTXOutfile(ClassPrintFormatter):
                 truncation_radius = float(text[line].split()[5]) / ang_to_bohr
         return truncation_type, truncation_radius
     
-    @classmethod
-    def _get_elec_cutoff(cls, text:str) -> float:
+    def _get_elec_cutoff(text:str) -> float:
         '''
         Get the electron cutoff from the out file text
 
@@ -279,8 +273,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         pwcut = float(text[line].split()[1]) * Ha_to_eV
         return pwcut
 
-    @classmethod
-    def _get_fftgrid(cls, text:str) -> list[int]:
+    def _get_fftgrid(text:str) -> list[int]:
         '''
         Get the FFT grid from the out file text
 
@@ -291,8 +284,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         fftgrid = [int(x) for x in text[line].split()[6:9]]
         return fftgrid
 
-    @classmethod
-    def _get_kgrid(cls, text:str) -> list[int]:
+    def _get_kgrid(text:str) -> list[int]:
         '''
         Get the kpoint grid from the out file text
 
@@ -320,12 +312,21 @@ class JDFTXOutfile(ClassPrintFormatter):
         varsdict["Egap"] = float(text[line+6].split()[2]) * Ha_to_eV
         return varsdict
     
-    @classmethod
-    def _get_pp_type(cls, text:str):
+    def _set_eigvars(self, text:str):
+        eigstats = self._get_eigstats_varsdict(text, self.prefix)
+        self.Emin = eigstats["Emin"]
+        self.HOMO = eigstats["HOMO"]
+        self.EFermi = eigstats["EFermi"]
+        self.LUMO = eigstats["LUMO"]
+        self.Emax = eigstats["Emax"]
+        self.Egap = eigstats["Egap"]
+    
+
+    def _get_pp_type(self, text:str):
         '''
         '''
         skey = "Reading pseudopotential file"
-        line = find_key(skey)
+        line = find_key(skey, text)
         ppfile_example = text[line].split(skey)[1].split(":")[0].strip("'")
         pptype = None
         readable = ["GBRV", "SG15"]
@@ -342,19 +343,8 @@ class JDFTXOutfile(ClassPrintFormatter):
             raise ValueError(f"Could not determine pseudopotential type from file name {ppfile_example}")
         return pptype
     
-    @classmethod
-    def _get_pseudopotvars(cls, text:str):
-        startline = find_key('---------- Setting up pseudopotentials ----------', text)
-        endline = find_first_range_key('Initialized ', text, startline = startline)[0]
-        lines = find_all_key('valence electrons', text)
-        try:
-            atom_total_elec = [int(float(text[x].split()[0])) for x in lines]
-            pp_type = 'SG15'
-        except:
-            pp_type = 'GBRV'
-            raise ValueError('SG15 valence electron reading failed, make sure right pseudopotentials were used!')
-        total_elec_dict = dict(zip(instance.atom_types, atom_total_elec))
-        instance.pp_type = pp_type
+    
+    
 
     @classmethod
     def from_file(cls, file_name: str):
@@ -370,7 +360,7 @@ class JDFTXOutfile(ClassPrintFormatter):
 
         instance.prefix = cls._get_prefix(text)
 
-        spintype, Nspin = cls._set_spinvars(text)
+        spintype, Nspin = cls._get_spinvars(text)
         instance.spintype = spintype
         instance.Nspin = Nspin
 
@@ -396,13 +386,15 @@ class JDFTXOutfile(ClassPrintFormatter):
         # if text[line].split()[1] != 'no':
         #     raise ValueError('kpoint-reduce-inversion must = no in single point DFT runs so kgrid without time-reversal symmetry is used (BGW requirement)')
 
-        eigstats = cls._get_eigstats_varsdict(text, instance.prefix)
-        instance.Emin = eigstats["Emin"]
-        instance.HOMO = eigstats["HOMO"]
-        instance.EFermi = eigstats["EFermi"]
-        instance.LUMO = eigstats["LUMO"]
-        instance.Emax = eigstats["Emax"]
-        instance.Egap = eigstats["Egap"]
+        # eigstats = cls._get_eigstats_varsdict(text, instance.prefix)
+        # instance.Emin = eigstats["Emin"]
+        # instance.HOMO = eigstats["HOMO"]
+        # instance.EFermi = eigstats["EFermi"]
+        # instance.LUMO = eigstats["LUMO"]
+        # instance.Emax = eigstats["Emax"]
+        # instance.Egap = eigstats["Egap"]
+        instance._set_eigvars(text)
+        print(f"Egap: {instance.Egap}")
         if instance.broadening_type is not None:
             instance.HOMO_filling = (2 / instance.Nspin) * cls.calculate_filling(instance.broadening_type, instance.broadening, instance.HOMO, instance.EFermi)
             instance.LUMO_filling = (2 / instance.Nspin) * cls.calculate_filling(instance.broadening_type, instance.broadening, instance.LUMO, instance.EFermi)
@@ -454,7 +446,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             pp_type = 'GBRV'
             raise ValueError('SG15 valence electron reading failed, make sure right pseudopotentials were used!')
         total_elec_dict = dict(zip(instance.atom_types, atom_total_elec))
-        instance.pp_type = pp_type
+        instance.pp_type = instance._get_pp_type(text)
 
         element_total_electrons = np.array([total_elec_dict[x] for x in instance.atom_elements])
         element_valence_electrons = np.array([atom_valence_electrons[x] for x in instance.atom_elements])
