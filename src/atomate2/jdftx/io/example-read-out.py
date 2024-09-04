@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from JDFTXOutfile import JDFTXOutfile
+from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
 from pathlib import Path
 
 path = Path(__file__)
