@@ -11,4 +11,6 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     M3GNet = "M3GNet"
     CHGNet = "CHGNet"
     Forcefield = "Forcefield"  # default placeholder option
+    NEP = "NEP"
     Nequip = "Nequip"
+    SevenNet = "SevenNet"

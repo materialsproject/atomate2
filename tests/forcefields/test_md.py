@@ -17,6 +17,7 @@ from atomate2.forcefields.md import (
     GAPMDMaker,
     M3GNetMDMaker,
     MACEMDMaker,
+    NEPMDMaker,
     NequipMDMaker,
 )
 
@@ -25,15 +26,18 @@ name_to_maker = {
     "M3GNet": M3GNetMDMaker,
     "MACE": MACEMDMaker,
     "GAP": GAPMDMaker,
+    "NEP": NEPMDMaker,
     "Nequip": NequipMDMaker,
 }
 
 
 @pytest.mark.parametrize(
     "ff_name",
-    ["CHGNet", "M3GNet", "MACE", "GAP", "Nequip"],
+    ["CHGNet", "M3GNet", "MACE", "GAP", "NEP", "Nequip"],
 )
-def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, clean_dir):
+def test_ml_ff_md_maker(
+    ff_name, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
+):
     n_steps = 5
 
     ref_energies_per_atom = {
@@ -41,6 +45,7 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
         "M3GNet": -5.387282371520996,
         "MACE": -5.311369895935059,
         "GAP": -5.391255755606209,
+        "NEP": -3.966232215741286,
         "Nequip": -8.84670181274414,
     }
 
@@ -54,6 +59,17 @@ def test_ml_ff_md_maker(ff_name, si_structure, sr_ti_o3_structure, test_dir, cle
             "args_str": "IP GAP",
             "param_filename": str(test_dir / "forcefields" / "gap" / "gap_file.xml"),
         }
+    elif ff_name == "NEP":
+        # NOTE: The test NEP model is specifically trained on 16 elemental metals
+        # thus a new Al2Au structure is added.
+        # The NEP model used for the tests is licensed under a
+        # [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode)
+        # and downloaded from https://doi.org/10.5281/zenodo.10081677
+        # Also cite the original work if you use this specific model : https://arxiv.org/abs/2311.04732
+        calculator_kwargs = {
+            "model_filename": test_dir / "forcefields" / "nep" / "nep.txt"
+        }
+        unit_cell_structure = al2_au_structure.copy()
     elif ff_name == "Nequip":
         calculator_kwargs = {
             "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
@@ -222,7 +238,7 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
         traj_file=None,
         dynamics="nose-hoover",
         temperature=temp_schedule,
-        ase_md_kwargs=dict(ttime=50.0 * units.fs, pfactor=None),
+        ase_md_kwargs={"ttime": 50.0 * units.fs, "pfactor": None},
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output
@@ -249,10 +265,10 @@ def test_press_schedule(ff_name, si_structure, clean_dir):
         traj_file_fmt="pmg",
         dynamics="nose-hoover",
         pressure=press_schedule,
-        ase_md_kwargs=dict(
-            ttime=50.0 * units.fs,
-            pfactor=(75.0 * units.fs) ** 2 * units.GPa,
-        ),
+        ase_md_kwargs={
+            "ttime": 50.0 * units.fs,
+            "pfactor": (75.0 * units.fs) ** 2 * units.GPa,
+        },
     ).make(structure)
     run_locally(job, ensure_success=True)
     # task_doc = response[next(iter(response))][1].output

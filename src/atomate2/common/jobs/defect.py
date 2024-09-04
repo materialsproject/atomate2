@@ -300,7 +300,7 @@ def bulk_supercell_calculation(
 def spawn_defect_q_jobs(
     defect: Defect,
     relax_maker: RelaxMaker,
-    relaxed_sc_lattice: Lattice,
+    relaxed_sc_lattice: Lattice | None = None,
     sc_mat: NDArray | None = None,
     defect_index: int | str = "",
     add_info: dict | None = None,
@@ -355,7 +355,8 @@ def spawn_defect_q_jobs(
     sc_def_struct = defect.get_supercell_structure(
         sc_mat=sc_mat, relax_radius=relax_radius, perturb=perturb
     )
-    sc_def_struct.lattice = relaxed_sc_lattice
+    if relaxed_sc_lattice is not None:
+        sc_def_struct.lattice = relaxed_sc_lattice
     if sc_mat is not None:
         sc_mat = np.array(sc_mat).tolist()
     for qq in defect.get_charge_states():
@@ -459,7 +460,7 @@ def get_defect_entry(charge_state_summary: dict, bulk_summary: dict) -> list[dic
                 "bulk_dir_name": bulk_dir_name,
                 "bulk_locpot": bulk_locpot,
                 "bulk_uuid": bulk_summary.get("uuid"),
-                "defect_uuid": qq_summary.get("uuid", None),
+                "defect_uuid": qq_summary.get("uuid"),
             }
         )
     return defect_ent_res

@@ -4,7 +4,9 @@
 user/index
 user/install
 user/running-workflows
+user/docs-schemas-emmet
 user/fireworks
+user/atomate-1-vs-2
 user/codes/index
 ```
 
@@ -20,6 +22,7 @@ reference/index
 dev/dev_install
 dev/workflow_tutorial
 dev/vasp_tests
+dev/abinit_tests
 ```
 
 ```{toctree}
