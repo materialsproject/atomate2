@@ -267,6 +267,30 @@ from) by clicking "Network Access" (under "Security" in the left hand menu) and 
 "Add IP address".
 ````
 
+````{note}
+If you do not have access to a Mongo database, you can run `atomate2` using a local `.json` file
+to store outputs using the following `jobflow.yaml` file.
+
+```yaml
+JOB_STORE:
+  docs_store:
+    type: JSONStore
+    uri: <<PATH>>
+    read_only: True
+  additional_stores:
+    data:
+      type: JSONStore
+      uri: <<PATH>>
+      read_only: True
+```
+
+The user doesn't need to have the file at the given `<<PATH>>`, since we have set `read_only: True`.
+In case the file isn't available, a new file with the name mentioned in the `<<PATH>>` will be generated.
+
+**Note that this approach has limitations - it cannot handle simultaneous writes and so is not suitable for high-throughput work.**
+````
+
+
 Atomate2 uses two database collections, one for small documents (such as elastic
 tensors, structures, and energies) called the `docs` store and another for large
 documents such as band structures and density of states called the `data` store.
@@ -296,7 +320,7 @@ This is the command that you would use to run VASP with parallelization
 
 The directory structure of `<<INSTALL_DIR>>/config` should now look like
 
-```txt
+```
 config
 ├── jobflow.yaml
 └── atomate2.yaml
@@ -456,6 +480,8 @@ See the following pages for more information on the topics we covered here:
 
 - To see how to run and customize the existing Workflows in atomate2, try the
   [](running_workflows) tutorial (suggested next step).
+- To learn more about `TaskDocument` and how `atomate2` organizes output data, review
+  the [Introduction to task documents, schemas, and emmet](docs_schemas_emmet.md) tutorial.
 - To see how to manage and execute many workflows at once, try the
   [](atomate2_fireWorks) tutorial.
 
