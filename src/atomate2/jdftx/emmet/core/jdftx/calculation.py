@@ -108,12 +108,12 @@ class CalculationOutput(BaseModel):
     @classmethod
     def from_jdftxoutput(cls, jdftxoutput: JDFTXOutfile) -> "CalculationOutput":
         """
-        Create a QChem output document from a QCOutput object.
+        Create a JDFTx output document from a JDFTXOutfile object.
 
         Parameters
         ----------
-        qcoutput
-            A QCOutput object.
+        jdftxoutput
+            A JDFTXOutfile object.
 
         Returns
         --------
@@ -121,8 +121,12 @@ class CalculationOutput(BaseModel):
             The output document.
         """
         optimized_structure = jdftxoutput.structure
+        electronic_output = jdftxoutput.electronic_output
+
         return cls(
             structure=optimized_structure,
+            Ecomponents=jdftxoutput.Ecomponents,
+            **electronic_output,
             
         )
 
@@ -131,20 +135,17 @@ class CalculationOutput(BaseModel):
 
 
 class Calculation(BaseModel):
-    """Full QChem calculation inputs and outputs."""
+    """Full JDFTx calculation inputs and outputs."""
 
-    dir_name: str = Field(None, description="The directory for this QChem calculation")
-    qchem_version: str = Field(
-        None, description="QChem version used to perform the current calculation"
-    )
-    has_qchem_completed: Union[QChemStatus, bool] = Field(
-        None, description="Whether QChem calculated the calculation successfully"
+    dir_name: str = Field(None, description="The directory for this JDFTx calculation")
+    has_jdftx_completed: Union[QChemStatus, bool] = Field(
+        None, description="Whether JDFTx calculated the calculation successfully"
     )
     input: CalculationInput = Field(
-        None, description="QChem input settings for the calculation"
+        None, description="JDFTx input settings for the calculation"
     )
     output: CalculationOutput = Field(
-        None, description="The QChem calculation output document"
+        None, description="The JDFTx calculation output document"
     )
     completed_at: str = Field(
         None, description="Timestamp for when the calculation was completed"

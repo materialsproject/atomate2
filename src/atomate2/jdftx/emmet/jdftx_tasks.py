@@ -108,31 +108,30 @@ class CustodianDoc(BaseModel):
     )
 
 
-# AnalysisDoc? Is there a scope for AnalysisDoc in QChem?
-
-
 class TaskDoc(StructureMetadata):
     """
     Calculation-level details about JDFTx calculations
     """
 
     dir_name: Optional[Union[str, Path]] = Field(
-        None, description="The directory for this QChem task"
+        None, description="The directory for this JDFTx task"
     )
 
     state: Optional[JDFTxStatus] = Field(
-        None, description="State of this QChem calculation"
-    )
-
-    calcs_reversed: Optional[List[Calculation]] = Field(
-        None,
-        title="Calcs reversed data",
-        description="Detailed data for each QChem calculation contributing to the task document.",
+        None, description="State of this JDFTx calculation"
     )
 
     task_type: Optional[Union[CalcType, TaskType]] = Field(
-        None, description="the type of QChem calculation"
+        None, description="the type of JDFTx calculation"
     )
+
+    # implemented in VASP and Qchem. Do we need this?
+    # it keeps a list of all calculations in a given task.
+    # calcs_reversed: Optional[List[Calculation]] = Field(
+    # None,
+    # title="Calcs reversed data",
+    # description="Detailed data for each JDFTx calculation contributing to the task document.",
+    # )
 
     orig_inputs: Optional[Union[CalculationInput, Dict[str, Any]]] = Field(
         {}, description="Summary of the original Q-Chem inputs"
@@ -140,7 +139,7 @@ class TaskDoc(StructureMetadata):
 
     input: Optional[InputDoc] = Field(
         None,
-        description="The input molecule and calc parameters used to generate the current task document.",
+        description="The input structure and calc parameters used to generate the current task document.",
     )
 
     output: Optional[OutputDoc] = Field(
@@ -148,34 +147,10 @@ class TaskDoc(StructureMetadata):
         description="The exact set of output parameters used to generate the current task document.",
     )
 
-    # TODO: Implement entry dict
-
-    custodian: Optional[List[CustodianDoc]] = Field(
-        None,
-        title="Calcs reversed data",
-        description="Detailed custodian data for each QChem calculation contributing to the task document.",
-    )
-
-    critic2: Optional[Dict[str, Any]] = Field(
-        None, description="Outputs from the critic2 calculation if performed"
-    )
-
-    custom_smd: Optional[Union[str, Dict[str, Any]]] = Field(
-        None,
-        description="The seven solvent parameters necessary to define a custom_smd model",
-    )
-
-    additional_fields: Optional[Dict[str, Any]] = Field(
-        None, description="Any miscellaneous fields passed to the pydantic model"
-    )
-
-    # TODO some sort of @validator s if necessary
-
     @classmethod
     def from_directory(
         cls: Type[_T],
         dir_name: Union[Path, str],
-        validate_lot: bool = True,
         store_additional_json: bool = True,
         additional_fields: Dict[str, Any] = None,
         **qchem_calculation_kwargs,
@@ -187,9 +162,6 @@ class TaskDoc(StructureMetadata):
         ----------
         dir_name
             The path to the folder containing the calculation outputs.
-        validate_lot
-            Flag for matching the basis and functional with the list of functionals consistent with MPCules.
-            Defaults to True. Change to False if you want to create a TaskDoc with other basis sets and functionals.
         store_additional_json
             Whether to store additional json files in the calculation directory.
         additional_fields
@@ -200,62 +172,64 @@ class TaskDoc(StructureMetadata):
 
         Returns
         -------
-        QChemTaskDoc
-            A task document for the calculation
+        TaskDoc
+            A task document for the JDFTx calculation
         """
         logger.info(f"Getting task doc in: {dir_name}")
 
         additional_fields = {} if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
-        task_files = _find_qchem_files(dir_name)
+        # task_files = _find_qchem_files(dir_name)
 
-        if len(task_files) == 0:
-            raise FileNotFoundError("No JDFTx files found!")
+        # if len(task_files) == 0:
+        #     raise FileNotFoundError("No JDFTx files found!")
 
-        critic2 = {}
-        custom_smd = {}
-        calcs_reversed = []
-        for task_name, files in task_files.items():
-            if task_name == "orig":
-                continue
-            else:
-                calc_doc = Calculation.from_qchem_files(
-                    dir_name,
-                    task_name,
-                    **files,
-                    **qchem_calculation_kwargs,
-                    validate_lot=validate_lot,
-                )
-                calcs_reversed.append(calc_doc)
+        ### all logic for calcs_reversed ###
+        # critic2 = {}
+        # custom_smd = {}
+        # calcs_reversed = []
+        # for task_name, files in task_files.items():
+        #     if task_name == "orig":
+        #         continue
+        #     else:
+        #         calc_doc = Calculation.from_qchem_files(
+        #             dir_name,
+        #             task_name,
+        #             **files,
+        #             **qchem_calculation_kwargs,
+        #         )
+        #         calcs_reversed.append(calc_doc)
                 # all_qchem_objects.append(qchem_objects)
 
         # Lists need to be reversed so that newest calc is the first calc, all_qchem_objects are also reversed to match
-        calcs_reversed.reverse()
+        # calcs_reversed.reverse()
 
         # all_qchem_objects.reverse()
-        custodian = _parse_custodian(dir_name)
-        additional_json = None
-        if store_additional_json:
-            additional_json = _parse_additional_json(dir_name)
-            for key, _ in additional_json.items():
-                if key == "processed_critic2":
-                    critic2["processed"] = additional_json["processed_critic2"]
-                elif key == "cpreport":
-                    critic2["cp"] = additional_json["cpreport"]
-                elif key == "YT":
-                    critic2["yt"] = additional_json["yt"]
-                elif key == "bonding":
-                    critic2["bonding"] = additional_json["bonding"]
-                elif key == "solvent_data":
-                    custom_smd = additional_json["solvent_data"]
 
-        orig_inputs = (
-            CalculationInput.from_qcinput(_parse_orig_inputs(dir_name))
-            if _parse_orig_inputs(dir_name)
-            else {}
-        )
+        ### Custodian stuff ###
+        # custodian = _parse_custodian(dir_name)
+        # additional_json = None
+        # if store_additional_json:
+        #     additional_json = _parse_additional_json(dir_name)
+        #     for key, _ in additional_json.items():
+        #         if key == "processed_critic2":
+        #             critic2["processed"] = additional_json["processed_critic2"]
+        #         elif key == "cpreport":
+        #             critic2["cp"] = additional_json["cpreport"]
+        #         elif key == "YT":
+        #             critic2["yt"] = additional_json["yt"]
+        #         elif key == "bonding":
+        #             critic2["bonding"] = additional_json["bonding"]
+        #         elif key == "solvent_data":
+        #             custom_smd = additional_json["solvent_data"]
 
-        dir_name = get_uri(dir_name)  # convert to full path
+        # orig_inputs = (
+        #     CalculationInput.from_qcinput(_parse_orig_inputs(dir_name))
+        #     if _parse_orig_inputs(dir_name)
+        #     else {}
+        # )
+
+        # dir_name = get_uri(dir_name)  # convert to full path
 
         # only store objects from last calculation
         # TODO: If vasp implementation makes this an option, change here as well
@@ -450,85 +424,85 @@ def _get_state(calcs_reversed: List[Calculation]) -> QChemStatus:
 #     )
 
 
-def _find_qchem_files(
-    path: Union[str, Path],
-) -> Dict[str, Any]:
-    """
-    Find QChem files in a directory.
+# def _find_qchem_files(
+#     path: Union[str, Path],
+# ) -> Dict[str, Any]:
+#     """
+#     Find QChem files in a directory.
 
-    Only the mol.qout file (or alternatively files
-    with the task name as an extension, e.g., mol.qout.opt_0.gz, mol.qout.freq_1.gz, or something like this...)
-    will be returned.
+#     Only the mol.qout file (or alternatively files
+#     with the task name as an extension, e.g., mol.qout.opt_0.gz, mol.qout.freq_1.gz, or something like this...)
+#     will be returned.
 
-    Parameters
-    ----------
-    path
-        Path to a directory to search.
+#     Parameters
+#     ----------
+#     path
+#         Path to a directory to search.
 
-    Returns
-    -------
-    Dict[str, Any]
-        The filenames of the calculation outputs for each QChem task, given as a ordered dictionary of::
+#     Returns
+#     -------
+#     Dict[str, Any]
+#         The filenames of the calculation outputs for each QChem task, given as a ordered dictionary of::
 
-            {
-                task_name:{
-                    "qchem_out_file": qcrun_filename,
-                },
-                ...
-            }
-    If there is only 1 qout file task_name will be "standard" otherwise it will be the extension name like "opt_0"
-    """
-    path = Path(path)
-    task_files = OrderedDict()
+#             {
+#                 task_name:{
+#                     "qchem_out_file": qcrun_filename,
+#                 },
+#                 ...
+#             }
+#     If there is only 1 qout file task_name will be "standard" otherwise it will be the extension name like "opt_0"
+#     """
+#     path = Path(path)
+#     task_files = OrderedDict()
 
-    in_file_pattern = re.compile(r"^(?P<in_task_name>mol\.(qin|in)(?:\..+)?)(\.gz)?$")
+#     in_file_pattern = re.compile(r"^(?P<in_task_name>mol\.(qin|in)(?:\..+)?)(\.gz)?$")
 
-    for file in path.iterdir():
-        if file.is_file():
-            in_match = in_file_pattern.match(file.name)
+#     for file in path.iterdir():
+#         if file.is_file():
+#             in_match = in_file_pattern.match(file.name)
 
-            # This block is for generalizing outputs coming from both atomate and manual qchem calculations
-            if in_match:
-                in_task_name = re.sub(
-                    r"(\.gz|gz)$",
-                    "",
-                    in_match.group("in_task_name").replace("mol.qin.", ""),
-                )
-                in_task_name = in_task_name or "mol.qin"
-                if in_task_name == "orig":
-                    task_files[in_task_name] = {"orig_input_file": file.name}
-                elif in_task_name == "last":
-                    continue
-                elif in_task_name == "mol.qin" or in_task_name == "mol.in":
-                    if in_task_name == "mol.qin":
-                        out_file = (
-                            path / "mol.qout.gz"
-                            if (path / "mol.qout.gz").exists()
-                            else path / "mol.qout"
-                        )
-                    else:
-                        out_file = (
-                            path / "mol.out.gz"
-                            if (path / "mol.out.gz").exists()
-                            else path / "mol.out"
-                        )
-                    task_files["standard"] = {
-                        "qcinput_file": file.name,
-                        "qcoutput_file": out_file.name,
-                    }
-                # This block will exist only if calcs were run through atomate
-                else:
-                    try:
-                        task_files[in_task_name] = {
-                            "qcinput_file": file.name,
-                            "qcoutput_file": Path(
-                                "mol.qout." + in_task_name + ".gz"
-                            ).name,
-                        }
-                    except FileNotFoundError:
-                        task_files[in_task_name] = {
-                            "qcinput_file": file.name,
-                            "qcoutput_file": "No qout files exist for this in file",
-                        }
+#             # This block is for generalizing outputs coming from both atomate and manual qchem calculations
+#             if in_match:
+#                 in_task_name = re.sub(
+#                     r"(\.gz|gz)$",
+#                     "",
+#                     in_match.group("in_task_name").replace("mol.qin.", ""),
+#                 )
+#                 in_task_name = in_task_name or "mol.qin"
+#                 if in_task_name == "orig":
+#                     task_files[in_task_name] = {"orig_input_file": file.name}
+#                 elif in_task_name == "last":
+#                     continue
+#                 elif in_task_name == "mol.qin" or in_task_name == "mol.in":
+#                     if in_task_name == "mol.qin":
+#                         out_file = (
+#                             path / "mol.qout.gz"
+#                             if (path / "mol.qout.gz").exists()
+#                             else path / "mol.qout"
+#                         )
+#                     else:
+#                         out_file = (
+#                             path / "mol.out.gz"
+#                             if (path / "mol.out.gz").exists()
+#                             else path / "mol.out"
+#                         )
+#                     task_files["standard"] = {
+#                         "qcinput_file": file.name,
+#                         "qcoutput_file": out_file.name,
+#                     }
+#                 # This block will exist only if calcs were run through atomate
+#                 else:
+#                     try:
+#                         task_files[in_task_name] = {
+#                             "qcinput_file": file.name,
+#                             "qcoutput_file": Path(
+#                                 "mol.qout." + in_task_name + ".gz"
+#                             ).name,
+#                         }
+#                     except FileNotFoundError:
+#                         task_files[in_task_name] = {
+#                             "qcinput_file": file.name,
+#                             "qcoutput_file": "No qout files exist for this in file",
+#                         }
 
-    return task_files
+#     return task_files
