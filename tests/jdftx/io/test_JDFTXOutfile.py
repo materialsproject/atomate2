@@ -2,11 +2,10 @@ from pathlib import Path
 from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile, HA2EV
 from pytest import approx
 import pytest
-from typing import 
+from pymatgen.util.typing import PathLike
 
 ex_files_dir = Path(__file__).parents[0] / "example_files"
-
-known = {
+example_sp_known = {
     "Nspin": 1,
     "spintype": None,
     "broadening_type": "MP1",
@@ -38,8 +37,13 @@ known = {
     "Eewald": -16901.4696647211094387*HA2EV,
 }
 
-@pytest.mark.parametrize("filename", [ex_files_dir / Path("jdftx.out")])
-def test_JDFTXOutfile_fromfile(filename,):
+@pytest.mark.parametrize("filename,known", [(ex_files_dir / Path("example_sp.out"),
+                                             example_sp_known)]
+                                             )
+def test_JDFTXOutfile_fromfile(
+    filename: PathLike,
+    known: dict
+    ):
     # filename = ex_files_dir / Path("jdftx.out")
     jout = JDFTXOutfile.from_file(filename)
     assert jout.Nspin == known["Nspin"]
