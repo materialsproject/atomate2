@@ -1,40 +1,41 @@
 from pathlib import Path
-from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile, HA2EV
+from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
 from pytest import approx
 import pytest
 from pymatgen.util.typing import PathLike
+from pymatgen.core.units import Ha_to_eV
 
 ex_files_dir = Path(__file__).parents[0] / "example_files"
 example_sp_known = {
     "Nspin": 1,
     "spintype": None,
     "broadening_type": "MP1",
-    "broadening": 0.00367493*HA2EV,
+    "broadening": 0.00367493*Ha_to_eV,
     "truncation_type": "slab",
-    "pwcut": 30*HA2EV,
+    "pwcut": 30*Ha_to_eV,
     "fftgrid": (54, 54, 224),
     "kgrid": (6, 6, 1),
-    "Emin": -3.836283*HA2EV,
-    "HOMO": -0.212435*HA2EV,
-    "EFermi": -0.209509*HA2EV,
-    "LUMO": -0.209424*HA2EV,
-    "Emax": 0.113409*HA2EV,
-    "Egap": 0.003011*HA2EV,
+    "Emin": -3.836283*Ha_to_eV,
+    "HOMO": -0.212435*Ha_to_eV,
+    "EFermi": -0.209509*Ha_to_eV,
+    "LUMO": -0.209424*Ha_to_eV,
+    "Emax": 0.113409*Ha_to_eV,
+    "Egap": 0.003011*Ha_to_eV,
     "is_metal": True,
     "fluid": None,
     "total_electrons": 288.0,
     "Nbands": 288,
     "Nat": 16,
-    "F": -1940.762261217305650*HA2EV,
-    "TS": -0.0001776512106456*HA2EV,
-    "Etot": -1940.7624388685162558*HA2EV,
-    "KE": 593.1822417205943339*HA2EV,
-    "Exc": -185.5577583222759870*HA2EV,
-    "Epulay": 0.0000125227478554*HA2EV,
-    "Enl": 174.1667582919756114*HA2EV,
-    "Eloc": 29663.3545152997867262*HA2EV,
-    "EH": -15284.4385436602351547*HA2EV,
-    "Eewald": -16901.4696647211094387*HA2EV,
+    "F": -1940.762261217305650*Ha_to_eV,
+    "TS": -0.0001776512106456*Ha_to_eV,
+    "Etot": -1940.7624388685162558*Ha_to_eV,
+    "KE": 593.1822417205943339*Ha_to_eV,
+    "Exc": -185.5577583222759870*Ha_to_eV,
+    "Epulay": 0.0000125227478554*Ha_to_eV,
+    "Enl": 174.1667582919756114*Ha_to_eV,
+    "Eloc": 29663.3545152997867262*Ha_to_eV,
+    "EH": -15284.4385436602351547*Ha_to_eV,
+    "Eewald": -16901.4696647211094387*Ha_to_eV,
 }
 
 @pytest.mark.parametrize("filename,known", [(ex_files_dir / Path("example_sp.out"),

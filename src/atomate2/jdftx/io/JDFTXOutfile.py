@@ -8,10 +8,11 @@ from atomate2.jdftx.io.data import atom_valence_electrons
 from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from typing import List
+from pymatgen.core.units import Ha_to_eV, ang_to_bohr
 
 
-HA2EV = 2.0 * const.value('Rydberg constant times hc in eV')
-ANG2BOHR = 1 / (const.value('Bohr radius') * 10**10)
+#Ha_to_eV = 2.0 * const.value('Rydberg constant times hc in eV')
+# ang_to_bohr = 1 / (const.value('Bohr radius') * 10**10)
 
 class ClassPrintFormatter():
     def __str__(self) -> str:
@@ -171,6 +172,109 @@ class JDFTXOutfile(ClassPrintFormatter):
     is_converged: bool = None #TODO implement this
 
     @classmethod
+    def _get_prefix(cls, text: str) -> str:
+        '''
+        Get output prefix from the out file
+
+        Args:
+            text: output of read_file for out file
+        '''
+        line = find_key('dump-name', text)
+        dumpname = text[line].split()[1]
+        prefix = dumpname.split('.')[0]
+        return prefix
+    
+    @classmethod
+    def _set_spinvars(cls, text: str) -> tuple[str, int]:
+        '''
+        Set spintype and Nspin from out file text for instance
+
+        Args:
+            text: output of read_file for out file
+        '''
+        line = find_key('spintype ', text)
+        spintype = text[line].split()[1]
+        if spintype == 'no-spin':
+            spintype = None
+            Nspin = 1
+        elif spintype == 'z-spin':
+            Nspin = 2
+        else:
+            raise NotImplementedError('have not considered this spin yet')
+        return spintype, Nspin
+    
+    @classmethod
+    def _get_broadeningvars(cls, text:str) -> tuple[str, float]:
+        '''
+        Get broadening type and value from out file text
+
+        Args:
+            text: output of read_file for out file
+        '''
+        line = find_key('elec-smearing ', text)
+        if line != len(text):
+            broadening_type = text[line].split()[1]
+            broadening = float(text[line].split()[2]) * Ha_to_eV
+        else:
+            broadening_type = None
+            broadening = 0
+        return broadening_type, broadening
+    
+    @classmethod
+    def _get_truncationvars(cls, text:str) -> tuple[str, float]:
+        '''
+        Get truncation type and value from out file text
+
+        Args:
+            text: output of read_file for out file
+        '''
+        maptypes = {'Periodic': None, 'Slab': 'slab', 'Cylindrical': 'wire', 'Wire': 'wire',
+                    'Spherical': 'spherical', 'Isolated': 'box'}
+        line = find_key('coulomb-interaction', text)
+        truncation_type = None
+        truncation_radius = None
+        if line != len(text):
+            truncation_type = text[line].split()[1]
+            truncation_type = maptypes[truncation_type]
+            direc = None
+            if len(text[line].split()) == 3:
+                direc = text[line].split()[2]
+            if truncation_type == 'slab' and direc != '001':
+                raise ValueError('BGW slab Coulomb truncation must be along z!')
+            if truncation_type == 'wire' and direc != '001':
+                raise ValueError('BGW wire Coulomb truncation must be periodic in z!')
+            if truncation_type == 'error':
+                raise ValueError('Problem with this truncation!')
+            if truncation_type == 'spherical':
+                line = find_key('Initialized spherical truncation of radius', text)
+                truncation_radius = float(text[line].split()[5]) / ang_to_bohr
+        return truncation_type, truncation_radius
+    
+    @classmethod
+    def _get_elec_cutoff(cls, text:str) -> float:
+        '''
+        Get the electron cutoff from the out file text
+
+        Args:
+            text: output of read_file for out file
+        '''
+        line = find_key('elec-cutoff ', text)
+        pwcut = float(text[line].split()[1]) * Ha_to_eV
+        return pwcut
+
+    @classmethod
+    def _get_fftgrid(cls, text:str) -> list[int]:
+        '''
+        Get the FFT grid from the out file text
+
+        Args:
+            text: output of read_file for out file
+        '''
+        line = find_key('Chosen fftbox size', text)
+        fftgrid = [int(x) for x in text[line].split()[6:9]]
+        return fftgrid
+
+    @classmethod
     def from_file(cls, file_name: str):
         '''
         Read file into class object
@@ -182,67 +286,29 @@ class JDFTXOutfile(ClassPrintFormatter):
 
         text = read_file(file_name)
 
-        line = find_key('dump-name', text)
-        dumpname = text[line].split()[1]
-        prefix = dumpname.split('.')[0]
-        instance.prefix = prefix
+        instance.prefix = cls._get_prefix(text)
 
-        line = find_key('spintype ', text)
-        spintype = text[line].split()[1]
-        if spintype == 'no-spin':
-            spintype = None
-            Nspin = 1
-        elif spintype == 'z-spin':
-            Nspin = 2
-        else:
-            raise NotImplementedError('have not considered this spin yet')
+        spintype, Nspin = cls._set_spinvars(text)
         instance.spintype = spintype
         instance.Nspin = Nspin
 
-        line = find_key('elec-smearing ', text)
-        if line != len(text):
-            broadening_type = text[line].split()[1]
-            broadening = float(text[line].split()[2])
-        else:
-            broadening_type = None
-            broadening = 0
+        broadening_type, broadening = cls._get_broadeningvars(text)
         instance.broadening_type = broadening_type
-        instance.broadening = broadening * HA2EV
+        instance.broadening = broadening
 
         line = find_key('kpoint-folding ', text)
         instance.kgrid = [int(x) for x in text[line].split()[1:4]]
 
-        maptypes = {'Periodic': None, 'Slab': 'slab', 'Cylindrical': 'wire', 'Wire': 'wire',
-                    'Spherical': 'spherical', 'Isolated': 'box'}
-        line = find_key('coulomb-interaction', text)
-        if line != len(text):
-            truncation_type = text[line].split()[1]
-            truncation_type = maptypes[truncation_type]
-            direc = None
-            if len(text[line].split()) == 3:
-                direc = text[line].split()[2]
-            if truncation_type == 'slab' and direc != '001':
-                raise ValueError('BGW slab Coulomb truncation must be along z!')
-            if truncation_type == 'wire' and direc != '001':
-                raise ValueError('BGW wire Coulomb truncation must be periodic in z!')
+        truncation_type, truncation_radius = cls._get_truncationvars(text)
+        instance.truncation_type = truncation_type
+        instance.truncation_radius = truncation_radius
 
-            if truncation_type == 'error':
-                raise ValueError('Problem with this truncation!')
-            if truncation_type == 'spherical':
-                line = find_key('Initialized spherical truncation of radius', text)
-                instance.truncation_radius = float(text[line].split()[5]) / ANG2BOHR
-            instance.truncation_type = truncation_type
-        else:
-            instance.truncation_type = None
+        instance.pwcut = cls.truncation_type(text)
 
-        line = find_key('elec-cutoff ', text)
-        instance.pwcut = float(text[line].split()[1]) * HA2EV
-
-        line = find_all_key('Chosen fftbox size', text)[0]
-        fftgrid = [int(x) for x in text[line].split()[6:9]]
-        instance.fftgrid = fftgrid
+        instance.fftgrid = cls._get_fftgrid(text)
 
         # Are these needed for DFT calcs?
+        # Ben: idk
         # line = find_key('kpoint-reduce-inversion', text)
         # if line == len(text):
         #     raise ValueError('kpoint-reduce-inversion must = no in single point DFT runs so kgrid without time-reversal symmetry is used (BGW requirement)')
@@ -252,12 +318,12 @@ class JDFTXOutfile(ClassPrintFormatter):
         line = find_key('Dumping \'eigStats\' ...', text)
         if line == len(text):
             raise ValueError('Must run DFT job with "dump End EigStats" to get summary gap information!')
-        instance.Emin = float(text[line+1].split()[1]) * HA2EV
-        instance.HOMO = float(text[line+2].split()[1]) * HA2EV
-        instance.EFermi = float(text[line+3].split()[2]) * HA2EV
-        instance.LUMO = float(text[line+4].split()[1]) * HA2EV
-        instance.Emax = float(text[line+5].split()[1]) * HA2EV
-        instance.Egap = float(text[line+6].split()[2]) * HA2EV
+        instance.Emin = float(text[line+1].split()[1]) * Ha_to_eV
+        instance.HOMO = float(text[line+2].split()[1]) * Ha_to_eV
+        instance.EFermi = float(text[line+3].split()[2]) * Ha_to_eV
+        instance.LUMO = float(text[line+4].split()[1]) * Ha_to_eV
+        instance.Emax = float(text[line+5].split()[1]) * Ha_to_eV
+        instance.Egap = float(text[line+6].split()[2]) * Ha_to_eV
         if instance.broadening_type is not None:
             instance.HOMO_filling = (2 / instance.Nspin) * cls.calculate_filling(instance.broadening_type, instance.broadening, instance.HOMO, instance.EFermi)
             instance.LUMO_filling = (2 / instance.Nspin) * cls.calculate_filling(instance.broadening_type, instance.broadening, instance.LUMO, instance.EFermi)
@@ -324,13 +390,13 @@ class JDFTXOutfile(ClassPrintFormatter):
 
         lines = find_all_key('R =', text)
         line = lines[0]
-        lattice_initial = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ANG2BOHR
+        lattice_initial = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
         instance.lattice_initial = lattice_initial.copy()
 
         templines = find_all_key('LatticeMinimize', text)
         if len(templines) > 0:
             line = templines[-1]
-            lattice_final = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ANG2BOHR
+            lattice_final = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
             instance.lattice_final = lattice_final.copy()
             instance.lattice = lattice_final.copy()
         else:
@@ -418,7 +484,7 @@ class JDFTXOutfile(ClassPrintFormatter):
                 trajectory_lattice.append(trajectory_lattice[-1])
             else:
                 line = lattice_lines[0]
-                trajectory_lattice.append(np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ANG2BOHR)
+                trajectory_lattice.append(np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr)
             trajectory_positions.append(coords)
             trajectory_forces.append(forces)
             trajectory_ecomponents.append(ecomp)
@@ -449,7 +515,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             if tmp_line.startswith("--"):
                 continue
             E_type = chars[0]
-            Energy = float(chars[-1]) * HA2EV
+            Energy = float(chars[-1]) * Ha_to_eV
             Ecomponents.update({E_type:Energy})
             if E_type == final_E_type:
                 return Ecomponents
