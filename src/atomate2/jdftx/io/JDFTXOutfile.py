@@ -212,7 +212,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             text: output of read_file for out file
         '''
         line = find_key('elec-smearing ', text)
-        if line != len(text):
+        if not line is None:
             broadening_type = text[line].split()[1]
             broadening = float(text[line].split()[2]) * Ha_to_eV
         else:
@@ -233,7 +233,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         line = find_key('coulomb-interaction', text)
         truncation_type = None
         truncation_radius = None
-        if line != len(text):
+        if not line is None:
             truncation_type = text[line].split()[1]
             truncation_type = maptypes[truncation_type]
             direc = None
@@ -275,6 +275,35 @@ class JDFTXOutfile(ClassPrintFormatter):
         return fftgrid
 
     @classmethod
+    def _get_kgrid(cls, text:str) -> list[int]:
+        '''
+        Get the kpoint grid from the out file text
+
+        Args:
+            text: output of read_file for out file
+        '''
+        line = find_key('kpoint-folding ', text)
+        kgrid = [int(x) for x in text[line].split()[1:4]]
+        return kgrid
+    
+    @classmethod
+    def _get_eigstats_varsdict(cls, text:str, prefix:str | None) -> dict[str, float]:
+        varsdict = {}
+        _prefix = ""
+        if not prefix is None:
+            _prefix = f"{prefix}."
+        line = find_key(f'Dumping \'{_prefix}eigStats\' ...', text)
+        if line is None:
+            raise ValueError('Must run DFT job with "dump End EigStats" to get summary gap information!')
+        varsdict["Emin"] = float(text[line+1].split()[1]) * Ha_to_eV
+        varsdict["HOMO"] = float(text[line+2].split()[1]) * Ha_to_eV
+        varsdict["EFermi"] = float(text[line+3].split()[2]) * Ha_to_eV
+        varsdict["LUMO"] = float(text[line+4].split()[1]) * Ha_to_eV
+        varsdict["Emax"] = float(text[line+5].split()[1]) * Ha_to_eV
+        varsdict["Egap"] = float(text[line+6].split()[2]) * Ha_to_eV
+        return varsdict
+
+    @classmethod
     def from_file(cls, file_name: str):
         '''
         Read file into class object
@@ -296,14 +325,13 @@ class JDFTXOutfile(ClassPrintFormatter):
         instance.broadening_type = broadening_type
         instance.broadening = broadening
 
-        line = find_key('kpoint-folding ', text)
-        instance.kgrid = [int(x) for x in text[line].split()[1:4]]
+        instance.kgrid = cls._get_kgrid(text)
 
         truncation_type, truncation_radius = cls._get_truncationvars(text)
         instance.truncation_type = truncation_type
         instance.truncation_radius = truncation_radius
 
-        instance.pwcut = cls.truncation_type(text)
+        instance.pwcut = cls._get_elec_cutoff(text)
 
         instance.fftgrid = cls._get_fftgrid(text)
 
@@ -315,15 +343,13 @@ class JDFTXOutfile(ClassPrintFormatter):
         # if text[line].split()[1] != 'no':
         #     raise ValueError('kpoint-reduce-inversion must = no in single point DFT runs so kgrid without time-reversal symmetry is used (BGW requirement)')
 
-        line = find_key('Dumping \'eigStats\' ...', text)
-        if line == len(text):
-            raise ValueError('Must run DFT job with "dump End EigStats" to get summary gap information!')
-        instance.Emin = float(text[line+1].split()[1]) * Ha_to_eV
-        instance.HOMO = float(text[line+2].split()[1]) * Ha_to_eV
-        instance.EFermi = float(text[line+3].split()[2]) * Ha_to_eV
-        instance.LUMO = float(text[line+4].split()[1]) * Ha_to_eV
-        instance.Emax = float(text[line+5].split()[1]) * Ha_to_eV
-        instance.Egap = float(text[line+6].split()[2]) * Ha_to_eV
+        eigstats = cls._get_eigstats_varsdict(text, instance.prefix)
+        instance.Emin = eigstats["Emin"]
+        instance.HOMO = eigstats["HOMO"]
+        instance.EFermi = eigstats["EFermi"]
+        instance.LUMO = eigstats["LUMO"]
+        instance.Emax = eigstats["Emax"]
+        instance.Egap = eigstats["Egap"]
         if instance.broadening_type is not None:
             instance.HOMO_filling = (2 / instance.Nspin) * cls.calculate_filling(instance.broadening_type, instance.broadening, instance.HOMO, instance.EFermi)
             instance.LUMO_filling = (2 / instance.Nspin) * cls.calculate_filling(instance.broadening_type, instance.broadening, instance.LUMO, instance.EFermi)
