@@ -197,6 +197,15 @@ class JDFTXInfile(dict, MSONable):
                 gathered_string.append(line)
         return gathered_string
 
+    @property
+    def structure(self):
+        """
+        return a pymatgen Structure object
+        """
+        jdftstructure = self.to_pmg_structure()
+        structure = jdftstructure.structure
+        return structure
+
     @classmethod
     def from_str(cls, string: str, dont_require_structure: bool = False, sort_tags: bool = True) -> Self:
         """Read an JDFTXInfile object from a string.

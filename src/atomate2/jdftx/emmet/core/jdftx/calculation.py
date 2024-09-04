@@ -10,9 +10,9 @@ import numpy as np
 import warnings
 from pydantic import field_validator, BaseModel, Field, ConfigDict
 from datetime import datetime
-from pymatgen.io.qchem.inputs import QCInput
-from pymatgen.io.qchem.outputs import QCOutput
-from pymatgen.core.structure import Molecule
+from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile # TODO change to pymatgen modules
+from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
+from pymatgen.core.structure import Structure
 from collections import OrderedDict
 import re
 
@@ -58,67 +58,20 @@ logger = logging.getLogger(__name__)
 
 class CalculationInput(BaseModel):
     """
-    Document defining QChem calculation inputs.
+    Document defining JDFTx calculation inputs.
     """
 
-    initial_molecule: Optional[Molecule] = Field(
-        None, description="input molecule geometry before the QChem calculation"
+    structure: Structure = Field(
+        None, description="input structure to JDFTx calcualtion"
     )
 
-    # parameters: Dict[str, Any] = Field(
-    #     None, description = "Parameters from a previous QChem calculation."
-    # )
-
-    charge: int = Field(None, description="The charge of the input molecule")
-
-    rem: Optional[Dict[str, Any]] = Field(
-        None,
-        description="The rem dict of the input file which has all the input parameters",
+    parameters: Dict = Field(
+        None, description="input tags in JDFTx in file"
     )
 
-    job_type: str = Field(
-        None, description="The type of QChem calculation being performed"
-    )
-
-    opt: Optional[Dict[str, Any]] = Field(
-        None,
-        description="A dictionary of opt section. For instance atom constraints and fixed atoms. Go to QCInput definition for more details.",
-    )
-
-    pcm: Optional[Dict[str, Any]] = Field(
-        None, description="A dictionary for the PCM solvent details if used"
-    )
-
-    solvent: Optional[Dict[str, Any]] = Field(
-        None,
-        description="The solvent parameters used if the PCM solvent model has been employed",
-    )
-
-    smx: Optional[Dict[str, Any]] = Field(
-        None,
-        description="A dictionary for the solvent parameters if the SMD solvent method has been employed",
-    )
-
-    vdw_mode: Optional[str] = Field(
-        None,
-        description="Either atomic or sequential. Used when custon van der Waals radii are used to construct pcm cavity",
-    )
-
-    van_der_waals: Optional[Dict[str, Any]] = Field(
-        None, description="The dictionary of the custom van der Waals radii if used"
-    )
-
-    scan_variables: Optional[Dict[str, Any]] = Field(
-        None,
-        description="The dictionary of scan variables for torsions or bond stretches",
-    )
-
-    tags: Optional[Union[Dict[str, Any], str]] = Field(
-        None, description="Any tags associated with the QChem calculation."
-    )
 
     @classmethod
-    def from_qcinput(cls, qcinput: QCInput) -> "CalculationInput":
+    def from_jdftxinput(cls, jdftxinput: JDFTXInfile) -> "CalculationInput":
         """
         Create a QChem input document from a QCInout object.
 
@@ -134,123 +87,26 @@ class CalculationInput(BaseModel):
         """
 
         return cls(
-            initial_molecule=qcinput.molecule,
-            charge=int(qcinput.molecule.as_dict()["charge"])
-            if qcinput.molecule.as_dict()
-            else None,
-            rem=qcinput.rem,
-            job_type=qcinput.rem.get("job_type", None),
-            opt=qcinput.opt,
-            pcm=qcinput.pcm,
-            solvent=qcinput.solvent,
-            smx=qcinput.smx,
-            vdw_mode=qcinput.vdw_mode,
-            scan_variables=qcinput.scan,
-            van_der_waals=qcinput.van_der_waals,
+            structure=jdftxinput.structure,
+            parameters=jdftxinput.as_dict(),
         )
 
 
 class CalculationOutput(BaseModel):
-    """Document defining QChem calculation outputs."""
+    """Document defining JDFTx calculation outputs."""
 
-    optimized_molecule: Optional[Molecule] = Field(
+    structure: Optional[Structure] = Field(
         None,
-        description="optimized geometry of the molecule after calculation in case of opt, optimization or ts",
+        description="optimized geometry of the structure after calculation",
     )
-
-    mulliken: Optional[Union[List, Dict[str, Any]]] = Field(
-        None, description="Calculate Mulliken charges on the atoms"
-    )
-
-    esp: Optional[Union[List, Dict[str, Any]]] = Field(
+    parameters: Optional[Dict] = Field( #TODO currently (I think) redundant with structure in these parameters
         None,
-        description="Calculated charges on the atoms if esp calculation has been performed",
+        description="Calculation input parameters",
     )
 
-    resp: Optional[Union[List, Dict[str, Any]]] = Field(
-        None,
-        description="Calculated charges on the atoms if resp calculation has been performed",
-    )
-
-    nbo_data: Optional[Dict[str, Any]] = Field(
-        None, description="NBO data if analysis has been performed."
-    )
-
-    frequencies: Optional[Union[Dict[str, Any], List]] = Field(
-        None,
-        description="Calculated frequency modes if the job type is freq or frequency",
-    )
-
-    frequency_modes: Optional[Union[List, str]] = Field(
-        None, description="The list of calculated frequency mode vectors"
-    )
-
-    final_energy: Optional[Union[str, float]] = Field(
-        None,
-        description="The final energy of the molecule after the calculation is complete",
-    )
-
-    enthalpy: Optional[Union[str, float]] = Field(
-        None,
-        description="The total enthalpy correction if a frequency calculation has been performed",
-    )
-
-    entropy: Optional[Union[str, float]] = Field(
-        None,
-        description="The total entropy of the system if a frequency calculation has been performed",
-    )
-
-    scan_energies: Optional[Dict[str, Any]] = Field(
-        None,
-        description="A dictionary of the scan energies with their respective parameters",
-    )
-
-    scan_geometries: Optional[Union[List, Dict[str, Any]]] = Field(
-        None, description="optimized geometry of the molecules after the geometric scan"
-    )
-
-    scan_molecules: Optional[Union[List, Dict[str, Any], Molecule]] = Field(
-        None,
-        description="The constructed pymatgen molecules from the optimized scan geometries",
-    )
-
-    pcm_gradients: Optional[Union[Dict[str, Any], np.ndarray, List]] = Field(
-        None,
-        description="The parsed total gradients after adding the PCM contributions.",
-    )
-
-    @field_validator("pcm_gradients", mode="before")
-    @classmethod
-    def validate_pcm_gradients(cls, v):
-        if v is not None and not isinstance(v, (np.ndarray, Dict, List)):
-            raise ValueError(
-                "pcm_gradients must be a numpy array, a dict or a list or None."
-            )
-        return v
-
-    cds_gradients: Optional[Union[Dict[str, Any], np.ndarray, List]] = Field(
-        None, description="The parsed CDS gradients."
-    )
-
-    @field_validator("cds_gradients", mode="before")
-    @classmethod
-    def validate_cds_gradients(cls, v):
-        if v is not None and not isinstance(v, (np.ndarray, Dict, List)):
-            raise ValueError(
-                "cds_gradients must be a numpy array, a dict or a list or None."
-            )
-        return v
-
-    dipoles: Optional[Dict[str, Any]] = Field(
-        None, description="The associated dipoles for Mulliken/RESP/ESP charges"
-    )
-
-    gap_info: Optional[Dict[str, Any]] = Field(
-        None, description="The Kohn-Sham HOMO-LUMO gaps and associated Eigenvalues"
-    )
 
     @classmethod
-    def from_qcoutput(cls, qcoutput: QCOutput) -> "CalculationOutput":
+    def from_jdftxoutput(cls, jdftxoutput: JDFTXOutfile) -> "CalculationOutput":
         """
         Create a QChem output document from a QCOutput object.
 
@@ -264,26 +120,10 @@ class CalculationOutput(BaseModel):
         CalculationOutput
             The output document.
         """
-        optimized_molecule = qcoutput.data.get("molecule_from_optimized_geometry", {})
-        optimized_molecule = optimized_molecule if optimized_molecule else None
+        optimized_structure = jdftxoutput.structure
         return cls(
-            optimized_molecule=optimized_molecule,
-            mulliken=qcoutput.data.get(["Mulliken"][-1], []),
-            esp=qcoutput.data.get(["ESP"][-1], []),
-            resp=qcoutput.data.get(["RESP"][-1], []),
-            nbo_data=qcoutput.data.get("nbo_data", {}),
-            frequencies=qcoutput.data.get("frequencies", {}),
-            frequency_modes=qcoutput.data.get("frequency_mode_vectors", []),
-            final_energy=qcoutput.data.get("final_energy", None),
-            enthalpy=qcoutput.data.get("total_enthalpy", None),
-            entropy=qcoutput.data.get("total_entropy", None),
-            scan_energies=qcoutput.data.get("scan_energies", {}),
-            scan_geometries=qcoutput.data.get("optimized_geometries", {}),
-            scan_molecules=qcoutput.data.get("molecules_from_optimized_geometries", {}),
-            pcm_gradients=qcoutput.data.get(["pcm_gradients"][0], None),
-            cds_gradients=qcoutput.data.get(["CDS_gradients"][0], None),
-            dipoles=qcoutput.data.get("dipoles", None),
-            gap_info=qcoutput.data.get("gap_info", None),
+            structure=optimized_structure,
+            
         )
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
