@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 import scipy.constants as const
 from data import atom_valence_electrons
 from pymatgen.core import Structure
+from pymatgen.core.trajectory import Trajectory
+from typing import List
 
 
 HA2EV = 2.0 * const.value('Rydberg constant times hc in eV')
@@ -38,14 +40,23 @@ def read_file(file_name: str) -> list[str]:
         return text
 
 def find_key(key_input, tempfile):
-    #finds line where key occurs in stored input, last instance
+    '''
+    Finds last instance of key in output file. 
+
+    Parameters
+    ----------
+    key_input: str
+        key string to match
+    tempfile: List[str]
+        output from readlines() function in read_file method
+    '''
     key_input = str(key_input)
-    # line = len(tempfile)                  #default to end
     line = None
     for i in range(0,len(tempfile)):
         if key_input in tempfile[i]:
             line = i
     return line
+
 
 def find_first_range_key(key_input, tempfile, startline=0, endline=-1, skip_pound = False):
     #finds all lines that exactly begin with key
@@ -105,6 +116,12 @@ class JDFTXOutfile(ClassPrintFormatter):
 
     fftgrid: list[int] = None
 
+    # grouping fields related to electronic parameters.
+    # Used by the get_electronic_output() method
+    _electronic_output = [ 
+    "EFermi", "Egap", "Emin", "Emax", "HOMO",
+    "LUMO", "HOMO_filling", "LUMO_filling", "is_metal"
+    ]
     EFermi: float = None
     Egap: float = None
     Emin: float = None
@@ -121,7 +138,6 @@ class JDFTXOutfile(ClassPrintFormatter):
     truncation_type: str = None
     truncation_radius: float = None
     pwcut: float = None
-    fluid: str = None
 
     pp_type: str = None
     total_electrons: float = None
@@ -143,9 +159,16 @@ class JDFTXOutfile(ClassPrintFormatter):
     atom_coords: list[list[float]] = None
 
     has_solvation: bool = False
+    fluid: str = None
 
+    #@ Cooper added @#
     Ecomponents: dict = field(default_factory=dict)
     is_gc: bool = False # is it a grand canonical calculation
+    trajectory_positions: list[list[list[float]]] = None
+    trajectory_lattice: list[list[list[float]]] = None
+    trajectory_forces: list[list[list[float]]] = None
+    trajectory_ecomponents: list[dict] = None
+    is_converged: bool = None #TODO implement this
 
     @classmethod
     def from_file(cls, file_name: str):
@@ -219,13 +242,14 @@ class JDFTXOutfile(ClassPrintFormatter):
         fftgrid = [int(x) for x in text[line].split()[6:9]]
         instance.fftgrid = fftgrid
 
-        line = find_key('kpoint-reduce-inversion', text)
-        if line == len(text):
-            raise ValueError('kpoint-reduce-inversion must = no in single point DFT runs so kgrid without time-reversal symmetry is used (BGW requirement)')
-        if text[line].split()[1] != 'no':
-            raise ValueError('kpoint-reduce-inversion must = no in single point DFT runs so kgrid without time-reversal symmetry is used (BGW requirement)')
+        # Are these needed for DFT calcs?
+        # line = find_key('kpoint-reduce-inversion', text)
+        # if line == len(text):
+        #     raise ValueError('kpoint-reduce-inversion must = no in single point DFT runs so kgrid without time-reversal symmetry is used (BGW requirement)')
+        # if text[line].split()[1] != 'no':
+        #     raise ValueError('kpoint-reduce-inversion must = no in single point DFT runs so kgrid without time-reversal symmetry is used (BGW requirement)')
 
-        line = find_key('Dumping \'jdft.eigStats\' ...', text)
+        line = find_key('Dumping \'eigStats\' ...', text)
         if line == len(text):
             raise ValueError('Must run DFT job with "dump End EigStats" to get summary gap information!')
         instance.Emin = float(text[line+1].split()[1]) * HA2EV
@@ -315,10 +339,12 @@ class JDFTXOutfile(ClassPrintFormatter):
 
         instance.has_solvation = instance.check_solvation()
 
-        # Cooper added
+        #@ Cooper added @#
         line = find_key("# Energy components:", text)
         instance.is_gc = key_exists('target-mu', text)
         instance.Ecomponents = instance.read_ecomponents(line, text)
+        instance._build_trajectory(templines)
+
         return instance
     
     @property
@@ -363,7 +389,56 @@ class JDFTXOutfile(ClassPrintFormatter):
         #don't need a write method since will never do that
         return NotImplementedError('There is no need to write a JDFTx out file')
 
-    def read_ecomponents(self, line:int, text:str): # might
+    def _build_trajectory(self, text):
+        '''
+        Builds the trajectory lists and sets the instance attributes.
+        
+        '''
+        # Needs to handle LatticeMinimize and IonicMinimize steps in one run
+        # can do this by checking if lattice vectors block is present and if
+        # so adding it to the lists. If it isn't present, copy the last 
+        # lattice from the list.
+        # initialize lattice list with starting lattice and remove it
+        # from the list after iterating through all the optimization steps
+        trajectory_positions = []
+        trajectory_lattice = [self.lattice_initial]
+        trajectory_forces = []
+        trajectory_ecomponents = []
+
+        ion_lines = find_first_range_key('# Ionic positions in', text)
+        force_lines = find_first_range_key('# Forces in', text)
+        ecomp_lines = find_first_range_key('# Energy components:', text)
+        print(ion_lines, force_lines, ecomp_lines)
+        for iline, ion_line, force_line, ecomp_line in enumerate(zip(ion_lines, force_lines, ecomp_lines)):
+            coords = np.array([text[i].split()[2:5] for i in range(ion_line + 1, ion_line + self.Nat + 1)], dtype = float)
+            forces = np.array([text[i].split()[2:5] for i in range(force_line + 1, force_line + self.Nat + 1)], dtype = float)
+            ecomp = self.read_ecomponents(ecomp_line, text)
+            lattice_lines = find_first_range_key('# Lattice vectors:', text, startline=ion_line, endline=ion_lines[iline-1])
+            if len(lattice_lines) == 0: # if no lattice lines found, append last lattice
+                trajectory_lattice.append(trajectory_lattice[-1])
+            else:
+                line = lattice_lines[0]
+                trajectory_lattice.append(np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ANG2BOHR)
+            trajectory_positions.append(coords)
+            trajectory_forces.append(forces)
+            trajectory_ecomponents.append(ecomp)
+        trajectory_lattice = trajectory_lattice[1:] # remove starting lattice
+
+        self.trajectory_positions = trajectory_positions
+        self.trajectory_lattice = trajectory_lattice
+        self.trajectory_forces = trajectory_forces
+        self.trajectory_ecomponents = trajectory_ecomponents
+
+    @property
+    def trajectory(self):
+        '''
+        Returns a pymatgen trajectory object
+        '''
+        # structures = []
+        # for coords, lattice 
+        # traj = Trajectory.from_structures
+
+    def read_ecomponents(self, line:int, text:str):
         Ecomponents = {}
         if self.is_gc == True:
             final_E_type = "G"
@@ -378,3 +453,25 @@ class JDFTXOutfile(ClassPrintFormatter):
             Ecomponents.update({E_type:Energy})
             if E_type == final_E_type:
                 return Ecomponents
+    
+    @property
+    def electronic_output(self) -> dict:
+        '''
+        Return a dictionary with all relevant electronic information.
+        Returns values corresponding to these keys in _electronic_output
+        field.
+        '''
+        dct = {}
+        for field in self.__dataclass_fields__:
+            if field in self._electronic_output:
+                value = getattr(self, field)
+                dct[field] = value
+        return dct
+
+    def to_dict(self) -> dict:
+        # convert dataclass to dictionary representation
+        dct = {}
+        for field in self.__dataclass_fields__:
+            value = getattr(self, field)
+            dct[field] = value
+        return dct
