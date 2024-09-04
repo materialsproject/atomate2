@@ -179,9 +179,11 @@ class JDFTXOutfile(ClassPrintFormatter):
         Args:
             text: output of read_file for out file
         '''
+        prefix = None
         line = find_key('dump-name', text)
         dumpname = text[line].split()[1]
-        prefix = dumpname.split('.')[0]
+        if "." in dumpname:
+            prefix = dumpname.split('.')[0]
         return prefix
     
     @classmethod
