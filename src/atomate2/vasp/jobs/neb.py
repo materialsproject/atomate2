@@ -70,20 +70,21 @@ class NebFromImagesMaker(BaseVaspMaker):
         prev_dir: str | Path | None = None,
     ):
 
-        #self.task_document_kwargs = {
-        #    "outcar_file": f"{Path.cwd()}/01/OUTCAR",
-        #    "contcar_file": f"{Path.cwd()}/01/CONTCAR",
-        #}
+        self.task_document_kwargs = {
+            f"{file.split('.')[0].lower()}_file": f"{Path.cwd()}/01/{file}"
+            for file in ("OUTCAR","CONTCAR","vasprun.xml")
+        }
 
-        num_images = len(images) - 2
+        num_frames = len(images)
+        num_images = num_frames - 2
         self.input_set_generator.num_images = num_images
         
-        for iimage in range(len(images)):
+        for iimage in range(num_frames):
             image_dir = f"{iimage:02}"
             mkdir(image_dir)
 
             # emmet TaskDoc stores at most 9 relaxation jobs because reasons
-            if iimage < 8:
+            if 1 <= iimage < min(num_frames-1,8):
                 symlink(image_dir, f"relax{iimage}")
                 
             images[iimage].to(f"{image_dir}/POSCAR")
