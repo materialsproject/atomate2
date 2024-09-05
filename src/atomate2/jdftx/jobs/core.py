@@ -10,17 +10,7 @@ from pymatgen.alchemy.materials import TransformedStructure
 from pymatgen.alchemy.transmuters import StandardTransmuter
 
 from atomate2.common.utils import get_transformations
-from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
-from atomate2.vasp.sets.core import (
-    HSEBSSetGenerator,
-    HSERelaxSetGenerator,
-    HSEStaticSetGenerator,
-    HSETightRelaxSetGenerator,
-    NonSCFSetGenerator,
-    RelaxSetGenerator,
-    StaticSetGenerator,
-    TightRelaxSetGenerator,
-)
+
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -35,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class RelaxMaker(BaseVaspMaker):
+class StaticMaker(BaseVaspMaker):
     """
     Maker to create VASP static jobs.
 
