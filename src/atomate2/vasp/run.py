@@ -86,7 +86,7 @@ def run_vasp(
     max_errors: int = SETTINGS.VASP_CUSTODIAN_MAX_ERRORS,
     scratch_dir: str = SETTINGS.CUSTODIAN_SCRATCH_DIR,
     handlers: Sequence[ErrorHandler] = DEFAULT_HANDLERS,
-    validators: Sequence[Validator] | None = _DEFAULT_VALIDATORS,
+    validators: Sequence[Validator] | None = None,
     wall_time: int | None = None,
     vasp_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
