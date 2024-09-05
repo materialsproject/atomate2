@@ -343,6 +343,43 @@ class JDFTXOutfile(ClassPrintFormatter):
             raise ValueError(f"Could not determine pseudopotential type from file name {ppfile_example}")
         return pptype
     
+    def _set_pseudo_vars(self, text:str) -> None:
+        '''
+        '''
+        self.pp_type = self._get_pp_type(text)
+        if self.pp_type == "SG15":
+            self._set_pseudo_vars_SG15(text)
+        elif self.pp_type == "GBRV":
+            self._set_pseudo_vars_GBRV(text)
+    
+    def _set_pseudo_vars_SG15(self, text:str) -> None:
+        '''
+        '''
+        startline = find_key('---------- Setting up pseudopotentials ----------', text)
+        endline = find_first_range_key('Initialized ', text, startline = startline)[0]
+        lines = find_all_key('valence electrons', text)
+        lines = [x for x in lines if x < endline and x > startline]
+        atom_total_elec = [int(float(text[x].split()[0])) for x in lines]
+        total_elec_dict = dict(zip(self.atom_types, atom_total_elec))
+        element_total_electrons = np.array([total_elec_dict[x] for x in self.atom_elements])
+        element_valence_electrons = np.array([atom_valence_electrons[x] for x in self.atom_elements])
+        element_semicore_electrons = element_total_electrons - element_valence_electrons
+        self.total_electrons_uncharged = np.sum(element_total_electrons)
+        self.valence_electrons_uncharged = np.sum(element_valence_electrons)
+        self.semicore_electrons_uncharged = np.sum(element_semicore_electrons)
+        self.semicore_electrons = self.semicore_electrons_uncharged
+        self.valence_electrons = self.total_electrons - self.semicore_electrons  #accounts for if system is charged
+
+
+    def _set_pseudo_vars_GBRV(self, text:str) -> None:
+        ''' TODO: implement this method
+        '''
+        self.total_electrons_uncharged = None
+        self.valence_electrons_uncharged = None
+        self.semicore_electrons_uncharged = None
+        self.semicore_electrons = None
+        self.valence_electrons = None
+
     
     
 
@@ -435,29 +472,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         coords = np.array([text[i].split()[2:5] for i in range(line, line + instance.Nat)], dtype = float)
         instance.atom_coords_final = coords
         instance.atom_coords = instance.atom_coords_final.copy()
-
-        startline = find_key('---------- Setting up pseudopotentials ----------', text)
-        endline = find_first_range_key('Initialized ', text, startline = startline)[0]
-        lines = find_all_key('valence electrons', text)
-        try:
-            atom_total_elec = [int(float(text[x].split()[0])) for x in lines]
-            pp_type = 'SG15'
-        except:
-            pp_type = 'GBRV'
-            raise ValueError('SG15 valence electron reading failed, make sure right pseudopotentials were used!')
-        total_elec_dict = dict(zip(instance.atom_types, atom_total_elec))
-        instance.pp_type = instance._get_pp_type(text)
-
-        element_total_electrons = np.array([total_elec_dict[x] for x in instance.atom_elements])
-        element_valence_electrons = np.array([atom_valence_electrons[x] for x in instance.atom_elements])
-        element_semicore_electrons = element_total_electrons - element_valence_electrons
-
-        instance.total_electrons_uncharged = np.sum(element_total_electrons)
-        instance.valence_electrons_uncharged = np.sum(element_valence_electrons)
-        instance.semicore_electrons_uncharged = np.sum(element_semicore_electrons)
-
-        instance.semicore_electrons = instance.semicore_electrons_uncharged
-        instance.valence_electrons = instance.total_electrons - instance.semicore_electrons  #accounts for if system is charged
+        instance._set_pseudo_vars(text)
 
         lines = find_all_key('R =', text)
         line = lines[0]

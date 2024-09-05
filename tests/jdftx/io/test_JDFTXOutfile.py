@@ -91,4 +91,4 @@ def test_JDFTXOutfile_fromfile(
     assert jout.Ecomponents["Eewald"] == approx(known["Eewald"])
 
 
-# test_JDFTXOutfile()
+test_JDFTXOutfile_fromfile(ex_files_dir / Path("example_sp.out"), example_sp_known)
