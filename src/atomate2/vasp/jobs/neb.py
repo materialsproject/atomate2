@@ -69,12 +69,7 @@ class NebFromImagesMaker(BaseVaspMaker):
         images: list[Structure],
         prev_dir: str | Path | None = None,
     ):
-
-        self.task_document_kwargs = {
-            f"{file.split('.')[0].lower()}_file": f"{Path.cwd()}/01/{file}"
-            for file in ("OUTCAR","CONTCAR","vasprun.xml")
-        }
-
+        
         num_frames = len(images)
         num_images = num_frames - 2
         self.input_set_generator.num_images = num_images

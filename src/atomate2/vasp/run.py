@@ -171,6 +171,12 @@ def run_vasp(
     logger.info("Running VASP using custodian.")
     custodian_manager.run()
 
+    if job_type == JobType.NEB:
+        from monty.shutil import gzip_dir
+
+        for image_dir in glob("[0-9][0-9]"):
+            gzip_dir(image_dir)
+
 
 def should_stop_children(
     task_document: TaskDoc,
