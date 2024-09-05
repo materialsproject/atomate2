@@ -2,16 +2,14 @@ import os
 from functools import wraps
 import math
 from ase import Atom, Atoms
-from ase.units import Bohr
-from jdftx.io.out_to_log import get_start_line
 import numpy as np
 from dataclasses import dataclass, field
 import scipy.constants as const
 from atomate2.jdftx.io.data import atom_valence_electrons
 from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
-from typing import List
-from pymatgen.core.units import Ha_to_eV, ang_to_bohr
+from typing import List, Optional
+from pymatgen.core.units import Ha_to_eV, ang_to_bohr, bohr_to_ang
 
 
 #Ha_to_eV = 2.0 * const.value('Rydberg constant times hc in eV')
@@ -315,7 +313,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         varsdict["Egap"] = float(text[line+6].split()[2]) * Ha_to_eV
         return varsdict
     
-    def _set_eigvars(self, text:str):
+    def _set_eigvars(self, text:str) -> None:
         eigstats = self._get_eigstats_varsdict(text, self.prefix)
         self.Emin = eigstats["Emin"]
         self.HOMO = eigstats["HOMO"]
@@ -325,7 +323,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         self.Egap = eigstats["Egap"]
     
 
-    def _get_pp_type(self, text:str):
+    def _get_pp_type(self, text:str) -> str:
         '''
         '''
         skey = "Reading pseudopotential file"
@@ -625,31 +623,30 @@ class JDFTXOutfile(ClassPrintFormatter):
         return dct
 
 
-def get_input_coord_vars_from_outfile(outfname):
-    start_line = get_start_line(outfname)
+def get_input_coord_vars_from_outfile(text: list[str]):
+    start_line = get_start_line(text)
     names = []
     posns = []
     R = np.zeros([3,3])
     lat_row = 0
     active_lattice = False
-    with open(outfname) as f:
-        for i, line in enumerate(f):
-            if i > start_line:
-                tokens = line.split()
-                if len(tokens) > 0:
-                    if tokens[0] == "ion":
-                        names.append(tokens[1])
-                        posns.append(np.array([float(tokens[2]), float(tokens[3]), float(tokens[4])]))
-                    elif tokens[0] == "lattice":
-                        active_lattice = True
-                    elif active_lattice:
-                        if lat_row < 3:
-                            R[lat_row, :] = [float(x) for x in tokens[:3]]
-                            lat_row += 1
-                        else:
-                            active_lattice = False
-                    elif "Initializing the Grid" in line:
-                        break
+    for i, line in enumerate(text):
+        if i > start_line:
+            tokens = line.split()
+            if len(tokens) > 0:
+                if tokens[0] == "ion":
+                    names.append(tokens[1])
+                    posns.append(np.array([float(tokens[2]), float(tokens[3]), float(tokens[4])]))
+                elif tokens[0] == "lattice":
+                    active_lattice = True
+                elif active_lattice:
+                    if lat_row < 3:
+                        R[lat_row, :] = [float(x) for x in tokens[:3]]
+                        lat_row += 1
+                    else:
+                        active_lattice = False
+                elif "Initializing the Grid" in line:
+                    break
     if not len(names) > 0:
         raise ValueError("No ion names found")
     if len(names) != len(posns):
@@ -659,10 +656,10 @@ def get_input_coord_vars_from_outfile(outfname):
     return names, posns, R
 
 
-def get_atoms_from_outfile_data(names, posns, R, charges=None, E=0, momenta=None):
+def get_atoms_from_outfile_data(names: list[str], posns: np.ndarray, R: np.ndarray, charges: Optional[np.ndarray] = None, E: Optional[float] = 0, momenta=Optional[np.ndarray] = None):
     atoms = Atoms()
-    posns *= Bohr
-    R = R.T*Bohr
+    posns *= bohr_to_ang
+    R = R.T*bohr_to_ang
     atoms.cell = R
     if charges is None:
         charges = np.zeros(len(names))
@@ -675,6 +672,10 @@ def get_atoms_from_outfile_data(names, posns, R, charges=None, E=0, momenta=None
 
 
 def get_atoms_list_from_out_reset_vars(nAtoms=100, _def=100):
+    ''' Remnant of having 0 creativity for elegant coding solutions
+    This should be replaced at some point, possibly with a new class object for collecting
+    data required to build an Atoms object
+    '''
     R = np.zeros([3, 3])
     posns = []
     names = []
@@ -699,13 +700,17 @@ def get_atoms_list_from_out_reset_vars(nAtoms=100, _def=100):
         new_posn, log_vars, E, charges, forces, active_forces, coords_forces
 
 
-def get_atoms_list_from_out_slice(outfile, i_start, i_end):
+def get_atoms_list_from_out_slice(text: list[str], i_start: int, i_end: int) -> list[Atoms]:
+    ''' Gives a list of atoms objects corresponding to individual lattice/ionization steps
+    for a slice of the out file bounded by i_start and i_end
+    (corresponding to an individual call of JDFTx)
+    '''
     charge_key = "oxidation-state"
     opts = []
     nAtoms = None
     R, posns, names, chargeDir, active_posns, active_lowdin, active_lattice, posns, coords, idxMap, j, lat_row, \
         new_posn, log_vars, E, charges, forces, active_forces, coords_forces = get_atoms_list_from_out_reset_vars()
-    for i, line in enumerate(open(outfile)):
+    for i, line in enumerate(text):
         if i > i_start and i < i_end:
             if new_posn:
                 if "Lowdin population analysis " in line:
@@ -768,7 +773,7 @@ def get_atoms_list_from_out_slice(outfile, i_start, i_end):
                         log_vars = True
                 elif log_vars:
                     if np.sum(R) == 0.0:
-                        R = get_input_coord_vars_from_outfile(outfile)[2]
+                        R = get_input_coord_vars_from_outfile(text)[2]
                     if coords != 'cartesian':
                         posns = np.dot(posns, R)
                     if len(forces) == 0:
@@ -784,45 +789,49 @@ def get_atoms_list_from_out_slice(outfile, i_start, i_end):
     return opts
 
 
-def get_start_lines(outfname, add_end=False):
+def get_start_lines(text: list[str], add_end=False) -> list[int]:
     start_lines = []
     end_line = 0
-    for i, line in enumerate(open(outfname)):
+    for i, line in enumerate(text):
         if "JDFTx 1." in line:
             start_lines.append(i)
         end_line = i
     if add_end:
-        start_lines.append(i)
+        start_lines.append(end_line)
     return start_lines
 
 
-def get_atoms_list_from_out(outfile):
-    start_lines = get_start_lines(outfile, add_end=True)
+def get_start_line(text: list[str]) -> int:
+    start_line = get_start_lines(text, add_end=False)[-1]
+    return start_line
+
+
+def get_atoms_list_from_out(text: list[str]) -> list[Atoms]:
+    start_lines = get_start_lines(text, add_end=True)
     atoms_list = []
     for i in range(len(start_lines) - 1):
-        atoms_list += get_atoms_list_from_out_slice(outfile, start_lines[i], start_lines[i+1])
+        atoms_list += get_atoms_list_from_out_slice(text, start_lines[i], start_lines[i+1])
     return atoms_list
 
 
-def is_done(outfile):
-    start_line = get_start_line(outfile)
+def is_done(text: list[str]) -> bool:
+    start_line = get_start_line(text)
     done = False
-    with open(outfile, "r") as f:
-        for i, line in enumerate(f):
-            if i > start_line:
-                if "Minimize: Iter:" in line:
-                    done = False
-                elif "Minimize: Converged" in line:
-                    done = True
+    for i, line in enumerate(text):
+        if i > start_line:
+            if "Minimize: Iter:" in line:
+                done = False
+            elif "Minimize: Converged" in line:
+                done = True
     return done
 
 
-def get_initial_lattice(outfile, start):
+def get_initial_lattice(text: list[str], start:int) -> np.ndarray:
     start_key = "lattice  \\"
     active = False
     R = np.zeros([3, 3])
     lat_row = 0
-    for i, line in enumerate(open(outfile)):
+    for i, line in enumerate(text):
         if i > start:
             if active:
                 if lat_row < 3:
