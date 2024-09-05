@@ -172,7 +172,7 @@ class JDFTXOutfile(ClassPrintFormatter):
     trajectory_ecomponents: list[dict] = None
     is_converged: bool = None #TODO implement this
 
-    def _get_start_lines(text:str, start_key="*************** JDFTx"):
+    def _get_start_lines(text:str, start_key: Optional[str]="*************** JDFTx"):
         '''
         Get the line numbers corresponding to the beginning of seperate JDFTx calculations
         (in case of multiple calculations appending the same out file)
@@ -575,6 +575,10 @@ class JDFTXOutfile(ClassPrintFormatter):
         self.trajectory_forces = trajectory_forces
         self.trajectory_ecomponents = trajectory_ecomponents
 
+    def _build_lattice2(self, text: list[str]) -> None:
+        atoms_list = get_atoms_list_from_out(text)
+        
+
     @property
     def trajectory(self):
         '''
@@ -584,7 +588,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         # for coords, lattice 
         # traj = Trajectory.from_structures
 
-    def read_ecomponents(self, line:int, text:str):
+    def read_ecomponents(self, line:int, text:str) -> dict:
         Ecomponents = {}
         if self.is_gc == True:
             final_E_type = "G"
