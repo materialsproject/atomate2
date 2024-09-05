@@ -33,6 +33,7 @@ from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+    from pathlib import Path
 
     from custodian.custodian import ErrorHandler, Validator
     from emmet.core.tasks import TaskDoc
@@ -217,7 +218,7 @@ class VaspNebFilesValidator(Validator):
     Analog of custodian's VaspFilesValidator for NEB runs.
     """
 
-    def check(self):
+    def check(self, base_directory: str | Path = "./"):
         """
         Check that VASP ran in each NEB image directory.
         
@@ -227,8 +228,9 @@ class VaspNebFilesValidator(Validator):
 
         VASP does not create these files in the endpoint directories.
         """
+        image_dirs = sorted(glob(f"{base_directory}/[0-9][0-9]"))[1:-1]
         return any(
             not exists(f"{image_dir}/{vasp_file}")
             for vasp_file in {"CONTCAR", "OSZICAR", "OUTCAR"}
-            for image_dir in sorted(glob("[0-9][0-9]"))[1:-1]
+            for image_dir in image_dirs
         )
