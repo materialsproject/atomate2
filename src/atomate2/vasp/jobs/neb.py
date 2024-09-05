@@ -84,6 +84,8 @@ class NebFromImagesMaker(BaseVaspMaker):
             mkdir(image_dir)
 
             # emmet TaskDoc stores at most 9 relaxation jobs because reasons
+            # only store results from intermediate image calculations
+            # no calculations happen for the endpoints
             if 1 <= iimage < min(num_frames-1,8):
                 symlink(image_dir, f"relax{iimage}")
                 

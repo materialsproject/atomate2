@@ -124,7 +124,7 @@ def run_vasp(
     custodian_kwargs = custodian_kwargs or {}
     validators = validators or (
         _DEFAULT_VALIDATORS if job_type != JobType.NEB
-        else tuple(VaspNebFilesValidator() if isinstance(v,VaspFilesValidator) else v for v in _DEFAULT_VALIDATORS)
+        else (VaspNebFilesValidator(),)
     )
 
     vasp_cmd = expandvars(vasp_cmd)
