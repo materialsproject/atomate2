@@ -40,11 +40,9 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         test_dir / "vasp/Au_adsorption/bulk_relax/inputs/POSCAR"
     )
 
-    flow = AdsorptionMaker().make(
+    flow = AdsorptionMaker(min_lw=5.0, min_slab_size=4.0).make(
         molecule=molecule,
         structure=bulk_structure,
-        min_lw=5.0,
-        min_slab_size=4.0,
     )
 
     # Run the flow or job and ensure that it finished running successfully

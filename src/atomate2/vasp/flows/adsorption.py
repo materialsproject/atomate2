@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Job, Maker
 
@@ -103,37 +102,30 @@ class AdsorptionMaker(Maker):
         molecule_structure = molecule.get_boxed_structure(10, 10, 10)
 
         jobs: list[Job] = []
-        joblog: dict[str, dict[str, Any]] = defaultdict(dict)
 
         if self.mol_relax_maker:
             mol_optimize_job = self.mol_relax_maker.make(
-                molecule_structure, prev_dir=None
+                molecule_structure, prev_dir=prev_dir_mol
             )
             mol_optimize_job.append_name("mol_relax_job")
             jobs += [mol_optimize_job]
 
-            joblog["job1: mol_relax_job"]["output"] = (
-                mol_optimize_job.output.structure
-            ).as_dict()
-
         mol_static_job = self.mol_static_maker.make(
-            mol_optimize_job.output.structure, prev_dir=None
+            mol_optimize_job.output.structure, prev_dir=prev_dir_mol
         )  # updated
         mol_static_job.append_name("mol_static_job")
         jobs += [mol_static_job]
 
         molecule_dft_energy = mol_static_job.output.output.energy
 
-        joblog["job2: mol_static_job"]["output"] = molecule_dft_energy.as_dict()
-
         if self.bulk_relax_maker:
-            bulk_optimize_job = self.bulk_relax_maker.make(structure, prev_dir=None)
+            bulk_optimize_job = self.bulk_relax_maker.make(
+                structure, prev_dir=prev_dir_bulk
+            )
             bulk_optimize_job.append_name("bulk_relax_job")
             jobs += [bulk_optimize_job]
 
             optimized_bulk = bulk_optimize_job.output.structure
-
-            joblog["job3: bulk_relax_job"]["output"] = optimized_bulk.as_dict()
 
         else:
             optimized_bulk = structure
@@ -149,8 +141,6 @@ class AdsorptionMaker(Maker):
         jobs += [generate_slab_structure]
         slab_structure = generate_slab_structure.output
 
-        joblog["job4: generate_slab_structure"]["output"] = slab_structure.as_dict()
-
         generate_adslabs_structures = generate_adslabs(
             bulk_structure=optimized_bulk,
             molecule_structure=molecule,
@@ -162,26 +152,21 @@ class AdsorptionMaker(Maker):
         jobs += [generate_adslabs_structures]
         adslab_structures = generate_adslabs_structures.output
 
-        joblog["job5: generate_adslabs_structures"]["output"] = (
-            adslab_structures
-        ).as_dict()
-
         # slab relaxation without adsorption
         slab_optimize_job = self.slab_relax_maker.make(slab_structure, prev_dir=None)
         slab_optimize_job.append_name("slab_relax_job")
         jobs += [slab_optimize_job]
 
         optimized_slab = slab_optimize_job.output.structure
+        prev_dir_slab = slab_optimize_job.output.dir_name
 
-        joblog["job6: slab_relax_job"]["output"] = optimized_slab.as_dict()
-
-        slab_static_job = self.slab_static_maker.make(optimized_slab, prev_dir=None)
+        slab_static_job = self.slab_static_maker.make(
+            optimized_slab, prev_dir=prev_dir_slab
+        )
         slab_static_job.append_name("slab_static_job")
         jobs += [slab_static_job]
 
         slab_dft_energy = slab_static_job.output.output.energy
-
-        joblog["job7: slab_static_job"]["output"] = slab_dft_energy.as_dict()
 
         run_ads_calculation = run_adslabs_job(
             adslab_structures=adslab_structures,
@@ -191,8 +176,6 @@ class AdsorptionMaker(Maker):
         jobs += [run_ads_calculation]
         ads_outputs = run_ads_calculation.output
 
-        joblog["job8: run_ads_calculations"]["output"] = ads_outputs
-
         adsorption_calc = adsorption_calculations(
             adslab_structures=adslab_structures,
             adslabs_data=ads_outputs,
@@ -200,7 +183,5 @@ class AdsorptionMaker(Maker):
             slab_dft_energy=slab_dft_energy,
         )
         jobs += [adsorption_calc]
-
-        joblog["job9: ads_calculations"]["output"] = (adsorption_calc.output).as_dict()
 
         return Flow(jobs, output=adsorption_calc.output, name=self.name)

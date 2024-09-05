@@ -15,6 +15,7 @@ from pymatgen.io.vasp import Kpoints
 from pymatgen.io.vasp.sets import MPRelaxSet
 
 from atomate2.vasp.jobs.base import BaseVaspMaker
+from atomate2.vasp.schemas.adsorption import AdsorptionDocument
 
 # from atomate2.vasp.sets.core import RelaxSetGenerator, StaticSetGenerator
 
@@ -39,7 +40,7 @@ class BulkRelaxMaker(BaseVaspMaker):
     name: str = "bulk_relax_maker__"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPRelaxSet(
-            user_kpoints_settings={"reciprocal_density": 200},
+            user_kpoints_settings={"reciprocal_density": 60},
             user_incar_settings={
                 "ISIF": 3,
                 "ENCUT": 700,
@@ -145,7 +146,7 @@ class SlabRelaxMaker(BaseVaspMaker):
     name: str = "slab_relax_maker__"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPRelaxSet(
-            user_kpoints_settings={"reciprocal_density": 200},
+            user_kpoints_settings={"reciprocal_density": 60},
             user_incar_settings={
                 "ISIF": 2,
                 "ENCUT": 700,
@@ -155,7 +156,7 @@ class SlabRelaxMaker(BaseVaspMaker):
                 "NSW": 300,
                 "NELM": 500,
             },
-            auto_ispin=True,
+            auto_ispin=False,
         )
     )
 
@@ -175,7 +176,7 @@ class SlabStaticMaker(BaseVaspMaker):
     name: str = "slab_static_maker__"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPRelaxSet(
-            user_kpoints_settings={"reciprocal_density": 200},
+            user_kpoints_settings={"reciprocal_density": 100},
             user_incar_settings={
                 "ENCUT": 700,
                 "IBRION": -1,
@@ -185,7 +186,7 @@ class SlabStaticMaker(BaseVaspMaker):
                 "NSW": 0,
                 "NELM": 500,
             },
-            auto_ispin=True,
+            auto_ispin=False,
         )
     )
 
@@ -275,7 +276,6 @@ def generate_slab(
     ads_slabs = AdsorbateSiteFinder(temp_slab).generate_adsorption_structures(
         hydrogen, translate=True, min_lw=min_lw
     )
-    # slab_only = remove_adsorbate(ads_slabs[0])
     return remove_adsorbate(ads_slabs[0])
 
 
@@ -358,8 +358,10 @@ def run_adslabs_job(
         ads_outputs["configuration_number"].append(i)
         ads_outputs["relaxed_structures"].append(ads_job.output.structure)
 
+        prev_dir_ads = ads_job.output.dir_name
+
         static_job = static_maker.make(
-            structure=ads_job.output.structure, prev_dir=None
+            structure=ads_job.output.structure, prev_dir=prev_dir_ads
         )
         static_job.append_name(f"static_adsconfig_{i}")
         adsorption_jobs.append(static_job)
@@ -371,7 +373,7 @@ def run_adslabs_job(
     return Response(replace=ads_flow)
 
 
-@job
+@job(output_schema=AdsorptionDocument)
 def adsorption_calculations(
     adslab_structures: list[Structure],
     adslabs_data: dict[str, list],
