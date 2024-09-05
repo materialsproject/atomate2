@@ -431,9 +431,25 @@ def adsorption_calculations(
     )
     sorted_combined_outputs = sorted(combined_outputs, key=lambda x: x[2])
 
+    structures_list = [item[0] for item in sorted_combined_outputs]
+    configuration_list = [item[1] for item in sorted_combined_outputs]
+    adsorption_energies_list = [item[2] for item in sorted_combined_outputs]
+    job_dirs_list = [item[3] for item in sorted_combined_outputs]
+
+    # Create AdsorptionDocument instances
+    adsorption_documents = AdsorptionDocument.from_adsorption(
+        structures=structures_list,
+        configuration_numbers=configuration_list,
+        adsorption_energies=adsorption_energies_list,
+        job_dirs=job_dirs_list,
+    )
+
+    # Return a dictionary with relevant fields extracted from AdsorptionDocument
     return {
-        "adsorption_configuration": [item[0] for item in sorted_combined_outputs],
-        "configuration_number": [item[1] for item in sorted_combined_outputs],
-        "adsorption_energy": [item[2] for item in sorted_combined_outputs],
-        "dirs": [item[3] for item in sorted_combined_outputs],
+        "adsorption_configuration": [doc.structure for doc in adsorption_documents],
+        "configuration_number": [
+            doc.configuration_number for doc in adsorption_documents
+        ],
+        "adsorption_energy": [doc.adsorption_energy for doc in adsorption_documents],
+        "dirs": [doc.job_dirs for doc in adsorption_documents],
     }

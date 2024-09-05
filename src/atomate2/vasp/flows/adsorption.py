@@ -184,4 +184,8 @@ class AdsorptionMaker(Maker):
         )
         jobs += [adsorption_calc]
 
-        return Flow(jobs, output=adsorption_calc.output, name=self.name)
+        return Flow(
+            jobs=jobs,
+            output=adsorption_calc.output,
+            name=self.name,
+        )
