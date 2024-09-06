@@ -1,5 +1,5 @@
-from ase import Atoms, Atom
 from pymatgen.core.units import bohr_to_ang, Ha_to_eV
+from pymatgen.core.structure import Structure
 from dataclasses import dataclass
 from typing import Optional, List
 import numpy as np
@@ -166,12 +166,11 @@ class JEiters(list):
             lines_collect = []
 
 
-    
 
-@dataclass
-class JAtoms(Atoms):
+dataclass
+class JStructure(Structure):
     '''
-    A mutant of the ase Atoms class for flexiblity in holding JDFTx optimization data
+    A mutant of the ase Structure class for flexiblity in holding JDFTx optimization data
     '''
     iter_type: str = None
     etype: str = None
@@ -201,6 +200,7 @@ class JAtoms(Atoms):
         Create a JAtoms object from a slice of an out file's text corresponding
         to a single step of a native JDFTx optimization
         '''
+        super.__init__()
         instance = cls()
         instance.eiter_type = eiter_type
         instance.iter_type = iter_type
@@ -241,6 +241,8 @@ class JAtoms(Atoms):
         # Opt line must be parsed after ecomp
         instance.parse_opt_lines(line_collections["opt"]["lines"])
 
+        return instance
+
     def init_line_collections(self) -> dict:
         ''' #TODO: Move line_collections to be used as a class variable
         '''
@@ -272,7 +274,7 @@ class JAtoms(Atoms):
         if len(lattice_lines):
             R = self._bracket_num_list_str_of_3x3_to_nparray(lattice_lines, i_start=2)
             R = R.T * bohr_to_ang
-        self.set_cell(R)
+        self.lattice = R
 
     
     def is_strain_start_line(self, line_text: str) -> bool:
@@ -322,7 +324,7 @@ class JAtoms(Atoms):
         else:
             posns *= bohr_to_ang
         for i in range(nAtoms):
-            self.append(Atom(names[i], posns[i]))
+            self.append(species=names[i], position=posns[i])
 
     
     def is_forces_start_line(self, line_text: str) -> bool:
@@ -491,8 +493,5 @@ class JAtoms(Atoms):
             colon_var = float(linetext.split(lkey)[1].strip().split(" ")[0])
         return colon_var
 
-        
 
-
-
-
+ 
