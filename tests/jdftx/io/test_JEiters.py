@@ -2,7 +2,7 @@ from pytest import approx
 import pytest
 from pymatgen.util.typing import PathLike
 from pymatgen.core.units import Ha_to_eV
-from atomate2.jdftx.io.JAtoms import JEiter, JEiters, JAtoms
+from atomate2.jdftx.io.JStructure import JEiter, JEiters
 
 ex_fillings_line1 = "FillingsUpdate:  mu: +0.714406772  nElectrons: 64.000000  magneticMoment: [ Abs: 0.00578  Tot: -0.00141 ]"
 ex_fillings_line1_known = {
@@ -50,34 +50,23 @@ ex_iter_line2_known = {
     "t_s": 48.68
 }
 
-ex_conv_line2 = "ElecMinimize: Converged (|Delta F|<1.000000e-07 for 2 iters)."
-ex_conv_line1_known = {
-    "converged": False,
-    "reason": None
-}
-ex_conv_line2_known = {
-    "converged": True,
-    "reason": "|Delta F|<1.000000e-07 for 2 iters"
-}
 
 ex_lines1 = [
     ex_iter_line1, ex_fillings_line1, ex_subspace_line1
 ]
 ex_lines2 = [
-    ex_iter_line2, ex_fillings_line2, ex_subspace_line2, ex_conv_line2
+    ex_iter_line2, ex_fillings_line2, ex_subspace_line2
 ]
 ex_known1 = {
     "iter": ex_iter_line1_known,
     "fill": ex_fillings_line1_known,
     "subspace": ex_subspace_line1_known,
-    "conv": ex_conv_line1_known
 }
 
 ex_known2 = {
     "iter": ex_iter_line2_known,
     "fill": ex_fillings_line2_known,
     "subspace": ex_subspace_line2_known,
-    "conv": ex_conv_line2_known
 }
 
 
@@ -105,10 +94,6 @@ def test_JEiter(exfill_line: str, exfill_known: dict[str, float],
     assert exiter_known["t_s"] == approx(jei.t_s)
     #
     assert exsubspace_known["subspace"] == approx(jei.subspaceRotationAdjust)
-    #
-    assert not jei.converged
-    assert jei.converged_reason is None
-
 
 @pytest.mark.parametrize("ex_lines,ex_knowns",
                          [([ex_lines1, ex_lines2], [ex_known1, ex_known2])
@@ -133,8 +118,5 @@ def test_JEiters(ex_lines: list[list[str]], ex_knowns: list[dict],
         assert ex_knowns[i]["iter"]["t_s"] == approx(jeis[i].t_s)
         #
         assert ex_knowns[i]["subspace"]["subspace"] == approx(jeis[i].subspaceRotationAdjust)
-        #
-        assert ex_knowns[i]["conv"]["converged"] == jeis[i].converged
-        assert ex_knowns[i]["conv"]["reason"] == jeis[i].converged_reason
 
 

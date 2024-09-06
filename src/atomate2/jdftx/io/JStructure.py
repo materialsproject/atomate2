@@ -28,6 +28,7 @@ class JEiter():
     converged: bool = False
     converged_reason: str = None
 
+
     @classmethod
     def _from_lines_collect(cls, lines_collect: list[str], iter_type: str, etype: str):
         instance = cls()
@@ -35,14 +36,12 @@ class JEiter():
         instance.etype = etype
         _iter_flag = f"{iter_type}: Iter: "
         for i, line_text in enumerate(lines_collect):
-            if instance.is_line0(i, line_text):
-                instance.read_line0(line_text, _iter_flag)
+            if instance.is_iter_line(i, line_text, _iter_flag):
+                instance.read_iter_line(line_text)
             elif instance.is_fillings_line(i, line_text):
                 instance.read_fillings_line(line_text)
             elif instance.is_subspaceadjust_line(i, line_text):
                 instance.read_subspaceadjust_line(line_text)
-            elif instance.is_converged_line(i, line_text):
-                instance.read_converged_line(line_text)
         return instance
 
     def is_iter_line(self, i: int, line_text: str, _iter_flag: str) -> bool:
@@ -57,25 +56,6 @@ class JEiter():
         self.linmin = self._get_colon_var_t1(line_text, "linmin: ")
         self.t_s = self._get_colon_var_t1(line_text, "t[s]: ")
 
-
-    def is_line0(self, i: int, line_text: str) -> bool:
-        is_line = i == 0
-        return is_line
-    
-
-    def read_line0(self, line_text: str, _iter_flag: str) -> None:
-        if not "Iter: " in _iter_flag:
-            raise ValueError("_iter_flag must contain 'Iter: '")
-        elif not _iter_flag in line_text:
-            raise ValueError(f"Provided _iter_flag {_iter_flag} does not appear in provided line {line_text}")
-        else:
-            self.iter = self._get_colon_var_t1(line_text, "Iter: ")
-            self.E = self._get_colon_var_t1(line_text, f"{self.etype}: ") * Ha_to_eV
-            self.grad_K = self._get_colon_var_t1(line_text, "|grad|_K: ")
-            self.alpha = self._get_colon_var_t1(line_text, "alpha: ")
-            self.linmin = self._get_colon_var_t1(line_text, "linmin: ")
-            self.t_s = self._get_colon_var_t1(line_text, "t[s]: ")
-    
 
     def is_fillings_line(self, i: int, line_text: str) -> bool:
         is_line = "FillingsUpdate" in line_text
@@ -160,20 +140,20 @@ class JEiters(list):
         _iter_flag = f"{self.iter_type}: Iter:"
         for line_text in text_slice:
             if len(line_text.strip()):
+                lines_collect.append(line_text)
                 if _iter_flag in line_text:
-                    lines_collect.append(line_text)
                     self.append(JEiter._from_lines_collect(lines_collect, self.iter_type, self.etype))
                     lines_collect = []
             else:
                 break
         if len(lines_collect):
-            self.append(JEiter._from_lines_collect(lines_collect, self.iter_type, self.etype))
+            self.parse_ending_lines(lines_collect)
             lines_collect = []
-            
+
 
     def parse_ending_lines(self, ending_lines: list[str]) -> None:
-        for line in ending_lines:
-            if self.is_converged_line(line):
+        for i, line in enumerate(ending_lines):
+            if self.is_converged_line(i, line):
                 self.read_converged_line(line)
 
 
@@ -221,7 +201,10 @@ class JStructure(Structure):
         Create a JAtoms object from a slice of an out file's text corresponding
         to a single step of a native JDFTx optimization
         '''
+        
         instance = cls(lattice=np.eye(3), species=[], coords=[], site_properties={})
+        if not iter_type in ["IonicMinimize", "LatticeMinimize"]:
+            iter_type = instance.correct_iter_type(iter_type)
         instance.eiter_type = eiter_type
         instance.iter_type = iter_type
         instance.emin_flag = emin_flag
@@ -262,6 +245,14 @@ class JStructure(Structure):
         instance.parse_opt_lines(line_collections["opt"]["lines"])
 
         return instance
+
+    def correct_iter_type(self, iter_type):
+        if "lattice" in iter_type.lower():
+            iter_type = "LatticeMinimize"
+        elif "ionic" in iter_type.lower():
+            iter_type = "IonicMinimize"
+        return iter_type
+    
 
     def init_line_collections(self) -> dict:
         ''' #TODO: Move line_collections to be used as a class variable
@@ -308,6 +299,7 @@ class JStructure(Structure):
             ST = self._bracket_num_list_str_of_3x3_to_nparray(strain_lines, i_start=1)
             ST = ST.T * 1 # Conversion factor?
         self.strain = ST
+
     
     def is_stress_start_line(self, line_text: str) -> bool:
         is_line = "# Stress tensor in" in line_text
@@ -329,7 +321,7 @@ class JStructure(Structure):
     
     def parse_posns_lines(self, posns_lines: list[str]) -> None:
         nAtoms = len(posns_lines) - 1
-        coords_type = posns_lines[0].split("positions in")[1].strip().split()[0]
+        coords_type = posns_lines[0].split("positions in")[1].strip().split()[0].strip()
         posns = []
         names = []
         for i in range(nAtoms):
@@ -339,7 +331,7 @@ class JStructure(Structure):
             names.append(name)
             posns.append(posn)
         posns = np.array(posns)
-        if coords_type != "cartesian":
+        if coords_type.lower() != "cartesian":
             posns = np.dot(posns, self.lattice.matrix)
         else:
             posns *= bohr_to_ang
@@ -354,14 +346,14 @@ class JStructure(Structure):
     
     def parse_forces_lines(self, forces_lines: list[str]) -> None:
         nAtoms = len(forces_lines) - 1
-        coords_type = forces_lines[0].split("Forces in")[1].strip().split()[0]
+        coords_type = forces_lines[0].split("Forces in")[1].strip().split()[0].strip()
         forces = []
         for i in range(nAtoms):
             line = forces_lines[i+1]
             force = np.array([float(x.strip()) for x in line.split()[2:5]])
             forces.append(force)
         forces = np.array(forces)
-        if coords_type != "cartesian":
+        if coords_type.lower() != "cartesian":
             forces = np.dot(forces, self.lattice.matrix) # TODO: Double check this conversion
             # (since self.cell is in Ang, and I need the forces in eV/ang, how
             # would you convert forces from direct coordinates into cartesian?)
@@ -383,17 +375,15 @@ class JStructure(Structure):
                 lsplit = line.split(" = ")
                 key = lsplit[0].strip()
                 val = float(lsplit[1].strip())
-                self.Ecomponents[key] = val
+                self.Ecomponents[key] = val * Ha_to_eV
         if self.etype is None:
             self.etype = key
-
 
     
     def is_lowdin_start_line(self, line_text: str) -> bool:
         is_line = "#--- Lowdin population analysis ---" in line_text
         return is_line
     
-
     
     def parse_lowdin_lines(self, lowdin_lines: list[str]) -> None:
         charges_dict = {}
@@ -403,7 +393,7 @@ class JStructure(Structure):
                 charges_dict = self.parse_lowdin_line(line, charges_dict)
             elif self.is_moments_line(line):
                 moments_dict = self.parse_lowdin_line(line, moments_dict)
-        names = self.species
+        names = [s.name for s in self.species]
         charges = np.zeros(len(names))
         moments = np.zeros(len(names))
         for el in charges_dict:
@@ -434,7 +424,7 @@ class JStructure(Structure):
         
     
     def is_opt_start_line(self, line_text: str) -> bool:
-        is_line = line_text.startswith(f"{self.iter_type}: Iter")
+        is_line = f"{self.iter_type}:" in line_text and f"Iter:" in line_text
         return is_line
     
     
@@ -443,7 +433,7 @@ class JStructure(Structure):
             opt_line = opt_lines[0]
             iter = int(self._get_colon_var_t1(opt_line, "Iter:"))
             self.iter = iter
-            E = self._get_colon_var_t1(opt_line, self.etype)
+            E = self._get_colon_var_t1(opt_line, f"{self.etype}:")
             self.E = E * Ha_to_eV
             grad_K = self._get_colon_var_t1(opt_line, "|grad|_K: ")
             self.grad_K = grad_K
@@ -453,7 +443,6 @@ class JStructure(Structure):
             self.linmin = linmin
             t_s = self._get_colon_var_t1(opt_line, "t[s]: ")
             self.t_s = t_s
-
 
     
     def is_generic_start_line(self, line_text: str, line_type: str) -> bool:
@@ -503,6 +492,7 @@ class JStructure(Structure):
         for i in range(3):
             out[i,:] += self._bracket_num_list_str_of_3_to_nparray(lines[i+i_start])
         return out
+    
     
     def _get_colon_var_t1(self, linetext: str, lkey: str) -> float | None:
         '''
