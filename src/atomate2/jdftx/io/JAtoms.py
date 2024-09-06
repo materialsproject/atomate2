@@ -41,6 +41,9 @@ class JEiter():
                 instance.read_fillings_line(line_text)
             elif instance.is_subspaceadjust_line(i, line_text):
                 instance.read_subspaceadjust_line(line_text)
+            elif instance.is_converged_line(i, line_text):
+                instance.read_converged_line(line_text)
+        return instance
 
 
     def is_line0(self, i: int, line_text: str) -> bool:
@@ -55,7 +58,7 @@ class JEiter():
             raise ValueError(f"Provided _iter_flag {_iter_flag} does not appear in provided line {line_text}")
         else:
             self.iter = self._get_colon_var_t1(line_text, "Iter: ")
-            self.E = self._get_colon_var_t1(line_text, f"{self.etype}: ")
+            self.E = self._get_colon_var_t1(line_text, f"{self.etype}: ") * Ha_to_eV
             self.grad_K = self._get_colon_var_t1(line_text, "|grad|_K: ")
             self.alpha = self._get_colon_var_t1(line_text, "alpha: ")
             self.linmin = self._get_colon_var_t1(line_text, "linmin: ")
@@ -89,7 +92,7 @@ class JEiter():
         return is_line
     
 
-    def set_converged_data(self, line_text: str) -> None:
+    def read_converged_line(self, line_text: str) -> None:
         self.converged = True
         self.converged_reason = line_text.split("(")[1].split(")")[0]
 
@@ -112,7 +115,7 @@ class JEiter():
 
 
     def set_mu(self, fillings_line: str) -> None:
-        self.mu = self._get_colon_var_t1(fillings_line, "mu: ")
+        self.mu = self._get_colon_var_t1(fillings_line, "mu: ") * Ha_to_eV
 
 
     def set_nElectrons(self, fillings_line: str) -> None:
@@ -128,13 +131,24 @@ class JEiters(list):
     '''
     iter_type: str = None
     etype: str = None
+    _iter_flag: str = None
 
-    def __init__(self, text_slice: list[str], iter_type: str = "ElecMinimize", etype: str = "F"):
-        super().__init__()
-        self._iter_flag = f"{iter_type}: Iter:"
-        self.iter_type = iter_type
-        self.etype = etype
-        self.parse_text_slice(text_slice)
+    @classmethod
+    def from_text_slice(cls, text_slice: list[str], iter_type: str = "ElecMinimize", etype: str = "F"):
+        super().__init__([])
+        instance = cls()
+        instance._iter_flag = f"{iter_type}: Iter:"
+        instance.iter_type = iter_type
+        instance.etype = etype
+        instance.parse_text_slice(text_slice)
+        return instance
+
+    # def __init__(self, text_slice: list[str], iter_type: str = "ElecMinimize", etype: str = "F"):
+    #     super().__init__()
+    #     self._iter_flag = f"{iter_type}: Iter:"
+    #     self.iter_type = iter_type
+    #     self.etype = etype
+    #     self.parse_text_slice(text_slice)
 
     def parse_text_slice(self, text_slice: list[str]) -> None:
         lines_collect = []
@@ -142,14 +156,14 @@ class JEiters(list):
             if len(line_text.strip()):
                 if self._iter_flag in line_text:
                     if len(lines_collect):
-                        self.append(JEiter()._from_lines_collect(lines_collect, self.iter_type, self.etype))
+                        self.append(JEiter._from_lines_collect(lines_collect, self.iter_type, self.etype))
                         lines_collect = []
                 lines_collect.append(line_text)
             else:
                 break
-
-
-
+        if len(lines_collect):
+            self.append(JEiter._from_lines_collect(lines_collect, self.iter_type, self.etype))
+            lines_collect = []
 
 
     
