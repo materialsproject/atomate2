@@ -6,6 +6,9 @@ import numpy as np
 
 
 class JEiter():
+    '''
+    Class object for storing logged electronic minimization data for a single SCF cycle
+    '''
     iter_type: str = None
     etype: str = None
     #
@@ -37,15 +40,15 @@ class JEiter():
             elif instance.is_fillings_line(i, line_text):
                 instance.read_fillings_line(line_text)
             elif instance.is_subspaceadjust_line(i, line_text):
-                instance.read_subspaceadjust(line_text)
+                instance.read_subspaceadjust_line(line_text)
 
 
-    def is_line0(self, i, line_text):
+    def is_line0(self, i: int, line_text: str) -> bool:
         is_line = i == 0
         return is_line
     
 
-    def read_line0(self, line_text: str, _iter_flag: str):
+    def read_line0(self, line_text: str, _iter_flag: str) -> None:
         if not "Iter: " in _iter_flag:
             raise ValueError("_iter_flag must contain 'Iter: '")
         elif not _iter_flag in line_text:
@@ -59,39 +62,39 @@ class JEiter():
             self.t_s = self._get_colon_var_t1(line_text, "t[s]: ")
     
 
-    def is_fillings_line(self, i, line_text):
+    def is_fillings_line(self, i: int, line_text: str) -> bool:
         is_line = "FillingsUpdate" in line_text
         return is_line
     
 
-    def read_fillings_line(self, fillings_line):
+    def read_fillings_line(self, fillings_line: str) -> None:
         assert "FillingsUpdate:" in fillings_line
-        self.get_mu(fillings_line)
-        self.get_nElectrons(fillings_line)
+        self.set_mu(fillings_line)
+        self.set_nElectrons(fillings_line)
         if "magneticMoment" in fillings_line:
-            self.get_magdata(fillings_line)
+            self.set_magdata(fillings_line)
     
 
-    def is_subspaceadjust_line(self, i, line_text):
+    def is_subspaceadjust_line(self, i: int, line_text: str) -> bool:
         is_line = "SubspaceRotationAdjust" in line_text
         return is_line
     
 
-    def read_subspaceadjust_line(self, line_text):
+    def read_subspaceadjust_line(self, line_text: str) -> None:
         self.subspaceRotationAdjust = self._get_colon_var_t1(line_text, "SubspaceRotationAdjust: set factor to")
     
 
-    def is_converged_line(self, i, line_text):
+    def is_converged_line(self, i: int, line_text: str) -> bool:
         is_line = f"{self.iter_type}: Converged" in line_text
         return is_line
     
 
-    def read_converged_line(self, line_text):
+    def set_converged_data(self, line_text: str) -> None:
         self.converged = True
         self.converged_reason = line_text.split("(")[1].split(")")[0]
 
 
-    def get_magdata(self, fillings_line):
+    def set_magdata(self, fillings_line: str) -> None:
         _fillings_line = fillings_line.split("magneticMoment: [ ")[1].split(" ]")[0].strip()
         self.abs_magneticMoment = self._get_colon_var_t1(_fillings_line, "Abs: ")
         self.tot_magneticMoment = self._get_colon_var_t1(_fillings_line, "Tot: ")
@@ -108,17 +111,21 @@ class JEiter():
         return colon_var
 
 
-    def get_mu(self, fillings_line):
+    def set_mu(self, fillings_line: str) -> None:
         self.mu = self._get_colon_var_t1(fillings_line, "mu: ")
 
 
-    def get_nElectrons(self, fillings_line):
+    def set_nElectrons(self, fillings_line: str) -> None:
         self.nElectrons = self._get_colon_var_t1(fillings_line, "nElectrons: ")
 
 
 
 
 class JEiters(list):
+    '''
+    Class object for collecting and storing a series of SCF cycles done between
+    geometric optimization steps
+    '''
     iter_type: str = None
     etype: str = None
 
@@ -129,7 +136,7 @@ class JEiters(list):
         self.etype = etype
         self.parse_text_slice(text_slice)
 
-    def parse_text_slice(self, text_slice: list[str]):
+    def parse_text_slice(self, text_slice: list[str]) -> None:
         lines_collect = []
         for line_text in text_slice:
             if len(line_text.strip()):
@@ -155,6 +162,7 @@ class JAtoms(Atoms):
     iter_type: str = None
     etype: str = None
     eiter_type: str = None
+    emin_flag: str = None
     #
     Ecomponents: dict = None
     elecMinData: JEiters = None
@@ -173,24 +181,18 @@ class JAtoms(Atoms):
     @classmethod
     def from_text_slice(cls, text_slice: list[str],
                         eiter_type: str = "ElecMinimize",
-                        etype: str = "F",
-                        iter_type: str = "IonicMinimize"):
+                        iter_type: str = "IonicMinimize",
+                        emin_flag: str = "---- Electronic minimization -------"):
         '''
         Create a JAtoms object from a slice of an out file's text corresponding
         to a single step of a native JDFTx optimization
         '''
         instance = cls()
         instance.eiter_type = eiter_type
-        instance.etype = etype
         instance.iter_type = iter_type
+        instance.emin_flag = emin_flag
         #
-        line_collections = {}
-        for line_type in instance.line_types:
-            line_collections[line_type] = {"lines": [],
-                                           "collecting": False,
-                                           "collected": False}
-        
-        #
+        line_collections = instance.init_line_collections()
         for i, line in enumerate(text_slice):
             read_line = False
             for line_type in line_collections:
@@ -210,48 +212,73 @@ class JAtoms(Atoms):
                             line_collections[line_type]["lines"].append(line)
                             break
 
+        # Ecomponents needs to be parsed before emin to set etype
+        instance.parse_ecomp_lines(line_collections["ecomp"]["lines"])
         instance.parse_emin_lines(line_collections["emin"]["lines"])
-        instance.parse_emin_lines(line_collections["emin"]["lines"])
+        # Lattice must be parsed before posns/forces incase of direct coordinates
+        instance.parse_lattice_lines(line_collections["lattice"]["lines"])
+        instance.parse_posns_lines(line_collections["posns"]["lines"])
+        instance.parse_forces_lines(line_collections["forces"]["lines"])
+        # Strain and stress can be parsed in any order
+        instance.parse_strain_lines(line_collections["strain"]["lines"])
+        instance.parse_stress_lines(line_collections["stress"]["lines"])
+        # Lowdin must be parsed after posns
+        instance.parse_lowdin_lines(line_collections["lowdin"]["lines"])
+        # Opt line must be parsed after ecomp
+        instance.parse_opt_lines(line_collections["opt"]["lines"])
+
+    def init_line_collections(self) -> dict:
+        ''' #TODO: Move line_collections to be used as a class variable
+        '''
+        line_collections = {}
+        for line_type in self.line_types:
+            line_collections[line_type] = {"lines": [],
+                                           "collecting": False,
+                                           "collected": False}
+        return line_collections
         
             
-    def is_emin_start_line(self, line_text):
-        is_line = "---- Electronic minimization -------" in line_text
+    def is_emin_start_line(self, line_text: str) -> bool:
+        is_line = self.emin_flag in line_text
         return is_line
     
 
-    def parse_emin_lines(self, emin_lines):
+    def parse_emin_lines(self, emin_lines: list[str]) -> None:
         if len(emin_lines):
             self.elecMinData = JEiters(emin_lines, iter_type=self.eiter_type, etype=self.etype)
 
 
-    def is_lattice_start_line(self, line_text):
+    def is_lattice_start_line(self, line_text: str) -> bool:
         is_line = "# Lattice vectors:" in line_text
         return is_line
     
-    def parse_lattice_lines(self, lattice_lines):
+    
+    def parse_lattice_lines(self, lattice_lines: list[str]) -> None:
         R = None
         if len(lattice_lines):
             R = self._bracket_num_list_str_of_3x3_to_nparray(lattice_lines, i_start=2)
             R = R.T * bohr_to_ang
         self.set_cell(R)
+
     
-    def is_strain_start_line(self, line_text):
+    def is_strain_start_line(self, line_text: str) -> bool:
         is_line = "# Strain tensor in" in line_text
         return is_line
     
-    def parse_strain_lines(self, strain_lines):
+    
+    def parse_strain_lines(self, strain_lines: list[str]) -> None:
         ST = None
         if len(strain_lines):
             ST = self._bracket_num_list_str_of_3x3_to_nparray(strain_lines, i_start=1)
             ST = ST.T * 1 # Conversion factor?
         self.strain = ST
     
-    def is_stress_start_line(self, line_text):
+    def is_stress_start_line(self, line_text: str) -> bool:
         is_line = "# Stress tensor in" in line_text
         return is_line
     
 
-    def parse_stress_lines(self, stress_lines):
+    def parse_stress_lines(self, stress_lines: list[str]) -> bool:
         ST = None
         if len(stress_lines):
             ST = self._bracket_num_list_str_of_3x3_to_nparray(stress_lines, i_start=1)
@@ -259,12 +286,12 @@ class JAtoms(Atoms):
         self.stress = ST
     
     
-    def is_posns_start_line(self, line_text):
+    def is_posns_start_line(self, line_text: str) -> bool:
         is_line = "# Ionic positions" in line_text
         return is_line
     
     
-    def parse_posns_lines(self, posns_lines):
+    def parse_posns_lines(self, posns_lines: list[str]) -> None:
         nAtoms = len(posns_lines) - 1
         coords_type = posns_lines[0].split("positions in")[1].strip().split()[0]
         posns = []
@@ -282,12 +309,14 @@ class JAtoms(Atoms):
             posns *= bohr_to_ang
         for i in range(nAtoms):
             self.append(Atom(names[i], posns[i]))
+
     
-    def is_forces_start_line(self, line_text):
+    def is_forces_start_line(self, line_text: str) -> bool:
         is_line = "# Forces in" in line_text
         return is_line
     
-    def parse_forces_lines(self, forces_lines):
+    
+    def parse_forces_lines(self, forces_lines: list[str]) -> None:
         nAtoms = len(forces_lines) - 1
         coords_type = forces_lines[0].split("Forces in")[1].strip().split()[0]
         forces = []
@@ -304,12 +333,14 @@ class JAtoms(Atoms):
             forces *= bohr_to_ang
         forces *= Ha_to_eV
         self.forces = forces
+
     
-    def is_ecomponents_start_line(self, line_text):
+    def is_ecomp_start_line(self, line_text: str) -> bool:
         is_line = "# Energy components" in line_text
         return is_line
     
-    def parse_ecomponents_lines(self, ecomp_lines):
+    
+    def parse_ecomp_lines(self, ecomp_lines: list[str]) -> None:
         self.Ecomponents = {}
         for line in ecomp_lines:
             if " = " in line:
@@ -322,13 +353,13 @@ class JAtoms(Atoms):
 
 
     
-    def is_lowdin_start_line(self, line_text):
+    def is_lowdin_start_line(self, line_text: str) -> bool:
         is_line = "#--- Lowdin population analysis ---" in line_text
         return is_line
     
 
     
-    def parse_lowdin_lines(self, lowdin_lines):
+    def parse_lowdin_lines(self, lowdin_lines: list[str]) -> None:
         charges_dict = {}
         moments_dict = {}
         for line in lowdin_lines:
@@ -348,17 +379,17 @@ class JAtoms(Atoms):
         self.magnetic_moments = moments
 
 
-    def is_charges_line(self, line_text):
+    def is_charges_line(self, line_text: str) -> bool:
         is_line = "oxidation-state" in line_text
         return is_line
     
     
-    def is_moments_line(self, line_text):
+    def is_moments_line(self, line_text: str) -> bool:
         is_line = "magnetic-moments" in line_text
         return is_line
     
 
-    def parse_lowdin_line(self, lowdin_line, lowdin_dict):
+    def parse_lowdin_line(self, lowdin_line: str, lowdin_dict: dict[str, float]) -> dict[str, float]:
         tokens = [v.strip() for v in lowdin_line.strip().split()]
         name = tokens[2]
         vals = [float(x) for x in tokens[3:]]
@@ -366,11 +397,12 @@ class JAtoms(Atoms):
         return lowdin_dict
         
     
-    def is_opt_start_line(self, line_text):
+    def is_opt_start_line(self, line_text: str) -> bool:
         is_line = line_text.starts_with(f"{self.iter_type}: Iter")
         return is_line
     
-    def parse_opt_lines(self, opt_lines):
+    
+    def parse_opt_lines(self, opt_lines: list[str]) -> None:
         opt_line = opt_lines[0]
         iter = int(self._get_colon_var_t1(opt_line, "Iter:"))
         self.iter = iter
@@ -387,7 +419,7 @@ class JAtoms(Atoms):
 
 
     
-    def is_generic_start_line(self, line_text: str, line_type: str):
+    def is_generic_start_line(self, line_text: str, line_type: str) -> bool:
         ''' I am choosing to map line_type to a function this way because
         I've had horrible experiences with storing functions in dictionaries
         in the past
@@ -397,7 +429,7 @@ class JAtoms(Atoms):
         elif line_type == "opt":
             return self.is_opt_start_line(line_text)
         elif line_type == "ecomp":
-            return self.is_ecomponents_start_line(line_text)
+            return self.is_ecomp_start_line(line_text)
         elif line_type == "forces":
             return self.is_forces_start_line(line_text)
         elif line_type == "posns":
@@ -414,7 +446,7 @@ class JAtoms(Atoms):
             raise ValueError(f"Unrecognized line type {line_type}")
 
     
-    def collect_generic_line(self, line_text, generic_lines):
+    def collect_generic_line(self, line_text: str, generic_lines: list[str]) -> tuple[list[str], bool, bool]:
         collecting = True
         collected = False
         if not len(line_text.strip()):
