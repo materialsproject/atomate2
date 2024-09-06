@@ -45,6 +45,18 @@ class JEiter():
                 instance.read_converged_line(line_text)
         return instance
 
+    def is_iter_line(self, i: int, line_text: str, _iter_flag: str) -> bool:
+        is_line = _iter_flag in line_text
+        return is_line
+    
+    def read_iter_line(self, line_text: str) -> None:
+        self.iter = self._get_colon_var_t1(line_text, "Iter: ")
+        self.E = self._get_colon_var_t1(line_text, f"{self.etype}: ") * Ha_to_eV
+        self.grad_K = self._get_colon_var_t1(line_text, "|grad|_K: ")
+        self.alpha = self._get_colon_var_t1(line_text, "alpha: ")
+        self.linmin = self._get_colon_var_t1(line_text, "linmin: ")
+        self.t_s = self._get_colon_var_t1(line_text, "t[s]: ")
+
 
     def is_line0(self, i: int, line_text: str) -> bool:
         is_line = i == 0
@@ -87,15 +99,6 @@ class JEiter():
         self.subspaceRotationAdjust = self._get_colon_var_t1(line_text, "SubspaceRotationAdjust: set factor to")
     
 
-    def is_converged_line(self, i: int, line_text: str) -> bool:
-        is_line = f"{self.iter_type}: Converged" in line_text
-        return is_line
-    
-
-    def read_converged_line(self, line_text: str) -> None:
-        self.converged = True
-        self.converged_reason = line_text.split("(")[1].split(")")[0]
-
 
     def set_magdata(self, fillings_line: str) -> None:
         _fillings_line = fillings_line.split("magneticMoment: [ ")[1].split(" ]")[0].strip()
@@ -132,6 +135,8 @@ class JEiters(list):
     iter_type: str = None
     etype: str = None
     _iter_flag: str = None
+    converged: bool = False
+    converged_Reason: str = None
 
     @classmethod
     def from_text_slice(cls, text_slice: list[str], iter_type: str = "ElecMinimize", etype: str = "F"):
@@ -140,13 +145,7 @@ class JEiters(list):
         instance._iter_flag = f"{iter_type}: Iter:"
         instance.iter_type = iter_type
         instance.etype = etype
-        # Remove fat from the top of the slice
-        i_start = 0
-        for i, line_text in enumerate(text_slice):
-            if instance._iter_flag in line_text:
-                i_start = i
-                break
-        instance.parse_text_slice(text_slice[i_start:])
+        instance.parse_text_slice(text_slice)
         return instance
 
     # def __init__(self, text_slice: list[str], iter_type: str = "ElecMinimize", etype: str = "F"):
@@ -158,18 +157,34 @@ class JEiters(list):
 
     def parse_text_slice(self, text_slice: list[str]) -> None:
         lines_collect = []
+        _iter_flag = f"{self.iter_type}: Iter:"
         for line_text in text_slice:
             if len(line_text.strip()):
-                if self._iter_flag in line_text:
-                    if len(lines_collect):
-                        self.append(JEiter._from_lines_collect(lines_collect, self.iter_type, self.etype))
-                        lines_collect = []
-                lines_collect.append(line_text)
+                if _iter_flag in line_text:
+                    lines_collect.append(line_text)
+                    self.append(JEiter._from_lines_collect(lines_collect, self.iter_type, self.etype))
+                    lines_collect = []
             else:
                 break
         if len(lines_collect):
             self.append(JEiter._from_lines_collect(lines_collect, self.iter_type, self.etype))
             lines_collect = []
+            
+
+    def parse_ending_lines(self, ending_lines: list[str]) -> None:
+        for line in ending_lines:
+            if self.is_converged_line(line):
+                self.read_converged_line(line)
+
+
+    def is_converged_line(self, i: int, line_text: str) -> bool:
+        is_line = f"{self.iter_type}: Converged" in line_text
+        return is_line
+    
+
+    def read_converged_line(self, line_text: str) -> None:
+        self.converged = True
+        self.converged_reason = line_text.split("(")[1].split(")")[0].strip()
 
 
 
