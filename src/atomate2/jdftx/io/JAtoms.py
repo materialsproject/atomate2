@@ -344,7 +344,7 @@ class JAtoms(Atoms):
             # (since self.cell is in Ang, and I need the forces in eV/ang, how
             # would you convert forces from direct coordinates into cartesian?)
         else:
-            forces *= bohr_to_ang
+            forces *= 1/bohr_to_ang
         forces *= Ha_to_eV
         self.forces = forces
 
