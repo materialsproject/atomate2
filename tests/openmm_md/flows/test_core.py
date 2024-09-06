@@ -1,8 +1,6 @@
 from pathlib import Path
 
 import numpy as np
-import pytest
-from emmet.core.openff import ClassicalMDTaskDocument
 from emmet.core.openmm import OpenMMTaskDocument
 from jobflow import Flow
 from MDAnalysis import Universe
@@ -30,7 +28,7 @@ def test_anneal_maker(interchange, run_job):
     task_doc = run_job(anneal_flow)
 
     # Check the output task document
-    assert isinstance(task_doc, ClassicalMDTaskDocument)
+    assert isinstance(task_doc, OpenMMTaskDocument)
     assert task_doc.state == "successful"
     assert len(task_doc.calcs_reversed) == 1
 
@@ -99,7 +97,7 @@ def test_flow_maker(interchange, run_job):
     task_doc = run_job(production_flow)
 
     # Check the output task document
-    assert isinstance(task_doc, ClassicalMDTaskDocument)
+    assert isinstance(task_doc, OpenMMTaskDocument)
     assert task_doc.state == "successful"
     assert len(task_doc.calcs_reversed) == 6
     assert task_doc.calcs_reversed[-1].task_name == "energy minimization"
@@ -169,7 +167,7 @@ def test_traj_blob_embed(interchange, run_job, tmp_path):
 
     # Write the bytes back to a file
     with open(tmp_path / "doc_trajectory.dcd", "wb") as f:
-        f.write(calc_output.traj_blob)
+        f.write(bytes.fromhex(calc_output.traj_blob))
 
     u2 = Universe(topology, str(tmp_path / "doc_trajectory.dcd"))
 
@@ -184,7 +182,7 @@ def test_traj_blob_embed(interchange, run_job, tmp_path):
     assert parsed_output.traj_blob == calc_output.traj_blob
 
 
-@pytest.mark.skip("for local testing and debugging")
+# @pytest.mark.skip("for local testing and debugging")
 def test_fireworks(interchange):
     # Create an instance of ProductionMaker with custom parameters
 
@@ -200,10 +198,10 @@ def test_fireworks(interchange):
     )
 
     interchange_json = interchange.json()
-    interchange_bytes = interchange_json.encode("utf-8")
+    # interchange_bytes = interchange_json.encode("utf-8")
 
     # Run the ProductionMaker flow
-    production_flow = production_maker.make(interchange_bytes)
+    production_flow = production_maker.make(interchange_json)
 
     from fireworks import LaunchPad
     from jobflow.managers.fireworks import flow_to_workflow

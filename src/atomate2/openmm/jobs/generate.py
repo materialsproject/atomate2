@@ -157,14 +157,13 @@ def generate_openmm_interchange(
 
     # TODO: fix all jsons
     interchange_json = interchange.json()
-    interchange_bytes = interchange_json.encode("utf-8")
 
     dir_name = Path.cwd()
 
     task_doc = OpenMMTaskDocument(
         dir_name=str(dir_name),
         state=TaskState.SUCCESS,
-        interchange=interchange_bytes,
+        interchange=interchange_json,
         interchange_meta=mol_specs,
         force_field="opls",  # TODO: change to flexible value
         tags=tags,

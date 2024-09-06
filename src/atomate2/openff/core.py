@@ -147,14 +147,13 @@ def generate_interchange(
     # force_field_names = ff_list if len(force_field) > 1 else ff_list[0]
 
     interchange_json = interchange.json()
-    interchange_bytes = interchange_json.encode("utf-8")
 
     dir_name = Path.cwd()
 
     task_doc = ClassicalMDTaskDocument(
         dir_name=str(dir_name),
         state=TaskState.SUCCESS,
-        interchange=interchange_bytes,
+        interchange=interchange_json,
         interchange_meta=mol_specs,
         force_field=force_field,
         tags=tags,

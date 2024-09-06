@@ -132,7 +132,7 @@ def test_evolve_simulation(openmm_data, run_job):
         np.array([-0.5873, -0.0492, 0.0768, 0.0768, 0.4061, 0.0768]),  # from file
     )
 
-    interchange_str = task_doc.interchange.decode("utf-8")
+    interchange_str = task_doc.interchange
     interchange = OpenMMInterchange.parse_raw(interchange_str)
 
     initial_state = XmlSerializer.deserialize(interchange.state)
@@ -142,7 +142,7 @@ def test_evolve_simulation(openmm_data, run_job):
     min_job = maker.make(interchange)
 
     task_doc2 = run_job(min_job)
-    interchange_str2 = task_doc2.interchange.decode("utf-8")
+    interchange_str2 = task_doc2.interchange
     interchange2 = OpenMMInterchange.parse_raw(interchange_str2)
 
     final_state = XmlSerializer.deserialize(interchange2.state)
