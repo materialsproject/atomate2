@@ -41,6 +41,23 @@ def read_file(file_name: str) -> list[str]:
             text = f.readlines()
         return text
 
+
+@check_file_exists
+def read_outfile(file_name: str, out_slice_idx: int = -1) -> list[str]:
+        '''
+        Read slice of out file into a list of str
+
+        Args:
+            filename: name of file to read
+            out_slice_idx: index of output slice to read
+        '''
+        with open(file_name, 'r') as f:
+            _text = f.readlines()
+        start_lines = get_start_lines(text, add_end=True)
+        text = _text[start_lines[out_slice_idx]:start_lines[out_slice_idx+1]]
+        return text
+
+
 def find_key(key_input, tempfile):
     '''
     Finds last instance of key in output file. 
@@ -172,19 +189,21 @@ class JDFTXOutfile(ClassPrintFormatter):
     trajectory_ecomponents: list[dict] = None
     is_converged: bool = None #TODO implement this
 
-    def _get_start_lines(text:str, start_key: Optional[str]="*************** JDFTx"):
-        '''
-        Get the line numbers corresponding to the beginning of seperate JDFTx calculations
-        (in case of multiple calculations appending the same out file)
+    # def _get_start_lines(self, text:str, start_key: Optional[str]="*************** JDFTx", add_end: Optional[bool]=False) -> list[int]:
+    #     '''
+    #     Get the line numbers corresponding to the beginning of seperate JDFTx calculations
+    #     (in case of multiple calculations appending the same out file)
 
-        Args:
-            text: output of read_file for out file
-        '''
-        start_lines = []
-        for i, line in enumerate(text):
-            if start_key in line:
-                start_lines.append(i)
-        return start_lines
+    #     Args:
+    #         text: output of read_file for out file
+    #     '''
+    #     start_lines = []
+    #     for i, line in enumerate(text):
+    #         if start_key in line:
+    #             start_lines.append(i)
+    #     if add_end:
+    #         start_lines.append(i)
+    #     return start_lines
 
     def _get_prefix(text: str) -> str:
         '''
