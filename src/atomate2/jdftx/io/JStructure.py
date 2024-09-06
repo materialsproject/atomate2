@@ -168,7 +168,7 @@ class JEiters(list):
 
 
 
-dataclass
+@dataclass
 class JStructure(Structure):
     '''
     A mutant of the ase Structure class for flexiblity in holding JDFTx optimization data
@@ -505,4 +505,58 @@ class JStructure(Structure):
         return colon_var
 
 
- 
+@dataclass
+class JStructures(list):
+
+    out_slice_start_flag = "-------- Electronic minimization -----------"
+    iter_type: str = None
+
+
+    @classmethod
+    def from_out_slice(cls, out_slice: list[str]):
+        super().__init__([])
+        instance = cls()
+        start_idx = instance.get_start_idx(out_slice)
+        instance.parse_out_slice(out_slice[start_idx:])
+
+    def get_start_idx(self, out_slice: list[str]) -> int:
+        for i, line in enumerate(out_slice):
+            if "# Energy components" in line:
+                return i
+        return
+    
+
+    def is_lowdin_start_line(self, line_text: str) -> bool:
+        is_line = "#--- Lowdin population analysis ---" in line_text
+        return is_line
+
+    
+    def get_step_bounds(self, out_slice: list[str]) -> list[list[int, int]]:
+        '''
+        Returns a list of lists of integers where each sublist contains the start and end
+        of an individual optimization step (or SCF cycle if no optimization)
+        '''
+        bounds_list = []
+        bounds = None
+        end_started = False
+        for i, line in enumerate(out_slice):
+            if not end_started:
+                if self.out_slice_start_flag in line:
+                    bounds = [i]
+                elif bounds is None:
+                    if self.is_lowdin_start_line(line):
+                        end_started = True
+            elif not bounds is None:
+                if not len(line.strip()):
+                    bounds.append(i)
+                    bounds_list.append(bounds)
+                    bounds = None
+                    end_started = False
+        return bounds_list
+
+    def parse_out_slice(self, out_slice: list[str]) -> None:
+        out_bounds = self.get_step_bounds(out_slice)
+        for bounds in out_bounds:
+            self.append(JStructure.from_text_slice(out_slice[bounds[0]:bounds[1]],
+                                                   iter_type=self.iter_type))
+        
