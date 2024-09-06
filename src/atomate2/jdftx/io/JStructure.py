@@ -1,5 +1,5 @@
 from pymatgen.core.units import bohr_to_ang, Ha_to_eV
-from pymatgen.core.structure import Structure
+from pymatgen.core.structure import Structure, Lattice
 from dataclasses import dataclass
 from typing import Optional, List
 import numpy as np
@@ -140,7 +140,13 @@ class JEiters(list):
         instance._iter_flag = f"{iter_type}: Iter:"
         instance.iter_type = iter_type
         instance.etype = etype
-        instance.parse_text_slice(text_slice)
+        # Remove fat from the top of the slice
+        i_start = 0
+        for i, line_text in enumerate(text_slice):
+            if instance._iter_flag in line_text:
+                i_start = i
+                break
+        instance.parse_text_slice(text_slice[i_start:])
         return instance
 
     # def __init__(self, text_slice: list[str], iter_type: str = "ElecMinimize", etype: str = "F"):
@@ -200,8 +206,7 @@ class JStructure(Structure):
         Create a JAtoms object from a slice of an out file's text corresponding
         to a single step of a native JDFTx optimization
         '''
-        super.__init__()
-        instance = cls()
+        instance = cls(lattice=np.eye(3), species=[], coords=[], site_properties={})
         instance.eiter_type = eiter_type
         instance.iter_type = iter_type
         instance.emin_flag = emin_flag
@@ -261,7 +266,7 @@ class JStructure(Structure):
 
     def parse_emin_lines(self, emin_lines: list[str]) -> None:
         if len(emin_lines):
-            self.elecMinData = JEiters(emin_lines, iter_type=self.eiter_type, etype=self.etype)
+            self.elecMinData = JEiters.from_text_slice(emin_lines, iter_type=self.eiter_type, etype=self.etype)
 
 
     def is_lattice_start_line(self, line_text: str) -> bool:
@@ -274,7 +279,7 @@ class JStructure(Structure):
         if len(lattice_lines):
             R = self._bracket_num_list_str_of_3x3_to_nparray(lattice_lines, i_start=2)
             R = R.T * bohr_to_ang
-        self.lattice = R
+        self.lattice= Lattice(R)
 
     
     def is_strain_start_line(self, line_text: str) -> bool:
@@ -320,11 +325,11 @@ class JStructure(Structure):
             posns.append(posn)
         posns = np.array(posns)
         if coords_type != "cartesian":
-            posns = np.dot(posns, self.cell)
+            posns = np.dot(posns, self.lattice.matrix)
         else:
             posns *= bohr_to_ang
         for i in range(nAtoms):
-            self.append(species=names[i], position=posns[i])
+            self.append(species=names[i], coords=posns[i], coords_are_cartesian=True)
 
     
     def is_forces_start_line(self, line_text: str) -> bool:
@@ -342,7 +347,7 @@ class JStructure(Structure):
             forces.append(force)
         forces = np.array(forces)
         if coords_type != "cartesian":
-            forces = np.dot(forces, self.cell) # TODO: Double check this conversion
+            forces = np.dot(forces, self.lattice.matrix) # TODO: Double check this conversion
             # (since self.cell is in Ang, and I need the forces in eV/ang, how
             # would you convert forces from direct coordinates into cartesian?)
         else:
@@ -383,7 +388,7 @@ class JStructure(Structure):
                 charges_dict = self.parse_lowdin_line(line, charges_dict)
             elif self.is_moments_line(line):
                 moments_dict = self.parse_lowdin_line(line, moments_dict)
-        names = self.get_chemical_symbols()
+        names = self.species
         charges = np.zeros(len(names))
         moments = np.zeros(len(names))
         for el in charges_dict:
@@ -414,24 +419,25 @@ class JStructure(Structure):
         
     
     def is_opt_start_line(self, line_text: str) -> bool:
-        is_line = line_text.starts_with(f"{self.iter_type}: Iter")
+        is_line = line_text.startswith(f"{self.iter_type}: Iter")
         return is_line
     
     
     def parse_opt_lines(self, opt_lines: list[str]) -> None:
-        opt_line = opt_lines[0]
-        iter = int(self._get_colon_var_t1(opt_line, "Iter:"))
-        self.iter = iter
-        E = self._get_colon_var_t1(opt_line, self.etype)
-        self.E = E * Ha_to_eV
-        grad_K = self._get_colon_var_t1(opt_line, "|grad|_K: ")
-        self.grad_K = grad_K
-        alpha = self._get_colon_var_t1(opt_line, "alpha: ")
-        self.alpha = alpha
-        linmin = self._get_colon_var_t1(opt_line, "linmin: ")
-        self.linmin = linmin
-        t_s = self._get_colon_var_t1(opt_line, "t[s]: ")
-        self.t_s = t_s
+        if len(opt_lines):
+            opt_line = opt_lines[0]
+            iter = int(self._get_colon_var_t1(opt_line, "Iter:"))
+            self.iter = iter
+            E = self._get_colon_var_t1(opt_line, self.etype)
+            self.E = E * Ha_to_eV
+            grad_K = self._get_colon_var_t1(opt_line, "|grad|_K: ")
+            self.grad_K = grad_K
+            alpha = self._get_colon_var_t1(opt_line, "alpha: ")
+            self.alpha = alpha
+            linmin = self._get_colon_var_t1(opt_line, "linmin: ")
+            self.linmin = linmin
+            t_s = self._get_colon_var_t1(opt_line, "t[s]: ")
+            self.t_s = t_s
 
 
     
