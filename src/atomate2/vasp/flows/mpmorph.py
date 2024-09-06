@@ -39,8 +39,9 @@ from atomate2.vasp.powerups import update_user_incar_settings
 if TYPE_CHECKING:
     from pathlib import Path
     from typing import Any
+    from typing_extensions import Self
 
-    from jobflow import Flow
+    from jobflow import Flow, Maker
     from pymatgen.core import Structure
 
     from atomate2.vasp.jobs.md import MDMaker
@@ -87,37 +88,54 @@ class VASPMPMorphMDMaker(MPMorphMDMaker):
     @classmethod
     def from_temperature_and_nsteps(
         cls,
-        temperature,
-        n_steps_convergence,
-        n_steps_production,
-        end_temp=None,
+        temperature: float,
+        n_steps_convergence : int,
+        n_steps_production : int,
+        end_temp : float | None = None,
+        md_maker : Maker = BaseMPMorphMDMaker,
     ) -> Self:
-        """Create a new instance of this class with a new temperature and number of steps."""
+        """
+        Create VASP MPMorph flow from a temperature and number of steps.
+        
+        Parameters
+        -----------
+        temperature : float
+            The (starting) temperature
+        n_steps_convergence : int
+            The number of steps used in MD runs for equilibrating structures.
+        n_steps_production : int
+            The number of steps used in MD production runs.
+        end_temp : float or None
+            If a float, the final temperature. If None (default), set to `temperature`.
+        base_md_maker : Maker
+            The Maker used to start MD runs.
+        """
 
-        if end_temp is None:
-            end_temp = temperature
+        end_temp = end_temp or temperature
 
-        base_md_maker = update_user_incar_settings(
-            flow=BaseMPMorphMDMaker(name="Convergence MPMorph VASP MD Maker"),
+        conv_md_maker = update_user_incar_settings(
+            flow=md_maker,
             incar_updates={
                 "TEBEG": temperature,
                 "TEEND": end_temp,
                 "NSW": n_steps_convergence,
             },
         )
+        conv_md_maker.name="Convergence MPMorph VASP MD Maker"
 
         updated_convergence_md_maker = EquilibriumVolumeMaker(
-            name="MP Morph VASP Equilibrium Volume Maker", md_maker=base_md_maker
+            name="MP Morph VASP Equilibrium Volume Maker", md_maker=conv_md_maker
         )
 
         updated_production_md_maker = update_user_incar_settings(
-            flow=base_md_maker,
+            flow=md_maker,
             incar_updates={
                 "TEBEG": temperature,
                 "TEEND": end_temp,
                 "NSW": n_steps_production,
             },
         )
+        updated_production_md_maker.name = "Production MPMorph VASP MD Maker"
 
         return cls(
             name="MP Morph VASP MD Maker",
