@@ -32,46 +32,46 @@ def check_file_exists(func):
 
 @check_file_exists
 def read_file(file_name: str) -> list[str]:
-        '''
-        Read file into a list of str
+    '''
+    Read file into a list of str
 
-        Parameters
-        ----------
-        filename: Path or str
-            name of file to read
+    Parameters
+    ----------
+    filename: Path or str
+        name of file to read
 
-        Returns
-        -------
-        text: list[str]
-            list of strings from file
-        '''
-        with open(file_name, 'r') as f:
-            text = f.readlines()
-        return text
+    Returns
+    -------
+    text: list[str]
+        list of strings from file
+    '''
+    with open(file_name, 'r') as f:
+        text = f.readlines()
+    return text
 
 
 @check_file_exists
 def read_outfile(file_name: str, out_slice_idx: int = -1) -> list[str]:
-        '''
-        Read slice of out file into a list of str
+    '''
+    Read slice of out file into a list of str
 
-        Parameters
-        ----------
-        filename: Path or str
-            name of file to read
-        out_slice_idx: int
-            index of slice to read from file
+    Parameters
+    ----------
+    filename: Path or str
+        name of file to read
+    out_slice_idx: int
+        index of slice to read from file
 
-        Returns
-        -------
-        text: list[str]
-            list of strings from file
-        '''
-        with open(file_name, 'r') as f:
-            _text = f.readlines()
-        start_lines = get_start_lines(text, add_end=True)
-        text = _text[start_lines[out_slice_idx]:start_lines[out_slice_idx+1]]
-        return text
+    Returns
+    -------
+    text: list[str]
+        list of strings from file
+    '''
+    with open(file_name, 'r') as f:
+        _text = f.readlines()
+    start_lines = get_start_lines(text, add_end=True)
+    text = _text[start_lines[out_slice_idx]:start_lines[out_slice_idx+1]]
+    return text
 
 
 def find_key(key_input, tempfile):
