@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
+from atomate2 import SETTINGS
 from atomate2.common.jobs.phonons import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
@@ -127,7 +128,7 @@ class BasePhononMaker(Maker, ABC):
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = 1e-4
+    symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
@@ -157,8 +158,7 @@ class BasePhononMaker(Maker, ABC):
         total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
     ) -> Flow:
-        """
-        Make flow to calculate the phonon properties.
+        """Make flow to calculate the phonon properties.
 
         Parameters
         ----------

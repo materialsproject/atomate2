@@ -21,7 +21,8 @@ from atomate2.vasp.sets.mp import (
     ],
 )
 def test_mp_sets(set_generator: VaspInputGenerator) -> None:
-    mp_set: VaspInputGenerator = set_generator()
+    with pytest.warns(FutureWarning):
+        mp_set: VaspInputGenerator = set_generator()
     assert {*mp_set.as_dict()} >= {
         "@class",
         "@module",
@@ -36,7 +37,7 @@ def test_mp_sets(set_generator: VaspInputGenerator) -> None:
         "force_gamma",
         "inherit_incar",
         "sort_structure",
-        "symprec",
+        "sym_prec",
         "use_structure_charge",
         "user_incar_settings",
         "user_kpoints_settings",
@@ -52,12 +53,12 @@ def test_mp_sets(set_generator: VaspInputGenerator) -> None:
     )
     assert mp_set.inherit_incar is False
     assert mp_set.auto_ismear is False
-    assert mp_set.auto_kspacing is True
-    assert mp_set.force_gamma is True
+    assert mp_set.auto_kspacing is ("Meta" in set_generator.__name__)
     assert mp_set.auto_lreal is False
-    assert mp_set.auto_metal_kpoints is True
+    assert mp_set.auto_metal_kpoints is ("Meta" not in set_generator.__name__)
+    assert mp_set.force_gamma is ("Meta" not in set_generator.__name__)
     assert mp_set.sort_structure is True
-    assert mp_set.symprec == 0.1
+    assert mp_set.sym_prec == 0.1
     assert mp_set.use_structure_charge is False
     assert mp_set.vdw is None
     bandgap_tol = getattr(mp_set, "bandgap_tol", None)

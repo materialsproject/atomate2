@@ -53,8 +53,7 @@ class QChemDrone(AbstractDrone):
         return doc
 
     def get_valid_paths(self, path: tuple[str, list[str], list[str]]) -> list[str]:
-        """
-        Get valid paths to assimilate.
+        """Get valid paths to assimilate.
 
         Parameters
         ----------

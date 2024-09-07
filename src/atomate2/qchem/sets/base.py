@@ -15,8 +15,6 @@ from pymatgen.io.qchem.utils import lower_and_check_unique
 if TYPE_CHECKING:
     from pymatgen.core.structure import Molecule
 
-# from pymatgen.io.qchem.sets import QChemDictSet
-
 __author__ = "Alex Ganose, Ryan Kingsbury, Rishabh D Guha"
 __copyright__ = "Copyright 2018-2022, The Materials Project"
 __version__ = "0.1"
@@ -52,8 +50,7 @@ class QCInputSet(InputSet):
         directory: str | Path,
         overwrite: bool = True,
     ) -> None:
-        """
-        Write QChem input file to directory.
+        """Write QChem input file to directory.
 
         Parameters
         ----------
@@ -62,25 +59,24 @@ class QCInputSet(InputSet):
         overwrite
             Whether to overwrite an input file if it already exists.
         """
-        directory = Path(directory)
         os.makedirs(directory, exist_ok=True)
+        directory = Path(directory)
 
         inputs = {"Input_Dict": self.qcinput}
         inputs.update(self.optional_files)
 
-        for k, v in inputs.items():
-            if v is not None and (overwrite or not (directory / k).exists()):
-                with zopen(directory / k, "wt") as f:
-                    f.write(str(v))
-            elif not overwrite and (directory / k).exists():
-                raise FileExistsError(f"{directory / k} already exists.")
+        for key, val in inputs.items():
+            if val is not None and (overwrite or not (directory / key).exists()):
+                with zopen(directory / key, "wt") as file:
+                    file.write(str(val))
+            elif not overwrite and (directory / key).exists():
+                raise FileExistsError(f"{directory / key} already exists.")
 
     @staticmethod
     def from_directory(
         directory: str | Path, optional_files: dict = None
     ) -> QCInputSet:
-        """
-        Load a set of QChem inputs from a directory.
+        """Load a set of QChem inputs from a directory.
 
         Parameters
         ----------
@@ -343,8 +339,7 @@ class QCInputGenerator(InputGenerator):
             )
 
     def get_input_set(self, molecule: Molecule = None) -> QCInputSet:
-        """
-        Return a QChem InputSet for a molecule.
+        """Get a QChem InputSet for a molecule.
 
         Parameters
         ----------

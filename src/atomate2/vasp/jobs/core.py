@@ -18,8 +18,10 @@ from atomate2.vasp.sets.core import (
     HSETightRelaxSetGenerator,
     MVLGWSetGenerator,
     NonSCFSetGenerator,
+    RelaxConstVolSetGenerator,
     RelaxSetGenerator,
     StaticSetGenerator,
+    TightRelaxConstVolSetGenerator,
     TightRelaxSetGenerator,
 )
 
@@ -101,6 +103,40 @@ class RelaxMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(default_factory=RelaxSetGenerator)
 
 
+class RelaxConstVolMaker(BaseVaspMaker):
+    """
+    Maker to create VASP constant volume relaxation jobs.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
+
+    name: str = "relax"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=RelaxConstVolSetGenerator
+    )
+
+
 @dataclass
 class TightRelaxMaker(BaseVaspMaker):
     """
@@ -133,6 +169,76 @@ class TightRelaxMaker(BaseVaspMaker):
     name: str = "tight relax"
     input_set_generator: VaspInputGenerator = field(
         default_factory=TightRelaxSetGenerator
+    )
+
+
+@dataclass
+class TightRelaxConstVolMaker(BaseVaspMaker):
+    """
+    Maker to create tight constant volume VASP relaxation jobs.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
+
+    name: str = "tight relax"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=TightRelaxConstVolSetGenerator
+    )
+
+
+@dataclass
+class TightConstVolRelaxMaker(BaseVaspMaker):
+    """
+    Maker to create tight VASP relaxation jobs.
+
+    Parameters
+    ----------
+    name : str
+        The job name.
+    input_set_generator : .VaspInputGenerator
+        A generator used to make the input set.
+    write_input_set_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.write_vasp_input_set`.
+    copy_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.copy_vasp_outputs`.
+    run_vasp_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.run_vasp`.
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_children_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.should_stop_children`.
+    write_additional_data : dict
+        Additional data to write to the current directory. Given as a dict of
+        {filename: data}. Note that if using FireWorks, dictionary keys cannot contain
+        the "." character which is typically used to denote file extensions. To avoid
+        this, use the ":" character, which will automatically be converted to ".". E.g.
+        ``{"my_file:txt": "contents of the file"}``.
+    """
+
+    name: str = "tight relax"
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=TightRelaxConstVolSetGenerator
     )
 
 
@@ -175,8 +281,7 @@ class NonSCFMaker(BaseVaspMaker):
         prev_dir: str | Path | None,
         mode: str = "uniform",
     ) -> Response:
-        """
-        Run a non-scf VASP job.
+        """Run a non-scf VASP job.
 
         Parameters
         ----------
@@ -349,8 +454,7 @@ class HSEBSMaker(BaseVaspMaker):
         prev_dir: str | Path | None = None,
         mode: Literal["line", "uniform", "gap"] = "uniform",
     ) -> Response:
-        """
-        Run a HSE06 band structure VASP job.
+        """Run an HSE06 band structure VASP job.
 
         Parameters
         ----------
@@ -646,8 +750,7 @@ class TransmuterMaker(BaseVaspMaker):
         structure: Structure,
         prev_dir: str | Path | None = None,
     ) -> Response:
-        """
-        Run a transmuter VASP job.
+        """Run a transmuter VASP job.
 
         Parameters
         ----------

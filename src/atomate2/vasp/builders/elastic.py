@@ -63,7 +63,7 @@ class ElasticBuilder(Builder):
     ) -> None:
         self.tasks = tasks
         self.elasticity = elasticity
-        self.query = query if query else {}
+        self.query = query or {}
         self.kwargs = kwargs
         self.symprec = symprec
         self.fitting_method = fitting_method
@@ -79,8 +79,7 @@ class ElasticBuilder(Builder):
         self.elasticity.ensure_index("last_updated")
 
     def get_items(self) -> Generator:
-        """
-        Get all items to process into elastic documents.
+        """Get all items to process into elastic documents.
 
         Yields
         ------
@@ -92,16 +91,12 @@ class ElasticBuilder(Builder):
         self.logger.debug("Adding indices")
         self.ensure_indexes()
 
-        q = dict(self.query)
-
         # query for deformations
-        q.update(
-            {
-                "output.transformations.history.0.@class": "DeformationTransformation",
-                "output.orig_inputs.NSW": {"$gt": 1},
-                "output.orig_inputs.ISIF": {"$gt": 2},
-            }
-        )
+        qry = dict(self.query) | {
+            "output.transformations.history.0.@class": "DeformationTransformation",
+            "output.orig_inputs.NSW": {"$gt": 1},
+            "output.orig_inputs.ISIF": {"$gt": 2},
+        }
         return_props = [
             "uuid",
             "output.transformations",
@@ -111,16 +106,15 @@ class ElasticBuilder(Builder):
         ]
 
         self.logger.info("Starting aggregation")
-        nformulas = len(self.tasks.distinct("output.formula_pretty", criteria=q))
+        n_formulas = len(self.tasks.distinct("output.formula_pretty", criteria=qry))
         results = self.tasks.groupby(
-            "output.formula_pretty", criteria=q, properties=return_props
+            "output.formula_pretty", criteria=qry, properties=return_props
         )
         self.logger.info("Aggregation complete")
 
-        for n, (keys, docs) in enumerate(results):
-            self.logger.debug(
-                f"Getting {keys['output']['formula_pretty']} ({n + 1} of {nformulas})"
-            )
+        for idx, (keys, docs) in enumerate(results):
+            formula = keys["output"]["formula_pretty"]
+            self.logger.debug(f"Getting {formula} ({idx + 1} of {n_formulas})")
             yield docs
 
     def process_item(self, tasks: list[dict]) -> list[ElasticDocument]:
@@ -149,9 +143,9 @@ class ElasticBuilder(Builder):
         grouped = _group_deformations(tasks, self.structure_match_tol)
 
         elastic_docs = []
-        for tasks in grouped:
+        for group in grouped:
             elastic_doc = _get_elastic_document(
-                tasks, self.symprec, self.fitting_method
+                group, self.symprec, self.fitting_method
             )
             elastic_docs.append(elastic_doc)
 
