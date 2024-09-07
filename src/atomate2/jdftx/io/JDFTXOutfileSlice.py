@@ -253,21 +253,100 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     trajectory_ecomponents: list[dict] = None
     is_converged: bool = None #TODO implement this
 
-    # def _get_start_lines(self, text:str, start_key: Optional[str]="*************** JDFTx", add_end: Optional[bool]=False) -> list[int]:
-    #     '''
-    #     Get the line numbers corresponding to the beginning of seperate JDFTx calculations
-    #     (in case of multiple calculations appending the same out file)
 
-    #     Args:
-    #         text: output of read_file for out file
-    #     '''
-    #     start_lines = []
-    #     for i, line in enumerate(text):
-    #         if start_key in line:
-    #             start_lines.append(i)
-    #     if add_end:
-    #         start_lines.append(i)
-    #     return start_lines
+    @property
+    def trajectory(self):
+        '''
+        Returns a pymatgen trajectory object
+        '''
+        constant_lattice = self.jsettings_lattice.nIterations == 0
+        traj = Trajectory.from_structures(
+            structures=self.jstrucs,
+            constant_lattice=constant_lattice
+        )
+        return traj
+        # structures = []
+        # for coords, lattice 
+        # traj = Trajectory.from_structures
+
+    
+    @property
+    def electronic_output(self) -> dict:
+        '''
+        Return a dictionary with all relevant electronic information.
+        Returns values corresponding to these keys in _electronic_output
+        field.
+        '''
+        dct = {}
+        for field in self.__dataclass_fields__:
+            if field in self._electronic_output:
+                value = getattr(self, field)
+                dct[field] = value
+        return dct
+    
+    
+    @property
+    def structure(self):
+        structure = self.jstrucs[-1]
+        return structure
+        # latt = self.lattice
+        # coords = self.atom_coords_final
+        # elements = self.atom_elements
+        # structure = Structure(
+        #     lattice=latt,
+        #     species=elements,
+        #     coords=coords
+        # )
+        # return structure
+    
+    
+    @classmethod
+    def from_out_slice(cls, text: list[str]):
+        '''
+        Read slice of out file into a JDFTXOutfileSlice instance
+
+        Parameters:
+        ----------
+        text: list[str]
+            file to read
+        '''
+        instance = cls()
+
+        instance._set_min_settings(text)
+        instance._set_geomopt_vars(text)
+        instance.prefix = cls._get_prefix(text)
+        spintype, Nspin = cls._get_spinvars(text)
+        instance.spintype = spintype
+        instance.Nspin = Nspin
+        broadening_type, broadening = cls._get_broadeningvars(text)
+        instance.broadening_type = broadening_type
+        instance.broadening = broadening
+        instance.kgrid = cls._get_kgrid(text)
+        truncation_type, truncation_radius = cls._get_truncationvars(text)
+        instance.truncation_type = truncation_type
+        instance.truncation_radius = truncation_radius
+        instance.pwcut = cls._get_elec_cutoff(text)
+        instance.fftgrid = cls._get_fftgrid(text)
+        instance._set_eigvars(text)
+        instance._set_orb_fillings()
+        instance.is_metal = instance._determine_is_metal()
+        instance._set_fluid(text)
+        instance._set_total_electrons(text)
+        instance._set_Nbands()
+        instance._set_atom_vars(text)
+        instance._set_pseudo_vars(text)
+        instance._set_lattice_vars(text)
+        instance.has_solvation = instance.check_solvation()
+
+        instance._set_jstrucs(text)
+
+        #@ Cooper added @#
+        instance.is_gc = key_exists('target-mu', text)
+        instance._set_ecomponents(text)
+        # instance._build_trajectory(templines)
+
+        return instance
+    
 
     def _get_prefix(text: list[str]) -> str:
         '''
@@ -359,6 +438,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
                 truncation_radius = float(text[line].split()[5]) / ang_to_bohr
         return truncation_type, truncation_radius
     
+    
     def _get_elec_cutoff(text:list[str]) -> float:
         '''
         Get the electron cutoff from the out file text
@@ -371,6 +451,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         line = find_key('elec-cutoff ', text)
         pwcut = float(text[line].split()[1]) * Ha_to_eV
         return pwcut
+    
 
     def _get_fftgrid(text:list[str]) -> list[int]:
         '''
@@ -384,6 +465,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         line = find_key('Chosen fftbox size', text)
         fftgrid = [int(x) for x in text[line].split()[6:9]]
         return fftgrid
+    
 
     def _get_kgrid(text:list[str]) -> list[int]:
         '''
@@ -397,6 +479,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         line = find_key('kpoint-folding ', text)
         kgrid = [int(x) for x in text[line].split()[1:4]]
         return kgrid
+    
     
     def _get_eigstats_varsdict(self, text:list[str], prefix:str | None) -> dict[str, float]:
         '''
@@ -428,6 +511,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         varsdict["Emax"] = float(text[line+5].split()[1]) * Ha_to_eV
         varsdict["Egap"] = float(text[line+6].split()[2]) * Ha_to_eV
         return varsdict
+    
     
     def _set_eigvars(self, text:list[str]) -> None:
         '''
@@ -495,6 +579,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         elif self.pp_type == "GBRV":
             self._set_pseudo_vars_GBRV(text)
     
+    
     def _set_pseudo_vars_SG15(self, text:list[str]) -> None:
         '''
         Set the pseudopotential variables for SG15 pseudopotentials
@@ -560,6 +645,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             elif len(lines):
                 break
         return lines
+    
 
     def _create_settings_dict(self, text:list[str], start_key:str) -> dict:
         '''
@@ -585,6 +671,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             value = line_text_list[1]
             settings_dict[key] = value
         return settings_dict
+    
     
     def _get_settings_object(self, text:list[str], settings_class: JMinSettings) -> JMinSettings:
         '''
@@ -623,6 +710,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.jsettings_electronic = self._get_settings_object(text, JMinSettingsElectronic)
         self.jsettings_lattice = self._get_settings_object(text, JMinSettingsLattice)
         self.jsettings_ionic = self._get_settings_object(text, JMinSettingsIonic)
+    
 
     def _set_geomopt_vars(self, text:list[str]) -> None:
         ''' 
@@ -704,6 +792,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         else:
             idx = 1  #nElectrons was not printed in scf iterations then
         self.total_electrons = float(text[lines[-1]].split()[idx])
+    
 
     def _set_Nbands(self, text: list[str]) -> None:
         '''
@@ -718,6 +807,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         line = lines[0]
         nbands = int(text[line].strip().split()[-1].strip())
         self.Nbands = nbands
+    
 
     def _set_atom_vars(self, text: list[str]) -> None:
         '''
@@ -746,6 +836,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         coords = np.array([text[i].split()[2:5] for i in range(line, line + self.Nat)], dtype = float)
         self.atom_coords_final = coords
         self.atom_coords = self.atom_coords_final.copy()
+    
 
     def _set_lattice_vars(self, text: list[str]) -> None:
         '''
@@ -784,85 +875,6 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.Ecomponents = self._read_ecomponents(line, text)
 
 
-
-
-
-
-
-
-    
-    
-
-    @classmethod
-    def from_out_slice(cls, text: list[str]):
-        '''
-        Read slice of out file into a JDFTXOutfileSlice instance
-
-        Parameters:
-        ----------
-        text: list[str]
-            file to read
-        '''
-        instance = cls()
-
-        instance._set_min_settings(text)
-        instance._set_geomopt_vars(text)
-        instance.prefix = cls._get_prefix(text)
-        spintype, Nspin = cls._get_spinvars(text)
-        instance.spintype = spintype
-        instance.Nspin = Nspin
-        broadening_type, broadening = cls._get_broadeningvars(text)
-        instance.broadening_type = broadening_type
-        instance.broadening = broadening
-        instance.kgrid = cls._get_kgrid(text)
-        truncation_type, truncation_radius = cls._get_truncationvars(text)
-        instance.truncation_type = truncation_type
-        instance.truncation_radius = truncation_radius
-        instance.pwcut = cls._get_elec_cutoff(text)
-        instance.fftgrid = cls._get_fftgrid(text)
-
-        # Are these needed for DFT calcs?
-        # Ben: idk
-        # line = find_key('kpoint-reduce-inversion', text)
-        # if line == len(text):
-        #     raise ValueError('kpoint-reduce-inversion must = no in single point DFT runs so kgrid without time-reversal symmetry is used (BGW requirement)')
-        # if text[line].split()[1] != 'no':
-        #     raise ValueError('kpoint-reduce-inversion must = no in single point DFT runs so kgrid without time-reversal symmetry is used (BGW requirement)')
-
-        instance._set_eigvars(text)
-        instance._set_orb_fillings()
-        instance.is_metal = instance._determine_is_metal()
-        instance._set_fluid(text)
-        instance._set_total_electrons(text)
-        instance._set_Nbands()
-        instance._set_atom_vars(text)
-        instance._set_pseudo_vars(text)
-        instance._set_lattice_vars(text)
-        instance.has_solvation = instance.check_solvation()
-
-        instance._set_jstrucs(text)
-
-        #@ Cooper added @#
-        instance.is_gc = key_exists('target-mu', text)
-        instance._set_ecomponents(text)
-        # instance._build_trajectory(templines)
-
-        return instance
-    
-    @property
-    def structure(self):
-        latt = self.lattice
-        coords = self.atom_coords_final
-        elements = self.atom_elements
-        structure = Structure(
-            lattice=latt,
-            species=elements,
-            coords=coords
-        )
-        return structure
-
-    
-
     def calculate_filling(broadening_type, broadening, eig, EFermi):
         #most broadening implementations do not have the denominator factor of 2, but JDFTx does currently
         #   remove if use this for other code outfile reading
@@ -895,6 +907,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         if self.HOMO_filling / (2 / self.Nspin) > (1 - TOL_PARTIAL) and self.LUMO_filling / (2 / self.Nspin) < TOL_PARTIAL:
             is_metal = False
         return is_metal
+    
 
     def check_solvation(self) -> bool:
         '''
@@ -907,10 +920,12 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         '''
         has_solvation = self.fluid is not None
         return has_solvation
+    
 
     def write():
         #don't need a write method since will never do that
         return NotImplementedError('There is no need to write a JDFTx out file')
+    
 
     def _build_trajectory(self, text):
         '''
@@ -931,7 +946,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         ion_lines = find_first_range_key('# Ionic positions in', text)
         force_lines = find_first_range_key('# Forces in', text)
         ecomp_lines = find_first_range_key('# Energy components:', text)
-        print(ion_lines, force_lines, ecomp_lines)
+        # print(ion_lines, force_lines, ecomp_lines)
         for iline, ion_line, force_line, ecomp_line in enumerate(zip(ion_lines, force_lines, ecomp_lines)):
             coords = np.array([text[i].split()[2:5] for i in range(ion_line + 1, ion_line + self.Nat + 1)], dtype = float)
             forces = np.array([text[i].split()[2:5] for i in range(force_line + 1, force_line + self.Nat + 1)], dtype = float)
@@ -951,16 +966,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.trajectory_lattice = trajectory_lattice
         self.trajectory_forces = trajectory_forces
         self.trajectory_ecomponents = trajectory_ecomponents
-        
-
-    @property
-    def trajectory(self):
-        '''
-        Returns a pymatgen trajectory object
-        '''
-        # structures = []
-        # for coords, lattice 
-        # traj = Trajectory.from_structures
+    
 
     def _read_ecomponents(self, line:int, text:str) -> dict:
         '''
@@ -992,20 +998,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             Ecomponents.update({E_type:Energy})
             if E_type == final_E_type:
                 return Ecomponents
+        
+
     
-    @property
-    def electronic_output(self) -> dict:
-        '''
-        Return a dictionary with all relevant electronic information.
-        Returns values corresponding to these keys in _electronic_output
-        field.
-        '''
-        dct = {}
-        for field in self.__dataclass_fields__:
-            if field in self._electronic_output:
-                value = getattr(self, field)
-                dct[field] = value
-        return dct
 
     def to_dict(self) -> dict:
         # convert dataclass to dictionary representation
