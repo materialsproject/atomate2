@@ -764,7 +764,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             output of read_file for out file
         '''
         line = find_key("# Energy components:", text)
-        self.Ecomponents = self.read_ecomponents(line, text)
+        self.Ecomponents = self._read_ecomponents(line, text)
 
 
 
@@ -862,15 +862,34 @@ class JDFTXOutfile(ClassPrintFormatter):
             raise NotImplementedError('Have not added other broadening types')
 
         return filling
+    
 
-    def _determine_is_metal(self):
+    def _determine_is_metal(self) -> bool:
+        '''
+        Determine if the system is a metal based on the fillings of HOMO and LUMO
+
+        Returns
+        --------
+        is_metal: bool
+            True if system is metallic
+        '''
         TOL_PARTIAL = 0.01
+        is_metal = True
         if self.HOMO_filling / (2 / self.Nspin) > (1 - TOL_PARTIAL) and self.LUMO_filling / (2 / self.Nspin) < TOL_PARTIAL:
-            return False
-        return True
+            is_metal = False
+        return is_metal
 
-    def check_solvation(self):
-        return self.fluid is not None
+    def check_solvation(self) -> bool:
+        '''
+        Check if calculation used implicit solvation
+        
+        Returns
+        --------
+        has_solvation: bool
+            True if calculation used implicit solvation
+        '''
+        has_solvation = self.fluid is not None
+        return has_solvation
 
     def write():
         #don't need a write method since will never do that
@@ -899,7 +918,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         for iline, ion_line, force_line, ecomp_line in enumerate(zip(ion_lines, force_lines, ecomp_lines)):
             coords = np.array([text[i].split()[2:5] for i in range(ion_line + 1, ion_line + self.Nat + 1)], dtype = float)
             forces = np.array([text[i].split()[2:5] for i in range(force_line + 1, force_line + self.Nat + 1)], dtype = float)
-            ecomp = self.read_ecomponents(ecomp_line, text)
+            ecomp = self._read_ecomponents(ecomp_line, text)
             lattice_lines = find_first_range_key('# Lattice vectors:', text, startline=ion_line, endline=ion_lines[iline-1])
             if len(lattice_lines) == 0: # if no lattice lines found, append last lattice
                 trajectory_lattice.append(trajectory_lattice[-1])
@@ -915,9 +934,6 @@ class JDFTXOutfile(ClassPrintFormatter):
         self.trajectory_lattice = trajectory_lattice
         self.trajectory_forces = trajectory_forces
         self.trajectory_ecomponents = trajectory_ecomponents
-
-    def _build_lattice2(self, text: list[str]) -> None:
-        atoms_list = get_atoms_list_from_out(text)
         
 
     @property
@@ -929,7 +945,22 @@ class JDFTXOutfile(ClassPrintFormatter):
         # for coords, lattice 
         # traj = Trajectory.from_structures
 
-    def read_ecomponents(self, line:int, text:str) -> dict:
+    def _read_ecomponents(self, line:int, text:str) -> dict:
+        '''
+        Read the energy components from the out file text
+        
+        Parameters
+        ----------
+        line: int
+            line number where energy components are found
+        text: list[str]
+            output of read_file for out file
+        
+        Returns
+        -------
+        Ecomponents: dict
+            dictionary of energy components
+        '''
         Ecomponents = {}
         if self.is_gc == True:
             final_E_type = "G"
