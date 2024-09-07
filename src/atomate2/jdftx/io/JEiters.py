@@ -94,5 +94,13 @@ class JEiters(list):
 
 
     def read_converged_line(self, line_text: str) -> None:
+        '''
+        Reads the convergence message from a JDFTx optimization step
+        
+        Parameters:
+        ----------
+        line_text: str
+            A line of text from a JDFTx out file containing a message about convergence for a JDFTx optimization step
+        '''
         self.converged = True
         self.converged_reason = line_text.split("(")[1].split(")")[0].strip()

@@ -9,7 +9,7 @@ import numpy as np
 @dataclass
 class JStructure(Structure):
     '''
-    A mutant of the ase Structure class for flexiblity in holding JDFTx optimization data
+    A mutant of the pymatgen Structure class for flexiblity in holding JDFTx optimization data
     '''
     iter_type: str = None
     etype: str = None
@@ -514,8 +514,15 @@ class JStructure(Structure):
         '''
         Returns True if the line_text is the start of a log message for a JDFTx optimization step
         
-        Args:
-            line_text (str): A line of text from a JDFTx out file
+        Parameters:
+        ----------
+        line_text: str
+            A line of text from a JDFTx out file
+
+        Returns:
+        -------
+        is_line: bool
+            True if the line_text is the start of a log message for a JDFTx optimization step
         '''
         is_line = f"{self.iter_type}:" in line_text and f"Iter:" in line_text
         return is_line
@@ -524,8 +531,15 @@ class JStructure(Structure):
         '''
         Returns True if the line_text is the end of a JDFTx optimization step
         
-        Args:
-            line_text (str): A line of text from a JDFTx out file
+        Parameters:
+        ----------
+        line_text: str
+            A line of text from a JDFTx out file
+
+        Returns:
+        -------
+        is_line: bool
+            True if the line_text is the end of a JDFTx optimization step
         '''
         is_line = f"{self.iter_type}: Converged" in line_text
     
@@ -534,9 +548,10 @@ class JStructure(Structure):
         '''
         Parses the lines of text corresponding to the optimization step of a JDFTx out file
 
-        Args:
-            opt_lines (list[str]): A list of lines of text from a JDFTx out file
-        
+        Parameters:
+        ----------
+        opt_lines: list[str]
+            A list of lines of text from a JDFTx out file
         '''
         if len(opt_lines):
             for line in opt_lines:
@@ -566,9 +581,17 @@ class JStructure(Structure):
         Returns True if the line_text is the start of a section of the JDFTx out file
         corresponding to the line_type
 
-        Args:
-            line_text (str): A line of text from a JDFTx out file
-            line_type (str): The type of line to check for
+        Parameters:
+        ----------
+        line_text: str
+            A line of text from a JDFTx out file
+        line_type: str
+            The type of line to check for
+
+        Returns:
+        -------
+        is_line: bool
+            True if the line_text is the start of a section of the JDFTx out file
         '''
         if line_type == "lowdin":
             return self.is_lowdin_start_line(line_text)
@@ -597,9 +620,21 @@ class JStructure(Structure):
         Collects a line of text into a list of lines if the line is not empty, and otherwise
         updates the collecting and collected flags
 
-        Args:
-            line_text (str): A line of text from a JDFTx out file
-            generic_lines (list[str]): A list of lines of text of the same type
+        Parameters:
+        ----------
+        line_text: str
+            A line of text from a JDFTx out file
+        generic_lines: list[str]
+            A list of lines of text of the same type
+
+        Returns:
+        -------
+        generic_lines: list[str]
+            A list of lines of text of the same type
+        collecting: bool
+            True if the line_text is not empty
+        collected: bool
+            True if the line_text is empty (end of section)
         '''
         collecting = True
         collected = False
@@ -615,8 +650,10 @@ class JStructure(Structure):
         '''
         Converts a string of the form "[ x y z ]" to a 3x1 numpy array
 
-        Args:
-            line (str): A string of the form "[ x y z ]"
+        Parameters:
+        ----------
+        line: str
+            A string of the form "[ x y z ]"
         '''
         return np.array([float(x) for x in line.split()[1:-1]])
     
@@ -625,9 +662,17 @@ class JStructure(Structure):
         '''
         Converts a list of strings of the form "[ x y z ]" to a 3x3 numpy array
 
-        Args:
-            lines (list[str]): A list of strings of the form "[ x y z ]"
-            i_start (int): The index of the first line in lines
+        Parameters:
+        -----------
+        lines: list[str]
+            A list of strings of the form "[ x y z ]"
+        i_start: int
+            The index of the first line in lines
+
+        Returns:
+        -------
+        out: np.ndarray
+            A 3x3 numpy array
         '''
         out = np.zeros([3,3])
         for i in range(3):
@@ -640,9 +685,12 @@ class JStructure(Structure):
         Reads a float from an elec minimization line assuming value appears as
         "... lkey value ..."
 
-        Args:
-            linetext (str): A line of text from a JDFTx out file
-            lkey (str): A string that appears before the float value in linetext
+        Parameters:
+        ----------
+        linetext: str
+            A line of text from a JDFTx out file
+        lkey: str
+            A string that appears before the float value in linetext
         '''
         colon_var = None
         if lkey in linetext:

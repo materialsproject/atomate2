@@ -97,7 +97,7 @@ class JEiter():
 
         Parameters:
         ----------
-        i (int): int
+        i: int
             The index of the line in the text slice
         line_text: str
             A line of text from a JDFTx out file

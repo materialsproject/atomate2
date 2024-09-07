@@ -25,8 +25,10 @@ class JStructures(list[JStructure]):
         Create a JStructures object from a slice of an out file's text corresponding
         to a single JDFTx call
 
-        Args:
-            out_slice (list[str]): A slice of a JDFTx out file (individual call of JDFTx)
+        Parameters:
+        ----------
+        out_slice: list[str]
+            A slice of a JDFTx out file (individual call of JDFTx)
         '''
         super().__init__([])
         instance = cls()
@@ -46,8 +48,10 @@ class JStructures(list[JStructure]):
         Corrects the iter_type to a recognizable string if it is not recognized
         (None may correspond to a single-point calculation)
 
-        Args:
-            iter_type (str): The iter_type to be corrected
+        Parameters:
+        ----------
+        iter_type: str
+            The iter_type to be corrected
         '''
         if "lattice" in iter_type.lower():
             iter_type = "LatticeMinimize"
@@ -62,21 +66,35 @@ class JStructures(list[JStructure]):
         '''
         Returns the index of the first line of the first structure in the out_slice
 
-        Args:
-            out_slice (list[str]): A slice of a JDFTx out file (individual call of JDFTx)
+        Parameters:
+        ----------
+        out_slice: list[str]
+            A slice of a JDFTx out file (individual call of JDFTx)
+
+        Returns:
+        -------
+        i: int
+            The index of the first line of the first structure in the out_slice
         '''
         for i, line in enumerate(out_slice):
             if self.out_slice_start_flag in line:
                 return i
-        return
+        return i
 
 
     def is_lowdin_start_line(self, line_text: str) -> bool:
         '''
         Check if a line in the out file is the start of a Lowdin population analysis
 
-        Args:
-            line_text (str): A line of text from a JDFTx out file
+        Parameters:
+        ----------
+        line_text: str
+            A line of text from a JDFTx out file
+
+        Returns:
+        -------
+        is_line: bool
+            True if the line is the start of a Lowdin population analysis
         '''
         is_line = "#--- Lowdin population analysis ---" in line_text
         return is_line
@@ -86,6 +104,17 @@ class JStructures(list[JStructure]):
         '''
         Returns a list of lists of integers where each sublist contains the start and end
         of an individual optimization step (or SCF cycle if no optimization)
+
+        Parameters:
+        ----------
+        out_slice: list[str]
+            A slice of a JDFTx out file (individual call of JDFTx)
+
+        Returns:
+        -------
+        bounds_list: list[list[int, int]]
+            A list of lists of integers where each sublist contains the start and end
+            of an individual optimization step (or SCF cycle if no optimization)
         '''
         bounds_list = []
         bounds = None
@@ -108,8 +137,10 @@ class JStructures(list[JStructure]):
         '''
         Set relevant variables for the JStructures object by parsing the out_slice
 
-        Args:
-            out_slice (list[str]): A slice of a JDFTx out file (individual call of JDFTx)
+        Parameters:
+        ----------
+        out_slice: list[str]
+            A slice of a JDFTx out file (individual call of JDFTx)
         '''
         out_bounds = self.get_step_bounds(out_slice)
         for bounds in out_bounds:
