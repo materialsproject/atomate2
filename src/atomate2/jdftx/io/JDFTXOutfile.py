@@ -35,8 +35,15 @@ def read_file(file_name: str) -> list[str]:
         '''
         Read file into a list of str
 
-        Args:
-            filename: name of file to read
+        Parameters
+        ----------
+        filename: Path or str
+            name of file to read
+
+        Returns
+        -------
+        text: list[str]
+            list of strings from file
         '''
         with open(file_name, 'r') as f:
             text = f.readlines()
@@ -48,9 +55,17 @@ def read_outfile(file_name: str, out_slice_idx: int = -1) -> list[str]:
         '''
         Read slice of out file into a list of str
 
-        Args:
-            filename: name of file to read
-            out_slice_idx: index of output slice to read
+        Parameters
+        ----------
+        filename: Path or str
+            name of file to read
+        out_slice_idx: int
+            index of slice to read from file
+
+        Returns
+        -------
+        text: list[str]
+            list of strings from file
         '''
         with open(file_name, 'r') as f:
             _text = f.readlines()
@@ -78,8 +93,29 @@ def find_key(key_input, tempfile):
     return line
 
 
-def find_first_range_key(key_input, tempfile, startline=0, endline=-1, skip_pound = False):
-    #finds all lines that exactly begin with key
+def find_first_range_key(key_input: str, tempfile: list[str], startline: int=0, endline: int=-1, skip_pound:bool = False) -> list[int]:
+    '''
+    Find all lines that exactly begin with key_input in a range of lines
+
+    Parameters
+    ----------
+    key_input: str
+        key string to match
+    tempfile: List[str]
+        output from readlines() function in read_file method
+    startline: int
+        line to start searching from
+    endline: int
+        line to stop searching at
+    skip_pound: bool
+        whether to skip lines that begin with a pound sign
+
+    Returns
+    -------
+    L: list[int]
+        list of line numbers where key_input occurs
+    
+    '''
     key_input = str(key_input)
     startlen = len(key_input)
     L = []
@@ -107,6 +143,8 @@ def key_exists(key_input, tempfile):
         return True
 
 def find_all_key(key_input, tempfile, startline = 0):
+    # Ben: I don't think this is deprecated by find_first_range_key, since this function
+    # doesn't require the key to be at the beginning of the line
     #DEPRECATED: NEED TO REMOVE INSTANCES OF THIS FUNCTION AND SWITCH WITH find_first_range_key
     #finds all lines where key occurs in in lines
     L = []     #default
@@ -483,12 +521,17 @@ class JDFTXOutfile(ClassPrintFormatter):
 
     def _set_jstrucs(self, text:list[str]) -> None:
         '''
+        Set the JStructures object from the out file text
+
+        Args:
+            text: output of read_file for out file
         '''
         self.jstrucs = JStructures.from_out_slice(text, iter_type=self.geom_opt_type)
 
 
     def _set_orb_fillings(self) -> None:
         '''
+        Calculate and set HOMO and LUMO fillings
         '''
         if self.broadening_type is not None:
             self.HOMO_filling = (2 / self.Nspin) * self.calculate_filling(self.broadening_type, self.broadening, self.HOMO, self.EFermi)
@@ -506,14 +549,16 @@ class JDFTXOutfile(ClassPrintFormatter):
 
 
     def _set_total_electrons(self, text:str) -> None:
-        line = find_all_key('nElectrons', text)
-        if len(line) > 1:
+        lines = find_all_key('nElectrons', text)
+        if len(lines) > 1:
             idx = 4
         else:
             idx = 1  #nElectrons was not printed in scf iterations then
-        self.total_electrons = float(text[line[-1]].split()[idx])
+        self.total_electrons = float(text[lines[-1]].split()[idx])
 
-    def _set_Nbands(self) -> None:
+    def _set_Nbands(self, text: list[str]) -> None:
+        '''
+        '''
         self.Nbands = int(math.ceil(self.total_electrons))
 
     def _set_atom_vars(self, text: list[str]) -> None:
