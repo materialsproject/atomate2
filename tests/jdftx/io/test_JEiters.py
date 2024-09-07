@@ -1,8 +1,9 @@
+from jdftx.io.JEiter import JEiter
 from pytest import approx
 import pytest
 from pymatgen.util.typing import PathLike
 from pymatgen.core.units import Ha_to_eV
-from atomate2.jdftx.io.JStructure import JEiter, JEiters
+from jdftx.io.JEiters import JEiters
 
 ex_fillings_line1 = "FillingsUpdate:  mu: +0.714406772  nElectrons: 64.000000  magneticMoment: [ Abs: 0.00578  Tot: -0.00141 ]"
 ex_fillings_line1_known = {
