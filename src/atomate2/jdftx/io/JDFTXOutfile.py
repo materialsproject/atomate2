@@ -214,7 +214,7 @@ class JDFTXOutfile(ClassPrintFormatter):
     #         start_lines.append(i)
     #     return start_lines
 
-    def _get_prefix(text: str) -> str:
+    def _get_prefix(text: list[str]) -> str:
         '''
         Get output prefix from the out file
 
@@ -228,7 +228,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             prefix = dumpname.split('.')[0]
         return prefix
     
-    def _get_spinvars(text: str) -> tuple[str, int]:
+    def _get_spinvars(text: list[str]) -> tuple[str, int]:
         '''
         Set spintype and Nspin from out file text for instance
 
@@ -246,7 +246,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             raise NotImplementedError('have not considered this spin yet')
         return spintype, Nspin
     
-    def _get_broadeningvars(text:str) -> tuple[str, float]:
+    def _get_broadeningvars(text:list[str]) -> tuple[str, float]:
         '''
         Get broadening type and value from out file text
 
@@ -262,7 +262,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             broadening = 0
         return broadening_type, broadening
     
-    def _get_truncationvars(text:str) -> tuple[str, float]:
+    def _get_truncationvars(text:list[str]) -> tuple[str, float]:
         '''
         Get truncation type and value from out file text
 
@@ -291,7 +291,7 @@ class JDFTXOutfile(ClassPrintFormatter):
                 truncation_radius = float(text[line].split()[5]) / ang_to_bohr
         return truncation_type, truncation_radius
     
-    def _get_elec_cutoff(text:str) -> float:
+    def _get_elec_cutoff(text:list[str]) -> float:
         '''
         Get the electron cutoff from the out file text
 
@@ -302,7 +302,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         pwcut = float(text[line].split()[1]) * Ha_to_eV
         return pwcut
 
-    def _get_fftgrid(text:str) -> list[int]:
+    def _get_fftgrid(text:list[str]) -> list[int]:
         '''
         Get the FFT grid from the out file text
 
@@ -313,7 +313,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         fftgrid = [int(x) for x in text[line].split()[6:9]]
         return fftgrid
 
-    def _get_kgrid(text:str) -> list[int]:
+    def _get_kgrid(text:list[str]) -> list[int]:
         '''
         Get the kpoint grid from the out file text
 
@@ -324,8 +324,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         kgrid = [int(x) for x in text[line].split()[1:4]]
         return kgrid
     
-    @classmethod
-    def _get_eigstats_varsdict(cls, text:str, prefix:str | None) -> dict[str, float]:
+    def _get_eigstats_varsdict(self, text:list[str], prefix:str | None) -> dict[str, float]:
         varsdict = {}
         _prefix = ""
         if not prefix is None:
@@ -341,7 +340,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         varsdict["Egap"] = float(text[line+6].split()[2]) * Ha_to_eV
         return varsdict
     
-    def _set_eigvars(self, text:str) -> None:
+    def _set_eigvars(self, text:list[str]) -> None:
         eigstats = self._get_eigstats_varsdict(text, self.prefix)
         self.Emin = eigstats["Emin"]
         self.HOMO = eigstats["HOMO"]
@@ -351,7 +350,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         self.Egap = eigstats["Egap"]
     
 
-    def _get_pp_type(self, text:str) -> str:
+    def _get_pp_type(self, text:list[str]) -> str:
         '''
         '''
         skey = "Reading pseudopotential file"
@@ -372,7 +371,8 @@ class JDFTXOutfile(ClassPrintFormatter):
             raise ValueError(f"Could not determine pseudopotential type from file name {ppfile_example}")
         return pptype
     
-    def _set_pseudo_vars(self, text:str) -> None:
+    
+    def _set_pseudo_vars(self, text:list[str]) -> None:
         '''
         '''
         self.pp_type = self._get_pp_type(text)
@@ -381,7 +381,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         elif self.pp_type == "GBRV":
             self._set_pseudo_vars_GBRV(text)
     
-    def _set_pseudo_vars_SG15(self, text:str) -> None:
+    def _set_pseudo_vars_SG15(self, text:list[str]) -> None:
         '''
         '''
         startline = find_key('---------- Setting up pseudopotentials ----------', text)
@@ -400,7 +400,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         self.valence_electrons = self.total_electrons - self.semicore_electrons  #accounts for if system is charged
 
 
-    def _set_pseudo_vars_GBRV(self, text:str) -> None:
+    def _set_pseudo_vars_GBRV(self, text:list[str]) -> None:
         ''' TODO: implement this method
         '''
         self.total_electrons_uncharged = None
@@ -410,7 +410,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         self.valence_electrons = None
 
 
-    def _collect_settings_lines(self, text:str, start_key:str) -> list[int]:
+    def _collect_settings_lines(self, text:list[str], start_key:str) -> list[int]:
         '''
         '''
         started = False
@@ -428,7 +428,7 @@ class JDFTXOutfile(ClassPrintFormatter):
                 break
         return lines
 
-    def _create_settings_dict(self, text:str, start_key:str) -> dict:
+    def _create_settings_dict(self, text:list[str], start_key:str) -> dict:
         '''
         '''
         lines = self._collect_settings_lines(text, start_key)
@@ -440,7 +440,7 @@ class JDFTXOutfile(ClassPrintFormatter):
             settings_dict[key] = value
         return settings_dict
     
-    def _get_settings_object(self, text:str, settings_class: JMinSettings) -> JMinSettings:
+    def _get_settings_object(self, text:list[str], settings_class: JMinSettings) -> JMinSettings:
         settings_dict = self._create_settings_dict(text, settings_class.start_key)
         if len(settings_dict):
             settings_obj = settings_class(**settings_dict)
@@ -449,7 +449,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         return settings_obj
     
 
-    def _set_min_settings(self, text:str) -> None:
+    def _set_min_settings(self, text:list[str]) -> None:
         '''
         '''
         self.jsettings_fluid = self._get_settings_object(text, JMinSettingsFluid)
@@ -457,7 +457,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         self.jsettings_lattice = self._get_settings_object(text, JMinSettingsLattice)
         self.jsettings_ionic = self._get_settings_object(text, JMinSettingsIonic)
 
-    def _set_geomopt_vars(self, text:str) -> None:
+    def _set_geomopt_vars(self, text:list[str]) -> None:
         ''' 
         Set vars geom_opt and geom_opt_type for initializing self.jstrucs
 
@@ -481,10 +481,86 @@ class JDFTXOutfile(ClassPrintFormatter):
                 self.geom_opt_type = "single point"
 
 
-    def _set_jstrucs(self, text:str) -> None:
+    def _set_jstrucs(self, text:list[str]) -> None:
         '''
         '''
         self.jstrucs = JStructures.from_out_slice(text, iter_type=self.geom_opt_type)
+
+
+    def _set_orb_fillings(self) -> None:
+        '''
+        '''
+        if self.broadening_type is not None:
+            self.HOMO_filling = (2 / self.Nspin) * self.calculate_filling(self.broadening_type, self.broadening, self.HOMO, self.EFermi)
+            self.LUMO_filling = (2 / self.Nspin) * self.calculate_filling(self.broadening_type, self.broadening, self.LUMO, self.EFermi)
+        else:
+            self.HOMO_filling = (2 / self.Nspin)
+            self.LUMO_filling = 0
+
+
+    def _set_fluid(self, text: str) -> None: # Is this redundant to the fluid settings?
+        line = find_first_range_key('fluid ', text)
+        self.fluid = text[line[0]].split()[1]
+        if self.fluid == 'None':
+            self.fluid = None
+
+
+    def _set_total_electrons(self, text:str) -> None:
+        line = find_all_key('nElectrons', text)
+        if len(line) > 1:
+            idx = 4
+        else:
+            idx = 1  #nElectrons was not printed in scf iterations then
+        self.total_electrons = float(text[line[-1]].split()[idx])
+
+    def _set_Nbands(self) -> None:
+        self.Nbands = int(math.ceil(self.total_electrons))
+
+    def _set_atom_vars(self, text: list[str]) -> None:
+        startline = find_key('Input parsed successfully', text)
+        endline = find_key('---------- Initializing the Grid ----------', text)
+        lines = find_first_range_key('ion ', text, startline = startline, endline = endline)
+        atom_elements = [text[x].split()[1] for x in lines]
+        self.Nat = len(atom_elements)
+        atom_coords = [text[x].split()[2:5] for x in lines]
+        self.atom_coords_initial = np.array(atom_coords, dtype = float)
+        atom_types = []
+        for x in atom_elements:
+            if not x in atom_types:
+                atom_types.append(x)
+        self.atom_elements = atom_elements
+        mapping_dict = dict(zip(atom_types, range(1, len(atom_types) + 1)))
+        self.atom_elements_int = [mapping_dict[x] for x in self.atom_elements]
+        self.atom_types = atom_types
+        line = find_key('# Ionic positions in', text) + 1
+        coords = np.array([text[i].split()[2:5] for i in range(line, line + self.Nat)], dtype = float)
+        self.atom_coords_final = coords
+        self.atom_coords = self.atom_coords_final.copy()
+
+    def _set_lattice_vars(self, text: list[str]) -> None:
+        lines = find_all_key('R =', text)
+        line = lines[0]
+        lattice_initial = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
+        self.lattice_initial = lattice_initial.copy()
+        templines = find_all_key('LatticeMinimize', text)
+        if len(templines) > 0:
+            line = templines[-1]
+            lattice_final = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
+            self.lattice_final = lattice_final.copy()
+            self.lattice = lattice_final.copy()
+        else:
+            self.lattice = lattice_initial.copy()
+        self.a, self.b, self.c = np.sum(self.lattice**2, axis = 1)**0.5
+
+
+    def _set_ecomponents(self, text: list[str]) -> None:
+        line = find_key("# Energy components:", text)
+        self.Ecomponents = self.read_ecomponents(line, text)
+
+
+
+
+
 
 
 
@@ -505,26 +581,18 @@ class JDFTXOutfile(ClassPrintFormatter):
         text = read_outfile(file_name)
         instance._set_min_settings(text)
         instance._set_geomopt_vars(text)
-
-
         instance.prefix = cls._get_prefix(text)
-
         spintype, Nspin = cls._get_spinvars(text)
         instance.spintype = spintype
         instance.Nspin = Nspin
-
         broadening_type, broadening = cls._get_broadeningvars(text)
         instance.broadening_type = broadening_type
         instance.broadening = broadening
-
         instance.kgrid = cls._get_kgrid(text)
-
         truncation_type, truncation_radius = cls._get_truncationvars(text)
         instance.truncation_type = truncation_type
         instance.truncation_radius = truncation_radius
-
         instance.pwcut = cls._get_elec_cutoff(text)
-
         instance.fftgrid = cls._get_fftgrid(text)
 
         # Are these needed for DFT calcs?
@@ -536,70 +604,21 @@ class JDFTXOutfile(ClassPrintFormatter):
         #     raise ValueError('kpoint-reduce-inversion must = no in single point DFT runs so kgrid without time-reversal symmetry is used (BGW requirement)')
 
         instance._set_eigvars(text)
-        print(f"Egap: {instance.Egap}")
-        if instance.broadening_type is not None:
-            instance.HOMO_filling = (2 / instance.Nspin) * cls.calculate_filling(instance.broadening_type, instance.broadening, instance.HOMO, instance.EFermi)
-            instance.LUMO_filling = (2 / instance.Nspin) * cls.calculate_filling(instance.broadening_type, instance.broadening, instance.LUMO, instance.EFermi)
-        else:
-            instance.HOMO_filling = (2 / instance.Nspin)
-            instance.LUMO_filling = 0
+        instance._set_orb_fillings()
         instance.is_metal = instance._determine_is_metal()
-
-        line = find_first_range_key('fluid ', text)
-        instance.fluid = text[line[0]].split()[1]
-        if instance.fluid == 'None':
-            instance.fluid = None
-
-        line = find_all_key('nElectrons', text)
-        if len(line) > 1:
-            idx = 4
-        else:
-            idx = 1  #nElectrons was not printed in scf iterations then
-        instance.total_electrons = float(text[line[-1]].split()[idx])
-        instance.Nbands = int(math.ceil(instance.total_electrons))
-
-        startline = find_key('Input parsed successfully', text)
-        endline = find_key('---------- Initializing the Grid ----------', text)
-        lines = find_first_range_key('ion ', text, startline = startline, endline = endline)
-        atom_elements = [text[x].split()[1] for x in lines]
-        instance.Nat = len(atom_elements)
-        atom_coords = [text[x].split()[2:5] for x in lines]
-        instance.atom_coords_initial = np.array(atom_coords, dtype = float)
-        atom_types = []
-        for x in atom_elements:
-            if not x in atom_types:
-                atom_types.append(x)
-        instance.atom_elements = atom_elements
-        mapping_dict = dict(zip(atom_types, range(1, len(atom_types) + 1)))
-        instance.atom_elements_int = [mapping_dict[x] for x in instance.atom_elements]
-        instance.atom_types = atom_types
-        line = find_key('# Ionic positions in', text) + 1
-        coords = np.array([text[i].split()[2:5] for i in range(line, line + instance.Nat)], dtype = float)
-        instance.atom_coords_final = coords
-        instance.atom_coords = instance.atom_coords_final.copy()
+        instance._set_fluid(text)
+        instance._set_total_electrons(text)
+        instance._set_Nbands()
+        instance._set_atom_vars(text)
         instance._set_pseudo_vars(text)
-
-        lines = find_all_key('R =', text)
-        line = lines[0]
-        lattice_initial = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
-        instance.lattice_initial = lattice_initial.copy()
-
-        templines = find_all_key('LatticeMinimize', text)
-        if len(templines) > 0:
-            line = templines[-1]
-            lattice_final = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
-            instance.lattice_final = lattice_final.copy()
-            instance.lattice = lattice_final.copy()
-        else:
-            instance.lattice = lattice_initial.copy()
-        instance.a, instance.b, instance.c = np.sum(instance.lattice**2, axis = 1)**0.5
-
+        instance._set_lattice_vars(text)
         instance.has_solvation = instance.check_solvation()
 
+        instance._set_jstrucs(text)
+
         #@ Cooper added @#
-        line = find_key("# Energy components:", text)
         instance.is_gc = key_exists('target-mu', text)
-        instance.Ecomponents = instance.read_ecomponents(line, text)
+        instance._set_ecomponents(text)
         instance._build_trajectory(templines)
 
         return instance
