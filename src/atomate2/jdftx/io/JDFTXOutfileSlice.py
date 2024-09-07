@@ -2,12 +2,12 @@ import os
 from functools import wraps
 import math
 from ase import Atom, Atoms
-from jdftx.io.JMinSettings import JMinSettings, JMinSettingsElectronic, JMinSettingsFluid, JMinSettingsIonic, JMinSettingsLattice
+from atomate2.jdftx.io.JMinSettings import JMinSettings, JMinSettingsElectronic, JMinSettingsFluid, JMinSettingsIonic, JMinSettingsLattice
 import numpy as np
 from dataclasses import dataclass, field
 import scipy.constants as const
 from atomate2.jdftx.io.data import atom_valence_electrons
-from jdftx.io.JStructures import JStructures
+from atomate2.jdftx.io.JStructures import JStructures
 from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from typing import List, Optional

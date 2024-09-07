@@ -1,4 +1,4 @@
-from jdftx.io.JStructure import JStructure
+from atomate2.jdftx.io.JStructure import JStructure
 
 
 from dataclasses import dataclass

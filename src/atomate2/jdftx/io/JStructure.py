@@ -1,4 +1,4 @@
-from jdftx.io.JEiters import JEiters
+from atomate2.jdftx.io.JEiters import JEiters
 from pymatgen.core.units import bohr_to_ang, Ha_to_eV
 from pymatgen.core.structure import Structure, Lattice
 from dataclasses import dataclass
