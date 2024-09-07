@@ -20,12 +20,11 @@ import numpy as np
 from jobflow import Flow, Maker, Response, job
 
 from atomate2.common.jobs.eos import MPMorphPVPostProcess, _apply_strain_to_structure
-from atomate2.forcefields.md import ForceFieldMDMaker
-from atomate2.vasp.jobs.md import MDMaker as VaspMDMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
     from typing import Any
+    from typing_extensions import Self
 
     from jobflow import Job
     from pymatgen.core import Composition, Structure
@@ -252,7 +251,6 @@ class MPMorphMDMaker(Maker):
         Flow
             A flow containing series of molecular dynamics run (and relax+static).
         """
-        self._post_init_update()
         flow_jobs = []
 
         if self.convergence_md_maker is not None:
@@ -283,9 +281,37 @@ class MPMorphMDMaker(Maker):
             name=self.name,
         )
 
-    def _post_init_update(self) -> None:
-        """Update Maker prior to creating flow."""
+    @classmethod
+    def from_temperature_and_nsteps(
+        cls,
+        temperature: float,
+        n_steps_convergence : int = 5000,
+        n_steps_production : int = 10000,
+        end_temp : float | None = None,
+        md_maker : Maker = None,
+    ) -> Self:
+        """
+        Create an MPMorph flow from a temperature and number of steps.
 
+        This is a convenience class constructor. The user need only
+        input the desired temperature and steps for convergence / production
+        MD runs.
+        
+        Parameters
+        -----------
+        temperature : float
+            The (starting) temperature
+        n_steps_convergence : int = 5000
+            The number of steps used in MD runs for equilibrating structures.
+        n_steps_production : int = 10000
+            The number of steps used in MD production runs.
+        end_temp : float or None
+            If a float, the temperature to ramp down to in the production run.
+            If None (default), set to `temperature`.
+        base_md_maker : Maker
+            The Maker used to start MD runs.
+        """
+        return NotImplementedError
 
 @dataclass
 class FastQuenchMaker(Maker):

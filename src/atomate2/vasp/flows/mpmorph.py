@@ -48,7 +48,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class VASPMPMorphMDMaker(MPMorphMDMaker):
+class VaspMPMorphMDMaker(MPMorphMDMaker):
     """Base MPMorph flow for amorphous solid equilibration using VASP.
 
     This flow uses NVT molecular dynamics to:
@@ -89,10 +89,11 @@ class VASPMPMorphMDMaker(MPMorphMDMaker):
     def from_temperature_and_nsteps(
         cls,
         temperature: float,
-        n_steps_convergence : int,
-        n_steps_production : int,
+        n_steps_convergence : int = 5000,
+        n_steps_production : int = 10000,
         end_temp : float | None = None,
         md_maker : Maker = BaseMPMorphMDMaker,
+        n_steps_per_production_run : int | None = None
     ) -> Self:
         """
         Create VASP MPMorph flow from a temperature and number of steps.
@@ -101,14 +102,18 @@ class VASPMPMorphMDMaker(MPMorphMDMaker):
         -----------
         temperature : float
             The (starting) temperature
-        n_steps_convergence : int
+        n_steps_convergence : int = 5000
             The number of steps used in MD runs for equilibrating structures.
-        n_steps_production : int
+        n_steps_production : int = 10000
             The number of steps used in MD production runs.
         end_temp : float or None
-            If a float, the final temperature. If None (default), set to `temperature`.
+            If a float, the temperature to ramp down to in the production run.
+            If None (default), set to `temperature`.
         base_md_maker : Maker
             The Maker used to start MD runs.
+        n_steps_per_production_run : int or None (default)
+            If an int, the number of steps to use per production run,
+            using MultiMDMaker to orchestrate chained production runs.
         """
 
         end_temp = end_temp or temperature
@@ -117,150 +122,47 @@ class VASPMPMorphMDMaker(MPMorphMDMaker):
             flow=md_maker,
             incar_updates={
                 "TEBEG": temperature,
-                "TEEND": end_temp,
+                "TEEND": temperature,
                 "NSW": n_steps_convergence,
             },
         )
         conv_md_maker.name="Convergence MPMorph VASP MD Maker"
 
-        updated_convergence_md_maker = EquilibriumVolumeMaker(
+        convergence_md_maker = EquilibriumVolumeMaker(
             name="MP Morph VASP Equilibrium Volume Maker", md_maker=conv_md_maker
         )
 
-        updated_production_md_maker = update_user_incar_settings(
+        if n_steps_per_production_run is None:
+            n_steps_per_production_run = n_steps_production
+            n_production_runs = 1
+        else:
+            n_production_runs = math.ceil(n_steps_production/n_steps_production)
+        
+        production_md_maker = update_user_incar_settings(
             flow=md_maker,
             incar_updates={
                 "TEBEG": temperature,
                 "TEEND": end_temp,
-                "NSW": n_steps_production,
+                "NSW": n_steps_production
             },
         )
-        updated_production_md_maker.name = "Production MPMorph VASP MD Maker"
+        production_md_maker.name = "Production MPMorph VASP MD Maker"
 
-        return cls(
-            name="MP Morph VASP MD Maker",
-            convergence_md_maker=updated_convergence_md_maker,
-            production_md_maker=updated_production_md_maker,
-        )
-
-
-@dataclass
-class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
-    """Base MPMorph flow for amorphous solid equilibration using VASP.
-
-    This flow uses NVT molecular dynamics to:
-    (1 - optional) Determine the equilibrium volume of an amorphous
-        structure via EOS fit.
-    (2 - optional) Quench the equilibrium volume structure from a higher
-        temperature down to a lower desired "production" temperature.
-    (3) Run a production, longer-time MD run in NVT.
-        The production run can be broken up into smaller steps to
-        ensure the simulation does not hit wall time limits.
-
-    Check atomate2.common.flows.mpmorph for MPMorphMDMaker
-
-    Parameters
-    ----------
-    name : str
-        Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    end_temp : float = 300
-        End temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K.
-        Use only for lowering temperarture for production run
-    md_maker : BaseMPMorphMDMaker
-        MDMaker or MultiMDMaker to generate the molecular dynamics jobs specifically for MPMorph AIMD;
-        inherits from MDMaker (VASP)
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    steps_single_production_run: int | None = 5000
-        Number of steps for a single production run; default 5000 steps.
-        If set and steps_total_production > steps_single_production_run,
-        multiple production runs (MultiMDMaker) will be generated.
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
-    convergence_md_maker : EquilibrateVolumeMaker
-        MDMaker to generate the equilibrium volumer searcher;
-        inherits from EquilibriumVolumeMaker and MDMaker (VASP)
-    quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
-        SlowQuenchMaker - MDMaker that quenches structure from high to low temperature
-        FastQuenchMaker - DoubleRelaxMaker + Static that "quenches" structure at 0K
-    production_md_maker : BaseMPMorphMDMaker
-        MDMaker to generate the production run(s);
-        inherits from MDMaker (VASP) or MultiMDMaker
-    """
-
-    name: str = "MP Morph VASP Skeleton MD Maker"
-    temperature: float = 300
-    end_temp: float = 300
-    steps_convergence: int | None = None
-    steps_single_production_run: int | None = 5000
-    steps_total_production: int = 10000
-
-    md_maker: MDMaker | MultiMDMaker = field(default_factory=BaseMPMorphMDMaker)
-    convergence_md_maker: EquilibriumVolumeMaker | None = None
-    production_md_maker: MDMaker | MultiMDMaker = field(
-        default_factory=BaseMPMorphMDMaker
-    )
-
-    quench_maker: FastQuenchVaspMaker | SlowQuenchVaspMaker | None = None
-
-    def _post_init_update(self) -> None:
-        """Ensure that VASP input sets correctly set temperature."""
-        # TODO: check if this properly updates INCAR for all MD runs
-        if self.steps_convergence is None:
-            # Equilibrium volume search is only at single temperature
-            # (temperature sweep not allowed)
-            self.md_maker = update_user_incar_settings(
-                flow=self.md_maker,
-                incar_updates={
-                    "TEBEG": self.temperature,
-                    "TEEND": self.temperature,
-                },
-            )
-        elif (
-            self.steps_convergence is not None
-        ):  # TODO: make this elif statement more efficient
-            self.md_maker = update_user_incar_settings(
-                flow=self.md_maker,
-                incar_updates={
-                    "TEBEG": self.temperature,
-                    "TEEND": self.end_temp,
-                    "NSW": self.steps_convergence,
-                },
-            )
-        if self.convergence_md_maker is None:
-            self.convergence_md_maker = EquilibriumVolumeMaker(
-                name="MP Morph VASP Equilibrium Volume Maker", md_maker=self.md_maker
-            )
-
-        if self.steps_single_production_run is None:
-            self.steps_single_production_run = self.steps_total_production
-
-        self.production_md_maker = update_user_incar_settings(
-            flow=self.production_md_maker,
-            incar_updates={
-                "TEBEG": self.temperature,
-                "TEEND": self.end_temp,
-                "NSW": self.steps_single_production_run,
-            },
-        )
-
-        if self.steps_total_production > self.steps_single_production_run:
-            n_prod_md_steps = math.ceil(
-                self.steps_total_production / self.steps_single_production_run
-            )
-            self.production_md_maker = Response(
+        if n_production_runs > 1:
+            production_md_maker = Response(
                 replace=MultiMDMaker(
-                    md_makers=[self.production_md_maker for _ in range(n_prod_md_steps)]
+                    md_makers=[production_md_maker for _ in range(n_production_runs)]
                 )
             )
 
+        return cls(
+            name="MP Morph VASP MD Maker",
+            convergence_md_maker=convergence_md_maker,
+            production_md_maker=production_md_maker,
+        )
 
 @dataclass
-class MPMorphVaspMDMaker(BaseMPMorphVaspMDMaker):
+class MPMorphVaspMDMaker(VaspMPMorphMDMaker):
     """VASP MPMorph flow for volume equilibration and single production run.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -307,7 +209,7 @@ class MPMorphVaspMDMaker(BaseMPMorphVaspMDMaker):
 
 
 @dataclass
-class MPMorphVaspMultiMDMaker(BaseMPMorphVaspMDMaker):
+class MPMorphVaspMultiMDMaker(VaspMPMorphMDMaker):
     """VASP MPMorph flow for volume equilibration and multiple production runs.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -365,7 +267,7 @@ class MPMorphVaspMultiMDMaker(BaseMPMorphVaspMDMaker):
 
 
 @dataclass
-class MPMorphVaspMDSlowQuenchMaker(BaseMPMorphVaspMDMaker):
+class MPMorphVaspMDSlowQuenchMaker(VaspMPMorphMDMaker):
     """VASP MPMorph flow plus slow quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -426,7 +328,7 @@ class MPMorphVaspMDSlowQuenchMaker(BaseMPMorphVaspMDMaker):
 
 
 @dataclass
-class MPMorphVaspMDFastQuenchMaker(BaseMPMorphVaspMDMaker):
+class MPMorphVaspMDFastQuenchMaker(VaspMPMorphMDMaker):
     """
     VASP MPMorph flow including multiple production runs and slow quench.
 
