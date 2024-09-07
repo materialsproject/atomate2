@@ -256,8 +256,15 @@ class JDFTXOutfile(ClassPrintFormatter):
         '''
         Get output prefix from the out file
 
-        Args:
-            text: output of read_file for out file
+        Parameters
+        ----------
+            text: list[str]
+                output of read_file for out file
+
+        Returns
+        -------
+            prefix: str
+                prefix of dump files for JDFTx calculation
         '''
         prefix = None
         line = find_key('dump-name', text)
@@ -270,8 +277,10 @@ class JDFTXOutfile(ClassPrintFormatter):
         '''
         Set spintype and Nspin from out file text for instance
 
-        Args:
-            text: output of read_file for out file
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
         '''
         line = find_key('spintype ', text)
         spintype = text[line].split()[1]
@@ -288,8 +297,10 @@ class JDFTXOutfile(ClassPrintFormatter):
         '''
         Get broadening type and value from out file text
 
-        Args:
-            text: output of read_file for out file
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
         '''
         line = find_key('elec-smearing ', text)
         if not line is None:
@@ -304,8 +315,10 @@ class JDFTXOutfile(ClassPrintFormatter):
         '''
         Get truncation type and value from out file text
 
-        Args:
-            text: output of read_file for out file
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
         '''
         maptypes = {'Periodic': None, 'Slab': 'slab', 'Cylindrical': 'wire', 'Wire': 'wire',
                     'Spherical': 'spherical', 'Isolated': 'box'}
@@ -333,8 +346,10 @@ class JDFTXOutfile(ClassPrintFormatter):
         '''
         Get the electron cutoff from the out file text
 
-        Args:
-            text: output of read_file for out file
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
         '''
         line = find_key('elec-cutoff ', text)
         pwcut = float(text[line].split()[1]) * Ha_to_eV
@@ -344,8 +359,10 @@ class JDFTXOutfile(ClassPrintFormatter):
         '''
         Get the FFT grid from the out file text
 
-        Args:
-            text: output of read_file for out file
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
         '''
         line = find_key('Chosen fftbox size', text)
         fftgrid = [int(x) for x in text[line].split()[6:9]]
@@ -355,14 +372,31 @@ class JDFTXOutfile(ClassPrintFormatter):
         '''
         Get the kpoint grid from the out file text
 
-        Args:
-            text: output of read_file for out file
+        Parameters
+        ----------
+            text: list[str]
+                output of read_file for out file
         '''
         line = find_key('kpoint-folding ', text)
         kgrid = [int(x) for x in text[line].split()[1:4]]
         return kgrid
     
     def _get_eigstats_varsdict(self, text:list[str], prefix:str | None) -> dict[str, float]:
+        '''
+        Get the eigenvalue statistics from the out file text
+        
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+        prefix: str
+            prefix for the eigStats section in the out file
+        
+        Returns
+        -------
+        varsdict: dict[str, float]
+            dictionary of eigenvalue statistics
+        '''
         varsdict = {}
         _prefix = ""
         if not prefix is None:
@@ -379,6 +413,14 @@ class JDFTXOutfile(ClassPrintFormatter):
         return varsdict
     
     def _set_eigvars(self, text:list[str]) -> None:
+        '''
+        Set the eigenvalue statistics variables
+        
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+        '''
         eigstats = self._get_eigstats_varsdict(text, self.prefix)
         self.Emin = eigstats["Emin"]
         self.HOMO = eigstats["HOMO"]
@@ -390,6 +432,17 @@ class JDFTXOutfile(ClassPrintFormatter):
 
     def _get_pp_type(self, text:list[str]) -> str:
         '''
+        Get the pseudopotential type used in calculation
+
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+
+        Returns
+        ----------
+        pptype: str
+            Pseudopotential library used
         '''
         skey = "Reading pseudopotential file"
         line = find_key(skey, text)
@@ -412,6 +465,12 @@ class JDFTXOutfile(ClassPrintFormatter):
     
     def _set_pseudo_vars(self, text:list[str]) -> None:
         '''
+        Set the pseudopotential variables   
+
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
         '''
         self.pp_type = self._get_pp_type(text)
         if self.pp_type == "SG15":
@@ -421,6 +480,12 @@ class JDFTXOutfile(ClassPrintFormatter):
     
     def _set_pseudo_vars_SG15(self, text:list[str]) -> None:
         '''
+        Set the pseudopotential variables for SG15 pseudopotentials
+
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
         '''
         startline = find_key('---------- Setting up pseudopotentials ----------', text)
         endline = find_first_range_key('Initialized ', text, startline = startline)[0]
@@ -450,6 +515,19 @@ class JDFTXOutfile(ClassPrintFormatter):
 
     def _collect_settings_lines(self, text:list[str], start_key:str) -> list[int]:
         '''
+        Collect the lines of settings from the out file text
+
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+        start_key: str
+            key to start collecting settings lines
+
+        Returns
+        -------
+        lines: list[int]
+            list of line numbers where settings occur
         '''
         started = False
         lines = []
@@ -468,6 +546,19 @@ class JDFTXOutfile(ClassPrintFormatter):
 
     def _create_settings_dict(self, text:list[str], start_key:str) -> dict:
         '''
+        Create a dictionary of settings from the out file text
+
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+        start_key: str
+            key to start collecting settings lines
+
+        Returns
+        -------
+        settings_dict: dict
+            dictionary of settings
         '''
         lines = self._collect_settings_lines(text, start_key)
         settings_dict = {}
@@ -479,6 +570,21 @@ class JDFTXOutfile(ClassPrintFormatter):
         return settings_dict
     
     def _get_settings_object(self, text:list[str], settings_class: JMinSettings) -> JMinSettings:
+        '''
+        Get the settings object from the out file text
+        
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+        settings_class: JMinSettings
+            settings class to create object from
+            
+        Returns
+        -------
+        settings_obj: JMinSettings
+            settings object
+        '''
         settings_dict = self._create_settings_dict(text, settings_class.start_key)
         if len(settings_dict):
             settings_obj = settings_class(**settings_dict)
@@ -489,6 +595,12 @@ class JDFTXOutfile(ClassPrintFormatter):
 
     def _set_min_settings(self, text:list[str]) -> None:
         '''
+        Set the settings objects from the out file text
+
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
         '''
         self.jsettings_fluid = self._get_settings_object(text, JMinSettingsFluid)
         self.jsettings_electronic = self._get_settings_object(text, JMinSettingsElectronic)
@@ -499,8 +611,10 @@ class JDFTXOutfile(ClassPrintFormatter):
         ''' 
         Set vars geom_opt and geom_opt_type for initializing self.jstrucs
 
-        Args:
-            text: output of read_file for out file
+        Parameters
+        ----------
+            text: list[str]
+                output of read_file for out file
         '''
         if self.jsettings_ionic is None or self.jsettings_lattice is None:
             self._set_min_settings(text)
@@ -523,8 +637,10 @@ class JDFTXOutfile(ClassPrintFormatter):
         '''
         Set the JStructures object from the out file text
 
-        Args:
-            text: output of read_file for out file
+        Parameters
+        ----------
+            text: list[str]
+                output of read_file for out file
         '''
         self.jstrucs = JStructures.from_out_slice(text, iter_type=self.geom_opt_type)
 
@@ -541,7 +657,15 @@ class JDFTXOutfile(ClassPrintFormatter):
             self.LUMO_filling = 0
 
 
-    def _set_fluid(self, text: str) -> None: # Is this redundant to the fluid settings?
+    def _set_fluid(self, text: list[str]) -> None: # Is this redundant to the fluid settings?
+        '''
+        Set the fluid class variable
+        
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+        '''
         line = find_first_range_key('fluid ', text)
         self.fluid = text[line[0]].split()[1]
         if self.fluid == 'None':
@@ -549,6 +673,14 @@ class JDFTXOutfile(ClassPrintFormatter):
 
 
     def _set_total_electrons(self, text:str) -> None:
+        '''
+        Set the total_Electrons class variable
+
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+        '''
         lines = find_all_key('nElectrons', text)
         if len(lines) > 1:
             idx = 4
@@ -558,8 +690,17 @@ class JDFTXOutfile(ClassPrintFormatter):
 
     def _set_Nbands(self, text: list[str]) -> None:
         '''
+        Set the Nbands class variable
+
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
         '''
-        self.Nbands = int(math.ceil(self.total_electrons))
+        lines = self.find_all_key('elec-n-bands', text)
+        line = lines[0]
+        nbands = int(text[line].strip().split()[-1].strip())
+        self.Nbands = nbands
 
     def _set_atom_vars(self, text: list[str]) -> None:
         startline = find_key('Input parsed successfully', text)
