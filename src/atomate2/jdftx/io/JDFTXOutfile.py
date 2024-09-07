@@ -703,6 +703,13 @@ class JDFTXOutfile(ClassPrintFormatter):
         self.Nbands = nbands
 
     def _set_atom_vars(self, text: list[str]) -> None:
+        '''
+        Set the atom variables
+        
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file'''
         startline = find_key('Input parsed successfully', text)
         endline = find_key('---------- Initializing the Grid ----------', text)
         lines = find_first_range_key('ion ', text, startline = startline, endline = endline)
@@ -724,6 +731,14 @@ class JDFTXOutfile(ClassPrintFormatter):
         self.atom_coords = self.atom_coords_final.copy()
 
     def _set_lattice_vars(self, text: list[str]) -> None:
+        '''
+        Set the lattice variables
+        
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+        '''
         lines = find_all_key('R =', text)
         line = lines[0]
         lattice_initial = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
@@ -740,6 +755,14 @@ class JDFTXOutfile(ClassPrintFormatter):
 
 
     def _set_ecomponents(self, text: list[str]) -> None:
+        '''
+        Set the energy components dictionary
+        
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+        '''
         line = find_key("# Energy components:", text)
         self.Ecomponents = self.read_ecomponents(line, text)
 
