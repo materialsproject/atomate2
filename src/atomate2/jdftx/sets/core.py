@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class RelaxSetGenerator(JdftxInputGenerator):
-class RelaxSetGenerator(JdftxInputGenerator):
     """Class to generate VASP relaxation input sets."""
 
     def get_incar_updates(

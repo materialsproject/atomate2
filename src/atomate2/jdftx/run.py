@@ -18,9 +18,11 @@ class JobType(ValueEnum):
 def run_jdftx(
         job_type: JobType | str = JobType.NORMAL,
         jdftx_cmd: str = "docker run -t --rm -v $PWD:/root/research jdftx jdftx",
-        jdftx_job_kwargs : dict[str, Any] = {},
+        jdftx_job_kwargs : dict[str, Any] = None
 ) -> None:
     
+    jdftx_job_kwargs = jdftx_job_kwargs or {}
+
     if job_type == JobType.NORMAL:
         job = JDFTxJob(jdftx_cmd, **jdftx_job_kwargs, input_file="input-tutorial.in")
     
