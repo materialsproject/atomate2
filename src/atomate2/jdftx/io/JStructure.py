@@ -190,7 +190,17 @@ class JStructure(Structure):
     linmin: float = None
     t_s: float = None
     #
+    geom_converged: bool = False
+    geom_converged_reason: str = None
+    #
     line_types = ["emin", "lattice", "strain", "stress", "posns", "forces", "ecomp", "lowdin", "opt"]
+
+    def __init__(self, lattice: np.ndarray, species: list[str], coords: list[np.ndarray], site_properties: dict[str, list]):
+        super().__init__(lattice=lattice, species=species, coords=coords, site_properties=site_properties)
+        # self.lattice = lattice
+        # self.species = species
+        # self.coords = coords
+        # self.site_properties = site_properties
 
     @classmethod
     def from_text_slice(cls, text_slice: list[str],
@@ -202,6 +212,7 @@ class JStructure(Structure):
         to a single step of a native JDFTx optimization
         '''
         
+        # instance = super.__init__(lattice=np.eye(3), species=[], coords=[], site_properties={})
         instance = cls(lattice=np.eye(3), species=[], coords=[], site_properties={})
         if not iter_type in ["IonicMinimize", "LatticeMinimize"]:
             iter_type = instance.correct_iter_type(iter_type)
@@ -427,22 +438,29 @@ class JStructure(Structure):
         is_line = f"{self.iter_type}:" in line_text and f"Iter:" in line_text
         return is_line
     
+    def is_opt_conv_line(self, line_text: str) -> bool:
+        is_line = f"{self.iter_type}: Converged" in line_text
+    
     
     def parse_opt_lines(self, opt_lines: list[str]) -> None:
         if len(opt_lines):
-            opt_line = opt_lines[0]
-            iter = int(self._get_colon_var_t1(opt_line, "Iter:"))
-            self.iter = iter
-            E = self._get_colon_var_t1(opt_line, f"{self.etype}:")
-            self.E = E * Ha_to_eV
-            grad_K = self._get_colon_var_t1(opt_line, "|grad|_K: ")
-            self.grad_K = grad_K
-            alpha = self._get_colon_var_t1(opt_line, "alpha: ")
-            self.alpha = alpha
-            linmin = self._get_colon_var_t1(opt_line, "linmin: ")
-            self.linmin = linmin
-            t_s = self._get_colon_var_t1(opt_line, "t[s]: ")
-            self.t_s = t_s
+            for line in opt_lines:
+                if self.is_opt_start_line(line):
+                    iter = int(self._get_colon_var_t1(line, "Iter:"))
+                    self.iter = iter
+                    E = self._get_colon_var_t1(line, f"{self.etype}:")
+                    self.E = E * Ha_to_eV
+                    grad_K = self._get_colon_var_t1(line, "|grad|_K: ")
+                    self.grad_K = grad_K
+                    alpha = self._get_colon_var_t1(line, "alpha: ")
+                    self.alpha = alpha
+                    linmin = self._get_colon_var_t1(line, "linmin: ")
+                    self.linmin = linmin
+                    t_s = self._get_colon_var_t1(line, "t[s]: ")
+                    self.t_s = t_s
+                elif self.is_opt_conv_line(line):
+                    self.geom_converged = True
+                    self.geom_converged_reason = line.split("(")[1].split(")")[0].strip()
 
     
     def is_generic_start_line(self, line_text: str, line_type: str) -> bool:
@@ -506,22 +524,39 @@ class JStructure(Structure):
 
 
 @dataclass
-class JStructures(list):
+class JStructures(list[JStructure]):
 
     out_slice_start_flag = "-------- Electronic minimization -----------"
     iter_type: str = None
+    geom_converged: bool = False
+    geom_converged_reason: str = None
+    elec_converged: bool = False
+    elec_converged_reason: str = None
 
 
     @classmethod
-    def from_out_slice(cls, out_slice: list[str]):
+    def from_out_slice(cls, out_slice: list[str], iter_type: str = "IonicMinimize"):
         super().__init__([])
         instance = cls()
+        if not iter_type in ["IonicMinimize", "LatticeMinimize"]:
+            iter_type = instance.correct_iter_type(iter_type)
+        instance.iter_type = iter_type
         start_idx = instance.get_start_idx(out_slice)
         instance.parse_out_slice(out_slice[start_idx:])
+        return instance
+
+
+    def correct_iter_type(self, iter_type):
+        if "lattice" in iter_type.lower():
+            iter_type = "LatticeMinimize"
+        elif "ionic" in iter_type.lower():
+            iter_type = "IonicMinimize"
+        return iter_type
+
 
     def get_start_idx(self, out_slice: list[str]) -> int:
         for i, line in enumerate(out_slice):
-            if "# Energy components" in line:
+            if self.out_slice_start_flag in line:
                 return i
         return
     
@@ -543,15 +578,14 @@ class JStructures(list):
             if not end_started:
                 if self.out_slice_start_flag in line:
                     bounds = [i]
-                elif bounds is None:
+                elif not bounds is None:
                     if self.is_lowdin_start_line(line):
                         end_started = True
-            elif not bounds is None:
-                if not len(line.strip()):
-                    bounds.append(i)
-                    bounds_list.append(bounds)
-                    bounds = None
-                    end_started = False
+            elif not len(line.strip()):
+                bounds.append(i)
+                bounds_list.append(bounds)
+                bounds = None
+                end_started = False
         return bounds_list
 
     def parse_out_slice(self, out_slice: list[str]) -> None:
@@ -559,4 +593,13 @@ class JStructures(list):
         for bounds in out_bounds:
             self.append(JStructure.from_text_slice(out_slice[bounds[0]:bounds[1]],
                                                    iter_type=self.iter_type))
+            
+    def check_convergence(self) -> None:
+        jst = self[-1]
+        if jst.elecMinData.converged:
+            self.elec_converged = True
+            self.elec_converged_reason = jst.elecMinData.converged_reason
+        if jst.geom_converged:
+            self.geom_converged = True
+            self.geom_converged_reason = jst.geom_converged_reason
         
