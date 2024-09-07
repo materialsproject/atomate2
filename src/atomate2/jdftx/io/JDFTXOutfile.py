@@ -619,7 +619,7 @@ class JDFTXOutfile(ClassPrintFormatter):
         #@ Cooper added @#
         instance.is_gc = key_exists('target-mu', text)
         instance._set_ecomponents(text)
-        instance._build_trajectory(templines)
+        # instance._build_trajectory(templines)
 
         return instance
     
