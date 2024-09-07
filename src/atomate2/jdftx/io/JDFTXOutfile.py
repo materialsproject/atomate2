@@ -74,6 +74,22 @@ def read_outfile(file_name: str, out_slice_idx: int = -1) -> list[str]:
     text = _text[start_lines[out_slice_idx]:start_lines[out_slice_idx+1]]
     return text
 
+def get_start_lines(text: list[str], start_key: Optional[str]="*************** JDFTx", add_end: Optional[bool]=False) -> list[int]:
+    '''
+    Get the line numbers corresponding to the beginning of seperate JDFTx calculations
+    (in case of multiple calculations appending the same out file)
+
+    Args:
+        text: output of read_file for out file
+    '''
+    start_lines = []
+    for i, line in enumerate(text):
+        if start_key in line:
+            start_lines.append(i)
+    if add_end:
+        start_lines.append(i)
+    return start_lines
+
 
 def find_key(key_input, tempfile):
     '''
