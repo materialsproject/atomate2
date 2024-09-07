@@ -6,6 +6,7 @@ import numpy as np
 from dataclasses import dataclass, field
 import scipy.constants as const
 from atomate2.jdftx.io.data import atom_valence_electrons
+from atomate2.jdftx.io.JStructure import JStructures, JMinSettingsElectronic, JMinSettingsLattice, JMinSettingsIonic, JMinSettingsFluid, JMinSettings
 from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from typing import List, Optional
@@ -126,6 +127,12 @@ class JDFTXOutfile(ClassPrintFormatter):
 
     prefix: str = None
 
+    jstrucs: JStructures = None
+    jsettings_fluid: JMinSettingsFluid = None
+    jsettings_electronic: JMinSettingsElectronic = None
+    jsettings_lattice: JMinSettingsLattice = None
+    jsettings_ionic: JMinSettingsIonic = None
+
     lattice_initial: list[list[float]] = None
     lattice_final: list[list[float]] = None
     lattice: list[list[float]] = None
@@ -134,6 +141,8 @@ class JDFTXOutfile(ClassPrintFormatter):
     c: float = None
 
     fftgrid: list[int] = None
+    geom_opt: bool = None
+    geom_opt_type: str = None
 
     # grouping fields related to electronic parameters.
     # Used by the get_electronic_output() method
@@ -400,6 +409,85 @@ class JDFTXOutfile(ClassPrintFormatter):
         self.semicore_electrons = None
         self.valence_electrons = None
 
+
+    def _collect_settings_lines(self, text:str, start_key:str) -> list[int]:
+        '''
+        '''
+        started = False
+        lines = []
+        for i, line in enumerate(text):
+            if started:
+                if line.strip().split()[-1].strip() == "\\":
+                    lines.append(i)
+                else:
+                    started = False
+            elif start_key in line:
+                started = True
+                #lines.append(i) # we DONT want to do this
+            elif len(lines):
+                break
+        return lines
+
+    def _create_settings_dict(self, text:str, start_key:str) -> dict:
+        '''
+        '''
+        lines = self._collect_settings_lines(text, start_key)
+        settings_dict = {}
+        for line in lines:
+            line_text_list = text[line].strip().split()
+            key = line_text_list[0]
+            value = line_text_list[1]
+            settings_dict[key] = value
+        return settings_dict
+    
+    def _get_settings_object(self, text:str, settings_class: JMinSettings) -> JMinSettings:
+        settings_dict = self._create_settings_dict(text, settings_class.start_key)
+        if len(settings_dict):
+            settings_obj = settings_class(**settings_dict)
+        else:
+            settings_obj = None
+        return settings_obj
+    
+
+    def _set_min_settings(self, text:str) -> None:
+        '''
+        '''
+        self.jsettings_fluid = self._get_settings_object(text, JMinSettingsFluid)
+        self.jsettings_electronic = self._get_settings_object(text, JMinSettingsElectronic)
+        self.jsettings_lattice = self._get_settings_object(text, JMinSettingsLattice)
+        self.jsettings_ionic = self._get_settings_object(text, JMinSettingsIonic)
+
+    def _set_geomopt_vars(self, text:str) -> None:
+        ''' 
+        Set vars geom_opt and geom_opt_type for initializing self.jstrucs
+
+        Args:
+            text: output of read_file for out file
+        '''
+        if self.jsettings_ionic is None or self.jsettings_lattice is None:
+            self._set_min_settings(text)
+        #
+        if self.jsettings_ionic is None or self.jsettings_lattice is None:
+            raise ValueError("Unknown issue in setting settings objects")
+        else:
+            if self.jsettings_lattice.nIterations > 0:
+                self.geom_opt = True
+                self.geom_opt_type = "lattice"
+            elif self.jsettings_ionic.nIterations > 0:
+                self.geom_opt = True
+                self.geom_opt_type = "ionic"
+            else:
+                self.geom_opt = False
+                self.geom_opt_type = "single point"
+
+
+    def _set_jstrucs(self, text:str) -> None:
+        '''
+        '''
+        self.jstrucs = JStructures.from_out_slice(text, iter_type=self.geom_opt_type)
+
+
+
     
     
 
@@ -413,7 +501,11 @@ class JDFTXOutfile(ClassPrintFormatter):
         '''
         instance = cls()
 
-        text = read_file(file_name)
+        #text = read_file(file_name)
+        text = read_outfile(file_name)
+        instance._set_min_settings(text)
+        instance._set_geomopt_vars(text)
+
 
         instance.prefix = cls._get_prefix(text)
 
@@ -523,6 +615,8 @@ class JDFTXOutfile(ClassPrintFormatter):
             coords=coords
         )
         return structure
+
+    
 
     def calculate_filling(broadening_type, broadening, eig, EFermi):
         #most broadening implementations do not have the denominator factor of 2, but JDFTx does currently

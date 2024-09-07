@@ -188,6 +188,8 @@ class JMinSettings():
     wolfeEnergyThreshold: float = None
     wolfeGradientThreshold: float = None
     fdTest: bool = None
+    #
+    start_flag: str = None
 
     def __init__(self, dirUpdateScheme: str = None, linminMethod: str = None,
                  nIterations: int = None, history: int = None, knormThreshold: float = None,
@@ -217,6 +219,8 @@ class JMinSettingsElectronic(JMinSettings):
     '''
     A class for storing lattice minimization settings read from a JDFTx out file
     '''
+
+    start_flag: str = "electronic-minimize"
     
 
     def __init__(self, dirUpdateScheme: str = None, linminMethod: str = None,
@@ -238,6 +242,8 @@ class JMinSettingsFluid(JMinSettings):
     '''
     A class for storing lattice minimization settings read from a JDFTx out file
     '''
+
+    start_flag: str = "fluid-minimize"
     
 
     def __init__(self, dirUpdateScheme: str = None, linminMethod: str = None,
@@ -259,6 +265,8 @@ class JMinSettingsLattice(JMinSettings):
     '''
     A class for storing lattice minimization settings read from a JDFTx out file
     '''
+
+    start_flag: str = "lattice-minimize"
     
 
     def __init__(self, dirUpdateScheme: str = None, linminMethod: str = None,
@@ -280,6 +288,9 @@ class JMinSettingsIonic(JMinSettings):
     '''
     A class for storing ionic minimization settings read from a JDFTx out file
     '''
+
+    start_flag: str = "ionic-minimize"
+
 
     def __init__(self, dirUpdateScheme: str = None, linminMethod: str = None,
                  nIterations: int = None, history: int = None, knormThreshold: float = None,
@@ -389,6 +400,8 @@ class JStructure(Structure):
             iter_type = "LatticeMinimize"
         elif "ionic" in iter_type.lower():
             iter_type = "IonicMinimize"
+        else:
+            iter_type = None
         return iter_type
     
 
@@ -670,6 +683,9 @@ class JStructures(list[JStructure]):
         instance.iter_type = iter_type
         start_idx = instance.get_start_idx(out_slice)
         instance.parse_out_slice(out_slice[start_idx:])
+        if instance.iter_type is None and len(instance) > 1:
+            raise Warning("iter type interpreted as single-point calculation, but \
+                           multiple structures found")
         return instance
 
 
@@ -678,6 +694,8 @@ class JStructures(list[JStructure]):
             iter_type = "LatticeMinimize"
         elif "ionic" in iter_type.lower():
             iter_type = "IonicMinimize"
+        else:
+            iter_type = None
         return iter_type
 
 
