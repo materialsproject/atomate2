@@ -7,7 +7,7 @@ import numpy as np
 
 
 @dataclass
-class JStructure(Structure):
+class JOutStructure(Structure):
     '''
     A mutant of the pymatgen Structure class for flexiblity in holding JDFTx optimization data
     '''

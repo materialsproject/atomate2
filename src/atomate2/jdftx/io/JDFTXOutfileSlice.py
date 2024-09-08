@@ -7,7 +7,7 @@ import numpy as np
 from dataclasses import dataclass, field
 import scipy.constants as const
 from atomate2.jdftx.io.data import atom_valence_electrons
-from atomate2.jdftx.io.JStructures import JStructures
+from jdftx.io.JOutStructures import JOutStructures
 from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from typing import List, Optional
@@ -151,7 +151,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
 
     prefix: str = None
 
-    jstrucs: JStructures = None
+    jstrucs: JOutStructures = None
     jsettings_fluid: JMinSettingsFluid = None
     jsettings_electronic: JMinSettingsElectronic = None
     jsettings_lattice: JMinSettingsLattice = None
@@ -784,7 +784,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             text: list[str]
                 output of read_file for out file
         '''
-        self.jstrucs = JStructures.from_out_slice(text, iter_type=self.geom_opt_type)
+        self.jstrucs = JOutStructures.from_out_slice(text, iter_type=self.geom_opt_type)
 
 
     def _set_orb_fillings(self) -> None:

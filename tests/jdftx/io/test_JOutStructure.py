@@ -1,7 +1,7 @@
 from pytest import approx
 import pytest
 from pymatgen.core.units import Ha_to_eV
-from atomate2.jdftx.io.JStructure import JStructure
+from jdftx.io.JOutStructure import JOutStructure
 from pathlib import Path
 from pymatgen.util.typing import PathLike
 from pymatgen.core.units import Ha_to_eV, bohr_to_ang
@@ -99,7 +99,7 @@ ex_slice2_known = {
                           (ex_slice2, ex_slice2_known)
                            ])
 def test_JStructure(eslice: list[str], eknowns: dict):
-    jst = JStructure.from_text_slice(eslice, iter_type="lattice")
+    jst = JOutStructure.from_text_slice(eslice, iter_type="lattice")
     assert jst.iter == eknowns["iter"]
     assert jst.etype == eknowns["etype"]
     assert jst.E == approx(eknowns["E"])

@@ -1,12 +1,12 @@
 from typing import Any
-from atomate2.jdftx.io.JStructure import JStructure
+from jdftx.io.JOutStructure import JOutStructure
 
 
 from dataclasses import dataclass
 
 
 @dataclass
-class JStructures(list[JStructure], JStructure):
+class JOutStructures(list[JOutStructure], JOutStructure):
 
     '''
     A class for storing a series of JStructure objects
@@ -162,7 +162,7 @@ class JStructures(list[JStructure], JStructure):
         '''
         out_bounds = self.get_step_bounds(out_slice)
         for bounds in out_bounds:
-            self.append(JStructure.from_text_slice(out_slice[bounds[0]:bounds[1]],
+            self.append(JOutStructure.from_text_slice(out_slice[bounds[0]:bounds[1]],
                                                    iter_type=self.iter_type))
 
     def check_convergence(self) -> None:
