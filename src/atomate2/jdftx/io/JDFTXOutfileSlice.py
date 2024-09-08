@@ -36,10 +36,9 @@ def get_start_lines(text: list[str], start_key: Optional[str]="*************** J
         start_lines.append(i)
     return start_lines
 
-
-def find_key(key_input, tempfile):
+def find_key_first(key_input, tempfile):
     '''
-    Finds last instance of key in output file. 
+    Finds first instance of key in output file. 
 
     Parameters
     ----------
@@ -53,6 +52,28 @@ def find_key(key_input, tempfile):
     for i in range(0,len(tempfile)):
         if key_input in tempfile[i]:
             line = i
+            break
+    return line
+
+
+def find_key(key_input, tempfile):
+    '''
+    Finds last instance of key in output file. 
+
+    Parameters
+    ----------
+    key_input: str
+        key string to match
+    tempfile: List[str]
+        output from readlines() function in read_file method
+    '''
+    key_input = str(key_input)
+    lines = find_all_key(key_input, tempfile)
+    line = lines[-1]
+    # line = None
+    # for i in range(0,len(tempfile)):
+    #     if key_input in tempfile[i]:
+    #         line = i
     return line
 
 
@@ -284,7 +305,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         instance.is_metal = instance._determine_is_metal()
         instance._set_fluid(text)
         instance._set_total_electrons(text)
-        instance._set_Nbands()
+        instance._set_Nbands(text)
         instance._set_atom_vars(text)
         instance._set_pseudo_vars(text)
         instance._set_lattice_vars(text)
@@ -476,7 +497,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         text: list[str]
             output of read_file for out file
         '''
-        line = find_key('Chosen fftbox size', text)
+        line = find_key_first('Chosen fftbox size', text)
         fftgrid = [int(x) for x in text[line].split()[6:9]]
         return fftgrid
     
