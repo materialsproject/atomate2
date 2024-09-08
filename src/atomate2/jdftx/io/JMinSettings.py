@@ -22,6 +22,7 @@ class JMinSettings():
     wolfeEnergy: float = None
     wolfeGradient: float = None
     fdTest: bool = None
+    maxThreshold: bool = None
     #
     start_flag: str = None
 
@@ -30,7 +31,7 @@ class JMinSettings():
                  energyDiffThreshold: float = None, nEnergyDiff: int = None, alphaTstart: float = None,
                  alphaTmin: float = None, updateTestStepSize: bool = None, alphaTreduceFactor: float = None,
                  alphaTincreaseFactor: float = None, nAlphaAdjustMax: int = None, wolfeEnergy: float = None,
-                 wolfeGradient: float = None, fdTest: bool = None):
+                 wolfeGradient: float = None, fdTest: bool = None, maxThreshold: bool = None):
         self.dirUpdateScheme = self._assign_type(dirUpdateScheme, str)
         self.linminMethod = self._assign_type(linminMethod, str)
         self.nIterations = self._assign_type(nIterations, int)
@@ -47,6 +48,7 @@ class JMinSettings():
         self.wolfeEnergy = self._assign_type(wolfeEnergy, float)
         self.wolfeGradient = self._assign_type(wolfeGradient, float)
         self.fdTest = self._assign_type(fdTest, bool)
+        self.maxThreshold = self._assign_type(maxThreshold, bool)
 
     def _assign_type(self, val: Optional[str], val_type: Callable[[str], Union[float, int, str]]) -> Optional[Union[float, int, str]]:
         if val is None:
@@ -69,14 +71,14 @@ class JMinSettingsElectronic(JMinSettings):
                  energyDiffThreshold: float = None, nEnergyDiff: int = None, alphaTstart: float = None,
                  alphaTmin: float = None, updateTestStepSize: bool = None, alphaTreduceFactor: float = None,
                  alphaTincreaseFactor: float = None, nAlphaAdjustMax: int = None, wolfeEnergy: float = None,
-                 wolfeGradient: float = None, fdTest: bool = None):
+                 wolfeGradient: float = None, fdTest: bool = None, maxThreshold: bool = None):
         super().__init__(dirUpdateScheme=dirUpdateScheme, linminMethod=linminMethod,
                          nIterations=nIterations, history=history, knormThreshold=knormThreshold,
                          energyDiffThreshold=energyDiffThreshold, nEnergyDiff=nEnergyDiff, alphaTstart=alphaTstart,
                          alphaTmin=alphaTmin, updateTestStepSize=updateTestStepSize, alphaTreduceFactor=alphaTreduceFactor,
                          alphaTincreaseFactor=alphaTincreaseFactor, nAlphaAdjustMax=nAlphaAdjustMax,
                          wolfeEnergy=wolfeEnergy, wolfeGradient=wolfeGradient,
-                         fdTest=fdTest)
+                         fdTest=fdTest, maxThreshold=maxThreshold)
 
 
 @dataclass
@@ -93,14 +95,14 @@ class JMinSettingsFluid(JMinSettings):
                  energyDiffThreshold: float = None, nEnergyDiff: int = None, alphaTstart: float = None,
                  alphaTmin: float = None, updateTestStepSize: bool = None, alphaTreduceFactor: float = None,
                  alphaTincreaseFactor: float = None, nAlphaAdjustMax: int = None, wolfeEnergy: float = None,
-                 wolfeGradient: float = None, fdTest: bool = None):
+                 wolfeGradient: float = None, fdTest: bool = None, maxThreshold: bool = None):
         super().__init__(dirUpdateScheme=dirUpdateScheme, linminMethod=linminMethod,
                          nIterations=nIterations, history=history, knormThreshold=knormThreshold,
                          energyDiffThreshold=energyDiffThreshold, nEnergyDiff=nEnergyDiff, alphaTstart=alphaTstart,
                          alphaTmin=alphaTmin, updateTestStepSize=updateTestStepSize, alphaTreduceFactor=alphaTreduceFactor,
                          alphaTincreaseFactor=alphaTincreaseFactor, nAlphaAdjustMax=nAlphaAdjustMax,
                          wolfeEnergy=wolfeEnergy, wolfeGradient=wolfeGradient,
-                         fdTest=fdTest)
+                         fdTest=fdTest, maxThreshold=maxThreshold)
 
 
 @dataclass
@@ -117,14 +119,14 @@ class JMinSettingsLattice(JMinSettings):
                  energyDiffThreshold: float = None, nEnergyDiff: int = None, alphaTstart: float = None,
                  alphaTmin: float = None, updateTestStepSize: bool = None, alphaTreduceFactor: float = None,
                  alphaTincreaseFactor: float = None, nAlphaAdjustMax: int = None, wolfeEnergy: float = None,
-                 wolfeGradient: float = None, fdTest: bool = None):
+                 wolfeGradient: float = None, fdTest: bool = None, maxThreshold: bool = None):
         super().__init__(dirUpdateScheme=dirUpdateScheme, linminMethod=linminMethod,
                          nIterations=nIterations, history=history, knormThreshold=knormThreshold,
                          energyDiffThreshold=energyDiffThreshold, nEnergyDiff=nEnergyDiff, alphaTstart=alphaTstart,
                          alphaTmin=alphaTmin, updateTestStepSize=updateTestStepSize, alphaTreduceFactor=alphaTreduceFactor,
                          alphaTincreaseFactor=alphaTincreaseFactor, nAlphaAdjustMax=nAlphaAdjustMax,
                          wolfeEnergy=wolfeEnergy, wolfeGradient=wolfeGradient,
-                         fdTest=fdTest)
+                         fdTest=fdTest, maxThreshold=maxThreshold)
 
 
 @dataclass
@@ -141,11 +143,11 @@ class JMinSettingsIonic(JMinSettings):
                  energyDiffThreshold: float = None, nEnergyDiff: int = None, alphaTstart: float = None,
                  alphaTmin: float = None, updateTestStepSize: bool = None, alphaTreduceFactor: float = None,
                  alphaTincreaseFactor: float = None, nAlphaAdjustMax: int = None, wolfeEnergy: float = None,
-                 wolfeGradient: float = None, fdTest: bool = None):
+                 wolfeGradient: float = None, fdTest: bool = None, maxThreshold: bool = None):
         super().__init__(dirUpdateScheme=dirUpdateScheme, linminMethod=linminMethod,
                          nIterations=nIterations, history=history, knormThreshold=knormThreshold,
                          energyDiffThreshold=energyDiffThreshold, nEnergyDiff=nEnergyDiff, alphaTstart=alphaTstart,
                          alphaTmin=alphaTmin, updateTestStepSize=updateTestStepSize, alphaTreduceFactor=alphaTreduceFactor,
                          alphaTincreaseFactor=alphaTincreaseFactor, nAlphaAdjustMax=nAlphaAdjustMax,
                          wolfeEnergy=wolfeEnergy, wolfeGradient=wolfeGradient,
-                         fdTest=fdTest)
+                         fdTest=fdTest, maxThreshold=maxThreshold)

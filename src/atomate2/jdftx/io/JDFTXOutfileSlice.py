@@ -886,18 +886,22 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         text: list[str]
             output of read_file for out file
         '''
-        lines = find_all_key('R =', text)
-        line = lines[0]
-        lattice_initial = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
-        self.lattice_initial = lattice_initial.copy()
-        templines = find_all_key('LatticeMinimize', text)
-        if len(templines) > 0:
-            line = templines[-1]
-            lattice_final = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
-            self.lattice_final = lattice_final.copy()
-            self.lattice = lattice_final.copy()
-        else:
-            self.lattice = lattice_initial.copy()
+        self.lattice_initial = self.jstrucs[0].lattice.matrix
+        self.lattice_final = self.jstrucs[-1].lattice.matrix
+        self.lattice = self.lattice_final.copy()
+        # This block was throwing errors
+        # lines = find_all_key('R =', text)
+        # line = lines[0]
+        # lattice_initial = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
+        # self.lattice_initial = lattice_initial.copy()
+        # templines = find_all_key('LatticeMinimize', text)
+        # if len(templines) > 0:
+        #     line = templines[-1]
+        #     lattice_final = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
+        #     self.lattice_final = lattice_final.copy()
+        #     self.lattice = lattice_final.copy()
+        # else:
+        #     self.lattice = lattice_initial.copy()
         self.a, self.b, self.c = np.sum(self.lattice**2, axis = 1)**0.5
 
 
