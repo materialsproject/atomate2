@@ -53,10 +53,10 @@ ex_iter_line2_known = {
 
 
 ex_lines1 = [
-    ex_iter_line1, ex_fillings_line1, ex_subspace_line1
+    ex_fillings_line1, ex_subspace_line1, ex_iter_line1
 ]
 ex_lines2 = [
-    ex_iter_line2, ex_fillings_line2, ex_subspace_line2
+    ex_fillings_line2, ex_subspace_line2, ex_iter_line2
 ]
 ex_known1 = {
     "iter": ex_iter_line1_known,
