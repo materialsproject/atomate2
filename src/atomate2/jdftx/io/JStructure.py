@@ -103,7 +103,7 @@ class JStructure(Structure):
 
         return instance
 
-    def correct_iter_type(self, iter_type: str) -> str | None:
+    def correct_iter_type(self, iter_type: str | None) -> str | None:
         '''
         Corrects the iter_type string to match the JDFTx convention
         
@@ -117,12 +117,11 @@ class JStructure(Structure):
         iter_type: str | None
             The corrected type of optimization step
         '''
-        if "lattice" in iter_type.lower():
-            iter_type = "LatticeMinimize"
-        elif "ionic" in iter_type.lower():
-            iter_type = "IonicMinimize"
-        else:
-            iter_type = None
+        if not iter_type is None:
+            if "lattice" in iter_type.lower():
+                iter_type = "LatticeMinimize"
+            elif "ionic" in iter_type.lower():
+                iter_type = "IonicMinimize"
         return iter_type
     
 
@@ -206,7 +205,7 @@ class JStructure(Structure):
         if len(lattice_lines):
             R = self._bracket_num_list_str_of_3x3_to_nparray(lattice_lines, i_start=2)
             R = R.T * bohr_to_ang
-        self.lattice= Lattice(R)
+            self.lattice = Lattice(R)
 
     
     def is_strain_start_line(self, line_text: str) -> bool:
@@ -440,13 +439,20 @@ class JStructure(Structure):
             elif self.is_moments_line(line):
                 moments_dict = self.parse_lowdin_line(line, moments_dict)
         names = [s.name for s in self.species]
-        charges = np.zeros(len(names))
-        moments = np.zeros(len(names))
-        for el in charges_dict:
-            idcs = [i for i in range(len(names)) if names[i] == el]
-            for i, idx in enumerate(idcs):
-                charges[idx] += charges_dict[el][i]
-                moments[idx] += moments_dict[el][i]
+        charges = None
+        moments = None
+        if len(charges_dict):
+            charges = np.zeros(len(names))
+            for el in charges_dict:
+                idcs = [i for i in range(len(names)) if names[i] == el]
+                for i, idx in enumerate(idcs):
+                    charges[idx] += charges_dict[el][i]
+        if len(moments_dict):
+            moments = np.zeros(len(names))
+            for el in moments_dict:
+                idcs = [i for i in range(len(names)) if names[i] == el]
+                for i, idx in enumerate(idcs):
+                    moments[idx] += moments_dict[el][i]
         self.charges = charges
         self.magnetic_moments = moments
 
