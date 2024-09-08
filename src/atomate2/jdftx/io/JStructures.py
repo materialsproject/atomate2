@@ -1,3 +1,4 @@
+from typing import Any
 from atomate2.jdftx.io.JStructure import JStructure
 
 
@@ -5,7 +6,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class JStructures(list[JStructure]):
+class JStructures(list[JStructure], JStructure):
 
     '''
     A class for storing a series of JStructure objects
@@ -41,25 +42,42 @@ class JStructures(list[JStructure]):
             raise Warning("iter type interpreted as single-point calculation, but \
                            multiple structures found")
         return instance
+    
+    def __getattr__(self, name):
+        try:
+            return super().__getattr__(name)
+        except AttributeError:
+            if self:
+                return getattr(self[-1], name)
+            raise AttributeError(f"'JStructures' object has no attribute '{name}'")
+    
+    # def __setattr__(self, name, value):
+    #     # Do we want this? I don't imagine this class object should be modified
+    #     if name in self.__annotations__:
+    #         super().__setattr__(name, value)
+    #     elif self:
+    #         setattr(self[-1], name, value)
+    #     else:
+    #         raise AttributeError(f"'JStructures' object has no attribute '{name}'")
 
 
-    def correct_iter_type(self, iter_type: str) -> str:
-        '''
-        Corrects the iter_type to a recognizable string if it is not recognized
-        (None may correspond to a single-point calculation)
+    # def correct_iter_type(self, iter_type: str) -> str:
+    #     '''
+    #     Corrects the iter_type to a recognizable string if it is not recognized
+    #     (None may correspond to a single-point calculation)
 
-        Parameters:
-        ----------
-        iter_type: str
-            The iter_type to be corrected
-        '''
-        if "lattice" in iter_type.lower():
-            iter_type = "LatticeMinimize"
-        elif "ionic" in iter_type.lower():
-            iter_type = "IonicMinimize"
-        else:
-            iter_type = None
-        return iter_type
+    #     Parameters:
+    #     ----------
+    #     iter_type: str
+    #         The iter_type to be corrected
+    #     '''
+    #     if "lattice" in iter_type.lower():
+    #         iter_type = "LatticeMinimize"
+    #     elif "ionic" in iter_type.lower():
+    #         iter_type = "IonicMinimize"
+    #     else:
+    #         iter_type = None
+    #     return iter_type
 
 
     def get_start_idx(self, out_slice: list[str]) -> int:
@@ -82,22 +100,22 @@ class JStructures(list[JStructure]):
         return i
 
 
-    def is_lowdin_start_line(self, line_text: str) -> bool:
-        '''
-        Check if a line in the out file is the start of a Lowdin population analysis
+    # def is_lowdin_start_line(self, line_text: str) -> bool:
+    #     '''
+    #     Check if a line in the out file is the start of a Lowdin population analysis
 
-        Parameters:
-        ----------
-        line_text: str
-            A line of text from a JDFTx out file
+    #     Parameters:
+    #     ----------
+    #     line_text: str
+    #         A line of text from a JDFTx out file
 
-        Returns:
-        -------
-        is_line: bool
-            True if the line is the start of a Lowdin population analysis
-        '''
-        is_line = "#--- Lowdin population analysis ---" in line_text
-        return is_line
+    #     Returns:
+    #     -------
+    #     is_line: bool
+    #         True if the line is the start of a Lowdin population analysis
+    #     '''
+    #     is_line = "#--- Lowdin population analysis ---" in line_text
+    #     return is_line
 
 
     def get_step_bounds(self, out_slice: list[str]) -> list[list[int, int]]:

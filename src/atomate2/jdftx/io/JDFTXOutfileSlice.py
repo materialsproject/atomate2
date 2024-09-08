@@ -134,6 +134,8 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     jsettings_lattice: JMinSettingsLattice = None
     jsettings_ionic: JMinSettingsIonic = None
 
+    xc_func: str = None
+
     lattice_initial: list[list[float]] = None
     lattice_final: list[list[float]] = None
     lattice: list[list[float]] = None
@@ -167,6 +169,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     truncation_type: str = None
     truncation_radius: float = None
     pwcut: float = None
+    rhocut: float = None
 
     pp_type: str = None
     total_electrons: float = None
@@ -197,7 +200,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     trajectory_lattice: list[list[list[float]]] = None
     trajectory_forces: list[list[list[float]]] = None
     trajectory_ecomponents: list[dict] = None
-    is_converged: bool = None #TODO implement this
+    # is_converged: bool = None #TODO implement this
     
 
     @property
@@ -260,19 +263,22 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
 
         instance._set_min_settings(text)
         instance._set_geomopt_vars(text)
-        instance.prefix = cls._get_prefix(text)
-        spintype, Nspin = cls._get_spinvars(text)
+        instance._set_jstrucs(text)
+        instance.prefix = instance._get_prefix(text)
+        spintype, Nspin = instance._get_spinvars(text)
+        instance.xc_func =instance._get_xc_func(text)
         instance.spintype = spintype
         instance.Nspin = Nspin
-        broadening_type, broadening = cls._get_broadeningvars(text)
+        broadening_type, broadening = instance._get_broadeningvars(text)
         instance.broadening_type = broadening_type
         instance.broadening = broadening
-        instance.kgrid = cls._get_kgrid(text)
-        truncation_type, truncation_radius = cls._get_truncationvars(text)
+        instance.kgrid = instance._get_kgrid(text)
+        truncation_type, truncation_radius = instance._get_truncationvars(text)
         instance.truncation_type = truncation_type
         instance.truncation_radius = truncation_radius
-        instance.pwcut = cls._get_elec_cutoff(text)
-        instance.fftgrid = cls._get_fftgrid(text)
+        instance.pwcut = instance._get_pw_cutoff(text)
+        instance.rhocut = instance._get_rho_cutoff(text)
+        instance.fftgrid = instance._get_fftgrid(text)
         instance._set_eigvars(text)
         instance._set_orb_fillings()
         instance.is_metal = instance._determine_is_metal()
@@ -284,7 +290,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         instance._set_lattice_vars(text)
         instance.has_solvation = instance.check_solvation()
 
-        instance._set_jstrucs(text)
+        
 
         #@ Cooper added @#
         instance.is_gc = key_exists('target-mu', text)
@@ -294,7 +300,27 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return instance
     
 
-    def _get_prefix(text: list[str]) -> str:
+    def _get_xc_func(self, text: list[str]) -> str:
+        '''
+        Get the exchange-correlation functional used in the calculation
+        
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+            
+        Returns
+        -------
+        xc_func: str
+            exchange-correlation functional used
+        '''
+        line = find_key('elec-ex-corr', text)
+        xc_func = text[line].strip().split()[-1].strip()
+        return xc_func
+        
+    
+
+    def _get_prefix(self, text: list[str]) -> str:
         '''
         Get output prefix from the out file
 
@@ -315,7 +341,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             prefix = dumpname.split('.')[0]
         return prefix
     
-    def _get_spinvars(text: list[str]) -> tuple[str, int]:
+    def _get_spinvars(self, text: list[str]) -> tuple[str, int]:
         '''
         Set spintype and Nspin from out file text for instance
 
@@ -342,7 +368,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             raise NotImplementedError('have not considered this spin yet')
         return spintype, Nspin
     
-    def _get_broadeningvars(text:list[str]) -> tuple[str, float]:
+    def _get_broadeningvars(self, text:list[str]) -> tuple[str, float]:
         '''
         Get broadening type and value from out file text
 
@@ -367,7 +393,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             broadening = 0
         return broadening_type, broadening
     
-    def _get_truncationvars(text:list[str]) -> tuple[str, float]:
+    def _get_truncationvars(self, text:list[str]) -> tuple[str, float]:
         '''
         Get truncation type and value from out file text
 
@@ -406,7 +432,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return truncation_type, truncation_radius
     
     
-    def _get_elec_cutoff(text:list[str]) -> float:
+    def _get_pw_cutoff(self, text:list[str]) -> float:
         '''
         Get the electron cutoff from the out file text
 
@@ -419,8 +445,29 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         pwcut = float(text[line].split()[1]) * Ha_to_eV
         return pwcut
     
+    
+    def _get_rho_cutoff(self, text:list[str]) -> float:
+        '''
+        Get the electron cutoff from the out file text
 
-    def _get_fftgrid(text:list[str]) -> list[int]:
+        Parameters
+        ----------
+        text: list[str]
+            output of read_file for out file
+        '''
+        line = find_key('elec-cutoff ', text)
+        lsplit = text[line].split()
+        if len(lsplit) == 3:
+            rhocut = float(lsplit[2]) * Ha_to_eV
+        else:
+            pwcut = self.pwcut
+            if self.pwcut is None:
+                pwcut = self._get_pw_cutoff(text)
+            rhocut = float(pwcut * 4)
+        return rhocut
+    
+
+    def _get_fftgrid(self, text:list[str]) -> list[int]:
         '''
         Get the FFT grid from the out file text
 
@@ -434,7 +481,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return fftgrid
     
 
-    def _get_kgrid(text:list[str]) -> list[int]:
+    def _get_kgrid(self, text:list[str]) -> list[int]:
         '''
         Get the kpoint grid from the out file text
 
@@ -582,7 +629,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.valence_electrons = None
 
 
-    def _collect_settings_lines(self, text:list[str], start_key:str) -> list[int]:
+    def _collect_settings_lines(self, text:list[str], start_flag:str) -> list[int]:
         '''
         Collect the lines of settings from the out file text
 
@@ -590,7 +637,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         ----------
         text: list[str]
             output of read_file for out file
-        start_key: str
+        start_flag: str
             key to start collecting settings lines
 
         Returns
@@ -606,7 +653,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
                     lines.append(i)
                 else:
                     started = False
-            elif start_key in line:
+            elif start_flag in line:
                 started = True
                 #lines.append(i) # we DONT want to do this
             elif len(lines):
@@ -614,7 +661,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return lines
     
 
-    def _create_settings_dict(self, text:list[str], start_key:str) -> dict:
+    def _create_settings_dict(self, text:list[str], start_flag:str) -> dict:
         '''
         Create a dictionary of settings from the out file text
 
@@ -622,7 +669,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         ----------
         text: list[str]
             output of read_file for out file
-        start_key: str
+        start_flag: str
             key to start collecting settings lines
 
         Returns
@@ -630,7 +677,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         settings_dict: dict
             dictionary of settings
         '''
-        lines = self._collect_settings_lines(text, start_key)
+        lines = self._collect_settings_lines(text, start_flag)
         settings_dict = {}
         for line in lines:
             line_text_list = text[line].strip().split()
@@ -656,7 +703,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         settings_obj: JMinSettings
             settings object
         '''
-        settings_dict = self._create_settings_dict(text, settings_class.start_key)
+        settings_dict = self._create_settings_dict(text, settings_class.start_flag)
         if len(settings_dict):
             settings_obj = settings_class(**settings_dict)
         else:
@@ -844,7 +891,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.Ecomponents = self._read_ecomponents(line, text)
 
 
-    def calculate_filling(broadening_type, broadening, eig, EFermi):
+    def calculate_filling(self, broadening_type, broadening, eig, EFermi):
         #most broadening implementations do not have the denominator factor of 2, but JDFTx does currently
         #   remove if use this for other code outfile reading
         x = (eig - EFermi) / (2.0 * broadening)

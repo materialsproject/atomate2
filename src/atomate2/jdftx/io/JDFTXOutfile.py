@@ -81,7 +81,7 @@ def read_outfile_slices(file_name: str) -> list[list[str]]:
     return texts
 
 @dataclass
-class JDFTXOutfile(List[JDFTXOutfileSlice], ClassPrintFormatter):
+class JDFTXOutfile(List[JDFTXOutfileSlice], ClassPrintFormatter, JDFTXOutfileSlice):
     '''
     A class to read and process a JDFTx out file
     '''
@@ -95,10 +95,12 @@ class JDFTXOutfile(List[JDFTXOutfileSlice], ClassPrintFormatter):
         pass
 
     def __getattr__(self, name):
-        # Default assume that the desired attribute is that of the final slice
-        if self:
-            return getattr(self[-1], name)
-        raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
+        try:
+            return super().__getattr__(name)
+        except AttributeError:
+            if self:
+                return getattr(self[-1], name)
+            raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
 
     def __setattr__(self, name, value):
         # Do we want this? I don't imagine this class object should be modified
