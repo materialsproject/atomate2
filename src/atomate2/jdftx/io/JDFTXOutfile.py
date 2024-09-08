@@ -5,9 +5,6 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 
-#Ha_to_eV = 2.0 * const.value('Rydberg constant times hc in eV')
-# ang_to_bohr = 1 / (const.value('Bohr radius') * 10**10)
-
 class ClassPrintFormatter():
     def __str__(self) -> str:
         '''generic means of printing class to command line in readable format'''
