@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import io
+import re
 import tempfile
 import time
 import warnings
@@ -30,6 +31,21 @@ class XMLMoleculeFF:
     def __init__(self, xml_string: str) -> None:
         """Create an XMLMoleculeFF object from a string version of the XML file."""
         self.tree = ElementTree.parse(io.StringIO(xml_string))  # noqa: S314
+
+        root = self.tree.getroot()
+        canonical_order = {}
+        for i, atom in enumerate(root.findall(".//Residues/Residue/Atom")):
+            canonical_order[atom.attrib["type"]] = i
+
+        non_to_res_map = {}
+        for i, atom in enumerate(root.findall(".//NonbondedForce/Atom")):
+            non_to_res_map[i] = canonical_order[atom.attrib["type"]]
+            # self._res_to_non.append(canonical_order[atom.attrib["type"]])
+        # invert map, change to list
+        self._res_to_non = [
+            k for k, v in sorted(non_to_res_map.items(), key=lambda item: item[1])
+        ]
+        self._non_to_res = list(non_to_res_map.values())
 
     def __str__(self) -> str:
         """Return the a string version of the XML file."""
@@ -60,14 +76,14 @@ class XMLMoleculeFF:
 
     def to_openff_molecule(self) -> tk.Molecule:
         """Convert the XMLMoleculeFF to an openff_toolkit Molecule."""
-        if sum(self.partial_charges) > 0:
+        if sum(self.partial_charges) > 1e-6:
             # TODO: update message
             warnings.warn("Formal charges not considered.", stacklevel=1)
 
         p_table = {e.symbol: e.number for e in Element}
         openff_mol = tk.Molecule()
         for atom in self.tree.getroot().findall(".//Residues/Residue/Atom"):
-            symbol = atom.attrib["name"][0]  # TODO: replace with character regex
+            symbol = re.match(r"^[A-Za-z]+", atom.attrib["name"]).group()
             atomic_number = p_table[symbol]
             openff_mol.add_atom(atomic_number, formal_charge=0, is_aromatic=False)
 
@@ -87,13 +103,14 @@ class XMLMoleculeFF:
     def partial_charges(self) -> np.ndarray:
         """Get the partial charges from the XMLMoleculeFF object."""
         atoms = self.tree.getroot().findall(".//NonbondedForce/Atom")
-        charges = [float(atom.attrib["charge"]) for atom in atoms]
-        return np.array(charges)
+        charges = np.array([float(atom.attrib["charge"]) for atom in atoms])
+        return charges[self._res_to_non]
 
     @partial_charges.setter
     def partial_charges(self, partial_charges: np.ndarray) -> None:
         for i, atom in enumerate(self.tree.getroot().findall(".//NonbondedForce/Atom")):
-            atom.attrib["charge"] = str(partial_charges[i])
+            charge = partial_charges[self._non_to_res[i]]
+            atom.attrib["charge"] = str(charge)
 
     def assign_partial_charges(self, mol_or_method: tk.Molecule | str) -> None:
         """Assign partial charges to the XMLMoleculeFF object.

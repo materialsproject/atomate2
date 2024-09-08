@@ -74,9 +74,10 @@ def test_generate_openmm_interchange(openmm_data, run_job):
     assert molecule_specs[1].name == "water"
     assert molecule_specs[1].count == 300
     co = tk.Molecule.from_json(molecule_specs[1].openff_mol)
+
     assert np.allclose(
         co.partial_charges.magnitude,
-        np.array([-0.5873, -0.0492, 0.0768, 0.0768, 0.4061, 0.0768]),  # from file
+        np.array([-0.0492, -0.5873, 0.0768, 0.0768, 0.0768, 0.4061]),  # from file
     )
 
 

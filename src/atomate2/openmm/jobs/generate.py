@@ -28,7 +28,7 @@ from atomate2.openmm.utils import XMLMoleculeFF, create_system_from_xml
 def generate_openmm_interchange(
     input_mol_specs: list[MoleculeSpec | dict],
     mass_density: float,
-    ff_xmls: list[str | Path],
+    ff_xmls: list[str],
     xml_method_and_scaling: tuple[str, float] = None,
     pack_box_kwargs: dict = None,
     tags: list[str] = None,
@@ -57,7 +57,8 @@ def generate_openmm_interchange(
         The target mass density for packing the molecules into
         a box, kg/L.
     ff_xmls : List[str]
-        A list of force field XML strings. The order of the XML strings
+        A list of force field XML strings, these should be the raw text
+        of the XML files. The order of the XML strings
         must match the order of the input_mol_specs.
     xml_method_and_scaling : Tuple[str, float], optional
         A tuple containing the charge method and scaling factor to use for
@@ -95,7 +96,7 @@ def generate_openmm_interchange(
         else:
             raise TypeError("mol_specs must be a list of dicts or MoleculeSpec")
 
-    xml_mols = [XMLMoleculeFF.from_file(xml) for xml in ff_xmls]
+    xml_mols = [XMLMoleculeFF(xml) for xml in ff_xmls]
     if len(mol_specs) != len(xml_mols):
         raise ValueError(
             "The number of molecule specifications and XML files must match."
