@@ -187,7 +187,7 @@ class MVLGWBandStructureMaker(Maker):
         The maker to use for the GW calculation.
     """
 
-    name: str = "band structure"
+    name: str = "MVL G0W0 band structure"
     static_maker: BaseVaspMaker = field(default_factory=MVLStaticMaker)
     nscf_maker: BaseVaspMaker = field(default_factory=MVLNonSCFMaker)
     gw_maker: BaseVaspMaker = field(default_factory=MVLGWMaker)

@@ -520,9 +520,7 @@ class MVLStaticMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = (
-        "Materials Virtual Lab (MVL) static calculation compatible with MVL GW jobs"
-    )
+    name: str = "MVL static"
     input_set_generator: VaspInputGenerator = field(default_factory=MVLGWSetGenerator)
 
     @vasp_job
@@ -575,10 +573,7 @@ class MVLNonSCFMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = (
-        "Materials Virtual Lab (MVL) non-self-consistent calculation "
-        "compatible with MVL GW jobs"
-    )
+    name: str = "MVL nscf"
     input_set_generator: VaspInputGenerator = field(default_factory=MVLGWSetGenerator)
 
     @vasp_job
@@ -633,7 +628,7 @@ class MVLGWMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "Materials Virtual Lab GW band structure"
+    name: str = "MVL G0W0 job"
     input_set_generator: VaspInputGenerator = field(default_factory=MVLGWSetGenerator)
 
     @vasp_job
