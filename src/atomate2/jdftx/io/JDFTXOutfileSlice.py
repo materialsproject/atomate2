@@ -68,8 +68,10 @@ def find_key(key_input, tempfile):
         output from readlines() function in read_file method
     '''
     key_input = str(key_input)
+    line = None
     lines = find_all_key(key_input, tempfile)
-    line = lines[-1]
+    if len(lines):
+        line = lines[-1]
     # line = None
     # for i in range(0,len(tempfile)):
     #     if key_input in tempfile[i]:
@@ -408,7 +410,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         line = find_key('elec-smearing ', text)
         if not line is None:
             broadening_type = text[line].split()[1]
-            broadening = float(text[line].split()[2]) * Ha_to_eV
+            broadening = float(text[line].split()[2])
         else:
             broadening_type = None
             broadening = 0
