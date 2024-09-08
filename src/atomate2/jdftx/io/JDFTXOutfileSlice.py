@@ -14,65 +14,11 @@ from typing import List, Optional
 from pymatgen.core.units import Ha_to_eV, ang_to_bohr, bohr_to_ang
 
 
-#Ha_to_eV = 2.0 * const.value('Rydberg constant times hc in eV')
-# ang_to_bohr = 1 / (const.value('Bohr radius') * 10**10)
-
 class ClassPrintFormatter():
     def __str__(self) -> str:
         '''generic means of printing class to command line in readable format'''
         return str(self.__class__) + '\n' + '\n'.join((str(item) + ' = ' + str(self.__dict__[item]) for item in sorted(self.__dict__)))
 
-# def check_file_exists(func):
-#     '''Check if file exists (and continue normally) or raise an exception if it does not'''
-#     @wraps(func)
-#     def wrapper(filename):
-#         if not os.path.isfile(filename):
-#             raise OSError('\'' + filename + '\' file doesn\'t exist!')
-#         return func(filename)
-#     return wrapper
-
-# @check_file_exists
-# def read_file(file_name: str) -> list[str]:
-#     '''
-#     Read file into a list of str
-
-#     Parameters
-#     ----------
-#     filename: Path or str
-#         name of file to read
-
-#     Returns
-#     -------
-#     text: list[str]
-#         list of strings from file
-#     '''
-#     with open(file_name, 'r') as f:
-#         text = f.readlines()
-#     return text
-
-
-# @check_file_exists
-# def read_outfile(file_name: str, out_slice_idx: int = -1) -> list[str]:
-#     '''
-#     Read slice of out file into a list of str
-
-#     Parameters
-#     ----------
-#     filename: Path or str
-#         name of file to read
-#     out_slice_idx: int
-#         index of slice to read from file
-
-#     Returns
-#     -------
-#     text: list[str]
-#         list of strings from file
-#     '''
-#     with open(file_name, 'r') as f:
-#         _text = f.readlines()
-#     start_lines = get_start_lines(text, add_end=True)
-#     text = _text[start_lines[out_slice_idx]:start_lines[out_slice_idx+1]]
-#     return text
 
 def get_start_lines(text: list[str], start_key: Optional[str]="*************** JDFTx", add_end: Optional[bool]=False) -> list[int]:
     '''
@@ -252,10 +198,22 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     trajectory_forces: list[list[list[float]]] = None
     trajectory_ecomponents: list[dict] = None
     is_converged: bool = None #TODO implement this
+    
+
+    @property
+    def is_converged(self) -> bool:
+        '''
+        Returns True if the electronic and geometric optimization have converged
+        (or only the former if a single-point calculation)
+        '''
+        converged = self.jstrucs.elec_converged
+        if self.geom_opt:
+            converged = converged and self.jstrucs.geom_converged
+        return converged
 
 
     @property
-    def trajectory(self):
+    def trajectory(self) -> Trajectory:
         '''
         Returns a pymatgen trajectory object
         '''
@@ -265,9 +223,6 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             constant_lattice=constant_lattice
         )
         return traj
-        # structures = []
-        # for coords, lattice 
-        # traj = Trajectory.from_structures
 
     
     @property
@@ -286,18 +241,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     
     
     @property
-    def structure(self):
+    def structure(self) -> Structure:
         structure = self.jstrucs[-1]
         return structure
-        # latt = self.lattice
-        # coords = self.atom_coords_final
-        # elements = self.atom_elements
-        # structure = Structure(
-        #     lattice=latt,
-        #     species=elements,
-        #     coords=coords
-        # )
-        # return structure
     
     
     @classmethod
@@ -377,6 +323,13 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         ----------
         text: list[str]
             output of read_file for out file
+
+        Returns
+        -------
+        spintype: str
+            type of spin in calculation
+        Nspin: int
+            number of spin types in calculation
         '''
         line = find_key('spintype ', text)
         spintype = text[line].split()[1]
@@ -397,6 +350,13 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         ----------
         text: list[str]
             output of read_file for out file
+
+        Returns
+        -------
+        broadening_type: str
+            type of electronic smearing
+        broadening: float
+            parameter for electronic smearing
         '''
         line = find_key('elec-smearing ', text)
         if not line is None:
@@ -415,6 +375,13 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         ----------
         text: list[str]
             output of read_file for out file
+
+        Returns
+        -------
+        truncation_type: str
+            type of coulomb truncation
+        truncation_radius: float | None
+            radius of truncation (if truncation_type is spherical)
         '''
         maptypes = {'Periodic': None, 'Slab': 'slab', 'Cylindrical': 'wire', 'Wire': 'wire',
                     'Spherical': 'spherical', 'Isolated': 'box'}
@@ -786,12 +753,14 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         text: list[str]
             output of read_file for out file
         '''
-        lines = find_all_key('nElectrons', text)
-        if len(lines) > 1:
-            idx = 4
-        else:
-            idx = 1  #nElectrons was not printed in scf iterations then
-        self.total_electrons = float(text[lines[-1]].split()[idx])
+        total_electrons = self.jstrucs[-1].elecMinData[-1].nElectrons
+        self.total_electrons = total_electrons
+        # lines = find_all_key('nElectrons', text)
+        # if len(lines) > 1:
+        #     idx = 4
+        # else:
+        #     idx = 1  #nElectrons was not printed in scf iterations then
+        # self.total_electrons = float(text[lines[-1]].split()[idx])
     
 
     def _set_Nbands(self, text: list[str]) -> None:
@@ -803,7 +772,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         text: list[str]
             output of read_file for out file
         '''
-        lines = self.find_all_key('elec-n-bands', text)
+        lines = find_all_key('elec-n-bands', text)
         line = lines[0]
         nbands = int(text[line].strip().split()[-1].strip())
         self.Nbands = nbands
