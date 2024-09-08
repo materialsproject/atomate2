@@ -628,7 +628,7 @@ class MVLGWMaker(BaseVaspMaker):
         ``{"my_file:txt": "contents of the file"}``.
     """
 
-    name: str = "MVL G0W0 job"
+    name: str = "MVL G0W0"
     input_set_generator: VaspInputGenerator = field(default_factory=MVLGWSetGenerator)
 
     @vasp_job
