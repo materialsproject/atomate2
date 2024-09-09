@@ -66,6 +66,92 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        inherits from EquilibriumVolumeMaker and ForceFieldMDMaker (MLFF)
+    production_md_maker : ForceFieldMDMaker
+        MDMaker to generate the production run(s);
+        inherits from ForceFieldMDMaker (MLFF)
+    quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
+        SlowQuenchMaker - MLFFMDMaker that quenchs structure from
+        high to low temperature
+        FastQuenchMaker - DoubleRelaxMaker + Static that "quenches"
+        structure to 0K
+    """
+
+    name: str = "MP Morph MLFF MD Maker"
+    convergence_md_maker: EquilibriumVolumeMaker | None = None
+    production_md_maker: ForceFieldMDMaker = field(default_factory=ForceFieldMDMaker)
+    quench_maker: FastQuenchMLFFMDMaker | SlowQuenchMLFFMDMaker | None = None
+
+    @classmethod
+    def from_temperature_and_steps(
+        cls,
+        temperature: float,
+        n_steps_convergence: int,
+        n_steps_production: int,
+        mlff_maker: ForceFieldMDMaker = ForceFieldMDMaker(),
+    ) -> MPMorphMLFFMDMaker:
+        """Create a MPMorphMLFFMDMaker from temperature and steps.
+        Recommended for friendly user experience.
+
+        Parameters
+        ----------
+        temperature : float
+            Temperature of the equilibrium volume search and production run in Kelvin
+        n_steps_convergence : int
+            Number of steps for the convergence run(s)
+        n_steps_production : int
+            Total number of steps for the production run(s)
+        mlff_maker : ForceFieldMDMaker
+            MDMaker to generate the molecular dynamics jobs specifically for MLFF MDs.
+            This is generalization to any MLFF MD Maker. E.g. LJMDMaker, CHGNetMDMaker, etc.
+        """
+        base_md_maker = mlff_maker.update_kwargs(
+            temperature=temperature,
+            n_steps=n_steps_convergence,
+            name="Convergence MPMorph MLFF MD Maker",
+        )
+
+        updated_convergence_md_maker = EquilibriumVolumeMaker(
+            name="MP Morph MLFF Equilibrium Volume Maker",
+            md_maker=base_md_maker,
+        )
+
+        updated_production_md_maker = base_md_maker.update_kwargs(
+            update=dict(
+                name="Production Run MLFF MD Maker",
+                temperature=temperature,
+                n_steps=n_steps_production,
+            )
+        )
+        return cls(
+            name="MP Morph MLFF MD Maker",
+            convergence_md_maker=updated_convergence_md_maker,
+            production_md_maker=updated_production_md_maker,
+        )
+
+
+@dataclass
+class OldMPMorphMLFFMDMaker(MPMorphMDMaker):
+    """
+    Define a ML ForceField MPMorph flow.
+
+    This flow uses NVT molecular dynamics to:
+    (1 - optional) Determine the equilibrium volume of an amorphous
+        structure via EOS fit.
+    (2 - optional) Quench the equilibrium volume structure from a higher
+        temperature down to a lower desired "production" temperature.
+    (3) Run a production, longer-time MD run in NVT.
+        The production run can be broken up into smaller steps to
+        ensure the simulation does not hit wall time limits.
+
+    Check atomate2.common.flows.mpmorph for MPMorphMDMaker
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
     temperature : float = 300
         Temperature of the equilibrium volume search and production run in Kelvin,
         default 300K
