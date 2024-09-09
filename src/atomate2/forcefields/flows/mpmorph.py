@@ -41,13 +41,14 @@ from atomate2.forcefields.md import (
 if TYPE_CHECKING:
     from pathlib import Path
     from typing import Any
+    from typing_extensions import Self
 
-    from jobflow import Flow, Job
+    from jobflow import Flow, Job, Maker
     from pymatgen.core import Structure
 
 
 @dataclass
-class MPMorphMLFFMDMaker(MPMorphMDMaker):
+class MLFFMPMorphMDMaker(MPMorphMDMaker):
     """
     Define a ML ForceField MPMorph flow.
 
@@ -60,12 +61,16 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
         The production run can be broken up into smaller steps to
         ensure the simulation does not hit wall time limits.
 
-    Check atomate2.common.flows.mpmorph for MPMorphMDMaker
+    Check atomate2.common.flows.mpmorph for MPMorphMDMaker.
+
+    Unlike the VASP base MPMorph flows, this class will not run
+    calculations by default. The user needs to specify a forcefield.
 
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
+<<<<<<< HEAD
     convergence_md_maker : EquilibrateVolumeMaker
         MDMaker to generate the equilibrium volumer searcher;
         uses EquilibriumVolumeMaker with a ForceFieldMDMaker (MLFF)
@@ -164,53 +169,83 @@ class OldMPMorphMLFFMDMaker(MPMorphMDMaker):
         MDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
     steps_total_production: int = 10000
         Total number of steps for the production run(s); default 10000 steps
+=======
+>>>>>>> cb0b4aa46ad7fb05f82dad8de361063935ad99aa
     convergence_md_maker : EquilibrateVolumeMaker
-        MDMaker to generate the equilibrium volumer searcher;
-        inherits from EquilibriumVolumeMaker and ForceFieldMDMaker (MLFF)
+        MDMaker to generate the equilibrium volumer searcher
+    production_md_maker : Maker
+        MDMaker to generate the production run(s)
     quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
-        SlowQuenchMaker - MLFFMDMaker that quenchs structure from
-        high to low temperature
-        FastQuenchMaker - DoubleRelaxMaker + Static that "quenches"
-        structure to 0K
-    production_md_maker : ForceFieldMDMaker
-        MDMaker to generate the production run(s);
-        inherits from ForceFieldMDMaker (MLFF)
+        SlowQuenchMaker - MDMaker that quenchs structure from high to low temperature
+        FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
     """
 
-    name: str = "MP Morph MLFF MD Maker"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
+    name: str = "Forcefield MPMorph MD"
+    convergence_md_maker: Maker | None = field(
+        default_factory = lambda : EquilibriumVolumeMaker(
+            name="MP Morph MLFF Equilibrium Volume Maker",
+            md_maker = ForceFieldMDMaker,
+            postprocessor=MPMorphEVPostProcess(),
+        )
+    )
+    production_md_maker: Maker | None = field(default_factory=ForceFieldMDMaker)
+    quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
-    md_maker: ForceFieldMDMaker | None = field(default_factory=ForceFieldMDMaker)
-    convergence_md_maker: EquilibriumVolumeMaker | None = None
-    production_md_maker: ForceFieldMDMaker = field(default_factory=ForceFieldMDMaker)
+    @classmethod
+    def from_temperature_and_nsteps(
+        cls,
+        temperature: float,
+        n_steps_convergence : int = 5000,
+        n_steps_production : int = 10000,
+        end_temp : float | None = None,
+        md_maker : Maker = ForceFieldMDMaker,
+    ) -> Self:
+        """
+        Create an MPMorph flow from a temperature and number of steps.
 
-    quench_maker: FastQuenchMLFFMDMaker | SlowQuenchMLFFMDMaker | None = None
+        This is a convenience class constructor. The user need only
+        input the desired temperature and steps for convergence / production
+        MD runs.
+        
+        Parameters
+        -----------
+        temperature : float
+            The (starting) temperature
+        n_steps_convergence : int = 5000
+            The number of steps used in MD runs for equilibrating structures.
+        n_steps_production : int =
+            The number of steps used in MD production runs. Default, 10000.
+        end_temp : float or None
+            If a float, the temperature to ramp down to in the production run.
+            If None (default), set to `temperature`.
+        base_md_maker : Maker
+            The Maker used to start MD runs.
+        """
 
-    def _post_init_update(self) -> None:
-        """Ensure that forcefield makers correctly set temperature."""
-        self.md_maker = self.md_maker.update_kwargs(
+        conv_md_maker = md_maker.update_kwargs(
             update={
-                "temperature": self.temperature,
-                "n_steps": self.steps_convergence,
+                "temperature": temperature,
+                "n_steps": n_steps_convergence,
             },
             class_filter=ForceFieldMDMaker,
         )
-        if self.convergence_md_maker is None:
-            # Default to equilibrium volume maker
-            self.convergence_md_maker = EquilibriumVolumeMaker(
-                name="MP Morph MLFF Equilibrium Volume Maker",
-                md_maker=self.md_maker,
-                postprocessor=MPMorphEVPostProcess(),
-            )  # TODO: check EV versus PV
+        convergence_md_maker = EquilibriumVolumeMaker(
+            name="MP Morph MLFF Equilibrium Volume Maker",
+            md_maker=conv_md_maker,
+            postprocessor=MPMorphEVPostProcess(),
+        )
 
-        self.production_md_maker = self.md_maker.update_kwargs(
+        production_md_maker = md_maker.update_kwargs(
             update=dict(
                 name="Production Run MLFF MD Maker",
-                temperature=self.temperature,
-                n_steps=self.steps_total_production,
+                temperature=temperature if end_temp is None else [temperature,end_temp],
+                n_steps=n_steps_production,
             )
+        )
+
+        return cls(
+            convergence_md_maker = convergence_md_maker,
+            production_md_maker = production_md_maker,
         )
 
 
@@ -287,7 +322,7 @@ class FastQuenchMLFFMDMaker(FastQuenchMaker):
 
 
 @dataclass
-class MPMorphLJMDMaker(MPMorphMLFFMDMaker):
+class MPMorphLJMDMaker(MLFFMPMorphMDMaker):
     """Lennard-Jones MPMorph flow for volume equilibration and production.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -320,7 +355,7 @@ class MPMorphLJMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
+class MPMorphSlowQuenchLJMDMaker(MLFFMPMorphMDMaker):
     """Lennard Jones ForceField MPMorph flow plus slow quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -365,7 +400,7 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphFastQuenchLJMDMaker(MPMorphMLFFMDMaker):
+class MPMorphFastQuenchLJMDMaker(MLFFMPMorphMDMaker):
     """Lennard Jones ForceField MPMorph flow plus fast quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -408,7 +443,7 @@ class MPMorphFastQuenchLJMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphCHGNetMDMaker(MPMorphMLFFMDMaker):
+class MPMorphCHGNetMDMaker(MLFFMPMorphMDMaker):
     """CHGNet ML ForceField MPMorph flow for volume equilibration and production.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -441,7 +476,7 @@ class MPMorphCHGNetMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
+class MPMorphSlowQuenchCHGNetMDMaker(MLFFMPMorphMDMaker):
     """CHGNet ML ForceField MPMorph flow plus slow quench..
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -486,7 +521,7 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphFastQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
+class MPMorphFastQuenchCHGNetMDMaker(MLFFMPMorphMDMaker):
     """CHGNet ML ForceField MPMorph flow plus fast quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -529,7 +564,7 @@ class MPMorphFastQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphM3GNetMDMaker(MPMorphMLFFMDMaker):
+class MPMorphM3GNetMDMaker(MLFFMPMorphMDMaker):
     """M3GNet ML ForceField MPMorph flow for volume equilibration and production.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -562,7 +597,7 @@ class MPMorphM3GNetMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
+class MPMorphSlowQuenchM3GNetMDMaker(MLFFMPMorphMDMaker):
     """M3GNet ML ForceField MPMorph flow plus slow quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -607,7 +642,7 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphFastQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
+class MPMorphFastQuenchM3GNetMDMaker(MLFFMPMorphMDMaker):
     """M3GNet ML ForceField MPMorph flow plus fast quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -650,7 +685,7 @@ class MPMorphFastQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphMACEMDMaker(MPMorphMLFFMDMaker):
+class MPMorphMACEMDMaker(MLFFMPMorphMDMaker):
     """MACE ML ForceField MPMorph flow for volume equilibration and production runs.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -683,7 +718,7 @@ class MPMorphMACEMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
+class MPMorphSlowQuenchMACEMDMaker(MLFFMPMorphMDMaker):
     """MACE ML ForceField MPMorph flow plus slow quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -728,7 +763,7 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
 
 
 @dataclass
-class MPMorphFastQuenchMACEMDMaker(MPMorphMLFFMDMaker):
+class MPMorphFastQuenchMACEMDMaker(MLFFMPMorphMDMaker):
     """MACE ML ForceField MPMorph flow plus fast quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.

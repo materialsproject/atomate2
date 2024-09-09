@@ -37,8 +37,10 @@ from atomate2.vasp.powerups import update_user_incar_settings
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Any
+    from typing_extensions import Self
 
-    from jobflow import Flow
+    from jobflow import Flow, Maker
     from pymatgen.core import Structure
 
     from atomate2.vasp.jobs.md import MDMaker
@@ -89,51 +91,66 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
         n_steps_convergence: int,
         n_steps_production: int,
         end_temp: float | None = None,
-    ) -> MPMorphVaspMDMaker:
-        """Create a new instance of this class with a new temperature and number of steps.
-        Recommended for user friendly experience of using MPMorphMDMaker.
+        md_maker: Maker = BaseMPMorphMDMaker,
+        n_steps_per_production_run: int | None = None,
+    ) -> Self:
+        """
+        Create VASP MPMorph flow from a temperature and number of steps.
 
         Parameters
-        ----------
+        -----------
         temperature : float
-            Temperature of the equilibrium volume search and production run in Kelvin.
-        n_steps_convergence : int
-            Number of steps for the convergence fitting for the volume.
-        n_steps_production : int
-            Number of steps for the production run(s).
-        end_temp : float | None
-            End temperature of the equilibrium volume search and production run in Kelvin.
-            Use only for lowering temperarture for convergence AND production run. Default None.
+            The (starting) temperature
+        n_steps_convergence : int = 5000
+            The number of steps used in MD runs for equilibrating structures.
+        n_steps_production : int = 10000
+            The number of steps used in MD production runs.
+        end_temp : float or None
+            If a float, the temperature to ramp down to in the production run.
+            If None (default), set to `temperature`.
+        base_md_maker : Maker
+            The Maker used to start MD runs.
+        n_steps_per_production_run : int or None (default)
+            If an int, the number of steps to use per production run,
+            using MultiMDMaker to orchestrate chained production runs.
         """
-        if end_temp is None:
-            end_temp = temperature
 
-        base_md_maker = update_user_incar_settings(
-            flow=BaseMPMorphMDMaker(name="Convergence MPMorph VASP MD Maker"),
+        end_temp = end_temp or temperature
+
+        conv_md_maker = update_user_incar_settings(
+            flow=md_maker,
             incar_updates={
                 "TEBEG": temperature,
-                "TEEND": end_temp,
+                "TEEND": temperature,
                 "NSW": n_steps_convergence,
             },
         )
+        conv_md_maker.name = "Convergence MPMorph VASP MD Maker"
 
-        updated_convergence_md_maker = EquilibriumVolumeMaker(
-            name="MP Morph VASP Equilibrium Volume Maker", md_maker=base_md_maker
+        convergence_md_maker = EquilibriumVolumeMaker(
+            name="MP Morph VASP Equilibrium Volume Maker", md_maker=conv_md_maker
         )
 
-        updated_production_md_maker = update_user_incar_settings(
-            flow=base_md_maker,
+        if n_steps_per_production_run is None:
+            n_steps_per_production_run = n_steps_production
+            n_production_runs = 1
+        else:
+            n_production_runs = math.ceil(n_steps_production / n_steps_production)
+
+        production_md_maker = update_user_incar_settings(
+            flow=md_maker,
             incar_updates={
                 "TEBEG": temperature,
                 "TEEND": end_temp,
                 "NSW": n_steps_production,
             },
         )
+        production_md_maker.name = "Production MPMorph VASP MD Maker"
 
         return cls(
             name="MP Morph VASP MD Maker",
-            convergence_md_maker=updated_convergence_md_maker,
-            production_md_maker=updated_production_md_maker,
+            convergence_md_maker=convergence_md_maker,
+            production_md_maker=production_md_maker,
         )
 
 
@@ -326,9 +343,15 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
             )
             self.production_md_maker = Response(
                 replace=MultiMDMaker(
-                    md_makers=[self.production_md_maker for _ in range(n_prod_md_steps)]
+                    md_makers=[production_md_maker for _ in range(n_production_runs)]
                 )
             )
+
+        return cls(
+            name="MP Morph VASP MD Maker",
+            convergence_md_maker=convergence_md_maker,
+            production_md_maker=production_md_maker,
+        )
 
 
 @dataclass
