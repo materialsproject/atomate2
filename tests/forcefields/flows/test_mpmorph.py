@@ -13,6 +13,7 @@ from atomate2.forcefields.flows.mpmorph import (
     MPMorphSlowQuenchCHGNetMDMaker,
     MPMorphSlowQuenchLJMDMaker,
     MPMorphSlowQuenchMACEMDMaker,
+    SlowQuenchMLFFMDMaker,
 )
 from atomate2.forcefields.md import CHGNetMDMaker, LJMDMaker, MACEMDMaker
 
@@ -90,7 +91,25 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         if "Slow Quench" in ff_name
         else {}
     )
+    md_maker = md_maker(name=f"{mlff_name} MD Maker", mb_velocity_seed=_velocity_seed)
+    maker = name_to_maker[ff_name]()
+    maker = maker.from_temperature_and_steps(
+        temperature=temp,
+        n_steps_convergence=n_steps_convergence,
+        n_steps_production=n_steps_production,
+        mlff_maker=md_maker,
+    )
+    if "Slow Quench" in ff_name:
+        maker.quench_maker = maker.quench_maker.update_kwargs(
+            update=quench_kwargs, class_filter=SlowQuenchMLFFMDMaker
+        )
+    else:
+        pass
 
+    flow = maker.make(structure)
+
+    """
+    # Old Setup
     flow = name_to_maker[ff_name](
         temperature=temp,
         steps_convergence=n_steps_convergence,
@@ -104,7 +123,7 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         ),
         quench_maker_kwargs=quench_kwargs,
     ).make(structure)
-
+    """
     uuids = {}
     _get_uuid_from_job(flow, uuids)
 
@@ -120,17 +139,17 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
 
     # check number of jobs spawned
     if "Fast Quench" in ff_name:
-        assert len(uuids) == 10
+        assert len(uuids) == 9
     elif "Slow Quench" in ff_name:
-        assert len(uuids) == 11
+        assert len(uuids) == 10
     else:  # "Main MPMorph MLFF Maker"
-        assert len(uuids) == 7
+        assert len(uuids) == 6
 
     main_mp_morph_job_names = [
         "MD Maker 1",
         "MD Maker 2",
         "MD Maker 3",
-        "MD Maker 4",
+        # "MD Maker 4",
         "production run",
     ]
 
@@ -159,13 +178,16 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     assert task_docs["production run"].output.n_steps == n_steps_production + 1
 
     # check initial structure is scaled correctly
-    ref_volumes = [
+
+    ref_volumes = [669.9137883357736, 1308.4253678433074, 2260.959035633235]
+    """
+    #old ref_volumes =
+    [
         669.9137883357736,
         1063.7982842554181,
         1587.9437945736847,
         2260.959035633235,
-    ]
-
+    ]"""
     assert all(
         any(
             doc.output.structure.volume == pytest.approx(ref_volume, abs=1e-2)
@@ -192,9 +214,10 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     # check that MD Maker Energies are close
     # TODO: This may be unnecessary because it changes from model to model
     assert task_docs["MD Maker 1"].output.energy == pytest.approx(-130, abs=5)
-    assert task_docs["MD Maker 2"].output.energy == pytest.approx(-325, abs=5)
-    assert task_docs["MD Maker 3"].output.energy == pytest.approx(-329, abs=5)
-    assert task_docs["MD Maker 4"].output.energy == pytest.approx(-270, abs=5)
+    assert task_docs["MD Maker 2"].output.energy == pytest.approx(-340, abs=5)
+    assert task_docs["MD Maker 3"].output.energy == pytest.approx(-270, abs=5)
+    # old assert task_docs["MD Maker 2"].output.energy == pytest.approx(-325, abs=5)
+    # old assert task_docs["MD Maker 3"].output.energy == pytest.approx(-329, abs=5) #also new 3 is old 4
 
     if "Fast Quench" in ff_name:
         assert (
