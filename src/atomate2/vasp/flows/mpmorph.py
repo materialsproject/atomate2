@@ -134,12 +134,11 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
             name="MP Morph VASP MD Maker",
             convergence_md_maker=updated_convergence_md_maker,
             production_md_maker=updated_production_md_maker,
-            quench_maker=None,
         )
 
 
 @dataclass
-class SlowQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
+class MPMorphSlowQuenchVaspMDMaker(MPMorphVaspMDMaker):
     """VASP MPMorph flow plus slow quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -180,91 +179,9 @@ class SlowQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
         )
     )
 
-    @classmethod
-    def from_temperature_nsteps_for_slow_quench(
-        cls,
-        temperature: float,
-        n_steps_convergence: int,
-        n_steps_production: int,
-        quench_n_steps: int,
-        quench_temperature_step: int,
-        quench_end_temperature: float,
-        quench_start_temperature: float,
-        descent_method: Literal["stepwise", "linear with hold"] = "stepwise",
-        end_temp: float | None = None,
-    ) -> SlowQuenchMPMorphVaspMDMaker:
-        """Create a new instance of MPMorph SlowQuench with a new temperature and number of steps
-        for convergence run, production run, and slow quencher.
-        Recommended for user friendly experience of using MPMorphSlowQuenchMaker.
-
-        Parameters
-        ----------
-        temperature : float
-            Temperature of the equilibrium volume search and production run in Kelvin.
-        n_steps_convergence : int
-            Number of steps for the convergence fitting for the volume.
-        n_steps_production : int
-            Number of steps for the production run(s).
-        end_temp : float | None
-            End temperature of the equilibrium volume search and production run in Kelvin.
-            Use only for lowering temperarture for convergence AND production run. Default None.
-        quench_n_steps : int
-            Number of steps for quench.
-        quench_temperature_step : int
-            Temperature step for quench.
-        quench_end_temperature : float
-            End temperature for quench.
-        quench_start_temperature : float
-            Start temperature for quench.
-        descent_method : Literal["stepwise", "linear with hold"]
-            Descent method for quench. Default "stepwise".
-        """
-        if end_temp is None:
-            end_temp = temperature
-
-        base_md_maker = update_user_incar_settings(
-            flow=BaseMPMorphMDMaker(
-                name="Convergence MPMorph VASP MD Maker for slow quench"
-            ),
-            incar_updates={
-                "TEBEG": temperature,
-                "TEEND": end_temp,
-                "NSW": n_steps_convergence,
-            },
-        )
-
-        updated_convergence_md_maker = EquilibriumVolumeMaker(
-            name="MP Morph VASP Equilibrium Volume Maker for slow quench",
-            md_maker=base_md_maker,
-        )
-
-        updated_production_md_maker = update_user_incar_settings(
-            flow=base_md_maker,
-            incar_updates={
-                "TEBEG": temperature,
-                "TEEND": end_temp,
-                "NSW": n_steps_production,
-            },
-        )
-
-        slow_quench_maker = SlowQuenchVaspMaker(
-            md_maker=BaseMPMorphMDMaker(name="Slow Quench VASP Maker"),
-            quench_n_steps=quench_n_steps,
-            quench_temperature_step=quench_temperature_step,
-            quench_end_temperature=quench_end_temperature,
-            quench_start_temperature=quench_start_temperature,
-            descent_method=descent_method,
-        )
-        return cls(
-            name="MP Morph VASP MD Maker",
-            convergence_md_maker=updated_convergence_md_maker,
-            production_md_maker=updated_production_md_maker,
-            quench_maker=slow_quench_maker,
-        )
-
 
 @dataclass
-class FastQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
+class MPMorphFastQuenchVaspMDMaker(MPMorphVaspMDMaker):
     """
     VASP MPMorph flow including multiple production runs and slow quench.
 
@@ -297,66 +214,6 @@ class FastQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
     )
     production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
     quench_maker: BaseVaspMaker = field(default_factory=MPGGADoubleRelaxStaticMaker)
-
-    @classmethod
-    def from_temperature_nsteps_for_fast_quench(
-        cls,
-        temperature: float,
-        n_steps_convergence: int,
-        n_steps_production: int,
-        end_temp: float | None = None,
-    ) -> FastQuenchMPMorphVaspMDMaker:
-        """Create a new instance of MPMorph SlowQuench with a new temperature and number of steps
-        for convergence run, production run, and slow quencher.
-        Recommended for user friendly experience of using MPMorphSlowQuenchMaker.
-
-        Parameters
-        ----------
-        temperature : float
-            Temperature of the equilibrium volume search and production run in Kelvin.
-        n_steps_convergence : int
-            Number of steps for the convergence fitting for the volume.
-        n_steps_production : int
-            Number of steps for the production run(s).
-        end_temp : float | None
-            End temperature of the equilibrium volume search and production run in Kelvin.
-            Use only for lowering temperarture for convergence AND production run. Default None.
-        """
-        if end_temp is None:
-            end_temp = temperature
-
-        base_md_maker = update_user_incar_settings(
-            flow=BaseMPMorphMDMaker(
-                name="Convergence MPMorph VASP MD Maker for fast quench"
-            ),
-            incar_updates={
-                "TEBEG": temperature,
-                "TEEND": end_temp,
-                "NSW": n_steps_convergence,
-            },
-        )
-
-        updated_convergence_md_maker = EquilibriumVolumeMaker(
-            name="MP Morph VASP Equilibrium Volume Maker for fast quench",
-            md_maker=base_md_maker,
-        )
-
-        updated_production_md_maker = update_user_incar_settings(
-            flow=base_md_maker,
-            incar_updates={
-                "TEBEG": temperature,
-                "TEEND": end_temp,
-                "NSW": n_steps_production,
-            },
-        )
-
-        fast_quench_maker = MPGGADoubleRelaxStaticMaker(name="Fast Quench VASP Maker")
-        return cls(
-            name="MP Morph VASP MD Maker",
-            convergence_md_maker=updated_convergence_md_maker,
-            production_md_maker=updated_production_md_maker,
-            quench_maker=fast_quench_maker,
-        )
 
 
 @dataclass
