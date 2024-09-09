@@ -27,7 +27,7 @@ _REF_PATHS: dict[str, str | Path] = {}
 _FAKE_RUN_QCHEM_KWARGS: dict[str, dict] = {}
 
 
-@pytest.fixture()
+@pytest.fixture
 def h2o_molecule():
     return Molecule(
         coords=[
