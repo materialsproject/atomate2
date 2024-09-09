@@ -148,7 +148,7 @@ MASTER_TAG_LIST = {
             format_options = [
             #note that hyb-HSE06 has a bug in JDFTx and should not be used and is excluded here
             #    use the LibXC version instead (hyb-gga-HSE06)
-            StrTag(write_tagname = False,
+            StrTag(write_tagname = True, #Ben: Changing this to True to see if it fixes the issue
                    options = ['gga', 'gga-PBE', 'gga-PBEsol', 'gga-PW91', 'Hartree-Fock', 'hyb-PBE0',
                               'lda', 'lda-PW', 'lda-PW-prec', 'lda-PZ', 'lda-Teter', 'lda-VWN',
                               'mgga-revTPSS', 'mgga-TPSS', 'orb-GLLBsc', 'pot-LB94']),
