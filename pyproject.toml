@@ -62,6 +62,9 @@ forcefields = [
 ase = [
     "ase>=3.23.0",
 ]
+ase-ext = [
+    "tblite>=0.3.0"
+]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
@@ -103,6 +106,7 @@ strict = [
     "pymatgen==2024.6.10",
     "python-ulid==2.7.0",
     "seekpath==2.1.0",
+    "tblite==0.3.0",
     "typing-extensions==4.12.2",
 ]
 strict-forcefields = [

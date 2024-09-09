@@ -32,7 +32,6 @@ jobs:
 
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
 
@@ -93,7 +92,6 @@ jobs:
 
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
 
