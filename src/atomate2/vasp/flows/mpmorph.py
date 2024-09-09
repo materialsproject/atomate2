@@ -75,7 +75,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
     )
 
     @classmethod
-    def from_temperature_and_nsteps(  # type: ignore[override]
+    def from_temperature_and_steps(
         cls,
         temperature: float,
         n_steps_convergence: int,
