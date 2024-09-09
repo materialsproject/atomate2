@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
 from jobflow import Maker, Response, job
-from monty.serialization import dumpfn
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
@@ -103,22 +102,15 @@ class BaseJdftxMaker(Maker):
         run_jdftx(**self.run_jdftx_kwargs)
 
         current_dir = Path.cwd()
+        files = [str(f) for f in current_dir.glob('*') if f.is_file()]
 
-        #for testing
-        files = list(current_dir.glob('*'))
-        file_paths = [str(f) for f in files if f.is_file()]
-
-
-        response = Response(
+        return Response(
             output={
                 "directory": str(current_dir),
-                "files": file_paths
+                "files": files
             },
             stored_data={
                 "job_type": "JDFTx",
                 "status": "completed"
             }
         )
-
-        return response
-    

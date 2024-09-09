@@ -1,4 +1,4 @@
-"""Module defining base VASP input set and generator."""
+"""Module defining base JDFTx input set and generator."""
 
 from __future__ import annotations
 
@@ -32,7 +32,11 @@ class JdftxInputSet(InputSet):
         A JdftxInput object
     """
 
-    def __init__(self, jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure) -> None:
+    def __init__(
+        self,
+        jdftxinput: JDFTXInfile, 
+        jdftxstructure: JDFTXStructure
+    ) -> None:
         self.jdftxstructure = jdftxstructure
         self.jdftxinput = jdftxinput
 
@@ -72,15 +76,12 @@ class JdftxInputSet(InputSet):
         Parameters
         ----------
         directory
-            Directory to read VASP inputs from.
-        optional_files
-            Optional files to read in as well as a dict of {filename: Object class}.
-            Object class must have a static/class method from_file.
+            Directory to read JDFTx inputs from.
         """
         directory = Path(directory)
         jdftxinput = JDFTXInfile.from_file(
             directory / "input.in"
-        )  # jdftxinputs is a JDFTXInfile object
+        ) 
         jdftxstructure = jdftxinput.to_JDFTXStructure()
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftxstructure)
 
