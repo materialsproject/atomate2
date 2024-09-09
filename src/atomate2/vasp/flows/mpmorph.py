@@ -139,7 +139,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphVaspSlowQuenchMaker(MPMorphMDMaker):
+class SlowQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
     """VASP MPMorph flow plus slow quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -262,7 +262,7 @@ class MPMorphVaspSlowQuenchMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphVaspFastQuenchMaker(MPMorphMDMaker):
+class FastQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
     """
     VASP MPMorph flow including multiple production runs and slow quench.
 
