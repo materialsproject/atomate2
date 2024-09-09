@@ -108,9 +108,12 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             This is generalization to any MLFF MD Maker. E.g. LJMDMaker, CHGNetMDMaker, etc.
         """
         base_md_maker = mlff_maker.update_kwargs(
-            temperature=temperature,
-            n_steps=n_steps_convergence,
-            name="Convergence MPMorph MLFF MD Maker",
+            update={
+                "temperature": temperature,
+                "n_steps": n_steps_convergence,
+                "name": "Convergence MPMorph MLFF MD Maker",
+            },
+            class_filter=ForceFieldMDMaker,
         )
 
         updated_convergence_md_maker = EquilibriumVolumeMaker(
