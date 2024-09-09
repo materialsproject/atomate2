@@ -1,0 +1,34 @@
+latt-move-scale 0.0 0.0 0.0  
+core-overlap-check none 
+ion-species GBRV_v1.5/$ID_pbe_v1.uspp 
+
+symmetries none 
+
+gga 
+van-der-waals D3 
+elec-cutoff 20.0 100.0  
+elec-smearing Fermi 0.001  
+spintype z-spin 
+elec-initial-magnetization 0 no  
+converge-empty-states yes 
+
+lattice-minimize \
+    nIterations 0  
+electronic-minimize \
+    nIterations 100 \
+    energyDiffThreshold 1e-07  
+
+dump End Dtot  
+dump End BoundCharge  
+dump End State  
+dump End Forces  
+dump End Ecomponents  
+dump End VfluidTot  
+dump End ElecDensity  
+dump End KEdensity  
+dump End EigStats  
+dump End BandEigs  
+dump End bandProjections  
+dump End DOS  
+band-projection-params yes no  
+
