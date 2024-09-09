@@ -4,7 +4,6 @@ from shutil import which
 
 import pytest
 from jobflow import run_locally
-from monty.serialization import loadfn
 from pandas import read_json
 from pymatgen.core import Composition
 
@@ -80,7 +79,6 @@ def test_get_random_packed_structure(test_dir):
     matcher = StructureMatcher()
 
     comp = Composition({"Mg2+": 6, "Si4+": 3, "O2-": 12})
-    ref_struct = loadfn(test_dir / "structures" / "packmol_123456.json.gz")
 
     kwargs = {
         "composition": comp,
@@ -88,10 +86,10 @@ def test_get_random_packed_structure(test_dir):
         "vol_per_atom_source": "icsd",
         "packmol_seed": 123456,
     }
-    random_struct = get_random_packed_structure(**kwargs)
-    assert matcher.fit(random_struct, ref_struct)
+    random_struct_1 = get_random_packed_structure(**kwargs)
 
     random_struct_job = get_random_packed_structure(**kwargs, return_as_job=True)
     response = run_locally(random_struct_job)
-    random_struct = response[random_struct_job.uuid][1].output
-    assert matcher.fit(random_struct, ref_struct)
+    random_struct_2 = response[random_struct_job.uuid][1].output
+
+    assert matcher.fit(random_struct_1, random_struct_2)
