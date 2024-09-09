@@ -48,7 +48,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class MLFFMPMorphMDMaker(MPMorphMDMaker):
+class MPMorphMMLFFMDMaker(MPMorphMDMaker):
     """
     Define a ML ForceField MPMorph flow.
 
@@ -70,7 +70,6 @@ class MLFFMPMorphMDMaker(MPMorphMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-<<<<<<< HEAD
     convergence_md_maker : EquilibrateVolumeMaker
         MDMaker to generate the equilibrium volumer searcher;
         uses EquilibriumVolumeMaker with a ForceFieldMDMaker (MLFF)
@@ -96,7 +95,7 @@ class MLFFMPMorphMDMaker(MPMorphMDMaker):
         n_steps_convergence: int,
         n_steps_production: int,
         mlff_maker: ForceFieldMDMaker = ForceFieldMDMaker(),
-    ) -> MPMorphMLFFMDMaker:
+    ) -> MPMorphMMLFFMDMaker:
         """Create a MPMorphMLFFMDMaker from temperature and steps.
         Recommended for friendly user experience.
 
@@ -169,8 +168,6 @@ class OldMPMorphMLFFMDMaker(MPMorphMDMaker):
         MDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
     steps_total_production: int = 10000
         Total number of steps for the production run(s); default 10000 steps
-=======
->>>>>>> cb0b4aa46ad7fb05f82dad8de361063935ad99aa
     convergence_md_maker : EquilibrateVolumeMaker
         MDMaker to generate the equilibrium volumer searcher
     production_md_maker : Maker
@@ -182,9 +179,9 @@ class OldMPMorphMLFFMDMaker(MPMorphMDMaker):
 
     name: str = "Forcefield MPMorph MD"
     convergence_md_maker: Maker | None = field(
-        default_factory = lambda : EquilibriumVolumeMaker(
+        default_factory=lambda: EquilibriumVolumeMaker(
             name="MP Morph MLFF Equilibrium Volume Maker",
-            md_maker = ForceFieldMDMaker,
+            md_maker=ForceFieldMDMaker,
             postprocessor=MPMorphEVPostProcess(),
         )
     )
@@ -195,10 +192,10 @@ class OldMPMorphMLFFMDMaker(MPMorphMDMaker):
     def from_temperature_and_nsteps(
         cls,
         temperature: float,
-        n_steps_convergence : int = 5000,
-        n_steps_production : int = 10000,
-        end_temp : float | None = None,
-        md_maker : Maker = ForceFieldMDMaker,
+        n_steps_convergence: int = 5000,
+        n_steps_production: int = 10000,
+        end_temp: float | None = None,
+        md_maker: Maker = ForceFieldMDMaker,
     ) -> Self:
         """
         Create an MPMorph flow from a temperature and number of steps.
@@ -206,7 +203,7 @@ class OldMPMorphMLFFMDMaker(MPMorphMDMaker):
         This is a convenience class constructor. The user need only
         input the desired temperature and steps for convergence / production
         MD runs.
-        
+
         Parameters
         -----------
         temperature : float
@@ -238,14 +235,16 @@ class OldMPMorphMLFFMDMaker(MPMorphMDMaker):
         production_md_maker = md_maker.update_kwargs(
             update=dict(
                 name="Production Run MLFF MD Maker",
-                temperature=temperature if end_temp is None else [temperature,end_temp],
+                temperature=(
+                    temperature if end_temp is None else [temperature, end_temp]
+                ),
                 n_steps=n_steps_production,
             )
         )
 
         return cls(
-            convergence_md_maker = convergence_md_maker,
-            production_md_maker = production_md_maker,
+            convergence_md_maker=convergence_md_maker,
+            production_md_maker=production_md_maker,
         )
 
 
