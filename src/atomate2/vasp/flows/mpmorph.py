@@ -21,6 +21,8 @@ from atomate2.common.flows.mpmorph import (
     SlowQuenchMaker,
 )
 from atomate2.vasp.flows.md import MultiMDMaker
+from atomate2.vasp.flows.mp import MPGGADoubleRelaxStaticMaker
+from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.mp import (
     MPMetaGGARelaxMaker,
     MPMetaGGAStaticMaker,
@@ -31,14 +33,10 @@ from atomate2.vasp.jobs.mpmorph import (
     FastQuenchVaspMaker,
     SlowQuenchVaspMaker,
 )
-
-from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.flows.mp import MPGGADoubleRelaxStaticMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Any
 
     from jobflow import Flow
     from pymatgen.core import Structure
@@ -47,7 +45,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class VASPMPMorphMDMaker(MPMorphMDMaker):
+class MPMorphVaspMDMaker(MPMorphMDMaker):
     """Base MPMorph flow for amorphous solid equilibration using VASP.
 
     This flow uses NVT molecular dynamics to:
@@ -87,13 +85,26 @@ class VASPMPMorphMDMaker(MPMorphMDMaker):
     @classmethod
     def from_temperature_and_nsteps(
         cls,
-        temperature,
-        n_steps_convergence,
-        n_steps_production,
-        end_temp=None,
+        temperature: float = 300,
+        n_steps_convergence: int = 5000,
+        n_steps_production: int = 10000,
+        end_temp: float | None = None,
     ) -> Self:
-        """Create a new instance of this class with a new temperature and number of steps."""
+        """Create a new instance of this class with a new temperature and number of steps.
+        Recommended for user friendly experience of using MPMorphMDMaker.
 
+        Parameters
+        ----------
+        temperature : float
+            Temperature of the equilibrium volume search and production run in Kelvin. Default 300K.
+        n_steps_convergence : int
+            Number of steps for the convergence fitting for the volume. Default 5000 steps.
+        n_steps_production : int
+            Number of steps for the production run(s). Default 10000 steps.
+        end_temp : float | None
+            End temperature of the equilibrium volume search and production run in Kelvin.
+            Use only for lowering temperarture for convergence AND production run. Default None.
+        """
         if end_temp is None:
             end_temp = temperature
 
@@ -123,7 +134,86 @@ class VASPMPMorphMDMaker(MPMorphMDMaker):
             name="MP Morph VASP MD Maker",
             convergence_md_maker=updated_convergence_md_maker,
             production_md_maker=updated_production_md_maker,
+            quench_maker=None,
         )
+
+
+@dataclass
+class MPMorphVaspSlowQuenchMaker(MPMorphMDMaker):
+    """VASP MPMorph flow plus slow quench.
+
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and finally a production run
+    at a given temperature.
+
+    Check atomate2.common.flows.mpmorph for MPMorphMDMaker
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        inherits from EquilibriumVolumeMaker and MDMaker (VASP)
+    production_md_maker : BaseMPMorphMDMaker
+        MDMaker to generate the production run(s); inherits from MDMaker
+        (VASP) or MultiMDMaker.
+    quench_maker :  SlowQuenchVaspMaker
+        SlowQuenchVaspMaker - MDMaker that quenches structure from high
+        to low temperature in piece-wise AIMD runs.
+        Check atomate2.vasp.jobs.mpmorph for SlowQuenchVaspMaker.
+    """
+
+    name: str = "MP Morph VASP MD Maker Slow Quench"
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(md_maker=BaseMPMorphMDMaker())
+    )
+    production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
+    quench_maker: SlowQuenchVaspMaker = field(
+        default_factory=lambda: SlowQuenchVaspMaker(
+            BaseMPMorphMDMaker(name="Slow Quench VASP Maker"),
+            quench_n_steps=1000,
+            quench_temperature_step=500,
+            quench_end_temperature=500,
+            quench_start_temperature=3000,
+        )
+    )
+
+
+@dataclass
+class MPMorphVaspFastQuenchMaker(MPMorphMDMaker):
+    """
+    VASP MPMorph flow including multiple production runs and slow quench.
+
+    Calculates the equilibrium volume of a structure at a given temperature.
+    A convergence fitting for the volume and finally a production run at a
+    given temperature. Runs a "Fast Quench" at 0K using a double relaxation
+    plus static.
+
+    Check atomate2.common.flows.mpmorph for MPMorphMDMaker
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        inherits from EquilibriumVolumeMaker and MDMaker (VASP)
+    production_md_maker : BaseMPMorphMDMaker
+        MDMaker to generate the production run(s); inherits from
+        MDMaker (VASP) or MultiMDMaker.
+    quench_maker :  FastQuenchVaspMaker
+        FastQuenchVaspMaker - MDMaker that quenches structure from
+        high temperature to 0K.
+        Check atomate2.vasp.jobs.mpmorph for FastQuenchVaspMaker.
+    """
+
+    name: str = "MP Morph VASP MD Maker Fast Quench"
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(md_maker=BaseMPMorphMDMaker())
+    )
+    production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
+    quench_maker: BaseVaspMaker = field(default_factory=MPGGADoubleRelaxStaticMaker)
 
 
 @dataclass
@@ -242,7 +332,7 @@ class BaseMPMorphVaspMDMaker(MPMorphMDMaker):
 
 
 @dataclass
-class MPMorphVaspMDMaker(BaseMPMorphVaspMDMaker):
+class OldMPMorphVaspMDMaker(BaseMPMorphVaspMDMaker):
     """VASP MPMorph flow for volume equilibration and single production run.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -289,7 +379,7 @@ class MPMorphVaspMDMaker(BaseMPMorphVaspMDMaker):
 
 
 @dataclass
-class MPMorphVaspMultiMDMaker(BaseMPMorphVaspMDMaker):
+class OldMPMorphVaspMultiMDMaker(BaseMPMorphVaspMDMaker):
     """VASP MPMorph flow for volume equilibration and multiple production runs.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -347,7 +437,7 @@ class MPMorphVaspMultiMDMaker(BaseMPMorphVaspMDMaker):
 
 
 @dataclass
-class MPMorphVaspMDSlowQuenchMaker(BaseMPMorphVaspMDMaker):
+class OldMPMorphVaspMDSlowQuenchMaker(BaseMPMorphVaspMDMaker):
     """VASP MPMorph flow plus slow quench.
 
     Calculates the equilibrium volume of a structure at a given temperature.
@@ -408,7 +498,7 @@ class MPMorphVaspMDSlowQuenchMaker(BaseMPMorphVaspMDMaker):
 
 
 @dataclass
-class MPMorphVaspMDFastQuenchMaker(BaseMPMorphVaspMDMaker):
+class OldMPMorphVaspMDFastQuenchMaker(BaseMPMorphVaspMDMaker):
     """
     VASP MPMorph flow including multiple production runs and slow quench.
 
