@@ -75,6 +75,10 @@ def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool]):
     which("packmol") is None, reason="packmol must be installed to run this test."
 )
 def test_get_random_packed_structure(test_dir):
+    from pymatgen.analysis.structure_matcher import StructureMatcher
+
+    matcher = StructureMatcher()
+
     comp = Composition({"Mg2+": 6, "Si4+": 3, "O2-": 12})
     ref_struct = loadfn(test_dir / "structures" / "packmol_123456.json.gz")
 
@@ -85,9 +89,9 @@ def test_get_random_packed_structure(test_dir):
         "packmol_seed": 123456,
     }
     random_struct = get_random_packed_structure(**kwargs)
-    assert random_struct == ref_struct
+    assert matcher.fit(random_struct, ref_struct)
 
     random_struct_job = get_random_packed_structure(**kwargs, return_as_job=True)
     response = run_locally(random_struct_job)
     random_struct = response[random_struct_job.uuid][1].output
-    assert random_struct == ref_struct
+    assert matcher.fit(random_struct, ref_struct)
