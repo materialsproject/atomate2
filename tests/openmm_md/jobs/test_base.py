@@ -3,7 +3,7 @@ import copy
 import numpy as np
 import pytest
 from emmet.core.openff import ClassicalMDTaskDocument
-from emmet.core.openmm import Calculation, CalculationInput
+from emmet.core.openmm import Calculation, CalculationInput, OpenMMTaskDocument
 from jobflow import Flow, Job
 from mdareporter import MDAReporter
 from openmm.app import Simulation, StateDataReporter
@@ -98,7 +98,7 @@ def test_create_task_doc(interchange, temp_dir):
         dir_name=dir_name,
     )
 
-    assert isinstance(task_doc, ClassicalMDTaskDocument)
+    assert isinstance(task_doc, OpenMMTaskDocument)
     assert task_doc.dir_name == str(dir_name)
     assert task_doc.state == "successful"
     assert len(task_doc.calcs_reversed) == 1
@@ -133,7 +133,7 @@ def test_make(interchange, temp_dir, run_job):
     task_doc = run_job(base_job)
 
     # Assert the specific values in the task document
-    assert isinstance(task_doc, ClassicalMDTaskDocument)
+    assert isinstance(task_doc, OpenMMTaskDocument)
     assert task_doc.state == "successful"
     # assert task_doc.dir_name == str(temp_dir)
     assert len(task_doc.calcs_reversed) == 1

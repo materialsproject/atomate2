@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import ast
 import copy
 import time
 import warnings
@@ -232,18 +231,24 @@ class BaseOpenMMMaker(Maker):
             The loaded Interchange object.
         """
         if isinstance(interchange, str):
-            # fireworks is mangling the interchange bytes and converting them
-            # into a string, this converts it back to bytes
-            interchange = ast.literal_eval(interchange)
-        if isinstance(interchange, bytes):
-            interchange = interchange.decode("utf-8")
-
-            interchange_str = interchange
             try:
-                interchange = Interchange.parse_raw(interchange_str)
+                interchange = Interchange.parse_raw(interchange)
             except:  # noqa: E722
                 # parse with openmm instead
-                interchange = OpenMMInterchange.parse_raw(interchange_str)
+                interchange = OpenMMInterchange.parse_raw(interchange)
+
+            # fireworks is mangling the interchange bytes and converting them
+            # into a string, this converts it back to bytes
+        #     interchange = ast.literal_eval(interchange)
+        # if isinstance(interchange, bytes):
+        #     interchange = interchange.decode("utf-8")
+        #
+        #     interchange_str = interchange
+        #     try:
+        #         interchange = Interchange.parse_raw(interchange_str)
+        #     except:
+        #         # parse with openmm instead
+        #         interchange = OpenMMInterchange.parse_raw(interchange_str)
 
         else:
             interchange = copy.deepcopy(interchange)
@@ -551,14 +556,14 @@ class BaseOpenMMMaker(Maker):
         prev_task = prev_task or OpenMMTaskDocument()
 
         interchange_json = interchange.json()
-        interchange_bytes = interchange_json.encode("utf-8")
+        # interchange_bytes = interchange_json.encode("utf-8")
 
         return OpenMMTaskDocument(
             tags=tags,
             dir_name=str(dir_name),
             state="successful",
             calcs_reversed=[calc],
-            interchange=interchange_bytes,
+            interchange=interchange_json,
             interchange_meta=prev_task.interchange_meta,
             force_field=prev_task.force_field,
             task_name=calc.task_name,
