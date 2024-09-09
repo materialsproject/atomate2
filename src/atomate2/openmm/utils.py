@@ -76,7 +76,7 @@ class XMLMoleculeFF:
 
     def to_openff_molecule(self) -> tk.Molecule:
         """Convert the XMLMoleculeFF to an openff_toolkit Molecule."""
-        if sum(self.partial_charges) > 1e-6:
+        if sum(self.partial_charges) > 1e-3:
             # TODO: update message
             warnings.warn("Formal charges not considered.", stacklevel=1)
 
