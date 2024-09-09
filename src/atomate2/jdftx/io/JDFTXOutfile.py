@@ -6,9 +6,6 @@ from atomate2.jdftx.io.JDFTXOutfileSlice import JDFTXOutfileSlice
 from dataclasses import dataclass
 from typing import List, Optional
 
-HA2EV = 2.0 * const.value("Rydberg constant times hc in eV")
-ANG2BOHR = 1 / (const.value("Bohr radius") * 10**10)
-
 
 class ClassPrintFormatter():
 
