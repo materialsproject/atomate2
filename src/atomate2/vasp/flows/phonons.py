@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from atomate2 import SETTINGS
 from atomate2.common.flows.phonons import BasePhononMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
@@ -114,7 +115,7 @@ class PhononMaker(BasePhononMaker):
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = 1e-4
+    symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
@@ -123,7 +124,7 @@ class PhononMaker(BasePhononMaker):
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
-    store_force_constants: bool = True
+    store_force_constants: bool = False
     socket: bool = False
     code: str = "vasp"
     bulk_relax_maker: BaseVaspMaker | None = field(

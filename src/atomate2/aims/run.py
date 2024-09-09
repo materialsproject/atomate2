@@ -40,7 +40,7 @@ def run_aims(
     aims_cmd = expandvars(aims_cmd)
 
     logger.info(f"Running command: {aims_cmd}")
-    return_code = subprocess.call(["/bin/bash", "-c", aims_cmd], env=os.environ)  # noqa: S603
+    return_code = subprocess.call(["/bin/bash", "-c", aims_cmd], env=os.environ)
     logger.info(f"{aims_cmd} finished running with return code: {return_code}")
 
 
@@ -92,6 +92,9 @@ def run_aims_socket(
     aims_cmd: str
         The aims command to use (defaults to SETTINGS.AIMS_CMD).
     """
+    if aims_cmd is None:
+        aims_cmd = SETTINGS.AIMS_CMD
+
     ase_adaptor = AseAtomsAdaptor()
     atoms_to_calculate = [
         ase_adaptor.get_atoms(structure) for structure in structures_to_calculate
@@ -99,10 +102,19 @@ def run_aims_socket(
 
     with open("parameters.json") as param_file:
         parameters = json.load(param_file, cls=MontyDecoder)
+
+    del_keys = []
+    for key, val in parameters.items():
+        if val is None:
+            del_keys.append(key)
+
+    for key in del_keys:
+        parameters.pop(key)
+
     if aims_cmd:
-        parameters["aims_command"] = aims_cmd
-    elif "aims_command" not in parameters:
-        parameters["aims_command"] = SETTINGS.AIMS_CMD
+        parameters["command"] = aims_cmd
+    elif "command" not in parameters:
+        parameters["command"] = SETTINGS.AIMS_CMD
 
     calculator = Aims(**parameters)
     port = parameters["use_pimd_wrapper"][1]

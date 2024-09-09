@@ -100,7 +100,7 @@ def test_lobster_uniform_maker(
         .dict()
         .items()
     ):
-        if key == "lso_dos" or key == "band_overlaps":
+        if key in ("lso_dos", "band_overlaps"):
             assert value is None
         else:
             assert value is not None
@@ -176,7 +176,7 @@ def test_lobstermaker(
         .dict()
         .items()
     ):
-        if key == "lso_dos" or key == "band_overlaps":
+        if key in ("lso_dos", "band_overlaps"):
             assert value is None
         else:
             assert value is not None
