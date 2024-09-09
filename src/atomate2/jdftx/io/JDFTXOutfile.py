@@ -106,6 +106,7 @@ class JDFTXOutfile(List[JDFTXOutfileSlice], ClassPrintFormatter):
         instance = cls()
         for text in texts:
             instance.append(JDFTXOutfileSlice.from_out_slice(text))
+        return instance
 
     def __getattr__(self, name):
         if len(self):
