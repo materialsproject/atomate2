@@ -85,9 +85,9 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
     @classmethod
     def from_temperature_and_nsteps(
         cls,
-        temperature: float = 300,
-        n_steps_convergence: int = 5000,
-        n_steps_production: int = 10000,
+        temperature: float,
+        n_steps_convergence: int,
+        n_steps_production: int,
         end_temp: float | None = None,
     ) -> Self:
         """Create a new instance of this class with a new temperature and number of steps.
@@ -96,11 +96,11 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
         Parameters
         ----------
         temperature : float
-            Temperature of the equilibrium volume search and production run in Kelvin. Default 300K.
+            Temperature of the equilibrium volume search and production run in Kelvin.
         n_steps_convergence : int
-            Number of steps for the convergence fitting for the volume. Default 5000 steps.
+            Number of steps for the convergence fitting for the volume.
         n_steps_production : int
-            Number of steps for the production run(s). Default 10000 steps.
+            Number of steps for the production run(s).
         end_temp : float | None
             End temperature of the equilibrium volume search and production run in Kelvin.
             Use only for lowering temperarture for convergence AND production run. Default None.
@@ -183,15 +183,15 @@ class SlowQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
     @classmethod
     def from_temperature_nsteps_for_slow_quench(
         cls,
-        temperature: float = 300,
-        n_steps_convergence: int = 5000,
-        n_steps_production: int = 10000,
-        end_temp: float | None = None,
-        quench_n_steps: int = 1000,
-        quench_temperature_step: int = 500,
-        quench_end_temperature: float = 500,
-        quench_start_temperature: float = 3000,
+        temperature: float,
+        n_steps_convergence: int,
+        n_steps_production: int,
+        quench_n_steps: int,
+        quench_temperature_step: int,
+        quench_end_temperature: float,
+        quench_start_temperature: float,
         descent_method: Literal["stepwise", "linear with hold"] = "stepwise",
+        end_temp: float | None = None,
     ) -> Self:
         """Create a new instance of MPMorph SlowQuench with a new temperature and number of steps
         for convergence run, production run, and slow quencher.
@@ -200,22 +200,24 @@ class SlowQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
         Parameters
         ----------
         temperature : float
-            Temperature of the equilibrium volume search and production run in Kelvin. Default 300K.
+            Temperature of the equilibrium volume search and production run in Kelvin.
         n_steps_convergence : int
-            Number of steps for the convergence fitting for the volume. Default 5000 steps.
+            Number of steps for the convergence fitting for the volume.
         n_steps_production : int
-            Number of steps for the production run(s). Default 10000 steps.
+            Number of steps for the production run(s).
         end_temp : float | None
             End temperature of the equilibrium volume search and production run in Kelvin.
             Use only for lowering temperarture for convergence AND production run. Default None.
         quench_n_steps : int
-            Number of steps for quench. Default 1000 steps.
+            Number of steps for quench.
         quench_temperature_step : int
-            Temperature step for quench. Default 500K.
+            Temperature step for quench.
         quench_end_temperature : float
-            End temperature for quench. Default 500K.
+            End temperature for quench.
         quench_start_temperature : float
-            Start temperature for quench. Default 3000K.
+            Start temperature for quench.
+        descent_method : Literal["stepwise", "linear with hold"]
+            Descent method for quench. Default "stepwise".
         """
         if end_temp is None:
             end_temp = temperature
@@ -299,9 +301,9 @@ class FastQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
     @classmethod
     def from_temperature_nsteps_for_fast_quench(
         cls,
-        temperature: float = 300,
-        n_steps_convergence: int = 5000,
-        n_steps_production: int = 10000,
+        temperature: float,
+        n_steps_convergence: int,
+        n_steps_production: int,
         end_temp: float | None = None,
     ) -> Self:
         """Create a new instance of MPMorph SlowQuench with a new temperature and number of steps
@@ -311,11 +313,11 @@ class FastQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
         Parameters
         ----------
         temperature : float
-            Temperature of the equilibrium volume search and production run in Kelvin. Default 300K.
+            Temperature of the equilibrium volume search and production run in Kelvin.
         n_steps_convergence : int
-            Number of steps for the convergence fitting for the volume. Default 5000 steps.
+            Number of steps for the convergence fitting for the volume.
         n_steps_production : int
-            Number of steps for the production run(s). Default 10000 steps.
+            Number of steps for the production run(s).
         end_temp : float | None
             End temperature of the equilibrium volume search and production run in Kelvin.
             Use only for lowering temperarture for convergence AND production run. Default None.
