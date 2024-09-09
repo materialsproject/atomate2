@@ -10,7 +10,7 @@ from monty.io import zopen
 from pymatgen.core import Molecule, Structure
 from pymatgen.io.core import InputFile
 
-#TODO functions are currently not implemented in utils. Remove these?
+# TODO functions are currently not implemented in utils. Remove these?
 # from .utils import lower_and_check_unique, read_pattern, read_table_pattern
 
 if TYPE_CHECKING:
@@ -40,199 +40,14 @@ class JdftxInput(InputFile):
 
     def __init__(
         self,
-        structure: Structure | list[Molecule] | Literal["read"],
-        rem: dict,
-        opt: dict[str, list] | None = None,
-        pcm: dict | None = None,
-        solvent: dict | None = None,
-        smx: dict | None = None,
-        scan: dict[str, list] | None = None,
-        van_der_waals: dict[str, float] | None = None,
-        vdw_mode: str = "atomic",
-        plots: dict | None = None,
-        nbo: dict | None = None,
-        geom_opt: dict | None = None,
-        cdft: list[list[dict]] | None = None,
-        almo_coupling: list[list[tuple[int, int]]] | None = None,
-        svp: dict | None = None,
-        pcm_nonels: dict | None = None,
+        structure: Structure | list[Structure] | Literal["read"],
     ):
-        #TODO update docustring for JDFTx
-        """
-        Args:
-            structure (pymatgen Structure object or "read"):
-                Input molecule(s). molecule can be set as a pymatgen Molecule object, a list of such
-                Molecule objects, or as the string "read". "read" can be used in multi_job QChem input
-                files where the molecule is read in from the previous calculation.
-            rem (dict):
-                A dictionary of all the input parameters for the REM section of QChem input file.
-                Ex. rem = {'method': 'rimp2', 'basis': '6-31*G++' ... }
-            opt (dict of lists):
-                A dictionary of opt sections, where each opt section is a key and the corresponding
-                values are a list of strings. Strings must be formatted as instructed by the QChem manual.
-                The different opt sections are: CONSTRAINT, FIXED, DUMMY, and CONNECT
-                Ex. opt = {"CONSTRAINT": ["tors 2 3 4 5 25.0", "tors 2 5 7 9 80.0"], "FIXED": ["2 XY"]}
-            pcm (dict):
-                A dictionary of the PCM section, defining behavior for use of the polarizable continuum model.
-                Ex: pcm = {"theory": "cpcm", "hpoints": 194}
-            solvent (dict):
-                A dictionary defining the solvent parameters used with PCM.
-                Ex: solvent = {"dielectric": 78.39, "temperature": 298.15}
-            smx (dict):
-                A dictionary defining solvent parameters used with the SMD method, a solvent method that adds
-                short-range terms to PCM.
-                Ex: smx = {"solvent": "water"}
-            scan (dict of lists):
-                A dictionary of scan variables. Because two constraints of the same type are allowed (for instance, two
-                torsions or two bond stretches), each TYPE of variable (stre, bend, tors) should be its own key in the
-                dict, rather than each variable. Note that the total number of variable (sum of lengths of all lists)
-                CANNOT be
-                more than two.
-                Ex. scan = {"stre": ["3 6 1.5 1.9 0.1"], "tors": ["1 2 3 4 -180 180 15"]}
-            van_der_waals (dict):
-                A dictionary of custom van der Waals radii to be used when constructing cavities for the PCM
-                model or when computing, e.g. Mulliken charges. They keys are strs whose meaning depends on
-                the value of vdw_mode, and the values are the custom radii in angstroms.
-            vdw_mode (str): Method of specifying custom van der Waals radii - 'atomic' or 'sequential'.
-                In 'atomic' mode (default), dict keys represent the atomic number associated with each
-                radius (e.g., 12 = carbon). In 'sequential' mode, dict keys represent the sequential
-                position of a single specific atom in the input structure.
-            plots (dict):
-                    A dictionary of all the input parameters for the plots section of the QChem input file.
-            nbo (dict):
-                    A dictionary of all the input parameters for the nbo section of the QChem input file.
-            geom_opt (dict):
-                    A dictionary of input parameters for the geom_opt section of the QChem input file.
-                    This section is required when using the new libopt3 geometry optimizer.
-            cdft (list of lists of dicts):
-                    A list of lists of dictionaries, where each dictionary represents a charge constraint in the
-                    cdft section of the QChem input file.
-
-                    Each entry in the main list represents one state (allowing for multi-configuration calculations
-                    using constrained density functional theory - configuration interaction (CDFT-CI).
-                    Each state is represented by a list, which itself contains some number of constraints
-                    (dictionaries).
-
-                    Ex:
-
-                    1. For a single-state calculation with two constraints:
-                    cdft=[[
-                        {"value": 1.0, "coefficients": [1.0], "first_atoms": [1], "last_atoms": [2], "types": [None]},
-                        {"value": 2.0, "coefficients": [1.0, -1.0], "first_atoms": [1, 17], "last_atoms": [3, 19],
-                            "types": ["s"]}
-                    ]]
-
-                    Note that a type of None will default to a charge constraint (which can also be accessed by
-                    requesting a type of "c" or "charge".
-
-                    2. For a multi-reference calculation:
-                    cdft=[
-                        [
-                            {"value": 1.0, "coefficients": [1.0], "first_atoms": [1], "last_atoms": [27],
-                                "types": ["c"]},
-                            {"value": 0.0, "coefficients": [1.0], "first_atoms": [1], "last_atoms": [27],
-                                "types": ["s"]},
-                        ],
-                        [
-                            {"value": 0.0, "coefficients": [1.0], "first_atoms": [1], "last_atoms": [27],
-                                "types": ["c"]},
-                            {"value": -1.0, "coefficients": [1.0], "first_atoms": [1], "last_atoms": [27],
-                                "types": ["s"]},
-                        ]
-                    ]
-            almo_coupling (list of lists of int 2-tuples):
-                A list of lists of int 2-tuples used for calculations of diabatization and state coupling calculations
-                    relying on the absolutely localized molecular orbitals (ALMO) methodology. Each entry in the main
-                    list represents a single state (two states are included in an ALMO calculation). Within a single
-                    state, each 2-tuple represents the charge and spin multiplicity of a single fragment.
-                ex: almo=[
-                            [
-                                (1, 2),
-                                (0, 1)
-                            ],
-                            [
-                                (0, 1),
-                                (1, 2)
-                            ]
-                        ]
-            svp (dict): Settings for the ISOSVP solvent model, corresponding to the $svp section
-                of the Q-Chem input file, which is formatted as a FORTRAN namelist. Note that in pymatgen, these
-                parameters are typically not set by the user, but rather are populated automatically by an InputSet.
-
-                An example for water may look like:
-                    {
-                        "RHOISO": "0.001",
-                        "DIELST": "78.36",
-                        "NPTLEB": "1202",
-                        "ITRNGR": "2",
-                        "IROTGR": "2",
-                        "IPNRF": "1",
-                        "IDEFESR": "1",
-                    }
-
-                See https://manual.q-chem.com/6.0/subsec_SS(V)PE.html in the Q-Chem manual for more
-                details.
-            pcm_nonels (dict): Settings for the non-electrostatic part of the CMIRS solvation
-                model, corresponding to the $pcm_nonels section of the Q-Chem input file/ Note that in pymatgen,
-                these parameters are typically not set by the user, but rather are populated automatically by an
-                InputSet.
-
-                An example for water may look like:
-                    {
-                        "a": "-0.006496",
-                        "b": "0.050833",
-                        "c": "-566.7",
-                        "d": "-30.503",
-                        "gamma": "3.2",
-                        "solvrho": "0.05",
-                        "delta": 7,
-                        "gaulag_n": 40,
-                    }
-
-                See https://manual.q-chem.com/6.0/example_CMIRS-water.html in the Q-Chem manual for more details.
-        """
-        self.molecule = molecule
-        self.rem = lower_and_check_unique(rem)
-        self.opt = opt
-        self.pcm = lower_and_check_unique(pcm)
-        self.solvent = lower_and_check_unique(solvent)
-        self.smx = lower_and_check_unique(smx)
-        self.scan = lower_and_check_unique(scan)
-        self.van_der_waals = lower_and_check_unique(van_der_waals)
-        self.vdw_mode = vdw_mode
-        self.plots = lower_and_check_unique(plots)
-        self.nbo = lower_and_check_unique(nbo)
-        self.geom_opt = lower_and_check_unique(geom_opt)
-        self.cdft = cdft
-        self.almo_coupling = almo_coupling
-        self.svp = lower_and_check_unique(svp)
-        self.pcm_nonels = lower_and_check_unique(pcm_nonels)
+        self.structure = structure
 
         # Make sure rem is valid:
         #   - Has a basis
         #   - Has a method or DFT exchange functional
         #   - Has a valid job_type or jobtype
-
-        valid_job_types = [
-            "opt",
-            "optimization",
-            "sp",
-            "freq",
-            "frequency",
-            "force",
-            "nmr",
-            "ts",
-            "pes_scan",
-        ]
-
-        if "basis" not in self.rem:
-            raise ValueError("The rem dictionary must contain a 'basis' entry")
-        if "method" not in self.rem and "exchange" not in self.rem:
-            raise ValueError("The rem dictionary must contain either a 'method' entry or an 'exchange' entry")
-        if "job_type" not in self.rem:
-            raise ValueError("The rem dictionary must contain a 'job_type' entry")
-        if self.rem.get("job_type").lower() not in valid_job_types:
-            raise ValueError("The rem dictionary must contain a valid 'job_type' entry")
 
         # Still to do:
         #   - Check that the method or functional is valid
@@ -244,7 +59,9 @@ class JdftxInput(InputFile):
     def __str__(self) -> str:
         combined_list: list = []
         # molecule section
-        combined_list.extend((self.molecule_template(self.molecule), "", self.rem_template(self.rem), ""))
+        combined_list.extend(
+            (self.molecule_template(self.molecule), "", self.rem_template(self.rem), "")
+        )
         # opt section
         if self.opt:
             combined_list.extend((self.opt_template(self.opt), ""))
@@ -261,7 +78,9 @@ class JdftxInput(InputFile):
             combined_list.extend((self.scan_template(self.scan), ""))
         # section for van_der_waals radii
         if self.van_der_waals:
-            combined_list.extend((self.van_der_waals_template(self.van_der_waals, self.vdw_mode), ""))
+            combined_list.extend(
+                (self.van_der_waals_template(self.van_der_waals, self.vdw_mode), "")
+            )
         # plots section
         if self.plots:
             combined_list.extend((self.plots_template(self.plots), ""))
@@ -295,7 +114,8 @@ class JdftxInput(InputFile):
         Args:
             job_list (): List of jobs.
 
-        Returns:
+        Returns
+        -------
             str: String representation of a multi-job input file.
         """
         multi_job_string = ""
@@ -314,7 +134,8 @@ class JdftxInput(InputFile):
         Args:
             string (str): String input.
 
-        Returns:
+        Returns
+        -------
             QcInput
         """
         sections = cls.find_sections(string)
@@ -388,7 +209,8 @@ class JdftxInput(InputFile):
         Args:
             filename (str): Filename
 
-        Returns:
+        Returns
+        -------
             QcInput
         """
         with zopen(filename, mode="rt") as file:
@@ -402,7 +224,8 @@ class JdftxInput(InputFile):
         Args:
             filename (str): Filename
 
-        Returns:
+        Returns
+        -------
             List of QCInput objects
         """
         with zopen(filename, mode="rt") as file:
@@ -417,7 +240,8 @@ class JdftxInput(InputFile):
         Args:
             molecule (Molecule, list of Molecules, or "read").
 
-        Returns:
+        Returns
+        -------
             str: Molecule template.
         """
         # TODO: add ghost atoms
@@ -432,11 +256,15 @@ class JdftxInput(InputFile):
             if molecule == "read":
                 mol_list.append(" read")
             else:
-                raise ValueError('The only acceptable text value for molecule is "read"')
+                raise ValueError(
+                    'The only acceptable text value for molecule is "read"'
+                )
         elif isinstance(molecule, Molecule):
             mol_list.append(f" {int(molecule.charge)} {molecule.spin_multiplicity}")
             for site in molecule:
-                mol_list.append(f" {site.species_string}     {site.x: .10f}     {site.y: .10f}     {site.z: .10f}")
+                mol_list.append(
+                    f" {site.species_string}     {site.x: .10f}     {site.y: .10f}     {site.z: .10f}"
+                )
         else:
             overall_charge = sum(x.charge for x in molecule)
             unpaired_electrons = sum(x.spin_multiplicity - 1 for x in molecule)
@@ -445,9 +273,13 @@ class JdftxInput(InputFile):
             mol_list.append(f" {int(overall_charge)} {int(overall_spin)}")
 
             for fragment in molecule:
-                mol_list.extend(("--", f" {int(fragment.charge)} {fragment.spin_multiplicity}"))
+                mol_list.extend(
+                    ("--", f" {int(fragment.charge)} {fragment.spin_multiplicity}")
+                )
                 for site in fragment:
-                    mol_list.append(f" {site.species_string}     {site.x: .10f}     {site.y: .10f}     {site.z: .10f}")
+                    mol_list.append(
+                        f" {site.species_string}     {site.x: .10f}     {site.y: .10f}     {site.z: .10f}"
+                    )
 
         mol_list.append("$end")
         return "\n".join(mol_list)
@@ -458,7 +290,8 @@ class JdftxInput(InputFile):
         Args:
             rem ():
 
-        Returns:
+        Returns
+        -------
             str: REM template.
         """
         rem_list = []
@@ -476,7 +309,8 @@ class JdftxInput(InputFile):
         Args:
             opt ():
 
-        Returns:
+        Returns
+        -------
             str: Optimization template.
         """
         opt_list = []
@@ -501,7 +335,8 @@ class JdftxInput(InputFile):
         Args:
             pcm ():
 
-        Returns:
+        Returns
+        -------
             str: PCM template.
         """
         pcm_list = []
@@ -518,7 +353,8 @@ class JdftxInput(InputFile):
         Args:
             solvent ():
 
-        Returns:
+        Returns
+        -------
             str: Solvent section.
         """
         solvent_list = []
@@ -534,7 +370,8 @@ class JdftxInput(InputFile):
         Args:
             smx ():
 
-        Returns:
+        Returns
+        -------
             str: Solvation model with short-range corrections.
         """
         smx_list = []
@@ -562,7 +399,9 @@ class JdftxInput(InputFile):
         scan_list.append("$scan")
         total_vars = sum(len(v) for v in scan.values())
         if total_vars > 2:
-            raise ValueError("Q-Chem only supports PES_SCAN with two or less variables.")
+            raise ValueError(
+                "Q-Chem only supports PES_SCAN with two or less variables."
+            )
         for var_type, variables in scan.items():
             if variables not in [None, []]:
                 for var in variables:
@@ -584,7 +423,8 @@ class JdftxInput(InputFile):
                 a single specific atom in the input structure.
                 **NOTE: keys must be given as strings even though they are numbers!**.
 
-        Returns:
+        Returns
+        -------
             str: representing Q-Chem input format for van_der_waals section
         """
         vdw_list = []
@@ -607,7 +447,8 @@ class JdftxInput(InputFile):
         Args:
             plots ():
 
-        Returns:
+        Returns
+        -------
             str: Plots section.
         """
         out = ["$plots"]
@@ -622,7 +463,8 @@ class JdftxInput(InputFile):
         Args:
             nbo ():
 
-        Returns:
+        Returns
+        -------
             str: NBO section.
         """
         nbo_list = []
@@ -641,7 +483,8 @@ class JdftxInput(InputFile):
             svp: dict of SVP parameters, e.g.
             {"rhoiso": "0.001", "nptleb": "1202", "itrngr": "2", "irotgr": "2"}
 
-        Returns:
+        Returns
+        -------
             str: the $svp section. Note that all parameters will be concatenated onto
                 a single line formatted as a FORTRAN namelist. This is necessary
                 because the isodensity SS(V)PE model in Q-Chem calls a secondary code.
@@ -658,7 +501,8 @@ class JdftxInput(InputFile):
         Args:
             geom_opt ():
 
-        Returns:
+        Returns
+        -------
             str: Geometry optimization section.
         """
         geom_opt_list = []
@@ -674,7 +518,8 @@ class JdftxInput(InputFile):
         Args:
             cdft: list of lists of dicts.
 
-        Returns:
+        Returns
+        -------
             str: CDFT section.
         """
         cdft_list = []
@@ -694,7 +539,10 @@ class JdftxInput(InputFile):
                         raise ValueError("Invalid CDFT constraint type!")
 
                 for coef, first, last, type_string in zip(
-                    constraint["coefficients"], constraint["first_atoms"], constraint["last_atoms"], type_strings
+                    constraint["coefficients"],
+                    constraint["first_atoms"],
+                    constraint["last_atoms"],
+                    type_strings,
                 ):
                     if type_string != "":
                         cdft_list.append(f"   {coef} {first} {last} {type_string}")
@@ -716,7 +564,8 @@ class JdftxInput(InputFile):
         Args:
             almo: list of lists of int 2-tuples.
 
-        Returns:
+        Returns
+        -------
             str: ALMO coupling section.
         """
         almo_list = []
@@ -758,7 +607,8 @@ class JdftxInput(InputFile):
                 "gaulag_n": 40,
             }
 
-        Returns:
+        Returns
+        -------
             str: the $pcm_nonels section. Note that all parameters will be concatenated onto
                 a single line formatted as a FORTRAN namelist. This is necessary
                 because the non-electrostatic part of the CMIRS solvation model in Q-Chem
@@ -780,7 +630,8 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             List of sections.
         """
         patterns = {"sections": r"^\s*?\$([a-z_]+)", "multiple_jobs": r"(@@@)"}
@@ -791,7 +642,9 @@ class JdftxInput(InputFile):
         sections = [sec for sec in sections if sec != "end"]
         # this error should be replaced by a multi job read function when it is added
         if "multiple_jobs" in matches:
-            raise ValueError("Output file contains multiple qchem jobs please parse separately")
+            raise ValueError(
+                "Output file contains multiple qchem jobs please parse separately"
+            )
         if "molecule" not in sections:
             raise ValueError("Output file does not contain a molecule section")
         if "rem" not in sections:
@@ -806,7 +659,8 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             Molecule
         """
         charge = spin_mult = None
@@ -829,13 +683,22 @@ class JdftxInput(InputFile):
             header = r"^\s*\$molecule\n\s*(?:\-)*\d+\s+(?:\-)*\d+"
             row = r"\s*([A-Za-z]+)\s+([\d\-\.]+)\s+([\d\-\.]+)\s+([\d\-\.]+)"
             footer = r"^\$end"
-            mol_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+            mol_table = read_table_pattern(
+                string, header_pattern=header, row_pattern=row, footer_pattern=footer
+            )
             species = [val[0] for val in mol_table[0]]
-            coords = [[float(val[1]), float(val[2]), float(val[3])] for val in mol_table[0]]
+            coords = [
+                [float(val[1]), float(val[2]), float(val[3])] for val in mol_table[0]
+            ]
             if charge is None:
                 mol = Molecule(species=species, coords=coords)
             else:
-                mol = Molecule(species=species, coords=coords, charge=charge, spin_multiplicity=spin_mult)
+                mol = Molecule(
+                    species=species,
+                    coords=coords,
+                    charge=charge,
+                    spin_multiplicity=spin_mult,
+                )
             return mol
 
         header = r"\s*(?:\-)*\d+\s+(?:\-)*\d+"
@@ -847,13 +710,17 @@ class JdftxInput(InputFile):
         patterns = {"charge_spin": r"\s*\-\-\s*([\-0-9]+)\s+([\-0-9]+)"}
         matches = read_pattern(string, patterns)
 
-        mol_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        mol_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         for match, table in zip(matches.get("charge_spin"), mol_table):
             charge = int(match[0])
             spin = int(match[1])
             species = [val[0] for val in table]
             coords = [[float(val[1]), float(val[2]), float(val[3])] for val in table]
-            mol = Molecule(species=species, coords=coords, charge=charge, spin_multiplicity=spin)
+            mol = Molecule(
+                species=species, coords=coords, charge=charge, spin_multiplicity=spin
+            )
             molecules.append(mol)
 
         return molecules
@@ -865,13 +732,16 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             dict[str, str]: REM section
         """
         header = r"^\s*\$rem"
         row = r"\s*([a-zA-Z\_\d]+)\s*=?\s*(\S+)"
         footer = r"^\s*\$end"
-        rem_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        rem_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         return dict(rem_table[0])
 
     @staticmethod
@@ -882,7 +752,8 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             dict[str, list]: Opt section
         """
         patterns = {
@@ -898,7 +769,12 @@ class JdftxInput(InputFile):
             c_header = r"^\s*CONSTRAINT\n"
             c_row = r"(\w.*)\n"
             c_footer = r"^\s*ENDCONSTRAINT\n"
-            c_table = read_table_pattern(string, header_pattern=c_header, row_pattern=c_row, footer_pattern=c_footer)
+            c_table = read_table_pattern(
+                string,
+                header_pattern=c_header,
+                row_pattern=c_row,
+                footer_pattern=c_footer,
+            )
             opt["CONSTRAINT"] = [val[0] for val in c_table[0]]
         if "FIXED" in opt_sections:
             f_header = r"^\s*FIXED\n"
@@ -943,15 +819,20 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             dict[str, str]: PCM parameters
         """
         header = r"^\s*\$pcm"
         row = r"\s*([a-zA-Z\_]+)\s+(\S+)"
         footer = r"^\s*\$end"
-        pcm_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        pcm_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         if not pcm_table:
-            print("No valid PCM inputs found. Note that there should be no '=' characters in PCM input lines.")
+            print(
+                "No valid PCM inputs found. Note that there should be no '=' characters in PCM input lines."
+            )
             return {}
 
         return dict(pcm_table[0])
@@ -964,15 +845,20 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             tuple[str, dict]: (vdW mode ('atomic' or 'sequential'), dict of van der Waals radii)
         """
         header = r"^\s*\$van_der_waals"
         row = r"[^\d]*(\d+).?(\d+.\d+)?.*"
         footer = r"^\s*\$end"
-        vdw_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        vdw_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         if not vdw_table:
-            print("No valid vdW inputs found. Note that there should be no '=' characters in vdW input lines.")
+            print(
+                "No valid vdW inputs found. Note that there should be no '=' characters in vdW input lines."
+            )
             return "", {}
 
         mode = "sequential" if vdw_table[0][0][0] == 2 else "atomic"
@@ -987,15 +873,20 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             dict[str, str]: Solvent parameters
         """
         header = r"^\s*\$solvent"
         row = r"\s*([a-zA-Z\_]+)\s+(\S+)"
         footer = r"^\s*\$end"
-        solvent_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        solvent_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         if not solvent_table:
-            print("No valid solvent inputs found. Note that there should be no '=' characters in solvent input lines.")
+            print(
+                "No valid solvent inputs found. Note that there should be no '=' characters in solvent input lines."
+            )
             return {}
 
         return dict(solvent_table[0])
@@ -1008,15 +899,20 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             dict[str, str] SMX parameters.
         """
         header = r"^\s*\$smx"
         row = r"\s*([a-zA-Z\_]+)\s+(\S+)"
         footer = r"^\s*\$end"
-        smx_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        smx_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         if not smx_table:
-            print("No valid smx inputs found. Note that there should be no '=' characters in smx input lines.")
+            print(
+                "No valid smx inputs found. Note that there should be no '=' characters in smx input lines."
+            )
             return {}
         smx = dict(smx_table[0])
         if smx["solvent"] == "tetrahydrofuran":
@@ -1034,15 +930,20 @@ class JdftxInput(InputFile):
         Args:
             string: String to be parsed
 
-        Returns:
+        Returns
+        -------
             Dict representing Q-Chem scan section
         """
         header = r"^\s*\$scan"
         row = r"\s*(stre|bend|tors|STRE|BEND|TORS)\s+((?:[\-\.0-9]+\s*)+)"
         footer = r"^\s*\$end"
-        scan_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        scan_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         if scan_table == []:
-            print("No valid scan inputs found. Note that there should be no '=' characters in scan input lines.")
+            print(
+                "No valid scan inputs found. Note that there should be no '=' characters in scan input lines."
+            )
             return {}
 
         stre = []
@@ -1057,7 +958,9 @@ class JdftxInput(InputFile):
                 tors.append(row[1].replace("\n", "").rstrip())
 
         if len(stre) + len(bend) + len(tors) > 2:
-            raise ValueError("No more than two variables are allows in the scan section!")
+            raise ValueError(
+                "No more than two variables are allows in the scan section!"
+            )
 
         return {"stre": stre, "bend": bend, "tors": tors}
 
@@ -1069,15 +972,20 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             dict[str, str]: plots parameters.
         """
         header = r"^\s*\$plots"
         row = r"\s*([a-zA-Z\_]+)\s+(\S+)"
         footer = r"^\s*\$end"
-        plots_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        plots_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         if plots_table == []:
-            print("No valid plots inputs found. Note that there should be no '=' characters in plots input lines.")
+            print(
+                "No valid plots inputs found. Note that there should be no '=' characters in plots input lines."
+            )
             return {}
         return dict(plots_table[0])
 
@@ -1089,13 +997,16 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             dict[str, str]: nbo parameters.
         """
         header = r"^\s*\$nbo"
         row = r"\s*([a-zA-Z\_\d]+)\s*=?\s*(\S+)"
         footer = r"^\s*\$end"
-        nbo_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        nbo_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         if nbo_table == []:
             print("No valid nbo inputs found.")
             return {}
@@ -1109,13 +1020,16 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             dict[str, str]: geom_opt parameters.
         """
         header = r"^\s*\$geom_opt"
         row = r"\s*([a-zA-Z\_]+)\s*=?\s*(\S+)"
         footer = r"^\s*\$end"
-        geom_opt_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        geom_opt_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         if geom_opt_table == []:
             print("No valid geom_opt inputs found.")
             return {}
@@ -1129,7 +1043,8 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             list[list[dict]]: cdft parameters
         """
         pattern_sec = {
@@ -1187,7 +1102,8 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             list[list[tuple[int, int]]]: ALMO coupling parameters
         """
         pattern = {
@@ -1223,7 +1139,9 @@ class JdftxInput(InputFile):
         header = r"^\s*\$svp"
         row = r"(\w.*)\n"
         footer = r"^\s*\$end"
-        svp_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        svp_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         if svp_table == []:
             print("No valid svp inputs found.")
             return {}
@@ -1241,13 +1159,16 @@ class JdftxInput(InputFile):
         Args:
             string (str): String
 
-        Returns:
+        Returns
+        -------
             dict[str, str]: PCM parameters
         """
         header = r"^\s*\$pcm_nonels"
         row = r"\s*([a-zA-Z\_]+)\s+(.+)"
         footer = r"^\s*\$end"
-        pcm_nonels_table = read_table_pattern(string, header_pattern=header, row_pattern=row, footer_pattern=footer)
+        pcm_nonels_table = read_table_pattern(
+            string, header_pattern=header, row_pattern=row, footer_pattern=footer
+        )
         if not pcm_nonels_table:
             print(
                 "No valid $pcm_nonels inputs found. Note that there should be no '=' "

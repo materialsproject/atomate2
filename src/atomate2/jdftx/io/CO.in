@@ -3,7 +3,7 @@
 lattice \
 18.897261  0.000000  0.000000  \
 0.000000  18.897261  0.000000  \
-0.000000  0.000000  18.897261  
+0.000000  0.000000  18.897261
 
 dump-name $VAR
 initial-state $VAR
@@ -25,7 +25,7 @@ fluid-solvent H2O
 fluid-cation Na+ 0.5
 fluid-anion F- 0.5
 vibrations useConstraints no rotationSym no
-dump End Dtot 
+dump End Dtot
 dump End BoundCharge
 dump End State
 dump End Forces

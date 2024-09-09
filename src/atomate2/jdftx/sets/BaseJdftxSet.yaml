@@ -5,28 +5,28 @@ van-der-waals: D3
 
 ### Electronic Parameters ###
 elec-cutoff:
-  Ecut: 20 
+  Ecut: 20
   EcutRho: 100
 electronic-minimize:
-  nIterations: 100 
+  nIterations: 100
   energyDiffThreshold: 1.0e-07
-elec-smearing: 
-  smearingType: Fermi 
+elec-smearing:
+  smearingType: Fermi
   smearingWidth: 0.001
 elec-initial-magnetization:
-  M: 0 
+  M: 0
   constrain: False
 spintype: z-spin
 core-overlap-check: none
 converge-empty-states: True
-band-projection-params: 
+band-projection-params:
   ortho: True
   norm: False
 
 ### Lattice / Unit Cell ###
 latt-move-scale:
-  s0: 0 
-  s1: 0 
+  s0: 0
+  s1: 0
   s2: 0
 lattice-minimize:
   nIterations: 00
@@ -49,24 +49,23 @@ symmetries: none
 ion-species: GBRV_v1.5/$ID_pbe_v1.uspp
 
 ### Output Files ###
-dump-name: $VAR
-dump: 
+dump:
   - freq: End
     var: Dtot
   - freq: End
-    var: BoundCharge 
+    var: BoundCharge
   - freq: End
-    var: State 
+    var: State
   - freq: End
-    var: Forces 
+    var: Forces
   - freq: End
-    var: Ecomponents 
+    var: Ecomponents
   - freq: End
-    var: VfluidTot 
+    var: VfluidTot
   - freq: End
-    var: ElecDensity 
+    var: ElecDensity
   - freq: End
-    var: KEdensity 
+    var: KEdensity
   - freq: End
     var: EigStats
   - freq: End

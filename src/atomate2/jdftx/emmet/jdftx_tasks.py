@@ -1,27 +1,19 @@
 # mypy: ignore-errors
 
-""" Core definition of a JDFTx Task Document """
-from typing import Any, Dict, List, Optional
+"""Core definition of a JDFTx Task Document"""
+
 import logging
 import re
 from collections import OrderedDict
-from pydantic import BaseModel, Field
-from custodian.qchem.jobs import QCJob
-from atomate2.jdftx.io.inputs import JdftxInput
-from monty.serialization import loadfn
-from typing import Type, TypeVar, Union
-from pymatgen.core.structure import Structure
-from emmet.core.structure import StructureMetadata
 from pathlib import Path
-from emmet.core.qchem.calc_types import (
-    LevelOfTheory,
-    CalcType,
-    TaskType,
-)
+from typing import Any, Dict, List, Optional, Type, TypeVar, Union
+
+from custodian.qchem.jobs import QCJob
+from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
 from emmet.core.qchem.calculation import Calculation, CalculationInput
-
-from atomate2.jdftx.emmet.core.jdftx.task import JDFTxStatus
-
+from emmet.core.structure import MoleculeMetadata
+from monty.serialization import loadfn
+from pydantic import BaseModel, Field
 
 __author__ = (
     "Evan Spotte-Smith <ewcspottesmith@lbl.gov>, Rishabh D. Guha <rdguha@lbl.gov>"
@@ -37,10 +29,60 @@ class OutputDoc(BaseModel):
     optimized_structure: Optional[Structure] = Field(
         None, description="Optimized Structure object"
     )
-    energy: float = Field(..., description="Total Energy in units of eV.")
-    forces: Optional[List[List[float]]] = Field(
-        None, description="The force on each atom in units of eV/A^2."
+    mulliken: Optional[List[Any]] = Field(
+        None, description="Mulliken atomic partial charges and partial spins"
     )
+    resp: Optional[Union[List[float], List[Any]]] = Field(
+        None,
+        description="Restrained Electrostatic Potential (RESP) atomic partial charges",
+    )
+    nbo: Optional[Dict[str, Any]] = Field(
+        None, description="Natural Bonding Orbital (NBO) output"
+    )
+
+    frequencies: Optional[Union[Dict[str, Any], List]] = Field(
+        None,
+        description="The list of calculated frequencies if job type is freq (units: cm^-1)",
+    )
+
+    frequency_modes: Optional[Union[List, str]] = Field(
+        None,
+        description="The list of calculated frequency mode vectors if job type is freq",
+    )
+
+    @classmethod
+    def from_qchem_calc_doc(cls, calc_doc: Calculation) -> "OutputDoc":
+        """
+        Create a summary of QChem calculation outputs from a QChem calculation document.
+
+        Parameters
+        ----------
+        calc_doc
+            A QChem calculation document.
+        kwargs
+            Any other additional keyword arguments
+
+        Returns
+        -------
+        OutputDoc
+            The calculation output summary
+        """
+        return cls(
+            initial_molecule=calc_doc.input.initial_molecule,
+            optimized_molecule=calc_doc.output.optimized_molecule,
+            # species_hash = self.species_hash, #The three entries post this needs to be checked again
+            # coord_hash = self.coord_hash,
+            # last_updated = self.last_updated,
+            final_energy=calc_doc.output.final_energy,
+            dipoles=calc_doc.output.dipoles,
+            enthalpy=calc_doc.output.enthalpy,
+            entropy=calc_doc.output.entropy,
+            mulliken=calc_doc.output.mulliken,
+            resp=calc_doc.output.resp,
+            nbo=calc_doc.output.nbo_data,
+            frequencies=calc_doc.output.frequencies,
+            frequency_modes=calc_doc.output.frequency_modes,
+        )
 
 
 class InputDoc(BaseModel):
@@ -67,7 +109,7 @@ class InputDoc(BaseModel):
             A QChem calculation document.
 
         Returns
-        --------
+        -------
         InputDoc
             A summary of the input molecule and corresponding calculation parameters
         """
@@ -277,11 +319,10 @@ class TaskDoc(StructureMetadata):
             The job identifier
 
         Returns
-        --------
+        -------
         Dict
             A dict of computed entries
         """
-
         entry_dict = {
             "entry_id": task_id,
             "task_id": task_id,
@@ -350,7 +391,7 @@ def _parse_custodian(dir_name: Path) -> Optional[Dict]:
         Path to calculation directory.
 
     Returns
-    --------
+    -------
     Optional[Dict]
         The information parsed from custodian.json file.
     """
@@ -505,4 +546,4 @@ def _get_state(calcs_reversed: List[Calculation]) -> QChemStatus:
 #                             "qcoutput_file": "No qout files exist for this in file",
 #                         }
 
-#     return task_files
+    return task_files

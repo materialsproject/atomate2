@@ -18,7 +18,7 @@ class JDFTxJob(Job):
     # job = JDFTxJob()
     # job.run()  # assumes input files already written to directory
 
-    # Used Cp2kJob developed by Nick Winner as a template.
+    # Used Cp2kJob developed by Nick Winner as a template (custodian).
 
     def __init__(
         self,
@@ -65,22 +65,9 @@ class JDFTxJob(Job):
             open(os.path.join(directory, self.output_file), "w") as f_std,
             open(os.path.join(directory, self.stderr_file), "w", buffering=1) as f_err,
         ):
-            result = subprocess.run([cmd], cwd=directory, stdout=f_std, stderr=f_err, shell=True)
-
-        # Review the return code
-        if result.returncode == 0:
-            logger.info(f"Command executed successfully with return code {result.returncode}.")
-        else:
-            logger.error(f"Command failed with return code {result.returncode}.")
-        # Optionally, you can log or print additional information here
-            with open(os.path.join(directory, self.stderr_file), 'r') as f_err:
-                error_output = f_err.read()
-            logger.error(f"Standard Error Output:\n{error_output}")
-    
-        return result
 
             # use line buffering for stderr
-        #    return subprocess.run([cmd], cwd=directory, stdout=f_std, stderr=f_err, shell=True)
+            return subprocess.run([cmd], cwd=directory, stdout=f_std, stderr=f_err, shell=True)
 
 
     def postprocess(self, directory="./") -> None:

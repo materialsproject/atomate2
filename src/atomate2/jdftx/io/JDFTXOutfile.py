@@ -1,23 +1,40 @@
+import math
 import os
+from dataclasses import dataclass
 from functools import wraps
 from atomate2.jdftx.io.JDFTXOutfileSlice import JDFTXOutfileSlice
 from dataclasses import dataclass
 from typing import List, Optional
 
+HA2EV = 2.0 * const.value("Rydberg constant times hc in eV")
+ANG2BOHR = 1 / (const.value("Bohr radius") * 10**10)
+
 
 class ClassPrintFormatter():
+
     def __str__(self) -> str:
-        '''generic means of printing class to command line in readable format'''
-        return str(self.__class__) + '\n' + '\n'.join((str(item) + ' = ' + str(self.__dict__[item]) for item in sorted(self.__dict__)))
+        """Generic means of printing class to command line in readable format"""
+        return (
+            str(self.__class__)
+            + "\n"
+            + "\n".join(
+                str(item) + " = " + str(self.__dict__[item])
+                for item in sorted(self.__dict__)
+            )
+        )
+
 
 def check_file_exists(func):
-    '''Check if file exists (and continue normally) or raise an exception if it does not'''
+    """Check if file exists (and continue normally) or raise an exception if it does not"""
+
     @wraps(func)
     def wrapper(filename):
         if not os.path.isfile(filename):
-            raise OSError('\'' + filename + '\' file doesn\'t exist!')
+            raise OSError("'" + filename + "' file doesn't exist!")
         return func(filename)
+
     return wrapper
+
 
 @check_file_exists
 def read_file(file_name: str) -> list[str]:
@@ -55,7 +72,6 @@ def get_start_lines(text: list[str], start_key: Optional[str]="*************** J
         start_lines.append(i)
     return start_lines
 
-
 def read_outfile_slices(file_name: str) -> list[list[str]]:
     '''
     Read slice of out file into a list of str
@@ -80,6 +96,7 @@ def read_outfile_slices(file_name: str) -> list[list[str]]:
         texts.append(text)
     return texts
 
+
 @dataclass
 class JDFTXOutfile(List[JDFTXOutfileSlice], ClassPrintFormatter):
     '''
@@ -92,7 +109,6 @@ class JDFTXOutfile(List[JDFTXOutfileSlice], ClassPrintFormatter):
         instance = cls()
         for text in texts:
             instance.append(JDFTXOutfileSlice.from_out_slice(text))
-        return instance
 
     def __getattr__(self, name):
         if len(self):
