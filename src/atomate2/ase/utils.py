@@ -338,7 +338,7 @@ class AseRelaxer:
 
     def relax(
         self,
-        atoms: Atoms,
+        atoms: Atoms | Structure | Molecule,
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
@@ -352,7 +352,7 @@ class AseRelaxer:
 
         Parameters
         ----------
-        atoms : Atoms
+        atoms : ASE Atoms, pymatgen Structure, or pymatgen Molecule
             The atoms for relaxation.
         fmax : float
             Total force tolerance for relaxation convergence.
