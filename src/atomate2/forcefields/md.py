@@ -6,8 +6,8 @@ import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from monty.dev import deprecated
 from jobflow import job
+from monty.dev import deprecated
 
 from atomate2.ase.md import AseMDMaker
 from atomate2.forcefields import MLFF
@@ -110,14 +110,13 @@ class ForceFieldMDMaker(AseMDMaker):
 
     def __post_init__(self) -> None:
         """Ensure that force_field_name is correctly assigned."""
-
-        if isinstance(self.force_field_name,str) and self.force_field_name in MLFF.__members__:
+        if (
+            isinstance(self.force_field_name, str)
+            and self.force_field_name in MLFF.__members__
+        ):
             # ensure `force_field_name` uses enum format
             self.force_field_name = MLFF(self.force_field_name)
-
-        if isinstance(self.force_field_name,MLFF):
-            # if `force_field_name` is an enum, convert to string
-            self.force_field_name = str(self.force_field_name)
+        self.force_field_name = str(self.force_field_name)
 
     @job(
         data=[*_FORCEFIELD_DATA_OBJECTS, "ionic_steps"],
@@ -152,7 +151,7 @@ class ForceFieldMDMaker(AseMDMaker):
             )
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
-            self.force_field_name,
+            str(self.force_field_name),  # make mypy happy
             md_result,
             relax_cell=(self.ensemble == "npt"),
             steps=self.n_steps,
@@ -169,9 +168,17 @@ class ForceFieldMDMaker(AseMDMaker):
     @property
     def calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
-        return ase_calculator(self.force_field_name, **self.calculator_kwargs)
+        return ase_calculator(
+            str(self.force_field_name),  # make mypy happy
+            **self.calculator_kwargs,
+        )
 
-@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use NEP, set `force_field_name = 'NEP'` in ForceFieldMDMaker.")
+
+@deprecated(
+    replacement=ForceFieldMDMaker,
+    deadline=(2025, 1, 1),
+    message="To use NEP, set `force_field_name = 'NEP'` in ForceFieldMDMaker.",
+)
 @dataclass
 class NEPMDMaker(ForceFieldMDMaker):
     """Perform an MD run with NEP."""
@@ -182,7 +189,12 @@ class NEPMDMaker(ForceFieldMDMaker):
         default_factory=lambda: {"model_filename": "nep.txt"}
     )
 
-@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldMDMaker.")
+
+@deprecated(
+    replacement=ForceFieldMDMaker,
+    deadline=(2025, 1, 1),
+    message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldMDMaker.",
+)
 @dataclass
 class MACEMDMaker(ForceFieldMDMaker):
     """Perform an MD run with MACE."""
@@ -193,7 +205,12 @@ class MACEMDMaker(ForceFieldMDMaker):
         default_factory=lambda: {"default_dtype": "float32"}
     )
 
-@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use M3GNet, set `force_field_name = 'M3GNet'` in ForceFieldMDMaker.")
+
+@deprecated(
+    replacement=ForceFieldMDMaker,
+    deadline=(2025, 1, 1),
+    message="To use M3GNet, set `force_field_name = 'M3GNet'` in ForceFieldMDMaker.",
+)
 @dataclass
 class M3GNetMDMaker(ForceFieldMDMaker):
     """Perform an MD run with M3GNet."""
@@ -201,7 +218,12 @@ class M3GNetMDMaker(ForceFieldMDMaker):
     name: str = f"{MLFF.M3GNet} MD"
     force_field_name: str | MLFF = MLFF.M3GNet
 
-@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use CHGNet, set `force_field_name = 'CHGNet'` in ForceFieldMDMaker.")
+
+@deprecated(
+    replacement=ForceFieldMDMaker,
+    deadline=(2025, 1, 1),
+    message="To use CHGNet, set `force_field_name = 'CHGNet'` in ForceFieldMDMaker.",
+)
 @dataclass
 class CHGNetMDMaker(ForceFieldMDMaker):
     """Perform an MD run with CHGNet."""
@@ -209,7 +231,12 @@ class CHGNetMDMaker(ForceFieldMDMaker):
     name: str = f"{MLFF.CHGNet} MD"
     force_field_name: str | MLFF = MLFF.CHGNet
 
-@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use GAP, set `force_field_name = 'GAP'` in ForceFieldMDMaker.")
+
+@deprecated(
+    replacement=ForceFieldMDMaker,
+    deadline=(2025, 1, 1),
+    message="To use GAP, set `force_field_name = 'GAP'` in ForceFieldMDMaker.",
+)
 @dataclass
 class GAPMDMaker(ForceFieldMDMaker):
     """Perform an MD run with GAP."""
@@ -220,7 +247,12 @@ class GAPMDMaker(ForceFieldMDMaker):
         default_factory=lambda: {"args_str": "IP GAP", "param_filename": "gap.xml"}
     )
 
-@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use Nequip, set `force_field_name = 'Nequip'` in ForceFieldMDMaker.")
+
+@deprecated(
+    replacement=ForceFieldMDMaker,
+    deadline=(2025, 1, 1),
+    message="To use Nequip, set `force_field_name = 'Nequip'` in ForceFieldMDMaker.",
+)
 @dataclass
 class NequipMDMaker(ForceFieldMDMaker):
     """Perform an MD run with nequip."""
