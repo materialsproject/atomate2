@@ -160,7 +160,7 @@ class MPMorphVaspSlowQuenchMaker(MPMorphMDMaker):
         (VASP) or MultiMDMaker.
     quench_maker :  SlowQuenchVaspMaker
         SlowQuenchVaspMaker - MDMaker that quenches structure from high
-        to low temperature in piece-wise AIMD runs.
+        to low temperature in piece-wise ('stepwise') AIMD runs.
         Check atomate2.vasp.jobs.mpmorph for SlowQuenchVaspMaker.
     """
 
