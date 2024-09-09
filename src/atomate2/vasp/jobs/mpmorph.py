@@ -8,9 +8,8 @@ from typing import TYPE_CHECKING
 from atomate2.common.flows.mpmorph import FastQuenchMaker, SlowQuenchMaker
 from atomate2.vasp.jobs.md import MDMaker
 from atomate2.vasp.jobs.mp import (
-    MPMetaGGARelaxMaker,
-    MPMetaGGAStaticMaker,
-    MPPreRelaxMaker,
+    MPGGARelaxMaker,
+    MPGGAStaticMaker,
 )
 from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.sets.mpmorph import MPMorphMDSetGenerator
@@ -130,7 +129,9 @@ class FastQuenchVaspMaker(FastQuenchMaker):
 
     Quenches a provided structure with a single (or double) relaxation
     and a static calculation at 0K.
-    NOTE: Same as MPMetaGGADoubleRelaxMaker.
+
+    NOTE: By default, same as atomate2.vasp.flows.mp.MPGGADoubleRelaxMaker.
+    This exists for the user to structure a FastQuenchMaker more easily.
     This is built for consistency with MPMorph flows.
 
     Parameters
@@ -147,14 +148,14 @@ class FastQuenchVaspMaker(FastQuenchMaker):
     """
 
     name: str = "Vasp fast quench"
-    relax_maker: MPPreRelaxMaker = field(default_factory=MPPreRelaxMaker)
-    relax_maker2: MPMetaGGARelaxMaker = field(
-        default_factory=lambda: MPMetaGGARelaxMaker(
+    relax_maker: BaseVaspMaker = field(default_factory=MPGGARelaxMaker)
+    relax_maker2: BaseVaspMaker = field(
+        default_factory=lambda: MPGGARelaxMaker(
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
         )
     )
-    static_maker: MPMetaGGAStaticMaker = field(
-        default_factory=lambda: MPMetaGGAStaticMaker(
+    static_maker: BaseVaspMaker = field(
+        default_factory=lambda: MPGGAStaticMaker(
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
         )
     )

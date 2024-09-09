@@ -261,7 +261,7 @@ def get_random_packed_structure(
     tol: float = 2.0,
     return_as_job: bool = False,
     vol_per_atom_source: float | str = "mp",
-    db_kwargs: dict | None = {"use_cached": True},
+    db_kwargs: dict | None = None,
     packmol_seed: int = 1,
     packmol_output_dir: str | Path | None = None,
 ) -> Structure | Job:
@@ -316,7 +316,7 @@ def get_random_packed_structure(
     if isinstance(composition, str):
         composition = Composition(composition)
 
-    db_kwargs = db_kwargs or {}
+    db_kwargs = db_kwargs or ({"use_cached": True} if vol_per_atom_source.lower() == "mp" else {})
     if isinstance(vol_per_atom_source, (float, int)):
         vol_per_atom = vol_per_atom_source
 

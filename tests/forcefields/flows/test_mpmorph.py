@@ -4,39 +4,13 @@ import pytest
 from jobflow import run_locally
 
 from atomate2.forcefields.flows.mpmorph import (
-    MPMorphCHGNetMDMaker,
-    MPMorphFastQuenchCHGNetMDMaker,
-    MPMorphFastQuenchLJMDMaker,
-    MPMorphFastQuenchMACEMDMaker,
-    MPMorphLJMDMaker,
-    MPMorphMACEMDMaker,
-    MPMorphSlowQuenchCHGNetMDMaker,
-    MPMorphSlowQuenchLJMDMaker,
-    MPMorphSlowQuenchMACEMDMaker,
     SlowQuenchMLFFMDMaker,
+    FastQuenchMLFFMDMaker,
+    MPMorphMLFFMDMaker,
 )
-from atomate2.forcefields.md import CHGNetMDMaker, LJMDMaker, MACEMDMaker
+from atomate2.forcefields import md as mlff_md
 
 _velocity_seed = 1234
-
-name_to_maker = {
-    "LJ": MPMorphLJMDMaker,
-    "LJ Slow Quench": MPMorphSlowQuenchLJMDMaker,
-    "LJ Fast Quench": MPMorphFastQuenchLJMDMaker,
-    "MACE": MPMorphMACEMDMaker,
-    "MACE Slow Quench": MPMorphSlowQuenchMACEMDMaker,
-    "MACE Fast Quench": MPMorphFastQuenchMACEMDMaker,
-    "CHGNet": MPMorphCHGNetMDMaker,
-    "CHGNet Slow Quench": MPMorphSlowQuenchCHGNetMDMaker,
-    "CHGNet Fast Quench": MPMorphFastQuenchCHGNetMDMaker,
-}
-
-name_to_md_maker = {
-    "LJ": LJMDMaker,
-    "MACE": MACEMDMaker,
-    "CHGNet": CHGNetMDMaker,
-}
-
 
 def _get_uuid_from_job(job, dct):
     if hasattr(job, "jobs"):
@@ -50,13 +24,13 @@ def _get_uuid_from_job(job, dct):
     "ff_name",
     [
         "MACE",
-        "MACE Fast Quench",
         "MACE Slow Quench",
+        "MACE Fast Quench",
     ],
-)
-#       "CHGNet",
-#       "CHGNet Slow Quench",
-#       "CHGNet Fast Quench",
+)       
+#        "MACE",
+#        "MACE Fast Quench",
+#        "MACE Slow Quench",
 
 
 def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
@@ -73,13 +47,12 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
-    for mlff_name in name_to_md_maker:
-        if mlff_name in ff_name:
-            md_maker = name_to_md_maker[mlff_name]
-            break
+    mlff_name = ff_name.split(" ")[0]
+    md_maker = getattr(mlff_md,f"{mlff_name}MDMaker")
 
-    quench_kwargs = (
-        {
+    quench_maker = None
+    if "Slow Quench" in ff_name:
+        quench_maker = SlowQuenchMLFFMDMaker(**{
             "quench_n_steps": n_steps_quench,
             "quench_temperature_step": quench_temp_steps,
             "quench_end_temperature": quench_end_temp,
@@ -87,24 +60,20 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
             "md_maker": md_maker(
                 name=f"{mlff_name} Quench MD Maker", mb_velocity_seed=_velocity_seed
             ),
-        }
-        if "Slow Quench" in ff_name
-        else {}
-    )
+        })
+
+    elif "Fast Quench" in ff_name:
+        quench_maker = FastQuenchMLFFMDMaker.from_force_field_name(mlff_name)
+
     md_maker = md_maker(name=f"{mlff_name} MD Maker", mb_velocity_seed=_velocity_seed)
-    maker = name_to_maker[ff_name]()
-    maker = maker.from_temperature_and_steps(
+    
+    maker = MPMorphMLFFMDMaker.from_temperature_and_steps(
         temperature=temp,
         n_steps_convergence=n_steps_convergence,
         n_steps_production=n_steps_production,
-        mlff_maker=md_maker,
+        md_maker=md_maker,
+        quench_maker = quench_maker,
     )
-    if "Slow Quench" in ff_name:
-        maker.quench_maker = maker.quench_maker.update_kwargs(
-            update=quench_kwargs, class_filter=SlowQuenchMLFFMDMaker
-        )
-    else:
-        pass
 
     flow = maker.make(structure)
 

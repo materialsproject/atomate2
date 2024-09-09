@@ -289,6 +289,7 @@ class MPMorphMDMaker(Maker):
         n_steps_production : int = 10000,
         end_temp : float | None = None,
         md_maker : Maker = None,
+        quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None,
     ) -> Self:
         """
         Create an MPMorph flow from a temperature and number of steps.
@@ -310,8 +311,11 @@ class MPMorphMDMaker(Maker):
             If None (default), set to `temperature`.
         base_md_maker : Maker
             The Maker used to start MD runs.
+        quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
+            SlowQuenchMaker - MDMaker that quenchs structure from high to low temperature
+            FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
         """
-        return NotImplementedError
+        raise NotImplementedError
 
 @dataclass
 class FastQuenchMaker(Maker):
@@ -503,14 +507,14 @@ class SlowQuenchMaker(Maker):
         ----------
         A slow quench .Flow or .Job
         """
-        return NotImplemented
+        raise NotImplementedError
 
 
 @dataclass
 class AmorphousLimitMaker(Maker):
     """Create an amorphous structure and equilibrate with MPMorph.
 
-    Creates an amorphous structure from a desired stiochiometry,
+    Creates an amorphous structure from a desired stoichiometry,
     then performs the MPMorph molecular dynamics runs on top of it.
 
     Parameters
