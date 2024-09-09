@@ -42,7 +42,7 @@ class MPMorphMDSetGenerator(MPMDSet):
     auto_lreal: bool = False
     inherit_incar: bool | None = False
     ensemble: str = "nvt"
-    spin_polarized : bool = False
+    spin_polarized: bool = False
     time_step: float = 2
     nsteps: int = 2000
 
@@ -57,12 +57,14 @@ class MPMorphMDSetGenerator(MPMDSet):
             A dictionary of updates to apply.
         """
         updates = super().incar_updates
-        updates.update({
-            "LAECHG": False,
-            "EDIFFG": None,
-            **MDSetGenerator._get_ensemble_defaults(self.structure, self.ensemble)
-        })
+        updates.update(
+            {
+                "LAECHG": False,
+                "EDIFFG": None,
+                **MDSetGenerator._get_ensemble_defaults(self.structure, self.ensemble),  # noqa: SLF001
+            }
+        )
         if self.spin_polarized:
-            updates.update(MAGMOM = None)
+            updates.update(MAGMOM=None)
 
         return updates

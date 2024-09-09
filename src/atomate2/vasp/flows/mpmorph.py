@@ -21,7 +21,6 @@ from atomate2.common.flows.mpmorph import (
     SlowQuenchMaker,
 )
 from atomate2.vasp.flows.md import MultiMDMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.mpmorph import (
     BaseMPMorphMDMaker,
     FastQuenchVaspMaker,
@@ -30,10 +29,10 @@ from atomate2.vasp.jobs.mpmorph import (
 from atomate2.vasp.powerups import update_user_incar_settings
 
 if TYPE_CHECKING:
+    from jobflow import Maker
     from typing_extensions import Self
 
-    from jobflow import Maker
-
+    from atomate2.vasp.jobs.base import BaseVaspMaker
     from atomate2.vasp.jobs.md import MDMaker
 
 
@@ -76,7 +75,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
     )
 
     @classmethod
-    def from_temperature_and_nsteps(
+    def from_temperature_and_nsteps(  # type: ignore[override]
         cls,
         temperature: float,
         n_steps_convergence: int,
@@ -90,7 +89,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
         Create VASP MPMorph flow from a temperature and number of steps.
 
         Parameters
-        -----------
+        ----------
         temperature : float
             The (starting) temperature
         n_steps_convergence : int = 5000
@@ -106,10 +105,11 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
             If an int, the number of steps to use per production run,
             using MultiMDMaker to orchestrate chained production runs.
         quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
-            SlowQuenchMaker - MDMaker that quenchs structure from high to low temperature
-            FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
+            SlowQuenchMaker - MDMaker that quenches structure from
+                high to low temperature
+            FastQuenchMaker - DoubleRelaxMaker + Static that "quenches"
+                structure at 0K
         """
-
         end_temp = end_temp or temperature
 
         conv_md_maker = update_user_incar_settings(
@@ -130,7 +130,9 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
             n_steps_per_production_run = n_steps_production
             n_production_runs = 1
         else:
-            n_production_runs = math.ceil(n_steps_production / n_steps_per_production_run)
+            n_production_runs = math.ceil(
+                n_steps_production / n_steps_per_production_run
+            )
 
         production_md_maker = update_user_incar_settings(
             flow=md_maker,
@@ -144,8 +146,8 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
         if n_production_runs > 1:
             production_md_maker = Response(
                 replace=MultiMDMaker(
-                    name = "Production MPMorph VASP MultiMD Maker",
-                    md_makers=[production_md_maker for _ in range(n_production_runs)]
+                    name="Production MPMorph VASP MultiMD Maker",
+                    md_makers=[production_md_maker for _ in range(n_production_runs)],
                 )
             )
         else:
@@ -155,7 +157,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
             name="MP Morph VASP MD Maker",
             convergence_md_maker=convergence_md_maker,
             production_md_maker=production_md_maker,
-            quench_maker = quench_maker,
+            quench_maker=quench_maker,
         )
 
 

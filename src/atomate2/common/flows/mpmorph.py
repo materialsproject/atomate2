@@ -24,10 +24,10 @@ from atomate2.common.jobs.eos import MPMorphPVPostProcess, _apply_strain_to_stru
 if TYPE_CHECKING:
     from pathlib import Path
     from typing import Any
-    from typing_extensions import Self
 
     from jobflow import Job
     from pymatgen.core import Composition, Structure
+    from typing_extensions import Self
 
     from atomate2.common.jobs.eos import EOSPostProcessor
 
@@ -58,7 +58,7 @@ class EquilibriumVolumeMaker(Maker):
     name: str = "Equilibrium Volume Maker"
     md_maker: Maker | None = None
     postprocessor: EOSPostProcessor = field(default_factory=MPMorphPVPostProcess)
-    initial_strain: float = 0.2
+    initial_strain: float | tuple[float, float] = 0.2
     min_strain: float = 0.5
     max_attempts: int | None = 20
     energy_average_frames: int = 1
@@ -88,8 +88,9 @@ class EquilibriumVolumeMaker(Maker):
         """
         if working_outputs is None:
             if isinstance(self.initial_strain, (float, int)):
-                self.initial_strain = tuple(
-                    (-1) ** (i + 1) * abs(self.initial_strain) for i in range(2)
+                self.initial_strain = (
+                    -abs(self.initial_strain),
+                    abs(self.initial_strain),
                 )
             linear_strain = np.linspace(
                 *self.initial_strain, self.postprocessor.min_data_points
@@ -215,8 +216,10 @@ class MPMorphMDMaker(Maker):
     production_md_maker : Maker
         MDMaker to generate the production run(s)
     quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
-        SlowQuenchMaker - MDMaker that quenchs structure from high to low temperature
-        FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
+        SlowQuenchMaker - MDMaker that quenches structure from
+            high to low temperature
+        FastQuenchMaker - DoubleRelaxMaker + Static that
+            "quenches" structure at 0K
     """
 
     name: str = "Base MPMorph MD"
@@ -285,10 +288,10 @@ class MPMorphMDMaker(Maker):
     def from_temperature_and_nsteps(
         cls,
         temperature: float,
-        n_steps_convergence : int = 5000,
-        n_steps_production : int = 10000,
-        end_temp : float | None = None,
-        md_maker : Maker = None,
+        n_steps_convergence: int = 5000,
+        n_steps_production: int = 10000,
+        end_temp: float | None = None,
+        md_maker: Maker = None,
         quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None,
     ) -> Self:
         """
@@ -297,9 +300,9 @@ class MPMorphMDMaker(Maker):
         This is a convenience class constructor. The user need only
         input the desired temperature and steps for convergence / production
         MD runs.
-        
+
         Parameters
-        -----------
+        ----------
         temperature : float
             The (starting) temperature
         n_steps_convergence : int = 5000
@@ -312,10 +315,13 @@ class MPMorphMDMaker(Maker):
         base_md_maker : Maker
             The Maker used to start MD runs.
         quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
-            SlowQuenchMaker - MDMaker that quenchs structure from high to low temperature
-            FastQuenchMaker - DoubleRelaxMaker + Static that "quenchs" structure at 0K
+            SlowQuenchMaker - MDMaker that quenches structure from
+                high to low temperature
+            FastQuenchMaker - DoubleRelaxMaker + Static that
+                "quenches" structure at 0K
         """
         raise NotImplementedError
+
 
 @dataclass
 class FastQuenchMaker(Maker):
@@ -504,7 +510,7 @@ class SlowQuenchMaker(Maker):
             A previous calculation directory to copy output files from.
 
         Returns
-        ----------
+        -------
         A slow quench .Flow or .Job
         """
         raise NotImplementedError

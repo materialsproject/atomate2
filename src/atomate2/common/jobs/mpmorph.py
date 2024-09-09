@@ -278,7 +278,7 @@ def get_random_packed_structure(
     target_atoms : int
         The target number of atoms in the structure.
     vol_multiply : float
-        The factor to multiply the strcuture volume by.
+        The factor to multiply the structure volume by.
     tol : float
         The tolerance to apply to the box size.
     return_as_job : bool
@@ -316,14 +316,18 @@ def get_random_packed_structure(
     if isinstance(composition, str):
         composition = Composition(composition)
 
-    db_kwargs = db_kwargs or ({"use_cached": True} if vol_per_atom_source.lower() == "mp" else {})
+    struct_db = (
+        vol_per_atom_source.lower() if isinstance(vol_per_atom_source, str) else None
+    )
+    db_kwargs = db_kwargs or ({"use_cached": True} if struct_db == "mp" else {})
+
     if isinstance(vol_per_atom_source, (float, int)):
         vol_per_atom = vol_per_atom_source
 
-    elif vol_per_atom_source.lower() == "mp":
+    elif struct_db == "mp":
         vol_per_atom = get_average_volume_from_mp(composition, **db_kwargs)
 
-    elif vol_per_atom_source.lower() == "icsd":
+    elif struct_db == "icsd":
         vol_per_atom = get_average_volume_from_icsd(composition, **db_kwargs)
 
     else:

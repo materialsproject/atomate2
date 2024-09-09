@@ -7,10 +7,7 @@ from typing import TYPE_CHECKING
 
 from atomate2.common.flows.mpmorph import FastQuenchMaker, SlowQuenchMaker
 from atomate2.vasp.jobs.md import MDMaker
-from atomate2.vasp.jobs.mp import (
-    MPGGARelaxMaker,
-    MPGGAStaticMaker,
-)
+from atomate2.vasp.jobs.mp import MPGGARelaxMaker, MPGGAStaticMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.sets.mpmorph import MPMorphMDSetGenerator
 
@@ -96,22 +93,25 @@ class SlowQuenchVaspMaker(SlowQuenchMaker):
         prev_dir: str | Path | None = None,
     ) -> Flow | Job:
         """Call the VASP MD maker.
-        
+
         Parameters
         ----------
         structure : .Structure
             A pymatgen structure object.
-        temp : float
+        temp : float or tuple[float, float]
             The temperature in Kelvin.
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from.
 
         Returns
-        ----------
+        -------
         A slow quench .Flow or .Job
         """
-        incar_updates = {"NSW": self.quench_n_steps,}
-        incar_updates["TEBEG"], incar_updates["TEEND"] = temp if isinstance(temp, tuple) else (temp, temp)
+        incar_updates = {
+            "NSW": self.quench_n_steps,
+            "TEBEG": temp[0] if isinstance(temp, tuple) else temp,
+            "TEEND": temp[1] if isinstance(temp, tuple) else temp,
+        }
 
         self.md_maker = update_user_incar_settings(
             flow=self.md_maker,

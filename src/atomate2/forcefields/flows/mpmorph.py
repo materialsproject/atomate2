@@ -17,27 +17,16 @@ from atomate2.common.flows.mpmorph import (
     MPMorphMDMaker,
     SlowQuenchMaker,
 )
-from atomate2.common.jobs.eos import MPMorphEVPostProcess
-
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.jobs import (
-    ForceFieldRelaxMaker,
-    ForceFieldStaticMaker,
-)
-from atomate2.forcefields.md import (
-    CHGNetMDMaker,
-    ForceFieldMDMaker,
-    M3GNetMDMaker,
-    MACEMDMaker,
-)
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+from atomate2.forcefields.md import ForceFieldMDMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Any
-    from typing_extensions import Self
 
-    from jobflow import Flow, Job, Maker
+    from jobflow import Flow, Job
     from pymatgen.core import Structure
+    from typing_extensions import Self
 
 
 @dataclass
@@ -87,11 +76,13 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
         temperature: float,
         n_steps_convergence: int,
         n_steps_production: int,
-        end_temp : float | None = None,
-        md_maker: ForceFieldMDMaker = ForceFieldMDMaker(),
-        quench_maker : FastQuenchMaker | SlowQuenchMaker | None = None,
+        end_temp: float | None = None,
+        md_maker: ForceFieldMDMaker = None,
+        quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None,
     ) -> MPMorphMLFFMDMaker:
-        """Create a MPMorphMLFFMDMaker from temperature and steps.
+        """
+        Create a MPMorphMLFFMDMaker from temperature and steps.
+
         Recommended for friendly user experience.
 
         Parameters
@@ -107,14 +98,13 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             If None (default), set to `temperature`.
         md_maker : ForceFieldMDMaker
             MDMaker to generate the molecular dynamics jobs specifically for MLFF MDs.
-            This is generalization to any MLFF MD Maker. E.g. LJMDMaker, CHGNetMDMaker, etc.
+            This is a generalization to any MLFF MD Maker, e.g., CHGNetMDMaker
         quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
             SlowQuenchMaker - MLFFMDMaker that quenches structure from
             high to low temperature
             FastQuenchMaker - DoubleRelaxMaker + Static that "quenches"
             structure to 0K
         """
-
         conv_md_maker = md_maker.update_kwargs(
             update={
                 "temperature": temperature,
@@ -132,7 +122,9 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
         production_md_maker = md_maker.update_kwargs(
             update={
                 "name": "Production Run MLFF MD Maker",
-                "temperature": temperature if end_temp is None else [temperature,end_temp],
+                "temperature": temperature
+                if end_temp is None
+                else [temperature, end_temp],
                 "n_steps": n_steps_production,
             }
         )
@@ -141,7 +133,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             name="MP Morph MLFF MD Maker",
             convergence_md_maker=convergence_md_maker,
             production_md_maker=production_md_maker,
-            quench_maker = quench_maker,
+            quench_maker=quench_maker,
         )
 
 
@@ -217,18 +209,29 @@ class FastQuenchMLFFMDMaker(FastQuenchMaker):
     static_maker: ForceFieldStaticMaker = field(default_factory=ForceFieldStaticMaker)
 
     @classmethod
-    def from_force_field_name(cls, force_field_name: str | MLFF ) -> Self:
-        if (
-            isinstance(force_field_name, str)
-            and force_field_name in MLFF.__members__
-        ):
+    def from_force_field_name(cls, force_field_name: str | MLFF) -> Self:
+        """
+        Create a fast quench maker from the force field name.
+
+        Parameters
+        ----------
+        force_field_name : str or .MLFF
+            The name of the forcefield or its enum value
+
+        Returns
+        -------
+        FastQuenchMaker
+            A fast quench maker that consists of a double relax + static using
+            the specified MLFF.
+        """
+        if isinstance(force_field_name, str) and force_field_name in MLFF.__members__:
             # ensure `force_field_name` uses enum format
             force_field_name = MLFF(force_field_name)
         force_field_name = str(force_field_name)
 
         return cls(
-            name = f"{force_field_name} fast quench maker",
-            relax_maker = ForceFieldRelaxMaker(force_field_name=force_field_name),
-            relax_maker2 = ForceFieldRelaxMaker(force_field_name=force_field_name),
-            static_maker = ForceFieldStaticMaker(force_field_name=force_field_name)
+            name=f"{force_field_name} fast quench maker",
+            relax_maker=ForceFieldRelaxMaker(force_field_name=force_field_name),
+            relax_maker2=ForceFieldRelaxMaker(force_field_name=force_field_name),
+            static_maker=ForceFieldStaticMaker(force_field_name=force_field_name),
         )

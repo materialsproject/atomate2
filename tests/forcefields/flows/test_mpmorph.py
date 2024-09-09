@@ -3,14 +3,15 @@
 import pytest
 from jobflow import run_locally
 
+from atomate2.forcefields import md as mlff_md
 from atomate2.forcefields.flows.mpmorph import (
-    SlowQuenchMLFFMDMaker,
     FastQuenchMLFFMDMaker,
     MPMorphMLFFMDMaker,
+    SlowQuenchMLFFMDMaker,
 )
-from atomate2.forcefields import md as mlff_md
 
 _velocity_seed = 1234
+
 
 def _get_uuid_from_job(job, dct):
     if hasattr(job, "jobs"):
@@ -27,7 +28,7 @@ def _get_uuid_from_job(job, dct):
         "MACE Slow Quench",
         "MACE Fast Quench",
     ],
-)       
+)
 #        "MACE",
 #        "MACE Fast Quench",
 #        "MACE Slow Quench",
@@ -48,31 +49,31 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
     mlff_name = ff_name.split(" ")[0]
-    md_maker = getattr(mlff_md,f"{mlff_name}MDMaker")
+    md_maker = getattr(mlff_md, f"{mlff_name}MDMaker")
 
     quench_maker = None
     if "Slow Quench" in ff_name:
-        quench_maker = SlowQuenchMLFFMDMaker(**{
-            "quench_n_steps": n_steps_quench,
-            "quench_temperature_step": quench_temp_steps,
-            "quench_end_temperature": quench_end_temp,
-            "quench_start_temperature": quench_start_temp,
-            "md_maker": md_maker(
+        quench_maker = SlowQuenchMLFFMDMaker(
+            quench_n_steps=n_steps_quench,
+            quench_temperature_step=quench_temp_steps,
+            quench_end_temperature=quench_end_temp,
+            quench_start_temperature=quench_start_temp,
+            md_maker=md_maker(
                 name=f"{mlff_name} Quench MD Maker", mb_velocity_seed=_velocity_seed
             ),
-        })
+        )
 
     elif "Fast Quench" in ff_name:
         quench_maker = FastQuenchMLFFMDMaker.from_force_field_name(mlff_name)
 
     md_maker = md_maker(name=f"{mlff_name} MD Maker", mb_velocity_seed=_velocity_seed)
-    
+
     maker = MPMorphMLFFMDMaker.from_temperature_and_steps(
         temperature=temp,
         n_steps_convergence=n_steps_convergence,
         n_steps_production=n_steps_production,
         md_maker=md_maker,
-        quench_maker = quench_maker,
+        quench_maker=quench_maker,
     )
 
     flow = maker.make(structure)
@@ -185,8 +186,6 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     assert task_docs["MD Maker 1"].output.energy == pytest.approx(-130, abs=5)
     assert task_docs["MD Maker 2"].output.energy == pytest.approx(-340, abs=5)
     assert task_docs["MD Maker 3"].output.energy == pytest.approx(-270, abs=5)
-    # old assert task_docs["MD Maker 2"].output.energy == pytest.approx(-325, abs=5)
-    # old assert task_docs["MD Maker 3"].output.energy == pytest.approx(-329, abs=5) #also new 3 is old 4
 
     if "Fast Quench" in ff_name:
         assert (
