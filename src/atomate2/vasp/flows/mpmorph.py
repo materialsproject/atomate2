@@ -89,7 +89,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
         n_steps_convergence: int,
         n_steps_production: int,
         end_temp: float | None = None,
-    ) -> Self:
+    ) -> MPMorphVaspMDMaker:
         """Create a new instance of this class with a new temperature and number of steps.
         Recommended for user friendly experience of using MPMorphMDMaker.
 
@@ -192,7 +192,7 @@ class SlowQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
         quench_start_temperature: float,
         descent_method: Literal["stepwise", "linear with hold"] = "stepwise",
         end_temp: float | None = None,
-    ) -> Self:
+    ) -> SlowQuenchMPMorphVaspMDMaker:
         """Create a new instance of MPMorph SlowQuench with a new temperature and number of steps
         for convergence run, production run, and slow quencher.
         Recommended for user friendly experience of using MPMorphSlowQuenchMaker.
@@ -305,7 +305,7 @@ class FastQuenchMPMorphVaspMDMaker(MPMorphMDMaker):
         n_steps_convergence: int,
         n_steps_production: int,
         end_temp: float | None = None,
-    ) -> Self:
+    ) -> FastQuenchMPMorphVaspMDMaker:
         """Create a new instance of MPMorph SlowQuench with a new temperature and number of steps
         for convergence run, production run, and slow quencher.
         Recommended for user friendly experience of using MPMorphSlowQuenchMaker.
