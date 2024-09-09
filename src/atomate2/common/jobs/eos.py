@@ -82,6 +82,8 @@ class EOSPostProcessor(MSONable):
                         "energy": list, <required>
                         "volume": list, <required>
                         "stress": list <optional>
+                        "structure": list <not needed for the fit>
+                        "dir_name": list <optional for the fit>
                     },
                     "initial_<key>": {"E0": float, "V0": float} <optional>,
                         for <key> in ("relax", "static")
