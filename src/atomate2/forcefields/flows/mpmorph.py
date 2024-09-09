@@ -68,7 +68,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
         Name of the flows produced by this maker.
     convergence_md_maker : EquilibrateVolumeMaker
         MDMaker to generate the equilibrium volumer searcher;
-        inherits from EquilibriumVolumeMaker and ForceFieldMDMaker (MLFF)
+        uses EquilibriumVolumeMaker with a ForceFieldMDMaker (MLFF)
     production_md_maker : ForceFieldMDMaker
         MDMaker to generate the production run(s);
         inherits from ForceFieldMDMaker (MLFF)
@@ -297,25 +297,20 @@ class MPMorphLJMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run
-        in Kelvin, default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
-    md_maker : LJMDMaker
-        LJMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
+    convergence_md_maker : EquilibriumVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with LJMDMaker (MLFF)
     production_md_maker : LJMDMaker
         LJMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     """
 
     name: str = "MP Morph LJ MD Maker"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: LJMDMaker = field(default_factory=lambda: LJMDMaker(name="LJ MD Maker"))
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=LJMDMaker(),
+        )
+    )
     production_md_maker: LJMDMaker = field(
         default_factory=lambda: LJMDMaker(name="Production Run LJ MD Maker")
     )
@@ -335,15 +330,9 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    md_maker : LJMDMaker
-        LJMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with LJMDMaker (MLFF)
     production_md_maker : LJMDMaker
         LJMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     quench_maker : SlowQuenchMLFFMDMaker
@@ -352,11 +341,12 @@ class MPMorphSlowQuenchLJMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph LJ MD Maker Slow Quench"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: LJMDMaker = field(default_factory=lambda: LJMDMaker(name="LJ MD Maker"))
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=LJMDMaker(),
+        )
+    )
     production_md_maker: LJMDMaker = field(
         default_factory=lambda: LJMDMaker(name="Production Run LJ MD Maker")
     )
@@ -385,15 +375,9 @@ class MPMorphFastQuenchLJMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    md_maker : LJMDMaker
-        LJMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with LJMDMaker (MLFF)
     production_md_maker : LJMDMaker
         LJMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     quench_maker : FastQuenchMLFFMDMaker
@@ -402,11 +386,12 @@ class MPMorphFastQuenchLJMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph LJ MD Maker Fast Quench"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: LJMDMaker = field(default_factory=lambda: LJMDMaker(name="LJ MD Maker"))
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=LJMDMaker(),
+        )
+    )
     production_md_maker: LJMDMaker = field(
         default_factory=lambda: LJMDMaker(name="Production Run LJ MD Maker")
     )
@@ -433,26 +418,19 @@ class MPMorphCHGNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
-    md_maker : CHGNetMDMaker
-        CHGNetMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with CHGNetMDMaker (MLFF)
     production_md_maker : CHGNetMDMaker
         CHGNetMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     """
 
     name: str = "MP Morph CHGNet MD Maker"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: CHGNetMDMaker = field(
-        default_factory=lambda: CHGNetMDMaker(name="CHGNet MD Maker")
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=CHGNetMDMaker(),
+        )
     )
     production_md_maker: CHGNetMDMaker = field(
         default_factory=lambda: CHGNetMDMaker(name="Production Run CHGNet MD Maker")
@@ -473,15 +451,9 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    md_maker : CHGNetMDMaker
-        CHGNetMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with CHGNetMDMaker (MLFF)
     production_md_maker : CHGNetMDMaker
         CHGNetMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     quench_maker : SlowQuenchMLFFMDMaker
@@ -490,12 +462,11 @@ class MPMorphSlowQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph CHGNet MD Maker Slow Quench"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: CHGNetMDMaker = field(
-        default_factory=lambda: CHGNetMDMaker(name="CHGNet MD Maker")
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=CHGNetMDMaker(),
+        )
     )
     production_md_maker: CHGNetMDMaker = field(
         default_factory=lambda: CHGNetMDMaker(name="Production Run CHGNet MD Maker")
@@ -525,15 +496,9 @@ class MPMorphFastQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    md_maker : CHGNetMDMaker
-        CHGNetMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with CHGNetMDMaker (MLFF)
     production_md_maker : CHGNetMDMaker
         CHGNetMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     quench_maker : FastQuenchMLFFMDMaker
@@ -542,12 +507,11 @@ class MPMorphFastQuenchCHGNetMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph CHGNet MD Maker Fast Quench"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: CHGNetMDMaker = field(
-        default_factory=lambda: CHGNetMDMaker(name="CHGNet MD Maker")
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=CHGNetMDMaker(),
+        )
     )
     production_md_maker: CHGNetMDMaker = field(
         default_factory=lambda: CHGNetMDMaker(name="Production Run CHGNet MD Maker")
@@ -575,26 +539,19 @@ class MPMorphM3GNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
-    md_maker : M3GNetMDMaker
-        M3GNetMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with M3GNetMDMaker (MLFF)
     production_md_maker : M3GNetMDMaker
         M3GNetMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     """
 
     name: str = "MP Morph M3GNet MD Maker"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: M3GNetMDMaker = field(
-        default_factory=lambda: M3GNetMDMaker(name="M3GNet MD Maker")
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=M3GNetMDMaker(),
+        )
     )
     production_md_maker: M3GNetMDMaker = field(
         default_factory=lambda: M3GNetMDMaker(name="Production Run M3GNet MD Maker")
@@ -615,15 +572,9 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    md_maker : M3GNetMDMaker
-        M3GNetMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with M3GNetMDMaker (MLFF)
     production_md_maker : M3GNetMDMaker
         M3GNetMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     quench_maker : SlowQuenchMLFFMDMaker
@@ -632,12 +583,11 @@ class MPMorphSlowQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph M3GNet MD Maker Slow Quench"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: M3GNetMDMaker = field(
-        default_factory=lambda: M3GNetMDMaker(name="M3GNet MD Maker")
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=M3GNetMDMaker(),
+        )
     )
     production_md_maker: M3GNetMDMaker = field(
         default_factory=lambda: M3GNetMDMaker(name="Production Run M3GNet MD Maker")
@@ -667,15 +617,9 @@ class MPMorphFastQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    md_maker : M3GNetMDMaker
-        M3GNetMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with M3GNetMDMaker (MLFF)
     production_md_maker : M3GNetMDMaker
         M3GNetMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     quench_maker : FastQuenchMLFFMDMaker
@@ -684,12 +628,11 @@ class MPMorphFastQuenchM3GNetMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph M3GNet MD Maker Fast Quench"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: M3GNetMDMaker = field(
-        default_factory=lambda: M3GNetMDMaker(name="M3GNet MD Maker")
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=M3GNetMDMaker(),
+        )
     )
     production_md_maker: M3GNetMDMaker = field(
         default_factory=lambda: M3GNetMDMaker(name="Production Run CHGNet MD Maker")
@@ -717,26 +660,19 @@ class MPMorphMACEMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
-    md_maker : MACEMDMaker
-        MACEMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with MACE MD Maker (MLFF)
     production_md_maker : MACEMDMaker
         MACEMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     """
 
     name: str = "MP Morph MACE MD Maker"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: MACEMDMaker = field(
-        default_factory=lambda: MACEMDMaker(name="MACE MD Maker")
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=MACEMDMaker(),
+        )
     )
     production_md_maker: MACEMDMaker = field(
         default_factory=lambda: MACEMDMaker(name="Production Run MACE MD Maker")
@@ -757,15 +693,9 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    md_maker : MACEMDMaker
-        MACEMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with MACE MD Maker (MLFF)
     production_md_maker : MACEMDMaker
         MACEMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     quench_maker : SlowQuenchMLFFMDMaker
@@ -774,12 +704,11 @@ class MPMorphSlowQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph MACE MD Maker Slow Quench"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: MACEMDMaker = field(
-        default_factory=lambda: MACEMDMaker(name="MACE MD Maker")
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=MACEMDMaker(),
+        )
     )
     production_md_maker: MACEMDMaker = field(
         default_factory=lambda: MACEMDMaker(name="Production Run MACE MD Maker")
@@ -809,15 +738,9 @@ class MPMorphFastQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    temperature : float = 300
-        Temperature of the equilibrium volume search and production run in Kelvin,
-        default 300K
-    steps_convergence: int | None = None
-        Defaults to 5000 steps unless specified
-    md_maker : MACEMDMaker
-        MACEMDMaker to generate the molecular dynamics jobs specifically for MLFF MDs
-    steps_total_production: int = 10000
-        Total number of steps for the production run(s); default 10000 steps
+    convergence_md_maker : EquilibrateVolumeMaker
+        MDMaker to generate the equilibrium volumer searcher;
+        uses EquilibriumVolumeMaker with MACE MD Maker (MLFF)
     production_md_maker : MACEMDMaker
         MACEMDMaker to generate the production run(s); inherits from ForceFieldMDMaker
     quench_maker : FastQuenchMLFFMDMaker
@@ -826,12 +749,11 @@ class MPMorphFastQuenchMACEMDMaker(MPMorphMLFFMDMaker):
     """
 
     name: str = "MP Morph MACE MD Maker Fast Quench"
-    temperature: float = 300
-    steps_convergence: int = 5000
-    steps_total_production: int = 10000
-
-    md_maker: MACEMDMaker = field(
-        default_factory=lambda: MACEMDMaker(name="MACE MD Maker")
+    convergence_md_maker: EquilibriumVolumeMaker = field(
+        default_factory=lambda: EquilibriumVolumeMaker(
+            name="MP Morph LJ Equilibrium Volume Maker",
+            md_maker=MACEMDMaker(),
+        )
     )
     production_md_maker: MACEMDMaker = field(
         default_factory=lambda: MACEMDMaker(name="Production Run MACE MD Maker")
