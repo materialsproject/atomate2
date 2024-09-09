@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 from ase.io import Trajectory as AseTrajectory
 from ase.units import GPa as _GPa_to_eV_per_A3
 from jobflow import job
+from monty.dev import deprecated
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.ase.jobs import AseRelaxMaker
@@ -78,7 +79,7 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
@@ -110,7 +111,7 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
     """
 
     name: str = "Force field relax"
-    force_field_name: str = f"{MLFF.Forcefield}"
+    force_field_name: str | MLFF = MLFF.Forcefield
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float | None = 1e-2
@@ -119,6 +120,18 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        """Ensure that force_field_name is correctly assigned."""
+
+        if isinstance(self.force_field_name,str) and self.force_field_name in MLFF.__members__:
+            # ensure `force_field_name` uses enum format
+            self.force_field_name = MLFF(self.force_field_name)
+
+        if isinstance(self.force_field_name,MLFF):
+            # if `force_field_name` is an enum, convert to string
+            self.force_field_name = str(self.force_field_name)
+        
 
     @forcefield_job
     def make(
@@ -180,7 +193,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
@@ -189,7 +202,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     """
 
     name: str = "Force field static"
-    force_field_name: str = "Force field"
+    force_field_name: str | MLFF = MLFF.Forcefield
     relax_cell: bool = False
     steps: int = 1
     relax_kwargs: dict = field(default_factory=dict)
@@ -197,7 +210,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     calculator_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-
+@deprecated(replacement=ForceFieldRelaxMaker, deadline=(2025, 1, 1), message="To use CHGNet, set `force_field_name = 'CHGNet'` in ForceFieldRelaxMaker.")
 @dataclass
 class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     """
@@ -205,7 +218,7 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
 
     Parameters
     ----------
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
@@ -227,7 +240,7 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     """
 
     name: str = f"{MLFF.CHGNet} relax"
-    force_field_name: str = f"{MLFF.CHGNet}"
+    force_field_name: str | MLFF = MLFF.CHGNet
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float = 1e-2
@@ -240,6 +253,7 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     )
 
 
+@deprecated(replacement=ForceFieldStaticMaker, deadline=(2025, 1, 1), message="To use CHGNet, set `force_field_name = 'CHGNet'` in ForceFieldStaticMaker.")
 @dataclass
 class CHGNetStaticMaker(ForceFieldStaticMaker):
     """
@@ -256,13 +270,13 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
     """
 
     name: str = f"{MLFF.CHGNet} static"
-    force_field_name: str = f"{MLFF.CHGNet}"
+    force_field_name: str | MLFF = MLFF.CHGNet
     task_document_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
         default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
     )
 
-
+@deprecated(replacement=ForceFieldRelaxMaker, deadline=(2025, 1, 1), message="To use M3GNet, set `force_field_name = 'M3GNet'` in ForceFieldRelaxMaker.")
 @dataclass
 class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     """
@@ -272,7 +286,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
@@ -294,7 +308,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     """
 
     name: str = f"{MLFF.M3GNet} relax"
-    force_field_name: str = f"{MLFF.M3GNet}"
+    force_field_name: str | MLFF = MLFF.M3GNet
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float = 1e-2
@@ -306,7 +320,32 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
         default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
     )
 
+@deprecated(replacement=ForceFieldStaticMaker, deadline=(2025, 1, 1), message="To use M3GNet, set `force_field_name = 'M3GNet'` in ForceFieldStaticMaker.")
+@dataclass
+class M3GNetStaticMaker(ForceFieldStaticMaker):
+    """
+    Maker to calculate forces and stresses using the M3GNet force field.
 
+    Parameters
+    ----------
+    name : str
+        The job name.
+    force_field_name : str or .MLFF
+        The name of the force field.
+    calculator_kwargs : dict
+        Keyword arguments that will get passed to the ASE calculator.
+    task_document_kwargs : dict (deprecated)
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+    """
+
+    name: str = f"{MLFF.M3GNet} static"
+    force_field_name: str | MLFF = MLFF.M3GNet
+    task_document_kwargs: dict = field(default_factory=dict)
+    calculator_kwargs: dict = field(
+        default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
+    )
+
+@deprecated(replacement=ForceFieldRelaxMaker, deadline=(2025, 1, 1), message="To use NEP, set `force_field_name = 'NEP'` in ForceFieldRelaxMaker.")
 @dataclass
 class NEPRelaxMaker(ForceFieldRelaxMaker):
     """
@@ -316,7 +355,7 @@ class NEPRelaxMaker(ForceFieldRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
@@ -338,7 +377,7 @@ class NEPRelaxMaker(ForceFieldRelaxMaker):
     """
 
     name: str = f"{MLFF.NEP} relax"
-    force_field_name: str = f"{MLFF.NEP}"
+    force_field_name: str | MLFF = MLFF.NEP
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float = 1e-2
@@ -350,7 +389,7 @@ class NEPRelaxMaker(ForceFieldRelaxMaker):
     )
     task_document_kwargs: dict = field(default_factory=dict)
 
-
+@deprecated(replacement=ForceFieldStaticMaker, deadline=(2025, 1, 1), message="To use NEP, set `force_field_name = 'NEP'` in ForceFieldStaticMaker.")
 @dataclass
 class NEPStaticMaker(ForceFieldStaticMaker):
     """
@@ -360,7 +399,7 @@ class NEPStaticMaker(ForceFieldStaticMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
@@ -369,13 +408,13 @@ class NEPStaticMaker(ForceFieldStaticMaker):
     """
 
     name: str = f"{MLFF.NEP} static"
-    force_field_name: str = f"{MLFF.NEP}"
+    force_field_name: str | MLFF = MLFF.NEP
     task_document_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
         default_factory=lambda: {"model_filename": "nep.txt"}
     )
 
-
+@deprecated(replacement=ForceFieldRelaxMaker, deadline=(2025, 1, 1), message="To use Nequip, set `force_field_name = 'Nequip'` in ForceFieldRelaxMaker.")
 @dataclass
 class NequipRelaxMaker(ForceFieldRelaxMaker):
     """
@@ -385,7 +424,7 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
@@ -407,7 +446,7 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
     """
 
     name: str = f"{MLFF.Nequip} relax"
-    force_field_name: str = f"{MLFF.Nequip}"
+    force_field_name: str | MLFF = MLFF.Nequip
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float = 1e-2
@@ -416,7 +455,7 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-
+@deprecated(replacement=ForceFieldStaticMaker, deadline=(2025, 1, 1), message="To use Nequip, set `force_field_name = 'Nequip'` in ForceFieldStaticMaker.")
 @dataclass
 class NequipStaticMaker(ForceFieldStaticMaker):
     """
@@ -426,7 +465,7 @@ class NequipStaticMaker(ForceFieldStaticMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
@@ -435,35 +474,10 @@ class NequipStaticMaker(ForceFieldStaticMaker):
     """
 
     name: str = f"{MLFF.Nequip} static"
-    force_field_name: str = f"{MLFF.Nequip}"
+    force_field_name: str | MLFF = MLFF.Nequip
     task_document_kwargs: dict = field(default_factory=dict)
 
-
-@dataclass
-class M3GNetStaticMaker(ForceFieldStaticMaker):
-    """
-    Maker to calculate forces and stresses using the M3GNet force field.
-
-    Parameters
-    ----------
-    name : str
-        The job name.
-    force_field_name : str
-        The name of the force field.
-    calculator_kwargs : dict
-        Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    """
-
-    name: str = f"{MLFF.M3GNet} static"
-    force_field_name: str = f"{MLFF.M3GNet}"
-    task_document_kwargs: dict = field(default_factory=dict)
-    calculator_kwargs: dict = field(
-        default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
-    )
-
-
+@deprecated(replacement=ForceFieldRelaxMaker, deadline=(2025, 1, 1), message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldRelaxMaker.")
 @dataclass
 class MACERelaxMaker(ForceFieldRelaxMaker):
     """
@@ -473,7 +487,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
@@ -499,7 +513,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     """
 
     name: str = f"{MLFF.MACE} relax"
-    force_field_name: str = f"{MLFF.MACE}"
+    force_field_name: str | MLFF = MLFF.MACE
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float = 1e-2
@@ -508,7 +522,7 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-
+@deprecated(replacement=ForceFieldStaticMaker, deadline=(2025, 1, 1), message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldStaticMaker.")
 @dataclass
 class MACEStaticMaker(ForceFieldStaticMaker):
     """
@@ -518,7 +532,7 @@ class MACEStaticMaker(ForceFieldStaticMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator. E.g. the "model"
@@ -531,10 +545,10 @@ class MACEStaticMaker(ForceFieldStaticMaker):
     """
 
     name: str = f"{MLFF.MACE} static"
-    force_field_name: str = f"{MLFF.MACE}"
+    force_field_name: str | MLFF = MLFF.MACE
     task_document_kwargs: dict = field(default_factory=dict)
 
-
+@deprecated(replacement=ForceFieldRelaxMaker, deadline=(2025, 1, 1), message="To use SevenNet, set `force_field_name = 'SevenNet'` in ForceFieldRelaxMaker.")
 @dataclass
 class SevenNetRelaxMaker(ForceFieldRelaxMaker):
     """
@@ -547,7 +561,7 @@ class SevenNetRelaxMaker(ForceFieldRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
@@ -573,7 +587,7 @@ class SevenNetRelaxMaker(ForceFieldRelaxMaker):
     """
 
     name: str = f"{MLFF.SevenNet} relax"
-    force_field_name: str = f"{MLFF.SevenNet}"
+    force_field_name: str | MLFF = MLFF.SevenNet
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float = 1e-2
@@ -582,7 +596,7 @@ class SevenNetRelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-
+@deprecated(replacement=ForceFieldStaticMaker, deadline=(2025, 1, 1), message="To use SevenNet, set `force_field_name = 'SevenNet'` in ForceFieldStaticMaker.")
 @dataclass
 class SevenNetStaticMaker(ForceFieldStaticMaker):
     """
@@ -595,7 +609,7 @@ class SevenNetStaticMaker(ForceFieldStaticMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator. E.g. the "model"
@@ -608,10 +622,10 @@ class SevenNetStaticMaker(ForceFieldStaticMaker):
     """
 
     name: str = f"{MLFF.SevenNet} static"
-    force_field_name: str = f"{MLFF.SevenNet}"
+    force_field_name: str | MLFF = MLFF.SevenNet
     task_document_kwargs: dict = field(default_factory=dict)
 
-
+@deprecated(replacement=ForceFieldRelaxMaker, deadline=(2025, 1, 1), message="To use GAP, set `force_field_name = 'GAP'` in ForceFieldRelaxMaker.")
 @dataclass
 class GAPRelaxMaker(ForceFieldRelaxMaker):
     """
@@ -621,7 +635,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
@@ -643,7 +657,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     """
 
     name: str = f"{MLFF.GAP} relax"
-    force_field_name: str = f"{MLFF.GAP}"
+    force_field_name: str | MLFF = MLFF.GAP
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float = 1e-2
@@ -658,7 +672,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     )
     task_document_kwargs: dict = field(default_factory=dict)
 
-
+@deprecated(replacement=ForceFieldStaticMaker, deadline=(2025, 1, 1), message="To use GAP, set `force_field_name = 'GAP'` in ForceFieldStaticMaker.")
 @dataclass
 class GAPStaticMaker(ForceFieldStaticMaker):
     """
@@ -668,7 +682,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
@@ -677,7 +691,7 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     """
 
     name: str = f"{MLFF.GAP} static"
-    force_field_name: str = f"{MLFF.GAP}"
+    force_field_name: str | MLFF= MLFF.GAP
     task_document_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
         default_factory=lambda: {

@@ -6,6 +6,7 @@ import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from monty.dev import deprecated
 from jobflow import job
 
 from atomate2.ase.md import AseMDMaker
@@ -44,7 +45,7 @@ class ForceFieldMDMaker(AseMDMaker):
     ----------
     name : str
         The name of the MD Maker
-    force_field_name : str
+    force_field_name : str or .MLFF
         The name of the forcefield (for provenance)
     time_step : float | None = None.
         The timestep of the MD run in fs.
@@ -104,8 +105,19 @@ class ForceFieldMDMaker(AseMDMaker):
     """
 
     name: str = "Forcefield MD"
-    force_field_name: str = f"{MLFF.Forcefield}"
+    force_field_name: str | MLFF = MLFF.Forcefield
     task_document_kwargs: dict = None
+
+    def __post_init__(self) -> None:
+        """Ensure that force_field_name is correctly assigned."""
+
+        if isinstance(self.force_field_name,str) and self.force_field_name in MLFF.__members__:
+            # ensure `force_field_name` uses enum format
+            self.force_field_name = MLFF(self.force_field_name)
+
+        if isinstance(self.force_field_name,MLFF):
+            # if `force_field_name` is an enum, convert to string
+            self.force_field_name = str(self.force_field_name)
 
     @job(
         data=[*_FORCEFIELD_DATA_OBJECTS, "ionic_steps"],
@@ -159,59 +171,59 @@ class ForceFieldMDMaker(AseMDMaker):
         """ASE calculator, can be overwritten by user."""
         return ase_calculator(self.force_field_name, **self.calculator_kwargs)
 
-
+@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use NEP, set `force_field_name = 'NEP'` in ForceFieldMDMaker.")
 @dataclass
 class NEPMDMaker(ForceFieldMDMaker):
     """Perform an MD run with NEP."""
 
     name: str = f"{MLFF.NEP} MD"
-    force_field_name: str = f"{MLFF.NEP}"
+    force_field_name: str | MLFF = MLFF.NEP
     calculator_kwargs: dict = field(
         default_factory=lambda: {"model_filename": "nep.txt"}
     )
 
-
+@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldMDMaker.")
 @dataclass
 class MACEMDMaker(ForceFieldMDMaker):
     """Perform an MD run with MACE."""
 
     name: str = f"{MLFF.MACE} MD"
-    force_field_name: str = f"{MLFF.MACE}"
+    force_field_name: str | MLFF = MLFF.MACE
     calculator_kwargs: dict = field(
         default_factory=lambda: {"default_dtype": "float32"}
     )
 
-
+@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use M3GNet, set `force_field_name = 'M3GNet'` in ForceFieldMDMaker.")
 @dataclass
 class M3GNetMDMaker(ForceFieldMDMaker):
     """Perform an MD run with M3GNet."""
 
     name: str = f"{MLFF.M3GNet} MD"
-    force_field_name: str = f"{MLFF.M3GNet}"
+    force_field_name: str | MLFF = MLFF.M3GNet
 
-
+@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use CHGNet, set `force_field_name = 'CHGNet'` in ForceFieldMDMaker.")
 @dataclass
 class CHGNetMDMaker(ForceFieldMDMaker):
     """Perform an MD run with CHGNet."""
 
     name: str = f"{MLFF.CHGNet} MD"
-    force_field_name: str = f"{MLFF.CHGNet}"
+    force_field_name: str | MLFF = MLFF.CHGNet
 
-
+@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use GAP, set `force_field_name = 'GAP'` in ForceFieldMDMaker.")
 @dataclass
 class GAPMDMaker(ForceFieldMDMaker):
     """Perform an MD run with GAP."""
 
     name: str = f"{MLFF.GAP} MD"
-    force_field_name: str = f"{MLFF.GAP}"
+    force_field_name: str | MLFF = MLFF.GAP
     calculator_kwargs: dict = field(
         default_factory=lambda: {"args_str": "IP GAP", "param_filename": "gap.xml"}
     )
 
-
+@deprecated(replacement=ForceFieldMDMaker, deadline=(2025, 1, 1), message="To use Nequip, set `force_field_name = 'Nequip'` in ForceFieldMDMaker.")
 @dataclass
 class NequipMDMaker(ForceFieldMDMaker):
     """Perform an MD run with nequip."""
 
     name: str = f"{MLFF.Nequip} MD"
-    force_field_name: str = f"{MLFF.Nequip}"
+    force_field_name: str | MLFF = MLFF.Nequip
