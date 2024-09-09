@@ -325,7 +325,7 @@ class MPMorphVaspFastQuenchMaker(MPMorphMDMaker):
 
         base_md_maker = update_user_incar_settings(
             flow=BaseMPMorphMDMaker(
-                name="Convergence MPMorph VASP MD Maker for slow quench"
+                name="Convergence MPMorph VASP MD Maker for fast quench"
             ),
             incar_updates={
                 "TEBEG": temperature,
@@ -335,7 +335,7 @@ class MPMorphVaspFastQuenchMaker(MPMorphMDMaker):
         )
 
         updated_convergence_md_maker = EquilibriumVolumeMaker(
-            name="MP Morph VASP Equilibrium Volume Maker for slow quench",
+            name="MP Morph VASP Equilibrium Volume Maker for fast quench",
             md_maker=base_md_maker,
         )
 
