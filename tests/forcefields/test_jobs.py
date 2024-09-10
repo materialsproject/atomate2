@@ -43,7 +43,8 @@ def test_maker_initialization():
 def test_chgnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
-        force_field_name="CHGNet", ionic_step_data=("structure", "energy")
+        force_field_name="CHGNet",
+        ionic_step_data=("structure", "energy"),
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -102,7 +103,9 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     max_step = 25
     # generate job
     job = ForceFieldRelaxMaker(
-        force_field_name="CHGNet", steps=max_step, relax_cell=relax_cell
+        force_field_name="CHGNet",
+        steps=max_step,
+        relax_cell=relax_cell,
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -132,7 +135,8 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
 def test_m3gnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
-        force_field_name="M3GNet", ionic_step_data=("structure", "energy")
+        force_field_name="M3GNet",
+        ionic_step_data=("structure", "energy"),
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -156,9 +160,10 @@ def test_m3gnet_relax_maker(si_structure):
 
     # generate job
     max_step = 25
-    job = ForceFieldRelaxMaker(force_field_name="M3GNet", steps=max_step).make(
-        si_structure
-    )
+    job = ForceFieldRelaxMaker(
+        force_field_name="M3GNet", 
+        steps=max_step, 
+    ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)

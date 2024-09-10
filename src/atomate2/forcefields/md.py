@@ -10,8 +10,8 @@ from jobflow import job
 from monty.dev import deprecated
 
 from atomate2.ase.md import AseMDMaker
-from atomate2.forcefields import MLFF
-from atomate2.forcefields.jobs import _FORCEFIELD_DATA_OBJECTS
+from atomate2.forcefields import MLFF, _get_formatted_ff_name
+from atomate2.forcefields.jobs import _FORCEFIELD_DATA_OBJECTS, _DEFAULT_CALCULATOR_KWARGS
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
 
@@ -110,13 +110,13 @@ class ForceFieldMDMaker(AseMDMaker):
 
     def __post_init__(self) -> None:
         """Ensure that force_field_name is correctly assigned."""
-        if (
-            isinstance(self.force_field_name, str)
-            and self.force_field_name in MLFF.__members__
-        ):
-            # ensure `force_field_name` uses enum format
-            self.force_field_name = MLFF(self.force_field_name)
-        self.force_field_name = str(self.force_field_name)
+        self.force_field_name = _get_formatted_ff_name(self.force_field_name)
+        
+        # Pad calculator_kwargs with default values, but permit user to override them
+        self.calculator_kwargs = {
+            **_DEFAULT_CALCULATOR_KWARGS.get(self.force_field_name,{}),
+            **self.calculator_kwargs
+        }
 
     @job(
         data=[*_FORCEFIELD_DATA_OBJECTS, "ionic_steps"],
@@ -186,7 +186,7 @@ class NEPMDMaker(ForceFieldMDMaker):
     name: str = f"{MLFF.NEP} MD"
     force_field_name: str | MLFF = MLFF.NEP
     calculator_kwargs: dict = field(
-        default_factory=lambda: {"model_filename": "nep.txt"}
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[str(MLFF.NEP)]
     )
 
 
@@ -244,7 +244,7 @@ class GAPMDMaker(ForceFieldMDMaker):
     name: str = f"{MLFF.GAP} MD"
     force_field_name: str | MLFF = MLFF.GAP
     calculator_kwargs: dict = field(
-        default_factory=lambda: {"args_str": "IP GAP", "param_filename": "gap.xml"}
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[str(MLFF.GAP)]
     )
 
 

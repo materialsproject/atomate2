@@ -14,7 +14,7 @@ from monty.dev import deprecated
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.ase.jobs import AseRelaxMaker
-from atomate2.forcefields import MLFF
+from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
 
@@ -29,6 +29,12 @@ logger = logging.getLogger(__name__)
 
 _FORCEFIELD_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, "ionic_steps"]
 
+_DEFAULT_CALCULATOR_KWARGS = {
+    MLFF.CHGNet: {"stress_weight": _GPa_to_eV_per_A3},
+    MLFF.M3GNet: {"stress_weight": _GPa_to_eV_per_A3},
+    MLFF.NEP: {"model_filename": "nep.txt"},
+    MLFF.GAP: {"args_str": "IP GAP","param_filename": "gap.xml",}
+}
 
 def forcefield_job(method: Callable) -> job:
     """
@@ -123,13 +129,13 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
 
     def __post_init__(self) -> None:
         """Ensure that force_field_name is correctly assigned as str."""
-        if (
-            isinstance(self.force_field_name, str)
-            and self.force_field_name in MLFF.__members__
-        ):
-            # ensure `force_field_name` uses enum format
-            self.force_field_name = MLFF(self.force_field_name)
-        self.force_field_name = str(self.force_field_name)
+        self.force_field_name = _get_formatted_ff_name(self.force_field_name)
+
+        # Pad calculator_kwargs with default values, but permit user to override them
+        self.calculator_kwargs = {
+            **_DEFAULT_CALCULATOR_KWARGS.get(MLFF(self.force_field_name.split("MLFF.")[-1]),{}),
+            **self.calculator_kwargs
+        }
 
     @forcefield_job
     def make(
@@ -255,7 +261,7 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
-        default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.CHGNet]
     )
 
 
@@ -285,7 +291,7 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
     force_field_name: str | MLFF = MLFF.CHGNet
     task_document_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
-        default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.CHGNet]
     )
 
 
@@ -334,7 +340,7 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     optimizer_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
-        default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.M3GNet]
     )
 
 
@@ -366,7 +372,7 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
     force_field_name: str | MLFF = MLFF.M3GNet
     task_document_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
-        default_factory=lambda: {"stress_weight": _GPa_to_eV_per_A3}
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.M3GNet]
     )
 
 
@@ -414,7 +420,7 @@ class NEPRelaxMaker(ForceFieldRelaxMaker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
-        default_factory=lambda: {"model_filename": "nep.txt"}
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.NEP]
     )
     task_document_kwargs: dict = field(default_factory=dict)
 
@@ -445,7 +451,7 @@ class NEPStaticMaker(ForceFieldStaticMaker):
     force_field_name: str | MLFF = MLFF.NEP
     task_document_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
-        default_factory=lambda: {"model_filename": "nep.txt"}
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.NEP]
     )
 
 
@@ -740,10 +746,7 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
-        default_factory=lambda: {
-            "args_str": "IP GAP",
-            "param_filename": "gap.xml",
-        }
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.GAP]
     )
     task_document_kwargs: dict = field(default_factory=dict)
 
@@ -774,8 +777,5 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     force_field_name: str | MLFF = MLFF.GAP
     task_document_kwargs: dict = field(default_factory=dict)
     calculator_kwargs: dict = field(
-        default_factory=lambda: {
-            "args_str": "IP GAP",
-            "param_filename": "gap.xml",
-        }
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.GAP]
     )
