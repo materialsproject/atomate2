@@ -93,6 +93,7 @@ class BaseJdftxMaker(Maker):
     run_jdftx_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
+    @jdftx_job
     def make(
         self, structure: Structure
     ) -> Response:
