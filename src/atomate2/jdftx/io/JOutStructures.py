@@ -1,5 +1,5 @@
 from typing import Any
-from jdftx.io.JOutStructure import JOutStructure
+from atomate2.jdftx.io.JOutStructure import JOutStructure
 
 
 from dataclasses import dataclass
