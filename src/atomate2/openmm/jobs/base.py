@@ -155,7 +155,7 @@ class BaseOpenMMMaker(Maker):
     @openmm_job
     def make(
         self,
-        interchange: Interchange | OpenMMInterchange | bytes,
+        interchange: Interchange | OpenMMInterchange | str,
         prev_dir: str | None = None,
     ) -> Response:
         """Run an OpenMM calculation.
@@ -212,7 +212,7 @@ class BaseOpenMMMaker(Maker):
         return Response(output=task_doc)
 
     def _load_interchange(
-        self, interchange: Interchange | OpenMMInterchange | bytes
+        self, interchange: Interchange | OpenMMInterchange | str
     ) -> Interchange:
         """Load an Interchange object from a JSON string or bytes.
 
@@ -236,20 +236,6 @@ class BaseOpenMMMaker(Maker):
             except:  # noqa: E722
                 # parse with openmm instead
                 interchange = OpenMMInterchange.parse_raw(interchange)
-
-            # fireworks is mangling the interchange bytes and converting them
-            # into a string, this converts it back to bytes
-        #     interchange = ast.literal_eval(interchange)
-        # if isinstance(interchange, bytes):
-        #     interchange = interchange.decode("utf-8")
-        #
-        #     interchange_str = interchange
-        #     try:
-        #         interchange = Interchange.parse_raw(interchange_str)
-        #     except:
-        #         # parse with openmm instead
-        #         interchange = OpenMMInterchange.parse_raw(interchange_str)
-
         else:
             interchange = copy.deepcopy(interchange)
         return interchange

@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from emmet.core.openmm import Calculation, OpenMMTaskDocument
+from emmet.core.openmm import Calculation, OpenMMInterchange, OpenMMTaskDocument
 from jobflow import Flow, Job, Response
 
 from atomate2.openff.utils import create_list_summing_to
@@ -91,7 +91,7 @@ class OpenMMFlowMaker:
 
     def make(
         self,
-        interchange: Interchange | bytes,
+        interchange: Interchange | OpenMMInterchange | str,
         prev_dir: str | None = None,
     ) -> Flow:
         """Run the production simulation using the provided Interchange object.
