@@ -7,22 +7,32 @@ import re
 from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Type, TypeVar, Union
-
+from pymatgen.core import Structure
 from custodian.qchem.jobs import QCJob
 from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
-from emmet.core.qchem.calculation import Calculation, CalculationInput
-from emmet.core.structure import MoleculeMetadata
+from emmet.core.utils import ValueEnum
+from atomate2.jdftx.schemas.calculation import Calculation, CalculationInput, CalculationOutput
+from emmet.core.structure import StructureMetadata
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
 
+from atomate2.utils.datetime import datetime_str
+
 __author__ = (
-    "Evan Spotte-Smith <ewcspottesmith@lbl.gov>, Rishabh D. Guha <rdguha@lbl.gov>"
+    "Cooper Tezak <cooper.tezak@colorado.edu>"
 )
 
 logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDoc")
 # _DERIVATIVE_FILES = ("GRAD", "HESS")
 
+class JDFTxStatus(ValueEnum):
+    """
+    JDFTx Calculation State
+    """
+
+    SUCCESS = "successful"
+    FAILED = "unsuccessful"
 
 class OutputDoc(BaseModel):
     initial_structure: Structure = Field(None, description="Input Structure object")
@@ -159,12 +169,26 @@ class TaskDoc(StructureMetadata):
         None, description="The directory for this JDFTx task"
     )
 
-    state: Optional[JDFTxStatus] = Field(
-        None, description="State of this JDFTx calculation"
-    )
-
     task_type: Optional[Union[CalcType, TaskType]] = Field(
         None, description="the type of JDFTx calculation"
+    )
+
+    last_updated: str = Field(
+        default_factory=datetime_str,
+        description="Timestamp for this task document was last updated",
+    )
+
+    calc_inputs: Optional[CalculationInput] = Field(
+        {}, description="JDFTx calculation inputs"
+    )
+
+    calc_outputs: Optional[CalculationOutput] = Field(
+        None,
+        description="JDFTx calculation outputs",
+    )
+
+    state: Optional[JDFTxStatus] = Field(
+        None, description="State of this JDFTx calculation"
     )
 
     # implemented in VASP and Qchem. Do we need this?
@@ -175,19 +199,6 @@ class TaskDoc(StructureMetadata):
     # description="Detailed data for each JDFTx calculation contributing to the task document.",
     # )
 
-    orig_inputs: Optional[Union[CalculationInput, Dict[str, Any]]] = Field(
-        {}, description="Summary of the original Q-Chem inputs"
-    )
-
-    input: Optional[InputDoc] = Field(
-        None,
-        description="The input structure and calc parameters used to generate the current task document.",
-    )
-
-    output: Optional[OutputDoc] = Field(
-        None,
-        description="The exact set of output parameters used to generate the current task document.",
-    )
 
     @classmethod
     def from_directory(
@@ -195,10 +206,10 @@ class TaskDoc(StructureMetadata):
         dir_name: Union[Path, str],
         store_additional_json: bool = True,
         additional_fields: Dict[str, Any] = None,
-        **qchem_calculation_kwargs,
+        **jdftx_calculation_kwargs,
     ) -> _T:
         """
-        Create a task document from a directory containing QChem files.
+        Create a task document from a directory containing JDFTx files.
 
         Parameters
         ----------
@@ -221,6 +232,11 @@ class TaskDoc(StructureMetadata):
 
         additional_fields = {} if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
+        calc_doc = Calculation.from_files(
+            dir_name=dir_name,
+            jdftxinput_file="inputs.in",
+            jdftxoutput_file="out.log"
+            )
         # task_files = _find_qchem_files(dir_name)
 
         # if len(task_files) == 0:
@@ -273,34 +289,15 @@ class TaskDoc(StructureMetadata):
 
         # dir_name = get_uri(dir_name)  # convert to full path
 
-        # only store objects from last calculation
-        # TODO: If vasp implementation makes this an option, change here as well
-        qchem_objects = None
-        included_objects = None
-        if qchem_objects:
-            included_objects = list(qchem_objects.keys())
-
-        # run_stats = _get_run_stats(calcs_reversed), Discuss whether this is something which is necessary in terms of QChem calcs
-        doc = cls.from_molecule(
-            meta_molecule=calcs_reversed[-1].input.initial_molecule,
+        doc = cls.from_structure(
+            meta_structure=calc_doc.output.structure,
             dir_name=dir_name,
-            calcs_reversed=calcs_reversed,
-            custodian=custodian,
-            additional_json=additional_json,
-            additional_fields=additional_fields,
-            completed_at=calcs_reversed[0].completed_at,
-            orig_inputs=orig_inputs,
-            input=InputDoc.from_qchem_calc_doc(calcs_reversed[0]),
-            output=OutputDoc.from_qchem_calc_doc(calcs_reversed[0]),
-            state=_get_state(calcs_reversed),
-            qchem_objects=qchem_objects,
-            included_objects=included_objects,
-            critic2=critic2,
-            custom_smd=custom_smd,
-            task_type=calcs_reversed[0].task_type,
+            calc_outputs=calc_doc.output,
+            calc_inputs=calc_doc.input
+            # task_type=
+            # state=_get_state()
         )
 
-        # doc = doc.copy(update=additional_fields)
         doc = doc.model_copy(update=additional_fields)
         return doc
 
@@ -440,110 +437,12 @@ def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
     return additional_json
 
 
-def _get_state(calcs_reversed: List[Calculation]) -> QChemStatus:
-    """Get state from calculation documents of QChem tasks."""
-    all_calcs_completed = all(
-        [c.has_qchem_completed == QChemStatus.SUCCESS for c in calcs_reversed]
-    )
-    if all_calcs_completed:
-        return QChemStatus.SUCCESS
-    return QChemStatus.FAILED
+# TODO currently doesn't work b/c has_jdftx_completed method is not implemented
+def _get_state(calc: Calculation) -> JDFTxStatus:
+    """Get state from calculation document of JDFTx task."""
+    if calc.has_jdftx_completed:
+        return JDFTxStatus.SUCCESS
+    else:
+        return JDFTxStatus.FAILED
 
 
-# def _get_run_stats(calcs_reversed: List[Calculation]) -> Dict[str, RunStatistics]:
-#     """Get summary of runtime statistics for each calculation in this task."""
-
-#     run_stats = {}
-#     total = dict(
-#         average_memory=0.0,
-#         max_memory=0.0,
-#         elapsed_time=0.0,
-#         system_time=0.0,
-#         user_time=0.0,
-#         total_time=0.0,
-#         cores=0,
-#     )
-
-
-# def _find_qchem_files(
-#     path: Union[str, Path],
-# ) -> Dict[str, Any]:
-#     """
-#     Find QChem files in a directory.
-
-#     Only the mol.qout file (or alternatively files
-#     with the task name as an extension, e.g., mol.qout.opt_0.gz, mol.qout.freq_1.gz, or something like this...)
-#     will be returned.
-
-#     Parameters
-#     ----------
-#     path
-#         Path to a directory to search.
-
-#     Returns
-#     -------
-#     Dict[str, Any]
-#         The filenames of the calculation outputs for each QChem task, given as a ordered dictionary of::
-
-#             {
-#                 task_name:{
-#                     "qchem_out_file": qcrun_filename,
-#                 },
-#                 ...
-#             }
-#     If there is only 1 qout file task_name will be "standard" otherwise it will be the extension name like "opt_0"
-#     """
-#     path = Path(path)
-#     task_files = OrderedDict()
-
-#     in_file_pattern = re.compile(r"^(?P<in_task_name>mol\.(qin|in)(?:\..+)?)(\.gz)?$")
-
-#     for file in path.iterdir():
-#         if file.is_file():
-#             in_match = in_file_pattern.match(file.name)
-
-#             # This block is for generalizing outputs coming from both atomate and manual qchem calculations
-#             if in_match:
-#                 in_task_name = re.sub(
-#                     r"(\.gz|gz)$",
-#                     "",
-#                     in_match.group("in_task_name").replace("mol.qin.", ""),
-#                 )
-#                 in_task_name = in_task_name or "mol.qin"
-#                 if in_task_name == "orig":
-#                     task_files[in_task_name] = {"orig_input_file": file.name}
-#                 elif in_task_name == "last":
-#                     continue
-#                 elif in_task_name == "mol.qin" or in_task_name == "mol.in":
-#                     if in_task_name == "mol.qin":
-#                         out_file = (
-#                             path / "mol.qout.gz"
-#                             if (path / "mol.qout.gz").exists()
-#                             else path / "mol.qout"
-#                         )
-#                     else:
-#                         out_file = (
-#                             path / "mol.out.gz"
-#                             if (path / "mol.out.gz").exists()
-#                             else path / "mol.out"
-#                         )
-#                     task_files["standard"] = {
-#                         "qcinput_file": file.name,
-#                         "qcoutput_file": out_file.name,
-#                     }
-#                 # This block will exist only if calcs were run through atomate
-#                 else:
-#                     try:
-#                         task_files[in_task_name] = {
-#                             "qcinput_file": file.name,
-#                             "qcoutput_file": Path(
-#                                 "mol.qout." + in_task_name + ".gz"
-#                             ).name,
-#                         }
-#                     except FileNotFoundError:
-#                         task_files[in_task_name] = {
-#                             "qcinput_file": file.name,
-#                             "qcoutput_file": "No qout files exist for this in file",
-#                         }
-
-    return task_files

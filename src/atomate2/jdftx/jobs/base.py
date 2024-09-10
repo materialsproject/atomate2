@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
+from atomate2.jdftx.schemas.task import TaskDoc
 from jobflow import Maker, Response, job
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
@@ -105,12 +106,13 @@ class BaseJdftxMaker(Maker):
         files = [str(f) for f in current_dir.glob('*') if f.is_file()]
 
         return Response(
-            output={
-                "directory": str(current_dir),
-                "files": files
-            },
-            stored_data={
-                "job_type": "JDFTx",
-                "status": "completed"
-            }
+            stop_children=stop_children,
+            stored_data={"custodian": task_doc.custodian},
+            output=task_doc,
         )
+
+
+def get_jdftx_task_document(path: Path | str, **kwargs) -> TaskDoc:
+    """Get JDFTx Task Document using atomate2 settings."""
+
+    return TaskDoc.from_directory(path, **kwargs)
