@@ -8,14 +8,11 @@ from pymatgen.io.vasp import Kpoints
 from atomate2.common.flows.mpmorph import EquilibriumVolumeMaker, MPMorphMDMaker
 from atomate2.vasp.flows.mpmorph import (
     MPMorphFastQuenchVaspMDMaker,
-    MPMorphVaspMDMaker,
     MPMorphSlowQuenchVaspMDMaker,
-)
-from atomate2.vasp.jobs.mpmorph import (
-    FastQuenchVaspMaker,
-    SlowQuenchVaspMaker
+    MPMorphVaspMDMaker,
 )
 from atomate2.vasp.jobs.md import MDMaker
+from atomate2.vasp.jobs.mpmorph import FastQuenchVaspMaker, SlowQuenchVaspMaker
 from atomate2.vasp.run import DEFAULT_HANDLERS
 from atomate2.vasp.sets.core import MDSetGenerator
 
@@ -86,19 +83,19 @@ def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
     quench_maker = None
     if "Slow Quench" in maker_name:
         quench_maker = SlowQuenchVaspMaker(
-            quench_n_steps = n_steps_quench,
-            quench_temperature_step = quench_temp_steps,
-            quench_end_temperature = quench_end_temp,
-            quench_start_temperature = quench_start_temp,
+            quench_n_steps=n_steps_quench,
+            quench_temperature_step=quench_temp_steps,
+            quench_end_temperature=quench_end_temp,
+            quench_start_temperature=quench_start_temp,
         )
     elif "Fast Quench" in maker_name:
         quench_maker = FastQuenchVaspMaker()
 
     flow = MPMorphVaspMDMaker.from_temperature_and_steps(
-        temperature = temperature,
-        n_steps_convergence = steps_convergence,
-        n_steps_production = steps_production,
-        quench_maker = quench_maker,
+        temperature=temperature,
+        n_steps_convergence=steps_convergence,
+        n_steps_production=steps_production,
+        quench_maker=quench_maker,
     ).make(intial_structure)
 
     uuids = {}
