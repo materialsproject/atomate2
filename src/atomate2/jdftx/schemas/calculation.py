@@ -3,36 +3,31 @@
 # mypy: ignore-errors
 
 import logging
+import re
+import warnings
+from collections import OrderedDict
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
-import warnings
-from pydantic import field_validator, BaseModel, Field, ConfigDict
-from datetime import datetime
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile # TODO change to pymatgen modules
-from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
-from pymatgen.core.structure import Structure
-from collections import OrderedDict
-import re
+from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
+from emmet.core.qchem.calc_types.calc_types import BASIS_SETS, FUNCTIONALS
 
-from emmet.core.qchem.calc_types import (
-    LevelOfTheory,
-    CalcType,
-    TaskType,
-)
-from emmet.core.qchem.calc_types.calc_types import (
-    FUNCTIONALS,
-    BASIS_SETS,
-)
 
 # from emmet.core.qchem.calc_types.em_utils import (
 #     level_of_theory,
 #     task_type,
 #     calc_type,
 # )
+from atomate2.jdftx.schemas.task import JDFTxStatus
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pymatgen.core.structure import Molecule, Structure
+from pymatgen.io.qchem.inputs import QCInput
+from pymatgen.io.qchem.outputs import QCOutput
 
-from emmet.core.qchem.task import QChemStatus
+from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile, JDFTXStructure
+from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
 
 functional_synonyms = {
     "b97mv": "b97m-v",
@@ -73,19 +68,18 @@ class CalculationInput(BaseModel):
     @classmethod
     def from_jdftxinput(cls, jdftxinput: JDFTXInfile) -> "CalculationInput":
         """
-        Create a QChem input document from a QCInout object.
+        Create a JDFTx InputDoc schema from a JDFTXInfile object.
 
         Parameters
         ----------
-        qcinput
-            A QCInput object.
+        jdftxinput
+            A JDFTXInfile object.
 
         Returns
-        --------
+        -------
         CalculationInput
             The input document.
         """
-
         return cls(
             structure=jdftxinput.structure,
             parameters=jdftxinput.as_dict(),
@@ -116,7 +110,7 @@ class CalculationOutput(BaseModel):
             A JDFTXOutfile object.
 
         Returns
-        --------
+        -------
         CalculationOutput
             The output document.
         """
@@ -127,65 +121,54 @@ class CalculationOutput(BaseModel):
             structure=optimized_structure,
             Ecomponents=jdftxoutput.Ecomponents,
             **electronic_output,
-            
         )
-
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-    # TODO What can be done for the trajectories, also how will walltime and cputime be reconciled
 
 
 class Calculation(BaseModel):
     """Full JDFTx calculation inputs and outputs."""
 
     dir_name: str = Field(None, description="The directory for this JDFTx calculation")
-    has_jdftx_completed: Union[QChemStatus, bool] = Field(
-        None, description="Whether JDFTx calculated the calculation successfully"
-    )
     input: CalculationInput = Field(
         None, description="JDFTx input settings for the calculation"
     )
     output: CalculationOutput = Field(
         None, description="The JDFTx calculation output document"
     )
-    completed_at: str = Field(
-        None, description="Timestamp for when the calculation was completed"
-    )
-    task_name: str = Field(
-        None,
-        description="Name of task given by custodian (e.g. opt1, opt2, freq1, freq2)",
-    )
-    output_file_paths: Dict[str, Union[str, Path, Dict[str, Path]]] = Field(
-        None,
-        description="Paths (relative to dir_name) of the QChem output files associated with this calculation",
-    )
-    level_of_theory: Union[LevelOfTheory, str] = Field(
-        None,
-        description="Levels of theory used for the QChem calculation: For instance, B97-D/6-31g*",
-    )
-    solvation_lot_info: Optional[str] = Field(
-        None,
-        description="A condensed string representation of the comboned LOT and Solvent info",
-    )
-    task_type: TaskType = Field(
-        None,
-        description="Calculation task type like Single Point, Geometry Optimization. Frequency...",
-    )
-    calc_type: Union[CalcType, str] = Field(
-        None,
-        description="Combination dict of LOT + TaskType: B97-D/6-31g*/VACUUM Geometry Optimization",
-    )
+
+    #TODO implement these after parser is complete
+    # task_name: str = Field(
+    #     None,
+    #     description="Name of task given by custodian (e.g. opt1, opt2, freq1, freq2)",
+    # )
+    # task_type: TaskType = Field(
+    #     None,
+    #     description="Calculation task type like Single Point, Geometry Optimization. Frequency...",
+    # )
+    # calc_type: Union[CalcType, str] = Field(
+    #     None,
+    #     description="Combination dict of LOT + TaskType: B97-D/6-31g*/VACUUM Geometry Optimization",
+    # )
+    # completed_at: str = Field(
+    #     None, description="Timestamp for when the calculation was completed"
+    # )
+    # has_jdftx_completed: Union[JDFTxStatus, bool] = Field(
+    #     None, description="Whether JDFTx calculated the calculation successfully"
+    # )
+    # We'll only need this if we are using Custodian to do error handling and calculation resubmission
+    # output_file_paths: Dict[str, Union[str, Path, Dict[s tr, Path]]] = Field(
+    #     None,
+    #     description="Paths (relative to dir_name) of the QChem output files associated with this calculation",
+    # )
 
     @classmethod
-    def from_qchem_files(
+    def from_files(
         cls,
         dir_name: Union[Path, str],
-        task_name: str,
-        qcinput_file: Union[Path, str],
-        qcoutput_file: Union[Path, str],
-        validate_lot: bool = True,
-        store_energy_trajectory: bool = False,
-        qcinput_kwargs: Optional[Dict] = None,
-        qcoutput_kwargs: Optional[Dict] = None,
+        jdftxinput_file: Union[Path, str],
+        jdftxoutput_file: Union[Path, str],
+        jdftxinput_kwargs: Optional[Dict] = None,
+        jdftxoutput_kwargs: Optional[Dict] = None,
+        # task_name  # do we need task names? These are created by Custodian
     ) -> "Calculation":
         """
         Create a QChem calculation document from a directory and file paths.
@@ -193,156 +176,57 @@ class Calculation(BaseModel):
         Parameters
         ----------
         dir_name
-            The directory containing the QChem calculation outputs.
-        task_name
-            The task name.
-        qcinput_file
-            Path to the .in/qin file, relative to dir_name.
-        qcoutput_file
-            Path to the .out/.qout file, relative to dir_name.
-        store_energy_trajectory
-            Whether to store the energy trajectory during a QChem calculation #TODO: Revisit this- False for now.
-        qcinput_kwargs
-            Additional keyword arguments that will be passed to the qcinput file
-        qcoutput_kwargs
-            Additional keyword arguments that will be passed to the qcoutput file
+            The directory containing the JDFTx calculation outputs.
+        jdftxinput_file
+            Path to the JDFTx in file relative to dir_name.
+        jdftxoutput_file
+            Path to the JDFTx out file relative to dir_name.
+        jdftxinput_kwargs
+            Additional keyword arguments that will be passed to the :obj:`.JDFTXInFile.from_file` method
+        jdftxoutput_kwargs
+            Additional keyword arguments that will be passed to the :obj:`.JDFTXOutFile.from_file` method
 
         Returns
         -------
         Calculation
-            A QChem calculation document.
+            A JDFTx calculation document.
         """
-
         dir_name = Path(dir_name)
-        qcinput_file = dir_name / qcinput_file
-        qcoutput_file = dir_name / qcoutput_file
+        jdftxinput_file = dir_name / jdftxinput_file
+        jdftxoutput_file = dir_name / jdftxoutput_file
 
-        output_file_paths = _find_qchem_files(dir_name)
+        jdftxinput_kwargs = jdftxinput_kwargs if jdftxinput_kwargs else {}
+        jdftxinput = JDFTXInfile.from_file(jdftxinput_file, **jdftxinput_kwargs)
 
-        qcinput_kwargs = qcinput_kwargs if qcinput_kwargs else {}
-        qcinput = QCInput.from_file(qcinput_file, **qcinput_kwargs)
+        jdftxoutput_kwargs = jdftxoutput_kwargs if jdftxoutput_kwargs else {}
+        jdftxoutput = JDFTXOutfile.from_file(jdftxoutput_file, **jdftxoutput_kwargs)
 
-        qcoutput_kwargs = qcoutput_kwargs if qcoutput_kwargs else {}
-        qcoutput = QCOutput(qcoutput_file, **qcoutput_kwargs)
+        # completed_at = str(datetime.fromtimestamp(qcoutput_file.stat().st_mtime))
+        # TODO parse times from JDFTx out file and implement them here
 
-        completed_at = str(datetime.fromtimestamp(qcoutput_file.stat().st_mtime))
+        input_doc = CalculationInput.from_jdftxinput(jdftxinput)
+        output_doc = CalculationOutput.from_jdftxoutput(jdftxoutput)
 
-        input_doc = CalculationInput.from_qcinput(qcinput)
-        output_doc = CalculationOutput.from_qcoutput(qcoutput)
-
-        has_qchem_completed = (
-            QChemStatus.SUCCESS
-            if qcoutput.data.get("completion", [])
-            else QChemStatus.FAILED
-        )
-
-        if store_energy_trajectory:
-            print("Still have to figure the energy trajectory")
+        # TODO implement the get method on the output parser.
+        # has_jdftx_completed = (
+        #     JDFTxStatus.SUCCESS
+        #     if jdftxoutput.get("completed")
+        #     else JDFTxStatus.FAILED
+        # )
 
         return cls(
             dir_name=str(dir_name),
-            task_name=task_name,
-            qchem_version=qcoutput.data["version"],
-            has_qchem_completed=has_qchem_completed,
-            completed_at=completed_at,
             input=input_doc,
             output=output_doc,
-            output_file_paths={
-                k.lower(): Path(v)
-                if isinstance(v, str)
-                else {k2: Path(v2) for k2, v2 in v.items()}
-                for k, v in output_file_paths.items()
-            },
-            level_of_theory=level_of_theory(input_doc, validate_lot=validate_lot),
-            solvation_lot_info=lot_solvent_string(input_doc, validate_lot=validate_lot),
-            task_type=task_type(input_doc),
-            calc_type=calc_type(input_doc, validate_lot=validate_lot),
+
+            #TODO implement these methods if we want them
+            # jdftx_version=qcoutput.data["version"],
+            # has_jdftx_completed=has_qchem_completed,
+            # completed_at=completed_at,
+            # task_type=task_type(input_doc),
+            # calc_type=calc_type(input_doc, validate_lot=validate_lot),
+            # task_name=
         )
-
-
-def _find_qchem_files(
-    path: Union[str, Path],
-) -> Dict[str, Any]:
-    """
-    Find QChem files in a directory.
-
-    Only the mol.qout file (or alternatively files
-    with the task name as an extension, e.g., mol.qout.opt_0.gz, mol.qout.freq_1.gz, or something like this...)
-    will be returned.
-
-    Parameters
-    ----------
-    path
-        Path to a directory to search.
-
-    Returns
-    -------
-    Dict[str, Any]
-        The filenames of the calculation outputs for each QChem task, given as a ordered dictionary of::
-
-            {
-                task_name:{
-                    "qchem_out_file": qcrun_filename,
-                },
-                ...
-            }
-    If there is only 1 qout file task_name will be "standard" otherwise it will be the extension name like "opt_0"
-    """
-    path = Path(path)
-    task_files = OrderedDict()
-
-    in_file_pattern = re.compile(r"^(?P<in_task_name>mol\.(qin|in)(?:\..+)?)(\.gz)?$")
-
-    for file in path.iterdir():
-        if file.is_file():
-            in_match = in_file_pattern.match(file.name)
-
-            # This block is for generalizing outputs coming from both atomate and manual qchem calculations
-            if in_match:
-                in_task_name = re.sub(
-                    r"(\.gz|gz)$",
-                    "",
-                    in_match.group("in_task_name").replace("mol.qin.", ""),
-                )
-                in_task_name = in_task_name or "mol.qin"
-                if in_task_name == "orig":
-                    task_files[in_task_name] = {"orig_input_file": file.name}
-                elif in_task_name == "last":
-                    continue
-                elif in_task_name == "mol.qin" or in_task_name == "mol.in":
-                    if in_task_name == "mol.qin":
-                        out_file = (
-                            path / "mol.qout.gz"
-                            if (path / "mol.qout.gz").exists()
-                            else path / "mol.qout"
-                        )
-                    else:
-                        out_file = (
-                            path / "mol.out.gz"
-                            if (path / "mol.out.gz").exists()
-                            else path / "mol.out"
-                        )
-                    task_files["standard"] = {
-                        "qcinput_file": file.name,
-                        "qcoutput_file": out_file.name,
-                    }
-                # This block will exist only if calcs were run through atomate
-                else:
-                    try:
-                        task_files[in_task_name] = {
-                            "qcinput_file": file.name,
-                            "qcoutput_file": Path(
-                                "mol.qout." + in_task_name + ".gz"
-                            ).name,
-                        }
-                    except FileNotFoundError:
-                        task_files[in_task_name] = {
-                            "qcinput_file": file.name,
-                            "qcoutput_file": "No qout files exist for this in file",
-                        }
-
-    return task_files
-
 
 def level_of_theory(
     parameters: CalculationInput, validate_lot: bool = True
@@ -356,7 +240,6 @@ def level_of_theory(
         parameters: Dict of Q-Chem input parameters
 
     """
-
     funct_raw = parameters.rem.get("method")
     basis_raw = parameters.rem.get("basis")
 

@@ -1,30 +1,25 @@
 # mypy: ignore-errors
 
-""" Core definition of a JDFTx Task Document """
-from typing import Any, Dict, List, Optional
+"""Core definition of a JDFTx Task Document"""
+
 import logging
 import re
 from collections import OrderedDict
-from pydantic import BaseModel, Field
-from custodian.qchem.jobs import QCJob
-from atomate2.jdftx.io.inputs import JdftxInput
-from monty.serialization import loadfn
-from typing import Type, TypeVar, Union
-from pymatgen.core.structure import Structure
-from emmet.core.structure import StructureMetadata
 from pathlib import Path
-from emmet.core.qchem.calc_types import (
-    LevelOfTheory,
-    CalcType,
-    TaskType,
-)
-from emmet.core.qchem.calculation import Calculation, CalculationInput
+from typing import Any, Dict, List, Optional, Type, TypeVar, Union
+from pymatgen.core import Structure
+from custodian.qchem.jobs import QCJob
+from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
+from emmet.core.utils import ValueEnum
+from atomate2.jdftx.schemas.calculation import Calculation, CalculationInput, CalculationOutput
+from emmet.core.structure import StructureMetadata
+from monty.serialization import loadfn
+from pydantic import BaseModel, Field
 
-from atomate2.jdftx.emmet.core.jdftx.task import JDFTxStatus
-
+from atomate2.utils.datetime import datetime_str
 
 __author__ = (
-    "Evan Spotte-Smith <ewcspottesmith@lbl.gov>, Rishabh D. Guha <rdguha@lbl.gov>"
+    "Cooper Tezak <cooper.tezak@colorado.edu>"
 )
 
 logger = logging.getLogger(__name__)
@@ -37,10 +32,60 @@ class OutputDoc(BaseModel):
     optimized_structure: Optional[Structure] = Field(
         None, description="Optimized Structure object"
     )
-    energy: float = Field(..., description="Total Energy in units of eV.")
-    forces: Optional[List[List[float]]] = Field(
-        None, description="The force on each atom in units of eV/A^2."
+    mulliken: Optional[List[Any]] = Field(
+        None, description="Mulliken atomic partial charges and partial spins"
     )
+    resp: Optional[Union[List[float], List[Any]]] = Field(
+        None,
+        description="Restrained Electrostatic Potential (RESP) atomic partial charges",
+    )
+    nbo: Optional[Dict[str, Any]] = Field(
+        None, description="Natural Bonding Orbital (NBO) output"
+    )
+
+    frequencies: Optional[Union[Dict[str, Any], List]] = Field(
+        None,
+        description="The list of calculated frequencies if job type is freq (units: cm^-1)",
+    )
+
+    frequency_modes: Optional[Union[List, str]] = Field(
+        None,
+        description="The list of calculated frequency mode vectors if job type is freq",
+    )
+
+    @classmethod
+    def from_qchem_calc_doc(cls, calc_doc: Calculation) -> "OutputDoc":
+        """
+        Create a summary of QChem calculation outputs from a QChem calculation document.
+
+        Parameters
+        ----------
+        calc_doc
+            A QChem calculation document.
+        kwargs
+            Any other additional keyword arguments
+
+        Returns
+        -------
+        OutputDoc
+            The calculation output summary
+        """
+        return cls(
+            initial_molecule=calc_doc.input.initial_molecule,
+            optimized_molecule=calc_doc.output.optimized_molecule,
+            # species_hash = self.species_hash, #The three entries post this needs to be checked again
+            # coord_hash = self.coord_hash,
+            # last_updated = self.last_updated,
+            final_energy=calc_doc.output.final_energy,
+            dipoles=calc_doc.output.dipoles,
+            enthalpy=calc_doc.output.enthalpy,
+            entropy=calc_doc.output.entropy,
+            mulliken=calc_doc.output.mulliken,
+            resp=calc_doc.output.resp,
+            nbo=calc_doc.output.nbo_data,
+            frequencies=calc_doc.output.frequencies,
+            frequency_modes=calc_doc.output.frequency_modes,
+        )
 
 
 class InputDoc(BaseModel):
@@ -67,7 +112,7 @@ class InputDoc(BaseModel):
             A QChem calculation document.
 
         Returns
-        --------
+        -------
         InputDoc
             A summary of the input molecule and corresponding calculation parameters
         """
@@ -133,19 +178,15 @@ class TaskDoc(StructureMetadata):
     # description="Detailed data for each JDFTx calculation contributing to the task document.",
     # )
 
-    orig_inputs: Optional[Union[CalculationInput, Dict[str, Any]]] = Field(
-        {}, description="Summary of the original Q-Chem inputs"
+    calc_inputs: Optional[CalculationInput] = Field(
+        {}, description="JDFTx calculation inputs"
     )
 
-    input: Optional[InputDoc] = Field(
+    calc_outputs: Optional[CalculationOutput] = Field(
         None,
-        description="The input structure and calc parameters used to generate the current task document.",
+        description="JDFTx calculation outputs",
     )
 
-    output: Optional[OutputDoc] = Field(
-        None,
-        description="The exact set of output parameters used to generate the current task document.",
-    )
 
     @classmethod
     def from_directory(
@@ -277,11 +318,10 @@ class TaskDoc(StructureMetadata):
             The job identifier
 
         Returns
-        --------
+        -------
         Dict
             A dict of computed entries
         """
-
         entry_dict = {
             "entry_id": task_id,
             "task_id": task_id,
@@ -350,7 +390,7 @@ def _parse_custodian(dir_name: Path) -> Optional[Dict]:
         Path to calculation directory.
 
     Returns
-    --------
+    -------
     Optional[Dict]
         The information parsed from custodian.json file.
     """
@@ -408,101 +448,10 @@ def _get_state(calcs_reversed: List[Calculation]) -> QChemStatus:
         return QChemStatus.SUCCESS
     return QChemStatus.FAILED
 
+class JDFTxStatus(ValueEnum):
+    """
+    JDFTx Calculation State
+    """
 
-# def _get_run_stats(calcs_reversed: List[Calculation]) -> Dict[str, RunStatistics]:
-#     """Get summary of runtime statistics for each calculation in this task."""
-
-#     run_stats = {}
-#     total = dict(
-#         average_memory=0.0,
-#         max_memory=0.0,
-#         elapsed_time=0.0,
-#         system_time=0.0,
-#         user_time=0.0,
-#         total_time=0.0,
-#         cores=0,
-#     )
-
-
-# def _find_qchem_files(
-#     path: Union[str, Path],
-# ) -> Dict[str, Any]:
-#     """
-#     Find QChem files in a directory.
-
-#     Only the mol.qout file (or alternatively files
-#     with the task name as an extension, e.g., mol.qout.opt_0.gz, mol.qout.freq_1.gz, or something like this...)
-#     will be returned.
-
-#     Parameters
-#     ----------
-#     path
-#         Path to a directory to search.
-
-#     Returns
-#     -------
-#     Dict[str, Any]
-#         The filenames of the calculation outputs for each QChem task, given as a ordered dictionary of::
-
-#             {
-#                 task_name:{
-#                     "qchem_out_file": qcrun_filename,
-#                 },
-#                 ...
-#             }
-#     If there is only 1 qout file task_name will be "standard" otherwise it will be the extension name like "opt_0"
-#     """
-#     path = Path(path)
-#     task_files = OrderedDict()
-
-#     in_file_pattern = re.compile(r"^(?P<in_task_name>mol\.(qin|in)(?:\..+)?)(\.gz)?$")
-
-#     for file in path.iterdir():
-#         if file.is_file():
-#             in_match = in_file_pattern.match(file.name)
-
-#             # This block is for generalizing outputs coming from both atomate and manual qchem calculations
-#             if in_match:
-#                 in_task_name = re.sub(
-#                     r"(\.gz|gz)$",
-#                     "",
-#                     in_match.group("in_task_name").replace("mol.qin.", ""),
-#                 )
-#                 in_task_name = in_task_name or "mol.qin"
-#                 if in_task_name == "orig":
-#                     task_files[in_task_name] = {"orig_input_file": file.name}
-#                 elif in_task_name == "last":
-#                     continue
-#                 elif in_task_name == "mol.qin" or in_task_name == "mol.in":
-#                     if in_task_name == "mol.qin":
-#                         out_file = (
-#                             path / "mol.qout.gz"
-#                             if (path / "mol.qout.gz").exists()
-#                             else path / "mol.qout"
-#                         )
-#                     else:
-#                         out_file = (
-#                             path / "mol.out.gz"
-#                             if (path / "mol.out.gz").exists()
-#                             else path / "mol.out"
-#                         )
-#                     task_files["standard"] = {
-#                         "qcinput_file": file.name,
-#                         "qcoutput_file": out_file.name,
-#                     }
-#                 # This block will exist only if calcs were run through atomate
-#                 else:
-#                     try:
-#                         task_files[in_task_name] = {
-#                             "qcinput_file": file.name,
-#                             "qcoutput_file": Path(
-#                                 "mol.qout." + in_task_name + ".gz"
-#                             ).name,
-#                         }
-#                     except FileNotFoundError:
-#                         task_files[in_task_name] = {
-#                             "qcinput_file": file.name,
-#                             "qcoutput_file": "No qout files exist for this in file",
-#                         }
-
-#     return task_files
+    SUCCESS = "successful"
+    FAILED = "unsuccessful"
