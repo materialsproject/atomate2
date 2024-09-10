@@ -303,13 +303,41 @@ class TagContainer(AbstractTag):
         for subtag, subtag_type in self.subtags.items():
             # every subtag with write_tagname=True in a TagContainer has a fixed length and can be immediately read in this loop if it is present
             if subtag in value:  # this subtag is present in the value string
-                idx_start = value.index(subtag)
-                idx_end = idx_start + subtag_type.get_token_len()
-                subtag_value = " ".join(
-                    value[(idx_start + 1) : idx_end]
-                )  # add 1 so the subtag value string excludes the subtagname
-                tempdict[subtag] = subtag_type.read(subtag, subtag_value)
-                del value[idx_start:idx_end]
+                # Ben: At this point, the subtag is a string, and subtag_type is tag object with a can_repeat class variable.
+                # If I am following this right, even if the subtag can repeat, its value will only be
+                # fetched for the first time it appears, and the rest will be ignored.
+                # Testing fix below.
+                subtag_count = value.count(subtag)
+                if not subtag_type.can_repeat:
+                    if subtag_count > 1:
+                        raise ValueError(
+                            f"Subtag {subtag} is not allowed to repeat but appears more than once in {tag}'s value {value}"
+                        )
+                    else:
+                        idx_start = value.index(subtag)
+                        idx_end = idx_start + subtag_type.get_token_len()
+                        subtag_value = " ".join(
+                            value[(idx_start + 1) : idx_end]
+                        )  # add 1 so the subtag value string excludes the subtagname
+                        tempdict[subtag] = subtag_type.read(subtag, subtag_value)
+                        del value[idx_start:idx_end]
+                else:
+                    tempdict[subtag] = []
+                    for i in range(subtag_count):
+                        idx_start = value.index(subtag)
+                        idx_end = idx_start + subtag_type.get_token_len()
+                        subtag_value = " ".join(
+                            value[(idx_start + 1) : idx_end]
+                        )  # add 1 so the subtag value string excludes the subtagname
+                        tempdict[subtag].append(subtag_type.read(subtag, subtag_value))
+                        del value[idx_start:idx_end]
+                # idx_start = value.index(subtag)
+                # idx_end = idx_start + subtag_type.get_token_len()
+                # subtag_value = " ".join(
+                #     value[(idx_start + 1) : idx_end]
+                # )  # add 1 so the subtag value string excludes the subtagname
+                # tempdict[subtag] = subtag_type.read(subtag, subtag_value)
+                # del value[idx_start:idx_end]
 
         for subtag, subtag_type in self.subtags.items():
             # now try to populate remaining subtags that do not use a keyword in order of appearance
