@@ -122,6 +122,8 @@ class JOutStructure(Structure):
                 iter_type = "LatticeMinimize"
             elif "ionic" in iter_type.lower():
                 iter_type = "IonicMinimize"
+            else:
+                iter_type = None
         return iter_type
     
 

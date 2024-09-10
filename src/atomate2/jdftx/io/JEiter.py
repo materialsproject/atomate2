@@ -219,3 +219,7 @@ class JEiter():
             A line of text from a JDFTx out file containing the electronic minimization data
         '''
         self.nElectrons = self._get_colon_var_t1(fillings_line, "nElectrons: ")
+
+
+def deletme():
+    print("deleteme")
