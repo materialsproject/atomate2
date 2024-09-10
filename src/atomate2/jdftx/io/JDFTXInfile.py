@@ -56,7 +56,8 @@ class JDFTXInfile(dict, MSONable):
 
     def __str__(self) -> str:
         """Str representation of dict"""
-        return "".join([line + "\n" for line in self.get_text_list()])
+        out = "".join([line + "\n" for line in self.get_text_list()])
+        return out
 
     def __add__(self, other: Self) -> Self:
         """
