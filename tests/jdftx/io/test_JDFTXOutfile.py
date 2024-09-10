@@ -37,7 +37,8 @@ example_sp_known = {
     "EH": -15284.4385436602351547*Ha_to_eV,
     "Eewald": -16901.4696647211094387*Ha_to_eV,
     "nSlices": 1,
-    "t_s": 165.87
+    "t_s": 165.87,
+    "iter_type": None
 }
 
 example_latmin_known = {
@@ -70,7 +71,8 @@ example_latmin_known = {
     "EH": 28.5721759138337354*Ha_to_eV,
     "Eewald": -214.7213057123609019*Ha_to_eV,
     "nSlices": 7,
-    "t_s": 314.16
+    "t_s": 314.16,
+    "iter_type": "LatticeMinimize",
 }
 
 example_ionmin_known = {
@@ -103,7 +105,8 @@ example_ionmin_known = {
     "EH": 39775.3166089357473538*Ha_to_eV,
     "Eewald": 38803.1912795634780196*Ha_to_eV,
     "nSlices": 1,
-    "t_s": 2028.57
+    "t_s": 2028.57,
+    "iter_type": "IonicMinimize",
 }
 
 @pytest.mark.parametrize("filename,known", 
@@ -162,6 +165,7 @@ def test_JDFTXOutfile_fromfile(
     #
     assert len(jout) == known["nSlices"]
     assert jout.t_s == approx(known["t_s"])
+    assert jout.jstrucs.iter_type == known["iter_type"]
 
 
 test_JDFTXOutfile_fromfile(ex_files_dir / Path("example_sp.out"), example_sp_known)
