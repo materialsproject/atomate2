@@ -12,13 +12,13 @@ from openff.units import unit
 from atomate2.openff.utils import create_mol_spec, merge_specs_by_name_and_smiles
 
 
-@pytest.fixture()
+@pytest.fixture
 def temp_dir():
     with tempfile.TemporaryDirectory() as temp_dir:
         yield Path(temp_dir)
 
 
-@pytest.fixture()
+@pytest.fixture
 def run_job(temp_dir):
     def run_job(job):
         response_dict = run_locally(job, ensure_success=True, root_dir=temp_dir)
@@ -27,7 +27,7 @@ def run_job(temp_dir):
     return run_job
 
 
-@pytest.fixture()
+@pytest.fixture
 def openmm_data(test_dir):
     return test_dir / "openmm"
 
@@ -60,6 +60,6 @@ def interchange():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def output_dir(test_dir):
     return test_dir / "classical_md" / "output_dir"

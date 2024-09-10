@@ -13,13 +13,13 @@ from openff.units import unit
 from atomate2.openff.utils import create_mol_spec, merge_specs_by_name_and_smiles
 
 
-@pytest.fixture()
+@pytest.fixture
 def temp_dir():
     with tempfile.TemporaryDirectory() as temp_dir:
         yield Path(temp_dir)
 
 
-@pytest.fixture()
+@pytest.fixture
 def run_job(temp_dir):
     def run_job(job):
         response_dict = run_locally(job, ensure_success=True, root_dir=temp_dir)
@@ -28,7 +28,7 @@ def run_job(temp_dir):
     return run_job
 
 
-@pytest.fixture()
+@pytest.fixture
 def mol_specs_small():
     return [
         create_mol_spec("CCO", 10, name="ethanol", charge_method="mmff94"),
@@ -36,12 +36,12 @@ def mol_specs_small():
     ]
 
 
-@pytest.fixture()
+@pytest.fixture
 def openff_data(test_dir):
     return test_dir / "openff"
 
 
-@pytest.fixture()
+@pytest.fixture
 def mol_files(openff_data):
     geo_dir = openff_data / "molecule_charge_files"
     return {
@@ -57,7 +57,7 @@ def mol_files(openff_data):
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def mol_specs_salt(mol_files):
     charges = np.load(mol_files["PF6_charges"])
     return [

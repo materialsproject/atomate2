@@ -8,9 +8,9 @@ import re
 import tempfile
 import time
 import warnings
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import TYPE_CHECKING
-from xml.etree import ElementTree
 from xml.etree.ElementTree import tostring
 
 import numpy as np
@@ -30,7 +30,7 @@ class XMLMoleculeFF:
 
     def __init__(self, xml_string: str) -> None:
         """Create an XMLMoleculeFF object from a string version of the XML file."""
-        self.tree = ElementTree.parse(io.StringIO(xml_string))  # noqa: S314
+        self.tree = ET.parse(io.StringIO(xml_string))  # noqa: S314
 
         root = self.tree.getroot()
         canonical_order = {}
