@@ -8,10 +8,10 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pytest import approx, importorskip
 
 from atomate2.forcefields.jobs import (
-    ForceFieldRelaxMaker,
-    ForceFieldStaticMaker,
     CHGNetRelaxMaker,
     CHGNetStaticMaker,
+    ForceFieldRelaxMaker,
+    ForceFieldStaticMaker,
     GAPRelaxMaker,
     GAPStaticMaker,
     M3GNetRelaxMaker,
@@ -25,20 +25,25 @@ from atomate2.forcefields.jobs import (
 )
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 
+
 def test_maker_initialization():
     # test that makers can be initialized from str or value enum
 
     from atomate2.forcefields import MLFF
 
     for mlff in MLFF.__members__:
-        assert ForceFieldRelaxMaker(force_field_name=MLFF(mlff)) == ForceFieldRelaxMaker(force_field_name=mlff)
-        assert ForceFieldRelaxMaker(force_field_name=str(MLFF(mlff))) == ForceFieldRelaxMaker(force_field_name=mlff)
+        assert ForceFieldRelaxMaker(
+            force_field_name=MLFF(mlff)
+        ) == ForceFieldRelaxMaker(force_field_name=mlff)
+        assert ForceFieldRelaxMaker(
+            force_field_name=str(MLFF(mlff))
+        ) == ForceFieldRelaxMaker(force_field_name=mlff)
+
 
 def test_chgnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
-        force_field_name="CHGNet",
-        ionic_step_data=("structure", "energy")
+        force_field_name="CHGNet", ionic_step_data=("structure", "energy")
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -55,6 +60,7 @@ def test_chgnet_static_maker(si_structure):
 
     with pytest.warns(FutureWarning):
         CHGNetStaticMaker()
+
 
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
@@ -87,6 +93,7 @@ def test_chgnet_relax_maker_fix_symmetry(
     else:
         assert initial_space_group != final_space_group
 
+
 @pytest.mark.parametrize("relax_cell", [True, False])
 def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     # translate one atom to ensure a small number of relaxation steps are taken
@@ -95,9 +102,7 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     max_step = 25
     # generate job
     job = ForceFieldRelaxMaker(
-        force_field_name = "CHGNet",
-        steps=max_step,
-        relax_cell=relax_cell
+        force_field_name="CHGNet", steps=max_step, relax_cell=relax_cell
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -123,11 +128,11 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     with pytest.warns(FutureWarning):
         CHGNetRelaxMaker()
 
+
 def test_m3gnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
-        force_field_name = "M3GNet",
-        ionic_step_data=("structure", "energy")
+        force_field_name="M3GNet", ionic_step_data=("structure", "energy")
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -151,10 +156,9 @@ def test_m3gnet_relax_maker(si_structure):
 
     # generate job
     max_step = 25
-    job = ForceFieldRelaxMaker(
-        force_field_name = "M3GNet",
-        steps=max_step
-    ).make(si_structure)
+    job = ForceFieldRelaxMaker(force_field_name="M3GNet", steps=max_step).make(
+        si_structure
+    )
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -202,6 +206,7 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
 
     with pytest.warns(FutureWarning):
         MACEStaticMaker()
+
 
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
@@ -452,6 +457,7 @@ def test_nep_relax_maker(
     with pytest.warns(FutureWarning):
         NEPRelaxMaker()
 
+
 def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     importorskip("nequip")
 
@@ -477,6 +483,7 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
 
     with pytest.warns(FutureWarning):
         NequipStaticMaker()
+
 
 @pytest.mark.parametrize(
     ("relax_cell", "fix_symmetry"),

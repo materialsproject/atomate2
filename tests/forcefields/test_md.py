@@ -13,8 +13,8 @@ from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core import Structure
 
 from atomate2.forcefields.md import (
-    ForceFieldMDMaker,
     CHGNetMDMaker,
+    ForceFieldMDMaker,
     GAPMDMaker,
     M3GNetMDMaker,
     MACEMDMaker,
@@ -31,14 +31,19 @@ name_to_maker = {
     "Nequip": NequipMDMaker,
 }
 
+
 def test_maker_initialization():
     # test that makers can be initialized from str or value enum
 
     from atomate2.forcefields import MLFF
 
     for mlff in MLFF.__members__:
-        assert ForceFieldMDMaker(force_field_name=MLFF(mlff)) == ForceFieldMDMaker(force_field_name=mlff)
-        assert ForceFieldMDMaker(force_field_name=str(MLFF(mlff))) == ForceFieldMDMaker(force_field_name=mlff)
+        assert ForceFieldMDMaker(force_field_name=MLFF(mlff)) == ForceFieldMDMaker(
+            force_field_name=mlff
+        )
+        assert ForceFieldMDMaker(force_field_name=str(MLFF(mlff))) == ForceFieldMDMaker(
+            force_field_name=mlff
+        )
 
 
 @pytest.mark.parametrize(
@@ -120,7 +125,7 @@ def test_ml_ff_md_maker(
     # Check that the trajectory has expected physical properties
     assert task_doc.included_objects == ["trajectory"]
     assert len(task_doc.objects["trajectory"]) == n_steps + 1
-    assert task_doc.objects == task_doc.forcefield_objects # test legacy alias
+    assert task_doc.objects == task_doc.forcefield_objects  # test legacy alias
     assert all(
         key in step
         for key in ("energy", "forces", "stress", "velocities", "temperature")
@@ -129,6 +134,7 @@ def test_ml_ff_md_maker(
 
     with pytest.warns(FutureWarning):
         name_to_maker[ff_name]()
+
 
 @pytest.mark.parametrize("traj_file", ["trajectory.json.gz", "atoms.traj"])
 def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
@@ -250,7 +256,7 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
     structure = si_structure.to_conventional() * (2, 2, 2)
 
     job = ForceFieldMDMaker(
-        force_field_name = ff_name,
+        force_field_name=ff_name,
         n_steps=n_steps,
         traj_file=None,
         dynamics="nose-hoover",
