@@ -7,7 +7,7 @@ import pytest
 TEST_DIR = Path(__file__).parent
 
 
-@pytest.fixture()
+@pytest.fixture
 def tmp_dir():
     """Same as clean_dir but is fresh for every test"""
     import os
