@@ -26,6 +26,13 @@ logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDoc")
 # _DERIVATIVE_FILES = ("GRAD", "HESS")
 
+class JDFTxStatus(ValueEnum):
+    """
+    JDFTx Calculation State
+    """
+
+    SUCCESS = "successful"
+    FAILED = "unsuccessful"
 
 class OutputDoc(BaseModel):
     initial_structure: Structure = Field(None, description="Input Structure object")
@@ -162,21 +169,14 @@ class TaskDoc(StructureMetadata):
         None, description="The directory for this JDFTx task"
     )
 
-    state: Optional[JDFTxStatus] = Field(
-        None, description="State of this JDFTx calculation"
-    )
-
     task_type: Optional[Union[CalcType, TaskType]] = Field(
         None, description="the type of JDFTx calculation"
     )
 
-    # implemented in VASP and Qchem. Do we need this?
-    # it keeps a list of all calculations in a given task.
-    # calcs_reversed: Optional[List[Calculation]] = Field(
-    # None,
-    # title="Calcs reversed data",
-    # description="Detailed data for each JDFTx calculation contributing to the task document.",
-    # )
+    last_updated: str = Field(
+        default_factory=datetime_str,
+        description="Timestamp for this task document was last updated",
+    )
 
     calc_inputs: Optional[CalculationInput] = Field(
         {}, description="JDFTx calculation inputs"
@@ -187,6 +187,18 @@ class TaskDoc(StructureMetadata):
         description="JDFTx calculation outputs",
     )
 
+    state: Optional[JDFTxStatus] = Field(
+        None, description="State of this JDFTx calculation"
+    )
+
+    # implemented in VASP and Qchem. Do we need this?
+    # it keeps a list of all calculations in a given task.
+    # calcs_reversed: Optional[List[Calculation]] = Field(
+    # None,
+    # title="Calcs reversed data",
+    # description="Detailed data for each JDFTx calculation contributing to the task document.",
+    # )
+
 
     @classmethod
     def from_directory(
@@ -194,10 +206,10 @@ class TaskDoc(StructureMetadata):
         dir_name: Union[Path, str],
         store_additional_json: bool = True,
         additional_fields: Dict[str, Any] = None,
-        **qchem_calculation_kwargs,
+        **jdftx_calculation_kwargs,
     ) -> _T:
         """
-        Create a task document from a directory containing QChem files.
+        Create a task document from a directory containing JDFTx files.
 
         Parameters
         ----------
@@ -220,6 +232,11 @@ class TaskDoc(StructureMetadata):
 
         additional_fields = {} if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
+        calc_doc = Calculation.from_files(
+            dir_name=dir_name,
+            jdftxinput_file="inputs.in",
+            jdftxoutput_file="out.log"
+            )
         # task_files = _find_qchem_files(dir_name)
 
         # if len(task_files) == 0:
@@ -272,34 +289,15 @@ class TaskDoc(StructureMetadata):
 
         # dir_name = get_uri(dir_name)  # convert to full path
 
-        # only store objects from last calculation
-        # TODO: If vasp implementation makes this an option, change here as well
-        qchem_objects = None
-        included_objects = None
-        if qchem_objects:
-            included_objects = list(qchem_objects.keys())
-
-        # run_stats = _get_run_stats(calcs_reversed), Discuss whether this is something which is necessary in terms of QChem calcs
-        doc = cls.from_molecule(
-            meta_molecule=calcs_reversed[-1].input.initial_molecule,
+        doc = cls.from_structure(
+            meta_structure=calc_doc.output.structure,
             dir_name=dir_name,
-            calcs_reversed=calcs_reversed,
-            custodian=custodian,
-            additional_json=additional_json,
-            additional_fields=additional_fields,
-            completed_at=calcs_reversed[0].completed_at,
-            orig_inputs=orig_inputs,
-            input=InputDoc.from_qchem_calc_doc(calcs_reversed[0]),
-            output=OutputDoc.from_qchem_calc_doc(calcs_reversed[0]),
-            state=_get_state(calcs_reversed),
-            qchem_objects=qchem_objects,
-            included_objects=included_objects,
-            critic2=critic2,
-            custom_smd=custom_smd,
-            task_type=calcs_reversed[0].task_type,
+            calc_outputs=calc_doc.output,
+            calc_inputs=calc_doc.input
+            # task_type=
+            # state=_get_state()
         )
 
-        # doc = doc.copy(update=additional_fields)
         doc = doc.model_copy(update=additional_fields)
         return doc
 
@@ -439,19 +437,12 @@ def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
     return additional_json
 
 
-def _get_state(calcs_reversed: List[Calculation]) -> QChemStatus:
-    """Get state from calculation documents of QChem tasks."""
-    all_calcs_completed = all(
-        [c.has_qchem_completed == QChemStatus.SUCCESS for c in calcs_reversed]
-    )
-    if all_calcs_completed:
-        return QChemStatus.SUCCESS
-    return QChemStatus.FAILED
+# TODO currently doesn't work b/c has_jdftx_completed method is not implemented
+def _get_state(calc: Calculation) -> JDFTxStatus:
+    """Get state from calculation document of JDFTx task."""
+    if calc.has_jdftx_completed:
+        return JDFTxStatus.SUCCESS
+    else:
+        return JDFTxStatus.FAILED
 
-class JDFTxStatus(ValueEnum):
-    """
-    JDFTx Calculation State
-    """
 
-    SUCCESS = "successful"
-    FAILED = "unsuccessful"
