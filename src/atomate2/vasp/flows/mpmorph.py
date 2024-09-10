@@ -111,16 +111,15 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
                 structure at 0K
         """
         end_temp = end_temp or temperature
-
+        
         conv_md_maker = update_user_incar_settings(
-            flow=md_maker,
+            flow=md_maker(name = "Convergence MPMorph VASP MD Maker"),
             incar_updates={
                 "TEBEG": temperature,
                 "TEEND": temperature,
                 "NSW": n_steps_convergence,
             },
         )
-        conv_md_maker.name = "Convergence MPMorph VASP MD Maker"
 
         convergence_md_maker = EquilibriumVolumeMaker(
             name="MP Morph VASP Equilibrium Volume Maker", md_maker=conv_md_maker
@@ -135,7 +134,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
             )
 
         production_md_maker = update_user_incar_settings(
-            flow=md_maker,
+            flow=md_maker(name = "Production MPMorph VASP MD Maker"),
             incar_updates={
                 "TEBEG": temperature,
                 "TEEND": end_temp,
@@ -150,8 +149,6 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
                     md_makers=[production_md_maker for _ in range(n_production_runs)],
                 )
             )
-        else:
-            production_md_maker.name = "Production MPMorph VASP MD Maker"
 
         return cls(
             name="MP Morph VASP MD Maker",

@@ -7,9 +7,13 @@ from pymatgen.io.vasp import Kpoints
 
 from atomate2.common.flows.mpmorph import EquilibriumVolumeMaker, MPMorphMDMaker
 from atomate2.vasp.flows.mpmorph import (
-    MPMorphVaspMDFastQuenchMaker,
+    MPMorphFastQuenchVaspMDMaker,
     MPMorphVaspMDMaker,
-    MPMorphVaspMDSlowQuenchMaker,
+    MPMorphSlowQuenchVaspMDMaker,
+)
+from atomate2.vasp.jobs.mpmorph import (
+    FastQuenchVaspMaker,
+    SlowQuenchVaspMaker
 )
 from atomate2.vasp.jobs.md import MDMaker
 from atomate2.vasp.run import DEFAULT_HANDLERS
@@ -17,8 +21,8 @@ from atomate2.vasp.sets.core import MDSetGenerator
 
 name_to_maker = {
     "MPMorph Vasp": MPMorphVaspMDMaker,
-    "MPMorph Vasp Slow Quench": MPMorphVaspMDSlowQuenchMaker,
-    "MPMorph Vasp Fast Quench": MPMorphVaspMDFastQuenchMaker,
+    "MPMorph Vasp Slow Quench": MPMorphSlowQuenchVaspMDMaker,
+    "MPMorph Vasp Fast Quench": MPMorphFastQuenchVaspMDMaker,
 }
 
 
@@ -79,23 +83,22 @@ def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
     quench_end_temp = 500
     quench_start_temp = 900
 
-    quench_kwargs = (
-        {
-            "quench_n_steps": n_steps_quench,
-            "quench_temperature_step": quench_temp_steps,
-            "quench_end_temperature": quench_end_temp,
-            "quench_start_temperature": quench_start_temp,
-        }
-        if "Slow Quench" in maker_name
-        else {}
-    )
+    quench_maker = None
+    if "Slow Quench" in maker_name:
+        quench_maker = SlowQuenchVaspMaker(
+            quench_n_steps = n_steps_quench,
+            quench_temperature_step = quench_temp_steps,
+            quench_end_temperature = quench_end_temp,
+            quench_start_temperature = quench_start_temp,
+        )
+    elif "Fast Quench" in maker_name:
+        quench_maker = FastQuenchVaspMaker()
 
-    flow = name_to_maker[maker_name](
-        temperature=temperature,
-        end_temp=end_temp,
-        steps_convergence=steps_convergence,
-        steps_total_production=steps_production,
-        quench_maker_kwargs=quench_kwargs,
+    flow = MPMorphVaspMDMaker.from_temperature_and_steps(
+        temperature = temperature,
+        n_steps_convergence = steps_convergence,
+        n_steps_production = steps_production,
+        quench_maker = quench_maker,
     ).make(intial_structure)
 
     uuids = {}
@@ -542,11 +545,11 @@ def test_mpmorph_vasp_maker(mock_vasp, clean_dir, vasp_test_dir):
     steps_convergence: int = 20
     steps_production: int = 50
 
-    flow = MPMorphVaspMDMaker(
+    flow = MPMorphVaspMDMaker.from_temperature_and_steps(
         temperature=temperature,
         end_temp=end_temp,
-        steps_convergence=steps_convergence,
-        steps_total_production=steps_production,
+        n_steps_convergence=steps_convergence,
+        n_steps_production=steps_production,
     ).make(structure=intial_structure)
 
     uuids = {}
