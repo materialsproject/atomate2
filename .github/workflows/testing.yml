@@ -90,38 +90,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
 
-#  test_md:
-#    services:
-#      local_mongodb:
-#        image: mongo:4.0
-#        ports:
-#          - 27017:27017
-#
-#    runs-on: ubuntu-latest
-#    strategy:
-#      matrix:
-#        python-version: ["3.9", "3.10", "3.11"]
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - uses: mamba-org/setup-micromamba@main
-#
-#      - name: Install dependencies
-#        run: |
-#          micromamba create -n atomate2 python=${{ matrix.python-version }} --yes
-#          micromamba install -n atomate2 -c conda-forge --file .github/classical_md_requirements.txt --yes
-#          micromamba run -n atomate2 pip install .[strict,tests,classical_md]
-#
-#      - name: Test
-#        run: micromamba run -n atomate2 pytest tests/classical_md/ --cov=atomate2 --cov-report=xml
-#
-#      - uses: codecov/codecov-action@v1
-#        if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
-#        with:
-#          token: ${{ secrets.CODECOV_TOKEN }}
-#          file: ./coverage.xml
-
   docs:
     runs-on: ubuntu-latest
 
