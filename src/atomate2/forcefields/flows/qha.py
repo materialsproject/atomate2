@@ -9,6 +9,7 @@ from atomate2.common.flows.qha import CommonQhaMaker
 from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
+
 @dataclass
 class CHGNetQhaMaker(CommonQhaMaker):
     """
@@ -52,13 +53,11 @@ class CHGNetQhaMaker(CommonQhaMaker):
 
     name: str = "CHGNet QHA Maker"
     initial_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory= lambda : ForceFieldRelaxMaker(force_field_name="CHGNet",)
+        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="CHGNet")
     )
     eos_relax_maker: ForceFieldRelaxMaker | None = field(
         default_factory=lambda: ForceFieldRelaxMaker(
-            force_field_name="CHGNet",
-            relax_cell=False, 
-            relax_kwargs={"fmax": 0.00001}
+            force_field_name="CHGNet", relax_cell=False, relax_kwargs={"fmax": 0.00001}
         )
     )
     phonon_maker: PhononMaker = field(

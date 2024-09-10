@@ -33,8 +33,9 @@ _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.CHGNet: {"stress_weight": _GPa_to_eV_per_A3},
     MLFF.M3GNet: {"stress_weight": _GPa_to_eV_per_A3},
     MLFF.NEP: {"model_filename": "nep.txt"},
-    MLFF.GAP: {"args_str": "IP GAP","param_filename": "gap.xml",}
+    MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
 }
+
 
 def forcefield_job(method: Callable) -> job:
     """
@@ -133,8 +134,10 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
 
         # Pad calculator_kwargs with default values, but permit user to override them
         self.calculator_kwargs = {
-            **_DEFAULT_CALCULATOR_KWARGS.get(MLFF(self.force_field_name.split("MLFF.")[-1]),{}),
-            **self.calculator_kwargs
+            **_DEFAULT_CALCULATOR_KWARGS.get(
+                MLFF(self.force_field_name.split("MLFF.")[-1]), {}
+            ),
+            **self.calculator_kwargs,
         }
 
     @forcefield_job

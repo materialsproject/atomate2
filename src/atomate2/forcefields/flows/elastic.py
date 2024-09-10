@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.elastic import BaseElasticMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+
 
 @dataclass
 class ElasticMaker(BaseElasticMaker):

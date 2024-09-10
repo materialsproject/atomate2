@@ -63,14 +63,14 @@ class GruneisenMaker(BaseGruneisenMaker):
 
     name: str = "Gruneisen"
     bulk_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="CHGNet",relax_kwargs={"fmax": 0.00001})
+        default_factory=lambda: ForceFieldRelaxMaker(
+            force_field_name="CHGNet", relax_kwargs={"fmax": 0.00001}
+        )
     )
     code: str = "forcefields"
     const_vol_relax_maker: ForceFieldRelaxMaker = field(
         default_factory=lambda: ForceFieldRelaxMaker(
-            force_field_name="CHGNet",
-            relax_kwargs={"fmax": 0.00001},
-            relax_cell=False
+            force_field_name="CHGNet", relax_kwargs={"fmax": 0.00001}, relax_cell=False
         )
     )
     kpath_scheme: str = "seekpath"

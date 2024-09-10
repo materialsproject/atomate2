@@ -5,8 +5,8 @@ from monty.serialization import loadfn
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.flows.eos import (
-    ForceFieldEosMaker,
     CHGNetEosMaker,
+    ForceFieldEosMaker,
     M3GNetEosMaker,
     MACEEosMaker,
 )
@@ -25,7 +25,6 @@ def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
 
     job = ForceFieldEosMaker.from_force_field_name(mlff).make(si_structure)
     job_to_uuid = {job.name: job.uuid for job in job.jobs}
-    print(job_to_uuid)
     post_process_uuid = job_to_uuid[f"{mlff} EOS Maker postprocessing"]
     response = run_locally(job, ensure_success=True)
     output = response[post_process_uuid][1].output

@@ -161,8 +161,8 @@ def test_m3gnet_relax_maker(si_structure):
     # generate job
     max_step = 25
     job = ForceFieldRelaxMaker(
-        force_field_name="M3GNet", 
-        steps=max_step, 
+        force_field_name="M3GNet",
+        steps=max_step,
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully

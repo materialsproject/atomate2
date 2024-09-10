@@ -11,7 +11,10 @@ from monty.dev import deprecated
 
 from atomate2.ase.md import AseMDMaker
 from atomate2.forcefields import MLFF, _get_formatted_ff_name
-from atomate2.forcefields.jobs import _FORCEFIELD_DATA_OBJECTS, _DEFAULT_CALCULATOR_KWARGS
+from atomate2.forcefields.jobs import (
+    _DEFAULT_CALCULATOR_KWARGS,
+    _FORCEFIELD_DATA_OBJECTS,
+)
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
 
@@ -111,11 +114,13 @@ class ForceFieldMDMaker(AseMDMaker):
     def __post_init__(self) -> None:
         """Ensure that force_field_name is correctly assigned."""
         self.force_field_name = _get_formatted_ff_name(self.force_field_name)
-        
+
         # Pad calculator_kwargs with default values, but permit user to override them
         self.calculator_kwargs = {
-            **_DEFAULT_CALCULATOR_KWARGS.get(self.force_field_name,{}),
-            **self.calculator_kwargs
+            **_DEFAULT_CALCULATOR_KWARGS.get(
+                MLFF(self.force_field_name.split("MLFF.")[-1]), {}
+            ),
+            **self.calculator_kwargs,
         }
 
     @job(
@@ -186,7 +191,7 @@ class NEPMDMaker(ForceFieldMDMaker):
     name: str = f"{MLFF.NEP} MD"
     force_field_name: str | MLFF = MLFF.NEP
     calculator_kwargs: dict = field(
-        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[str(MLFF.NEP)]
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.NEP]
     )
 
 
@@ -244,7 +249,7 @@ class GAPMDMaker(ForceFieldMDMaker):
     name: str = f"{MLFF.GAP} MD"
     force_field_name: str | MLFF = MLFF.GAP
     calculator_kwargs: dict = field(
-        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[str(MLFF.GAP)]
+        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.GAP]
     )
 
 

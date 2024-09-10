@@ -33,7 +33,9 @@ class CHGNetVaspRelaxMaker(Maker):
     """
 
     name: str = f"{MLFF.CHGNet} relax followed by a VASP relax"
-    chgnet_maker: ForceFieldRelaxMaker = field(default_factory=lambda : ForceFieldRelaxMaker(force_field_name="CHGNet"))
+    chgnet_maker: ForceFieldRelaxMaker = field(
+        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="CHGNet")
+    )
     vasp_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure) -> Flow:
@@ -73,7 +75,9 @@ class M3GNetVaspRelaxMaker(Maker):
     """
 
     name: str = f"{MLFF.M3GNet} relax followed by a VASP relax"
-    m3gnet_maker: ForceFieldRelaxMaker = field(default_factory=lambda : ForceFieldRelaxMaker(force_field_name="M3GNet"))
+    m3gnet_maker: ForceFieldRelaxMaker = field(
+        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="M3GNet")
+    )
     vasp_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure) -> Flow:

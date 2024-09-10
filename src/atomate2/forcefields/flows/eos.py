@@ -12,8 +12,9 @@ from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
     from jobflow import Maker
+    from typing_extensions import Self
+
 
 @dataclass
 class ForceFieldEosMaker(CommonEosMaker):
@@ -59,39 +60,42 @@ class ForceFieldEosMaker(CommonEosMaker):
     @classmethod
     def from_force_field_name(
         cls,
-        force_field_name : str | MLFF,
-        relax_initial_structure : bool = True,
+        force_field_name: str | MLFF,
+        relax_initial_structure: bool = True,
     ) -> Self:
         """
         Create an EOS flow from a forcefield name.
 
         Parameters
-        -----------
+        ----------
         force_field_name : str or .MLFF
             The name of the force field.
         relax_initial_structure: bool = True
             Whether to relax the initial structure before performing an EOS fit.
 
         Returns
-        --------
-        ForceFieldEosMaker        
+        -------
+        ForceFieldEosMaker
         """
         force_field_name = _get_formatted_ff_name(force_field_name)
         return cls(
-            name = f"{force_field_name.split('MLFF.')[-1]} EOS Maker",
-            initial_relax_maker = (
+            name=f"{force_field_name.split('MLFF.')[-1]} EOS Maker",
+            initial_relax_maker=(
                 ForceFieldRelaxMaker(force_field_name=force_field_name)
-                if relax_initial_structure 
+                if relax_initial_structure
                 else None
             ),
-            eos_relax_maker = ForceFieldRelaxMaker(force_field_name=force_field_name,relax_cell=False),
-            static_maker = None,
+            eos_relax_maker=ForceFieldRelaxMaker(
+                force_field_name=force_field_name, relax_cell=False
+            ),
+            static_maker=None,
         )
+
 
 @deprecated(
     replacement=ForceFieldEosMaker,
     deadline=(2025, 1, 1),
-    message='Use ForceFieldEosMaker.from_force_field_name with force_field_name = "CHGNet".',
+    message='Use ForceFieldEosMaker.from_force_field_name(force_field_name = "CHGNet")',
 )
 @dataclass
 class CHGNetEosMaker(CommonEosMaker):
@@ -128,16 +132,21 @@ class CHGNetEosMaker(CommonEosMaker):
     """
 
     name: str = "CHGNet EOS Maker"
-    initial_relax_maker: Maker = field(default_factory= lambda: ForceFieldRelaxMaker(force_field_name="CHGNet"))
+    initial_relax_maker: Maker = field(
+        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="CHGNet")
+    )
     eos_relax_maker: Maker = field(
-        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="CHGNet",relax_cell=False)
+        default_factory=lambda: ForceFieldRelaxMaker(
+            force_field_name="CHGNet", relax_cell=False
+        )
     )
     static_maker: Maker = None
+
 
 @deprecated(
     replacement=ForceFieldEosMaker,
     deadline=(2025, 1, 1),
-    message='Use ForceFieldEosMaker.from_force_field_name with force_field_name = "M3GNet".',
+    message='Use ForceFieldEosMaker.from_force_field_name(force_field_name = "M3GNet")',
 )
 @dataclass
 class M3GNetEosMaker(CommonEosMaker):
@@ -174,9 +183,13 @@ class M3GNetEosMaker(CommonEosMaker):
     """
 
     name: str = "M3GNet EOS Maker"
-    initial_relax_maker: Maker = field(default_factory=lambda : ForceFieldRelaxMaker(force_field_name="M3GNet"))
+    initial_relax_maker: Maker = field(
+        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="M3GNet")
+    )
     eos_relax_maker: Maker = field(
-        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="M3GNet",relax_cell=False)
+        default_factory=lambda: ForceFieldRelaxMaker(
+            force_field_name="M3GNet", relax_cell=False
+        )
     )
     static_maker: Maker = None
 
@@ -184,7 +197,7 @@ class M3GNetEosMaker(CommonEosMaker):
 @deprecated(
     replacement=ForceFieldEosMaker,
     deadline=(2025, 1, 1),
-    message='Use ForceFieldEosMaker.from_force_field_name with force_field_name = "MACE".',
+    message='Use ForceFieldEosMaker.from_force_field_name(force_field_name = "MACE")',
 )
 @dataclass
 class MACEEosMaker(CommonEosMaker):
@@ -221,8 +234,12 @@ class MACEEosMaker(CommonEosMaker):
     """
 
     name: str = "MACE EOS Maker"
-    initial_relax_maker: Maker = field(default_factory=lambda : ForceFieldRelaxMaker(force_field_name="MACE"))
+    initial_relax_maker: Maker = field(
+        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="MACE")
+    )
     eos_relax_maker: Maker = field(
-        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="MACE", relax_cell=False)
+        default_factory=lambda: ForceFieldRelaxMaker(
+            force_field_name="MACE", relax_cell=False
+        )
     )
     static_maker: Maker = None
