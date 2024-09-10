@@ -36,7 +36,8 @@ example_sp_known = {
     "Eloc": 29663.3545152997867262*Ha_to_eV,
     "EH": -15284.4385436602351547*Ha_to_eV,
     "Eewald": -16901.4696647211094387*Ha_to_eV,
-    "nSlices": 1
+    "nSlices": 1,
+    "t_s": 165.87
 }
 
 example_latmin_known = {
@@ -68,7 +69,8 @@ example_latmin_known = {
     "Eloc": -40.0429414587348518*Ha_to_eV,
     "EH": 28.5721759138337354*Ha_to_eV,
     "Eewald": -214.7213057123609019*Ha_to_eV,
-    "nSlices": 7
+    "nSlices": 7,
+    "t_s": 314.16
 }
 
 example_ionmin_known = {
@@ -100,7 +102,8 @@ example_ionmin_known = {
     "Eloc": -79647.5920994735934073*Ha_to_eV,
     "EH": 39775.3166089357473538*Ha_to_eV,
     "Eewald": 38803.1912795634780196*Ha_to_eV,
-    "nSlices": 1
+    "nSlices": 1,
+    "t_s": 2028.57
 }
 
 @pytest.mark.parametrize("filename,known", 
@@ -158,6 +161,7 @@ def test_JDFTXOutfile_fromfile(
     assert jout.Ecomponents["Eewald"] == approx(known["Eewald"])
     #
     assert len(jout) == known["nSlices"]
+    assert jout.t_s == approx(known["t_s"])
 
 
 test_JDFTXOutfile_fromfile(ex_files_dir / Path("example_sp.out"), example_sp_known)
