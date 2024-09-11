@@ -6,4 +6,3 @@ from atomate2.openmm.jobs.core import (
     NVTMaker,
     TempChangeMaker,
 )
-from atomate2.openmm.jobs.generate import generate_openmm_interchange

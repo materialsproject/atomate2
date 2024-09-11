@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 import numpy as np
 import openff.toolkit as tk
 from emmet.core.openff import MoleculeSpec
-from emmet.core.openmm import OpenMMTaskDocument  # noqa: TCH002
 from pymatgen.core import Element, Molecule
 from pymatgen.io.openff import create_openff_mol
 
@@ -136,51 +135,6 @@ def merge_specs_by_name_and_smiles(mol_specs: list[MoleculeSpec]) -> list[Molecu
         else:
             merged_spec_dict[key] = spec
     return list(merged_spec_dict.values())
-
-
-def create_list_summing_to(total_sum: int, n_pieces: int) -> list:
-    """Create a NumPy array with n_pieces elements that sum up to total_sum.
-
-    Divides total_sum by n_pieces to determine the base value for each element.
-    Distributes the remainder evenly among the elements.
-
-    Parameters
-    ----------
-    total_sum : int
-        The desired sum of the array elements.
-    n_pieces : int
-        The number of elements in the array.
-
-    Returns
-    -------
-    numpy.ndarray
-        A 1D NumPy array with n_pieces elements summing up to total_sum.
-    """
-    div, mod = total_sum // n_pieces, total_sum % n_pieces
-    return [div + 1] * mod + [div] * (n_pieces - mod)
-
-
-def increment_name(file_name: str) -> str:
-    """Increment the count in a file name."""
-    # logic to increment count on file name
-    re_match = re.search(r"(\d*)$", file_name)
-    position = re_match.start(1)
-    new_count = int(re_match.group(1) or 1) + 1
-    return f"{file_name[:position]}{new_count}"
-
-
-def task_reports(task: OpenMMTaskDocument, traj_or_state: str = "traj") -> bool:
-    """Check if a task reports trajectories or states."""
-    if not task.calcs_reversed:
-        return False
-    calc_input = task.calcs_reversed[0].input
-    if traj_or_state == "traj":
-        report_freq = calc_input.traj_interval
-    elif traj_or_state == "state":
-        report_freq = calc_input.state_interval
-    else:
-        raise ValueError("traj_or_state must be 'traj' or 'state'")
-    return calc_input.n_steps >= report_freq
 
 
 def calculate_elyte_composition(

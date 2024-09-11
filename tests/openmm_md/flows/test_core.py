@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import numpy as np
+import pytest
 from emmet.core.openmm import OpenMMTaskDocument
 from jobflow import Flow
 from MDAnalysis import Universe
@@ -182,7 +183,7 @@ def test_traj_blob_embed(interchange, run_job, tmp_path):
     assert parsed_output.traj_blob == calc_output.traj_blob
 
 
-# @pytest.mark.skip("for local testing and debugging")
+@pytest.mark.skip("for local testing and debugging")
 def test_fireworks(interchange):
     # Create an instance of ProductionMaker with custom parameters
 

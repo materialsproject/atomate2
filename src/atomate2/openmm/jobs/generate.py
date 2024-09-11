@@ -7,13 +7,10 @@ import io
 from pathlib import Path
 
 import numpy as np
-import openff.toolkit as tk
 from emmet.core.openff import MoleculeSpec
 from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
 from emmet.core.vasp.task_valid import TaskState
 from jobflow import Response
-from openff.interchange.components._packmol import pack_box
-from openff.units import unit
 from openmm import Context, LangevinMiddleIntegrator, XmlSerializer
 from openmm.app.pdbfile import PDBFile
 from openmm.unit import kelvin, picoseconds
@@ -22,6 +19,16 @@ from pymatgen.io.openff import get_atom_map
 from atomate2.openff.utils import create_mol_spec, merge_specs_by_name_and_smiles
 from atomate2.openmm.jobs.base import openmm_job
 from atomate2.openmm.utils import XMLMoleculeFF, create_system_from_xml
+
+try:
+    import openff.toolkit as tk
+    from openff.interchange.components._packmol import pack_box
+    from openff.units import unit
+except ImportError as e:
+    raise ImportError(
+        "Using the atomate2.openmm.generate "
+        "module requires the openff-toolkit package."
+    ) from e
 
 
 @openmm_job
@@ -85,8 +92,6 @@ def generate_openmm_interchange(
     - The function uses the merge_specs_by_name_and_smiles function to merge molecule
     specifications with the same name and SMILES string.
     """
-    # TODO: warn if using unsupported properties
-
     mol_specs = []
     for spec in input_mol_specs:
         if isinstance(spec, dict):

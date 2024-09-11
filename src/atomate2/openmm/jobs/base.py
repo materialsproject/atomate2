@@ -24,7 +24,7 @@ from openmm import Integrator, LangevinMiddleIntegrator, Platform, XmlSerializer
 from openmm.app import StateDataReporter
 from openmm.unit import kelvin, picoseconds
 
-from atomate2.openff.utils import increment_name, task_reports
+from atomate2.openmm.utils import increment_name, task_reports
 
 if TYPE_CHECKING:
     from openmm.app.simulation import Simulation

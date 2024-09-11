@@ -21,7 +21,6 @@ from atomate2.openff.utils import (
     counts_from_box_size,
     counts_from_masses,
     create_mol_spec,
-    increment_name,
     merge_specs_by_name_and_smiles,
 )
 
@@ -218,23 +217,6 @@ def test_openff_quantity_as_from_monty_dict():
     assert quantity.magnitude == reconstructed_quantity.magnitude
     assert quantity.units == reconstructed_quantity.units
     assert quantity == reconstructed_quantity
-
-
-def test_increment_file_name():
-    test_cases = [
-        ("report", "report2"),
-        ("report123", "report124"),
-        ("report.123", "report.124"),
-        ("report-123", "report-124"),
-        ("report-dcd", "report-dcd2"),
-        ("report.123.dcd", "report.123.dcd2"),
-    ]
-
-    for file_name, expected_output in test_cases:
-        result = increment_name(file_name)
-        assert (
-            result == expected_output
-        ), f"Failed for case: {file_name}. Expected: {expected_output}, Got: {result}"
 
 
 def test_calculate_elyte_composition():

@@ -9,9 +9,9 @@ from typing import TYPE_CHECKING
 from emmet.core.openmm import Calculation, OpenMMInterchange, OpenMMTaskDocument
 from jobflow import Flow, Job, Response
 
-from atomate2.openff.utils import create_list_summing_to
 from atomate2.openmm.jobs.base import openmm_job
 from atomate2.openmm.jobs.core import NVTMaker, TempChangeMaker
+from atomate2.openmm.utils import create_list_summing_to
 
 if TYPE_CHECKING:
     from openff.interchange import Interchange

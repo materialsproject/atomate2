@@ -58,7 +58,7 @@ forcefields = [
     "quippy-ase>=0.9.14",
     "sevenn>=0.9.3",
 ]
-classical_md = [
+openmm = [
     "mdanalysis>=2.7.0",
     "openmm>=8.1.0",
     "openmm-mdanalysis-reporter>=0.1.0",
