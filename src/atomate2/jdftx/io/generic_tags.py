@@ -1,3 +1,4 @@
+from secrets import token_bytes
 import warnings
 from abc import ABC, abstractmethod
 from copy import deepcopy
@@ -301,6 +302,8 @@ class TagContainer(AbstractTag):
         tempdict = {}  # temporarily store read tags out of order they are processed
 
         for subtag, subtag_type in self.subtags.items():
+            if subtag == "poleEl":
+                print("here")
             # every subtag with write_tagname=True in a TagContainer has a fixed length and can be immediately read in this loop if it is present
             if subtag in value:  # this subtag is present in the value string
                 # Ben: At this point, the subtag is a string, and subtag_type is tag object with a can_repeat class variable.
@@ -315,7 +318,8 @@ class TagContainer(AbstractTag):
                         )
                     else:
                         idx_start = value.index(subtag)
-                        idx_end = idx_start + subtag_type.get_token_len()
+                        token_len = subtag_type.get_token_len()
+                        idx_end = idx_start + token_len
                         subtag_value = " ".join(
                             value[(idx_start + 1) : idx_end]
                         )  # add 1 so the subtag value string excludes the subtagname
@@ -531,7 +535,10 @@ class TagContainer(AbstractTag):
                 return value  # no conversion needed
             string_value = self._make_dict(tag, value)
             return self.read(tag, string_value)
+        
 
+
+    
 
 @dataclass(kw_only=True)
 class StructureDeferredTagContainer(TagContainer):
@@ -635,3 +642,55 @@ class MultiformatTag(AbstractTag):
         format_index, _ = self._determine_format_option(tag, value)
         # print(f'using index of {format_index}')
         return self.format_options[format_index]._write(tag, value)
+    
+
+@dataclass
+class BoolTagContainer(TagContainer):
+
+    def read(self, tag:str, value: str) -> dict:
+        value = value.split()
+        tempdict = {}
+        for subtag, subtag_type in self.subtags.items():
+            if subtag in value:
+                idx_start = value.index(subtag)
+                idx_end = idx_start + subtag_type.get_token_len()
+                subtag_value = " ".join(value[(idx_start + 1) : idx_end])
+                tempdict[subtag] = subtag_type.read(subtag, subtag_value)
+                del value[idx_start:idx_end]
+        subdict = {x: tempdict[x] for x in self.subtags if x in tempdict}
+        for subtag, subtag_type in self.subtags.items():
+            if not subtag_type.optional and subtag not in subdict:
+                raise ValueError(
+                    f"The {subtag} tag is not optional but was not populated during the read!"
+                )
+        if len(value) > 0:
+            raise ValueError(
+                f"Something is wrong in the JDFTXInfile formatting, some values were not processed: {value}"
+            )
+        return subdict
+
+@dataclass
+class DumpTagContainer(TagContainer):
+
+    def read(self, tag: str, value: str) -> dict:
+        value = value.split()
+        tempdict = {} 
+        # Each subtag is a freq, which will be a BoolTagContainer
+        for subtag, subtag_type in self.subtags.items():
+            if subtag in value:
+                idx_start = value.index(subtag)
+                subtag_value = " ".join(value[(idx_start + 1):])
+                tempdict[subtag] = subtag_type.read(subtag, subtag_value)
+                del value[idx_start:]
+        # reorder all tags to match order of __MASTER_TAG_LIST__ and do coarse-grained validation of read
+        subdict = {x: tempdict[x] for x in self.subtags if x in tempdict}
+        for subtag, subtag_type in self.subtags.items():
+            if not subtag_type.optional and subtag not in subdict:
+                raise ValueError(
+                    f"The {subtag} tag is not optional but was not populated during the read!"
+                )
+        if len(value) > 0:
+            raise ValueError(
+                f"Something is wrong in the JDFTXInfile formatting, some values were not processed: {value}"
+            )
+        return subdict

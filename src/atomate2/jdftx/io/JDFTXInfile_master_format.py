@@ -1,6 +1,74 @@
 from copy import deepcopy
+from os import write
 
-from .generic_tags import BoolTag, StrTag, IntTag, FloatTag, TagContainer, MultiformatTag
+from .generic_tags import BoolTag, StrTag, IntTag, FloatTag, TagContainer, MultiformatTag, BoolTagContainer, DumpTagContainer
+
+JDFTXDumpFreqOptions = [
+    "Electronic", "End", "Fluid", "Gummel", "Init", "Ionic"
+]
+JDFTXDumpVarOptions = [
+    "BandEigs",  # Band Eigenvalues
+    "BandProjections",  # Projections of each band state against each atomic orbital
+    "BandUnfold",  # Unfold band structure from supercell to unit cell (see command band-unfold)
+    "Berry",  # Berry curvature i <dC/dk| X |dC/dk>, only allowed at End (see command Cprime-params)
+    "BGW",  # G-space wavefunctions, density and potential for Berkeley GW (requires HDF5 support)
+    "BoundCharge",  # Bound charge in the fluid
+    "BulkEpsilon",  # Dielectric constant of a periodic solid (see command bulk-epsilon)
+    "ChargedDefect",  # Calculate energy correction for charged defect (see command charged-defect)
+    "CoreDensity",  # Total core electron density (from partial core corrections)
+    "Dfluid",  # Electrostatic potential due to fluid alone
+    "Dipole",  # Dipole moment of explicit charges (ionic and electronic)
+    "Dn",  # First order change in electronic density
+    "DOS",  # Density of States (see command density-of-states)
+    "Dtot",  # Total electrostatic potential
+    "Dvac",  # Electrostatic potential due to explicit system alone
+    "DVext",  # External perturbation
+    "DVscloc",  # First order change in local self-consistent potential
+    "DWfns",  # Perturbation Wavefunctions
+    "Ecomponents",  # Components of the energy
+    "EigStats",  # Band eigenvalue statistics: HOMO, LUMO, min, max and Fermi level
+    "ElecDensity",  # Electronic densities (n or nup,ndn)
+    "ElecDensityAccum",  # Electronic densities (n or nup,ndn) accumulated over MD trajectory
+    "EresolvedDensity",  # Electron density from bands within specified energy ranges
+    "ExcCompare",  # Energies for other exchange-correlation functionals (see command elec-ex-corr-compare)
+    "Excitations",  # Dumps dipole moments and transition strength (electric-dipole) of excitations
+    "FCI",  # Output Coulomb matrix elements in FCIDUMP format
+    "FermiDensity",  # Electron density from fermi-derivative at specified energy
+    "FermiVelocity",  # Fermi velocity, density of states at Fermi level and related quantities
+    "Fillings",  # Fillings
+    "FluidDebug",  # Fluid specific debug output if any
+    "FluidDensity",  # Fluid densities (NO,NH,nWater for explicit fluids, cavity function for PCMs)
+    "Forces",  # Forces on the ions in the coordinate system selected by command forces-output-coords
+    "Gvectors",  # List of G vectors in reciprocal lattice basis, for each k-point
+    "IonicDensity",  # Nuclear charge density (with gaussians)
+    "IonicPositions",  # Ionic positions in the same format (and coordinate system) as the input file
+    "KEdensity",  # Kinetic energy density of the valence electrons
+    "Kpoints",  # List of reduced k-points in calculation, and mapping to the unreduced k-point mesh
+    "L",  # Angular momentum matrix elements, only allowed at End (see command Cprime-params)
+    "Lattice",  # Lattice vectors in the same format as the input file
+    "Momenta",  # Momentum matrix elements in a binary file (indices outer to inner: state, cartesian direction, band1, band2)
+    "None",  # Dump nothing
+    "Ocean",  # Wave functions for Ocean code
+    "OrbitalDep",  # Custom output from orbital-dependent functionals (eg. quasi-particle energies, discontinuity potential)
+    "Q",  # Quadrupole r*p matrix elements, only allowed at End (see command Cprime-params)
+    "QMC",  # Blip'd orbitals and potential for CASINO [27]
+    "R",  # Position operator matrix elements, only allowed at End (see command Cprime-params)
+    "RealSpaceWfns",  # Real-space wavefunctions (one column per file)
+    "RhoAtom",  # Atomic-orbital projected density matrices (only for species with +U enabled)
+    "SelfInteractionCorrection",  # Calculates Perdew-Zunger self-interaction corrected Kohn-Sham eigenvalues
+    "SlabEpsilon",  # Local dielectric function of a slab (see command slab-epsilon)
+    "SolvationRadii",  # Effective solvation radii based on fluid bound charge distribution
+    "Spin",  # Spin matrix elements from non-collinear calculations in a binary file (indices outer to inner: state, cartesian direction, band1, band2)
+    "State",  # All variables needed to restart calculation: wavefunction and fluid state/fillings if any
+    "Stress",  # Dumps dE/dR_ij where R_ij is the i'th component of the j'th lattice vector
+    "Symmetries",  # List of symmetry matrices (in covariant lattice coordinates)
+    "Vcavity",  # Fluid cavitation potential on the electron density that determines the cavity
+    "Velocities",  # Diagonal momentum/velocity matrix elements in a binary file (indices outer to inner: state, band, cartesian direction)
+    "VfluidTot",  # Total contribution of fluid to the electron potential
+    "Vlocps",  # Local part of pseudopotentials
+    "Vscloc",  # Self-consistent potential
+    "XCanalysis"  # Debug VW KE density, single-particle-ness and spin-polarzied Hartree potential
+    ]
 
 
 #simple dictionaries deepcopied multiple times into MASTER_TAG_LIST later for different tags
@@ -9,7 +77,7 @@ JDFTXMinimize_subtagdict = {
     'alphaTmin': FloatTag(),
     'alphaTreduceFactor': FloatTag(),
     'alphaTstart': FloatTag(),
-    'dirUpdateScheme': StrTag(options = ['FletcherReeves', 'HestenesStiefellL-BFGS', 'PolakRibiere', 'SteepestDescent']),
+    'dirUpdateScheme': StrTag(options = ['FletcherReeves', 'HestenesStiefel', 'L-BFGS', 'PolakRibiere', 'SteepestDescent']),
     'energyDiffThreshold': FloatTag(),
     'fdTest': BoolTag(),
     'history': IntTag(),
@@ -28,7 +96,15 @@ JDFTXFluid_subtagdict = {
     'epsLJ': FloatTag(),
     'Nnorm': FloatTag(),
     'pMol': FloatTag(),
-    'poleEl': FloatTag(can_repeat = True),
+    'poleEl': TagContainer(
+        can_repeat = True,
+        subtags = {
+            "omega0": FloatTag(write_tagname=False, optional=False),
+            "gamma0": FloatTag(write_tagname=False, optional=False),
+            "A0": FloatTag(write_tagname=False, optional=False),
+        },
+    ),
+    # 'poleEl': FloatTag(can_repeat = True),
     'Pvap': FloatTag(),
     'quad_nAlpha': FloatTag(),
     'quad_nBeta': FloatTag(),
@@ -682,13 +758,12 @@ MASTER_TAG_LIST = {
         #         'freq': StrTag(write_tagname = False, optional = False),
         #         'format': StrTag(write_tagname = False, optional = False),
         #         }),
-        #     }),
         'dump-name': StrTag(),
-        'dump': TagContainer(can_repeat = True,
-            subtags = {
-            'freq': StrTag(write_tagname = False, optional = False),
-            'var': StrTag(write_tagname = False, optional = False)
-            }),
+        # 'dump': TagContainer(can_repeat = True,
+        #     subtags = {
+        #     'freq': StrTag(write_tagname = False, optional = False),
+        #     'var': StrTag(write_tagname = False, optional = False)
+        #     }),
         'dump-interval': TagContainer(can_repeat = True,
             subtags = {
             'freq': StrTag(options = ['Ionic', 'Electronic', 'Fluid', 'Gummel'], write_tagname = False, optional = False),
@@ -822,6 +897,19 @@ MASTER_TAG_LIST = {
             }),
     },
 }
+
+
+def get_dump_tag_container():
+    subtags = {}
+    for freq in JDFTXDumpFreqOptions:
+        subsubtags = {}
+        for var in JDFTXDumpVarOptions:
+            subsubtags[var] = BoolTag(write_value = False)
+        subtags[freq] = BoolTagContainer(subtags = subsubtags, write_tagname = True, can_repeat=True)
+    dump_tag_container = DumpTagContainer(subtags = subtags, write_tagname = True, can_repeat=True)
+    return dump_tag_container
+MASTER_TAG_LIST["export"]["dump"] = get_dump_tag_container()
+
 
 __PHONON_TAGS__ = ['phonon']
 __WANNIER_TAGS__ = ['wannier', 'wannier-center-pinned', 'wannier-dump-name',
