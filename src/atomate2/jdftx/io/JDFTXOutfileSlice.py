@@ -14,6 +14,8 @@ from atomate2.jdftx.io.JMinSettings import (
     JMinSettingsLattice,
 )
 from atomate2.jdftx.io.JOutStructures import JOutStructures
+from typing import Optional
+from dataclasses import dataclass
 
 
 class ClassPrintFormatter:

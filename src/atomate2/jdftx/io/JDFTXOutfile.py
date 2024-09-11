@@ -215,24 +215,24 @@ class JDFTXOutfile(JDFTXOutfileSlice):
     #         instance.append(JDFTXOutfileSlice.from_out_slice(text))
     #     return instance
 
-    def __getattr__(self, name):
-        if len(self):
-            return getattr(self[-1], name)
-        try:
-            return super().__getattr__(name)
-        except AttributeError:
-            if self:
-                return getattr(self[-1], name)
-            raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
+    # def __getattr__(self, name):
+    #     if len(self):
+    #         return getattr(self[-1], name)
+    #     try:
+    #         return super().__getattr__(name)
+    #     except AttributeError:
+    #         if self:
+    #             return getattr(self[-1], name)
+    #         raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
 
-    def __setattr__(self, name, value):
-        # Do we want this? I don't imagine this class object should be modified
-        if name in self.__annotations__:
-            super().__setattr__(name, value)
-        elif self:
-            setattr(self[-1], name, value)
-        else:
-            raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
+    # def __setattr__(self, name, value):
+    #     # Do we want this? I don't imagine this class object should be modified
+    #     if name in self.__annotations__:
+    #         super().__setattr__(name, value)
+    #     elif self:
+    #         setattr(self[-1], name, value)
+    #     else:
+    #         raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
 
 
 # @dataclass
