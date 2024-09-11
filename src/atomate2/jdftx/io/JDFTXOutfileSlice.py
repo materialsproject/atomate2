@@ -185,6 +185,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     HOMO_filling: float = None
     LUMO_filling: float = None
     is_metal: bool = None
+    etype: str = None
 
     broadening_type: str = None
     broadening: float = None
@@ -800,6 +801,8 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
                 output of read_file for out file
         '''
         self.jstrucs = JOutStructures.from_out_slice(text, iter_type=self.geom_opt_type)
+        if self.etype is None:
+            self.etype = self.jstrucs.etype
 
 
     def _set_orb_fillings(self) -> None:
@@ -851,6 +854,8 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     def _set_Nbands(self, text: list[str]) -> None:
         '''
         Set the Nbands class variable
+        Prioritizes finding nBands from the reiteration of the input parameters.
+        If this line is not found, then it pulls it from "Setting up k-points, bands, fillings" section.
 
         Parameters
         ----------
@@ -858,8 +863,13 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             output of read_file for out file
         '''
         lines = find_all_key('elec-n-bands', text)
-        line = lines[0]
-        nbands = int(text[line].strip().split()[-1].strip())
+        if len(lines):
+            line = lines[0]
+            nbands = int(text[line].strip().split()[-1].strip())
+        else:
+            lines = find_all_key('nBands:', text)
+            line = lines[0]
+            nbands = int(text[line].split("nBands:")[1].strip().split()[0].strip())
         self.Nbands = nbands
     
 
@@ -929,8 +939,11 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         text: list[str]
             output of read_file for out file
         '''
-        line = find_key("# Energy components:", text)
-        self.Ecomponents = self._read_ecomponents(line, text)
+        ecomp = self.jstrucs[-1].Ecomponents
+        if not self.etype in ecomp:
+            ecomp[self.etype] = self.jstrucs[-1].E
+        # line = find_key("# Energy components:", text)
+        self.Ecomponents = ecomp
 
 
     def calculate_filling(self, broadening_type, broadening, eig, EFermi):
@@ -985,77 +998,77 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return NotImplementedError('There is no need to write a JDFTx out file')
     
 
-    def _build_trajectory(self, text):
-        '''
-        Builds the trajectory lists and sets the instance attributes.
+    # def _build_trajectory(self, text):
+    #     '''
+    #     Builds the trajectory lists and sets the instance attributes.
         
-        '''
-        # Needs to handle LatticeMinimize and IonicMinimize steps in one run
-        # can do this by checking if lattice vectors block is present and if
-        # so adding it to the lists. If it isn't present, copy the last 
-        # lattice from the list.
-        # initialize lattice list with starting lattice and remove it
-        # from the list after iterating through all the optimization steps
-        trajectory_positions = []
-        trajectory_lattice = [self.lattice_initial]
-        trajectory_forces = []
-        trajectory_ecomponents = []
+    #     '''
+    #     # Needs to handle LatticeMinimize and IonicMinimize steps in one run
+    #     # can do this by checking if lattice vectors block is present and if
+    #     # so adding it to the lists. If it isn't present, copy the last 
+    #     # lattice from the list.
+    #     # initialize lattice list with starting lattice and remove it
+    #     # from the list after iterating through all the optimization steps
+    #     trajectory_positions = []
+    #     trajectory_lattice = [self.lattice_initial]
+    #     trajectory_forces = []
+    #     trajectory_ecomponents = []
 
-        ion_lines = find_first_range_key('# Ionic positions in', text)
-        force_lines = find_first_range_key('# Forces in', text)
-        ecomp_lines = find_first_range_key('# Energy components:', text)
-        # print(ion_lines, force_lines, ecomp_lines)
-        for iline, ion_line, force_line, ecomp_line in enumerate(zip(ion_lines, force_lines, ecomp_lines)):
-            coords = np.array([text[i].split()[2:5] for i in range(ion_line + 1, ion_line + self.Nat + 1)], dtype = float)
-            forces = np.array([text[i].split()[2:5] for i in range(force_line + 1, force_line + self.Nat + 1)], dtype = float)
-            ecomp = self._read_ecomponents(ecomp_line, text)
-            lattice_lines = find_first_range_key('# Lattice vectors:', text, startline=ion_line, endline=ion_lines[iline-1])
-            if len(lattice_lines) == 0: # if no lattice lines found, append last lattice
-                trajectory_lattice.append(trajectory_lattice[-1])
-            else:
-                line = lattice_lines[0]
-                trajectory_lattice.append(np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr)
-            trajectory_positions.append(coords)
-            trajectory_forces.append(forces)
-            trajectory_ecomponents.append(ecomp)
-        trajectory_lattice = trajectory_lattice[1:] # remove starting lattice
+    #     ion_lines = find_first_range_key('# Ionic positions in', text)
+    #     force_lines = find_first_range_key('# Forces in', text)
+    #     ecomp_lines = find_first_range_key('# Energy components:', text)
+    #     # print(ion_lines, force_lines, ecomp_lines)
+    #     for iline, ion_line, force_line, ecomp_line in enumerate(zip(ion_lines, force_lines, ecomp_lines)):
+    #         coords = np.array([text[i].split()[2:5] for i in range(ion_line + 1, ion_line + self.Nat + 1)], dtype = float)
+    #         forces = np.array([text[i].split()[2:5] for i in range(force_line + 1, force_line + self.Nat + 1)], dtype = float)
+    #         ecomp = self._read_ecomponents(ecomp_line, text)
+    #         lattice_lines = find_first_range_key('# Lattice vectors:', text, startline=ion_line, endline=ion_lines[iline-1])
+    #         if len(lattice_lines) == 0: # if no lattice lines found, append last lattice
+    #             trajectory_lattice.append(trajectory_lattice[-1])
+    #         else:
+    #             line = lattice_lines[0]
+    #             trajectory_lattice.append(np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr)
+    #         trajectory_positions.append(coords)
+    #         trajectory_forces.append(forces)
+    #         trajectory_ecomponents.append(ecomp)
+    #     trajectory_lattice = trajectory_lattice[1:] # remove starting lattice
 
-        self.trajectory_positions = trajectory_positions
-        self.trajectory_lattice = trajectory_lattice
-        self.trajectory_forces = trajectory_forces
-        self.trajectory_ecomponents = trajectory_ecomponents
+    #     self.trajectory_positions = trajectory_positions
+    #     self.trajectory_lattice = trajectory_lattice
+    #     self.trajectory_forces = trajectory_forces
+    #     self.trajectory_ecomponents = trajectory_ecomponents
     
 
-    def _read_ecomponents(self, line:int, text:str) -> dict:
-        '''
-        Read the energy components from the out file text
+    # def _read_ecomponents(self, line:int, text:str) -> dict:
+    #     '''
+    #     Read the energy components from the out file text
         
-        Parameters
-        ----------
-        line: int
-            line number where energy components are found
-        text: list[str]
-            output of read_file for out file
+    #     Parameters
+    #     ----------
+    #     line: int
+    #         line number where energy components are found
+    #     text: list[str]
+    #         output of read_file for out file
         
-        Returns
-        -------
-        Ecomponents: dict
-            dictionary of energy components
-        '''
-        Ecomponents = {}
-        if self.is_gc == True:
-            final_E_type = "G"
-        else:
-            final_E_type = "F"
-        for tmp_line in text[line+1:]:
-            chars = tmp_line.strip().split()
-            if tmp_line.startswith("--"):
-                continue
-            E_type = chars[0]
-            Energy = float(chars[-1]) * Ha_to_eV
-            Ecomponents.update({E_type:Energy})
-            if E_type == final_E_type:
-                return Ecomponents
+    #     Returns
+    #     -------
+    #     Ecomponents: dict
+    #         dictionary of energy components
+    #     '''
+    #     Ecomponents = {}
+    #     if self.is_gc == True:
+    #         final_E_type = "G"
+    #     else:
+    #         final_E_type = "F"
+    #     for tmp_line in text[line+1:]:
+    #         chars = tmp_line.strip().split()
+    #         if tmp_line.startswith("--"):
+    #             continue
+    #         E_type = chars[0]
+    #         Energy = float(chars[-1]) * Ha_to_eV
+    #         Ecomponents.update({E_type:Energy})
+    #         if E_type == final_E_type:
+    #             return Ecomponents
         
 
     

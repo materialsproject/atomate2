@@ -6,6 +6,9 @@ from pymatgen.util.typing import PathLike
 from pymatgen.core.units import Ha_to_eV
 
 ex_files_dir = Path(__file__).parents[0] / "example_files"
+
+test_read = JDFTXOutfile.from_file(ex_files_dir / Path("problem1.out"))
+
 example_sp_known = {
     "Nspin": 1,
     "spintype": None,

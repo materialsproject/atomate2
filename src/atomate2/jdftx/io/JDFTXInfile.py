@@ -114,6 +114,8 @@ class JDFTXInfile(dict, MSONable):
         for tag_group in MASTER_TAG_LIST:
             added_tag_in_group = False
             for tag in MASTER_TAG_LIST[tag_group]:
+                if tag == "fluid-solvent":
+                    print("here")
                 if tag not in self:
                     continue
                 if tag in __WANNIER_TAGS__:
