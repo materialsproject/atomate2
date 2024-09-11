@@ -1,7 +1,23 @@
+from pydash import lines
 from atomate2.jdftx.io.JEiter import JEiter
 
 
-class JEiters(list):
+def gather_line_collections(iter_type: str, text_slice: list[str]):
+    lines_collect = []
+    line_collections = []
+    _iter_flag = f"{iter_type}: Iter:"
+    for line_text in text_slice:
+        if len(line_text.strip()):
+            lines_collect.append(line_text)
+            if _iter_flag in line_text:
+                line_collections.append(lines_collect)
+                lines_collect = []
+        else:
+            break
+    return line_collections, lines_collect
+
+
+class JEiters(list[JEiter], JEiter):
     """
     Class object for collecting and storing a series of SCF steps done between
     geometric optimization steps
@@ -29,12 +45,16 @@ class JEiters(list):
         etype: str
             The type of energy component
         """
-        super().__init__([])
-        instance = cls()
+        line_collections, lines_collect = gather_line_collections(iter_type, text_slice)
+        instance = cls._from_lines_collect(line_collections[-1], iter_type, etype)
         instance._iter_flag = f"{iter_type}: Iter:"
         instance.iter_type = iter_type
         instance.etype = etype
-        instance.parse_text_slice(text_slice)
+        for lines_collect in line_collections:
+            instance.append(JEiter._from_lines_collect(lines_collect, iter_type, etype))
+        if len(lines_collect):
+            instance.parse_ending_lines(lines_collect)
+            lines_collect = []
         return instance
 
     def parse_text_slice(self, text_slice: list[str]) -> None:
@@ -107,3 +127,4 @@ class JEiters(list):
         """
         self.converged = True
         self.converged_reason = line_text.split("(")[1].split(")")[0].strip()
+
