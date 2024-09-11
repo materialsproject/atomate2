@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING, Any
 
 from monty.serialization import loadfn
 from pymatgen.io.core import InputGenerator, InputSet
-from pymatgen.util.typing import PathLike
 
 from atomate2.jdftx.io.JDFTXInfile import (  # TODO update this to the pymatgen module
     JDFTXInfile,
@@ -19,6 +18,7 @@ from atomate2.jdftx.io.JDFTXInfile import (  # TODO update this to the pymatgen 
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
+    from pymatgen.util.typing import PathLike
 
 _BASE_JDFTX_SET = loadfn(get_mod_path("atomate2.jdftx.sets") / "BaseJdftxSet.yaml")
 
@@ -130,6 +130,7 @@ class JdftxInputGenerator(InputGenerator):
 def condense_jdftxinputs(
     jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
 ) -> JDFTXInfile:
+    
     """
     Function to combine a JDFTXInputs class with calculation
     settings and a JDFTxStructure that defines the structure
@@ -149,5 +150,6 @@ def condense_jdftxinputs(
             A JDFTXInfile that includes the calculation
             parameters and input structure.
     """
+
     condensed_inputs = jdftxinput + JDFTXInfile.from_str(jdftxstructure.get_str())
     return condensed_inputs
