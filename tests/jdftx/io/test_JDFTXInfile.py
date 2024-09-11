@@ -9,36 +9,36 @@ import os
 
 ex_files_dir = Path(__file__).parents[0] / "example_files"
 
-# ex_infile1_fname = ex_files_dir / "CO.in"
+ex_infile1_fname = ex_files_dir / "CO.in"
 # jif = JDFTXInfile.from_file(ex_infile1_fname)
 # out = jif.get_list_representation(jif)
 # jif.get_text_list()
 
 
-# @pytest.mark.parametrize("infile_fname", [ex_infile1_fname])
-# def test_JDFTXInfile_self_consistency(infile_fname: PathLike):
-#     jif = JDFTXInfile.from_file(infile_fname)
-#     dict_jif = jif.as_dict()
-#     jif2 = JDFTXInfile.from_dict(dict_jif)
-#     # # Removing this requirement for now
-#     # str_jif = str(jif)
-#     # with open(ex_files_dir / "str_jif", "w") as f:
-#     #     f.write(str_jif)
-#     # with open(ex_files_dir / "str_jif2", "w") as f:
-#     #     f.write(rf'{str_jif}')
-#     # str_dict_jif = str(dict_jif)
-#     # with open(ex_files_dir / "str_dict_jif", "w") as f:
-#     #     f.write(str_dict_jif)
-#     # jif3 = JDFTXInfile.from_dict(dict(str(jif)))
-#     jif3 = JDFTXInfile.from_str(str(jif))
-#     tmp_fname = ex_files_dir / "tmp.in"
-#     jif.write_file(tmp_fname)
-#     jif4 = JDFTXInfile.from_file(tmp_fname)
-#     jifs = [jif, jif2, jif3, jif4]
-#     for i in range(len(jifs)):
-#         for j in range(i+1, len(jifs)):
-#             assert is_identical_jif(jifs[i], jifs[j])
-#     return None
+@pytest.mark.parametrize("infile_fname", [ex_infile1_fname])
+def test_JDFTXInfile_self_consistency(infile_fname: PathLike):
+    jif = JDFTXInfile.from_file(infile_fname)
+    dict_jif = jif.as_dict()
+    jif2 = JDFTXInfile.from_dict(dict_jif)
+    # # Removing this requirement for now
+    # str_jif = str(jif)
+    # with open(ex_files_dir / "str_jif", "w") as f:
+    #     f.write(str_jif)
+    # with open(ex_files_dir / "str_jif2", "w") as f:
+    #     f.write(rf'{str_jif}')
+    # str_dict_jif = str(dict_jif)
+    # with open(ex_files_dir / "str_dict_jif", "w") as f:
+    #     f.write(str_dict_jif)
+    # jif3 = JDFTXInfile.from_dict(dict(str(jif)))
+    jif3 = JDFTXInfile.from_str(str(jif))
+    tmp_fname = ex_files_dir / "tmp.in"
+    jif.write_file(tmp_fname)
+    jif4 = JDFTXInfile.from_file(tmp_fname)
+    jifs = [jif, jif2, jif3, jif4]
+    for i in range(len(jifs)):
+        for j in range(i+1, len(jifs)):
+            assert is_identical_jif(jifs[i], jifs[j])
+    return None
 
 def is_identical_jif(jif1: JDFTXInfile, jif2: JDFTXInfile):
     for key in jif1:

@@ -98,6 +98,7 @@ JDFTXFluid_subtagdict = {
     'pMol': FloatTag(),
     'poleEl': TagContainer(
         can_repeat = True,
+        write_tagname=True,
         subtags = {
             "omega0": FloatTag(write_tagname=False, optional=False),
             "gamma0": FloatTag(write_tagname=False, optional=False),

@@ -10,13 +10,27 @@ import numpy as np
 __author__ = "Jacob Clary"
 
 
+# def flatten_list(tag: str, list_of_lists: List[Any]) -> List[Any]:
+#     """Flattens list of lists into a single list, then stops"""
+#     if not isinstance(list_of_lists, list):
+#         raise ValueError(f"{tag}: You must provide a list to flatten_list()!")
+#     while any([isinstance(x, list) for x in list_of_lists]):
+#         list_of_lists = sum(list_of_lists, [])
+#     return list_of_lists
+
 def flatten_list(tag: str, list_of_lists: List[Any]) -> List[Any]:
+    # Ben: I don't know what "then stops" means but I think this is how this
+    # function should work.
     """Flattens list of lists into a single list, then stops"""
     if not isinstance(list_of_lists, list):
         raise ValueError(f"{tag}: You must provide a list to flatten_list()!")
-    while any([isinstance(x, list) for x in list_of_lists]):
-        list_of_lists = sum(list_of_lists, [])
-    return list_of_lists
+    flist = []
+    for v in list_of_lists:
+        if isinstance(v, list):
+            flist.extend(flatten_list(tag, v))
+        else:
+            flist.append(v)
+    return flist
 
 
 class ClassPrintFormatter:
@@ -641,7 +655,13 @@ class MultiformatTag(AbstractTag):
     def write(self, tag: str, value) -> str:
         format_index, _ = self._determine_format_option(tag, value)
         # print(f'using index of {format_index}')
-        return self.format_options[format_index]._write(tag, value)
+        # Ben: Changing _write to write, using _write seem to shoot you straight
+        # to the floor level definition, and completely messes up all the calls
+        # to subtags for how they're supposed to be printed and just prints
+        # a dictionary instead.
+        # Ben: Update: this fixes it.
+        return self.format_options[format_index].write(tag, value)
+        # return self.format_options[format_index]._write(tag, value)
     
 
 @dataclass
