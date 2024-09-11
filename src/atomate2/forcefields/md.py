@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from jobflow import job
 from monty.dev import deprecated
 
-from atomate2.ase.md import AseMDMaker
+from atomate2.ase.md import AseMDMaker, MDEnsemble
 from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import (
     _DEFAULT_CALCULATOR_KWARGS,
@@ -56,7 +56,7 @@ class ForceFieldMDMaker(AseMDMaker):
         hydrogen and 2 fs otherwise.
     n_steps : int = 1000
         The number of MD steps to run
-    ensemble : str = "nvt"
+    ensemble : MDEnsemble = "nvt"
         The ensemble to use. Valid ensembles are nve, nvt, or npt
     temperature: float | Sequence | np.ndarray | None.
         The temperature in Kelvin. If a sequence or 1D array, the temperature
@@ -113,6 +113,8 @@ class ForceFieldMDMaker(AseMDMaker):
 
     def __post_init__(self) -> None:
         """Ensure that force_field_name is correctly assigned."""
+
+        super().__post_init__()
         self.force_field_name = _get_formatted_ff_name(self.force_field_name)
 
         # Pad calculator_kwargs with default values, but permit user to override them
@@ -158,7 +160,7 @@ class ForceFieldMDMaker(AseMDMaker):
         return ForceFieldTaskDocument.from_ase_compatible_result(
             str(self.force_field_name),  # make mypy happy
             md_result,
-            relax_cell=(self.ensemble == "npt"),
+            relax_cell=(self.ensemble == MDEnsemble.npt),
             steps=self.n_steps,
             relax_kwargs=None,
             optimizer_kwargs=None,

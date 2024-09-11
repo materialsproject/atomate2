@@ -41,6 +41,12 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
+class MDEnsemble(Enum):
+    """Define known MD ensembles."""
+
+    nve = "nve"
+    nvt = "nvt"
+    npt = "npt"
 
 class DynamicsPresets(Enum):
     """Define mappings between MD ensembles and thermo-/baro-stats."""
@@ -53,18 +59,15 @@ class DynamicsPresets(Enum):
     npt_berendsen = "ase.md.nptberendsen.NPTBerendsen"
     npt_nose_hoover = "ase.md.npt.NPT"  # noqa: PIE796
 
-
-class DefaultDynamics(Enum):
-    """Define default dynamics objects for ASE MD runs."""
-
-    nve = "velocityverlet"
-    nvt = "langevin"
-    npt = "nose-hoover"
-
+default_dynamics = {
+    MDEnsemble.nve : "velocityverlet",
+    MDEnsemble.nvt : "langevin",
+    MDEnsemble.npt : "nose-hoover"
+}
 
 _valid_dynamics: dict[str, set[str]] = {}
 for preset in DynamicsPresets.__members__:
-    ensemble = preset.split("_")[0]
+    ensemble = MDEnsemble(preset.split("_")[0])
     thermostat = "-".join(preset.split("_")[1:])
     if ensemble not in _valid_dynamics:
         _valid_dynamics[ensemble] = set()
@@ -100,7 +103,7 @@ class AseMDMaker(AseMaker):
         hydrogen and 2 fs otherwise.
     n_steps : int = 1000
         The number of MD steps to run
-    ensemble : str = "nvt"
+    ensemble : MDEnsemble | str = MDEnsemble.nvt
         The ensemble to use. Valid ensembles are nve, nvt, or npt
     temperature: float | Sequence | np.ndarray | None.
         The temperature in Kelvin. If a sequence or 1D array, the temperature
@@ -154,7 +157,7 @@ class AseMDMaker(AseMaker):
     name: str = "ASE MD"
     time_step: float | None = None
     n_steps: int = 1000
-    ensemble: Literal["nve", "nvt", "npt"] = "nvt"
+    ensemble: MDEnsemble = MDEnsemble.nvt
     dynamics: str | MolecularDynamics | None = None
     temperature: float | Sequence | np.ndarray | None = 300.0
     pressure: float | Sequence | np.ndarray | None = None
@@ -170,6 +173,11 @@ class AseMDMaker(AseMaker):
     zero_angular_momentum: bool = False
     verbose: bool = False
 
+    def __post_init__(self) -> None:
+        """Ensure that ensemble is an enum."""
+        if isinstance(self.ensemble,str):
+            self.ensemble = MDEnsemble(self.ensemble)
+
     @staticmethod
     def _interpolate_quantity(values: Sequence | np.ndarray, n_pts: int) -> np.ndarray:
         """Interpolate temperature / pressure on a schedule."""
@@ -181,7 +189,7 @@ class AseMDMaker(AseMaker):
         )
 
     def _get_ensemble_schedule(self) -> None:
-        if self.ensemble == "nve":
+        if self.ensemble == MDEnsemble.nve:
             # Disable thermostat and barostat
             self.temperature = np.nan
             self.pressure = np.nan
@@ -199,7 +207,7 @@ class AseMDMaker(AseMaker):
         else:
             self.t_schedule = np.full(self.n_steps + 1, self.temperature)
 
-        if self.ensemble == "nvt":
+        if self.ensemble == MDEnsemble.nvt:
             self.pressure = np.nan
             self.p_schedule = np.full(self.n_steps + 1, self.pressure)
             return
@@ -218,16 +226,16 @@ class AseMDMaker(AseMaker):
     def _get_ensemble_defaults(self) -> None:
         """Update ASE MD kwargs with defaults consistent with VASP MD."""
         self.ase_md_kwargs = self.ase_md_kwargs or {}
-        self.dynamics = self.dynamics or DefaultDynamics[self.ensemble].value
+        self.dynamics = self.dynamics or default_dynamics[self.ensemble]
 
-        if self.ensemble == "nve":
+        if self.ensemble == MDEnsemble.nve:
             self.ase_md_kwargs.pop("temperature", None)
             self.ase_md_kwargs.pop("temperature_K", None)
             self.ase_md_kwargs.pop("externalstress", None)
-        elif self.ensemble == "nvt":
+        elif self.ensemble == MDEnsemble.nvt:
             self.ase_md_kwargs["temperature_K"] = self.t_schedule[0]
             self.ase_md_kwargs.pop("externalstress", None)
-        elif self.ensemble == "npt":
+        elif self.ensemble == MDEnsemble.npt:
             self.ase_md_kwargs["temperature_K"] = self.t_schedule[0]
             self.ase_md_kwargs["externalstress"] = self.p_schedule[0] * 1e3 * units.bar
 
@@ -302,13 +310,13 @@ class AseMDMaker(AseMaker):
             self.dynamics = self.dynamics.lower()
             if self.dynamics not in _valid_dynamics[self.ensemble]:
                 raise ValueError(
-                    f"{self.dynamics} thermostat not available for {self.ensemble}."
-                    f"Available {self.ensemble} thermostats are:"
+                    f"{self.dynamics} thermostat not available for {self.ensemble.value}."
+                    f"Available {self.ensemble.value} thermostats are:"
                     " ".join(_valid_dynamics[self.ensemble])
                 )
 
             _dyn_mod_path = DynamicsPresets[
-                f"{self.ensemble}_{self.dynamics.replace('-','_')}"
+                f"{self.ensemble.value}_{self.dynamics.replace('-','_')}"
             ].value.split(".")
             dynamics = getattr(
                 import_module(".".join(_dyn_mod_path[:-1])), _dyn_mod_path[-1]
@@ -352,10 +360,10 @@ class AseMDMaker(AseMaker):
         md_runner.attach(md_observer, interval=self.traj_interval)
 
         def _callback(dyn: MolecularDynamics = md_runner) -> None:
-            if self.ensemble == "nve":
+            if self.ensemble == MDEnsemble.nve:
                 return
             dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
-            if self.ensemble == "nvt":
+            if self.ensemble == MDEnsemble.nvt:
                 return
             dyn.set_stress(self.p_schedule[dyn.nsteps] * 1e3 * units.bar)
 
