@@ -163,6 +163,44 @@ class JOutStructure(Structure):
         return is_line
     
 
+    def get_etype_from_emin_lines(self, emin_lines: list[str]) -> str:
+        '''
+        Returns the type of energy from the electronic minimization data of a JDFTx out file
+        
+        Parameters:
+        ----------
+        emin_lines: list[str]
+            A list of lines of text from a JDFTx out file containing the electronic minimization data
+        
+        Returns:
+        -------
+        etype: str
+            The type of energy from the electronic minimization data of a JDFTx out file
+        '''
+        etype = None
+        for line in emin_lines:
+            if "F:" in line:
+                etype = "F"
+                break
+            elif "G:" in line:
+                etype = "G"
+                break
+        return etype
+    
+    def set_etype_from_emin_lines(self, emin_lines: list[str]) -> None:
+        '''
+        Sets the type of energy from the electronic minimization data of a JDFTx out file
+        
+        Parameters:
+        ----------
+        emin_lines: list[str]
+            A list of lines of text from a JDFTx out file containing the electronic minimization data
+        '''
+        self.etype = self.get_etype_from_emin_lines(emin_lines)
+        if self.etype is None:
+            raise ValueError("Could not determine energy type from electronic minimization data")
+    
+
     def parse_emin_lines(self, emin_lines: list[str]) -> None:
         '''
         Parses the lines of text corresponding to the electronic minimization data of a JDFTx out file
@@ -173,6 +211,8 @@ class JOutStructure(Structure):
             A list of lines of text from a JDFTx out file containing the electronic minimization data
         '''
         if len(emin_lines):
+            if self.etype is None:
+                self.set_etype_from_emin_lines(emin_lines)
             self.elecMinData = JEiters.from_text_slice(emin_lines, iter_type=self.eiter_type, etype=self.etype)
 
 
@@ -403,7 +443,8 @@ class JOutStructure(Structure):
                 val = float(lsplit[1].strip())
                 self.Ecomponents[key] = val * Ha_to_eV
         if self.etype is None:
-            self.etype = key
+            if key in ["F", "G"]:
+                self.etype = key
 
     
     def is_lowdin_start_line(self, line_text: str) -> bool:
