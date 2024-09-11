@@ -350,13 +350,13 @@ class JDFTXInfile(dict, MSONable):
         return cls(reformatted_params)
 
     @classmethod
-    def get_dict_representation(cls, JDFTXInfile):
+    def get_dict_representation(cls, JDFTXInfile): # as list issue not resolved in reformatted_params - should it be? OR is that supposed to be resolved in the later lines?
         reformatted_params = deepcopy(JDFTXInfile.as_dict(skip_module_keys=True))
-        # rest of code assumes lists are lists and not np.arrays
+        # Just to make sure only passing lists and no more numpy arrays
         reformatted_params = {
             k: v.tolist() if isinstance(v, np.ndarray) else v
             for k, v in reformatted_params.items()
-        }
+        } # rest of code assumes lists are lists and not np.arrays
         for tag, value in reformatted_params.items():
             tag_object = get_tag_object(tag)
             if tag_object.allow_list_representation and tag_object._is_tag_container:

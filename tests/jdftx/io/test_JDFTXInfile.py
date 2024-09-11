@@ -15,6 +15,7 @@ ex_infile1_fname = ex_files_dir / "CO.in"
 
 @pytest.mark.parametrize("infile_fname", [ex_infile1_fname])
 def test_JDFTXInfile_self_consistency(infile_fname: PathLike):
+    # TODO: jif2 is saving latt-move-scale as a list of float instead of dict, figure out why
     jif = JDFTXInfile.from_file(infile_fname)
     dict_jif = jif.as_dict()
     jif2 = JDFTXInfile.from_dict(dict_jif)
@@ -25,6 +26,7 @@ def test_JDFTXInfile_self_consistency(infile_fname: PathLike):
     jifs = [jif, jif2, jif3, jif4]
     for i in range(len(jifs)):
         for j in range(i+1, len(jifs)):
+            print(f"{i}, {j}")
             assert is_identical_jif(jifs[i], jifs[j])
     os.remove(tmp_fname)
 
@@ -35,6 +37,7 @@ def is_identical_jif(jif1: JDFTXInfile, jif2: JDFTXInfile):
         else:
             v1 = jif1[key]
             v2 = jif2[key]
+            assert is_identical_jif_val(v1, v2)
     return True
 
 

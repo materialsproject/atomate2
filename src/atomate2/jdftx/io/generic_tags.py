@@ -519,6 +519,7 @@ class TagContainer(AbstractTag):
             )
 
     def _make_dict(self, tag, value):
+        # Ben: Is this supposed to create a dictionary? This creates a string without any dictionary indications
         value = flatten_list(tag, value)
         self._check_for_mixed_nesting(tag, value)
         return " ".join([str(x) for x in value])
