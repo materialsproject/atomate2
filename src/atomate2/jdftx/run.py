@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 from jobflow.utils import ValueEnum
 from atomate2.jdftx.jobs.jobs import JDFTxJob
+from atomate2.jdftx.schemas.task import TaskDoc, JDFTxStatus
 
 class JobType(ValueEnum):
     """
@@ -24,8 +25,20 @@ def run_jdftx(
     jdftx_job_kwargs = jdftx_job_kwargs or {}
 
     if job_type == JobType.NORMAL:
-        job = JDFTxJob(jdftx_cmd, **jdftx_job_kwargs, input_file="input-tutorial.in")
+        job = JDFTxJob(jdftx_cmd, **jdftx_job_kwargs)
     
     job.run()
 
 #need to call job = run_jdftx() to run calc
+
+def should_stop_children(
+    task_document: TaskDoc,
+) -> bool:
+    """
+    Parse JDFTx TaskDoc and decide whether to stop child processes.
+    If JDFTx failed, stop child processes.
+    """
+    if task_document.state == JDFTxStatus.SUCCESS:
+        return False
+    else:
+        return True

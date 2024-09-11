@@ -1,7 +1,6 @@
 import os
 from functools import wraps
 import math
-from ase import Atom, Atoms
 from atomate2.jdftx.io.JMinSettings import JMinSettings, JMinSettingsElectronic, JMinSettingsFluid, JMinSettingsIonic, JMinSettingsLattice
 import numpy as np
 from dataclasses import dataclass, field

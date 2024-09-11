@@ -10,12 +10,12 @@ from typing import Any, Dict, List, Optional, Type, TypeVar, Union
 from pymatgen.core import Structure
 from custodian.qchem.jobs import QCJob
 from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
-from emmet.core.utils import ValueEnum
 from atomate2.jdftx.schemas.calculation import Calculation, CalculationInput, CalculationOutput
 from emmet.core.structure import StructureMetadata
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
 
+from atomate2.jdftx.schemas.calculation import JDFTxStatus
 from atomate2.utils.datetime import datetime_str
 
 __author__ = (
@@ -25,14 +25,6 @@ __author__ = (
 logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDoc")
 # _DERIVATIVE_FILES = ("GRAD", "HESS")
-
-class JDFTxStatus(ValueEnum):
-    """
-    JDFTx Calculation State
-    """
-
-    SUCCESS = "successful"
-    FAILED = "unsuccessful"
 
 class OutputDoc(BaseModel):
     initial_structure: Structure = Field(None, description="Input Structure object")
@@ -235,7 +227,7 @@ class TaskDoc(StructureMetadata):
         calc_doc = Calculation.from_files(
             dir_name=dir_name,
             jdftxinput_file="inputs.in",
-            jdftxoutput_file="out.log"
+            jdftxoutput_file="output.out"
             )
         # task_files = _find_qchem_files(dir_name)
 
