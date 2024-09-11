@@ -15,6 +15,7 @@ from ase import Atoms
 from ase.calculators.calculator import PropertyNotImplementedError
 from ase.calculators.singlepoint import SinglePointCalculator
 from ase.constraints import FixSymmetry
+from ase.filters import FrechetCellFilter
 from ase.io import Trajectory as AseTrajectory
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
@@ -24,20 +25,6 @@ from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.ase.schemas import AseResult
-
-try:
-    from ase.filters import FrechetCellFilter
-except ImportError:
-    FrechetCellFilter = None
-    warnings.warn(
-        "Due to errors in the implementation of gradients in the ASE"
-        " ExpCellFilter, we recommend installing ASE from gitlab\n"
-        "    pip install git+https://gitlab.com/ase/ase.git\n"
-        "rather than PyPi to access FrechetCellFilter. See\n"
-        "    https://wiki.fysik.dtu.dk/ase/ase/filters.html#the-frechetcellfilter-class\n"
-        "for more details. Otherwise, you must specify an alternate ASE Filter.",
-        stacklevel=2,
-    )
 
 if TYPE_CHECKING:
     from os import PathLike
