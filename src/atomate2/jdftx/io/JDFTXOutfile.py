@@ -119,7 +119,7 @@ def read_outfile_slices(file_name: str) -> list[list[str]]:
 
 @dataclass
 class JDFTXOutfile(JDFTXOutfileSlice):
-    '''
+    """
     A class to read and process a JDFTx out file
     """
 
