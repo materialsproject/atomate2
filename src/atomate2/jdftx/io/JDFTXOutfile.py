@@ -5,6 +5,8 @@ from functools import wraps
 from atomate2.jdftx.io.JDFTXOutfileSlice import JDFTXOutfileSlice
 from dataclasses import dataclass
 from typing import List, Optional
+from monty.io import zopen
+from pathlib import Path
 
 
 class ClassPrintFormatter():
@@ -26,8 +28,9 @@ def check_file_exists(func):
 
     @wraps(func)
     def wrapper(filename):
-        if not os.path.isfile(filename):
-            raise OSError("'" + filename + "' file doesn't exist!")
+        filename = Path(filename)
+        if not filename.is_file():
+            raise OSError(f"'{filename}' file doesn't exist!")
         return func(filename)
 
     return wrapper
@@ -48,7 +51,7 @@ def read_file(file_name: str) -> list[str]:
     text: list[str]
         list of strings from file
     '''
-    with open(file_name, 'r') as f:
+    with zopen(file_name, 'r') as f:
         text = f.readlines()
     return text
 
