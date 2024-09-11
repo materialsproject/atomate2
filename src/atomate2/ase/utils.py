@@ -7,7 +7,6 @@ import io
 import os
 import sys
 import time
-import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np

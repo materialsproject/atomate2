@@ -41,12 +41,14 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
+
 class MDEnsemble(Enum):
     """Define known MD ensembles."""
 
     nve = "nve"
     nvt = "nvt"
     npt = "npt"
+
 
 class DynamicsPresets(Enum):
     """Define mappings between MD ensembles and thermo-/baro-stats."""
@@ -59,13 +61,14 @@ class DynamicsPresets(Enum):
     npt_berendsen = "ase.md.nptberendsen.NPTBerendsen"
     npt_nose_hoover = "ase.md.npt.NPT"  # noqa: PIE796
 
+
 default_dynamics = {
-    MDEnsemble.nve : "velocityverlet",
-    MDEnsemble.nvt : "langevin",
-    MDEnsemble.npt : "nose-hoover"
+    MDEnsemble.nve: "velocityverlet",
+    MDEnsemble.nvt: "langevin",
+    MDEnsemble.npt: "nose-hoover",
 }
 
-_valid_dynamics: dict[str, set[str]] = {}
+_valid_dynamics: dict[MDEnsemble, set[str]] = {}
 for preset in DynamicsPresets.__members__:
     ensemble = MDEnsemble(preset.split("_")[0])
     thermostat = "-".join(preset.split("_")[1:])
@@ -175,7 +178,7 @@ class AseMDMaker(AseMaker):
 
     def __post_init__(self) -> None:
         """Ensure that ensemble is an enum."""
-        if isinstance(self.ensemble,str):
+        if isinstance(self.ensemble, str):
             self.ensemble = MDEnsemble(self.ensemble)
 
     @staticmethod
@@ -310,7 +313,8 @@ class AseMDMaker(AseMaker):
             self.dynamics = self.dynamics.lower()
             if self.dynamics not in _valid_dynamics[self.ensemble]:
                 raise ValueError(
-                    f"{self.dynamics} thermostat not available for {self.ensemble.value}."
+                    f"{self.dynamics} thermostat not available for "
+                    f"{self.ensemble.value}."
                     f"Available {self.ensemble.value} thermostats are:"
                     " ".join(_valid_dynamics[self.ensemble])
                 )

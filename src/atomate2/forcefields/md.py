@@ -113,7 +113,6 @@ class ForceFieldMDMaker(AseMDMaker):
 
     def __post_init__(self) -> None:
         """Ensure that force_field_name is correctly assigned."""
-
         super().__post_init__()
         self.force_field_name = _get_formatted_ff_name(self.force_field_name)
 

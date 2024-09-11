@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-from atomate2.ase.utils import AseRelaxer, FrechetCellFilter, TrajectoryObserver
+from atomate2.ase.utils import AseRelaxer, TrajectoryObserver
 
 
 def test_trajectory_observer(si_structure: Structure, test_dir, tmp_dir):
@@ -56,7 +56,6 @@ def test_trajectory_observer(si_structure: Structure, test_dir, tmp_dir):
     [("BFGS", None), (None, None), (BFGS, "log_file.traj")],
 )
 def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
-
     expected_lattice = {
         "a": 3.866974,
         "b": 3.866974,
