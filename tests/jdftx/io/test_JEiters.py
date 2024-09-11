@@ -1,4 +1,4 @@
-from jdftx.io.JEiter import JEiter
+from atomate2.jdftx.io.JEiter import JEiter
 from pytest import approx
 import pytest
 from pymatgen.util.typing import PathLike

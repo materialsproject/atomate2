@@ -215,14 +215,29 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     has_solvation: bool = False
     fluid: str = None
 
-    #@ Cooper added @#
-    Ecomponents: dict = field(default_factory=dict)
-    is_gc: bool = False # is it a grand canonical calculation
-    trajectory_positions: list[list[list[float]]] = None
-    trajectory_lattice: list[list[list[float]]] = None
-    trajectory_forces: list[list[list[float]]] = None
-    trajectory_ecomponents: list[dict] = None
-    # is_converged: bool = None #TODO implement this
+    # #@ Cooper added @#
+    # Ecomponents: dict = field(default_factory=dict)
+    # is_gc: bool = False # is it a grand canonical calculation
+    # trajectory_positions: list[list[list[float]]] = None
+    # trajectory_lattice: list[list[list[float]]] = None
+    # trajectory_forces: list[list[list[float]]] = None
+    # trajectory_ecomponents: list[dict] = None
+    # # is_converged: bool = None #TODO implement this
+
+    @property
+    def t_s(self) -> float:
+        '''
+        Returns the total time in seconds for the calculation
+
+        Returns:
+        -------
+        t_s: float
+            The total time in seconds for the calculation
+        '''
+        t_s = None
+        if self.jstrucs:
+            t_s = self.jstrucs.t_s
+        return t_s
     
 
     @property

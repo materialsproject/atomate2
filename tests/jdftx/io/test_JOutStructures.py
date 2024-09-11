@@ -1,7 +1,7 @@
 from pytest import approx
 import pytest
 from pymatgen.core.units import Ha_to_eV
-from jdftx.io.JOutStructures import JOutStructures
+from atomate2.jdftx.io.JOutStructures import JOutStructures
 from pathlib import Path
 from pymatgen.util.typing import PathLike
 from pymatgen.core.units import Ha_to_eV, bohr_to_ang

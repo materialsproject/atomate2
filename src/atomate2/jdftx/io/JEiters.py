@@ -1,6 +1,7 @@
 from atomate2.jdftx.io.JEiter import JEiter
 
 
+
 class JEiters(list):
     '''
     Class object for collecting and storing a series of SCF steps done between

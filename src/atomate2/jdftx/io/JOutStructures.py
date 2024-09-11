@@ -1,7 +1,6 @@
 from typing import Any
 from atomate2.jdftx.io.JOutStructure import JOutStructure
 
-
 from dataclasses import dataclass
 
 
@@ -18,6 +17,11 @@ class JOutStructures(list[JOutStructure], JOutStructure):
     geom_converged_reason: str = None
     elec_converged: bool = False
     elec_converged_reason: str = None
+    _t_s: float = None
+
+    def __init__(self, *args: Any, **kwargs: Any):
+        super().__init__(*args, **kwargs)
+        self._t_s = None
 
 
     @classmethod
@@ -31,7 +35,7 @@ class JOutStructures(list[JOutStructure], JOutStructure):
         out_slice: list[str]
             A slice of a JDFTx out file (individual call of JDFTx)
         '''
-        super().__init__([])
+        #super().__init__([])
         instance = cls()
         if not iter_type in ["IonicMinimize", "LatticeMinimize"]:
             iter_type = instance.correct_iter_type(iter_type)
@@ -41,7 +45,29 @@ class JOutStructures(list[JOutStructure], JOutStructure):
         if instance.iter_type is None and len(instance) > 1:
             raise Warning("iter type interpreted as single-point calculation, but \
                            multiple structures found")
+        # instance._t_s = None
         return instance
+
+    @property
+    def t_s(self) -> float:
+        '''
+        Returns the total time in seconds for the calculation
+        
+        Returns:
+        -------
+        t_s: float
+            The total time in seconds for the calculation
+        '''
+        if not self._t_s is None:
+            return self._t_s
+        else:
+            if len(self):
+                if self.iter_type in ["single point", None]:
+                    self._t_s = self[-1].elecMinData[-1].t_s
+                else:
+                    self._t_s = self[-1].t_s
+            return self._t_s
+            
     
     def __getattr__(self, name):
         try:
