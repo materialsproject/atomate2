@@ -107,14 +107,15 @@ JDFTXMinimize_subtagdict = {
     "wolfeGradient": FloatTag(),
 }
 JDFTXFluid_subtagdict = {
-    "epsBulk": FloatTag(),
-    "epsInf": FloatTag(),
-    "epsLJ": FloatTag(),
-    "Nnorm": FloatTag(),
-    "pMol": FloatTag(),
-    "poleEl": TagContainer(
-        can_repeat=True,
-        subtags={
+    'epsBulk': FloatTag(),
+    'epsInf': FloatTag(),
+    'epsLJ': FloatTag(),
+    'Nnorm': FloatTag(),
+    'pMol': FloatTag(),
+    'poleEl': TagContainer(
+        can_repeat = True,
+        write_tagname=True,
+        subtags = {
             "omega0": FloatTag(write_tagname=False, optional=False),
             "gamma0": FloatTag(write_tagname=False, optional=False),
             "A0": FloatTag(write_tagname=False, optional=False),

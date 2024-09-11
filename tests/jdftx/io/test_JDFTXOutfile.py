@@ -168,7 +168,8 @@ def test_JDFTXOutfile_fromfile(filename: PathLike, known: dict):
     assert jout.Ecomponents["Eloc"] == approx(known["Eloc"])
     assert jout.Ecomponents["EH"] == approx(known["EH"])
     assert jout.Ecomponents["Eewald"] == approx(known["Eewald"])
-    assert len(jout) == known["nSlices"]
+    #
+    assert len(jout.slices) == known["nSlices"]
     assert jout.t_s == approx(known["t_s"])
     assert jout.jstrucs.iter_type == known["iter_type"]
 

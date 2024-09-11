@@ -13,41 +13,42 @@ symmetries none
 
 kpoint-folding 1 1 1
 
-gga
-van-der-waals D3
-elec-cutoff 20.0 100.0
-elec-smearing Fermi 0.001
-elec-n-bands 15
-spintype z-spin
-converge-empty-states yes
+elec-ex-corr gga 
+van-der-waals D3 
+elec-cutoff 20.0 100.0  
+elec-smearing Fermi 0.001  
+elec-n-bands 15 
+spintype z-spin 
+converge-empty-states yes 
 
-coulomb-interaction {'truncationType': 'Periodic'}
+coulomb-interaction Periodic  
 
 initial-state $VAR
 
 electronic-minimize \
     energyDiffThreshold 1e-07 \
-    nIterations 100
+    nIterations 100  
 
-fluid LinearPCM
-fluid-solvent {'name': 'H2O'}
-fluid-anion F- 0.5
-fluid-cation Na+ 0.5
-pcm-variant CANDLE
+fluid LinearPCM  
+fluid-solvent H2O  
+fluid-anion F- 0.5  
+fluid-cation Na+ 0.5  
+pcm-variant CANDLE 
 
-vibrations useConstraints no rotationSym no
+vibrations useConstraints no rotationSym no  
 
-dump-name $VAR
-dump End Dtot
-dump End BoundCharge
-dump End State
-dump End Forces
-dump End Ecomponents
-dump End VfluidTot
-dump End ElecDensity
-dump End KEdensity
-dump End EigStats
-dump End BandEigs
-dump End DOS
-dump End Forces
-dump End Ecomponents
+dump-name $VAR 
+dump End Dtot   
+dump End BoundCharge   
+dump End State   
+dump End Forces   
+dump End Ecomponents   
+dump End VfluidTot   
+dump End ElecDensity   
+dump End KEdensity   
+dump End EigStats   
+dump End BandEigs   
+dump End DOS   
+dump End Forces   
+dump End Ecomponents   
+
