@@ -3,32 +3,24 @@
 # mypy: ignore-errors
 
 import logging
-import re
 import warnings
-from collections import OrderedDict
-from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, Optional, Union
 
-import numpy as np
 from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
 from emmet.core.qchem.calc_types.calc_types import BASIS_SETS, FUNCTIONALS
-
+from emmet.core.utils import ValueEnum
 
 # from emmet.core.qchem.calc_types.em_utils import (
 #     level_of_theory,
 #     task_type,
 #     calc_type,
 # )
-from pydantic import BaseModel, ConfigDict, Field, field_validator
-from pymatgen.core.structure import Molecule, Structure
-from pymatgen.io.qchem.inputs import QCInput
-from pymatgen.io.qchem.outputs import QCOutput
+from pydantic import BaseModel, Field
+from pymatgen.core.structure import Structure
 
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile, JDFTXStructure
+from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
 from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
-from emmet.core.utils import ValueEnum
-
 
 functional_synonyms = {
     "b97mv": "b97m-v",
@@ -60,6 +52,7 @@ class JDFTxStatus(ValueEnum):
     SUCCESS = "successful"
     FAILED = "unsuccessful"
 
+
 class CalculationInput(BaseModel):
     """
     Document defining JDFTx calculation inputs.
@@ -69,10 +62,7 @@ class CalculationInput(BaseModel):
         None, description="input structure to JDFTx calcualtion"
     )
 
-    parameters: Dict = Field(
-        None, description="input tags in JDFTx in file"
-    )
-
+    parameters: Dict = Field(None, description="input tags in JDFTx in file")
 
     @classmethod
     def from_jdftxinput(cls, jdftxinput: JDFTXInfile) -> "CalculationInput":
@@ -102,11 +92,12 @@ class CalculationOutput(BaseModel):
         None,
         description="optimized geometry of the structure after calculation",
     )
-    parameters: Optional[Dict] = Field( #TODO currently (I think) redundant with structure in these parameters
-        None,
-        description="Calculation input parameters",
+    parameters: Optional[Dict] = (
+        Field(  # TODO currently (I think) redundant with structure in these parameters
+            None,
+            description="Calculation input parameters",
+        )
     )
-
 
     @classmethod
     def from_jdftxoutput(cls, jdftxoutput: JDFTXOutfile) -> "CalculationOutput":
@@ -144,7 +135,7 @@ class Calculation(BaseModel):
         None, description="The JDFTx calculation output document"
     )
 
-    #TODO implement these after parser is complete
+    # TODO implement these after parser is complete
     # task_name: str = Field(
     #     None,
     #     description="Name of task given by custodian (e.g. opt1, opt2, freq1, freq2)",
@@ -227,8 +218,7 @@ class Calculation(BaseModel):
             dir_name=str(dir_name),
             input=input_doc,
             output=output_doc,
-
-            #TODO implement these methods if we want them
+            # TODO implement these methods if we want them
             # jdftx_version=qcoutput.data["version"],
             # has_jdftx_completed=has_qchem_completed,
             # completed_at=completed_at,
@@ -236,6 +226,7 @@ class Calculation(BaseModel):
             # calc_type=calc_type(input_doc, validate_lot=validate_lot),
             # task_name=
         )
+
 
 def level_of_theory(
     parameters: CalculationInput, validate_lot: bool = True
@@ -302,21 +293,20 @@ def level_of_theory(
         lot = f"{functional}/{basis}/{solvation}"
 
         return LevelOfTheory(lot)
-    else:
-        warnings.warn(
-            "User has turned the validate flag off."
-            "This can have downstream effects if the chosen functional and basis "
-            "is not in the available sets of MP employed functionals and the user"
-            "wants to include the TaskDoc in the MP infrastructure."
-            "Users should ignore this warning if their objective is just to create TaskDocs",
-            UserWarning,
-            stacklevel=2,
-        )
-        functional = funct_lower
-        basis = basis_lower
-        lot = f"{functional}/{basis}/{solvation}"
+    warnings.warn(
+        "User has turned the validate flag off."
+        "This can have downstream effects if the chosen functional and basis "
+        "is not in the available sets of MP employed functionals and the user"
+        "wants to include the TaskDoc in the MP infrastructure."
+        "Users should ignore this warning if their objective is just to create TaskDocs",
+        UserWarning,
+        stacklevel=2,
+    )
+    functional = funct_lower
+    basis = basis_lower
+    lot = f"{functional}/{basis}/{solvation}"
 
-        return lot
+    return lot
 
 
 def solvent(
@@ -369,7 +359,7 @@ def solvent(
     #             piecestring = f"{name}={round(float(piece), digits)}"
     #         string += "," + piecestring
     #     return string
-    elif solvation == "SMD":
+    if solvation == "SMD":
         solvent = parameters.smx.get("solvent", "water")
         if solvent == "other":
             if custom_smd is None:
@@ -384,10 +374,8 @@ def solvent(
             for name, number in zip(names, numbers):
                 string += f"{name}={number:.3f};"
             return string.rstrip(",").rstrip(";").replace(".", ",")
-        else:
-            return f"SOLVENT={solvent.upper()}"
-    else:
-        return "NONE"
+        return f"SOLVENT={solvent.upper()}"
+    return "NONE"
 
 
 def lot_solvent_string(
@@ -416,18 +404,18 @@ def task_type(
 ) -> TaskType:
     if special_run_type == "frequency_flattener":
         return TaskType("Frequency Flattening Geometry Optimization")
-    elif special_run_type == "ts_frequency_flattener":
+    if special_run_type == "ts_frequency_flattener":
         return TaskType("Frequency Flattening Transition State Geometry Optimization")
 
     if parameters.job_type == "sp":
         return TaskType("Single Point")
-    elif parameters.job_type == "force":
+    if parameters.job_type == "force":
         return TaskType("Force")
-    elif parameters.job_type == "opt":
+    if parameters.job_type == "opt":
         return TaskType("Geometry Optimization")
-    elif parameters.job_type == "ts":
+    if parameters.job_type == "ts":
         return TaskType("Transition State Geometry Optimization")
-    elif parameters.job_type == "freq":
+    if parameters.job_type == "freq":
         return TaskType("Frequency Analysis")
 
     return TaskType("Unknown")
@@ -448,6 +436,5 @@ def calc_type(
     if validate_lot:
         rt = level_of_theory(parameters, validate_lot=validate_lot).value
         return CalcType(f"{rt} {tt}")
-    else:
-        rt = level_of_theory(parameters, validate_lot=validate_lot)
-        return str(f"{rt} {tt}")
+    rt = level_of_theory(parameters, validate_lot=validate_lot)
+    return str(f"{rt} {tt}")

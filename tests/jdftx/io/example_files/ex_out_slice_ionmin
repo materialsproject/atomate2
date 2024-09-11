@@ -26,9 +26,9 @@ coulomb-interaction Slab 001
 coulomb-truncation-embed 8.21814 4.57743 20.4455
 davidson-band-ratio 1.1
 dump End State Forces ElecDensity BandEigs BandProjections EigStats Fillings Ecomponents Kpoints
-dump 
-dump 
-dump 
+dump
+dump
+dump
 dump-name $VAR
 elec-cutoff 25 100
 elec-eigen-algo Davidson
@@ -170,13 +170,13 @@ ionic-minimize  \
 	wolfeGradient        0.9 \
 	fdTest               no
 kpoint   0.000000000000   0.000000000000   0.000000000000  1.00000000000000
-kpoint-folding 4 4 1 
+kpoint-folding 4 4 1
 latt-move-scale 0 0 0
-latt-scale 1 1 1 
+latt-scale 1 1 1
 lattice  \
 	  12.348814000000001    6.161090000000000    0.000000000000000  \
 	   0.000000000000000   10.702064999999999    0.000000000000000  \
-	   0.539642000000000    0.539642000000000   70.750715000000000 
+	   0.539642000000000    0.539642000000000   70.750715000000000
 lattice-minimize  \
 	dirUpdateScheme      L-BFGS \
 	linminMethod         DirUpdateRecommended \
@@ -216,7 +216,7 @@ van-der-waals D3
 Applied RMS atom displacement 0 bohrs to make symmetries exact.
 
 ---------- Initializing the Grid ----------
-R = 
+R =
 [      12.3488      6.16109            0  ]
 [            0      10.7021            0  ]
 [     0.539642     0.539642      70.7507  ]
@@ -304,7 +304,7 @@ Initialized 3 species with 41 total atoms.
 Folded 1 k-points by 4x4x1 to 16 k-points.
 
 ---------- Setting up k-points, bands, fillings ----------
-No reducable k-points. 
+No reducable k-points.
 Computing the number of bands and number of electrons
 Calculating initial fillings.
 nElectrons: 325.000000   nBands: 195   nStates: 32
@@ -316,7 +316,7 @@ average nbasis = 55826.812 , ideal nbasis = 55824.864
 Fluid mode embedding: using embedded box, but periodic Coulomb kernel.
 (Fluid response is responsible for (approximate) separation between periodic images.)
 Setting up double-sized grid for truncated Coulomb potentials:
-R = 
+R =
 [      12.3488      6.16109            0  ]
 [            0      10.7021            0  ]
 [     0.539642     0.539642      141.501  ]
@@ -6683,7 +6683,7 @@ Dumping 'n_up' ... done
 Dumping 'n_dn' ... done
 Dumping 'eigenvals' ... done
 Dumping 'bandProjections' ... done
-Dumping 'eigStats' ... 
+Dumping 'eigStats' ...
 	eMin: -2.488051 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 1 )
 	HOMO: -0.190949 at state 8 ( [ +0.500000 +0.000000 +0.000000 ] spin 1 )
 	mu  : -0.190000

@@ -1,4 +1,3 @@
-from secrets import token_bytes
 import warnings
 from abc import ABC, abstractmethod
 from copy import deepcopy
@@ -193,10 +192,9 @@ class StrTag(AbstractTag):
 
         if self.options is None or value in self.options:
             return value
-        else:
-            raise ValueError(
-                f"The '{value}' string must be one of {self.options} for {tag}"
-            )
+        raise ValueError(
+            f"The '{value}' string must be one of {self.options} for {tag}"
+        )
 
     def write(self, tag: str, value) -> str:
         return self._write(tag, value)
@@ -296,10 +294,7 @@ class TagContainer(AbstractTag):
                 for x in value
             ]
             return [list(x) for x in list(zip(*results))]
-        else:
-            return self._validate_single_entry(
-                value, try_auto_type_fix=try_auto_type_fix
-            )
+        return self._validate_single_entry(value, try_auto_type_fix=try_auto_type_fix)
 
     def read(self, tag: str, value: str) -> dict:
         value = value.split()
@@ -330,15 +325,14 @@ class TagContainer(AbstractTag):
                         raise ValueError(
                             f"Subtag {subtag} is not allowed to repeat but appears more than once in {tag}'s value {value}"
                         )
-                    else:
-                        idx_start = value.index(subtag)
-                        token_len = subtag_type.get_token_len()
-                        idx_end = idx_start + token_len
-                        subtag_value = " ".join(
-                            value[(idx_start + 1) : idx_end]
-                        )  # add 1 so the subtag value string excludes the subtagname
-                        tempdict[subtag] = subtag_type.read(subtag, subtag_value)
-                        del value[idx_start:idx_end]
+                    idx_start = value.index(subtag)
+                    token_len = subtag_type.get_token_len()
+                    idx_end = idx_start + token_len
+                    subtag_value = " ".join(
+                        value[(idx_start + 1) : idx_end]
+                    )  # add 1 so the subtag value string excludes the subtagname
+                    tempdict[subtag] = subtag_type.read(subtag, subtag_value)
+                    del value[idx_start:idx_end]
                 else:
                     tempdict[subtag] = []
                     for i in range(subtag_count):
@@ -450,12 +444,11 @@ class TagContainer(AbstractTag):
         value_dict = self.get_dict_representation(tag, value)
         if value == value_list:
             return "list"
-        elif value == value_dict:
+        if value == value_dict:
             return "dict"
-        else:
-            raise ValueError(
-                "Could not determine TagContainer representation, something is wrong"
-            )
+        raise ValueError(
+            "Could not determine TagContainer representation, something is wrong"
+        )
 
     def _make_list(self, value):
         value_list = []
@@ -545,15 +538,11 @@ class TagContainer(AbstractTag):
                 return value  # no conversion needed
             string_value = [self._make_dict(tag, entry) for entry in value]
             return [self.read(tag, entry) for entry in string_value]
-        else:
-            if isinstance(value, dict):
-                return value  # no conversion needed
-            string_value = self._make_dict(tag, value)
-            return self.read(tag, string_value)
-        
+        if isinstance(value, dict):
+            return value  # no conversion needed
+        string_value = self._make_dict(tag, value)
+        return self.read(tag, string_value)
 
-
-    
 
 @dataclass(kw_only=True)
 class StructureDeferredTagContainer(TagContainer):
@@ -667,8 +656,7 @@ class MultiformatTag(AbstractTag):
 
 @dataclass
 class BoolTagContainer(TagContainer):
-
-    def read(self, tag:str, value: str) -> dict:
+    def read(self, tag: str, value: str) -> dict:
         value = value.split()
         tempdict = {}
         for subtag, subtag_type in self.subtags.items():
@@ -690,17 +678,17 @@ class BoolTagContainer(TagContainer):
             )
         return subdict
 
+
 @dataclass
 class DumpTagContainer(TagContainer):
-
     def read(self, tag: str, value: str) -> dict:
         value = value.split()
-        tempdict = {} 
+        tempdict = {}
         # Each subtag is a freq, which will be a BoolTagContainer
         for subtag, subtag_type in self.subtags.items():
             if subtag in value:
                 idx_start = value.index(subtag)
-                subtag_value = " ".join(value[(idx_start + 1):])
+                subtag_value = " ".join(value[(idx_start + 1) :])
                 tempdict[subtag] = subtag_type.read(subtag, subtag_value)
                 del value[idx_start:]
         # reorder all tags to match order of __MASTER_TAG_LIST__ and do coarse-grained validation of read

@@ -1,5 +1,3 @@
-import math
-import os
 from dataclasses import dataclass
 from functools import wraps
 
@@ -7,6 +5,7 @@ from pydash import get
 from atomate2.jdftx.io.JDFTXOutfileSlice import JDFTXOutfileSlice
 from dataclasses import dataclass
 from typing import List, Optional
+
 from monty.io import zopen
 from pathlib import Path
 import os
@@ -23,9 +22,10 @@ from pymatgen.core.trajectory import Trajectory
 from typing import List, Optional
 from pymatgen.core.units import Ha_to_eV, ang_to_bohr, bohr_to_ang
 
+from atomate2.jdftx.io.JDFTXOutfileSlice import JDFTXOutfileSlice
 
-class ClassPrintFormatter():
 
+class ClassPrintFormatter:
     def __str__(self) -> str:
         """Generic means of printing class to command line in readable format"""
         return (
@@ -53,7 +53,7 @@ def check_file_exists(func):
 
 @check_file_exists
 def read_file(file_name: str) -> list[str]:
-    '''
+    """
     Read file into a list of str
 
     Parameters
@@ -65,20 +65,24 @@ def read_file(file_name: str) -> list[str]:
     -------
     text: list[str]
         list of strings from file
-    '''
-    with zopen(file_name, 'r') as f:
+    """
+    with zopen(file_name, "r") as f:
         text = f.readlines()
     return text
 
 
-def get_start_lines(text: list[str], start_key: Optional[str]="*************** JDFTx", add_end: Optional[bool]=False) -> list[int]:
-    '''
+def get_start_lines(
+    text: list[str],
+    start_key: Optional[str] = "*************** JDFTx",
+    add_end: Optional[bool] = False,
+) -> list[int]:
+    """
     Get the line numbers corresponding to the beginning of seperate JDFTx calculations
     (in case of multiple calculations appending the same out file)
 
     Args:
         text: output of read_file for out file
-    '''
+    """
     start_lines = []
     for i, line in enumerate(text):
         if start_key in line:
@@ -87,8 +91,9 @@ def get_start_lines(text: list[str], start_key: Optional[str]="*************** J
         start_lines.append(i)
     return start_lines
 
+
 def read_outfile_slices(file_name: str) -> list[list[str]]:
-    '''
+    """
     Read slice of out file into a list of str
 
     Parameters
@@ -102,12 +107,12 @@ def read_outfile_slices(file_name: str) -> list[list[str]]:
     -------
     texts: list[list[str]]
         list of out file slices (individual calls of JDFTx)
-    '''
+    """
     _text = read_file(file_name)
     start_lines = get_start_lines(_text, add_end=True)
     texts = []
-    for i in range(len(start_lines)-1):
-        text = _text[start_lines[i]:start_lines[i+1]]
+    for i in range(len(start_lines) - 1):
+        text = _text[start_lines[i] : start_lines[i + 1]]
         texts.append(text)
     return texts
 
@@ -116,7 +121,7 @@ def read_outfile_slices(file_name: str) -> list[list[str]]:
 class JDFTXOutfile(JDFTXOutfileSlice):
     '''
     A class to read and process a JDFTx out file
-    '''
+    """
 
     slices: List[JDFTXOutfileSlice] = field(default_factory=list)
     #####
@@ -213,13 +218,12 @@ class JDFTXOutfile(JDFTXOutfileSlice):
     def __getattr__(self, name):
         if len(self):
             return getattr(self[-1], name)
-        else:
-            try:
-                return super().__getattr__(name)
-            except AttributeError:
-                if self:
-                    return getattr(self[-1], name)
-                raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
+        try:
+            return super().__getattr__(name)
+        except AttributeError:
+            if self:
+                return getattr(self[-1], name)
+            raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
 
     def __setattr__(self, name, value):
         # Do we want this? I don't imagine this class object should be modified

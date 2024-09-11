@@ -30,6 +30,7 @@ def test_JDFTXInfile_self_consistency(infile_fname: PathLike):
             assert is_identical_jif(jifs[i], jifs[j])
     os.remove(tmp_fname)
 
+
 def is_identical_jif(jif1: JDFTXInfile, jif2: JDFTXInfile):
     for key in jif1:
         if key not in jif2:
@@ -42,22 +43,19 @@ def is_identical_jif(jif1: JDFTXInfile, jif2: JDFTXInfile):
 
 
 def is_identical_jif_val(v1, v2):
-    if not type(v1) == type(v2):
+    if type(v1) != type(v2):
         return False
-    else:
-        if isinstance(v1, float):
-            return v1 == approx(v2)
-        elif True in [isinstance(v1, str), isinstance(v1, int)]:
-            return v1 == v2
-        elif True in [isinstance(v1, list)]:
-            if not len(v1) == len(v2):
+    if isinstance(v1, float):
+        return v1 == approx(v2)
+    if True in [isinstance(v1, str), isinstance(v1, int)]:
+        return v1 == v2
+    if True in [isinstance(v1, list)]:
+        if len(v1) != len(v2):
+            return False
+        for i, v in enumerate(v1):
+            if not is_identical_jif_val(v, v2[i]):
                 return False
-            else:
-                for i, v in enumerate(v1):
-                    if not is_identical_jif_val(v, v2[i]):
-                        return False
-                return True
+        return True
+
 
 # test_JDFTXInfile_self_consistency(ex_infile1_fname)
-        
-        

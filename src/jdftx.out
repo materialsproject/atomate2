@@ -1,9 +1,9 @@
 
 *************** JDFTx 1.7.0  ***************
 
-Start date and time: Sat Sep  7 18:56:21 2024
+Start date and time: Wed Sep 11 15:26:38 2024
 Executable jdftx with command-line: -i input-tutorial.in
-Running on hosts (process indices):  0ca33f6681fd (0)
+Running on hosts (process indices):  235368e547b6 (0)
 Divided in process groups (process indices):  0 (0)
 Resource initialization completed at t[s]:      0.00
 Run totals: 1 processes, 10 threads, 0 GPUs

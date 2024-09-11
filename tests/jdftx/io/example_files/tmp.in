@@ -1,17 +1,17 @@
-latt-move-scale 0.0 0.0 0.0  
-coords-type Cartesian 
+latt-move-scale 0.0 0.0 0.0
+coords-type Cartesian
 lattice \
     18.897261000000  0.000000000000  0.000000000000 \
      0.000000000000 18.897261000000  0.000000000000 \
-     0.000000000000  0.000000000000 18.897261000000  
-ion O -0.235981000000 -0.237621000000  2.242580000000 1  
-ion C -0.011521000000 -0.011600000000  0.109935000000 1  
-core-overlap-check none 
-ion-species GBRV_v1.5/$ID_pbe_v1.uspp 
+     0.000000000000  0.000000000000 18.897261000000
+ion O -0.235981000000 -0.237621000000  2.242580000000 1
+ion C -0.011521000000 -0.011600000000  0.109935000000 1
+core-overlap-check none
+ion-species GBRV_v1.5/$ID_pbe_v1.uspp
 
-symmetries none 
+symmetries none
 
-kpoint-folding 1 1 1  
+kpoint-folding 1 1 1
 
 elec-ex-corr gga 
 van-der-waals D3 
@@ -23,7 +23,7 @@ converge-empty-states yes
 
 coulomb-interaction Periodic  
 
-initial-state $VAR 
+initial-state $VAR
 
 electronic-minimize \
     energyDiffThreshold 1e-07 \

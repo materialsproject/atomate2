@@ -3,28 +3,30 @@
 """Core definition of a JDFTx Task Document"""
 
 import logging
-import re
-from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Type, TypeVar, Union
-from pymatgen.core import Structure
+
 from custodian.qchem.jobs import QCJob
-from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
-from atomate2.jdftx.schemas.calculation import Calculation, CalculationInput, CalculationOutput
+from emmet.core.qchem.calc_types import CalcType, TaskType
 from emmet.core.structure import StructureMetadata
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
+from pymatgen.core import Structure
 
-from atomate2.jdftx.schemas.calculation import JDFTxStatus
+from atomate2.jdftx.schemas.calculation import (
+    Calculation,
+    CalculationInput,
+    CalculationOutput,
+    JDFTxStatus,
+)
 from atomate2.utils.datetime import datetime_str
 
-__author__ = (
-    "Cooper Tezak <cooper.tezak@colorado.edu>"
-)
+__author__ = "Cooper Tezak <cooper.tezak@colorado.edu>"
 
 logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDoc")
 # _DERIVATIVE_FILES = ("GRAD", "HESS")
+
 
 class OutputDoc(BaseModel):
     initial_structure: Structure = Field(None, description="Input Structure object")
@@ -98,7 +100,6 @@ class InputDoc(BaseModel):
         None,
         description="JDFTx calculation parameters",
     )
-
 
     @classmethod
     def from_qchem_calc_doc(cls, calc_doc: Calculation) -> "InputDoc":
@@ -191,7 +192,6 @@ class TaskDoc(StructureMetadata):
     # description="Detailed data for each JDFTx calculation contributing to the task document.",
     # )
 
-
     @classmethod
     def from_directory(
         cls: Type[_T],
@@ -227,8 +227,8 @@ class TaskDoc(StructureMetadata):
         calc_doc = Calculation.from_files(
             dir_name=dir_name,
             jdftxinput_file="inputs.in",
-            jdftxoutput_file="output.out"
-            )
+            jdftxoutput_file="output.out",
+        )
         # task_files = _find_qchem_files(dir_name)
 
         # if len(task_files) == 0:
@@ -249,7 +249,7 @@ class TaskDoc(StructureMetadata):
         #             **qchem_calculation_kwargs,
         #         )
         #         calcs_reversed.append(calc_doc)
-                # all_qchem_objects.append(qchem_objects)
+        # all_qchem_objects.append(qchem_objects)
 
         # Lists need to be reversed so that newest calc is the first calc, all_qchem_objects are also reversed to match
         # calcs_reversed.reverse()
@@ -285,7 +285,7 @@ class TaskDoc(StructureMetadata):
             meta_structure=calc_doc.output.structure,
             dir_name=dir_name,
             calc_outputs=calc_doc.output,
-            calc_inputs=calc_doc.input
+            calc_inputs=calc_doc.input,
             # task_type=
             # state=_get_state()
         )
@@ -434,7 +434,4 @@ def _get_state(calc: Calculation) -> JDFTxStatus:
     """Get state from calculation document of JDFTx task."""
     if calc.has_jdftx_completed:
         return JDFTxStatus.SUCCESS
-    else:
-        return JDFTxStatus.FAILED
-
-
+    return JDFTxStatus.FAILED

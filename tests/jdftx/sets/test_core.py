@@ -1,9 +1,12 @@
 import pytest
-import os
 
-@pytest.mark.parametrize("deleteme", [
-    ("delete this"),
-])
+
+@pytest.mark.parametrize(
+    "deleteme",
+    [
+        ("delete this"),
+    ],
+)
 def test_input_generators(deleteme):
     # from atomate2.jdftx.sets.core import (
     #     RelaxSetGenerator,

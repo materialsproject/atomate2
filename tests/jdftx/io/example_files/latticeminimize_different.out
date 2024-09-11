@@ -25,8 +25,8 @@ core-overlap-check none
 coulomb-interaction Periodic
 davidson-band-ratio 1.1
 dump End State Forces ElecDensity KEdensity Dtot VfluidTot BandEigs BandProjections EigStats Fillings Ecomponents BoundCharge DOS Kpoints
-dump 
-dump 
+dump
+dump
 dump-name $VAR
 elec-cutoff 25
 elec-eigen-algo Davidson
@@ -135,13 +135,13 @@ ionic-minimize  \
 	wolfeGradient        0.9 \
 	fdTest               no
 kpoint   0.000000000000   0.000000000000   0.000000000000  1.00000000000000
-kpoint-folding 7 7 7 
+kpoint-folding 7 7 7
 latt-move-scale 1 1 1
-latt-scale 1 1 1 
+latt-scale 1 1 1
 lattice  \
 	   8.185231000000000    0.000000000000000    0.000000000000000  \
 	   0.000000000000000    8.185231000000000    0.000000000000000  \
-	   0.000000000000000    0.000000000000000    8.185231000000000 
+	   0.000000000000000    0.000000000000000    8.185231000000000
 lattice-minimize  \
 	dirUpdateScheme      L-BFGS \
 	linminMethod         DirUpdateRecommended \
@@ -179,7 +179,7 @@ van-der-waals D3
 Applied RMS atom displacement 0 bohrs to make symmetries exact.
 
 ---------- Initializing the Grid ----------
-R = 
+R =
 [      8.18523            0            0  ]
 [            0      8.18523            0  ]
 [            0            0      8.18523  ]
@@ -248,7 +248,7 @@ Initialized 2 species with 8 total atoms.
 Folded 1 k-points by 7x7x7 to 343 k-points.
 
 ---------- Setting up k-points, bands, fillings ----------
-No reducable k-points. 
+No reducable k-points.
 Computing the number of bands and number of electrons
 Calculating initial fillings.
 nElectrons:  64.000000   nBands: 42   nStates: 686
@@ -491,7 +491,7 @@ Computing DFT-D3 correction:
 EvdW_6 =   -0.037386
 EvdW_8 =   -0.065663
 # Lattice vectors:
-R = 
+R =
 [      8.18523            0            0  ]
 [            0      8.18523            0  ]
 [            0            0      8.18523  ]
@@ -626,7 +626,7 @@ Computing DFT-D3 correction:
 EvdW_6 =   -0.035521
 EvdW_8 =   -0.060800
 # Lattice vectors:
-R = 
+R =
 [      8.35067  9.54428e-06  8.19266e-05  ]
 [  9.54428e-06      8.35067  8.19202e-05  ]
 [  8.19266e-05  8.19202e-05      8.35072  ]
@@ -771,7 +771,7 @@ Computing DFT-D3 correction:
 EvdW_6 =   -0.032207
 EvdW_8 =   -0.052536
 # Lattice vectors:
-R = 
+R =
 [      8.66917  4.09672e-05  0.000337858  ]
 [  4.09672e-05      8.66917  0.000337856  ]
 [  0.000337857  0.000337855      8.66925  ]
@@ -901,7 +901,7 @@ Computing DFT-D3 correction:
 EvdW_6 =   -0.031592
 EvdW_8 =   -0.051052
 # Lattice vectors:
-R = 
+R =
 [      8.73161  2.23059e-05  0.000506417  ]
 [  2.23059e-05      8.73161  0.000506419  ]
 [  0.000506392  0.000506394      8.73108  ]
@@ -1011,7 +1011,7 @@ Computing DFT-D3 correction:
 EvdW_6 =   -0.031503
 EvdW_8 =   -0.050838
 # Lattice vectors:
-R = 
+R =
 [      8.74076  1.99991e-05  0.000587402  ]
 [  1.99991e-05      8.74076  0.000587388  ]
 [   0.00058737  0.000587356      8.74002  ]
@@ -1106,7 +1106,7 @@ Computing DFT-D3 correction:
 EvdW_6 =   -0.031498
 EvdW_8 =   -0.050826
 # Lattice vectors:
-R = 
+R =
 [       8.7413   1.6619e-05   0.00064683  ]
 [   1.6619e-05       8.7413  0.000646828  ]
 [  0.000646799  0.000646797       8.7405  ]
@@ -1201,7 +1201,7 @@ Computing DFT-D3 correction:
 EvdW_6 =   -0.031498
 EvdW_8 =   -0.050825
 # Lattice vectors:
-R = 
+R =
 [      8.74136  1.46017e-05  0.000680805  ]
 [  1.46017e-05      8.74136  0.000680802  ]
 [  0.000680775  0.000680773      8.74053  ]
@@ -1277,7 +1277,7 @@ Dumping 'd_tot' ... done
 Dumping 'V_fluidTot' ... done
 Dumping 'eigenvals' ... done
 Dumping 'bandProjections' ... done
-Dumping 'eigStats' ... 
+Dumping 'eigStats' ...
 	eMin: -1.878213 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 1 )
 	HOMO: +0.357956 at state 35 ( [ +0.000000 -0.285714 +0.000000 ] spin 1 )
 	mu  : +0.358768
