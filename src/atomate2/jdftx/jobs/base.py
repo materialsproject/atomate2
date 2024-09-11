@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
-
 from atomate2.jdftx.schemas.task import TaskDoc
 from jobflow import Maker, Response, job
 from pymatgen.core.trajectory import Trajectory
@@ -33,14 +32,14 @@ _DATA_OBJECTS = [ # TODO update relevant list for JDFTx
 ]
 
 _INPUT_FILES = [
-    "inputs.in",
-    "inputs.lattice",
-    "inputs.ionpos",
+    "init.in",
+    "init.lattice",
+    "init.ionpos",
 ]
 
 # Output files. Partially from https://www.vasp.at/wiki/index.php/Category:Output_files
 _OUTPUT_FILES = [ # TODO finish this list
-    "out.log",
+    "output.out",
     "Ecomponents",
     "wfns",
     "bandProjections",

@@ -227,7 +227,7 @@ class TaskDoc(StructureMetadata):
         calc_doc = Calculation.from_files(
             dir_name=dir_name,
             jdftxinput_file="inputs.in",
-            jdftxoutput_file="out.log"
+            jdftxoutput_file="output.out"
             )
         # task_files = _find_qchem_files(dir_name)
 

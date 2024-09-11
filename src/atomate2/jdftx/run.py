@@ -25,7 +25,7 @@ def run_jdftx(
     jdftx_job_kwargs = jdftx_job_kwargs or {}
 
     if job_type == JobType.NORMAL:
-        job = JDFTxJob(jdftx_cmd, **jdftx_job_kwargs, input_file="input-tutorial.in")
+        job = JDFTxJob(jdftx_cmd, **jdftx_job_kwargs)
     
     job.run()
 
