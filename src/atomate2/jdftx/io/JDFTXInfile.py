@@ -17,6 +17,7 @@ from monty.io import zopen
 from monty.json import MSONable
 from pymatgen.core import Structure
 from pymatgen.util.io_utils import clean_lines
+from pathlib import Path
 
 from atomate2.jdftx.io.generic_tags import flatten_list
 from atomate2.jdftx.io.JDFTXInfile_master_format import (
@@ -42,6 +43,8 @@ class JDFTXInfile(dict, MSONable):
     JDFTxInfile object for reading and writing JDFTx input files.
     Essentially a dictionary with some helper functions.
     """
+
+    path_parent: str = None # Only gets initialized if from_file
 
     def __init__(self, params: dict[str, Any] | None = None) -> None:
         """
@@ -152,6 +155,7 @@ class JDFTXInfile(dict, MSONable):
         filename: PathLike,
         dont_require_structure: bool = False,
         sort_tags: bool = True,
+        assign_path_parent: bool = True,
     ) -> Self:
         """Read an JDFTXInfile object from a file.
 
@@ -162,12 +166,17 @@ class JDFTXInfile(dict, MSONable):
         -------
             JDFTXInfile object
         """
+        path_parent = None
+        if assign_path_parent:
+            path_parent = Path(filename).parents[0]
         with zopen(filename, mode="rt") as file:
-            return cls.from_str(
+            instance = cls.from_str(
                 file.read(),
                 dont_require_structure=dont_require_structure,
                 sort_tags=sort_tags,
+                path_parent=path_parent,
             )
+            return instance
 
     @staticmethod
     def _preprocess_line(line):
@@ -239,7 +248,7 @@ class JDFTXInfile(dict, MSONable):
 
     @classmethod
     def from_str(
-        cls, string: str, dont_require_structure: bool = False, sort_tags: bool = True
+        cls, string: str, dont_require_structure: bool = False, sort_tags: bool = True, path_parent: str = None
     ) -> Self:
         """Read an JDFTXInfile object from a string.
 
@@ -266,7 +275,15 @@ class JDFTXInfile(dict, MSONable):
 
         if "include" in params:
             for filename in params["include"]:
-                params.update(cls.from_file(filename, dont_require_structure=True))
+                _filename = filename
+                if not Path(_filename).exists():
+                    if not path_parent is None:
+                        _filename = path_parent / filename
+                    if not Path(_filename).exists():
+                        raise ValueError(
+                            f"The include file {filename} ({_filename}) does not exist!"
+                        )
+                params.update(cls.from_file(_filename, dont_require_structure=True, assign_path_parent=False))
             del params["include"]
 
         if (
