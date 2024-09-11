@@ -9,20 +9,22 @@ from os import mkdir, symlink
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from custodian.vasp.validators import VasprunXMLValidator
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Kpoints
 
+from atomate2.common.jobs.neb import NEBInterpolation, get_images_from_endpoints
 from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
 from atomate2.vasp.sets.core import NebSetGenerator
 
 if TYPE_CHECKING:
+    from typing_extensions import Self
+
     from atomate2.vasp.sets.base import VaspInputGenerator
 
 @dataclass
-class NebFromImagesMaker(BaseVaspMaker):
+class NEBFromImagesMaker(BaseVaspMaker):
     """
-    Maker to create VASP NEB jobs.
+    Maker to create VASP NEB jobs from a set of images.
 
     Parameters
     ----------
@@ -69,6 +71,17 @@ class NebFromImagesMaker(BaseVaspMaker):
         images: list[Structure],
         prev_dir: str | Path | None = None,
     ):
+        """
+        Make an NEB job from a list of images.
+
+        Parameters
+        -----------
+        images : list[Structure]
+            A list of NEB images.
+        prev_dir : str or Path or None (default)
+            A previous directory to copy outputs from.
+        
+        """
         
         num_frames = len(images)
         num_images = num_frames - 2
@@ -100,65 +113,45 @@ class NebFromImagesMaker(BaseVaspMaker):
                 self.kpoints_kludge.write_file(f"{image_dir}/KPOINTS")
 
         return super().make.original(self, images[0], prev_dir = prev_dir)
-
-
+    
 @dataclass
-class NEBMaker(BaseVaspMaker):
-    name: str = "NEB"
-    input_set_generator: VaspInputGenerator = field(
-        default_factory= NebSetGenerator
-    )
-    run_vasp_kwargs: dict = field(default_factory=dict)
+class NEBFromEndpointsMaker(NEBFromImagesMaker):
+    """
+    Maker to create VASP NEB jobs from two endpoints.
+    """
 
     @vasp_job
     def make(
         self,
-        endpoint1: Structure,
-        endpoint2: Structure,
-        lclimb: bool = True,
-        nimages: int = 1,
-        interp_sort_tol: float = 0.5,
-        KPOINTS_KLUDGE: Kpoints | None = None,
-        **kwargs,
-    ):
-        # can't let user overwrite this
-        self.run_vasp_kwargs = {
-            "job_type": "neb",
-            "vasp_job_kwargs": {
-                "output_file": "vasp.out",
-                "stderr_file": "std_err.txt",  # ,"auto_npar": True
-            },
-            "validators": (VasprunXMLValidator(), NEBFilesValidator()),
-        }
+        endpoints: tuple[Structure, Structure] | list[Structure],
+        num_images: int,
+        prev_dir : str | Path = None,
+        interpolation_method : NEBInterpolation = NEBInterpolation.LINEAR,
+        **interpolation_kwargs
+    ) -> Self:
+        """
+        Make an NEB job from a set of endpoints.
 
-        self.task_document_kwargs = {
-            "outcar_file": f"{Path.cwd()}/01/OUTCAR",
-            "contcar_file": f"{Path.cwd()}/01/CONTCAR",
-        }
+        Parameters
+        -----------
+        endpoints : tuple[Structure,Structure] or list[Structure]
+            A set of two endpoints to interpolate NEB images from.
+        num_images : int
+            The number of images to include in the interpolation.
+        prev_dir : str or Path or None (default)
+            A previous directory to copy outputs from.
+        interpolation_method : .NEBInterpolation
+            The method to use to interpolate between images.
+        **interpolation_kwargs
+            kwargs to pass to the interpolation function.
+        """
 
-        self.input_set_generator.nimage = nimages
-        self.input_set_generator.lclimb = lclimb
-
-        images = endpoint1.interpolate(
-            endpoint2, nimages=nimages + 1, autosort_tol=interp_sort_tol
+        return super.make(
+            get_images_from_endpoints(
+                endpoints,
+                num_images,
+                interpolation_method = interpolation_method,
+                **interpolation_kwargs,
+            ),
+            prev_dir = prev_dir
         )
-
-        for iimage in range(nimages + 2):
-            tdir = f"{iimage:02}"
-            mkdir(tdir)
-            images[iimage].to(tdir + "/POSCAR")
-
-            """
-                Bug in VASP 6 compiled with HDF5 support:
-                    https://www.vasp.at/forum/viewtopic.php?f=3&t=18721&p=23430&hilit=neb+hdf5+images#p23430
-
-                Seems like there's a validation check of whether the KPOINTS file used in the head directory
-                is the same as in each IMAGE subdirectory.
-
-                Using KSPACING in INCAR gets around this issue; a kludge to use KPOINTS is to simply copy it
-                to each subdirectory, as we do here
-            """
-            if KPOINTS_KLUDGE:
-                KPOINTS_KLUDGE.write_file(f"{tdir}/KPOINTS")
-
-        return super().make.original(self, images[1], **kwargs)
