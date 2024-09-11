@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from jobflow.utils import ValueEnum
 from custodian.jdftx.jobs import JDFTxJob
-from atomate2.jdftx.schemas.task import TaskDoc, JDFTxStatus
+from jobflow.utils import ValueEnum
+
+from atomate2.jdftx.schemas.task import JDFTxStatus, TaskDoc
+
 
 class JobType(ValueEnum):
     """
@@ -27,10 +29,12 @@ def run_jdftx(
 
     if job_type == JobType.NORMAL:
         job = JDFTxJob(jdftx_cmd, **jdftx_job_kwargs)
-    
+
     job.run()
 
-#need to call job = run_jdftx() to run calc
+
+# need to call job = run_jdftx() to run calc
+
 
 def should_stop_children(
     task_document: TaskDoc,
@@ -41,5 +45,4 @@ def should_stop_children(
     """
     if task_document.state == JDFTxStatus.SUCCESS:
         return False
-    else:
-        return True
+    return True

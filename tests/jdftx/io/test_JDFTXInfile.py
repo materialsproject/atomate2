@@ -1,7 +1,5 @@
 from pathlib import Path
 
-import pytest
-from pymatgen.util.typing import PathLike
 from pytest import approx
 
 from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
@@ -39,6 +37,7 @@ ex_files_dir = Path(__file__).parents[0] / "example_files"
 #             assert is_identical_jif(jifs[i], jifs[j])
 #     return None
 
+
 def is_identical_jif(jif1: JDFTXInfile, jif2: JDFTXInfile):
     for key in jif1:
         if key not in jif2:
@@ -63,6 +62,5 @@ def is_identical_jif_val(v1, v2):
                 return False
         return True
 
+
 # test_JDFTXInfile_self_consistency(ex_infile1_fname)
-        
-        

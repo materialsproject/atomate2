@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 # Optional for debugging, use via "pip install stackprinter" first:
-import stackprinter
 import os
+
+import stackprinter
 
 stackprinter.set_excepthook(style="darkbg2")
 

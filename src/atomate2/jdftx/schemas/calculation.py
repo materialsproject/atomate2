@@ -9,26 +9,18 @@ from typing import Dict, Optional, Union
 
 from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
 from emmet.core.qchem.calc_types.calc_types import BASIS_SETS, FUNCTIONALS
-from pydantic import BaseModel, Field
-from pymatgen.core.structure import Structure
-
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
-from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
+from emmet.core.utils import ValueEnum
 
 # from emmet.core.qchem.calc_types.em_utils import (
 #     level_of_theory,
 #     task_type,
 #     calc_type,
 # )
-from pydantic import BaseModel, ConfigDict, Field, field_validator
-from pymatgen.core.structure import Molecule, Structure
-from pymatgen.io.qchem.inputs import QCInput
-from pymatgen.io.qchem.outputs import QCOutput
+from pydantic import BaseModel, Field
+from pymatgen.core.structure import Structure
 
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile, JDFTXStructure
+from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
 from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
-from emmet.core.utils import ValueEnum
-
 
 functional_synonyms = {
     "b97mv": "b97m-v",
@@ -59,6 +51,7 @@ class JDFTxStatus(ValueEnum):
 
     SUCCESS = "successful"
     FAILED = "unsuccessful"
+
 
 class CalculationInput(BaseModel):
     """

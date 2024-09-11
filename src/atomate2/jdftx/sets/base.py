@@ -40,7 +40,7 @@ class JdftxInputSet(InputSet):
     def write_input(
         self,
         directory: str | Path,
-        infile: PathLike = "inputs.in", #TODO I don't think this should be optional
+        infile: PathLike = "inputs.in",  # TODO I don't think this should be optional
         make_dir: bool = True,
         overwrite: bool = True,
     ) -> None:
@@ -126,31 +126,28 @@ class JdftxInputGenerator(InputGenerator):
 
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftx_structure)
 
+
 def condense_jdftxinputs(
-        jdftxinput:JDFTXInfile, 
-        jdftxstructure:JDFTXStructure
-        ) -> JDFTXInfile:
+    jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
+) -> JDFTXInfile:
     """
     Function to combine a JDFTXInputs class with calculation
     settings and a JDFTxStructure that defines the structure
     into one JDFTXInputs instance.
 
     Parameters
-        ----------
+    ----------
         jdftxinput: JDFTXInfile
             A JDFTXInfile object with calculation settings.
 
         jdftxstructure: JDFTXStructure
             A JDFTXStructure object that defines the structure.
-            
-        Returns
-        -------
+
+    Returns
+    -------
         JDFTXInfile
             A JDFTXInfile that includes the calculation
             parameters and input structure.
     """
-    condensed_inputs = (
-        jdftxinput + 
-        JDFTXInfile.from_str(jdftxstructure.get_str())
-        )
+    condensed_inputs = jdftxinput + JDFTXInfile.from_str(jdftxstructure.get_str())
     return condensed_inputs

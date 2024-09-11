@@ -3,8 +3,6 @@ from typing import Any
 
 from atomate2.jdftx.io.JOutStructure import JOutStructure
 
-from dataclasses import dataclass
-
 
 @dataclass
 class JOutStructures(list[JOutStructure], JOutStructure):

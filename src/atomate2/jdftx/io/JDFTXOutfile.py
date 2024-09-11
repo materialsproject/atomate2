@@ -1,15 +1,14 @@
-import os
 from dataclasses import dataclass
 from functools import wraps
-from atomate2.jdftx.io.JDFTXOutfileSlice import JDFTXOutfileSlice
-from dataclasses import dataclass
-from typing import List, Optional
-from monty.io import zopen
 from pathlib import Path
+from typing import List, Optional
+
+from monty.io import zopen
+
+from atomate2.jdftx.io.JDFTXOutfileSlice import JDFTXOutfileSlice
 
 
-class ClassPrintFormatter():
-
+class ClassPrintFormatter:
     def __str__(self) -> str:
         """Generic means of printing class to command line in readable format"""
         return (
@@ -49,8 +48,8 @@ def read_file(file_name: str) -> list[str]:
     -------
     text: list[str]
         list of strings from file
-    '''
-    with zopen(file_name, 'r') as f:
+    """
+    with zopen(file_name, "r") as f:
         text = f.readlines()
     return text
 
