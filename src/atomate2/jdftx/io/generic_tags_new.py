@@ -7,9 +7,7 @@ and their representations in JDFTx input files.
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, List, Dict, Union
-
-import numpy as np
+from typing import Any, List
 
 __author__ = "Jacob Clary"
 
@@ -28,12 +26,8 @@ class ClassPrintFormatter:
 
     def __str__(self) -> str:
         """Format class for readable command line output."""
-        return (
-            f"{self.__class__}\n"
-            + "\n".join(
-                f"{item} = {self.__dict__[item]}"
-                for item in sorted(self.__dict__)
-            )
+        return f"{self.__class__}\n" + "\n".join(
+            f"{item} = {self.__dict__[item]}" for item in sorted(self.__dict__)
         )
 
 
@@ -51,7 +45,9 @@ class AbstractTag(ClassPrintFormatter, ABC):
     allow_list_representation: bool = False
 
     @abstractmethod
-    def validate_value_type(self, tag: str, value: Any, try_auto_type_fix: bool = False) -> bool:
+    def validate_value_type(
+        self, tag: str, value: Any, try_auto_type_fix: bool = False
+    ) -> bool:
         """Validate the type of the value for this tag."""
 
     def _validate_value_type(
@@ -96,5 +92,6 @@ class AbstractTag(ClassPrintFormatter, ABC):
 
     def _get_token_len(self) -> int:
         return int(self.write_tagname) + int(self.write_value)
+
 
 # ... [rest of the code remains the same] ...

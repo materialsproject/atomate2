@@ -325,8 +325,7 @@ class JDFTXInfile(dict, MSONable):
             [isinstance(x, dict) for x in value]
         ):  # value is like {'subtag': 'subtag_value'}
             return flag
-        else:
-            return not flag
+        return not flag
 
     @classmethod
     def get_list_representation(cls, JDFTXInfile):

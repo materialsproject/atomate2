@@ -32,11 +32,7 @@ class JdftxInputSet(InputSet):
         A JdftxInput object
     """
 
-    def __init__(
-        self,
-        jdftxinput: JDFTXInfile, 
-        jdftxstructure: JDFTXStructure
-    ) -> None:
+    def __init__(self, jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure) -> None:
         self.jdftxstructure = jdftxstructure
         self.jdftxinput = jdftxinput
 
@@ -79,10 +75,8 @@ class JdftxInputSet(InputSet):
             Directory to read JDFTx inputs from.
         """
         directory = Path(directory)
-        jdftxinput = JDFTXInfile.from_file(
-            directory / "input.in"
-        ) 
-        jdftxstructure = jdftxinput.to_JDFTXStructure()
+        jdftxinput = JDFTXInfile.from_file(directory / "input.in")
+        jdftxstructure = jdftxinput.to_JDFTXStructure(jdftxinput)
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftxstructure)
 
 

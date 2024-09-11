@@ -178,10 +178,9 @@ class StrTag(AbstractTag):
 
         if self.options is None or value in self.options:
             return value
-        else:
-            raise ValueError(
-                f"The '{value}' string must be one of {self.options} for {tag}"
-            )
+        raise ValueError(
+            f"The '{value}' string must be one of {self.options} for {tag}"
+        )
 
     def write(self, tag: str, value) -> str:
         return self._write(tag, value)
@@ -281,10 +280,7 @@ class TagContainer(AbstractTag):
                 for x in value
             ]
             return [list(x) for x in list(zip(*results))]
-        else:
-            return self._validate_single_entry(
-                value, try_auto_type_fix=try_auto_type_fix
-            )
+        return self._validate_single_entry(value, try_auto_type_fix=try_auto_type_fix)
 
     def read(self, tag: str, value: str) -> dict:
         value = value.split()
@@ -404,12 +400,11 @@ class TagContainer(AbstractTag):
         value_dict = self.get_dict_representation(tag, value)
         if value == value_list:
             return "list"
-        elif value == value_dict:
+        if value == value_dict:
             return "dict"
-        else:
-            raise ValueError(
-                "Could not determine TagContainer representation, something is wrong"
-            )
+        raise ValueError(
+            "Could not determine TagContainer representation, something is wrong"
+        )
 
     def _make_list(self, value):
         value_list = []
@@ -498,11 +493,10 @@ class TagContainer(AbstractTag):
                 return value  # no conversion needed
             string_value = [self._make_dict(tag, entry) for entry in value]
             return [self.read(tag, entry) for entry in string_value]
-        else:
-            if isinstance(value, dict):
-                return value  # no conversion needed
-            string_value = self._make_dict(tag, value)
-            return self.read(tag, string_value)
+        if isinstance(value, dict):
+            return value  # no conversion needed
+        string_value = self._make_dict(tag, value)
+        return self.read(tag, string_value)
 
 
 @dataclass(kw_only=True)

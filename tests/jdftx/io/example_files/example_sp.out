@@ -76,17 +76,17 @@ density-of-states Etol 1.000000e-06 Esigma 1.000000e-03 \
     OrthoOrbital Pt 16   d
 dump End IonicPositions Lattice ElecDensity KEdensity BandEigs BandProjections EigStats RhoAtom DOS Symmetries Kpoints Gvectors
 dump Ionic State EigStats Ecomponents
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
+dump
+dump
+dump
+dump
+dump
+dump
+dump
+dump
+dump
+dump
+dump
 dump-name jdft.$VAR
 elec-cutoff 30
 elec-eigen-algo Davidson
@@ -179,14 +179,14 @@ ionic-minimize  \
     wolfeGradient        0.9 \
     fdTest               no
 kpoint   0.000000000000   0.000000000000   0.000000000000  1.00000000000000
-kpoint-folding 6 6 1 
+kpoint-folding 6 6 1
 kpoint-reduce-inversion no
 latt-move-scale 0 0 0
-latt-scale 1 1 1 
+latt-scale 1 1 1
 lattice  \
       10.457499819964989    5.228749909982495    0.000000000000000  \
        0.000000000000000    9.056460504160873    0.000000000000000  \
-       0.000000000000001    0.000000000000001   44.023042120134328 
+       0.000000000000001    0.000000000000001   44.023042120134328
 lattice-minimize  \
     dirUpdateScheme      L-BFGS \
     linminMethod         DirUpdateRecommended \
@@ -221,7 +221,7 @@ Found 48 space-group symmetries with basis
 Applied RMS atom displacement 3.11691e-15 bohrs to make symmetries exact.
 
 ---------- Initializing the Grid ----------
-R = 
+R =
 [      10.4575      5.22875            0  ]
 [            0      9.05646            0  ]
 [            0            0       44.023  ]
@@ -260,7 +260,7 @@ Initialized 1 species with 16 total atoms.
 Folded 1 k-points by 6x6x1 to 36 k-points.
 
 ---------- Setting up k-points, bands, fillings ----------
-Reduced to 7 k-points under symmetry. 
+Reduced to 7 k-points under symmetry.
 Computing the number of bands and number of electrons
 Calculating initial fillings.
 nElectrons: 288.000000   nBands: 174   nStates: 7
@@ -280,7 +280,7 @@ Supercell lattice vectors:
 
 ---------- Setting up coulomb interaction ----------
 Setting up double-sized grid for truncated Coulomb potentials:
-R = 
+R =
 [      10.4575      5.22875            0  ]
 [            0      9.05646            0  ]
 [            0            0      88.0461  ]
@@ -643,7 +643,7 @@ force Pt   0.000000000000000   0.000000000000000   0.255492416867783 1
 Dumping 'jdft.fillings' ... done
 Dumping 'jdft.wfns' ... done
 Dumping 'jdft.eigenvals' ... done
-Dumping 'jdft.eigStats' ... 
+Dumping 'jdft.eigStats' ...
     eMin: -3.836283 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
     HOMO: -0.212435 at state 5 ( [ +0.166667 +0.500000 +0.000000 ] spin 0 )
     mu  : -0.209509
@@ -665,7 +665,7 @@ Dumping 'jdft.n' ... done
 Dumping 'jdft.tau' ... done
 Dumping 'jdft.eigenvals' ... done
 Dumping 'jdft.bandProjections' ... done
-Dumping 'jdft.eigStats' ... 
+Dumping 'jdft.eigStats' ...
     eMin: -3.836283 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 0 )
     HOMO: -0.212435 at state 5 ( [ +0.166667 +0.500000 +0.000000 ] spin 0 )
     mu  : -0.209509
