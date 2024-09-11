@@ -4,22 +4,21 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
-
-from jobflow import Maker, Response
-
-if TYPE_CHECKING:
-    from pymatgen.core import Structure
-    from pymatgen.core.trajectory import Trajectory
-    from pymatgen.electronic_structure.bandstructure import (
-        BandStructure,
-        BandStructureSymmLine,
-    )
+from typing import TYPE_CHECKING, Callable
+from atomate2.jdftx.schemas.task import TaskDoc
+from jobflow import Maker, Response, job
+from pymatgen.core.trajectory import Trajectory
+from pymatgen.electronic_structure.bandstructure import (
+    BandStructure,
+    BandStructureSymmLine,
+)
 
 from atomate2.jdftx.files import write_jdftx_input_set
-from atomate2.jdftx.run import run_jdftx
-from atomate2.jdftx.schemas.task import TaskDoc
-from atomate2.jdftx.sets.base import JdftxInputGenerator
+from atomate2.jdftx.run import run_jdftx, should_stop_children
+
+#if TYPE_CHECKING:
+from pymatgen.core import Structure
+
 
 _DATA_OBJECTS = [  # TODO update relevant list for JDFTx
     BandStructure,
@@ -31,14 +30,14 @@ _DATA_OBJECTS = [  # TODO update relevant list for JDFTx
 ]
 
 _INPUT_FILES = [
-    "inputs.in",
-    "inputs.lattice",
-    "inputs.ionpos",
+    "init.in",
+    "init.lattice",
+    "init.ionpos",
 ]
 
 # Output files. Partially from https://www.vasp.at/wiki/index.php/Category:Output_files
-_OUTPUT_FILES = [  # TODO finish this list
-    "out.log",
+_OUTPUT_FILES = [ # TODO finish this list
+    "output.out",
     "Ecomponents",
     "wfns",
     "bandProjections",
@@ -46,6 +45,23 @@ _OUTPUT_FILES = [  # TODO finish this list
     "lattice",
     "ionpos",
 ]
+
+def jdftx_job(method: Callable) -> job:
+    """
+    Decorate the ``make`` method of JDFTx job makers.
+
+    Parameters
+    ----------
+    method : callable
+        A BaseJdftxMaker.make method. This should not be specified directly and is
+        implied by the decorator.
+
+    Returns
+    -------
+    callable
+        A decorated version of the make function that will generate JDFTx jobs.
+    """
+    return job(method, data=_DATA_OBJECTS, output_schema=TaskDoc)
 
 
 @dataclass
@@ -63,7 +79,8 @@ class BaseJdftxMaker(Maker):
         Keyword arguments that will get passed to :obj:`.write_jdftx_input_set`.
     run_jdftx_kwargs : dict
         Keyword arguments that will get passed to :obj:`.run_jdftx`.
-
+    task_document_kwargs : dict
+        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
 
     """
 
@@ -73,8 +90,12 @@ class BaseJdftxMaker(Maker):
     )
     write_input_set_kwargs: dict = field(default_factory=dict)
     run_jdftx_kwargs: dict = field(default_factory=dict)
+    task_document_kwargs: dict = field(default_factory=dict)
 
-    def make(self, structure: Structure) -> Response:
+    @jdftx_job
+    def make(
+        self, structure: Structure
+    ) -> Response:
         """Run a JDFTx calculation.
 
         Parameters
@@ -96,7 +117,11 @@ class BaseJdftxMaker(Maker):
         run_jdftx(**self.run_jdftx_kwargs)
 
         current_dir = Path.cwd()
-        files = [str(f) for f in current_dir.glob("*") if f.is_file()]
+        files = [str(f) for f in current_dir.glob('*') if f.is_file()]
+
+        task_doc = get_jdftx_task_document(current_dir, **self.task_document_kwargs)
+
+        stop_children = should_stop_children(task_doc)
 
         return Response(
             stop_children=stop_children,
@@ -108,3 +133,4 @@ class BaseJdftxMaker(Maker):
 def get_jdftx_task_document(path: Path | str, **kwargs) -> TaskDoc:
     """Get JDFTx Task Document using atomate2 settings."""
     return TaskDoc.from_directory(path, **kwargs)
+

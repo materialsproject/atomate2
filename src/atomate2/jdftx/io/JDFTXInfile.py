@@ -114,6 +114,8 @@ class JDFTXInfile(dict, MSONable):
         for tag_group in MASTER_TAG_LIST:
             added_tag_in_group = False
             for tag in MASTER_TAG_LIST[tag_group]:
+                if tag == "fluid-solvent":
+                    print("here")
                 if tag not in self:
                     continue
                 if tag in __WANNIER_TAGS__:
@@ -254,6 +256,8 @@ class JDFTXInfile(dict, MSONable):
         params: dict[str, Any] = {}
         # process all tag value lines using specified tag formats in MASTER_TAG_LIST
         for line in lines:
+            if "ionic-minimize" in line:
+                print("here")
             tag_object, tag, value = cls._preprocess_line(line)
             processed_value = tag_object.read(tag, value)
             params = cls._store_value(

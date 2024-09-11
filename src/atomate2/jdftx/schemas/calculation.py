@@ -20,6 +20,15 @@ from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
 #     task_type,
 #     calc_type,
 # )
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pymatgen.core.structure import Molecule, Structure
+from pymatgen.io.qchem.inputs import QCInput
+from pymatgen.io.qchem.outputs import QCOutput
+
+from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile, JDFTXStructure
+from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
+from emmet.core.utils import ValueEnum
+
 
 functional_synonyms = {
     "b97mv": "b97m-v",
@@ -42,6 +51,14 @@ logger = logging.getLogger(__name__)
 # Not sure but can we have something like GRAD and HESS
 # as QChem data objects
 
+
+class JDFTxStatus(ValueEnum):
+    """
+    JDFTx Calculation State
+    """
+
+    SUCCESS = "successful"
+    FAILED = "unsuccessful"
 
 class CalculationInput(BaseModel):
     """

@@ -8,6 +8,9 @@ from pytest import approx
 from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
 
 ex_files_dir = Path(__file__).parents[0] / "example_files"
+
+test_read = JDFTXOutfile.from_file(ex_files_dir / Path("problem1.out"))
+
 example_sp_known = {
     "Nspin": 1,
     "spintype": None,
@@ -40,6 +43,7 @@ example_sp_known = {
     "Eewald": -16901.4696647211094387 * Ha_to_eV,
     "nSlices": 1,
     "t_s": 165.87,
+    "iter_type": None
 }
 
 example_latmin_known = {
@@ -73,6 +77,7 @@ example_latmin_known = {
     "Eewald": -214.7213057123609019 * Ha_to_eV,
     "nSlices": 7,
     "t_s": 314.16,
+    "iter_type": "LatticeMinimize",
 }
 
 example_ionmin_known = {
@@ -106,18 +111,19 @@ example_ionmin_known = {
     "Eewald": 38803.1912795634780196 * Ha_to_eV,
     "nSlices": 1,
     "t_s": 2028.57,
+    "iter_type": "IonicMinimize",
 }
 
-
-@pytest.mark.parametrize(
-    "filename,known",
-    [
-        (ex_files_dir / Path("example_sp.out"), example_sp_known),
-        (ex_files_dir / Path("example_latmin.out"), example_latmin_known),
-        (ex_files_dir / Path("example_ionmin.out"), example_ionmin_known),
-    ],
-)
-def test_JDFTXOutfile_fromfile(filename: PathLike, known: dict):
+@pytest.mark.parametrize("filename,known", 
+                         [(ex_files_dir / Path("example_sp.out"), example_sp_known),
+                          (ex_files_dir / Path("example_latmin.out"), example_latmin_known),
+                          (ex_files_dir / Path("example_ionmin.out"), example_ionmin_known),
+                           ]
+                                             )
+def test_JDFTXOutfile_fromfile(
+    filename: PathLike,
+    known: dict
+    ):
     # filename = ex_files_dir / Path("jdftx.out")
     jout = JDFTXOutfile.from_file(filename)
     assert jout.Nspin == known["Nspin"]
@@ -164,6 +170,7 @@ def test_JDFTXOutfile_fromfile(filename: PathLike, known: dict):
     assert jout.Ecomponents["Eewald"] == approx(known["Eewald"])
     assert len(jout) == known["nSlices"]
     assert jout.t_s == approx(known["t_s"])
+    assert jout.jstrucs.iter_type == known["iter_type"]
 
 
 test_JDFTXOutfile_fromfile(ex_files_dir / Path("example_sp.out"), example_sp_known)

@@ -7,18 +7,15 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Type, TypeVar, Union
 
 from custodian.qchem.jobs import QCJob
-from emmet.core.qchem.calc_types import CalcType, TaskType
+from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
+from atomate2.jdftx.schemas.calculation import Calculation, CalculationInput, CalculationOutput
 from emmet.core.structure import StructureMetadata
 from emmet.core.utils import ValueEnum
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 
-from atomate2.jdftx.schemas.calculation import (
-    Calculation,
-    CalculationInput,
-    CalculationOutput,
-)
+from atomate2.jdftx.schemas.calculation import JDFTxStatus
 from atomate2.utils.datetime import datetime_str
 
 __author__ = "Cooper Tezak <cooper.tezak@colorado.edu>"
@@ -26,15 +23,6 @@ __author__ = "Cooper Tezak <cooper.tezak@colorado.edu>"
 logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDoc")
 # _DERIVATIVE_FILES = ("GRAD", "HESS")
-
-
-class JDFTxStatus(ValueEnum):
-    """
-    JDFTx Calculation State
-    """
-
-    SUCCESS = "successful"
-    FAILED = "unsuccessful"
 
 
 class OutputDoc(BaseModel):
@@ -234,8 +222,10 @@ class TaskDoc(StructureMetadata):
         additional_fields = {} if additional_fields is None else additional_fields
         dir_name = Path(dir_name)
         calc_doc = Calculation.from_files(
-            dir_name=dir_name, jdftxinput_file="inputs.in", jdftxoutput_file="out.log"
-        )
+            dir_name=dir_name,
+            jdftxinput_file="inputs.in",
+            jdftxoutput_file="output.out"
+            )
         # task_files = _find_qchem_files(dir_name)
 
         # if len(task_files) == 0:
