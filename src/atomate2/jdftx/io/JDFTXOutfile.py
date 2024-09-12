@@ -197,15 +197,25 @@ class JDFTXOutfile(JDFTXOutfileSlice):
     def from_file(cls, file_path: str):
         texts = read_outfile_slices(file_path)
         slices = []
-        # instance = cls()
         for text in texts:
             slices.append(JDFTXOutfileSlice.from_out_slice(text))
         instance = cls.from_out_slice(texts[-1])
         instance.slices = slices
         return instance
-    '''
-    A class to read and process a JDFTx out file
-    '''
+    
+    
+    def __getitem__(self, key: int | str):
+        if type(key) is int:
+            return self.slices[key]
+        elif type(key) is str:
+            return getattr(self, key)
+        
+
+    def __len__(self):
+        return len(self.slices)
+    
+
+
 
     # @classmethod
     # def from_file(cls, file_path: str):
