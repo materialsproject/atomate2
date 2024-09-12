@@ -243,6 +243,10 @@ class Atomate2Settings(BaseSettings):
         "parsing QChem directories useful for storing duplicate of FW.json",
     )
 
+    JDFTX_CPU_CMD: str = Field(
+        "jdftx", description="Command to run cpu version of jdftx"
+    )
+
     @model_validator(mode="before")
     @classmethod
     def load_default_settings(cls, values: dict[str, Any]) -> dict[str, Any]:
