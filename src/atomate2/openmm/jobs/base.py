@@ -19,7 +19,6 @@ from emmet.core.openmm import (
 )
 from jobflow import Maker, Response, job
 from mdareporter.mdareporter import MDAReporter
-from openff.interchange import Interchange
 from openmm import Integrator, LangevinMiddleIntegrator, Platform, XmlSerializer
 from openmm.app import StateDataReporter
 from openmm.unit import kelvin, picoseconds
@@ -28,6 +27,28 @@ from atomate2.openmm.utils import increment_name, task_reports
 
 if TYPE_CHECKING:
     from openmm.app.simulation import Simulation
+
+
+try:
+    # so we can load OpenMM Interchange created by openmmml
+    import openmmml
+except ImportError:
+    openmmml = None
+
+try:
+    from openff.interchange import Interchange
+except ImportError:
+
+    class Interchange:  # type: ignore[no-redef]
+        """Dummy class for failed imports of Interchange."""
+
+        def parse_raw(self, _: str) -> None:
+            """Parse raw is the first method called on the Interchange object."""
+            raise ImportError(
+                "openff-interchange must be installed for OpenMM makers to"
+                "to support OpenFF Interchange objects."
+            )
+
 
 OPENMM_MAKER_DEFAULTS = {
     "step_size": 0.001,
@@ -213,7 +234,7 @@ class BaseOpenMMMaker(Maker):
 
     def _load_interchange(
         self, interchange: Interchange | OpenMMInterchange | str
-    ) -> Interchange:
+    ) -> Interchange | OpenMMInterchange:
         """Load an Interchange object from a JSON string or bytes.
 
         This method loads an Interchange object from a JSON string or bytes
@@ -424,7 +445,7 @@ class BaseOpenMMMaker(Maker):
 
     def _create_simulation(
         self,
-        interchange: Interchange,
+        interchange: Interchange | OpenMMInterchange,
         prev_task: OpenMMTaskDocument | None = None,
     ) -> Simulation:
         """Create an OpenMM simulation.
@@ -458,7 +479,7 @@ class BaseOpenMMMaker(Maker):
 
     def _update_interchange(
         self,
-        interchange: Interchange,
+        interchange: Interchange | OpenMMInterchange,
         sim: Simulation,
         prev_task: OpenMMTaskDocument | None = None,
     ) -> None:
@@ -490,7 +511,7 @@ class BaseOpenMMMaker(Maker):
 
     def _create_task_doc(
         self,
-        interchange: Interchange,
+        interchange: Interchange | OpenMMInterchange,
         elapsed_time: float | None = None,
         dir_name: Path | None = None,
         prev_task: OpenMMTaskDocument | None = None,
