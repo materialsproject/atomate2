@@ -1,15 +1,8 @@
 from copy import deepcopy
 
-from .generic_tags import (
-    BoolTag,
-    BoolTagContainer,
-    DumpTagContainer,
-    FloatTag,
-    IntTag,
-    MultiformatTag,
-    StrTag,
-    TagContainer,
-)
+
+from .generic_tags import BoolTag, StrTag, IntTag, FloatTag, TagContainer, MultiformatTag, BoolTagContainer, DumpTagContainer, InitMagMomTag
+
 
 JDFTXDumpFreqOptions = ["Electronic", "End", "Fluid", "Gummel", "Init", "Ionic"]
 JDFTXDumpVarOptions = [
@@ -421,7 +414,7 @@ MASTER_TAG_LIST = {
         ),
         "elec-n-bands": IntTag(),
         "spintype": StrTag(options=["no-spin", "spin-orbit", "vector-spin", "z-spin"]),
-        #'initial-magnetic-moments': StructureDeferredTagContainer(),
+        'initial-magnetic-moments': InitMagMomTag(),
         "elec-initial-magnetization": TagContainer(
             subtags={
                 "M": FloatTag(write_tagname=False, optional=False),
