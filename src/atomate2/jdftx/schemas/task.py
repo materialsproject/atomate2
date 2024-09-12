@@ -16,7 +16,7 @@ from atomate2.jdftx.schemas.calculation import (
     CalculationInput,
     CalculationOutput,
 )
-from atomate2.jdftx.schemas.enums import JDFTxStatus, TaskType, CalcType
+from atomate2.jdftx.schemas.enums import CalcType, JDFTxStatus, TaskType
 from atomate2.utils.datetime import datetime_str
 
 __author__ = "Cooper Tezak <cooper.tezak@colorado.edu>"
@@ -177,6 +177,7 @@ class TaskDoc(StructureMetadata):
 
         doc = doc.model_copy(update=additional_fields)
         return doc
+
 
 def get_uri(dir_name: Union[str, Path]) -> str:
     """

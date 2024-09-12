@@ -12,7 +12,7 @@ from pymatgen.core.structure import Structure
 
 from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
 from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
-from atomate2.jdftx.schemas.enums import CalcType, TaskType
+from atomate2.jdftx.schemas.enums import TaskType
 
 __author__ = "Cooper Tezak <cote3804@colorado.edu>"
 logger = logging.getLogger(__name__)
@@ -223,7 +223,7 @@ class Calculation(BaseModel):
 #         custom_smd: (Optional) string representing SMD parameters for a
 #         non-standard solvent
 #     """
-    # TODO adapt this for JDFTx
+# TODO adapt this for JDFTx
 
 
 def task_type(
@@ -254,4 +254,4 @@ def task_type(
 #         parameters: CalculationInput parameters
 #     """
 #     pass
-    # TODO implement this
+# TODO implement this
