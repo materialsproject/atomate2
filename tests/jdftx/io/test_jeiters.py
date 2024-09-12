@@ -5,7 +5,8 @@ from pytest import approx
 from atomate2.jdftx.io.jeiter import JEiter
 from atomate2.jdftx.io.jeiters import JEiters
 
-ex_fillings_line1 = "FillingsUpdate:  mu: +0.714406772  nElectrons: 64.000000  magneticMoment: [ Abs: 0.00578  Tot: -0.00141 ]"
+ex_fillings_line1 = "FillingsUpdate:  mu: +0.714406772  \
+    nElectrons: 64.000000  magneticMoment: [ Abs: 0.00578  Tot: -0.00141 ]"
 ex_fillings_line1_known = {
     "mu": 0.714406772 * Ha_to_eV,
     "nElectrons": 64.0,
@@ -13,7 +14,8 @@ ex_fillings_line1_known = {
     "tot_magneticMoment": -0.00141,
 }
 
-ex_fillings_line2 = "FillingsUpdate:  mu: +0.814406772  nElectrons: 60.000000  magneticMoment: [ Abs: 0.0578  Tot: -0.0141 ]"
+ex_fillings_line2 = "FillingsUpdate:  mu: +0.814406772  \
+    nElectrons: 60.000000  magneticMoment: [ Abs: 0.0578  Tot: -0.0141 ]"
 ex_fillings_line2_known = {
     "mu": 0.814406772 * Ha_to_eV,
     "nElectrons": 60.0,
@@ -27,7 +29,9 @@ ex_subspace_line1_known = {"subspace": 0.229}
 ex_subspace_line2 = "SubspaceRotationAdjust: set factor to 0.329"
 ex_subspace_line2_known = {"subspace": 0.329}
 
-ex_iter_line1 = "ElecMinimize: Iter:   6  F: -246.531038317370076  |grad|_K:  6.157e-08  alpha:  5.534e-01  linmin: -4.478e-06  t[s]:    248.68"
+ex_iter_line1 = "ElecMinimize: Iter:   6  F: -246.531038317370076\
+        |grad|_K:  6.157e-08  alpha:  5.534e-01  linmin: -4.478e-06\
+              t[s]:    248.68"
 ex_iter_line1_known = {
     "iter": 6,
     "E": -246.531038317370076 * Ha_to_eV,
@@ -37,7 +41,9 @@ ex_iter_line1_known = {
     "t_s": 248.68,
 }
 
-ex_iter_line2 = "ElecMinimize: Iter:   7  F: -240.531038317370076  |grad|_K:  6.157e-07  alpha:  5.534e-02  linmin: -5.478e-06  t[s]:    48.68"
+ex_iter_line2 = "ElecMinimize: Iter:   7  F: -240.531038317370076\
+        |grad|_K:  6.157e-07  alpha:  5.534e-02  linmin: -5.478e-06\
+                t[s]:    48.68"
 ex_iter_line2_known = {
     "iter": 7,
     "E": -240.531038317370076 * Ha_to_eV,
@@ -64,7 +70,8 @@ ex_known2 = {
 
 
 @pytest.mark.parametrize(
-    "exfill_line,exfill_known,exiter_line,exiter_known,exsubspace_line,exsubspace_known",
+    "exfill_line,exfill_known,exiter_line,exiter_known,exsubspace_line,\
+        exsubspace_known",
     [
         (
             ex_fillings_line1,
