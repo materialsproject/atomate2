@@ -242,16 +242,16 @@ def task_type(
     return TaskType("Unknown")
 
 
-def calc_type(
-    parameters: CalculationInput,
-    validate_lot: bool = True,
-    special_run_type: Optional[str] = None,
-) -> CalcType:
-    """
-    Determine the calc type.
+# def calc_type(
+#     parameters: CalculationInput,
+#     validate_lot: bool = True,
+#     special_run_type: Optional[str] = None,
+# ) -> CalcType:
+#     """
+#     Determine the calc type.
 
-    Args:
-        parameters: CalculationInput parameters
-    """
-    pass
+#     Args:
+#         parameters: CalculationInput parameters
+#     """
+#     pass
     # TODO implement this

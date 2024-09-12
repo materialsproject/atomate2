@@ -6,18 +6,17 @@ import logging
 from pathlib import Path
 from typing import Any, Optional, TypeVar, Union, type
 
-from custodian.jdftx.jobs import JDFTxJob # Waiting on Sophie's PR
+from custodian.jdftx.jobs import JDFTxJob  # Waiting on Sophie's PR
 from emmet.core.structure import StructureMetadata
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
-from pymatgen.core import Structure
 
 from atomate2.jdftx.schemas.calculation import (
     Calculation,
     CalculationInput,
     CalculationOutput,
 )
-from atomate2.jdftx.schemas.enums import JDFTxStatus
+from atomate2.jdftx.schemas.enums import JDFTxStatus, TaskType, CalcType
 from atomate2.utils.datetime import datetime_str
 
 __author__ = "Cooper Tezak <cooper.tezak@colorado.edu>"
@@ -42,9 +41,7 @@ class CustodianDoc(BaseModel):
 
 
 class TaskDoc(StructureMetadata):
-    """
-    Calculation-level details about JDFTx calculations
-    """
+    """Calculation-level details about JDFTx calculations."""
 
     dir_name: Optional[Union[str, Path]] = Field(
         None, description="The directory for this JDFTx task"
@@ -181,53 +178,6 @@ class TaskDoc(StructureMetadata):
         doc = doc.model_copy(update=additional_fields)
         return doc
 
-    @staticmethod
-    def get_entry(
-        calcs_reversed: list[Calculation], task_id: Optional[str] = None
-    ) -> dict:
-        """
-        Get a computed entry from a list of QChem calculation documents.
-
-        Parameters
-        ----------
-        calcs_reversed
-            A list of QChem calculation documents in reverse order.
-        task_id
-            The job identifier
-
-        Returns
-        -------
-        dict
-            A dict of computed entries
-        """
-        entry_dict = {
-            "entry_id": task_id,
-            "task_id": task_id,
-            "charge": calcs_reversed[0].output.molecule.charge,
-            "spin_multiplicity": calcs_reversed[0].output.molecule.spin_multiplicity,
-            "level_of_theory": calcs_reversed[-1].input.level_of_theory,
-            "solvent": calcs_reversed[-1].input.solv_spec,
-            "lot_solvent": calcs_reversed[-1].input.lot_solv_combo,
-            "custom_smd": calcs_reversed[-1].input.custom_smd,
-            "task_type": calcs_reversed[-1].input.task_spec,
-            "calc_type": calcs_reversed[-1].input.calc_spec,
-            "tags": calcs_reversed[-1].input.tags,
-            "molecule": calcs_reversed[0].output.molecule,
-            "composition": calcs_reversed[0].output.molecule.composition,
-            "formula": calcs_reversed[
-                0
-            ].output.formula.composition.aplhabetical_formula,
-            "energy": calcs_reversed[0].output.final_energy,
-            "output": calcs_reversed[0].output.as_dict(),
-            "critic2": calcs_reversed[
-                0
-            ].output.critic,  # TODO: Unclear about orig_inputs
-            "last_updated": calcs_reversed[0].output.last_updated,
-        }
-
-        return entry_dict
-
-
 def get_uri(dir_name: Union[str, Path]) -> str:
     """
     Return the URI path for a directory.
@@ -276,45 +226,6 @@ def _parse_custodian(dir_name: Path) -> Optional[dict]:
     if len(filenames) >= 1:
         return loadfn(filenames[0], cls=None)
     return None
-
-
-def _parse_orig_inputs(
-    dir_name: Path,
-) -> dict[str, Any]:
-    """
-    Parse original input files.
-
-    Calculations using custodian generate a *.orig file for the inputs. This is useful
-    to know how the calculation originally started.
-
-    Parameters
-    ----------
-    dir_name
-        Path to calculation directory.
-
-    Returns
-    -------
-    dict[str, Any]
-        The original molecule, rem, solvent and other data.
-    """
-    orig_inputs = {}
-    orig_file_path = next(dir_name.glob("*.orig*"), None)
-
-    if orig_file_path:
-        orig_inputs = QCInput.from_file(orig_file_path)
-
-    return orig_inputs
-
-
-def _parse_additional_json(dir_name: Path) -> dict[str, Any]:
-    """Parse additional json files in the directory."""
-    additional_json = {}
-    for filename in dir_name.glob("*.json*"):
-        key = filename.name.split(".")[0]
-        if key not in ("custodian", "transformations"):
-            if key not in additional_json:
-                additional_json[key] = loadfn(filename, cls=None)
-    return additional_json
 
 
 # TODO currently doesn't work b/c has_jdftx_completed method is not implemented
