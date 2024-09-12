@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
 from pathlib import Path
+
+from atomate2.jdftx.io.jdftxoutfile import JDFTXOutfile
 
 path = Path(__file__)
 filename = path.parents[0] / Path("latticeminimize.out")
@@ -17,6 +18,6 @@ dct = jout.electronic_output
 print(jout.trajectory_positions)
 jout.trajectory_lattice
 jout.trajectory_forces
-jout.trajectory_ecomponents 
+jout.trajectory_ecomponents
 
 print(dct)

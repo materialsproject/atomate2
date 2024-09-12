@@ -230,5 +230,4 @@ def filter_task_type(
 
     if sort_by is not None:
         return sorted(filtered, key=sort_by)
-    else:
-        return filtered
+    return filtered

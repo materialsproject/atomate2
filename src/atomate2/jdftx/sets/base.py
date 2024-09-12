@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING, Any
 
 from monty.serialization import loadfn
 from pymatgen.io.core import InputGenerator, InputSet
-from pymatgen.util.typing import PathLike
 
 from atomate2.jdftx.io.JDFTXInfile import (  # TODO update this to the pymatgen module
     JDFTXInfile,
@@ -19,6 +18,7 @@ from atomate2.jdftx.io.JDFTXInfile import (  # TODO update this to the pymatgen 
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
+    from pymatgen.util.typing import PathLike
 
 _BASE_JDFTX_SET = loadfn(get_mod_path("atomate2.jdftx.sets") / "BaseJdftxSet.yaml")
 
@@ -33,18 +33,14 @@ class JdftxInputSet(InputSet):
         A JdftxInput object
     """
 
-    def __init__(
-        self,
-        jdftxinput: JDFTXInfile, 
-        jdftxstructure: JDFTXStructure
-    ) -> None:
+    def __init__(self, jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure) -> None:
         self.jdftxstructure = jdftxstructure
         self.jdftxinput = jdftxinput
 
     def write_input(
         self,
         directory: str | Path,
-        infile: PathLike = "inputs.in", #TODO I don't think this should be optional
+        infile: PathLike = "inputs.in",  # TODO I don't think this should be optional
         make_dir: bool = True,
         overwrite: bool = True,
     ) -> None:
@@ -82,10 +78,8 @@ class JdftxInputSet(InputSet):
             Directory to read JDFTx inputs from.
         """
         directory = Path(directory)
-        jdftxinput = JDFTXInfile.from_file(
-            directory / "input.in"
-        ) 
-        jdftxstructure = jdftxinput.to_JDFTXStructure()
+        jdftxinput = JDFTXInfile.from_file(directory / "input.in")
+        jdftxstructure = jdftxinput.to_JDFTXStructure(jdftxinput)
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftxstructure)
 
 
@@ -132,31 +126,30 @@ class JdftxInputGenerator(InputGenerator):
 
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftx_structure)
 
+
 def condense_jdftxinputs(
-        jdftxinput:JDFTXInfile, 
-        jdftxstructure:JDFTXStructure
-        ) -> JDFTXInfile:
+    jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
+) -> JDFTXInfile:
+    
     """
     Function to combine a JDFTXInputs class with calculation
     settings and a JDFTxStructure that defines the structure
     into one JDFTXInputs instance.
 
     Parameters
-        ----------
+    ----------
         jdftxinput: JDFTXInfile
             A JDFTXInfile object with calculation settings.
 
         jdftxstructure: JDFTXStructure
             A JDFTXStructure object that defines the structure.
-            
-        Returns
-        -------
+
+    Returns
+    -------
         JDFTXInfile
             A JDFTXInfile that includes the calculation
             parameters and input structure.
     """
-    condensed_inputs = (
-        jdftxinput + 
-        JDFTXInfile.from_str(jdftxstructure.get_str())
-        )
+
+    condensed_inputs = jdftxinput + JDFTXInfile.from_str(jdftxstructure.get_str())
     return condensed_inputs

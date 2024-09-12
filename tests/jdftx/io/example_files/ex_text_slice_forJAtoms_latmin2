@@ -75,7 +75,7 @@ Computing DFT-D3 correction:
 EvdW_6 =   -0.043366
 EvdW_8 =   -0.075888
 # Lattice vectors:
-R = 
+R =
 [      6.16844     -5.9e-05      5.3e-05  ]
 [      2.3e-05      16.4275     0.001924  ]
 [        4e-05    -0.005724      5.90259  ]
@@ -133,4 +133,3 @@ LatticeMinimize: Iter:   9  F: -246.531007900240667  |grad|_K:  2.745e-03  t[s]:
 # magnetic-moments Ta +0.000 +0.000 +0.000 +0.000
 # oxidation-state B -0.034 -0.034 -0.034 -0.034
 # magnetic-moments B +0.000 +0.000 +0.000 +0.100
-

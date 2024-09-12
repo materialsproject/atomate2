@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
 from jobflow import Maker, Response, job
 
-# if TYPE_CHECKING:
+if TYPE_CHECKING:
+    from atomate2.jdftx.sets.base import JdftxInputGenerator
 from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
@@ -19,7 +20,6 @@ from pymatgen.electronic_structure.bandstructure import (
 from atomate2.jdftx.files import write_jdftx_input_set
 from atomate2.jdftx.run import run_jdftx, should_stop_children
 from atomate2.jdftx.schemas.task import TaskDoc
-from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 _DATA_OBJECTS = [  # TODO update relevant list for JDFTx
     BandStructure,
@@ -117,8 +117,6 @@ class BaseJdftxMaker(Maker):
         run_jdftx(**self.run_jdftx_kwargs)
 
         current_dir = Path.cwd()
-        files = [str(f) for f in current_dir.glob("*") if f.is_file()]
-
         task_doc = get_jdftx_task_document(current_dir, **self.task_document_kwargs)
 
         stop_children = should_stop_children(task_doc)
