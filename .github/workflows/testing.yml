@@ -23,37 +23,6 @@ jobs:
 
       - uses: pre-commit/action@v3.0.0
 
-  test-notebooks:
-    services:
-      local_mongodb:
-        image: mongo:4.0
-        ports:
-          - 27017:27017
-
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10", "3.11"]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .[strict,tests]
-
-      - name: Install pymatgen from master if triggered by pymatgen repo dispatch
-        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
-        run: pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
-
-      - name: Test Notebooks
-        run: pytest --nbmake ./tutorials
-
   test:
     services:
       local_mongodb:
@@ -115,7 +84,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
 
-  test-ase:
+  test-notebooks-and-ase:
     # It seems like anything torch-dependent and tblite can't be installed in the same environment
     # without the tblite tests failing in CI, see, e.g.:
     # https://github.com/tblite/tblite/issues/116
@@ -148,7 +117,10 @@ jobs:
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
         run: pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
-      - name: Test
+      - name: Test Notebooks
+        run: pytest --nbmake ./tutorials
+
+      - name: Test ASE
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: pytest --cov=atomate2 --cov-report=xml tests/ase
