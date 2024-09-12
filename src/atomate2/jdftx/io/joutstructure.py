@@ -10,7 +10,7 @@ from jdftx.io.jeiters import JEiters
 def _get_colon_var_t1(linetext: str, lkey: str) -> float | None:
     """
     Reads a float from an elec minimization line assuming value appears as
-    "... lkey value ..."
+    "... lkey value ...".
 
     Parameters
     ----------
@@ -27,7 +27,7 @@ def _get_colon_var_t1(linetext: str, lkey: str) -> float | None:
 
 def correct_iter_type(iter_type: str | None) -> str | None:
     """
-    Corrects the iter_type string to match the JDFTx convention
+    Corrects the iter_type string to match the JDFTx convention.
 
     Parameters
     ----------
@@ -52,7 +52,8 @@ def correct_iter_type(iter_type: str | None) -> str | None:
 
 def is_strain_start_line(line_text: str) -> bool:
     """
-    Returns True if the line_text is the start of a log message for a JDFTx optimization step
+    Returns True if the line_text is the start of a log message for a JDFTx 
+    optimization step.
 
     Parameters
     ----------
@@ -62,7 +63,8 @@ def is_strain_start_line(line_text: str) -> bool:
     Returns
     -------
     is_line: bool
-        True if the line_text is the start of a log message for a JDFTx optimization step
+        True if the line_text is the start of a log message for a JDFTx 
+        optimization step
     """
     is_line = "# Strain tensor in" in line_text
     return is_line
@@ -70,7 +72,8 @@ def is_strain_start_line(line_text: str) -> bool:
 
 def is_lattice_start_line(line_text: str) -> bool:
     """
-    Returns True if the line_text is the start of a log message for a JDFTx optimization step
+    Returns True if the line_text is the start of a log message for a JDFTx 
+    optimization step.
 
     Parameters
     ----------
@@ -80,7 +83,8 @@ def is_lattice_start_line(line_text: str) -> bool:
     Returns
     -------
     is_line: bool
-        True if the line_text is the start of a log message for a JDFTx optimization step
+        True if the line_text is the start of a log message for a JDFTx 
+        optimization step
     """
     is_line = "# Lattice vectors:" in line_text
     return is_line
@@ -88,7 +92,8 @@ def is_lattice_start_line(line_text: str) -> bool:
 
 def is_forces_start_line(line_text: str) -> bool:
     """
-    Returns True if the line_text is the start of a log message for a JDFTx optimization step
+    Returns True if the line_text is the start of a log message for a JDFTx 
+    optimization step.
 
     Parameters
     ----------
@@ -98,7 +103,8 @@ def is_forces_start_line(line_text: str) -> bool:
     Returns
     -------
     is_line: bool
-        True if the line_text is the start of a log message for a JDFTx optimization step
+        True if the line_text is the start of a log message for a JDFTx 
+        optimization step
     """
     is_line = "# Forces in" in line_text
     return is_line
@@ -106,7 +112,8 @@ def is_forces_start_line(line_text: str) -> bool:
 
 def is_stress_start_line(line_text: str) -> bool:
     """
-    Returns True if the line_text is the start of a log message for a JDFTx optimization step
+    Returns True if the line_text is the start of a log message for a JDFTx 
+    optimization step.
 
     Parameters
     ----------
@@ -116,7 +123,8 @@ def is_stress_start_line(line_text: str) -> bool:
     Returns
     -------
     is_line: bool
-        True if the line_text is the start of a log message for a JDFTx optimization step
+        True if the line_text is the start of a log message for a JDFTx 
+        optimization step
     """
     is_line = "# Stress tensor in" in line_text
     return is_line
@@ -124,7 +132,8 @@ def is_stress_start_line(line_text: str) -> bool:
 
 def is_posns_start_line(line_text: str) -> bool:
     """
-    Returns True if the line_text is the start of a log message for a JDFTx optimization step
+    Returns True if the line_text is the start of a log message for a JDFTx 
+    optimization step.
 
     Parameters
     ----------
@@ -134,7 +143,8 @@ def is_posns_start_line(line_text: str) -> bool:
     Returns
     -------
         is_line: bool
-            True if the line_text is the start of a log message for a JDFTx optimization step
+            True if the line_text is the start of a log message for a JDFTx 
+            optimization step
     """
     is_line = "# Ionic positions" in line_text
     return is_line
@@ -142,7 +152,8 @@ def is_posns_start_line(line_text: str) -> bool:
 
 def is_ecomp_start_line(line_text: str) -> bool:
     """
-    Returns True if the line_text is the start of a log message for a JDFTx optimization step
+    Returns True if the line_text is the start of a log message for a JDFTx 
+    optimization step.
 
     Parameters
     ----------
@@ -152,7 +163,8 @@ def is_ecomp_start_line(line_text: str) -> bool:
     Returns
     -------
     is_line: bool
-        True if the line_text is the start of a log message for a JDFTx optimization step
+        True if the line_text is the start of a log message for a JDFTx 
+        optimization step
     """
     is_line = "# Energy components" in line_text
     return is_line
@@ -160,7 +172,8 @@ def is_ecomp_start_line(line_text: str) -> bool:
 
 def is_lowdin_start_line(line_text: str) -> bool:
     """
-    Returns True if the line_text is the start of a Lowdin population analysis in a JDFTx out file
+    Returns True if the line_text is the start of a Lowdin population analysis 
+    in a JDFTx out file.
 
     Parameters
     ----------
@@ -170,7 +183,8 @@ def is_lowdin_start_line(line_text: str) -> bool:
     Returns
     -------
     is_line: bool
-        True if the line_text is the start of a Lowdin population analysis in a JDFTx out file
+        True if the line_text is the start of a Lowdin population analysis in a 
+        JDFTx out file
     """
     is_line = "#--- Lowdin population analysis ---" in line_text
     return is_line
@@ -178,7 +192,8 @@ def is_lowdin_start_line(line_text: str) -> bool:
 
 def is_charges_line(line_text: str) -> bool:
     """
-    Returns True if the line_text is a line of text from a JDFTx out file corresponding to a Lowdin population analysis
+    Returns True if the line_text is a line of text from a JDFTx out file 
+    corresponding to a Lowdin population analysis.
 
     Parameters
     ----------
@@ -188,14 +203,16 @@ def is_charges_line(line_text: str) -> bool:
     Returns
     -------
     is_line: bool
-        True if the line_text is a line of text from a JDFTx out file corresponding to a Lowdin population
+        True if the line_text is a line of text from a JDFTx out file 
+        corresponding to a Lowdin population
     """
     is_line = "oxidation-state" in line_text
     return is_line
 
 def is_moments_line(line_text: str) -> bool:
     """
-    Returns True if the line_text is a line of text from a JDFTx out file corresponding to a Lowdin population analysis
+    Returns True if the line_text is a line of text from a JDFTx out file 
+    corresponding to a Lowdin population analysis.
 
     Parameters
     ----------
@@ -205,7 +222,8 @@ def is_moments_line(line_text: str) -> bool:
     Returns
     -------
     is_line: bool
-        True if the line_text is a line of text from a JDFTx out file corresponding to a Lowdin population
+        True if the line_text is a line of text from a JDFTx out file 
+        corresponding to a Lowdin population
     """
     is_line = "magnetic-moments" in line_text
     return is_line
@@ -215,7 +233,8 @@ def is_moments_line(line_text: str) -> bool:
 @dataclass
 class JOutStructure(Structure):
     """
-    A mutant of the pymatgen Structure class for flexiblity in holding JDFTx optimization data
+    A mutant of the pymatgen Structure class for flexiblity in holding JDFTx 
+    optimization data
     """
 
     iter_type: str = None
@@ -275,16 +294,18 @@ class JOutStructure(Structure):
         Parameters
         ----------
         text_slice: list[str]
-            A slice of text from a JDFTx out file corresponding to a single optimization step / SCF cycle
+            A slice of text from a JDFTx out file corresponding to a single 
+            optimization step / SCF cycle
         eiter_type: str
             The type of electronic minimization step
         iter_type: str
             The type of optimization step
         emin_flag: str
-            The flag that indicates the start of a log message for a JDFTx optimization step
+            The flag that indicates the start of a log message for a JDFTx 
+            optimization step
         """
-        # instance = super.__init__(lattice=np.eye(3), species=[], coords=[], site_properties={})
-        instance = cls(lattice=np.eye(3), species=[], coords=[], site_properties={})
+        instance = cls(lattice=np.eye(3),
+                       species=[], coords=[], site_properties={})
         if iter_type not in ["IonicMinimize", "LatticeMinimize"]:
             iter_type = correct_iter_type(iter_type)
         instance.eiter_type = eiter_type
@@ -296,12 +317,12 @@ class JOutStructure(Structure):
             for line_type in line_collections:
                 sdict = line_collections[line_type]
                 if sdict["collecting"]:
-                    lines, collecting, collected = instance.collect_generic_line(
+                    lines, getting, got = instance.collect_generic_line(
                         line, sdict["lines"]
                     )
                     sdict["lines"] = lines
-                    sdict["collecting"] = collecting
-                    sdict["collected"] = collected
+                    sdict["collecting"] = getting
+                    sdict["collected"] = got
                     read_line = True
                     break
             if not read_line:
@@ -315,7 +336,8 @@ class JOutStructure(Structure):
         # Ecomponents needs to be parsed before emin to set etype
         instance.parse_ecomp_lines(line_collections["ecomp"]["lines"])
         instance.parse_emin_lines(line_collections["emin"]["lines"])
-        # Lattice must be parsed before posns/forces incase of direct coordinates
+        # Lattice must be parsed before posns/forces incase of direct 
+        # coordinates
         instance.parse_lattice_lines(line_collections["lattice"]["lines"])
         instance.parse_posns_lines(line_collections["posns"]["lines"])
         instance.parse_forces_lines(line_collections["forces"]["lines"])
@@ -334,12 +356,14 @@ class JOutStructure(Structure):
     def init_line_collections(self) -> dict:
         # TODO: Move line_collections to be used as a class variable
         """
-        Initializes a dictionary of line collections for each type of line in a JDFTx out file
+        Initializes a dictionary of line collections for each type of line in a 
+        JDFTx out file
 
         Returns
         -------
         line_collections: dict
-            A dictionary of line collections for each type of line in a JDFTx out file
+            A dictionary of line collections for each type of line in a JDFTx 
+            out file
         """
         line_collections = {}
         for line_type in self.line_types:
@@ -353,7 +377,8 @@ class JOutStructure(Structure):
 
     def is_emin_start_line(self, line_text: str) -> bool:
         """
-        Returns True if the line_text is the start of a log message for a JDFTx optimization step
+        Returns True if the line_text is the start of a log message for a JDFTx
+        optimization step
 
         Parameters
         ----------
@@ -363,7 +388,8 @@ class JOutStructure(Structure):
         Returns
         -------
         is_line: bool
-            True if the line_text is the start of a log message for a JDFTx optimization step
+            True if the line_text is the start of a log message for a JDFTx
+            optimization step
         """
         is_line = self.emin_flag in line_text
         return is_line
@@ -371,7 +397,8 @@ class JOutStructure(Structure):
 
     def is_opt_start_line(self, line_text: str) -> bool:
         """
-        Returns True if the line_text is the start of a log message for a JDFTx optimization step
+        Returns True if the line_text is the start of a log message for a JDFTx 
+        optimization step
 
         Parameters
         ----------
@@ -381,7 +408,8 @@ class JOutStructure(Structure):
         Returns
         -------
         is_line: bool
-            True if the line_text is the start of a log message for a JDFTx optimization step
+            True if the line_text is the start of a log message for a JDFTx 
+            optimization step
         """
         is_line = f"{self.iter_type}:" in line_text and "Iter:" in line_text
         return is_line
@@ -389,17 +417,20 @@ class JOutStructure(Structure):
 
     def get_etype_from_emin_lines(self, emin_lines: list[str]) -> str:
         """
-        Returns the type of energy from the electronic minimization data of a JDFTx out file
+        Returns the type of energy from the electronic minimization data of a 
+        JDFTx out file
 
         Parameters
         ----------
         emin_lines: list[str]
-            A list of lines of text from a JDFTx out file containing the electronic minimization data
+            A list of lines of text from a JDFTx out file containing the 
+            electronic minimization data
 
         Returns
         -------
         etype: str
-            The type of energy from the electronic minimization data of a JDFTx out file
+            The type of energy from the electronic minimization data of a JDFTx 
+            out file
         """
         etype = None
         for line in emin_lines:
@@ -413,27 +444,32 @@ class JOutStructure(Structure):
 
     def set_etype_from_emin_lines(self, emin_lines: list[str]) -> None:
         """
-        Sets the type of energy from the electronic minimization data of a JDFTx out file
+        Sets the type of energy from the electronic minimization data of a 
+        JDFTx out file
 
         Parameters
         ----------
         emin_lines: list[str]
-            A list of lines of text from a JDFTx out file containing the electronic minimization data
+            A list of lines of text from a JDFTx out file containing the 
+            electronic minimization data
         """
         self.etype = self.get_etype_from_emin_lines(emin_lines)
         if self.etype is None:
             raise ValueError(
-                "Could not determine energy type from electronic minimization data"
+                "Could not determine energy type from electronic minimization \
+                    data"
             )
 
     def parse_emin_lines(self, emin_lines: list[str]) -> None:
         """
-        Parses the lines of text corresponding to the electronic minimization data of a JDFTx out file
+        Parses the lines of text corresponding to the electronic minimization 
+        data of a JDFTx out file
 
         Parameters
         ----------
         emin_lines: list[str]
-            A list of lines of text from a JDFTx out file containing the electronic minimization data
+            A list of lines of text from a JDFTx out file containing the 
+            electronic minimization data
         """
         if len(emin_lines):
             if self.etype is None:
@@ -445,16 +481,19 @@ class JOutStructure(Structure):
 
     def parse_lattice_lines(self, lattice_lines: list[str]) -> None:
         """
-        Parses the lines of text corresponding to the lattice vectors of a JDFTx out file
+        Parses the lines of text corresponding to the lattice vectors of a 
+        JDFTx out file
 
         Parameters
         ----------
         lattice_lines: list[str]
-            A list of lines of text from a JDFTx out file containing the lattice vectors
+            A list of lines of text from a JDFTx out file containing the 
+            lattice vectors
         """
         R = None
         if len(lattice_lines):
-            R = self._bracket_num_list_str_of_3x3_to_nparray(lattice_lines, i_start=2)
+            R = self._brkt_list_of_3x3_to_nparray(lattice_lines,
+                                                             i_start=2)
             R = R.T * bohr_to_ang
             self.lattice = Lattice(R)
 
@@ -462,39 +501,46 @@ class JOutStructure(Structure):
 
     def parse_strain_lines(self, strain_lines: list[str]) -> None:
         """
-        Parses the lines of text corresponding to the strain tensor of a JDFTx out file
+        Parses the lines of text corresponding to the strain tensor of a 
+        JDFTx out file
 
         Parameters
         ----------
         strain_lines: list[str]
-            A list of lines of text from a JDFTx out file containing the strain tensor
+            A list of lines of text from a JDFTx out file containing the 
+            strain tensor
         """
         ST = None
         if len(strain_lines):
-            ST = self._bracket_num_list_str_of_3x3_to_nparray(strain_lines, i_start=1)
+            ST = self._brkt_list_of_3x3_to_nparray(strain_lines,
+                                                              i_start=1)
             ST = ST.T * 1  # Conversion factor?
         self.strain = ST
 
 
     def parse_stress_lines(self, stress_lines: list[str]) -> None:
         """
-        Parses the lines of text corresponding to the stress tensor of a JDFTx out file
+        Parses the lines of text corresponding to the stress tensor of a 
+        JDFTx out file
 
         Parameters
         ----------
         stress_lines: list[str]
-            A list of lines of text from a JDFTx out file containing the stress tensor
+            A list of lines of text from a JDFTx out file containing the 
+            stress tensor
         """
         ST = None
         if len(stress_lines):
-            ST = self._bracket_num_list_str_of_3x3_to_nparray(stress_lines, i_start=1)
+            ST = self._brkt_list_of_3x3_to_nparray(stress_lines,
+                                                              i_start=1)
             ST = ST.T * 1  # Conversion factor?
         self.stress = ST
 
 
     def parse_posns_lines(self, posns_lines: list[str]) -> None:
         """
-        Parses the lines of text corresponding to the positions of a JDFTx out file
+        Parses the lines of text corresponding to the positions of a 
+        JDFTx out file
 
         Parameters
         ----------
@@ -502,7 +548,8 @@ class JOutStructure(Structure):
             A list of lines of text from a JDFTx out file
         """
         nAtoms = len(posns_lines) - 1
-        coords_type = posns_lines[0].split("positions in")[1].strip().split()[0].strip()
+        coords_type = posns_lines[0].split("positions in")[1]
+        coords_type = coords_type.strip().split()[0].strip()
         posns = []
         names = []
         for i in range(nAtoms):
@@ -517,13 +564,15 @@ class JOutStructure(Structure):
         else:
             posns *= bohr_to_ang
         for i in range(nAtoms):
-            self.append(species=names[i], coords=posns[i], coords_are_cartesian=True)
+            self.append(species=names[i], coords=posns[i],
+                        coords_are_cartesian=True)
 
 
 
     def parse_forces_lines(self, forces_lines: list[str]) -> None:
         """
-        Parses the lines of text corresponding to the forces of a JDFTx out file
+        Parses the lines of text corresponding to the forces of a 
+        JDFTx out file
 
         Parameters
         ----------
@@ -531,7 +580,8 @@ class JOutStructure(Structure):
             A list of lines of text from a JDFTx out file containing the forces
         """
         nAtoms = len(forces_lines) - 1
-        coords_type = forces_lines[0].split("Forces in")[1].strip().split()[0].strip()
+        coords_type = forces_lines[0].split("Forces in")[1]
+        coords_type = coords_type.strip().split()[0].strip()
         forces = []
         for i in range(nAtoms):
             line = forces_lines[i + 1]
@@ -552,7 +602,8 @@ class JOutStructure(Structure):
 
     def parse_ecomp_lines(self, ecomp_lines: list[str]) -> None:
         """
-        Parses the lines of text corresponding to the energy components of a JDFTx out file
+        Parses the lines of text corresponding to the energy components of a 
+        JDFTx out file
 
         Parameters
         ----------
@@ -574,7 +625,8 @@ class JOutStructure(Structure):
 
     def parse_lowdin_lines(self, lowdin_lines: list[str]) -> None:
         """
-        Parses the lines of text corresponding to a Lowdin population analysis in a JDFTx out file
+        Parses the lines of text corresponding to a Lowdin population analysis 
+        in a JDFTx out file
 
         Parameters
         ----------
@@ -614,7 +666,8 @@ class JOutStructure(Structure):
         self, lowdin_line: str, lowdin_dict: dict[str, float]
     ) -> dict[str, float]:
         """
-        Parses a line of text from a JDFTx out file corresponding to a Lowdin population analysis
+        Parses a line of text from a JDFTx out file corresponding to a 
+        Lowdin population analysis
 
         Parameters
         ----------
@@ -654,7 +707,8 @@ class JOutStructure(Structure):
 
     def parse_opt_lines(self, opt_lines: list[str]) -> None:
         """
-        Parses the lines of text corresponding to the optimization step of a JDFTx out file
+        Parses the lines of text corresponding to the optimization step of a 
+        JDFTx out file
 
         Parameters
         ----------
@@ -687,8 +741,8 @@ class JOutStructure(Structure):
         # I've had horrible experiences with storing functions in dictionaries
         # in the past
         """
-        Returns True if the line_text is the start of a section of the JDFTx out file
-        corresponding to the line_type
+        Returns True if the line_text is the start of a section of the 
+        JDFTx out file corresponding to the line_type
 
         Parameters
         ----------
@@ -700,7 +754,8 @@ class JOutStructure(Structure):
         Returns
         -------
         is_line: bool
-            True if the line_text is the start of a section of the JDFTx out file
+            True if the line_text is the start of a section of the 
+            JDFTx out file
         """
         if line_type == "lowdin":
             return is_lowdin_start_line(line_text)
@@ -726,8 +781,8 @@ class JOutStructure(Structure):
         self, line_text: str, generic_lines: list[str]
     ) -> tuple[list[str], bool, bool]:
         """
-        Collects a line of text into a list of lines if the line is not empty, and otherwise
-        updates the collecting and collected flags
+        Collects a line of text into a list of lines if the line is not empty, 
+        and otherwise updates the collecting and collected flags
 
         Parameters
         ----------
@@ -754,7 +809,7 @@ class JOutStructure(Structure):
             generic_lines.append(line_text)
         return generic_lines, collecting, collected
 
-    def _bracket_num_list_str_of_3_to_nparray(self, line: str) -> np.ndarray:
+    def _brkt_list_of_3_to_nparray(self, line: str) -> np.ndarray:
         """
         Converts a string of the form "[ x y z ]" to a 3x1 numpy array
 
@@ -765,7 +820,7 @@ class JOutStructure(Structure):
         """
         return np.array([float(x) for x in line.split()[1:-1]])
 
-    def _bracket_num_list_str_of_3x3_to_nparray(
+    def _brkt_list_of_3x3_to_nparray(
         self, lines: list[str], i_start=0
     ) -> np.ndarray:
         """
@@ -785,7 +840,7 @@ class JOutStructure(Structure):
         """
         out = np.zeros([3, 3])
         for i in range(3):
-            out[i, :] += self._bracket_num_list_str_of_3_to_nparray(lines[i + i_start])
+            out[i, :] += self._brkt_list_of_3_to_nparray(lines[i + i_start])
         return out
 
     
