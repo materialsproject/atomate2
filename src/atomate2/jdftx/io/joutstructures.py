@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from atomate2.jdftx.io.JOutStructure import JOutStructure, correct_iter_type, is_lowdin_start_line
+from atomate2.jdftx.io.joutstructure import JOutStructure, correct_iter_type, is_lowdin_start_line
 
 
 def get_start_idx(out_slice: list[str], out_slice_start_flag: str = "-------- Electronic minimization -----------") -> int:

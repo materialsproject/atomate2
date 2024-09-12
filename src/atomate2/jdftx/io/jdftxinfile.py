@@ -20,7 +20,7 @@ from pymatgen.util.io_utils import clean_lines
 from pathlib import Path
 
 from atomate2.jdftx.io.generic_tags import flatten_list
-from atomate2.jdftx.io.JDFTXInfile_master_format import (
+from atomate2.jdftx.io.jdftxinfile_master_format import (
     __PHONON_TAGS__,
     __TAG_LIST__,
     __WANNIER_TAGS__,

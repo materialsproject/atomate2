@@ -1,5 +1,5 @@
 from pathlib import Path
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
+from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
 from pytest import approx
 import pytest
 from pymatgen.util.typing import PathLike

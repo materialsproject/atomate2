@@ -1,5 +1,5 @@
 from pydash import lines
-from atomate2.jdftx.io.JEiter import JEiter
+from atomate2.jdftx.io.jeiter import JEiter
 
 
 def gather_line_collections(iter_type: str, text_slice: list[str]):

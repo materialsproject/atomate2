@@ -5,14 +5,14 @@ from typing import List, Optional
 
 from monty.io import zopen
 
-from atomate2.jdftx.io.JDFTXOutfileSlice import JDFTXOutfileSlice
-from atomate2.jdftx.io.JMinSettings import (
+from atomate2.jdftx.io.jdftxoutfileslice import JDFTXOutfileSlice
+from atomate2.jdftx.io.jminsettings import (
     JMinSettingsElectronic,
     JMinSettingsFluid,
     JMinSettingsIonic,
     JMinSettingsLattice,
 )
-from atomate2.jdftx.io.JOutStructures import JOutStructures
+from atomate2.jdftx.io.joutstructures import JOutStructures
 
 
 class ClassPrintFormatter:

@@ -4,7 +4,7 @@ import numpy as np
 from pymatgen.core.structure import Lattice, Structure
 from pymatgen.core.units import Ha_to_eV, bohr_to_ang
 
-from atomate2.jdftx.io.JEiters import JEiters
+from jdftx.io.jeiters import JEiters
 
 
 def _get_colon_var_t1(linetext: str, lkey: str) -> float | None:

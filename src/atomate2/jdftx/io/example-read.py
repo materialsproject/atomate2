@@ -4,7 +4,7 @@ import pathlib
 
 import numpy as np
 
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
+from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
 
 # read file example
 p = pathlib.Path(__file__)

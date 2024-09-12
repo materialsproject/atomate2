@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
+from atomate2.jdftx.io.jdftxoutfile import JDFTXOutfile
 
 path = Path(__file__)
 filename = path.parents[0] / Path("latticeminimize.out")
