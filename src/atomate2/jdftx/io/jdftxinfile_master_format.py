@@ -1,6 +1,10 @@
 from copy import deepcopy
 
 from atomate2.jdftx.io.jdftxinfile_ref_options import (
+    JDFTXFluid_subtagdict, JDFTXMinimize_subtagdict
+)
+
+from atomate2.jdftx.io.jdftxinfile_ref_options import (
     JDFTXDumpFreqOptions, JDFTXDumpVarOptions, elec_ex_corr_func_options,
     elec_ex_corr_func_x_options, elec_ex_corr_func_c_options, 
     elec_ex_corr_func_xc_options,
@@ -13,91 +17,6 @@ from .generic_tags import BoolTag, StrTag, IntTag, FloatTag, TagContainer, Multi
 
 
 
-
-# simple dictionaries deepcopied multiple times into MASTER_TAG_LIST later for 
-# different tags
-JDFTXMinimize_subtagdict = {
-    "alphaTincreaseFactor": FloatTag(),
-    "alphaTmin": FloatTag(),
-    "alphaTreduceFactor": FloatTag(),
-    "alphaTstart": FloatTag(),
-    "dirUpdateScheme": StrTag(
-        options=[
-            "FletcherReeves",
-            "HestenesStiefel",
-            "L-BFGS",
-            "PolakRibiere",
-            "SteepestDescent",
-        ]
-    ),
-    "energyDiffThreshold": FloatTag(),
-    "fdTest": BoolTag(),
-    "history": IntTag(),
-    "knormThreshold": FloatTag(),
-    "linminMethod": StrTag(
-        options=["CubicWolfe", "DirUpdateRecommended", "Quad", "Relax"]
-    ),
-    "nAlphaAdjustMax": FloatTag(),
-    "nEnergyDiff": IntTag(),
-    "nIterations": IntTag(),
-    "updateTestStepSize": BoolTag(),
-    "wolfeEnergy": FloatTag(),
-    "wolfeGradient": FloatTag(),
-}
-JDFTXFluid_subtagdict = {
-    'epsBulk': FloatTag(),
-    'epsInf': FloatTag(),
-    'epsLJ': FloatTag(),
-    'Nnorm': FloatTag(),
-    'pMol': FloatTag(),
-    'poleEl': TagContainer(
-        can_repeat = True,
-        write_tagname=True,
-        subtags = {
-            "omega0": FloatTag(write_tagname=False, optional=False),
-            "gamma0": FloatTag(write_tagname=False, optional=False),
-            "A0": FloatTag(write_tagname=False, optional=False),
-        },
-    ),
-    # 'poleEl': FloatTag(can_repeat = True),
-    "Pvap": FloatTag(),
-    "quad_nAlpha": FloatTag(),
-    "quad_nBeta": FloatTag(),
-    "quad_nGamma": FloatTag(),
-    "representation": TagContainer(
-        subtags={"MuEps": FloatTag(), "Pomega": FloatTag(),
-                 "PsiAlpha": FloatTag()}
-    ),
-    "Res": FloatTag(),
-    "Rvdw": FloatTag(),
-    "s2quadType": StrTag(
-        options=[
-            "10design60",
-            "11design70",
-            "12design84",
-            "13design94",
-            "14design108",
-            "15design120",
-            "16design144",
-            "17design156",
-            "18design180",
-            "19design204",
-            "20design216",
-            "21design240",
-            "7design24",
-            "8design36",
-            "9design48",
-            "Euler",
-            "Icosahedron",
-            "Octahedron",
-            "Tetrahedron",
-        ]
-    ),
-    "sigmaBulk": FloatTag(),
-    "tauNuc": FloatTag(),
-    "translation": StrTag(options=["ConstantSpline", "Fourier",
-                                   "LinearSpline"]),
-}
 
 MASTER_TAG_LIST = {
     "extrafiles": {
@@ -234,20 +153,20 @@ MASTER_TAG_LIST = {
                 # (hyb-gga-HSE06)
                 StrTag(
                     write_tagname=True,
-                    options=elec_ex_corr_func_options,
+                    options=deepcopy(elec_ex_corr_func_options),
                 ),
                 TagContainer(
                     subtags={
                         "funcX": StrTag(write_tagname=False, optional=False,
-                                        options=elec_ex_corr_func_x_options),
+                                        options=deepcopy(elec_ex_corr_func_x_options)),
                         "funcC": StrTag(write_tagname=False, optional=False,
-                                        options=elec_ex_corr_func_c_options),
+                                        options=deepcopy(elec_ex_corr_func_c_options)),
                     }
                 ),
                 TagContainer(
                     subtags={
                         "funcXC": StrTag(write_tagname=False, optional=False,
-                                         options=elec_ex_corr_func_xc_options)}
+                                         options=deepcopy(elec_ex_corr_func_xc_options))}
                 ),
             ]
         ),
@@ -264,9 +183,9 @@ MASTER_TAG_LIST = {
                 TagContainer(
                     subtags={
                         "funcX": StrTag(write_tagname=False, optional=False,
-                                        options=elec_ex_corr_func_x_options),
+                                        options=deepcopy(elec_ex_corr_func_x_options)),
                         "funcC": StrTag(write_tagname=False, optional=False,
-                                        options=elec_ex_corr_func_c_options),
+                                        options=deepcopy(elec_ex_corr_func_c_options)),
                     }
                 ),
                 # TODO: add all XC options from here:
@@ -276,7 +195,7 @@ MASTER_TAG_LIST = {
                 TagContainer(
                     subtags={
                         "funcXC": StrTag(write_tagname=False, optional=False,
-                                         options=elec_ex_corr_func_xc_options)}
+                                         options=deepcopy(elec_ex_corr_func_xc_options))}
                 ),
             ],
         ),
