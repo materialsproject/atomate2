@@ -5,12 +5,15 @@ from atomate2.jdftx.io.jdftxinfile_ref_options import (
 )
 
 from atomate2.jdftx.io.jdftxinfile_ref_options import (
-    JDFTXDumpFreqOptions, JDFTXDumpVarOptions, elec_ex_corr_func_options,
-    elec_ex_corr_func_x_options, elec_ex_corr_func_c_options, 
-    elec_ex_corr_func_xc_options,
+    JDFTXDumpFreqOptions, JDFTXDumpVarOptions, func_options,
+    func_x_options, func_c_options, 
+    func_xc_options,
 )
 
-from .generic_tags import BoolTag, StrTag, IntTag, FloatTag, TagContainer, MultiformatTag, BoolTagContainer, DumpTagContainer, InitMagMomTag
+from .generic_tags import (
+    BoolTag, StrTag, IntTag, FloatTag, TagContainer, MultiformatTag, 
+    BoolTagContainer, DumpTagContainer, InitMagMomTag
+)
 
 
 
@@ -153,20 +156,20 @@ MASTER_TAG_LIST = {
                 # (hyb-gga-HSE06)
                 StrTag(
                     write_tagname=True,
-                    options=deepcopy(elec_ex_corr_func_options),
+                    options=deepcopy(func_options),
                 ),
                 TagContainer(
                     subtags={
                         "funcX": StrTag(write_tagname=False, optional=False,
-                                        options=deepcopy(elec_ex_corr_func_x_options)),
+                                        options=deepcopy(func_x_options)),
                         "funcC": StrTag(write_tagname=False, optional=False,
-                                        options=deepcopy(elec_ex_corr_func_c_options)),
+                                        options=deepcopy(func_c_options)),
                     }
                 ),
                 TagContainer(
                     subtags={
                         "funcXC": StrTag(write_tagname=False, optional=False,
-                                         options=deepcopy(elec_ex_corr_func_xc_options))}
+                                         options=deepcopy(func_xc_options))}
                 ),
             ]
         ),
@@ -178,14 +181,14 @@ MASTER_TAG_LIST = {
                 # (hyb-gga-HSE06)
                 StrTag(
                     write_tagname=True,
-                    options=elec_ex_corr_func_options,
+                    options=func_options,
                 ),
                 TagContainer(
                     subtags={
                         "funcX": StrTag(write_tagname=False, optional=False,
-                                        options=deepcopy(elec_ex_corr_func_x_options)),
+                                        options=deepcopy(func_x_options)),
                         "funcC": StrTag(write_tagname=False, optional=False,
-                                        options=deepcopy(elec_ex_corr_func_c_options)),
+                                        options=deepcopy(func_c_options)),
                     }
                 ),
                 # TODO: add all XC options from here:
@@ -195,7 +198,7 @@ MASTER_TAG_LIST = {
                 TagContainer(
                     subtags={
                         "funcXC": StrTag(write_tagname=False, optional=False,
-                                         options=deepcopy(elec_ex_corr_func_xc_options))}
+                                         options=deepcopy(func_xc_options))}
                 ),
             ],
         ),
@@ -1047,7 +1050,8 @@ MASTER_TAG_LIST = {
                     can_repeat=True,
                     subtags={
                         "species": StrTag(write_tagname=False, optional=False),
-                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False,
+                                            optional=False),
                         "r": FloatTag(write_tagname=False, optional=False),
                         "i0": FloatTag(write_tagname=False, optional=False),
                         "i1": FloatTag(write_tagname=False, optional=False),
@@ -1058,7 +1062,8 @@ MASTER_TAG_LIST = {
                     can_repeat=True,
                     subtags={
                         "species": StrTag(write_tagname=False, optional=False),
-                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False,
+                                            optional=False),
                         "r": FloatTag(write_tagname=False, optional=False),
                     },
                 ),
@@ -1067,7 +1072,8 @@ MASTER_TAG_LIST = {
                     can_repeat=True,
                     subtags={
                         "species": StrTag(write_tagname=False, optional=False),
-                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False,
+                                            optional=False),
                         "orbDesc": StrTag(write_tagname=False, optional=False),
                     },
                 ),
@@ -1075,7 +1081,8 @@ MASTER_TAG_LIST = {
                     can_repeat=True,
                     subtags={
                         "species": StrTag(write_tagname=False, optional=False),
-                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False,
+                                            optional=False),
                         "orbDesc": StrTag(write_tagname=False, optional=False),
                     },
                 ),
@@ -1176,8 +1183,10 @@ MASTER_TAG_LIST = {
         ),
         "pcm-nonlinear-debug": TagContainer(
             subtags={
-                "linearDielectric": BoolTag(write_tagname=False, optional=False),
-                "linearScreening": BoolTag(write_tagname=False, optional=False),
+                "linearDielectric": BoolTag(write_tagname=False,
+                                            optional=False),
+                "linearScreening": BoolTag(write_tagname=False,
+                                           optional=False),
             }
         ),
     },
@@ -1211,7 +1220,9 @@ __WANNIER_TAGS__ = [
     "wannier-minimize",
     "defect-supercell",
 ]
-__TAG_LIST__ = [tag for group in MASTER_TAG_LIST for tag in MASTER_TAG_LIST[group]]
+__TAG_LIST__ = [
+    tag for group in MASTER_TAG_LIST for tag in MASTER_TAG_LIST[group]
+]
 __TAG_GROUPS__ = {
     tag: group for group in MASTER_TAG_LIST for tag in MASTER_TAG_LIST[group]
 }

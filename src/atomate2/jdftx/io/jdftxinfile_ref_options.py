@@ -1,7 +1,7 @@
 from jdftx.io.generic_tags import BoolTag, FloatTag, IntTag, StrTag, TagContainer
 
 
-elec_ex_corr_func_options = [
+func_options = [
     "gga",  # Perdew-Burke-Ernzerhof GGA
     "gga-PBE",  # Perdew-Burke-Ernzerhof GGA
     "gga-PBEsol",  # Perdew-Burke-Ernzerhof GGA reparametrized for solids
@@ -24,7 +24,7 @@ elec_ex_corr_func_options = [
     "pot-LB94"  # van Leeuwen-Baerends model potential (no total energy)
 ]
 
-elec_ex_corr_func_x_options = [
+func_x_options = [
     "gga-x-2d-b86",  # Becke 86 in 2D
     "gga-x-2d-b86-mgc",  # Becke 86 with modified gradient correction for 2D
     "gga-x-2d-b88",  # Becke 88 in 2D
@@ -128,7 +128,7 @@ elec_ex_corr_func_x_options = [
     "gga-x-vmt-pbe",  # Vela, Medel, and Trickey with mu = mu_PBE
 ]
 
-elec_ex_corr_func_c_options = [
+func_c_options = [
     "c-none",  # no correlation
     "gga-c-acgga",  # acGGA, asymptotically corrected GGA correlation
     "gga-c-acggap",  # acGGA+, asymptotically corrected GGA correlation+
@@ -288,7 +288,7 @@ elec_ex_corr_func_c_options = [
 ]
 
 
-elec_ex_corr_func_xc_options = [
+func_xc_options = [
     "gga-b97-3c",  # Becke 97-3c by Grimme et. al.
     "gga-b97-d",  # Becke 97-D
     "gga-b97-gga1",  # Becke 97 GGA-1
