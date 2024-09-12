@@ -195,7 +195,7 @@ class JobHistory(collections.deque, MSONable):
         """Get the total run time based summing the abinit stop event run times."""
         total_run_time = 0
         for te in self.get_events_by_types(JobEvent.ABINIT_STOP):
-            run_time = te.details.get("run_time", None)
+            run_time = te.details.get("run_time")
             if run_time:
                 total_run_time += run_time
 

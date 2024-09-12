@@ -31,7 +31,7 @@ def qchem_test_dir(test_dir):
     return test_dir / "qchem"
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_qchem(
     monkeypatch: MonkeyPatch, qchem_test_dir: Path
 ) -> Generator[Callable[[Any, Any], Any], None, None]:
