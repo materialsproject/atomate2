@@ -50,9 +50,10 @@ class JEiters(list[JEiter], JEiter):
         instance._iter_flag = f"{iter_type}: Iter:"
         instance.iter_type = iter_type
         instance.etype = etype
-        for lines_collect in line_collections:
-            instance.append(JEiter._from_lines_collect(lines_collect, iter_type, etype))
+        for _lines_collect in line_collections:
+            instance.append(JEiter._from_lines_collect(_lines_collect, iter_type, etype))
         if len(lines_collect):
+            print(lines_collect)
             instance.parse_ending_lines(lines_collect)
             lines_collect = []
         return instance
