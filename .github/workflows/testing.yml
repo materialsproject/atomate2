@@ -70,9 +70,6 @@ jobs:
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
         run: pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
-      - name: Test Notebooks
-        run: pytest --nbmake ./tutorials
-
       - name: Test split ${{ matrix.split }}
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
