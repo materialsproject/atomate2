@@ -1,237 +1,14 @@
 from dataclasses import dataclass
 
+from jdftx.io.joutstructure_helpers import _get_colon_var_t1, correct_iter_type, is_charges_line, is_ecomp_start_line, is_forces_start_line, is_lattice_start_line, is_lowdin_start_line, is_moments_line, is_posns_start_line, is_strain_start_line, is_stress_start_line
 import numpy as np
 from pymatgen.core.structure import Lattice, Structure
 from pymatgen.core.units import Ha_to_eV, bohr_to_ang
-
-from jdftx.io.jeiters import JEiters
-
-
-def _get_colon_var_t1(linetext: str, lkey: str) -> float | None:
-    """
-    Reads a float from an elec minimization line assuming value appears as
-    "... lkey value ...".
-
-    Parameters
-    ----------
-    linetext: str
-        A line of text from a JDFTx out file
-    lkey: str
-        A string that appears before the float value in linetext
-    """
-    colon_var = None
-    if lkey in linetext:
-        colon_var = float(linetext.split(lkey)[1].strip().split(" ")[0])
-    return colon_var
+from typing import Any
+from atomate2.jdftx.io.jeiters import JEiters
 
 
-def correct_iter_type(iter_type: str | None) -> str | None:
-    """
-    Corrects the iter_type string to match the JDFTx convention.
-
-    Parameters
-    ----------
-    iter_type:
-        The type of optimization step
-
-    Returns
-    -------
-    iter_type: str | None
-        The corrected type of optimization step
-    """
-    print(iter_type)
-    if iter_type is not None:
-        if "lattice" in iter_type.lower():
-            iter_type = "LatticeMinimize"
-        elif "ionic" in iter_type.lower():
-            iter_type = "IonicMinimize"
-        else:
-            iter_type = None
-    return iter_type
-
-
-def is_strain_start_line(line_text: str) -> bool:
-    """
-    Returns True if the line_text is the start of a log message for a JDFTx 
-    optimization step.
-
-    Parameters
-    ----------
-    line_text: str
-        A line of text from a JDFTx out file
-
-    Returns
-    -------
-    is_line: bool
-        True if the line_text is the start of a log message for a JDFTx 
-        optimization step
-    """
-    is_line = "# Strain tensor in" in line_text
-    return is_line
-
-
-def is_lattice_start_line(line_text: str) -> bool:
-    """
-    Returns True if the line_text is the start of a log message for a JDFTx 
-    optimization step.
-
-    Parameters
-    ----------
-    line_text: str
-        A line of text from a JDFTx out file
-
-    Returns
-    -------
-    is_line: bool
-        True if the line_text is the start of a log message for a JDFTx 
-        optimization step
-    """
-    is_line = "# Lattice vectors:" in line_text
-    return is_line
-
-
-def is_forces_start_line(line_text: str) -> bool:
-    """
-    Returns True if the line_text is the start of a log message for a JDFTx 
-    optimization step.
-
-    Parameters
-    ----------
-    line_text: str
-        A line of text from a JDFTx out file
-
-    Returns
-    -------
-    is_line: bool
-        True if the line_text is the start of a log message for a JDFTx 
-        optimization step
-    """
-    is_line = "# Forces in" in line_text
-    return is_line
-
-
-def is_stress_start_line(line_text: str) -> bool:
-    """
-    Returns True if the line_text is the start of a log message for a JDFTx 
-    optimization step.
-
-    Parameters
-    ----------
-    line_text: str
-        A line of text from a JDFTx out file
-
-    Returns
-    -------
-    is_line: bool
-        True if the line_text is the start of a log message for a JDFTx 
-        optimization step
-    """
-    is_line = "# Stress tensor in" in line_text
-    return is_line
-
-
-def is_posns_start_line(line_text: str) -> bool:
-    """
-    Returns True if the line_text is the start of a log message for a JDFTx 
-    optimization step.
-
-    Parameters
-    ----------
-    line_text: str
-        A line of text from a JDFTx out file containing the positions of atoms
-
-    Returns
-    -------
-        is_line: bool
-            True if the line_text is the start of a log message for a JDFTx 
-            optimization step
-    """
-    is_line = "# Ionic positions" in line_text
-    return is_line
-
-
-def is_ecomp_start_line(line_text: str) -> bool:
-    """
-    Returns True if the line_text is the start of a log message for a JDFTx 
-    optimization step.
-
-    Parameters
-    ----------
-    line_text: str
-        A line of text from a JDFTx out file
-
-    Returns
-    -------
-    is_line: bool
-        True if the line_text is the start of a log message for a JDFTx 
-        optimization step
-    """
-    is_line = "# Energy components" in line_text
-    return is_line
-
-
-def is_lowdin_start_line(line_text: str) -> bool:
-    """
-    Returns True if the line_text is the start of a Lowdin population analysis 
-    in a JDFTx out file.
-
-    Parameters
-    ----------
-    line_text: str
-        A line of text from a JDFTx out file
-
-    Returns
-    -------
-    is_line: bool
-        True if the line_text is the start of a Lowdin population analysis in a 
-        JDFTx out file
-    """
-    is_line = "#--- Lowdin population analysis ---" in line_text
-    return is_line
-
-
-def is_charges_line(line_text: str) -> bool:
-    """
-    Returns True if the line_text is a line of text from a JDFTx out file 
-    corresponding to a Lowdin population analysis.
-
-    Parameters
-    ----------
-    line_text: str
-        A line of text from a JDFTx out file
-
-    Returns
-    -------
-    is_line: bool
-        True if the line_text is a line of text from a JDFTx out file 
-        corresponding to a Lowdin population
-    """
-    is_line = "oxidation-state" in line_text
-    return is_line
-
-def is_moments_line(line_text: str) -> bool:
-    """
-    Returns True if the line_text is a line of text from a JDFTx out file 
-    corresponding to a Lowdin population analysis.
-
-    Parameters
-    ----------
-    line_text: str
-        A line of text from a JDFTx out file
-
-    Returns
-    -------
-    is_line: bool
-        True if the line_text is a line of text from a JDFTx out file 
-        corresponding to a Lowdin population
-    """
-    is_line = "magnetic-moments" in line_text
-    return is_line
-
-
-
-@dataclass
-class JOutStructure(Structure):
+class JOutStructure:
     """
     A mutant of the pymatgen Structure class for flexiblity in holding JDFTx 
     optimization data
@@ -264,20 +41,21 @@ class JOutStructure(Structure):
         "lowdin",
         "opt",
     ]
+    structure: Structure = None
 
-    def __init__(
-        self,
-        lattice: np.ndarray,
-        species: list[str],
-        coords: list[np.ndarray],
-        site_properties: dict[str, list],
-    ):
-        super().__init__(
-            lattice=lattice,
-            species=species,
-            coords=coords,
-            site_properties=site_properties,
-        )
+    # def __init__(
+    #     self,
+    #     lattice: np.ndarray,
+    #     species: list[str],
+    #     coords: list[np.ndarray],
+    #     site_properties: dict[str, list],
+    # ):
+    #     super().__init__(
+    #         lattice=lattice,
+    #         species=species,
+    #         coords=coords,
+    #         site_properties=site_properties,
+    #     )
 
     @classmethod
     def from_text_slice(
@@ -286,7 +64,7 @@ class JOutStructure(Structure):
         eiter_type: str = "ElecMinimize",
         iter_type: str = "IonicMinimize",
         emin_flag: str = "---- Electronic minimization -------",
-    ):
+    ) -> JOutStructure:
         """
         Create a JAtoms object from a slice of an out file's text corresponding
         to a single step of a native JDFTx optimization
@@ -304,8 +82,9 @@ class JOutStructure(Structure):
             The flag that indicates the start of a log message for a JDFTx 
             optimization step
         """
-        instance = cls(lattice=np.eye(3),
-                       species=[], coords=[], site_properties={})
+        instance = cls()
+        # instance = cls(lattice=np.eye(3),
+        #                species=[], coords=[], site_properties={})
         if iter_type not in ["IonicMinimize", "LatticeMinimize"]:
             iter_type = correct_iter_type(iter_type)
         instance.eiter_type = eiter_type
@@ -842,5 +621,27 @@ class JOutStructure(Structure):
         for i in range(3):
             out[i, :] += self._brkt_list_of_3_to_nparray(lines[i + i_start])
         return out
+    
+
+    def __getatr__(self, name: str) -> Any:
+        """Return attribute value.
+
+        Return the value of an attribute.
+
+        Parameters
+        ----------
+        name: str
+            The name of the attribute
+
+        Returns
+        -------
+        value
+            The value of the attribute
+        """
+        if not hasattr(self, name):
+            if not hasattr(self.structure, name):
+                raise AttributeError(f"{self.__class__.__name__} not found: {name}")
+            return getattr(self.structure, name)
+        return getattr(self, name)
 
     
