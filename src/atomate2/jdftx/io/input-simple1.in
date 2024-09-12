@@ -11,10 +11,11 @@ elec-n-bands 34
 converge-empty-states yes
 
 #elec-ex-corr gga-PBE
+initial-magnetic-moments C 0.5 0.2 0.3 O 0.1 myAtomLabel 0.4
 
 dump-only
 dump End State
-dump End eigenvals
+#dump End eigenvals
 
 lattice \
  10 0.5 0 \
