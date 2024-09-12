@@ -1,3 +1,6 @@
+from jdftx.io.generic_tags import BoolTag, FloatTag, IntTag, StrTag, TagContainer
+
+
 elec_ex_corr_func_options = [
     "gga",  # Perdew-Burke-Ernzerhof GGA
     "gga-PBE",  # Perdew-Burke-Ernzerhof GGA
@@ -577,3 +580,87 @@ JDFTXDumpVarOptions = [
     "XCanalysis",  # Debug VW KE density, single-particle-ness and 
     # spin-polarzied Hartree potential
 ]
+# simple dictionaries deepcopied multiple times into MASTER_TAG_LIST later for 
+# different tags
+JDFTXMinimize_subtagdict = {
+    "alphaTincreaseFactor": FloatTag(),
+    "alphaTmin": FloatTag(),
+    "alphaTreduceFactor": FloatTag(),
+    "alphaTstart": FloatTag(),
+    "dirUpdateScheme": StrTag(
+        options=[
+            "FletcherReeves",
+            "HestenesStiefel",
+            "L-BFGS",
+            "PolakRibiere",
+            "SteepestDescent",
+        ]
+    ),
+    "energyDiffThreshold": FloatTag(),
+    "fdTest": BoolTag(),
+    "history": IntTag(),
+    "knormThreshold": FloatTag(),
+    "linminMethod": StrTag(
+        options=["CubicWolfe", "DirUpdateRecommended", "Quad", "Relax"]
+    ),
+    "nAlphaAdjustMax": FloatTag(),
+    "nEnergyDiff": IntTag(),
+    "nIterations": IntTag(),
+    "updateTestStepSize": BoolTag(),
+    "wolfeEnergy": FloatTag(),
+    "wolfeGradient": FloatTag(),
+}
+JDFTXFluid_subtagdict = {
+    'epsBulk': FloatTag(),
+    'epsInf': FloatTag(),
+    'epsLJ': FloatTag(),
+    'Nnorm': FloatTag(),
+    'pMol': FloatTag(),
+    'poleEl': TagContainer(
+        can_repeat = True,
+        write_tagname=True,
+        subtags = {
+            "omega0": FloatTag(write_tagname=False, optional=False),
+            "gamma0": FloatTag(write_tagname=False, optional=False),
+            "A0": FloatTag(write_tagname=False, optional=False),
+        },
+    ),
+    # 'poleEl': FloatTag(can_repeat = True),
+    "Pvap": FloatTag(),
+    "quad_nAlpha": FloatTag(),
+    "quad_nBeta": FloatTag(),
+    "quad_nGamma": FloatTag(),
+    "representation": TagContainer(
+        subtags={"MuEps": FloatTag(), "Pomega": FloatTag(),
+                 "PsiAlpha": FloatTag()}
+    ),
+    "Res": FloatTag(),
+    "Rvdw": FloatTag(),
+    "s2quadType": StrTag(
+        options=[
+            "10design60",
+            "11design70",
+            "12design84",
+            "13design94",
+            "14design108",
+            "15design120",
+            "16design144",
+            "17design156",
+            "18design180",
+            "19design204",
+            "20design216",
+            "21design240",
+            "7design24",
+            "8design36",
+            "9design48",
+            "Euler",
+            "Icosahedron",
+            "Octahedron",
+            "Tetrahedron",
+        ]
+    ),
+    "sigmaBulk": FloatTag(),
+    "tauNuc": FloatTag(),
+    "translation": StrTag(options=["ConstantSpline", "Fourier",
+                                   "LinearSpline"]),
+}
