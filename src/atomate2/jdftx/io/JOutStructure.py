@@ -182,45 +182,45 @@ class JOutStructure(Structure):
         """
         is_line = self.emin_flag in line_text
         return is_line
-    
 
     def get_etype_from_emin_lines(self, emin_lines: list[str]) -> str:
-        '''
+        """
         Returns the type of energy from the electronic minimization data of a JDFTx out file
-        
-        Parameters:
+
+        Parameters
         ----------
         emin_lines: list[str]
             A list of lines of text from a JDFTx out file containing the electronic minimization data
-        
-        Returns:
+
+        Returns
         -------
         etype: str
             The type of energy from the electronic minimization data of a JDFTx out file
-        '''
+        """
         etype = None
         for line in emin_lines:
             if "F:" in line:
                 etype = "F"
                 break
-            elif "G:" in line:
+            if "G:" in line:
                 etype = "G"
                 break
         return etype
-    
+
     def set_etype_from_emin_lines(self, emin_lines: list[str]) -> None:
-        '''
+        """
         Sets the type of energy from the electronic minimization data of a JDFTx out file
-        
-        Parameters:
+
+        Parameters
         ----------
         emin_lines: list[str]
             A list of lines of text from a JDFTx out file containing the electronic minimization data
-        '''
+        """
         self.etype = self.get_etype_from_emin_lines(emin_lines)
         if self.etype is None:
-            raise ValueError("Could not determine energy type from electronic minimization data")
-    
+            raise ValueError(
+                "Could not determine energy type from electronic minimization data"
+            )
 
     def parse_emin_lines(self, emin_lines: list[str]) -> None:
         """
@@ -234,8 +234,9 @@ class JOutStructure(Structure):
         if len(emin_lines):
             if self.etype is None:
                 self.set_etype_from_emin_lines(emin_lines)
-            self.elecMinData = JEiters.from_text_slice(emin_lines, iter_type=self.eiter_type, etype=self.etype)
-
+            self.elecMinData = JEiters.from_text_slice(
+                emin_lines, iter_type=self.eiter_type, etype=self.etype
+            )
 
     def is_lattice_start_line(self, line_text: str) -> bool:
         """
@@ -459,7 +460,6 @@ class JOutStructure(Structure):
             if key in ["F", "G"]:
                 self.etype = key
 
-    
     def is_lowdin_start_line(self, line_text: str) -> bool:
         """
         Returns True if the line_text is the start of a Lowdin population analysis in a JDFTx out file

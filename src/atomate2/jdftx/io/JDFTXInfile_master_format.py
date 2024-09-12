@@ -1,11 +1,10 @@
 from copy import deepcopy
-from os import write
+
 
 from .generic_tags import BoolTag, StrTag, IntTag, FloatTag, TagContainer, MultiformatTag, BoolTagContainer, DumpTagContainer, InitMagMomTag
 
-JDFTXDumpFreqOptions = [
-    "Electronic", "End", "Fluid", "Gummel", "Init", "Ionic"
-]
+
+JDFTXDumpFreqOptions = ["Electronic", "End", "Fluid", "Gummel", "Init", "Ionic"]
 JDFTXDumpVarOptions = [
     "BandEigs",  # Band Eigenvalues
     "BandProjections",  # Projections of each band state against each atomic orbital
@@ -67,29 +66,39 @@ JDFTXDumpVarOptions = [
     "VfluidTot",  # Total contribution of fluid to the electron potential
     "Vlocps",  # Local part of pseudopotentials
     "Vscloc",  # Self-consistent potential
-    "XCanalysis"  # Debug VW KE density, single-particle-ness and spin-polarzied Hartree potential
-    ]
+    "XCanalysis",  # Debug VW KE density, single-particle-ness and spin-polarzied Hartree potential
+]
 
 
-#simple dictionaries deepcopied multiple times into MASTER_TAG_LIST later for different tags
+# simple dictionaries deepcopied multiple times into MASTER_TAG_LIST later for different tags
 JDFTXMinimize_subtagdict = {
-    'alphaTincreaseFactor': FloatTag(),
-    'alphaTmin': FloatTag(),
-    'alphaTreduceFactor': FloatTag(),
-    'alphaTstart': FloatTag(),
-    'dirUpdateScheme': StrTag(options = ['FletcherReeves', 'HestenesStiefel', 'L-BFGS', 'PolakRibiere', 'SteepestDescent']),
-    'energyDiffThreshold': FloatTag(),
-    'fdTest': BoolTag(),
-    'history': IntTag(),
-    'knormThreshold': FloatTag(),
-    'linminMethod': StrTag(options = ['CubicWolfe', 'DirUpdateRecommended', 'Quad', 'Relax']),
-    'nAlphaAdjustMax': FloatTag(),
-    'nEnergyDiff': IntTag(),
-    'nIterations': IntTag(),
-    'updateTestStepSize': BoolTag(),
-    'wolfeEnergy': FloatTag(),
-    'wolfeGradient': FloatTag(),
-    }
+    "alphaTincreaseFactor": FloatTag(),
+    "alphaTmin": FloatTag(),
+    "alphaTreduceFactor": FloatTag(),
+    "alphaTstart": FloatTag(),
+    "dirUpdateScheme": StrTag(
+        options=[
+            "FletcherReeves",
+            "HestenesStiefel",
+            "L-BFGS",
+            "PolakRibiere",
+            "SteepestDescent",
+        ]
+    ),
+    "energyDiffThreshold": FloatTag(),
+    "fdTest": BoolTag(),
+    "history": IntTag(),
+    "knormThreshold": FloatTag(),
+    "linminMethod": StrTag(
+        options=["CubicWolfe", "DirUpdateRecommended", "Quad", "Relax"]
+    ),
+    "nAlphaAdjustMax": FloatTag(),
+    "nEnergyDiff": IntTag(),
+    "nIterations": IntTag(),
+    "updateTestStepSize": BoolTag(),
+    "wolfeEnergy": FloatTag(),
+    "wolfeGradient": FloatTag(),
+}
 JDFTXFluid_subtagdict = {
     'epsBulk': FloatTag(),
     'epsInf': FloatTag(),
@@ -98,6 +107,7 @@ JDFTXFluid_subtagdict = {
     'pMol': FloatTag(),
     'poleEl': TagContainer(
         can_repeat = True,
+        write_tagname=True,
         subtags = {
             "omega0": FloatTag(write_tagname=False, optional=False),
             "gamma0": FloatTag(write_tagname=False, optional=False),
@@ -105,22 +115,42 @@ JDFTXFluid_subtagdict = {
         },
     ),
     # 'poleEl': FloatTag(can_repeat = True),
-    'Pvap': FloatTag(),
-    'quad_nAlpha': FloatTag(),
-    'quad_nBeta': FloatTag(),
-    'quad_nGamma': FloatTag(),
-    'representation': TagContainer(subtags = {'MuEps': FloatTag(), 'Pomega': FloatTag(), 'PsiAlpha': FloatTag()}),
-    'Res': FloatTag(),
-    'Rvdw': FloatTag(),
-    's2quadType': StrTag(options = ['10design60', '11design70', '12design84', '13design94',
-                                    '14design108', '15design120', '16design144', '17design156',
-                                    '18design180', '19design204', '20design216', '21design240',
-                                    '7design24', '8design36', '9design48', 'Euler',
-                                    'Icosahedron', 'Octahedron', 'Tetrahedron']),
-    'sigmaBulk': FloatTag(),
-    'tauNuc': FloatTag(),
-    'translation': StrTag(options = ['ConstantSpline', 'Fourier', 'LinearSpline']),
-    }
+    "Pvap": FloatTag(),
+    "quad_nAlpha": FloatTag(),
+    "quad_nBeta": FloatTag(),
+    "quad_nGamma": FloatTag(),
+    "representation": TagContainer(
+        subtags={"MuEps": FloatTag(), "Pomega": FloatTag(), "PsiAlpha": FloatTag()}
+    ),
+    "Res": FloatTag(),
+    "Rvdw": FloatTag(),
+    "s2quadType": StrTag(
+        options=[
+            "10design60",
+            "11design70",
+            "12design84",
+            "13design94",
+            "14design108",
+            "15design120",
+            "16design144",
+            "17design156",
+            "18design180",
+            "19design204",
+            "20design216",
+            "21design240",
+            "7design24",
+            "8design36",
+            "9design48",
+            "Euler",
+            "Icosahedron",
+            "Octahedron",
+            "Tetrahedron",
+        ]
+    ),
+    "sigmaBulk": FloatTag(),
+    "tauNuc": FloatTag(),
+    "translation": StrTag(options=["ConstantSpline", "Fourier", "LinearSpline"]),
+}
 
 MASTER_TAG_LIST = {
     "extrafiles": {
@@ -1125,135 +1155,172 @@ MASTER_TAG_LIST = {
         #         'freq': StrTag(write_tagname = False, optional = False),
         #         'format': StrTag(write_tagname = False, optional = False),
         #         }),
-        'dump-name': StrTag(),
+        "dump-name": StrTag(),
         # 'dump': TagContainer(can_repeat = True,
         #     subtags = {
         #     'freq': StrTag(write_tagname = False, optional = False),
         #     'var': StrTag(write_tagname = False, optional = False)
         #     }),
-        'dump-interval': TagContainer(can_repeat = True,
-            subtags = {
-            'freq': StrTag(options = ['Ionic', 'Electronic', 'Fluid', 'Gummel'], write_tagname = False, optional = False),
-            'var': IntTag(write_tagname = False, optional = False)
-            }),
-        'dump-only': BoolTag(write_value = False),
-        'band-projection-params': TagContainer(
-            subtags = {
-            'ortho': BoolTag(write_tagname = False, optional = False),
-            'norm': BoolTag(write_tagname = False, optional = False),
-            }),
-        'density-of-states': TagContainer(multiline_tag = True,
-            subtags = {
-            'Total': BoolTag(write_value = False),
-            'Slice': TagContainer(can_repeat = True,
-                subtags = {
-                'c0': FloatTag(write_tagname = False, optional = False),
-                'c1': FloatTag(write_tagname = False, optional = False),
-                'c2': FloatTag(write_tagname = False, optional = False),
-                'r': FloatTag(write_tagname = False, optional = False),
-                'i0': FloatTag(write_tagname = False, optional = False),
-                'i1': FloatTag(write_tagname = False, optional = False),
-                'i2': FloatTag(write_tagname = False, optional = False),
-                }),
-            'Sphere': TagContainer(can_repeat = True,
-                subtags = {
-                'c0': FloatTag(write_tagname = False, optional = False),
-                'c1': FloatTag(write_tagname = False, optional = False),
-                'c2': FloatTag(write_tagname = False, optional = False),
-                'r': FloatTag(write_tagname = False, optional = False),
-                }),
-            'AtomSlice': TagContainer(can_repeat = True,
-                subtags = {
-                'species': StrTag(write_tagname = False, optional = False),
-                'atomIndex': IntTag(write_tagname = False, optional = False),
-                'r': FloatTag(write_tagname = False, optional = False),
-                'i0': FloatTag(write_tagname = False, optional = False),
-                'i1': FloatTag(write_tagname = False, optional = False),
-                'i2': FloatTag(write_tagname = False, optional = False),
-                }),
-            'AtomSphere': TagContainer(can_repeat = True,
-                subtags = {
-                'species': StrTag(write_tagname = False, optional = False),
-                'atomIndex': IntTag(write_tagname = False, optional = False),
-                'r': FloatTag(write_tagname = False, optional = False),
-                }),
-            'File': StrTag(),
-            'Orbital': TagContainer(can_repeat = True,
-                subtags = {
-                'species': StrTag(write_tagname = False, optional = False),
-                'atomIndex': IntTag(write_tagname = False, optional = False),
-                'orbDesc': StrTag(write_tagname = False, optional = False),
-                }),
-            'OrthoOrbital': TagContainer(can_repeat = True,
-                subtags = {
-                'species': StrTag(write_tagname = False, optional = False),
-                'atomIndex': IntTag(write_tagname = False, optional = False),
-                'orbDesc': StrTag(write_tagname = False, optional = False),
-                }),
-            'Etol': FloatTag(),
-            'Esigma': FloatTag(),
-            'EigsOverride': StrTag(),
-            'Occupied': BoolTag(write_value = False),
-            'Complete': BoolTag(write_value = False),
-            'SpinProjected': TagContainer(can_repeat = True,
-                subtags = {
-                'theta': FloatTag(write_tagname = False, optional = False),
-                'phi': FloatTag(write_tagname = False, optional = False),
-                }),
-            'SpinTotal': BoolTag(write_value = False),
-            }),
-        'dump-Eresolved-density': TagContainer(
-            subtags = {
-            'Emin': FloatTag(write_tagname = False, optional = False),
-            'Emax': FloatTag(write_tagname = False, optional = False),
-            }),
-        'dump-fermi-density': MultiformatTag(can_repeat = True,
-            format_options = [
-            BoolTag(write_value = False),
-            FloatTag(),
-            ]),
-        'bgw-params': TagContainer(multiline_tag = True,
-            subtags = {
-            'nBandsDense': IntTag(),
-            'nBandsV': IntTag(),
-            'blockSize': IntTag(),
-            'clusterSize': IntTag(),
-            'Ecut_rALDA': FloatTag(),
-            'EcutChiFluid': FloatTag(),
-            'rpaExx': BoolTag(),
-            'saveVxc': BoolTag(),
-            'saveVxx': BoolTag(),
-            'offDiagV': BoolTag(),
-            'elecOnly': BoolTag(),
-            'freqBroaden_eV': FloatTag(),
-            'freqNimag': IntTag(),
-            'freqPlasma': FloatTag(),
-            'freqReMax_eV': FloatTag(),
-            'freqReStep_eV': FloatTag(),
-            'kernelSym_rALDA': BoolTag(),
-            'kFcut_rALDA': FloatTag(),
-            'q0': TagContainer(
-                subtags = {
-                'q0x': FloatTag(write_tagname = False, optional = False),
-                'q0y': FloatTag(write_tagname = False, optional = False),
-                'q0z': FloatTag(write_tagname = False, optional = False),
-                })
-            }),
-        'forces-output-coords': StrTag(options = ['Cartesian', 'Contravariant', 'Lattice', 'Positions']),
-        'polarizability': TagContainer(
-            subtags = {
-            'eigenBasis': StrTag(options = ['External', 'NonInteracting', 'Total'], write_tagname = False, optional = False),
-            'Ecut': FloatTag(write_tagname = False),
-            'nEigs': IntTag(write_tagname = False),
-            }),
-        'polarizability-kdiff': TagContainer(
-            subtags = {
-            'dk0': FloatTag(write_tagname = False, optional = False),
-            'dk1': FloatTag(write_tagname = False, optional = False),
-            'dk2': FloatTag(write_tagname = False, optional = False),
-            'dkFilenamePattern': StrTag(write_tagname = False),
-            }),
-        'potential-subtraction': BoolTag(),
+        "dump-interval": TagContainer(
+            can_repeat=True,
+            subtags={
+                "freq": StrTag(
+                    options=["Ionic", "Electronic", "Fluid", "Gummel"],
+                    write_tagname=False,
+                    optional=False,
+                ),
+                "var": IntTag(write_tagname=False, optional=False),
+            },
+        ),
+        "dump-only": BoolTag(write_value=False),
+        "band-projection-params": TagContainer(
+            subtags={
+                "ortho": BoolTag(write_tagname=False, optional=False),
+                "norm": BoolTag(write_tagname=False, optional=False),
+            }
+        ),
+        "density-of-states": TagContainer(
+            multiline_tag=True,
+            subtags={
+                "Total": BoolTag(write_value=False),
+                "Slice": TagContainer(
+                    can_repeat=True,
+                    subtags={
+                        "c0": FloatTag(write_tagname=False, optional=False),
+                        "c1": FloatTag(write_tagname=False, optional=False),
+                        "c2": FloatTag(write_tagname=False, optional=False),
+                        "r": FloatTag(write_tagname=False, optional=False),
+                        "i0": FloatTag(write_tagname=False, optional=False),
+                        "i1": FloatTag(write_tagname=False, optional=False),
+                        "i2": FloatTag(write_tagname=False, optional=False),
+                    },
+                ),
+                "Sphere": TagContainer(
+                    can_repeat=True,
+                    subtags={
+                        "c0": FloatTag(write_tagname=False, optional=False),
+                        "c1": FloatTag(write_tagname=False, optional=False),
+                        "c2": FloatTag(write_tagname=False, optional=False),
+                        "r": FloatTag(write_tagname=False, optional=False),
+                    },
+                ),
+                "AtomSlice": TagContainer(
+                    can_repeat=True,
+                    subtags={
+                        "species": StrTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "r": FloatTag(write_tagname=False, optional=False),
+                        "i0": FloatTag(write_tagname=False, optional=False),
+                        "i1": FloatTag(write_tagname=False, optional=False),
+                        "i2": FloatTag(write_tagname=False, optional=False),
+                    },
+                ),
+                "AtomSphere": TagContainer(
+                    can_repeat=True,
+                    subtags={
+                        "species": StrTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "r": FloatTag(write_tagname=False, optional=False),
+                    },
+                ),
+                "File": StrTag(),
+                "Orbital": TagContainer(
+                    can_repeat=True,
+                    subtags={
+                        "species": StrTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "orbDesc": StrTag(write_tagname=False, optional=False),
+                    },
+                ),
+                "OrthoOrbital": TagContainer(
+                    can_repeat=True,
+                    subtags={
+                        "species": StrTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "orbDesc": StrTag(write_tagname=False, optional=False),
+                    },
+                ),
+                "Etol": FloatTag(),
+                "Esigma": FloatTag(),
+                "EigsOverride": StrTag(),
+                "Occupied": BoolTag(write_value=False),
+                "Complete": BoolTag(write_value=False),
+                "SpinProjected": TagContainer(
+                    can_repeat=True,
+                    subtags={
+                        "theta": FloatTag(write_tagname=False, optional=False),
+                        "phi": FloatTag(write_tagname=False, optional=False),
+                    },
+                ),
+                "SpinTotal": BoolTag(write_value=False),
+            },
+        ),
+        "dump-Eresolved-density": TagContainer(
+            subtags={
+                "Emin": FloatTag(write_tagname=False, optional=False),
+                "Emax": FloatTag(write_tagname=False, optional=False),
+            }
+        ),
+        "dump-fermi-density": MultiformatTag(
+            can_repeat=True,
+            format_options=[
+                BoolTag(write_value=False),
+                FloatTag(),
+            ],
+        ),
+        "bgw-params": TagContainer(
+            multiline_tag=True,
+            subtags={
+                "nBandsDense": IntTag(),
+                "nBandsV": IntTag(),
+                "blockSize": IntTag(),
+                "clusterSize": IntTag(),
+                "Ecut_rALDA": FloatTag(),
+                "EcutChiFluid": FloatTag(),
+                "rpaExx": BoolTag(),
+                "saveVxc": BoolTag(),
+                "saveVxx": BoolTag(),
+                "offDiagV": BoolTag(),
+                "elecOnly": BoolTag(),
+                "freqBroaden_eV": FloatTag(),
+                "freqNimag": IntTag(),
+                "freqPlasma": FloatTag(),
+                "freqReMax_eV": FloatTag(),
+                "freqReStep_eV": FloatTag(),
+                "kernelSym_rALDA": BoolTag(),
+                "kFcut_rALDA": FloatTag(),
+                "q0": TagContainer(
+                    subtags={
+                        "q0x": FloatTag(write_tagname=False, optional=False),
+                        "q0y": FloatTag(write_tagname=False, optional=False),
+                        "q0z": FloatTag(write_tagname=False, optional=False),
+                    }
+                ),
+            },
+        ),
+        "forces-output-coords": StrTag(
+            options=["Cartesian", "Contravariant", "Lattice", "Positions"]
+        ),
+        "polarizability": TagContainer(
+            subtags={
+                "eigenBasis": StrTag(
+                    options=["External", "NonInteracting", "Total"],
+                    write_tagname=False,
+                    optional=False,
+                ),
+                "Ecut": FloatTag(write_tagname=False),
+                "nEigs": IntTag(write_tagname=False),
+            }
+        ),
+        "polarizability-kdiff": TagContainer(
+            subtags={
+                "dk0": FloatTag(write_tagname=False, optional=False),
+                "dk1": FloatTag(write_tagname=False, optional=False),
+                "dk2": FloatTag(write_tagname=False, optional=False),
+                "dkFilenamePattern": StrTag(write_tagname=False),
+            }
+        ),
+        "potential-subtraction": BoolTag(),
     },
     "misc": {
         "debug": StrTag(
@@ -1283,10 +1350,16 @@ def get_dump_tag_container():
     for freq in JDFTXDumpFreqOptions:
         subsubtags = {}
         for var in JDFTXDumpVarOptions:
-            subsubtags[var] = BoolTag(write_value = False)
-        subtags[freq] = BoolTagContainer(subtags = subsubtags, write_tagname = True, can_repeat=True)
-    dump_tag_container = DumpTagContainer(subtags = subtags, write_tagname = True, can_repeat=True)
+            subsubtags[var] = BoolTag(write_value=False)
+        subtags[freq] = BoolTagContainer(
+            subtags=subsubtags, write_tagname=True, can_repeat=True
+        )
+    dump_tag_container = DumpTagContainer(
+        subtags=subtags, write_tagname=True, can_repeat=True
+    )
     return dump_tag_container
+
+
 MASTER_TAG_LIST["export"]["dump"] = get_dump_tag_container()
 
 

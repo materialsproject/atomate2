@@ -1,5 +1,5 @@
 import math
-from atomate2.jdftx.io.JMinSettings import JMinSettings, JMinSettingsElectronic, JMinSettingsFluid, JMinSettingsIonic, JMinSettingsLattice
+
 import numpy as np
 from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
@@ -826,7 +826,6 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         if self.etype is None:
             self.etype = self.jstrucs.etype
 
-
     def _set_orb_fillings(self) -> None:
         """
         Calculate and set HOMO and LUMO fillings
@@ -886,13 +885,13 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         ----------
         text: list[str]
             output of read_file for out file
-        '''
-        lines = find_all_key('elec-n-bands', text)
+        """
+        lines = find_all_key("elec-n-bands", text)
         if len(lines):
             line = lines[0]
             nbands = int(text[line].strip().split()[-1].strip())
         else:
-            lines = find_all_key('nBands:', text)
+            lines = find_all_key("nBands:", text)
             line = lines[0]
             nbands = int(text[line].split("nBands:")[1].strip().split()[0].strip())
         self.Nbands = nbands
@@ -963,9 +962,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         ----------
         text: list[str]
             output of read_file for out file
-        '''
+        """
         ecomp = self.jstrucs[-1].Ecomponents
-        if not self.etype in ecomp:
+        if self.etype not in ecomp:
             ecomp[self.etype] = self.jstrucs[-1].E
         # line = find_key("# Energy components:", text)
         self.Ecomponents = ecomp
@@ -1027,11 +1026,11 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     # def _build_trajectory(self, text):
     #     '''
     #     Builds the trajectory lists and sets the instance attributes.
-        
+
     #     '''
     #     # Needs to handle LatticeMinimize and IonicMinimize steps in one run
     #     # can do this by checking if lattice vectors block is present and if
-    #     # so adding it to the lists. If it isn't present, copy the last 
+    #     # so adding it to the lists. If it isn't present, copy the last
     #     # lattice from the list.
     #     # initialize lattice list with starting lattice and remove it
     #     # from the list after iterating through all the optimization steps
@@ -1063,19 +1062,18 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     #     self.trajectory_lattice = trajectory_lattice
     #     self.trajectory_forces = trajectory_forces
     #     self.trajectory_ecomponents = trajectory_ecomponents
-    
 
     # def _read_ecomponents(self, line:int, text:str) -> dict:
     #     '''
     #     Read the energy components from the out file text
-        
+
     #     Parameters
     #     ----------
     #     line: int
     #         line number where energy components are found
     #     text: list[str]
     #         output of read_file for out file
-        
+
     #     Returns
     #     -------
     #     Ecomponents: dict
@@ -1095,9 +1093,6 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     #         Ecomponents.update({E_type:Energy})
     #         if E_type == final_E_type:
     #             return Ecomponents
-        
-
-    
 
     def to_dict(self) -> dict:
         # convert dataclass to dictionary representation

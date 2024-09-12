@@ -151,14 +151,14 @@ ionic-minimize  \
     wolfeGradient        0.9 \
     fdTest               no
 kpoint   0.000000000000   0.000000000000   0.000000000000  1.00000000000000
-kpoint-folding 6 6 1 
+kpoint-folding 6 6 1
 kpoint-reduce-inversion no
 latt-move-scale 0 0 0
-latt-scale 1 1 1 
+latt-scale 1 1 1
 lattice  \
       10.457499819964989    5.228749909982495    0.000000000000000  \
        0.000000000000000    9.056460504160873    0.000000000000000  \
-       0.000000000000001    0.000000000000001   44.023042120134328 
+       0.000000000000001    0.000000000000001   44.023042120134328
 lattice-minimize  \
     dirUpdateScheme      L-BFGS \
     linminMethod         DirUpdateRecommended \
@@ -183,4 +183,3 @@ subspace-rotation-factor 1 yes
 symmetries automatic
 symmetry-threshold 0.0001
 wavefunction lcao
-

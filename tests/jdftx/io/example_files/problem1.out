@@ -19,17 +19,17 @@ core-overlap-check none
 coulomb-interaction Periodic
 davidson-band-ratio 1.1
 dump End State Forces ElecDensity KEdensity Dtot VfluidTot BandEigs BandProjections EigStats Ecomponents BoundCharge DOS
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
-dump 
+dump
+dump
+dump
+dump
+dump
+dump
+dump
+dump
+dump
+dump
+dump
 dump-name jdftx.$VAR
 elec-cutoff 20 100
 elec-eigen-algo Davidson
@@ -110,13 +110,13 @@ ionic-minimize  \
 	wolfeGradient        0.9 \
 	fdTest               no
 kpoint   0.000000000000   0.000000000000   0.000000000000  1.00000000000000
-kpoint-folding 1 1 1 
+kpoint-folding 1 1 1
 latt-move-scale 0 0 0
-latt-scale 1 1 1 
+latt-scale 1 1 1
 lattice  \
 	   0.000000000000000    5.158952320228000    5.158952320228000  \
 	   5.158952320228000    0.000000000000000    5.158952320228000  \
-	   5.158952320228000    5.158952320228000    0.000000000000000 
+	   5.158952320228000    5.158952320228000    0.000000000000000
 lattice-minimize  \
 	dirUpdateScheme      L-BFGS \
 	linminMethod         DirUpdateRecommended \
@@ -154,7 +154,7 @@ van-der-waals D3
 Applied RMS atom displacement 0 bohrs to make symmetries exact.
 
 ---------- Initializing the Grid ----------
-R = 
+R =
 [            0      5.15895      5.15895  ]
 [      5.15895            0      5.15895  ]
 [      5.15895      5.15895            0  ]
@@ -167,7 +167,7 @@ Minimum fftbox size, Smin = [  36  36  36  ]
 Chosen fftbox size, S = [  36  36  36  ]
 
 ---------- Initializing tighter grid for wavefunction operations ----------
-R = 
+R =
 [            0      5.15895      5.15895  ]
 [      5.15895            0      5.15895  ]
 [      5.15895      5.15895            0  ]
@@ -212,7 +212,7 @@ Initialized 1 species with 2 total atoms.
 Folded 1 k-points by 1x1x1 to 1 k-points.
 
 ---------- Setting up k-points, bands, fillings ----------
-No reducable k-points. 
+No reducable k-points.
 Computing the number of bands and number of electrons
 Calculating initial fillings.
 nElectrons:   8.000000   nBands: 8   nStates: 2
@@ -445,7 +445,7 @@ Dumping 'jdftx.tau_dn' ... done
 Dumping 'jdftx.d_tot' ... done
 Dumping 'jdftx.eigenvals' ... done
 Dumping 'jdftx.bandProjections' ... done
-Dumping 'jdftx.eigStats' ... 
+Dumping 'jdftx.eigStats' ...
 	eMin: -0.185024 at state 0 ( [ +0.000000 +0.000000 +0.000000 ] spin 1 )
 	HOMO: +0.255923 at state 1 ( [ +0.000000 +0.000000 +0.000000 ] spin -1 )
 	mu  : +0.300000

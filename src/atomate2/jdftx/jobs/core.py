@@ -4,15 +4,21 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from atomate2.jdftx.jobs.base import BaseJdftxMaker
-from atomate2.jdftx.sets.base import JdftxInputGenerator
 from atomate2.jdftx.sets.core import BEASTSetGenerator
+
+if TYPE_CHECKING:
+    from atomate2.jdftx.sets.base import JdftxInputGenerator
+
 
 logger = logging.getLogger(__name__)
 
 
 @dataclass
-class BEASTRelaxMaker(BaseJdftxMaker):
+class RelaxMaker(BaseJdftxMaker):
+    """Maker to create JDFTx ionic optimization job"""
+
     name: str = "relax"
     input_set_generator: JdftxInputGenerator = field(default_factory=BEASTSetGenerator)

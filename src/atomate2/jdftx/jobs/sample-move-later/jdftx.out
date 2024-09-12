@@ -97,13 +97,13 @@ ionic-minimize  \
 	wolfeGradient        0.9 \
 	fdTest               no
 kpoint   0.000000000000   0.000000000000   0.000000000000  1.00000000000000
-kpoint-folding 1 1 1 
+kpoint-folding 1 1 1
 latt-move-scale 1 1 1
-latt-scale 1 1 1 
+latt-scale 1 1 1
 lattice  \
 	  10.000000000000000    0.000000000000000    0.000000000000000  \
 	   0.000000000000000   10.000000000000000    0.000000000000000  \
-	   0.000000000000000    0.000000000000000   10.000000000000000 
+	   0.000000000000000    0.000000000000000   10.000000000000000
 lattice-minimize  \
 	dirUpdateScheme      L-BFGS \
 	linminMethod         DirUpdateRecommended \
@@ -145,7 +145,7 @@ Found 4 space-group symmetries with basis
 Applied RMS atom displacement 0 bohrs to make symmetries exact.
 
 ---------- Initializing the Grid ----------
-R = 
+R =
 [           10            0            0  ]
 [            0           10            0  ]
 [            0            0           10  ]
@@ -158,7 +158,7 @@ Minimum fftbox size, Smin = [  48  48  48  ]
 Chosen fftbox size, S = [  48  48  48  ]
 
 ---------- Initializing tighter grid for wavefunction operations ----------
-R = 
+R =
 [           10            0            0  ]
 [            0           10            0  ]
 [            0            0           10  ]
@@ -217,7 +217,7 @@ Initialized 2 species with 3 total atoms.
 Folded 1 k-points by 1x1x1 to 1 k-points.
 
 ---------- Setting up k-points, bands, fillings ----------
-No reducable k-points. 
+No reducable k-points.
 Computing the number of bands and number of electrons
 Calculating initial fillings.
 nElectrons:   8.000000   nBands: 4   nStates: 1

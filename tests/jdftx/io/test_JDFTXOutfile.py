@@ -43,7 +43,7 @@ example_sp_known = {
     "Eewald": -16901.4696647211094387 * Ha_to_eV,
     "nSlices": 1,
     "t_s": 165.87,
-    "iter_type": None
+    "iter_type": None,
 }
 
 example_latmin_known = {
@@ -114,16 +114,16 @@ example_ionmin_known = {
     "iter_type": "IonicMinimize",
 }
 
-@pytest.mark.parametrize("filename,known", 
-                         [(ex_files_dir / Path("example_sp.out"), example_sp_known),
-                          (ex_files_dir / Path("example_latmin.out"), example_latmin_known),
-                          (ex_files_dir / Path("example_ionmin.out"), example_ionmin_known),
-                           ]
-                                             )
-def test_JDFTXOutfile_fromfile(
-    filename: PathLike,
-    known: dict
-    ):
+
+@pytest.mark.parametrize(
+    "filename,known",
+    [
+        (ex_files_dir / Path("example_sp.out"), example_sp_known),
+        (ex_files_dir / Path("example_latmin.out"), example_latmin_known),
+        (ex_files_dir / Path("example_ionmin.out"), example_ionmin_known),
+    ],
+)
+def test_JDFTXOutfile_fromfile(filename: PathLike, known: dict):
     # filename = ex_files_dir / Path("jdftx.out")
     jout = JDFTXOutfile.from_file(filename)
     assert jout.Nspin == known["Nspin"]
@@ -168,7 +168,8 @@ def test_JDFTXOutfile_fromfile(
     assert jout.Ecomponents["Eloc"] == approx(known["Eloc"])
     assert jout.Ecomponents["EH"] == approx(known["EH"])
     assert jout.Ecomponents["Eewald"] == approx(known["Eewald"])
-    assert len(jout) == known["nSlices"]
+    #
+    assert len(jout.slices) == known["nSlices"]
     assert jout.t_s == approx(known["t_s"])
     assert jout.jstrucs.iter_type == known["iter_type"]
 

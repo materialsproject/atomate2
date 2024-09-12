@@ -1,4 +1,3 @@
-from secrets import token_bytes
 import warnings
 from abc import ABC, abstractmethod
 from copy import deepcopy
@@ -10,13 +9,27 @@ import numpy as np
 __author__ = "Jacob Clary"
 
 
+# def flatten_list(tag: str, list_of_lists: List[Any]) -> List[Any]:
+#     """Flattens list of lists into a single list, then stops"""
+#     if not isinstance(list_of_lists, list):
+#         raise ValueError(f"{tag}: You must provide a list to flatten_list()!")
+#     while any([isinstance(x, list) for x in list_of_lists]):
+#         list_of_lists = sum(list_of_lists, [])
+#     return list_of_lists
+
 def flatten_list(tag: str, list_of_lists: List[Any]) -> List[Any]:
+    # Ben: I don't know what "then stops" means but I think this is how this
+    # function should work.
     """Flattens list of lists into a single list, then stops"""
     if not isinstance(list_of_lists, list):
         raise ValueError(f"{tag}: You must provide a list to flatten_list()!")
-    while any([isinstance(x, list) for x in list_of_lists]):
-        list_of_lists = sum(list_of_lists, [])
-    return list_of_lists
+    flist = []
+    for v in list_of_lists:
+        if isinstance(v, list):
+            flist.extend(flatten_list(tag, v))
+        else:
+            flist.append(v)
+    return flist
 
 
 class ClassPrintFormatter:
@@ -343,15 +356,14 @@ class TagContainer(AbstractTag):
                         raise ValueError(
                             f"Subtag {subtag} is not allowed to repeat but appears more than once in {tag}'s value {value}"
                         )
-                    else:
-                        idx_start = value.index(subtag)
-                        token_len = subtag_type.get_token_len()
-                        idx_end = idx_start + token_len
-                        subtag_value = " ".join(
-                            value[(idx_start + 1) : idx_end]
-                        )  # add 1 so the subtag value string excludes the subtagname
-                        tempdict[subtag] = subtag_type.read(subtag, subtag_value)
-                        del value[idx_start:idx_end]
+                    idx_start = value.index(subtag)
+                    token_len = subtag_type.get_token_len()
+                    idx_end = idx_start + token_len
+                    subtag_value = " ".join(
+                        value[(idx_start + 1) : idx_end]
+                    )  # add 1 so the subtag value string excludes the subtagname
+                    tempdict[subtag] = subtag_type.read(subtag, subtag_value)
+                    del value[idx_start:idx_end]
                 else:
                     tempdict[subtag] = []
                     for i in range(subtag_count):
@@ -531,6 +543,7 @@ class TagContainer(AbstractTag):
             )
 
     def _make_dict(self, tag, value):
+        # Ben: Is this supposed to create a dictionary? This creates a string without any dictionary indications
         value = flatten_list(tag, value)
         self._check_for_mixed_nesting(tag, value)
         return " ".join([str(x) for x in value])
@@ -556,11 +569,13 @@ class TagContainer(AbstractTag):
                 return value  # no conversion needed
             string_value = [self._make_dict(tag, entry) for entry in value]
             return [self.read(tag, entry) for entry in string_value]
+
         else:
             if isinstance(value, dict):
                 return value  # no conversion needed
             string_value = self._make_dict(tag, value)
             return self.read(tag, string_value)
+
 
 
 
@@ -667,13 +682,20 @@ class MultiformatTag(AbstractTag):
     def write(self, tag: str, value) -> str:
         format_index, _ = self._determine_format_option(tag, value)
         # print(f'using index of {format_index}')
-        return self.format_options[format_index]._write(tag, value)
+
+        # Ben: Changing _write to write, using _write seem to shoot you straight
+        # to the floor level definition, and completely messes up all the calls
+        # to subtags for how they're supposed to be printed and just prints
+        # a dictionary instead.
+        # Ben: Update: this fixes it.
+        return self.format_options[format_index].write(tag, value)
+        # return self.format_options[format_index]._write(tag, value)
+    
 
 
 @dataclass
 class BoolTagContainer(TagContainer):
-
-    def read(self, tag:str, value: str) -> dict:
+    def read(self, tag: str, value: str) -> dict:
         value = value.split()
         tempdict = {}
         for subtag, subtag_type in self.subtags.items():
@@ -695,9 +717,9 @@ class BoolTagContainer(TagContainer):
             )
         return subdict
 
+
 @dataclass
 class DumpTagContainer(TagContainer):
-
     def read(self, tag: str, value: str) -> dict:
         value = value.split()
         tempdict = {}
@@ -705,7 +727,7 @@ class DumpTagContainer(TagContainer):
         for subtag, subtag_type in self.subtags.items():
             if subtag in value:
                 idx_start = value.index(subtag)
-                subtag_value = " ".join(value[(idx_start + 1):])
+                subtag_value = " ".join(value[(idx_start + 1) :])
                 tempdict[subtag] = subtag_type.read(subtag, subtag_value)
                 del value[idx_start:]
         # reorder all tags to match order of __MASTER_TAG_LIST__ and do coarse-grained validation of read
