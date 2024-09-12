@@ -32,7 +32,7 @@ class JEiter:
     converged_reason: str = None
 
     @classmethod
-    def _from_lines_collect(
+    def from_lines_collect(
         cls, lines_collect: list[str], iter_type: str, etype: str
     ) -> JEiter:
         """Return JEiter object.
@@ -180,7 +180,7 @@ class JEiter:
             A line of text from a JDFTx out file containing the electronic
             minimization data
         """
-        self.subspaceRotationAdjust = self._get_colon_var_t1(
+        self.subspacerotationadjust = self._get_colon_var_t1(
             line_text, "SubspaceRotationAdjust: set factor to"
         )
 
@@ -199,8 +199,8 @@ class JEiter:
         _fillings_line = (
             fillings_line.split("magneticMoment: [ ")[1].split(" ]")[0].strip()
         )
-        self.abs_magneticMoment = self._get_colon_var_t1(_fillings_line, "Abs: ")
-        self.tot_magneticMoment = self._get_colon_var_t1(_fillings_line, "Tot: ")
+        self.abs_magneticmoment = self._get_colon_var_t1(_fillings_line, "Abs: ")
+        self.tot_magneticmoment = self._get_colon_var_t1(_fillings_line, "Tot: ")
 
     def _get_colon_var_t1(self, linetext: str, lkey: str) -> float | None:
         """Return float val from '...lkey: val...' in linetext.
@@ -251,4 +251,4 @@ class JEiter:
             A line of text from a JDFTx out file containing the electronic
             minimization data
         """
-        self.nElectrons = self._get_colon_var_t1(fillings_line, "nElectrons: ")
+        self.nelectrons = self._get_colon_var_t1(fillings_line, "nElectrons: ")

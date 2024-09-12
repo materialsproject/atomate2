@@ -5,7 +5,7 @@ from pymatgen.core.units import Ha_to_eV
 from pymatgen.util.typing import PathLike
 from pytest import approx
 
-from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
+from atomate2.jdftx.io.jdftxoutfile import JDFTXOutfile
 
 ex_files_dir = Path(__file__).parents[0] / "example_files"
 
@@ -168,7 +168,6 @@ def test_JDFTXOutfile_fromfile(filename: PathLike, known: dict):
     assert jout.Ecomponents["Eloc"] == approx(known["Eloc"])
     assert jout.Ecomponents["EH"] == approx(known["EH"])
     assert jout.Ecomponents["Eewald"] == approx(known["Eewald"])
-    #
     assert len(jout.slices) == known["nSlices"]
     assert jout.t_s == approx(known["t_s"])
     assert jout.jstrucs.iter_type == known["iter_type"]

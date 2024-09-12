@@ -1,9 +1,9 @@
 import pytest
-from jdftx.io.JEiters import JEiters
 from pymatgen.core.units import Ha_to_eV
 from pytest import approx
 
-from atomate2.jdftx.io.JEiter import JEiter
+from atomate2.jdftx.io.jeiter import JEiter
+from atomate2.jdftx.io.jeiters import JEiters
 
 ex_fillings_line1 = "FillingsUpdate:  mu: +0.714406772  nElectrons: 64.000000  magneticMoment: [ Abs: 0.00578  Tot: -0.00141 ]"
 ex_fillings_line1_known = {
@@ -87,18 +87,18 @@ def test_JEiter(
     eitertype="ElecMinimize",
 ):
     ex_lines_collect = [exiter_line, exfill_line, exsubspace_line]
-    jei = JEiter._from_lines_collect(ex_lines_collect, eitertype, etype)
+    jei = JEiter.from_lines_collect(ex_lines_collect, eitertype, etype)
     assert exfill_known["mu"] == approx(jei.mu)
-    assert exfill_known["nElectrons"] == approx(jei.nElectrons)
-    assert exfill_known["abs_magneticMoment"] == approx(jei.abs_magneticMoment)
-    assert exfill_known["tot_magneticMoment"] == approx(jei.tot_magneticMoment)
+    assert exfill_known["nElectrons"] == approx(jei.nelectrons)
+    assert exfill_known["abs_magneticMoment"] == approx(jei.abs_magneticmoment)
+    assert exfill_known["tot_magneticMoment"] == approx(jei.tot_magneticmoment)
     assert exiter_known["iter"] == jei.iter
     assert exiter_known["E"] == approx(jei.E)
-    assert exiter_known["grad_K"] == approx(jei.grad_K)
+    assert exiter_known["grad_K"] == approx(jei.grad_k)
     assert exiter_known["alpha"] == approx(jei.alpha)
     assert exiter_known["linmin"] == approx(jei.linmin)
     assert exiter_known["t_s"] == approx(jei.t_s)
-    assert exsubspace_known["subspace"] == approx(jei.subspaceRotationAdjust)
+    assert exsubspace_known["subspace"] == approx(jei.subspacerotationadjust)
 
 
 @pytest.mark.parametrize(
@@ -116,19 +116,19 @@ def test_JEiters(
     jeis = JEiters.from_text_slice(text_slice, iter_type=eitertype, etype=etype)
     for i in range(len(ex_lines)):
         assert ex_knowns[i]["fill"]["mu"] == approx(jeis[i].mu)
-        assert ex_knowns[i]["fill"]["nElectrons"] == approx(jeis[i].nElectrons)
+        assert ex_knowns[i]["fill"]["nElectrons"] == approx(jeis[i].nelectrons)
         assert ex_knowns[i]["fill"]["abs_magneticMoment"] == approx(
-            jeis[i].abs_magneticMoment
+            jeis[i].abs_magneticmoment
         )
         assert ex_knowns[i]["fill"]["tot_magneticMoment"] == approx(
-            jeis[i].tot_magneticMoment
+            jeis[i].tot_magneticmoment
         )
         assert ex_knowns[i]["iter"]["iter"] == jeis[i].iter
         assert ex_knowns[i]["iter"]["E"] == approx(jeis[i].E)
-        assert ex_knowns[i]["iter"]["grad_K"] == approx(jeis[i].grad_K)
+        assert ex_knowns[i]["iter"]["grad_K"] == approx(jeis[i].grad_k)
         assert ex_knowns[i]["iter"]["alpha"] == approx(jeis[i].alpha)
         assert ex_knowns[i]["iter"]["linmin"] == approx(jeis[i].linmin)
         assert ex_knowns[i]["iter"]["t_s"] == approx(jeis[i].t_s)
         assert ex_knowns[i]["subspace"]["subspace"] == approx(
-            jeis[i].subspaceRotationAdjust
+            jeis[i].subspacerotationadjust
         )
