@@ -6,14 +6,16 @@ from pymatgen.core.trajectory import Trajectory
 from pymatgen.core.units import Ha_to_eV, ang_to_bohr
 
 from atomate2.jdftx.io.data import atom_valence_electrons
-from atomate2.jdftx.io.JMinSettings import (
+from atomate2.jdftx.io.jminsettings import (
     JMinSettings,
     JMinSettingsElectronic,
     JMinSettingsFluid,
     JMinSettingsIonic,
     JMinSettingsLattice,
 )
-from atomate2.jdftx.io.JOutStructures import JOutStructures
+from atomate2.jdftx.io.joutstructures import JOutStructures
+from typing import Optional
+from dataclasses import dataclass
 
 
 class ClassPrintFormatter:

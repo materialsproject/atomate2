@@ -1,28 +1,18 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import wraps
-
-from pydash import get
-from atomate2.jdftx.io.JDFTXOutfileSlice import JDFTXOutfileSlice
-from dataclasses import dataclass
+from pathlib import Path
 from typing import List, Optional
 
 from monty.io import zopen
-from pathlib import Path
-import os
-from functools import wraps
-import math
-from atomate2.jdftx.io.JMinSettings import JMinSettings, JMinSettingsElectronic, JMinSettingsFluid, JMinSettingsIonic, JMinSettingsLattice
-import numpy as np
-from dataclasses import dataclass, field
-import scipy.constants as const
-from atomate2.jdftx.io.data import atom_valence_electrons
-from atomate2.jdftx.io.JOutStructures import JOutStructures
-from pymatgen.core import Structure
-from pymatgen.core.trajectory import Trajectory
-from typing import List, Optional
-from pymatgen.core.units import Ha_to_eV, ang_to_bohr, bohr_to_ang
 
-from atomate2.jdftx.io.JDFTXOutfileSlice import JDFTXOutfileSlice
+from atomate2.jdftx.io.jdftxoutfileslice import JDFTXOutfileSlice
+from atomate2.jdftx.io.jminsettings import (
+    JMinSettingsElectronic,
+    JMinSettingsFluid,
+    JMinSettingsIonic,
+    JMinSettingsLattice,
+)
+from atomate2.jdftx.io.joutstructures import JOutStructures
 
 
 class ClassPrintFormatter:
@@ -148,9 +138,16 @@ class JDFTXOutfile(JDFTXOutfileSlice):
 
     # grouping fields related to electronic parameters.
     # Used by the get_electronic_output() method
-    _electronic_output = [ 
-    "EFermi", "Egap", "Emin", "Emax", "HOMO",
-    "LUMO", "HOMO_filling", "LUMO_filling", "is_metal"
+    _electronic_output = [
+        "EFermi",
+        "Egap",
+        "Emin",
+        "Emax",
+        "HOMO",
+        "LUMO",
+        "HOMO_filling",
+        "LUMO_filling",
+        "is_metal",
     ]
     EFermi: float = None
     Egap: float = None
@@ -197,74 +194,17 @@ class JDFTXOutfile(JDFTXOutfileSlice):
     def from_file(cls, file_path: str):
         texts = read_outfile_slices(file_path)
         slices = []
-        # instance = cls()
         for text in texts:
             slices.append(JDFTXOutfileSlice.from_out_slice(text))
         instance = cls.from_out_slice(texts[-1])
         instance.slices = slices
         return instance
-    '''
-    A class to read and process a JDFTx out file
-    '''
 
-    # @classmethod
-    # def from_file(cls, file_path: str):
-    #     texts = read_outfile_slices(file_path)
-    #     instance = cls()
-    #     for text in texts:
-    #         instance.append(JDFTXOutfileSlice.from_out_slice(text))
-    #     return instance
+    def __getitem__(self, key: int | str):
+        if type(key) is int:
+            return self.slices[key]
+        if type(key) is str:
+            return getattr(self, key)
 
-    def __getattr__(self, name):
-        if len(self):
-            return getattr(self[-1], name)
-        try:
-            return super().__getattr__(name)
-        except AttributeError:
-            if self:
-                return getattr(self[-1], name)
-            raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
-
-    def __setattr__(self, name, value):
-        # Do we want this? I don't imagine this class object should be modified
-        if name in self.__annotations__:
-            super().__setattr__(name, value)
-        elif self:
-            setattr(self[-1], name, value)
-        else:
-            raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
-
-
-# @dataclass
-# class JDFTXOutfile(List[JDFTXOutfileSlice], ClassPrintFormatter):
-#     '''
-#     A class to read and process a JDFTx out file
-#     '''
-
-#     @classmethod
-#     def from_file(cls, file_path: str):
-#         texts = read_outfile_slices(file_path)
-#         instance = cls()
-#         for text in texts:
-#             instance.append(JDFTXOutfileSlice.from_out_slice(text))
-#         return instance
-
-#     def __getattr__(self, name):
-#         if len(self):
-#             return getattr(self[-1], name)
-#         else:
-#             try:
-#                 return super().__getattr__(name)
-#             except AttributeError:
-#                 if self:
-#                     return getattr(self[-1], name)
-#                 raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
-
-#     def __setattr__(self, name, value):
-#         # Do we want this? I don't imagine this class object should be modified
-#         if name in self.__annotations__:
-#             super().__setattr__(name, value)
-#         elif self:
-#             setattr(self[-1], name, value)
-#         else:
-#             raise AttributeError(f"'JDFTXOutfile' object has no attribute '{name}'")
+    def __len__(self):
+        return len(self.slices)

@@ -14,7 +14,7 @@ converge-empty-states yes
 
 dump-only
 dump End State
-dump End eigenvals
+dump End BandEigs
 
 lattice \
  10 0.5 0 \
