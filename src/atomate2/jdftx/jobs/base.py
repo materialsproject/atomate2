@@ -4,25 +4,24 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
-from atomate2.jdftx.schemas.task import TaskDoc
+from typing import Callable
+
 from jobflow import Maker, Response, job
+
+# if TYPE_CHECKING:
+from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
     BandStructureSymmLine,
 )
 
-
-from atomate2.jdftx.sets.base import JdftxInputGenerator
 from atomate2.jdftx.files import write_jdftx_input_set
 from atomate2.jdftx.run import run_jdftx, should_stop_children
+from atomate2.jdftx.schemas.task import TaskDoc
+from atomate2.jdftx.sets.base import JdftxInputGenerator
 
-#if TYPE_CHECKING:
-from pymatgen.core import Structure
-
-
-_DATA_OBJECTS = [ # TODO update relevant list for JDFTx
+_DATA_OBJECTS = [  # TODO update relevant list for JDFTx
     BandStructure,
     BandStructureSymmLine,
     Trajectory,
@@ -38,7 +37,7 @@ _INPUT_FILES = [
 ]
 
 # Output files.
-_OUTPUT_FILES = [ # TODO finish this list
+_OUTPUT_FILES = [  # TODO finish this list
     "output.out",
     "Ecomponents",
     "wfns",
@@ -47,6 +46,7 @@ _OUTPUT_FILES = [ # TODO finish this list
     "lattice",
     "ionpos",
 ]
+
 
 def jdftx_job(method: Callable) -> job:
     """
@@ -87,15 +87,15 @@ class BaseJdftxMaker(Maker):
     """
 
     name: str = "base JDFTx job"
-    input_set_generator: JdftxInputGenerator = field(default_factory=JdftxInputGenerator)
+    input_set_generator: JdftxInputGenerator = field(
+        default_factory=JdftxInputGenerator
+    )
     write_input_set_kwargs: dict = field(default_factory=dict)
     run_jdftx_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
     @jdftx_job
-    def make(
-        self, structure: Structure
-    ) -> Response:
+    def make(self, structure: Structure) -> Response:
         """Run a JDFTx calculation.
 
         Parameters
@@ -117,7 +117,7 @@ class BaseJdftxMaker(Maker):
         run_jdftx(**self.run_jdftx_kwargs)
 
         current_dir = Path.cwd()
-        files = [str(f) for f in current_dir.glob('*') if f.is_file()]
+        files = [str(f) for f in current_dir.glob("*") if f.is_file()]
 
         task_doc = get_jdftx_task_document(current_dir, **self.task_document_kwargs)
 
@@ -132,6 +132,4 @@ class BaseJdftxMaker(Maker):
 
 def get_jdftx_task_document(path: Path | str, **kwargs) -> TaskDoc:
     """Get JDFTx Task Document using atomate2 settings."""
-
     return TaskDoc.from_directory(path, **kwargs)
-
