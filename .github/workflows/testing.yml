@@ -34,6 +34,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
+      split: [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
     steps:
       - uses: actions/checkout@v4
@@ -61,8 +62,9 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          pip install .[strict,tests,abinit]
+          pip install .[strict,strict-forcefields,tests,abinit]
           pip install --no-deps nequip==0.5.6
+          pip install torch-runstats
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
@@ -74,7 +76,7 @@ jobs:
       - name: Test
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: pytest --ignore=tests/forcefields --cov=atomate2 --cov-report=xml
+        run: pytest --splits 9 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --ignore=tests/ase --cov=atomate2 --cov-report=xml
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
@@ -82,7 +84,12 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
 
-  test-forcefields:
+  test-ase:
+    # It seems like anything torch-dependent and tblite can't be installed in the same environment
+    # without the tblite tests failing in CI, see, e.g.:
+    # https://github.com/tblite/tblite/issues/116
+    # Outside of CI, having torch installed but not loaded seems not to affect tblite
+    # Split off ASE tests here, where tblite-dependent tests live
     services:
       local_mongodb:
         image: mongo:4.0
@@ -104,9 +111,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[strict,strict-forcefields,tests]
-          pip install torch-runstats
-          pip install --no-deps nequip==0.5.6
+          pip install .[strict,tests]
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
@@ -115,7 +120,7 @@ jobs:
       - name: Test
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: pytest --cov=atomate2 --cov-report=xml tests/forcefields
+        run: pytest --cov=atomate2 --cov-report=xml tests/ase
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
@@ -138,7 +143,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[strict,docs]
+          pip install .[strict,strict-forcefields,docs]
 
       - name: Build
         run: sphinx-build docs docs_build
