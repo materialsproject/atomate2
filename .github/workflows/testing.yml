@@ -34,7 +34,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
-        split: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        split: [1, 2, 3]
 
     steps:
       - uses: actions/checkout@v4
@@ -76,7 +76,7 @@ jobs:
       - name: Test split ${{ matrix.split }}
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: pytest --splits 9 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --ignore=tests/ase --cov=atomate2 --cov-report=xml
+        run: pytest --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --ignore=tests/ase --cov=atomate2 --cov-report=xml
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
