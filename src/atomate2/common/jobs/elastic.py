@@ -172,9 +172,10 @@ def fit_elastic_tensor(
     fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
     symprec: float = SETTINGS.SYMPREC,
     allow_elastically_unstable_structs: bool = True,
+    stress_sign_factor: float = 1.0,
     max_failed_deformations: float | None = None,
 ) -> ElasticDocument:
-    """
+    r"""
     Analyze stress/strain data to fit the elastic tensor and related properties.
 
     Parameters
@@ -201,6 +202,8 @@ def fit_elastic_tensor(
     allow_elastically_unstable_structs : bool
         Whether to allow the ElasticDocument to still complete in the event that
         the structure is elastically unstable.
+    stress_sign_factor: float
+        Corrections for codes that define stress to be \partial E / \partial n_ij
     max_failed_deformations: int or float
         Maximum number of deformations allowed to fail to proceed with the fitting
         of the elastic tensor. If an int the absolute number of deformations. If
@@ -218,7 +221,7 @@ def fit_elastic_tensor(
             failed_uuids.append(data["uuid"])
             continue
 
-        stresses.append(Stress(data["stress"]))
+        stresses.append(Stress(stress_sign_factor * np.array(data["stress"])))
         deformations.append(Deformation(data["deformation"]))
         uuids.append(data["uuid"])
         job_dirs.append(data["job_dir"])

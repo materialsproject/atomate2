@@ -1,6 +1,7 @@
 """Confirm with @janosh before changing any of the expected values below."""
 
 import pytest
+from pymatgen.io.vasp.sets import MatPESStaticSet
 
 from atomate2.vasp.sets.base import VaspInputGenerator
 from atomate2.vasp.sets.matpes import (
@@ -14,7 +15,9 @@ from atomate2.vasp.sets.matpes import (
     [MatPesGGAStaticSetGenerator, MatPesMetaGGAStaticSetGenerator],
 )
 def test_matpes_sets(set_generator: VaspInputGenerator) -> None:
-    matpes_set: VaspInputGenerator = set_generator()
+    with pytest.warns(FutureWarning):
+        matpes_set: VaspInputGenerator = set_generator()
+
     assert {*matpes_set.as_dict()} >= {
         "@class",
         "@module",
@@ -29,7 +32,7 @@ def test_matpes_sets(set_generator: VaspInputGenerator) -> None:
         "force_gamma",
         "inherit_incar",
         "sort_structure",
-        "symprec",
+        "sym_prec",
         "use_structure_charge",
         "user_incar_settings",
         "user_kpoints_settings",
@@ -39,13 +42,12 @@ def test_matpes_sets(set_generator: VaspInputGenerator) -> None:
         "vdw",
     }
     assert matpes_set.potcar_functional == "PBE_64"
-    assert matpes_set.inherit_incar is False
+    assert isinstance(matpes_set.inherit_incar, (list, tuple))
+    assert set(matpes_set.inherit_incar) == set(MatPESStaticSet.inherit_incar)
     assert matpes_set.auto_ismear is False
     assert matpes_set.auto_kspacing is False
-    assert matpes_set.force_gamma is True
     assert matpes_set.auto_lreal is False
-    assert matpes_set.auto_metal_kpoints is True
     assert matpes_set.sort_structure is True
-    assert matpes_set.symprec == 0.1
+    assert matpes_set.sym_prec == 0.1
     assert matpes_set.use_structure_charge is False
     assert matpes_set.vdw is None

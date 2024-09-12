@@ -217,36 +217,40 @@ class SomeAbinitInputSetGenerator(AbinitInputGenerator):
 
 
 def test_generator_check_format_prev_dirs():
-    aisg = AbinitInputGenerator(factory=mocked_factory)
-    prev_outputs = aisg.check_format_prev_dirs(None)
+    input_gen = AbinitInputGenerator(factory=mocked_factory)
+    prev_outputs = input_gen.check_format_prev_dirs(None)
     assert prev_outputs is None
-    prev_outputs = aisg.check_format_prev_dirs("/some/path")
+    prev_outputs = input_gen.check_format_prev_dirs("/some/path")
     assert prev_outputs == ["/some/path"]
-    prev_outputs = aisg.check_format_prev_dirs(Path("/some/path"))
+    prev_outputs = input_gen.check_format_prev_dirs(Path("/some/path"))
     assert prev_outputs == ["/some/path"]
-    prev_outputs = aisg.check_format_prev_dirs(["/some/path", Path("/some/other/path")])
+    prev_outputs = input_gen.check_format_prev_dirs(
+        ["/some/path", Path("/some/other/path")]
+    )
     assert prev_outputs == ["/some/path", "/some/other/path"]
 
 
 def test_generator_resolve_dep():
-    aisg = AbinitInputGenerator(factory=mocked_factory)
+    input_gen = AbinitInputGenerator(factory=mocked_factory)
     with ScratchDir(".") as tmpdir:
         prev_output_dir = os.path.join(tmpdir, "prev_output")
         prev_outdata = os.path.join(prev_output_dir, OUTDIR_NAME)
         makedirs_p(prev_outdata)
         Path(os.path.join(prev_outdata, "out_DEN")).touch()
-        irdvars, restart_file = aisg.resolve_dep_exts(
+        irdvars, restart_file = input_gen.resolve_dep_exts(
             prev_output_dir, exts=("WFK", "DEN")
         )
         assert irdvars == {"irdden": 1}
         assert restart_file == [(os.path.join(prev_outdata, "out_DEN"), "in_DEN")]
         Path(os.path.join(prev_outdata, "out_WFK")).touch()
-        irdvars, restart_file = aisg.resolve_dep_exts(
+        irdvars, restart_file = input_gen.resolve_dep_exts(
             prev_output_dir, exts=("WFK", "DEN")
         )
         assert irdvars == {"irdwfk": 1}
         assert restart_file == [(os.path.join(prev_outdata, "out_WFK"), "in_WFK")]
-        irdvars, restart_file = aisg.resolve_dep_exts(prev_output_dir, exts=("DEN",))
+        irdvars, restart_file = input_gen.resolve_dep_exts(
+            prev_output_dir, exts=("DEN",)
+        )
         assert irdvars == {"irdden": 1}
         assert restart_file == [(os.path.join(prev_outdata, "out_DEN"), "in_DEN")]
     with ScratchDir(".") as tmpdir:
@@ -254,7 +258,7 @@ def test_generator_resolve_dep():
         prev_outdata = os.path.join(prev_output_dir, OUTDIR_NAME)
         makedirs_p(prev_outdata)
         Path(os.path.join(prev_outdata, "out_WFK")).touch()
-        irdvars, restart_file = aisg.resolve_dep_exts(
+        irdvars, restart_file = input_gen.resolve_dep_exts(
             prev_output_dir, exts=("WFK", "DEN")
         )
         assert irdvars == {"irdwfk": 1}
@@ -262,12 +266,12 @@ def test_generator_resolve_dep():
         with pytest.raises(
             InitializationError, match=r"Cannot find DDB file to restart from."
         ):
-            aisg.resolve_dep_exts(prev_output_dir, exts=("DDB",))
+            input_gen.resolve_dep_exts(prev_output_dir, exts=("DDB",))
         with pytest.raises(
             InitializationError,
             match=r"Cannot find DDB or DVDB or DKK file to restart from.",
         ):
-            aisg.resolve_dep_exts(prev_output_dir, exts=("DDB", "DVDB", "DKK"))
+            input_gen.resolve_dep_exts(prev_output_dir, exts=("DDB", "DVDB", "DKK"))
     with ScratchDir(".") as tmpdir:
         prev_output_dir = os.path.join(tmpdir, "prev_output")
         prev_outdata = os.path.join(prev_output_dir, OUTDIR_NAME)
@@ -275,11 +279,15 @@ def test_generator_resolve_dep():
         Path(os.path.join(prev_outdata, "out_TIM1_DEN")).touch()
         Path(os.path.join(prev_outdata, "out_TIM2_DEN")).touch()
         Path(os.path.join(prev_outdata, "out_TIM15_DEN")).touch()
-        irdvars, restart_file = aisg.resolve_dep_exts(prev_output_dir, exts=("DEN",))
+        irdvars, restart_file = input_gen.resolve_dep_exts(
+            prev_output_dir, exts=("DEN",)
+        )
         assert irdvars == {"irdden": 1}
         assert restart_file == [(os.path.join(prev_outdata, "out_TIM15_DEN"), "in_DEN")]
         Path(os.path.join(prev_outdata, "out_DEN")).touch()
-        irdvars, restart_file = aisg.resolve_dep_exts(prev_output_dir, exts=("DEN",))
+        irdvars, restart_file = input_gen.resolve_dep_exts(
+            prev_output_dir, exts=("DEN",)
+        )
         assert irdvars == {"irdden": 1}
         assert restart_file == [(os.path.join(prev_outdata, "out_DEN"), "in_DEN")]
 

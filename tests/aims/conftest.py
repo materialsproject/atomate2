@@ -79,8 +79,6 @@ def mg2mn4o8():
         site_properties={"magmom": [0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0]},
     )
 
-
-@pytest.fixture()
 def si():
     return Structure(
         lattice=Lattice(
@@ -91,7 +89,22 @@ def si():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
+def nacl():
+    return Structure(
+        lattice=Lattice(
+            [
+                [3.422015, 0.0, 1.975702],
+                [1.140671, 3.226306, 1.975702],
+                [0.0, 0.0, 3.951402],
+            ]
+        ),
+        species=["Na", "Cl"],
+        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+    )
+
+
+@pytest.fixture
 def o2():
     return Molecule(species=["O", "O"], coords=[[0, 0, 0.622978], [0, 0, -0.622978]])
 
@@ -110,7 +123,7 @@ def ref_path():
     return test_dir.resolve()
 
 
-@pytest.fixture()
+@pytest.fixture
 def should_mock_aims(request):
     try:
         return not request.config.getoption("--generate-test-data")
@@ -118,7 +131,7 @@ def should_mock_aims(request):
         return True
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_aims(monkeypatch, ref_path, should_mock_aims):
     """
     This fixture allows one to mock (fake) running FHI-aims.

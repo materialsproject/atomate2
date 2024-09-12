@@ -170,5 +170,6 @@ At this point, you might:
 
 * Learn how to chain workflows together: [](connecting_vasp_jobs).
 * Learn how to customise VASP input settings: [](modifying_input_sets).
+* Learn more about [Document Models and Schemas](docs_schemas_emmet)
 * Configure atomate2 with FireWorks to manage and execute many workflows at once:
   [](atomate2_fireWorks).

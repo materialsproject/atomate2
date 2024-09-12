@@ -350,10 +350,12 @@ class MagneticOrderingsDocument(BaseModel):
     def from_tasks(cls, tasks: list[dict]) -> MagneticOrderingsDocument:
         """Construct a MagneticOrderingsDocument from a list of task dicts.
 
-        .. Note:: this function assumes the tasks contain the keys "output" and
-        "metadata". These keys are automatically constructed when jobflow stores its
-        outputs; however, you may need to put the data in this format if using this
-        manually (as in a postprocessing job).
+        .. Note::
+
+            this function assumes the tasks contain the keys "output" and "metadata".
+            These keys are automatically constructed when jobflow stores its outputs;
+            however, you may need to put the data in this format if using this
+            manually (as in a postprocessing job).
         """
         parent_structure = tasks[0]["metadata"]["parent_structure"]
 
