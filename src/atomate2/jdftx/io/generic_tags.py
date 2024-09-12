@@ -252,6 +252,37 @@ class FloatTag(AbstractTag):
     def get_token_len(self) -> int:
         return self._get_token_len()
 
+@dataclass(kw_only=True)
+class InitMagMomTag(AbstractTag):
+    # temporary fix to allow use of initial-magnetic-moments tag
+    # requires the user to set magnetic moments as a string with no extra validation
+    # processes input files as simply a string variable with no extra type conversion
+
+    # the formatting of this tag's value depends on the species labels in the ion tags
+    #     these species labels are not necessarily element symbols
+    # there are also multiple types of formatting options of the spins
+    # most robustly, this should be a MultiFormatTag, with each option
+    #     being a StructureDeferredTag, because this tag needs to know the
+    #     results of reading in the structure before being able to robustly
+    #     parse the value of this tag
+    def validate_value_type(self, tag, value, try_auto_type_fix: bool = False) -> tuple:
+        return self._validate_value_type(
+            str, tag, value, try_auto_type_fix=try_auto_type_fix
+        )
+
+    def read(self, tag: str, value: str) -> str:
+        try:
+            value = str(value)
+        except:
+            raise ValueError(f"Could not set '{value}' to a str for {tag}!")
+        return value
+
+    def write(self, tag: str, value) -> str:
+        return self._write(tag, value)
+
+    def get_token_len(self) -> int:
+        return self._get_token_len()
+
 
 @dataclass(kw_only=True)
 class TagContainer(AbstractTag):
@@ -538,10 +569,16 @@ class TagContainer(AbstractTag):
                 return value  # no conversion needed
             string_value = [self._make_dict(tag, entry) for entry in value]
             return [self.read(tag, entry) for entry in string_value]
-        if isinstance(value, dict):
-            return value  # no conversion needed
-        string_value = self._make_dict(tag, value)
-        return self.read(tag, string_value)
+
+        else:
+            if isinstance(value, dict):
+                return value  # no conversion needed
+            string_value = self._make_dict(tag, value)
+            return self.read(tag, string_value)
+
+
+
+
 
 
 @dataclass(kw_only=True)
@@ -645,6 +682,7 @@ class MultiformatTag(AbstractTag):
     def write(self, tag: str, value) -> str:
         format_index, _ = self._determine_format_option(tag, value)
         # print(f'using index of {format_index}')
+
         # Ben: Changing _write to write, using _write seem to shoot you straight
         # to the floor level definition, and completely messes up all the calls
         # to subtags for how they're supposed to be printed and just prints
@@ -653,6 +691,7 @@ class MultiformatTag(AbstractTag):
         return self.format_options[format_index].write(tag, value)
         # return self.format_options[format_index]._write(tag, value)
     
+
 
 @dataclass
 class BoolTagContainer(TagContainer):
