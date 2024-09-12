@@ -76,7 +76,7 @@ ex_known2 = {
         )
     ],
 )
-def test_JEiter(
+def test_jeiter(
     exfill_line: str,
     exfill_known: dict[str, float],
     exiter_line: str,
@@ -104,7 +104,7 @@ def test_JEiter(
 @pytest.mark.parametrize(
     "ex_lines,ex_knowns", [([ex_lines1, ex_lines2], [ex_known1, ex_known2])]
 )
-def test_JEiters(
+def test_jeiters(
     ex_lines: list[list[str]],
     ex_knowns: list[dict],
     etype: str = "F",
