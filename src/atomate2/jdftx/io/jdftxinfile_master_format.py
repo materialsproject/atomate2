@@ -839,7 +839,8 @@ MASTER_TAG_LIST = {
                 "energyScale": FloatTag(write_tagname=False, optional=False),
                 "lengthScale": FloatTag(write_tagname=False),
                 "FMixType": StrTag(
-                    options=["LJPotential", "GaussianKernel"], write_tagname=False
+                    options=["LJPotential", "GaussianKernel"],
+                    write_tagname=False
                 ),
             },
         ),
