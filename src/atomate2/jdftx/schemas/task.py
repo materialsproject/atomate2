@@ -1,151 +1,40 @@
 # mypy: ignore-errors
 
-"""Core definition of a JDFTx Task Document"""
+"""Core definition of a JDFTx Task Document."""
 
 import logging
-import re
-from collections import OrderedDict
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Type, TypeVar, Union
-from pymatgen.core import Structure
-from custodian.qchem.jobs import QCJob
-from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
-from atomate2.jdftx.schemas.calculation import Calculation, CalculationInput, CalculationOutput
+from typing import Any, Optional, TypeVar, Union, type
+
+from custodian.jdftx.jobs import JDFTxJob # Waiting on Sophie's PR
 from emmet.core.structure import StructureMetadata
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
+from pymatgen.core import Structure
 
-from atomate2.jdftx.schemas.calculation import JDFTxStatus
+from atomate2.jdftx.schemas.calculation import (
+    Calculation,
+    CalculationInput,
+    CalculationOutput,
+)
+from atomate2.jdftx.schemas.enums import JDFTxStatus
 from atomate2.utils.datetime import datetime_str
 
-__author__ = (
-    "Cooper Tezak <cooper.tezak@colorado.edu>"
-)
+__author__ = "Cooper Tezak <cooper.tezak@colorado.edu>"
 
 logger = logging.getLogger(__name__)
 _T = TypeVar("_T", bound="TaskDoc")
 # _DERIVATIVE_FILES = ("GRAD", "HESS")
 
-class OutputDoc(BaseModel):
-    initial_structure: Structure = Field(None, description="Input Structure object")
-    optimized_structure: Optional[Structure] = Field(
-        None, description="Optimized Structure object"
-    )
-    mulliken: Optional[List[Any]] = Field(
-        None, description="Mulliken atomic partial charges and partial spins"
-    )
-    resp: Optional[Union[List[float], List[Any]]] = Field(
-        None,
-        description="Restrained Electrostatic Potential (RESP) atomic partial charges",
-    )
-    nbo: Optional[Dict[str, Any]] = Field(
-        None, description="Natural Bonding Orbital (NBO) output"
-    )
-
-    frequencies: Optional[Union[Dict[str, Any], List]] = Field(
-        None,
-        description="The list of calculated frequencies if job type is freq (units: cm^-1)",
-    )
-
-    frequency_modes: Optional[Union[List, str]] = Field(
-        None,
-        description="The list of calculated frequency mode vectors if job type is freq",
-    )
-
-    @classmethod
-    def from_qchem_calc_doc(cls, calc_doc: Calculation) -> "OutputDoc":
-        """
-        Create a summary of QChem calculation outputs from a QChem calculation document.
-
-        Parameters
-        ----------
-        calc_doc
-            A QChem calculation document.
-        kwargs
-            Any other additional keyword arguments
-
-        Returns
-        -------
-        OutputDoc
-            The calculation output summary
-        """
-        return cls(
-            initial_molecule=calc_doc.input.initial_molecule,
-            optimized_molecule=calc_doc.output.optimized_molecule,
-            # species_hash = self.species_hash, #The three entries post this needs to be checked again
-            # coord_hash = self.coord_hash,
-            # last_updated = self.last_updated,
-            final_energy=calc_doc.output.final_energy,
-            dipoles=calc_doc.output.dipoles,
-            enthalpy=calc_doc.output.enthalpy,
-            entropy=calc_doc.output.entropy,
-            mulliken=calc_doc.output.mulliken,
-            resp=calc_doc.output.resp,
-            nbo=calc_doc.output.nbo_data,
-            frequencies=calc_doc.output.frequencies,
-            frequency_modes=calc_doc.output.frequency_modes,
-        )
-
-
-class InputDoc(BaseModel):
-    structure: Structure = Field(
-        None,
-        title="Input Structure",
-        description="Input molecule and calc details for the QChem calculation",
-    )
-
-    parameters: Optional[Dict] = Field(
-        None,
-        description="JDFTx calculation parameters",
-    )
-
-
-    @classmethod
-    def from_qchem_calc_doc(cls, calc_doc: Calculation) -> "InputDoc":
-        """
-        Create qchem calculation input summary from a qchem calculation document.
-
-        Parameters
-        ----------
-        calc_doc
-            A QChem calculation document.
-
-        Returns
-        -------
-        InputDoc
-            A summary of the input molecule and corresponding calculation parameters
-        """
-        try:
-            lot_val = calc_doc.level_of_theory.value
-        except AttributeError:
-            lot_val = calc_doc.level_of_theory
-
-        try:
-            ct_val = calc_doc.calc_type.value
-        except AttributeError:
-            ct_val = calc_doc.calc_type
-        # TODO : modify this to get the different variables from the task doc.
-        return cls(
-            initial_molecule=calc_doc.input.initial_molecule,
-            rem=calc_doc.input.rem,
-            level_of_theory=lot_val,
-            task_type=calc_doc.task_type.value,
-            tags=calc_doc.input.tags,
-            solvation_lot_info=calc_doc.solvation_lot_info,
-            # special_run_type = calc_doc.input.special_run_type,
-            # smiles = calc_doc.input.smiles,
-            calc_type=ct_val,
-        )
-
 
 class CustodianDoc(BaseModel):
-    corrections: Optional[List[Any]] = Field(
+    corrections: Optional[list[Any]] = Field(
         None,
         title="Custodian Corrections",
-        description="List of custodian correction data for calculation.",
+        description="list of custodian correction data for calculation.",
     )
 
-    job: Optional[Union[Dict[str, Any], QCJob]] = Field(
+    job: Optional[Union[dict[str, Any], JDFTxJob]] = Field(
         None,
         title="Custodian Job Data",
         description="Job data logged by custodian.",
@@ -185,19 +74,18 @@ class TaskDoc(StructureMetadata):
 
     # implemented in VASP and Qchem. Do we need this?
     # it keeps a list of all calculations in a given task.
-    # calcs_reversed: Optional[List[Calculation]] = Field(
+    # calcs_reversed: Optional[list[Calculation]] = Field(
     # None,
     # title="Calcs reversed data",
     # description="Detailed data for each JDFTx calculation contributing to the task document.",
     # )
 
-
     @classmethod
     def from_directory(
-        cls: Type[_T],
+        cls: type[_T],
         dir_name: Union[Path, str],
         store_additional_json: bool = True,
-        additional_fields: Dict[str, Any] = None,
+        additional_fields: dict[str, Any] = None,
         **jdftx_calculation_kwargs,
     ) -> _T:
         """
@@ -210,7 +98,7 @@ class TaskDoc(StructureMetadata):
         store_additional_json
             Whether to store additional json files in the calculation directory.
         additional_fields
-            Dictionary of additional fields to add to output document.
+            dictionary of additional fields to add to output document.
         **qchem_calculation_kwargs
             Additional parsing options that will be passed to the
             :obj:`.Calculation.from_qchem_files` function.
@@ -227,8 +115,8 @@ class TaskDoc(StructureMetadata):
         calc_doc = Calculation.from_files(
             dir_name=dir_name,
             jdftxinput_file="inputs.in",
-            jdftxoutput_file="output.out"
-            )
+            jdftxoutput_file="output.out",
+        )
         # task_files = _find_qchem_files(dir_name)
 
         # if len(task_files) == 0:
@@ -249,9 +137,9 @@ class TaskDoc(StructureMetadata):
         #             **qchem_calculation_kwargs,
         #         )
         #         calcs_reversed.append(calc_doc)
-                # all_qchem_objects.append(qchem_objects)
+        # all_qchem_objects.append(qchem_objects)
 
-        # Lists need to be reversed so that newest calc is the first calc, all_qchem_objects are also reversed to match
+        # lists need to be reversed so that newest calc is the first calc, all_qchem_objects are also reversed to match
         # calcs_reversed.reverse()
 
         # all_qchem_objects.reverse()
@@ -285,7 +173,7 @@ class TaskDoc(StructureMetadata):
             meta_structure=calc_doc.output.structure,
             dir_name=dir_name,
             calc_outputs=calc_doc.output,
-            calc_inputs=calc_doc.input
+            calc_inputs=calc_doc.input,
             # task_type=
             # state=_get_state()
         )
@@ -295,8 +183,8 @@ class TaskDoc(StructureMetadata):
 
     @staticmethod
     def get_entry(
-        calcs_reversed: List[Calculation], task_id: Optional[str] = None
-    ) -> Dict:
+        calcs_reversed: list[Calculation], task_id: Optional[str] = None
+    ) -> dict:
         """
         Get a computed entry from a list of QChem calculation documents.
 
@@ -309,7 +197,7 @@ class TaskDoc(StructureMetadata):
 
         Returns
         -------
-        Dict
+        dict
             A dict of computed entries
         """
         entry_dict = {
@@ -367,7 +255,7 @@ def get_uri(dir_name: Union[str, Path]) -> str:
     return f"{hostname}:{fullpath}"
 
 
-def _parse_custodian(dir_name: Path) -> Optional[Dict]:
+def _parse_custodian(dir_name: Path) -> Optional[dict]:
     """
     Parse custodian.json file.
 
@@ -381,7 +269,7 @@ def _parse_custodian(dir_name: Path) -> Optional[Dict]:
 
     Returns
     -------
-    Optional[Dict]
+    Optional[dict]
         The information parsed from custodian.json file.
     """
     filenames = tuple(dir_name.glob("custodian.json*"))
@@ -392,7 +280,7 @@ def _parse_custodian(dir_name: Path) -> Optional[Dict]:
 
 def _parse_orig_inputs(
     dir_name: Path,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Parse original input files.
 
@@ -406,7 +294,7 @@ def _parse_orig_inputs(
 
     Returns
     -------
-    Dict[str, Any]
+    dict[str, Any]
         The original molecule, rem, solvent and other data.
     """
     orig_inputs = {}
@@ -418,7 +306,7 @@ def _parse_orig_inputs(
     return orig_inputs
 
 
-def _parse_additional_json(dir_name: Path) -> Dict[str, Any]:
+def _parse_additional_json(dir_name: Path) -> dict[str, Any]:
     """Parse additional json files in the directory."""
     additional_json = {}
     for filename in dir_name.glob("*.json*"):
@@ -434,7 +322,4 @@ def _get_state(calc: Calculation) -> JDFTxStatus:
     """Get state from calculation document of JDFTx task."""
     if calc.has_jdftx_completed:
         return JDFTxStatus.SUCCESS
-    else:
-        return JDFTxStatus.FAILED
-
-
+    return JDFTxStatus.FAILED
