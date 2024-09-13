@@ -6,15 +6,12 @@ from typing import Any
 
 from custodian.jdftx.jobs import JDFTxJob
 from jobflow.utils import ValueEnum
-
+from atomate2 import SETTINGS
 from atomate2.jdftx.schemas.task import JDFTxStatus, TaskDoc
 
 
 class JobType(ValueEnum):
-    """
-    Type of JDFTx job
-
-    """
+    """Type of JDFTx job."""
 
     NORMAL = "normal"
     # Only running through Custodian now, can add DIRECT method later.
@@ -22,7 +19,7 @@ class JobType(ValueEnum):
 
 def run_jdftx(
     job_type: JobType | str = JobType.NORMAL,
-    jdftx_cmd: str = "docker run -t --rm -v $PWD:/root/research jdftx jdftx",
+    jdftx_cmd: str = SETTINGS.JDFTX_CMD,
     jdftx_job_kwargs: dict[str, Any] = None,
 ) -> None:
     jdftx_job_kwargs = jdftx_job_kwargs or {}
