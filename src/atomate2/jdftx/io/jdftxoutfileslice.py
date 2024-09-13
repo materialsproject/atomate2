@@ -1,4 +1,15 @@
+"""JDFTx Outfile Slice Class.
+
+This module defines the JDFTxOutfileSlice class, which is used to read and
+process a JDFTx out file.
+
+"""
+
+from __future__ import annotations
+
 import math
+from dataclasses import dataclass
+from typing import Type
 
 import numpy as np
 from pymatgen.core import Structure
@@ -6,16 +17,20 @@ from pymatgen.core.trajectory import Trajectory
 from pymatgen.core.units import Ha_to_eV, ang_to_bohr
 
 from atomate2.jdftx.io.data import atom_valence_electrons
+from atomate2.jdftx.io.jdftxoutfileslice_helpers import (
+    find_all_key,
+    find_first_range_key,
+    find_key,
+    find_key_first,
+    key_exists,
+)
 from atomate2.jdftx.io.jminsettings import (
-    JMinSettings,
     JMinSettingsElectronic,
     JMinSettingsFluid,
     JMinSettingsIonic,
     JMinSettingsLattice,
 )
 from atomate2.jdftx.io.joutstructures import JOutStructures
-from typing import Optional
-from dataclasses import dataclass
 
 
 class ClassPrintFormatter:
@@ -31,139 +46,6 @@ class ClassPrintFormatter:
         )
 
 
-def get_start_lines(
-    text: list[str],
-    start_key: Optional[str] = "*************** JDFTx",
-    add_end: Optional[bool] = False,
-) -> list[int]:
-    """
-    Get the line numbers corresponding to the beginning of seperate JDFTx calculations
-    (in case of multiple calculations appending the same out file)
-
-    Args:
-        text: output of read_file for out file
-    """
-    start_lines = []
-    for i, line in enumerate(text):
-        if start_key in line:
-            start_lines.append(i)
-    if add_end:
-        start_lines.append(i)
-    return start_lines
-
-
-def find_key_first(key_input, tempfile):
-    """
-    Finds first instance of key in output file.
-
-    Parameters
-    ----------
-    key_input: str
-        key string to match
-    tempfile: List[str]
-        output from readlines() function in read_file method
-    """
-    key_input = str(key_input)
-    line = None
-    for i in range(len(tempfile)):
-        if key_input in tempfile[i]:
-            line = i
-            break
-    return line
-
-
-def find_key(key_input, tempfile):
-    """
-    Finds last instance of key in output file.
-
-    Parameters
-    ----------
-    key_input: str
-        key string to match
-    tempfile: List[str]
-        output from readlines() function in read_file method
-    """
-    key_input = str(key_input)
-    line = None
-    lines = find_all_key(key_input, tempfile)
-    if len(lines):
-        line = lines[-1]
-    # line = None
-    # for i in range(0,len(tempfile)):
-    #     if key_input in tempfile[i]:
-    #         line = i
-    return line
-
-
-def find_first_range_key(
-    key_input: str,
-    tempfile: list[str],
-    startline: int = 0,
-    endline: int = -1,
-    skip_pound: bool = False,
-) -> list[int]:
-    """
-    Find all lines that exactly begin with key_input in a range of lines
-
-    Parameters
-    ----------
-    key_input: str
-        key string to match
-    tempfile: List[str]
-        output from readlines() function in read_file method
-    startline: int
-        line to start searching from
-    endline: int
-        line to stop searching at
-    skip_pound: bool
-        whether to skip lines that begin with a pound sign
-
-    Returns
-    -------
-    L: list[int]
-        list of line numbers where key_input occurs
-
-    """
-    key_input = str(key_input)
-    startlen = len(key_input)
-    L = []
-
-    if endline == -1:
-        endline = len(tempfile)
-    for i in range(startline, endline):
-        line = tempfile[i]
-        if skip_pound == True:
-            for j in range(10):  # repeat to make sure no really weird formatting
-                line = line.lstrip()
-                line = line.lstrip("#")
-        line = line[0:startlen]
-        if line == key_input:
-            L.append(i)
-    if not L:
-        L = [len(tempfile)]
-    return L
-
-
-def key_exists(key_input, tempfile):
-    line = find_key(key_input, tempfile)
-    if line == None:
-        return False
-    return True
-
-
-def find_all_key(key_input, tempfile, startline=0):
-    # Ben: I don't think this is deprecated by find_first_range_key, since this function
-    # doesn't require the key to be at the beginning of the line
-    # DEPRECATED: NEED TO REMOVE INSTANCES OF THIS FUNCTION AND SWITCH WITH find_first_range_key
-    # finds all lines where key occurs in in lines
-    L = []  # default
-    key_input = str(key_input)
-    for i in range(startline, len(tempfile)):
-        if key_input in tempfile[i]:
-            L.append(i)
-    return L
-
-
 @dataclass
 class JDFTXOutfileSlice(ClassPrintFormatter):
     """
@@ -177,10 +59,30 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     prefix: str = None
 
     jstrucs: JOutStructures = None
-    jsettings_fluid: JMinSettingsFluid = None
-    jsettings_electronic: JMinSettingsElectronic = None
-    jsettings_lattice: JMinSettingsLattice = None
-    jsettings_ionic: JMinSettingsIonic = None
+    jsettings_fluid: (
+        JMinSettingsFluid
+        | JMinSettingsElectronic
+        | JMinSettingsLattice
+        | JMinSettingsIonic
+    ) = None
+    jsettings_electronic: (
+        JMinSettingsFluid
+        | JMinSettingsElectronic
+        | JMinSettingsLattice
+        | JMinSettingsIonic
+    ) = None
+    jsettings_lattice: (
+        JMinSettingsFluid
+        | JMinSettingsElectronic
+        | JMinSettingsLattice
+        | JMinSettingsIonic
+    ) = None
+    jsettings_ionic: (
+        JMinSettingsFluid
+        | JMinSettingsElectronic
+        | JMinSettingsLattice
+        | JMinSettingsIonic
+    ) = None
 
     xc_func: str = None
 
@@ -198,24 +100,24 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     # grouping fields related to electronic parameters.
     # Used by the get_electronic_output() method
     _electronic_output = [
-        "EFermi",
-        "Egap",
-        "Emin",
-        "Emax",
-        "HOMO",
-        "LUMO",
-        "HOMO_filling",
-        "LUMO_filling",
+        "efermi",
+        "egap",
+        "emin",
+        "emax",
+        "homo",
+        "lumo",
+        "homo_filling",
+        "lumo_filling",
         "is_metal",
     ]
-    EFermi: float = None
-    Egap: float = None
-    Emin: float = None
-    Emax: float = None
-    HOMO: float = None
-    LUMO: float = None
-    HOMO_filling: float = None
-    LUMO_filling: float = None
+    efermi: float = None
+    egap: float = None
+    emin: float = None
+    emax: float = None
+    homo: float = None
+    lumo: float = None
+    homo_filling: float = None
+    lumo_filling: float = None
     is_metal: bool = None
     etype: str = None
 
@@ -246,17 +148,12 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     atom_coords_final: list[list[float]] = None
     atom_coords: list[list[float]] = None
 
+    lattice_initial: np.ndarray = None
+    lattice_final: np.ndarray = None
+    lattice: np.ndarray = None
+
     has_solvation: bool = False
     fluid: str = None
-
-    # #@ Cooper added @#
-    # Ecomponents: dict = field(default_factory=dict)
-    # is_gc: bool = False # is it a grand canonical calculation
-    # trajectory_positions: list[list[list[float]]] = None
-    # trajectory_lattice: list[list[list[float]]] = None
-    # trajectory_forces: list[list[list[float]]] = None
-    # trajectory_ecomponents: list[dict] = None
-    # # is_converged: bool = None #TODO implement this
 
     @property
     def t_s(self) -> float:
@@ -289,7 +186,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         """
         Returns a pymatgen trajectory object
         """
-        constant_lattice = self.jsettings_lattice.nIterations == 0
+        constant_lattice = self.jsettings_lattice.niterations == 0
         traj = Trajectory.from_structures(
             structures=self.jstrucs, constant_lattice=constant_lattice
         )
@@ -315,7 +212,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return structure
 
     @classmethod
-    def from_out_slice(cls, text: list[str]):
+    def from_out_slice(cls, text: list[str]) -> JDFTXOutfileSlice:
         """
         Read slice of out file into a JDFTXOutfileSlice instance
 
@@ -349,7 +246,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         instance.is_metal = instance._determine_is_metal()
         instance._set_fluid(text)
         instance._set_total_electrons(text)
-        instance._set_Nbands(text)
+        instance._set_nbands(text)
         instance._set_atom_vars(text)
         instance._set_pseudo_vars(text)
         instance._set_lattice_vars(text)
@@ -363,8 +260,8 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return instance
 
     def _get_xc_func(self, text: list[str]) -> str:
-        """
-        Get the exchange-correlation functional used in the calculation
+        """Get the exchange-correlation functional used in the calculation.
+        Get the exchange-correlation functional used in the calculation.
 
         Parameters
         ----------
@@ -381,8 +278,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return xc_func
 
     def _get_prefix(self, text: list[str]) -> str:
-        """
-        Get output prefix from the out file
+        """Get output prefix from the out file.
+
+        Get output prefix from the out file.
 
         Parameters
         ----------
@@ -402,8 +300,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return prefix
 
     def _get_spinvars(self, text: list[str]) -> tuple[str, int]:
-        """
-        Set spintype and Nspin from out file text for instance
+        """Set spintype and Nspin from out file text for instance.
+
+        Set spintype and Nspin from out file text for instance.
 
         Parameters
         ----------
@@ -429,8 +328,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return spintype, Nspin
 
     def _get_broadeningvars(self, text: list[str]) -> tuple[str, float]:
-        """
-        Get broadening type and value from out file text
+        """Get broadening type and value from out file text.
+
+        Get broadening type and value from out file text.
 
         Parameters
         ----------
@@ -454,8 +354,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return broadening_type, broadening
 
     def _get_truncationvars(self, text: list[str]) -> tuple[str, float]:
-        """
-        Get truncation type and value from out file text
+        """Get truncation type and value from out file text.
+
+        Get truncation type and value from out file text.
 
         Parameters
         ----------
@@ -498,8 +399,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return truncation_type, truncation_radius
 
     def _get_pw_cutoff(self, text: list[str]) -> float:
-        """
-        Get the electron cutoff from the out file text
+        """Get the electron cutoff from the out file text.
+
+        Get the electron cutoff from the out file text.
 
         Parameters
         ----------
@@ -511,8 +413,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return pwcut
 
     def _get_rho_cutoff(self, text: list[str]) -> float:
-        """
-        Get the electron cutoff from the out file text
+        """Get the electron cutoff from the out file text.
+
+        Get the electron cutoff from the out file text.
 
         Parameters
         ----------
@@ -531,8 +434,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return rhocut
 
     def _get_fftgrid(self, text: list[str]) -> list[int]:
-        """
-        Get the FFT grid from the out file text
+        """Get the FFT grid from the out file text.
+
+        Get the FFT grid from the out file text.
 
         Parameters
         ----------
@@ -544,8 +448,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return fftgrid
 
     def _get_kgrid(self, text: list[str]) -> list[int]:
-        """
-        Get the kpoint grid from the out file text
+        """Get the kpoint grid from the out file text.
+
+        Get the kpoint grid from the out file text.
 
         Parameters
         ----------
@@ -559,8 +464,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     def _get_eigstats_varsdict(
         self, text: list[str], prefix: str | None
     ) -> dict[str, float]:
-        """
-        Get the eigenvalue statistics from the out file text
+        """Get the eigenvalue statistics from the out file text.
+
+        Get the eigenvalue statistics from the out file text.
 
         Parameters
         ----------
@@ -583,17 +489,18 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             raise ValueError(
                 'Must run DFT job with "dump End EigStats" to get summary gap information!'
             )
-        varsdict["Emin"] = float(text[line + 1].split()[1]) * Ha_to_eV
-        varsdict["HOMO"] = float(text[line + 2].split()[1]) * Ha_to_eV
-        varsdict["EFermi"] = float(text[line + 3].split()[2]) * Ha_to_eV
-        varsdict["LUMO"] = float(text[line + 4].split()[1]) * Ha_to_eV
-        varsdict["Emax"] = float(text[line + 5].split()[1]) * Ha_to_eV
-        varsdict["Egap"] = float(text[line + 6].split()[2]) * Ha_to_eV
+        varsdict["emin"] = float(text[line + 1].split()[1]) * Ha_to_eV
+        varsdict["homo"] = float(text[line + 2].split()[1]) * Ha_to_eV
+        varsdict["efermi"] = float(text[line + 3].split()[2]) * Ha_to_eV
+        varsdict["lumo"] = float(text[line + 4].split()[1]) * Ha_to_eV
+        varsdict["emax"] = float(text[line + 5].split()[1]) * Ha_to_eV
+        varsdict["egap"] = float(text[line + 6].split()[2]) * Ha_to_eV
         return varsdict
 
     def _set_eigvars(self, text: list[str]) -> None:
-        """
-        Set the eigenvalue statistics variables
+        """Set the eigenvalue statistics variables.
+
+        Set the eigenvalue statistics variables.
 
         Parameters
         ----------
@@ -601,16 +508,17 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             output of read_file for out file
         """
         eigstats = self._get_eigstats_varsdict(text, self.prefix)
-        self.Emin = eigstats["Emin"]
-        self.HOMO = eigstats["HOMO"]
-        self.EFermi = eigstats["EFermi"]
-        self.LUMO = eigstats["LUMO"]
-        self.Emax = eigstats["Emax"]
-        self.Egap = eigstats["Egap"]
+        self.emin = eigstats["emin"]
+        self.homo = eigstats["homo"]
+        self.efermi = eigstats["efermi"]
+        self.lumo = eigstats["lumo"]
+        self.emax = eigstats["emax"]
+        self.egap = eigstats["egap"]
 
     def _get_pp_type(self, text: list[str]) -> str:
-        """
-        Get the pseudopotential type used in calculation
+        """Get the pseudopotential type used in calculation.
+
+        Get the pseudopotential type used in calculation.
 
         Parameters
         ----------
@@ -643,8 +551,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return pptype
 
     def _set_pseudo_vars(self, text: list[str]) -> None:
-        """
-        Set the pseudopotential variables
+        """Set the pseudopotential variables.
+
+        Set the pseudopotential variables.
 
         Parameters
         ----------
@@ -653,13 +562,14 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         """
         self.pp_type = self._get_pp_type(text)
         if self.pp_type == "SG15":
-            self._set_pseudo_vars_SG15(text)
+            self._set_pseudo_vars_sg15(text)
         elif self.pp_type == "GBRV":
-            self._set_pseudo_vars_GBRV(text)
+            self._set_pseudo_vars_gbrv(text)
 
-    def _set_pseudo_vars_SG15(self, text: list[str]) -> None:
-        """
-        Set the pseudopotential variables for SG15 pseudopotentials
+    def _set_pseudo_vars_sg15(self, text: list[str]) -> None:
+        """Set the pseudopotential variables for SG15 pseudopotentials.
+
+        Set the pseudopotential variables for SG15 pseudopotentials.
 
         Parameters
         ----------
@@ -687,7 +597,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             self.total_electrons - self.semicore_electrons
         )  # accounts for if system is charged
 
-    def _set_pseudo_vars_GBRV(self, text: list[str]) -> None:
+    def _set_pseudo_vars_gbrv(self, text: list[str]) -> None:
         """TODO: implement this method"""
         self.total_electrons_uncharged = None
         self.valence_electrons_uncharged = None
@@ -696,8 +606,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.valence_electrons = None
 
     def _collect_settings_lines(self, text: list[str], start_flag: str) -> list[int]:
-        """
-        Collect the lines of settings from the out file text
+        """Collect the lines of settings from the out file text.
+
+        Collect the lines of settings from the out file text.
 
         Parameters
         ----------
@@ -727,7 +638,8 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return lines
 
     def _create_settings_dict(self, text: list[str], start_flag: str) -> dict:
-        """
+        """Get a dictionary of settings from the out file text.
+
         Create a dictionary of settings from the out file text
 
         Parameters
@@ -752,16 +664,29 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return settings_dict
 
     def _get_settings_object(
-        self, text: list[str], settings_class: JMinSettings
-    ) -> JMinSettings:
-        """
+        self,
+        text: list[str],
+        settings_class: Type[
+            JMinSettingsElectronic
+            | JMinSettingsFluid
+            | JMinSettingsIonic
+            | JMinSettingsLattice
+        ],
+    ) -> (
+        JMinSettingsElectronic
+        | JMinSettingsFluid
+        | JMinSettingsIonic
+        | JMinSettingsLattice
+    ):
+        """Get appropriate JMinSettings mutant.
+
         Get the settings object from the out file text
 
         Parameters
         ----------
         text: list[str]
             output of read_file for out file
-        settings_class: JMinSettings
+        settings_class: Type[JMinSettings]
             settings class to create object from
 
         Returns
@@ -777,8 +702,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return settings_obj
 
     def _set_min_settings(self, text: list[str]) -> None:
-        """
-        Set the settings objects from the out file text
+        """Set the settings objects from the out file text.
+
+        Set the settings objects from the out file text.
 
         Parameters
         ----------
@@ -793,7 +719,8 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.jsettings_ionic = self._get_settings_object(text, JMinSettingsIonic)
 
     def _set_geomopt_vars(self, text: list[str]) -> None:
-        """
+        """Set the geom_opt and geom_opt_type class variables.
+
         Set vars geom_opt and geom_opt_type for initializing self.jstrucs
 
         Parameters
@@ -805,10 +732,10 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             self._set_min_settings(text)
         if self.jsettings_ionic is None or self.jsettings_lattice is None:
             raise ValueError("Unknown issue in setting settings objects")
-        if self.jsettings_lattice.nIterations > 0:
+        if self.jsettings_lattice.niterations > 0:
             self.geom_opt = True
             self.geom_opt_type = "lattice"
-        elif self.jsettings_ionic.nIterations > 0:
+        elif self.jsettings_ionic.niterations > 0:
             self.geom_opt = True
             self.geom_opt_type = "ionic"
         else:
@@ -816,8 +743,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             self.geom_opt_type = "single point"
 
     def _set_jstrucs(self, text: list[str]) -> None:
-        """
-        Set the JStructures object from the out file text
+        """Set the jstrucs class variable.
+
+        Set the JStructures object to jstrucs from the out file text.
 
         Parameters
         ----------
@@ -826,28 +754,30 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         """
         self.jstrucs = JOutStructures.from_out_slice(text, iter_type=self.geom_opt_type)
         if self.etype is None:
-            self.etype = self.jstrucs.etype
+            self.etype = self.jstrucs[-1].etype
 
     def _set_orb_fillings(self) -> None:
-        """
-        Calculate and set HOMO and LUMO fillings
+        """Set the orbital fillings.
+
+        Calculate and set homo and lumo fillings
         """
         if self.broadening_type is not None:
-            self.HOMO_filling = (2 / self.Nspin) * self.calculate_filling(
-                self.broadening_type, self.broadening, self.HOMO, self.EFermi
+            self.homo_filling = (2 / self.Nspin) * self.calculate_filling(
+                self.broadening_type, self.broadening, self.homo, self.efermi
             )
-            self.LUMO_filling = (2 / self.Nspin) * self.calculate_filling(
-                self.broadening_type, self.broadening, self.LUMO, self.EFermi
+            self.lumo_filling = (2 / self.Nspin) * self.calculate_filling(
+                self.broadening_type, self.broadening, self.lumo, self.efermi
             )
         else:
-            self.HOMO_filling = 2 / self.Nspin
-            self.LUMO_filling = 0
+            self.homo_filling = 2 / self.Nspin
+            self.lumo_filling = 0
 
     def _set_fluid(
         self, text: list[str]
     ) -> None:  # Is this redundant to the fluid settings?
-        """
-        Set the fluid class variable
+        """Set the fluid class variable.
+
+        Set the fluid class variable.
 
         Parameters
         ----------
@@ -860,28 +790,25 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             self.fluid = None
 
     def _set_total_electrons(self, text: str) -> None:
-        """
-        Set the total_Electrons class variable
+        """Set the total_Electrons class variable.
+
+        Set the total_electrons class variable.
 
         Parameters
         ----------
         text: list[str]
             output of read_file for out file
         """
-        total_electrons = self.jstrucs[-1].elecMinData[-1].nElectrons
+        total_electrons = self.jstrucs[-1].elecmindata[-1].nelectrons
         self.total_electrons = total_electrons
-        # lines = find_all_key('nElectrons', text)
-        # if len(lines) > 1:
-        #     idx = 4
-        # else:
-        #     idx = 1  #nElectrons was not printed in scf iterations then
-        # self.total_electrons = float(text[lines[-1]].split()[idx])
 
-    def _set_Nbands(self, text: list[str]) -> None:
-        """
-        Set the Nbands class variable
+    def _set_nbands(self, text: list[str]) -> None:
+        """Set the Nbands class variable.
+
+        Set the nbands class variable.
         Prioritizes finding nBands from the reiteration of the input parameters.
-        If this line is not found, then it pulls it from "Setting up k-points, bands, fillings" section.
+        If this line is not found, then it pulls it from "Setting up k-points,
+        bands, fillings" section.
 
         Parameters
         ----------
@@ -896,11 +823,12 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             lines = find_all_key("nBands:", text)
             line = lines[0]
             nbands = int(text[line].split("nBands:")[1].strip().split()[0].strip())
-        self.Nbands = nbands
+        self.nbands = nbands
 
     def _set_atom_vars(self, text: list[str]) -> None:
-        """
-        Set the atom variables
+        """Set the atom variables.
+
+        Set the atom variables from the out file text.
 
         Parameters
         ----------
@@ -911,7 +839,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         endline = find_key("---------- Initializing the Grid ----------", text)
         lines = find_first_range_key("ion ", text, startline=startline, endline=endline)
         atom_elements = [text[x].split()[1] for x in lines]
-        self.Nat = len(atom_elements)
+        self.nat = len(atom_elements)
         atom_coords = [text[x].split()[2:5] for x in lines]
         self.atom_coords_initial = np.array(atom_coords, dtype=float)
         atom_types = []
@@ -930,8 +858,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.atom_coords = self.atom_coords_final.copy()
 
     def _set_lattice_vars(self, text: list[str]) -> None:
-        """
-        Set the lattice variables
+        """Set the lattice variables.
+
+        Set the lattice variables from the out file text.
 
         Parameters
         ----------
@@ -941,40 +870,51 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.lattice_initial = self.jstrucs[0].lattice.matrix
         self.lattice_final = self.jstrucs[-1].lattice.matrix
         self.lattice = self.lattice_final.copy()
-        # This block was throwing errors
-        # lines = find_all_key('R =', text)
-        # line = lines[0]
-        # lattice_initial = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
-        # self.lattice_initial = lattice_initial.copy()
-        # templines = find_all_key('LatticeMinimize', text)
-        # if len(templines) > 0:
-        #     line = templines[-1]
-        #     lattice_final = np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr
-        #     self.lattice_final = lattice_final.copy()
-        #     self.lattice = lattice_final.copy()
-        # else:
-        #     self.lattice = lattice_initial.copy()
         self.a, self.b, self.c = np.sum(self.lattice**2, axis=1) ** 0.5
 
     def _set_ecomponents(self, text: list[str]) -> None:
-        """
-        Set the energy components dictionary
+        """Set the energy components dictionary
+
+        Set the energy components dictionary from the out file text.
 
         Parameters
         ----------
         text: list[str]
             output of read_file for out file
         """
-        ecomp = self.jstrucs[-1].Ecomponents
+        ecomp = self.jstrucs[-1].ecomponents
         if self.etype not in ecomp:
             ecomp[self.etype] = self.jstrucs[-1].E
         # line = find_key("# Energy components:", text)
-        self.Ecomponents = ecomp
+        self.ecomponents = ecomp
 
-    def calculate_filling(self, broadening_type, broadening, eig, EFermi):
+    def calculate_filling(
+        self, broadening_type: str, broadening: float, eig: float, efermi: float
+    ) -> float:
+        """Calculate the filling for a given eigenvalue.
+
+        Use the broadening type, broadening value, eigenvalue, and fermi energy
+        to calculate the filling at the eigenvalue.
+
+        Parameters
+        ----------
+        broadening_type: str
+            type of broadening to use
+        broadening: float
+            broadening parameter
+        eig: float
+            eigenvalue
+        efermi: float
+            fermi energy
+
+        Returns
+        -------
+        filling: float
+            filling at the eigenvalue
+        """
         # most broadening implementations do not have the denominator factor of 2, but JDFTx does currently
         #   remove if use this for other code outfile reading
-        x = (eig - EFermi) / (2.0 * broadening)
+        x = (eig - efermi) / (2.0 * broadening)
         if broadening_type == "Fermi":
             filling = 0.5 * (1 - np.tanh(x))
         elif broadening_type == "Gauss":
@@ -992,8 +932,10 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return filling
 
     def _determine_is_metal(self) -> bool:
-        """
-        Determine if the system is a metal based on the fillings of HOMO and LUMO
+        """Determine if the system is a metal based.
+
+        Determine if the system is a metal based on the fillings of
+        homo and lumo.
 
         Returns
         -------
@@ -1003,14 +945,15 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         TOL_PARTIAL = 0.01
         is_metal = True
         if (
-            self.HOMO_filling / (2 / self.Nspin) > (1 - TOL_PARTIAL)
-            and self.LUMO_filling / (2 / self.Nspin) < TOL_PARTIAL
+            self.homo_filling / (2 / self.Nspin) > (1 - TOL_PARTIAL)
+            and self.lumo_filling / (2 / self.Nspin) < TOL_PARTIAL
         ):
             is_metal = False
         return is_metal
 
     def check_solvation(self) -> bool:
-        """
+        """Check for implicit solvation.
+
         Check if calculation used implicit solvation
 
         Returns
@@ -1018,83 +961,11 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         has_solvation: bool
             True if calculation used implicit solvation
         """
-        has_solvation = self.fluid is not None
-        return has_solvation
+        return self.fluid is not None
 
-    def write():
+    def write(self):
         # don't need a write method since will never do that
         return NotImplementedError("There is no need to write a JDFTx out file")
-
-    # def _build_trajectory(self, text):
-    #     '''
-    #     Builds the trajectory lists and sets the instance attributes.
-
-    #     '''
-    #     # Needs to handle LatticeMinimize and IonicMinimize steps in one run
-    #     # can do this by checking if lattice vectors block is present and if
-    #     # so adding it to the lists. If it isn't present, copy the last
-    #     # lattice from the list.
-    #     # initialize lattice list with starting lattice and remove it
-    #     # from the list after iterating through all the optimization steps
-    #     trajectory_positions = []
-    #     trajectory_lattice = [self.lattice_initial]
-    #     trajectory_forces = []
-    #     trajectory_ecomponents = []
-
-    #     ion_lines = find_first_range_key('# Ionic positions in', text)
-    #     force_lines = find_first_range_key('# Forces in', text)
-    #     ecomp_lines = find_first_range_key('# Energy components:', text)
-    #     # print(ion_lines, force_lines, ecomp_lines)
-    #     for iline, ion_line, force_line, ecomp_line in enumerate(zip(ion_lines, force_lines, ecomp_lines)):
-    #         coords = np.array([text[i].split()[2:5] for i in range(ion_line + 1, ion_line + self.Nat + 1)], dtype = float)
-    #         forces = np.array([text[i].split()[2:5] for i in range(force_line + 1, force_line + self.Nat + 1)], dtype = float)
-    #         ecomp = self._read_ecomponents(ecomp_line, text)
-    #         lattice_lines = find_first_range_key('# Lattice vectors:', text, startline=ion_line, endline=ion_lines[iline-1])
-    #         if len(lattice_lines) == 0: # if no lattice lines found, append last lattice
-    #             trajectory_lattice.append(trajectory_lattice[-1])
-    #         else:
-    #             line = lattice_lines[0]
-    #             trajectory_lattice.append(np.array([x.split()[1:4] for x in text[(line + 1):(line + 4)]], dtype = float).T / ang_to_bohr)
-    #         trajectory_positions.append(coords)
-    #         trajectory_forces.append(forces)
-    #         trajectory_ecomponents.append(ecomp)
-    #     trajectory_lattice = trajectory_lattice[1:] # remove starting lattice
-
-    #     self.trajectory_positions = trajectory_positions
-    #     self.trajectory_lattice = trajectory_lattice
-    #     self.trajectory_forces = trajectory_forces
-    #     self.trajectory_ecomponents = trajectory_ecomponents
-
-    # def _read_ecomponents(self, line:int, text:str) -> dict:
-    #     '''
-    #     Read the energy components from the out file text
-
-    #     Parameters
-    #     ----------
-    #     line: int
-    #         line number where energy components are found
-    #     text: list[str]
-    #         output of read_file for out file
-
-    #     Returns
-    #     -------
-    #     Ecomponents: dict
-    #         dictionary of energy components
-    #     '''
-    #     Ecomponents = {}
-    #     if self.is_gc == True:
-    #         final_E_type = "G"
-    #     else:
-    #         final_E_type = "F"
-    #     for tmp_line in text[line+1:]:
-    #         chars = tmp_line.strip().split()
-    #         if tmp_line.startswith("--"):
-    #             continue
-    #         E_type = chars[0]
-    #         Energy = float(chars[-1]) * Ha_to_eV
-    #         Ecomponents.update({E_type:Energy})
-    #         if E_type == final_E_type:
-    #             return Ecomponents
 
     def to_dict(self) -> dict:
         # convert dataclass to dictionary representation
