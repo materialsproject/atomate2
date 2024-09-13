@@ -17,6 +17,7 @@ from atomate2.jdftx.schemas.calculation import (
     CalculationOutput,
 )
 from atomate2.jdftx.schemas.enums import CalcType, JDFTxStatus, TaskType
+from atomate2.jdftx.files import FILE_NAMES
 from atomate2.utils.datetime import datetime_str
 
 __author__ = "Cooper Tezak <cooper.tezak@colorado.edu>"
@@ -110,8 +111,8 @@ class TaskDoc(StructureMetadata):
         dir_name = Path(dir_name)
         calc_doc = Calculation.from_files(
             dir_name=dir_name,
-            jdftxinput_file="inputs.in",
-            jdftxoutput_file="output.out",
+            jdftxinput_file=FILE_NAMES["in"],
+            jdftxoutput_file=FILE_NAMES["out"],
         )
 
         doc = cls.from_structure(
