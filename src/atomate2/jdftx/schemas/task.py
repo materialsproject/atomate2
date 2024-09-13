@@ -10,7 +10,6 @@ from custodian.jdftx.jobs import JDFTxJob  # Waiting on Sophie's PR
 from emmet.core.structure import StructureMetadata
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
-from pymatgen.core import Structure
 
 from atomate2.jdftx.schemas.calculation import (
     Calculation,

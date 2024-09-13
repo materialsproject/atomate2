@@ -6,6 +6,7 @@ from typing import Any
 
 from custodian.jdftx.jobs import JDFTxJob
 from jobflow.utils import ValueEnum
+
 from atomate2 import SETTINGS
 from atomate2.jdftx.schemas.task import JDFTxStatus, TaskDoc
 
