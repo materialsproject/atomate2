@@ -34,7 +34,7 @@ def pytest_addoption(parser):
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def mg2mn4o8():
     return Structure(
         lattice=Lattice(
@@ -79,6 +79,8 @@ def mg2mn4o8():
         site_properties={"magmom": [0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0]},
     )
 
+
+@pytest.fixture
 def si():
     return Structure(
         lattice=Lattice(
