@@ -54,7 +54,7 @@ def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_
 
 
 @pytest.mark.parametrize("calculator_name", ["LJ"])
-def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_dir):
+def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, tmp_dir):
     os.environ["OMP_NUM_THREADS"] = "1"
 
     reference_energies = {

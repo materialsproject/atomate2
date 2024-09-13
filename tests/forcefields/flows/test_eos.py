@@ -1,5 +1,4 @@
 import pytest
-import torch
 from jobflow import run_locally
 from monty.serialization import loadfn
 
@@ -20,9 +19,6 @@ ff_maker_map = {
 
 @pytest.mark.parametrize("mlff", ff_maker_map)
 def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
-    # MACE changes the default dtype, ensure consistent dtype here
-    torch.set_default_dtype(torch.float32)
-
     job = ForceFieldEosMaker.from_force_field_name(mlff).make(si_structure)
     job_to_uuid = {job.name: job.uuid for job in job.jobs}
     post_process_uuid = job_to_uuid[f"{mlff} EOS Maker postprocessing"]

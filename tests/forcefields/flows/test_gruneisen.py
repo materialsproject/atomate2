@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import torch
 from jobflow import run_locally
 from pymatgen.core.structure import Structure
 from pymatgen.phonon.gruneisen import (
@@ -18,8 +17,6 @@ from atomate2.forcefields.flows.gruneisen import GruneisenMaker
 
 
 def test_gruneisen_wf_ff(clean_dir, si_structure: Structure, tmp_path: Path):
-    torch.set_default_dtype(torch.float32)
-
     flow = GruneisenMaker(
         symprec=1e-2,
         compute_gruneisen_param_kwargs={
