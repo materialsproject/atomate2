@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Type
 
 import numpy as np
 from pymatgen.core import Structure
@@ -86,9 +85,12 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
 
     xc_func: str = None
 
-    lattice_initial: list[list[float]] = None
-    lattice_final: list[list[float]] = None
-    lattice: list[list[float]] = None
+    # lattice_initial: list[list[float]] = None
+    # lattice_final: list[list[float]] = None
+    # lattice: list[list[float]] = None
+    lattice_initial: np.ndarray = None
+    lattice_final: np.ndarray = None
+    lattice: np.ndarray = None
     a: float = None
     b: float = None
     c: float = None
@@ -142,18 +144,15 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     atom_elements_int: list = None
     atom_types: list = None
     spintype: str = None
-    Nspin: int = None
-    Nat: int = None
+    nspin: int = None
+    nat: int = None
     atom_coords_initial: list[list[float]] = None
     atom_coords_final: list[list[float]] = None
     atom_coords: list[list[float]] = None
 
-    lattice_initial: np.ndarray = None
-    lattice_final: np.ndarray = None
-    lattice: np.ndarray = None
-
     has_solvation: bool = False
     fluid: str = None
+    is_gc: bool = None
 
     @property
     def t_s(self) -> float:
@@ -227,10 +226,10 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         instance._set_geomopt_vars(text)
         instance._set_jstrucs(text)
         instance.prefix = instance._get_prefix(text)
-        spintype, Nspin = instance._get_spinvars(text)
+        spintype, nspin = instance._get_spinvars(text)
         instance.xc_func = instance._get_xc_func(text)
         instance.spintype = spintype
-        instance.Nspin = Nspin
+        instance.nspin = nspin
         broadening_type, broadening = instance._get_broadeningvars(text)
         instance.broadening_type = broadening_type
         instance.broadening = broadening
@@ -300,9 +299,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         return prefix
 
     def _get_spinvars(self, text: list[str]) -> tuple[str, int]:
-        """Set spintype and Nspin from out file text for instance.
+        """Set spintype and nspin from out file text for instance.
 
-        Set spintype and Nspin from out file text for instance.
+        Set spintype and nspin from out file text for instance.
 
         Parameters
         ----------
@@ -313,19 +312,19 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         -------
         spintype: str
             type of spin in calculation
-        Nspin: int
+        nspin: int
             number of spin types in calculation
         """
         line = find_key("spintype ", text)
         spintype = text[line].split()[1]
         if spintype == "no-spin":
             spintype = None
-            Nspin = 1
+            nspin = 1
         elif spintype == "z-spin":
-            Nspin = 2
+            nspin = 2
         else:
             raise NotImplementedError("have not considered this spin yet")
-        return spintype, Nspin
+        return spintype, nspin
 
     def _get_broadeningvars(self, text: list[str]) -> tuple[str, float]:
         """Get broadening type and value from out file text.
@@ -658,7 +657,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         settings_dict = {}
         for line in lines:
             line_text_list = text[line].strip().split()
-            key = line_text_list[0]
+            key = line_text_list[0].lower()
             value = line_text_list[1]
             settings_dict[key] = value
         return settings_dict
@@ -666,7 +665,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
     def _get_settings_object(
         self,
         text: list[str],
-        settings_class: Type[
+        settings_class: type[
             JMinSettingsElectronic
             | JMinSettingsFluid
             | JMinSettingsIonic
@@ -695,11 +694,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
             settings object
         """
         settings_dict = self._create_settings_dict(text, settings_class.start_flag)
-        if len(settings_dict):
-            settings_obj = settings_class(**settings_dict)
-        else:
-            settings_obj = None
-        return settings_obj
+        return settings_class(**settings_dict) if len(settings_dict) else None
 
     def _set_min_settings(self, text: list[str]) -> None:
         """Set the settings objects from the out file text.
@@ -762,14 +757,14 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         Calculate and set homo and lumo fillings
         """
         if self.broadening_type is not None:
-            self.homo_filling = (2 / self.Nspin) * self.calculate_filling(
+            self.homo_filling = (2 / self.nspin) * self.calculate_filling(
                 self.broadening_type, self.broadening, self.homo, self.efermi
             )
-            self.lumo_filling = (2 / self.Nspin) * self.calculate_filling(
+            self.lumo_filling = (2 / self.nspin) * self.calculate_filling(
                 self.broadening_type, self.broadening, self.lumo, self.efermi
             )
         else:
-            self.homo_filling = 2 / self.Nspin
+            self.homo_filling = 2 / self.nspin
             self.lumo_filling = 0
 
     def _set_fluid(
@@ -789,7 +784,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         if self.fluid == "None":
             self.fluid = None
 
-    def _set_total_electrons(self, text: str) -> None:
+    def _set_total_electrons(self, text: list[str]) -> None:
         """Set the total_Electrons class variable.
 
         Set the total_electrons class variable.
@@ -852,7 +847,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.atom_types = atom_types
         line = find_key("# Ionic positions in", text) + 1
         coords = np.array(
-            [text[i].split()[2:5] for i in range(line, line + self.Nat)], dtype=float
+            [text[i].split()[2:5] for i in range(line, line + self.nat)], dtype=float
         )
         self.atom_coords_final = coords
         self.atom_coords = self.atom_coords_final.copy()
@@ -873,7 +868,7 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         self.a, self.b, self.c = np.sum(self.lattice**2, axis=1) ** 0.5
 
     def _set_ecomponents(self, text: list[str]) -> None:
-        """Set the energy components dictionary
+        """Set the energy components dictionary.
 
         Set the energy components dictionary from the out file text.
 
@@ -912,8 +907,9 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         filling: float
             filling at the eigenvalue
         """
-        # most broadening implementations do not have the denominator factor of 2, but JDFTx does currently
-        #   remove if use this for other code outfile reading
+        # most broadening implementations do not have the denominator factor
+        # of 2, but JDFTx does currently.
+        # Remove if use this for other code outfile reading
         x = (eig - efermi) / (2.0 * broadening)
         if broadening_type == "Fermi":
             filling = 0.5 * (1 - np.tanh(x))
@@ -942,11 +938,11 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         is_metal: bool
             True if system is metallic
         """
-        TOL_PARTIAL = 0.01
+        tol_partial = 0.01
         is_metal = True
         if (
-            self.homo_filling / (2 / self.Nspin) > (1 - TOL_PARTIAL)
-            and self.lumo_filling / (2 / self.Nspin) < TOL_PARTIAL
+            self.homo_filling / (2 / self.nspin) > (1 - tol_partial)
+            and self.lumo_filling / (2 / self.nspin) < tol_partial
         ):
             is_metal = False
         return is_metal
@@ -963,11 +959,24 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         """
         return self.fluid is not None
 
-    def write(self):
+    def write(self) -> NotImplementedError:
+        """Return an error.
+
+        Return an error. (pre-commit needs a docustring here)
+        """
         # don't need a write method since will never do that
         return NotImplementedError("There is no need to write a JDFTx out file")
 
     def to_dict(self) -> dict:
+        """Convert dataclass to dictionary representation.
+
+        Convert dataclass to dictionary representation.
+
+        Returns
+        -------
+        dict
+            JDFTXOutfileSlice in dictionary format
+        """
         # convert dataclass to dictionary representation
         dct = {}
         for field in self.__dataclass_fields__:
