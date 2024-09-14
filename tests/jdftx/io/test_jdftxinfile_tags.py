@@ -1,6 +1,6 @@
 # import pytest
-from atomate2.jdftx.io.JDFTXInfile_master_format import *
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
+from atomate2.jdftx.io.jdftxinfile_master_format import *
+from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
 from pathlib import Path
 import os
 

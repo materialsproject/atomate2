@@ -5,7 +5,7 @@ from pymatgen.core.units import Ha_to_eV
 from pymatgen.util.typing import PathLike
 from pytest import approx
 
-from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
+from atomate2.jdftx.io.jdftxoutfile import JDFTXOutfile
 
 ex_files_dir = Path(__file__).parents[0] / "example_files"
 
@@ -29,8 +29,8 @@ example_sp_known = {
     "is_metal": True,
     "fluid": None,
     "total_electrons": 288.0,
-    "Nbands": 174,
-    "Nat": 16,
+    "nbands": 174,
+    "nat": 16,
     "F": -1940.762261217305650 * Ha_to_eV,
     "TS": -0.0001776512106456 * Ha_to_eV,
     "Etot": -1940.7624388685162558 * Ha_to_eV,
@@ -64,8 +64,8 @@ example_latmin_known = {
     "is_metal": True,
     "fluid": None,
     "total_electrons": 64.0,
-    "Nbands": 42,
-    "Nat": 8,
+    "nbands": 42,
+    "nat": 8,
     "F": -246.5310423967243025 * Ha_to_eV,
     "TS": 0.0003221374940495 * Ha_to_eV,
     "Etot": -246.5307202592302644 * Ha_to_eV,
@@ -98,8 +98,8 @@ example_ionmin_known = {
     "is_metal": False,  # Oh god oh god oh god
     "fluid": "LinearPCM",
     "total_electrons": 325.541406,
-    "Nbands": 195,
-    "Nat": 41,
+    "nbands": 195,
+    "nat": 41,
     "F": -1120.9154606162035179 * Ha_to_eV,
     "TS": 0.0014609776617570 * Ha_to_eV,
     "Etot": -1120.9139996385417817 * Ha_to_eV,
@@ -126,7 +126,7 @@ example_ionmin_known = {
 def test_JDFTXOutfile_fromfile(filename: PathLike, known: dict):
     # filename = ex_files_dir / Path("jdftx.out")
     jout = JDFTXOutfile.from_file(filename)
-    assert jout.Nspin == known["Nspin"]
+    assert jout.nspin == known["Nspin"]
     assert jout.spintype == known["spintype"]
     assert jout.broadening_type == known["broadening_type"]
     assert jout.broadening == approx(known["broadening"])
@@ -137,20 +137,20 @@ def test_JDFTXOutfile_fromfile(filename: PathLike, known: dict):
         assert jout.fftgrid[i] == known["fftgrid"][i]
     for i in range(3):
         assert jout.kgrid[i] == known["kgrid"][i]
-    assert jout.Emin == approx(known["Emin"])
-    assert approx(known["HOMO"]) == jout.HOMO
-    assert jout.EFermi == approx(known["EFermi"])
-    assert approx(known["LUMO"]) == jout.LUMO
-    assert jout.Emax == approx(known["Emax"])
-    assert jout.Egap == approx(known["Egap"])
+    assert jout.emin == approx(known["Emin"])
+    assert approx(known["HOMO"]) == jout.homo
+    assert jout.efermi == approx(known["EFermi"])
+    assert approx(known["LUMO"]) == jout.lumo
+    assert jout.emax == approx(known["Emax"])
+    assert jout.egap == approx(known["Egap"])
     # TODO: filling tests
     # assert jout.HOMO_filling == approx(None)
     # assert jout.LUMO_filling == approx(None)
     assert jout.is_metal == known["is_metal"]
     assert jout.fluid == known["fluid"]
     assert jout.total_electrons == approx(known["total_electrons"])
-    assert jout.Nbands == known["Nbands"]
-    assert jout.Nat == known["Nat"]
+    assert jout.nbands == known["nbands"]
+    assert jout.nat == known["nat"]
     for listlike in (
         jout.atom_coords,
         jout.atom_coords_final,
@@ -158,17 +158,16 @@ def test_JDFTXOutfile_fromfile(filename: PathLike, known: dict):
         jout.atom_elements,
         jout.atom_elements_int,
     ):
-        assert len(listlike) == known["Nat"]
-    assert jout.Ecomponents["F"] == approx(known["F"])
-    assert jout.Ecomponents["TS"] == approx(known["TS"])
-    assert jout.Ecomponents["Etot"] == approx(known["Etot"])
-    assert jout.Ecomponents["KE"] == approx(known["KE"])
-    assert jout.Ecomponents["Exc"] == approx(known["Exc"])
-    assert jout.Ecomponents["Enl"] == approx(known["Enl"])
-    assert jout.Ecomponents["Eloc"] == approx(known["Eloc"])
-    assert jout.Ecomponents["EH"] == approx(known["EH"])
-    assert jout.Ecomponents["Eewald"] == approx(known["Eewald"])
-    #
+        assert len(listlike) == known["nat"]
+    assert jout.ecomponents["F"] == approx(known["F"])
+    assert jout.ecomponents["TS"] == approx(known["TS"])
+    assert jout.ecomponents["Etot"] == approx(known["Etot"])
+    assert jout.ecomponents["KE"] == approx(known["KE"])
+    assert jout.ecomponents["Exc"] == approx(known["Exc"])
+    assert jout.ecomponents["Enl"] == approx(known["Enl"])
+    assert jout.ecomponents["Eloc"] == approx(known["Eloc"])
+    assert jout.ecomponents["EH"] == approx(known["EH"])
+    assert jout.ecomponents["Eewald"] == approx(known["Eewald"])
     assert len(jout.slices) == known["nSlices"]
     assert jout.t_s == approx(known["t_s"])
     assert jout.jstrucs.iter_type == known["iter_type"]

@@ -19,7 +19,7 @@ from pymatgen.core import Structure
 from pymatgen.util.io_utils import clean_lines
 from pathlib import Path
 
-from atomate2.jdftx.io.generic_tags import flatten_list
+from atomate2.jdftx.io.generic_tags import flatten_list, DumpTagContainer
 from atomate2.jdftx.io.jdftxinfile_master_format import (
     __PHONON_TAGS__,
     __TAG_LIST__,
@@ -207,10 +207,27 @@ class JDFTXInfile(dict, MSONable):
 
     @staticmethod
     def _store_value(params, tag_object, tag, value):
+
         if tag_object.can_repeat:  # store tags that can repeat in a list
             if tag not in params:
-                params[tag] = []
-            params[tag].append(value)
+                    params[tag] = []
+            if not type(tag_object) in [DumpTagContainer]:
+                params[tag].append(value)
+            else: # The previous if statement will need to adapted to reference
+                # a tag object flag to be stored in this manner. This manner
+                # is to store all subtags as standalone dictionaries within
+                # a list, but to combine alike subtags (ie the same dump freq)
+                # as they appear.
+                assert type(value) is dict
+                for freq in value:
+                    inserted = False
+                    for i, preex in enumerate(params[tag]):
+                        if freq in preex:
+                            params[tag][i][freq].update(value[freq])
+                            inserted = True
+                            break
+                    if not inserted:
+                        params[tag].append(value)
         else:
             if tag in params:
                 raise ValueError(
@@ -265,8 +282,6 @@ class JDFTXInfile(dict, MSONable):
         params: dict[str, Any] = {}
         # process all tag value lines using specified tag formats in MASTER_TAG_LIST
         for line in lines:
-            if "ionic-minimize" in line:
-                print("here")
             tag_object, tag, value = cls._preprocess_line(line)
             processed_value = tag_object.read(tag, value)
             params = cls._store_value(

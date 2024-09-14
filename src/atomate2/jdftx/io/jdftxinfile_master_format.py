@@ -1,156 +1,25 @@
 from copy import deepcopy
 
+from atomate2.jdftx.io.jdftxinfile_ref_options import (
+    JDFTXFluid_subtagdict, JDFTXMinimize_subtagdict
+)
 
-from .generic_tags import BoolTag, StrTag, IntTag, FloatTag, TagContainer, MultiformatTag, BoolTagContainer, DumpTagContainer, InitMagMomTag
+from atomate2.jdftx.io.jdftxinfile_ref_options import (
+    JDFTXDumpFreqOptions, JDFTXDumpVarOptions, func_options,
+    func_x_options, func_c_options, 
+    func_xc_options,
+)
 
-
-JDFTXDumpFreqOptions = ["Electronic", "End", "Fluid", "Gummel", "Init", "Ionic"]
-JDFTXDumpVarOptions = [
-    "BandEigs",  # Band Eigenvalues
-    "BandProjections",  # Projections of each band state against each atomic orbital
-    "BandUnfold",  # Unfold band structure from supercell to unit cell (see command band-unfold)
-    "Berry",  # Berry curvature i <dC/dk| X |dC/dk>, only allowed at End (see command Cprime-params)
-    "BGW",  # G-space wavefunctions, density and potential for Berkeley GW (requires HDF5 support)
-    "BoundCharge",  # Bound charge in the fluid
-    "BulkEpsilon",  # Dielectric constant of a periodic solid (see command bulk-epsilon)
-    "ChargedDefect",  # Calculate energy correction for charged defect (see command charged-defect)
-    "CoreDensity",  # Total core electron density (from partial core corrections)
-    "Dfluid",  # Electrostatic potential due to fluid alone
-    "Dipole",  # Dipole moment of explicit charges (ionic and electronic)
-    "Dn",  # First order change in electronic density
-    "DOS",  # Density of States (see command density-of-states)
-    "Dtot",  # Total electrostatic potential
-    "Dvac",  # Electrostatic potential due to explicit system alone
-    "DVext",  # External perturbation
-    "DVscloc",  # First order change in local self-consistent potential
-    "DWfns",  # Perturbation Wavefunctions
-    "Ecomponents",  # Components of the energy
-    "EigStats",  # Band eigenvalue statistics: HOMO, LUMO, min, max and Fermi level
-    "ElecDensity",  # Electronic densities (n or nup,ndn)
-    "ElecDensityAccum",  # Electronic densities (n or nup,ndn) accumulated over MD trajectory
-    "EresolvedDensity",  # Electron density from bands within specified energy ranges
-    "ExcCompare",  # Energies for other exchange-correlation functionals (see command elec-ex-corr-compare)
-    "Excitations",  # Dumps dipole moments and transition strength (electric-dipole) of excitations
-    "FCI",  # Output Coulomb matrix elements in FCIDUMP format
-    "FermiDensity",  # Electron density from fermi-derivative at specified energy
-    "FermiVelocity",  # Fermi velocity, density of states at Fermi level and related quantities
-    "Fillings",  # Fillings
-    "FluidDebug",  # Fluid specific debug output if any
-    "FluidDensity",  # Fluid densities (NO,NH,nWater for explicit fluids, cavity function for PCMs)
-    "Forces",  # Forces on the ions in the coordinate system selected by command forces-output-coords
-    "Gvectors",  # List of G vectors in reciprocal lattice basis, for each k-point
-    "IonicDensity",  # Nuclear charge density (with gaussians)
-    "IonicPositions",  # Ionic positions in the same format (and coordinate system) as the input file
-    "KEdensity",  # Kinetic energy density of the valence electrons
-    "Kpoints",  # List of reduced k-points in calculation, and mapping to the unreduced k-point mesh
-    "L",  # Angular momentum matrix elements, only allowed at End (see command Cprime-params)
-    "Lattice",  # Lattice vectors in the same format as the input file
-    "Momenta",  # Momentum matrix elements in a binary file (indices outer to inner: state, cartesian direction, band1, band2)
-    "None",  # Dump nothing
-    "Ocean",  # Wave functions for Ocean code
-    "OrbitalDep",  # Custom output from orbital-dependent functionals (eg. quasi-particle energies, discontinuity potential)
-    "Q",  # Quadrupole r*p matrix elements, only allowed at End (see command Cprime-params)
-    "QMC",  # Blip'd orbitals and potential for CASINO [27]
-    "R",  # Position operator matrix elements, only allowed at End (see command Cprime-params)
-    "RealSpaceWfns",  # Real-space wavefunctions (one column per file)
-    "RhoAtom",  # Atomic-orbital projected density matrices (only for species with +U enabled)
-    "SelfInteractionCorrection",  # Calculates Perdew-Zunger self-interaction corrected Kohn-Sham eigenvalues
-    "SlabEpsilon",  # Local dielectric function of a slab (see command slab-epsilon)
-    "SolvationRadii",  # Effective solvation radii based on fluid bound charge distribution
-    "Spin",  # Spin matrix elements from non-collinear calculations in a binary file (indices outer to inner: state, cartesian direction, band1, band2)
-    "State",  # All variables needed to restart calculation: wavefunction and fluid state/fillings if any
-    "Stress",  # Dumps dE/dR_ij where R_ij is the i'th component of the j'th lattice vector
-    "Symmetries",  # List of symmetry matrices (in covariant lattice coordinates)
-    "Vcavity",  # Fluid cavitation potential on the electron density that determines the cavity
-    "Velocities",  # Diagonal momentum/velocity matrix elements in a binary file (indices outer to inner: state, band, cartesian direction)
-    "VfluidTot",  # Total contribution of fluid to the electron potential
-    "Vlocps",  # Local part of pseudopotentials
-    "Vscloc",  # Self-consistent potential
-    "XCanalysis",  # Debug VW KE density, single-particle-ness and spin-polarzied Hartree potential
-]
+from .generic_tags import (
+    BoolTag, StrTag, IntTag, FloatTag, TagContainer, MultiformatTag, 
+    BoolTagContainer, DumpTagContainer, InitMagMomTag
+)
 
 
-# simple dictionaries deepcopied multiple times into MASTER_TAG_LIST later for different tags
-JDFTXMinimize_subtagdict = {
-    "alphaTincreaseFactor": FloatTag(),
-    "alphaTmin": FloatTag(),
-    "alphaTreduceFactor": FloatTag(),
-    "alphaTstart": FloatTag(),
-    "dirUpdateScheme": StrTag(
-        options=[
-            "FletcherReeves",
-            "HestenesStiefel",
-            "L-BFGS",
-            "PolakRibiere",
-            "SteepestDescent",
-        ]
-    ),
-    "energyDiffThreshold": FloatTag(),
-    "fdTest": BoolTag(),
-    "history": IntTag(),
-    "knormThreshold": FloatTag(),
-    "linminMethod": StrTag(
-        options=["CubicWolfe", "DirUpdateRecommended", "Quad", "Relax"]
-    ),
-    "nAlphaAdjustMax": FloatTag(),
-    "nEnergyDiff": IntTag(),
-    "nIterations": IntTag(),
-    "updateTestStepSize": BoolTag(),
-    "wolfeEnergy": FloatTag(),
-    "wolfeGradient": FloatTag(),
-}
-JDFTXFluid_subtagdict = {
-    'epsBulk': FloatTag(),
-    'epsInf': FloatTag(),
-    'epsLJ': FloatTag(),
-    'Nnorm': FloatTag(),
-    'pMol': FloatTag(),
-    'poleEl': TagContainer(
-        can_repeat = True,
-        write_tagname=True,
-        subtags = {
-            "omega0": FloatTag(write_tagname=False, optional=False),
-            "gamma0": FloatTag(write_tagname=False, optional=False),
-            "A0": FloatTag(write_tagname=False, optional=False),
-        },
-    ),
-    # 'poleEl': FloatTag(can_repeat = True),
-    "Pvap": FloatTag(),
-    "quad_nAlpha": FloatTag(),
-    "quad_nBeta": FloatTag(),
-    "quad_nGamma": FloatTag(),
-    "representation": TagContainer(
-        subtags={"MuEps": FloatTag(), "Pomega": FloatTag(), "PsiAlpha": FloatTag()}
-    ),
-    "Res": FloatTag(),
-    "Rvdw": FloatTag(),
-    "s2quadType": StrTag(
-        options=[
-            "10design60",
-            "11design70",
-            "12design84",
-            "13design94",
-            "14design108",
-            "15design120",
-            "16design144",
-            "17design156",
-            "18design180",
-            "19design204",
-            "20design216",
-            "21design240",
-            "7design24",
-            "8design36",
-            "9design48",
-            "Euler",
-            "Icosahedron",
-            "Octahedron",
-            "Tetrahedron",
-        ]
-    ),
-    "sigmaBulk": FloatTag(),
-    "tauNuc": FloatTag(),
-    "translation": StrTag(options=["ConstantSpline", "Fourier", "LinearSpline"]),
-}
+
+
+
+
 
 MASTER_TAG_LIST = {
     "extrafiles": {
@@ -174,7 +43,8 @@ MASTER_TAG_LIST = {
             },
         ),
         "coords-type": StrTag(options=["Cartesian", "Lattice"]),
-        # TODO: change lattice tag into MultiformatTag for different symmetry options
+        # TODO: change lattice tag into MultiformatTag for different 
+        # symmetry options
         "lattice": TagContainer(
             linebreak_Nth_entry=3,
             optional=False,
@@ -203,9 +73,12 @@ MASTER_TAG_LIST = {
                 "v": TagContainer(
                     allow_list_representation=True,
                     subtags={
-                        "vx0": FloatTag(write_tagname=False, optional=False, prec=12),
-                        "vx1": FloatTag(write_tagname=False, optional=False, prec=12),
-                        "vx2": FloatTag(write_tagname=False, optional=False, prec=12),
+                        "vx0": FloatTag(write_tagname=False, optional=False, 
+                                        prec=12),
+                        "vx1": FloatTag(write_tagname=False, optional=False, 
+                                        prec=12),
+                        "vx2": FloatTag(write_tagname=False, optional=False, 
+                                        prec=12),
                     },
                 ),
                 "moveScale": IntTag(write_tagname=False, optional=False),
@@ -261,7 +134,8 @@ MASTER_TAG_LIST = {
                 "k0": FloatTag(write_tagname=False, optional=False, prec=12),
                 "k1": FloatTag(write_tagname=False, optional=False, prec=12),
                 "k2": FloatTag(write_tagname=False, optional=False, prec=12),
-                "weight": FloatTag(write_tagname=False, optional=False, prec=12),
+                "weight": FloatTag(write_tagname=False, optional=False, 
+                                   prec=12),
             },
         ),
         "kpoint-folding": TagContainer(
@@ -277,82 +151,54 @@ MASTER_TAG_LIST = {
     "electronic": {
         "elec-ex-corr": MultiformatTag(
             format_options=[
-                # note that hyb-HSE06 has a bug in JDFTx and should not be used and is excluded here
-                #    use the LibXC version instead (hyb-gga-HSE06)
+                # note that hyb-HSE06 has a bug in JDFTx and should not be 
+                # used and is excluded here use the LibXC version instead 
+                # (hyb-gga-HSE06)
                 StrTag(
-                    write_tagname=True,  # Ben: Changing this to True with permission from Jacob!
-                    options=[
-                        "gga",
-                        "gga-PBE",
-                        "gga-PBEsol",
-                        "gga-PW91",
-                        "Hartree-Fock",
-                        "hyb-PBE0",
-                        "lda",
-                        "lda-PW",
-                        "lda-PW-prec",
-                        "lda-PZ",
-                        "lda-Teter",
-                        "lda-VWN",
-                        "mgga-revTPSS",
-                        "mgga-TPSS",
-                        "orb-GLLBsc",
-                        "pot-LB94",
-                    ],
+                    write_tagname=True,
+                    options=deepcopy(func_options),
                 ),
-                # TODO: add all X and C options from here: https://jdftx.org/CommandElecExCorr.html
-                #    note: use a separate variable elsewhere for this to not dominate this dictionary
                 TagContainer(
                     subtags={
-                        "funcX": StrTag(write_tagname=False, optional=False),
-                        "funcC": StrTag(write_tagname=False, optional=False),
+                        "funcX": StrTag(write_tagname=False, optional=False,
+                                        options=deepcopy(func_x_options)),
+                        "funcC": StrTag(write_tagname=False, optional=False,
+                                        options=deepcopy(func_c_options)),
                     }
                 ),
-                # TODO: add all XC options from here: https://jdftx.org/CommandElecExCorr.html
-                #    note: use a separate variable elsewhere for this to not dominate this dictionary
                 TagContainer(
-                    subtags={"funcXC": StrTag(write_tagname=False, optional=False)}
+                    subtags={
+                        "funcXC": StrTag(write_tagname=False, optional=False,
+                                         options=deepcopy(func_xc_options))}
                 ),
             ]
         ),
         "elec-ex-corr-compare": MultiformatTag(
             can_repeat=True,
             format_options=[
-                # note that hyb-HSE06 has a bug in JDFTx and should not be used and is excluded here
-                #    use the LibXC version instead (hyb-gga-HSE06)
+                # note that hyb-HSE06 has a bug in JDFTx and should not be used 
+                # and is excluded here use the LibXC version instead 
+                # (hyb-gga-HSE06)
                 StrTag(
-                    write_tagname=True,  # Ben: Changing this to True with permission from Jacob!
-                    options=[
-                        "gga",
-                        "gga-PBE",
-                        "gga-PBEsol",
-                        "gga-PW91",
-                        "Hartree-Fock",
-                        "hyb-PBE0",
-                        "lda",
-                        "lda-PW",
-                        "lda-PW-prec",
-                        "lda-PZ",
-                        "lda-Teter",
-                        "lda-VWN",
-                        "mgga-revTPSS",
-                        "mgga-TPSS",
-                        "orb-GLLBsc",
-                        "pot-LB94",
-                    ],
+                    write_tagname=True,
+                    options=func_options,
                 ),
-                # TODO: add all X and C options from here: https://jdftx.org/CommandElecExCorr.html
-                #    note: use a separate variable elsewhere for this to not dominate this dictionary
                 TagContainer(
                     subtags={
-                        "funcX": StrTag(write_tagname=False, optional=False),
-                        "funcC": StrTag(write_tagname=False, optional=False),
+                        "funcX": StrTag(write_tagname=False, optional=False,
+                                        options=deepcopy(func_x_options)),
+                        "funcC": StrTag(write_tagname=False, optional=False,
+                                        options=deepcopy(func_c_options)),
                     }
                 ),
-                # TODO: add all XC options from here: https://jdftx.org/CommandElecExCorr.html
-                #    note: use a separate variable elsewhere for this to not dominate this dictionary
+                # TODO: add all XC options from here:
+                # https://jdftx.org/CommandElecExCorr.html
+                # note: use a separate variable elsewhere for this to not
+                # dominate this dictionary
                 TagContainer(
-                    subtags={"funcXC": StrTag(write_tagname=False, optional=False)}
+                    subtags={
+                        "funcXC": StrTag(write_tagname=False, optional=False,
+                                         options=deepcopy(func_xc_options))}
                 ),
             ],
         ),
@@ -413,7 +259,8 @@ MASTER_TAG_LIST = {
             },
         ),
         "elec-n-bands": IntTag(),
-        "spintype": StrTag(options=["no-spin", "spin-orbit", "vector-spin", "z-spin"]),
+        "spintype": StrTag(options=["no-spin", "spin-orbit", "vector-spin",
+                                    "z-spin"]),
         'initial-magnetic-moments': InitMagMomTag(),
         "elec-initial-magnetization": TagContainer(
             subtags={
@@ -550,8 +397,10 @@ MASTER_TAG_LIST = {
                 "EcutTransverse": FloatTag(),
                 "computeRange": TagContainer(
                     subtags={
-                        "iqStart": FloatTag(write_tagname=False, optional=False),
-                        "iqStop": FloatTag(write_tagname=False, optional=False),
+                        "iqStart": FloatTag(write_tagname=False,
+                                            optional=False),
+                        "iqStop": FloatTag(write_tagname=False,
+                                           optional=False),
                     }
                 ),
             },
@@ -568,7 +417,9 @@ MASTER_TAG_LIST = {
     "truncation": {
         "coulomb-interaction": MultiformatTag(
             format_options=[
-                # note that the first 2 and last 2 TagContainers could be combined, but keep separate so there is less ambiguity on formatting
+                # note that the first 2 and last 2 TagContainers could be 
+                # combined, but keep separate so there is less ambiguity on 
+                # formatting
                 TagContainer(
                     subtags={
                         "truncationType": StrTag(
@@ -581,7 +432,8 @@ MASTER_TAG_LIST = {
                 TagContainer(
                     subtags={
                         "truncationType": StrTag(
-                            options=["Spherical"], write_tagname=False, optional=False
+                            options=["Spherical"], write_tagname=False,
+                            optional=False
                         ),
                         "Rc": FloatTag(write_tagname=False),
                     }
@@ -603,7 +455,8 @@ MASTER_TAG_LIST = {
                 TagContainer(
                     subtags={
                         "truncationType": StrTag(
-                            options=["Cylindrical"], write_tagname=False, optional=False
+                            options=["Cylindrical"], write_tagname=False,
+                            optional=False
                         ),
                         "dir": StrTag(
                             options=["001", "010", "100"],
@@ -637,10 +490,12 @@ MASTER_TAG_LIST = {
         "wavefunction": MultiformatTag(
             format_options=[
                 TagContainer(
-                    subtags={"lcao": BoolTag(write_value=False, optional=False)}
+                    subtags={"lcao": BoolTag(write_value=False,
+                                             optional=False)}
                 ),
                 TagContainer(
-                    subtags={"random": BoolTag(write_value=False, optional=False)}
+                    subtags={"random": BoolTag(write_value=False,
+                                               optional=False)}
                 ),
                 TagContainer(
                     subtags={
@@ -674,12 +529,15 @@ MASTER_TAG_LIST = {
         "Vexternal": MultiformatTag(
             format_options=[
                 TagContainer(
-                    subtags={"filename": StrTag(write_value=False, optional=False)}
+                    subtags={"filename": StrTag(write_value=False,
+                                                optional=False)}
                 ),
                 TagContainer(
                     subtags={
-                        "filenameUp": StrTag(write_value=False, optional=False),
-                        "filenameDn": StrTag(write_tagname=False, optional=False),
+                        "filenameUp": StrTag(write_value=False,
+                                             optional=False),
+                        "filenameDn": StrTag(write_tagname=False,
+                                             optional=False),
                     }
                 ),
             ]
@@ -864,7 +722,8 @@ MASTER_TAG_LIST = {
                             ],
                             write_tagname=False,
                         ),
-                        "concentration": StrTag(options=["bulk"], write_tagname=False),
+                        "concentration": StrTag(options=["bulk"],
+                                                write_tagname=False),
                         "functional": StrTag(
                             options=[
                                 "BondedVoids",
@@ -882,7 +741,8 @@ MASTER_TAG_LIST = {
         "fluid-anion": TagContainer(
             subtags={
                 "name": StrTag(
-                    options=["Cl-", "ClO4-", "F-"], write_tagname=False, optional=False
+                    options=["Cl-", "ClO4-", "F-"], write_tagname=False,
+                    optional=False
                 ),
                 "concentration": FloatTag(write_tagname=False, optional=False),
                 "functional": StrTag(
@@ -932,7 +792,8 @@ MASTER_TAG_LIST = {
             subtags={
                 "kinetic": StrTag(
                     write_tagname=False, optional=False
-                ),  # TODO: add options from: https://jdftx.org/CommandFluidExCorr.html
+                ),  # TODO: add options from:
+                # https://jdftx.org/CommandFluidExCorr.html
                 "exchange-correlation": StrTag(
                     write_tagname=False
                 ),  # TODO: add same options as elec-ex-corr
@@ -978,7 +839,8 @@ MASTER_TAG_LIST = {
                 "energyScale": FloatTag(write_tagname=False, optional=False),
                 "lengthScale": FloatTag(write_tagname=False),
                 "FMixType": StrTag(
-                    options=["LJPotential", "GaussianKernel"], write_tagname=False
+                    options=["LJPotential", "GaussianKernel"],
+                    write_tagname=False
                 ),
             },
         ),
@@ -1141,26 +1003,7 @@ MASTER_TAG_LIST = {
         ),
     },
     "export": {
-        # note that the below representation should be possible, but dealing with
-        # arbitrary length nested TagContainers within the same line requires a lot of code changes
-        # 'dump-name': TagContainer(allow_list_representation = True,
-        #     subtags = {
-        #     'format': StrTag(write_tagname = False, optional = False),
-        #     # 'freq1': StrTag(),
-        #     # 'format1': StrTag(),
-        #     # 'freq2': StrTag(),
-        #     # 'format2': StrTag(),
-        #     'extra': TagContainer(can_repeat = True, write_tagname = False,
-        #         subtags = {
-        #         'freq': StrTag(write_tagname = False, optional = False),
-        #         'format': StrTag(write_tagname = False, optional = False),
-        #         }),
         "dump-name": StrTag(),
-        # 'dump': TagContainer(can_repeat = True,
-        #     subtags = {
-        #     'freq': StrTag(write_tagname = False, optional = False),
-        #     'var': StrTag(write_tagname = False, optional = False)
-        #     }),
         "dump-interval": TagContainer(
             can_repeat=True,
             subtags={
@@ -1208,7 +1051,8 @@ MASTER_TAG_LIST = {
                     can_repeat=True,
                     subtags={
                         "species": StrTag(write_tagname=False, optional=False),
-                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False,
+                                            optional=False),
                         "r": FloatTag(write_tagname=False, optional=False),
                         "i0": FloatTag(write_tagname=False, optional=False),
                         "i1": FloatTag(write_tagname=False, optional=False),
@@ -1219,7 +1063,8 @@ MASTER_TAG_LIST = {
                     can_repeat=True,
                     subtags={
                         "species": StrTag(write_tagname=False, optional=False),
-                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False,
+                                            optional=False),
                         "r": FloatTag(write_tagname=False, optional=False),
                     },
                 ),
@@ -1228,7 +1073,8 @@ MASTER_TAG_LIST = {
                     can_repeat=True,
                     subtags={
                         "species": StrTag(write_tagname=False, optional=False),
-                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False,
+                                            optional=False),
                         "orbDesc": StrTag(write_tagname=False, optional=False),
                     },
                 ),
@@ -1236,7 +1082,8 @@ MASTER_TAG_LIST = {
                     can_repeat=True,
                     subtags={
                         "species": StrTag(write_tagname=False, optional=False),
-                        "atomIndex": IntTag(write_tagname=False, optional=False),
+                        "atomIndex": IntTag(write_tagname=False,
+                                            optional=False),
                         "orbDesc": StrTag(write_tagname=False, optional=False),
                     },
                 ),
@@ -1337,8 +1184,10 @@ MASTER_TAG_LIST = {
         ),
         "pcm-nonlinear-debug": TagContainer(
             subtags={
-                "linearDielectric": BoolTag(write_tagname=False, optional=False),
-                "linearScreening": BoolTag(write_tagname=False, optional=False),
+                "linearDielectric": BoolTag(write_tagname=False,
+                                            optional=False),
+                "linearScreening": BoolTag(write_tagname=False,
+                                           optional=False),
             }
         ),
     },
@@ -1372,7 +1221,9 @@ __WANNIER_TAGS__ = [
     "wannier-minimize",
     "defect-supercell",
 ]
-__TAG_LIST__ = [tag for group in MASTER_TAG_LIST for tag in MASTER_TAG_LIST[group]]
+__TAG_LIST__ = [
+    tag for group in MASTER_TAG_LIST for tag in MASTER_TAG_LIST[group]
+]
 __TAG_GROUPS__ = {
     tag: group for group in MASTER_TAG_LIST for tag in MASTER_TAG_LIST[group]
 }

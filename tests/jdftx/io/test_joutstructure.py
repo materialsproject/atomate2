@@ -5,14 +5,13 @@ import pytest
 from pymatgen.core.units import Ha_to_eV, bohr_to_ang
 from pytest import approx
 
-from atomate2.jdftx.io.JOutStructure import JOutStructure
+from atomate2.jdftx.io.joutstructure import JOutStructure
 
 ex_files_dir = Path(__file__).parents[0] / "example_files"
 ex_slice_fname1 = ex_files_dir / "ex_text_slice_forJAtoms_latmin"
 ex_slice1 = []
 with open(ex_slice_fname1) as f:
-    for line in f:
-        ex_slice1.append(line)
+    ex_slice1 = list.copy(list(f))
 ex_slice1_known = {
     "iter": 0,
     "etype": "F",
@@ -55,8 +54,7 @@ ex_slice1_known = {
 ex_slice_fname2 = ex_files_dir / "ex_text_slice_forJAtoms_latmin2"
 ex_slice2 = []
 with open(ex_slice_fname2) as f:
-    for line in f:
-        ex_slice2.append(line)
+    ex_slice2 = list.copy(list(f))
 ex_slice2_known = {
     "iter": 9,
     "etype": "F",
@@ -101,31 +99,31 @@ ex_slice2_known = {
 @pytest.mark.parametrize(
     "eslice,eknowns", [(ex_slice1, ex_slice1_known), (ex_slice2, ex_slice2_known)]
 )
-def test_JStructure(eslice: list[str], eknowns: dict):
+def test_jstructure(eslice: list[str], eknowns: dict):
     jst = JOutStructure.from_text_slice(eslice, iter_type="lattice")
     assert jst.iter == eknowns["iter"]
     assert jst.etype == eknowns["etype"]
     assert approx(eknowns["E"]) == jst.E
-    assert jst.Ecomponents["Eewald"] == approx(eknowns["Eewald"])
-    assert jst.Ecomponents["EH"] == approx(eknowns["EH"])
-    assert jst.Ecomponents["Eloc"] == approx(eknowns["Eloc"])
-    assert jst.Ecomponents["Enl"] == approx(eknowns["Enl"])
-    assert jst.Ecomponents["EvdW"] == approx(eknowns["EvdW"])
-    assert jst.Ecomponents["Exc"] == approx(eknowns["Exc"])
-    assert jst.Ecomponents["Exc_core"] == approx(eknowns["Exc_core"])
-    assert jst.Ecomponents["KE"] == approx(eknowns["KE"])
-    assert jst.Ecomponents["Etot"] == approx(eknowns["Etot"])
-    assert jst.Ecomponents["TS"] == approx(eknowns["TS"])
-    assert jst.Ecomponents["F"] == approx(eknowns["F"])
-    assert jst.elecMinData[0].mu == approx(eknowns["mu0"])
-    assert jst.elecMinData[-1].mu == approx(eknowns["mu-1"])
-    assert approx(eknowns["E0"]) == jst.elecMinData[0].E
-    assert approx(eknowns["E-1"]) == jst.elecMinData[-1].E
-    assert len(jst.elecMinData) == eknowns["nEminSteps"]
+    assert jst.ecomponents["Eewald"] == approx(eknowns["Eewald"])
+    assert jst.ecomponents["EH"] == approx(eknowns["EH"])
+    assert jst.ecomponents["Eloc"] == approx(eknowns["Eloc"])
+    assert jst.ecomponents["Enl"] == approx(eknowns["Enl"])
+    assert jst.ecomponents["EvdW"] == approx(eknowns["EvdW"])
+    assert jst.ecomponents["Exc"] == approx(eknowns["Exc"])
+    assert jst.ecomponents["Exc_core"] == approx(eknowns["Exc_core"])
+    assert jst.ecomponents["KE"] == approx(eknowns["KE"])
+    assert jst.ecomponents["Etot"] == approx(eknowns["Etot"])
+    assert jst.ecomponents["TS"] == approx(eknowns["TS"])
+    assert jst.ecomponents["F"] == approx(eknowns["F"])
+    assert jst.elecmindata[0].mu == approx(eknowns["mu0"])
+    assert jst.elecmindata[-1].mu == approx(eknowns["mu-1"])
+    assert approx(eknowns["E0"]) == jst.elecmindata[0].E
+    assert approx(eknowns["E-1"]) == jst.elecmindata[-1].E
+    assert len(jst.elecmindata) == eknowns["nEminSteps"]
     assert len(jst.forces) == eknowns["nAtoms"]
     assert len(jst.cart_coords) == eknowns["nAtoms"]
-    assert jst.elecMinData.converged_reason == eknowns["EconvReason"]
-    assert jst.elecMinData.converged == eknowns["conv"]
+    assert jst.elecmindata.converged_reason == eknowns["EconvReason"]
+    assert jst.elecmindata.converged == eknowns["conv"]
     assert jst.lattice.matrix[0, 0] == approx(eknowns["cell_00"])
     assert jst.strain[0, 0] == approx(eknowns["strain_00"])
     assert jst.stress[0, 0] == approx(eknowns["stress_00"])
