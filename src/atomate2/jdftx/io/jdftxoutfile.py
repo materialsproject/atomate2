@@ -1,7 +1,10 @@
+from __future__ import annotations
 from dataclasses import dataclass, field
 from functools import wraps
 from pathlib import Path
 from typing import List, Optional
+import numpy as np
+
 
 from monty.io import zopen
 
@@ -113,21 +116,43 @@ class JDFTXOutfile(JDFTXOutfileSlice):
     A class to read and process a JDFTx out file
     """
 
-    slices: List[JDFTXOutfileSlice] = field(default_factory=list)
-    #####
     prefix: str = None
+    slices: list[JDFTXOutfileSlice] = field(default_factory=list)
 
     jstrucs: JOutStructures = None
-    jsettings_fluid: JMinSettingsFluid = None
-    jsettings_electronic: JMinSettingsElectronic = None
-    jsettings_lattice: JMinSettingsLattice = None
-    jsettings_ionic: JMinSettingsIonic = None
+    jsettings_fluid: (
+        JMinSettingsFluid
+        | JMinSettingsElectronic
+        | JMinSettingsLattice
+        | JMinSettingsIonic
+    ) = None
+    jsettings_electronic: (
+        JMinSettingsFluid
+        | JMinSettingsElectronic
+        | JMinSettingsLattice
+        | JMinSettingsIonic
+    ) = None
+    jsettings_lattice: (
+        JMinSettingsFluid
+        | JMinSettingsElectronic
+        | JMinSettingsLattice
+        | JMinSettingsIonic
+    ) = None
+    jsettings_ionic: (
+        JMinSettingsFluid
+        | JMinSettingsElectronic
+        | JMinSettingsLattice
+        | JMinSettingsIonic
+    ) = None
 
     xc_func: str = None
 
-    lattice_initial: list[list[float]] = None
-    lattice_final: list[list[float]] = None
-    lattice: list[list[float]] = None
+    # lattice_initial: list[list[float]] = None
+    # lattice_final: list[list[float]] = None
+    # lattice: list[list[float]] = None
+    lattice_initial: np.ndarray = None
+    lattice_final: np.ndarray = None
+    lattice: np.ndarray = None
     a: float = None
     b: float = None
     c: float = None
@@ -139,24 +164,24 @@ class JDFTXOutfile(JDFTXOutfileSlice):
     # grouping fields related to electronic parameters.
     # Used by the get_electronic_output() method
     _electronic_output = [
-        "EFermi",
-        "Egap",
-        "Emin",
-        "Emax",
-        "HOMO",
-        "LUMO",
-        "HOMO_filling",
-        "LUMO_filling",
+        "efermi",
+        "egap",
+        "emin",
+        "emax",
+        "homo",
+        "lumo",
+        "homo_filling",
+        "lumo_filling",
         "is_metal",
     ]
-    EFermi: float = None
-    Egap: float = None
-    Emin: float = None
-    Emax: float = None
-    HOMO: float = None
-    LUMO: float = None
-    HOMO_filling: float = None
-    LUMO_filling: float = None
+    efermi: float = None
+    egap: float = None
+    emin: float = None
+    emax: float = None
+    homo: float = None
+    lumo: float = None
+    homo_filling: float = None
+    lumo_filling: float = None
     is_metal: bool = None
     etype: str = None
 
@@ -181,17 +206,18 @@ class JDFTXOutfile(JDFTXOutfileSlice):
     atom_elements_int: list = None
     atom_types: list = None
     spintype: str = None
-    Nspin: int = None
-    Nat: int = None
+    nspin: int = None
+    nat: int = None
     atom_coords_initial: list[list[float]] = None
     atom_coords_final: list[list[float]] = None
     atom_coords: list[list[float]] = None
 
     has_solvation: bool = False
     fluid: str = None
+    is_gc: bool = None
 
     @classmethod
-    def from_file(cls, file_path: str):
+    def from_file(cls, file_path: str) -> JDFTXOutfile:
         texts = read_outfile_slices(file_path)
         slices = []
         for text in texts:

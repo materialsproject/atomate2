@@ -42,16 +42,15 @@ def test_JDFTXInfile_knowns_simple(infile_fname: PathLike, knowns: dict):
 
 @pytest.mark.parametrize("infile_fname", [ex_infile1_fname])
 def test_JDFTXInfile_self_consistency(infile_fname: PathLike):
-    # TODO: jif2 is saving latt-move-scale as a list of float instead of dict, figure out why
     jif = JDFTXInfile.from_file(infile_fname)
     dict_jif = jif.as_dict()
-    # Commenting out this infile because the values are saved in a weird way
-    # jif2 = JDFTXInfile.from_dict(dict_jif)
+    # # Commenting out tests with jif2 due to the list representation asserted
+    jif2 = JDFTXInfile.get_dict_representation(JDFTXInfile.from_dict(dict_jif))
     jif3 = JDFTXInfile.from_str(str(jif))
     tmp_fname = ex_files_dir / "tmp.in"
     jif.write_file(tmp_fname)
     jif4 = JDFTXInfile.from_file(tmp_fname)
-    jifs = [jif, jif3, jif4]
+    jifs = [jif, jif2, jif3, jif4]
     for i in range(len(jifs)):
         for j in range(i+1, len(jifs)):
             print(f"{i}, {j}")

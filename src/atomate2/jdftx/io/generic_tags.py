@@ -563,7 +563,8 @@ class TagContainer(AbstractTag):
         # cannot repeat: list of bool/str/int/float (elec-cutoff)
         # cannot repeat: list of lists (lattice)
 
-        # the .read() method automatically handles regenerating any nesting because is just like reading a file
+        # the .read() method automatically handles regenerating any nesting 
+        # because is just like reading a file
         if self.can_repeat:
             if all([isinstance(entry, dict) for entry in value]):
                 return value  # no conversion needed
@@ -623,12 +624,14 @@ class StructureDeferredTagContainer(TagContainer):
 @dataclass(kw_only=True)
 class MultiformatTag(AbstractTag):
     """
-    This tag class should be used for tags that could have different types of input values given to them
-    or tags where different subtag options directly impact how many expected arguments are provided
-    e.g. the coulomb-truncation or van-der-waals tags
+    This tag class should be used for tags that could have different types of 
+    input values given to them or tags where different subtag options directly 
+    impact how many expected arguments are provided e.g. the coulomb-truncation
+    or van-der-waals tags.
 
-    This class should not be used for tags with simply some combination of mandatory and optional args
-    because the TagContainer class can handle those cases by itself
+    This class should not be used for tags with simply some combination of 
+    mandatory and optional args because the TagContainer class can handle those
+    cases by itself.
     """
 
     format_options: list = None
@@ -647,14 +650,17 @@ class MultiformatTag(AbstractTag):
                 return trial_format.read(tag, value)
             except Exception as e:
                 problem_log.append(e)
-        errormsg = f"No valid read format for '{tag} {value}' tag\nAdd option to format_options or double-check the value string and retry!\n\n"
-        errormsg += "Here is the log of errors for each known formatting option:\n"
+        errormsg = f"No valid read format for '{tag} {value}' tag\nAdd option \
+            to format_options or double-check the value string and retry!\n\n"
+        errormsg += "Here is the log of errors for each known \
+            formatting option:\n"
         errormsg += "\n".join(
             [f"Format {x}: {problem_log[x]}" for x in range(len(problem_log))]
         )
         raise ValueError(errormsg)
 
-    def _determine_format_option(self, tag, value, try_auto_type_fix: bool = False):
+    def _determine_format_option(self, tag, value, 
+                                 try_auto_type_fix: bool = False):
         for i, format_option in enumerate(self.format_options):
             try:
                 # print(i, tag, value, format_option)
@@ -668,7 +674,8 @@ class MultiformatTag(AbstractTag):
                             f"{tag} option {i} is not it: validation failed"
                         )
                 elif not is_tag_valid:
-                    raise ValueError(f"{tag} option {i} is not it: validation failed")
+                    raise ValueError(f"{tag} option {i} is not it: validation \
+                                     failed")
 
                 # print('PASSED!', tag, value, 'option', i)
                 return i, value
@@ -709,11 +716,13 @@ class BoolTagContainer(TagContainer):
         for subtag, subtag_type in self.subtags.items():
             if not subtag_type.optional and subtag not in subdict:
                 raise ValueError(
-                    f"The {subtag} tag is not optional but was not populated during the read!"
+                    f"The {subtag} tag is not optional but was not populated \
+                        during the read!"
                 )
         if len(value) > 0:
             raise ValueError(
-                f"Something is wrong in the JDFTXInfile formatting, some values were not processed: {value}"
+                f"Something is wrong in the JDFTXInfile formatting, some \
+                    values were not processed: {value}"
             )
         return subdict
 
@@ -730,15 +739,18 @@ class DumpTagContainer(TagContainer):
                 subtag_value = " ".join(value[(idx_start + 1) :])
                 tempdict[subtag] = subtag_type.read(subtag, subtag_value)
                 del value[idx_start:]
-        # reorder all tags to match order of __MASTER_TAG_LIST__ and do coarse-grained validation of read
+        # reorder all tags to match order of __MASTER_TAG_LIST__ and do 
+        # coarse-grained validation of read
         subdict = {x: tempdict[x] for x in self.subtags if x in tempdict}
         for subtag, subtag_type in self.subtags.items():
             if not subtag_type.optional and subtag not in subdict:
                 raise ValueError(
-                    f"The {subtag} tag is not optional but was not populated during the read!"
+                    f"The {subtag} tag is not optional but was not populated \
+                        during the read!"
                 )
         if len(value) > 0:
             raise ValueError(
-                f"Something is wrong in the JDFTXInfile formatting, some values were not processed: {value}"
+                f"Something is wrong in the JDFTXInfile formatting, some \
+                    values were not processed: {value}"
             )
         return subdict
