@@ -10,10 +10,6 @@ from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 logger = logging.getLogger(__name__)
 
-FILE_NAMES = {
-    "in": "init.in",
-    "out": "jdftx.out"
-}
 
 def write_jdftx_input_set(
     structure: Structure,
