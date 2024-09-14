@@ -1,4 +1,4 @@
-from jdftx.io.generic_tags import BoolTag, FloatTag, IntTag, StrTag, TagContainer
+from atomate2.jdftx.io.generic_tags import BoolTag, FloatTag, IntTag, StrTag, TagContainer
 
 
 func_options = [
