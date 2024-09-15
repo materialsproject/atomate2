@@ -1,0 +1,14 @@
+ALGO = Exact
+EDIFF = 1e-08
+ICHARG = 1
+ISMEAR = 0
+ISPIN = 1
+LOPTICS = True
+LORBIT = 11
+LPEAD = True
+LREAL = Auto
+LWAVE = True
+NBANDS = 48
+NELM = 100
+PREC = Accurate
+SIGMA = 0.01
