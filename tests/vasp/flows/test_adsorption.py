@@ -2,6 +2,7 @@ from jobflow import run_locally
 from pymatgen.core import Molecule, Structure
 
 from atomate2.vasp.flows.adsorption import AdsorptionMaker
+from atomate2.vasp.jobs.adsorption import AdsorptionDocument
 
 
 def test_adsorption(mock_vasp, clean_dir, test_dir):
@@ -72,21 +73,24 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
     for actual_name in expected_job_names:
         assert actual_name in job_names, f"Job '{actual_name}' not found."
 
-    assert flow[-1].uuid in responses, "ads calculation job not found"
+    assert flow[-1].uuid in responses, "Adsorption calculation job not found."
 
-    adsorption_calculation_job = responses.get(flow[-1].uuid)
-    adsorption_energy = [
-        energy
-        for response in adsorption_calculation_job.values()
-        for energy in response.output.get("adsorption_energy", [])
-    ]
+    adsorption_document = next(iter(responses[flow[-1].uuid].values())).output
 
-    assert isinstance(adsorption_energy, list)
+    assert isinstance(
+        adsorption_document, AdsorptionDocument
+    ), "Output is not an AdsorptionDocument instance."
 
-    adsorption_energy.sort()
+    # Extract the adsorption energies
+    adsorption_energies = adsorption_document.adsorption_energies
 
-    assert adsorption_energy == [
+    # The energies should already be sorted based on your job function
+    expected_energies = [
         -3.0666021499999943,
         -2.9407460899999904,
         -2.0976731399999906,
-    ], "adsorption energy is inaccurate or not found in response"
+    ]
+
+    assert (
+        adsorption_energies == expected_energies
+    ), "Adsorption energies do not match expected values."

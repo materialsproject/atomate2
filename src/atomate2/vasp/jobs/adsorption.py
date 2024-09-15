@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Response, job
 from pymatgen.analysis.adsorption import AdsorbateSiteFinder
@@ -379,77 +379,52 @@ def adsorption_calculations(
     adslabs_data: dict[str, list],
     molecule_dft_energy: float,
     slab_dft_energy: float,
-) -> dict[str, list[Any]]:
-    """Calculate the adsorption energies by subtracting the energies of
-    the adsorbate, slab, and adsorbate-slab.
+) -> AdsorptionDocument:
+    """Calculate the adsorption energies and return an AdsorptionDocument instance.
 
     Parameters
     ----------
-    bulk_structure: Structure
-        The bulk/unit cell structure.
-    molecule_structure: Structure
-        The molecule to be adsorbed.
-    surface_idx: tuple
-        The Miller index [h, k, l] of the surface.
-    adslab_structures: list[Structure]
+    adslab_structures : list[Structure]
         The list of all possible configurations of slab structures with adsorbates.
-    molecule_dft_energy: float
+    adslabs_data : dict[str, list]
+        Dictionary containing static energies and directories of the adsorption slabs.
+    molecule_dft_energy : float
         The static energy of the molecule.
-    slab_dft_energy: float
+    slab_dft_energy : float
         The static energy of the slab.
 
     Returns
     -------
-    list
-        The list of (adsorption configurations, configuration number,
-        adsorption energy, directories) sorted by adsorption energy.
-    """  # noqa: D205
-    outputs: dict[str, list] = {
-        "adsorption_configuration": [],
-        "configuration_number": [],
-        "adsorption_energy": [],
-        "dirs": [],
-    }
+    AdsorptionDocument
+        An AdsorptionDocument instance containing all adsorption data.
+    """
+    adsorption_energies = []
+    configuration_numbers = []
+    job_dirs = []
 
-    for i, ad_structure in enumerate(adslab_structures):
-        outputs["adsorption_configuration"].append(ad_structure)
-        outputs["configuration_number"].append(i)
+    for i, _ad_structure in enumerate(adslab_structures):
         ads_energy = (
             adslabs_data["static_energy"][i] - molecule_dft_energy - slab_dft_energy
         )
-        outputs["adsorption_energy"].append(ads_energy)
-        outputs["dirs"].append(adslabs_data["dirs"][i])
+        adsorption_energies.append(ads_energy)
+        configuration_numbers.append(i)
+        job_dirs.append(adslabs_data["dirs"][i])
 
-    # Combine and sort
-    combined_outputs = list(
-        zip(
-            outputs["adsorption_configuration"],
-            outputs["configuration_number"],
-            outputs["adsorption_energy"],
-            outputs["dirs"],
-        )
-    )
-    sorted_combined_outputs = sorted(combined_outputs, key=lambda x: x[2])
-
-    structures_list = [item[0] for item in sorted_combined_outputs]
-    configuration_list = [item[1] for item in sorted_combined_outputs]
-    adsorption_energies_list = [item[2] for item in sorted_combined_outputs]
-    job_dirs_list = [item[3] for item in sorted_combined_outputs]
-
-    # Create AdsorptionDocument instances
-    adsorption_documents = AdsorptionDocument.from_adsorption(
-        structures=structures_list,
-        configuration_numbers=configuration_list,
-        adsorption_energies=adsorption_energies_list,
-        job_dirs=job_dirs_list,
+    # Sort the data by adsorption energy
+    sorted_indices = sorted(
+        range(len(adsorption_energies)), key=lambda k: adsorption_energies[k]
     )
 
-    # Return a dictionary with relevant fields extracted from AdsorptionDocument
-    return {
-        "adsorption_configuration": [doc.structure for doc in adsorption_documents],
-        "configuration_number": [
-            doc.configuration_number for doc in adsorption_documents
-        ],
-        "adsorption_energy": [doc.adsorption_energy for doc in adsorption_documents],
-        "dirs": [doc.job_dirs for doc in adsorption_documents],
-    }
+    # Apply the sorted indices to all lists
+    sorted_structures = [adslab_structures[i] for i in sorted_indices]
+    sorted_configuration_numbers = [configuration_numbers[i] for i in sorted_indices]
+    sorted_adsorption_energies = [adsorption_energies[i] for i in sorted_indices]
+    sorted_job_dirs = [job_dirs[i] for i in sorted_indices]
+
+    # Create and return the AdsorptionDocument instance
+    return AdsorptionDocument(
+        structures=sorted_structures,
+        configuration_numbers=sorted_configuration_numbers,
+        adsorption_energies=sorted_adsorption_energies,
+        job_dirs=sorted_job_dirs,
+    )
