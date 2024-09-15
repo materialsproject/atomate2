@@ -550,7 +550,10 @@ class HSEBSSetGenerator(VaspInputGenerator):
 @dataclass
 class MVLGWSetGenerator(VaspInputGenerator):
     """
-    Class to generate Materials Virtual Lab input sets for static, diag and GW calculations.
+    Materials Virtual Lab GW input set generator.
+
+    To generate Materials Virtual Lab input sets for static,
+    diag and GW calculations.
 
     Parameters
     ----------
@@ -587,30 +590,26 @@ class MVLGWSetGenerator(VaspInputGenerator):
                 f"{', '.join(map(repr, MVLGWSetGenerator.SUPPORTED_MODES))}"
             )
 
-    def get_kpoints_updates(
+    @property
+    def kpoints_updates(
         self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = 0.0,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
     ) -> dict:
         """Get updates to the kpoints configuration for this calculation type."""
         # Generate gamma center k-points mesh grid for GW calc, which is requested
         # by GW calculation.
         return {"reciprocal_density": self.reciprocal_density}
 
-    def get_incar_updates(
+    @property
+    def incar_updates(
         self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
     ) -> dict:
         """Get updates to the INCAR config for this calculation type."""
         updates: dict[str, str | float | int | bool] = {}
-        nbands = int(vasprun.parameters["NBANDS"]) if vasprun is not None else None
+        nbands = (
+            int(self.prev_vasprun.parameters["NBANDS"])
+            if self.prev_vasprun is not None
+            else None
+        )
 
         if self.mode == "STATIC":
             # TODO: the VaspInputGenerator._get_incar() method
