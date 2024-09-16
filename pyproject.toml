@@ -63,7 +63,7 @@ ase = [
     "ase>=3.23.0",
 ]
 ase-ext = [
-    "tblite>=0.3.0"
+    "tblite>=0.3.0",
 ]
 docs = [
     "FireWorks==2.0.3",
