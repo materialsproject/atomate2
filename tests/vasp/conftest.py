@@ -196,7 +196,10 @@ def fake_run_vasp(
 def check_incar(
     ref_path: Path, incar_settings: Sequence[str], incar_exclude: Sequence[str]
 ) -> None:
+    import os
     user_incar = Incar.from_file(zpath("INCAR"))
+   # absolute_incar_path = os.path.abspath(zpath("INCAR"))
+  #  logger.info("Absolute path of INCAR: %s", absolute_incar_path)
     ref_incar_path = zpath(ref_path / "inputs" / "INCAR")
     ref_incar = Incar.from_file(ref_incar_path)
     defaults = {"ISPIN": 1, "ISMEAR": 1, "SIGMA": 0.2}

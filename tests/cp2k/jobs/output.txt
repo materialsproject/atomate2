@@ -1,0 +1,291 @@
+/Users/sophi/envs/jobflow_py310/lib/python3.10/site-packages/paramiko/pkey.py:100: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from this module in 48.0.0.
+  "cipher": algorithms.TripleDES,
+/Users/sophi/envs/jobflow_py310/lib/python3.10/site-packages/paramiko/transport.py:259: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from this module in 48.0.0.
+  "class": algorithms.TripleDES,
+============================= test session starts ==============================
+platform darwin -- Python 3.10.11, pytest-8.3.2, pluggy-1.5.0
+rootdir: /Users/sophi/envs/jobflow_py310/src/atomate2
+configfile: pyproject.toml
+plugins: cov-5.0.0, nbmake-1.5.4, mock-3.14.0
+collected 1 item
+
+test_core.py /Users/sophi/envs/jobflow_py310/lib/python3.10/site-packages/pydantic/_internal/_fields.py:201: UserWarning: Field name "schema" in "TaskDocument" shadows an attribute in parent "StructureMetadata"
+  warnings.warn(
+/Users/sophi/envs/jobflow_py310/lib/python3.10/site-packages/pydantic/_internal/_fields.py:201: UserWarning: Field name "schema" in "TaskDocument" shadows an attribute in parent "MoleculeMetadata"
+  warnings.warn(
+2024-09-16 14:07:39,980 INFO Started executing jobs locally
+2024-09-16 14:07:40,041 INFO Starting job - static (e6f8546f-69d4-4f05-8db5-86135bec3657)
+/Users/sophi/envs/jobflow_py310/src/pymatgen/src/pymatgen/io/cp2k/sets.py:225: UserWarning: As of 2022.1, kpoints not supported with OT. Defaulting to diagonalization
+  warnings.warn("As of 2022.1, kpoints not supported with OT. Defaulting to diagonalization")
+2024-09-16 14:07:40,085 INFO Writing CP2K input set.
+2024-09-16 14:07:40,087 INFO Running fake CP2K.
+2024-09-16 14:07:40,087 INFO Entering _check_input
+2024-09-16 14:07:40,087 INFO ref_path: /Users/sophi/envs/jobflow_py310/src/atomate2/tests/test_data/cp2k/Si_static_test
+2024-09-16 14:07:40,087 INFO user_input: ()
+2024-09-16 14:07:40,090 INFO static failed with exception:
+Traceback (most recent call last):
+  File "/Users/sophi/envs/jobflow_py310/lib/python3.10/site-packages/jobflow/managers/local.py", line 114, in _run_job
+    response = job.run(store=store)
+  File "/Users/sophi/envs/jobflow_py310/lib/python3.10/site-packages/jobflow/core/job.py", line 600, in run
+    response = function(*self.function_args, **self.function_kwargs)
+  File "/Users/sophi/envs/jobflow_py310/src/atomate2/src/atomate2/cp2k/jobs/base.py", line 172, in make
+    run_cp2k(**self.run_cp2k_kwargs)
+  File "/Users/sophi/envs/jobflow_py310/src/atomate2/tests/cp2k/conftest.py", line 108, in mock_run_cp2k
+    fake_run_cp2k(check_input, ref_path, **_FAKE_RUN_CP2K_KWARGS.get(name, {}))
+  File "/Users/sophi/envs/jobflow_py310/src/atomate2/tests/cp2k/conftest.py", line 159, in fake_run_cp2k
+    check_input(ref_path, input_settings)
+  File "/Users/sophi/envs/jobflow_py310/src/atomate2/tests/cp2k/conftest.py", line 182, in _check_input
+    user_input.verbosity(verbosity=False)
+AttributeError: 'tuple' object has no attribute 'verbosity'
+
+2024-09-16 14:07:40,090 INFO Finished executing jobs locally
+F
+
+=================================== FAILURES ===================================
+______________________________ test_static_maker _______________________________
+
+tmp_path = PosixPath('/private/var/folders/90/bvygb0811zxdh75mht0vbwkm0000gn/T/pytest-of-sophi/pytest-16/test_static_maker0')
+mock_cp2k = <function mock_cp2k.<locals>._run at 0x2866169e0>
+si_structure = Structure Summary
+Lattice
+    abc : 3.86697465 3.86697465 3.86697465
+ angles : 59.99999999999999 59.99999999999999 59....PeriodicSite: Si0 (Si) (1.116, 0.7893, 1.933) [0.25, 0.25, 0.25]
+PeriodicSite: Si1 (Si) (0.0, 0.0, 0.0) [0.0, 0.0, 0.0]
+basis_and_potential = {'basis_and_potential': {'Si': {'aux_basis': 'pFIT3', 'basis': 'DZVP-MOLOPT-SR-GTH', 'potential': 'GTH-PBE-q4'}}}
+
+    def test_static_maker(tmp_path, mock_cp2k, si_structure, basis_and_potential):
+        import os
+    
+        from jobflow import run_locally
+    
+        from atomate2.cp2k.jobs.core import StaticMaker
+        from atomate2.cp2k.schemas.task import TaskDocument
+        from atomate2.cp2k.sets.core import StaticSetGenerator
+    
+        # mapping from job name to directory containing test files
+        ref_paths = {"static": "Si_static_test"}
+    
+        # settings passed to fake_run_cp2k; adjust these to check for certain input settings
+        fake_run_cp2k_kwargs = {}
+    
+        # automatically use fake CP2K
+        mock_cp2k(ref_paths, fake_run_cp2k_kwargs)
+    
+        # generate job
+        maker = StaticMaker(
+            input_set_generator=StaticSetGenerator(user_input_settings=basis_and_potential)
+        )
+        job = maker.make(si_structure)
+    
+        # run the flow or job and ensure that it finished running successfully
+        os.chdir(tmp_path)
+>       responses = run_locally(job, create_folders=True, ensure_success=True)
+
+/Users/sophi/envs/jobflow_py310/src/atomate2/tests/cp2k/jobs/test_core.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+flow = Flow(name='Flow', uuid='ed425058-0c5d-4e1f-8dd5-b4c7850ce038')
+1. Job(name='static', uuid='e6f8546f-69d4-4f05-8db5-86135bec3657')
+log = True, store = <jobflow.core.store.JobStore object at 0x127c611e0>
+create_folders = True
+root_dir = PosixPath('/private/var/folders/90/bvygb0811zxdh75mht0vbwkm0000gn/T/pytest-of-sophi/pytest-16/test_static_maker0')
+ensure_success = True, allow_external_references = False
+raise_immediately = False
+
+    def run_locally(
+        flow: jobflow.Flow | jobflow.Job | list[jobflow.Job],
+        log: bool = True,
+        store: jobflow.JobStore | None = None,
+        create_folders: bool = False,
+        root_dir: str | Path | None = None,
+        ensure_success: bool = False,
+        allow_external_references: bool = False,
+        raise_immediately: bool = False,
+    ) -> dict[str, dict[int, jobflow.Response]]:
+        """
+        Run a :obj:`Job` or :obj:`Flow` locally.
+    
+        Parameters
+        ----------
+        flow : Flow | Job | list[Job]
+            A job or flow.
+        log : bool
+            Whether to print log messages.
+        store : JobStore
+            A job store. If a job store is not specified then
+            :obj:`JobflowSettings.JOB_STORE` will be used. By default this is a maggma
+            ``MemoryStore`` but can be customised by setting the jobflow configuration file.
+        create_folders : bool
+            Whether to run each job in a new folder.
+        root_dir : str | Path | None
+            The root directory to run the jobs in or where to create new subfolders if
+                ``create_folders`` is True. If None then the current working
+                directory will be used.
+        ensure_success : bool
+            Raise an error if the flow was not executed successfully.
+        allow_external_references : bool
+            If False all the references to other outputs should be from other Jobs
+            of the Flow.
+        raise_immediately : bool
+            If True, raise an exception immediately if a job fails. If False, continue
+            running the flow and only raise an exception at the end if the flow did not
+            finish running successfully.
+    
+        Returns
+        -------
+        dict[str, dict[int, Response]]
+            The responses of the jobs, as a dict of ``{uuid: {index: response}}``.
+        """
+        from collections import defaultdict
+        from datetime import datetime, timezone
+        from pathlib import Path
+        from random import randint
+    
+        from monty.os import cd
+    
+        from jobflow import SETTINGS, initialize_logger
+        from jobflow.core.flow import get_flow
+        from jobflow.core.reference import OnMissing
+    
+        if store is None:
+            store = SETTINGS.JOB_STORE
+    
+        root_dir = Path.cwd() if root_dir is None else Path(root_dir).resolve()
+        root_dir.mkdir(exist_ok=True)
+    
+        store.connect()
+    
+        if log:
+            initialize_logger()
+    
+        flow = get_flow(flow, allow_external_references=allow_external_references)
+    
+        stopped_parents: set[str] = set()
+        errored: set[str] = set()
+        responses: dict[str, dict[int, jobflow.Response]] = defaultdict(dict)
+        stop_jobflow = False
+    
+        def _run_job(job: jobflow.Job, parents):
+            nonlocal stop_jobflow
+    
+            if stop_jobflow:
+                return None, True
+    
+            if len(set(parents).intersection(stopped_parents)) > 0:
+                # stop children has been called for one of the jobs' parents
+                logger.info(
+                    f"{job.name} is a child of a job with stop_children=True, skipping..."
+                )
+                stopped_parents.add(job.uuid)
+                return None, False
+    
+            if (
+                len(set(parents).intersection(errored)) > 0
+                and job.config.on_missing_references == OnMissing.ERROR
+            ):
+                errored.add(job.uuid)
+                return None, False
+    
+            if raise_immediately:
+                response = job.run(store=store)
+            else:
+                try:
+                    response = job.run(store=store)
+                except Exception:
+                    import traceback
+    
+                    logger.info(
+                        f"{job.name} failed with exception:\n{traceback.format_exc()}"
+                    )
+                    errored.add(job.uuid)
+                    return None, False
+    
+            responses[job.uuid][job.index] = response
+    
+            if response.stored_data is not None:
+                logger.warning("Response.stored_data is not supported with local manager.")
+    
+            if response.stop_children:
+                stopped_parents.add(job.uuid)
+    
+            if response.stop_jobflow:
+                stop_jobflow = True
+                return None, True
+    
+            diversion_responses = []
+            if response.replace is not None:
+                # first run any restarts
+                diversion_responses.append(_run(response.replace))
+    
+            if response.detour is not None:
+                # next any detours
+                diversion_responses.append(_run(response.detour))
+    
+            if response.addition is not None:
+                # finally any additions
+                diversion_responses.append(_run(response.addition))
+    
+            if not all(diversion_responses):
+                return None, False
+            return response, False
+    
+        def _get_job_dir():
+            if create_folders:
+                time_now = datetime.now(tz=timezone.utc).strftime(SETTINGS.DIRECTORY_FORMAT)
+                job_dir = root_dir / f"job_{time_now}-{randint(10000, 99999)}"
+                job_dir.mkdir()
+                return job_dir
+            return root_dir
+    
+        def _run(root_flow):
+            encountered_bad_response = False
+            for job, parents in root_flow.iterflow():
+                job_dir = _get_job_dir()
+                with cd(job_dir):
+                    response, jobflow_stopped = _run_job(job, parents)
+    
+                if response is not None:
+                    response.job_dir = job_dir
+                encountered_bad_response = encountered_bad_response or response is None
+                if jobflow_stopped:
+                    return False
+    
+            return not encountered_bad_response
+    
+        logger.info("Started executing jobs locally")
+        finished_successfully = _run(flow)
+        logger.info("Finished executing jobs locally")
+    
+        if ensure_success and not finished_successfully:
+>           raise RuntimeError("Flow did not finish running successfully")
+E           RuntimeError: Flow did not finish running successfully
+
+/Users/sophi/envs/jobflow_py310/lib/python3.10/site-packages/jobflow/managers/local.py:181: RuntimeError
+------------------------------ Captured log call -------------------------------
+INFO     jobflow.managers.local:local.py:176 Started executing jobs locally
+INFO     jobflow.core.job:job.py:582 Starting job - static (e6f8546f-69d4-4f05-8db5-86135bec3657)
+INFO     atomate2.cp2k.files:files.py:196 Writing CP2K input set.
+INFO     atomate2:conftest.py:154 Running fake CP2K.
+INFO     atomate2:conftest.py:177 Entering _check_input
+INFO     atomate2:conftest.py:178 ref_path: /Users/sophi/envs/jobflow_py310/src/atomate2/tests/test_data/cp2k/Si_static_test
+INFO     atomate2:conftest.py:179 user_input: ()
+INFO     jobflow.managers.local:local.py:118 static failed with exception:
+Traceback (most recent call last):
+  File "/Users/sophi/envs/jobflow_py310/lib/python3.10/site-packages/jobflow/managers/local.py", line 114, in _run_job
+    response = job.run(store=store)
+  File "/Users/sophi/envs/jobflow_py310/lib/python3.10/site-packages/jobflow/core/job.py", line 600, in run
+    response = function(*self.function_args, **self.function_kwargs)
+  File "/Users/sophi/envs/jobflow_py310/src/atomate2/src/atomate2/cp2k/jobs/base.py", line 172, in make
+    run_cp2k(**self.run_cp2k_kwargs)
+  File "/Users/sophi/envs/jobflow_py310/src/atomate2/tests/cp2k/conftest.py", line 108, in mock_run_cp2k
+    fake_run_cp2k(check_input, ref_path, **_FAKE_RUN_CP2K_KWARGS.get(name, {}))
+  File "/Users/sophi/envs/jobflow_py310/src/atomate2/tests/cp2k/conftest.py", line 159, in fake_run_cp2k
+    check_input(ref_path, input_settings)
+  File "/Users/sophi/envs/jobflow_py310/src/atomate2/tests/cp2k/conftest.py", line 182, in _check_input
+    user_input.verbosity(verbosity=False)
+AttributeError: 'tuple' object has no attribute 'verbosity'
+
+INFO     jobflow.managers.local:local.py:178 Finished executing jobs locally
+=========================== short test summary info ============================
+FAILED test_core.py::test_static_maker - RuntimeError: Flow did not finish ru...
+============================== 1 failed in 1.84s ===============================

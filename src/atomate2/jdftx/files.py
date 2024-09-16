@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Callable
 from collections.abc import Sequence
 
 from pymatgen.core import Structure
-
 from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 logger = logging.getLogger(__name__)
