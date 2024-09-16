@@ -34,7 +34,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
-        split: [1, 2, 3]
+        # split: [1, 2, 3]
 
     steps:
       - uses: actions/checkout@v4
