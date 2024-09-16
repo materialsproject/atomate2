@@ -74,7 +74,7 @@ jobs:
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         # regenerate durations file with `pytest --store-durations --durations-path tests/.pytest-split-durations`
-        run: pytest --splits 4 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --ignore=tests/ase --cov=atomate2 --cov-report=xml
+        run: pytest --splits 4 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --cov=atomate2 --cov-report=xml
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
