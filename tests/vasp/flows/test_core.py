@@ -442,6 +442,6 @@ def test_mvl_gw(mock_vasp, clean_dir, si_structure):
     assert isinstance(output2, TaskDoc)
     assert isinstance(output3, TaskDoc)
     assert output1.output.energy == pytest.approx(-10.22237938)
-    assert output1.output.energy == pytest.approx(0.7161)
+    assert output1.output.bandgap == pytest.approx(0.7161)
     assert output2.output.energy == pytest.approx(-10.2223794)
     assert output3.output.bandgap == pytest.approx(1.3488000000000007)
