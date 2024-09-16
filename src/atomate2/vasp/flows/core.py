@@ -179,6 +179,10 @@ class MVLGWBandStructureMaker(Maker):
     """
     Maker to generate VASP band structures with Materials Virtual Lab GW setup.
 
+    .. warning::
+        This workflow is only compatible with the Materials Virtual Lab GW setup,
+        and it may require additional benchmarks. Please use with caution.
+
     Parameters
     ----------
     name : str
