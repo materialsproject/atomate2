@@ -593,7 +593,7 @@ class MVLNonSCFMaker(BaseVaspMaker):
             A previous VASP calculation directory to copy output files from.
         """
         self.input_set_generator.mode = "DIAG"
-        self.copy_vasp_kwargs.setdefault("additional_vasp_files", ("CHGCAR", "WAVECAR"))
+        self.copy_vasp_kwargs.setdefault("additional_vasp_files", ("CHGCAR",))
 
         return super().make.original(self, structure, prev_dir)
 
@@ -650,7 +650,7 @@ class MVLGWMaker(BaseVaspMaker):
         """
         self.input_set_generator.mode = "GW"
         self.copy_vasp_kwargs.setdefault(
-            "additional_vasp_files", ("CHGCAR", "WAVECAR", "WAVEDER")
+            "additional_vasp_files", ("WAVECAR", "WAVEDER")
         )
 
         return super().make.original(self, structure, prev_dir)
