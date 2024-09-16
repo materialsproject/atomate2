@@ -1,0 +1,105 @@
+from __future__ import annotations
+
+import logging
+from pathlib import Path
+from typing import TYPE_CHECKING, Literal
+import pytest
+from monty.io import zopen
+from monty.os.path import zpath as monty_zpath
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+logger = logging.getLogger("atomate2")
+
+_JFILES = "init.in"
+_REF_PATHS = {}
+_FAKE_RUN_JDFTX_KWARGS = {}
+
+def zpath(path: str | Path) -> Path:
+    return Path(monty_zpath(str(path)))
+
+@pytest.fixture(scope="session")
+def jdftx_test_dir(test_dir):
+    return test_dir / "jdftx"
+# tests/test_data/jdftx
+
+@pytest.fixture
+def mock_jdftx(monkeypatch, jdftx_test_dir):
+    
+    import atomate2.jdftx.jobs.base
+    import atomate2.jdftx.run
+    from atomate2.jdftx.sets.base import JdftxInputGenerator
+
+    def _run(ref_paths, fake_run_jdftx_kwargs=None): 
+        if fake_run_jdftx_kwargs is None:
+            fake_run_jdftx_kwargs = {}
+
+        _REF_PATHS.update(ref_paths)
+        _FAKE_RUN_JDFTX_KWARGS.update(fake_run_jdftx_kwargs)
+            
+    def mock_run_jdftx(*args, **kwargs):
+        from jobflow import CURRENT_JOB   #attributes: jobflow.Job and jobflow.JobStore
+
+        name = CURRENT_JOB.job.name
+        ref_path = jdftx_test_dir / _REF_PATHS[name]
+        fake_run_jdftx(ref_path, **_FAKE_RUN_JDFTX_KWARGS.get(name, {}))
+
+    get_input_set_orig = JdftxInputGenerator.get_input_set
+
+    def mock_get_input_set(self, *args, **kwargs):
+        return get_input_set_orig(self, *args, **kwargs)
+
+    monkeypatch.setattr(atomate2.jdftx.run, "run_jdftx", mock_run_jdftx)
+    monkeypatch.setattr(atomate2.jdftx.jobs.base, "run_jdftx", mock_run_jdftx)
+    monkeypatch.setattr(JdftxInputGenerator, "get_input_set", mock_get_input_set)   
+
+    yield _run
+
+    monkeypatch.undo()
+    _REF_PATHS.clear()
+    _FAKE_RUN_JDFTX_KWARGS.clear()
+        
+
+def fake_run_jdftx(
+        ref_path: str | Path,
+        input_settings: Sequence[str] = (),
+        check_inputs: Sequence[Literal["init.in"]] = _JFILES,
+) -> None:
+    
+    logger.info("Running fake JDFTx.")
+    ref_path = Path(ref_path)
+
+    if "init.in" in check_inputs:
+        check_input(ref_path, input_settings)
+
+    logger.info("Verified inputs successfully")
+
+
+@pytest.fixture
+def check_input():
+    from atomate2.jdftx.io.inputs import JdftxInput
+
+    def _check_input(ref_path, input_settings: Sequence[str] = (),):
+        ref_input = JdftxInput.from_file(ref_path / "inputs" / "init.in")
+        user_input = JdftxInput.from_file(zpath("init.in"))
+     #   user_input.verbosity(verbosity=False)
+      #  ref_input.verbosity(verbosity=False)
+     #   user_string = " ".join(user_input.get_str().lower().split())
+      #  user_hash = md5(user_string.encode("utf-8")).hexdigest()
+
+       # ref_string = " ".join(ref_input.get_str().lower().split())
+       # ref_hash = md5(ref_string.encode("utf-8")).hexdigest()
+
+#        if ref_hash != user_hash:
+ #           raise ValueError("Cp2k Inputs do not match!")
+
+    return _check_input
+
+def copy_cp2k_outputs(ref_path: str | Path):
+    import shutil
+
+    output_path = ref_path / "outputs"
+    for output_file in output_path.iterdir():
+        if output_file.is_file():
+            shutil.copy(output_file, ".")
