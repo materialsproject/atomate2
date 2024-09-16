@@ -76,7 +76,7 @@ jobs:
         # regenerate durations file with `pytest --store-durations --durations-path tests/.pytest-split-durations`
         #run: pytest --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --ignore=tests/ase --cov=atomate2 --cov-report=xml
         run: |
-          pytest --store-durations --durations-path=DURATIONS_PATH
+          pytest --store-durations --durations-path=DURATIONS_PATH --ignore=tests/ase
           cat DURATIONS_PATH
 
       - uses: codecov/codecov-action@v1
