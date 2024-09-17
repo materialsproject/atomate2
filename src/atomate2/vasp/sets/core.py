@@ -5,11 +5,9 @@ from __future__ import annotations
 import logging
 from copy import deepcopy
 from dataclasses import dataclass, field
-from importlib.resources import files as import_files
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
-from monty.serialization import loadfn
 from pymatgen.core.periodic_table import Element
 from pymatgen.io.vasp.sets import LobsterSet
 
@@ -22,8 +20,6 @@ if TYPE_CHECKING:
 
 
 logger = logging.getLogger(__name__)
-
-_BASE_MVLGW_VASP_SET = loadfn(import_files("atomate2.vasp.sets") / "BaseMVLGWSet.yaml")
 
 
 @dataclass
@@ -543,135 +539,6 @@ class HSEBSSetGenerator(VaspInputGenerator):
             updates.update(LOPTICS=True, LREAL=False, CSHIFT=1e-5)
 
         updates["MAGMOM"] = None
-
-        return updates
-
-
-@dataclass
-class MVLGWSetGenerator(VaspInputGenerator):
-    """
-    Materials Virtual Lab GW input set generator.
-
-    To generate Materials Virtual Lab input sets for static,
-    diag and GW calculations.
-
-    Parameters
-    ----------
-    mode
-        The mode of the calculation. Options are "STATIC", "DIAG", and "GW".
-    nbands_factor
-        Multiplicative factor for NBANDS when starting from a previous calculation.
-        Choose a higher number if you are doing an LOPTICS calculation.
-    **kwargs
-        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
-    """
-
-    reciprocal_density: float = 100
-    mode: str = "STATIC"
-    copy_wavecar: bool = True
-    nbands_factor: int = 5
-    ncores: int = 16
-    nbands: int | None = None
-    force_gamma: bool = True
-    inherit_incar: bool = True  # inherit incar from previous run if available
-    SUPPORTED_MODES = ("DIAG", "GW", "STATIC")
-    config_dict: dict = field(default_factory=lambda: _BASE_MVLGW_VASP_SET)
-
-    # CONFIG = _load_yaml_config("MVLGWSet")
-
-    def __post_init__(self) -> None:
-        """Validate input settings."""
-        super().__post_init__()
-        self.mode = mode = self.mode.upper()
-
-        if mode not in MVLGWSetGenerator.SUPPORTED_MODES:
-            raise ValueError(
-                f"Invalid {mode=}, supported modes are "
-                f"{', '.join(map(repr, MVLGWSetGenerator.SUPPORTED_MODES))}"
-            )
-
-    @property
-    def kpoints_updates(
-        self,
-    ) -> dict:
-        """Get updates to the kpoints configuration for this calculation type."""
-        # Generate gamma center k-points mesh grid for GW calc, which is requested
-        # by GW calculation.
-        return {"reciprocal_density": self.reciprocal_density}
-
-    @property
-    def incar_updates(
-        self,
-    ) -> dict:
-        """Get updates to the INCAR config for this calculation type."""
-        updates: dict[str, str | float | int | bool] = {}
-        nbands = (
-            int(self.prev_vasprun.parameters["NBANDS"])
-            if self.prev_vasprun is not None
-            else None
-        )
-
-        if self.mode == "STATIC":
-            # TODO: the VaspInputGenerator._get_incar() method
-            #       always changes the ISMEAR and SIGMA parameters.
-            #       So, I manually set them here.
-            updates.update(
-                {
-                    "ALGO": "Normal",
-                    "ISMEAR": 0,
-                    "SIGMA": 0.01,
-                }
-            )
-        elif self.mode == "DIAG":
-            # Default parameters for diagonalization calculation.
-            updates.update(
-                {
-                    "ALGO": "Exact",
-                    # In pymatgen/io/vasp/MVLGWSet.yaml,
-                    # the default value of NELM is 100;
-                    # but in the pymatgen.io.vasp.sets.MVLGWSet,
-                    # the default value of NELM for DIAG calculation
-                    # is manually set to be 1.
-                    # If 1 were used, the NSCF calculation would not converge,
-                    # and Custodian would not proceed with later calculations.
-                    # Here, I decide to keep the default value of NELM
-                    # to be 100 as defined in pymatgen.io.vasp.sets MVLGWSet.yaml.
-                    "NELM": 100,
-                    "ISMEAR": 0,
-                    "SIGMA": 0.01,
-                    "LOPTICS": True,
-                    "LPEAD": True,
-                }
-            )
-            if nbands:
-                nbands = int(
-                    np.ceil(nbands * self.nbands_factor / self.ncores) * self.ncores
-                )
-
-        elif self.mode == "GW":
-            # Default parameters for GW calculation.
-            updates.update(
-                {
-                    "ALGO": "GW0",
-                    "NELM": 1,
-                    "ISMEAR": 0,
-                    "SIGMA": 0.01,
-                    "NOMEGA": 80,
-                    "ENCUTGW": 250,
-                    "EDIFF": None,
-                    "LOPTICS": None,
-                    "LPEAD": None,
-                }
-            )
-        # elif self.mode == "BSE":
-        #     # Not plan to support BSE for the moment
-        #     # Default parameters for BSE calculation.
-        #     updates.update({
-        #         "ALGO": "BSE", "ANTIRES": 0, "NBANDSO": 20, "NBANDSV": 20
-        #     })
-
-        if nbands:
-            updates["NBANDS"] = nbands
 
         return updates
 
