@@ -4,7 +4,8 @@ import pathlib
 
 import numpy as np
 
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
+from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
+
 
 # read file example
 p = pathlib.Path(__file__)
@@ -13,6 +14,7 @@ jin1 = JDFTXInfile.from_file(filename)
 print(jin1)
 # jin1.write_file('test-write.in')
 print("===============================================================")
+
 
 
 # strict dictionary initialization example
@@ -58,7 +60,8 @@ water_tagdict = {
     "elec-n-bands": 20,
     "elec-ex-corr": "gga-PBE",
     "dump-name": "jdft.$VAR",
-    "dump": {"freq": "End", "var": "State"},  # TODO add support for dump lists
+    #"dump": {"freq": "End", "var": "State"},  # TODO add support for dump lists
+    "initial-magnetic-moments": "C 0.1 0.2 O 0.6",
 }
 jin2 = JDFTXInfile.from_dict(water_tagdict)
 print(jin2)
@@ -98,7 +101,7 @@ water_tagdict = {
     "elec-n-bands": 20,
     "elec-ex-corr": "gga-PBE",
     "dump-name": "jdft.$VAR",
-    "dump": {"freq": "End", "var": "State"},
+    #"dump": {"freq": "End", "var": "State"},
 }
 jin3A = JDFTXInfile.from_dict(water_tagdict)
 jin3B = JDFTXInfile.from_dict(struc_dict)

@@ -18,6 +18,7 @@ from atomate2.jdftx.io.JDFTXInfile import (  # TODO update this to the pymatgen 
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
+    from pymatgen.util.typing import PathLike
 
 _BASE_JDFTX_SET = loadfn(get_mod_path("atomate2.jdftx.sets") / "BaseJdftxSet.yaml")
 
@@ -32,17 +33,14 @@ class JdftxInputSet(InputSet):
         A JdftxInput object
     """
 
-    def __init__(
-        self,
-        jdftxinput: JDFTXInfile, 
-        jdftxstructure: JDFTXStructure
-    ) -> None:
+    def __init__(self, jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure) -> None:
         self.jdftxstructure = jdftxstructure
         self.jdftxinput = jdftxinput
 
     def write_input(
         self,
         directory: str | Path,
+        infile: PathLike = "inputs.in",  # TODO I don't think this should be optional
         make_dir: bool = True,
         overwrite: bool = True,
     ) -> None:
@@ -57,7 +55,6 @@ class JdftxInputSet(InputSet):
         overwrite
             Whether to overwrite an input file if it already exists.
         """
-        infile = "inputs.in"
         directory = Path(directory)
         if make_dir:
             os.makedirs(directory, exist_ok=True)
@@ -65,7 +62,9 @@ class JdftxInputSet(InputSet):
         if not overwrite and (directory / infile).exists():
             raise FileExistsError(f"{directory / infile} already exists.")
 
-        self.jdftxinput.write_file(filename=(directory / infile))
+        jdftxinput = condense_jdftxinputs(self.jdftxinput, self.jdftxstructure)
+
+        jdftxinput.write_file(filename=(directory / infile))
 
     @staticmethod
     def from_directory(
@@ -79,10 +78,8 @@ class JdftxInputSet(InputSet):
             Directory to read JDFTx inputs from.
         """
         directory = Path(directory)
-        jdftxinput = JDFTXInfile.from_file(
-            directory / "input.in"
-        ) 
-        jdftxstructure = jdftxinput.to_JDFTXStructure()
+        jdftxinput = JDFTXInfile.from_file(directory / "input.in")
+        jdftxstructure = jdftxinput.to_JDFTXStructure(jdftxinput)
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftxstructure)
 
 
@@ -128,3 +125,31 @@ class JdftxInputGenerator(InputGenerator):
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
 
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftx_structure)
+
+
+def condense_jdftxinputs(
+    jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
+) -> JDFTXInfile:
+    
+    """
+    Function to combine a JDFTXInputs class with calculation
+    settings and a JDFTxStructure that defines the structure
+    into one JDFTXInputs instance.
+
+    Parameters
+    ----------
+        jdftxinput: JDFTXInfile
+            A JDFTXInfile object with calculation settings.
+
+        jdftxstructure: JDFTXStructure
+            A JDFTXStructure object that defines the structure.
+
+    Returns
+    -------
+        JDFTXInfile
+            A JDFTXInfile that includes the calculation
+            parameters and input structure.
+    """
+
+    condensed_inputs = jdftxinput + JDFTXInfile.from_str(jdftxstructure.get_str())
+    return condensed_inputs

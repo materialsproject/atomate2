@@ -1,18 +1,13 @@
+"""Module defining core JDFTx input set generators."""
+
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from atomate2.jdftx.sets.base import _BASE_JDFTX_SET, JdftxInputGenerator
 
-if TYPE_CHECKING:
-    from pymatgen.core import Structure
-    from pymatgen.io.vasp import Outcar, Vasprun
-
-
 logger = logging.getLogger(__name__)
-
 
 
 @dataclass

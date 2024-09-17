@@ -9,13 +9,27 @@ import numpy as np
 __author__ = "Jacob Clary"
 
 
+# def flatten_list(tag: str, list_of_lists: List[Any]) -> List[Any]:
+#     """Flattens list of lists into a single list, then stops"""
+#     if not isinstance(list_of_lists, list):
+#         raise ValueError(f"{tag}: You must provide a list to flatten_list()!")
+#     while any([isinstance(x, list) for x in list_of_lists]):
+#         list_of_lists = sum(list_of_lists, [])
+#     return list_of_lists
+
 def flatten_list(tag: str, list_of_lists: List[Any]) -> List[Any]:
+    # Ben: I don't know what "then stops" means but I think this is how this
+    # function should work.
     """Flattens list of lists into a single list, then stops"""
     if not isinstance(list_of_lists, list):
         raise ValueError(f"{tag}: You must provide a list to flatten_list()!")
-    while any([isinstance(x, list) for x in list_of_lists]):
-        list_of_lists = sum(list_of_lists, [])
-    return list_of_lists
+    flist = []
+    for v in list_of_lists:
+        if isinstance(v, list):
+            flist.extend(flatten_list(tag, v))
+        else:
+            flist.append(v)
+    return flist
 
 
 class ClassPrintFormatter:
@@ -178,10 +192,9 @@ class StrTag(AbstractTag):
 
         if self.options is None or value in self.options:
             return value
-        else:
-            raise ValueError(
-                f"The '{value}' string must be one of {self.options} for {tag}"
-            )
+        raise ValueError(
+            f"The '{value}' string must be one of {self.options} for {tag}"
+        )
 
     def write(self, tag: str, value) -> str:
         return self._write(tag, value)
@@ -239,6 +252,37 @@ class FloatTag(AbstractTag):
     def get_token_len(self) -> int:
         return self._get_token_len()
 
+@dataclass(kw_only=True)
+class InitMagMomTag(AbstractTag):
+    # temporary fix to allow use of initial-magnetic-moments tag
+    # requires the user to set magnetic moments as a string with no extra validation
+    # processes input files as simply a string variable with no extra type conversion
+
+    # the formatting of this tag's value depends on the species labels in the ion tags
+    #     these species labels are not necessarily element symbols
+    # there are also multiple types of formatting options of the spins
+    # most robustly, this should be a MultiFormatTag, with each option
+    #     being a StructureDeferredTag, because this tag needs to know the
+    #     results of reading in the structure before being able to robustly
+    #     parse the value of this tag
+    def validate_value_type(self, tag, value, try_auto_type_fix: bool = False) -> tuple:
+        return self._validate_value_type(
+            str, tag, value, try_auto_type_fix=try_auto_type_fix
+        )
+
+    def read(self, tag: str, value: str) -> str:
+        try:
+            value = str(value)
+        except:
+            raise ValueError(f"Could not set '{value}' to a str for {tag}!")
+        return value
+
+    def write(self, tag: str, value) -> str:
+        return self._write(tag, value)
+
+    def get_token_len(self) -> int:
+        return self._get_token_len()
+
 
 @dataclass(kw_only=True)
 class TagContainer(AbstractTag):
@@ -281,10 +325,7 @@ class TagContainer(AbstractTag):
                 for x in value
             ]
             return [list(x) for x in list(zip(*results))]
-        else:
-            return self._validate_single_entry(
-                value, try_auto_type_fix=try_auto_type_fix
-            )
+        return self._validate_single_entry(value, try_auto_type_fix=try_auto_type_fix)
 
     def read(self, tag: str, value: str) -> dict:
         value = value.split()
@@ -301,15 +342,45 @@ class TagContainer(AbstractTag):
         tempdict = {}  # temporarily store read tags out of order they are processed
 
         for subtag, subtag_type in self.subtags.items():
+            if subtag == "poleEl":
+                print("here")
             # every subtag with write_tagname=True in a TagContainer has a fixed length and can be immediately read in this loop if it is present
             if subtag in value:  # this subtag is present in the value string
-                idx_start = value.index(subtag)
-                idx_end = idx_start + subtag_type.get_token_len()
-                subtag_value = " ".join(
-                    value[(idx_start + 1) : idx_end]
-                )  # add 1 so the subtag value string excludes the subtagname
-                tempdict[subtag] = subtag_type.read(subtag, subtag_value)
-                del value[idx_start:idx_end]
+                # Ben: At this point, the subtag is a string, and subtag_type is tag object with a can_repeat class variable.
+                # If I am following this right, even if the subtag can repeat, its value will only be
+                # fetched for the first time it appears, and the rest will be ignored.
+                # Testing fix below.
+                subtag_count = value.count(subtag)
+                if not subtag_type.can_repeat:
+                    if subtag_count > 1:
+                        raise ValueError(
+                            f"Subtag {subtag} is not allowed to repeat but appears more than once in {tag}'s value {value}"
+                        )
+                    idx_start = value.index(subtag)
+                    token_len = subtag_type.get_token_len()
+                    idx_end = idx_start + token_len
+                    subtag_value = " ".join(
+                        value[(idx_start + 1) : idx_end]
+                    )  # add 1 so the subtag value string excludes the subtagname
+                    tempdict[subtag] = subtag_type.read(subtag, subtag_value)
+                    del value[idx_start:idx_end]
+                else:
+                    tempdict[subtag] = []
+                    for i in range(subtag_count):
+                        idx_start = value.index(subtag)
+                        idx_end = idx_start + subtag_type.get_token_len()
+                        subtag_value = " ".join(
+                            value[(idx_start + 1) : idx_end]
+                        )  # add 1 so the subtag value string excludes the subtagname
+                        tempdict[subtag].append(subtag_type.read(subtag, subtag_value))
+                        del value[idx_start:idx_end]
+                # idx_start = value.index(subtag)
+                # idx_end = idx_start + subtag_type.get_token_len()
+                # subtag_value = " ".join(
+                #     value[(idx_start + 1) : idx_end]
+                # )  # add 1 so the subtag value string excludes the subtagname
+                # tempdict[subtag] = subtag_type.read(subtag, subtag_value)
+                # del value[idx_start:idx_end]
 
         for subtag, subtag_type in self.subtags.items():
             # now try to populate remaining subtags that do not use a keyword in order of appearance
@@ -404,12 +475,11 @@ class TagContainer(AbstractTag):
         value_dict = self.get_dict_representation(tag, value)
         if value == value_list:
             return "list"
-        elif value == value_dict:
+        if value == value_dict:
             return "dict"
-        else:
-            raise ValueError(
-                "Could not determine TagContainer representation, something is wrong"
-            )
+        raise ValueError(
+            "Could not determine TagContainer representation, something is wrong"
+        )
 
     def _make_list(self, value):
         value_list = []
@@ -473,6 +543,7 @@ class TagContainer(AbstractTag):
             )
 
     def _make_dict(self, tag, value):
+        # Ben: Is this supposed to create a dictionary? This creates a string without any dictionary indications
         value = flatten_list(tag, value)
         self._check_for_mixed_nesting(tag, value)
         return " ".join([str(x) for x in value])
@@ -492,17 +563,23 @@ class TagContainer(AbstractTag):
         # cannot repeat: list of bool/str/int/float (elec-cutoff)
         # cannot repeat: list of lists (lattice)
 
-        # the .read() method automatically handles regenerating any nesting because is just like reading a file
+        # the .read() method automatically handles regenerating any nesting 
+        # because is just like reading a file
         if self.can_repeat:
             if all([isinstance(entry, dict) for entry in value]):
                 return value  # no conversion needed
             string_value = [self._make_dict(tag, entry) for entry in value]
             return [self.read(tag, entry) for entry in string_value]
+
         else:
             if isinstance(value, dict):
                 return value  # no conversion needed
             string_value = self._make_dict(tag, value)
             return self.read(tag, string_value)
+
+
+
+
 
 
 @dataclass(kw_only=True)
@@ -547,12 +624,14 @@ class StructureDeferredTagContainer(TagContainer):
 @dataclass(kw_only=True)
 class MultiformatTag(AbstractTag):
     """
-    This tag class should be used for tags that could have different types of input values given to them
-    or tags where different subtag options directly impact how many expected arguments are provided
-    e.g. the coulomb-truncation or van-der-waals tags
+    This tag class should be used for tags that could have different types of 
+    input values given to them or tags where different subtag options directly 
+    impact how many expected arguments are provided e.g. the coulomb-truncation
+    or van-der-waals tags.
 
-    This class should not be used for tags with simply some combination of mandatory and optional args
-    because the TagContainer class can handle those cases by itself
+    This class should not be used for tags with simply some combination of 
+    mandatory and optional args because the TagContainer class can handle those
+    cases by itself.
     """
 
     format_options: list = None
@@ -571,14 +650,17 @@ class MultiformatTag(AbstractTag):
                 return trial_format.read(tag, value)
             except Exception as e:
                 problem_log.append(e)
-        errormsg = f"No valid read format for '{tag} {value}' tag\nAdd option to format_options or double-check the value string and retry!\n\n"
-        errormsg += "Here is the log of errors for each known formatting option:\n"
+        errormsg = f"No valid read format for '{tag} {value}' tag\nAdd option \
+            to format_options or double-check the value string and retry!\n\n"
+        errormsg += "Here is the log of errors for each known \
+            formatting option:\n"
         errormsg += "\n".join(
             [f"Format {x}: {problem_log[x]}" for x in range(len(problem_log))]
         )
         raise ValueError(errormsg)
 
-    def _determine_format_option(self, tag, value, try_auto_type_fix: bool = False):
+    def _determine_format_option(self, tag, value, 
+                                 try_auto_type_fix: bool = False):
         for i, format_option in enumerate(self.format_options):
             try:
                 # print(i, tag, value, format_option)
@@ -592,7 +674,8 @@ class MultiformatTag(AbstractTag):
                             f"{tag} option {i} is not it: validation failed"
                         )
                 elif not is_tag_valid:
-                    raise ValueError(f"{tag} option {i} is not it: validation failed")
+                    raise ValueError(f"{tag} option {i} is not it: validation \
+                                     failed")
 
                 # print('PASSED!', tag, value, 'option', i)
                 return i, value
@@ -606,4 +689,68 @@ class MultiformatTag(AbstractTag):
     def write(self, tag: str, value) -> str:
         format_index, _ = self._determine_format_option(tag, value)
         # print(f'using index of {format_index}')
-        return self.format_options[format_index]._write(tag, value)
+
+        # Ben: Changing _write to write, using _write seem to shoot you straight
+        # to the floor level definition, and completely messes up all the calls
+        # to subtags for how they're supposed to be printed and just prints
+        # a dictionary instead.
+        # Ben: Update: this fixes it.
+        return self.format_options[format_index].write(tag, value)
+        # return self.format_options[format_index]._write(tag, value)
+    
+
+
+@dataclass
+class BoolTagContainer(TagContainer):
+    def read(self, tag: str, value: str) -> dict:
+        value = value.split()
+        tempdict = {}
+        for subtag, subtag_type in self.subtags.items():
+            if subtag in value:
+                idx_start = value.index(subtag)
+                idx_end = idx_start + subtag_type.get_token_len()
+                subtag_value = " ".join(value[(idx_start + 1) : idx_end])
+                tempdict[subtag] = subtag_type.read(subtag, subtag_value)
+                del value[idx_start:idx_end]
+        subdict = {x: tempdict[x] for x in self.subtags if x in tempdict}
+        for subtag, subtag_type in self.subtags.items():
+            if not subtag_type.optional and subtag not in subdict:
+                raise ValueError(
+                    f"The {subtag} tag is not optional but was not populated \
+                        during the read!"
+                )
+        if len(value) > 0:
+            raise ValueError(
+                f"Something is wrong in the JDFTXInfile formatting, some \
+                    values were not processed: {value}"
+            )
+        return subdict
+
+
+@dataclass
+class DumpTagContainer(TagContainer):
+    def read(self, tag: str, value: str) -> dict:
+        value = value.split()
+        tempdict = {}
+        # Each subtag is a freq, which will be a BoolTagContainer
+        for subtag, subtag_type in self.subtags.items():
+            if subtag in value:
+                idx_start = value.index(subtag)
+                subtag_value = " ".join(value[(idx_start + 1) :])
+                tempdict[subtag] = subtag_type.read(subtag, subtag_value)
+                del value[idx_start:]
+        # reorder all tags to match order of __MASTER_TAG_LIST__ and do 
+        # coarse-grained validation of read
+        subdict = {x: tempdict[x] for x in self.subtags if x in tempdict}
+        for subtag, subtag_type in self.subtags.items():
+            if not subtag_type.optional and subtag not in subdict:
+                raise ValueError(
+                    f"The {subtag} tag is not optional but was not populated \
+                        during the read!"
+                )
+        if len(value) > 0:
+            raise ValueError(
+                f"Something is wrong in the JDFTXInfile formatting, some \
+                    values were not processed: {value}"
+            )
+        return subdict
