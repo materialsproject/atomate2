@@ -12,6 +12,7 @@ from abipy.flowtk.utils import abi_extensions
 from jobflow.core.job import job
 from monty.serialization import loadfn
 
+from atomate2 import SETTINGS
 from atomate2.abinit.utils.common import INDIR_NAME
 from atomate2.common.files import delete_files, gzip_files
 from atomate2.utils.file_client import FileClient, auto_fileclient
@@ -224,7 +225,7 @@ def write_anaddb_input_set(
 def del_gzip_files(
     output: list | OutputReference,
     exclude_files_from_zip: list[str | Path] | None = None,
-    to_del: bool = True,
+    delete: bool = True,
     exclude_files_from_del: list[str | Path] | None = None,
     include_files_to_del: list[str | Path] | None = None,
 ) -> None:
@@ -238,7 +239,7 @@ def del_gzip_files(
     exclude_files_from_zip
         Filenames to exclude from the compression.
         Supports glob file matching, e.g., "\*.dat".
-    to_del: bool = True,
+    delete: bool = True,
         Activates the deletion of the files or not.
     exclude_files_from_del
         Filenames to exclude from the compression.
@@ -267,18 +268,9 @@ def del_gzip_files(
     # to take its own directory into account
     recursiv_dirs_to_zip.append(Path(os.getcwd()))
 
-    if to_del:
+    if delete:
         if include_files_to_del is None:
-            include_files_to_del = [
-                "*WFK*",
-                "*1WF*",
-                "*EVK*",
-                "*EIG*",
-                "*DEN*",
-                "*OUT*",
-                "*POT*",
-                "*EBANDS*",
-            ]
+            include_files_to_del = SETTINGS.ABINIT_FILES_TO_DEL
         for dz in recursiv_dirs_to_zip:
             delete_files(
                 directory=strip_hostname(dz),

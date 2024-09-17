@@ -64,6 +64,7 @@ class ResponseMaker(BaseAbinitMaker):
         default_factory=lambda: {"files_to_store": ["DDB"]}
     )
     input_set_generator: AbinitInputGenerator
+    stop_jobflow_on_failure: bool = True
 
     CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
         ScfConvergenceWarning,
@@ -100,7 +101,7 @@ class ResponseMaker(BaseAbinitMaker):
             prev_outputs=prev_outputs,
             restart_from=restart_from,
             history=history,
-            stop_jobflow=True,
+            stop_jobflow=self.stop_jobflow_on_failure,
         )
 
 

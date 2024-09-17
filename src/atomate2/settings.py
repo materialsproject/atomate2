@@ -211,6 +211,12 @@ class Atomate2Settings(BaseSettings):
     ABINIT_MAX_RESTARTS: int = Field(
         5, description="Maximum number of restarts of a job."
     )
+    ABINIT_FILES_TO_DEL: list = Field(
+        ["*WFK*", "*1WF*", "*EVK*", "*EIG*", "*DEN*", "*OUT*", "*POT*", "*EBANDS*"],
+        description="Extension of the files deleted by \
+        'abinit.files.del_gzip_files'. \
+        An empty list should be provided to avoid removing any files.",
+    )
 
     model_config = SettingsConfigDict(env_prefix=_ENV_PREFIX)
 

@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Job, Maker
 from pymatgen.io.abinit.abiobjects import KSampling
 
+from atomate2.abinit.files import del_gzip_files
 from atomate2.abinit.jobs.base import BaseAbinitMaker
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def update_maker_kwargs(
@@ -263,3 +267,55 @@ def update_taskdoc(
     }
 
     return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
+
+
+def update_clean_flow(
+    flow: Job | Flow,
+    exclude_files_from_zip: list[str | Path] | None = None,
+    delete: bool = True,
+    exclude_files_from_del: list[str | Path] | None = None,
+    include_files_to_del: list[str | Path] | None = None,
+) -> Job | Flow | Maker:
+    r"""
+    Append a job to delete and/or compress files of the flow.
+
+    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
+    happen in place.
+
+    Parameters
+    ----------
+    flow : .Job or .Flow
+        A job, or flow.
+    exclude_files_from_zip
+        Filenames to exclude from the compression.
+        Supports glob file matching, e.g., "\*.dat".
+    delete: bool = True,
+        Activates the deletion of the files or not.
+    exclude_files_from_del
+        Filenames to exclude from the compression.
+        Supports glob file matching, e.g., "\*.dat".
+    include_files_to_del
+        Filenames to include as a list of str or Path objects given relative to
+        directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
+        in the directory will be deleted.
+
+    Returns
+    -------
+    Job or Flow
+        A copy of the input flow/job/maker modified to delete/compress files
+        once completed.
+    """
+    copied_flow = deepcopy(flow)
+    return Flow(
+        [
+            copied_flow,
+            del_gzip_files(
+                copied_flow.output,
+                exclude_files_from_zip=exclude_files_from_zip,
+                delete=delete,
+                exclude_files_from_del=exclude_files_from_del,
+                include_files_to_del=include_files_to_del,
+            ),
+        ],
+        output=copied_flow.output,
+    )

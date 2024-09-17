@@ -49,7 +49,7 @@ class DdeSetGenerator(StaticSetGenerator):
     )
     user_abinit_settings: dict = field(
         default_factory=lambda: {"irdddk": 1, "ird1wf": 0}
-    )
+    )  # TODO: find common solution if more jobs will need to set irdddk=1
 
 
 @dataclass

@@ -167,6 +167,8 @@ class BaseAbinitMaker(Maker):
         Keyword arguments that will get passed to :obj:`.run_abinit`.
     task_document_kwargs : dict[str, Any]
         Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_jobflow_on_failure : bool
+        If True, stop all other jobs of the flow. False by default.
     """
 
     input_set_generator: AbinitInputGenerator
@@ -174,6 +176,7 @@ class BaseAbinitMaker(Maker):
     wall_time: int | None = None
     run_abinit_kwargs: dict[str, Any] = field(default_factory=dict)
     task_document_kwargs: dict[str, Any] = field(default_factory=dict)
+    stop_jobflow_on_failure: bool = False
 
     # class variables
     CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = ()
@@ -194,7 +197,6 @@ class BaseAbinitMaker(Maker):
         prev_outputs: str | Path | list[str] | None = None,
         restart_from: str | Path | list[str] | None = None,
         history: JobHistory | None = None,
-        stop_jobflow: bool = False,
     ) -> jobflow.Job:
         """Get an ABINIT jobflow.Job.
 
@@ -250,7 +252,6 @@ class BaseAbinitMaker(Maker):
             history=config.history,
             max_restarts=SETTINGS.ABINIT_MAX_RESTARTS,
             prev_outputs=prev_outputs,
-            stop_jobflow=stop_jobflow,
         )
 
     def get_response(
@@ -259,7 +260,6 @@ class BaseAbinitMaker(Maker):
         history: JobHistory,
         max_restarts: int = 5,
         prev_outputs: str | tuple | list | Path | None = None,
-        stop_jobflow: bool = False,
     ) -> Response:
         """Get new job to restart abinit calculation."""
         if task_document.state == TaskState.SUCCESS:
@@ -279,7 +279,7 @@ class BaseAbinitMaker(Maker):
             return Response(
                 output=task_document,
                 stop_children=True,
-                stop_jobflow=stop_jobflow,
+                stop_jobflow=self.stop_jobflow_on_failure,
                 stored_data={"error": unconverged_error},
             )
 
