@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING, Callable
 
 from jobflow import Maker, Response, job
 
-if TYPE_CHECKING:
-    from atomate2.jdftx.sets.base import JdftxInputGenerator
+# if TYPE_CHECKING:
+from atomate2.jdftx.sets.base import JdftxInputGenerator
 from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (

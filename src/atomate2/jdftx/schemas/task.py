@@ -4,7 +4,7 @@
 
 import logging
 from pathlib import Path
-from typing import Any, Optional, TypeVar, Union, type
+from typing import Any, Optional, TypeVar, Union
 
 from custodian.jdftx.jobs import JDFTxJob  # Waiting on Sophie's PR
 from emmet.core.structure import StructureMetadata
@@ -17,7 +17,7 @@ from atomate2.jdftx.schemas.calculation import (
     CalculationOutput,
 )
 from atomate2.jdftx.schemas.enums import CalcType, JDFTxStatus, TaskType
-from atomate2.jdftx.files import FILE_NAMES
+from atomate2.jdftx.sets.base import FILE_NAMES
 from atomate2.utils.datetime import datetime_str
 
 __author__ = "Cooper Tezak <cooper.tezak@colorado.edu>"
