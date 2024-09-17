@@ -34,7 +34,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
-        split: [1, 2, 3, 4, 5]
+        split: [1, 2, 3]
 
     steps:
       - uses: actions/checkout@v4
@@ -78,7 +78,7 @@ jobs:
         # This helps prevent a test split having no tests to run, and then the GH action failing, see:
         # https://github.com/jerry-git/pytest-split/issues/95
         # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
-        run: pytest --splits 5 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --cov=atomate2 --cov-report=xml
+        run: pytest --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --cov=atomate2 --cov-report=xml
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
