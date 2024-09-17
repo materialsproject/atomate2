@@ -42,15 +42,4 @@ class MVLGWSetGenerator(MVLGWSet):
         dict
             A dictionary of updates to apply.
         """
-        updates = super().incar_updates
-        if self.mode == "DIAG":
-            # TODO: Update the values later
-            # Currently, custodian will raise VaspErrorHandler
-            # because it mistakenly thinks the calculation is not converged if NELM = 1
-            # So, I make NELM = 100 here but keep the density
-            # to be constant (ICHARG = 11).
-            updates["NELM"] = 100
-            updates["ICHARG"] = 11
-        elif self.mode == "GW":
-            updates["ICHARG"] = 1
-        return updates
+        return super().incar_updates
