@@ -1,6 +1,6 @@
 ALGO = Exact
 EDIFF = 1e-08
-ICHARG = 1
+ICHARG = 11
 ISMEAR = 0
 ISPIN = 1
 LOPTICS = True
