@@ -19,8 +19,8 @@ from emmet.core.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
-from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
+from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
+from atomate2.jdftx.io.jdftxoutfile import JDFTXOutfile
 
 functional_synonyms = {
     "b97mv": "b97m-v",

@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any
 from monty.serialization import loadfn
 from pymatgen.io.core import InputGenerator, InputSet
 
-from atomate2.jdftx.io.JDFTXInfile import (  # TODO update this to the pymatgen module
+from atomate2.jdftx.io.jdftxinfile import (  # TODO update this to the pymatgen module
     JDFTXInfile,
     JDFTXStructure,
 )
@@ -40,7 +40,7 @@ class JdftxInputSet(InputSet):
     def write_input(
         self,
         directory: str | Path,
-        infile: PathLike = "inputs.in",  # TODO I don't think this should be optional
+        infile: PathLike = "input.in",  # TODO I don't think this should be optional
         make_dir: bool = True,
         overwrite: bool = True,
     ) -> None:
@@ -61,7 +61,7 @@ class JdftxInputSet(InputSet):
 
         if not overwrite and (directory / infile).exists():
             raise FileExistsError(f"{directory / infile} already exists.")
-
+        print(directory)
         jdftxinput = condense_jdftxinputs(self.jdftxinput, self.jdftxstructure)
 
         jdftxinput.write_file(filename=(directory / infile))

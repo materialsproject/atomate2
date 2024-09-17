@@ -1206,6 +1206,7 @@ def get_dump_tag_container():
     dump_tag_container = DumpTagContainer(
         subtags=subtags, write_tagname=True, can_repeat=True
     )
+    print(dump_tag_container)
     return dump_tag_container
 
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 import pytest
@@ -12,7 +13,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger("atomate2")
 
-_JFILES = "init.in"
+_JFILES = "input.in"
 _REF_PATHS = {}
 _FAKE_RUN_JDFTX_KWARGS = {}
 
@@ -30,13 +31,6 @@ def mock_jdftx(monkeypatch, jdftx_test_dir):
     import atomate2.jdftx.jobs.base
     import atomate2.jdftx.run
     from atomate2.jdftx.sets.base import JdftxInputGenerator
-
-    def _run(ref_paths, fake_run_jdftx_kwargs=None): 
-        if fake_run_jdftx_kwargs is None:
-            fake_run_jdftx_kwargs = {}
-
-        _REF_PATHS.update(ref_paths)
-        _FAKE_RUN_JDFTX_KWARGS.update(fake_run_jdftx_kwargs)
             
     def mock_run_jdftx(*args, **kwargs):
         from jobflow import CURRENT_JOB   #attributes: jobflow.Job and jobflow.JobStore
@@ -44,16 +38,25 @@ def mock_jdftx(monkeypatch, jdftx_test_dir):
         name = CURRENT_JOB.job.name
         ref_path = jdftx_test_dir / _REF_PATHS[name]
         fake_run_jdftx(ref_path, **_FAKE_RUN_JDFTX_KWARGS.get(name, {}))
+        logger.info("mock_run called")
 
     get_input_set_orig = JdftxInputGenerator.get_input_set
 
     def mock_get_input_set(self, *args, **kwargs):
+        logger.info("mock_input called")
         return get_input_set_orig(self, *args, **kwargs)
 
     monkeypatch.setattr(atomate2.jdftx.run, "run_jdftx", mock_run_jdftx)
     monkeypatch.setattr(atomate2.jdftx.jobs.base, "run_jdftx", mock_run_jdftx)
     monkeypatch.setattr(JdftxInputGenerator, "get_input_set", mock_get_input_set)   
 
+    def _run(ref_paths, fake_run_jdftx_kwargs=None): 
+        if fake_run_jdftx_kwargs is None:
+            fake_run_jdftx_kwargs = {}
+
+        _REF_PATHS.update(ref_paths)
+        _FAKE_RUN_JDFTX_KWARGS.update(fake_run_jdftx_kwargs)
+        logger.info("_run passed")
     yield _run
 
     monkeypatch.undo()
@@ -81,6 +84,7 @@ def check_input():
     from atomate2.jdftx.io.inputs import JdftxInput
 
     def _check_input(ref_path, input_settings: Sequence[str] = (),):
+        logger.info("Checking inputs.")
         ref_input = JdftxInput.from_file(ref_path / "inputs" / "init.in")
         user_input = JdftxInput.from_file(zpath("init.in"))
      #   user_input.verbosity(verbosity=False)

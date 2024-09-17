@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.jdftx.jobs.base import BaseJdftxMaker
-from atomate2.jdftx.sets.core import BEASTSetGenerator
+from atomate2.jdftx.sets.core import RelaxSetGenerator
 
 if TYPE_CHECKING:
     from atomate2.jdftx.sets.base import JdftxInputGenerator
@@ -21,4 +21,4 @@ class RelaxMaker(BaseJdftxMaker):
     """Maker to create JDFTx ionic optimization job"""
 
     name: str = "relax"
-    input_set_generator: JdftxInputGenerator = field(default_factory=BEASTSetGenerator)
+    input_set_generator: JdftxInputGenerator = field(default_factory=RelaxSetGenerator)

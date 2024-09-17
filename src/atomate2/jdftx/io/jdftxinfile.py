@@ -112,6 +112,7 @@ class JDFTXInfile(dict, MSONable):
     def get_text_list(self) -> str:
         """Get a list of strings representation of the JDFTXInfile"""
         self_as_dict = self.get_dict_representation(self)
+        print("Keys:", self_as_dict.keys())
 
         text = []
         for tag_group in MASTER_TAG_LIST:

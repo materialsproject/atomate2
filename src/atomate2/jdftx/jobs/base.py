@@ -7,10 +7,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
 from jobflow import Maker, Response, job
+import logging
+logger = logging.getLogger(__name__)
+
+from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 if TYPE_CHECKING:
-    from atomate2.jdftx.sets.base import JdftxInputGenerator
-from pymatgen.core import Structure
+    from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
@@ -94,7 +97,6 @@ class BaseJdftxMaker(Maker):
     run_jdftx_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-    @jdftx_job
     def make(self, structure: Structure) -> Response:
         """Run a JDFTx calculation.
 
@@ -108,11 +110,13 @@ class BaseJdftxMaker(Maker):
             Response: A response object containing the output, detours and stop
                 commands of the JDFTx run.
         """
+        print(structure)
         # write jdftx input files
         write_jdftx_input_set(
             structure, self.input_set_generator, **self.write_input_set_kwargs
         )
-
+        logger.info("Wrote JDFTx input files.")
+        print("Wrote JDFTx input files.")
         # run jdftx
         run_jdftx(**self.run_jdftx_kwargs)
 
