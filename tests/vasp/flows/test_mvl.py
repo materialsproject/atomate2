@@ -47,4 +47,4 @@ def test_mvl_gw(mock_vasp, clean_dir, si_structure):
     assert output1.output.energy == pytest.approx(-10.22237938)
     assert output1.output.bandgap == pytest.approx(0.7161)
     assert output2.output.energy == pytest.approx(-10.22215331)
-    assert output3.output.bandgap == pytest.approx(1.3484999999999996)
+    assert output3.output.bandgap == pytest.approx(1.3486000000000002)
