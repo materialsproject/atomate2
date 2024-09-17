@@ -39,7 +39,7 @@ _INPUT_FILES = [
     "init.ionpos",
 ]
 
-# Output files. Partially from https://www.vasp.at/wiki/index.php/Category:Output_files
+# Output files.
 _OUTPUT_FILES = [  # TODO finish this list
     "output.out",
     "Ecomponents",

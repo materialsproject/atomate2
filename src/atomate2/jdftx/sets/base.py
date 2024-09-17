@@ -22,6 +22,10 @@ if TYPE_CHECKING:
 
 _BASE_JDFTX_SET = loadfn(get_mod_path("atomate2.jdftx.sets") / "BaseJdftxSet.yaml")
 
+FILE_NAMES = {
+    "in": "init.in",
+    "out": "jdftx.out"
+}
 
 class JdftxInputSet(InputSet):
     """
@@ -40,7 +44,7 @@ class JdftxInputSet(InputSet):
     def write_input(
         self,
         directory: str | Path,
-        infile: PathLike = "input.in",  # TODO I don't think this should be optional
+        infile: PathLike = FILE_NAMES["in"],
         make_dir: bool = True,
         overwrite: bool = True,
     ) -> None:
@@ -122,6 +126,7 @@ class JdftxInputGenerator(InputGenerator):
         """
         jdftx_structure = JDFTXStructure(structure)
         jdftxinputs = self.settings
+        print(jdftxinputs)
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
 
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftx_structure)
