@@ -1,3 +1,4 @@
+"""File operations and default JDFTx file names"""
 import logging
 
 # if TYPE_CHECKING:

@@ -48,30 +48,38 @@ symmetries: none
 ### Pseudopotential ###
 ion-species: GBRV_v1.5/$ID_pbe_v1.uspp
 
+# ### Output Files ###
+# dump-name: jdftx.$VAR
+# dump:
+#   - freq: End
+#     var: Dtot
+#   - freq: End
+#     var: BoundCharge
+#   - freq: End
+#     var: State
+#   - freq: End
+#     var: Forces
+#   - freq: End
+#     var: Ecomponents
+#   - freq: End
+#     var: VfluidTot
+#   - freq: End
+#     var: ElecDensity
+#   - freq: End
+#     var: KEdensity
+#   - freq: End
+#     var: EigStats
+#   - freq: End
+#     var: BandEigs
+#   - freq: End
+#     var: bandProjections
+#   - freq: End
+#     var: DOS
+
+
 ### Output Files ###
 dump-name: jdftx.$VAR
 dump:
-  - freq: End
-    var: Dtot
-  - freq: End
-    var: BoundCharge
-  - freq: End
-    var: State
-  - freq: End
-    var: Forces
-  - freq: End
-    var: Ecomponents
-  - freq: End
-    var: VfluidTot
-  - freq: End
-    var: ElecDensity
-  - freq: End
-    var: KEdensity
-  - freq: End
-    var: EigStats
-  - freq: End
-    var: BandEigs
-  - freq: End
-    var: bandProjections
-  - freq: End
-    var: DOS
+  - End: 
+      Dtot: True 
+      State: True

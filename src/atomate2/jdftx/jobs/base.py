@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING, Callable
 
 from jobflow import Maker, Response, job
 
-if TYPE_CHECKING:
-    from atomate2.jdftx.sets.base import JdftxInputGenerator
+# if TYPE_CHECKING:
+from atomate2.jdftx.sets.base import JdftxInputGenerator
 from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
@@ -36,7 +36,7 @@ _INPUT_FILES = [
     "init.ionpos",
 ]
 
-# Output files. Partially from https://www.vasp.at/wiki/index.php/Category:Output_files
+# Output files.
 _OUTPUT_FILES = [  # TODO finish this list
     "output.out",
     "Ecomponents",

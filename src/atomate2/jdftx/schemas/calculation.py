@@ -3,66 +3,34 @@
 # mypy: ignore-errors
 
 import logging
-import warnings
+from dataclasses import asdict
 from pathlib import Path
-from typing import Dict, Optional, Union
+from typing import Optional, Union
 
-from emmet.core.qchem.calc_types import CalcType, LevelOfTheory, TaskType
-from emmet.core.qchem.calc_types.calc_types import BASIS_SETS, FUNCTIONALS
-from emmet.core.utils import ValueEnum
-
-# from emmet.core.qchem.calc_types.em_utils import (
-#     level_of_theory,
-#     task_type,
-#     calc_type,
-# )
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
-from atomate2.jdftx.io.JDFTXOutfile import JDFTXOutfile
+from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
+from atomate2.jdftx.io.jdftxoutfile import JDFTXOutfile
+from atomate2.jdftx.schemas.enums import TaskType
 
-functional_synonyms = {
-    "b97mv": "b97m-v",
-    "b97mrv": "b97m-rv",
-    "wb97xd": "wb97x-d",
-    "wb97xd3": "wb97x-d3",
-    "wb97xv": "wb97x-v",
-    "wb97mv": "wb97m-v",
-}
-
-smd_synonyms = {
-    "DIELECTRIC=7,230;N=1,410;ALPHA=0,000;BETA=0,859;GAMMA=36,830;PHI=0,000;PSI=0,000": "diglyme",
-    "DIELECTRIC=18,500;N=1,415;ALPHA=0,000;BETA=0,735;GAMMA=20,200;PHI=0,000;PSI=0,000": "3:7 EC:EMC",
-}
-
-__author__ = "Rishabh D. Guha <rdguha@lbl.gov>"
+__author__ = "Cooper Tezak <cote3804@colorado.edu>"
 logger = logging.getLogger(__name__)
 
-# class QChemObject(ValueEnum):
-# Not sure but can we have something like GRAD and HESS
-# as QChem data objects
-
-
-class JDFTxStatus(ValueEnum):
-    """
-    JDFTx Calculation State
-    """
-
-    SUCCESS = "successful"
-    FAILED = "unsuccessful"
 
 
 class CalculationInput(BaseModel):
-    """
-    Document defining JDFTx calculation inputs.
-    """
+    """Document defining JDFTx calculation inputs."""
+
+    # TODO Break out parameters into more explicit dataclass
+    # fields.
+    # Waiting on parsers to be finished.
 
     structure: Structure = Field(
         None, description="input structure to JDFTx calcualtion"
     )
 
-    parameters: Dict = Field(None, description="input tags in JDFTx in file")
+    parameters: dict = Field(None, description="input tags in JDFTx in file")
 
     @classmethod
     def from_jdftxinput(cls, jdftxinput: JDFTXInfile) -> "CalculationInput":
@@ -88,15 +56,17 @@ class CalculationInput(BaseModel):
 class CalculationOutput(BaseModel):
     """Document defining JDFTx calculation outputs."""
 
+    # TODO Break out jdftxoutput into more dataclass fields instead of lumping
+    # everything into parameters.
+    # Waiting on parsers to be finished.
+
     structure: Optional[Structure] = Field(
         None,
         description="optimized geometry of the structure after calculation",
     )
-    parameters: Optional[Dict] = (
-        Field(  # TODO currently (I think) redundant with structure in these parameters
-            None,
-            description="Calculation input parameters",
-        )
+    parameters: Optional[dict] = Field(
+        None,
+        description="Calculation input parameters",
     )
 
     @classmethod
@@ -115,12 +85,19 @@ class CalculationOutput(BaseModel):
             The output document.
         """
         optimized_structure = jdftxoutput.structure
-        electronic_output = jdftxoutput.electronic_output
-
+        # jstrucs = jdftxoutput.jstrucs
+        # TODO write method on JoutStructures to get trajectory
+        # and handle optional storing of trajectory
+        jsettings_fluid = jdftxoutput.jsettings_fluid
+        jsettings_electronic = jdftxoutput.jsettings_electronic
+        jsettings_lattice = jdftxoutput.jsettings_lattice
+        jsettings_ionic = jdftxoutput.jsettings_ionic
         return cls(
             structure=optimized_structure,
-            Ecomponents=jdftxoutput.Ecomponents,
-            **electronic_output,
+            **asdict(jsettings_fluid),
+            **asdict(jsettings_electronic),
+            **asdict(jsettings_lattice),
+            **asdict(jsettings_ionic),
         )
 
 
@@ -142,11 +119,12 @@ class Calculation(BaseModel):
     # )
     # task_type: TaskType = Field(
     #     None,
-    #     description="Calculation task type like Single Point, Geometry Optimization. Frequency...",
+    #     description="Calculation task type like Single Point,
+    #       Geometry Optimization, Frequency...",
     # )
     # calc_type: Union[CalcType, str] = Field(
     #     None,
-    #     description="Combination dict of LOT + TaskType: B97-D/6-31g*/VACUUM Geometry Optimization",
+    #     description="Combination of calc type and task type",
     # )
     # completed_at: str = Field(
     #     None, description="Timestamp for when the calculation was completed"
@@ -154,10 +132,13 @@ class Calculation(BaseModel):
     # has_jdftx_completed: Union[JDFTxStatus, bool] = Field(
     #     None, description="Whether JDFTx calculated the calculation successfully"
     # )
-    # We'll only need this if we are using Custodian to do error handling and calculation resubmission
-    # output_file_paths: Dict[str, Union[str, Path, Dict[s tr, Path]]] = Field(
+    # We'll only need this if we are using Custodian
+    # to do error handling and calculation resubmission, which
+    # will create additional files and paths
+    # output_file_paths: dict[str, Union[str, Path, dict[s tr, Path]]] = Field(
     #     None,
-    #     description="Paths (relative to dir_name) of the QChem output files associated with this calculation",
+    #     description="Paths (relative to dir_name) of the
+    #       JDFTx output files associated with this calculation",
     # )
 
     @classmethod
@@ -166,8 +147,8 @@ class Calculation(BaseModel):
         dir_name: Union[Path, str],
         jdftxinput_file: Union[Path, str],
         jdftxoutput_file: Union[Path, str],
-        jdftxinput_kwargs: Optional[Dict] = None,
-        jdftxoutput_kwargs: Optional[Dict] = None,
+        jdftxinput_kwargs: Optional[dict] = None,
+        jdftxoutput_kwargs: Optional[dict] = None,
         # task_name  # do we need task names? These are created by Custodian
     ) -> "Calculation":
         """
@@ -182,9 +163,11 @@ class Calculation(BaseModel):
         jdftxoutput_file
             Path to the JDFTx out file relative to dir_name.
         jdftxinput_kwargs
-            Additional keyword arguments that will be passed to the :obj:`.JDFTXInFile.from_file` method
+            Additional keyword arguments that will be passed to the
+            :obj:`.JDFTXInFile.from_file` method
         jdftxoutput_kwargs
-            Additional keyword arguments that will be passed to the :obj:`.JDFTXOutFile.from_file` method
+            Additional keyword arguments that will be passed to the
+            :obj:`.JDFTXOutFile.from_file` method
 
         Returns
         -------
@@ -228,213 +211,48 @@ class Calculation(BaseModel):
         )
 
 
-def level_of_theory(
-    parameters: CalculationInput, validate_lot: bool = True
-) -> LevelOfTheory:
-    """
+# def solvent(
+#     parameters: CalculationInput,
+#     validate_lot: bool = True,
+#     custom_smd: Optional[str] = None,
+# ) -> str:
+#     """
+#     Return the solvent used for this calculation.
 
-    Returns the level of theory for a calculation,
-    based on the input parameters given to Q-Chem
-
-    Args:
-        parameters: Dict of Q-Chem input parameters
-
-    """
-    funct_raw = parameters.rem.get("method")
-    basis_raw = parameters.rem.get("basis")
-
-    if funct_raw is None or basis_raw is None:
-        raise ValueError(
-            'Method and basis must be included in "rem" section ' "of parameters!"
-        )
-
-    disp_corr = parameters.rem.get("dft_d")
-
-    if disp_corr is None:
-        funct_lower = funct_raw.lower()
-        funct_lower = functional_synonyms.get(funct_lower, funct_lower)
-    else:
-        # Replace Q-Chem terms for D3 tails with more common expressions
-        disp_corr = disp_corr.replace("_bj", "(bj)").replace("_zero", "(0)")
-        funct_lower = f"{funct_raw}-{disp_corr}"
-
-    basis_lower = basis_raw.lower()
-
-    solvent_method = parameters.rem.get("solvent_method", "").lower()
-
-    if solvent_method == "":
-        solvation = "VACUUM"
-    elif solvent_method in ["pcm", "cosmo"]:
-        solvation = "PCM"
-    # TODO: Add this once added into pymatgen and atomate
-    # elif solvent_method == "isosvp":
-    #     if parameters.get("svp", {}).get("idefesr", 0):
-    #         solvation = "CMIRS"
-    #     else:
-    #         solvation = "ISOSVP"
-    elif solvent_method == "smd":
-        solvation = "SMD"
-    else:
-        raise ValueError(f"Unexpected implicit solvent method {solvent_method}!")
-
-    if validate_lot:
-        functional = [f for f in FUNCTIONALS if f.lower() == funct_lower]
-        if not functional:
-            raise ValueError(f"Unexpected functional {funct_lower}!")
-
-        functional = functional[0]
-
-        basis = [b for b in BASIS_SETS if b.lower() == basis_lower]
-        if not basis:
-            raise ValueError(f"Unexpected basis set {basis_lower}!")
-
-        basis = basis[0]
-
-        lot = f"{functional}/{basis}/{solvation}"
-
-        return LevelOfTheory(lot)
-    warnings.warn(
-        "User has turned the validate flag off."
-        "This can have downstream effects if the chosen functional and basis "
-        "is not in the available sets of MP employed functionals and the user"
-        "wants to include the TaskDoc in the MP infrastructure."
-        "Users should ignore this warning if their objective is just to create TaskDocs",
-        UserWarning,
-        stacklevel=2,
-    )
-    functional = funct_lower
-    basis = basis_lower
-    lot = f"{functional}/{basis}/{solvation}"
-
-    return lot
-
-
-def solvent(
-    parameters: CalculationInput,
-    validate_lot: bool = True,
-    custom_smd: Optional[str] = None,
-) -> str:
-    """
-    Returns the solvent used for this calculation.
-
-    Args:
-        parameters: Dict of Q-Chem input parameters
-        custom_smd: (Optional) string representing SMD parameters for a
-        non-standard solvent
-    """
-    lot = level_of_theory(parameters, validate_lot=validate_lot)
-    if validate_lot:
-        solvation = lot.value.split("/")[-1]
-    else:
-        solvation = lot.split("/")[-1]
-
-    if solvation == "PCM":
-        # dielectric = float(parameters.get("solvent", {}).get("dielectric", 78.39))
-        # dielectric = float(parameters.get("solvent", {}))
-        # dielectric = getattr(parameters, "solvent", None)
-        # dielectric_string = f"{dielectric.get('dielectric', '0.0'):.2f}".replace(".", ",")
-        dielectric_string = getattr(parameters, "solvent", None)
-        return f"DIELECTRIC= {dielectric_string}"
-    # TODO: Add this once added into pymatgen and atomate
-    # elif solvation == "ISOSVP":
-    #     dielectric = float(parameters.get("svp", {}).get("dielst", 78.39))
-    #     rho = float(parameters.get("svp", {}).get("rhoiso", 0.001))
-    #     return f"DIELECTRIC={round(dielectric, 2)},RHO={round(rho, 4)}"
-    # elif solvation == "CMIRS":
-    #     dielectric = float(parameters.get("svp", {}).get("dielst", 78.39))
-    #     rho = float(parameters.get("svp", {}).get("rhoiso", 0.001))
-    #     a = parameters.get("pcm_nonels", {}).get("a")
-    #     b = parameters.get("pcm_nonels", {}).get("b")
-    #     c = parameters.get("pcm_nonels", {}).get("c")
-    #     d = parameters.get("pcm_nonels", {}).get("d")
-    #     solvrho = parameters.get("pcm_nonels", {}).get("solvrho")
-    #     gamma = parameters.get("pcm_nonels", {}).get("gamma")
-    #
-    #     string = f"DIELECTRIC={round(dielectric, 2)},RHO={round(rho, 4)}"
-    #     for name, (piece, digits) in {"A": (a, 6), "B": (b, 6), "C": (c, 1), "D": (d, 3),
-    #                                   "SOLVRHO": (solvrho, 2), "GAMMA": (gamma, 1)}.items():
-    #         if piece is None:
-    #             piecestring = "NONE"
-    #         else:
-    #             piecestring = f"{name}={round(float(piece), digits)}"
-    #         string += "," + piecestring
-    #     return string
-    if solvation == "SMD":
-        solvent = parameters.smx.get("solvent", "water")
-        if solvent == "other":
-            if custom_smd is None:
-                raise ValueError(
-                    "SMD calculation with solvent=other requires custom_smd!"
-                )
-
-            names = ["DIELECTRIC", "N", "ALPHA", "BETA", "GAMMA", "PHI", "PSI"]
-            numbers = [float(x) for x in custom_smd.split(",")]
-
-            string = ""
-            for name, number in zip(names, numbers):
-                string += f"{name}={number:.3f};"
-            return string.rstrip(",").rstrip(";").replace(".", ",")
-        return f"SOLVENT={solvent.upper()}"
-    return "NONE"
-
-
-def lot_solvent_string(
-    parameters: CalculationInput,
-    validate_lot: bool = True,
-    custom_smd: Optional[str] = None,
-) -> str:
-    """
-    Returns a string representation of the level of theory and solvent used for this calculation.
-
-    Args:
-        parameters: Dict of Q-Chem input parameters
-        custom_smd: (Optional) string representing SMD parameters for a
-        non-standard solvent
-    """
-    if validate_lot:
-        lot = level_of_theory(parameters, validate_lot=validate_lot).value
-    else:
-        lot = level_of_theory(parameters, validate_lot=validate_lot)
-    solv = solvent(parameters, custom_smd=custom_smd, validate_lot=validate_lot)
-    return f"{lot}({solv})"
+#     Args:
+#         parameters: dict of Q-Chem input parameters
+#         custom_smd: (Optional) string representing SMD parameters for a
+#         non-standard solvent
+#     """
+# TODO adapt this for JDFTx
 
 
 def task_type(
-    parameters: CalculationInput, special_run_type: Optional[str] = None
+    parameters: CalculationInput,
 ) -> TaskType:
-    if special_run_type == "frequency_flattener":
-        return TaskType("Frequency Flattening Geometry Optimization")
-    if special_run_type == "ts_frequency_flattener":
-        return TaskType("Frequency Flattening Transition State Geometry Optimization")
-
+    """Return TaskType for JDFTx calculation."""
     if parameters.job_type == "sp":
         return TaskType("Single Point")
-    if parameters.job_type == "force":
-        return TaskType("Force")
     if parameters.job_type == "opt":
         return TaskType("Geometry Optimization")
-    if parameters.job_type == "ts":
-        return TaskType("Transition State Geometry Optimization")
     if parameters.job_type == "freq":
-        return TaskType("Frequency Analysis")
+        return TaskType("Frequency")
+    if parameters.job_type == "md":
+        return TaskType("Molecular Dynamics")
 
     return TaskType("Unknown")
 
 
-def calc_type(
-    parameters: CalculationInput,
-    validate_lot: bool = True,
-    special_run_type: Optional[str] = None,
-) -> CalcType:
-    """
-    Determines the calc type
+# def calc_type(
+#     parameters: CalculationInput,
+#     validate_lot: bool = True,
+#     special_run_type: Optional[str] = None,
+# ) -> CalcType:
+#     """
+#     Determine the calc type.
 
-    Args:
-        parameters: CalculationInput parameters
-    """
-    tt = task_type(parameters, special_run_type=special_run_type).value
-    if validate_lot:
-        rt = level_of_theory(parameters, validate_lot=validate_lot).value
-        return CalcType(f"{rt} {tt}")
-    rt = level_of_theory(parameters, validate_lot=validate_lot)
-    return str(f"{rt} {tt}")
+#     Args:
+#         parameters: CalculationInput parameters
+#     """
+#     pass
+# TODO implement this
