@@ -42,7 +42,7 @@ MASTER_TAG_LIST = {
                 "s2": FloatTag(write_tagname=False, optional=False),
             },
         ),
-        "coords-type": StrTag(options=["Cartesian", "Lattice"]),
+        "coords-type": StrTag(options=["Cartesian", "Lattice", "cartesian", "lattice"]),
         # TODO: change lattice tag into MultiformatTag for different 
         # symmetry options
         "lattice": TagContainer(
@@ -1206,7 +1206,7 @@ def get_dump_tag_container():
     dump_tag_container = DumpTagContainer(
         subtags=subtags, write_tagname=True, can_repeat=True
     )
-    print(dump_tag_container)
+    
     return dump_tag_container
 
 

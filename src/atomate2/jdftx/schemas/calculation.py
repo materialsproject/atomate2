@@ -88,16 +88,21 @@ class CalculationOutput(BaseModel):
         # jstrucs = jdftxoutput.jstrucs
         # TODO write method on JoutStructures to get trajectory
         # and handle optional storing of trajectory
-        jsettings_fluid = jdftxoutput.jsettings_fluid
-        jsettings_electronic = jdftxoutput.jsettings_electronic
-        jsettings_lattice = jdftxoutput.jsettings_lattice
-        jsettings_ionic = jdftxoutput.jsettings_ionic
+        fluid_settings = jdftxoutput.jsettings_fluid
+        electronic_settings = jdftxoutput.jsettings_electronic
+        lattice_settings = jdftxoutput.jsettings_lattice
+        ionic_settings = jdftxoutput.jsettings_ionic
+
+        parameters = {
+            "fluid_settings": fluid_settings,
+            "electronic_settings": electronic_settings,
+            "lattice_settings": lattice_settings,
+            "ionic_settings": ionic_settings,
+        }
+
         return cls(
             structure=optimized_structure,
-            **asdict(jsettings_fluid),
-            **asdict(jsettings_electronic),
-            **asdict(jsettings_lattice),
-            **asdict(jsettings_ionic),
+            parameters=parameters
         )
 
 
@@ -152,7 +157,7 @@ class Calculation(BaseModel):
         # task_name  # do we need task names? These are created by Custodian
     ) -> "Calculation":
         """
-        Create a QChem calculation document from a directory and file paths.
+        Create a JDFTx calculation document from a directory and file paths.
 
         Parameters
         ----------
@@ -174,7 +179,6 @@ class Calculation(BaseModel):
         Calculation
             A JDFTx calculation document.
         """
-        dir_name = Path(dir_name)
         jdftxinput_file = dir_name / jdftxinput_file
         jdftxoutput_file = dir_name / jdftxoutput_file
 
@@ -183,7 +187,6 @@ class Calculation(BaseModel):
 
         jdftxoutput_kwargs = jdftxoutput_kwargs if jdftxoutput_kwargs else {}
         jdftxoutput = JDFTXOutfile.from_file(jdftxoutput_file, **jdftxoutput_kwargs)
-
         # completed_at = str(datetime.fromtimestamp(qcoutput_file.stat().st_mtime))
         # TODO parse times from JDFTx out file and implement them here
 

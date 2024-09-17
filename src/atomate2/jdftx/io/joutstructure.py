@@ -237,6 +237,9 @@ class JOutStructure(Structure):
             if "G:" in line:
                 etype = "G"
                 break
+            if "Etot:" in line:
+                etype = "Etot"
+                break
         return etype
 
     def set_etype_from_emin_lines(self, emin_lines: list[str]) -> None:

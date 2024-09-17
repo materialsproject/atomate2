@@ -116,7 +116,6 @@ class BaseJdftxMaker(Maker):
             structure, self.input_set_generator, **self.write_input_set_kwargs
         )
         logger.info("Wrote JDFTx input files.")
-        print("Wrote JDFTx input files.")
         # run jdftx
         run_jdftx(**self.run_jdftx_kwargs)
 
@@ -125,9 +124,11 @@ class BaseJdftxMaker(Maker):
 
         stop_children = should_stop_children(task_doc)
 
+
+
         return Response(
             stop_children=stop_children,
-            stored_data={"custodian": task_doc.custodian},
+            stored_data={},
             output=task_doc,
         )
 

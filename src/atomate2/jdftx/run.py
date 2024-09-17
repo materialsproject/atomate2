@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from atomate2.jdftx.jobs import JDFTxJob
+from custodian.jdftx.jobs import JDFTxJob
 from jobflow.utils import ValueEnum
 
 from atomate2 import SETTINGS

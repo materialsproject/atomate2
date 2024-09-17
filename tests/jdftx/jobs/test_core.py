@@ -8,11 +8,9 @@ from atomate2.jdftx.jobs.base import BaseJdftxMaker
 
 #@patch('atomate2.jdftx.jobs.base.BaseJdftxMaker.make')
 #@patch('atomate2.jdftx.jobs.base.write_jdftx_input_set')
-def test_static_maker(mock_jdftx, si_structure):
-    import os
+def test_static_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames):
 
-
-    ref_paths = {}
+    ref_paths = {"relax": "default_test"}
 
     fake_run_jdftx_kwargs = {}
 
@@ -23,7 +21,8 @@ def test_static_maker(mock_jdftx, si_structure):
 
     job = maker.make(si_structure)
 
- #   MockMake.assert_called_once()
- #   MockWrite.assert_called_once()
+    #responses = run_locally(job, create_folders=True, ensure_success=True)
+
+    
 
 

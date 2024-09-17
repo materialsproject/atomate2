@@ -124,6 +124,7 @@ class TaskDoc(StructureMetadata):
             # state=_get_state()
         )
 
+        print(doc.calc_outputs.__dict__)
         doc = doc.model_copy(update=additional_fields)
         return doc
 

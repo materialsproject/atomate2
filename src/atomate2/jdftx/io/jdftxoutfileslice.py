@@ -484,16 +484,25 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         if prefix is not None:
             _prefix = f"{prefix}."
         line = find_key(f"Dumping '{_prefix}eigStats' ...", text)
+        #if line is None:
+        #    raise ValueError(
+        #        'Must run DFT job with "dump End EigStats" to get summary gap information!'
+        #    )
         if line is None:
-            raise ValueError(
-                'Must run DFT job with "dump End EigStats" to get summary gap information!'
-            )
-        varsdict["emin"] = float(text[line + 1].split()[1]) * Ha_to_eV
-        varsdict["homo"] = float(text[line + 2].split()[1]) * Ha_to_eV
-        varsdict["efermi"] = float(text[line + 3].split()[2]) * Ha_to_eV
-        varsdict["lumo"] = float(text[line + 4].split()[1]) * Ha_to_eV
-        varsdict["emax"] = float(text[line + 5].split()[1]) * Ha_to_eV
-        varsdict["egap"] = float(text[line + 6].split()[2]) * Ha_to_eV
+            varsdict["emin"] = None
+            varsdict["homo"] = None
+            varsdict["efermi"] = None
+            varsdict["lumo"] = None
+            varsdict["emax"] = None
+            varsdict["egap"] = None
+        else:
+
+            varsdict["emin"] = float(text[line + 1].split()[1]) * Ha_to_eV
+            varsdict["homo"] = float(text[line + 2].split()[1]) * Ha_to_eV
+            varsdict["efermi"] = float(text[line + 3].split()[2]) * Ha_to_eV
+            varsdict["lumo"] = float(text[line + 4].split()[1]) * Ha_to_eV
+            varsdict["emax"] = float(text[line + 5].split()[1]) * Ha_to_eV
+            varsdict["egap"] = float(text[line + 6].split()[2]) * Ha_to_eV
         return varsdict
 
     def _set_eigvars(self, text: list[str]) -> None:

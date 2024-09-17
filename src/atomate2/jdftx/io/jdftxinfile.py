@@ -112,14 +112,11 @@ class JDFTXInfile(dict, MSONable):
     def get_text_list(self) -> str:
         """Get a list of strings representation of the JDFTXInfile"""
         self_as_dict = self.get_dict_representation(self)
-        print("Keys:", self_as_dict.keys())
 
         text = []
         for tag_group in MASTER_TAG_LIST:
             added_tag_in_group = False
             for tag in MASTER_TAG_LIST[tag_group]:
-                if tag == "fluid-solvent":
-                    print("here")
                 if tag not in self:
                     continue
                 if tag in __WANNIER_TAGS__:
@@ -167,6 +164,7 @@ class JDFTXInfile(dict, MSONable):
         -------
             JDFTXInfile object
         """
+
         path_parent = None
         if assign_path_parent:
             path_parent = Path(filename).parents[0]
@@ -260,8 +258,8 @@ class JDFTXInfile(dict, MSONable):
         """
         return a pymatgen Structure object
         """
-        jdftstructure = self.to_pmg_structure()
-        structure = jdftstructure.structure
+        jdftstructure = self.to_pmg_structure(self)
+        structure = jdftstructure
         return structure
 
     @classmethod
