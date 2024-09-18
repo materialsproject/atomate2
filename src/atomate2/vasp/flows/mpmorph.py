@@ -84,7 +84,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
         md_maker: Maker = BaseMPMorphMDMaker,
         n_steps_per_production_run: int | None = None,
         quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None,
-    ) -> Self:
+    ) -> MPMorphVaspMDMaker:
         """
         Create VASP MPMorph flow from a temperature and number of steps.
 
@@ -113,12 +113,15 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
         end_temp = end_temp or temperature
 
         conv_md_maker = update_user_incar_settings(
-            flow=md_maker(name="Convergence MPMorph VASP MD Maker"),
+            flow=md_maker(),
             incar_updates={
                 "TEBEG": temperature,
                 "TEEND": temperature,
                 "NSW": n_steps_convergence,
             },
+        )
+        conv_md_maker = conv_md_maker.update_kwargs(
+            update={"name": "Convergence MPMorph VASP MD Maker"}
         )
 
         convergence_md_maker = EquilibriumVolumeMaker(
@@ -134,12 +137,16 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
             )
 
         production_md_maker = update_user_incar_settings(
-            flow=md_maker(name="Production MPMorph VASP MD Maker"),
+            flow=md_maker(),
             incar_updates={
                 "TEBEG": temperature,
-                "TEEND": end_temp,
-                "NSW": n_steps_per_production_run,
+                "TEEND": temperature,
+                "NSW": n_steps_convergence,
             },
+        )
+
+        production_md_maker = production_md_maker.update_kwargs(
+            update={"name": "Production MPMorph VASP MD Maker"}
         )
 
         if n_production_runs > 1:
