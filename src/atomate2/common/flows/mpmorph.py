@@ -285,7 +285,7 @@ class MPMorphMDMaker(Maker):
         )
 
     @classmethod
-    def from_temperature_and_nsteps(
+    def from_temperature_and_steps(
         cls,
         temperature: float,
         n_steps_convergence: int = 5000,
