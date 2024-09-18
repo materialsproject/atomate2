@@ -55,6 +55,8 @@ def fname2ext(filepath: Path | str) -> None | str:
     ext = filename.split("_")[-1].replace(".nc", "")
     if "1WF" in ext:
         ext = "1WF"
+    if "DEN" in ext and isinstance(int(ext[-1]), int):
+        ext = "1DEN"
     if ext not in ALL_ABIEXTS:
         return None
     return ext
@@ -261,27 +263,28 @@ def del_gzip_files(
             dirs_to_zip.append(o["dir_name"])  # to zip run_rf and generate_perts
 
     recursiv_dirs_to_zip = []
-    for dz in dirs_to_zip:
+    for dz_ in dirs_to_zip:
+        dz = strip_hostname(dz_)
         recursiv_dirs_to_zip.append(Path(dz))
-        for root, dirs, _ in os.walk(dz):
-            recursiv_dirs_to_zip.extend([Path(root) / d for d in dirs])
+        for root, _, _ in os.walk(dz):
+            recursiv_dirs_to_zip.append(Path(root))
     # to take its own directory into account
     recursiv_dirs_to_zip.append(Path(os.getcwd()))
 
     if delete:
         if include_files_to_del is None:
             include_files_to_del = SETTINGS.ABINIT_FILES_TO_DEL
-        for dz in recursiv_dirs_to_zip:
+        for d in recursiv_dirs_to_zip:
             delete_files(
-                directory=strip_hostname(dz),
+                directory=strip_hostname(d),
                 include_files=include_files_to_del,
                 exclude_files=exclude_files_from_del,
                 allow_missing=True,
             )
 
-    for dz in recursiv_dirs_to_zip:
+    for d in recursiv_dirs_to_zip:
         gzip_files(
-            directory=strip_hostname(dz),
+            directory=strip_hostname(d),
             exclude_files=exclude_files_from_zip,
             force=True,
         )
