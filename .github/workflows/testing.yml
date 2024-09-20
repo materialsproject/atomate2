@@ -62,7 +62,7 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,tests,abinit,classical_md]
+          uv pip install .[strict,tests,abinit]
           uv pip install torch-runstats
           uv pip install --no-deps nequip==0.5.6
 
