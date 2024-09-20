@@ -82,7 +82,7 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest --cov=atomate2 --cov-report=xml --ignore=tests/openff_md --ignore=tests/openmm_md
+          pytest --cov=atomate2 --cov-report=xml
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
