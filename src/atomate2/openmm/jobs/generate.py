@@ -314,7 +314,7 @@ def generate_openmm_interchange(
         dir_name=str(dir_name),
         state=TaskState.SUCCESS,
         interchange=interchange_json,
-        interchange_meta=mol_specs,
+        mol_specs=mol_specs,
         force_field="opls",  # TODO: change to flexible value
         tags=tags,
     )

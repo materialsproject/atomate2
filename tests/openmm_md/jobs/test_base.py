@@ -214,4 +214,4 @@ def test_make_from_prev(run_job):
 
     task_doc = run_job(Flow([inter_job, base_job]))
 
-    assert task_doc.interchange_meta is not None
+    assert task_doc.mol_specs is not None

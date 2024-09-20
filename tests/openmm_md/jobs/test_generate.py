@@ -105,7 +105,7 @@ def test_generate_openmm_interchange(openmm_data, run_job):
         mol_specs, 1.0, ff_xmls, xml_method_and_scaling=("cm1a-lbcc", 1.14)
     )
     task_doc = run_job(job)
-    molecule_specs = task_doc.interchange_meta
+    molecule_specs = task_doc.mol_specs
     assert len(molecule_specs) == 2
     assert molecule_specs[0].name == "ethanol"
     assert molecule_specs[0].count == 10
@@ -147,7 +147,7 @@ def test_make_from_prev(openmm_data, run_job):
 
     task_doc = run_job(Flow([inter_job, base_job]))
 
-    assert task_doc.interchange_meta is not None
+    assert task_doc.mol_specs is not None
 
 
 def test_evolve_simulation(openmm_data, run_job):
@@ -165,7 +165,7 @@ def test_evolve_simulation(openmm_data, run_job):
     task_doc = run_job(inter_job)
 
     # test that opls charges are not being used
-    co = tk.Molecule.from_json(task_doc.interchange_meta[1].openff_mol)
+    co = tk.Molecule.from_json(task_doc.mol_specs[1].openff_mol)
     assert not np.allclose(
         co.partial_charges.magnitude,
         np.array([-0.5873, -0.0492, 0.0768, 0.0768, 0.4061, 0.0768]),  # from file

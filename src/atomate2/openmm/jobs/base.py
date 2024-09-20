@@ -571,7 +571,7 @@ class BaseOpenMMMaker(Maker):
             state="successful",
             calcs_reversed=[calc],
             interchange=interchange_json,
-            interchange_meta=prev_task.interchange_meta,
+            mol_specs=prev_task.mol_specs,
             force_field=prev_task.force_field,
             task_name=calc.task_name,
             task_type="test",
