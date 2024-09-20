@@ -21,7 +21,8 @@ from jobflow import Maker, Response, job
 from mdareporter.mdareporter import MDAReporter
 from openmm import Integrator, LangevinMiddleIntegrator, Platform, XmlSerializer
 from openmm.app import StateDataReporter
-from openmm.unit import kelvin, picoseconds
+from openmm.unit import angstrom, kelvin, picoseconds
+from pymatgen.core import Structure
 
 from atomate2.openmm.utils import increment_name, task_reports
 
@@ -64,6 +65,7 @@ OPENMM_MAKER_DEFAULTS = {
     "traj_file_name": "trajectory",
     "traj_file_type": "dcd",
     "embed_traj": False,
+    "save_structure": False,
 }
 
 
@@ -154,6 +156,10 @@ class BaseOpenMMMaker(Maker):
     traj_file_type : Optional[str]
         The type of trajectory file to save. Supports any output format
         supported by MDAnalysis.
+    embed_traj : Optional[bool]
+        Whether to embed the trajectory in the task document.
+    save_structure : Optional[bool]
+        Whether to save the final structure in the task document.
     """
 
     name: str = "base openmm job"
@@ -172,6 +178,7 @@ class BaseOpenMMMaker(Maker):
     traj_file_name: str | None = field(default=None)
     traj_file_type: str | None = field(default=None)
     embed_traj: bool | None = field(default=None)
+    save_structure: bool | None = field(default=None)
 
     @openmm_job
     def make(
@@ -218,17 +225,20 @@ class BaseOpenMMMaker(Maker):
 
         self._update_interchange(interchange, sim, prev_task)
 
+        structure = self._create_structure(sim, prev_task)
+
+        task_doc = self._create_task_doc(
+            interchange, structure, elapsed_time, dir_name, prev_task
+        )
+
         # leaving the MDAReporter makes the builders fail
         for _ in range(len(sim.reporters)):
             reporter = sim.reporters.pop()
             del reporter
         del sim
 
-        task_doc = self._create_task_doc(interchange, elapsed_time, dir_name, prev_task)
-
         # write out task_doc json to output dir
-        with open(dir_name / "taskdoc.json", "w") as file:
-            file.write(task_doc.json())
+        self._write_task_doc(task_doc, dir_name)
 
         return Response(output=task_doc)
 
@@ -509,9 +519,36 @@ class BaseOpenMMMaker(Maker):
         elif isinstance(interchange, OpenMMInterchange):
             interchange.state = XmlSerializer.serialize(state)
 
+    def _create_structure(
+        self, sim: Simulation, prev_task: OpenMMTaskDocument | None = None
+    ) -> Structure | None:
+        """Create a pymatgen Structure from the OpenMM simulation.
+
+        Parameters
+        ----------
+        sim : Simulation
+            The OpenMM simulation object.
+        """
+        if not self._resolve_attr("save_structure", prev_task):
+            return None
+
+        state = sim.context.getState(
+            getPositions=True,
+            getVelocities=True,
+            enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
+        )
+
+        return Structure(
+            lattice=state.getPeriodicBoxVectors(asNumpy=True).value_in_unit(angstrom),
+            species=[atom.element.symbol for atom in sim.topology.atoms()],
+            coords=state.getPositions(asNumpy=True).value_in_unit(angstrom),
+            coords_are_cartesian=True,
+        )
+
     def _create_task_doc(
         self,
         interchange: Interchange | OpenMMInterchange,
+        structure: Structure | None,
         elapsed_time: float | None = None,
         dir_name: Path | None = None,
         prev_task: OpenMMTaskDocument | None = None,
@@ -525,6 +562,8 @@ class BaseOpenMMMaker(Maker):
         ----------
         interchange : Interchange
             The updated Interchange object.
+        structure : Structure
+            The final structure of the simulation.
         elapsed_time : Optional[float]
             The elapsed time of the simulation. Default is None.
         dir_name : Optional[Path]
@@ -572,8 +611,18 @@ class BaseOpenMMMaker(Maker):
             calcs_reversed=[calc],
             interchange=interchange_json,
             mol_specs=prev_task.mol_specs,
+            structure=structure,
             force_field=prev_task.force_field,
             task_name=calc.task_name,
             task_type="test",
             last_updated=datetime.now(tz=timezone.utc),
         )
+
+    def _write_task_doc(self, task_doc: OpenMMTaskDocument, dir_name: Path) -> None:
+        # write out task_doc json to output dir
+        with open(dir_name / "taskdoc.json", "w") as file:
+            task_doc = copy.deepcopy(task_doc)
+            task_doc.structure = (
+                None if not task_doc.structure else task_doc.structure.to_json()
+            )
+            file.write(task_doc.json())

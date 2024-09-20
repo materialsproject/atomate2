@@ -9,6 +9,7 @@ from mdareporter import MDAReporter
 from openmm.app import Simulation, StateDataReporter
 from openmm.openmm import LangevinMiddleIntegrator
 from openmm.unit import kelvin, picoseconds
+from pymatgen.core import Structure
 
 from atomate2.openff.core import generate_interchange
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
@@ -94,6 +95,7 @@ def test_create_task_doc(interchange, tmp_path):
 
     task_doc = maker._create_task_doc(  # noqa: SLF001
         interchange,
+        None,
         elapsed_time=10.5,
         dir_name=dir_name,
     )
@@ -117,6 +119,7 @@ def test_make(interchange, tmp_path, run_job):
         traj_interval=50,
         temperature=300,
         friction_coefficient=1,
+        save_structure=True,
     )
 
     # monkey patch to allow running the test without openmm
@@ -137,6 +140,7 @@ def test_make(interchange, tmp_path, run_job):
     assert task_doc.state == "successful"
     # assert task_doc.dir_name == str(tmp_path)
     assert len(task_doc.calcs_reversed) == 1
+    assert isinstance(task_doc.structure, Structure)
 
     # Assert the calculation details
     calc = task_doc.calcs_reversed[0]
