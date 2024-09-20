@@ -14,6 +14,7 @@ from atomate2.common.schemas.gruneisen import (
     PhononRunsImaginaryModes,
 )
 from atomate2.forcefields.flows.gruneisen import GruneisenMaker
+from atomate2.forcefields.flows.phonons import PhononMaker
 
 
 def test_gruneisen_wf_ff(clean_dir, si_structure: Structure, tmp_path: Path):
@@ -23,6 +24,12 @@ def test_gruneisen_wf_ff(clean_dir, si_structure: Structure, tmp_path: Path):
             "gruneisen_mesh": f"{tmp_path}/gruneisen_mesh.pdf",
             "gruneisen_bs": f"{tmp_path}/gruneisen_band.pdf",
         },
+        phonon_maker=PhononMaker(
+            use_symmetrized_structure="conventional",
+            create_thermal_displacements=False,
+            store_force_constants=False,
+            prefer_90_degrees=False,
+        ),
     ).make(structure=si_structure)
 
     # run the flow or job and ensure that it finished running successfully
