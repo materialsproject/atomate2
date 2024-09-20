@@ -171,6 +171,12 @@ def test_make_w_velocities(interchange, run_job):
         run_job(maker1.make(interchange))
         # run_job(base_job)
 
+    import MDAnalysis
+    from packaging.version import Version
+
+    if Version(MDAnalysis.__version__) < Version("2.8.0"):
+        return
+
     maker2 = BaseOpenMMMaker(
         n_steps=1000,
         report_velocities=True,

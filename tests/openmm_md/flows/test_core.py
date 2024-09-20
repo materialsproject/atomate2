@@ -55,6 +55,12 @@ def test_anneal_maker(interchange, run_job):
 # @pytest.mark.skip("Reporting to HDF5 is broken in MDA upstream.")
 def test_hdf5_writing(interchange, run_job):
     # Create an instance of AnnealMaker with custom parameters
+    import MDAnalysis
+    from packaging.version import Version
+
+    if Version(MDAnalysis.__version__) < Version("2.8.0"):
+        return
+
     anneal_maker = OpenMMFlowMaker.anneal_flow(
         name="test_anneal",
         n_steps=3,
