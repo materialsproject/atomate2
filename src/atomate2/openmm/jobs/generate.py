@@ -132,7 +132,6 @@ class XMLMoleculeFF:
             If a molecule is provided, it must have partial charges assigned.
             If a string is provided, openff_toolkit.Molecule.assign_partial_charges
             will be used to generate the partial charges.
-
         """
         if isinstance(mol_or_method, str):
             openff_mol = self.to_openff_molecule()
@@ -241,7 +240,10 @@ def generate_openmm_interchange(
         elif isinstance(spec, MoleculeSpec):
             mol_specs.append(copy.deepcopy(spec))
         else:
-            raise TypeError("mol_specs must be a list of dicts or MoleculeSpec")
+            raise TypeError(
+                f"item in mol_specs is a {type(spec)}, but mol_specs "
+                f"must be a list of dicts or MoleculeSpec"
+            )
 
     xml_mols = [XMLMoleculeFF(xml) for xml in ff_xmls]
     if len(mol_specs) != len(xml_mols):

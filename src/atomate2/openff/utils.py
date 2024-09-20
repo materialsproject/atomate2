@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import copy
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 import openff.toolkit as tk
@@ -101,7 +101,10 @@ def create_mol_spec_list(
         elif isinstance(spec, MoleculeSpec):
             mol_specs.append(copy.deepcopy(spec))
         else:
-            raise TypeError("mol_specs must be a list of dicts or MoleculeSpec")
+            raise TypeError(
+                f"item in mol_specs is a {type(spec)}, but mol_specs "
+                f"must be a list of dicts or MoleculeSpec"
+            )
 
     mol_specs.sort(
         key=lambda x: tk.Molecule.from_json(x.openff_mol).to_smiles() + x.name
@@ -141,7 +144,7 @@ def calculate_elyte_composition(
     solvents: dict[str, float],
     salts: dict[str, float],
     solvent_densities: dict = None,
-    solvent_ratio_dimension: str = "mass",
+    solvent_ratio_dimension: Literal["mass", "volume"] = "mass",
 ) -> dict[str, float]:
     """Calculate the normalized mass ratios of an electrolyte solution.
 
@@ -164,7 +167,7 @@ def calculate_elyte_composition(
     """
     # Check if all solvents have corresponding densities
     solvent_densities = solvent_densities or {}
-    if set(solvents.keys()) > set(solvent_densities.keys()):
+    if set(solvents) > set(solvent_densities):
         raise ValueError("solvent_densities must contain densities for all solvents.")
 
     # convert masses to volumes so we can normalize volume
@@ -222,16 +225,15 @@ def counts_from_masses(species: dict[str, float], n_mol: int) -> dict[str, float
     """
     masses = {el.Z: el.atomic_mass for el in Element}
 
-    mws = []
+    mol_weights = []
     for smile in species:
         mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
-        mws.append(sum([masses[atom.atomic_number] for atom in mol.atoms]))
+        mol_weights.append(sum([masses[atom.atomic_number] for atom in mol.atoms]))
 
-    mol_ratio = np.array(list(species.values())) / np.array(mws)
+    mol_ratio = np.array(list(species.values())) / np.array(mol_weights)
     mol_ratio /= sum(mol_ratio)
     return {
-        smile: int(np.round(ratio * n_mol))
-        for smile, ratio in zip(species.keys(), mol_ratio)
+        smile: int(np.round(ratio * n_mol)) for smile, ratio in zip(species, mol_ratio)
     }
 
 
@@ -261,15 +263,15 @@ def counts_from_box_size(
     total_mass = volume * density  # grams
 
     # Calculate molecular weights
-    mws = []
+    mol_weights = []
     for smile in species:
         mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
-        mws.append(sum([masses[atom.atomic_number] for atom in mol.atoms]))
-    mean_mw = np.mean(mws)
+        mol_weights.append(sum([masses[atom.atomic_number] for atom in mol.atoms]))
+    mean_mw = np.mean(mol_weights)
     n_mol = (total_mass / mean_mw) * na
 
     # Calculate the number of moles needed for each species
-    mol_ratio = np.array(list(species.values())) / np.array(mws)
+    mol_ratio = np.array(list(species.values())) / np.array(mol_weights)
     mol_ratio /= sum(mol_ratio)
 
     # Convert moles to number of molecules
@@ -293,7 +295,7 @@ def create_mol_dicts(
             "count": count,
             "name": name_lookup.get(smile, smile),
         }
-        if bool(re.search(r"[+-]", smile)):
+        if re.search(r"[+-]", smile):
             spec_dict["charge_scaling"] = ion_charge_scaling
         xyz_charge = xyz_charge_lookup.get(smile)
         if xyz_charge is not None:

@@ -74,17 +74,16 @@ class NPTMaker(BaseOpenMMMaker):
     name : str
         The name of the NPT simulation job. Default is "npt simulation".
     n_steps : int
-        The number of simulation steps. Default is 1000000.
+        The number of simulation steps. Default is 1,000,000.
     pressure : float
         The pressure of the simulation in atmospheres.
         Default is 1 atm.
     pressure_update_frequency : int
-        The number of steps between pressure
-        update attempts.
+        The number of steps between pressure update attempts.
     """
 
     name: str = "npt simulation"
-    n_steps: int = 1000000
+    n_steps: int = 1_000_000
     pressure: float = 1
     pressure_update_frequency: int = 10
 
@@ -133,11 +132,11 @@ class NVTMaker(BaseOpenMMMaker):
     name : str
         The name of the NVT simulation job. Default is "nvt simulation".
     n_steps : int
-        The number of simulation steps. Default is 1000000.
+        The number of simulation steps. Default is 1,000,000.
     """
 
     name: str = "nvt simulation"
-    n_steps: int = 1000000
+    n_steps: int = 1_000_000
 
     def run_openmm(self, sim: Simulation) -> None:
         """Evolve the simulation with OpenMM for self.n_steps.
@@ -174,7 +173,7 @@ class TempChangeMaker(BaseOpenMMMaker):
     """
 
     name: str = "temperature change"
-    n_steps: int = 1000000
+    n_steps: int = 1_000_000
     temp_steps: int | None = None
     starting_temperature: float | None = None
 

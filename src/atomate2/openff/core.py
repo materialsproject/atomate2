@@ -139,7 +139,6 @@ def generate_interchange(
     )
 
     # currently not needed because ForceField isn't correctly supporting iterables
-
     # coerce force_field to a str or list of str
     # if not isinstance(force_field, list):
     #     force_field = [force_field]
