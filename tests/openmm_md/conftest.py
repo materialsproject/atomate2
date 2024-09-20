@@ -1,6 +1,3 @@
-import tempfile
-from pathlib import Path
-
 import openff.toolkit as tk
 import pytest
 from jobflow import run_locally
@@ -13,15 +10,9 @@ from atomate2.openff.utils import create_mol_spec, merge_specs_by_name_and_smile
 
 
 @pytest.fixture
-def temp_dir():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        yield Path(temp_dir)
-
-
-@pytest.fixture
-def run_job(temp_dir):
+def run_job(tmp_path):
     def run_job(job):
-        response_dict = run_locally(job, ensure_success=True, root_dir=temp_dir)
+        response_dict = run_locally(job, ensure_success=True, root_dir=tmp_path)
         return list(response_dict.values())[-1][1].output
 
     return run_job

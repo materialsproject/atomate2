@@ -14,12 +14,12 @@ from atomate2.openff.core import generate_interchange
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
 
 
-def test_add_reporters(interchange, temp_dir):
+def test_add_reporters(interchange, tmp_path):
     maker = BaseOpenMMMaker(
         traj_interval=100, state_interval=50, wrap_traj=True, n_steps=1
     )
     sim = maker._create_simulation(interchange)  # noqa: SLF001
-    dir_name = temp_dir / "test_output"
+    dir_name = tmp_path / "test_output"
     dir_name.mkdir()
 
     maker._add_reporters(sim, dir_name)  # noqa: SLF001
@@ -87,9 +87,9 @@ def test_update_interchange(interchange):
     assert np.all(interchange.box == start_box)
 
 
-def test_create_task_doc(interchange, temp_dir):
+def test_create_task_doc(interchange, tmp_path):
     maker = BaseOpenMMMaker(n_steps=1000, temperature=300)
-    dir_name = temp_dir / "test_output"
+    dir_name = tmp_path / "test_output"
     dir_name.mkdir()
 
     task_doc = maker._create_task_doc(  # noqa: SLF001
@@ -107,7 +107,7 @@ def test_create_task_doc(interchange, temp_dir):
     assert task_doc.calcs_reversed[0].output.elapsed_time == 10.5
 
 
-def test_make(interchange, temp_dir, run_job):
+def test_make(interchange, tmp_path, run_job):
     # Create an instance of BaseOpenMMMaker
     maker = BaseOpenMMMaker(
         n_steps=1000,
@@ -135,12 +135,12 @@ def test_make(interchange, temp_dir, run_job):
     # Assert the specific values in the task document
     assert isinstance(task_doc, OpenMMTaskDocument)
     assert task_doc.state == "successful"
-    # assert task_doc.dir_name == str(temp_dir)
+    # assert task_doc.dir_name == str(tmp_path)
     assert len(task_doc.calcs_reversed) == 1
 
     # Assert the calculation details
     calc = task_doc.calcs_reversed[0]
-    # assert calc.dir_name == str(temp_dir)
+    # assert calc.dir_name == str(tmp_path)
     assert calc.has_openmm_completed is True
     assert calc.input.n_steps == 1000
     assert calc.input.step_size == 0.002

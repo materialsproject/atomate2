@@ -4,12 +4,12 @@ from atomate2.openmm.utils import download_opls_xml, increment_name
 
 
 @pytest.mark.skip("annoying test")
-def test_download_xml(temp_dir):
+def test_download_xml(tmp_path):
     pytest.importorskip("selenium")
 
-    download_opls_xml("CCO", temp_dir / "CCO.xml")
+    download_opls_xml("CCO", tmp_path / "CCO.xml")
 
-    assert (temp_dir / "CCO.xml").exists()
+    assert (tmp_path / "CCO.xml").exists()
 
 
 def test_increment_file_name():
