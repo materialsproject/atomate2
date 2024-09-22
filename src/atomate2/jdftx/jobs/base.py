@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
+import os
 
 from jobflow import Maker, Response, job
 import logging
@@ -97,6 +98,7 @@ class BaseJdftxMaker(Maker):
     run_jdftx_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
+    @jdftx_job
     def make(self, structure: Structure) -> Response:
         """Run a JDFTx calculation.
 
@@ -110,7 +112,6 @@ class BaseJdftxMaker(Maker):
             Response: A response object containing the output, detours and stop
                 commands of the JDFTx run.
         """
-        print(structure)
         # write jdftx input files
         write_jdftx_input_set(
             structure, self.input_set_generator, **self.write_input_set_kwargs
@@ -119,7 +120,7 @@ class BaseJdftxMaker(Maker):
         # run jdftx
         run_jdftx(**self.run_jdftx_kwargs)
 
-        current_dir = Path.cwd()
+        current_dir = os.getcwd()
         task_doc = get_jdftx_task_document(current_dir, **self.task_document_kwargs)
 
         stop_children = should_stop_children(task_doc)

@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class RelaxSetGenerator(JdftxInputGenerator):
+class SinglePointSetGenerator(JdftxInputGenerator):
     """Class to generate JDFTx input sets that follow BEAST convention."""
 
     default_settings: dict = field(

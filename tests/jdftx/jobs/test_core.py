@@ -2,27 +2,27 @@ import pytest
 from unittest.mock import patch
 from jobflow import run_locally
 
-from atomate2.jdftx.jobs.core import RelaxMaker
-from atomate2.jdftx.sets.core import RelaxSetGenerator
+from atomate2.jdftx.jobs.core import SinglePointMaker
+from atomate2.jdftx.sets.core import SinglePointSetGenerator
 from atomate2.jdftx.jobs.base import BaseJdftxMaker
+from atomate2.jdftx.schemas.task import TaskDoc
 
-#@patch('atomate2.jdftx.jobs.base.BaseJdftxMaker.make')
-#@patch('atomate2.jdftx.jobs.base.write_jdftx_input_set')
-def test_static_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames):
+@pytest.mark.parametrize("mock_cwd", ["sp_test"], indirect=True)
+def test_sp_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames, clean_dir):
 
-    ref_paths = {"relax": "default_test"}
+    ref_paths = {"single_point": "sp_test"}
 
     fake_run_jdftx_kwargs = {}
 
-    mock_jdftx(ref_paths, fake_run_jdftx_kwargs) #updates _REF_PATHS and _FAKE_RUN_JDFTX_KWARGS & monkeypatches
-    #run_jdftx and get_input_set
+    mock_jdftx(ref_paths, fake_run_jdftx_kwargs)
 
-    maker = RelaxMaker(input_set_generator=RelaxSetGenerator())
+    maker = SinglePointMaker(input_set_generator=SinglePointSetGenerator())
 
     job = maker.make(si_structure)
 
-    #responses = run_locally(job, create_folders=True, ensure_success=True)
+    responses = run_locally(job, create_folders=True, ensure_success=True)
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, TaskDoc)
 
-    
 
 

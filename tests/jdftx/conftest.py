@@ -1,13 +1,18 @@
 from __future__ import annotations
 
 import logging
+import os
 logger = logging.getLogger(__name__)
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 import pytest
 from monty.io import zopen
 from monty.os.path import zpath as monty_zpath
+from contextlib import contextmanager
 from atomate2.jdftx.sets.base import FILE_NAMES
+from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
+from jobflow import CURRENT_JOB
+import shutil
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -15,8 +20,8 @@ if TYPE_CHECKING:
 logger = logging.getLogger("atomate2")
 
 _JFILES = "init.in"
-_REF_PATHS = {}
-_FAKE_RUN_JDFTX_KWARGS = {}
+_REF_PATHS: dict[str, str | Path] = {}
+_FAKE_RUN_JDFTX_KWARGS: dict[str, dict]  = {}
 
 def zpath(path: str | Path) -> Path:
     return Path(monty_zpath(str(path)))
@@ -24,13 +29,14 @@ def zpath(path: str | Path) -> Path:
 @pytest.fixture(scope="session")
 def jdftx_test_dir(test_dir):
     return test_dir / "jdftx"
-# tests/test_data/jdftx
 
-#fixtures to get TaskDoc
 @pytest.fixture
-def mock_cwd(monkeypatch):
-    mock_path = Path("../../test_data/jdftx/default_test")
-    monkeypatch.setattr(Path, "cwd", lambda: mock_path)
+def mock_cwd(monkeypatch, request):
+    test_name = request.param
+    print(f"test_name: {test_name}")
+    mock_path = Path(__file__).resolve().parent / f"../test_data/jdftx/{test_name}"
+    monkeypatch.setattr(os, "getcwd", lambda: mock_path)
+
 
 @pytest.fixture
 def mock_filenames(monkeypatch):
@@ -38,20 +44,19 @@ def mock_filenames(monkeypatch):
     monkeypatch.setitem(FILE_NAMES, "out", "outputs/jdftx.out")
 
 @pytest.fixture
-def mock_jdftx(monkeypatch, jdftx_test_dir):
-    
+def mock_jdftx(monkeypatch, jdftx_test_dir: Path):
     import atomate2.jdftx.jobs.base
     import atomate2.jdftx.run
     from atomate2.jdftx.sets.base import JdftxInputGenerator
-            
-    def mock_run_jdftx(*args, **kwargs):
-        from jobflow import CURRENT_JOB   #attributes: jobflow.Job and jobflow.JobStore
 
-        #name = CURRENT_JOB.job.name
-        name = "relax"
+    def mock_run_jdftx(*args, **kwargs):
+
+        name = CURRENT_JOB.job.name
+        print(f"name:", name)
         ref_path = jdftx_test_dir / _REF_PATHS[name]
-        fake_run_jdftx(ref_path, **_FAKE_RUN_JDFTX_KWARGS)
         logger.info("mock_run called")
+        fake_run_jdftx(ref_path, **_FAKE_RUN_JDFTX_KWARGS)
+        
 
     get_input_set_orig = JdftxInputGenerator.get_input_set
 
@@ -70,6 +75,7 @@ def mock_jdftx(monkeypatch, jdftx_test_dir):
         _REF_PATHS.update(ref_paths)
         _FAKE_RUN_JDFTX_KWARGS.update(fake_run_jdftx_kwargs)
         logger.info("_run passed")
+
     yield _run
 
     monkeypatch.undo()
@@ -78,42 +84,52 @@ def mock_jdftx(monkeypatch, jdftx_test_dir):
         
 
 def fake_run_jdftx(
-        ref_path: str | Path,
-        input_settings: Sequence[str] = (),
-        check_inputs: Sequence[Literal["init.in"]] = _JFILES,
-) -> None:
-    
+    ref_path: str | Path,
+    input_settings: Sequence[str] = None,
+    check_inputs: Sequence[Literal["init.in"]] = _JFILES,
+    clear_inputs: bool = True,
+):
     logger.info("Running fake JDFTx.")
     ref_path = Path(ref_path)
 
     if "init.in" in check_inputs:
-        check_input(ref_path, input_settings)
+        results = check_input(ref_path, input_settings)
+        for key, (user_val, ref_val) in results.items():
+            assert user_val == ref_val, f"Mismatch for {key}: user_val={user_val}, ref_val={ref_val}"
 
     logger.info("Verified inputs successfully")
+ 
+    if clear_inputs:
+        clear_jdftx_inputs()
 
+    copy_jdftx_outputs(ref_path)
 
-#@pytest.fixture
-def check_input(ref_path, input_settings: Sequence[str] = (),):
-
-    from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
+def check_input(ref_path, input_settings: Sequence[str] = None):
     logger.info("Checking inputs.")
 
     ref_input = JDFTXInfile.from_file(ref_path / "inputs" / "init.in")
     user_input = JDFTXInfile.from_file(zpath("init.in"))
-    print(f"ref_input:", ref_input)
-    print(f"user_input:", user_input)
-     #   user_string = " ".join(user_input.get_str().lower().split())
-      #  user_hash = md5(user_string.encode("utf-8")).hexdigest()
 
-       # ref_string = " ".join(ref_input.get_str().lower().split())
-       # ref_hash = md5(ref_string.encode("utf-8")).hexdigest()
+    keys_to_check = (
+        set(user_input) if input_settings is None else set(input_settings)
+    )
 
-#        if ref_hash != user_hash:
- #           raise ValueError("Cp2k Inputs do not match!")
+    results = {}
+    for key in keys_to_check:
+        user_val = user_input.get(key)
+        ref_val = ref_input.get(key)
+        results[key] = (user_val, ref_val)
+    
+    return results
 
-def copy_cp2k_outputs(ref_path: str | Path):
-    import shutil
+def clear_jdftx_inputs():
+    if (file_path:= zpath("init.in")).exists():
+        file_path.unlink()
+        print(f"Deleting file: {file_path.resolve()}") 
+    logger.info("Cleared jdftx inputs")
 
+def copy_jdftx_outputs(ref_path: Path):
+    import os
     output_path = ref_path / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():
