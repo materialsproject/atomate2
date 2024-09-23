@@ -225,21 +225,14 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             is_symmetry=sym_reduce,
         )
 
-        # modified by jiongzhi zheng
+        # Start from here, we use the pheasy code to extract the force constants.
         supercell = phonon.get_supercell()
         write_vasp("POSCAR", cell)
         write_vasp("SPOSCAR", supercell)
 
         phonon.generate_displacements(distance=displacement)
         disps_j = phonon.displacements
-
         f_disp_n1 = len(disps_j)
-
-        # jiongzhi zheng
-        # Print keys and their corresponding values
-        for key, value in displacement_data.items():
-            print(f"{key}: {value}")
-
 
         if f_disp_n1 < 1:
             set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
@@ -250,9 +243,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
             print(np.shape(set_of_disps_m))
             n_shape = set_of_disps_m.shape[0]
-            # set_of_disps_d = {}
-            # set_of_disps_d['displacements'] = set_of_disps_m
             set_of_disps_d = {'displacements': set_of_disps_m, 'dtype': 'double', 'order': 'C'}
+
         else:
             set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
             set_of_forces_a_o = np.array(set_of_forces)
@@ -261,15 +253,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             set_of_disps = [np.array(disps.cart_coords) for disps in displacement_data["displaced_structures"]]
             set_of_disps_m_o = np.round((set_of_disps - supercell.get_positions()), decimals=16).astype('double')
             set_of_disps_m = set_of_disps_m_o[:-1, :, :]
-            print(set_of_disps_m)
 
-            print(np.shape(set_of_disps_m))
             n_shape = set_of_disps_m.shape[0]
-            # set_of_disps_d = {}
-            # set_of_disps_d['displacements'] = set_of_disps_m
             set_of_disps_d = {'displacements': set_of_disps_m, 'dtype': 'double', 'order': 'C'}
-            # phonon.set_displacement_dataset(set_of_disps_d)
-            # print (set_of_disps)
 
         import pickle
         with open("disp_matrix.pkl","wb") as file: 
@@ -327,9 +313,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         else:
             num_har = n_shape
 
-
-        #set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
-
         if born is not None and epsilon_static is not None:
             if len(structure) == len(born):
                 borns, epsilon = symmetrize_borns_and_epsilon(
@@ -355,13 +338,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         else:
             borns = None
             epsilon = None
-        
-        # Produces all force constants
-        #phonon.produce_force_constants(forces=set_of_forces)
-        #phonon.produce_force_constants(forces=set_of_forces,  fc_calculator="alm") 
-        #phonon.symmetrize_force_constants()
-        #fcs = phonon.force_constants
-        #write_FORCE_CONSTANTS(fcs)
+
         prim = read('POSCAR')
         supercell = read('SPOSCAR')
 
@@ -379,17 +356,12 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
            pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 -l LASSO --std --rasr BHH --ndata "{3}"'.format(int(supercell_matrix[0][0]), int(supercell_matrix[1][1]), int(supercell_matrix[2][2]), int(num_har))
         else:
             pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 --rasr BHH --ndata "{3}"'.format(int(supercell_matrix[0][0]), int(supercell_matrix[1][1]), int(supercell_matrix[2][2]), int(num_har))
-            #pheasy_cmd_4_1 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --hdf5 --symprec 1e-3 --rasr BHH --ndata "{3}"'.format(int(supercell_matrix[0][0]), int(supercell_matrix[1][1]), int(supercell_matrix[2][2]), int(num_har))
 
         print ("Start running pheasy in andes8: Dartmouth College Clusters or NERSC Perlmutter")
         subprocess.call(pheasy_cmd_1, shell=True)
         subprocess.call(pheasy_cmd_2, shell=True)
         subprocess.call(pheasy_cmd_3, shell=True)
         subprocess.call(pheasy_cmd_4, shell=True)
-        #subprocess.call(pheasy_cmd_4_1, shell=True)
-
-        # Produces all force constants
-        #phonon.produce_force_constants(forces=set_of_forces)
 
         force_constants = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
         phonon.force_constants = force_constants
@@ -491,7 +463,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --c2 10.0 --full_ifc -w 2 --symprec 1e-3 -l LASSO --std --rasr BHH --ndata "{3}"'.format(int(supercell_matrix[0][0]), int(supercell_matrix[1][1]), int(supercell_matrix[2][2]), int(num_har))
             else:
                 pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc --c2 10.0 -w 2 --symprec 1e-3 --rasr BHH --ndata "{3}"'.format(int(supercell_matrix[0][0]), int(supercell_matrix[1][1]), int(supercell_matrix[2][2]), int(num_har))
-            #pheasy_cmd_4_1 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --hdf5 --symprec 1e-3 --rasr BHH --ndata "{3}"'.format(int(supercell_matrix[0][0]), int(supercell_matrix[1][1]), int(supercell_matrix[2][2]), int(num_har))
 
             print ("Start running pheasy in discovery")
             subprocess.call(pheasy_cmd_11, shell=True)
@@ -541,8 +512,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             #)
         else:
             pass
-
-
+        
         # gets data for visualization on website - yaml is also enough
         if kwargs.get("band_structure_eigenvectors"):
             bs_symm_line.write_phononwebsite("phonon_website.json")
