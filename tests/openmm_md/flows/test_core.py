@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import json
 from pathlib import Path
 
 import numpy as np
@@ -5,6 +8,7 @@ import pytest
 from emmet.core.openmm import OpenMMTaskDocument
 from jobflow import Flow
 from MDAnalysis import Universe
+from monty.json import MontyDecoder
 from openff.interchange import Interchange
 
 from atomate2.openmm.flows.core import OpenMMFlowMaker
@@ -84,6 +88,23 @@ def test_hdf5_writing(interchange, run_job):
         "trajectory2.h5md",
         "trajectory.h5md",
     }
+
+
+def test_collect_outputs(interchange, run_job):
+    # Create an instance of ProductionMaker with custom parameters
+    production_maker = OpenMMFlowMaker(
+        name="test_production",
+        tags=["test"],
+        makers=[
+            EnergyMinimizationMaker(max_iterations=1, save_structure=True),
+            NVTMaker(n_steps=5),
+        ],
+        collect_outputs=True,
+    )
+
+    # Run the ProductionMaker flow
+    production_flow = production_maker.make(interchange)
+    run_job(production_flow)
 
 
 def test_flow_maker(interchange, run_job):
@@ -181,9 +202,9 @@ def test_traj_blob_embed(interchange, run_job, tmp_path):
     assert np.all(u.atoms.positions == u2.atoms.positions)
 
     with open(Path(task_doc.dir_name) / "taskdoc.json") as file:
-        json_data = file.read()
+        task_dict = json.load(file, cls=MontyDecoder)
+        task_doc_parsed = OpenMMTaskDocument.model_validate(task_dict)
 
-    task_doc_parsed = OpenMMTaskDocument.parse_raw(json_data)
     parsed_output = task_doc_parsed.calcs_reversed[0].output
 
     assert parsed_output.traj_blob == calc_output.traj_blob

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import time
 import warnings
 from dataclasses import dataclass, field
@@ -19,6 +20,7 @@ from emmet.core.openmm import (
 )
 from jobflow import Maker, Response, job
 from mdareporter.mdareporter import MDAReporter
+from monty.json import MontyDecoder, MontyEncoder
 from openmm import Integrator, LangevinMiddleIntegrator, Platform, XmlSerializer
 from openmm.app import StateDataReporter
 from openmm.unit import angstrom, kelvin, picoseconds
@@ -43,7 +45,7 @@ except ImportError:
     class Interchange:  # type: ignore[no-redef]
         """Dummy class for failed imports of Interchange."""
 
-        def parse_raw(self, _: str) -> None:
+        def model_validate(self, _: str) -> None:
             """Parse raw is the first method called on the Interchange object."""
             raise ImportError(
                 "openff-interchange must be installed for OpenMM makers to"
@@ -204,11 +206,12 @@ class BaseOpenMMMaker(Maker):
         Response
             A response object containing the output task document.
         """
-        prev_task = (
-            OpenMMTaskDocument.parse_file(Path(prev_dir) / "taskdoc.json")
-            if prev_dir
-            else None
-        )
+        if prev_dir:
+            with open(Path(prev_dir) / "taskdoc.json") as file:
+                task_dict = json.load(file, cls=MontyDecoder)
+                prev_task = OpenMMTaskDocument.model_validate(task_dict)
+        else:
+            prev_task = None
 
         interchange = self._load_interchange(interchange)
 
@@ -238,7 +241,8 @@ class BaseOpenMMMaker(Maker):
         del sim
 
         # write out task_doc json to output dir
-        self._write_task_doc(task_doc, dir_name)
+        with open(dir_name / "taskdoc.json", "w") as file:
+            json.dump(task_doc.model_dump(), file, cls=MontyEncoder)
 
         return Response(output=task_doc)
 
@@ -266,7 +270,7 @@ class BaseOpenMMMaker(Maker):
                 interchange = Interchange.parse_raw(interchange)
             except:  # noqa: E722
                 # parse with openmm instead
-                interchange = OpenMMInterchange.parse_raw(interchange)
+                interchange = OpenMMInterchange.model_validate_json(interchange)
         else:
             interchange = copy.deepcopy(interchange)
         return interchange
@@ -617,12 +621,3 @@ class BaseOpenMMMaker(Maker):
             task_type="test",
             last_updated=datetime.now(tz=timezone.utc),
         )
-
-    def _write_task_doc(self, task_doc: OpenMMTaskDocument, dir_name: Path) -> None:
-        # write out task_doc json to output dir
-        with open(dir_name / "taskdoc.json", "w") as file:
-            task_doc = copy.deepcopy(task_doc)
-            task_doc.structure = (
-                None if not task_doc.structure else task_doc.structure.to_json()
-            )
-            file.write(task_doc.json())

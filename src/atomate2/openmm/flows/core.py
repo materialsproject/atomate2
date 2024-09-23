@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from emmet.core.openmm import Calculation, OpenMMInterchange, OpenMMTaskDocument
 from jobflow import Flow, Job, Response
+from monty.json import MontyDecoder, MontyEncoder
 
 from atomate2.openmm.jobs.base import openmm_job
 from atomate2.openmm.jobs.core import NVTMaker, TempChangeMaker
@@ -46,7 +48,9 @@ def collect_outputs(
     task_type: str,
 ) -> Response:
     """Reformat the output of the OpenMMFlowMaker into a OpenMMTaskDocument."""
-    task_doc = OpenMMTaskDocument.parse_file(Path(prev_dir) / "taskdoc.json")
+    with open(Path(prev_dir) / "taskdoc.json") as file:
+        task_dict = json.load(file, cls=MontyDecoder)
+        task_doc = OpenMMTaskDocument.model_validate(task_dict)
 
     # this must be done here because we cannot unwrap the calcs
     # when they are an output reference
@@ -58,7 +62,7 @@ def collect_outputs(
     task_doc.task_type = task_type
 
     with open(Path(task_doc.dir_name) / "taskdoc.json", "w") as file:
-        file.write(task_doc.json())
+        json.dump(task_doc.model_dump(), file, cls=MontyEncoder)
 
     return Response(output=task_doc)
 
