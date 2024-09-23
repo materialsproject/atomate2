@@ -33,13 +33,14 @@ SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
 @dataclass
 class BasePhononMaker(Maker, ABC):
     """
-    Maker to calculate harmonic phonons with a DFT/force field code and the code Pheasy.
+    Maker to calculate harmonic phonons with a DFT/force field code and the LASSO-based machine 
+    learning code Pheasy.
 
     Calculate the harmonic phonons of a material. Initially, a tight structural
     relaxation is performed to obtain a structure without forces on the atoms.
-    Subsequently, supercells with all atoms displaced by a small amount (generally 0.01 A) 
+    Subsequently, supercells with all atoms displaced by a small amount (generally using 0.01 A) 
     are are generated and accurate forces are computed for these structures. 
-    With the help of phonopy, these forces are then converted into a dynamical matrix. 
+    With the help of pheasy (LASSO), these forces are then converted into a dynamical matrix. 
     To correct for polarization effects, a correction of the dynamical matrix based on 
     BORN charges can be performed. Finally, phonon densities of states, phonon band 
     structures and thermodynamic properties are computed.
@@ -47,7 +48,7 @@ class BasePhononMaker(Maker, ABC):
     .. Note::
         It is heavily recommended to symmetrize the structure before passing it to
         this flow. Otherwise, a different space group might be detected and too
-        many displacement calculations will be generated.
+        many displacement calculations will be required for pheasy phonon calculation.
         It is recommended to check the convergence parameters here and
         adjust them if necessary. The default might not be strict enough
         for your specific case.
@@ -65,6 +66,8 @@ class BasePhononMaker(Maker, ABC):
         and to handle all symmetry-related tasks in phonopy
     displacement: float
         displacement distance for phonons
+    num_displaced_supercells: int
+        number of displacements to be generated using a random displacement method
     min_length: float
         min length of the supercell that will be built
     prefer_90_degrees: bool
@@ -119,6 +122,8 @@ class BasePhononMaker(Maker, ABC):
         to the primitive cell and not pymatgen
     code: str
         determines the dft or force field code.
+    mp_id: str
+        The mp_id of the material in the Materials Project database.
     store_force_constants: bool
         if True, force constants will be stored
     socket: bool
@@ -129,6 +134,7 @@ class BasePhononMaker(Maker, ABC):
     sym_reduce: bool = True
     symprec: float = 1e-4
     displacement: float = 0.01
+    num_displaced_supercells: int = 0
     min_length: float | None = 14.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
@@ -146,7 +152,7 @@ class BasePhononMaker(Maker, ABC):
     kpath_scheme: str = "seekpath"
     code: str = None
 
-    # add mpid to the phonon output
+    # add mp_id to the phonon output
     mp_id: str = None
     store_force_constants: bool = True
     socket: bool = False
@@ -292,6 +298,7 @@ class BasePhononMaker(Maker, ABC):
             structure=structure,
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
+            num_displaced_supercells=self.num_displaced_supercells,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,

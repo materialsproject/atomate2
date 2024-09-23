@@ -109,6 +109,7 @@ def get_supercell_size(
 def generate_phonon_displacements(
     structure: Structure,
     supercell_matrix: np.array,
+    num_displaced_supercells: int,
     displacement: float,
     sym_reduce: bool,
     symprec: float,
@@ -130,6 +131,8 @@ def generate_phonon_displacements(
         array to describe supercell matrix
     displacement: float
         displacement in Angstrom
+    num_displaced_supercells: int
+        number of displaced supercells
     sym_reduce: bool
         if True, symmetry will be used to generate displacements
     symprec: float
@@ -200,9 +203,7 @@ def generate_phonon_displacements(
 
     num = int(np.ceil(n_fp / (3.0 * natom)))
 
-
-    displacement_t = 0.01
-    phonon.generate_displacements(displacement_t)
+    phonon.generate_displacements(distance=displacement)
     num_disp_t = len(phonon.displacements)
     if num_disp_t > 3:
         num_d = int(np.ceil(num * 1.8))
@@ -223,20 +224,25 @@ def generate_phonon_displacements(
         "At least use one or two more configurations based on the suggested number of displacements."
         )
     
-    displacement_f = 0.01
-    phonon.generate_displacements(distance=displacement_f)
+    phonon.generate_displacements(distance=displacement)
 
     disps = phonon.displacements
 
     finite_disp = False
     f_disp_n = len(disps)
     if f_disp_n > 3:
-        phonon.generate_displacements(distance=displacement, number_of_snapshots=num_d, random_seed=103)
+        if num_displaced_supercells != 0:
+            phonon.generate_displacements(distance=displacement, 
+                                      number_of_snapshots=num_displaced_supercells, 
+                                      random_seed=103)
+        else:
+            phonon.generate_displacements(distance=displacement, 
+                                      number_of_snapshots=num_d, 
+                                      random_seed=103)
     else:
         finite_disp = True
 
     supercells = phonon.supercells_with_displacements
-
     displacements = []
     for cell in supercells:
         displacements.append(get_pmg_structure(cell))
