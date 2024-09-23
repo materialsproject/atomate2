@@ -141,8 +141,8 @@ class DfptFlowMaker(Maker):
                 #     if key in obj:
                 # TypeError: unhashable type: 'dict'
                 # with key being {'append_str': '1/3', 'prepend': False}
-                ddk_job.append_name(f"{ipert+1}/{len(perturbations)}")
-                # ddk_job.name = ddk_job.name + f"{ipert+1}/{len(perturbations)}"
+                # ddk_job.append_name(f"{ipert+1}/{len(perturbations)}")
+                ddk_job.name = ddk_job.name + f"{ipert+1}/{len(perturbations)}"
 
                 ddk_jobs.append(ddk_job)
                 outputs["dirs"].append(ddk_job.output.dir_name)
