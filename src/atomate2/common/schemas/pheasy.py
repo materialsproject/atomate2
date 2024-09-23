@@ -42,79 +42,15 @@ from phonopy.interface.vasp import read_vasp
 
 from atomate2.aims.utils.units import omegaToTHz
 
+# import some modules directly from phonons
+from atomate2.common.schemas.phonons import get_factor
+from atomate2.common.schemas.phonons import ThermalDisplacementData
+from atomate2.common.schemas.phonons import PhononComputationalSettings
+from atomate2.common.schemas.phonons import PhononUUIDs
+from atomate2.common.schemas.phonons import PhononJobDirs
+
 logger = logging.getLogger(__name__)
 
-
-def get_factor(code: str) -> float:
-    """
-    Get the frequency conversion factor to THz for each code.
-
-    Parameters
-    ----------
-    code: str
-        The code to get the conversion factor for
-
-    Returns
-    -------
-    float
-        The correct conversion factor
-
-    Raises
-    ------
-    ValueError
-        If code is not defined
-    """
-    if code in ["forcefields", "vasp"]:
-        return VaspToTHz
-    if code == "aims":
-        return omegaToTHz  # Based on CODATA 2002
-    raise ValueError(f"Frequency conversion factor for code ({code}) not defined.")
-
-
-class PhononComputationalSettings(BaseModel):
-    """Collection to store computational settings for the phonon computation."""
-
-    # could be optional and implemented at a later stage?
-    npoints_band: int = Field("number of points for band structure computation")
-    kpath_scheme: str = Field("indicates the kpath scheme")
-    kpoint_density_dos: int = Field(
-        "number of points for computation of free energies and densities of states",
-    )
-
-
-class ThermalDisplacementData(BaseModel):
-    """Collection to store information on the thermal displacement matrices."""
-
-    freq_min_thermal_displacements: float = Field(
-        "cutoff frequency in THz to avoid numerical issues in the "
-        "computation of the thermal displacement parameters"
-    )
-    thermal_displacement_matrix_cif: Optional[list[list[Matrix3D]]] = Field(
-        None, description="field including thermal displacement matrices in CIF format"
-    )
-    thermal_displacement_matrix: Optional[list[list[Matrix3D]]] = Field(
-        None,
-        description="field including thermal displacement matrices in Cartesian "
-        "coordinate system",
-    )
-    temperatures_thermal_displacements: Optional[list[int]] = Field(
-        None,
-        description="temperatures at which the thermal displacement matrices"
-        "have been computed",
-    )
-
-
-class PhononUUIDs(BaseModel):
-    """Collection to save all uuids connected to the phonon run."""
-
-    optimization_run_uuid: Optional[str] = Field(
-        None, description="optimization run uuid"
-    )
-    displacements_uuids: Optional[list[str]] = Field(
-        None, description="The uuids of the displacement jobs."
-    )
-    static_run_uuid: Optional[str] = Field(None, description="static run uuid")
-    born_run_uuid: Optional[str] = Field(None, description="born run uuid")
 
 
 class Forceconstants(MSONable):
@@ -122,27 +58,6 @@ class Forceconstants(MSONable):
 
     def __init__(self, force_constants: list[list[Matrix3D]]) -> None:
         self.force_constants = force_constants
-
-
-class PhononJobDirs(BaseModel):
-    """Collection to save all job directories relevant for the phonon run."""
-
-    displacements_job_dirs: Optional[list[Optional[str]]] = Field(
-        None, description="The directories where the displacement jobs were run."
-    )
-    static_run_job_dir: Optional[Optional[str]] = Field(
-        None, description="Directory where static run was performed."
-    )
-    born_run_job_dir: Optional[str] = Field(
-        None, description="Directory where born run was performed."
-    )
-    optimization_run_job_dir: Optional[str] = Field(
-        None, description="Directory where optimization run was performed."
-    )
-    taskdoc_run_job_dir: Optional[str] = Field(
-        None, description="Directory where task doc was generated."
-    )
-
 
 class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     """Collection of all data produced by the phonon workflow."""
@@ -552,7 +467,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
             new_plotter.save_plot(filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),units=kwargs.get("units", "THz"))
 
-            #new_plotter.save_plot("phonon_band_structure.eps",img_format=kwargs.get("img_format", "eps"),units=kwargs.get("units", "THz"),)
+            # new_plotter.save_plot("phonon_band_structure.eps",img_format=kwargs.get("img_format", "eps"),units=kwargs.get("units", "THz"),)
 
             imaginary_modes_hiphive = bs_symm_line.has_imaginary_freq(
             tol=kwargs.get("tol_imaginary_modes", 1e-5)
@@ -588,9 +503,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             phonon.force_constants = force_constants
             phonon.symmetrize_force_constants()
 
-
-            #phonon.force_constants = fcs
-
             # with phonon.load("phonopy.yaml") the phonopy API can be used
             phonon.save("phonopy.yaml")
 
@@ -622,7 +534,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             imaginary_modes_cutoff = bs_symm_line.has_imaginary_freq(
             tol=kwargs.get("tol_imaginary_modes", 1e-5))
             imaginary_modes = imaginary_modes_cutoff
-            #new_plotter.save_plot(
+            # new_plotter.save_plot(
             #    "phonon_band_structure.eps",
             #    img_format=kwargs.get("img_format", "eps"),
             #    units=kwargs.get("units", "THz"),
