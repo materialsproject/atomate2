@@ -49,7 +49,6 @@ from atomate2.common.schemas.phonons import PhononComputationalSettings
 from atomate2.common.schemas.phonons import PhononUUIDs
 from atomate2.common.schemas.phonons import PhononJobDirs
 
-
 logger = logging.getLogger(__name__)
 
 class Forceconstants(MSONable):
@@ -342,16 +341,19 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         prim = read('POSCAR')
         supercell = read('SPOSCAR')
 
-        pheasy_cmd_1 = 'pheasy --dim "{0}" "{1}" "{2}" -s -w 2 --symprec 1e-3 --nbody 2'.format(int(supercell_matrix[0][0]),
-                                                                                                 int(supercell_matrix[1][1]),
-                                                                                                int(supercell_matrix[2][2]))
-        pheasy_cmd_2 = 'pheasy --dim "{0}" "{1}" "{2}" -c --symprec 1e-3 -w 2'.format(int(supercell_matrix[0][0]),
-                                                                                       int(supercell_matrix[1][1]),
-                                                                                        int(supercell_matrix[2][2]))
-        pheasy_cmd_3 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec 1e-3 --ndata "{3}" --disp_file'.format(int(supercell_matrix[0][0]),
-                                                                                                                int(supercell_matrix[1][1]),
-                                                                                                                int(supercell_matrix[2][2]),
-                                                                                                                 int(num_har))
+        pheasy_cmd_1 = 'pheasy --dim "{0}" "{1}" "{2}" -s -w 2 --symprec 1e-3 --nbody 2'.format(
+            int(supercell_matrix[0][0]),
+            int(supercell_matrix[1][1]),
+            int(supercell_matrix[2][2]))
+        pheasy_cmd_2 = 'pheasy --dim "{0}" "{1}" "{2}" -c --symprec 1e-3 -w 2'.format(
+            int(supercell_matrix[0][0]),
+            int(supercell_matrix[1][1]),
+            int(supercell_matrix[2][2]))
+        pheasy_cmd_3 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec 1e-3 --ndata "{3}" --disp_file'.format(
+            int(supercell_matrix[0][0]),
+            int(supercell_matrix[1][1]),
+            int(supercell_matrix[2][2]),
+            int(num_har))
 
         displacement_f = 0.01
         phonon.generate_displacements(distance=displacement_f)
@@ -359,15 +361,18 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         num_judge = len(disps)
 
         if num_judge > 3:
-           pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 -l LASSO --std --rasr BHH --ndata "{3}"'.format(int(supercell_matrix[0][0]),
-                                                                                                                                            int(supercell_matrix[1][1]),
-                                                                                                                                            int(supercell_matrix[2][2]),
-                                                                                                                                             int(num_har))
+           pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 -l LASSO --std --rasr BHH --ndata "{3}"'.format(
+                int(supercell_matrix[0][0]),
+                int(supercell_matrix[1][1]),
+                int(supercell_matrix[2][2]),
+                int(num_har))
         else:
-            pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 --rasr BHH --ndata "{3}"'.format(int(supercell_matrix[0][0]), 
-                                                                                                                              int(supercell_matrix[1][1]), 
-                                                                                                                              int(supercell_matrix[2][2]), 
-                                                                                                                              int(num_har))
+            pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 --rasr BHH --ndata "{3}"'.format(
+                int(supercell_matrix[0][0]), 
+                int(supercell_matrix[1][1]), 
+                int(supercell_matrix[2][2]), 
+                int(num_har))
+            
         logger.info("Start running pheasy in andes8: Dartmouth College Clusters or NERSC Perlmutter")
         subprocess.call(pheasy_cmd_1, shell=True)
         subprocess.call(pheasy_cmd_2, shell=True)
@@ -427,7 +432,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
             # import the phonopy force constants using the correct supercell also provided by phonopy
             fcs = ForceConstants.read_phonopy(supercell, 'FORCE_CONSTANTS')
-            
+
             # Find the parameters that best fits the force constants given you cluster space
             parameters = extract_parameters(fcs, cs)
 
@@ -468,34 +473,39 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
            imaginary_modes = False
 
         if imaginary_modes_hiphive:
-            pheasy_cmd_11 = 'pheasy --dim "{0}" "{1}" "{2}" -s -w 2 --c2 10.0 --symprec 1e-3 --nbody 2'.format(int(supercell_matrix[0][0]), 
-                                                                                                               int(supercell_matrix[1][1]), 
-                                                                                                               int(supercell_matrix[2][2]))
-            pheasy_cmd_12 = 'pheasy --dim "{0}" "{1}" "{2}" -c --symprec 1e-3 --c2 10.0 -w 2'.format(int(supercell_matrix[0][0]), 
-                                                                                                     int(supercell_matrix[1][1]), 
-                                                                                                     int(supercell_matrix[2][2]))
-            pheasy_cmd_13 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec 1e-3 --c2 10.0 --ndata "{3}" --disp_file'.format(int(supercell_matrix[0][0]), 
-                                                                                                                               int(supercell_matrix[1][1]), 
-                                                                                                                               int(supercell_matrix[2][2]),
-                                                                                                                                int(num_har))
-
+            pheasy_cmd_11 = 'pheasy --dim "{0}" "{1}" "{2}" -s -w 2 --c2 10.0 --symprec 1e-3 --nbody 2'.format(
+                int(supercell_matrix[0][0]), 
+                int(supercell_matrix[1][1]), 
+                int(supercell_matrix[2][2]))
+            pheasy_cmd_12 = 'pheasy --dim "{0}" "{1}" "{2}" -c --symprec 1e-3 --c2 10.0 -w 2'.format(
+                int(supercell_matrix[0][0]), 
+                int(supercell_matrix[1][1]), 
+                int(supercell_matrix[2][2]))
+            pheasy_cmd_13 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec 1e-3 --c2 10.0 --ndata "{3}" --disp_file'.format(
+                int(supercell_matrix[0][0]), 
+                int(supercell_matrix[1][1]), 
+                int(supercell_matrix[2][2]),
+                int(num_har))
+            
             displacement_f = 0.01
             phonon.generate_displacements(distance=displacement_f)
             disps = phonon.displacements
             num_judge = len(disps)
 
             if num_judge > 3:
-                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --c2 10.0 --full_ifc -w 2 --symprec 1e-3 -l LASSO --std --rasr BHH --ndata "{3}"'.format(int(supercell_matrix[0][0]),
-                                                                                                                                                             int(supercell_matrix[1][1]), 
-                                                                                                                                                             int(supercell_matrix[2][2]), 
-                                                                                                                                                             int(num_har))
+                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --c2 10.0 --full_ifc -w 2 --symprec 1e-3 -l LASSO --std --rasr BHH --ndata "{3}"'.format(
+                    int(supercell_matrix[0][0]),
+                    int(supercell_matrix[1][1]), 
+                    int(supercell_matrix[2][2]), 
+                    int(num_har))
             else:
-                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc --c2 10.0 -w 2 --symprec 1e-3 --rasr BHH --ndata "{3}"'.format(int(supercell_matrix[0][0]), 
-                                                                                                                                             int(supercell_matrix[1][1]), 
-                                                                                                                                             int(supercell_matrix[2][2]), 
-                                                                                                                                             int(num_har))
+                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc --c2 10.0 -w 2 --symprec 1e-3 --rasr BHH --ndata "{3}"'.format(
+                    int(supercell_matrix[0][0]), 
+                    int(supercell_matrix[1][1]), 
+                    int(supercell_matrix[2][2]), 
+                    int(num_har))
 
-            print ("Start running pheasy in discovery")
+            logger.info("Start running pheasy in cluster")
             subprocess.call(pheasy_cmd_11, shell=True)
             subprocess.call(pheasy_cmd_12, shell=True)
             subprocess.call(pheasy_cmd_13, shell=True)
