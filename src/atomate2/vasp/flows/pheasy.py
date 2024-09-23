@@ -117,7 +117,8 @@ class PhononMaker(BasePhononMaker):
     sym_reduce: bool = True
     symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
-    min_length: float | None = 20.0
+    num_displaced_supercells: int = 0
+    min_length: float | None = 14.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None

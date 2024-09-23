@@ -1,4 +1,6 @@
-"""Flows for calculating phonons with the pheasy code (LASSO and random-displacement method)."""
+"""Flows for calculating phonons, higher-order force constants, 
+and phonon renormalization with the pheasy code (LASSO and 
+random-displacement method)."""
 
 from __future__ import annotations
 
@@ -134,7 +136,9 @@ class BasePhononMaker(Maker, ABC):
     sym_reduce: bool = True
     symprec: float = 1e-4
     displacement: float = 0.01
+    displacement_anharmonic: float = 0.08
     num_displaced_supercells: int = 0
+    num_displaced_supercells_anharmonic: int = 0
     min_length: float | None = 14.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)

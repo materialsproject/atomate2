@@ -18,7 +18,8 @@ from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
-from atomate2.common.schemas.pheasy import Forceconstants, PhononBSDOSDoc, get_factor
+from atomate2.common.schemas.pheasy import Forceconstants, PhononBSDOSDoc
+from atomate2.common.schemas.phonons import get_factor
 
 if TYPE_CHECKING:
     from pathlib import Path
