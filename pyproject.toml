@@ -64,6 +64,11 @@ anharmonicphonons = [
     "f90nml==1.4.4",
     "spglib>=2.2.0",
 	"ase>=3.22.1",]
+openmm = [
+    "mdanalysis>=2.7.0",
+    "openmm>=8.1.0",
+    "openmm-mdanalysis-reporter>=0.1.0",
+]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
@@ -113,7 +118,9 @@ strict = [
     "sevenn==0.9.3.post1",
     "torch==2.2.1",
     "typing-extensions==4.12.2",
-    "python-ulid==2.2.0",
+    "mdanalysis==2.7.0",
+    "openmm==8.1.1",
+    "openmm-mdanalysis-reporter==0.1.0",
 ]
 
 [project.scripts]
