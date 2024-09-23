@@ -117,7 +117,10 @@ def generate_phonon_displacements(
     code: str,
 ) -> list[Structure]:
     """
-    Generate displaced structures with phonopy.
+    Generate displaced structures with phonopy based on two ways: 
+    (we will directly use the pheasy to generate the supercell in the near future)
+    1. finite-displacment method when the displacement number is less than 2.
+    2. random-displacement method when the displacement number is more than 2.
 
     Parameters
     ----------
@@ -175,9 +178,15 @@ def generate_phonon_displacements(
         is_symmetry=sym_reduce,
     )
 
+    # 1. the ALM module is used to dertermine how many free parameters of second order 
+    # force constants within the supercell. 2. Baed on the number of free parameters, 
+    # we can determine how many displaced supercells we need to use to extract the second 
+    # order force constants. Generally, the number of free parameters should be less than 
+    # 3 * natom(supercell) * num_displaced_supercells. However, the full rank of matrix 
+    # can not always guarantee the correct result sometimes, you may need to displace more 
+    # random configurations. At least use one or two more configurations basd on the suggested 
+    # number of displacements.
 
-    # following is modified by jiongzhi Zheng
-    # I will use the ALM to determine how many displaced supercells we need to use for extract second order force constants here
     from alm import ALM
     supercell_z = phonon.supercell
     lattice = supercell_z.cell
@@ -189,10 +198,6 @@ def generate_phonon_displacements(
         alm.suggest()
         n_fp = alm._get_number_of_irred_fc_elements(1)
 
-    """Determine how many displaced supercells we need to use for extract second order force constants here
-    if we want to calculate the lattice thermal conductivty here, I highly suggest you to use the finite diplacement method 
-    to calculate the zero-K second order force constants which garantee you get the completely converged results"""
-
     num = int(np.ceil(n_fp / (3.0 * natom)))
 
 
@@ -203,28 +208,20 @@ def generate_phonon_displacements(
         num_d = int(np.ceil(num * 1.8))
     else:
         pass
-        
+    
+    logger.info("The number of free parameters of Second Order Force Constants is %s", n_fp)
+    logger.info("")  
 
+    logger.info("The Number of Equations Used to Obtain the 2ND FCs is %s", 3 * natom * num)
+    logger.info("")  
 
-    #previous version
-    #if num_disp_t > 3:
-    #    num_d = int(np.ceil(num_disp_t / 3.0))
-    #    if num_d < num:
-    #        num_d = int(num + 1)
-    #    else:
-    #        pass
-    #else:
-    #    num_d = int(num+1)
-
-    print ("The number of free parameters of Second Order Force Constants is ", n_fp)
-    print ()
-    print ("The Number of Equations Used to Obtain the 2ND FCs is ", 3 * natom * num)
-    print ()
-    print ("Be Careful!!! Full Rank of Matrix can not always guarantee the correct result sometimes"\
-           "\n if the total atoms in supercell is less than 100 and"\
-           "\n lattice constants are less than 10 angstrom,"\
-           "\n I highly suggest you to displace more random configurations"\
-           "\n At least use one or two more configurations basd on the suggested number of displacements")
+    logger.warning(
+        "Be Careful!!! Full Rank of Matrix cannot always guarantee the correct result sometimes.\n"
+        "If the total atoms in the supercell are less than 100 and\n"
+        "lattice constants are less than 10 angstroms,\n"
+        "I highly suggest displacing more random configurations.\n"
+        "At least use one or two more configurations based on the suggested number of displacements."
+        )
     
     displacement_f = 0.01
     phonon.generate_displacements(distance=displacement_f)
@@ -246,14 +243,6 @@ def generate_phonon_displacements(
 
     displacements.append(get_pmg_structure(phonon.supercell))
     return displacements
-
-
-    #phonon.generate_displacements(distance=displacement)
-
-    #supercells = phonon.supercells_with_displacements
-
-    #return [get_pmg_structure(cell) for cell in supercells]
-
 
 @job(
     output_schema=PhononBSDOSDoc,

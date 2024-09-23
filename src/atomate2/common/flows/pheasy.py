@@ -1,4 +1,4 @@
-"""Flows for calculating phonons."""
+"""Flows for calculating phonons with the pheasy code (LASSO and random-displacement method)."""
 
 from __future__ import annotations
 
@@ -33,16 +33,16 @@ SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
 @dataclass
 class BasePhononMaker(Maker, ABC):
     """
-    Maker to calculate harmonic phonons with a DFT/force field code and Phonopy.
+    Maker to calculate harmonic phonons with a DFT/force field code and the code Pheasy.
 
     Calculate the harmonic phonons of a material. Initially, a tight structural
     relaxation is performed to obtain a structure without forces on the atoms.
-    Subsequently, supercells with one displaced atom are generated and accurate
-    forces are computed for these structures. With the help of phonopy, these
-    forces are then converted into a dynamical matrix. To correct for polarization
-    effects, a correction of the dynamical matrix based on BORN charges can
-    be performed. Finally, phonon densities of states, phonon band structures
-    and thermodynamic properties are computed.
+    Subsequently, supercells with all atoms displaced by a small amount (generally 0.01 A) 
+    are are generated and accurate forces are computed for these structures. 
+    With the help of phonopy, these forces are then converted into a dynamical matrix. 
+    To correct for polarization effects, a correction of the dynamical matrix based on 
+    BORN charges can be performed. Finally, phonon densities of states, phonon band 
+    structures and thermodynamic properties are computed.
 
     .. Note::
         It is heavily recommended to symmetrize the structure before passing it to
@@ -129,7 +129,7 @@ class BasePhononMaker(Maker, ABC):
     sym_reduce: bool = True
     symprec: float = 1e-4
     displacement: float = 0.01
-    min_length: float | None = 20.0
+    min_length: float | None = 14.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
@@ -287,7 +287,7 @@ class BasePhononMaker(Maker, ABC):
             jobs.append(compute_total_energy_job)
             total_dft_energy = compute_total_energy_job.output
 
-        # get a phonon object from phonopy
+        # get a phonon object from pheasy code
         displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
