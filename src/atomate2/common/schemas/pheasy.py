@@ -52,8 +52,6 @@ from atomate2.common.schemas.phonons import PhononJobDirs
 
 logger = logging.getLogger(__name__)
 
-
-
 class Forceconstants(MSONable):
     """A force constants class."""
 
