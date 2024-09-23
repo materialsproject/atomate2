@@ -49,6 +49,7 @@ from atomate2.common.schemas.phonons import PhononComputationalSettings
 from atomate2.common.schemas.phonons import PhononUUIDs
 from atomate2.common.schemas.phonons import PhononJobDirs
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -147,6 +148,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
     )
 
     uuids: Optional[PhononUUIDs] = Field("Field including all relevant uuids")
+
 
     @classmethod
     def from_forces_born(
@@ -512,7 +514,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             #)
         else:
             pass
-        
+
         # gets data for visualization on website - yaml is also enough
         if kwargs.get("band_structure_eigenvectors"):
             bs_symm_line.write_phononwebsite("phonon_website.json")

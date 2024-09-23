@@ -9,7 +9,7 @@ from atomate2 import SETTINGS
 from atomate2.common.flows.pheasy import BasePhononMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import DielectricMaker, StaticMaker, TightRelaxMaker
-from atomate2.vasp.jobs.pheasy import PhononDisplacementMaker
+from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
