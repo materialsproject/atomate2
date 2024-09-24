@@ -75,7 +75,9 @@ jobs:
       - name: Test
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: pytest --ignore=tests/ase --cov=atomate2 --cov-report=xml
+        run: |
+          micromamba activate a2
+          pytest --ignore=tests/ase --cov=atomate2 --cov-report=xml
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
@@ -96,6 +98,9 @@ jobs:
           - 27017:27017
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
@@ -129,7 +134,7 @@ jobs:
         run: uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
       - name: Test Notebooks
-        run: | 
+        run: |
           micromamba activate a2
           pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb
 
