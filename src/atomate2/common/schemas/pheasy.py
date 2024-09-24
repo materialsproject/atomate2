@@ -336,7 +336,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         prim = read('POSCAR')
         supercell = read('SPOSCAR')
 
-        # To generate the culsters and orbots for second order force constants
+        # Create the clusters and orbitals for second order force constants
         pheasy_cmd_1 = 'pheasy --dim "{0}" "{1}" "{2}" -s -w 2 --symprec 1e-3 --nbody 2'.format(
             int(supercell_matrix[0][0]),
             int(supercell_matrix[1][1]),
@@ -349,8 +349,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             int(supercell_matrix[1][1]),
             int(supercell_matrix[2][2]))
         
-        # Generate the sensing matrix for the input of machine leaning method.i.e., LASSO,
-        pheasy_cmd_3 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec 1e-3 --ndata "{3}" --disp_file'.format(
+        # Generate the Compressive Sensing matrix,i.e., displacment matrix
+        # for the input of machine leaning method.i.e., LASSO,
+        pheasy_cmd_3 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec 1e-3 \
+            --ndata "{3}" --disp_file'.format(
             int(supercell_matrix[0][0]),
             int(supercell_matrix[1][1]),
             int(supercell_matrix[2][2]),
@@ -366,7 +368,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         num_judge = len(disps)
 
         if num_judge > 3:
-           # Generate the force constants using the LASSO method
+           # Calculate the force constants using the LASSO method
            pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 \
             -l LASSO --std --rasr BHH --ndata "{3}"'.format(
                 int(supercell_matrix[0][0]),
@@ -374,7 +376,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 int(supercell_matrix[2][2]),
                 int(num_har))
         else:
-            # Generate the force constants using the least-squred method
+            # Calculate the force constants using the least-squred method
             pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 \
                   --rasr BHH --ndata "{3}"'.format(
                 int(supercell_matrix[0][0]), 
@@ -382,7 +384,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 int(supercell_matrix[2][2]), 
                 int(num_har))
             
-        logger.info("Start running pheasy in andes8: Dartmouth College Clusters or NERSC Perlmutter")
+        logger.info("Start running pheasy in cluster")
+        
         subprocess.call(pheasy_cmd_1, shell=True)
         subprocess.call(pheasy_cmd_2, shell=True)
         subprocess.call(pheasy_cmd_3, shell=True)
