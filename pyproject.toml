@@ -28,7 +28,7 @@ dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core==0.82.2",
+    "emmet-core>=0.82.2",
     "jobflow>=0.1.11",
     "monty>=2024.7.30",
     "numpy",
@@ -65,6 +65,11 @@ ase = [
 ase-ext = [
     "tblite>=0.3.0",
 ]
+openmm = [
+    "mdanalysis>=2.7.0",
+    "openmm>=8.1.0",
+    "openmm-mdanalysis-reporter>=0.1.0",
+]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
@@ -93,7 +98,7 @@ strict = [
     "click==8.1.7",
     "custodian==2024.6.24",
     "dscribe==2.1.1",
-    "emmet-core==0.82.2",
+    "emmet-core==0.84.2",
     "ijson==3.3.0",
     "jobflow==0.1.18",
     "lobsterpy==0.4.5",
@@ -109,6 +114,9 @@ strict = [
     "seekpath==2.1.0",
     "tblite==0.3.0",
     "typing-extensions==4.12.2",
+    "mdanalysis==2.7.0",
+    "openmm==8.1.1",
+    "openmm-mdanalysis-reporter==0.1.0",
 ]
 strict-forcefields = [
     "calorine==2.2.1",
