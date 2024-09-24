@@ -1,6 +1,5 @@
-"""Flows for calculating phonons, higher-order force constants, 
-and phonon renormalization with the pheasy code (LASSO and 
-random-displacement method)."""
+"""Flows for calculating phonons, an-harmonic force constants, 
+and phonon energy renormalization with the pheasy."""
 
 from __future__ import annotations
 
@@ -38,43 +37,59 @@ class BasePhononMaker(Maker, ABC):
     Maker to calculate harmonic phonons with a DFT/force field code and the LASSO-based machine 
     learning code Pheasy.
 
-    Calculate the harmonic phonons of a material. Initially, a tight structural
-    relaxation is performed to obtain a structure without forces on the atoms.
-    Subsequently, supercells with all atoms displaced by a small amount (generally using 0.01 A) 
-    are are generated and accurate forces are computed for these structures. 
-    With the help of pheasy (LASSO), these forces are then converted into a dynamical matrix. 
-    To correct for polarization effects, a correction of the dynamical matrix based on 
-    BORN charges can be performed. Finally, phonon densities of states, phonon band 
-    structures and thermodynamic properties are computed.
+    Calculate the zero-K harmonic phonons of a material. Initially, a tight structural relaxation 
+    is performed to obtain a structure without forces on the atoms. Subsequently, supercells with 
+    all atoms displaced by a small amplitude (generally using 0.01 A) are are generated and accurate
+    forces are computed for these structures. With the help of pheasy (LASSO technique), these 
+    forces are then converted into a dynamical matrix. To correct for polarization effects, a 
+    correction of the dynamical matrix based on BORN charges can be performed. Finally, phonon 
+    densities of states, phonon band structures and thermodynamic properties are computed.
 
     .. Note::
-        It is heavily recommended to symmetrize the structure before passing it to
-        this flow. Otherwise, a different space group might be detected and too
-        many displacement calculations will be required for pheasy phonon calculation.
-        It is recommended to check the convergence parameters here and
-        adjust them if necessary. The default might not be strict enough
-        for your specific case.
+        It is heavily recommended to symmetrize the structure before passing it to this flow. 
+        Otherwise, a different space group might be detected and too many displacement calculations 
+        will be required for pheasy phonon calculation. It is recommended to check the convergence 
+        parameters here and adjust them if necessary. The default might not be strict enough for your
+        specific case. Additionally, for high-throughoput calculations, it is recommended to calculate 
+        the residual forces on the atoms in the supercell after the relaxation. Then the forces on 
+        displaced supercells can deduct the residual forces to reduce the error in the dynamical matrix.
 
     Parameters
     ----------
     name : str
-        Name of the flows produced by this maker.
+        Name of the flow produced by this maker.
     sym_reduce : bool
         Whether to reduce the number of deformations using symmetry.
     symprec : float
         Symmetry precision to use in the
         reduction of symmetry to find the primitive/conventional cell
         (use_primitive_standard_structure, use_conventional_standard_structure)
-        and to handle all symmetry-related tasks in phonopy
+        and to handle all symmetry-related tasks in pheasy, we recommend to 
+        use the value of 1e-3.
     displacement: float
-        displacement distance for phonons
+        displacement distance for phonons, for most cases 0.01 A is a good choice,
+        but it can be increased to 0.02 A for heavier elements.
+    displacement_anharmonic: float
+        displacement distance for anharmonic force constants(FCs) up to sixth-order 
+        FCs, for most cases 0.08 A is a good choice, but it can be increased to 0.1 A.
     num_displaced_supercells: int
-        number of displacements to be generated using a random displacement method
+        number of displacements to be generated using a random-displacement approach
+        for harmonic phonon calculations. The default value is 0 and the number of
+        displacements is automatically determined by the number of atoms in the supercell
+        and its space group.
+    num_displaced_supercells_anharmonic: int
+        number of displacements to be generated using a random-displacement approach
+        for anharmonic phonon calculations. The default value is 0 and the number of
+        displacements is automatically determined by the number of atoms in the supercell,
+        cutoff distance for anharmonic FCs its space group. generally, 50 large-distance
+        displacements are enough for most cases.
     min_length: float
-        min length of the supercell that will be built
+        minimum length of lattice constants will be used to create the supercell, the 
+        default value is 14.0 A. In most cases, the default value is good enough, but
+        it can be increased for larger supercells.
     prefer_90_degrees: bool
         if set to True, supercell algorithm will first try to find a supercell
-        with 3 90 degree angles
+        with 3 90 degree angles.
     get_supercell_size_kwargs: dict
         kwargs that will be passed to get_supercell_size to determine supercell size
     use_symmetrized_structure: str
@@ -155,8 +170,6 @@ class BasePhononMaker(Maker, ABC):
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     code: str = None
-
-    # add mp_id to the phonon output
     mp_id: str = None
     store_force_constants: bool = True
     socket: bool = False
