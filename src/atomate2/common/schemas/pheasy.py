@@ -28,6 +28,7 @@ from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 from typing_extensions import Self
+import pickle
 
 # import lib by jiongzhi zheng 
 from ase.io import read
@@ -49,7 +50,7 @@ from atomate2.common.schemas.phonons import PhononComputationalSettings
 from atomate2.common.schemas.phonons import PhononUUIDs
 from atomate2.common.schemas.phonons import PhononJobDirs
 
-import pickle
+
 
 logger = logging.getLogger(__name__)
 
@@ -231,40 +232,31 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         write_vasp("POSCAR", cell)
         write_vasp("SPOSCAR", supercell)
 
-        phonon.generate_displacements(distance=displacement)
-        disps_j = phonon.displacements
-        f_disp_n1 = len(disps_j)
+        # get the force-displacement dataset from previous calculations
+        set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
+        set_of_forces_a_o = np.array(set_of_forces)
 
-        if f_disp_n1 < 1:
-            set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
-            set_of_forces_a = np.array(set_of_forces)
-            set_of_disps = [np.array(disps.cart_coords) for disps in displacement_data["displaced_structures"]]
-            set_of_disps_m = np.array(set_of_disps)
-            print(set_of_disps_m)
+        # deduct the residual forces on the equilibrium structure
+        set_of_forces_a_t = set_of_forces_a_o - set_of_forces_a_o[-1, :, :]
+        set_of_forces_a = set_of_forces_a_t[:-1, :, :]
+        set_of_disps = [np.array(disps.cart_coords) for disps in displacement_data["displaced_structures"]]
 
-            print(np.shape(set_of_disps_m))
-            n_shape = set_of_disps_m.shape[0]
-            set_of_disps_d = {'displacements': set_of_disps_m, 'dtype': 'double', 'order': 'C'}
+        # get the displacement dataset
+        set_of_disps_m_o = np.round((set_of_disps - supercell.get_positions()), 
+                                    decimals=16).astype('double')
+        set_of_disps_m = set_of_disps_m_o[:-1, :, :]
 
-        else:
-            set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
-            set_of_forces_a_o = np.array(set_of_forces)
-            set_of_forces_a_t = set_of_forces_a_o - set_of_forces_a_o[-1, :, :]
-            set_of_forces_a = set_of_forces_a_t[:-1, :, :]
-            set_of_disps = [np.array(disps.cart_coords) for disps in displacement_data["displaced_structures"]]
-            set_of_disps_m_o = np.round((set_of_disps - supercell.get_positions()), decimals=16).astype('double')
-            set_of_disps_m = set_of_disps_m_o[:-1, :, :]
+        # get the number of displacements
+        n_shape = set_of_disps_m.shape[0]
 
-            n_shape = set_of_disps_m.shape[0]
-            set_of_disps_d = {'displacements': set_of_disps_m, 'dtype': 'double', 'order': 'C'}
-
-        
+        # save the displacement and force matrix in the current directory
+        # for the future use by pheasy code 
         with open("disp_matrix.pkl","wb") as file: 
              pickle.dump(set_of_disps_m,file)
         with open("force_matrix.pkl","wb") as file:
              pickle.dump(set_of_forces_a,file)
 
-        """"put a if else condition here to determine whether we need to calculate the higher order force constants """
+        # TODO: extract the anharmonic force constants
         Calc_anharmonic_FCs = False
         if Calc_anharmonic_FCs:
             from alm import ALM
@@ -314,6 +306,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         else:
             num_har = n_shape
 
+
         if born is not None and epsilon_static is not None:
             if len(structure) == len(born):
                 borns, epsilon = symmetrize_borns_and_epsilon(
@@ -343,33 +336,47 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         prim = read('POSCAR')
         supercell = read('SPOSCAR')
 
+        # To generate the culsters and orbots for second order force constants
         pheasy_cmd_1 = 'pheasy --dim "{0}" "{1}" "{2}" -s -w 2 --symprec 1e-3 --nbody 2'.format(
             int(supercell_matrix[0][0]),
             int(supercell_matrix[1][1]),
             int(supercell_matrix[2][2]))
+        
+        # Create the null space to further reduce the free parameters for 
+        # specific force constants and make them physically correct.
         pheasy_cmd_2 = 'pheasy --dim "{0}" "{1}" "{2}" -c --symprec 1e-3 -w 2'.format(
             int(supercell_matrix[0][0]),
             int(supercell_matrix[1][1]),
             int(supercell_matrix[2][2]))
+        
+        # Generate the sensing matrix for the input of machine leaning method.i.e., LASSO,
         pheasy_cmd_3 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec 1e-3 --ndata "{3}" --disp_file'.format(
             int(supercell_matrix[0][0]),
             int(supercell_matrix[1][1]),
             int(supercell_matrix[2][2]),
             int(num_har))
 
-        displacement_f = 0.01
-        phonon.generate_displacements(distance=displacement_f)
+
+        # Here we set a criteria to determine which method to use to generate the force constants.
+        # If the number of displacements is larger than 3, 
+        # we will use the LASSO method to generate the force constants.
+        # Otherwise, we will use the least-squred method to generate the force constants.
+        phonon.generate_displacements(distance=displacement)
         disps = phonon.displacements
         num_judge = len(disps)
 
         if num_judge > 3:
-           pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 -l LASSO --std --rasr BHH --ndata "{3}"'.format(
+           # Generate the force constants using the LASSO method
+           pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 \
+            -l LASSO --std --rasr BHH --ndata "{3}"'.format(
                 int(supercell_matrix[0][0]),
                 int(supercell_matrix[1][1]),
                 int(supercell_matrix[2][2]),
                 int(num_har))
         else:
-            pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 --rasr BHH --ndata "{3}"'.format(
+            # Generate the force constants using the least-squred method
+            pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 \
+                  --rasr BHH --ndata "{3}"'.format(
                 int(supercell_matrix[0][0]), 
                 int(supercell_matrix[1][1]), 
                 int(supercell_matrix[2][2]), 
