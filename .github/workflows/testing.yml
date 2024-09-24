@@ -120,6 +120,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          micromamba activate a2
           python -m pip install --upgrade pip
           uv pip install .[strict,tests]
 
