@@ -337,25 +337,28 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         supercell = read('SPOSCAR')
 
         # Create the clusters and orbitals for second order force constants
-        pheasy_cmd_1 = 'pheasy --dim "{0}" "{1}" "{2}" -s -w 2 --symprec 1e-3 --nbody 2'.format(
-            int(supercell_matrix[0][0]),
-            int(supercell_matrix[1][1]),
-            int(supercell_matrix[2][2]))
-        
-        # Create the null space to further reduce the free parameters for 
-        # specific force constants and make them physically correct.
-        pheasy_cmd_2 = 'pheasy --dim "{0}" "{1}" "{2}" -c --symprec 1e-3 -w 2'.format(
-            int(supercell_matrix[0][0]),
-            int(supercell_matrix[1][1]),
-            int(supercell_matrix[2][2]))
-        
-        # Generate the Compressive Sensing matrix,i.e., displacment matrix
-        # for the input of machine leaning method.i.e., LASSO,
-        pheasy_cmd_3 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec 1e-3 \
-            --ndata "{3}" --disp_file'.format(
+        pheasy_cmd_1 = 'pheasy --dim "{0}" "{1}" "{2}" -s -w 2 --symprec "{3}" --nbody 2'.format(
             int(supercell_matrix[0][0]),
             int(supercell_matrix[1][1]),
             int(supercell_matrix[2][2]),
+            float(symprec))
+        
+        # Create the null space to further reduce the free parameters for 
+        # specific force constants and make them physically correct.
+        pheasy_cmd_2 = 'pheasy --dim "{0}" "{1}" "{2}" -c --symprec "{3}" -w 2'.format(
+            int(supercell_matrix[0][0]),
+            int(supercell_matrix[1][1]),
+            int(supercell_matrix[2][2]),
+            float(symprec))
+        
+        # Generate the Compressive Sensing matrix,i.e., displacment matrix
+        # for the input of machine leaning method.i.e., LASSO,
+        pheasy_cmd_3 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec "{3}" \
+            --ndata "{4}" --disp_file'.format(
+            int(supercell_matrix[0][0]),
+            int(supercell_matrix[1][1]),
+            int(supercell_matrix[2][2]),
+            float(symprec),
             int(num_har))
 
 
@@ -369,23 +372,25 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         if num_judge > 3:
            # Calculate the force constants using the LASSO method
-           pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 \
-            -l LASSO --std --rasr BHH --ndata "{3}"'.format(
+           pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec "{3}" \
+            -l LASSO --std --rasr BHH --ndata "{4}"'.format(
                 int(supercell_matrix[0][0]),
                 int(supercell_matrix[1][1]),
                 int(supercell_matrix[2][2]),
+                float(symprec),
                 int(num_har))
         else:
             # Calculate the force constants using the least-squred method
-            pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec 1e-3 \
-                  --rasr BHH --ndata "{3}"'.format(
+            pheasy_cmd_4 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc -w 2 --symprec "{3}" \
+                  --rasr BHH --ndata "{4}"'.format(
                 int(supercell_matrix[0][0]), 
                 int(supercell_matrix[1][1]), 
-                int(supercell_matrix[2][2]), 
+                int(supercell_matrix[2][2]),
+                float(symprec), 
                 int(num_har))
             
         logger.info("Start running pheasy in cluster")
-        
+
         subprocess.call(pheasy_cmd_1, shell=True)
         subprocess.call(pheasy_cmd_2, shell=True)
         subprocess.call(pheasy_cmd_3, shell=True)
@@ -485,18 +490,21 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
            imaginary_modes = False
 
         if imaginary_modes_hiphive:
-            pheasy_cmd_11 = 'pheasy --dim "{0}" "{1}" "{2}" -s -w 2 --c2 10.0 --symprec 1e-3 --nbody 2'.format(
-                int(supercell_matrix[0][0]), 
-                int(supercell_matrix[1][1]), 
-                int(supercell_matrix[2][2]))
-            pheasy_cmd_12 = 'pheasy --dim "{0}" "{1}" "{2}" -c --symprec 1e-3 --c2 10.0 -w 2'.format(
-                int(supercell_matrix[0][0]), 
-                int(supercell_matrix[1][1]), 
-                int(supercell_matrix[2][2]))
-            pheasy_cmd_13 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec 1e-3 --c2 10.0 --ndata "{3}" --disp_file'.format(
+            pheasy_cmd_11 = 'pheasy --dim "{0}" "{1}" "{2}" -s -w 2 --c2 10.0 --symprec "{3}" --nbody 2'.format(
                 int(supercell_matrix[0][0]), 
                 int(supercell_matrix[1][1]), 
                 int(supercell_matrix[2][2]),
+                float(symprec))
+            pheasy_cmd_12 = 'pheasy --dim "{0}" "{1}" "{2}" -c --symprec "{3}" --c2 10.0 -w 2'.format(
+                int(supercell_matrix[0][0]), 
+                int(supercell_matrix[1][1]), 
+                int(supercell_matrix[2][2]),
+                float(symprec))
+            pheasy_cmd_13 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec "{3}" --c2 10.0 --ndata "{4}" --disp_file'.format(
+                int(supercell_matrix[0][0]), 
+                int(supercell_matrix[1][1]), 
+                int(supercell_matrix[2][2]),
+                float(symprec),
                 int(num_har))
             
             displacement_f = 0.01
@@ -505,16 +513,18 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             num_judge = len(disps)
 
             if num_judge > 3:
-                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --c2 10.0 --full_ifc -w 2 --symprec 1e-3 -l LASSO --std --rasr BHH --ndata "{3}"'.format(
+                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --c2 10.0 --full_ifc -w 2 --symprec "{3}" -l LASSO --std --rasr BHH --ndata "{4}"'.format(
                     int(supercell_matrix[0][0]),
                     int(supercell_matrix[1][1]), 
-                    int(supercell_matrix[2][2]), 
+                    int(supercell_matrix[2][2]),
+                    float(symprec), 
                     int(num_har))
             else:
-                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc --c2 10.0 -w 2 --symprec 1e-3 --rasr BHH --ndata "{3}"'.format(
+                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc --c2 10.0 -w 2 --symprec "{3}" --rasr BHH --ndata "{4}"'.format(
                     int(supercell_matrix[0][0]), 
                     int(supercell_matrix[1][1]), 
-                    int(supercell_matrix[2][2]), 
+                    int(supercell_matrix[2][2]),
+                    float(symprec), 
                     int(num_har))
 
             logger.info("Start running pheasy in cluster")
