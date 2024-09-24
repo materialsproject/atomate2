@@ -247,7 +247,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         set_of_disps_m = set_of_disps_m_o[:-1, :, :]
 
         # get the number of displacements
-        n_shape = set_of_disps_m.shape[0]
+        num_har = set_of_disps_m.shape[0]
 
         # save the displacement and force matrix in the current directory
         # for the future use by pheasy code 
@@ -256,57 +256,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         with open("force_matrix.pkl","wb") as file:
              pickle.dump(set_of_forces_a,file)
 
-        # TODO: extract the anharmonic force constants
-        Calc_anharmonic_FCs = False
-        if Calc_anharmonic_FCs:
-            from alm import ALM
-            supercell_z = phonon.supercell
-            lattice = supercell_z.cell
-            positions = supercell_z.scaled_positions
-            numbers = supercell_z.numbers
-            natom = len(numbers)
-            with ALM(lattice, positions, numbers) as alm:
-                alm.define(1)
-                alm.suggest()
-                n_fp = alm._get_number_of_irred_fc_elements(1)
-
-            num = int(np.ceil(n_fp / (3.0 * natom)))
-            num_round = int(np.round((n_fp / (3.0 * natom))))
-
-            if num > num_round:
-                num_d = num
-                displacement_t = 0.01
-                phonon.generate_displacements(displacement_t)
-                num_disp_t = len(phonon.displacements)
-                int_num = int(num_disp_t / num_d)
-                if int_num > 3:
-                    num_d = int(np.ceil(int_num / 3.0))
-                else:
-                    num_d = int(np.ceil(int_num / 3.0) + 1)
-            else:
-                num_d = num
-                displacement_t = 0.01
-                phonon.generate_displacements(displacement_t)
-                num_disp_t = len(phonon.displacements)
-                int_num = int(num_disp_t / num_d)
-                if int_num >= 3:
-                    num_d = int(np.ceil(int_num / 3.0))
-                else:
-                    num_d = int(num + 1)
-
-            displacement_f = 0.01
-            phonon.generate_displacements(distance=displacement_f)
-            disps = phonon.displacements
-
-            f_disp_n = int(len(disps))
-            if f_disp_n > 2:
-                num_har = num_d
-            else:
-                num_har = f_disp_n
-        else:
-            num_har = n_shape
-
-
+        # get the born charges and dielectric constant
         if born is not None and epsilon_static is not None:
             if len(structure) == len(born):
                 borns, epsilon = symmetrize_borns_and_epsilon(
