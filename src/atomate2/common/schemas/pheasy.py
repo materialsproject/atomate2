@@ -479,7 +479,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             new_plotter.save_plot(filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
                                   units=kwargs.get("units", "THz"))
 
-            # new_plotter.save_plot("phonon_band_structure.eps",img_format=kwargs.get("img_format", "eps"),units=kwargs.get("units", "THz"),)
+            # new_plotter.save_plot("phonon_band_structure.eps",img_format=kwargs.get("img_format", "eps"),
+            # units=kwargs.get("units", "THz"),)
 
             imaginary_modes_hiphive = bs_symm_line.has_imaginary_freq(
             tol=kwargs.get("tol_imaginary_modes", 1e-5)
@@ -500,7 +501,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 int(supercell_matrix[1][1]), 
                 int(supercell_matrix[2][2]),
                 float(symprec))
-            pheasy_cmd_13 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec "{3}" --c2 10.0 --ndata "{4}" --disp_file'.format(
+            pheasy_cmd_13 = 'pheasy --dim "{0}" "{1}" "{2}" -w 2 -d --symprec "{3}" --c2 10.0 --ndata "{4}" \
+                --disp_file'.format(
                 int(supercell_matrix[0][0]), 
                 int(supercell_matrix[1][1]), 
                 int(supercell_matrix[2][2]),
@@ -513,14 +515,16 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             num_judge = len(disps)
 
             if num_judge > 3:
-                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --c2 10.0 --full_ifc -w 2 --symprec "{3}" -l LASSO --std --rasr BHH --ndata "{4}"'.format(
+                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --c2 10.0 --full_ifc -w 2 --symprec "{3}" \
+                    -l LASSO --std --rasr BHH --ndata "{4}"'.format(
                     int(supercell_matrix[0][0]),
                     int(supercell_matrix[1][1]), 
                     int(supercell_matrix[2][2]),
                     float(symprec), 
                     int(num_har))
             else:
-                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc --c2 10.0 -w 2 --symprec "{3}" --rasr BHH --ndata "{4}"'.format(
+                pheasy_cmd_14 = 'pheasy --dim "{0}" "{1}" "{2}" -f --full_ifc --c2 10.0 -w 2 --symprec "{3}" \
+                    --rasr BHH --ndata "{4}"'.format(
                     int(supercell_matrix[0][0]), 
                     int(supercell_matrix[1][1]), 
                     int(supercell_matrix[2][2]),
