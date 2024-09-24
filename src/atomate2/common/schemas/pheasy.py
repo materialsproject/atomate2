@@ -42,12 +42,14 @@ from phonopy.interface.vasp import read_vasp
 
 from atomate2.aims.utils.units import omegaToTHz
 
-# import some modules directly from phonons
+# import some classmethod directly from phonons
 from atomate2.common.schemas.phonons import get_factor
 from atomate2.common.schemas.phonons import ThermalDisplacementData
 from atomate2.common.schemas.phonons import PhononComputationalSettings
 from atomate2.common.schemas.phonons import PhononUUIDs
 from atomate2.common.schemas.phonons import PhononJobDirs
+
+import pickle
 
 logger = logging.getLogger(__name__)
 
@@ -256,7 +258,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             n_shape = set_of_disps_m.shape[0]
             set_of_disps_d = {'displacements': set_of_disps_m, 'dtype': 'double', 'order': 'C'}
 
-        import pickle
+        
         with open("disp_matrix.pkl","wb") as file: 
              pickle.dump(set_of_disps_m,file)
         with open("force_matrix.pkl","wb") as file:
