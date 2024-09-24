@@ -87,6 +87,7 @@ def get_supercell_size(
         min_length=min_length,
         max_length=max_length,
         min_atoms=kwargs.get("min_atoms"),
+        max_atoms=kwargs.get("max_atoms"),
         force_diagonal=kwargs["force_diagonal"],
         step_size=kwargs["step_size"],
     )
@@ -94,7 +95,6 @@ def get_supercell_size(
     if not prefer_90_degrees:
         transformation = CubicSupercellTransformation(
             **common_kwds,
-            max_atoms=kwargs.get("max_atoms"),
             force_90_degrees=False,
             allow_orthorhombic=allow_orthorhombic,
         )
@@ -113,7 +113,6 @@ def get_supercell_size(
         except AttributeError:
             transformation = CubicSupercellTransformation(
                 **common_kwds,
-                max_atoms=kwargs.get("max_atoms"),
                 force_90_degrees=False,
                 allow_orthorhombic=allow_orthorhombic,
             )
