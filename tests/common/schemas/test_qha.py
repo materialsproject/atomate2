@@ -7,7 +7,7 @@ from atomate2.common.jobs.phonons import PhononBSDOSDoc
 from atomate2.common.jobs.qha import PhononQHADoc, analyze_free_energy
 
 
-def test_analyze_free_energy(clean_dir, test_dir):
+def test_analyze_free_energy(tmp_dir, test_dir):
     # The following code and the test files have been adapted from Phonopy
     # Copyright (C) 2015 Atsushi Togo
     # All rights reserved.
@@ -84,7 +84,7 @@ def test_analyze_free_energy(clean_dir, test_dir):
     assert isinstance(qha_doc, PhononQHADoc)
 
 
-def test_analyze_free_energy_small(clean_dir, test_dir):
+def test_analyze_free_energy_small(tmp_dir, test_dir):
     # The following code and the test files have been adapted from Phonopy
     # Copyright (C) 2015 Atsushi Togo
     # All rights reserved.
