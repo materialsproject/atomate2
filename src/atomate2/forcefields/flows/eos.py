@@ -34,7 +34,7 @@ class ForceFieldEosMaker(CommonEosMaker):
     initial_relax_maker : .Maker | None
         Maker to relax the input structure, defaults to None (no initial relaxation).
     eos_relax_maker : .Maker
-        Maker to relax deformationed structures for the EOS fit.
+        Maker to relax deformed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
     strain : tuple[float]
@@ -115,7 +115,7 @@ class CHGNetEosMaker(CommonEosMaker):
     initial_relax_maker : .Maker | None
         Maker to relax the input structure, defaults to None (no initial relaxation).
     eos_relax_maker : .Maker
-        Maker to relax deformationed structures for the EOS fit.
+        Maker to relax deformed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
     strain : tuple[float]
@@ -166,7 +166,7 @@ class M3GNetEosMaker(CommonEosMaker):
     initial_relax_maker : .Maker | None
         Maker to relax the input structure, defaults to None (no initial relaxation).
     eos_relax_maker : .Maker
-        Maker to relax deformationed structures for the EOS fit.
+        Maker to relax deformed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
     strain : tuple[float]
@@ -217,7 +217,7 @@ class MACEEosMaker(CommonEosMaker):
     initial_relax_maker : .Maker | None
         Maker to relax the input structure, defaults to None (no initial relaxation).
     eos_relax_maker : .Maker
-        Maker to relax deformationed structures for the EOS fit.
+        Maker to relax deformed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
     strain : tuple[float]
