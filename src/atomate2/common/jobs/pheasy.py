@@ -34,8 +34,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-
-
 @job(data=[Structure])
 def generate_phonon_displacements(
     structure: Structure,
@@ -49,10 +47,11 @@ def generate_phonon_displacements(
     code: str,
 ) -> list[Structure]:
     """
-    Generate displaced structures with phonopy based on two ways: 
+    Generate small-distance perturbed structures with phonopy based on two ways: 
     (we will directly use the pheasy to generate the supercell in the near future)
-    1. finite-displacment method when the displacement number is less than 2.
-    2. random-displacement method when the displacement number is more than 2.
+    1. finite-displacment method (one displaced atom) when the displacement number
+    is less than 3. 2. random-displacement method (all-displaced atoms) when the 
+    displacement number is more than 3.
 
     Parameters
     ----------
@@ -61,9 +60,9 @@ def generate_phonon_displacements(
     supercell_matrix: np.array
         array to describe supercell matrix
     displacement: float
-        displacement in Angstrom
+        displacement in Angstrom (default: 0.01)
     num_displaced_supercells: int
-        number of displaced supercells
+        number of displaced supercells defined by users
     sym_reduce: bool
         if True, symmetry will be used to generate displacements
     symprec: float
@@ -102,7 +101,8 @@ def generate_phonon_displacements(
                 "use_symmetrized_structure must be 'primitive'"
             )
         cell.magnetic_moments = None
-
+    # create the phonopy object to get some information
+    # for the displacement generation in ALM code.
     phonon = Phonopy(
         cell,
         supercell_matrix,
@@ -112,31 +112,38 @@ def generate_phonon_displacements(
         is_symmetry=sym_reduce,
     )
 
-    # 1. the ALM module is used to dertermine how many free parameters of second order 
-    # force constants within the supercell. 2. Baed on the number of free parameters, 
-    # we can determine how many displaced supercells we need to use to extract the second 
-    # order force constants. Generally, the number of free parameters should be less than 
-    # 3 * natom(supercell) * num_displaced_supercells. However, the full rank of matrix 
-    # can not always guarantee the correct result sometimes, you may need to displace more 
-    # random configurations. At least use one or two more configurations basd on the suggested 
-    # number of displacements.
+    # 1. the ALM module is used to dertermine how many free parameters (irreducible force 
+    # constants) of second order force constants (FCs) within the supercell. 2. Baed on the 
+    # number of free parameters, we can determine how many displaced supercells we need 
+    # to use to extract the second order force constants. Generally, the number of free 
+    # parameters should be less than 3 * natom(supercell) * num_displaced_supercells. 
+    # However, the full rank of matrix can not always guarantee the accurate result 
+    # sometimes, you may need to displace more random configurations. At least use one 
+    # or two more configurations basd on the suggested number of displacements.
 
     from alm import ALM
-    supercell_z = phonon.supercell
-    lattice = supercell_z.cell
-    positions = supercell_z.scaled_positions
-    numbers = supercell_z.numbers
+    supercell_ph = phonon.supercell
+    lattice = supercell_ph.cell
+    positions = supercell_ph.scaled_positions
+    numbers = supercell_ph.numbers
     natom = len(numbers)
+
+    # get the number of free parameters of 2ND FCs from ALM, labeled as n_fp
     with ALM(lattice, positions, numbers) as alm:
         alm.define(1)
         alm.suggest()
         n_fp = alm._get_number_of_irred_fc_elements(1)
 
+    # get the number of displaced supercells based on the number of free parameters
     num = int(np.ceil(n_fp / (3.0 * natom)))
 
+    # get the number of displaced supercells from phonopy to compared with the number
+    # of 3, if the number of displaced supercells is less than 3, we will use the finite
+    # displacement method to generate the supercells. Otherwise, we will use the random
+    # displacement method to generate the supercells.  
     phonon.generate_displacements(distance=displacement)
-    num_disp_t = len(phonon.displacements)
-    if num_disp_t > 3:
+    num_disp_f = len(phonon.displacements)
+    if num_disp_f > 3:
         num_d = int(np.ceil(num * 1.8))
     else:
         pass
@@ -154,14 +161,9 @@ def generate_phonon_displacements(
         "I highly suggest displacing more random configurations.\n"
         "At least use one or two more configurations based on the suggested number of displacements."
         )
-    
-    phonon.generate_displacements(distance=displacement)
+    logger.info("")
 
-    disps = phonon.displacements
-
-    finite_disp = False
-    f_disp_n = len(disps)
-    if f_disp_n > 3:
+    if num_disp_f > 3:
         if num_displaced_supercells != 0:
             phonon.generate_displacements(distance=displacement, 
                                       number_of_snapshots=num_displaced_supercells, 
@@ -171,13 +173,15 @@ def generate_phonon_displacements(
                                       number_of_snapshots=num_d, 
                                       random_seed=103)
     else:
-        finite_disp = True
-
+        pass
+    
     supercells = phonon.supercells_with_displacements
     displacements = []
     for cell in supercells:
         displacements.append(get_pmg_structure(cell))
 
+    # add the equilibrium structure to the list for calculating 
+    # the residual forces.
     displacements.append(get_pmg_structure(phonon.supercell))
     return displacements
 
