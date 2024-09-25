@@ -86,7 +86,7 @@ atomate2 workflows can be run using the [FireWorks] software. See the
 
 ## Installation
 
-Atomate2 is a Python 3.8+ library and can be installed using pip. Full installation
+Atomate2 is a Python 3.10+ library and can be installed using pip. Full installation
 and configuration instructions are provided in the [installation tutorial][installation].
 
 ## Tutorials
