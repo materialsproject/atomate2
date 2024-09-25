@@ -103,7 +103,7 @@ jobs:
         shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.10", "3.11"]
 
     steps:
       - name: Check out repo
