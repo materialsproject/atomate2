@@ -56,7 +56,7 @@ class JobHistory(collections.deque, MSONable):
         self, job: Job | Flow, initialization_info: Any | None = None
     ) -> None:
         """Log initialization information about the job."""
-        details = {"job_class": job.__class__.__name__}
+        details = {"job_class": type(job).__name__}
         if initialization_info:
             details["initialization_info"] = initialization_info
         self.append(JobEvent(JobEvent.INITIALIZED, details=details))

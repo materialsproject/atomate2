@@ -325,7 +325,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
     maker_info = loadfn("maker.json")
     maker = maker_info["maker"]
 
-    maker_name = maker.__class__.__name__
+    maker_name = type(maker).__name__
     # take the module path and exclude the first two elements
     # (i.e. "atomate2" and "abinit")
     module_path = maker.__module__.split(".")[2:]

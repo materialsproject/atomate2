@@ -600,7 +600,7 @@ class BaseOpenMMMaker(Maker):
             ),
             completed_at=str(datetime.now(tz=timezone.utc)),
             task_name=job_name,
-            calc_type=self.__class__.__name__,
+            calc_type=type(self).__name__,
         )
 
         prev_task = prev_task or OpenMMTaskDocument()
