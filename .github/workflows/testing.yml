@@ -24,6 +24,9 @@ jobs:
       - uses: pre-commit/action@v3.0.0
 
   test-non-ase:
+    # prevent this action from running on forks
+    if: github.repository == 'materialsproject/atomate2'
+
     services:
       local_mongodb:
         image: mongo:4.0
@@ -94,6 +97,9 @@ jobs:
           file: ./coverage.xml
   
   test-notebooks-and-ase:
+    # prevent this action from running on forks
+    if: github.repository == 'materialsproject/atomate2'
+    
     # It seems like anything torch-dependent and tblite can't be installed in the same environment
     # without the tblite tests failing in CI, see, e.g.:
     # https://github.com/tblite/tblite/issues/116
