@@ -59,12 +59,11 @@ class MPMorphMDSetGenerator(MPMDSet):
         updates = super().incar_updates
         updates.update(
             {
+                "LPLANE": True,  # may cause performance issues on modern machines
                 "LAECHG": False,
                 "EDIFFG": None,
                 **MDSetGenerator._get_ensemble_defaults(self.structure, self.ensemble),  # noqa: SLF001
             }
         )
-        if self.spin_polarized:
-            updates.update(MAGMOM=None)
 
         return updates
