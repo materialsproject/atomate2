@@ -12,10 +12,14 @@ from jobflow import Flow, Maker
 from atomate2.common.jobs.pheasy import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
-    get_supercell_size,
-    get_total_energy_per_cell,
     run_phonon_displacements,
 )
+
+from atomate2.common.jobs.phonons import (
+    get_supercell_size,
+    get_total_energy_per_cell,
+)
+
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 
 if TYPE_CHECKING:
@@ -273,7 +277,10 @@ class BasePhononMaker(Maker, ABC):
             optimization_run_uuid = bulk.output.uuid
 
         # if supercell_matrix is None, supercell size will be determined after relax
-        # maker to ensure that cell lengths are really larger than threshold
+        # maker to ensure that cell lengths are really larger than threshold. 
+        # Note that If one wants to calculate the lattice thermal conductivity,
+        # the supercell dimensions should be forced to be diagonal, e.g.,
+        # supercell_matrix = [[2, 0, 0], [0, 2, 0], [0, 0, 2]]
         if supercell_matrix is None:
             supercell_job = get_supercell_size(
                 structure,
@@ -310,7 +317,7 @@ class BasePhononMaker(Maker, ABC):
             jobs.append(compute_total_energy_job)
             total_dft_energy = compute_total_energy_job.output
 
-        # get a phonon object from pheasy code
+        # get a phonon object from pheasy code using the random-displacement approach
         displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
