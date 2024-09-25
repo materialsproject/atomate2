@@ -256,7 +256,9 @@ def generate_frequencies_eigenvectors(
         **kwargs,
     )
 
-
+# I did not directly import this job from the phonon module
+# because I modified the job to pass the displaced structures
+# to the output. 
 @job(data=["forces", "displaced_structures"])
 def run_phonon_displacements(
     displacements: list[Structure],
