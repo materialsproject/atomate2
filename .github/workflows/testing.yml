@@ -23,7 +23,7 @@ jobs:
 
       - uses: pre-commit/action@v3.0.0
 
-  test:
+  test-non-ase:
     services:
       local_mongodb:
         image: mongo:4.0
@@ -90,6 +90,7 @@ jobs:
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          name: coverage${{ matrix.split }}
           file: ./coverage.xml
 
   test-notebooks-and-ase:
@@ -179,7 +180,7 @@ jobs:
         run: sphinx-build docs docs_build
 
   automerge:
-    needs: [lint, test, docs]
+    needs: [lint, test-non-ase, test-notebooks-and-ase, docs]
     runs-on: ubuntu-latest
 
     permissions:

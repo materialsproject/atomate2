@@ -167,6 +167,7 @@ class AseRelaxMaker(AseMaker):
         """
         return AseTaskDoc.to_mol_or_struct_metadata_doc(
             getattr(self.calculator, "name", self.calculator.__class__),
+            getattr(self.calculator, "name", type(self.calculator).__name__),
             self.run_ase(mol_or_struct, prev_dir=prev_dir),
             self.steps,
             relax_kwargs=self.relax_kwargs,
