@@ -62,7 +62,7 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,tests,abinit]
+          uv pip install .[strict,strict-forcefields,tests,abinit]
           uv pip install torch-runstats
           uv pip install --no-deps nequip==0.5.6
 
@@ -72,17 +72,78 @@ jobs:
           micromamba activate a2
           uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
-      - name: Test Notebooks
-        run: | 
-          micromamba activate a2
-          pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb
-
       - name: Test
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest --cov=atomate2 --cov-report=xml
+          pytest --ignore=tests/ase --cov=atomate2 --cov-report=xml
+
+      - uses: codecov/codecov-action@v1
+        if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+
+  test-notebooks-and-ase:
+    # It seems like anything torch-dependent and tblite can't be installed in the same environment
+    # without the tblite tests failing in CI, see, e.g.:
+    # https://github.com/tblite/tblite/issues/116
+    # Outside of CI, having torch installed but not loaded seems not to affect tblite
+    # Set off ASE tests here, where tblite-dependent tests live
+    services:
+      local_mongodb:
+        image: mongo:4.0
+        ports:
+          - 27017:27017
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up micromamba
+        uses: mamba-org/setup-micromamba@main
+
+      - name: Create mamba environment
+        run: |
+          micromamba create -n a2 python=${{ matrix.python-version }} --yes
+
+      - name: Install uv
+        run: micromamba run -n a2 pip install uv
+
+      - name: Install conda dependencies
+        run: |
+          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
+
+      - name: Install dependencies
+        run: |
+          micromamba activate a2
+          python -m pip install --upgrade pip
+          uv pip install .[strict,tests]
+
+      - name: Install pymatgen from master if triggered by pymatgen repo dispatch
+        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
+        run: uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
+
+      - name: Test Notebooks
+        run: |
+          micromamba activate a2
+          pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb
+
+      - name: Test ASE
+        env:
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}
+        run: |
+          micromamba activate a2
+          pytest --cov=atomate2 --cov-report=xml tests/ase
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
@@ -105,7 +166,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[strict,docs]
+          pip install .[strict,strict-forcefields,docs]
 
       - name: Build
         run: sphinx-build docs docs_build
