@@ -111,7 +111,7 @@ def run_ordering_calculations(
     """
     jobs = []
     num_orderings = len(orderings[0])
-    for idx, (struct, origin) in enumerate(zip(*orderings)):
+    for idx, (struct, origin) in enumerate(zip(*orderings, strict=False)):
         name = f"{idx + 1}/{num_orderings} ({origin})"
 
         parent_structure = struct.copy()

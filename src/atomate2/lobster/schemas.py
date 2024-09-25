@@ -373,10 +373,10 @@ class CondensedBondingAnalysis(BaseModel):
             struct = analyse.structure
 
             for _iplot, (ication, labels, cohps) in enumerate(
-                zip(seq_ineq_cations, seq_labels_cohps, seq_cohps)
+                zip(seq_ineq_cations, seq_labels_cohps, seq_cohps, strict=False)
             ):
                 label_str = f"{struct[ication].specie!s}{ication + 1!s}: "
-                for label, cohp in zip(labels, cohps):
+                for label, cohp in zip(labels, cohps, strict=False):
                     if label is not None:
                         cba_cohp_plot_data[label_str + label] = cohp
 
@@ -1176,7 +1176,7 @@ def _replace_inf_values(data: Union[dict[Any, Any], list[Any]]) -> None:
     """
     if isinstance(data, dict):
         for key, value in data.items():
-            if isinstance(value, (dict, list)):
+            if isinstance(value, dict | list):
                 _replace_inf_values(
                     value
                 )  # Recursively process nested dictionaries and lists
@@ -1184,7 +1184,7 @@ def _replace_inf_values(data: Union[dict[Any, Any], list[Any]]) -> None:
                 data[key] = "-Infinity"  # Replace -inf with a string representation
     elif isinstance(data, list):
         for index, item in enumerate(data):
-            if isinstance(item, (dict, list)):
+            if isinstance(item, dict | list):
                 _replace_inf_values(
                     item
                 )  # Recursively process nested dictionaries and lists
@@ -1280,6 +1280,7 @@ def _get_strong_bonds(
         bondlist["list_atom2"],
         bondlist["list_icohp"],
         bondlist["list_length"],
+        strict=False,
     ):
         bonds.append(f"{a.rstrip('0123456789')}-{b.rstrip('0123456789')}")
         icohp_all.append(sum(c.values()))

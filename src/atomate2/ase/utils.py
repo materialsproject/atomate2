@@ -361,7 +361,7 @@ class AseRelaxer:
             isinstance(atoms, Atoms) and all(not pbc for pbc in atoms.pbc)
         )
 
-        if isinstance(atoms, (Structure, Molecule)):
+        if isinstance(atoms, Structure | Molecule):
             atoms = self.ase_adaptor.get_atoms(atoms)
         if self.fix_symmetry:
             atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))

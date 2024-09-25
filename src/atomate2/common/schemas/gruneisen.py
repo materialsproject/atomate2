@@ -310,7 +310,7 @@ class GruneisenParameterDocument(StructureMetadata):
         )
 
         for (dists_inx, dists), (_, freqs) in zip(
-            enumerate(data["distances"]), enumerate(data["frequency"])
+            enumerate(data["distances"]), enumerate(data["frequency"]), strict=False
         ):
             for band_idx in range(gruneisen_band_symline_plotter.n_bands):
                 ys = [freqs[band_idx][j] * u.factor for j in range(len(dists))]

@@ -251,7 +251,7 @@ def generate_openmm_interchange(
             "The number of molecule specifications and XML files must match."
         )
 
-    for mol_spec, xml_mol in zip(mol_specs, xml_mols):
+    for mol_spec, xml_mol in zip(mol_specs, xml_mols, strict=False):
         openff_mol = tk.Molecule.from_json(mol_spec.openff_mol)
         xml_openff_mol = xml_mol.to_openff_molecule()
         is_isomorphic, atom_map = get_atom_map(openff_mol, xml_openff_mol)

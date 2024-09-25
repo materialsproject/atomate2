@@ -218,7 +218,9 @@ class ElasticDocument(StructureMetadata):
         if equilibrium_stress:
             eq_stress = -0.1 * Stress(equilibrium_stress)
 
-        pk_stresses = [s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations)]
+        pk_stresses = [
+            s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations, strict=False)
+        ]
 
         if order is None:
             order = 2 if len(stresses) < 70 else 3  # TODO: Figure this out better

@@ -9,7 +9,7 @@ import warnings
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, NoReturn
+from typing import TYPE_CHECKING, Any, NoReturn
 
 from emmet.core.openmm import (
     Calculation,
@@ -29,6 +29,8 @@ from pymatgen.core import Structure
 from atomate2.openmm.utils import increment_name, task_reports
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from openmm.app.simulation import Simulation
 
 

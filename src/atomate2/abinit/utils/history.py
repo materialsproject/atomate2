@@ -187,7 +187,7 @@ class JobHistory(collections.deque, MSONable):
         types
             Single type or list of types.
         """
-        types = types if isinstance(types, (list, tuple)) else [types]
+        types = types if isinstance(types, list | tuple) else [types]
 
         return [e for e in self if e.event_type in types]
 

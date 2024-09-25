@@ -78,7 +78,7 @@ def generate_elastic_deformations(
         strain_magnitudes = [strain_magnitudes] * len(strain_states)  # type: ignore[assignment]
 
     strains = []
-    for state, magnitudes in zip(strain_states, strain_magnitudes):
+    for state, magnitudes in zip(strain_states, strain_magnitudes, strict=False):
         strains.extend([Strain.from_voigt(m * np.array(state)) for m in magnitudes])
 
     # remove zero strains

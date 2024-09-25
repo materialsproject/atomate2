@@ -233,7 +233,8 @@ def counts_from_masses(species: dict[str, float], n_mol: int) -> dict[str, float
     mol_ratio = np.array(list(species.values())) / np.array(mol_weights)
     mol_ratio /= sum(mol_ratio)
     return {
-        smile: int(np.round(ratio * n_mol)) for smile, ratio in zip(species, mol_ratio)
+        smile: int(np.round(ratio * n_mol))
+        for smile, ratio in zip(species, mol_ratio, strict=False)
     }
 
 
@@ -277,7 +278,7 @@ def counts_from_box_size(
     # Convert moles to number of molecules
     return {
         smile: int(np.round(ratio * n_mol))
-        for smile, ratio in zip(species.keys(), mol_ratio)
+        for smile, ratio in zip(species.keys(), mol_ratio, strict=False)
     }
 
 

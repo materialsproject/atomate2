@@ -101,7 +101,7 @@ def analyze_free_energy(
         heat_capacities.append([])
         entropies.append([])
 
-        for _, output in sorted(zip(volume, phonon_outputs)):
+        for _, output in sorted(zip(volume, phonon_outputs, strict=False)):
             # check if imaginary modes
             if (not output.has_imaginary_modes) or ignore_imaginary_modes:
                 electronic_energies[itemp].append(output.total_dft_energy)
