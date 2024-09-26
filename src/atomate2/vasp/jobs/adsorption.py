@@ -402,13 +402,13 @@ def adsorption_calculations(
     configuration_numbers = []
     job_dirs = []
 
-    for i, _ad_structure in enumerate(adslab_structures):
+    for idx in range(len(adslab_structures)):
         ads_energy = (
-            adslabs_data["static_energy"][i] - molecule_dft_energy - slab_dft_energy
+            adslabs_data["static_energy"][idx] - molecule_dft_energy - slab_dft_energy
         )
         adsorption_energies.append(ads_energy)
-        configuration_numbers.append(i)
-        job_dirs.append(adslabs_data["dirs"][i])
+        configuration_numbers.append(idx)
+        job_dirs.append(adslabs_data["dirs"][idx])
 
     # Sort the data by adsorption energy
     sorted_indices = sorted(

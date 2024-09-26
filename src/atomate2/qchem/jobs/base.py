@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from emmet.core.qc_tasks import TaskDoc
 from jobflow import Maker, Response, job
@@ -18,6 +18,8 @@ from atomate2.qchem.run import run_qchem, should_stop_children
 from atomate2.qchem.sets.base import QCInputGenerator
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from pymatgen.core.structure import Molecule
 
 logger = logging.getLogger(__name__)

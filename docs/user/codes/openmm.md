@@ -6,7 +6,7 @@
 >>> conda activate atomate2
 
 # installing atomate2
->>> pip install git+https://github.com/orionarcher/atomate2.git
+>>> pip install git+https://github.com/orionarcher/atomate2
 
 # installing classical_md dependencies
 >>> conda install -c conda-forge --file .github/classical_md_requirements.txt
@@ -18,7 +18,7 @@ you can clone the repository and install from source.
 
 ``` bash
 # installing atomate2
->>> git clone https://github.com/orionarcher/atomate2.git
+>>> git clone https://github.com/orionarcher/atomate2
 >>> cd atomate2
 >>> git branch openff
 >>> git checkout openff
@@ -33,7 +33,7 @@ you intend to run on GPU, make sure that the tests are passing for CUDA.
 >>> python -m openmm.testInstallation
 ```
 
-# Understanding Atomate2 OpenMM
+## Understanding Atomate2 OpenMM
 
 Atomate2 is really just a collection of jobflow workflows relevant to
 materials science. In all the workflows, we pass our system of interest
@@ -55,7 +55,6 @@ The first job we need to create generates the `Interchange` object.
 To specify the system of interest, we use give it the SMILES strings,
 counts, and names (optional) of the molecules we want to include.
 
-
 ```python
 from atomate2.openff.core import generate_interchange
 
@@ -73,7 +72,6 @@ out the `create_mol_spec` function in the `atomate2.openff.utils`
 module. Under the hood, this is being called on each mol_spec dict.
 Meaning the code below is functionally identical to the code above.
 
-
 ```python
 from atomate2.openff.utils import create_mol_spec
 
@@ -89,7 +87,6 @@ object, which we can pass to the next stage of the simulation.
 
 NOTE: It's actually mandatory to include partial charges
 for PF6- here, the built in partial charge method fails.
-
 
 ```python
 import numpy as np
@@ -205,13 +202,13 @@ Awesome! At this point, we've run a workflow and could start analyzing
 our data. Before we get there though, let's go through some of the
 other simulation options available.
 
-# Digging Deeper
+## Digging Deeper
 
 Atomate2 OpenMM supports running a variety of workflows with different
 configurations. Below we dig in to some of the more advanced options.
 
-
 ### Configuring the Simulation
+
 <details>
 <summary>Learn more about the configuration of OpenMM simulations</summary>
 
@@ -228,14 +225,13 @@ once and have it apply to all stages of the simulation. The value inheritance
 is as follows: 1) any explicitly set value, 2) the value from the previous
 maker, 3) the default value (as shown below).
 
-
 ```python
 from atomate2.openmm.jobs.base import OPENMM_MAKER_DEFAULTS
 
 print(OPENMM_MAKER_DEFAULTS)
 ```
 
-```
+```py
 {
     "step_size": 0.001,
     "temperature": 298,
@@ -339,7 +335,6 @@ Rather than use `jobflow.yaml`, you could also create the stores in
 Python and pass the stores to the `run_locally` function. This is a bit
 more code, so usually the prior method is preferred.
 
-
 ```python
 from jobflow import run_locally, JobStore
 from maggma.stores import MongoStore, S3Store
@@ -374,6 +369,7 @@ run_locally(
     ensure_success=True,
 )
 ```
+
 </details>
 
 ### Running on GPUs
@@ -381,11 +377,9 @@ run_locally(
 <details>
 <summary>Learn to accelerate MD simulations with GPUs</summary>
 
-
 Running on a GPU is nearly as simple as running on a CPU. The only difference
 is that you need to specify the `platform_properties` argument in the
 `EnergyMinimizationMaker` with the `DeviceIndex` of the GPU you want to use.
-
 
 ```python
 production_maker = OpenMMFlowMaker(
@@ -413,7 +407,6 @@ First you'll need to install mpi4py.
 ```
 
 Then you can modify and run the following script to distribute the work across the GPUs.
-
 
 ```python
 # other imports
@@ -457,15 +450,16 @@ for i in range(4):
 # this script will run four times, each with a different rank, thus distributing the work across the four GPUs.
 run_locally(flows[rank], ensure_success=True)
 ```
+
 </details>
 
-# Analysis with Emmet
+## Analysis with Emmet
 
 For now, you'll need to make sure you have a particular emmet branch installed.
 Later the builders will be integrated into `main`.
 
 ```bash
-pip install git+https://github.com/orionarcher/emmet.git@md_builders
+pip install git+https://github.com/orionarcher/emmet@md_builders
 ```
 
 ### Analyzing Local Data
@@ -498,6 +492,7 @@ u = create_universe(
 
 solute = create_solute(u, solute_name="Li", networking_solvents=["PF6"])
 ```
+
 </details>
 
 ### Setting up builders
@@ -556,6 +551,7 @@ builder.connect()
 <summary>Here are some more convenient queries.</summary>
 
 Here are some more convenient queries we could use!
+
 ```python
 # query jobs from a specific day
 april_16 = {"completed_at": {"$regex": "^2024-04-16"}}
@@ -570,6 +566,7 @@ job_uuids = [
 ]
 my_specific_jobs = {"uuid": {"$in": job_uuids}}
 ```
+
 </details>
 
 </details>
@@ -611,6 +608,7 @@ solute = create_solute(
     fallback_radius=3,
 )
 ```
+
 </details>
 
 ### Automated analysis with builders

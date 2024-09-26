@@ -320,7 +320,7 @@ class AseMDMaker(AseMaker):
                 )
 
             _dyn_mod_path = DynamicsPresets[
-                f"{self.ensemble.value}_{self.dynamics.replace('-','_')}"
+                f"{self.ensemble.value}_{self.dynamics.replace('-', '_')}"
             ].value.split(".")
             dynamics = getattr(
                 import_module(".".join(_dyn_mod_path[:-1])), _dyn_mod_path[-1]

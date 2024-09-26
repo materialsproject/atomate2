@@ -190,7 +190,7 @@ def calculate_elyte_composition(
     salt_mws = {}
     for smile in salts:
         mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
-        salt_mws[smile] = sum([masses[atom.atomic_number] for atom in mol.atoms])
+        salt_mws[smile] = sum(masses[atom.atomic_number] for atom in mol.atoms)
 
     # Convert salt mole ratios to mass ratios
     salt_mass_ratio = {
@@ -228,12 +228,13 @@ def counts_from_masses(species: dict[str, float], n_mol: int) -> dict[str, float
     mol_weights = []
     for smile in species:
         mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
-        mol_weights.append(sum([masses[atom.atomic_number] for atom in mol.atoms]))
+        mol_weights.append(sum(masses[atom.atomic_number] for atom in mol.atoms))
 
     mol_ratio = np.array(list(species.values())) / np.array(mol_weights)
     mol_ratio /= sum(mol_ratio)
     return {
-        smile: int(np.round(ratio * n_mol)) for smile, ratio in zip(species, mol_ratio)
+        smile: int(np.round(ratio * n_mol))
+        for smile, ratio in zip(species, mol_ratio, strict=True)
     }
 
 
@@ -258,7 +259,7 @@ def counts_from_box_size(
     """
     masses = {el.Z: el.atomic_mass for el in Element}
 
-    na = 6.02214076e23
+    na = 6.02214076e23  # Avogadro's number
     volume = (side_length * 1e-7) ** 3  # Convert from nm3 to cm^3
     total_mass = volume * density  # grams
 
@@ -266,7 +267,7 @@ def counts_from_box_size(
     mol_weights = []
     for smile in species:
         mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
-        mol_weights.append(sum([masses[atom.atomic_number] for atom in mol.atoms]))
+        mol_weights.append(sum(masses[atom.atomic_number] for atom in mol.atoms))
     mean_mw = np.mean(mol_weights)
     n_mol = (total_mass / mean_mw) * na
 
@@ -277,7 +278,7 @@ def counts_from_box_size(
     # Convert moles to number of molecules
     return {
         smile: int(np.round(ratio * n_mol))
-        for smile, ratio in zip(species.keys(), mol_ratio)
+        for smile, ratio in zip(species.keys(), mol_ratio, strict=True)
     }
 
 

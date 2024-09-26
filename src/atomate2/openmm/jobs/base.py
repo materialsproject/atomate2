@@ -9,7 +9,7 @@ import warnings
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, NoReturn
+from typing import TYPE_CHECKING, Any, NoReturn
 
 from emmet.core.openmm import (
     Calculation,
@@ -29,6 +29,8 @@ from pymatgen.core import Structure
 from atomate2.openmm.utils import increment_name, task_reports
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from openmm.app.simulation import Simulation
 
 
@@ -308,7 +310,7 @@ class BaseOpenMMMaker(Maker):
             if traj_file_type in ["h5md", "nc", "ncdf"]:
                 writer_kwargs["velocities"] = report_velocities
                 writer_kwargs["forces"] = False
-            elif report_velocities and traj_file_type not in ["trr"]:
+            elif report_velocities and traj_file_type != "trr":
                 raise ValueError(
                     f"File type {traj_file_type} does not support velocities as"
                     f"of MDAnalysis 2.7.0. Select another file type"
@@ -600,7 +602,7 @@ class BaseOpenMMMaker(Maker):
             ),
             completed_at=str(datetime.now(tz=timezone.utc)),
             task_name=job_name,
-            calc_type=self.__class__.__name__,
+            calc_type=type(self).__name__,
         )
 
         prev_task = prev_task or OpenMMTaskDocument()

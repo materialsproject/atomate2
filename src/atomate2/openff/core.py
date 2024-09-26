@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Callable
+from typing import TYPE_CHECKING
 
 import openff.toolkit as tk
 from emmet.core.openff import ClassicalMDTaskDocument, MoleculeSpec
@@ -15,6 +15,9 @@ from openff.toolkit import ForceField
 from openff.units import unit
 
 from atomate2.openff.utils import create_mol_spec_list, merge_specs_by_name_and_smiles
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 def openff_job(method: Callable) -> job:

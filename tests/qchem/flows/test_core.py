@@ -46,7 +46,7 @@ def test_frequency_opt_flattening_maker(
     mock_qchem, clean_dir, qchem_test_dir, h2o_molecule
 ):
     ref_paths = {
-        k: Path(qchem_test_dir) / "ffopt" / f"{k.lower().replace(' ','_')}"
+        k: Path(qchem_test_dir) / "ffopt" / f"{k.lower().replace(' ', '_')}"
         for k in ("Geometry Optimization", "Frequency Analysis 1")
     }
 
