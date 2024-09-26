@@ -6,7 +6,7 @@
 >>> conda activate atomate2
 
 # installing atomate2
->>> pip install git+https://github.com/orionarcher/atomate2.git
+>>> pip install git+https://github.com/orionarcher/atomate2
 
 # installing classical_md dependencies
 >>> conda install -c conda-forge --file .github/classical_md_requirements.txt
@@ -18,7 +18,7 @@ you can clone the repository and install from source.
 
 ``` bash
 # installing atomate2
->>> git clone https://github.com/orionarcher/atomate2.git
+>>> git clone https://github.com/orionarcher/atomate2
 >>> cd atomate2
 >>> git branch openff
 >>> git checkout openff
@@ -459,7 +459,7 @@ For now, you'll need to make sure you have a particular emmet branch installed.
 Later the builders will be integrated into `main`.
 
 ```bash
-pip install git+https://github.com/orionarcher/emmet.git@md_builders
+pip install git+https://github.com/orionarcher/emmet@md_builders
 ```
 
 ### Analyzing Local Data

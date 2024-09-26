@@ -55,9 +55,10 @@ forcefields = [
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.1.3",
-    "quippy-ase>=0.9.14",
+    # quippy-ase support for py3.12 tracked in https://github.com/libAtoms/QUIP/issues/645
+    "quippy-ase>=0.9.14; python_version < '3.12'",
     "sevenn>=0.9.3",
-    "torchdata<=0.7.1",   # TODO: remove when issue fixed
+    "torchdata<=0.7.1",                            # TODO: remove when issue fixed
 ]
 ase = ["ase>=3.23.0"]
 ase-ext = ["tblite>=0.3.0"]
@@ -118,10 +119,10 @@ strict-forcefields = [
     "chgnet==0.3.8",
     "mace-torch>=0.3.3",
     "matgl==1.1.3",
-    "quippy-ase==0.9.14",
+    "quippy-ase==0.9.14; python_version < '3.12'",
     "sevenn==0.9.3.post1",
     "torch==2.2.1",
-    "torchdata==0.7.1",    # TODO: remove when issue fixed
+    "torchdata==0.7.1",                            # TODO: remove when issue fixed
 ]
 
 [project.scripts]
