@@ -63,7 +63,7 @@ def test_base_mpmorph_makers(mock_vasp, clean_dir, vasp_test_dir, maker_name):
         "Si_mp_morph/BaseVaspMPMorph/static",
     ]
 
-    ref_paths = dict(zip(job_names, job_paths))
+    ref_paths = dict(zip(job_names, job_paths, strict=False))
 
     mock_vasp(ref_paths)
 
@@ -281,7 +281,7 @@ def test_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir):
         "Si_mp_morph/Si_1.2",
     ]
 
-    ref_paths = dict(zip(job_names, job_paths))
+    ref_paths = dict(zip(job_names, job_paths, strict=False))
 
     mock_vasp(ref_paths)
 
@@ -348,7 +348,7 @@ def test_recursion_equilibrium_volume_maker(mock_vasp, clean_dir, vasp_test_dir)
         "Si_mp_morph/recursion/Si_6.80",
     ]
 
-    ref_paths = dict(zip(job_names, job_paths))
+    ref_paths = dict(zip(job_names, job_paths, strict=False))
 
     mock_vasp(ref_paths)
 
@@ -530,7 +530,7 @@ def test_mpmorph_vasp_maker(mock_vasp, clean_dir, vasp_test_dir):
         "Si_mp_morph/Si_prod",
     ]
 
-    ref_paths = dict(zip(job_names, job_paths))
+    ref_paths = dict(zip(job_names, job_paths, strict=False))
 
     mock_vasp(ref_paths)
 

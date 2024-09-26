@@ -87,7 +87,7 @@ class EquilibriumVolumeMaker(Maker):
         .Flow, an MPMorph flow
         """
         if working_outputs is None:
-            if isinstance(self.initial_strain, (float, int)):
+            if isinstance(self.initial_strain, float | int):
                 self.initial_strain = (
                     -abs(self.initial_strain),
                     abs(self.initial_strain),

@@ -321,7 +321,7 @@ def get_random_packed_structure(
     )
     db_kwargs = db_kwargs or ({"use_cached": True} if struct_db == "mp" else {})
 
-    if isinstance(vol_per_atom_source, (float, int)):
+    if isinstance(vol_per_atom_source, float | int):
         vol_per_atom = vol_per_atom_source
 
     elif struct_db == "mp":

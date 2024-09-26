@@ -74,12 +74,12 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     def from_temperature_and_steps(
         cls,
         temperature: float,
-        n_steps_convergence: int,
-        n_steps_production: int,
+        n_steps_convergence: int = 5000,
+        n_steps_production: int = 1000,
         end_temp: float | None = None,
         md_maker: ForceFieldMDMaker = None,
         quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None,
-    ) -> MPMorphMLFFMDMaker:
+    ) -> Self:
         """
         Create a MPMorphMLFFMDMaker from temperature and steps.
 

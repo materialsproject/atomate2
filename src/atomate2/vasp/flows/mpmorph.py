@@ -29,8 +29,9 @@ from atomate2.vasp.jobs.mpmorph import (
 from atomate2.vasp.powerups import update_user_incar_settings
 
 if TYPE_CHECKING:
+    from typing import Self
+
     from jobflow import Maker
-    from typing_extensions import Self
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
     from atomate2.vasp.jobs.md import MDMaker
@@ -75,16 +76,16 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
     )
 
     @classmethod
-    def from_temperature_and_steps(
+    def from_temperature_and_steps(  # type: ignore[override]
         cls,
         temperature: float,
-        n_steps_convergence: int,
-        n_steps_production: int,
+        n_steps_convergence: int = 5000,
+        n_steps_production: int = 10000,
         end_temp: float | None = None,
         md_maker: Maker = BaseMPMorphMDMaker,
         n_steps_per_production_run: int | None = None,
         quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None,
-    ) -> MPMorphVaspMDMaker:
+    ) -> Self:
         """
         Create VASP MPMorph flow from a temperature and number of steps.
 
