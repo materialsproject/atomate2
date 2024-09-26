@@ -615,8 +615,6 @@ class BaseOpenMMMaker(Maker):
             interchange_json = interchange.json()
         else:
             interchange_json = interchange.model_dump_json()
-        # interchange_json = interchange.json()
-        # interchange_bytes = interchange_json.encode("utf-8")
 
         return OpenMMTaskDocument(
             tags=tags,
