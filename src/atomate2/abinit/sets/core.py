@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 from abipy.abio.factories import (
@@ -18,6 +18,8 @@ from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
 from atomate2.abinit.sets.base import AbinitInputGenerator
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from abipy.abio.inputs import AbinitInput
     from pymatgen.core import Structure
     from pymatgen.io.abinit import PseudoTable

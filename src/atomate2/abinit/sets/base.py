@@ -8,7 +8,7 @@ import logging
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from abipy.abio.inputs import AbinitInput, MultiDataset
@@ -39,7 +39,7 @@ from atomate2.abinit.utils.common import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
+    from collections.abc import Callable, Iterable, Sequence
 
     from pymatgen.core.structure import Structure
 
@@ -394,7 +394,7 @@ class AbinitInputGenerator(InputGenerator):
         """Check and format the prev_dirs (restart or dependency)."""
         if prev_dirs is None:
             return None
-        if isinstance(prev_dirs, (str, Path)):
+        if isinstance(prev_dirs, str | Path):
             return [str(prev_dirs)]
         return [str(prev_dir) for prev_dir in prev_dirs]
 
