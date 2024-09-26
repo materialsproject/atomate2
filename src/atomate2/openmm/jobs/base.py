@@ -526,7 +526,7 @@ class BaseOpenMMMaker(Maker):
             interchange.state = XmlSerializer.serialize(state)
         else:
             raise TypeError(
-                "Interchange must be an Interchange or OpenMMInterchange object."
+                f"Interchange must be an Interchange or OpenMMInterchange object, got {type(interchange).__name__}"
             )
 
     def _create_structure(
