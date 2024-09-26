@@ -88,8 +88,8 @@ def get_supercell_size(
         max_length=max_length,
         min_atoms=kwargs.get("min_atoms"),
         max_atoms=kwargs.get("max_atoms"),
+        step_size=kwargs.get("step_size", 0.1),
         force_diagonal=kwargs["force_diagonal"],
-        step_size=kwargs["step_size"],
     )
 
     if not prefer_90_degrees:
@@ -101,9 +101,9 @@ def get_supercell_size(
         transformation.apply_transformation(structure=structure)
     else:
         try:
+            common_kwds.update({"max_atoms": kwargs.get("max_atoms", 1200)})
             transformation = CubicSupercellTransformation(
                 **common_kwds,
-                max_atoms=kwargs.get("max_atoms", 1200),
                 force_90_degrees=True,
                 angle_tolerance=kwargs.get("angle_tolerance", 1e-2),
                 allow_orthorhombic=allow_orthorhombic,
