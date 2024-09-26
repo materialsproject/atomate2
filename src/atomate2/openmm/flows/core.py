@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -67,7 +67,6 @@ def collect_outputs(
     return Response(output=task_doc)
 
 
-@dataclass
 class OpenMMFlowMaker(Maker):
     """Run a production simulation.
 
