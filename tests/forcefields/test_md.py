@@ -1,5 +1,6 @@
 """Tests for forcefield MD flows."""
 
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -53,6 +54,11 @@ def test_maker_initialization():
 def test_ml_ff_md_maker(
     ff_name, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
 ):
+    if ff_name == "GAP" and sys.version_info >= (3, 12):
+        pytest.skip(
+            "GAP model not compatible with Python 3.12, waiting on https://github.com/libAtoms/QUIP/issues/645"
+        )
+
     n_steps = 5
 
     ref_energies_per_atom = {

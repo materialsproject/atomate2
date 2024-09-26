@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Callable, NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
 from emmet.core.electrode import InsertionElectrodeDoc
 from emmet.core.mpid import MPID
@@ -14,6 +14,7 @@ from pymatgen.entries.computed_entries import ComputedStructureEntry
 from ulid import ULID
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from pathlib import Path
 
     from pymatgen.alchemy import ElementLike

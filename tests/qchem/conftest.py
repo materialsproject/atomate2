@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import shutil
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Final, Literal
+from typing import TYPE_CHECKING, Any, Final, Literal
 
 import pytest
 from jobflow import CURRENT_JOB
@@ -17,7 +17,7 @@ import atomate2.qchem.run
 from atomate2.qchem.sets.base import QCInputGenerator
 
 if TYPE_CHECKING:
-    from collections.abc import Generator, Sequence
+    from collections.abc import Callable, Generator, Sequence
 
 
 logger = logging.getLogger("atomate2")
