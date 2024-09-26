@@ -1,6 +1,0 @@
-GPa
-===
-
-.. currentmodule:: atomate2.forcefields.schemas
-
-.. autodata:: GPa

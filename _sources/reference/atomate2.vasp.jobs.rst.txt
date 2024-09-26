@@ -27,6 +27,7 @@ atomate2.vasp.jobs
    :toctree:
    :recursive:
 
+   adsorption
    amset
    base
    core

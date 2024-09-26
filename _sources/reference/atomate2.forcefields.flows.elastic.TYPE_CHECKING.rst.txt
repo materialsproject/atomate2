@@ -1,6 +1,0 @@
-TYPE\_CHECKING
-==============
-
-.. currentmodule:: atomate2.forcefields.flows.elastic
-
-.. autodata:: TYPE_CHECKING

@@ -1,0 +1,8 @@
+AdsorptionMaker
+===============
+
+.. currentmodule:: atomate2.vasp.flows.adsorption
+
+.. autoclass:: AdsorptionMaker
+   :show-inheritance:
+   :members:

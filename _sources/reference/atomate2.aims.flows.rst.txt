@@ -27,6 +27,7 @@ atomate2.aims.flows
    :toctree:
    :recursive:
 
+   anharmonicity
    core
    elastic
    eos

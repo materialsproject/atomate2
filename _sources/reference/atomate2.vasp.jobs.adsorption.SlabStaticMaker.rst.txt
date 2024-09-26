@@ -1,0 +1,8 @@
+SlabStaticMaker
+===============
+
+.. currentmodule:: atomate2.vasp.jobs.adsorption
+
+.. autoclass:: SlabStaticMaker
+   :show-inheritance:
+   :members:

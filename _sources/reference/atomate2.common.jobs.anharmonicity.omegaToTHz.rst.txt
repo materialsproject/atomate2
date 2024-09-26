@@ -1,0 +1,6 @@
+omegaToTHz
+==========
+
+.. currentmodule:: atomate2.common.jobs.anharmonicity
+
+.. autodata:: omegaToTHz

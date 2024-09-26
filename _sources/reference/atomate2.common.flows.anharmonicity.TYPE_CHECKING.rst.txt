@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.common.flows.anharmonicity
+
+.. autodata:: TYPE_CHECKING

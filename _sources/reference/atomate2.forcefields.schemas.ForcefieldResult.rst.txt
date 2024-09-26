@@ -3,6 +3,4 @@ ForcefieldResult
 
 .. currentmodule:: atomate2.forcefields.schemas
 
-.. autoclass:: ForcefieldResult
-   :show-inheritance:
-   :members:
+.. autopydantic_model:: ForcefieldResult

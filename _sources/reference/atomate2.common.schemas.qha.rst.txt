@@ -1,0 +1,33 @@
+atomate2.common.schemas.qha
+===========================
+
+.. automodule:: atomate2.common.schemas.qha
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      PhononQHADoc
+
+

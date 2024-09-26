@@ -1,0 +1,6 @@
+build\_dynmat
+=============
+
+.. currentmodule:: atomate2.common.jobs.anharmonicity
+
+.. autofunction:: build_dynmat

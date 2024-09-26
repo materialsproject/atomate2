@@ -1,0 +1,6 @@
+get\_boxed\_molecule
+====================
+
+.. currentmodule:: atomate2.vasp.jobs.adsorption
+
+.. autofunction:: get_boxed_molecule

@@ -1,0 +1,33 @@
+atomate2.common.schemas.anharmonicity
+=====================================
+
+.. automodule:: atomate2.common.schemas.anharmonicity
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      AnharmonicityDoc
+
+

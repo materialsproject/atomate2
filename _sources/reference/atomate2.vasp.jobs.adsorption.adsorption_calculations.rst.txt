@@ -1,0 +1,6 @@
+adsorption\_calculations
+========================
+
+.. currentmodule:: atomate2.vasp.jobs.adsorption
+
+.. autofunction:: adsorption_calculations

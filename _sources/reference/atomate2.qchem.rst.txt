@@ -29,6 +29,7 @@
 
    drones
    files
+   flows
    jobs
    run
    sets

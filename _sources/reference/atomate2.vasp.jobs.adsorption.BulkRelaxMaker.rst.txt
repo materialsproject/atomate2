@@ -1,0 +1,8 @@
+BulkRelaxMaker
+==============
+
+.. currentmodule:: atomate2.vasp.jobs.adsorption
+
+.. autoclass:: BulkRelaxMaker
+   :show-inheritance:
+   :members:

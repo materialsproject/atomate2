@@ -1,0 +1,6 @@
+AnharmonicityDoc
+================
+
+.. currentmodule:: atomate2.common.schemas.anharmonicity
+
+.. autopydantic_model:: AnharmonicityDoc

@@ -1,0 +1,33 @@
+atomate2.vasp.schemas.adsorption
+================================
+
+.. automodule:: atomate2.vasp.schemas.adsorption
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      AdsorptionDocument
+
+

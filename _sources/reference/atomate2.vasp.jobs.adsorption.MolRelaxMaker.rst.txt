@@ -1,0 +1,8 @@
+MolRelaxMaker
+=============
+
+.. currentmodule:: atomate2.vasp.jobs.adsorption
+
+.. autoclass:: MolRelaxMaker
+   :show-inheritance:
+   :members:

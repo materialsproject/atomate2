@@ -1,0 +1,72 @@
+atomate2.vasp.jobs.adsorption
+=============================
+
+.. automodule:: atomate2.vasp.jobs.adsorption
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      adsorption_calculations
+      generate_adslabs
+      generate_slab
+      get_boxed_molecule
+      remove_adsorbate
+      run_adslabs_job
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      BulkRelaxMaker
+      MolRelaxMaker
+      MolStaticMaker
+      SlabRelaxMaker
+      SlabStaticMaker
+      TYPE_CHECKING
+
+

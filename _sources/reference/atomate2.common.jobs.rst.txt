@@ -27,6 +27,7 @@ atomate2.common.jobs
    :toctree:
    :recursive:
 
+   anharmonicity
    defect
    elastic
    electrode
@@ -34,4 +35,5 @@ atomate2.common.jobs
    gruneisen
    magnetism
    phonons
+   qha
    utils

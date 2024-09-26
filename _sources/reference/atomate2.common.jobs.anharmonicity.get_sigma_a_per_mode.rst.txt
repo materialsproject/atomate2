@@ -1,0 +1,6 @@
+get\_sigma\_a\_per\_mode
+========================
+
+.. currentmodule:: atomate2.common.jobs.anharmonicity
+
+.. autofunction:: get_sigma_a_per_mode

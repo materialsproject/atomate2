@@ -27,6 +27,7 @@ atomate2.vasp.schemas
    :toctree:
    :recursive:
 
+   adsorption
    defect
    elph
    md

@@ -1,0 +1,8 @@
+MolStaticMaker
+==============
+
+.. currentmodule:: atomate2.vasp.jobs.adsorption
+
+.. autoclass:: MolStaticMaker
+   :show-inheritance:
+   :members:

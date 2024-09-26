@@ -1,8 +1,0 @@
-TrajectoryObserver
-==================
-
-.. currentmodule:: atomate2.forcefields.utils
-
-.. autoclass:: TrajectoryObserver
-   :show-inheritance:
-   :members:

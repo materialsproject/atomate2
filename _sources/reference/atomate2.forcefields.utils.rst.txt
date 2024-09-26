@@ -24,16 +24,6 @@ atomate2.forcefields.utils
       
    
    
-      
-   
-   
-      
-   
-   
-      
-   
-   
-   
    
    
    
@@ -49,9 +39,6 @@ atomate2.forcefields.utils
       :toctree:
       :nosignatures:
    
-      OPTIMIZERS
-      Relaxer
       TYPE_CHECKING
-      TrajectoryObserver
 
 

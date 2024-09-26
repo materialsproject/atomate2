@@ -27,6 +27,7 @@ atomate2.common.flows
    :toctree:
    :recursive:
 
+   anharmonicity
    defect
    elastic
    electrode
@@ -34,3 +35,4 @@ atomate2.common.flows
    gruneisen
    magnetism
    phonons
+   qha

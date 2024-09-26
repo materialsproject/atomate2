@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.common.jobs.qha
+
+.. autodata:: TYPE_CHECKING

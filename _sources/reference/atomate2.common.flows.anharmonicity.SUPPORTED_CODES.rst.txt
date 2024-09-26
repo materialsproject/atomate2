@@ -1,0 +1,6 @@
+SUPPORTED\_CODES
+================
+
+.. currentmodule:: atomate2.common.flows.anharmonicity
+
+.. autodata:: SUPPORTED_CODES

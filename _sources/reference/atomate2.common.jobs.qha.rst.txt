@@ -1,0 +1,44 @@
+atomate2.common.jobs.qha
+========================
+
+.. automodule:: atomate2.common.jobs.qha
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      analyze_free_energy
+      get_phonon_jobs
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+

@@ -31,4 +31,5 @@ atomate2.forcefields.flows
    eos
    gruneisen
    phonons
+   qha
    relax

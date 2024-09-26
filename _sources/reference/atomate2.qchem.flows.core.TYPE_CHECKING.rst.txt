@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.qchem.flows.core
+
+.. autodata:: TYPE_CHECKING

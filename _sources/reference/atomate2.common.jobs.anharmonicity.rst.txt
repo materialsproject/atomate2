@@ -1,0 +1,82 @@
+atomate2.common.jobs.anharmonicity
+==================================
+
+.. automodule:: atomate2.common.jobs.anharmonicity
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      box_muller
+      build_dynmat
+      calc_sigma_a
+      displace_structure
+      get_eigens
+      get_forces
+      get_phonon_supercell
+      get_sigma_a_per_mode
+      get_sigma_per_element
+      get_sigma_per_site
+      get_sigmas
+      run_displacements
+      store_results
+
+
+
+
+
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+      
+   
+   
+      
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+      kb
+      omegaToTHz
+
+
+
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      ImaginaryModeError
+   

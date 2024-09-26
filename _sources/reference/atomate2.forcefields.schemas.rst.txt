@@ -21,18 +21,6 @@ atomate2.forcefields.schemas
       
    
    
-      
-   
-   
-      
-   
-   
-      
-   
-   
-      
-   
-   
    
    
    
@@ -49,9 +37,5 @@ atomate2.forcefields.schemas
       ForceFieldTaskDocument
       ForcefieldObject
       ForcefieldResult
-      GPa
-      InputDoc
-      IonicStep
-      OutputDoc
 
 

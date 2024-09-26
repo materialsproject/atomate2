@@ -1,0 +1,6 @@
+AdsorptionDocument
+==================
+
+.. currentmodule:: atomate2.vasp.schemas.adsorption
+
+.. autopydantic_model:: AdsorptionDocument

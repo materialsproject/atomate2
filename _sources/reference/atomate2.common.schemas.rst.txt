@@ -27,9 +27,11 @@ atomate2.common.schemas
    :toctree:
    :recursive:
 
+   anharmonicity
    cclib
    defects
    elastic
    gruneisen
    magnetism
    phonons
+   qha

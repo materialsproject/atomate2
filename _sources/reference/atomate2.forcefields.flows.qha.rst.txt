@@ -1,0 +1,33 @@
+atomate2.forcefields.flows.qha
+==============================
+
+.. automodule:: atomate2.forcefields.flows.qha
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      CHGNetQhaMaker
+
+

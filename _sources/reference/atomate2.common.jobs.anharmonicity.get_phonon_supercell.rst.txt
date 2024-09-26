@@ -1,0 +1,6 @@
+get\_phonon\_supercell
+======================
+
+.. currentmodule:: atomate2.common.jobs.anharmonicity
+
+.. autofunction:: get_phonon_supercell

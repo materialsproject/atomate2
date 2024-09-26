@@ -1,0 +1,8 @@
+SlabRelaxMaker
+==============
+
+.. currentmodule:: atomate2.vasp.jobs.adsorption
+
+.. autoclass:: SlabRelaxMaker
+   :show-inheritance:
+   :members:

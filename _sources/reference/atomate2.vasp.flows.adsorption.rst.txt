@@ -1,0 +1,37 @@
+atomate2.vasp.flows.adsorption
+==============================
+
+.. automodule:: atomate2.vasp.flows.adsorption
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      AdsorptionMaker
+      TYPE_CHECKING
+
+

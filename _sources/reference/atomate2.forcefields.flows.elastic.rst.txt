@@ -15,9 +15,6 @@ atomate2.forcefields.flows.elastic
       
    
    
-      
-   
-   
    
    
    
@@ -32,6 +29,5 @@ atomate2.forcefields.flows.elastic
       :nosignatures:
    
       ElasticMaker
-      TYPE_CHECKING
 
 

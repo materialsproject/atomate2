@@ -1,0 +1,8 @@
+QhaMaker
+========
+
+.. currentmodule:: atomate2.vasp.flows.qha
+
+.. autoclass:: QhaMaker
+   :show-inheritance:
+   :members:

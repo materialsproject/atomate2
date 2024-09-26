@@ -1,0 +1,6 @@
+analyze\_free\_energy
+=====================
+
+.. currentmodule:: atomate2.common.jobs.qha
+
+.. autofunction:: analyze_free_energy

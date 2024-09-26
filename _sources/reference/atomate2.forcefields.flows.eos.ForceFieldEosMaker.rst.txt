@@ -1,0 +1,8 @@
+ForceFieldEosMaker
+==================
+
+.. currentmodule:: atomate2.forcefields.flows.eos
+
+.. autoclass:: ForceFieldEosMaker
+   :show-inheritance:
+   :members:

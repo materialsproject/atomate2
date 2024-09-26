@@ -1,0 +1,6 @@
+get\_eigens
+===========
+
+.. currentmodule:: atomate2.common.jobs.anharmonicity
+
+.. autofunction:: get_eigens

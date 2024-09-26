@@ -1,0 +1,41 @@
+atomate2.common.flows.anharmonicity
+===================================
+
+.. automodule:: atomate2.common.flows.anharmonicity
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      BaseAnharmonicityMaker
+      SUPPORTED_CODES
+      TYPE_CHECKING
+
+

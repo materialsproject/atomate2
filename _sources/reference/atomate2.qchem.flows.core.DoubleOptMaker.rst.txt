@@ -1,0 +1,8 @@
+DoubleOptMaker
+==============
+
+.. currentmodule:: atomate2.qchem.flows.core
+
+.. autoclass:: DoubleOptMaker
+   :show-inheritance:
+   :members:

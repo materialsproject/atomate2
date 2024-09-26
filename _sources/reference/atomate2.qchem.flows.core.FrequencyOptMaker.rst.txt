@@ -1,0 +1,8 @@
+FrequencyOptMaker
+=================
+
+.. currentmodule:: atomate2.qchem.flows.core
+
+.. autoclass:: FrequencyOptMaker
+   :show-inheritance:
+   :members:

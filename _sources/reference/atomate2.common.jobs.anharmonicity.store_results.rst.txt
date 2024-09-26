@@ -1,0 +1,6 @@
+store\_results
+==============
+
+.. currentmodule:: atomate2.common.jobs.anharmonicity
+
+.. autofunction:: store_results

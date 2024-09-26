@@ -1,0 +1,6 @@
+box\_muller
+===========
+
+.. currentmodule:: atomate2.common.jobs.anharmonicity
+
+.. autofunction:: box_muller

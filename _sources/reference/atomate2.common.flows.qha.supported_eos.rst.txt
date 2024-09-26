@@ -1,0 +1,6 @@
+supported\_eos
+==============
+
+.. currentmodule:: atomate2.common.flows.qha
+
+.. autodata:: supported_eos

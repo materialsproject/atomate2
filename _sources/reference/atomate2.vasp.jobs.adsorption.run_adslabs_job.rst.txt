@@ -1,0 +1,6 @@
+run\_adslabs\_job
+=================
+
+.. currentmodule:: atomate2.vasp.jobs.adsorption
+
+.. autofunction:: run_adslabs_job

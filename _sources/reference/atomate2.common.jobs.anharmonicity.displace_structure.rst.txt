@@ -1,0 +1,6 @@
+displace\_structure
+===================
+
+.. currentmodule:: atomate2.common.jobs.anharmonicity
+
+.. autofunction:: displace_structure

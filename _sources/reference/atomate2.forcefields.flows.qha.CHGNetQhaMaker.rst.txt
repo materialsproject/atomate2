@@ -1,0 +1,8 @@
+CHGNetQhaMaker
+==============
+
+.. currentmodule:: atomate2.forcefields.flows.qha
+
+.. autoclass:: CHGNetQhaMaker
+   :show-inheritance:
+   :members:
