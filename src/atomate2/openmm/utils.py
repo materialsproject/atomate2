@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import io
 import re
 import tempfile
 import time
@@ -9,8 +10,19 @@ import warnings
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import numpy as np
+import openmm.unit as omm_unit
+from emmet.core.openmm import OpenMMInterchange
+from openmm import LangevinMiddleIntegrator, XmlSerializer
+from openmm.app import PDBFile
+
 if TYPE_CHECKING:
+    from contextlib import suppress
+
     from emmet.core.openmm import OpenMMTaskDocument
+
+    with suppress(ImportError):
+        from openff.interchange import Interchange
 
 
 def download_opls_xml(
@@ -132,3 +144,34 @@ def task_reports(task: OpenMMTaskDocument, traj_or_state: str = "traj") -> bool:
     else:
         raise ValueError("traj_or_state must be 'traj' or 'state'")
     return calc_input.n_steps >= report_freq
+
+
+def openff_to_openmm_interchange(
+    openff_interchange: Interchange,
+) -> OpenMMInterchange:
+    """Convert an OpenFF Interchange object to an OpenMM Interchange object."""
+    integrator = LangevinMiddleIntegrator(
+        300 * omm_unit.kelvin,
+        10.0 / omm_unit.picoseconds,
+        1.0 * omm_unit.femtoseconds,
+    )
+    sim = openff_interchange.to_openmm_simulation(integrator)
+    state = sim.context.getState(
+        getPositions=True,
+        getVelocities=True,
+        enforcePeriodicBox=True,
+    )
+    with io.StringIO() as buffer:
+        PDBFile.writeFile(
+            sim.topology,
+            np.zeros(shape=(sim.topology.getNumAtoms(), 3)),
+            file=buffer,
+        )
+        buffer.seek(0)
+        pdb = buffer.read()
+
+        return OpenMMInterchange(
+            system=XmlSerializer.serialize(sim.system),
+            state=XmlSerializer.serialize(state),
+            topology=pdb,
+        )
