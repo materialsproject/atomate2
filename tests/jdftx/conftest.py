@@ -34,7 +34,7 @@ def jdftx_test_dir(test_dir):
 def mock_cwd(monkeypatch, request):
     test_name = request.param
     print(f"test_name: {test_name}")
-    mock_path = Path(__file__).resolve().parent / f"../test_data/jdftx/{test_name}"
+    mock_path = (Path(__file__).resolve().parent / f"../test_data/jdftx/{test_name}").resolve()
     monkeypatch.setattr(os, "getcwd", lambda: mock_path)
 
 
@@ -55,7 +55,7 @@ def mock_jdftx(monkeypatch, jdftx_test_dir: Path):
         print(f"name:", name)
         ref_path = jdftx_test_dir / _REF_PATHS[name]
         logger.info("mock_run called")
-        fake_run_jdftx(ref_path, **_FAKE_RUN_JDFTX_KWARGS)
+        fake_run_jdftx(ref_path, **_FAKE_RUN_JDFTX_KWARGS, clear_inputs=False)
         
 
     get_input_set_orig = JdftxInputGenerator.get_input_set

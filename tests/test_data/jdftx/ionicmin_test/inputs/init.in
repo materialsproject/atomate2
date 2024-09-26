@@ -18,6 +18,8 @@ spintype z-spin
 elec-initial-magnetization 5 no  
 converge-empty-states yes 
 
+ionic-minimize \
+    nIterations 100 
 lattice-minimize \
     nIterations 0  
 electronic-minimize \

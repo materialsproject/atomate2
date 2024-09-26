@@ -765,7 +765,8 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
 
         Calculate and set homo and lumo fillings
         """
-        if self.broadening_type is not None:
+        
+        if self.broadening_type is not None and self.efermi is not None:
             self.homo_filling = (2 / self.nspin) * self.calculate_filling(
                 self.broadening_type, self.broadening, self.homo, self.efermi
             )

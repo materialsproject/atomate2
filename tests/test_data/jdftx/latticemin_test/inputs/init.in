@@ -1,4 +1,4 @@
-latt-move-scale 0.0 0.0 0.0  
+latt-move-scale 1.0 1.0 1.0  
 lattice \
      6.328500573514  2.109500191171  0.000000000000 \
      0.000000000000  5.966567560367  0.000000000000 \
@@ -19,7 +19,7 @@ elec-initial-magnetization 5 no
 converge-empty-states yes 
 
 lattice-minimize \
-    nIterations 0  
+    nIterations 100  
 electronic-minimize \
     nIterations 100 \
     energyDiffThreshold 1e-07  

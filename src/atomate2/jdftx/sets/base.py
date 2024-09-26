@@ -69,6 +69,7 @@ class JdftxInputSet(InputSet):
         jdftxinput = condense_jdftxinputs(self.jdftxinput, self.jdftxstructure)
 
         jdftxinput.write_file(filename=(directory / infile))
+        print(f"Wrote JDFTx input file to {directory / infile}")
 
     @staticmethod
     def from_directory(
