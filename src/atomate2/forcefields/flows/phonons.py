@@ -7,12 +7,7 @@ from typing import Literal
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.phonons import BasePhononMaker
-from atomate2.forcefields.jobs import (
-    CHGNetRelaxMaker,
-    CHGNetStaticMaker,
-    ForceFieldRelaxMaker,
-    ForceFieldStaticMaker,
-)
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
 
 @dataclass
@@ -120,13 +115,15 @@ class PhononMaker(BasePhononMaker):
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     bulk_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
+        default_factory=lambda: ForceFieldRelaxMaker(
+            force_field_name="CHGNet", relax_kwargs={"fmax": 0.00001}
+        )
     )
     static_energy_maker: ForceFieldStaticMaker | None = field(
-        default_factory=CHGNetStaticMaker
+        default_factory=lambda: ForceFieldStaticMaker(force_field_name="CHGNet")
     )
     phonon_displacement_maker: ForceFieldStaticMaker = field(
-        default_factory=CHGNetStaticMaker
+        default_factory=lambda: ForceFieldStaticMaker(force_field_name="CHGNet")
     )
     create_thermal_displacements: bool = False
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)

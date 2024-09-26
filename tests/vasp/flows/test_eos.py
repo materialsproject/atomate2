@@ -180,5 +180,5 @@ def test_mp_eos_maker(
                 assert all(
                     approx(v) == data[k] for k, v in ref_eos_fit[job_type][key].items()
                 )
-            elif isinstance(data, (float, int)):
+            elif isinstance(data, float | int):
                 assert approx(ref_eos_fit[job_type][key]) == data
