@@ -88,8 +88,8 @@ def get_image_input_structures(
     host_chgcar: Chgcar,
     selective_dynamics_scheme: str | None = "fix_two_atoms",
 ) -> dict:
-    """Get image relaxation jobs."""
-    image_jobs_dict = {}
+    """Get image input structures for relaxation."""
+    image_input_dict = {}
     for combo in inserted_combo_list:
         ini_ind, fin_ind = map(int, combo.split("+"))
         # potential place for uuid logic if depth first si desirable
@@ -111,9 +111,9 @@ def get_image_input_structures(
                 for image in pathfinder_output.output["images"]
             ]
 
-        image_jobs_dict[combo] = images_list
+        image_input_dict[combo] = images_list
 
-    return image_jobs_dict
+    return image_input_dict
 
 
 @job
