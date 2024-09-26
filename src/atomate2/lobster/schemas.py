@@ -373,10 +373,10 @@ class CondensedBondingAnalysis(BaseModel):
             struct = analyse.structure
 
             for _iplot, (ication, labels, cohps) in enumerate(
-                zip(seq_ineq_cations, seq_labels_cohps, seq_cohps, strict=False)
+                zip(seq_ineq_cations, seq_labels_cohps, seq_cohps, strict=True)
             ):
                 label_str = f"{struct[ication].specie!s}{ication + 1!s}: "
-                for label, cohp in zip(labels, cohps, strict=False):
+                for label, cohp in zip(labels, cohps, strict=True):
                     if label is not None:
                         cba_cohp_plot_data[label_str + label] = cohp
 
@@ -1280,7 +1280,7 @@ def _get_strong_bonds(
         bondlist["list_atom2"],
         bondlist["list_icohp"],
         bondlist["list_length"],
-        strict=False,
+        strict=True,
     ):
         bonds.append(f"{a.rstrip('0123456789')}-{b.rstrip('0123456789')}")
         icohp_all.append(sum(c.values()))

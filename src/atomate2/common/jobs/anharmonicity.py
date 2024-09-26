@@ -441,7 +441,7 @@ def get_sigma_a_per_mode(
         ).flatten()
         anharmonic_vals = [
             dft_force - harmonic_force
-            for dft_force, harmonic_force in zip(dft_vals, harmonic_vals, strict=False)
+            for dft_force, harmonic_force in zip(dft_vals, harmonic_vals, strict=True)
         ]
         sigma_a = np.std(anharmonic_vals) / np.std(dft_vals)
         mode_sigma_vals.append((mode, sigma_a))
@@ -545,7 +545,7 @@ def get_sigmas(
         [
             dft_force - harmonic_force
             for dft_force, harmonic_force in zip(
-                dft_forces, harmonic_forces, strict=False
+                dft_forces, harmonic_forces, strict=True
             )
         ]
     )

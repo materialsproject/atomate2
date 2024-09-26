@@ -35,7 +35,7 @@ def get_transformations(
 
     transformation_objects = []
     for transformation, transformation_params in zip(
-        transformations, params, strict=False
+        transformations, params, strict=True
     ):
         found = False
         for module in (

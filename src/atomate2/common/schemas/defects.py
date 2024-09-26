@@ -248,13 +248,13 @@ class CCDDocument(BaseModel):
         entries1 = list(
             starmap(
                 get_cs_entry,
-                zip(structures1, energies1, static_dirs1, static_uuids1, strict=False),
+                zip(structures1, energies1, static_dirs1, static_uuids1, strict=True),
             )
         )
         entries2 = list(
             starmap(
                 get_cs_entry,
-                zip(structures2, energies2, static_dirs2, static_uuids2, strict=False),
+                zip(structures2, energies2, static_dirs2, static_uuids2, strict=True),
             )
         )
 
@@ -395,7 +395,7 @@ def sort_pos_dist(
     d0 = dist(s1, s2)
 
     d_vs_s = []
-    for q1, q2, s in zip(d1, d2, list_in, strict=False):
+    for q1, q2, s in zip(d1, d2, list_in, strict=True):
         sign = +1
         if q1 < q2 and q2 > d0:
             sign = -1
@@ -424,7 +424,7 @@ def get_dQ(ref: Structure, distorted: Structure) -> float:  # noqa: N802
         np.sum(
             [
                 x[0].distance(x[1]) ** 2 * x[0].specie.atomic_mass
-                for x in zip(ref, distorted, strict=False)
+                for x in zip(ref, distorted, strict=True)
             ],
         ),
     )

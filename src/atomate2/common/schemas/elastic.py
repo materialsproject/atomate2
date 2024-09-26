@@ -219,7 +219,7 @@ class ElasticDocument(StructureMetadata):
             eq_stress = -0.1 * Stress(equilibrium_stress)
 
         pk_stresses = [
-            s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations, strict=False)
+            s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations, strict=True)
         ]
 
         if order is None:

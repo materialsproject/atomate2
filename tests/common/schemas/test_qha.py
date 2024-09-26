@@ -54,7 +54,7 @@ def test_analyze_free_energy(tmp_dir, test_dir):
             energies.append(float(e))
 
     phonon_docs = []
-    for index, energy, volume in zip(range(-5, 6), energies, volumes, strict=False):
+    for index, energy, volume in zip(range(-5, 6), energies, volumes, strict=True):
         filename = f"{test_dir}/qha/thermal_properties.yaml-{index!s}"
         yaml = YAML()
         with open(filename) as f:
@@ -131,7 +131,7 @@ def test_analyze_free_energy_small(tmp_dir, test_dir):
             energies.append(float(e))
 
     phonon_docs = []
-    for index, energy, volume in zip(range(-5, 6), energies, volumes, strict=False):
+    for index, energy, volume in zip(range(-5, 6), energies, volumes, strict=True):
         filename = f"{test_dir}/qha/thermal_properties.yaml-{index!s}"
         yaml = YAML()
         with open(filename) as f:

@@ -196,7 +196,7 @@ class TempChangeMaker(BaseOpenMMMaker):
             self.starting_temperature, self.temperature, self.temp_steps
         )
         steps = create_list_summing_to(self.n_steps, self.temp_steps)
-        for temp, n_steps in zip(temps, steps, strict=False):
+        for temp, n_steps in zip(temps, steps, strict=True):
             integrator.setTemperature(temp * kelvin)
             sim.step(n_steps)
 
