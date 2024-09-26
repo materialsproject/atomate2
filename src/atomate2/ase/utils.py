@@ -85,7 +85,7 @@ class TrajectoryObserver:
 
         self._store_md_outputs = store_md_outputs
         if store_md_outputs:
-            self._calc_kwargs.update({k: True for k in ("velocities", "temperature")})
+            self._calc_kwargs |= dict(velocities=True, temperature=True)
         # `self.{velocities,temperatures}` always initialized,
         # but data is only stored / saved to trajectory for MD runs
         self.velocities: list[np.ndarray] = []

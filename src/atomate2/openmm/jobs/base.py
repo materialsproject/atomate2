@@ -310,7 +310,7 @@ class BaseOpenMMMaker(Maker):
             if traj_file_type in ["h5md", "nc", "ncdf"]:
                 writer_kwargs["velocities"] = report_velocities
                 writer_kwargs["forces"] = False
-            elif report_velocities and traj_file_type not in ["trr"]:
+            elif report_velocities and traj_file_type != "trr":
                 raise ValueError(
                     f"File type {traj_file_type} does not support velocities as"
                     f"of MDAnalysis 2.7.0. Select another file type"

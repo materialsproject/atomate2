@@ -138,7 +138,7 @@ class XMLMoleculeFF:
             openff_mol.assign_partial_charges(mol_or_method)
             mol_or_method = openff_mol
         self_mol = self.to_openff_molecule()
-        isomorphic, atom_map = get_atom_map(mol_or_method, self_mol)
+        _isomorphic, atom_map = get_atom_map(mol_or_method, self_mol)
         mol_charges = mol_or_method.partial_charges[list(atom_map.values())].magnitude
         self.partial_charges = mol_charges
 
@@ -254,7 +254,7 @@ def generate_openmm_interchange(
     for mol_spec, xml_mol in zip(mol_specs, xml_mols, strict=True):
         openff_mol = tk.Molecule.from_json(mol_spec.openff_mol)
         xml_openff_mol = xml_mol.to_openff_molecule()
-        is_isomorphic, atom_map = get_atom_map(openff_mol, xml_openff_mol)
+        is_isomorphic, _atom_map = get_atom_map(openff_mol, xml_openff_mol)
         if not is_isomorphic:
             raise ValueError(
                 "The mol_specs and ff_xmls must index identical molecules."
