@@ -17,12 +17,8 @@ from openmm import LangevinMiddleIntegrator, XmlSerializer
 from openmm.app import PDBFile
 
 if TYPE_CHECKING:
-    from contextlib import suppress
-
     from emmet.core.openmm import OpenMMTaskDocument
-
-    with suppress(ImportError):
-        from openff.interchange import Interchange
+    from openff.interchange import Interchange
 
 
 def download_opls_xml(
