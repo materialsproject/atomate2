@@ -61,7 +61,8 @@ forcefields = [
     "torchdata<=0.7.1",                            # TODO: remove when issue fixed
 ]
 ase = ["ase>=3.23.0"]
-ase-ext = ["tblite>=0.3.0"]
+# tblite py3.12 support tracked in https://github.com/tblite/tblite/issues/198
+ase-ext = ["tblite>=0.3.0; python_version < '3.12'"]
 openmm = [
     "mdanalysis>=2.7.0",
     "openmm-mdanalysis-reporter>=0.1.0",
@@ -111,7 +112,7 @@ strict = [
     "pymatgen==2024.6.10",
     "python-ulid==2.7.0",
     "seekpath==2.1.0",
-    "tblite==0.3.0",
+    "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.12.2",
 ]
 strict-forcefields = [
