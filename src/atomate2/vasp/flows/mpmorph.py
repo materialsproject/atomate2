@@ -142,7 +142,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
             incar_updates={
                 "TEBEG": temperature,
                 "TEEND": temperature,
-                "NSW": n_steps_convergence,
+                "NSW": n_production_runs,
             },
         )
 

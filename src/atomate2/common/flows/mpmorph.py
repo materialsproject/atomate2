@@ -375,7 +375,9 @@ class FastQuenchMaker(Maker):
         prev_dir = relax1.output.dir_name
 
         if self.relax_maker2 is not None:
+            relax1.name += " 1"
             relax2 = self.relax_maker2.make(structure, prev_dir=prev_dir)
+            relax2.name += " 2"
             jobs += [relax2]
             structure = relax2.output.structure
             prev_dir = relax2.output.dir_name
