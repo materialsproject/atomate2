@@ -19,8 +19,8 @@ from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from pathlib import Path
-    from typing import Callable
 
     from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure

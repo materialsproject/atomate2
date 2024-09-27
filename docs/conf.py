@@ -169,7 +169,7 @@ html_title = "atomate2"
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3.8", None),
+    "python": ("https://docs.python.org/3.10", None),
     "matplotlib": ("https://matplotlib.org/stable/", None),
     "networkx": ("https://networkx.org/documentation/stable/", None),
     "jobflow": ("https://materialsproject.github.io/jobflow", None),

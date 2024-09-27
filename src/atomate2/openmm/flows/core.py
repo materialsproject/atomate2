@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from emmet.core.openmm import Calculation, OpenMMInterchange, OpenMMTaskDocument
-from jobflow import Flow, Job, Response
+from jobflow import Flow, Job, Maker, Response
 from monty.json import MontyDecoder, MontyEncoder
 
 from atomate2.openmm.jobs.base import openmm_job
@@ -68,7 +68,7 @@ def collect_outputs(
 
 
 @dataclass
-class OpenMMFlowMaker:
+class OpenMMFlowMaker(Maker):
     """Run a production simulation.
 
     This flexible flow links together any flows of OpenMM jobs in

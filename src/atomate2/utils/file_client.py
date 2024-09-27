@@ -11,13 +11,14 @@ from functools import wraps
 from glob import glob
 from gzip import GzipFile
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import paramiko
 from monty.io import zopen
 from paramiko import SFTPClient, SSHClient
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from types import TracebackType
 
 
