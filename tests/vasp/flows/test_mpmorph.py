@@ -2,19 +2,17 @@
 
 import pytest
 from jobflow import run_locally
-from pymatgen.core import Structure
-from pymatgen.io.vasp import Kpoints
 
-from atomate2.common.flows.mpmorph import EquilibriumVolumeMaker, MPMorphMDMaker
 from atomate2.vasp.flows.mpmorph import (
     MPMorphFastQuenchVaspMDMaker,
     MPMorphSlowQuenchVaspMDMaker,
     MPMorphVaspMDMaker,
 )
-from atomate2.vasp.jobs.md import MDMaker
-from atomate2.vasp.jobs.mpmorph import FastQuenchVaspMaker, SlowQuenchVaspMaker, BaseMPMorphMDMaker
-from atomate2.vasp.run import DEFAULT_HANDLERS
-from atomate2.vasp.sets.core import MDSetGenerator
+from atomate2.vasp.jobs.mpmorph import (
+    BaseMPMorphMDMaker,
+    FastQuenchVaspMaker,
+    SlowQuenchVaspMaker,
+)
 
 name_to_maker = {
     "MPMorph Vasp": MPMorphVaspMDMaker,
@@ -22,11 +20,13 @@ name_to_maker = {
     "MPMorph Vasp Fast Quench": MPMorphFastQuenchVaspMDMaker,
 }
 
+
 @pytest.fixture
 def initial_structure(si_structure):
     initial_structure = si_structure.copy()
-    initial_structure.scale_lattice(1.1*initial_structure.volume)
-    return initial_structure * (2,2,2)
+    initial_structure.scale_lattice(1.1 * initial_structure.volume)
+    return initial_structure * (2, 2, 2)
+
 
 def _get_uuid_from_job(job, dct):
     if hasattr(job, "jobs"):
@@ -35,6 +35,7 @@ def _get_uuid_from_job(job, dct):
     else:
         dct[job.uuid] = job.name
 
+
 @pytest.mark.parametrize(
     "quench_type",
     [
@@ -42,8 +43,9 @@ def _get_uuid_from_job(job, dct):
         "slow",
     ],
 )
-def test_vasp_mpmorph(initial_structure, mock_vasp, clean_dir, vasp_test_dir, quench_type):
-
+def test_vasp_mpmorph(
+    initial_structure, mock_vasp, clean_dir, vasp_test_dir, quench_type
+):
     job_names = [
         "MP Morph VASP Equilibrium Volume Maker Convergence MPMorph VASP MD Maker 1",
         "MP Morph VASP Equilibrium Volume Maker Convergence MPMorph VASP MD Maker 2",
@@ -52,25 +54,13 @@ def test_vasp_mpmorph(initial_structure, mock_vasp, clean_dir, vasp_test_dir, qu
     ]
 
     temperature = 500
-    quench_temps = {
-        "start": temperature,
-        "end": 300,
-        "step": 50
-    }
-    steps = {
-        "convergence": 100,
-        "production": 500,
-        "quench": 100
-    }
+    quench_temps = {"start": temperature, "end": 300, "step": 50}
+    steps = {"convergence": 100, "production": 100, "quench": 100}
 
     quench_maker = None
     if quench_type == "fast":
         quench_maker = FastQuenchVaspMaker()
-        job_names += [
-            "MP GGA relax 1",
-            "MP GGA relax 2",
-            "MP GGA static"
-        ]
+        job_names += ["MP GGA relax 1", "MP GGA relax 2", "MP GGA static"]
     elif quench_type == "slow":
         quench_maker = SlowQuenchVaspMaker(
             BaseMPMorphMDMaker(name="Slow Quench VASP Maker"),
@@ -93,13 +83,13 @@ def test_vasp_mpmorph(initial_structure, mock_vasp, clean_dir, vasp_test_dir, qu
     }
 
     mock_vasp(ref_paths)
-    
+
     flow = MPMorphVaspMDMaker.from_temperature_and_steps(
-        temperature = temperature,
-        n_steps_convergence = steps["convergence"],
-        n_steps_production = steps["production"],
-        end_temp = None,
-        quench_maker = quench_maker,
+        temperature=temperature,
+        n_steps_convergence=steps["convergence"],
+        n_steps_production=steps["production"],
+        end_temp=None,
+        quench_maker=quench_maker,
     ).make(initial_structure)
 
     uuids = {}
@@ -131,7 +121,6 @@ def test_vasp_mpmorph(initial_structure, mock_vasp, clean_dir, vasp_test_dir, qu
     # check number of steps of each MD equilibrate run and production run
 
     for mode, num_steps in steps.items():
-        print(mode,num_steps,[doc.input.parameters["NSW"] for name, doc in task_docs.items() if mode in name.lower()])
         assert all(
             doc.input.parameters["NSW"] == num_steps
             for name, doc in task_docs.items()
@@ -145,27 +134,31 @@ def test_vasp_mpmorph(initial_structure, mock_vasp, clean_dir, vasp_test_dir, qu
             and doc.input.parameters["TEEND"] == temperature
         )
         for name, doc in task_docs.items()
-        if any(name_str in name.lower() for name_str in ("convergence","production") )
+        if any(name_str in name.lower() for name_str in ("convergence", "production"))
     )
 
     # check that MD Maker Energies are close
 
     ref_eos = {
         "energy": [-47.31250505, -65.66356248, -66.3485729],
-        "volume": [184.2262917923377, 359.8169761569094, 621.7637347991395]
+        "volume": [184.2262917923377, 359.8169761569094, 621.7637347991395],
     }
 
     assert all(
         task_docs[
-            f"MP Morph VASP Equilibrium Volume Maker Convergence MPMorph VASP MD Maker {1+idx}"
-        ].output.energy == pytest.approx(ref_eos["energy"][idx])
+            "MP Morph VASP Equilibrium Volume Maker "
+            f"Convergence MPMorph VASP MD Maker {1+idx}"
+        ].output.energy
+        == pytest.approx(ref_eos["energy"][idx])
         for idx in range(3)
     )
 
     assert all(
         task_docs[
-            f"MP Morph VASP Equilibrium Volume Maker Convergence MPMorph VASP MD Maker {1+idx}"
-        ].output.structure.volume == pytest.approx(ref_eos["volume"][idx])
+            "MP Morph VASP Equilibrium Volume Maker "
+            f"Convergence MPMorph VASP MD Maker {1+idx}"
+        ].output.structure.volume
+        == pytest.approx(ref_eos["volume"][idx])
         for idx in range(3)
     )
 
@@ -179,7 +172,9 @@ def test_vasp_mpmorph(initial_structure, mock_vasp, clean_dir, vasp_test_dir, qu
 
         assert (
             task_docs["MP GGA relax 1"].output.structure.volume
-            <= task_docs["MP Morph VASP MD Maker production run"].output.structure.volume
+            <= task_docs[
+                "MP Morph VASP MD Maker production run"
+            ].output.structure.volume
         )  # Ensures that the unit cell relaxes when fast quenched at 0K
 
     if quench_type == "slow":
@@ -187,7 +182,10 @@ def test_vasp_mpmorph(initial_structure, mock_vasp, clean_dir, vasp_test_dir, qu
         assert all(
             doc.output.structure.volume
             == pytest.approx(
-                task_docs["MP Morph VASP MD Maker production run"].output.structure.volume, abs=1e-1
+                task_docs[
+                    "MP Morph VASP MD Maker production run"
+                ].output.structure.volume,
+                abs=1e-1,
             )
             for name, doc in task_docs.items()
             if "K" in name
