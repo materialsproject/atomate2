@@ -1,9 +1,7 @@
 import numpy as np
-import openff.toolkit as tk
+import pytest
 from emmet.core.openmm import OpenMMInterchange
 from jobflow import Flow
-from openff.interchange.components._packmol import pack_box
-from openff.units import unit
 from openmm import XmlSerializer
 
 from atomate2.openff.utils import create_mol_spec
@@ -14,6 +12,11 @@ from atomate2.openmm.jobs.generate import (
     create_system_from_xml,
     generate_openmm_interchange,
 )
+
+pytest.importorskip("openff.toolkit")
+import openff.toolkit as tk  # noqa: E402
+from openff.interchange.components._packmol import pack_box  # noqa: E402
+from openff.units import unit  # noqa: E402
 
 
 def test_create_system_from_xml(openmm_data):
