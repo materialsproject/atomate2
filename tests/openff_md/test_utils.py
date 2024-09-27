@@ -1,27 +1,29 @@
 import numpy as np
-import openff.toolkit as tk
 import pymatgen
 import pytest
 from emmet.core.openff import MoleculeSpec
-from openff.interchange import Interchange
-from openff.toolkit.topology import Topology
-from openff.toolkit.topology.molecule import Molecule
-from openff.units import Quantity
 from pymatgen.analysis.graphs import MoleculeGraph
-from pymatgen.io.openff import (
-    add_conformer,
-    assign_partial_charges,
-    create_openff_mol,
-    get_atom_map,
-    infer_openff_mol,
-    mol_graph_to_openff_mol,
-)
 
 from atomate2.openff.utils import (
     counts_from_box_size,
     counts_from_masses,
     create_mol_spec,
     merge_specs_by_name_and_smiles,
+)
+
+pytest.importorskip("openff.toolkit")
+import openff.toolkit as tk  # noqa: E402
+from openff.interchange import Interchange  # noqa: E402
+from openff.toolkit.topology import Topology  # noqa: E402
+from openff.toolkit.topology.molecule import Molecule  # noqa: E402
+from openff.units import Quantity  # noqa: E402
+from pymatgen.io.openff import (  # noqa: E402
+    add_conformer,
+    assign_partial_charges,
+    create_openff_mol,
+    get_atom_map,
+    infer_openff_mol,
+    mol_graph_to_openff_mol,
 )
 
 
