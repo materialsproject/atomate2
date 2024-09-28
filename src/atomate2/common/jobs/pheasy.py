@@ -123,7 +123,13 @@ def generate_phonon_displacements(
     # may need to displace more random configurations. At least use one or 
     # two more configurations based on the suggested number of displacements.
 
-    from alm import ALM
+    try:
+        from alm import ALM
+    except ImportError as e:
+        logging.error(
+            f"Error importing ALM: {e}. Please ensure the 'alm'"
+            "library is installed."
+        )
 
     supercell_ph = phonon.supercell
     lattice = supercell_ph.cell
