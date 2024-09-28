@@ -739,4 +739,3 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             for lbl_idx, label in enumerate(label_set):
                 path[set_idx][lbl_idx] = kpath["kpoints"][label]
         return kpath["kpoints"], path
-    

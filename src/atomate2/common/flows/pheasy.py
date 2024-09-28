@@ -1,5 +1,5 @@
 """Flows for calculating phonons, an-harmonic force constants, 
-and phonon energy renormalization with the pheasy.
+    and phonon energy renormalization with the pheasy.
 """
 
 from __future__ import annotations
