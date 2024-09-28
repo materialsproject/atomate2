@@ -14,9 +14,6 @@ from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
-from pymatgen.transformations.advanced_transformations import (
-    CubicSupercellTransformation,
-)
 
 from atomate2.common.schemas.pheasy import Forceconstants, PhononBSDOSDoc
 from atomate2.common.schemas.phonons import get_factor
@@ -47,10 +44,11 @@ def generate_phonon_displacements(
     code: str,
 ) -> list[Structure]:
     """
-    Generate small-distance perturbed structures with phonopy based on two ways: 
+
+    Generate small-distance perturbed structures with phonopy based on two ways:
     (we will directly use the pheasy to generate the supercell in the near future)
     1. finite-displacment method (one displaced atom) when the displacement number
-    is less than 3. 2. random-displacement method (all-displaced atoms) when the 
+    is less than 3. 2. random-displacement method (all-displaced atoms) when the
     displacement number is more than 3.
 
     Parameters
@@ -73,7 +71,9 @@ def generate_phonon_displacements(
         scheme to generate kpath
     code:
         code to perform the computations
+
     """
+
     warnings.warn(
         "Initial magnetic moments will not be considered for the determination "
         "of the symmetry of the structure and thus will be removed now.",
@@ -112,16 +112,19 @@ def generate_phonon_displacements(
         is_symmetry=sym_reduce,
     )
 
-    # 1. the ALM module is used to dertermine how many free parameters (irreducible force 
-    # constants) of second order force constants (FCs) within the supercell. 2. Baed on the 
-    # number of free parameters, we can determine how many displaced supercells we need 
-    # to use to extract the second order force constants. Generally, the number of free 
-    # parameters should be less than 3 * natom(supercell) * num_displaced_supercells. 
-    # However, the full rank of matrix can not always guarantee the accurate result 
-    # sometimes, you may need to displace more random configurations. At least use one 
-    # or two more configurations basd on the suggested number of displacements.
+    # 1. the ALM module is used to determine how many free parameters 
+    # (irreducible force constants) of second order force constants (FCs)
+    # within the supercell.
+    # 2. Based on the number of free parameters, we can determine how many
+    # displaced supercells we need to use to extract the second order force
+    # constants. Generally, the number of free parameters should be less than
+    # 3 * natom(supercell) * num_displaced_supercells. However, the full rank
+    # of matrix can not always guarantee the accurate result sometimes, you
+    # may need to displace more random configurations. At least use one or 
+    # two more configurations based on the suggested number of displacements.
 
     from alm import ALM
+
     supercell_ph = phonon.supercell
     lattice = supercell_ph.cell
     positions = supercell_ph.scaled_positions
@@ -148,42 +151,53 @@ def generate_phonon_displacements(
     else:
         pass
     
-    logger.info("The number of free parameters of Second Order Force Constants is %s", n_fp)
+    logger.info(
+        "The number of free parameters of Second Order Force Constants is %s",
+                n_fp
+    )
     logger.info("")  
 
-    logger.info("The Number of Equations Used to Obtain the 2ND FCs is %s", 3 * natom * num)
+    logger.info(
+        "The Number of Equations Used to Obtain the 2ND FCs is %s",
+                3 * natom * num
+    )
     logger.info("")  
 
     logger.warning(
-        "Be Careful!!! Full Rank of Matrix cannot always guarantee the correct result sometimes.\n"
+        "Be Careful!!! Full Rank of Matrix cannot always guarantee the correct result\
+        sometimes.\n"
         "If the total atoms in the supercell are less than 100 and\n"
         "lattice constants are less than 10 angstroms,\n"
         "I highly suggest displacing more random configurations.\n"
-        "At least use one or two more configurations based on the suggested number of displacements."
-        )
+        "At least use one or two more configurations based on the suggested\
+        number of displacements."
+    )
     logger.info("")
 
     if num_disp_f > 3:
         if num_displaced_supercells != 0:
-            phonon.generate_displacements(distance=displacement, 
-                                      number_of_snapshots=num_displaced_supercells, 
-                                      random_seed=103)
+            phonon.generate_displacements(
+                distance=displacement, 
+                number_of_snapshots=num_displaced_supercells, 
+                random_seed=103,
+            )
         else:
-            phonon.generate_displacements(distance=displacement, 
-                                      number_of_snapshots=num_d, 
-                                      random_seed=103)
+            phonon.generate_displacements(
+                distance=displacement, 
+                number_of_snapshots=num_d, 
+                random_seed=103,
+            )
     else:
         pass
     
     supercells = phonon.supercells_with_displacements
-    displacements = []
-    for cell in supercells:
-        displacements.append(get_pmg_structure(cell))
+    displacements = [get_pmg_structure(cell) for cell in supercells]
 
-    # add the equilibrium structure to the list for calculating 
+    # add the equilibrium structure to the list for calculating
     # the residual forces.
     displacements.append(get_pmg_structure(phonon.supercell))
     return displacements
+
 
 @job(
     output_schema=PhononBSDOSDoc,
@@ -256,9 +270,10 @@ def generate_frequencies_eigenvectors(
         **kwargs,
     )
 
+
 # I did not directly import this job from the phonon module
 # because I modified the job to pass the displaced structures
-# to the output. 
+# to the output.
 @job(data=["forces", "displaced_structures"])
 def run_phonon_displacements(
     displacements: list[Structure],
@@ -319,7 +334,8 @@ def run_phonon_displacements(
         outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)
         outputs["dirs"] = [phonon_job.output.dir_name] * len(displacements)
         outputs["forces"] = phonon_job.output.output.all_forces
-        # add the displaced structures, still need to be careful with the order, experimental feature
+        # add the displaced structures, still need to be careful with the order,
+        # experimental feature
         outputs["displaced_structures"] = displacements
     else:
         for idx, displacement in enumerate(displacements):
