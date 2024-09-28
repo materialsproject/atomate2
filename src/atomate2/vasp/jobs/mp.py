@@ -90,7 +90,9 @@ class MPGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MP GGA static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPStaticSet(force_gamma=True, inherit_incar=False, auto_metal_kpoints=True)
+        default_factory=lambda: MPStaticSet(
+            force_gamma=True, inherit_incar=False, auto_metal_kpoints=True
+        )
     )
 
 
