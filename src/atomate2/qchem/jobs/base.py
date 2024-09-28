@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from emmet.core.qc_tasks import TaskDoc
 from jobflow import Maker, Response, job
@@ -17,7 +18,11 @@ from atomate2.qchem.run import run_qchem, should_stop_children
 from atomate2.qchem.sets.base import QCInputGenerator
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from pymatgen.core.structure import Molecule
+
+logger = logging.getLogger(__name__)
 
 
 def qchem_job(method: Callable) -> job:
@@ -94,10 +99,14 @@ class BaseQCMaker(Maker):
     task_document_kwargs: dict = field(default_factory=dict)
     stop_children_kwargs: dict = field(default_factory=dict)
     write_additional_data: dict = field(default_factory=dict)
+    task_type: str | None = None
 
     @qchem_job
     def make(
-        self, molecule: Molecule, prev_qchem_dir: str | Path | None = None
+        self,
+        molecule: Molecule,
+        prev_dir: str | Path | None = None,
+        prev_qchem_dir: str | Path | None = None,
     ) -> Response:
         """Run a QChem calculation.
 
@@ -105,19 +114,36 @@ class BaseQCMaker(Maker):
         ----------
         molecule : Molecule
             A pymatgen molecule object.
-        prev_qchem_dir : str or Path or None
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from.
+        prev_qchem_dir (deprecated): str or Path or None
             A previous QChem calculation directory to copy output files from.
         """
         # copy previous inputs
-        from_prev = prev_qchem_dir is not None
         if prev_qchem_dir is not None:
-            copy_qchem_outputs(prev_qchem_dir, **self.copy_qchem_kwargs)
+            logger.warning(
+                "`prev_qchem_dir` will be deprecated in a future release. "
+                "Please use `prev_dir` instead."
+            )
+            if prev_dir is not None:
+                logger.warning(
+                    "You set both `prev_dir` and `prev_qchem_dir`, "
+                    "only `prev_dir` will be used."
+                )
+            else:
+                prev_dir = prev_qchem_dir
+
+        if from_prev := (prev_dir is not None):
+            copy_qchem_outputs(prev_dir, **self.copy_qchem_kwargs)
 
         self.write_input_set_kwargs.setdefault("from_prev", from_prev)
 
         # write qchem input files
         # self.input_set_generator.get_input_set(molecule).write_inputs()
         self.input_set_generator.get_input_set(molecule)
+        self.input_set_generator.get_input_set(molecule).write_input(
+            directory=Path.cwd()
+        )
 
         # write any additional data
         for filename, data in self.write_additional_data.items():
@@ -129,7 +155,7 @@ class BaseQCMaker(Maker):
         # parse qchem outputs
         task_doc = TaskDoc.from_directory(Path.cwd(), **self.task_document_kwargs)
         # task_doc.task_label = self.name
-        task_doc.task_type = self.name
+        task_doc.task_type = self.name if self.task_type is None else self.task_type
 
         # decide whether child jobs should proceed
         stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)

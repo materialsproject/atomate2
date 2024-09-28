@@ -42,7 +42,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     )
     volume_temperature: Optional[list[float]] = Field(
         None,
-        description="Volumes in Angstrom^3 at temperatures." "Shape: (temperatures, )",
+        description="Volumes in Angstrom^3 at temperatures.Shape: (temperatures, )",
     )
     gibbs_temperature: Optional[list[float]] = Field(
         None,
@@ -51,7 +51,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     )
     bulk_modulus_temperature: Optional[list[float]] = Field(
         None,
-        description="Bulk modulus in GPa  at temperature." "Shape: (temperatures, )",
+        description="Bulk modulus in GPa  at temperature.Shape: (temperatures, )",
     )
     heat_capacity_p_numerical: Optional[list[float]] = Field(
         None,
@@ -60,7 +60,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     )
     gruneisen_temperature: Optional[list[float]] = Field(
         None,
-        description="Gruneisen parameters at temperatures." "Shape: (temperatures, )",
+        description="Gruneisen parameters at temperatures.Shape: (temperatures, )",
     )
     pressure: Optional[float] = Field(
         None, description="Pressure in GPA at which Gibb's energy was computed"
@@ -147,33 +147,33 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         # create some plots here
         # add kwargs to change the names and file types
         qha.plot_helmholtz_volume().savefig(
-            f"{kwargs.get('helmholtz_volume_filename','helmholtz_volume')}"
-            f".{kwargs.get('plot_type','pdf')}"
+            f"{kwargs.get('helmholtz_volume_filename', 'helmholtz_volume')}"
+            f".{kwargs.get('plot_type', 'pdf')}"
         )
         qha.plot_volume_temperature().savefig(
-            f"{kwargs.get('volume_temperature_plot','volume_temperature')}"
-            f".{kwargs.get('plot_type','pdf')}"
+            f"{kwargs.get('volume_temperature_plot', 'volume_temperature')}"
+            f".{kwargs.get('plot_type', 'pdf')}"
         )
         qha.plot_thermal_expansion().savefig(
-            f"{kwargs.get('thermal_expansion_plot','thermal_expansion')}"
-            f".{kwargs.get('plot_type','pdf')}"
+            f"{kwargs.get('thermal_expansion_plot', 'thermal_expansion')}"
+            f".{kwargs.get('plot_type', 'pdf')}"
         )
         qha.plot_gibbs_temperature().savefig(
             f"{kwargs.get('gibbs_temperature_plot', 'gibbs_temperature')}"
-            f".{kwargs.get('plot_type','pdf')}"
+            f".{kwargs.get('plot_type', 'pdf')}"
         )
         qha.plot_bulk_modulus_temperature().savefig(
             f"{kwargs.get('bulk_modulus_plot', 'bulk_modulus_temperature')}"
-            f".{kwargs.get('plot_type','pdf')}"
+            f".{kwargs.get('plot_type', 'pdf')}"
         )
         qha.plot_heat_capacity_P_numerical().savefig(
             f"{kwargs.get('heat_capacity_plot', 'heat_capacity_P_numerical')}"
-            f".{kwargs.get('plot_type','pdf')}"
+            f".{kwargs.get('plot_type', 'pdf')}"
         )
         # qha.plot_heat_capacity_P_polyfit().savefig("heat_capacity_P_polyfit.eps")
         qha.plot_gruneisen_temperature().savefig(
             f"{kwargs.get('gruneisen_temperature_plot', 'gruneisen_temperature')}"
-            f".{kwargs.get('plot_type','pdf')}"
+            f".{kwargs.get('plot_type', 'pdf')}"
         )
 
         qha.write_helmholtz_volume(
