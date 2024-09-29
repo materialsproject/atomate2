@@ -2,15 +2,20 @@
 
 from __future__ import annotations
 
+import logging
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
 from jobflow import Maker, Response, job
 
-# if TYPE_CHECKING:
+logger = logging.getLogger(__name__)
+
 from atomate2.jdftx.sets.base import JdftxInputGenerator
-from pymatgen.core import Structure
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
@@ -112,18 +117,18 @@ class BaseJdftxMaker(Maker):
         write_jdftx_input_set(
             structure, self.input_set_generator, **self.write_input_set_kwargs
         )
-
+        logger.info("Wrote JDFTx input files.")
         # run jdftx
         run_jdftx(**self.run_jdftx_kwargs)
 
-        current_dir = Path.cwd()
+        current_dir = os.getcwd()
         task_doc = get_jdftx_task_document(current_dir, **self.task_document_kwargs)
 
         stop_children = should_stop_children(task_doc)
 
         return Response(
             stop_children=stop_children,
-            stored_data={"custodian": task_doc.custodian},
+            stored_data={},
             output=task_doc,
         )
 

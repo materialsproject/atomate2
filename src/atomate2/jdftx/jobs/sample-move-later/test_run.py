@@ -8,7 +8,7 @@ import stackprinter
 stackprinter.set_excepthook(style="darkbg2")
 
 # if running from directory containing jobs.py for testing, can also use "from jobs import JDFTxJob"
-from atomate2.jdftx.jobs.jobs import JDFTxJob
+from custodian.jdftx.jobs import JDFTxJob
 
 # assumes running this script from directory containing already-generated input files
 # if input files are in a different directory, change "$PWD" below
