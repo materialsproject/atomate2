@@ -131,7 +131,7 @@ def test_mp_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 def test_mp_gga_static_maker_prev_dir(vasp_test_dir):
     prev_dir = f"{vasp_test_dir}/Si_hse_band_structure/hse_static/outputs"
-    structure = Structure.from_dict(f"{prev_dir}/POSCAR.gz")
+    structure = Structure.from_file(f"{prev_dir}/POSCAR.gz")
 
     input_set = MPGGAStaticMaker().input_set_generator.get_input_set(
         structure=structure, potcar_spec=True, prev_dir=prev_dir
