@@ -136,4 +136,4 @@ def test_mp_gga_static_maker_prev_dir(vasp_test_dir):
     input_set = MPGGAStaticMaker().input_set_generator.get_input_set(
         structure=structure, potcar_spec=True, prev_dir=prev_dir
     )
-    assert input_set["ENCUT"] == 520
+    assert input_set.incar["ENCUT"] == 520
