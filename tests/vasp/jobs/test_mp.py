@@ -1,9 +1,4 @@
 import pytest
-from emmet.core.tasks import TaskDoc
-from jobflow import run_locally
-from pymatgen.core import Structure
-from pymatgen.io.vasp.sets import MPScanRelaxSet
-
 from atomate2.vasp.jobs.mp import (
     MPGGARelaxMaker,
     MPGGAStaticMaker,
@@ -11,6 +6,10 @@ from atomate2.vasp.jobs.mp import (
     MPMetaGGAStaticMaker,
     MPPreRelaxMaker,
 )
+from emmet.core.tasks import TaskDoc
+from jobflow import run_locally
+from pymatgen.core import Structure
+from pymatgen.io.vasp.sets import MPScanRelaxSet
 
 expected_incar = {
     "ISIF": 3,
@@ -131,7 +130,7 @@ def test_mp_gga_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
 
 def test_mp_gga_static_maker_prev_dir(vasp_test_dir):
     structure = Structure.from_dict(
-        f"{vasp_test_dir}/Si_hse_band_structure/hse_static/outputs"
+        f"{vasp_test_dir}/Si_hse_band_structure/hse_static/outputs/POSCAR.gz"
     )
 
     input_set = MPGGAStaticMaker().input_set_generator.get_input_set(
