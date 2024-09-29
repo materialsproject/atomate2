@@ -33,6 +33,7 @@ def test_lennard_jones_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):
     assert output.structure.volume == pytest.approx(22.304245)
     assert output.output.energy == pytest.approx(-0.018494767)
     assert isinstance(output, AseStructureTaskDoc)
+    assert output.structure.matches(fcc_ne_structure)
 
 
 def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
@@ -45,7 +46,9 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
     assert output.output.energy == pytest.approx(-0.0179726955438795)
     assert output.structure.volume == pytest.approx(24.334)
     assert isinstance(output, AseStructureTaskDoc)
-    assert output.structure == fcc_ne_structure
+    assert output.structure.matches(
+        fcc_ne_structure
+    ), f"{output.structure} != {fcc_ne_structure}"
 
 
 @pytest.mark.skipif(condition=TBLite is None, reason="TBLite must be installed.")
