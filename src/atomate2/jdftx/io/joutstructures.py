@@ -9,8 +9,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from atomate2.jdftx.io.joutstructure import JOutStructure
-from atomate2.jdftx.io.joutstructure_helpers import (
+from pymatgen.io.jdftx.joutstructure import JOutStructure
+from pymatgen.io.jdftx.joutstructure_helpers import (
     correct_iter_type,
     is_lowdin_start_line,
 )

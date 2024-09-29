@@ -19,8 +19,8 @@ from pymatgen.core import Structure
 from pymatgen.util.io_utils import clean_lines
 from pathlib import Path
 
-from atomate2.jdftx.io.generic_tags import flatten_list, DumpTagContainer
-from atomate2.jdftx.io.jdftxinfile_master_format import (
+from pymatgen.io.jdftx.generic_tags import flatten_list, DumpTagContainer
+from pymatgen.io.jdftx.jdftxinfile_master_format import (
     __PHONON_TAGS__,
     __TAG_LIST__,
     __WANNIER_TAGS__,

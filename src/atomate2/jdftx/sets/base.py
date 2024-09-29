@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any
 from monty.serialization import loadfn
 from pymatgen.io.core import InputGenerator, InputSet
 
-from atomate2.jdftx.io.jdftxinfile import (  # TODO update this to the pymatgen module
+from pymatgen.io.jdftx.jdftxinfile import (
     JDFTXInfile,
     JDFTXStructure,
 )

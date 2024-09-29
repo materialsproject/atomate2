@@ -5,7 +5,7 @@ from pymatgen.core.units import Ha_to_eV
 from pymatgen.util.typing import PathLike
 from pytest import approx
 
-from atomate2.jdftx.io.jdftxoutfile import JDFTXOutfile
+from pymatgen.io.jdftx.jdftxoutfile import JDFTXOutfile
 
 ex_files_dir = Path(__file__).parents[0] / "example_files"
 

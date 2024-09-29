@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import field
 from typing import Any
 
-from atomate2.jdftx.io.jeiter import JEiter
+from pymatgen.io.jdftx.jeiter import JEiter
 
 
 def gather_line_collections(

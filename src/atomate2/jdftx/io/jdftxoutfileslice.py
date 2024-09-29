@@ -15,21 +15,21 @@ from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.core.units import Ha_to_eV, ang_to_bohr
 
-from atomate2.jdftx.io.data import atom_valence_electrons
-from atomate2.jdftx.io.jdftxoutfileslice_helpers import (
+from pymatgen.io.jdftx.data import atom_valence_electrons
+from pymatgen.io.jdftx.jdftxoutfileslice_helpers import (
     find_all_key,
     find_first_range_key,
     find_key,
     find_key_first,
     key_exists,
 )
-from atomate2.jdftx.io.jminsettings import (
+from pymatgen.io.jdftx.jminsettings import (
     JMinSettingsElectronic,
     JMinSettingsFluid,
     JMinSettingsIonic,
     JMinSettingsLattice,
 )
-from atomate2.jdftx.io.joutstructures import JOutStructures
+from pymatgen.io.jdftx.joutstructures import JOutStructures
 
 
 class ClassPrintFormatter:
@@ -890,7 +890,6 @@ class JDFTXOutfileSlice(ClassPrintFormatter):
         ecomp = self.jstrucs[-1].ecomponents
         if self.etype not in ecomp:
             ecomp[self.etype] = self.jstrucs[-1].E
-        # line = find_key("# Energy components:", text)
         self.ecomponents = ecomp
 
     def calculate_filling(

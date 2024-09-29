@@ -10,8 +10,8 @@ from typing import Optional, Union
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 
-from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
-from atomate2.jdftx.io.jdftxoutfile import JDFTXOutfile
+from pymatgen.io.jdftx.jdftxinfile import JDFTXInfile
+from pymatgen.io.jdftx.jdftxoutfile import JDFTXOutfile
 from atomate2.jdftx.schemas.enums import TaskType
 
 __author__ = "Cooper Tezak <cote3804@colorado.edu>"

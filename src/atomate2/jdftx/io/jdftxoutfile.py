@@ -8,14 +8,14 @@ import numpy as np
 
 from monty.io import zopen
 
-from atomate2.jdftx.io.jdftxoutfileslice import JDFTXOutfileSlice
-from atomate2.jdftx.io.jminsettings import (
+from pymatgen.io.jdftx.jdftxoutfileslice import JDFTXOutfileSlice
+from pymatgen.io.jdftx.jminsettings import (
     JMinSettingsElectronic,
     JMinSettingsFluid,
     JMinSettingsIonic,
     JMinSettingsLattice,
 )
-from atomate2.jdftx.io.joutstructures import JOutStructures
+from pymatgen.io.jdftx.joutstructures import JOutStructures
 
 
 class ClassPrintFormatter:

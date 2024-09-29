@@ -1,10 +1,10 @@
 from copy import deepcopy
 
-from atomate2.jdftx.io.jdftxinfile_ref_options import (
+from pymatgen.io.jdftx.jdftxinfile_ref_options import (
     JDFTXFluid_subtagdict, JDFTXMinimize_subtagdict
 )
 
-from atomate2.jdftx.io.jdftxinfile_ref_options import (
+from pymatgen.io.jdftx.jdftxinfile_ref_options import (
     JDFTXDumpFreqOptions, JDFTXDumpVarOptions, func_options,
     func_x_options, func_c_options, 
     func_xc_options,

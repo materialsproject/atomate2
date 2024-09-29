@@ -11,8 +11,8 @@ import numpy as np
 from pymatgen.core.structure import Lattice, Structure
 from pymatgen.core.units import Ha_to_eV, bohr_to_ang
 
-from atomate2.jdftx.io.jeiters import JEiters
-from atomate2.jdftx.io.joutstructure_helpers import (
+from pymatgen.io.jdftx.jeiters import JEiters
+from pymatgen.io.jdftx.joutstructure_helpers import (
     _get_colon_var_t1,
     correct_iter_type,
     is_charges_line,

@@ -1,6 +1,6 @@
 import pathlib
 
-from atomate2.jdftx.io.JDFTXInfile import JDFTXInfile
+from pymatgen.io.jdftx.jdftxinfile import JDFTXInfile
 from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 p = pathlib.Path(__file__)

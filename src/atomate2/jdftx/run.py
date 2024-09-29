@@ -35,7 +35,6 @@ def run_jdftx(
     if job_type == JobType.NORMAL:
         job = JDFTxJob(jdftx_cmd, **jdftx_job_kwargs)
 
-    print("input file", job.input_file)
     job.run()
 
 

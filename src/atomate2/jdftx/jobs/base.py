@@ -69,7 +69,6 @@ def jdftx_job(method: Callable) -> job:
     """
     return job(method, data=_DATA_OBJECTS, output_schema=TaskDoc)
 
-
 @dataclass
 class BaseJdftxMaker(Maker):
     """

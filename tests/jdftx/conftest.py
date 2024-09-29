@@ -10,9 +10,10 @@ from monty.io import zopen
 from monty.os.path import zpath as monty_zpath
 from contextlib import contextmanager
 from atomate2.jdftx.sets.base import FILE_NAMES
-from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
+from pymatgen.io.jdftx.jdftxinfile import JDFTXInfile
 from jobflow import CURRENT_JOB
 import shutil
+import math
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -95,7 +96,10 @@ def fake_run_jdftx(
     if "init.in" in check_inputs:
         results = check_input(ref_path, input_settings)
         for key, (user_val, ref_val) in results.items():
-            assert user_val == ref_val, f"Mismatch for {key}: user_val={user_val}, ref_val={ref_val}"
+            if isinstance(user_val, dict) and isinstance(ref_val, dict):
+                compare_dict(user_val, ref_val, key)
+            else:
+                assert user_val == ref_val, f"Mismatch for {key}: user_val={user_val}, ref_val={ref_val}"
 
     logger.info("Verified inputs successfully")
  
@@ -121,6 +125,20 @@ def check_input(ref_path, input_settings: Sequence[str] = None):
         results[key] = (user_val, ref_val)
     
     return results
+
+def compare_dict(user_val, ref_val, key, rel_tol=1e-9):
+    for sub_key, user_sub_val in user_val.items():
+        ref_sub_val = ref_val[sub_key]
+
+        if isinstance(user_sub_val, (int, float)) and isinstance(ref_sub_val, (int, float)):
+            # Compare numerical values with tolerance
+            assert math.isclose(user_sub_val, ref_sub_val, rel_tol=rel_tol), (
+                f"Mismatch for {key}.{sub_key}: user_val={user_sub_val}, ref_val={ref_sub_val}"
+                )
+        else:
+            assert user_sub_val == ref_sub_val, (
+                f"Mismatch for {key}.{sub_key}: user_val={user_sub_val}, ref_val={ref_sub_val}"
+            )
 
 def clear_jdftx_inputs():
     if (file_path:= zpath("init.in")).exists():

@@ -4,7 +4,7 @@ import pathlib
 
 import numpy as np
 
-from atomate2.jdftx.io.jdftxinfile import JDFTXInfile
+from pymatgen.io.jdftx.jdftxinfile import JDFTXInfile
 
 
 # read file example
