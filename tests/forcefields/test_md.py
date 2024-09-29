@@ -70,7 +70,7 @@ def test_ml_ff_md_maker(
         "GAP": -5.391255755606209,
         "NEP": -3.966232215741286,
         "Nequip": -8.84670181274414,
-        "DeepMD": -5.391255755606209,  # CHANGE THIS
+        "DeepMD": -744.6197365326168,
     }
 
     # ASE can slightly change tolerances on structure positions

@@ -543,7 +543,6 @@ def test_deepmd_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     importorskip("deepmd")
 
     # generate job
-    # NOTE the test model is not trained on Si, so the energy is not accurate
     job = ForceFieldStaticMaker(
         force_field_name="DeepMD",
         ionic_step_data=("structure", "energy"),
@@ -556,7 +555,7 @@ def test_deepmd_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-44.40017, rel=1e-4)  # change here
+    assert output1.output.energy == approx(-3723.09868, rel=1e-4)
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("deepmd")
 
@@ -576,7 +575,7 @@ def test_deepmd_relax_maker(
 ):
     importorskip("deepmd")
     # translate one atom to ensure a small number of relaxation steps are taken
-    sr_ti_o3_structure.translate_sites(0, [0, 0, 0.2])
+    sr_ti_o3_structure.translate_sites(0, [0, 0, 0.01])
     # generate job
     job = ForceFieldRelaxMaker(
         force_field_name="DeepMD",
@@ -594,11 +593,11 @@ def test_deepmd_relax_maker(
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     if relax_cell:
-        assert output1.output.energy == approx(-44.407, rel=1e-3)
-        assert output1.output.n_steps == 5
+        assert output1.output.energy == approx(-3723.098823, rel=1e-3)
+        assert output1.output.n_steps == 14
     else:
-        assert output1.output.energy == approx(-44.40015, rel=1e-4)
-        assert output1.output.n_steps == 5
+        assert output1.output.energy == approx(-3723.100111, rel=1e-4)
+        assert output1.output.n_steps == 9
 
     # fix_symmetry makes no difference for this structure relaxer combo
     # just testing that passing fix_symmetry doesn't break
