@@ -1,4 +1,9 @@
 import pytest
+from emmet.core.tasks import TaskDoc
+from jobflow import run_locally
+from pymatgen.core import Structure
+from pymatgen.io.vasp.sets import MPScanRelaxSet
+
 from atomate2.vasp.jobs.mp import (
     MPGGARelaxMaker,
     MPGGAStaticMaker,
@@ -6,10 +11,6 @@ from atomate2.vasp.jobs.mp import (
     MPMetaGGAStaticMaker,
     MPPreRelaxMaker,
 )
-from emmet.core.tasks import TaskDoc
-from jobflow import run_locally
-from pymatgen.core import Structure
-from pymatgen.io.vasp.sets import MPScanRelaxSet
 
 expected_incar = {
     "ISIF": 3,
