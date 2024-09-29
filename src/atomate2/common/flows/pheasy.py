@@ -9,7 +9,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-# chnage the import to the correct path
 from atomate2.common.jobs.pheasy import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
