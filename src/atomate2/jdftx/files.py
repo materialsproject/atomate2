@@ -1,10 +1,12 @@
 """File operations and default JDFTx file names"""
+
 import logging
 
 # if TYPE_CHECKING:
 from pathlib import Path
 
 from pymatgen.core import Structure
+
 from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 logger = logging.getLogger(__name__)

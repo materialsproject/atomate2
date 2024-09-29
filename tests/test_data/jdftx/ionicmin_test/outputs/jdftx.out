@@ -117,13 +117,13 @@ ionic-minimize  \
 	wolfeGradient        0.9 \
 	fdTest               no
 kpoint   0.000000000000   0.000000000000   0.000000000000  1.00000000000000
-kpoint-folding 1 1 1 
+kpoint-folding 1 1 1
 latt-move-scale 0 0 0
-latt-scale 1 1 1 
+latt-scale 1 1 1
 lattice  \
 	   6.328500573514000    2.109500191171000    0.000000000000000  \
 	   0.000000000000000    5.966567560367000    0.000000000000000  \
-	   3.653761509685000    3.653761509685000    7.307523019371000 
+	   3.653761509685000    3.653761509685000    7.307523019371000
 lattice-minimize  \
 	dirUpdateScheme      L-BFGS \
 	linminMethod         DirUpdateRecommended \
@@ -161,7 +161,7 @@ van-der-waals D3
 Applied RMS atom displacement 0 bohrs to make symmetries exact.
 
 ---------- Initializing the Grid ----------
-R = 
+R =
 [       6.3285       2.1095            0  ]
 [            0      5.96657            0  ]
 [      3.65376      3.65376      7.30752  ]
@@ -174,7 +174,7 @@ Minimum fftbox size, Smin = [  36  36  36  ]
 Chosen fftbox size, S = [  36  36  36  ]
 
 ---------- Initializing tighter grid for wavefunction operations ----------
-R = 
+R =
 [       6.3285       2.1095            0  ]
 [            0      5.96657            0  ]
 [      3.65376      3.65376      7.30752  ]
@@ -219,7 +219,7 @@ Initialized 1 species with 2 total atoms.
 Folded 1 k-points by 1x1x1 to 1 k-points.
 
 ---------- Setting up k-points, bands, fillings ----------
-No reducable k-points. 
+No reducable k-points.
 Computing the number of bands and number of electrons
 Calculating initial fillings.
 nElectrons:   8.000000   nBands: 8   nStates: 2

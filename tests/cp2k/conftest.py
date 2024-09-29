@@ -17,7 +17,7 @@ _REF_PATHS = {}
 _FAKE_RUN_CP2K_KWARGS = {}
 
 
-@pytest.fixture(autouse=True) 
+@pytest.fixture(autouse=True)
 def patch_settings(monkeypatch, test_dir):
     settings = {
         "PMG_CP2K_DATA_DIR": Path(test_dir / "cp2k/data"),
@@ -107,7 +107,9 @@ def mock_cp2k(monkeypatch, cp2k_test_dir, check_input):
         ref_path = cp2k_test_dir / _REF_PATHS[name]
         fake_run_cp2k(check_input, ref_path, **_FAKE_RUN_CP2K_KWARGS.get(name, {}))
 
-    get_input_set_orig = Cp2kInputGenerator.get_input_set #doesn't call it, just assigns the method
+    get_input_set_orig = (
+        Cp2kInputGenerator.get_input_set
+    )  # doesn't call it, just assigns the method
 
     def mock_get_input_set(self, *args, **kwargs):
         return get_input_set_orig(self, *args, **kwargs)
@@ -130,7 +132,8 @@ def mock_cp2k(monkeypatch, cp2k_test_dir, check_input):
     _FAKE_RUN_CP2K_KWARGS.clear()
 
 
-def fake_run_cp2k(check_input,
+def fake_run_cp2k(
+    check_input,
     ref_path: str | Path,
     input_settings: Sequence[str] = (),
     check_inputs: Sequence[Literal["cp2k.inp"]] = _VFILES,

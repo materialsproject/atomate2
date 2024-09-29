@@ -3,20 +3,18 @@
 # mypy: ignore-errors
 
 import logging
-from dataclasses import asdict
 from pathlib import Path
 from typing import Optional, Union
 
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
-
 from pymatgen.io.jdftx.jdftxinfile import JDFTXInfile
 from pymatgen.io.jdftx.jdftxoutfile import JDFTXOutfile
+
 from atomate2.jdftx.schemas.enums import TaskType
 
 __author__ = "Cooper Tezak <cote3804@colorado.edu>"
 logger = logging.getLogger(__name__)
-
 
 
 class CalculationInput(BaseModel):
@@ -100,10 +98,7 @@ class CalculationOutput(BaseModel):
             "ionic_settings": ionic_settings,
         }
 
-        return cls(
-            structure=optimized_structure,
-            parameters=parameters
-        )
+        return cls(structure=optimized_structure, parameters=parameters)
 
 
 class Calculation(BaseModel):

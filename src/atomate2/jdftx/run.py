@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
+import os
 from typing import Any
 
 from custodian.jdftx.jobs import JDFTxJob
 from jobflow.utils import ValueEnum
 
-from atomate2 import SETTINGS
 from atomate2.jdftx.schemas.task import JDFTxStatus, TaskDoc
-import os
-
 
 
 class JobType(ValueEnum):
@@ -19,13 +17,15 @@ class JobType(ValueEnum):
     NORMAL = "normal"
     # Only running through Custodian now, can add DIRECT method later.
 
+
 def get_jdftx_cmd():
     current_dir = os.getcwd()
     return f"docker run -t --rm -v {current_dir}:/root/research jdftx jdftx"
 
+
 def run_jdftx(
     job_type: JobType | str = JobType.NORMAL,
-    jdftx_cmd: str =  None,
+    jdftx_cmd: str = None,
     jdftx_job_kwargs: dict[str, Any] = None,
 ) -> None:
     jdftx_job_kwargs = jdftx_job_kwargs or {}

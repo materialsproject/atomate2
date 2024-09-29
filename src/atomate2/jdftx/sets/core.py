@@ -26,6 +26,7 @@ class SinglePointSetGenerator(JdftxInputGenerator):
         }
     )
 
+
 @dataclass
 class IonicMinSetGenerator(JdftxInputGenerator):
     """Class to generate JDFTx relax sets."""
@@ -43,10 +44,10 @@ class IonicMinSetGenerator(JdftxInputGenerator):
         }
     )
 
-    
+
 @dataclass
 class LatticeMinSetGenerator(JdftxInputGenerator):
-    """Class to generate JDFTx lattice minimization sets. """
+    """Class to generate JDFTx lattice minimization sets."""
 
     default_settings: dict = field(
         default_factory=lambda: {

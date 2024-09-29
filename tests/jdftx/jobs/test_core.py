@@ -1,15 +1,17 @@
 import pytest
-from unittest.mock import patch
 from jobflow import run_locally
 
-from atomate2.jdftx.jobs.core import SinglePointMaker, IonicMinMaker, LatticeMinMaker
-from atomate2.jdftx.sets.core import SinglePointSetGenerator, IonicMinSetGenerator, LatticeMinSetGenerator
-from atomate2.jdftx.jobs.base import BaseJdftxMaker
+from atomate2.jdftx.jobs.core import IonicMinMaker, LatticeMinMaker, SinglePointMaker
 from atomate2.jdftx.schemas.task import TaskDoc
+from atomate2.jdftx.sets.core import (
+    IonicMinSetGenerator,
+    LatticeMinSetGenerator,
+    SinglePointSetGenerator,
+)
+
 
 @pytest.mark.parametrize("mock_cwd", ["sp_test"], indirect=True)
 def test_sp_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames, clean_dir):
-
     ref_paths = {"single_point": "sp_test"}
 
     fake_run_jdftx_kwargs = {}
@@ -27,7 +29,6 @@ def test_sp_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames, clean_dir)
 
 @pytest.mark.parametrize("mock_cwd", ["ionicmin_test"], indirect=True)
 def test_ionicmin_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames, clean_dir):
-
     ref_paths = {"ionic_min": "ionicmin_test"}
 
     fake_run_jdftx_kwargs = {}
@@ -42,9 +43,11 @@ def test_ionicmin_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames, clea
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
 
-@pytest.mark.parametrize("mock_cwd", ["latticemin_test"], indirect=True)
-def test_latticemin_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames, clean_dir):
 
+@pytest.mark.parametrize("mock_cwd", ["latticemin_test"], indirect=True)
+def test_latticemin_maker(
+    mock_jdftx, si_structure, mock_cwd, mock_filenames, clean_dir
+):
     ref_paths = {"lattice_min": "latticemin_test"}
 
     fake_run_jdftx_kwargs = {}

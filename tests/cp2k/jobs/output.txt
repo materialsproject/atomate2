@@ -55,34 +55,34 @@ basis_and_potential = {'basis_and_potential': {'Si': {'aux_basis': 'pFIT3', 'bas
 
     def test_static_maker(tmp_path, mock_cp2k, si_structure, basis_and_potential):
         import os
-    
+
         from jobflow import run_locally
-    
+
         from atomate2.cp2k.jobs.core import StaticMaker
         from atomate2.cp2k.schemas.task import TaskDocument
         from atomate2.cp2k.sets.core import StaticSetGenerator
-    
+
         # mapping from job name to directory containing test files
         ref_paths = {"static": "Si_static_test"}
-    
+
         # settings passed to fake_run_cp2k; adjust these to check for certain input settings
         fake_run_cp2k_kwargs = {}
-    
+
         # automatically use fake CP2K
         mock_cp2k(ref_paths, fake_run_cp2k_kwargs)
-    
+
         # generate job
         maker = StaticMaker(
             input_set_generator=StaticSetGenerator(user_input_settings=basis_and_potential)
         )
         job = maker.make(si_structure)
-    
+
         # run the flow or job and ensure that it finished running successfully
         os.chdir(tmp_path)
 >       responses = run_locally(job, create_folders=True, ensure_success=True)
 
-/Users/sophi/envs/jobflow_py310/src/atomate2/tests/cp2k/jobs/test_core.py:30: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/sophi/envs/jobflow_py310/src/atomate2/tests/cp2k/jobs/test_core.py:30:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 flow = Flow(name='Flow', uuid='ed425058-0c5d-4e1f-8dd5-b4c7850ce038')
 1. Job(name='static', uuid='e6f8546f-69d4-4f05-8db5-86135bec3657')
@@ -104,7 +104,7 @@ raise_immediately = False
     ) -> dict[str, dict[int, jobflow.Response]]:
         """
         Run a :obj:`Job` or :obj:`Flow` locally.
-    
+
         Parameters
         ----------
         flow : Flow | Job | list[Job]
@@ -130,7 +130,7 @@ raise_immediately = False
             If True, raise an exception immediately if a job fails. If False, continue
             running the flow and only raise an exception at the end if the flow did not
             finish running successfully.
-    
+
         Returns
         -------
         dict[str, dict[int, Response]]
@@ -140,37 +140,37 @@ raise_immediately = False
         from datetime import datetime, timezone
         from pathlib import Path
         from random import randint
-    
+
         from monty.os import cd
-    
+
         from jobflow import SETTINGS, initialize_logger
         from jobflow.core.flow import get_flow
         from jobflow.core.reference import OnMissing
-    
+
         if store is None:
             store = SETTINGS.JOB_STORE
-    
+
         root_dir = Path.cwd() if root_dir is None else Path(root_dir).resolve()
         root_dir.mkdir(exist_ok=True)
-    
+
         store.connect()
-    
+
         if log:
             initialize_logger()
-    
+
         flow = get_flow(flow, allow_external_references=allow_external_references)
-    
+
         stopped_parents: set[str] = set()
         errored: set[str] = set()
         responses: dict[str, dict[int, jobflow.Response]] = defaultdict(dict)
         stop_jobflow = False
-    
+
         def _run_job(job: jobflow.Job, parents):
             nonlocal stop_jobflow
-    
+
             if stop_jobflow:
                 return None, True
-    
+
             if len(set(parents).intersection(stopped_parents)) > 0:
                 # stop children has been called for one of the jobs' parents
                 logger.info(
@@ -178,14 +178,14 @@ raise_immediately = False
                 )
                 stopped_parents.add(job.uuid)
                 return None, False
-    
+
             if (
                 len(set(parents).intersection(errored)) > 0
                 and job.config.on_missing_references == OnMissing.ERROR
             ):
                 errored.add(job.uuid)
                 return None, False
-    
+
             if raise_immediately:
                 response = job.run(store=store)
             else:
@@ -193,42 +193,42 @@ raise_immediately = False
                     response = job.run(store=store)
                 except Exception:
                     import traceback
-    
+
                     logger.info(
                         f"{job.name} failed with exception:\n{traceback.format_exc()}"
                     )
                     errored.add(job.uuid)
                     return None, False
-    
+
             responses[job.uuid][job.index] = response
-    
+
             if response.stored_data is not None:
                 logger.warning("Response.stored_data is not supported with local manager.")
-    
+
             if response.stop_children:
                 stopped_parents.add(job.uuid)
-    
+
             if response.stop_jobflow:
                 stop_jobflow = True
                 return None, True
-    
+
             diversion_responses = []
             if response.replace is not None:
                 # first run any restarts
                 diversion_responses.append(_run(response.replace))
-    
+
             if response.detour is not None:
                 # next any detours
                 diversion_responses.append(_run(response.detour))
-    
+
             if response.addition is not None:
                 # finally any additions
                 diversion_responses.append(_run(response.addition))
-    
+
             if not all(diversion_responses):
                 return None, False
             return response, False
-    
+
         def _get_job_dir():
             if create_folders:
                 time_now = datetime.now(tz=timezone.utc).strftime(SETTINGS.DIRECTORY_FORMAT)
@@ -236,26 +236,26 @@ raise_immediately = False
                 job_dir.mkdir()
                 return job_dir
             return root_dir
-    
+
         def _run(root_flow):
             encountered_bad_response = False
             for job, parents in root_flow.iterflow():
                 job_dir = _get_job_dir()
                 with cd(job_dir):
                     response, jobflow_stopped = _run_job(job, parents)
-    
+
                 if response is not None:
                     response.job_dir = job_dir
                 encountered_bad_response = encountered_bad_response or response is None
                 if jobflow_stopped:
                     return False
-    
+
             return not encountered_bad_response
-    
+
         logger.info("Started executing jobs locally")
         finished_successfully = _run(flow)
         logger.info("Finished executing jobs locally")
-    
+
         if ensure_success and not finished_successfully:
 >           raise RuntimeError("Flow did not finish running successfully")
 E           RuntimeError: Flow did not finish running successfully

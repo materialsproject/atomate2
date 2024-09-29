@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+import logging
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
-import os
 
 from jobflow import Maker, Response, job
-import logging
+
 logger = logging.getLogger(__name__)
 
 from atomate2.jdftx.sets.base import JdftxInputGenerator
@@ -69,6 +70,7 @@ def jdftx_job(method: Callable) -> job:
     """
     return job(method, data=_DATA_OBJECTS, output_schema=TaskDoc)
 
+
 @dataclass
 class BaseJdftxMaker(Maker):
     """
@@ -123,8 +125,6 @@ class BaseJdftxMaker(Maker):
         task_doc = get_jdftx_task_document(current_dir, **self.task_document_kwargs)
 
         stop_children = should_stop_children(task_doc)
-
-
 
         return Response(
             stop_children=stop_children,
