@@ -55,7 +55,9 @@ class MPGGARelaxMaker(BaseVaspMaker):
 
     name: str = "MP GGA relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPRelaxSet(force_gamma=True, auto_metal_kpoints=True, inherit_incar=False)
+        default_factory=lambda: MPRelaxSet(
+            force_gamma=True, auto_metal_kpoints=True, inherit_incar=False
+        )
     )
 
 
@@ -91,7 +93,7 @@ class MPGGAStaticMaker(BaseVaspMaker):
     name: str = "MP GGA static"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: MPStaticSet(
-            force_gamma=True, auto_metal_kpoints=True, inherit_incar=False,
+            force_gamma=True, auto_metal_kpoints=True, inherit_incar=False
         )
     )
 
