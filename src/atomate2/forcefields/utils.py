@@ -83,6 +83,11 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
 
             calculator = SevenNetCalculator(**{"model": "7net-0"} | kwargs)
 
+        elif calculator_name == MLFF.DeepMD:
+            from deepmd.calculator import DP
+
+            calculator = DP(**kwargs)
+
     elif isinstance(calculator_meta, dict):
         calc_cls = MontyDecoder().decode(json.dumps(calculator_meta))
         calculator = calc_cls(**kwargs)

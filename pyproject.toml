@@ -59,6 +59,7 @@ forcefields = [
     "quippy-ase>=0.9.14; python_version < '3.12'",
     "sevenn>=0.9.3",
     "torchdata<=0.7.1",                            # TODO: remove when issue fixed
+    "deepmd>=2.1.4",
 ]
 ase = ["ase>=3.23.0"]
 # tblite py3.12 support tracked in https://github.com/tblite/tblite/issues/198

@@ -15,6 +15,7 @@ from pymatgen.core import Structure
 
 from atomate2.forcefields.md import (
     CHGNetMDMaker,
+    DeepMDMDMaker,
     ForceFieldMDMaker,
     GAPMDMaker,
     M3GNetMDMaker,
@@ -30,6 +31,7 @@ name_to_maker = {
     "GAP": GAPMDMaker,
     "NEP": NEPMDMaker,
     "Nequip": NequipMDMaker,
+    "DeepMD": DeepMDMDMaker,
 }
 
 
@@ -49,7 +51,7 @@ def test_maker_initialization():
 
 @pytest.mark.parametrize(
     "ff_name",
-    ["CHGNet", "M3GNet", "MACE", "GAP", "NEP", "Nequip"],
+    ["CHGNet", "M3GNet", "MACE", "GAP", "NEP", "Nequip", "DeepMD"],
 )
 def test_ml_ff_md_maker(
     ff_name, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
@@ -68,6 +70,7 @@ def test_ml_ff_md_maker(
         "GAP": -5.391255755606209,
         "NEP": -3.966232215741286,
         "Nequip": -8.84670181274414,
+        "DeepMD": -5.391255755606209,  # CHANGE THIS
     }
 
     # ASE can slightly change tolerances on structure positions
@@ -94,6 +97,11 @@ def test_ml_ff_md_maker(
     elif ff_name == "Nequip":
         calculator_kwargs = {
             "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+        }
+        unit_cell_structure = sr_ti_o3_structure.copy()
+    elif ff_name == "DeepMD":
+        calculator_kwargs = {
+            "model_path": test_dir / "forcefields" / "deepmd" / "graph.pb"
         }
         unit_cell_structure = sr_ti_o3_structure.copy()
 
