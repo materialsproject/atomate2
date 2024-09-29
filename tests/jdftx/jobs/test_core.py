@@ -1,3 +1,4 @@
+
 import pytest
 from jobflow import run_locally
 
@@ -12,6 +13,7 @@ from atomate2.jdftx.sets.core import (
 
 @pytest.mark.parametrize("mock_cwd", ["sp_test"], indirect=True)
 def test_sp_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames, clean_dir):
+
     ref_paths = {"single_point": "sp_test"}
 
     fake_run_jdftx_kwargs = {}
@@ -29,6 +31,7 @@ def test_sp_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames, clean_dir)
 
 @pytest.mark.parametrize("mock_cwd", ["ionicmin_test"], indirect=True)
 def test_ionicmin_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames, clean_dir):
+
     ref_paths = {"ionic_min": "ionicmin_test"}
 
     fake_run_jdftx_kwargs = {}
@@ -43,11 +46,10 @@ def test_ionicmin_maker(mock_jdftx, si_structure, mock_cwd, mock_filenames, clea
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDoc)
 
-
 @pytest.mark.parametrize("mock_cwd", ["latticemin_test"], indirect=True)
 def test_latticemin_maker(
     mock_jdftx, si_structure, mock_cwd, mock_filenames, clean_dir
-):
+    ):
     ref_paths = {"lattice_min": "latticemin_test"}
 
     fake_run_jdftx_kwargs = {}
