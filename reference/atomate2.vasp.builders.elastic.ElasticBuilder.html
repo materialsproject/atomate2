@@ -1410,16 +1410,16 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tasks</strong> (<em>.Store</em>) – Store of task documents.</p></li>
 <li><p><strong>elasticity</strong> (<em>.Store</em>) – Store for final elastic documents.</p></li>
-<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary query to limit tasks to be analyzed.</p></li>
-<li><p><strong>sympec</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Symmetry precision for desymmetrising deformations.</p></li>
-<li><p><strong>fitting_method</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The method used to fit the elastic tensor. See pymatgen for more details on the
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary query to limit tasks to be analyzed.</p></li>
+<li><p><strong>sympec</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Symmetry precision for desymmetrising deformations.</p></li>
+<li><p><strong>fitting_method</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The method used to fit the elastic tensor. See pymatgen for more details on the
 methods themselves. The options are:
 - “finite_difference” (note this is required if fitting a 3rd order tensor)
 - “independent”
 - “pseudoinverse”</p></li>
-<li><p><strong>structure_match_tol</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Numerical tolerance for structure equivalence.</p></li>
+<li><p><strong>structure_match_tol</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Numerical tolerance for structure equivalence.</p></li>
 <li><p><strong>**kwargs</strong> – Keyword arguments that will be passed to the Builder init.</p></li>
-<li><p><strong>symprec</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>)</p></li>
+<li><p><strong>symprec</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1457,13 +1457,13 @@ required data to generate elasticity documents.</p>
 structure before the deformation was applied).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tasks</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – A list of deformation task, all with the same formula.</p>
+<dd class="field-odd"><p><strong>tasks</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A list of deformation task, all with the same formula.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of elastic documents for each unique parent structure.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a> of .ElasticDocument</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a> of .ElasticDocument</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1474,7 +1474,7 @@ structure before the deformation was applied).</p>
 <dd><p>Insert new elastic documents into the elasticity store.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> of </em><em>.ElasticDocument</em>) – A list of elasticity documents.</p>
+<dd class="field-odd"><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><em>.ElasticDocument</em>) – A list of elasticity documents.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>None</em></p>
@@ -1566,7 +1566,7 @@ structure before the deformation was applied).</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

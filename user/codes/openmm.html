@@ -183,7 +183,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -1386,7 +1386,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -1399,7 +1399,7 @@
 &gt;&gt;&gt;<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>atomate2
 
 <span class="c1"># installing atomate2</span>
-&gt;&gt;&gt;<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/orionarcher/atomate2.git
+&gt;&gt;&gt;<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/orionarcher/atomate2
 
 <span class="c1"># installing classical_md dependencies</span>
 &gt;&gt;&gt;<span class="w"> </span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>--file<span class="w"> </span>.github/classical_md_requirements.txt
@@ -1409,7 +1409,7 @@
 atomate2 from source (which at this point, you should),
 you can clone the repository and install from source.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># installing atomate2</span>
-&gt;&gt;&gt;<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/orionarcher/atomate2.git
+&gt;&gt;&gt;<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/orionarcher/atomate2
 &gt;&gt;&gt;<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>atomate2
 &gt;&gt;&gt;<span class="w"> </span>git<span class="w"> </span>branch<span class="w"> </span>openff
 &gt;&gt;&gt;<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>openff
@@ -1422,9 +1422,8 @@ you intend to run on GPU, make sure that the tests are passing for CUDA.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>openmm.testInstallation
 </pre></div>
 </div>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="understanding-atomate2-openmm">
-<h1>Understanding Atomate2 OpenMM<a class="headerlink" href="#understanding-atomate2-openmm" title="Link to this heading">¶</a></h1>
+<section id="understanding-atomate2-openmm">
+<h2>Understanding Atomate2 OpenMM<a class="headerlink" href="#understanding-atomate2-openmm" title="Link to this heading">¶</a></h2>
 <p>Atomate2 is really just a collection of jobflow workflows relevant to
 materials science. In all the workflows, we pass our system of interest
 between different jobs to perform the desired simulation. Representing the
@@ -1439,7 +1438,7 @@ which catalogs the necessary system properties and interfaces with a
 variety of MD engines. This is the object that we pass between stages of
 a classical MD simulation and it is the starting point of our workflow.</p>
 <section id="setting-up-the-system">
-<h2>Setting up the system<a class="headerlink" href="#setting-up-the-system" title="Link to this heading">¶</a></h2>
+<h3>Setting up the system<a class="headerlink" href="#setting-up-the-system" title="Link to this heading">¶</a></h3>
 <p>The first job we need to create generates the <code class="docutils literal notranslate"><span class="pre">Interchange</span></code> object.
 To specify the system of interest, we use give it the SMILES strings,
 counts, and names (optional) of the molecules we want to include.</p>
@@ -1509,7 +1508,7 @@ for PF6- here, the built in partial charge method fails.</p>
 </div>
 </section>
 <section id="running-a-basic-simulation">
-<h2>Running a basic simulation<a class="headerlink" href="#running-a-basic-simulation" title="Link to this heading">¶</a></h2>
+<h3>Running a basic simulation<a class="headerlink" href="#running-a-basic-simulation" title="Link to this heading">¶</a></h3>
 <p>To run a production simulation, we will create a production flow,
 link it to our <code class="docutils literal notranslate"><span class="pre">elyte_interchange_job</span></code>, and then run both locally.</p>
 <p>In jobflow, jobs and flows are created by
@@ -1578,12 +1577,12 @@ our data. Before we get there though, let’s go through some of the
 other simulation options available.</p>
 </section>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="digging-deeper">
-<h1>Digging Deeper<a class="headerlink" href="#digging-deeper" title="Link to this heading">¶</a></h1>
+<section id="digging-deeper">
+<h2>Digging Deeper<a class="headerlink" href="#digging-deeper" title="Link to this heading">¶</a></h2>
 <p>Atomate2 OpenMM supports running a variety of workflows with different
 configurations. Below we dig in to some of the more advanced options.</p>
 <section id="configuring-the-simulation">
-<h2>Configuring the Simulation<a class="headerlink" href="#configuring-the-simulation" title="Link to this heading">¶</a></h2>
+<h3>Configuring the Simulation<a class="headerlink" href="#configuring-the-simulation" title="Link to this heading">¶</a></h3>
 <details>
 <summary>Learn more about the configuration of OpenMM simulations</summary>
 <p>All OpenMM jobs, i.e. anything in <code class="docutils literal notranslate"><span class="pre">atomate2.openmm.jobs</span></code>, inherits
@@ -1602,7 +1601,7 @@ maker, 3) the default value (as shown below).</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">OPENMM_MAKER_DEFAULTS</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;step_size&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
     <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">298</span><span class="p">,</span>
     <span class="s2">&quot;friction_coefficient&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -1647,7 +1646,7 @@ for much longer, more appropriate for a real production workflow.</p>
 </details>
 </section>
 <section id="running-with-databases">
-<h2>Running with Databases<a class="headerlink" href="#running-with-databases" title="Link to this heading">¶</a></h2>
+<h3>Running with Databases<a class="headerlink" href="#running-with-databases" title="Link to this heading">¶</a></h3>
 <details>
 <summary>Learn to upload your MD data to databases</summary>
 <p>Before trying this, you should have a basic understanding of JobFlow
@@ -1733,7 +1732,7 @@ more code, so usually the prior method is preferred.</p>
 </details>
 </section>
 <section id="running-on-gpus">
-<h2>Running on GPUs<a class="headerlink" href="#running-on-gpus" title="Link to this heading">¶</a></h2>
+<h3>Running on GPUs<a class="headerlink" href="#running-on-gpus" title="Link to this heading">¶</a></h3>
 <details>
 <summary>Learn to accelerate MD simulations with GPUs</summary>
 <p>Running on a GPU is nearly as simple as running on a CPU. The only difference
@@ -1806,15 +1805,15 @@ single node. To fully leverage the compute, you’ll need to distribute
 </details>
 </section>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="analysis-with-emmet">
-<h1>Analysis with Emmet<a class="headerlink" href="#analysis-with-emmet" title="Link to this heading">¶</a></h1>
+<section id="analysis-with-emmet">
+<h2>Analysis with Emmet<a class="headerlink" href="#analysis-with-emmet" title="Link to this heading">¶</a></h2>
 <p>For now, you’ll need to make sure you have a particular emmet branch installed.
 Later the builders will be integrated into <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/orionarcher/emmet.git@md_builders
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/orionarcher/emmet@md_builders
 </pre></div>
 </div>
 <section id="analyzing-local-data">
-<h2>Analyzing Local Data<a class="headerlink" href="#analyzing-local-data" title="Link to this heading">¶</a></h2>
+<h3>Analyzing Local Data<a class="headerlink" href="#analyzing-local-data" title="Link to this heading">¶</a></h3>
 <details>
 <summary>Learn to analyze your data without a database</summary>
 <p>Emmet will give us a solid head start on analyzing our data even without touching
@@ -1844,7 +1843,7 @@ for more information.</p>
 </details>
 </section>
 <section id="setting-up-builders">
-<h2>Setting up builders<a class="headerlink" href="#setting-up-builders" title="Link to this heading">¶</a></h2>
+<h3>Setting up builders<a class="headerlink" href="#setting-up-builders" title="Link to this heading">¶</a></h3>
 <details>
 <summary>Connect with your databases</summary>
 <p>If you followed the instructions above to set up a database, you can
@@ -1910,7 +1909,7 @@ the tag “tutorial_production_flow” that we used earlier.</p>
 </details>
 </section>
 <section id="analyzing-systems-individually">
-<h2>Analyzing systems individually<a class="headerlink" href="#analyzing-systems-individually" title="Link to this heading">¶</a></h2>
+<h3>Analyzing systems individually<a class="headerlink" href="#analyzing-systems-individually" title="Link to this heading">¶</a></h3>
 <details>
 <summary>Download and explore systems one-by-one</summary>
 <p>To analyze a specific system, you’ll need the uuid of the taskdoc you want to
@@ -1943,7 +1942,7 @@ it to create a <code class="docutils literal notranslate"><span class="pre">Univ
 </details>
 </section>
 <section id="automated-analysis-with-builders">
-<h2>Automated analysis with builders<a class="headerlink" href="#automated-analysis-with-builders" title="Link to this heading">¶</a></h2>
+<h3>Automated analysis with builders<a class="headerlink" href="#automated-analysis-with-builders" title="Link to this heading">¶</a></h3>
 <details>
 <summary>Do it all for all the systems!</summary>
 <p>Finally, we’ll put the H in high-throughput molecular dynamics. Below,
@@ -1962,6 +1961,7 @@ Aggregating most of what you might want to know about an MD simulation.</p>
 </pre></div>
 </div>
 </details>
+</section>
 </section>
 </section>
 
@@ -1996,13 +1996,49 @@ Aggregating most of what you might want to know about an MD simulation.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Installing Atomate2 from source with OpenMM</a><ul>
+<li><a class="reference internal" href="#understanding-atomate2-openmm">Understanding Atomate2 OpenMM</a><ul>
+<li><a class="reference internal" href="#setting-up-the-system">Setting up the system</a></li>
+<li><a class="reference internal" href="#running-a-basic-simulation">Running a basic simulation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#digging-deeper">Digging Deeper</a><ul>
+<li><a class="reference internal" href="#configuring-the-simulation">Configuring the Simulation</a></li>
+<li><a class="reference internal" href="#running-with-databases">Running with Databases</a></li>
+<li><a class="reference internal" href="#running-on-gpus">Running on GPUs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#analysis-with-emmet">Analysis with Emmet</a><ul>
+<li><a class="reference internal" href="#analyzing-local-data">Analyzing Local Data</a></li>
+<li><a class="reference internal" href="#setting-up-builders">Setting up builders</a></li>
+<li><a class="reference internal" href="#analyzing-systems-individually">Analyzing systems individually</a></li>
+<li><a class="reference internal" href="#automated-analysis-with-builders">Automated analysis with builders</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>

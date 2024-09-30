@@ -1394,6 +1394,29 @@
         <article role="main" id="furo-main-content">
           <section class="tex2jax_ignore mathjax_ignore" id="change-log">
 <h1>Change log<a class="headerlink" href="#change-log" title="Link to this heading">¶</a></h1>
+<section id="v0-0-17">
+<h2>v0.0.17<a class="headerlink" href="#v0-0-17" title="Link to this heading">¶</a></h2>
+<section id="bug-fixes">
+<h3>Bug Fixes 🐛<a class="headerlink" href="#bug-fixes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">prev_dir</span></code> behavior in input set generator of <code class="docutils literal notranslate"><span class="pre">MPGGAStaticMaker</span></code> by &#64;Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/996</p></li>
+</ul>
+</section>
+<section id="documentation">
+<h3>Documentation 📖<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Bump min supported Python to 3.10 by &#64;janosh in https://github.com/materialsproject/atomate2/pull/992</p></li>
+</ul>
+</section>
+<section id="house-keeping">
+<h3>House-Keeping 🧹<a class="headerlink" href="#house-keeping" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Excise openff dependency from OpenMM testing by &#64;orionarcher in https://github.com/materialsproject/atomate2/pull/993</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">pytest-split</span></code> to parallelize across 3 runners and speedup CI by &#64;esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/985</p></li>
+</ul>
+<p><strong>Full Changelog</strong>: https://github.com/materialsproject/atomate2/compare/v0.0.16…v0.0.17</p>
+</section>
+</section>
 <section id="v0-0-16">
 <h2>v0.0.16<a class="headerlink" href="#v0-0-16" title="Link to this heading">¶</a></h2>
 <p>This release brings lots of new workflows and support for all ASE calculators.</p>
@@ -1408,14 +1431,14 @@
 <li><p>Generalize forcefields for generic ASE calculator support by &#64;esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/940</p></li>
 </ul>
 </section>
-<section id="documentation">
-<h3>Documentation 📖<a class="headerlink" href="#documentation" title="Link to this heading">¶</a></h3>
+<section id="id1">
+<h3>Documentation 📖<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Input set tutorial by &#64;JonathanSchmidt1 in https://github.com/materialsproject/atomate2/pull/780</p></li>
 </ul>
 </section>
-<section id="house-keeping">
-<h3>House-Keeping 🧹<a class="headerlink" href="#house-keeping" title="Link to this heading">¶</a></h3>
+<section id="id2">
+<h3>House-Keeping 🧹<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Remove emmet <code class="docutils literal notranslate"><span class="pre">==</span></code> pin in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and update version in <code class="docutils literal notranslate"><span class="pre">strict</span></code> by &#64;Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/988</p></li>
 </ul>
@@ -1434,8 +1457,8 @@
 <section id="v0-0-15">
 <h2>v0.0.15<a class="headerlink" href="#v0-0-15" title="Link to this heading">¶</a></h2>
 <p><strong>NOTE</strong>: This version updates the VASP workflows to use input sets defined in pymatgen. Please make sure your pymatgen version is updated accordingly.</p>
-<section id="id1">
-<h3>New Features 🎉<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<section id="id3">
+<h3>New Features 🎉<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add nequip force field relax- and staticmaker and corresponding tests by &#64;JonathanSchmidt1 in https://github.com/materialsproject/atomate2/pull/764</p></li>
 <li><p>Porting qchem into atomate2 by &#64;rdguha1995 in https://github.com/materialsproject/atomate2/pull/689</p></li>
@@ -1447,8 +1470,8 @@
 <li><p>Add workflow to compute Gruneisen parameters  by &#64;naik-aakash in https://github.com/materialsproject/atomate2/pull/752</p></li>
 </ul>
 </section>
-<section id="bug-fixes">
-<h3>Bug Fixes 🐛<a class="headerlink" href="#bug-fixes" title="Link to this heading">¶</a></h3>
+<section id="id4">
+<h3>Bug Fixes 🐛<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Fix tests and installation bug by &#64;jmmshn in https://github.com/materialsproject/atomate2/pull/765</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">revert_default_dtype</span></code> context manager to fix clashing global <code class="docutils literal notranslate"><span class="pre">torch.dtype</span></code> between MACE and CHGNet by &#64;janosh in https://github.com/materialsproject/atomate2/pull/766</p></li>
@@ -1480,8 +1503,8 @@
 <li><p>Lobster schema updates by &#64;naik-aakash in https://github.com/materialsproject/atomate2/pull/924</p></li>
 </ul>
 </section>
-<section id="id2">
-<h3>Documentation 📖<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<section id="id5">
+<h3>Documentation 📖<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Corrected typo in doc by &#64;rul048 in https://github.com/materialsproject/atomate2/pull/775</p></li>
 <li><p>Add more details to the installation guide by &#64;JaGeo in https://github.com/materialsproject/atomate2/pull/810</p></li>
@@ -1498,8 +1521,8 @@
 <li><p>Adds missing MAGMOMs for MatPES jobs by &#64;esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/854</p></li>
 </ul>
 </section>
-<section id="id3">
-<h3>House-Keeping 🧹<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<section id="id6">
+<h3>House-Keeping 🧹<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Make functions prefixed with <code class="docutils literal notranslate"><span class="pre">_</span></code> but cross-imported public by &#64;janosh in https://github.com/materialsproject/atomate2/pull/767</p></li>
 <li><p>Warn on non-default <code class="docutils literal notranslate"><span class="pre">ATOMATE2_CONFIG_FILE</span></code> that’s not found by &#64;janosh in https://github.com/materialsproject/atomate2/pull/794</p></li>
@@ -1512,8 +1535,8 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">ruff</span></code> fixes by &#64;janosh in https://github.com/materialsproject/atomate2/pull/946</p></li>
 </ul>
 </section>
-<section id="id4">
-<h3>New Contributors<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<section id="id7">
+<h3>New Contributors<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>&#64;rul048 made their first contribution in https://github.com/materialsproject/atomate2/pull/775</p></li>
 <li><p>&#64;davidwaroquiers made their first contribution in https://github.com/materialsproject/atomate2/pull/183</p></li>
@@ -1527,8 +1550,8 @@
 </section>
 <section id="v0-0-14">
 <h2>v0.0.14<a class="headerlink" href="#v0-0-14" title="Link to this heading">¶</a></h2>
-<section id="id5">
-<h3>New Features 🎉<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<section id="id8">
+<h3>New Features 🎉<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add lobster mp workflow by &#64;JaGeo in https://github.com/materialsproject/atomate2/pull/634</p></li>
 <li><p>Add FHI-aims DFT calculator by &#64;tpurcell90 in https://github.com/materialsproject/atomate2/pull/562</p></li>
@@ -1536,8 +1559,8 @@
 <li><p>Equation of state (EOS) workflows by &#64;esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/623</p></li>
 </ul>
 </section>
-<section id="id6">
-<h3>Bug Fixes 🐛<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<section id="id9">
+<h3>Bug Fixes 🐛<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Skip final LDAU/J/L/MAGMOM updates and fix setting MAGMOM via <code class="docutils literal notranslate"><span class="pre">user_incar_settings</span></code> by &#64;JonathanSchmidt1 in https://github.com/materialsproject/atomate2/pull/648</p></li>
 <li><p>Prep for next <code class="docutils literal notranslate"><span class="pre">pymatgen</span></code> release by &#64;janosh in https://github.com/materialsproject/atomate2/pull/690</p></li>
@@ -1551,8 +1574,8 @@
 <li><p>Fix MP query by &#64;utf in https://github.com/materialsproject/atomate2/pull/755</p></li>
 </ul>
 </section>
-<section id="id7">
-<h3>Enhancements 🛠<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
+<section id="id10">
+<h3>Enhancements 🛠<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>add directory of task doc generation to phonon schema by &#64;JaGeo in https://github.com/materialsproject/atomate2/pull/674</p></li>
 <li><p>Ensure MP VASP sets don’t use auto_ismear, few other fixes by &#64;esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/673</p></li>
@@ -1561,8 +1584,8 @@
 <li><p>Define <code class="docutils literal notranslate"><span class="pre">MLFF</span></code> <code class="docutils literal notranslate"><span class="pre">Enum</span></code> to ensure consistent force field names by &#64;janosh in https://github.com/materialsproject/atomate2/pull/729</p></li>
 </ul>
 </section>
-<section id="id8">
-<h3>Documentation 📖<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<section id="id11">
+<h3>Documentation 📖<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Update doc: adding metadata to flow by &#64;naik-aakash in https://github.com/materialsproject/atomate2/pull/638</p></li>
 <li><p>Fix hyperlink in Docs by &#64;naik-aakash in https://github.com/materialsproject/atomate2/pull/686</p></li>
@@ -1571,16 +1594,16 @@
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">citation.cff</span></code> file, Zenodo record and readme “How to cite” section by &#64;janosh in https://github.com/materialsproject/atomate2/pull/731</p></li>
 </ul>
 </section>
-<section id="id9">
-<h3>House-Keeping 🧹<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
+<section id="id12">
+<h3>House-Keeping 🧹<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Address TODO re missing asserts in <code class="docutils literal notranslate"><span class="pre">test_elastic_wf_with_mace()</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/679</p></li>
 <li><p>Update lobsterpy version by &#64;naik-aakash in https://github.com/materialsproject/atomate2/pull/683</p></li>
 <li><p>Fix all ruff PT011 (not checking error message when testing exceptions) by &#64;janosh in https://github.com/materialsproject/atomate2/pull/698</p></li>
 </ul>
 </section>
-<section id="id10">
-<h3>New Contributors<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<section id="id13">
+<h3>New Contributors<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>&#64;JonathanSchmidt1 made their first contribution in https://github.com/materialsproject/atomate2/pull/648</p></li>
 <li><p>&#64;rdguha1995 made their first contribution in https://github.com/materialsproject/atomate2/pull/161</p></li>
@@ -1595,14 +1618,14 @@
 <h3>BREAKING CHANGE<a class="headerlink" href="#breaking-change" title="Link to this heading">¶</a></h3>
 <p>The API of <code class="docutils literal notranslate"><span class="pre">Maker.maker</span></code> for all workflows (VASP, CP2K, force fields) have been modified. Previously, this function had custom arguments for previous calculation directories (e.g., <code class="docutils literal notranslate"><span class="pre">prev_vasp_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">prev_cp2k_dir</span></code>). These arguments have been standardised to <code class="docutils literal notranslate"><span class="pre">prev_dir</span></code>. Accordingly, the approach used to chain workflows has now changed.</p>
 </section>
-<section id="id11">
-<h3>New Features 🎉<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
+<section id="id14">
+<h3>New Features 🎉<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add setting <code class="docutils literal notranslate"><span class="pre">VASP_RUN_DDEC6:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/587</p></li>
 </ul>
 </section>
-<section id="id12">
-<h3>Bug Fixes 🐛<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
+<section id="id15">
+<h3>Bug Fixes 🐛<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Resolve bandstructure datastore bug by &#64;JaGeo in https://github.com/materialsproject/atomate2/pull/605</p></li>
 <li><p>Fix <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>: <code class="docutils literal notranslate"><span class="pre">PhononBSPlotter.save_plot()</span></code> got an unexpected keyword argument <code class="docutils literal notranslate"><span class="pre">img_format</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/625</p></li>
@@ -1614,8 +1637,8 @@
 <li><p>Mark schema fields with <code class="docutils literal notranslate"><span class="pre">None</span></code> default as <code class="docutils literal notranslate"><span class="pre">Optional</span></code> to pass pydantic v2 validation by &#64;danielzuegner in https://github.com/materialsproject/atomate2/pull/651</p></li>
 </ul>
 </section>
-<section id="id13">
-<h3>Enhancements 🛠<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
+<section id="id16">
+<h3>Enhancements 🛠<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Breaking: Unify previous directory <code class="docutils literal notranslate"><span class="pre">Maker</span></code> API by &#64;janosh in https://github.com/materialsproject/atomate2/pull/593</p></li>
 <li><p>Add keyword <code class="docutils literal notranslate"><span class="pre">incar_exclude:</span> <span class="pre">Sequence[str]</span> <span class="pre">=</span> <span class="pre">None</span></code> to <code class="docutils literal notranslate"><span class="pre">fake_run_vasp()</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/599</p></li>
@@ -1629,22 +1652,22 @@
 <li><p>Multi step MD flow by &#64;gpetretto in https://github.com/materialsproject/atomate2/pull/489</p></li>
 </ul>
 </section>
-<section id="id14">
-<h3>Documentation 📖<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
+<section id="id17">
+<h3>Documentation 📖<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add &#64;CompRhys to <code class="docutils literal notranslate"><span class="pre">contributors.md</span></code> by &#64;CompRhys in https://github.com/materialsproject/atomate2/pull/612</p></li>
 </ul>
 </section>
-<section id="id15">
-<h3>House-Keeping 🧹<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
+<section id="id18">
+<h3>House-Keeping 🧹<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Update GitHub Action versions by &#64;janosh in https://github.com/materialsproject/atomate2/pull/640</p></li>
 <li><p>Drop <code class="docutils literal notranslate"><span class="pre">flake8</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/658</p></li>
 <li><p>Enable all <code class="docutils literal notranslate"><span class="pre">ruff</span></code> rules by default by &#64;janosh in https://github.com/materialsproject/atomate2/pull/663</p></li>
 </ul>
 </section>
-<section id="id16">
-<h3>New Contributors<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h3>
+<section id="id19">
+<h3>New Contributors<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>&#64;CompRhys made their first contribution in https://github.com/materialsproject/atomate2/pull/612</p></li>
 <li><p>&#64;danielzuegner made their first contribution in https://github.com/materialsproject/atomate2/pull/651</p></li>
@@ -1657,8 +1680,8 @@
 <ul class="simple">
 <li><p>Breaking: default <code class="docutils literal notranslate"><span class="pre">Atomate2Settings.VASP_INHERIT_INCAR</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/594</p></li>
 </ul>
-<section id="id17">
-<h3>Bug Fixes 🐛<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h3>
+<section id="id20">
+<h3>Bug Fixes 🐛<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Enforce magmom precedence in INCAR creation by &#64;mattmcdermott in https://github.com/materialsproject/atomate2/pull/506</p></li>
 <li><p>Warn on empty config by &#64;janosh in https://github.com/materialsproject/atomate2/pull/522</p></li>
@@ -1675,8 +1698,8 @@
 <li><p>Test MP + MatPES set generators by &#64;janosh in https://github.com/materialsproject/atomate2/pull/596</p></li>
 </ul>
 </section>
-<section id="id18">
-<h3>Enhancements 🛠<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
+<section id="id21">
+<h3>Enhancements 🛠<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add StructureMetadata as baseclass for output documents by &#64;gpetretto in https://github.com/materialsproject/atomate2/pull/514</p></li>
 <li><p>Materials Project GGA and meta-GGA workflows by &#64;janosh in https://github.com/materialsproject/atomate2/pull/504</p></li>
@@ -1686,8 +1709,8 @@
 <li><p>Move elastic workflow to common and build force-field elastic workflow by &#64;JaGeo in https://github.com/materialsproject/atomate2/pull/581</p></li>
 </ul>
 </section>
-<section id="id19">
-<h3>Documentation 📖<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h3>
+<section id="id22">
+<h3>Documentation 📖<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Update &#64;arosen93 to &#64;Andrew-S-Rosen by &#64;Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/516</p></li>
 <li><p>Add Aaron Kaplan and Matthew McDermott to <code class="docutils literal notranslate"><span class="pre">contributors.md</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/560</p></li>
@@ -1698,8 +1721,8 @@
 <li><p>Update contributors.md by &#64;utf in https://github.com/materialsproject/atomate2/pull/579</p></li>
 </ul>
 </section>
-<section id="id20">
-<h3>House-Keeping 🧹<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h3>
+<section id="id23">
+<h3>House-Keeping 🧹<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Remove <code class="docutils literal notranslate"><span class="pre">__all__</span></code> from all modules by &#64;janosh in https://github.com/materialsproject/atomate2/pull/540</p></li>
 <li><p>removed py38 support, and add py 3.11 support by &#64;naik-aakash in https://github.com/materialsproject/atomate2/pull/537</p></li>
@@ -1710,8 +1733,8 @@
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">numpy.testing.assert_allclose</span></code> over assert <code class="docutils literal notranslate"><span class="pre">np.(all|is)close</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/582</p></li>
 </ul>
 </section>
-<section id="id21">
-<h3>New Contributors<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h3>
+<section id="id24">
+<h3>New Contributors<a class="headerlink" href="#id24" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>&#64;mattmcdermott made their first contribution in https://github.com/materialsproject/atomate2/pull/506</p></li>
 <li><p>&#64;tpurcell90 made their first contribution in https://github.com/materialsproject/atomate2/pull/568</p></li>
@@ -1773,8 +1796,8 @@ metallic system) then ISMEAR=2 and SIGMA=0.2; if the system is an insulator, the
 ISMEAR=-5 (tetrahedron smearing).</p></li>
 </ul>
 </section>
-<section id="id22">
-<h3>New Features 🎉<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h3>
+<section id="id25">
+<h3>New Features 🎉<a class="headerlink" href="#id25" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>CP2K Support by &#64;nwinner in https://github.com/materialsproject/atomate2/pull/157</p></li>
 <li><p>Add forcefield schemas/makers to atomate2 by &#64;matthewkuner in https://github.com/materialsproject/atomate2/pull/322</p></li>
@@ -1782,8 +1805,8 @@ ISMEAR=-5 (tetrahedron smearing).</p></li>
 <li><p>Phonons for forcefields by &#64;JaGeo in https://github.com/materialsproject/atomate2/pull/398</p></li>
 </ul>
 </section>
-<section id="id23">
-<h3>Bug Fixes 🐛<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h3>
+<section id="id26">
+<h3>Bug Fixes 🐛<a class="headerlink" href="#id26" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Fix Lobster Schema by &#64;JaGeo in https://github.com/materialsproject/atomate2/pull/266</p></li>
 <li><p>fix lso dos of lobster being not saved in schema by &#64;naik-aakash in https://github.com/materialsproject/atomate2/pull/279</p></li>
@@ -1800,8 +1823,8 @@ ISMEAR=-5 (tetrahedron smearing).</p></li>
 <li><p>Test for <code class="docutils literal notranslate"><span class="pre">zip_outputs</span></code> by &#64;gpetretto in https://github.com/materialsproject/atomate2/pull/503</p></li>
 </ul>
 </section>
-<section id="id24">
-<h3>Enhancements 🛠<a class="headerlink" href="#id24" title="Link to this heading">¶</a></h3>
+<section id="id27">
+<h3>Enhancements 🛠<a class="headerlink" href="#id27" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Extension of Lobster schema and additional tests by &#64;JaGeo in https://github.com/materialsproject/atomate2/pull/272</p></li>
 <li><p>Use emmet VASP task document by &#64;utf in https://github.com/materialsproject/atomate2/pull/269</p></li>
@@ -1824,8 +1847,8 @@ ISMEAR=-5 (tetrahedron smearing).</p></li>
 <li><p>Optionally zip files at the end of jobs by &#64;gpetretto in https://github.com/materialsproject/atomate2/pull/414</p></li>
 </ul>
 </section>
-<section id="id25">
-<h3>Documentation 📖<a class="headerlink" href="#id25" title="Link to this heading">¶</a></h3>
+<section id="id28">
+<h3>Documentation 📖<a class="headerlink" href="#id28" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add more documentation for Lobster by &#64;JaGeo in https://github.com/materialsproject/atomate2/pull/267</p></li>
 <li><p>Use furo for docs theme by &#64;utf in https://github.com/materialsproject/atomate2/pull/331</p></li>
@@ -1841,8 +1864,8 @@ ISMEAR=-5 (tetrahedron smearing).</p></li>
 <li><p>Use GitHub’s <code class="docutils literal notranslate"><span class="pre">deploy-pages</span></code> action to deploy docs by &#64;janosh in https://github.com/materialsproject/atomate2/pull/475</p></li>
 </ul>
 </section>
-<section id="id26">
-<h3>House-Keeping 🧹<a class="headerlink" href="#id26" title="Link to this heading">¶</a></h3>
+<section id="id29">
+<h3>House-Keeping 🧹<a class="headerlink" href="#id29" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>More <code class="docutils literal notranslate"><span class="pre">ruff</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/344</p></li>
 <li><p>Move all type-hint only imports behind <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">TYPE_CHECKING</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/354</p></li>
@@ -1852,8 +1875,8 @@ ISMEAR=-5 (tetrahedron smearing).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">dict.setdefault</span></code> instead of <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">key</span> <span class="pre">not</span> <span class="pre">in</span> <span class="pre">dict:</span> <span class="pre">dict[key]</span> <span class="pre">=</span> <span class="pre">...</span></code> by &#64;janosh in https://github.com/materialsproject/atomate2/pull/452</p></li>
 </ul>
 </section>
-<section id="id27">
-<h3>New Contributors<a class="headerlink" href="#id27" title="Link to this heading">¶</a></h3>
+<section id="id30">
+<h3>New Contributors<a class="headerlink" href="#id30" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>&#64;naik-aakash made their first contribution in https://github.com/materialsproject/atomate2/pull/279</p></li>
 <li><p>&#64;matthewkuner made their first contribution in https://github.com/materialsproject/atomate2/pull/322</p></li>
@@ -2081,58 +2104,64 @@ VASP schema (<a class="reference external" href="https://github.com/Andrew-S-Ros
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Change log</a><ul>
-<li><a class="reference internal" href="#v0-0-16">v0.0.16</a><ul>
-<li><a class="reference internal" href="#new-features">New Features 🎉</a></li>
+<li><a class="reference internal" href="#v0-0-17">v0.0.17</a><ul>
+<li><a class="reference internal" href="#bug-fixes">Bug Fixes 🐛</a></li>
 <li><a class="reference internal" href="#documentation">Documentation 📖</a></li>
 <li><a class="reference internal" href="#house-keeping">House-Keeping 🧹</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#v0-0-16">v0.0.16</a><ul>
+<li><a class="reference internal" href="#new-features">New Features 🎉</a></li>
+<li><a class="reference internal" href="#id1">Documentation 📖</a></li>
+<li><a class="reference internal" href="#id2">House-Keeping 🧹</a></li>
 <li><a class="reference internal" href="#new-contributors">New Contributors</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#v0-0-15">v0.0.15</a><ul>
-<li><a class="reference internal" href="#id1">New Features 🎉</a></li>
-<li><a class="reference internal" href="#bug-fixes">Bug Fixes 🐛</a></li>
+<li><a class="reference internal" href="#id3">New Features 🎉</a></li>
+<li><a class="reference internal" href="#id4">Bug Fixes 🐛</a></li>
 <li><a class="reference internal" href="#enhancements">Enhancements 🛠</a></li>
-<li><a class="reference internal" href="#id2">Documentation 📖</a></li>
-<li><a class="reference internal" href="#id3">House-Keeping 🧹</a></li>
-<li><a class="reference internal" href="#id4">New Contributors</a></li>
+<li><a class="reference internal" href="#id5">Documentation 📖</a></li>
+<li><a class="reference internal" href="#id6">House-Keeping 🧹</a></li>
+<li><a class="reference internal" href="#id7">New Contributors</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#v0-0-14">v0.0.14</a><ul>
-<li><a class="reference internal" href="#id5">New Features 🎉</a></li>
-<li><a class="reference internal" href="#id6">Bug Fixes 🐛</a></li>
-<li><a class="reference internal" href="#id7">Enhancements 🛠</a></li>
-<li><a class="reference internal" href="#id8">Documentation 📖</a></li>
-<li><a class="reference internal" href="#id9">House-Keeping 🧹</a></li>
-<li><a class="reference internal" href="#id10">New Contributors</a></li>
+<li><a class="reference internal" href="#id8">New Features 🎉</a></li>
+<li><a class="reference internal" href="#id9">Bug Fixes 🐛</a></li>
+<li><a class="reference internal" href="#id10">Enhancements 🛠</a></li>
+<li><a class="reference internal" href="#id11">Documentation 📖</a></li>
+<li><a class="reference internal" href="#id12">House-Keeping 🧹</a></li>
+<li><a class="reference internal" href="#id13">New Contributors</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#v0-0-13">v0.0.13</a><ul>
 <li><a class="reference internal" href="#breaking-change">BREAKING CHANGE</a></li>
-<li><a class="reference internal" href="#id11">New Features 🎉</a></li>
-<li><a class="reference internal" href="#id12">Bug Fixes 🐛</a></li>
-<li><a class="reference internal" href="#id13">Enhancements 🛠</a></li>
-<li><a class="reference internal" href="#id14">Documentation 📖</a></li>
-<li><a class="reference internal" href="#id15">House-Keeping 🧹</a></li>
-<li><a class="reference internal" href="#id16">New Contributors</a></li>
+<li><a class="reference internal" href="#id14">New Features 🎉</a></li>
+<li><a class="reference internal" href="#id15">Bug Fixes 🐛</a></li>
+<li><a class="reference internal" href="#id16">Enhancements 🛠</a></li>
+<li><a class="reference internal" href="#id17">Documentation 📖</a></li>
+<li><a class="reference internal" href="#id18">House-Keeping 🧹</a></li>
+<li><a class="reference internal" href="#id19">New Contributors</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#v0-0-12">v0.0.12</a><ul>
-<li><a class="reference internal" href="#id17">Bug Fixes 🐛</a></li>
-<li><a class="reference internal" href="#id18">Enhancements 🛠</a></li>
-<li><a class="reference internal" href="#id19">Documentation 📖</a></li>
-<li><a class="reference internal" href="#id20">House-Keeping 🧹</a></li>
-<li><a class="reference internal" href="#id21">New Contributors</a></li>
+<li><a class="reference internal" href="#id20">Bug Fixes 🐛</a></li>
+<li><a class="reference internal" href="#id21">Enhancements 🛠</a></li>
+<li><a class="reference internal" href="#id22">Documentation 📖</a></li>
+<li><a class="reference internal" href="#id23">House-Keeping 🧹</a></li>
+<li><a class="reference internal" href="#id24">New Contributors</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#v0-0-11">v0.0.11</a><ul>
 <li><a class="reference internal" href="#task-document-changes">Task Document Changes</a></li>
 <li><a class="reference internal" href="#vasp-input-set-updates">VASP input set updates</a></li>
-<li><a class="reference internal" href="#id22">New Features 🎉</a></li>
-<li><a class="reference internal" href="#id23">Bug Fixes 🐛</a></li>
-<li><a class="reference internal" href="#id24">Enhancements 🛠</a></li>
-<li><a class="reference internal" href="#id25">Documentation 📖</a></li>
-<li><a class="reference internal" href="#id26">House-Keeping 🧹</a></li>
-<li><a class="reference internal" href="#id27">New Contributors</a></li>
+<li><a class="reference internal" href="#id25">New Features 🎉</a></li>
+<li><a class="reference internal" href="#id26">Bug Fixes 🐛</a></li>
+<li><a class="reference internal" href="#id27">Enhancements 🛠</a></li>
+<li><a class="reference internal" href="#id28">Documentation 📖</a></li>
+<li><a class="reference internal" href="#id29">House-Keeping 🧹</a></li>
+<li><a class="reference internal" href="#id30">New Contributors</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#v0-0-10">v0.0.10</a></li>
@@ -2156,7 +2185,7 @@ VASP schema (<a class="reference external" href="https://github.com/Andrew-S-Ros
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

@@ -1406,27 +1406,27 @@ Finally, compute Gibb’s free energy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
 <li><p><strong>initial_relax_maker</strong> (<em>.TightRelaxMaker</em><em> | </em><em>None</em>) – Maker to relax the input structure.</p></li>
 <li><p><strong>eos_relax_maker</strong> (<em>.TightRelaxMaker</em><em> | </em><em>None</em>) – Maker to relax deformed structures for the EOS fit.
 The volume has to be fixed!</p></li>
 <li><p><strong>phonon_maker</strong> (<em>.PhononMaker</em>) – Maker to compute phonons. The volume has to be fixed!
 The beforehand relaxation could be switched off.</p></li>
-<li><p><strong>linear_strain</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>]</em>) – Percentage linear strain to apply as a deformation, default = -5% to 5%.</p></li>
-<li><p><strong>number_of_frames</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of strain calculations to do for EOS fit, default = 6.</p></li>
-<li><p><strong>t_max</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>None</em>) – Maximum temperature until which the QHA will be performed</p></li>
-<li><p><strong>pressure</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>None</em>) – Pressure at which the QHA will be performed (default None, no pressure)</p></li>
-<li><p><strong>skip_analysis</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Skips the analysis step and only performs EOS and phonon computations.</p></li>
-<li><p><strong>ignore_imaginary_modes</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – By default, volumes where the harmonic phonon approximation shows imaginary
+<li><p><strong>linear_strain</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>]</em>) – Percentage linear strain to apply as a deformation, default = -5% to 5%.</p></li>
+<li><p><strong>number_of_frames</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of strain calculations to do for EOS fit, default = 6.</p></li>
+<li><p><strong>t_max</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>None</em>) – Maximum temperature until which the QHA will be performed</p></li>
+<li><p><strong>pressure</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>None</em>) – Pressure at which the QHA will be performed (default None, no pressure)</p></li>
+<li><p><strong>skip_analysis</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Skips the analysis step and only performs EOS and phonon computations.</p></li>
+<li><p><strong>ignore_imaginary_modes</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – By default, volumes where the harmonic phonon approximation shows imaginary
 will be ignored</p></li>
 <li><p><strong>eos_type</strong> (<em>supported_eos</em>) – Equation of State type used for the fitting. Defaults to vinet.</p></li>
-<li><p><strong>analyze_free_energy_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>)</p></li>
+<li><p><strong>analyze_free_energy_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="atomate2.vasp.flows.qha.QhaMaker.prev_calc_dir_argname">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></em><a class="headerlink" href="#atomate2.vasp.flows.qha.QhaMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#atomate2.vasp.flows.qha.QhaMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
 <dd><p>Name of argument informing static maker of previous calculation directory.</p>
 <p>As this differs between different DFT codes (e.g., VASP, CP2K), it
 has been left as a property to be implemented by the inheriting class.</p>
@@ -1515,7 +1515,7 @@ calculations are performed for each ordering (relax -&gt; static)</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

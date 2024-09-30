@@ -1409,16 +1409,16 @@ adsorbed molecule and the sum of the slab without the adsorbed molecule and the 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the flow.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the flow.</p></li>
 <li><p><strong>bulk_relax_maker</strong> (<a class="reference internal" href="atomate2.vasp.jobs.base.BaseVaspMaker.html#atomate2.vasp.jobs.base.BaseVaspMaker" title="atomate2.vasp.jobs.base.BaseVaspMaker"><em>BaseVaspMaker</em></a>) – Maker for bulk relaxation.</p></li>
 <li><p><strong>mol_relax_maker</strong> (<a class="reference internal" href="atomate2.vasp.jobs.base.BaseVaspMaker.html#atomate2.vasp.jobs.base.BaseVaspMaker" title="atomate2.vasp.jobs.base.BaseVaspMaker"><em>BaseVaspMaker</em></a>) – Maker for molecule relaxation.</p></li>
 <li><p><strong>slab_relax_maker</strong> (<a class="reference internal" href="atomate2.vasp.jobs.base.BaseVaspMaker.html#atomate2.vasp.jobs.base.BaseVaspMaker" title="atomate2.vasp.jobs.base.BaseVaspMaker"><em>BaseVaspMaker</em></a>) – Maker for slab relaxation with adsorption.</p></li>
 <li><p><strong>slab_static_maker</strong> (<a class="reference internal" href="atomate2.vasp.jobs.base.BaseVaspMaker.html#atomate2.vasp.jobs.base.BaseVaspMaker" title="atomate2.vasp.jobs.base.BaseVaspMaker"><em>BaseVaspMaker</em></a>) – Maker for slab static energy calculation.</p></li>
 <li><p><strong>mol_static_maker</strong> (<a class="reference internal" href="atomate2.vasp.jobs.base.BaseVaspMaker.html#atomate2.vasp.jobs.base.BaseVaspMaker" title="atomate2.vasp.jobs.base.BaseVaspMaker"><em>BaseVaspMaker</em></a>) – Maker for molecule static energy calculation.</p></li>
-<li><p><strong>min_vacuum</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The minimum size of the vacuum region. In Angstroms or number of hkl planes.</p></li>
-<li><p><strong>min_slab_size</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The minimum size of layers of the slab. In Angstroms or number of hkl planes.</p></li>
-<li><p><strong>min_lw</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Minimum length and width of the slab</p></li>
-<li><p><strong>surface_idx</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a>) – Miller index [h, k, l] of plane parallel to surface.</p></li>
+<li><p><strong>min_vacuum</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The minimum size of the vacuum region. In Angstroms or number of hkl planes.</p></li>
+<li><p><strong>min_slab_size</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The minimum size of layers of the slab. In Angstroms or number of hkl planes.</p></li>
+<li><p><strong>min_lw</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Minimum length and width of the slab</p></li>
+<li><p><strong>surface_idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a>) – Miller index [h, k, l] of plane parallel to surface.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1431,8 +1431,8 @@ adsorbed molecule and the sum of the slab without the adsorbed molecule and the 
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>molecule</strong> (<em>Molecule</em>) – A pymatgen molecule object. The molecule to be adsorbed.</p></li>
 <li><p><strong>structure</strong> (<em>Structure</em>) – A pymatgen structure object. The bulk structure to be used for slab generation.</p></li>
-<li><p><strong>prev_dir_mol</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous VASP calculation directory to copy output files from.</p></li>
-<li><p><strong>prev_dir_bulk</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous VASP calculation directory to copy output files from.</p></li>
+<li><p><strong>prev_dir_mol</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous VASP calculation directory to copy output files from.</p></li>
+<li><p><strong>prev_dir_bulk</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous VASP calculation directory to copy output files from.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1525,7 +1525,7 @@ adsorbed molecule and the sum of the slab without the adsorbed molecule and the 
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

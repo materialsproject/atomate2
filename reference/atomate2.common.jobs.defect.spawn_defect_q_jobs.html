@@ -1406,21 +1406,21 @@
 <li><p><strong>relax_maker</strong> (<a class="reference internal" href="atomate2.aims.jobs.core.RelaxMaker.html#atomate2.aims.jobs.core.RelaxMaker" title="atomate2.aims.jobs.core.RelaxMaker"><em>RelaxMaker</em></a>) – A RelaxMaker object to use for the atomic relaxation.</p></li>
 <li><p><strong>sc_mat</strong> (<em>NDArray</em><em> | </em><em>None</em>) – The supercell matrix. If None, the code will attempt to create a
 nearly-cubic supercell.</p></li>
-<li><p><strong>defect_index</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Additional index to give unique names to the defect calculations.
+<li><p><strong>defect_index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Additional index to give unique names to the defect calculations.
 Useful for external bookkeeping of symmetry distinct defects.</p></li>
-<li><p><strong>add_info</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em> | </em><em>None</em>) – Additional information to store with the defect cell relaxation calculation.
+<li><p><strong>add_info</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> | </em><em>None</em>) – Additional information to store with the defect cell relaxation calculation.
 By default only the defect object and charge state are stored.</p></li>
 <li><p><strong>relaxed_sc_lattice</strong> (<em>Lattice</em><em> | </em><em>None</em>) – The lattice of the relaxed supercell. If provided, the lattice parameters
 of the supercell will be set to value specified. Otherwise, the lattice it will
 only by set by <cite>defect.structure</cite> and <cite>sc_mat</cite>.</p></li>
-<li><p><strong>validate_charge</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to validate the charge states of the defect after the atomic relaxation.
+<li><p><strong>validate_charge</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to validate the charge states of the defect after the atomic relaxation.
 Assuming the final output of the relaxation is a TaskDoc, we should make sure
 that the charge state is set properly and matches the expected charge state from
 the input defect object.</p></li>
-<li><p><strong>relax_radius</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> | </em><em>None</em>) – The radius to include around the defect site for the relaxation.
+<li><p><strong>relax_radius</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – The radius to include around the defect site for the relaxation.
 If “auto”, the radius will be set to the maximum that will fit inside a periodic
 cell. If None, all atoms will be relaxed.</p></li>
-<li><p><strong>perturb</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>None</em>) – The amount to perturb the sites in the supercell. Only perturb the sites with
+<li><p><strong>perturb</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>None</em>) – The amount to perturb the sites in the supercell. Only perturb the sites with
 selective dynamics set to True. So this setting only works with <cite>relax_radius</cite>.</p></li>
 </ul>
 </dd>
@@ -1510,7 +1510,7 @@ charge states.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

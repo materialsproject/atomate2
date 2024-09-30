@@ -1409,11 +1409,11 @@ calculations.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tasks</strong> (<em>.Store</em>) – Store of task documents.</p></li>
 <li><p><strong>magnetic_orderings</strong> (<em>.Store</em>) – Store for magnetic ordering documents.</p></li>
-<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary query to limit tasks to be analyzed.</p></li>
-<li><p><strong>structure_match_stol</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Numerical site tolerance for structure equivalence. Default is 0.3.</p></li>
-<li><p><strong>structure_match_ltol</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Numerical length tolerance for structure equivalence. Default is 0.3</p></li>
-<li><p><strong>structure_match_angle_tol</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Numerical angle tolerance in degrees for structure equivalence. Default is 5.</p></li>
-<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments that will be passed to the Builder init.</p></li>
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary query to limit tasks to be analyzed.</p></li>
+<li><p><strong>structure_match_stol</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Numerical site tolerance for structure equivalence. Default is 0.3.</p></li>
+<li><p><strong>structure_match_ltol</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Numerical length tolerance for structure equivalence. Default is 0.3</p></li>
+<li><p><strong>structure_match_angle_tol</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Numerical angle tolerance in degrees for structure equivalence. Default is 5.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments that will be passed to the Builder init.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1440,7 +1440,7 @@ orderings are grouped by parent structure.</p>
 formula.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Iterator</em>[<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>[<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>]]</p>
+<dd class="field-even"><p><em>Iterator</em>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1454,14 +1454,14 @@ formula.</p>
 See _group_orderings for more details.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tasks</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em>]</em>) – A list of magnetic ordering tasks grouped by same formula.</p>
+<dd class="field-odd"><p><strong>tasks</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>]</em>) – A list of magnetic ordering tasks grouped by same formula.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of magnetic ordering documents (one for each unique parent
 structure).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a> of .MagneticOrderingsDocument</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a> of .MagneticOrderingsDocument</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1472,7 +1472,7 @@ structure).</p>
 <dd><p>Insert new magnetic orderings into the magnetic orderings Store.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> of </em><em>.MagneticOrderingsDocument</em>) – A list of magnetic ordering documents to add to the database.</p>
+<dd class="field-odd"><p><strong>items</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><em>.MagneticOrderingsDocument</em>) – A list of magnetic ordering documents to add to the database.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>None</em></p>
@@ -1564,7 +1564,7 @@ structure).</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

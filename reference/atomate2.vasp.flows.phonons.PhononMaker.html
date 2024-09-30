@@ -1430,7 +1430,7 @@ and to handle all symmetry-related tasks in phonopy</p></li>
 <li><p><strong>prefer_90_degrees</strong> (<em>bool = True</em>) – if set to True, supercell algorithm will first try to find a supercell
 with 3 90 degree angles</p></li>
 <li><p><strong>get_supercell_size_kwargs</strong> (<em>dict = {}</em>) – kwargs that will be passed to get_supercell_size to determine supercell size</p></li>
-<li><p><strong>use_symmetrized_structure</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>None = None</em>) – <p>allowed strings: “primitive”, “conventional”, None</p>
+<li><p><strong>use_symmetrized_structure</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>None = None</em>) – <p>allowed strings: “primitive”, “conventional”, None</p>
 <ul>
 <li><p>”primitive” will enforce to start the phonon computation
 from the primitive standard structure
@@ -1458,8 +1458,8 @@ Set to <code class="docutils literal notranslate"><span class="pre">None</span><
 static energy computation</p></li>
 <li><p><strong>born_maker</strong> (<em>.BaseVaspMaker</em><em> or </em><em>None</em>) – Maker to compute the BORN charges.</p></li>
 <li><p><strong>phonon_displacement_maker</strong> (<em>.BaseVaspMaker</em><em> or </em><em>None</em>) – Maker used to compute the forces for a supercell.</p></li>
-<li><p><strong>generate_frequencies_eigenvectors_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_frequencies_eigenvectors</span></code>.</p></li>
-<li><p><strong>create_thermal_displacements</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Bool that determines if thermal_displacement_matrices are computed</p></li>
+<li><p><strong>generate_frequencies_eigenvectors_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_frequencies_eigenvectors</span></code>.</p></li>
+<li><p><strong>create_thermal_displacements</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Bool that determines if thermal_displacement_matrices are computed</p></li>
 <li><p><strong>kpath_scheme</strong> (<em>str = &quot;seekpath&quot;</em>) – scheme to generate kpoints. Please be aware that
 you can only use seekpath with any kind of cell
 Otherwise, please use the standard primitive structure
@@ -1472,14 +1472,14 @@ to the primitive cell and not pymatgen</p></li>
 <li><p><strong>code</strong> (<em>str = &quot;vasp&quot;</em>) – determines the DFT code. currently only vasp is implemented.
 This keyword might enable the implementation of other codes
 in the future</p></li>
-<li><p><strong>store_force_constants</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – if True, force constants will be stored</p></li>
-<li><p><strong>socket</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, use the socket for the calculation</p></li>
+<li><p><strong>store_force_constants</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, force constants will be stored</p></li>
+<li><p><strong>socket</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, use the socket for the calculation</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="atomate2.vasp.flows.phonons.PhononMaker.prev_calc_dir_argname">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></em><a class="headerlink" href="#atomate2.vasp.flows.phonons.PhononMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#atomate2.vasp.flows.phonons.PhononMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
 <dd><p>Name of argument informing static maker of previous calculation directory.</p>
 <p>As this differs between different DFT codes (e.g., VASP, CP2K), it
 has been left as a property to be implemented by the inheriting class.</p>
@@ -1568,7 +1568,7 @@ calculations are performed for each ordering (relax -&gt; static)</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

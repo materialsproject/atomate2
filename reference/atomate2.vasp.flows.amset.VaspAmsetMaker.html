@@ -1408,10 +1408,10 @@ correct axes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
-<li><p><strong>doping</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Doping concentrations at which to calculate transport properties.</p></li>
-<li><p><strong>temperatures</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Temperatures at which to calculate transport properties.</p></li>
-<li><p><strong>use_hse_gap</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to perform an HSE06 calculation to calculate the band gap for use in
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
+<li><p><strong>doping</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Doping concentrations at which to calculate transport properties.</p></li>
+<li><p><strong>temperatures</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Temperatures at which to calculate transport properties.</p></li>
+<li><p><strong>use_hse_gap</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to perform an HSE06 calculation to calculate the band gap for use in
 AMSET. This can impact the results for small band gap materials.</p></li>
 <li><p><strong>relax_maker</strong> (<em>.BaseVaspMaker</em>) – A maker to perform a tight relaxation on the bulk. Set to <code class="docutils literal notranslate"><span class="pre">None</span></code> to skip the
 bulk relaxation.</p></li>
@@ -1423,7 +1423,7 @@ bulk relaxation.</p></li>
 <li><p><strong>hse_gap_maker</strong> (<em>.BaseVaspMaker</em>) – The maker to use for calculating the band gap using HSE06. Note, this maker is
 only used if <code class="docutils literal notranslate"><span class="pre">use_hse_gap=True</span></code>.</p></li>
 <li><p><strong>amset_maker</strong> (<em>.AmsetMaker</em>) – The maker to use for running AMSET calculations.</p></li>
-<li><p><strong>amset_settings</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>)</p></li>
+<li><p><strong>amset_settings</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1435,7 +1435,7 @@ only used if <code class="docutils literal notranslate"><span class="pre">use_hs
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>structure</strong> (<em>.Structure</em>) – A pymatgen structure.</p></li>
-<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous vasp calculation directory to use for copying outputs.</p></li>
+<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous vasp calculation directory to use for copying outputs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1525,7 +1525,7 @@ only used if <code class="docutils literal notranslate"><span class="pre">use_hs
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

@@ -1413,46 +1413,46 @@ function through <cite>ase_md_kwargs</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the MD Maker</p></li>
-<li><p><strong>force_field_name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>.MLFF</em>) – The name of the forcefield (for provenance)</p></li>
-<li><p><strong>time_step</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>None = None.</em>) – The timestep of the MD run in fs.
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the MD Maker</p></li>
+<li><p><strong>force_field_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>.MLFF</em>) – The name of the forcefield (for provenance)</p></li>
+<li><p><strong>time_step</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>None = None.</em>) – The timestep of the MD run in fs.
 If <cite>None</cite>, defaults to 0.5 fs if a structure contains an isotope of
 hydrogen and 2 fs otherwise.</p></li>
 <li><p><strong>n_steps</strong> (<em>int = 1000</em>) – The number of MD steps to run</p></li>
 <li><p><strong>ensemble</strong> (<em>MDEnsemble = &quot;nvt&quot;</em>) – The ensemble to use. Valid ensembles are nve, nvt, or npt</p></li>
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>Sequence</em><em> | </em><em>np.ndarray</em><em> | </em><em>None.</em>) – The temperature in Kelvin. If a sequence or 1D array, the temperature
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>Sequence</em><em> | </em><em>np.ndarray</em><em> | </em><em>None.</em>) – The temperature in Kelvin. If a sequence or 1D array, the temperature
 schedule will be interpolated linearly between the given values. If a
 float, the temperature will be constant throughout the run.</p></li>
-<li><p><strong>pressure</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>Sequence</em><em> | </em><em>None = None</em>) – The pressure in kilobar. If a sequence or 1D array, the pressure
+<li><p><strong>pressure</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>Sequence</em><em> | </em><em>None = None</em>) – The pressure in kilobar. If a sequence or 1D array, the pressure
 schedule will be interpolated linearly between the given values. If a
 float, the pressure will be constant throughout the run.</p></li>
-<li><p><strong>dynamics</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> | </em><em>ASE .MolecularDynamics = &quot;langevin&quot;</em>) – The dynamical thermostat to use. If dynamics is an ASE .MolecularDynamics
+<li><p><strong>dynamics</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>ASE .MolecularDynamics = &quot;langevin&quot;</em>) – The dynamical thermostat to use. If dynamics is an ASE .MolecularDynamics
 object, this uses the option specified explicitly by the user.
 See _valid_dynamics for a list of pre-defined options when
 specifying dynamics as a string.</p></li>
-<li><p><strong>ase_md_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em> | </em><em>None = None</em>) – Options except for temperature and pressure to pass into the ASE
+<li><p><strong>ase_md_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> | </em><em>None = None</em>) – Options except for temperature and pressure to pass into the ASE
 .MolecularDynamics function</p></li>
-<li><p><strong>calculator_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – kwargs to pass to the ASE calculator class</p></li>
-<li><p><strong>ionic_step_data</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><em>...</em><em>] or </em><em>None</em>) – Quantities to store in the TaskDocument ionic_steps.
+<li><p><strong>calculator_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – kwargs to pass to the ASE calculator class</p></li>
+<li><p><strong>ionic_step_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>,</em><em>...</em><em>] or </em><em>None</em>) – Quantities to store in the TaskDocument ionic_steps.
 Possible options are “struct_or_mol”, “energy”,
 “forces”, “stress”, and “magmoms”.
 “structure” and “molecule” are aliases for “struct_or_mol”.</p></li>
 <li><p><strong>store_trajectory</strong> (<em>emmet .StoreTrajectoryOption = &quot;partial&quot;</em>) – Whether to store trajectory information (“no”) or complete trajectories
 (“partial” or “full”, which are identical).</p></li>
-<li><p><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>] or </em><em>None</em>) – A list of tags for the task.</p></li>
-<li><p><strong>traj_file</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> | </em><em>Path</em><em> | </em><em>None = None</em>) – If a str or Path, the name of the file to save the MD trajectory to.
+<li><p><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] or </em><em>None</em>) – A list of tags for the task.</p></li>
+<li><p><strong>traj_file</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>Path</em><em> | </em><em>None = None</em>) – If a str or Path, the name of the file to save the MD trajectory to.
 If None, the trajectory is not written to disk</p></li>
 <li><p><strong>traj_file_fmt</strong> (<em>Literal</em><em>[</em><em>&quot;ase&quot;</em><em>,</em><em>&quot;pmg&quot;</em><em>,</em><em>&quot;xdatcar&quot;</em><em>]</em>) – The format of the trajectory file to write.
 If “ase”, writes an ASE .Trajectory.
 If “pmg”, writes a Pymatgen .Trajectory.
 If “xdatcar, writes a VASP-style XDATCAR</p></li>
-<li><p><strong>traj_interval</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The step interval for saving the trajectories.</p></li>
-<li><p><strong>mb_velocity_seed</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> or </em><em>None</em>) – If an int, a random number seed for generating initial velocities
+<li><p><strong>traj_interval</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The step interval for saving the trajectories.</p></li>
+<li><p><strong>mb_velocity_seed</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> or </em><em>None</em>) – If an int, a random number seed for generating initial velocities
 from a Maxwell-Boltzmann distribution.</p></li>
 <li><p><strong>zero_linear_momentum</strong> (<em>bool = False</em>) – Whether to initialize the atomic velocities with zero linear momentum</p></li>
 <li><p><strong>zero_angular_momentum</strong> (<em>bool = False</em>) – Whether to initialize the atomic velocities with zero angular momentum</p></li>
-<li><p><strong>task_document_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em> or </em><em>None</em><em> (</em><em>deprecated</em><em>)</em>) – Options to pass to the TaskDoc.</p></li>
-<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>)</p></li>
+<li><p><strong>task_document_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><em>None</em><em> (</em><em>deprecated</em><em>)</em>) – Options to pass to the TaskDoc.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1464,7 +1464,7 @@ from a Maxwell-Boltzmann distribution.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>structure</strong> (<em>.Structure</em>) – pymatgen structure.</p></li>
-<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous calculation directory to copy output files from. Unused, just
+<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous calculation directory to copy output files from. Unused, just
 added to match the method signature of other makers.</p></li>
 </ul>
 </dd>
@@ -1562,7 +1562,7 @@ added to match the method signature of other makers.</p></li>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

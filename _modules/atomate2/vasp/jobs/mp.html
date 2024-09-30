@@ -1441,7 +1441,9 @@
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;MP GGA relax&quot;</span>
     <span class="n">input_set_generator</span><span class="p">:</span> <span class="n">VaspInputGenerator</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
-        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">MPRelaxSet</span><span class="p">(</span><span class="n">force_gamma</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_metal_kpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">MPRelaxSet</span><span class="p">(</span>
+            <span class="n">force_gamma</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_metal_kpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inherit_incar</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
     <span class="p">)</span></div>
 
 
@@ -1479,7 +1481,9 @@
 
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;MP GGA static&quot;</span>
     <span class="n">input_set_generator</span><span class="p">:</span> <span class="n">VaspInputGenerator</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
-        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">MPStaticSet</span><span class="p">(</span><span class="n">force_gamma</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_metal_kpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">MPStaticSet</span><span class="p">(</span>
+            <span class="n">force_gamma</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_metal_kpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inherit_incar</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
     <span class="p">)</span></div>
 
 
@@ -1519,6 +1523,7 @@
     <span class="n">input_set_generator</span><span class="p">:</span> <span class="n">VaspInputGenerator</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">MPScanRelaxSet</span><span class="p">(</span>
             <span class="n">auto_ismear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">inherit_incar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">user_incar_settings</span><span class="o">=</span><span class="p">{</span>
                 <span class="s2">&quot;EDIFFG&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span>
                 <span class="s2">&quot;GGA&quot;</span><span class="p">:</span> <span class="s2">&quot;PS&quot;</span><span class="p">,</span>
@@ -1567,6 +1572,7 @@
     <span class="n">input_set_generator</span><span class="p">:</span> <span class="n">VaspInputGenerator</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">MPScanRelaxSet</span><span class="p">(</span>
             <span class="n">auto_ismear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">inherit_incar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">user_incar_settings</span><span class="o">=</span><span class="p">{</span>
                 <span class="s2">&quot;GGA&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># unset GGA, shouldn&#39;t be set anyway but best be sure</span>
                 <span class="s2">&quot;LCHARG&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -1663,7 +1669,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../../../../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>

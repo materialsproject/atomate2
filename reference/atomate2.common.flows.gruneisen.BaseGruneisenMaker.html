@@ -1397,7 +1397,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="atomate2.common.flows.gruneisen.BaseGruneisenMaker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atomate2.common.flows.gruneisen.</span></span><span class="sig-name descname"><span class="pre">BaseGruneisenMaker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name='Gruneisen'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulk_relax_maker=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">const_vol_relax_maker=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kpath_scheme='seekpath'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phonon_maker=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perc_vol=0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh=7000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compute_gruneisen_param_kwargs=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symprec=0.001</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/atomate2/common/flows/gruneisen.html#BaseGruneisenMaker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#atomate2.common.flows.gruneisen.BaseGruneisenMaker" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://materialsproject.github.io/jobflow/jobflow.core.html#jobflow.core.maker.Maker" title="(in jobflow v0.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maker</span></code></a>, <a class="reference external" href="https://docs.python.org/3.8/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://materialsproject.github.io/jobflow/jobflow.core.html#jobflow.core.maker.Maker" title="(in jobflow v0.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maker</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/abc.html#abc.ABC" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
 <p>Maker to calculate Grueneisen parameters with DFT/force field code and Phonopy.</p>
 <p>Calculate Grueneisen parameters by a finite volume change approach based on
 harmonic phonons.
@@ -1412,12 +1412,12 @@ to compute Grueneisen parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
 <li><p><strong>bulk_relax_maker</strong> (<em>.ForceFieldRelaxMaker</em><em>, </em><em>.BaseAimsMaker</em><em>, </em><em>.BaseVaspMaker</em><em>, or </em><em>None</em>) – A maker to perform an initial tight relaxation on the bulk.</p></li>
-<li><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – determines the dft or force field code.</p></li>
+<li><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – determines the dft or force field code.</p></li>
 <li><p><strong>const_vol_relax_maker</strong> (<em>.ForceFieldRelaxMaker</em><em>, </em><em>.BaseAimsMaker</em><em>,</em>) – .BaseVaspMaker, or None. A maker to perform a tight relaxation
 on the expanded and shrunk structures at constant volume.</p></li>
-<li><p><strong>kpath_scheme</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – scheme to generate kpoints. Please be aware that
+<li><p><strong>kpath_scheme</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – scheme to generate kpoints. Please be aware that
 you can only use seekpath with any kind of cell
 Otherwise, please use the standard primitive structure
 Available schemes are:
@@ -1426,12 +1426,12 @@ Available schemes are:
 seekpath can be used with any kind of unit cell as
 it relies on phonopy to handle the relationship
 to the primitive cell and not pymatgen</p></li>
-<li><p><strong>mesh</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
+<li><p><strong>mesh</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Mesh numbers along a, b, c axes used for Grueneisen parameter computation.
 Or an int or float to indicate a kpoint density.</p></li>
 <li><p><strong>phonon_maker</strong> (<em>.BasePhononMaker</em>) – PhononMaker to run the phonon workflow.</p></li>
-<li><p><strong>perc_vol</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Percent volume to shrink and expand ground state structure</p></li>
-<li><p><strong>compute_gruneisen_param_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_gruneisen_param</span></code>.</p></li>
-<li><p><strong>symprec</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Symmetry precision for symmetry checks and phonon runs.</p></li>
+<li><p><strong>perc_vol</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Percent volume to shrink and expand ground state structure</p></li>
+<li><p><strong>compute_gruneisen_param_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_gruneisen_param</span></code>.</p></li>
+<li><p><strong>symprec</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Symmetry precision for symmetry checks and phonon runs.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1448,7 +1448,7 @@ this three phonon runs.</p>
 <li><p><strong>structure</strong> (<em>Structure</em>) – A pymatgen structure object. Please start with a structure
 that is nearly fully optimized as the internal optimizers
 have very strict settings!</p></li>
-<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous calculation directory to use for copying outputs.</p></li>
+<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous calculation directory to use for copying outputs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1459,7 +1459,7 @@ have very strict settings!</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="atomate2.common.flows.gruneisen.BaseGruneisenMaker.prev_calc_dir_argname">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></em><a class="headerlink" href="#atomate2.common.flows.gruneisen.BaseGruneisenMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></em><a class="headerlink" href="#atomate2.common.flows.gruneisen.BaseGruneisenMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
 <dd><p>Name of argument informing static maker of previous calculation directory.</p>
 <p>As this differs between different DFT codes (e.g., VASP, CP2K), it
 has been left as a property to be implemented by the inheriting class.</p>
@@ -1549,7 +1549,7 @@ calculations are performed for each ordering (relax -&gt; static)</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

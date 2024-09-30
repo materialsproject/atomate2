@@ -1405,24 +1405,24 @@ up a predefined forcefield. To overwrite this behavior, redefine <cite>self.calc
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The job name.</p></li>
-<li><p><strong>force_field_name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>.MLFF</em>) – The name of the force field.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The job name.</p></li>
+<li><p><strong>force_field_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>.MLFF</em>) – The name of the force field.</p></li>
 <li><p><strong>relax_cell</strong> (<em>bool = True</em>) – Whether to allow the cell shape/volume to change during relaxation.</p></li>
 <li><p><strong>fix_symmetry</strong> (<em>bool = False</em>) – Whether to fix the symmetry during relaxation.
 Refines the symmetry of the initial structure.</p></li>
-<li><p><strong>symprec</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>None = 1e-2</em>) – Tolerance for symmetry finding in case of fix_symmetry.</p></li>
-<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Maximum number of ionic steps allowed during relaxation.</p></li>
-<li><p><strong>relax_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments that will get passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">AseRelaxer.relax</span></code>.</p></li>
-<li><p><strong>optimizer_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments that will get passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">AseRelaxer()</span></code>.</p></li>
-<li><p><strong>calculator_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments that will get passed to the ASE calculator.</p></li>
-<li><p><strong>ionic_step_data</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><em>...</em><em>] or </em><em>None</em>) – Quantities to store in the TaskDocument ionic_steps.
+<li><p><strong>symprec</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>None = 1e-2</em>) – Tolerance for symmetry finding in case of fix_symmetry.</p></li>
+<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Maximum number of ionic steps allowed during relaxation.</p></li>
+<li><p><strong>relax_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments that will get passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">AseRelaxer.relax</span></code>.</p></li>
+<li><p><strong>optimizer_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments that will get passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">AseRelaxer()</span></code>.</p></li>
+<li><p><strong>calculator_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments that will get passed to the ASE calculator.</p></li>
+<li><p><strong>ionic_step_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>,</em><em>...</em><em>] or </em><em>None</em>) – Quantities to store in the TaskDocument ionic_steps.
 Possible options are “struct_or_mol”, “energy”,
 “forces”, “stress”, and “magmoms”.
 “structure” and “molecule” are aliases for “struct_or_mol”.</p></li>
 <li><p><strong>store_trajectory</strong> (<em>emmet .StoreTrajectoryOption = &quot;no&quot;</em>) – Whether to store trajectory information (“no”) or complete trajectories
 (“partial” or “full”, which are identical).</p></li>
-<li><p><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>] or </em><em>None</em>) – A list of tags for the task.</p></li>
-<li><p><strong>task_document_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em> (</em><em>deprecated</em><em>)</em>) – Additional keyword args passed to <a class="reference internal" href="atomate2.forcefields.schemas.ForceFieldTaskDocument.html#atomate2.forcefields.schemas.ForceFieldTaskDocument" title="atomate2.forcefields.schemas.ForceFieldTaskDocument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ForceFieldTaskDocument()</span></code></a>.</p></li>
+<li><p><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] or </em><em>None</em>) – A list of tags for the task.</p></li>
+<li><p><strong>task_document_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> (</em><em>deprecated</em><em>)</em>) – Additional keyword args passed to <a class="reference internal" href="atomate2.forcefields.schemas.ForceFieldTaskDocument.html#atomate2.forcefields.schemas.ForceFieldTaskDocument" title="atomate2.forcefields.schemas.ForceFieldTaskDocument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ForceFieldTaskDocument()</span></code></a>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1434,7 +1434,7 @@ Possible options are “struct_or_mol”, “energy”,
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>structure</strong> (<em>.Structure</em>) – pymatgen structure.</p></li>
-<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – <dl class="simple">
+<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – <dl class="simple">
 <dt>A previous calculation directory to copy output files from. Unused, just</dt><dd><p>added to match the method signature of other makers.</p>
 </dd>
 </dl>
@@ -1535,7 +1535,7 @@ Possible options are “struct_or_mol”, “energy”,
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

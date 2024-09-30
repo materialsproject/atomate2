@@ -1397,7 +1397,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="atomate2.common.flows.anharmonicity.BaseAnharmonicityMaker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atomate2.common.flows.anharmonicity.</span></span><span class="sig-name descname"><span class="pre">BaseAnharmonicityMaker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'anharmonicity'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phonon_maker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/atomate2/common/flows/anharmonicity.html#BaseAnharmonicityMaker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#atomate2.common.flows.anharmonicity.BaseAnharmonicityMaker" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://materialsproject.github.io/jobflow/jobflow.core.html#jobflow.core.maker.Maker" title="(in jobflow v0.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maker</span></code></a>, <a class="reference external" href="https://docs.python.org/3.8/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://materialsproject.github.io/jobflow/jobflow.core.html#jobflow.core.maker.Maker" title="(in jobflow v0.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maker</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/abc.html#abc.ABC" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
 <p>Maker to calculate the anharmonicity score of a material.</p>
 <p>Calculate sigma^A as defined in doi.org/10.1103/PhysRevMaterials.4.083809, by
 first calculating the phonons for a material and then generating the one-shot
@@ -1405,7 +1405,7 @@ sample and calculating the DFT and harmonic forces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
 <li><p><strong>phonon_maker</strong> (<a class="reference internal" href="atomate2.common.flows.phonons.BasePhononMaker.html#atomate2.common.flows.phonons.BasePhononMaker" title="atomate2.common.flows.phonons.BasePhononMaker"><em>BasePhononMaker</em></a>) – The maker to generate the phonon model</p></li>
 </ul>
 </dd>
@@ -1420,9 +1420,9 @@ sample and calculating the DFT and harmonic forces.</p>
 <li><p><strong>structure</strong> (<em>Structure</em>) – A pymatgen structure object. Please start with a structure
 that is nearly fully optimized as the internal optimizers
 have very strict settings!</p></li>
-<li><p><strong>prev_dir</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> | </em><em>Path</em><em>]</em>) – A previous calculation directory to use for copying outputs.
+<li><p><strong>prev_dir</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>Path</em><em>]</em>) – A previous calculation directory to use for copying outputs.
 Default is None.</p></li>
-<li><p><strong>born</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><em>Matrix3D</em><em>]</em><em>]</em>) – Instead of recomputing born charges and epsilon, these values can also be
+<li><p><strong>born</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><em>Matrix3D</em><em>]</em><em>]</em>) – Instead of recomputing born charges and epsilon, these values can also be
 provided manually. If born and epsilon_static are provided, the born run
 will be skipped it can be provided in the VASP convention with information
 for every atom in unit cell. Please be careful when converting structures
@@ -1431,7 +1431,7 @@ field is None.</p></li>
 <li><p><strong>epsilon_static</strong> (<em>Optional</em><em>[</em><em>Matrix3D</em><em>]</em>) – The high-frequency dielectric constant to use instead of recomputing born
 charges and epsilon. If born, epsilon_static are provided, the born run
 will be skipped. The default for this field is None.</p></li>
-<li><p><strong>total_dft_energy_per_formula_unit</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>]</em>) – It has to be given per formula unit (as a result in corresponding Doc).
+<li><p><strong>total_dft_energy_per_formula_unit</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>]</em>) – It has to be given per formula unit (as a result in corresponding Doc).
 Instead of recomputing the energy of the bulk structure every time, this
 value can also be provided in eV. If it is provided, the static run will be
 skipped. This energy is the typical output dft energy of the dft workflow.
@@ -1439,16 +1439,16 @@ No conversion needed. It is set to 0 by default.</p></li>
 <li><p><strong>supercell_matrix</strong> (<em>Optional</em><em>[</em><em>Matrix3D</em><em>]</em>) – Instead of min_length, also a supercell_matrix can be given, e.g.
 [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]. By default, this matrix is
 set to None.</p></li>
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The temperature for the anharmonicity calculation. The default temp is 300.</p></li>
-<li><p><strong>one_shot_approx</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, finds the one shot approximation of sigma^A and if false, finds
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The temperature for the anharmonicity calculation. The default temp is 300.</p></li>
+<li><p><strong>one_shot_approx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If true, finds the one shot approximation of sigma^A and if false, finds
 the full sigma^A. The default is True.</p></li>
-<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) – Seed to use for the random number generator
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em>) – Seed to use for the random number generator
 (only used if one_shot_approx == False). Set to None by default.</p></li>
-<li><p><strong>element_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, calculate the atom-resolved sigma^A. This is false by default.</p></li>
-<li><p><strong>mode_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, calculate the mode-resolved sigma^A. This is false by default.</p></li>
-<li><p><strong>site_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, resolve sigma^A to the different sites.
+<li><p><strong>element_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If true, calculate the atom-resolved sigma^A. This is false by default.</p></li>
+<li><p><strong>mode_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If true, calculate the mode-resolved sigma^A. This is false by default.</p></li>
+<li><p><strong>site_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If true, resolve sigma^A to the different sites.
 Default is false.</p></li>
-<li><p><strong>n_samples</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of times displaced structures are sampled.
+<li><p><strong>n_samples</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of times displaced structures are sampled.
 Must be &gt;= 1 and cannot be used when one_shot_approx == True.
 It is set to 1 by default.</p></li>
 </ul>
@@ -1470,18 +1470,18 @@ It is set to 1 by default.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>phonon_doc</strong> (<a class="reference internal" href="atomate2.common.schemas.phonons.PhononBSDOSDoc.html#atomate2.common.schemas.phonons.PhononBSDOSDoc" title="atomate2.common.schemas.phonons.PhononBSDOSDoc"><em>PhononBSDOSDoc</em></a>) – The document to get the anharmonicity for</p></li>
-<li><p><strong>prev_dir</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> | </em><em>Path</em><em>]</em>) – A previous calculation directory to use for copying outputs.
+<li><p><strong>prev_dir</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>Path</em><em>]</em>) – A previous calculation directory to use for copying outputs.
 Default is None.</p></li>
-<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – The temperature for the anharmonicity calculation. Default is 300.</p></li>
-<li><p><strong>one_shot_approx</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, finds the one shot approximation of sigma^A and if false,
+<li><p><strong>temperature</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – The temperature for the anharmonicity calculation. Default is 300.</p></li>
+<li><p><strong>one_shot_approx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If true, finds the one shot approximation of sigma^A and if false,
 finds the full sigma^A. The default is True.</p></li>
-<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>]</em>) – Seed to use for the random number generator
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em>) – Seed to use for the random number generator
 (only used if one_shot_approx == False). Default is None.</p></li>
-<li><p><strong>element_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, calculate the atom-resolved sigma^A. This is false by default.</p></li>
-<li><p><strong>mode_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, calculate the mode-resolved sigma^A. This is false by default.</p></li>
-<li><p><strong>site_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, resolve sigma^A to the different sites.
+<li><p><strong>element_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If true, calculate the atom-resolved sigma^A. This is false by default.</p></li>
+<li><p><strong>mode_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If true, calculate the mode-resolved sigma^A. This is false by default.</p></li>
+<li><p><strong>site_resolved</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If true, resolve sigma^A to the different sites.
 Default is false.</p></li>
-<li><p><strong>n_samples</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of times displaced structures are sampled.
+<li><p><strong>n_samples</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of times displaced structures are sampled.
 Must be &gt;= 1 and cannot be used when one_shot_approx == True.
 It is set to 1 by default.</p></li>
 </ul>
@@ -1497,7 +1497,7 @@ It is set to 1 by default.</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="atomate2.common.flows.anharmonicity.BaseAnharmonicityMaker.prev_calc_dir_argname">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></em><a class="headerlink" href="#atomate2.common.flows.anharmonicity.BaseAnharmonicityMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></em><a class="headerlink" href="#atomate2.common.flows.anharmonicity.BaseAnharmonicityMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
 <dd><p>Name of argument informing static maker of previous calculation directory.</p>
 <p>As this differs between different DFT codes (e.g., VASP, CP2K), it
 has been left as a property to be implemented by the inheriting class.</p>
@@ -1588,7 +1588,7 @@ calculations are performed for each ordering (relax -&gt; static)</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

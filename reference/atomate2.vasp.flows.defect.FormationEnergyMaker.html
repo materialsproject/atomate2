@@ -1432,14 +1432,14 @@ lattice relaxation, you should manually set the grid size.</p>
 </pre></div>
 </div>
 </p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the flow created by this maker.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the flow created by this maker.</p></li>
 <li><p><strong>relax_radius</strong> – The radius to include around the defect site for the relaxation.
 If “auto”, the radius will be set to the maximum that will fit inside
 a periodic cell. If None, all atoms will be relaxed.</p></li>
 <li><p><strong>perturb</strong> – The amount to perturb the sites in the supercell. Only perturb the
 sites with selective dynamics set to True. So this setting only works
 with <cite>relax_radius</cite>.</p></li>
-<li><p><strong>collect_defect_entry_data</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – <p>Whether to collect the defect entry data at the end of the flow.
+<li><p><strong>collect_defect_entry_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – <p>Whether to collect the defect entry data at the end of the flow.
 If True, the output of all the charge states for each symmetry distinct
 defect will be collected into a list of dictionaries that can be used
 to create a DefectEntry. The data here can be trivially combined with
@@ -1482,12 +1482,12 @@ correction calculation.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>defect_relax_maker</strong> (<a class="reference internal" href="atomate2.vasp.jobs.base.BaseVaspMaker.html#atomate2.vasp.jobs.base.BaseVaspMaker" title="atomate2.vasp.jobs.base.BaseVaspMaker"><em>BaseVaspMaker</em></a>)</p></li>
 <li><p><strong>bulk_relax_maker</strong> (<a class="reference internal" href="atomate2.vasp.jobs.base.BaseVaspMaker.html#atomate2.vasp.jobs.base.BaseVaspMaker" title="atomate2.vasp.jobs.base.BaseVaspMaker"><em>BaseVaspMaker</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>uc_bulk</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>)</p></li>
-<li><p><strong>relax_radius</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>perturb</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>validate_charge</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>)</p></li>
-<li><p><strong>collect_defect_entry_data</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>)</p></li>
+<li><p><strong>uc_bulk</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>)</p></li>
+<li><p><strong>relax_radius</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>perturb</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>validate_charge</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
+<li><p><strong>collect_defect_entry_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1499,7 +1499,7 @@ correction calculation.</p>
 and return the structure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous_dir</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The directory to copy from.</p>
+<dd class="field-odd"><p><strong>previous_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory to copy from.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>ComputedStructureEntry</p>
@@ -1516,7 +1516,7 @@ and return the structure.</p>
 <dd class="field-odd"><p><strong>task_doc</strong> (<em>TaskDoc</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1623,7 +1623,7 @@ an error if something is wrong.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

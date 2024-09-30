@@ -1546,7 +1546,7 @@
         <span class="s2">&quot;uuids&quot;</span><span class="p">:</span> <span class="p">[],</span>
         <span class="s2">&quot;dirs&quot;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="p">}</span>
-    <span class="k">for</span> <span class="n">temp</span><span class="p">,</span> <span class="n">structure</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">structures</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">temp</span><span class="p">,</span> <span class="n">structure</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">temperatures</span><span class="p">,</span> <span class="n">structures</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="c1"># create the job</span>
         <span class="n">elph_job</span> <span class="o">=</span> <span class="n">vasp_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">)</span>
         <span class="n">elph_job</span><span class="o">.</span><span class="n">append_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; T=</span><span class="si">{</span><span class="n">temp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1697,7 +1697,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../../../../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>

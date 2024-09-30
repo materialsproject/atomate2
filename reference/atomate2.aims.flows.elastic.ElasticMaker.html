@@ -1416,23 +1416,23 @@ effective at reducing the total number of deformations needed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
-<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Order of the tensor expansion to be determined. Can be either 2 or 3.</p></li>
-<li><p><strong>sym_reduce</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to reduce the number of deformations using symmetry.</p></li>
-<li><p><strong>symprec</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Symmetry precision to use in the reduction of symmetry.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Order of the tensor expansion to be determined. Can be either 2 or 3.</p></li>
+<li><p><strong>sym_reduce</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to reduce the number of deformations using symmetry.</p></li>
+<li><p><strong>symprec</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Symmetry precision to use in the reduction of symmetry.</p></li>
 <li><p><strong>bulk_relax_maker</strong> (<em>.BaseAimsMaker</em><em> or </em><em>None</em>) – A maker to perform a tight relaxation on the bulk. Set to <code class="docutils literal notranslate"><span class="pre">None</span></code> to skip the
 bulk relaxation.</p></li>
 <li><p><strong>elastic_relax_maker</strong> (<em>.BaseAimsMaker</em>) – Maker used to generate elastic relaxations.</p></li>
-<li><p><strong>generate_elastic_deformations_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_elastic_deformations</span></code>.</p></li>
-<li><p><strong>fit_elastic_tensor_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_elastic_tensor</span></code>.</p></li>
-<li><p><strong>task_document_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Additional keyword args passed to <a class="reference internal" href="atomate2.common.schemas.elastic.ElasticDocument.html#atomate2.common.schemas.elastic.ElasticDocument.from_stresses" title="atomate2.common.schemas.elastic.ElasticDocument.from_stresses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticDocument.from_stresses()</span></code></a>.</p></li>
-<li><p><strong>max_failed_deformations</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>generate_elastic_deformations_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_elastic_deformations</span></code>.</p></li>
+<li><p><strong>fit_elastic_tensor_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_elastic_tensor</span></code>.</p></li>
+<li><p><strong>task_document_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Additional keyword args passed to <a class="reference internal" href="atomate2.common.schemas.elastic.ElasticDocument.html#atomate2.common.schemas.elastic.ElasticDocument.from_stresses" title="atomate2.common.schemas.elastic.ElasticDocument.from_stresses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticDocument.from_stresses()</span></code></a>.</p></li>
+<li><p><strong>max_failed_deformations</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="atomate2.aims.flows.elastic.ElasticMaker.prev_calc_dir_argname">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a></em><a class="headerlink" href="#atomate2.aims.flows.elastic.ElasticMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></em><a class="headerlink" href="#atomate2.aims.flows.elastic.ElasticMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
 <dd><p>Name of argument informing static maker of previous calculation directory.</p>
 <p>As this differs between different DFT codes (e.g., VASP, CP2K), it
 has been left as a property to be implemented by the inheriting class.</p>
@@ -1442,7 +1442,7 @@ calculations are performed for each ordering (relax -&gt; static)</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="atomate2.aims.flows.elastic.ElasticMaker.stress_sign_correction">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stress_sign_correction</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><span class="pre">float</span></a></em><a class="headerlink" href="#atomate2.aims.flows.elastic.ElasticMaker.stress_sign_correction" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stress_sign_correction</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></em><a class="headerlink" href="#atomate2.aims.flows.elastic.ElasticMaker.stress_sign_correction" title="Link to this definition">¶</a></dt>
 <dd><p>Correct the sign of the stress tensor.</p>
 <dl class="simple">
 <dt>This is done because VASP defines the stress tensor to be</dt><dd><p>sigma_ij = -partial E / partial n_ij</p>
@@ -1534,7 +1534,7 @@ calculations are performed for each ordering (relax -&gt; static)</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

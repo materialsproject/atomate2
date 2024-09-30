@@ -1397,7 +1397,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="atomate2.common.flows.phonons.BasePhononMaker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atomate2.common.flows.phonons.</span></span><span class="sig-name descname"><span class="pre">BasePhononMaker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name='phonon'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sym_reduce=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symprec=0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">displacement=0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_length=20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefer_90_degrees=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_supercell_size_kwargs=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_symmetrized_structure=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulk_relax_maker=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static_energy_maker=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">born_maker=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phonon_displacement_maker=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_thermal_displacements=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_frequencies_eigenvectors_kwargs=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kpath_scheme='seekpath'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_force_constants=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">socket=False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/atomate2/common/flows/phonons.html#BasePhononMaker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#atomate2.common.flows.phonons.BasePhononMaker" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://materialsproject.github.io/jobflow/jobflow.core.html#jobflow.core.maker.Maker" title="(in jobflow v0.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maker</span></code></a>, <a class="reference external" href="https://docs.python.org/3.8/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://materialsproject.github.io/jobflow/jobflow.core.html#jobflow.core.maker.Maker" title="(in jobflow v0.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maker</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/abc.html#abc.ABC" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
 <p>Maker to calculate harmonic phonons with a DFT/force field code and Phonopy.</p>
 <p>Calculate the harmonic phonons of a material. Initially, a tight structural
 relaxation is performed to obtain a structure without forces on the atoms.
@@ -1419,18 +1419,18 @@ for your specific case.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
-<li><p><strong>sym_reduce</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to reduce the number of deformations using symmetry.</p></li>
-<li><p><strong>symprec</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Symmetry precision to use in the
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the flows produced by this maker.</p></li>
+<li><p><strong>sym_reduce</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to reduce the number of deformations using symmetry.</p></li>
+<li><p><strong>symprec</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – Symmetry precision to use in the
 reduction of symmetry to find the primitive/conventional cell
 (use_primitive_standard_structure, use_conventional_standard_structure)
 and to handle all symmetry-related tasks in phonopy</p></li>
-<li><p><strong>displacement</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – displacement distance for phonons</p></li>
-<li><p><strong>min_length</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – min length of the supercell that will be built</p></li>
-<li><p><strong>prefer_90_degrees</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – if set to True, supercell algorithm will first try to find a supercell
+<li><p><strong>displacement</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – displacement distance for phonons</p></li>
+<li><p><strong>min_length</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – min length of the supercell that will be built</p></li>
+<li><p><strong>prefer_90_degrees</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if set to True, supercell algorithm will first try to find a supercell
 with 3 90 degree angles</p></li>
-<li><p><strong>get_supercell_size_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – kwargs that will be passed to get_supercell_size to determine supercell size</p></li>
-<li><p><strong>use_symmetrized_structure</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – <p>allowed strings: “primitive”, “conventional”, None</p>
+<li><p><strong>get_supercell_size_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – kwargs that will be passed to get_supercell_size to determine supercell size</p></li>
+<li><p><strong>use_symmetrized_structure</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – <p>allowed strings: “primitive”, “conventional”, None</p>
 <ul>
 <li><p>”primitive” will enforce to start the phonon computation
 from the primitive standard structure
@@ -1458,9 +1458,9 @@ Set to <code class="docutils literal notranslate"><span class="pre">None</span><
 static energy computation</p></li>
 <li><p><strong>born_maker</strong> (<em>.ForceFieldStaticMaker</em><em>, </em><em>.BaseAsimsMaker</em><em>, </em><em>.BaseVaspMaker</em><em>, or </em><em>None</em>) – Maker to compute the BORN charges.</p></li>
 <li><p><strong>phonon_displacement_maker</strong> (<em>.ForceFieldStaticMaker</em><em>, </em><em>.BaseAimsMaker</em><em>, </em><em>.BaseVaspMaker</em>) – Maker used to compute the forces for a supercell.</p></li>
-<li><p><strong>generate_frequencies_eigenvectors_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_frequencies_eigenvectors</span></code>.</p></li>
-<li><p><strong>create_thermal_displacements</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Bool that determines if thermal_displacement_matrices are computed</p></li>
-<li><p><strong>kpath_scheme</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – scheme to generate kpoints. Please be aware that
+<li><p><strong>generate_frequencies_eigenvectors_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_frequencies_eigenvectors</span></code>.</p></li>
+<li><p><strong>create_thermal_displacements</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Bool that determines if thermal_displacement_matrices are computed</p></li>
+<li><p><strong>kpath_scheme</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – scheme to generate kpoints. Please be aware that
 you can only use seekpath with any kind of cell
 Otherwise, please use the standard primitive structure
 Available schemes are:
@@ -1469,9 +1469,9 @@ Available schemes are:
 seekpath can be used with any kind of unit cell as
 it relies on phonopy to handle the relationship
 to the primitive cell and not pymatgen</p></li>
-<li><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – determines the dft or force field code.</p></li>
-<li><p><strong>store_force_constants</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – if True, force constants will be stored</p></li>
-<li><p><strong>socket</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, use the socket for the calculation</p></li>
+<li><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – determines the dft or force field code.</p></li>
+<li><p><strong>store_force_constants</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, force constants will be stored</p></li>
+<li><p><strong>socket</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, use the socket for the calculation</p></li>
 </ul>
 </dd>
 </dl>
@@ -1485,7 +1485,7 @@ to the primitive cell and not pymatgen</p></li>
 <li><p><strong>structure</strong> (<em>Structure</em>) – A pymatgen structure object. Please start with a structure
 that is nearly fully optimized as the internal optimizers
 have very strict settings!</p></li>
-<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous calculation directory to use for copying outputs.</p></li>
+<li><p><strong>prev_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>Path</em><em> or </em><em>None</em>) – A previous calculation directory to use for copying outputs.</p></li>
 <li><p><strong>born</strong> (<em>Matrix3D</em>) – Instead of recomputing born charges and epsilon, these values can also be
 provided manually. If born and epsilon_static are provided, the born run
 will be skipped it can be provided in the VASP convention with information
@@ -1494,12 +1494,12 @@ within in this workflow as this could lead to errors</p></li>
 <li><p><strong>epsilon_static</strong> (<em>Matrix3D</em>) – The high-frequency dielectric constant to use instead of recomputing born
 charges and epsilon. If born, epsilon_static are provided, the born run
 will be skipped</p></li>
-<li><p><strong>total_dft_energy_per_formula_unit</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – It has to be given per formula unit (as a result in corresponding Doc).
+<li><p><strong>total_dft_energy_per_formula_unit</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – It has to be given per formula unit (as a result in corresponding Doc).
 Instead of recomputing the energy of the bulk structure every time, this
 value can also be provided in eV. If it is provided, the static run will be
 skipped. This energy is the typical output dft energy of the dft workflow.
 No conversion needed.</p></li>
-<li><p><strong>supercell_matrix</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Instead of min_length, also a supercell_matrix can be given, e.g.
+<li><p><strong>supercell_matrix</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Instead of min_length, also a supercell_matrix can be given, e.g.
 [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]</p></li>
 </ul>
 </dd>
@@ -1511,7 +1511,7 @@ No conversion needed.</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="atomate2.common.flows.phonons.BasePhononMaker.prev_calc_dir_argname">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.8/library/constants.html#None" title="(in Python v3.8)"><span class="pre">None</span></a></em><a class="headerlink" href="#atomate2.common.flows.phonons.BasePhononMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prev_calc_dir_argname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></em><a class="headerlink" href="#atomate2.common.flows.phonons.BasePhononMaker.prev_calc_dir_argname" title="Link to this definition">¶</a></dt>
 <dd><p>Name of argument informing static maker of previous calculation directory.</p>
 <p>As this differs between different DFT codes (e.g., VASP, CP2K), it
 has been left as a property to be implemented by the inheriting class.</p>
@@ -1601,7 +1601,7 @@ calculations are performed for each ordering (relax -&gt; static)</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

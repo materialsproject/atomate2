@@ -1618,7 +1618,9 @@
         <span class="k">if</span> <span class="n">equilibrium_stress</span><span class="p">:</span>
             <span class="n">eq_stress</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">Stress</span><span class="p">(</span><span class="n">equilibrium_stress</span><span class="p">)</span>
 
-        <span class="n">pk_stresses</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">piola_kirchoff_2</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">stresses</span><span class="p">,</span> <span class="n">deformations</span><span class="p">)]</span>
+        <span class="n">pk_stresses</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">piola_kirchoff_2</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">stresses</span><span class="p">,</span> <span class="n">deformations</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">]</span>
 
         <span class="k">if</span> <span class="n">order</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">order</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stresses</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">70</span> <span class="k">else</span> <span class="mi">3</span>  <span class="c1"># TODO: Figure this out better</span>
@@ -1773,7 +1775,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../../../../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>

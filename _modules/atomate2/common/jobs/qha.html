@@ -1490,7 +1490,7 @@
         <span class="n">heat_capacities</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
         <span class="n">entropies</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
 
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">output</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">phonon_outputs</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">output</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">phonon_outputs</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
             <span class="c1"># check if imaginary modes</span>
             <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">output</span><span class="o">.</span><span class="n">has_imaginary_modes</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ignore_imaginary_modes</span><span class="p">:</span>
                 <span class="n">electronic_energies</span><span class="p">[</span><span class="n">itemp</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">total_dft_energy</span><span class="p">)</span>
@@ -1559,7 +1559,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../../../../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>

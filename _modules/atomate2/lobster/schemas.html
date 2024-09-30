@@ -1794,10 +1794,10 @@
             <span class="n">struct</span> <span class="o">=</span> <span class="n">analyse</span><span class="o">.</span><span class="n">structure</span>
 
             <span class="k">for</span> <span class="n">_iplot</span><span class="p">,</span> <span class="p">(</span><span class="n">ication</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">cohps</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
-                <span class="nb">zip</span><span class="p">(</span><span class="n">seq_ineq_cations</span><span class="p">,</span> <span class="n">seq_labels_cohps</span><span class="p">,</span> <span class="n">seq_cohps</span><span class="p">)</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">seq_ineq_cations</span><span class="p">,</span> <span class="n">seq_labels_cohps</span><span class="p">,</span> <span class="n">seq_cohps</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="p">):</span>
                 <span class="n">label_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">struct</span><span class="p">[</span><span class="n">ication</span><span class="p">]</span><span class="o">.</span><span class="n">specie</span><span class="si">!s}{</span><span class="n">ication</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">!s}</span><span class="s2">: &quot;</span>
-                <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">cohp</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">cohps</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">cohp</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">cohps</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                     <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">cba_cohp_plot_data</span><span class="p">[</span><span class="n">label_str</span> <span class="o">+</span> <span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">cohp</span>
 
@@ -2626,7 +2626,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="n">_replace_inf_values</span><span class="p">(</span>
                     <span class="n">value</span>
                 <span class="p">)</span>  <span class="c1"># Recursively process nested dictionaries and lists</span>
@@ -2634,7 +2634,7 @@
                 <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;-Infinity&quot;</span>  <span class="c1"># Replace -inf with a string representation</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="n">_replace_inf_values</span><span class="p">(</span>
                     <span class="n">item</span>
                 <span class="p">)</span>  <span class="c1"># Recursively process nested dictionaries and lists</span>
@@ -2730,6 +2730,7 @@
         <span class="n">bondlist</span><span class="p">[</span><span class="s2">&quot;list_atom2&quot;</span><span class="p">],</span>
         <span class="n">bondlist</span><span class="p">[</span><span class="s2">&quot;list_icohp&quot;</span><span class="p">],</span>
         <span class="n">bondlist</span><span class="p">[</span><span class="s2">&quot;list_length&quot;</span><span class="p">],</span>
+        <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="n">bonds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">a</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;0123456789&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">b</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;0123456789&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">icohp_all</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
@@ -2867,7 +2868,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../../../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>

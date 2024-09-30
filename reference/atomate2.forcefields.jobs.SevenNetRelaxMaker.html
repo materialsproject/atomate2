@@ -1404,24 +1404,24 @@ pip install git+https://github.com/MDIL-SNU/SevenNet</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The job name.</p></li>
-<li><p><strong>force_field_name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><em>.MLFF</em>) – The name of the force field.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The job name.</p></li>
+<li><p><strong>force_field_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>.MLFF</em>) – The name of the force field.</p></li>
 <li><p><strong>relax_cell</strong> (<em>bool = True</em>) – Whether to allow the cell shape/volume to change during relaxation.</p></li>
 <li><p><strong>fix_symmetry</strong> (<em>bool = False</em>) – Whether to fix the symmetry during relaxation.
 Refines the symmetry of the initial structure.</p></li>
 <li><p><strong>symprec</strong> (<em>float = 1e-2</em>) – Tolerance for symmetry finding in case of fix_symmetry.</p></li>
-<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Maximum number of ionic steps allowed during relaxation.</p></li>
-<li><p><strong>relax_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments that will get passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">AseRelaxer.relax</span></code>.</p></li>
-<li><p><strong>optimizer_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments that will get passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">AseRelaxer()</span></code>.</p></li>
-<li><p><strong>calculator_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Keyword arguments that will get passed to the ASE calculator. E.g. the “model”
+<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Maximum number of ionic steps allowed during relaxation.</p></li>
+<li><p><strong>relax_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments that will get passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">AseRelaxer.relax</span></code>.</p></li>
+<li><p><strong>optimizer_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments that will get passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">AseRelaxer()</span></code>.</p></li>
+<li><p><strong>calculator_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments that will get passed to the ASE calculator. E.g. the “model”
 key configures which checkpoint to load with mace.calculators.MACECalculator().
 Can be a URL starting with <a class="reference external" href="https://">https://</a>. If not set, loads the universal MACE-MP
 trained for Matbench Discovery on the MPtrj dataset available at
 <a class="reference external" href="https://figshare.com/articles/dataset/22715158">https://figshare.com/articles/dataset/22715158</a>.</p></li>
-<li><p><strong>task_document_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a><em> (</em><em>deprecated</em><em>)</em>) – Additional keyword args passed to <a class="reference internal" href="atomate2.forcefields.schemas.ForceFieldTaskDocument.html#atomate2.forcefields.schemas.ForceFieldTaskDocument" title="atomate2.forcefields.schemas.ForceFieldTaskDocument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ForceFieldTaskDocument()</span></code></a>.</p></li>
-<li><p><strong>ionic_step_data</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>...</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>task_document_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> (</em><em>deprecated</em><em>)</em>) – Additional keyword args passed to <a class="reference internal" href="atomate2.forcefields.schemas.ForceFieldTaskDocument.html#atomate2.forcefields.schemas.ForceFieldTaskDocument" title="atomate2.forcefields.schemas.ForceFieldTaskDocument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ForceFieldTaskDocument()</span></code></a>.</p></li>
+<li><p><strong>ionic_step_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>...</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>store_trajectory</strong> (<em>StoreTrajectoryOption</em>)</p></li>
-<li><p><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1503,7 +1503,7 @@ trained for Matbench Discovery on the MPtrj dataset available at
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

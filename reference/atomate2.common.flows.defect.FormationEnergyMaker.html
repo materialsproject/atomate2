@@ -1397,7 +1397,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="atomate2.common.flows.defect.FormationEnergyMaker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">atomate2.common.flows.defect.</span></span><span class="sig-name descname"><span class="pre">FormationEnergyMaker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defect_relax_maker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bulk_relax_maker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uc_bulk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'formation</span> <span class="pre">energy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relax_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_charge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collect_defect_entry_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/atomate2/common/flows/defect.html#FormationEnergyMaker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#atomate2.common.flows.defect.FormationEnergyMaker" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://materialsproject.github.io/jobflow/jobflow.core.html#jobflow.core.maker.Maker" title="(in jobflow v0.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maker</span></code></a>, <a class="reference external" href="https://docs.python.org/3.8/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://materialsproject.github.io/jobflow/jobflow.core.html#jobflow.core.maker.Maker" title="(in jobflow v0.0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Maker</span></code></a>, <a class="reference external" href="https://docs.python.org/3.10/library/abc.html#abc.ABC" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
 <p>Maker class to help calculate of the formation energy diagram.</p>
 <p>Maker class to calculate formation energy diagrams. The main settings for
 this maker is the <cite>defect_relax_maker</cite> which contains the settings for the atomic
@@ -1435,21 +1435,21 @@ lattice relaxation, you should manually set the grid size.</p>
 </pre></div>
 </div>
 </p></li>
-<li><p><strong>uc_bulk</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, skip the bulk supercell calculation and only perform the defect
+<li><p><strong>uc_bulk</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, skip the bulk supercell calculation and only perform the defect
 supercell calculations. This is useful for large-scale defect databases.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The name of the flow created by this maker.</p></li>
-<li><p><strong>relax_radius</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> | </em><em>None</em>) – The radius to include around the defect site for the relaxation.
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the flow created by this maker.</p></li>
+<li><p><strong>relax_radius</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – The radius to include around the defect site for the relaxation.
 If “auto”, the radius will be set to the maximum that will fit inside
 a periodic cell. If None, all atoms will be relaxed.</p></li>
-<li><p><strong>perturb</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>None</em>) – The amount to perturb the sites in the supercell. Only perturb the
+<li><p><strong>perturb</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>None</em>) – The amount to perturb the sites in the supercell. Only perturb the
 sites with selective dynamics set to True. So this setting only works
 with <cite>relax_radius</cite>.</p></li>
-<li><p><strong>validate_charge</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to validate the charge of the defect. If True (default), the charge
+<li><p><strong>validate_charge</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to validate the charge of the defect. If True (default), the charge
 of the output structure will have to match the charge of the input defect.
 This helps catch situations where the charge of the output defect is either
 improperly set or improperly parsed before the data is stored in the
 database.</p></li>
-<li><p><strong>collect_defect_entry_data</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – <p>Whether to collect the defect entry data at the end of the flow.
+<li><p><strong>collect_defect_entry_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – <p>Whether to collect the defect entry data at the end of the flow.
 If True, the output of all the charge states for each symmetry distinct
 defect will be collected into a list of dictionaries that can be used
 to create a DefectEntry. The data here can be trivially combined with
@@ -1491,12 +1491,12 @@ locpot is currently needed for the finite-size correction calculation.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>defect_relax_maker</strong> (<a class="reference external" href="https://materialsproject.github.io/jobflow/jobflow.core.html#jobflow.core.maker.Maker" title="(in jobflow v0.0.1)"><em>Maker</em></a>)</p></li>
 <li><p><strong>bulk_relax_maker</strong> (<a class="reference external" href="https://materialsproject.github.io/jobflow/jobflow.core.html#jobflow.core.maker.Maker" title="(in jobflow v0.0.1)"><em>Maker</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>uc_bulk</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>)</p></li>
-<li><p><strong>relax_radius</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>perturb</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>validate_charge</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>)</p></li>
-<li><p><strong>collect_defect_entry_data</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>)</p></li>
+<li><p><strong>uc_bulk</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>)</p></li>
+<li><p><strong>relax_radius</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>perturb</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>validate_charge</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
+<li><p><strong>collect_defect_entry_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1511,11 +1511,11 @@ structure.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>defect</strong> (<em>Defect</em>) – A <cite>Defect</cite> object representing the Defect we are calculating the
 formation energy diagram for.</p></li>
-<li><p><strong>bulk_supercell_dir</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> | </em><em>Path</em><em> | </em><em>None</em>) – If provided, the bulk supercell calculation will be skipped.</p></li>
+<li><p><strong>bulk_supercell_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>Path</em><em> | </em><em>None</em>) – If provided, the bulk supercell calculation will be skipped.</p></li>
 <li><p><strong>supercell_matrix</strong> (<em>NDArray</em><em> | </em><em>None</em>) – The supercell transformation matrix. If None, the supercell matrix
 will be computed automatically. If <cite>bulk_supercell_dir</cite> is provided,
 this parameter will be ignored.</p></li>
-<li><p><strong>defect_index</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Additional index to give unique names to the defect calculations.
+<li><p><strong>defect_index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Additional index to give unique names to the defect calculations.
 Useful for external bookkeeping of symmetry distinct defects.</p></li>
 </ul>
 </dd>
@@ -1534,7 +1534,7 @@ Useful for external bookkeeping of symmetry distinct defects.</p></li>
 <dd><p>Copy the output ComputedStructureEntry and Locpot from previous directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>previous_dir</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – The directory to copy from.</p>
+<dd class="field-odd"><p><strong>previous_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory to copy from.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>entry</strong></p>
@@ -1559,7 +1559,7 @@ part of the TaskDoc for different codes.</p>
 <dd class="field-even"><p><strong>planar_locpot</strong> – The planar average locpot.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1667,7 +1667,7 @@ an error if something is wrong.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

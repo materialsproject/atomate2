@@ -1385,9 +1385,9 @@
 <span></span><span class="sd">&quot;&quot;&quot;General schemas for defect workflow outputs.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">starmap</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">emmet.core.tasks</span> <span class="kn">import</span> <span class="n">TaskDoc</span>
@@ -1644,12 +1644,14 @@
 
         <span class="n">entries1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
             <span class="n">starmap</span><span class="p">(</span>
-                <span class="n">get_cs_entry</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">structures1</span><span class="p">,</span> <span class="n">energies1</span><span class="p">,</span> <span class="n">static_dirs1</span><span class="p">,</span> <span class="n">static_uuids1</span><span class="p">)</span>
+                <span class="n">get_cs_entry</span><span class="p">,</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">structures1</span><span class="p">,</span> <span class="n">energies1</span><span class="p">,</span> <span class="n">static_dirs1</span><span class="p">,</span> <span class="n">static_uuids1</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="p">)</span>
         <span class="n">entries2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
             <span class="n">starmap</span><span class="p">(</span>
-                <span class="n">get_cs_entry</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">structures2</span><span class="p">,</span> <span class="n">energies2</span><span class="p">,</span> <span class="n">static_dirs2</span><span class="p">,</span> <span class="n">static_uuids2</span><span class="p">)</span>
+                <span class="n">get_cs_entry</span><span class="p">,</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">structures2</span><span class="p">,</span> <span class="n">energies2</span><span class="p">,</span> <span class="n">static_dirs2</span><span class="p">,</span> <span class="n">static_uuids2</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
             <span class="p">)</span>
         <span class="p">)</span>
 
@@ -1800,7 +1802,7 @@
     <span class="n">d0</span> <span class="o">=</span> <span class="n">dist</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">)</span>
 
     <span class="n">d_vs_s</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">list_in</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">list_in</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">sign</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span>
         <span class="k">if</span> <span class="n">q1</span> <span class="o">&lt;</span> <span class="n">q2</span> <span class="ow">and</span> <span class="n">q2</span> <span class="o">&gt;</span> <span class="n">d0</span><span class="p">:</span>
             <span class="n">sign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -1832,7 +1834,7 @@
         <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">specie</span><span class="o">.</span><span class="n">atomic_mass</span>
-                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">distorted</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">distorted</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="p">],</span>
         <span class="p">),</span>
     <span class="p">)</span></div>
@@ -1875,7 +1877,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=c7cdf6fe"></script>
+</div><script src="../../../../_static/documentation_options.js?v=63b572e7"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>
