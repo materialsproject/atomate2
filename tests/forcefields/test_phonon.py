@@ -30,6 +30,11 @@ def test_phonon_maker_initialization_with_all_mlff(
         if mlff in {MLFF.GAP, MLFF.Forcefield}:
             continue  # TODO fix GAP, currently fails with RuntimeError, see
             # https://github.com/materialsproject/atomate2/pull/918#issuecomment-2253659694
+        # skip m3gnet due to DGL issues FileNotFoundError: Cannot find DGL C++ graphbolt
+        # libgraphbolt_pytorch_2.4.1.so
+        if mlff == MLFF.M3GNet:
+            continue
+
         calc_kwargs = {
             MLFF.Nequip: {"model_path": f"{chk_pt_dir}/nequip/nequip_ff_sr_ti_o3.pth"},
             MLFF.NEP: {"model_filename": f"{test_dir}/forcefields/nep/nep.txt"},

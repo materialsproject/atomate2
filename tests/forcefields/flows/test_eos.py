@@ -6,13 +6,15 @@ from atomate2.forcefields import MLFF
 from atomate2.forcefields.flows.eos import (
     CHGNetEosMaker,
     ForceFieldEosMaker,
-    M3GNetEosMaker,
+    # M3GNetEosMaker,
     MACEEosMaker,
 )
 
 ff_maker_map = {
     MLFF.CHGNet.value: CHGNetEosMaker,
-    MLFF.M3GNet.value: M3GNetEosMaker,
+    # skip m3gnet due to DGL issues FileNotFoundError: Cannot find DGL C++ graphbolt
+    # libgraphbolt_pytorch_2.4.1.so
+    # MLFF.M3GNet.value: M3GNetEosMaker,
     MLFF.MACE.value: MACEEosMaker,
 }
 
