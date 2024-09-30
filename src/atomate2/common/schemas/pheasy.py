@@ -156,7 +156,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         cls,
         structure: Structure,
         supercell_matrix: np.array,
+        anharmonic_force_constants: bool,
         displacement: float,
+        displacement_anharmonic: float,
+        num_displaced_supercells: int,
+        num_displaced_supercells_anharmonic: int,
         sym_reduce: bool,
         symprec: float,
         use_symmetrized_structure: Union[str, None],
@@ -257,9 +261,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         ).astype('double')
         dataset_disps_array_use = dataset_disps_array_rr[:-1, :, :]
 
-        anharmonic_cals = True 
+
         # seperate the dataset into harmonic and anharmonic parts
-        if anharmonic_cals:
+        if anharmonic_force_constants:
             try:
                 from alm import ALM
             except ImportError as e:
@@ -297,7 +301,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         else:
             num_har = dataset_disps_array_use.shape[0]
 
-        if anharmonic_cals:
+        if anharmonic_force_constants:
             dataset_disps_array_use = dataset_disps_array_use[:num_har, :, :]
             dataset_forces_array_disp = dataset_forces_array_disp[:num_har, :, :]
             with open("disp_matrix.pkl", "wb") as file:
@@ -400,7 +404,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         subprocess.call(pheasy_cmd_3, shell=True)
         subprocess.call(pheasy_cmd_4, shell=True)
         
-        if anharmonic_cals:
+        if anharmonic_force_constants:
             subprocess.call("rm -f disp_matrix.pkl force_matrix.pkl", shell=True)
             dataset_disps_array_use = dataset_disps_array_use[num_har:, :, :]
             dataset_forces_array_disp = dataset_forces_array_disp[num_har:, :, :]
@@ -412,10 +416,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         else:
             pass
 
-        # we next begin to generate the anharmonic force constants up to fourth 
+        # We next begin to generate the anharmonic force constants up to fourth 
         # order using the LASSO method
 
-        if anharmonic_cals:
+        if anharmonic_force_constants:
             pheasy_cmd_5 = (
                 f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
                 f'"{int(supercell_matrix[2][2])}" -s -w 4 --symprec "{float(symprec)}" --nbody 2 3 3 --c3 6.3 --c4 5.3'

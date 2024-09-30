@@ -202,7 +202,8 @@ def generate_phonon_displacements(
     supercells = phonon.supercells_with_displacements
     displacements = [get_pmg_structure(cell) for cell in supercells]
 
-    anharmonic_force_constants = True
+    # 3. the ALM module is used to determine how many free parameters of third and
+    # fourth order force constants (FCs) within the supercell.
     if anharmonic_force_constants:
             with ALM(lattice, positions, numbers) as alm:
                 # get the number of free parameters of 3RD and 4TH order FCs from ALM,
@@ -219,9 +220,12 @@ def generate_phonon_displacements(
                 # to reduce the number of displaced supercells due to we use the lasso
                 # technique.
                 num_d_anh = int(np.ceil(n_rd_anh / (3.0 * natom)))
-                num_displaced_supercells_anharmonic = num_d_anh
+                if num_displaced_supercells_anharmonic != 0:
+                    num_displaced_supercells_anharmonic = num_displaced_supercells_anharmonic
+                else:
+                    num_displaced_supercells_anharmonic = num_d_anh
 
-                # generate the supercells for anharmonic force constants
+            # generate the supercells for anharmonic force constants
             phonon.generate_displacements(
                 distance=displacement_anharmonic,
                 number_of_snapshots=num_displaced_supercells_anharmonic,
@@ -246,6 +250,10 @@ def generate_frequencies_eigenvectors(
     structure: Structure,
     supercell_matrix: np.array,
     displacement: float,
+    displacement_anharmonic: float,
+    num_displaced_supercells: int,
+    num_displaced_supercells_anharmonic: int,
+    anharmonic_force_constants: bool,
     sym_reduce: bool,
     symprec: float,
     use_symmetrized_structure: str | None,
@@ -296,6 +304,10 @@ def generate_frequencies_eigenvectors(
         else structure,
         supercell_matrix=supercell_matrix,
         displacement=displacement,
+        displacement_anharmonic=displacement_anharmonic,
+        num_displaced_supercells=num_displaced_supercells,
+        num_displaced_supercells_anharmonic=num_displaced_supercells_anharmonic,
+        anharmonic_force_constants=anharmonic_force_constants,
         sym_reduce=sym_reduce,
         symprec=symprec,
         use_symmetrized_structure=use_symmetrized_structure,

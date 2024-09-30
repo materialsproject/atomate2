@@ -369,6 +369,10 @@ class BasePhononMaker(Maker, ABC):
         phonon_collect = generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
+            displacement_anharmonic=self.displacement_anharmonic,
+            num_displaced_supercells=self.num_displaced_supercells,
+            num_displaced_supercells_anharmonic=self.num_displaced_supercells_anharmonic,
+            anharmonic_force_constants=self.anharmonic_force_constants,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,
