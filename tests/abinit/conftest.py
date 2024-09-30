@@ -31,7 +31,7 @@ def abinit_integration_tests(pytestconfig):
     return pytestconfig.getoption("abinit_integration")
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
     """
     This fixture allows one to mock running ABINIT.
@@ -157,7 +157,7 @@ def clear_abinit_files():
     logger.info("Cleared abinit files.")
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_mrgddb(mocker, abinit_test_dir, abinit_integration_tests):
     """
     This fixture allows one to mock running Mrgddb.
@@ -252,7 +252,7 @@ def check_mrgddb_inputs(
     logger.info("Verified inputs successfully")
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_anaddb(mocker, abinit_test_dir, abinit_integration_tests):
     """
     This fixture allows one to mock running Anaddb.

@@ -19,7 +19,7 @@ from atomate2.abinit.schemas.outfiles import AbinitStoredFile
 from atomate2.abinit.sets.mrgddb import MrgddbInputGenerator
 
 if TYPE_CHECKING:
-    from typing import Callable
+    from collections.abc import Callable
 
     from atomate2.abinit.utils.history import JobHistory
 

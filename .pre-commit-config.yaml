@@ -3,7 +3,7 @@ default_language_version:
 exclude: ^(.github/|tests/test_data/abinit/)
 repos:
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.5.2
+  rev: v0.6.7
   hooks:
   - id: ruff
     args: [--fix]
@@ -30,7 +30,7 @@ repos:
   - id: rst-directive-colons
   - id: rst-inline-touching-normal
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.10.1
+  rev: v1.11.2
   hooks:
   - id: mypy
     files: ^src/
@@ -48,8 +48,7 @@ repos:
   rev: 0.7.1
   hooks:
     - id: nbstripout
-      args: [
-        --drop-empty-cells,
-        --strip-init-cells,
-        --extra-keys=metadata.kernelspec,
-        ]
+      args:
+        - --drop-empty-cells
+        - --strip-init-cells
+        - --extra-keys=metadata.kernelspec

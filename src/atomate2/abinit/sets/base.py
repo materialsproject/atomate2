@@ -8,7 +8,7 @@ import logging
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from abipy.abio.inputs import AbinitInput, MultiDataset
@@ -40,7 +40,7 @@ from atomate2.abinit.utils.common import (
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
+    from collections.abc import Callable, Iterable, Sequence
 
     from pymatgen.core.structure import Structure
 
@@ -70,13 +70,14 @@ class AbinitMixinInputGenerator(InputGenerator):
     calc_type: str
     prev_outputs_deps: str | tuple | None
 
+    @staticmethod
     def check_format_prev_dirs(
-        self, prev_dirs: str | tuple | list | Path | None
+        prev_dirs: str | tuple | list | Path | None,
     ) -> list[str] | None:
         """Check and format the prev_dirs (restart or dependency)."""
         if prev_dirs is None:
             return None
-        if isinstance(prev_dirs, (str, Path)):
+        if isinstance(prev_dirs, str | Path):
             return [str(prev_dirs)]
         return [str(prev_dir) for prev_dir in prev_dirs]
 
@@ -474,11 +475,10 @@ class AbinitInputGenerator(AbinitMixinInputGenerator):
         structure : Structure
             Pymatgen Structure object.
         restart_from : str or Path or list or tuple
-            Directory (as a str or Path) or list/tuple of 1 directory (as a str
-            or Path) to restart from.
+            Directory or list/tuple of 1 directory to restart from.
         prev_outputs : str or Path or list or tuple
-            Directory (as a str or Path) or list/tuple of directories (as a str
-            or Path) needed as dependencies for the AbinitInputSet generated.
+            Directory or list/tuple of directories needed as dependencies for the
+                AbinitInputSet generated.
         """
         # Get the pseudos as a PseudoTable
         pseudos = as_pseudo_table(self.pseudos) if self.pseudos else None
@@ -536,6 +536,42 @@ class AbinitInputGenerator(AbinitMixinInputGenerator):
             link_files=True,
         )
 
+    @staticmethod
+    def check_format_prev_dirs(
+        prev_dirs: str | tuple | list | Path | None,
+    ) -> list[str] | None:
+        """Check and format the prev_dirs (restart or dependency)."""
+        if prev_dirs is None:
+            return None
+        if isinstance(prev_dirs, str | Path):
+            return [str(prev_dirs)]
+        return [str(prev_dir) for prev_dir in prev_dirs]
+
+    def resolve_deps(
+        self, prev_dirs: list[str], deps: str | tuple, check_runlevel: bool = True
+    ) -> tuple[dict, list]:
+        """Resolve dependencies.
+
+        This method assumes that prev_dirs is in the correct format, i.e.
+        a list of directories as str or Path.
+        """
+        input_files = []
+        deps_irdvars = {}
+        for prev_dir in prev_dirs:
+            if check_runlevel:
+                abinit_input = load_abinit_input(prev_dir)
+            for dep in deps:
+                runlevel = set(dep.split(":")[0].split("|"))
+                exts = list(dep.split(":")[1].split("|"))
+                if not check_runlevel or runlevel.intersection(abinit_input.runlevel):
+                    irdvars, inp_files = self.resolve_dep_exts(
+                        prev_dir=prev_dir, exts=exts
+                    )
+                    input_files.extend(inp_files)
+                    deps_irdvars.update(irdvars)
+
+        return deps_irdvars, input_files
+
     def resolve_prev_inputs(
         self, prev_dirs: list[str], prev_inputs_kwargs: dict
     ) -> dict[str, AbinitInput]:
@@ -552,9 +588,9 @@ class AbinitInputGenerator(AbinitMixinInputGenerator):
         for prev_d in prev_dirs:
             prev_dir = strip_hostname(prev_d)  # TODO: to FileCLient?
             abinit_input = load_abinit_input(prev_dir)
-            for var_name, runlevels in prev_inputs_kwargs.items():
+            for var_name, run_levels in prev_inputs_kwargs.items():
                 if abinit_input.runlevel and abinit_input.runlevel.intersection(
-                    runlevels
+                    run_levels
                 ):
                     if var_name in abinit_inputs:
                         msg = (

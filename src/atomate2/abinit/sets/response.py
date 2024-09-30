@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from abipy.abio.factories import (
     ddepert_from_gsinput,
@@ -13,6 +13,8 @@ from abipy.abio.factories import (
 from abipy.abio.input_tags import DDE, DDK, DTE, SCF
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from pymatgen.io.abinit import PseudoTable
 
 from atomate2.abinit.sets.core import NonSCFSetGenerator, StaticSetGenerator

@@ -7,7 +7,7 @@ import json
 import logging
 import os
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 from abipy.abio.inputs import AnaddbInput
 from abipy.flowtk.utils import Directory
@@ -25,7 +25,7 @@ from atomate2.abinit.utils.common import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Callable, Iterable
     from pathlib import Path
 
     from pymatgen.core.structure import Structure

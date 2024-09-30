@@ -259,7 +259,7 @@ def run_rf(
     rf_jobs = []
     outputs: dict[str, Any] = {"dirs": []}
 
-    if isinstance(rf_maker, (DdeMaker, DteMaker)):
+    if isinstance(rf_maker, DdeMaker | DteMaker):
         # Flatten the list of previous outputs dir
         # prev_outputs = [item for sublist in prev_outputs for item in sublist]
         prev_outputs = list(np.hstack(prev_outputs))
