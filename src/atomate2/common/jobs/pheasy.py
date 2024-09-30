@@ -35,8 +35,11 @@ logger = logging.getLogger(__name__)
 def generate_phonon_displacements(
     structure: Structure,
     supercell_matrix: np.array,
+    anharmonic_force_constants: bool,
     num_displaced_supercells: int,
+    displacement_anharmonic: float,
     displacement: float,
+    num_displaced_supercells_anharmonic: int,
     sym_reduce: bool,
     symprec: float,
     use_symmetrized_structure: str | None,
@@ -198,6 +201,35 @@ def generate_phonon_displacements(
     
     supercells = phonon.supercells_with_displacements
     displacements = [get_pmg_structure(cell) for cell in supercells]
+
+    if anharmonic_force_constants:
+            with ALM(lattice, positions, numbers) as alm:
+                # get the number of free parameters of 3RD and 4TH order FCs from ALM,
+                # labeled as n_rd
+
+                alm.define(3, [-1, 11.9, 10.0])
+                alm.suggest()
+                n_rd_anh = (
+                    alm._get_number_of_irred_fc_elements(2) 
+                    + alm._get_number_of_irred_fc_elements(3)
+                )
+                # we can determine how many displaced supercells we need to use to extract 
+                # the third and fourth order force constants, and we can add a scaling factor
+                # to reduce the number of displaced supercells due to we use the lasso
+                # technique.
+                num_d_anh = int(np.ceil(n_rd_anh / (3.0 * natom)))
+                num_displaced_supercells_anharmonic = num_d_anh
+
+                # generate the supercells for anharmonic force constants
+            phonon.generate_displacements(
+                distance=displacement_anharmonic,
+                number_of_snapshots=num_displaced_supercells_anharmonic,
+                random_seed=103,
+            )
+            supercells = phonon.supercells_with_displacements
+            displacements += [get_pmg_structure(cell) for cell in supercells]
+    else:
+        pass
 
     # add the equilibrium structure to the list for calculating
     # the residual forces.

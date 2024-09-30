@@ -154,6 +154,7 @@ class BasePhononMaker(Maker, ABC):
     name: str = "phonon"
     sym_reduce: bool = True
     symprec: float = 1e-3
+    anharmonic_force_constants: bool = False
     displacement: float = 0.01
     displacement_anharmonic: float = 0.08
     num_displaced_supercells: int = 0
@@ -321,7 +322,10 @@ class BasePhononMaker(Maker, ABC):
         displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
+            anharmonic_force_constants=self.anharmonic_force_constants,
+            displacement_anharmonic=self.displacement_anharmonic,
             displacement=self.displacement,
+            num_displaced_supercells_anharmonic=self.num_displaced_supercells_anharmonic,
             num_displaced_supercells=self.num_displaced_supercells,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,

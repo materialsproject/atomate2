@@ -356,6 +356,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         subprocess.call(pheasy_cmd_3, shell=True)
         subprocess.call(pheasy_cmd_4, shell=True)
 
+        # using the subprocess to remove files that are not needed
+        #subprocess.call("rm -f POSCAR SPOSCAR", shell=True)
+
         # Read the force constants from the output file of pheasy code
         force_constants = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
         phonon.force_constants = force_constants
