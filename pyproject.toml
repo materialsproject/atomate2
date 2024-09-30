@@ -99,7 +99,7 @@ strict = [
     "emmet-core==0.84.2",
     "ijson==3.3.0",
     "jobflow==0.1.18",
-    "lobsterpy==0.4.5",
+    "lobsterpy==0.4.9",
     "mdanalysis==2.7.0",
     "monty==2024.7.30",
     "mp-api==0.42.2",
