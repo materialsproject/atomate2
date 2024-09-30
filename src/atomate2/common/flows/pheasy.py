@@ -154,7 +154,7 @@ class BasePhononMaker(Maker, ABC):
     name: str = "phonon"
     sym_reduce: bool = True
     symprec: float = 1e-3
-    anharmonic_force_constants: bool = False
+    anharmonic_force_constants: bool = True
     displacement: float = 0.01
     displacement_anharmonic: float = 0.08
     num_displaced_supercells: int = 0

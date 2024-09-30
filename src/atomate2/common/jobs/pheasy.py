@@ -202,6 +202,7 @@ def generate_phonon_displacements(
     supercells = phonon.supercells_with_displacements
     displacements = [get_pmg_structure(cell) for cell in supercells]
 
+    anharmonic_force_constants = True
     if anharmonic_force_constants:
             with ALM(lattice, positions, numbers) as alm:
                 # get the number of free parameters of 3RD and 4TH order FCs from ALM,

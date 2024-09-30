@@ -257,15 +257,59 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         ).astype('double')
         dataset_disps_array_use = dataset_disps_array_rr[:-1, :, :]
 
-        # get the number of displacements for harmonic phonon calculation
-        num_har = dataset_disps_array_use.shape[0]
+        anharmonic_cals = True 
+        # seperate the dataset into harmonic and anharmonic parts
+        if anharmonic_cals:
+            try:
+                from alm import ALM
+            except ImportError as e:
+                logging.error(
+                    f"Error importing ALM: {e}. Please ensure the 'alm'"
+                    "library is installed."
+                )
 
-        # save the displacement and force matrix in the current directory
-        # for the future use by pheasy code
-        with open("disp_matrix.pkl", "wb") as file:
-            pickle.dump(dataset_disps_array_use, file)
-        with open("force_matrix.pkl", "wb") as file:
-            pickle.dump(dataset_forces_array_disp, file)
+            supercell_ph = phonon.supercell
+            lattice = supercell_ph.cell
+            positions = supercell_ph.scaled_positions
+            numbers = supercell_ph.numbers
+            natom = len(numbers)
+
+            # get the number of free parameters of 2ND FCs from ALM, labeled as n_fp
+            with ALM(lattice, positions, numbers) as alm:
+                alm.define(1)
+                alm.suggest()
+                n_fp = alm._get_number_of_irred_fc_elements(1)
+
+            # get the number of displaced supercells based on the number of free parameters
+            num = int(np.ceil(n_fp / (3.0 * natom)))
+
+            # get the number of displaced supercells from phonopy to compared with the number
+            # of 3, if the number of displaced supercells is less than 3, we will use the finite
+            # displacement method to generate the supercells. Otherwise, we will use the random
+            # displacement method to generate the supercells.  
+            phonon.generate_displacements(distance=displacement)
+            num_disp_f = len(phonon.displacements)
+            if num_disp_f > 3:
+                num_d = int(np.ceil(num * 1.8))
+                num_har = num_d
+            else:
+                num_har = num_disp_f
+        else:
+            num_har = dataset_disps_array_use.shape[0]
+
+        if anharmonic_cals:
+            dataset_disps_array_use = dataset_disps_array_use[:num_har, :, :]
+            dataset_forces_array_disp = dataset_forces_array_disp[:num_har, :, :]
+            with open("disp_matrix.pkl", "wb") as file:
+                pickle.dump(dataset_disps_array_use, file)
+            with open("force_matrix.pkl", "wb") as file:
+                pickle.dump(dataset_forces_array_disp, file)
+
+        else:
+            with open("disp_matrix.pkl", "wb") as file:
+                pickle.dump(dataset_disps_array_use, file)
+            with open("force_matrix.pkl", "wb") as file:
+                pickle.dump(dataset_forces_array_disp, file)
 
         # get the born charges and dielectric constant
         if born is not None and epsilon_static is not None:
@@ -355,9 +399,53 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         subprocess.call(pheasy_cmd_2, shell=True)
         subprocess.call(pheasy_cmd_3, shell=True)
         subprocess.call(pheasy_cmd_4, shell=True)
+        
+        if anharmonic_cals:
+            subprocess.call("rm -f disp_matrix.pkl force_matrix.pkl", shell=True)
+            dataset_disps_array_use = dataset_disps_array_use[num_har:, :, :]
+            dataset_forces_array_disp = dataset_forces_array_disp[num_har:, :, :]
+            with open("disp_matrix.pkl", "wb") as file:
+                pickle.dump(dataset_disps_array_use, file)
+            with open("force_matrix.pkl", "wb") as file:
+                pickle.dump(dataset_forces_array_disp, file)
+            num_anhar = dataset_disps_array_use.shape[0]
+        else:
+            pass
 
-        # using the subprocess to remove files that are not needed
-        #subprocess.call("rm -f POSCAR SPOSCAR", shell=True)
+        # we next begin to generate the anharmonic force constants up to fourth 
+        # order using the LASSO method
+
+        if anharmonic_cals:
+            pheasy_cmd_5 = (
+                f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
+                f'"{int(supercell_matrix[2][2])}" -s -w 4 --symprec "{float(symprec)}" --nbody 2 3 3 --c3 6.3 --c4 5.3'
+            )
+
+            pheasy_cmd_6 = (
+                f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
+                f'"{int(supercell_matrix[2][2])}" -c --symprec "{float(symprec)}" -w 4'
+            )
+
+            pheasy_cmd_7 = (
+                f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
+                f'"{int(supercell_matrix[2][2])}" -w 4 -d --symprec "{float(symprec)}" '
+                f'--ndata "{int(num_anhar)}" --disp_file'
+            )
+
+            pheasy_cmd_8 = (
+                f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
+                f'"{int(supercell_matrix[2][2])}" -f -w 4 --fix_fc2 --symprec "{float(symprec)}" '
+                f'--ndata "{int(num_anhar)}"'
+            )
+
+            logger.info("Start running pheasy in cluster")
+
+            subprocess.call(pheasy_cmd_5, shell=True)
+            subprocess.call(pheasy_cmd_6, shell=True)
+            subprocess.call(pheasy_cmd_7, shell=True)
+            subprocess.call(pheasy_cmd_8, shell=True)
+        else:
+            pass
 
         # Read the force constants from the output file of pheasy code
         force_constants = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
