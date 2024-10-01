@@ -156,10 +156,10 @@ class BasePhononMaker(Maker, ABC):
     symprec: float = 1e-3
     displacement: float = 0.01
     num_displaced_supercells: int = 0
-    anharmonic_force_constants: bool = False
-    displacement_anharmonic: float = 0.08
-    num_displaced_supercells_anharmonic: int = 0
-    FCs_cutoff_radius: list = [-1, 12, 10]
+    cal_anhar_fcs: bool = False
+    displacement_anhar: float = 0.08
+    num_disp_anhar: int = 0
+    fcs_cutoff_radius: list = [-1, 12, 10]
     min_length: float | None = 12.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
@@ -323,12 +323,12 @@ class BasePhononMaker(Maker, ABC):
         displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
-            anharmonic_force_constants=self.anharmonic_force_constants,
-            displacement_anharmonic=self.displacement_anharmonic,
+            cal_anhar_fcs=self.cal_anhar_fcs,
+            displacement_anhar=self.displacement_anhar,
             displacement=self.displacement,
-            num_displaced_supercells_anharmonic=self.num_displaced_supercells_anharmonic,
+            num_disp_anhar=self.num_disp_anhar,
             num_displaced_supercells=self.num_displaced_supercells,
-            FCs_cutoff_radius=self.FCs_cutoff_radius,
+            fcs_cutoff_radius=self.fcs_cutoff_radius,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,
@@ -371,11 +371,11 @@ class BasePhononMaker(Maker, ABC):
         phonon_collect = generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
-            displacement_anharmonic=self.displacement_anharmonic,
+            displacement_anhar=self.displacement_anhar,
             num_displaced_supercells=self.num_displaced_supercells,
-            num_displaced_supercells_anharmonic=self.num_displaced_supercells_anharmonic,
-            anharmonic_force_constants=self.anharmonic_force_constants,
-            FCs_cutoff_radius=self.FCs_cutoff_radius,
+            num_disp_anhar=self.num_disp_anhar,
+            cal_anhar_fcs=self.cal_anhar_fcs,
+            fcs_cutoff_radius=self.fcs_cutoff_radius,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,

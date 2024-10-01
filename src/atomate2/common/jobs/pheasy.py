@@ -35,12 +35,12 @@ logger = logging.getLogger(__name__)
 def generate_phonon_displacements(
     structure: Structure,
     supercell_matrix: np.array,
-    anharmonic_force_constants: bool,
+    cal_anhar_fcs: bool,
     num_displaced_supercells: int,
-    displacement_anharmonic: float,
+    displacement_anhar: float,
     displacement: float,
-    num_displaced_supercells_anharmonic: int,
-    FCs_cutoff_radius: list[int],
+    num_disp_anhar: int,
+    fcs_cutoff_radius: list[int],
     sym_reduce: bool,
     symprec: float,
     use_symmetrized_structure: str | None,
@@ -205,12 +205,12 @@ def generate_phonon_displacements(
 
     # 3. the ALM module is used to determine how many free parameters of third and
     # fourth order force constants (FCs) within the supercell.
-    if anharmonic_force_constants:
+    if cal_anhar_fcs:
             with ALM(lattice, positions, numbers) as alm:
                 # get the number of free parameters of 3RD and 4TH order FCs from ALM,
                 # labeled as n_rd
 
-                alm.define(3, FCs_cutoff_radius)
+                alm.define(3, fcs_cutoff_radius)
                 alm.suggest()
                 n_rd_anh = (
                     alm._get_number_of_irred_fc_elements(2) 
@@ -221,14 +221,14 @@ def generate_phonon_displacements(
                 # to reduce the number of displaced supercells due to we use the lasso
                 # technique.
                 num_d_anh = int(np.ceil(n_rd_anh / (3.0 * natom)))
-                if num_displaced_supercells_anharmonic != 0:
-                    num_displaced_supercells_anharmonic = num_displaced_supercells_anharmonic
+                if num_disp_anhar != 0:
+                    num_displaced_supercells_anharmonic = num_disp_anhar
                 else:
                     num_displaced_supercells_anharmonic = num_d_anh
 
             # generate the supercells for anharmonic force constants
             phonon.generate_displacements(
-                distance=displacement_anharmonic,
+                distance=displacement_anhar,
                 number_of_snapshots=num_displaced_supercells_anharmonic,
                 random_seed=103,
             )
@@ -253,9 +253,9 @@ def generate_frequencies_eigenvectors(
     displacement: float,
     displacement_anharmonic: float,
     num_displaced_supercells: int,
-    num_displaced_supercells_anharmonic: int,
-    anharmonic_force_constants: bool,
-    FCs_cutoff_radius: list[int],
+    num_disp_anhar: int,
+    cal_anhar_fcs: bool,
+    fcs_cutoff_radius: list[int],
     sym_reduce: bool,
     symprec: float,
     use_symmetrized_structure: str | None,
@@ -308,9 +308,9 @@ def generate_frequencies_eigenvectors(
         displacement=displacement,
         displacement_anharmonic=displacement_anharmonic,
         num_displaced_supercells=num_displaced_supercells,
-        num_displaced_supercells_anharmonic=num_displaced_supercells_anharmonic,
-        anharmonic_force_constants=anharmonic_force_constants,
-        FCs_cutoff_radius=FCs_cutoff_radius,
+        num_disp_anhar=num_disp_anhar,
+        cal_anhar_fcs=cal_anhar_fcs,
+        fcs_cutoff_radius=fcs_cutoff_radius,
         sym_reduce=sym_reduce,
         symprec=symprec,
         use_symmetrized_structure=use_symmetrized_structure,
