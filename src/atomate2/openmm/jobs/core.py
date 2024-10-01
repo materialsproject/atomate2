@@ -65,26 +65,27 @@ class EnergyMinimizationMaker(BaseOpenMMMaker):
             maxIterations=self.max_iterations,
         )
 
-        state = sim.context.getState(
-            getPositions=True,
-            getVelocities=True,
-            getForces=True,
-            getEnergy=True,
-            enforcePeriodicBox=self.wrap_traj,
-        )
+        if self.state_interval > 0:
+            state = sim.context.getState(
+                getPositions=True,
+                getVelocities=True,
+                getForces=True,
+                getEnergy=True,
+                enforcePeriodicBox=self.wrap_traj,
+            )
 
-        state_reporter = StateDataReporter(
-            file=f"{dir_name / self.state_file_name}.csv",
-            reportInterval=0,
-            step=True,
-            potentialEnergy=True,
-            kineticEnergy=True,
-            totalEnergy=True,
-            temperature=True,
-            volume=True,
-            density=True,
-        )
-        state_reporter.report(sim, state)
+            state_reporter = StateDataReporter(
+                file=f"{dir_name / self.state_file_name}.csv",
+                reportInterval=0,
+                step=True,
+                potentialEnergy=True,
+                kineticEnergy=True,
+                totalEnergy=True,
+                temperature=True,
+                volume=True,
+                density=True,
+            )
+            state_reporter.report(sim, state)
 
 
 @dataclass

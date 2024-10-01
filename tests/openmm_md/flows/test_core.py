@@ -114,7 +114,7 @@ def test_flow_maker(interchange, run_job):
         name="test_production",
         tags=["test"],
         makers=[
-            EnergyMinimizationMaker(max_iterations=1),
+            EnergyMinimizationMaker(max_iterations=1, state_interval=1),
             NPTMaker(n_steps=5, pressure=1.0, state_interval=1, traj_interval=1),
             OpenMMFlowMaker.anneal_flow(anneal_temp=400, final_temp=300, n_steps=5),
             NVTMaker(n_steps=5),
