@@ -138,7 +138,7 @@ def test_make_from_prev(openmm_data, run_job):
     maker = BaseOpenMMMaker(n_steps=10)
 
     # monkey patch to allow running the test without openmm
-    def do_nothing(self, sim):
+    def do_nothing(self, sim, dir_name):
         pass
 
     BaseOpenMMMaker.run_openmm = do_nothing
