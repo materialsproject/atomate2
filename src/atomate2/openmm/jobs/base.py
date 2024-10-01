@@ -524,6 +524,11 @@ class BaseOpenMMMaker(Maker):
             interchange.box = state.getPeriodicBoxVectors(asNumpy=True)
         elif isinstance(interchange, OpenMMInterchange):
             interchange.state = XmlSerializer.serialize(state)
+        else:
+            raise TypeError(
+                f"Interchange must be an Interchange or "
+                f"OpenMMInterchange object, got {type(interchange).__name__}"
+            )
 
     def _create_structure(
         self, sim: Simulation, prev_task: OpenMMTaskDocument | None = None
@@ -607,8 +612,10 @@ class BaseOpenMMMaker(Maker):
 
         prev_task = prev_task or OpenMMTaskDocument()
 
-        interchange_json = interchange.json()
-        # interchange_bytes = interchange_json.encode("utf-8")
+        if isinstance(interchange, Interchange):
+            interchange_json = interchange.json()
+        else:
+            interchange_json = interchange.model_dump_json()
 
         return OpenMMTaskDocument(
             tags=tags,
