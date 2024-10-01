@@ -26,7 +26,7 @@ if TYPE_CHECKING:
     from typing import Any
 
     from jobflow import Job
-    from pymatgen.core import Composition, Structure
+    from pymatgen.core import Structure
     from typing_extensions import Self
 
     from atomate2.common.jobs.eos import EOSPostProcessor
@@ -516,82 +516,3 @@ class SlowQuenchMaker(Maker):
         A slow quench .Flow or .Job
         """
         raise NotImplementedError
-
-
-@dataclass
-class AmorphousLimitMaker(Maker):
-    """Create an amorphous structure and equilibrate with MPMorph.
-
-    Creates an amorphous structure from a desired stoichiometry,
-    then performs the MPMorph molecular dynamics runs on top of it.
-
-    Parameters
-    ----------
-    name : str
-        Name of the flows produced by this maker.
-    mpmorph_maker :  MPMorphMDMaker
-        MDMaker to generate the molecular dynamics jobs specifically
-        for MPMorph workflow
-    """
-
-    name: str = "Amorphous Limit Maker"
-    mpmorph_maker: MPMorphMDMaker = field(default_factory=MPMorphMDMaker)
-    packmol_opts: dict = field(
-        default_factory=lambda: {
-            "target_atoms": 100,
-            "vol_exp": 1.2,
-            "tol": 2.0,
-            "return_as_job": True,
-            "vol_per_atom_source": "mp",
-            "packmol_seed": 1,
-        }
-    )
-
-    def make(
-        self,
-        structure: Structure | None = None,
-        composition: str | Composition | None = None,
-        prev_dir: str | Path | None = None,
-    ) -> Flow:
-        """
-        Run the amorphous structure maker and equilibration.
-
-        Parameters
-        ----------
-        structure : .Structure
-            A pymatgen structure object.
-        composition : str or Composition
-            Composition of the amorphous structure to generate.
-        prev_dir : str or Path or None
-            A previous VASP calculation directory to copy output files from.
-
-        Returns
-        -------
-        Flow
-            A flow containing series of rescaled volume molecular
-            dynamics runs, EOS fitted, then production run at the
-            equilibirum volume.
-        """
-        if structure is None:
-            if composition is None:
-                raise ValueError("Either structure or composition must be provided.")
-
-            from atomate2.common.jobs.mpmorph import get_random_packed_structure
-
-            structure = get_random_packed_structure(composition, **self.packmol_opts)
-
-        mpmorph_flow = self.mpmorph_maker.make(structure=structure, prev_dir=prev_dir)
-
-        if self.quench_maker:
-            quench_flow = self.quench_maker.make(
-                structure=mpmorph_flow.output.structure,
-                prev_dir=mpmorph_flow.output.dir_name,
-            )
-            return Flow(
-                [mpmorph_flow, quench_flow],
-                name=self.name,
-            )
-        return Flow(
-            [mpmorph_flow],
-            name=self.name,
-        )
