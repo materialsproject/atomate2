@@ -159,7 +159,8 @@ class BasePhononMaker(Maker, ABC):
     displacement_anharmonic: float = 0.08
     num_displaced_supercells: int = 0
     num_displaced_supercells_anharmonic: int = 0
-    min_length: float | None = 14.0
+    FCs_cutoff_radius: list = [-1, 12, 10] # unit: Borh
+    min_length: float | None = 12.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
@@ -327,6 +328,7 @@ class BasePhononMaker(Maker, ABC):
             displacement=self.displacement,
             num_displaced_supercells_anharmonic=self.num_displaced_supercells_anharmonic,
             num_displaced_supercells=self.num_displaced_supercells,
+            FCs_cutoff_radius=self.FCs_cutoff_radius,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,
@@ -373,6 +375,7 @@ class BasePhononMaker(Maker, ABC):
             num_displaced_supercells=self.num_displaced_supercells,
             num_displaced_supercells_anharmonic=self.num_displaced_supercells_anharmonic,
             anharmonic_force_constants=self.anharmonic_force_constants,
+            FCs_cutoff_radius=self.FCs_cutoff_radius,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,

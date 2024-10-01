@@ -161,6 +161,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         displacement_anharmonic: float,
         num_displaced_supercells: int,
         num_displaced_supercells_anharmonic: int,
+        FCs_cutoff_radius: list[int],
         sym_reduce: bool,
         symprec: float,
         use_symmetrized_structure: Union[str, None],
@@ -422,7 +423,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         if anharmonic_force_constants:
             pheasy_cmd_5 = (
                 f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
-                f'"{int(supercell_matrix[2][2])}" -s -w 4 --symprec "{float(symprec)}" --nbody 2 3 3 --c3 6.3 --c4 5.3'
+                f'"{int(supercell_matrix[2][2])}" -s -w 4 --symprec "{float(symprec)}" --nbody 2 3 3 --c3 "{int(FCs_cutoff_radius[1])}" --c4 "{int(FCs_cutoff_radius[2])}"'
             )
 
             pheasy_cmd_6 = (
@@ -755,6 +756,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         return cls.from_structure(
             structure=structure,
             meta_structure=structure,
+            displacement_anharmonic=displacement_anharmonic,
+            num_displaced_supercells=num_displaced_supercells,
+            num_displaced_supercells_anharmonic=num_displaced_supercells_anharmonic,
             phonon_bandstructure=bs_symm_line,
             phonon_dos=dos,
             free_energies=free_energies,

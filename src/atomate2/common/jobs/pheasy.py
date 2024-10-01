@@ -40,6 +40,7 @@ def generate_phonon_displacements(
     displacement_anharmonic: float,
     displacement: float,
     num_displaced_supercells_anharmonic: int,
+    FCs_cutoff_radius: list[int],
     sym_reduce: bool,
     symprec: float,
     use_symmetrized_structure: str | None,
@@ -209,7 +210,7 @@ def generate_phonon_displacements(
                 # get the number of free parameters of 3RD and 4TH order FCs from ALM,
                 # labeled as n_rd
 
-                alm.define(3, [-1, 11.9, 10.0])
+                alm.define(3, FCs_cutoff_radius)
                 alm.suggest()
                 n_rd_anh = (
                     alm._get_number_of_irred_fc_elements(2) 
@@ -254,6 +255,7 @@ def generate_frequencies_eigenvectors(
     num_displaced_supercells: int,
     num_displaced_supercells_anharmonic: int,
     anharmonic_force_constants: bool,
+    FCs_cutoff_radius: list[int],
     sym_reduce: bool,
     symprec: float,
     use_symmetrized_structure: str | None,
@@ -308,6 +310,7 @@ def generate_frequencies_eigenvectors(
         num_displaced_supercells=num_displaced_supercells,
         num_displaced_supercells_anharmonic=num_displaced_supercells_anharmonic,
         anharmonic_force_constants=anharmonic_force_constants,
+        FCs_cutoff_radius=FCs_cutoff_radius,
         sym_reduce=sym_reduce,
         symprec=symprec,
         use_symmetrized_structure=use_symmetrized_structure,
