@@ -154,12 +154,12 @@ class BasePhononMaker(Maker, ABC):
     name: str = "phonon"
     sym_reduce: bool = True
     symprec: float = 1e-3
-    anharmonic_force_constants: bool = True
     displacement: float = 0.01
-    displacement_anharmonic: float = 0.08
     num_displaced_supercells: int = 0
+    anharmonic_force_constants: bool = False
+    displacement_anharmonic: float = 0.08
     num_displaced_supercells_anharmonic: int = 0
-    FCs_cutoff_radius: list = [-1, 12, 10] # unit: Borh
+    FCs_cutoff_radius: list = [-1, 12, 10]
     min_length: float | None = 12.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
