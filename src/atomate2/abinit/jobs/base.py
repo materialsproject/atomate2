@@ -262,6 +262,10 @@ class BaseAbinitMaker(Maker):
     ) -> Response:
         """Get new job to restart abinit calculation."""
         if task_document.state == TaskState.SUCCESS:
+            if history.num_restarts >= 1:  # VT
+                task_document = task_document.model_copy(
+                    update={"history_dirs": history.prev_dirs}
+                )  # VT
             return Response(
                 output=task_document,
             )

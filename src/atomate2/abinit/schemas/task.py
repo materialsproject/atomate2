@@ -62,8 +62,10 @@ class AbinitPseudoDoc(BaseModel):
     filepath: str = Field(
         None, description="Absolute path of the pseudopotential file."
     )
-    repo_name: str = Field(None, description="Name of the pseudopotentials repository.")
-    table_name: str = Field(
+    repo_name: Optional[str] = Field(
+        None, description="Name of the pseudopotentials repository."
+    )
+    table_name: Optional[str] = Field(
         None, description="Name of the accuracy table of the repository."
     )
 
@@ -274,6 +276,9 @@ class AbinitTaskDoc(StructureMetadata):
 
     dir_name: Optional[str] = Field(
         None, description="The directory for this Abinit task"
+    )
+    history_dirs: Optional[list[str]] = Field(
+        None, description="The directories for the previously restarted Abinit tasks"
     )
     last_updated: Optional[str] = Field(
         default_factory=datetime_str,

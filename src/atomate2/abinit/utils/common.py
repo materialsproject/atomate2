@@ -15,6 +15,8 @@ from abipy.flowtk.utils import Directory, File
 from monty.json import MSONable
 from monty.serialization import MontyDecoder
 
+from atomate2.utils.path import strip_hostname
+
 if TYPE_CHECKING:
     from abipy.abio.inputs import AbinitInput
     from abipy.core.structure import Structure
@@ -347,6 +349,7 @@ def get_final_structure(dir_name: Path | str) -> Structure:
     1. from the output file of abinit (run.abo).
     2. from the gsr file of abinit (out_GSR.nc).
     """
+    dir_name = strip_hostname(dir_name)
     gsr_path = Directory(os.path.join(dir_name, OUTDIR_NAME)).has_abiext("GSR")
     if gsr_path:
         # Open the GSR file.
