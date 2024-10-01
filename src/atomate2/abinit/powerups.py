@@ -269,7 +269,7 @@ def update_taskdoc(
     return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
 
 
-def update_clean_flow(
+def append_clean_flow(
     flow: Job | Flow,
     exclude_files_from_zip: list[str | Path] | None = None,
     delete: bool = True,
@@ -310,7 +310,7 @@ def update_clean_flow(
         [
             copied_flow,
             del_gzip_files(
-                copied_flow.output,
+                copied_flow,
                 exclude_files_from_zip=exclude_files_from_zip,
                 delete=delete,
                 exclude_files_from_del=exclude_files_from_del,

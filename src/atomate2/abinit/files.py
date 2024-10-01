@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-import contextlib
 import logging
 import os
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from abipy.flowtk.utils import abi_extensions
-from jobflow.core.job import job
+from jobflow.core.flow import Flow
+from jobflow.core.job import Job, job
 from monty.serialization import loadfn
 
 from atomate2 import SETTINGS
@@ -22,7 +22,6 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
     from abipy.abio.inputs import AbinitInput
-    from jobflow.core.reference import OutputReference
     from pymatgen.core.structure import Structure
 
     from atomate2.abinit.sets.anaddb import AnaddbInputGenerator
@@ -225,7 +224,7 @@ def write_anaddb_input_set(
 # store_inputs, and its own directory into account...
 @job
 def del_gzip_files(
-    output: list | OutputReference,
+    to_clean: Job | Flow,
     exclude_files_from_zip: list[str | Path] | None = None,
     delete: bool = True,
     exclude_files_from_del: list[str | Path] | None = None,
@@ -235,9 +234,8 @@ def del_gzip_files(
 
     Parameters
     ----------
-    output
-        The OutputReference or the list of OutputReference of the Job/Flow
-        that needs its files deleted/compressed.
+    to_clean
+        Job or Flow that needs its files deleted/compressed.
     exclude_files_from_zip
         Filenames to exclude from the compression.
         Supports glob file matching, e.g., "\*.dat".
@@ -251,16 +249,28 @@ def del_gzip_files(
         directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
         in the directory will be deleted.
     """
+    # dirs_to_zip = []
+    # if not isinstance(output, list):  # in case of a single Job
+    #     output = [output]
+    # for o in output:
+    #     with contextlib.suppress(TypeError, AttributeError):
+    #         dirs_to_zip.append(o.dir_name)
+    #     with contextlib.suppress(TypeError, AttributeError, KeyError):
+    #         dirs_to_zip.extend(o["dirs"])
+    #     with contextlib.suppress(TypeError, AttributeError, KeyError):
+    #         dirs_to_zip.append(o["dir_name"])  # to zip run_rf and generate_perts
+
     dirs_to_zip = []
-    if not isinstance(output, list):  # in case of a single Job
-        output = [output]
-    for o in output:
-        with contextlib.suppress(TypeError, AttributeError):
-            dirs_to_zip.append(o.dir_name)
-        with contextlib.suppress(TypeError, AttributeError, KeyError):
-            dirs_to_zip.extend(o["dirs"])
-        with contextlib.suppress(TypeError, AttributeError, KeyError):
-            dirs_to_zip.append(o["dir_name"])  # to zip run_rf and generate_perts
+    if isinstance(to_clean, Job):
+        dirs_to_zip.append(to_clean.output.dir_name)
+    elif isinstance(to_clean, Flow):
+        for job, _ in to_clean.iterflow():
+            dirs_to_zip.append(job.output.dir_name)
+    else:
+        raise TypeError(
+            f"The function 'del_gzip_files' accepts Job or Flow \
+            as input, but {type(to_clean)} was passed."
+        )
 
     recursiv_dirs_to_zip = []
     for dz_ in dirs_to_zip:
