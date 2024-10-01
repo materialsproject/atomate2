@@ -29,9 +29,8 @@ from atomate2.vasp.jobs.mpmorph import (
 from atomate2.vasp.powerups import update_user_incar_settings
 
 if TYPE_CHECKING:
-    from typing_extensions import Self
-
     from jobflow import Maker
+    from typing_extensions import Self
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
     from atomate2.vasp.jobs.md import MDMaker
