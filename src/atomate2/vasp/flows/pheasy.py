@@ -116,8 +116,11 @@ class PhononMaker(BasePhononMaker):
     name: str = "phonon"
     sym_reduce: bool = True
     symprec: float = SETTINGS.PHONON_SYMPREC
+    anharmonic_force_constants: bool = True
     displacement: float = 0.01
+    displacement_anharmonic: float = 0.08
     num_displaced_supercells: int = 0
+    num_displaced_supercells_anharmonic: int = 0
     min_length: float | None = 14.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
