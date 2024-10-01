@@ -171,7 +171,8 @@ def test_vasp_mpmorph(
         )
 
         """
-        @BryantLI-BLI: does this block make sense? Not sure the structure should always shrink
+        # @BryantLI-BLI: does this block make sense?
+        #    The structure won't always shrink in volume
         assert (
             task_docs["MP GGA relax 1"].output.structure.volume
             <= task_docs[
