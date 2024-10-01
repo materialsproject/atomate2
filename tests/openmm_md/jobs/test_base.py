@@ -133,7 +133,7 @@ def test_make(interchange, tmp_path, run_job):
 
     # monkey patch to allow running the test without openmm
 
-    def do_nothing(self, sim):
+    def do_nothing(self, sim, dir_name):
         pass
 
     BaseOpenMMMaker.run_openmm = do_nothing
@@ -170,7 +170,7 @@ def test_make(interchange, tmp_path, run_job):
 
 def test_make_w_velocities(interchange, run_job):
     # monkey patch to allow running the test without openmm
-    def do_nothing(self, sim):
+    def do_nothing(self, sim, dir_name):
         pass
 
     BaseOpenMMMaker.run_openmm = do_nothing
@@ -215,7 +215,7 @@ def test_make_from_prev(run_job):
     maker = BaseOpenMMMaker(n_steps=10)
 
     # monkey patch to allow running the test without openmm
-    def do_nothing(self, sim):
+    def do_nothing(self, sim, dir_name):
         pass
 
     BaseOpenMMMaker.run_openmm = do_nothing
