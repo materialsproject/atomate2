@@ -147,6 +147,7 @@ class BasePhononMaker(Maker, ABC):
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     code: str = None
+    mp_id: str = None
     store_force_constants: bool = True
     socket: bool = False
 
