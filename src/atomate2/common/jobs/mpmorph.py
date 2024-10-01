@@ -313,7 +313,7 @@ def get_random_packed_structure(
                 "packmol_seed": packmol_seed,
             },
         )
-    if isinstance(composition, str):
+    if isinstance(composition, str | dict):
         composition = Composition(composition)
 
     struct_db = (
