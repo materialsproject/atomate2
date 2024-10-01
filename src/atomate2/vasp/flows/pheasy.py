@@ -152,3 +152,4 @@ class PhononMaker(BasePhononMaker):
         calculations are performed for each ordering (relax -> static)
         """
         return "prev_dir"
+    

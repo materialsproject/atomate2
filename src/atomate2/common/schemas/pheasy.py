@@ -9,15 +9,16 @@ from typing import Optional, Union
 
 import numpy as np
 
-# import lib by jiongzhi zheng 
+# import lib by jiongzhi zheng
 from ase.io import read
 from emmet.core.math import Matrix3D
 from emmet.core.structure import StructureMetadata
 from hiphive import (
-    ClusterSpace, 
-    ForceConstantPotential, 
-    ForceConstants, 
-    enforce_rotational_sum_rules)
+    ClusterSpace,
+    ForceConstantPotential,
+    ForceConstants,
+    enforce_rotational_sum_rules
+)
 
 from hiphive.cutoffs import estimate_maximum_cutoff
 from hiphive.utilities import extract_parameters
@@ -45,11 +46,11 @@ from typing_extensions import Self
 
 # import some classmethod directly from phonons
 from atomate2.common.schemas.phonons import (
-    get_factor,
-    ThermalDisplacementData,
     PhononComputationalSettings,
-    PhononUUIDs,
     PhononJobDirs,
+    PhononUUIDs,
+    ThermalDisplacementData,
+    get_factor,
 )
 
 logger = logging.getLogger(__name__)
@@ -246,14 +247,13 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # force matrix on the displaced structures
         dataset_forces_array_disp = dataset_forces_array_rr[:-1, :, :]
         dataset_disps = [
-            np.array(disps.cart_coords) 
+            np.array(disps.cart_coords)
             for disps in displacement_data["displaced_structures"]
         ]
 
         # get the displacement dataset
         dataset_disps_array_rr = np.round(
-            (dataset_disps - supercell.get_positions()), 
-                                    decimals=16
+            (dataset_disps - supercell.get_positions()), decimals=16
         ).astype('double')
         dataset_disps_array_use = dataset_disps_array_rr[:-1, :, :]
 
@@ -306,14 +306,14 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
             f'"{int(supercell_matrix[2][2])}" -s -w 2 --symprec "{float(symprec)}" --nbody 2'
         )
-        
-        # Create the null space to further reduce the free parameters for 
+
+        # Create the null space to further reduce the free parameters for
         # specific force constants and make them physically correct.
         pheasy_cmd_2 = (
             f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
             f'"{int(supercell_matrix[2][2])}" -c --symprec "{float(symprec)}" -w 2'
         )
-        
+
         # Generate the Compressive Sensing matrix,i.e., displacement matrix
         # for the input of machine leaning method.i.e., LASSO,
         pheasy_cmd_3 = (
@@ -333,7 +333,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         if num_judge > 3:
            # Calculate the force constants using the LASSO method due to the
            # random-displacement method Obviously, the rotaional invariance
-           # constraint, i.e., tag: --rasr BHH, is enforced during the 
+           # constraint, i.e., tag: --rasr BHH, is enforced during the
            # fitting process.
            pheasy_cmd_4 = (
                 f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
@@ -348,7 +348,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 f'"{int(supercell_matrix[2][2])}" -f --full_ifc -w 2 --symprec "{float(symprec)}" '
                 f'--rasr BHH --ndata "{int(num_har)}"'
             )
-            
+
         logger.info("Start running pheasy in cluster")
 
         subprocess.call(pheasy_cmd_1, shell=True)
@@ -427,7 +427,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
             # Enforce the rotational sum rules
             parameters_rot = enforce_rotational_sum_rules(
-                cs, parameters, ['Huang','Born-Huang'], alpha=1e-6
+                cs, parameters, ["Huang","Born-Huang"], alpha=1e-6
             )
             
             # use the new parameters to make a fcp and then create the force
@@ -441,7 +441,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             phonon.symmetrize_force_constants()
 
             phonon.run_band_structure(
-                qpoints, path_connections=connections,with_eigenvectors=True
+                qpoints, path_connections=connections, with_eigenvectors=True
             )
             phonon.write_yaml_band_structure(filename=filename_band_yaml)
             bs_symm_line = get_ph_bs_symm_line(
@@ -471,42 +471,58 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # eliminate the imaginary modes near Gamma point in phesay code
         if imaginary_modes_hiphive:
             pheasy_cmd_11 = (
-                f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
-                f'"{int(supercell_matrix[2][2])}" -s -w 2 --c2 10.0 --symprec "{float(symprec)}" '
+                f'pheasy --dim "{int(supercell_matrix[0][0])}" '
+                f'"{int(supercell_matrix[1][1])}" '
+                f'"{int(supercell_matrix[2][2])}" '
+                f'-s -w 2 --c2 10.0 '
+                f'--symprec "{float(symprec)}" '
                 f'--nbody 2'
             )
 
             pheasy_cmd_12 = (
-                f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
-                f'"{int(supercell_matrix[2][2])}" -c --symprec "{float(symprec)}" --c2 10.0 -w 2'
+                f'pheasy --dim "{int(supercell_matrix[0][0])}" '
+                f'"{int(supercell_matrix[1][1])}" '
+                f'"{int(supercell_matrix[2][2])}" '
+                f'-c --symprec "{float(symprec)}" '
+                f'--c2 10.0 -w 2'
             )
 
             pheasy_cmd_13 = (
-                f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
-                f'"{int(supercell_matrix[2][2])}" -w 2 -d --symprec "{float(symprec)}" --c2 10.0 '
-                f'--ndata "{int(num_har)}" --disp_file'
+                f'pheasy --dim "{int(supercell_matrix[0][0])}" '
+                f'"{int(supercell_matrix[1][1])}" '
+                f'"{int(supercell_matrix[2][2])}" '
+                f'-w 2 -d --symprec "{float(symprec)}" '
+                f'--c2 10.0 --ndata "{int(num_har)}" '
+                f'--disp_file'
             )
-            
+
             phonon.generate_displacements(distance=displacement)
             disps = phonon.displacements
             num_judge = len(disps)
 
             if num_judge > 3:
                 pheasy_cmd_14 = (
-                    f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
-                    f'"{int(supercell_matrix[2][2])}" -f --c2 10.0 --full_ifc -w 2 --symprec "{float(symprec)}" '
-                    f'-l LASSO --std --rasr BHH --ndata "{int(num_har)}"'
+                    f'pheasy --dim "{int(supercell_matrix[0][0])}" '
+                    f'"{int(supercell_matrix[1][1])}" '
+                    f'"{int(supercell_matrix[2][2])}" '
+                    f'-f --c2 10.0 --full_ifc -w 2 '
+                    f'--symprec "{float(symprec)}" '
+                    f'-l LASSO --std --rasr BHH '
+                    f'--ndata "{int(num_har)}"'
                 )
 
             else:
                 pheasy_cmd_14 = (
-                    f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
-                    f'"{int(supercell_matrix[2][2])}" -f --full_ifc --c2 10.0 -w 2 --symprec "{float(symprec)}" '
+                    f'pheasy --dim "{int(supercell_matrix[0][0])}" '
+                    f'"{int(supercell_matrix[1][1])}" '
+                    f'"{int(supercell_matrix[2][2])}" '
+                    f'-f --full_ifc --c2 10.0 -w 2 '
+                    f'--symprec "{float(symprec)}" '
                     f'--rasr BHH --ndata "{int(num_har)}"'
                 )
 
             logger.info("Start running pheasy in cluster")
-            
+
             subprocess.call(pheasy_cmd_11, shell=True)
             subprocess.call(pheasy_cmd_12, shell=True)
             subprocess.call(pheasy_cmd_13, shell=True)
@@ -543,8 +559,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             new_plotter = PhononBSPlotter(bs=bs_symm_line)
 
             new_plotter.save_plot(
-                filename=kwargs.get("filename_bs", 
-                "phonon_band_structure.pdf"),
+                filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
                 units=kwargs.get("units", "THz")
             )
 
@@ -739,3 +754,4 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             for lbl_idx, label in enumerate(label_set):
                 path[set_idx][lbl_idx] = kpath["kpoints"][label]
         return kpath["kpoints"], path
+    

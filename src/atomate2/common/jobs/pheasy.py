@@ -73,7 +73,6 @@ def generate_phonon_displacements(
         code to perform the computations
 
     """
-
     warnings.warn(
         "Initial magnetic moments will not be considered for the determination "
         "of the symmetry of the structure and thus will be removed now.",
@@ -112,7 +111,7 @@ def generate_phonon_displacements(
         is_symmetry=sym_reduce,
     )
 
-    # 1. the ALM module is used to determine how many free parameters 
+    # 1. the ALM module is used to determine how many free parameters
     # (irreducible force constants) of second order force constants (FCs)
     # within the supercell.
     # 2. Based on the number of free parameters, we can determine how many
@@ -120,13 +119,13 @@ def generate_phonon_displacements(
     # constants. Generally, the number of free parameters should be less than
     # 3 * natom(supercell) * num_displaced_supercells. However, the full rank
     # of matrix can not always guarantee the accurate result sometimes, you
-    # may need to displace more random configurations. At least use one or 
+    # may need to displace more random configurations. At least use one or
     # two more configurations based on the suggested number of displacements.
 
     try:
         from alm import ALM
     except ImportError as e:
-        logging.error(
+        logging.exception(
             f"Error importing ALM: {e}. Please ensure the 'alm'"
             "library is installed."
         )
@@ -149,25 +148,23 @@ def generate_phonon_displacements(
     # get the number of displaced supercells from phonopy to compared with the number
     # of 3, if the number of displaced supercells is less than 3, we will use the finite
     # displacement method to generate the supercells. Otherwise, we will use the random
-    # displacement method to generate the supercells.  
+    # displacement method to generate the supercells.
     phonon.generate_displacements(distance=displacement)
     num_disp_f = len(phonon.displacements)
     if num_disp_f > 3:
         num_d = int(np.ceil(num * 1.8))
     else:
         pass
-    
-    logger.info(
-        "The number of free parameters of Second Order Force Constants is %s",
-                n_fp
-    )
-    logger.info("")  
 
     logger.info(
-        "The Number of Equations Used to Obtain the 2ND FCs is %s",
-                3 * natom * num
+        "The number of free parameters of Second Order Force Constants is %s", n_fp
     )
-    logger.info("")  
+    logger.info("")
+
+    logger.info(
+        "The Number of Equations Used to Obtain the 2ND FCs is %s", 3 * natom * num
+    )
+    logger.info("")
 
     logger.warning(
         "Be Careful!!! Full Rank of Matrix cannot always guarantee the correct result\
@@ -183,19 +180,19 @@ def generate_phonon_displacements(
     if num_disp_f > 3:
         if num_displaced_supercells != 0:
             phonon.generate_displacements(
-                distance=displacement, 
-                number_of_snapshots=num_displaced_supercells, 
+                distance=displacement,
+                number_of_snapshots=num_displaced_supercells,
                 random_seed=103,
             )
         else:
             phonon.generate_displacements(
-                distance=displacement, 
-                number_of_snapshots=num_d, 
+                distance=displacement,
+                number_of_snapshots=num_d,
                 random_seed=103,
             )
     else:
         pass
-    
+
     supercells = phonon.supercells_with_displacements
     displacements = [get_pmg_structure(cell) for cell in supercells]
 

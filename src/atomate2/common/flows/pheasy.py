@@ -1,5 +1,5 @@
-"""Flows for calculating phonons, an-harmonic force constants, 
-    and phonon energy renormalization with the pheasy.
+"""Flows for calculating phonons, an-harmonic force constants,
+and phonon energy renormalization with the pheasy.
 """
 
 from __future__ import annotations
@@ -15,7 +15,6 @@ from atomate2.common.jobs.pheasy import (
     generate_phonon_displacements,
     run_phonon_displacements,
 )
-
 from atomate2.common.jobs.phonons import get_supercell_size, get_total_energy_per_cell
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 
@@ -40,23 +39,24 @@ class BasePhononMaker(Maker, ABC):
     machine learning code Pheasy.
 
     Calculate the zero-K harmonic phonons of a material. Initially, a tight structural
-    relaxation is performed to obtain a structure without forces on the atoms. Subsequently,
-    supercells with all atoms displaced by a small amplitude (generally using 0.01 A) are
-    generated and accurate forces are computed for these structures. With the help of
-    pheasy (LASSO technique), these forces are then converted into a dynamical matrix.
-    To correct for polarization effects, a correction of the dynamical matrix based on
-    BORN charges can be performed. Finally, phonon densities of states, phonon band
-    structures and thermodynamic properties are computed.
+    relaxation is performed to obtain a structure without forces on the atoms.
+    Subsequently, supercells with all atoms displaced by a small amplitude (generally
+    using 0.01 A) are generated and accurate forces are computed for these structures.
+    With the help of pheasy (LASSO technique), these forces are then converted into a
+    dynamical matrix. To correct for polarization effects, a correction of the
+    dynamical matrix based on BORN charges can be performed. Finally, phonon densities
+    of states, phonon band structures and thermodynamic properties are computed.
 
     .. Note::
-        It is heavily recommended to symmetrize the structure before passing it to this flow.
-        Otherwise, a different space group might be detected and too many displacement
-        calculations will be required for pheasy phonon calculation. It is recommended to
-        check the convergence parameters here and adjust them if necessary. The default
-        might not be strict enough for your specific case. Additionally, for high-throughoput
-        calculations, it is recommended to calculate the residual forces on the atoms in
-        the supercell after the relaxation. Then the forces on displaced supercells can deduct
-        the residual forces to reduce the error in the dynamical matrix.
+        It is heavily recommended to symmetrize the structure before passing it to
+        this flow. Otherwise, a different space group might be detected and too 
+        many displacement calculations will be required for pheasy phonon
+        calculation. It is recommended to check the convergence parameters here
+        and adjust them if necessary. The default might not be strict enough for
+        your specific case. Additionally, for high-throughoput calculations, it
+        is recommended to calculate the residual forces on the atoms in the
+        supercell after the relaxation. Then the forces on displaced supercells
+        can deduct the residual forces to reduce the error in the dynamical matrix.
 
     Parameters
     ----------
@@ -84,9 +84,9 @@ class BasePhononMaker(Maker, ABC):
     num_displaced_supercells_anharmonic: int
         number of displacements to be generated using a random-displacement approach
         for anharmonic phonon calculations. The default value is 0 and the number of
-        displacements is automatically determined by the number of atoms in the supercell,
-        cutoff distance for anharmonic FCs its space group. generally, 50 large-distance
-        displacements are enough for most cases.
+        displacements is automatically determined by the number of atoms in the
+        supercell, cutoff distance for anharmonic FCs its space group. generally,
+        50 large-distance displacements are enough for most cases.
     min_length: float
         minimum length of lattice constants will be used to create the supercell,
         the default value is 14.0 A. In most cases, the default value is good
@@ -278,7 +278,7 @@ class BasePhononMaker(Maker, ABC):
             optimization_run_uuid = bulk.output.uuid
 
         # if supercell_matrix is None, supercell size will be determined after relax
-        # maker to ensure that cell lengths are really larger than threshold. 
+        # maker to ensure that cell lengths are really larger than threshold.
         # Note that If one wants to calculate the lattice thermal conductivity,
         # the supercell dimensions should be forced to be diagonal, e.g.,
         # supercell_matrix = [[2, 0, 0], [0, 2, 0], [0, 0, 2]]
@@ -304,7 +304,7 @@ class BasePhononMaker(Maker, ABC):
                 static_job_kwargs[self.prev_calc_dir_argname] = prev_dir
             static_job = self.static_energy_maker.make(
                 structure=structure, **static_job_kwargs
-                )
+            )
             jobs.append(static_job)
             total_dft_energy = static_job.output.output.energy
             static_run_job_dir = static_job.output.dir_name
