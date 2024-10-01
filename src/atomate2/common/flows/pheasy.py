@@ -38,14 +38,20 @@ class BasePhononMaker(Maker, ABC):
     Maker to calculate harmonic phonons with a DFT/force field code and the LASSO-based
     machine learning code Pheasy.
 
-    Calculate the zero-K harmonic phonons of a material. Initially, a tight structural
-    relaxation is performed to obtain a structure without forces on the atoms. Subsequently,
-    supercells with all atoms displaced by a small amplitude (generally using 0.01 A) are
-    generated and accurate forces are computed for these structures. With the help of
-    pheasy (LASSO technique), these forces are then converted into a dynamical matrix.
-    To correct for polarization effects, a correction of the dynamical matrix based on
-    BORN charges can be performed. Finally, phonon densities of states, phonon band
-    structures and thermodynamic properties are computed.
+    Calculate the zero-K harmonic phonons of a material and higher-order force constants.
+    Initially, a tight structural relaxation is performed to obtain a structure without
+    forces on the atoms. Subsequently, supercells with all atoms displaced by a small
+    amplitude (generally using 0.01 A) are generated and accurate forces are computed
+    for these structures for the second order force constants. With the help of pheasy
+    (LASSO technique), these forces are then converted into a dynamical matrix. In this
+    Workflow, we seperate the harmonic phonon calculations and anharmonic force constants
+    calculations. To correct for polarization effects, a correction of the dynamical
+    matrix based on BORN charges can be performed. Finally, phonon densities of states,
+    phonon band structures and thermodynamic properties are computed. For the anharmonic
+    force constants, the supercells with all atoms displaced by a larger amplitude
+    (generally using 0.08 A) are generated and accurate forces are computed for these
+    structures. With the help of pheasy (LASSO technique), the third- and fourth-order
+    force constants are extracted at once.
 
     .. Note::
         It is heavily recommended to symmetrize the structure before passing it to this flow.
@@ -72,20 +78,30 @@ class BasePhononMaker(Maker, ABC):
     displacement: float
         displacement distance for phonons, for most cases 0.01 A is a good choice,
         but it can be increased to 0.02 A for heavier elements.
-    displacement_anharmonic: float
-        displacement distance for anharmonic force constants(FCs) up to sixth-order
-        FCs, for most cases 0.08 A is a good choice, but it can be increased to 0.1 A.
     num_displaced_supercells: int
         number of displacements to be generated using a random-displacement approach
         for harmonic phonon calculations. The default value is 0 and the number of
         displacements is automatically determined by the number of atoms in the
         supercell and its space group.
-    num_displaced_supercells_anharmonic: int
+    cal_anhar_fcs: bool
+        if set to True, anharmonic force constants(FCs) up to fourth-order FCs will
+        be calculated. The default value is False, and only harmonic phonons will
+        be calculated.
+    displacement_anhar: float
+        displacement distance for anharmonic force constants(FCs) up to fourth-order
+        FCs, for most cases 0.08 A is a good choice, but it can be increased to 0.1 A.
+    num_disp_anhar: int
         number of displacements to be generated using a random-displacement approach
         for anharmonic phonon calculations. The default value is 0 and the number of
         displacements is automatically determined by the number of atoms in the supercell,
         cutoff distance for anharmonic FCs its space group. generally, 50 large-distance
         displacements are enough for most cases.
+    fcs_cutoff_radius: list
+        cutoff distance for anharmonic force constants(FCs) up to fourth-order FCs.
+        The default value is [-1, 12, 10], which means that the cutoff distance for
+        second-order FCs is the Wigner-Seitz cell boundary and the cutoff distance
+        for third-order FCs is 12 Borh, and the cutoff distance for fourth-order FCs
+        is 10 Bohr. Gnerally, the default value is good enough.
     min_length: float
         minimum length of lattice constants will be used to create the supercell,
         the default value is 14.0 A. In most cases, the default value is good
@@ -323,11 +339,11 @@ class BasePhononMaker(Maker, ABC):
         displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
+            displacement=self.displacement,
+            num_displaced_supercells=self.num_displaced_supercells,
             cal_anhar_fcs=self.cal_anhar_fcs,
             displacement_anhar=self.displacement_anhar,
-            displacement=self.displacement,
             num_disp_anhar=self.num_disp_anhar,
-            num_displaced_supercells=self.num_displaced_supercells,
             fcs_cutoff_radius=self.fcs_cutoff_radius,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
@@ -371,10 +387,10 @@ class BasePhononMaker(Maker, ABC):
         phonon_collect = generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
-            displacement_anhar=self.displacement_anhar,
             num_displaced_supercells=self.num_displaced_supercells,
-            num_disp_anhar=self.num_disp_anhar,
             cal_anhar_fcs=self.cal_anhar_fcs,
+            displacement_anhar=self.displacement_anhar,
+            num_disp_anhar=self.num_disp_anhar,
             fcs_cutoff_radius=self.fcs_cutoff_radius,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,

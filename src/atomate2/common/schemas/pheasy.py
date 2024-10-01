@@ -156,10 +156,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         cls,
         structure: Structure,
         supercell_matrix: np.array,
-        cal_anhar_fcs: bool,
         displacement: float,
-        displacement_anhar: float,
         num_displaced_supercells: int,
+        cal_anhar_fcs: bool,
+        displacement_anhar: float,
         num_disp_anhar: int,
         fcs_cutoff_radius: list[int],
         sym_reduce: bool,
@@ -182,6 +182,16 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         supercell_matrix: numpy array describing the supercell
         displacement: float
             size of displacement in angstrom
+        num_displaced_supercells: int
+            number of displaced supercells
+        cal_anhar_fcs: bool
+            if True, anharmonic force constants will be computed
+        displacement_anhar: float
+            size of displacement in angstrom for anharmonic force constants
+        num_disp_anhar: int
+            number of displaced supercells for anharmonic force constants
+        fcs_cutoff_radius: list
+            cutoff radius for force constants
         sym_reduce: bool
             if True, phonopy will use symmetry
         symprec: float
@@ -423,7 +433,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         if cal_anhar_fcs:
             pheasy_cmd_5 = (
                 f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
-                f'"{int(supercell_matrix[2][2])}" -s -w 4 --symprec "{float(symprec)}" --nbody 2 3 3 --c3 "{int(fcs_cutoff_radius[1])}" --c4 "{int(fcs_cutoff_radius[2])}"'
+                f'"{int(supercell_matrix[2][2])}" -s -w 4 --symprec "{float(symprec)}" '
+                f'--nbody 2 3 3 --c3 "{int(fcs_cutoff_radius[1])}" --c4 "{int(fcs_cutoff_radius[2])}"'
             )
 
             pheasy_cmd_6 = (
@@ -756,8 +767,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         return cls.from_structure(
             structure=structure,
             meta_structure=structure,
-            displacement_anhar=displacement_anhar,
             num_displaced_supercells=num_displaced_supercells,
+            displacement_anhar=displacement_anhar,
             num_disp_anhar=num_disp_anhar,
             phonon_bandstructure=bs_symm_line,
             phonon_dos=dos,
