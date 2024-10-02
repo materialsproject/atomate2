@@ -61,7 +61,6 @@ class EquilibriumVolumeMaker(Maker):
     initial_strain: float | tuple[float, float] = 0.2
     min_strain: float = 0.5
     max_attempts: int | None = 20
-    energy_average_frames: int = 1
 
     @job
     def make(
@@ -102,11 +101,6 @@ class EquilibriumVolumeMaker(Maker):
             }
 
         else:
-            # Average energy over last `energy_average_frames` if requested
-            working_outputs["relax"]["energy"] = [
-                sum(frame[-self.energy_average_frames :]) / self.energy_average_frames
-                for frame in working_outputs["relax"]["energies"]
-            ]
 
             # Fit EOS to running list of energies and volumes
             self.postprocessor.fit(working_outputs)
@@ -120,9 +114,9 @@ class EquilibriumVolumeMaker(Maker):
 
             # Check if equilibrium volume is in range of attempted volumes
             v0_in_range = (
-                (vmin := working_outputs.get("Vmin"))
-                <= v0
-                <= (vmax := working_outputs.get("Vmax"))
+                vmin := working_outputs.get("Vmin")
+            ) <= v0 <= (
+                vmax := working_outputs.get("Vmax")
             )
 
             # Check if maximum number of refinement NVT runs is set,
@@ -158,23 +152,7 @@ class EquilibriumVolumeMaker(Maker):
                 f"{self.name} {md_job.name} {len(working_outputs['relax']['volume'])+1}"
             )
 
-            if self.energy_average_frames == 1:
-                energies = [md_job.output.output.energy]
-            else:
-                raise ValueError("Cannot perform energy averaging just yet!")
-                try:
-                    energies = [
-                        frame.energy for frame in md_job.output.output.ionic_steps
-                    ]
-                except AttributeError:
-                    energies = [
-                        frame.e_0_energy
-                        for frame in md_job.output.vasp_objects[
-                            "trajectory"
-                        ].frame_properties
-                    ]
-
-            working_outputs["relax"]["energies"].append(energies)
+            working_outputs["relax"]["energies"].append(md_job.output.output.energy)
             working_outputs["relax"]["volume"].append(md_job.output.structure.volume)
             working_outputs["relax"]["stress"].append(md_job.output.output.stress)
             eos_jobs.append(md_job)
