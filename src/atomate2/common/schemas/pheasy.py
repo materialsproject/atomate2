@@ -290,9 +290,19 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             dataset_disps_array_rr < -0.5,
             dataset_disps_array_rr + 1.0,
             dataset_disps_array_rr)
-        dataset_disps_array_rr = np.dot(
-            supercell.cell.real.T,
-            dataset_disps_array_rr.T).T
+        
+        # Transpose the displacement array on the last two axes (atoms and coordinates)
+        dataset_disps_array_rr_transposed = np.transpose(dataset_disps_array_rr, (0, 2, 1))
+
+        # Perform matrix multiplication with the transposed supercell.cell
+        # 'ij' for supercell.cell.T and 'nkj' for the transposed dataset_disps_array_rr
+        dataset_disps_array_rr_cartesian = np.einsum('ij,njk->nik',
+                                                    supercell.cell.T,
+                                                    dataset_disps_array_rr_transposed
+                                                    )
+        # Transpose back to the original format
+        dataset_disps_array_rr_cartesian = np.transpose(dataset_disps_array_rr_cartesian, (0, 2, 1))
+        
         dataset_disps_array_use = dataset_disps_array_rr[:-1, :, :]
 
         # seperate the dataset into harmonic and anharmonic parts
