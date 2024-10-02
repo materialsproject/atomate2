@@ -101,7 +101,6 @@ class EquilibriumVolumeMaker(Maker):
             }
 
         else:
-
             # Fit EOS to running list of energies and volumes
             self.postprocessor.fit(working_outputs)
             working_outputs = dict(self.postprocessor.results)
@@ -114,9 +113,9 @@ class EquilibriumVolumeMaker(Maker):
 
             # Check if equilibrium volume is in range of attempted volumes
             v0_in_range = (
-                vmin := working_outputs.get("Vmin")
-            ) <= v0 <= (
-                vmax := working_outputs.get("Vmax")
+                (vmin := working_outputs.get("Vmin"))
+                <= v0
+                <= (vmax := working_outputs.get("Vmax"))
             )
 
             # Check if maximum number of refinement NVT runs is set,
