@@ -25,6 +25,85 @@ from atomate2.utils.path import get_uri
 logger = logging.getLogger(__name__)
 
 
+class AbinitPseudoDoc(BaseModel):
+    """Summary of the pseudopotentials used in an Abinit calculation.
+
+    Parameters
+    ----------
+    basename: str
+        Basename of the file.
+    type_psp: str
+        Type of the pseudopotential.
+    symbol: str
+        Symbol of the element.
+    Z: int
+        Atomic number of the element.
+    Z_val: int
+        Valence charge.
+    l_max: int
+        Maximum angular momentum.
+    md5: str
+        MD5 hash value.
+    filepath: str
+        Absolute path to the pseudopotential file.
+    repo_name: str
+        Name of the pseudopotentials repository if applicable.
+    table_name: str
+        Name of the accuracy table associated to the repository if applicable.
+    """
+
+    basename: str = Field(None, description="Name of the pseudopotential file.")
+    type_psp: str = Field(None, description="Type of the pseudopotential.")
+    symbol: str = Field(None, description="Symbol of the element.")
+    Z: int = Field(None, description="Atomic number of the element.")
+    Z_val: int = Field(None, description="Valence charge.")
+    l_max: int = Field(None, description="Maximum angular momentum.")
+    md5: str = Field(None, description="MD5 hash value.")
+    filepath: str = Field(
+        None, description="Absolute path of the pseudopotential file."
+    )
+    repo_name: Optional[str] = Field(
+        None, description="Name of the pseudopotentials repository."
+    )
+    table_name: Optional[str] = Field(
+        None, description="Name of the accuracy table of the repository."
+    )
+
+    @classmethod
+    def from_abinitpseudo(cls, abi_psp: AbinitPseudo) -> Self:
+        """Create a summary from an AbinitPseudo.
+
+        Parameters
+        ----------
+        abi_psp: AbinitPseudo
+            An Abinit pseudopotential.
+
+        Returns
+        -------
+        .AbinitPseudoDoc
+            The abinit pseudopotential summary.
+        """
+        dct_abi_psp = abi_psp.as_dict()
+        split_filepath = dct_abi_psp["filepath"].split("/")[::-1]
+        repo_name = None
+        for isplit in split_filepath:
+            if "ONCVPSP" in isplit or "ATOMPAW" in isplit:
+                repo_name = isplit
+
+        return cls(
+            basename=dct_abi_psp["basename"],
+            type_psp=dct_abi_psp["type"],
+            symbol=dct_abi_psp["symbol"],
+            Z=dct_abi_psp["Z"],
+            Z_val=dct_abi_psp["Z_val"],
+            l_max=dct_abi_psp["l_max"],
+            md5=dct_abi_psp["md5"],
+            filepath=dct_abi_psp["filepath"],
+            repo_name=repo_name,
+            # table_name = # TODO: No way to set it yet
+        )
+
+
 class InputDoc(BaseModel):
     """Summary of the inputs for an Abinit calculation.
 
@@ -38,8 +117,8 @@ class InputDoc(BaseModel):
     abinit_input: AbinitInput = Field(
         None, description="AbinitInput used to perform calculation."
     )
-    pseudopotentials: list[AbinitPseudo] = Field(
-        None, description="List of the AbinitPseudo used to perform calculation."
+    pseudopotentials: list[AbinitPseudoDoc] = Field(
+        None, description="List of the AbinitPseudoDoc used to perform calculation."
     )
     xc: str = Field(
         None, description="Exchange-correlation functional used if not the default"
@@ -63,7 +142,10 @@ class InputDoc(BaseModel):
         return cls(
             structure=abinit_input.structure,
             abinit_input=abinit_input,
-            pseudopotentials=abinit_input.pseudos,
+            pseudopotentials=[
+                AbinitPseudoDoc.from_abinitpseudo(abi_psp)
+                for abi_psp in abinit_input.pseudos
+            ],
             xc=str(abinit_input.pseudos[0].xc.name),
         )
 
@@ -194,6 +276,9 @@ class AbinitTaskDoc(StructureMetadata):
 
     dir_name: Optional[str] = Field(
         None, description="The directory for this Abinit task"
+    )
+    history_dirs: Optional[list[str]] = Field(
+        None, description="The directories for the previously restarted Abinit tasks"
     )
     last_updated: Optional[str] = Field(
         default_factory=datetime_str,

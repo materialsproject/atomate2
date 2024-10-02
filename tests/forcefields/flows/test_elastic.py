@@ -4,20 +4,21 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2.common.schemas.elastic import ElasticDocument
 from atomate2.forcefields.flows.elastic import ElasticMaker
-from atomate2.forcefields.jobs import MACERelaxMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 
 def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir):
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
     model_path = f"{test_dir}/forcefields/mace/MACE.model"
-    common_kwds = dict(
-        calculator_kwargs={"model": model_path, "default_dtype": "float64"},
-        relax_kwargs={"fmax": 0.00001},
-    )
+    common_kwds = {
+        "force_field_name": "MACE",
+        "calculator_kwargs": {"model": model_path, "default_dtype": "float64"},
+        "relax_kwargs": {"fmax": 0.00001},
+    }
 
     flow = ElasticMaker(
-        bulk_relax_maker=MACERelaxMaker(**common_kwds, relax_cell=True),
-        elastic_relax_maker=MACERelaxMaker(**common_kwds, relax_cell=False),
+        bulk_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=True),
+        elastic_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=False),
     ).make(si_prim)
 
     # run the flow or job and ensure that it finished running successfully

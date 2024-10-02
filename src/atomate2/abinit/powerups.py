@@ -269,7 +269,7 @@ def update_taskdoc(
     return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
 
 
-def update_clean_flow(
+def append_clean_flow(
     flow: Job | Flow,
     exclude_files_from_zip: list[str | Path] | None = None,
     delete: bool = True,
@@ -306,11 +306,23 @@ def update_clean_flow(
         once completed.
     """
     copied_flow = deepcopy(flow)
+    outputs_to_clean = []
+    if isinstance(copied_flow, Job):
+        outputs_to_clean.append(copied_flow.output)
+    elif isinstance(copied_flow, Flow):
+        for job, _ in copied_flow.iterflow():
+            outputs_to_clean.append(job.output)
+    else:
+        raise TypeError(
+            f"The function 'del_gzip_files' accepts Job or Flow \
+            as input, but {type(copied_flow)} was passed."
+        )
+
     return Flow(
         [
             copied_flow,
             del_gzip_files(
-                copied_flow.output,
+                outputs=outputs_to_clean,
                 exclude_files_from_zip=exclude_files_from_zip,
                 delete=delete,
                 exclude_files_from_del=exclude_files_from_del,

@@ -13,6 +13,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
+from pymatgen.io.vasp.sets import LobsterSet
 
 from atomate2.lobster.jobs import LobsterMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
@@ -24,7 +25,6 @@ from atomate2.vasp.jobs.mp import (
     MPMetaGGAStaticMaker,
     MPPreRelaxMaker,
 )
-from atomate2.vasp.sets.mp import MPGGAStaticSetGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -234,23 +234,7 @@ class MPVaspLobsterMaker(VaspLobsterMaker):
     name: str = "lobster"
     relax_maker: BaseVaspMaker | None = field(default_factory=MPGGADoubleRelaxMaker)
     lobster_static_maker: BaseVaspMaker = field(
-        default_factory=lambda: MPGGAStaticMaker(
-            input_set_generator=MPGGAStaticSetGenerator(
-                user_potcar_functional="PBE_54",
-                user_potcar_settings={"W": "W_sv"},
-                user_kpoints_settings={"reciprocal_density": 310},
-                user_incar_settings={
-                    "EDIFF": 1e-6,
-                    "NSW": 0,
-                    "LWAVE": True,
-                    "ISYM": 0,
-                    "IBRION": -1,
-                    "ISMEAR": -5,
-                    "LORBIT": 11,
-                    "ALGO": "Normal",
-                },
-            )
-        )
+        default_factory=lambda: MPGGAStaticMaker(input_set_generator=LobsterSet())
     )
     lobster_maker: LobsterMaker | None = field(default_factory=LobsterMaker)
     delete_wavecars: bool = True

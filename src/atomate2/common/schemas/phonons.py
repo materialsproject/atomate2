@@ -53,7 +53,7 @@ def get_factor(code: str) -> float:
     ValueError
         If code is not defined
     """
-    if code in ["forcefields", "vasp"]:
+    if code in ["ase", "forcefields", "vasp"]:
         return VaspToTHz
     if code == "aims":
         return omegaToTHz  # Based on CODATA 2002
@@ -180,7 +180,15 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         " and other properties have been computed",
     )
 
-    total_dft_energy: Optional[float] = Field("total DFT energy per formula unit in eV")
+    total_dft_energy: Optional[float] = Field(
+        None, description="total DFT energy per formula unit in eV"
+    )
+
+    volume_per_formula_unit: Optional[float] = Field(
+        None, description="volume per formula unit in Angstrom**3"
+    )
+
+    formula_units: Optional[int] = Field(None, description="Formula units per cell")
 
     has_imaginary_modes: Optional[bool] = Field(
         None, description="if true, structure has imaginary modes"
@@ -201,26 +209,33 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         None, description="The high-frequency dielectric constant"
     )
 
-    supercell_matrix: Matrix3D = Field("matrix describing the supercell")
-    primitive_matrix: Matrix3D = Field(
-        "matrix describing relationship to primitive cell"
+    supercell_matrix: Optional[Matrix3D] = Field(
+        None, description="matrix describing the supercell"
+    )
+    primitive_matrix: Optional[Matrix3D] = Field(
+        None, description="matrix describing relationship to primitive cell"
     )
 
-    code: str = Field("String describing the code for the computation")
+    code: Optional[str] = Field(
+        None, description="String describing the code for the computation"
+    )
 
-    phonopy_settings: PhononComputationalSettings = Field(
-        "Field including settings for Phonopy"
+    phonopy_settings: Optional[PhononComputationalSettings] = Field(
+        None, description="Field including settings for Phonopy"
     )
 
     thermal_displacement_data: Optional[ThermalDisplacementData] = Field(
-        "Includes all data of the computation of the thermal displacements"
+        None,
+        description="Includes all data of the computation of the thermal displacements",
     )
 
     jobdirs: Optional[PhononJobDirs] = Field(
-        "Field including all relevant job directories"
+        None, description="Field including all relevant job directories"
     )
 
-    uuids: Optional[PhononUUIDs] = Field("Field including all relevant uuids")
+    uuids: Optional[PhononUUIDs] = Field(
+        None, description="Field including all relevant uuids"
+    )
 
     @classmethod
     def from_forces_born(
@@ -330,8 +345,12 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # Produces all force constants
         phonon.produce_force_constants(forces=set_of_forces)
 
+        filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
+        # if kwargs.get("filename_phonopy_yaml") is None:
+        #    kwargs["filename_phonopy_yaml"] = "phonopy.yaml"
+
         # with phonopy.load("phonopy.yaml") the phonopy API can be used
-        phonon.save("phonopy.yaml")
+        phonon.save(filename_phonopy_yaml)
 
         # get phonon band structure
         kpath_dict, kpath_concrete = PhononBSDOSDoc.get_kpath(
@@ -346,7 +365,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         )
 
         # phonon band structures will always be computed
-        filename_band_yaml = "phonon_band_structure.yaml"
+        filename_band_yaml = kwargs.get(
+            "filename_band_yaml", "phonon_band_structure.yaml"
+        )
+        # filename_band_yaml = "phonon_band_structure.yaml"
 
         # TODO: potentially add kwargs to avoid computation of eigenvectors
         phonon.run_band_structure(
@@ -375,7 +397,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             bs_symm_line.write_phononwebsite("phonon_website.json")
 
         # get phonon density of states
-        filename_dos_yaml = "phonon_dos.yaml"
+        filename_dos_yaml = kwargs.get("filename_dos_yaml", "phonon_dos.yaml")
+        # filename_dos_yaml = "phonon_dos.yaml"
 
         kpoint_density_dos = kwargs.get("kpoint_density_dos", 7_000)
         kpoint = Kpoints.automatic_density(
@@ -384,7 +407,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             force_gamma=True,
         )
         phonon.run_mesh(kpoint.kpts[0])
-        phonon.run_total_dos()
+        phonon_dos_sigma = kwargs.get("phonon_dos_sigma", None)
+        dos_use_tetrahedron_method = kwargs.get("dos_use_tetrahedron_method", True)
+        phonon.run_total_dos(
+            sigma=phonon_dos_sigma, use_tetrahedron_method=dos_use_tetrahedron_method
+        )
         phonon.write_total_dos(filename=filename_dos_yaml)
         dos = get_ph_dos(filename_dos_yaml)
         new_plotter_dos = PhononDosPlotter()
@@ -467,6 +494,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             total_dft_energy / formula_units if total_dft_energy is not None else None
         )
 
+        volume_per_formula_unit = structure.volume / formula_units
+
         doc = cls.from_structure(
             structure=structure,
             meta_structure=structure,
@@ -478,6 +507,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             entropies=entropies,
             temperatures=temperature_range.tolist(),
             total_dft_energy=total_dft_energy_per_formula_unit,
+            volume_per_formula_unit=volume_per_formula_unit,
+            formula_units=formula_units,
             has_imaginary_modes=imaginary_modes,
             force_constants={"force_constants": phonon.force_constants.tolist()}
             if kwargs["store_force_constants"]

@@ -66,9 +66,7 @@ class DfptFlowMaker(Maker):
         )
     )
     ddk_maker: BaseAbinitMaker | None = field(default_factory=DdkMaker)  # |
-    dde_maker: BaseAbinitMaker | None = field(
-        default_factory=DdeMaker
-    )  # | VT: replace by bool?
+    dde_maker: BaseAbinitMaker | None = field(default_factory=DdeMaker)  # |
     dte_maker: BaseAbinitMaker | None = field(default_factory=DteMaker)  # |
     mrgddb_maker: Maker | None = field(default_factory=MrgddbMaker)  # |
     anaddb_maker: Maker | None = field(default_factory=AnaddbMaker)  # |
@@ -135,14 +133,7 @@ class DfptFlowMaker(Maker):
                     perturbation=pert,
                     prev_outputs=static_job.output.dir_name,
                 )
-                # next line throws :
-                # File "/gpfs/home/acad/ucl-modl/vtrinque/Software/jobflow/src
-                # /jobflow/utils/find.py", line 84, in _lookup
-                #     if key in obj:
-                # TypeError: unhashable type: 'dict'
-                # with key being {'append_str': '1/3', 'prepend': False}
-                # ddk_job.append_name(f"{ipert+1}/{len(perturbations)}")
-                ddk_job.name = ddk_job.name + f"{ipert+1}/{len(perturbations)}"
+                ddk_job.append_name(f"{ipert+1}/{len(perturbations)}")
 
                 ddk_jobs.append(ddk_job)
                 outputs["dirs"].append(ddk_job.output.dir_name)

@@ -22,8 +22,7 @@ from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import Callable
+    from collections.abc import Callable, Sequence
 
     from abipy.flowtk.events import AbinitCriticalWarning
     from pymatgen.core.structure import Structure
@@ -238,6 +237,7 @@ class BaseAbinitMaker(Maker):
 
         task_doc = AbinitTaskDoc.from_directory(
             Path.cwd(),
+            additional_fields={"history_dirs": config.history.prev_dirs},
             **self.task_document_kwargs,
         )
         task_doc.task_label = self.name

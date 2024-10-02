@@ -19,22 +19,22 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core==0.82.2",
+    "emmet-core>=0.82.2",
     "jobflow>=0.1.11",
-    "monty>=2024.2.2",
+    "monty>=2024.7.30",
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.4.13",
+    "pymatgen>=2024.6.4",
 ]
 
 [project.optional-dependencies]
@@ -50,22 +50,32 @@ defects = [
     "python-ulid",
 ]
 forcefields = [
-    "ase>=3.22.1",
+    "ase>=3.23.0",
     "calorine<=2.2.1",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
-    "matgl>=1.1.1",
-    "quippy-ase>=0.9.14",
-    "torch<=2.2.1",       # incompatibility with dgl if newer versions are used
+    "matgl>=1.1.3",
+    # quippy-ase support for py3.12 tracked in https://github.com/libAtoms/QUIP/issues/645
+    "quippy-ase>=0.9.14; python_version < '3.12'",
+    "sevenn>=0.9.3",
+    "torchdata<=0.7.1",                            # TODO: remove when issue fixed
+]
+ase = ["ase>=3.23.0"]
+# tblite py3.12 support tracked in https://github.com/tblite/tblite/issues/198
+ase-ext = ["tblite>=0.3.0; python_version < '3.12'"]
+openmm = [
+    "mdanalysis>=2.7.0",
+    "openmm-mdanalysis-reporter>=0.1.0",
+    "openmm>=8.1.0",
 ]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.1.0",
-    "furo==2024.7.18",
-    "ipython==8.26.0",
+    "furo==2024.8.6",
+    "ipython==8.27.0",
     "jsonschema[format]",
-    "myst_parser==3.0.1",
-    "numpydoc==1.7.0",
+    "myst_parser==4.0.0",
+    "numpydoc==1.8.0",
     "sphinx-copybutton==0.5.2",
     "sphinx==7.4.7",
     "sphinx_design==0.6.0",
@@ -73,41 +83,48 @@ docs = [
 dev = ["pre-commit>=2.12.1"]
 tests = [
     "FireWorks==2.0.3",
+    "nbmake==1.5.4",
     "pytest-cov==5.0.0",
     "pytest-mock==3.14.0",
-    "pytest==8.0.2",
-    "nbmake==1.5.4"
+    "pytest-split==0.9.0",
+    "pytest==8.3.3",
 ]
 strict = [
-    "PyYAML==6.0.1",
-    # must use >= for ase to not uninstall main branch install in CI
-    # last known working commit: https://gitlab.com/ase/ase@2bab58f4e
-    "ase>=3.22.1",
-    "calorine==2.2.1",
+    "PyYAML==6.0.2",
+    "ase==3.23.0",
     "cclib==1.8.1",
-    "chgnet==0.3.8",
     "click==8.1.7",
     "custodian==2024.6.24",
     "dscribe==2.1.1",
-    "emmet-core==0.82.2",
+    "emmet-core==0.84.2",
     "ijson==3.3.0",
-    "jobflow==0.1.17",
+    "jobflow==0.1.18",
     "lobsterpy==0.4.5",
-    "mace-torch>=0.3.3",
-    "matgl==1.1.2",
-    "monty==2024.5.24",
-    "mp-api==0.41.2",
+    "mdanalysis==2.7.0",
+    "monty==2024.7.30",
+    "mp-api==0.42.2",
     "numpy",
-    "phonopy==2.26.6",
-    "pydantic-settings==2.3.4",
-    "pydantic==2.8.2",
+    "openmm-mdanalysis-reporter==0.1.0",
+    "openmm==8.1.1",
+    "phonopy==2.27.0",
+    "pydantic-settings==2.5.2",
+    "pydantic==2.9.2",
     "pymatgen-analysis-defects==2024.7.19",
     "pymatgen==2024.6.10",
     "python-ulid==2.7.0",
-    "quippy-ase==0.9.14",
     "seekpath==2.1.0",
-    "torch==2.2.1",
+    "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.12.2",
+]
+strict-forcefields = [
+    "calorine==2.2.1",
+    "chgnet==0.3.8",
+    "mace-torch>=0.3.3",
+    "matgl==1.1.3",
+    "quippy-ase==0.9.14; python_version < '3.12'",
+    "sevenn==0.9.3.post1",
+    "torch==2.2.1",
+    "torchdata==0.7.1",                            # TODO: remove when issue fixed
 ]
 
 [project.scripts]
@@ -161,18 +178,16 @@ exclude_lines = [
 ]
 
 [tool.ruff]
-target-version = "py39"
+target-version = "py310"
+output-format = "concise"
 
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN002",
-    "ANN003",
-    "ANN101", # missing self type annotation
-    "ANN102", # missing cls annotation
-    "ANN401",
-    "ARG002", # unused method argument
-    # "BLE001",
+    "ANN002",  # Missing type annotation for *arg
+    "ANN003",  # Missing type annotation for **kwargs
+    "ANN401",  # typing.Any disallowed
+    "ARG002",  # unused method argument
     "C408",    # Unnecessary (dict/list/tuple) call - remove call
     "C901",    # function too complex
     "COM812",  # trailing comma missing
@@ -181,7 +196,7 @@ ignore = [
     "FBT001",
     "FBT002",
     "FIX002",
-    "G004",    # logging uses fstring
+    "G004",    # logging uses f-string
     "ISC001",
     "PD011",   # pandas-use-of-dot-values
     "PERF203", # try-except-in-loop
@@ -196,9 +211,9 @@ ignore = [
     "PTH",     # prefer Pathlib to os.path
     "RUF013",  # implicit-optional
     "S324",    # use of insecure hash function
-    "S603",    # use of insecure subprocess
     "S507",    # paramiko auto trust
-    "TD",      # TODOs
+    "S603",    # use of insecure subprocess
+    "TD",      # todos
     "TRY003",  # long message outside exception class
 ]
 pydocstyle.convention = "numpy"

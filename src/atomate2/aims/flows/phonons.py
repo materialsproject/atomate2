@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from atomate2 import SETTINGS
 from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
 from atomate2.aims.jobs.phonons import (
     PhononDisplacementMaker,
@@ -13,6 +14,8 @@ from atomate2.aims.jobs.phonons import (
 from atomate2.common.flows.phonons import BasePhononMaker
 
 if TYPE_CHECKING:
+    from typing import Literal
+
     from atomate2.aims.jobs.base import BaseAimsMaker
 
 
@@ -112,12 +115,12 @@ class PhononMaker(BasePhononMaker):
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = 1e-4
+    symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_symmetrized_structure: str | None = None
+    use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"

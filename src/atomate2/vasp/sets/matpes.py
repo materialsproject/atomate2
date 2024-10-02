@@ -6,97 +6,60 @@ In case of questions, contact @janosh or @shyuep.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from importlib.resources import files as get_mod_path
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from monty.serialization import loadfn
-
-from atomate2.vasp.sets.base import VaspInputGenerator
+from monty.dev import deprecated
+from pymatgen.io.vasp.sets import MatPESStaticSet
 
 if TYPE_CHECKING:
-    from pymatgen.core import Structure
-    from pymatgen.io.vasp import Outcar, Vasprun
+    from typing import Literal
 
 
-# POTCAR section comes from PARENT but atomate2 does not support inheritance yet
-_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR = loadfn(
-    get_mod_path("pymatgen.io.vasp") / "MatPESStaticSet.yaml"
-)
-_POTCAR_BASE_FILE = f"{_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR['PARENT']}.yaml"
-_POTCAR_SET = loadfn(get_mod_path("pymatgen.io.vasp") / _POTCAR_BASE_FILE)
-_BASE_MATPES_PBE_STATIC_SET = {**_POTCAR_SET, **_BASE_MATPES_PBE_STATIC_SET_NO_POTCAR}
-
-
+@deprecated(replacement=MatPESStaticSet, deadline=(2025, 1, 1))
 @dataclass
-class MatPesGGAStaticSetGenerator(VaspInputGenerator):
+class MatPesGGAStaticSetGenerator(MatPESStaticSet):
     """Class to generate MP-compatible VASP GGA static input sets."""
 
-    config_dict: dict = field(default_factory=lambda: _BASE_MATPES_PBE_STATIC_SET)
+    xc_functional: Literal["R2SCAN", "PBE", "PBE+U"] = "PBE"
     auto_ismear: bool = False
     auto_kspacing: bool = False
+    symprec: float | None = None
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
-        """Get updates to the INCAR for this calculation type.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
-
-        Returns
-        -------
-        dict
-            A dictionary of updates to apply.
-        """
-        return {}
+    def __post_init__(self) -> None:
+        """Raise deprecation warning and validate."""
+        if self.symprec is not None:
+            self.sym_prec = self.symprec
+        super().__post_init__()
 
 
+@deprecated(
+    replacement=MatPESStaticSet,
+    deadline=(2025, 1, 1),
+    message="Be sure to use `xc_functional = 'R2SCAN'` when instantiating the class.",
+)
 @dataclass
-class MatPesMetaGGAStaticSetGenerator(MatPesGGAStaticSetGenerator):
+class MatPesMetaGGAStaticSetGenerator(MatPESStaticSet):
     """Class to generate MP-compatible VASP meta-GGA static input sets."""
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
-        """Get updates to the INCAR for this calculation type.
+    xc_functional: Literal["R2SCAN", "PBE", "PBE+U"] = "R2SCAN"
+    auto_ismear: bool = False
+    auto_kspacing: bool = False
+    symprec: float | None = None
 
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
+    def __post_init__(self) -> None:
+        """Raise deprecation warning and validate."""
+        if self.symprec is not None:
+            self.sym_prec = self.symprec
+        super().__post_init__()
+
+    @property
+    def incar_updates(self) -> dict:
+        """Get updates to the INCAR for this calculation type.
 
         Returns
         -------
         dict
             A dictionary of updates to apply.
         """
-        return {"METAGGA": "R2SCAN", "ALGO": "ALL", "GGA": None}  # unset GGA
+        return {"GGA": None}  # unset GGA

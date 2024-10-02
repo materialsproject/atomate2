@@ -56,7 +56,7 @@ class JobHistory(collections.deque, MSONable):
         self, job: Job | Flow, initialization_info: Any | None = None
     ) -> None:
         """Log initialization information about the job."""
-        details = {"job_class": job.__class__.__name__}
+        details = {"job_class": type(job).__name__}
         if initialization_info:
             details["initialization_info"] = initialization_info
         self.append(JobEvent(JobEvent.INITIALIZED, details=details))
@@ -113,6 +113,14 @@ class JobHistory(collections.deque, MSONable):
         return os.path.join(
             self.get_events_by_types(JobEvent.END)[-1].details["workdir"]
         )
+
+    @property
+    def prev_dirs(self) -> list[str]:
+        """Get the last run directory."""
+        return [
+            os.path.join(ievent.details["workdir"])
+            for ievent in self.get_events_by_types(JobEvent.START)[:-1]
+        ]
 
     @property
     def prev_outdir(self) -> str:
@@ -187,7 +195,7 @@ class JobHistory(collections.deque, MSONable):
         types
             Single type or list of types.
         """
-        types = types if isinstance(types, (list, tuple)) else [types]
+        types = types if isinstance(types, list | tuple) else [types]
 
         return [e for e in self if e.event_type in types]
 
@@ -195,7 +203,7 @@ class JobHistory(collections.deque, MSONable):
         """Get the total run time based summing the abinit stop event run times."""
         total_run_time = 0
         for te in self.get_events_by_types(JobEvent.ABINIT_STOP):
-            run_time = te.details.get("run_time", None)
+            run_time = te.details.get("run_time")
             if run_time:
                 total_run_time += run_time
 

@@ -136,8 +136,8 @@ atomate2
 ## Create a conda environment
 
 ```{note}
-Make sure to create a Python 3.8+ environment as recent versions of atomate2 only
-support Python 3.8 and higher.
+Make sure to create a Python 3.10+ environment as recent versions of atomate2 only
+support Python 3.10 and higher.
 ```
 
 We highly recommend that you organize your installation of the atomate2 and the other
@@ -266,6 +266,30 @@ add the IP address of your cluster (and any other computers you'll be connecting
 from) by clicking "Network Access" (under "Security" in the left hand menu) and then
 "Add IP address".
 ````
+
+````{note}
+If you do not have access to a Mongo database, you can run `atomate2` using a local `.json` file
+to store outputs using the following `jobflow.yaml` file.
+
+```yaml
+JOB_STORE:
+  docs_store:
+    type: JSONStore
+    uri: <<PATH>>
+    read_only: True
+  additional_stores:
+    data:
+      type: JSONStore
+      uri: <<PATH>>
+      read_only: True
+```
+
+The user doesn't need to have the file at the given `<<PATH>>`, since we have set `read_only: True`.
+In case the file isn't available, a new file with the name mentioned in the `<<PATH>>` will be generated.
+
+**Note that this approach has limitations - it cannot handle simultaneous writes and so is not suitable for high-throughput work.**
+````
+
 
 Atomate2 uses two database collections, one for small documents (such as elastic
 tensors, structures, and energies) called the `docs` store and another for large

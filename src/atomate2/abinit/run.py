@@ -79,10 +79,9 @@ def run_mrgddb(
     mpirun_cmd = mpirun_cmd or SETTINGS.ABINIT_MPIRUN_CMD
     command = []
     if mpirun_cmd:
+        if not any(opt in mpirun_cmd.split() for opt in ("-c", "-n", "--n", "-np")):
+            mpirun_cmd += " -n 1"
         command.extend(mpirun_cmd.split())
-        if command[-1] != "-n":
-            command.append("-n")
-        command.append("1")
     command.extend([mrgddb_cmd, "--nostrict"])
     start_time = start_time or time.time()
 
@@ -127,9 +126,6 @@ def run_anaddb(
     command = []
     if mpirun_cmd:
         command.extend(mpirun_cmd.split())
-        if command[-1] != "-n":
-            command.append("-n")
-        command.append("1")
     command.extend([anaddb_cmd, "anaddb.in"])
     start_time = start_time or time.time()
 
