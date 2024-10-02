@@ -26,7 +26,7 @@ __all__ = [
 
 @dataclass
 class BSEmdfSetGenerator(AbinitInputGenerator):
-    """Class to generate Abinit non-SCF input sets."""
+    """Class to generate Abinit BSE with model dielectric function input sets."""
 
     calc_type: str = "bse_mdf"
     factory: Callable = bse_with_mdf_from_inputs 
@@ -46,6 +46,17 @@ class BSEmdfSetGenerator(AbinitInputGenerator):
         kpoints_settings: dict | KSampling | None = None,
     ) -> AbinitInput:
 
+        """Get AbinitInput object for BSE calculation."""
+        if prev_outputs is None:
+            raise RuntimeError("No previous_outputs. Cannot perform BSE calculation.")
+        if len(prev_outputs) != 1:
+            raise RuntimeError(
+                "Should have exactly one previous outputs for mdf-BSE (one NSCF calculation)."
+            )
+        ab1 = load_abinit_input(prev_outputs[0])
+        if NSCF not in ab1.runlevel:
+            raise RuntimeError("Could not find one NSCF calculation.")
+
         return super().get_abinit_input(
             structure=structure,
             pseudos=pseudos,
@@ -56,7 +67,7 @@ class BSEmdfSetGenerator(AbinitInputGenerator):
 
 @dataclass
 class BSEscrSetGenerator(AbinitInputGenerator):
-    """Class to generate Abinit non-SCF input sets."""
+    """Class to generate Abinit BSE with full dielectric function input sets."""
 
     calc_type: str = "bse_full"
     factory: Callable = bse_with_mdf_from_inputs 
@@ -75,6 +86,28 @@ class BSEscrSetGenerator(AbinitInputGenerator):
         factory_kwargs: dict | None = None,
         kpoints_settings: dict | KSampling | None = None,
     ) -> AbinitInput:
+
+        """Get AbinitInput object for BSE calculation."""
+        if prev_outputs is None:
+            raise RuntimeError("No previous_outputs. Cannot perform BSE calculation.")
+        if len(prev_outputs) != 2:
+            raise RuntimeError(
+                "Should have exactly two previous outputs (one NSCF calculation "
+                "and one SCREENING calculation)."
+            )
+        ab1 = load_abinit_input(prev_outputs[0])
+        ab2 = load_abinit_input(prev_outputs[1])
+        if NSCF in ab1.runlevel and SCREENING in ab2.runlevel:
+            nscf_inp = ab1
+            scr_inp = ab2
+        elif SCREENING in ab1.runlevel and NSCF in ab2.runlevel:
+            nscf_inp = ab2
+            scr_inp = ab1
+        else:
+            raise RuntimeError("Could not find one NSCF and one SCREENING calculation.")
+
+        if nscf_inp.vars["ngkpt"]!=scr_inp.vars["ngkpt"]:
+            raise RuntimeError("Screening calculation k-grid is not compatible")
 
         return super().get_abinit_input(
             structure=structure,

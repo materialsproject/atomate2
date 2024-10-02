@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import json
 import logging
-import numpy as np
-from scipy.integrate import simpson
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Optional, TypeVar, Union
@@ -20,7 +18,7 @@ from pymatgen.core import Structure
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.schemas.calculation import AbinitObject, Calculation, TaskState
-from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE
+from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE, check_convergence
 from atomate2.utils.datetime import datetime_str
 from atomate2.utils.path import get_uri, strip_hostname
 
@@ -470,23 +468,7 @@ class ConvergenceSummary(BaseModel):
 
         with open(convergence_file) as f:
             convergence_data = json.load(f)
-        if type(convergence_data["criterion_values"][-1]) is list:
-            old_data=np.array(convergence_data["criterion_values"][-2])
-            new_data=np.array(convergence_data["criterion_values"][-1])
-            mesh0=old_data[0]
-            mesh=new_data[0]
-            values0=old_data[1]
-            values=new_data[1]
-            values1=np.interp(mesh0, mesh, values)
-            delta=abs(values1-values0)
-            delarea=simpson(delta) 
-            area=simpson(values0)
-            actual_epsilon=delarea/area
-        if type(convergence_data["criterion_values"][-1]) is float:
-            actual_epsilon=abs(
-                     convergence_data["criterion_values"][-1]
-                    - convergence_data["criterion_values"][-2]
-                )
+            actual_epsilon=check_convergence(convergence_data["criterion_values"][-1], convergence_data["criterion_values"][-2])
 
         return cls(
             structure=calc_doc.output.structure,

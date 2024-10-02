@@ -5,6 +5,8 @@ from __future__ import annotations
 import logging
 import os
 from typing import TYPE_CHECKING
+import numpy as np
+from scipy.integrate import simpson
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -430,3 +432,21 @@ def get_event_report(ofile: File, mpiabort_file: File) -> EventReport | None:
         return parser.report_exception(ofile.path, exc)
     else:
         return report
+
+
+def check_convergence(old, new)-> float:
+    if type(old) is list:
+        mesh_old = old[0]
+        mesh_new = new[0]
+        values_old = np.array(old[1])
+        values_new = np.array(new[1])
+        values_int = np.interp(mesh_old, mesh_new, values_new)
+        delta = abs(values_int-values_old)
+        delarea = simpson(delta) 
+        area = simpson(values_old)
+        conv = delarea/area
+    elif type(old) is float:
+        conv = abs(new-old)
+    else:
+        raise RuntimeError("Output not supported for convergence check")
+    return conv

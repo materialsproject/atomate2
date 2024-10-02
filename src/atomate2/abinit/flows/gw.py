@@ -11,10 +11,7 @@ from pymatgen.core.structure import Structure
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.jobs.core import NonSCFMaker, StaticMaker, ConvergenceMaker
 from atomate2.abinit.jobs.gw import ScreeningMaker, SigmaMaker
-from atomate2.abinit.powerups import update_user_abinit_settings, update_factory_kwargs, update_user_kpoints_settings 
-from pymatgen.io.abinit.abiobjects import KSampling
-from atomate2.abinit.schemas.task import AbinitTaskDoc, ConvergenceSummary 
-
+from atomate2.abinit.powerups import update_user_abinit_settings
 
 
 @dataclass
@@ -48,8 +45,8 @@ class G0W0Maker(Maker):
     name: str = "G0W0 calculation"
     gw_qprange: int = 0
     joblist: List = field(default_factory=lambda: ["scf", "nscf", "scr", "sigma"])
-    scf_maker: StaticMaker = field(default_factory=StaticMaker)
-    nscf_maker: NonSCFMaker = field(default_factory=NonSCFMaker)
+    scf_maker: BaseAbinitMaker = field(default_factory=StaticMaker)
+    nscf_maker: BaseAbinitMaker = field(default_factory=NonSCFMaker)
     scr_maker: BaseAbinitMaker = field(default_factory=ScreeningMaker)
     sigma_maker: BaseAbinitMaker = field(default_factory=SigmaMaker)
 

@@ -11,13 +11,40 @@ from pymatgen.core.structure import Structure
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.jobs.core import NonSCFMaker, StaticMaker, ConvergenceMaker
 from atomate2.abinit.jobs.bse import BSEmdfMaker, BSEscrMaker
-from atomate2.abinit.powerups import update_user_abinit_settings, update_factory_kwargs, update_user_kpoints_settings 
+from atomate2.abinit.flows.gw import G0W0Maker
+from atomate2.abinit.powerups import update_user_abinit_settings, update_user_kpoints_settings 
 from pymatgen.io.abinit.abiobjects import KSampling
-from atomate2.abinit.schemas.task import AbinitTaskDoc, ConvergenceSummary 
 
 
 @dataclass
 class BSEFlowMaker(Maker):
+    """
+    Maker to generate workflow for BSE calculations.
+
+    Parameters
+    ----------
+    name : str
+        A name for the job
+    nscf_maker : .BaseAbinitMaker
+        The maker to use for the non-scf calculation.
+    bse_maker : .BaseAbinitMaker
+        The maker to use for the bse calculations.
+    kppa: integer
+        Grid density for k-mesh
+    shifts : tuple 
+        Shift from gamma centered k-grid 
+    mbpt_sciss : float
+        Scissor shift added to the conductions states in eV, 
+        Default value 0.0 eV
+    mdf_epsinf : float
+        The value of the macroscopic dielectric function 
+        used to model the screening function. 
+    enwinbse : float
+        Energy window from band-edges in which all conduction
+        and valence bands are included in BSE calculations in eV.
+        Default value 3.0 eV
+
+    """
 
     name: str = "BSE mdf calculation"
     nscf_maker: BaseAbinitMaker = field(default_factory=NonSCFMaker)
@@ -95,6 +122,54 @@ class BSEFlowMaker(Maker):
         return Response(output=output)
 
 
+@dataclass
+class GWBSEMaker(Maker):
+    """
+    Maker to generate workflow for BSE calculations.
+
+    Parameters
+    ----------
+    name : str
+        A name for the job
+    nscf_maker : .BaseAbinitMaker
+        The maker to use for the non-scf calculation.
+    bse_maker : .BaseAbinitMaker
+        The maker to use for the bse calculations.
+    kppa: integer
+        Grid density for k-mesh
+    shifts : tuple 
+        Shift from gamma centered k-grid 
+    mbpt_sciss : float
+        Scissor shift added to the conductions states in eV, 
+        Default value 0.0 eV
+    mdf_epsinf : float
+        The value of the macroscopic dielectric function 
+        used to model the screening function. 
+    enwinbse : float
+        Energy window from band-edges in which all conduction
+        and valence bands are included in BSE calculations in eV.
+        Default value 3.0 eV
+
+    """
+
+    name: str = "GW-BSE full calculation"
+    gwflow_maker: BaseAbinitMaker = field(default_factory=G0W0Maker)
+    bseflow_maker: BaseAbinitMaker = field(default_factory=BSEFlowMaker)
+
+    def __post_init__(self):
+        self.bseflow_maker.bse_maker=BSEscrMaker()
+
+    def make(
+        self,
+        structure: Structure,
+    ):
+        gw_job = self.gwflow_maker.make(structure=structure)
+        self.bseflow_maker.mbpt_sciss=gw_job.output.output.mbpt_sciss
+        bse_job=self.bseflow_maker.make(structure=structure, prev_outputs=[gw_job.jobs[0].output.dir_name, gw_job.jobs[2].output.dir_name])
+
+        return Flow([gw_job, bse_job], bse_job.output, name=self.name)
+
+
 
 @dataclass
 class BSEConvergenceMaker(Maker):
@@ -105,6 +180,10 @@ class BSEConvergenceMaker(Maker):
     ----------
     name : str
         A name for the job
+    scf_maker : .BaseAbinitMaker
+        The maker to use for the scf calculation.
+    bse_maker : .BaseAbinitMaker
+        The maker to use for the bse calculations.
     criterion_name: str
         A name for the convergence criterion. Must be in the run results
     epsilon: float
@@ -118,8 +197,8 @@ class BSEConvergenceMaker(Maker):
     """
 
     name: str = "BSE convergence"
-    scf_maker: StaticMaker = field(default_factory=StaticMaker)
-    bse_maker: Maker = field(default_factory=Maker)
+    scf_maker: BaseAbinitMaker = field(default_factory=StaticMaker)
+    bse_maker: BaseAbinitMaker = field(default_factory=BSEFlowMaker)
     criterion_name: str = "emacro"
     epsilon: float = 0.1
     convergence_field: str = field(default_factory=str)
@@ -175,20 +254,10 @@ class BSEMultiShiftedMaker(Maker):
         If the iterable is depleted and the convergence is not reached,
         that the job is failed
     """
-    cards: List[str] = field(default_factory=list)
-
-    def __post_init__(self):
-        if not self.cards:
-            self.cards = self.create_cards()
-
-    def create_cards(self):
-        return ['King', 'Queen']
-
-
 
     name: str = "BSE Mutiple Shifted Grid"
-    scf_maker: StaticMaker = field(default_factory=StaticMaker)
-    bse_maker: Maker = field(default_factory=Maker)
+    scf_maker: BaseAbinitMaker = field(default_factory=StaticMaker)
+    bse_maker: BaseAbinitMaker = field(default_factory=BSEFlowMaker)
     shiftks: list = None
 
     def make(

@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import logging
 import json
-import numpy as np
-from scipy.integrate import simpson
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
@@ -20,6 +18,7 @@ from jobflow import Job, job, Maker, Response, Flow
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker
 from atomate2.abinit.powerups import update_user_abinit_settings, update_user_kpoints_settings
+from atomate2.abinit.utils.common import check_convergence
 from pymatgen.io.abinit.abiobjects import KSampling
 from atomate2.abinit.schemas.task import AbinitTaskDoc, ConvergenceSummary 
 from atomate2.abinit.sets.core import (
@@ -362,27 +361,9 @@ class ConvergenceMaker(Maker):
         convergence_data["idx"] = idx
         if len(convergence_data["criterion_values"]) > 1:
             # checking for convergence
-            if type(convergence_data["criterion_values"][-1]) is list:
-                old_data=np.array(convergence_data["criterion_values"][-2])
-                new_data=np.array(convergence_data["criterion_values"][-1])
-                mesh0=old_data[0]
-                mesh=new_data[0]
-                values0=old_data[1]
-                values=new_data[1]
-                values1=np.interp(mesh0, mesh, values)
-                delta=abs(values1-values0)
-                delarea=simpson(delta) 
-                area=simpson(values0)
-                print(delarea/area) 
-                convergence_data["converged"] = bool(delarea/area < self.epsilon)
-            if type(convergence_data["criterion_values"][-1]) is float:
-                convergence_data["converged"] = bool(
-                    abs(
-                         convergence_data["criterion_values"][-1]
-                        - convergence_data["criterion_values"][-2]
-                    )
-                    < self.epsilon
-                )
+            conv = check_convergence(convergence_data["criterion_values"][-1], convergence_data["criterion_values"][-2])
+            convergence_data["converged"] = bool(conv < self.epsilon)
+
         job_dir = job_dir.split(":")[-1]
         convergence_file = Path(job_dir) / CONVERGENCE_FILE_NAME
         with open(convergence_file, "w") as f:

@@ -17,7 +17,7 @@ __all__ = ["BSEmdfMaker", "BSEscrMaker"]
 
 @dataclass
 class BSEscrMaker(BaseAbinitMaker):
-    """Maker to create non SCF calculations."""
+    """Maker to create BSE with full dielectric function calculations."""
 
     calc_type: str = "bse_scr"
     name: str = "BSE scr calculation"
@@ -68,7 +68,7 @@ class BSEscrMaker(BaseAbinitMaker):
 
 @dataclass
 class BSEmdfMaker(BaseAbinitMaker):
-    """Maker to create non SCF calculations."""
+    """Maker to create BSE with model dielectric function calculations."""
 
     calc_type: str = "bse_mdf"
     name: str = "BSE mdf calculation"
@@ -103,7 +103,7 @@ class BSEmdfMaker(BaseAbinitMaker):
         if mdf_epsinf==None:
             raise RuntimeError("Need a value of mdf_epsinf")
         if len(prev_outputs)!=1:
-            raise RuntimeError("Need previous SCF calculation")
+            raise RuntimeError("Need only one previous SCF calculation")
 
         self.input_set_generator.factory_kwargs = {"mbpt_sciss": mbpt_sciss,
                                                    "bs_loband": bs_loband,
