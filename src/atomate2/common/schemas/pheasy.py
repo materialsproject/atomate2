@@ -260,18 +260,39 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         # force matrix on the displaced structures
         dataset_forces_array_disp = dataset_forces_array_rr[:-1, :, :]
+        #dataset_disps = [
+        #    np.array(disps.cart_coords) 
+        #    for disps in displacement_data["displaced_structures"]
+        #]
+        
+        # get the displacement dataset
+        #dataset_disps_array_rr = np.round(
+        #    (dataset_disps - supercell.get_positions()), 
+        #                            decimals=16
+        #).astype('double')
+        #dataset_disps_array_use = dataset_disps_array_rr[:-1, :, :]
+
+        # To handle the large dispalced distance in the dataset
         dataset_disps = [
-            np.array(disps.cart_coords) 
+            np.array(disps.frac_coords) 
             for disps in displacement_data["displaced_structures"]
         ]
-
-        # get the displacement dataset
         dataset_disps_array_rr = np.round(
-            (dataset_disps - supercell.get_positions()), 
+            (dataset_disps - supercell.get_scaled_positions()), 
                                     decimals=16
         ).astype('double')
-        dataset_disps_array_use = dataset_disps_array_rr[:-1, :, :]
-
+        dataset_disps_array_rr = np.where(
+            dataset_disps_array_rr > 0.5,
+            dataset_disps_array_rr - 1.0,
+            dataset_disps_array_rr
+        )
+        dataset_disps_array_rr = np.where(
+            dataset_disps_array_rr < -0.5,
+            dataset_disps_array_rr + 1.0,
+            dataset_disps_array_rr)
+        dataset_disps_array_rr = np.dot(
+            supercell.cell.real.T,
+            dataset_disps_array_rr.T).T
 
         # seperate the dataset into harmonic and anharmonic parts
         if cal_anhar_fcs:
