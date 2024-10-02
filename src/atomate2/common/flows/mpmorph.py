@@ -102,47 +102,44 @@ class EquilibriumVolumeMaker(Maker):
             }
 
         else:
+            # Average energy over last `energy_average_frames` if requested
             working_outputs["relax"]["energy"] = [
                 sum(frame[-self.energy_average_frames :]) / self.energy_average_frames
                 for frame in working_outputs["relax"]["energies"]
             ]
 
+            # Fit EOS to running list of energies and volumes
             self.postprocessor.fit(working_outputs)
             working_outputs = dict(self.postprocessor.results)
             for k in ("pressure", "energy"):
                 working_outputs["relax"].pop(k, None)
 
-            if (
-                working_outputs.get("V0") is None
-            ):  # breaks whole flow here if EOS is not fitted properly
+            # Stop flow here if EOS cannot be fitted
+            if (v0 := working_outputs.get("V0")) is None:
                 return Response(output=working_outputs, stop_children=True)
-            if (
-                working_outputs.get("V0") <= working_outputs.get("Vmax")
-                and working_outputs.get("V0") >= working_outputs.get("Vmin")
-            ) or (
-                self.max_attempts
-                and (
-                    len(working_outputs["relax"]["volume"])
-                    - self.postprocessor.min_data_points
-                )
-                >= self.max_attempts
-            ):
-                # If the equilibrium volume is within the range of fitted volumes,
-                # or if the maximum number of attempts has been performed, stop
-                # and return structure at estimated equilibrium volume
+            
+            # Check if equilibrium volume is in range of attempted volumes
+            v0_in_range = (
+                (vmin := working_outputs.get("Vmin")) <= v0 
+                and v0 <= (vmax := working_outputs.get("Vmax"))
+            )
+
+            # Check if maximum number of refinement NVT runs is set,
+            # and if so, if that limit has been reached
+            max_attempts_reached = len(working_outputs["relax"]["volume"]) >= (
+                (self.max_attempts or np.inf) + self.postprocessor.min_data_points
+            )
+
+            # Succesful fit: return structure at estimated equilibrium volume
+            if v0_in_range or max_attempts_reached:
                 final_structure = structure.copy()
-                final_structure.scale_lattice(working_outputs["V0"])
+                final_structure.scale_lattice(v0)
                 return final_structure
 
             # Else, if the extrapolated equilibrium volume is outside the range of
             # fitted volumes, scale appropriately
-            if working_outputs.get("V0") > working_outputs.get("Vmax"):
-                v_ref = working_outputs["Vmax"]
-
-            elif working_outputs.get("V0") < working_outputs.get("Vmax"):
-                v_ref = working_outputs["Vmin"]
-
-            eps_0 = (working_outputs["V0"] / v_ref) ** (1.0 / 3.0) - 1.0
+            v_ref = vmax if v0 > vmax else vmin
+            eps_0 = (v0 / v_ref) ** (1.0 / 3.0) - 1.0
             linear_strain = [np.sign(eps_0) * (abs(eps_0) + self.min_strain)]
 
         deformation_matrices = [np.eye(3) * (1.0 + eps) for eps in linear_strain]
