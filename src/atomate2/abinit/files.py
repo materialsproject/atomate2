@@ -22,6 +22,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
     from abipy.abio.inputs import AbinitInput
+    from jobflow.core.reference import OutputReference
     from pymatgen.core.structure import Structure
 
     from atomate2.abinit.sets.anaddb import AnaddbInputGenerator
@@ -225,7 +226,7 @@ def write_anaddb_input_set(
 @job
 def del_gzip_files(
     # to_clean: Job | Flow,
-    outputs,
+    outputs: list[OutputReference],
     exclude_files_from_zip: list[str | Path] | None = None,
     delete: bool = True,
     exclude_files_from_del: list[str | Path] | None = None,
@@ -235,8 +236,8 @@ def del_gzip_files(
 
     Parameters
     ----------
-    dirs_to_clean
-        Job or Flow that needs its files deleted/compressed.
+    outputs
+        Outputs of the Job or Flow that needs its files deleted/compressed.
     exclude_files_from_zip
         Filenames to exclude from the compression.
         Supports glob file matching, e.g., "\*.dat".

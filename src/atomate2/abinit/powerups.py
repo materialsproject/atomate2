@@ -306,12 +306,12 @@ def append_clean_flow(
         once completed.
     """
     copied_flow = deepcopy(flow)
-    dirs_to_clean = []
+    outputs_to_clean = []
     if isinstance(copied_flow, Job):
-        dirs_to_clean.append(copied_flow.output)
+        outputs_to_clean.append(copied_flow.output)
     elif isinstance(copied_flow, Flow):
         for job, _ in copied_flow.iterflow():
-            dirs_to_clean.append(job.output)
+            outputs_to_clean.append(job.output)
     else:
         raise TypeError(
             f"The function 'del_gzip_files' accepts Job or Flow \
@@ -322,7 +322,7 @@ def append_clean_flow(
         [
             copied_flow,
             del_gzip_files(
-                dirs_to_clean,
+                outputs=outputs_to_clean,
                 exclude_files_from_zip=exclude_files_from_zip,
                 delete=delete,
                 exclude_files_from_del=exclude_files_from_del,

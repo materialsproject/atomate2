@@ -237,6 +237,7 @@ class BaseAbinitMaker(Maker):
 
         task_doc = AbinitTaskDoc.from_directory(
             Path.cwd(),
+            additional_fields={"history_dirs": config.history.prev_dirs},
             **self.task_document_kwargs,
         )
         task_doc.task_label = self.name
@@ -262,10 +263,6 @@ class BaseAbinitMaker(Maker):
     ) -> Response:
         """Get new job to restart abinit calculation."""
         if task_document.state == TaskState.SUCCESS:
-            if history.num_restarts >= 1:  # VT
-                task_document = task_document.model_copy(
-                    update={"history_dirs": history.prev_dirs}
-                )  # VT
             return Response(
                 output=task_document,
             )
