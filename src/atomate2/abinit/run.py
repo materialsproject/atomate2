@@ -125,8 +125,6 @@ def run_anaddb(
     mpirun_cmd = mpirun_cmd or SETTINGS.ABINIT_MPIRUN_CMD
     command = []
     if mpirun_cmd:
-        if not any(opt in mpirun_cmd.split() for opt in ("-c", "-n", "--n", "-np")):
-            mpirun_cmd += " -n 1"
         command.extend(mpirun_cmd.split())
     command.extend([anaddb_cmd, "anaddb.in"])
     start_time = start_time or time.time()
