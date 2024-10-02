@@ -206,7 +206,9 @@ def generate_phonon_displacements(
     # Here, the ALM module is used to determine how many free parameters of third and
     # fourth order force constants (FCs) within the specific supercell.
     if cal_anhar_fcs:
-            with ALM(lattice, positions, numbers) as alm:
+            # Due to the cutoff radius of the force constants use the unit of Borh in ALM,
+            # we need to convert the cutoff radius from Angstrom to Bohr.
+            with ALM(lattice * 1.89, positions, numbers) as alm:
                 # Define the force constants up to fourth order with a list of cutoff radius.
                 alm.define(3, fcs_cutoff_radius)
                 # Perform symmetry analysis and suggest irreducible force constants.
