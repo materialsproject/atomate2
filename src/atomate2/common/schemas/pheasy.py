@@ -293,6 +293,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         dataset_disps_array_rr = np.dot(
             supercell.cell.real.T,
             dataset_disps_array_rr.T).T
+        dataset_disps_array_use = dataset_disps_array_rr[:-1, :, :]
 
         # seperate the dataset into harmonic and anharmonic parts
         if cal_anhar_fcs:
@@ -455,7 +456,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             pheasy_cmd_5 = (
                 f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
                 f'"{int(supercell_matrix[2][2])}" -s -w 4 --symprec "{float(symprec)}" '
-                f'--nbody 2 3 3 --c3 "{int(fcs_cutoff_radius[1])}" --c4 "{int(fcs_cutoff_radius[2])}"'
+                f'--nbody 2 3 3 --c3 "{float(fcs_cutoff_radius[1]/1.89)}" --c4 "{float(fcs_cutoff_radius[2]/1.89)}"'
             )
 
             pheasy_cmd_6 = (
