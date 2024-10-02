@@ -121,7 +121,7 @@ class PhononMaker(BasePhononMaker):
     displacement_anhar: float = 0.08
     num_displaced_supercells: int = 0
     num_disp_anhar: int = 0
-    fcs_cutoff_radius: list = [-1, 12, 10] # unit: Borh
+    fcs_cutoff_radius: list = field(default_factory=lambda: [-1, 12, 10])
     min_length: float | None = 12.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
