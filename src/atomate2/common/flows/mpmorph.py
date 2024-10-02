@@ -114,7 +114,7 @@ class EquilibriumVolumeMaker(Maker):
             for k in ("pressure", "energy"):
                 working_outputs["relax"].pop(k, None)
 
-            # Stop flow here if EOS cannot be fitted
+            # Stop flow here if EOS cannot be fit
             if (v0 := working_outputs.get("V0")) is None:
                 return Response(output=working_outputs, stop_children=True)
 
