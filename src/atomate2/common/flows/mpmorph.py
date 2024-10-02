@@ -117,11 +117,10 @@ class EquilibriumVolumeMaker(Maker):
             # Stop flow here if EOS cannot be fitted
             if (v0 := working_outputs.get("V0")) is None:
                 return Response(output=working_outputs, stop_children=True)
-            
+
             # Check if equilibrium volume is in range of attempted volumes
-            v0_in_range = (
-                (vmin := working_outputs.get("Vmin")) <= v0 
-                and v0 <= (vmax := working_outputs.get("Vmax"))
+            v0_in_range = (vmin := working_outputs.get("Vmin")) <= v0 and v0 <= (
+                vmax := working_outputs.get("Vmax")
             )
 
             # Check if maximum number of refinement NVT runs is set,
@@ -130,7 +129,7 @@ class EquilibriumVolumeMaker(Maker):
                 (self.max_attempts or np.inf) + self.postprocessor.min_data_points
             )
 
-            # Succesful fit: return structure at estimated equilibrium volume
+            # Successful fit: return structure at estimated equilibrium volume
             if v0_in_range or max_attempts_reached:
                 final_structure = structure.copy()
                 final_structure.scale_lattice(v0)
