@@ -66,9 +66,7 @@ class DfptFlowMaker(Maker):
         )
     )
     ddk_maker: BaseAbinitMaker | None = field(default_factory=DdkMaker)  # |
-    dde_maker: BaseAbinitMaker | None = field(
-        default_factory=DdeMaker
-    )  # | VT: replace by bool?
+    dde_maker: BaseAbinitMaker | None = field(default_factory=DdeMaker)  # |
     dte_maker: BaseAbinitMaker | None = field(default_factory=DteMaker)  # |
     mrgddb_maker: Maker | None = field(default_factory=MrgddbMaker)  # |
     anaddb_maker: Maker | None = field(default_factory=AnaddbMaker)  # |

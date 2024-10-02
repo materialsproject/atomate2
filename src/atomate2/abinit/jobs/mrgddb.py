@@ -79,9 +79,6 @@ class MrgddbMaker(Maker):
         The job name.
     """
 
-    # VT need to remove the following because of the @property below
-    # _calc_type: str = "mrgddb_merge"
-    # would have been okay in a child class with @dataclass
     name: str = "Merge DDB"
     input_set_generator: MrgddbInputGenerator = field(
         default_factory=MrgddbInputGenerator
