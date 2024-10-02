@@ -119,8 +119,10 @@ class EquilibriumVolumeMaker(Maker):
                 return Response(output=working_outputs, stop_children=True)
 
             # Check if equilibrium volume is in range of attempted volumes
-            v0_in_range = (vmin := working_outputs.get("Vmin")) <= v0 and v0 <= (
-                vmax := working_outputs.get("Vmax")
+            v0_in_range = (
+                (vmin := working_outputs.get("Vmin"))
+                <= v0
+                <= (vmax := working_outputs.get("Vmax"))
             )
 
             # Check if maximum number of refinement NVT runs is set,
