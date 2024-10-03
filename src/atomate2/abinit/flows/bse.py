@@ -46,7 +46,7 @@ class BSEFlowMaker(Maker):
 
     """
 
-    name: str = "BSE mdf calculation"
+    name: str = "BSE calculation"
     nscf_maker: BaseAbinitMaker = field(default_factory=NonSCFMaker)
     bse_maker: BaseAbinitMaker = field(default_factory=BSEmdfMaker)
     kppa: int = 1000
