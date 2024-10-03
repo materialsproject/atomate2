@@ -184,7 +184,7 @@ class BSEConvergenceMaker(Maker):
     name: str = "BSE convergence"
     scf_maker: BaseAbinitMaker = field(default_factory=StaticMaker)
     bse_maker: BaseAbinitMaker = field(default_factory=BSEFlowMaker)
-    criterion_name: str = "emacro"
+    criterion_name: str = "kppa"
     epsilon: float = 0.1
     convergence_field: str = field(default_factory=str)
     convergence_steps: list = field(default_factory=list)
