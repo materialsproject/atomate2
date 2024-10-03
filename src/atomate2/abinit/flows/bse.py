@@ -131,25 +131,10 @@ class GWBSEMaker(Maker):
     ----------
     name : str
         A name for the job
-    nscf_maker : .BaseAbinitMaker
-        The maker to use for the non-scf calculation.
-    bse_maker : .BaseAbinitMaker
-        The maker to use for the bse calculations.
-    kppa: integer
-        Grid density for k-mesh
-    shifts : tuple 
-        Shift from gamma centered k-grid 
-    mbpt_sciss : float
-        Scissor shift added to the conductions states in eV, 
-        Default value 0.0 eV
-    mdf_epsinf : float
-        The value of the macroscopic dielectric function 
-        used to model the screening function. 
-    enwinbse : float
-        Energy window from band-edges in which all conduction
-        and valence bands are included in BSE calculations in eV.
-        Default value 3.0 eV
-
+    gwflow_maker : .BaseAbinitMaker
+        The maker to use for the GW workflow calculations.
+    bseflow_maker : .BaseAbinitMaker
+        The maker to use for the BSE workflow calculations.
     """
 
     name: str = "GW-BSE full calculation"
