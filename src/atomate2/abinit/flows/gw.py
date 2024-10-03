@@ -112,7 +112,7 @@ class G0W0Maker(Maker):
         #SCR step
         if "scr" in joblist:
             if len(prev_outputs)!=1:
-                raise RuntimeError("Previous SCF and NSCF calculation needed in prev_outputs")
+                raise RuntimeError("Previous NSCF calculation needed in prev_outputs")
             scr_job = self.scr_maker.make(
                 prev_outputs=[prev_outputs[0]], 
             )
@@ -127,7 +127,7 @@ class G0W0Maker(Maker):
         #SIGMA step
         if "sigma" in joblist:
             if len(prev_outputs)!=2:
-                raise RuntimeError("Previous SCF, NSCF and SCR calculation needed in prev_outputs")
+                raise RuntimeError("Previous NSCF and SCR calculation needed in prev_outputs")
             sigma_job = self.sigma_maker.make(
                 prev_outputs=[prev_outputs[0], prev_outputs[1]],
             )
