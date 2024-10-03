@@ -27,10 +27,6 @@ class G0W0Maker(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    scr_maker : .BaseAbinitMaker
-        The maker to use for the screening calculation.
-    sigma_maker : .BaseAbinitMaker
-        The maker to use for the sigma calculations.
     gw_qprange: int
            0 - Compute the QP corrections only for the fundamental and the direct gap
 
@@ -40,6 +36,19 @@ class G0W0Maker(Maker):
         -num - Compute the QP corrections for all the k-points in the irreducible zone. 
                Include all occupied states and num empty states.
 
+    joblist : list[str]
+        Steps of GW calculations to be included.
+        Default is ["scf", "nscf", "scr", "sigma"],
+        which creates a worflow to perform the 
+        entire GW calculations.
+    scf_maker : .BaseAbinitMaker
+        The maker to use for the scf calculation.
+    nscf_maker : .BaseAbinitMaker
+        The maker to use for the nscf calculations.
+    scr_maker : .BaseAbinitMaker
+        The maker to use for the screening calculation.
+    sigma_maker : .BaseAbinitMaker
+        The maker to use for the sigma calculations.
     """
 
     name: str = "G0W0 calculation"
