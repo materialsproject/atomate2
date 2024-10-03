@@ -14,6 +14,8 @@ from atomate2.aims.jobs.phonons import (
 from atomate2.common.flows.phonons import BasePhononMaker
 
 if TYPE_CHECKING:
+    from typing import Literal
+
     from atomate2.aims.jobs.base import BaseAimsMaker
 
 
@@ -118,7 +120,7 @@ class PhononMaker(BasePhononMaker):
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_symmetrized_structure: str | None = None
+    use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"

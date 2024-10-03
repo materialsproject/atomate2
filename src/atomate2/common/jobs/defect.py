@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 from jobflow import Flow, Response, job
@@ -20,7 +20,7 @@ from atomate2.common.schemas.defects import CCDDocument
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Callable, Iterable
     from pathlib import Path
 
     from emmet.core.tasks import TaskDoc

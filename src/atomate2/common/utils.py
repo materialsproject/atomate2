@@ -34,7 +34,9 @@ def get_transformations(
         raise ValueError("Number of transformations and parameters must be the same.")
 
     transformation_objects = []
-    for transformation, transformation_params in zip(transformations, params):
+    for transformation, transformation_params in zip(
+        transformations, params, strict=True
+    ):
         found = False
         for module in (
             "advanced_transformations",
