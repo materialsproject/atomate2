@@ -46,7 +46,7 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
     assert output.structure.volume == pytest.approx(24.334)
     assert isinstance(output, AseStructureTaskDoc)
 
-    output.structure.properties = {}
+    output.structure.properties = fcc_ne_structure.properties
     assert output.structure == fcc_ne_structure
 
 
