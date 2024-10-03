@@ -1,15 +1,16 @@
 from __future__ import annotations
 
+import io
 import json
 from pathlib import Path
 
 import numpy as np
 import pytest
-from emmet.core.openmm import OpenMMTaskDocument
+from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
 from jobflow import Flow
 from MDAnalysis import Universe
 from monty.json import MontyDecoder
-from openff.interchange import Interchange
+from openmm.app import PDBFile
 
 from atomate2.openmm.flows.core import OpenMMFlowMaker
 from atomate2.openmm.jobs import EnergyMinimizationMaker, NPTMaker, NVTMaker
@@ -113,7 +114,7 @@ def test_flow_maker(interchange, run_job):
         name="test_production",
         tags=["test"],
         makers=[
-            EnergyMinimizationMaker(max_iterations=1),
+            EnergyMinimizationMaker(max_iterations=1, state_interval=1),
             NPTMaker(n_steps=5, pressure=1.0, state_interval=1, traj_interval=1),
             OpenMMFlowMaker.anneal_flow(anneal_temp=400, final_temp=300, n_steps=5),
             NVTMaker(n_steps=5),
@@ -158,20 +159,20 @@ def test_flow_maker(interchange, run_job):
 
     all_steps = [calc.output.steps_reported for calc in task_doc.calcs_reversed]
     assert all_steps == [
+        [11, 12, 13, 14, 15],
+        [10],
+        [8, 9],
+        [6, 7],
         [1, 2, 3, 4, 5],
-        [1],
-        [1, 2],
-        [1, 2],
-        [1, 2, 3, 4, 5],
-        None,
+        [0],
     ]
     # Test that the state interval is respected
-    assert calc_output.steps_reported == list(range(1, 6))
+    assert calc_output.steps_reported == list(range(11, 16))
     assert calc_output.traj_file == "trajectory5.dcd"
     assert calc_output.state_file == "state5.csv"
 
-    interchange = Interchange.parse_raw(task_doc.interchange)
-    topology = interchange.to_openmm_topology()
+    interchange = OpenMMInterchange.model_validate_json(task_doc.interchange)
+    topology = PDBFile(io.StringIO(interchange.topology)).getTopology()
     u = Universe(topology, str(Path(task_doc.dir_name) / "trajectory5.dcd"))
 
     assert len(u.trajectory) == 5
@@ -184,8 +185,9 @@ def test_traj_blob_embed(interchange, run_job, tmp_path):
     nvt_job = nvt.make(interchange)
     task_doc = run_job(nvt_job)
 
-    interchange = Interchange.parse_raw(task_doc.interchange)
-    topology = interchange.to_openmm_topology()
+    interchange = OpenMMInterchange.model_validate_json(task_doc.interchange)
+    topology = PDBFile(io.StringIO(interchange.topology)).getTopology()
+
     u = Universe(topology, str(Path(task_doc.dir_name) / "trajectory.dcd"))
 
     assert len(u.trajectory) == 2

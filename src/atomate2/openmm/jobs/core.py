@@ -7,12 +7,15 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from openmm import Integrator, LangevinMiddleIntegrator, MonteCarloBarostat
+from openmm.app import StateDataReporter
 from openmm.unit import atmosphere, kelvin, kilojoules_per_mole, nanometer, picoseconds
 
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.openmm.utils import create_list_summing_to
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from emmet.core.openmm import OpenMMTaskDocument
     from openmm.app import Simulation
 
@@ -41,7 +44,7 @@ class EnergyMinimizationMaker(BaseOpenMMMaker):
     tolerance: float = 10
     max_iterations: int = 0
 
-    def run_openmm(self, sim: Simulation) -> None:
+    def run_openmm(self, sim: Simulation, dir_name: Path) -> None:
         """Run the energy minimization with OpenMM.
 
         This method performs energy minimization on the molecular system using
@@ -61,6 +64,28 @@ class EnergyMinimizationMaker(BaseOpenMMMaker):
             tolerance=self.tolerance * kilojoules_per_mole / nanometer,
             maxIterations=self.max_iterations,
         )
+
+        if self.state_interval > 0:
+            state = sim.context.getState(
+                getPositions=True,
+                getVelocities=True,
+                getForces=True,
+                getEnergy=True,
+                enforcePeriodicBox=self.wrap_traj,
+            )
+
+            state_reporter = StateDataReporter(
+                file=f"{dir_name / self.state_file_name}.csv",
+                reportInterval=0,
+                step=True,
+                potentialEnergy=True,
+                kineticEnergy=True,
+                totalEnergy=True,
+                temperature=True,
+                volume=True,
+                density=True,
+            )
+            state_reporter.report(sim, state)
 
 
 @dataclass
@@ -87,7 +112,7 @@ class NPTMaker(BaseOpenMMMaker):
     pressure: float = 1
     pressure_update_frequency: int = 10
 
-    def run_openmm(self, sim: Simulation) -> None:
+    def run_openmm(self, sim: Simulation, dir_name: Path) -> None:
         """Evolve the simulation for self.n_steps in the NPT ensemble.
 
         This adds a Monte Carlo barostat to the system to put it into NPT, runs the
@@ -138,7 +163,7 @@ class NVTMaker(BaseOpenMMMaker):
     name: str = "nvt simulation"
     n_steps: int = 1_000_000
 
-    def run_openmm(self, sim: Simulation) -> None:
+    def run_openmm(self, sim: Simulation, dir_name: Path) -> None:
         """Evolve the simulation with OpenMM for self.n_steps.
 
         Parameters
@@ -177,7 +202,7 @@ class TempChangeMaker(BaseOpenMMMaker):
     temp_steps: int | None = None
     starting_temperature: float | None = None
 
-    def run_openmm(self, sim: Simulation) -> None:
+    def run_openmm(self, sim: Simulation, dir_name: Path) -> None:
         """Evolve the simulation while gradually changing the temperature.
 
         self.temperature is the final temperature. self.temp_steps

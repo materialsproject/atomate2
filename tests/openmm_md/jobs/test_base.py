@@ -6,6 +6,7 @@ from emmet.core.openff import ClassicalMDTaskDocument
 from emmet.core.openmm import Calculation, CalculationInput, OpenMMTaskDocument
 from jobflow import Flow, Job
 from mdareporter import MDAReporter
+from openmm import XmlSerializer
 from openmm.app import Simulation, StateDataReporter
 from openmm.openmm import LangevinMiddleIntegrator
 from openmm.unit import kelvin, picoseconds
@@ -70,22 +71,30 @@ def test_create_simulation(interchange):
 def test_update_interchange(interchange):
     interchange = copy.deepcopy(interchange)
     maker = BaseOpenMMMaker(wrap_traj=True)
+
     sim = maker._create_simulation(interchange)  # noqa: SLF001
-    start_positions = interchange.positions
-    start_velocities = interchange.velocities
-    start_box = interchange.box
+
+    state = XmlSerializer.deserialize(interchange.state)
+    start_positions = state.getPositions(asNumpy=True)
+    start_velocities = state.getVelocities(asNumpy=True)
+    start_box = state.getPeriodicBoxVectors()
 
     # Run the simulation for one step
-    sim.step(1)
+    sim.step(2)
 
     maker._update_interchange(interchange, sim, None)  # noqa: SLF001
 
-    assert interchange.positions.shape == start_positions.shape
-    assert interchange.velocities.shape == (1170, 3)
+    new_state = XmlSerializer.deserialize(interchange.state)
+    new_positions = new_state.getPositions(asNumpy=True)
+    new_velocities = new_state.getVelocities(asNumpy=True)
+    new_box = new_state.getPeriodicBoxVectors()
 
-    assert np.any(interchange.positions != start_positions)
-    assert np.any(interchange.velocities != start_velocities)
-    assert np.all(interchange.box == start_box)
+    assert new_positions.shape == start_positions.shape
+    assert new_velocities.shape == start_velocities.shape
+
+    assert not np.all(new_positions == start_positions)
+    assert not np.all(new_velocities == start_velocities)
+    assert np.all(new_box == start_box)
 
 
 def test_create_task_doc(interchange, tmp_path):
@@ -124,7 +133,7 @@ def test_make(interchange, tmp_path, run_job):
 
     # monkey patch to allow running the test without openmm
 
-    def do_nothing(self, sim):
+    def do_nothing(self, sim, dir_name):
         pass
 
     BaseOpenMMMaker.run_openmm = do_nothing
@@ -161,7 +170,7 @@ def test_make(interchange, tmp_path, run_job):
 
 def test_make_w_velocities(interchange, run_job):
     # monkey patch to allow running the test without openmm
-    def do_nothing(self, sim):
+    def do_nothing(self, sim, dir_name):
         pass
 
     BaseOpenMMMaker.run_openmm = do_nothing
@@ -206,7 +215,7 @@ def test_make_from_prev(run_job):
     maker = BaseOpenMMMaker(n_steps=10)
 
     # monkey patch to allow running the test without openmm
-    def do_nothing(self, sim):
+    def do_nothing(self, sim, dir_name):
         pass
 
     BaseOpenMMMaker.run_openmm = do_nothing
