@@ -219,7 +219,7 @@ class Calculation(BaseModel):
         Whether FHI-aims completed the calculation successfully
     output: .CalculationOutput
         The FHI-aims calculation output
-    input: .CalculationOutput
+    input: .CalculationInput
         The FHI-aims calculation input
     completed_at: str
         Timestamp for when the calculation was completed
