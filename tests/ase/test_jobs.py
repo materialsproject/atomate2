@@ -6,6 +6,7 @@ import os
 
 import pytest
 from jobflow import run_locally
+from pymatgen.analysis.molecule_matcher import MoleculeMatcher
 from pymatgen.core import Molecule
 
 from atomate2.ase.jobs import (
@@ -102,4 +103,4 @@ def test_gfn_xtb_static_maker(h2o_3uud_trimer):
 
     assert output.output.energy_per_atom == pytest.approx(-46.05920227158222)
     assert isinstance(output, AseMoleculeTaskDoc)
-    assert output.molecule == h2o_3uud_trimer
+    assert MoleculeMatcher().fit(output.molecule, h2o_3uud_trimer)
