@@ -48,6 +48,7 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
     output.structure.properties = fcc_ne_structure.properties
     assert output.structure == fcc_ne_structure
 
+
 @pytest.mark.skipif(condition=TBLite is None, reason="TBLite must be installed.")
 def test_gfn_xtb_relax_maker(h2o_3uud_trimer):
     os.environ["OMP_NUM_THREADS"] = "1"
