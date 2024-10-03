@@ -1,5 +1,22 @@
 # Change log
 
+## v0.0.17
+
+### Bug Fixes 🐛
+
+* Fix `prev_dir` behavior in input set generator of `MPGGAStaticMaker` by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/996
+
+### Documentation 📖
+
+* Bump min supported Python to 3.10 by @janosh in https://github.com/materialsproject/atomate2/pull/992
+
+### House-Keeping 🧹
+
+* Excise openff dependency from OpenMM testing by @orionarcher in https://github.com/materialsproject/atomate2/pull/993
+* Use `pytest-split` to parallelize across 3 runners and speedup CI by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/985
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.16...v0.0.17
+
 ## v0.0.16
 
 This release brings lots of new workflows and support for all ASE calculators.

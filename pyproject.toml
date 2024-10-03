@@ -34,7 +34,7 @@ dependencies = [
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.6.4",
+    "pymatgen>=2024.10.3",
 ]
 
 [project.optional-dependencies]
@@ -100,7 +100,7 @@ strict = [
     "emmet-core==0.84.2",
     "ijson==3.3.0",
     "jobflow==0.1.18",
-    "lobsterpy==0.4.5",
+    "lobsterpy==0.4.9",
     "mdanalysis==2.7.0",
     "monty==2024.7.30",
     "mp-api==0.42.2",
@@ -111,7 +111,7 @@ strict = [
     "pydantic-settings==2.5.2",
     "pydantic==2.9.2",
     "pymatgen-analysis-defects==2024.7.19",
-    "pymatgen==2024.6.10",
+    "pymatgen==2024.10.3",
     "python-ulid==2.7.0",
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",

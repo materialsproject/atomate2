@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 from emmet.core.openmm import OpenMMInterchange
 from openmm import XmlSerializer
@@ -23,6 +25,7 @@ def test_energy_minimization_maker(interchange, run_job):
     new_positions = new_state.getPositions(asNumpy=True)
 
     assert not np.all(new_positions == start_positions)
+    assert (Path(task_doc.calcs_reversed[0].output.dir_name) / "state.csv").exists()
 
 
 def test_npt_maker(interchange, run_job):
