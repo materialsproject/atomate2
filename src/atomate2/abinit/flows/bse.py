@@ -228,16 +228,13 @@ class BSEMultiShiftedMaker(Maker):
     ----------
     name : str
         A name for the job
-    criterion_name: str
-        A name for the convergence criterion. Must be in the run results
-    epsilon: float
-        A difference in criterion value for subsequent runs
-    convergence_field: str
-        An input parameter that changes to achieve convergence
-    convergence_steps: list | tuple
-        An iterable of the possible values for the convergence field.
-        If the iterable is depleted and the convergence is not reached,
-        that the job is failed
+    scf_maker : .BaseAbinitMaker
+        The maker to use for the scf calculation.
+    bse_maker : .BaseAbinitMaker
+        The maker to use for the bse calculations.
+    shiftks : list[tuple]
+        k-grid shifts to be used for multiple BSE calculations.
+	The resulting absorption spectra will be avaeraged. 
     """
 
     name: str = "BSE Mutiple Shifted Grid"
