@@ -6,7 +6,6 @@ import os
 
 import pytest
 from jobflow import run_locally
-from pymatgen.analysis.molecule_matcher import MoleculeMatcher
 from pymatgen.core import Molecule
 
 from atomate2.ase.jobs import (
