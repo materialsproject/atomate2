@@ -225,7 +225,7 @@ class BaseOpenMMMaker(Maker):
 
         # Run the simulation
         start = time.time()
-        self.run_openmm(sim)
+        self.run_openmm(sim, dir_name)
         elapsed_time = time.time() - start
 
         self._update_interchange(interchange, sim, prev_task)
@@ -303,6 +303,7 @@ class BaseOpenMMMaker(Maker):
         traj_file_name = self._resolve_attr("traj_file_name", prev_task)
         traj_file_type = self._resolve_attr("traj_file_type", prev_task)
         report_velocities = self._resolve_attr("report_velocities", prev_task)
+        wrap_traj = self._resolve_attr("wrap_traj", prev_task)
 
         if has_steps & (traj_interval > 0):
             writer_kwargs = {}
@@ -327,7 +328,7 @@ class BaseOpenMMMaker(Maker):
             kwargs = dict(
                 file=str(dir_name / f"{self.traj_file_name}.{traj_file_type}"),
                 reportInterval=traj_interval,
-                enforcePeriodicBox=self._resolve_attr("wrap_traj", prev_task),
+                enforcePeriodicBox=wrap_traj,
             )
             if report_velocities:
                 # assert package version
@@ -364,7 +365,7 @@ class BaseOpenMMMaker(Maker):
             )
             sim.reporters.append(state_reporter)
 
-    def run_openmm(self, simulation: Simulation) -> NoReturn:
+    def run_openmm(self, sim: Simulation, dir_name: Path) -> NoReturn:
         """Abstract method for running the OpenMM simulation.
 
         This method should be implemented by subclasses to
@@ -524,6 +525,11 @@ class BaseOpenMMMaker(Maker):
             interchange.box = state.getPeriodicBoxVectors(asNumpy=True)
         elif isinstance(interchange, OpenMMInterchange):
             interchange.state = XmlSerializer.serialize(state)
+        else:
+            raise TypeError(
+                f"Interchange must be an Interchange or "
+                f"OpenMMInterchange object, got {type(interchange).__name__}"
+            )
 
     def _create_structure(
         self, sim: Simulation, prev_task: OpenMMTaskDocument | None = None
@@ -607,8 +613,10 @@ class BaseOpenMMMaker(Maker):
 
         prev_task = prev_task or OpenMMTaskDocument()
 
-        interchange_json = interchange.json()
-        # interchange_bytes = interchange_json.encode("utf-8")
+        if isinstance(interchange, Interchange):
+            interchange_json = interchange.json()
+        else:
+            interchange_json = interchange.model_dump_json()
 
         return OpenMMTaskDocument(
             tags=tags,
