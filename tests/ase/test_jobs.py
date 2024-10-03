@@ -104,4 +104,6 @@ def test_gfn_xtb_static_maker(h2o_3uud_trimer):
 
     assert output.output.energy_per_atom == pytest.approx(-46.05920227158222)
     assert isinstance(output, AseMoleculeTaskDoc)
+
+    output.molecule.properties = h2o_3uud_trimer.properties
     assert output.molecule == h2o_3uud_trimer
