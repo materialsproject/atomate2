@@ -23,7 +23,10 @@ jobs:
 
       - uses: pre-commit/action@v3.0.0
 
-  test:
+  test-non-ase:
+    # prevent this action from running on forks
+    if: github.repository == 'materialsproject/atomate2'
+
     services:
       local_mongodb:
         image: mongo:4.0
@@ -37,6 +40,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
+        split: [1, 2, 3]
 
     steps:
       - name: Check out repo
@@ -72,20 +76,30 @@ jobs:
           micromamba activate a2
           uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
-      - name: Test
+      - name: Test split ${{ matrix.split }}
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
+
+        # regenerate durations file with `pytest --store-durations --durations-path tests/.pytest-split-durations`
+        # Note the use of `--splitting-algorithm least_duration`.
+        # This helps prevent a test split having no tests to run, and then the GH action failing, see:
+        # https://github.com/jerry-git/pytest-split/issues/95
+        # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
         run: |
           micromamba activate a2
-          pytest --ignore=tests/ase --cov=atomate2 --cov-report=xml
+          pytest --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --cov=atomate2 --cov-report=xml
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          name: coverage${{ matrix.split }}
           file: ./coverage.xml
 
   test-notebooks-and-ase:
+    # prevent this action from running on forks
+    if: github.repository == 'materialsproject/atomate2'
+    
     # It seems like anything torch-dependent and tblite can't be installed in the same environment
     # without the tblite tests failing in CI, see, e.g.:
     # https://github.com/tblite/tblite/issues/116
@@ -143,7 +157,7 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest --cov=atomate2 --cov-report=xml tests/ase
+          pytest --splits 1 --group 1 --cov=atomate2 --cov-report=xml tests/ase
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
@@ -172,7 +186,7 @@ jobs:
         run: sphinx-build docs docs_build
 
   automerge:
-    needs: [lint, test, docs]
+    needs: [lint, test-non-ase, test-notebooks-and-ase, docs]
     runs-on: ubuntu-latest
 
     permissions:
