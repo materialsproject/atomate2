@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from glob import glob
 from os import mkdir
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from emmet.core.neb import NebTaskDoc
 from jobflow import Response, job
@@ -27,6 +27,8 @@ from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.sets.core import NebSetGenerator
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from pymatgen.core import Structure
     from typing_extensions import Self
 
