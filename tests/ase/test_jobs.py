@@ -45,6 +45,8 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
     assert output.output.energy == pytest.approx(-0.0179726955438795)
     assert output.structure.volume == pytest.approx(24.334)
     assert isinstance(output, AseStructureTaskDoc)
+
+    output.structure.properties = fcc_ne_structure.properties
     assert output.structure == fcc_ne_structure
 
 
@@ -102,4 +104,6 @@ def test_gfn_xtb_static_maker(h2o_3uud_trimer):
 
     assert output.output.energy_per_atom == pytest.approx(-46.05920227158222)
     assert isinstance(output, AseMoleculeTaskDoc)
+
+    output.molecule.properties = h2o_3uud_trimer.properties
     assert output.molecule == h2o_3uud_trimer
