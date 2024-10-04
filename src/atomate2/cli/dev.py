@@ -296,7 +296,11 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
     from monty.serialization import dumpfn, loadfn
     from monty.shutil import compress_dir
 
-    from atomate2.abinit.schemas.core import AbinitTaskDocument
+    try:
+        from atomate2.abinit.schemas.core import AbinitTaskDocument
+    except ModuleNotFoundError:
+        from atomate2.abinit.schemas.task import AbinitTaskDoc as AbinitTaskDocument
+
     from atomate2.common.files import copy_files
     from atomate2.utils.path import strip_hostname
 
@@ -426,14 +430,14 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
             )
 
     for output in outputs:
-        if not isinstance(output["output"], AbinitTaskDocument):
+        if not isinstance(output.output, AbinitTaskDocument):
             # this is not an Abinit job
             continue
 
-        job_name = output["output"].task_label
-        orig_job_dir = Path(strip_hostname(output["output"].dir_name))
-        folder_name = output["output"].task_label.replace("/", "_").replace(" ", "_")
-        index_job = str(output["index"])
+        job_name = output.output.task_label
+        orig_job_dir = Path(strip_hostname(output.output.dir_name))
+        folder_name = output.output.task_label.replace("/", "_").replace(" ", "_")
+        index_job = str(output.index)
 
         job_dir = test_dir / folder_name
         _makedir(job_dir, force_overwrite=force)
