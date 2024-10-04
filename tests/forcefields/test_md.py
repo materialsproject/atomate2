@@ -15,7 +15,6 @@ from pymatgen.core import Structure
 
 from atomate2.forcefields.md import (
     CHGNetMDMaker,
-    DeepMDMDMaker,
     ForceFieldMDMaker,
     GAPMDMaker,
     M3GNetMDMaker,
@@ -31,9 +30,7 @@ name_to_maker = {
     "GAP": GAPMDMaker,
     "NEP": NEPMDMaker,
     "Nequip": NequipMDMaker,
-    "DeepMD": DeepMDMDMaker,
 }
-
 
 def test_maker_initialization():
     # test that makers can be initialized from str or value enum

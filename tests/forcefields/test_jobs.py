@@ -10,8 +10,6 @@ from pytest import approx, importorskip
 from atomate2.forcefields.jobs import (
     CHGNetRelaxMaker,
     CHGNetStaticMaker,
-    DeepMDRelaxMaker,
-    DeepMDStaticMaker,
     ForceFieldRelaxMaker,
     ForceFieldStaticMaker,
     GAPRelaxMaker,
@@ -557,10 +555,7 @@ def test_deepmd_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-3723.09868, rel=1e-4)
     assert output1.output.n_steps == 1
-    assert output1.forcefield_version == get_imported_version("deepmd")
-
-    with pytest.warns(FutureWarning):
-        DeepMDStaticMaker()
+    assert output1.forcefield_version == get_imported_version("deepmd-kit")
 
 
 @pytest.mark.parametrize(
@@ -603,6 +598,3 @@ def test_deepmd_relax_maker(
     # just testing that passing fix_symmetry doesn't break
     final_spg_num = output1.output.structure.get_space_group_info()[1]
     assert final_spg_num == 99
-
-    with pytest.warns(FutureWarning):
-        DeepMDRelaxMaker()

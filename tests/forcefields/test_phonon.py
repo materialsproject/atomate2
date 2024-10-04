@@ -67,6 +67,7 @@ def test_phonon_maker_initialization_with_all_mlff(
         calc_kwargs = {
             MLFF.Nequip: {"model_path": f"{chk_pt_dir}/nequip/nequip_ff_sr_ti_o3.pth"},
             MLFF.NEP: {"model_filename": f"{test_dir}/forcefields/nep/nep.txt"},
+            MLFF.DeepMD: {"model": test_dir / "forcefields" / "deepmd" / "graph.pb"},
         }.get(mlff, {})
         static_maker = ForceFieldStaticMaker(
             name=f"{mlff} static",

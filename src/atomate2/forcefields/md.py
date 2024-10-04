@@ -265,19 +265,3 @@ class NequipMDMaker(ForceFieldMDMaker):
 
     name: str = f"{MLFF.Nequip} MD"
     force_field_name: str | MLFF = MLFF.Nequip
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use DP, set `force_field_name = 'DeepMD'` in ForceFieldMDMaker.",
-)
-@dataclass
-class DeepMDMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with DP."""
-
-    name: str = f"{MLFF.DeepMD} MD"
-    force_field_name: str | MLFF = MLFF.DeepMD
-    calculator_kwargs: dict = field(
-        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.DeepMD]
-    )
