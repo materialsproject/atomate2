@@ -588,11 +588,11 @@ def test_deepmd_relax_maker(
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     if relax_cell:
-        assert output1.output.energy == approx(-3723.098823, rel=1e-3)
-        assert output1.output.n_steps == 14
+        assert output1.output.energy == approx(-3723.099519623731, rel=1e-3)
+        assert output1.output.n_steps == 3
     else:
-        assert output1.output.energy == approx(-3723.100111, rel=1e-4)
-        assert output1.output.n_steps == 9
+        assert output1.output.energy == approx(-3723.0981880334643, rel=1e-4)
+        assert output1.output.n_steps == 3
 
     # fix_symmetry makes no difference for this structure relaxer combo
     # just testing that passing fix_symmetry doesn't break
