@@ -32,6 +32,7 @@ name_to_maker = {
     "Nequip": NequipMDMaker,
 }
 
+
 def test_maker_initialization():
     # test that makers can be initialized from str or value enum
 
@@ -97,9 +98,7 @@ def test_ml_ff_md_maker(
         }
         unit_cell_structure = sr_ti_o3_structure.copy()
     elif ff_name == "DeepMD":
-        calculator_kwargs = {
-            "model_path": test_dir / "forcefields" / "deepmd" / "graph.pb"
-        }
+        calculator_kwargs = {"model": test_dir / "forcefields" / "deepmd" / "graph.pb"}
         unit_cell_structure = sr_ti_o3_structure.copy()
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
@@ -143,8 +142,10 @@ def test_ml_ff_md_maker(
         for step in task_doc.objects["trajectory"].frame_properties
     )
 
-    with pytest.warns(FutureWarning):
-        name_to_maker[ff_name]()
+    # Skip the following test for DeepMD, since it doesn't have concrete implementations
+    if ff_name != "DeepMD":
+        with pytest.warns(FutureWarning):
+            name_to_maker[ff_name]()
 
 
 @pytest.mark.parametrize("traj_file", ["trajectory.json.gz", "atoms.traj"])
