@@ -8,6 +8,7 @@ from pathlib import Path
 from shutil import which
 from typing import TYPE_CHECKING, Callable
 
+from emmet.core.neb import NebTaskDoc
 from emmet.core.tasks import TaskDoc
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
@@ -246,46 +247,49 @@ class BaseVaspMaker(Maker):
         )
 
 
-def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
+def get_vasp_task_document(path: Path | str, is_neb : bool = False, **kwargs) -> TaskDoc | NebTaskDoc:
     """Get VASP Task Document using atomate2 settings."""
     kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
 
-    kwargs.setdefault(
-        "volume_change_warning_tol", SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
-    )
+    if not is_neb:
+        kwargs.setdefault(
+            "volume_change_warning_tol", SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
+        )
 
-    if SETTINGS.VASP_RUN_BADER:
-        kwargs.setdefault("run_bader", _BADER_EXE_EXISTS)
-        if not _BADER_EXE_EXISTS:
-            warnings.warn(
-                f"{SETTINGS.VASP_RUN_BADER=} but bader executable not found on path",
-                stacklevel=1,
-            )
-    if SETTINGS.VASP_RUN_DDEC6:
-        # if VASP_RUN_DDEC6 is True but _CHARGEMOL_EXE_EXISTS is False, just silently
-        # skip running DDEC6
-        run_ddec6: bool | str = _CHARGEMOL_EXE_EXISTS
-        if run_ddec6 and isinstance(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR, str):
-            # if DDEC6_ATOMIC_DENSITIES_DIR is a string and directory at that path
-            # exists, use as path to the atomic densities
-            if Path(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR).is_dir():
-                run_ddec6 = SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR
-            else:
-                # if the directory doesn't exist, warn the user and skip running DDEC6
+        if SETTINGS.VASP_RUN_BADER:
+            kwargs.setdefault("run_bader", _BADER_EXE_EXISTS)
+            if not _BADER_EXE_EXISTS:
                 warnings.warn(
-                    f"{SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR=} does not exist, skipping "
-                    "DDEC6",
+                    f"{SETTINGS.VASP_RUN_BADER=} but bader executable not found on path",
                     stacklevel=1,
                 )
-        kwargs.setdefault("run_ddec6", run_ddec6)
+        if SETTINGS.VASP_RUN_DDEC6:
+            # if VASP_RUN_DDEC6 is True but _CHARGEMOL_EXE_EXISTS is False, just silently
+            # skip running DDEC6
+            run_ddec6: bool | str = _CHARGEMOL_EXE_EXISTS
+            if run_ddec6 and isinstance(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR, str):
+                # if DDEC6_ATOMIC_DENSITIES_DIR is a string and directory at that path
+                # exists, use as path to the atomic densities
+                if Path(SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR).is_dir():
+                    run_ddec6 = SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR
+                else:
+                    # if the directory doesn't exist, warn the user and skip running DDEC6
+                    warnings.warn(
+                        f"{SETTINGS.DDEC6_ATOMIC_DENSITIES_DIR=} does not exist, skipping "
+                        "DDEC6",
+                        stacklevel=1,
+                    )
+            kwargs.setdefault("run_ddec6", run_ddec6)
 
-        if not _CHARGEMOL_EXE_EXISTS:
-            warnings.warn(
-                f"{SETTINGS.VASP_RUN_DDEC6=} but chargemol executable not found on "
-                "path",
-                stacklevel=1,
-            )
+            if not _CHARGEMOL_EXE_EXISTS:
+                warnings.warn(
+                    f"{SETTINGS.VASP_RUN_DDEC6=} but chargemol executable not found on "
+                    "path",
+                    stacklevel=1,
+                )
 
     kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
 
+    if is_neb:
+        return NebTaskDoc.from_directory(path,**kwargs)
     return TaskDoc.from_directory(path, **kwargs)

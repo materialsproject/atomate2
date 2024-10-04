@@ -5,24 +5,56 @@ Define NEB VASP jobs.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from glob import glob
 from os import mkdir, symlink
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
+from jobflow import job, Maker, Response
+from emmet.core.neb import NebTaskDoc
+from monty.serialization import dumpfn
 from pymatgen.core import Structure
 from pymatgen.io.vasp import Kpoints
 
+from atomate2 import SETTINGS
+from atomate2.common.files import gzip_output_folder
 from atomate2.common.jobs.neb import NEBInterpolation, get_images_from_endpoints
-from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
+from atomate2.vasp.jobs.base import _DATA_OBJECTS, _FILES_TO_ZIP, get_vasp_task_document
 from atomate2.vasp.sets.core import NebSetGenerator
+from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
+from atomate2.vasp.run import run_vasp, should_stop_children
 
 if TYPE_CHECKING:
     from typing_extensions import Self
 
     from atomate2.vasp.sets.base import VaspInputGenerator
 
+def vasp_neb_job(method: Callable) -> job:
+    """
+    Decorate the ``make`` method of VASP NEB job makers.
+
+    This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
+    settings for VASP NEB jobs. For example, it ensures that large data objects
+    (band structures, density of states, LOCPOT, CHGCAR, etc) are all stored in the
+    atomate2 data store. It also configures the output schema to be a VASP
+    :obj:`.NebTaskDoc`.
+
+    Parameters
+    ----------
+    method : callable
+        A BaseVaspMaker.make method. This should not be specified directly and is
+        implied by the decorator.
+
+    Returns
+    -------
+    callable
+        A decorated version of the make function that will generate VASP NEB jobs.
+    """
+    return job(method, data=_DATA_OBJECTS, output_schema=NebTaskDoc)
+
+
 @dataclass
-class NEBFromImagesMaker(BaseVaspMaker):
+class NEBFromImagesMaker(Maker):
     """
     Maker to create VASP NEB jobs from a set of images.
 
@@ -65,12 +97,12 @@ class NEBFromImagesMaker(BaseVaspMaker):
     lclimb: bool = True
     kpoints_kludge: Kpoints | None = None
 
-    @vasp_job
+    @vasp_neb_job
     def make(
         self,
         images: list[Structure],
         prev_dir: str | Path | None = None,
-    ):
+    ) -> Response:
         """
         Make an NEB job from a list of images.
 
@@ -112,7 +144,51 @@ class NEBFromImagesMaker(BaseVaspMaker):
             if isinstance(self.kpoints_kludge, Kpoints):
                 self.kpoints_kludge.write_file(f"{image_dir}/KPOINTS")
 
-        return super().make.original(self, images[0], prev_dir = prev_dir)
+        # copy previous inputs
+        from_prev = prev_dir is not None
+        if prev_dir is not None:
+            copy_vasp_outputs(prev_dir, **self.copy_vasp_kwargs)
+
+        self.write_input_set_kwargs.setdefault("from_prev", from_prev)
+
+        # write vasp input files
+        write_vasp_input_set(
+            images[0], self.input_set_generator, **self.write_input_set_kwargs
+        )
+
+        # write any additional data
+        for filename, data in self.write_additional_data.items():
+            dumpfn(data, filename.replace(":", "."))
+
+        # run vasp
+        run_vasp(**self.run_vasp_kwargs)
+
+        # parse vasp outputs
+        task_doc = get_vasp_task_document(Path.cwd(), is_neb=True, **self.task_document_kwargs)
+        task_doc.task_label = self.name
+
+        # decide whether child jobs should proceed
+        stop_children = should_stop_children(task_doc, **self.stop_children_kwargs)
+
+        # gzip folder
+        gzip_output_folder(
+            directory=Path.cwd(),
+            setting=SETTINGS.VASP_ZIP_FILES,
+            files_list=_FILES_TO_ZIP,
+        )
+
+        for image_dir in glob(str(Path.cwd() / "[0-9][0-9]")):
+            gzip_output_folder(
+                directory = image_dir,
+                setting=SETTINGS.VASP_ZIP_FILES,
+                files_list=_FILES_TO_ZIP,
+            )
+
+        return Response(
+            stop_children=stop_children,
+            stored_data={"custodian": task_doc.custodian},
+            output=task_doc,
+        )
     
 @dataclass
 class NEBFromEndpointsMaker(NEBFromImagesMaker):
