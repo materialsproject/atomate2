@@ -4,20 +4,25 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from glob import glob
-from os import mkdir, symlink
+from os import mkdir
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable
 
 from emmet.core.neb import NebTaskDoc
-from jobflow import Maker, Response, job
+from jobflow import Response, job
 from monty.serialization import dumpfn
 from pymatgen.io.vasp import Kpoints
 
 from atomate2 import SETTINGS
 from atomate2.common.files import gzip_output_folder
-from atomate2.common.jobs.neb import NEBInterpolation, get_images_from_endpoints
+from atomate2.common.jobs.neb import NebInterpolation, get_images_from_endpoints
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
-from atomate2.vasp.jobs.base import _DATA_OBJECTS, _FILES_TO_ZIP, get_vasp_task_document
+from atomate2.vasp.jobs.base import (
+    _DATA_OBJECTS,
+    _FILES_TO_ZIP,
+    BaseVaspMaker,
+    get_vasp_task_document,
+)
 from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.sets.core import NebSetGenerator
 
@@ -53,7 +58,7 @@ def vasp_neb_job(method: Callable) -> job:
 
 
 @dataclass
-class NEBFromImagesMaker(Maker):
+class NebFromImagesMaker(BaseVaspMaker):
     """
     Maker to create VASP NEB jobs from a set of images.
 
@@ -119,12 +124,6 @@ class NEBFromImagesMaker(Maker):
         for iimage in range(num_frames):
             image_dir = f"{iimage:02}"
             mkdir(image_dir)
-
-            # emmet TaskDoc stores at most 9 relaxation jobs because reasons
-            # only store results from intermediate image calculations
-            # no calculations happen for the endpoints
-            if 1 <= iimage < min(num_frames - 1, 8):
-                symlink(image_dir, f"relax{iimage}")
 
             images[iimage].to(f"{image_dir}/POSCAR")
 
@@ -193,7 +192,7 @@ class NEBFromImagesMaker(Maker):
 
 
 @dataclass
-class NEBFromEndpointsMaker(NEBFromImagesMaker):
+class NebFromEndpointsMaker(NebFromImagesMaker):
     """Maker to create VASP NEB jobs from two endpoints."""
 
     @vasp_neb_job
@@ -202,7 +201,7 @@ class NEBFromEndpointsMaker(NEBFromImagesMaker):
         endpoints: tuple[Structure, Structure] | list[Structure],
         num_images: int,
         prev_dir: str | Path = None,
-        interpolation_method: NEBInterpolation = NEBInterpolation.LINEAR,
+        interpolation_method: NebInterpolation = NebInterpolation.LINEAR,
         **interpolation_kwargs,
     ) -> Self:
         """
@@ -216,7 +215,7 @@ class NEBFromEndpointsMaker(NEBFromImagesMaker):
             The number of images to include in the interpolation.
         prev_dir : str or Path or None (default)
             A previous directory to copy outputs from.
-        interpolation_method : .NEBInterpolation
+        interpolation_method : .NebInterpolation
             The method to use to interpolate between images.
         **interpolation_kwargs
             kwargs to pass to the interpolation function.

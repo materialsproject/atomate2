@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-class NEBInterpolation(Enum):
+class NebInterpolation(Enum):
     """Methods for interpolating NEB images."""
 
     LINEAR = "linear"
@@ -25,7 +25,7 @@ class NEBInterpolation(Enum):
 def get_images_from_endpoints(
     endpoints: tuple[Structure, Structure] | list[Structure],
     num_images: int,
-    interpolation_method: NEBInterpolation = NEBInterpolation.LINEAR,
+    interpolation_method: NebInterpolation = NebInterpolation.LINEAR,
     **interpolation_kwargs,
 ) -> list[Structure]:
     """
@@ -39,16 +39,16 @@ def get_images_from_endpoints(
         The number of images to include in the interpolation.
     prev_dir : str or Path or None (default)
         A previous directory to copy outputs from.
-    interpolation_method : .NEBInterpolation
+    interpolation_method : .NebInterpolation
         The method to use to interpolate between images.
     **interpolation_kwargs
         kwargs to pass to the interpolation function.
     """
-    if interpolation_method == NEBInterpolation.LINEAR:
+    if interpolation_method == NebInterpolation.LINEAR:
         return endpoints[0].interpolate(
             endpoints[1], nimages=num_images, **interpolation_kwargs
         )
-    if interpolation_method == NEBInterpolation.IDPP:
+    if interpolation_method == NebInterpolation.IDPP:
         try:
             from pymatgen.analysis.diffusion.neb.pathfinder import IDPPSolver
         except ImportError as exc:
