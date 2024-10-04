@@ -758,6 +758,7 @@ class LobsterTightStaticSetGenerator(LobsterSet):
             "ISYM": 0,
         }
 
+
 @dataclass
 class NebSetGenerator(VaspInputGenerator):
     """
@@ -773,10 +774,9 @@ class NebSetGenerator(VaspInputGenerator):
         Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
 
-
     auto_ismear: bool = False
-    auto_kspacing : bool = False
-    inherit_incar : bool = False
+    auto_kspacing: bool = False
+    inherit_incar: bool = False
     num_images: int = 1
     climbing_image: bool = True
 
@@ -799,10 +799,12 @@ class NebSetGenerator(VaspInputGenerator):
             "IBRION": 2,
         }
         if self.climbing_image:
-            updates.update({
-                "LCLIMB": True,
-                "IOPT": 1,
-                "IBRION": 3,
-                "POTIM": 0,
-            })
+            updates.update(
+                {
+                    "LCLIMB": True,
+                    "IOPT": 1,
+                    "IBRION": 3,
+                    "POTIM": 0,
+                }
+            )
         return updates

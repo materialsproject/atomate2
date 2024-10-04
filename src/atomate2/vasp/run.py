@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from glob import glob
 import logging
 import shlex
 import subprocess
-from os.path import expandvars, exists
+from glob import glob
+from os.path import exists, expandvars
 from typing import TYPE_CHECKING, Any
 
 from custodian import Custodian
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
     from pathlib import Path
 
-    from custodian.custodian import ErrorHandler, Validator
+    from custodian.custodian import ErrorHandler
     from emmet.core.neb import NebTaskDoc
     from emmet.core.tasks import TaskDoc
 
@@ -125,8 +125,7 @@ def run_vasp(
     vasp_job_kwargs = vasp_job_kwargs or {}
     custodian_kwargs = custodian_kwargs or {}
     validators = validators or (
-        _DEFAULT_VALIDATORS if job_type != JobType.NEB
-        else (VaspNebFilesValidator(),)
+        _DEFAULT_VALIDATORS if job_type != JobType.NEB else (VaspNebFilesValidator(),)
     )
 
     vasp_cmd = expandvars(vasp_cmd)
@@ -171,6 +170,7 @@ def run_vasp(
 
     logger.info("Running VASP using custodian.")
     custodian_manager.run()
+
 
 def should_stop_children(
     task_document: TaskDoc | NebTaskDoc,
@@ -218,10 +218,10 @@ class VaspNebFilesValidator(Validator):
     Analog of custodian's VaspFilesValidator for NEB runs.
     """
 
-    def check(self, base_directory: str | Path = "./"):
+    def check(self, base_directory: str | Path = "./") -> bool:
         """
         Check that VASP ran in each NEB image directory.
-        
+
         This validator ensures that CONTCAR, OSZICAR, and OUTCAR
         files are created in each NEB image directory, consistent
         with VaspFilesValidator.
@@ -231,6 +231,6 @@ class VaspNebFilesValidator(Validator):
         image_dirs = sorted(glob(f"{base_directory}/[0-9][0-9]"))[1:-1]
         return any(
             not exists(f"{image_dir}/{vasp_file}")
-            for vasp_file in {"CONTCAR", "OSZICAR", "OUTCAR"}
+            for vasp_file in ("CONTCAR", "OSZICAR", "OUTCAR")
             for image_dir in image_dirs
         )
