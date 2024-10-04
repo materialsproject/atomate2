@@ -258,6 +258,7 @@ def test_phonon_wf_vasp_only_displacements_kpath(
         kpath_scheme=kpath_scheme,
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         create_thermal_displacements=True,
+        store_force_constants=True,
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -356,6 +357,7 @@ def test_phonon_wf_vasp_only_displacements_add_inputs_raises(
         use_symmetrized_structure="primitive",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         create_thermal_displacements=True,
+        store_force_constants=True,
     ).make(
         structure=si_structure,
         total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
@@ -397,6 +399,7 @@ def test_phonon_wf_vasp_only_displacements_add_inputs(
         use_symmetrized_structure="primitive",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         create_thermal_displacements=True,
+        store_force_constants=True,
     ).make(
         structure=si_structure,
         total_dft_energy_per_formula_unit=total_dft_energy_per_formula_unit,
@@ -595,6 +598,7 @@ def test_phonon_wf_vasp_all_steps(mock_vasp, clean_dir, si_structure: Structure)
         use_symmetrized_structure=None,
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         create_thermal_displacements=True,
+        store_force_constants=True,
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully

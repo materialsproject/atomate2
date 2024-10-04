@@ -8,7 +8,7 @@ from atomate2.common.jobs.gruneisen import (
 )
 
 
-def test_shrink_expand_structure(clean_dir, si_structure: Structure):
+def test_shrink_expand_structure(tmp_dir, si_structure: Structure):
     job = shrink_expand_structure(si_structure, perc_vol=0.01)
 
     # run the flow or job and ensure that it finished running successfully
@@ -25,7 +25,7 @@ def test_shrink_expand_structure(clean_dir, si_structure: Structure):
     ].volume / si_structure.volume == pytest.approx(0.99)
 
 
-def test_compute_gruneisen_param(clean_dir, test_dir):
+def test_compute_gruneisen_param(tmp_dir, test_dir):
     job = compute_gruneisen_param(
         mesh=(20, 20, 20),
         code="vasp",
