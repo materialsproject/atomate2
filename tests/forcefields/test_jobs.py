@@ -550,7 +550,7 @@ def test_deepmd_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate the outputs of the job
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-3723.09868, rel=1e-4)
@@ -584,7 +584,7 @@ def test_deepmd_relax_maker(
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
-    # validation the outputs of the job
+    # validate the outputs of the job
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     if relax_cell:
