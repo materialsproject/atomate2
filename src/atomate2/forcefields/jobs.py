@@ -35,9 +35,6 @@ _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.NEP: {"model_filename": "nep.txt"},
     MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
     MLFF.DeepMD: {"model": "graph.pb"},
-    MLFF.MACE: {
-        "model": "https://github.com/ACEsuit/mace-mp/releases/download/mace_mp_0/2023-12-10-mace-128-L0_epoch-199.model"
-    },
 }
 
 

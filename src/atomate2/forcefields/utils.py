@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 from monty.json import MontyDecoder
 
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.jobs import _DEFAULT_CALCULATOR_KWARGS
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -62,7 +61,10 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
         elif calculator_name == MLFF.MACE:
             from mace.calculators import mace_mp
 
-            calculator = mace_mp(**_DEFAULT_CALCULATOR_KWARGS[MLFF.MACE] | kwargs)
+            default_model = {
+                "model": "https://github.com/ACEsuit/mace-mp/releases/download/mace_mp_0/2023-12-10-mace-128-L0_epoch-199.model"
+            }
+            calculator = mace_mp(**default_model | kwargs)
 
         elif calculator_name == MLFF.GAP:
             from quippy.potential import Potential
