@@ -188,7 +188,7 @@ class CommonEosMaker(Maker):
             jobs["utility"] += [post_process]
 
         job_list = []
-        for key in jobs:
-            job_list += jobs[key]
+        for val in jobs.values():
+            job_list += val
 
         return Flow(jobs=job_list, output=flow_output, name=self.name)

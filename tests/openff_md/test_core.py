@@ -1,7 +1,10 @@
+import pytest
 from emmet.core.openff import ClassicalMDTaskDocument, MoleculeSpec
-from openff.interchange import Interchange
 
 from atomate2.openff.core import generate_interchange
+
+pytest.importorskip("openff.toolkit")
+from openff.interchange import Interchange  # noqa: E402
 
 
 def test_generate_interchange(mol_specs_small, run_job):
