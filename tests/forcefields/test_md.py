@@ -25,12 +25,12 @@ from atomate2.forcefields.md import (
 )
 
 name_to_maker = {
-    "CHGNet": CHGNetMDMaker,
-    "M3GNet": M3GNetMDMaker,
-    "MACE": MACEMDMaker,
-    "GAP": GAPMDMaker,
-    "NEP": NEPMDMaker,
-    "Nequip": NequipMDMaker,
+    MLFF.CHGNet: CHGNetMDMaker,
+    MLFF.M3GNet: M3GNetMDMaker,
+    MLFF.MACE: MACEMDMaker,
+    MLFF.GAP: GAPMDMaker,
+    MLFF.NEP: NEPMDMaker,
+    MLFF.Nequip: NequipMDMaker,
 }
 
 
@@ -76,12 +76,12 @@ def test_ml_ff_md_maker(
 
     calculator_kwargs = {}
     unit_cell_structure = si_structure.copy()
-    if ff_name == "GAP":
+    if ff_name == MLFF.GAP:
         calculator_kwargs = {
             "args_str": "IP GAP",
             "param_filename": str(test_dir / "forcefields" / "gap" / "gap_file.xml"),
         }
-    elif ff_name == "NEP":
+    elif ff_name == MLFF.NEP:
         # NOTE: The test NEP model is specifically trained on 16 elemental metals
         # thus a new Al2Au structure is added.
         # The NEP model used for the tests is licensed under a
@@ -92,7 +92,7 @@ def test_ml_ff_md_maker(
             "model_filename": test_dir / "forcefields" / "nep" / "nep.txt"
         }
         unit_cell_structure = al2_au_structure.copy()
-    elif ff_name == "Nequip":
+    elif ff_name == MLFF.Nequip:
         calculator_kwargs = {
             "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
         }
