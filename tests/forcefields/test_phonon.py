@@ -64,8 +64,8 @@ def test_phonon_maker_initialization_with_all_mlff(
         if mlff in {MLFF.GAP, MLFF.Forcefield}:
             continue  # TODO fix GAP, currently fails with RuntimeError, see
             # https://github.com/materialsproject/atomate2/pull/918#issuecomment-2253659694
-        # skip m3gnet due to DGL issues FileNotFoundError: Cannot find DGL C++ graphbolt
-        # libgraphbolt_pytorch_2.4.1.so
+        # skip m3gnet due M3GNet requiring DGL which is PyTorch 2.4 incompatible
+        # raises "FileNotFoundError: Cannot find DGL C++ libgraphbolt_pytorch_2.4.1.so"
         if mlff == MLFF.M3GNet:
             continue
 
