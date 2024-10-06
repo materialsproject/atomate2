@@ -13,6 +13,7 @@ from monty.serialization import loadfn
 from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core import Structure
 
+from atomate2.forcefields import MLFF
 from atomate2.forcefields.md import (
     CHGNetMDMaker,
     ForceFieldMDMaker,
@@ -47,27 +48,27 @@ def test_maker_initialization():
         )
 
 
-@pytest.mark.parametrize(
-    "ff_name",
-    ["CHGNet", "M3GNet", "MACE", "GAP", "NEP", "Nequip"],
-)
+@pytest.mark.parametrize("ff_name", MLFF)
 def test_ml_ff_md_maker(
     ff_name, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
 ):
-    if ff_name == "GAP" and sys.version_info >= (3, 12):
+    if ff_name == MLFF.GAP and sys.version_info >= (3, 12):
         pytest.skip(
             "GAP model not compatible with Python 3.12, waiting on https://github.com/libAtoms/QUIP/issues/645"
         )
+    if ff_name == MLFF.M3GNet:
+        pytest.skip("M3GNet requires DGL which is PyTorch 2.4 incompatible")
 
     n_steps = 5
 
     ref_energies_per_atom = {
-        "CHGNet": -5.280157089233398,
-        "M3GNet": -5.387282371520996,
-        "MACE": -5.311369895935059,
-        "GAP": -5.391255755606209,
-        "NEP": -3.966232215741286,
-        "Nequip": -8.84670181274414,
+        MLFF.CHGNet: -5.280157089233398,
+        MLFF.M3GNet: -5.387282371520996,
+        MLFF.MACE: -5.311369895935059,
+        MLFF.GAP: -5.391255755606209,
+        MLFF.NEP: -3.966232215741286,
+        MLFF.Nequip: -8.84670181274414,
+        MLFF.SevenNet: -5.394115447998047,
     }
 
     # ASE can slightly change tolerances on structure positions
