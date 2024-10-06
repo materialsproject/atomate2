@@ -102,8 +102,6 @@ class PhononMaker(BasePhononMaker):
         determines the dft or force field code.
     store_force_constants: bool
         if True, force constants will be stored
-    calculate_pdos: bool
-        if True, the projected phonon density of states will be calculated
     socket: bool
         If True, use the socket for the calculation
     """
@@ -131,7 +129,6 @@ class PhononMaker(BasePhononMaker):
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     store_force_constants: bool = True
-    calculate_pdos: bool = False
     code: str = "forcefields"
     born_maker: ForceFieldStaticMaker | None = None
 
