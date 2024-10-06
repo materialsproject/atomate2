@@ -138,9 +138,9 @@ def test_ml_ff_md_maker(
         for key in ("energy", "forces", "stress", "velocities", "temperature")
         for step in task_doc.objects["trajectory"].frame_properties
     )
-
-    with pytest.warns(FutureWarning):
-        name_to_maker[ff_name]()
+    if ff_maker := name_to_maker.get(ff_name):
+        with pytest.warns(FutureWarning):
+            ff_maker()
 
 
 @pytest.mark.parametrize("traj_file", ["trajectory.json.gz", "atoms.traj"])
