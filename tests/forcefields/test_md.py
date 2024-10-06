@@ -52,6 +52,8 @@ def test_maker_initialization():
 def test_ml_ff_md_maker(
     ff_name, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
 ):
+    if ff_name == MLFF.Forcefield:
+        return  # nothing to test here, MLFF.Forcefield is just a generic placeholder
     if ff_name == MLFF.GAP and sys.version_info >= (3, 12):
         pytest.skip(
             "GAP model not compatible with Python 3.12, waiting on https://github.com/libAtoms/QUIP/issues/645"
