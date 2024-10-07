@@ -55,10 +55,10 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    convergence_md_maker : EquilibrateVolumeMaker
+    equilibrium_volume_maker : EquilibriumVolumeMaker
         MDMaker to generate the equilibrium volumer searcher;
         inherits from EquilibriumVolumeMaker and MDMaker (VASP)
-    quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
+    quench_maker : SlowQuenchMaker or FastQuenchMaker or None
         SlowQuenchMaker - MDMaker that quenches structure from high to low temperature
         FastQuenchMaker - DoubleRelaxMaker + Static that "quenches" structure at 0K
     production_md_maker : BaseMPMorphMDMaker
@@ -67,7 +67,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
     """
 
     name: str = "MP Morph VASP MD Maker"
-    convergence_md_maker: EquilibriumVolumeMaker = field(
+    equilibrium_volume_maker: EquilibriumVolumeMaker = field(
         default_factory=lambda: EquilibriumVolumeMaker(md_maker=BaseMPMorphMDMaker())
     )
     production_md_maker: MDMaker | MultiMDMaker = field(
@@ -104,7 +104,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
         n_steps_per_production_run : int or None (default)
             If an int, the number of steps to use per production run,
             using MultiMDMaker to orchestrate chained production runs.
-        quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
+        quench_maker : SlowQuenchMaker or FastQuenchMaker or None
             SlowQuenchMaker - MDMaker that quenches structure from
                 high to low temperature
             FastQuenchMaker - DoubleRelaxMaker + Static that "quenches"
@@ -124,7 +124,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
             update={"name": "Convergence MPMorph VASP MD Maker"}
         )
 
-        convergence_md_maker = EquilibriumVolumeMaker(
+        equilibrium_volume_maker = EquilibriumVolumeMaker(
             name="MP Morph VASP Equilibrium Volume Maker", md_maker=conv_md_maker
         )
 
@@ -159,7 +159,7 @@ class MPMorphVaspMDMaker(MPMorphMDMaker):
 
         return cls(
             name="MP Morph VASP MD Maker",
-            convergence_md_maker=convergence_md_maker,
+            equilibrium_volume_maker=equilibrium_volume_maker,
             production_md_maker=production_md_maker,
             quench_maker=quench_maker,
         )
@@ -179,20 +179,20 @@ class MPMorphSlowQuenchVaspMDMaker(MPMorphVaspMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    convergence_md_maker : EquilibrateVolumeMaker
+    equilibrium_volume_maker : EquilibriumVolumeMaker
         MDMaker to generate the equilibrium volumer searcher;
         inherits from EquilibriumVolumeMaker and MDMaker (VASP)
     production_md_maker : BaseMPMorphMDMaker
         MDMaker to generate the production run(s); inherits from MDMaker
         (VASP) or MultiMDMaker.
-    quench_maker :  SlowQuenchVaspMaker
+    quench_maker : SlowQuenchVaspMaker
         SlowQuenchVaspMaker - MDMaker that quenches structure from high
         to low temperature in piece-wise ('stepwise') AIMD runs.
         Check atomate2.vasp.jobs.mpmorph for SlowQuenchVaspMaker.
     """
 
     name: str = "MP Morph VASP MD Maker Slow Quench"
-    convergence_md_maker: EquilibriumVolumeMaker = field(
+    equilibrium_volume_maker: EquilibriumVolumeMaker = field(
         default_factory=lambda: EquilibriumVolumeMaker(md_maker=BaseMPMorphMDMaker())
     )
     production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)
@@ -224,20 +224,20 @@ class MPMorphFastQuenchVaspMDMaker(MPMorphVaspMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    convergence_md_maker : EquilibrateVolumeMaker
+    equilibrium_volume_maker : EquilibriumVolumeMaker
         MDMaker to generate the equilibrium volumer searcher;
         inherits from EquilibriumVolumeMaker and MDMaker (VASP)
     production_md_maker : BaseMPMorphMDMaker
         MDMaker to generate the production run(s); inherits from
         MDMaker (VASP) or MultiMDMaker.
-    quench_maker :  FastQuenchVaspMaker
+    quench_maker : FastQuenchVaspMaker
         FastQuenchVaspMaker - MDMaker that quenches structure from
         high temperature to 0K.
         Check atomate2.vasp.jobs.mpmorph for FastQuenchVaspMaker.
     """
 
     name: str = "MP Morph VASP MD Maker Fast Quench"
-    convergence_md_maker: EquilibriumVolumeMaker = field(
+    equilibrium_volume_maker: EquilibriumVolumeMaker = field(
         default_factory=lambda: EquilibriumVolumeMaker(md_maker=BaseMPMorphMDMaker())
     )
     production_md_maker: MDMaker = field(default_factory=BaseMPMorphMDMaker)

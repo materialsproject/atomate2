@@ -12,7 +12,7 @@ For information about the current flows, contact:
 """
 
 from __future__ import annotations
-
+from abc import abstractmethod, ABCMeta
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
@@ -86,11 +86,20 @@ class EquilibriumVolumeMaker(Maker):
         .Flow, an MPMorph flow
         """
         if working_outputs is None:
+
             if isinstance(self.initial_strain, float | int):
                 self.initial_strain = (
                     -abs(self.initial_strain),
                     abs(self.initial_strain),
                 )
+            elif not isinstance(self.initial_strain, tuple | list | np.array) or len(self.initial_strain) != 2:
+                raise ValueError(
+                    "`initial_strain` should either be a float, to set "
+                    "a symmetric linear strain of ± `initial_strain`, or a two-element "
+                    "tuple / list to explicitly set linear strain values, "
+                    f"not {self.initial_strain}."
+                )
+                
             linear_strain = np.linspace(
                 *self.initial_strain, self.postprocessor.min_data_points
             )
@@ -168,7 +177,7 @@ class EquilibriumVolumeMaker(Maker):
 
 
 @dataclass
-class MPMorphMDMaker(Maker):
+class MPMorphMDMaker(Maker,metaclass = ABCMeta):
     """Base MPMorph flow for amorphous solid equilibration.
 
     This flow uses NVT molecular dynamics to:
@@ -186,7 +195,7 @@ class MPMorphMDMaker(Maker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    convergence_md_maker : EquilibrateVolumeMaker
+    equilibrium_volume_maker : EquilibriumVolumeMaker
         MDMaker to generate the equilibrium volumer searcher
     production_md_maker : Maker
         MDMaker to generate the production run(s)
@@ -198,10 +207,13 @@ class MPMorphMDMaker(Maker):
     """
 
     name: str = "Base MPMorph MD"
-    convergence_md_maker: Maker | None = None  # check logic on this line
-    # May need to fix next two into ForceFieldMDMakers later..)
-    production_md_maker: Maker | None = None
+    equilibrium_volume_maker: Maker | None = None
+    production_md_maker: Maker = None
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
+
+    def __post_init__(self) -> None:
+        if self.production_md_maker is None:
+            raise ValueError("You must set `production_md_maker` to use this flow.")
 
     def make(
         self,
@@ -209,13 +221,12 @@ class MPMorphMDMaker(Maker):
         prev_dir: str | Path | None = None,
     ) -> Flow:
         """
-        Create a flow with MPMorph molecular dynamics (and relax+static).
+        Create an MPMorph equilibration workflow.
 
-        By default, production run is broken up into multiple smaller steps.
-        Converegence and quench are optional and may be used to equilibrate
-        the wt cell volume (useful for high temperature production runs of
+        Converegence and quench steps are optional, and may be used to equilibrate
+        the cell volume (useful for high temperature production runs of
         structures extracted from Materials Project) and to quench the
-        structure from high to low temperature (e.g. amorphous structures).
+        structure from high to low temperature (e.g. amorphous structures), respectively.
 
         Parameters
         ----------
@@ -231,8 +242,8 @@ class MPMorphMDMaker(Maker):
         """
         flow_jobs = []
 
-        if self.convergence_md_maker is not None:
-            convergence_flow = self.convergence_md_maker.make(
+        if self.equilibrium_volume_maker is not None:
+            convergence_flow = self.equilibrium_volume_maker.make(
                 structure, prev_dir=prev_dir
             )
             flow_jobs.append(convergence_flow)
@@ -260,6 +271,7 @@ class MPMorphMDMaker(Maker):
         )
 
     @classmethod
+    @abstractmethod
     def from_temperature_and_steps(
         cls,
         temperature: float,
@@ -289,7 +301,7 @@ class MPMorphMDMaker(Maker):
             If None (default), set to `temperature`.
         base_md_maker : Maker
             The Maker used to start MD runs.
-        quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
+        quench_maker : SlowQuenchMaker or FastQuenchMaker or None
             SlowQuenchMaker - MDMaker that quenches structure from
                 high to low temperature
             FastQuenchMaker - DoubleRelaxMaker + Static that
@@ -318,9 +330,14 @@ class FastQuenchMaker(Maker):
     """
 
     name: str = "fast quench"
-    relax_maker: Maker = Maker
+    relax_maker: Maker = None
     relax_maker2: Maker | None = None
-    static_maker: Maker = Maker
+    static_maker: Maker = None
+
+    def __post_init__(self) -> None:
+        for attr in ("relax_maker","static_maker"):
+            if getattr(self,attr,None) is None:
+                raise ValueError(f"You must specify {attr} to use this flow. Only `relax_maker2` is optional.")
 
     def make(
         self,
@@ -367,7 +384,7 @@ class FastQuenchMaker(Maker):
 
 
 @dataclass
-class SlowQuenchMaker(Maker):
+class SlowQuenchMaker(Maker,metaclass=ABCMeta):
     """Slow quench from high to low temperature structures.
 
     Quenches a provided structure with a molecular dynamics
@@ -404,9 +421,11 @@ class SlowQuenchMaker(Maker):
     quench_n_steps: int = 1000
     descent_method: Literal["stepwise", "linear with hold"] = "stepwise"
 
+    def __post_init__(self) -> None:
+        if self.md_maker is None:
+            raise ValueError("You must specify `md_maker` to use this flow.")
+
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        # TODO : main objective: modified to work with other MD codes.
-        # Only works for VASP and MLFF_MD now.
         """
         Create a slow quench flow with md maker.
 
@@ -467,6 +486,7 @@ class SlowQuenchMaker(Maker):
             name=self.name,
         )
 
+    @abstractmethod
     def call_md_maker(
         self,
         structure: Structure,

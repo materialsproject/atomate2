@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-import logging
+from abc import abstractmethod, ABCMeta
 from dataclasses import dataclass, field
+import logging
 from typing import TYPE_CHECKING
 
 from ase.io import Trajectory as AseTrajectory
@@ -28,7 +29,7 @@ _ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
 
 
 @dataclass
-class AseMaker(Maker):
+class AseMaker(Maker,metaclass=ABCMeta):
     """
     Define basic template of ASE-based jobs.
 
@@ -70,6 +71,7 @@ class AseMaker(Maker):
     store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO
     tags: list[str] | None = None
 
+    @abstractmethod
     def run_ase(
         self,
         mol_or_struct: Structure | Molecule,
@@ -92,6 +94,7 @@ class AseMaker(Maker):
         raise NotImplementedError
 
     @property
+    @abstractmethod
     def calculator(self) -> Calculator:
         """ASE calculator, method to be implemented in subclasses."""
         raise NotImplementedError

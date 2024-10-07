@@ -52,13 +52,13 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
-    convergence_md_maker : EquilibrateVolumeMaker
+    equilibrium_volume_maker : EquilibriumVolumeMaker
         MDMaker to generate the equilibrium volumer searcher;
         uses EquilibriumVolumeMaker with a ForceFieldMDMaker (MLFF)
     production_md_maker : ForceFieldMDMaker
         MDMaker to generate the production run(s);
         inherits from ForceFieldMDMaker (MLFF)
-    quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
+    quench_maker : SlowQuenchMaker or FastQuenchMaker or None
         SlowQuenchMaker - MLFFMDMaker that quenches structure from
         high to low temperature
         FastQuenchMaker - DoubleRelaxMaker + Static that "quenches"
@@ -66,7 +66,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
     """
 
     name: str = "MP Morph MLFF MD Maker"
-    convergence_md_maker: EquilibriumVolumeMaker | None = None
+    equilibrium_volume_maker: EquilibriumVolumeMaker | None = None
     production_md_maker: ForceFieldMDMaker = field(default_factory=ForceFieldMDMaker)
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
@@ -99,7 +99,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
         md_maker : ForceFieldMDMaker
             MDMaker to generate the molecular dynamics jobs specifically for MLFF MDs.
             This is a generalization to any MLFF MD Maker, e.g., CHGNetMDMaker
-        quench_maker :  SlowQuenchMaker or FastQuenchMaker or None
+        quench_maker : SlowQuenchMaker or FastQuenchMaker or None
             SlowQuenchMaker - MLFFMDMaker that quenches structure from
             high to low temperature
             FastQuenchMaker - DoubleRelaxMaker + Static that "quenches"
@@ -114,7 +114,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
             class_filter=ForceFieldMDMaker,
         )
 
-        convergence_md_maker = EquilibriumVolumeMaker(
+        equilibrium_volume_maker = EquilibriumVolumeMaker(
             name="MP Morph MLFF Equilibrium Volume Maker",
             md_maker=conv_md_maker,
         )
@@ -131,7 +131,7 @@ class MPMorphMLFFMDMaker(MPMorphMDMaker):
 
         return cls(
             name="MP Morph MLFF MD Maker",
-            convergence_md_maker=convergence_md_maker,
+            equilibrium_volume_maker=equilibrium_volume_maker,
             production_md_maker=production_md_maker,
             quench_maker=quench_maker,
         )

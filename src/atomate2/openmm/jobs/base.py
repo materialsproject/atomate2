@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from abc import abstractmethod, ABCMeta
 import copy
 import json
 import time
@@ -110,7 +111,7 @@ def openmm_job(method: Callable) -> job:
 
 
 @dataclass
-class BaseOpenMMMaker(Maker):
+class BaseOpenMMMaker(Maker,metaclass=ABCMeta):
     """Base class for OpenMM simulation makers.
 
     This class provides a foundation for creating OpenMM simulation
@@ -365,6 +366,7 @@ class BaseOpenMMMaker(Maker):
             )
             sim.reporters.append(state_reporter)
 
+    @abstractmethod
     def run_openmm(self, sim: Simulation, dir_name: Path) -> NoReturn:
         """Abstract method for running the OpenMM simulation.
 

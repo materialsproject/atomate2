@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from abc import abstractmethod, ABCMeta
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -22,7 +23,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-class EOSPostProcessor(MSONable):
+class EOSPostProcessor(MSONable,metaclass=ABCMeta):
     """
     Fit data to an EOS.
 
@@ -63,6 +64,7 @@ class EOSPostProcessor(MSONable):
                         self.results[job_type][key][index] for index in sort_by_vol
                     ]
 
+    @abstractmethod
     def eval(self) -> None:
         """Fit the EOS according to a user-implemented function."""
         raise NotImplementedError

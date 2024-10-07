@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from abc import abstractmethod, ABCMeta
 import contextlib
 import io
 import os
@@ -78,7 +79,7 @@ for preset in DynamicsPresets.__members__:
 
 
 @dataclass
-class AseMDMaker(AseMaker):
+class AseMDMaker(AseMaker,metaclass=ABCMeta):
     """
     Perform MD with the Atomic Simulation Environment (ASE).
 
@@ -393,6 +394,7 @@ class AseMDMaker(AseMaker):
         )
 
     @property
+    @abstractmethod
     def calculator(self) -> Calculator:
         """ASE calculator, to be overwritten by user."""
         raise NotImplementedError
