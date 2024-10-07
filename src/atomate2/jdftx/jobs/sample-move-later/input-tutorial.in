@@ -1,0 +1,27 @@
+# The input file is a list of commands, one per line
+# The commands may appear in any order; group them to your liking
+# Everything on a line after a # is treated as a comment and ignored
+# Whitespace separates words; extra whitespace is ignored
+# --------------- Water molecule example ----------------
+
+# Set up the unit cell - each column is a bravais lattice vector in bohrs
+# Hence this is a cubic box of side 10 bohr (Note that \ continues lines)
+lattice \
+    10 0  0 \
+    0  10 0 \
+    0  0  10
+
+elec-cutoff 20 100    #Plane-wave kinetic energy cutoff for wavefunctions and charge density in Hartrees
+
+# Specify the pseudopotentials (this defines species O and H):
+ion-species GBRV/h_pbe.uspp
+ion-species GBRV/o_pbe.uspp
+
+# Specify coordinate system and atom positions:
+coords-type cartesian       #the other option is lattice (suitable for solids)
+ion O   0.00 0.00  0.00  0  # The last 0 holds this atom fixed
+ion H   0.00 1.13 +1.45  1  # while the 1 allows this one to move
+ion H   0.00 1.13 -1.45  1  # during ionic minimization
+
+dump-name water.$VAR              #Filename pattern for outputs
+dump End Ecomponents ElecDensity  #Output energy components and electron density at the end
