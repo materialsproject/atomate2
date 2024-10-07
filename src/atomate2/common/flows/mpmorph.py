@@ -56,12 +56,17 @@ class EquilibriumVolumeMaker(Maker):
         cannot be determined.
     """
 
+    md_maker: Maker
     name: str = "Equilibrium Volume Maker"
-    md_maker: Maker | None = None
     postprocessor: EOSPostProcessor = field(default_factory=MPMorphPVPostProcess)
     initial_strain: float | tuple[float, float] = 0.2
     min_strain: float = 0.5
     max_attempts: int | None = 20
+
+    def __post_init__(self) -> None:
+        """Ensure required class attributes are set."""
+        if self.md_maker is None:
+            raise ValueError("You must specify `md_maker` to use this flow.")
 
     @job
     def make(
@@ -209,9 +214,9 @@ class MPMorphMDMaker(Maker, metaclass=ABCMeta):
             "quenches" structure at 0K
     """
 
+    production_md_maker: Maker
     name: str = "Base MPMorph MD"
     equilibrium_volume_maker: Maker | None = None
-    production_md_maker: Maker = None
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
     def __post_init__(self) -> None:
@@ -334,10 +339,10 @@ class FastQuenchMaker(Maker):
         Static Maker
     """
 
+    relax_maker: Maker
+    static_maker: Maker
     name: str = "fast quench"
-    relax_maker: Maker = None
     relax_maker2: Maker | None = None
-    static_maker: Maker = None
 
     def __post_init__(self) -> None:
         """Ensure required class attributes are set."""
@@ -422,8 +427,8 @@ class SlowQuenchMaker(Maker, metaclass=ABCMeta):
         Others available: "linear with hold"
     """
 
+    md_maker: Maker
     name: str = "slow quench"
-    md_maker: Maker | None = None
     quench_start_temperature: float = 3000
     quench_end_temperature: float = 500
     quench_temperature_step: float = 500
