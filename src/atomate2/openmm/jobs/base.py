@@ -6,7 +6,6 @@ import copy
 import json
 import time
 import warnings
-from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -111,7 +110,7 @@ def openmm_job(method: Callable) -> job:
 
 
 @dataclass
-class BaseOpenMMMaker(Maker, metaclass=ABCMeta):
+class BaseOpenMMMaker(Maker):
     """Base class for OpenMM simulation makers.
 
     This class provides a foundation for creating OpenMM simulation
@@ -366,7 +365,6 @@ class BaseOpenMMMaker(Maker, metaclass=ABCMeta):
             )
             sim.reporters.append(state_reporter)
 
-    @abstractmethod
     def run_openmm(self, sim: Simulation, dir_name: Path) -> NoReturn:
         """Abstract method for running the OpenMM simulation.
 
