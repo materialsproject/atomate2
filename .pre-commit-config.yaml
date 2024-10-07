@@ -41,7 +41,7 @@ repos:
   rev: v2.3.0
   hooks:
   - id: codespell
-    stages: [commit, commit-msg]
+    stages: [pre-commit, commit-msg]
     args: [--ignore-words-list, 'titel,statics,ba,nd,te,atomate']
     types_or: [python, rst, markdown]
 - repo: https://github.com/kynan/nbstripout
