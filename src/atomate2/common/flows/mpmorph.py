@@ -12,7 +12,8 @@ For information about the current flows, contact:
 """
 
 from __future__ import annotations
-from abc import abstractmethod, ABCMeta
+
+from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
@@ -86,20 +87,22 @@ class EquilibriumVolumeMaker(Maker):
         .Flow, an MPMorph flow
         """
         if working_outputs is None:
-
             if isinstance(self.initial_strain, float | int):
                 self.initial_strain = (
                     -abs(self.initial_strain),
                     abs(self.initial_strain),
                 )
-            elif not isinstance(self.initial_strain, tuple | list | np.array) or len(self.initial_strain) != 2:
+            elif (
+                not isinstance(self.initial_strain, tuple | list | np.array)
+                or len(self.initial_strain) != 2
+            ):
                 raise ValueError(
                     "`initial_strain` should either be a float, to set "
                     "a symmetric linear strain of ± `initial_strain`, or a two-element "
                     "tuple / list to explicitly set linear strain values, "
                     f"not {self.initial_strain}."
                 )
-                
+
             linear_strain = np.linspace(
                 *self.initial_strain, self.postprocessor.min_data_points
             )
@@ -177,7 +180,7 @@ class EquilibriumVolumeMaker(Maker):
 
 
 @dataclass
-class MPMorphMDMaker(Maker,metaclass = ABCMeta):
+class MPMorphMDMaker(Maker, metaclass=ABCMeta):
     """Base MPMorph flow for amorphous solid equilibration.
 
     This flow uses NVT molecular dynamics to:
@@ -212,6 +215,7 @@ class MPMorphMDMaker(Maker,metaclass = ABCMeta):
     quench_maker: FastQuenchMaker | SlowQuenchMaker | None = None
 
     def __post_init__(self) -> None:
+        """Ensure required class attributes are set."""
         if self.production_md_maker is None:
             raise ValueError("You must set `production_md_maker` to use this flow.")
 
@@ -223,10 +227,11 @@ class MPMorphMDMaker(Maker,metaclass = ABCMeta):
         """
         Create an MPMorph equilibration workflow.
 
-        Converegence and quench steps are optional, and may be used to equilibrate
-        the cell volume (useful for high temperature production runs of
-        structures extracted from Materials Project) and to quench the
-        structure from high to low temperature (e.g. amorphous structures), respectively.
+        Converegence and quench steps are optional, and may be used
+        to equilibrate the cell volume (useful for high temperature
+        production runs of structures extracted from Materials Project)
+        and to quench the structure from high to low temperature
+        (e.g. amorphous structures), respectively.
 
         Parameters
         ----------
@@ -335,9 +340,13 @@ class FastQuenchMaker(Maker):
     static_maker: Maker = None
 
     def __post_init__(self) -> None:
-        for attr in ("relax_maker","static_maker"):
-            if getattr(self,attr,None) is None:
-                raise ValueError(f"You must specify {attr} to use this flow. Only `relax_maker2` is optional.")
+        """Ensure required class attributes are set."""
+        for attr in ("relax_maker", "static_maker"):
+            if getattr(self, attr, None) is None:
+                raise ValueError(
+                    f"You must specify {attr} to use this flow. "
+                    "Only `relax_maker2` is optional."
+                )
 
     def make(
         self,
@@ -384,7 +393,7 @@ class FastQuenchMaker(Maker):
 
 
 @dataclass
-class SlowQuenchMaker(Maker,metaclass=ABCMeta):
+class SlowQuenchMaker(Maker, metaclass=ABCMeta):
     """Slow quench from high to low temperature structures.
 
     Quenches a provided structure with a molecular dynamics
@@ -422,6 +431,7 @@ class SlowQuenchMaker(Maker,metaclass=ABCMeta):
     descent_method: Literal["stepwise", "linear with hold"] = "stepwise"
 
     def __post_init__(self) -> None:
+        """Ensure required class attributes are set."""
         if self.md_maker is None:
             raise ValueError("You must specify `md_maker` to use this flow.")
 

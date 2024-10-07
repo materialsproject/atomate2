@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from abc import abstractmethod, ABCMeta
-from dataclasses import dataclass, field
 import logging
+from abc import ABCMeta, abstractmethod
+from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from ase.io import Trajectory as AseTrajectory
@@ -29,7 +29,7 @@ _ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
 
 
 @dataclass
-class AseMaker(Maker,metaclass=ABCMeta):
+class AseMaker(Maker, metaclass=ABCMeta):
     """
     Define basic template of ASE-based jobs.
 

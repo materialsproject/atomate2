@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from abc import abstractmethod, ABCMeta
 import copy
 import json
 import time
 import warnings
+from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -111,7 +111,7 @@ def openmm_job(method: Callable) -> job:
 
 
 @dataclass
-class BaseOpenMMMaker(Maker,metaclass=ABCMeta):
+class BaseOpenMMMaker(Maker, metaclass=ABCMeta):
     """Base class for OpenMM simulation makers.
 
     This class provides a foundation for creating OpenMM simulation
