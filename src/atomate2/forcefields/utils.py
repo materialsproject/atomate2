@@ -61,10 +61,7 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
         elif calculator_name == MLFF.MACE:
             from mace.calculators import mace_mp
 
-            default_model = {
-                "model": "https://github.com/ACEsuit/mace-mp/releases/download/mace_mp_0/2023-12-10-mace-128-L0_epoch-199.model"
-            }
-            calculator = mace_mp(**default_model | kwargs)
+            calculator = mace_mp(**kwargs)
 
         elif calculator_name == MLFF.GAP:
             from quippy.potential import Potential

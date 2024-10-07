@@ -5,13 +5,17 @@ from atomate2.forcefields.utils import ase_calculator
 
 
 @pytest.mark.parametrize(("force_field"), ["CHGNet", "MACE"])
-def test_ext_load(force_field: str):
+def test_ext_load(force_field: str, test_dir):
     decode_dict = {
         "CHGNet": {"@module": "chgnet.model.dynamics", "@callable": "CHGNetCalculator"},
         "MACE": {"@module": "mace.calculators", "@callable": "mace_mp"},
     }[force_field]
-    calc_from_decode = ase_calculator(decode_dict)
-    calc_from_preset = ase_calculator(str(MLFF(force_field)))
+    kwargs_calc = {
+        "CHGNet": {},
+        "MACE": {"model": test_dir / "forcefields" / "mace" / "MACE.model"},
+    }[force_field]
+    calc_from_decode = ase_calculator(decode_dict, **kwargs_calc)
+    calc_from_preset = ase_calculator(str(MLFF(force_field)), **kwargs_calc)
     assert type(calc_from_decode) is type(calc_from_preset)
     assert calc_from_decode.name == calc_from_preset.name
     assert calc_from_decode.parameters == calc_from_preset.parameters == {}
