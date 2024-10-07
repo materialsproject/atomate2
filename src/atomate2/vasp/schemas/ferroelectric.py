@@ -41,25 +41,25 @@ class PolarizationDocument(BaseModel):
         description="The norm of the polarization vector",
     )
 
-    same_branch_polarization: List[List[float]] = Field(
+    same_branch_polarization: Dict = Field(
         None,
         title="Same Branch Polarization Vectors",
         description="Polarization vectors in the same branch",
     )
 
-    raw_electron_polarization: List[float] = Field(
+    raw_electron_polarization: Dict = Field(
         None,
         title="Raw Electron Polarization",
         description="Electronic contribution to the polarization",
     )
 
-    raw_ion_polarization: List[float] = Field(
+    raw_ion_polarization: Dict = Field(
         None,
         title="Raw Ions Polarization",
         description="Ionic contribution to the polarization",
     )
 
-    polarization_quanta: List[List[float]] = Field(
+    polarization_quanta: Dict = Field(
         None,
         title="Polarization Quanta",
         description="Quanta of polarization for each structure and direction",
