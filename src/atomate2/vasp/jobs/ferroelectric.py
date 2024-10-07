@@ -64,7 +64,7 @@ def polarization_analysis(np_lcalcpol_output,
     # VASP's ionic contribution is sometimes strange.
     # See pymatgen.analysis.ferroelectricity.polarization.Polarization for details.
     p_elecs = [p["p_elecs"] for p in polarization_tasks]
-    p_ions = [ get_total_ionic_dipole(st, zval_dict) for st in structures]
+    p_ions = [get_total_ionic_dipole(st, zval_dict) for st in structures]
 
     polarization_doc = PolarizationDocument.from_pol_output(
         p_elecs, p_ions, structures, energies,
