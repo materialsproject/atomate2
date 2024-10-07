@@ -42,7 +42,7 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
     """
     calculator = None
 
-    if isinstance(calculator_meta, str) and calculator_meta in map(str, MLFF):
+    if isinstance(calculator_meta, str | MLFF) and calculator_meta in map(str, MLFF):
         calculator_name = MLFF(calculator_meta.split("MLFF.")[-1])
 
         if calculator_name == MLFF.CHGNet:
@@ -96,7 +96,7 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
         calculator = calc_cls(**kwargs)
 
     if calculator is None:
-        raise ValueError("Could not create ASE calculator.")
+        raise ValueError(f"Could not create ASE calculator for {calculator_meta}.")
 
     return calculator
 

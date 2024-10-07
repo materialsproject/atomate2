@@ -89,8 +89,8 @@ class CalculationInput(BaseModel):
     @classmethod
     def remove_unnecessary(cls, atomic_kind_info: dict) -> dict:
         """Remove unnecessary entry from atomic_kind_info."""
-        for key in atomic_kind_info:
-            if "total_pseudopotential_energy" in atomic_kind_info[key]:
+        for key, value in atomic_kind_info.items():
+            if "total_pseudopotential_energy" in value:
                 del atomic_kind_info[key]["total_pseudopotential_energy"]
         return atomic_kind_info
 
@@ -524,9 +524,9 @@ def _get_volumetric_data(
         except Exception as err:
             raise ValueError(f"Failed to parse {file_type} at {file}.") from err
 
-    for file_type in volumetric_data:
+    for file_type, data in volumetric_data.items():
         if file_type.name in __is_stored_in_Ha__:
-            volumetric_data[file_type].scale(Ha_to_eV)
+            data.scale(Ha_to_eV)
 
     return volumetric_data
 
