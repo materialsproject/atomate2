@@ -36,6 +36,7 @@ _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
 }
 
+
 def forcefield_job(method: Callable) -> job:
     """
     Decorate the ``make`` method of forcefield job makers.
@@ -187,6 +188,7 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
             str(self.force_field_name),  # make mypy happy
             **self.calculator_kwargs,
         )
+
 
 @dataclass
 class ForceFieldStaticMaker(ForceFieldRelaxMaker):
@@ -780,4 +782,3 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     calculator_kwargs: dict = field(
         default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.GAP]
     )
-
