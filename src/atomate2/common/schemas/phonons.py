@@ -424,7 +424,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             phonon.write_projected_dos()
 
         phonon.run_mesh(kpoint.kpts[0])
-        phonon_dos_sigma = kwargs.get("phonon_dos_sigma", None)
+        phonon_dos_sigma = kwargs.get("phonon_dos_sigma")
         dos_use_tetrahedron_method = kwargs.get("dos_use_tetrahedron_method", True)
         phonon.run_total_dos(
             sigma=phonon_dos_sigma, use_tetrahedron_method=dos_use_tetrahedron_method

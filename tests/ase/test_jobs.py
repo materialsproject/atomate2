@@ -33,6 +33,9 @@ def test_lennard_jones_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):
     assert output.structure.volume == pytest.approx(22.304245)
     assert output.output.energy == pytest.approx(-0.018494767)
     assert isinstance(output, AseStructureTaskDoc)
+    assert fcc_ne_structure.matches(
+        output.structure
+    ), f"{output.structure} != {fcc_ne_structure}"
 
 
 def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
@@ -46,8 +49,12 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
     assert output.structure.volume == pytest.approx(24.334)
     assert isinstance(output, AseStructureTaskDoc)
 
+    # Structure.__eq__ checks properties which contains 'energy', 'forces', 'stress'
+    # so need to reset properties to ensure equality
     output.structure.properties = fcc_ne_structure.properties
-    assert output.structure == fcc_ne_structure
+    assert (
+        output.structure == fcc_ne_structure
+    ), f"{output.structure} != {fcc_ne_structure}"
 
 
 @pytest.mark.skipif(condition=TBLite is None, reason="TBLite must be installed.")
@@ -94,9 +101,7 @@ H -0.181997 2.257930 -0.421222""",
 def test_gfn_xtb_static_maker(h2o_3uud_trimer):
     os.environ["OMP_NUM_THREADS"] = "1"
     job = GFNxTBStaticMaker(
-        calculator_kwargs={
-            "method": "GFN2-xTB",
-        },
+        calculator_kwargs={"method": "GFN2-xTB"},
     ).make(h2o_3uud_trimer)
 
     response = run_locally(job)
@@ -105,5 +110,7 @@ def test_gfn_xtb_static_maker(h2o_3uud_trimer):
     assert output.output.energy_per_atom == pytest.approx(-46.05920227158222)
     assert isinstance(output, AseMoleculeTaskDoc)
 
+    # Molecule.__eq__ checks properties which contains 'energy', 'forces', 'stress'
+    # so need to reset properties to ensure equality
     output.molecule.properties = h2o_3uud_trimer.properties
     assert output.molecule == h2o_3uud_trimer
