@@ -7,6 +7,7 @@ from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from ase.calculators.calculator import Calculator
 from ase.io import Trajectory as AseTrajectory
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from jobflow import Maker, job
@@ -20,7 +21,6 @@ logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from ase.calculators.calculator import Calculator
     from pymatgen.core import Molecule, Structure
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
@@ -29,7 +29,7 @@ _ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
 
 
 @dataclass
-class AseMaker(Maker, metaclass=ABCMeta):
+class AseMaker(Maker,metaclass=ABCMeta):
     """
     Define basic template of ASE-based jobs.
 
@@ -43,8 +43,6 @@ class AseMaker(Maker, metaclass=ABCMeta):
     ----------
     name: str
         The name of the job
-    calculator_kwargs : dict
-        Keyword arguments that will get passed to the ASE calculator.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     ionic_step_data : tuple[str,...] or None
@@ -94,11 +92,10 @@ class AseMaker(Maker, metaclass=ABCMeta):
         raise NotImplementedError
 
     @property
-    @abstractmethod
     def calculator(self) -> Calculator:
         """ASE calculator, method to be implemented in subclasses."""
-        raise NotImplementedError
-
+        return NotImplementedError
+    
 
 @dataclass
 class AseRelaxMaker(AseMaker):
@@ -212,7 +209,6 @@ class AseRelaxMaker(AseMaker):
             **self.optimizer_kwargs,
         )
         return relaxer.relax(mol_or_struct, steps=self.steps, **self.relax_kwargs)
-
 
 @dataclass
 class LennardJonesRelaxMaker(AseRelaxMaker):

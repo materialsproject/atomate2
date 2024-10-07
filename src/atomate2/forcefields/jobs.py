@@ -36,7 +36,6 @@ _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
 }
 
-
 def forcefield_job(method: Callable) -> job:
     """
     Decorate the ``make`` method of forcefield job makers.
@@ -188,7 +187,6 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
             str(self.force_field_name),  # make mypy happy
             **self.calculator_kwargs,
         )
-
 
 @dataclass
 class ForceFieldStaticMaker(ForceFieldRelaxMaker):
@@ -783,107 +781,3 @@ class GAPStaticMaker(ForceFieldStaticMaker):
         default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.GAP]
     )
 
-
-@dataclass
-class PyACERelaxMaker(ForceFieldRelaxMaker):
-    """Base Maker to calculate forces and stresses using a PyACE potential.
-
-    Note: the "basis_set" key is required to specify the basis set.
-    The "asi_file" key is required to specify active set in ACE
-
-    Parameters
-    ----------
-    name : str
-        The job name.
-    force_field_name : str
-        The name of the force field.
-    relax_cell : bool = True
-        Whether to allow the cell shape/volume to change during relaxation.
-    fix_symmetry : bool = False
-        Whether to fix the symmetry during relaxation.
-        Refines the symmetry of the initial structure.
-    symprec : float = 1e-2
-        Tolerance for symmetry finding in case of fix_symmetry.
-    steps : int
-        Maximum number of ionic steps allowed during relaxation.
-    relax_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer.relax`.
-    optimizer_kwargs : dict
-        Keyword arguments that will get passed to :obj:`Relaxer()`.
-    calculator_kwargs : dict
-        Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    """
-
-    name: str = f"{MLFF.Pyace} relax"
-    force_field_name: str = f"{MLFF.Pyace}"
-    relax_cell: bool = True
-    fix_symmetry: bool = False
-    symprec: float = 1e-2
-    steps: int = 500
-    relax_kwargs: dict = field(default_factory=dict)
-    optimizer_kwargs: dict = field(default_factory=dict)
-    task_document_kwargs: dict = field(default_factory=dict)
-    calculator_kwargs: dict = field(
-        default_factory=lambda: {
-            "basis_set": "output_potential.yaml",
-            "asi_file": "output_potential.asi",
-        }
-    )
-
-
-@dataclass
-class PyACEStaticMaker(ForceFieldStaticMaker):
-    """Base Maker to calculate forces and stresses using a PyACE potential.
-
-    Note: the "basis_set" key is required to specify the basis set.
-    The "asi_file" key is required to specify active set in ACE
-
-    Parameters
-    ----------
-    name : str
-        The job name.
-    force_field_name : str
-        The name of the force field.
-    calculator_kwargs : dict
-        Keyword arguments that will get passed to the ASE calculator.
-    task_document_kwargs : dict
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
-    calculator_kwargs : dict
-        Keyword arguments that will get passed to the ASE calculator.
-    """
-
-    name: str = f"{MLFF.Pyace} static"
-    force_field_name: str = f"{MLFF.Pyace}"
-    task_document_kwargs: dict = field(default_factory=dict)
-    calculator_kwargs: dict = field(
-        default_factory=lambda: {
-            "basis_set": "output_potential.yaml",
-            "asi_file": "output_potential.asi",
-        }
-    )
-
-
-@dataclass
-class LJRelaxMaker(ForceFieldRelaxMaker):
-    """Base Maker to calculate forces and stresses using a Lennard-Jones potential."""
-
-    name: str = "LJ relax"
-
-    def _calculator(self) -> Calculator:
-        from ase.calculators.lj import LennardJones
-
-        return LennardJones(**self.calculator_kwargs)
-
-
-@dataclass
-class LJStaticMaker(ForceFieldStaticMaker):
-    """Base Maker to calculate forces and stresses using a Lennard-Jones potential."""
-
-    name: str = "LJ static"
-
-    def _calculator(self) -> Calculator:
-        from ase.calculators.lj import LennardJones
-
-        return LennardJones(**self.calculator_kwargs)

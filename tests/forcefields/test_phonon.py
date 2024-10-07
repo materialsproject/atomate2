@@ -61,7 +61,7 @@ def test_phonon_maker_initialization_with_all_mlff(
 
     chk_pt_dir = test_dir / "forcefields"
     for mlff in MLFF:
-        if mlff in {MLFF.GAP, MLFF.Pyace, MLFF.Forcefield}:
+        if mlff in {MLFF.GAP, MLFF.Forcefield}:
             continue  # TODO fix GAP, currently fails with RuntimeError, see
             # https://github.com/materialsproject/atomate2/pull/918#issuecomment-2253659694
         # skip m3gnet due M3GNet requiring DGL which is PyTorch 2.4 incompatible
