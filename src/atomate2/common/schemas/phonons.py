@@ -351,8 +351,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         # with phonopy.load("phonopy.yaml") the phonopy API can be used
         phonon.save(
-            filename_phonopy_yaml, 
-            settings={'force_constants': kwargs.get("store_force_constants", True)}
+            filename_phonopy_yaml,
+            settings={"force_constants": kwargs.get("store_force_constants", True)},
         )
 
         # get phonon band structure
@@ -409,8 +409,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             kppa=kpoint_density_dos,
             force_gamma=True,
         )
-        
-        # projected dos 
+
+        # projected dos
         if kwargs.get("calculate_pdos", False):
             phonon.run_mesh(
                 kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
@@ -418,8 +418,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             phonon_dos_sigma = kwargs.get("phonon_dos_sigma", None)
             dos_use_tetrahedron_method = kwargs.get("dos_use_tetrahedron_method", True)
             phonon.run_projected_dos(
-                sigma=phonon_dos_sigma, 
-                use_tetrahedron_method=dos_use_tetrahedron_method
+                sigma=phonon_dos_sigma,
+                use_tetrahedron_method=dos_use_tetrahedron_method,
             )
             phonon.write_projected_dos()
 
