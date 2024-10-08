@@ -4,17 +4,26 @@ from shutil import which
 
 import pytest
 from jobflow import run_locally
-from pandas import read_json
+from pandas import read_parquet, DataFrame
 from pymatgen.core import Composition
 
 from atomate2.common.jobs.mpmorph import (
-    _DEFAULT_ICSD_AVG_VOL_FILE,
-    _DEFAULT_MP_AVG_VOL_FILE,
+    _DEFAULT_AVG_VOL_FILE,
+    _get_average_volumes_file,
     _get_chem_env_key_from_composition,
-    get_average_volume_from_icsd,
+    get_average_volume_from_db_cached,
     get_average_volume_from_mp,
     get_random_packed_structure,
 )
+
+def test_get_ref_file(retries = 5):
+    for _ in range(retries):
+        try:
+            _get_average_volumes_file()
+        except Exception:
+            pass
+    assert _DEFAULT_AVG_VOL_FILE.exists()
+    assert isinstance(read_parquet(_DEFAULT_AVG_VOL_FILE),DataFrame)
 
 
 @pytest.mark.parametrize(
@@ -23,14 +32,18 @@ from atomate2.common.jobs.mpmorph import (
 def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool]):
     comp = Composition({"Ag+": 1, "Cl5+": 1, "O2-": 3})
 
+    avg_vols = read_parquet(_DEFAULT_AVG_VOL_FILE)
+    avg_vols = avg_vols[avg_vols["source"] == db]
+
+    kwargs = {}
     if db == "icsd":
-        avg_vols = read_json(_DEFAULT_ICSD_AVG_VOL_FILE)
         ref_vols = {0: 14.204405661000004, 1: 14.244954961061925}
-        get_avg_vol_func = get_average_volume_from_icsd
+        get_avg_vol_func = get_average_volume_from_db_cached
+        args = (db,)
     elif db == "mp":
-        avg_vols = read_json(_DEFAULT_MP_AVG_VOL_FILE)
         ref_vols = {1: 17.845894151307604}
         get_avg_vol_func = get_average_volume_from_mp
+        args = tuple()
     else:
         raise ValueError(f"Unknown database {db}")
 
@@ -45,14 +58,14 @@ def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool]):
         assert (
             len(
                 avg_vols[
-                    (avg_vols["chem_env"] == chem_env)
+                    (avg_vols.index == chem_env)
                     & (~avg_vols["with_oxi"] if ignore_oxi else avg_vols["with_oxi"])
                 ]
             )
             > 0
         )
 
-        assert get_avg_vol_func(comp, **kwargs) == pytest.approx(ref_vols[ignore_oxi])
+        assert get_avg_vol_func(comp, *args, **kwargs) == pytest.approx(ref_vols[ignore_oxi])
 
     comp = Composition({"Ag+": 1, "Cu2+": 1, "Cl-": 3})
     if db == "icsd":
@@ -67,7 +80,7 @@ def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool]):
             _get_chem_env_key_from_composition(comp, ignore_oxi_states=ignore_oxi)
             == chem_env
         )
-        assert get_avg_vol_func(comp, **kwargs) == pytest.approx(ref_vols[ignore_oxi])
+        assert get_avg_vol_func(comp, *args, **kwargs) == pytest.approx(ref_vols[ignore_oxi])
 
 
 @pytest.mark.skipif(

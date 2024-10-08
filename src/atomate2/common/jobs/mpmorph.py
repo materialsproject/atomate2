@@ -14,24 +14,37 @@ For information about the current flows, contact:
 from __future__ import annotations
 
 from importlib.resources import files as import_resource_file
+from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING
 
 import numpy as np
+import pandas
 from jobflow import Job
 from pymatgen.core import Composition, Molecule, Structure
 from pymatgen.io.packmol import PackmolBoxGen
 
-if TYPE_CHECKING:
-    from pathlib import Path
+_DEFAULT_AVG_VOL_FILE = import_resource_file("atomate2.common.jobs") / "db_avg_vols.parquet.gz"
+_DEFAULT_AVG_VOL_URL = "https://figshare.com/ndownloader/files/49680966"
 
-_DEFAULT_ICSD_AVG_VOL_FILE = str(
-    import_resource_file("atomate2.common.jobs")
-    / "ICSD_expt_inorg_ordered_avg_vol.json.gz"
-)
-_DEFAULT_MP_AVG_VOL_FILE = str(
-    import_resource_file("atomate2.common.jobs") / "mp_avg_vol.json.gz"
-)
+def _get_average_volumes_file(
+    chunk_size : int = 2048
+) -> None:
+    """
+    Retrieve stored average volume data from figshare if needed.
+
+    Parameters
+    -----------
+    chunk_size : int = 2048
+        Chunk size for downloading from figshare
+    """
+    if not _DEFAULT_AVG_VOL_FILE.exists():
+        import requests
+
+        stream_data = requests.get(_DEFAULT_AVG_VOL_URL,stream=True)
+        with open(str(_DEFAULT_AVG_VOL_FILE),"wb") as file:
+            for chunk in stream_data.iter_content(chunk_size=chunk_size):
+                file.write(chunk)
 
 
 def get_average_volume_from_mp_api(
@@ -88,32 +101,44 @@ def get_average_volume_from_mp_api(
     return np.mean(vols)
 
 
-def get_average_volume_from_mp_cached(
+def get_average_volume_from_db_cached(
     composition: Composition,
+    db_name : str,
     cache_file: str | Path | None = None,
+    ignore_oxi_states : bool = True,
 ) -> float:
     """
-    Get the average volume per atom for a given composition from cached MP data.
+    Get the average volume per atom for a given composition from cached data.
 
-    This function uses cached MP data to accelerate the volume/atom search.
+    This function uses cached data to accelerate the volume/atom search.
 
     Parameters
     ----------
     composition : Composition
         The target composition.
+    db_name : str
+        Name of the database to pull data from.
     cache_file : str, .Path, or None
-        Path to the cached volume file, should be of the same form as used in
-        `get_average_volume_from_icsd`
+        Path to the cached volume file.
+    ignore_oxi_states : bool = True
+        Whether to ignore oxidation state data.
 
     Returns
     -------
     float
         The average volume per atom for the composition.
     """
-    return get_average_volume_from_icsd(
+    if cache_file is None:
+        _get_average_volumes_file()
+
+    avg_vols = pandas.read_parquet(
+        cache_file or _DEFAULT_AVG_VOL_FILE
+    )
+    avg_vols = avg_vols[avg_vols["source"] == db_name]
+    return get_average_volume_from_database(
         composition,
-        ignore_oxi_states=True,
-        icsd_chem_env_file=cache_file or _DEFAULT_MP_AVG_VOL_FILE,
+        avg_vols = avg_vols,
+        ignore_oxi_states=ignore_oxi_states,
     )
 
 
@@ -133,7 +158,7 @@ def get_average_volume_from_mp(
     use_cached : bool = True
         Whether to use cached MP data (True) or make calls to the MP API (False)
     **kwargs : kwargs to pass to the volume/atom search functions, see
-        `get_average_volume_from_mp_cached`,
+        `get_average_volume_from_db_cached`,
         `get_average_volume_from_mp_api`
         for specific kwargs.
 
@@ -143,7 +168,7 @@ def get_average_volume_from_mp(
         The average volume per atom for the composition.
     """
     if use_cached:
-        return get_average_volume_from_mp_cached(composition, **kwargs)
+        return get_average_volume_from_db_cached(composition, db_name="mp", **kwargs)
     return get_average_volume_from_mp_api(composition, **kwargs)
 
 
@@ -177,11 +202,10 @@ def _get_chem_env_key_from_composition(
         chem_env = chem_env.replace(f"0{char}", "")
     return chem_env
 
-
-def get_average_volume_from_icsd(
+def get_average_volume_from_database(
     composition: Composition,
+    avg_vols : pandas.DataFrame,
     ignore_oxi_states: bool = True,
-    icsd_chem_env_file: str | Path | None = None,
 ) -> float:
     """
     Get average volume for a chemical environment from ICSD data.
@@ -192,23 +216,17 @@ def get_average_volume_from_icsd(
     ----------
     composition : .Composition
         Structure composition
+    avg_vols : pandas .DataFrame
+        Chemical environment data for a given database.
+        Should be indexed by the chemical environment.
+        Should also have the following columns:
+            "avg_vol", "count", "with_oxi"
     ignore_oxi_states : bool = True
         Whether to ignore oxidation states assigned to sites in the structure,
         both in the input composition and ICSD structures.
 
         Note that 0+ / 0- oxidation states are treated identically even
         when ignore_oxi_states = False.
-    icsd_chem_env_file : str | Path | None = None
-        The file path to the ICSD chemical environments file.
-        For the user to substitute their own values, this should be a dict of the form:
-        ```
-        {
-            "chem_env": list[str],
-            "avg_vol": list[float].
-            "count": list[int],
-            "with_oxi": list[bool],
-        }
-        ```
 
     Returns
     -------
@@ -216,13 +234,8 @@ def get_average_volume_from_icsd(
     """
     from itertools import combinations
 
-    from pandas import read_json
-
-    icsd_chem_env_file = icsd_chem_env_file or _DEFAULT_ICSD_AVG_VOL_FILE
-    icsd_avg_vols = read_json(icsd_chem_env_file)
-
     def get_entry_from_dict(chem_env: str) -> dict | None:
-        data = icsd_avg_vols[icsd_avg_vols["chem_env"] == chem_env]
+        data = avg_vols[avg_vols.index == chem_env]
         data = data[
             data["with_oxi"]
             if (not ignore_oxi_states and len(data[data["with_oxi"]]) > 0)
@@ -328,7 +341,7 @@ def get_random_packed_structure(
         vol_per_atom = get_average_volume_from_mp(composition, **db_kwargs)
 
     elif struct_db == "icsd":
-        vol_per_atom = get_average_volume_from_icsd(composition, **db_kwargs)
+        vol_per_atom = get_average_volume_from_db_cached(composition, db_name="icsd", **db_kwargs)
 
     else:
         raise ValueError(f"Unknown volume per atom source: {vol_per_atom_source}.")
