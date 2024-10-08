@@ -83,14 +83,14 @@ class PolarizationDocument(BaseModel):
         description="All the interpolated structures",
     )
 
-    polarization_max_spline_jumps: list[float] = Field(
+    polarization_max_spline_jumps: list[float] | None = Field(
         None,
         title="Polarization Max Spline Jump",
         description="Maximum jump of the spline that interpolate \
                      the polarization branch",
     )
 
-    energy_per_atom_max_spline_jumps: float = Field(
+    energy_per_atom_max_spline_jumps: float | None = Field(
         None,
         title="Energy Max Spline Jump",
         description="Maximum jump of the spline that interpolate \
@@ -152,10 +152,10 @@ class PolarizationDocument(BaseModel):
 
         if len(structures) > 3:
             energy_trend = EnergyTrend(energies_per_atom)
-            energy_max_spline_jumps = energy_trend.max_spline_jump()
+            energy_max_spline_jump = energy_trend.max_spline_jump()
             polarization_max_spline_jumps = polarization.max_spline_jumps()
         else:
-            energy_max_spline_jumps = None
+            energy_max_spline_jump = None
             polarization_max_spline_jumps = None
 
         polarization_dict = {}
@@ -187,7 +187,7 @@ class PolarizationDocument(BaseModel):
 
         # Energy information
         polarization_dict.update(
-            {"energy_per_atom_max_spline_jumps": energy_max_spline_jumps}
+            {"energy_per_atom_max_spline_jumps": energy_max_spline_jump}
         )
         polarization_dict.update({"energies": energies})
         polarization_dict.update({"energies_per_atom": energies_per_atom})
