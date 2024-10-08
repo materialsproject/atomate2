@@ -94,7 +94,7 @@ class AseMaker(Maker, metaclass=ABCMeta):
     @property
     def calculator(self) -> Calculator:
         """ASE calculator, method to be implemented in subclasses."""
-        return NotImplementedError
+        raise NotImplementedError
 
 
 @dataclass
