@@ -1,15 +1,11 @@
 """Schemas for Ferroelectric wflow."""
 
-from typing import Dict, List
 import numpy as np
-from monty.serialization import dumpfn,loadfn
+from monty.serialization import dumpfn
 from pydantic import BaseModel, Field
+from pymatgen.analysis.ferroelectricity.polarization import EnergyTrend, Polarization
 from pymatgen.core import Structure
-from pymatgen.analysis.ferroelectricity.polarization import (
-    EnergyTrend,
-    Polarization,
-    get_total_ionic_dipole,
-)
+from typing_extensions import Self
 
 __all__ = ["PolarizationDocument"]
 
@@ -23,13 +19,13 @@ class PolarizationDocument(BaseModel):
         description="Cleaned representation of the formula",
     )
 
-    task_label_order: List[str] = Field(
+    task_label_order: list[str] = Field(
         None,
         title="Task Labels Ordered",
         description="Task labels in order from nonpolar to polar",
     )
 
-    polarization_change: List[float] = Field(
+    polarization_change: list[float] = Field(
         None,
         title="Polarization Vector",
         description="The polarization vector",
@@ -41,25 +37,25 @@ class PolarizationDocument(BaseModel):
         description="The norm of the polarization vector",
     )
 
-    same_branch_polarization: Dict = Field(
+    same_branch_polarization: dict = Field(
         None,
         title="Same Branch Polarization Vectors",
         description="Polarization vectors in the same branch",
     )
 
-    raw_electron_polarization: Dict = Field(
+    raw_electron_polarization: dict = Field(
         None,
         title="Raw Electron Polarization",
         description="Electronic contribution to the polarization",
     )
 
-    raw_ion_polarization: Dict = Field(
+    raw_ion_polarization: dict = Field(
         None,
         title="Raw Ions Polarization",
         description="Ionic contribution to the polarization",
     )
 
-    polarization_quanta: Dict = Field(
+    polarization_quanta: dict = Field(
         None,
         title="Polarization Quanta",
         description="Quanta of polarization for each structure and direction",
@@ -71,23 +67,23 @@ class PolarizationDocument(BaseModel):
         description="Charge of the atoms as in pseudopotentials",
     )
 
-    energies: List[float] = Field(
+    energies: list[float] = Field(
         None,
         title="Energies",
         description="Total energy of each structure",
     )
 
-    energies_per_atom: List[float] = Field(
+    energies_per_atom: list[float] = Field(
         None, title="Total energy per atom of each structure", description=""
     )
 
-    structures: List[Structure] = Field(
+    structures: list[Structure] = Field(
         None,
         title="Structures",
         description="All the interpolated structures",
     )
 
-    polarization_max_spline_jumps: List[float] = Field(
+    polarization_max_spline_jumps: list[float] = Field(
         None,
         title="Polarization Max Spline Jump",
         description="Maximum jump of the spline that interpolate \
@@ -101,28 +97,27 @@ class PolarizationDocument(BaseModel):
                      the energy per atom profile",
     )
 
-    uuids: List[str] = Field(None, description="The uuids of the polarization jobs.")
-    
-    job_dirs: List[str] = Field(
-        None, description="The directories where the polarization jobs were run.")
+    uuids: list[str] = Field(None, description="The uuids of the polarization jobs.")
 
-        
+    job_dirs: list[str] = Field(
+        None, description="The directories where the polarization jobs were run."
+    )
+
     @classmethod
     def from_pol_output(
-            cls,
-            p_elecs: List[float],
-            p_ions: List[float],
-            structures: List[Structure],
-            energies: List[float],
-            energies_per_atom: List[float],
-            zval_dict: dict,
-            tasks: List[str],
-            job_dirs: List[str],
-            uuids: List[str],
-    ):
-
+        cls,
+        p_elecs: list[float],
+        p_ions: list[float],
+        structures: list[Structure],
+        energies: list[float],
+        energies_per_atom: list[float],
+        zval_dict: dict,
+        tasks: list[str],
+        job_dirs: list[str],
+        uuids: list[str],
+    ) -> Self:
         """
-        Generate a PolarizationDocument from output of lcalcpol calculations
+        Generate a PolarizationDocument from output of lcalcpol calculations.
 
         Parameters
         ----------
@@ -135,17 +130,16 @@ class PolarizationDocument(BaseModel):
         energies: List[float]
             total energy for each calculation
         energies_per_atom: List[float]
-            Total energy per atom for each calculation        
-        zval_dicts: Dict
+            Total energy per atom for each calculation
+        zval_dict: Dict
             zvals from pseudopotentials
-        tasks: List[str],
+        tasks: List[str]
             Labels of each polarization task calculation
-        job_dirs: List[str],
-            The directories where the polarization jobs were run.
-        uuids: List[str],
-            The uuids of the polarization jobs.
-        """    
-
+        job_dirs: List[str]
+            The directories where the polarization jobs were run
+        uuids: List[str]
+            The uuids of the polarization jobs
+        """
         polarization = Polarization(p_elecs, p_ions, structures)
 
         p_change = np.ravel(polarization.get_polarization_change()).tolist()
@@ -166,10 +160,10 @@ class PolarizationDocument(BaseModel):
 
         polarization_dict = {}
 
-        def split_abc(var):
+        def split_abc(var: np.array) -> dict[str, list[float]]:
             d = {}
             for i, j in enumerate("abc"):
-                d.update({f"{j}": np.ravel(var[:, i]).tolist()})
+                d.update({f"{j}": np.ravel(var[:, i].tolist())})
             return d
 
         # General information
@@ -199,7 +193,9 @@ class PolarizationDocument(BaseModel):
         polarization_dict.update({"energies_per_atom": energies_per_atom})
         polarization_dict.update({"structures": structures})
 
+        # Add job_dirs and uuids to the polarization_dict
+        polarization_dict.update({"job_dirs": job_dirs})
+        polarization_dict.update({"uuids": uuids})
+
         dumpfn(polarization_dict, "polarization_doc.json")
         return cls(**polarization_dict)
-
-

@@ -36,7 +36,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-
 @dataclass
 class StaticMaker(BaseVaspMaker):
     """

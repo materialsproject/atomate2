@@ -4,20 +4,24 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.core.structure import Structure
 
-from atomate2 import SETTINGS
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vasp.jobs.base import BaseVaspMaker
+
 from atomate2.vasp.flows.core import DoubleRelaxMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.jobs.core import PolarizationMaker, RelaxMaker
 from atomate2.vasp.jobs.ferroelectric import (
-    interpolate_structures,
     add_interpolation_flow,
-    polarization_analysis,
     get_polarization_output,
+    interpolate_structures,
+    polarization_analysis,
 )
 
 __all__ = ["FerroelectricMaker"]
@@ -57,7 +61,7 @@ class FerroelectricMaker(Maker):
         polar_structure: Structure,
         nonpolar_structure: Structure,
         prev_vasp_dir: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Make flow to calculate the polarization.
 
@@ -114,21 +118,19 @@ class FerroelectricMaker(Maker):
         jobs.append(interp_structs_job)
 
         prev_interp_dir = interp_structs_job.output
-        add_interp_flow = add_interpolation_flow(prev_interp_dir,
-                                                 self.lcalcpol_maker)
+        add_interp_flow = add_interpolation_flow(prev_interp_dir, self.lcalcpol_maker)
 
         pol_analysis = polarization_analysis(
             get_polarization_output(nonpolar_lcalcpol),
             get_polarization_output(polar_lcalcpol),
             add_interp_flow.output,
         )
-        
+
         jobs.append(add_interp_flow)
         jobs.append(pol_analysis)
 
-        flow = Flow(
+        return Flow(
             jobs=jobs,
             output=pol_analysis.output,
             name=self.name,
         )
-        return flow
