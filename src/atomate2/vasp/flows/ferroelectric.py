@@ -91,7 +91,7 @@ class FerroelectricMaker(Maker):
         logger.info(f"{type(polar_structure)}")
 
         polar_lcalcpol = self.lcalcpol_maker.make(
-            polar_structure, prev_vasp_dir=prev_vasp_dir_p
+            polar_structure, prev_dir=prev_vasp_dir_p
         )
         polar_lcalcpol.append_name(" polar")
         jobs.append(polar_lcalcpol)
@@ -106,7 +106,7 @@ class FerroelectricMaker(Maker):
             prev_vasp_dir_np = relax_np.output.dir_name
 
         nonpolar_lcalcpol = self.lcalcpol_maker.make(
-            nonpolar_structure, prev_vasp_dir=prev_vasp_dir_np
+            nonpolar_structure, prev_dir=prev_vasp_dir_np
         )
         nonpolar_lcalcpol.append_name(" nonpolar")
         jobs.append(nonpolar_lcalcpol)
