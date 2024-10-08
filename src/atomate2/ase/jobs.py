@@ -92,6 +92,7 @@ class AseMaker(Maker, metaclass=ABCMeta):
         raise NotImplementedError
 
     @property
+    @abstractmethod
     def calculator(self) -> Calculator:
         """ASE calculator, method to be implemented in subclasses."""
         raise NotImplementedError
