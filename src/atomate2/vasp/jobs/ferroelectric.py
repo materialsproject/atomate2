@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 import logging
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Job, Response, job
-from monty.serialization import dumpfn, loadfn
 from pymatgen.analysis.ferroelectricity.polarization import get_total_ionic_dipole
 
 from atomate2.vasp.schemas.ferroelectric import PolarizationDocument
@@ -93,7 +91,7 @@ def polarization_analysis(
 
 
 @job
-def interpolate_structures(p_st: Structure, np_st: Structure, nimages: int) -> Path:
+def interpolate_structures(p_st: Structure, np_st: Structure, nimages: int) -> list:
     """
     Interpolate linearly the polar and the nonpolar structures with nimages structures.
 
@@ -109,26 +107,22 @@ def interpolate_structures(p_st: Structure, np_st: Structure, nimages: int) -> P
 
     Returns
     -------
-    Path
-        Path to the directory containing the interpolated structures.
+    List of interpolated structures
     """
-    interp_structures = p_st.interpolate(np_st, nimages, autosort_tol=0.0)
-    dumpfn(interp_structures, "interp_structures.json")
-
-    return Path.cwd()
+    return p_st.interpolate(np_st, nimages, autosort_tol=0.0)
 
 
 @job
 def add_interpolation_flow(
-    prev_dir: str | Path, lcalcpol_maker: BaseVaspMaker
+    interp_structures: list[Structure], lcalcpol_maker: BaseVaspMaker
 ) -> Response:
     """
     Generate the interpolations jobs and add them to the main ferroelectric flow.
 
     Parameters
     ----------
-    prev_dir : str or Path
-        Previous directory where interpolated structures were created.
+    interp_structures: List[Structure]
+        List of interpolated structures
     lcalcpol_maker : BaseVaspMaker
         Vasp maker to compute the polarization of each structure.
 
@@ -137,7 +131,6 @@ def add_interpolation_flow(
     Response
         Job response containing the interpolation flow.
     """
-    interp_structures = loadfn(f"{prev_dir}/interp_structures.json")
     jobs = []
     outputs = {}
 
