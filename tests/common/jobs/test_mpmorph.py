@@ -1,11 +1,13 @@
 """Test common MPMorph features / jobs."""
 
+from pathlib import Path
 from shutil import which
 
 import pytest
 from jobflow import run_locally
-from pandas import read_parquet, DataFrame
+from pandas import DataFrame, read_parquet
 from pymatgen.core import Composition
+from requests.exceptions import ConnectionError
 
 from atomate2.common.jobs.mpmorph import (
     _DEFAULT_AVG_VOL_FILE,
@@ -16,14 +18,17 @@ from atomate2.common.jobs.mpmorph import (
     get_random_packed_structure,
 )
 
-def test_get_ref_file(retries = 5):
-    for _ in range(retries):
-        try:
-            _get_average_volumes_file()
-        except Exception:
-            pass
-    assert _DEFAULT_AVG_VOL_FILE.exists()
-    assert isinstance(read_parquet(_DEFAULT_AVG_VOL_FILE),DataFrame)
+for _ in range(5):
+    try:
+        _get_average_volumes_file()
+        break
+    except ConnectionError:
+        pass
+
+
+def test_get_ref_file():
+    assert Path(_DEFAULT_AVG_VOL_FILE).exists()
+    assert isinstance(read_parquet(_DEFAULT_AVG_VOL_FILE), DataFrame)
 
 
 @pytest.mark.parametrize(
@@ -65,7 +70,9 @@ def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool]):
             > 0
         )
 
-        assert get_avg_vol_func(comp, *args, **kwargs) == pytest.approx(ref_vols[ignore_oxi])
+        assert get_avg_vol_func(comp, *args, **kwargs) == pytest.approx(
+            ref_vols[ignore_oxi]
+        )
 
     comp = Composition({"Ag+": 1, "Cu2+": 1, "Cl-": 3})
     if db == "icsd":
@@ -80,7 +87,9 @@ def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool]):
             _get_chem_env_key_from_composition(comp, ignore_oxi_states=ignore_oxi)
             == chem_env
         )
-        assert get_avg_vol_func(comp, *args, **kwargs) == pytest.approx(ref_vols[ignore_oxi])
+        assert get_avg_vol_func(comp, *args, **kwargs) == pytest.approx(
+            ref_vols[ignore_oxi]
+        )
 
 
 @pytest.mark.skipif(

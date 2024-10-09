@@ -14,35 +14,40 @@ For information about the current flows, contact:
 from __future__ import annotations
 
 from importlib.resources import files as import_resource_file
-from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING
 
 import numpy as np
-import pandas
+import pandas as pd
 from jobflow import Job
 from pymatgen.core import Composition, Molecule, Structure
 from pymatgen.io.packmol import PackmolBoxGen
 
-_DEFAULT_AVG_VOL_FILE = import_resource_file("atomate2.common.jobs") / "db_avg_vols.parquet.gz"
+if TYPE_CHECKING:
+    from pathlib import Path
+
+_DEFAULT_AVG_VOL_FILE = (
+    import_resource_file("atomate2.common.jobs") / "db_avg_vols.parquet.gz"
+)
 _DEFAULT_AVG_VOL_URL = "https://figshare.com/ndownloader/files/49680966"
 
-def _get_average_volumes_file(
-    chunk_size : int = 2048
-) -> None:
+
+def _get_average_volumes_file(chunk_size: int = 2048, timeout: float = 60) -> None:
     """
     Retrieve stored average volume data from figshare if needed.
 
     Parameters
-    -----------
+    ----------
     chunk_size : int = 2048
         Chunk size for downloading from figshare
+    timeout : float = 60
+        Timeout time in seconds to wait for the request to resolve
     """
-    if not _DEFAULT_AVG_VOL_FILE.exists():
-        import requests
+    if not _DEFAULT_AVG_VOL_FILE.exists():  # type: ignore[attr-defined]
+        import requests  # type: ignore[import-untyped]
 
-        stream_data = requests.get(_DEFAULT_AVG_VOL_URL,stream=True)
-        with open(str(_DEFAULT_AVG_VOL_FILE),"wb") as file:
+        stream_data = requests.get(_DEFAULT_AVG_VOL_URL, stream=True, timeout=timeout)
+        with open(str(_DEFAULT_AVG_VOL_FILE), "wb") as file:
             for chunk in stream_data.iter_content(chunk_size=chunk_size):
                 file.write(chunk)
 
@@ -103,9 +108,9 @@ def get_average_volume_from_mp_api(
 
 def get_average_volume_from_db_cached(
     composition: Composition,
-    db_name : str,
+    db_name: str,
     cache_file: str | Path | None = None,
-    ignore_oxi_states : bool = True,
+    ignore_oxi_states: bool = True,
 ) -> float:
     """
     Get the average volume per atom for a given composition from cached data.
@@ -131,13 +136,11 @@ def get_average_volume_from_db_cached(
     if cache_file is None:
         _get_average_volumes_file()
 
-    avg_vols = pandas.read_parquet(
-        cache_file or _DEFAULT_AVG_VOL_FILE
-    )
+    avg_vols = pd.read_parquet(cache_file or _DEFAULT_AVG_VOL_FILE)
     avg_vols = avg_vols[avg_vols["source"] == db_name]
     return get_average_volume_from_database(
         composition,
-        avg_vols = avg_vols,
+        avg_vols=avg_vols,
         ignore_oxi_states=ignore_oxi_states,
     )
 
@@ -202,9 +205,10 @@ def _get_chem_env_key_from_composition(
         chem_env = chem_env.replace(f"0{char}", "")
     return chem_env
 
+
 def get_average_volume_from_database(
     composition: Composition,
-    avg_vols : pandas.DataFrame,
+    avg_vols: pd.DataFrame,
     ignore_oxi_states: bool = True,
 ) -> float:
     """
@@ -341,7 +345,9 @@ def get_random_packed_structure(
         vol_per_atom = get_average_volume_from_mp(composition, **db_kwargs)
 
     elif struct_db == "icsd":
-        vol_per_atom = get_average_volume_from_db_cached(composition, db_name="icsd", **db_kwargs)
+        vol_per_atom = get_average_volume_from_db_cached(
+            composition, db_name="icsd", **db_kwargs
+        )
 
     else:
         raise ValueError(f"Unknown volume per atom source: {vol_per_atom_source}.")
