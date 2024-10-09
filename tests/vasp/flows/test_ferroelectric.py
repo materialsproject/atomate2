@@ -44,6 +44,13 @@ def test_my_flow(mock_vasp, clean_dir, test_dir):
         / "inputs"
         / "POSCAR"
     )
+    st_interp = Structure.from_file(
+        test_dir
+        / "vasp"
+        / "KNbO3_ferroelectric/polarization_interpolation_0"
+        / "inputs"
+        / "POSCAR"
+    )
 
     flow = FerroelectricMaker(relax_maker=False, nimages=1).make(st_p, st_np)
 
@@ -62,3 +69,14 @@ def test_my_flow(mock_vasp, clean_dir, test_dir):
     assert isinstance(output1, PolarizationDocument)
     assert output1.polarization_change == pytest.approx([0.0, 0.0, 47.34548], rel=1e-6)
     assert output1.polarization_change_norm == pytest.approx(47.34548, rel=1e-6)
+
+    # validate total number of structures
+    assert len(output1.structures) == 3
+
+    # validate interpolation made via pmg
+    abc_1 = output1.structures[1].lattice.abc
+    abc_p = output1.structures[0].lattice.abc
+    abc_np = output1.structures[-1].lattice.abc
+    assert abc_1 == st_interp.lattice.abc
+    assert abc_p == st_p.lattice.abc
+    assert abc_np == st_np.lattice.abc
