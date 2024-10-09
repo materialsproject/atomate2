@@ -13,6 +13,7 @@ For information about the current flows, contact:
 
 from __future__ import annotations
 
+from importlib import import_module
 from importlib.resources import files as import_resource_file
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING
@@ -43,6 +44,21 @@ def _get_average_volumes_file(chunk_size: int = 2048, timeout: float = 60) -> No
     timeout : float = 60
         Timeout time in seconds to wait for the request to resolve
     """
+    user_has_parquet_reader = False
+    for pkg in ("pyarrow", "fastparquet"):
+        try:
+            import_module(pkg)
+            user_has_parquet_reader = True
+            break
+        except ModuleNotFoundError:  # noqua: S110
+            pass
+
+    if not user_has_parquet_reader:
+        raise ImportError(
+            "Please install either `pyarrow` or `fastparquet` "
+            "to use cached MP / ICSD data."
+        )
+
     if not _DEFAULT_AVG_VOL_FILE.exists():  # type: ignore[attr-defined]
         import requests  # type: ignore[import-untyped]
 
