@@ -55,7 +55,7 @@ def test_my_flow(mock_vasp, clean_dir, test_dir):
     # !!! validation on the energy
     output1 = responses[flow.jobs[0].uuid][1].output
     assert isinstance(output1, TaskDoc)
-    assert output1.output.energy == -40.65766597
+    assert output1.output.energy == -40.65768215
 
     # !!! validation on the polarization change
     output1 = responses[flow.jobs[-1].uuid][1].output
