@@ -102,14 +102,18 @@ def interpolate_structures(p_st: Structure, np_st: Structure, nimages: int) -> l
     np_st : Structure
         A pymatgen structure of nonpolar phase.
     nimages : int
-        Number of interpolations calculated from polar to nonpolar structures,
-        including the nonpolar.
+        Number of interpolatated structures calculated
+        from polar to nonpolar structures.
 
     Returns
     -------
     List of interpolated structures
     """
-    return p_st.interpolate(np_st, nimages, autosort_tol=0.0)
+    # adding +1 to nimages to match convention used in the interpolate
+    # func where nonpolar is (weirdly) included in the nimages count
+    return p_st.interpolate(
+        np_st, nimages + 1, interpolate_lattices=True, autosort_tol=0.0
+    )
 
 
 @job
@@ -134,7 +138,12 @@ def add_interpolation_flow(
     jobs = []
     outputs = {}
 
-    for i, interp_structure in enumerate(interp_structures[1:]):
+    for i, interp_structure in enumerate(interp_structures[1:-1]):
+        lcalcpol_maker.write_additional_data[""] = {
+            "st_polar": interp_structures[0],
+            "st_nonpolar": interp_structures[-1],
+            "st_interp_idx": i + 1,
+        }
         interpolation = lcalcpol_maker.make(interp_structure)
         interpolation.append_name(f" interpolation_{i}")
         jobs.append(interpolation)

@@ -39,8 +39,7 @@ class FerroelectricMaker(Maker):
     name : str
         Name of the flows produced by this maker.
     nimages: int
-        Number of interpolations calculated from polar to nonpolar structures,
-        including the nonpolar.
+        Number of interpolated structures calculated from polar to nonpolar structures
     relax_maker: BaseVaspMaker or None or tuple
         None to avoid relaxation of both polar and nonpolar structures
         BaseVaspMaker to relax both structures (default)
@@ -50,7 +49,7 @@ class FerroelectricMaker(Maker):
     """
 
     name: str = "ferroelectric"
-    nimages: int = 9
+    nimages: int = 8
     relax_maker: BaseVaspMaker | None | tuple = field(
         default_factory=lambda: DoubleRelaxMaker.from_relax_maker(RelaxMaker())
     )
