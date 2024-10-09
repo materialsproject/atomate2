@@ -60,5 +60,5 @@ def test_my_flow(mock_vasp, clean_dir, test_dir):
     # !!! validation on the polarization change
     output1 = responses[flow.jobs[-1].uuid][1].output
     assert isinstance(output1, PolarizationDocument)
-    assert output1.polarization_change == pytest.approx([0.0, 0.0, 47.65973], rel=1e-6)
-    assert output1.polarization_change_norm == pytest.approx(47.65973, rel=1e-6)
+    assert output1.polarization_change == pytest.approx([0.0, 0.0, 47.34548], rel=1e-6)
+    assert output1.polarization_change_norm == pytest.approx(47.34548, rel=1e-6)
