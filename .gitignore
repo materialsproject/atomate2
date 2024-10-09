@@ -73,5 +73,3 @@ docs/reference/atomate2.*
 
 .ipynb_checkpoints
 
-# cached database file for MPMorph
-src/atomate2/common/jobs/db_avg_vols.parquet.gz

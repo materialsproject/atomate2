@@ -13,8 +13,8 @@ For information about the current flows, contact:
 
 from __future__ import annotations
 
-from importlib import import_module
-from importlib.resources import files as import_resource_file
+import os
+from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING
 
@@ -24,16 +24,17 @@ from jobflow import Job
 from pymatgen.core import Composition, Molecule, Structure
 from pymatgen.io.packmol import PackmolBoxGen
 
-if TYPE_CHECKING:
-    from pathlib import Path
 
-_DEFAULT_AVG_VOL_FILE = (
-    import_resource_file("atomate2.common.jobs") / "db_avg_vols.parquet.gz"
-)
-_DEFAULT_AVG_VOL_URL = "https://figshare.com/ndownloader/files/49680966"
+_DEFAULT_AVG_VOL_FILE = Path("~/.cache/atomate2").expanduser() / "db_avg_vols.json.gz"
+if not _DEFAULT_AVG_VOL_FILE.parents[0].exists():
+    os.makedirs(_DEFAULT_AVG_VOL_FILE.parents[0],exist_ok=True)
+_DEFAULT_AVG_VOL_URL = "https://figshare.com/ndownloader/files/49704288"
 
 
-def _get_average_volumes_file(chunk_size: int = 2048, timeout: float = 60) -> None:
+def _get_average_volumes_file(
+    chunk_size: int = 2048,
+    timeout: float = 60
+) -> pd.DataFrame:
     """
     Retrieve stored average volume data from figshare if needed.
 
@@ -44,28 +45,16 @@ def _get_average_volumes_file(chunk_size: int = 2048, timeout: float = 60) -> No
     timeout : float = 60
         Timeout time in seconds to wait for the request to resolve
     """
-    user_has_parquet_reader = False
-    for pkg in ("pyarrow", "fastparquet"):
-        try:
-            import_module(pkg)
-            user_has_parquet_reader = True
-            break
-        except ModuleNotFoundError:  # noqua: S110
-            pass
 
-    if not user_has_parquet_reader:
-        raise ImportError(
-            "Please install either `pyarrow` or `fastparquet` "
-            "to use cached MP / ICSD data."
-        )
-
-    if not _DEFAULT_AVG_VOL_FILE.exists():  # type: ignore[attr-defined]
+    if not _DEFAULT_AVG_VOL_FILE.exists():
         import requests  # type: ignore[import-untyped]
 
         stream_data = requests.get(_DEFAULT_AVG_VOL_URL, stream=True, timeout=timeout)
         with open(str(_DEFAULT_AVG_VOL_FILE), "wb") as file:
             for chunk in stream_data.iter_content(chunk_size=chunk_size):
                 file.write(chunk)
+
+    return pd.read_json(_DEFAULT_AVG_VOL_FILE,orient="split")
 
 
 def get_average_volume_from_mp_api(
@@ -125,7 +114,7 @@ def get_average_volume_from_mp_api(
 def get_average_volume_from_db_cached(
     composition: Composition,
     db_name: str,
-    cache_file: str | Path | None = None,
+    cache_file: pd.DataFrame | None = None,
     ignore_oxi_states: bool = True,
 ) -> float:
     """
@@ -139,8 +128,11 @@ def get_average_volume_from_db_cached(
         The target composition.
     db_name : str
         Name of the database to pull data from.
-    cache_file : str, .Path, or None
-        Path to the cached volume file.
+    cache_file : pandas DataFrame or None (default)
+        DataFrame containing cached volumes.
+        Should match the format of the data in _DEFAULT_AVG_VOL_FILE,
+        and have the following columns:
+            "chem_env", "avg_vol", "count", "with_oxi", "source"
     ignore_oxi_states : bool = True
         Whether to ignore oxidation state data.
 
@@ -149,10 +141,9 @@ def get_average_volume_from_db_cached(
     float
         The average volume per atom for the composition.
     """
-    if cache_file is None:
-        _get_average_volumes_file()
+    
+    avg_vols = cache_file or _get_average_volumes_file()
 
-    avg_vols = pd.read_parquet(cache_file or _DEFAULT_AVG_VOL_FILE)
     avg_vols = avg_vols[avg_vols["source"] == db_name]
     return get_average_volume_from_database(
         composition,
@@ -238,9 +229,8 @@ def get_average_volume_from_database(
         Structure composition
     avg_vols : pandas .DataFrame
         Chemical environment data for a given database.
-        Should be indexed by the chemical environment.
-        Should also have the following columns:
-            "avg_vol", "count", "with_oxi"
+        Should have the following columns:
+            "chem_env", "avg_vol", "count", "with_oxi"
     ignore_oxi_states : bool = True
         Whether to ignore oxidation states assigned to sites in the structure,
         both in the input composition and ICSD structures.
@@ -255,7 +245,7 @@ def get_average_volume_from_database(
     from itertools import combinations
 
     def get_entry_from_dict(chem_env: str) -> dict | None:
-        data = avg_vols[avg_vols.index == chem_env]
+        data = avg_vols[avg_vols["chem_env"] == chem_env]
         data = data[
             data["with_oxi"]
             if (not ignore_oxi_states and len(data[data["with_oxi"]]) > 0)

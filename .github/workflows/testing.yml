@@ -67,7 +67,6 @@ jobs:
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           uv pip install .[strict,strict-forcefields,tests,abinit]
-          uv pip install fastparquet # TODO: remove if/when pandas requires pyarrow
           uv pip install torch-runstats
           uv pip install --no-deps nequip==0.5.6
 

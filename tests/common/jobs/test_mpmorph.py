@@ -5,7 +5,7 @@ from shutil import which
 
 import pytest
 from jobflow import run_locally
-from pandas import DataFrame, read_parquet
+from pandas import DataFrame
 from pymatgen.core import Composition
 from requests.exceptions import ConnectionError
 
@@ -18,6 +18,7 @@ from atomate2.common.jobs.mpmorph import (
     get_random_packed_structure,
 )
 
+# first ensure tests cache the file - can't depend on test order
 for _ in range(5):
     try:
         _get_average_volumes_file()
@@ -28,7 +29,7 @@ for _ in range(5):
 
 def test_get_ref_file():
     assert Path(_DEFAULT_AVG_VOL_FILE).exists()
-    assert isinstance(read_parquet(_DEFAULT_AVG_VOL_FILE), DataFrame)
+    assert isinstance(_get_average_volumes_file(), DataFrame)
 
 
 @pytest.mark.parametrize(
@@ -37,7 +38,7 @@ def test_get_ref_file():
 def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool]):
     comp = Composition({"Ag+": 1, "Cl5+": 1, "O2-": 3})
 
-    avg_vols = read_parquet(_DEFAULT_AVG_VOL_FILE)
+    avg_vols = _get_average_volumes_file(_get_average_volumes_file)
     avg_vols = avg_vols[avg_vols["source"] == db]
 
     kwargs = {}
@@ -63,7 +64,7 @@ def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool]):
         assert (
             len(
                 avg_vols[
-                    (avg_vols.index == chem_env)
+                    (avg_vols["chem_env"] == chem_env)
                     & (~avg_vols["with_oxi"] if ignore_oxi else avg_vols["with_oxi"])
                 ]
             )
