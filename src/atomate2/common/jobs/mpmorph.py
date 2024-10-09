@@ -16,7 +16,6 @@ from __future__ import annotations
 import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
@@ -24,16 +23,14 @@ from jobflow import Job
 from pymatgen.core import Composition, Molecule, Structure
 from pymatgen.io.packmol import PackmolBoxGen
 
-
 _DEFAULT_AVG_VOL_FILE = Path("~/.cache/atomate2").expanduser() / "db_avg_vols.json.gz"
 if not _DEFAULT_AVG_VOL_FILE.parents[0].exists():
-    os.makedirs(_DEFAULT_AVG_VOL_FILE.parents[0],exist_ok=True)
+    os.makedirs(_DEFAULT_AVG_VOL_FILE.parents[0], exist_ok=True)
 _DEFAULT_AVG_VOL_URL = "https://figshare.com/ndownloader/files/49704288"
 
 
 def _get_average_volumes_file(
-    chunk_size: int = 2048,
-    timeout: float = 60
+    chunk_size: int = 2048, timeout: float = 60
 ) -> pd.DataFrame:
     """
     Retrieve stored average volume data from figshare if needed.
@@ -45,7 +42,6 @@ def _get_average_volumes_file(
     timeout : float = 60
         Timeout time in seconds to wait for the request to resolve
     """
-
     if not _DEFAULT_AVG_VOL_FILE.exists():
         import requests  # type: ignore[import-untyped]
 
@@ -54,7 +50,7 @@ def _get_average_volumes_file(
             for chunk in stream_data.iter_content(chunk_size=chunk_size):
                 file.write(chunk)
 
-    return pd.read_json(_DEFAULT_AVG_VOL_FILE,orient="split")
+    return pd.read_json(_DEFAULT_AVG_VOL_FILE, orient="split")
 
 
 def get_average_volume_from_mp_api(
@@ -141,7 +137,6 @@ def get_average_volume_from_db_cached(
     float
         The average volume per atom for the composition.
     """
-    
     avg_vols = cache_file or _get_average_volumes_file()
 
     avg_vols = avg_vols[avg_vols["source"] == db_name]
