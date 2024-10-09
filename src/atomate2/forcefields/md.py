@@ -264,4 +264,4 @@ class NequipMDMaker(ForceFieldMDMaker):
     """Perform an MD run with nequip."""
 
     name: str = f"{MLFF.Nequip} MD"
-    force_field_name: str | MLFF = MLFF.Nequip
+    force_field_name: str = f"{MLFF.Nequip}"
