@@ -139,7 +139,7 @@ def add_interpolation_flow(
     outputs = {}
 
     for i, interp_structure in enumerate(interp_structures[1:-1]):
-        lcalcpol_maker.write_additional_data[""] = {
+        lcalcpol_maker.write_additional_data["structures:json"] = {
             "st_polar": interp_structures[0],
             "st_nonpolar": interp_structures[-1],
             "st_interp_idx": i + 1,
