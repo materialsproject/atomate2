@@ -42,7 +42,7 @@ def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_
         store_trajectory="partial",
     ).make(fcc_ne_structure)
 
-    response = run_locally(md_job)
+    response = run_locally(md_job, ensure_success=True)
     output = response[md_job.uuid][1].output
 
     assert isinstance(output, AseStructureTaskDoc)
@@ -77,13 +77,15 @@ def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, tmp_di
         ionic_step_data=("energy", "stress"),
     ).make(structure)
 
-    response = run_locally(md_job)
+    response = run_locally(md_job, ensure_success=True)
     output = response[md_job.uuid][1].output
 
     assert isinstance(output, AseStructureTaskDoc)
     assert output.output.energy_per_atom == pytest.approx(
         reference_energies[calculator_name]
     )
+    assert output.dir_name is not None
+    assert output.formula_pretty is not None 
 
     # TODO: improve XDATCAR parsing test when class is fixed in pmg
     assert os.path.isfile("XDATCAR")
