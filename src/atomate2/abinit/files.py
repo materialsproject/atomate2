@@ -22,7 +22,6 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
     from abipy.abio.inputs import AbinitInput
-    from jobflow.core.reference import OutputReference
     from pymatgen.core.structure import Structure
 
     from atomate2.abinit.sets.anaddb import AnaddbInputGenerator
@@ -221,12 +220,10 @@ def write_anaddb_input_set(
     anais.write_input(directory=directory, make_dir=True, overwrite=False)
 
 
-# TODO: atm does not take the directories of the generate..., run_rf,
-# store_inputs, and its own directory into account...
+# TODO: does not take the directories of the store_inputs
 @job
 def del_gzip_files(
-    # to_clean: Job | Flow,
-    outputs: list[OutputReference],
+    outputs: list,
     exclude_files_from_zip: list[str | Path] | None = None,
     delete: bool = True,
     exclude_files_from_del: list[str | Path] | None = None,

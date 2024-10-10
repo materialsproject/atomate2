@@ -297,12 +297,9 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
     from monty.serialization import dumpfn, loadfn
     from monty.shutil import compress_dir
 
-    try:
-        from atomate2.abinit.schemas.core import AbinitTaskDocument
-    except ModuleNotFoundError:
-        from atomate2.abinit.schemas.task import AbinitTaskDoc as AbinitTaskDocument
     from atomate2.abinit.schemas.anaddb import AnaddbTaskDoc
     from atomate2.abinit.schemas.mrgddb import MrgddbTaskDoc
+    from atomate2.abinit.schemas.task import AbinitTaskDoc
     from atomate2.common.files import copy_files
     from atomate2.utils.path import strip_hostname
 
@@ -352,7 +349,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
     outputs = loadfn("outputs.json")
 
     task_labels = [
-        o["output"].task_label for o in outputs if isinstance(o, AbinitTaskDocument)
+        o["output"].task_label for o in outputs if isinstance(o, AbinitTaskDoc)
     ]
 
     if len(task_labels) != len(set(task_labels)):
@@ -388,9 +385,11 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
             )
         if include_fake_files:
             for fn in include_fake_files:
+                # let's be sure to catch outputs of perturbation tasks
                 fname = check_file_ext_pert(filename=fn, dirname=src_dirdata)
                 src_fpath = src_dirdata / fname
                 dest_fpath = dest_dirdata / fname
+                # let's remove out_DDB that were copied but could be a fake file
                 remove_copied_out_ddb(
                     filename=fn, dirname=dest_dirdata, src_dirname=src_dirdata
                 )
@@ -409,12 +408,15 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
                         "File is not a symbolic link nor a regular file."
                     )
 
+    # can return out_DENxxx from the filename out_DEN and idem for out_1WFxxx
     def check_file_ext_pert(filename: str | Path, dirname: str | Path) -> str | Path:
         for file in os.listdir(dirname):
             if str(filename) in file:
                 return file
         return filename
 
+    # remove out_DDB from a given directory if the src out_DDB
+    # was not the output of a mrgddb task
     def remove_copied_out_ddb(
         filename: str | Path, dirname: Path, src_dirname: Path
     ) -> None:
@@ -455,7 +457,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
 
     for output in outputs:
         if (
-            not isinstance(output.output, AbinitTaskDocument)
+            not isinstance(output.output, AbinitTaskDoc)
             and not isinstance(output.output, MrgddbTaskDoc)
             and not isinstance(output.output, AnaddbTaskDoc)
         ):
@@ -593,7 +595,7 @@ class Test{maker_name}:
         from jobflow import run_locally
         from pymatgen.core.structure import Structure
         from monty.serialization import loadfn
-        from atomate2.abinit.schemas.core import AbinitTaskDocument
+        from atomate2.abinit.schemas.core import AbinitTaskDoc
 
         # load the initial structure, the maker and the ref_paths from the test_dir
         test_dir = abinit_test_dir / {" / ".join(
@@ -612,7 +614,7 @@ class Test{maker_name}:
 
         # validation the outputs of the flow or job
         output1 = responses[flow_or_job.uuid][1].output
-        assert isinstance(output1, AbinitTaskDocument)
+        assert isinstance(output1, AbinitTaskDoc)
         assert output1.structure == structure
         assert output1.run_number == 1
     """
