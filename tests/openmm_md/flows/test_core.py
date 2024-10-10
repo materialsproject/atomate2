@@ -114,7 +114,7 @@ def test_flow_maker(interchange, run_job):
         name="test_production",
         tags=["test"],
         makers=[
-            EnergyMinimizationMaker(max_iterations=1),
+            EnergyMinimizationMaker(max_iterations=1, state_interval=1),
             NPTMaker(n_steps=5, pressure=1.0, state_interval=1, traj_interval=1),
             OpenMMFlowMaker.anneal_flow(anneal_temp=400, final_temp=300, n_steps=5),
             NVTMaker(n_steps=5),
@@ -157,6 +157,15 @@ def test_flow_maker(interchange, run_job):
     calc_output = task_doc.calcs_reversed[0].output
     assert len(calc_output.steps_reported) == 5
 
+    all_steps = [calc.output.steps_reported for calc in task_doc.calcs_reversed]
+    assert all_steps == [
+        [11, 12, 13, 14, 15],
+        [10],
+        [8, 9],
+        [6, 7],
+        [1, 2, 3, 4, 5],
+        [0],
+    ]
     # Test that the state interval is respected
     assert calc_output.steps_reported == list(range(11, 16))
     assert calc_output.traj_file == "trajectory5.dcd"

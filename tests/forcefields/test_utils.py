@@ -22,6 +22,7 @@ def test_raises_error():
         ase_calculator("not_a_calculator")
 
 
+@pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
 def test_m3gnet_pot():
     import matgl
     from matgl.ext.ase import PESCalculator

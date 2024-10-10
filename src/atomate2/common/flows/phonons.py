@@ -132,7 +132,9 @@ class BasePhononMaker(Maker, ABC):
     symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
+    max_length: float | None = None
     prefer_90_degrees: bool = True
+    allow_orthorhombic: bool = False
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = None
@@ -252,9 +254,11 @@ class BasePhononMaker(Maker, ABC):
         # maker to ensure that cell lengths are really larger than threshold
         if supercell_matrix is None:
             supercell_job = get_supercell_size(
-                structure,
-                self.min_length,
-                self.prefer_90_degrees,
+                structure=structure,
+                min_length=self.min_length,
+                max_length=self.max_length,
+                prefer_90_degrees=self.prefer_90_degrees,
+                allow_orthorhombic=self.allow_orthorhombic,
                 **self.get_supercell_size_kwargs,
             )
             jobs.append(supercell_job)
