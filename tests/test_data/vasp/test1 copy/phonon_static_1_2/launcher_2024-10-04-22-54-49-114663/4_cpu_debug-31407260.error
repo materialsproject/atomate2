@@ -1,0 +1,21 @@
+Lmod has detected the following error: Warning: Python module not loaded, you
+already have Python loaded via conda init. 
+While processing the following module(s):
+    Module fullname              Module Filename
+    ---------------              ---------------
+    python/3.9-anaconda-2021.11  /opt/nersc/pe/modulefiles/python/3.9-anaconda-2021.11.lua
+
+Lmod has detected the following error: Warning: Python module not loaded, you
+already have Python loaded via conda init. 
+While processing the following module(s):
+    Module fullname              Module Filename
+    ---------------              ---------------
+    python/3.9-anaconda-2021.11  /opt/nersc/pe/modulefiles/python/3.9-anaconda-2021.11.lua
+
+
+Lmod is automatically replacing "gpu/1.0" with "cpu/1.0".
+
+/global/homes/h/hrushi99/.local/perlmutter/3.9-anaconda-2021.11/lib/python3.9/site-packages/paramiko/pkey.py:100: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from this module in 48.0.0.
+  "cipher": algorithms.TripleDES,
+/global/homes/h/hrushi99/.local/perlmutter/3.9-anaconda-2021.11/lib/python3.9/site-packages/paramiko/transport.py:258: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from this module in 48.0.0.
+  "class": algorithms.TripleDES,

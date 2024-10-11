@@ -1,0 +1,10 @@
+1N cpu trial atomate2_10-22 activated
+2024-10-04 16:06:02,654 INFO Hostname/IP lookup (this will take a few seconds)
+2024-10-04 16:06:24,360 INFO Created new dir /pscratch/sd/h/hrushi99/atomate2/pheasy/block_2024-10-04-19-19-06-773297/launcher_2024-10-04-22-54-49-114663/launcher_2024-10-04-23-06-24-360271
+2024-10-04 16:06:24,361 INFO Launching Rocket
+2024-10-04 16:06:24,394 INFO RUNNING fw_id: 10291 in directory: /pscratch/sd/h/hrushi99/atomate2/pheasy/block_2024-10-04-19-19-06-773297/launcher_2024-10-04-22-54-49-114663/launcher_2024-10-04-23-06-24-360271
+2024-10-04 16:06:24,408 INFO Task started: {{jobflow.managers.fireworks.JobFiretask}}.
+2024-10-04 16:06:24,434 INFO Starting job - phonon static 1/2 (1e6c2ee3-6dd6-431e-903b-fd1eaaf88d41)
+2024-10-04 16:07:17,725 INFO Finished job - phonon static 1/2 (1e6c2ee3-6dd6-431e-903b-fd1eaaf88d41)
+2024-10-04 16:07:17,726 INFO Task completed: {{jobflow.managers.fireworks.JobFiretask}}
+2024-10-04 16:07:17,760 INFO Rocket finished
