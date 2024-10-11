@@ -345,12 +345,13 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             num_har = dataset_disps_array_use.shape[0]
 
         if cal_anhar_fcs:
-            dataset_disps_array_use = dataset_disps_array_use[:num_har, :, :]
-            dataset_forces_array_disp = dataset_forces_array_disp[:num_har, :, :]
+            # I'm too stupid to overwrite the dataset_disps_array_use, so I create a new one
+            dataset_disps_array_use_har = dataset_disps_array_use[:num_har, :, :]
+            dataset_forces_array_disp_har = dataset_forces_array_disp[:num_har, :, :]
             with open("disp_matrix.pkl", "wb") as file:
-                pickle.dump(dataset_disps_array_use, file)
+                pickle.dump(dataset_disps_array_use_har, file)
             with open("force_matrix.pkl", "wb") as file:
-                pickle.dump(dataset_forces_array_disp, file)
+                pickle.dump(dataset_forces_array_disp_har, file)
 
         else:
             with open("disp_matrix.pkl", "wb") as file:
@@ -449,13 +450,13 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         
         if cal_anhar_fcs:
             subprocess.call("rm -f disp_matrix.pkl force_matrix.pkl", shell=True)
-            dataset_disps_array_use = dataset_disps_array_use[num_har:, :, :]
-            dataset_forces_array_disp = dataset_forces_array_disp[num_har:, :, :]
+            dataset_disps_array_use_anahr = dataset_disps_array_use[num_har:, :, :]
+            dataset_forces_array_disp_anhar = dataset_forces_array_disp[num_har:, :, :]
             with open("disp_matrix.pkl", "wb") as file:
-                pickle.dump(dataset_disps_array_use, file)
+                pickle.dump(dataset_disps_array_use_anahr, file)
             with open("force_matrix.pkl", "wb") as file:
-                pickle.dump(dataset_forces_array_disp, file)
-            num_anhar = dataset_disps_array_use.shape[0]
+                pickle.dump(dataset_forces_array_disp_anhar, file)
+            num_anhar = dataset_disps_array_use_anahr.shape[0]
         else:
             pass
 
