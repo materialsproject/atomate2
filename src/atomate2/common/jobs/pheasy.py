@@ -15,7 +15,6 @@ from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 
-from atomate2.common.schemas.pheasy import Forceconstants, PhononBSDOSDoc
 from atomate2.common.schemas.phonons import get_factor
 
 if TYPE_CHECKING:
@@ -26,6 +25,9 @@ if TYPE_CHECKING:
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.forcefields.jobs import ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
+
+# move to here to avoid circular import
+from atomate2.common.schemas.pheasy import Forceconstants, PhononBSDOSDoc
 
 
 logger = logging.getLogger(__name__)
