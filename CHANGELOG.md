@@ -1,5 +1,52 @@
 # Change log
 
+## v0.0.17
+
+### Bug Fixes 🐛
+
+* Fix `prev_dir` behavior in input set generator of `MPGGAStaticMaker` by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/996
+
+### Documentation 📖
+
+* Bump min supported Python to 3.10 by @janosh in https://github.com/materialsproject/atomate2/pull/992
+
+### House-Keeping 🧹
+
+* Excise openff dependency from OpenMM testing by @orionarcher in https://github.com/materialsproject/atomate2/pull/993
+* Use `pytest-split` to parallelize across 3 runners and speedup CI by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/985
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.16...v0.0.17
+
+## v0.0.16
+
+This release brings lots of new workflows and support for all ASE calculators.
+
+### New Features 🎉
+
+* Anharmonicity Quantification workflow by @4kevinbeck5 in https://github.com/materialsproject/atomate2/pull/901
+* Workflow for Quasi-harmonic approximation (forcefields and VASP) by @JaGeo in https://github.com/materialsproject/atomate2/pull/903
+* Atomate2 OpenMM integration & broader classical MD framework by @orionarcher in https://github.com/materialsproject/atomate2/pull/782
+* Frequency Flattening Optimizer by @rohithsrinivaas in https://github.com/materialsproject/atomate2/pull/863
+* Including VASP surface adsorption flow by @itsduowang in https://github.com/materialsproject/atomate2/pull/691
+* Generalize forcefields for generic ASE calculator support by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/940
+
+### Documentation 📖
+
+* Input set tutorial by @JonathanSchmidt1 in https://github.com/materialsproject/atomate2/pull/780
+
+### House-Keeping 🧹
+
+* Remove emmet `==` pin in `pyproject.toml` and update version in `strict` by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/988
+
+### New Contributors
+
+* @4kevinbeck5 made their first contribution in https://github.com/materialsproject/atomate2/pull/901
+* @orionarcher made their first contribution in https://github.com/materialsproject/atomate2/pull/782
+* @rohithsrinivaas made their first contribution in https://github.com/materialsproject/atomate2/pull/863
+* @itsduowang made their first contribution in https://github.com/materialsproject/atomate2/pull/691
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.15...v0.0.16
+
 ## v0.0.15
 
 **NOTE**: This version updates the VASP workflows to use input sets defined in pymatgen. Please make sure your pymatgen version is updated accordingly.
@@ -72,7 +119,7 @@
 * `ruff` fixes by @janosh in https://github.com/materialsproject/atomate2/pull/894
 * `ruff` fixes by @janosh in https://github.com/materialsproject/atomate2/pull/946
 
-## New Contributors
+### New Contributors
 
 * @rul048 made their first contribution in https://github.com/materialsproject/atomate2/pull/775
 * @davidwaroquiers made their first contribution in https://github.com/materialsproject/atomate2/pull/183
@@ -127,7 +174,7 @@
 * Update lobsterpy version by @naik-aakash in https://github.com/materialsproject/atomate2/pull/683
 * Fix all ruff PT011 (not checking error message when testing exceptions) by @janosh in https://github.com/materialsproject/atomate2/pull/698
 
-## New Contributors
+### New Contributors
 
 * @JonathanSchmidt1 made their first contribution in https://github.com/materialsproject/atomate2/pull/648
 * @rdguha1995 made their first contribution in https://github.com/materialsproject/atomate2/pull/161
@@ -235,7 +282,7 @@ The API of `Maker.maker` for all workflows (VASP, CP2K, force fields) have been 
 * Future type annotations by @janosh in https://github.com/materialsproject/atomate2/pull/580
 * Use `numpy.testing.assert_allclose` over assert `np.(all|is)close` by @janosh in https://github.com/materialsproject/atomate2/pull/582
 
-## New Contributors
+### New Contributors
 
 * @mattmcdermott made their first contribution in https://github.com/materialsproject/atomate2/pull/506
 * @tpurcell90 made their first contribution in https://github.com/materialsproject/atomate2/pull/568
@@ -353,7 +400,7 @@ reciprocal_density_metal` instead of `reciprocal_density` for metallic systems.
 * Simplify: `dict.get(key, None)` -> `dict.get(key)` by @janosh in https://github.com/materialsproject/atomate2/pull/429
 * `dict.setdefault` instead of `if key not in dict: dict[key] = ...` by @janosh in https://github.com/materialsproject/atomate2/pull/452
 
-## New Contributors
+### New Contributors
 
 * @naik-aakash made their first contribution in https://github.com/materialsproject/atomate2/pull/279
 * @matthewkuner made their first contribution in https://github.com/materialsproject/atomate2/pull/322

@@ -13,6 +13,8 @@ from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
 from atomate2.vasp.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
+    from typing import Literal
+
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
@@ -120,7 +122,7 @@ class PhononMaker(BasePhononMaker):
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_symmetrized_structure: str | None = None
+    use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"

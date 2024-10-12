@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-import torch
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
@@ -19,7 +18,6 @@ from atomate2.forcefields.flows.phonons import PhononMaker
 
 def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
-    torch.set_default_dtype(torch.float32)
 
     flow = PhononMaker(
         use_symmetrized_structure="conventional",

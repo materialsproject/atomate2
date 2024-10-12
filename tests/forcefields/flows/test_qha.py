@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import torch
 from jobflow import run_locally
 from pymatgen.core.structure import Structure
 
@@ -11,7 +10,6 @@ from atomate2.forcefields.flows.qha import CHGNetQhaMaker
 
 def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
-    torch.set_default_dtype(torch.float32)
 
     flow = CHGNetQhaMaker(
         number_of_frames=5,

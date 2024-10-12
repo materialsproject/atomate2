@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
@@ -31,6 +31,8 @@ from atomate2.cp2k.schemas.task import TaskDocument
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from pymatgen.core import Structure
 
 

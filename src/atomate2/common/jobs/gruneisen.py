@@ -77,20 +77,20 @@ def run_phonon_jobs(
     Phonon Jobs or Symmetry of the optimized structures.
     """
     symmetry = []
-    for st in opt_struct:
-        sga = SpacegroupAnalyzer(opt_struct[st], symprec=symprec)
+    for struct in opt_struct.values():
+        sga = SpacegroupAnalyzer(struct, symprec=symprec)
         symmetry.append(int(sga.get_space_group_number()))
     set_symmetry = list(set(symmetry))
     if len(set_symmetry) == 1:
         jobs = []
         phonon_yaml_dirs = dict.fromkeys(("ground", "plus", "minus"), None)
         phonon_imaginary_modes = dict.fromkeys(("ground", "plus", "minus"), None)
-        for st in opt_struct:
+        for st, struct in opt_struct.items():
             # phonon run for all 3 optimized structures (ground state, expanded, shrunk)
             phonon_kwargs = {}
             if prev_calc_dir_argname is not None:
                 phonon_kwargs[prev_calc_dir_argname] = prev_dir_dict[st]
-            phonon_job = phonon_maker.make(structure=opt_struct[st], **phonon_kwargs)
+            phonon_job = phonon_maker.make(structure=struct, **phonon_kwargs)
             phonon_job.append_name(f" {st}")
             # change default phonopy.yaml file name to ensure workflow can be
             # run without having to create folders, thus
