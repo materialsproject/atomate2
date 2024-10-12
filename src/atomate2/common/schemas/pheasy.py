@@ -21,9 +21,10 @@ from hiphive import (
 
 from hiphive.cutoffs import estimate_maximum_cutoff
 from hiphive.utilities import extract_parameters
+from hiphive import ForceConstants
 from monty.json import MSONable
 from phonopy import Phonopy
-from phonopy.file_IO import parse_FORCE_CONSTANTS
+from phonopy.file_IO import parse_FORCE_CONSTANTS, write_force_constants_to_hdf5
 from phonopy.interface.vasp import write_vasp
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
@@ -495,6 +496,31 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             subprocess.call(pheasy_cmd_8, shell=True)
         else:
             pass
+
+        # begin to convert the force constants to the phonopy and phono3py format
+        # for the further lattice thermal conductivity calculations
+        
+        # convert the 2ND order force constants to the phonopy format
+        fc_phonopy_text = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
+        write_force_constants_to_hdf5(fc_phonopy_text, filename="fc2.hdf5")
+
+        # convert the 3RD order force constants to the phonopy format
+
+        prim_hiphive = read('POSCAR')
+        supercell_hiphive = read('SPOSCAR')
+        fcs = ForceConstants.read_shengBTE(supercell_hiphive, 'FORCE_CONSTANTS_3RD', prim_hiphive)
+        fcs.write_to_phono3py('fc3.hdf5')
+
+        # parameters
+        dim = 3
+        mesh = 19
+        temperatures = [300]
+
+        phono3py_cmd = 'phono3py --dim="{0} {0} {0}" --fc2 --fc3 --br --isotope --wigner --mesh="'\
+               '{1} {1} {1}" --ts="{2}"'.format(
+                dim, mesh, ' '.join(str(T) for T in temperatures))
+        
+        subprocess.call(phono3py_cmd, shell=True)
 
         # Read the force constants from the output file of pheasy code
         force_constants = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
