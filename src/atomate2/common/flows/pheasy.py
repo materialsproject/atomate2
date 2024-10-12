@@ -176,6 +176,9 @@ class BasePhononMaker(Maker, ABC):
     displacement_anhar: float = 0.08
     num_disp_anhar: int = 0
     fcs_cutoff_radius: list = field(default_factory=lambda: [-1, 12, 10]) # units in Bohr
+    cal_ther_cond: bool = False
+    ther_cond_mesh: list = field(default_factory=lambda: [20, 20, 20])
+    ther_cond_temp: list = field(default_factory=lambda: [100, 700, 100])
     min_length: float | None = 12.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)

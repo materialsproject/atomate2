@@ -163,6 +163,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         displacement_anhar: float,
         num_disp_anhar: int,
         fcs_cutoff_radius: list[int],
+        cal_ther_cond: bool,
+        ther_cond_mesh: list[int],
+        ther_cond_temp: list[int],
         sym_reduce: bool,
         symprec: float,
         use_symmetrized_structure: Union[str, None],
@@ -499,28 +502,28 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         # begin to convert the force constants to the phonopy and phono3py format
         # for the further lattice thermal conductivity calculations
-        
-        # convert the 2ND order force constants to the phonopy format
-        fc_phonopy_text = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
-        write_force_constants_to_hdf5(fc_phonopy_text, filename="fc2.hdf5")
+        if cal_ther_cond:
+            # convert the 2ND order force constants to the phonopy format
+            fc_phonopy_text = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
+            write_force_constants_to_hdf5(fc_phonopy_text, filename="fc2.hdf5")
 
-        # convert the 3RD order force constants to the phonopy format
+            # convert the 3RD order force constants to the phonopy format
 
-        prim_hiphive = read('POSCAR')
-        supercell_hiphive = read('SPOSCAR')
-        fcs = ForceConstants.read_shengBTE(supercell_hiphive, 'FORCE_CONSTANTS_3RD', prim_hiphive)
-        fcs.write_to_phono3py('fc3.hdf5')
+            prim_hiphive = read('POSCAR')
+            supercell_hiphive = read('SPOSCAR')
+            fcs = ForceConstants.read_shengBTE(supercell_hiphive, 'FORCE_CONSTANTS_3RD', prim_hiphive)
+            fcs.write_to_phono3py('fc3.hdf5')
 
-        # parameters
-        dim = 3
-        mesh = 19
-        temperatures = [300]
+            phono3py_cmd = (
+                f'phono3py --dim {int(supercell_matrix[0][0])} {int(supercell_matrix[1][1])} {int(supercell_matrix[2][2])} '
+                '--fc2 --fc3 --br --isotope --wigner '
+                f'--mesh {ther_cond_mesh[0]} {ther_cond_mesh[1]} {ther_cond_mesh[2]} '
+                f'--tmin {ther_cond_temp[0]} --tmax {ther_cond_temp[1]} --tstep {ther_cond_temp[2]}'
+            )
 
-        phono3py_cmd = 'phono3py --dim="{0} {0} {0}" --fc2 --fc3 --br --isotope --wigner --mesh="'\
-               '{1} {1} {1}" --ts="{2}"'.format(
-                dim, mesh, ' '.join(str(T) for T in temperatures))
-        
-        subprocess.call(phono3py_cmd, shell=True)
+            subprocess.call(phono3py_cmd, shell=True)
+        else:
+            pass
 
         # Read the force constants from the output file of pheasy code
         force_constants = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
