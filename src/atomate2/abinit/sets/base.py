@@ -613,7 +613,6 @@ class AbinitInputGenerator(InputGenerator):
         if factory_kwargs:
             total_factory_kwargs.update(factory_kwargs)
         generated_input = self.factory(**total_factory_kwargs)
-
         if input_index is not None:
             generated_input = generated_input[input_index]
 
