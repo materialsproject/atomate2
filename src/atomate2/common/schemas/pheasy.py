@@ -303,7 +303,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # Transpose back to the original format
         dataset_disps_array_rr_cartesian = np.transpose(dataset_disps_array_rr_cartesian, (0, 2, 1))
         
-        dataset_disps_array_use = dataset_disps_array_rr[:-1, :, :]
+        dataset_disps_array_use = dataset_disps_array_rr_cartesian[:-1, :, :]
 
         # seperate the dataset into harmonic and anharmonic parts
         if cal_anhar_fcs:
