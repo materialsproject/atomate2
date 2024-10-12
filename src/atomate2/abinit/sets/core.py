@@ -98,7 +98,7 @@ class NonSCFSetGenerator(AbinitInputGenerator):
         """Get AbinitInput object for Non-SCF calculation."""
         factory_kwargs = dict(factory_kwargs) if factory_kwargs else {}
         factory_kwargs["nband"] = self._get_nband(prev_outputs)
-        
+
         return super().get_abinit_input(
             structure=structure,
             pseudos=pseudos,
