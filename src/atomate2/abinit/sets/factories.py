@@ -1,5 +1,6 @@
 # coding: utf-8
 """Factory functions for Abinit input files """
+"""This code is planned to be moved into abipy/abio/factories.py"""
 from __future__ import annotations
 
 import numpy as np
