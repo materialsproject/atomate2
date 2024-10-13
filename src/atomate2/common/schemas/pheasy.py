@@ -259,6 +259,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # get the force-displacement dataset from previous calculations
         dataset_forces = [np.array(forces) for forces in displacement_data["forces"]]
         dataset_forces_array = np.array(dataset_forces)
+        # save to csv file
+        import csv
+        with open("dataset_forces.csv", "w") as file:
+            writer = csv.writer(file)
+            writer.writerows(dataset_forces_array)
 
         # To deduct the residual forces on an equilibrium structure to eliminate the
         # fitting error
@@ -283,10 +288,21 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             np.array(disps.frac_coords) 
             for disps in displacement_data["displaced_structures"]
         ]
+        logger.info(f"dataset_disps = {dataset_disps}")
+        print(f"dataset_disps = {dataset_disps}")
+        # save to csv file
+        import csv
+        with open("dataset_disps.csv", "w") as file:
+            writer = csv.writer(file)
+            writer.writerows(dataset_disps)
         dataset_disps_array_rr = np.round(
             (dataset_disps - supercell.get_scaled_positions()), 
                                     decimals=16
         ).astype('double')
+        # save to csv file
+        with open("dataset_disps_array_rr.csv", "w") as file:
+            writer = csv.writer(file)
+            writer.writerows(dataset_disps_array_rr)
         dataset_disps_array_rr = np.where(
             dataset_disps_array_rr > 0.5,
             dataset_disps_array_rr - 1.0,
@@ -476,25 +492,25 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 f'"{int(supercell_matrix[2][2])}" -s -w 4 --symprec "{float(symprec)}" '
                 f'--nbody 2 3 3 --c3 "{float(fcs_cutoff_radius[1]/1.89)}" --c4 "{float(fcs_cutoff_radius[2]/1.89)}"'
             )
+            logger.info("pheasy_cmd_5 = %s", pheasy_cmd_5)
 
             pheasy_cmd_6 = (
                 f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
                 f'"{int(supercell_matrix[2][2])}" -c --symprec "{float(symprec)}" -w 4'
             )
-
+            logger.info("pheasy_cmd_6 = %s", pheasy_cmd_6)
             pheasy_cmd_7 = (
                 f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
                 f'"{int(supercell_matrix[2][2])}" -w 4 -d --symprec "{float(symprec)}" '
                 f'--ndata "{int(num_anhar)}" --disp_file'
             )
-
+            logger.info("pheasy_cmd_7 = %s", pheasy_cmd_7)
             pheasy_cmd_8 = (
                 f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
                 f'"{int(supercell_matrix[2][2])}" -f -w 4 --fix_fc2 --symprec "{float(symprec)}" '
                 f'--ndata "{int(num_anhar)}"'
             )
-
-
+            logger.info("pheasy_cmd_8 = %s", pheasy_cmd_8)
             logger.info("Start running pheasy in cluster")
 
             subprocess.call(pheasy_cmd_5, shell=True)
