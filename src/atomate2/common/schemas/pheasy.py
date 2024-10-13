@@ -163,6 +163,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         displacement_anhar: float,
         num_disp_anhar: int,
         fcs_cutoff_radius: list[int],
+        renorm_phonon: bool,
+        renorm_temp: list[int],
         cal_ther_cond: bool,
         ther_cond_mesh: list[int],
         ther_cond_temp: list[int],
@@ -500,6 +502,12 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         else:
             pass
 
+        # begin to renormzlize the phonon energies
+        if renorm_phonon:
+            logger.info("Start running pheasy in cluster")
+        else:
+            pass
+        
         # begin to convert the force constants to the phonopy and phono3py format
         # for the further lattice thermal conductivity calculations
         if cal_ther_cond:

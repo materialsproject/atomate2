@@ -176,6 +176,8 @@ class BasePhononMaker(Maker, ABC):
     displacement_anhar: float = 0.08
     num_disp_anhar: int = 0
     fcs_cutoff_radius: list = field(default_factory=lambda: [-1, 12, 10]) # units in Bohr
+    renorm_phonon: bool = False
+    renorm_temp: list = field(default_factory=lambda: [100, 700, 100])
     cal_ther_cond: bool = False
     ther_cond_mesh: list = field(default_factory=lambda: [20, 20, 20])
     ther_cond_temp: list = field(default_factory=lambda: [100, 700, 100])
@@ -395,6 +397,9 @@ class BasePhononMaker(Maker, ABC):
             displacement_anhar=self.displacement_anhar,
             num_disp_anhar=self.num_disp_anhar,
             fcs_cutoff_radius=self.fcs_cutoff_radius,
+            cal_ther_cond=self.cal_ther_cond,
+            ther_cond_mesh=self.ther_cond_mesh,
+            ther_cond_temp=self.ther_cond_temp,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,
