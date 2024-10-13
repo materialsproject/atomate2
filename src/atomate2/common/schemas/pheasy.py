@@ -388,6 +388,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                     "factor": 14.399652,
                 }
             # Other codes could be added here
+
         else:
             borns = None
             epsilon = None
@@ -493,6 +494,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 f'--ndata "{int(num_anhar)}"'
             )
 
+
             logger.info("Start running pheasy in cluster")
 
             subprocess.call(pheasy_cmd_5, shell=True)
@@ -504,7 +506,19 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         # begin to renormzlize the phonon energies
         if renorm_phonon:
+
+            pheasy_cmd_9 = (
+                f'pheasy --dim "{int(supercell_matrix[0][0])}" "{int(supercell_matrix[1][1])}" '
+                f'"{int(supercell_matrix[2][2])}" -f -w 4 --fix_fc2 --hdf5 --symprec "{float(symprec)}" '
+                f'--ndata "{int(num_anhar)}"' 
+            )
+
             logger.info("Start running pheasy in cluster")
+            subprocess.call(pheasy_cmd_9, shell=True)
+
+            # write the born charges and dielectric constant to the pheasy format
+
+
         else:
             pass
         

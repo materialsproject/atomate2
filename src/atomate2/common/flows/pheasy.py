@@ -397,6 +397,8 @@ class BasePhononMaker(Maker, ABC):
             displacement_anhar=self.displacement_anhar,
             num_disp_anhar=self.num_disp_anhar,
             fcs_cutoff_radius=self.fcs_cutoff_radius,
+            renorm_phonon=self.renorm_phonon,
+            renorm_temp=self.renorm_temp,
             cal_ther_cond=self.cal_ther_cond,
             ther_cond_mesh=self.ther_cond_mesh,
             ther_cond_temp=self.ther_cond_temp,
