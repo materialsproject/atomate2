@@ -72,6 +72,29 @@ class NebResult(BaseModel):
 class NebPathwayResult(BaseModel):
     """Class for containing multiple NEB calculations, as along a reaction pathway."""
 
-    hops: list[NebResult] = Field(
-        None, description="List of NEB calculations included in this calculation"
+    hops: dict[str, NebResult] = Field(
+        None, description="Dict of NEB calculations included in this calculation"
     )
+
+    forward_barriers: dict[str, float] = Field(
+        None, description="Dict of the forward barriers computed here."
+    )
+
+    reverse_barriers: dict[str, float] = Field(
+        None, description="Dict of the reverse barriers computed here."
+    )
+
+    @model_validator(mode="after")
+    def set_barriers(self) -> Self:
+        """Set barriers if needed."""
+        for direction in ("forward", "reverse"):
+            if getattr(self, f"{direction}_barriers", None) is None:
+                setattr(
+                    self,
+                    f"{direction}_barriers",
+                    {
+                        idx: getattr(neb_calc, f"{direction}_barrier", None)
+                        for idx, neb_calc in self.hops.items()
+                    },
+                )
+        return self

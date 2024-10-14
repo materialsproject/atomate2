@@ -5,14 +5,18 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from emmet.core.neb import NebMethod
 from jobflow import job
 from pymatgen.analysis.diffusion.neb.pathfinder import ChgcarPotential, NEBPathfinder
 
+from atomate2.common.schemas.neb import NebPathwayResult, NebResult
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import RelaxMaker
-from atomate2.vasp.sets.approxneb import ApproxNEBSetGenerator
+from atomate2.vasp.sets.approx_neb import ApproxNEBSetGenerator
 
 if TYPE_CHECKING:
+    from typing import Literal
+
     from pymatgen.core import Structure
     from pymatgen.io.vasp import Chgcar
 
@@ -82,42 +86,46 @@ def get_endpoint_input_structs(
 @job
 def get_image_input_structures(
     working_ion: str,
-    ep_jobs_output: dict,
+    ep_structures: dict[int, Structure],
     inserted_combo_list: list,
     n_images: int,
     host_chgcar: Chgcar,
-    selective_dynamics_scheme: str | None = "fix_two_atoms",
+    selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms",
 ) -> dict:
     """Get image input structures for relaxation."""
     image_input_dict = {}
     for combo in inserted_combo_list:
         ini_ind, fin_ind = map(int, combo.split("+"))
-        # potential place for uuid logic if depth first si desirable
-        pf_struct_ini = ep_jobs_output[ini_ind].structure
-        pf_struct_fin = ep_jobs_output[fin_ind].structure
-        pathfinder_output = get_pathfiner_results(
-            pf_struct_ini, pf_struct_fin, working_ion, n_images, host_chgcar
+        # potential place for uuid logic if depth first is desirable
+        pathfinder_output = get_pathfinder_results(
+            ep_structures[ini_ind],
+            ep_structures[fin_ind],
+            working_ion,
+            n_images,
+            host_chgcar,
         )
-        images_list = pathfinder_output.output["images"]
+        images_list = pathfinder_output["images"]
 
         # add selective dynamics to structure
-        if selective_dynamics_scheme:
+        if selective_dynamics_scheme == "fix_two_atoms":
             images_list = [
-                add_selective_dynamics(
+                add_selective_dynamics_two_fixed_sites(
                     image,
-                    pathfinder_output.output["mobile_site_index"],
-                    selective_dynamics_scheme,
-                ).output
-                for image in pathfinder_output.output["images"]
+                    pathfinder_output["mobile_site_index"],
+                    working_ion,
+                )
+                for image in pathfinder_output["images"]
             ]
+
+        elif selective_dynamics_scheme is not None:
+            raise ValueError(f"Unknown {selective_dynamics_scheme=}.")
 
         image_input_dict[combo] = images_list
 
     return image_input_dict
 
 
-@job
-def get_pathfiner_results(
+def get_pathfinder_results(
     pf_struct_ini: Structure,
     pf_struct_fin: Structure,
     working_ion: str,
@@ -125,8 +133,8 @@ def get_pathfiner_results(
     host_chgcar: Chgcar,
 ) -> dict:
     """Get interpolated images from the pathfinder algorithm."""
-    _, ini_wi_ind = _get_wi_coords_ind(pf_struct_ini, working_ion).output
-    _, fin_wi_ind = _get_wi_coords_ind(pf_struct_fin, working_ion).output
+    ini_wi_ind = get_working_ion_index(pf_struct_ini, working_ion)
+    fin_wi_ind = get_working_ion_index(pf_struct_fin, working_ion)
 
     if ini_wi_ind != fin_wi_ind:
         raise ValueError(
@@ -155,54 +163,60 @@ def get_pathfiner_results(
     }
 
 
-@job
-def add_selective_dynamics(
+def add_selective_dynamics_two_fixed_sites(
     structure: Structure,
     fixed_index: int,
-    fixed_specie_name: str,
-    selective_dynamics_scheme: str,
+    fixed_species_name: str,
 ) -> Structure:
-    """Add selective dynamics to input structure according to scheme."""
-    if selective_dynamics_scheme not in ["fix_two_atoms"]:
-        raise ValueError(
-            "selective_dynamics_scheme does match any supported schemes, "
-            "check input value"
-        )
-
-    if structure[fixed_index].specie.name != fixed_specie_name:
+    """Add selective dynamics to input structure."""
+    if structure[fixed_index].specie.name != fixed_species_name:
         raise ValueError(
             f"The chosen fixed atom at index {fixed_index} is not a "
-            f"{fixed_specie_name} atom"
+            f"{fixed_species_name} atom"
         )
 
     # removes site properties to avoid error
-    if structure.site_properties != {}:
-        for p in structure.site_properties:
-            structure.remove_site_property(p)
+    for p in structure.site_properties:
+        structure.remove_site_property(p)
 
     # add selectives dynamics with fix_two_atoms scheme
     # fix the atom at fixed_index and the furthest atom in the structure
-    if selective_dynamics_scheme == "fix_two_atoms":
-        sd_structure = structure.copy()
-        sd_array = [[True, True, True] for i in range(sd_structure.num_sites)]
-        sd_array[fixed_index] = [False, False, False]
-        ref_site = sd_structure.sites[fixed_index]
-        distances = [site.distance(ref_site) for site in sd_structure.sites]
-        farthest_index = distances.index(max(distances))
-        sd_array[farthest_index] = [False, False, False]
-        sd_structure.add_site_property("selective_dynamics", sd_array)
+    ref_site = structure.sites[fixed_index]
+    distances = [site.distance(ref_site) for site in structure.sites]
+    farthest_index = distances.index(max(distances))
+    sd_array = [
+        [False, False, False]
+        if idx in {fixed_index, farthest_index}
+        else [True, True, True]
+        for idx in range(structure.num_sites)
+    ]
+    structure.add_site_property("selective_dynamics", sd_array)
 
-    return sd_structure
+    return structure
+
+
+def get_working_ion_index(structure: Structure, working_ion: str) -> int | None:
+    """Get the index of the working ion in a structure."""
+    for ind, site in enumerate(structure):
+        if site.species_string == working_ion:
+            # assume that only the lowest indexed working ion is mobile
+            return ind
+    return None
 
 
 @job
-def _get_wi_coords_ind(structure: Structure, working_ion: str) -> tuple[list, int]:
-    coords = []
-    indices = []
-    for ind, site in enumerate(structure):
-        if site.speice.name == working_ion:
-            coords.append(site.frac_coords)
-            indices.append(ind)
-
-    # assume that only the lowest indexed working ion is mobile
-    return coords[0], indices[0]
+def collate_results(
+    endpoint_calc_output: dict, image_calc_output: dict[str, list]
+) -> NebPathwayResult:
+    """Collect output from an ApproxNEB workflow."""
+    hop_dict = {}
+    for combo_name, images in image_calc_output.items():
+        endpoint_calcs = [endpoint_calc_output[idx] for idx in combo_name.split("+")]
+        hop = [endpoint_calcs[0], *images, endpoint_calcs[1]]
+        hop_dict[combo_name] = NebResult(
+            structures=[calc.structure for calc in hop],
+            energies=[calc.energy for calc in hop],
+            ionic_steps=[calc.output.ionic_steps for calc in hop],
+            method=NebMethod.APPROX,
+        )
+    return NebPathwayResult(hops=hop_dict)
