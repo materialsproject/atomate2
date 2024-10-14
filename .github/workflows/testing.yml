@@ -183,7 +183,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install .[strict,strict-forcefields,docs]
-          uv pip install --upgrade 'git+https://github.com/esoteric-ephemera/emmet@neb' # to-do: remove on emmet-core release
+          uv pip install --upgrade 'git+https://github.com/esoteric-ephemera/emmet.git@neb#subdirectory=emmet-core' # to-do: remove on emmet-core release
 
       - name: Build
         run: sphinx-build docs docs_build
