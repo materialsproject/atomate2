@@ -120,7 +120,7 @@ strict = [
     "pydantic==2.9.2",
     "pymatgen-analysis-defects==2024.7.19",
     "pymatgen==2024.10.3",
-    "python-ulid==2.7.0",
+    "python-ulid==3.0.0",
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.12.2",
