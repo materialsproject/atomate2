@@ -132,6 +132,7 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
         CHGNetRelaxMaker()
 
 
+@pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
 def test_m3gnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
@@ -154,6 +155,7 @@ def test_m3gnet_static_maker(si_structure):
         M3GNetStaticMaker()
 
 
+@pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
 def test_m3gnet_relax_maker(si_structure):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
