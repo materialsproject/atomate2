@@ -45,6 +45,12 @@ OPTIMIZERS = {
     "BFGSLineSearch": BFGSLineSearch,
 }
 
+FORCE_BASED_OPTIMIZERS = {
+    "FIRE": FIRE,
+    "BFGS": BFGS,
+    "MDMin": MDMin,
+}
+
 
 class TrajectoryObserver:
     """Trajectory observer.
@@ -376,6 +382,125 @@ class AseRelaxer:
             optimizer.run(fmax=fmax, steps=steps)
             t_f = time.perf_counter()
             obs()
+        if traj_file is not None:
+            obs.save(traj_file)
+        if isinstance(atoms, cell_filter):
+            atoms = atoms.atoms
+
+        struct = self.ase_adaptor.get_structure(
+            atoms, cls=Molecule if is_mol else Structure
+        )
+        traj = obs.to_pymatgen_trajectory(None)
+        is_force_conv = all(
+            np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
+            for idx in range(len(struct))
+        )
+        return AseResult(
+            final_mol_or_struct=struct,
+            trajectory=traj,
+            is_force_converged=is_force_conv,
+            energy_downhill=traj.frame_properties[-1]["energy"]
+            < traj.frame_properties[0]["energy"],
+            dir_name=os.getcwd(),
+            elapsed_time=t_f - t_i,
+        )
+
+class AseNebInterface:
+    """Perform NEB using the Atomic Simulation Environment."""
+
+    def __init__(
+        self,
+        calculator: Calculator,
+        optimizer: Optimizer | str = "FIRE",
+        relax_cell: bool = True,
+        fix_symmetry: bool = False,
+        symprec: float = 1e-2,
+    ) -> None:
+        """Initialize the interface.
+
+        Parameters
+        ----------
+        calculator (ase Calculator): an ase calculator
+        optimizer (str or ase Optimizer): the optimization algorithm.
+        relax_cell (bool): if True, cell parameters will be optimized.
+        fix_symmetry (bool): if True, symmetry will be fixed during relaxation.
+        symprec (float): Tolerance for symmetry finding in case of fix_symmetry.
+        """
+        self.calculator = calculator
+
+        if isinstance(optimizer, str):
+            optimizer_obj = FORCE_BASED_OPTIMIZERS.get(optimizer)
+        elif optimizer is None:
+            raise ValueError("Optimizer cannot be None")
+        else:
+            optimizer_obj = optimizer
+
+        self.opt_class: Optimizer = optimizer_obj
+        self.relax_cell = relax_cell
+        self.ase_adaptor = AseAtomsAdaptor()
+        self.fix_symmetry = fix_symmetry
+        self.symprec = symprec
+
+    def run_neb(
+        self,
+        images: list[Atoms | Structure | Molecule],
+        fmax: float = 0.1,
+        steps: int = 500,
+        traj_file: str = None,
+        interval: int = 1,
+        verbose: bool = False,
+        cell_filter: Filter = FrechetCellFilter,
+        **kwargs,
+    ) -> AseResult:
+        """
+        Perform NEB on a list of molecules or structures.
+
+        Parameters
+        ----------
+        images : list of ASE Atoms, pymatgen Structure, or pymatgen Molecule
+            The ordered list of atoms to perform NEB on.
+        fmax : float
+            Total force tolerance for relaxation convergence.
+        steps : int
+            Max number of steps for relaxation.
+        traj_file : str
+            The trajectory file for saving.
+        interval : int
+            The step interval for saving the trajectories.
+        verbose : bool
+            If True, screen output will be shown.
+        **kwargs
+            Further kwargs.
+
+        Returns
+        -------
+            dict including optimized structure and the trajectory
+        """
+        is_mol = isinstance(images[0], Molecule) or (
+            isinstance(images[0], Atoms) and all(not pbc for pbc in images[0].pbc)
+        )
+
+        for idx, image in enumerate(images):
+            if isinstance(image, Structure | Molecule):
+                images[idx] = self.ase_adaptor.get_atoms(image)
+            
+        for image in images:
+            if self.fix_symmetry:
+                image.set_constraint(FixSymmetry(image, symprec=self.symprec))
+            image.set_calculator(self.calculator)
+
+        with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
+            obs = [TrajectoryObserver(image) for image in images]
+            if self.relax_cell and (not is_mol):
+                for idx, image in enumerate(images):
+                    images[idx] = cell_filter(image)
+            optimizer = self.opt_class(atoms, **kwargs)
+            optimizer.attach(obs, interval=interval)
+            t_i = time.perf_counter()
+            optimizer.run(fmax=fmax, steps=steps)
+            t_f = time.perf_counter()
+            [obs[idx]() for idx in range(len(images))]
+            
         if traj_file is not None:
             obs.save(traj_file)
         if isinstance(atoms, cell_filter):

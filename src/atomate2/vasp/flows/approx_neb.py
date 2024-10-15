@@ -13,8 +13,8 @@ from atomate2.vasp.jobs.approx_neb import (
     ApproxNEBHostRelaxMaker,
     ApproxNEBImageRelaxMaker,
     collate_results,
-    get_endpoint_input_structs,
-    get_image_input_structures,
+    get_endpoints_and_relax,
+    get_images_and_relax,
 )
 
 if TYPE_CHECKING:
@@ -30,7 +30,7 @@ class ApproxNEBMaker(Maker):
     """Maker for an ApproxNEB flow."""
 
     name: str = "ApproxNEB"
-    host_relax_maker: Maker = field(default_factory=ApproxNEBHostRelaxMaker)
+    host_relax_maker: Maker | None = field(default_factory=ApproxNEBHostRelaxMaker)
     image_relax_maker: Maker = field(default_factory=ApproxNEBImageRelaxMaker)
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = None
 
@@ -85,53 +85,36 @@ class ApproxNEBMaker(Maker):
             prev_dir = host_relax_job.output.dir_name
 
         # assign jobs to relax endpoint structures
-        ep_relax_input = get_endpoint_input_structs(
+        ep_relax_jobs = get_endpoints_and_relax(
             host_structure=host_structure,
             working_ion=working_ion,
             endpoint_coords_dict=inserted_coords_dict,
             inserted_coords_combo=inserted_coords_combo,
+            relax_maker = self.image_relax_maker,
         )
-        ep_relax_jobs = {
-            key: self.image_relax_maker.make(val) for key, val in ep_relax_input.items()
-        }
-        jobs += list(ep_relax_jobs.values())
-        ep_structures = {}
-        for idx, job in ep_relax_jobs.items():
-            if (job_output := getattr(job, "output", None)) is not None:
-                ep_structures[idx] = job_output.structure
 
         # get charge density of host structure for pathfinder
         host_chgcar_job = get_charge_density_job(
             prev_dir, ElectrodeInsertionMaker.get_charge_density
         )
-        host_chgcar = host_chgcar_job.output
-        jobs.append(host_chgcar_job)
 
         # run pathfinder (and selective dynamics) to get image structure input
-        image_input_structures = get_image_input_structures(
+        image_relax_jobs = get_images_and_relax(
             working_ion=working_ion,
-            ep_structures=ep_structures,
+            ep_structures=ep_relax_jobs.output,
             inserted_combo_list=inserted_coords_combo,
             n_images=n_images,
-            host_chgcar=host_chgcar,
+            host_chgcar=host_chgcar_job.output,
+            relax_maker = self.image_relax_maker,
             selective_dynamics_scheme=self.selective_dynamics_scheme,
-        ).output
-
-        # make image relaxation jobs
-        relax_image_jobs = {
-            idx: [self.image_relax_maker.make(image) for image in images]
-            for idx, images in image_input_structures.items()
-        }
-        for image_calcs in relax_image_jobs.values():
-            jobs += image_calcs
+        )
 
         collect_output = collate_results(
-            {idx: calc.output for idx, calc in ep_relax_jobs.items()},
-            {
-                idx: [calc.output for calc in images]
-                for idx, images in relax_image_jobs.items()
-            },
+            ep_relax_jobs.output,
+            image_relax_jobs.output,
         )
-        jobs += collect_output
 
-        return Flow(jobs, output=collect_output.output)
+        return Flow(
+            [*jobs, ep_relax_jobs, host_chgcar_job, image_relax_jobs, collate_output],
+            output=collect_output.output
+        )
