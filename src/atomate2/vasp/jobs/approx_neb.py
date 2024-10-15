@@ -107,7 +107,7 @@ def get_images_and_relax(
     # remove failed output first
     ep_structures = {
         k: calc["structure"]
-        for k, v in ep_output.items()
+        for k, calc in ep_output.items()
         if calc["structure"] is not None
     }
 

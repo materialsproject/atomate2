@@ -115,6 +115,6 @@ class ApproxNEBMaker(Maker):
         )
 
         return Flow(
-            [*jobs, ep_relax_jobs, host_chgcar_job, image_relax_jobs, collate_output],
+            [*jobs, ep_relax_jobs, host_chgcar_job, image_relax_jobs, collect_output],
             output=collect_output.output,
         )
