@@ -90,7 +90,7 @@ class ApproxNEBMaker(Maker):
             working_ion=working_ion,
             endpoint_coords_dict=inserted_coords_dict,
             inserted_coords_combo=inserted_coords_combo,
-            relax_maker = self.image_relax_maker,
+            relax_maker=self.image_relax_maker,
         )
 
         # get charge density of host structure for pathfinder
@@ -105,7 +105,7 @@ class ApproxNEBMaker(Maker):
             inserted_combo_list=inserted_coords_combo,
             n_images=n_images,
             host_chgcar=host_chgcar_job.output,
-            relax_maker = self.image_relax_maker,
+            relax_maker=self.image_relax_maker,
             selective_dynamics_scheme=self.selective_dynamics_scheme,
         )
 
@@ -116,5 +116,5 @@ class ApproxNEBMaker(Maker):
 
         return Flow(
             [*jobs, ep_relax_jobs, host_chgcar_job, image_relax_jobs, collate_output],
-            output=collect_output.output
+            output=collect_output.output,
         )

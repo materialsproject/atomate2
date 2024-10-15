@@ -405,6 +405,7 @@ class AseRelaxer:
             elapsed_time=t_f - t_i,
         )
 
+
 class AseNebInterface:
     """Perform NEB using the Atomic Simulation Environment."""
 
@@ -483,7 +484,7 @@ class AseNebInterface:
         for idx, image in enumerate(images):
             if isinstance(image, Structure | Molecule):
                 images[idx] = self.ase_adaptor.get_atoms(image)
-            
+
         for image in images:
             if self.fix_symmetry:
                 image.set_constraint(FixSymmetry(image, symprec=self.symprec))
@@ -500,7 +501,7 @@ class AseNebInterface:
             optimizer.run(fmax=fmax, steps=steps)
             t_f = time.perf_counter()
             [obs[idx]() for idx in range(len(images))]
-            
+
         if traj_file is not None:
             obs.save(traj_file)
         if isinstance(atoms, cell_filter):

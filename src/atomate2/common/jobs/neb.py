@@ -6,9 +6,8 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 import numpy as np
-from scipy.interpolate import CubicSpline
-
 from jobflow import job
+from scipy.interpolate import CubicSpline
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -28,7 +27,7 @@ def get_images_from_endpoints(
     endpoints: tuple[Structure, Structure] | list[Structure],
     num_images: int,
     interpolation_method: NebInterpolation = NebInterpolation.LINEAR,
-    run_as_job : bool = False,
+    run_as_job: bool = False,
     **interpolation_kwargs,
 ) -> list[Structure]:
     """
@@ -54,10 +53,10 @@ def get_images_from_endpoints(
                 num_images,
                 interpolation_method=interpolation_method,
                 run_as_job=False,
-                **interpolation_kwargs
+                **interpolation_kwargs,
             )
         )
-    
+
     if interpolation_method == NebInterpolation.LINEAR:
         return endpoints[0].interpolate(
             endpoints[1], nimages=num_images, **interpolation_kwargs

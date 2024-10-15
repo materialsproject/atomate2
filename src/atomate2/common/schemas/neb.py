@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field, model_validator
 from atomate2.common.jobs.neb import neb_spline_fit
 
 if TYPE_CHECKING:
-    from pymatgen.core import Structure, Molecule
+    from pymatgen.core import Molecule, Structure
     from typing_extensions import Any, Self
 
 
@@ -22,7 +22,7 @@ class NebResult(BaseModel):
     )
 
     energies: list[float] = Field(
-        None, description="Energies corresponding the structures in `iamges`."
+        None, description="Energies corresponding the structures in `images`."
     )
 
     forward_barrier: float = Field(

@@ -1,4 +1,4 @@
-""" Create NEB jobs with ASE. """
+"""Create NEB jobs with ASE."""
 
 from __future__ import annotations
 
@@ -6,17 +6,12 @@ from dataclasses import dataclass, field
 
 from ase.mep.neb import NEB
 from pymatgen.core import Molecule, Structure
-from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.ase.jobs import AseMaker
 from atomate2.common.schemas.neb import NebResult
 
 # Parameters chosen for consistency with atomate2.vasp.sets.core.NebSetGenerator
-_DEFAULT_NEB_KWARGS = {
-    "k": 5., 
-    "climb": True,
-    "method": "improvedtangent"
-}
+_DEFAULT_NEB_KWARGS = {"k": 5.0, "climb": True, "method": "improvedtangent"}
 
 
 @dataclass
@@ -24,7 +19,7 @@ class AseNebMaker(AseMaker):
     """Define ASE NEB jobs."""
 
     name: str = "ASE NEB maker"
-    neb_kwargs : dict = field(default_factory=dict)
+    neb_kwargs: dict = field(default_factory=dict)
 
     def run_ase(
         self,
@@ -45,16 +40,13 @@ class AseNebMaker(AseMaker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-
         self.neb_kwargs = self.neb_kwargs or _DEFAULT_NEB_KWARGS
 
-        is_mol_calc = all(isinstance(image,Molecule) for image in images)
-        
-        images = [
-            image.to_ase_atoms() for image in images
-        ]
-        
-        neb_calc = NEB(images,**self.neb_kwargs)
+        is_mol_calc = all(isinstance(image, Molecule) for image in images)
+
+        images = [image.to_ase_atoms() for image in images]
+
+        neb_calc = NEB(images, **self.neb_kwargs)
         for image in images:
             image.calc = self.calculator
 
@@ -90,4 +82,3 @@ class AseNebMaker(AseMaker):
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
         )
-        

@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from emmet.core.neb import NebMethod
-from jobflow import job, Flow, Maker, Response
+from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.diffusion.neb.pathfinder import ChgcarPotential, NEBPathfinder
 
 from atomate2.common.schemas.neb import NebPathwayResult, NebResult
@@ -59,9 +59,9 @@ def get_endpoints_and_relax(
     working_ion: str,
     endpoint_coords_dict: dict,
     inserted_coords_combo: list,
-    relax_maker : Maker,
+    relax_maker: Maker,
 ) -> Response:
-    """Get adn relax endpoint structures."""
+    """Get and relax endpoint structures."""
     ep_distinct = []
     for one_combo in inserted_coords_combo:
         try:
@@ -87,10 +87,11 @@ def get_endpoints_and_relax(
                 "energy": relax_job.output.energy,
                 "structure": relax_job.output.structure,
             }
-            
+
     flow = Flow(ep_relax_jobs, output=ep_relax_output)
 
     return Response(replace=flow)
+
 
 @job
 def get_images_and_relax(
@@ -99,14 +100,15 @@ def get_images_and_relax(
     inserted_combo_list: list,
     n_images: int,
     host_chgcar: Chgcar,
-    relax_maker : Maker,
+    relax_maker: Maker,
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms",
 ) -> Response:
     """Get and relax image input structures."""
-
     # remove failed output first
     ep_structures = {
-        k : calc["structure"] for k, v in ep_output.items() if calc["structure"] is not None
+        k: calc["structure"]
+        for k, v in ep_output.items()
+        if calc["structure"] is not None
     }
 
     image_relax_jobs = []
@@ -114,10 +116,10 @@ def get_images_and_relax(
     for combo in inserted_combo_list:
         ini_ind, fin_ind = map(int, combo.split("+"))
 
-        if not all(ep_structures.get(idx) for idx in [ini_ind,fin_ind]):
+        if not all(ep_structures.get(idx) for idx in [ini_ind, fin_ind]):
             # cannot proceed with this hop calculation
             continue
-        
+
         # potential place for uuid logic if depth first is desirable
         pathfinder_output = get_pathfinder_results(
             ep_structures[ini_ind],
@@ -146,10 +148,12 @@ def get_images_and_relax(
         for image in images_list:
             relax_job = relax_maker.make(image)
             image_relax_jobs.append(relax_job)
-            image_relax_output[combo].append({
-                "structure": relax_job.output.structure,
-                "energy": relax_job.output.energy,
-            })
+            image_relax_output[combo].append(
+                {
+                    "structure": relax_job.output.structure,
+                    "energy": relax_job.output.energy,
+                }
+            )
 
     relax_flow = Flow(image_relax_jobs, output=image_relax_output)
 
@@ -247,7 +251,7 @@ def collate_results(
         hop_dict[combo_name] = NebResult(
             images=[calc["structure"] for calc in hop],
             energies=[calc["energy"] for calc in hop],
-            ionic_steps=None, #[calc.output.ionic_steps for calc in hop],
+            ionic_steps=None,  # [calc.output.ionic_steps for calc in hop],
             method=NebMethod.APPROX,
         )
     return NebPathwayResult(hops=hop_dict)
