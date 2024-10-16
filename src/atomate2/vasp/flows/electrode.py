@@ -6,7 +6,6 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from monty.os.path import zpath
 from pymatgen.io.vasp.outputs import Chgcar
 
 from atomate2.common.flows import electrode as electrode_flows
@@ -57,7 +56,7 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
     """
 
     @staticmethod
-    def get_charge_density(prev_dir: Path | str, use_aeccar : bool = False) -> VolumetricData:
+    def get_charge_density(prev_dir: Path | str) -> VolumetricData:
         """Get the charge density of a structure.
 
         Parameters
@@ -70,12 +69,9 @@ class ElectrodeInsertionMaker(electrode_flows.ElectrodeInsertionMaker):
             The charge density.
         """
         prev_dir = Path(strip_hostname(prev_dir))
-        if use_aeccar:
-            aeccar0 = Chgcar.from_file(zpath(str(prev_dir / "AECCAR0")))
-            aeccar2 = Chgcar.from_file(zpath(str(prev_dir / "AECCAR2")))
-            return aeccar0 + aeccar2
-        else:
-            return Chgcar.from_file(zpath(str(prev_dir / "CHGCAR")))
+        aeccar0 = Chgcar.from_file(prev_dir / "AECCAR0.gz")
+        aeccar2 = Chgcar.from_file(prev_dir / "AECCAR2.gz")
+        return aeccar0 + aeccar2
 
     def update_static_maker(self) -> None:
         """Ensure that the static maker will store the desired data."""

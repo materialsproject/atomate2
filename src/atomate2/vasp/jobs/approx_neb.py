@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from emmet.core.neb import NebMethod
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.diffusion.neb.pathfinder import ChgcarPotential, NEBPathfinder
+from pymatgen.io.vasp.outputs import Chgcar
 
 from atomate2.common.schemas.neb import NebPathwayResult, NebResult
+from atomate2.utils.path import strip_hostname
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import RelaxMaker
 from atomate2.vasp.sets.approx_neb import ApproxNEBSetGenerator
@@ -50,7 +53,7 @@ class ApproxNEBImageRelaxMaker(DoubleRelaxMaker):
         default_factory=lambda: RelaxMaker(
             input_set_generator=ApproxNEBSetGenerator(set_type="image")
         )
-    )    
+    )
 
 @job
 def get_endpoints_and_relax(
@@ -98,9 +101,10 @@ def get_images_and_relax(
     ep_output: dict,
     inserted_combo_list: list,
     n_images: int,
-    host_chgcar: Chgcar,
+    host_calc_path: str | Path,
     relax_maker: Maker,
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms",
+    use_aeccar : bool = False
 ) -> Response:
     """Get and relax image input structures."""
     # remove failed output first
@@ -109,6 +113,8 @@ def get_images_and_relax(
         for k, calc in ep_output.items()
         if calc["structure"] is not None
     }
+
+    host_chgcar = get_charge_density(host_calc_path, use_aeccar=use_aeccar)
 
     image_relax_jobs = []
     image_relax_output = {}
@@ -237,6 +243,13 @@ def get_working_ion_index(structure: Structure, working_ion: str) -> int | None:
             return ind
     return None
 
+def get_charge_density(path : str | Path, use_aeccar : bool = False):
+    prev_dir = Path(strip_hostname(prev_dir))
+    if use_aeccar:
+        aeccar0 = Chgcar.from_file(zpath(str(prev_dir / "AECCAR0")))
+        aeccar2 = Chgcar.from_file(zpath(str(prev_dir / "AECCAR2")))
+        return aeccar0 + aeccar2
+    return Chgcar.from_file(zpath(str(prev_dir / "CHGCAR")))
 
 @job
 def collate_results(

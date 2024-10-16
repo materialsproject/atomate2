@@ -7,8 +7,6 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2.common.jobs.electrode import get_charge_density_job
-from atomate2.vasp.flows.electrode import ElectrodeInsertionMaker
 from atomate2.vasp.jobs.approx_neb import (
     ApproxNEBHostRelaxMaker,
     ApproxNEBImageRelaxMaker,
@@ -94,19 +92,13 @@ class ApproxNEBMaker(Maker):
             relax_maker=self.image_relax_maker,
         )
 
-        # get charge density of host structure for pathfinder
-        get_charge_density_func = lambda f : get_charge_density(f,use_aeccar=use_aeccar)
-        host_chgcar_job = get_charge_density_job(
-            prev_dir, get_charge_density_func
-        )
-
         # run pathfinder (and selective dynamics) to get image structure input
         image_relax_jobs = get_images_and_relax(
             working_ion=working_ion,
             ep_structures=ep_relax_jobs.output,
             inserted_combo_list=inserted_coords_combo,
             n_images=n_images,
-            host_chgcar=host_chgcar_job.output,
+            host_calc_path=prev_dir,
             relax_maker=self.image_relax_maker,
             selective_dynamics_scheme=self.selective_dynamics_scheme,
         )
@@ -117,6 +109,6 @@ class ApproxNEBMaker(Maker):
         )
 
         return Flow(
-            [*jobs, ep_relax_jobs, host_chgcar_job, image_relax_jobs, collect_output],
+            [*jobs, ep_relax_jobs, image_relax_jobs, collect_output],
             output=collect_output.output,
         )
