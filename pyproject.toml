@@ -124,7 +124,7 @@ strict-forcefields = [
     "quippy-ase==0.9.14; python_version < '3.12'",
     "sevenn==0.9.3.post1",
     "torch==2.4.1",
-    "torchdata==0.7.1",                            # TODO: remove when issue fixed
+    "torchdata==0.8.0",
 ]
 
 [project.scripts]
