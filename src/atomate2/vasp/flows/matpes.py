@@ -50,7 +50,7 @@ class MatPesStaticFlowMaker(Maker):
             ),
         )
     )
-    static2: Maker = field(
+    static2: Maker | None = field(
         default_factory=lambda: MatPesMetaGGAStaticMaker(
             # start from pre-conditioned WAVECAR from static1 to speed up convergence
             # could copy CHGCAR too but is redundant since VASP can reconstruct it from
@@ -68,6 +68,11 @@ class MatPesStaticFlowMaker(Maker):
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)},
         )
     )
+
+    def __post_init__(self) -> None:
+        """Validate flow."""
+        if (self.static1, self.static2, self.static3) == (None, None, None):
+            raise ValueError("Must provide at least one StaticMaker")
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
         """Create a flow with MatPES statics.
@@ -89,10 +94,20 @@ class MatPesStaticFlowMaker(Maker):
         Flow
             A flow containing 2 or 3 statics.
         """
-        static1 = self.static1.make(structure, prev_dir=prev_dir)
-        static2 = self.static2.make(structure, prev_dir=static1.output.dir_name)
-        output = {"static1": static1.output, "static2": static2.output}
-        jobs = [static1, static2]
+        jobs = []
+        output = {}
+
+        if self.static1 is not None:
+            static1 = self.static1.make(structure, prev_dir=prev_dir)
+            jobs += [static1]
+            output["static1"] = static1.output
+
+        prev_dir = static1.output.dir_name if self.static1 is not None else prev_dir
+
+        if self.static2 is not None:
+            static2 = self.static2.make(structure, prev_dir=prev_dir)
+            jobs += [static2]
+            output["static2"] = static2.output
 
         # only run 3rd static if set generator not None and structure contains at least
         # one element with Hubbard +U corrections
@@ -104,7 +119,7 @@ class MatPesStaticFlowMaker(Maker):
                 anion in elems and elems & {*cations}
                 for anion, cations in u_corrections.items()
             ):
-                static3 = self.static3.make(structure, prev_dir=static1.output.dir_name)
+                static3 = self.static3.make(structure, prev_dir=prev_dir)
                 output["static3"] = static3.output
                 jobs += [static3]
 
