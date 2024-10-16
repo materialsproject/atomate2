@@ -71,6 +71,7 @@ def test_ml_ff_md_maker(
         MLFF.NEP: -3.966232215741286,
         MLFF.Nequip: -8.84670181274414,
         MLFF.SevenNet: -5.394115447998047,
+        MLFF.DeepMD: -744.6197365326168,
     }
 
     # ASE can slightly change tolerances on structure positions
@@ -99,6 +100,14 @@ def test_ml_ff_md_maker(
             "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
         }
         unit_cell_structure = sr_ti_o3_structure.copy()
+    elif ff_name == MLFF.DeepMD:
+        calculator_kwargs = {"model": test_dir / "forcefields" / "deepmd" / "graph.pb"}
+        unit_cell_structure = sr_ti_o3_structure.copy()
+
+    elif ff_name == MLFF.MACE:
+        calculator_kwargs = {
+            "model": "https://github.com/ACEsuit/mace-mp/releases/download/mace_mp_0/2023-12-10-mace-128-L0_epoch-199.model"
+        }
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
@@ -140,6 +149,7 @@ def test_ml_ff_md_maker(
         for key in ("energy", "forces", "stress", "velocities", "temperature")
         for step in task_doc.objects["trajectory"].frame_properties
     )
+
     if ff_maker := name_to_maker.get(ff_name):
         with pytest.warns(FutureWarning):
             ff_maker()
