@@ -84,7 +84,7 @@ def get_endpoints_and_relax(
             relax_job = relax_maker.make(ep_inserted_struct)
             ep_relax_jobs.append(relax_job)
             ep_relax_output[ep_index] = {
-                "energy": relax_job.output.energy,
+                "energy": relax_job.output.output.energy,
                 "structure": relax_job.output.structure,
             }
 
@@ -151,7 +151,7 @@ def get_images_and_relax(
             image_relax_output[combo].append(
                 {
                     "structure": relax_job.output.structure,
-                    "energy": relax_job.output.energy,
+                    "energy": relax_job.output.output.energy,
                 }
             )
 
