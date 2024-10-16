@@ -1,0 +1,35 @@
+latt-move-scale 1.0 1.0 1.0
+lattice \
+     6.328500573514  2.109500191171  0.000000000000 \
+     0.000000000000  5.966567560367  0.000000000000 \
+     3.653761509685  3.653761509685  7.307523019371
+ion Si  0.250000000000  0.250000000000  0.250000000000 1
+ion Si  0.000000000000  0.000000000000  0.000000000000 1
+core-overlap-check none
+ion-species GBRV_v1.5/$ID_pbe_v1.uspp
+
+symmetries none
+
+elec-ex-corr gga
+van-der-waals D3
+elec-cutoff 20.0 100.0
+elec-smearing Fermi 0.001
+spintype z-spin
+elec-initial-magnetization 5 no
+converge-empty-states yes
+
+lattice-minimize \
+    nIterations 100
+electronic-minimize \
+    nIterations 100 \
+    energyDiffThreshold 1e-07
+
+fluid LinearPCM
+fluid-solvent H2O
+fluid-anion F- 0.5
+fluid-cation Na+ 0.5
+pcm-variant CANDLE
+
+dump-name jdftx.$VAR
+band-projection-params yes no
+dump End Dtot State
