@@ -50,8 +50,7 @@ class ApproxNEBImageRelaxMaker(DoubleRelaxMaker):
         default_factory=lambda: RelaxMaker(
             input_set_generator=ApproxNEBSetGenerator(set_type="image")
         )
-    )
-
+    )    
 
 @job
 def get_endpoints_and_relax(

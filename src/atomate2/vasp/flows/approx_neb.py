@@ -41,6 +41,7 @@ class ApproxNEBMaker(Maker):
         inserted_coords_dict: dict | list,
         inserted_coords_combo: list,
         n_images: int = 5,
+        use_aeccar : bool = False,
         prev_dir: str | Path | None = None,
     ) -> Flow:
         """
@@ -94,8 +95,9 @@ class ApproxNEBMaker(Maker):
         )
 
         # get charge density of host structure for pathfinder
+        get_charge_density_func = lambda f : get_charge_density(f,use_aeccar=use_aeccar)
         host_chgcar_job = get_charge_density_job(
-            prev_dir, ElectrodeInsertionMaker.get_charge_density
+            prev_dir, get_charge_density_func
         )
 
         # run pathfinder (and selective dynamics) to get image structure input
