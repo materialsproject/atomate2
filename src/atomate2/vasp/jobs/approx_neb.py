@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from emmet.core.neb import NebMethod
 from jobflow import Flow, Maker, Response, job
+from monty.os.path import zpath
 from pymatgen.analysis.diffusion.neb.pathfinder import ChgcarPotential, NEBPathfinder
 from pymatgen.io.vasp.outputs import Chgcar
 
@@ -21,7 +22,6 @@ if TYPE_CHECKING:
     from typing import Literal
 
     from pymatgen.core import Structure
-    from pymatgen.io.vasp import Chgcar
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
@@ -54,6 +54,7 @@ class ApproxNEBImageRelaxMaker(DoubleRelaxMaker):
             input_set_generator=ApproxNEBSetGenerator(set_type="image")
         )
     )
+
 
 @job
 def get_endpoints_and_relax(
@@ -104,7 +105,7 @@ def get_images_and_relax(
     host_calc_path: str | Path,
     relax_maker: Maker,
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms",
-    use_aeccar : bool = False
+    use_aeccar: bool = False,
 ) -> Response:
     """Get and relax image input structures."""
     # remove failed output first
@@ -117,7 +118,7 @@ def get_images_and_relax(
     host_chgcar = get_charge_density(host_calc_path, use_aeccar=use_aeccar)
 
     image_relax_jobs = []
-    image_relax_output = {}
+    image_relax_output: dict[str, list] = {}
     for combo in inserted_combo_list:
         ini_ind, fin_ind = map(int, combo.split("+"))
 
@@ -243,13 +244,16 @@ def get_working_ion_index(structure: Structure, working_ion: str) -> int | None:
             return ind
     return None
 
-def get_charge_density(path : str | Path, use_aeccar : bool = False):
+
+def get_charge_density(prev_dir: str | Path, use_aeccar: bool = False) -> Chgcar:
+    """Get charge density from a prior VASP calculation."""
     prev_dir = Path(strip_hostname(prev_dir))
     if use_aeccar:
         aeccar0 = Chgcar.from_file(zpath(str(prev_dir / "AECCAR0")))
         aeccar2 = Chgcar.from_file(zpath(str(prev_dir / "AECCAR2")))
         return aeccar0 + aeccar2
     return Chgcar.from_file(zpath(str(prev_dir / "CHGCAR")))
+
 
 @job
 def collate_results(

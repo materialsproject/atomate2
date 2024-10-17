@@ -39,7 +39,7 @@ class ApproxNEBMaker(Maker):
         inserted_coords_dict: dict | list,
         inserted_coords_combo: list,
         n_images: int = 5,
-        use_aeccar : bool = False,
+        use_aeccar: bool = False,
         prev_dir: str | Path | None = None,
     ) -> Flow:
         """
