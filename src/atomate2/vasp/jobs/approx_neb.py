@@ -99,7 +99,7 @@ def get_endpoints_and_relax(
 @job
 def get_images_and_relax(
     working_ion: str,
-    ep_output: dict,
+    ep_structures: dict,
     inserted_combo_list: list,
     n_images: int,
     host_calc_path: str | Path,
@@ -111,7 +111,7 @@ def get_images_and_relax(
     # remove failed output first
     ep_structures = {
         k: calc["structure"]
-        for k, calc in ep_output.items()
+        for k, calc in ep_structures.items()
         if calc["structure"] is not None
     }
 
