@@ -2,16 +2,13 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional
+from typing import Any, Optional, Self
 
 from emmet.core.neb import NebMethod
 from pydantic import BaseModel, Field, model_validator
+from pymatgen.core import Molecule, Structure
 
 from atomate2.common.jobs.neb import neb_spline_fit
-
-if TYPE_CHECKING:
-    from pymatgen.core import Molecule, Structure
-    from typing_extensions import Any, Self
 
 
 class NebResult(BaseModel):

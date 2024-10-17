@@ -120,7 +120,7 @@ def get_images_and_relax(
     image_relax_jobs = []
     image_relax_output: dict[str, list] = {}
     for combo in inserted_combo_list:
-        ini_ind, fin_ind = map(int, combo.split("+"))
+        ini_ind, fin_ind = combo.split("+")
 
         if not all(ep_structures.get(idx) for idx in [ini_ind, fin_ind]):
             # cannot proceed with this hop calculation
