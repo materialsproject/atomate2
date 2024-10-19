@@ -123,6 +123,8 @@ class BasePhononMaker(Maker, ABC):
         determines the dft or force field code.
     store_force_constants: bool
         if True, force constants will be stored
+    force_constants2file: str
+        if store_force_constants is True, the file name to store the force constants
     calculate_pdos: bool
         if True, the projected phonon density of states will be calculated
     socket: bool
@@ -152,6 +154,7 @@ class BasePhononMaker(Maker, ABC):
     kpath_scheme: str = "seekpath"
     code: str = None
     store_force_constants: bool = True
+    force_constants2file: str = None
     calculate_pdos: bool = False
     socket: bool = False
 
@@ -358,6 +361,7 @@ class BasePhononMaker(Maker, ABC):
             optimization_run_uuid=optimization_run_uuid,
             create_thermal_displacements=self.create_thermal_displacements,
             store_force_constants=self.store_force_constants,
+            force_constants2file=self.force_constants2file,
             calculate_pdos=self.calculate_pdos,
             **self.generate_frequencies_eigenvectors_kwargs,
         )

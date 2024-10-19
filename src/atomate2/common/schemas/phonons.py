@@ -10,6 +10,7 @@ from emmet.core.math import Matrix3D
 from emmet.core.structure import StructureMetadata
 from monty.json import MSONable
 from phonopy import Phonopy
+from phonopy.file_IO import write_FORCE_CONSTANTS
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from phonopy.units import VaspToTHz
@@ -346,14 +347,23 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         phonon.produce_force_constants(forces=set_of_forces)
 
         filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
+        force_constants2file = kwargs.get("force_constants2file")
         # if kwargs.get("filename_phonopy_yaml") is None:
         #    kwargs["filename_phonopy_yaml"] = "phonopy.yaml"
 
         # with phonopy.load("phonopy.yaml") the phonopy API can be used
-        phonon.save(
-            filename_phonopy_yaml,
-            settings={"force_constants": kwargs.get("store_force_constants", True)},
-        )
+        if force_constants2file:
+            # If specified, saved force_constants to text file
+            phonon.save(
+                filename_phonopy_yaml,
+                settings={"force_constants": False},
+            )
+            write_FORCE_CONSTANTS(phonon.force_constants, filename=force_constants2file)
+        else:
+            phonon.save(
+                filename_phonopy_yaml,
+                settings={"force_constants": kwargs.get("store_force_constants", True)},
+            )
 
         # get phonon band structure
         kpath_dict, kpath_concrete = PhononBSDOSDoc.get_kpath(
