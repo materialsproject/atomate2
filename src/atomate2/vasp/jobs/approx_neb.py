@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -25,6 +26,36 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
+@dataclass
+class DoubleRelaxConditionalMaker(Maker):
+
+    relax_maker1 : Maker
+    relax_maker2 : Maker
+    _first_relax : bool = True
+    name : str = "Double relax conditionally"
+
+    @job
+    def make(self, structure, prev_dir = None):
+
+        if self._first_relax:
+            job = self.relax_maker1.make(structure, prev_dir = prev_dir)
+            job.name += " 1"
+            new_flow = DoubleRelaxConditionalMaker(
+                relax_maker1 = self.relax_maker1,
+                relax_maker2 = self.relax_maker2,
+                _first_relax = False,
+            ).make(job.output.structure, prev_dir=job.output.dir_name)
+            return Response(replace = Flow([job, new_flow]), output = new_flow.output)
+        
+        job = self.relax_maker2.make(structure, prev_dir = prev_dir)
+        job.name += " 2"
+        return Response(replace = job, output = job.output)
+    
+    @classmethod
+    def from_relax_maker(cls, relax_maker : Maker):
+        return cls(
+            relax_maker1 = deepcopy(relax_maker), relax_maker2 = deepcopy(relax_maker)
+        )
 
 @dataclass
 class ApproxNEBHostRelaxMaker(DoubleRelaxMaker):
@@ -40,7 +71,7 @@ class ApproxNEBHostRelaxMaker(DoubleRelaxMaker):
 
 
 @dataclass
-class ApproxNEBImageRelaxMaker(DoubleRelaxMaker):
+class ApproxNEBImageRelaxMaker(DoubleRelaxConditionalMaker):
     """Maker to perform a double relaxation on an ApproxNEB endpoint/image structure."""
 
     name: str = "approxneb_image_relax"
@@ -85,6 +116,7 @@ def get_endpoints_and_relax(
             ep_inserted_struct.insert(0, working_ion, ep_coords)
 
             relax_job = relax_maker.make(ep_inserted_struct)
+            relax_job.name += f" endpoint {ep_index}"
             ep_relax_jobs.append(relax_job)
             ep_relax_output[ep_index] = {
                 "energy": relax_job.output.output.energy,
@@ -99,7 +131,7 @@ def get_endpoints_and_relax(
 @job
 def get_images_and_relax(
     working_ion: str,
-    ep_structures: dict,
+    ep_output: dict,
     inserted_combo_list: list,
     n_images: int,
     host_calc_path: str | Path,
@@ -111,7 +143,7 @@ def get_images_and_relax(
     # remove failed output first
     ep_structures = {
         k: calc["structure"]
-        for k, calc in ep_structures.items()
+        for k, calc in ep_output.items()
         if calc["structure"] is not None
     }
 
@@ -151,8 +183,9 @@ def get_images_and_relax(
             raise ValueError(f"Unknown {selective_dynamics_scheme=}.")
 
         image_relax_output[combo] = []
-        for image in images_list:
+        for image_idx, image in enumerate(images_list):
             relax_job = relax_maker.make(image)
+            relax_job.name += f" hop {combo} image {image_idx+1}"
             image_relax_jobs.append(relax_job)
             image_relax_output[combo].append(
                 {
@@ -190,7 +223,7 @@ def get_pathfinder_results(
     neb_pf = NEBPathfinder(
         pf_struct_ini,
         pf_struct_fin,
-        relax_sites=ini_wi_ind,
+        relax_sites=[ini_wi_ind],
         v=host_v,
         n_images=n_images + 1,
     )

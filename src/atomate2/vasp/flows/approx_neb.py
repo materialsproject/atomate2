@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from jobflow import Flow, Maker
+from jobflow import Flow, Maker, OnMissing
 
 from atomate2.vasp.jobs.approx_neb import (
     ApproxNEBHostRelaxMaker,
@@ -95,7 +95,7 @@ class ApproxNEBMaker(Maker):
         # run pathfinder (and selective dynamics) to get image structure input
         image_relax_jobs = get_images_and_relax(
             working_ion=working_ion,
-            ep_structures=ep_relax_jobs.output,
+            ep_output=ep_relax_jobs.output,
             inserted_combo_list=inserted_coords_combo,
             n_images=n_images,
             host_calc_path=prev_dir,
@@ -107,6 +107,9 @@ class ApproxNEBMaker(Maker):
             ep_relax_jobs.output,
             image_relax_jobs.output,
         )
+
+        # to permit the flow to succeed even when prior jobs fail
+        collect_output.config.on_missing_references = OnMissing.NONE
 
         return Flow(
             [*jobs, ep_relax_jobs, image_relax_jobs, collect_output],
