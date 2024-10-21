@@ -347,18 +347,23 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         phonon.produce_force_constants(forces=set_of_forces)
 
         filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
-        force_constants2file = kwargs.get("force_constants2file")
+        create_force_constants_file = kwargs.get("create_force_constants_file", False)
+        force_constants_filename = kwargs.get(
+            "force_constants_filename", "FORCE_CONSTANTS"
+        )
         # if kwargs.get("filename_phonopy_yaml") is None:
         #    kwargs["filename_phonopy_yaml"] = "phonopy.yaml"
 
         # with phonopy.load("phonopy.yaml") the phonopy API can be used
-        if force_constants2file:
+        if create_force_constants_file:
             # If specified, saved force_constants to text file
             phonon.save(
                 filename_phonopy_yaml,
                 settings={"force_constants": False},
             )
-            write_FORCE_CONSTANTS(phonon.force_constants, filename=force_constants2file)
+            write_FORCE_CONSTANTS(
+                phonon.force_constants, filename=force_constants_filename
+            )
         else:
             phonon.save(
                 filename_phonopy_yaml,
