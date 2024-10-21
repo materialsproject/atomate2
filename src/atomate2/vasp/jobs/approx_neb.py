@@ -20,7 +20,8 @@ from atomate2.vasp.jobs.core import RelaxMaker
 from atomate2.vasp.sets.approx_neb import ApproxNEBSetGenerator
 
 if TYPE_CHECKING:
-    from typing import Literal, Self
+    from typing import Literal
+    from typing_extensions import Self
 
     from pymatgen.core import Structure
 
