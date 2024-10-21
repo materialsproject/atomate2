@@ -29,11 +29,10 @@ from atomate2.vasp.schemas.neb import VaspNebResult
 from atomate2.vasp.sets.core import NebSetGenerator
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Sequence
 
     from pymatgen.core import Structure
 
-    from atomate2.vasp.jobs.base import BaseVaspMaker
     from atomate2.vasp.sets.base import VaspInputGenerator
 
 logger = logging.getLogger(__name__)
@@ -67,7 +66,7 @@ def vasp_neb_job(method: Callable) -> job:
 def collect_neb_output(
     endpoint_dirs: list[str | Path] | None, neb_head_dir: str | Path, **neb_doc_kwargs
 ) -> VaspNebResult | NebTaskDoc:
-    """Parse NEB output from either full (image + endpoint) relax or just image relax."""
+    """Parse NEB output from image and optionally endpoint relaxations."""
     if endpoint_dirs is not None and len(endpoint_dirs) == 2:
         return VaspNebResult.from_directories(
             endpoint_dirs, neb_head_dir, **neb_doc_kwargs
@@ -257,17 +256,18 @@ class NebFromEndpointsMaker(Maker):
             raise ValueError("Cannot interpolate fewer than two endpoint structures!")
         if len(endpoints) > 2:
             logger.warning(
-                "More than two endpoint structures specified, selecting only the first two."
+                "More than two endpoint structures specified, "
+                "selecting only the first two."
             )
 
         endpoint_jobs = []
-        endpoint_dirs: tuple[str | Path, str | Path] | None = None
+        endpoint_dirs: Sequence[str | Path] | None = None
         if self.endpoint_relax_maker is not None:
             endpoint_jobs += [
                 self.endpoint_relax_maker.make(endpoint, prev_dir=prev_dir)
                 for endpoint in endpoints
             ]
-            endpoints = (relax_job.output.structure for relax_job in endpoint_jobs)
+            endpoints = [relax_job.output.structure for relax_job in endpoint_jobs]
             endpoint_dirs = [
                 endpoint_job.output.dir_name for endpoint_job in endpoint_jobs
             ]
@@ -280,7 +280,7 @@ class NebFromEndpointsMaker(Maker):
             **interpolation_kwargs,
         )
 
-        image_relax_job = self.images_maker.make(get_images.output)
+        image_relax_job = self.images_maker.make(get_images.output)  # type: ignore[attr-defined]
 
         collate_job = collect_neb_output(endpoint_dirs, image_relax_job.output.dir_name)
 

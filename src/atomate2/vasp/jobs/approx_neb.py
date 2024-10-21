@@ -20,42 +20,74 @@ from atomate2.vasp.jobs.core import RelaxMaker
 from atomate2.vasp.sets.approx_neb import ApproxNEBSetGenerator
 
 if TYPE_CHECKING:
-    from typing import Literal
+    from typing import Literal, Self
 
     from pymatgen.core import Structure
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
+
 @dataclass
 class DoubleRelaxConditionalMaker(Maker):
+    """
+    Perform a double relaxation only if the initial relax succeeds.
 
-    relax_maker1 : Maker
-    relax_maker2 : Maker
-    _first_relax : bool = True
-    name : str = "Double relax conditionally"
+    This maker is intended to behave similarly to how the atomate
+    double relax maker functioned: if the initial relax failed, but
+    subsequent jobs didn't require the output of this job, the flow
+    could proceed.
+
+    With the atomate2 double relax maker, at least the initial relax
+    is required to finish successfully for the flow to proceed.
+    This flow gets around that by only spawning a second relax if the
+    first succeeds.
+    """
+
+    relax_maker1: Maker
+    relax_maker2: Maker
+    _first_relax: bool = True
+    name: str = "Double relax conditionally"
 
     @job
-    def make(self, structure, prev_dir = None):
+    def make(
+        self, structure: Structure, prev_dir: str | Path | None = None
+    ) -> Response:
+        """
+        Make a conditional double relax flow.
 
+        Parameters
+        ----------
+        structure : Structure
+            A pymatgen structure object.
+        prev_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A conditional double relax flow.
+        """
         if self._first_relax:
-            job = self.relax_maker1.make(structure, prev_dir = prev_dir)
+            job = self.relax_maker1.make(structure, prev_dir=prev_dir)
             job.name += " 1"
             new_flow = DoubleRelaxConditionalMaker(
-                relax_maker1 = self.relax_maker1,
-                relax_maker2 = self.relax_maker2,
-                _first_relax = False,
+                relax_maker1=self.relax_maker1,
+                relax_maker2=self.relax_maker2,
+                _first_relax=False,
             ).make(job.output.structure, prev_dir=job.output.dir_name)
-            return Response(replace = Flow([job, new_flow]), output = new_flow.output)
-        
-        job = self.relax_maker2.make(structure, prev_dir = prev_dir)
+            return Response(replace=Flow([job, new_flow]), output=new_flow.output)
+
+        job = self.relax_maker2.make(structure, prev_dir=prev_dir)
         job.name += " 2"
-        return Response(replace = job, output = job.output)
-    
+        return Response(replace=job, output=job.output)
+
     @classmethod
-    def from_relax_maker(cls, relax_maker : Maker):
+    def from_relax_maker(cls, relax_maker: Maker) -> Self:
+        """Initialize from a single relax maker."""
         return cls(
-            relax_maker1 = deepcopy(relax_maker), relax_maker2 = deepcopy(relax_maker)
+            relax_maker1=deepcopy(relax_maker), relax_maker2=deepcopy(relax_maker)
         )
+
 
 @dataclass
 class ApproxNEBHostRelaxMaker(DoubleRelaxMaker):
