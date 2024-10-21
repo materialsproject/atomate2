@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional, Self
+from typing import Any, Optional
+from typing_extensions import Self
 
 from emmet.core.neb import NebMethod
 from pydantic import BaseModel, Field, model_validator
