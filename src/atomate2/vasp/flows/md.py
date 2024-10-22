@@ -130,7 +130,7 @@ class MultiMDMaker(Maker):
             prevrun_end_temp += delta_temp / nsteps * nsteps_runs[irun]
             end_temp_runs.append(prevrun_end_temp)
 
-        return list(zip(nsteps_runs, start_temp_runs, end_temp_runs))
+        return list(zip(nsteps_runs, start_temp_runs, end_temp_runs, strict=False))
 
     @classmethod
     def from_parameters(
