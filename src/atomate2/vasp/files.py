@@ -198,12 +198,10 @@ def write_vasp_input_set(
         Keyword arguments that will be passed to :obj:`.VaspInputSet.write_input`.
     """
     prev_dir = "." if from_prev else None
-    get_previous_bandgap = kwargs.pop("get_previous_bandgap", True)
     vis = input_set_generator.get_input_set(
         structure,
         prev_dir=prev_dir,
         potcar_spec=potcar_spec,
-        get_previous_bandgap=get_previous_bandgap,
     )
 
     if apply_incar_updates:
