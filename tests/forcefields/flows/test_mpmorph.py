@@ -3,12 +3,12 @@
 import pytest
 from jobflow import run_locally
 
-from atomate2.forcefields.md import ForceFieldMDMaker
 from atomate2.forcefields.flows.mpmorph import (
     FastQuenchMLFFMDMaker,
     MPMorphMLFFMDMaker,
     SlowQuenchMLFFMDMaker,
 )
+from atomate2.forcefields.md import ForceFieldMDMaker
 
 _velocity_seed = 1234
 
@@ -55,7 +55,7 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
             md_maker=ForceFieldMDMaker(
                 name=f"{mlff_name} Quench MD Maker",
                 force_field_name=mlff_name,
-                mb_velocity_seed=_velocity_seed
+                mb_velocity_seed=_velocity_seed,
             ),
         )
 
@@ -69,7 +69,7 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         md_maker=ForceFieldMDMaker(
             name=f"{mlff_name} MD Maker",
             force_field_name=mlff_name,
-            mb_velocity_seed=_velocity_seed
+            mb_velocity_seed=_velocity_seed,
         ),
         quench_maker=quench_maker,
     )

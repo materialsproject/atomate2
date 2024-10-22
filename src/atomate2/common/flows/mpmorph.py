@@ -121,7 +121,7 @@ class EquilibriumVolumeMaker(Maker):
             # Fit EOS to running list of energies and volumes
             self.postprocessor.fit(working_outputs)
             working_outputs = dict(self.postprocessor.results)
-            flow_output = {"eos_data": working_outputs.copy(), "structure": None}
+            flow_output = {"working_outputs": working_outputs.copy(), "structure": None}
             for k in ("pressure", "energy"):
                 working_outputs["relax"].pop(k, None)
 
@@ -145,7 +145,7 @@ class EquilibriumVolumeMaker(Maker):
             # Successful fit: return structure at estimated equilibrium volume
             if v0_in_range or max_attempts_reached:
                 flow_output["structure"] = structure.copy()
-                flow_output["structure"].scale_lattice(v0)
+                flow_output["structure"].scale_lattice(v0)  # type: ignore[attr-defined]
                 return flow_output
 
             # Else, if the extrapolated equilibrium volume is outside the range of
