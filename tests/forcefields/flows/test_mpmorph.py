@@ -3,7 +3,7 @@
 import pytest
 from jobflow import run_locally
 
-from atomate2.forcefields import md as mlff_md
+from atomate2.forcefields.md import ForceFieldMDMaker
 from atomate2.forcefields.flows.mpmorph import (
     FastQuenchMLFFMDMaker,
     MPMorphMLFFMDMaker,
@@ -29,11 +29,6 @@ def _get_uuid_from_job(job, dct):
         "MACE Fast Quench",
     ],
 )
-#        "MACE",
-#        "MACE Fast Quench",
-#        "MACE Slow Quench",
-
-
 def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     temp = 300
     n_steps_convergence = 10
@@ -49,7 +44,6 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
     mlff_name = ff_name.split(" ")[0]
-    md_maker = getattr(mlff_md, f"{mlff_name}MDMaker")
 
     quench_maker = None
     if "Slow Quench" in ff_name:
@@ -58,21 +52,25 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
             quench_temperature_step=quench_temp_steps,
             quench_end_temperature=quench_end_temp,
             quench_start_temperature=quench_start_temp,
-            md_maker=md_maker(
-                name=f"{mlff_name} Quench MD Maker", mb_velocity_seed=_velocity_seed
+            md_maker=ForceFieldMDMaker(
+                name=f"{mlff_name} Quench MD Maker",
+                force_field_name=mlff_name,
+                mb_velocity_seed=_velocity_seed
             ),
         )
 
     elif "Fast Quench" in ff_name:
         quench_maker = FastQuenchMLFFMDMaker.from_force_field_name(mlff_name)
 
-    md_maker = md_maker(name=f"{mlff_name} MD Maker", mb_velocity_seed=_velocity_seed)
-
     maker = MPMorphMLFFMDMaker.from_temperature_and_steps(
         temperature=temp,
         n_steps_convergence=n_steps_convergence,
         n_steps_production=n_steps_production,
-        md_maker=md_maker,
+        md_maker=ForceFieldMDMaker(
+            name=f"{mlff_name} MD Maker",
+            force_field_name=mlff_name,
+            mb_velocity_seed=_velocity_seed
+        ),
         quench_maker=quench_maker,
     )
 

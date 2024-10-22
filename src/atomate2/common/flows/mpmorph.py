@@ -121,12 +121,13 @@ class EquilibriumVolumeMaker(Maker):
             # Fit EOS to running list of energies and volumes
             self.postprocessor.fit(working_outputs)
             working_outputs = dict(self.postprocessor.results)
+            flow_output = {"eos_data": working_outputs.copy(), "structure": None}
             for k in ("pressure", "energy"):
                 working_outputs["relax"].pop(k, None)
 
             # Stop flow here if EOS cannot be fit
             if (v0 := working_outputs.get("V0")) is None:
-                return Response(output=working_outputs, stop_children=True)
+                return Response(output=flow_output, stop_children=True)
 
             # Check if equilibrium volume is in range of attempted volumes
             v0_in_range = (
@@ -143,9 +144,9 @@ class EquilibriumVolumeMaker(Maker):
 
             # Successful fit: return structure at estimated equilibrium volume
             if v0_in_range or max_attempts_reached:
-                final_structure = structure.copy()
-                final_structure.scale_lattice(v0)
-                return final_structure
+                flow_output["structure"] = structure.copy()
+                flow_output["structure"].scale_lattice(v0)
+                return flow_output
 
             # Else, if the extrapolated equilibrium volume is outside the range of
             # fitted volumes, scale appropriately
@@ -259,7 +260,7 @@ class MPMorphMDMaker(Maker, metaclass=ABCMeta):
             flow_jobs.append(convergence_flow)
 
             # convergence_flow only outputs a structure
-            structure = convergence_flow.output
+            structure = convergence_flow.output["structure"]
 
         self.production_md_maker.name = self.name + " production run"
         production_run = self.production_md_maker.make(
