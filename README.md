@@ -4,6 +4,8 @@
 [![code coverage](https://img.shields.io/codecov/c/gh/materialsproject/atomate2)](https://codecov.io/gh/materialsproject/atomate2)
 [![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
+[![Zenodo](https://img.shields.io/badge/DOI-10.5281/zenodo.10677081-blue?logo=Zenodo&logoColor=white)](https://zenodo.org/records/10677081)
+[![This project supports Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg?logo=python&logoColor=white)](https://python.org/downloads)
 
 [Documentation][docs] | [PyPI][pypi] | [GitHub][github]
 
@@ -20,9 +22,6 @@ workflows using simple Python functions. Features of atomate2 include
   share in a systematic way.
 - It automatically keeps meticulous records of jobs, their directories, runtime
   parameters, and more.
-
-**Note**: Atomate2 is primarily built to work with the [VASP] electronic structure
-software, but we are actively working on adding more codes.
 
 ## Workflows
 
@@ -87,7 +86,7 @@ atomate2 workflows can be run using the [FireWorks] software. See the
 
 ## Installation
 
-Atomate2 is a Python 3.8+ library and can be installed using pip. Full installation
+Atomate2 is a Python 3.10+ library and can be installed using pip. Full installation
 and configuration instructions are provided in the [installation tutorial][installation].
 
 ## Tutorials
@@ -122,6 +121,23 @@ Atomate2 is released under a modified BSD license; the full text can be found [h
 
 The development of atomate2 has benefited from many people across several research groups.
 A full list of contributors can be found [here][contributors].
+
+## Citing atomate2
+
+A journal submission for `atomate2` is planned. In the meantime, please use [`citation.cff`](citation.cff) and the [Zenodo record](https://zenodo.org/badge/latestdoi/306414371) to cite `atomate2`.
+
+```bib
+@software{ganose_atomate2_2024,
+  author = {Ganose, Alex and Riebesell, Janosh and George, J. and Shen, Jimmy and S. Rosen, Andrew and Ashok Naik, Aakash and nwinner and Wen, Mingjian and rdguha1995 and Kuner, Matthew and Petretto, Guido and Zhu, Zhuoying and Horton, Matthew and Sahasrabuddhe, Hrushikesh and Kaplan, Aaron and Schmidt, Jonathan and Ertural, Christina and Kingsbury, Ryan and McDermott, Matt and Goodall, Rhys and Bonkowski, Alexander and Purcell, Thomas and Zügner, Daniel and Qi, Ji},
+  doi = {10.5281/zenodo.10677081},
+  license = {cc-by-4.0},
+  month = jan,
+  title = {atomate2},
+  url = {https://github.com/materialsproject/atomate2},
+  version = {0.0.13},
+  year = {2024}
+}
+```
 
 [pymatgen]: https://pymatgen.org
 [fireworks]: https://materialsproject.github.io/fireworks/

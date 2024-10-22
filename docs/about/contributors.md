@@ -90,8 +90,8 @@ Lawrence Berkeley National Laboratory
 [0000-0003-3439-4856]: https://orcid.org/0000-0003-3439-4856
 
 **Matthew McDermott** [![gh]][mattmcdermott] [![orc]][0000-0002-4071-3000] \
-PhD student \
-University of California, Berkeley
+Postdoctoral Researcher \
+Lawrence Berkeley National Laboratory
 
 [mattmcdermott]: https://github.com/mattmcdermott
 [0000-0002-4071-3000]: https://orcid.org/0000-0002-4071-3000
@@ -102,6 +102,13 @@ University of Arizona
 
 [tpurcell90]: https://github.com/tpurcell90
 [0000-0003-4564-7206]: https://orcid.org/0000-0003-4564-7206
+
+**Andrei Sobolev** [![gh]][ansobolev] [![orc]][0000-0001-5086-6601] \
+Software Scientist \
+MS1P e.V.
+
+[ansobolev]: https://github.com/ansobolev
+[0000-0001-5086-6601]: https://orcid.org/0000-0001-5086-6601
 
 **Alexander Bonkowski** [![gh]][ab5424] [![orc]][0000-0002-0525-4742] \
 PhD student in Chemistry \
@@ -122,3 +129,11 @@ Hobbyist Contributor
 
 [comprhys]: https://github.com/comprhys
 [0000-0002-6589-1700]: https://orcid.org/0000-0002-6589-1700
+
+
+**Kevin Beck** [![gh]][4kevinbeck5] [![orc]][0009-0006-5620-1292] \
+PhD student in Applied Mathematics \
+University of Arizona
+
+[4kevinbeck5]: https://github.com/4kevinbeck5
+[0009-0006-5620-1292]: https://orcid.org/0009-0006-5620-1292

@@ -27,7 +27,7 @@ def lobster_test_dir(test_dir):
     return test_dir / "lobster"
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_lobster(monkeypatch, lobster_test_dir):
     """
     This fixture allows one to mock (fake) running LOBSTER.
@@ -131,9 +131,9 @@ def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]):
     # Check lobsterin
     ref = Lobsterin.from_file(ref_path / "inputs" / "lobsterin")
 
-    for p in lobsterin_settings:
-        if user.get(p, None) != ref.get(p, None):
-            raise ValueError(f"lobsterin value of {p} is inconsistent!")
+    for key in lobsterin_settings:
+        if user.get(key) != ref.get(key):
+            raise ValueError(f"lobsterin value of {key} is inconsistent!")
 
 
 def copy_lobster_outputs(ref_path: str | Path):

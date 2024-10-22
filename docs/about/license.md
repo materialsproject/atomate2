@@ -1,5 +1,4 @@
-License
-=======
+# License
 
 `atomate2` is developed under a modified BSD license, reproduced below:
 
@@ -46,7 +45,7 @@ choose to make your Enhancements available either publicly, or
 directly to Lawrence Berkeley National Laboratory or its
 contributors, without imposing a separate written license agreement
 for such Enhancements, then you hereby grant the following license:
-a  non-exclusive, royalty-free perpetual license to install, use,
+a non-exclusive, royalty-free perpetual license to install, use,
 modify, prepare derivative works, incorporate into other computer
 software, distribute, and sublicense such enhancements or derivative
 works thereof, in binary and source code form.

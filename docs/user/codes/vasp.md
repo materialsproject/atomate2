@@ -42,6 +42,7 @@ The most important settings to consider are:
 - `VASP_VDW_KERNEL_DIR`: The path to the VASP Van der Waals kernel.
 
 (vasp_workflows)=
+
 ## List of VASP workflows
 
 ```{eval-rst}
@@ -232,6 +233,11 @@ converted into a dynamical matrix. To correct for polarization effects, a correc
 dynamical matrix based on BORN charges can be performed. Finally, phonon densities of states,
 phonon band structures and thermodynamic properties are computed.
 
+```{warning}
+The current implementation of the workflow does not consider the initial magnetic moments
+for the determination of the symmetry of the structure; therefore, they are removed from the structure.
+```
+
 ```{note}
 It is heavily recommended to symmetrize the structure before passing it to
 this flow. Otherwise, a different space group might be detected and too
@@ -241,7 +247,35 @@ adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
 
-### Lobster
+### Gruneisen parameter workflow
+
+Calculates mode-dependent Grüneisen parameters with the help of Phonopy.
+
+Initially, a tight structural relaxation is performed to obtain a structure without
+forces on the atoms. The optimized structure (ground state) is further expanded and
+shrunk by 1 % (default) of its volume.
+Subsequently, supercells with one displaced atom are generated for all the three structures
+(ground state, expanded and shrunk volume) and accurate forces are computed for these structures.
+With the help of phonopy, these forces are then converted into a dynamical matrix.
+The dynamical matrices of three structures are then used as an input to the phonopy Grueneisen api
+to compute mode-dependent Grueneisen parameters.
+
+
+### Quasi-harmonic Workflow
+Uses the quasi-harmonic approximation with the help of Phonopy to compute thermodynamic properties.
+First, a tight relaxation is performed. Subsequently, several optimizations at different constant
+volumes are performed. At each of the volumes, an additional phonon run is performed as well.
+Afterwards, equation of state fits are performed with phonopy.
+
+
+
+### Equation of State Workflow
+An equation of state workflow is implemented. First, a tight relaxation is performed. Subsequently, several optimizations at different constant
+volumes are performed. Additional static calculations might be performed afterwards to arrive at more
+accurate energies. Then, an equation of state fit is performed with pymatgen.
+
+
+### LOBSTER
 
 Perform bonding analysis with [LOBSTER](http://cohp.de/) and [LobsterPy](https://github.com/jageo/lobsterpy)
 
@@ -360,6 +394,43 @@ for number, (key, cohp) in enumerate(
     cohp = Cohp.from_dict(cohp)
     plotter.add_cohp(key, cohp)
     plotter.save_plot(f"plots_cation_anion_bonds{number}.pdf")
+```
+
+#### Running the LOBSTER workflow without database and with one job script only
+
+It is also possible to run the VASP-LOBSTER workflow with a minimal setup.
+In this case, you will run the VASP calculations on the same node as the LOBSTER calculations.
+In between, the different computations you will switch from MPI to OpenMP parallelization.
+
+For example, for a node with 48 cores, you could use an adapted version of the following SLURM script:
+
+```bash
+#!/bin/bash
+#SBATCH -J vasplobsterjob
+#SBATCH -o ./%x.%j.out
+#SBATCH -e ./%x.%j.err
+#SBATCH -D ./
+#SBATCH --mail-type=END
+#SBATCH --mail-user=you@you.de
+#SBATCH --time=24:00:00
+#SBATCH --nodes=1
+#This needs to be adapted if you run with different cores
+#SBATCH --ntasks=48
+
+# ensure you load the modules to run VASP, e.g., module load vasp
+module load my_vasp_module
+# please activate the required conda environment
+conda activate my_environment
+cd my_folder
+# the following script needs to contain the workflow
+python xyz.py
+```
+
+The `LOBSTER_CMD` now needs an additional export of the number of threads.
+
+```yaml
+VASP_CMD: <<VASP_CMD>>
+LOBSTER_CMD: OMP_NUM_THREADS=48 <<LOBSTER_CMD>>
 ```
 
 (modifying_input_sets)=

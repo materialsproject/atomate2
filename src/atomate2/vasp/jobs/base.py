@@ -6,7 +6,7 @@ import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
 from shutil import which
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from emmet.core.tasks import TaskDoc
 from jobflow import Maker, Response, job
@@ -26,6 +26,8 @@ from atomate2.vasp.run import run_vasp, should_stop_children
 from atomate2.vasp.sets.base import VaspInputGenerator
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from pymatgen.core import Structure
 
 
@@ -192,8 +194,7 @@ class BaseVaspMaker(Maker):
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
     ) -> Response:
-        """
-        Run a VASP calculation.
+        """Run a VASP calculation.
 
         Parameters
         ----------

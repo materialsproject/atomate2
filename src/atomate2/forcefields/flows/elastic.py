@@ -3,14 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.elastic import BaseElasticMaker
-from atomate2.forcefields.jobs import CHGNetRelaxMaker
-
-if TYPE_CHECKING:
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 
 @dataclass
@@ -45,6 +41,11 @@ class ElasticMaker(BaseElasticMaker):
     bulk_relax_maker : .ForceFieldRelaxMaker or None
         A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation.
+    max_failed_deformations: int or float
+        Maximum number of deformations allowed to fail to proceed with the fitting
+        of the elastic tensor. If an int the absolute number of deformations. If
+        a float between 0 an 1 the maximum fraction of deformations. If None any
+        number of deformations allowed.
     elastic_relax_maker : .ForceFieldRelaxMaker
         Maker used to generate elastic relaxations.
     generate_elastic_deformations_kwargs : dict
@@ -60,15 +61,20 @@ class ElasticMaker(BaseElasticMaker):
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
     bulk_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(
-            relax_cell=True, relax_kwargs={"fmax": 0.00001}
+        default_factory=lambda: ForceFieldRelaxMaker(
+            force_field_name="CHGNet",
+            relax_cell=True,
+            relax_kwargs={"fmax": 0.00001},
         )
     )
     elastic_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(
-            relax_cell=False, relax_kwargs={"fmax": 0.00001}
+        default_factory=lambda: ForceFieldRelaxMaker(
+            force_field_name="CHGNet",
+            relax_cell=False,
+            relax_kwargs={"fmax": 0.00001},
         )
     )  # constant volume relaxation
+    max_failed_deformations: int | float | None = None
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
