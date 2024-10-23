@@ -78,7 +78,7 @@ class ApproxNEBMaker(Maker):
             host_relax_job = self.host_relax_maker.make(
                 host_structure, prev_dir=prev_dir
             )
-            host_relax_job.name = "ApproxNEB Relax Host Structure"
+            host_relax_job.append_name("Relax Host Structure ", prepend=True)
             jobs += [host_relax_job]
             host_structure = host_relax_job.output.structure
             prev_dir = host_relax_job.output.dir_name

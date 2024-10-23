@@ -17,6 +17,7 @@ from atomate2.common.schemas.neb import NebPathwayResult, NebResult
 from atomate2.utils.path import strip_hostname
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import RelaxMaker
+from atomate2.vasp.run import JobType
 from atomate2.vasp.sets.approx_neb import ApproxNEBSetGenerator
 
 if TYPE_CHECKING:
@@ -26,68 +27,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
-
-
-@dataclass
-class DoubleRelaxConditionalMaker(Maker):
-    """
-    Perform a double relaxation only if the initial relax succeeds.
-
-    This maker is intended to behave similarly to how the atomate
-    double relax maker functioned: if the initial relax failed, but
-    subsequent jobs didn't require the output of this job, the flow
-    could proceed.
-
-    With the atomate2 double relax maker, at least the initial relax
-    is required to finish successfully for the flow to proceed.
-    This flow gets around that by only spawning a second relax if the
-    first succeeds.
-    """
-
-    relax_maker1: Maker
-    relax_maker2: Maker
-    _first_relax: bool = True
-    name: str = "Double relax conditionally"
-
-    @job
-    def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> Response:
-        """
-        Make a conditional double relax flow.
-
-        Parameters
-        ----------
-        structure : Structure
-            A pymatgen structure object.
-        prev_dir : str or Path or None
-            A previous VASP calculation directory to copy output files from.
-
-        Returns
-        -------
-        Flow
-            A conditional double relax flow.
-        """
-        if self._first_relax:
-            job = self.relax_maker1.make(structure, prev_dir=prev_dir)
-            job.name += " 1"
-            new_flow = DoubleRelaxConditionalMaker(
-                relax_maker1=self.relax_maker1,
-                relax_maker2=self.relax_maker2,
-                _first_relax=False,
-            ).make(job.output.structure, prev_dir=job.output.dir_name)
-            return Response(replace=Flow([job, new_flow]), output=new_flow.output)
-
-        job = self.relax_maker2.make(structure, prev_dir=prev_dir)
-        job.name += " 2"
-        return Response(replace=job, output=job.output)
-
-    @classmethod
-    def from_relax_maker(cls, relax_maker: Maker) -> Self:
-        """Initialize from a single relax maker."""
-        return cls(
-            relax_maker1=deepcopy(relax_maker), relax_maker2=deepcopy(relax_maker)
-        )
+    from atomate2.vasp.sets.base import VaspInputGenerator
 
 
 @dataclass
@@ -104,19 +44,22 @@ class ApproxNEBHostRelaxMaker(DoubleRelaxMaker):
 
 
 @dataclass
-class ApproxNEBImageRelaxMaker(DoubleRelaxConditionalMaker):
-    """Maker to perform a double relaxation on an ApproxNEB endpoint/image structure."""
+class ApproxNEBImageRelaxMaker(RelaxMaker):
+    """
+    Maker to perform a double relaxation on an ApproxNEB endpoint/image structure.
+    
+    Very important here - we are doing a double relaxation in the atomate style,
+    where one job maps to two VASP calculations.
+    """
 
     name: str = "approxneb_image_relax"
-    relax_maker1: BaseVaspMaker | None = field(
-        default_factory=lambda: RelaxMaker(
-            input_set_generator=ApproxNEBSetGenerator(set_type="image")
-        )
+    input_set_generator : VaspInputGenerator = field(
+        default_factory= lambda : ApproxNEBSetGenerator(set_type="image")
     )
-    relax_maker2: BaseVaspMaker = field(
-        default_factory=lambda: RelaxMaker(
-            input_set_generator=ApproxNEBSetGenerator(set_type="image")
-        )
+    run_vasp_kwargs: dict = field(
+        default_factory=lambda: {
+            "job_type": JobType.DOUBLE_RELAXATION,
+        }
     )
 
 
@@ -149,7 +92,7 @@ def get_endpoints_and_relax(
             ep_inserted_struct.insert(0, working_ion, ep_coords)
 
             relax_job = relax_maker.make(ep_inserted_struct)
-            relax_job.name += f" endpoint {ep_index}"
+            relax_job.append_name(f" endpoint {ep_index}")
             ep_relax_jobs.append(relax_job)
             ep_relax_output[ep_index] = {
                 "energy": relax_job.output.output.energy,
@@ -218,7 +161,7 @@ def get_images_and_relax(
         image_relax_output[combo] = []
         for image_idx, image in enumerate(images_list):
             relax_job = relax_maker.make(image)
-            relax_job.name += f" hop {combo} image {image_idx+1}"
+            relax_job.append_name(f" hop {combo} image {image_idx+1}")
             image_relax_jobs.append(relax_job)
             image_relax_output[combo].append(
                 {

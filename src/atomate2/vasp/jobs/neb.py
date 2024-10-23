@@ -24,7 +24,7 @@ from atomate2.vasp.jobs.base import (
     BaseVaspMaker,
     get_vasp_task_document,
 )
-from atomate2.vasp.run import run_vasp, should_stop_children
+from atomate2.vasp.run import run_vasp, should_stop_children, JobType
 from atomate2.vasp.schemas.neb import VaspNebResult
 from atomate2.vasp.sets.core import NebSetGenerator
 
@@ -107,7 +107,7 @@ class NebFromImagesMaker(BaseVaspMaker):
     input_set_generator: VaspInputGenerator = field(default_factory=NebSetGenerator)
     run_vasp_kwargs: dict = field(
         default_factory=lambda: {
-            "job_type": "neb",
+            "job_type": JobType.NEB,
             "vasp_job_kwargs": {
                 "output_file": "vasp.out",
                 "stderr_file": "std_err.txt",
