@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -22,7 +21,6 @@ from atomate2.vasp.sets.approx_neb import ApproxNEBSetGenerator
 
 if TYPE_CHECKING:
     from typing import Literal
-    from typing_extensions import Self
 
     from pymatgen.core import Structure
 
@@ -47,14 +45,14 @@ class ApproxNEBHostRelaxMaker(DoubleRelaxMaker):
 class ApproxNEBImageRelaxMaker(RelaxMaker):
     """
     Maker to perform a double relaxation on an ApproxNEB endpoint/image structure.
-    
+
     Very important here - we are doing a double relaxation in the atomate style,
     where one job maps to two VASP calculations.
     """
 
     name: str = "approxneb_image_relax"
-    input_set_generator : VaspInputGenerator = field(
-        default_factory= lambda : ApproxNEBSetGenerator(set_type="image")
+    input_set_generator: VaspInputGenerator = field(
+        default_factory=lambda: ApproxNEBSetGenerator(set_type="image")
     )
     run_vasp_kwargs: dict = field(
         default_factory=lambda: {

@@ -24,7 +24,7 @@ from atomate2.vasp.jobs.base import (
     BaseVaspMaker,
     get_vasp_task_document,
 )
-from atomate2.vasp.run import run_vasp, should_stop_children, JobType
+from atomate2.vasp.run import JobType, run_vasp, should_stop_children
 from atomate2.vasp.schemas.neb import VaspNebResult
 from atomate2.vasp.sets.core import NebSetGenerator
 
