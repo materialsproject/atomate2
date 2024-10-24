@@ -267,6 +267,8 @@ class NebFromEndpointsMaker(Maker):
                 self.endpoint_relax_maker.make(endpoint, prev_dir=prev_dir)
                 for endpoint in endpoints
             ]
+            for idx in range(2):
+                endpoint_jobs[idx].append_name(f" endpoint {idx + 1}")
             endpoints = [relax_job.output.structure for relax_job in endpoint_jobs]
             endpoint_dirs = [
                 endpoint_job.output.dir_name for endpoint_job in endpoint_jobs
@@ -276,7 +278,6 @@ class NebFromEndpointsMaker(Maker):
             endpoints,
             num_images,
             interpolation_method=interpolation_method,
-            run_as_job=True,
             **interpolation_kwargs,
         )
 

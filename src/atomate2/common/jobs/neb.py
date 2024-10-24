@@ -23,11 +23,41 @@ class NebInterpolation(Enum):
     IDPP = "IDPP"
 
 
+@job
 def get_images_from_endpoints(
     endpoints: tuple[Structure, Structure] | list[Structure],
     num_images: int,
     interpolation_method: NebInterpolation = NebInterpolation.LINEAR,
-    run_as_job: bool = False,
+    **interpolation_kwargs,
+) -> list[Structure]:
+    """
+    Interpolate between two endpoints as a job.
+
+    Parameters
+    ----------
+    endpoints : tuple[Structure,Structure] or list[Structure]
+        A set of two endpoints to interpolate NEB images from.
+    num_images : int
+        The number of images to include in the interpolation.
+    prev_dir : str or Path or None (default)
+        A previous directory to copy outputs from.
+    interpolation_method : .NebInterpolation
+        The method to use to interpolate between images.
+    **interpolation_kwargs
+        kwargs to pass to the interpolation function.
+    """
+    return _get_images_from_endpoints(
+        endpoints,
+        num_images,
+        interpolation_method=interpolation_method,
+        **interpolation_kwargs,
+    )
+
+
+def _get_images_from_endpoints(
+    endpoints: tuple[Structure, Structure] | list[Structure],
+    num_images: int,
+    interpolation_method: NebInterpolation = NebInterpolation.LINEAR,
     **interpolation_kwargs,
 ) -> list[Structure]:
     """
@@ -46,17 +76,6 @@ def get_images_from_endpoints(
     **interpolation_kwargs
         kwargs to pass to the interpolation function.
     """
-    if run_as_job:
-        return job(
-            get_images_from_endpoints(
-                endpoints,
-                num_images,
-                interpolation_method=interpolation_method,
-                run_as_job=False,
-                **interpolation_kwargs,
-            )
-        )
-
     if interpolation_method == NebInterpolation.LINEAR:
         return endpoints[0].interpolate(
             endpoints[1], nimages=num_images, **interpolation_kwargs
