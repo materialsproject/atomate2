@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import numpy as np
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -23,6 +24,7 @@ if TYPE_CHECKING:
     from typing import Literal
 
     from pymatgen.core import Structure
+    from pymatgen.util.typing import CompositionLike
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
     from atomate2.vasp.sets.base import VaspInputGenerator
@@ -32,7 +34,7 @@ if TYPE_CHECKING:
 class ApproxNEBHostRelaxMaker(DoubleRelaxMaker):
     """Maker to perform a double relaxation on an ApproxNEB host structure."""
 
-    name: str = "approxneb_host_relax"
+    name: str = "ApproxNEB host relax"
     relax_maker1: BaseVaspMaker | None = field(
         default_factory=lambda: RelaxMaker(input_set_generator=ApproxNEBSetGenerator())
     )
@@ -50,7 +52,7 @@ class ApproxNEBImageRelaxMaker(RelaxMaker):
     where one job maps to two VASP calculations.
     """
 
-    name: str = "approxneb_image_relax"
+    name: str = "ApproxNEB image relax"
     input_set_generator: VaspInputGenerator = field(
         default_factory=lambda: ApproxNEBSetGenerator(set_type="image")
     )
@@ -64,12 +66,35 @@ class ApproxNEBImageRelaxMaker(RelaxMaker):
 @job
 def get_endpoints_and_relax(
     host_structure: Structure,
-    working_ion: str,
-    endpoint_coords_dict: dict,
-    inserted_coords_combo: list,
+    working_ion: CompositionLike,
+    endpoint_coords: dict,
+    inserted_coords_combo: list[str],
     relax_maker: Maker,
 ) -> Response:
-    """Get and relax endpoint structures."""
+    """
+    Get and relax endpoint structures.
+    
+    Parameters
+    -----------
+    host_structure : pymatgen Structure
+        The structure in which to insert a working ion
+    working_ion : pymatgen CompositionLike (string, Element, or Species)
+        The name of the element to insert
+    endpoint_coords : dict
+        Dict of endpoint index to the coordinates where the 
+        working ion will be inserted
+    inserted_coords_combo : list
+        List of hops indicated by < endpoint index 1 > + < endpoint index 2 >
+    relax_maker : Maker
+        Maker to relax the endpoints
+
+    Returns
+    ---------
+    Response:
+        The flow relaxes all required endpoints, but the output of this flow
+        is a dict containing the energies and relaxed structures of the
+        endpoints, with the endpoint indices as keys.
+    """
     ep_distinct = []
     for one_combo in inserted_coords_combo:
         try:
@@ -84,7 +109,7 @@ def get_endpoints_and_relax(
 
     ep_relax_output = {}
     ep_relax_jobs = []
-    for ep_index, ep_coords in endpoint_coords_dict.items():
+    for ep_index, ep_coords in endpoint_coords.items():
         if int(ep_index) in ep_distinct:
             ep_inserted_struct = host_structure.copy()
             ep_inserted_struct.insert(0, working_ion, ep_coords)
@@ -105,15 +130,50 @@ def get_endpoints_and_relax(
 @job
 def get_images_and_relax(
     working_ion: str,
-    ep_output: dict,
-    inserted_combo_list: list,
-    n_images: int,
+    ep_output: dict[str,dict],
+    inserted_combo_list: list[str],
+    n_images: int | list[int],
     host_calc_path: str | Path,
     relax_maker: Maker,
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms",
     use_aeccar: bool = False,
 ) -> Response:
-    """Get and relax image input structures."""
+    """
+    Get and relax image input structures.
+    
+    Parameters
+    -----------
+    ep_output : dict
+        Output of get_endpoints_and_relax
+    inserted_combo_list : list
+        List of hops to perform ApproxNEB on
+    n_images : int
+        The number of images to use along each hop.
+        If an int, the number to use for every hop.
+        If a list of ints, the number of images to use in that hop,
+    host_calc_path: str | Path
+        The path to the calculation of the host_structure
+    relax_maker : Maker
+        Maker to relax images
+    selective_dynamics_scheme : "fix_two_atoms" or None
+        Whether to use a pre-defined selective dynamics scheme or relax
+        all ionic positions in the images.
+    use_aeccar : bool = False
+        If True, the sum of the host structure AECCAR0 (pseudo-core charge density) 
+        and AECCAR2 (valence charge density) are used in image pathfinding.
+        If False (default), the CHGCAR (valence charge density) is used.
+
+    Returns
+    ---------
+    Response : a series of image relaxations with output containing the
+        relaxed structures and energies of each image in each hop in a dict:
+        {
+            hop_index : [
+                {"energy": energy of image 1, "structure": relaxed image structure 1},
+                ...
+            ]
+        }    
+    """
     # remove failed output first
     ep_structures = {
         k: calc["structure"]
@@ -125,7 +185,11 @@ def get_images_and_relax(
 
     image_relax_jobs = []
     image_relax_output: dict[str, list] = {}
-    for combo in inserted_combo_list:
+
+    if isinstance(n_images,int):
+        n_images = [n_images for _ in inserted_combo_list]
+
+    for hop_idx, combo in enumerate(inserted_combo_list):
         ini_ind, fin_ind = combo.split("+")
 
         if not all(ep_structures.get(idx) for idx in [ini_ind, fin_ind]):
@@ -137,7 +201,7 @@ def get_images_and_relax(
             ep_structures[ini_ind],
             ep_structures[fin_ind],
             working_ion,
-            n_images,
+            n_images[hop_idx],
             host_chgcar,
         )
         images_list = pathfinder_output["images"]
@@ -176,11 +240,30 @@ def get_images_and_relax(
 def get_pathfinder_results(
     pf_struct_ini: Structure,
     pf_struct_fin: Structure,
-    working_ion: str,
+    working_ion: CompositionLike,
     n_images: int,
     host_chgcar: Chgcar,
 ) -> dict:
-    """Get interpolated images from the pathfinder algorithm."""
+    """
+    Get interpolated images from the pathfinder algorithm.
+    
+    Parameters
+    -----------
+    pf_struct_ini : pymatgen Structure
+        First NEB endpoint structure
+    pf_struct_fin : pymatgen Structure
+        Second/final endpoint structure
+    working_ion : CompositionLike
+        The element which migrates
+    n_images : int
+        The number of images to be created along the path
+    host_chgcar : pymatgen.io.vasp.outputs Chgcar
+        The charge density of the host structure
+
+    Returns
+    -----------
+    dict containing the images along the path and the mobile_site index
+    """
     ini_wi_ind = get_working_ion_index(pf_struct_ini, working_ion)
     fin_wi_ind = get_working_ion_index(pf_struct_fin, working_ion)
 
@@ -264,10 +347,14 @@ def get_charge_density(prev_dir: str | Path, use_aeccar: bool = False) -> Chgcar
 
 @job
 def collate_results(
-    endpoint_calc_output: dict, image_calc_output: dict[str, list]
+    host_structure : Structure,
+    working_ion : str,
+    endpoint_calc_output: dict,
+    image_calc_output: dict[str, list],
 ) -> NebPathwayResult:
     """Collect output from an ApproxNEB workflow."""
     hop_dict = {}
+    hop_dist = {}
     for combo_name, images in image_calc_output.items():
         endpoint_calcs = [endpoint_calc_output[idx] for idx in combo_name.split("+")]
         hop = [endpoint_calcs[0], *images, endpoint_calcs[1]]
@@ -277,4 +364,20 @@ def collate_results(
             ionic_steps=None,  # [calc.output.ionic_steps for calc in hop],
             method=NebMethod.APPROX,
         )
-    return NebPathwayResult(hops=hop_dict)
+
+        working_ion_sites = [
+            [
+                site for site in endpoint_calcs[ep_idx]["structure"] if site.species_string == working_ion
+            ] for ep_idx in range(2)
+        ]
+        hop_dist[combo_name] = max(
+            np.linalg.norm(site_a.coords - site_b.coords)
+            for site_a in working_ion_sites[0]
+            for site_b in working_ion_sites[1]
+        )
+
+    return NebPathwayResult(
+        hops=hop_dict,
+        host_structure = host_structure,
+        hop_distances = hop_dist
+    )

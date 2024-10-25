@@ -49,7 +49,7 @@ def get_images_from_endpoints(
     return _get_images_from_endpoints(
         endpoints,
         num_images,
-        interpolation_method=interpolation_method,
+        interpolation_method=NebInterpolation(interpolation_method),
         **interpolation_kwargs,
     )
 
@@ -129,7 +129,7 @@ def neb_spline_fit(
             crit_point, 2
         ) <= 0.0:
             analysis["ts_frame_index"] = crit_point
-            analysis["ts_energy"] = energy
+            analysis["ts_energy"] = float(energy)
 
     analysis["ts_in_frames"] = any(
         abs(analysis["ts_frame_index"] - frame_idx)

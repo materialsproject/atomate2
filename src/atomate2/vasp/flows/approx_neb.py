@@ -104,6 +104,7 @@ class ApproxNEBMaker(Maker):
         )
 
         collect_output = collate_results(
+            host_structure,
             ep_relax_jobs.output,
             image_relax_jobs.output,
         )
