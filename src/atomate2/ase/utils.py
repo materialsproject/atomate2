@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+from copy import deepcopy
 import io
 import os
 import sys
@@ -18,12 +19,15 @@ from ase.filters import FrechetCellFilter
 from ase.io import Trajectory as AseTrajectory
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
+
+from emmet.core.neb import NebMethod
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.ase.schemas import AseResult
+from atomate2.common.schemas.neb import NebResult
 
 if TYPE_CHECKING:
     from os import PathLike
@@ -480,47 +484,58 @@ class AseNebInterface:
         is_mol = isinstance(images[0], Molecule) or (
             isinstance(images[0], Atoms) and all(not pbc for pbc in images[0].pbc)
         )
+        num_images = len(images)
 
         for idx, image in enumerate(images):
             if isinstance(image, Structure | Molecule):
                 images[idx] = self.ase_adaptor.get_atoms(image)
 
-        for image in images:
             if self.fix_symmetry:
-                image.set_constraint(FixSymmetry(image, symprec=self.symprec))
-            image.set_calculator(self.calculator)
+                images[idx].set_constraint(FixSymmetry(image, symprec=self.symprec))
+            images[idx].calc = deepcopy(self.calculator)
 
         with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
-            obs = [TrajectoryObserver(image) for image in images]
+            observers = [TrajectoryObserver(image) for image in images]
             if self.relax_cell and (not is_mol):
                 for idx, image in enumerate(images):
                     images[idx] = cell_filter(image)
             optimizer = self.opt_class(atoms, **kwargs)
-            optimizer.attach(obs, interval=interval)
+            for idx, image in enumerate(images):
+                optimizer.attach(observers[idx], interval=interval)
             t_i = time.perf_counter()
             optimizer.run(fmax=fmax, steps=steps)
             t_f = time.perf_counter()
-            [obs[idx]() for idx in range(len(images))]
+            [observers[idx]() for idx in range(num_images)]
 
         if traj_file is not None:
-            obs.save(traj_file)
-        if isinstance(atoms, cell_filter):
-            atoms = atoms.atoms
+            for idx in range(num_images):
+                traj_file_split = traj_file.split(".")
+                traj_file_prefix = ".".join(traj_file_split[:-1])
+                traj_file_ext = traj_file[-1]
+                observers.save(f"{traj_file_prefix}-image-{idx+1}.{traj_file_ext}")
+        
+        for idx in range(num_images):
+            if isinstance(images[idx], cell_filter):
+                images[idx] = images[idx].atoms
 
-        struct = self.ase_adaptor.get_structure(
-            atoms, cls=Molecule if is_mol else Structure
-        )
-        traj = obs.to_pymatgen_trajectory(None)
+        images = [
+            self.ase_adaptor.get_structure(
+                image, cls=Molecule if is_mol else Structure
+            ) for image in images
+        ]
+        num_sites = len(images[0])
         is_force_conv = all(
-            np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
-            for idx in range(len(struct))
+            np.linalg.norm(observers[image_idx].forces[-1][site_idx]) < abs(fmax)
+            for site_idx in range(num_sites)
+            for image_idx in range(num_images)
         )
-        return AseResult(
-            final_mol_or_struct=struct,
-            trajectory=traj,
+        return NebResult(
+            images = images,
+            energies = [
+                observers[image_idx].energies[-1] for image_idx in range(num_images)
+            ],
+            method = NebMethod.CLIMBING_IMAGE if neb.climb else NebMethod.STANDARD,
             is_force_converged=is_force_conv,
-            energy_downhill=traj.frame_properties[-1]["energy"]
-            < traj.frame_properties[0]["energy"],
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
         )

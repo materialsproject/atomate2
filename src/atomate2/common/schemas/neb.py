@@ -12,7 +12,7 @@ from typing_extensions import Self
 from atomate2.common.jobs.neb import neb_spline_fit
 
 
-class NebResult(BaseModel):
+class NebResult(BaseModel, extra = "allow"):
     """Container class to store high-level NEB calculation info."""
 
     images: list[Structure | Molecule] = Field(
