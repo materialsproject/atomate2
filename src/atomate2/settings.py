@@ -264,11 +264,6 @@ class Atomate2Settings(BaseSettings):
         ),
         examples=["gpu 0", "gpu 1 split 0.75", "gpu 2 split -1.0", "gpu 1 omp 4"],
     )
-    MPI_CMD: str = Field("mpirun", description="The command to invoke MPI.")
-    MPI_NUM_PROCESSES_FLAG: str = Field(
-        "-n",
-        description="The flag with which to provide the number of processes to use in the MPI execution.",
-    )
 
 
     @model_validator(mode="before")
