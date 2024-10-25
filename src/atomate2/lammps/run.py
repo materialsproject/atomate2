@@ -1,18 +1,18 @@
 import subprocess
 from pathlib import Path
 
-from .settings import LAMMPS_SETTINGS
+from atomate2 import SETTINGS
 
 
 def run_lammps(
     lammps_input_file: str = "lammps.in",
-    lammps_cmd: str = LAMMPS_SETTINGS.LAMMPS_CMD,
-    lammps_suffix: list[str] | str | None = LAMMPS_SETTINGS.LAMMPS_SUFFIX,
-    lammps_pks: list[str] | str | None = LAMMPS_SETTINGS.LAMMPS_PACKAGES,
+    lammps_cmd: str = SETTINGS.LAMMPS_CMD,
+    lammps_suffix: list[str] | str | None = SETTINGS.LAMMPS_SUFFIX,
+    lammps_pks: list[str] | str | None = SETTINGS.LAMMPS_PACKAGES,
     lammps_run_flags: list[str] | str | None = None,
-    mpi_cmd: str | None = LAMMPS_SETTINGS.MPI_CMD,
+    mpi_cmd: str | None = SETTINGS.MPI_CMD,
     mpi_num_processes: int = 1,
-    mpi_num_processes_flag: str = LAMMPS_SETTINGS.MPI_NUM_PROCESSES_FLAG,
+    mpi_num_processes_flag: str = SETTINGS.MPI_NUM_PROCESSES_FLAG,
     max_walltime_hours: float | None = None,
     stdout_file: str | Path = "stdout.log",
     stderr_file: str | Path = "stderr.log",
