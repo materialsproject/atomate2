@@ -10,10 +10,6 @@ def run_lammps(
     lammps_suffix: list[str] | str | None = SETTINGS.LAMMPS_SUFFIX,
     lammps_pks: list[str] | str | None = SETTINGS.LAMMPS_PACKAGES,
     lammps_run_flags: list[str] | str | None = None,
-    mpi_cmd: str | None = SETTINGS.MPI_CMD,
-    mpi_num_processes: int = 1,
-    mpi_num_processes_flag: str = SETTINGS.MPI_NUM_PROCESSES_FLAG,
-    max_walltime_hours: float | None = None,
     stdout_file: str | Path = "stdout.log",
     stderr_file: str | Path = "stderr.log",
 ) -> subprocess.Popen:
@@ -45,15 +41,6 @@ def run_lammps(
     """
 
     lammps_invocation: list[str] = []
-
-    if mpi_cmd is not None:
-        lammps_invocation.extend(
-            [
-                mpi_cmd,
-                f"-{mpi_num_processes_flag.lstrip('-')}",
-                str(mpi_num_processes),
-            ]
-        )
 
     if lammps_suffix is not None:
         if isinstance(lammps_suffix, str):
