@@ -48,10 +48,7 @@ def test_phonon_flow(si, clean_dir, mock_aims, species_dir):
         ),
     )
     maker.name = "phonons"
-    flow = maker.make(
-        si,
-        supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
-    )
+    flow = maker.make(si, supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3))
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
@@ -142,10 +139,7 @@ def test_phonon_socket_flow(si, clean_dir, mock_aims, species_dir):
         ),
     )
     maker.name = "phonons"
-    flow = maker.make(
-        si,
-        supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
-    )
+    flow = maker.make(si, supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3))
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
@@ -212,10 +206,8 @@ def test_phonon_default_flow(si, clean_dir, mock_aims, species_dir):
 
     maker = PhononMaker()
     maker.name = "phonons"
-    flow = maker.make(
-        si,
-        supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
-    )
+    supercell_matrix = np.ones((3, 3)) - 2 * np.eye(3)
+    flow = maker.make(si, supercell_matrix=supercell_matrix)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
@@ -288,10 +280,7 @@ def test_phonon_default_socket_flow(si, clean_dir, mock_aims, species_dir):
 
     maker = PhononMaker(socket=True)
     maker.name = "phonons"
-    flow = maker.make(
-        si,
-        supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
-    )
+    flow = maker.make(si, supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3))
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)

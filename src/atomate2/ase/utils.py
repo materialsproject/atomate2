@@ -278,11 +278,11 @@ class TrajectoryObserver:
         if self._store_md_outputs:
             traj_dict.update(velocities=self.velocities, temperature=self.temperatures)
         # sanitize dict
-        for key in traj_dict:
-            if all(isinstance(val, np.ndarray) for val in traj_dict[key]):
-                traj_dict[key] = [val.tolist() for val in traj_dict[key]]
-            elif isinstance(traj_dict[key], np.ndarray):
-                traj_dict[key] = traj_dict[key].tolist()
+        for key, value in traj_dict.items():
+            if all(isinstance(val, np.ndarray) for val in value):
+                traj_dict[key] = [val.tolist() for val in value]
+            elif isinstance(value, np.ndarray):
+                traj_dict[key] = value.tolist()
         return traj_dict
 
 
