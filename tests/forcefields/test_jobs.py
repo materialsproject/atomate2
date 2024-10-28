@@ -217,6 +217,7 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
 
 def test_orb_static_maker(si_structure: Structure):
     importorskip("orb_models")
+    importorskip("pynanoflann")
 
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
