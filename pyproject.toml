@@ -126,7 +126,7 @@ strict = [
     "typing-extensions==4.12.2",
 ]
 strict-forcefields = [
-    "calorine==2.2.1",
+    "calorine==3.0",
     "chgnet==0.4.0",
     "mace-torch>=0.3.3",
     "matgl==1.1.3",
