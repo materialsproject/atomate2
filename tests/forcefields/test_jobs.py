@@ -215,6 +215,25 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
         MACEStaticMaker()
 
 
+def test_orb_static_maker(si_structure: Structure):
+    importorskip("orb_models")
+
+    # generate job
+    # NOTE the test model is not trained on Si, so the energy is not accurate
+    job = ForceFieldStaticMaker(
+        force_field_name="Orb",
+        ionic_step_data=("structure", "energy"),
+    ).make(si_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validation the outputs of the job
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    assert output1.output.n_steps == 1
+
+
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
