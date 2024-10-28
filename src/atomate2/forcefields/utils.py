@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 from contextlib import contextmanager
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from monty.json import MontyDecoder
@@ -63,8 +64,9 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             import torch
             from mace.calculators import MACECalculator, mace_mp
 
-            if os.path.isfile(kwargs.get("model")):
-                model_path = kwargs.get("model")
+            model = kwargs.get("model")
+            if isinstance(model, str | Path) and os.path.isfile(model):
+                model_path = model
                 device = kwargs.get("device") or (
                     "cuda" if torch.cuda.is_available() else "cpu"
                 )
