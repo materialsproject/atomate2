@@ -17,6 +17,7 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     Nequip = "Nequip"
     SevenNet = "SevenNet"
 
+
 def _get_formatted_ff_name(force_field_name: str | MLFF) -> str:
     """
     Get the standardized force field name.
