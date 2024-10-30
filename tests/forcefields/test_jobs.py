@@ -214,6 +214,7 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
     with pytest.warns(FutureWarning):
         MACEStaticMaker()
 
+
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
