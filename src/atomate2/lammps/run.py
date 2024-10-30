@@ -5,7 +5,7 @@ from atomate2 import SETTINGS
 
 
 def run_lammps(
-    lammps_input_file: str = "lammps.in",
+    lammps_input_file: str = "in.lammps",
     lammps_cmd: str = SETTINGS.LAMMPS_CMD,
     lammps_suffix: list[str] | str | None = SETTINGS.LAMMPS_SUFFIX,
     lammps_pks: list[str] | str | None = SETTINGS.LAMMPS_PACKAGES,
