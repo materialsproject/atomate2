@@ -17,6 +17,7 @@ from pymatgen.io.vasp import Kpoints
 from atomate2 import SETTINGS
 from atomate2.common.files import gzip_output_folder
 from atomate2.common.jobs.neb import NebInterpolation, get_images_from_endpoints
+from atomate2.utils.path import strip_hostname
 from atomate2.vasp.files import copy_vasp_outputs, write_vasp_input_set
 from atomate2.vasp.jobs.base import (
     _DATA_OBJECTS,
@@ -27,7 +28,6 @@ from atomate2.vasp.jobs.base import (
 from atomate2.vasp.run import JobType, run_vasp, should_stop_children
 from atomate2.vasp.schemas.neb import VaspNebResult
 from atomate2.vasp.sets.core import NebSetGenerator
-from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -72,7 +72,7 @@ def collect_neb_output(
         return VaspNebResult.from_directories(
             [strip_hostname(endpoint_path) for endpoint_path in endpoint_dirs],
             strip_hostname(neb_head_dir),
-            **neb_doc_kwargs
+            **neb_doc_kwargs,
         )
     return NebTaskDoc.from_directory(neb_head_dir, **neb_doc_kwargs)
 

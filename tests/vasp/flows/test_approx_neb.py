@@ -1,4 +1,4 @@
-""" Test ApproxNEB workflow. """
+"""Test ApproxNEB workflow."""
 
 from pathlib import Path
 
@@ -9,22 +9,22 @@ from atomate2.vasp.flows.approx_neb import ApproxNEBMaker
 
 
 def test_approx_neb_flow(mock_vasp, clean_dir, vasp_test_dir):
-
-    flow_input = loadfn(
-        Path(vasp_test_dir) / "ApproxNEB/approx_neb_input.json.gz"
-    )
-
+    flow_input = loadfn(Path(vasp_test_dir) / "ApproxNEB/approx_neb_input.json.gz")
 
     flow = ApproxNEBMaker().make(
         *[
-            flow_input[k] for k in (
-                "host_structure", "working_ion", "inserted_coords_dict", "inserted_coords_combo"
+            flow_input[k]
+            for k in (
+                "host_structure",
+                "working_ion",
+                "inserted_coords_dict",
+                "inserted_coords_combo",
             )
         ]
     )
 
     ref_paths = {
-        job_name : f"ApproxNeb/{job_name.replace(' ','_')}"
+        job_name: f"ApproxNeb/{job_name.replace(' ','_')}"
         for job_name in [
             "host structure relax 1",
             "host structure relax 2",

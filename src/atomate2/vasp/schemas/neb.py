@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-
 from emmet.core.neb import NebMethod, NebTaskDoc
 from emmet.core.tasks import TaskDoc
 
@@ -46,10 +45,13 @@ class VaspNebResult(NebResult):
         return cls(
             structures=properties["structure"],
             energies=properties["energy"],
-            images = [image_calc.output.structure for image_calc in neb_task.image_calculations],
-            method = (
+            images=[
+                image_calc.output.structure
+                for image_calc in neb_task.image_calculations
+            ],
+            method=(
                 NebMethod.CLIMBING_IMAGE
-                if neb_task.inputs.incar.get("LCLIMB",False)
+                if neb_task.inputs.incar.get("LCLIMB", False)
                 else NebMethod.STANDARD
             ),
             **neb_doc_kwargs,

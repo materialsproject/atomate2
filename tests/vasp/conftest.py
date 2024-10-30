@@ -174,14 +174,12 @@ def fake_run_vasp(
         check_kpoints(ref_path)
 
     if "poscar" in check_inputs:
-        if len(
-            neb_sub_dirs := sorted((ref_path / "inputs").glob("[0-9][0-9]"))
-        ) > 0:
+        if len(neb_sub_dirs := sorted((ref_path / "inputs").glob("[0-9][0-9]"))) > 0:
             for idx, neb_sub_dir in enumerate(neb_sub_dirs):
                 check_poscar(
                     neb_sub_dir,
-                    user_poscar_path = zpath( Path(f"{idx:02}") / "POSCAR"),
-                    ref_poscar_path = zpath(neb_sub_dir / "POSCAR")
+                    user_poscar_path=zpath(Path(f"{idx:02}") / "POSCAR"),
+                    ref_poscar_path=zpath(neb_sub_dir / "POSCAR"),
                 )
         else:
             check_poscar(ref_path)
@@ -264,7 +262,11 @@ def check_kpoints(ref_path: Path):
             )
 
 
-def check_poscar(ref_path: Path, user_poscar_path : Path | None = None, ref_poscar_path : Path | None = None):
+def check_poscar(
+    ref_path: Path,
+    user_poscar_path: Path | None = None,
+    ref_poscar_path: Path | None = None,
+):
     user_poscar_path = user_poscar_path or zpath("POSCAR")
     ref_poscar_path = ref_poscar_path or zpath(ref_path / "inputs" / "POSCAR")
 
@@ -290,6 +292,7 @@ def check_poscar(ref_path: Path, user_poscar_path : Path | None = None, ref_posc
             f"POSCAR files are inconsistent\n\n{ref_poscar_path!s}\n{ref_poscar}"
             f"\n\n{user_poscar_path!s}\n{user_poscar}"
         )
+
 
 def check_potcar(ref_path: Path):
     potcars = {"reference": None, "user": None}
@@ -335,7 +338,7 @@ def copy_vasp_outputs(ref_path: Path):
             shutil.copy(output_file, ".")
 
     for idx, neb_dir in enumerate(neb_dirs):
-        (copied_neb_dir := Path(f"./{idx:02}") ).mkdir(parents=True,exist_ok=True)
+        (copied_neb_dir := Path(f"./{idx:02}")).mkdir(parents=True, exist_ok=True)
         for output_file in neb_dir.iterdir():
             if output_file.is_file():
                 shutil.copy(output_file, copied_neb_dir)

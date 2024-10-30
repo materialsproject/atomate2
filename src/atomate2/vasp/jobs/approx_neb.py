@@ -261,7 +261,7 @@ def get_pathfinder_results(
         The charge density of the host structure
 
     Returns
-    ---------
+    -------
     dict containing the images along the path and the mobile_site index
     """
     ini_wi_ind = get_working_ion_index(pf_struct_ini, working_ion)
@@ -300,7 +300,7 @@ def add_selective_dynamics_two_fixed_sites(
     fixed_species_name: CompositionLike,
 ) -> Structure:
     """Add selective dynamics to input structure.
-    
+
     Parameters
     ----------
     structure : pymatgen Structure
@@ -312,7 +312,7 @@ def add_selective_dynamics_two_fixed_sites(
         to check validity of fixed_index
 
     Returns
-    ---------
+    -------
     Copy of the input structure with selective dynamics tags
     """
     if structure[fixed_index].specie.name != fixed_species_name:
@@ -341,9 +341,11 @@ def add_selective_dynamics_two_fixed_sites(
     return structure
 
 
-def get_working_ion_index(structure: Structure, working_ion: CompositionLike) -> int | None:
+def get_working_ion_index(
+    structure: Structure, working_ion: CompositionLike
+) -> int | None:
     """Get the index of the working ion in a structure.
-    
+
     Parameters
     ----------
     structure : pymatgen Structure
@@ -351,7 +353,7 @@ def get_working_ion_index(structure: Structure, working_ion: CompositionLike) ->
         Name of the element to identify
 
     Returns
-    ----------
+    -------
     int - the first site in the structure containing the working ion
     None - no sites in the structure contain the working ion
     """
@@ -364,7 +366,7 @@ def get_working_ion_index(structure: Structure, working_ion: CompositionLike) ->
 
 def get_charge_density(prev_dir: str | Path, use_aeccar: bool = False) -> Chgcar:
     """Get charge density from a prior VASP calculation.
-    
+
     Parameters
     ----------
     prev_dir : str or Path
@@ -374,7 +376,7 @@ def get_charge_density(prev_dir: str | Path, use_aeccar: bool = False) -> Chgcar
         rather than CHGCAR (valence electron density only - False)
 
     Returns
-    ----------
+    -------
     pymatgen Chgcar object
     """
     prev_dir = Path(strip_hostname(prev_dir))
@@ -393,7 +395,7 @@ def collate_results(
     image_calc_output: dict[str, list],
 ) -> NebPathwayResult:
     """Collect output from an ApproxNEB workflow.
-    
+
     Parameters
     ----------
     host_structure : pymatgen Structure
@@ -406,7 +408,7 @@ def collate_results(
         Output of get_images_and_relax
 
     Returns
-    ----------
+    -------
     NebPathwayResult - a collection of NEB calculations and analysis
     """
     hop_dict = {}

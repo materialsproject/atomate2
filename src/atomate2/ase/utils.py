@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import contextlib
-from copy import deepcopy
 import io
 import os
 import sys
 import time
+from copy import deepcopy
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -19,7 +19,6 @@ from ase.filters import FrechetCellFilter
 from ase.io import Trajectory as AseTrajectory
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
-
 from emmet.core.neb import NebMethod
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
@@ -513,15 +512,14 @@ class AseNebInterface:
                 traj_file_prefix = ".".join(traj_file_split[:-1])
                 traj_file_ext = traj_file[-1]
                 observers.save(f"{traj_file_prefix}-image-{idx+1}.{traj_file_ext}")
-        
+
         for idx in range(num_images):
             if isinstance(images[idx], cell_filter):
                 images[idx] = images[idx].atoms
 
         images = [
-            self.ase_adaptor.get_structure(
-                image, cls=Molecule if is_mol else Structure
-            ) for image in images
+            self.ase_adaptor.get_structure(image, cls=Molecule if is_mol else Structure)
+            for image in images
         ]
         num_sites = len(images[0])
         is_force_conv = all(
@@ -530,11 +528,11 @@ class AseNebInterface:
             for image_idx in range(num_images)
         )
         return NebResult(
-            images = images,
-            energies = [
+            images=images,
+            energies=[
                 observers[image_idx].energies[-1] for image_idx in range(num_images)
             ],
-            method = NebMethod.CLIMBING_IMAGE if neb.climb else NebMethod.STANDARD,
+            method=NebMethod.CLIMBING_IMAGE if neb.climb else NebMethod.STANDARD,
             is_force_converged=is_force_conv,
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
