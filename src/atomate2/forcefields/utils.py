@@ -67,12 +67,8 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             model = kwargs.get("model")
             if isinstance(model, str | Path) and os.path.isfile(model):
                 model_path = model
-                device = kwargs.get("device") or (
-                    "cuda" if torch.cuda.is_available() else "cpu"
-                )
                 calculator = MACECalculator(
                     model_paths=model_path,
-                    device=device,
                     **kwargs,
                 )
             else:
