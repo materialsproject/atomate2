@@ -123,6 +123,7 @@ def _mock_vasp(
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.base, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
+    monkeypatch.setattr(atomate2.vasp.jobs.neb, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(VaspInputSet, "get_input_set", mock_get_input_set)
     monkeypatch.setattr(VaspInputSet, "nelect", mock_nelect)
 
@@ -173,7 +174,17 @@ def fake_run_vasp(
         check_kpoints(ref_path)
 
     if "poscar" in check_inputs:
-        check_poscar(ref_path)
+        if len(
+            neb_sub_dirs := sorted((ref_path / "inputs").glob("[0-9][0-9]"))
+        ) > 0:
+            for idx, neb_sub_dir in enumerate(neb_sub_dirs):
+                check_poscar(
+                    neb_sub_dir,
+                    user_poscar_path = zpath( Path(f"{idx:02}") / "POSCAR"),
+                    ref_poscar_path = zpath(neb_sub_dir / "POSCAR")
+                )
+        else:
+            check_poscar(ref_path)
 
     if "potcar" in check_inputs:
         check_potcar(ref_path)
@@ -253,9 +264,9 @@ def check_kpoints(ref_path: Path):
             )
 
 
-def check_poscar(ref_path: Path):
-    user_poscar_path = zpath("POSCAR")
-    ref_poscar_path = zpath(ref_path / "inputs" / "POSCAR")
+def check_poscar(ref_path: Path, user_poscar_path : Path | None = None, ref_poscar_path : Path | None = None):
+    user_poscar_path = user_poscar_path or zpath("POSCAR")
+    ref_poscar_path = ref_poscar_path or zpath(ref_path / "inputs" / "POSCAR")
 
     user_poscar = Poscar.from_file(user_poscar_path)
     ref_poscar = Poscar.from_file(ref_poscar_path)
@@ -279,7 +290,6 @@ def check_poscar(ref_path: Path):
             f"POSCAR files are inconsistent\n\n{ref_poscar_path!s}\n{ref_poscar}"
             f"\n\n{user_poscar_path!s}\n{user_poscar}"
         )
-
 
 def check_potcar(ref_path: Path):
     potcars = {"reference": None, "user": None}
@@ -318,6 +328,14 @@ def clear_vasp_inputs():
 
 def copy_vasp_outputs(ref_path: Path):
     output_path = ref_path / "outputs"
+    neb_dirs = sorted(output_path.glob("[0-9][0-9]"))
+
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")
+
+    for idx, neb_dir in enumerate(neb_dirs):
+        (copied_neb_dir := Path(f"./{idx:02}") ).mkdir(parents=True,exist_ok=True)
+        for output_file in neb_dir.iterdir():
+            if output_file.is_file():
+                shutil.copy(output_file, copied_neb_dir)
