@@ -16,8 +16,6 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     NEP = "NEP"
     Nequip = "Nequip"
     SevenNet = "SevenNet"
-    Orb = "Orb"
-
 
 def _get_formatted_ff_name(force_field_name: str | MLFF) -> str:
     """
