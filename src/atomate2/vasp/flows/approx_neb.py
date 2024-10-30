@@ -78,7 +78,7 @@ class ApproxNEBMaker(Maker):
             host_relax_job = self.host_relax_maker.make(
                 host_structure, prev_dir=prev_dir
             )
-            host_relax_job.append_name("Relax Host Structure ", prepend=True)
+            host_relax_job.append_name("host structure ", prepend=True)
             jobs += [host_relax_job]
             host_structure = host_relax_job.output.structure
             prev_dir = host_relax_job.output.dir_name
@@ -105,6 +105,7 @@ class ApproxNEBMaker(Maker):
 
         collect_output = collate_results(
             host_structure,
+            working_ion,
             ep_relax_jobs.output,
             image_relax_jobs.output,
         )

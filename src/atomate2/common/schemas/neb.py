@@ -12,7 +12,7 @@ from typing_extensions import Self
 from atomate2.common.jobs.neb import neb_spline_fit
 
 
-class NebResult(BaseModel, extra = "allow"):
+class NebResult(BaseModel, extra="allow"):
     """Container class to store high-level NEB calculation info."""
 
     images: list[Structure | Molecule] = Field(
@@ -67,7 +67,7 @@ class NebResult(BaseModel, extra = "allow"):
         return self
 
 
-class NebPathwayResult(BaseModel, extra = "allow"):
+class NebPathwayResult(BaseModel, extra="allow"):
     """Class for containing multiple NEB calculations, as along a reaction pathway."""
 
     hops: dict[str, NebResult] = Field(
@@ -96,8 +96,11 @@ class NebPathwayResult(BaseModel, extra = "allow"):
                     },
                 )
         return self
-    
+
     @property
     def max_barriers(self):
         """Retrieve the maximum barrier along each hop."""
-        return {idx: max(self.forward_barriers[idx], self.reverse_barriers[k]) for idx in self.forward_barriers}
+        return {
+            idx: max(self.forward_barriers[idx], self.reverse_barriers[k])
+            for idx in self.forward_barriers
+        }

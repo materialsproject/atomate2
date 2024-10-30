@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-import numpy as np
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import numpy as np
 from emmet.core.neb import NebMethod
 from jobflow import Flow, Maker, Response, job
 from monty.os.path import zpath
@@ -73,15 +73,15 @@ def get_endpoints_and_relax(
 ) -> Response:
     """
     Get and relax endpoint structures.
-    
+
     Parameters
-    -----------
+    ----------
     host_structure : pymatgen Structure
         The structure in which to insert a working ion
     working_ion : pymatgen CompositionLike (string, Element, or Species)
         The name of the element to insert
     endpoint_coords : dict
-        Dict of endpoint index to the coordinates where the 
+        Dict of endpoint index to the coordinates where the
         working ion will be inserted
     inserted_coords_combo : list
         List of hops indicated by < endpoint index 1 > + < endpoint index 2 >
@@ -89,7 +89,7 @@ def get_endpoints_and_relax(
         Maker to relax the endpoints
 
     Returns
-    ---------
+    -------
     Response:
         The flow relaxes all required endpoints, but the output of this flow
         is a dict containing the energies and relaxed structures of the
@@ -130,7 +130,7 @@ def get_endpoints_and_relax(
 @job
 def get_images_and_relax(
     working_ion: str,
-    ep_output: dict[str,dict],
+    ep_output: dict[str, dict],
     inserted_combo_list: list[str],
     n_images: int | list[int],
     host_calc_path: str | Path,
@@ -140,9 +140,9 @@ def get_images_and_relax(
 ) -> Response:
     """
     Get and relax image input structures.
-    
+
     Parameters
-    -----------
+    ----------
     ep_output : dict
         Output of get_endpoints_and_relax
     inserted_combo_list : list
@@ -159,12 +159,12 @@ def get_images_and_relax(
         Whether to use a pre-defined selective dynamics scheme or relax
         all ionic positions in the images.
     use_aeccar : bool = False
-        If True, the sum of the host structure AECCAR0 (pseudo-core charge density) 
+        If True, the sum of the host structure AECCAR0 (pseudo-core charge density)
         and AECCAR2 (valence charge density) are used in image pathfinding.
         If False (default), the CHGCAR (valence charge density) is used.
 
     Returns
-    ---------
+    -------
     Response : a series of image relaxations with output containing the
         relaxed structures and energies of each image in each hop in a dict:
         {
@@ -172,7 +172,7 @@ def get_images_and_relax(
                 {"energy": energy of image 1, "structure": relaxed image structure 1},
                 ...
             ]
-        }    
+        }
     """
     # remove failed output first
     ep_structures = {
@@ -186,7 +186,7 @@ def get_images_and_relax(
     image_relax_jobs = []
     image_relax_output: dict[str, list] = {}
 
-    if isinstance(n_images,int):
+    if isinstance(n_images, int):
         n_images = [n_images for _ in inserted_combo_list]
 
     for hop_idx, combo in enumerate(inserted_combo_list):
@@ -246,9 +246,9 @@ def get_pathfinder_results(
 ) -> dict:
     """
     Get interpolated images from the pathfinder algorithm.
-    
+
     Parameters
-    -----------
+    ----------
     pf_struct_ini : pymatgen Structure
         First NEB endpoint structure
     pf_struct_fin : pymatgen Structure
@@ -261,7 +261,7 @@ def get_pathfinder_results(
         The charge density of the host structure
 
     Returns
-    -----------
+    ---------
     dict containing the images along the path and the mobile_site index
     """
     ini_wi_ind = get_working_ion_index(pf_struct_ini, working_ion)
@@ -297,9 +297,24 @@ def get_pathfinder_results(
 def add_selective_dynamics_two_fixed_sites(
     structure: Structure,
     fixed_index: int,
-    fixed_species_name: str,
+    fixed_species_name: CompositionLike,
 ) -> Structure:
-    """Add selective dynamics to input structure."""
+    """Add selective dynamics to input structure.
+    
+    Parameters
+    ----------
+    structure : pymatgen Structure
+        Structure to add selective dynamics tags to
+    fixed_index : int
+        Index of the site to add selective dynamics to
+    fixed_species_name : CompositionLike
+        The expected element at the indexed site - used
+        to check validity of fixed_index
+
+    Returns
+    ---------
+    Copy of the input structure with selective dynamics tags
+    """
     if structure[fixed_index].specie.name != fixed_species_name:
         raise ValueError(
             f"The chosen fixed atom at index {fixed_index} is not a "
@@ -326,8 +341,20 @@ def add_selective_dynamics_two_fixed_sites(
     return structure
 
 
-def get_working_ion_index(structure: Structure, working_ion: str) -> int | None:
-    """Get the index of the working ion in a structure."""
+def get_working_ion_index(structure: Structure, working_ion: CompositionLike) -> int | None:
+    """Get the index of the working ion in a structure.
+    
+    Parameters
+    ----------
+    structure : pymatgen Structure
+    working_ion : CompositionLike
+        Name of the element to identify
+
+    Returns
+    ----------
+    int - the first site in the structure containing the working ion
+    None - no sites in the structure contain the working ion
+    """
     for ind, site in enumerate(structure):
         if site.species_string == working_ion:
             # assume that only the lowest indexed working ion is mobile
@@ -336,7 +363,20 @@ def get_working_ion_index(structure: Structure, working_ion: str) -> int | None:
 
 
 def get_charge_density(prev_dir: str | Path, use_aeccar: bool = False) -> Chgcar:
-    """Get charge density from a prior VASP calculation."""
+    """Get charge density from a prior VASP calculation.
+    
+    Parameters
+    ----------
+    prev_dir : str or Path
+        Path to the previous VASP calculation
+    use_aeccar : bool = False
+        True: use AECCAR0 and AECCAR2 (pseudo-all electron charge density)
+        rather than CHGCAR (valence electron density only - False)
+
+    Returns
+    ----------
+    pymatgen Chgcar object
+    """
     prev_dir = Path(strip_hostname(prev_dir))
     if use_aeccar:
         aeccar0 = Chgcar.from_file(zpath(str(prev_dir / "AECCAR0")))
@@ -347,12 +387,28 @@ def get_charge_density(prev_dir: str | Path, use_aeccar: bool = False) -> Chgcar
 
 @job
 def collate_results(
-    host_structure : Structure,
-    working_ion : str,
+    host_structure: Structure,
+    working_ion: CompositionLike,
     endpoint_calc_output: dict,
     image_calc_output: dict[str, list],
 ) -> NebPathwayResult:
-    """Collect output from an ApproxNEB workflow."""
+    """Collect output from an ApproxNEB workflow.
+    
+    Parameters
+    ----------
+    host_structure : pymatgen Structure
+    working_ion : CompositionLike
+        Used in combination with host_structure to estimate
+        the linear distance traversed in a given ApproxNEB hop
+    endpoint_calc_output : dict
+        Output of get_endpoints_and_relax
+    image_calc_output : dict[str,list]
+        Output of get_images_and_relax
+
+    Returns
+    ----------
+    NebPathwayResult - a collection of NEB calculations and analysis
+    """
     hop_dict = {}
     hop_dist = {}
     for combo_name, images in image_calc_output.items():
@@ -367,8 +423,11 @@ def collate_results(
 
         working_ion_sites = [
             [
-                site for site in endpoint_calcs[ep_idx]["structure"] if site.species_string == working_ion
-            ] for ep_idx in range(2)
+                site
+                for site in endpoint_calcs[ep_idx]["structure"]
+                if site.species_string == working_ion
+            ]
+            for ep_idx in range(2)
         ]
         hop_dist[combo_name] = max(
             np.linalg.norm(site_a.coords - site_b.coords)
@@ -377,7 +436,5 @@ def collate_results(
         )
 
     return NebPathwayResult(
-        hops=hop_dict,
-        host_structure = host_structure,
-        hop_distances = hop_dist
+        hops=hop_dict, host_structure=host_structure, hop_distances=hop_dist
     )
