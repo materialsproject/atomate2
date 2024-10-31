@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 from contextlib import contextmanager
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -64,7 +63,7 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             from mace.calculators import MACECalculator, mace_mp
 
             model = kwargs.get("model")
-            if isinstance(model, str | Path) and os.path.isfile(model):
+            if isinstance(model, str | Path) and Path(model).exists():
                 model_path = model
                 device = kwargs.get("device") or "cpu"
                 if "device" in kwargs:
