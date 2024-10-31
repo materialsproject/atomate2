@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, List
+import os
 
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
@@ -9,25 +10,44 @@ from pymatgen.core import Structure
 
 from ..files import write_lammps_input_set
 from ..run import run_lammps
-from ..schemas.task import TaskDocument
-from ..sets.base import BaseLammpsGenerator
+from ..schemas.task import LammpsTaskDocument
+from ..sets.base import BaseLammpsSet
 
-_DATA_OBJECTS: List[Any] = []  # populate with calc output data objects here
+_DATA_OBJECTS: List[str] = ["dump", "log", "in", "data", "trajectory"]
 
 __all__ = ("BaseLammpsMaker", "lammps_job")
 
 
 def lammps_job(method: Callable):
-    return job(method, data=_DATA_OBJECTS, output_schema=TaskDocument)
+    return job(method, data=_DATA_OBJECTS, output_schema=LammpsTaskDocument)
 
 
 @dataclass
 class BaseLammpsMaker(Maker):
+    '''
+    Basic Maker class for LAMMPS jobs. 
+    
+    name: str
+        Name of the job
+    input_set_generator: BaseLammpsGenerator
+        Input set generator for the job, default is the BaseLammpsGenerator
+    write_input_set_kwargs: dict
+        Additional kwargs to write_lammps_input_set
+    run_lammps_kwargs: dict
+        Additional kwargs to run_lammps
+    task_document_kwargs: dict
+        Additional kwargs to TaskDocument.from_directory
+    write_additional_data: dict
+        Additional data to write to the job directory
+    traj_file_fmt: Literal["dump", "pmg", "ase"]
+        Format for the trajectory file, stores only dump file by default
+    '''
     name: str = "Base LAMMPS job"
-    input_set_generator: BaseLammpsGenerator = field(
-        default_factory=BaseLammpsGenerator
+    input_set_generator: BaseLammpsSet = field(
+        default_factory=BaseLammpsSet
     )
     write_input_set_kwargs: dict = field(default_factory=dict)
+    force_field: str = field(default_factory=str)
     run_lammps_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
     write_additional_data: dict = field(default_factory=dict)
@@ -35,7 +55,7 @@ class BaseLammpsMaker(Maker):
     @lammps_job
     def make(self, input_structure: Structure | Path):
         """Run a LAMMPS calculation."""
-
+                
         write_lammps_input_set(
             input_structure, self.input_set_generator, **self.write_input_set_kwargs
         )
@@ -45,11 +65,15 @@ class BaseLammpsMaker(Maker):
 
         run_lammps(**self.run_lammps_kwargs)
 
-        task_doc = TaskDocument.from_directory(
-            Path.cwd(), task_label=self.name, **self.task_document_kwargs
+        task_doc = LammpsTaskDocument.from_directory(
+            os.getcwd(), task_label=self.name, **self.task_document_kwargs
         )
+        
+        task_doc.composition = input_structure.composition
+        task_doc.reduced_formula = input_structure.composition.reduced_formula
         task_doc.task_label = self.name
-
+        task_doc.inputs = self.input_set_generator.settings
+        
         gzip_dir(".")
 
         return Response(output=task_doc)
@@ -58,6 +82,6 @@ class BaseLammpsMaker(Maker):
 @dataclass
 class LammpsMaker(BaseLammpsMaker):
     name: str = "Simple LAMMPS job"
-    input_set_generator: BaseLammpsGenerator = field(
-        default_factory=BaseLammpsGenerator
+    input_set_generator: BaseLammpsSet = field(
+        default_factory=BaseLammpsSet
     )
