@@ -249,6 +249,11 @@ def test_mace_relax_maker_fix_symmetry(
     with pytest.warns(FutureWarning):
         MACERelaxMaker()
 
+#
+# @pytest.mark.parametrize(
+#     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
+# )
+# @pytest.mark.parametrize("relax_cell", [True, False])
 
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
