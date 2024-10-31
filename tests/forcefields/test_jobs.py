@@ -249,6 +249,7 @@ def test_mace_relax_maker_fix_symmetry(
     with pytest.warns(FutureWarning):
         MACERelaxMaker()
 
+
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
@@ -261,7 +262,6 @@ def test_mace_relax_maker(
     fix_symmetry: bool,
     symprec: float,
 ):
-
     from ase.spacegroup.symmetrize import check_symmetry, is_subgroup
 
     _, init_spg_num = si_structure.get_space_group_info()
@@ -309,7 +309,9 @@ def test_mace_relax_maker(
     if fix_symmetry:  # if symmetry is fixed, the symmetry should be the same or higher
         assert is_subgroup(symmetry_ops_init, symmetry_ops_final)
     else:  # if symmetry is not fixed, it can both increase or decrease or stay the same
-        assert not is_subgroup(symmetry_ops_init, symmetry_ops_final) or is_subgroup(symmetry_ops_init, symmetry_ops_final)
+        assert not is_subgroup(symmetry_ops_init, symmetry_ops_final) or is_subgroup(
+            symmetry_ops_init, symmetry_ops_final
+        )
 
     if relax_cell:
         assert output1.output.energy == approx(-0.071117445, rel=1e-1)

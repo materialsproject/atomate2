@@ -61,7 +61,6 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             calculator = PESCalculator(potential, **kwargs)
 
         elif calculator_name == MLFF.MACE:
-            import torch
             from mace.calculators import MACECalculator, mace_mp
 
             model = kwargs.get("model")
