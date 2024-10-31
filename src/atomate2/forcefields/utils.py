@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from contextlib import contextmanager
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from monty.json import MontyDecoder
@@ -59,9 +60,21 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             calculator = PESCalculator(potential, **kwargs)
 
         elif calculator_name == MLFF.MACE:
-            from mace.calculators import mace_mp
+            from mace.calculators import MACECalculator, mace_mp
 
-            calculator = mace_mp(**kwargs)
+            model = kwargs.get("model")
+            if isinstance(model, str | Path) and Path(model).exists():
+                model_path = model
+                device = kwargs.get("device") or "cpu"
+                if "device" in kwargs:
+                    del kwargs["device"]
+                calculator = MACECalculator(
+                    model_paths=model_path,
+                    device=device,
+                    **kwargs,
+                )
+            else:
+                calculator = mace_mp(**kwargs)
 
         elif calculator_name == MLFF.GAP:
             from quippy.potential import Potential
