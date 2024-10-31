@@ -87,7 +87,7 @@ class ApproxNEBMaker(Maker):
         ep_relax_jobs = get_endpoints_and_relax(
             host_structure=host_structure,
             working_ion=working_ion,
-            endpoint_coords_dict=inserted_coords_dict,
+            endpoint_coords=inserted_coords_dict,
             inserted_coords_combo=inserted_coords_combo,
             relax_maker=self.image_relax_maker,
         )

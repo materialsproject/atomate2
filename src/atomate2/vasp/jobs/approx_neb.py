@@ -419,7 +419,7 @@ def collate_results(
         hop_dict[combo_name] = NebResult(
             images=[calc["structure"] for calc in hop if calc["structure"] is not None],
             energies=[calc["energy"] for calc in hop if calc["energy"] is not None],
-            ionic_steps=None,  # [calc.output.ionic_steps for calc in hop],
+            ionic_steps=None,
             method=NebMethod.APPROX,
         )
 

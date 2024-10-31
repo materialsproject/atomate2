@@ -16,6 +16,7 @@ from pytest import MonkeyPatch
 
 import atomate2.vasp.jobs.base
 import atomate2.vasp.jobs.defect
+import atomate2.vasp.jobs.neb
 import atomate2.vasp.run
 from atomate2.vasp.sets.base import VaspInputGenerator
 
