@@ -1,2 +1,2 @@
-from .task import TaskDocument
+from .task import LammpsTaskDocument
 # Add more imports here
