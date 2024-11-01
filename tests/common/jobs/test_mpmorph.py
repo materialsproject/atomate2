@@ -22,7 +22,7 @@ def mock_avg_vol_db(test_dir):
     pytest.MonkeyPatch().setattr(
         atomate2.common.jobs.mpmorph,
         "_DEFAULT_AVG_VOL_FILE",
-        test_dir / "common/avg_vol_subset_for_test.json.gz",
+        test_dir / "common/avg_vol_subset_for_test.json.bz2",
     )
 
 
