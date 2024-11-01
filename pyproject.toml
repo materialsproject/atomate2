@@ -83,7 +83,7 @@ docs = [
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = [
-    "FireWorks==2.0.3", 
+    "FireWorks==2.0.3",
     "nbmake==1.5.4",
     "pytest-cov==5.0.0",
     "pytest-mock==3.14.0",
