@@ -22,7 +22,7 @@ class ForcefieldResult(AseResult):
         None, description="The structure in the final trajectory frame."
     )
 
-    def model_post_init(self, __context: Any) -> None:
+    def model_post_init(self, context: Any, /) -> None:
         """Populate final_structure attr."""
         self.final_structure = getattr(
             self, "final_structure", self.final_mol_or_struct
