@@ -277,7 +277,7 @@ def test_mace_relax_maker(
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = ForceFieldRelaxMaker(
         force_field_name="MACE",
-        calculator_kwargs={"model": model},
+        calculator_kwargs={"model": model, "default_dtype": "float32"},
         steps=25,
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
@@ -308,7 +308,7 @@ def test_mace_relax_maker(
 
     if fix_symmetry:  # if symmetry is fixed, the symmetry should be the same or higher
         assert is_subgroup(symmetry_ops_init, symmetry_ops_final)
-    else:  # if symmetry is not fixed, it can both increase or decrease
+    else:  # if symmetry is not fixed, it can both increase or decrease or stay the same
         assert not is_subgroup(symmetry_ops_init, symmetry_ops_final)
 
     if relax_cell:
