@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -28,7 +29,7 @@ _ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
 
 
 @dataclass
-class AseMaker(Maker):
+class AseMaker(Maker, metaclass=ABCMeta):
     """
     Define basic template of ASE-based jobs.
 
@@ -42,8 +43,6 @@ class AseMaker(Maker):
     ----------
     name: str
         The name of the job
-    calculator_kwargs : dict
-        Keyword arguments that will get passed to the ASE calculator.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     ionic_step_data : tuple[str,...] or None
@@ -70,6 +69,7 @@ class AseMaker(Maker):
     store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO
     tags: list[str] | None = None
 
+    @abstractmethod
     def run_ase(
         self,
         mol_or_struct: Structure | Molecule,
@@ -92,6 +92,7 @@ class AseMaker(Maker):
         raise NotImplementedError
 
     @property
+    @abstractmethod
     def calculator(self) -> Calculator:
         """ASE calculator, method to be implemented in subclasses."""
         raise NotImplementedError
