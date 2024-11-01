@@ -1,13 +1,11 @@
 """Test common MPMorph features / jobs."""
 
-from pathlib import Path
 from shutil import which
 
 import pytest
 from jobflow import run_locally
 from pandas import DataFrame
 from pymatgen.core import Composition
-from requests.exceptions import ConnectionError
 
 import atomate2.common.jobs.mpmorph
 from atomate2.common.jobs.mpmorph import (
@@ -21,7 +19,12 @@ from atomate2.common.jobs.mpmorph import (
 
 @pytest.fixture(scope="module")
 def mock_avg_vol_db(test_dir):
-    pytest.MonkeyPatch().setattr(atomate2.common.jobs.mpmorph,"_DEFAULT_AVG_VOL_FILE", test_dir / "common/avg_vol_subset_for_test.json.gz")
+    pytest.MonkeyPatch().setattr(
+        atomate2.common.jobs.mpmorph,
+        "_DEFAULT_AVG_VOL_FILE",
+        test_dir / "common/avg_vol_subset_for_test.json.gz",
+    )
+
 
 def test_get_ref_file(mock_avg_vol_db):
     assert isinstance(_get_average_volumes_file(), DataFrame)
@@ -30,12 +33,13 @@ def test_get_ref_file(mock_avg_vol_db):
 @pytest.mark.parametrize(
     "db, ignore_oxi_states", [("icsd", [True, False]), ("mp", [True])]
 )
-def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool], mock_avg_vol_db):
+def test_get_average_volume_from_icsd(
+    db: str, ignore_oxi_states: list[bool], mock_avg_vol_db
+):
     comp = Composition({"Ag+": 1, "Cl5+": 1, "O2-": 3})
 
     avg_vols = _get_average_volumes_file()
     avg_vols = avg_vols[avg_vols["source"] == db]
-    print("poppy",[k for k in avg_vols if all(ele in k for ele in ("Ag","Cl","O"))])
 
     kwargs = {}
     if db == "icsd":
