@@ -102,7 +102,7 @@ tests = [
     "pytest==8.3.3",
 ]
 strict = [
-    "atomate2[forcefields, docs, cclib, defects, lobster, openmm, mp, defects, ase, ase-ext]",
+    "atomate2[forcefields, docs, cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
 ]
 
 [project.scripts]
