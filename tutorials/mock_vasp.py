@@ -9,7 +9,7 @@ from pathlib import Path
 
 from pytest import MonkeyPatch
 
-from atomate2.utils.testing.vasp import _mock_vasp
+from atomate2.utils.testing.vasp import monkeypatch_vasp
 
 TEST_ROOT = Path(__file__).parent.parent / "tests"
 TEST_DIR = TEST_ROOT / "test_data"
@@ -27,7 +27,7 @@ def mock_vasp(ref_paths: dict) -> Generator:
     ------
         function: A function that mocks calls to VASP.
     """
-    for mf in _mock_vasp(MonkeyPatch(), TEST_DIR / "vasp"):
+    for mf in monkeypatch_vasp(MonkeyPatch(), TEST_DIR / "vasp"):
         fake_run_vasp_kwargs = {k: {"check_inputs": ()} for k in ref_paths}
         old_cwd = os.getcwd()
         new_path = tempfile.mkdtemp()

@@ -42,13 +42,13 @@ def zpath(path: str | Path) -> Path:
     return Path(monty_zpath(str(path)))
 
 
-def _mock_vasp(
+def monkeypatch_vasp(
     monkeypatch: MonkeyPatch, vasp_test_dir: Path, nelect: int = 12
 ) -> Generator[Callable[[Any, Any], Any], None, None]:
-    """
-    Isolated version of the mock_vasp fixture that can be used in other contexts.
+    """Fake VASP calculations by copying reference files.
 
-    This fixture allows one to mock (fake) running VASP.
+    This is provided as a generator and can be used as by conextmanagers and
+    pytest.fixture.
 
     It works by monkeypatching (replacing) calls to run_vasp and
     VaspInputSet.write_inputs with versions that will work when the vasp executables or
@@ -62,32 +62,19 @@ def _mock_vasp(
     distributed with VASP are not present on the testing server due to licensing
     constraints. Accordingly, VaspInputSet.write_inputs will fail unless the
     "potcar_spec" option is set to True, in which case a POTCAR.spec file will be
-    written instead. This fixture solves both of these issues.
+    written instead.
 
-    To use the fixture successfully, the following steps must be followed:
-    1. "mock_vasp" should be included as an argument to any test that would like to use
-       its functionally.
-    2. For each job in your workflow, you should prepare a reference directory
-       containing two folders "inputs" (containing the reference input files expected
-       to be produced by write_vasp_input_set) and "outputs" (containing the expected
-       output files to be produced by run_vasp). These files should reside in a
-       subdirectory of "tests/test_data/vasp".
-    3. Create a dictionary mapping each job name to its reference directory. Note that
-       you should supply the reference directory relative to the "tests/test_data/vasp"
-       folder. For example, if your calculation has one job named "static" and the
-       reference files are present in "tests/test_data/vasp/Si_static", the dictionary
-       would look like: ``{"static": "Si_static"}``.
-    4. Optional: create a dictionary mapping each job name to custom keyword arguments
-       that will be supplied to fake_run_vasp. This way you can configure which incar
-       settings are expected for each job. For example, if your calculation has one job
-       named "static" and you wish to validate that "NSW" is set correctly in the INCAR,
-       your dictionary would look like ``{"static": {"incar_settings": {"NSW": 0}}``.
-    5. Inside the test function, call `mock_vasp(ref_paths, fake_vasp_kwargs)`, where
-       ref_paths is the dictionary created in step 3 and fake_vasp_kwargs is the
-       dictionary created in step 4.
-    6. Run your vasp job after calling `mock_vasp`.
-
+    The pytext.fixture defined with this is stored at tests/vasp/conftest.py.
     For examples, see the tests in tests/vasp/makers/core.py.
+
+    Parameters
+    ----------
+    monkeypatch: The a MonkeyPatch object from pytest, this is meant as a place-holder
+        For the `monkeypatch` fixture in pytest.
+    vasp_test_dir: The root directory for the VASP tests. This is
+    nelect: The number of electrons in a system is usually calculate using the POTCAR
+        which we do not have direct access to during testing. So we have to patch it in.
+        TODO: potcar_spec should have the nelect data somehow.
     """
 
     def mock_run_vasp(*_args, **_kwargs) -> None:

@@ -8,7 +8,7 @@ import pytest
 from monty.os.path import zpath as monty_zpath
 from pytest import MonkeyPatch
 
-from atomate2.utils.testing.vasp import _mock_vasp
+from atomate2.utils.testing.vasp import monkeypatch_vasp
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
@@ -81,4 +81,4 @@ def mock_vasp(
 
     For examples, see the tests in tests/vasp/makers/core.py.
     """
-    yield from _mock_vasp(monkeypatch, vasp_test_dir)
+    yield from monkeypatch_vasp(monkeypatch, vasp_test_dir)
