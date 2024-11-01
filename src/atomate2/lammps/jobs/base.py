@@ -39,8 +39,6 @@ class BaseLammpsMaker(Maker):
         Additional kwargs to TaskDocument.from_directory
     write_additional_data: dict
         Additional data to write to the job directory
-    traj_file_fmt: Literal["dump", "pmg", "ase"]
-        Format for the trajectory file, stores only dump file by default
     '''
     name: str = "Base LAMMPS job"
     input_set_generator: BaseLammpsSet = field(
@@ -77,11 +75,3 @@ class BaseLammpsMaker(Maker):
         gzip_dir(".")
 
         return Response(output=task_doc)
-
-
-@dataclass
-class LammpsMaker(BaseLammpsMaker):
-    name: str = "Simple LAMMPS job"
-    input_set_generator: BaseLammpsSet = field(
-        default_factory=BaseLammpsSet
-    )
