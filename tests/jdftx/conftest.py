@@ -42,7 +42,7 @@ def mock_cwd(monkeypatch, request):
     mock_path = (
         Path(__file__).resolve().parent / f"../test_data/jdftx/{test_name}"
     ).resolve()
-    monkeypatch.setattr(os, "getcwd", lambda: mock_path)
+    monkeypatch.setattr(os, "getcwd", lambda: str(mock_path))
 
 
 @pytest.fixture
