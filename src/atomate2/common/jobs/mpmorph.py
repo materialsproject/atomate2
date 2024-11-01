@@ -261,7 +261,7 @@ def get_average_volume_from_database(
     for ielt in range(2, len(composition)):
         for combo in combinations(composition, ielt):
             chem_env_key = _get_chem_env_key_from_composition(
-                Composition({spec: 1 for spec in combo}),
+                Composition(dict.fromkeys(combo, 1)),
                 ignore_oxi_states=ignore_oxi_states,
             )
 

@@ -7,7 +7,7 @@ import io
 import os
 import sys
 import time
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from enum import Enum
@@ -79,7 +79,7 @@ for preset in DynamicsPresets.__members__:
 
 
 @dataclass
-class AseMDMaker(AseMaker, metaclass=ABCMeta):
+class AseMDMaker(AseMaker, ABC):
     """
     Perform MD with the Atomic Simulation Environment (ASE).
 
