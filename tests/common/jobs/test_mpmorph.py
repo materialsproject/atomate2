@@ -9,8 +9,8 @@ from pandas import DataFrame
 from pymatgen.core import Composition
 from requests.exceptions import ConnectionError
 
+import atomate2.common.jobs.mpmorph
 from atomate2.common.jobs.mpmorph import (
-    _DEFAULT_AVG_VOL_FILE,
     _get_average_volumes_file,
     _get_chem_env_key_from_composition,
     get_average_volume_from_db_cached,
@@ -18,27 +18,22 @@ from atomate2.common.jobs.mpmorph import (
     get_random_packed_structure,
 )
 
-# first ensure tests cache the file - can't depend on test order
-for _ in range(5):
-    try:
-        _get_average_volumes_file()
-        break
-    except ConnectionError:
-        pass
 
+@pytest.fixture(scope="module")
+def mock_avg_vol_db(test_dir):
+    pytest.MonkeyPatch().setattr(atomate2.common.jobs.mpmorph,"_DEFAULT_AVG_VOL_FILE", test_dir / "avg_vol_subset_for_test.json.gz")
 
-def test_get_ref_file():
-    assert Path(_DEFAULT_AVG_VOL_FILE).exists()
+def test_get_ref_file(mock_avg_vol_db):
     assert isinstance(_get_average_volumes_file(), DataFrame)
 
 
 @pytest.mark.parametrize(
     "db, ignore_oxi_states", [("icsd", [True, False]), ("mp", [True])]
 )
-def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool]):
+def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool], mock_avg_vol_db):
     comp = Composition({"Ag+": 1, "Cl5+": 1, "O2-": 3})
 
-    avg_vols = _get_average_volumes_file(_get_average_volumes_file)
+    avg_vols = _get_average_volumes_file()
     avg_vols = avg_vols[avg_vols["source"] == db]
 
     kwargs = {}
@@ -96,7 +91,7 @@ def test_get_average_volume_from_icsd(db: str, ignore_oxi_states: list[bool]):
 @pytest.mark.skipif(
     which("packmol") is None, reason="packmol must be installed to run this test."
 )
-def test_get_random_packed_structure(test_dir):
+def test_get_random_packed_structure(test_dir, mock_avg_vol_db):
     from pymatgen.analysis.structure_matcher import StructureMatcher
 
     matcher = StructureMatcher()
