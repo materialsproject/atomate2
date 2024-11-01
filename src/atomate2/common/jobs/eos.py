@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-class EOSPostProcessor(MSONable, metaclass=ABCMeta):
+class EOSPostProcessor(MSONable, ABC):
     """
     Fit data to an EOS.
 

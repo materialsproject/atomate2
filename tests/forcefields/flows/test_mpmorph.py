@@ -132,7 +132,7 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         )
     task_docs = {}
     for uuid, job_name in uuids.items():
-        for _i, mp_job_name in enumerate(main_mp_morph_job_names):
+        for mp_job_name in main_mp_morph_job_names:
             if mp_job_name in job_name:
                 task_docs[mp_job_name] = response[uuid][1].output
                 break
