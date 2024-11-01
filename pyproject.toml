@@ -77,6 +77,7 @@ openmm = [
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
+fireworks = ["FireWorks==2.0.3"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.2.0",
