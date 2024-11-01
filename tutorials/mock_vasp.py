@@ -3,19 +3,16 @@
 import contextlib
 import os
 import shutil
-import sys
 import tempfile
 from collections.abc import Generator
 from pathlib import Path
 
 from pytest import MonkeyPatch
 
-# load the vasp conftest
+from atomate2.utils.testing.vasp import _mock_vasp
+
 TEST_ROOT = Path(__file__).parent.parent / "tests"
 TEST_DIR = TEST_ROOT / "test_data"
-VASP_TEST_DATA = TEST_ROOT / "test_data/vasp"
-sys.path.insert(0, str(TEST_ROOT / "vasp"))
-from conftest import _mock_vasp  # noqa: E402
 
 
 @contextlib.contextmanager
@@ -30,7 +27,7 @@ def mock_vasp(ref_paths: dict) -> Generator:
     ------
         function: A function that mocks calls to VASP.
     """
-    for mf in _mock_vasp(MonkeyPatch(), TEST_ROOT / "test_data/vasp"):
+    for mf in _mock_vasp(MonkeyPatch(), TEST_DIR / "vasp"):
         fake_run_vasp_kwargs = {k: {"check_inputs": ()} for k in ref_paths}
         old_cwd = os.getcwd()
         new_path = tempfile.mkdtemp()
