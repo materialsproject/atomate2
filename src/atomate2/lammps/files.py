@@ -33,7 +33,7 @@ class DumpConvertor(MSONable):
                 file.write()
         return AseTrajectory(filename, 'r')
     
-    def to_pymatgen_trajectory(self, filename : str | None = 'trajectory.json.gz') -> PmgTrajectory:
+    def to_pymatgen_trajectory(self, filename : str | None = None) -> PmgTrajectory:
                 
         species = AseAtomsAdaptor.get_structure(self.traj[0], cls = Structure if self.is_periodic else Molecule).species
 

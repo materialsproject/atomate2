@@ -44,7 +44,7 @@ class LammpsTaskDocument(StructureMetadata):
         task_label: str,
         store_trajectory: Literal["no", "partial", "full"] = "partial",
         trajectory_format : Literal["pmg", "ase"] = "pmg",
-        output_file_pattern: str = None,
+        output_file_pattern: str | None = None,
     ) -> "LammpsTaskDocument":
         """
         Create a LammpsTaskDocument from a directory containing the output of a LAMMPS run.
