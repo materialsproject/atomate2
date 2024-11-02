@@ -1,0 +1,1 @@
+{"atom_style": "atomic", "start_temp": 300, "end_temp": 300, "start_pressure": 0, "end_pressure": 0, "units": "metal", "nsteps": 1000, "timestep": 0.5, "log_interval": 100, "traj_interval": 100, "ensemble": "nve", "thermostat": "temp", "tfriction": 50.0, "pfriction": 50.0, "barostat": "iso", "seed": 42}
