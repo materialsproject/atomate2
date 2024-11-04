@@ -30,7 +30,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
             
     def __init__(self, 
                  atom_style : str = "atomic",
-                 ensemble : Literal["nve", "nvt", "npt"] = "nve",
+                 ensemble : Literal["nve", "nvt", "npt", "nph"] = "nve",
                  start_temp : float = 300,
                  end_temp : float = 300,
                  start_pressure : float = 0,
@@ -41,6 +41,9 @@ class BaseLammpsSet(BaseLammpsGenerator):
                  log_interval : int = 100,
                  traj_interval : int = 100,
                  force_field : Union[str, dict] = None,
+                 pressure_symmetry : Literal["iso", "aniso"] = "iso",
+                 thermostat : Literal["langevin", "nose-hoover"] = "nose-hoover",
+                 barostat : Literal["berendsen", "nose-hoover"] = "nose-hoover",
                  template : str = None,
                  settings : dict = None,
                  **kwargs):
@@ -53,20 +56,24 @@ class BaseLammpsSet(BaseLammpsGenerator):
         self.end_temp = end_temp
         self.start_pressure = start_pressure
         self.end_pressure = end_pressure
+        self.pressure_symmetry = pressure_symmetry
         self.units = units
         self.nsteps = nsteps
         self.timestep = timestep
         self.log_interval = log_interval
         self.traj_interval = traj_interval
+        self.thermostat = thermostat
+        self.barostat = barostat
         self.force_field = force_field
         self.species = None
         
         process_kwargs = kwargs.copy()
         process_kwargs.update({'atom_style': self.atom_style, 'ensemble': self.ensemble, 'start_temp': self.start_temp,
                        'end_temp': self.end_temp, 'start_pressure': self.start_pressure, 'end_pressure': self.end_pressure,
-                       'units': self.units, 'nsteps': self.nsteps, 'timestep': self.timestep, 'log_interval': self.log_interval,
-                       'traj_interval': self.traj_interval})
-                
+                       'psymm': self.pressure_symmetry, 'units': self.units, 'nsteps': self.nsteps, 'timestep': self.timestep, 
+                       'thermostat': self.thermostat, 'barostat': self.barostat,
+                       'log_interval': self.log_interval, 'traj_interval': self.traj_interval})
+                        
         self.settings = update_settings(settings = self.settings, **process_kwargs)
         self.settings = process_ensemble_conditions(self.settings)
         

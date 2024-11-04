@@ -15,20 +15,19 @@ class LammpsNVTSet(BaseLammpsSet):
                  friction : float = None,
                  **kwargs):
         
-        if thermostat == 'nose-hoover':
-            thermostat = 'temp'
+        self.thermostat = thermostat
         if friction is None:
             friction = 100*kwargs.get('timestep', _BASE_LAMMPS_SETTINGS['timestep'])
         if friction < kwargs.get('timestep', 0.001):
             raise ValueError("Friction should be more than the timestep")
         
-        self.settings = {'thermostat': thermostat, 
+        self.settings = {'thermostat': self.thermostat, 
                          'tfriction': friction,
                          'ensemble': 'nvt'
                          }
         
         self.settings = update_settings(settings=self.settings, **kwargs)
-        super().__init__(**kwargs)
+        super().__init__(ensemble=self.ensemble, thermostat=self.thermostat, **kwargs)
 
 class LammpsNPTSet(BaseLammpsSet):
     """
@@ -36,30 +35,24 @@ class LammpsNPTSet(BaseLammpsSet):
     """
     ensemble : str = "npt"
     barostat : str = "berendsen"
-    thermostat : str = "nose-hoover"
     friction : float = 0.1
     
     def __init__(self, 
                  barostat : Literal['berendsen', 'nose-hoover'] = 'berendsen',
-                 thermostat : Literal['langevin', 'nose-hoover'] = 'nose-hoover',
                  friction : float = None,
                  **kwargs):
         
-        if barostat == 'nose-hoover':
-            barostat = 'temp'
-        if thermostat == 'nose-hoover':
-            thermostat = 'temp'
+        self.barostat = barostat
+ 
         if friction is None:
             friction = 100*kwargs.get('timestep', _BASE_LAMMPS_SETTINGS['timestep'])
         if friction < kwargs.get('timestep', 0.001):
             raise ValueError("Friction should be more than the timestep")
         
         self.settings = {'barostat': barostat, 
-                         'thermostat': thermostat, 
                          'pfriction': friction,
-                         'tfriction': friction,
                          'ensemble': 'npt'
                          }
         
-        self.settings = update_settings(settings=self.settings, **kwargs)
-        super().__init__(**kwargs)
+        self.settings = update_settings(settings=self.settings,**kwargs)
+        super().__init__(ensemble=self.ensemble, barostat=self.barostat, **kwargs)
