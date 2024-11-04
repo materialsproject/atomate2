@@ -13,7 +13,7 @@ from ..run import run_lammps
 from ..schemas.task import LammpsTaskDocument
 from ..sets.base import BaseLammpsSet
 
-_DATA_OBJECTS: List[str] = ["dump", "log", "in", "data", "trajectory"]
+_DATA_OBJECTS: List[str] = ["raw_log_file", "inputs", "metadata", "trajectory"]
 
 __all__ = ("BaseLammpsMaker", "lammps_job")
 
