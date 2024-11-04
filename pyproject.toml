@@ -109,7 +109,7 @@ strict = [
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.1.1",
     "phonopy==2.27.0",
-    "pydantic-settings==2.6.0",
+    "pydantic-settings==2.6.1",
     "pydantic==2.9.2",
     "pymatgen-analysis-defects==2024.7.19",
     "pymatgen==2024.10.3",
