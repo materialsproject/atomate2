@@ -80,6 +80,6 @@ class BaseLammpsMaker(Maker):
         task_doc.task_label = self.name
         task_doc.inputs = self.input_set_generator.settings
         
-        gzip_dir(".")
+        #gzip_dir(".")
 
         return Response(output=task_doc)
