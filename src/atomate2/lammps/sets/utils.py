@@ -9,14 +9,15 @@ def update_settings(settings : dict = None, **kwargs):
     """
     Update the settings for the LAMMPS input file.
     """
-    if settings is None:
-        settings = _BASE_LAMMPS_SETTINGS.copy()
+    
+    base_settings = _BASE_LAMMPS_SETTINGS.copy()
         
-    for k, v in kwargs.items():
-        if k in all_settings_keys:
-            settings.update({k: v})
-        else:
-            Warning("Invalid key {k} for LAMMPS settings, skipping...")
+    if settings is None:
+        settings = base_settings
+    
+    for k in base_settings.keys():
+        if k in kwargs.keys():
+            settings.update({k: kwargs.get(k)})
     
     return settings
 
@@ -29,5 +30,22 @@ def process_ensemble_conditions(settings : dict):
         for k in ["nve", "nvt", "npt"]:
             settings.update({f'{k}_flag': '#'})
             
+        if ensemble == 'nvt':
+            if settings.get('thermostat') == 'langevin':
+                settings.update({'nve_flag': 'fix', 'thermseed': settings.get('seed', 0)})
+                
+            else: 
+                settings.update({'thermostat': 'nvt temp'})
+        
+            
+        if ensemble == 'npt':
+            if settings.get('barostat') == 'berendsen':
+                settings.update({'nve_flag': 'fix', 'barostat': 'press/berendsen'})
+            else:
+                settings.update({'barostat': 'npt temp'})
+        
+        if ensemble == 'nph':
+            settings.update({'npt_flag': 'fix', 'barostat': 'nph'})
+        
         settings.update({f'{ensemble}_flag': 'fix'}) if ensemble in ["nve", "nvt", "npt"] else None
         return settings
