@@ -67,8 +67,8 @@ class LammpsTaskDocument(StructureMetadata):
             thermo_log = parse_lammps_log(log_file)
         except FileNotFoundError:
             Warning(f"Log file not found for {dir_name}")
-            raw_log = None
-            thermo_log = None
+            raw_log = ''
+            thermo_log = []
             
         dump_files = [os.path.join(dir_name, file) for file in glob("*.dump*", root_dir=dir_name)]
         print(dump_files)
