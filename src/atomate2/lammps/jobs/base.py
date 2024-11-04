@@ -51,9 +51,17 @@ class BaseLammpsMaker(Maker):
     write_additional_data: dict = field(default_factory=dict)
 
     @lammps_job
-    def make(self, input_structure: Structure | Path):
+    def make(self, input_structure: Structure | Path, prev_dir : Path = None) -> Response:
         """Run a LAMMPS calculation."""
-                
+        
+        if prev_dir:
+            if os.path.exists(os.path.join(prev_dir, "md.restart")):
+                self.input_set_generator.settings.update({'read_restart': os.path.join(prev_dir, 'md.restart'),
+                                                         'restart_flag': 'read_restart',
+                                                         'read_data_flag': '#'})
+            else:
+                raise FileNotFoundError("No restart file found in the previous directory. If present, it should be named 'md.restart'")
+        
         write_lammps_input_set(
             input_structure, self.input_set_generator, **self.write_input_set_kwargs
         )
