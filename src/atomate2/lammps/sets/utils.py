@@ -17,9 +17,9 @@ def update_settings(settings : dict = None, **kwargs):
     
     for k in base_settings.keys():
         if k in kwargs.keys():
-            settings.update({k: kwargs.get(k)})
+            base_settings.update({k: kwargs.get(k)})
     
-    return settings
+    return base_settings
 
 
 def process_ensemble_conditions(settings : dict):
