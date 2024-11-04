@@ -7,8 +7,9 @@ atom_style      $atom_style
 
 # Atom definition
 
-read_data       system.data
-#read_restart    md.restart
+$restart_flag   $read_restart
+$read_data_flag  system.data
+
 
 # Force field settings (consult official document for detailed formats)
 
@@ -30,3 +31,4 @@ dump_modify     d1 sort id element $species
 # Actions
 timestep        $timestep
 run             $nsteps
+write_restart   md.restart
