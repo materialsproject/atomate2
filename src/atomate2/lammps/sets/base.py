@@ -92,7 +92,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
                 logger.error(f"Force field parameters (pair_style and pair_coeff) not found in {force_field}, check input format!")
                 raise KeyError
         else:
-            raise TypeError(f"Force field should be a dictionary, got {type(force_field)}")
+            Warning(f"Force field should be a dictionary, got {type(force_field)}")
             
         if self.force_field is not None:
             self.settings.update({'force_field': self.force_field, 'species': species_str})
