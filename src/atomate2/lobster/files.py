@@ -13,22 +13,39 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 LOBSTEROUTPUT_FILES = [
-    "lobsterout",
+    "BWDF.lobster",
+    "BWDFCOHP.lobster",
     "CHARGE.lobster",
+    "CHARGE.LCFO.lobster",
+    "COBICAR.lobster",
+    "COBICAR.LCFO.lobster"
     "COHPCAR.lobster",
+    "COHPCAR.LCFO.lobster",
     "COOPCAR.lobster",
+    "COOPCAR.LCFO.lobster",
     "DOSCAR.lobster",
+    "DOSCAR.LCFO.lobster",
     "DOSCAR.LSO.lobster",
     "GROSSPOP.lobster",
+    "GROSSPOP.LCFO.lobster",
+    "ICOBILIST.lobster",
+    "ICOBILIST.LCFO.lobster",
     "ICOHPLIST.lobster",
+    "ICOHPLIST.LCFO.lobster",
     "ICOOPLIST.lobster",
+    "ICOOPLIST.LCFO.lobster",
+    "IMOFELIST.lobster",
+    "LCFO_Fragments.lobster",
+    "lobsterout",
     "lobster.out",
     "projectionData.lobster",
+    "POLARIZATION.lobster",
+    "POSCAR.lobster",
+    "POSCAR.lobster.vasp",
     "MadelungEnergies.lobster",
+    "MOFECAR.lobster",
     "SitePotentials.lobster",
     "bandOverlaps.lobster",
-    "ICOBILIST.lobster",
-    "COBICAR.lobster",
 ]
 
 VASP_OUTPUT_FILES = [
