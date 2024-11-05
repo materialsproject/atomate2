@@ -11,7 +11,7 @@ from atomate2.lammps.sets.base import (
     LammpsQuench,
     LammpsThermalize,
 )
-
+from atomate2.lammps.sets.core import CustomLammpsSet
 from ..jobs.base import BaseLammpsMaker
 
 
@@ -49,3 +49,9 @@ class QuenchMaker(BaseLammpsMaker):
 class MinimizationMaker(BaseLammpsMaker):
     name: str = "minimization"
     input_set_generator: BaseLammpsGenerator = field(default_factory=LammpsMinimization)
+    
+    
+class CustomLammpsMaker(BaseLammpsMaker):
+    name: str = "custom_lammps_job"
+    template : str = None
+    input_set_generator: BaseLammpsGenerator = field(default_factory=CustomLammpsSet)
