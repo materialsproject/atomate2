@@ -16,8 +16,8 @@ def update_settings(settings : dict = None, **kwargs):
         settings = base_settings
     
     for k in base_settings.keys():
-        if k in kwargs.keys():
-            base_settings.update({k: kwargs.get(k)})
+        if k not in kwargs.keys():
+            settings.update({k: base_settings.get(k)})
     
     return base_settings
 
