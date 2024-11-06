@@ -285,7 +285,9 @@ class NebFromEndpointsMaker(Maker):
 
         image_relax_job = self.images_maker.make(get_images.output)  # type: ignore[attr-defined]
 
-        collate_job = collect_neb_output(endpoint_dirs, image_relax_job.output.dir_name, store_calculations = False)
+        collate_job = collect_neb_output(
+            endpoint_dirs, image_relax_job.output.dir_name, store_calculations=False
+        )
 
         return Flow(
             [*endpoint_jobs, get_images, image_relax_job, collate_job],

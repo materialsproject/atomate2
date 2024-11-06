@@ -4,12 +4,10 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from emmet.core.neb import NebMethod
+from emmet.core.neb import NebMethod, neb_barrier_spline_fit
 from pydantic import BaseModel, Field, model_validator
 from pymatgen.core import Molecule, Structure
 from typing_extensions import Self
-
-from emmet.core.neb import neb_barrier_spline_fit
 
 
 class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]

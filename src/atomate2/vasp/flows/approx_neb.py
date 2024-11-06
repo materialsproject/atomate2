@@ -26,9 +26,9 @@ if TYPE_CHECKING:
 @dataclass
 class ApproxNEBMaker(Maker):
     """Run an ApproxNEB workflow.
-    
+
     Parameters
-    -----------
+    ----------
     name : str = "ApproxNEB"
         Name of the workflow
     host_relax_maker : Maker
@@ -51,7 +51,7 @@ class ApproxNEBMaker(Maker):
     host_relax_maker: Maker | None = field(default_factory=ApproxNEBHostRelaxMaker)
     image_relax_maker: Maker = field(default_factory=ApproxNEBImageRelaxMaker)
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = None
-    min_hop_distance : float | None = None
+    min_hop_distance: float | None = None
 
     def make(
         self,
@@ -67,7 +67,7 @@ class ApproxNEBMaker(Maker):
         Make an ApproxNEB flow.
 
         Parameters
-        -----------
+        ----------
         host_structure: Structure
             the (supercell) structure of the empty host with no working ion
         working_ion: str
@@ -122,7 +122,7 @@ class ApproxNEBMaker(Maker):
             host_calc_path=prev_dir,
             relax_maker=self.image_relax_maker,
             selective_dynamics_scheme=self.selective_dynamics_scheme,
-            min_hop_distance = self.min_hop_distance
+            min_hop_distance=self.min_hop_distance,
         )
 
         collect_output = collate_results(

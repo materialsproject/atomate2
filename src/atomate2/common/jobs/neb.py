@@ -5,14 +5,9 @@ from __future__ import annotations
 from enum import Enum
 from typing import TYPE_CHECKING
 
-import numpy as np
 from jobflow import job
-from scipy.interpolate import CubicSpline
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from typing import Any
-
     from pymatgen.core import Structure
 
 
