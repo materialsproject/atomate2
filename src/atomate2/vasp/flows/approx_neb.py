@@ -25,12 +25,33 @@ if TYPE_CHECKING:
 
 @dataclass
 class ApproxNEBMaker(Maker):
-    """Maker for an ApproxNEB flow."""
+    """Run an ApproxNEB workflow.
+    
+    Parameters
+    -----------
+    name : str = "ApproxNEB"
+        Name of the workflow
+    host_relax_maker : Maker
+        Optional, a maker to relax the input host structure.
+        Defaults to atomate2.vasp.jobs.approx_neb.ApproxNEBHostRelaxMaker
+    image_relax_maker : maker
+        Required, a maker to relax the ApproxNEB endpoints and images.
+        Defaults to atomate2.vasp.jobs.approx_neb.ApproxNEBImageRelaxMaker
+    selective_dynamics_scheme : "fix_two_atoms" or None
+        If "fix_two_atoms", uses the default selective dynamics scheme of ApproxNEB,
+        wherein the migrating ion and the ion farthest from it are the only
+        ions whose positions can relax.
+    min_hop_distance : float or None (default)
+        If a float, skips any hops where the working ion moves a distance less
+        than min_hop_distance. This situation can happen when a migration graph
+        mistakenly identifies a periodic image outside the computational cell.
+    """
 
     name: str = "ApproxNEB"
     host_relax_maker: Maker | None = field(default_factory=ApproxNEBHostRelaxMaker)
     image_relax_maker: Maker = field(default_factory=ApproxNEBImageRelaxMaker)
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = None
+    min_hop_distance : float | None = None
 
     def make(
         self,
@@ -46,7 +67,7 @@ class ApproxNEBMaker(Maker):
         Make an ApproxNEB flow.
 
         Parameters
-        ----------
+        -----------
         host_structure: Structure
             the (supercell) structure of the empty host with no working ion
         working_ion: str
@@ -101,6 +122,7 @@ class ApproxNEBMaker(Maker):
             host_calc_path=prev_dir,
             relax_maker=self.image_relax_maker,
             selective_dynamics_scheme=self.selective_dynamics_scheme,
+            min_hop_distance = self.min_hop_distance
         )
 
         collect_output = collate_results(

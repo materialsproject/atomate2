@@ -26,7 +26,6 @@ from atomate2.vasp.jobs.base import (
     get_vasp_task_document,
 )
 from atomate2.vasp.run import JobType, run_vasp, should_stop_children
-from atomate2.vasp.schemas.neb import VaspNebResult
 from atomate2.vasp.sets.core import NebSetGenerator
 
 if TYPE_CHECKING:
@@ -66,10 +65,10 @@ def vasp_neb_job(method: Callable) -> job:
 @job
 def collect_neb_output(
     endpoint_dirs: list[str | Path] | None, neb_head_dir: str | Path, **neb_doc_kwargs
-) -> VaspNebResult | NebTaskDoc:
+) -> NebTaskDoc:
     """Parse NEB output from image and optionally endpoint relaxations."""
     if endpoint_dirs is not None and len(endpoint_dirs) == 2:
-        return VaspNebResult.from_directories(
+        return NebTaskDoc.from_directories(
             [strip_hostname(endpoint_path) for endpoint_path in endpoint_dirs],
             strip_hostname(neb_head_dir),
             **neb_doc_kwargs,
@@ -286,7 +285,7 @@ class NebFromEndpointsMaker(Maker):
 
         image_relax_job = self.images_maker.make(get_images.output)  # type: ignore[attr-defined]
 
-        collate_job = collect_neb_output(endpoint_dirs, image_relax_job.output.dir_name)
+        collate_job = collect_neb_output(endpoint_dirs, image_relax_job.output.dir_name, store_calculations = False)
 
         return Flow(
             [*endpoint_jobs, get_images, image_relax_job, collate_job],

@@ -12,7 +12,6 @@ from pymatgen.core import Structure
 from atomate2.common.jobs.neb import _get_images_from_endpoints
 from atomate2.vasp.jobs.core import RelaxMaker
 from atomate2.vasp.jobs.neb import NebFromEndpointsMaker, NebFromImagesMaker
-from atomate2.vasp.schemas.neb import VaspNebResult
 from atomate2.vasp.sets.core import RelaxSetGenerator
 
 expected_incar_tags_relax = [
@@ -115,7 +114,7 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
         for idx, image in enumerate(expected_images)
     )
 
-    assert isinstance(output["collect_neb_output"], VaspNebResult)
+    assert isinstance(output["collect_neb_output"], NebTaskDoc)
     expected_neb_result = loadfn(str(base_neb_dir / "collect_neb_output.json.gz"))
     assert all(
         output["collect_neb_output"].energies[i] == pytest.approx(energy)
@@ -125,7 +124,7 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
         len(output["collect_neb_output"].structures) == num_images + 2
     )  # endpoints + images
     assert (
-        len(output["collect_neb_output"].images) == num_images
+        len(output["collect_neb_output"].image_structures) == num_images
     )  # just intermediate images
 
     assert all(

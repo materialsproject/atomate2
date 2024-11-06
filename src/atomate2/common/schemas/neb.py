@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field, model_validator
 from pymatgen.core import Molecule, Structure
 from typing_extensions import Self
 
-from atomate2.common.jobs.neb import neb_spline_fit
+from emmet.core.neb import neb_barrier_spline_fit
 
 
 class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
@@ -61,7 +61,7 @@ class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
     def set_barriers(self) -> Self:
         """Perform analysis on barrier if needed."""
         if not self.forward_barrier or not self.reverse_barrier:
-            self.barrier_analysis = neb_spline_fit(self.energies)
+            self.barrier_analysis = neb_barrier_spline_fit(self.energies)
             for k in ("forward", "reverse"):
                 setattr(self, f"{k}_barrier", self.barrier_analysis[f"{k}_barrier"])
         return self

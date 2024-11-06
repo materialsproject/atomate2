@@ -21,7 +21,7 @@ from atomate2.vasp.run import JobType
 from atomate2.vasp.sets.approx_neb import ApproxNEBSetGenerator
 
 if TYPE_CHECKING:
-    from typing import Literal
+    from typing import Literal, Sequence
 
     from pymatgen.core import Structure
     from pymatgen.util.typing import CompositionLike
@@ -137,6 +137,7 @@ def get_images_and_relax(
     relax_maker: Maker,
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms",
     use_aeccar: bool = False,
+    min_hop_distance : float | None = None,
 ) -> Response:
     """
     Get and relax image input structures.
@@ -162,7 +163,11 @@ def get_images_and_relax(
         If True, the sum of the host structure AECCAR0 (pseudo-core charge density)
         and AECCAR2 (valence charge density) are used in image pathfinding.
         If False (default), the CHGCAR (valence charge density) is used.
-
+    min_hop_distance : float or None (default)
+        If a float, skips any hops where the working ion moves a distance less
+        than min_hop_distance. This situation can happen when a migration graph
+        mistakenly identifies a periodic image outside the computational cell.
+    
     Returns
     -------
     Response : a series of image relaxations with output containing the
@@ -192,8 +197,16 @@ def get_images_and_relax(
     for hop_idx, combo in enumerate(inserted_combo_list):
         ini_ind, fin_ind = combo.split("+")
 
-        if not all(ep_structures.get(idx) for idx in [ini_ind, fin_ind]):
-            # cannot proceed with this hop calculation
+        if (
+            (not all(ep_structures.get(idx) for idx in [ini_ind, fin_ind])) # (a)
+            or (
+                min_hop_distance is not None # (b)
+                and get_hop_distance_from_endpoints([ep_structures[ini_ind], ep_structures[fin_ind]], working_ion) < min_hop_distance
+            )
+        ):
+            # cannot proceed with this hop calculation, either:
+            #     (a) One endpoint calculation failed
+            #     (b) The working ion hop distance is below the specified threshold
             continue
 
         # potential place for uuid logic if depth first is desirable
@@ -386,6 +399,35 @@ def get_charge_density(prev_dir: str | Path, use_aeccar: bool = False) -> Chgcar
         return aeccar0 + aeccar2
     return Chgcar.from_file(zpath(str(prev_dir / "CHGCAR")))
 
+def get_hop_distance_from_endpoints(endpoint_structures : Sequence[Structure], working_ion : CompositionLike) -> float:
+    """
+    Find the hop distance of a working ion from two endpoint structures.
+    
+    Parameters
+    -----------
+    endpoint_structures : Sequence of pymatgen .Structure
+        The two endpoint structures defining a hop.
+    working_ion : pymatgen .CompositionLike
+        The species name of the working ion.
+
+    Returns
+    ----------
+    float - the hop distnace
+    """
+    working_ion_sites = [
+        [
+            site
+            for site in endpoint_structures[ep_idx]
+            if site.species_string == working_ion
+        ]
+        for ep_idx in range(2)
+    ]
+    
+    return max(
+        np.linalg.norm(site_a.coords - site_b.coords)
+        for site_a in working_ion_sites[0]
+        for site_b in working_ion_sites[1]
+    )
 
 @job
 def collate_results(
@@ -423,19 +465,9 @@ def collate_results(
             method=NebMethod.APPROX,
         )
 
-        working_ion_sites = [
-            [
-                site
-                for site in endpoint_calcs[ep_idx]["structure"]
-                if site.species_string == working_ion
-            ]
-            for ep_idx in range(2)
-        ]
-        hop_dist[combo_name] = max(
-            np.linalg.norm(site_a.coords - site_b.coords)
-            for site_a in working_ion_sites[0]
-            for site_b in working_ion_sites[1]
-        )
+        hop_dist[combo_name] = get_hop_distance_from_endpoints([
+            ep_calc["structure"] for ep_calc in endpoint_calcs
+        ])
 
     return NebPathwayResult(
         hops=hop_dict, host_structure=host_structure, hop_distances=hop_dist
