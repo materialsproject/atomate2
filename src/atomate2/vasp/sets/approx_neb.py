@@ -7,7 +7,7 @@ from pymatgen.io.vasp.sets import MPRelaxSet
 
 
 @dataclass
-class ApproxNEBSetGenerator(MPRelaxSet):
+class ApproxNebSetGenerator(MPRelaxSet):
     """
     Class to generate VASP ApproxNEB input sets.
 

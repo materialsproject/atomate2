@@ -9,8 +9,8 @@ from emmet.core.mobility.migrationgraph import MigrationGraphDoc
 from jobflow import Flow, Maker, OnMissing
 
 from atomate2.vasp.jobs.approx_neb import (
-    ApproxNEBHostRelaxMaker,
-    ApproxNEBImageRelaxMaker,
+    ApproxNebHostRelaxMaker,
+    ApproxNebImageRelaxMaker,
     collate_results,
     get_endpoints_and_relax,
     get_images_and_relax,
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class ApproxNEBMaker(Maker):
+class ApproxNebMaker(Maker):
     """Run an ApproxNEB workflow.
 
     Parameters
@@ -35,10 +35,10 @@ class ApproxNEBMaker(Maker):
         Name of the workflow
     host_relax_maker : Maker
         Optional, a maker to relax the input host structure.
-        Defaults to atomate2.vasp.jobs.approx_neb.ApproxNEBHostRelaxMaker
+        Defaults to atomate2.vasp.jobs.approx_neb.ApproxNebHostRelaxMaker
     image_relax_maker : maker
         Required, a maker to relax the ApproxNEB endpoints and images.
-        Defaults to atomate2.vasp.jobs.approx_neb.ApproxNEBImageRelaxMaker
+        Defaults to atomate2.vasp.jobs.approx_neb.ApproxNebImageRelaxMaker
     selective_dynamics_scheme : "fix_two_atoms" or None
         If "fix_two_atoms", uses the default selective dynamics scheme of ApproxNEB,
         wherein the migrating ion and the ion farthest from it are the only
@@ -54,8 +54,8 @@ class ApproxNEBMaker(Maker):
     """
 
     name: str = "ApproxNEB"
-    host_relax_maker: Maker | None = field(default_factory=ApproxNEBHostRelaxMaker)
-    image_relax_maker: Maker = field(default_factory=ApproxNEBImageRelaxMaker)
+    host_relax_maker: Maker | None = field(default_factory=ApproxNebHostRelaxMaker)
+    image_relax_maker: Maker = field(default_factory=ApproxNebImageRelaxMaker)
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = None
     use_aeccar: bool = False
     min_hop_distance: float | None = None
@@ -128,7 +128,7 @@ class ApproxNEBMaker(Maker):
             host_calc_path=prev_dir,
             relax_maker=self.image_relax_maker,
             selective_dynamics_scheme=self.selective_dynamics_scheme,
-            use_aeccar = self.use_aeccar,
+            use_aeccar=self.use_aeccar,
             min_hop_distance=self.min_hop_distance,
         )
 
@@ -146,11 +146,11 @@ class ApproxNEBMaker(Maker):
             [*jobs, ep_relax_jobs, image_relax_jobs, collect_output],
             output=collect_output.output,
         )
-    
+
     def make_from_migration_graph(
         self,
-        migration_graph : MigrationGraph,
-        working_ion : str,
+        migration_graph: MigrationGraph,
+        working_ion: str,
         n_images: int = 5,
         prev_dir: str | Path | None = None,
     ):
@@ -174,14 +174,16 @@ class ApproxNEBMaker(Maker):
         Flow
             A flow performing AppoxNEB calculations
         """
-        inserted_coords_dict, inserted_coords_combo, _ = MigrationGraphDoc.get_distinct_hop_sites(
-            migration_graph.inserted_ion_coords, migration_graph.insert_coords_combo
+        inserted_coords_dict, inserted_coords_combo, _ = (
+            MigrationGraphDoc.get_distinct_hop_sites(
+                migration_graph.inserted_ion_coords, migration_graph.insert_coords_combo
+            )
         )
         return self.make(
-            host_structure = migration_graph.matrix_supercell_structure,
+            host_structure=migration_graph.matrix_supercell_structure,
             working_ion=working_ion,
             inserted_coords_dict=inserted_coords_dict,
             inserted_coords_combo=inserted_coords_combo,
             n_images=n_images,
-            prev_dir=prev_dir
+            prev_dir=prev_dir,
         )

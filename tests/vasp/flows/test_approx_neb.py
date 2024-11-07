@@ -8,14 +8,14 @@ from monty.serialization import loadfn
 from pymatgen.core import Structure
 
 from atomate2.common.schemas.neb import NebPathwayResult, NebResult
-from atomate2.vasp.flows.approx_neb import ApproxNEBMaker
+from atomate2.vasp.flows.approx_neb import ApproxNebMaker
 
 
 def test_approx_neb_flow(mock_vasp, clean_dir, vasp_test_dir):
     base_dir = Path(vasp_test_dir) / "ApproxNEB"
     flow_input = loadfn(base_dir / "approx_neb_input.json.gz")
 
-    flow = ApproxNEBMaker().make(
+    flow = ApproxNebMaker().make(
         *[
             flow_input[k]
             for k in (

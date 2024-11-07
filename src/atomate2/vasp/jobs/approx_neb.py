@@ -18,7 +18,7 @@ from atomate2.utils.path import strip_hostname
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.jobs.core import RelaxMaker
 from atomate2.vasp.run import JobType
-from atomate2.vasp.sets.approx_neb import ApproxNEBSetGenerator
+from atomate2.vasp.sets.approx_neb import ApproxNebSetGenerator
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -32,20 +32,20 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class ApproxNEBHostRelaxMaker(DoubleRelaxMaker):
+class ApproxNebHostRelaxMaker(DoubleRelaxMaker):
     """Maker to perform a double relaxation on an ApproxNEB host structure."""
 
     name: str = "ApproxNEB host relax"
     relax_maker1: BaseVaspMaker | None = field(
-        default_factory=lambda: RelaxMaker(input_set_generator=ApproxNEBSetGenerator())
+        default_factory=lambda: RelaxMaker(input_set_generator=ApproxNebSetGenerator())
     )
     relax_maker2: BaseVaspMaker = field(
-        default_factory=lambda: RelaxMaker(input_set_generator=ApproxNEBSetGenerator())
+        default_factory=lambda: RelaxMaker(input_set_generator=ApproxNebSetGenerator())
     )
 
 
 @dataclass
-class ApproxNEBImageRelaxMaker(RelaxMaker):
+class ApproxNebImageRelaxMaker(RelaxMaker):
     """
     Maker to perform a double relaxation on an ApproxNEB endpoint/image structure.
 
@@ -55,7 +55,7 @@ class ApproxNEBImageRelaxMaker(RelaxMaker):
 
     name: str = "ApproxNEB image relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: ApproxNEBSetGenerator(set_type="image")
+        default_factory=lambda: ApproxNebSetGenerator(set_type="image")
     )
     run_vasp_kwargs: dict = field(
         default_factory=lambda: {

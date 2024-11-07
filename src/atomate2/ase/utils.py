@@ -424,7 +424,7 @@ class AseNebInterface:
         relax_cell: bool = True,
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
-        neb_kwargs : dict | None = None
+        neb_kwargs: dict | None = None,
     ) -> None:
         """Initialize the interface.
 
@@ -461,7 +461,7 @@ class AseNebInterface:
         traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
         interval: int = 1,
         verbose: bool = False,
-        neb_doc_kwargs : dict | None = None,
+        neb_doc_kwargs: dict | None = None,
         **kwargs,
     ) -> NebResult:
         """
@@ -518,7 +518,10 @@ class AseNebInterface:
                 traj_file_split = traj_file.split(".")
                 traj_file_prefix = ".".join(traj_file_split[:-1])
                 traj_file_ext = traj_file[-1]
-                observers.save(f"{traj_file_prefix}-image-{idx+1}.{traj_file_ext}", fmt=traj_file_fmt)
+                observers[idx].save(
+                    f"{traj_file_prefix}-image-{idx+1}.{traj_file_ext}",
+                    fmt=traj_file_fmt,
+                )
 
         images = [
             self.ase_adaptor.get_structure(image, cls=Molecule if is_mol else Structure)
@@ -535,7 +538,9 @@ class AseNebInterface:
             energies=[
                 observers[image_idx].energies[-1] for image_idx in range(num_images)
             ],
-            method=NebMethod.CLIMBING_IMAGE if self.neb_kwargs.get("climb",False) else NebMethod.STANDARD,
+            method=NebMethod.CLIMBING_IMAGE
+            if self.neb_kwargs.get("climb", False)
+            else NebMethod.STANDARD,
             is_force_converged=is_force_conv,
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,

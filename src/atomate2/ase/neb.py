@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import job
 
-from atomate2.ase.jobs import AseMaker, _ASE_DATA_OBJECTS
+from atomate2.ase.jobs import _ASE_DATA_OBJECTS, AseMaker
 from atomate2.ase.utils import AseNebInterface
 
 if TYPE_CHECKING:
@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Molecule, Structure
 
     from atomate2.common.schemas.neb import NebResult
+
 
 @dataclass
 class AseNebMaker(AseMaker):
@@ -31,10 +32,10 @@ class AseNebMaker(AseMaker):
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
-    traj_file: str | Path | None = None
+    traj_file: str | None = None
     traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase"
-    traj_interval : int = 1
-    neb_doc_kwargs : dict = field(default_factory=dict)
+    traj_interval: int = 1
+    neb_doc_kwargs: dict = field(default_factory=dict)
 
     def run_ase(
         self,
@@ -53,7 +54,7 @@ class AseNebMaker(AseMaker):
                 added to match the method signature of other makers.
         """
         return AseNebInterface(
-            calculator = self.calculator,
+            calculator=self.calculator,
             fix_symmetry=self.fix_symmetry,
             relax_cell=self.relax_cell,
             symprec=self.symprec,
@@ -61,14 +62,14 @@ class AseNebMaker(AseMaker):
             **self.optimizer_kwargs,
         ).run_neb(
             images,
-            steps = self.steps,
+            steps=self.steps,
             traj_file=self.traj_file,
-            traj_file_fmt = self.traj_file_fmt,
+            traj_file_fmt=self.traj_file_fmt,
             interval=self.traj_interval,
-            neb_doc_kwargs = self.neb_doc_kwargs,
+            neb_doc_kwargs=self.neb_doc_kwargs,
             **self.relax_kwargs,
         )
-    
+
     @job(data=_ASE_DATA_OBJECTS, schema=NebResult)
     def make(
         self,
@@ -86,8 +87,9 @@ class AseNebMaker(AseMaker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-        return self.run_ase(images,prev_dir=prev_dir)
-    
+        return self.run_ase(images, prev_dir=prev_dir)
+
+
 class LennardJonesNebMaker(AseNebMaker):
     """
     Lennard-Jones NEB maker, primarily for testing/debugging.

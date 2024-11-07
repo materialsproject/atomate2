@@ -169,7 +169,7 @@ class AseMDMaker(AseMaker):
     ionic_step_data: tuple[str, ...] | None = None
     store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.PARTIAL
     traj_file: str | Path | None = None
-    traj_file_fmt: Literal["pmg", "ase","xdatcar"] = "ase"
+    traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase"
     traj_interval: int = 1
     mb_velocity_seed: int | None = None
     zero_linear_momentum: bool = False

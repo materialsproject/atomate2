@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from jobflow import job
@@ -16,12 +16,12 @@ from atomate2.forcefields.jobs import (
 )
 from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
 
-
 if TYPE_CHECKING:
     from pathlib import Path
 
     from ase.calculators.calculator import Calculator
     from pymatgen.core import Structure
+
 
 @dataclass
 class ForceFieldNebMaker(AseNebMaker):
@@ -29,7 +29,7 @@ class ForceFieldNebMaker(AseNebMaker):
     Run NEB with an ML forcefield using ASE.
     """
 
-    name : str = "Forcefield NEB"
+    name: str = "Forcefield NEB"
     force_field_name: str | MLFF = MLFF.Forcefield
 
     def __post_init__(self) -> None:
@@ -48,8 +48,10 @@ class ForceFieldNebMaker(AseNebMaker):
         if not self.neb_doc_kwargs.get("force_field_name"):
             self.neb_doc_kwargs["force_field_name"] = str(self.force_field_name)
 
-    @job(data = _FORCEFIELD_DATA_OBJECTS, schema = NebResult)
-    def make(self, images : list[Structure], prev_dir : str | Path | None = None) -> NebResult:
+    @job(data=_FORCEFIELD_DATA_OBJECTS, schema=NebResult)
+    def make(
+        self, images: list[Structure], prev_dir: str | Path | None = None
+    ) -> NebResult:
         """
         Perform NEB with MLFFs on a set of images.
 
@@ -64,7 +66,7 @@ class ForceFieldNebMaker(AseNebMaker):
         with revert_default_dtype():
             neb_result = self.run_ase(images=images, prev_dir=prev_dir)
         return neb_result
-    
+
     @property
     def calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
