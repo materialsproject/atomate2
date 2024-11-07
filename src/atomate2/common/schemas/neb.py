@@ -55,6 +55,10 @@ class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
         None, description="Analysis of the reaction barrier."
     )
 
+    metadata : Optional[dict[str,Any]] = Field(
+        None, description = "Infomation about the calculation."
+    )
+
     @model_validator(mode="after")
     def set_barriers(self) -> Self:
         """Perform analysis on barrier if needed."""

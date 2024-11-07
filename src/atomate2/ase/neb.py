@@ -3,23 +3,38 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
-from ase.mep.neb import NEB
-from pymatgen.core import Molecule, Structure
+from jobflow import job
 
-from atomate2.ase.jobs import AseMaker
-from atomate2.common.schemas.neb import NebResult
+from atomate2.ase.jobs import AseMaker, _ASE_DATA_OBJECTS
+from atomate2.ase.utils import AseNebInterface
 
-# Parameters chosen for consistency with atomate2.vasp.sets.core.NebSetGenerator
-_DEFAULT_NEB_KWARGS = {"k": 5.0, "climb": True, "method": "improvedtangent"}
+if TYPE_CHECKING:
+    from pathlib import Path
+    from typing import Literal
 
+    from ase.calculators.calculator import Calculator
+    from pymatgen.core import Molecule, Structure
+
+    from atomate2.common.schemas.neb import NebResult
 
 @dataclass
 class AseNebMaker(AseMaker):
-    """Define ASE NEB jobs."""
+    """Define scheme for performing ASE NEB calculations."""
 
     name: str = "ASE NEB maker"
     neb_kwargs: dict = field(default_factory=dict)
+    relax_cell: bool = True
+    fix_symmetry: bool = False
+    symprec: float | None = 1e-2
+    steps: int = 500
+    relax_kwargs: dict = field(default_factory=dict)
+    optimizer_kwargs: dict = field(default_factory=dict)
+    traj_file: str | Path | None = None
+    traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase"
+    traj_interval : int = 1
+    neb_doc_kwargs : dict = field(default_factory=dict)
 
     def run_ase(
         self,
@@ -27,58 +42,62 @@ class AseNebMaker(AseMaker):
         prev_dir: str | Path | None = None,
     ) -> NebResult:
         """
-        Run ASE, method to be implemented in subclasses.
-
-        This method exists to permit subclasses to redefine `make`
-        for different output schemas.
+        Run an ASE NEB job from a list of images.
 
         Parameters
         ----------
-        mol_or_struct: .Molecule or .Structure
-            pymatgen molecule or structure
+        images: list of pymatgen .Molecule or .Structure
+            pymatgen molecule or structure images
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-        self.neb_kwargs = self.neb_kwargs or _DEFAULT_NEB_KWARGS
-
-        is_mol_calc = all(isinstance(image, Molecule) for image in images)
-
-        images = [image.to_ase_atoms() for image in images]
-
-        neb_calc = NEB(images, **self.neb_kwargs)
-        for image in images:
-            image.calc = self.calculator
-
-        with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
-            obs = TrajectoryObserver(atoms)
-            if self.relax_cell and (not is_mol):
-                atoms = cell_filter(atoms)
-            optimizer = self.opt_class(atoms, **kwargs)
-            optimizer.attach(obs, interval=interval)
-            t_i = time.perf_counter()
-            optimizer.run(fmax=fmax, steps=steps)
-            t_f = time.perf_counter()
-            obs()
-        if traj_file is not None:
-            obs.save(traj_file)
-        if isinstance(atoms, cell_filter):
-            atoms = atoms.atoms
-
-        struct = self.ase_adaptor.get_structure(
-            atoms, cls=Molecule if is_mol else Structure
+        return AseNebInterface(
+            calculator = self.calculator,
+            fix_symmetry=self.fix_symmetry,
+            relax_cell=self.relax_cell,
+            symprec=self.symprec,
+            neb_kwargs=self.neb_kwargs,
+            **self.optimizer_kwargs,
+        ).run_neb(
+            images,
+            steps = self.steps,
+            traj_file=self.traj_file,
+            traj_file_fmt = self.traj_file_fmt,
+            interval=self.traj_interval,
+            neb_doc_kwargs = self.neb_doc_kwargs,
+            **self.relax_kwargs,
         )
-        traj = obs.to_pymatgen_trajectory(None)
-        is_force_conv = all(
-            np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
-            for idx in range(len(struct))
-        )
-        return AseResult(
-            final_mol_or_struct=struct,
-            trajectory=traj,
-            is_force_converged=is_force_conv,
-            energy_downhill=traj.frame_properties[-1]["energy"]
-            < traj.frame_properties[0]["energy"],
-            dir_name=os.getcwd(),
-            elapsed_time=t_f - t_i,
-        )
+    
+    @job(data=_ASE_DATA_OBJECTS, schema=NebResult)
+    def make(
+        self,
+        images: list[Structure | Molecule],
+        prev_dir: str | Path | None = None,
+    ) -> NebResult:
+        """
+        Run an ASE NEB job from a list of images.
+
+        Parameters
+        ----------
+        images: list of pymatgen .Molecule or .Structure
+            pymatgen molecule or structure images
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
+        """
+        return self.run_ase(images,prev_dir=prev_dir)
+    
+class LennardJonesNebMaker(AseNebMaker):
+    """
+    Lennard-Jones NEB maker, primarily for testing/debugging.
+    """
+
+    name: str = "Lennard-Jones 6-12 NEB"
+
+    @property
+    def calculator(self) -> Calculator:
+        """Lennard-Jones calculator."""
+        from ase.calculators.lj import LennardJones
+
+        return LennardJones(**self.calculator_kwargs)

@@ -17,6 +17,7 @@ from ase.calculators.singlepoint import SinglePointCalculator
 from ase.constraints import FixSymmetry
 from ase.filters import FrechetCellFilter
 from ase.io import Trajectory as AseTrajectory
+from ase.mep.neb import NEB
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from emmet.core.neb import NebMethod
@@ -53,6 +54,9 @@ FORCE_BASED_OPTIMIZERS = {
     "BFGS": BFGS,
     "MDMin": MDMin,
 }
+
+# Parameters chosen for consistency with atomate2.vasp.sets.core.NebSetGenerator
+DEFAULT_NEB_KWARGS = {"k": 5.0, "climb": True, "method": "improvedtangent"}
 
 
 class TrajectoryObserver:
@@ -337,6 +341,7 @@ class AseRelaxer:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
+        traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
         interval: int = 1,
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
@@ -386,7 +391,7 @@ class AseRelaxer:
             t_f = time.perf_counter()
             obs()
         if traj_file is not None:
-            obs.save(traj_file)
+            obs.save(traj_file, fmt=traj_file_fmt)
         if isinstance(atoms, cell_filter):
             atoms = atoms.atoms
 
@@ -419,6 +424,7 @@ class AseNebInterface:
         relax_cell: bool = True,
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
+        neb_kwargs : dict | None = None
     ) -> None:
         """Initialize the interface.
 
@@ -444,6 +450,7 @@ class AseNebInterface:
         self.ase_adaptor = AseAtomsAdaptor()
         self.fix_symmetry = fix_symmetry
         self.symprec = symprec
+        self.neb_kwargs = neb_kwargs or DEFAULT_NEB_KWARGS.copy()
 
     def run_neb(
         self,
@@ -451,11 +458,12 @@ class AseNebInterface:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
+        traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
         interval: int = 1,
         verbose: bool = False,
-        cell_filter: Filter = FrechetCellFilter,
+        neb_doc_kwargs : dict | None = None,
         **kwargs,
-    ) -> AseResult:
+    ) -> NebResult:
         """
         Perform NEB on a list of molecules or structures.
 
@@ -493,12 +501,11 @@ class AseNebInterface:
                 images[idx].set_constraint(FixSymmetry(image, symprec=self.symprec))
             images[idx].calc = deepcopy(self.calculator)
 
+        neb_calc = NEB(images, **self.neb_kwargs)
+
         with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
             observers = [TrajectoryObserver(image) for image in images]
-            if self.relax_cell and (not is_mol):
-                for idx, image in enumerate(images):
-                    images[idx] = cell_filter(image)
-            optimizer = self.opt_class(atoms, **kwargs)
+            optimizer = self.opt_class(neb_calc, **kwargs)
             for idx, image in enumerate(images):
                 optimizer.attach(observers[idx], interval=interval)
             t_i = time.perf_counter()
@@ -511,11 +518,7 @@ class AseNebInterface:
                 traj_file_split = traj_file.split(".")
                 traj_file_prefix = ".".join(traj_file_split[:-1])
                 traj_file_ext = traj_file[-1]
-                observers.save(f"{traj_file_prefix}-image-{idx+1}.{traj_file_ext}")
-
-        for idx in range(num_images):
-            if isinstance(images[idx], cell_filter):
-                images[idx] = images[idx].atoms
+                observers.save(f"{traj_file_prefix}-image-{idx+1}.{traj_file_ext}", fmt=traj_file_fmt)
 
         images = [
             self.ase_adaptor.get_structure(image, cls=Molecule if is_mol else Structure)
@@ -532,8 +535,9 @@ class AseNebInterface:
             energies=[
                 observers[image_idx].energies[-1] for image_idx in range(num_images)
             ],
-            method=NebMethod.CLIMBING_IMAGE if neb.climb else NebMethod.STANDARD,
+            method=NebMethod.CLIMBING_IMAGE if self.neb_kwargs.get("climb",False) else NebMethod.STANDARD,
             is_force_converged=is_force_conv,
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
+            **neb_doc_kwargs,
         )
