@@ -25,9 +25,7 @@ if TYPE_CHECKING:
 
 @dataclass
 class ForceFieldNebMaker(AseNebMaker):
-    """
-    Run NEB with an ML forcefield using ASE.
-    """
+    """Run NEB with an ML forcefield using ASE."""
 
     name: str = "Forcefield NEB"
     force_field_name: str | MLFF = MLFF.Forcefield
@@ -64,8 +62,7 @@ class ForceFieldNebMaker(AseNebMaker):
             added to match the method signature of other makers.
         """
         with revert_default_dtype():
-            neb_result = self.run_ase(images=images, prev_dir=prev_dir)
-        return neb_result
+            return self.run_ase(images=images, prev_dir=prev_dir)
 
     @property
     def calculator(self) -> Calculator:

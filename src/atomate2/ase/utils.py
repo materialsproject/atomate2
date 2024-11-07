@@ -506,8 +506,8 @@ class AseNebInterface:
         with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
             observers = [TrajectoryObserver(image) for image in images]
             optimizer = self.opt_class(neb_calc, **kwargs)
-            for idx, image in enumerate(images):
-                optimizer.attach(observers[idx], interval=interval)
+            for idx in range(num_images):
+                optimizer.attach(observers[idx], interval=interval, atoms=images[idx])
             t_i = time.perf_counter()
             optimizer.run(fmax=fmax, steps=steps)
             t_f = time.perf_counter()

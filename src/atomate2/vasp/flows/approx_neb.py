@@ -153,7 +153,7 @@ class ApproxNebMaker(Maker):
         working_ion: str,
         n_images: int = 5,
         prev_dir: str | Path | None = None,
-    ):
+    ) -> Flow:
         """
         Make an ApproxNEB flow from a migration graph.
 

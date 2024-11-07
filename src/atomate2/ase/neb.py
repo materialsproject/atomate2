@@ -9,6 +9,7 @@ from jobflow import job
 
 from atomate2.ase.jobs import _ASE_DATA_OBJECTS, AseMaker
 from atomate2.ase.utils import AseNebInterface
+from atomate2.common.schemas.neb import NebResult
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -16,8 +17,6 @@ if TYPE_CHECKING:
 
     from ase.calculators.calculator import Calculator
     from pymatgen.core import Molecule, Structure
-
-    from atomate2.common.schemas.neb import NebResult
 
 
 @dataclass
@@ -91,9 +90,7 @@ class AseNebMaker(AseMaker):
 
 
 class LennardJonesNebMaker(AseNebMaker):
-    """
-    Lennard-Jones NEB maker, primarily for testing/debugging.
-    """
+    """Lennard-Jones NEB maker, primarily for testing/debugging."""
 
     name: str = "Lennard-Jones 6-12 NEB"
 
