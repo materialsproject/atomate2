@@ -56,7 +56,7 @@ class LammpsNPTSet(BaseLammpsSet):
                          }
         
         self.settings = update_settings(settings=self.settings,**kwargs)
-        super().__init__(ensemble=self.ensemble, barostat=self.barostat, **kwargs)
+        super().__init__(ensemble=self.ensemble, barostat=self.barostat, settings=self.settings, **kwargs)
         
         
 class LammpsMinimizeSet(BaseLammpsSet):
@@ -65,7 +65,8 @@ class LammpsMinimizeSet(BaseLammpsSet):
     """
     def __init__(self, **kwargs):
         template = os.path.join(template_dir, "minimize.template")
-        super().__init__(ensemble='minimize', template=template, **kwargs)
+        super().__init__(ensemble='minimize', template=template, settings=self.settings, **kwargs)
+
 
 class CustomLammpsSet(BaseLammpsSet):
     """
