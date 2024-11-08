@@ -5,17 +5,8 @@ pymatgen by Ryan Kingsbury & Guillaume Brunin.
 
 import logging
 import os
-from pathlib import Path
-from string import Template
-
-from pymatgen.core import Structure
-from pymatgen.io.core import InputGenerator, InputSet
-from pymatgen.io.lammps.data import CombinedData, LammpsData
-from pymatgen.io.lammps.inputs import LammpsInputFile
-from pymatgen.io.lammps.sets import LammpsInputSet
-from pymatgen.io.lammps.generators import BaseLammpsGenerator, LammpsMinimization
+from pymatgen.io.lammps.generators import BaseLammpsGenerator
 from typing import Union, Literal
-from monty.serialization import loadfn
 from atomate2.lammps.sets.utils import process_ensemble_conditions, update_settings
 
 __author__ = "Ryan Kingsbury, Guillaume Brunin (Matgenix)"
@@ -73,7 +64,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
                        'psymm': self.pressure_symmetry, 'units': self.units, 'nsteps': self.nsteps, 'timestep': self.timestep, 
                        'thermostat': self.thermostat, 'barostat': self.barostat,
                        'log_interval': self.log_interval, 'traj_interval': self.traj_interval})
-                        
+        
         self.settings = update_settings(settings = self.settings, **process_kwargs)
         self.settings = process_ensemble_conditions(self.settings)
         

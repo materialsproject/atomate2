@@ -1,1 +1,1 @@
-from .base import LammpsInputSet
+from .base import BaseLammpsSet
