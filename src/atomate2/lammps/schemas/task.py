@@ -65,7 +65,6 @@ class LammpsTaskDocument(StructureMetadata):
         output_file_pattern: str
             Pattern for the output file, written to disk in dir_name. Default is None.  
         """
-        time.sleep(30)
         log_file = os.path.join(dir_name, "log.lammps")
         try:
             with open(log_file) as f:

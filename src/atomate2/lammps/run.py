@@ -63,8 +63,10 @@ def run_lammps(
     lammps_invocation.extend([lammps_cmd, "-in", lammps_input_file])
 
     with open(stdout_file, "a") as stdout, open(stderr_file, "a") as stderr:
-        return subprocess.Popen(
+        process = subprocess.Popen(
             lammps_invocation,
             stdout=stdout,
             stderr=stderr,
         )
+        process.wait()
+        return process
