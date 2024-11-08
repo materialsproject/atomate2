@@ -150,7 +150,6 @@ class ApproxNebMaker(Maker):
     def make_from_migration_graph(
         self,
         migration_graph: MigrationGraph,
-        working_ion: str,
         n_images: int = 5,
         prev_dir: str | Path | None = None,
     ) -> Flow:
@@ -162,8 +161,6 @@ class ApproxNebMaker(Maker):
         migration_graph: MigrationGraph
             Migration graph containing information about the host structure,
             inserted coordinates, etc.
-        working_ion: str
-            the mobile species in ApproxNEB
         n_images: int
             number of images for the ApproxNEB calculation
         selective_dynamics: str
@@ -178,6 +175,10 @@ class ApproxNebMaker(Maker):
             MigrationGraphDoc.get_distinct_hop_sites(
                 migration_graph.inserted_ion_coords, migration_graph.insert_coords_combo
             )
+        )
+        working_ion = next(
+            ele.value
+            for ele in migration_graph.working_ion_entry.composition.remove_charges()
         )
         return self.make(
             host_structure=migration_graph.matrix_supercell_structure,
