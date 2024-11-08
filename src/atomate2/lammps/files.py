@@ -9,6 +9,7 @@ from ase.io import Trajectory as AseTrajectory
 from typing import Literal
 from monty.serialization import dumpfn
 from monty.json import MSONable
+from emmet.core.vasp.calculation import StoreTajectoryOption
 
 def write_lammps_input_set(
     structure: Structure | Path,
@@ -21,7 +22,7 @@ def write_lammps_input_set(
 
 
 class DumpConvertor(MSONable):    
-    def __init__(self, dumpfile, store_md_outputs : Literal["no", "partial", "full"]  = 'partial') -> None:
+    def __init__(self, dumpfile, store_md_outputs : StoreTajectoryOption  = StoreTajectoryOption.PARTIAL) -> None:
         self.store_md_outputs = store_md_outputs
         self.traj = read(dumpfile, index=':')
         self.is_periodic = any(self.traj[0].pbc)
@@ -41,21 +42,20 @@ class DumpConvertor(MSONable):
         frame_properties = []
         
         for atoms in self.traj:
-            if self.store_md_outputs:
-                if self.store_md_outputs == 'full':
-                    frame_properties.append({key : getattr(atoms, f'get_{key}')() for key in self.frame_properties_keys})
-                    
-                if self.is_periodic:
-                    frames.append(Structure(lattice = atoms.get_cell(), 
-                                            species = species, 
-                                            coords = atoms.get_positions(), 
-                                            coords_are_cartesian = True)
-                                  )
-                else:
-                    frames.append(Molecule(species = species, 
-                                           coords = atoms.get_positions(), 
-                                           charge = atoms.get_charges(),
-                                           )
+            if self.store_md_outputs == StoreTajectoryOption.FULL:
+                frame_properties.append({key : getattr(atoms, f'get_{key}')() for key in self.frame_properties_keys})
+                
+            if self.is_periodic:
+                frames.append(Structure(lattice = atoms.get_cell(), 
+                                        species = species, 
+                                        coords = atoms.get_positions(), 
+                                        coords_are_cartesian = True)
+                                )
+            else:
+                frames.append(Molecule(species = species, 
+                                        coords = atoms.get_positions(), 
+                                        charge = atoms.get_charges(),
+                                        )
                                   )
         traj_method = 'from_structures' if self.is_periodic else 'from_molecules'
         pmg_traj = getattr(PmgTrajectory, traj_method)(
