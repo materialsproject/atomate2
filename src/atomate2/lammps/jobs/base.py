@@ -78,12 +78,10 @@ class BaseLammpsMaker(Maker):
         )
         
         if task_doc.state == TaskState.ERROR:
-            error = "could not parse log file"
             try: 
-                if task_doc.raw_log_file:
-                    error = task_doc.raw_log_file[-10:] if len(task_doc.raw_log_file) > 10 else task_doc.raw_log_file
+                error = task_doc.raw_log_file.split('\n')[-2:]
             except:
-                pass
+                error = "could not parse log file"
             raise Exception(f"Task {task_doc.task_label} failed, error: {error}") 
         
         task_doc.composition = input_structure.composition

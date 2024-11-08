@@ -71,7 +71,7 @@ class LammpsTaskDocument(StructureMetadata):
             with open(log_file) as f:
                 raw_log = f.read()
             thermo_log = parse_lammps_log(log_file)
-            state = TaskState.ERROR if "ERROR" in raw_log[-1] else TaskState.SUCCESS
+            state = TaskState.ERROR if "ERROR" in raw_log else TaskState.SUCCESS
         except FileNotFoundError:
             Warning(f"Log file not found for {dir_name}")
             raw_log = ''
