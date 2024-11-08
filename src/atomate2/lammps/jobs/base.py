@@ -78,11 +78,13 @@ class BaseLammpsMaker(Maker):
         )
         
         if task_doc.state == TaskState.ERROR:
+            error = "could not parse log file"
             try: 
-                error = task_doc.raw_log_file[-10:] if task_doc.raw_log_file else "No log file" #last 10 lines of the log file
+                if task_doc.raw_log_file:
+                    error = task_doc.raw_log_file[-10:] if len(task_doc.raw_log_file) > 10 else task_doc.raw_log_file
             except:
-                error = task_doc.raw_log_file[-2:] if task_doc.raw_log_file else "No log file" #last 2 lines of the log file if the log file is too short, usually has the error message
-            return Exception(f"Task {task_doc.task_label} fizzled, log: {error}") 
+                pass
+            raise Exception(f"Task {task_doc.task_label} failed, error: {error}") 
         
         task_doc.composition = input_structure.composition
         task_doc.reduced_formula = input_structure.composition.reduced_formula
