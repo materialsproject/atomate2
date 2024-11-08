@@ -2,6 +2,8 @@ from pathlib import Path
 from typing import Type, Optional, List, Literal
 
 from emmet.core.structure import StructureMetadata
+from emmet.core.vasp.task_valid import TaskState
+from emmet.core.vasp.calculation import StoreTajectoryOption
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.core import Composition, Structure
 from pydantic import Field
@@ -23,6 +25,8 @@ class LammpsTaskDocument(StructureMetadata):
     
     composition : Composition = Field(None, description="Composition of the system")
     
+    state : TaskState = Field(None, description="State of the calculation")
+    
     reduced_formula : str = Field(None, description="Reduced formula of the system")
     
     dump_files : Optional[list] = Field(None, description="Path to dump files")
@@ -42,7 +46,7 @@ class LammpsTaskDocument(StructureMetadata):
         cls: Type["LammpsTaskDocument"],
         dir_name: str | Path,
         task_label: str,
-        store_trajectory: Literal["no", "partial", "full"] = "partial",
+        store_trajectory: StoreTajectoryOption = StoreTajectoryOption.PARTIAL,
         trajectory_format : Literal["pmg", "ase"] = "pmg",
         output_file_pattern: str | None = None,
     ) -> "LammpsTaskDocument":
@@ -65,14 +69,16 @@ class LammpsTaskDocument(StructureMetadata):
             with open(log_file) as f:
                 raw_log = f.read()
             thermo_log = parse_lammps_log(log_file)
+            state = TaskState.ERROR if "ERROR" in raw_log[-1] else TaskState.SUCCESS
         except FileNotFoundError:
             Warning(f"Log file not found for {dir_name}")
             raw_log = ''
             thermo_log = []
+            state = TaskState.ERROR
             
         dump_files = [os.path.join(dir_name, file) for file in glob("*.dump*", root_dir=dir_name)]
         print(dump_files)
-        if store_trajectory in ["partial", "full"]:
+        if store_trajectory != StoreTajectoryOption.NO:
             trajectories = [DumpConvertor(store_md_outputs=store_trajectory, 
                                           dumpfile=os.path.join(dir_name, dump_file)).save(filename=f'{output_file_pattern}{i}',
                                                                                            fmt=trajectory_format)
@@ -98,7 +104,8 @@ class LammpsTaskDocument(StructureMetadata):
                                   dump_files=dump_files,
                                   trajectory=trajectories,
                                   structure=structure,
-                                  inputs=inputs
+                                  inputs=inputs,
+                                  state=state,
                                   )
         
 ''' References to implement here: https://github.com/materialsproject/emmet/blob/main/emmet-core/emmet/core/openmm/calculations.py 

@@ -8,6 +8,8 @@ from monty.serialization import dumpfn
 from monty.shutil import gzip_dir
 from pymatgen.core import Structure
 
+from emmet.core.vasp.task_valid import TaskState
+
 from ..files import write_lammps_input_set
 from ..run import run_lammps
 from ..schemas.task import LammpsTaskDocument
@@ -74,6 +76,13 @@ class BaseLammpsMaker(Maker):
         task_doc = LammpsTaskDocument.from_directory(
             os.getcwd(), task_label=self.name, **self.task_document_kwargs
         )
+        
+        if task_doc.state == TaskState.ERROR:
+            try: 
+                error = task_doc.raw_log_file[-10:] if task_doc.raw_log_file else "No log file" #last 10 lines of the log file
+            except:
+                error = task_doc.raw_log_file[-2:] if task_doc.raw_log_file else "No log file" #last 2 lines of the log file if the log file is too short, usually has the error message
+            return Exception(f"Task {task_doc.task_label} fizzled, log: {error}") 
         
         task_doc.composition = input_structure.composition
         task_doc.reduced_formula = input_structure.composition.reduced_formula
