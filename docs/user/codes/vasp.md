@@ -469,7 +469,7 @@ tedious to update the input sets for each job individually. Atomate2 provides he
 functions called "powerups" that can apply settings updates to all VASP jobs in a flow.
 These powerups also contain filters for the name of the job and the maker used to
 generate them. These functions will apply updates *only* to VASP jobs, including those
-created dyanmically - all other jobs in a flow will not be modified.
+created dynamically - all other jobs in a flow will not be modified.
 
 ```py
 from atomate2.vasp.powerups import update_user_incar_settings
