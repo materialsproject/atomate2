@@ -3,7 +3,7 @@ from typing import Type, Optional, List, Literal
 
 from emmet.core.structure import StructureMetadata
 from emmet.core.vasp.task_valid import TaskState
-from emmet.core.vasp.calculation import StoreTajectoryOption
+from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.core import Composition, Structure
 from pydantic import Field
@@ -46,7 +46,7 @@ class LammpsTaskDocument(StructureMetadata):
         cls: Type["LammpsTaskDocument"],
         dir_name: str | Path,
         task_label: str,
-        store_trajectory: StoreTajectoryOption = StoreTajectoryOption.PARTIAL,
+        store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.PARTIAL,
         trajectory_format : Literal["pmg", "ase"] = "pmg",
         output_file_pattern: str | None = None,
     ) -> "LammpsTaskDocument":
@@ -75,10 +75,15 @@ class LammpsTaskDocument(StructureMetadata):
             raw_log = ''
             thermo_log = []
             state = TaskState.ERROR
+        except ValueError:
+            Warning(f"Error parsing log file for {dir_name}, incomplete job")
+            raw_log = ''
+            thermo_log = []
+            state = TaskState.ERROR
             
         dump_files = [os.path.join(dir_name, file) for file in glob("*.dump*", root_dir=dir_name)]
         print(dump_files)
-        if store_trajectory != StoreTajectoryOption.NO:
+        if store_trajectory != StoreTrajectoryOption.NO:
             trajectories = [DumpConvertor(store_md_outputs=store_trajectory, 
                                           dumpfile=os.path.join(dir_name, dump_file)).save(filename=f'{output_file_pattern}{i}',
                                                                                            fmt=trajectory_format)

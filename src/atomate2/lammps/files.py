@@ -9,7 +9,7 @@ from ase.io import Trajectory as AseTrajectory
 from typing import Literal
 from monty.serialization import dumpfn
 from monty.json import MSONable
-from emmet.core.vasp.calculation import StoreTajectoryOption
+from emmet.core.vasp.calculation import StoreTrajectoryOption
 
 def write_lammps_input_set(
     structure: Structure | Path,
@@ -22,7 +22,7 @@ def write_lammps_input_set(
 
 
 class DumpConvertor(MSONable):    
-    def __init__(self, dumpfile, store_md_outputs : StoreTajectoryOption  = StoreTajectoryOption.PARTIAL) -> None:
+    def __init__(self, dumpfile, store_md_outputs : StoreTrajectoryOption  = StoreTrajectoryOption.PARTIAL) -> None:
         self.store_md_outputs = store_md_outputs
         self.traj = read(dumpfile, index=':')
         self.is_periodic = any(self.traj[0].pbc)
@@ -42,7 +42,7 @@ class DumpConvertor(MSONable):
         frame_properties = []
         
         for atoms in self.traj:
-            if self.store_md_outputs == StoreTajectoryOption.FULL:
+            if self.store_md_outputs == StoreTrajectoryOption.FULL:
                 frame_properties.append({key : getattr(atoms, f'get_{key}')() for key in self.frame_properties_keys})
                 
             if self.is_periodic:
@@ -71,9 +71,9 @@ class DumpConvertor(MSONable):
     
     def save(self, filename : str | None = None, fmt : Literal["pmg", "ase"] = "pmg"):
         filename = str(filename) if filename is not None else None
-        if fmt == "pmg":
+        if fmt == "pmg" and filename:
             return self.to_pymatgen_trajectory(filename=filename) 
-        elif fmt == "ase":
+        elif fmt == "ase" and filename:
             return self.to_ase_trajectory(filename=filename)
 
         
