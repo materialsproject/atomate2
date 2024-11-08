@@ -324,7 +324,7 @@ run_locally(lobster, create_folders=True, store=SETTINGS.JOB_STORE)
 ```
 
 It is, however,  computationally very beneficial to define two different types of job scripts for the VASP and Lobster runs, as VASP and Lobster runs are parallelized differently (MPI vs. OpenMP).
-[FireWorks](https://github.com/materialsproject/fireworks) allows to run the VASP and Lobster jobs with different job scripts. Please check out the [jobflow documentation on FireWorks](https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs) for more information.
+[FireWorks](https://github.com/materialsproject/fireworks) allows one to run the VASP and Lobster jobs with different job scripts. Please check out the [jobflow documentation on FireWorks](https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs) for more information.
 
 Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
 
@@ -468,7 +468,8 @@ Finally, sometimes you have a workflow containing many VASP jobs. In this case i
 tedious to update the input sets for each job individually. Atomate2 provides helper
 functions called "powerups" that can apply settings updates to all VASP jobs in a flow.
 These powerups also contain filters for the name of the job and the maker used to
-generate them.
+generate them. These functions will apply updates *only* to VASP jobs, including those
+created dyanmically - all other jobs in a flow will not be modified.
 
 ```py
 from atomate2.vasp.powerups import update_user_incar_settings
