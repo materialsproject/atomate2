@@ -40,7 +40,6 @@ class BaseLammpsSet(BaseLammpsGenerator):
                  **kwargs):
         
         template = os.path.join(template_dir, "md.template") if template is None else template
-        self.settings = settings
         self.atom_style = atom_style
         self.ensemble = ensemble
         self.start_temp = start_temp
@@ -55,7 +54,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
         self.traj_interval = traj_interval
         self.thermostat = thermostat
         self.barostat = barostat
-        self.force_field = force_field
+        self.force_field = force_field.copy() if isinstance(force_field, dict) else force_field
         self.species = None
         
         process_kwargs = kwargs.copy()
@@ -65,7 +64,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
                        'thermostat': self.thermostat, 'barostat': self.barostat,
                        'log_interval': self.log_interval, 'traj_interval': self.traj_interval})
         
-        self.settings = update_settings(settings = self.settings, **process_kwargs)
+        self.settings = update_settings(settings = settings, **process_kwargs)
         self.settings = process_ensemble_conditions(self.settings)
         
         if isinstance(force_field, dict):
