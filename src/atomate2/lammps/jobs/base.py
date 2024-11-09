@@ -79,9 +79,10 @@ class BaseLammpsMaker(Maker):
         
         if task_doc.state == TaskState.ERROR:
             try: 
+                error = ""
                 for index, line in enumerate(task_doc.raw_log_file.split('\n')):
                     if "ERROR" in line:
-                        error=''.join(task_doc.raw_log_file.split('\n')[index:])
+                        error=error.join(task_doc.raw_log_file.split('\n')[index:])
                         break
             except:
                 error = "could not parse log file"
