@@ -70,9 +70,9 @@ class BaseLammpsSet(BaseLammpsGenerator):
         
         if isinstance(force_field, dict):
             try:
-                pair_style = force_field.pop('pair_style', None)
-                pair_coeff = force_field.pop('pair_coeff', None)
-                species = force_field.pop('species', None)
+                pair_style = force_field.pop('pair_style')
+                pair_coeff = force_field.pop('pair_coeff')
+                species = force_field.pop('species')
                 self.species = '' if species is None else ' '.join(species)
                 if not isinstance(pair_style, str) or not isinstance(pair_coeff, str) or not isinstance(species, list):
                     raise KeyError
@@ -80,8 +80,13 @@ class BaseLammpsSet(BaseLammpsGenerator):
                 self.force_field = f'pair_style {pair_style}\n pair_coeff {pair_coeff} {self.species}'
                 
             except KeyError:
-                logger.error(f"Force field parameters (pair_style and pair_coeff) not found in {force_field}, check input format!")
+                logger.error(f"Force field parameters (pair_style, pair_coeff and species) not found in {force_field}, check input format!")
                 raise KeyError
+        
+        if isinstance(force_field, str):
+            self.force_field = force_field
+            self.species = ' '.join(force_field.split(' ')[6:]) #check if logic holds for general FF
+            
         else:
             Warning(f"Force field should be a dictionary, got {type(force_field)}")
             
