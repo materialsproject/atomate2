@@ -28,7 +28,7 @@ class LammpsNVTSet(BaseLammpsSet):
                          }
         
         self.settings = update_settings(settings=self.settings, **kwargs)
-        super().__init__(ensemble=self.ensemble, thermostat=self.thermostat, **kwargs)
+        super().__init__(ensemble=self.ensemble, thermostat=self.thermostat, settings=self.settings, **kwargs)
 
 class LammpsNPTSet(BaseLammpsSet):
     """
