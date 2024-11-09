@@ -1,7 +1,7 @@
 import os
 from .base import BaseLammpsSet, template_dir
 from atomate2.lammps.sets.utils import update_settings, _BASE_LAMMPS_SETTINGS
-from typing import Literal
+from typing import Literal, Union
 
 class LammpsNVTSet(BaseLammpsSet):
     """
@@ -9,12 +9,14 @@ class LammpsNVTSet(BaseLammpsSet):
     """
     ensemble : str = "nvt"
     thermostat : str = "lengevin"
+    force_field : Union[str, dict] = None
     friction : float = 0.1
     settings : dict = None
     
     def __init__(self, 
                  thermostat : Literal['langevin', 'nose-hoover'] = 'nose-hoover',
                  friction : float = None,
+                 force_field : Union[str, dict] = None,
                  **kwargs):
         
         self.thermostat = thermostat
@@ -29,7 +31,7 @@ class LammpsNVTSet(BaseLammpsSet):
                          }
         
         self.settings = update_settings(settings=self.settings, **kwargs)
-        super().__init__(ensemble=self.ensemble, thermostat=self.thermostat, settings=self.settings, **kwargs)
+        super().__init__(ensemble=self.ensemble, thermostat=self.thermostat, force_field=force_field, settings=self.settings, **kwargs)
 
 class LammpsNPTSet(BaseLammpsSet):
     """
@@ -37,12 +39,14 @@ class LammpsNPTSet(BaseLammpsSet):
     """
     ensemble : str = "npt"
     barostat : str = "berendsen"
+    force_field : Union[str, dict] = None
     friction : float = 0.1
     settings : dict = None
     
     def __init__(self, 
                  barostat : Literal['berendsen', 'nose-hoover'] = 'berendsen',
                  friction : float = None,
+                 force_field : Union[str, dict] = None,
                  **kwargs):
         
         self.barostat = barostat
@@ -58,7 +62,7 @@ class LammpsNPTSet(BaseLammpsSet):
                          }
         
         self.settings = update_settings(settings=self.settings,**kwargs)
-        super().__init__(ensemble=self.ensemble, barostat=self.barostat, settings=self.settings, **kwargs)
+        super().__init__(ensemble=self.ensemble, barostat=self.barostat, force_field=force_field, settings=self.settings, **kwargs)
         
         
 class LammpsMinimizeSet(BaseLammpsSet):
