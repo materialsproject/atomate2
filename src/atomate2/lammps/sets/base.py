@@ -21,6 +21,8 @@ class BaseLammpsSet(BaseLammpsGenerator):
             
     def __init__(self, 
                  atom_style : str = "atomic",
+                 dimension : int = 3,
+                 boundary : str = "p p p",
                  ensemble : Literal["nve", "nvt", "npt", "nph"] = "nve",
                  start_temp : float = 300,
                  end_temp : float = 300,
@@ -41,6 +43,8 @@ class BaseLammpsSet(BaseLammpsGenerator):
         
         template = os.path.join(template_dir, "md.template") if template is None else template
         self.atom_style = atom_style
+        self.dimension = dimension
+        self.boundary = boundary
         self.ensemble = ensemble
         self.start_temp = start_temp
         self.end_temp = end_temp
@@ -58,11 +62,12 @@ class BaseLammpsSet(BaseLammpsGenerator):
         self.species = None
         
         process_kwargs = kwargs.copy()
-        process_kwargs.update({'atom_style': self.atom_style, 'ensemble': self.ensemble, 'start_temp': self.start_temp,
-                       'end_temp': self.end_temp, 'start_pressure': self.start_pressure, 'end_pressure': self.end_pressure,
-                       'psymm': self.pressure_symmetry, 'units': self.units, 'nsteps': self.nsteps, 'timestep': self.timestep, 
-                       'thermostat': self.thermostat, 'barostat': self.barostat,
-                       'log_interval': self.log_interval, 'traj_interval': self.traj_interval})
+        process_kwargs.update({'atom_style': self.atom_style, 'dimension': self.dimension, 'boundary': self.boundary,
+                               'ensemble': self.ensemble, 'start_temp': self.start_temp, 'end_temp': self.end_temp, 
+                               'start_pressure': self.start_pressure, 'end_pressure': self.end_pressure, 
+                               'psymm': self.pressure_symmetry, 'units': self.units, 'nsteps': self.nsteps, 
+                               'timestep': self.timestep, 'thermostat': self.thermostat, 'barostat': self.barostat,
+                               'log_interval': self.log_interval, 'traj_interval': self.traj_interval})
         
         self.settings = update_settings(settings = settings, **process_kwargs)
         self.settings = process_ensemble_conditions(self.settings)

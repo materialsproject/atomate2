@@ -4,6 +4,8 @@
 
 units           $units
 atom_style      $atom_style
+dimension       $dimension
+boundary        $boundary
 
 # Atom definition
 
