@@ -14,6 +14,8 @@ def update_settings(settings : dict = None, **kwargs) -> dict:
     if settings is None:
         settings = base_settings
     
+    settings  = settings.copy()
+    
     for k in base_settings.keys():
         if k not in settings.keys():
             if k not in kwargs.keys():
