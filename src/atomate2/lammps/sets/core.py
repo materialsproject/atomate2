@@ -10,6 +10,7 @@ class LammpsNVTSet(BaseLammpsSet):
     ensemble : str = "nvt"
     thermostat : str = "lengevin"
     friction : float = 0.1
+    settings : dict = None
     
     def __init__(self, 
                  thermostat : Literal['langevin', 'nose-hoover'] = 'nose-hoover',
@@ -37,6 +38,7 @@ class LammpsNPTSet(BaseLammpsSet):
     ensemble : str = "npt"
     barostat : str = "berendsen"
     friction : float = 0.1
+    settings : dict = None
     
     def __init__(self, 
                  barostat : Literal['berendsen', 'nose-hoover'] = 'berendsen',
@@ -63,6 +65,8 @@ class LammpsMinimizeSet(BaseLammpsSet):
     """
     Input set for minimization simulations.
     """
+    setting : dict = {'ensemble': 'minimize'}
+    
     def __init__(self, **kwargs):
         template = os.path.join(template_dir, "minimize.template")
         super().__init__(ensemble='minimize', template=template, settings=self.settings, **kwargs)
