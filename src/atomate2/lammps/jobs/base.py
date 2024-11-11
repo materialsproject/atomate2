@@ -44,7 +44,7 @@ class BaseLammpsMaker(Maker):
     '''
     name: str = "Base LAMMPS job"
     input_set_generator: BaseLammpsSet = field(
-        default_factory=BaseLammpsSet
+        default_factory = BaseLammpsSet
     )
     write_input_set_kwargs: dict = field(default_factory=dict)
     force_field: str = field(default_factory=str)
@@ -53,7 +53,7 @@ class BaseLammpsMaker(Maker):
     write_additional_data: dict = field(default_factory=dict)
 
     @lammps_job
-    def make(self, input_structure: Structure | Path, prev_dir : Path = None) -> Response:
+    def make(self, input_structure: Structure | Path = None, prev_dir : Path = None) -> Response:
         """Run a LAMMPS calculation."""
         
         if prev_dir:
