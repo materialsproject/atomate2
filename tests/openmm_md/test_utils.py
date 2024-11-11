@@ -57,8 +57,7 @@ def test_trajectory_reporter(interchange, tmp_path):
     n_steps = 3
     simulation.step(n_steps)
 
-    # Force reporter cleanup to create trajectory
-    reporter.__del__()
+    reporter.save()
 
     # Check trajectory was created
     assert hasattr(reporter, "trajectory")
