@@ -13,8 +13,9 @@ from typing import TYPE_CHECKING
 import numpy as np
 import openmm.unit as omm_unit
 from emmet.core.openmm import OpenMMInterchange
-from openmm import LangevinMiddleIntegrator, XmlSerializer
-from openmm.app import PDBFile
+from openmm import LangevinMiddleIntegrator, State, XmlSerializer
+from openmm.app import PDBFile, Simulation
+from pymatgen.core.trajectory import Trajectory
 
 if TYPE_CHECKING:
     from emmet.core.openmm import OpenMMTaskDocument
@@ -73,7 +74,7 @@ def download_opls_xml(
                 submit_button.click()
 
                 # Wait for the second page to load
-                # time.sleep(2)  # Adjust this delay as needed based on the loading time
+                # time.sleep(2)  # Adjust this delay as needed based on loading time
 
                 # Find and click the "XML" button under Downloads and OpenMM
                 xml_button = driver.find_element(
@@ -171,3 +172,148 @@ def openff_to_openmm_interchange(
             state=XmlSerializer.serialize(state),
             topology=pdb,
         )
+
+
+"""Reporter for creating pymatgen Trajectory objects from OpenMM simulations."""
+
+
+class PymatgenTrajectoryReporter:
+    """Reporter that creates a pymatgen Trajectory from an OpenMM simulation.
+
+    Accumulates structures and velocities during the simulation and writes them to a
+    Trajectory object when the reporter is deleted.
+    """
+
+    def __init__(
+        self,
+        file: str | Path,
+        reportInterval: int,  # noqa: N803
+        enforcePeriodicBox: bool | None = None,  # noqa: N803
+    ) -> None:
+        """Initialize the reporter.
+
+        Parameters
+        ----------
+        reportInterval : int
+            The interval (in time steps) at which to save frames
+        enforcePeriodicBox : bool | None
+            Whether to wrap coordinates to the periodic box. If None, determined from
+            simulation settings.
+        """
+        self._file = file
+        self._reportInterval = reportInterval
+        self._enforcePeriodicBox = enforcePeriodicBox
+        self._topology = None
+        self._nextModel = 0
+
+        # Storage for trajectory data
+        self._positions: list[np.ndarray] = []
+        self._velocities: list[np.ndarray] = []
+        self._lattices: list[np.ndarray] = []
+        self._frame_properties: list[dict] = []
+        self._species: list[str] | None = None
+        self._time_step: float | None = None
+
+    def describeNextReport(  # noqa: N802
+        self, simulation: Simulation
+    ) -> tuple[int, bool, bool, bool, bool, bool]:
+        """Get information about the next report this object will generate.
+
+        Parameters
+        ----------
+        simulation : Simulation
+            The Simulation to generate a report for
+
+        Returns
+        -------
+        tuple[int, bool, bool, bool, bool, bool]
+            A six element tuple. The first element is the number of steps until the
+            next report. The remaining elements specify whether that report will
+            require positions, velocities, forces, energies, and periodic box info.
+        """
+        steps = self._reportInterval - simulation.currentStep % self._reportInterval
+        return (steps, True, True, False, True, self._enforcePeriodicBox)
+
+    def report(self, simulation: Simulation, state: State) -> None:
+        """Generate a report.
+
+        Parameters
+        ----------
+        simulation : Simulation
+            The Simulation to generate a report for
+        state : State
+            The current state of the simulation
+        """
+        if self._nextModel == 0:
+            self._topology = simulation.topology
+            self._species = [
+                atom.element.symbol for atom in simulation.topology.atoms()
+            ]
+            self._time_step = (
+                simulation.integrator.getStepSize() * self._reportInterval
+            ).value_in_unit(omm_unit.femtoseconds)
+
+        # Get positions and velocities in Angstrom and Angstrom/fs
+        positions = state.getPositions(asNumpy=True).value_in_unit(omm_unit.angstrom)
+        velocities = state.getVelocities(asNumpy=True).value_in_unit(
+            omm_unit.angstrom / omm_unit.femtosecond
+        )
+        box_vectors = state.getPeriodicBoxVectors(asNumpy=True).value_in_unit(
+            omm_unit.angstrom
+        )
+
+        ev_to_kj_per_mol = 96.485
+
+        # Get energies in eV
+        kinetic_energy = (
+            state.getKineticEnergy()._value / ev_to_kj_per_mol  # noqa: SLF001
+        )
+        potential_energy = (
+            state.getPotentialEnergy()._value / ev_to_kj_per_mol  # noqa: SLF001
+        )
+
+        self._positions.append(positions)
+        self._velocities.append(velocities)
+        self._lattices.append(box_vectors)
+        self._frame_properties.append(
+            {
+                "kinetic_energy": kinetic_energy,
+                "potential_energy": potential_energy,
+                "total_energy": kinetic_energy + potential_energy,
+            }
+        )
+
+        self._nextModel += 1
+
+    def __del__(self) -> None:
+        """Write accumulated trajectory data to a pymatgen Trajectory object."""
+        if not self._positions:
+            return
+
+        velocities = [
+            [tuple(site_vel) for site_vel in frame_vel]
+            for frame_vel in self._velocities
+        ]
+
+        # Format site properties as list of dicts, one per frame
+        site_properties = []
+        n_frames = len(self._positions)
+        site_properties = [{"velocities": velocities[i]} for i in range(n_frames)]
+
+        # Create trajectory with positions and lattices
+        trajectory = Trajectory(
+            species=self._species,
+            coords=self._positions,
+            lattice=self._lattices,
+            frame_properties=self._frame_properties,
+            site_properties=site_properties,  # Now properly formatted as list of dicts
+            time_step=self._time_step,
+        )
+
+        # Store trajectory as a class attribute so it can be accessed after deletion
+        self.trajectory = trajectory
+
+        # write out trajectory to a file
+        json_str = trajectory.to_json()
+        with open(self._file, "w") as f:
+            f.write(json_str)

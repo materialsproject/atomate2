@@ -1,7 +1,8 @@
 from pathlib import Path
 
 import numpy as np
-from emmet.core.openmm import OpenMMInterchange
+from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
+from monty.serialization import loadfn
 from openmm import XmlSerializer
 
 from atomate2.openmm.jobs import (
@@ -51,7 +52,7 @@ def test_nvt_maker(interchange, run_job):
     state = XmlSerializer.deserialize(interchange.state)
     start_positions = state.getPositions(asNumpy=True)
 
-    maker = NVTMaker(n_steps=10, state_interval=1)
+    maker = NVTMaker(n_steps=10, state_interval=1, traj_interval=5)
     base_job = maker.make(interchange)
     task_doc = run_job(base_job)
 
@@ -88,3 +89,36 @@ def test_temp_change_maker(interchange, run_job):
     # test that temperature was updated correctly in the input
     assert task_doc.calcs_reversed[0].input.temperature == 310
     assert task_doc.calcs_reversed[0].input.starting_temperature == 298
+
+
+def test_trajectory_reporter_json(interchange, tmp_path, run_job):
+    """Test that the trajectory reporter can be serialized to JSON."""
+    # Create simulation using NVTMaker
+    maker = NVTMaker(
+        temperature=300,
+        friction_coefficient=1.0,
+        step_size=0.002,
+        platform_name="CPU",
+        traj_interval=1,
+        n_steps=3,
+        traj_file_type="json",
+    )
+
+    job = maker.make(interchange)
+    task_doc = run_job(job)
+
+    # Test serialization/deserialization
+    json_str = task_doc.model_dump_json()
+    new_doc = OpenMMTaskDocument.model_validate_json(json_str)
+
+    # Verify trajectory data survived the round trip
+    calc_output = new_doc.calcs_reversed[0].output
+    traj_file = Path(calc_output.dir_name) / calc_output.traj_file
+    traj = loadfn(traj_file)
+
+    assert len(traj) == 3
+    assert traj.coords.max() < traj.lattice.max()
+    assert "kinetic_energy" in traj.frame_properties[0]
+
+    # Check that trajectory file was written
+    assert (tmp_path / "trajectory.json").exists()
