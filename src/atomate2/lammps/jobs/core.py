@@ -1,57 +1,31 @@
-import abc
 from dataclasses import dataclass, field
-from typing import Callable, Union
+from atomate2.lammps.sets.core import BaseLammpsSet, LammpsNVTSet, LammpsNPTSet, LammpsMinimizeSet
+from atomate2.lammps.jobs.base import BaseLammpsMaker
 
-from pymatgen.core import Structure
-
-from atomate2.lammps.sets.base import (
-    BaseLammpsGenerator,
-    LammpsMelt,
-    LammpsMinimization,
-    LammpsQuench,
-    LammpsThermalize,
-)
-from atomate2.lammps.sets.core import CustomLammpsSet
-from ..jobs.base import BaseLammpsMaker
-
-
-class StoppingCriteria(abc.ABC):
-    """Abstract class for encapsulating criteria for ending a LAMMPS dynamics run."""
-
-
-class AutocorrelationCriteria(StoppingCriteria):
-    pass
+@dataclass
+class LammpsNVTMaker(BaseLammpsMaker):
+    name: str = "nvt"
+    input_set_generator: BaseLammpsSet = field(default_factory=LammpsNVTSet)
 
 
 @dataclass
-class MeltMaker(BaseLammpsMaker):
-    melt_temperature: float 
-    stopping_criteria: str | Callable[[Structure, List[Structure]]] | StoppingCriteria  #recheck type inside Callable here
-    name: str = "melt"
-    input_set_generator: BaseLammpsGenerator = field(default_factory=LammpsMelt)
-
-
-@dataclass
-class ThermalizeMaker(BaseLammpsMaker):
-    thermalization_temperature: float
-    stopping_criteria: str | Callable[[Union[Structure, List[Structure]]]] | StoppingCriteria
-    name: str = "thermalize"
-    input_set_generator: BaseLammpsGenerator = field(default_factory=LammpsThermalize)
-
-
-@dataclass
-class QuenchMaker(BaseLammpsMaker):
-    name: str = "quench"
-    input_set_generator: BaseLammpsGenerator = field(default_factory=LammpsQuench)
+class LammpsNPTMaker(BaseLammpsMaker):
+    name: str = "npt"
+    input_set_generator: BaseLammpsSet = field(default_factory=LammpsNPTSet)
 
 
 @dataclass
 class MinimizationMaker(BaseLammpsMaker):
     name: str = "minimization"
-    input_set_generator: BaseLammpsGenerator = field(default_factory=LammpsMinimization)
-    
-    
+    input_set_generator: LammpsMinimizeSet = field(default_factory=LammpsMinimizeSet)
+
+@dataclass
 class CustomLammpsMaker(BaseLammpsMaker):
     name: str = "custom_lammps_job"
     template : str = None
-    input_set_generator: BaseLammpsGenerator = field(default_factory=CustomLammpsSet)
+    settings : dict = field(default_factory=dict)
+    
+    def __post_init__(self):
+        self.input_set_generator = BaseLammpsSet(template=self.template, settings=self.settings)
+        
+#TODO: add makers for Quench, Thermalize, Melt.
