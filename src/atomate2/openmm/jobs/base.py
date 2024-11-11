@@ -239,6 +239,8 @@ class BaseOpenMMMaker(Maker):
         # leaving the MDAReporter makes the builders fail
         for _ in range(len(sim.reporters)):
             reporter = sim.reporters.pop()
+            if hasattr(reporter, "save"):
+                reporter.save()
             del reporter
         del sim
 

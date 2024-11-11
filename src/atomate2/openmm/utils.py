@@ -174,9 +174,6 @@ def openff_to_openmm_interchange(
         )
 
 
-"""Reporter for creating pymatgen Trajectory objects from OpenMM simulations."""
-
-
 class PymatgenTrajectoryReporter:
     """Reporter that creates a pymatgen Trajectory from an OpenMM simulation.
 
@@ -194,6 +191,8 @@ class PymatgenTrajectoryReporter:
 
         Parameters
         ----------
+        file : str | Path
+            The file to write the trajectory to
         reportInterval : int
             The interval (in time steps) at which to save frames
         enforcePeriodicBox : bool | None
@@ -232,7 +231,7 @@ class PymatgenTrajectoryReporter:
             require positions, velocities, forces, energies, and periodic box info.
         """
         steps = self._reportInterval - simulation.currentStep % self._reportInterval
-        return (steps, True, True, False, True, self._enforcePeriodicBox)
+        return steps, True, True, False, True, self._enforcePeriodicBox
 
     def report(self, simulation: Simulation, state: State) -> None:
         """Generate a report.
@@ -262,15 +261,14 @@ class PymatgenTrajectoryReporter:
             omm_unit.angstrom
         )
 
-        ev_to_kj_per_mol = 96.485
-
         # Get energies in eV
         kinetic_energy = (
-            state.getKineticEnergy()._value / ev_to_kj_per_mol  # noqa: SLF001
-        )
+            state.getKineticEnergy() / omm_unit.AVOGADRO_CONSTANT_NA
+        ).value_in_unit(omm_unit.ev)
+
         potential_energy = (
-            state.getPotentialEnergy()._value / ev_to_kj_per_mol  # noqa: SLF001
-        )
+            state.getPotentialEnergy() / omm_unit.AVOGADRO_CONSTANT_NA
+        ).value_in_unit(omm_unit.ev)
 
         self._positions.append(positions)
         self._velocities.append(velocities)
@@ -285,7 +283,7 @@ class PymatgenTrajectoryReporter:
 
         self._nextModel += 1
 
-    def __del__(self) -> None:
+    def save(self) -> None:
         """Write accumulated trajectory data to a pymatgen Trajectory object."""
         if not self._positions:
             return
