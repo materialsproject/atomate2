@@ -11,6 +11,7 @@ from emmet.core.neb import NebMethod
 from jobflow import Flow, Maker, Response, job
 from monty.os.path import zpath
 from pymatgen.analysis.diffusion.neb.pathfinder import ChgcarPotential, NEBPathfinder
+from pymatgen.core import Element
 from pymatgen.io.vasp.outputs import Chgcar
 
 from atomate2.common.schemas.neb import NebPathwayResult, NebResult
@@ -138,7 +139,7 @@ def get_images_and_relax(
     relax_maker: Maker,
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms",
     use_aeccar: bool = False,
-    min_hop_distance: float | None = None,
+    min_hop_distance: float | bool = True,
 ) -> Response:
     """
     Get and relax image input structures.
@@ -164,10 +165,11 @@ def get_images_and_relax(
         If True, the sum of the host structure AECCAR0 (pseudo-core charge density)
         and AECCAR2 (valence charge density) are used in image pathfinding.
         If False (default), the CHGCAR (valence charge density) is used.
-    min_hop_distance : float or None (default)
+    min_hop_distance : float or bool (default = True)
         If a float, skips any hops where the working ion moves a distance less
-        than min_hop_distance. This situation can happen when a migration graph
-        mistakenly identifies a periodic image outside the computational cell.
+        than min_hop_distance.
+        If True, min_hop_distance is set to twice the average ionic radius.
+        If False, no checks are made.
 
     Returns
     -------
@@ -195,13 +197,21 @@ def get_images_and_relax(
     if isinstance(n_images, int):
         n_images = [n_images for _ in inserted_combo_list]
 
+    if isinstance(min_hop_distance, bool) and min_hop_distance:
+        _wion = Element(str(working_ion))
+        if (ionic_radius := getattr(_wion, "average_ionic_radius", None)) is not None:
+            min_hop_distance = 2 * ionic_radius
+        elif (atomic_radius := getattr(_wion, "atomic_radius", None)) is not None:
+            # all elements have an atomic radius in pymatgen
+            min_hop_distance = atomic_radius
+
     for hop_idx, combo in enumerate(inserted_combo_list):
         ini_ind, fin_ind = combo.split("+")
 
         if (
             (not all(ep_structures.get(idx) for idx in [ini_ind, fin_ind]))  # (a)
             or (
-                min_hop_distance is not None  # (b)
+                isinstance(min_hop_distance, float)  # (b)
                 and get_hop_distance_from_endpoints(
                     [ep_structures[ini_ind], ep_structures[fin_ind]], working_ion
                 )

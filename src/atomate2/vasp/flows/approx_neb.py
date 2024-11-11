@@ -47,10 +47,11 @@ class ApproxNebMaker(Maker):
         If True, the sum of the host structure AECCAR0 (pseudo-core charge density)
         and AECCAR2 (valence charge density) are used in image pathfinding.
         If False (default), the CHGCAR (valence charge density) is used.
-    min_hop_distance : float or None (default)
+    min_hop_distance : float or bool (default = True)
         If a float, skips any hops where the working ion moves a distance less
-        than min_hop_distance. This situation can happen when a migration graph
-        mistakenly identifies a periodic image outside the computational cell.
+        than min_hop_distance.
+        If True, min_hop_distance is set to twice the average ionic radius.
+        If False, no checks are made.
     """
 
     name: str = "ApproxNEB"
@@ -58,7 +59,7 @@ class ApproxNebMaker(Maker):
     image_relax_maker: Maker = field(default_factory=ApproxNebImageRelaxMaker)
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = None
     use_aeccar: bool = False
-    min_hop_distance: float | None = None
+    min_hop_distance: float | bool = True
 
     def make(
         self,
