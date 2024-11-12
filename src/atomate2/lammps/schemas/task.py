@@ -79,8 +79,10 @@ class LammpsTaskDocument(StructureMetadata):
         dump_files = [os.path.join(dir_name, file) for file in glob("*.dump*", root_dir=dir_name)]
 
         if store_trajectory != StoreTrajectoryOption.NO:
+            if output_file_pattern is None:
+                output_file_pattern = "trajectory"
             trajectories = [DumpConvertor(store_md_outputs=store_trajectory, 
-                                          dumpfile=os.path.join(dir_name, dump_file)).save(filename=f'{output_file_pattern}{i}',
+                                          dumpfile=os.path.join(dir_name, dump_file)).save(filename=f'{output_file_pattern}{i}.traj',
                                                                                            fmt=trajectory_format)
                             for i, dump_file in enumerate(dump_files)]
             structure = trajectories[-1][-1] if trajectories and trajectory_format == 'pmg' else None
