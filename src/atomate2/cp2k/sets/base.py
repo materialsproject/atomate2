@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
 from importlib.resources import files as get_mod_path
@@ -144,6 +145,10 @@ class Cp2kInputSet(InputSet):
     @property
     def is_valid(self) -> bool:
         """Whether the input set is valid."""
+        warnings.warn(
+            "Cp2kInputSet.is_valid is not yet implemented and will always return True.",
+            stacklevel=2,
+        )
         return True
 
 
@@ -323,11 +328,7 @@ class Cp2kInputGenerator(InputGenerator):
         # Generate base input but override with user input settings
         input_settings = recursive_update(input_settings, input_updates)
         input_settings = recursive_update(input_settings, self.user_input_settings)
-        overrides = (
-            input_settings.pop("override_default_params")
-            if "override_default_params" in input_settings
-            else {}
-        )
+        overrides = input_settings.pop("override_default_params", {})
         cp2k_input = DftSet(structure=structure, kpoints=kpoints, **input_settings)
 
         for setting in input_settings:
