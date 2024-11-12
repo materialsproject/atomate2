@@ -423,7 +423,7 @@ class BaseOpenMMMaker(Maker):
         else:
             prev_input = None
 
-        defaults = {**OPENMM_MAKER_DEFAULTS, **(add_defaults or {})}
+        defaults = OPENMM_MAKER_DEFAULTS | (add_defaults or {})
 
         if getattr(self, attr, None) is not None:
             attr_value = getattr(self, attr)

@@ -73,7 +73,7 @@ def get_average_volume_from_mp_api(
     Returns
     -------
     float
-        The average volume per atom for the composition.
+        The average volume per atom for the composition in Angstrom^3.
     """
     from mp_api.client import MPRester
 
