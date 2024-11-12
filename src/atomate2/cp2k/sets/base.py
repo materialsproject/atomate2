@@ -8,7 +8,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from importlib.resources import files as get_mod_path
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 from monty.io import zopen
@@ -40,7 +40,7 @@ class Cp2kInputSet(InputSet):
     def __init__(
         self,
         cp2k_input: Cp2kInput,
-        optional_files: dict | None = None,
+        optional_files: dict | None | Literal[False] = None,
     ) -> None:
         """Initialize the set.
 
@@ -187,7 +187,7 @@ class Cp2kInputGenerator(InputGenerator):
         self,
         structure: Structure | Molecule = None,
         prev_dir: str | Path = None,
-        optional_files: dict | None = None,
+        optional_files: dict | None | Literal[False] = None,
     ) -> Cp2kInputSet:
         """Get a CP2K input set.
 
@@ -202,6 +202,8 @@ class Cp2kInputGenerator(InputGenerator):
             A previous directory to generate the input set from.
         optional_files
             Additional files (e.g. vdw kernel file) to be included in the input set.
+            If False, no optional files will be included. Defaults to writing a BASIS
+            and POTENTIAL file.
 
         Returns
         -------
@@ -229,15 +231,16 @@ class Cp2kInputGenerator(InputGenerator):
             prev_input,
             input_updates,
         )
-        optional_files = optional_files or {}
-        optional_files["basis"] = {
-            "filename": "BASIS",
-            "object": self._get_basis_file(cp2k_input=cp2k_input),
-        }
-        optional_files["potential"] = {
-            "filename": "POTENTIAL",
-            "object": self._get_potential_file(cp2k_input=cp2k_input),
-        }
+        if optional_files is not False:
+            optional_files = optional_files or {}
+            optional_files["basis"] = {
+                "filename": "BASIS",
+                "object": self._get_basis_file(cp2k_input=cp2k_input),
+            }
+            optional_files["potential"] = {
+                "filename": "POTENTIAL",
+                "object": self._get_potential_file(cp2k_input=cp2k_input),
+            }
 
         return Cp2kInputSet(cp2k_input=cp2k_input, optional_files=optional_files)
 
