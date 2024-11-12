@@ -109,6 +109,14 @@ def get_endpoints_and_relax(
         ep_distinct.extend([ini, fin])
     ep_distinct = list(set(ep_distinct))
 
+    # In principle, it makes sense to use the magmoms from the host
+    # structure to initialize the host + inserted working ion calcs
+    # In practice, this throws unfixable "Bravais" errors in VASP
+    # (the actual reciprocal lattice does not have the expected
+    # symmetry of the ideal reciprocal lattice.)
+    if host_structure.site_properties.get("magmom") is not None:
+        host_structure.remove_site_property("magmom")
+
     ep_relax_output = {}
     ep_relax_jobs = []
     for ep_index, ep_coords in endpoint_coords.items():
