@@ -102,7 +102,7 @@ class LammpsTaskDocument(StructureMetadata):
                                   raw_log_file=raw_log, 
                                   thermo_log=thermo_log, 
                                   dump_files=dump_files,
-                                  trajectory=trajectories,
+                                  trajectory=trajectories if store_trajectory != StoreTrajectoryOption.NO else None,
                                   structure=structure if store_trajectory != StoreTrajectoryOption.NO else None,
                                   inputs=inputs,
                                   state=state,
