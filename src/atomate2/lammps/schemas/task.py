@@ -7,12 +7,11 @@ from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.core import Composition, Structure
 from pydantic import Field
-from pymatgen.io.lammps.outputs import parse_lammps_dumps, parse_lammps_log
+from pymatgen.io.lammps.outputs import parse_lammps_log
 from atomate2.lammps.files import DumpConvertor
 import os
 from glob import glob
 from atomate2.utils.datetime import datetime_str
-import time
 
 class LammpsTaskDocument(StructureMetadata):
 
@@ -71,11 +70,6 @@ class LammpsTaskDocument(StructureMetadata):
                 raw_log = f.read()
             thermo_log = parse_lammps_log(log_file)
             state = TaskState.ERROR if "ERROR" in raw_log else TaskState.SUCCESS
-        except FileNotFoundError:
-            Warning(f"Log file not found for {dir_name}")
-            raw_log = ''
-            thermo_log = []
-            state = TaskState.ERROR
         except ValueError:
             Warning(f"Error parsing log file for {dir_name}, incomplete job")
             raw_log = ''
@@ -83,7 +77,7 @@ class LammpsTaskDocument(StructureMetadata):
             state = TaskState.ERROR
             
         dump_files = [os.path.join(dir_name, file) for file in glob("*.dump*", root_dir=dir_name)]
-        print(dump_files)
+
         if store_trajectory != StoreTrajectoryOption.NO:
             trajectories = [DumpConvertor(store_md_outputs=store_trajectory, 
                                           dumpfile=os.path.join(dir_name, dump_file)).save(filename=f'{output_file_pattern}{i}',
@@ -109,12 +103,7 @@ class LammpsTaskDocument(StructureMetadata):
                                   thermo_log=thermo_log, 
                                   dump_files=dump_files,
                                   trajectory=trajectories,
-                                  structure=structure,
+                                  structure=structure if store_trajectory != StoreTrajectoryOption.NO else None,
                                   inputs=inputs,
                                   state=state,
                                   )
-        
-''' References to implement here: https://github.com/materialsproject/emmet/blob/main/emmet-core/emmet/core/openmm/calculations.py 
-https://github.com/materialsproject/emmet/blob/main/emmet-core/emmet/core/openmm/tasks.py
-This might take a lot of work considering the sheer number of possible lammps outputs there can be. 
-'''

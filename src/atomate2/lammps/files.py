@@ -1,5 +1,4 @@
 from pathlib import Path
-import numpy as np
 from pymatgen.core import Structure, Molecule
 from pymatgen.io.lammps.generators import BaseLammpsGenerator
 from ase.io import read
@@ -73,7 +72,5 @@ class DumpConvertor(MSONable):
         filename = str(filename) if filename is not None else None
         if fmt == "pmg" and filename:
             return self.to_pymatgen_trajectory(filename=filename) 
-        elif fmt == "ase" and filename:
+        if fmt == "ase" and filename:
             return self.to_ase_trajectory(filename=filename)
-
-        

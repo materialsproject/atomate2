@@ -1,19 +1,18 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, List
+from typing import Callable, List
 import os
 
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
-from monty.shutil import gzip_dir
 from pymatgen.core import Structure
 
 from emmet.core.vasp.task_valid import TaskState
 
-from ..files import write_lammps_input_set
-from ..run import run_lammps
-from ..schemas.task import LammpsTaskDocument
-from ..sets.base import BaseLammpsSet
+from atomate2.lammps.files import write_lammps_input_set
+from atomate2.lammps.run import run_lammps
+from atomate2.lammps.schemas.task import LammpsTaskDocument
+from atomate2.lammps.sets.base import BaseLammpsSet
 
 _DATA_OBJECTS: List[str] = ["raw_log_file", "inputs", "metadata", "trajectory"]
 
@@ -84,7 +83,7 @@ class BaseLammpsMaker(Maker):
                     if "ERROR" in line:
                         error=error.join(task_doc.raw_log_file.split('\n')[index:])
                         break
-            except:
+            except ValueError:
                 error = "could not parse log file"
             raise Exception(f"Task {task_doc.task_label} failed, error: {error}") 
         

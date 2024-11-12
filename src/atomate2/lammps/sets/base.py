@@ -7,7 +7,7 @@ import logging
 import os
 import numpy as np
 from pymatgen.io.lammps.generators import BaseLammpsGenerator
-from typing import Union, Literal, Sequence
+from typing import Literal, Sequence
 from atomate2.lammps.sets.utils import process_ensemble_conditions, update_settings
 
 from atomate2.ase.md import MDEnsemble
@@ -96,7 +96,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
                  barostat : Literal["berendsen", "nose-hoover"] = "nose-hoover",
                  friction : float | None = None,
                  template : str = None,
-                 settings : dict | None = {},
+                 settings : dict | None = None,
                  **kwargs):
         
         template = os.path.join(template_dir, "md.template") if template is None else template
@@ -133,6 +133,8 @@ class BaseLammpsSet(BaseLammpsGenerator):
         self.species = None
         
         process_kwargs = kwargs.copy()
+        if settings is None:
+            settings = {}
         settings.update({'atom_style': self.atom_style, 
                          'dimension': self.dimension, 
                         'boundary': self.boundary,
@@ -168,7 +170,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
                 self.force_field = f'pair_style {pair_style}\n pair_coeff {pair_coeff} {self.species}'
                 
             except KeyError:
-                logger.error(f"Force field parameters (pair_style, pair_coeff and species) not found in {force_field}, check input format!")
+                logger.error("Force field parameters (pair_style, pair_coeff and species) not found in force_field, check input format!")
                 raise KeyError
         
         if isinstance(force_field, str):
