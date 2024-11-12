@@ -35,8 +35,11 @@ atomate2.vasp.jobs
    elastic
    elph
    eos
+   ferroelectric
    lobster
    matpes
    md
    mp
+   mpmorph
+   mvl
    phonons

@@ -34,6 +34,7 @@ atomate2.common.jobs
    eos
    gruneisen
    magnetism
+   mpmorph
    phonons
    qha
    utils

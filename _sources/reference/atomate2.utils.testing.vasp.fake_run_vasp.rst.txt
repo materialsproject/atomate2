@@ -1,0 +1,6 @@
+fake\_run\_vasp
+===============
+
+.. currentmodule:: atomate2.utils.testing.vasp
+
+.. autofunction:: fake_run_vasp

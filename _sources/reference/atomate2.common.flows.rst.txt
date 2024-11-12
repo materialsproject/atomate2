@@ -34,5 +34,6 @@ atomate2.common.flows
    eos
    gruneisen
    magnetism
+   mpmorph
    phonons
    qha

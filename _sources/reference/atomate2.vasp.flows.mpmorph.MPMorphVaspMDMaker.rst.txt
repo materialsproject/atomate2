@@ -1,0 +1,8 @@
+MPMorphVaspMDMaker
+==================
+
+.. currentmodule:: atomate2.vasp.flows.mpmorph
+
+.. autoclass:: MPMorphVaspMDMaker
+   :show-inheritance:
+   :members:

@@ -27,12 +27,6 @@ atomate2.aims.schemas.task
       
    
    
-      
-   
-   
-      
-   
-   
    
    
    
@@ -55,7 +49,5 @@ atomate2.aims.schemas.task
       ConvergenceSummary
       InputDoc
       OutputDoc
-      Species
-      SpeciesSummary
 
 

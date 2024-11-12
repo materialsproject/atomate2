@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.vasp.flows.ferroelectric
+
+.. autodata:: TYPE_CHECKING

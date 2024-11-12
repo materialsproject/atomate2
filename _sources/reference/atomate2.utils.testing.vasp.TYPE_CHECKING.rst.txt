@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.utils.testing.vasp
+
+.. autodata:: TYPE_CHECKING

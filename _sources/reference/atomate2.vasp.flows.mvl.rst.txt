@@ -1,0 +1,37 @@
+atomate2.vasp.flows.mvl
+=======================
+
+.. automodule:: atomate2.vasp.flows.mvl
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MVLGWBandStructureMaker
+      TYPE_CHECKING
+
+

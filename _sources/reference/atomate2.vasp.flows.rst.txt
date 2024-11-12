@@ -35,10 +35,13 @@ atomate2.vasp.flows
    electrode
    elph
    eos
+   ferroelectric
    gruneisen
    lobster
    matpes
    md
    mp
+   mpmorph
+   mvl
    phonons
    qha

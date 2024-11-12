@@ -1,0 +1,8 @@
+MPMorphEVPostProcess
+====================
+
+.. currentmodule:: atomate2.common.jobs.eos
+
+.. autoclass:: MPMorphEVPostProcess
+   :show-inheritance:
+   :members:

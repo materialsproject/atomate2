@@ -1,0 +1,8 @@
+MVLStaticMaker
+==============
+
+.. currentmodule:: atomate2.vasp.jobs.mvl
+
+.. autoclass:: MVLStaticMaker
+   :show-inheritance:
+   :members:

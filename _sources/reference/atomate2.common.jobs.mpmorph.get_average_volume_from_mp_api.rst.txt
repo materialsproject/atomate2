@@ -1,0 +1,6 @@
+get\_average\_volume\_from\_mp\_api
+===================================
+
+.. currentmodule:: atomate2.common.jobs.mpmorph
+
+.. autofunction:: get_average_volume_from_mp_api

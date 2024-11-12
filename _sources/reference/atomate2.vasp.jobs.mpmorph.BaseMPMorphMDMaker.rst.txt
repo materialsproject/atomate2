@@ -1,0 +1,8 @@
+BaseMPMorphMDMaker
+==================
+
+.. currentmodule:: atomate2.vasp.jobs.mpmorph
+
+.. autoclass:: BaseMPMorphMDMaker
+   :show-inheritance:
+   :members:

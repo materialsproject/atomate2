@@ -1,0 +1,8 @@
+MVLGWMaker
+==========
+
+.. currentmodule:: atomate2.vasp.jobs.mvl
+
+.. autoclass:: MVLGWMaker
+   :show-inheritance:
+   :members:

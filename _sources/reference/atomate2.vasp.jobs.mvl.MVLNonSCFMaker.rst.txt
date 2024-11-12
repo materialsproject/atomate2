@@ -1,0 +1,8 @@
+MVLNonSCFMaker
+==============
+
+.. currentmodule:: atomate2.vasp.jobs.mvl
+
+.. autoclass:: MVLNonSCFMaker
+   :show-inheritance:
+   :members:

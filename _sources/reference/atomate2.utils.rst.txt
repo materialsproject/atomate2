@@ -31,3 +31,4 @@
    file_client
    log
    path
+   testing

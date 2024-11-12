@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.vasp.jobs.mpmorph
+
+.. autodata:: TYPE_CHECKING

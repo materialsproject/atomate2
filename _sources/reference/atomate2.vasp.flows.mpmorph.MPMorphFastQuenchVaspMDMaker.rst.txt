@@ -1,0 +1,8 @@
+MPMorphFastQuenchVaspMDMaker
+============================
+
+.. currentmodule:: atomate2.vasp.flows.mpmorph
+
+.. autoclass:: MPMorphFastQuenchVaspMDMaker
+   :show-inheritance:
+   :members:

@@ -1,0 +1,8 @@
+MPMorphMDSetGenerator
+=====================
+
+.. currentmodule:: atomate2.vasp.sets.mpmorph
+
+.. autoclass:: MPMorphMDSetGenerator
+   :show-inheritance:
+   :members:

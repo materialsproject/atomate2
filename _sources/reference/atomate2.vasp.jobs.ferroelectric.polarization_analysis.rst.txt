@@ -1,0 +1,6 @@
+polarization\_analysis
+======================
+
+.. currentmodule:: atomate2.vasp.jobs.ferroelectric
+
+.. autofunction:: polarization_analysis

@@ -1,0 +1,41 @@
+atomate2.aims.jobs.magnetism
+============================
+
+.. automodule:: atomate2.aims.jobs.magnetism
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MagneticRelaxMaker
+      MagneticStaticMaker
+      TYPE_CHECKING
+
+

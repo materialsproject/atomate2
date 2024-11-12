@@ -1,0 +1,38 @@
+atomate2.vasp.flows.ferroelectric
+=================================
+
+.. automodule:: atomate2.vasp.flows.ferroelectric
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      FerroelectricMaker
+      TYPE_CHECKING
+
+

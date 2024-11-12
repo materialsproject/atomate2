@@ -1,0 +1,6 @@
+get\_polarization\_output
+=========================
+
+.. currentmodule:: atomate2.vasp.jobs.ferroelectric
+
+.. autofunction:: get_polarization_output

@@ -1,0 +1,8 @@
+FerroelectricMaker
+==================
+
+.. currentmodule:: atomate2.vasp.flows.ferroelectric
+
+.. autoclass:: FerroelectricMaker
+   :show-inheritance:
+   :members:

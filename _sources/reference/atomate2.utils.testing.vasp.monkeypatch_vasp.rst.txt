@@ -1,0 +1,6 @@
+monkeypatch\_vasp
+=================
+
+.. currentmodule:: atomate2.utils.testing.vasp
+
+.. autofunction:: monkeypatch_vasp

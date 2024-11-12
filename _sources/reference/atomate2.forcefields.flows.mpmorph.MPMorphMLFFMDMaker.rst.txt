@@ -1,0 +1,8 @@
+MPMorphMLFFMDMaker
+==================
+
+.. currentmodule:: atomate2.forcefields.flows.mpmorph
+
+.. autoclass:: MPMorphMLFFMDMaker
+   :show-inheritance:
+   :members:

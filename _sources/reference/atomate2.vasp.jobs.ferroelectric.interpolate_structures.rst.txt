@@ -1,0 +1,6 @@
+interpolate\_structures
+=======================
+
+.. currentmodule:: atomate2.vasp.jobs.ferroelectric
+
+.. autofunction:: interpolate_structures

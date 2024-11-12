@@ -1,0 +1,45 @@
+atomate2.vasp.jobs.mvl
+======================
+
+.. automodule:: atomate2.vasp.jobs.mvl
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MVLGWMaker
+      MVLNonSCFMaker
+      MVLStaticMaker
+      TYPE_CHECKING
+
+

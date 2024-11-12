@@ -1,0 +1,33 @@
+atomate2.vasp.sets.mpmorph
+==========================
+
+.. automodule:: atomate2.vasp.sets.mpmorph
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MPMorphMDSetGenerator
+
+

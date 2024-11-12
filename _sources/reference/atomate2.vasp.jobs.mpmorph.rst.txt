@@ -1,0 +1,45 @@
+atomate2.vasp.jobs.mpmorph
+==========================
+
+.. automodule:: atomate2.vasp.jobs.mpmorph
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      BaseMPMorphMDMaker
+      FastQuenchVaspMaker
+      SlowQuenchVaspMaker
+      TYPE_CHECKING
+
+

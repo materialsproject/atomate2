@@ -1,0 +1,6 @@
+clear\_vasp\_inputs
+===================
+
+.. currentmodule:: atomate2.utils.testing.vasp
+
+.. autofunction:: clear_vasp_inputs

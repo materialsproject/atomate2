@@ -1,0 +1,6 @@
+check\_incar
+============
+
+.. currentmodule:: atomate2.utils.testing.vasp
+
+.. autofunction:: check_incar

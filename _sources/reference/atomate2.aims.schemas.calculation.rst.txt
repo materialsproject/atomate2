@@ -38,6 +38,9 @@ atomate2.aims.schemas.calculation
       
    
    
+      
+   
+   
    
    
    
@@ -59,6 +62,7 @@ atomate2.aims.schemas.calculation
    
       AimsObject
       Calculation
+      CalculationInput
       CalculationOutput
       STORE_VOLUMETRIC_DATA
       TYPE_CHECKING

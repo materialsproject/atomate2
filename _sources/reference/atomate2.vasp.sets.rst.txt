@@ -33,3 +33,4 @@ atomate2.vasp.sets
    eos
    matpes
    mp
+   mpmorph

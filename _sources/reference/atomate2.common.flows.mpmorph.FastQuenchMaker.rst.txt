@@ -1,0 +1,8 @@
+FastQuenchMaker
+===============
+
+.. currentmodule:: atomate2.common.flows.mpmorph
+
+.. autoclass:: FastQuenchMaker
+   :show-inheritance:
+   :members:

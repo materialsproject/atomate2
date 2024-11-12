@@ -1,0 +1,8 @@
+EquilibriumVolumeMaker
+======================
+
+.. currentmodule:: atomate2.common.flows.mpmorph
+
+.. autoclass:: EquilibriumVolumeMaker
+   :show-inheritance:
+   :members:

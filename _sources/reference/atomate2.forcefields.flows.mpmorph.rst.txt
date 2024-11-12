@@ -1,0 +1,45 @@
+atomate2.forcefields.flows.mpmorph
+==================================
+
+.. automodule:: atomate2.forcefields.flows.mpmorph
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      FastQuenchMLFFMDMaker
+      MPMorphMLFFMDMaker
+      SlowQuenchMLFFMDMaker
+      TYPE_CHECKING
+
+

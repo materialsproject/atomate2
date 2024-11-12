@@ -1,0 +1,49 @@
+atomate2.common.flows.mpmorph
+=============================
+
+.. automodule:: atomate2.common.flows.mpmorph
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      EquilibriumVolumeMaker
+      FastQuenchMaker
+      MPMorphMDMaker
+      SlowQuenchMaker
+      TYPE_CHECKING
+
+

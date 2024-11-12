@@ -1,0 +1,8 @@
+MPMorphMDMaker
+==============
+
+.. currentmodule:: atomate2.common.flows.mpmorph
+
+.. autoclass:: MPMorphMDMaker
+   :show-inheritance:
+   :members:

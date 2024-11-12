@@ -1,0 +1,45 @@
+atomate2.vasp.flows.mpmorph
+===========================
+
+.. automodule:: atomate2.vasp.flows.mpmorph
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      MPMorphFastQuenchVaspMDMaker
+      MPMorphSlowQuenchVaspMDMaker
+      MPMorphVaspMDMaker
+      TYPE_CHECKING
+
+

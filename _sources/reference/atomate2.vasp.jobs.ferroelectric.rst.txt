@@ -1,0 +1,49 @@
+atomate2.vasp.jobs.ferroelectric
+================================
+
+.. automodule:: atomate2.vasp.jobs.ferroelectric
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      add_interpolation_flow
+      get_polarization_output
+      interpolate_structures
+      polarization_analysis
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
+
+

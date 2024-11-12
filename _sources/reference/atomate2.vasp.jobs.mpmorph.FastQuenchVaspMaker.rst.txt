@@ -1,0 +1,8 @@
+FastQuenchVaspMaker
+===================
+
+.. currentmodule:: atomate2.vasp.jobs.mpmorph
+
+.. autoclass:: FastQuenchVaspMaker
+   :show-inheritance:
+   :members:

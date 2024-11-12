@@ -1,0 +1,6 @@
+add\_interpolation\_flow
+========================
+
+.. currentmodule:: atomate2.vasp.jobs.ferroelectric
+
+.. autofunction:: add_interpolation_flow

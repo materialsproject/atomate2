@@ -1,0 +1,6 @@
+PolarizationDocument
+====================
+
+.. currentmodule:: atomate2.vasp.schemas.ferroelectric
+
+.. autopydantic_model:: PolarizationDocument

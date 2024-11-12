@@ -1,0 +1,8 @@
+PolarizationMaker
+=================
+
+.. currentmodule:: atomate2.vasp.jobs.core
+
+.. autoclass:: PolarizationMaker
+   :show-inheritance:
+   :members:

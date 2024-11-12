@@ -1,6 +1,0 @@
-Species
-=======
-
-.. currentmodule:: atomate2.aims.schemas.task
-
-.. autopydantic_model:: Species

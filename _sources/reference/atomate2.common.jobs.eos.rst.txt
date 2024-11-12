@@ -32,6 +32,13 @@ atomate2.common.jobs.eos
       
    
    
+      
+   
+   
+      
+   
+   
+   
    
    
    
@@ -47,6 +54,8 @@ atomate2.common.jobs.eos
       :nosignatures:
    
       EOSPostProcessor
+      MPMorphEVPostProcess
+      MPMorphPVPostProcess
       PostProcessEosEnergy
       PostProcessEosPressure
       TYPE_CHECKING

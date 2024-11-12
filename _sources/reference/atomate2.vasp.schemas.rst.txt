@@ -30,4 +30,5 @@ atomate2.vasp.schemas
    adsorption
    defect
    elph
+   ferroelectric
    md

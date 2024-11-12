@@ -1,0 +1,8 @@
+MVLGWBandStructureMaker
+=======================
+
+.. currentmodule:: atomate2.vasp.flows.mvl
+
+.. autoclass:: MVLGWBandStructureMaker
+   :show-inheritance:
+   :members:

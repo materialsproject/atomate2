@@ -1,0 +1,8 @@
+SlowQuenchMLFFMDMaker
+=====================
+
+.. currentmodule:: atomate2.forcefields.flows.mpmorph
+
+.. autoclass:: SlowQuenchMLFFMDMaker
+   :show-inheritance:
+   :members:

@@ -1,0 +1,41 @@
+atomate2.common.jobs.mpmorph
+============================
+
+.. automodule:: atomate2.common.jobs.mpmorph
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      get_average_volume_from_database
+      get_average_volume_from_db_cached
+      get_average_volume_from_mp
+      get_average_volume_from_mp_api
+      get_random_packed_structure
+
+
+
+
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
