@@ -7,6 +7,7 @@ import re
 import tempfile
 import time
 import warnings
+import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -22,7 +23,7 @@ if TYPE_CHECKING:
 
 
 def download_opls_xml(
-    names_smiles: dict[str, str], output_dir: str | Path, overwrite_files: bool = False
+    names_params: dict[str, dict[str, str]], output_dir: str | Path, overwrite_files: bool = False
 ) -> None:
     """Download an OPLS-AA/M XML file from the LigParGen website using Selenium."""
     try:
@@ -30,7 +31,8 @@ def download_opls_xml(
         from selenium.webdriver.chrome.service import Service as ChromeService
         from selenium.webdriver.common.by import By
         from webdriver_manager.chrome import ChromeDriverManager
-
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as EC
     except ImportError:
         warnings.warn(
             "The `selenium` package is not installed. "
@@ -41,8 +43,12 @@ def download_opls_xml(
     # Initialize the Chrome driver
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
-    for name, smiles in names_smiles.items():
+    for name, params in names_params.items():
         final_file = Path(output_dir) / f"{name}.xml"
+        smiles = params.get("smiles")
+        checkopt = params.get("checkopt", 3)
+        charge = params.get("charge", 0)
+
         if final_file.exists() and not overwrite_files:
             continue
         try:
@@ -62,9 +68,23 @@ def download_opls_xml(
                 driver.get("https://zarbi.chem.yale.edu/ligpargen/")
 
                 # Find the SMILES input box and enter the SMILES code
-                smiles_input = driver.find_element(By.ID, "smiles")
+                smiles_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.ID, "smiles"))
+                        )
                 smiles_input.send_keys(smiles)
+                
+                # Find Molecule Optimization Iterations dropdown menu and select 
+                checkopt_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.NAME, "checkopt"))
+                        )
+                checkopt_input.send_keys(checkopt)
 
+                # Find Charge dropdown menu and select 
+                charge_input = WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.NAME, "dropcharge"))
+                        )
+                charge_input.send_keys(charge)
+                
                 # Find and click the "Submit Molecule" button
                 submit_button = driver.find_element(
                     By.XPATH,
@@ -73,7 +93,7 @@ def download_opls_xml(
                 submit_button.click()
 
                 # Wait for the second page to load
-                # time.sleep(2)  # Adjust this delay as needed based on the loading time
+                time.sleep(2+0.5*checkopt)  # Adjust this delay as needed based on the loading time & optimization iterations
 
                 # Find and click the "XML" button under Downloads and OpenMM
                 xml_button = driver.find_element(
@@ -86,7 +106,7 @@ def download_opls_xml(
 
                 file = next(Path(tmpdir).iterdir())
                 # copy downloaded file to output_file using os
-                Path(file).rename(final_file)
+                shutil.copy(file, final_file) 
 
         except Exception as e:  # noqa: BLE001
             warnings.warn(
