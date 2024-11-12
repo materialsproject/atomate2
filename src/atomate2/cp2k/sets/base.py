@@ -390,6 +390,15 @@ class Cp2kInputGenerator(InputGenerator):
         """Get the kpoints object."""
         kpoints_updates = kpoints_updates or {}
 
+        # don't write kpoints if user_kpoints_settings or base KPOINTS config is None
+        # KPOINTS are not compatible with orbital transformation mode and CP2K will
+        # crash if found
+        if (
+            self.user_kpoints_settings is None
+            or self.config_dict.get("KPOINTS") is None
+        ):
+            return None
+
         # use user setting if set otherwise default to base config settings
         if self.user_kpoints_settings != {}:
             kpt_config = deepcopy(self.user_kpoints_settings)
