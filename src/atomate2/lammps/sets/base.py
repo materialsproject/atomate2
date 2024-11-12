@@ -113,6 +113,9 @@ class BaseLammpsSet(BaseLammpsGenerator):
             self.start_temp = temperature[0]
             self.end_temp = temperature[-1]
         
+        self.temperature = temperature
+        self.pressure = pressure
+        
         if isinstance(pressure, (int, float)):
             self.start_pressure = pressure
             self.end_pressure = pressure
