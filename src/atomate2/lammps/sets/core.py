@@ -1,7 +1,7 @@
 import os
 from .base import BaseLammpsSet, template_dir
 from atomate2.lammps.sets.utils import update_settings, _BASE_LAMMPS_SETTINGS
-from typing import Literal, Union
+from typing import Literal
 from atomate2.ase.md import MDEnsemble
 
 class LammpsNVTSet(BaseLammpsSet):
