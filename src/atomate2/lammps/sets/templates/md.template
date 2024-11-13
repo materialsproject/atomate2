@@ -30,7 +30,7 @@ $npt_flag             3 all $barostat $start_temp $end_temp 0.1 $psymm $start_pr
 # Output settings
 thermo          $log_interval  # output thermo data every N steps
 dump            d1 all custom $traj_interval traj.dump id element x y z vx vy vz fx fy fz # dump a snapshot every 100 steps
-dump_modify     d1 sort id element $species
+$dump_modify_flag     d1 sort id element $species
 
 # Actions
 timestep        $timestep

@@ -3,6 +3,7 @@ from pymatgen.core import Structure, Molecule
 from pymatgen.io.lammps.generators import BaseLammpsGenerator
 from ase.io import read
 from pymatgen.io.ase import AseAtomsAdaptor
+from pymatgen.io.lammps.data import LammpsData
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from ase.io import Trajectory as AseTrajectory
 from typing import Literal
@@ -11,12 +12,16 @@ from monty.json import MSONable
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 
 def write_lammps_input_set(
-    structure: Structure | Path,
+    structure: Structure | Path | None,
     input_set_generator: BaseLammpsGenerator,
     directory: str | Path = ".",
     **kwargs,
 ):
-    input_set = input_set_generator.get_input_set(structure, **kwargs)
+    data = structure
+    if input_set_generator.interchange:
+        input_set_generator.interchange.to_lammps_datafile("interchange_data.lmp")
+        data = LammpsData.from_file("interchange_data.lmp", atom_style=input_set_generator.atom_style)
+    input_set = input_set_generator.get_input_set(data, **kwargs)
     input_set.write_input(directory)
 
 
