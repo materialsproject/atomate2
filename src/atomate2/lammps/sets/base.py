@@ -12,8 +12,20 @@ from atomate2.lammps.sets.utils import process_ensemble_conditions, update_setti
 
 from atomate2.ase.md import MDEnsemble
 
+try:
+    from openff.interchange import Interchange
+except ImportError:
 
-__author__ = "Ryan Kingsbury, Guillaume Brunin (Matgenix)"
+    class Interchange:  # type: ignore[no-redef]
+        """Dummy class for failed imports of Interchange."""
+
+        def model_validate(self, _: str) -> None:
+            """Parse raw is the first method called on the Interchange object."""
+            raise ImportError(
+                "openff-interchange must be installed for OpenMM makers to"
+                "to support OpenFF Interchange objects."
+            )
+
 
 logger = logging.getLogger(__name__)
 template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
@@ -97,6 +109,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
                  friction : float | None = None,
                  template : str = None,
                  settings : dict | None = None,
+                 interchange : Interchange  = None,
                  **kwargs):
         
         template = os.path.join(template_dir, "md.template") if template is None else template
@@ -134,6 +147,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
         self.friction = 100*timestep if friction is None else friction
         self.force_field = force_field.copy() if isinstance(force_field, dict) else force_field
         self.species = None
+        self.interchange = interchange
         
         process_kwargs = kwargs.copy()
         if settings is None:
@@ -167,7 +181,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
         super().__init__(template = template, settings = self.settings, **kwargs)
     
 
-    def set_force_field(self, force_field : str | dict):
+    def set_force_field(self, force_field : str | dict | None = None):
         
         if isinstance(force_field, dict):
             try:
@@ -191,6 +205,8 @@ class BaseLammpsSet(BaseLammpsGenerator):
         else:
             Warning(f"Force field should be a dictionary, got {type(force_field)}")
             
-        if self.force_field is not None:
-            self.settings.update({'force_field': self.force_field, 'species': self.species})
+        if self.force_field:
+            self.settings.update({'force_field': self.force_field, 'species': self.species, 'dump_modify_flag': 'dump_modify'}) 
         
+        if not self.force_field and self.interchange:
+            self.settings.update({'force_field': '#', 'species': None})       
