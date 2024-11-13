@@ -138,8 +138,9 @@ class BaseLammpsSet(BaseLammpsGenerator):
         process_kwargs = kwargs.copy()
         if settings is None:
             settings = {}
-        settings.update({'atom_style': self.atom_style, 
-                         'dimension': self.dimension, 
+        settings.update({
+                        'atom_style': self.atom_style, 
+                        'dimension': self.dimension, 
                         'boundary': self.boundary,
                         'ensemble': self.ensemble.value, 
                         'start_temp': self.start_temp, 
@@ -160,6 +161,13 @@ class BaseLammpsSet(BaseLammpsGenerator):
         
         self.settings = update_settings(settings = settings, **process_kwargs)
         self.settings = process_ensemble_conditions(self.settings)
+        
+        self.set_force_field(force_field)        
+    
+        super().__init__(template = template, settings = self.settings, **kwargs)
+    
+
+    def set_force_field(self, force_field : str | dict):
         
         if isinstance(force_field, dict):
             try:
@@ -185,6 +193,4 @@ class BaseLammpsSet(BaseLammpsGenerator):
             
         if self.force_field is not None:
             self.settings.update({'force_field': self.force_field, 'species': self.species})
-                
-    
-        super().__init__(template = template, settings = self.settings, **kwargs)
+        
