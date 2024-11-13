@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Any
 
 from monty.serialization import loadfn
 from pymatgen.io.core import InputGenerator, InputSet
-from pymatgen.io.jdftx.jdftxinfile import JDFTXInfile, JDFTXStructure
+from pymatgen.io.jdftx.inputs import JDFTXInfile, JDFTXStructure
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
@@ -59,11 +59,10 @@ class JdftxInputSet(InputSet):
 
         if not overwrite and (directory / infile).exists():
             raise FileExistsError(f"{directory / infile} already exists.")
-        print(directory)
+
         jdftxinput = condense_jdftxinputs(self.jdftxinput, self.jdftxstructure)
 
         jdftxinput.write_file(filename=(directory / infile))
-        print(f"Wrote JDFTx input file to {directory / infile}")
 
     @staticmethod
     def from_directory(
@@ -121,7 +120,6 @@ class JdftxInputGenerator(InputGenerator):
         """
         jdftx_structure = JDFTXStructure(structure)
         jdftxinputs = self.settings
-        print(jdftxinputs)
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
 
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftx_structure)
@@ -131,9 +129,11 @@ def condense_jdftxinputs(
     jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
 ) -> JDFTXInfile:
     """
-    Function to combine a JDFTXInputs class with calculation
+    Combine JDFTXInfile and JDFTxStructure into complete JDFTXInfile.
+
+    Function combines a JDFTXInfile class with calculation
     settings and a JDFTxStructure that defines the structure
-    into one JDFTXInputs instance.
+    into one JDFTXInfile instance.
 
     Parameters
     ----------
@@ -149,5 +149,4 @@ def condense_jdftxinputs(
             A JDFTXInfile that includes the calculation
             parameters and input structure.
     """
-    condensed_inputs = jdftxinput + JDFTXInfile.from_str(jdftxstructure.get_str())
-    return condensed_inputs
+    return jdftxinput + JDFTXInfile.from_str(jdftxstructure.get_str())
