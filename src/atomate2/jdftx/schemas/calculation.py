@@ -8,8 +8,8 @@ from typing import Optional, Union
 
 from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
-from pymatgen.io.jdftx.jdftxinfile import JDFTXInfile
-from pymatgen.io.jdftx.jdftxoutfile import JDFTXOutfile
+from pymatgen.io.jdftx.inputs import JDFTXInfile
+from pymatgen.io.jdftx.outputs import JDFTXOutfile
 
 from atomate2.jdftx.schemas.enums import TaskType
 
@@ -25,7 +25,7 @@ class CalculationInput(BaseModel):
     # Waiting on parsers to be finished.
 
     structure: Structure = Field(
-        None, description="input structure to JDFTx calcualtion"
+        None, description="input structure to JDFTx calculation"
     )
 
     parameters: dict = Field(None, description="input tags in JDFTx in file")
