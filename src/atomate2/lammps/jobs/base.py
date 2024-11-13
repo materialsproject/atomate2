@@ -46,10 +46,16 @@ class BaseLammpsMaker(Maker):
         default_factory = BaseLammpsSet
     )
     write_input_set_kwargs: dict = field(default_factory=dict)
-    force_field: str = field(default_factory=str)
+    force_field: str | dict = field(default_factory=str)
     run_lammps_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
     write_additional_data: dict = field(default_factory=dict)
+    
+    def __post_init__(self):
+        if self.force_field and self.input_set_generator.force_field is None:
+            self.input_set_generator.set_force_field(self.force_field)
+        if not self.input_set_generator.force_field:
+            raise ValueError("Force field not specified")
 
     @lammps_job
     def make(self, input_structure: Structure | Path = None, prev_dir : Path = None) -> Response:

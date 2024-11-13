@@ -5,19 +5,17 @@ from atomate2.lammps.jobs.base import BaseLammpsMaker
 @dataclass
 class LammpsNVTMaker(BaseLammpsMaker):
     name: str = "nvt"
-    input_set_generator: BaseLammpsSet = field(default_factory=LammpsNVTSet)
-
+    input_set_generator: BaseLammpsSet = field(default_factory=LammpsNVTSet)    
 
 @dataclass
 class LammpsNPTMaker(BaseLammpsMaker):
     name: str = "npt"
     input_set_generator: BaseLammpsSet = field(default_factory=LammpsNPTSet)
 
-
 @dataclass
 class MinimizationMaker(BaseLammpsMaker):
     name: str = "minimization"
-    input_set_generator: LammpsMinimizeSet = field(default_factory=LammpsMinimizeSet)
+    input_set_generator: BaseLammpsSet = field(default_factory=LammpsMinimizeSet)
 
 @dataclass
 class CustomLammpsMaker(BaseLammpsMaker):
