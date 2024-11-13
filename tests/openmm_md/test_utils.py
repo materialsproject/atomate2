@@ -1,5 +1,8 @@
+from pathlib import Path
+
 import pytest
 
+from atomate2.openmm.interchange import OpenMMInterchange
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.openmm.utils import (
     PymatgenTrajectoryReporter,
@@ -9,7 +12,7 @@ from atomate2.openmm.utils import (
 
 
 @pytest.mark.skip("annoying test")
-def test_download_xml(tmp_path):
+def test_download_xml(tmp_path: Path) -> None:
     pytest.importorskip("selenium")
 
     download_opls_xml("CCO", tmp_path / "CCO.xml")
@@ -17,7 +20,7 @@ def test_download_xml(tmp_path):
     assert (tmp_path / "CCO.xml").exists()
 
 
-def test_increment_file_name():
+def test_increment_file_name() -> None:
     test_cases = [
         ("report", "report2"),
         ("report123", "report124"),
@@ -34,7 +37,7 @@ def test_increment_file_name():
         ), f"Failed for case: {file_name}. Expected: {expected_output}, Got: {result}"
 
 
-def test_trajectory_reporter(interchange, tmp_path):
+def test_trajectory_reporter(interchange: OpenMMInterchange, tmp_path: Path) -> None:
     """Test that the trajectory reporter correctly accumulates and formats data."""
     # Create simulation using BaseOpenMMMaker
     maker = BaseOpenMMMaker(
@@ -64,16 +67,20 @@ def test_trajectory_reporter(interchange, tmp_path):
     traj = reporter.trajectory
 
     # Check basic properties
-    assert len(traj) == n_steps  # should have n_steps frames
+    assert (
+        len(traj) == n_steps
+    ), f"got {len(traj)=}, expected {n_steps=}"  # should have n_steps frames
     assert traj.time_step is not None
-    assert len(traj.species) == len(list(simulation.topology.atoms()))
+    assert len(traj.species) == len(
+        list(simulation.topology.atoms())
+    ), f"got {len(traj.species)=}, expected {len(list(simulation.topology.atoms()))=}"
 
     # Check frame properties
     assert len(traj.frame_properties) == n_steps
     for frame in traj.frame_properties:
-        assert "kinetic_energy" in frame
-        assert "potential_energy" in frame
-        assert "total_energy" in frame
+        assert isinstance(frame["kinetic_energy"], float)
+        assert isinstance(frame["potential_energy"], float)
+        assert isinstance(frame["total_energy"], float)
 
     # Check site properties
     assert len(traj.site_properties) == n_steps

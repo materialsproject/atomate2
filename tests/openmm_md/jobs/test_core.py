@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from pathlib import Path
 
 import numpy as np
@@ -13,7 +14,9 @@ from atomate2.openmm.jobs import (
 )
 
 
-def test_energy_minimization_maker(interchange, run_job):
+def test_energy_minimization_maker(
+    interchange: OpenMMInterchange, run_job: Callable
+) -> None:
     state = XmlSerializer.deserialize(interchange.state)
     start_positions = state.getPositions(asNumpy=True)
 
@@ -29,7 +32,7 @@ def test_energy_minimization_maker(interchange, run_job):
     assert (Path(task_doc.calcs_reversed[0].output.dir_name) / "state.csv").exists()
 
 
-def test_npt_maker(interchange, run_job):
+def test_npt_maker(interchange: OpenMMInterchange, run_job: Callable) -> None:
     state = XmlSerializer.deserialize(interchange.state)
     start_positions = state.getPositions(asNumpy=True)
     start_box = state.getPeriodicBoxVectors()
@@ -48,7 +51,7 @@ def test_npt_maker(interchange, run_job):
     assert not np.all(new_box == start_box)
 
 
-def test_nvt_maker(interchange, run_job):
+def test_nvt_maker(interchange: OpenMMInterchange, run_job: Callable) -> None:
     state = XmlSerializer.deserialize(interchange.state)
     start_positions = state.getPositions(asNumpy=True)
 
@@ -71,7 +74,7 @@ def test_nvt_maker(interchange, run_job):
     assert calc_output.steps_reported == list(range(1, 11))
 
 
-def test_temp_change_maker(interchange, run_job):
+def test_temp_change_maker(interchange: OpenMMInterchange, run_job: Callable):
     state = XmlSerializer.deserialize(interchange.state)
     start_positions = state.getPositions(asNumpy=True)
 
@@ -91,7 +94,9 @@ def test_temp_change_maker(interchange, run_job):
     assert task_doc.calcs_reversed[0].input.starting_temperature == 298
 
 
-def test_trajectory_reporter_json(interchange, tmp_path, run_job):
+def test_trajectory_reporter_json(
+    interchange: OpenMMInterchange, tmp_path: Path, run_job: Callable
+):
     """Test that the trajectory reporter can be serialized to JSON."""
     # Create simulation using NVTMaker
     maker = NVTMaker(

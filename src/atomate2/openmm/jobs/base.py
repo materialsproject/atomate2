@@ -314,7 +314,7 @@ class BaseOpenMMMaker(Maker):
         if has_steps & (traj_interval > 0):
             writer_kwargs = {}
             # these are the only file types that support velocities
-            if traj_file_type in ["h5md", "nc", "ncdf", "json"]:
+            if traj_file_type in ("h5md", "nc", "ncdf", "json"):
                 writer_kwargs["velocities"] = report_velocities
                 writer_kwargs["forces"] = False
             elif report_velocities and traj_file_type != "trr":

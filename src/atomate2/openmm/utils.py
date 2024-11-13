@@ -312,6 +312,5 @@ class PymatgenTrajectoryReporter:
         self.trajectory = trajectory
 
         # write out trajectory to a file
-        json_str = trajectory.to_json()
-        with open(self._file, "w") as f:
-            f.write(json_str)
+        with open(self._file, mode="w") as file:
+            file.write(trajectory.to_json())
