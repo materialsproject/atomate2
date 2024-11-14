@@ -161,11 +161,13 @@ class NonSCFSetGenerator(Cp2kInputGenerator):
 
     def __post_init__(self) -> None:
         """Ensure mode is set correctly."""
-        self.mode = self.mode.lower()
+        mode = self.mode = self.mode.lower()
 
         supported_modes = ("line", "uniform")
         if self.mode not in supported_modes:
-            raise ValueError(f"Supported modes are: {', '.join(supported_modes)}")
+            raise ValueError(
+                f"Invalid {mode=}, valid modes are: {', '.join(supported_modes)}"
+            )
 
     def get_kpoints_updates(
         self,

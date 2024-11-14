@@ -81,7 +81,7 @@ class MagneticOrderingRelaxation(BaseModel):
         None, description="Total magnetization normalized to per formula unit."
     )
     total_magnetization_per_unit_volume: Optional[float] = Field(
-        None, description="Total magnetiation normalized to per unit volume."
+        None, description="Total magnetization normalized to per unit volume."
     )
 
     @classmethod
@@ -175,7 +175,7 @@ class MagneticOrderingOutput(BaseModel):
         None, description="Total magnetization normalized to per formula unit."
     )
     total_magnetization_per_unit_volume: Optional[float] = Field(
-        None, description="Total magnetiation normalized to per unit volume."
+        None, description="Total magnetization normalized to per unit volume."
     )
     ordering_changed: Optional[bool] = Field(
         None,

@@ -211,9 +211,14 @@ class OutputSummary(BaseModel):
         OutputSummary
             The calculation output summary.
         """
-        if calc_doc.output.ionic_steps:
-            forces = calc_doc.output.ionic_steps[-1].get("forces")
-            stress = calc_doc.output.ionic_steps[-1].get("stress")
+        if calc_doc.output.ionic_steps:  # also handles for static calculations
+            final_step = calc_doc.output.ionic_steps[-1]
+            forces = final_step.get("forces")
+            # 2024-11-14 @janosh this method used to read "stress" from final_step
+            # (still read as fallback). CP2K docs don't mention "stress", only
+            # "stress_tensor". Unclear if this was a breaking change in CP2K or
+            # should always have been stress_tensor in this code.
+            stress = final_step.get("stress_tensor", final_step.get("stress"))
         else:
             forces = None
             stress = None
@@ -338,7 +343,7 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
         task_files = _find_cp2k_files(dir_name, volumetric_files=volumetric_files)
 
         if len(task_files) == 0:
-            raise FileNotFoundError("No CP2K files found!")
+            raise FileNotFoundError(f"No CP2K files found in {dir_name}")
 
         calcs_reversed = []
         all_cp2k_objects = []
