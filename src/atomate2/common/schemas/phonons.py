@@ -346,11 +346,28 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         phonon.produce_force_constants(forces=set_of_forces)
 
         filename_phonopy_yaml = kwargs.get("filename_phonopy_yaml", "phonopy.yaml")
+        create_force_constants_file = kwargs.get("create_force_constants_file", False)
+        force_constants_filename = kwargs.get(
+            "force_constants_filename", "FORCE_CONSTANTS"
+        )
         # if kwargs.get("filename_phonopy_yaml") is None:
         #    kwargs["filename_phonopy_yaml"] = "phonopy.yaml"
 
         # with phonopy.load("phonopy.yaml") the phonopy API can be used
-        phonon.save(filename_phonopy_yaml)
+        phonon.save(
+            filename_phonopy_yaml,
+            settings={
+                "force_constants": kwargs.get(
+                    "store_force_constants", not create_force_constants_file
+                )
+            },
+        )
+        if create_force_constants_file:
+            from phonopy.file_IO import write_FORCE_CONSTANTS
+
+            write_FORCE_CONSTANTS(  # save force_constants to text file
+                phonon.force_constants, filename=force_constants_filename
+            )
 
         # get phonon band structure
         kpath_dict, kpath_concrete = PhononBSDOSDoc.get_kpath(
@@ -361,7 +378,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         npoints_band = kwargs.get("npoints_band", 101)
         qpoints, connections = get_band_qpoints_and_path_connections(
-            kpath_concrete, npoints=kwargs.get("npoints_band", 101)
+            kpath_concrete, npoints=npoints_band
         )
 
         # phonon band structures will always be computed
@@ -406,6 +423,20 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             kppa=kpoint_density_dos,
             force_gamma=True,
         )
+
+        # projected dos
+        if kwargs.get("calculate_pdos", False):
+            phonon.run_mesh(
+                kpoint.kpts[0], with_eigenvectors=True, is_mesh_symmetry=False
+            )
+            phonon_dos_sigma = kwargs.get("phonon_dos_sigma")
+            dos_use_tetrahedron_method = kwargs.get("dos_use_tetrahedron_method", True)
+            phonon.run_projected_dos(
+                sigma=phonon_dos_sigma,
+                use_tetrahedron_method=dos_use_tetrahedron_method,
+            )
+            phonon.write_projected_dos()
+
         phonon.run_mesh(kpoint.kpts[0])
         phonon_dos_sigma = kwargs.get("phonon_dos_sigma")
         dos_use_tetrahedron_method = kwargs.get("dos_use_tetrahedron_method", True)
