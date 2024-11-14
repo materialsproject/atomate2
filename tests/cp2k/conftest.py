@@ -25,7 +25,7 @@ def patch_settings(monkeypatch, test_dir):
         "PMG_DEFAULT_CP2K_BASIS_TYPE": "DZVP-MOLOPT",
         "PMG_DEFAULT_CP2K_AUX_BASIS_TYPE": "pFIT",
     }
-    monkeypatch.setattr("pymatgen.core.SETTINGS", settings)
+    monkeypatch.setattr("pymatgen.io.cp2k.sets.SETTINGS", settings)
 
 
 @pytest.fixture(scope="session")

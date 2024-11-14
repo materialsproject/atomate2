@@ -1,16 +1,4 @@
-import pytest
 from pytest import approx
-
-
-@pytest.fixture(autouse=True)
-def patch_settings(monkeypatch, test_dir):
-    settings = {
-        "PMG_CP2K_DATA_DIR": f"{test_dir}/cp2k/data",
-        "PMG_DEFAULT_CP2K_FUNCTIONAL": "PBE",
-        "PMG_DEFAULT_CP2K_BASIS_TYPE": "DZVP-MOLOPT",
-        "PMG_DEFAULT_CP2K_AUX_BASIS_TYPE": "pFIT",
-    }
-    monkeypatch.setattr("pymatgen.core.SETTINGS", settings)
 
 
 def test_static_maker(tmp_path, mock_cp2k, si_structure, basis_and_potential):
