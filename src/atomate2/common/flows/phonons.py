@@ -107,6 +107,12 @@ class BasePhononMaker(Maker, ABC):
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
+        - create_force_constants_file: bool
+            If True, a force constants file will be created
+        - force_constants_filename: str
+            If store_force_constants is True, the file name to store the force constants
+        - calculate_pdos: bool
+            If True, the projected phonon density of states will be calculated
     create_thermal_displacements: bool
         Bool that determines if thermal_displacement_matrices are computed
     kpath_scheme: str
@@ -123,10 +129,6 @@ class BasePhononMaker(Maker, ABC):
         determines the dft or force field code.
     store_force_constants: bool
         if True, force constants will be stored
-    force_constants_filename: str
-        if store_force_constants is True, the file name to store the force constants
-    calculate_pdos: bool
-        if True, the projected phonon density of states will be calculated
     socket: bool
         If True, use the socket for the calculation
     """
