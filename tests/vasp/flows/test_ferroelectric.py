@@ -35,21 +35,21 @@ def test_my_flow(mock_vasp, clean_dir, test_dir):
         / "vasp"
         / "KNbO3_ferroelectric/polarization_polar"
         / "inputs"
-        / "POSCAR"
+        / "POSCAR.gz"
     )
     st_np = Structure.from_file(
         test_dir
         / "vasp"
         / "KNbO3_ferroelectric/polarization_nonpolar"
         / "inputs"
-        / "POSCAR"
+        / "POSCAR.gz"
     )
     st_interp = Structure.from_file(
         test_dir
         / "vasp"
         / "KNbO3_ferroelectric/polarization_interpolation_0"
         / "inputs"
-        / "POSCAR"
+        / "POSCAR.gz"
     )
 
     flow = FerroelectricMaker(relax_maker=False, nimages=1).make(st_p, st_np)
