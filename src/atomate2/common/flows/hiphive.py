@@ -8,18 +8,20 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, ClassVar
 
-import numpy as np
-
-# Jobflow packages
 from jobflow import Flow, Maker
 
 from atomate2.common.jobs.hiphive import (
-    hiphive_static_calcs,
-    run_fc_to_pdos,
-    run_hiphive,
-    run_hiphive_renormalization,
-    run_lattice_thermal_conductivity,
+    generate_frequencies_eigenvectors,
+    generate_phonon_displacements,
 )
+
+# Jobflow packages
+from atomate2.common.jobs.phonons import (
+    get_supercell_size,
+    get_total_energy_per_cell,
+    run_phonon_displacements,
+)
+from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 from atomate2.forcefields.jobs import (
     CHGNetStaticMaker,
     ForceFieldRelaxMaker,
@@ -33,10 +35,13 @@ from atomate2.vasp.sets.core import StaticSetGenerator
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure  # type: ignore  # noqa: PGH003
 
     from atomate2.vasp.flows.core import DoubleRelaxMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
+
+SUPPORTED_CODES = ["vasp", "forcefields"]
 
 logger = logging.getLogger(__name__)
 
@@ -124,52 +129,55 @@ class BaseHiphiveMaker(Maker, ABC):
     ff_displacement_maker: ForceFieldStaticMaker | None = field(
         default_factory=CHGNetStaticMaker
     )
-    min_length: float | None = 13.0
-    prefer_90_degrees: bool = True
     supercell_matrix_kwargs: dict = field(default_factory=dict)
     IMAGINARY_TOL = 0.025  # in THz
     MESH_DENSITY = 100.0  # should always be a float
     T_QHA: ClassVar[list[int]] = [
         i * 100 for i in range(21)
     ]  # Temp. for phonopy calc. of thermo. properties (free energy etc.)
-    T_RENORM: ClassVar[list[int]] = [
-        300 # 300, 500, 600, 700, 800, 900, 1000, 1500, 2500, 2700, 3000
-    ]  # [i*100 for i in range(0,16)] # Temp. at which renorm. is to be performed
-    # If renormalization is performed,
-    # T_RENORM overrides T_KLAT for lattice thermal conductivity
-    T_KLAT: ClassVar[dict] = {"min":100,"max":1000,"step":100}
-    # T_KLAT: list[int] = field(default_factory=lambda: [100, 200, 300])
-    FIT_METHOD = "rfe" #least-squares #omp #rfe #elasticnet
-    RENORM_METHOD = "least_squares" # pseudoinverse refit least_squares
-    RENORM_NCONFIG = 6  # Changed from 50
-    RENORM_CONV_THRESH = 0.1  # meV/atom
-    RENORM_MAX_ITER = 30  # Changed from 20
-    THERM_COND_SOLVER: str = "almabte"
+    FIT_METHOD = "least-squares" #least-squares #omp #rfe #elasticnet
+    sym_reduce: bool = True
+    symprec: float = 1e-4
+    displacement: float = 0.01
+    min_length: float | None = 20.0
+    prefer_90_degrees: bool = True
+    get_supercell_size_kwargs: dict = field(default_factory=dict)
+    use_symmetrized_structure: str | None = None
+    bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
+    static_energy_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = (
+        None
+    )
+    born_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
+    phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker = (
+        None
+    )
+    create_thermal_displacements: bool = True
+    generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
+    kpath_scheme: str = "seekpath"
+    code: str = None
+    store_force_constants: bool = True
+    socket: bool = False
 
     def make(
         self,
         mpid: str,
         structure: Structure,
         bulk_modulus: float,
-        supercell_matrix: list[list[int]] | None = None,
+        # supercell_matrix: list[list[int]] | None = None,
+        supercell_matrix: Matrix3D | None = None,
         fit_method: str | None = FIT_METHOD,
         disp_cut: float | None = None,
         cutoffs: list[list[float]] | None = None,
         prev_dir: str | Path | None = None,
-        calculate_lattice_thermal_conductivity: bool = True,
         renormalize: bool = True,
-        renormalize_temperature: list = T_RENORM,
-        renormalize_method: str = RENORM_METHOD,
-        renormalize_nconfig: int = RENORM_NCONFIG,
-        renormalize_conv_thresh: float = RENORM_CONV_THRESH,
-        renormalize_max_iter: int = RENORM_MAX_ITER,
-        renormalize_thermal_expansion_iter: bool = False,
         mesh_density: float = MESH_DENSITY,
-        thermal_conductivity_temperature: list = T_KLAT,
         imaginary_tol: float = IMAGINARY_TOL,
         temperature_qha: float | list | dict = T_QHA,
         n_structures: float = 1,
         fixed_displs: float | None = None,
+        born: list[Matrix3D] | None = None,
+        epsilon_static: Matrix3D | None = None,
+        total_dft_energy_per_formula_unit: float | None = None,
     ) -> Flow:
         """
         Make flow to calculate the harmonic & anharmonic properties of phonon.
@@ -225,264 +233,179 @@ class BaseHiphiveMaker(Maker, ABC):
         fixed_displs (float, optional):
             Avg value of atomic displacement in Angstroms, default is None.
         """
-        jobs = []
-        outputs = []
-
-        # # 1. Relax the structure
-        # if self.bulk_relax_maker is not None:
-        #     bulk_kwargs = {}
-        #     if self.prev_calc_dir_argname is not None:
-        #         bulk_kwargs[self.prev_calc_dir_argname] = prev_dir
-        #     bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)  # type: ignore[misc]
-        #     bulk.update_config({"manager_config": {"_fworker": "gpu_fworker"}})
-        #     jobs.append(bulk)
-        #     outputs.append(bulk.output)
-        #     structure = bulk.output.structure
-        #     prev_dir = bulk.output.dir_name
-
-        # bulk.update_metadata(
-        #     {
-        #         "tag": [
-        #             f"mp_id={mpid}",
-        #             f"bulk_modulus={bulk_modulus}",
-        #             f"nConfigsPerStd={n_structures}",
-        #             f"fixedDispls={fixed_displs}",
-        #             f"dispCut={disp_cut}",
-        #             f"supercell_matrix_kwargs={self.supercell_matrix_kwargs}",
-        #         ]
-        #     }
-        # )
-
-        # # 2. if supercell_matrix is None, supercell size will be determined after
-        # # relax maker to ensure that cell lengths are really larger than threshold.
-        # # then, perturbations will be generated based on the supercell size.
-        # # STATIC calculations will then be run on the perturbed structures, and the
-        # # forces and perturbed structures will be aggregated.
-        from pymatgen.core.structure import IStructure
-        file_path = "/Users/HPSahasrabuddhe/Downloads/supporting_data/runtime_costs/BP/1_relax/CONTCAR.relax2"
-        structure = IStructure.from_file(file_path)
-        static_calcs = hiphive_static_calcs(
-                structure=structure,
-                supercell_matrix=supercell_matrix,
-                min_length=self.min_length,
-                prefer_90_degrees=self.prefer_90_degrees,
-                n_structures=n_structures,
-                # fixed_displs=fixed_displs,
-                prev_dir=prev_dir,
-                phonon_displacement_maker=self.phonon_displacement_maker,
-                supercell_matrix_kwargs=self.supercell_matrix_kwargs,
-                mpid=mpid
-        )
-        jobs.append(static_calcs)
-
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/hiphive_paper_review/hiphive_1479_fixed_displ/launcher_2024-05-08-16-08-35-107058_modified_names"
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/npj_paper_review/based_on_MACE/mp_754326/launcher_2024-07-13-05-07-14-567954/launcher_2024-07-13-05-08-27-077841" # mp-754326 -- 3 configs per displ
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/npj_paper_review/based_on_MACE/mp_9254/launcher_2024-07-14-02-15-50-245499/launcher_2024-07-14-02-25-07-361771" # mp-9254 -- 3 configs per displ
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/npj_paper_review/based_on_MACE/mp_14069/launcher_2024-07-14-02-15-55-938867/launcher_2024-07-14-02-25-07-365495" # mp-14069 -- 3 configs per displ
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/npj_paper_review/based_on_MACE/mp_2604/launcher_2024-07-14-14-39-06-872624/launcher_2024-07-14-14-40-18-235493" # mp-2604 -- 3 configs per displ
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/npj_paper_review/based_on_MACE/mp_2371/launcher_2024-07-15-03-37-42-749659/launcher_2024-07-15-03-42-16-702710" # mp-2371 -- 3 configs per displ
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/npj_paper_review/based_on_MACE/mp_1591/launcher_2024-07-15-03-37-51-098937/launcher_2024-07-15-03-53-52-366405" # mp-1591 -- 3 configs per displ
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/npj_paper_review/based_on_MACE/mp_8622/launcher_2024-07-15-10-24-56-844718/launcher_2024-07-15-10-30-05-946173" # mp-8622 -- 3 configs per displ
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-6475_MACE_9A_10_displs/n_configs_per_std_3/min_length_9/job_2024-07-15-22-53-47-814187-12533" # mp-6475 -- 3 configs per displ
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-2371_MACE_9A_LTC_MACE_MD_10_20_30_300_400_500K/n_configs_per_std_1/min_length_9/job_2024-07-19-20-53-04-336736-93275" # mp-2371 -- 1 configs per displ -- MACE-MD -- 10, 20, 30, 300, 400, 500 K
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-2371_MACE_9A_LTC_MACE_MD_10_20_30_40_50_60K/n_configs_per_std_1/min_length_9/job_2024-07-19-21-30-55-564765-98694" # mp-2371 -- 1 configs per displ -- MACE-MD -- 10, 20, 30, 40, 50, 60 K
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-2371_MACE_9A_LTC_MACE_MD_1_3_5_40_50_60K_disp_cut_0,05_nconfigs_3/n_configs_per_std_3/min_length_9/job_2024-07-19-21-52-28-126685-48567" # mp-2371 -- 3 configs per displ -- MACE-MD -- 1, 3, 5, 40, 50, 60 K
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-1591_MACE_9A_LTC_MACE_MD_1_3_5_40_50_60K_disp_cut_0,05_nconfigs_3_cutoffs_4_4_3/n_configs_per_std_3/min_length_9/job_2024-07-19-23-33-58-247222-92793" # mp-1591 -- 3 configs per displ -- MACE-MD -- 1, 3, 5, 40, 50, 60 K
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/5th_Sem/MSE299/npjReview/supercell_raw_data/GaAs/16" # BP 16 Å
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-1591_VASP_rev1_comm1_cutoffs_4_3_3_supercell16_updated_CONTROLfdfd/n_configs_per_std_3/min_length_16/job_2024-07-25-16-34-17-544000-73730" # Al4C3 16 Å -- MACE
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-938_cutoffs_4_3_3_supercell16_updated_CONTROLfefdd/n_configs_per_std_3/min_length_16/job_2024-07-25-17-43-35-648598-62159" # GeTe 16 Å -- MACE
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-938_cutoffs_12_7,5_5_supercell20_updated_CONTROL_md_fgd/n_configs_per_std_1/min_length_20/job_2024-07-25-18-12-18-201652-98466" # GeTe 20 Å -- MACE_MD
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-541837_cutoffs_10_5,5_4_supercell20_updated_CONTROL/n_configs_per_std_2/min_length_20/job_2024-07-25-23-59-20-208184-14739" # Bi2Se3 20 Å -- 2 configs -- MACE
-        # 3. Hiphive Fitting of FCPs upto 4th order
-        fit_force_constant = run_hiphive(
-            fit_method=fit_method,
-            disp_cut=disp_cut,
-            bulk_modulus=bulk_modulus,
-            temperature_qha=temperature_qha,
-            imaginary_tol=imaginary_tol,
-            prev_dir_json_saver=static_calcs.output["current_dir"],
-            # prev_dir_json_saver=prev_dir_json_saver,
-            cutoffs=cutoffs
-        )
-        fit_force_constant.update_config(
-            {"manager_config": {"_fworker": "cpu_reg_fworker"}})
-        jobs.append(fit_force_constant)
-        outputs.append(fit_force_constant.output)
-        fit_force_constant.metadata.update(
-            {
-                "tag": [
-                    f"mp_id={mpid}",
-                    f"bulk_modulus={bulk_modulus}",
-                    f"cutoffs={cutoffs}",
-                    f"nConfigsPerStd={n_structures}",
-                    f"fixedDispls={fixed_displs}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix={supercell_matrix}",
-                ]
-            }
-        )
-
-
-        # # 4. Perform phonon renormalization to obtain temperature-dependent
-        # # force constants using hiPhive
-        # outputs_renorm = []
-        # if renormalize:
-        #     for temperature in renormalize_temperature:
-        #         nconfig = renormalize_nconfig * (1 + temperature // 100)
-        #         renormalization = run_hiphive_renormalization(
-        #             temperature=temperature,
-        #             renorm_method=renormalize_method,
-        #             nconfig=nconfig,
-        #             renorm_TE_iter=renormalize_thermal_expansion_iter,
-        #             bulk_modulus=bulk_modulus,
-        #             prev_dir_hiphive=fit_force_constant.output["current_dir"],
-        #         )
-        #         renormalization.update_config(
-        #             {"manager_config": {"_fworker": "cpu_reg_fworker"}})
-        #         jobs.append(renormalization)
-        #         outputs_renorm.append(renormalization.output)
-        #         outputs.append(renormalization.output)
-        #         renormalization.metadata.update(
-        #             {
-        #                 "tag": [
-        #                     f"mp_id={mpid}",
-        #                     f"bulk_modulus={bulk_modulus}",
-        #                     f"nConfigsPerStd={n_structures}",
-        #                     f"fixedDispls={fixed_displs}",
-        #                     f"dispCut={disp_cut}",
-        #                     f"supercell_matrix={supercell_matrix}",
-        #                 ]
-        #             }
-        #         )
-
-
-        # 5. Extract Phonon Band structure & DOS from FC
-        # for 0K
-        fc_pdos_pb_to_db = run_fc_to_pdos(
-                renormalized=renormalize,
-                mesh_density=mesh_density,
-                prev_dir_json_saver=fit_force_constant.output["current_dir"],
+        use_symmetrized_structure = self.use_symmetrized_structure
+        kpath_scheme = self.kpath_scheme
+        valid_structs = (None, "primitive", "conventional")
+        if use_symmetrized_structure not in valid_structs:
+            raise ValueError(
+                f"Invalid {use_symmetrized_structure=}, use one of {valid_structs}"
             )
-        fc_pdos_pb_to_db.name += " 0K"
-        jobs.append(fc_pdos_pb_to_db)
-        outputs.append(fc_pdos_pb_to_db.output)
-        fc_pdos_pb_to_db.metadata.update(
-            {
-                "tag": [
-                    f"mp_id={mpid}",
-                    f"cutoffs={cutoffs}",
-                    f"bulk_modulus={bulk_modulus}",
-                    "temperature=0K"
-                    "fc_pdos_pb_to_db",
-                    f"nConfigsPerStd={n_structures}",
-                    f"fixedDispls={fixed_displs}",
-                    f"dispCut={disp_cut}",
-                    f"supercell_matrix={supercell_matrix}",
-                ]
-            }
+
+        if use_symmetrized_structure != "primitive" and kpath_scheme != "seekpath":
+            raise ValueError(
+                f"You can't use {kpath_scheme=} with the primitive standard "
+                "structure, please use seekpath"
+            )
+
+        valid_schemes = ("seekpath", "hinuma", "setyawan_curtarolo", "latimer_munro")
+        if kpath_scheme not in valid_schemes:
+            raise ValueError(
+                f"{kpath_scheme=} is not implemented, use one of {valid_schemes}"
+            )
+
+        if self.code is None or self.code not in SUPPORTED_CODES:
+            raise ValueError(
+                "The code variable must be passed and it must be a supported code."
+                f" Supported codes are: {SUPPORTED_CODES}"
+            )
+
+        jobs = []
+        # outputs = []
+
+        # TODO: should this be after or before structural optimization as the
+        #  optimization could change the symmetry we could add a tutorial and point out
+        #  that the structure should be nearly optimized before the phonon workflow
+        if self.use_symmetrized_structure == "primitive":
+            # These structures are compatible with many
+            # of the kpath algorithms that are used for Materials Project
+            prim_job = structure_to_primitive(structure, self.symprec)
+            jobs.append(prim_job)
+            structure = prim_job.output
+        elif self.use_symmetrized_structure == "conventional":
+            # it could be beneficial to use conventional standard structures to arrive
+            # faster at supercells with right angles
+            conv_job = structure_to_conventional(structure, self.symprec)
+            jobs.append(conv_job)
+            structure = conv_job.output
+
+        optimization_run_job_dir = None
+        optimization_run_uuid = None
+
+        if self.bulk_relax_maker is not None:
+            # optionally relax the structure
+            bulk_kwargs = {}
+            if self.prev_calc_dir_argname is not None:
+                bulk_kwargs[self.prev_calc_dir_argname] = prev_dir
+            bulk = self.bulk_relax_maker.make(structure, **bulk_kwargs)
+            jobs.append(bulk)
+            structure = bulk.output.structure
+            prev_dir = bulk.output.dir_name
+            optimization_run_job_dir = bulk.output.dir_name
+            optimization_run_uuid = bulk.output.uuid
+
+        # if supercell_matrix is None, supercell size will be determined after relax
+        # maker to ensure that cell lengths are really larger than threshold
+        if supercell_matrix is None:
+            supercell_job = get_supercell_size(
+                structure,
+                self.min_length,
+                self.prefer_90_degrees,
+                **self.get_supercell_size_kwargs,
+            )
+            jobs.append(supercell_job)
+            supercell_matrix = supercell_job.output
+
+        # Computation of static energy
+        total_dft_energy = None
+        static_run_job_dir = None
+        static_run_uuid = None
+        if (self.static_energy_maker is not None) and (
+            total_dft_energy_per_formula_unit is None
+        ):
+            static_job_kwargs = {}
+            if self.prev_calc_dir_argname is not None:
+                static_job_kwargs[self.prev_calc_dir_argname] = prev_dir
+            static_job = self.static_energy_maker.make(
+                structure=structure, **static_job_kwargs
+            )
+            jobs.append(static_job)
+            total_dft_energy = static_job.output.output.energy
+            static_run_job_dir = static_job.output.dir_name
+            static_run_uuid = static_job.output.uuid
+            prev_dir = static_job.output.dir_name
+        elif total_dft_energy_per_formula_unit is not None:
+            # to make sure that one can reuse results from Doc
+            compute_total_energy_job = get_total_energy_per_cell(
+                total_dft_energy_per_formula_unit, structure
+            )
+            jobs.append(compute_total_energy_job)
+            total_dft_energy = compute_total_energy_job.output
+
+
+        # get a phonon object from phonopy
+        displacements = generate_phonon_displacements(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            fixed_displs=[0.01, 0.03, 0.08, 0.1],
+            sym_reduce=self.sym_reduce,
+            symprec=self.symprec,
+            use_symmetrized_structure=self.use_symmetrized_structure,
+            kpath_scheme=self.kpath_scheme,
+            code=self.code,
         )
-        # # for finite temperatures
-        # if renormalize:
-        #     for i, temperature in enumerate(renormalize_temperature):
-        #         fc_pdos_pb_to_db = run_fc_to_pdos(
-        #             renormalized=renormalize,
-        #             mesh_density=mesh_density,
-        #             prev_dir_json_saver=outputs_renorm[i][0],
-        #         )
-        #         fc_pdos_pb_to_db.name += " {temperature}K"
-        #         jobs.append(fc_pdos_pb_to_db)
-        #         outputs.append(fc_pdos_pb_to_db.output)
-        #         fc_pdos_pb_to_db.metadata.update(
-        #             {
-        #                 "tag": [
-        #                     f"mp_id={mpid}",
-        #                     f"bulk_modulus={bulk_modulus}",
-        #                     f"temperature={temperature}K"
-        #                     "fc_pdos_pb_to_db",
-        #                     f"nConfigsPerStd={n_structures}",
-        #                     f"fixedDispls={fixed_displs}",
-        #                     f"dispCut={disp_cut}",
-        #                     f"supercell_matrix={supercell_matrix}",
-        #                 ]
-        #             }
-        #         )
+        jobs.append(displacements)
 
-        prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-1591_VASP_9A_cutoff_5_4_3/n_configs_per_std_3/min_length_9/job_2024-07-17-16-30-35-537125-39245"
-        prev_dir_hiphive = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/HPS_hiphive/mpid_mp-541837_cutoffs_10_5,5_4_supercell20_updated_CONTROL/n_configs_per_std_2/min_length_20/job_2024-07-25-23-59-20-208184-14739" # Bi2Se3 20 Å -- 2 configs -- MACE
-        # 6. Lattice thermal conductivity calculation using ShengBTE
-        if calculate_lattice_thermal_conductivity:
-            if renormalize:
-                temperatures = renormalize_temperature
-            else:
-                temperatures = thermal_conductivity_temperature
-            # Because of the way ShengBTE works, a temperature array that is not
-            # evenly spaced out (T_step) requires submission for each temperature
-            if not renormalize:
-                if isinstance(temperatures, dict):
-                    pass
-                elif isinstance(temperatures, (list, np.ndarray)) and not all(
-                    np.diff(temperatures) == np.diff(temperatures)[0]
-                ):
-                    raise ValueError("Temperature differences are not consistent.")
-                lattice_thermal_conductivity = run_lattice_thermal_conductivity(
-                    renormalized=renormalize,
-                    temperature=temperatures,
-                    prev_dir_hiphive=fit_force_constant.output["current_dir"],
-                    # prev_dir_hiphive=prev_dir_hiphive,
-                    therm_cond_solver= self.THERM_COND_SOLVER
-                )
-                lattice_thermal_conductivity.name += " {temperatures}"
-                lattice_thermal_conductivity.update_config(
-                    {"manager_config": {"_fworker": "gpu_fworker"}})
-                jobs.append(lattice_thermal_conductivity)
-                outputs.append(lattice_thermal_conductivity.output)
-                lattice_thermal_conductivity.metadata.update(
-                    {
-                        "tag": [
-                            f"mp_id={mpid}",
-                            f"bulk_modulus={bulk_modulus}",
-                            "run_lattice_thermal_conductivity",
-                            f"nConfigsPerStd={n_structures}",
-                            f"fixedDispls={fixed_displs}",
-                            f"dispCut={disp_cut}",
-                            f"supercell_matrix_kwargs={self.supercell_matrix_kwargs}",
-                            f"supercell_matrix={supercell_matrix}",
-                        ]
-                    }
-                )
-            else:
-                for t, temp in enumerate(temperatures):
-                    if temp == 0:
-                        continue
-                    lattice_thermal_conductivity = run_lattice_thermal_conductivity(
-                        renormalized=renormalize,
-                        temperature=temp,
-                        # prev_dir_hiphive=outputs_renorm[t][0],
-                        prev_dir_hiphive=prev_dir_hiphive,
-                        therm_cond_solver= self.THERM_COND_SOLVER
-                    )
+        # perform the phonon displacement calculations
+        displacement_calcs = run_phonon_displacements(
+            displacements=displacements.output,
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            phonon_maker=self.phonon_displacement_maker,
+            socket=self.socket,
+            prev_dir_argname=self.prev_calc_dir_argname,
+            prev_dir=prev_dir,
+        )
+        jobs.append(displacement_calcs)
 
-                    lattice_thermal_conductivity.name += f" {temp}"
-                    lattice_thermal_conductivity.update_config(
-                        {"manager_config": {"_fworker": "gpu_fworker"}})
-                    jobs.append(lattice_thermal_conductivity)
-                    outputs.append(lattice_thermal_conductivity.output)
-                    lattice_thermal_conductivity.metadata.update(
-                        {
-                            "tag": [
-                                f"mp_id={mpid}",
-                                f"bulk_modulus={bulk_modulus}",
-                                "run_lattice_thermal_conductivity",
-                                f"nConfigsPerStd={n_structures}",
-                                f"fixedDispls={fixed_displs}",
-                                f"dispCut={disp_cut}",
-                                f"supercell_matrix_kwargs={self.supercell_matrix_kwargs}",
-                                f"supercell_matrix={supercell_matrix}",
-                            ]
-                        }
-                    )
+        # Computation of BORN charges
+        born_run_job_dir = None
+        born_run_uuid = None
+        if self.born_maker is not None and (born is None or epsilon_static is None):
+            born_kwargs = {}
+            if self.prev_calc_dir_argname is not None:
+                born_kwargs[self.prev_calc_dir_argname] = prev_dir
+            born_job = self.born_maker.make(structure, **born_kwargs)
+            jobs.append(born_job)
 
-        return Flow(jobs=jobs, output=outputs, name=f"{mpid}_{self.THERM_COND_SOLVER}_"
+            # I am not happy how we currently access "born" charges
+            # This is very vasp specific code aims and forcefields
+            # do not support this at the moment, if this changes we have
+            # to update this section
+            epsilon_static = born_job.output.calcs_reversed[0].output.epsilon_static
+            born = born_job.output.calcs_reversed[0].output.outcar["born"]
+            born_run_job_dir = born_job.output.dir_name
+            born_run_uuid = born_job.output.uuid
+
+        logger.info("Generating phonon frequencies and eigenvectors")
+        print("Generating phonon frequencies and eigenvectors")
+        phonon_collect = generate_frequencies_eigenvectors(
+            supercell_matrix=supercell_matrix,
+            displacement=self.displacement,
+            sym_reduce=self.sym_reduce,
+            symprec=self.symprec,
+            use_symmetrized_structure=self.use_symmetrized_structure,
+            kpath_scheme=self.kpath_scheme,
+            code=self.code,
+            structure=structure,
+            displacement_data=displacement_calcs.output,
+            epsilon_static=epsilon_static,
+            born=born,
+            total_dft_energy=total_dft_energy,
+            static_run_job_dir=static_run_job_dir,
+            static_run_uuid=static_run_uuid,
+            born_run_job_dir=born_run_job_dir,
+            born_run_uuid=born_run_uuid,
+            optimization_run_job_dir=optimization_run_job_dir,
+            optimization_run_uuid=optimization_run_uuid,
+            create_thermal_displacements=self.create_thermal_displacements,
+            store_force_constants=self.store_force_constants,
+            bulk_modulus=bulk_modulus,
+            **self.generate_frequencies_eigenvectors_kwargs,
+        )
+
+        jobs.append(phonon_collect)
+
+        return Flow(jobs=jobs, output=phonon_collect.output, name=f"{mpid}_"
                                                     f"{disp_cut}_"
                                                     f"{cutoffs}_"
                                                     f"{self.name}")
