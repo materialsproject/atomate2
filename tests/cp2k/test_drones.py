@@ -14,7 +14,11 @@ def test_structure_optimization(cp2k_test_dir):
     assert doc.output.forces == pytest.approx(
         [(-1e-08, -1e-08, -1e-08), (2e-08, 2e-08, 2e-08)], abs=1e-1
     )
-    assert doc.output.stress is None
+    assert doc.output.stress == (
+        (10.7732045483, -1.12172149101, -0.432646843218),
+        (-1.12172149101, 11.8286321403, 2.48811110025),
+        (-0.432646843218, 2.48811110025, 8.74606312102),
+    )
     assert doc.output.bandgap is None
     assert doc.output.cbm == pytest.approx(7.65104451, abs=1e-1)
     assert doc.output.vbm == pytest.approx(5.09595793, abs=1e-1)
