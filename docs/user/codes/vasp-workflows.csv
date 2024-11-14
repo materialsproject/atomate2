@@ -1,22 +1,22 @@
 Name,Type,Maker
-`Static`_,job,:obj:`.StaticMaker`
-`Relax`_,job,:obj:`.RelaxMaker`
-`Tight Relax`_,job,:obj:`.TightRelaxMaker`
-`Dielectric`_,job,:obj:`.DielectricMaker`
-`Transmuter`_,job,:obj:`.TransmuterMaker`
-`HSE06 Static`_,job,:obj:`.HSEStaticMaker`
-`HSE06 Relax`_,job,:obj:`.HSERelaxMaker`
-`HSE06 Tight Relax`_,job,:obj:`.HSETightRelaxMaker`
-`Double Relax`_,flow,:obj:`.DoubleRelaxMaker`
-`Band Structure`_,flow,:obj:`.BandStructureMaker`
-`Uniform Band Structure`_,flow,:obj:`.UniformBandStructureMaker`
-`Line-Mode Band Structure`_,flow,:obj:`.LineModeBandStructureMaker`
-`HSE06 Band Structure`_,flow,:obj:`.HSEBandStructureMaker`
-`HSE06 Uniform Band Structure`_,flow,:obj:`.HSEUniformBandStructureMaker`
-`HSE06 Line-Mode Band Structure`_,flow,:obj:`.HSELineModeBandStructureMaker`
-`Relax and Band Structure`_,flow,:obj:`.RelaxBandStructureMaker`
-`Elastic Constant`_,flow,:obj:`.ElasticMaker`
-`Optics`_,flow,:obj:`.OpticsMaker`
-`HSE06 Optics`_,flow,:obj:`.HSEOpticsMaker`
-`Phonons`_,flow,:obj:`.PhononMaker`
-`Lobster`_,flow,:obj:`.VaspLobsterMaker`
+`Static`_,job,:obj:`~atomate2.vasp.jobs.core.StaticMaker`
+`Relax`_,job,:obj:`~atomate2.vasp.jobs.core.RelaxMaker`
+`Tight Relax`_,job,:obj:`~atomate2.vasp.jobs.core.TightRelaxMaker`
+`Dielectric`_,job,:obj:`~atomate2.vasp.jobs.core.DielectricMaker`
+`Transmuter`_,job,:obj:`~atomate2.vasp.jobs.core.TransmuterMaker`
+`HSE06 Static`_,job,:obj:`~atomate2.vasp.jobs.core.HSEStaticMaker`
+`HSE06 Relax`_,job,:obj:`~atomate2.vasp.jobs.core.HSERelaxMaker`
+`HSE06 Tight Relax`_,job,:obj:`~atomate2.vasp.jobs.core.HSETightRelaxMaker`
+`Double Relax`_,flow,:obj:`~atomate2.vasp.flows.core.DoubleRelaxMaker`
+`Band Structure`_,flow,:obj:`~atomate2.vasp.flows.core.BandStructureMaker`
+`Uniform Band Structure`_,flow,:obj:`~atomate2.vasp.flows.core.UniformBandStructureMaker`
+`Line-Mode Band Structure`_,flow,:obj:`~atomate2.vasp.flows.core.LineModeBandStructureMaker`
+`HSE06 Band Structure`_,flow,:obj:`~atomate2.vasp.flows.core.HSEBandStructureMaker`
+`HSE06 Uniform Band Structure`_,flow,:obj:`~atomate2.vasp.flows.core.HSEUniformBandStructureMaker`
+`HSE06 Line-Mode Band Structure`_,flow,:obj:`~atomate2.vasp.flows.core.HSELineModeBandStructureMaker`
+`Relax and Band Structure`_,flow,:obj:`~atomate2.vasp.flows.core.RelaxBandStructureMaker`
+`Elastic Constant`_,flow,:obj:`~atomate2.vasp.flows.elastic.ElasticMaker`
+`Optics`_,flow,:obj:`~atomate2.vasp.flows.core.OpticsMaker`
+`HSE06 Optics`_,flow,:obj:`~atomate2.vasp.flows.core.HSEOpticsMaker`
+`Phonons`_,flow,:obj:`~atomate2.vasp.flows.phonons.PhononMaker`
+`Lobster`_,flow,:obj:`~atomate2.vasp.flows.lobster.VaspLobsterMaker`
