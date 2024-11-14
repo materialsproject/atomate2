@@ -32,10 +32,10 @@ def test_copy_cp2k_outputs_static(
     test_dir.mkdir()
 
     # Create minimal cp2k.out file with required content
-    with open(test_dir / "cp2k.out", "w") as f:
-        f.write("CP2K| Output file names:\n")
-        f.write(" CP2K-ELECTRON_DENSITY-1_0.cube\n")
-        f.write(" CP2K-WFN-1_0.wfn\n")
+    with open(test_dir / "cp2k.out", "w") as file:
+        file.write("CP2K| Output file names:\n")
+        file.write(" CP2K-ELECTRON_DENSITY-1_0.cube\n")
+        file.write(" CP2K-WFN-1_0.wfn\n")
 
     # Create other necessary files
     (test_dir / "cp2k.inp").touch()
