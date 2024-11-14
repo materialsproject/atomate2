@@ -363,10 +363,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             },
         )
         if create_force_constants_file:
-            # If specified, saved force_constants to text file
             from phonopy.file_IO import write_FORCE_CONSTANTS
 
-            write_FORCE_CONSTANTS(
+            write_FORCE_CONSTANTS(  # save force_constants to text file
                 phonon.force_constants, filename=force_constants_filename
             )
 
@@ -379,7 +378,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         npoints_band = kwargs.get("npoints_band", 101)
         qpoints, connections = get_band_qpoints_and_path_connections(
-            kpath_concrete, npoints=kwargs.get("npoints_band", 101)
+            kpath_concrete, npoints=npoints_band
         )
 
         # phonon band structures will always be computed
