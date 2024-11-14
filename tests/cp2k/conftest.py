@@ -57,6 +57,12 @@ def cp2k_test_outputs(test_dir):
 
 
 @pytest.fixture
+def cp2k_output_path(test_dir):
+    """Get path to test CP2K output file."""
+    return f"{test_dir}/cp2k/Si_static_test/outputs/cp2k.out.gz"
+
+
+@pytest.fixture
 def mock_cp2k(monkeypatch, cp2k_test_dir):
     """
     This fixture allows one to mock (fake) running CP2K.
