@@ -112,7 +112,7 @@ def run_cp2k(
     else:
         raise ValueError(f"Unsupported {job_type=}")
 
-    c = Custodian(
+    custodian = Custodian(
         handlers,
         jobs,
         validators=validators,
@@ -122,7 +122,7 @@ def run_cp2k(
     )
 
     logger.info("Running CP2K using custodian.")
-    c.run()
+    custodian.run()
 
 
 def should_stop_children(

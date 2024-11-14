@@ -79,7 +79,6 @@ def enumerate_magnetic_orderings(
         truncate_by_symmetry=truncate_by_symmetry,
         transformation_kwargs=transformation_kwargs,
     )
-
     return enumerator.ordered_structures, enumerator.ordered_structure_origins
 
 
@@ -111,7 +110,7 @@ def run_ordering_calculations(
     """
     jobs = []
     num_orderings = len(orderings[0])
-    for idx, (struct, origin) in enumerate(zip(*orderings)):
+    for idx, (struct, origin) in enumerate(zip(*orderings, strict=True)):
         name = f"{idx + 1}/{num_orderings} ({origin})"
 
         parent_structure = struct.copy()

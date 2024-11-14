@@ -60,10 +60,7 @@ def test_anharmonic_quantification_oneshot(si, clean_dir, mock_aims, species_dir
         phonon_maker=phonon_maker,
     )
     maker.name = "anharmonicity"
-    flow = maker.make(
-        si,
-        supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
-    )
+    flow = maker.make(si, supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3))
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
@@ -120,7 +117,7 @@ def test_anharmonic_quantification_full(si, clean_dir, mock_aims, species_dir):
     maker.name = "anharmonicity"
     flow = maker.make(
         si,
-        supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
+        supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3),
         one_shot_approx=False,
         seed=1234,
     )
@@ -254,9 +251,7 @@ def test_site_resolved_anharmonic_quantification(
     )
     maker.name = "anharmonicity"
     flow = maker.make(
-        nacl,
-        supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
-        site_resolved=True,
+        nacl, supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3), site_resolved=True
     )
 
     # run the flow or job and ensure that it finished running successfully
@@ -323,7 +318,7 @@ def test_element_resolved_anharmonic_quantification(
     maker.name = "anharmonicity"
     flow = maker.make(
         nacl,
-        supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
+        supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3),
         element_resolved=True,
     )
 
@@ -372,10 +367,7 @@ def test_anharmonic_quantification_socket_oneshot(si, clean_dir, species_dir):
         phonon_maker=phonon_maker,
     )
     maker.name = "anharmonicity"
-    flow = maker.make(
-        si,
-        supercell_matrix=np.array([-1, 1, 1, 1, -1, 1, 1, 1, -1]).reshape((3, 3)),
-    )
+    flow = maker.make(si, supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3))
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
