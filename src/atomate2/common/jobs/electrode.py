@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from pymatgen.analysis.structure_matcher import StructureMatcher
     from pymatgen.core import Structure
     from pymatgen.entries.computed_entries import ComputedEntry
+    from pymatgen.io.common import VolumetricData
 
 
 logger = logging.getLogger(__name__)
@@ -203,7 +204,7 @@ def get_insertion_electrode_doc(
 @job
 def get_inserted_structures(
     prev_dir: Path | str,
-    get_charge_density: Callable,
+    get_charge_density: Callable[[str | Path], VolumetricData],
     inserted_species: ElementLike,
     insertions_per_step: int = 4,
     charge_insertion_generator: ChargeInterstitialGenerator | None = None,
@@ -213,7 +214,7 @@ def get_inserted_structures(
     Parameters
     ----------
     prev_dir: The previous directory where the static calculation was performed.
-    get_charge_density: A function to get the charge density from a task document.
+    get_charge_density: A function to get the charge density from a run directory.
     inserted_species: The species to insert.
     insertions_per_step: The maximum number of ion insertion sites to attempt.
     charge_insertion_generator: The charge insertion generator to use,
