@@ -11,21 +11,7 @@ from typing import Literal, Sequence
 from atomate2.lammps.sets.utils import process_ensemble_conditions, update_settings
 
 from atomate2.ase.md import MDEnsemble
-
-try:
-    from openff.interchange import Interchange
-except ImportError:
-
-    class Interchange:  # type: ignore[no-redef]
-        """Dummy class for failed imports of Interchange."""
-
-        def model_validate(self, _: str) -> None:
-            """Parse raw is the first method called on the Interchange object."""
-            raise ImportError(
-                "openff-interchange must be installed for OpenMM makers to"
-                "to support OpenFF Interchange objects."
-            )
-
+from atomate2.lammps.sets.utils import LammpsInterchange
 
 logger = logging.getLogger(__name__)
 template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
@@ -109,7 +95,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
                  friction : float | None = None,
                  template : str = None,
                  settings : dict | None = None,
-                 interchange : Interchange  = None,
+                 interchange : LammpsInterchange = None,
                  **kwargs):
         
         template = os.path.join(template_dir, "md.template") if template is None else template
@@ -209,4 +195,4 @@ class BaseLammpsSet(BaseLammpsGenerator):
             self.settings.update({'force_field': self.force_field, 'species': self.species, 'dump_modify_flag': 'dump_modify'}) 
         
         if not self.force_field and self.interchange:
-            self.settings.update({'force_field': '#', 'species': None})       
+            self.settings.update({'force_field': 'pair_style lj/cut/coul/cut 10.0'}) #Assumes the pair_style is lj/cut if no force field is provided (which should be true for openFF forcefields?)
