@@ -142,6 +142,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             MLFF.MACE: "mace-torch",
             MLFF.GAP: "quippy-ase",
             MLFF.Nequip: "nequip",
+            MLFF.DeepMD: "deepmd-kit",
         }
 
         if pkg_name := {str(k): v for k, v in model_to_pkg_map.items()}.get(
