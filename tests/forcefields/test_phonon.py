@@ -28,7 +28,7 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
         min_length=5,
         max_length=10,
         prefer_90_degrees=False,
-        allow_orhtorhombic=True,
+        allow_orthorhombic=True,
     )
 
     # run the flow or job and ensure that it finished running successfully
@@ -43,7 +43,7 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
         min_length=5,
         max_length=10,
         prefer_90_degrees=True,
-        allow_orhtorhombic=True,
+        allow_orthorhombic=True,
     )
 
     # run the flow or job and ensure that it finished running successfully
