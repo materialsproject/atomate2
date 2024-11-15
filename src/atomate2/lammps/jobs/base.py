@@ -52,9 +52,9 @@ class BaseLammpsMaker(Maker):
     write_additional_data: dict = field(default_factory=dict)
     
     def __post_init__(self):
-        if self.force_field and self.input_set_generator.force_field is None:
+        if self.force_field and self.input_set_generator.force_field is None and self.input_set_generator.interchange is None:
             self.input_set_generator.set_force_field(self.force_field)
-        if not self.input_set_generator.force_field:
+        if not self.input_set_generator.force_field and not self.input_set_generator.interchange:
             raise ValueError("Force field not specified")
 
     @lammps_job
