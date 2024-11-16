@@ -88,6 +88,8 @@ class BaseHiphiveMaker(Maker, ABC):
         The force field displacement maker, default is CHGNetStaticMaker.
     min_length (float):
         Minimum length of supercell lattice vectors in Angstroms, default is 13.0.
+    max_length (float):
+        Minimum length of supercell lattice vectors in Angstroms, default is 25.0.
     prefer_90_degrees (bool):
         Whether to prefer 90 degree angles in supercell matrix,
         default is True.
@@ -139,7 +141,8 @@ class BaseHiphiveMaker(Maker, ABC):
     sym_reduce: bool = True
     symprec: float = 1e-4
     displacement: float = 0.01
-    min_length: float | None = 20.0
+    min_length: float | None = 13.0
+    max_length: float | None = 25.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
@@ -299,6 +302,7 @@ class BaseHiphiveMaker(Maker, ABC):
             supercell_job = get_supercell_size(
                 structure,
                 self.min_length,
+                self.max_length,
                 self.prefer_90_degrees,
                 **self.get_supercell_size_kwargs,
             )

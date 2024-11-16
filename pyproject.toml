@@ -62,11 +62,16 @@ forcefields = [
     "torchdata<=0.7.1",                            # TODO: remove when issue fixed
 ]
 anharmonicphonons = [
-    "phonopy>=2.21.0",
+    "phonopy==2.21.2",
 	"hiphive @ git+https://gitlab.com/jsyony37/hiphive.git@personal#egg=hiphive",
+    #"hiphive @ git@gitlab.com:jsyony37/hiphive.git",
     "f90nml==1.4.4",
     "spglib>=2.2.0",
-	"ase>=3.22.1",]
+	"ase>=3.22.1",
+    "phono3py==2.8.0",
+    "numpy==1.26.4",
+    "scipy==1.14.1",
+    ]
 ase = [
     "ase>=3.23.0",
 ]

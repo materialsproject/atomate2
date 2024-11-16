@@ -1018,8 +1018,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         if cutoffs is None:
             # cutoffs = get_cutoffs(supercell_structure)
             # cutoffs = [[5, 4, 3.5]] # Ba2DySbO6 cubic
-            cutoffs = [[5, 4, 3]] # CoS2 cubic
+            # cutoffs = [[5, 4, 3]] # CoS2 cubic
             # cutoffs = [[9, 6, 4]] # Bi4Au
+            cutoffs = [[4, 3, 2]] # CoS2 cubic
             logger.info(f"cutoffs is {cutoffs}")
         else:
             pass
@@ -1177,7 +1178,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
             HiphiveForceConstants.write_to_phonopy(fcs, "fc2.hdf5", "hdf5") # ForceConstants
             # ForceConstants.write_to_phono3py(fcs, "fc3.hdf5", "hdf5")
-            HiphiveForceConstants.write_to_phono3py(fcs, "fc3.hdf5") # ForceConstants
+            HiphiveForceConstants.write_to_phono3py(fcs, "fc3.hdf5", order=3) # ForceConstants
 
             ### detour from hdf5
             supercell_atoms_phonopy = phonopy_atoms_to_ase(phonopy.supercell)
@@ -1195,7 +1196,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             supercell_atoms = supercell_atoms_phonopy
             # supercell_atoms = supercell_atoms_pymatgen
             # fcs = ForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5", order=3)
-            fcs = HiphiveForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5") # ForceConstants
+            fcs = HiphiveForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5", order=3) # ForceConstants
             # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, order=3, fc_tol=1e-4)
             # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, fc_tol=1e-4)
 
@@ -1203,8 +1204,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_hdf5_phonopy_struct", phonopy_atoms_to_ase(phonopy.primitive))
 
             supercell_atoms = supercell_atoms_pymatgen
-            fcs = HiphiveForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5") # ForceConstants
-            fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_hdf5_pymatgen_struct", atoms)
+            fcs = HiphiveForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5", order=3) # ForceConstants
+            fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_hdf5_pymatgen_struct", atoms, order=3)
 
         else:
             logger.info(f"best_n_imaginary = {fitting_data['best_n_imaginary']}")
