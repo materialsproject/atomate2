@@ -107,11 +107,8 @@ def test_transmuter(tmp_path, mock_cp2k, basis_and_potential, si_structure):
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, TaskDocument)
     assert output1.output.energy == approx(-404.08231791)
-    assert output1.transformations["history"][0]["scaling_matrix"] == [
-        [1, 0, 0],
-        [0, 1, 0],
-        [0, 0, 2],
-    ]
+    scaling_matrix = output1.transformations["history"][0]["scaling_matrix"]
+    assert scaling_matrix == [[1, 0, 0], [0, 1, 0], [0, 0, 2]]
     np.testing.assert_allclose(
         output1.structure.lattice.abc, [3.866975, 3.866975, 7.733949]
     )

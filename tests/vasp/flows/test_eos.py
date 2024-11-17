@@ -19,14 +19,11 @@ expected_incar_relax = {
     "KSPACING": 0.22,
 }
 
-expected_incar_relax_1 = {
-    **expected_incar_relax,
-    "EDIFFG": -0.05,
-}
+expected_incar_relax_1 = expected_incar_relax | {"EDIFFG": -0.05}
 
-expected_incar_deform = {**expected_incar_relax, "ISIF": 2}
+expected_incar_deform = expected_incar_relax | {"ISIF": 2}
 
-expected_incar_static = {**expected_incar_relax, "NSW": 0, "IBRION": -1, "ISMEAR": -5}
+expected_incar_static = expected_incar_relax | {"NSW": 0, "IBRION": -1, "ISMEAR": -5}
 expected_incar_static.pop("ISIF")
 
 
