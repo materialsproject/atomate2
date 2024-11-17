@@ -17,7 +17,7 @@ expected_incar_relax = {
     "KSPACING": 0.22,
 }
 
-expected_incar_static = {**expected_incar_relax, "NSW": 0, "IBRION": -1, "ISMEAR": -5}
+expected_incar_static = expected_incar_relax | {"NSW": 0, "IBRION": -1, "ISMEAR": -5}
 expected_incar_static.pop("ISIF")
 
 

@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import os
+import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
 from importlib.resources import files as get_mod_path
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 from monty.io import zopen
@@ -39,7 +40,7 @@ class Cp2kInputSet(InputSet):
     def __init__(
         self,
         cp2k_input: Cp2kInput,
-        optional_files: dict | None = None,
+        optional_files: dict | None | Literal[False] = None,
     ) -> None:
         """Initialize the set.
 
@@ -144,6 +145,10 @@ class Cp2kInputSet(InputSet):
     @property
     def is_valid(self) -> bool:
         """Whether the input set is valid."""
+        warnings.warn(
+            "Cp2kInputSet.is_valid is not yet implemented and will always return True.",
+            stacklevel=2,
+        )
         return True
 
 
@@ -182,7 +187,7 @@ class Cp2kInputGenerator(InputGenerator):
         self,
         structure: Structure | Molecule = None,
         prev_dir: str | Path = None,
-        optional_files: dict | None = None,
+        optional_files: dict | None | Literal[False] = None,
     ) -> Cp2kInputSet:
         """Get a CP2K input set.
 
@@ -197,6 +202,8 @@ class Cp2kInputGenerator(InputGenerator):
             A previous directory to generate the input set from.
         optional_files
             Additional files (e.g. vdw kernel file) to be included in the input set.
+            If False, no optional files will be included. Defaults to writing a BASIS
+            and POTENTIAL file.
 
         Returns
         -------
@@ -224,15 +231,16 @@ class Cp2kInputGenerator(InputGenerator):
             prev_input,
             input_updates,
         )
-        optional_files = optional_files or {}
-        optional_files["basis"] = {
-            "filename": "BASIS",
-            "object": self._get_basis_file(cp2k_input=cp2k_input),
-        }
-        optional_files["potential"] = {
-            "filename": "POTENTIAL",
-            "object": self._get_potential_file(cp2k_input=cp2k_input),
-        }
+        if optional_files is not False:
+            optional_files = optional_files or {}
+            optional_files["basis"] = {
+                "filename": "BASIS",
+                "object": self._get_basis_file(cp2k_input=cp2k_input),
+            }
+            optional_files["potential"] = {
+                "filename": "POTENTIAL",
+                "object": self._get_potential_file(cp2k_input=cp2k_input),
+            }
 
         return Cp2kInputSet(cp2k_input=cp2k_input, optional_files=optional_files)
 
@@ -323,11 +331,7 @@ class Cp2kInputGenerator(InputGenerator):
         # Generate base input but override with user input settings
         input_settings = recursive_update(input_settings, input_updates)
         input_settings = recursive_update(input_settings, self.user_input_settings)
-        overrides = (
-            input_settings.pop("override_default_params")
-            if "override_default_params" in input_settings
-            else {}
-        )
+        overrides = input_settings.pop("override_default_params", {})
         cp2k_input = DftSet(structure=structure, kpoints=kpoints, **input_settings)
 
         for setting in input_settings:
@@ -385,6 +389,15 @@ class Cp2kInputGenerator(InputGenerator):
     ) -> Kpoints | None:
         """Get the kpoints object."""
         kpoints_updates = kpoints_updates or {}
+
+        # don't write kpoints if user_kpoints_settings or base KPOINTS config is None
+        # KPOINTS are not compatible with orbital transformation mode and CP2K will
+        # crash if found
+        if (
+            self.user_kpoints_settings is None
+            or self.config_dict.get("KPOINTS") is None
+        ):
+            return None
 
         # use user setting if set otherwise default to base config settings
         if self.user_kpoints_settings != {}:

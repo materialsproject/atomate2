@@ -61,7 +61,7 @@ def test_user_incar_settings():
         "GGA": "PE",
         "IBRION": 1,
         "ISIF": 1,
-        "ISPIN": False,  # wrong type, should be integer (only 1 or 2)
+        "ISPIN": -10,  # wrong value, should be 1 or 2
         "LASPH": False,
         "ISMEAR": -2,
         "LCHARG": 50,  # wrong type, should be bool.
