@@ -11,13 +11,15 @@ from typing import TYPE_CHECKING, Any
 from monty.serialization import loadfn
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.jdftx.inputs import JDFTXInfile, JDFTXStructure
+from pymatgen.io.vasp import Kpoints
+from pymatgen.util.typing import Kpoint
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
     from pymatgen.util.typing import PathLike
 
 _BASE_JDFTX_SET = loadfn(get_mod_path("atomate2.jdftx.sets") / "BaseJdftxSet.yaml")
-
+_BEAST_CONFIG = loadfn(get_mod_path("atomate2.jdftx.sets") / "BeastConfig.yaml")
 FILE_NAMES = {"in": "init.in", "out": "jdftx.out"}
 
 
@@ -83,11 +85,25 @@ class JdftxInputSet(InputSet):
 
 @dataclass
 class JdftxInputGenerator(InputGenerator):
-    """A class to generate JDFTx input sets."""
+    """A class to generate JDFTx input sets.
+    
+    Args:
+        user_settings (dict): User JDFTx settings. This allows the user to
+            override the default JDFTx settings loaded in the default_settings
+            argument.
+        user_kpoint_settings (dict): User settings for overriding the
+            calculation of the k-point grid. The user can set the k-point
+            density with "kpoint-density". 
+        config_dict (dict): The config dictionary used to set input paremeters
+            used in the calculation of JDFTx tags.
+        default_settings: Default JDFTx settings.
+    """
 
     # copy _BASE_JDFTX_SET to ensure each class instance has its own copy
     # otherwise in-place changes can affect other instances
     user_settings: dict = field(default_factory=dict)
+    user_kpoint_settings: dict = field(default_factory=dict)
+    config_dict: dict = field(default_factory=lambda: _BEAST_CONFIG)
     default_settings: dict = field(default_factory=lambda: _BASE_JDFTX_SET)
 
     def __post_init__(self) -> None:
@@ -124,6 +140,34 @@ class JdftxInputGenerator(InputGenerator):
 
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftx_structure)
 
+    def get_kgrid(
+        self, 
+        structure:Structure
+    ) -> Kpoint:
+        """Get k-point grid.
+        
+        Parameters
+        ----------
+        structure
+            A pymatgen structure.
+        
+        Returns
+        -------
+        Kpoints
+            A tuple of integers specifying the k-point grid.
+        """
+        if self.user_kpoint_settings == {}:
+            kpoints = Kpoints.automatic_density(
+                structure=structure,
+                kppa=self.config_dict.get("kpoint-density")
+                )
+        else:
+            if "kpoint-density" in self.user_kpoint_settings.keys():
+                kpoints = Kpoints.automatic_density(
+                    structure=structure,
+                    kppa=self.user_kpoint_settings["kpoint-density"]
+                    )
+        colomb_interaction = self.settings
 
 def condense_jdftxinputs(
     jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
