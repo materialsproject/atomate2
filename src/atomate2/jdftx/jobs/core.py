@@ -48,16 +48,3 @@ class LatticeMinMaker(BaseJdftxMaker):
     input_set_generator: JdftxInputGenerator = field(
         default_factory=LatticeMinSetGenerator
     )
-
-@dataclass
-class SurfaceMinMaker(BaseJdftxMaker):
-    """Maker to create surface relaxation job."""
-
-    name: str = "surface_ionic_min"
-    input_set_generator: JdftxInputGenerator = field(
-        default_factory=IonicMinSetGenerator(
-            user_settings={
-                
-            }
-        )
-    )

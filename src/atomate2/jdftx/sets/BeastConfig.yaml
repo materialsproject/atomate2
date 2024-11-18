@@ -1,1 +1,2 @@
 kpoint-density: 1000
+coulomb-truncation: True

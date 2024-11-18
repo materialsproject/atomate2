@@ -12,7 +12,7 @@ from monty.serialization import loadfn
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.jdftx.inputs import JDFTXInfile, JDFTXStructure
 from pymatgen.io.vasp import Kpoints
-from pymatgen.util.typing import Kpoint
+from pymatgen.util.typing import Kpoint, Tuple3Floats
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
@@ -91,9 +91,13 @@ class JdftxInputGenerator(InputGenerator):
         user_settings (dict): User JDFTx settings. This allows the user to
             override the default JDFTx settings loaded in the default_settings
             argument.
-        user_kpoint_settings (dict): User settings for overriding the
-            calculation of the k-point grid. The user can set the k-point
-            density with "kpoint-density". 
+        coulomb_truncation (bool) = False: 
+            Whether to use coulomb truncation and calculate the coulomb 
+            truncation center. Only works for molecules and slabs.
+        auto_kpoint_density:
+            Reciprocal k-point density for automatic k-point calculation. If 
+            k-points are specified in user_settings, they will not be 
+            overridden.
         config_dict (dict): The config dictionary used to set input paremeters
             used in the calculation of JDFTx tags.
         default_settings: Default JDFTx settings.
@@ -102,7 +106,8 @@ class JdftxInputGenerator(InputGenerator):
     # copy _BASE_JDFTX_SET to ensure each class instance has its own copy
     # otherwise in-place changes can affect other instances
     user_settings: dict = field(default_factory=dict)
-    user_kpoint_settings: dict = field(default_factory=dict)
+    coulomb_truncation: bool = False
+    auto_kpoint_density: int = 1000
     config_dict: dict = field(default_factory=lambda: _BEAST_CONFIG)
     default_settings: dict = field(default_factory=lambda: _BASE_JDFTX_SET)
 
@@ -138,9 +143,14 @@ class JdftxInputGenerator(InputGenerator):
         jdftxinputs = self.settings
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
 
+        self.set_kgrid(structure=structure)
+        self.set_coulomb_truncation(structure=structure)
+
+        jdftxinputs = self.settings
+        jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftx_structure)
 
-    def get_kgrid(
+    def set_kgrid(
         self, 
         structure:Structure
     ) -> Kpoint:
@@ -156,18 +166,99 @@ class JdftxInputGenerator(InputGenerator):
         Kpoints
             A tuple of integers specifying the k-point grid.
         """
-        if self.user_kpoint_settings == {}:
+        # never override k grid definition in user settings
+        if "kpoint-folding" in self.user_settings.keys():
+            return 
+        # calculate k-grid with k-point density
+        else:
             kpoints = Kpoints.automatic_density(
                 structure=structure,
-                kppa=self.config_dict.get("kpoint-density")
+                kppa=self.auto_kpoint_density
                 )
+            kpoints = kpoints.kpts
+            if self._is_surface_calc():
+                kpoints[-1] = 1
+            elif self._is_molecule_calc():
+                kpoints = [1, 1, 1]
+            kpoint_update = {"kpoint-folding": 
+                {
+                "n0": kpoints[0], 
+                "n1": kpoints[1],
+                "n2": kpoints[2],
+                }
+            }
+            self.settings.update(kpoint_update)
+            return
+
+    def set_coulomb_truncation(
+            self, 
+            structure:Structure, 
+            jdftxinput:JDFTXInfile
+        ) -> JDFTXInfile:
+        """
+        Set coulomb-truncation for JDFTXInfile.
+
+        Check config_dict to determine whether to use coulomb-truncation. 
+        Specify "coulomb-truncation": bool in self.user_settings to override 
+        config_dict. Calculate center of mass of the unit cell, set the 
+        coulomb-truncation tag in the JDFTXInfile, and return the JDFTXInfile.
+
+        Parameters
+        ----------
+        structure
+            A pymatgen structure
+        jdftxinputs
+            A pymatgen.io.jdftx.inputs.JDFTXInfile object
+
+        Returns
+        -------
+        jdftxinputs
+            A pymatgen.io.jdftx.inputs.JDFTXInfile object
+        
+        """
+        if self._is_surface_calc():
+            
+        elif self._is_molecule_calc():
+        
         else:
-            if "kpoint-density" in self.user_kpoint_settings.keys():
-                kpoints = Kpoints.automatic_density(
-                    structure=structure,
-                    kppa=self.user_kpoint_settings["kpoint-density"]
-                    )
-        colomb_interaction = self.settings
+            jdftxinput["coulomb-interaction"] =  "Periodic"
+        
+
+    def _is_surface_calc(
+            self
+    ) -> bool:
+        """
+        Check if calculation is for surface.
+
+        First set coulomb-truncation based on config_dict. Override with 
+        self.settings for coulomb-interaction type Slab. 
+        Override with self.user_coulomb_settings.
+
+        Returns
+        -------
+            A boolean where True means this is a surface calculation
+        """
+        is_surface = False
+        if "coulomb-interaction" in self.user_settings():
+            if self.user_settings["coulomb-interaction"]["truncationType"] == "Slab":
+                is_surface = True
+        else:
+            False
+        
+    def _is_molecule_calc(
+            self
+    ) -> bool:
+         """
+        Check if calculation is for surface.
+
+        First set coulomb-truncation based on config_dict. Override with 
+        self.settings for coulomb-interaction type Slab. 
+        Override with self.user_coulomb_settings.
+
+        Returns
+        -------
+            A boolean where True means this is a surface calculation
+        """
 
 def condense_jdftxinputs(
     jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
