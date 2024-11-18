@@ -6,20 +6,26 @@ import os
 from dataclasses import dataclass, field
 from importlib.resources import files as get_mod_path
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Union
+import numpy as np
+from scipy import constants as const
 
 from monty.serialization import loadfn
+from pymatgen.core import Structure
+from pymatgen.core.units import eV_to_Ha, ang_to_bohr
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.jdftx.inputs import JDFTXInfile, JDFTXStructure
 from pymatgen.io.vasp import Kpoints
 from pymatgen.util.typing import Kpoint, Tuple3Floats
+from atomate2 import SETTINGS
+
 
 if TYPE_CHECKING:
-    from pymatgen.core import Structure
     from pymatgen.util.typing import PathLike
 
 _BASE_JDFTX_SET = loadfn(get_mod_path("atomate2.jdftx.sets") / "BaseJdftxSet.yaml")
 _BEAST_CONFIG = loadfn(get_mod_path("atomate2.jdftx.sets") / "BeastConfig.yaml")
+_PSEUDO_CONFIG = loadfn(get_mod_path("atomate2.jdftx.sets") / "PseudosConfig.yaml")
 FILE_NAMES = {"in": "init.in", "out": "jdftx.out"}
 
 
@@ -94,10 +100,16 @@ class JdftxInputGenerator(InputGenerator):
         coulomb_truncation (bool) = False: 
             Whether to use coulomb truncation and calculate the coulomb 
             truncation center. Only works for molecules and slabs.
-        auto_kpoint_density:
+        auto_kpoint_density (int) = 1000:
             Reciprocal k-point density for automatic k-point calculation. If 
             k-points are specified in user_settings, they will not be 
             overridden.
+        potential (None, float) = None:
+            Potential vs SHE for GC-DFT calculation.
+        calc_type (str) = "bulk":
+            Type of calculation used for setting input parameters. Options are:
+            ["bulk", "surface", "molecule"].
+        pseudopotentials (str) = "GBRV"
         config_dict (dict): The config dictionary used to set input paremeters
             used in the calculation of JDFTx tags.
         default_settings: Default JDFTx settings.
@@ -108,11 +120,20 @@ class JdftxInputGenerator(InputGenerator):
     user_settings: dict = field(default_factory=dict)
     coulomb_truncation: bool = False
     auto_kpoint_density: int = 1000
+    potential: Union[None, float] = None
+    calc_type: str = "bulk"
+    pseudos: str = "GBRV_v1.5"
     config_dict: dict = field(default_factory=lambda: _BEAST_CONFIG)
     default_settings: dict = field(default_factory=lambda: _BASE_JDFTX_SET)
 
     def __post_init__(self) -> None:
         """Post init formatting of arguments."""
+        calc_type_options = ["bulk", "surface", "molecule"]
+        if self.calc_type not in calc_type_options:
+            raise ValueError(
+                f"calc type f{self.calc_type} not in list of supported calc "
+                "types: {calc_type_options}."
+            )
         self.settings = self.default_settings.copy()
         self.settings.update(self.user_settings)
         self._apply_settings(self.settings)
@@ -139,6 +160,12 @@ class JdftxInputGenerator(InputGenerator):
         JdftxInputSet
             A JDFTx input set.
         """
+        self.set_kgrid(structure=structure)
+        self.set_coulomb_interaction(structure=structure)
+        self.set_nbands(structure=structure)
+        self.set_mu()
+        self.set_pseudos()
+
         jdftx_structure = JDFTXStructure(structure)
         jdftxinputs = self.settings
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
@@ -175,10 +202,10 @@ class JdftxInputGenerator(InputGenerator):
                 structure=structure,
                 kppa=self.auto_kpoint_density
                 )
-            kpoints = kpoints.kpts
-            if self._is_surface_calc():
+            kpoints = kpoints.kpts 
+            if self.calc_type == "surface":
                 kpoints[-1] = 1
-            elif self._is_molecule_calc():
+            elif self.calc_type == "molecule":
                 kpoints = [1, 1, 1]
             kpoint_update = {"kpoint-folding": 
                 {
@@ -190,25 +217,19 @@ class JdftxInputGenerator(InputGenerator):
             self.settings.update(kpoint_update)
             return
 
-    def set_coulomb_truncation(
+    def set_coulomb_interaction(
             self, 
             structure:Structure, 
-            jdftxinput:JDFTXInfile
-        ) -> JDFTXInfile:
+    ) -> JDFTXInfile:
         """
-        Set coulomb-truncation for JDFTXInfile.
+        Set coulomb-interaction and coulomb-truncation for JDFTXInfile.
 
-        Check config_dict to determine whether to use coulomb-truncation. 
-        Specify "coulomb-truncation": bool in self.user_settings to override 
-        config_dict. Calculate center of mass of the unit cell, set the 
-        coulomb-truncation tag in the JDFTXInfile, and return the JDFTXInfile.
+        Description
 
         Parameters
         ----------
         structure
             A pymatgen structure
-        jdftxinputs
-            A pymatgen.io.jdftx.inputs.JDFTXInfile object
 
         Returns
         -------
@@ -216,49 +237,81 @@ class JdftxInputGenerator(InputGenerator):
             A pymatgen.io.jdftx.inputs.JDFTXInfile object
         
         """
-        if self._is_surface_calc():
-            
-        elif self._is_molecule_calc():
-        
+        if "coulomb-interaction" in self.settings.keys():
+            return
+        if self.calc_type == "bulk":
+            self.settings["coulomb-interaction"] = {
+                "truncationType": "Periodic",
+            }
+            return
+        elif self.calc_type == "surface":
+            self.settings["coulomb-interaction"] = {
+                "truncationType": "Slab",
+                "dir": "001",
+            }
+        elif self.calc_type == "molecule":
+            self.settings["coulomb-interaction"] = {
+                "truncationType": "Isolated",
+            }
+        com = center_of_mass(structure=structure)
+        com = com @ structure.lattice * ang_to_bohr
+        self.settings["coulomb-truncation-embed"] = {
+            "c0": com[0],
+            "c1": com[1],
+            "c2": com[2],
+        }
+        return
+    
+    def set_nbands(
+            self, 
+            structure:Structure
+    ) -> None:
+        """
+        Set number of bands in DFT calculation.
+        """
+        nelec = 0
+        for atom in structure.species:
+            nelec += _PSEUDO_CONFIG[self.pseudos][str(atom)]
+        nbands_add = int(nelec / 2) + 10
+        nbands_mult = int((nelec/2)) * _BEAST_CONFIG["bands_multiplier"]
+        self.settings["nbands"] = max(nbands_add, nbands_mult)
+        return
+             
+    def set_pseudos(
+            self,
+    ) -> None:
+        """
+        Set ion-species tag corresponding to pseudopotentials
+        """
+        if SETTINGS.JDFTX_PSEUDOS_DIR != None:
+            psuedos_str = str(
+                Path(SETTINGS.JDFTX_PSEUDOS_DIR) / Path(self.pseudos)
+            )
         else:
-            jdftxinput["coulomb-interaction"] =  "Periodic"
-        
-
-    def _is_surface_calc(
-            self
-    ) -> bool:
-        """
-        Check if calculation is for surface.
-
-        First set coulomb-truncation based on config_dict. Override with 
-        self.settings for coulomb-interaction type Slab. 
-        Override with self.user_coulomb_settings.
-
-        Returns
-        -------
-            A boolean where True means this is a surface calculation
-        """
-        is_surface = False
-        if "coulomb-interaction" in self.user_settings():
-            if self.user_settings["coulomb-interaction"]["truncationType"] == "Slab":
-                is_surface = True
+            pseudos_str = self.pseudos
+        add_tags = []
+        for suffix in _PSEUDO_CONFIG[self.pseudos]["suffixes"]:
+            add_tags.append(pseudos_str+"/$ID"+suffix)
+        # do not override pseudopotentials in settings
+        if "ion-species" in self.settings.keys():
+            return 
         else:
-            False
+            self.settings["ion-species"] = add_tags
+            return
         
-    def _is_molecule_calc(
-            self
-    ) -> bool:
-         """
-        Check if calculation is for surface.
-
-        First set coulomb-truncation based on config_dict. Override with 
-        self.settings for coulomb-interaction type Slab. 
-        Override with self.user_coulomb_settings.
-
-        Returns
-        -------
-            A boolean where True means this is a surface calculation
+    def set_mu(self) -> None:
         """
+        Set absolute electron chemical potential (fermi level) for GC-DFT.
+        """
+        # never override mu in settings
+        if "target-mu" in self.settings.keys():
+            return
+        solvent_model = self.settings["pcm-variant"]
+        ashep = _BEAST_CONFIG["ASHEP"][solvent_model]
+        # calculate absolute potential in Hartree
+        mu = -(ashep - self.potential) / eV_to_Ha 
+        self.settings["target-mu"] = {"mu": mu}
+        return
 
 def condense_jdftxinputs(
     jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
@@ -285,3 +338,7 @@ def condense_jdftxinputs(
             parameters and input structure.
     """
     return jdftxinput + JDFTXInfile.from_str(jdftxstructure.get_str())
+
+def center_of_mass(structure:Structure): 
+    weights = [site.species.weight for site in structure]
+    return np.average(structure.frac_coords, weights=weights, axis=0)
