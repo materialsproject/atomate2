@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Type, Optional, List, Literal
-
+import warnings
 from emmet.core.structure import StructureMetadata
 from emmet.core.vasp.task_valid import TaskState
 from emmet.core.vasp.calculation import StoreTrajectoryOption
@@ -46,7 +46,7 @@ class LammpsTaskDocument(StructureMetadata):
         cls: Type["LammpsTaskDocument"],
         dir_name: str | Path,
         task_label: str,
-        store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.PARTIAL,
+        store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         trajectory_format : Literal["pmg", "ase"] = "pmg",
         output_file_pattern: str | None = None,
     ) -> "LammpsTaskDocument":
@@ -79,6 +79,7 @@ class LammpsTaskDocument(StructureMetadata):
         dump_files = [os.path.join(dir_name, file) for file in glob("*.dump*", root_dir=dir_name)]
 
         if store_trajectory != StoreTrajectoryOption.NO:
+            warnings.warn("Trajectory data might be large, only store if absolutely necessary. Consider manually parsing the dump files instead.")
             if output_file_pattern is None:
                 output_file_pattern = "trajectory"
             trajectories = [DumpConvertor(store_md_outputs=store_trajectory, 

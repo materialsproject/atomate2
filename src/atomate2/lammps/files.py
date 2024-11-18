@@ -10,6 +10,7 @@ from typing import Literal
 from monty.serialization import dumpfn
 from monty.json import MSONable
 from emmet.core.vasp.calculation import StoreTrajectoryOption
+import warnings
 
 def write_lammps_input_set(
     structure: Structure | Path | None,
@@ -19,14 +20,17 @@ def write_lammps_input_set(
 ):
     data = structure
     if input_set_generator.interchange:
+        warnings.warn("Interchange is experimental and may not work as expected. Use with caution. Ensure FF units are consistent with LAMMPS.")
+        #write unit convertor here
         input_set_generator.interchange.to_lammps_datafile("interchange_data.lmp")
         data = LammpsData.from_file("interchange_data.lmp", atom_style=input_set_generator.atom_style)
+        #validate data here: ff coeffs style, atom_style, etc. have to be updated into the input_set_generator.settings
     input_set = input_set_generator.get_input_set(data, **kwargs)
     input_set.write_input(directory)
 
 
 class DumpConvertor(MSONable):    
-    def __init__(self, dumpfile, store_md_outputs : StoreTrajectoryOption  = StoreTrajectoryOption.PARTIAL) -> None:
+    def __init__(self, dumpfile, store_md_outputs : StoreTrajectoryOption  = StoreTrajectoryOption.NO) -> None:
         self.store_md_outputs = store_md_outputs
         self.traj = read(dumpfile, index=':')
         self.is_periodic = any(self.traj[0].pbc)
