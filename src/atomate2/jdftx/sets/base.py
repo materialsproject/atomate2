@@ -122,7 +122,7 @@ class JdftxInputGenerator(InputGenerator):
     auto_kpoint_density: int = 1000
     potential: Union[None, float] = None
     calc_type: str = "bulk"
-    pseudos: str = "GBRV_v1.5"
+    pseudos: str = "GBRV"
     config_dict: dict = field(default_factory=lambda: _BEAST_CONFIG)
     default_settings: dict = field(default_factory=lambda: _BASE_JDFTX_SET)
 
@@ -165,6 +165,7 @@ class JdftxInputGenerator(InputGenerator):
         self.set_nbands(structure=structure)
         self.set_mu()
         self.set_pseudos()
+        self._apply_settings(self.settings)
 
         jdftx_structure = JDFTXStructure(structure)
         jdftxinputs = self.settings
