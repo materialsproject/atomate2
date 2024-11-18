@@ -138,7 +138,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
         self.force_field = force_field.copy() if isinstance(force_field, dict) else force_field
         self.species = None
         self.interchange = interchange
-        print(self.force_field) 
+        
         process_kwargs = kwargs.copy()
         self.settings = settings.copy() if settings else {}
         self.settings.update({
