@@ -1,4 +1,3 @@
-from monty.serialization import loadfn
 import os
 import json
 
@@ -15,10 +14,6 @@ except ImportError:
                 "openff-interchange must be installed for OpenMM makers to"
                 "to support OpenFF Interchange objects."
             )
-
-settings_dir = os.path.dirname(os.path.abspath(__file__))
-_BASE_LAMMPS_SETTINGS = loadfn(os.path.join(settings_dir,'BASE_LAMMPS_SETTINGS.json'))
-
 
 class LammpsInterchange(Interchange):
     """
@@ -51,27 +46,6 @@ class LammpsInterchange(Interchange):
         Load an Interchange object from a dictionary.
         """
         return cls(**d)
-
-def update_settings(settings : dict = None, **kwargs) -> dict:
-    """
-    Update the settings for the LAMMPS input file. 
-    """
-    
-    base_settings = _BASE_LAMMPS_SETTINGS.copy()
-
-    if settings is None:
-        settings = base_settings
-    
-    settings  = settings.copy()
-    
-    for k in base_settings.keys():
-        if k not in settings.keys():
-            if k not in kwargs.keys():
-                settings.update({k: base_settings.get(k)})
-            else:
-                settings.update({k: kwargs.get(k)})
-    
-    return settings
 
 
 def process_ensemble_conditions(settings : dict) -> dict:

@@ -6,15 +6,19 @@ pymatgen by Ryan Kingsbury & Guillaume Brunin.
 import logging
 import os
 import numpy as np
+from monty.serialization import loadfn
 from pymatgen.io.lammps.generators import BaseLammpsGenerator
 from typing import Literal, Sequence
-from atomate2.lammps.sets.utils import process_ensemble_conditions, update_settings
+from atomate2.lammps.sets.utils import process_ensemble_conditions
 
 from atomate2.ase.md import MDEnsemble
 from atomate2.lammps.sets.utils import LammpsInterchange
 
 logger = logging.getLogger(__name__)
 template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
+settings_dir = os.path.dirname(os.path.abspath(__file__))
+_BASE_LAMMPS_SETTINGS = loadfn(os.path.join(settings_dir,'BASE_LAMMPS_SETTINGS.json'))
+
 
 class BaseLammpsSet(BaseLammpsGenerator):
     """
@@ -80,7 +84,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
                  atom_style : str = "atomic",
                  dimension : int = 3,
                  boundary : str = "p p p",
-                 ensemble : MDEnsemble = MDEnsemble.nvt,
+                 ensemble : MDEnsemble | str = MDEnsemble.nvt,
                  temperature : float | Sequence | np.ndarray | None = 300,
                  pressure : float | Sequence | np.ndarray | None = 0,
                  units : str = "metal",
@@ -103,7 +107,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
         self.atom_style = atom_style
         self.dimension = dimension
         self.boundary = boundary
-        self.ensemble = ensemble
+        self.ensemble = ensemble if isinstance(ensemble, MDEnsemble) else MDEnsemble(ensemble)
         
         if isinstance(temperature, (int, float)):
             self.start_temp = temperature
@@ -134,11 +138,10 @@ class BaseLammpsSet(BaseLammpsGenerator):
         self.force_field = force_field.copy() if isinstance(force_field, dict) else force_field
         self.species = None
         self.interchange = interchange
-        
+        print(self.force_field) 
         process_kwargs = kwargs.copy()
-        if settings is None:
-            settings = {}
-        settings.update({
+        self.settings = settings.copy() if settings else {}
+        self.settings.update({
                         'atom_style': self.atom_style, 
                         'dimension': self.dimension, 
                         'boundary': self.boundary,
@@ -159,11 +162,8 @@ class BaseLammpsSet(BaseLammpsGenerator):
                         'traj_interval': self.traj_interval
                         })
         
-        self.settings = update_settings(settings = settings, **process_kwargs)
-        self.settings = process_ensemble_conditions(self.settings)
-        
-        self.set_force_field(force_field)        
-    
+        self.update_settings(**process_kwargs)        
+        self.set_force_field(self.force_field)
         super().__init__(template = template, settings = self.settings, **kwargs)
     
 
@@ -196,3 +196,28 @@ class BaseLammpsSet(BaseLammpsGenerator):
         
         if not self.force_field and self.interchange:
             self.settings.update({'force_field': 'pair_style lj/cut/coul/cut 10.0'}) #Assumes the pair_style is lj/cut if no force field is provided (which should be true for openFF forcefields?)
+            
+    def update_settings(self, **kwargs) -> dict:
+        """
+        Update the settings for the LAMMPS input file. 
+        """
+        
+        base_settings = _BASE_LAMMPS_SETTINGS.copy()
+
+        self.settings = base_settings if self.settings is None else self.settings.copy()
+                
+        for k in set(base_settings.keys()) - set(['force_field', 'species']):
+            if k not in self.settings.keys():
+                if k not in kwargs.keys():
+                    self.settings.update({k: base_settings.get(k)})
+                    self.__setattr__(k, base_settings.get(k))
+                else:
+                    self.settings.update({k: kwargs.get(k)})
+                    self.__setattr__(k, kwargs.get(k))
+            else:
+                if k in kwargs.keys():
+                    self.settings.update({k: kwargs.get(k)})
+                    self.__setattr__(k, kwargs.get(k))
+                    
+        self.settings = process_ensemble_conditions(self.settings)
+        self.set_force_field(self.force_field)        
