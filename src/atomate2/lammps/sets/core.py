@@ -8,6 +8,7 @@ class LammpsNVTSet(BaseLammpsSet):
     Lammps input set for NVT MD simulations. 
     """
     ensemble : MDEnsemble = MDEnsemble.nvt
+    friction : float = None
     thermostat : str = "langevin"
     settings : dict = None
     
@@ -33,6 +34,7 @@ class LammpsNPTSet(BaseLammpsSet):
     Lammps input set for NPT MD simulations.
     """
     ensemble : MDEnsemble = MDEnsemble.npt
+    friction : float = None
     barostat : str = "nose-hoover"
     settings : dict = None
     
