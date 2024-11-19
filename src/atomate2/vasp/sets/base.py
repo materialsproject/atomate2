@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from pymatgen.io.vasp import Kpoints
     from pymatgen.io.vasp.sets import UserPotcarFunctional
 
-_BASE_VASP_SET = {**MPScanRelaxSet()._config_dict, "KPOINTS": {}}  # noqa: SLF001
+_BASE_VASP_SET = MPScanRelaxSet()._config_dict | {"KPOINTS": {}}  # noqa: SLF001
 _ATOMATE2_BASE_VASP_SET_UPDATES = {
     "INCAR": {
         "ALGO": "Fast",

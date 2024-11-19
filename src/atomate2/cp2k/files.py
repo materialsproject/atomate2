@@ -65,22 +65,24 @@ def copy_cp2k_outputs(
     additional_cp2k_files = additional_cp2k_files or []
 
     # find required files
-    o = Cp2kOutput(src_dir / get_zfile(directory_listing, "cp2k.out"), auto_load=False)
-    o.parse_files()
+    cp2k_output = Cp2kOutput(
+        src_dir / get_zfile(directory_listing, "cp2k.out"), auto_load=False
+    )
+    cp2k_output.parse_files()
     if restart_to_input:
         additional_cp2k_files += ("restart",)
 
     # copy files
     additional_cp2k_files += ("wfn",)
     files = ["cp2k.inp", "cp2k.out"]
-    for f in set(additional_cp2k_files):
-        if f in o.filenames and o.filenames.get(f):
-            if isinstance(o.filenames[f], str):
-                files.append(Path(o.filenames[f]).name)
+    for file in set(additional_cp2k_files):
+        if file in cp2k_output.filenames and cp2k_output.filenames.get(file):
+            if isinstance(cp2k_output.filenames[file], str):
+                files.append(Path(cp2k_output.filenames[file]).name)
             else:
-                files.append(Path(o.filenames[f][-1]).name)
+                files.append(Path(cp2k_output.filenames[file][-1]).name)
         else:
-            files.append(Path(f).name)
+            files.append(Path(file).name)
     all_files = [
         get_zfile(directory_listing, r + relax_ext, allow_missing=True) for r in files
     ]
