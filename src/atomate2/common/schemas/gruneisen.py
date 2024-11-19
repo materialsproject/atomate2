@@ -4,12 +4,8 @@ import logging
 from pathlib import Path
 from typing import Optional, Union
 
-import matplotlib.pyplot as plt
-import numpy as np
 import phonopy
 from emmet.core.structure import StructureMetadata
-from matplotlib import colors
-from matplotlib.colors import LinearSegmentedColormap
 from phonopy.api_gruneisen import PhonopyGruneisen
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from pydantic import BaseModel, Field
@@ -24,12 +20,7 @@ from pymatgen.phonon.gruneisen import (
     GruneisenParameter,
     GruneisenPhononBandStructureSymmLine,
 )
-from pymatgen.phonon.plotter import (
-    GruneisenPhononBSPlotter,
-    GruneisenPlotter,
-    freq_units,
-)
-from pymatgen.util.plotting import pretty_plot
+from pymatgen.phonon.plotter import GruneisenPhononBSPlotter, GruneisenPlotter
 from typing_extensions import Self
 
 from atomate2.common.schemas.phonons import PhononBSDOSDoc
@@ -232,10 +223,12 @@ class GruneisenParameterDocument(StructureMetadata):
         gruneisen_bs_plot = compute_gruneisen_param_kwargs.get(
             "gruneisen_bs", "gruneisen_band.pdf"
         )
-        gp_bs_plot.save_plot_gs(filename=gruneisen_bs_plot,
-                                plot_ph_bs_with_gruneisen=True,
-                                img_format=compute_gruneisen_param_kwargs.get("img_format", "pdf"),
-                                **compute_gruneisen_param_kwargs)
+        gp_bs_plot.save_plot_gs(
+            filename=gruneisen_bs_plot,
+            plot_ph_bs_with_gruneisen=True,
+            img_format=compute_gruneisen_param_kwargs.get("img_format", "pdf"),
+            **compute_gruneisen_param_kwargs,
+        )
         gruneisen_parameter_inputs = {
             "ground": phonopy_yaml_paths_dict["ground"],
             "plus": phonopy_yaml_paths_dict["plus"],
