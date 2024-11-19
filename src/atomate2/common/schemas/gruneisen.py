@@ -228,11 +228,14 @@ class GruneisenParameterDocument(StructureMetadata):
             labels_dict=kpath_dict,
         )
         gp_bs_plot = GruneisenPhononBSPlotter(bs=gruneisen_band_structure)
-        GruneisenParameterDocument.get_gruneisen_weighted_bandstructure(
-            gruneisen_band_symline_plotter=gp_bs_plot,
-            save_fig=True,
-            **compute_gruneisen_param_kwargs,
+
+        gruneisen_bs_plot = compute_gruneisen_param_kwargs.get(
+            "gruneisen_bs", "gruneisen_band.pdf"
         )
+        gp_bs_plot.save_plot_gs(filename=gruneisen_bs_plot,
+                                plot_ph_bs_with_gruneisen=True,
+                                img_format=compute_gruneisen_param_kwargs.get("img_format", "pdf"),
+                                **compute_gruneisen_param_kwargs)
         gruneisen_parameter_inputs = {
             "ground": phonopy_yaml_paths_dict["ground"],
             "plus": phonopy_yaml_paths_dict["plus"],
@@ -261,82 +264,3 @@ class GruneisenParameterDocument(StructureMetadata):
             gruneisen_band_structure=gruneisen_band_structure,
             derived_properties=derived_properties,
         )
-
-    @staticmethod
-    def get_gruneisen_weighted_bandstructure(
-        gruneisen_band_symline_plotter: GruneisenPhononBSPlotter,
-        save_fig: bool = True,
-        **kwargs,
-    ) -> None:
-        """Save a phonon band structure weighted with Grueneisen parameters.
-
-        Parameters
-        ----------
-        gruneisen_band_symline_plotter: GruneisenPhononBSPlotter
-            pymatgen GruneisenPhononBSPlotter obj
-        save_fig: bool
-            bool to save plots
-        kwargs: dict
-            keyword arguments to adjust plotter
-
-        Returns
-        -------
-        None
-        """
-        u = freq_units(kwargs.get("units", "THz"))
-        ax = pretty_plot(12, 8)
-        gruneisen_band_symline_plotter._make_ticks(ax)  # noqa: SLF001
-
-        # plot y=0 line
-        ax.axhline(0, linewidth=1, color="black")
-
-        # Create custom colormap (default is red to blue)
-        cmap = LinearSegmentedColormap.from_list(
-            "mycmap", kwargs.get("mycmap", ["red", "blue"])
-        )
-
-        data = gruneisen_band_symline_plotter.bs_plot_data()
-
-        # extract min and max Grüneisen parameter values
-        max_gruneisen = np.array(data["gruneisen"]).max()
-        min_gruneisen = np.array(data["gruneisen"]).min()
-
-        # LogNormalize colormap based on the min and max Grüneisen parameter values
-        norm = colors.SymLogNorm(
-            vmin=min_gruneisen,
-            vmax=max_gruneisen,
-            linthresh=1e-2,
-            linscale=1,
-        )
-
-        for (dists_inx, dists), (_, freqs) in zip(
-            enumerate(data["distances"]), enumerate(data["frequency"]), strict=True
-        ):
-            for band_idx in range(gruneisen_band_symline_plotter.n_bands):
-                ys = [freqs[band_idx][j] * u.factor for j in range(len(dists))]
-                ys_gru = [
-                    data["gruneisen"][dists_inx][band_idx][idx]
-                    for idx in range(len(data["distances"][dists_inx]))
-                ]
-                sc = ax.scatter(
-                    dists, ys, c=ys_gru, cmap=cmap, norm=norm, marker="o", s=1
-                )
-
-        # Main X and Y Labels
-        ax.set_xlabel(r"$\mathrm{Wave\ Vector}$", fontsize=30)
-        units = kwargs.get("units", "THz")
-        ax.set_ylabel(f"Frequencies ({units})", fontsize=30)
-        # X range (K)
-        # last distance point
-        x_max = data["distances"][-1][-1]
-        ax.set_xlim(0, x_max)
-
-        cbar = plt.colorbar(sc, ax=ax)
-        cbar.set_label(r"$\gamma \ \mathrm{(logarithmized)}$", fontsize=30)
-        plt.tight_layout()
-        gruneisen_band_plot = kwargs.get("gruneisen_bs", "gruneisen_band.pdf")
-        if save_fig:
-            plt.savefig(fname=gruneisen_band_plot)
-            plt.close()
-        else:
-            plt.close()
