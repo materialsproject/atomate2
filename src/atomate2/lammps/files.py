@@ -32,7 +32,7 @@ def write_lammps_input_set(
 class DumpConvertor(MSONable):    
     def __init__(self, dumpfile, store_md_outputs : StoreTrajectoryOption  = StoreTrajectoryOption.NO) -> None:
         self.store_md_outputs = store_md_outputs
-        self.traj = read(dumpfile, index=':')
+        self.traj = read(dumpfile, index=':') #check if this is frame by frame
         self.is_periodic = any(self.traj[0].pbc)
         self.frame_properties_keys = ['forces', 'velocities']
         

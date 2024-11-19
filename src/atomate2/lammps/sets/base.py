@@ -8,6 +8,7 @@ import os
 import numpy as np
 from monty.serialization import loadfn
 from pymatgen.io.lammps.generators import BaseLammpsGenerator
+from pymatgen.io.lammps.data import LammpsData, ForceField
 from typing import Literal, Sequence
 from atomate2.lammps.sets.utils import process_ensemble_conditions
 
@@ -96,70 +97,54 @@ class BaseLammpsSet(BaseLammpsGenerator):
                  pressure_symmetry : Literal["iso", "aniso"] = "iso",
                  thermostat : Literal["langevin", "nose-hoover"] = "nose-hoover",
                  barostat : Literal["berendsen", "nose-hoover"] = "nose-hoover",
-                 friction : float | None = None,
+                 friction : float | None = 0.1,
                  template : str = None,
                  settings : dict | None = None,
                  interchange : LammpsInterchange = None,
                  **kwargs):
         
         template = os.path.join(template_dir, "md.template") if template is None else template
-        
-        self.atom_style = atom_style
-        self.dimension = dimension
-        self.boundary = boundary
         self.ensemble = ensemble if isinstance(ensemble, MDEnsemble) else MDEnsemble(ensemble)
         
         if isinstance(temperature, (int, float)):
-            self.start_temp = temperature
-            self.end_temp = temperature
+            start_temp = temperature
+            end_temp = temperature
         elif isinstance(temperature, (list, np.ndarray)):
-            self.start_temp = temperature[0]
-            self.end_temp = temperature[-1]
-        
-        self.temperature = temperature
-        self.pressure = pressure
-        
+            start_temp = temperature[0]
+            end_temp = temperature[-1]
+     
         if isinstance(pressure, (int, float)):
-            self.start_pressure = pressure
-            self.end_pressure = pressure
+            start_pressure = pressure
+            end_pressure = pressure
         elif isinstance(pressure, (list, np.ndarray)):                
-            self.start_pressure = pressure[0]
-            self.end_pressure = pressure[-1]
+            start_pressure = pressure[0]
+            end_pressure = pressure[-1]
 
-        self.pressure_symmetry = pressure_symmetry
-        self.units = units
-        self.n_steps = n_steps
-        self.timestep = timestep
-        self.log_interval = log_interval
-        self.traj_interval = traj_interval
-        self.thermostat = thermostat
-        self.barostat = barostat
-        self.friction = 100*timestep if friction is None else friction
-        self.force_field = force_field.copy() if isinstance(force_field, dict) else force_field
         self.species = None
         self.interchange = interchange
+        self.force_field = force_field.copy() if isinstance(force_field, dict) else force_field
         
         process_kwargs = kwargs.copy()
         self.settings = settings.copy() if settings else {}
         self.settings.update({
-                        'atom_style': self.atom_style, 
-                        'dimension': self.dimension, 
-                        'boundary': self.boundary,
-                        'ensemble': self.ensemble.value, 
-                        'start_temp': self.start_temp, 
-                        'end_temp': self.end_temp, 
-                        'start_pressure': self.start_pressure, 
-                        'end_pressure': self.end_pressure, 
-                        'psymm': self.pressure_symmetry, 
-                        'units': self.units, 
-                        'nsteps': self.n_steps, 
-                        'timestep': self.timestep, 
-                        'thermostat': self.thermostat, 
-                        'barostat': self.barostat,
-                        'tfriction': self.friction,
-                        'pfriction': self.friction,
-                        'log_interval': self.log_interval, 
-                        'traj_interval': self.traj_interval
+                        'atom_style': atom_style, 
+                        'dimension': dimension, 
+                        'boundary': boundary,
+                        'ensemble': ensemble.value if isinstance(ensemble, MDEnsemble) else ensemble,
+                        'start_temp': start_temp, 
+                        'end_temp': end_temp, 
+                        'start_pressure': start_pressure, 
+                        'end_pressure': end_pressure, 
+                        'psymm': pressure_symmetry, 
+                        'units': units, 
+                        'nsteps': n_steps, 
+                        'timestep': timestep, 
+                        'thermostat': thermostat, 
+                        'barostat': barostat,
+                        'tfriction': friction,
+                        'pfriction': friction,
+                        'log_interval': log_interval, 
+                        'traj_interval': traj_interval
                         })
         
         self.update_settings(**process_kwargs)        
@@ -167,7 +152,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
         super().__init__(template = template, settings = self.settings, **kwargs)
     
 
-    def set_force_field(self, force_field : str | dict | None = None):
+    def set_force_field(self, force_field : str | dict | ForceField | LammpsData = None):
         
         if isinstance(force_field, dict):
             try:
@@ -210,14 +195,11 @@ class BaseLammpsSet(BaseLammpsGenerator):
             if k not in self.settings.keys():
                 if k not in kwargs.keys():
                     self.settings.update({k: base_settings.get(k)})
-                    self.__setattr__(k, base_settings.get(k))
                 else:
                     self.settings.update({k: kwargs.get(k)})
-                    self.__setattr__(k, kwargs.get(k))
             else:
                 if k in kwargs.keys():
                     self.settings.update({k: kwargs.get(k)})
-                    self.__setattr__(k, kwargs.get(k))
                     
         self.settings = process_ensemble_conditions(self.settings)
         self.set_force_field(self.force_field)        
