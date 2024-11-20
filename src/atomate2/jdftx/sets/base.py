@@ -347,7 +347,7 @@ class JdftxInputGenerator(InputGenerator):
         if "magmom" in structure.site_properties.keys():
             if len(structure.species) != len(structure.site_properties["magmom"]):
                 raise ValueError(
-                    f"length of magmom, {structure.site_properties["magmom"]} "
+                    f"length of magmom, {structure.site_properties['magmom']} "
                     "does not match number of species in structure, "
                     f"{len(structure.species)}."
                     )
