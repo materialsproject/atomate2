@@ -13,9 +13,9 @@ electronic-minimize:
 elec-smearing:
   smearingType: Fermi
   smearingWidth: 0.001
-elec-initial-magnetization:
-  M: 0
-  constrain: False
+# elec-initial-magnetization:
+#   M: 0
+#   constrain: False
 spintype: z-spin
 core-overlap-check: none
 converge-empty-states: True

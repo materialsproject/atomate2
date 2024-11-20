@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Union
 import numpy as np
 from scipy import constants as const
+from collections import defaultdict
 
 from monty.serialization import loadfn
 from pymatgen.core import Structure
@@ -160,12 +161,13 @@ class JdftxInputGenerator(InputGenerator):
         JdftxInputSet
             A JDFTx input set.
         """
-        print(self.settings)
         self.set_kgrid(structure=structure)
         self.set_coulomb_interaction(structure=structure)
         self.set_nbands(structure=structure)
         self.set_mu()
         self.set_pseudos()
+        self.set_magnetic_moments(structure=structure)
+        print(self.settings)
         self._apply_settings(self.settings)
 
         jdftx_structure = JDFTXStructure(structure)
@@ -279,8 +281,8 @@ class JdftxInputGenerator(InputGenerator):
     def set_pseudos(
             self,
     ) -> None:
-        """
-        Set ion-species tag corresponding to pseudopotentials
+        """Set ion-species tag corresponding to pseudopotentials
+        
         """
         if SETTINGS.JDFTX_PSEUDOS_DIR != None:
             psuedos_str = str(
@@ -314,6 +316,63 @@ class JdftxInputGenerator(InputGenerator):
             mu = -(ashep - self.potential) / eV_to_Ha 
             self.settings["target-mu"] = {"mu": mu}
         return
+    
+    def set_magnetic_moments(self, structure:Structure
+    ) -> None:
+        """Set the magnetic moments for each atom in the structure.
+
+        If the user specified magnetic moments as JDFTx tags, they will 
+        not be prioritized. The user can also set the magnetic moments in
+        the site_params dictionary attribute of the structure. If neither above
+        options are set, the code will initialize all metal atoms with +5 
+        magnetic moments.
+
+        Parameters
+        ----------
+        structure
+            A pymatgen structure
+
+        Returns
+        -------
+        None
+        """
+        
+        # check if user set JFDTx magnetic tags and return if true
+        if any(
+            [i in ["initial-magnetic-moments", "elec-initial-magnetization"]
+            for i in self.settings.keys()]
+            ):
+            return
+        # if magmoms set on structure, build JDFTx tag
+        if "magmom" in structure.site_properties.keys():
+            if len(structure.species) != len(structure.site_properties["magmom"]):
+                raise ValueError(
+                    f"length of magmom, {structure.site_properties["magmom"]} "
+                    "does not match number of species in structure, "
+                    f"{len(structure.species)}."
+                    )
+            magmoms = defaultdict(list)
+            for magmom, species in zip(structure.site_properties["magmom"], structure.species):
+                magmoms[species].append(magmom)
+            tag_str = ""
+            for element, magmom_list in magmoms.items():
+                tag_str += f"{element} " + " ".join(list(map(str,magmom_list))) + " "
+        # set magmoms to +5 for all metals in structure.
+        else:
+            magmoms = defaultdict(list)
+            for species in structure.species:
+                if species.is_metal:
+                    magmoms[str(species)].append(5)
+                else:
+                    magmoms[str(species)].append(0)
+            tag_str = ""
+            for element, magmom_list in magmoms.items():
+                tag_str += f"{element} " + " ".join(list(map(str,magmom_list))) + " "
+        self.settings["initial-magnetic-moments"] = tag_str
+        return
+
+                
+
 
 def condense_jdftxinputs(
     jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
