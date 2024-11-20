@@ -63,5 +63,5 @@ dump:
       KEdensity: True
       EigStats: True
       BandEigs: True
-      bandProjections: True
+      BandProjections: True
       DOS: True
