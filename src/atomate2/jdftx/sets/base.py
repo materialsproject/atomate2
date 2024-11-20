@@ -122,7 +122,7 @@ class JdftxInputGenerator(InputGenerator):
     auto_kpoint_density: int = 1000
     potential: Union[None, float] = None
     calc_type: str = "bulk"
-    pseudos: str = "GBRV"
+    pseudopotentials: str = "GBRV"
     config_dict: dict = field(default_factory=lambda: _BEAST_CONFIG)
     default_settings: dict = field(default_factory=lambda: _BASE_JDFTX_SET)
 
@@ -160,6 +160,7 @@ class JdftxInputGenerator(InputGenerator):
         JdftxInputSet
             A JDFTx input set.
         """
+        print(self.settings)
         self.set_kgrid(structure=structure)
         self.set_coulomb_interaction(structure=structure)
         self.set_nbands(structure=structure)
@@ -170,9 +171,6 @@ class JdftxInputGenerator(InputGenerator):
         jdftx_structure = JDFTXStructure(structure)
         jdftxinputs = self.settings
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
-
-        self.set_kgrid(structure=structure)
-        self.set_coulomb_truncation(structure=structure)
 
         jdftxinputs = self.settings
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
@@ -203,11 +201,11 @@ class JdftxInputGenerator(InputGenerator):
                 structure=structure,
                 kppa=self.auto_kpoint_density
                 )
-            kpoints = kpoints.kpts 
+            kpoints = kpoints.kpts[0]
             if self.calc_type == "surface":
-                kpoints[-1] = 1
+                kpoints = (kpoints[0], kpoints[1], 1)
             elif self.calc_type == "molecule":
-                kpoints = [1, 1, 1]
+                kpoints = (1,1,1)
             kpoint_update = {"kpoint-folding": 
                 {
                 "n0": kpoints[0], 
@@ -255,11 +253,11 @@ class JdftxInputGenerator(InputGenerator):
                 "truncationType": "Isolated",
             }
         com = center_of_mass(structure=structure)
-        com = com @ structure.lattice * ang_to_bohr
+        com = com.T @ structure.lattice.matrix * ang_to_bohr
         self.settings["coulomb-truncation-embed"] = {
-            "c0": com[0],
-            "c1": com[1],
-            "c2": com[2],
+            "c0": com[0][0],
+            "c1": com[0][1],
+            "c2": com[0][2],
         }
         return
     
@@ -272,7 +270,7 @@ class JdftxInputGenerator(InputGenerator):
         """
         nelec = 0
         for atom in structure.species:
-            nelec += _PSEUDO_CONFIG[self.pseudos][str(atom)]
+            nelec += _PSEUDO_CONFIG[self.pseudopotentials][str(atom)]
         nbands_add = int(nelec / 2) + 10
         nbands_mult = int((nelec/2)) * _BEAST_CONFIG["bands_multiplier"]
         self.settings["nbands"] = max(nbands_add, nbands_mult)
@@ -286,12 +284,12 @@ class JdftxInputGenerator(InputGenerator):
         """
         if SETTINGS.JDFTX_PSEUDOS_DIR != None:
             psuedos_str = str(
-                Path(SETTINGS.JDFTX_PSEUDOS_DIR) / Path(self.pseudos)
+                Path(SETTINGS.JDFTX_PSEUDOS_DIR) / Path(self.pseudopotentials)
             )
         else:
-            pseudos_str = self.pseudos
+            pseudos_str = self.pseudopotentials
         add_tags = []
-        for suffix in _PSEUDO_CONFIG[self.pseudos]["suffixes"]:
+        for suffix in _PSEUDO_CONFIG[self.pseudopotentials]["suffixes"]:
             add_tags.append(pseudos_str+"/$ID"+suffix)
         # do not override pseudopotentials in settings
         if "ion-species" in self.settings.keys():
@@ -307,11 +305,14 @@ class JdftxInputGenerator(InputGenerator):
         # never override mu in settings
         if "target-mu" in self.settings.keys():
             return
-        solvent_model = self.settings["pcm-variant"]
-        ashep = _BEAST_CONFIG["ASHEP"][solvent_model]
-        # calculate absolute potential in Hartree
-        mu = -(ashep - self.potential) / eV_to_Ha 
-        self.settings["target-mu"] = {"mu": mu}
+        elif self.potential == None:
+            return
+        else:
+            solvent_model = self.settings["pcm-variant"]
+            ashep = _BEAST_CONFIG["ASHEP"][solvent_model]
+            # calculate absolute potential in Hartree
+            mu = -(ashep - self.potential) / eV_to_Ha 
+            self.settings["target-mu"] = {"mu": mu}
         return
 
 def condense_jdftxinputs(
@@ -340,6 +341,7 @@ def condense_jdftxinputs(
     """
     return jdftxinput + JDFTXInfile.from_str(jdftxstructure.get_str())
 
-def center_of_mass(structure:Structure): 
+def center_of_mass(structure:Structure) -> np.ndarray: 
     weights = [site.species.weight for site in structure]
-    return np.average(structure.frac_coords, weights=weights, axis=0)
+    com = np.average(structure.frac_coords, weights=weights, axis=0)
+    return com[..., np.newaxis]

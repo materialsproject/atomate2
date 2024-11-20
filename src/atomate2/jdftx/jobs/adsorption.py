@@ -24,7 +24,7 @@ class SurfaceMinMaker(BaseJdftxMaker):
     """Maker to create surface relaxation job."""
     name: str = "surface_ionic_min"
     input_set_generator: JdftxInputGenerator = field(
-        default_factory=IonicMinSetGenerator(
+        default_factory= lambda: IonicMinSetGenerator(
             coulomb_truncation = True,
             auto_kpoint_density = 1000,
             calc_type="surface",
