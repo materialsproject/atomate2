@@ -31,9 +31,6 @@ from hiphive.cutoffs import estimate_maximum_cutoff, is_cutoff_allowed
 from hiphive.fitting import Optimizer
 from hiphive.utilities import get_displacements
 from monty.json import MSONable
-
-# Jobflow packages
-# Pymatgen packages
 from monty.serialization import dumpfn
 from phono3py.phonon3.gruneisen import Gruneisen
 
@@ -45,6 +42,8 @@ from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from phonopy.units import VaspToTHz
 from pydantic import BaseModel, Field
+
+# Pymatgen packages
 from pymatgen.core import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.phonopy import (
@@ -1006,21 +1005,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             scaling_matrix=supercell_matrix
         ).apply_transformation(parent_structure)
 
-        # copy_hiphive_outputs(prev_dir_json_saver)
-
-        # perturbed_structures = loadfn("perturbed_structures.json")
-        # perturbed_forces = loadfn("perturbed_forces_new.json")
-        # structure_data = loadfn("structure_data.json")
-
-        # parent_structure = structure_data["structure"]
-        # supercell_structure = structure_data["supercell_structure"]
-        # supercell_matrix = np.array(structure_data["supercell_matrix"])
-
         if cutoffs is None:
             # cutoffs = get_cutoffs(supercell_structure)
-            # cutoffs = [[5, 4, 3.5]] # Ba2DySbO6 cubic
-            # cutoffs = [[5, 4, 3]] # CoS2 cubic
-            # cutoffs = [[9, 6, 4]] # Bi4Au
             cutoffs = [[4, 3, 2]]  # Si
             logger.info(f"cutoffs is {cutoffs}")
         else:
@@ -1450,19 +1436,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             )
             return {}
 
-        # # if you want to select specific clusters then use the following
-        # prototype code:
-        # from hiphive.cutoffs import BeClusterFilter
-        # be_cf = BeClusterFilter()
-        # cs = ClusterSpace(
-        #     supercell_atoms,
-        #     cutoffs,
-        #     cluster_filter=be_cf,
-        #     symprec=1e-3,
-        #     acoustic_sum_rules=True
-        #     )
-        # logger.info(f"cs orbit data = {cs.orbit_data}")
-
         try:
             cs = ClusterSpace(
                 supercell_atoms, cutoffs, symprec=1e-3, acoustic_sum_rules=True
@@ -1475,15 +1448,14 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         logger.info(cs)
         cs_2_dofs = cs.get_n_dofs_by_order(2)
         cs_3_dofs = cs.get_n_dofs_by_order(3)
-        cs_4_dofs = cs.get_n_dofs_by_order(4)  # uncomment this later
-        cs_dofs = [cs_2_dofs, cs_3_dofs, cs_4_dofs]  # uncomment this later
-        # cs_dofs = [cs_2_dofs, cs_3_dofs]
+        cs_4_dofs = cs.get_n_dofs_by_order(4)
+        cs_dofs = [cs_2_dofs, cs_3_dofs, cs_4_dofs]
         logger.info(cs_dofs)
         n2nd = cs.get_n_dofs_by_order(2)
         nall = cs.n_dofs
 
         logger.info("Fitting harmonic force constants separately")
-        separate_fit = False  # Change this back to true
+        separate_fit = True  # Change this back to true
         logger.info(f"disp_cut = {disp_cut}")
 
         sc = PhononBSDOSDoc.get_structure_container(
@@ -1519,32 +1491,13 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         logger.info("Did you get the large Condition number error?")
 
         phonopy.set_force_constants(fcs.get_fc_array(2))
-        # phonopy.set_mesh(
-        #     mesh, is_eigenvectors=False, is_mesh_symmetry=False
-        # )  # run_mesh(is_gamma_center=True)
-        phonopy.set_mesh(
-            mesh, is_eigenvectors=True, is_mesh_symmetry=True
-        )  # run_mesh(is_gamma_center=True)
-        # phonopy.run_mesh(mesh, with_eigenvectors=False, is_mesh_symmetry=False)
+        phonopy.set_mesh(mesh, is_eigenvectors=True, is_mesh_symmetry=True)
         phonopy.run_mesh(mesh, with_eigenvectors=True, is_mesh_symmetry=True)
         omega = phonopy.mesh.frequencies  # THz
         omega = np.sort(omega.flatten())
         logger.info(f"omega_one_shot_fit = {omega}")
         imaginary = np.any(omega < -1e-3)
         logger.info(f"imaginary_one_shot_fit = {imaginary}")
-
-        # # Phonopy's way of calculating phonon frequencies
-        # structure_phonopy = get_phonopy_structure(parent_structure)
-        # phonon = Phonopy(structure_phonopy, supercell_matrix=supercell_matrix)
-        # phonon.set_force_constants(fcs.get_fc_array(2))
-        # phonon.run_mesh(mesh=100.0, is_mesh_symmetry=False, is_gamma_center=True)
-        # mesh = phonon.get_mesh_dict()
-        # omega = mesh["frequencies"]
-        # omega = np.sort(omega.flatten())
-        # logger.info(f"omega_phonopy_one_shot_fitting = {omega}")
-        # # imaginary = np.any(omega < -1e-3)
-        # imaginary = np.any(omega < -imaginary_tol)
-        # logger.info(f"imaginary_phonopy_one_shot_fitting = {imaginary}")
         n_imaginary = int(np.sum(omega < -np.abs(imaginary_tol)))
 
         if imaginary:
@@ -1848,13 +1801,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             filename="phonon_band_structure.pdf",
             units="THz",
         )
-
-        # will determine if imaginary modes are present in the structure
-        # imaginary_modes = bs_symm_line.has_imaginary_freq(tol=1e-5)
-
-        # # gets data for visualization on website - yaml is also enough
-        # if kwargs.get("band_structure_eigenvectors"):
-        #     bs_symm_line.write_phononwebsite("phonon_website.json")
 
         # get phonon density of states
         filename_dos_yaml = "phonon_dos.yaml"

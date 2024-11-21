@@ -108,17 +108,34 @@ class BaseHiphiveMaker(Maker, ABC):
         Temperature for lattice thermal conductivity calculation, default is 300.
     FIT_METHOD (str):
         Method for fitting force constants, default is "rfe".
-    RENORM_METHOD (str):
-        Method for renormalization, default is 'pseudoinverse'.
-    RENORM_NCONFIG (int):
-        Number of configurations for renormalization, default is 5.
-    RENORM_CONV_THRESH (float):
-        Convergence threshold for renormalization in meV/atom, default is 0.1.
-    RENORM_MAX_ITER (int):
-        Maximum iterations for renormalization, default is 30.
-    THERM_COND_SOLVER (str):
-        Solver for lattice thermal conductivity, default is "almabte". Other options
-        include "shengbte" and "phono3py".
+    sym_reduce (bool):
+        Whether to reduce the number of deformations using symmetry, default is True.
+    symprec (float):
+        Symmetry precision to use in the reduction of symmetry to find the
+        primitive/conventional cell and to handle all symmetry-related tasks in phonopy,
+        default is 1e-4.
+    displacement (float):
+        Displacement distance for phonons, default is 0.01.
+    get_supercell_size_kwargs (dict):
+        Keyword arguments for get_supercell_size, default is {}.
+    use_symmetrized_structure (str | None):
+        Whether to use a symmetrized structure, default is None.
+    static_energy_maker (BaseVaspMaker | None):
+        The VASP input generator for static calculations, default is None.
+    born_maker (BaseVaspMaker | None):
+        The VASP input generator for BORN charge calculations, default is None.
+    create_thermal_displacements (bool):
+        Whether to create thermal displacements, default is True.
+    generate_frequencies_eigenvectors_kwargs (dict):
+        Keyword arguments for generate_frequencies_eigenvectors, default is {}.
+    kpath_scheme (str):
+        Scheme to generate kpoints, default is "seekpath".
+    code (str):
+        The calculator (VASP, MLFF etc) to use for the calculations, default is None.
+    store_force_constants (bool):
+        Whether to store the force constants, default is True.
+    socket (bool):
+        Whether to use the socket interface for VASP, default is False.
     """
 
     name: str = "Lattice-Dynamics"
@@ -131,6 +148,9 @@ class BaseHiphiveMaker(Maker, ABC):
     ff_displacement_maker: ForceFieldStaticMaker | None = field(
         default_factory=CHGNetStaticMaker
     )
+    min_length: float | None = 13.0
+    max_length: float | None = 25.0
+    prefer_90_degrees: bool = True
     supercell_matrix_kwargs: dict = field(default_factory=dict)
     IMAGINARY_TOL = 0.025  # in THz
     MESH_DENSITY = 100.0  # should always be a float
@@ -141,9 +161,6 @@ class BaseHiphiveMaker(Maker, ABC):
     sym_reduce: bool = True
     symprec: float = 1e-4
     displacement: float = 0.01
-    min_length: float | None = 13.0
-    max_length: float | None = 25.0
-    prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
     static_energy_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
@@ -160,18 +177,10 @@ class BaseHiphiveMaker(Maker, ABC):
         mpid: str,
         structure: Structure,
         bulk_modulus: float,
-        # supercell_matrix: list[list[int]] | None = None,
         supercell_matrix: Matrix3D | None = None,
-        fit_method: str | None = FIT_METHOD,
         disp_cut: float | None = None,
         cutoffs: list[list[float]] | None = None,
         prev_dir: str | Path | None = None,
-        renormalize: bool = True,
-        mesh_density: float = MESH_DENSITY,
-        imaginary_tol: float = IMAGINARY_TOL,
-        temperature_qha: float | list | dict = T_QHA,
-        n_structures: float = 1,
-        fixed_displs: float | None = None,
         born: list[Matrix3D] | None = None,
         epsilon_static: Matrix3D | None = None,
         total_dft_energy_per_formula_unit: float | None = None,
@@ -189,8 +198,6 @@ class BaseHiphiveMaker(Maker, ABC):
             Bulk modulus of the material in GPa.
         supercell_matrix (list[list[int]], optional):
             Supercell transformation matrix, default is None.
-        fit_method (str, optional):
-            Method for fitting force constants using hiphive, default is None.
         disp_cut (float, optional):
             Cutoff distance for displacements in Angstroms, default is None.
         cutoffs (List[List[float]], optional):
@@ -199,36 +206,12 @@ class BaseHiphiveMaker(Maker, ABC):
         prev_dir (str | Path | None, optional):
             Previous RELAX calculation directory to use for copying outputs.,
             default is None.
-        calculate_lattice_thermal_conductivity (bool, optional):
-            Calculate lattice thermal conductivity, default is True.
-        renormalize (bool, optional):
-            Perform renormalization, default is False.
-        renormalize_temperature (float | List | Dict, optional):
-            Temperatures for renormalization, default is T_RENORM.
-        renormalize_method (str, optional):
-            Method for renormalization, default is RENORM_METHOD.
-        renormalize_nconfig (int, optional):
-            Number of configurations for renormalization, default is RENORM_NCONFIG.
-        renormalize_conv_thresh (float, optional):
-            Convergence threshold for renormalization in meV/atom,
-            default is RENORM_CONV_THRESH.
-        renormalize_max_iter (int, optional):
-            Maximum iterations for renormalization, default is RENORM_MAX_ITER.
-        renormalize_thermal_expansion_iter (bool, optional):
-            Include thermal expansion during renormalization iterations,
-            default is False.
-        mesh_density (float, optional):
-            Mesh density for phonon calculations, default is MESH_DENSITY.
-        thermal_conductivity_temperature (float | List | Dict, optional):
-            Temperatures for thermal conductivity calculations, default is T_KLAT.
-        imaginary_tol (float, optional):
-            Imaginary frequency tolerance in THz, default is IMAGINARY_TOL.
-        temperature_qha (float, optional):
-            Temperatures for phonopy thermodynamic calculations, default is T_QHA.
-        n_structures (float, optional):
-            Number of structures to consider for calculations, default is None.
-        fixed_displs (float, optional):
-            Avg value of atomic displacement in Angstroms, default is None.
+        born (List[Matrix3D], optional):
+            Born charges for the material, default is None.
+        epsilon_static (Matrix3D, optional):
+            Static dielectric tensor for the material, default is None.
+        total_dft_energy_per_formula_unit (float, optional):
+            Total DFT energy per formula unit, default is None.
         """
         use_symmetrized_structure = self.use_symmetrized_structure
         kpath_scheme = self.kpath_scheme
@@ -257,7 +240,6 @@ class BaseHiphiveMaker(Maker, ABC):
             )
 
         jobs = []
-        # outputs = []
 
         # TODO: should this be after or before structural optimization as the
         #  optimization could change the symmetry we could add a tutorial and point out
@@ -391,6 +373,7 @@ class BaseHiphiveMaker(Maker, ABC):
             create_thermal_displacements=self.create_thermal_displacements,
             store_force_constants=self.store_force_constants,
             bulk_modulus=bulk_modulus,
+            disp_cut=disp_cut,
             **self.generate_frequencies_eigenvectors_kwargs,
         )
 
