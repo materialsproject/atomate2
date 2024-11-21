@@ -93,7 +93,7 @@ def generate_phonon_displacements(
 
     # a bit of code repetition here as I currently
     # do not see how to pass the phonopy object?
-    if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
+    if use_symmetrized_structure == "primitive" and kpath_scheme == "seekpath":
         primitive_matrix: np.ndarray | str = np.eye(3)
     else:
         primitive_matrix = "auto"
