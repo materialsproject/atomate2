@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Literal
 import pytest
 from jobflow import CURRENT_JOB
 from monty.os.path import zpath as monty_zpath
-from pymatgen.io.jdftx.jdftxinfile import JDFTXInfile
+from pymatgen.io.jdftx.inputs import JDFTXInfile
 
 import atomate2.jdftx.jobs.base
 import atomate2.jdftx.run
