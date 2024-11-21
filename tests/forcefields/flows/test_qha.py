@@ -72,7 +72,7 @@ def test_qha_dir_change_defaults(clean_dir, si_structure: Structure, tmp_path: P
 
 def test_qha_dir_manual_supercell(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
-    matrix = [[2.0, 0.0, 0.0], [0.0, 2.0, 0.0], [0.0, 0.0, 2.0]]
+    matrix = [[2.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
     flow = CHGNetQhaMaker(
         number_of_frames=4,
         ignore_imaginary_modes=True,
