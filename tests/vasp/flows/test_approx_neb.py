@@ -50,7 +50,7 @@ def test_approx_neb_flow(mock_vasp, clean_dir, vasp_test_dir):
 
     fake_run_vasp_kwargs = {
         key: {
-            "incar_exclude": ["IBRION", "ALGO"]
+            "incar_exclude": ["IBRION", "ALGO", "MAGMOM"]
         }  # updated this to generate flow test data more quickly
         for key in ref_paths
     }
