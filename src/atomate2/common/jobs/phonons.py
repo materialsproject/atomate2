@@ -316,7 +316,7 @@ def run_phonon_displacements(
         "forces": [],
         "uuids": [],
         "dirs": [],
-        "structure": []
+        "structure": [],
     }
     phonon_job_kwargs = {}
     if prev_dir is not None and prev_dir_argname is not None:
@@ -333,13 +333,6 @@ def run_phonon_displacements(
             {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
         )
 
-        if isinstance(phonon_maker, BaseVaspMaker):
-            phonon_job.update_config(
-                {"manager_config": {"_fworker": "gpu_reg_fworker"}})
-        elif isinstance(phonon_maker, ForceFieldStaticMaker):
-            phonon_job.update_config(
-                {"manager_config": {"_fworker": "gpu_fworker"}})
-
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(len(displacements)))
         outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)
@@ -352,12 +345,6 @@ def run_phonon_displacements(
                 phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
             else:
                 phonon_job = phonon_maker.make(displacement)
-            if isinstance(phonon_maker, BaseVaspMaker):
-                phonon_job.update_config(
-                    {"manager_config": {"_fworker": "gpu_reg_fworker"}})
-            elif isinstance(phonon_maker, ForceFieldStaticMaker):
-                phonon_job.update_config(
-                    {"manager_config": {"_fworker": "gpu_fworker"}})
             phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
 
             # we will add some meta data
