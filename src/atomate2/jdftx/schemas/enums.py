@@ -37,7 +37,6 @@ class SolvationType(ValueEnum):
     LINEAR_CANDLE = "LinearPCM CANDLE"
     LINEAR_SCCS_ANION = "LinearPCM SCCS_anion"
     LINEAR_SCCS_CATION = "LinearPCM SCCS_anion"
-    LINEAR_SCCS_ANION = "LinearPCM SCCS_cation"
     LINEAR_SCCS_G03 = "LinearPCM SCCS_g03"
     LINEAR_SCCS_G03BETA = "LinearPCM SCCS_g03beta"
     LINEAR_SCCS_G03P = "LinearPCM SCCS_g03p"
