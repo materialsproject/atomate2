@@ -117,6 +117,7 @@ def analyze_free_energy(
         output.volume_per_formula_unit * output.formula_units
         for output in phonon_outputs
     ]
+    supercell_matrix: list[list[float]] = phonon_outputs[0].supercell_matrix
 
     for itemp, temp in enumerate(phonon_outputs[0].temperatures):
         temperatures.append(float(temp))
@@ -154,5 +155,6 @@ def analyze_free_energy(
         pressure=pressure,
         formula_units=next(iter(set(formula_units))),
         eos_type=eos_type,
+        supercell_matrix=supercell_matrix,
         **kwargs,
     )

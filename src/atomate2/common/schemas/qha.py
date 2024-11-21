@@ -4,6 +4,7 @@ import logging
 from typing import Optional, Union
 
 import numpy as np
+from emmet.core.math import Matrix3D
 from emmet.core.structure import StructureMetadata
 from phonopy.api_qha import PhonopyQHA
 from pydantic import Field
@@ -88,6 +89,8 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     )
     formula_units: Optional[int] = Field(None, description="Formula units")
 
+    supercell_matrix: Optional[Matrix3D] = Field(None, description="Supercell matrix")
+
     @classmethod
     def from_phonon_runs(
         cls,
@@ -98,6 +101,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         free_energies: list[list[float]],
         heat_capacities: list[list[float]],
         entropies: list[list[float]],
+        supercell_matrix: list[list[float]],
         t_max: float = None,
         pressure: float = None,
         formula_units: Union[int, None] = None,
@@ -115,6 +119,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         free_energies: list of list of floats
         heat_capacities: list of list of floats
         entropies: list of list of floats
+        supercell_matrix: list of list of floats
         t_max: float
         pressure: float
         eos_type: string
@@ -232,4 +237,5 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
             heat_capacities=heat_capacities,
             entropies=entropies,
             formula_units=formula_units,
+            supercell_matrix=supercell_matrix,
         )
