@@ -85,8 +85,6 @@ class CommonQhaMaker(Maker, ABC):
     skip_analysis: bool = False
     eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
     analyze_free_energy_kwargs: dict = field(default_factory=dict)
-    # TODO: implement advanced handling of
-    #  imaginary modes in phonon runs (i.e., fitting procedures)
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
         """Run an EOS flow.
@@ -116,6 +114,7 @@ class CommonQhaMaker(Maker, ABC):
             eos_relax_maker=self.eos_relax_maker,
             static_maker=None,
             postprocessor=None,
+            linear_strain=self.linear_strain,
             number_of_frames=self.number_of_frames,
         )
 
