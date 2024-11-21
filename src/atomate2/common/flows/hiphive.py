@@ -124,7 +124,7 @@ class BaseHiphiveMaker(Maker, ABC):
     name: str = "Lattice-Dynamics"
     bulk_relax_maker: DoubleRelaxMaker | ForceFieldRelaxMaker | None = None
     phonon_displacement_maker: BaseVaspMaker | ForceFieldStaticMaker | None = field(
-        default_factory=lambda:PhononDisplacementMaker(
+        default_factory=lambda: PhononDisplacementMaker(
             input_set_generator=StaticSetGenerator(auto_lreal=True)
         )
     )
@@ -137,7 +137,7 @@ class BaseHiphiveMaker(Maker, ABC):
     T_QHA: ClassVar[list[int]] = [
         i * 100 for i in range(21)
     ]  # Temp. for phonopy calc. of thermo. properties (free energy etc.)
-    FIT_METHOD = "least-squares" #least-squares #omp #rfe #elasticnet
+    FIT_METHOD = "least-squares"  # least-squares #omp #rfe #elasticnet
     sym_reduce: bool = True
     symprec: float = 1e-4
     displacement: float = 0.01
@@ -146,14 +146,8 @@ class BaseHiphiveMaker(Maker, ABC):
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
-    bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
-    static_energy_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = (
-        None
-    )
+    static_energy_maker: ForceFieldRelaxMaker | BaseVaspMaker | None = None
     born_maker: ForceFieldStaticMaker | BaseVaspMaker | None = None
-    phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker = (
-        None
-    )
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
@@ -335,17 +329,11 @@ class BaseHiphiveMaker(Maker, ABC):
             jobs.append(compute_total_energy_job)
             total_dft_energy = compute_total_energy_job.output
 
-
         # get a phonon object from phonopy
         displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
             fixed_displs=[0.01, 0.03, 0.08, 0.1],
-            sym_reduce=self.sym_reduce,
-            symprec=self.symprec,
-            use_symmetrized_structure=self.use_symmetrized_structure,
-            kpath_scheme=self.kpath_scheme,
-            code=self.code,
         )
         jobs.append(displacements)
 
@@ -381,7 +369,6 @@ class BaseHiphiveMaker(Maker, ABC):
             born_run_uuid = born_job.output.uuid
 
         logger.info("Generating phonon frequencies and eigenvectors")
-        print("Generating phonon frequencies and eigenvectors")
         phonon_collect = generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
@@ -409,10 +396,11 @@ class BaseHiphiveMaker(Maker, ABC):
 
         jobs.append(phonon_collect)
 
-        return Flow(jobs=jobs, output=phonon_collect.output, name=f"{mpid}_"
-                                                    f"{disp_cut}_"
-                                                    f"{cutoffs}_"
-                                                    f"{self.name}")
+        return Flow(
+            jobs=jobs,
+            output=phonon_collect.output,
+            name=f"{mpid}_" f"{disp_cut}_" f"{cutoffs}_" f"{self.name}",
+        )
 
     @property
     @abstractmethod
