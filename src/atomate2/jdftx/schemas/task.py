@@ -10,13 +10,19 @@ from custodian.jdftx.jobs import JDFTxJob  # Waiting on Sophie's PR
 from emmet.core.structure import StructureMetadata
 from monty.serialization import loadfn
 from pydantic import BaseModel, Field
+from pymatgen.core import Structure
 
 from atomate2.jdftx.schemas.calculation import (
     Calculation,
     CalculationInput,
     CalculationOutput,
+    RunStatistics
 )
-from atomate2.jdftx.schemas.enums import CalcType, JDFTxStatus, TaskType
+from atomate2.jdftx.schemas.enums import (
+    CalcType, 
+    JDFTxStatus, 
+    TaskType,
+)
 from atomate2.jdftx.sets.base import FILE_NAMES
 from atomate2.utils.datetime import datetime_str
 
@@ -47,25 +53,27 @@ class TaskDoc(StructureMetadata):
     dir_name: Optional[Union[str, Path]] = Field(
         None, description="The directory for this JDFTx task"
     )
-
-    task_type: Optional[Union[CalcType, TaskType]] = Field(
-        None, description="the type of JDFTx calculation"
-    )
-
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-
+    comnpleted_at: Optional[str] = Field(
+        None, description="Timestamp for when this task was completed"
+    )
     calc_inputs: Optional[CalculationInput] = Field(
         {}, description="JDFTx calculation inputs"
     )
-
+    structure: Structure = Field(
+        None, description="Final output structure"
+    )
+    run_stats: Optional[dict[str, RunStatistics]] = Field(
+        None,
+        description="Summary of runtime statistics for each calculation in this task",
+    )
     calc_outputs: Optional[CalculationOutput] = Field(
         None,
         description="JDFTx calculation outputs",
     )
-
     state: Optional[JDFTxStatus] = Field(
         None, description="State of this JDFTx calculation"
     )
@@ -107,7 +115,7 @@ class TaskDoc(StructureMetadata):
         """
         logger.info(f"Getting task doc in: {dir_name}")
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
         calc_doc = Calculation.from_files(
             dir_name=dir_name,
@@ -124,7 +132,6 @@ class TaskDoc(StructureMetadata):
             # state=_get_state()
         )
 
-        print(doc.calc_outputs.__dict__)
         doc = doc.model_copy(update=additional_fields)
         return doc
 
@@ -155,33 +162,3 @@ def get_uri(dir_name: Union[str, Path]) -> str:
         pass
     return f"{hostname}:{fullpath}"
 
-
-def _parse_custodian(dir_name: Path) -> Optional[dict]:
-    """
-    Parse custodian.json file.
-
-    Calculations done using custodian have a custodian.json file which tracks the makers
-    performed and any errors detected and fixed.
-
-    Parameters
-    ----------
-    dir_name
-        Path to calculation directory.
-
-    Returns
-    -------
-    Optional[dict]
-        The information parsed from custodian.json file.
-    """
-    filenames = tuple(dir_name.glob("custodian.json*"))
-    if len(filenames) >= 1:
-        return loadfn(filenames[0], cls=None)
-    return None
-
-
-# TODO currently doesn't work b/c has_jdftx_completed method is not implemented
-def _get_state(calc: Calculation) -> JDFTxStatus:
-    """Get state from calculation document of JDFTx task."""
-    if calc.has_jdftx_completed:
-        return JDFTxStatus.SUCCESS
-    return JDFTxStatus.FAILED
