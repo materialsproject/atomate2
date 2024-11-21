@@ -29,6 +29,7 @@ def get_supercell_size(
     **kwargs,
 ) -> list[list[float]]:
     """
+    Job to get the supercell size from an eos output.
 
     Parameters
     ----------

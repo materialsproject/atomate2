@@ -24,7 +24,7 @@ def get_supercell_matrix(
     prefer_90_degrees: bool,
     allow_orthorhombic: bool = False,
     **kwargs,
-):
+) -> list[list[float]]:
     """
     Determine supercell size with given min_length and max_length.
 
