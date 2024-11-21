@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 @job
-def get_supercells(
+def get_supercell_size(
     eos_output: dict,
     min_length: float,
     max_length: float,
@@ -28,6 +28,23 @@ def get_supercells(
     allow_orthorhombic: bool = False,
     **kwargs,
 ) -> list[list[float]]:
+    """
+
+    Parameters
+    ----------
+    eos_output: dict
+        output from eos state job
+    min_length: float
+        minimum length of cell in Angstrom
+    max_length: float
+        maximum length of cell in Angstrom
+    prefer_90_degrees: bool
+        if True, the algorithm will try to find a cell with 90 degree angles first
+    allow_orthorhombic: bool
+        if True, orthorhombic supercells are allowed
+    **kwargs:
+        Additional parameters that can be set.
+    """
     return get_supercell_matrix(
         eos_output["relax"]["structure"][0],
         min_length,

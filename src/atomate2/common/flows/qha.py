@@ -13,7 +13,7 @@ from atomate2.common.flows.eos import CommonEosMaker
 from atomate2.common.jobs.qha import (
     analyze_free_energy,
     get_phonon_jobs,
-    get_supercells,
+    get_supercell_size,
 )
 
 if TYPE_CHECKING:
@@ -150,7 +150,7 @@ class CommonQhaMaker(Maker, ABC):
 
         # implement a supercell job to get matrix for just the equillibrium structure
         if supercell_matrix is None:
-            supercell = get_supercells(
+            supercell = get_supercell_size(
                 eos_output=eos_job.output,
                 min_length=self.min_length,
                 max_length=self.max_length,
