@@ -42,7 +42,7 @@ def test_matpes_sets(set_generator: VaspInputGenerator) -> None:
         "vdw",
     }
     assert matpes_set.potcar_functional == "PBE_64"
-    assert isinstance(matpes_set.inherit_incar, (list, tuple))
+    assert isinstance(matpes_set.inherit_incar, list | tuple)
     assert set(matpes_set.inherit_incar) == set(MatPESStaticSet.inherit_incar)
     assert matpes_set.auto_ismear is False
     assert matpes_set.auto_kspacing is False

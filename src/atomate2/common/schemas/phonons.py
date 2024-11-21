@@ -53,7 +53,7 @@ def get_factor(code: str) -> float:
     ValueError
         If code is not defined
     """
-    if code in ["forcefields", "vasp"]:
+    if code in ["ase", "forcefields", "vasp"]:
         return VaspToTHz
     if code == "aims":
         return omegaToTHz  # Based on CODATA 2002
@@ -407,7 +407,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             force_gamma=True,
         )
         phonon.run_mesh(kpoint.kpts[0])
-        phonon_dos_sigma = kwargs.get("phonon_dos_sigma", None)
+        phonon_dos_sigma = kwargs.get("phonon_dos_sigma")
         dos_use_tetrahedron_method = kwargs.get("dos_use_tetrahedron_method", True)
         phonon.run_total_dos(
             sigma=phonon_dos_sigma, use_tetrahedron_method=dos_use_tetrahedron_method

@@ -25,7 +25,7 @@ def patch_settings(monkeypatch, test_dir):
         "PMG_DEFAULT_CP2K_BASIS_TYPE": "DZVP-MOLOPT",
         "PMG_DEFAULT_CP2K_AUX_BASIS_TYPE": "pFIT",
     }
-    monkeypatch.setattr("pymatgen.core.SETTINGS", settings)
+    monkeypatch.setattr("pymatgen.io.cp2k.sets.SETTINGS", settings)
 
 
 @pytest.fixture(scope="session")
@@ -57,7 +57,13 @@ def cp2k_test_outputs(test_dir):
 
 
 @pytest.fixture
-def mock_cp2k(monkeypatch, cp2k_test_dir, check_input):
+def cp2k_output_path(test_dir):
+    """Get path to test CP2K output file."""
+    return f"{test_dir}/cp2k/Si_static_test/outputs/cp2k.out.gz"
+
+
+@pytest.fixture
+def mock_cp2k(monkeypatch, cp2k_test_dir):
     """
     This fixture allows one to mock (fake) running CP2K.
 

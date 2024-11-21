@@ -220,7 +220,7 @@ class Atomate2Settings(BaseSettings):
     # QChem specific settings
 
     QCHEM_CMD: str = Field(
-        "qchem_std", description="Command to run standard version of qchem."
+        "qchem", description="Command to run standard version of qchem."
     )
 
     QCHEM_CUSTODIAN_MAX_ERRORS: int = Field(
@@ -281,4 +281,4 @@ class Atomate2Settings(BaseSettings):
                 f"{env_var_name} at {config_file_path} does not exist", stacklevel=2
             )
 
-        return {**new_values, **values}
+        return new_values | values
