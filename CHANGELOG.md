@@ -1,5 +1,32 @@
 # Change log
 
+## v0.0.18
+
+### New Features 🎉
+* Aims magnetic ordering by @tpurcell90 in https://github.com/materialsproject/atomate2/pull/922
+* Ferroelectric Workflow 2 by @fraricci in https://github.com/materialsproject/atomate2/pull/1012
+* Feat: GW workflow with VASP by @yanghan234 in https://github.com/materialsproject/atomate2/pull/808
+
+### Enhancements 🛠
+* Allow energy minimization maker to report energies by @orionarcher in https://github.com/materialsproject/atomate2/pull/1004
+* Implementation to adjust get_supercell_size to also generate orthorhombic supercells by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/923
+* MPMorph Flows by @BryantLi-BLI in https://github.com/materialsproject/atomate2/pull/938
+
+### House-Keeping 🧹
+* Fix `ruff` PLC0206 by @janosh in https://github.com/materialsproject/atomate2/pull/1009
+* Update MACE to 0.3.6 by @orionarcher in https://github.com/materialsproject/atomate2/pull/1032
+* Allow custom mace model by specifying "model" in calculator kwargs" by @orionarcher in https://github.com/materialsproject/atomate2/pull/1017
+* feat: add dedicated fireworks optional dependency (Fix #1033). by @hongyi-zhao in https://github.com/materialsproject/atomate2/pull/1035
+* Make testing utils importable by @jmmshn in https://github.com/materialsproject/atomate2/pull/1037
+
+### New Contributors
+* @fraricci made their first contribution in https://github.com/materialsproject/atomate2/pull/1012
+* @hongyi-zhao made their first contribution in https://github.com/materialsproject/atomate2/pull/1035
+* @BryantLi-BLI made their first contribution in https://github.com/materialsproject/atomate2/pull/938
+* @yanghan234 made their first contribution in https://github.com/materialsproject/atomate2/pull/808
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.17...v0.0.18
+
 ## v0.0.17
 
 ### Bug Fixes 🐛
