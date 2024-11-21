@@ -9,6 +9,7 @@ from jobflow import Flow, Response, job
 
 from atomate2.common.schemas.phonons import PhononBSDOSDoc
 from atomate2.common.schemas.qha import PhononQHADoc
+from atomate2.common.utils import get_supercell_matrix
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
@@ -18,10 +19,31 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+@job
+def get_supercells(
+    eos_output: dict,
+    min_length: float,
+    max_length: float,
+    prefer_90_degrees: bool,
+    allow_orthorhombic: bool = False,
+    **kwargs,
+) -> list[list[float]]:
+    return get_supercell_matrix(
+        eos_output["relax"]["structure"][0],
+        min_length,
+        max_length,
+        prefer_90_degrees,
+        allow_orthorhombic,
+        **kwargs,
+    )
+
+
 @job(
     data=[PhononBSDOSDoc],
 )
-def get_phonon_jobs(phonon_maker: BasePhononMaker, eos_output: dict) -> Flow:
+def get_phonon_jobs(
+    phonon_maker: BasePhononMaker, eos_output: dict, supercell_matrix: list[list[float]]
+) -> Flow:
     """
     Start all relevant phonon jobs.
 
@@ -31,17 +53,20 @@ def get_phonon_jobs(phonon_maker: BasePhononMaker, eos_output: dict) -> Flow:
         Maker to start harmonic phonon runs.
     eos_output: dict
         Output from EOSMaker
-
+    supercell_matrix:
+        Supercell matrix to be passed into the phonon runs.
     """
     phonon_jobs = []
     outputs = []
     for istructure, structure in enumerate(eos_output["relax"]["structure"]):
         if eos_output["relax"]["dir_name"][istructure] is not None:
             phonon_job = phonon_maker.make(
-                structure, prev_dir=eos_output["relax"]["dir_name"][istructure]
+                structure,
+                prev_dir=eos_output["relax"]["dir_name"][istructure],
+                supercell_matrix=supercell_matrix,
             )
         else:
-            phonon_job = phonon_maker.make(structure)
+            phonon_job = phonon_maker.make(structure, supercell_matrix=supercell_matrix)
         phonon_job.append_name(f" eos deformation {istructure + 1}")
         phonon_jobs.append(phonon_job)
         outputs.append(phonon_job.output)

@@ -1,5 +1,5 @@
 from pathlib import Path
-import numpy as np
+
 import pytest
 from jobflow import run_locally
 from pymatgen.core.structure import Structure
@@ -36,14 +36,13 @@ def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
     assert isinstance(ph_bs_dos_doc, PhononQHADoc)
 
 
-
 def test_qha_dir_change_defaults(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
     flow = CHGNetQhaMaker(
         number_of_frames=4,
         ignore_imaginary_modes=True,
-        linear_strain=(-0.03,0.03),
+        linear_strain=(-0.03, 0.03),
         phonon_maker=PhononMaker(
             min_length=10,
             store_force_constants=False,
@@ -60,11 +59,11 @@ def test_qha_dir_change_defaults(clean_dir, si_structure: Structure, tmp_path: P
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
-    #print(responses)
+    # print(responses)
 
     # # validate the outputs
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
     assert isinstance(ph_bs_dos_doc, PhononQHADoc)
     assert len(ph_bs_dos_doc.volumes) == 5
-    assert ph_bs_dos_doc.volumes[0]  == pytest.approx(ph_bs_dos_doc.volumes[2]*0.97**3)
-    assert ph_bs_dos_doc.volumes[4]  == pytest.approx(ph_bs_dos_doc.volumes[2]*1.03**3)
+    assert ph_bs_dos_doc.volumes[0] == pytest.approx(ph_bs_dos_doc.volumes[2] * 0.97**3)
+    assert ph_bs_dos_doc.volumes[4] == pytest.approx(ph_bs_dos_doc.volumes[2] * 1.03**3)
