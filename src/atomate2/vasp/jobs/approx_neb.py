@@ -190,7 +190,6 @@ def get_images_and_relax(
             ]
         }
     """
-    
     # remove failed output and strip magmoms to avoid "Bravais" errors
     ep_structures = {}
     for k, calc in ep_output.items():
@@ -200,7 +199,6 @@ def get_images_and_relax(
         if ep_struct.site_properties.get("magmom") is not None:
             ep_struct.remove_site_property("magmom")
         ep_structures[k] = ep_struct
-
 
     host_chgcar = get_charge_density(host_calc_path, use_aeccar=use_aeccar)
 
