@@ -10,7 +10,7 @@ import os
 import warnings
 from itertools import product
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, ClassVar, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -70,16 +70,15 @@ warnings.filterwarnings("ignore", module="ase")
 
 if TYPE_CHECKING:
     from ase.atoms import Atoms
-    from pymatgen.core.structure import Structure
     from emmet.core.math import Matrix3D
+    from pymatgen.core.structure import Structure
 
-    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 logger = logging.getLogger(__name__)
 
 ev2j = sp.constants.elementary_charge
-hbar = sp.constants.hbar # J-s
-kb = sp.constants.Boltzmann # J/K
+hbar = sp.constants.hbar  # J-s
+kb = sp.constants.Boltzmann  # J/K
 
 
 def get_factor(code: str) -> float:
@@ -129,9 +128,9 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
     cutoffs_2nd_list = []
     cutoffs_3rd_list = []
     cutoffs_4th_list = []
-    n_doffs_2nd_list = []
-    n_doffs_3rd_list = []
-    n_doffs_4th_list = []
+    n_doffs_2nd_list: list[int] = []
+    n_doffs_3rd_list: list[int] = []
+    n_doffs_4th_list: list[int] = []
     # create a list of cutoffs to check starting from 2 to 11, with a step size of 0.1
     supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
     max_cutoff = estimate_maximum_cutoff(supercell_atoms)
@@ -143,9 +142,7 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
     supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
 
     def get_best_cutoff(
-        cutoffs_to_check: np.ndarray,
-        target_n_doff: int,
-        order: int
+        cutoffs_to_check: np.ndarray, target_n_doff: int, order: int
     ) -> tuple[float, list[int], np.ndarray]:
         """
         Find the best cutoff value for a given order of interaction.
@@ -169,7 +166,7 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
                 - cutoffs_to_check (numpy.ndarray): The array of cutoff values checked.
 
         """
-        n_doffs_list = []
+        n_doffs_list: list[int] = []
         best_cutoff = np.inf
 
         if order == 2:
@@ -184,48 +181,45 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
             if order == 2 and all(n_doff < 1000 for n_doff in n_doffs_list):
                 with contextlib.suppress(ValueError):
                     cs = ClusterSpace(
-                        supercell_atoms,
-                        [cutoff],
-                        symprec=1e-3,
-                        acoustic_sum_rules=True
-                        )
+                        supercell_atoms, [cutoff], symprec=1e-3, acoustic_sum_rules=True
+                    )
             elif order == 3 and all(n_doff < 2200 for n_doff in n_doffs_list):
                 with contextlib.suppress(ValueError):
                     cs = ClusterSpace(
                         supercell_atoms,
                         [2, cutoff],
                         symprec=1e-3,
-                        acoustic_sum_rules=True
-                        )
+                        acoustic_sum_rules=True,
+                    )
             elif order == 4 and all(n_doff < 2200 for n_doff in n_doffs_list):
                 with contextlib.suppress(ValueError):
                     cs = ClusterSpace(
                         supercell_atoms,
                         [2, 3, cutoff],
                         symprec=1e-3,
-                        acoustic_sum_rules=True
-                        )
+                        acoustic_sum_rules=True,
+                    )
 
             try:
                 n_doff = cs.get_n_dofs_by_order(order)
                 if (
-                    (order == 2 and n_doff < 1000) or
-                    (order == 3 and n_doff < 2200) or
-                    (order == 4 and n_doff < 2200)
-                    ):
+                    (order == 2 and n_doff < 1000)
+                    or (order == 3 and n_doff < 2200)
+                    or (order == 4 and n_doff < 2200)
+                ):
                     logger.info(f"adding n_doff = {n_doff} to the n_doff list")
                     n_doffs_list.append(n_doff)
                 elif (
-                    (order == 2 and n_doff > 1000) or
-                    (order == 3 and n_doff > 2200) or
-                    (order == 4 and n_doff > 2200)
-                    ):
+                    (order == 2 and n_doff > 1000)
+                    or (order == 3 and n_doff > 2200)
+                    or (order == 4 and n_doff > 2200)
+                ):
                     # remove all the cutoffs from cutoffs_to_check from the current
                     # cutoff once we are inside this block
                     cutoff_index = np.where(cutoffs_to_check == cutoff)[0][0]
                     cutoffs_to_check = cutoffs_to_check[:cutoff_index]
                     # do the same for n_doffs_list
-                    n_doffs_list = n_doffs_list[:cutoff_index + 1]
+                    n_doffs_list = n_doffs_list[: cutoff_index + 1]
                     break
             except UnboundLocalError:
                 logger.info(f"UnboundLocalError for cutoff = {cutoff}")
@@ -247,24 +241,24 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
                         supercell_atoms,
                         [best_cutoff],
                         symprec=1e-3,
-                        acoustic_sum_rules=True
-                        )
+                        acoustic_sum_rules=True,
+                    )
             elif order == 3:
                 with contextlib.suppress(ValueError):
                     cs = ClusterSpace(
                         supercell_atoms,
                         [3, best_cutoff],
                         symprec=1e-3,
-                        acoustic_sum_rules=True
-                        )
+                        acoustic_sum_rules=True,
+                    )
             elif order == 4:
                 with contextlib.suppress(ValueError):
                     cs = ClusterSpace(
                         supercell_atoms,
                         [3, 3, best_cutoff],
                         symprec=1e-3,
-                        acoustic_sum_rules=True
-                        )
+                        acoustic_sum_rules=True,
+                    )
 
             n_doff = cs.get_n_dofs_by_order(order)
 
@@ -280,28 +274,30 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
     # Get best cutoffs for 2nd, 3rd, and 4th order
     logger.info("Getting best cutoffs for 2nd order")
     best_2nd_order_cutoff, n_doffs_2nd_list, cutoffs_2nd_to_check = get_best_cutoff(
-        cutoffs_2nd_to_check, 100, 2)
+        cutoffs_2nd_to_check, 100, 2
+    )
     logger.info("Getting best cutoffs for 3rd order")
     best_3rd_order_cutoff, n_doffs_3rd_list, cutoffs_3rd_to_check = get_best_cutoff(
-        cutoffs_3rd_to_check, 1000, 3)
+        cutoffs_3rd_to_check, 1000, 3
+    )
     logger.info("Getting best cutoffs for 4th order")
     best_4th_order_cutoff, n_doffs_4th_list, cutoffs_4th_to_check = get_best_cutoff(
-        cutoffs_4th_to_check, 1000, 4)
+        cutoffs_4th_to_check, 1000, 4
+    )
 
     cutoffs_2nd_list.append(best_2nd_order_cutoff)
     cutoffs_3rd_list.append(best_3rd_order_cutoff)
     cutoffs_4th_list.append(best_4th_order_cutoff)
 
-    best_cutoff_list = [[best_2nd_order_cutoff,
-                         best_3rd_order_cutoff,
-                         best_4th_order_cutoff]]
+    best_cutoff_list = [
+        [best_2nd_order_cutoff, best_3rd_order_cutoff, best_4th_order_cutoff]
+    ]
     logger.info(f"best_cutoff_list = {best_cutoff_list}")
 
     # Linear interpolation to find cutoffs for targets
     def interpolate_and_find_cutoffs(
-            cutoffs_to_check: np.ndarray,
-            n_doffs_list: list[int],
-            targets: list[int]) -> np.ndarray:
+        cutoffs_to_check: np.ndarray, n_doffs_list: list[int], targets: list[int]
+    ) -> np.ndarray:
         """
         Perform linear interpolation to find cutoff values for specific target DOFs.
 
@@ -327,13 +323,19 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
         logger.info(f"cutoffs_for_targets = {cutoffs_for_targets}")
         return cutoffs_for_targets
 
-
-    cutoffs_2nd_list.extend(interpolate_and_find_cutoffs(
-        cutoffs_2nd_to_check, n_doffs_2nd_list, [70, 220]))
-    cutoffs_3rd_list.extend(interpolate_and_find_cutoffs(
-        cutoffs_3rd_to_check, n_doffs_3rd_list, [1500, 2000]))
-    cutoffs_4th_list.extend(interpolate_and_find_cutoffs(
-        cutoffs_4th_to_check, n_doffs_4th_list, [1500, 2000]))
+    cutoffs_2nd_list.extend(
+        interpolate_and_find_cutoffs(cutoffs_2nd_to_check, n_doffs_2nd_list, [70, 220])
+    )
+    cutoffs_3rd_list.extend(
+        interpolate_and_find_cutoffs(
+            cutoffs_3rd_to_check, n_doffs_3rd_list, [1500, 2000]
+        )
+    )
+    cutoffs_4th_list.extend(
+        interpolate_and_find_cutoffs(
+            cutoffs_4th_to_check, n_doffs_4th_list, [1500, 2000]
+        )
+    )
 
     # Sort the lists
     cutoffs_2nd_list = sorted(cutoffs_2nd_list)
@@ -341,8 +343,9 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
     cutoffs_4th_list = sorted(cutoffs_4th_list)
 
     # Generate combinations of cutoffs
-    cutoffs = np.array(list(map(list, product(
-        cutoffs_2nd_list, cutoffs_3rd_list, cutoffs_4th_list))))
+    cutoffs = np.array(
+        list(map(list, product(cutoffs_2nd_list, cutoffs_3rd_list, cutoffs_4th_list)))
+    )
     logger.info(f"cutoffs = {cutoffs}")
     logger.info(f"len(cutoffs) = {len(cutoffs)}")
     logger.info(f"cutoffs[0] = {cutoffs[0]}")
@@ -353,11 +356,8 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
         logger.info(f"cutoff.tolist() = {cutoff}")
         with contextlib.suppress(ValueError):
             cs = ClusterSpace(
-                supercell_atoms,
-                cutoff,
-                symprec=1e-3,
-                acoustic_sum_rules=True
-                )
+                supercell_atoms, cutoff, symprec=1e-3, acoustic_sum_rules=True
+            )
             n_doff_2 = cs.get_n_dofs_by_order(2)
             n_doff_3 = cs.get_n_dofs_by_order(3)
             n_doff_4 = cs.get_n_dofs_by_order(4)
@@ -366,14 +366,14 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
 
     # Save the plots for cutoffs vs n_doffs
     def save_plot(
-            cutoffs_to_check: np.ndarray,
-            n_doffs_list: list[int],
-            order: int) -> None:
+        cutoffs_to_check: np.ndarray, n_doffs_list: list[int], order: int
+    ) -> None:
         """Save the plot for cutoffs vs n_doffs."""
         plt.figure()
         plt.scatter(cutoffs_to_check, n_doffs_list, color="blue", label="Data Points")
-        plt.plot(cutoffs_to_check,
-                 n_doffs_list, color="red", label="Linear Interpolation")
+        plt.plot(
+            cutoffs_to_check, n_doffs_list, color="red", label="Linear Interpolation"
+        )
         plt.xlabel(f"Cutoffs {order} Order")
         plt.ylabel(f"n_doffs_{order}")
         plt.title(f"Linear Interpolation for n_doffs_{order} vs Cutoffs {order} Order")
@@ -398,18 +398,20 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
     logger.info(f"cutoffs_used = {cutoffs}")
 
     def filter_cutoffs(
-            cutoffs: list[list[int]],
-            dofs_list: list[list[int]]) -> list[list[int]]:
+        cutoffs: list[list[int]], dofs_list: list[list[int]]
+    ) -> list[list[int]]:
         """Filter cutoffs based on unique DOFs."""
         # Map cutoffs to dofs_list
-        cutoffs_to_dofs = {tuple(c): tuple(d) for c, d in zip(cutoffs, dofs_list)}
+        cutoffs_to_dofs = {
+            tuple(c): tuple(d) for c, d in zip(cutoffs, dofs_list, strict=False)
+        }
         logger.info(f"Cutoffs to DOFs mapping: {cutoffs_to_dofs}")
 
         # Track seen dofs and keep only the first occurrence of each unique dofs
         seen_dofs = set()
         new_cutoffs = []
 
-        for c, d in zip(cutoffs, dofs_list):
+        for c, d in zip(cutoffs, dofs_list, strict=False):
             d_tuple = tuple(d)
             if d_tuple not in seen_dofs:
                 seen_dofs.add(d_tuple)
@@ -608,9 +610,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         bulk_modulus: float,
         epsilon_static: Matrix3D = None,
         born: Matrix3D = None,
-        fit_method: str | None = "rfe", # FIT_METHOD = "least-squares" #least-squares #omp #rfe #elasticnet
+        fit_method: str | None = "rfe",
         disp_cut: float | None = None,
-        temperature_qha: float | list | dict = [ i * 100 for i in range(21)], # Temp. for phonopy calc. of thermo. properties (free energy etc.)
+        temperature_qha: float | list | dict | None = None,
         imaginary_tol: float = 0.025,  # in THz
         cutoffs: list[list[float]] | None = None,
         **kwargs,
@@ -646,10 +648,12 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             additional arguments
         """
         logger.info("Starting from_forces_born.")
-        print("Starting from_forces_born.")
         factor = get_factor(code)
         # This opens the opportunity to add support for other codes
         # that are supported by phonopy
+
+        if temperature_qha is None:
+            temperature_qha = [i * 100 for i in range(21)]
 
         cell = get_phonopy_structure(structure)
 
@@ -705,12 +709,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             epsilon = None
 
         # Produces all force constants
-        phonon.produce_force_constants(forces=set_of_forces) # add the def run_hiphive() here and get the 2nd order FCs out. then use JZ's way to add FC to the phonon object.
-
+        phonon.produce_force_constants(forces=set_of_forces)
+        # add the def run_hiphive() here and get the 2nd order FCs out.
+        # then use JZ's way to add FC to the phonon object.
 
         logger.info("Starting run_hiphive.")
-        prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/3rd_sem/MSE 299/Hiphive_Atomate2_integration/npj_paper_review/based_on_MACE/mp_1591/launcher_2024-07-15-03-37-51-098937/launcher_2024-07-15-03-53-52-366405" # mp-1591 -- 3 configs per displ
-        # prev_dir_json_saver = "/Users/HPSahasrabuddhe/Desktop/Acads/5th_Sem/MSE299/npjReview/configs_convergence/mp-2691/1ConfigsPerDispl" # mp-2691 19 Å -- 1, 2, 3, 4 configs -- VASP -- CdSe
         # 3. Hiphive Fitting of FCPs upto 4th order
         PhononBSDOSDoc.run_hiphive(
             parent_structure=structure,
@@ -723,23 +726,20 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             cutoffs=cutoffs,
             displacement_data=displacement_data,
             supercell_matrix=supercell_matrix,
-            T_QHA= [i * 100 for i in range(21)]  # Temp. for phonopy calc. of thermo. properties (free energy etc.)
+            t_qha=[
+                i * 100 for i in range(21)
+            ],  # Temp. for phonopy calc. of thermo. properties (free energy etc.)
         )
         logger.info("Completed run_hiphive.")
 
-
         # Read the force constants from the output file of pheasy code
-        force_constants = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS_2ND") # FORCE_CONSTANTS_2ND FORCE_CONSTANTS
+        force_constants = parse_FORCE_CONSTANTS(
+            filename="FORCE_CONSTANTS_2ND"
+        )  # FORCE_CONSTANTS_2ND FORCE_CONSTANTS
         phonon.force_constants = force_constants
-        # symmetrize the force constants to make them physically correct based on the space group
-        # symmetry of the crystal structure.
+        # symmetrize the force constants to make them physically correct based
+        # on the space group symmetry of the crystal structure.
         phonon.symmetrize_force_constants()
-
-
-
-
-
-
 
         # with phonopy.load("phonopy.yaml") the phonopy API can be used
         phonon.save("phonopy.yaml")
@@ -967,15 +967,15 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         parent_structure: Structure,
         displacement_data: dict[str, list],
         cutoffs: list[list] | None = None,
-        fit_method: str | None = "rfe", # FIT_METHOD = "least-squares" #least-squares #omp #rfe #elasticnet
+        fit_method: str | None = "rfe",
         disp_cut: float | None = None,
         bulk_modulus: float | None = None,
-        temperature_qha: float | list | dict = None,
+        temperature_qha: float | list | dict | None = None,
         imaginary_tol: float | None = None,
-        prev_dir_json_saver: str | None = None,
+        # prev_dir_json_saver: str | None = None,
         supercell_structure: Structure | None = None,
         supercell_matrix: np.array | None = None,
-        T_QHA: ClassVar[list[int]] = [i * 100 for i in range(21)]  # Temp. for phonopy calc. of thermo. properties (free energy etc.)
+        t_qha: float | list | dict | None = None,
     ) -> dict:
         """
         Fit force constants using hiPhive.
@@ -990,8 +990,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             separate_fit: If True, harmonic and anharmonic force constants are fit
                 separately and sequentially, harmonic first then anharmonic. If
                 False, then they are all fit in one go. Default is False.
-            disp_cut: if separate_fit=True, determines the mean displacement of perturbed
-                structure to be included in harmonic (<) or anharmonic (>) fitting
+            disp_cut: if separate_fit=True, determines the mean displacement of
+                perturbed structure to be included in harmonic (<) or
+                anharmonic (>) fitting
             imaginary_tol (float): Tolerance used to decide if a phonon mode
                 is imaginary, in THz.
             fit_method (str): Method used for fitting force constants. This can
@@ -1003,7 +1004,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         supercell_structure = SupercellTransformation(
             scaling_matrix=supercell_matrix
-            ).apply_transformation(parent_structure)
+        ).apply_transformation(parent_structure)
 
         # copy_hiphive_outputs(prev_dir_json_saver)
 
@@ -1020,12 +1021,12 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             # cutoffs = [[5, 4, 3.5]] # Ba2DySbO6 cubic
             # cutoffs = [[5, 4, 3]] # CoS2 cubic
             # cutoffs = [[9, 6, 4]] # Bi4Au
-            cutoffs = [[4, 3, 2]] # CoS2 cubic
+            cutoffs = [[4, 3, 2]]  # Si
             logger.info(f"cutoffs is {cutoffs}")
         else:
             pass
 
-        t_qha = temperature_qha if temperature_qha is not None else T_QHA
+        t_qha = temperature_qha if temperature_qha is not None else t_qha
         if isinstance(t_qha, list):
             t_qha.sort()
         else:
@@ -1042,7 +1043,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
         supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
-        for structure, forces in zip(displacement_data["structure"], set_of_forces):
+        for structure, forces in zip(
+            displacement_data["structure"], set_of_forces, strict=False
+        ):
             logger.info(f"structure is {structure}")
             atoms = AseAtomsAdaptor.get_atoms(structure)
             displacements = get_displacements(atoms, supercell_atoms)
@@ -1053,13 +1056,17 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
             # Calculate mean displacements
             mean_displacements = np.linalg.norm(displacements, axis=1).mean()
-            logger.info(f"Mean displacements while reading individual displacements: "
-                        f"{mean_displacements}")
+            logger.info(
+                f"Mean displacements while reading individual displacements: "
+                f"{mean_displacements}"
+            )
             # Calculate standard deviation of displacements
             std_displacements = np.linalg.norm(displacements, axis=1).std()
-            logger.info("Standard deviation of displacements while reading individual"
-                        "displacements: "
-                        f"{std_displacements}")
+            logger.info(
+                "Standard deviation of displacements while reading individual"
+                "displacements: "
+                f"{std_displacements}"
+            )
 
         all_cutoffs = cutoffs
         logger.info(f"all_cutoffs is {all_cutoffs}")
@@ -1124,11 +1131,17 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         logger.info("Writing cluster space and force_constants")
         logger.info(f"{type(fcs)}")
 
-        logger.info(f"phonopy_atoms_to_ase(phonopy.supercell) = {phonopy_atoms_to_ase(phonopy.supercell)}")
+        logger.info(
+            f"phonopy_atoms_to_ase(phonopy.supercell) = "
+            f"{phonopy_atoms_to_ase(phonopy.supercell)}"
+        )
         logger.info(f"supercell_atoms = {supercell_atoms}")
         from pymatgen.io.ase import MSONAtoms
+
         structure_data_phonopy_atoms = {
-            "supercell_structure_phonopy_atoms": MSONAtoms(phonopy_atoms_to_ase(phonopy.supercell)),
+            "supercell_structure_phonopy_atoms": MSONAtoms(
+                phonopy_atoms_to_ase(phonopy.supercell)
+            ),
         }
         structure_data_pymatgen_atoms = {
             "supercell_structure_pymatgen_atoms": supercell_atoms,
@@ -1146,39 +1159,59 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         prim_structure_data_pymatgen_atoms = {
             "primitive_structure_pymatgen_atoms": primitive_atoms_pymatgen,
         }
-        # dumpfn primitve and supercell atoms
-        dumpfn(prim_structure_data_phonopy_atoms, "prim_structure_data_phonopy_atoms.json")
-        dumpfn(prim_structure_data_pymatgen_atoms, "prim_structure_data_pymatgen_atoms.json")
+        # dumpfn primitive and supercell atoms
+        dumpfn(
+            prim_structure_data_phonopy_atoms, "prim_structure_data_phonopy_atoms.json"
+        )
+        dumpfn(
+            prim_structure_data_pymatgen_atoms,
+            "prim_structure_data_pymatgen_atoms.json",
+        )
 
+        primitive_structure_phonopy = AseAtomsAdaptor.get_structure(
+            primitive_atoms_phonopy
+        )
+        primitive_structure_pymatgen = AseAtomsAdaptor.get_structure(
+            primitive_atoms_pymatgen
+        )
 
-        primitive_structure_phonopy = AseAtomsAdaptor.get_structure(primitive_atoms_phonopy)
-        primitive_structure_pymatgen = AseAtomsAdaptor.get_structure(primitive_atoms_pymatgen)
-
-        # dumpfn primitve and supercell structures
+        # dumpfn primitive and supercell structures
         dumpfn(primitive_structure_phonopy, "primitive_structure_phonopy.json")
         dumpfn(primitive_structure_pymatgen, "primitive_structure_pymatgen.json")
 
-        primitive_structure_phonopy_new = SpacegroupAnalyzer(primitive_structure_phonopy).find_primitive()
-        primitive_structure_pymatgen_new = SpacegroupAnalyzer(primitive_structure_pymatgen).find_primitive()
+        primitive_structure_phonopy_new = SpacegroupAnalyzer(
+            primitive_structure_phonopy
+        ).find_primitive()
+        primitive_structure_pymatgen_new = SpacegroupAnalyzer(
+            primitive_structure_pymatgen
+        ).find_primitive()
 
-        # dumpfn primitve and supercell structures
+        # dumpfn primitive and supercell structures
         dumpfn(primitive_structure_phonopy_new, "primitive_structure_phonopy_new.json")
-        dumpfn(primitive_structure_pymatgen_new, "primitive_structure_pymatgen_new.json")
+        dumpfn(
+            primitive_structure_pymatgen_new, "primitive_structure_pymatgen_new.json"
+        )
 
         if fitting_data["best_n_imaginary"] == 0:
-        # if True:
+            # if True:
             logger.info("No imaginary modes! Writing ShengBTE files")
             atoms = AseAtomsAdaptor.get_atoms(parent_structure)
             # # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_1", atoms, order=3)
-            # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_fcs_pymatgen_struct", atoms)
+            # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_fcs_pymatgen_struct",
+            # atoms)
             fcs.write_to_phonopy("FORCE_CONSTANTS_2ND", format="text")
 
             # primitive_atoms_phonopy = phonopy_atoms_to_ase(phonopy.primitive)
-            # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_fcs_phonopy_struct", primitive_atoms_phonopy)
+            # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_fcs_phonopy_struct",
+            # primitive_atoms_phonopy)
 
-            HiphiveForceConstants.write_to_phonopy(fcs, "fc2.hdf5", "hdf5") # ForceConstants
+            HiphiveForceConstants.write_to_phonopy(
+                fcs, "fc2.hdf5", "hdf5"
+            )  # ForceConstants
             # ForceConstants.write_to_phono3py(fcs, "fc3.hdf5", "hdf5")
-            HiphiveForceConstants.write_to_phono3py(fcs, "fc3.hdf5", order=3) # ForceConstants
+            HiphiveForceConstants.write_to_phono3py(
+                fcs, "fc3.hdf5", order=3
+            )  # ForceConstants
 
             ### detour from hdf5
             supercell_atoms_phonopy = phonopy_atoms_to_ase(phonopy.supercell)
@@ -1196,16 +1229,24 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             supercell_atoms = supercell_atoms_phonopy
             # supercell_atoms = supercell_atoms_pymatgen
             # fcs = ForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5", order=3)
-            fcs = HiphiveForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5", order=3) # ForceConstants
+            fcs = HiphiveForceConstants.read_phono3py(
+                supercell_atoms, "fc3.hdf5", order=3
+            )  # ForceConstants
             # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, order=3, fc_tol=1e-4)
             # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD", atoms, fc_tol=1e-4)
 
-            # # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_hdf5_phonopy_struct", atoms) # this was the original way of writing shengBTE files
-            # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_hdf5_phonopy_struct", phonopy_atoms_to_ase(phonopy.primitive))
+            # # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_hdf5_phonopy_struct",
+            # atoms) # this was the original way of writing shengBTE files
+            # fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_hdf5_phonopy_struct",
+            # phonopy_atoms_to_ase(phonopy.primitive))
 
             supercell_atoms = supercell_atoms_pymatgen
-            fcs = HiphiveForceConstants.read_phono3py(supercell_atoms, "fc3.hdf5", order=3) # ForceConstants
-            fcs.write_to_shengBTE("FORCE_CONSTANTS_3RD_from_hdf5_pymatgen_struct", atoms, order=3)
+            fcs = HiphiveForceConstants.read_phono3py(
+                supercell_atoms, "fc3.hdf5", order=3
+            )  # ForceConstants
+            fcs.write_to_shengBTE(
+                "FORCE_CONSTANTS_3RD_from_hdf5_pymatgen_struct", atoms, order=3
+            )
 
         else:
             logger.info(f"best_n_imaginary = {fitting_data['best_n_imaginary']}")
@@ -1214,12 +1255,12 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         current_dir = os.getcwd()
 
-        outputs: dict[str, list] = {
+        outputs: dict[str, Any] = {
             "thermal_data": thermal_data,
             "anharmonic_data": anharmonic_data,
             "fitting_data": fitting_data,
             "param": param,
-            "current_dir": current_dir
+            "current_dir": current_dir,
         }
 
         return outputs
@@ -1233,7 +1274,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         all_cutoffs: list[list[float]],
         disp_cut: float | None = 0.055,
         imaginary_tol: float = 0.025,  # in THz
-        fit_method: str | None = "rfe", # FIT_METHOD = "least-squares" #least-squares #omp #rfe #elasticnet
+        fit_method: str | None = "rfe",
         n_jobs: int | None = -1,
         fit_kwargs: dict | None = None,
     ) -> tuple:
@@ -1268,8 +1309,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 reached by any cutoff combination this FireTask will fizzle.
             fit_method: Method used for fitting force constants. This can be
                 any of the values allowed by the hiphive ``Optimizer`` class.
-            n_jobs: Number of processors to use for fitting coefficients. -1 means use all
-                processors.
+            n_jobs: Number of processors to use for fitting coefficients.
+                -1 means use all processors.
             fit_kwargs: Additional arguments passed to the hiphive force constant
                 optimizer.
 
@@ -1296,7 +1337,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             "disp_cut": disp_cut,
             "imaginary_tol": imaginary_tol,
             "best_cutoff": None,
-            "best_rmse": np.inf
+            "best_rmse": np.inf,
         }
 
         best_fit = {
@@ -1324,23 +1365,23 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         logger.info(f"CPU COUNT: {os.cpu_count()}")
 
-        logger.info("We are starting Joblib_s parallellized jobs")
+        logger.info("We are starting Joblib_s parallelized jobs")
 
         cutoff_results = []
         for i, cutoffs in enumerate(all_cutoffs):
             result = PhononBSDOSDoc._run_cutoffs(
-                                        i=i,
-                                        cutoffs=cutoffs,
-                                        n_cutoffs=n_cutoffs,
-                                        parent_structure=parent_structure,
-                                        supercell_structure=supercell_structure,
-                                        structures=structures,
-                                        supercell_matrix=supercell_matrix,
-                                        fit_method=fit_method,
-                                        disp_cut=disp_cut,
-                                        imaginary_tol=imaginary_tol,
-                                        fit_kwargs=fit_kwargs,
-                                    )
+                i=i,
+                cutoffs=cutoffs,
+                n_cutoffs=n_cutoffs,
+                parent_structure=parent_structure,
+                supercell_structure=supercell_structure,
+                structures=structures,
+                supercell_matrix=supercell_matrix,
+                fit_method=fit_method,
+                disp_cut=disp_cut,
+                imaginary_tol=imaginary_tol,
+                fit_kwargs=fit_kwargs,
+            )
             cutoff_results.append(result)
 
         for result in cutoff_results:
@@ -1362,7 +1403,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                     fitting_data["cs_dofs"].append(result["cs_dofs"])
                 if "imaginary" in result:
                     fitting_data["imaginary"].append(result["imaginary"])
-                if "rmse_test" in result and (result["rmse_test"] < best_fit["rmse_test"]):
+                if "rmse_test" in result and (
+                    result["rmse_test"] < best_fit["rmse_test"]
+                ):
                     best_fit.update(result)
                     fitting_data["best_cutoff"] = result["cutoffs"]
                     fitting_data["best_rmse"] = result["rmse_test"]
@@ -1378,8 +1421,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             best_fit["parameters"],
             best_fit["cluster_space"],
             fitting_data,
-            best_fit["force_constants_potential"]
-            )
+            best_fit["force_constants_potential"],
+        )
 
     @staticmethod
     def _run_cutoffs(
@@ -1395,7 +1438,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         fit_kwargs: dict[str, Any],
         imaginary_tol: float = 0.025,  # in THz
     ) -> dict[str, Any]:
-
         logger.info(f"Testing cutoffs {i+1} out of {n_cutoffs}: {cutoffs}")
         logger.info(f"fit_method is {fit_method}")
         supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
@@ -1403,10 +1445,13 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         logger.info(f"supercell_atoms = {supercell_atoms}")
 
         if not is_cutoff_allowed(supercell_atoms, max(cutoffs)):
-            logger.info("Skipping cutoff due as it is not commensurate with supercell size")
+            logger.info(
+                "Skipping cutoff due as it is not commensurate with supercell size"
+            )
             return {}
 
-        # # if you want to select specific clusters then use the following prototype code:
+        # # if you want to select specific clusters then use the following
+        # prototype code:
         # from hiphive.cutoffs import BeClusterFilter
         # be_cf = BeClusterFilter()
         # cs = ClusterSpace(
@@ -1419,7 +1464,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # logger.info(f"cs orbit data = {cs.orbit_data}")
 
         try:
-            cs = ClusterSpace(supercell_atoms, cutoffs, symprec=1e-3, acoustic_sum_rules=True)
+            cs = ClusterSpace(
+                supercell_atoms, cutoffs, symprec=1e-3, acoustic_sum_rules=True
+            )
         except ValueError:
             logger.info("ValueError encountered, moving to the next cutoff")
             return {}
@@ -1428,15 +1475,15 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         logger.info(cs)
         cs_2_dofs = cs.get_n_dofs_by_order(2)
         cs_3_dofs = cs.get_n_dofs_by_order(3)
-        cs_4_dofs = cs.get_n_dofs_by_order(4) # uncomment this later
-        cs_dofs = [cs_2_dofs, cs_3_dofs, cs_4_dofs] # uncomment this later
+        cs_4_dofs = cs.get_n_dofs_by_order(4)  # uncomment this later
+        cs_dofs = [cs_2_dofs, cs_3_dofs, cs_4_dofs]  # uncomment this later
         # cs_dofs = [cs_2_dofs, cs_3_dofs]
         logger.info(cs_dofs)
         n2nd = cs.get_n_dofs_by_order(2)
         nall = cs.n_dofs
 
         logger.info("Fitting harmonic force constants separately")
-        separate_fit = False # Change this back to true
+        separate_fit = False  # Change this back to true
         logger.info(f"disp_cut = {disp_cut}")
 
         sc = PhononBSDOSDoc.get_structure_container(
@@ -1446,7 +1493,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         try:
             opt.train()
         except Exception:
-            logger.exception(f"Error occurred in opt.train() for cutoff: {i}, {cutoffs}")
+            logger.exception(
+                f"Error occurred in opt.train() for cutoff: {i}, {cutoffs}"
+            )
 
             return {}
         param_harmonic = opt.parameters  # harmonic force constant parameters
@@ -1461,7 +1510,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # Ensure supercell_matrix is a numpy array
         supercell_matrix = np.array(supercell_matrix)
         mesh = supercell_matrix.diagonal() * 2
-        mesh = [10, 10, 10] #TODO change this later
+        mesh = [10, 10, 10]  # TODO change this later
 
         fcp = ForceConstantPotential(cs, param_tmp)
         # supercell_atoms = phonopy_atoms_to_ase(phonopy.supercell)
@@ -1510,7 +1559,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             try:
                 opt.train()
             except Exception:
-                logger.exception(f"Error occured in opt.train() for cutoff: {i}, {cutoffs}")
+                logger.exception(
+                    f"Error occurred in opt.train() for cutoff: {i}, {cutoffs}"
+                )
                 return {}
             param_anharmonic = opt.parameters  # anharmonic force constant parameters
 
@@ -1520,12 +1571,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 raise ValueError("nall is not equal to the length of parameters.")
             logger.info(f"Training complete for cutoff: {i}, {cutoffs}")
 
-
             parent_phonopy = get_phonopy_structure(parent_structure)
             phonopy = Phonopy(parent_phonopy, supercell_matrix=supercell_matrix)
             phonopy.primitive.get_number_of_atoms()
             mesh = supercell_matrix.diagonal() * 2
-            mesh = [10, 10, 10] #TODO change this later
+            mesh = [10, 10, 10]  # TODO change this later
 
             fcp = ForceConstantPotential(cs, parameters)
             # supercell_atoms = phonopy_atoms_to_ase(phonopy.supercell)
@@ -1537,7 +1587,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             phonopy.set_mesh(
                 mesh, is_eigenvectors=False, is_mesh_symmetry=False
             )  # run_mesh(is_gamma_center=True)
-            phonopy.run_mesh(mesh=100.0, with_eigenvectors=False, is_mesh_symmetry=False)
+            phonopy.run_mesh(
+                mesh=100.0, with_eigenvectors=False, is_mesh_symmetry=False
+            )
             omega = phonopy.mesh.frequencies  # THz
             omega = np.sort(omega.flatten())
             logger.info(f"omega_seperate_fit = {omega}")
@@ -1570,15 +1622,18 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             try:
                 opt.train()
             except Exception:
-                logger.exception(f"Error occured in opt.train() for cutoff: {i}, {cutoffs}")
+                logger.exception(
+                    f"Error occurred in opt.train() for cutoff: {i}, {cutoffs}"
+                )
                 return {}
             parameters = opt.parameters
             logger.info(f"Training complete for cutoff: {i}, {cutoffs}")
 
-
         logger.info(f"parameters before enforcing sum rules {parameters}")
         logger.info(f"Memory use: {psutil.virtual_memory().percent} %")
-        parameters = enforce_rotational_sum_rules(cs, parameters, ["Huang", "Born-Huang"])
+        parameters = enforce_rotational_sum_rules(
+            cs, parameters, ["Huang", "Born-Huang"]
+        )
         fcp = ForceConstantPotential(cs, parameters)
         # supercell_atoms = phonopy_atoms_to_ase(phonopy.supercell)
         fcs = fcp.get_force_constants(supercell_atoms)
@@ -1613,8 +1668,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 "displacements" arrays included.
             separate_fit: Boolean to determine whether harmonic and anharmonic fitting
                 are to be done separately (True) or in one shot (False)
-            disp_cut: if separate_fit true, determines the mean displacement of perturbed
-                structure to be included in harmonic (<) or anharmonic (>) fitting
+            disp_cut: if separate_fit true, determines the mean displacement of
+                perturbed structure to be included in harmonic (<) or anharmonic (>)
+                fitting
             ncut: the parameter index where fitting separation occurs
             param2: previously fit parameter array (harmonic only for now, hence 2).
 
@@ -1637,12 +1693,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             logger.info(f"Mean Forces: {mean_forces}")
             # Calculate standard deviation of displacements
             std_displacements = np.linalg.norm(displacements, axis=1).std()
-            logger.info(f"Standard deviation of displacements: "
-                        f"{std_displacements}")
+            logger.info(f"Standard deviation of displacements: " f"{std_displacements}")
             # Calculate standard deviation of forces
             std_forces = np.linalg.norm(forces, axis=1).std()
-            logger.info(f"Standard deviation of forces: "
-                        f"{std_forces}")
+            logger.info(f"Standard deviation of forces: " f"{std_forces}")
             if not separate_fit:  # fit all
                 sc.add_structure(structure)
             # for harmonic fitting
@@ -1659,8 +1713,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 sc.add_structure(structure)
                 saved_structures.append(structure)
 
-        logger.info("final shape of fit matrix (total # of atoms in all added"
-                    f"supercells, n_dofs) = (rows, columns) = {sc.data_shape}")
+        logger.info(
+            "final shape of fit matrix (total # of atoms in all added"
+            f"supercells, n_dofs) = (rows, columns) = {sc.data_shape}"
+        )
         logger.info("We have completed adding structures")
         logger.info(f"sc.get_fit_data() = {sc.get_fit_data()}")
 
@@ -1688,8 +1744,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         fcs: ForceConstants,
         temperature: list,
         imaginary_tol: float = 0.025,  # in THz
-        mesh: list = None
-    ) -> tuple[dict,Phonopy]:
+        mesh: list = None,
+    ) -> tuple[dict, Phonopy]:
         """
         Thermodynamic (harmonic) phonon props calculated using the force constants.
 
@@ -1711,15 +1767,15 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         logger.info(f"fcs2 = {fcs2}")
         parent_phonopy = get_phonopy_structure(structure)
         phonopy = Phonopy(parent_phonopy, supercell_matrix=supercell_matrix)
-        natom = phonopy.primitive.get_number_of_atoms()
+        # natom = phonopy.primitive.get_number_of_atoms()
         # Ensure supercell_matrix is a numpy array
         supercell_matrix = np.array(supercell_matrix)
-        mesh = supercell_matrix.diagonal()*2
-        mesh = [10, 10, 10] #TODO change this later
+        mesh = supercell_matrix.diagonal() * 2
+        mesh = [10, 10, 10]  # TODO change this later
         logger.info(f"Mesh: {mesh}")
 
         phonopy.set_force_constants(fcs2)
-        phonopy.set_mesh(mesh,is_eigenvectors=True,is_mesh_symmetry=False)
+        phonopy.set_mesh(mesh, is_eigenvectors=True, is_mesh_symmetry=False)
         phonopy.run_thermal_properties(temperatures=temperature)
         logger.info("Thermal properties successfully run!")
 
@@ -1730,7 +1786,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # entropy *= 1/sp.constants.Avogadro/eV2J/natom # J/K/mol to eV/K/atom
         # heat_capacity *= 1/sp.constants.Avogadro/ev2j/natom # J/K/mol to eV/K/atom
 
-        freq = phonopy.mesh.frequencies # in THz
+        freq = phonopy.mesh.frequencies  # in THz
         logger.info(f"Frequencies: {freq}")
         logger.info(f"freq_flatten = {np.sort(freq.flatten())}")
 
@@ -1743,17 +1799,19 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         ### Added from Phonon workflow
         logger.info("starting the thermal prop calculation as per the phonon workflow")
-        from atomate2.common.schemas.phonons import PhononBSDOSDoc
         from pymatgen.io.phonopy import (
             get_ph_bs_symm_line,
             get_ph_dos,
             get_pmg_structure,
         )
+
+        from atomate2.common.schemas.phonons import PhononBSDOSDoc
+
         kpath_scheme = "seekpath"
         symprec = 1e-4
         from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
-        from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
         from pymatgen.io.vasp import Kpoints
+        from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 
         # with phonopy.load("phonopy.yaml") the phonopy API can be used
         phonopy.save("phonopy.yaml")
@@ -1765,9 +1823,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             symprec=symprec,
         )
 
-        npoints_band = 101
+        # npoints_band = 101
         qpoints, connections = get_band_qpoints_and_path_connections(
-            kpath_concrete, npoints=101 # changed from 101
+            kpath_concrete,
+            npoints=101,  # changed from 101
         )
 
         # phonon band structures will always be computed
@@ -1791,9 +1850,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         )
 
         # will determine if imaginary modes are present in the structure
-        imaginary_modes = bs_symm_line.has_imaginary_freq(
-            tol=1e-5
-        )
+        # imaginary_modes = bs_symm_line.has_imaginary_freq(tol=1e-5)
 
         # # gets data for visualization on website - yaml is also enough
         # if kwargs.get("band_structure_eigenvectors"):
@@ -1820,9 +1877,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         )
 
         # compute vibrational part of free energies per formula unit
-        temperature_range = np.arange(
-            0, 1000, 10
-        )
+        temperature_range = np.arange(0, 1000, 10)
 
         free_energies = [
             dos.helmholtz_free_energy(
@@ -1848,23 +1903,24 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             for temp in temperature_range
         ]
 
-        # save a json file of temperature_range, free_energies, entropies, internal_energies, heat_capacities
+        # save a json file of temperature_range, free_energies, entropies,
+        # internal_energies, heat_capacities
         # Organize data into a dictionary
         data = {
-            "temperature_range": temperature_range.tolist(),  # Convert to list for JSON serialization
+            "temperature_range": temperature_range.tolist(),
             "free_energies": free_energies,
             "entropies": entropies,
             "internal_energies": internal_energies,
-            "heat_capacities": heat_capacities
+            "heat_capacities": heat_capacities,
         }
 
         # Define the output file path
         output_file_path = "thermodynamic_properties.json"
 
         # Write the dictionary to a JSON file
-        with open(output_file_path, 'w') as f:
+        with open(output_file_path, "w") as f:
             json.dump(data, f, indent=4)  # `indent=4` for pretty printing
-        
+
         logger.info("ending the thermal prop calculation as per the phonon workflow")
 
         ### Added from Phonon workflow
@@ -1874,8 +1930,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             "free_energy": free_energy,
             "entropy": entropy,
             "heat_capacity": heat_capacity,
-            "n_imaginary": n_imaginary
-            }, phonopy
+            "n_imaginary": n_imaginary,
+        }, phonopy
 
     @staticmethod
     def anharmonic_properties(
@@ -1884,143 +1940,208 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         temperature: list,
         heat_capacity: np.ndarray,
         n_imaginary: float,
-        bulk_modulus: float = None
+        bulk_modulus: float | None = None,
     ) -> dict:
+        """
+        Anharmonic properties calculated using the force constants.
 
+        Args:
+            phonopy: The phonopy object.
+            fcs: The force constants in numpy format.
+            temperature: The temperature range.
+            heat_capacity: The heat capacity in J/K/mol.
+            n_imaginary: The number of imaginary modes.
+            bulk_modulus: The bulk modulus.
+
+        Returns
+        -------
+            A dictionary of the Gruneisen parameter, thermal expansion, and
+            expansion fraction.
+        """
         if n_imaginary == 0:
             logger.info("Evaluating anharmonic properties...")
             fcs2 = fcs.get_fc_array(2)
             fcs3 = fcs.get_fc_array(3)
-            grun, cte, dlfrac = PhononBSDOSDoc.gruneisen(phonopy,fcs2,fcs3,temperature,heat_capacity,
-                                        bulk_modulus=bulk_modulus)
-        else: # do not calculate these if imaginary modes exist
-            logger.warning("Gruneisen and thermal expansion cannot be calculated with"
-                        "imaginary modes. All set to 0.")
-            grun = np.zeros((len(temperature),3))
-            cte = np.zeros((len(temperature),3))
-            dlfrac = np.zeros((len(temperature),3))
+            grun, cte, dlfrac = PhononBSDOSDoc.gruneisen(
+                phonopy,
+                fcs2,
+                fcs3,
+                temperature,
+                heat_capacity,
+                bulk_modulus=bulk_modulus,
+            )
+        else:  # do not calculate these if imaginary modes exist
+            logger.warning(
+                "Gruneisen and thermal expansion cannot be calculated with"
+                "imaginary modes. All set to 0."
+            )
+            grun = np.zeros((len(temperature), 3))
+            cte = np.zeros((len(temperature), 3))
+            dlfrac = np.zeros((len(temperature), 3))
 
         return {
             "gruneisen": grun,
             "thermal_expansion": cte,
             "expansion_fraction": dlfrac,
-            }
+        }
 
     @staticmethod
     def get_total_grun(
-            omega: np.ndarray,
-            grun: np.ndarray,
-            kweight: np.ndarray,
-            t: float
+        omega: np.ndarray, grun: np.ndarray, kweight: np.ndarray, t: float
     ) -> np.ndarray:
-        total = 0
+        """
+        Calculate the total Gruneisen parameter.
+
+        Args:
+            omega: The phonon frequencies.
+            grun: The Gruneisen parameters.
+            kweight: The k-point weights.
+            t: The temperature.
+
+        Returns
+        -------
+            The total Gruneisen parameter.
+        """
+        # total = 0
         weight = 0
         nptk = omega.shape[0]
         nbands = omega.shape[1]
-        omega = abs(omega)*1e12*2*np.pi
-        if t==0:
-            total = np.zeros((3,3))
+        omega = abs(omega) * 1e12 * 2 * np.pi
+        if t == 0:
+            total = np.zeros((3, 3))
             grun_total_diag = np.zeros(3)
         else:
+            total = np.zeros((3, 3))
             for i in range(nptk):
                 for j in range(nbands):
-                    x = hbar*omega[i,j]/(2.0*kb*t)
-                    dbe = (x/np.sinh(x))**2
-                    weight += dbe*kweight[i]
-                    total += dbe*kweight[i]*grun[i,j]
-            total = total/weight
-            grun_total_diag = np.array([total[0,2],total[1,1],total[2,0]])
+                    x = hbar * omega[i, j] / (2.0 * kb * t)
+                    dbe = (x / np.sinh(x)) ** 2
+                    weight += dbe * kweight[i]
+                    total += dbe * kweight[i] * grun[i, j]
+            total = total / weight
+            grun_total_diag = np.array([total[0, 2], total[1, 1], total[2, 0]])
 
             def percent_diff(a: float, b: float) -> float:
-                return abs((a-b)/b)
-            # This process preserves cell symmetry upon thermal expansion, i.e., it prevents
-            # symmetry-identical directions from inadvertently expanding by different ratios
-            # when/if the Gruneisen routine returns slightly different ratios for those
-            # directions
-            avg012 = np.mean((grun_total_diag[0],grun_total_diag[1],grun_total_diag[2]))
-            avg01 = np.mean((grun_total_diag[0],grun_total_diag[1]))
-            avg02 = np.mean((grun_total_diag[0],grun_total_diag[2]))
-            avg12 = np.mean((grun_total_diag[1],grun_total_diag[2]))
-            if percent_diff(grun_total_diag[0],avg012) < 0.1:
-                if percent_diff(grun_total_diag[1],avg012) < 0.1:
-                    if percent_diff(grun_total_diag[2],avg012) < 0.1: # all similar
+                return abs((a - b) / b)
+
+            # This process preserves cell symmetry upon thermal expansion, i.e.,
+            # it prevents symmetry-identical directions from inadvertently expanding
+            # by different ratios when/if the Gruneisen routine returns slightly
+            # different ratios for those directions
+            avg012 = np.mean(
+                (grun_total_diag[0], grun_total_diag[1], grun_total_diag[2])
+            )
+            avg01 = np.mean((grun_total_diag[0], grun_total_diag[1]))
+            avg02 = np.mean((grun_total_diag[0], grun_total_diag[2]))
+            avg12 = np.mean((grun_total_diag[1], grun_total_diag[2]))
+            if percent_diff(grun_total_diag[0], avg012) < 0.1:
+                if percent_diff(grun_total_diag[1], avg012) < 0.1:
+                    if percent_diff(grun_total_diag[2], avg012) < 0.1:  # all similar
                         grun_total_diag[0] = avg012
                         grun_total_diag[1] = avg012
                         grun_total_diag[2] = avg012
-                    elif percent_diff(grun_total_diag[2],avg02) < 0.1: # 0 and 2 similar
+                    elif (
+                        percent_diff(grun_total_diag[2], avg02) < 0.1
+                    ):  # 0 and 2 similar
                         grun_total_diag[0] = avg02
                         grun_total_diag[2] = avg02
-                    elif percent_diff(grun_total_diag[2],avg12) < 0.1: # 1 and 2 similar
+                    elif (
+                        percent_diff(grun_total_diag[2], avg12) < 0.1
+                    ):  # 1 and 2 similar
                         grun_total_diag[1] = avg12
                         grun_total_diag[2] = avg12
                     else:
                         pass
-                elif percent_diff(grun_total_diag[1],avg01) < 0.1: # 0 and 1 similar
+                elif percent_diff(grun_total_diag[1], avg01) < 0.1:  # 0 and 1 similar
                     grun_total_diag[0] = avg01
                     grun_total_diag[1] = avg01
-                elif percent_diff(grun_total_diag[1],avg12) < 0.1: # 1 and 2 similar
+                elif percent_diff(grun_total_diag[1], avg12) < 0.1:  # 1 and 2 similar
                     grun_total_diag[1] = avg12
                     grun_total_diag[2] = avg12
                 else:
                     pass
-            elif percent_diff(grun_total_diag[0],avg01) < 0.1: # 0 and 1 similar
+            elif percent_diff(grun_total_diag[0], avg01) < 0.1:  # 0 and 1 similar
                 grun_total_diag[0] = avg01
                 grun_total_diag[1] = avg01
-            elif percent_diff(grun_total_diag[0],avg02) < 0.1: # 0 and 2 similar
+            elif percent_diff(grun_total_diag[0], avg02) < 0.1:  # 0 and 2 similar
                 grun_total_diag[0] = avg02
                 grun_total_diag[2] = avg02
-            else: # nothing similar
+            else:  # nothing similar
                 pass
 
         return grun_total_diag
 
     @staticmethod
     def gruneisen(
-            phonopy: Phonopy,
-            fcs2: np.ndarray,
-            fcs3: np.ndarray,
-            temperature: list,
-            heat_capacity: np.ndarray, # in J/K/mol
-            bulk_modulus: float = None # in GPa
-    ) -> tuple[list,list]:
+        phonopy: Phonopy,
+        fcs2: np.ndarray,
+        fcs3: np.ndarray,
+        temperature: list,
+        heat_capacity: np.ndarray,  # in J/K/mol
+        bulk_modulus: float | None = None,  # in GPa
+    ) -> tuple[list, list, list]:
+        """
+        Calculate the Gruneisen parameter.
 
-        gruneisen = Gruneisen(fcs2,fcs3,phonopy.supercell,phonopy.primitive)
-        gruneisen.set_sampling_mesh(phonopy.mesh_numbers,is_gamma_center=True)
+        Args:
+            phonopy: The phonopy object.
+            fcs2: The second order force constants.
+            fcs3: The third order force constants.
+            temperature: The temperature range.
+            heat_capacity: The heat capacity in J/K/mol.
+            bulk_modulus: The bulk modulus in GPa.
+
+        Returns
+        -------
+            A tuple of the Gruneisen parameter, linear thermal expansion coefficient,
+            and linear expansion fraction.
+        """
+        gruneisen = Gruneisen(fcs2, fcs3, phonopy.supercell, phonopy.primitive)
+        gruneisen.set_sampling_mesh(phonopy.mesh_numbers, is_gamma_center=True)
         gruneisen.run()
-        grun = gruneisen.get_gruneisen_parameters() # (nptk,nmode,3,3)
+        grun = gruneisen.get_gruneisen_parameters()  # (nptk,nmode,3,3)
         omega = gruneisen._frequencies  # noqa: SLF001
         # qp = gruneisen._qpoints
         kweight = gruneisen._weights  # noqa: SLF001
 
-        grun_tot = [PhononBSDOSDoc.get_total_grun(omega, grun, kweight, temp) for temp in temperature]
+        grun_tot = [
+            PhononBSDOSDoc.get_total_grun(omega, grun, kweight, temp)
+            for temp in temperature
+        ]
         grun_tot = np.nan_to_num(np.array(grun_tot))
 
-        # linear thermal expansion coefficeint and fraction
+        # linear thermal expansion coefficient and fraction
         if bulk_modulus is None:
             cte = None
             dlfrac = None
         else:
             # heat_capacity *= eV2J*phonopy.primitive.get_number_of_atoms()
             # # eV/K/atom to J/K
-            heat_capacity *= 1/sp.constants.Avogadro # J/K/mol to J/K
-            # to convert from J/K/atom multiply by phonopy.primitive.get_number_of_atoms()
+            heat_capacity *= 1 / sp.constants.Avogadro  # J/K/mol to J/K
+            # to convert from J/K/atom multiply by
+            # phonopy.primitive.get_number_of_atoms()
             # Convert heat_capacity to an array if it's a scalar
             # heat_capacity = np.array([heat_capacity])
             logger.info(f"heat capacity = {heat_capacity}")
             vol = phonopy.primitive.get_volume()
 
             logger.info(f"grun_tot: {grun_tot}")
-            logger.info(f"grun_tot shape: {grun_tot.shape}")
+            # logger.info(f"grun_tot shape: {grun_tot.shape}")
             logger.info(f"heat_capacity shape: {heat_capacity.shape}")
             logger.info(f"heat_capacity: {heat_capacity}")
             logger.info(f"vol: {vol}")
             logger.info(f"bulk_modulus: {bulk_modulus}")
-    #        cte = grun_tot*heat_capacity.repeat(3)/(vol/10**30)/(bulk_modulus*10**9)/3
-            cte = grun_tot*heat_capacity.repeat(3).reshape(
-                len(heat_capacity),3)/(vol/10**30)/(bulk_modulus*10**9)/3
+            # cte = grun_tot*heat_capacity.repeat(3)/(vol/10**30)/(bulk_modulus*10**9)/3
+            cte = (
+                grun_tot
+                * heat_capacity.repeat(3).reshape(len(heat_capacity), 3)
+                / (vol / 10**30)
+                / (bulk_modulus * 10**9)
+                / 3
+            )
             cte = np.nan_to_num(cte)
-            if len(temperature)==1:
-                dlfrac = cte*temperature
+            if len(temperature) == 1:
+                dlfrac = cte * temperature
             else:
                 dlfrac = PhononBSDOSDoc.thermal_expansion(temperature, cte)
             logger.info(f"Gruneisen: \n {grun_tot}")
@@ -2031,9 +2152,20 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
     @staticmethod
     def thermal_expansion(
-            temperature: list,
-            cte: np.array,
+        temperature: list,
+        cte: np.array,
     ) -> np.ndarray:
+        """
+        Calculate the linear thermal expansion fraction.
+
+        Args:
+            temperature: The temperature range.
+            cte: The linear thermal expansion coefficient.
+
+        Returns
+        -------
+            The linear thermal expansion fraction.
+        """
         if len(temperature) != len(cte):
             raise ValueError("Length of temperature and cte lists must be equal.")
         if 0 not in temperature:
@@ -2046,7 +2178,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # linear expansion fraction
         dlfrac = copy.copy(cte)
         for t in range(len(temperature)):
-            dlfrac[t,:] = np.trapz(cte[:t+1,:],temperature[:t+1],axis=0)
+            dlfrac[t, :] = np.trapezoid(cte[: t + 1, :], temperature[: t + 1], axis=0)
         dlfrac = np.nan_to_num(dlfrac)
         logger.info(f"Linear Expansion Fraction: \n {dlfrac}")
         return dlfrac
