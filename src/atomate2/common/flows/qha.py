@@ -7,7 +7,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
-from emmet.core.math import Matrix3D
 from jobflow import Flow, Maker
 
 from atomate2.common.flows.eos import CommonEosMaker
@@ -20,12 +19,12 @@ from atomate2.common.jobs.qha import (
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from emmet.core.math import Matrix3D
     from pymatgen.core import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
     from atomate2.vasp.jobs.core import BaseVaspMaker
-
 supported_eos = frozenset(("vinet", "birch_murnaghan", "murnaghan"))
 
 
