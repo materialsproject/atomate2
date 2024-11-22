@@ -480,12 +480,14 @@ def _get_basis_and_potential_files(dir_name: Path) -> dict[Cp2kObject, DataFile]
     the basis/potential contained in these files.
     """
     data: dict[Cp2kObject, DataFile] = {}
-    if Path.exists(dir_name / "BASIS"):
-        data[Cp2kObject.BASIS] = BasisFile.from_file(str(dir_name / "BASIS"))  # type: ignore[index]
-    if Path.exists(dir_name / "POTENTIAL"):
-        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(  # type: ignore[index]
-            str(dir_name / "POTENTIAL")
-        )
+    for filename, cls, cp2k_object in (
+        (dir_name / "BASIS", BasisFile, Cp2kObject.BASIS),
+        (dir_name / "POTENTIAL", PotentialFile, Cp2kObject.POTENTIAL),
+    ):
+        if filename.exists():
+            content = filename.read_text().strip()
+            if content not in ("None", ""):  # ignore empty files
+                data[cp2k_object] = cls.from_str(content)  # type: ignore[index]
     return data
 
 

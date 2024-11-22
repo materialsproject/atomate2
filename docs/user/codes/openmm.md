@@ -6,24 +6,17 @@
 >>> conda activate atomate2
 
 # installing atomate2
->>> pip install git+https://github.com/orionarcher/atomate2
-
-# installing classical_md dependencies
->>> conda install -c conda-forge --file .github/classical_md_requirements.txt
+>>> pip install "atomate2[openmm]"
 ```
 
 Alternatively, if you anticipate regularly updating
-atomate2 from source (which at this point, you should),
-you can clone the repository and install from source.
+atomate2 from source, you can clone the repository and install from source.
 
 ``` bash
 # installing atomate2
->>> git clone https://github.com/orionarcher/atomate2
+>>> git clone https://github.com/materialsproject/atomate2
 >>> cd atomate2
->>> git branch openff
->>> git checkout openff
->>> git pull origin openff
->>> pip install -e .
+>>> pip install -e '.[openmm]'
 ```
 
 To test the openmm installation, you can run the following command. If
@@ -458,6 +451,7 @@ run_locally(flows[rank], ensure_success=True)
 For now, you'll need to make sure you have a particular emmet branch installed.
 Later the builders will be integrated into `main`.
 
+<!-- TODO get emmet@md_builders merged -->
 ```bash
 pip install git+https://github.com/orionarcher/emmet@md_builders
 ```
