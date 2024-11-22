@@ -152,11 +152,11 @@ class CalculationOutput(BaseModel):
         None, 
         description="Stress from last lattice optimization step"
     )
-    cbm: Optional[int] = Field(
+    cbm: Optional[float] = Field(
         None, 
         description="Conduction band minimum / LUMO from last electronic optimization"
     )
-    vbm: Optional[int] = Field(
+    vbm: Optional[float] = Field(
         None,
         description="Valence band maximum /HOMO from last electonic optimization"
     )

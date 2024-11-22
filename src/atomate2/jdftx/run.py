@@ -9,6 +9,7 @@ from custodian.jdftx.jobs import JDFTxJob
 from jobflow.utils import ValueEnum
 from atomate2 import SETTINGS
 from atomate2.jdftx.schemas.task import JDFTxStatus, TaskDoc
+from atomate2.jdftx.sets.base import FILE_NAMES
 
 
 class JobType(ValueEnum):
@@ -32,7 +33,11 @@ def run_jdftx(
         jdftx_cmd = get_jdftx_cmd()
 
     if job_type == JobType.NORMAL:
-        job = JDFTxJob(jdftx_cmd, **jdftx_job_kwargs)
+        job = JDFTxJob(
+            jdftx_cmd, 
+            input_file=FILE_NAMES["in"],
+            output_file=FILE_NAMES["out"],
+            **jdftx_job_kwargs)
 
     job.run()
 
