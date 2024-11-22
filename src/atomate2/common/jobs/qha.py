@@ -9,6 +9,7 @@ from jobflow import Flow, Response, job
 
 from atomate2.common.schemas.phonons import PhononBSDOSDoc
 from atomate2.common.schemas.qha import PhononQHADoc
+from atomate2.common.utils import get_supercell_matrix
 
 if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
@@ -18,10 +19,49 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+@job
+def get_supercell_size(
+    eos_output: dict,
+    min_length: float,
+    max_length: float,
+    prefer_90_degrees: bool,
+    allow_orthorhombic: bool = False,
+    **kwargs,
+) -> list[list[float]]:
+    """
+    Job to get the supercell size from an eos output.
+
+    Parameters
+    ----------
+    eos_output: dict
+        output from eos state job
+    min_length: float
+        minimum length of cell in Angstrom
+    max_length: float
+        maximum length of cell in Angstrom
+    prefer_90_degrees: bool
+        if True, the algorithm will try to find a cell with 90 degree angles first
+    allow_orthorhombic: bool
+        if True, orthorhombic supercells are allowed
+    **kwargs:
+        Additional parameters that can be set.
+    """
+    return get_supercell_matrix(
+        eos_output["relax"]["structure"][0],
+        min_length,
+        max_length,
+        prefer_90_degrees,
+        allow_orthorhombic,
+        **kwargs,
+    )
+
+
 @job(
     data=[PhononBSDOSDoc],
 )
-def get_phonon_jobs(phonon_maker: BasePhononMaker, eos_output: dict) -> Flow:
+def get_phonon_jobs(
+    phonon_maker: BasePhononMaker, eos_output: dict, supercell_matrix: list[list[float]]
+) -> Flow:
     """
     Start all relevant phonon jobs.
 
@@ -31,17 +71,20 @@ def get_phonon_jobs(phonon_maker: BasePhononMaker, eos_output: dict) -> Flow:
         Maker to start harmonic phonon runs.
     eos_output: dict
         Output from EOSMaker
-
+    supercell_matrix:
+        Supercell matrix to be passed into the phonon runs.
     """
     phonon_jobs = []
     outputs = []
     for istructure, structure in enumerate(eos_output["relax"]["structure"]):
         if eos_output["relax"]["dir_name"][istructure] is not None:
             phonon_job = phonon_maker.make(
-                structure, prev_dir=eos_output["relax"]["dir_name"][istructure]
+                structure,
+                prev_dir=eos_output["relax"]["dir_name"][istructure],
+                supercell_matrix=supercell_matrix,
             )
         else:
-            phonon_job = phonon_maker.make(structure)
+            phonon_job = phonon_maker.make(structure, supercell_matrix=supercell_matrix)
         phonon_job.append_name(f" eos deformation {istructure + 1}")
         phonon_jobs.append(phonon_job)
         outputs.append(phonon_job.output)
@@ -92,6 +135,7 @@ def analyze_free_energy(
         output.volume_per_formula_unit * output.formula_units
         for output in phonon_outputs
     ]
+    supercell_matrix: list[list[float]] = phonon_outputs[0].supercell_matrix
 
     for itemp, temp in enumerate(phonon_outputs[0].temperatures):
         temperatures.append(float(temp))
@@ -129,5 +173,6 @@ def analyze_free_energy(
         pressure=pressure,
         formula_units=next(iter(set(formula_units))),
         eos_type=eos_type,
+        supercell_matrix=supercell_matrix,
         **kwargs,
     )
