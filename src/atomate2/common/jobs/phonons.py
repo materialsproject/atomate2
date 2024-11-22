@@ -122,17 +122,23 @@ def generate_phonon_displacements(
         scheme to generate kpath
     code:
         code to perform the computations
+
+    Returns
+    -------
+    List[Structure]
+        Displaced structures
     """
     warnings.warn(
         "Initial magnetic moments will not be considered for the determination "
         "of the symmetry of the structure and thus will be removed now.",
-        stacklevel=1,
+        stacklevel=2,
     )
-    cell = get_phonopy_structure(
-        structure.remove_site_property(property_name="magmom")
-        if "magmom" in structure.site_properties
-        else structure
-    )
+    if "magmom" in structure.site_properties:
+        # remove_site_property is in-place so make a structure copy first
+        no_mag_struct = structure.copy().remove_site_property(property_name="magmom")
+    else:
+        no_mag_struct = structure
+    cell = get_phonopy_structure(no_mag_struct)
     factor = get_factor(code)
 
     # a bit of code repetition here as I currently
