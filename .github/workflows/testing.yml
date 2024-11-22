@@ -79,7 +79,7 @@ jobs:
           git checkout develop
           mkdir build
           cd build
-          cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/alamode_install
+          cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/alamode_install -DBOOST_INCLUDE=/usr/include/boost
           make -j$(nproc)
           make install
 
