@@ -130,7 +130,6 @@ strict = [
 	"hiphive @ git+https://gitlab.com/jsyony37/hiphive.git@personal#egg=hiphive",
     "f90nml==1.4.4",
     "spglib>=2.2.0",
-    "phono3py",
     "scipy==1.14.1",
 ]
 strict-forcefields = [
