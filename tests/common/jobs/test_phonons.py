@@ -27,11 +27,11 @@ def test_supercell1(si_structure, tmp_dir):
 
 
 def test_supercell2(si_structure, tmp_dir):
-    super = get_supercell_size(
+    supercell = get_supercell_size(
         si_structure, min_length=8, max_length=20, prefer_90_degrees=True
     )
 
-    responses = run_locally(super, create_folders=True, ensure_success=True)
+    responses = run_locally(supercell, create_folders=True, ensure_success=True)
     assert_allclose(
-        responses[super.output.uuid][1].output, [[6, -2, 0], [0, 6, 0], [-3, -2, 5]]
+        responses[supercell.output.uuid][1].output, [[6, -2, 0], [0, 6, 0], [-3, -2, 5]]
     )
