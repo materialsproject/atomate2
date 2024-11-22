@@ -118,7 +118,8 @@ strict = [
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.12.2",
-    "hiphive==1.3.1"
+    "hiphive==1.3.1",
+    "f90nml==1.4.4",
 ]
 strict-forcefields = [
     "calorine==3.0",
