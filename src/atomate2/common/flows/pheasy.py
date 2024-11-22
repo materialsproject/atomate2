@@ -180,6 +180,7 @@ class BasePhononMaker(Maker, ABC):
     ther_cond_mesh: list = field(default_factory=lambda: [20, 20, 20])
     ther_cond_temp: list = field(default_factory=lambda: [100, 700, 100])
     min_length: float | None = 12.0
+    max_length: float | None = 16.0
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
@@ -306,6 +307,7 @@ class BasePhononMaker(Maker, ABC):
             supercell_job = get_supercell_size(
                 structure,
                 self.min_length,
+                self.max_length,
                 self.prefer_90_degrees,
                 **self.get_supercell_size_kwargs,
             )
