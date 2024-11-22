@@ -7,7 +7,7 @@ from typing import Any
 
 from custodian.jdftx.jobs import JDFTxJob
 from jobflow.utils import ValueEnum
-
+from atomate2 import SETTINGS
 from atomate2.jdftx.schemas.task import JDFTxStatus, TaskDoc
 
 
@@ -19,8 +19,7 @@ class JobType(ValueEnum):
 
 
 def get_jdftx_cmd():
-    current_dir = os.getcwd()
-    return f"docker run -t --rm -v {current_dir}:/root/research jdftx jdftx"
+    return SETTINGS.JDFTX_CMD
 
 
 def run_jdftx(

@@ -281,15 +281,16 @@ class JdftxInputGenerator(InputGenerator):
     def set_pseudos(
             self,
     ) -> None:
-        """Set ion-species tag corresponding to pseudopotentials
+        """Set ion-species tag corresponding to pseudopotentials.
         
         """
         if SETTINGS.JDFTX_PSEUDOS_DIR != None:
-            psuedos_str = str(
+            pseudos_str = str(
                 Path(SETTINGS.JDFTX_PSEUDOS_DIR) / Path(self.pseudopotentials)
             )
         else:
             pseudos_str = self.pseudopotentials
+            
         add_tags = []
         for suffix in _PSEUDO_CONFIG[self.pseudopotentials]["suffixes"]:
             add_tags.append(pseudos_str+"/$ID"+suffix)
