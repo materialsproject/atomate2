@@ -210,7 +210,6 @@ ignore = [
     "PLR0913", # too many arguments
     "PLR0915", # too many local statements
     "PLR2004",
-    "PT004",   # pytest-missing-fixture-name-underscore
     "PT006",   # pytest-parametrize-names-wrong-type
     "PT013",   # pytest-incorrect-pytest-import
     "PTH",     # prefer Pathlib to os.path

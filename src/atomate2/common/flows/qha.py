@@ -37,7 +37,7 @@ class CommonQhaMaker(Maker, ABC):
     Then we scale the relaxed structure, and
     then compute harmonic phonons for each scaled
     structure with Phonopy.
-    Finally, we compute the Gibb's free energy and
+    Finally, we compute the Gibbs free energy and
     other thermodynamic properties available from
     the quasi-harmonic approximation.
 
