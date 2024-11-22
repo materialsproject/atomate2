@@ -130,6 +130,7 @@ def get_endpoints_and_relax(
             ep_relax_output[ep_index] = {
                 "energy": relax_job.output.output.energy,
                 "structure": relax_job.output.structure,
+                "initial_structure": relax_job.output.input.structure,
             }
 
     flow = Flow(ep_relax_jobs, output=ep_relax_output)
@@ -265,8 +266,9 @@ def get_images_and_relax(
             image_relax_jobs.append(relax_job)
             image_relax_output[combo].append(
                 {
-                    "structure": relax_job.output.structure,
                     "energy": relax_job.output.output.energy,
+                    "structure": relax_job.output.structure,
+                    "initial_structure": relax_job.output.input.structure,
                 }
             )
 
@@ -489,6 +491,7 @@ def collate_results(
         hop = [endpoint_calcs[0], *images, endpoint_calcs[1]]
         hop_dict[combo_name] = NebResult(
             images=[calc["structure"] for calc in hop if calc["structure"] is not None],
+            initial_images = [calc["initial_structure"] for calc in hop if calc["initial_structure"] is not None],
             energies=[calc["energy"] for calc in hop if calc["energy"] is not None],
             ionic_steps=None,
             method=NebMethod.APPROX,

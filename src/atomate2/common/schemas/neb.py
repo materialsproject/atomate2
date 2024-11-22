@@ -16,6 +16,9 @@ class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
     images: list[Structure | Molecule] = Field(
         None, description="Relaxed structures/molecules along the reaction pathway."
     )
+    initial_images: list[Structure | Molecule] = Field(
+        None, description="Unrelaxed structures/molecules along the reaction pathway."
+    )
 
     energies: list[float] = Field(
         None, description="Energies corresponding the structures in `images`."
