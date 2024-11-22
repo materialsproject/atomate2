@@ -127,6 +127,11 @@ strict = [
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.12.2",
+	"hiphive @ git+https://gitlab.com/jsyony37/hiphive.git@personal#egg=hiphive",
+    "f90nml==1.4.4",
+    "spglib>=2.2.0",
+    "phono3py==2.8.0",
+    "scipy==1.14.1",
 ]
 strict-forcefields = [
     "calorine==3.0",
