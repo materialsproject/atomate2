@@ -491,7 +491,11 @@ def collate_results(
         hop = [endpoint_calcs[0], *images, endpoint_calcs[1]]
         hop_dict[combo_name] = NebResult(
             images=[calc["structure"] for calc in hop if calc["structure"] is not None],
-            initial_images = [calc["initial_structure"] for calc in hop if calc["initial_structure"] is not None],
+            initial_images=[
+                calc["initial_structure"]
+                for calc in hop
+                if calc["initial_structure"] is not None
+            ],
             energies=[calc["energy"] for calc in hop if calc["energy"] is not None],
             ionic_steps=None,
             method=NebMethod.APPROX,
