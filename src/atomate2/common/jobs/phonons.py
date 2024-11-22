@@ -19,8 +19,6 @@ from pymatgen.transformations.advanced_transformations import (
 )
 
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
-from atomate2.forcefields.jobs import ForceFieldStaticMaker
-from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -28,6 +26,8 @@ if TYPE_CHECKING:
     from emmet.core.math import Matrix3D
 
     from atomate2.aims.jobs.base import BaseAimsMaker
+    from atomate2.forcefields.jobs import ForceFieldStaticMaker
+    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 
 logger = logging.getLogger(__name__)
