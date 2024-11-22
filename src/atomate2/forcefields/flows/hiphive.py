@@ -12,12 +12,10 @@ from dataclasses import dataclass, field
 
 from atomate2.common.flows.hiphive import BaseHiphiveMaker
 from atomate2.forcefields.jobs import (
-    CHGNetRelaxMaker,
-    CHGNetStaticMaker,
     ForceFieldRelaxMaker,
     ForceFieldStaticMaker,
     MACERelaxMaker,
-    MACEStaticMaker
+    MACEStaticMaker,
 )
 
 logger = logging.getLogger(__name__)
@@ -52,7 +50,7 @@ class HiphiveMaker(BaseHiphiveMaker):
     7. Optional: Perform phonon renormalization at finite temperature - useful
        when unstable modes exist
     8. Optional: Solve the lattice thermal conductivity using ShengBTE and
-       output to the database.
+       output to the database
 
     Args
     ----------
@@ -96,4 +94,3 @@ class HiphiveMaker(BaseHiphiveMaker):
         calculations are performed for each ordering (relax -> static)
         """
         return
-
