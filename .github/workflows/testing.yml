@@ -68,7 +68,7 @@ jobs:
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           uv pip install .[strict,strict-forcefields,tests,abinit]
           uv pip install -i https://test.pypi.org/simple/ pheasy==0.0.1  # Install pheasy
-          micromamba install -n a2 -c conda-forge compilers openmpi boost eigen cmake spglib fftw scipy numpy h5py ipython --yes
+          micromamba install -n a2 -c conda-forge numpy scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include --yes  
           uv pip install torch-runstats
           uv pip install --no-deps nequip==0.5.6
 
