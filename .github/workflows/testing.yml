@@ -79,7 +79,9 @@ jobs:
           git checkout develop
           mkdir build
           cd build
-          cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/alamode_install -DBOOST_INCLUDE=/usr/include/boost
+          cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/alamode_install \
+                   -DBOOST_INCLUDE=$(micromamba info --base-env)/include/boost \
+                   -DEIGEN3_INCLUDE=$(micromamba info --base-env)/include/eigen3
           make -j$(nproc)
           make install
 
