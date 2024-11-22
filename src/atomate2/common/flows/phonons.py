@@ -107,6 +107,12 @@ class BasePhononMaker(Maker, ABC):
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
+        - create_force_constants_file: bool
+            If True, a force constants file will be created
+        - force_constants_filename: str
+            If store_force_constants is True, the file name to store the force constants
+        - calculate_pdos: bool
+            If True, the projected phonon density of states will be calculated
     create_thermal_displacements: bool
         Bool that determines if thermal_displacement_matrices are computed
     kpath_scheme: str
@@ -132,7 +138,9 @@ class BasePhononMaker(Maker, ABC):
     symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
+    max_length: float | None = None
     prefer_90_degrees: bool = True
+    allow_orthorhombic: bool = False
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = None
@@ -144,7 +152,14 @@ class BasePhononMaker(Maker, ABC):
         None
     )
     create_thermal_displacements: bool = True
-    generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
+    generate_frequencies_eigenvectors_kwargs: dict = field(
+        default_factory=lambda: {
+            "create_force_constants_file": False,
+            "force_constants_filename": "FORCE_CONSTANTS",
+            "calculate_pdos": False,
+        }
+    )
+
     kpath_scheme: str = "seekpath"
     code: str = None
     mp_id: str = None
@@ -253,9 +268,11 @@ class BasePhononMaker(Maker, ABC):
         # maker to ensure that cell lengths are really larger than threshold
         if supercell_matrix is None:
             supercell_job = get_supercell_size(
-                structure,
-                self.min_length,
-                self.prefer_90_degrees,
+                structure=structure,
+                min_length=self.min_length,
+                max_length=self.max_length,
+                prefer_90_degrees=self.prefer_90_degrees,
+                allow_orthorhombic=self.allow_orthorhombic,
                 **self.get_supercell_size_kwargs,
             )
             jobs.append(supercell_job)

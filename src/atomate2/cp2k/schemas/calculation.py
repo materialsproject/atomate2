@@ -89,8 +89,8 @@ class CalculationInput(BaseModel):
     @classmethod
     def remove_unnecessary(cls, atomic_kind_info: dict) -> dict:
         """Remove unnecessary entry from atomic_kind_info."""
-        for key in atomic_kind_info:
-            if "total_pseudopotential_energy" in atomic_kind_info[key]:
+        for key, value in atomic_kind_info.items():
+            if "total_pseudopotential_energy" in value:
                 del atomic_kind_info[key]["total_pseudopotential_energy"]
         return atomic_kind_info
 
@@ -480,12 +480,14 @@ def _get_basis_and_potential_files(dir_name: Path) -> dict[Cp2kObject, DataFile]
     the basis/potential contained in these files.
     """
     data: dict[Cp2kObject, DataFile] = {}
-    if Path.exists(dir_name / "BASIS"):
-        data[Cp2kObject.BASIS] = BasisFile.from_file(str(dir_name / "BASIS"))  # type: ignore[index]
-    if Path.exists(dir_name / "POTENTIAL"):
-        data[Cp2kObject.POTENTIAL] = PotentialFile.from_file(  # type: ignore[index]
-            str(dir_name / "POTENTIAL")
-        )
+    for filename, cls, cp2k_object in (
+        (dir_name / "BASIS", BasisFile, Cp2kObject.BASIS),
+        (dir_name / "POTENTIAL", PotentialFile, Cp2kObject.POTENTIAL),
+    ):
+        if filename.exists():
+            content = filename.read_text().strip()
+            if content not in ("None", ""):  # ignore empty files
+                data[cp2k_object] = cls.from_str(content)  # type: ignore[index]
     return data
 
 
@@ -524,9 +526,9 @@ def _get_volumetric_data(
         except Exception as err:
             raise ValueError(f"Failed to parse {file_type} at {file}.") from err
 
-    for file_type in volumetric_data:
+    for file_type, data in volumetric_data.items():
         if file_type.name in __is_stored_in_Ha__:
-            volumetric_data[file_type].scale(Ha_to_eV)
+            data.scale(Ha_to_eV)
 
     return volumetric_data
 
