@@ -70,8 +70,8 @@ jobs:
           uv pip install -i https://test.pypi.org/simple/ pheasy==0.0.1  # Install pheasy
           uv pip install torch-runstats
           uv pip install --no-deps nequip==0.5.6
-          micromamba install -n a2 -c conda-forge numpy scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include --yes  
-      
+          micromamba install -n a2 -c conda-forge numpy scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include openmpi --yes  
+
       - name: Install ALA-Mode
         run: |
           git clone https://github.com/ttadano/alamode.git
@@ -80,8 +80,8 @@ jobs:
           mkdir build
           cd build
           cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/alamode_install \
-                   -DBOOST_INCLUDE=$(micromamba info --base-env)/include/boost \
-                   -DEIGEN3_INCLUDE=$(micromamba info --base-env)/include/eigen3
+                   -DBOOST_INCLUDE=$CONDA_PREFIX/include/boost \
+                   -DEIGEN3_INCLUDE=$CONDA_PREFIX/include/eigen3
           make -j$(nproc)
           make install
 
