@@ -43,6 +43,16 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath>=2.0.0"]
+anharmonicphonons = [
+    "phonopy==2.21.2",
+	"hiphive @ git+https://gitlab.com/jsyony37/hiphive.git@personal#egg=hiphive",
+    "f90nml==1.4.4",
+    "spglib>=2.2.0",
+	"ase>=3.22.1",
+    "phono3py==2.8.0",
+    "numpy==1.26.4",
+    "scipy==1.14.1",
+    ]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
 defects = [
     "dscribe>=1.2.0",
