@@ -74,16 +74,10 @@ jobs:
 
       - name: Install ALA-Mode
         run: |
-          git clone https://github.com/ttadano/alamode.git
-          cd alamode
-          git checkout develop
-          mkdir build
-          cd build
-          cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/alamode_install \
-                   -DBOOST_INCLUDE=$CONDA_PREFIX/include/boost \
-                   -DEIGEN3_INCLUDE=$CONDA_PREFIX/include/eigen3
-          make -j$(nproc)
-          make install
+          git clone https://github.com/ttadano/ALM.git # do I need to modify this?
+          cd ALM # do I need to modify this?
+          python setup.py build # do I need to modify this?
+          uv pip install -e . # do I need to modify this?
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
