@@ -14,11 +14,9 @@ from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
-from pymatgen.transformations.advanced_transformations import (
-    CubicSupercellTransformation,
-)
 
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
+from atomate2.common.utils import get_supercell_matrix
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -82,44 +80,14 @@ def get_supercell_size(
     **kwargs:
         Additional parameters that can be set.
     """
-    kwargs.setdefault("force_diagonal", False)
-    common_kwds = dict(
-        min_length=min_length,
+    return get_supercell_matrix(
+        allow_orthorhombic=allow_orthorhombic,
         max_length=max_length,
-        min_atoms=kwargs.get("min_atoms"),
-        max_atoms=kwargs.get("max_atoms"),
-        step_size=kwargs.get("step_size", 0.1),
-        force_diagonal=kwargs["force_diagonal"],
+        min_length=min_length,
+        prefer_90_degrees=prefer_90_degrees,
+        structure=structure,
+        **kwargs,
     )
-
-    if not prefer_90_degrees:
-        transformation = CubicSupercellTransformation(
-            **common_kwds,
-            force_90_degrees=False,
-            allow_orthorhombic=allow_orthorhombic,
-        )
-        transformation.apply_transformation(structure=structure)
-    else:
-        try:
-            common_kwds.update({"max_atoms": kwargs.get("max_atoms", 1200)})
-            transformation = CubicSupercellTransformation(
-                **common_kwds,
-                force_90_degrees=True,
-                angle_tolerance=kwargs.get("angle_tolerance", 1e-2),
-                allow_orthorhombic=allow_orthorhombic,
-            )
-            transformation.apply_transformation(structure=structure)
-
-        except AttributeError:
-            transformation = CubicSupercellTransformation(
-                **common_kwds,
-                force_90_degrees=False,
-                allow_orthorhombic=allow_orthorhombic,
-            )
-            transformation.apply_transformation(structure=structure)
-
-    # matrix from pymatgen has to be transposed
-    return transformation.transformation_matrix.transpose().tolist()
 
 
 @job(data=[Structure])

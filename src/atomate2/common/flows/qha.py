@@ -10,17 +10,21 @@ from typing import TYPE_CHECKING, Literal
 from jobflow import Flow, Maker
 
 from atomate2.common.flows.eos import CommonEosMaker
-from atomate2.common.jobs.qha import analyze_free_energy, get_phonon_jobs
+from atomate2.common.jobs.qha import (
+    analyze_free_energy,
+    get_phonon_jobs,
+    get_supercell_size,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from emmet.core.math import Matrix3D
     from pymatgen.core import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
     from atomate2.vasp.jobs.core import BaseVaspMaker
-
 supported_eos = frozenset(("vinet", "birch_murnaghan", "murnaghan"))
 
 
@@ -71,6 +75,16 @@ class CommonQhaMaker(Maker, ABC):
         will be ignored
     eos_type: str
         Equation of State type used for the fitting. Defaults to vinet.
+    min_length: float
+        min length of the supercell that will be built
+    max_length: float
+        max length of the supercell that will be built
+    prefer_90_degrees: bool
+        if set to True, supercell algorithm will first try to find a supercell
+        with 3 90 degree angles
+    get_supercell_size_kwargs: dict
+        kwargs that will be passed to get_supercell_size to determine supercell size
+
     """
 
     name: str = "QHA Maker"
@@ -85,16 +99,27 @@ class CommonQhaMaker(Maker, ABC):
     skip_analysis: bool = False
     eos_type: Literal["vinet", "birch_murnaghan", "murnaghan"] = "vinet"
     analyze_free_energy_kwargs: dict = field(default_factory=dict)
-    # TODO: implement advanced handling of
-    #  imaginary modes in phonon runs (i.e., fitting procedures)
+    min_length: float | None = 20.0
+    max_length: float | None = None
+    prefer_90_degrees: bool = True
+    allow_orthorhombic: bool = False
+    get_supercell_size_kwargs: dict = field(default_factory=dict)
 
-    def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
+    def make(
+        self,
+        structure: Structure,
+        supercell_matrix: Matrix3D | None = None,
+        prev_dir: str | Path = None,
+    ) -> Flow:
         """Run an EOS flow.
 
         Parameters
         ----------
         structure : Structure
             A pymatgen structure object.
+        supercell_matrix: list
+            Instead of min_length, also a supercell_matrix can be given, e.g.
+            [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from.
 
@@ -116,14 +141,32 @@ class CommonQhaMaker(Maker, ABC):
             eos_relax_maker=self.eos_relax_maker,
             static_maker=None,
             postprocessor=None,
+            linear_strain=self.linear_strain,
             number_of_frames=self.number_of_frames,
         )
 
         eos_job = self.eos.make(structure)
         qha_jobs.append(eos_job)
 
+        # implement a supercell job to get matrix for just the equillibrium structure
+        if supercell_matrix is None:
+            supercell = get_supercell_size(
+                eos_output=eos_job.output,
+                min_length=self.min_length,
+                max_length=self.max_length,
+                prefer_90_degrees=self.prefer_90_degrees,
+                allow_orthorhombic=self.allow_orthorhombic,
+                **self.get_supercell_size_kwargs,
+            )
+            qha_jobs.append(supercell)
+            supercell_matrix = supercell.output
+
+        # pass the matrix to the phonon_jobs, allow to set a consistent matrix instead
+
         phonon_jobs = get_phonon_jobs(
-            phonon_maker=self.phonon_maker, eos_output=eos_job.output
+            phonon_maker=self.phonon_maker,
+            eos_output=eos_job.output,
+            supercell_matrix=supercell_matrix,
         )
         qha_jobs.append(phonon_jobs)
         if not self.skip_analysis:

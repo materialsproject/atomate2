@@ -69,6 +69,8 @@ class BasePhononMaker(Maker, ABC):
         displacement distance for phonons
     min_length: float
         min length of the supercell that will be built
+    max_length: float
+        max length of the supercell that will be built
     prefer_90_degrees: bool
         if set to True, supercell algorithm will first try to find a supercell
         with 3 90 degree angles
