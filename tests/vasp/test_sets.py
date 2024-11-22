@@ -52,7 +52,7 @@ def test_user_incar_settings():
 
     # check to see if user incar settings (even when set to nonsensical values, as done
     # below) are always preserved.
-    uis = {
+    user_settings = {
         "ALGO": "VeryFast",
         "EDIFF": 1e-30,
         "EDIFFG": -1e-10,
@@ -80,16 +80,16 @@ def test_user_incar_settings():
         "LDAUTYPE": 2,
     }
 
-    static_set_generator = StaticSetGenerator(user_incar_settings=uis)
+    static_set_generator = StaticSetGenerator(user_incar_settings=user_settings)
     incar = static_set_generator.get_input_set(structure, potcar_spec=True)["INCAR"]
 
-    for key in uis:
+    for key, val in user_settings.items():
         if isinstance(incar[key], str):
-            assert incar[key].lower() == uis[key].lower()
-        elif isinstance(uis[key], dict):
-            assert incar[key] == [uis[key][str(site.specie)] for site in structure]
+            assert incar[key].lower() == val.lower()
+        elif isinstance(val, dict):
+            assert incar[key] == [val[str(site.specie)] for site in structure]
         else:
-            assert incar[key] == uis[key]
+            assert incar[key] == val
 
 
 @pytest.mark.parametrize(
