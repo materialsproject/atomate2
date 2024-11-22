@@ -13,9 +13,25 @@ class JDFTxStatus(ValueEnum):
 class CalcType(ValueEnum):
     """JDFTx calculation type."""
 
-    PBE = "PBE"
-    HSE = "HSE"
-
+    GGA = "gga"
+    GGA_PBE = "gga-PBE"
+    GGA_PBESOL = "gga-PBEsol",
+    GGA_PW91 = "gga-PW91",
+    HARTREE_FOCK = "Hartree-Fock",
+    HYB_HSE06 = "hyb-HSE06",
+    HYB_HSE12 = "hyb-HSE12",
+    HYB_HSE12S = "hyb-HSE12s",
+    HYB_PBE0 = "hyb-PBE0",
+    LDA = "lda",
+    LDA_PW = "lda-PW",
+    LDA_PW_PREC = "lda-PW-prec",
+    LDA_PZ = "lda-PZ",
+    LDA_TETER = "lda-Teter",
+    LDA_VWN = "lda-VWN",
+    MGGA_REVTPSS = "mgga-revTPSS",
+    MGGA_TPSS = "mgga-TPSS",
+    ORB_GLLBSC = "orb-GLLBsc",
+    POT_LB94 = "pot-LB94"
 
 class TaskType(ValueEnum):
     """JDFTx task type."""

@@ -77,14 +77,9 @@ class TaskDoc(StructureMetadata):
     state: Optional[JDFTxStatus] = Field(
         None, description="State of this JDFTx calculation"
     )
-
-    # implemented in VASP and Qchem. Do we need this?
-    # it keeps a list of all calculations in a given task.
-    # calcs_reversed: Optional[list[Calculation]] = Field(
-    # None,
-    # title="Calcs reversed data",
-    # description="Detailed data for each JDFTx calculation contributing to the task document.",
-    # )
+    task_type: Optional[TaskType] = Field(
+        None, description="The type of task this calculation is"
+    )
 
     @classmethod
     def from_directory(
@@ -128,8 +123,7 @@ class TaskDoc(StructureMetadata):
             dir_name=dir_name,
             calc_outputs=calc_doc.output,
             calc_inputs=calc_doc.input,
-            # task_type=
-            # state=_get_state()
+            task_type=calc_doc.task_type,
         )
 
         doc = doc.model_copy(update=additional_fields)

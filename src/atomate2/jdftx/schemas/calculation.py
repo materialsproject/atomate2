@@ -29,26 +29,26 @@ class Convergence(BaseModel):
         True,
         description="Whether the JDFTx calculation converged"
     )
-    geom_converged: bool = Field(
+    geom_converged: Optional[bool] = Field(
         True,
         description="Whether the ionic/lattice optimization converged"
     )
-    elec_converged: bool = Field(
+    elec_converged: Optional[bool] = Field(
         True,
         description="Whether the last electronic optimization converged"
     )
-    geom_converged_reason: str = Field(
+    geom_converged_reason: Optional[str] = Field(
         None,
         description="Reason ionic/lattice convergence was reached"
     )
-    elec_converged_reason: str = Field(
+    elec_converged_reason: Optional[str] = Field(
         None,
         description="Reason electronic convergence was reached"
     )
 
     @classmethod
     def from_jdftxoutput(cls, jdftxoutput: JDFTXOutfile):
-        converged = jdftxoutput.is_converged()
+        converged = jdftxoutput.is_converged
         jstrucs = jdftxoutput.jstrucs
         geom_converged = jstrucs.geom_converged
         geom_converged_reason = jstrucs.geom_converged_reason
@@ -64,15 +64,21 @@ class Convergence(BaseModel):
 
 class RunStatistics(BaseModel):
     """JDFTx run statistics."""
-    total_time: float = Field(
-        0, description="Total wall time for this calculation"
+    total_time: Optional[float] = Field(
+        0, 
+        description="Total wall time for this calculation"
     )
 
     @classmethod
     def from_jdftxoutput(cls, jdftxoutput:JDFTXOutfile):
+        """Initialize RunStatistics from JDFTXOutfile"""
+        if hasattr(jdftxoutput, "t_s"):
+            t_s = jdftxoutput.t_s
+        else:
+            t_s = None
 
         return cls(
-            total_time=jdftxoutput.t_s
+            total_time=t_s
         )
 
 class CalculationInput(BaseModel):
@@ -81,7 +87,7 @@ class CalculationInput(BaseModel):
     structure: Structure = Field(
         None, description="input structure to JDFTx calculation"
     )
-    parameters: dict = Field(
+    jdftxinfile: dict = Field(
         None, 
         description="input tags in JDFTx in file"
     )
@@ -103,16 +109,12 @@ class CalculationInput(BaseModel):
         """
         return cls(
             structure=jdftxinput.structure,
-            parameters=jdftxinput.as_dict(),
+            jdftxinfile=jdftxinput.as_dict(),
         )
 
 
 class CalculationOutput(BaseModel):
     """Document defining JDFTx calculation outputs."""
-
-    # TODO Break out jdftxoutput into more dataclass fields instead of lumping
-    # everything into parameters.
-    # Waiting on parsers to be finished.
 
     structure: Optional[Structure] = Field(
         None,
@@ -120,7 +122,7 @@ class CalculationOutput(BaseModel):
     )
     parameters: Optional[dict] = Field(
         None,
-        description="calculation output parameters",
+        description="JDFTXOutfile dictionary from last JDFTx run",
     )
     forces: Optional[list] = Field(
         None, 
@@ -138,7 +140,7 @@ class CalculationOutput(BaseModel):
         None, 
         description="Fermi level of last electronic step"
     )
-    lowdin_charges: list = Field(
+    lowdin_charges: Optional[list] = Field(
         None, 
         description="Lowdin charges from last electronic optimizaiton"
     )
@@ -146,22 +148,22 @@ class CalculationOutput(BaseModel):
         None,
         description="Total system charge from last electronic step in number of electrons"
     )
-    stress: list[list] = Field(
+    stress: Optional[list[list]] = Field(
         None, 
         description="Stress from last lattice optimization step"
     )
-    cbm: int = Field(
+    cbm: Optional[int] = Field(
         None, 
         description="Conduction band minimum / LUMO from last electronic optimization"
     )
-    vbm: int = Field(
+    vbm: Optional[int] = Field(
         None,
         description="Valence band maximum /HOMO from last electonic optimization"
     )
     trajectory: Trajectory = Field(
         None,
         description="Ionic trajectory from last JDFTx run"
-    )
+    ),
     @classmethod
     def from_jdftxoutput(cls, jdftxoutput: JDFTXOutfile, **kwargs) -> "CalculationOutput":
         """
@@ -178,14 +180,23 @@ class CalculationOutput(BaseModel):
             The output document.
         """
         optimized_structure: JOutStructure = jdftxoutput.structure
-        forces = optimized_structure.forces.tolist()
+        if hasattr(optimized_structure, "forces"):
+            forces = optimized_structure.forces.tolist()
+        else:
+            forces = None
+        if hasattr(optimized_structure, "stress"):
+            if optimized_structure.stress == None:
+                stress = None
+            else:
+                stress = optimized_structure.stress.tolist()
+        else:
+            stress = None
         energy = jdftxoutput.e
         energy_type = jdftxoutput.eopt_type
         mu = jdftxoutput.mu
         lowdin_charges = optimized_structure.charges
         # total charge in number of electrons (negative of oxidation state)
         total_charge = jdftxoutput.total_electrons_uncharged - jdftxoutput.total_electrons
-        stress = optimized_structure.stress.tolist()
         cbm = jdftxoutput.lumo
         vbm = jdftxoutput.homo
         if kwargs.get("store_trajectory", True) == True:
@@ -193,19 +204,6 @@ class CalculationOutput(BaseModel):
         else:
             trajectory = None
 
-
-
-        fluid_outputs = jdftxoutput.jsettings_fluid
-        electronic_outputs = jdftxoutput.jsettings_electronic
-        lattice_outputs = jdftxoutput.jsettings_lattice
-        ionic_outputs = jdftxoutput.jsettings_ionic
-
-        parameters = {
-            "fluid_outputs": fluid_outputs,
-            "electronic_outputs": electronic_outputs,
-            "lattice_outputs": lattice_outputs,
-            "ionic_outputs": ionic_outputs,
-        }
 
         return cls(
             structure=optimized_structure, 
@@ -219,7 +217,7 @@ class CalculationOutput(BaseModel):
             cbm=cbm,
             vbm=vbm,
             trajectory=trajectory,
-            parameters=parameters
+            parameters=jdftxoutput.to_dict(),
         )
 
 class Calculation(BaseModel):
@@ -298,12 +296,13 @@ class Calculation(BaseModel):
 
         input_doc = CalculationInput.from_jdftxinput(jdftxinput,  **jdftxinput_kwargs)
         output_doc = CalculationOutput.from_jdftxoutput(jdftxoutput, **jdftxoutput_kwargs)
+        logging.log(logging.DEBUG, f"{output_doc}")
         converged = Convergence.from_jdftxoutput(jdftxoutput)
         run_stats = RunStatistics.from_jdftxoutput(jdftxoutput)
 
-        calc_type = calc_type(input_doc)
-        task_type = task_type(input_doc)
-        solvation_type = solvation_type(input_doc)
+        calc_type = _calc_type(output_doc)
+        task_type = _task_type(output_doc)
+        solvation_type = _solvation_type(input_doc)
 
         return cls(
             dir_name=str(dir_name),
@@ -317,27 +316,38 @@ class Calculation(BaseModel):
         )
 
 
-def task_type(
-    parameters: CalculationInput,
+def _task_type(
+    outputdoc: CalculationOutput,
 ) -> TaskType:
     """Return TaskType for JDFTx calculation."""
-    if parameters.job_type == "sp":
+    jdftxoutput: dict = outputdoc.parameters
+    if jdftxoutput.get("geom_opt") == False:
         return TaskType("Single Point")
-    if parameters.job_type == "opt":
-        return TaskType("Geometry Optimization")
-    if parameters.job_type == "freq":
-        return TaskType("Frequency")
-    if parameters.job_type == "md":
-        return TaskType("Molecular Dynamics")
+    else:
+        if jdftxoutput.get("geom_opt_type") == "lattice":
+            return TaskType("Lattice Optimization")
+        elif jdftxoutput.get("geom_opt_type") == "ionic":
+            return TaskType("Ionic Optimization")
+    #TODO implement MD and frequency task types. Waiting on output parsers
 
     return TaskType("Unknown")
 
-def calc_type(
-        parameters: CalculationInput,
+def _calc_type(
+        outputdoc: CalculationOutput ,
 ) -> CalcType:
-    pass
+    jdftxoutput = outputdoc.parameters
+    xc = jdftxoutput.get("xc_func", None)
+    return CalcType(xc)
 
-def solvation_type(
-        parameters: CalculationInput
+def _solvation_type(
+        inputdoc: CalculationInput
 ) -> SolvationType:
-    pass
+    jdftxinput: JDFTXInfile = inputdoc.jdftxinfile
+    fluid = jdftxinput.get("fluid", None)    
+    if fluid == None:
+        return SolvationType("None")
+    else:
+        fluid_solvent = jdftxinput.get("pcm-variant")
+        fluid_type = fluid.get("type")
+        solvation_type = f"{fluid_type} {fluid_solvent}"
+        return SolvationType(solvation_type)
