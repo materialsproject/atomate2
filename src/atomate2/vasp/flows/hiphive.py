@@ -44,7 +44,7 @@ class HiphiveMaker(BaseHiphiveMaker):
        rattle procedure. The atoms are perturbed roughly according to a
        normal deviation. A number of standard deviation perturbation distances
        are included. Multiple supercells may be generated for each perturbation
-       distance.
+       distance
     4. Run static VASP calculations on each perturbed supercell to calculate
        atomic forces.
     5. Aggregate the forces and conduct the fit atomic force constants using
@@ -72,61 +72,63 @@ class HiphiveMaker(BaseHiphiveMaker):
 
     name: str = "Lattice-Dynamics-VASP"
     bulk_relax_maker: DoubleRelaxMaker = field(
-        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(TightRelaxMaker(
-            input_set_generator=TightRelaxSetGenerator(
-                user_incar_settings={
-                    "PREC": "Accurate",
-                    "GGA": "PS",
-                    "IBRION": 2,
-                    "NSW": 20,
-                    "NELMIN": 5,
-                    "ISIF": 3,
-                    # "ENCUT": 648.744200,
-                    "EDIFF": 1.000000e-06,
-                    # "EDIFFG": -1.000000e-08,
-                    "ISMEAR": 0,
-                    "SIGMA": 1.000000e-02,
-                    "IALGO": 38,
-                    "LREAL": ".FALSE.",
-                    "ADDGRID": ".TRUE.",
-                    "LWAVE": ".FALSE.",
-                    "LCHARG": ".FALSE.",
-                    "NPAR": 4
-                }
+        default_factory=lambda: DoubleRelaxMaker.from_relax_maker(
+            TightRelaxMaker(
+                input_set_generator=TightRelaxSetGenerator(
+                    user_incar_settings={
+                        "PREC": "Accurate",
+                        "GGA": "PS",
+                        "IBRION": 2,
+                        "NSW": 20,
+                        "NELMIN": 5,
+                        "ISIF": 3,
+                        # "ENCUT": 648.744200,
+                        "EDIFF": 1.000000e-06,
+                        # "EDIFFG": -1.000000e-08,
+                        "ISMEAR": 0,
+                        "SIGMA": 1.000000e-02,
+                        "IALGO": 38,
+                        "LREAL": ".FALSE.",
+                        "ADDGRID": ".TRUE.",
+                        "LWAVE": ".FALSE.",
+                        "LCHARG": ".FALSE.",
+                        "NPAR": 4,
+                    }
+                )
             )
-        ))
+        )
     )
     phonon_displacement_maker: BaseVaspMaker | None = field(
-        default_factory=lambda:PhononDisplacementMaker(
-            input_set_generator = StaticSetGenerator(
-            user_kpoints_settings={"reciprocal_density": 100},
-            user_incar_settings={
-                "ADDGRID": True,
-                "ALGO": "Normal",
-                "EDIFF": 1e-06,
-                # "EDIFFG": -1.000000e-08,
-                "ENCUT": 600,
-                "GGA": "PS",
-                "IBRION": -1,
-                "ISIF": 3,
-                "ISMEAR": 0,
-                "ISPIN": 2,
-                "LAECHG": False,
-                "LASPH": True,
-                "LCHARG": False,
-                "LORBIT": 11,
-                "LREAL": "Auto",
-                "LVHAR": False,
-                "LVTOT": False,
-                "LWAVE": False,
-                # "MAGMOM": 250*0.6,
-                "NCORE": 6,
-                "NELM": 100,
-                "NSW": 0,
-                "PREC": "Accurate",
-                "SIGMA": 0.1, # changed from 0.1
+        default_factory=lambda: PhononDisplacementMaker(
+            input_set_generator=StaticSetGenerator(
+                user_kpoints_settings={"reciprocal_density": 100},
+                user_incar_settings={
+                    "ADDGRID": True,
+                    "ALGO": "Normal",
+                    "EDIFF": 1e-06,
+                    # "EDIFFG": -1.000000e-08,
+                    "ENCUT": 600,
+                    "GGA": "PS",
+                    "IBRION": -1,
+                    "ISIF": 3,
+                    "ISMEAR": 0,
+                    "ISPIN": 2,
+                    "LAECHG": False,
+                    "LASPH": True,
+                    "LCHARG": False,
+                    "LORBIT": 11,
+                    "LREAL": "Auto",
+                    "LVHAR": False,
+                    "LVTOT": False,
+                    "LWAVE": False,
+                    # "MAGMOM": 250*0.6,
+                    "NCORE": 6,
+                    "NELM": 100,
+                    "NSW": 0,
+                    "PREC": "Accurate",
+                    "SIGMA": 0.1,  # changed from 0.1
                 },
-            # auto_ispin=True,
+                # auto_ispin=True,
             )
         )
     )
