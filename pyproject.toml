@@ -43,6 +43,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath>=2.0.0"]
+pheasy = ["hiphive==1.3.1"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
 defects = [
     "dscribe>=1.2.0",
@@ -117,6 +118,7 @@ strict = [
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.12.2",
+    "hiphive==1.3.1"
 ]
 strict-forcefields = [
     "calorine==3.0",
