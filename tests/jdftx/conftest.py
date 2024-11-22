@@ -44,6 +44,14 @@ def mock_cwd(monkeypatch, request):
     ).resolve()
     monkeypatch.setattr(os, "getcwd", lambda: str(mock_path))
 
+@pytest.fixture(params=["sp_test", "ionicmin_test", "latticemin_test"])
+def task_name(request):
+    task_table = {
+        "sp_test": "Single Point",
+        "ionicmin_test": "Ionic Optimization",
+        "latticemin_test": "Lattice Optimization"
+    }
+    return task_table[request.param]
 
 @pytest.fixture
 def mock_filenames(monkeypatch):

@@ -7,7 +7,7 @@ ion Si  0.250000000000  0.250000000000  0.250000000000 1
 ion Si  0.000000000000  0.000000000000  0.000000000000 1
 core-overlap-check none
 ion-species GBRV_v1.5/$ID_pbe_v1.uspp
-
+kpoint-folding 7 7 7
 symmetries none
 
 elec-ex-corr gga
@@ -17,6 +17,7 @@ elec-smearing Fermi 0.001
 spintype z-spin
 elec-initial-magnetization 5 no
 converge-empty-states yes
+coulomb-interaction Periodic  
 
 lattice-minimize \
     nIterations 0
@@ -32,4 +33,4 @@ pcm-variant CANDLE
 
 dump-name jdftx.$VAR
 band-projection-params yes no
-dump End Dtot State
+dump End Dtot State BandEigs BandProjections BoundCharge DOS Ecomponents EigStats ElecDensity Forces KEdensity VfluidTot
