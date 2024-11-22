@@ -76,6 +76,7 @@ jobs:
         run: |
           git clone https://github.com/ttadano/ALM.git # do I need to modify this?
           cd ALM # do I need to modify this?
+          cd python
           python setup.py build # do I need to modify this?
           uv pip install -e . # do I need to modify this?
 
