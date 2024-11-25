@@ -155,7 +155,7 @@ class GruneisenParameterDocument(StructureMetadata):
                 mesh=mesh,
                 shift=compute_gruneisen_param_kwargs.get("shift"),
                 is_gamma_center=compute_gruneisen_param_kwargs.get(
-                    "is_gamma_center", True
+                    "is_gamma_center", False
                 ),
                 is_time_reversal=compute_gruneisen_param_kwargs.get(
                     "is_time_reversal", True
@@ -175,7 +175,7 @@ class GruneisenParameterDocument(StructureMetadata):
                 mesh=kpoint.kpts[0],
                 shift=compute_gruneisen_param_kwargs.get("shift"),
                 is_gamma_center=compute_gruneisen_param_kwargs.get(
-                    "is_gamma_center", True
+                    "is_gamma_center", False
                 ),
                 is_time_reversal=compute_gruneisen_param_kwargs.get(
                     "is_time_reversal", True
