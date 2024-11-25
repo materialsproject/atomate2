@@ -287,8 +287,8 @@ def test_phonon_wf_vasp_only_displacements_kpath(
     assert ph_doc.total_dft_energy is None
     assert ph_doc.born is None
     assert ph_doc.epsilon_static is None
-    assert ph_doc.supercell_matrix.tolist() == ((1, 0, 0), (0, 1, 0), (0, 0, 1))
-    assert ph_doc.primitive_matrix.tolist() == ((1, 0, 0), (0, 1, 0), (0, 0, 1))
+    assert ph_doc.supercell_matrix == ((-1, 1, 1), (1, -1, 1), (1, 1, -1))
+    assert ph_doc.primitive_matrix == ((1, 0, 0), (0, 1, 0), (0, 0, 1))
     assert ph_doc.code == "vasp"
     assert isinstance(
         ph_doc.phonopy_settings,
