@@ -250,17 +250,17 @@ def get_relaxed_job_summaries(
     """
     relax_jobs = []
     outputs = []
-    for ii, structure in enumerate(structures):
+    for idx, structure in enumerate(structures):
         job_ = relax_maker.make(structure=structure)
         relax_jobs.append(job_)
-        job_.append_name(f" {append_name} ({ii})")
-        d_ = {
-            "structure": job_.output.structure,
-            "entry": job_.output.entry,
-            "dir_name": job_.output.dir_name,
-            "uuid": job_.output.uuid,
-        }
-        outputs.append(RelaxJobSummary(**d_))
+        job_.append_name(f" {append_name} ({idx})")
+        job_summary = RelaxJobSummary(
+            structure=job_.output.structure,
+            entry=job_.output.entry,
+            dir_name=job_.output.dir_name,
+            uuid=job_.output.uuid,
+        )
+        outputs.append(job_summary)
 
     replace_flow = Flow(relax_jobs, output=outputs)
     return Response(replace=replace_flow, output=outputs)
