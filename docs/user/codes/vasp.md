@@ -1,4 +1,5 @@
 (codes.vasp)=
+
 # VASP
 
 At present, most workflows in atomate2 use the Vienna *ab initio* simulation package
@@ -260,20 +261,18 @@ With the help of phonopy, these forces are then converted into a dynamical matri
 The dynamical matrices of three structures are then used as an input to the phonopy Grueneisen api
 to compute mode-dependent Grueneisen parameters.
 
-
 ### Quasi-harmonic Workflow
+
 Uses the quasi-harmonic approximation with the help of Phonopy to compute thermodynamic properties.
 First, a tight relaxation is performed. Subsequently, several optimizations at different constant
 volumes are performed. At each of the volumes, an additional phonon run is performed as well.
 Afterwards, equation of state fits are performed with phonopy.
 
-
-
 ### Equation of State Workflow
+
 An equation of state workflow is implemented. First, a tight relaxation is performed. Subsequently, several optimizations at different constant
 volumes are performed. Additional static calculations might be performed afterwards to arrive at more
 accurate energies. Then, an equation of state fit is performed with pymatgen.
-
 
 ### LOBSTER
 

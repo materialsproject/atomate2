@@ -25,28 +25,24 @@ if TYPE_CHECKING:
     from atomate2.common.flows.phonons import BasePhononMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker
     from atomate2.vasp.jobs.core import BaseVaspMaker
+
 supported_eos = frozenset(("vinet", "birch_murnaghan", "murnaghan"))
 
 
 @dataclass
 class CommonQhaMaker(Maker, ABC):
-    """
-    Use the quasi-harmonic approximation.
+    """Use the quasi-harmonic approximation.
 
-    First relax a structure.
-    Then we scale the relaxed structure, and
-    then compute harmonic phonons for each scaled
-    structure with Phonopy.
-    Finally, we compute the Gibbs free energy and
-    other thermodynamic properties available from
-    the quasi-harmonic approximation.
+    First relax a structure. Then we scale the relaxed structure, and then compute
+    harmonic phonons for each scaled structure with Phonopy. Finally, we compute the
+    Gibbs free energy and other thermodynamic properties available from the
+    quasi-harmonic approximation.
 
     Note: We do not consider electronic free energies so far.
     This might be problematic for metals (see e.g.,
     Wolverton and Zunger, Phys. Rev. B, 52, 8813 (1994).)
 
-    Note: Magnetic Materials have never been computed with
-    this workflow.
+    Note: Magnetic Materials have never been computed with this workflow.
 
     Parameters
     ----------
@@ -84,7 +80,6 @@ class CommonQhaMaker(Maker, ABC):
         with 3 90 degree angles
     get_supercell_size_kwargs: dict
         kwargs that will be passed to get_supercell_size to determine supercell size
-
     """
 
     name: str = "QHA Maker"
@@ -128,10 +123,7 @@ class CommonQhaMaker(Maker, ABC):
         .Flow, a QHA flow
         """
         if self.eos_type not in supported_eos:
-            raise ValueError(
-                "EOS not supported.",
-                "Please choose 'vinet', 'birch_murnaghan', 'murnaghan'",
-            )
+            raise ValueError(f"EOS not supported. Choose one of {set(supported_eos)}")
 
         qha_jobs = []
 
@@ -148,7 +140,7 @@ class CommonQhaMaker(Maker, ABC):
         eos_job = self.eos.make(structure)
         qha_jobs.append(eos_job)
 
-        # implement a supercell job to get matrix for just the equillibrium structure
+        # implement a supercell job to get matrix for just the equilibrium structure
         if supercell_matrix is None:
             supercell = get_supercell_size(
                 eos_output=eos_job.output,
@@ -162,7 +154,6 @@ class CommonQhaMaker(Maker, ABC):
             supercell_matrix = supercell.output
 
         # pass the matrix to the phonon_jobs, allow to set a consistent matrix instead
-
         phonon_jobs = get_phonon_jobs(
             phonon_maker=self.phonon_maker,
             eos_output=eos_job.output,

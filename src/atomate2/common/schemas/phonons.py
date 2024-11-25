@@ -201,7 +201,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
     born: Optional[list[Matrix3D]] = Field(
         None,
-        description="born charges as computed from phonopy. Only for symmetrically "
+        description="Born charges as computed from phonopy. Only for symmetrically "
         "different atoms",
     )
 
@@ -280,7 +280,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         epsilon_static: Matrix3D
             The high-frequency dielectric constant
         born: Matrix3D
-            born charges
+            Born charges
         **kwargs:
             additional arguments
         """
@@ -329,7 +329,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 )
             else:
                 raise ValueError(
-                    "Number of born charges does not agree with number of atoms"
+                    "Number of Born charges does not agree with number of atoms"
                 )
             if code == "vasp" and not np.all(np.isclose(borns, 0.0)):
                 phonon.nac_params = {
@@ -595,7 +595,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         **kpath_kwargs:
             additional parameters that can be passed to this method as a dict
         """
-        if kpath_scheme in ("setyawan_curtarolo", "latimer_munro", "hinuma"):
+        valid_schemes = {"setyawan_curtarolo", "latimer_munro", "hinuma", "seekpath"}
+        if kpath_scheme in (valid_schemes - {"seekpath"}):
             high_symm_kpath = HighSymmKpath(
                 structure, path_type=kpath_scheme, symprec=symprec, **kpath_kwargs
             )
@@ -604,7 +605,9 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             high_symm_kpath = KPathSeek(structure, symprec=symprec, **kpath_kwargs)
             kpath = high_symm_kpath._kpath  # noqa: SLF001
         else:
-            raise ValueError(f"Unexpected {kpath_scheme=}")
+            raise ValueError(
+                f"Unexpected {kpath_scheme=}, must be one of {valid_schemes}"
+            )
 
         path = copy.deepcopy(kpath["path"])
 

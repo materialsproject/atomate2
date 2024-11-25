@@ -188,7 +188,7 @@ class BasePhononMaker(Maker, ABC):
         prev_dir : str or Path or None
             A previous calculation directory to use for copying outputs.
         born: Matrix3D
-            Instead of recomputing born charges and epsilon, these values can also be
+            Instead of recomputing Born charges and epsilon, these values can also be
             provided manually. If born and epsilon_static are provided, the born run
             will be skipped it can be provided in the VASP convention with information
             for every atom in unit cell. Please be careful when converting structures
