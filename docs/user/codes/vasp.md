@@ -273,6 +273,20 @@ Afterwards, equation of state fits are performed with phonopy.
 An equation of state workflow is implemented. First, a tight relaxation is performed. Subsequently, several optimizations at different constant
 volumes are performed. Additional static calculations might be performed afterwards to arrive at more
 accurate energies. Then, an equation of state fit is performed with pymatgen.
+The output of the workflow is, by default, a dictionary containing the energy and volume data generated
+with DFT, in addition to fitted equation of state parameters for all models currently available in
+pymatgen (Murnaghan, Birch-Murnaghan, Poirier-Tarantola, and Vinet/UBER).
+
+If the user wishes to reproduce the equation of state data currently in the Materials Project,
+they should use the atomate 1-compatible `MPLegacy`-prefixed flows (and jobs and input sets).
+For performing updated PBE-GGA equation of state flows with Materials Project-compliant parameters,
+the user should use the `MPGGA`-prefixed classes.
+Last, the `MPMetaGGA`-prefixed classes allow the user to perform Materials Project-compliant r<sup>2</sup>SCAN
+equation of state workflows.
+
+**To summarize:** for MP compliant equation of state workflows, the user should use `MPGGAEosMaker` for faster,
+lower-accuracy calculations; `MPMetaGGAEosMaker` for higher-accuracy but slower calculations;
+and `MPLegacyEosMaker` for consistency with the data currently hosted by the Materials Project.
 
 ### LOBSTER
 
