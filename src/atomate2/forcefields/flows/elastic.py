@@ -11,10 +11,12 @@ from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
+    from typing import Any
+
     from typing_extensions import Self
 
 # default options for the forcefield makers in ElasticMaker
-_DEFAULT_RELAX_KWARGS = {
+_DEFAULT_RELAX_KWARGS: dict[str, Any] = {
     "force_field_name": "CHGNet",
     "relax_kwargs": {"fmax": 0.00001},
 }
@@ -120,13 +122,13 @@ class ElasticMaker(BaseElasticMaker):
         -------
         ElasticMaker
         """
-        default_kwargs = {
+        default_kwargs: dict[str, Any] = {
             **_DEFAULT_RELAX_KWARGS,
             **(mlff_kwargs or {}),
             "force_field_name": _get_formatted_ff_name(force_field_name),
         }
         return cls(
-            name=f"{force_field_name.split('MLFF.')[-1]} elastic",
+            name=f"{str(force_field_name).split('MLFF.')[-1]} elastic",
             bulk_relax_maker=ForceFieldRelaxMaker(
                 relax_cell=True,
                 **default_kwargs,
