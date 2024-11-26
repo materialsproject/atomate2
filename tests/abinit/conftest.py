@@ -26,6 +26,13 @@ def abinit_test_dir(test_dir):
     return test_dir / "abinit"
 
 
+@pytest.fixture(scope="session", autouse=True)
+def load_pseudos(abinit_test_dir):
+    import abipy.flowtk.psrepos
+
+    abipy.flowtk.psrepos.REPOS_ROOT = str(abinit_test_dir / "pseudos")
+
+
 @pytest.fixture(scope="session")
 def abinit_integration_tests(pytestconfig):
     return pytestconfig.getoption("abinit_integration")
@@ -134,7 +141,7 @@ def check_run_abi(ref_path: str | Path):
         ref_str = file.read()
     ref = AbinitInputFile.from_string(ref_str.decode("utf-8"))
     # Ignore the pseudos as the directory depends on the pseudo root directory
-    diffs = user.get_differences(ref, ignore_vars=["pseudos"])
+    diffs = user.get_differences(ref, ignore_vars=["pseudos", "pp_dirpath"])
     # TODO: should we still add some check on the pseudos here ?
     assert diffs == [], "'run.abi' is different from reference."
 
