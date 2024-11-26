@@ -3,11 +3,13 @@ from jobflow import run_locally
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2.common.schemas.elastic import ElasticDocument
+from atomate2.forcefields import MLFF
 from atomate2.forcefields.flows.elastic import ElasticMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 
-def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir):
+@pytest.mark.parametrize("convenience_constructor", [True, False])
+def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir, convenience_constructor : bool):
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
     model_path = f"{test_dir}/forcefields/mace/MACE.model"
     common_kwds = {
@@ -16,10 +18,17 @@ def test_elastic_wf_with_mace(clean_dir, si_structure, test_dir):
         "relax_kwargs": {"fmax": 0.00001},
     }
 
-    flow = ElasticMaker(
-        bulk_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=True),
-        elastic_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=False),
-    ).make(si_prim)
+    if convenience_constructor:
+        common_kwds.pop("force_field_name")
+        flow = ElasticMaker.from_force_field_name(
+            force_field_name = "MACE",
+            mlff_kwargs = common_kwds,
+        ).make(si_prim)
+    else:
+        flow = ElasticMaker(
+            bulk_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=True),
+            elastic_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=False),
+        ).make(si_prim)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)

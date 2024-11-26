@@ -3,11 +3,21 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.elastic import BaseElasticMaker
+from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
+if TYPE_CHECKING:
+    from typing_extensions import Self
+
+# default options for the forcefield makers in ElasticMaker 
+_DEFAULT_RELAX_KWARGS = {
+    "force_field_name": "CHGNet",
+    "relax_kwargs": {"fmax": 0.00001}
+}
 
 @dataclass
 class ElasticMaker(BaseElasticMaker):
@@ -62,16 +72,14 @@ class ElasticMaker(BaseElasticMaker):
     symprec: float = SETTINGS.SYMPREC
     bulk_relax_maker: ForceFieldRelaxMaker | None = field(
         default_factory=lambda: ForceFieldRelaxMaker(
-            force_field_name="CHGNet",
             relax_cell=True,
-            relax_kwargs={"fmax": 0.00001},
+            **_DEFAULT_RELAX_KWARGS
         )
     )
     elastic_relax_maker: ForceFieldRelaxMaker | None = field(
         default_factory=lambda: ForceFieldRelaxMaker(
-            force_field_name="CHGNet",
             relax_cell=False,
-            relax_kwargs={"fmax": 0.00001},
+            **_DEFAULT_RELAX_KWARGS
         )
     )  # constant volume relaxation
     max_failed_deformations: int | float | None = None
@@ -89,3 +97,45 @@ class ElasticMaker(BaseElasticMaker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
+
+    @classmethod
+    def from_force_field_name(
+        cls,
+        force_field_name: str | MLFF,
+        mlff_kwargs : dict | None = None,
+        **kwargs,
+    ) -> Self:
+        """
+        Create an elastic flow from a forcefield name.
+
+        Parameters
+        ----------
+        force_field_name : str or .MLFF
+            The name of the force field.
+        mlff_kwargs : dict or None (default)
+            kwargs to pass to `ForceFieldRelaxMaker`.
+        **kwargs
+            Additional kwargs to pass to ElasticMaker.
+
+        Returns
+        -------
+        ElasticMaker
+        """
+
+        default_kwargs = {
+            **_DEFAULT_RELAX_KWARGS,
+            **(mlff_kwargs or {}),
+            "force_field_name": _get_formatted_ff_name(force_field_name),
+        }
+        return cls(
+            name = f"{force_field_name.split('MLFF.')[-1]} elastic",
+            bulk_relax_maker = ForceFieldRelaxMaker(
+                relax_cell=True,
+                **default_kwargs,
+            ),
+            elastic_relax_maker = ForceFieldRelaxMaker(
+                relax_cell=False,
+                **default_kwargs,
+            ),
+            **kwargs
+        )
