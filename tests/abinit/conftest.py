@@ -33,6 +33,13 @@ def load_pseudos(abinit_test_dir):
     abipy.flowtk.psrepos.REPOS_ROOT = str(abinit_test_dir / "pseudos")
 
 
+@pytest.fixture(scope="session", autouse=True)
+def load_manager(abinit_test_dir):
+    import abipy.flowtk.tasks
+
+    abipy.flowtk.tasks.TaskManager.USER_CONFIG_DIR = str(abinit_test_dir / "abipy")
+
+
 @pytest.fixture(scope="session")
 def abinit_integration_tests(pytestconfig):
     return pytestconfig.getoption("abinit_integration")

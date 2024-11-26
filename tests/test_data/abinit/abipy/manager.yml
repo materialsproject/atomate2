@@ -1,0 +1,17 @@
+qadapters:
+    # List of qadapters objects 
+    - priority: 1
+      queue:
+        qtype: shell
+        qname: localhost
+      job:
+        mpi_runner: "mpirun"
+
+      limits:
+        timelimit: 0:05:00
+        max_cores: 2
+      hardware:
+         num_nodes: 1
+         sockets_per_node: 1
+         cores_per_socket: 10
+         mem_per_node: 1 Gb
