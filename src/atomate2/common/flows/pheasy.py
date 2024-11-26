@@ -1,4 +1,4 @@
-"""Flows for calculating phonons."""
+"""Flow for calculating (an)harmonic FCs and phonon energy renorma. with pheasy."""
 
 from __future__ import annotations
 
@@ -8,19 +8,16 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
-from atomate2 import SETTINGS
-from atomate2.common.jobs.phonons import (
+from atomate2.common.jobs.pheasy import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
-    get_supercell_size,
-    get_total_energy_per_cell,
     run_phonon_displacements,
 )
+from atomate2.common.jobs.phonons import get_supercell_size, get_total_energy_per_cell
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 
 if TYPE_CHECKING:
     from pathlib import Path
-    from typing import Literal
 
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
@@ -29,51 +26,85 @@ if TYPE_CHECKING:
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields", "ase"))
+SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields"))
 
 
 @dataclass
 class BasePhononMaker(Maker, ABC):
-    """
-    Maker to calculate harmonic phonons with a DFT/force field code and Phonopy.
+    """Maker to calculate harmonic phonons with LASSO-based ML code Pheasy.
 
-    Calculate the harmonic phonons of a material. Initially, a tight structural
-    relaxation is performed to obtain a structure without forces on the atoms.
-    Subsequently, supercells with one displaced atom are generated and accurate
-    forces are computed for these structures. With the help of phonopy, these
-    forces are then converted into a dynamical matrix. To correct for polarization
-    effects, a correction of the dynamical matrix based on BORN charges can
-    be performed. Finally, phonon densities of states, phonon band structures
-    and thermodynamic properties are computed.
+    Calculate the zero-K harmonic phonons of a material and higher-order FCs.
+    Initially, a tight structural relaxation is performed to obtain a structure
+    without forces on the atoms. Subsequently, supercells with all atoms displaced
+    by a small amplitude (generally using 0.01 A) are generated and accurate forces
+    are computed for these structures for the second order force constants. With the
+    help of pheasy (LASSO technique), these forces are then converted into a dynamical
+    matrix. In this Workflow, we separate the harmonic phonon calculations and
+    anharmonic force constants calculations. To correct for polarization effects, a
+    correction of the dynamical matrix based on BORN charges can be performed. Finally,
+    phonon densities of states, phonon band structures and thermodynamic properties
+    are computed. For the anharmonic force constants, the supercells with all atoms
+    displaced by a larger amplitude (generally using 0.08 A) are generated and accurate
+    forces are computed for these structures. With the help of pheasy (LASSO technique),
+    the third- and fourth-order force constants are extracted at once.
 
     .. Note::
         It is heavily recommended to symmetrize the structure before passing it to
-        this flow. Otherwise, a different space group might be detected and too
-        many displacement calculations will be generated.
-        It is recommended to check the convergence parameters here and
-        adjust them if necessary. The default might not be strict enough
-        for your specific case.
+        this flow. Otherwise, a different space group might be detected and too many
+        displacement calculations will be required for pheasy phonon calculation. It
+        is recommended to check the convergence parameters here and adjust them if
+        necessary. The default might not be strict enough for your specific case.
+        Additionally, for high-throughoput calculations, it is recommended to calculate
+        the residual forces on the atoms in the supercell after the relaxation. Then the
+        forces on displaced supercells can deduct the residual forces to reduce the
+        error in the dynamical matrix.
 
     Parameters
     ----------
     name : str
-        Name of the flows produced by this maker.
+        Name of the flow produced by this maker.
     sym_reduce : bool
         Whether to reduce the number of deformations using symmetry.
     symprec : float
         Symmetry precision to use in the
         reduction of symmetry to find the primitive/conventional cell
         (use_primitive_standard_structure, use_conventional_standard_structure)
-        and to handle all symmetry-related tasks in phonopy
+        and to handle all symmetry-related tasks in pheasy, we recommend to
+        use the value of 1e-3.
     displacement: float
-        displacement distance for phonons
+        displacement distance for phonons, for most cases 0.01 A is a good choice,
+        but it can be increased to 0.02 A for heavier elements.
+    num_displaced_supercells: int
+        number of displacements to be generated using a random-displacement approach
+        for harmonic phonon calculations. The default value is 0 and the number of
+        displacements is automatically determined by the number of atoms in the
+        supercell and its space group.
+    cal_anhar_fcs: bool
+        if set to True, anharmonic force constants(FCs) up to fourth-order FCs will
+        be calculated. The default value is False, and only harmonic phonons will
+        be calculated.
+    displacement_anhar: float
+        displacement distance for anharmonic force constants(FCs) up to fourth-order
+        FCs, for most cases 0.08 A is a good choice, but it can be increased to 0.1 A.
+    num_disp_anhar: int
+        number of displacements to be generated using a random-displacement approach
+        for anharmonic phonon calculations. The default value is 0 and the number of
+        displacements is automatically determined by the number of atoms in the
+        supercell, cutoff distance for anharmonic FCs its space group. generally,
+        50 large-distance displacements are enough for most cases.
+    fcs_cutoff_radius: list
+        cutoff distance for anharmonic force constants(FCs) up to fourth-order FCs.
+        The default value is [-1, 12, 10], which means that the cutoff distance for
+        second-order FCs is the Wigner-Seitz cell boundary and the cutoff distance
+        for third-order FCs is 12 Borh, and the cutoff distance for fourth-order FCs
+        is 10 Bohr. Generally, the default value is good enough.
     min_length: float
-        min length of the supercell that will be built
-    max_length: float
-        max length of the supercell that will be built
+        minimum length of lattice constants will be used to create the supercell,
+        the default value is 14.0 A. In most cases, the default value is good
+        enough, but it can be increased for larger supercells.
     prefer_90_degrees: bool
         if set to True, supercell algorithm will first try to find a supercell
-        with 3 90 degree angles
+        with 3 90 degree angles.
     get_supercell_size_kwargs: dict
         kwargs that will be passed to get_supercell_size to determine supercell size
     use_symmetrized_structure: str
@@ -109,12 +140,6 @@ class BasePhononMaker(Maker, ABC):
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
-        - create_force_constants_file: bool
-            If True, a force constants file will be created
-        - force_constants_filename: str
-            If store_force_constants is True, the file name to store the force constants
-        - calculate_pdos: bool
-            If True, the projected phonon density of states will be calculated
     create_thermal_displacements: bool
         Bool that determines if thermal_displacement_matrices are computed
     kpath_scheme: str
@@ -129,22 +154,36 @@ class BasePhononMaker(Maker, ABC):
         to the primitive cell and not pymatgen
     code: str
         determines the dft or force field code.
+    mp_id: str
+        The mp_id of the material in the Materials Project database.
     store_force_constants: bool
         if True, force constants will be stored
     socket: bool
         If True, use the socket for the calculation
+
     """
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = SETTINGS.PHONON_SYMPREC
+    symprec: float = 1e-3
     displacement: float = 0.01
-    min_length: float | None = 20.0
-    max_length: float | None = None
+    num_displaced_supercells: int = 0
+    cal_anhar_fcs: bool = False
+    displacement_anhar: float = 0.08
+    num_disp_anhar: int = 0
+    fcs_cutoff_radius: list = field(
+        default_factory=lambda: [-1, 12, 10]
+    )  # units in Bohr
+    renorm_phonon: bool = False
+    renorm_temp: list = field(default_factory=lambda: [100, 700, 100])
+    cal_ther_cond: bool = False
+    ther_cond_mesh: list = field(default_factory=lambda: [20, 20, 20])
+    ther_cond_temp: list = field(default_factory=lambda: [100, 700, 100])
+    min_length: float | None = 12.0
+    max_length: float | None = 16.0
     prefer_90_degrees: bool = True
-    allow_orthorhombic: bool = False
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
+    use_symmetrized_structure: str | None = None
     bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = None
     static_energy_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = (
         None
@@ -153,15 +192,8 @@ class BasePhononMaker(Maker, ABC):
     phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker = (
         None
     )
-    create_thermal_displacements: bool = True
-    generate_frequencies_eigenvectors_kwargs: dict = field(
-        default_factory=lambda: {
-            "create_force_constants_file": False,
-            "force_constants_filename": "FORCE_CONSTANTS",
-            "calculate_pdos": False,
-        }
-    )
-
+    create_thermal_displacements: bool = False
+    generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     code: str = None
     mp_id: str = None
@@ -188,7 +220,7 @@ class BasePhononMaker(Maker, ABC):
         prev_dir : str or Path or None
             A previous calculation directory to use for copying outputs.
         born: Matrix3D
-            Instead of recomputing Born charges and epsilon, these values can also be
+            Instead of recomputing born charges and epsilon, these values can also be
             provided manually. If born and epsilon_static are provided, the born run
             will be skipped it can be provided in the VASP convention with information
             for every atom in unit cell. Please be careful when converting structures
@@ -267,14 +299,16 @@ class BasePhononMaker(Maker, ABC):
             optimization_run_uuid = bulk.output.uuid
 
         # if supercell_matrix is None, supercell size will be determined after relax
-        # maker to ensure that cell lengths are really larger than threshold
+        # maker to ensure that cell lengths are really larger than threshold.
+        # Note that If one wants to calculate the lattice thermal conductivity,
+        # the supercell dimensions should be forced to be diagonal, e.g.
+        # supercell_matrix = [[2, 0, 0], [0, 2, 0], [0, 0, 2]]
         if supercell_matrix is None:
             supercell_job = get_supercell_size(
-                structure=structure,
-                min_length=self.min_length,
-                max_length=self.max_length,
-                prefer_90_degrees=self.prefer_90_degrees,
-                allow_orthorhombic=self.allow_orthorhombic,
+                structure,
+                self.min_length,
+                self.max_length,
+                self.prefer_90_degrees,
                 **self.get_supercell_size_kwargs,
             )
             jobs.append(supercell_job)
@@ -306,11 +340,16 @@ class BasePhononMaker(Maker, ABC):
             jobs.append(compute_total_energy_job)
             total_dft_energy = compute_total_energy_job.output
 
-        # get a phonon object from phonopy
+        # get a phonon object from pheasy code using the random-displacement approach
         displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
+            num_displaced_supercells=self.num_displaced_supercells,
+            cal_anhar_fcs=self.cal_anhar_fcs,
+            displacement_anhar=self.displacement_anhar,
+            num_disp_anhar=self.num_disp_anhar,
+            fcs_cutoff_radius=self.fcs_cutoff_radius,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,
@@ -353,11 +392,22 @@ class BasePhononMaker(Maker, ABC):
         phonon_collect = generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
+            num_displaced_supercells=self.num_displaced_supercells,
+            cal_anhar_fcs=self.cal_anhar_fcs,
+            displacement_anhar=self.displacement_anhar,
+            num_disp_anhar=self.num_disp_anhar,
+            fcs_cutoff_radius=self.fcs_cutoff_radius,
+            renorm_phonon=self.renorm_phonon,
+            renorm_temp=self.renorm_temp,
+            cal_ther_cond=self.cal_ther_cond,
+            ther_cond_mesh=self.ther_cond_mesh,
+            ther_cond_temp=self.ther_cond_temp,
             sym_reduce=self.sym_reduce,
             symprec=self.symprec,
             use_symmetrized_structure=self.use_symmetrized_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,
+            mp_id=self.mp_id,
             structure=structure,
             displacement_data=displacement_calcs.output,
             epsilon_static=epsilon_static,

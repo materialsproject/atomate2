@@ -202,6 +202,8 @@ def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.primitive_matrix,
         ((0, 1, 0), (0, 0, 1), (1, 0, 0)),
+        rtol=1e-8,
+        atol=1e-10,
     )
     assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
     assert isinstance(
