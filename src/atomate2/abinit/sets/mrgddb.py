@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
     from pathlib import Path
 
-__all__ = ["MrgddbInputSet", "MrgddbInputGenerator"]
+__all__ = ["MrgddbInputGenerator", "MrgddbInputSet"]
 
 logger = logging.getLogger(__name__)
 

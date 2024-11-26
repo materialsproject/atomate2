@@ -20,8 +20,8 @@ if TYPE_CHECKING:
 from atomate2.abinit.sets.core import NonSCFSetGenerator, StaticSetGenerator
 
 __all__ = [
-    "DdkSetGenerator",
     "DdeSetGenerator",
+    "DdkSetGenerator",
     "DteSetGenerator",
 ]
 
