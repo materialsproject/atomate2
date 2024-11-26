@@ -38,7 +38,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-abinit = ["abipy>=0.9.3"]
+#abinit = ["abipy>=0.9.3"]
+abinit = ["abipy @ git+https://github.com/abinit/abipy.git"] # tmp
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
