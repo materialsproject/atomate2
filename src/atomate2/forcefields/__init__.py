@@ -17,6 +17,15 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     Nequip = "Nequip"
     SevenNet = "SevenNet"
 
+    @classmethod
+    def _missing_(cls, value):
+        """Allow input of str(MLFF) as valid enum."""
+        if isinstance(value, str):
+            value = value.split("MLFF.")[-1]
+        for member in cls:
+            if member.value == value:
+                return member
+
 
 def _get_formatted_ff_name(force_field_name: str | MLFF) -> str:
     """

@@ -75,8 +75,8 @@ class ForceFieldEosMaker(CommonEosMaker):
             Whether to relax the initial structure before performing an EOS fit.
         **kwargs
             Additional kwargs to pass to ElasticMaker
-            
-            
+
+
         Returns
         -------
         ForceFieldEosMaker

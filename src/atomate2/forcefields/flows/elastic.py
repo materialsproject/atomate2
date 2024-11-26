@@ -13,11 +13,12 @@ from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 if TYPE_CHECKING:
     from typing_extensions import Self
 
-# default options for the forcefield makers in ElasticMaker 
+# default options for the forcefield makers in ElasticMaker
 _DEFAULT_RELAX_KWARGS = {
     "force_field_name": "CHGNet",
-    "relax_kwargs": {"fmax": 0.00001}
+    "relax_kwargs": {"fmax": 0.00001},
 }
+
 
 @dataclass
 class ElasticMaker(BaseElasticMaker):
@@ -72,14 +73,12 @@ class ElasticMaker(BaseElasticMaker):
     symprec: float = SETTINGS.SYMPREC
     bulk_relax_maker: ForceFieldRelaxMaker | None = field(
         default_factory=lambda: ForceFieldRelaxMaker(
-            relax_cell=True,
-            **_DEFAULT_RELAX_KWARGS
+            relax_cell=True, **_DEFAULT_RELAX_KWARGS
         )
     )
     elastic_relax_maker: ForceFieldRelaxMaker | None = field(
         default_factory=lambda: ForceFieldRelaxMaker(
-            relax_cell=False,
-            **_DEFAULT_RELAX_KWARGS
+            relax_cell=False, **_DEFAULT_RELAX_KWARGS
         )
     )  # constant volume relaxation
     max_failed_deformations: int | float | None = None
@@ -102,7 +101,7 @@ class ElasticMaker(BaseElasticMaker):
     def from_force_field_name(
         cls,
         force_field_name: str | MLFF,
-        mlff_kwargs : dict | None = None,
+        mlff_kwargs: dict | None = None,
         **kwargs,
     ) -> Self:
         """
@@ -121,21 +120,20 @@ class ElasticMaker(BaseElasticMaker):
         -------
         ElasticMaker
         """
-
         default_kwargs = {
             **_DEFAULT_RELAX_KWARGS,
             **(mlff_kwargs or {}),
             "force_field_name": _get_formatted_ff_name(force_field_name),
         }
         return cls(
-            name = f"{force_field_name.split('MLFF.')[-1]} elastic",
-            bulk_relax_maker = ForceFieldRelaxMaker(
+            name=f"{force_field_name.split('MLFF.')[-1]} elastic",
+            bulk_relax_maker=ForceFieldRelaxMaker(
                 relax_cell=True,
                 **default_kwargs,
             ),
-            elastic_relax_maker = ForceFieldRelaxMaker(
+            elastic_relax_maker=ForceFieldRelaxMaker(
                 relax_cell=False,
                 **default_kwargs,
             ),
-            **kwargs
+            **kwargs,
         )
