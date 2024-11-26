@@ -1,4 +1,5 @@
 (codes.vasp)=
+
 # VASP
 
 At present, most workflows in atomate2 use the Vienna *ab initio* simulation package
@@ -260,20 +261,18 @@ With the help of phonopy, these forces are then converted into a dynamical matri
 The dynamical matrices of three structures are then used as an input to the phonopy Grueneisen api
 to compute mode-dependent Grueneisen parameters.
 
-
 ### Quasi-harmonic Workflow
+
 Uses the quasi-harmonic approximation with the help of Phonopy to compute thermodynamic properties.
 First, a tight relaxation is performed. Subsequently, several optimizations at different constant
 volumes are performed. At each of the volumes, an additional phonon run is performed as well.
 Afterwards, equation of state fits are performed with phonopy.
 
-
-
 ### Equation of State Workflow
+
 An equation of state workflow is implemented. First, a tight relaxation is performed. Subsequently, several optimizations at different constant
 volumes are performed. Additional static calculations might be performed afterwards to arrive at more
 accurate energies. Then, an equation of state fit is performed with pymatgen.
-
 
 ### LOBSTER
 
@@ -324,7 +323,7 @@ run_locally(lobster, create_folders=True, store=SETTINGS.JOB_STORE)
 ```
 
 It is, however,  computationally very beneficial to define two different types of job scripts for the VASP and Lobster runs, as VASP and Lobster runs are parallelized differently (MPI vs. OpenMP).
-[FireWorks](https://github.com/materialsproject/fireworks) allows to run the VASP and Lobster jobs with different job scripts. Please check out the [jobflow documentation on FireWorks](https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs) for more information.
+[FireWorks](https://github.com/materialsproject/fireworks) allows one to run the VASP and Lobster jobs with different job scripts. Please check out the [jobflow documentation on FireWorks](https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs) for more information.
 
 Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
 
@@ -468,7 +467,8 @@ Finally, sometimes you have a workflow containing many VASP jobs. In this case i
 tedious to update the input sets for each job individually. Atomate2 provides helper
 functions called "powerups" that can apply settings updates to all VASP jobs in a flow.
 These powerups also contain filters for the name of the job and the maker used to
-generate them.
+generate them. These functions will apply updates *only* to VASP jobs, including those
+created dynamically - all other jobs in a flow will not be modified.
 
 ```py
 from atomate2.vasp.powerups import update_user_incar_settings

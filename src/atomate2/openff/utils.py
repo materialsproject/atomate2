@@ -198,7 +198,7 @@ def calculate_elyte_composition(
     }
 
     # Combine solvent and salt mass ratios
-    combined_mass_ratio = {**mass_ratio, **salt_mass_ratio}
+    combined_mass_ratio = mass_ratio | salt_mass_ratio
 
     # Calculate the total mass
     total_mass = sum(combined_mass_ratio.values())

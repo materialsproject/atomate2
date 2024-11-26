@@ -46,3 +46,29 @@ def test_matpes_static_flow_maker(mock_vasp, clean_dir, vasp_test_dir):
 
     assert isinstance(flow.output, dict)
     assert {*flow.output} == {"static1", "static2"}
+
+    # Test setting single maker to None
+    flow_maker = MatPesStaticFlowMaker(static1=None)
+    flow = flow_maker.make(si_struct)
+    assert len(flow) == 1
+    assert flow[0].name == "MatPES meta-GGA static"
+
+    flow_maker = MatPesStaticFlowMaker(static2=None)
+    flow = flow_maker.make(si_struct)
+    assert len(flow) == 1
+    assert flow[0].name == "MatPES GGA static"
+
+    # Test setting two makers to None
+    flow_maker = MatPesStaticFlowMaker(static1=None, static2=None)
+    flow = flow_maker.make(si_struct)
+    assert len(flow) == 0
+
+    # Test setting all three makers to None
+    with pytest.raises(ValueError, match="Must provide at least one StaticMaker"):
+        MatPesStaticFlowMaker(static1=None, static2=None, static3=None)
+
+    # Test no static3 if structure requires no Hubbard U corrections
+    flow_maker = MatPesStaticFlowMaker(static1=None, static2=None)
+    flow = flow_maker.make(si_struct)
+    assert len(flow) == 0
+    assert flow.output == {}
