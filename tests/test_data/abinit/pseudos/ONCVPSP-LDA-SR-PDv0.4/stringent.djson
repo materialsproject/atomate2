@@ -1,0 +1,56 @@
+{
+ "dojo_info": {
+  "pp_type": "NC",
+  "xc_name": "PW",
+  "description": "Standard table designed for GS applications",
+  "references": ["Dojo paper"],
+  "authors": ["M. J. van Setten", "M. Giantomassi"],
+  "dojo_dir": "ONCVPSP-PW-PDv0.4"
+ },
+ "pseudos_metadata": {
+  "C": {
+   "basename": "C.psp8",
+   "Z_val": 4.0,
+   "l_max": 1,
+   "md5": "1bbc2828a8ff593c4920afd65e04f6c3",
+   "dfact_meV": 2.2168471313855003,
+   "dfactprime_meV": 2.647431133570892,
+   "tags": [
+    ""
+   ],
+   "hints": {
+    "high": {
+     "ecut": 45.0
+    },
+    "low": {
+     "ecut": 37.0
+    },
+    "normal": {
+     "ecut": 41.0
+    }
+   }
+  },
+  "Si": {
+   "basename": "Si.psp8",
+   "Z_val": 4.0,
+   "l_max": 2,
+   "md5": "9cf3649cb539efbe8c67e8db9d375af0",
+   "dfact_meV": 1.6183984331105803,
+   "dfactprime_meV": 2.5811483459657167,
+   "tags": [
+    " "
+   ],
+   "hints": {
+    "high": {
+     "ecut": 22.0
+    },
+    "low": {
+     "ecut": 12.0
+    },
+    "normal": {
+     "ecut": 16.0
+    }
+   }
+  },
+ }
+}
