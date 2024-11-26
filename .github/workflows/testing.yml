@@ -58,7 +58,7 @@ jobs:
 
       - name: Install conda dependencies
         run: |
-          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
+          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel abinit openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
 
       - name: Install dependencies
         run: |

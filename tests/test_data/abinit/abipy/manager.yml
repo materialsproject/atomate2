@@ -6,6 +6,7 @@ qadapters:
         qname: localhost
       job:
         mpi_runner: "mpirun"
+        pre_run: "micromamba activate a2"
 
       limits:
         timelimit: 0:05:00
