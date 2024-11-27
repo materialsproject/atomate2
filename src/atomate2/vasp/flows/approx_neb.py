@@ -68,7 +68,7 @@ class ApproxNebMaker(Maker):
         inserted_coords_dict: dict | list,
         inserted_coords_combo: list,
         n_images: int = 5,
-        min_images_per_hop : int | None = 3,
+        min_images_per_hop: int | None = 3,
         prev_dir: str | Path | None = None,
     ) -> Flow:
         """
@@ -142,7 +142,7 @@ class ApproxNebMaker(Maker):
             working_ion,
             ep_relax_jobs.output,
             image_relax_jobs.output,
-            min_images_per_hop = min_images_per_hop
+            min_images_per_hop=min_images_per_hop,
         )
 
         # to permit the flow to succeed even when prior jobs fail

@@ -15,15 +15,19 @@ class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
     """Container class to store high-level NEB calculation info."""
 
     images: Optional[list[Structure | Molecule]] = Field(
-        None, description="Relaxed structures/molecules along the reaction pathway, including endpoints."
+        None,
+        description=(
+            "Relaxed structures/molecules along the reaction pathway, "
+            "including endpoints."
+        ),
     )
 
-    initial_endpoints : Optional[dict[str, Structure | Molecule]] = Field(
-        None, description = "Initial endpoint structures"
+    initial_endpoints: Optional[dict[str, Structure | Molecule]] = Field(
+        None, description="Initial endpoint structures"
     )
 
-    relaxed_endpoints : Optional[dict[str, Structure | Molecule]] = Field(
-        None, description = "Relaxed endpoint structures"
+    relaxed_endpoints: Optional[dict[str, Structure | Molecule]] = Field(
+        None, description="Relaxed endpoint structures"
     )
 
     initial_images: Optional[list[Structure | Molecule]] = Field(
@@ -60,7 +64,9 @@ class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
         ),
     )
 
-    state: Optional[TaskState] = Field(None, description="Whether the NEB calculation succeeded.")
+    state: Optional[TaskState] = Field(
+        None, description="Whether the NEB calculation succeeded."
+    )
 
     method: Optional[NebMethod] = Field(
         None, description="Variety of NEB used in this calculation."
@@ -79,7 +85,8 @@ class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
         """Perform analysis on barrier if needed."""
         if (
             (not self.forward_barrier or not self.reverse_barrier)
-            and isinstance(self.energies,list) and len(self.energies) > 0
+            and isinstance(self.energies, list)
+            and len(self.energies) > 0
         ):
             self.barrier_analysis = neb_barrier_spline_fit(self.energies)
             for k in ("forward", "reverse"):

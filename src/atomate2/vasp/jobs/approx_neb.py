@@ -33,11 +33,14 @@ if TYPE_CHECKING:
     from atomate2.vasp.jobs.base import BaseVaspMaker
     from atomate2.vasp.sets.base import VaspInputGenerator
 
+
 class HopFailureReason(Enum):
-    
+    """Define failure modes for ApproxNEB calculations."""
+
     ENDPOINT = "Endpoint structure relaxation failed"
     MIN_DIST = "Linear distance traversed by working ion is below threshold."
     MIN_IMAGE = "Too few image calculations succeeded"
+
 
 @dataclass
 class ApproxNebHostRelaxMaker(DoubleRelaxMaker):
@@ -233,7 +236,7 @@ def get_images_and_relax(
             # At least one endpoint calculation failed
             skip_reasons.append(HopFailureReason.ENDPOINT)
         if (
-            isinstance(min_hop_distance, float)  
+            isinstance(min_hop_distance, float)
             and get_hop_distance_from_endpoints(
                 [ep_structures[ini_ind], ep_structures[fin_ind]], working_ion
             )
@@ -477,7 +480,7 @@ def collate_results(
     working_ion: CompositionLike,
     endpoint_calc_output: dict,
     image_calc_output: dict[str, list],
-    min_images_per_hop : int | None = None,
+    min_images_per_hop: int | None = None,
 ) -> NebPathwayResult:
     """Collect output from an ApproxNEB workflow.
 
@@ -492,7 +495,7 @@ def collate_results(
     image_calc_output : dict[str,list]
         Output of get_images_and_relax
     min_images_per_hop : int or None (default)
-        If an integer, the minimum number of succesful image calculations
+        If an integer, the minimum number of successful image calculations
         to mark a calculation as successful
 
     Returns
@@ -502,36 +505,33 @@ def collate_results(
     hop_dict = {}
     hop_dist = {}
 
-    endpoint_idxs = set()
+    endpoint_idxs = []
     for combo_name in image_calc_output:
-        endpoint_idxs.update(combo_name.split("+"))
-    endpoint_idxs = sorted(endpoint_idxs)
+        endpoint_idxs.extend(combo_name.split("+"))
+    endpoint_idxs = sorted(set(endpoint_idxs))
 
-    for combo_name, images in image_calc_output.items():
-
+    for combo_name, entry in image_calc_output.items():
         metadata = {}
         task_state = TaskState.SUCCESS
-        if all(isinstance(image,str) for image in images):
+        images = entry
+        if all(isinstance(v, str) for v in entry):
             # hop calculation failed
-            metadata = {"failure_reasons": images}
+            metadata = {"failure_reasons": entry}
             task_state = TaskState.FAILED
-            if HopFailureReason.ENDPOINT.value in images:
+            if HopFailureReason.ENDPOINT.value in entry:
                 # Cannot populate any NEB fields, skip entirely
-                hop_dict[combo_name] = NebResult(
-                    state=task_state,
-                    metadata = metadata
-                )
+                hop_dict[combo_name] = NebResult(state=task_state, metadata=metadata)
                 continue
-
-            # set images to empty list, no hop calculations performed
             images = []
 
         endpoint_calcs = [endpoint_calc_output[idx] for idx in combo_name.split("+")]
         hop = [endpoint_calcs[0], *images, endpoint_calcs[1]]
 
         if min_images_per_hop is not None and task_state == TaskState.SUCCESS:
-            num_success_calcs = len([calc for calc in hop if calc["structure"] is not None])
-            if num_success_calcs < min_images_per_hop: 
+            num_success_calcs = len(
+                [calc for calc in hop if calc["structure"] is not None]
+            )
+            if num_success_calcs < min_images_per_hop:
                 task_state = TaskState.FAILED
                 if "failure_reasons" not in metadata:
                     metadata["failure_reasons"] = []
@@ -545,16 +545,17 @@ def collate_results(
                 if calc["initial_structure"] is not None
             ],
             energies=[calc["energy"] for calc in hop if calc["energy"] is not None],
-            initial_endpoints = {
-                idx : endpoint_calc_output[idx]["initial_structure"] for idx in endpoint_idxs
+            initial_endpoints={
+                idx: endpoint_calc_output[idx]["initial_structure"]
+                for idx in endpoint_idxs
             },
-            relaxed_endpoints = {
+            relaxed_endpoints={
                 idx: endpoint_calc_output[idx]["structure"] for idx in endpoint_idxs
             },
             ionic_steps=None,
             method=NebMethod.APPROX,
-            state = task_state,
-            metadata = metadata if len(metadata) > 0 else None,
+            state=task_state,
+            metadata=metadata if len(metadata) > 0 else None,
         )
 
         hop_dist[combo_name] = get_hop_distance_from_endpoints(
