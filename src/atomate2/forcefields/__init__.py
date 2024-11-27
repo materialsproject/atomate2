@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 from enum import Enum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import Any
 
 
 class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
@@ -16,6 +20,16 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     NEP = "NEP"
     Nequip = "Nequip"
     SevenNet = "SevenNet"
+
+    @classmethod
+    def _missing_(cls, value: Any) -> Any:
+        """Allow input of str(MLFF) as valid enum."""
+        if isinstance(value, str):
+            value = value.split("MLFF.")[-1]
+        for member in cls:
+            if member.value == value:
+                return member
+        return None
 
 
 def _get_formatted_ff_name(force_field_name: str | MLFF) -> str:

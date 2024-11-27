@@ -44,15 +44,16 @@ class ImaginaryModeError(Exception):
 
     def __init__(self, largest_mode: float) -> None:
         self.largest_mode = largest_mode
-        self.message = f"""Structure has imaginary modes: the largest optical
-                        eigenmode {largest_mode} < 0.0001"""
+        self.message = (
+            f"Structure has imaginary modes: the largest optical eigenmode "
+            f"{largest_mode} < 0.0001"
+        )
         super().__init__(self.message)
 
 
 @job
 def get_phonon_supercell(
-    structure: Structure,
-    supercell_matrix: np.ndarray,
+    structure: Structure, supercell_matrix: np.ndarray
 ) -> Structure:
     """Get the phonon supercell of a structure.
 
@@ -68,12 +69,9 @@ def get_phonon_supercell(
     Structure
         The phonopy structure
     """
-    cell = get_phonopy_structure(structure)
-    phonon = Phonopy(
-        cell,
-        supercell_matrix,
-    )
-    return get_pmg_structure(phonon.supercell)
+    unit_cell = get_phonopy_structure(structure)
+    phonopy = Phonopy(unit_cell, supercell_matrix)
+    return get_pmg_structure(phonopy.supercell)
 
 
 def get_sigma_per_site(

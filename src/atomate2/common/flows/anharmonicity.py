@@ -81,7 +81,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             A previous calculation directory to use for copying outputs.
             Default is None.
         born: Optional[list[Matrix3D]]
-            Instead of recomputing born charges and epsilon, these values can also be
+            Instead of recomputing Born charges and epsilon, these values can also be
             provided manually. If born and epsilon_static are provided, the born run
             will be skipped it can be provided in the VASP convention with information
             for every atom in unit cell. Please be careful when converting structures
