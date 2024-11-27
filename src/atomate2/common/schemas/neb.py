@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, Optional
 
 from emmet.core.neb import NebMethod, neb_barrier_spline_fit
+from emmet.core.vasp.task_valid import TaskState
 from pydantic import BaseModel, Field, model_validator
 from pymatgen.core import Molecule, Structure
 from typing_extensions import Self
@@ -13,18 +14,27 @@ from typing_extensions import Self
 class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
     """Container class to store high-level NEB calculation info."""
 
-    images: list[Structure | Molecule] = Field(
-        None, description="Relaxed structures/molecules along the reaction pathway."
+    images: Optional[list[Structure | Molecule]] = Field(
+        None, description="Relaxed structures/molecules along the reaction pathway, including endpoints."
     )
-    initial_images: list[Structure | Molecule] = Field(
+
+    initial_endpoints : Optional[dict[str, Structure | Molecule]] = Field(
+        None, description = "Initial endpoint structures"
+    )
+
+    relaxed_endpoints : Optional[dict[str, Structure | Molecule]] = Field(
+        None, description = "Relaxed endpoint structures"
+    )
+
+    initial_images: Optional[list[Structure | Molecule]] = Field(
         None, description="Unrelaxed structures/molecules along the reaction pathway."
     )
 
-    energies: list[float] = Field(
+    energies: Optional[list[float]] = Field(
         None, description="Energies corresponding the structures in `images`."
     )
 
-    forward_barrier: float = Field(
+    forward_barrier: Optional[float] = Field(
         None,
         description=(
             "Forward barrier for this reaction, "
@@ -33,7 +43,7 @@ class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
         ),
     )
 
-    reverse_barrier: float = Field(
+    reverse_barrier: Optional[float] = Field(
         None,
         description=(
             "Reverse barrier for this reaction, "
@@ -50,6 +60,8 @@ class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
         ),
     )
 
+    state: Optional[TaskState] = Field(None, description="Whether the NEB calculation succeeded.")
+
     method: Optional[NebMethod] = Field(
         None, description="Variety of NEB used in this calculation."
     )
@@ -65,7 +77,10 @@ class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
     @model_validator(mode="after")
     def set_barriers(self) -> Self:
         """Perform analysis on barrier if needed."""
-        if not self.forward_barrier or not self.reverse_barrier:
+        if (
+            (not self.forward_barrier or not self.reverse_barrier)
+            and isinstance(self.energies,list) and len(self.energies) > 0
+        ):
             self.barrier_analysis = neb_barrier_spline_fit(self.energies)
             for k in ("forward", "reverse"):
                 setattr(self, f"{k}_barrier", self.barrier_analysis[f"{k}_barrier"])

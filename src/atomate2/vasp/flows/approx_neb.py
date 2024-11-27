@@ -39,7 +39,7 @@ class ApproxNebMaker(Maker):
     image_relax_maker : maker
         Required, a maker to relax the ApproxNEB endpoints and images.
         Defaults to atomate2.vasp.jobs.approx_neb.ApproxNebImageRelaxMaker
-    selective_dynamics_scheme : "fix_two_atoms" or None
+    selective_dynamics_scheme : "fix_two_atoms" (default) or None
         If "fix_two_atoms", uses the default selective dynamics scheme of ApproxNEB,
         wherein the migrating ion and the ion farthest from it are the only
         ions whose positions can relax.
@@ -57,7 +57,7 @@ class ApproxNebMaker(Maker):
     name: str = "ApproxNEB"
     host_relax_maker: Maker | None = field(default_factory=ApproxNebHostRelaxMaker)
     image_relax_maker: Maker = field(default_factory=ApproxNebImageRelaxMaker)
-    selective_dynamics_scheme: Literal["fix_two_atoms"] | None = None
+    selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms"
     use_aeccar: bool = False
     min_hop_distance: float | bool = True
 
@@ -68,6 +68,7 @@ class ApproxNebMaker(Maker):
         inserted_coords_dict: dict | list,
         inserted_coords_combo: list,
         n_images: int = 5,
+        min_images_per_hop : int | None = 3,
         prev_dir: str | Path | None = None,
     ) -> Flow:
         """
@@ -85,8 +86,11 @@ class ApproxNebMaker(Maker):
         inserted_coords_combo: list
             a list of combo strings "a+b" to designate run calculations between
             endpoints a and b
-        n_images: int
+        n_images: int = 5
             number of images for the ApproxNEB calculation
+        min_images_per_hop : int or None, default = 3
+            If an int, the minimum number of image calculations per hop that
+            must succeed to mark a hop as successfully calculated.
         selective_dynamics: str
             the scheme for adding selective dynamics to image relaxations
 
@@ -138,6 +142,7 @@ class ApproxNebMaker(Maker):
             working_ion,
             ep_relax_jobs.output,
             image_relax_jobs.output,
+            min_images_per_hop = min_images_per_hop
         )
 
         # to permit the flow to succeed even when prior jobs fail
