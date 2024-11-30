@@ -5,7 +5,6 @@ from __future__ import annotations
 import copy
 import io
 import re
-import warnings
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from xml.etree.ElementTree import tostring
@@ -20,7 +19,7 @@ from openmm.app import PME, ForceField
 from openmm.app.pdbfile import PDBFile
 from openmm.unit import kelvin, picoseconds
 from pymatgen.core import Element
-from pymatgen.io.openff import get_atom_map
+from pymatgen.io.openff import coerce_formal_charges, get_atom_map
 
 from atomate2.openff.utils import create_mol_spec, merge_specs_by_name_and_smiles
 from atomate2.openmm.jobs.base import openmm_job
@@ -85,12 +84,8 @@ class XMLMoleculeFF:
                     if type_stub in key:
                         element.attrib[key] += increment
 
-    def to_openff_molecule(self) -> tk.Molecule:
+    def to_openff_molecule(self, template_molecule: tk.Molecule = None) -> tk.Molecule:
         """Convert the XMLMoleculeFF to an openff_toolkit Molecule."""
-        if sum(self.partial_charges) > 1e-3:
-            # TODO: update message
-            warnings.warn("Formal charges not considered.", stacklevel=1)
-
         p_table = {e.symbol: e.number for e in Element}
         openff_mol = tk.Molecule()
         for atom in self.tree.getroot().findall(".//Residues/Residue/Atom"):
@@ -107,6 +102,9 @@ class XMLMoleculeFF:
             )
 
         openff_mol.partial_charges = self.partial_charges * unit.elementary_charge
+
+        if template_molecule:
+            openff_mol = coerce_formal_charges(openff_mol, template_molecule)
 
         return openff_mol
 
@@ -253,7 +251,7 @@ def generate_openmm_interchange(
 
     for mol_spec, xml_mol in zip(mol_specs, xml_mols, strict=True):
         openff_mol = tk.Molecule.from_json(mol_spec.openff_mol)
-        xml_openff_mol = xml_mol.to_openff_molecule()
+        xml_openff_mol = xml_mol.to_openff_molecule(template_molecule=openff_mol)
         is_isomorphic, _atom_map = get_atom_map(openff_mol, xml_openff_mol)
         if not is_isomorphic:
             raise ValueError(

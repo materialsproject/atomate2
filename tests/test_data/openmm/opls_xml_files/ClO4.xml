@@ -1,0 +1,41 @@
+<ForceField>
+	<AtomTypes>
+		<Type name="Clc" class="Clc" element="C" mass="35.45" />
+		<Type name="Oc" class="Oc" element="O" mass="15.99" />
+	</AtomTypes>
+	<Residues>
+		<Residue name="PF6">
+			<Atom name="Cl1" type="Clc" />
+			<Atom name="O2" type="Oc" />
+			<Atom name="O3" type="Oc" />
+			<Atom name="O4" type="Oc" />
+			<Atom name="O5" type="Oc" />
+			<Bond from="0" to="1" />
+			<Bond from="0" to="2" />
+			<Bond from="0" to="3" />
+			<Bond from="0" to="4" />
+		</Residue>
+	</Residues>
+	<HarmonicBondForce>
+		<Bond class1="Clc" class2="Oc" length="0.1506" k="633959.68" />
+		<Bond class1="Clc" class2="Oc" length="0.1506" k="633959.68" />
+		<Bond class1="Clc" class2="Oc" length="0.1506" k="633959.68" />
+		<Bond class1="Clc" class2="Oc" length="0.1506" k="633959.68" />
+	</HarmonicBondForce>
+	<HarmonicAngleForce>
+		<Angle class1="Oc" class2="Clc" class3="Oc" angle="1.911135530933791" k="1739.707" />
+		<Angle class1="Oc" class2="Clc" class3="Oc" angle="1.911135530933791" k="1739.707" />
+		<Angle class1="Oc" class2="Clc" class3="Oc" angle="1.911135530933791" k="1739.707" />
+		<Angle class1="Oc" class2="Clc" class3="Oc" angle="1.911135530933791" k="1739.707" />
+		<Angle class1="Oc" class2="Clc" class3="Oc" angle="1.911135530933791" k="1739.707" />
+		<Angle class1="Oc" class2="Clc" class3="Oc" angle="1.911135530933791" k="1739.707" />
+	</HarmonicAngleForce>
+	<PeriodicTorsionForce />
+	<NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
+		<Atom type="Clc" charge="1.176" sigma="0.350000" epsilon="0.492830" />
+		<Atom type="Oc" charge="-0.544" sigma="0.290000" epsilon="0.878640" />
+		<Atom type="Oc" charge="-0.544" sigma="0.290000" epsilon="0.878640" />
+		<Atom type="Oc" charge="-0.544" sigma="0.290000" epsilon="0.878640" />
+		<Atom type="Oc" charge="-0.544" sigma="0.290000" epsilon="0.878640" />
+	</NonbondedForce>
+</ForceField>

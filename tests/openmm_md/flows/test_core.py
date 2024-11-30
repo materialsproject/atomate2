@@ -63,7 +63,7 @@ def test_hdf5_writing(interchange, run_job):
     import MDAnalysis
     from packaging.version import Version
 
-    if Version(MDAnalysis.__version__) < Version("2.8.0"):
+    if Version(MDAnalysis.__version__) < Version("2.8.0.dev0"):
         return
 
     anneal_maker = OpenMMFlowMaker.anneal_flow(
@@ -89,6 +89,17 @@ def test_hdf5_writing(interchange, run_job):
         "trajectory2.h5md",
         "trajectory.h5md",
     }
+
+    with io.StringIO(interchange.topology) as s:
+        pdb = PDBFile(s)
+        openmm_topology = pdb.getTopology()
+
+    traj_file = Path(task_doc.calcs_reversed[0].output.dir_name) / "trajectory3.h5md"
+    Universe(
+        openmm_topology,
+        str(traj_file),
+        format="h5md",
+    )
 
 
 def test_collect_outputs(interchange, run_job):
