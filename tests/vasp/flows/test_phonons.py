@@ -521,11 +521,11 @@ def test_phonon_wf_vasp_only_displacements_optional_settings(
 def test_phonon_wf_vasp_all_steps(mock_vasp, clean_dir, si_structure: Structure):
     # mapping from job name to directory containing test files
     ref_paths = {
-        "phonon static 1/1": "Si_phonons_4/phonon_static_1_1",
-        "static": "Si_phonons_4/static",
-        "tight relax 1": "Si_phonons_4/tight_relax_1",
-        "tight relax 2": "Si_phonons_4/tight_relax_2",
-        "dielectric": "Si_phonons_4/dielectric",
+        "phonon static 1/1": "Si_phonons_3/phonon_static_1_1",
+        "static": "Si_phonons_3/static",
+        "tight relax 1": "Si_phonons_3/tight_relax_1",
+        "tight relax 2": "Si_phonons_3/tight_relax_2",
+        "dielectric": "Si_phonons_3/dielectric",
     }
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
