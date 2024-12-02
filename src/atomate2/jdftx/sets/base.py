@@ -275,7 +275,7 @@ class JdftxInputGenerator(InputGenerator):
             nelec += _PSEUDO_CONFIG[self.pseudopotentials][str(atom)]
         nbands_add = int(nelec / 2) + 10
         nbands_mult = int((nelec/2)) * _BEAST_CONFIG["bands_multiplier"]
-        self.settings["nbands"] = max(nbands_add, nbands_mult)
+        self.settings["elec-nbands"] = max(nbands_add, nbands_mult)
         return
              
     def set_pseudos(
