@@ -104,13 +104,6 @@ class BaseLammpsSet(BaseLammpsGenerator):
                  settings : dict | None = None,
                  interchange : LammpsInterchange = None,
                  **kwargs):
-                
-        if isinstance(template, LammpsInputFile):
-            template = template.get_str()
-        
-        if isinstance(template, str):
-            if Path(template).exists():
-                template = Path(template)
         
         template = os.path.join(template_dir, "md.template") if not template else template
         self.ensemble = ensemble if isinstance(ensemble, MDEnsemble) else MDEnsemble(ensemble)
