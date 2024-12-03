@@ -6,6 +6,7 @@ import os
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from pymatgen.core import Structure
+from pymatgen.io.lammps.generators import BaseLammpsGenerator, LammpsData
 
 from emmet.core.vasp.task_valid import TaskState
 
@@ -33,7 +34,7 @@ class BaseLammpsMaker(Maker):
     name: str
         Name of the job
     input_set_generator: BaseLammpsGenerator
-        Input set generator for the job, default is the BaseLammpsGenerator
+        Input set generator for the job, default is the BaseLammpsSet
     write_input_set_kwargs: dict
         Additional kwargs to write_lammps_input_set
     run_lammps_kwargs: dict
@@ -44,7 +45,7 @@ class BaseLammpsMaker(Maker):
         Additional data to write to the job directory
     '''
     name: str = "Base LAMMPS job"
-    input_set_generator: BaseLammpsSet = field(
+    input_set_generator: BaseLammpsGenerator = field(
         default_factory = BaseLammpsSet
     )
     write_input_set_kwargs: dict = field(default_factory=dict)
@@ -63,7 +64,7 @@ class BaseLammpsMaker(Maker):
             warnings.warn("Trajectory data might be large, only store if absolutely necessary. Consider manually parsing the dump files instead.")
 
     @lammps_job
-    def make(self, input_structure: Structure | Path = None, prev_dir : Path = None) -> Response:
+    def make(self, input_structure: Structure | Path | LammpsData = None, prev_dir : Path = None) -> Response:
         """Run a LAMMPS calculation."""
         
         if prev_dir:

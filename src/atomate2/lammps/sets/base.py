@@ -174,7 +174,9 @@ class BaseLammpsSet(BaseLammpsGenerator):
         if isinstance(force_field, str):
             self.force_field = force_field
             self.species = ' '.join(force_field.split(' ')[6:]) #check if logic holds for general FF
-            
+        
+        if isinstance(force_field, ForceField) or isinstance(force_field, LammpsData):
+            raise NotImplementedError("ForceField and LammpsData objects are not yet supported.")
         else:
             Warning(f"Force field should be a dictionary, got {type(force_field)}")
             
@@ -183,7 +185,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
         
         if not self.force_field and self.interchange:
             self.settings.update({'force_field': 'pair_style lj/cut/coul/cut 10.0'}) #Assumes the pair_style is lj/cut if no force field is provided (which should be true for openFF forcefields?)
-            
+    
     def update_settings(self, **kwargs) -> dict:
         """
         Update the settings for the LAMMPS input file. 

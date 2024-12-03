@@ -34,7 +34,7 @@ class LammpsTaskDocument(StructureMetadata):
     
     structure : Optional[Structure] = Field(None, description="Final structure of the system, taken from the last dump file")
     
-    metadata : dict = Field(None, description="Metadata for the task")
+    metadata : Optional[dict] = Field(None, description="Metadata for the task")
     
     raw_log_file : str = Field(None, description="Log file output from lammps run")
         
@@ -91,7 +91,6 @@ class LammpsTaskDocument(StructureMetadata):
                                           dumpfile=os.path.join(dir_name, dump_file)).save(filename=f'{output_file_pattern}{i}.traj',
                                                                                            fmt=trajectory_format)
                             for i, dump_file in enumerate(dump_files)]
-            structure = trajectories[-1][-1] if trajectories and trajectory_format == 'pmg' else None
         
         try:
             input_file = LammpsInputFile.from_file(os.path.join(dir_name, "in.lammps"), ignore_comments=True)
@@ -101,9 +100,10 @@ class LammpsTaskDocument(StructureMetadata):
             Warning(f"Input or data file not found for {dir_name}")
             input_file = None
             data_files = None
-        
+            
+        final_structure = DumpConvertor(dumpfile=os.path.join(dir_name, dump_file_keys[-1]), read_index=-1).to_pymatgen_trajectory().get_structure(-1)        
         inputs = {"in.lammps": input_file, "data_files": data_files}
-        composition = data_files[0].structure.composition if data_files else None
+        composition = final_structure.composition if data_files else None
         reduced_formula = composition.reduced_formula if composition else None
             
         return LammpsTaskDocument(dir_name=str(dir_name), 
@@ -112,7 +112,7 @@ class LammpsTaskDocument(StructureMetadata):
                                   thermo_log=thermo_log, 
                                   dump_files=dump_files,
                                   trajectories=trajectories if store_trajectory != StoreTrajectoryOption.NO else None,
-                                  structure=structure if store_trajectory != StoreTrajectoryOption.NO else None,
+                                  structure=final_structure,
                                   composition=composition,
                                   reduced_formula=reduced_formula,
                                   inputs=inputs,
