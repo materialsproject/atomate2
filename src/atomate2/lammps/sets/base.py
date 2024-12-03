@@ -9,7 +9,9 @@ import numpy as np
 from monty.serialization import loadfn
 from pymatgen.io.lammps.generators import BaseLammpsGenerator
 from pymatgen.io.lammps.data import LammpsData, ForceField
+from pymatgen.io.lammps.inputs import LammpsInputFile
 from typing import Literal, Sequence
+from pathlib import Path
 from atomate2.lammps.sets.utils import process_ensemble_conditions
 
 from atomate2.ase.md import MDEnsemble
@@ -98,12 +100,19 @@ class BaseLammpsSet(BaseLammpsGenerator):
                  thermostat : Literal["langevin", "nose-hoover"] = "nose-hoover",
                  barostat : Literal["berendsen", "nose-hoover"] = "nose-hoover",
                  friction : float | None = 0.1,
-                 template : str = None,
+                 template : str | LammpsInputFile | Path = None,
                  settings : dict | None = None,
                  interchange : LammpsInterchange = None,
                  **kwargs):
+                
+        if isinstance(template, LammpsInputFile):
+            template = template.get_str()
         
-        template = os.path.join(template_dir, "md.template") if template is None else template
+        if isinstance(template, str):
+            if Path(template).exists():
+                template = Path(template)
+        
+        template = os.path.join(template_dir, "md.template") if not template else template
         self.ensemble = ensemble if isinstance(ensemble, MDEnsemble) else MDEnsemble(ensemble)
         
         if isinstance(temperature, (int, float)):
