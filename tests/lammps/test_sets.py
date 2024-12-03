@@ -6,3 +6,7 @@ def test_LammpsNVTSet():
     assert nvt.ensemble.value == 'nvt'
     assert nvt.settings['thermostat'] == 'langevin'
     assert nvt.settings['timestep'] == 0.005
+    
+def test_minimize_set():
+    mini = LammpsMinimizeSet()
+    assert mini.ensemble.value == 'npt'
