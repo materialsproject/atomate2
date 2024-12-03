@@ -19,7 +19,7 @@ read_data system.data
 
 # Stage 7
 pair_style tersoff
-pair_coeff * * /Users/virkaran/Code/repos/dev/atomate2/tests/test_data/lammps/Si.tersoff Si
+pair_coeff * * /atomate2/tests/test_data/lammps/Si.tersoff Si
 
 # Create velocities
 velocity all create 300 42 mom yes rot yes dist gaussian

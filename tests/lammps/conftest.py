@@ -10,11 +10,19 @@ from collections.abc import Sequence
 from pymatgen.io.lammps.inputs import LammpsInputFile
 import jobflow
 
-test_data_dir = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'test_data', 'lammps'))
 logger = logging.getLogger(__name__)
-_VAL_SETTINGS = ('units', 'atom_style', 'dimension', 'boundary', 'pair_style', 'pair_coeff', 'thermo', 'dump', 'timestep', 'run', 'minimize', 'fix')
+_VAL_SETTINGS = ('units', 'atom_style', 'dimension', 'boundary', 'pair_style', 'thermo', 'dump', 'timestep', 'run', 'minimize', 'fix')
 _REF_PATHS = {}
 _FAKE_RUN_LAMMPS_KWARGS = {}
+
+@pytest.fixture(scope="session")
+def ref_path():
+    from pathlib import Path
+
+    module_dir = Path(__file__).resolve().parents[1]
+    test_dir = module_dir / "test_data/lammps/"
+    return test_dir.resolve()
+    
 
 @pytest.fixture
 def test_si_structure() -> Structure:
@@ -25,9 +33,9 @@ def test_si_structure() -> Structure:
 )
     
 @pytest.fixture
-def test_si_force_field() -> dict:
+def test_si_force_field(ref_path) -> dict:
     return {'pair_style': 'tersoff',
-            'pair_coeff': f'* * {os.path.join(test_data_dir, "Si.tersoff")}',
+            'pair_coeff': f'* * {os.path.normpath(os.path.join(ref_path, "Si.tersoff"))}',
             'species': ['Si']}
 
 @pytest.fixture
@@ -36,15 +44,7 @@ def test_h2o_molecule() -> Molecule:
     species=["H", "O", "H"],
     coords=[[0, 0, 0], [0, 0, 1], [0, 1, 0]],
 )
-    
-@pytest.fixture(scope="session")
-def ref_path():
-    from pathlib import Path
 
-    module_dir = Path(__file__).resolve().parents[1]
-    test_dir = module_dir / "test_data/lammps/"
-    return test_dir.resolve()
-    
 
 @pytest.fixture
 def mock_lammps(monkeypatch, ref_path):
