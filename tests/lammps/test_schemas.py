@@ -1,5 +1,4 @@
 from atomate2.lammps.schemas.task import LammpsTaskDocument, StoreTrajectoryOption
-import os
 
 def test_task_doc(ref_path):
     ref_output_files = ref_path / "nvt_test" / "outputs"
