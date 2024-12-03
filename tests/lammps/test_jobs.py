@@ -1,17 +1,14 @@
 import pytest
 import os
-import glob
 from jobflow import run_locally
-from pymatgen.core import Molecule, Structure
 import pandas as pd
 
 from atomate2.lammps.jobs.core import (
     LammpsNVTMaker,
     LammpsNPTMaker,
     MinimizationMaker,
-    CustomLammpsMaker,
 )
-from atomate2.lammps.sets.core import (LammpsNVTSet, LammpsNPTSet, LammpsMinimizeSet)
+from atomate2.lammps.sets.core import LammpsNVTSet
 from atomate2.lammps.schemas.task import LammpsTaskDocument
 from atomate2.lammps.schemas.task import StoreTrajectoryOption
 
