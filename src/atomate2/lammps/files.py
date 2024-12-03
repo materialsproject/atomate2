@@ -13,7 +13,7 @@ from emmet.core.vasp.calculation import StoreTrajectoryOption
 import warnings
 
 def write_lammps_input_set(
-    structure: Structure | Path | None,
+    structure: Structure | LammpsData | None,
     input_set_generator: BaseLammpsGenerator,
     directory: str | Path = ".",
     **kwargs,
@@ -30,9 +30,9 @@ def write_lammps_input_set(
 
 
 class DumpConvertor(MSONable):    
-    def __init__(self, dumpfile, store_md_outputs : StoreTrajectoryOption  = StoreTrajectoryOption.NO) -> None:
+    def __init__(self, dumpfile, store_md_outputs : StoreTrajectoryOption  = StoreTrajectoryOption.NO, read_index: str | int = ':') -> None:
         self.store_md_outputs = store_md_outputs
-        self.traj = read(dumpfile, index=':') #check if this is frame by frame
+        self.traj = read(dumpfile, index=read_index) if isinstance(read_index, str) else [read(dumpfile, index=read_index)]
         self.is_periodic = any(self.traj[0].pbc)
         self.frame_properties_keys = ['forces', 'velocities']
         
