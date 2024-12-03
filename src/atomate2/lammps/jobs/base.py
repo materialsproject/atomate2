@@ -9,10 +9,12 @@ from pymatgen.core import Structure
 
 from emmet.core.vasp.task_valid import TaskState
 
+from atomate2.common.files import gzip_files
 from atomate2.lammps.files import write_lammps_input_set
 from atomate2.lammps.run import run_lammps
-from atomate2.lammps.schemas.task import LammpsTaskDocument
+from atomate2.lammps.schemas.task import LammpsTaskDocument, StoreTrajectoryOption
 from atomate2.lammps.sets.base import BaseLammpsSet
+import warnings
 
 _DATA_OBJECTS: List[str] = ["raw_log_file", "inputs", "metadata", "trajectory"]
 
@@ -56,6 +58,9 @@ class BaseLammpsMaker(Maker):
             self.input_set_generator.set_force_field(self.force_field)
         if not self.input_set_generator.force_field and not self.input_set_generator.interchange:
             raise ValueError("Force field not specified")
+        
+        if self.task_document_kwargs.get('store_trajectory') and self.task_document_kwargs.get('store_trajectory') != StoreTrajectoryOption.NO:
+            warnings.warn("Trajectory data might be large, only store if absolutely necessary. Consider manually parsing the dump files instead.")
 
     @lammps_job
     def make(self, input_structure: Structure | Path = None, prev_dir : Path = None) -> Response:
@@ -98,6 +103,6 @@ class BaseLammpsMaker(Maker):
         task_doc.task_label = self.name
         task_doc.inputs = self.input_set_generator.settings
         
-        #gzip_dir(".")
+        gzip_files(".")
 
         return Response(output=task_doc)
