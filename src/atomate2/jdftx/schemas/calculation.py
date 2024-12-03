@@ -48,7 +48,7 @@ class Convergence(BaseModel):
 
     @classmethod
     def from_jdftxoutput(cls, jdftxoutput: JDFTXOutfile):
-        converged = jdftxoutput.is_converged
+        converged = jdftxoutput.converged
         jstrucs = jdftxoutput.jstrucs
         geom_converged = jstrucs.geom_converged
         geom_converged_reason = jstrucs.geom_converged_reason
@@ -179,13 +179,13 @@ class CalculationOutput(BaseModel):
         CalculationOutput
             The output document.
         """
-        optimized_structure: JOutStructure = jdftxoutput.structure
+        optimized_structure = jdftxoutput.structure
         if hasattr(optimized_structure, "forces"):
             forces = optimized_structure.forces.tolist()
         else:
             forces = None
         if hasattr(optimized_structure, "stress"):
-            if optimized_structure.stress == None:
+            if optimized_structure.stress is None:
                 stress = None
             else:
                 stress = optimized_structure.stress.tolist()
@@ -200,11 +200,16 @@ class CalculationOutput(BaseModel):
         cbm = jdftxoutput.lumo
         vbm = jdftxoutput.homo
         if kwargs.get("store_trajectory", True) == True:
-            trajectory = jdftxoutput.trajectory
+            trajectory: Trajectory = jdftxoutput.trajectory
+            trajectory = trajectory.as_dict()
         else:
             trajectory = None
-
-
+        print("OPTIMIZED STRUCTURE: \n")
+        print(optimized_structure)
+        print("\n")
+        print("OPTIMIZED STRUCTURE TYPE")
+        print(type(optimized_structure))
+        print("\n")
         return cls(
             structure=optimized_structure, 
             forces=forces,
@@ -344,7 +349,7 @@ def _solvation_type(
 ) -> SolvationType:
     jdftxinput: JDFTXInfile = inputdoc.jdftxinfile
     fluid = jdftxinput.get("fluid", None)    
-    if fluid == None:
+    if fluid is None:
         return SolvationType("None")
     else:
         fluid_solvent = jdftxinput.get("pcm-variant")
