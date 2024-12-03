@@ -5,10 +5,9 @@ import atomate2.lammps.run
 from atomate2.lammps.sets.base import BaseLammpsSet
 from pathlib import Path
 import logging
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 from collections.abc import Sequence
 from pymatgen.io.lammps.inputs import LammpsInputFile
-import jobflow
 
 logger = logging.getLogger(__name__)
 _VAL_SETTINGS = ('units', 'atom_style', 'dimension', 'boundary', 'pair_style', 'thermo', 'dump', 'timestep', 'run', 'minimize', 'fix')
@@ -56,27 +55,17 @@ def mock_lammps(monkeypatch, ref_path):
        its functionally.
     2. For each job in your workflow, you should prepare a reference directory
        containing two folders "inputs" (containing the reference input files expected
-       to be produced by write_aims_input_set) and "outputs" (containing the expected
-       output files to be produced by run_aims). These files should reside in a
-       subdirectory of "tests/test_data/aims".
+       to be produced by write_lammps_input_set) and "outputs" (containing the expected
+       output files to be produced by run_lammps). These files should reside in a
+       subdirectory of "tests/test_data/lammps".
     3. Create a dictionary mapping each job name to its reference directory. Note that
-       you should supply the reference directory relative to the "tests/test_data/aims"
-       folder. For example, if your calculation has one job named "static" and the
-       reference files are present in "tests/test_data/aims/Si_static", the dictionary
-       would look like: ``{"static": "Si_static"}``.
-    4. Optional (does not work yet): create a dictionary mapping each job name to
-       custom keyword arguments that will be supplied to fake_run_aims.
-       This way you can configure which control.in settings are expected for each job.
-       For example, if your calculation has one job named "static" and you wish to
-       validate that "xc" is set correctly in the control.in, your dictionary would
-       look like
-       ``{"static": {"input_settings": {"relativistic": "atomic_zora scalar"}}``.
-    5. Inside the test function, call `mock_aims(ref_paths, fake_aims_kwargs)`, where
-       ref_paths is the dictionary created in step 3 and fake_aims_kwargs is the
-       dictionary created in step 4.
-    6. Run your aims job after calling `mock_aims`.
+       you should supply the reference directory relative to the "tests/test_data/lammps"
+       folder.
+    4. Inside the test function, call `mock_lammps(ref_paths, fake_lammps_kwargs)`, where
+       ref_paths is the dictionary created in step 3.
+    5. Run your lammps job after calling `mock_lammps`.
 
-    For examples, see the tests in tests/aims/jobs/core.py.
+    For examples, see the tests in tests/lammps/test_jobs.py.
     """
 
     def mock_run_lammps(*args, **kwargs):
@@ -116,17 +105,17 @@ def fake_run_lammps(
     clear_inputs: bool = False,
 ):
     """
-    Emulate running aims and validate aims input files.
+    Emulate running lammps and validate lammps input files.
 
     Parameters
     ----------
     ref_path
-        Path to reference directory with aims input files in the folder named 'inputs'
+        Path to reference directory with lammps input files in the folder named 'inputs'
         and output files in the folder named 'outputs'.
     input_settings
         A list of input settings to check.
     check_inputs
-        A list of aims input files to check. Supported options are "in.lammps"
+        A list of lammps input files to check. Supported options are "in.lammps" (others to come later?).
     clear_inputs
         Whether to clear input files before copying in the reference lammps outputs.
     """
@@ -144,7 +133,7 @@ def fake_run_lammps(
 
     copy_lammps_outputs(ref_path)
 
-    # pretend to run aims by copying pre-generated outputs from reference dir
+    # pretend to run lammps by copying pre-generated outputs from reference dir
     logger.info("Generated fake lammps outputs")
 
 
