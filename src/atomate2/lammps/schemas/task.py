@@ -29,14 +29,14 @@ class LammpsTaskDocument(StructureMetadata):
     
     reduced_formula : str = Field(None, description="Reduced formula of the system")
     
-    dump_files : Optional[list] = Field(None, description="Path to dump files")
+    dump_files : Optional[dict] = Field(None, description="Dump files produced by lammps run")
     
     structure : Optional[Structure] = Field(None, description="Final structure of the system, taken from the last dump file")
     
     metadata : dict = Field(None, description="Metadata for the task")
     
     raw_log_file : str = Field(None, description="Log file output from lammps run")
-    
+        
     thermo_log : list = Field(None, description="Parsed log output from lammps run, with a focus on thermo data")
     
     inputs : dict = Field(None, description="Input files for the task")
@@ -76,7 +76,11 @@ class LammpsTaskDocument(StructureMetadata):
             thermo_log = []
             state = TaskState.ERROR
             
-        dump_files = [os.path.join(dir_name, file) for file in glob("*.dump*", root_dir=dir_name)]
+        dump_file_keys = [os.path.join(dir_name, file) for file in glob("*.dump*", root_dir=dir_name)]
+        dump_files = {}
+        for dump_file in dump_file_keys:
+            with open(dump_file, 'rt') as f:
+                dump_files[dump_file] = f.read()
 
         if store_trajectory != StoreTrajectoryOption.NO:
             warnings.warn("Trajectory data might be large, only store if absolutely necessary. Consider manually parsing the dump files instead.")
