@@ -25,5 +25,3 @@ class CustomLammpsMaker(BaseLammpsMaker):
     
     def __post_init__(self):
         self.input_set_generator = BaseLammpsSet(template=self.template, settings=self.settings)
-        
-#TODO: add makers for Quench, Thermalize, Melt.
