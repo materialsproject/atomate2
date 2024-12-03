@@ -8,6 +8,7 @@ from pymatgen.core.trajectory import Trajectory
 from pymatgen.core import Composition, Structure
 from pydantic import Field
 from pymatgen.io.lammps.outputs import parse_lammps_log
+from pymatgen.io.lammps.generators import LammpsData, LammpsInputFile
 from atomate2.lammps.files import DumpConvertor
 import os
 from glob import glob
@@ -21,13 +22,13 @@ class LammpsTaskDocument(StructureMetadata):
     
     last_updated : str = Field(datetime_str(), description="Timestamp for the last time the task was updated")
     
-    trajectory : Optional[List[Trajectory]] = Field(None, description="Pymatgen trajectory output from lammps run")
+    trajectories : Optional[List[Trajectory]] = Field(None, description="Pymatgen trajectories output from lammps run")
     
-    composition : Composition = Field(None, description="Composition of the system")
+    composition : Composition | None = Field(None, description="Composition of the system")
     
     state : TaskState = Field(None, description="State of the calculation")
     
-    reduced_formula : str = Field(None, description="Reduced formula of the system")
+    reduced_formula : str | None = Field(None, description="Reduced formula of the system")
     
     dump_files : Optional[dict] = Field(None, description="Dump files produced by lammps run")
     
@@ -76,10 +77,10 @@ class LammpsTaskDocument(StructureMetadata):
             thermo_log = []
             state = TaskState.ERROR
             
-        dump_file_keys = [os.path.join(dir_name, file) for file in glob("*.dump*", root_dir=dir_name)]
+        dump_file_keys = glob("*dump*", root_dir=dir_name)
         dump_files = {}
         for dump_file in dump_file_keys:
-            with open(dump_file, 'rt') as f:
+            with open(os.path.join(dir_name, dump_file), 'rt') as f:
                 dump_files[dump_file] = f.read()
 
         if store_trajectory != StoreTrajectoryOption.NO:
@@ -93,24 +94,27 @@ class LammpsTaskDocument(StructureMetadata):
             structure = trajectories[-1][-1] if trajectories and trajectory_format == 'pmg' else None
         
         try:
-            with open(os.path.join(dir_name, "in.lammps")) as f:
-                input_file = f.read()
-            with open(os.path.join(dir_name, "system.data")) as f:
-                data_file = f.read()
+            input_file = LammpsInputFile.from_file(os.path.join(dir_name, "in.lammps"), ignore_comments=True)
+            data_files = [LammpsData.from_file(os.path.join(dir_name, file), atom_style=input_file.get_args("atom_style")) for file in glob("*.data*", root_dir=dir_name)]
+   
         except FileNotFoundError:
             Warning(f"Input or data file not found for {dir_name}")
             input_file = None
-            data_file = None
+            data_files = None
         
-        inputs = {"in.lammps": input_file, "system.data": data_file}
+        inputs = {"in.lammps": input_file, "data_files": data_files}
+        composition = data_files[0].structure.composition if data_files else None
+        reduced_formula = composition.reduced_formula if composition else None
             
         return LammpsTaskDocument(dir_name=str(dir_name), 
                                   task_label=task_label, 
                                   raw_log_file=raw_log, 
                                   thermo_log=thermo_log, 
                                   dump_files=dump_files,
-                                  trajectory=trajectories if store_trajectory != StoreTrajectoryOption.NO else None,
+                                  trajectories=trajectories if store_trajectory != StoreTrajectoryOption.NO else None,
                                   structure=structure if store_trajectory != StoreTrajectoryOption.NO else None,
+                                  composition=composition,
+                                  reduced_formula=reduced_formula,
                                   inputs=inputs,
                                   state=state,
                                   )
