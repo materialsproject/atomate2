@@ -1,0 +1,32 @@
+# LAMMPS input generated from LammpsInputFile with pymatgen v2024.10.29
+
+# 1) Initialization
+units metal
+atom_style atomic
+dimension 3
+boundary p p p
+
+# 2) System definition
+
+# md.restart
+read_data system.data
+neigh_modify every 1 delay 5 check yes
+
+# 3) Simulation settings
+pair_style tersoff
+pair_coeff * * /atomate2/tests/test_data/lammps/Si.tersoff Si
+
+# 4) Energy minimization
+thermo 100
+thermo_style custom step lx ly lz press pxx pyy pzz pe
+dump d1 all custom 100 min.dump id element x y z vx vy vz fx fy fz
+dump_modify d1 sort id element Si
+
+# Stage 6
+min_style cg
+fix 1 all box/relax iso 0 vmax 0.001
+minimize 1.0e-6 1.0e-6 1000 100000
+
+# 5) Write output data
+write_data run.data
+write_restart md.restart

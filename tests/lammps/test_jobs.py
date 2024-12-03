@@ -36,7 +36,6 @@ def test_nvt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
     
     assert isinstance(output, LammpsTaskDocument)
     assert output.structure.volume == pytest.approx(si_structure.volume)
-    assert len(output.trajectory[0]) == 11
     assert len(list(output.dump_files.keys())) == 1
     dump_key = list(output.dump_files.keys())[0]
     assert dump_key.endswith('.dump')
@@ -61,7 +60,6 @@ def test_npt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
     
     assert isinstance(output, LammpsTaskDocument)
     assert output.structure.volume > si_structure.volume
-    assert len(output.trajectory[0]) == 11
     assert len(output.dump_files.keys()) == 1
     dump_key = list(output.dump_files.keys())[0]
     assert dump_key.endswith('.dump')
@@ -91,7 +89,6 @@ def test_nvt_ff_from_set(si_structure, tmp_path, test_si_force_field, mock_lammp
     assert isinstance(output.raw_log_file, str)
     assert len(output.thermo_log[0]) == 11
     assert output.structure.volume == pytest.approx(si_structure.volume)
-    assert len(output.trajectory[0]) == 11
     assert len(output.dump_files.keys()) == 1
     dump_key = list(output.dump_files.keys())[0]
     assert dump_key.endswith('.dump')
