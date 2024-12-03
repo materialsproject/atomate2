@@ -26,7 +26,7 @@ def test_task_doc(ref_path):
                                                 )
     assert task_doc.task_label == "test_no_store"
     assert task_doc.state is not None
-    assert task_doc.structure is None
+    assert task_doc.structure is not None
     assert task_doc.trajectories is None
     assert len(list(task_doc.dump_files.keys())) == 1
     dump_key = list(task_doc.dump_files.keys())[0]
