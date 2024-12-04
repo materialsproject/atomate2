@@ -69,6 +69,8 @@ class BasePhononMaker(Maker, ABC):
         displacement distance for phonons
     min_length: float
         min length of the supercell that will be built
+    max_length: float
+        max length of the supercell that will be built
     prefer_90_degrees: bool
         if set to True, supercell algorithm will first try to find a supercell
         with 3 90 degree angles
@@ -107,6 +109,12 @@ class BasePhononMaker(Maker, ABC):
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
+        - create_force_constants_file: bool
+            If True, a force constants file will be created
+        - force_constants_filename: str
+            If store_force_constants is True, the file name to store the force constants
+        - calculate_pdos: bool
+            If True, the projected phonon density of states will be calculated
     create_thermal_displacements: bool
         Bool that determines if thermal_displacement_matrices are computed
     kpath_scheme: str
@@ -146,7 +154,14 @@ class BasePhononMaker(Maker, ABC):
         None
     )
     create_thermal_displacements: bool = True
-    generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
+    generate_frequencies_eigenvectors_kwargs: dict = field(
+        default_factory=lambda: {
+            "create_force_constants_file": False,
+            "force_constants_filename": "FORCE_CONSTANTS",
+            "calculate_pdos": False,
+        }
+    )
+
     kpath_scheme: str = "seekpath"
     code: str = None
     store_force_constants: bool = True
@@ -172,7 +187,7 @@ class BasePhononMaker(Maker, ABC):
         prev_dir : str or Path or None
             A previous calculation directory to use for copying outputs.
         born: Matrix3D
-            Instead of recomputing born charges and epsilon, these values can also be
+            Instead of recomputing Born charges and epsilon, these values can also be
             provided manually. If born and epsilon_static are provided, the born run
             will be skipped it can be provided in the VASP convention with information
             for every atom in unit cell. Please be careful when converting structures

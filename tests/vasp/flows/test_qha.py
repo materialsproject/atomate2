@@ -22,9 +22,10 @@ def test_qha(mock_vasp, clean_dir, si_diamond: Structure):
 
     qha_maker = QhaMaker(
         number_of_frames=0,
-        phonon_maker=PhononMaker(min_length=8, born_maker=None, bulk_relax_maker=None),
+        phonon_maker=PhononMaker(born_maker=None, bulk_relax_maker=None),
         ignore_imaginary_modes=True,
         skip_analysis=True,
+        min_length=8,
     ).make(structure=si_diamond)
 
     qha_maker = update_user_incar_settings(qha_maker, {"NPAR": 4, "ISMEAR": 0})
