@@ -262,14 +262,13 @@ class JdftxInputGenerator(InputGenerator):
             }
         com = center_of_mass(structure=structure)
         if self.settings["coords-type"] == "Cartesian":
-            com = com.T @ structure.lattice.matrix * ang_to_bohr
-            com = com.T
+            com = com @ structure.lattice.matrix * ang_to_bohr
         elif self.settings["coords-type"] == "Lattice":
-            pass
+            com = com * ang_to_bohr
         self.settings["coulomb-truncation-embed"] = {
-            "c0": com[0][0],
-            "c1": com[1][0],
-            "c2": com[2][0],
+            "c0": com[0],
+            "c1": com[1],
+            "c2": com[2],
         }
         return
     
@@ -432,4 +431,4 @@ def center_of_mass(structure:Structure) -> np.ndarray:
     """
     weights = [site.species.weight for site in structure]
     com = np.average(structure.frac_coords, weights=weights, axis=0)
-    return com[..., np.newaxis]
+    return com
