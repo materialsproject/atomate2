@@ -137,6 +137,9 @@ class JdftxInputGenerator(InputGenerator):
             )
         self.settings = self.default_settings.copy()
         self.settings.update(self.user_settings)
+        # set default coords-type to Cartesian
+        if "coords-type" not in self.settings.keys():
+            self.settings["coords-type"] = "Cartesian"
         self._apply_settings(self.settings)
 
     def _apply_settings(
@@ -172,6 +175,7 @@ class JdftxInputGenerator(InputGenerator):
 
         jdftx_structure = JDFTXStructure(structure)
         jdftxinputs = self.settings
+        jdftxinputs["coords-type"] = "Cartesian" # always force Cartesian
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
 
         jdftxinputs = self.settings
@@ -257,11 +261,15 @@ class JdftxInputGenerator(InputGenerator):
                 "truncationType": "Isolated",
             }
         com = center_of_mass(structure=structure)
-        com = com.T @ structure.lattice.matrix * ang_to_bohr
+        if self.settings["coords-type"] == "Cartesian":
+            com = com.T @ structure.lattice.matrix * ang_to_bohr
+            com = com.T
+        elif self.settings["coords-type"] == "Lattice":
+            pass
         self.settings["coulomb-truncation-embed"] = {
             "c0": com[0][0],
-            "c1": com[0][1],
-            "c2": com[0][2],
+            "c1": com[1][0],
+            "c2": com[2][0],
         }
         return
     
@@ -374,9 +382,6 @@ class JdftxInputGenerator(InputGenerator):
         self.settings["initial-magnetic-moments"] = tag_str
         return
 
-                
-
-
 def condense_jdftxinputs(
     jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
 ) -> JDFTXInfile:
@@ -401,9 +406,30 @@ def condense_jdftxinputs(
             A JDFTXInfile that includes the calculation
             parameters and input structure.
     """
-    return jdftxinput + JDFTXInfile.from_str(jdftxstructure.get_str())
+    # force Cartesian coordinates
+    coords_type = jdftxinput.get("coords-type")
+    if coords_type == "Cartesian":
+        cartesian = True
+    else:
+        cartesian = False
+    return (jdftxinput + 
+            JDFTXInfile.from_str(jdftxstructure.get_str(in_cart_coords=cartesian))
+            )
 
-def center_of_mass(structure:Structure) -> np.ndarray: 
+def center_of_mass(structure:Structure) -> np.ndarray:
+    """
+    Calculate center of mass
+
+    Parameters
+    ----------
+    structure: Structure
+        A pymatgen structure
+    
+    Returns
+    -------
+    np.ndarray
+        A numpy array containing the center of mass in fractional coordinates.
+    """
     weights = [site.species.weight for site in structure]
     com = np.average(structure.frac_coords, weights=weights, axis=0)
     return com[..., np.newaxis]
