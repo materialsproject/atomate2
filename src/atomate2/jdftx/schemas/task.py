@@ -4,19 +4,20 @@
 
 import logging
 from pathlib import Path
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, Optional, Self, TypeVar, Union
 
 from custodian.jdftx.jobs import JDFTxJob  # Waiting on Sophie's PR
 from emmet.core.structure import StructureMetadata
-from monty.serialization import loadfn
 from pydantic import BaseModel, Field
+from pymatgen.core import Structure
 
 from atomate2.jdftx.schemas.calculation import (
     Calculation,
     CalculationInput,
     CalculationOutput,
+    RunStatistics,
 )
-from atomate2.jdftx.schemas.enums import CalcType, JDFTxStatus, TaskType
+from atomate2.jdftx.schemas.enums import JDFTxStatus, TaskType
 from atomate2.jdftx.sets.base import FILE_NAMES
 from atomate2.utils.datetime import datetime_str
 
@@ -28,6 +29,8 @@ _T = TypeVar("_T", bound="TaskDoc")
 
 
 class CustodianDoc(BaseModel):
+    """Custodian data for JDFTx calculations."""
+
     corrections: Optional[list[Any]] = Field(
         None,
         title="Custodian Corrections",
@@ -47,36 +50,31 @@ class TaskDoc(StructureMetadata):
     dir_name: Optional[Union[str, Path]] = Field(
         None, description="The directory for this JDFTx task"
     )
-
-    task_type: Optional[Union[CalcType, TaskType]] = Field(
-        None, description="the type of JDFTx calculation"
-    )
-
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-
+    comnpleted_at: Optional[str] = Field(
+        None, description="Timestamp for when this task was completed"
+    )
     calc_inputs: Optional[CalculationInput] = Field(
         {}, description="JDFTx calculation inputs"
     )
-
+    structure: Structure = Field(None, description="Final output structure")
+    run_stats: Optional[dict[str, RunStatistics]] = Field(
+        None,
+        description="Summary of runtime statistics for each calculation in this task",
+    )
     calc_outputs: Optional[CalculationOutput] = Field(
         None,
         description="JDFTx calculation outputs",
     )
-
     state: Optional[JDFTxStatus] = Field(
         None, description="State of this JDFTx calculation"
     )
-
-    # implemented in VASP and Qchem. Do we need this?
-    # it keeps a list of all calculations in a given task.
-    # calcs_reversed: Optional[list[Calculation]] = Field(
-    # None,
-    # title="Calcs reversed data",
-    # description="Detailed data for each JDFTx calculation contributing to the task document.",
-    # )
+    task_type: Optional[TaskType] = Field(
+        None, description="The type of task this calculation is"
+    )
 
     @classmethod
     def from_directory(
@@ -84,7 +82,7 @@ class TaskDoc(StructureMetadata):
         dir_name: Union[Path, str],
         additional_fields: dict[str, Any] = None,
         **jdftx_calculation_kwargs,
-    ) -> _T:
+    ) -> Self:
         """
         Create a task document from a directory containing JDFTx files.
 
@@ -107,12 +105,13 @@ class TaskDoc(StructureMetadata):
         """
         logger.info(f"Getting task doc in: {dir_name}")
 
-        additional_fields = {} if additional_fields is None else additional_fields
+        additional_fields = additional_fields or {}
         dir_name = Path(dir_name)
         calc_doc = Calculation.from_files(
             dir_name=dir_name,
             jdftxinput_file=FILE_NAMES["in"],
             jdftxoutput_file=FILE_NAMES["out"],
+            **jdftx_calculation_kwargs,
         )
 
         doc = cls.from_structure(
@@ -120,13 +119,10 @@ class TaskDoc(StructureMetadata):
             dir_name=dir_name,
             calc_outputs=calc_doc.output,
             calc_inputs=calc_doc.input,
-            # task_type=
-            # state=_get_state()
+            task_type=calc_doc.task_type,
         )
 
-        print(doc.calc_outputs.__dict__)
-        doc = doc.model_copy(update=additional_fields)
-        return doc
+        return doc.model_copy(update=additional_fields)
 
 
 def get_uri(dir_name: Union[str, Path]) -> str:
@@ -151,37 +147,6 @@ def get_uri(dir_name: Union[str, Path]) -> str:
     hostname = socket.gethostname()
     try:
         hostname = socket.gethostbyaddr(hostname)[0]
-    except (socket.gaierror, socket.herror):
-        pass
+    except (socket.gaierror, socket.herror) as e:
+        raise Warning(f"Could not resolve hostname for {fullpath}") from e
     return f"{hostname}:{fullpath}"
-
-
-def _parse_custodian(dir_name: Path) -> Optional[dict]:
-    """
-    Parse custodian.json file.
-
-    Calculations done using custodian have a custodian.json file which tracks the makers
-    performed and any errors detected and fixed.
-
-    Parameters
-    ----------
-    dir_name
-        Path to calculation directory.
-
-    Returns
-    -------
-    Optional[dict]
-        The information parsed from custodian.json file.
-    """
-    filenames = tuple(dir_name.glob("custodian.json*"))
-    if len(filenames) >= 1:
-        return loadfn(filenames[0], cls=None)
-    return None
-
-
-# TODO currently doesn't work b/c has_jdftx_completed method is not implemented
-def _get_state(calc: Calculation) -> JDFTxStatus:
-    """Get state from calculation document of JDFTx task."""
-    if calc.has_jdftx_completed:
-        return JDFTxStatus.SUCCESS
-    return JDFTxStatus.FAILED

@@ -17,7 +17,6 @@ class SinglePointSetGenerator(JdftxInputGenerator):
     default_settings: dict = field(
         default_factory=lambda: {
             **_BASE_JDFTX_SET,
-            "elec-initial-magnetization": {"M": 5, "constrain": False},
             "fluid": {"type": "LinearPCM"},
             "pcm-variant": "CANDLE",
             "fluid-solvent": {"name": "H2O"},
@@ -34,7 +33,6 @@ class IonicMinSetGenerator(JdftxInputGenerator):
     default_settings: dict = field(
         default_factory=lambda: {
             **_BASE_JDFTX_SET,
-            "elec-initial-magnetization": {"M": 5, "constrain": False},
             "fluid": {"type": "LinearPCM"},
             "pcm-variant": "CANDLE",
             "fluid-solvent": {"name": "H2O"},
@@ -52,7 +50,6 @@ class LatticeMinSetGenerator(JdftxInputGenerator):
     default_settings: dict = field(
         default_factory=lambda: {
             **_BASE_JDFTX_SET,
-            "elec-initial-magnetization": {"M": 5, "constrain": False},
             "fluid": {"type": "LinearPCM"},
             "pcm-variant": "CANDLE",
             "fluid-solvent": {"name": "H2O"},

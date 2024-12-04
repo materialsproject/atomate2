@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class SinglePointMaker(BaseJdftxMaker):
-    """Maker to create JDFTx ionic optimization job"""
+    """Maker to create JDFTx ionic optimization job."""
 
     name: str = "single_point"
     input_set_generator: JdftxInputGenerator = field(
@@ -32,7 +32,7 @@ class SinglePointMaker(BaseJdftxMaker):
 
 @dataclass
 class IonicMinMaker(BaseJdftxMaker):
-    """Maker to create JDFTx ionic optimization job"""
+    """Maker to create JDFTx ionic optimization job."""
 
     name: str = "ionic_min"
     input_set_generator: JdftxInputGenerator = field(
@@ -42,7 +42,7 @@ class IonicMinMaker(BaseJdftxMaker):
 
 @dataclass
 class LatticeMinMaker(BaseJdftxMaker):
-    """Maker to create JDFTx lattice optimization job"""
+    """Maker to create JDFTx lattice optimization job."""
 
     name: str = "lattice_min"
     input_set_generator: JdftxInputGenerator = field(
