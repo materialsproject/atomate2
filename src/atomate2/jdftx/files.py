@@ -1,4 +1,4 @@
-"""File operations and default JDFTx file names"""
+"""File operations and default JDFTx file names."""
 
 import logging
 

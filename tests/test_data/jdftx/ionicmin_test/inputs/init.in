@@ -17,7 +17,7 @@ elec-smearing Fermi 0.001
 spintype z-spin
 elec-initial-magnetization 5 no
 converge-empty-states yes
-coulomb-interaction Periodic 
+coulomb-interaction Periodic
 
 ionic-minimize \
     nIterations 100

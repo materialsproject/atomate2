@@ -5,16 +5,16 @@ from __future__ import annotations
 import logging
 import os
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from jobflow import Maker, Response, job
-
-logger = logging.getLogger(__name__)
 
 from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+    from pathlib import Path
+
     from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.electronic_structure.bandstructure import (
@@ -25,6 +25,8 @@ from pymatgen.electronic_structure.bandstructure import (
 from atomate2.jdftx.files import write_jdftx_input_set
 from atomate2.jdftx.run import run_jdftx, should_stop_children
 from atomate2.jdftx.schemas.task import TaskDoc
+
+logger = logging.getLogger(__name__)
 
 _DATA_OBJECTS = [  # TODO update relevant list for JDFTx
     BandStructure,

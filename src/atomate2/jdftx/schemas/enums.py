@@ -15,23 +15,24 @@ class CalcType(ValueEnum):
 
     GGA = "gga"
     GGA_PBE = "gga-PBE"
-    GGA_PBESOL = "gga-PBEsol",
-    GGA_PW91 = "gga-PW91",
-    HARTREE_FOCK = "Hartree-Fock",
-    HYB_HSE06 = "hyb-HSE06",
-    HYB_HSE12 = "hyb-HSE12",
-    HYB_HSE12S = "hyb-HSE12s",
-    HYB_PBE0 = "hyb-PBE0",
-    LDA = "lda",
-    LDA_PW = "lda-PW",
-    LDA_PW_PREC = "lda-PW-prec",
-    LDA_PZ = "lda-PZ",
-    LDA_TETER = "lda-Teter",
-    LDA_VWN = "lda-VWN",
-    MGGA_REVTPSS = "mgga-revTPSS",
-    MGGA_TPSS = "mgga-TPSS",
-    ORB_GLLBSC = "orb-GLLBsc",
+    GGA_PBESOL = ("gga-PBEsol",)
+    GGA_PW91 = ("gga-PW91",)
+    HARTREE_FOCK = ("Hartree-Fock",)
+    HYB_HSE06 = ("hyb-HSE06",)
+    HYB_HSE12 = ("hyb-HSE12",)
+    HYB_HSE12S = ("hyb-HSE12s",)
+    HYB_PBE0 = ("hyb-PBE0",)
+    LDA = ("lda",)
+    LDA_PW = ("lda-PW",)
+    LDA_PW_PREC = ("lda-PW-prec",)
+    LDA_PZ = ("lda-PZ",)
+    LDA_TETER = ("lda-Teter",)
+    LDA_VWN = ("lda-VWN",)
+    MGGA_REVTPSS = ("mgga-revTPSS",)
+    MGGA_TPSS = ("mgga-TPSS",)
+    ORB_GLLBSC = ("orb-GLLBsc",)
     POT_LB94 = "pot-LB94"
+
 
 class TaskType(ValueEnum):
     """JDFTx task type."""
@@ -43,9 +44,10 @@ class TaskType(ValueEnum):
     SOFTSPHERE = "SoftSphere"
     DYNAMICS = "Molecular Dynamics"
 
+
 class SolvationType(ValueEnum):
-    """JDFTx solvent type"""
-    
+    """JDFTx solvent type."""
+
     NONE = "None"
     SALSA = "SaLSA"
     CDFT = "Classical DFT"
@@ -62,6 +64,3 @@ class SolvationType(ValueEnum):
     LINEAR_SGA13 = "LinearPCM SGA13"
     LINEAR_SOFTSPHERE = "LinearPCM SoftSphere"
     NONLINEAR_SGA13 = "NonlinearPCM SGA13"
-
-
-

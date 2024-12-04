@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 
 from atomate2.jdftx.sets.base import JdftxInputGenerator
@@ -6,7 +7,6 @@ from atomate2.jdftx.sets.core import (
     LatticeMinSetGenerator,
     SinglePointSetGenerator,
 )
-import numpy as np
 
 
 @pytest.fixture
@@ -45,16 +45,27 @@ def test_latticemin_generator(si_structure, basis_and_potential):
     jdftx_input = input_set.jdftxinput
     assert jdftx_input["lattice-minimize"]["nIterations"] == 100
 
+
 def test_coulomb_truncation(si_structure):
-    cart_gen = JdftxInputGenerator(calc_type="surface", user_settings={"coords-type": "Cartesian"})
-    frac_gen = JdftxInputGenerator(calc_type="surface", user_settings={"coords-type": "Lattice"})
+    cart_gen = JdftxInputGenerator(
+        calc_type="surface", user_settings={"coords-type": "Cartesian"}
+    )
+    frac_gen = JdftxInputGenerator(
+        calc_type="surface", user_settings={"coords-type": "Lattice"}
+    )
     cart_input_set = cart_gen.get_input_set(si_structure)
     frac_input_set = frac_gen.get_input_set(si_structure)
     cart_jdftx_input = cart_input_set.jdftxinput
     frac_jdftx_input = frac_input_set.jdftxinput
 
-    cart_center_of_mass = np.array([val for val in cart_jdftx_input["coulomb-truncation-embed"].values()])
-    frac_center_of_mass = np.array([val for val in frac_jdftx_input["coulomb-truncation-embed"].values()])
-    assert any([val > 1 for val in cart_center_of_mass]) == True
-    assert all([val < 1 for val in frac_center_of_mass]) == True
-    assert np.allclose(cart_center_of_mass, frac_center_of_mass @ si_structure.lattice.matrix) == True
+    cart_center_of_mass = np.array(
+        list(cart_jdftx_input["coulomb-truncation-embed"].values())
+    )
+    frac_center_of_mass = np.array(
+        list(frac_jdftx_input["coulomb-truncation-embed"].values())
+    )
+    assert any([cart_center_of_mass > 1])
+    assert all([frac_center_of_mass < 1])
+    assert np.allclose(
+        cart_center_of_mass, frac_center_of_mass @ si_structure.lattice.matrix
+    )

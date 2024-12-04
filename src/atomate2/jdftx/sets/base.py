@@ -3,26 +3,25 @@
 from __future__ import annotations
 
 import os
+from collections import defaultdict
 from dataclasses import dataclass, field
 from importlib.resources import files as get_mod_path
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Union
-import numpy as np
-from scipy import constants as const
-from collections import defaultdict
+from typing import TYPE_CHECKING, Any
 
+import numpy as np
 from monty.serialization import loadfn
-from pymatgen.core import Structure
-from pymatgen.core.units import eV_to_Ha, ang_to_bohr
+from pymatgen.core.units import ang_to_bohr, eV_to_Ha
 from pymatgen.io.core import InputGenerator, InputSet
 from pymatgen.io.jdftx.inputs import JDFTXInfile, JDFTXStructure
 from pymatgen.io.vasp import Kpoints
-from pymatgen.util.typing import Kpoint, Tuple3Floats
+
 from atomate2 import SETTINGS
 
-
 if TYPE_CHECKING:
-    from pymatgen.util.typing import PathLike
+    from pymatgen.core import Structure
+    from pymatgen.util.typing import Kpoint, PathLike
+
 
 _BASE_JDFTX_SET = loadfn(get_mod_path("atomate2.jdftx.sets") / "BaseJdftxSet.yaml")
 _BEAST_CONFIG = loadfn(get_mod_path("atomate2.jdftx.sets") / "BeastConfig.yaml")
@@ -93,17 +92,17 @@ class JdftxInputSet(InputSet):
 @dataclass
 class JdftxInputGenerator(InputGenerator):
     """A class to generate JDFTx input sets.
-    
+
     Args:
         user_settings (dict): User JDFTx settings. This allows the user to
             override the default JDFTx settings loaded in the default_settings
             argument.
-        coulomb_truncation (bool) = False: 
-            Whether to use coulomb truncation and calculate the coulomb 
+        coulomb_truncation (bool) = False:
+            Whether to use coulomb truncation and calculate the coulomb
             truncation center. Only works for molecules and slabs.
         auto_kpoint_density (int) = 1000:
-            Reciprocal k-point density for automatic k-point calculation. If 
-            k-points are specified in user_settings, they will not be 
+            Reciprocal k-point density for automatic k-point calculation. If
+            k-points are specified in user_settings, they will not be
             overridden.
         potential (None, float) = None:
             Potential vs SHE for GC-DFT calculation.
@@ -111,7 +110,7 @@ class JdftxInputGenerator(InputGenerator):
             Type of calculation used for setting input parameters. Options are:
             ["bulk", "surface", "molecule"].
         pseudopotentials (str) = "GBRV"
-        config_dict (dict): The config dictionary used to set input paremeters
+        config_dict (dict): The config dictionary used to set input parameters
             used in the calculation of JDFTx tags.
         default_settings: Default JDFTx settings.
     """
@@ -121,7 +120,7 @@ class JdftxInputGenerator(InputGenerator):
     user_settings: dict = field(default_factory=dict)
     coulomb_truncation: bool = False
     auto_kpoint_density: int = 1000
-    potential: Union[None, float] = None
+    potential: None | float = None
     calc_type: str = "bulk"
     pseudopotentials: str = "GBRV"
     config_dict: dict = field(default_factory=lambda: _BEAST_CONFIG)
@@ -138,7 +137,7 @@ class JdftxInputGenerator(InputGenerator):
         self.settings = self.default_settings.copy()
         self.settings.update(self.user_settings)
         # set default coords-type to Cartesian
-        if "coords-type" not in self.settings.keys():
+        if "coords-type" not in self.settings:
             self.settings["coords-type"] = "Cartesian"
         self._apply_settings(self.settings)
 
@@ -175,58 +174,52 @@ class JdftxInputGenerator(InputGenerator):
 
         jdftx_structure = JDFTXStructure(structure)
         jdftxinputs = self.settings
-        jdftxinputs["coords-type"] = "Cartesian" # always force Cartesian
+        jdftxinputs["coords-type"] = "Cartesian"  # always force Cartesian
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
 
         jdftxinputs = self.settings
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
 
-        print(self.settings)
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftx_structure)
 
-    def set_kgrid(
-        self, 
-        structure:Structure
-    ) -> Kpoint:
+    def set_kgrid(self, structure: Structure) -> Kpoint:
         """Get k-point grid.
-        
+
         Parameters
         ----------
         structure
             A pymatgen structure.
-        
+
         Returns
         -------
         Kpoints
             A tuple of integers specifying the k-point grid.
         """
         # never override k grid definition in user settings
-        if "kpoint-folding" in self.user_settings.keys():
-            return 
+        if "kpoint-folding" in self.user_settings:
+            return
         # calculate k-grid with k-point density
-        else:
-            kpoints = Kpoints.automatic_density(
-                structure=structure,
-                kppa=self.auto_kpoint_density
-                )
-            kpoints = kpoints.kpts[0]
-            if self.calc_type == "surface":
-                kpoints = (kpoints[0], kpoints[1], 1)
-            elif self.calc_type == "molecule":
-                kpoints = (1,1,1)
-            kpoint_update = {"kpoint-folding": 
-                {
-                "n0": kpoints[0], 
+        kpoints = Kpoints.automatic_density(
+            structure=structure, kppa=self.auto_kpoint_density
+        )
+        kpoints = kpoints.kpts[0]
+        if self.calc_type == "surface":
+            kpoints = (kpoints[0], kpoints[1], 1)
+        elif self.calc_type == "molecule":
+            kpoints = (1, 1, 1)
+        kpoint_update = {
+            "kpoint-folding": {
+                "n0": kpoints[0],
                 "n1": kpoints[1],
                 "n2": kpoints[2],
-                }
             }
-            self.settings.update(kpoint_update)
-            return
+        }
+        self.settings.update(kpoint_update)
+        return
 
     def set_coulomb_interaction(
-            self, 
-            structure:Structure, 
+        self,
+        structure: Structure,
     ) -> JDFTXInfile:
         """
         Set coulomb-interaction and coulomb-truncation for JDFTXInfile.
@@ -242,16 +235,16 @@ class JdftxInputGenerator(InputGenerator):
         -------
         jdftxinputs
             A pymatgen.io.jdftx.inputs.JDFTXInfile object
-        
+
         """
-        if "coulomb-interaction" in self.settings.keys():
+        if "coulomb-interaction" in self.settings:
             return
         if self.calc_type == "bulk":
             self.settings["coulomb-interaction"] = {
                 "truncationType": "Periodic",
             }
             return
-        elif self.calc_type == "surface":
+        if self.calc_type == "surface":
             self.settings["coulomb-interaction"] = {
                 "truncationType": "Slab",
                 "dir": "001",
@@ -271,70 +264,56 @@ class JdftxInputGenerator(InputGenerator):
             "c2": com[2],
         }
         return
-    
-    def set_nbands(
-            self, 
-            structure:Structure
-    ) -> None:
-        """
-        Set number of bands in DFT calculation.
-        """
+
+    def set_nbands(self, structure: Structure) -> None:
+        """Set number of bands in DFT calculation."""
         nelec = 0
         for atom in structure.species:
             nelec += _PSEUDO_CONFIG[self.pseudopotentials][str(atom)]
         nbands_add = int(nelec / 2) + 10
-        nbands_mult = int((nelec/2)) * _BEAST_CONFIG["bands_multiplier"]
+        nbands_mult = int(nelec / 2) * _BEAST_CONFIG["bands_multiplier"]
         self.settings["elec-n-bands"] = max(nbands_add, nbands_mult)
-        return
-             
+
     def set_pseudos(
-            self,
+        self,
     ) -> None:
-        """Set ion-species tag corresponding to pseudopotentials.
-        
-        """
-        if SETTINGS.JDFTX_PSEUDOS_DIR != None:
+        """Set ion-species tag corresponding to pseudopotentials."""
+        if SETTINGS.JDFTX_PSEUDOS_DIR is not None:
             pseudos_str = str(
                 Path(SETTINGS.JDFTX_PSEUDOS_DIR) / Path(self.pseudopotentials)
             )
         else:
             pseudos_str = self.pseudopotentials
-            
-        add_tags = []
-        for suffix in _PSEUDO_CONFIG[self.pseudopotentials]["suffixes"]:
-            add_tags.append(pseudos_str+"/$ID"+suffix)
+
+        add_tags = [
+            pseudos_str + "/$ID" + suffix
+            for suffix in _PSEUDO_CONFIG[self.pseudopotentials]["suffixes"]
+        ]
         # do not override pseudopotentials in settings
-        if "ion-species" in self.settings.keys():
-            return 
-        else:
-            self.settings["ion-species"] = add_tags
+        if "ion-species" in self.settings:
             return
-        
-    def set_mu(self) -> None:
-        """
-        Set absolute electron chemical potential (fermi level) for GC-DFT.
-        """
-        # never override mu in settings
-        if "target-mu" in self.settings.keys():
-            return
-        elif self.potential == None:
-            return
-        else:
-            solvent_model = self.settings["pcm-variant"]
-            ashep = _BEAST_CONFIG["ASHEP"][solvent_model]
-            # calculate absolute potential in Hartree
-            mu = -(ashep - self.potential) / eV_to_Ha 
-            self.settings["target-mu"] = {"mu": mu}
+        self.settings["ion-species"] = add_tags
         return
-    
-    def set_magnetic_moments(self, structure:Structure
-    ) -> None:
+
+    def set_mu(self) -> None:
+        """Set absolute electron chemical potential (fermi level) for GC-DFT."""
+        # never override mu in settings
+        if "target-mu" in self.settings or self.potential is None:
+            return
+        solvent_model = self.settings["pcm-variant"]
+        ashep = _BEAST_CONFIG["ASHEP"][solvent_model]
+        # calculate absolute potential in Hartree
+        mu = -(ashep - self.potential) / eV_to_Ha
+        self.settings["target-mu"] = {"mu": mu}
+        return
+
+    def set_magnetic_moments(self, structure: Structure) -> None:
         """Set the magnetic moments for each atom in the structure.
 
-        If the user specified magnetic moments as JDFTx tags, they will 
+        If the user specified magnetic moments as JDFTx tags, they will
         not be prioritized. The user can also set the magnetic moments in
         the site_params dictionary attribute of the structure. If neither above
-        options are set, the code will initialize all metal atoms with +5 
+        options are set, the code will initialize all metal atoms with +5
         magnetic moments.
 
         Parameters
@@ -346,27 +325,28 @@ class JdftxInputGenerator(InputGenerator):
         -------
         None
         """
-        
         # check if user set JFDTx magnetic tags and return if true
-        if any(
-            [i in ["initial-magnetic-moments", "elec-initial-magnetization"]
-            for i in self.settings.keys()]
-            ):
+        if (
+            "initial-magnetic-moments" in self.settings
+            or "elec-initial-magnetization" in self.settings
+        ):
             return
         # if magmoms set on structure, build JDFTx tag
-        if "magmom" in structure.site_properties.keys():
+        if "magmom" in structure.site_properties:
             if len(structure.species) != len(structure.site_properties["magmom"]):
                 raise ValueError(
                     f"length of magmom, {structure.site_properties['magmom']} "
                     "does not match number of species in structure, "
                     f"{len(structure.species)}."
-                    )
+                )
             magmoms = defaultdict(list)
-            for magmom, species in zip(structure.site_properties["magmom"], structure.species):
+            for magmom, species in zip(
+                structure.site_properties["magmom"], structure.species, strict=False
+            ):
                 magmoms[species].append(magmom)
             tag_str = ""
             for element, magmom_list in magmoms.items():
-                tag_str += f"{element} " + " ".join(list(map(str,magmom_list))) + " "
+                tag_str += f"{element} " + " ".join(list(map(str, magmom_list))) + " "
         # set magmoms to +5 for all metals in structure.
         else:
             magmoms = defaultdict(list)
@@ -377,9 +357,10 @@ class JdftxInputGenerator(InputGenerator):
                     magmoms[str(species)].append(0)
             tag_str = ""
             for element, magmom_list in magmoms.items():
-                tag_str += f"{element} " + " ".join(list(map(str,magmom_list))) + " "
+                tag_str += f"{element} " + " ".join(list(map(str, magmom_list))) + " "
         self.settings["initial-magnetic-moments"] = tag_str
         return
+
 
 def condense_jdftxinputs(
     jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
@@ -407,28 +388,24 @@ def condense_jdftxinputs(
     """
     # force Cartesian coordinates
     coords_type = jdftxinput.get("coords-type")
-    if coords_type == "Cartesian":
-        cartesian = True
-    else:
-        cartesian = False
-    return (jdftxinput + 
-            JDFTXInfile.from_str(jdftxstructure.get_str(in_cart_coords=cartesian))
-            )
+    return jdftxinput + JDFTXInfile.from_str(
+        jdftxstructure.get_str(in_cart_coords=(coords_type == "Cartesian"))
+    )
 
-def center_of_mass(structure:Structure) -> np.ndarray:
+
+def center_of_mass(structure: Structure) -> np.ndarray:
     """
-    Calculate center of mass
+    Calculate center of mass.
 
     Parameters
     ----------
     structure: Structure
         A pymatgen structure
-    
+
     Returns
     -------
     np.ndarray
         A numpy array containing the center of mass in fractional coordinates.
     """
     weights = [site.species.weight for site in structure]
-    com = np.average(structure.frac_coords, weights=weights, axis=0)
-    return com
+    return np.average(structure.frac_coords, weights=weights, axis=0)
