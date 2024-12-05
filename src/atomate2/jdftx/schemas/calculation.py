@@ -227,7 +227,7 @@ class Calculation(BaseModel):
         jdftxoutput_file: Union[Path, str],
         jdftxinput_kwargs: Optional[dict] = None,
         jdftxoutput_kwargs: Optional[dict] = None,
-        # task_name  # do we need task names? These are created by Custodian
+        # **jdftx_calculation_kwargs, #TODO implement optional calcdoc kwargs
     ) -> "Calculation":
         """
         Create a JDFTx calculation document from a directory and file paths.

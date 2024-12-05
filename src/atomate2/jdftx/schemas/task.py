@@ -81,7 +81,7 @@ class TaskDoc(StructureMetadata):
         cls: type[_T],
         dir_name: Union[Path, str],
         additional_fields: dict[str, Any] = None,
-        **jdftx_calculation_kwargs,
+        # **jdftx_calculation_kwargs, #TODO implement
     ) -> Self:
         """
         Create a task document from a directory containing JDFTx files.
@@ -94,7 +94,7 @@ class TaskDoc(StructureMetadata):
             Whether to store additional json files in the calculation directory.
         additional_fields
             dictionary of additional fields to add to output document.
-        **qchem_calculation_kwargs
+        **jdftx_calculation_kwargs
             Additional parsing options that will be passed to the
             :obj:`.Calculation.from_qchem_files` function.
 
@@ -111,7 +111,7 @@ class TaskDoc(StructureMetadata):
             dir_name=dir_name,
             jdftxinput_file=FILE_NAMES["in"],
             jdftxoutput_file=FILE_NAMES["out"],
-            **jdftx_calculation_kwargs,
+            # **jdftx_calculation_kwargs, # still need to implement
         )
 
         doc = cls.from_structure(
