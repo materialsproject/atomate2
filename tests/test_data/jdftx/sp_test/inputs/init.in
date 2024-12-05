@@ -9,6 +9,9 @@ core-overlap-check none
 ion-species GBRV_v1.5/$ID_pbe_v1.uspp
 kpoint-folding 7 7 7
 symmetries none
+elec-n-bands 14
+coords-type Lattice
+initial-magnetic-moments Si 0 0
 
 elec-ex-corr gga
 van-der-waals D3

@@ -64,8 +64,8 @@ def test_coulomb_truncation(si_structure):
     frac_center_of_mass = np.array(
         list(frac_jdftx_input["coulomb-truncation-embed"].values())
     )
-    assert any([cart_center_of_mass > 1])
-    assert all([frac_center_of_mass < 1])
+    assert any(cart_center_of_mass > 1)
+    assert all(frac_center_of_mass < 1)
     assert np.allclose(
         cart_center_of_mass, frac_center_of_mass @ si_structure.lattice.matrix
     )
