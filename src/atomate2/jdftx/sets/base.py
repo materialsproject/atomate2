@@ -176,9 +176,6 @@ class JdftxInputGenerator(InputGenerator):
         jdftxinputs = self.settings
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
 
-        jdftxinputs = self.settings
-        jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
-
         return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftx_structure)
 
     def set_kgrid(self, structure: Structure) -> Kpoint:
