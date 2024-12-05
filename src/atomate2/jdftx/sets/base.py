@@ -174,7 +174,6 @@ class JdftxInputGenerator(InputGenerator):
 
         jdftx_structure = JDFTXStructure(structure)
         jdftxinputs = self.settings
-        jdftxinputs["coords-type"] = "Cartesian"  # always force Cartesian
         jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
 
         jdftxinputs = self.settings
