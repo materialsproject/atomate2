@@ -36,15 +36,6 @@ def jdftx_test_dir(test_dir):
     return test_dir / "jdftx"
 
 
-@pytest.fixture
-def mock_cwd(monkeypatch, request):
-    test_name = request.param
-    mock_path = (
-        Path(__file__).resolve().parent / f"../test_data/jdftx/{test_name}"
-    ).resolve()
-    monkeypatch.setattr(os, "getcwd", lambda: str(mock_path))
-
-
 @pytest.fixture(params=["sp_test", "ionicmin_test", "latticemin_test"])
 def task_name(request):
     task_table = {
@@ -57,8 +48,8 @@ def task_name(request):
 
 @pytest.fixture
 def mock_filenames(monkeypatch):
-    monkeypatch.setitem(FILE_NAMES, "in", "inputs/init.in")
-    monkeypatch.setitem(FILE_NAMES, "out", "outputs/jdftx.out")
+    monkeypatch.setitem(FILE_NAMES, "in", "init.in")
+    monkeypatch.setitem(FILE_NAMES, "out", "jdftx.out")
 
 
 @pytest.fixture
@@ -164,7 +155,9 @@ def clear_jdftx_inputs():
 
 
 def copy_jdftx_outputs(ref_path: Path):
+    base_path = Path(os.getcwd())
     output_path = ref_path / "outputs"
+    logger.info(f"copied output files to {base_path}")
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")
