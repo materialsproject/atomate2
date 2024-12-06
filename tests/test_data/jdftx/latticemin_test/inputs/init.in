@@ -28,11 +28,6 @@ electronic-minimize \
     nIterations 100 \
     energyDiffThreshold 1e-07
 
-fluid LinearPCM
-fluid-solvent H2O
-fluid-anion F- 0.5
-fluid-cation Na+ 0.5
-pcm-variant CANDLE
 
 dump-name jdftx.$VAR
 band-projection-params yes no
