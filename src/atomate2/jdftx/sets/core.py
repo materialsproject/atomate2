@@ -17,11 +17,6 @@ class SinglePointSetGenerator(JdftxInputGenerator):
     default_settings: dict = field(
         default_factory=lambda: {
             **_BASE_JDFTX_SET,
-            "fluid": {"type": "LinearPCM"},
-            "pcm-variant": "CANDLE",
-            "fluid-solvent": {"name": "H2O"},
-            "fluid-cation": {"name": "Na+", "concentration": 0.5},
-            "fluid-anion": {"name": "F-", "concentration": 0.5},
         }
     )
 
@@ -33,11 +28,6 @@ class IonicMinSetGenerator(JdftxInputGenerator):
     default_settings: dict = field(
         default_factory=lambda: {
             **_BASE_JDFTX_SET,
-            "fluid": {"type": "LinearPCM"},
-            "pcm-variant": "CANDLE",
-            "fluid-solvent": {"name": "H2O"},
-            "fluid-cation": {"name": "Na+", "concentration": 0.5},
-            "fluid-anion": {"name": "F-", "concentration": 0.5},
             "ionic-minimize": {"nIterations": 100},
         }
     )
@@ -50,12 +40,23 @@ class LatticeMinSetGenerator(JdftxInputGenerator):
     default_settings: dict = field(
         default_factory=lambda: {
             **_BASE_JDFTX_SET,
+            "lattice-minimize": {"nIterations": 100},
+            "latt-move-scale": {"s0": 1, "s1": 1, "s2": 1},
+        }
+    )
+
+
+class BEASTSetGenerator(JdftxInputGenerator):
+    """Generate BEAST Database ionic relaxation set."""
+
+    default_settings: dict = field(
+        default_factory=lambda: {
+            **_BASE_JDFTX_SET,
             "fluid": {"type": "LinearPCM"},
             "pcm-variant": "CANDLE",
             "fluid-solvent": {"name": "H2O"},
             "fluid-cation": {"name": "Na+", "concentration": 0.5},
             "fluid-anion": {"name": "F-", "concentration": 0.5},
-            "lattice-minimize": {"nIterations": 100},
-            "latt-move-scale": {"s0": 1, "s1": 1, "s2": 1},
+            "ionic-minimize": {"nIterations": 100},
         }
     )
