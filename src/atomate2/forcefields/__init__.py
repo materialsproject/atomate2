@@ -20,10 +20,13 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     NEP = "NEP"
     Nequip = "Nequip"
     SevenNet = "SevenNet"
+    Allegro = "Allegro"
+    OCP = "OCP"  # for loading model checkpoint with fairchem.core.OCPCalculator
+    MatterSim = "MatterSim"
 
     @classmethod
     def _missing_(cls, value: Any) -> Any:
-        """Allow input of str(MLFF) as valid enum."""
+        """Allow feeding output of str(MLFF.<model>) back into MLFF(...)."""
         if isinstance(value, str):
             value = value.split("MLFF.")[-1]
         for member in cls:
