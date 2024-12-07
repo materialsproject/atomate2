@@ -57,6 +57,7 @@ forcefields = [
     "matgl>=1.1.3",
     "torchdata<=0.7.1",
     # quippy-ase support for py3.12 tracked in https://github.com/libAtoms/QUIP/issues/645
+    "mattersim>=1.0.0rc10.dev1",
     "quippy-ase>=0.9.14; python_version < '3.12'",
     "sevenn>=0.9.3",
     "torchdata<=0.7.1",                            # TODO: remove when issue fixed
@@ -123,6 +124,7 @@ strict-forcefields = [
     "chgnet==0.4.0",
     "mace-torch>=0.3.6",
     "matgl==1.1.3",
+    "mattersim==1.0.0rc10.dev1",
     "quippy-ase==0.9.14; python_version < '3.12'",
     "sevenn==0.10.1",
     "torch==2.5.1",

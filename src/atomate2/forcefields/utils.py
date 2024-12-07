@@ -90,10 +90,27 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
 
             calculator = NequIPCalculator.from_deployed_model(**kwargs)
 
+        elif calculator_name == MLFF.Allegro:
+            from allegro.ase import AllegroCalculator
+
+            calculator = AllegroCalculator.from_deployed_model(**kwargs)
+
         elif calculator_name == MLFF.SevenNet:
             from sevenn.sevennet_calculator import SevenNetCalculator
 
             calculator = SevenNetCalculator(**{"model": "7net-0"} | kwargs)
+
+        elif calculator_name == MLFF.OCP:
+            # this package is not available on PyPI, needs to be installed from source
+            # see https://github.com/FAIR-Chem/fairchem?tab=readme-ov-file#installation
+            from fairchem.core import OCPCalculator
+
+            calculator = OCPCalculator(**kwargs)
+
+        elif calculator_name == MLFF.MatterSim:
+            from mattersim.forcefield import MatterSimCalculator
+
+            calculator = MatterSimCalculator(**kwargs)
 
     elif isinstance(calculator_meta, dict):
         calc_cls = MontyDecoder().process_decoded(calculator_meta)
