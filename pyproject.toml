@@ -74,7 +74,7 @@ docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.2.0",
     "furo==2024.8.6",
-    "ipython==8.29.0",
+    "ipython==8.30.0",
     "jsonschema[format]",
     "myst_parser==4.0.0",
     "numpydoc==1.8.0",
@@ -89,7 +89,7 @@ tests = [
     "pytest-cov==6.0.0",
     "pytest-mock==3.14.0",
     "pytest-split==0.10.0",
-    "pytest==8.3.3",
+    "pytest==8.3.4",
 ]
 strict = [
     "PyYAML==6.0.2",
@@ -98,17 +98,17 @@ strict = [
     "click==8.1.7",
     "custodian==2024.10.16",
     "dscribe==2.1.1",
-    "emmet-core==0.84.3rc3",
+    "emmet-core==0.84.3rc4",
     "ijson==3.3.0",
-    "jobflow==0.1.18",
+    "jobflow==0.1.19",
     "lobsterpy==0.4.9",
     "mdanalysis==2.7.0",
     "monty==2024.10.21",
-    "mp-api==0.42.2",
+    "mp-api==0.43.0",
     "numpy",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.1.1",
-    "phonopy==2.27.0",
+    "phonopy==2.30.1",
     "pydantic-settings==2.6.1",
     "pydantic==2.9.2",
     "pymatgen-analysis-defects==2024.10.22",
@@ -207,7 +207,6 @@ ignore = [
     "PLR0913", # too many arguments
     "PLR0915", # too many local statements
     "PLR2004",
-    "PT004",   # pytest-missing-fixture-name-underscore
     "PT006",   # pytest-parametrize-names-wrong-type
     "PT013",   # pytest-incorrect-pytest-import
     "PTH",     # prefer Pathlib to os.path
