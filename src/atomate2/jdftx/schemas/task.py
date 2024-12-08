@@ -9,7 +9,6 @@ from typing import Any, Optional, Self, TypeVar, Union
 from custodian.jdftx.jobs import JDFTxJob  # Waiting on Sophie's PR
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
-from pymatgen.core import Structure
 
 from atomate2.jdftx.schemas.calculation import (
     Calculation,
@@ -60,7 +59,6 @@ class TaskDoc(StructureMetadata):
     calc_inputs: Optional[CalculationInput] = Field(
         {}, description="JDFTx calculation inputs"
     )
-    structure: Structure = Field(None, description="Final output structure")
     run_stats: Optional[dict[str, RunStatistics]] = Field(
         None,
         description="Summary of runtime statistics for each calculation in this task",

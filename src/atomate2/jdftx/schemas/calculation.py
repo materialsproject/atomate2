@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 from pymatgen.core.structure import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.io.jdftx.inputs import JDFTXInfile
+from pymatgen.io.jdftx.joutstructure import JOutStructure
 from pymatgen.io.jdftx.outputs import JDFTXOutfile
 
 from atomate2.jdftx.schemas.enums import CalcType, SolvationType, TaskType
@@ -135,7 +136,7 @@ class CalculationOutput(BaseModel):
     vbm: Optional[float] = Field(
         None, description="Valence band maximum /HOMO from last electonic optimization"
     )
-    trajectory: Trajectory = (
+    trajectory: Optional[Trajectory] = (
         Field(None, description="Ionic trajectory from last JDFTx run"),
     )
 
@@ -178,13 +179,14 @@ class CalculationOutput(BaseModel):
         )
         cbm = jdftxoutput.lumo
         vbm = jdftxoutput.homo
+        structure = joutstruct_to_struct(joutstruct=optimized_structure)
         if kwargs.get("store_trajectory", True):
             trajectory: Trajectory = jdftxoutput.trajectory
             trajectory = trajectory.as_dict()
         else:
             trajectory = None
         return cls(
-            structure=optimized_structure,
+            structure=structure,
             forces=forces,
             energy=energy,
             energy_type=energy_type,
@@ -318,3 +320,20 @@ def _solvation_type(inputdoc: CalculationInput) -> SolvationType:
     fluid_type = fluid.get("type")
     solvation_type = f"{fluid_type} {fluid_solvent}"
     return SolvationType(solvation_type)
+
+
+def joutstruct_to_struct(joutstruct: JOutStructure) -> Structure:
+    """Convert JOutStructre to Structure."""
+    lattice = joutstruct.lattice
+    cart_coords = joutstruct.cart_coords
+    species = joutstruct.species
+    struct = Structure(
+        lattice=lattice,
+        coords=cart_coords,
+        species=species,
+        coords_are_cartesian=True,
+    )
+    for prop, values in joutstruct.site_properties.items():
+        for isite, site in enumerate(struct):
+            site.properties[prop] = values[isite]
+    return struct
