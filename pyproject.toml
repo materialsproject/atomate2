@@ -51,7 +51,7 @@ defects = [
 ]
 forcefields = [
     "ase>=3.23.0",
-    "calorine<=2.2.1",
+    "calorine>=3.0",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.1.3",
