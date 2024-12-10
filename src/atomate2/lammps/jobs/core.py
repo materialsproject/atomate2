@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
-from atomate2.lammps.sets.core import BaseLammpsSetGenerator, LammpsNVTSet, LammpsNPTSet, LammpsMinimizeSet, LammpsInputFile
+from atomate2.lammps.sets.core import BaseLammpsSetGenerator, LammpsNVTSet, LammpsNPTSet, LammpsMinimizeSet
 from atomate2.lammps.jobs.base import BaseLammpsMaker
+from pymatgen.io.lammps.inputs import LammpsInputFile
 
 @dataclass
 class LammpsNVTMaker(BaseLammpsMaker):

@@ -11,7 +11,6 @@ from monty.serialization import dumpfn
 from monty.json import MSONable
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from atomate2.lammps.sets.utils import LammpsInterchange
-import warnings
 
 def write_lammps_input_set(
     data: Structure | LammpsData | LammpsInterchange | CombinedData,
@@ -28,6 +27,19 @@ def write_lammps_input_set(
 
 
 class DumpConvertor(MSONable):    
+    '''
+    Class to convert LAMMPS dump files to pymatgen or ase Trajectory objects. Based on TrajectoryObserver from atomate2.ase.
+    
+    args:
+        dumpfile : str
+            Path to the LAMMPS dump file
+        store_md_outputs : StoreTrajectoryOption
+            Option to store MD outputs in the Trajectory object
+        read_index : str | int
+            Index of the frame to read from the dump file (default is ':', i.e. read all frames). 
+            Use an integer to read a specific frame (practical for large files).
+    
+    '''
     def __init__(self, dumpfile, store_md_outputs : StoreTrajectoryOption  = StoreTrajectoryOption.NO, read_index: str | int = ':') -> None:
         self.store_md_outputs = store_md_outputs
         self.traj = read(dumpfile, index=read_index) if isinstance(read_index, str) else [read(dumpfile, index=read_index)]
