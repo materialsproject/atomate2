@@ -74,7 +74,7 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
     )
 
     # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, create_folders=False, ensure_success=True)
+    responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate the outputs
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
