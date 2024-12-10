@@ -1,69 +1,98 @@
-import os
-from atomate2.lammps.sets.base import BaseLammpsSet, template_dir, _BASE_LAMMPS_SETTINGS
+from atomate2.lammps.sets.base import BaseLammpsSetGenerator
 from typing import Literal
 from atomate2.ase.md import MDEnsemble
+import numpy as np
 
-class LammpsNVTSet(BaseLammpsSet):
+
+class LammpsNVESet(BaseLammpsSetGenerator):
+    """
+    Lammps input set for NVE MD simulations. 
+    """
+    ensemble : MDEnsemble = MDEnsemble.nve
+    settings : dict = {}
+    
+    def __init__(self, **kwargs):
+        self.settings.update({'ensemble': self.ensemble.value})
+        
+        super().__init__(calc_type=f'lammps_{self.ensemble.value}', settings=self.settings, **kwargs)
+
+
+class LammpsNVTSet(BaseLammpsSetGenerator):
     """
     Lammps input set for NVT MD simulations. 
     """
     ensemble : MDEnsemble = MDEnsemble.nvt
     friction : float = None
-    thermostat : str = "langevin"
-    settings : dict = None
+    temperature : float | list | np.ndarray = 300
+    thermostat : Literal['langevin', 'nose-hoover'] = "langevin"
+    settings : dict = {}
     
     def __init__(self, 
                  thermostat : Literal['langevin', 'nose-hoover'] = 'langevin',
+                 temperature : float | list | np.ndarray = 300,
                  friction : float = None,
                  **kwargs):
+        self.friction = friction
+        self.thermostat = thermostat                     
+        self.settings.update({'ensemble': self.ensemble.value,
+                              'thermostat': self.thermostat,
+                              'temperature': temperature})
         
-        self.thermostat = thermostat
-        if friction is None:
-            friction = 100*kwargs.get('timestep', _BASE_LAMMPS_SETTINGS['timestep'])
-        if friction < kwargs.get('timestep', 0.001):
-            raise ValueError("Friction should be more than the timestep!")
-        
-        self.settings = {'thermostat': self.thermostat, 
-                         'tfriction': friction,
-                         'ensemble': self.ensemble.value
-                         }
-        super().__init__(ensemble=self.ensemble, thermostat=self.thermostat, settings=self.settings, **kwargs)
+        super().__init__(calc_type=f'lammps_{self.ensemble.value}', settings=self.settings, **kwargs)
 
-class LammpsNPTSet(BaseLammpsSet):
+class LammpsNPTSet(BaseLammpsSetGenerator):
     """
     Lammps input set for NPT MD simulations.
     """
     ensemble : MDEnsemble = MDEnsemble.npt
     friction : float = None
-    barostat : str = "nose-hoover"
-    settings : dict = None
+    pressure : float | list | np.ndarray = 1.0
+    temperature : float | list = 300
+    barostat : Literal['berendsen', 'nose-hoover', 'nph'] = "nose-hoover"
+    settings : dict = {}
     
     def __init__(self, 
-                 barostat : Literal['berendsen', 'nose-hoover'] = 'nose-hoover',
+                 barostat : Literal['berendsen', 'nose-hoover', 'nph'] = 'nose-hoover',
+                 pressure : float | list | np.ndarray = 1.0,
+                 temperature : float | list = 300,
                  friction : float = None,
                  **kwargs):
         
         self.barostat = barostat
- 
-        if friction is None:
-            friction = 100*kwargs.get('timestep', _BASE_LAMMPS_SETTINGS['timestep'])
-        if friction < kwargs.get('timestep', 0.001):
-            raise ValueError("Friction should be more than the timestep!")
+        self.pressure = pressure
+        self.temperature = temperature
+        self.friction = friction
+        self.settings = {'ensemble': self.ensemble.value,
+                            'barostat': self.barostat,
+                            'pressure': self.pressure,
+                            'temperature': self.temperature}
         
-        self.settings = {'barostat': barostat, 
-                         'pfriction': friction,
-                         'ensemble': self.ensemble.value
-                         }
-        super().__init__(ensemble=self.ensemble, barostat=self.barostat, settings=self.settings, **kwargs)
+        super().__init__(calc_type=f'lammps_{self.ensemble.value}', settings=self.settings, **kwargs)
         
         
-class LammpsMinimizeSet(BaseLammpsSet):
+class LammpsMinimizeSet(BaseLammpsSetGenerator):
     """
     Input set for minimization simulations.
     """
-    settings : dict = {'ensemble': 'minimize'}
+    settings : dict = None
+    pressure : float | list | np.ndarray = 0.0
+    max_steps : int = 10000
+    tol : float = 1.0e-6
     
-    def __init__(self, **kwargs):
-        template = os.path.join(template_dir, "minimization.template")
-        super().__init__(ensemble='npt', template=template, settings=self.settings, **kwargs)
+    def __init__(self,
+                 pressure : float | list | np.ndarray = 0.0,
+                 max_steps : int = 10000,
+                 tol : float = 1.0e-6,
+                 **kwargs):
+        
+        self.pressure = pressure
+        self.max_steps = max_steps
+        self.tol = tol
+        
+        self.settings = {'ensemble': 'minimize',
+                         'pressure': self.pressure,
+                         'max_steps': self.max_steps,
+                         'tol': self.tol}
+            
+        super().__init__(calc_type='lammps_minimization', settings=self.settings, **kwargs)
     

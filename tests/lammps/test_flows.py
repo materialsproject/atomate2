@@ -17,13 +17,14 @@ def test_melt_quench_thermalize_maker(si_structure, tmp_path, test_si_force_fiel
     mock_lammps(ref_paths, fake_run_lammps_kwargs=fake_run_lammps_kwargs)
     
     npt = LammpsNPTMaker(force_field=test_si_force_field)
-    maker = MeltQuenchThermalizeMaker.from_temperature_steps(npt_maker=npt, nvt_maker=None)
+    maker = MeltQuenchThermalizeMaker.from_temperature_steps(npt_maker=npt, nvt_maker=None, quench_temperature=1000)
     maker.name = 'melt_quench_thermalize_test'
     maker.melt_maker.name = 'melt_test'
     maker.quench_maker.name = 'quench_test'
     maker.thermalize_maker.name = 'thermalize_test'
     
-    job = maker.make(si_structure)
+    supercell = si_structure.make_supercell([5, 5, 5])
+    job = maker.make(supercell)
     
     os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -36,5 +37,4 @@ def test_melt_quench_thermalize_maker(si_structure, tmp_path, test_si_force_fiel
         dump_key = list(output.dump_files.keys())[0]
         assert dump_key.endswith('.dump')
         assert isinstance(output.dump_files[dump_key], str)
-        assert (output.structure.volume - si_structure.volume)/si_structure.volume < 0.1
-    
+    assert outputs[-1].thermo_log[0]['Temp'].mean() == pytest.approx(1000, rel=5e-2) 

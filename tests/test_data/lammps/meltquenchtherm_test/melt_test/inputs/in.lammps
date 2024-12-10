@@ -1,41 +1,31 @@
 # LAMMPS input generated from LammpsInputFile with pymatgen v2024.10.29
 
-# Sample input script template for MD
-
 # Initialization
-
-# Stage 3
 units metal
 atom_style atomic
 dimension 3
 boundary p p p
+pair_style tersoff
 
-# Atom definition
-
-# md.restart
+# AtomDefinition
 read_data system.data
 
-# Force field settings (consult official document for detailed formats)
+# ForceField
+include forcefield.lammps
 
-# Stage 7
-pair_style tersoff
-pair_coeff * * /Users/virkaran/Code/Notebooks/lammps_flows/test_new/../pmg_data/Si.tersoff Si
-
-# Create velocities
+# Velocities
 velocity all create 300 42 mom yes rot yes dist gaussian
-
-# Stage 9
 neigh_modify delay 5 every 1 check yes
 
-# Ensemble constraints 1 all nve 2 all nose-hoover 300 300 0.1
-fix 3 all npt temp 300 300 0.1 iso 0 0 0.1
+# Ensemble
+fix 1 all npt temp 300 3000 0.1 iso 1.0 1.0 0.1
 
-# Output settings
+# Outputs
 thermo 100
 dump d1 all custom 100 traj.dump id element x y z vx vy vz fx fy fz
 dump_modify d1 sort id element Si
 
 # Actions
+write_restart md.restart
 timestep 0.001
 run 10000
-write_restart md.restart

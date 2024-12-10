@@ -2,7 +2,7 @@ import pytest
 from pymatgen.core import Molecule, Structure
 import os
 import atomate2.lammps.run
-from atomate2.lammps.sets.base import BaseLammpsSet
+from atomate2.lammps.sets.base import BaseLammpsSetGenerator
 from pathlib import Path
 import logging
 from typing import Literal
@@ -34,8 +34,7 @@ def test_si_structure() -> Structure:
 @pytest.fixture
 def test_si_force_field(ref_path) -> dict:
     return {'pair_style': 'tersoff',
-            'pair_coeff': f'* * {os.path.normpath(os.path.join(ref_path, "Si.tersoff"))}',
-            'species': ['Si']}
+            'pair_coeff': f'* * {os.path.normpath(os.path.join(ref_path, "Si.tersoff"))}'}
 
 @pytest.fixture
 def test_h2o_molecule() -> Molecule:
@@ -75,14 +74,14 @@ def mock_lammps(monkeypatch, ref_path):
         ref_dir = ref_path / _REF_PATHS[name]
         fake_run_lammps(ref_dir, **_FAKE_RUN_LAMMPS_KWARGS.get(name, {}))
 
-    get_input_set_orig = BaseLammpsSet.get_input_set
+    get_input_set_orig = BaseLammpsSetGenerator.get_input_set
 
     def mock_get_input_set(self, *args, **kwargs):
         return get_input_set_orig(self, *args, **kwargs)
 
     monkeypatch.setattr(atomate2.lammps.run, "run_lammps", mock_run_lammps)
     monkeypatch.setattr(atomate2.lammps.jobs.base, "run_lammps", mock_run_lammps)
-    monkeypatch.setattr(BaseLammpsSet, "get_input_set", mock_get_input_set)
+    monkeypatch.setattr(BaseLammpsSetGenerator, "get_input_set", mock_get_input_set)
 
     def _run(ref_paths, fake_run_lammps_kwargs=None):
         if fake_run_lammps_kwargs is None:

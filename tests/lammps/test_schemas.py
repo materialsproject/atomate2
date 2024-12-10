@@ -13,7 +13,7 @@ def test_task_doc(ref_path):
     assert task_doc.reduced_formula is not None
     assert task_doc.structure is not None
     assert isinstance(task_doc.raw_log_file, str)
-    assert len(task_doc.trajectories[0]) == 11
+    assert len(task_doc.trajectories[0]) == 1001
     assert task_doc.trajectories[0].frame_properties is not None
     assert len(list(task_doc.dump_files.keys())) == 1
     dump_key = list(task_doc.dump_files.keys())[0]
@@ -43,5 +43,5 @@ def test_task_doc(ref_path):
     assert task_doc.state is not None
     assert task_doc.structure is not None
     assert task_doc.trajectories is not None
-    assert len(task_doc.trajectories[0]) == 11
+    assert len(task_doc.trajectories[0]) == 1001
     assert task_doc.trajectories[0].frame_properties is None

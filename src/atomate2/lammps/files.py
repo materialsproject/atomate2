@@ -3,29 +3,27 @@ from pymatgen.core import Structure, Molecule
 from pymatgen.io.lammps.generators import BaseLammpsGenerator
 from ase.io import read
 from pymatgen.io.ase import AseAtomsAdaptor
-from pymatgen.io.lammps.data import LammpsData
+from pymatgen.io.lammps.data import LammpsData, CombinedData
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from ase.io import Trajectory as AseTrajectory
 from typing import Literal
 from monty.serialization import dumpfn
 from monty.json import MSONable
 from emmet.core.vasp.calculation import StoreTrajectoryOption
+from atomate2.lammps.sets.utils import LammpsInterchange
 import warnings
 
 def write_lammps_input_set(
-    structure: Structure | LammpsData | None,
+    data: Structure | LammpsData | LammpsInterchange | CombinedData,
     input_set_generator: BaseLammpsGenerator,
+    force_field : str | None = None,
+    additional_data : LammpsData | CombinedData | None = None,
     directory: str | Path = ".",
-    **kwargs,
 ):
-    data = structure
-    if input_set_generator.interchange:
-        warnings.warn("Interchange is experimental and may not work as expected. Use with caution. Ensure FF units are consistent with LAMMPS.")
-        #write unit convertor here
-        input_set_generator.interchange.to_lammps_datafile("interchange_data.lmp")
-        data = LammpsData.from_file("interchange_data.lmp", atom_style=input_set_generator.atom_style)
-        #validate data here: ff coeffs style, atom_style, etc. have to be updated into the input_set_generator.settings
-    input_set = input_set_generator.get_input_set(data, **kwargs)
+    input_set = input_set_generator.get_input_set(data, 
+                                                  force_field,
+                                                  additional_data,
+                                                  )
     input_set.write_input(directory)
 
 
