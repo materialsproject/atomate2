@@ -239,7 +239,6 @@ class BaseLammpsSetGenerator(InputGenerator):
                  **kwargs):
         
         settings.update({k:v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS.keys()})
-        #print({k:v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS.keys()})
         
         if isinstance(settings, dict):
             self.settings = LammpsInputSettings(settings) if settings else LammpsInputSettings(_BASE_LAMMPS_SETTINGS)
@@ -334,21 +333,6 @@ class BaseLammpsSetGenerator(InputGenerator):
                     value = [value] if not isinstance(value, list) else value
                     for val in value:
                         self.inputfile.add_commands(stage_name=stage, commands={key: str(val)})
-        '''try:
-            fix_vals = self.inputfile.get_args(stage_name="Ensemble", command='fix')
-            if isinstance(fix_vals, list):
-                for i in range(len(fix_vals)):
-                    for j in range(len(fix_vals) - 1, i, -1):
-                        if fix_vals[i] == fix_vals[j]:
-                            fix_vals.pop(j)
-                self.inputfile.remove_command(command='fix', stage_name="Ensemble", remove_empty_stages=False)
-                #remove duplicates if any
-                for fix in fix_vals:
-                    self.inputfile.add_commands(stage_name="Ensemble", commands={'fix': fix})
-        except KeyError:
-            logger.error("No fix command found in Ensemble stage!")
-            raise KeyError'''
-                            
         
         return LammpsInputSet(
             inputfile=self.inputfile,
