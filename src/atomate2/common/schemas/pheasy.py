@@ -485,7 +485,12 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         subprocess.call(shlex.split(pheasy_cmd_1))
         subprocess.call(shlex.split(pheasy_cmd_2))
         subprocess.call(shlex.split(pheasy_cmd_3))
+        # print the cwd
+        logger.info(f"path before running cmd_4 is {Path.cwd()}")
         subprocess.call(shlex.split(pheasy_cmd_4))
+        logger.info(f"path after running cmd_4 is {Path.cwd()}")
+        # print all the files in the current directory
+        logger.info(f"all files in cwd are {list(Path.cwd().iterdir())}")
 
         # When this code is run on Github tests, it is failing because it is
         # not able to find the FORCE_CONSTANTS file. This is because the file is
