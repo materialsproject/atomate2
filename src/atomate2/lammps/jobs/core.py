@@ -45,12 +45,15 @@ class CustomLammpsMaker(BaseLammpsMaker):
     '''
     name: str = "custom_lammps_job"
     inputfile : str | LammpsInputFile | Path = field(default=None)
-    settings : dict = field(default_factory=dict)
+    settings : dict = field(default_factory={})
     keep_stages : bool = field(default=True)
     
     def __post_init__(self):
         if not self.inputfile:
             raise ValueError("Input file not specified. Use this maker only if you have a custom LAMMPS input file!")
+        
+        if self.settings and isinstance(self.inputfile, LammpsInputFile):
+            self.inputfile = self.inputfile.get_str()
         
         if isinstance(self.inputfile, Path):
             with open(self.inputfile, "rt") as f:
