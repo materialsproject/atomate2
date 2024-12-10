@@ -1,1 +1,1 @@
-pair_coeff * * /Users/virkaran/Code/Notebooks/lammps_flows/pmg_data/Si.tersoff Si
+pair_coeff * * /atomate2/tests/test_data/lammps/Si.tersoff Si
