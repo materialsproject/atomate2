@@ -26,8 +26,8 @@ def lammps_job(method: Callable):
     return job(method, data=_DATA_OBJECTS, output_schema=LammpsTaskDocument)
 
 
-FF_STYLE_KEYS = ["pair_style", "bond_style", "angle_style", "dihedral_style", "improper_style"]
-FF_COEFF_KEYS = ["pair_coeff", "bond_coeff", "angle_coeff", "dihedral_coeff", "improper_coeff"]
+FF_STYLE_KEYS = ["pair_style", "bond_style", "angle_style", "dihedral_style", "improper_style", "kspace_style"]
+FF_COEFF_KEYS = ["pair_coeff", "bond_coeff", "angle_coeff", "dihedral_coeff", "improper_coeff", "kspace_coeff"]
 
 
 @dataclass
