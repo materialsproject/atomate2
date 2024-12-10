@@ -595,8 +595,13 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         else:
             pass
 
+        # When this code is run on Github tests, it is failing because it is
+        # not able to find the FORCE_CONSTANTS file. This is because the file is
+        # somehow getting generated in some temp directory. Can you fix the bug?
+        cwd = Path.cwd()
+        fc_file = cwd / "FORCE_CONSTANTS"
         # Read the force constants from the output file of pheasy code
-        force_constants = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
+        force_constants = parse_FORCE_CONSTANTS(filename=fc_file)
         phonon.force_constants = force_constants
         # symmetrize the force constants to make them physically correct based on
         # the space group symmetry of the crystal structure.
