@@ -38,7 +38,8 @@ class BaseLammpsMaker(Maker):
     name: str
         Name of the job
     input_set_generator: BaseLammpsGenerator
-        Input set generator for the job, default is the BaseLammpsSet
+        Input set generator for the job, default is the BaseLammpsSetGenerator. 
+        Check the sets module for more options on input kwargs.
     write_input_set_kwargs: dict
         Additional kwargs to write_lammps_input_set
     run_lammps_kwargs: dict
@@ -131,6 +132,6 @@ class BaseLammpsMaker(Maker):
         task_doc.task_label = self.name
         task_doc.inputs = self.input_set_generator.settings.settings
         
-        #gzip_files(".")
+        gzip_files(".")
 
         return Response(output=task_doc)
