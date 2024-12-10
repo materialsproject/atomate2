@@ -1,12 +1,11 @@
-from atomate2.lammps.sets.core import BaseLammpsSet, LammpsNVTSet, LammpsNPTSet, LammpsMinimizeSet
+from atomate2.lammps.sets.core import BaseLammpsSetGenerator, LammpsNVTSet, LammpsNPTSet, LammpsMinimizeSet
 
 def test_LammpsNVTSet():
-    nvt = BaseLammpsSet()
-    nvt.update_settings(timestep=0.005, ensemble='nvt', thermostat='langevin')
+    nvt = LammpsNVTSet(timestep=0.005, thermostat='langevin')
     assert nvt.ensemble.value == 'nvt'
-    assert nvt.settings['thermostat'] == 'langevin'
-    assert nvt.settings['timestep'] == 0.005
+    assert nvt.settings.settings['thermostat'] == 'langevin'
+    assert nvt.settings.settings['timestep'] == 0.005
     
 def test_minimize_set():
     mini = LammpsMinimizeSet()
-    assert mini.ensemble.value == 'npt'
+    assert mini.settings.settings['ensemble'] == 'minimize'

@@ -76,22 +76,35 @@ class LammpsTaskDocument(StructureMetadata):
             raw_log = ''
             thermo_log = []
             state = TaskState.ERROR
+        
+        if state == TaskState.ERROR:
+            return LammpsTaskDocument(dir_name=str(dir_name), 
+                                      task_label=task_label, 
+                                      raw_log_file=raw_log, 
+                                      thermo_log=thermo_log, 
+                                      state=state,
+                                      )
             
         dump_file_keys = glob("*dump*", root_dir=dir_name)
         dump_files = {}
-        for dump_file in dump_file_keys:
-            with open(os.path.join(dir_name, dump_file), 'rt') as f:
-                dump_files[dump_file] = f.read()
+        if dump_file_keys:
+            for dump_file in dump_file_keys:
+                with open(os.path.join(dir_name, dump_file), 'rt') as f:
+                    dump_files[dump_file] = f.read()
 
-        if store_trajectory != StoreTrajectoryOption.NO:
-            warnings.warn("Trajectory data might be large, only store if absolutely necessary. Consider manually parsing the dump files instead.")
-            if output_file_pattern is None:
-                output_file_pattern = "trajectory"
-            trajectories = [DumpConvertor(store_md_outputs=store_trajectory, 
-                                          dumpfile=os.path.join(dir_name, dump_file)).save(filename=f'{output_file_pattern}{i}.traj',
-                                                                                           fmt=trajectory_format)
-                            for i, dump_file in enumerate(dump_files)]
-        
+            if store_trajectory != StoreTrajectoryOption.NO:
+                warnings.warn("Trajectory data might be large, only store if absolutely necessary. Consider manually parsing the dump files instead.")
+                if output_file_pattern is None:
+                    output_file_pattern = "trajectory"
+                trajectories = [DumpConvertor(store_md_outputs=store_trajectory, 
+                                            dumpfile=os.path.join(dir_name, dump_file)).save(filename=f'{output_file_pattern}{i}.traj',
+                                                                                            fmt=trajectory_format)
+                                for i, dump_file in enumerate(dump_files)]
+                
+            final_structure = DumpConvertor(dumpfile=os.path.join(dir_name, dump_file_keys[-1]), read_index=-1).to_pymatgen_trajectory().get_structure(-1)        
+        else:
+            warnings.warn("No dump files found, no trajectory data stored")
+            
         try:
             input_file = LammpsInputFile.from_file(os.path.join(dir_name, "in.lammps"), ignore_comments=True)
             data_files = [LammpsData.from_file(os.path.join(dir_name, file), atom_style=input_file.get_args("atom_style")) for file in glob("*.data*", root_dir=dir_name)]
@@ -101,10 +114,9 @@ class LammpsTaskDocument(StructureMetadata):
             input_file = None
             data_files = None
             
-        final_structure = DumpConvertor(dumpfile=os.path.join(dir_name, dump_file_keys[-1]), read_index=-1).to_pymatgen_trajectory().get_structure(-1)        
         inputs = {"in.lammps": input_file, "data_files": data_files}
-        composition = final_structure.composition if data_files else None
-        reduced_formula = composition.reduced_formula if composition else None
+        composition = final_structure.composition if final_structure else None
+        reduced_formula = composition.reduced_formula if final_structure else None
             
         return LammpsTaskDocument(dir_name=str(dir_name), 
                                   task_label=task_label, 

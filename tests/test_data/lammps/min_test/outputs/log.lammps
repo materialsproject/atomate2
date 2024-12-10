@@ -1,40 +1,57 @@
 LAMMPS (29 Aug 2024 - Development - patch_29Aug2024-704-g6d0e633edf)
 # LAMMPS input generated from LammpsInputFile with pymatgen v2024.10.29
 
-# 1) Initialization
+# Initialization
 units metal
 atom_style atomic
 dimension 3
 boundary p p p
+pair_style tersoff
 
-# 2) System definition
-
-# md.restart
+# AtomDefinition
 read_data system.data
 Reading data file ...
-  triclinic box = (0 0 0) to (3.866975 3.348898 3.157372) with tilt (1.933487 1.933487 1.116299)
+  triclinic box = (0 0 0) to (19.334873 16.744491 15.786858) with tilt (9.667437 9.667437 5.581497)
 WARNING: Triclinic box skew is large. LAMMPS will run inefficiently. (src/domain.cpp:221)
   1 by 1 by 1 MPI processor grid
   reading atoms ...
-  2 atoms
-  read_data CPU = 0.000 seconds
-neigh_modify every 1 delay 5 check yes
+  250 atoms
+  read_data CPU = 0.001 seconds
 
-# 3) Simulation settings
-pair_style tersoff
-pair_coeff * * /Users/virkaran/Code/Notebooks/lammps_flows/test_new/../pmg_data/Si.tersoff Si
-Reading tersoff potential file /Users/virkaran/Code/Notebooks/lammps_flows/test_new/../pmg_data/Si.tersoff with DATE: 2007-10-25
+# ForceField
+include forcefield.lammps
+pair_coeff * * /Users/virkaran/Code/Notebooks/lammps_flows/pmg_data/Si.tersoff Si
+Reading tersoff potential file /Users/virkaran/Code/Notebooks/lammps_flows/pmg_data/Si.tersoff with DATE: 2007-10-25
 
-# 4) Energy minimization
-thermo 100
-thermo_style custom step lx ly lz press pxx pyy pzz pe
-dump d1 all custom 100 min.dump id element x y z vx vy vz fx fy fz
-dump_modify d1 sort id element Si
+# Velocities
+velocity all create 300 42 mom yes rot yes dist gaussian
+neigh_modify delay 5 every 1 check yes
 
-# Stage 6
+# Ensemble
 min_style cg
 fix 1 all box/relax iso 0 vmax 0.001
-minimize 1.0e-6 1.0e-6 1000 100000
+
+# Outputs
+thermo 100
+dump d1 all custom 100 traj.dump id element x y z vx vy vz fx fy fz
+dump_modify d1 sort id element Si
+
+# Actions
+write_restart minimized.restart
+System init for write_restart ...
+Neighbor list info ...
+  update: every = 1 steps, delay = 5 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.2
+  ghost atom cutoff = 5.2
+  binsize = 2.6, bins = 15 9 7
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair tersoff, perpetual
+      attributes: full, newton on
+      pair build: full/bin/atomonly
+      stencil: full/bin/3d
+      bin: standard
+minimize 1e-06 1e-06 1000 100000
 
 CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
 
@@ -55,64 +72,46 @@ Your simulation uses code contributions which should be cited:
 CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
 
 Switching to 'neigh_modify every 1 delay 0 check yes' setting during minimization
-Neighbor list info ...
-  update: every = 1 steps, delay = 0 steps, check = yes
-  max neighbors/atom: 2000, page size: 100000
-  master list distance cutoff = 5.2
-  ghost atom cutoff = 5.2
-  binsize = 2.6, bins = 3 2 2
-  1 neighbor lists, perpetual/occasional/extra = 1 0 0
-  (1) pair tersoff, perpetual
-      attributes: full, newton on
-      pair build: full/bin/atomonly
-      stencil: full/bin/3d
-      bin: standard
 WARNING: Energy due to 1 extra global DOFs will be included in minimizer energies
  (src/min.cpp:219)
-Per MPI rank memory allocation (min/avg/max) = 4.208 | 4.208 | 4.208 Mbytes
-   Step           Lx             Ly             Lz           Press           Pxx            Pyy            Pzz           PotEng    
-         0   3.866975       3.348898       3.157372      -19248.36      -19248.23      -19248.342     -19248.509     -9.2557091    
-         8   3.8404603      3.3259356      3.1357228      0.0030355524   0.079529676    0.026570194   -0.096993213   -9.2608243    
-Loop time of 8.3125e-05 on 1 procs for 8 steps with 2 atoms
+Per MPI rank memory allocation (min/avg/max) = 4.226 | 4.226 | 4.226 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press          Volume    
+         0   300           -1156.9637      0             -1147.3079     -17230.329      5111.0364    
+         8   300           -1157.603       0             -1147.9473      2059.9532      5006.6218    
+Loop time of 0.00463617 on 1 procs for 8 steps with 250 atoms
 
-89.0% CPU use with 1 MPI tasks x no OpenMP threads
+98.8% CPU use with 1 MPI tasks x no OpenMP threads
 
 Minimization stats:
   Stopping criterion = energy tolerance
   Energy initial, next-to-last, final = 
-     -9.25570912490249  -9.26082432694341  -9.26082432699293
-  Force two-norm initial, final = 1.4736816 6.6506792e-06
-  Force max component initial, final = 1.4736816 4.1947834e-06
-  Final line search alpha, max atom move = 1 4.1947834e-06
+     -1156.96365107608  -1157.60304086754  -1157.60304087371
+  Force two-norm initial, final = 184.20873 0.00018309935
+  Force max component initial, final = 184.20873 9.8604356e-05
+  Final line search alpha, max atom move = 0.053943167 5.3190312e-06
   Iterations, force evaluations = 8 10
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 3.8959e-05 | 3.8959e-05 | 3.8959e-05 |   0.0 | 46.87
+Pair    | 0.0039718  | 0.0039718  | 0.0039718  |   0.0 | 85.67
 Neigh   | 0          | 0          | 0          |   0.0 |  0.00
-Comm    | 6.251e-06  | 6.251e-06  | 6.251e-06  |   0.0 |  7.52
+Comm    | 2.4748e-05 | 2.4748e-05 | 2.4748e-05 |   0.0 |  0.53
 Output  | 0          | 0          | 0          |   0.0 |  0.00
 Modify  | 0          | 0          | 0          |   0.0 |  0.00
-Other   |            | 3.791e-05  |            |       | 45.61
+Other   |            | 0.0006396  |            |       | 13.80
 
-Nlocal:              2 ave           2 max           2 min
+Nlocal:            250 ave         250 max         250 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:            126 ave         126 max         126 min
+Nghost:            774 ave         774 max         774 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Neighs:              0 ave           0 max           0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-FullNghs:           56 ave          56 max          56 min
+FullNghs:         7000 ave        7000 max        7000 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 56
+Total # of neighbors = 7000
 Ave neighs/atom = 28
 Neighbor list builds = 0
 Dangerous builds = 0
-
-# 5) Write output data
-write_data run.data
-System init for write_data ...
-write_restart md.restart
-System init for write_restart ...
 Total wall time: 0:00:00

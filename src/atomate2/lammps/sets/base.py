@@ -4,32 +4,61 @@ pymatgen by Ryan Kingsbury & Guillaume Brunin.
 """
 
 import logging
+import warnings
 import os
 import numpy as np
-from monty.serialization import loadfn
-from pymatgen.io.lammps.generators import BaseLammpsGenerator
-from pymatgen.io.lammps.data import LammpsData, ForceField
+from pymatgen.io.lammps.generators import LammpsInputSet, InputGenerator
+from pymatgen.io.lammps.data import LammpsData, CombinedData
+from pymatgen.core.structure import Structure
 from pymatgen.io.lammps.inputs import LammpsInputFile
 from typing import Literal, Sequence
 from pathlib import Path
-from atomate2.lammps.sets.utils import process_ensemble_conditions
+from monty.json import MSONable
 
-from atomate2.ase.md import MDEnsemble
 from atomate2.lammps.sets.utils import LammpsInterchange
+
+from dataclasses import dataclass, field
 
 logger = logging.getLogger(__name__)
 template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
-settings_dir = os.path.dirname(os.path.abspath(__file__))
-_BASE_LAMMPS_SETTINGS = loadfn(os.path.join(settings_dir,'BASE_LAMMPS_SETTINGS.json'))
+
+_BASE_LAMMPS_SETTINGS = {'units': 'metal',
+                         'atom_style': 'atomic',
+                         'dimension': 3,
+                         'boundary': 'p p p',
+                         'pair_style': 'lj/cut 10.0',
+                         'thermo': 100,
+                         'start_temp': 300,
+                         'end_temp': 300,
+                         'start_pressure': 0,
+                         'end_pressure': 0,
+                         'timestep': 0.001,
+                         'friction': 0.1,
+                         'log_interval': 100,
+                         'traj_interval': 100,
+                         'ensemble': 'nvt',
+                         'thermostat': 'nose-hoover',
+                         'barostat': 'nose-hoover',
+                         'nsteps': 1000,
+                         'tol': 1e-6,
+                         }
+
+_STAGE_TO_KEYS = {'Initialization': ['units', 'atom_style', 'dimension', 'boundary', 'pair_style', 'bond_style', 'angle_style', 'dihedral_style', 'improper_style'],
+                  'AtomDefinition': ['read_data', 'read_restart'],
+                  'ForceField': ['include'],
+                  'AdditionalData': ['read_data'],
+                  'Velocities': ['velocity', 'neigh_modify'],
+                  'Ensemble': ['fix'],
+                  'Outputs': ['thermo', 'dump', 'dump_modify'],
+                  'Actions': ['timestep', 'run']} 
 
 
-class BaseLammpsSet(BaseLammpsGenerator):
+class LammpsInputSettings(MSONable):
     """
-    Basic LAMMPS MD input set generator.
-    Note: This class is based on templates and is not intended to be very flexible. 
-
-    Attributes:
+    Settings object for LAMMPS input files. 
+    Note: default settings are given in the _BASE_LAMMPS_SETTINGS object in 'metal' units for reference.
     
+    Keys that can be passed as input to the SETTINGS object:
     atom_style : str 
         Atom style for the LAMMPS input file.
     dimension : int
@@ -50,7 +79,7 @@ class BaseLammpsSet(BaseLammpsGenerator):
         with the first list being the starting pressure and the second list being the final pressure.
     units : str
         Units for the simulation. Defaults to metal.
-    n_steps : int
+    nsteps : int
         Number of steps for the simulation. Defaults to 1000.
     timestep : float
         Timestep for the simulation. Defaults to 0.001 (=ps in metal units).
@@ -58,152 +87,286 @@ class BaseLammpsSet(BaseLammpsGenerator):
         Interval for logging the simulation. Defaults to 100.
     traj_interval : int
         Interval for writing the trajectory. Defaults to 100.
-    force_field : Union[str, dict]
-        Force field for the simulation. Can be a string or a dictionary with the pair_style, pair_coeff and species.
-        If a dictionary is provided, the species should be a list of the atomic species in the simulation. 
-        If a string is provided, the string should be of the form "pair_style {pair_style}\n pair_coeff {pair_coeff} {species}",
-        as would be written in a lammps input file.
-    pressure_symmetry : Literal["iso", "aniso"]
-        Symmetry of the pressure. Defaults to isotropic. If anisotropic pressure is provided,
-        the pressure should be a 2D array with the starting and final pressures.
     thermostat : Literal["langevin", "nose-hoover"]
-        Thermostat for the simulation. Defaults to Langevin.
+        Thermostat for the simulation. Defaults to nose-hoover.
     barostat : Literal["berendsen", "nose-hoover"]
         Barostat for the simulation. Defaults to nose-hoover.
     friction : float
         Friction coefficient for the thermostat and barostat. Defaults to 100*timestep.
-    template : str
-        Path to the template file used to create the LAMMPS input file. Provide this for a more flexible input set.
-        All variables in the template file should be prefixed with a $ sign, e.g. $nsteps.
-    settings : dict
-        Additional settings for the LAMMPS input file. These will be added to the default settings. 
-        Provide this for a more flexible input set. E.x., for a custom template file with variable $nsteps,
-        provide {"nsteps":1000} to control the variable.
-    **kwargs : dict
-        Additional keyword arguments to pass to the BaseLammpsGenerator from pymatgen.
+    tol : float
+        Tolerance for minimization jobs, done under constant pressure. Defaults to 1e-6.
     """
+    settings = {} #raw strings given as input by the user/maker
+    input_settings = {} #formatted settings for the LAMMPS input i/o functions in pmg
+    
+    def __init__(self, settings : dict):  
+              
+        if settings.get('temperature', None):
+            if isinstance(settings['temperature'], (int, float)):
+                settings.update({'start_temp': settings['temperature'], 'end_temp': settings['temperature']})
+            if isinstance(settings['temperature'], (list, np.ndarray)):
+                settings.update({'start_temp': settings['temperature'][0], 'end_temp': settings['temperature'][-1]})
+            settings.pop('temperature')
+        
+        if settings.get('pressure', None):
+            if isinstance(settings['pressure'], (int, float)):
+                settings.update({'start_pressure': settings['pressure'], 'end_pressure': settings['pressure']})
+            if isinstance(settings['pressure'], (list, np.ndarray)):
+                settings.update({'start_pressure': settings['pressure'][0], 'end_pressure': settings['pressure'][-1]})
+            settings.pop('pressure')
+        
+        for k, v in _BASE_LAMMPS_SETTINGS.items():
+            if k not in settings.keys():
+                settings.update({k: v})
+        
+        if self.settings.get('friction', 0.1) < settings.get('timestep', 0.001)/10:
+            warnings.warn("Friction coefficient is too low, setting equal to timestep.")
+            settings.update({'friction': settings['timestep']})
+        
+        for k, v in settings.items():
+            setattr(self, k, v)
+        
+        self.settings = settings
+        self.input_settings = self.get_formatted_settings()
+        
+    def as_dict(self):
+        return self.settings
+    
+    @classmethod
+    def from_dict(cls, d):
+        return cls(d)
+
+    def get_formatted_settings(self) -> dict:
+        
+        updates = self.settings.copy()
+        input_settings = {k: {} for k in _STAGE_TO_KEYS.keys()}
+        for stage, stage_data in input_settings.items():
+            if stage in ['Initialization', 'AtomDefinition', 'ForceField', 'AdditionalData', 'Actions']:
+                stage_data.update({k: v for k, v in updates.items() if k in _STAGE_TO_KEYS[stage]})
+                    
+            if stage in ['Velocities']:
+                if 'start_temp' in updates.keys():
+                    stage_data.update({'velocity': f'all create {updates["start_temp"]} 42 mom yes rot yes dist gaussian'})
             
-    def __init__(self, 
-                 atom_style : str = "atomic",
-                 dimension : int = 3,
-                 boundary : str = "p p p",
-                 ensemble : MDEnsemble | str = MDEnsemble.nvt,
-                 temperature : float | Sequence | np.ndarray | None = 300,
-                 pressure : float | Sequence | np.ndarray | None = 0,
-                 units : str = "metal",
-                 n_steps : int = 1000,
-                 timestep : float = 0.001,
-                 log_interval : int = 100,
-                 traj_interval : int = 100,
-                 force_field : str | dict = None,
-                 pressure_symmetry : Literal["iso", "aniso"] = "iso",
-                 thermostat : Literal["langevin", "nose-hoover"] = "nose-hoover",
-                 barostat : Literal["berendsen", "nose-hoover"] = "nose-hoover",
-                 friction : float | None = 0.1,
-                 template : str | LammpsInputFile | Path = None,
-                 settings : dict | None = None,
-                 interchange : LammpsInterchange = None,
+            if stage in ['Ensemble']:
+                updates.update({k : _BASE_LAMMPS_SETTINGS[k] for k in ['start_temp', 'end_temp', 'friction', 'ensemble', 'start_pressure', 'end_pressure', 'thermostat', 'barostat'] if k not in updates.keys()})
+                if 'fix' not in stage_data.keys():
+                    pressure_symmetry = 'aniso' if isinstance(updates['start_pressure'], (list, np.ndarray)) or isinstance(updates['end_pressure'], (list, np.ndarray)) else 'iso'
+                    if updates['ensemble'] == 'nve':
+                        stage_data.update({'fix': f'1 all nve'})
+                    if updates['ensemble'] == 'nvt':
+                        if updates['thermostat'] == 'nose-hoover':
+                            stage_data.update({'fix': f'1 all nvt temp {updates["start_temp"]} {updates["end_temp"]} {updates["friction"]}'})
+                        if updates['thermostat'] == 'langevin':
+                            stage_data.update({'fix': [f'1 all nve',
+                                f'2 all langevin {updates["start_temp"]} {updates["end_temp"]} {updates["friction"]} 42']})
+                    if updates['ensemble'] == 'npt':
+                        if updates['barostat'] == 'nose-hoover':
+                            stage_data.update({'fix': f'1 all npt temp {updates["start_temp"]} {updates["end_temp"]} {updates["friction"]} {pressure_symmetry} {updates["start_pressure"]} {updates["end_pressure"]} {updates["friction"]}'})
+                        if updates['barostat'] == 'berendsen':
+                            stage_data.update({'fix': [f'1 all nve',
+                                f'2 all press/berendsen {pressure_symmetry} {updates["start_pressure"]} {updates["end_pressure"]} {updates["friction"]}']})
+                        if updates['barostat'] == 'langevin':
+                            stage_data.update({'fix': [f'1 all nve',
+                                f'2 all press/langevin {pressure_symmetry} {updates["start_pressure"]} {updates["end_pressure"]} {updates["friction"]} temp {updates["start_temp"]} {updates["end_temp"]} 42']})
+                    if updates['ensemble'] == 'nph':
+                        stage_data.update({'fix': [f'1 all nve',
+                            f'2 all nph {updates["start_temp"]} {updates["end_temp"]} {updates["friction"]} {pressure_symmetry} {updates["start_pressure"]} {updates["end_pressure"]} {updates["friction"]}']})
+                    if updates['ensemble'] == 'minimize':
+                        stage_data.update({'min_style': 'cg',
+                            'fix': f'1 all box/relax {pressure_symmetry} {updates["start_pressure"]} vmax 0.001'})
+                        
+                
+            if stage in ['Outputs']:
+                if 'log_interval' in updates.keys():
+                    stage_data.update({'thermo': updates['log_interval']})
+                if 'traj_interval' in updates.keys():
+                    stage_data.update({'dump': f'd1 all custom {updates["traj_interval"]} traj.dump id element x y z vx vy vz fx fy fz'})
+            
+            if stage == 'Actions':
+                if 'nsteps' in updates.keys():
+                    stage_data.update({'run': updates['nsteps']})
+        
+        if updates.get('ensemble', None) == 'minimize':
+            input_settings.pop('Velocities')
+            input_settings['Actions'] = {'minimize': f'{updates["tol"]} {updates["tol"]} {updates["nsteps"]} 100000',
+                                         'write_restart': 'minimized.restart'}
+            
+        return input_settings
+             
+    @classmethod
+    def apply_updates(cls, updates) -> "LammpsInputSettings":    
+        
+        updated_settings = cls.settings.copy()
+        for k, v in updates.items():
+            updated_settings.update({k: v})
+        
+        return LammpsInputSettings(updated_settings)
+    
+    def _validate_settings(self):
+        """
+        Validate the settings for the LAMMPS input file.
+        """
+        pass #implement this with ENUMS for the settings
+
+@dataclass       
+class BaseLammpsSetGenerator(InputGenerator):
+    """
+    Base class for generating LAMMPS input sets.
+    
+    Args:
+        inputfile : LammpsInputFile | str | Path
+            Premade input file for the LAMMPS simulation. Useful if the user wants to use a custom input file (to make use of Lammps' flexibility).
+            Default format based on the md.template file in the templates directory.
+        settings : dict | LammpsInputSettings
+            Settings for the LAMMPS simulation. Default settings are given in the _BASE_LAMMPS_SETTINGS object in 'metal' units for reference.
+        calc_type : str
+            Type of calculation to be performed by LAMMPS.
+        keep_stages : bool
+            Whether to keep the stages of the input file or not. Default is True.
+        override_updates : bool
+            Whether to override the updates to the input file, i.e., keep the input file as is. Default is False.
+    """
+    inputfile : LammpsInputFile | str = field(default=None)
+    settings : dict | LammpsInputSettings = field(default_factory={})
+    calc_type : str = field(default="lammps")
+    keep_stages : bool = field(default=True)
+    override_updates : bool = field(default=False)
+    
+    def __init__(self,
+                 inputfile : LammpsInputFile | str | Path = None,
+                 settings : dict | LammpsInputSettings = {},
                  **kwargs):
         
-        template = os.path.join(template_dir, "md.template") if not template else template
-        self.ensemble = ensemble if isinstance(ensemble, MDEnsemble) else MDEnsemble(ensemble)
+        settings.update({k:v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS.keys()})
+        #print({k:v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS.keys()})
         
-        if isinstance(temperature, (int, float)):
-            start_temp = temperature
-            end_temp = temperature
-        elif isinstance(temperature, (list, np.ndarray)):
-            start_temp = temperature[0]
-            end_temp = temperature[-1]
-     
-        if isinstance(pressure, (int, float)):
-            start_pressure = pressure
-            end_pressure = pressure
-        elif isinstance(pressure, (list, np.ndarray)):                
-            start_pressure = pressure[0]
-            end_pressure = pressure[-1]
-
-        self.species = None
-        self.interchange = interchange
-        self.force_field = force_field.copy() if isinstance(force_field, dict) else force_field
-        
-        process_kwargs = kwargs.copy()
-        self.settings = settings.copy() if settings else {}
-        self.settings.update({
-                        'atom_style': atom_style, 
-                        'dimension': dimension, 
-                        'boundary': boundary,
-                        'ensemble': ensemble.value if isinstance(ensemble, MDEnsemble) else ensemble,
-                        'start_temp': start_temp, 
-                        'end_temp': end_temp, 
-                        'start_pressure': start_pressure, 
-                        'end_pressure': end_pressure, 
-                        'psymm': pressure_symmetry, 
-                        'units': units, 
-                        'nsteps': n_steps, 
-                        'timestep': timestep, 
-                        'thermostat': thermostat, 
-                        'barostat': barostat,
-                        'tfriction': friction,
-                        'pfriction': friction,
-                        'log_interval': log_interval, 
-                        'traj_interval': traj_interval
-                        })
-        
-        self.update_settings(**process_kwargs)        
-        self.set_force_field(self.force_field)
-        super().__init__(template = template, settings = self.settings, **kwargs)
+        if isinstance(settings, dict):
+            self.settings = LammpsInputSettings(settings) if settings else LammpsInputSettings(_BASE_LAMMPS_SETTINGS)
+         
+        if isinstance(inputfile, Path):
+            self.inputfile = LammpsInputFile.from_file(inputfile, keep_stages=self.keep_stages)
+        if isinstance(inputfile, str):
+            self.inputfile = LammpsInputFile.from_str(inputfile, keep_stages=self.keep_stages)
+        if inputfile is None:
+            self.inputfile = LammpsInputFile.from_file(os.path.join(template_dir, "md.template"), keep_stages=self.keep_stages)
     
+    def update_settings(self, updates : dict) -> "BaseLammpsSetGenerator":
+        """
+        Update the settings for the LAMMPS input file.
+        Args:
+            updates : dict
+                Dictionary containing the settings to update.
+        """
+        present_settings = self.settings.settings
+        for k, v in updates.items():
+            present_settings.update({k: v})
+        self.settings = LammpsInputSettings.apply_updates(present_settings)
+        return self
+                        
+    def get_input_set(self, 
+                      data : Structure | LammpsData | CombinedData | LammpsInterchange, 
+                      force_field : str = None,
+                      additional_data : LammpsData | CombinedData | None = None, 
+                      **kwargs) -> LammpsInputSet:
+        """
+        Generate a LAMMPS input set.
+        Args:
+            structure : Structure | LammpsData
+                Structure or LammpsData object for the simulation.
+            **kwargs : dict
+                Additional keyword arguments to pass to the InputSet from pmg.      
+        """
+        input_settings = self.settings.input_settings
+        atom_style = input_settings.get('Initialization').get('atom_style', "full")
+        species = ' '.join(set([s.symbol for s in data.species])) if isinstance(data, Structure) else ''
 
-    def set_force_field(self, force_field : str | dict | ForceField | LammpsData = None):
-        
-        if isinstance(force_field, dict):
-            try:
-                pair_style = force_field.get('pair_style')
-                pair_coeff = force_field.get('pair_coeff')
-                species = force_field.get('species')
-                self.species = '' if species is None else ' '.join(species)
-                if not isinstance(pair_style, str) or not isinstance(pair_coeff, str) or not isinstance(species, list):
-                    raise KeyError
+        if isinstance(data, Path):
+            data = LammpsData.from_file(data, atom_style=atom_style)
+        if isinstance(data, str):
+            data = LammpsData.from_str(data, atom_style=atom_style)
+        if isinstance(data, Structure):
+            data = LammpsData.from_structure(data, atom_style=atom_style)
+            warnings.warn("Structure provided, converting to LammpsData object.")
+        if isinstance(data, LammpsInterchange):
+            warnings.warn("Interchange is experimental and may not work as expected. Use with caution. Ensure FF units are consistent with LAMMPS.")
+            #write unit convertor here
+            data.to_lammps_datafile("interchange_data.lmp")
+            data = LammpsData.from_file("interchange_data.lmp", atom_style=atom_style)
+            #validate data here: ff coeffs style, atom_style, etc. have to be updated into the input_set_generator.settings'''
             
-                self.force_field = f'pair_style {pair_style}\n pair_coeff {pair_coeff} {self.species}'
-                
-            except KeyError:
-                logger.error("Force field parameters (pair_style, pair_coeff and species) not found in force_field, check input format!")
-                raise KeyError
+        if not data.force_field and not force_field:
+            raise ValueError("Force field not specified!")
         
-        if isinstance(force_field, str):
-            self.force_field = force_field
-            self.species = ' '.join(force_field.split(' ')[6:]) #check if logic holds for general FF
+        if species:
+            input_settings['Outputs'].update({"dump_modify": f"d1 sort id element {species}"})
         
-        if isinstance(force_field, ForceField) or isinstance(force_field, LammpsData):
-            raise NotImplementedError("ForceField and LammpsData objects are not yet supported.")
+        write_data = {}
+        if additional_data:
+            write_data.update({"extra.data": additional_data})
         else:
-            Warning(f"Force field should be a dictionary, got {type(force_field)}")
+            self.inputfile.remove_stage(stage_name="AdditionalData")
+        
+        if force_field:
+            write_data.update({"forcefield.lammps": force_field})
+        else:
+            self.inputfile.remove_stage(stage_name="ForceField") #implies FF is in the datafile
             
-        if self.force_field:
-            self.settings.update({'force_field': self.force_field, 'species': self.species, 'dump_modify_flag': 'dump_modify'}) 
+            
+        if self.override_updates:
+            return LammpsInputSet(
+                inputfile=self.inputfile,
+                data=data,
+                calc_type=self.calc_type,
+                additional_data=additional_data,
+                **kwargs
+            )
         
-        if not self.force_field and self.interchange:
-            self.settings.update({'force_field': 'pair_style lj/cut/coul/cut 10.0'}) #Assumes the pair_style is lj/cut if no force field is provided (which should be true for openFF forcefields?)
-    
-    def update_settings(self, **kwargs) -> dict:
-        """
-        Update the settings for the LAMMPS input file. 
-        """
+        if self.inputfile.contains_command(command='fix'):
+            self.inputfile.remove_command(command='fix', stage_name="Ensemble", remove_empty_stages=False)
         
-        base_settings = _BASE_LAMMPS_SETTINGS.copy()
-
-        self.settings = base_settings if self.settings is None else self.settings.copy()
-                
-        for k in set(base_settings.keys()) - set(['force_field', 'species']):
-            if k not in self.settings.keys():
-                if k not in kwargs.keys():
-                    self.settings.update({k: base_settings.get(k)})
+        
+        for stage, stage_data in input_settings.items():
+            for key, value in stage_data.items():
+                if self.inputfile.contains_command(command=key, stage_name=stage) and key not in ['fix']:
+                    self.inputfile.set_args(stage_name=stage, command=key, argument=str(value))                        
                 else:
-                    self.settings.update({k: kwargs.get(k)})
-            else:
-                if k in kwargs.keys():
-                    self.settings.update({k: kwargs.get(k)})
-                    
-        self.settings = process_ensemble_conditions(self.settings)
-        self.set_force_field(self.force_field)        
+                    value = [value] if not isinstance(value, list) else value
+                    for val in value:
+                        self.inputfile.add_commands(stage_name=stage, commands={key: str(val)})
+        '''try:
+            fix_vals = self.inputfile.get_args(stage_name="Ensemble", command='fix')
+            if isinstance(fix_vals, list):
+                for i in range(len(fix_vals)):
+                    for j in range(len(fix_vals) - 1, i, -1):
+                        if fix_vals[i] == fix_vals[j]:
+                            fix_vals.pop(j)
+                self.inputfile.remove_command(command='fix', stage_name="Ensemble", remove_empty_stages=False)
+                #remove duplicates if any
+                for fix in fix_vals:
+                    self.inputfile.add_commands(stage_name="Ensemble", commands={'fix': fix})
+        except KeyError:
+            logger.error("No fix command found in Ensemble stage!")
+            raise KeyError'''
+                            
+        
+        return LammpsInputSet(
+            inputfile=self.inputfile,
+            data=data,
+            calc_type=self.calc_type,
+            additional_data=write_data,
+            **kwargs
+        )
+        
+        
+        
+        
+        
+        
+            
+        
+            
+            
+            
+        
+        

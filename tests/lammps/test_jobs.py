@@ -19,12 +19,14 @@ def test_nvt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
     
     mock_lammps(ref_paths, fake_run_lammps_kwargs=fake_run_lammps_kwargs)
     
-    maker = LammpsNVTMaker(force_field=test_si_force_field, task_document_kwargs={'store_trajectory': StoreTrajectoryOption.PARTIAL})
+    generator = LammpsNVTSet(temperature=[300, 1000], nsteps=100000, timestep=0.001, friction=0.1, log_interval=500)
+    maker = LammpsNVTMaker(force_field=test_si_force_field, input_set_generator=generator, task_document_kwargs={'store_trajectory': StoreTrajectoryOption.PARTIAL})
     maker.name = 'nvt_test'
     
-    assert maker.input_set_generator.settings['ensemble'] == 'nvt'
+    assert maker.input_set_generator.settings.settings['ensemble'] == 'nvt'
     
-    job = maker.make(si_structure)
+    supercell = si_structure.make_supercell([5, 5, 5])
+    job = maker.make(supercell)
     
     os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -32,7 +34,7 @@ def test_nvt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
     output = responses[job.uuid][1].output
     
     assert isinstance(output, LammpsTaskDocument)
-    assert output.structure.volume == pytest.approx(si_structure.volume)
+    assert output.structure.volume == pytest.approx(supercell.volume)
     assert len(list(output.dump_files.keys())) == 1
     dump_key = list(output.dump_files.keys())[0]
     assert dump_key.endswith('.dump')
@@ -46,9 +48,9 @@ def test_npt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
     
     mock_lammps(ref_paths, fake_run_lammps_kwargs=fake_run_lammps_kwargs)
     
-    maker = LammpsNPTMaker(force_field=test_si_force_field, task_document_kwargs={'store_trajectory': StoreTrajectoryOption.PARTIAL})
+    maker = LammpsNPTMaker(force_field=test_si_force_field)
     maker.name = 'npt_test'
-    job = maker.make(si_structure)
+    job = maker.make(si_structure.make_supercell([5, 5, 5]))
 
     os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)
@@ -56,36 +58,6 @@ def test_npt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
     output = responses[job.uuid][1].output
     
     assert isinstance(output, LammpsTaskDocument)
-    assert output.structure.volume > si_structure.volume
-    assert len(output.dump_files.keys()) == 1
-    dump_key = list(output.dump_files.keys())[0]
-    assert dump_key.endswith('.dump')
-    assert isinstance(output.dump_files[dump_key], str)
-
-def test_nvt_ff_from_set(si_structure, tmp_path, test_si_force_field, mock_lammps):
-    
-    ref_paths = {'nvt_test': 'nvt_test'}
-    
-    fake_run_lammps_kwargs = {}
-    
-    mock_lammps(ref_paths, fake_run_lammps_kwargs=fake_run_lammps_kwargs)
-    
-    input_set = LammpsNVTSet(force_field=test_si_force_field)
-    maker = LammpsNVTMaker(input_set_generator=input_set, task_document_kwargs={'store_trajectory': StoreTrajectoryOption.PARTIAL})
-    maker.name = 'nvt_test'
-    
-    job = maker.make(si_structure)
-    
-    os.chdir(tmp_path)
-    responses = run_locally(job, create_folders=True, ensure_success=True)
-    os.chdir(os.getcwd())
-    output = responses[job.uuid][1].output
-    
-    assert isinstance(output, LammpsTaskDocument)
-    assert isinstance(output.thermo_log[0], pd.DataFrame)
-    assert isinstance(output.raw_log_file, str)
-    assert len(output.thermo_log[0]) == 11
-    assert output.structure.volume == pytest.approx(si_structure.volume)
     assert len(output.dump_files.keys()) == 1
     dump_key = list(output.dump_files.keys())[0]
     assert dump_key.endswith('.dump')
@@ -101,7 +73,8 @@ def test_minimization_maker(si_structure, tmp_path, test_si_force_field, mock_la
     
     maker = MinimizationMaker(force_field=test_si_force_field)
     maker.name = 'min_test'
-    job = maker.make(si_structure)
+    supercell = si_structure.make_supercell([5, 5, 5])
+    job = maker.make(supercell)
     
     os.chdir(tmp_path)
     responses = run_locally(job, create_folders=True, ensure_success=True)

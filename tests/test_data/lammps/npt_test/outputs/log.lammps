@@ -1,46 +1,37 @@
 LAMMPS (29 Aug 2024 - Development - patch_29Aug2024-704-g6d0e633edf)
 # LAMMPS input generated from LammpsInputFile with pymatgen v2024.10.29
 
-# Sample input script template for MD
-
 # Initialization
-
-# Stage 3
 units metal
 atom_style atomic
 dimension 3
 boundary p p p
+pair_style tersoff
 
-# Atom definition
-
-# md.restart
+# AtomDefinition
 read_data system.data
 Reading data file ...
-  triclinic box = (0 0 0) to (3.866975 3.348898 3.157372) with tilt (1.933487 1.933487 1.116299)
+  triclinic box = (0 0 0) to (19.334873 16.744491 15.786858) with tilt (9.667437 9.667437 5.581497)
 WARNING: Triclinic box skew is large. LAMMPS will run inefficiently. (src/domain.cpp:221)
   1 by 1 by 1 MPI processor grid
   reading atoms ...
-  2 atoms
-  read_data CPU = 0.000 seconds
+  250 atoms
+  read_data CPU = 0.001 seconds
 
-# Force field settings (consult official document for detailed formats)
+# ForceField
+include forcefield.lammps
+pair_coeff * * /Users/virkaran/Code/Notebooks/lammps_flows/pmg_data/Si.tersoff Si
+Reading tersoff potential file /Users/virkaran/Code/Notebooks/lammps_flows/pmg_data/Si.tersoff with DATE: 2007-10-25
 
-# Stage 7
-pair_style tersoff
-pair_coeff * * /Users/virkaran/Code/Notebooks/lammps_flows/test_new/../pmg_data/Si.tersoff Si
-Reading tersoff potential file /Users/virkaran/Code/Notebooks/lammps_flows/test_new/../pmg_data/Si.tersoff with DATE: 2007-10-25
-
-# Create velocities
+# Velocities
 velocity all create 300 42 mom yes rot yes dist gaussian
-
-# Stage 9
 neigh_modify delay 5 every 1 check yes
 
-# Ensemble constraints 1 all nve 2 all nose-hoover 300 300 0.1
-fix 3 all npt temp 300 300 0.1 iso 0 0 0.1
+# Ensemble
+fix 1 all npt temp 300 300 0.1 iso 1.0 1.0 0.1
 
-# Output settings
-thermo 100 # output thermo data every N steps
+# Outputs
+thermo 100
 dump d1 all custom 100 traj.dump id element x y z vx vy vz fx fy fz
 dump_modify d1 sort id element Si
 
@@ -71,51 +62,51 @@ Neighbor list info ...
   max neighbors/atom: 2000, page size: 100000
   master list distance cutoff = 5.2
   ghost atom cutoff = 5.2
-  binsize = 2.6, bins = 3 2 2
+  binsize = 2.6, bins = 15 9 7
   1 neighbor lists, perpetual/occasional/extra = 1 0 0
   (1) pair tersoff, perpetual
       attributes: full, newton on
       pair build: full/bin/atomonly
       stencil: full/bin/3d
       bin: standard
-Per MPI rank memory allocation (min/avg/max) = 3.099 | 3.099 | 3.099 Mbytes
+Per MPI rank memory allocation (min/avg/max) = 3.117 | 3.117 | 3.117 Mbytes
    Step          Temp          E_pair         E_mol          TotEng         Press          Volume    
-         0   300           -9.2557091      0             -9.2169311     -18235.368      40.888298    
-       100   107.75843     -9.2164857      0             -9.2025568     -21242.951      41.133796    
-       200   25.525963     -9.1266334      0             -9.1233339     -25634.65       41.663493    
-       300   194.54605     -9.1174879      0             -9.0923408      36077.38       39.132789    
-       400   633.9849      -9.2068583      0             -9.1249093      51419.666      38.357529    
-       500   583.39172     -9.2506912      0             -9.1752819      30790.437      38.965096    
-       600   187.16323     -9.2236805      0             -9.1994878      8994.5087      39.836427    
-       700   0.48893413    -9.2061526      0             -9.2060894     -16227.095      40.931632    
-       800   156.8894      -9.1601735      0             -9.139894      -67281.91       43.658026    
-       900   346.66207     -9.2213205      0             -9.1765109     -46862.262      42.364596    
-      1000   295.41069     -9.200503       0             -9.1623182     -21697.471      41.241267    
-Loop time of 0.00480737 on 1 procs for 1000 steps with 2 atoms
+         0   300           -1156.9637      0             -1147.3079     -17230.329      5111.0364    
+       100   161.35918     -1151.9434      0             -1146.7499     -5284.2016      5010.3809    
+       200   237.97159     -1152.4047      0             -1144.7454     -2837.8624      5020.9192    
+       300   214.18309     -1149.3738      0             -1142.4802     -2097.8356      5009.1231    
+       400   291.03317     -1149.3732      0             -1140.0061     -1944.6177      5020.8595    
+       500   310.55624     -1147.8817      0             -1137.8862     -2798.8809      5006.7268    
+       600   307.70946     -1146.3263      0             -1136.4225     -4995.2675      5018.0707    
+       700   370.57201     -1148.3663      0             -1136.4392     -5622.264       5045.3577    
+       800   278.55574     -1146.9591      0             -1137.9935     -2925.3125      5010.8237    
+       900   278.87134     -1147.7923      0             -1138.8166     -1315.0657      5000.8301    
+      1000   297.43893     -1148.4428      0             -1138.8695     -1257.4949      5008.1469    
+Loop time of 0.381613 on 1 procs for 1000 steps with 250 atoms
 
-Performance: 17972.386 ns/day, 0.001 hours/ns, 208013.729 timesteps/s, 416.027 katom-step/s
-97.8% CPU use with 1 MPI tasks x no OpenMP threads
+Performance: 226.407 ns/day, 0.106 hours/ns, 2620.454 timesteps/s, 655.114 katom-step/s
+98.0% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 0.0031829  | 0.0031829  | 0.0031829  |   0.0 | 66.21
+Pair    | 0.36642    | 0.36642    | 0.36642    |   0.0 | 96.02
 Neigh   | 0          | 0          | 0          |   0.0 |  0.00
-Comm    | 0.00045523 | 0.00045523 | 0.00045523 |   0.0 |  9.47
-Output  | 0.00015013 | 0.00015013 | 0.00015013 |   0.0 |  3.12
-Modify  | 0.00081058 | 0.00081058 | 0.00081058 |   0.0 | 16.86
-Other   |            | 0.0002085  |            |       |  4.34
+Comm    | 0.0023196  | 0.0023196  | 0.0023196  |   0.0 |  0.61
+Output  | 0.0051521  | 0.0051521  | 0.0051521  |   0.0 |  1.35
+Modify  | 0.0067327  | 0.0067327  | 0.0067327  |   0.0 |  1.76
+Other   |            | 0.0009893  |            |       |  0.26
 
-Nlocal:              2 ave           2 max           2 min
+Nlocal:            250 ave         250 max         250 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-Nghost:            126 ave         126 max         126 min
+Nghost:            774 ave         774 max         774 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 Neighs:              0 ave           0 max           0 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
-FullNghs:           56 ave          56 max          56 min
+FullNghs:         7000 ave        7000 max        7000 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
 
-Total # of neighbors = 56
+Total # of neighbors = 7000
 Ave neighs/atom = 28
 Neighbor list builds = 0
 Dangerous builds = 0
