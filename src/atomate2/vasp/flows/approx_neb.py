@@ -161,6 +161,7 @@ class ApproxNebMaker(Maker):
         migration_graph: MigrationGraph,
         n_images: int = 5,
         prev_dir: str | Path | None = None,
+        atomate_compat_labels : bool = False,
     ) -> Flow:
         """
         Make an ApproxNEB flow from a migration graph.
@@ -172,19 +173,28 @@ class ApproxNebMaker(Maker):
             inserted coordinates, etc.
         n_images: int
             number of images for the ApproxNEB calculation
-        selective_dynamics: str
-            the scheme for adding selective dynamics to image relaxations
+        prev_dir: str or .Path or None (default)
+            A previous calculation directory to copy outputs from.
+        atomate_compat_labels : bool = False
+            Whether to use atomate style labeling of the endpoints (True)
+            or the original labels from the MigrationGraphDoc (False, default)
 
         Returns
         -------
         Flow
             A flow performing AppoxNEB calculations
         """
-        inserted_coords_dict, inserted_coords_combo, _ = (
+        inserted_coords_dict, inserted_coords_combo, mapping = (
             MigrationGraphDoc.get_distinct_hop_sites(
                 migration_graph.inserted_ion_coords, migration_graph.insert_coords_combo
             )
         )
+        if not atomate_compat_labels:
+            inserted_coords_combo = [mapping[k] for k in inserted_coords_combo]
+            inserted_coords_dict = {
+                mapping[k] : v for k, v in inserted_coords_dict.items()
+            }
+
         working_ion = next(
             ele.value
             for ele in migration_graph.working_ion_entry.composition.remove_charges()

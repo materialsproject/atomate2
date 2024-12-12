@@ -51,7 +51,7 @@ class ApproxNebFromEndpointsMaker(Maker):
     def make(
         self,
         working_ion: CompositionLike,
-        end_points: list[Structure],
+        end_point_structures: list[Structure],
         charge_density_path: str | Path,
         n_images: int = 5,
         prev_dir: str | Path | None = None,
@@ -61,7 +61,7 @@ class ApproxNebFromEndpointsMaker(Maker):
 
         working_ion : CompositionLike
             The element which migrates.
-        end_points : list of pymatgen .Structure
+        end_point_structures : list of pymatgen .Structure
             The two endpoint structures
         charge_density_path: str or .Path
             Path to the directory containing the charge density file(s).
@@ -78,7 +78,7 @@ class ApproxNebFromEndpointsMaker(Maker):
         """
         ep_jobs: list[Job] = []
         ep_output: dict[str, dict[str, Any]] = {}
-        for idx, ep in enumerate(end_points):
+        for idx, ep in enumerate(end_point_structures):
             job = self.image_relax_maker.make(ep, prev_dir=prev_dir)
             job.name = f"ApproxNEB relax endpoint {idx}"
             ep_output[str(idx)] = {
