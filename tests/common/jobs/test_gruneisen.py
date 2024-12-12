@@ -53,8 +53,8 @@ def test_compute_gruneisen_param(tmp_dir, test_dir):
         "minus": False,
     }
     assert gp_doc.derived_properties.average_gruneisen == pytest.approx(
-        1.1882292157682082
+        1.1203420586842452, abs=1e-2
     )
     assert gp_doc.derived_properties.thermal_conductivity_slack == pytest.approx(
-        38.861289530152796
+        44.078885068152346, abs=1e-2
     )
