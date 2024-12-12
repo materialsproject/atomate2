@@ -1,22 +1,23 @@
 """Define common utility jobs needed for ApproxNEB flows."""
 
 from __future__ import annotations
+
 from enum import Enum
 from typing import TYPE_CHECKING
 
 import numpy as np
-
 from emmet.core.neb import NebMethod
 from emmet.core.vasp.task_valid import TaskState
-from jobflow import job, Flow, Response
+from jobflow import Flow, Response, job
 from pymatgen.analysis.diffusion.neb.pathfinder import ChgcarPotential, NEBPathfinder
 from pymatgen.core import Element
 
 from atomate2.common.schemas.neb import NebResult
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Sequence
     from pathlib import Path
-    from typing import Any, Callable, Literal, Sequence
+    from typing import Any, Literal
 
     from jobflow import Maker
     from pymatgen.core import Structure
@@ -31,6 +32,7 @@ class HopFailureReason(Enum):
     MIN_DIST = "Linear distance traversed by working ion is below threshold."
     MIN_IMAGE = "Too few image calculations succeeded"
 
+
 @job
 def get_images_and_relax(
     working_ion: str,
@@ -38,7 +40,7 @@ def get_images_and_relax(
     inserted_combo_list: list[str],
     n_images: int | list[int],
     charge_density_path: str | Path,
-    get_charge_density : Callable[[str | Path], VolumetricData],
+    get_charge_density: Callable[[str | Path], VolumetricData],
     relax_maker: Maker,
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms",
     min_hop_distance: float | bool = True,
@@ -173,6 +175,7 @@ def get_images_and_relax(
 
     return Response(replace=relax_flow)
 
+
 def get_pathfinder_results(
     pf_struct_ini: Structure,
     pf_struct_fin: Structure,
@@ -229,6 +232,7 @@ def get_pathfinder_results(
         "mobile_site_index": ini_wi_ind,
     }
 
+
 def add_selective_dynamics_two_fixed_sites(
     structure: Structure,
     fixed_index: int,
@@ -275,6 +279,7 @@ def add_selective_dynamics_two_fixed_sites(
 
     return structure
 
+
 def get_working_ion_index(
     structure: Structure, working_ion: CompositionLike
 ) -> int | None:
@@ -296,6 +301,7 @@ def get_working_ion_index(
             # assume that only the lowest indexed working ion is mobile
             return ind
     return None
+
 
 def get_hop_distance_from_endpoints(
     endpoint_structures: Sequence[Structure], working_ion: CompositionLike
@@ -329,22 +335,40 @@ def get_hop_distance_from_endpoints(
         for site_b in working_ion_sites[1]
     )
 
+
 @job
 def collate_images_single_hop(
-    working_ion : CompositionLike,
-    endpoint_calc_output : list[dict[str,Any]],
-    image_calc_output : list[dict[str,Any]],
+    working_ion: CompositionLike,
+    endpoint_calc_output: list[dict[str, Any]],
+    image_calc_output: list[dict[str, Any]],
     min_images_per_hop: int | None = None,
-):
+) -> NebResult:
+    """
+    Collect output from an ApproxNEB flow.
 
-    metadata = {}
+    Parameters
+    ----------
+    working_ion: CompositionLike
+        The mobile ion.
+    endpoint_calc_output: list of dict
+        Output from the endpoint relaxations.
+    image_calc_output: list of dict
+        Output from the image relaxations.
+    min_images_per_hop: int | None = None,
+        If an int, the minimum number of image calculations per hop that
+        must succeed to mark a hop as successfully calculated.
+
+    Returns
+    -------
+    NebResult
+    """
+    metadata: dict[str, Any] = {}
     task_state = TaskState.SUCCESS
 
+    calcs: list[dict[str, Any]] = image_calc_output.copy()
     if endpoint_calc_output is not None:
-        calcs = [endpoint_calc_output[0], image_calc_output,endpoint_calc_output[1]]
-    else:
-        calcs = image_calc_output
-    
+        calcs = [endpoint_calc_output[0], *calcs, endpoint_calc_output[1]]
+
     if min_images_per_hop is not None:
         num_success_calcs = len(
             [calc for calc in calcs if calc["structure"] is not None]
@@ -354,7 +378,7 @@ def collate_images_single_hop(
             if "failure_reasons" not in metadata:
                 metadata["failure_reasons"] = []
             metadata["failure_reasons"].append(HopFailureReason.MIN_IMAGE.value)
-    
+
     hop_dist = None
     if endpoint_calc_output is not None and working_ion is not None:
         hop_dist = get_hop_distance_from_endpoints(
@@ -373,5 +397,5 @@ def collate_images_single_hop(
         method=NebMethod.APPROX,
         state=task_state,
         metadata=metadata if len(metadata) > 0 else None,
-        hop_distance = hop_dist,
+        hop_distance=hop_dist,
     )

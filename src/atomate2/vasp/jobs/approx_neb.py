@@ -14,7 +14,7 @@ from pymatgen.io.vasp.outputs import Chgcar
 
 from atomate2.common.jobs.approx_neb import (
     HopFailureReason,
-    get_hop_distance_from_endpoints
+    get_hop_distance_from_endpoints,
 )
 from atomate2.common.schemas.neb import NebPathwayResult, NebResult
 from atomate2.utils.path import strip_hostname
@@ -24,12 +24,12 @@ from atomate2.vasp.run import JobType
 from atomate2.vasp.sets.approx_neb import ApproxNebSetGenerator
 
 if TYPE_CHECKING:
-    
     from pymatgen.core import Structure
     from pymatgen.util.typing import CompositionLike
 
     from atomate2.vasp.jobs.base import BaseVaspMaker
     from atomate2.vasp.sets.base import VaspInputGenerator
+
 
 @dataclass
 class ApproxNebHostRelaxMaker(DoubleRelaxMaker):
@@ -63,7 +63,8 @@ class ApproxNebImageRelaxMaker(RelaxMaker):
         }
     )
 
-def get_charge_density(prev_dir: str | Path, use_aeccar : bool = False) -> Chgcar:
+
+def get_charge_density(prev_dir: str | Path, use_aeccar: bool = False) -> Chgcar:
     """Get charge density from a prior VASP calculation.
 
     Parameters
@@ -157,6 +158,7 @@ def get_endpoints_and_relax(
     flow = Flow(ep_relax_jobs, output=ep_relax_output)
 
     return Response(replace=flow)
+
 
 @job
 def collate_results(

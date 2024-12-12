@@ -7,10 +7,9 @@ from typing import TYPE_CHECKING
 
 from emmet.core.mobility.migrationgraph import MigrationGraphDoc
 from jobflow import Flow, Maker, OnMissing
-from pymatgen.io.vasp.outputs import Chgcar
 
-from atomate2.common.jobs.approx_neb import get_images_and_relax
 from atomate2.common.flows.approx_neb import ApproxNebFromEndpointsMaker
+from atomate2.common.jobs.approx_neb import get_images_and_relax
 from atomate2.vasp.jobs.approx_neb import (
     ApproxNebHostRelaxMaker,
     ApproxNebImageRelaxMaker,
@@ -26,6 +25,7 @@ if TYPE_CHECKING:
     from emmet.core.mobility.migrationgraph import MigrationGraph
     from jobflow import Job
     from pymatgen.core import Structure
+    from pymatgen.io.vasp.outputs import Chgcar
 
 
 @dataclass
@@ -134,7 +134,7 @@ class ApproxNebMaker(Maker):
             inserted_combo_list=inserted_coords_combo,
             n_images=n_images,
             charge_density_path=prev_dir,
-            get_charge_density = self.get_charge_density,
+            get_charge_density=self.get_charge_density,
             relax_maker=self.image_relax_maker,
             selective_dynamics_scheme=self.selective_dynamics_scheme,
             min_hop_distance=self.min_hop_distance,
@@ -197,8 +197,8 @@ class ApproxNebMaker(Maker):
             n_images=n_images,
             prev_dir=prev_dir,
         )
-    
-    def get_charge_density(self,prev_dir : str | Path) -> Chgcar:
+
+    def get_charge_density(self, prev_dir: str | Path) -> Chgcar:
         """Get charge density from a prior VASP calculation.
 
         Parameters
@@ -215,13 +215,33 @@ class ApproxNebMaker(Maker):
 
 @dataclass
 class ApproxNebSingleHopMaker(ApproxNebFromEndpointsMaker):
+    """
+    Create an ApproxNEB VASP flow from specified endpoints.
 
-    image_relax_maker : Maker = field(
-        default_factory=ApproxNebImageRelaxMaker
-    )
+    image_relax_maker : Maker
+        Maker to relax both endpoints and images
+    selective_dynamics_scheme : "fix_two_atoms" (default) or None
+        If "fix_two_atoms", uses the default selective dynamics scheme of ApproxNEB,
+        wherein the migrating ion and the ion farthest from it are the only
+        ions whose positions can relax.
+    min_images_per_hop : int or None
+        If an int, the minimum number of image calculations per hop that
+        must succeed to mark a hop as successfully calculated.
+    min_hop_distance : float or bool (default = True)
+        If a float, skips any hops where the working ion moves a distance less
+        than min_hop_distance.
+        If True, min_hop_distance is set to twice the average ionic radius.
+        If False, no checks are made.
+    use_aeccar : bool = False
+        If True, the sum of the host structure AECCAR0 (pseudo-core charge density)
+        and AECCAR2 (valence charge density) are used in image pathfinding.
+        If False (default), the CHGCAR (valence charge density) is used.
+    """
+
+    image_relax_maker: Maker = field(default_factory=ApproxNebImageRelaxMaker)
     use_aeccar: bool = False
 
-    def get_charge_density(self, prev_dir : str | Path) -> Chgcar:
+    def get_charge_density(self, prev_dir: str | Path) -> Chgcar:
         """Get charge density from a prior VASP calculation.
 
         Parameters
