@@ -7,13 +7,16 @@ from typing import TYPE_CHECKING
 
 from emmet.core.mobility.migrationgraph import MigrationGraphDoc
 from jobflow import Flow, Maker, OnMissing
+from pymatgen.io.vasp.outputs import Chgcar
 
+from atomate2.common.jobs.approx_neb import get_images_and_relax
+from atomate2.common.flows.approx_neb import ApproxNebFromEndpointsMaker
 from atomate2.vasp.jobs.approx_neb import (
     ApproxNebHostRelaxMaker,
     ApproxNebImageRelaxMaker,
     collate_results,
+    get_charge_density,
     get_endpoints_and_relax,
-    get_images_and_relax,
 )
 
 if TYPE_CHECKING:
@@ -130,10 +133,10 @@ class ApproxNebMaker(Maker):
             ep_output=ep_relax_jobs.output,
             inserted_combo_list=inserted_coords_combo,
             n_images=n_images,
-            host_calc_path=prev_dir,
+            charge_density_path=prev_dir,
+            get_charge_density = self.get_charge_density,
             relax_maker=self.image_relax_maker,
             selective_dynamics_scheme=self.selective_dynamics_scheme,
-            use_aeccar=self.use_aeccar,
             min_hop_distance=self.min_hop_distance,
         )
 
@@ -194,3 +197,40 @@ class ApproxNebMaker(Maker):
             n_images=n_images,
             prev_dir=prev_dir,
         )
+    
+    def get_charge_density(self,prev_dir : str | Path) -> Chgcar:
+        """Get charge density from a prior VASP calculation.
+
+        Parameters
+        ----------
+        prev_dir : str or Path
+            Path to the previous VASP calculation
+
+        Returns
+        -------
+        pymatgen Chgcar object
+        """
+        return get_charge_density(prev_dir, use_aeccar=self.use_aeccar)
+
+
+@dataclass
+class ApproxNebSingleHopMaker(ApproxNebFromEndpointsMaker):
+
+    image_relax_maker : Maker = field(
+        default_factory=ApproxNebImageRelaxMaker
+    )
+    use_aeccar: bool = False
+
+    def get_charge_density(self, prev_dir : str | Path) -> Chgcar:
+        """Get charge density from a prior VASP calculation.
+
+        Parameters
+        ----------
+        prev_dir : str or Path
+            Path to the previous VASP calculation
+
+        Returns
+        -------
+        pymatgen Chgcar object
+        """
+        return get_charge_density(prev_dir, use_aeccar=self.use_aeccar)

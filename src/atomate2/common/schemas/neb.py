@@ -22,14 +22,6 @@ class NebResult(BaseModel, extra="allow"):  # type: ignore[call-arg]
         ),
     )
 
-    initial_endpoints: Optional[dict[str, Structure | Molecule]] = Field(
-        None, description="Initial endpoint structures"
-    )
-
-    relaxed_endpoints: Optional[dict[str, Structure | Molecule]] = Field(
-        None, description="Relaxed endpoint structures"
-    )
-
     initial_images: Optional[list[Structure | Molecule]] = Field(
         None, description="Unrelaxed structures/molecules along the reaction pathway."
     )

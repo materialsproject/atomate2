@@ -1,0 +1,377 @@
+"""Define common utility jobs needed for ApproxNEB flows."""
+
+from __future__ import annotations
+from enum import Enum
+from typing import TYPE_CHECKING
+
+import numpy as np
+
+from emmet.core.neb import NebMethod
+from emmet.core.vasp.task_valid import TaskState
+from jobflow import job, Flow, Response
+from pymatgen.analysis.diffusion.neb.pathfinder import ChgcarPotential, NEBPathfinder
+from pymatgen.core import Element
+
+from atomate2.common.schemas.neb import NebResult
+
+if TYPE_CHECKING:
+    from pathlib import Path
+    from typing import Any, Callable, Literal, Sequence
+
+    from jobflow import Maker
+    from pymatgen.core import Structure
+    from pymatgen.io.common import VolumetricData
+    from pymatgen.util.typing import CompositionLike
+
+
+class HopFailureReason(Enum):
+    """Define failure modes for ApproxNEB calculations."""
+
+    ENDPOINT = "Endpoint structure relaxation failed"
+    MIN_DIST = "Linear distance traversed by working ion is below threshold."
+    MIN_IMAGE = "Too few image calculations succeeded"
+
+@job
+def get_images_and_relax(
+    working_ion: str,
+    ep_output: dict[str, dict],
+    inserted_combo_list: list[str],
+    n_images: int | list[int],
+    charge_density_path: str | Path,
+    get_charge_density : Callable[[str | Path], VolumetricData],
+    relax_maker: Maker,
+    selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms",
+    min_hop_distance: float | bool = True,
+) -> Response:
+    """
+    Get and relax image input structures.
+
+    Parameters
+    ----------
+    ep_output : dict
+        Output of get_endpoints_and_relax
+    inserted_combo_list : list
+        List of hops to perform ApproxNEB on
+    n_images : int
+        The number of images to use along each hop.
+        If an int, the number to use for every hop.
+        If a list of ints, the number of images to use in that hop,
+    charge_density_path: str | Path
+        The path to the calculation of the host_structure
+    relax_maker : Maker
+        Maker to relax images
+    selective_dynamics_scheme : "fix_two_atoms" or None
+        Whether to use a pre-defined selective dynamics scheme or relax
+        all ionic positions in the images.
+    use_aeccar : bool = False
+        If True, the sum of the host structure AECCAR0 (pseudo-core charge density)
+        and AECCAR2 (valence charge density) are used in image pathfinding.
+        If False (default), the CHGCAR (valence charge density) is used.
+    min_hop_distance : float or bool (default = True)
+        If a float, skips any hops where the working ion moves a distance less
+        than min_hop_distance.
+        If True, min_hop_distance is set to twice the average ionic radius.
+        If False, no checks are made.
+
+    Returns
+    -------
+    Response : a series of image relaxations with output containing the
+        relaxed structures and energies of each image in each hop in a dict:
+        {
+            hop_index : [
+                {"energy": energy of image 1, "structure": relaxed image structure 1},
+                ...
+            ]
+        }
+    """
+    # remove failed output and strip magmoms to avoid "Bravais" errors
+    ep_structures = {}
+    for k, calc in ep_output.items():
+        if calc["structure"] is None:
+            continue
+        ep_struct = calc["structure"].copy()
+        if ep_struct.site_properties.get("magmom") is not None:
+            ep_struct.remove_site_property("magmom")
+        ep_structures[k] = ep_struct
+
+    host_chgcar = get_charge_density(charge_density_path)
+
+    image_relax_jobs = []
+    image_relax_output: dict[str, list] = {}
+
+    if isinstance(n_images, int):
+        n_images = [n_images for _ in inserted_combo_list]
+
+    if isinstance(min_hop_distance, bool) and min_hop_distance:
+        _wion = Element(str(working_ion))
+        if (ionic_radius := getattr(_wion, "average_ionic_radius", None)) is not None:
+            min_hop_distance = 2 * ionic_radius
+        elif (atomic_radius := getattr(_wion, "atomic_radius", None)) is not None:
+            # all elements have an atomic radius in pymatgen
+            min_hop_distance = atomic_radius
+
+    for hop_idx, combo in enumerate(inserted_combo_list):
+        ini_ind, fin_ind = combo.split("+")
+
+        # See if we can proceed with this hop calculation:
+        skip_reasons = []
+        if not all(ep_structures.get(idx) for idx in [ini_ind, fin_ind]):
+            # At least one endpoint calculation failed
+            skip_reasons.append(HopFailureReason.ENDPOINT)
+        if (
+            isinstance(min_hop_distance, float)
+            and get_hop_distance_from_endpoints(
+                [ep_structures[ini_ind], ep_structures[fin_ind]], working_ion
+            )
+            < min_hop_distance
+        ):
+            # The working ion hop distance is below the specified threshold
+            skip_reasons.append(HopFailureReason.MIN_DIST)
+
+        if len(skip_reasons) > 0:
+            image_relax_output[combo] = [reason.value for reason in skip_reasons]
+            continue
+
+        # potential place for uuid logic if depth first is desirable
+        pathfinder_output = get_pathfinder_results(
+            ep_structures[ini_ind],
+            ep_structures[fin_ind],
+            working_ion,
+            n_images[hop_idx],
+            host_chgcar,
+        )
+        images_list = pathfinder_output["images"]
+
+        # add selective dynamics to structure
+        if selective_dynamics_scheme == "fix_two_atoms":
+            images_list = [
+                add_selective_dynamics_two_fixed_sites(
+                    image,
+                    pathfinder_output["mobile_site_index"],
+                    working_ion,
+                )
+                for image in pathfinder_output["images"]
+            ]
+
+        elif selective_dynamics_scheme is not None:
+            raise ValueError(f"Unknown {selective_dynamics_scheme=}.")
+
+        image_relax_output[combo] = []
+        for image_idx, image in enumerate(images_list):
+            relax_job = relax_maker.make(image)
+            relax_job.append_name(f" hop {combo} image {image_idx+1}")
+            image_relax_jobs.append(relax_job)
+            image_relax_output[combo].append(
+                {
+                    "energy": relax_job.output.output.energy,
+                    "structure": relax_job.output.structure,
+                    "initial_structure": relax_job.output.input.structure,
+                }
+            )
+
+    relax_flow = Flow(image_relax_jobs, output=image_relax_output)
+
+    return Response(replace=relax_flow)
+
+def get_pathfinder_results(
+    pf_struct_ini: Structure,
+    pf_struct_fin: Structure,
+    working_ion: CompositionLike,
+    n_images: int,
+    host_charge_density: VolumetricData,
+) -> dict:
+    """
+    Get interpolated images from the pathfinder algorithm.
+
+    Parameters
+    ----------
+    pf_struct_ini : pymatgen Structure
+        First NEB endpoint structure
+    pf_struct_fin : pymatgen Structure
+        Second/final endpoint structure
+    working_ion : CompositionLike
+        The element which migrates
+    n_images : int
+        The number of images to be created along the path
+    host_charge_density : VolumetricData, like pymatgen.io.vasp.outputs Chgcar
+        The charge density of the host structure
+
+    Returns
+    -------
+    dict containing the images along the path and the mobile_site index
+    """
+    ini_wi_ind = get_working_ion_index(pf_struct_ini, working_ion)
+    fin_wi_ind = get_working_ion_index(pf_struct_fin, working_ion)
+
+    if ini_wi_ind != fin_wi_ind:
+        raise ValueError(
+            "Inserted site indexes of end point structures must match for NEBPathfinder"
+        )
+
+    # get potential gradient v from host chgcar
+    v_chgcar = ChgcarPotential(host_charge_density)
+    host_v = v_chgcar.get_v()
+
+    # perform pathfinding and get images
+    neb_pf = NEBPathfinder(
+        pf_struct_ini,
+        pf_struct_fin,
+        relax_sites=[ini_wi_ind],
+        v=host_v,
+        n_images=n_images + 1,
+    )
+    # note NEBPathfinder currently returns n_images+1 images (rather than n_images)
+    # and the first and last images generated are very similar to the end points
+    # provided so they are discarded
+
+    return {
+        "images": neb_pf.images[1:-1],
+        "mobile_site_index": ini_wi_ind,
+    }
+
+def add_selective_dynamics_two_fixed_sites(
+    structure: Structure,
+    fixed_index: int,
+    fixed_species_name: CompositionLike,
+) -> Structure:
+    """Add selective dynamics to input structure.
+
+    Parameters
+    ----------
+    structure : pymatgen Structure
+        Structure to add selective dynamics tags to
+    fixed_index : int
+        Index of the site to add selective dynamics to
+    fixed_species_name : CompositionLike
+        The expected element at the indexed site - used
+        to check validity of fixed_index
+
+    Returns
+    -------
+    Copy of the input structure with selective dynamics tags
+    """
+    if structure[fixed_index].specie.name != fixed_species_name:
+        raise ValueError(
+            f"The chosen fixed atom at index {fixed_index} is not a "
+            f"{fixed_species_name} atom"
+        )
+
+    # removes site properties to avoid error
+    for p in structure.site_properties:
+        structure.remove_site_property(p)
+
+    # add selectives dynamics with fix_two_atoms scheme
+    # fix the atom at fixed_index and the furthest atom in the structure
+    ref_site = structure.sites[fixed_index]
+    distances = [site.distance(ref_site) for site in structure.sites]
+    farthest_index = distances.index(max(distances))
+    sd_array = [
+        [False, False, False]
+        if idx in {fixed_index, farthest_index}
+        else [True, True, True]
+        for idx in range(structure.num_sites)
+    ]
+    structure.add_site_property("selective_dynamics", sd_array)
+
+    return structure
+
+def get_working_ion_index(
+    structure: Structure, working_ion: CompositionLike
+) -> int | None:
+    """Get the index of the working ion in a structure.
+
+    Parameters
+    ----------
+    structure : pymatgen Structure
+    working_ion : CompositionLike
+        Name of the element to identify
+
+    Returns
+    -------
+    int - the first site in the structure containing the working ion
+    None - no sites in the structure contain the working ion
+    """
+    for ind, site in enumerate(structure):
+        if site.species_string == working_ion:
+            # assume that only the lowest indexed working ion is mobile
+            return ind
+    return None
+
+def get_hop_distance_from_endpoints(
+    endpoint_structures: Sequence[Structure], working_ion: CompositionLike
+) -> float:
+    """
+    Find the hop distance of a working ion from two endpoint structures.
+
+    Parameters
+    ----------
+    endpoint_structures : Sequence of pymatgen .Structure
+        The two endpoint structures defining a hop.
+    working_ion : pymatgen .CompositionLike
+        The species name of the working ion.
+
+    Returns
+    -------
+    float - the hop distance
+    """
+    working_ion_sites = [
+        [
+            site
+            for site in endpoint_structures[ep_idx]
+            if site.species_string == working_ion
+        ]
+        for ep_idx in range(2)
+    ]
+
+    return max(
+        np.linalg.norm(site_a.coords - site_b.coords)
+        for site_a in working_ion_sites[0]
+        for site_b in working_ion_sites[1]
+    )
+
+@job
+def collate_images_single_hop(
+    working_ion : CompositionLike,
+    endpoint_calc_output : list[dict[str,Any]],
+    image_calc_output : list[dict[str,Any]],
+    min_images_per_hop: int | None = None,
+):
+
+    metadata = {}
+    task_state = TaskState.SUCCESS
+
+    if endpoint_calc_output is not None:
+        calcs = [endpoint_calc_output[0], image_calc_output,endpoint_calc_output[1]]
+    else:
+        calcs = image_calc_output
+    
+    if min_images_per_hop is not None:
+        num_success_calcs = len(
+            [calc for calc in calcs if calc["structure"] is not None]
+        )
+        if num_success_calcs < min_images_per_hop:
+            task_state = TaskState.FAILED
+            if "failure_reasons" not in metadata:
+                metadata["failure_reasons"] = []
+            metadata["failure_reasons"].append(HopFailureReason.MIN_IMAGE.value)
+    
+    hop_dist = None
+    if endpoint_calc_output is not None and working_ion is not None:
+        hop_dist = get_hop_distance_from_endpoints(
+            [ep_calc["structure"] for ep_calc in endpoint_calc_output], working_ion
+        )
+
+    return NebResult(
+        images=[calc["structure"] for calc in calcs if calc["structure"] is not None],
+        initial_images=[
+            calc["initial_structure"]
+            for calc in calcs
+            if calc["initial_structure"] is not None
+        ],
+        energies=[calc["energy"] for calc in calcs if calc["energy"] is not None],
+        ionic_steps=None,
+        method=NebMethod.APPROX,
+        state=task_state,
+        metadata=metadata if len(metadata) > 0 else None,
+        hop_distance = hop_dist,
+    )
