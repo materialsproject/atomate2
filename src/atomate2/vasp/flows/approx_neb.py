@@ -83,7 +83,7 @@ class ApproxNebMaker(Maker):
             the (supercell) structure of the empty host with no working ion
         working_ion: str
             the mobile species in ApproxNEB
-        inserted_coords_dict: dict
+        inserted_coords_dict: dict or list
             a dictionary containing site coords (endpoints) for working ions
             in the simulation cell
         inserted_coords_combo: list
@@ -161,7 +161,7 @@ class ApproxNebMaker(Maker):
         migration_graph: MigrationGraph,
         n_images: int = 5,
         prev_dir: str | Path | None = None,
-        atomate_compat_labels : bool = False,
+        atomate_compat_labels: bool = False,
     ) -> Flow:
         """
         Make an ApproxNEB flow from a migration graph.
@@ -184,15 +184,23 @@ class ApproxNebMaker(Maker):
         Flow
             A flow performing AppoxNEB calculations
         """
-        inserted_coords_dict, inserted_coords_combo, mapping = (
+        inserted_coords, inserted_coords_combo, mapping = (
             MigrationGraphDoc.get_distinct_hop_sites(
                 migration_graph.inserted_ion_coords, migration_graph.insert_coords_combo
             )
         )
         if not atomate_compat_labels:
             inserted_coords_combo = [mapping[k] for k in inserted_coords_combo]
-            inserted_coords_dict = {
-                mapping[k] : v for k, v in inserted_coords_dict.items()
+            site_idx_map = {}
+            for k, v in mapping.items():
+                start_idx_new, end_idx_new = k.split("+")
+                start_idx_old, end_idx_old = v.split("+")
+                site_idx_map.update(
+                    {start_idx_new: start_idx_old, end_idx_new: end_idx_old}
+                )
+            inserted_coords = {
+                site_idx_map[str(idx)]: coords
+                for idx, coords in enumerate(inserted_coords)
             }
 
         working_ion = next(
@@ -202,7 +210,7 @@ class ApproxNebMaker(Maker):
         return self.make(
             host_structure=migration_graph.matrix_supercell_structure,
             working_ion=working_ion,
-            inserted_coords_dict=inserted_coords_dict,
+            inserted_coords_dict=inserted_coords,
             inserted_coords_combo=inserted_coords_combo,
             n_images=n_images,
             prev_dir=prev_dir,
