@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, Job, Maker
 from pymatgen.io.abinit.abiobjects import KSampling
 
+from atomate2.abinit.files import del_gzip_files
 from atomate2.abinit.jobs.base import BaseAbinitMaker
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def update_maker_kwargs(
@@ -224,3 +228,106 @@ def update_generator_attributes(
     }
 
     return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
+
+
+def update_taskdoc(
+    flow: Job | Flow | Maker,
+    taskdoc_updates: dict[str, Any],
+    name_filter: str | None = None,
+    class_filter: type[Maker] | None = BaseAbinitMaker,
+) -> Job | Flow | Maker:
+    """
+    Update any attribute of any AbinitTaskDoc in the flow.
+
+    Alternatively, if a Maker is supplied, the attributes of the maker will
+    be updated.
+
+    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
+    happen in place.
+
+    Parameters
+    ----------
+    flow : .Job or .Flow or .Maker
+        A job, flow or Maker.
+    taskdoc_updates : dict
+        The updates to apply to the input generator.
+    name_filter : str or None
+        A filter for the name of the jobs.
+    class_filter : Maker or None
+        A filter for the BaseAbinitMaker class used to generate the flows. Note the
+        class filter will match any subclasses.
+
+    Returns
+    -------
+    Job or Flow or Maker
+        A copy of the input flow/job/maker modified to use the updated factory settings.
+    """
+    dict_mod_updates = {
+        f"task_document_kwargs->{k}": v for k, v in taskdoc_updates.items()
+    }
+
+    return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
+
+
+def append_clean_flow(
+    flow: Job | Flow,
+    exclude_files_from_zip: list[str | Path] | None = None,
+    delete: bool = True,
+    exclude_files_from_del: list[str | Path] | None = None,
+    include_files_to_del: list[str | Path] | None = None,
+) -> Job | Flow | Maker:
+    r"""
+    Append a job to delete and/or compress files of the flow.
+
+    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
+    happen in place.
+
+    Parameters
+    ----------
+    flow : .Job or .Flow
+        A job, or flow.
+    exclude_files_from_zip
+        Filenames to exclude from the compression.
+        Supports glob file matching, e.g., "\*.dat".
+    delete: bool = True,
+        Activates the deletion of the files or not.
+    exclude_files_from_del
+        Filenames to exclude from the compression.
+        Supports glob file matching, e.g., "\*.dat".
+    include_files_to_del
+        Filenames to include as a list of str or Path objects given relative to
+        directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
+        in the directory will be deleted.
+
+    Returns
+    -------
+    Job or Flow
+        A copy of the input flow/job/maker modified to delete/compress files
+        once completed.
+    """
+    copied_flow = deepcopy(flow)
+    outputs_to_clean = []
+    if isinstance(copied_flow, Job):
+        outputs_to_clean.append(copied_flow.output)
+    elif isinstance(copied_flow, Flow):
+        for job, _ in copied_flow.iterflow():
+            outputs_to_clean.append(job.output)
+    else:
+        raise TypeError(
+            f"The function 'del_gzip_files' accepts Job or Flow \
+            as input, but {type(copied_flow)} was passed."
+        )
+
+    return Flow(
+        [
+            copied_flow,
+            del_gzip_files(
+                outputs=outputs_to_clean,
+                exclude_files_from_zip=exclude_files_from_zip,
+                delete=delete,
+                exclude_files_from_del=exclude_files_from_del,
+                include_files_to_del=include_files_to_del,
+            ),
+        ],
+        output=copied_flow.output,
+    )
