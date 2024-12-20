@@ -157,22 +157,16 @@ class CalculationOutput(BaseModel):
         CalculationOutput
             The output document.
         """
-        optimized_structure = jdftxoutput.structure
-        if hasattr(optimized_structure, "forces"):
-            forces = optimized_structure.forces.tolist()
-        else:
-            forces = None
-        if hasattr(optimized_structure, "stress"):
-            if optimized_structure.stress is None:
-                stress = None
-            else:
-                stress = optimized_structure.stress.tolist()
+        optimized_structure: Structure = jdftxoutput.structure
+        forces = jdftxoutput.forces.tolist() if hasattr(jdftxoutput, "forces") else None
+        if hasattr(jdftxoutput, "stress"):
+            stress = None if jdftxoutput.stress is None else jdftxoutput.stress.tolist()
         else:
             stress = None
         energy = jdftxoutput.e
         energy_type = jdftxoutput.eopt_type
         mu = jdftxoutput.mu
-        lowdin_charges = optimized_structure.charges
+        lowdin_charges = optimized_structure.site_properties.get("charges", None)
         # total charge in number of electrons (negative of oxidation state)
         total_charge = (
             jdftxoutput.total_electrons_uncharged - jdftxoutput.total_electrons
