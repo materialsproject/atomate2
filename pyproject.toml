@@ -110,7 +110,7 @@ strict = [
     "openmm==8.1.1",
     "phonopy==2.30.1",
     "pydantic-settings==2.7.0",
-    "pydantic==2.9.2",
+    "pydantic==2.10.4",
     "pymatgen-analysis-defects==2024.10.22",
     "pymatgen==2024.11.13",
     "python-ulid==3.0.0",
