@@ -115,6 +115,14 @@ class JobHistory(collections.deque, MSONable):
         )
 
     @property
+    def prev_dirs(self) -> list[str]:
+        """Get the last run directory."""
+        return [
+            os.path.join(ievent.details["workdir"])
+            for ievent in self.get_events_by_types(JobEvent.START)[:-1]
+        ]
+
+    @property
     def prev_outdir(self) -> str:
         """Get the output directory of the last run."""
         return os.path.join(self.prev_dir, OUTDIR_NAME)
