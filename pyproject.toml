@@ -112,7 +112,7 @@ strict = [
     "pydantic-settings==2.7.0",
     "pydantic==2.9.2",
     "pymatgen-analysis-defects==2024.10.22",
-    "git+https://github.com/materialsproject/pymatgen.git", #"pymatgen==2024.11.13",
+    "pymatgen==2024.11.13",
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
