@@ -51,7 +51,7 @@ defects = [
 ]
 forcefields = [
     "ase>=3.23.0",
-    "calorine<=2.2.1",
+    "calorine>=3.0",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.1.3",
@@ -74,7 +74,7 @@ docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.2.0",
     "furo==2024.8.6",
-    "ipython==8.30.0",
+    "ipython==8.31.0",
     "jsonschema[format]",
     "myst_parser==4.0.0",
     "numpydoc==1.8.0",
@@ -85,7 +85,7 @@ docs = [
 dev = ["pre-commit>=2.12.1"]
 tests = [
     "FireWorks==2.0.3",
-    "nbmake==1.5.4",
+    "nbmake==1.5.5",
     "pytest-cov==6.0.0",
     "pytest-mock==3.14.0",
     "pytest-split==0.10.0",
@@ -98,7 +98,7 @@ strict = [
     "click==8.1.7",
     "custodian==2024.10.16",
     "dscribe==2.1.1",
-    "emmet-core==0.84.3rc4",
+    "emmet-core==0.84.5",
     "ijson==3.3.0",
     "jobflow==0.1.19",
     "lobsterpy==0.4.9",
@@ -109,7 +109,7 @@ strict = [
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.1.1",
     "phonopy==2.30.1",
-    "pydantic-settings==2.6.1",
+    "pydantic-settings==2.7.0",
     "pydantic==2.9.2",
     "pymatgen-analysis-defects==2024.10.22",
     "pymatgen==2024.11.13",
@@ -124,7 +124,7 @@ strict-forcefields = [
     "mace-torch>=0.3.6",
     "matgl==1.1.3",
     "quippy-ase==0.9.14; python_version < '3.12'",
-    "sevenn==0.10.1",
+    "sevenn==0.10.3",
     "torch==2.5.1",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
 ]
