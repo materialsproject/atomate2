@@ -1,0 +1,11 @@
+ALGO = Normal
+EDIFF = 1e-08
+ICHARG = 1
+ISMEAR = 0
+ISPIN = 1
+LORBIT = 11
+LREAL = Auto
+LWAVE = True
+NELM = 100
+PREC = Accurate
+SIGMA = 0.01

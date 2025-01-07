@@ -285,4 +285,4 @@ class Atomate2Settings(BaseSettings):
                 f"{env_var_name} at {config_file_path} does not exist", stacklevel=2
             )
 
-        return {**new_values, **values}
+        return new_values | values

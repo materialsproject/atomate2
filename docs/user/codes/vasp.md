@@ -1,4 +1,5 @@
 (codes.vasp)=
+
 # VASP
 
 At present, most workflows in atomate2 use the Vienna *ab initio* simulation package
@@ -260,20 +261,48 @@ With the help of phonopy, these forces are then converted into a dynamical matri
 The dynamical matrices of three structures are then used as an input to the phonopy Grueneisen api
 to compute mode-dependent Grueneisen parameters.
 
-
 ### Quasi-harmonic Workflow
+
 Uses the quasi-harmonic approximation with the help of Phonopy to compute thermodynamic properties.
 First, a tight relaxation is performed. Subsequently, several optimizations at different constant
 volumes are performed. At each of the volumes, an additional phonon run is performed as well.
 Afterwards, equation of state fits are performed with phonopy.
 
-
-
 ### Equation of State Workflow
-An equation of state workflow is implemented. First, a tight relaxation is performed. Subsequently, several optimizations at different constant
-volumes are performed. Additional static calculations might be performed afterwards to arrive at more
-accurate energies. Then, an equation of state fit is performed with pymatgen.
 
+An equation of state (EOS) workflow is implemented. First, a tight relaxation is performed. Subsequently, several optimizations at different constant
+volumes are performed. Additional static calculations might be performed afterwards to arrive at more
+accurate energies. Then, an EOS fit is performed with pymatgen.
+
+The output of the workflow is, by default, a dictionary containing the energy and volume data generated with DFT, in addition to fitted equation of state parameters for all models currently available in pymatgen (Murnaghan, Birch-Murnaghan, Poirier-Tarantola, and Vinet/UBER).
+
+#### Materials Project-compliant workflows
+
+If the user wishes to reproduce the EOS data currently in the Materials Project, they should use the atomate 1-compatible `MPLegacy`-prefixed flows (and jobs and input sets). For performing updated PBE-GGA EOS flows with Materials Project-compliant parameters, the user should use the `MPGGA`-prefixed classes. Lastly, the `MPMetaGGA`-prefixed classes allow the user to perform Materials Project-compliant r<sup>2</sup>SCAN EOS workflows.
+
+**Summary:** For Materials Project-compliant equation of state (EOS) workflows, the user should use:
+* `MPGGAEosMaker` for faster, lower-accuracy calculation with the PBE-GGA
+* `MPMetaGGAEosMaker` for higher-accuracy but slower calculations with the r<sup>2</sup>SCAN meta-GGA
+* `MPLegacyEosMaker` for consistency with the PBE-GGA data currently distributed by the Materials Project
+
+#### Implementation details
+
+The Materials Project-compliant EOS flows, jobs, and sets currently use three prefixes to indicate their usage.
+* `MPGGA`: MP-compatible PBE-GGA (current)
+* `MPMetaGGA`: MP-compatible r<sup>2</sup>SCAN meta-GGA (current)
+* `MPLegacy`: a reproduction of the atomate 1 implementation, described in
+  K. Latimer, S. Dwaraknath, K. Mathew, D. Winston, and K.A. Persson, npj Comput. Materials **vol. 4**, p. 40 (2018), DOI: 10.1038/s41524-018-0091-x
+
+  For reference, the original atomate workflows can be found here:
+    * [`atomate.vasp.workflows.base.wf_bulk_modulus`](https://github.com/hackingmaterials/atomate/blob/main/atomate/vasp/workflows/presets/core.py#L564)
+    * [`atomate.vasp.workflows.base.bulk_modulus.get_wf_bulk_modulus`](https://github.com/hackingmaterials/atomate/blob/main/atomate/vasp/workflows/base/bulk_modulus.py#L21)
+
+In the original atomate 1 workflow and the atomate2 `MPLegacyEosMaker`, the k-point density is **extremely** high. This is despite the convergence tests in the supplementary information
+of Latimer *et al.* not showing strong sensitivity when the "number of ***k***-points per reciprocal atom" (KPPRA) is at least 3,000.
+
+To make the `MPGGAEosMaker` and `MPMetaGGAEosMaker` more tractable for high-throughput jobs, their input sets (`MPGGAEos{Relax,Static}SetGenerator` and `MPMetaGGAEos{Relax,Static}SetGenerator` respectively) still use the highest ***k***-point density in standard Materials Project jobs, `KSPACING = 0.22` Å<sup>-1</sup>, which is comparable to KPPRA = 3,000.
+
+This choice is justified by Fig. S12 of the supplemantary information of Latimer *et al.*, which shows that all fitted EOS parameters (equilibrium energy $E_0$, equilibrium volume $V_0$, bulk modulus $B_0$, and bulk modulus pressure derivative $B_1$) do not deviate by more than 1.5%, and typically by less than 0.1%, from well-converged values when KPPRA = 3,000.
 
 ### LOBSTER
 
@@ -324,7 +353,7 @@ run_locally(lobster, create_folders=True, store=SETTINGS.JOB_STORE)
 ```
 
 It is, however,  computationally very beneficial to define two different types of job scripts for the VASP and Lobster runs, as VASP and Lobster runs are parallelized differently (MPI vs. OpenMP).
-[FireWorks](https://github.com/materialsproject/fireworks) allows to run the VASP and Lobster jobs with different job scripts. Please check out the [jobflow documentation on FireWorks](https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs) for more information.
+[FireWorks](https://github.com/materialsproject/fireworks) allows one to run the VASP and Lobster jobs with different job scripts. Please check out the [jobflow documentation on FireWorks](https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs) for more information.
 
 Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
 
@@ -468,7 +497,8 @@ Finally, sometimes you have a workflow containing many VASP jobs. In this case i
 tedious to update the input sets for each job individually. Atomate2 provides helper
 functions called "powerups" that can apply settings updates to all VASP jobs in a flow.
 These powerups also contain filters for the name of the job and the maker used to
-generate them.
+generate them. These functions will apply updates *only* to VASP jobs, including those
+created dynamically - all other jobs in a flow will not be modified.
 
 ```py
 from atomate2.vasp.powerups import update_user_incar_settings

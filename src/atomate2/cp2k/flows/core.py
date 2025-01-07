@@ -222,7 +222,7 @@ class HybridFlowMaker(Maker):
     initialize_with_pbe
         Whether or not to attach a pre-hybrid flow that can be used to
         kickstart the hybrid flow. This is treated differently than just
-        stiching flows together, because of the screening done in
+        stitching flows together, because of the screening done in
         __post_init__
     pbe_maker
         Maker for the initialization
