@@ -16,7 +16,7 @@ from atomate2.abinit.utils.common import (
     STDERR_FILE_NAME,
 )
 
-__all__ = ["run_abinit", "run_mrgddb", "run_anaddb"]
+__all__ = ["run_abinit", "run_anaddb", "run_mrgddb"]
 
 
 SLEEP_TIME_STEP = 30

@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+import abipy.core.abinit_units as abu
 from abipy.abio.factories import scf_for_phonons
 from jobflow import Flow, Maker
 
@@ -19,6 +20,7 @@ from atomate2.abinit.jobs.response import (
     generate_dte_perts,
     run_rf,
 )
+from atomate2.abinit.powerups import update_user_abinit_settings
 from atomate2.abinit.sets.core import ShgStaticSetGenerator, StaticSetGenerator
 
 if TYPE_CHECKING:
@@ -225,6 +227,8 @@ class ShgFlowMaker(DfptFlowMaker):
     ----------
     name : str
         Name of the flows produced by this maker.
+    scissor: float
+        A rigid shift of the conduction bands in eV.
     """
 
     name: str = "DFPT Chi2 SHG"
@@ -233,3 +237,35 @@ class ShgFlowMaker(DfptFlowMaker):
     static_maker: BaseAbinitMaker = field(
         default_factory=lambda: StaticMaker(input_set_generator=ShgStaticSetGenerator())
     )
+    scissor: float | None = None
+
+    def make(
+        self,
+        structure: Structure | None = None,
+        restart_from: str | Path | None = None,
+    ) -> Flow:
+        """
+        Create a DFPT flow.
+
+        Parameters
+        ----------
+        structure : Structure
+            A pymatgen structure object.
+        restart_from : str or Path or None
+            One previous directory to restart from.
+
+        Returns
+        -------
+        Flow
+            A DFPT flow
+        """
+        shg_flow = super().make(structure=structure, restart_from=restart_from)
+
+        if self.scissor:
+            shg_flow = update_user_abinit_settings(
+                shg_flow,
+                {"dfpt_sciss": self.scissor * abu.eV_Ha},
+                name_filter="Scf calculation",
+            )
+
+        return shg_flow

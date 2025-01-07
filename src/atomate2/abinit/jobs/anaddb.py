@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["AnaddbMaker", "AnaddbDfptDteMaker"]
+__all__ = ["AnaddbDfptDteMaker", "AnaddbMaker"]
 
 
 @dataclass
