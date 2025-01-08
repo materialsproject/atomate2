@@ -1,4 +1,4 @@
-from atomate2.lammps.sets.core import BaseLammpsSetGenerator, LammpsNVTSet, LammpsNPTSet, LammpsMinimizeSet
+from atomate2.lammps.sets.core import LammpsNVTSet, LammpsNPTSet, LammpsMinimizeSet
 
 def test_LammpsNVTSet():
     nvt = LammpsNVTSet(timestep=0.005, thermostat='langevin')

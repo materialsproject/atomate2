@@ -14,7 +14,7 @@ from atomate2.common.files import gzip_files
 from atomate2.lammps.files import write_lammps_input_set
 from atomate2.lammps.run import run_lammps
 from atomate2.lammps.schemas.task import LammpsTaskDocument, StoreTrajectoryOption
-from atomate2.lammps.sets.base import BaseLammpsSetGenerator
+from pymatgen.io.lammps.generators import BaseLammpsSetGenerator
 import warnings
 
 _DATA_OBJECTS: List[str] = ["raw_log_file", "inputs", "metadata", "trajectory", "dump_files"]
