@@ -2,7 +2,7 @@ import pytest
 from pymatgen.core import Molecule, Structure
 import os
 import atomate2.lammps.run
-from atomate2.lammps.sets.base import BaseLammpsSetGenerator
+from pymatgen.io.lammps.generators import BaseLammpsSetGenerator
 from pathlib import Path
 import logging
 from typing import Literal

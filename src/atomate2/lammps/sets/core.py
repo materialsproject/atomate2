@@ -1,4 +1,4 @@
-from atomate2.lammps.sets.base import BaseLammpsSetGenerator
+from pymatgen.io.lammps.generators import BaseLammpsSetGenerator
 from typing import Literal
 from atomate2.ase.md import MDEnsemble
 import numpy as np
