@@ -83,19 +83,19 @@ class BaseLammpsMaker(Maker):
             restart_files = glob.glob(os.path.join(prev_dir, "*restart*"))
             if len(restart_files) != 1:
                 raise FileNotFoundError("No/More than one restart file found in the previous directory. If present, it should have the extension '.restart'!")
-            self.input_set_generator.settings.input_settings['AtomDefinition'].update({'read_restart': os.path.join(prev_dir, restart_files[0])})
+            self.input_set_generator._formatted_settings['AtomDefinition'].update({'read_restart': os.path.join(prev_dir, restart_files[0])})
 
         if isinstance(input_structure, Path):
             input_structure = LammpsData.from_file(input_structure, atom_style=self.input_set_generator.settings.get('atom_style', 'full'))
         
         if isinstance(self.force_field, str):
-            self.input_set_generator.settings.input_settings['ForceField'] = {}
+            self.input_set_generator._formatted_settings['ForceField'] = {}
             
         if isinstance(self.force_field, dict):
             force_field_coeffs = ''
             for key, value in self.force_field.items():
                 if key in FF_STYLE_KEYS:
-                    self.input_set_generator.settings.input_settings['Initialization'].update({key: value})
+                    self.input_set_generator._formatted_settings['Initialization'].update({key: value})
                 if key in FF_COEFF_KEYS:
                    force_field_coeffs += f"{key} {value}\n"
                 else:
@@ -130,7 +130,7 @@ class BaseLammpsMaker(Maker):
         task_doc.composition = input_structure.composition
         task_doc.reduced_formula = input_structure.composition.reduced_formula
         task_doc.task_label = self.name
-        task_doc.inputs = self.input_set_generator.settings.settings
+        task_doc.inputs = self.input_set_generator.settings.dict
         
         gzip_files(".")
 

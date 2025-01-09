@@ -44,18 +44,21 @@ class MeltQuenchThermalizeMaker(Maker):
         
         melt_maker = deepcopy(npt_maker)
         melt_maker.name = "melt"
-        melt_maker.input_set_generator.update_settings({"temperature" : [start_temperature, melt_temperature],
-                                                                "nsteps" : n_steps_melt})
+        melt_maker.input_set_generator.update_settings({"start_temp" : start_temperature,
+                                                        "end_temp": melt_temperature,
+                                                        "nsteps" : n_steps_melt})
 
         quench_maker = deepcopy(npt_maker)
         quench_maker.name = "quench"
-        quench_maker.input_set_generator.update_settings({"temperature" : [melt_temperature, quench_temperature],
-                                                                "nsteps" : n_steps_quench})
-
+        quench_maker.input_set_generator.update_settings({"start_temp" : melt_temperature,
+                                                        "end_temp": quench_temperature,
+                                                        "nsteps" : n_steps_quench})
+        
         thermalize_maker = deepcopy(nvt_maker) if nvt_maker else deepcopy(npt_maker)
         thermalize_maker.name = "thermalize"
-        thermalize_maker.input_set_generator.update_settings({"nsteps" : n_steps_thermalize,
-                                                                    "temperature" : [quench_temperature, quench_temperature]})
+        thermalize_maker.input_set_generator.update_settings({"start_temp" : quench_temperature,
+                                                "end_temp": quench_temperature,
+                                                "nsteps" : n_steps_thermalize})
         return cls(
             melt_maker=melt_maker,
             quench_maker=quench_maker,
