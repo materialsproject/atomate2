@@ -19,11 +19,11 @@ def test_nvt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
     
     mock_lammps(ref_paths, fake_run_lammps_kwargs=fake_run_lammps_kwargs)
     
-    generator = LammpsNVTSet(temperature=[300, 1000], nsteps=100000, timestep=0.001, friction=0.1, log_interval=500)
+    generator = LammpsNVTSet(start_temp=300, end_temp=1000, nsteps=100000, timestep=0.001, friction=0.1, log_interval=500)
     maker = LammpsNVTMaker(force_field=test_si_force_field, input_set_generator=generator, task_document_kwargs={'store_trajectory': StoreTrajectoryOption.PARTIAL})
     maker.name = 'nvt_test'
     
-    assert maker.input_set_generator.settings.settings['ensemble'] == 'nvt'
+    assert maker.input_set_generator.settings.ensemble == 'nvt'
     
     supercell = si_structure.make_supercell([5, 5, 5])
     job = maker.make(supercell)
@@ -72,6 +72,7 @@ def test_minimization_maker(si_structure, tmp_path, test_si_force_field, mock_la
     mock_lammps(ref_paths, fake_run_lammps_kwargs=fake_run_lammps_kwargs)
     
     maker = MinimizationMaker(force_field=test_si_force_field)
+    maker.input_set_generator.update_settings({'nsteps': 1000})
     maker.name = 'min_test'
     supercell = si_structure.make_supercell([5, 5, 5])
     job = maker.make(supercell)
