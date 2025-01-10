@@ -86,12 +86,14 @@ def get_stable_inserted_results(
     """
     if structure is None:
         return []
-    if n_steps is not None and n_steps <= 0:
+    if n_inserted > n_steps if n_steps is not None else float("inf"):
         return []
     # append job name
-    add_name = f"{n_inserted}"
+    _shown_steps = str(n_steps) if n_steps else "inf"
+    add_name = f"{n_inserted}/{_shown_steps}"
 
     static_job = static_maker.make(structure=structure)
+    static_job.append_name(f" {n_inserted - 1}/{_shown_steps}")
     insertion_job = get_inserted_structures(
         static_job.output.dir_name,
         get_charge_density,
@@ -107,7 +109,6 @@ def get_stable_inserted_results(
         ref_structure=structure,
         structure_matcher=structure_matcher,
     )
-    nn_step = n_steps - 1 if n_steps is not None else None
     next_step = get_stable_inserted_results(
         structure=min_en_job.output[0],
         inserted_element=inserted_element,
@@ -116,12 +117,12 @@ def get_stable_inserted_results(
         relax_maker=relax_maker,
         get_charge_density=get_charge_density,
         insertions_per_step=insertions_per_step,
-        n_steps=nn_step,
+        n_steps=n_steps,
         n_inserted=n_inserted + 1,
     )
 
-    for job_ in [static_job, insertion_job, min_en_job, relax_jobs, next_step]:
-        job_.append_name(f" {add_name}")
+    # for job_ in [static_job, insertion_job, min_en_job, relax_jobs, next_step]:
+    #     job_.append_name(f" {add_name}")
     combine_job = get_computed_entries(next_step.output, min_en_job.output)
     replace_flow = Flow(
         jobs=[

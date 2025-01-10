@@ -120,6 +120,10 @@ class ElectrodeInsertionMaker(Maker, ABC):
             relax = self.bulk_relax_maker.make(structure)
         else:
             relax = self.relax_maker.make(structure)
+
+        _shown_steps = str(n_steps) if n_steps else "inf"
+        relax.append_name(f" 0/{_shown_steps}")
+
         # add ignored_species to the structure matcher
         sm = _add_ignored_species(self.structure_matcher, inserted_element)
         # Get the inserted structure
@@ -131,7 +135,7 @@ class ElectrodeInsertionMaker(Maker, ABC):
             relax_maker=self.relax_maker,
             get_charge_density=self.get_charge_density,
             n_steps=n_steps,
-            insertions_per_step=insertions_per_step,
+            n_inserted=1,
         )
         relaxed_summary = RelaxJobSummary(
             structure=relax.output.structure,
