@@ -41,11 +41,11 @@ and will result in a response that
 is deemed necessary and appropriate to the circumstances.
 
 Project maintainers and Materials Project staff members are obligated to
-maintain confidentiality with regard to the reporter of an incident to the extent 
-possible by law and institutional policy. Community members should be aware that 
-Materials Project staff members are subject to Lawrence Berkeley National Laboratory's 
-[harassment and discrimination policies](https://diversity.lbl.gov/harassment-discrimination-policies/), 
-which require that reports of sexual violence or harassment (as defined in the policy) 
+maintain confidentiality with regard to the reporter of an incident to the extent
+possible by law and institutional policy. Community members should be aware that
+Materials Project staff members are subject to Lawrence Berkeley National Laboratory's
+[harassment and discrimination policies](https://diversity.lbl.gov/harassment-discrimination-policies/),
+which require that reports of sexual violence or harassment (as defined in the policy)
 be reported to the institution.
 
 This Code of Conduct is adapted from the [Contributor Covenant][homepage],
