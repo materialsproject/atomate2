@@ -103,7 +103,7 @@ strict = [
     "jobflow==0.1.19",
     "lobsterpy==0.4.9",
     "mdanalysis==2.7.0",
-    "monty==2024.10.21",
+    "monty==2025.1.9",
     "mp-api==0.43.0",
     "numpy",
     "openmm-mdanalysis-reporter==0.1.0",
