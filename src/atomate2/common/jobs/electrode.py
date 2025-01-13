@@ -84,9 +84,11 @@ def get_stable_inserted_results(
         The number of ions inserted so far, used to help assign a unique name to the
         different jobs.
     """
-    if structure is None:
-        return []
-    if n_inserted > n_steps if n_steps is not None else float("inf"):
+    if (
+        (structure is None)
+        or (n_steps is not None and n_steps <= 0)
+        or (n_inserted > n_steps)
+    ):
         return []
     # append job name
     _shown_steps = str(n_steps) if n_steps else "inf"
@@ -121,8 +123,6 @@ def get_stable_inserted_results(
         n_inserted=n_inserted + 1,
     )
 
-    # for job_ in [static_job, insertion_job, min_en_job, relax_jobs, next_step]:
-    #     job_.append_name(f" {add_name}")
     combine_job = get_computed_entries(next_step.output, min_en_job.output)
     replace_flow = Flow(
         jobs=[

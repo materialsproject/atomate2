@@ -135,6 +135,7 @@ class ElectrodeInsertionMaker(Maker, ABC):
             relax_maker=self.relax_maker,
             get_charge_density=self.get_charge_density,
             n_steps=n_steps,
+            insertions_per_step=insertions_per_step,
             n_inserted=1,
         )
         relaxed_summary = RelaxJobSummary(
