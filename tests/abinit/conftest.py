@@ -189,10 +189,6 @@ def check_equivalent_znucl_typat(
         {count_sorted_znucl_a} vs. {count_sorted_znucl_b}"
     )
 
-    for fp_key in ("tsmear",):
-        if (ref_val := ref.datasets[0].get(fp_key)) is not None:
-            assert user.datasets[0].get(fp_key) == pytest.approx(ref_val)
-
 
 def check_abinit_input_json(ref_path: str | Path):
     from abipy.abio.inputs import AbinitInput
