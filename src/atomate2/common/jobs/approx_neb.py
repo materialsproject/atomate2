@@ -365,7 +365,13 @@ def collate_images_single_hop(
     metadata: dict[str, Any] = {}
     task_state = TaskState.SUCCESS
 
-    calcs: list[dict[str, Any]] = image_calc_output.copy()
+    calcs: list[dict[str, Any]] = []
+    if image_calc_output is None:
+        task_state = TaskState.FAILED
+        metadata["failure_reasons"] = ["No image calculation output."]
+    else:
+        calcs += image_calc_output
+
     if endpoint_calc_output is not None:
         calcs = [endpoint_calc_output[0], *calcs, endpoint_calc_output[1]]
 

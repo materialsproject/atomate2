@@ -102,8 +102,8 @@ class ApproxNebFromEndpointsMaker(Maker):
 
         collate_job = collate_images_single_hop(
             working_ion=working_ion,
-            endpoint_calc_output=ep_output,
-            image_calc_output=image_calcs.output,
+            endpoint_calc_output=[ep_output[str(idx)] for idx in range(2)],
+            image_calc_output=image_calcs.output["0+1"],
             min_images_per_hop=self.min_images_per_hop,
         )
         collate_job.config.on_missing_references = OnMissing.NONE
