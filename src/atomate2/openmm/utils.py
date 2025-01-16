@@ -12,8 +12,15 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 import openmm.unit as omm_unit
+import sqrt
 from emmet.core.openmm import OpenMMInterchange
-from openmm import LangevinMiddleIntegrator, State, XmlSerializer
+from openmm import (
+    CustomNonbondedForce,
+    LangevinMiddleIntegrator,
+    State,
+    System,
+    XmlSerializer,
+)
 from openmm.app import PDBFile, Simulation
 from pymatgen.core.trajectory import Trajectory
 
@@ -172,6 +179,56 @@ def openff_to_openmm_interchange(
             state=XmlSerializer.serialize(state),
             topology=pdb,
         )
+
+
+def opls_lj(system: System) -> System:
+    """Update system object combination rules to geometric mean for OPLS convention.
+
+    Except for OPLS-AA, most force fields implement the Lorentz-Berthelot
+    combination rules to obtain epsilon and sigma values. This is also the only
+    combination rule implemented in OpenMM. Herein is a function call to use the
+    OPLS-AA geometric combination rules.
+
+    Ref: https://traken.chem.yale.edu/ligpargen/openMM_tutorial.html
+    See Section 4.1.1 of Gromac Manual for further details.
+
+    Note: OPLS-AA uses the 0.5 scaling factor for 1-4 interactions. LigParGen creates
+    xml files that are consistent with this selection, but if not, the NonbondedForce
+    class should be as follows:
+
+    <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
+    """
+    forces = {
+        system.getForce(index).__class__.__name__: system.getForce(index)
+        for index in range(system.getNumForces())
+    }
+    nonbonded_force = forces["NonbondedForce"]
+    lorentz = CustomNonbondedForce(
+        """4*epsilon*((sigma/r)^12-(sigma/r)^6);
+        sigma=sqrt(sigma1*sigma2);
+        epsilon=sqrt(epsilon1*epsilon2)"""
+    )
+    lorentz.setNonbondedMethod(nonbonded_force.getNonbondedMethod())
+    lorentz.addPerParticleParameter("sigma")
+    lorentz.addPerParticleParameter("epsilon")
+    lorentz.setCutoffDistance(nonbonded_force.getCutoffDistance())
+    system.addForce(lorentz)
+    ljset = {}
+    for index in range(nonbonded_force.getNumParticles()):
+        charge, sigma, epsilon = nonbonded_force.getParticleParameters(index)
+        ljset[index] = (sigma, epsilon)
+        lorentz.addParticle([sigma, epsilon])
+        nonbonded_force.setParticleParameters(index, charge, sigma, epsilon * 0)
+    for i in range(nonbonded_force.getNumExceptions()):
+        (p1, p2, q, sig, eps) = nonbonded_force.getExceptionParameters(i)
+        # ALL THE 1-2, 1-3 and 1-4 interactions are EXCLUDED FROM CUSTOM NONBONDED FORCE
+        lorentz.addExclusion(p1, p2)
+        if eps._value != 0.0:
+            # print p1,p2,sig,eps
+            sig14 = sqrt(ljset[p1][0] * ljset[p2][0])
+            eps14 = sqrt(ljset[p1][1] * ljset[p2][1])
+            nonbonded_force.setExceptionParameters(i, p1, p2, q, sig14, eps)
+    return system
 
 
 class PymatgenTrajectoryReporter:
