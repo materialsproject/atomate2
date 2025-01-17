@@ -9,7 +9,7 @@ from atomate2.openmm.jobs import EnergyMinimizationMaker
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.openmm.jobs.generate import (
     XMLMoleculeFF,
-    create_system_from_xml,
+    create_ff_from_xml,
     generate_openmm_interchange,
 )
 
@@ -19,7 +19,7 @@ from openff.interchange.components._packmol import pack_box  # noqa: E402
 from openff.units import unit  # noqa: E402
 
 
-def test_create_system_from_xml(openmm_data):
+def test_ff_system_from_xml(openmm_data):
     # load strings of xml files into dict
     ff_xmls = [
         XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CCO.xml"),
@@ -41,7 +41,7 @@ def test_create_system_from_xml(openmm_data):
         mass_density=0.8 * unit.grams / unit.milliliter,
     )
 
-    create_system_from_xml(topology, ff_xmls)
+    create_ff_from_xml(topology, ff_xmls)
 
 
 def test_xml_molecule_from_file(openmm_data):

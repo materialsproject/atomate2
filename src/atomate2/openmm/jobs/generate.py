@@ -17,6 +17,7 @@ from emmet.core.vasp.task_valid import TaskState
 from jobflow import Response
 from openmm import Context, LangevinMiddleIntegrator, System, XmlSerializer
 from openmm.app import PME, ForceField
+from openmm.app.forcefield import NonbondedGenerator
 from openmm.app.pdbfile import PDBFile
 from openmm.unit import kelvin, picoseconds
 from pymatgen.core import Element
@@ -154,7 +155,7 @@ class XMLMoleculeFF:
         return cls(xml_str)
 
 
-def create_system_from_xml(
+def create_ff_from_xml(
     topology: tk.Topology,
     xml_mols: list[XMLMoleculeFF],
 ) -> System:
@@ -169,7 +170,7 @@ def create_system_from_xml(
     for i, xml in enumerate(io_files[1:]):  # type: ignore[assignment]
         ff.loadFile(xml, resname_prefix=f"_{i + 1}")
 
-    return ff.createSystem(topology.to_openmm(), nonbondedMethod=PME)
+    return ff
 
 
 @openmm_job
@@ -281,8 +282,18 @@ def generate_openmm_interchange(
         **pack_box_kwargs,
     )
 
-    system = create_system_from_xml(topology, xml_mols)
+    ff = create_ff_from_xml(topology, xml_mols)
+    
+    # obtain 14 scaling values from forcefield
+    generator = ff.getGenerators()
+    for gen in generator:
+        if isinstance(gen, NonbondedGenerator):
+            coulomb14scale = gen.coulomb14scale
+            lj14scale = gen.lj14scale
+    # print(coulomb14scale, lj14scale)
 
+    system = ff.createSystem(topology.to_openmm(), nonbondedMethod=PME)
+    
     # these values don't actually matter because integrator is only
     # used to generate the state
     integrator = LangevinMiddleIntegrator(
