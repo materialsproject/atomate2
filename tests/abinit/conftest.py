@@ -150,7 +150,9 @@ def check_run_abi(ref_path: str | Path):
     # Ignore the pseudos as the directory depends on the pseudo root directory
     diffs = user.get_differences(ref, ignore_vars=["pseudos", "pp_dirpath"])
     # TODO: should we still add some check on the pseudos here ?
-    assert diffs == [], "'run.abi' is different from reference."
+    assert (
+        diffs == []
+    ), f"'run.abi' is different from reference because of the following: {diffs}."
 
 
 def check_abinit_input_json(ref_path: str | Path):
