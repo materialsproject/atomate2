@@ -19,14 +19,11 @@ expected_incar_relax = {
     "KSPACING": 0.22,
 }
 
-expected_incar_relax_1 = {
-    **expected_incar_relax,
-    "EDIFFG": -0.05,
-}
+expected_incar_relax_1 = expected_incar_relax | {"EDIFFG": -0.05}
 
-expected_incar_deform = {**expected_incar_relax, "ISIF": 2}
+expected_incar_deform = expected_incar_relax | {"ISIF": 2}
 
-expected_incar_static = {**expected_incar_relax, "NSW": 0, "IBRION": -1, "ISMEAR": -5}
+expected_incar_static = expected_incar_relax | {"NSW": 0, "IBRION": -1, "ISMEAR": -5}
 expected_incar_static.pop("ISIF")
 
 
@@ -45,7 +42,7 @@ def test_mp_eos_double_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     }
 
     structure = Structure.from_file(
-        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1']}/inputs/POSCAR"
+        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1']}/inputs/POSCAR.gz"
     )
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
@@ -121,7 +118,7 @@ def test_mp_eos_maker(
         )
 
     structure = Structure.from_file(
-        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1']}/inputs/POSCAR"
+        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1']}/inputs/POSCAR.gz"
     )
 
     # cannot perform least-squares fit for four parameters with only 3 data points
@@ -180,5 +177,5 @@ def test_mp_eos_maker(
                 assert all(
                     approx(v) == data[k] for k, v in ref_eos_fit[job_type][key].items()
                 )
-            elif isinstance(data, (float, int)):
+            elif isinstance(data, float | int):
                 assert approx(ref_eos_fit[job_type][key]) == data

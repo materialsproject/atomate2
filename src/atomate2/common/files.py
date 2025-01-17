@@ -97,11 +97,11 @@ def delete_files(
         The hostname used to specify a remote filesystem. Can be given as either
         "username@host" or just "host" in which case the username will be
         inferred from the current user. If ``None``, the local filesystem will be used.
-    include_files : None or list of (str or Path)
+    include_files : None or list of (str or .Path)
         Filenames to include as a list of str or Path objects given relative to
         directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
         in the directory will be deleted.
-    exclude_files : None or list of (str or Path)
+    exclude_files : None or list of (str or .Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
     allow_missing : bool
         Whether to error if a file in ``include_files`` is not present in the directory.
@@ -188,11 +188,11 @@ def gzip_files(
         The hostname used to specify a remote filesystem. Can be given as either
         "username@host" or just "host" in which case the username will be
         inferred from the current user. If ``None``, the local filesystem will be used.
-    include_files : None or list of (str or Path)
+    include_files : None or list of (str or .Path)
         Filenames to include as a list of str or Path objects given relative to
         directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
         in the directory will be gzipped.
-    exclude_files : None or list of (str or Path)
+    exclude_files : None or list of (str or .Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
     allow_missing : bool
         Whether to error if a file in ``include_files`` is not present in the directory.
@@ -241,11 +241,11 @@ def gunzip_files(
         The hostname used to specify a remote filesystem. Can be given as either
         "username@host" or just "host" in which case the username will be
         inferred from the current user. If ``None``, the local filesystem will be used.
-    include_files : None or list of (str or Path)
+    include_files : None or list of (str or .Path)
         Filenames to include as a list of str or Path objects given relative to
         directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all
         gzipped files in the directory will be gunzipped.
-    exclude_files : None or list of (str or Path)
+    exclude_files : None or list of (str or .Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
     allow_missing : bool
         Whether to error if a file in ``include_files`` is not present in the directory.
@@ -287,11 +287,11 @@ def find_and_filter_files(
         A file client.
     directory : str or Path
         A directory in which to find files.
-    include_files : None or list of (str or Path)
+    include_files : None or list of (str or .Path)
         Filenames to include as a list of str or Path objects given relative to
         directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
         in the source directory will be returned.
-    exclude_files : None or list of (str or Path)
+    exclude_files : None or list of (str or .Path)
         Filenames to exclude. Supports glob file matching, e.g., "\*.dat".
     host : str or None
         A hostname used to specify a remote filesystem. Can be given as either

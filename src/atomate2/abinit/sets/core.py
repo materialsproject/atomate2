@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 import numpy as np
 from abipy.abio.factories import (
@@ -18,6 +18,8 @@ from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
 from atomate2.abinit.sets.base import AbinitInputGenerator
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from abipy.abio.inputs import AbinitInput
     from pymatgen.core import Structure
     from pymatgen.io.abinit import PseudoTable
@@ -45,8 +47,7 @@ class StaticSetGenerator(AbinitInputGenerator):
         kpoints_settings: dict | KSampling | None = None,
         input_index: int | None = None,
     ) -> AbinitInput:
-        """
-        Generate the AbinitInput for the input set.
+        """Generate the AbinitInput for the input set.
 
         Removes some standard variables related to relaxation.
         """
@@ -207,8 +208,7 @@ class RelaxSetGenerator(AbinitInputGenerator):
         kpoints_settings: dict | KSampling | None = None,
         input_index: int | None = None,
     ) -> AbinitInput:
-        """
-        Generate the AbinitInput for the input set.
+        """Generate the AbinitInput for the input set.
 
         Sets tolmxf and determines the index of the MultiDataset.
         """

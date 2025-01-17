@@ -11,13 +11,14 @@ from functools import wraps
 from glob import glob
 from gzip import GzipFile
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import paramiko
 from monty.io import zopen
 from paramiko import SFTPClient, SSHClient
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from types import TracebackType
 
 
@@ -78,8 +79,7 @@ class FileClient:
         self.connections[host] = {"ssh": ssh, "sftp": ssh.open_sftp()}
 
     def get_ssh(self, host: str) -> SSHClient:
-        """
-        Get an SSH connection to a host.
+        """Get an SSH connection to a host.
 
         Parameters
         ----------
@@ -99,8 +99,7 @@ class FileClient:
         return self.connections[host]["ssh"]
 
     def get_sftp(self, host: str) -> SFTPClient:
-        """
-        Get an SFTP connection to a host.
+        """Get an SFTP connection to a host.
 
         Parameters
         ----------
@@ -145,8 +144,7 @@ class FileClient:
         return True
 
     def is_file(self, path: str | Path, host: str | None = None) -> bool:
-        """
-        Whether a path is a file.
+        """Whether a path is a file.
 
         Parameters
         ----------
@@ -169,8 +167,7 @@ class FileClient:
             return False
 
     def is_dir(self, path: str | Path, host: str | None = None) -> bool:
-        """
-        Whether a path is a directory.
+        """Whether a path is a directory.
 
         Parameters
         ----------
@@ -193,8 +190,7 @@ class FileClient:
             return False
 
     def listdir(self, path: str | Path, host: str | None = None) -> list[Path]:
-        """
-        Get the directory listing.
+        """Get the directory listing.
 
         Parameters
         ----------
@@ -278,8 +274,8 @@ class FileClient:
         """
         try:
             os.symlink(src_filename, dest_filename)
-        except OSError as e:
-            if e.errno == errno.EEXIST:
+        except OSError as exc:
+            if exc.errno == errno.EEXIST:
                 os.remove(dest_filename)
                 os.symlink(src_filename, dest_filename)
             else:
@@ -328,8 +324,7 @@ class FileClient:
             self.get_sftp(host).rename(old_path, new_path)
 
     def abspath(self, path: str | Path, host: str | None = None) -> Path:
-        """
-        Get the absolute path.
+        """Get the absolute path.
 
         Parameters
         ----------
@@ -552,9 +547,9 @@ def get_ssh_connection(
         ssh_config = paramiko.SSHConfig().from_path(str(config_filename))
 
         host_config = ssh_config.lookup(hostname)  # type: ignore[attr-defined]
-        for k in ("hostname", "user", "port"):
-            if k in host_config:
-                config[k.replace("user", "username")] = host_config[k]
+        for key in ("hostname", "user", "port"):
+            if key in host_config:
+                config[key.replace("user", "username")] = host_config[key]
 
         if "proxycommand" in host_config:
             config["sock"] = paramiko.ProxyCommand(host_config["proxycommand"])
@@ -583,7 +578,7 @@ def auto_fileclient(method: Callable | None = None) -> Callable:
 
     def decorator(func: Callable) -> Callable:
         @wraps(func)
-        def gen_fileclient(*args, **kwargs) -> Any:
+        def gen_file_client(*args, **kwargs) -> Any:
             file_client = kwargs.get("file_client")
             if file_client is None:
                 with FileClient() as file_client:
@@ -592,7 +587,7 @@ def auto_fileclient(method: Callable | None = None) -> Callable:
             else:
                 return func(*args, **kwargs)
 
-        return gen_fileclient
+        return gen_file_client
 
     # See if we're being called as @auto_fileclient or @auto_fileclient().
     if method is None:

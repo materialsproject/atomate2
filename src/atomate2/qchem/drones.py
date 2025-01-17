@@ -1,4 +1,4 @@
-"""Drones for parsing VASP calculations and realtd outputs."""
+"""Drones for parsing VASP calculations and related outputs."""
 
 from __future__ import annotations
 
@@ -53,8 +53,7 @@ class QChemDrone(AbstractDrone):
         return doc
 
     def get_valid_paths(self, path: tuple[str, list[str], list[str]]) -> list[str]:
-        """
-        Get valid paths to assimilate.
+        """Get valid paths to assimilate.
 
         Parameters
         ----------
@@ -70,15 +69,15 @@ class QChemDrone(AbstractDrone):
         parent, subdirs, _ = path
         task_names = ["mol.qout.*"]
         combined_paths = [parent + os.sep + sdir for sdir in subdirs]
-        rpath = []
-        for cpath in combined_paths:
-            fnames = os.listdir(cpath)
-            if any(name.startswith("mol.qout.") for name in fnames):
-                rpath.append(parent)
+        valid_paths = []
+        for sub_dir in combined_paths:
+            file_names = os.listdir(sub_dir)
+            if any(name.startswith("mol.qout.") for name in file_names):
+                valid_paths.append(parent)
 
             if (
                 not any(parent.endswith(os.sep + r) for r in task_names)
                 and len(list(Path(parent).glob("mol.qout*"))) > 0
             ):
-                rpath.append(parent)
-        return rpath
+                valid_paths.append(parent)
+        return valid_paths

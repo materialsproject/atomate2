@@ -4,12 +4,9 @@ from __future__ import annotations
 
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, Union
-
-if TYPE_CHECKING:
-    pass
+from typing import Optional, Union
 
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
@@ -18,6 +15,7 @@ from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
+from typing_extensions import Self
 
 from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE, get_event_report
 
@@ -110,9 +108,8 @@ class CalculationOutput(BaseModel):
     def from_abinit_gsr(
         cls,
         output: GsrFile,  # Must use auto_load kwarg when passed
-    ) -> CalculationOutput:
-        """
-        Create an Abinit output document from Abinit outputs.
+    ) -> Self:
+        """Create an Abinit output document from Abinit outputs.
 
         Parameters
         ----------
@@ -211,9 +208,8 @@ class Calculation(BaseModel):
         abinit_gsr_file: Path | str = "out_GSR.nc",
         abinit_log_file: Path | str = LOG_FILE_NAME,
         abinit_abort_file: Path | str = MPIABORTFILE,
-    ) -> tuple[Calculation, dict[AbinitObject, dict]]:
-        """
-        Create an Abinit calculation document from a directory and file paths.
+    ) -> tuple[Self, dict[AbinitObject, dict]]:
+        """Create an Abinit calculation document from a directory and file paths.
 
         Parameters
         ----------
@@ -240,7 +236,9 @@ class Calculation(BaseModel):
 
         abinit_gsr = GsrFile.from_file(abinit_gsr_file)
 
-        completed_at = str(datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime))
+        completed_at = str(
+            datetime.fromtimestamp(os.stat(abinit_log_file).st_mtime, tz=timezone.utc)
+        )
 
         output_doc = CalculationOutput.from_abinit_gsr(abinit_gsr)
 
@@ -259,19 +257,18 @@ class Calculation(BaseModel):
             if report.run_completed:
                 has_abinit_completed = TaskState.SUCCESS
 
-        except Exception as exc:
+        except (ValueError, RuntimeError, Exception) as exc:
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
 
-        return (
-            cls(
-                dir_name=str(dir_name),
-                task_name=task_name,
-                abinit_version=abinit_gsr.abinit_version,
-                has_abinit_completed=has_abinit_completed,
-                completed_at=completed_at,
-                output=output_doc,
-                event_report=report,
-            ),
-            None,  # abinit_objects,
+        instance = cls(
+            dir_name=str(dir_name),
+            task_name=task_name,
+            abinit_version=abinit_gsr.abinit_version,
+            has_abinit_completed=has_abinit_completed,
+            completed_at=completed_at,
+            output=output_doc,
+            event_report=report,
         )
+
+        return instance, None  # abinit_objects,

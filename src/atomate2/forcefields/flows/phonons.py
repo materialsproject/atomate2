@@ -5,13 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Literal
 
+from atomate2 import SETTINGS
 from atomate2.common.flows.phonons import BasePhononMaker
-from atomate2.forcefields.jobs import (
-    CHGNetRelaxMaker,
-    CHGNetStaticMaker,
-    ForceFieldRelaxMaker,
-    ForceFieldStaticMaker,
-)
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
 
 @dataclass
@@ -52,6 +48,8 @@ class PhononMaker(BasePhononMaker):
         displacement distance for phonons
     min_length: float
         min length of the supercell that will be built
+    max_length: float
+        max length of the supercell that will be built
     prefer_90_degrees: bool
         if set to True, supercell algorithm will first try to find a supercell
         with 3 90 degree angles
@@ -112,20 +110,23 @@ class PhononMaker(BasePhononMaker):
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = 1e-4
+    symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
     prefer_90_degrees: bool = True
+    max_length: float | None = None
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     bulk_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(relax_kwargs={"fmax": 0.00001})
+        default_factory=lambda: ForceFieldRelaxMaker(
+            force_field_name="CHGNet", relax_kwargs={"fmax": 0.00001}
+        )
     )
     static_energy_maker: ForceFieldStaticMaker | None = field(
-        default_factory=CHGNetStaticMaker
+        default_factory=lambda: ForceFieldStaticMaker(force_field_name="CHGNet")
     )
     phonon_displacement_maker: ForceFieldStaticMaker = field(
-        default_factory=CHGNetStaticMaker
+        default_factory=lambda: ForceFieldStaticMaker(force_field_name="CHGNet")
     )
     create_thermal_displacements: bool = False
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)

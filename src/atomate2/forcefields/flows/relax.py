@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Maker
 
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.jobs import CHGNetRelaxMaker, M3GNetRelaxMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 from atomate2.vasp.jobs.core import RelaxMaker
 
 if TYPE_CHECKING:
@@ -26,19 +26,20 @@ class CHGNetVaspRelaxMaker(Maker):
     ----------
     name : str
         Name of the flow produced by this maker.
-    chgnet_maker : .CHGNetRelaxMaker
+    chgnet_maker : .ForceFieldRelaxMaker
         Maker to generate a CHGNet relaxation job.
     vasp_maker : .BaseVaspMaker
         Maker to generate a VASP relaxation job.
     """
 
     name: str = f"{MLFF.CHGNet} relax followed by a VASP relax"
-    chgnet_maker: CHGNetRelaxMaker = field(default_factory=CHGNetRelaxMaker)
+    chgnet_maker: ForceFieldRelaxMaker = field(
+        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="CHGNet")
+    )
     vasp_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure) -> Flow:
-        """
-        Create a flow with a CHGNet (pre)relaxation followed by a VASP relaxation.
+        """Create a flow with a CHGNet (pre)relaxation followed by a VASP relaxation.
 
         Parameters
         ----------
@@ -74,12 +75,13 @@ class M3GNetVaspRelaxMaker(Maker):
     """
 
     name: str = f"{MLFF.M3GNet} relax followed by a VASP relax"
-    m3gnet_maker: M3GNetRelaxMaker = field(default_factory=M3GNetRelaxMaker)
+    m3gnet_maker: ForceFieldRelaxMaker = field(
+        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="M3GNet")
+    )
     vasp_maker: BaseVaspMaker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure) -> Flow:
-        """
-        Create a flow with a M3GNet (pre)relaxation followed by a VASP relaxation.
+        """Create a flow with a M3GNet (pre)relaxation followed by a VASP relaxation.
 
         Parameters
         ----------

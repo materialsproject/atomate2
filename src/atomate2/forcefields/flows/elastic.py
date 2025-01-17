@@ -7,10 +7,19 @@ from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.elastic import BaseElasticMaker
-from atomate2.forcefields.jobs import CHGNetRelaxMaker
+from atomate2.forcefields import MLFF, _get_formatted_ff_name
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
-    from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+    from typing import Any
+
+    from typing_extensions import Self
+
+# default options for the forcefield makers in ElasticMaker
+_DEFAULT_RELAX_KWARGS: dict[str, Any] = {
+    "force_field_name": "CHGNet",
+    "relax_kwargs": {"fmax": 0.00001},
+}
 
 
 @dataclass
@@ -45,6 +54,11 @@ class ElasticMaker(BaseElasticMaker):
     bulk_relax_maker : .ForceFieldRelaxMaker or None
         A maker to perform a tight relaxation on the bulk. Set to ``None`` to skip the
         bulk relaxation.
+    max_failed_deformations: int or float
+        Maximum number of deformations allowed to fail to proceed with the fitting
+        of the elastic tensor. If an int the absolute number of deformations. If
+        a float between 0 an 1 the maximum fraction of deformations. If None any
+        number of deformations allowed.
     elastic_relax_maker : .ForceFieldRelaxMaker
         Maker used to generate elastic relaxations.
     generate_elastic_deformations_kwargs : dict
@@ -60,15 +74,16 @@ class ElasticMaker(BaseElasticMaker):
     sym_reduce: bool = True
     symprec: float = SETTINGS.SYMPREC
     bulk_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(
-            relax_cell=True, relax_kwargs={"fmax": 0.00001}
+        default_factory=lambda: ForceFieldRelaxMaker(
+            relax_cell=True, **_DEFAULT_RELAX_KWARGS
         )
     )
     elastic_relax_maker: ForceFieldRelaxMaker | None = field(
-        default_factory=lambda: CHGNetRelaxMaker(
-            relax_cell=False, relax_kwargs={"fmax": 0.00001}
+        default_factory=lambda: ForceFieldRelaxMaker(
+            relax_cell=False, **_DEFAULT_RELAX_KWARGS
         )
     )  # constant volume relaxation
+    max_failed_deformations: int | float | None = None
     generate_elastic_deformations_kwargs: dict = field(default_factory=dict)
     fit_elastic_tensor_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
@@ -83,3 +98,44 @@ class ElasticMaker(BaseElasticMaker):
         Note: this is only applicable if a relax_maker is specified; i.e., two
         calculations are performed for each ordering (relax -> static)
         """
+
+    @classmethod
+    def from_force_field_name(
+        cls,
+        force_field_name: str | MLFF,
+        mlff_kwargs: dict | None = None,
+        **kwargs,
+    ) -> Self:
+        """
+        Create an elastic flow from a forcefield name.
+
+        Parameters
+        ----------
+        force_field_name : str or .MLFF
+            The name of the force field.
+        mlff_kwargs : dict or None (default)
+            kwargs to pass to `ForceFieldRelaxMaker`.
+        **kwargs
+            Additional kwargs to pass to ElasticMaker.
+
+        Returns
+        -------
+        ElasticMaker
+        """
+        default_kwargs: dict[str, Any] = {
+            **_DEFAULT_RELAX_KWARGS,
+            **(mlff_kwargs or {}),
+            "force_field_name": _get_formatted_ff_name(force_field_name),
+        }
+        return cls(
+            name=f"{str(force_field_name).split('MLFF.')[-1]} elastic",
+            bulk_relax_maker=ForceFieldRelaxMaker(
+                relax_cell=True,
+                **default_kwargs,
+            ),
+            elastic_relax_maker=ForceFieldRelaxMaker(
+                relax_cell=False,
+                **default_kwargs,
+            ),
+            **kwargs,
+        )

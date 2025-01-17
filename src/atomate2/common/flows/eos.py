@@ -62,8 +62,7 @@ class CommonEosMaker(Maker):
     _store_transformation_information: bool = False
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
-        """
-        Run an EOS flow.
+        """Run an EOS flow.
 
         Parameters
         ----------
@@ -82,7 +81,10 @@ class CommonEosMaker(Maker):
             ("relax", "static") if self.static_maker else ("relax",)
         )
         flow_output: dict[str, dict] = {
-            key: {quantity: [] for quantity in ("energy", "volume", "stress")}
+            key: {
+                quantity: []
+                for quantity in ("energy", "volume", "stress", "structure", "dir_name")
+            }
             for key in job_types
         }
 
@@ -164,9 +166,12 @@ class CommonEosMaker(Maker):
         for key in job_types:
             for idx in range(len(jobs[key])):
                 output = jobs[key][idx].output.output
+                dir_name = jobs[key][idx].output.dir_name
                 flow_output[key]["energy"] += [output.energy]
                 flow_output[key]["volume"] += [output.structure.volume]
                 flow_output[key]["stress"] += [output.stress]
+                flow_output[key]["structure"] += [output.structure]
+                flow_output[key]["dir_name"] += [dir_name]
 
         if self.postprocessor is not None:
             min_points = self.postprocessor.min_data_points
@@ -183,7 +188,7 @@ class CommonEosMaker(Maker):
             jobs["utility"] += [post_process]
 
         job_list = []
-        for key in jobs:
-            job_list += jobs[key]
+        for val in jobs.values():
+            job_list += val
 
         return Flow(jobs=job_list, output=flow_output, name=self.name)
