@@ -226,7 +226,9 @@ def opls_lj(system: System) -> System:
         if eps._value != 0.0:
             # print p1,p2,sig,eps
             sig14 = sqrt(ljset[p1][0] * ljset[p2][0])
-            eps14 = sqrt(ljset[p1][1] * ljset[p2][1])
+            # Note: eps14 is in the original reference function provided by ligpargen
+            # however, is not properly scaled by 0.5 and used anywhere in the function
+            # eps14 = sqrt(ljset[p1][1] * ljset[p2][1])
             nonbonded_force.setExceptionParameters(i, p1, p2, q, sig14, eps)
     return system
 
