@@ -41,7 +41,7 @@ def download_opls_xml(
 
     except ImportError:
         warnings.warn(
-            "The `selenium` package is not installed. "
+            "The `selenium` or `websriver_manager` package is not installed. "
             "It's required to run the opls web scraper.",
             stacklevel=1,
         )
