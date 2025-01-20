@@ -16,6 +16,7 @@ from emmet.core.openmm import OpenMMInterchange
 from openmm import (
     CustomNonbondedForce,
     LangevinMiddleIntegrator,
+    NonbondedForce,
     State,
     System,
     XmlSerializer,
@@ -207,7 +208,10 @@ def opls_lj(system: System) -> System:
         sigma=sqrt(sigma1*sigma2);
         epsilon=sqrt(epsilon1*epsilon2)"""
     )
-    lorentz.setNonbondedMethod(nonbonded_force.getNonbondedMethod())
+    # sets nonbonded method to Cutoff Periodic if illegal value supplied
+    lorentz.setNonbondedMethod(
+        min(nonbonded_force.getNonbondedMethod(), NonbondedForce.CutoffPeriodic)
+    )
     lorentz.addPerParticleParameter("sigma")
     lorentz.addPerParticleParameter("epsilon")
     lorentz.setCutoffDistance(nonbonded_force.getCutoffDistance())
@@ -224,7 +228,7 @@ def opls_lj(system: System) -> System:
         lorentz.addExclusion(p1, p2)
         if eps._value != 0.0:
             # print p1,p2,sig,eps
-            sig14 = omn_unit.sqrt(ljset[p1][0] * ljset[p2][0])
+            sig14 = omm_unit.sqrt(ljset[p1][0] * ljset[p2][0])
             # Note: eps14 is in the original reference function provided by ligpargen
             # however, is not properly scaled by 0.5 and used anywhere in the function
             # eps14 = sqrt(ljset[p1][1] * ljset[p2][1])
