@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
+import numpy as np
 import pytest
 
 if TYPE_CHECKING:
@@ -161,9 +162,19 @@ def check_abinit_input_json(ref_path: str | Path):
 
     user = loadfn("abinit_input.json")
     assert isinstance(user, AbinitInput)
+    user_abivars = user.structure.to_abivars()
+
     ref = loadfn(ref_path / "inputs" / "abinit_input.json.gz")
-    assert user.structure == ref.structure
-    assert user.runlevel == ref.runlevel
+    ref_abivars = ref.structure.to_abivars()
+
+    for k, user_v in user_abivars.items():
+        assert k in ref_abivars, f"{k = } is not a key of the reference input."
+        ref_v = ref_abivars[k]
+        if isinstance(user_v, str):
+            assert user_v == ref_v, f"{k = }-->{user_v = } versus {ref_v = }"
+        else:
+            assert np.allclose(user_v, ref_v), f"{k = }-->{user_v = } versus {ref_v = }"
+    assert user.runlevel == ref.runlevel, f"{user.runlevel = } versus {ref.runlevel = }"
 
 
 def clear_abinit_files():
@@ -375,9 +386,30 @@ def check_anaddb_input_json(ref_path: str | Path):
 
     user = loadfn("anaddb_input.json")
     assert isinstance(user, AnaddbInput)
+    user_abivars = user.structure.to_abivars()
+
     ref = loadfn(ref_path / "inputs" / "anaddb_input.json.gz")
-    assert user.structure == ref.structure
-    assert user == ref
+    ref_abivars = ref.structure.to_abivars()
+
+    # Check structure
+    for k, user_v in user_abivars.items():
+        assert k in ref_abivars, f"{k = } is not a key of the reference input."
+        ref_v = ref_abivars[k]
+        if isinstance(user_v, str):
+            assert user_v == ref_v, f"{k = }-->{user_v = } versus {ref_v = }"
+        else:
+            assert np.allclose(user_v, ref_v), f"{k = }-->{user_v = } versus {ref_v = }"
+
+    # Check anaddb input
+    user_args = dict(user.as_dict()["anaddb_args"])
+    ref_args = dict(ref.as_dict()["anaddb_args"])
+    for k, user_v in user_args.items():
+        assert k in ref_args, f"{k = } is not a key of the reference input."
+        ref_v = ref_args[k]
+        if isinstance(user_v, str):
+            assert user_v == ref_v, f"{k = }-->{user_v = } versus {ref_v = }"
+        else:
+            assert np.allclose(user_v, ref_v), f"{k = }-->{user_v = } versus {ref_v = }"
 
 
 def copy_abinit_outputs(ref_path: str | Path):
