@@ -130,7 +130,7 @@ def check_run_abi(ref_path: str | Path):
         ref_str = file.read()
     ref = AbinitInputFile.from_string(ref_str.decode("utf-8"))
     # Ignore the pseudos as the directory depends on the pseudo root directory
-    diffs = user.get_differences(ref, ignore_vars=["pseudos"])
+    diffs = _get_differences_tol(user, ref, ignore_vars=["pseudos"])
     # TODO: should we still add some check on the pseudos here ?
     assert diffs == [], f"'run.abi' is different from reference.\n{diffs}"
 
@@ -170,3 +170,80 @@ def copy_abinit_outputs(ref_path: str | Path):
             if file.is_file():
                 shutil.copy(file, data_dir)
                 decompress_file(str(Path(data_dir, file.name)))
+
+
+def _get_differences_tol(
+    abi1, abi2, ignore_vars=None, rtol=1e-5, atol=1e-12
+) -> list[str]:
+    """
+    Get the differences between this AbinitInputFile and another.
+    Allow tolerance for floats.
+    """
+    diffs = []
+    to_ignore = {
+        "acell",
+        "angdeg",
+        "rprim",
+        "ntypat",
+        "natom",
+        "znucl",
+        "typat",
+        "xred",
+        "xcart",
+        "xangst",
+    }
+    if ignore_vars is not None:
+        to_ignore.update(ignore_vars)
+    if abi1.ndtset != abi2.ndtset:
+        diffs.append(
+            f"Number of datasets in this file is {abi1.ndtset} "
+            f"while other file has {abi2.ndtset} datasets."
+        )
+        return diffs
+    for idataset, self_dataset in enumerate(abi1.datasets):
+        other_dataset = abi2.datasets[idataset]
+        if self_dataset.structure != other_dataset.structure:
+            diffs.append("Structures are different.")
+        self_dataset_dict = dict(self_dataset)
+        other_dataset_dict = dict(other_dataset)
+        for k in to_ignore:
+            if k in self_dataset_dict:
+                del self_dataset_dict[k]
+            if k in other_dataset_dict:
+                del other_dataset_dict[k]
+        common_keys = set(self_dataset_dict.keys()).intersection(
+            other_dataset_dict.keys()
+        )
+        self_only_keys = set(self_dataset_dict.keys()).difference(
+            other_dataset_dict.keys()
+        )
+        other_only_keys = set(other_dataset_dict.keys()).difference(
+            self_dataset_dict.keys()
+        )
+        if self_only_keys:
+            diffs.append(
+                f"The following variables are in this file but not in other: "
+                f"{', '.join([str(k) for k in self_only_keys])}"
+            )
+        if other_only_keys:
+            diffs.append(
+                f"The following variables are in other file but not in this one: "
+                f"{', '.join([str(k) for k in other_only_keys])}"
+            )
+        for k in common_keys:
+            matched = False
+            if isinstance(self_dataset_dict[k], float):
+                matched = (
+                    pytest.approx(self_dataset_dict[k], rel=rtol, abs=atol)
+                    == other_dataset_dict[k]
+                )
+            else:
+                matched = self_dataset_dict[k] == other_dataset_dict[k]
+
+            if not matched:
+                diffs.append(
+                    f"The variable '{k}' is different in the two files:\n"
+                    f" - this file:  '{self_dataset_dict[k]}'\n"
+                    f" - other file: '{other_dataset_dict[k]}'"
+                )
+    return diffs
