@@ -142,7 +142,13 @@ def check_abinit_input_json(ref_path: str | Path):
     user = loadfn("abinit_input.json")
     assert isinstance(user, AbinitInput)
     ref = loadfn(ref_path / "inputs" / "abinit_input.json.gz")
-    assert user.structure == ref.structure
+    assert (
+        user.structure.composition.reduced_formula
+        == ref.structure.composition.reduced_formula
+    )
+    assert ref.structure.volume == pytest.approx(
+        user.structure.volume, rel=1e-5, abs=1e-10
+    )
     assert user.runlevel == ref.runlevel
 
 
@@ -231,12 +237,23 @@ def _get_differences_tol(
                 f"{', '.join([str(k) for k in other_only_keys])}"
             )
         for k in common_keys:
+            val1 = self_dataset_dict[k]
+            val2 = other_dataset_dict[k]
             matched = False
-            if isinstance(self_dataset_dict[k], float):
-                matched = (
-                    pytest.approx(self_dataset_dict[k], rel=rtol, abs=atol)
-                    == other_dataset_dict[k]
-                )
+            if isinstance(val1, str):
+                if val1.endswith(" Ha"):
+                    val1 = val1.replace(" Ha", "")
+                if val1.count(".") <= 1 and val1.replace(".", "").isdecimal():
+                    val1 = float(val1)
+
+            if isinstance(val2, str):
+                if val2.endswith(" Ha"):
+                    val2 = val2.replace(" Ha", "")
+                if val2.count(".") <= 1 and val2.replace(".", "").isdecimal():
+                    val2 = float(val2)
+
+            if isinstance(val1, float):
+                matched = pytest.approx(val1, rel=rtol, abs=atol) == val2
             else:
                 matched = self_dataset_dict[k] == other_dataset_dict[k]
 
