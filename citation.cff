@@ -1,116 +1,203 @@
 cff-version: 1.2.0
 message: If you use this software, please cite it using these metadata.
-title: atomate2
-doi: 10.5281/zenodo.10677081
+title: "Atomate2: Modular workflows for materials science"
+doi: 10.26434/chemrxiv-2025-tcr5h
 authors:
-  - given-names: Alex
+  - given-names: Alex M.
     family-names: Ganose
     github: https://github.com/utf
     affiliation: Imperial College London
     orcid: 0000-0002-4486-3321
-  - given-names: Janosh
-    family-names: Riebesell
-    github: https://github.com/janosh
-    affiliation: Cambridge University, Lawrence Berkeley National Laboratory
-    orcid: 0000-0001-5233-3462
+  - given-names: Hrushikesh
+    family-names: Sahasrabuddhe
+    github: https://github.com/hrushikesh-s
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
+  - given-names: Mark
+    family-names: Asta
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
+  - given-names: Kevin
+    family-names: Beck
+    affiliation: University of Arizona
+  - given-names: Tathagata
+    family-names: Biswas
+    affiliation: UCLouvain
+  - given-names: Alexander
+    family-names: Bonkowski
+    affiliation: RWTH Aachen University
+    github: https://github.com/ab5424
+    affiliation: RWTH Aachen University
+  - given-names: Joana
+    family-names: Bustamante
+    affiliation: Federal Institute For Materials Research and Testing
+  - given-names: Xin
+    family-names: Chen
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
+  - given-names: Yuan
+    family-names: Chiang
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
+  - given-names: Daryl
+    family-names: Chrzan
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
+  - given-names: Jacob
+    family-names: Clary
+    affiliation: National Renewable Energy Laboratory
+  - given-names: Orion
+    family-names: Cohen
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
+  - given-names: Christina
+    family-names: Ertural
+    github: https://github.com/QuantumChemist
+    affiliation: Federal Institute for Materials Research and Testing (BAM)
+  - given-names: Max
+    family-names: Gallant
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
   - given-names: Janine
     family-names: George
     github: https://github.com/JaGeo
     affiliation: Federal Institute for Materials Research and Testing (BAM)
     orcid: 0000-0001-8907-0336
-  - given-names: Jimmy-Xuan
-    family-names: Shen
-    github: https://github.com/jmmshn
-    affiliation: Lawrence Livermore National Laboratory
-    orcid: 0000-0002-2743-7531
+  - given-names: Sophie
+    family-names: Gerits
+    affiliation: University of Colorado Boulder
+  - given-names: Rhys
+    family-names: Goodall
+    github: https://github.com/CompRhys
+    affiliation: Radical AI
+  - given-names: Rishabh
+    family-names: Guha
+    github: https://github.com/rdguha1995
+    affiliation: Lawrence Berkeley National Laboratory
+  - given-names: Geoffroy
+    family-names: Hautier
+    affiliation: Dartmouth College
+  - given-names: Matthew
+    family-names: Horton
+    github: https://github.com/mkhorton
+    affiliation: Microsoft Research
+    orcid: 0000-0001-7777-8871
+  - given-names: Aaron
+    family-names: Kaplan
+    github: https://github.com/esoteric-ephemera
+    affiliation: Lawrence Berkeley National Laboratory
+  - given-names: Ryan
+    family-names: Kingsbury
+    github: https://github.com/rkingsbury
+    affiliation: Princeton University
+  - given-names: Matthew
+    family-names: Kuner
+    github: https://github.com/matthewkuner
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
+  - given-names: Bryant
+    family-names: Li
+    affiliation: University of California Berkeley
+  - given-names: Xavier
+    family-names: Linn
+    affiliation: University of California Berkeley
+  - given-names: Matthew
+    family-names: McDermott
+    github: https://github.com/mattmcdermott
+    affiliation: Lawrence Berkeley National Laboratory
+  - given-names: Rohith Srinivaas
+    family-names: Mohanakrishnan
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
+  - given-names: Aakash
+    family-names: Naik
+    github: https://github.com/naik-aakash
+    affiliation: Federal Institute for Materials Research and Testing (BAM), Friedrich Schiller University Jena
+  - given-names: Jeffrey
+    family-names: Neaton
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory, Kavli Energy NanoScience Institute
+  - given-names: Kristin
+    family-names: Persson
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
+  - given-names: Guido
+    family-names: Petretto
+    github: https://github.com/gpetretto
+    affiliation: UCLouvain, Matgenix SRL
+  - given-names: Thomas
+    family-names: Purcell
+    github: https://github.com/tpurcell90
+    affiliation: University of Arizona, Fritz Haber Institute of the Max Planck Society
+  - given-names: Francesco
+    family-names: Ricci
+    affiliation: University of California Berkeley, Lawrence Berkeley National Laboratory
+  - given-names: Benjamin
+    family-names: Rich
+    affiliation: University of Colorado Boulder
+  - given-names: Janosh
+    family-names: Riebesell
+    github: https://github.com/janosh
+    affiliation: Lawrence Berkeley National Laboratory, Radical AI, Cambridge University, 
+    orcid: 0000-0001-5233-3462
+  - given-names: Gian-Marco
+    family-names: Rignanese
+    affiliation: UCLouvain, Matgenix SRL, WEL Research Institute
   - given-names: Andrew
     family-names: Rosen
     github: https://github.com/Andrew-S-Rosen
     name-particle: S.
     affiliation: Princeton University
     orcid: 0000-0002-0141-7006
-  - given-names: Aakash
-    family-names: Naik
-    github: https://github.com/naik-aakash
-    name-particle: Ashok
-    affiliation: Federal Institute for Materials Research and Testing (BAM)
-  - given-names: Nick
-    family-names: Winner
-    email: nwinner@berkeley.edu
-    github: https://github.com/nwinner
-    affiliation: University of California, Berkeley
-  - given-names: Mingjian
-    family-names: Wen
-    github: https://github.com/mjwen
-    affiliation: University of Houston
-  - given-names: Rishabh
-    family-names: Guha
-    github: https://github.com/rdguha1995
-    affiliation: Lawrence Berkeley National Laboratory
-  - given-names: Matthew
-    family-names: Kuner
-    github: https://github.com/matthewkuner
-    affiliation: University of California, Berkeley
-  - given-names: Guido
-    family-names: Petretto
-    github: https://github.com/gpetretto
-    affiliation: Université catholique de Louvain
-  - given-names: Zhuoying
-    family-names: Zhu
-    github: https://github.com/Zhuoying
-    affiliation: Lawrence Berkeley National Laboratory
-  - given-names: Matthew
-    family-names: Horton
-    github: https://github.com/mkhorton
-    affiliation: Microsoft Research
-    orcid: 0000-0001-7777-8871
-  - given-names: Hrushikesh
-    family-names: Sahasrabuddhe
-    github: https://github.com/hrushikesh-s
-    affiliation: University of California, Berkeley
-  - given-names: Aaron
-    family-names: Kaplan
-    github: https://github.com/esoteric-ephemera
-    affiliation: Lawrence Berkeley National Laboratory
+  - given-names: Matthias
+    family-names: Scheffler
+    affiliation: Fritz Haber Institute of the Max Planck Society
   - given-names: Jonathan
     family-names: Schmidt
     github: https://github.com/JonathanSchmidt1
     affiliation: ETH Zurich
-  - given-names: Christina
-    family-names: Ertural
-    github: https://github.com/QuantumChemist
-    affiliation: Federal Institute for Materials Research and Testing (BAM)
-  - given-names: Ryan
-    family-names: Kingsbury
-    github: https://github.com/rkingsbury
-    affiliation: Princeton University
-  - given-names: Matt
-    family-names: McDermott
-    github: https://github.com/mattmcdermott
+  - given-names: Jimmy-Xuan
+    family-names: Shen
+    github: https://github.com/jmmshn
+    affiliation: Lawrence Livermore National Laboratory
+    orcid: 0000-0002-2743-7531
+  - given-names: Andrei
+    family-names: Sobolev
+    affiliation: Fritz Haber Institute of the Max Planck Society, Molecular Simulations from First Principles - MS1P e.V.
+  - given-names: Ravishankar
+    family-names: Sundararaman
+    affiliation: Rensselaer Polytechnic Institute
+  - given-names: Cooper
+    family-names: Tezak
+    affiliation: University of Colorado Boulder
+  - given-names: Victor
+    family-names: Trinquet
+    affiliation: UCLouvain
+  - given-names: Joel
+    family-names: Varley
+    affiliation: Lawrence Livermore National Laboratory
+  - given-names: Derek
+    family-names: Vigil-Fowler
+    affiliation: National Renewable Energy Laboratory
+  - given-names: Duo
+    family-names: Wang
     affiliation: Lawrence Berkeley National Laboratory
-  - given-names: Rhys
-    family-names: Goodall
-    github: https://github.com/CompRhys
-    affiliation: Chemix.ai
-  - given-names: Alexander
-    family-names: Bonkowski
-    github: https://github.com/ab5424
-    affiliation: RWTH Aachen University
-  - given-names: Thomas
-    family-names: Purcell
-    github: https://github.com/tpurcell90
-    affiliation: Fritz Haber Institute
-  - given-names: Daniel
-    family-names: Zügner
-    github: https://github.com/danielzuegner
+  - given-names: David
+    family-names: Waroquiers
+    affiliation: UCLouvain, Matgenix SRL
+  - given-names: Mingjian
+    family-names: Wen
+    github: https://github.com/mjwen
+    affiliation: University of Houston
+  - given-names: Han
+    family-names: Yang
     affiliation: Microsoft Research
-  - given-names: Ji
-    family-names: Qi
-    github: https://github.com/JiQi535
-    affiliation: University of California, San Diego
+  - given-names: Hui
+    family-names: Zheng
+    affiliation: Lawrence Berkeley National Laboratory
+  - given-names: Jiongzhi
+    family-names: Zheng
+    affiliation: Dartmouth College
+  - given-names: Zhuoying
+    family-names: Zhu
+    github: https://github.com/Zhuoying
+    affiliation: Lawrence Berkeley National Laboratory
+  - given-names: Anubhav
+    family-names: Jain
+    github: https://github.com/computron
+    affiliation: Lawrence Berkeley National Laboratory
 version: 0.0.13
-date-released: 2024-01-08
+date-released: 2025-01-22
 repository-code: https://github.com/materialsproject/atomate2
 license: cc-by-4.0
 license-url: https://github.com/materialsproject/atomate2/blob/main/LICENSE
-type: software
+type: article, software
