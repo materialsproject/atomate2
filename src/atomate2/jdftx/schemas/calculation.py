@@ -158,7 +158,8 @@ class CalculationOutput(BaseModel):
             The output document.
         """
         optimized_structure: Structure = jdftxoutput.structure
-        forces = jdftxoutput.forces.tolist() if hasattr(jdftxoutput, "forces") else None
+        if hasattr(jdftxoutput, "forces"):
+            forces = None if jdftxoutput.forces is None else jdftxoutput.forces.tolist()
         if hasattr(jdftxoutput, "stress"):
             stress = None if jdftxoutput.stress is None else jdftxoutput.stress.tolist()
         else:
