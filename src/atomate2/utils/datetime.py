@@ -1,4 +1,4 @@
-"""Helper functions for datetime objects."""
+"""Helper functions for datetime objects."""  # noqa: A005
 
 from __future__ import annotations
 
