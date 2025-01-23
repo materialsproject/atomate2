@@ -95,7 +95,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             It has to be given per formula unit (as a result in corresponding Doc).
             Instead of recomputing the energy of the bulk structure every time, this
             value can also be provided in eV. If it is provided, the static run will be
-            skipped. This energy is the typical output dft energy of the dft workflow.
+            skipped. This energy is the typical output DFT energy of the DFT workflow.
             No conversion needed. It is set to 0 by default.
         supercell_matrix: Optional[Matrix3D]
             Instead of min_length, also a supercell_matrix can be given, e.g.

@@ -31,8 +31,7 @@ try:
     from openff.units import unit
 except ImportError as e:
     raise ImportError(
-        "Using the atomate2.openmm.generate "
-        "module requires the openff-toolkit package."
+        "Using the atomate2.openmm.generate module requires the openff-toolkit package."
     ) from e
 
 

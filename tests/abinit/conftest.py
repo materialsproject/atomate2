@@ -158,8 +158,10 @@ def check_equivalent_frac_coords(
         len(find_in_coord_list_pbc(ref_frac_coords, coord, atol=atol)) > 0
         for coord in user_frac_coords
     ]
-    assert all(coord_match), f"The two structures have different frac. coords: \
+    assert all(coord_match), (
+        f"The two structures have different frac. coords: \
         {user_frac_coords} vs. {ref_frac_coords}."
+    )
 
 
 def check_equivalent_znucl_typat(
@@ -172,9 +174,9 @@ def check_equivalent_znucl_typat(
 
     sorted_znucl_a = sorted(znucl_a, reverse=True)
     sorted_znucl_b = sorted(znucl_b, reverse=True)
-    assert (
-        sorted_znucl_a == sorted_znucl_b
-    ), f"The elements are different: {znucl_a} vs. {znucl_b}"
+    assert sorted_znucl_a == sorted_znucl_b, (
+        f"The elements are different: {znucl_a} vs. {znucl_b}"
+    )
 
     count_sorted_znucl_a = [
         list(typat_a).count(list(znucl_a).index(s) + 1) for s in sorted_znucl_a
@@ -182,10 +184,10 @@ def check_equivalent_znucl_typat(
     count_sorted_znucl_b = [
         list(typat_b).count(list(znucl_b).index(s) + 1) for s in sorted_znucl_b
     ]
-    assert (
-        count_sorted_znucl_a == count_sorted_znucl_b
-    ), f"The number of same elements is different: \
+    assert count_sorted_znucl_a == count_sorted_znucl_b, (
+        f"The number of same elements is different: \
         {count_sorted_znucl_a} vs. {count_sorted_znucl_b}"
+    )
 
 
 def check_abinit_input_json(ref_path: str | Path):

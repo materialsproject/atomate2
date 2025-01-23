@@ -51,8 +51,7 @@ class AseResult(BaseModel):
     is_force_converged: Optional[bool] = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
@@ -220,8 +219,7 @@ class AseStructureTaskDoc(StructureMetadata):
     is_force_converged: Optional[bool] = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
@@ -285,8 +283,7 @@ class AseMoleculeTaskDoc(MoleculeMetadata):
     is_force_converged: Optional[bool] = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
@@ -329,8 +326,7 @@ class AseTaskDoc(AseBaseModel):
     is_force_converged: Optional[bool] = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
