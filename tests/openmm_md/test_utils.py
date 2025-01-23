@@ -32,9 +32,9 @@ def test_increment_file_name() -> None:
 
     for file_name, expected_output in test_cases:
         result = increment_name(file_name)
-        assert (
-            result == expected_output
-        ), f"Failed for case: {file_name}. Expected: {expected_output}, Got: {result}"
+        assert result == expected_output, (
+            f"Failed for case: {file_name}. Expected: {expected_output}, Got: {result}"
+        )
 
 
 def test_trajectory_reporter(interchange: OpenMMInterchange, tmp_path: Path) -> None:
@@ -67,13 +67,13 @@ def test_trajectory_reporter(interchange: OpenMMInterchange, tmp_path: Path) -> 
     traj = reporter.trajectory
 
     # Check basic properties
-    assert (
-        len(traj) == n_steps
-    ), f"got {len(traj)=}, expected {n_steps=}"  # should have n_steps frames
+    assert len(traj) == n_steps, (
+        f"got {len(traj)=}, expected {n_steps=}"
+    )  # should have n_steps frames
     assert traj.time_step is not None
-    assert len(traj.species) == len(
-        list(simulation.topology.atoms())
-    ), f"got {len(traj.species)=}, expected {len(list(simulation.topology.atoms()))=}"
+    assert len(traj.species) == len(list(simulation.topology.atoms())), (
+        f"got {len(traj.species)=}, expected {len(list(simulation.topology.atoms()))=}"
+    )
 
     # Check frame properties
     assert len(traj.frame_properties) == n_steps

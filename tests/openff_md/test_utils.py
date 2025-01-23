@@ -12,12 +12,12 @@ from atomate2.openff.utils import (
 )
 
 pytest.importorskip("openff.toolkit")
-import openff.toolkit as tk  # noqa: E402
-from openff.interchange import Interchange  # noqa: E402
-from openff.toolkit.topology import Topology  # noqa: E402
-from openff.toolkit.topology.molecule import Molecule  # noqa: E402
-from openff.units import Quantity  # noqa: E402
-from pymatgen.io.openff import (  # noqa: E402
+import openff.toolkit as tk
+from openff.interchange import Interchange
+from openff.toolkit.topology import Topology
+from openff.toolkit.topology.molecule import Molecule
+from openff.units import Quantity
+from pymatgen.io.openff import (
     add_conformer,
     assign_partial_charges,
     create_openff_mol,

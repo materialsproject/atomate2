@@ -14,9 +14,9 @@ from atomate2.openmm.jobs.generate import (
 )
 
 pytest.importorskip("openff.toolkit")
-import openff.toolkit as tk  # noqa: E402
-from openff.interchange.components._packmol import pack_box  # noqa: E402
-from openff.units import unit  # noqa: E402
+import openff.toolkit as tk
+from openff.interchange.components._packmol import pack_box
+from openff.units import unit
 
 
 def test_create_system_from_xml(openmm_data):
