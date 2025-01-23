@@ -14,7 +14,9 @@ def test_band_structure_run_silicon(mock_abinit, abinit_test_dir, clean_dir):
 
     # make the flow or job, run it and ensure that it finished running successfully
     flow_or_job = maker.make(structure)
-    responses = run_locally(flow_or_job, create_folders=True, ensure_success=True)
+    responses = run_locally(
+        flow_or_job, create_folders=True, ensure_success=True, raise_immediately=True
+    )
 
     # validation the outputs of the flow or job
     assert len(responses) == 3
@@ -40,7 +42,9 @@ def test_relax_run_silicon_standard(mock_abinit, abinit_test_dir, clean_dir):
 
     # make the flow or job, run it and ensure that it finished running successfully
     flow_or_job = maker.make(structure)
-    responses = run_locally(flow_or_job, create_folders=True, ensure_success=True)
+    responses = run_locally(
+        flow_or_job, create_folders=True, ensure_success=True, raise_immediately=True
+    )
 
     # validation the outputs of the flow or job
     assert len(responses) == 2
