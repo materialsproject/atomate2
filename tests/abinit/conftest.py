@@ -6,9 +6,12 @@ from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 import pytest
+from pymatgen.util.coord import find_in_coord_list_pbc
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
+
+    from pymatgen.core.structure import Structure
 
 
 logger = logging.getLogger("atomate2")
@@ -156,6 +159,54 @@ def check_run_abi(ref_path: str | Path):
     ), f"'run.abi' is different from reference because of the following: {diffs}."
 
 
+# Adapted from check_poscar in atomate2.utils.testing.vasp.py
+def check_equivalent_frac_coords(
+    struct: Structure,
+    struct_ref: Structure,
+    atol=1e-3,
+) -> None:
+    """Check that the frac. coords. of two structures are equivalent (includes pbc)."""
+
+    user_frac_coords = struct.frac_coords
+    ref_frac_coords = struct_ref.frac_coords
+
+    # In some cases, the ordering of sites can change when copying input files.
+    # To account for this, we check that the sites are the same, within a tolerance,
+    # while accounting for PBC.
+    coord_match = [
+        len(find_in_coord_list_pbc(ref_frac_coords, coord, atol=atol)) > 0
+        for coord in user_frac_coords
+    ]
+    assert all(coord_match), f"The two structures have different frac. coords: \
+        {user_frac_coords} vs. {ref_frac_coords}."
+
+
+def check_equivalent_znucl_typat(
+    znucl_a: list | np.ndarray,
+    znucl_b: list | np.ndarray,
+    typat_a: list | np.ndarray,
+    typat_b: list | np.ndarray,
+) -> None:
+    """Check that the elements and their number of atoms are equivalent."""
+
+    sorted_znucl_a = sorted(znucl_a, reverse=True)
+    sorted_znucl_b = sorted(znucl_b, reverse=True)
+    assert (
+        sorted_znucl_a == sorted_znucl_b
+    ), f"The elements are different: {znucl_a} vs. {znucl_b}"
+
+    count_sorted_znucl_a = [
+        list(typat_a).count(list(znucl_a).index(s) + 1) for s in sorted_znucl_a
+    ]
+    count_sorted_znucl_b = [
+        list(typat_b).count(list(znucl_b).index(s) + 1) for s in sorted_znucl_b
+    ]
+    assert (
+        count_sorted_znucl_a == count_sorted_znucl_b
+    ), f"The number of same elements is different: \
+        {count_sorted_znucl_a} vs. {count_sorted_znucl_b}"
+
+
 def check_abinit_input_json(ref_path: str | Path):
     from abipy.abio.inputs import AbinitInput
     from monty.serialization import loadfn
@@ -167,7 +218,17 @@ def check_abinit_input_json(ref_path: str | Path):
     ref = loadfn(ref_path / "inputs" / "abinit_input.json.gz")
     ref_abivars = ref.structure.to_abivars()
 
+    check_equivalent_frac_coords(user.structure, ref.structure)
+    check_equivalent_znucl_typat(
+        user_abivars["znucl"],
+        ref_abivars["znucl"],
+        user_abivars["typat"],
+        ref_abivars["typat"],
+    )
+
     for k, user_v in user_abivars.items():
+        if k in ["xred", "znucl", "typat"]:
+            continue
         assert k in ref_abivars, f"{k = } is not a key of the reference input."
         ref_v = ref_abivars[k]
         if isinstance(user_v, str):
@@ -392,7 +453,17 @@ def check_anaddb_input_json(ref_path: str | Path):
     ref_abivars = ref.structure.to_abivars()
 
     # Check structure
+    check_equivalent_frac_coords(user.structure, ref.structure)
+    check_equivalent_znucl_typat(
+        user_abivars["znucl"],
+        ref_abivars["znucl"],
+        user_abivars["typat"],
+        ref_abivars["typat"],
+    )
+
     for k, user_v in user_abivars.items():
+        if k in ["xred", "znucl", "typat"]:
+            continue
         assert k in ref_abivars, f"{k = } is not a key of the reference input."
         ref_v = ref_abivars[k]
         if isinstance(user_v, str):
