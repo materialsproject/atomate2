@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import os
 import re
 import tempfile
 import time
@@ -41,7 +42,7 @@ def download_opls_xml(
 
     except ImportError:
         warnings.warn(
-            "The `selenium` or `websriver_manager` package is not installed. "
+            "The `selenium` or `webdriver_manager` package is not installed. "
             "It's required to run the opls web scraper.",
             stacklevel=1,
         )
@@ -104,6 +105,42 @@ def download_opls_xml(
 
     driver.quit()
 
+
+def generate_opls_xml(
+    names_smiles: dict[str, str], output_dir: str | Path, overwrite_files: bool = False
+) -> None:
+    """Download an OPLS-AA/M XML file from the LigParGen repo & BOSS executable."""
+    import subprocess
+    for name, smiles in names_smiles.items():
+        final_file = Path(output_dir) / f"{name}.xml"
+        if final_file.exists() and not overwrite_files:
+            continue
+        #try:
+            
+        # Specify the directory where you want to download files
+        with tempfile.TemporaryDirectory() as tmpdir:
+            download_dir = tmpdir
+
+            # Run LigParGen via Shifter / Docker / Apptainer
+            charge = 0 # update in later version of code with better dictionary handling 
+            #lpg_cmd = f'ligpargen -n {name} -p {name} -r {name} -c {charge} -o 3 -cgen CM1A -s \"{smiles}\"'
+            lpg_cmd = f"touch {os.path.join(Path(download_dir),'{name}.openmm.xml')}"
+            run_container = f"shifter --image=shehan0807/ligpargen:latest {lpg_cmd}"
+            subprocess.run(lpg_cmd, shell=True)
+            print(f"RAN LIGPARGEN SUCCESSFULLY") 
+            #xml_file = os.path.join(os.getcwd(), f"{name}.openmm.xml")
+            
+            print(Path(tmpdir))
+            print(Path(tmpdir).iterdir())
+            file = next(Path(tmpdir).iterdir())
+            # copy downloaded file to output_file using os
+            Path(file).rename(final_file)
+
+        #except Exception as e:  # noqa: BLE001
+        #    warnings.warn(
+        #        f"{name} ({smiles}) failed to download because an error occurred: {e}",
+        #        stacklevel=1,
+        #    )
 
 def create_list_summing_to(total_sum: int, n_pieces: int) -> list:
     """Create a NumPy array with n_pieces elements that sum up to total_sum.

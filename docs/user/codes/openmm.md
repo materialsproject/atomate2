@@ -446,6 +446,16 @@ run_locally(flows[rank], ensure_success=True)
 
 </details>
 
+### Varying Forcefield
+
+<details>
+<summary>Learn to generate OPLS Forcefield Parmeters</summary>
+
+The OpenFF Force Fields provide a powerful starting point to simulate a variety of organic materials using general forcefields like [Parsley](https://doi.org/10.1021/acs.jctc.1c00571) and [Sage](https://pubs.acs.org/doi/10.1021/acs.jctc.3c00039). Just as the is done through the OpenFF Toolkit and Interchange machinery, one can automate force field generation for custom force fields. For instance, LigParGen is an automatic OPLS-AA parameter generator for small organic molecules with both a [online server](https://traken.chem.yale.edu/ligpargen/) and open-source [repository](https://traken.chem.yale.edu/ligpargen/). You will see that for any custom parameter generation tool, one can create a container environment as a wrapper to plug into the workflow described up until now. 
+
+To do so, you will use the `generate_opls_xml(...)` function in `atomate2/openmm/utils`. 
+</details>
+
 ## Analysis with Emmet
 
 For now, you'll need to make sure you have a particular emmet branch installed.
