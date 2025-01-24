@@ -55,12 +55,12 @@ def download_opls_xml(
     # Initialize the Chrome driver
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
-    for name, parmas in names_params.items():
+    for name, params in names_params.items():
         final_file = Path(output_dir) / f"{name}.xml"
         smiles = params.get("smiles")
         charge = params.get("charge", 0)
         checkopt = params.get("checkopt", 3)
-        
+
         if final_file.exists() and not overwrite_files:
             continue
         try:
@@ -85,7 +85,7 @@ def download_opls_xml(
                 )
                 smiles_input.send_keys(smiles)
 
-               # Find Molecule Optimization Iterations dropdown menu and select
+                # Find Molecule Optimization Iterations dropdown menu and select
                 checkopt_input = WebDriverWait(driver, 10).until(
                     ec.presence_of_element_located((By.NAME, "checkopt"))
                 )
@@ -106,7 +106,7 @@ def download_opls_xml(
 
                 # Wait for the second page to load
                 time.sleep(
-                        2+0.5*checkopt
+                    2 + 0.5 * int(checkopt)
                 )  # Adjust based on loading time and optimization iterations
 
                 # Find and click the "XML" button under Downloads and OpenMM
@@ -134,14 +134,14 @@ def download_opls_xml(
 
 def generate_opls_xml(
     names_params: dict[str, dict[str, str]],
-    output_dir: str | Path, 
+    output_dir: str | Path,
     overwrite_files: bool = False,
 ) -> None:
     """Download an OPLS-AA/M XML file from the LigParGen repo & BOSS executable."""
     import subprocess
+
     for name, params in names_params.items():
         final_file = Path(output_dir) / f"{name}.xml"
-        print(params)
         smiles = params.get("smiles")
         charge = params.get("charge", 0)
         charge_method = params.get("cgen", "CM1A")
@@ -150,31 +150,34 @@ def generate_opls_xml(
         if final_file.exists() and not overwrite_files:
             continue
         try:
-            
-        # Specify the directory where you want to download files
-        with tempfile.TemporaryDirectory() as tmpdir:
-            download_dir = tmpdir
+            # Specify the directory where you want to download files
+            with tempfile.TemporaryDirectory() as tmpdir:
+                download_dir = tmpdir
 
-            # Run LigParGen via Shifter / Docker / Apptainer
-            #lpg_cmd = f'ligpargen -n {name} -p {name} -r {name} -c {charge} -o {checkopt} -cgen {charge_method} -s \"{smiles}\"'
-            lpg_cmd = f"touch {os.path.join(Path(download_dir),'{name}.openmm.xml')}"
-            run_container = f"shifter --image=shehan0807/ligpargen:latest {lpg_cmd}"
-            subprocess.run(lpg_cmd, shell=True)
-            print(f"RAN LIGPARGEN SUCCESSFULLY") 
-            #xml_file = os.path.join(os.getcwd(), f"{name}.openmm.xml")
-            
-            print(Path(tmpdir))
-            print(Path(tmpdir).iterdir())
-            file = next(Path(tmpdir).iterdir())
-            # copy downloaded file to output_file using os
-            final_file.parent.mkdir(parents=True, exist_ok=True)
-            shutil.move(file, final_file)
-            subprocess.run(f"ls {download_dir}", shell=True)
+                # Run LigParGen via Shifter / Docker / Apptainer
+                lpg_cmd0 = (
+                    f"ligpargen -n {name} -p {name}"
+                    f"-r {name} -c {charge} -o {checkopt}"
+                    f"-cgen {charge_method} -s '{smiles}'"
+                )
+                lpg_cmd = (
+                    f"touch {os.path.join(Path(download_dir),'{name}.openmm.xml')}"
+                )
+                run_container = f"shifter --image=shehan0807/ligpargen:latest {lpg_cmd}"
+                subprocess.run(lpg_cmd.split(), check=False)
+
+                file = next(Path(tmpdir).iterdir())
+
+                # copy downloaded file to output_file using os
+                final_file.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(file, final_file)
+
         except Exception as e:  # noqa: BLE001
             warnings.warn(
                 f"{name} ({params}) failed to download because an error occurred: {e}",
                 stacklevel=1,
             )
+
 
 def create_list_summing_to(total_sum: int, n_pieces: int) -> list:
     """Create a NumPy array with n_pieces elements that sum up to total_sum.
