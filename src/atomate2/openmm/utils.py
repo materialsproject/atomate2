@@ -149,34 +149,35 @@ def generate_opls_xml(
 
         if final_file.exists() and not overwrite_files:
             continue
-        try:
-            # Specify the directory where you want to download files
-            with tempfile.TemporaryDirectory() as tmpdir:
-                download_dir = tmpdir
+        # try:
+        # Specify the directory where you want to download files
+        with tempfile.TemporaryDirectory() as tmpdir:
+            download_dir = tmpdir
 
-                # Run LigParGen via Shifter / Docker / Apptainer
-                lpg_cmd0 = (
-                    f"ligpargen -n {name} -p {name}"
-                    f"-r {name} -c {charge} -o {checkopt}"
-                    f"-cgen {charge_method} -s '{smiles}'"
-                )
-                lpg_cmd = (
-                    f"touch {os.path.join(Path(download_dir),'{name}.openmm.xml')}"
-                )
-                run_container = f"shifter --image=shehan0807/ligpargen:latest {lpg_cmd}"
-                subprocess.run(lpg_cmd.split(), check=False)
-
-                file = next(Path(tmpdir).iterdir())
-
-                # copy downloaded file to output_file using os
-                final_file.parent.mkdir(parents=True, exist_ok=True)
-                shutil.move(file, final_file)
-
-        except Exception as e:  # noqa: BLE001
-            warnings.warn(
-                f"{name} ({params}) failed to download because an error occurred: {e}",
-                stacklevel=1,
+            # Run LigParGen via Shifter / Docker / Apptainer
+            lpg_cmd0 = (
+                f"ligpargen -n {name} -p {name}"
+                f"-r {name} -c {charge} -o {checkopt}"
+                f"-cgen {charge_method} -s '{smiles}'"
             )
+            lpg_cmd = f"touch {os.path.join(Path(download_dir),'{name}.openmm.xml')}"
+            run_container = (
+                f"{os.environ['CONTAINER_SOFTWARE']} "
+                f"--image={os.environ['LPG_IMAGE_NAME']} {lpg_cmd0}"
+            )
+            subprocess.run(lpg_cmd.split(), check=False)
+
+            file = next(Path(tmpdir).iterdir())
+
+            # copy downloaded file to output_file using os
+            final_file.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(file, final_file)
+
+        # except Exception as e:
+        #    warnings.warn(
+        #        f"{name} ({params}) failed to download because an error occurred: {e}",
+        #        stacklevel=1,
+        #    )
 
 
 def create_list_summing_to(total_sum: int, n_pieces: int) -> list:
