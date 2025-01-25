@@ -141,7 +141,8 @@ def generate_opls_xml(
     import subprocess
 
     for name, params in names_params.items():
-        final_file = Path(output_dir) / f"{name}.xml"
+        output_dir = Path(output_dir)
+        final_file = output_dir / f"{name}.xml"
         smiles = params.get("smiles")
         charge = params.get("charge", 0)
         charge_method = params.get("cgen", "CM1A")
@@ -149,35 +150,36 @@ def generate_opls_xml(
 
         if final_file.exists() and not overwrite_files:
             continue
-        # try:
-        # Specify the directory where you want to download files
-        with tempfile.TemporaryDirectory() as tmpdir:
-            download_dir = tmpdir
+        try:
+            # Specify the directory where you want to download files
+            with tempfile.TemporaryDirectory() as tmpdir:
+                download_dir = tmpdir
 
-            # Run LigParGen via Shifter / Docker / Apptainer
-            lpg_cmd0 = (
-                f"ligpargen -n {name} -p {name}"
-                f"-r {name} -c {charge} -o {checkopt}"
-                f"-cgen {charge_method} -s '{smiles}'"
-            )
-            lpg_cmd = f"touch {os.path.join(Path(download_dir),'{name}.openmm.xml')}"
-            run_container = (
-                f"{os.environ['CONTAINER_SOFTWARE']} "
-                f"--image={os.environ['LPG_IMAGE_NAME']} {lpg_cmd0}"
-            )
-            subprocess.run(lpg_cmd.split(), check=False)
+                # Run LigParGen via Shifter / Docker / Apptainer
+                lpg_cmd = ([
+                    f"ligpargen -n {name} -p {name} "
+                    f"-r {name} -c {charge} -o {checkopt} "
+                    f"-cgen {charge_method} -s '{smiles}'"
+                    ]
+                )
+                run_container = (
+                    f"{os.environ['CONTAINER_SOFTWARE']} "
+                    f"run --rm -v {download_dir}:/opt/output "
+                    f"{os.environ['LPG_IMAGE_NAME']} bash -c" 
+                )
+                subprocess.run(run_container.split() + lpg_cmd, check=False)
 
-            file = next(Path(tmpdir).iterdir())
+                file = Path(download_dir) / f"{name}" / f"{name}.openmm.xml" 
 
-            # copy downloaded file to output_file using os
-            final_file.parent.mkdir(parents=True, exist_ok=True)
-            shutil.move(file, final_file)
+                # copy downloaded file to output_file using os
+                output_dir.mkdir(parents=True, exist_ok=True)
+                shutil.move(file, final_file)
 
-        # except Exception as e:
-        #    warnings.warn(
-        #        f"{name} ({params}) failed to download because an error occurred: {e}",
-        #        stacklevel=1,
-        #    )
+        except Exception as e:
+           warnings.warn(
+               f"{name} ({params}) failed to download because an error occurred: {e}",
+               stacklevel=1,
+           )
 
 
 def create_list_summing_to(total_sum: int, n_pieces: int) -> list:

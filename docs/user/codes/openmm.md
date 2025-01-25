@@ -446,7 +446,7 @@ run_locally(flows[rank], ensure_success=True)
 
 </details>
 
-### Varying Forcefield
+### Varying Forcefields: OPLS
 
 <details>
 <summary>Learn to generate OPLS Forcefield Parameters</summary>
@@ -529,13 +529,23 @@ Now, you can simply pull your image to which ever HPC cluster environment you ch
 docker pull USERNAME/ligpargen:latest
 ```
 
+On NERSC, users have the option of using [Shifter](https://docs.nersc.gov/development/containers/shifter/how-to-use/) or [Podman](https://docs.nersc.gov/development/containers/podman-hpc/overview/). We recommend Podman in this case to circumvent additiona user-level permission requirements. The following Podman commands will work:
+
+```bash
+podman-hpc login docker.io
+Username: USERNAME
+Password:
+
+podman-hpc pull docker.io/USERNAME/ligpargen::latest
+```
+
 #### 2. Set environment variables
 
 Set the image name and container software (Docker, Shifter, Apptainer, etc.) to environment variables (consider adding these to your `~/.bashrc`):
 
 ```bash
 export LPG_IMAGE_NAME="USERNAME/ligpargen:latest"
-export CONTAINER_SOFTWARE="shifter" # e.g.
+export CONTAINER_SOFTWARE="podman-hpc" # e.g.
 ```
 
 #### 3. Run `generate_opls_xml`
@@ -561,6 +571,13 @@ Functionally, this is equivalent to running the following LigParGen command:
 ```bash
 ligpargen -n EC -p EC -r EC -c 0 -o 3 -cgen CM1A -s C1COC(=O)O1
 ```
+
+Now, just like before, you can create an `Interchange` object. Be sure to include `opls` as a tag so the correct [geometric combination rules](https://traken.chem.yale.edu/ligpargen/openMM_tutorial.html) for OPLS force fields are invoked, 
+
+```python 
+elyte_interchange_job = generate_openmm_interchange(mol_specs_dicts, ff_xmls=["EC.xml"], tags=["opls"])
+```
+
 See that this general process can work transferably for *any* parameter generation software given you (1) create an image, (2) set the image name as an environment variable, and (3) minimally modify `generate_opls_xml(...)` to your own requirements. In future work, we'll improve this black-box type functionality to support wider parameter generation methods.
 
 </details>
