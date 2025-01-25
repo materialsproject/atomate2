@@ -125,7 +125,7 @@ class ElasticTensorDocument(BaseModel):
 class ElasticWarnings(Enum):
     """Warnings for elastic document."""
 
-    FAILED_PERTURBATIONS: str = "failed_perturbations"
+    FAILED_PERTURBATIONS = "failed_perturbations"
 
 
 class ElasticDocument(StructureMetadata):
