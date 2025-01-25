@@ -451,7 +451,7 @@ run_locally(flows[rank], ensure_success=True)
 <details>
 <summary>Learn to generate OPLS Forcefield Parameters</summary>
 
-The OpenFF Force Fields provide a powerful starting point to simulate a variety of organic materials using general forcefields like [Parsley](https://doi.org/10.1021/acs.jctc.1c00571) and [Sage](https://pubs.acs.org/doi/10.1021/acs.jctc.3c00039). Just as the is done through the OpenFF Toolkit and Interchange machinery, one can automate force field generation for custom force fields. For instance, LigParGen is an automatic OPLS-AA parameter generator for small organic molecules with both a [online server](https://traken.chem.yale.edu/ligpargen/) and open-source [repository](https://traken.chem.yale.edu/ligpargen/). You will see that for any custom parameter generation tool, one can create a container environment as a wrapper to plug into the workflow described up until now.
+The OpenFF Force Fields provide a powerful starting point to simulate a variety of organic materials using general forcefields like [Parsley](https://doi.org/10.1021/acs.jctc.1c00571) and [Sage](https://pubs.acs.org/doi/10.1021/acs.jctc.3c00039). Just as is done through the OpenFF Toolkit and Interchange machinery, one can automate force field generation for custom force fields. For instance, LigParGen is an automatic OPLS-AA parameter generator for small organic molecules with both a [online server](https://traken.chem.yale.edu/ligpargen/) and open-source [repository](https://traken.chem.yale.edu/ligpargen/). You will see that for any custom parameter generation tool, one can create a container environment as a wrapper to plug into the workflow described up until now.
 
 To do so, you will use the `generate_opls_xml(...)` function in `atomate2/openmm/utils`. This function runs a subprocess to call an image of the LigParGen repository (and all of its respective dependencies). Thus, this requires a local installation of [Docker](https://docs.docker.com/get-started/get-docker/) (otherwise, `download_opls_xml` can be run via the LigParGen website server instead). Once you have docker installed locally, `generate_opls_xml(...)` can be unlocked in three steps:
 
@@ -529,7 +529,7 @@ Now, you can simply pull your image to which ever HPC cluster environment you ch
 docker pull USERNAME/ligpargen:latest
 ```
 
-On NERSC, users have the option of using [Shifter](https://docs.nersc.gov/development/containers/shifter/how-to-use/) or [Podman](https://docs.nersc.gov/development/containers/podman-hpc/overview/). We recommend Podman in this case to circumvent additiona user-level permission requirements. The following Podman commands will work:
+On NERSC, users have the option of using [Shifter](https://docs.nersc.gov/development/containers/shifter/how-to-use/) or [Podman](https://docs.nersc.gov/development/containers/podman-hpc/overview/). We recommend Podman in this case to circumvent additional user-level permission requirements. The following Podman commands will work:
 
 ```bash
 podman-hpc login docker.io
@@ -572,10 +572,12 @@ Functionally, this is equivalent to running the following LigParGen command:
 ligpargen -n EC -p EC -r EC -c 0 -o 3 -cgen CM1A -s C1COC(=O)O1
 ```
 
-Now, just like before, you can create an `Interchange` object. Be sure to include `opls` as a tag so the correct [geometric combination rules](https://traken.chem.yale.edu/ligpargen/openMM_tutorial.html) for OPLS force fields are invoked, 
+Now, just like before, you can create an `Interchange` object. Be sure to include `opls` as a tag so the correct [geometric combination rules](https://traken.chem.yale.edu/ligpargen/openMM_tutorial.html) for OPLS force fields are invoked,
 
-```python 
-elyte_interchange_job = generate_openmm_interchange(mol_specs_dicts, ff_xmls=["EC.xml"], tags=["opls"])
+```python
+elyte_interchange_job = generate_openmm_interchange(
+    mol_specs_dicts, ff_xmls=["EC.xml"], tags=["opls"]
+)
 ```
 
 See that this general process can work transferably for *any* parameter generation software given you (1) create an image, (2) set the image name as an environment variable, and (3) minimally modify `generate_opls_xml(...)` to your own requirements. In future work, we'll improve this black-box type functionality to support wider parameter generation methods.

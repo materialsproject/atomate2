@@ -156,30 +156,29 @@ def generate_opls_xml(
                 download_dir = tmpdir
 
                 # Run LigParGen via Shifter / Docker / Apptainer
-                lpg_cmd = ([
+                lpg_cmd = [
                     f"ligpargen -n {name} -p {name} "
                     f"-r {name} -c {charge} -o {checkopt} "
                     f"-cgen {charge_method} -s '{smiles}'"
-                    ]
-                )
+                ]
                 run_container = (
                     f"{os.environ['CONTAINER_SOFTWARE']} "
                     f"run --rm -v {download_dir}:/opt/output "
-                    f"{os.environ['LPG_IMAGE_NAME']} bash -c" 
+                    f"{os.environ['LPG_IMAGE_NAME']} bash -c"
                 )
                 subprocess.run(run_container.split() + lpg_cmd, check=False)
 
-                file = Path(download_dir) / f"{name}" / f"{name}.openmm.xml" 
+                file = Path(download_dir) / f"{name}" / f"{name}.openmm.xml"
 
                 # copy downloaded file to output_file using os
                 output_dir.mkdir(parents=True, exist_ok=True)
                 shutil.move(file, final_file)
 
-        except Exception as e:
-           warnings.warn(
-               f"{name} ({params}) failed to download because an error occurred: {e}",
-               stacklevel=1,
-           )
+        except Exception as e:  # noqa: BLE001
+            warnings.warn(
+                f"{name} ({params}) failed to download because an error occurred: {e}",
+                stacklevel=1,
+            )
 
 
 def create_list_summing_to(total_sum: int, n_pieces: int) -> list:
@@ -303,7 +302,7 @@ def opls_lj(system: System) -> System:
         (p1, p2, q, sig, eps) = nonbonded_force.getExceptionParameters(i)
         # ALL THE 1-2, 1-3 and 1-4 interactions are EXCLUDED FROM CUSTOM NONBONDED FORCE
         lorentz.addExclusion(p1, p2)
-        if eps._value != 0.0:
+        if eps.value_in_unit(eps.unit) != 0.0:
             # print p1,p2,sig,eps
             sig14 = omm_unit.sqrt(ljset[p1][0] * ljset[p2][0])
             # Note: eps14 is in the original reference function provided by ligpargen
