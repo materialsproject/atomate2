@@ -36,17 +36,30 @@ from pathlib import Path
 import numpy as np
 import openmm
 import openmm.app
-import openmmtorch
 import torch
 from e3nn.util import jit
 from mace.tools import atomic_numbers_to_indices, to_one_hot, utils
 
 try:
     from NNPOps.neighbors import getNeighborPairs
-except ImportError as err:
-    raise ImportError(
-        "NNPOps is not installed. Please install it from conda-forge."
-    ) from err
+except ImportError:
+
+    def getNeighborPairs(*args, **kwargs) -> None:  # noqa: N802, ARG001
+        """Raise ImportError if NNPOps is not installed."""
+        raise ImportError(
+            "NNPOps is not installed. Please install it from conda-forge."
+        )
+
+
+try:
+    from openmmtorch import TorchForce
+except ImportError:
+
+    def TorchForce(*args, **kwargs) -> None:  # noqa: N802, ARG001
+        """Raise ImportError if openmmtorch is not installed."""
+        raise ImportError(
+            "openmmtorch is not installed. Please install it from conda-forge."
+        )
 
 
 class MaceForce(torch.nn.Module):
@@ -314,7 +327,7 @@ class MacePotential:
         module = torch.jit.script(maceforce)
 
         # Create the TorchForce and add it to the System.
-        force = openmmtorch.TorchForce(module)
+        force = TorchForce(module)
         force.setForceGroup(0)
         force.setUsesPeriodicBoundaryConditions(periodic)
         system.addForce(force)

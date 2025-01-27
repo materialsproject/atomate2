@@ -65,7 +65,7 @@ ase = ["ase>=3.23.0"]
 # tblite py3.12 support tracked in https://github.com/tblite/tblite/issues/198
 ase-ext = ["tblite>=0.3.0; python_version < '3.12'"]
 openmm = [
-    "mdanalysis>=2.7.0",
+    "mdanalysis>=2.8.0",
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
