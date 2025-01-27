@@ -2,7 +2,7 @@
 
 This code is based off of the openmm-ml package. In particular,
 it borrows from the MLPotential class written by Peter Eastman and the MACEForce
-class written by Harry Moore. The nnpops_nl function in the neighbors file
+class written by Harry Moore. The nnpops_nl function
 is also from openmm-ml and was written by Harry Moore.
 
 The original code is licensed as below
