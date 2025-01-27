@@ -3,7 +3,8 @@ from pathlib import Path
 
 import pytest
 from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
-from jobflow import Flow, JobStore, MemoryStore, run_locally
+from jobflow import Flow, JobStore, run_locally
+from maggma.stores import MemoryStore
 from monty.json import MontyDecoder
 from pymatgen.core import Composition, Structure
 
