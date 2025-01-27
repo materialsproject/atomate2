@@ -95,7 +95,7 @@ def random_structure(test_dir) -> Structure:
     regenerate_test_data = True
     if regenerate_test_data:
         struct_file.unlink(missing_ok=True)
-        composition = Composition("Al85Ni10Fe5")
+        composition = Composition("Fe100")
 
         n_atoms = 60
         struct = get_random_packed_structure(

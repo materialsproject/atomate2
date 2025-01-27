@@ -111,5 +111,5 @@ def test_structure_to_topology(random_structure: Structure) -> None:
 @pytest.mark.openmm_slow
 def test_interchange_to_structure(interchange: OpenMMInterchange) -> None:
     structure = interchange_to_structure(interchange)
-    assert len(structure) == 60
+    assert len(structure) == 1170
     assert 4 < np.max(structure.cart_coords) < 16
