@@ -7,7 +7,6 @@ from pathlib import Path
 import numpy as np
 import openmm
 import openmm.unit as omm_unit
-from atoms2.comp.md.atomate2.utils import structure_to_topology
 from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
 from emmet.core.vasp.task_valid import TaskState
 from jobflow import Response
@@ -18,7 +17,8 @@ from openmm.app.pdbfile import PDBFile
 from pymatgen.core import Structure
 
 from atomate2.openmm.jobs.base import openmm_job
-from atomate2.openmm.mace_force import MacePotential
+from atomate2.openmm.mace_utils import MacePotential
+from atomate2.openmm.utils import structure_to_topology
 
 
 @openmm_job

@@ -1,17 +1,21 @@
 from pathlib import Path
 
+import numpy as np
 import pytest
 from emmet.core.openmm import OpenMMInterchange
+from pymatgen.core import Structure
 
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.openmm.utils import (
     PymatgenTrajectoryReporter,
     download_opls_xml,
     increment_name,
+    interchange_to_structure,
+    structure_to_topology,
 )
 
 
-@pytest.mark.skip("annoying test")
+@pytest.mark.skip("Unreliable test, needs browser to run successfully.")
 def test_download_xml(tmp_path: Path) -> None:
     pytest.importorskip("selenium")
 
@@ -92,3 +96,20 @@ def test_trajectory_reporter(interchange: OpenMMInterchange, tmp_path: Path) -> 
 
     # check that file was written
     assert (tmp_path / "trajectory.json").exists()
+
+
+@pytest.mark.openmm_slow
+def test_structure_to_topology(random_structure: Structure) -> None:
+    topology = structure_to_topology(random_structure)
+    assert topology is not None, "Topology should not be None."
+    num_atoms_in_topology = sum(1 for _ in topology.atoms())
+    assert num_atoms_in_topology == len(random_structure), (
+        "Number of atoms in topology should match structure."
+    )
+
+
+@pytest.mark.openmm_slow
+def test_interchange_to_structure(interchange: OpenMMInterchange) -> None:
+    structure = interchange_to_structure(interchange)
+    assert len(structure) == 60
+    assert 4 < np.max(structure.cart_coords) < 16

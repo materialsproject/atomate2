@@ -153,13 +153,16 @@ ignore_missing_imports = true
 no_strict_optional = true
 
 [tool.pytest.ini_options]
-addopts = "-p no:warnings --import-mode=importlib --cov-config=pyproject.toml"
+addopts = "-p no:warnings --import-mode=importlib --cov-config=pyproject.toml -m 'not openmm_mace'"
 filterwarnings = [
     "ignore:.*POTCAR.*:UserWarning",
     "ignore:.*input structure.*:UserWarning",
     "ignore:.*is not gzipped.*:UserWarning",
     "ignore:.*magmom.*:UserWarning",
     "ignore::DeprecationWarning",
+]
+markers = [
+    "openmm_mace: tests marked openmm_mace are skipped by default because they are very slow (unskip with pytest -m openmm_mace)",
 ]
 
 [tool.coverage.run]

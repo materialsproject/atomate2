@@ -1,6 +1,16 @@
+import json
+from pathlib import Path
+
 import pytest
-from emmet.core.openmm import OpenMMInterchange
-from jobflow import run_locally
+from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
+from jobflow import Flow, JobStore, MemoryStore, run_locally
+from monty.json import MontyDecoder
+from pymatgen.core import Composition, Structure
+
+from atomate2.forcefields.utils import revert_default_dtype
+from atomate2.openmm.jobs.core import NVTMaker
+from atomate2.openmm.jobs.mace import generate_mace_interchange
+from atomate2.openmm.utils import get_random_packed_structure
 
 
 @pytest.fixture
@@ -73,3 +83,61 @@ def interchange(openmm_data):
 @pytest.fixture
 def output_dir(test_dir):
     return test_dir / "classical_md" / "output_dir"
+
+
+@pytest.fixture(scope="session")
+def random_structure(test_dir) -> Structure:
+    test_files = test_dir / "test_files"
+    test_files.mkdir(parents=True, exist_ok=True)
+    struct_file = test_files / "random_structure.json"
+
+    # disable this flag to speed up local testing
+    regenerate_test_data = True
+    if regenerate_test_data:
+        struct_file.unlink(missing_ok=True)
+        composition = Composition("Al85Ni10Fe5")
+
+        n_atoms = 60
+        struct = get_random_packed_structure(
+            composition=composition,
+            target_atoms=n_atoms,
+            packmol_seed=1,
+        )
+        struct.to_file(str(struct_file))
+    return Structure.from_file(struct_file)
+
+
+@pytest.fixture(scope="session")
+def task_doc(random_structure: Structure, test_dir: Path) -> OpenMMInterchange:
+    output_dir = test_dir / "test_files" / "output_dir"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # disable this flag to speed up local testing
+    regenerate_test_data = True
+    if regenerate_test_data:
+        (output_dir / "taskdoc.json").unlink(missing_ok=True)
+        generate_job = generate_mace_interchange(
+            random_structure,
+        )
+        nvt_job = NVTMaker(
+            n_steps=2, traj_interval=1, state_interval=1, save_structure=True
+        ).make(generate_job.output.interchange, prev_dir=generate_job.output.dir_name)
+
+        job_store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
+
+        with revert_default_dtype():
+            run_locally(
+                Flow([generate_job, nvt_job]),
+                store=job_store,
+                ensure_success=True,
+                root_dir=output_dir,
+            )
+
+    task_doc_dict = json.load((output_dir / "taskdoc.json").open(), cls=MontyDecoder)
+
+    return OpenMMTaskDocument.model_validate(task_doc_dict)
+
+
+@pytest.fixture(scope="session")
+def mace_interchange(task_doc: OpenMMTaskDocument) -> OpenMMInterchange:
+    return OpenMMInterchange.model_validate_json(task_doc.interchange)
