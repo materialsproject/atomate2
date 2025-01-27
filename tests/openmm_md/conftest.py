@@ -10,7 +10,6 @@ from pymatgen.core import Composition, Structure
 
 from atomate2.forcefields.utils import revert_default_dtype
 from atomate2.openmm.jobs.core import NVTMaker
-from atomate2.openmm.jobs.mace import generate_mace_interchange
 from atomate2.openmm.utils import get_random_packed_structure
 
 
@@ -110,6 +109,8 @@ def random_structure(test_dir) -> Structure:
 
 @pytest.fixture(scope="session")
 def task_doc(random_structure: Structure, test_dir: Path) -> OpenMMInterchange:
+    from atomate2.openmm.jobs.mace import generate_mace_interchange
+
     output_dir = test_dir / "test_files" / "output_dir"
     output_dir.mkdir(parents=True, exist_ok=True)
 
