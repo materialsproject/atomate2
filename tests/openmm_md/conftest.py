@@ -8,9 +8,9 @@ from maggma.stores import MemoryStore
 from monty.json import MontyDecoder
 from pymatgen.core import Composition, Structure
 
+from atomate2.common.jobs.mpmorph import get_random_packed_structure
 from atomate2.forcefields.utils import revert_default_dtype
 from atomate2.openmm.jobs.core import NVTMaker
-from atomate2.openmm.utils import get_random_packed_structure
 
 
 @pytest.fixture
