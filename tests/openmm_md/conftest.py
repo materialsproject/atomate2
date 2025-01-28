@@ -102,6 +102,7 @@ def random_structure(test_dir) -> Structure:
     return Structure.from_file(struct_file)
 
 
+@pytest.mark.openmm_slow
 @pytest.fixture(scope="session")
 def task_doc(random_structure: Structure, test_dir: Path) -> OpenMMInterchange:
     from atomate2.openmm.jobs.mace import generate_mace_interchange
@@ -113,16 +114,21 @@ def task_doc(random_structure: Structure, test_dir: Path) -> OpenMMInterchange:
     regenerate_test_data = True
     if regenerate_test_data:
         (output_dir / "taskdoc.json").unlink(missing_ok=True)
-        generate_job = generate_mace_interchange(
-            random_structure,
-        )
-        nvt_job = NVTMaker(
-            n_steps=2, traj_interval=1, state_interval=1, save_structure=True
-        ).make(generate_job.output.interchange, prev_dir=generate_job.output.dir_name)
-
-        job_store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
 
         with revert_default_dtype():
+            generate_job = generate_mace_interchange(
+                random_structure,
+            )
+            nvt_job = NVTMaker(
+                n_steps=2, traj_interval=1, state_interval=1, save_structure=True
+            ).make(
+                generate_job.output.interchange, prev_dir=generate_job.output.dir_name
+            )
+
+            job_store = JobStore(
+                MemoryStore(), additional_stores={"data": MemoryStore()}
+            )
+
             run_locally(
                 Flow([generate_job, nvt_job]),
                 store=job_store,
@@ -135,6 +141,7 @@ def task_doc(random_structure: Structure, test_dir: Path) -> OpenMMInterchange:
     return OpenMMTaskDocument.model_validate(task_doc_dict)
 
 
+@pytest.mark.openmm_slow
 @pytest.fixture(scope="session")
 def mace_interchange(task_doc: OpenMMTaskDocument) -> OpenMMInterchange:
     return OpenMMInterchange.model_validate_json(task_doc.interchange)
