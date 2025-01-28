@@ -102,6 +102,7 @@ def random_structure(test_dir) -> Structure:
             composition=composition,
             target_atoms=n_atoms,
             packmol_seed=1,
+            vol_per_atom_source="icsd",
         )
         struct.to_file(str(struct_file))
     return Structure.from_file(struct_file)
