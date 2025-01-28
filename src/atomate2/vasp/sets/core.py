@@ -687,13 +687,18 @@ class MDSetGenerator(VaspInputGenerator):
     @staticmethod
     def _get_ensemble_defaults(structure: Structure, ensemble: str) -> dict[str, Any]:
         """Get default params for the ensemble."""
+        # Handle both old (ntypesp) and new (n_elems) pymatgen versions
+        n_types = getattr(structure, "n_elems", None)
+        if n_types is None:
+            n_types = structure.ntypesp
+
         defaults = {
             "nve": {"MDALGO": 1, "ISIF": 2, "ANDERSEN_PROB": 0.0},
             "nvt": {"MDALGO": 2, "ISIF": 2, "SMASS": 0},
             "npt": {
                 "MDALGO": 3,
                 "ISIF": 3,
-                "LANGEVIN_GAMMA": [10] * structure.ntypesp,
+                "LANGEVIN_GAMMA": [10] * n_types,
                 "LANGEVIN_GAMMA_L": 1,
                 "PMASS": 10,
                 "PSTRESS": 0,

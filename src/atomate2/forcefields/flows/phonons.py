@@ -72,8 +72,8 @@ class PhononMaker(BasePhononMaker):
           High-throughput electronic band structure calculations:
           Challenges and tools. Computational Materials Science,
           49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
-          We will however use seekpath and primitive structures
-          as determined by from phonopy to compute the phonon band structure
+          We will, however, use seekpath and primitive structures
+          as determined by phonopy to compute the phonon band structure
     bulk_relax_maker : .ForceFieldRelaxMaker or None
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
@@ -101,7 +101,7 @@ class PhononMaker(BasePhononMaker):
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
     code: str
-        determines the dft or force field code.
+        determines the DFT or force field code.
     store_force_constants: bool
         if True, force constants will be stored
     socket: bool
