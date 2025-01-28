@@ -63,8 +63,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
     is_force_converged: Optional[bool] = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
