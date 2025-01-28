@@ -104,7 +104,7 @@ strict = [
     "jobflow==0.1.19",
     "lobsterpy==0.4.9",
     "mdanalysis==2.7.0",
-    "monty==2025.1.9",
+    "monty==2024.10.21",
     "mp-api==0.43.0",
     "numpy",
     "openmm-mdanalysis-reporter==0.1.0",
@@ -113,7 +113,7 @@ strict = [
     "pydantic-settings==2.7.0",
     "pydantic==2.9.2",
     "pymatgen-analysis-defects==2024.10.22",
-    "pymatgen==2025.1.9",
+    "pymatgen==2024.11.13",
     "pymongo==4.10.1", # TODO: remove pending maggma fix
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
