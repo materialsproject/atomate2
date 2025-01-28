@@ -257,6 +257,7 @@ class ApproxNebSingleHopMaker(ApproxNebFromEndpointsMaker):
     """
 
     image_relax_maker: Maker = field(default_factory=ApproxNebImageRelaxMaker)
+    name: str = "VASP ApproxNEB single hop from endpoints maker"
     use_aeccar: bool = False
 
     def get_charge_density(self, prev_dir: str | Path) -> Chgcar:

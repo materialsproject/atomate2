@@ -44,6 +44,7 @@ class ApproxNebFromEndpointsMaker(Maker):
     """
 
     image_relax_maker: Maker
+    name: str = "ApproxNEB single hop from endpoints maker"
     selective_dynamics_scheme: Literal["fix_two_atoms"] | None = "fix_two_atoms"
     min_images_per_hop: int | None = 3
     min_hop_distance: float | bool = True
