@@ -80,14 +80,9 @@ def interchange(openmm_data):
         return OpenMMInterchange.model_validate_json(file.read())
 
 
-@pytest.fixture
-def output_dir(test_dir):
-    return test_dir / "classical_md" / "output_dir"
-
-
 @pytest.fixture(scope="session")
 def random_structure(test_dir) -> Structure:
-    test_files = test_dir / "test_files"
+    test_files = test_dir / "openmm" / "mlff_test_files"
     test_files.mkdir(parents=True, exist_ok=True)
     struct_file = test_files / "random_structure.json"
 
@@ -95,7 +90,7 @@ def random_structure(test_dir) -> Structure:
     regenerate_test_data = True
     if regenerate_test_data:
         struct_file.unlink(missing_ok=True)
-        composition = Composition("Fe100")
+        composition = Composition("Al85Ni10Fe5")
 
         n_atoms = 60
         struct = get_random_packed_structure(
@@ -112,7 +107,7 @@ def random_structure(test_dir) -> Structure:
 def task_doc(random_structure: Structure, test_dir: Path) -> OpenMMInterchange:
     from atomate2.openmm.jobs.mace import generate_mace_interchange
 
-    output_dir = test_dir / "test_files" / "output_dir"
+    output_dir = test_dir / "openmm" / "mlff_test_files"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # disable this flag to speed up local testing
