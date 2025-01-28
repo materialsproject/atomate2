@@ -87,7 +87,7 @@ def random_structure(test_dir) -> Structure:
     struct_file = test_files / "random_structure.json"
 
     # disable this flag to speed up local testing
-    regenerate_test_data = True
+    regenerate_test_data = False
     if regenerate_test_data:
         struct_file.unlink(missing_ok=True)
         composition = Composition("Al85Ni10Fe5")
@@ -97,7 +97,6 @@ def random_structure(test_dir) -> Structure:
             composition=composition,
             target_atoms=n_atoms,
             packmol_seed=1,
-            vol_per_atom_source="icsd",
         )
         struct.to_file(str(struct_file))
     return Structure.from_file(struct_file)
