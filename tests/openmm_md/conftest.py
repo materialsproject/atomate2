@@ -1,4 +1,6 @@
+import gzip
 import json
+import shutil
 from pathlib import Path
 
 import pytest
@@ -110,8 +112,11 @@ def task_doc(random_structure: Structure, test_dir: Path) -> OpenMMInterchange:
     output_dir = test_dir / "openmm" / "mlff_test_files"
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    json_path = output_dir / "taskdoc.json"
+    gz_path = output_dir / "taskdoc.json.gz"
+
     # disable this flag to speed up local testing
-    regenerate_test_data = True
+    regenerate_test_data = False
     if regenerate_test_data:
         (output_dir / "taskdoc.json").unlink(missing_ok=True)
 
@@ -136,7 +141,16 @@ def task_doc(random_structure: Structure, test_dir: Path) -> OpenMMInterchange:
                 root_dir=output_dir,
             )
 
-    task_doc_dict = json.load((output_dir / "taskdoc.json").open(), cls=MontyDecoder)
+            # Compress the generated JSON file
+            with json_path.open("rb") as f_in, gzip.open(gz_path, "wb") as f_out:
+                shutil.copyfileobj(f_in, f_out)
+            json_path.unlink()  # Remove the uncompressed file
+
+    # Read from the compressed file
+    with gzip.open(gz_path, "rt") as f:
+        task_doc_dict = json.load(f, cls=MontyDecoder)
+
+    # task_doc_dict = json.load((output_dir / "taskdoc.json").open(), cls=MontyDecoder)
 
     return OpenMMTaskDocument.model_validate(task_doc_dict)
 
