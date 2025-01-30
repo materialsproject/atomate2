@@ -77,7 +77,7 @@ class OpenMMFlowMaker(Maker):
         The name of the production job. Default is "production".
     tags : list[str]
         Tags to apply to the final job. Will only be applied if collect_jobs is True.
-    makers: list[BaseOpenMMMaker]
+    makers: Union[BaseOpenMMMaker, OpenMMFlowMaker]
         A list of makers to string together.
     collect_outputs : bool
         If True, a final job is added that collects all jobs into a single
@@ -252,7 +252,9 @@ class DynamicOpenMMFlowMaker(Maker):
     """
     
     name: str = field(default=None)
-    maker: BaseOpenMMMaker | OpenMMFlowMaker = field(default_factory=BaseOpenMMMaker)
+    maker: BaseOpenMMMaker | OpenMMFlowMaker = field(
+        default_factory=lambda: BaseOpenMMMaker()
+    )
      
     def __post_init__(self) -> None:
         """Post init formatting of arguments."""
