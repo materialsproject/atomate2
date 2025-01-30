@@ -11,15 +11,12 @@ from emmet.core.openmm import Calculation, OpenMMInterchange, OpenMMTaskDocument
 from jobflow import Flow, Job, Maker, Response
 from monty.json import MontyDecoder, MontyEncoder
 
-from atomate2.openmm.jobs.base import openmm_job
+from atomate2.openmm.jobs.base import BaseOpenMMMaker, openmm_job
 from atomate2.openmm.jobs.core import NVTMaker, TempChangeMaker
 from atomate2.openmm.utils import create_list_summing_to
 
 if TYPE_CHECKING:
     from openff.interchange import Interchange
-
-    from atomate2.openmm.jobs.base import BaseOpenMMMaker
-
 
 def _get_calcs_reversed(job: Job | Flow) -> list[Calculation | list]:
     """Unwrap a nested list of calcs from jobs or flows."""
@@ -230,3 +227,41 @@ class OpenMMFlowMaker(Maker):
             makers=[raise_temp_maker, nvt_maker, lower_temp_maker],
             collect_outputs=False,
         )
+
+
+@dataclass
+class DynamicOpenMMFlowMaker(Maker):
+    """Run a dynamic equlibration or production simulation.
+    
+    Create a dynamic flow out of an existing OpenMM simulation
+    job or a linear sequence of linked jobs, i.e., an OpenMM
+    flow. 
+
+    Attributes
+    ----------
+    name : str
+        The name of the dynamic OpenMM job or flow. Default is the name 
+        of the inherited maker name with "dynamic" preprended.
+    tags : list[str]
+        Tags to apply to the final job. Will only be applied if collect_jobs is True.
+    maker: Union[BaseOpenMMMaker, OpenMMFlowMaker]
+        A list of makers to string together.
+    collect_outputs : bool
+        If True, a final job is added that collects all jobs into a single
+        task document.
+    """
+    
+    name: str = field(default=None)
+    maker: BaseOpenMMMaker | OpenMMFlowMaker = field(default_factory=BaseOpenMMMaker)
+     
+    def __post_init__(self) -> None:
+        """Post init formatting of arguments."""
+        if self.name is None: 
+            self.name = f"dynamic {self.maker.name}"
+
+    def make(
+        self,
+        interchange: Interchange | OpenMMInterchange | str,
+        prev_dir: str | None = None,
+    ) -> Flow:
+        pass
