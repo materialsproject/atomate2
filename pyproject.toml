@@ -35,7 +35,7 @@ dependencies = [
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
     "pymatgen>=2024.11.13",
-    "pymongo<=4.10.1",  # TODO: remove pending `mongomock` (required by maggma) update to include `sort` kwarg required by pymongo>=4.11
+    "pymongo<=4.10.1",
 ]
 
 [project.optional-dependencies]
@@ -114,7 +114,7 @@ strict = [
     "pydantic==2.9.2",
     "pymatgen-analysis-defects==2024.10.22",
     "pymatgen==2024.11.13",
-    "pymongo==4.10.1", # TODO: remove pending `mongomock` (required by maggma) update to include `sort` kwarg required by pymongo>=4.11
+    "pymongo==4.10.1",
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
