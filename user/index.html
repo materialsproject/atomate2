@@ -7,7 +7,7 @@
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>Introduction - atomate2</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -212,6 +212,7 @@
 <li class="toctree-l1"><a class="reference internal" href="atomate-1-vs-2.html">Atomate 1 vs 2</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="codes/index.html">Codes</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Codes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="codes/vasp.html">VASP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="codes/openmm.html">Installing Atomate2 from source with OpenMM</a></li>
 </ul>
 </li>
 </ul>
@@ -576,6 +577,7 @@
 <li class="toctree-l4 has-children"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.html">atomate2.common.jobs.qha</a><input class="toctree-checkbox" id="toctree-checkbox-60" name="toctree-checkbox-60" role="switch" type="checkbox"/><label for="toctree-checkbox-60"><div class="visually-hidden">Toggle navigation of atomate2.common.jobs.qha</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.analyze_free_energy.html">analyze_free_energy</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.get_phonon_jobs.html">get_phonon_jobs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.get_supercell_size.html">get_supercell_size</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
@@ -653,6 +655,7 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../reference/atomate2.common.utils.html">atomate2.common.utils</a><input class="toctree-checkbox" id="toctree-checkbox-72" name="toctree-checkbox-72" role="switch" type="checkbox"/><label for="toctree-checkbox-72"><div class="visually-hidden">Toggle navigation of atomate2.common.utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.parse_custodian.html">parse_custodian</a></li>
@@ -789,9 +792,11 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.html">atomate2.forcefields</a><input class="toctree-checkbox" id="toctree-checkbox-92" name="toctree-checkbox-92" role="switch" type="checkbox"/><label for="toctree-checkbox-92"><div class="visually-hidden">Toggle navigation of atomate2.forcefields</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../reference/atomate2.forcefields.MLFF.html">MLFF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/atomate2.forcefields.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.flows.html">atomate2.forcefields.flows</a><input class="toctree-checkbox" id="toctree-checkbox-93" name="toctree-checkbox-93" role="switch" type="checkbox"/><label for="toctree-checkbox-93"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.flows.elastic.html">atomate2.forcefields.flows.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-94" name="toctree-checkbox-94" role="switch" type="checkbox"/><label for="toctree-checkbox-94"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.forcefields.flows.elastic.ElasticMaker.html">ElasticMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.forcefields.flows.elastic.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.flows.eos.html">atomate2.forcefields.flows.eos</a><input class="toctree-checkbox" id="toctree-checkbox-95" name="toctree-checkbox-95" role="switch" type="checkbox"/><label for="toctree-checkbox-95"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -1532,9 +1537,9 @@ states).</p></li>
 <li><p>A non-self-consistent calculation on a high symmetry k-point path (for the line mode
 band structure).</p></li>
 </ol>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">atomate2.vasp.flows.core</span> <span class="kn">import</span> <span class="n">RelaxBandStructureMaker</span>
-<span class="kn">from</span> <span class="nn">jobflow</span> <span class="kn">import</span> <span class="n">run_locally</span>
-<span class="kn">from</span> <span class="nn">pymatgen.core</span> <span class="kn">import</span> <span class="n">Structure</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.flows.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">RelaxBandStructureMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jobflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_locally</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
 
 <span class="c1"># construct a rock salt MgO structure</span>
 <span class="n">mgo_structure</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span>
@@ -1603,16 +1608,14 @@ A full list of contributors can be found <a class="reference external" href="htt
 </section>
 <section id="citing-atomate2">
 <h2>Citing atomate2<a class="headerlink" href="#citing-atomate2" title="Link to this heading">¶</a></h2>
-<p>A journal submission for <code class="docutils literal notranslate"><span class="pre">atomate2</span></code> is planned. In the meantime, please use <a class="reference internal" href="#citation.cff"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">citation.cff</span></code></span></a> and the <a class="reference external" href="https://zenodo.org/badge/latestdoi/306414371">Zenodo record</a> to cite <code class="docutils literal notranslate"><span class="pre">atomate2</span></code>.</p>
-<div class="highlight-bib notranslate"><div class="highlight"><pre><span></span><span class="nc">@software</span><span class="p">{</span><span class="nl">ganose_atomate2_2024</span><span class="p">,</span>
-<span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Ganose, Alex and Riebesell, Janosh and George, J. and Shen, Jimmy and S. Rosen, Andrew and Ashok Naik, Aakash and nwinner and Wen, Mingjian and rdguha1995 and Kuner, Matthew and Petretto, Guido and Zhu, Zhuoying and Horton, Matthew and Sahasrabuddhe, Hrushikesh and Kaplan, Aaron and Schmidt, Jonathan and Ertural, Christina and Kingsbury, Ryan and McDermott, Matt and Goodall, Rhys and Bonkowski, Alexander and Purcell, Thomas and Zügner, Daniel and Qi, Ji}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">doi</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{10.5281/zenodo.10677081}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">license</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{cc-by-4.0}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">month</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nv">jan</span><span class="p">,</span>
-<span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{atomate2}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://github.com/materialsproject/atomate2}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">version</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{0.0.13}</span><span class="p">,</span>
-<span class="w">  </span><span class="na">year</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{2024}</span>
+<p>A journal submission of <code class="docutils literal notranslate"><span class="pre">atomate2</span></code> is undergoing peer review. In the meantime, please cite the <a class="reference external" href="https://chemrxiv.org/engage/chemrxiv/article-details/678e76a16dde43c9085c75e9">ChemRxiv preprint</a>:</p>
+<div class="highlight-bib notranslate"><div class="highlight"><pre><span></span><span class="nc">@article</span><span class="p">{</span><span class="nl">ganose2025_atomate2</span><span class="p">,</span>
+<span class="w">    </span><span class="na">title</span><span class="w">        </span><span class="p">=</span><span class="w"> </span><span class="s">{Atomate2: Modular Workflows for Materials Science}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">author</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">{Ganose, Alex M. and Sahasrabuddhe, Hrushikesh and Asta, Mark and Beck, Kevin and Biswas, Tathagata and Bonkowski, Alexander and Bustamante, Joana and Chen, Xin and Chiang, Yuan and Chrzan, Daryl and Clary, Jacob and Cohen, Orion and Ertural, Christina and Gallant, Max and George, Janine and Gerits, Sophie and Goodall, Rhys and Guha, Rishabh and Hautier, Geoffroy and Horton, Matthew and Kaplan, Aaron and Kingsbury, Ryan and Kuner, Matthew and Li, Bryant and Linn, Xavier and McDermott, Matthew and Mohanakrishnan, Rohith Srinivaas and Naik, Aakash and Neaton, Jeffrey and Persson, Kristin and Petretto, Guido and Purcell, Thomas and Ricci, Francesco and Rich, Benjamin and Riebesell, Janosh and Rignanese, Gian-Marco and Rosen, Andrew and Scheffler, Matthias and Schmidt, Jonathan and Shen, Jimmy-Xuan and Sobolev, Andrei and Sundararaman, Ravishankar and Tezak, Cooper and Trinquet, Victor and Varley, Joel and Vigil-Fowler, Derek and Wang, Duo and Waroquiers, David and Wen, Mingjian and Yang, Han and Zheng, Hui and Zheng, Jiongzhi and Zhu, Zhuoying and Jain, Anubhav}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">year</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="m">2025</span><span class="p">,</span>
+<span class="w">    </span><span class="na">journal</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">{ChemRxiv}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">url</span><span class="w">          </span><span class="p">=</span><span class="w"> </span><span class="s">{https://chemrxiv.org/engage/chemrxiv/article-details/678e76a16dde43c9085c75e9}</span><span class="p">,</span>
+<span class="w">    </span><span class="na">urldate</span><span class="w">      </span><span class="p">=</span><span class="w"> </span><span class="s">{2025-01-22}</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1702,7 +1705,7 @@ A full list of contributors can be found <a class="reference external" href="htt
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=8bafd125"></script>
+</div><script src="../_static/documentation_options.js?v=2fd7553c"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

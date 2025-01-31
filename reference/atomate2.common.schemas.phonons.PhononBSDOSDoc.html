@@ -7,7 +7,7 @@
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>PhononBSDOSDoc - atomate2</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -212,6 +212,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../user/atomate-1-vs-2.html">Atomate 1 vs 2</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../user/codes/index.html">Codes</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Codes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../user/codes/vasp.html">VASP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user/codes/openmm.html">Installing Atomate2 from source with OpenMM</a></li>
 </ul>
 </li>
 </ul>
@@ -576,6 +577,7 @@
 <li class="toctree-l4 has-children"><a class="reference internal" href="atomate2.common.jobs.qha.html">atomate2.common.jobs.qha</a><input class="toctree-checkbox" id="toctree-checkbox-60" name="toctree-checkbox-60" role="switch" type="checkbox"/><label for="toctree-checkbox-60"><div class="visually-hidden">Toggle navigation of atomate2.common.jobs.qha</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="atomate2.common.jobs.qha.analyze_free_energy.html">analyze_free_energy</a></li>
 <li class="toctree-l5"><a class="reference internal" href="atomate2.common.jobs.qha.get_phonon_jobs.html">get_phonon_jobs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="atomate2.common.jobs.qha.get_supercell_size.html">get_supercell_size</a></li>
 <li class="toctree-l5"><a class="reference internal" href="atomate2.common.jobs.qha.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
@@ -653,6 +655,7 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="atomate2.common.utils.html">atomate2.common.utils</a><input class="toctree-checkbox" id="toctree-checkbox-72" name="toctree-checkbox-72" role="switch" type="checkbox"/><label for="toctree-checkbox-72"><div class="visually-hidden">Toggle navigation of atomate2.common.utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
 <li class="toctree-l4"><a class="reference internal" href="atomate2.common.utils.parse_custodian.html">parse_custodian</a></li>
@@ -789,9 +792,11 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="atomate2.forcefields.html">atomate2.forcefields</a><input class="toctree-checkbox" id="toctree-checkbox-92" name="toctree-checkbox-92" role="switch" type="checkbox"/><label for="toctree-checkbox-92"><div class="visually-hidden">Toggle navigation of atomate2.forcefields</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="atomate2.forcefields.MLFF.html">MLFF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="atomate2.forcefields.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="atomate2.forcefields.flows.html">atomate2.forcefields.flows</a><input class="toctree-checkbox" id="toctree-checkbox-93" name="toctree-checkbox-93" role="switch" type="checkbox"/><label for="toctree-checkbox-93"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4 has-children"><a class="reference internal" href="atomate2.forcefields.flows.elastic.html">atomate2.forcefields.flows.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-94" name="toctree-checkbox-94" role="switch" type="checkbox"/><label for="toctree-checkbox-94"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="atomate2.forcefields.flows.elastic.ElasticMaker.html">ElasticMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="atomate2.forcefields.flows.elastic.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="atomate2.forcefields.flows.eos.html">atomate2.forcefields.flows.eos</a><input class="toctree-checkbox" id="toctree-checkbox-95" name="toctree-checkbox-95" role="switch" type="checkbox"/><label for="toctree-checkbox-95"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -1573,7 +1578,7 @@
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="atomate2.common.schemas.phonons.PhononBSDOSDoc.born">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">born</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#atomate2.common.schemas.phonons.PhononBSDOSDoc.born" title="Link to this definition">¶</a></dt>
-<dd><p>born charges as computed from phonopy. Only for symmetrically different atoms</p>
+<dd><p>Born charges as computed from phonopy. Only for symmetrically different atoms</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -1643,7 +1648,7 @@ primitive cells and symmetry in phonopy and pymatgen</p></li>
 <li><p><strong>displacement_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>]</em>) – output of the displacement data</p></li>
 <li><p><strong>total_dft_energy</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – total energy in eV per cell</p></li>
 <li><p><strong>epsilon_static</strong> (<em>Matrix3D</em>) – The high-frequency dielectric constant</p></li>
-<li><p><strong>born</strong> (<em>Matrix3D</em>) – born charges</p></li>
+<li><p><strong>born</strong> (<em>Matrix3D</em>) – Born charges</p></li>
 <li><p><strong>**kwargs</strong> – additional arguments</p></li>
 </ul>
 </dd>
@@ -1776,7 +1781,7 @@ primitive cells and symmetry in phonopy and pymatgen</p></li>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=8bafd125"></script>
+</div><script src="../_static/documentation_options.js?v=2fd7553c"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

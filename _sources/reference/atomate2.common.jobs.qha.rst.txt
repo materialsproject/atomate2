@@ -15,6 +15,7 @@ atomate2.common.jobs.qha
    
       analyze_free_energy
       get_phonon_jobs
+      get_supercell_size
 
 
 
@@ -22,6 +23,7 @@ atomate2.common.jobs.qha
 
    
       
+   
    
    
    

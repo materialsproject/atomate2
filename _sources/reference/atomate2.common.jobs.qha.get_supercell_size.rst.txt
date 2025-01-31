@@ -1,0 +1,6 @@
+get\_supercell\_size
+====================
+
+.. currentmodule:: atomate2.common.jobs.qha
+
+.. autofunction:: get_supercell_size

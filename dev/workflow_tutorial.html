@@ -7,7 +7,7 @@
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>How to develop a new atomate2 workflow - atomate2</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -212,6 +212,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../user/atomate-1-vs-2.html">Atomate 1 vs 2</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../user/codes/index.html">Codes</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Codes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../user/codes/vasp.html">VASP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user/codes/openmm.html">Installing Atomate2 from source with OpenMM</a></li>
 </ul>
 </li>
 </ul>
@@ -576,6 +577,7 @@
 <li class="toctree-l4 has-children"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.html">atomate2.common.jobs.qha</a><input class="toctree-checkbox" id="toctree-checkbox-60" name="toctree-checkbox-60" role="switch" type="checkbox"/><label for="toctree-checkbox-60"><div class="visually-hidden">Toggle navigation of atomate2.common.jobs.qha</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.analyze_free_energy.html">analyze_free_energy</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.get_phonon_jobs.html">get_phonon_jobs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.get_supercell_size.html">get_supercell_size</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
@@ -653,6 +655,7 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../reference/atomate2.common.utils.html">atomate2.common.utils</a><input class="toctree-checkbox" id="toctree-checkbox-72" name="toctree-checkbox-72" role="switch" type="checkbox"/><label for="toctree-checkbox-72"><div class="visually-hidden">Toggle navigation of atomate2.common.utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.parse_custodian.html">parse_custodian</a></li>
@@ -789,9 +792,11 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.html">atomate2.forcefields</a><input class="toctree-checkbox" id="toctree-checkbox-92" name="toctree-checkbox-92" role="switch" type="checkbox"/><label for="toctree-checkbox-92"><div class="visually-hidden">Toggle navigation of atomate2.forcefields</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../reference/atomate2.forcefields.MLFF.html">MLFF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/atomate2.forcefields.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.flows.html">atomate2.forcefields.flows</a><input class="toctree-checkbox" id="toctree-checkbox-93" name="toctree-checkbox-93" role="switch" type="checkbox"/><label for="toctree-checkbox-93"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.flows.elastic.html">atomate2.forcefields.flows.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-94" name="toctree-checkbox-94" role="switch" type="checkbox"/><label for="toctree-checkbox-94"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.forcefields.flows.elastic.ElasticMaker.html">ElasticMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.forcefields.flows.elastic.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.flows.eos.html">atomate2.forcefields.flows.eos</a><input class="toctree-checkbox" id="toctree-checkbox-95" name="toctree-checkbox-95" role="switch" type="checkbox"/><label for="toctree-checkbox-95"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -1492,8 +1497,8 @@
 <h2>Anatomy of an <code class="docutils literal notranslate"><span class="pre">atomate2</span></code> computational workflow (i.e., what do I need to write?)<a class="headerlink" href="#anatomy-of-an-atomate2-computational-workflow-i-e-what-do-i-need-to-write" title="Link to this heading">¶</a></h2>
 <p>Every <code class="docutils literal notranslate"><span class="pre">atomate2</span></code> workflow is an instance of jobflow’s <code class="docutils literal notranslate"><span class="pre">Flow</span></code> class, which is a collection of Job and/or other <code class="docutils literal notranslate"><span class="pre">Flow</span></code> objects. So your end goal is to produce a <code class="docutils literal notranslate"><span class="pre">Flow</span></code>.</p>
 <p>In the context of computational materials science, <code class="docutils literal notranslate"><span class="pre">Flow</span></code> objects are most easily created by a <code class="docutils literal notranslate"><span class="pre">Maker</span></code>, which contains a factory method make() that produces a <code class="docutils literal notranslate"><span class="pre">Flow</span></code>, given certain inputs. Typically, the input to <code class="docutils literal notranslate"><span class="pre">Maker</span></code>.make() includes atomic coordinate information in the form of a <code class="docutils literal notranslate"><span class="pre">pymatgen</span></code> <code class="docutils literal notranslate"><span class="pre">Structure</span></code> or <code class="docutils literal notranslate"><span class="pre">Molecule</span></code> object. So the basic signature looks like this:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ExampleMaker</span><span class="p">(</span><span class="n">Maker</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">:</span> <span class="n">Structure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flow</span><span class="p">:</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ExampleMaker</span><span class="p">(</span><span class="n">Maker</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">:</span> <span class="n">Structure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flow</span><span class="p">:</span>
         <span class="c1"># take the input coordinates and return a `Flow`</span>
         <span class="k">return</span> <span class="n">Flow</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 </pre></div>
@@ -1501,8 +1506,8 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">Maker</span></code> class usually contains most of the calculation parameters and other settings that are required to set up the calculation in the correct way. Much of this logic can be written like normal python functions and then turned into a <code class="docutils literal notranslate"><span class="pre">Job</span></code> via the <code class="docutils literal notranslate"><span class="pre">&#64;job</span></code> decorator.</p>
 <p>One common task encountered in almost any materials science calculation is writing calculation input files to disk so they can be executed by the underlying software (e.g., VASP, Q-Chem, CP2K, etc.). This is preferably done via a <code class="docutils literal notranslate"><span class="pre">pymatgen</span></code> <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> class. <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> is essentially a dict-like container that specifies the files that need to be written, and their contents. Similarly to the way that <code class="docutils literal notranslate"><span class="pre">Maker</span></code> classes generate <code class="docutils literal notranslate"><span class="pre">Flow</span></code>s, <code class="docutils literal notranslate"><span class="pre">InputSet</span></code>s are most easily created by <code class="docutils literal notranslate"><span class="pre">InputGenerator</span></code> classes. <code class="docutils literal notranslate"><span class="pre">InputGenerator</span></code>
 have a method <code class="docutils literal notranslate"><span class="pre">get_input_set()</span></code> that typically takes atomic coordinates (e.g., a <code class="docutils literal notranslate"><span class="pre">Structure</span></code> or <code class="docutils literal notranslate"><span class="pre">Molecule</span></code> object) and produce an <code class="docutils literal notranslate"><span class="pre">InputSet</span></code>, e.g.,</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ExampleInputGenerator</span><span class="p">(</span><span class="n">InputGenerator</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">get_input_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">:</span> <span class="n">Structure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InputSet</span><span class="p">:</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ExampleInputGenerator</span><span class="p">(</span><span class="n">InputGenerator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_input_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">:</span> <span class="n">Structure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InputSet</span><span class="p">:</span>
         <span class="c1"># take the input coordinates, determine appropriate</span>
         <span class="c1"># input file contents, and return an `InputSet`</span>
         <span class="k">return</span> <span class="n">InputSet</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
@@ -1510,12 +1515,12 @@ have a method <code class="docutils literal notranslate"><span class="pre">get_i
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">pymatgen</span></code> already contains <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> for many common codes, so when developing a workflow <code class="docutils literal notranslate"><span class="pre">Maker</span></code> it is convenient to use the <code class="docutils literal notranslate"><span class="pre">InputGenerator</span></code> / <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> to prepare your files. This is done in <code class="docutils literal notranslate"><span class="pre">atomate2</span></code> by making the <code class="docutils literal notranslate"><span class="pre">InputGenerator</span></code> a class parameter, e.g.,</p>
 <p><strong>TODO - the code block below needs refinement. Not exactly sure how write_inputs() fits into a<code class="docutils literal notranslate"><span class="pre">Job</span></code></strong></p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ExampleMaker</span><span class="p">(</span><span class="n">Maker</span><span class="p">):</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ExampleMaker</span><span class="p">(</span><span class="n">Maker</span><span class="p">):</span>
     <span class="n">input_set_generator</span><span class="p">:</span> <span class="n">ExampleInputGenerator</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="n">ExampleInputGenerator</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">:</span> <span class="n">Structure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flow</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coordinates</span><span class="p">:</span> <span class="n">Structure</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flow</span><span class="p">:</span>
         <span class="c1"># create an`InputSet`</span>
         <span class="n">input_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_set_generator</span><span class="o">.</span><span class="n">get_input_set</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
         <span class="c1"># write the input files</span>
@@ -1619,7 +1624,7 @@ have a method <code class="docutils literal notranslate"><span class="pre">get_i
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=8bafd125"></script>
+</div><script src="../_static/documentation_options.js?v=2fd7553c"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

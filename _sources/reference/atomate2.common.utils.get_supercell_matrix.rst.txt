@@ -1,0 +1,6 @@
+get\_supercell\_matrix
+======================
+
+.. currentmodule:: atomate2.common.utils
+
+.. autofunction:: get_supercell_matrix

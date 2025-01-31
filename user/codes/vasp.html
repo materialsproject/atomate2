@@ -3,11 +3,11 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="API reference" href="../../reference/index.html" /><link rel="prev" title="Codes" href="index.html" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Installing Atomate2 from source with OpenMM" href="openmm.html" /><link rel="prev" title="Codes" href="index.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>VASP - atomate2</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -212,6 +212,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../atomate-1-vs-2.html">Atomate 1 vs 2</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Codes</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Codes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">VASP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="openmm.html">Installing Atomate2 from source with OpenMM</a></li>
 </ul>
 </li>
 </ul>
@@ -576,6 +577,7 @@
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.common.jobs.qha.html">atomate2.common.jobs.qha</a><input class="toctree-checkbox" id="toctree-checkbox-60" name="toctree-checkbox-60" role="switch" type="checkbox"/><label for="toctree-checkbox-60"><div class="visually-hidden">Toggle navigation of atomate2.common.jobs.qha</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.qha.analyze_free_energy.html">analyze_free_energy</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.qha.get_phonon_jobs.html">get_phonon_jobs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.qha.get_supercell_size.html">get_supercell_size</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.qha.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
@@ -653,6 +655,7 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.common.utils.html">atomate2.common.utils</a><input class="toctree-checkbox" id="toctree-checkbox-72" name="toctree-checkbox-72" role="switch" type="checkbox"/><label for="toctree-checkbox-72"><div class="visually-hidden">Toggle navigation of atomate2.common.utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.common.utils.parse_custodian.html">parse_custodian</a></li>
@@ -789,9 +792,11 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/atomate2.forcefields.html">atomate2.forcefields</a><input class="toctree-checkbox" id="toctree-checkbox-92" name="toctree-checkbox-92" role="switch" type="checkbox"/><label for="toctree-checkbox-92"><div class="visually-hidden">Toggle navigation of atomate2.forcefields</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../reference/atomate2.forcefields.MLFF.html">MLFF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../reference/atomate2.forcefields.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.html">atomate2.forcefields.flows</a><input class="toctree-checkbox" id="toctree-checkbox-93" name="toctree-checkbox-93" role="switch" type="checkbox"/><label for="toctree-checkbox-93"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.elastic.html">atomate2.forcefields.flows.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-94" name="toctree-checkbox-94" role="switch" type="checkbox"/><label for="toctree-checkbox-94"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.elastic.ElasticMaker.html">ElasticMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.elastic.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.eos.html">atomate2.forcefields.flows.eos</a><input class="toctree-checkbox" id="toctree-checkbox-95" name="toctree-checkbox-95" role="switch" type="checkbox"/><label for="toctree-checkbox-95"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -1544,11 +1549,11 @@ NCORE, KPAR etc.</p></li>
 <tbody>
 <tr class="row-even"><td><p><a class="reference internal" href="#static">Static</a></p></td>
 <td><p>job</p></td>
-<td><p><a class="reference internal" href="../../reference/atomate2.aims.jobs.core.StaticMaker.html#atomate2.aims.jobs.core.StaticMaker" title="atomate2.aims.jobs.core.StaticMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StaticMaker</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../reference/atomate2.vasp.jobs.core.StaticMaker.html#atomate2.vasp.jobs.core.StaticMaker" title="atomate2.vasp.jobs.core.StaticMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StaticMaker</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#relax">Relax</a></p></td>
 <td><p>job</p></td>
-<td><p><a class="reference internal" href="../../reference/atomate2.aims.jobs.core.RelaxMaker.html#atomate2.aims.jobs.core.RelaxMaker" title="atomate2.aims.jobs.core.RelaxMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RelaxMaker</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../reference/atomate2.vasp.jobs.core.RelaxMaker.html#atomate2.vasp.jobs.core.RelaxMaker" title="atomate2.vasp.jobs.core.RelaxMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RelaxMaker</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#tight-relax">Tight Relax</a></p></td>
 <td><p>job</p></td>
@@ -1560,7 +1565,7 @@ NCORE, KPAR etc.</p></li>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#transmuter">Transmuter</a></p></td>
 <td><p>job</p></td>
-<td><p><a class="reference internal" href="../../reference/atomate2.cp2k.jobs.core.TransmuterMaker.html#atomate2.cp2k.jobs.core.TransmuterMaker" title="atomate2.cp2k.jobs.core.TransmuterMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransmuterMaker</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../reference/atomate2.vasp.jobs.core.TransmuterMaker.html#atomate2.vasp.jobs.core.TransmuterMaker" title="atomate2.vasp.jobs.core.TransmuterMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransmuterMaker</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#hse06-static">HSE06 Static</a></p></td>
 <td><p>job</p></td>
@@ -1576,11 +1581,11 @@ NCORE, KPAR etc.</p></li>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#double-relax">Double Relax</a></p></td>
 <td><p>flow</p></td>
-<td><p><a class="reference internal" href="../../reference/atomate2.aims.flows.core.DoubleRelaxMaker.html#atomate2.aims.flows.core.DoubleRelaxMaker" title="atomate2.aims.flows.core.DoubleRelaxMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DoubleRelaxMaker</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../reference/atomate2.vasp.flows.core.DoubleRelaxMaker.html#atomate2.vasp.flows.core.DoubleRelaxMaker" title="atomate2.vasp.flows.core.DoubleRelaxMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DoubleRelaxMaker</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#band-structure">Band Structure</a></p></td>
 <td><p>flow</p></td>
-<td><p><a class="reference internal" href="../../reference/atomate2.aims.jobs.core.BandStructureMaker.html#atomate2.aims.jobs.core.BandStructureMaker" title="atomate2.aims.jobs.core.BandStructureMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BandStructureMaker</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../reference/atomate2.vasp.flows.core.BandStructureMaker.html#atomate2.vasp.flows.core.BandStructureMaker" title="atomate2.vasp.flows.core.BandStructureMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BandStructureMaker</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#uniform-band-structure">Uniform Band Structure</a></p></td>
 <td><p>flow</p></td>
@@ -1604,11 +1609,11 @@ NCORE, KPAR etc.</p></li>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#relax-and-band-structure">Relax and Band Structure</a></p></td>
 <td><p>flow</p></td>
-<td><p><a class="reference internal" href="../../reference/atomate2.cp2k.flows.core.RelaxBandStructureMaker.html#atomate2.cp2k.flows.core.RelaxBandStructureMaker" title="atomate2.cp2k.flows.core.RelaxBandStructureMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RelaxBandStructureMaker</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../reference/atomate2.vasp.flows.core.RelaxBandStructureMaker.html#atomate2.vasp.flows.core.RelaxBandStructureMaker" title="atomate2.vasp.flows.core.RelaxBandStructureMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RelaxBandStructureMaker</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#elastic-constant">Elastic Constant</a></p></td>
 <td><p>flow</p></td>
-<td><p><a class="reference internal" href="../../reference/atomate2.aims.flows.elastic.ElasticMaker.html#atomate2.aims.flows.elastic.ElasticMaker" title="atomate2.aims.flows.elastic.ElasticMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticMaker</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../reference/atomate2.vasp.flows.elastic.ElasticMaker.html#atomate2.vasp.flows.elastic.ElasticMaker" title="atomate2.vasp.flows.elastic.ElasticMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElasticMaker</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#optics">Optics</a></p></td>
 <td><p>flow</p></td>
@@ -1620,7 +1625,7 @@ NCORE, KPAR etc.</p></li>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#phonons">Phonons</a></p></td>
 <td><p>flow</p></td>
-<td><p><a class="reference internal" href="../../reference/atomate2.aims.flows.phonons.PhononMaker.html#atomate2.aims.flows.phonons.PhononMaker" title="atomate2.aims.flows.phonons.PhononMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PhononMaker</span></code></a></p></td>
+<td><p><a class="reference internal" href="../../reference/atomate2.vasp.flows.phonons.PhononMaker.html#atomate2.vasp.flows.phonons.PhononMaker" title="atomate2.vasp.flows.phonons.PhononMaker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PhononMaker</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#lobster">Lobster</a></p></td>
 <td><p>flow</p></td>
@@ -1846,9 +1851,40 @@ Afterwards, equation of state fits are performed with phonopy.</p>
 </section>
 <section id="equation-of-state-workflow">
 <h3>Equation of State Workflow<a class="headerlink" href="#equation-of-state-workflow" title="Link to this heading">¶</a></h3>
-<p>An equation of state workflow is implemented. First, a tight relaxation is performed. Subsequently, several optimizations at different constant
+<p>An equation of state (EOS) workflow is implemented. First, a tight relaxation is performed. Subsequently, several optimizations at different constant
 volumes are performed. Additional static calculations might be performed afterwards to arrive at more
-accurate energies. Then, an equation of state fit is performed with pymatgen.</p>
+accurate energies. Then, an EOS fit is performed with pymatgen.</p>
+<p>The output of the workflow is, by default, a dictionary containing the energy and volume data generated with DFT, in addition to fitted equation of state parameters for all models currently available in pymatgen (Murnaghan, Birch-Murnaghan, Poirier-Tarantola, and Vinet/UBER).</p>
+<section id="materials-project-compliant-workflows">
+<h4>Materials Project-compliant workflows<a class="headerlink" href="#materials-project-compliant-workflows" title="Link to this heading">¶</a></h4>
+<p>If the user wishes to reproduce the EOS data currently in the Materials Project, they should use the atomate 1-compatible <code class="docutils literal notranslate"><span class="pre">MPLegacy</span></code>-prefixed flows (and jobs and input sets). For performing updated PBE-GGA EOS flows with Materials Project-compliant parameters, the user should use the <code class="docutils literal notranslate"><span class="pre">MPGGA</span></code>-prefixed classes. Lastly, the <code class="docutils literal notranslate"><span class="pre">MPMetaGGA</span></code>-prefixed classes allow the user to perform Materials Project-compliant r<sup>2</sup>SCAN EOS workflows.</p>
+<p><strong>Summary:</strong> For Materials Project-compliant equation of state (EOS) workflows, the user should use:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPGGAEosMaker</span></code> for faster, lower-accuracy calculation with the PBE-GGA</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPMetaGGAEosMaker</span></code> for higher-accuracy but slower calculations with the r<sup>2</sup>SCAN meta-GGA</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPLegacyEosMaker</span></code> for consistency with the PBE-GGA data currently distributed by the Materials Project</p></li>
+</ul>
+</section>
+<section id="implementation-details">
+<h4>Implementation details<a class="headerlink" href="#implementation-details" title="Link to this heading">¶</a></h4>
+<p>The Materials Project-compliant EOS flows, jobs, and sets currently use three prefixes to indicate their usage.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPGGA</span></code>: MP-compatible PBE-GGA (current)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPMetaGGA</span></code>: MP-compatible r<sup>2</sup>SCAN meta-GGA (current)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPLegacy</span></code>: a reproduction of the atomate 1 implementation, described in
+K. Latimer, S. Dwaraknath, K. Mathew, D. Winston, and K.A. Persson, npj Comput. Materials <strong>vol. 4</strong>, p. 40 (2018), DOI: 10.1038/s41524-018-0091-x</p>
+<p>For reference, the original atomate workflows can be found here:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/hackingmaterials/atomate/blob/main/atomate/vasp/workflows/presets/core.py#L564"><code class="docutils literal notranslate"><span class="pre">atomate.vasp.workflows.base.wf_bulk_modulus</span></code></a></p></li>
+<li><p><a class="reference external" href="https://github.com/hackingmaterials/atomate/blob/main/atomate/vasp/workflows/base/bulk_modulus.py#L21"><code class="docutils literal notranslate"><span class="pre">atomate.vasp.workflows.base.bulk_modulus.get_wf_bulk_modulus</span></code></a></p></li>
+</ul>
+</li>
+</ul>
+<p>In the original atomate 1 workflow and the atomate2 <code class="docutils literal notranslate"><span class="pre">MPLegacyEosMaker</span></code>, the k-point density is <strong>extremely</strong> high. This is despite the convergence tests in the supplementary information
+of Latimer <em>et al.</em> not showing strong sensitivity when the “number of <em><strong>k</strong></em>-points per reciprocal atom” (KPPRA) is at least 3,000.</p>
+<p>To make the <code class="docutils literal notranslate"><span class="pre">MPGGAEosMaker</span></code> and <code class="docutils literal notranslate"><span class="pre">MPMetaGGAEosMaker</span></code> more tractable for high-throughput jobs, their input sets (<code class="docutils literal notranslate"><span class="pre">MPGGAEos{Relax,Static}SetGenerator</span></code> and <code class="docutils literal notranslate"><span class="pre">MPMetaGGAEos{Relax,Static}SetGenerator</span></code> respectively) still use the highest <em><strong>k</strong></em>-point density in standard Materials Project jobs, <code class="docutils literal notranslate"><span class="pre">KSPACING</span> <span class="pre">=</span> <span class="pre">0.22</span></code> Å<sup>-1</sup>, which is comparable to KPPRA = 3,000.</p>
+<p>This choice is justified by Fig. S12 of the supplemantary information of Latimer <em>et al.</em>, which shows that all fitted EOS parameters (equilibrium energy <span class="math notranslate nohighlight">\(E_0\)</span>, equilibrium volume <span class="math notranslate nohighlight">\(V_0\)</span>, bulk modulus <span class="math notranslate nohighlight">\(B_0\)</span>, and bulk modulus pressure derivative <span class="math notranslate nohighlight">\(B_1\)</span>) do not deviate by more than 1.5%, and typically by less than 0.1%, from well-converged values when KPPRA = 3,000.</p>
+</section>
 </section>
 <section id="lobster">
 <h3>LOBSTER<a class="headerlink" href="#lobster" title="Link to this heading">¶</a></h3>
@@ -1871,12 +1907,12 @@ instead of VaspLobsterMaker. Rest of the things to execute the workflow stays sa
 shown below.</p>
 </div>
 <p>The corresponding flow could, for example, be started with the following code:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jobflow</span> <span class="kn">import</span> <span class="n">SETTINGS</span>
-<span class="kn">from</span> <span class="nn">jobflow</span> <span class="kn">import</span> <span class="n">run_locally</span>
-<span class="kn">from</span> <span class="nn">pymatgen.core.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jobflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">SETTINGS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jobflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_locally</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
 
-<span class="kn">from</span> <span class="nn">atomate2.vasp.flows.lobster</span> <span class="kn">import</span> <span class="n">VaspLobsterMaker</span>
-<span class="kn">from</span> <span class="nn">atomate2.vasp.powerups</span> <span class="kn">import</span> <span class="n">update_user_incar_settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.flows.lobster</span><span class="w"> </span><span class="kn">import</span> <span class="n">VaspLobsterMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.powerups</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_user_incar_settings</span>
 
 <span class="n">structure</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span>
     <span class="n">lattice</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
@@ -1893,14 +1929,14 @@ shown below.</p>
 </pre></div>
 </div>
 <p>It is, however,  computationally very beneficial to define two different types of job scripts for the VASP and Lobster runs, as VASP and Lobster runs are parallelized differently (MPI vs. OpenMP).
-<a class="reference external" href="https://github.com/materialsproject/fireworks">FireWorks</a> allows to run the VASP and Lobster jobs with different job scripts. Please check out the <a class="reference external" href="https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs">jobflow documentation on FireWorks</a> for more information.</p>
+<a class="reference external" href="https://github.com/materialsproject/fireworks">FireWorks</a> allows one to run the VASP and Lobster jobs with different job scripts. Please check out the <a class="reference external" href="https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs">jobflow documentation on FireWorks</a> for more information.</p>
 <p>Specifically, you might want to change the <code class="docutils literal notranslate"><span class="pre">_fworker</span></code> for the LOBSTER runs and define a separate <code class="docutils literal notranslate"><span class="pre">lobster</span></code> worker within FireWorks:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="kn">import</span> <span class="n">LaunchPad</span>
-<span class="kn">from</span> <span class="nn">jobflow.managers.fireworks</span> <span class="kn">import</span> <span class="n">flow_to_workflow</span>
-<span class="kn">from</span> <span class="nn">pymatgen.core.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">LaunchPad</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jobflow.managers.fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">flow_to_workflow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
 
-<span class="kn">from</span> <span class="nn">atomate2.vasp.flows.lobster</span> <span class="kn">import</span> <span class="n">VaspLobsterMaker</span>
-<span class="kn">from</span> <span class="nn">atomate2.vasp.powerups</span> <span class="kn">import</span> <span class="n">update_user_incar_settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.flows.lobster</span><span class="w"> </span><span class="kn">import</span> <span class="n">VaspLobsterMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.powerups</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_user_incar_settings</span>
 
 <span class="n">structure</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span>
     <span class="n">lattice</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
@@ -1927,9 +1963,9 @@ shown below.</p>
 </pre></div>
 </div>
 <p>Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jobflow</span> <span class="kn">import</span> <span class="n">SETTINGS</span>
-<span class="kn">from</span> <span class="nn">pymatgen.electronic_structure.cohp</span> <span class="kn">import</span> <span class="n">Cohp</span>
-<span class="kn">from</span> <span class="nn">pymatgen.electronic_structure.plotter</span> <span class="kn">import</span> <span class="n">CohpPlotter</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jobflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">SETTINGS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.electronic_structure.cohp</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cohp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.electronic_structure.plotter</span><span class="w"> </span><span class="kn">import</span> <span class="n">CohpPlotter</span>
 
 <span class="n">store</span> <span class="o">=</span> <span class="n">SETTINGS</span><span class="o">.</span><span class="n">JOB_STORE</span>
 <span class="n">store</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
@@ -2000,8 +2036,8 @@ python<span class="w"> </span>xyz.py
 <p>The inputs for a calculation can be modified in several ways. Every VASP job
 takes a <a class="reference internal" href="../../reference/atomate2.vasp.sets.base.VaspInputGenerator.html#atomate2.vasp.sets.base.VaspInputGenerator" title="atomate2.vasp.sets.base.VaspInputGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VaspInputGenerator</span></code></a> as an argument (<code class="docutils literal notranslate"><span class="pre">input_set_generator</span></code>). One
 option is to specify an alternative input set generator:</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">atomate2.vasp.sets.core</span> <span class="kn">import</span> <span class="n">StaticSetGenerator</span>
-<span class="kn">from</span> <span class="nn">atomate2.vasp.jobs.core</span> <span class="kn">import</span> <span class="n">StaticMaker</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.sets.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticSetGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticMaker</span>
 
 <span class="c1"># create a custom input generator set with a larger ENCUT</span>
 <span class="n">my_custom_set</span> <span class="o">=</span> <span class="n">StaticSetGenerator</span><span class="p">(</span><span class="n">user_incar_settings</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ENCUT&quot;</span><span class="p">:</span> <span class="mi">800</span><span class="p">})</span>
@@ -2024,11 +2060,12 @@ written:</p>
 tedious to update the input sets for each job individually. Atomate2 provides helper
 functions called “powerups” that can apply settings updates to all VASP jobs in a flow.
 These powerups also contain filters for the name of the job and the maker used to
-generate them.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">atomate2.vasp.powerups</span> <span class="kn">import</span> <span class="n">update_user_incar_settings</span>
-<span class="kn">from</span> <span class="nn">atomate2.vasp.flows.elastic</span> <span class="kn">import</span> <span class="n">ElasticMaker</span>
-<span class="kn">from</span> <span class="nn">atomate2.vasp.flows.core</span> <span class="kn">import</span> <span class="n">DoubleRelaxMaker</span>
-<span class="kn">from</span> <span class="nn">atomate2.vasp.jobs.elastic</span> <span class="kn">import</span> <span class="n">ElasticRelaxMaker</span>
+generate them. These functions will apply updates <em>only</em> to VASP jobs, including those
+created dynamically - all other jobs in a flow will not be modified.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.powerups</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_user_incar_settings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.flows.elastic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElasticMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.flows.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">DoubleRelaxMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.elastic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElasticRelaxMaker</span>
 
 <span class="c1"># make a flow to calculate the elastic constants</span>
 <span class="n">elastic_flow</span> <span class="o">=</span> <span class="n">ElasticMaker</span><span class="p">()</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">structure</span><span class="p">)</span>
@@ -2068,10 +2105,10 @@ from <code class="xref py py-obj docutils literal notranslate"><span class="pre"
 define a custom <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file that contains a different base set of VASP settings to use.
 An example of how this can be done is shown below for a representative static
 calculation.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">atomate2.vasp.sets.core</span> <span class="kn">import</span> <span class="n">StaticSetGenerator</span>
-<span class="kn">from</span> <span class="nn">atomate2.vasp.jobs.core</span> <span class="kn">import</span> <span class="n">StaticMaker</span>
-<span class="kn">from</span> <span class="nn">atomate2.vasp.jobs.base</span> <span class="kn">import</span> <span class="n">VaspInputGenerator</span>
-<span class="kn">from</span> <span class="nn">monty.serialization</span> <span class="kn">import</span> <span class="n">loadfn</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.sets.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticSetGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">VaspInputGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">monty.serialization</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadfn</span>
 
 <span class="c1"># read in a custom config file</span>
 <span class="n">user_config_dict</span> <span class="o">=</span> <span class="n">loadfn</span><span class="p">(</span><span class="s2">&quot;/path/to/my/CustomVaspSet.yaml&quot;</span><span class="p">)</span>
@@ -2112,9 +2149,9 @@ density) from the previous calculation. This can be achieved by setting both the
 </ol>
 <p>These two examples are illustrated in the code below, where we chain a relaxation
 calculation and a static calculation.</p>
-<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jobflow</span> <span class="kn">import</span> <span class="n">Flow</span>
-<span class="kn">from</span> <span class="nn">atomate2.vasp.jobs.core</span> <span class="kn">import</span> <span class="n">RelaxMaker</span><span class="p">,</span> <span class="n">StaticMaker</span>
-<span class="kn">from</span> <span class="nn">pymatgen.core.structure</span> <span class="kn">import</span> <span class="n">Structure</span>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jobflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">RelaxMaker</span><span class="p">,</span> <span class="n">StaticMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
 
 <span class="n">si_structure</span> <span class="o">=</span> <span class="n">Structure</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;Si.cif&quot;</span><span class="p">)</span>
 
@@ -2141,12 +2178,12 @@ calculation and a static calculation.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../../reference/index.html">
+          <a class="next-page" href="openmm.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">API reference</div>
+                <div class="title">Installing Atomate2 from source with OpenMM</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -2222,7 +2259,11 @@ calculation and a static calculation.</p>
 <li><a class="reference internal" href="#phonons">Phonons</a></li>
 <li><a class="reference internal" href="#gruneisen-parameter-workflow">Gruneisen parameter workflow</a></li>
 <li><a class="reference internal" href="#quasi-harmonic-workflow">Quasi-harmonic Workflow</a></li>
-<li><a class="reference internal" href="#equation-of-state-workflow">Equation of State Workflow</a></li>
+<li><a class="reference internal" href="#equation-of-state-workflow">Equation of State Workflow</a><ul>
+<li><a class="reference internal" href="#materials-project-compliant-workflows">Materials Project-compliant workflows</a></li>
+<li><a class="reference internal" href="#implementation-details">Implementation details</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#lobster">LOBSTER</a><ul>
 <li><a class="reference internal" href="#running-the-lobster-workflow-without-database-and-with-one-job-script-only">Running the LOBSTER workflow without database and with one job script only</a></li>
 </ul>
@@ -2242,12 +2283,14 @@ calculation and a static calculation.</p>
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=8bafd125"></script>
+</div><script src="../../_static/documentation_options.js?v=2fd7553c"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>window.MathJax = {"tex": {"macros": {"N": "\\mathbb{N}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"]}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </body>
 </html>

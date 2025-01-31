@@ -13,6 +13,7 @@ atomate2.common.utils
       :toctree:
       :nosignatures:
    
+      get_supercell_matrix
       get_transformations
       parse_additional_json
       parse_custodian
@@ -24,6 +25,7 @@ atomate2.common.utils
 
    
       
+   
    
    
    

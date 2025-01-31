@@ -7,7 +7,7 @@
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>Key concepts in atomate2: Job &amp; Flow Makers, InputSet, TaskDocument, and Builder - atomate2</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -212,6 +212,7 @@
 <li class="toctree-l1"><a class="reference internal" href="atomate-1-vs-2.html">Atomate 1 vs 2</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="codes/index.html">Codes</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Codes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="codes/vasp.html">VASP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="codes/openmm.html">Installing Atomate2 from source with OpenMM</a></li>
 </ul>
 </li>
 </ul>
@@ -576,6 +577,7 @@
 <li class="toctree-l4 has-children"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.html">atomate2.common.jobs.qha</a><input class="toctree-checkbox" id="toctree-checkbox-60" name="toctree-checkbox-60" role="switch" type="checkbox"/><label for="toctree-checkbox-60"><div class="visually-hidden">Toggle navigation of atomate2.common.jobs.qha</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.analyze_free_energy.html">analyze_free_energy</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.get_phonon_jobs.html">get_phonon_jobs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.get_supercell_size.html">get_supercell_size</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.common.jobs.qha.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
@@ -653,6 +655,7 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../reference/atomate2.common.utils.html">atomate2.common.utils</a><input class="toctree-checkbox" id="toctree-checkbox-72" name="toctree-checkbox-72" role="switch" type="checkbox"/><label for="toctree-checkbox-72"><div class="visually-hidden">Toggle navigation of atomate2.common.utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.get_supercell_matrix.html">get_supercell_matrix</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.get_transformations.html">get_transformations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.parse_additional_json.html">parse_additional_json</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../reference/atomate2.common.utils.parse_custodian.html">parse_custodian</a></li>
@@ -789,9 +792,11 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.html">atomate2.forcefields</a><input class="toctree-checkbox" id="toctree-checkbox-92" name="toctree-checkbox-92" role="switch" type="checkbox"/><label for="toctree-checkbox-92"><div class="visually-hidden">Toggle navigation of atomate2.forcefields</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../reference/atomate2.forcefields.MLFF.html">MLFF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reference/atomate2.forcefields.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.flows.html">atomate2.forcefields.flows</a><input class="toctree-checkbox" id="toctree-checkbox-93" name="toctree-checkbox-93" role="switch" type="checkbox"/><label for="toctree-checkbox-93"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.flows.elastic.html">atomate2.forcefields.flows.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-94" name="toctree-checkbox-94" role="switch" type="checkbox"/><label for="toctree-checkbox-94"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.forcefields.flows.elastic.ElasticMaker.html">ElasticMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../reference/atomate2.forcefields.flows.elastic.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../reference/atomate2.forcefields.flows.eos.html">atomate2.forcefields.flows.eos</a><input class="toctree-checkbox" id="toctree-checkbox-95" name="toctree-checkbox-95" role="switch" type="checkbox"/><label for="toctree-checkbox-95"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -1511,16 +1516,16 @@ Given that the job output data is stored in a JSON serializable dict format, it 
 <p>The atomate2 <code class="docutils literal notranslate"><span class="pre">Job</span></code> and <code class="docutils literal notranslate"><span class="pre">Flow</span></code> makers are both dataclasses that inherit from the <code class="docutils literal notranslate"><span class="pre">Maker</span></code> <a class="reference external" href="https://github.com/materialsproject/jobflow/blob/main/src/jobflow/core/maker.py">jobflow</a> dataclass.
 The <code class="docutils literal notranslate"><span class="pre">Maker</span></code> class from jobflow is a base class for constructing the aforementioned <code class="docutils literal notranslate"><span class="pre">Job</span></code> and <code class="docutils literal notranslate"><span class="pre">Flow</span></code> objects. It has two main functionalities, that are vital for any inheriting job or flow maker: the <code class="docutils literal notranslate"><span class="pre">make</span></code> function and the functionality to update keyword arguments (kwargs).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Maker</span><span class="p">(</span><span class="n">MSONable</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Maker</span><span class="p">(</span><span class="n">MSONable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base maker (factory) class for constructing :obj:`Job` and :obj:`Flow` objects.</span>
 <span class="sd">    [...]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jobflow</span><span class="o">.</span><span class="n">Flow</span> <span class="o">|</span> <span class="n">jobflow</span><span class="o">.</span><span class="n">Job</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jobflow</span><span class="o">.</span><span class="n">Flow</span> <span class="o">|</span> <span class="n">jobflow</span><span class="o">.</span><span class="n">Job</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Make a job or a flow - must be overridden with a concrete implementation.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
     <span class="p">[</span><span class="o">...</span><span class="p">]</span>
-    <span class="k">def</span> <span class="nf">update_kwargs</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_kwargs</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
 </pre></div>
 </div>
 <p>When implementing a new job or flow maker, it’s crucial to take care of the functions that raise an <code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code>. Functions like the <code class="docutils literal notranslate"><span class="pre">make</span></code> function have to be overridden for each specific job or flow maker with its own specific functionalities.</p>
@@ -1529,7 +1534,7 @@ The <code class="docutils literal notranslate"><span class="pre">Maker</span></c
 <h3>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h3>
 <p>Let’s have a closer look at the <code class="docutils literal notranslate"><span class="pre">LobsterMaker</span></code> as an example for a <code class="docutils literal notranslate"><span class="pre">Job</span> <span class="pre">Maker</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">LobsterMaker</span><span class="p">(</span><span class="n">Maker</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LobsterMaker</span><span class="p">(</span><span class="n">Maker</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    LOBSTER job maker.</span>
 <span class="sd">    [...]</span>
@@ -1538,7 +1543,7 @@ The <code class="docutils literal notranslate"><span class="pre">Maker</span></c
     <span class="p">[</span><span class="o">...</span><span class="p">]</span>
 
     <span class="nd">@job</span><span class="p">(</span><span class="n">output_schema</span><span class="o">=</span><span class="n">LobsterTaskDocument</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="n">CompleteCohp</span><span class="p">,</span> <span class="n">LobsterCompleteDos</span><span class="p">])</span>
-    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">wavefunction_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">basis_dict</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1554,7 +1559,7 @@ As the name “job maker” implies, this maker will then create jobs to execute
 <p>What changes need to be made to turn a maker into a <code class="docutils literal notranslate"><span class="pre">Flow</span> <span class="pre">Maker</span></code>? In that case, the <code class="docutils literal notranslate"><span class="pre">make</span></code> function needs to be adjusted to return a <code class="docutils literal notranslate"><span class="pre">Flow</span></code> object instead of a task document.
 As an example we take the <code class="docutils literal notranslate"><span class="pre">BasePhononMaker</span></code> (that can be used in combination with VASP or the various (machine-learned) force fields):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">BasePhononMaker</span><span class="p">(</span><span class="n">Maker</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BasePhononMaker</span><span class="p">(</span><span class="n">Maker</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Maker to calculate harmonic phonons with a DFT/force field code and Phonopy.</span>
 
@@ -1564,7 +1569,7 @@ As an example we take the <code class="docutils literal notranslate"><span class
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;phonon&quot;</span>
     <span class="p">[</span><span class="o">...</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flow</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flow</span><span class="p">:</span>
 </pre></div>
 </div>
 <p>This maker will return a flow that provides all the necessary steps and subroutines that are needed to complete the phonon calculations.
@@ -1584,13 +1589,13 @@ There are predefined “recipes” for generating <code class="docutils literal 
 <section id="id2">
 <h2>Technical Aspects<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">InputSet</span></code> objects posses the <code class="docutils literal notranslate"><span class="pre">write_input()</span></code> method that is used to write all the necessary files.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">InputSet</span><span class="p">(</span><span class="n">MSONable</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">InputSet</span><span class="p">(</span><span class="n">MSONable</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract base class for all InputSet classes. InputSet are dict-like</span>
 <span class="sd">    containers for all calculation input data.</span>
 <span class="sd">    [...]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">write_input</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_input</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
         <span class="n">make_dir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -1603,7 +1608,7 @@ There are predefined “recipes” for generating <code class="docutils literal 
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_directory</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_directory</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct an InputSet from a directory of one or more files.</span>
 <span class="sd">        [...]</span>
@@ -1616,27 +1621,27 @@ There are predefined “recipes” for generating <code class="docutils literal 
 <section id="id3">
 <h2>Examples<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h2>
 <p>Diving into the specifics for the <code class="docutils literal notranslate"><span class="pre">VaspInputSet</span></code> will demonstrate you some important features of an input set.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">VaspInputSet</span><span class="p">(</span><span class="n">InputSet</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">VaspInputSet</span><span class="p">(</span><span class="n">InputSet</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to represent a set of VASP inputs.</span>
 <span class="sd">    [...]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">write_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">,</span> <span class="n">potcar_spec</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">...</span><span class="p">,</span> <span class="n">potcar_spec</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Write VASP input files to a directory.</span>
 <span class="sd">        [...]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">from_directory</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VaspInputSet</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_directory</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VaspInputSet</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a set of VASP inputs from a directory.</span>
 <span class="sd">        [...]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Whether the input set is valid.</span>
 <span class="sd">        [...]</span>
@@ -1659,7 +1664,7 @@ Task documents are a very practical way to transfer (input and output) data betw
 <section id="id5">
 <h2>Technical Aspects<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
 <p>In atomate2, the <code class="docutils literal notranslate"><span class="pre">TaskDocument</span></code> objects inherit from the <a class="reference external" href="https://github.com/materialsproject/emmet/">emmet</a> classes <code class="docutils literal notranslate"><span class="pre">StructureMetadata</span></code> or <code class="docutils literal notranslate"><span class="pre">MoleculeMetadata</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">StructureMetadata</span><span class="p">(</span><span class="n">EmmetBaseModel</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">StructureMetadata</span><span class="p">(</span><span class="n">EmmetBaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Mix-in class for structure metadata.&quot;&quot;&quot;</span>
 </pre></div>
 </div>
@@ -1668,7 +1673,7 @@ Task documents are a very practical way to transfer (input and output) data betw
 <section id="id6">
 <h2>Examples<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
 <p>Let’s take the <code class="docutils literal notranslate"><span class="pre">ForceFieldTaskDocument</span></code> as an illustrative example for task documents, inheriting from the <code class="docutils literal notranslate"><span class="pre">StructureMetadata</span></code> class.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ForceFieldTaskDocument</span><span class="p">(</span><span class="n">StructureMetadata</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ForceFieldTaskDocument</span><span class="p">(</span><span class="n">StructureMetadata</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Document containing information on structure relaxation using a force field.&quot;&quot;&quot;</span>
 
     <span class="n">structure</span><span class="p">:</span> <span class="n">Structure</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -1700,7 +1705,7 @@ Task documents are a very practical way to transfer (input and output) data betw
 </div>
 <p>This task document provides the user with all information concerning a force field-based structure relaxation calculation. This includes the resulting relaxed structure, and force field-specific metadata like the force field name or version among other things.</p>
 <p>Next, we will have a look at the CP2K TaskDoc that is also inheriting from <code class="docutils literal notranslate"><span class="pre">MoleculeMetadata</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TaskDocument</span><span class="p">(</span><span class="n">StructureMetadata</span><span class="p">,</span> <span class="n">MoleculeMetadata</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TaskDocument</span><span class="p">(</span><span class="n">StructureMetadata</span><span class="p">,</span> <span class="n">MoleculeMetadata</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Definition of CP2K task document.&quot;&quot;&quot;</span>
 
     <span class="n">dir_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -1745,7 +1750,7 @@ Task documents are a very practical way to transfer (input and output) data betw
 <section id="id8">
 <h2>Technical Aspects<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">Builder</span></code> and <code class="docutils literal notranslate"><span class="pre">Store</span></code> are the core classes of maggma and give the user tools to build data pipelines from different types of data sources.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Builder</span><span class="p">(</span><span class="n">MSONable</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Builder</span><span class="p">(</span><span class="n">MSONable</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base Builder class</span>
 <span class="sd">    At minimum this class should implement:</span>
@@ -1758,12 +1763,12 @@ Task documents are a very practical way to transfer (input and output) data betw
     <span class="p">[</span><span class="o">...</span><span class="p">]</span>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">get_items</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_items</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">update_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">Builder</span></code> class has three main functionalities that are <code class="docutils literal notranslate"><span class="pre">get_items</span></code> to retrieve data from the source store(s), <code class="docutils literal notranslate"><span class="pre">process_item</span></code> to handle the input items and create an output document to be then added to the target store(s) by <code class="docutils literal notranslate"><span class="pre">update_target</span></code>.</p>
@@ -1771,22 +1776,22 @@ Task documents are a very practical way to transfer (input and output) data betw
 <section id="id9">
 <h2>Examples<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h2>
 <p>Atomate2 supplies us with the <code class="docutils literal notranslate"><span class="pre">ElasticBuilder</span></code> that is a handy example for a <code class="docutils literal notranslate"><span class="pre">Builder</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ElasticBuilder</span><span class="p">(</span><span class="n">Builder</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ElasticBuilder</span><span class="p">(</span><span class="n">Builder</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The elastic builder compiles deformation tasks into an elastic document.</span>
 <span class="sd">    [...]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">get_items</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_items</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get all items to process into elastic documents.</span>
 <span class="sd">        [...]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tasks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ElasticDocument</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tasks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">ElasticDocument</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process deformation tasks into elasticity documents.</span>
 <span class="sd">        [...]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">update_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ElasticDocument</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ElasticDocument</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Insert new elastic documents into the elasticity store.</span>
 <span class="sd">        [...]</span>
@@ -1840,7 +1845,7 @@ Finally, the builder compiles the processed items into an ElasticDocument from t
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=8bafd125"></script>
+</div><script src="../_static/documentation_options.js?v=2fd7553c"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
