@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 from jobflow import Flow, Maker
 from monty.dev import requires
 
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 from atomate2.lobster.jobs import LobsterMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker, UniformBandStructureMaker
 from atomate2.vasp.jobs.core import NonSCFMaker, RelaxMaker, StaticMaker
@@ -67,13 +68,13 @@ LOBSTER_UNIFORM_MAKER = UniformBandStructureMaker(
 @dataclass
 class VaspLobsterMaker(Maker):
     """
-    Maker to perform a Lobster computation.
+    Maker to perform VASP and LOBSTER computations.
 
     The calculations performed are:
 
     1. Optional optimization.
     2. Static calculation with ISYM=0.
-    3. Several Lobster computations testing several basis sets are performed.
+    3. Several LOBSTER computations testing several basis sets are performed.
 
     .. Note::
 
@@ -186,3 +187,52 @@ class VaspLobsterMaker(Maker):
             jobs.append(delete_wavecars)
 
         return Flow(jobs, output=lobster_jobs.output)
+
+
+@dataclass
+class MlffVaspLobsterMaker(VaspLobsterMaker):
+    """
+    Maker to perform MLFF, VASP and LOBSTER computations.
+
+    The calculations performed are:
+
+    1. MLFF based optimization.
+    2. Static calculation with ISYM=0 (to generate a WAVECAR file).
+    3. Several LOBSTER computations testing several basis sets are performed.
+
+    .. Note::
+
+        The basis sets can only be changed with yaml files.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker : .ForceFieldRelaxMaker
+        A MLFF based maker to perform a relaxation on the bulk.
+    lobster_static_maker : .BaseVaspMaker
+        A maker to perform the computation of the wavefunction before the static run.
+        Cannot be skipped. It can be LOBSTERUNIFORM or LobsterStaticMaker()
+    lobster_maker : .LobsterMaker
+        A maker to perform the Lobster run.
+    delete_wavecars : bool
+        If true, all WAVECARs will be deleted after the run.
+    address_min_basis : str
+        A path to a yaml file including basis set information.
+    address_max_basis : str
+       A path to a yaml file including basis set information.
+    """
+
+    name: str = "mlff_lobster"
+    relax_maker: ForceFieldRelaxMaker = field(
+        default_factory=lambda: ForceFieldRelaxMaker(
+            force_field_name="CHGNet", relax_kwargs={"fmax": 0.00001}
+        )
+    )
+    lobster_static_maker: BaseVaspMaker = field(
+        default_factory=lambda: LOBSTER_UNIFORM_MAKER
+    )
+    lobster_maker: LobsterMaker | None = field(default_factory=LobsterMaker)
+    delete_wavecars: bool = True
+    address_min_basis: str | None = None
+    address_max_basis: str | None = None
