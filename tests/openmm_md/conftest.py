@@ -1,6 +1,18 @@
+import gzip
+import json
+import shutil
+from pathlib import Path
+
 import pytest
-from emmet.core.openmm import OpenMMInterchange
-from jobflow import run_locally
+from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
+from jobflow import Flow, JobStore, run_locally
+from maggma.stores import MemoryStore
+from monty.json import MontyDecoder
+from pymatgen.core import Composition, Structure
+
+from atomate2.common.jobs.mpmorph import get_random_packed_structure
+from atomate2.forcefields.utils import revert_default_dtype
+from atomate2.openmm.jobs.core import NVTMaker
 
 
 @pytest.fixture
@@ -70,6 +82,80 @@ def interchange(openmm_data):
         return OpenMMInterchange.model_validate_json(file.read())
 
 
-@pytest.fixture
-def output_dir(test_dir):
-    return test_dir / "classical_md" / "output_dir"
+@pytest.fixture(scope="session")
+def random_structure(test_dir) -> Structure:
+    test_files = test_dir / "openmm" / "mlff_test_files"
+    test_files.mkdir(parents=True, exist_ok=True)
+    struct_file = test_files / "random_structure.json"
+
+    # disable this flag to speed up local testing
+    regenerate_test_data = False
+    if regenerate_test_data:
+        struct_file.unlink(missing_ok=True)
+        composition = Composition("Al85Ni10Fe5")
+
+        n_atoms = 60
+        struct = get_random_packed_structure(
+            composition=composition,
+            target_atoms=n_atoms,
+            packmol_seed=1,
+        )
+        struct.to_file(str(struct_file))
+    return Structure.from_file(struct_file)
+
+
+@pytest.mark.openmm_slow
+@pytest.fixture(scope="session")
+def task_doc(random_structure: Structure, test_dir: Path) -> OpenMMInterchange:
+    from atomate2.openmm.jobs.mace import generate_mace_interchange
+
+    output_dir = test_dir / "openmm" / "mlff_test_files"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    json_path = output_dir / "taskdoc.json"
+    gz_path = output_dir / "taskdoc.json.gz"
+
+    # disable this flag to speed up local testing
+    regenerate_test_data = False
+    if regenerate_test_data:
+        (output_dir / "taskdoc.json").unlink(missing_ok=True)
+
+        with revert_default_dtype():
+            generate_job = generate_mace_interchange(
+                random_structure,
+            )
+            nvt_job = NVTMaker(
+                n_steps=2, traj_interval=1, state_interval=1, save_structure=True
+            ).make(
+                generate_job.output.interchange, prev_dir=generate_job.output.dir_name
+            )
+
+            job_store = JobStore(
+                MemoryStore(), additional_stores={"data": MemoryStore()}
+            )
+
+            run_locally(
+                Flow([generate_job, nvt_job]),
+                store=job_store,
+                ensure_success=True,
+                root_dir=output_dir,
+            )
+
+            # Compress the generated JSON file
+            with json_path.open("rb") as f_in, gzip.open(gz_path, "wb") as f_out:
+                shutil.copyfileobj(f_in, f_out)
+            json_path.unlink()  # Remove the uncompressed file
+
+    # Read from the compressed file
+    with gzip.open(gz_path, "rt") as f:
+        task_doc_dict = json.load(f, cls=MontyDecoder)
+
+    # task_doc_dict = json.load((output_dir / "taskdoc.json").open(), cls=MontyDecoder)
+
+    return OpenMMTaskDocument.model_validate(task_doc_dict)
+
+
+@pytest.mark.openmm_slow
+@pytest.fixture(scope="session")
+def mace_interchange(task_doc: OpenMMTaskDocument) -> OpenMMInterchange:
+    return OpenMMInterchange.model_validate_json(task_doc.interchange)
