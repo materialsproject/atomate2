@@ -63,6 +63,54 @@ def collect_outputs(
 
     return Response(output=task_doc)
 
+@openmm_job
+def dynamic_collect_outputs(
+    all_docs: list[OpenMMTaskDocument]
+) -> list[OpenMMTaskDocument]:
+    """Wrapper to run "collect_outputs" jobs dynamically """
+    if not all_docs:
+        return []
+
+    doc = all_docs.pop(0) 
+    print(f"collecting outputs for:\n{doc}")
+    prev_dir = doc.dir_name
+    tags = None # need to pass this in  
+    job_uuids = doc.job.uuid
+    calcs_reversed = doc.calcs_reversed        
+    task_type = "collect"
+    collect_job = collect_outputs(
+        prev_dir=prev_dir,
+        tags=tags or None,
+        job_uuids=job_uuids,
+        calcs_reversed=calcs_reversed,
+        task_type=task_type,
+    )
+    if all_docs:
+        next_collect_job = dynamic_collect_outputs(all_docs=all_docs)
+        flow = Flow(jobs=[collect_job, next_collect_job],output=next_job.output)
+        return Response(replace=flow)
+    else:
+        return Response(output=[doc], addition=collect_job)
+
+def default_should_continue(
+    task_doc: OpenMMTaskDocument, 
+    stage_index: int,
+    max_stages: int, 
+) -> bool:
+    """Default dynamic flow logic for deciding to continue flow (True)
+        
+    This serves as a template for any bespoke "should_continue" functions
+    written by the user. By default, simulation logic depends on stability 
+    of potential energy as a function of time, dU_dt. 
+    """
+    print(f"%%%%% Running stage index {stage_index} %%%%%")
+    print(f"task_doc={task_doc}")
+    # TODO: Add PE vs time functionality ...
+    # TODO: add density vs. time functionality ...
+    if stage_index < max_stages:
+        return True 
+    else:
+        return False
 
 @dataclass
 class OpenMMFlowMaker(Maker):
@@ -242,20 +290,29 @@ class DynamicOpenMMFlowMaker(Maker):
     name : str
         The name of the dynamic OpenMM job or flow. Default is the name 
         of the inherited maker name with "dynamic" preprended.
-    tags : list[str]
-        Tags to apply to the final job. Will only be applied if collect_jobs is True.
     maker: Union[BaseOpenMMMaker, OpenMMFlowMaker]
         A list of makers to string together.
+    max_stages: int
+        Maximum number of stages to run consecutively before terminating
+        dynamic flow logic. 
     collect_outputs : bool
         If True, a final job is added that collects all jobs into a single
         task document.
+    should_continue: ...
+        A function ... Default is _default_should_continue...#TODO
     """
     
     name: str = field(default=None)
     maker: BaseOpenMMMaker | OpenMMFlowMaker = field(
         default_factory=lambda: BaseOpenMMMaker()
     )
-     
+    max_stages: int = field(default=5)
+    collect_outputs: bool = True
+    should_continue: Callable[[OpenMMTaskDocument, int, int], bool] = field(
+        default_factory=lambda: default_should_continue
+    )   
+    stage_task_type: str = "collect" # or default to OpenMMFlowMaker final_task_type?
+ 
     def __post_init__(self) -> None:
         """Post init formatting of arguments."""
         if self.name is None: 
@@ -266,4 +323,75 @@ class DynamicOpenMMFlowMaker(Maker):
         interchange: Interchange | OpenMMInterchange | str,
         prev_dir: str | None = None,
     ) -> Flow:
-        pass
+        
+        print(f"inside DOFM: -> {self.maker}")
+        # Initial segment job (or flow) of entire dynamic flow
+        stage_n = self.dynamic_flow(
+            interchange=interchange,
+            prev_dir=prev_dir, 
+            stage_index=0, # later can make this an input, n, for checkpointing
+            stage_docs=[],
+        )
+
+        return Flow([stage_n], name=self.name, output=stage_n.output)
+
+    def dynamic_flow(
+        self,
+        interchange: Interchange | OpenMMInterchange | str,
+        prev_dir: str | None,
+        stage_index: int,
+        stage_docs: list[OpenMMTaskDocument],
+    ) -> Response: 
+        """Run stage n and dynamically decide to continue or terminate flow."""
+    
+        # `stage` is either a job or a flow
+        stage = self.maker.make(
+            interchange=interchange, 
+            prev_dir=prev_dir,
+        )
+        
+        # stage decision login--> (a) terminate, (b) continue, (c) pause, etc
+        stage_control = self.apply_flow_control(
+            stage_doc=stage.output,
+            stage_index=stage_index, 
+            stage_docs=stage_docs,
+        )
+
+        # conditionally run flow until should_continue=False
+        flow = Flow(
+            jobs=[stage, stage_control],
+            output=stage_control.output,
+            name=f"{self.name} Stage {stage_index}",
+        )
+        return Response(replace=flow)
+               
+    def apply_flow_control(
+        self,
+        stage_doc: OpenMMTaskDocument,
+        stage_index: int,
+        stage_docs: list[OpenMMTaskDocument],
+    ) -> Response:
+
+        # update "stage" docs
+        stage_docs = stage_docs + [stage_doc]
+
+        continue_flow = self.should_continue(
+            stage_doc, 
+            stage_index, 
+            self.max_stages,
+        )
+
+        if continue_flow and stage_index < self.max_stages:
+            next_stage = self.dynamic_flow(
+                interchange=stage_doc.interchange,
+                prev_dir=stage_doc.dir_name, 
+                stage_index=stage_index+1,
+                stage_docs=stage_docs,
+            )
+            return Response(replace=Flow([next_stage], output=next_stage.output))
+        
+        if self.collect_outputs:
+            print(stage_docs)
+            dynamic_collection = dynamic_collect_outputs(all_docs=stage_docs)
+            final_flow = Flow([dynamic_collection], output=dynamic_collection.output)
+            return None
