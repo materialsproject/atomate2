@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
+import numpy as np
+from scipy.signal import savgol_filter
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from emmet.core.openmm import Calculation, OpenMMInterchange, OpenMMTaskDocument
-from jobflow import Flow, Job, Maker, Response
+from jobflow import Flow, Job, Maker, Response, job
 from monty.json import MontyDecoder, MontyEncoder
 
 from atomate2.openmm.jobs.base import BaseOpenMMMaker, openmm_job
@@ -92,25 +94,88 @@ def dynamic_collect_outputs(
     else:
         return Response(output=[doc], addition=collect_job)
 
+@openmm_job
 def default_should_continue(
-    task_doc: OpenMMTaskDocument, 
+    task_docs: list[OpenMMTaskDocument], 
     stage_index: int,
-    max_stages: int, 
-) -> bool:
+    max_stages: int,
+    physical_property: str = "potential_energy", 
+    target: float | None = None,
+    threshold: float = 1e-3,
+) -> Response:
     """Default dynamic flow logic for deciding to continue flow (True)
         
     This serves as a template for any bespoke "should_continue" functions
     written by the user. By default, simulation logic depends on stability 
     of potential energy as a function of time, dU_dt. 
     """
-    print(f"%%%%% Running stage index {stage_index} %%%%%")
-    print(f"task_doc={task_doc}")
-    # TODO: Add PE vs time functionality ...
-    # TODO: add density vs. time functionality ...
-    if stage_index < max_stages:
-        return True 
+    print(f"%%%%% Running should_continue for stage index {stage_index} %%%%%")
+    task_doc = task_docs[-1]
+    setattr(task_doc, "stage_index", stage_index)
+    print(f"task_doc.stage_index = {stage_index}")
+    print(f"there are {len(task_docs)} task_docs")
+
+    potential_energy: list[float] = []
+    density: list[float] = []
+    for doc in task_docs:
+        potential_energy.extend(doc.calcs_reversed[0].output.potential_energy)
+        density.extend(doc.calcs_reversed[0].output.density)
+    dt = doc.calcs_reversed[0].input.state_interval
+    print(f"total number of energies: {len(potential_energy)}")
+    
+    # toss out first 20% of values
+    burn_in = int(0.2 * len(potential_energy))
+    if physical_property == "density":
+        values = np.array(density[burn_in:])
+    elif physical_property == "potential_energy":
+        values = np.array(potential_energy[burn_in:])
+             
+    if int(0.2 * len(values)) % 2 == 0:
+        window_length = max(5, int(0.2 * len(values)) + 1)
     else:
-        return False
+        window_length = max(5, int(0.2 * len(values)))
+    print(f"window_length={window_length}")
+    dValue_dt = savgol_filter(values, window_length, polyorder=3, deriv=1, delta=dt)
+    decay_rate = np.max(np.abs(dValue_dt))
+    avg = np.mean(values)
+    std = np.std(values)
+    fluctuations = std / np.abs(avg)
+    
+    print(f"checking {physical_property}")
+    print(f"Mean of last 80% energies: {avg:.5f}")
+    print(f"Std of last 80% energies: {std:.5f}")
+    print(f"Fluctuations: {fluctuations:.5f}")
+    print(f"N^(1/2) ~ {len(values)**0.5}")
+    print(f"decay_rate: {decay_rate:.5f}")
+    if target: 
+        delta = np.abs( (avg - target) / target )
+        if delta < threshold:
+            print(f"{physical_property} within {threshold} threshold")
+            should_continue = False
+            print(f"should_continue={should_continue}")
+        else:
+            print(f"{physical_property} error at {delta*100} percent")
+            should_continue = True
+            print(f"should_continue={should_continue}")
+    elif stage_index > max_stages:
+        print(f"MAX STAGES REACHED!!")
+        should_continue=False
+        print(f"should_continue={should_continue}")
+    elif decay_rate < threshold:
+        print(f"EQUILIBRIUM REACHED!!")
+        should_continue=False
+        print(f"should_continue={should_continue}")
+    else:
+        print(f"decay_rate = {decay_rate}")
+        should_continue=True
+        print(f"should_continue={should_continue}")
+    
+    if stage_index < max_stages:
+        should_continue=True 
+    else:
+        should_continue=False
+    setattr(task_doc, "should_continue", should_continue)
+    return Response(output=task_doc)
 
 @dataclass
 class OpenMMFlowMaker(Maker):
@@ -308,10 +373,14 @@ class DynamicOpenMMFlowMaker(Maker):
     )
     max_stages: int = field(default=5)
     collect_outputs: bool = True
-    should_continue: Callable[[OpenMMTaskDocument, int, int], bool] = field(
+    should_continue: Callable[[list[OpenMMTaskDocument], int, int], Response] = field(
         default_factory=lambda: default_should_continue
     )   
     stage_task_type: str = "collect" # or default to OpenMMFlowMaker final_task_type?
+    
+    jobs: list = field(default_factory=list)
+    job_uuids: list = field(default_factory=list)
+    calcs_reversed: list[Calculation] = field(default_factory=list)
  
     def __post_init__(self) -> None:
         """Post init formatting of arguments."""
@@ -324,74 +393,115 @@ class DynamicOpenMMFlowMaker(Maker):
         prev_dir: str | None = None,
     ) -> Flow:
         
-        print(f"inside DOFM: -> {self.maker}")
-        # Initial segment job (or flow) of entire dynamic flow
-        stage_n = self.dynamic_flow(
+        # Run initial stage job
+        stage_job_0 = self.maker.make(
             interchange=interchange,
-            prev_dir=prev_dir, 
-            stage_index=0, # later can make this an input, n, for checkpointing
-            stage_docs=[],
-        )
-
-        return Flow([stage_n], name=self.name, output=stage_n.output)
-
-    def dynamic_flow(
-        self,
-        interchange: Interchange | OpenMMInterchange | str,
-        prev_dir: str | None,
-        stage_index: int,
-        stage_docs: list[OpenMMTaskDocument],
-    ) -> Response: 
-        """Run stage n and dynamically decide to continue or terminate flow."""
-    
-        # `stage` is either a job or a flow
-        stage = self.maker.make(
-            interchange=interchange, 
             prev_dir=prev_dir,
         )
+        self.jobs.append(stage_job_0)
+        print(f"stage_job_0->{stage_job_0.name}")
         
-        # stage decision login--> (a) terminate, (b) continue, (c) pause, etc
-        stage_control = self.apply_flow_control(
-            stage_doc=stage.output,
-            stage_index=stage_index, 
-            stage_docs=stage_docs,
+        # collect the uuids and calcs for the final collect job
+        if isinstance(stage_job_0, Flow):
+            self.job_uuids.extend(stage_job_0.job_uuids)
+        else:
+            self.job_uuids.append(stage_job_0.uuid)
+        self.calcs_reversed.append(_get_calcs_reversed(stage_job_0))
+        print(f"appended stage {self.jobs[-1]}")
+        print(f"appended job_uuid {self.job_uuids[-1]}")
+        print(f"appended calc {self.calcs_reversed[-1]}")
+        
+        # Determine stage job control logic
+        control_stage_0 = self.should_continue(
+            task_docs=[stage_job_0.output], 
+            stage_index=0,
+            max_stages=self.max_stages, 
         )
-
-        # conditionally run flow until should_continue=False
-        flow = Flow(
-            jobs=[stage, stage_control],
-            output=stage_control.output,
-            name=f"{self.name} Stage {stage_index}",
+        self.jobs.append(control_stage_0)
+        print(f"control_stage_0->{control_stage_0}")
+        
+        # stage_0 = Flow([stage_job_0, control_stage_0])
+    
+        stage_n = self.dynamic_flow(
+            prev_stage_index=0,
+            prev_docs=[control_stage_0.output],
         )
-        return Response(replace=flow)
-               
-    def apply_flow_control(
-        self,
-        stage_doc: OpenMMTaskDocument,
-        stage_index: int,
-        stage_docs: list[OpenMMTaskDocument],
-    ) -> Response:
-
-        # update "stage" docs
-        stage_docs = stage_docs + [stage_doc]
-
-        continue_flow = self.should_continue(
-            stage_doc, 
-            stage_index, 
-            self.max_stages,
-        )
-
-        if continue_flow and stage_index < self.max_stages:
-            next_stage = self.dynamic_flow(
-                interchange=stage_doc.interchange,
-                prev_dir=stage_doc.dir_name, 
-                stage_index=stage_index+1,
-                stage_docs=stage_docs,
-            )
-            return Response(replace=Flow([next_stage], output=next_stage.output))
+        self.jobs.append(stage_n)
         
         if self.collect_outputs:
-            print(stage_docs)
-            dynamic_collection = dynamic_collect_outputs(all_docs=stage_docs)
-            final_flow = Flow([dynamic_collection], output=dynamic_collection.output)
-            return None
+            collect_job = collect_outputs(
+                stage_n.output.dir_name,
+                tags=None, #self.tags or None,
+                job_uuids=self.job_uuids,
+                calcs_reversed=self.calcs_reversed,
+                task_type=self.stage_task_type,
+            )
+            # jobs.append(collect_job)
+            stage_n_flow = Flow([stage_job_0,control_stage_0,stage_n,collect_job])
+        else:
+            stage_n_flow = Flow([stage_job_0,control_stage_0,stage_n])
+ 
+        return stage_n_flow
+
+        #return Response(output=stage_n.output)
+    
+    @job
+    def dynamic_flow(
+        self,
+        prev_stage_index: int,
+        prev_docs: list[OpenMMTaskDocument],
+    ) -> Response | None: 
+        """Run stage n and dynamically decide to continue or terminate flow."""
+        
+        print(f"previous stage index: {prev_stage_index}")
+        prev_stage = prev_docs[-1] 
+        
+        # stage control logic: (a) begin, (b) continue, (c) terminate, (d) pause
+        if not prev_stage.should_continue: # terminate
+            print(f"Equilibration complete!")
+            return Response(output=prev_stage)
+        if prev_stage_index > self.max_stages: # pause
+            print(f"Reached max stages with equilibration incomplete")
+            print(f"prev_stage.output should_continue={prev_stage.should_continue}")
+            #setattr(prev_stage.output, "should_continue", False)
+            #setattr(prev_stage.output, "stage_index", stage_index)
+            return Response(output=prev_stage)
+
+        stage_index = prev_stage_index + 1
+ 
+        stage_job_n = self.maker.make(
+            interchange=prev_stage.interchange, 
+            prev_dir=prev_stage.dir_name,
+        )
+        self.jobs.append(stage_job_n)
+        print(f"stage_job_n->{stage_job_n.name}")
+        
+        # collect the uuids and calcs for the final collect job
+        if isinstance(stage_job_n, Flow):
+            self.job_uuids.extend(stage_job_n.job_uuids)
+        else:
+            self.job_uuids.append(stage_job_n.uuid)
+        self.calcs_reversed.append(_get_calcs_reversed(stage_job_n))
+        print(f"appended stage {self.jobs[-1]}")
+        print(f"appended job_uuid {self.job_uuids[-1]}")
+        print(f"appended calc {self.calcs_reversed[-1]}")
+        print(f"stage_job_n->{stage_job_n}")
+         
+        control_stage_n = self.should_continue(
+            task_docs=prev_docs+[stage_job_n.output], 
+            stage_index=stage_index,
+            max_stages=self.max_stages, 
+        )
+        self.jobs.append(control_stage_n)
+        print(f"control_stage_n->{control_stage_n}")
+         
+        next_stage_n = self.dynamic_flow(
+            prev_stage_index=stage_index,
+            prev_docs=prev_docs + [control_stage_n.output],
+        )
+        self.jobs.append(next_stage_n)
+        stage_n_flow = Flow([stage_job_n,control_stage_n, next_stage_n])
+ 
+        return Response(replace=stage_n_flow, output=next_stage_n.output)
+                
+                 
