@@ -66,35 +66,6 @@ def collect_outputs(
     return Response(output=task_doc)
 
 @openmm_job
-def dynamic_collect_outputs(
-    all_docs: list[OpenMMTaskDocument]
-) -> list[OpenMMTaskDocument]:
-    """Wrapper to run "collect_outputs" jobs dynamically """
-    if not all_docs:
-        return []
-
-    doc = all_docs.pop(0) 
-    print(f"collecting outputs for:\n{doc}")
-    prev_dir = doc.dir_name
-    tags = None # need to pass this in  
-    job_uuids = doc.job.uuid
-    calcs_reversed = doc.calcs_reversed        
-    task_type = "collect"
-    collect_job = collect_outputs(
-        prev_dir=prev_dir,
-        tags=tags or None,
-        job_uuids=job_uuids,
-        calcs_reversed=calcs_reversed,
-        task_type=task_type,
-    )
-    if all_docs:
-        next_collect_job = dynamic_collect_outputs(all_docs=all_docs)
-        flow = Flow(jobs=[collect_job, next_collect_job],output=next_job.output)
-        return Response(replace=flow)
-    else:
-        return Response(output=[doc], addition=collect_job)
-
-@openmm_job
 def default_should_continue(
     task_docs: list[OpenMMTaskDocument], 
     stage_index: int,
