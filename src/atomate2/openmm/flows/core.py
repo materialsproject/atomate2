@@ -164,7 +164,7 @@ class OpenMMFlowMaker(Maker):
         The name of the production job. Default is "production".
     tags : list[str]
         Tags to apply to the final job. Will only be applied if collect_jobs is True.
-    makers: Union[BaseOpenMMMaker, OpenMMFlowMaker]
+    makers: list[BaseOpenMMMaker]
         A list of makers to string together.
     collect_outputs : bool
         If True, a final job is added that collects all jobs into a single
