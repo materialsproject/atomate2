@@ -259,7 +259,9 @@ structure = Structure(
     coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
 )
 
-phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(structure=struct)
+phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
+    structure=struct
+)
 ```
 
 
