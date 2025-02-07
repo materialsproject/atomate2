@@ -156,7 +156,7 @@ jobs:
       - name: Test Notebooks
         run: |
           micromamba activate a2
-          pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields/*
+          pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields
 
       - name: Test ASE
         env:
