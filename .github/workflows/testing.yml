@@ -262,7 +262,7 @@ jobs:
         run: sphinx-build docs docs_build
 
   automerge:
-    needs: [lint, test-non-ase, test-notebooks-and-ase, docs]
+    needs: [lint, test-non-ase, test-notebooks-and-ase, test-force-field-notebook, docs]
     runs-on: ubuntu-latest
 
     permissions:
