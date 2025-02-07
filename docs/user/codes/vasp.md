@@ -352,7 +352,7 @@ lobster = update_user_incar_settings(lobster, {"NPAR": 4})
 run_locally(lobster, create_folders=True, store=SETTINGS.JOB_STORE)
 ```
 
-There are currently three different ways available to run the workflow efficiently, as VASP and LOBSTER rely on a different parallelization (MPI vs. OpenMP). 
+There are currently three different ways available to run the workflow efficiently, as VASP and LOBSTER rely on a different parallelization (MPI vs. OpenMP).
 One can use a job script (with some restrictions), or [Jobflow-remote](https://matgenix.github.io/jobflow-remote/) / [Fireworks](https://github.com/materialsproject/fireworks) for high-throughput runs.
 
 
@@ -420,8 +420,18 @@ lobster = update_user_incar_settings(lobster, {"NPAR": 4})
 submit_flow(lobster, worker="my_worker", resources=resources, project="my_project")
 ```
 
+The `LOBSTER_CMD` also needs an export of the threads.
+
+```yaml
+VASP_CMD: <<VASP_CMD>>
+LOBSTER_CMD: OMP_NUM_THREADS=48 <<LOBSTER_CMD>>
+```
+
+
+
 #### Fireworks
 Please first refer to the general documentation on running atomate2 workflows with fireworks: [https://materialsproject.github.io/atomate2/user/fireworks.html](https://materialsproject.github.io/atomate2/user/fireworks.html)
+
 Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
 
 ```py
@@ -455,6 +465,16 @@ wf = flow_to_workflow(lobster)
 lpad = LaunchPad.auto_load()
 lpad.add_wf(wf)
 ```
+
+
+The `LOBSTER_CMD` can now be adapted to not include the number of threads:
+
+```yaml
+VASP_CMD: <<VASP_CMD>>
+LOBSTER_CMD: <<LOBSTER_CMD>>
+```
+
+#### Analyzing outputs
 
 Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:
 
