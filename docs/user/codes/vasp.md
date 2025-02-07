@@ -248,6 +248,23 @@ adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
 
+You can use the following code to start the standard version of the workflow:
+```py
+from atomate2.vasp.flows.phonons import PhononMaker
+from pymatgen.core.structure import Structure
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(structure=struct)
+```
+
+
+
+
 ### Gruneisen parameter workflow
 
 Calculates mode-dependent Grüneisen parameters with the help of Phonopy.
