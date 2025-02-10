@@ -29,46 +29,41 @@ def lobster_test_dir(test_dir):
     return test_dir / "lobster"
 
 
-def monkeypatch_lobster(monkeypatch, lobster_test_dir):
-    """
-    This is provided as a generator and can be used as by conextmanagers and
-    pytest.fixture ("mock_lobster").
+def monkeypatch_lobster(monkeypatch: pytest.MonkeyPatch, lobster_test_dir: Path):
+    """Monkeypatch LOBSTER run calls for testing purposes.
 
-    It works by monkeypatching (replacing) calls to run_lobster that will
-    work when the lobster executables
-    are not present.
+    This generator can be used as a context manager or pytest fixture ("mock_lobster").
+    It replaces calls to run_lobster with a mock function that copies reference files
+    instead of running LOBSTER.
+
     The primary idea is that instead of running LOBSTER to generate the output files,
-    reference files will be copied into the directory instead. As we do not want to
-    test whether LOBSTER is giving the correct output rather that the calculation inputs
-    are generated correctly and that the outputs are parsed properly, this should be
-    sufficient for our needs.
-    To use the fixture successfully, the following steps must be followed:
-    1. "mock_lobster" should be included as an argument to any test that would
-        like to use its functionally.
-    2. For each job in your workflow, you should prepare a reference directory
-       containing two folders "inputs" (containing the reference input files
-       expected to be produced by Lobsterin.standard_calculations_from_vasp_files
-       and "outputs" (containing the expected
-       output files to be produced by run_lobster). These files should reside in a
-       subdirectory of "tests/test_data/lobster".
-    3. Create a dictionary mapping each job name to its reference directory.
-       Note that you should supply the reference directory relative to the
-       "tests/test_data/lobster" folder. For example, if your calculation
-       has one job named "lobster_run_0" and the reference files are present in
-       "tests/test_data/lobster/Si_lobster_run_0", the dictionary
-       would look like: ``{"lobster_run_0": "Si_lobster_run_0"}``.
-    4. Optional: create a dictionary mapping each job name to custom
-       keyword arguments that will be supplied to fake_run_lobster.
-       This way you can configure which lobsterin settings are expected for each job.
-       For example, if your calculation has one job named "lobster_run_0"
-       and you wish to validate that "basisfunctions" is set correctly
-       in the lobsterin, your dictionary would look like
-       ``{"lobster_run_0": {"lobsterin_settings": {"basisfunctions": Ba 5p 5s 6s}}``.
-    5. Inside the test function, call `mock_lobster(ref_paths, fake_lobster_kwargs)`,
-       where ref_paths is the dictionary created in step 3
-       and fake_lobster_kwargs is the
-       dictionary created in step 4.
-    6. Run your lobster job after calling `mock_lobster`.
+    reference files will be copied into the directory instead. This ensures that the
+    calculation inputs are generated correctly and that the outputs are parsed properly.
+
+    To use the fixture successfully, follow these steps:
+    1. Include "mock_lobster" as an argument to any test that would like to use its functionality.
+    2. For each job in your workflow, prepare a reference directory containing two folders:
+       "inputs" (containing the reference input files expected to be produced by
+       Lobsterin.standard_calculations_from_vasp_files) and "outputs" (containing the expected
+       output files to be produced by run_lobster). These files should reside in a subdirectory
+       of "tests/test_data/lobster".
+    3. Create a dictionary mapping each job name to its reference directory. Note that you should
+       supply the reference directory relative to the "tests/test_data/lobster" folder. For example,
+       if your calculation has one job named "lobster_run_0" and the reference files are present in
+       "tests/test_data/lobster/Si_lobster_run_0", the dictionary would look like:
+       {"lobster_run_0": "Si_lobster_run_0"}.
+    4. Optionally, create a dictionary mapping each job name to custom keyword arguments that will be
+       supplied to fake_run_lobster. This way you can configure which lobsterin settings are expected
+       for each job. For example, if your calculation has one job named "lobster_run_0" and you wish
+       to validate that "basisfunctions" is set correctly in the lobsterin, your dictionary would look like:
+       {"lobster_run_0": {"lobsterin_settings": {"basisfunctions": Ba 5p 5s 6s}}.
+    5. Inside the test function, call `mock_lobster(ref_paths, fake_lobster_kwargs)`, where ref_paths is the
+       dictionary created in step 3 and fake_lobster_kwargs is the dictionary created in step 4.
+    6. Run your LOBSTER job after calling `mock_lobster`.
+
+    Args:
+        monkeypatch (pytest.MonkeyPatch): The pytest monkeypatch fixture.
+        lobster_test_dir (Path): The directory containing reference files for LOBSTER tests.
     """
 
     def mock_run_lobster(*args, **kwargs):
@@ -81,7 +76,10 @@ def monkeypatch_lobster(monkeypatch, lobster_test_dir):
     monkeypatch.setattr(atomate2.lobster.run, "run_lobster", mock_run_lobster)
     monkeypatch.setattr(atomate2.lobster.jobs, "run_lobster", mock_run_lobster)
 
-    def _run(ref_paths, fake_run_lobster_kwargs):
+    def _run(
+        ref_paths: dict[str, str | Path],
+        fake_run_lobster_kwargs: dict[str, dict[str, Sequence]],
+    ):
         _LOBS_REF_PATHS.update(ref_paths)
         _FAKE_RUN_LOBSTER_KWARGS.update(fake_run_lobster_kwargs)
 
@@ -131,7 +129,13 @@ def fake_run_lobster(
     logger.info("ran fake LOBSTER, generated outputs")
 
 
-def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]):
+def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]) -> None:
+    """Verify LOBSTER input files against reference settings.
+
+    Args:
+        ref_path (str | Path): Path to the reference directory containing input files.
+        lobsterin_settings (Sequence[str]): A list of LOBSTER settings to check.
+    """
     user = Lobsterin.from_file("lobsterin")
 
     # Check lobsterin
@@ -142,7 +146,12 @@ def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]):
             raise ValueError(f"lobsterin value of {key} is inconsistent!")
 
 
-def copy_lobster_outputs(ref_path: str | Path):
+def copy_lobster_outputs(ref_path: str | Path) -> None:
+    """Copy LOBSTER output files from the reference directory to the current directory.
+
+    Args:
+        ref_path (str | Path): Path to the reference directory containing output files.
+    """
     output_path = Path(ref_path) / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():
