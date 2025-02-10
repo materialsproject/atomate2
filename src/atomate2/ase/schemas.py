@@ -248,9 +248,11 @@ class AseStructureTaskDoc(StructureMetadata):
         """
         task_document_kwargs.update(
             {k: getattr(ase_task_doc, k) for k in _task_doc_translation_keys},
-            structure = ase_task_doc.mol_or_struct,
+            structure=ase_task_doc.mol_or_struct,
         )
-        return cls.from_structure(meta_structure = ase_task_doc.mol_or_struct, **task_document_kwargs)
+        return cls.from_structure(
+            meta_structure=ase_task_doc.mol_or_struct, **task_document_kwargs
+        )
 
 
 class AseMoleculeTaskDoc(MoleculeMetadata):

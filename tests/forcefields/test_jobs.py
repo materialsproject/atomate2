@@ -318,6 +318,7 @@ def test_mace_relax_maker(
         assert output1.output.energy == approx(-0.06772976, rel=1e-4)
         assert output1.output.n_steps == 7
 
+
 def test_mace_mpa_0_relax_maker(
     si_structure: Structure,
 ):
@@ -337,6 +338,7 @@ def test_mace_mpa_0_relax_maker(
     assert output.output.structure.volume == pytest.approx(40.87471552602735)
     assert len(output.output.ionic_steps) == 4
     assert output.structure.volume == output.output.structure.volume
+
 
 def test_gap_static_maker(si_structure: Structure, test_dir):
     importorskip("quippy")

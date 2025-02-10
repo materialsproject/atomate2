@@ -43,7 +43,6 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
     calculator = None
 
     if isinstance(calculator_meta, str | MLFF) and calculator_meta in map(str, MLFF):
-
         calculator_name = MLFF[calculator_meta.split("MLFF.")[-1]]
 
         if calculator_name == MLFF.CHGNet:
