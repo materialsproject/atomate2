@@ -8,13 +8,14 @@ from typing import TYPE_CHECKING
 from monty.dev import deprecated
 
 from atomate2.common.flows.eos import CommonEosMaker
-from atomate2.forcefields import MLFF, _get_formatted_ff_name
+from atomate2.forcefields import _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
     from jobflow import Maker
     from typing_extensions import Self
 
+    from atomate2.forcefields import MLFF
 
 @dataclass
 class ForceFieldEosMaker(CommonEosMaker):
@@ -74,7 +75,7 @@ class ForceFieldEosMaker(CommonEosMaker):
         relax_initial_structure: bool = True
             Whether to relax the initial structure before performing an EOS fit.
         **kwargs
-            Additional kwargs to pass to ElasticMaker
+            Additional kwargs to pass to ForceFieldEosMaker
 
 
         Returns
@@ -82,17 +83,16 @@ class ForceFieldEosMaker(CommonEosMaker):
         ForceFieldEosMaker
         """
         force_field_name = _get_formatted_ff_name(force_field_name)
+        if relax_initial_structure:
+            kwargs.update(
+                initial_relax_maker = ForceFieldRelaxMaker(force_field_name=force_field_name)
+            )
+        kwargs.update(
+            eos_relax_maker = ForceFieldRelaxMaker(force_field_name=force_field_name, relax_cell=False),
+            static_maker = None,
+        )
         return cls(
             name=f"{force_field_name.split('MLFF.')[-1]} EOS Maker",
-            initial_relax_maker=(
-                ForceFieldRelaxMaker(force_field_name=force_field_name)
-                if relax_initial_structure
-                else None
-            ),
-            eos_relax_maker=ForceFieldRelaxMaker(
-                force_field_name=force_field_name, relax_cell=False
-            ),
-            static_maker=None,
             **kwargs,
         )
 

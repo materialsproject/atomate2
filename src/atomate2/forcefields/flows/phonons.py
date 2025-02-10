@@ -3,12 +3,17 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Literal, TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.phonons import BasePhononMaker
+from atomate2.forcefields import _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
+if TYPE_CHECKING:
+    from typing_extensions import Self
+
+    from atomate2.forcefields import MLFF
 
 @dataclass
 class PhononMaker(BasePhononMaker):
@@ -119,7 +124,7 @@ class PhononMaker(BasePhononMaker):
     use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     bulk_relax_maker: ForceFieldRelaxMaker | None = field(
         default_factory=lambda: ForceFieldRelaxMaker(
-            force_field_name="CHGNet", relax_kwargs={"fmax": 0.00001}
+            force_field_name="CHGNet", relax_kwargs={"fmax": 1e-5}
         )
     )
     static_energy_maker: ForceFieldStaticMaker | None = field(
@@ -146,3 +151,45 @@ class PhononMaker(BasePhononMaker):
         calculations are performed for each ordering (relax -> static)
         """
         return
+
+    @classmethod
+    def from_force_field_name(
+        cls,
+        force_field_name: str | MLFF,
+        relax_initial_structure: bool = True,
+        **kwargs,
+    ) -> Self:
+        """
+        Create a phonon flow from a forcefield name.
+
+        Parameters
+        ----------
+        force_field_name : str or .MLFF
+            The name of the force field.
+        relax_initial_structure: bool = True
+            Whether to relax the initial structure before performing an EOS fit.
+        **kwargs
+            Additional kwargs to pass to PhononMaker
+
+
+        Returns
+        -------
+        PhononMaker
+        """
+        force_field_name = _get_formatted_ff_name(force_field_name)
+        if relax_initial_structure:
+            kwargs.update(
+                bulk_relax_maker = ForceFieldRelaxMaker(
+                    force_field_name=force_field_name,
+                    relax_kwargs={"fmax": 1e-5}
+                )
+            )
+        kwargs.update(
+            static_energy_maker = ForceFieldStaticMaker(force_field_name=force_field_name),
+            phonon_displacement_maker = ForceFieldStaticMaker(force_field_name=force_field_name),
+            born_maker = None,
+        )
+        return cls(
+            name=f"{force_field_name.split('MLFF.')[-1]} Phonon Maker",
+            **kwargs
+        )
