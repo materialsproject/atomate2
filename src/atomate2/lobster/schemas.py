@@ -973,7 +973,9 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
             if describe_ionic is not None
             else None,
             strongest_bonds_cation_anion=sb_ionic,
-            calc_quality_summary=calc_quality_summary if calc_quality_summary is not None else None,
+            calc_quality_summary=calc_quality_summary
+            if calc_quality_summary is not None
+            else None,
             calc_quality_text=" ".join(calc_quality_text)
             if calc_quality_text is not None
             else None,

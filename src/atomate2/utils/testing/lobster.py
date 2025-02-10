@@ -27,12 +27,11 @@ def lobster_test_dir(test_dir):
     return test_dir / "lobster"
 
 
-
 def monkeypatch_lobster(monkeypatch, lobster_test_dir):
     """
     This is provided as a generator and can be used as by conextmanagers and
     pytest.fixture ("mock_lobster").
-    
+
     It works by monkeypatching (replacing) calls to run_lobster that will
     work when the lobster executables
     are not present.
@@ -98,6 +97,7 @@ def fake_run_lobster(
 ):
     """
     Emulate running LOBSTER and validate LOBSTER input files.
+
     Parameters
     ----------
     ref_path

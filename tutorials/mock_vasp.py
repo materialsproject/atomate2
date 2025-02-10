@@ -37,4 +37,3 @@ def mock_vasp(ref_paths: dict) -> Generator:
         finally:
             os.chdir(old_cwd)
             shutil.rmtree(new_path)
-
