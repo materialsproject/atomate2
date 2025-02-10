@@ -1,9 +1,11 @@
+"""Utilities for testing LOBSTER calculations."""
+
 from __future__ import annotations
 
 import logging
 import shutil
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 
 import pytest
 from pymatgen.io.lobster import Lobsterin
@@ -18,8 +20,8 @@ logger = logging.getLogger("atomate2")
 
 _LFILES = "lobsterin"
 _DFT_FILES = ("WAVECAR", "POSCAR", "INCAR", "KPOINTS", "POTCAR")
-_LOBS_REF_PATHS = {}
-_FAKE_RUN_LOBSTER_KWARGS = {}
+_LOBS_REF_PATHS: dict[str, str | Path] = {}
+_FAKE_RUN_LOBSTER_KWARGS: dict[str, dict[str, Sequence]] = {}
 
 
 @pytest.fixture(scope="session")
@@ -91,8 +93,8 @@ def monkeypatch_lobster(monkeypatch, lobster_test_dir):
 
 def fake_run_lobster(
     ref_path: str | Path,
-    check_lobster_inputs: Sequence[Literal["lobsterin"]] = _LFILES,
-    check_dft_inputs: Sequence[Literal["WAVECAR", "POSCAR"]] = _DFT_FILES,
+    check_lobster_inputs: Sequence[str] = _LFILES,
+    check_dft_inputs: Sequence[str] = _DFT_FILES,
     lobsterin_settings: Sequence[str] = (),
 ):
     """
@@ -105,6 +107,8 @@ def fake_run_lobster(
         and output files in the folder named 'outputs'.
     check_lobster_inputs
         A list of lobster input files to check. Supported options are "lobsterin.gz".
+    check_dft_inputs
+        A list of VASP files that need to be copied to start the LOBSTER runs.
     lobsterin_settings
         A list of LOBSTER settings to check.
     """
@@ -131,7 +135,7 @@ def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]):
     user = Lobsterin.from_file("lobsterin")
 
     # Check lobsterin
-    ref = Lobsterin.from_file(ref_path / "inputs" / "lobsterin")
+    ref = Lobsterin.from_file(Path(ref_path) / "inputs" / "lobsterin")
 
     for key in lobsterin_settings:
         if user.get(key) != ref.get(key):
@@ -139,7 +143,7 @@ def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]):
 
 
 def copy_lobster_outputs(ref_path: str | Path):
-    output_path = ref_path / "outputs"
+    output_path = Path(ref_path) / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")
