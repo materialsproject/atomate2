@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import shutil
+from collections.abc import Callable, Generator
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -25,11 +26,26 @@ _FAKE_RUN_LOBSTER_KWARGS: dict[str, dict[str, Sequence]] = {}
 
 
 @pytest.fixture(scope="session")
-def lobster_test_dir(test_dir):
+def lobster_test_dir(test_dir) -> Path:
+    """Fixture to provide the test directory for LOBSTER tests.
+
+    Args:
+        test_dir: The base test directory.
+
+    Returns
+    -------
+        Path: The test directory for LOBSTER tests.
+    """
     return test_dir / "lobster"
 
 
-def monkeypatch_lobster(monkeypatch: pytest.MonkeyPatch, lobster_test_dir: Path):
+def monkeypatch_lobster(
+    monkeypatch: pytest.MonkeyPatch, lobster_test_dir: Path
+) -> Generator[
+    Callable[[dict[str, str | Path], dict[str, dict[str, Sequence]]], None],
+    None,
+    None,
+]:
     """Monkeypatch LOBSTER run calls for testing purposes.
 
     This generator can be used as a context manager or pytest fixture ("mock_lobster").

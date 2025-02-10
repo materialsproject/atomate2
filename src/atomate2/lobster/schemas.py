@@ -597,7 +597,7 @@ class CalcQualitySummary(BaseModel):
             "bva_comp": True,
             **calc_quality_kwargs,
         }
-        
+
         cal_quality_dict = Analysis.get_lobster_calc_quality_summary(
             path_to_poscar=structure_path,
             path_to_vasprun=vasprun_path,
@@ -845,44 +845,42 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         calc_quality_text = None
         describe = None
         describe_ionic = None
-        
+
         if analyze_outputs and (
-                icohplist_path.exists()
-                and cohpcar_path.exists()
-                and charge_path.exists()
-            ):
-                (
-                    condensed_bonding_analysis,
-                    describe,
-                    sb_all,
-                ) = CondensedBondingAnalysis.from_directory(
-                    dir_name,
-                    save_cohp_plots=save_cohp_plots,
-                    plot_kwargs=plot_kwargs,
-                    lobsterpy_kwargs=lobsterpy_kwargs,
-                    which_bonds="all",
-                )
-                (
-                    condensed_bonding_analysis_ionic,
-                    describe_ionic,
-                    sb_ionic,
-                ) = CondensedBondingAnalysis.from_directory(
-                    dir_name,
-                    save_cohp_plots=save_cohp_plots,
-                    plot_kwargs=plot_kwargs,
-                    lobsterpy_kwargs=lobsterpy_kwargs,
-                    which_bonds="cation-anion",
-                )
-                # Get lobster calculation quality summary data
+            icohplist_path.exists() and cohpcar_path.exists() and charge_path.exists()
+        ):
+            (
+                condensed_bonding_analysis,
+                describe,
+                sb_all,
+            ) = CondensedBondingAnalysis.from_directory(
+                dir_name,
+                save_cohp_plots=save_cohp_plots,
+                plot_kwargs=plot_kwargs,
+                lobsterpy_kwargs=lobsterpy_kwargs,
+                which_bonds="all",
+            )
+            (
+                condensed_bonding_analysis_ionic,
+                describe_ionic,
+                sb_ionic,
+            ) = CondensedBondingAnalysis.from_directory(
+                dir_name,
+                save_cohp_plots=save_cohp_plots,
+                plot_kwargs=plot_kwargs,
+                lobsterpy_kwargs=lobsterpy_kwargs,
+                which_bonds="cation-anion",
+            )
+            # Get lobster calculation quality summary data
 
-                calc_quality_summary = CalcQualitySummary.from_directory(
-                    dir_name,
-                    calc_quality_kwargs=calc_quality_kwargs,
-                )
+            calc_quality_summary = CalcQualitySummary.from_directory(
+                dir_name,
+                calc_quality_kwargs=calc_quality_kwargs,
+            )
 
-                calc_quality_text = Description.get_calc_quality_description(
-                    calc_quality_summary.model_dump()
-                )
+            calc_quality_text = Description.get_calc_quality_description(
+                calc_quality_summary.model_dump()
+            )
 
         # Read in charges
         charges = None
