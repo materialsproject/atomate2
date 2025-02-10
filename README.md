@@ -25,7 +25,7 @@ workflows using simple Python functions. Features of atomate2 include
 
 ## Workflows
 
-Some of the workflows available in atomate2 are:
+Atomate2 supports a variety of DFT and ab initio codes (VASP, Abinit, CP2k, FHI-Aims, Q-Chem and many more). Based on these codes, a large number of different workflows exist. Some of them are:
 
 - electronic band structures
 - elastic, dielectric, and piezoelectric tensors
