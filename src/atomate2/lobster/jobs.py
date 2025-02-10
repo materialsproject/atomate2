@@ -79,6 +79,8 @@ class LobsterMaker(Maker):
         basis_dict: dict
             A dict including information on the basis set
         """
+        print(self.task_document_kwargs)
+
         # copy previous inputs # VASP for example
         copy_lobster_files(wavefunction_dir)
 

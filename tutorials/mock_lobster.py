@@ -28,12 +28,13 @@ def mock_lobster(ref_paths: dict) -> Generator:
         function: A function that mocks calls to VASP.
     """
     for mf in monkeypatch_lobster(MonkeyPatch(), TEST_DIR / "lobster"):
-        fake_run_lobster_kwargs = {k: {"lobsterin_settings": ()} for k in ref_paths}
+        fake_run_lobster_kwargs = {k: {"check_lobster_inputs": ()} for k in ref_paths}
+
         old_cwd = os.getcwd()
         new_path = tempfile.mkdtemp()
         os.chdir(new_path)
         try:
-            yield mf(ref_paths, fake_run_lobster_kwargs)
+            yield mf(ref_paths, fake_run_lobster_kwargs=fake_run_lobster_kwargs)
         finally:
             os.chdir(old_cwd)
             #shutil.rmtree(new_path)

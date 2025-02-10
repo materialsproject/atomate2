@@ -597,6 +597,7 @@ class CalcQualitySummary(BaseModel):
             "bva_comp": True,
             **calc_quality_kwargs,
         }
+        print(calc_quality_kwargs_updated)
         cal_quality_dict = Analysis.get_lobster_calc_quality_summary(
             path_to_poscar=structure_path,
             path_to_vasprun=vasprun_path,
@@ -844,6 +845,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         calc_quality_text = None
         describe = None
         describe_ionic = None
+        print(analyze_outputs)
         if analyze_outputs:
             if (
                 icohplist_path.exists()
@@ -872,16 +874,16 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                     lobsterpy_kwargs=lobsterpy_kwargs,
                     which_bonds="cation-anion",
                 )
-            # Get lobster calculation quality summary data
+                # Get lobster calculation quality summary data
 
-            calc_quality_summary = CalcQualitySummary.from_directory(
-                dir_name,
-                calc_quality_kwargs=calc_quality_kwargs,
-            )
+                calc_quality_summary = CalcQualitySummary.from_directory(
+                    dir_name,
+                    calc_quality_kwargs=calc_quality_kwargs,
+                )
 
-            calc_quality_text = Description.get_calc_quality_description(
-                calc_quality_summary.model_dump()
-            )
+                calc_quality_text = Description.get_calc_quality_description(
+                    calc_quality_summary.model_dump()
+                )
 
         # Read in charges
         charges = None
@@ -971,7 +973,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
             if describe_ionic is not None
             else None,
             strongest_bonds_cation_anion=sb_ionic,
-            calc_quality_summary=calc_quality_summary,
+            calc_quality_summary=calc_quality_summary if calc_quality_summary is not None else None,
             calc_quality_text=" ".join(calc_quality_text)
             if calc_quality_text is not None
             else None,
