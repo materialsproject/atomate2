@@ -13,7 +13,8 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     """Names of ML force fields."""
 
     MACE = "MACE"  # This is MACE-MP-0-medium
-    MACE_MPA_0 = "MACE_MPA_0"
+    MACE_MPA_0 = "MACE-MPA-0"
+    MACE_MP_0B3 = "MACE-MP-0b3"
     GAP = "GAP"
     M3GNet = "M3GNet"
     CHGNet = "CHGNet"
@@ -28,7 +29,7 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
         if isinstance(value, str):
             value = value.split("MLFF.")[-1]
         for member in cls:
-            if member.value == value:
+            if member.name == value:
                 return member
         return None
 
@@ -46,7 +47,10 @@ def _get_formatted_ff_name(force_field_name: str | MLFF) -> str:
     -------
     str : the name of the forcefield from MLFF
     """
-    if isinstance(force_field_name, str) and force_field_name in MLFF.__members__:
+    if isinstance(force_field_name, str):
         # ensure `force_field_name` uses enum format
-        force_field_name = MLFF(force_field_name)
+        if force_field_name in MLFF.__members__:
+            force_field_name = MLFF[force_field_name]
+        elif force_field_name in [v.value for v in MLFF]:
+            force_field_name = MLFF(force_field_name)
     return str(force_field_name)

@@ -58,7 +58,7 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             potential = matgl.load_model(path)
             calculator = PESCalculator(potential, **kwargs)
 
-        elif calculator_name in {MLFF.MACE, MLFF.MACE_MPA_0}:
+        elif calculator_name in {MLFF.MACE, MLFF.MACE_MPA_0, MLFF.MACE_MP_0B3}:
             from mace.calculators import MACECalculator, mace_mp
 
             model = kwargs.get("model")

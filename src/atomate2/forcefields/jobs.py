@@ -36,6 +36,7 @@ _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
     MLFF.MACE: {"model": "medium"},
     MLFF.MACE_MPA_0: {"model": "medium-mpa-0"},
+    MLFF.MACE_MP_0B3: {"model": "medium-0b3"},
 }
 
 
