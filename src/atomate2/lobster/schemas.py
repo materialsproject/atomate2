@@ -597,7 +597,7 @@ class CalcQualitySummary(BaseModel):
             "bva_comp": True,
             **calc_quality_kwargs,
         }
-        print(calc_quality_kwargs_updated)
+        
         cal_quality_dict = Analysis.get_lobster_calc_quality_summary(
             path_to_poscar=structure_path,
             path_to_vasprun=vasprun_path,
@@ -845,9 +845,8 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         calc_quality_text = None
         describe = None
         describe_ionic = None
-        print(analyze_outputs)
-        if analyze_outputs:
-            if (
+        
+        if analyze_outputs and (
                 icohplist_path.exists()
                 and cohpcar_path.exists()
                 and charge_path.exists()
