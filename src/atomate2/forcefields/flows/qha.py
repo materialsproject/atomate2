@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Literal, TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from atomate2.common.flows.qha import CommonQhaMaker
 from atomate2.forcefields import _get_formatted_ff_name
@@ -12,7 +12,9 @@ from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
     from typing_extensions import Self
+
     from atomate2.forcefields import MLFF
+
 
 @dataclass
 class ForceFieldQhaMaker(CommonQhaMaker):
@@ -63,10 +65,10 @@ class ForceFieldQhaMaker(CommonQhaMaker):
 
     """
 
-    phonon_maker: PhononMaker
     name: str = "Forcefield QHA Maker"
     initial_relax_maker: ForceFieldRelaxMaker | None = None
     eos_relax_maker: ForceFieldRelaxMaker | None = None
+    phonon_maker: PhononMaker = None
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
     pressure: float | None = None
@@ -89,7 +91,13 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         return
 
     @classmethod
-    def from_force_field_name(cls, force_field_name : str | MLFF, relax_initial_structure: bool = True, run_eos_flow : bool = True, **kwargs) -> Self:
+    def from_force_field_name(
+        cls,
+        force_field_name: str | MLFF,
+        relax_initial_structure: bool = True,
+        run_eos_flow: bool = True,
+        **kwargs,
+    ) -> Self:
         """
         Create a QHA flow from a forcefield name.
 
@@ -112,17 +120,26 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         force_field_name = _get_formatted_ff_name(force_field_name)
         if relax_initial_structure:
             kwargs.update(
-                initial_relax_maker = ForceFieldRelaxMaker(force_field_name=force_field_name),
+                initial_relax_maker=ForceFieldRelaxMaker(
+                    force_field_name=force_field_name
+                ),
             )
         if run_eos_flow:
             kwargs.update(
-                eos_relax_maker = ForceFieldRelaxMaker(force_field_name=force_field_name, relax_cell=False, relax_kwargs={"fmax": 1e-5})
+                eos_relax_maker=ForceFieldRelaxMaker(
+                    force_field_name=force_field_name,
+                    relax_cell=False,
+                    relax_kwargs={"fmax": 1e-5},
+                )
             )
         return cls(
-            phonon_maker = PhononMaker.from_force_field_name(force_field_name = force_field_name, relax_initial_structure=False),
+            phonon_maker=PhononMaker.from_force_field_name(
+                force_field_name=force_field_name, relax_initial_structure=False
+            ),
             name=f"{force_field_name.split('MLFF.')[-1]} QHA Maker",
-            **kwargs
+            **kwargs,
         )
+
 
 @dataclass
 class CHGNetQhaMaker(CommonQhaMaker):
@@ -173,10 +190,10 @@ class CHGNetQhaMaker(CommonQhaMaker):
 
     """
 
+    name: str = "CHGNet QHA Maker"
     phonon_maker: PhononMaker = field(
         default_factory=lambda: PhononMaker(bulk_relax_maker=None)
     )
-    name: str = "CHGNet QHA Maker"
     initial_relax_maker: ForceFieldRelaxMaker | None = field(
         default_factory=lambda: ForceFieldRelaxMaker(force_field_name="CHGNet")
     )

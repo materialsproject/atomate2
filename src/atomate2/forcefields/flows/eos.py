@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
     from atomate2.forcefields import MLFF
 
+
 @dataclass
 class ForceFieldEosMaker(CommonEosMaker):
     """
@@ -85,11 +86,15 @@ class ForceFieldEosMaker(CommonEosMaker):
         force_field_name = _get_formatted_ff_name(force_field_name)
         if relax_initial_structure:
             kwargs.update(
-                initial_relax_maker = ForceFieldRelaxMaker(force_field_name=force_field_name)
+                initial_relax_maker=ForceFieldRelaxMaker(
+                    force_field_name=force_field_name
+                )
             )
         kwargs.update(
-            eos_relax_maker = ForceFieldRelaxMaker(force_field_name=force_field_name, relax_cell=False),
-            static_maker = None,
+            eos_relax_maker=ForceFieldRelaxMaker(
+                force_field_name=force_field_name, relax_cell=False
+            ),
+            static_maker=None,
         )
         return cls(
             name=f"{force_field_name.split('MLFF.')[-1]} EOS Maker",

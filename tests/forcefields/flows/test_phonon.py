@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
-import pytest
 
+import pytest
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
@@ -18,7 +18,9 @@ from atomate2.forcefields.flows.phonons import PhononMaker
 
 
 @pytest.mark.parametrize("from_name", [False, True])
-def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Path, from_name : bool):
+def test_phonon_wf_force_field(
+    clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool
+):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
     phonon_kwargs = dict(

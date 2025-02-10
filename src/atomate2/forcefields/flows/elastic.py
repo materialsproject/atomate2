@@ -135,7 +135,7 @@ class ElasticMaker(BaseElasticMaker):
             elastic_relax_maker=ForceFieldRelaxMaker(
                 relax_cell=False,
                 **default_kwargs,
-            )
+            ),
         )
         return cls(
             name=f"{str(force_field_name).split('MLFF.')[-1]} elastic",

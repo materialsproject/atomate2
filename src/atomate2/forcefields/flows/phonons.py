@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Literal, TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.phonons import BasePhononMaker
@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from atomate2.forcefields import MLFF
+
 
 @dataclass
 class PhononMaker(BasePhononMaker):
@@ -179,17 +180,17 @@ class PhononMaker(BasePhononMaker):
         force_field_name = _get_formatted_ff_name(force_field_name)
         if relax_initial_structure:
             kwargs.update(
-                bulk_relax_maker = ForceFieldRelaxMaker(
-                    force_field_name=force_field_name,
-                    relax_kwargs={"fmax": 1e-5}
+                bulk_relax_maker=ForceFieldRelaxMaker(
+                    force_field_name=force_field_name, relax_kwargs={"fmax": 1e-5}
                 )
             )
         kwargs.update(
-            static_energy_maker = ForceFieldStaticMaker(force_field_name=force_field_name),
-            phonon_displacement_maker = ForceFieldStaticMaker(force_field_name=force_field_name),
-            born_maker = None,
+            static_energy_maker=ForceFieldStaticMaker(
+                force_field_name=force_field_name
+            ),
+            phonon_displacement_maker=ForceFieldStaticMaker(
+                force_field_name=force_field_name
+            ),
+            born_maker=None,
         )
-        return cls(
-            name=f"{force_field_name.split('MLFF.')[-1]} Phonon Maker",
-            **kwargs
-        )
+        return cls(name=f"{force_field_name.split('MLFF.')[-1]} Phonon Maker", **kwargs)
