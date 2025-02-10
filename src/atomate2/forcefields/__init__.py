@@ -12,7 +12,8 @@ if TYPE_CHECKING:
 class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     """Names of ML force fields."""
 
-    MACE = "MACE"
+    MACE = "MACE" # This is MACE-MP-0-medium
+    MACE_MPA_0 = "MACE_MPA_0"
     GAP = "GAP"
     M3GNet = "M3GNet"
     CHGNet = "CHGNet"

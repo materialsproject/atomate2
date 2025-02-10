@@ -35,6 +35,7 @@ _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.NEP: {"model_filename": "nep.txt"},
     MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
     MLFF.MACE: {"model": "medium"},
+    MLFF.MACE_MPA_0 : {"model": "medium-mpa-0",},
 }
 
 
