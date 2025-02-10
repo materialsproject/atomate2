@@ -66,7 +66,7 @@ def monkeypatch_lobster(monkeypatch: pytest.MonkeyPatch, lobster_test_dir: Path)
         lobster_test_dir (Path): The directory containing reference files for LOBSTER tests.
     """
 
-    def mock_run_lobster(*args, **kwargs):
+    def mock_run_lobster(*args, **kwargs) -> None:
         from jobflow import CURRENT_JOB
 
         name = CURRENT_JOB.job.name
@@ -79,7 +79,7 @@ def monkeypatch_lobster(monkeypatch: pytest.MonkeyPatch, lobster_test_dir: Path)
     def _run(
         ref_paths: dict[str, str | Path],
         fake_run_lobster_kwargs: dict[str, dict[str, Sequence]],
-    ):
+    ) -> None:
         _LOBS_REF_PATHS.update(ref_paths)
         _FAKE_RUN_LOBSTER_KWARGS.update(fake_run_lobster_kwargs)
 
