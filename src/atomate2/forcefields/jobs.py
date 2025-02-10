@@ -34,6 +34,7 @@ _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.M3GNet: {"stress_weight": _GPa_to_eV_per_A3},
     MLFF.NEP: {"model_filename": "nep.txt"},
     MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
+    MLFF.MACE: {"model": "medium"},
 }
 
 
