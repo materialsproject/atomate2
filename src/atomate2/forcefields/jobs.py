@@ -35,6 +35,7 @@ _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.NEP: {"model_filename": "nep.txt"},
     MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
     MLFF.MACE: {"model": "medium"},
+    MLFF.MACE_MP_0: {"model": "medium"},
     MLFF.MACE_MPA_0: {"model": "medium-mpa-0"},
     MLFF.MACE_MP_0B3: {"model": "medium-0b3"},
 }
@@ -539,12 +540,12 @@ class NequipStaticMaker(ForceFieldStaticMaker):
 @deprecated(
     replacement=ForceFieldRelaxMaker,
     deadline=(2025, 1, 1),
-    message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldRelaxMaker.",
+    message="To use MACE-MP-0, set `force_field_name = 'MACE-MP-0'` in ForceFieldRelaxMaker.",
 )
 @dataclass
 class MACERelaxMaker(ForceFieldRelaxMaker):
     """
-    Maker to perform a relaxation using the MACE ML force field.
+    Maker to perform a relaxation using the MACE-MP-0 medium ML force field.
 
     Parameters
     ----------
@@ -575,8 +576,8 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = f"{MLFF.MACE} relax"
-    force_field_name: str | MLFF = MLFF.MACE
+    name: str = f"{MLFF.MACE_MP_0} relax"
+    force_field_name: str | MLFF = MLFF.MACE_MP_0
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float = 1e-2
@@ -589,12 +590,12 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
 @deprecated(
     replacement=ForceFieldStaticMaker,
     deadline=(2025, 1, 1),
-    message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldStaticMaker.",
+    message="To use MACE-MP-0, set `force_field_name = 'MACE_MP_0'` in ForceFieldStaticMaker.",
 )
 @dataclass
 class MACEStaticMaker(ForceFieldStaticMaker):
     """
-    Maker to calculate forces and stresses using the MACE force field.
+    Maker to calculate forces and stresses using the MACE-MP-0 force field.
 
     Parameters
     ----------
@@ -612,8 +613,8 @@ class MACEStaticMaker(ForceFieldStaticMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = f"{MLFF.MACE} static"
-    force_field_name: str | MLFF = MLFF.MACE
+    name: str = f"{MLFF.MACE_MP_0} static"
+    force_field_name: str | MLFF = MLFF.MACE_MP_0
     task_document_kwargs: dict = field(default_factory=dict)
 
 

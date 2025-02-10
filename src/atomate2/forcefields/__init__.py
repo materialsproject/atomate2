@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from enum import Enum
 from typing import TYPE_CHECKING
+import warnings
 
 if TYPE_CHECKING:
     from typing import Any
@@ -12,7 +13,8 @@ if TYPE_CHECKING:
 class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     """Names of ML force fields."""
 
-    MACE = "MACE"  # This is MACE-MP-0-medium
+    MACE = "MACE"  # This is MACE-MP-0 (medium), deprecated
+    MACE_MP_0 = "MACE-MP-0"
     MACE_MPA_0 = "MACE-MPA-0"
     MACE_MP_0B3 = "MACE-MP-0b3"
     GAP = "GAP"
@@ -53,4 +55,14 @@ def _get_formatted_ff_name(force_field_name: str | MLFF) -> str:
             force_field_name = MLFF[force_field_name]
         elif force_field_name in [v.value for v in MLFF]:
             force_field_name = MLFF(force_field_name)
-    return str(force_field_name)
+    force_field_name = str(force_field_name)
+    if force_field_name in {"MLFF.MACE","MACE"}:
+        warnings.warn(
+            "Because the default MP-trained MACE model is constantly evolving, "
+            "we no longer recommend using `MACE` or `MLFF.MACE` to specify "
+            "a MACE model. For reproducibility purposes, specifying `MACE` "
+            "will still default to MACE-MP-0 (medium), which is identical to "
+            "specifying `MLFF.MACE_MP_0`.",
+            category=UserWarning,
+        )
+    return force_field_name

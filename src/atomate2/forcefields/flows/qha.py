@@ -142,7 +142,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
 
 
 @dataclass
-class CHGNetQhaMaker(CommonQhaMaker):
+class CHGNetQhaMaker(ForceFieldQhaMaker):
     """
     Perform quasi-harmonic approximation using CHGNet.
 

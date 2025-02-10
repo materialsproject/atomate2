@@ -207,12 +207,12 @@ class M3GNetEosMaker(CommonEosMaker):
 @deprecated(
     replacement=ForceFieldEosMaker,
     deadline=(2025, 1, 1),
-    message='Use ForceFieldEosMaker.from_force_field_name(force_field_name = "MACE")',
+    message='Use ForceFieldEosMaker.from_force_field_name(force_field_name = "MACE-MP-0")',
 )
 @dataclass
 class MACEEosMaker(CommonEosMaker):
     """
-    Generate equation of state data using the MACE ML forcefield.
+    Generate equation of state data using the MACE-MP-0 ML forcefield.
 
     First relax a structure using relax_maker.
     Then perform a series of deformations on the relaxed structure, and
@@ -243,13 +243,13 @@ class MACEEosMaker(CommonEosMaker):
         TODO: remove this when clash is fixed
     """
 
-    name: str = "MACE EOS Maker"
+    name: str = "MACE-MP-0 EOS Maker"
     initial_relax_maker: Maker = field(
-        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="MACE")
+        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="MACE-MP-0")
     )
     eos_relax_maker: Maker = field(
         default_factory=lambda: ForceFieldRelaxMaker(
-            force_field_name="MACE", relax_cell=False
+            force_field_name="MACE-MP-0", relax_cell=False
         )
     )
     static_maker: Maker = None
