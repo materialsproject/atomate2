@@ -177,8 +177,12 @@ def verify_inputs(ref_path: str | Path, lobsterin_settings: Sequence[str]) -> No
     ref = Lobsterin.from_file(Path(ref_path) / "inputs" / "lobsterin")
 
     for key in lobsterin_settings:
-        if user.get(key) != ref.get(key):
-            raise ValueError(f"lobsterin value of {key} is inconsistent!")
+        ref_val, user_val = ref.get(key), user.get(key)
+        if ref_val != user_val:
+            raise ValueError(
+                f"lobsterin value of {key} is inconsistent, got {user_val} but "
+                f"expected {ref_val}!"
+            )
 
 
 def copy_lobster_outputs(ref_path: str | Path) -> None:
