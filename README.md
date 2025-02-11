@@ -96,7 +96,7 @@ started:
 
 - [Introduction to running workflows][running-workflows]
 - [Using atomate2 with FireWorks][atomate2_fireworks]
-- [Overview of key concepts][key-concepts-in-atomate2-job-flow-makers-inputset-taskdocument-and-builder]
+- [Overview of key concepts][key-concepts]
 - [List of VASP workflows][vasp_workflows]
 
 ## Need help?
@@ -152,6 +152,7 @@ A journal submission of `atomate2` is undergoing peer review. In the meantime, p
 [contributors]: https://materialsproject.github.io/atomate2/about/contributors.html
 [license]: https://raw.githubusercontent.com/materialsproject/atomate2/main/LICENSE
 [running-workflows]: https://materialsproject.github.io/atomate2/user/running-workflows.html
+[key-concepts]: https://materialsproject.github.io/atomate2/user/key_concepts_overview.html#key-concepts-in-atomate2-job-flow-makers-inputset-taskdocument-and-builder
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html
 [vasp_workflows]: https://materialsproject.github.io/atomate2/user/codes/vasp.html
 [RelaxBandStructure]: https://materialsproject.github.io/atomate2/user/codes/vasp.html#relax-and-band-structure
