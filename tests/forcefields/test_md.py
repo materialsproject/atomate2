@@ -1,7 +1,7 @@
 """Tests for forcefield MD flows."""
 
-from contextlib import nullcontext
 import sys
+from contextlib import nullcontext
 from pathlib import Path
 
 import numpy as np
@@ -43,22 +43,22 @@ def test_maker_initialization():
     for mlff in MLFF.__members__:
         context_mgr = nullcontext()
         if mlff == "MACE":
-            context_mgr = pytest.warns(UserWarning, match = "default MP-trained MACE")
-        
+            context_mgr = pytest.warns(UserWarning, match="default MP-trained MACE")
+
         with context_mgr:
             assert ForceFieldMDMaker(force_field_name=MLFF(mlff)) == ForceFieldMDMaker(
                 force_field_name=mlff
             )
-            assert ForceFieldMDMaker(force_field_name=str(MLFF(mlff))) == ForceFieldMDMaker(
-                force_field_name=mlff
-            )
+            assert ForceFieldMDMaker(
+                force_field_name=str(MLFF(mlff))
+            ) == ForceFieldMDMaker(force_field_name=mlff)
 
 
 @pytest.mark.parametrize("ff_name", MLFF)
 def test_ml_ff_md_maker(
     ff_name, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
 ):
-    if ff_name in map(MLFF, ("Forcefield","MACE")):
+    if ff_name in map(MLFF, ("Forcefield", "MACE")):
         return  # nothing to test here, MLFF.Forcefield is just a generic placeholder
     if ff_name == MLFF.GAP and sys.version_info >= (3, 12):
         pytest.skip(

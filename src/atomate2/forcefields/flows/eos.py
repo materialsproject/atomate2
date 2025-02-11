@@ -207,7 +207,9 @@ class M3GNetEosMaker(CommonEosMaker):
 @deprecated(
     replacement=ForceFieldEosMaker,
     deadline=(2025, 1, 1),
-    message='Use ForceFieldEosMaker.from_force_field_name(force_field_name = "MACE-MP-0")',
+    message=(
+        'Use ForceFieldEosMaker.from_force_field_name(force_field_name = "MACE-MP-0")'
+    ),
 )
 @dataclass
 class MACEEosMaker(CommonEosMaker):

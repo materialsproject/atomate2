@@ -199,7 +199,9 @@ class NEPMDMaker(ForceFieldMDMaker):
 @deprecated(
     replacement=ForceFieldMDMaker,
     deadline=(2025, 1, 1),
-    message="To use MACE-MP-0, set `force_field_name = 'MACE_MP_0'` in ForceFieldMDMaker.",
+    message=(
+        "To use MACE-MP-0, set `force_field_name = 'MACE_MP_0'` in ForceFieldMDMaker."
+    ),
 )
 @dataclass
 class MACEMDMaker(ForceFieldMDMaker):

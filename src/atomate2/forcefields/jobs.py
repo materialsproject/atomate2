@@ -540,7 +540,10 @@ class NequipStaticMaker(ForceFieldStaticMaker):
 @deprecated(
     replacement=ForceFieldRelaxMaker,
     deadline=(2025, 1, 1),
-    message="To use MACE-MP-0, set `force_field_name = 'MACE-MP-0'` in ForceFieldRelaxMaker.",
+    message=(
+        "To use MACE-MP-0, set `force_field_name = 'MACE-MP-0'` "
+        "in ForceFieldRelaxMaker."
+    ),
 )
 @dataclass
 class MACERelaxMaker(ForceFieldRelaxMaker):
@@ -590,7 +593,10 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
 @deprecated(
     replacement=ForceFieldStaticMaker,
     deadline=(2025, 1, 1),
-    message="To use MACE-MP-0, set `force_field_name = 'MACE_MP_0'` in ForceFieldStaticMaker.",
+    message=(
+        "To use MACE-MP-0, set `force_field_name = 'MACE_MP_0'` "
+        "in ForceFieldStaticMaker."
+    ),
 )
 @dataclass
 class MACEStaticMaker(ForceFieldStaticMaker):

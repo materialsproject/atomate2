@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import warnings
 from enum import Enum
 from typing import TYPE_CHECKING
-import warnings
 
 if TYPE_CHECKING:
     from typing import Any
@@ -56,7 +56,7 @@ def _get_formatted_ff_name(force_field_name: str | MLFF) -> str:
         elif force_field_name in [v.value for v in MLFF]:
             force_field_name = MLFF(force_field_name)
     force_field_name = str(force_field_name)
-    if force_field_name in {"MLFF.MACE","MACE"}:
+    if force_field_name in {"MLFF.MACE", "MACE"}:
         warnings.warn(
             "Because the default MP-trained MACE model is constantly evolving, "
             "we no longer recommend using `MACE` or `MLFF.MACE` to specify "
@@ -64,5 +64,6 @@ def _get_formatted_ff_name(force_field_name: str | MLFF) -> str:
             "will still default to MACE-MP-0 (medium), which is identical to "
             "specifying `MLFF.MACE_MP_0`.",
             category=UserWarning,
+            stacklevel=2,
         )
     return force_field_name
