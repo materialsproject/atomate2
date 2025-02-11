@@ -43,7 +43,7 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
     calculator = None
 
     if isinstance(calculator_meta, str | MLFF) and calculator_meta in map(str, MLFF):
-        calculator_name = MLFF(calculator_meta.split("MLFF.")[-1])
+        calculator_name = MLFF[calculator_meta.split("MLFF.")[-1]]
 
         if calculator_name == MLFF.CHGNet:
             from chgnet.model.dynamics import CHGNetCalculator
@@ -58,7 +58,9 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             potential = matgl.load_model(path)
             calculator = PESCalculator(potential, **kwargs)
 
-        elif calculator_name == MLFF.MACE:
+        elif calculator_name in map(
+            MLFF, ("MACE", "MACE-MP-0", "MACE-MPA-0", "MACE-MP-0b3")
+        ):
             from mace.calculators import MACECalculator, mace_mp
 
             model = kwargs.get("model")
