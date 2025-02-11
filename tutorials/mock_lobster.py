@@ -2,6 +2,7 @@
 
 import contextlib
 import os
+import shutil
 import tempfile
 from collections.abc import Generator
 from pathlib import Path
@@ -36,4 +37,4 @@ def mock_lobster(ref_paths: dict) -> Generator:
             yield mf(ref_paths, fake_run_lobster_kwargs=fake_run_lobster_kwargs)
         finally:
             os.chdir(old_cwd)
-            # shutil.rmtree(new_path)
+            shutil.rmtree(new_path)
