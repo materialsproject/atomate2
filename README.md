@@ -96,7 +96,7 @@ started:
 
 - [Introduction to running workflows][running-workflows]
 - [Using atomate2 with FireWorks][atomate2_fireworks]
-- [Overview of key concepts][key_concepts_overview]
+- [Overview of key concepts][key-concepts-in-atomate2-job-flow-makers-inputset-taskdocument-and-builder]
 - [List of VASP workflows][vasp_workflows]
 
 ## Need help?
