@@ -23,8 +23,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
 
     temperatures: Optional[list[float]] = Field(
         None,
-        description="temperatures at which the vibrational"
-        " part of the free energies"
+        description="temperatures at which the vibrational part of the free energies"
         " and other properties have been computed",
     )
 
@@ -33,8 +32,8 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     )
     thermal_expansion: Optional[list[float]] = Field(
         None,
-        description="Thermal expansion coefficients at temperatures."
-        "Shape=(temperatures, ). ",
+        description="Thermal expansion coefficients at temperatures. "
+        "Shape=(temperatures,).",
     )
     helmholtz_volume: Optional[list[list[float]]] = Field(
         None,
@@ -43,25 +42,24 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     )
     volume_temperature: Optional[list[float]] = Field(
         None,
-        description="Volumes in Angstrom^3 at temperatures.Shape: (temperatures, )",
+        description="Volumes in Angstrom^3 at temperatures.Shape: (temperatures,)",
     )
     gibbs_temperature: Optional[list[float]] = Field(
         None,
-        description="Gibbs free energies in eV at temperatures."
-        "Shape: (temperatures, )",
+        description="Gibbs free energies in eV at temperatures. Shape: (temperatures,)",
     )
     bulk_modulus_temperature: Optional[list[float]] = Field(
         None,
-        description="Bulk modulus in GPa  at temperature.Shape: (temperatures, )",
+        description="Bulk modulus in GPa  at temperature.Shape: (temperatures,)",
     )
     heat_capacity_p_numerical: Optional[list[float]] = Field(
         None,
         description="Heat capacities in J/K/mol at constant pressure at temperatures."
-        "Shape: (temperatures, )",
+        "Shape: (temperatures,)",
     )
     gruneisen_temperature: Optional[list[float]] = Field(
         None,
-        description="Gruneisen parameters at temperatures.Shape: (temperatures, )",
+        description="Gruneisen parameters at temperatures.Shape: (temperatures,)",
     )
     pressure: Optional[float] = Field(
         None, description="Pressure in GPA at which Gibb's energy was computed"
@@ -75,17 +73,17 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     free_energies: Optional[list[list[float]]] = Field(
         None,
         description="List of free energies in J/mol for per formula unit. "
-        "Shape: (temperatuers, volumes)",
+        "Shape: (temperatures, volumes)",
     )
     heat_capacities: Optional[list[list[float]]] = Field(
         None,
         description="List of heat capacities in J/K/mol  per formula unit. "
-        "Shape: (temperatuers, volumes)",
+        "Shape: (temperatures, volumes)",
     )
     entropies: Optional[list[list[float]]] = Field(
         None,
         description="List of entropies in J/(K*mol) per formula unit. "
-        "Shape: (temperatuers, volumes) ",
+        "Shape: (temperatures, volumes) ",
     )
     formula_units: Optional[int] = Field(None, description="Formula units")
 

@@ -54,8 +54,7 @@ def setup_job(
 
     if structure is None and prev_outputs is None and restart_from is None:
         raise RuntimeError(
-            "At least one of structure, prev_outputs or "
-            "restart_from should be defined."
+            "At least one of structure, prev_outputs or restart_from should be defined."
         )
 
     if history is None:

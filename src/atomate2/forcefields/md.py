@@ -199,14 +199,16 @@ class NEPMDMaker(ForceFieldMDMaker):
 @deprecated(
     replacement=ForceFieldMDMaker,
     deadline=(2025, 1, 1),
-    message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldMDMaker.",
+    message=(
+        "To use MACE-MP-0, set `force_field_name = 'MACE_MP_0'` in ForceFieldMDMaker."
+    ),
 )
 @dataclass
 class MACEMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with MACE."""
+    """Perform an MD run with MACE-MP-0."""
 
-    name: str = f"{MLFF.MACE} MD"
-    force_field_name: str | MLFF = MLFF.MACE
+    name: str = f"{MLFF.MACE_MP_0} MD"
+    force_field_name: str | MLFF = MLFF.MACE_MP_0
     calculator_kwargs: dict = field(
         default_factory=lambda: {"default_dtype": "float32"}
     )

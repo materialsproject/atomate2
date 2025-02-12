@@ -1,6 +1,7 @@
 """Tests for forcefield MD flows."""
 
 import sys
+from contextlib import nullcontext
 from pathlib import Path
 
 import numpy as np
@@ -40,19 +41,24 @@ def test_maker_initialization():
     from atomate2.forcefields import MLFF
 
     for mlff in MLFF.__members__:
-        assert ForceFieldMDMaker(force_field_name=MLFF(mlff)) == ForceFieldMDMaker(
-            force_field_name=mlff
-        )
-        assert ForceFieldMDMaker(force_field_name=str(MLFF(mlff))) == ForceFieldMDMaker(
-            force_field_name=mlff
-        )
+        context_mgr = nullcontext()
+        if mlff == "MACE":
+            context_mgr = pytest.warns(UserWarning, match="default MP-trained MACE")
+
+        with context_mgr:
+            assert ForceFieldMDMaker(force_field_name=MLFF(mlff)) == ForceFieldMDMaker(
+                force_field_name=mlff
+            )
+            assert ForceFieldMDMaker(
+                force_field_name=str(MLFF(mlff))
+            ) == ForceFieldMDMaker(force_field_name=mlff)
 
 
 @pytest.mark.parametrize("ff_name", MLFF)
 def test_ml_ff_md_maker(
     ff_name, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
 ):
-    if ff_name == MLFF.Forcefield:
+    if ff_name in map(MLFF, ("Forcefield", "MACE")):
         return  # nothing to test here, MLFF.Forcefield is just a generic placeholder
     if ff_name == MLFF.GAP and sys.version_info >= (3, 12):
         pytest.skip(
@@ -66,7 +72,9 @@ def test_ml_ff_md_maker(
     ref_energies_per_atom = {
         MLFF.CHGNet: -5.280157089233398,
         MLFF.M3GNet: -5.387282371520996,
-        MLFF.MACE: -5.311369895935059,
+        MLFF.MACE_MP_0: -5.311369895935059,
+        MLFF.MACE_MPA_0: -5.40242338180542,
+        MLFF.MACE_MP_0B3: -5.403963088989258,
         MLFF.GAP: -5.391255755606209,
         MLFF.NEP: -3.966232215741286,
         MLFF.Nequip: -8.84670181274414,

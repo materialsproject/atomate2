@@ -89,6 +89,7 @@ jobs:
           micromamba activate a2
           pytest --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --cov=atomate2 --cov-report=xml
 
+
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
         with:
@@ -150,7 +151,7 @@ jobs:
       - name: Test Notebooks
         run: |
           micromamba activate a2
-          pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb
+          pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields
 
       - name: Test ASE
         env:
@@ -164,6 +165,81 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
+
+  test-force-field-notebook:
+    # prevent this action from running on forks
+    if: github.repository == 'materialsproject/atomate2'
+
+    services:
+      local_mongodb:
+        image: mongo:4.0
+        ports:
+          - 27017:27017
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up micromamba
+        uses: mamba-org/setup-micromamba@main
+
+      - name: Create mamba environment
+        run: |
+          micromamba create -n a2 python=${{ matrix.python-version }} --yes
+
+      - name: Install uv
+        run: micromamba run -n a2 pip install uv
+
+      - name: Install conda dependencies
+        run: |
+          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
+
+      - name: Install dependencies
+        run: |
+          micromamba activate a2
+          python -m pip install --upgrade pip
+          mkdir -p ~/.abinit/pseudos
+          cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
+          uv pip install .[strict,strict-forcefields,tests,abinit]
+          uv pip install torch-runstats
+          uv pip install --no-deps nequip==0.5.6
+
+      - name: Install pymatgen from master if triggered by pymatgen repo dispatch
+        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
+        run: |
+          micromamba activate a2
+          uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
+
+      - name: Forcefield tutorial
+        env:
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}
+
+        # regenerate durations file with `pytest --store-durations --durations-path tests/.pytest-split-durations`
+        # Note the use of `--splitting-algorithm least_duration`.
+        # This helps prevent a test split having no tests to run, and then the GH action failing, see:
+        # https://github.com/jerry-git/pytest-split/issues/95
+        # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
+        run: |
+          micromamba activate a2
+          pytest --nbmake ./tutorials/force_fields
+
+
+      - uses: codecov/codecov-action@v1
+        if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          name: coverage
+          file: ./coverage.xml
+
+
 
   docs:
     runs-on: ubuntu-latest
@@ -186,7 +262,7 @@ jobs:
         run: sphinx-build docs docs_build
 
   automerge:
-    needs: [lint, test-non-ase, test-notebooks-and-ase, docs]
+    needs: [lint, test-non-ase, test-notebooks-and-ase, test-force-field-notebook, docs]
     runs-on: ubuntu-latest
 
     permissions:

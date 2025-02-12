@@ -51,8 +51,7 @@ class AseResult(BaseModel):
     is_force_converged: Optional[bool] = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
@@ -220,8 +219,7 @@ class AseStructureTaskDoc(StructureMetadata):
     is_force_converged: Optional[bool] = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
@@ -249,10 +247,12 @@ class AseStructureTaskDoc(StructureMetadata):
             Additional keyword args passed to :obj:`.AseStructureTaskDoc()`.
         """
         task_document_kwargs.update(
-            {k: getattr(ase_task_doc, k) for k in _task_doc_translation_keys}
+            {k: getattr(ase_task_doc, k) for k in _task_doc_translation_keys},
+            structure=ase_task_doc.mol_or_struct,
         )
-        task_document_kwargs["structure"] = ase_task_doc.mol_or_struct
-        return cls(**task_document_kwargs)
+        return cls.from_structure(
+            meta_structure=ase_task_doc.mol_or_struct, **task_document_kwargs
+        )
 
 
 class AseMoleculeTaskDoc(MoleculeMetadata):
@@ -285,8 +285,7 @@ class AseMoleculeTaskDoc(MoleculeMetadata):
     is_force_converged: Optional[bool] = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
@@ -329,8 +328,7 @@ class AseTaskDoc(AseBaseModel):
     is_force_converged: Optional[bool] = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
