@@ -28,7 +28,7 @@ def test_approx_neb_flow(mock_vasp, clean_dir, vasp_test_dir):
     )
 
     ref_paths = {
-        job_name: f"ApproxNeb/{job_name.replace(' ','_')}"
+        job_name: f"ApproxNeb/{job_name.replace(' ', '_')}"
         for job_name in [
             "host structure relax 1",
             "host structure relax 2",

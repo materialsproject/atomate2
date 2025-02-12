@@ -73,7 +73,7 @@ class ApproxNebFromEndpointsMaker(Maker):
             copy outputs from.
 
         Returns
-        ----------
+        -------
         Flow
             A flow performing an AppoxNEB calculation for a single hop.
         """
@@ -119,7 +119,7 @@ class ApproxNebFromEndpointsMaker(Maker):
             Path to the calculation containing the previous charge density.
 
         Returns
-        ----------
+        -------
             VolumetricData
                 The charge density
         """

@@ -161,7 +161,7 @@ def get_images_and_relax(
         image_relax_output[combo] = []
         for image_idx, image in enumerate(images_list):
             relax_job = relax_maker.make(image)
-            relax_job.append_name(f" hop {combo} image {image_idx+1}")
+            relax_job.append_name(f" hop {combo} image {image_idx + 1}")
             image_relax_jobs.append(relax_job)
             image_relax_output[combo].append(
                 {

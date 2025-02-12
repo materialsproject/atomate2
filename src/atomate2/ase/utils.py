@@ -519,7 +519,7 @@ class AseNebInterface:
                 traj_file_prefix = ".".join(traj_file_split[:-1])
                 traj_file_ext = traj_file[-1]
                 observers[idx].save(
-                    f"{traj_file_prefix}-image-{idx+1}.{traj_file_ext}",
+                    f"{traj_file_prefix}-image-{idx + 1}.{traj_file_ext}",
                     fmt=traj_file_fmt,
                 )
 

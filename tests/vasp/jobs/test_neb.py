@@ -102,7 +102,7 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
 
     fixed_cell_vol = structure.volume
     assert all(
-        output[f"relax endpoint {1+idx}"].output.structure.volume
+        output[f"relax endpoint {1 + idx}"].output.structure.volume
         == pytest.approx(fixed_cell_vol)
         for idx in range(2)
     )
@@ -151,7 +151,9 @@ def test_neb_from_images_maker(mock_vasp, clean_dir, vasp_test_dir):
     base_neb_dir = Path(vasp_test_dir) / "Si_NEB"
 
     endpoints = [
-        Structure.from_file(base_neb_dir / f"relax_endpoint_{1+idx}/outputs/CONTCAR.gz")
+        Structure.from_file(
+            base_neb_dir / f"relax_endpoint_{1 + idx}/outputs/CONTCAR.gz"
+        )
         for idx in range(2)
     ]
     images = endpoints[0].interpolate(

@@ -1,22 +1,16 @@
 """Run an ApproxNEB flow using MLIPs."""
 
-from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from collections.abc import Sequence
+from dataclasses import dataclass
+from pathlib import Path
 
+from pymatgen.io.common import VolumetricData
 from pymatgen.io.vasp.outputs import Chgcar
+from typing_extensions import Self
 
-from atomate2.forcefields import _get_formatted_ff_name
 from atomate2.common.flows.approx_neb import ApproxNebFromEndpointsMaker
+from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
-
-if TYPE_CHECKING:
-    from pathlib import Path
-    from typing import Sequence
-    from typing_extensions import Self
-
-    from pymatgen.io.common import VolumetricData
-    
-    from atomate2.forcefields import MLFF
 
 
 @dataclass
@@ -40,12 +34,11 @@ class MLFFApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
         If False, no checks are made.
     """
 
-    image_relax_maker : ForceFieldRelaxMaker
+    image_relax_maker: ForceFieldRelaxMaker
     name: str = "MLFF ApproxNEB single hop from endpoints maker"
 
     def get_charge_density(
-        self,
-        prev_dir_or_chgcar : str | Path | Chgcar | Sequence[str | Path | Chgcar]
+        self, prev_dir_or_chgcar: str | Path | Chgcar | Sequence[str | Path | Chgcar]
     ) -> VolumetricData:
         """Obtain charge density from a specified path, CHGCAR, or list of them.
 
@@ -55,7 +48,7 @@ class MLFFApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
             Path(s) to the CHGCAR/AECCAR* file(s) or the object(s) themselves.
 
         Returns
-        ----------
+        -------
             VolumetricData
                 The charge density
         """
@@ -63,14 +56,13 @@ class MLFFApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
             prev_dir_or_chgcar = [prev_dir_or_chgcar]
 
         for idx, obj in enumerate(prev_dir_or_chgcar):
-            if isinstance(obj, str | Path):
-                obj = Chgcar.from_file(obj)
+            chg = Chgcar.from_file(obj) if isinstance(obj, str | Path) else obj
             if idx == 0:
-                charge_density = obj
+                charge_density = chg
             else:
-                charge_density += obj
+                charge_density += chg
         return charge_density
-    
+
     @classmethod
     def from_force_field_name(
         cls,
@@ -95,11 +87,12 @@ class MLFFApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
         force_field_name = _get_formatted_ff_name(force_field_name)
         kwargs.update(
             image_relax_maker=ForceFieldRelaxMaker(
-                force_field_name=force_field_name,
-                relax_cell=False
+                force_field_name=force_field_name, relax_cell=False
             ),
         )
         return cls(
-            name=f"{force_field_name.split('MLFF.')[-1]} ApproxNEB from endpoints Maker",
+            name=(
+                f"{force_field_name.split('MLFF.')[-1]} ApproxNEB from endpoints Maker"
+            ),
             **kwargs,
         )
