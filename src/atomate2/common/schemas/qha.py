@@ -38,7 +38,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     helmholtz_volume: Optional[list[list[float]]] = Field(
         None,
         description="Free energies at temperatures and volumes."
-        "shape (temperatures, volumes)",
+        "shape (temperatures, volumes)", #TODO: add units here
     )
     volume_temperature: Optional[list[float]] = Field(
         None,

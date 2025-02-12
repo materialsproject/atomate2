@@ -77,6 +77,7 @@ def get_supercell_matrix(
                 allow_orthorhombic=allow_orthorhombic,
             )
             transformation.apply_transformation(structure=structure)
+    print(transformation.transformation_matrix.transpose().tolist())
     # matrix from pymatgen has to be transposed
     return transformation.transformation_matrix.transpose().tolist()
 
