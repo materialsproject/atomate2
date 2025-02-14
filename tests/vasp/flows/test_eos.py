@@ -153,7 +153,10 @@ def test_mp_eos_maker(
     # deformation jobs not included in this
     assert len(job_output) == len(ref_paths)
 
-    ref_energies = {"EOS MP GGA relax 1 EOS equilibrium relaxation": -10.849349, "EOS MP GGA relax 2 EOS equilibrium relaxation": -10.849357}
+    ref_energies = {
+        "EOS MP GGA relax 1 EOS equilibrium relaxation": -10.849349,
+        "EOS MP GGA relax 2 EOS equilibrium relaxation": -10.849357,
+    }
     if do_statics:
         ref_energies["EOS equilibrium static"] = -10.849357
 
