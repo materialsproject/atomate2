@@ -1,5 +1,5 @@
 (tutorials)=
-
+[comment]: # This file will be copied to the docs to help including the tutorials
 # Tutorials
 
 The section includes tutorials for workflows in atomate2.
