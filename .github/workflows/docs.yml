@@ -36,7 +36,10 @@ jobs:
           pip install .[strict,docs]
 
       - name: Copy tutorials
-        run: cp -r tutorials docs/
+        run: |
+          cp -r tutorials docs/
+          jupyter nbconvert --to markdown docs/tutorials/*.ipynb
+          jupyter nbconvert --to markdown docs/tutorials/*/*.ipynb
 
       - name: Build
         run: sphinx-build docs docs_build
