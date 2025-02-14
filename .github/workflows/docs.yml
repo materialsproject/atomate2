@@ -35,9 +35,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install .[strict,docs]
 
-      -name: Copy tutorials
-        run: |
-          cp -r tutorials docs/
+      - name: Copy tutorials
+        run: cp -r tutorials docs/
 
       - name: Build
         run: sphinx-build docs docs_build
