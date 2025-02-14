@@ -96,8 +96,9 @@ class CommonEosMaker(Maker):
             relax_flow.name = "EOS equilibrium relaxation"
 
             try:
-                for job in relax_flow.jobs:
-                    job.append_name(" EOS equilibrium relaxation")
+                if len(relax_flow.jobs) > 1:
+                    for job in relax_flow.jobs:
+                        job.append_name(" EOS equilibrium relaxation")
             except AttributeError:
                 pass
             flow_output["initial_relax"] = {
@@ -159,8 +160,9 @@ class CommonEosMaker(Maker):
             )
             relax_job.name += f" deformation {frame_idx}"
             try:
-                for job in relax_job.jobs:
-                    job.append_name(f" deformation {frame_idx}")
+                if len(relax_job.jobs) > 1:
+                    for job in relax_job.jobs:
+                        job.append_name(f" deformation {frame_idx}")
             except AttributeError:
                 pass
             jobs["relax"].append(relax_job)

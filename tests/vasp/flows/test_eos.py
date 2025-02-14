@@ -23,7 +23,11 @@ expected_incar_relax_1 = expected_incar_relax | {"EDIFFG": -0.05}
 
 expected_incar_deform = expected_incar_relax | {"ISIF": 2}
 
-expected_incar_static = expected_incar_relax | {"NSW": 0, "IBRION": -1, "ISMEAR": -5}
+expected_incar_static = expected_incar_relax | {
+    "NSW": 0,
+    "IBRION": -1,
+    "ISMEAR": -5,
+}
 expected_incar_static.pop("ISIF")
 
 
@@ -77,11 +81,13 @@ def test_mp_eos_maker(
     n_frames: int = 2,
     linear_strain: tuple = (-0.05, 0.05),
 ):
+    relax_job_name_1 = "EOS MP GGA relax 1 EOS equilibrium relaxation"
+    relax_job_name_2 = "EOS MP GGA relax 2 EOS equilibrium relaxation"
     base_ref_path = "Si_EOS_MP_GGA/"
     ref_paths = {}
     expected_incars = {
-        "EOS MP GGA relax 1 EOS equilibrium relaxation": expected_incar_relax_1,
-        "EOS MP GGA relax 2 EOS equilibrium relaxation": expected_incar_relax,
+        relax_job_name_1: expected_incar_relax_1,
+        relax_job_name_2: expected_incar_relax,
     }
 
     for idx in range(2):
@@ -118,9 +124,7 @@ def test_mp_eos_maker(
         )
 
     structure = Structure.from_file(
-        f"{vasp_test_dir}/{
-            ref_paths['EOS MP GGA relax 1 EOS equilibrium relaxation']
-        }/inputs/POSCAR.gz"
+        f"{vasp_test_dir}/{ref_paths[relax_job_name_1]}/inputs/POSCAR.gz"
     )
 
     # cannot perform least-squares fit for four parameters with only 3 data points
