@@ -80,12 +80,12 @@ def test_mp_eos_maker(
     base_ref_path = "Si_EOS_MP_GGA/"
     ref_paths = {}
     expected_incars = {
-        "EOS MP GGA relax 1": expected_incar_relax_1,
-        "EOS MP GGA relax 2": expected_incar_relax,
+        "EOS MP GGA relax 1 EOS equilibrium relaxation": expected_incar_relax_1,
+        "EOS MP GGA relax 2 EOS equilibrium relaxation": expected_incar_relax,
     }
 
     for idx in range(2):
-        ref_paths[f"EOS MP GGA relax {idx + 1}"] = (
+        ref_paths[f"EOS MP GGA relax {idx + 1} EOS equilibrium relaxation"] = (
             f"mp-149-PBE-EOS_MP_GGA_relax_{idx + 1}"
         )
 
@@ -118,7 +118,7 @@ def test_mp_eos_maker(
         )
 
     structure = Structure.from_file(
-        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1']}/inputs/POSCAR.gz"
+        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1 EOS equilibrium relaxation']}/inputs/POSCAR.gz"
     )
 
     # cannot perform least-squares fit for four parameters with only 3 data points
@@ -153,7 +153,7 @@ def test_mp_eos_maker(
     # deformation jobs not included in this
     assert len(job_output) == len(ref_paths)
 
-    ref_energies = {"EOS MP GGA relax 1": -10.849349, "EOS MP GGA relax 2": -10.849357}
+    ref_energies = {"EOS MP GGA relax 1 EOS equilibrium relaxation": -10.849349, "EOS MP GGA relax 2 EOS equilibrium relaxation": -10.849357}
     if do_statics:
         ref_energies["EOS equilibrium static"] = -10.849357
 
