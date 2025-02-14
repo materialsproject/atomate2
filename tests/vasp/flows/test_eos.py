@@ -118,7 +118,9 @@ def test_mp_eos_maker(
         )
 
     structure = Structure.from_file(
-        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax 1 EOS equilibrium relaxation']}/inputs/POSCAR.gz"
+        f"{vasp_test_dir}/{
+            ref_paths['EOS MP GGA relax 1 EOS equilibrium relaxation']
+        }/inputs/POSCAR.gz"
     )
 
     # cannot perform least-squares fit for four parameters with only 3 data points
