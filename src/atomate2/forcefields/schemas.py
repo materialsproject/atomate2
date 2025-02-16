@@ -8,9 +8,16 @@ from emmet.core.utils import ValueEnum
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from monty.dev import deprecated
 from pydantic import Field
-from pymatgen.core import Structure
+from pymatgen.core import Molecule, Structure
 
-from atomate2.ase.schemas import AseObject, AseResult, AseStructureTaskDoc, AseTaskDoc
+from atomate2.ase.schemas import (
+    AseMoleculeTaskDoc,
+    AseObject,
+    AseResult,
+    AseStructureTaskDoc,
+    AseTaskDoc,
+    _task_doc_translation_keys,
+)
 from atomate2.forcefields import MLFF
 
 
@@ -36,7 +43,81 @@ class ForcefieldObject(ValueEnum):
     TRAJECTORY = "trajectory"
 
 
-class ForceFieldTaskDocument(AseStructureTaskDoc):
+class ForceFieldStructureTaskDocument(AseStructureTaskDoc):
+    """Document containing information on structure manipulation using a force field."""
+
+    forcefield_name: Optional[str] = Field(
+        None,
+        description="name of the interatomic potential used for relaxation.",
+    )
+
+    forcefield_version: Optional[str] = Field(
+        "Unknown",
+        description="version of the interatomic potential used for relaxation.",
+    )
+
+    dir_name: Optional[str] = Field(
+        None, description="Directory where the force field calculations are performed."
+    )
+
+    included_objects: Optional[list[AseObject]] = Field(
+        None, description="list of forcefield objects included with this task document"
+    )
+    objects: Optional[dict[AseObject, Any]] = Field(
+        None, description="Forcefield objects associated with this task"
+    )
+
+    is_force_converged: Optional[bool] = Field(
+        None,
+        description=(
+            "Whether the calculation is converged with respect to interatomic forces."
+        ),
+    )
+
+    @property
+    def forcefield_objects(self) -> Optional[dict[AseObject, Any]]:
+        """Alias `objects` attr for backwards compatibility."""
+        return self.objects
+
+
+class ForceFieldMoleculeTaskDocument(AseMoleculeTaskDoc):
+    """Document containing information on structure manipulation using a force field."""
+
+    forcefield_name: Optional[str] = Field(
+        None,
+        description="name of the interatomic potential used for relaxation.",
+    )
+
+    forcefield_version: Optional[str] = Field(
+        "Unknown",
+        description="version of the interatomic potential used for relaxation.",
+    )
+
+    dir_name: Optional[str] = Field(
+        None, description="Directory where the force field calculations are performed."
+    )
+
+    included_objects: Optional[list[AseObject]] = Field(
+        None, description="list of forcefield objects included with this task document"
+    )
+    objects: Optional[dict[AseObject, Any]] = Field(
+        None, description="Forcefield objects associated with this task"
+    )
+
+    is_force_converged: Optional[bool] = Field(
+        None,
+        description=(
+            "Whether the calculation is converged with respect to interatomic forces."
+        ),
+    )
+
+    @property
+    def forcefield_objects(self) -> Optional[dict[AseObject, Any]]:
+        """Alias `objects` attr for backwards compatibility."""
+        return self.objects
+
+
+class ForceFieldTaskDocument(AseTaskDoc):
     """Document containing information on structure manipulation using a force field."""
 
     forcefield_name: Optional[str] = Field(
@@ -68,7 +149,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
     )
 
     @classmethod
-    def from_ase_compatible_result(
+    def from_ase_compatible_result_forcefield(
         cls,
         ase_calculator_name: str,
         result: AseResult,
@@ -87,8 +168,8 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         tags: list[str] | None = None,
         **task_document_kwargs,
-    ) -> ForceFieldTaskDocument:
-        """Create an AseTaskDoc for a task that has ASE-compatible outputs.
+    ) -> ForceFieldStructureTaskDocument | ForceFieldMoleculeTaskDocument:
+        """Create an ForceField output for a task that has ASE-compatible outputs.
 
         Parameters
         ----------
@@ -154,6 +235,38 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             ff_kwargs["forcefield_version"] = importlib.metadata.version(pkg_name)
 
         return cls.from_ase_task_doc(ase_task_doc, **ff_kwargs)
+
+    @classmethod
+    def from_ase_task_doc(
+        cls, ase_task_doc: AseTaskDoc, **task_document_kwargs
+    ) -> ForceFieldStructureTaskDocument | ForceFieldMoleculeTaskDocument:
+        """Create an ForceField output for a task that has ASE-compatible outputs.
+
+        Parameters
+        ----------
+        ase_task_doc : AseTaskDoc
+            Task doc for the calculation
+        task_document_kwargs : dict
+            Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()`
+            or `.ForceFieldMoleculeTaskDocument()`.
+        """
+        task_document_kwargs.update(
+            {k: getattr(ase_task_doc, k) for k in _task_doc_translation_keys},
+        )
+        if isinstance(ase_task_doc.mol_or_struct, Structure):
+            meta_class = ForceFieldStructureTaskDocument
+            k = "structure"
+            if relax_cell := getattr(ase_task_doc, "relax_cell", None):
+                task_document_kwargs.update({"relax_cell": relax_cell})
+            task_document_kwargs.update(structure=ase_task_doc.mol_or_struct)
+        elif isinstance(ase_task_doc.mol_or_struct, Molecule):
+            meta_class = ForceFieldMoleculeTaskDocument
+            k = "molecule"
+            task_document_kwargs.update(molecule=ase_task_doc.mol_or_struct)
+        task_document_kwargs.update(
+            {k: ase_task_doc.mol_or_struct, f"meta_{k}": ase_task_doc.mol_or_struct}
+        )
+        return getattr(meta_class, f"from_{k}")(**task_document_kwargs)
 
     @property
     def forcefield_objects(self) -> Optional[dict[AseObject, Any]]:

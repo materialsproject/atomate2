@@ -232,27 +232,6 @@ class AseStructureTaskDoc(StructureMetadata):
 
     tags: list[str] | None = Field(None, description="List of tags for the task.")
 
-    @classmethod
-    def from_ase_task_doc(
-        cls, ase_task_doc: AseTaskDoc, **task_document_kwargs
-    ) -> AseStructureTaskDoc:
-        """Create an AseStructureTaskDoc for a task that has ASE-compatible outputs.
-
-        Parameters
-        ----------
-        ase_task_doc : AseTaskDoc
-            Task doc for the calculation
-        task_document_kwargs : dict
-            Additional keyword args passed to :obj:`.AseStructureTaskDoc()`.
-        """
-        task_document_kwargs.update(
-            {k: getattr(ase_task_doc, k) for k in _task_doc_translation_keys},
-            structure=ase_task_doc.mol_or_struct,
-        )
-        return cls.from_structure(
-            meta_structure=ase_task_doc.mol_or_struct, **task_document_kwargs
-        )
-
 
 class AseMoleculeTaskDoc(MoleculeMetadata):
     """Document containing information on molecule manipulation using ASE."""
