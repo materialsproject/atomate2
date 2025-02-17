@@ -248,6 +248,25 @@ adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
 
+You can use the following code to start the standard version of the workflow:
+```py
+from atomate2.vasp.flows.phonons import PhononMaker
+from pymatgen.core.structure import Structure
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
+    structure=struct
+)
+```
+
+
+
+
 ### Gruneisen parameter workflow
 
 Calculates mode-dependent Grüneisen parameters with the help of Phonopy.
@@ -352,8 +371,85 @@ lobster = update_user_incar_settings(lobster, {"NPAR": 4})
 run_locally(lobster, create_folders=True, store=SETTINGS.JOB_STORE)
 ```
 
-It is, however,  computationally very beneficial to define two different types of job scripts for the VASP and Lobster runs, as VASP and Lobster runs are parallelized differently (MPI vs. OpenMP).
-[FireWorks](https://github.com/materialsproject/fireworks) allows one to run the VASP and Lobster jobs with different job scripts. Please check out the [jobflow documentation on FireWorks](https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs) for more information.
+There are currently three different ways available to run the workflow efficiently, as VASP and LOBSTER rely on a different parallelization (MPI vs. OpenMP).
+One can use a job script (with some restrictions), or [Jobflow-remote](https://matgenix.github.io/jobflow-remote/) / [Fireworks](https://github.com/materialsproject/fireworks) for high-throughput runs.
+
+
+#### Running the LOBSTER workflow without database and with one job script only
+
+It is possible to run the VASP-LOBSTER workflow efficiently with a minimal setup.
+In this case, you will run the VASP calculations on the same node as the LOBSTER calculations.
+In between, the different computations you will switch from MPI to OpenMP parallelization.
+
+For example, for a node with 48 cores, you could use an adapted version of the following SLURM script:
+
+```bash
+#!/bin/bash
+#SBATCH -J vasplobsterjob
+#SBATCH -o ./%x.%j.out
+#SBATCH -e ./%x.%j.err
+#SBATCH -D ./
+#SBATCH --mail-type=END
+#SBATCH --mail-user=you@you.de
+#SBATCH --time=24:00:00
+#SBATCH --nodes=1
+#This needs to be adapted if you run with different cores
+#SBATCH --ntasks=48
+
+# ensure you load the modules to run VASP, e.g., module load vasp
+module load my_vasp_module
+# please activate the required conda environment
+conda activate my_environment
+cd my_folder
+# the following script needs to contain the workflow
+python xyz.py
+```
+
+The `LOBSTER_CMD` now needs an additional export of the number of threads.
+
+```yaml
+VASP_CMD: <<VASP_CMD>>
+LOBSTER_CMD: OMP_NUM_THREADS=48 <<LOBSTER_CMD>>
+```
+
+
+#### Jobflow-remote
+Please refer first to the general documentation of jobflow-remote: [https://matgenix.github.io/jobflow-remote/](https://matgenix.github.io/jobflow-remote/).
+
+```py
+from atomate2.vasp.flows.lobster import VaspLobsterMaker
+from pymatgen.core.structure import Structure
+from jobflow_remote import submit_flow, set_run_config
+from atomate2.vasp.powerups import update_user_incar_settings
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+lobster = VaspLobsterMaker().make(structure)
+
+resources = {"nodes": 3, "partition": "micro", "time": "00:55:00", "ntasks": 144}
+
+resources_lobster = {"nodes": 1, "partition": "micro", "time": "02:55:00", "ntasks": 48}
+lobster = set_run_config(lobster, name_filter="lobster", resources=resources_lobster)
+
+lobster = update_user_incar_settings(lobster, {"NPAR": 4})
+submit_flow(lobster, worker="my_worker", resources=resources, project="my_project")
+```
+
+The `LOBSTER_CMD` also needs an export of the threads.
+
+```yaml
+VASP_CMD: <<VASP_CMD>>
+LOBSTER_CMD: OMP_NUM_THREADS=48 <<LOBSTER_CMD>>
+```
+
+
+
+#### Fireworks
+Please first refer to the general documentation on running atomate2 workflows with fireworks: [https://materialsproject.github.io/atomate2/user/fireworks.html](https://materialsproject.github.io/atomate2/user/fireworks.html)
 
 Specifically, you might want to change the `_fworker` for the LOBSTER runs and define a separate `lobster` worker within FireWorks:
 
@@ -388,6 +484,16 @@ wf = flow_to_workflow(lobster)
 lpad = LaunchPad.auto_load()
 lpad.add_wf(wf)
 ```
+
+
+The `LOBSTER_CMD` can now be adapted to not include the number of threads:
+
+```yaml
+VASP_CMD: <<VASP_CMD>>
+LOBSTER_CMD: <<LOBSTER_CMD>>
+```
+
+#### Analyzing outputs
 
 Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:
 
@@ -425,42 +531,6 @@ for number, (key, cohp) in enumerate(
     plotter.save_plot(f"plots_cation_anion_bonds{number}.pdf")
 ```
 
-#### Running the LOBSTER workflow without database and with one job script only
-
-It is also possible to run the VASP-LOBSTER workflow with a minimal setup.
-In this case, you will run the VASP calculations on the same node as the LOBSTER calculations.
-In between, the different computations you will switch from MPI to OpenMP parallelization.
-
-For example, for a node with 48 cores, you could use an adapted version of the following SLURM script:
-
-```bash
-#!/bin/bash
-#SBATCH -J vasplobsterjob
-#SBATCH -o ./%x.%j.out
-#SBATCH -e ./%x.%j.err
-#SBATCH -D ./
-#SBATCH --mail-type=END
-#SBATCH --mail-user=you@you.de
-#SBATCH --time=24:00:00
-#SBATCH --nodes=1
-#This needs to be adapted if you run with different cores
-#SBATCH --ntasks=48
-
-# ensure you load the modules to run VASP, e.g., module load vasp
-module load my_vasp_module
-# please activate the required conda environment
-conda activate my_environment
-cd my_folder
-# the following script needs to contain the workflow
-python xyz.py
-```
-
-The `LOBSTER_CMD` now needs an additional export of the number of threads.
-
-```yaml
-VASP_CMD: <<VASP_CMD>>
-LOBSTER_CMD: OMP_NUM_THREADS=48 <<LOBSTER_CMD>>
-```
 
 (modifying_input_sets)=
 Modifying input sets

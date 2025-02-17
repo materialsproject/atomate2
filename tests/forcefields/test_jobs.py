@@ -319,6 +319,27 @@ def test_mace_relax_maker(
         assert output1.output.n_steps == 7
 
 
+def test_mace_mpa_0_relax_maker(
+    si_structure: Structure,
+):
+    job = ForceFieldRelaxMaker(
+        force_field_name="MACE_MPA_0",
+        steps=25,
+        relax_kwargs={"fmax": 0.005},
+    ).make(si_structure)
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validating the outputs of the job
+    output = responses[job.uuid][1].output
+
+    assert output.ase_calculator_name == "MLFF.MACE_MPA_0"
+    assert output.output.energy == pytest.approx(-10.829493522644043)
+    assert output.output.structure.volume == pytest.approx(40.87471552602735)
+    assert len(output.output.ionic_steps) == 4
+    assert output.structure.volume == output.output.structure.volume
+
+
 def test_gap_static_maker(si_structure: Structure, test_dir):
     importorskip("quippy")
 
