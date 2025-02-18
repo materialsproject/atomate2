@@ -123,7 +123,7 @@ class CalculationOutput(BaseModel):
     total_charge: float = Field(
         None,
         description=(
-            "Total system charge from last electronic step in number" "of electrons"
+            "Total system charge from last electronic step in numberof electrons"
         ),
     )
     stress: Optional[list[list]] = Field(
