@@ -100,9 +100,9 @@ def fake_run_jdftx(
             if isinstance(user_val, dict) and isinstance(ref_val, dict):
                 compare_dict(user_val, ref_val, key)
             else:
-                assert (
-                    user_val == ref_val
-                ), f"Mismatch for {key}: user_val={user_val}, ref_val={ref_val}"
+                assert user_val == ref_val, (
+                    f"Mismatch for {key}: user_val={user_val}, ref_val={ref_val}"
+                )
 
     logger.info("Verified inputs successfully")
 
