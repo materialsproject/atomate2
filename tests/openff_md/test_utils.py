@@ -231,7 +231,7 @@ def test_calculate_elyte_composition():
     comp_dict = calculate_elyte_composition(
         vol_ratio, salts, solvent_densities, "volume"
     )
-    counts = counts_from_masses(comp_dict, 101)
+    counts = counts_from_masses(comp_dict, 100)
     assert sum(counts.values()) == 101
 
     mol_ratio = {
