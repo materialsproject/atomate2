@@ -9,6 +9,7 @@ user/docs-schemas-emmet
 user/fireworks
 user/atomate-1-vs-2
 user/codes/index
+tutorials/tutorials
 ```
 
 ```{toctree}
