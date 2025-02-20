@@ -5,10 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from emmet.core.neb import NebResult
 from jobflow import job
 
 from atomate2.ase.neb import AseNebMaker
-from emmet.core.neb import NebResult
 from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import (
     _DEFAULT_CALCULATOR_KWARGS,

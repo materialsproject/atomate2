@@ -5,13 +5,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import numpy as np
-from emmet.core.neb import NebMethod
+from emmet.core.neb import HopFailureReason, NebMethod, NebPathwayResult, NebResult
 from emmet.core.vasp.task_valid import TaskState
 from jobflow import Flow, Response, job
 from pymatgen.analysis.diffusion.neb.pathfinder import ChgcarPotential, NEBPathfinder
 from pymatgen.core import Element
-
-from emmet.core.neb import HopFailureReason, NebPathwayResult, NebResult
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -22,6 +20,7 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
     from pymatgen.io.common import VolumetricData
     from pymatgen.util.typing import CompositionLike
+
 
 @job
 def get_endpoints_and_relax(

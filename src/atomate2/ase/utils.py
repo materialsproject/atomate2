@@ -20,14 +20,13 @@ from ase.io import Trajectory as AseTrajectory
 from ase.mep.neb import NEB
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
-from emmet.core.neb import NebMethod
+from emmet.core.neb import NebMethod, NebResult
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.ase.schemas import AseResult
-from emmet.core.neb import NebResult
 
 if TYPE_CHECKING:
     from os import PathLike

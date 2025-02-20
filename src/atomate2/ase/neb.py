@@ -5,11 +5,11 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from emmet.core.neb import NebResult
 from jobflow import job
 
 from atomate2.ase.jobs import _ASE_DATA_OBJECTS, AseMaker
 from atomate2.ase.utils import AseNebInterface
-from emmet.core.neb import NebResult
 
 if TYPE_CHECKING:
     from pathlib import Path

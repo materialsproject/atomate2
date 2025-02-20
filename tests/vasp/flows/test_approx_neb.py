@@ -3,11 +3,11 @@
 from pathlib import Path
 
 import pytest
+from emmet.core.neb import NebPathwayResult, NebResult
 from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.core import Structure
 
-from emmet.core.neb import NebPathwayResult, NebResult
 from atomate2.vasp.flows.approx_neb import ApproxNebMaker
 
 

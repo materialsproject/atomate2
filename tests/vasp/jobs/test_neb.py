@@ -4,7 +4,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from emmet.core.neb import NebMethod, NebTaskDoc, BarrierAnalysis
+from emmet.core.neb import BarrierAnalysis, NebMethod, NebTaskDoc
 from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.core import Structure
