@@ -19,7 +19,6 @@ if TYPE_CHECKING:
     from pathlib import Path
     from typing import Any, Literal
 
-    from emmet.core.mobility.migrationgraph import MigrationGraph
     from jobflow import Job
     from pymatgen.core import Structure
     from pymatgen.io.common import VolumetricData
@@ -147,19 +146,19 @@ class CommonApproxNebMaker(Maker):
             output=collect_output.output,
         )
 
-    def make_from_migration_graph(
+    def make_from_migration_graph_doc(
         self,
-        migration_graph: MigrationGraph,
+        migration_graph_doc: MigrationGraphDoc,
         n_images: int = 5,
         prev_dir: str | Path | None = None,
         atomate_compat_labels: bool = False,
     ) -> Flow:
         """
-        Make an ApproxNEB flow from a migration graph.
+        Make an ApproxNEB flow from an emmet MigrationGraphDoc.
 
         Parameters
         ----------
-        migration_graph: MigrationGraph
+        migration_graph_doc: MigrationGraph
             Migration graph containing information about the host structure,
             inserted coordinates, etc.
         n_images: int
@@ -177,7 +176,8 @@ class CommonApproxNebMaker(Maker):
         """
         inserted_coords, inserted_coords_combo, mapping = (
             MigrationGraphDoc.get_distinct_hop_sites(
-                migration_graph.inserted_ion_coords, migration_graph.insert_coords_combo
+                migration_graph_doc.inserted_ion_coords,
+                migration_graph_doc.insert_coords_combo,
             )
         )
         if not atomate_compat_labels:
@@ -194,12 +194,11 @@ class CommonApproxNebMaker(Maker):
                 for idx, coords in enumerate(inserted_coords)
             }
 
-        working_ion = next(
-            ele.value
-            for ele in migration_graph.working_ion_entry.composition.remove_charges()
-        )
+        composition = migration_graph_doc.working_ion_entry.composition.remove_charges()
+        working_ion = next(ele.value for ele in composition)
+
         return self.make(
-            host_structure=migration_graph.matrix_supercell_structure,
+            host_structure=migration_graph_doc.matrix_supercell_structure,
             working_ion=working_ion,
             inserted_coords_dict=inserted_coords,
             inserted_coords_combo=inserted_coords_combo,
