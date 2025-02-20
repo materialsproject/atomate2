@@ -7,7 +7,7 @@ from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.core import Structure
 
-from atomate2.common.schemas.neb import NebPathwayResult, NebResult
+from emmet.core.neb import NebPathwayResult, NebResult
 from atomate2.vasp.flows.approx_neb import ApproxNebMaker
 
 

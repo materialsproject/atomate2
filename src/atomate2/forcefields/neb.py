@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from jobflow import job
 
 from atomate2.ase.neb import AseNebMaker
-from atomate2.common.schemas.neb import NebResult
+from emmet.core.neb import NebResult
 from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import (
     _DEFAULT_CALCULATOR_KWARGS,

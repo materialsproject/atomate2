@@ -9,7 +9,7 @@ from jobflow import job
 
 from atomate2.ase.jobs import _ASE_DATA_OBJECTS, AseMaker
 from atomate2.ase.utils import AseNebInterface
-from atomate2.common.schemas.neb import NebResult
+from emmet.core.neb import NebResult
 
 if TYPE_CHECKING:
     from pathlib import Path

@@ -27,7 +27,7 @@ from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.ase.schemas import AseResult
-from atomate2.common.schemas.neb import NebResult
+from emmet.core.neb import NebResult
 
 if TYPE_CHECKING:
     from os import PathLike

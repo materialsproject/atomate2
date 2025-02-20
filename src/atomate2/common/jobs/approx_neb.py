@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from enum import Enum
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -12,7 +11,7 @@ from jobflow import Flow, Response, job
 from pymatgen.analysis.diffusion.neb.pathfinder import ChgcarPotential, NEBPathfinder
 from pymatgen.core import Element
 
-from atomate2.common.schemas.neb import NebPathwayResult, NebResult
+from emmet.core.neb import HopFailureReason, NebPathwayResult, NebResult
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
@@ -23,15 +22,6 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
     from pymatgen.io.common import VolumetricData
     from pymatgen.util.typing import CompositionLike
-
-
-class HopFailureReason(Enum):
-    """Define failure modes for ApproxNEB calculations."""
-
-    ENDPOINT = "Endpoint structure relaxation failed"
-    MIN_DIST = "Linear distance traversed by working ion is below threshold."
-    MIN_IMAGE = "Too few image calculations succeeded"
-
 
 @job
 def get_endpoints_and_relax(
@@ -177,7 +167,6 @@ def collate_results(
                 if calc["initial_structure"] is not None
             ],
             energies=[calc["energy"] for calc in hop if calc["energy"] is not None],
-            ionic_steps=None,
             method=NebMethod.APPROX,
             state=task_state,
             metadata=metadata if len(metadata) > 0 else None,
@@ -568,7 +557,6 @@ def collate_images_single_hop(
             if calc["initial_structure"] is not None
         ],
         energies=[calc["energy"] for calc in calcs if calc["energy"] is not None],
-        ionic_steps=None,
         method=NebMethod.APPROX,
         state=task_state,
         metadata=metadata if len(metadata) > 0 else None,

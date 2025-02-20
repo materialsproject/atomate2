@@ -4,7 +4,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from emmet.core.neb import NebMethod, NebTaskDoc
+from emmet.core.neb import NebMethod, NebTaskDoc, BarrierAnalysis
 from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.core import Structure
@@ -121,7 +121,7 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
         for i, energy in enumerate(expected_neb_result.energies)
     )
     assert (
-        len(output["collect_neb_output"].structures) == num_images + 2
+        len(output["collect_neb_output"].images) == num_images + 2
     )  # endpoints + images
     assert (
         len(output["collect_neb_output"].image_structures) == num_images
@@ -133,8 +133,8 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
         for direction in ("forward", "reverse")
     )
 
-    assert isinstance(output["collect_neb_output"].barrier_analysis, dict)
-    assert set(output["collect_neb_output"].barrier_analysis) == {
+    assert isinstance(output["collect_neb_output"].barrier_analysis, BarrierAnalysis)
+    assert set(output["collect_neb_output"].barrier_analysis.model_dump()) == {
         "cubic_spline_pars",
         "energies",
         "forward_barrier",
