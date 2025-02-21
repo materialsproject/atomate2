@@ -8,10 +8,10 @@ They can also be found in the form of jupyter notebooks in:
 
 ```{toctree}
 blob_storage
-grueneisen_workflow
 lobster_workflow
 openmm_tutorial
 phonon_workflow
+grueneisen_workflow
 qha_workflow
 force_fields/phonon_workflow
 ```
