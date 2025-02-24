@@ -248,7 +248,7 @@ adjust them if necessary. The default might not be strict enough
 for your specific case.
 ```
 
-You can use the following code to start the standard version of the workflow:
+You can use the following code to start the default VASP version of the workflow:
 ```py
 from atomate2.vasp.flows.phonons import PhononMaker
 from pymatgen.core.structure import Structure
@@ -260,14 +260,11 @@ structure = Structure(
 )
 
 phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
-    structure=struct
+    structure=structure
 )
 ```
 
-
-
-
-### Gruneisen parameter workflow
+### Grüneisen parameter workflow
 
 Calculates mode-dependent Grüneisen parameters with the help of Phonopy.
 
@@ -277,8 +274,25 @@ shrunk by 1 % (default) of its volume.
 Subsequently, supercells with one displaced atom are generated for all the three structures
 (ground state, expanded and shrunk volume) and accurate forces are computed for these structures.
 With the help of phonopy, these forces are then converted into a dynamical matrix.
-The dynamical matrices of three structures are then used as an input to the phonopy Grueneisen api
-to compute mode-dependent Grueneisen parameters.
+The dynamical matrices of three structures are then used as an input to the phonopy Grüneisen api
+to compute mode-dependent Grüneisen parameters.
+
+A Grüneisen workflow for VASP can be started as follows:
+```python
+from atomate2.vasp.flows.gruneisen import GruneisenMaker
+from pymatgen.core.structure import Structure
+
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+qha_flow = GruneisenMaker(kpath_scheme="seekpath", vol=0.01, mesh=(15, 15, 15)).make(
+    structure=structure
+)
+```
 
 ### Quasi-harmonic Workflow
 
@@ -287,13 +301,52 @@ First, a tight relaxation is performed. Subsequently, several optimizations at d
 volumes are performed. At each of the volumes, an additional phonon run is performed as well.
 Afterwards, equation of state fits are performed with phonopy.
 
+The following script allows you to start the default workflow for VASP with some adjusted parameters:
+```python
+from atomate2.vasp.flows.qha import QhaMaker
+from pymatgen.core.structure import Structure
+
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+qha_flow = QhaMaker(
+    linear_strain=(-0.10, 0.10),
+    number_of_frames=10,
+).make(structure=structure)
+```
+
 ### Equation of State Workflow
 
-An equation of state (EOS) workflow is implemented. First, a tight relaxation is performed. Subsequently, several optimizations at different constant
+An equation of state (EOS) workflow has the following structure: First, a tight relaxation is performed.
+Subsequently, several optimizations at different constant
 volumes are performed. Additional static calculations might be performed afterwards to arrive at more
 accurate energies. Then, an EOS fit is performed with pymatgen.
 
-The output of the workflow is, by default, a dictionary containing the energy and volume data generated with DFT, in addition to fitted equation of state parameters for all models currently available in pymatgen (Murnaghan, Birch-Murnaghan, Poirier-Tarantola, and Vinet/UBER).
+You can start the workflow as follows:
+```python
+from atomate2.vasp.flows.eos import EosMaker
+from pymatgen.core.structure import Structure
+
+
+structure = Structure(
+    lattice=[[0, 2.13, 2.13], [2.13, 0, 2.13], [2.13, 2.13, 0]],
+    species=["Mg", "O"],
+    coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+)
+
+qha_flow = EosMaker(
+    linear_strain=(-0.10, 0.10),
+    number_of_frames=10,
+).make(structure=structure)
+```
+
+The output of the workflow is a dictionary by default containing the energy and volume data generated with DFT,
+in addition to fitted equation of state parameters for all models currently available in pymatgen
+(Murnaghan, Birch-Murnaghan, Poirier-Tarantola, and Vinet/UBER).
 
 #### Materials Project-compliant workflows
 
