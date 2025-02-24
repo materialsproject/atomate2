@@ -325,7 +325,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
     maker_info = loadfn("maker.json")
     maker = maker_info["maker"]
 
-    maker_name = maker.__class__.__name__
+    maker_name = type(maker).__name__
     # take the module path and exclude the first two elements
     # (i.e. "atomate2" and "abinit")
     module_path = maker.__module__.split(".")[2:]
@@ -413,6 +413,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
             ("indata", "outdata", "tmpdata"),
             (indata_files, outdata_files, tmpdata_files),
             (indata_fake_files, outdata_fake_files, tmpdata_fake_files),
+            strict=True,
         ):
             _fake_dirdata(
                 src_dir=src_dir,
@@ -560,9 +561,9 @@ class Test{maker_name}:
         from atomate2.abinit.schemas.core import AbinitTaskDocument
 
         # load the initial structure, the maker and the ref_paths from the test_dir
-        test_dir = abinit_test_dir / {" / ".join(
-        [f'"{part}"' for part in test_dir.parts[index_part:]]
-    )}
+        test_dir = abinit_test_dir / {
+        " / ".join([f'"{part}"' for part in test_dir.parts[index_part:]])
+    }
         structure = Structure.from_file(test_dir / "initial_structure.json.gz")
         maker_info = loadfn(test_dir / "maker.json.gz")
         maker = maker_info["maker"]

@@ -1,5 +1,191 @@
 # Change log
 
+## v0.0.19
+
+### Bug Fixes 🐛
+* CP2K fixes by @janosh in https://github.com/materialsproject/atomate2/pull/1056
+* bug fix for linear strain passing in qha by @JaGeo in https://github.com/materialsproject/atomate2/pull/1061
+* Fix `generate_phonon_displacements`  magmom removal side effect by @janosh in https://github.com/materialsproject/atomate2/pull/1064
+* Fixed Failing Abinit tests bis by @VicTrqt in https://github.com/materialsproject/atomate2/pull/1108
+### Enhancements 🛠
+* Add trajectory reporter to openmm workflow by @orionarcher in https://github.com/materialsproject/atomate2/pull/1053
+* `PhononMaker` add options to `calculate_pdos` and save force constants to file by @chouyoudou in https://github.com/materialsproject/atomate2/pull/1008
+* Allow `MatPesStaticFlowMaker(static2=None)` by @janosh in https://github.com/materialsproject/atomate2/pull/997
+### Documentation 📖
+* Minor docs cleanup by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1047
+* add openmm description to docs by @JaGeo in https://github.com/materialsproject/atomate2/pull/1069
+* Docs update, forcefield elastic convenience maker, forcefield enum hydration by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1072
+* Added the ChemRxiv citation by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1107
+* Fix docs by @janosh in https://github.com/materialsproject/atomate2/pull/1109
+### House-Keeping 🧹
+* Fix minor phonon code formatting issues + typos by @janosh in https://github.com/materialsproject/atomate2/pull/1070
+* Fix bump phonopy by @naik-aakash in https://github.com/materialsproject/atomate2/pull/1006
+* update calorine version by @naik-aakash in https://github.com/materialsproject/atomate2/pull/1083
+* Deprecated `Structure.ntypesp` in pymatgen by @jmmshn in https://github.com/materialsproject/atomate2/pull/1105
+
+### New Contributors
+* @chouyoudou made their first contribution in https://github.com/materialsproject/atomate2/pull/1008
+* @VicTrqt made their first contribution in https://github.com/materialsproject/atomate2/pull/1108
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.18...v0.0.19
+
+## v0.0.18
+
+### New Features 🎉
+* Aims magnetic ordering by @tpurcell90 in https://github.com/materialsproject/atomate2/pull/922
+* Ferroelectric Workflow 2 by @fraricci in https://github.com/materialsproject/atomate2/pull/1012
+* Feat: GW workflow with VASP by @yanghan234 in https://github.com/materialsproject/atomate2/pull/808
+
+### Enhancements 🛠
+* Allow energy minimization maker to report energies by @orionarcher in https://github.com/materialsproject/atomate2/pull/1004
+* Implementation to adjust get_supercell_size to also generate orthorhombic supercells by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/923
+* MPMorph Flows by @BryantLi-BLI in https://github.com/materialsproject/atomate2/pull/938
+
+### House-Keeping 🧹
+* Fix `ruff` PLC0206 by @janosh in https://github.com/materialsproject/atomate2/pull/1009
+* Update MACE to 0.3.6 by @orionarcher in https://github.com/materialsproject/atomate2/pull/1032
+* Allow custom mace model by specifying "model" in calculator kwargs" by @orionarcher in https://github.com/materialsproject/atomate2/pull/1017
+* feat: add dedicated fireworks optional dependency (Fix #1033). by @hongyi-zhao in https://github.com/materialsproject/atomate2/pull/1035
+* Make testing utils importable by @jmmshn in https://github.com/materialsproject/atomate2/pull/1037
+
+### New Contributors
+* @fraricci made their first contribution in https://github.com/materialsproject/atomate2/pull/1012
+* @hongyi-zhao made their first contribution in https://github.com/materialsproject/atomate2/pull/1035
+* @BryantLi-BLI made their first contribution in https://github.com/materialsproject/atomate2/pull/938
+* @yanghan234 made their first contribution in https://github.com/materialsproject/atomate2/pull/808
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.17...v0.0.18
+
+## v0.0.17
+
+### Bug Fixes 🐛
+
+* Fix `prev_dir` behavior in input set generator of `MPGGAStaticMaker` by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/996
+
+### Documentation 📖
+
+* Bump min supported Python to 3.10 by @janosh in https://github.com/materialsproject/atomate2/pull/992
+
+### House-Keeping 🧹
+
+* Excise openff dependency from OpenMM testing by @orionarcher in https://github.com/materialsproject/atomate2/pull/993
+* Use `pytest-split` to parallelize across 3 runners and speedup CI by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/985
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.16...v0.0.17
+
+## v0.0.16
+
+This release brings lots of new workflows and support for all ASE calculators.
+
+### New Features 🎉
+
+* Anharmonicity Quantification workflow by @4kevinbeck5 in https://github.com/materialsproject/atomate2/pull/901
+* Workflow for Quasi-harmonic approximation (forcefields and VASP) by @JaGeo in https://github.com/materialsproject/atomate2/pull/903
+* Atomate2 OpenMM integration & broader classical MD framework by @orionarcher in https://github.com/materialsproject/atomate2/pull/782
+* Frequency Flattening Optimizer by @rohithsrinivaas in https://github.com/materialsproject/atomate2/pull/863
+* Including VASP surface adsorption flow by @itsduowang in https://github.com/materialsproject/atomate2/pull/691
+* Generalize forcefields for generic ASE calculator support by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/940
+
+### Documentation 📖
+
+* Input set tutorial by @JonathanSchmidt1 in https://github.com/materialsproject/atomate2/pull/780
+
+### House-Keeping 🧹
+
+* Remove emmet `==` pin in `pyproject.toml` and update version in `strict` by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/988
+
+### New Contributors
+
+* @4kevinbeck5 made their first contribution in https://github.com/materialsproject/atomate2/pull/901
+* @orionarcher made their first contribution in https://github.com/materialsproject/atomate2/pull/782
+* @rohithsrinivaas made their first contribution in https://github.com/materialsproject/atomate2/pull/863
+* @itsduowang made their first contribution in https://github.com/materialsproject/atomate2/pull/691
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.15...v0.0.16
+
+## v0.0.15
+
+**NOTE**: This version updates the VASP workflows to use input sets defined in pymatgen. Please make sure your pymatgen version is updated accordingly.
+
+### New Features 🎉
+
+* Add nequip force field relax- and staticmaker and corresponding tests by @JonathanSchmidt1 in https://github.com/materialsproject/atomate2/pull/764
+* Porting qchem into atomate2 by @rdguha1995 in https://github.com/materialsproject/atomate2/pull/689
+* Forcefield molecular dynamics and forcefield refactor by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/722
+* Abinit workflows: static, non-scf and relaxation. by @davidwaroquiers in https://github.com/materialsproject/atomate2/pull/183
+* Add magnetic orderings workflow by @mattmcdermott in https://github.com/materialsproject/atomate2/pull/432
+* Add elastic workflow for FHI-aims by @tpurcell90 in https://github.com/materialsproject/atomate2/pull/871
+* Transition to pymatgen VASP input sets by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/854
+* Add workflow to compute Gruneisen parameters  by @naik-aakash in https://github.com/materialsproject/atomate2/pull/752
+
+### Bug Fixes 🐛
+
+* Fix tests and installation bug by @jmmshn in https://github.com/materialsproject/atomate2/pull/765
+* Add `revert_default_dtype` context manager to fix clashing global `torch.dtype` between MACE and CHGNet by @janosh in https://github.com/materialsproject/atomate2/pull/766
+* Fix `TrajectoryObserver.to_ase_trajectory` return type by @janosh in https://github.com/materialsproject/atomate2/pull/852
+* Fix JobStoreDocument attribute access  by @mjwen in https://github.com/materialsproject/atomate2/pull/710
+* fix CP2K TaskDocument by @lory-w in https://github.com/materialsproject/atomate2/pull/900
+* Add back `symprec` kwarg to MP and MatPES set generators by @janosh in https://github.com/materialsproject/atomate2/pull/947
+* Fix MPID assignment in electrode workflow by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/956
+
+### Enhancements 🛠
+
+* Add dir_name to ForceFieldMaker and **task_document_kwargs to from_ase_compatible_result by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/791
+* Add flexible filename and extension to phonon new_plotter by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/792
+* Simplify phonon `get_supercell_size()` and test clean up by @janosh in https://github.com/materialsproject/atomate2/pull/783
+* Add `fix_symmetry: bool = False` option to forcefield relax makers by @JonathanSchmidt1 in https://github.com/materialsproject/atomate2/pull/789
+* Update LobsterTaskDoc  by @naik-aakash in https://github.com/materialsproject/atomate2/pull/723
+* `from_...` class methods now return `typing_extensions.Self` by @janosh in https://github.com/materialsproject/atomate2/pull/840
+* Make Fermi Energy Optional for FHI-aims by @tpurcell90 in https://github.com/materialsproject/atomate2/pull/793
+* Handling failures in elastic flow by @gpetretto in https://github.com/materialsproject/atomate2/pull/861
+* Bug in supercell matrix determination in phonon workflow by @JaGeo in https://github.com/materialsproject/atomate2/pull/872
+* Add possibility to use your own M3GNet potential by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/911
+* Equation of State workflow for FHI-aims by @ansobolev in https://github.com/materialsproject/atomate2/pull/889
+* Add NEP MLIP relax, static, and MD makers by @naik-aakash in https://github.com/materialsproject/atomate2/pull/893
+* add additional fields as kwargs to PhononBSDOSDoc by @naik-aakash in https://github.com/materialsproject/atomate2/pull/910
+* Defect: Allow bulk SC calculation to be skipped. by @jmmshn in https://github.com/materialsproject/atomate2/pull/742
+* Add `SevenNetRelaxMaker` + `SevenNetStaticMaker` to force field jobs by @janosh in https://github.com/materialsproject/atomate2/pull/918
+* Lobster schema updates by @naik-aakash in https://github.com/materialsproject/atomate2/pull/924
+
+### Documentation 📖
+
+* Corrected typo in doc by @rul048 in https://github.com/materialsproject/atomate2/pull/775
+* Add more details to the installation guide by @JaGeo in https://github.com/materialsproject/atomate2/pull/810
+* Add missing `calculator_kwargs` and remove outdated `model`/`model_kwargs` in `ForceFieldRelaxMaker` doc strings by @janosh in https://github.com/materialsproject/atomate2/pull/830
+* Document the option to run LOBSTER with one jobscript only by @JaGeo in https://github.com/materialsproject/atomate2/pull/811
+* Fix title hierarchies in VASP documentation by @JaGeo in https://github.com/materialsproject/atomate2/pull/853
+* Docs: add Document Models / emmet tutorial by @rkingsbury in https://github.com/materialsproject/atomate2/pull/917
+* Writing tutorial for high level overview of atomate2 concepts. by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/757
+* Tutorial for blob storage with test by @jmmshn in https://github.com/materialsproject/atomate2/pull/776
+* [WIP] Documentation update by @AntObi in https://github.com/materialsproject/atomate2/pull/850
+* Added documentation about JSONStore usage within Installation by @abhardwaj73 in https://github.com/materialsproject/atomate2/pull/945
+* Remove README note about atomate2 mostly being for VASP by @Andrew-S-Rosen in https://github.com/materialsproject/atomate2/pull/957
+* Increase k-point density for MP GGA static calculations to close issue https://github.com/materialsproject/atomate2/issues/844 by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/854
+* Adds missing MAGMOMs for MatPES jobs by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/854
+
+### House-Keeping 🧹
+
+* Make functions prefixed with `_` but cross-imported public by @janosh in https://github.com/materialsproject/atomate2/pull/767
+* Warn on non-default `ATOMATE2_CONFIG_FILE` that's not found by @janosh in https://github.com/materialsproject/atomate2/pull/794
+* Remove `abinit` `__all__` module star exports by @janosh in https://github.com/materialsproject/atomate2/pull/804
+* Turn `ForceFieldRelaxMaker._calculator` method into `calculator` property by @janosh in https://github.com/materialsproject/atomate2/pull/839
+* Update LobsterPy version in standard installation by @JaGeo in https://github.com/materialsproject/atomate2/pull/841
+* CI add `repository_dispatch` event for `pymatgen_ci_trigger` by @janosh in https://github.com/materialsproject/atomate2/pull/835
+* Add test for supercell matrix creation in phonon workflow by @JaGeo in https://github.com/materialsproject/atomate2/pull/873
+* `ruff` fixes by @janosh in https://github.com/materialsproject/atomate2/pull/894
+* `ruff` fixes by @janosh in https://github.com/materialsproject/atomate2/pull/946
+
+### New Contributors
+
+* @rul048 made their first contribution in https://github.com/materialsproject/atomate2/pull/775
+* @davidwaroquiers made their first contribution in https://github.com/materialsproject/atomate2/pull/183
+* @ansobolev made their first contribution in https://github.com/materialsproject/atomate2/pull/889
+* @lory-w made their first contribution in https://github.com/materialsproject/atomate2/pull/900
+* @AntObi made their first contribution in https://github.com/materialsproject/atomate2/pull/850
+* @abhardwaj73 made their first contribution in https://github.com/materialsproject/atomate2/pull/945
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.14...v0.0.15
+
 ## v0.0.14
 
 ### New Features 🎉
@@ -44,7 +230,7 @@
 * Update lobsterpy version by @naik-aakash in https://github.com/materialsproject/atomate2/pull/683
 * Fix all ruff PT011 (not checking error message when testing exceptions) by @janosh in https://github.com/materialsproject/atomate2/pull/698
 
-## New Contributors
+### New Contributors
 
 * @JonathanSchmidt1 made their first contribution in https://github.com/materialsproject/atomate2/pull/648
 * @rdguha1995 made their first contribution in https://github.com/materialsproject/atomate2/pull/161
@@ -152,7 +338,7 @@ The API of `Maker.maker` for all workflows (VASP, CP2K, force fields) have been 
 * Future type annotations by @janosh in https://github.com/materialsproject/atomate2/pull/580
 * Use `numpy.testing.assert_allclose` over assert `np.(all|is)close` by @janosh in https://github.com/materialsproject/atomate2/pull/582
 
-## New Contributors
+### New Contributors
 
 * @mattmcdermott made their first contribution in https://github.com/materialsproject/atomate2/pull/506
 * @tpurcell90 made their first contribution in https://github.com/materialsproject/atomate2/pull/568
@@ -270,7 +456,7 @@ reciprocal_density_metal` instead of `reciprocal_density` for metallic systems.
 * Simplify: `dict.get(key, None)` -> `dict.get(key)` by @janosh in https://github.com/materialsproject/atomate2/pull/429
 * `dict.setdefault` instead of `if key not in dict: dict[key] = ...` by @janosh in https://github.com/materialsproject/atomate2/pull/452
 
-## New Contributors
+### New Contributors
 
 * @naik-aakash made their first contribution in https://github.com/materialsproject/atomate2/pull/279
 * @matthewkuner made their first contribution in https://github.com/materialsproject/atomate2/pull/322

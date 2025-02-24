@@ -125,7 +125,7 @@ class ElasticTensorDocument(BaseModel):
 class ElasticWarnings(Enum):
     """Warnings for elastic document."""
 
-    FAILED_PERTURBATIONS: str = "failed_perturbations"
+    FAILED_PERTURBATIONS = "failed_perturbations"
 
 
 class ElasticDocument(StructureMetadata):
@@ -218,7 +218,9 @@ class ElasticDocument(StructureMetadata):
         if equilibrium_stress:
             eq_stress = -0.1 * Stress(equilibrium_stress)
 
-        pk_stresses = [s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations)]
+        pk_stresses = [
+            s.piola_kirchoff_2(d) for s, d in zip(stresses, deformations, strict=True)
+        ]
 
         if order is None:
             order = 2 if len(stresses) < 70 else 3  # TODO: Figure this out better

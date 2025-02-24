@@ -8,7 +8,7 @@ import logging
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from abipy.abio.inputs import AbinitInput, MultiDataset
@@ -39,7 +39,7 @@ from atomate2.abinit.utils.common import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
+    from collections.abc import Callable, Iterable, Sequence
 
     from pymatgen.core.structure import Structure
 
@@ -326,11 +326,10 @@ class AbinitInputGenerator(InputGenerator):
         structure : Structure
             Pymatgen Structure object.
         restart_from : str or Path or list or tuple
-            Directory (as a str or Path) or list/tuple of 1 directory (as a str
-            or Path) to restart from.
+            Directory or list/tuple of 1 directory to restart from.
         prev_outputs : str or Path or list or tuple
-            Directory (as a str or Path) or list/tuple of directories (as a str
-            or Path) needed as dependencies for the AbinitInputSet generated.
+            Directory or list/tuple of directories needed as dependencies for the
+                AbinitInputSet generated.
         """
         # Get the pseudos as a PseudoTable
         pseudos = as_pseudo_table(self.pseudos) if self.pseudos else None
@@ -388,13 +387,14 @@ class AbinitInputGenerator(InputGenerator):
             link_files=True,
         )
 
+    @staticmethod
     def check_format_prev_dirs(
-        self, prev_dirs: str | tuple | list | Path | None
+        prev_dirs: str | tuple | list | Path | None,
     ) -> list[str] | None:
         """Check and format the prev_dirs (restart or dependency)."""
         if prev_dirs is None:
             return None
-        if isinstance(prev_dirs, (str, Path)):
+        if isinstance(prev_dirs, str | Path):
             return [str(prev_dirs)]
         return [str(prev_dir) for prev_dir in prev_dirs]
 
@@ -438,9 +438,9 @@ class AbinitInputGenerator(InputGenerator):
         abinit_inputs = {}
         for prev_dir in prev_dirs:
             abinit_input = load_abinit_input(prev_dir)
-            for var_name, runlevels in prev_inputs_kwargs.items():
+            for var_name, run_levels in prev_inputs_kwargs.items():
                 if abinit_input.runlevel and abinit_input.runlevel.intersection(
-                    runlevels
+                    run_levels
                 ):
                     if var_name in abinit_inputs:
                         msg = (

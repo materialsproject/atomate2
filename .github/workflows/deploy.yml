@@ -28,8 +28,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # ase needed to get FrechetCellFilter used by ML force fields
-          pip install git+https://gitlab.com/ase/ase
           pip install .[strict,docs]
 
       - name: Build

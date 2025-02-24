@@ -7,9 +7,78 @@ from importlib import import_module
 from typing import TYPE_CHECKING, Any
 
 from monty.serialization import loadfn
+from pymatgen.transformations.advanced_transformations import (
+    CubicSupercellTransformation,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    from pymatgen.core.structure import Structure
+
+
+def get_supercell_matrix(
+    structure: Structure,
+    min_length: float,
+    max_length: float,
+    prefer_90_degrees: bool,
+    allow_orthorhombic: bool = False,
+    **kwargs,
+) -> list[list[float]]:
+    """
+    Determine supercell size with given min_length and max_length.
+
+    Parameters
+    ----------
+    structure: Structure Object
+        Input structure that will be used to determine supercell
+    min_length: float
+        minimum length of cell in Angstrom
+    max_length: float
+        maximum length of cell in Angstrom
+    prefer_90_degrees: bool
+        if True, the algorithm will try to find a cell with 90 degree angles first
+    allow_orthorhombic: bool
+        if True, orthorhombic supercells are allowed
+    **kwargs:
+        Additional parameters that can be set.
+    """
+    kwargs.setdefault("force_diagonal", False)
+    common_kwds = dict(
+        min_length=min_length,
+        max_length=max_length,
+        min_atoms=kwargs.get("min_atoms"),
+        max_atoms=kwargs.get("max_atoms"),
+        step_size=kwargs.get("step_size", 0.1),
+        force_diagonal=kwargs["force_diagonal"],
+    )
+    if not prefer_90_degrees:
+        transformation = CubicSupercellTransformation(
+            **common_kwds,
+            force_90_degrees=False,
+            allow_orthorhombic=allow_orthorhombic,
+        )
+        transformation.apply_transformation(structure=structure)
+    else:
+        try:
+            common_kwds.update({"max_atoms": kwargs.get("max_atoms", 1200)})
+            transformation = CubicSupercellTransformation(
+                **common_kwds,
+                force_90_degrees=True,
+                angle_tolerance=kwargs.get("angle_tolerance", 1e-2),
+                allow_orthorhombic=allow_orthorhombic,
+            )
+            transformation.apply_transformation(structure=structure)
+
+        except AttributeError:
+            transformation = CubicSupercellTransformation(
+                **common_kwds,
+                force_90_degrees=False,
+                allow_orthorhombic=allow_orthorhombic,
+            )
+            transformation.apply_transformation(structure=structure)
+    # matrix from pymatgen has to be transposed
+    return transformation.transformation_matrix.transpose().tolist()
 
 
 def get_transformations(
@@ -34,7 +103,9 @@ def get_transformations(
         raise ValueError("Number of transformations and parameters must be the same.")
 
     transformation_objects = []
-    for transformation, transformation_params in zip(transformations, params):
+    for transformation, transformation_params in zip(
+        transformations, params, strict=True
+    ):
         found = False
         for module in (
             "advanced_transformations",

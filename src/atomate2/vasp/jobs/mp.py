@@ -11,13 +11,14 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from atomate2.vasp.jobs.base import BaseVaspMaker
-from atomate2.vasp.sets.mp import (
-    MPGGARelaxSetGenerator,
-    MPGGAStaticSetGenerator,
-    MPMetaGGARelaxSetGenerator,
-    MPMetaGGAStaticSetGenerator,
+from pymatgen.io.vasp.sets import (
+    MPRelaxSet,
+    MPScanRelaxSet,
+    MPScanStaticSet,
+    MPStaticSet,
 )
+
+from atomate2.vasp.jobs.base import BaseVaspMaker
 
 if TYPE_CHECKING:
     from atomate2.vasp.sets.base import VaspInputGenerator
@@ -54,7 +55,9 @@ class MPGGARelaxMaker(BaseVaspMaker):
 
     name: str = "MP GGA relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MPGGARelaxSetGenerator
+        default_factory=lambda: MPRelaxSet(
+            force_gamma=True, auto_metal_kpoints=True, inherit_incar=False
+        )
     )
 
 
@@ -89,7 +92,9 @@ class MPGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MP GGA static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MPGGAStaticSetGenerator
+        default_factory=lambda: MPStaticSet(
+            force_gamma=True, auto_metal_kpoints=True, inherit_incar=False
+        )
     )
 
 
@@ -124,12 +129,15 @@ class MPPreRelaxMaker(BaseVaspMaker):
 
     name: str = "MP pre-relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=lambda: MPMetaGGARelaxSetGenerator(
+        default_factory=lambda: MPScanRelaxSet(
+            auto_ismear=False,
+            inherit_incar=False,
             user_incar_settings={
                 "EDIFFG": -0.05,
                 "GGA": "PS",
                 "LWAVE": True,
                 "LCHARG": True,
+                "LELF": False,  # prevents KPAR > 1
                 "METAGGA": None,
             },
         )
@@ -167,7 +175,16 @@ class MPMetaGGARelaxMaker(BaseVaspMaker):
 
     name: str = "MP meta-GGA relax"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MPMetaGGARelaxSetGenerator
+        default_factory=lambda: MPScanRelaxSet(
+            auto_ismear=False,
+            inherit_incar=False,
+            user_incar_settings={
+                "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
+                "LCHARG": True,
+                "LWAVE": True,
+                "LELF": False,  # prevents KPAR > 1
+            },
+        )
     )
 
 
@@ -202,5 +219,16 @@ class MPMetaGGAStaticMaker(BaseVaspMaker):
 
     name: str = "MP meta-GGA static"
     input_set_generator: VaspInputGenerator = field(
-        default_factory=MPMetaGGAStaticSetGenerator
+        default_factory=lambda: MPScanStaticSet(
+            auto_ismear=False,
+            inherit_incar=False,
+            user_incar_settings={
+                "ALGO": "FAST",
+                "GGA": None,  # unset GGA, shouldn't be set anyway but best be sure
+                "LCHARG": True,
+                "LWAVE": False,
+                "LVHAR": None,  # not needed, unset
+                "LELF": False,  # prevents KPAR > 1
+            },
+        )
     )

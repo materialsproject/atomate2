@@ -119,15 +119,13 @@ class MagneticOrderingsMaker(Maker, ABC):
         """
         if self.relax_maker is None:
             warnings.warn(
-                (
-                    "No relax_maker provided, relaxations will be skipped. Please be"
-                    " sure that this is intended!"
-                ),
+                "No relax_maker provided, relaxations will be skipped. Please be"
+                " sure that this is intended!",
                 stacklevel=2,
             )
         else:
-            static_base_maker_name = self.static_maker.__class__.__mro__[1].__name__
-            relax_base_maker_name = self.relax_maker.__class__.__mro__[1].__name__
+            static_base_maker_name = type(self.static_maker).__mro__[1].__name__
+            relax_base_maker_name = type(self.relax_maker).__mro__[1].__name__
             if relax_base_maker_name != static_base_maker_name:
                 warnings.warn(
                     "The provided static and relax makers do not use the "
