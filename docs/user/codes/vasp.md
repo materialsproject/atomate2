@@ -260,14 +260,11 @@ structure = Structure(
 )
 
 phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
-    structure=struct
+    structure=structure
 )
 ```
 
-
-
-
-### Gruneisen parameter workflow
+### Grüneisen parameter workflow
 
 Calculates mode-dependent Grüneisen parameters with the help of Phonopy.
 
@@ -278,7 +275,7 @@ Subsequently, supercells with one displaced atom are generated for all the three
 (ground state, expanded and shrunk volume) and accurate forces are computed for these structures.
 With the help of phonopy, these forces are then converted into a dynamical matrix.
 The dynamical matrices of three structures are then used as an input to the phonopy Grueneisen api
-to compute mode-dependent Grueneisen parameters.
+to compute mode-dependent Grüneisen parameters.
 
 ### Quasi-harmonic Workflow
 
