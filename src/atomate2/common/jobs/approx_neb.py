@@ -132,16 +132,18 @@ def collate_results(
     endpoint_idxs = sorted(set(endpoint_idxs))
 
     for combo_name, entry in image_calc_output.items():
-        metadata = {}
+        failure_reasons = []
         task_state = TaskState.SUCCESS
         images = entry
         if all(isinstance(v, str) for v in entry):
             # hop calculation failed
-            metadata = {"failure_reasons": entry}
+            failure_reasons.extend([HopFailureReason(v) for v in entry])
             task_state = TaskState.FAILED
-            if HopFailureReason.ENDPOINT.value in entry:
+            if HopFailureReason.ENDPOINT in failure_reasons:
                 # Cannot populate any NEB fields, skip entirely
-                hop_dict[combo_name] = NebResult(state=task_state, metadata=metadata)
+                hop_dict[combo_name] = NebResult(
+                    state=task_state, failure_reasons=failure_reasons
+                )
                 continue
             images = []
 
@@ -154,9 +156,7 @@ def collate_results(
             )
             if num_success_calcs < min_images_per_hop:
                 task_state = TaskState.FAILED
-                if "failure_reasons" not in metadata:
-                    metadata["failure_reasons"] = []
-                metadata["failure_reasons"].append(HopFailureReason.MIN_IMAGE.value)
+                failure_reasons.append(HopFailureReason.MIN_IMAGE)
 
         hop_dict[combo_name] = NebResult(
             images=[calc["structure"] for calc in hop if calc["structure"] is not None],
@@ -168,7 +168,7 @@ def collate_results(
             energies=[calc["energy"] for calc in hop if calc["energy"] is not None],
             method=NebMethod.APPROX,
             state=task_state,
-            metadata=metadata if len(metadata) > 0 else None,
+            failure_reasons=failure_reasons if len(failure_reasons) > 0 else None,
             endpoint_indices=combo_name.split("+"),
         )
 
@@ -519,13 +519,13 @@ def collate_images_single_hop(
     -------
     NebResult
     """
-    metadata: dict[str, Any] = {}
+    failure_reasons: list[HopFailureReason] = []
     task_state = TaskState.SUCCESS
 
     calcs: list[dict[str, Any]] = []
     if image_calc_output is None:
         task_state = TaskState.FAILED
-        metadata["failure_reasons"] = ["No image calculation output."]
+        failure_reasons.append(HopFailureReason.IMAGE_FAILURE)
     else:
         calcs += image_calc_output
 
@@ -538,9 +538,7 @@ def collate_images_single_hop(
         )
         if num_success_calcs < min_images_per_hop:
             task_state = TaskState.FAILED
-            if "failure_reasons" not in metadata:
-                metadata["failure_reasons"] = []
-            metadata["failure_reasons"].append(HopFailureReason.MIN_IMAGE.value)
+            failure_reasons.append(HopFailureReason.MIN_IMAGE)
 
     hop_dist = None
     if endpoint_calc_output is not None and working_ion is not None:
@@ -558,6 +556,6 @@ def collate_images_single_hop(
         energies=[calc["energy"] for calc in calcs if calc["energy"] is not None],
         method=NebMethod.APPROX,
         state=task_state,
-        metadata=metadata if len(metadata) > 0 else None,
+        failure_reasons=failure_reasons if len(failure_reasons) > 0 else None,
         hop_distance=hop_dist,
     )
