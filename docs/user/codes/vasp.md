@@ -289,9 +289,9 @@ structure = Structure(
     coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
 )
 
-qha_flow = GruneisenMaker(kpath_scheme="seekpath", vol=0.01, mesh=(15, 15, 15)).make(
-    structure=structure
-)
+gruneisen_flow = GruneisenMaker(
+    kpath_scheme="seekpath", vol=0.01, mesh=(15, 15, 15)
+).make(structure=structure)
 ```
 
 ### Quasi-harmonic Workflow
@@ -338,7 +338,7 @@ structure = Structure(
     coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
 )
 
-qha_flow = EosMaker(
+eos_flow = EosMaker(
     linear_strain=(-0.10, 0.10),
     number_of_frames=10,
 ).make(structure=structure)
