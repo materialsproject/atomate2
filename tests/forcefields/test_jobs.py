@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 from jobflow import run_locally
-from pymatgen.core import Structure
+from pymatgen.core import Molecule, Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pytest import approx, importorskip
 
@@ -23,7 +23,7 @@ from atomate2.forcefields.jobs import (
     NequipRelaxMaker,
     NequipStaticMaker,
 )
-from atomate2.forcefields.schemas import ForceFieldTaskDocument
+from atomate2.forcefields.schemas import ForceFieldStructureTaskDocument
 
 
 def test_maker_initialization():
@@ -52,7 +52,7 @@ def test_chgnet_static_maker(si_structure):
 
     # validate job outputs
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     assert output1.output.energy == approx(-10.6275062, rel=1e-4)
     assert output1.output.ionic_steps[-1].magmoms is None
     assert output1.output.n_steps == 1
@@ -113,7 +113,7 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
 
     # validate job outputs
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     if relax_cell:
         assert not output1.is_force_converged
         assert output1.output.n_steps == max_step + 2
@@ -145,7 +145,7 @@ def test_m3gnet_static_maker(si_structure):
 
     # validate job outputs
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     assert output1.output.energy == approx(-10.8, abs=0.2)
     assert output1.output.n_steps == 1
 
@@ -172,7 +172,7 @@ def test_m3gnet_relax_maker(si_structure):
 
     # validate job outputs
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     assert output1.is_force_converged
     assert output1.output.energy == approx(-10.8, abs=0.2)
     assert output1.output.n_steps == 24
@@ -206,7 +206,7 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
 
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     assert output1.output.energy == approx(-0.068231, rel=1e-4)
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("mace-torch")
@@ -292,7 +292,7 @@ def test_mace_relax_maker(
     # validating the outputs of the job
     output1 = responses[job.uuid][1].output
     assert output1.is_force_converged
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
 
     si_atoms = si_structure.to_ase_atoms()
     symmetry_ops_init = check_symmetry(si_atoms, symprec=1.0e-3)
@@ -319,9 +319,7 @@ def test_mace_relax_maker(
         assert output1.output.n_steps == 7
 
 
-def test_mace_mpa_0_relax_maker(
-    si_structure: Structure,
-):
+def test_mace_mpa_0_relax_maker(si_structure: Structure, water_molecule: Molecule):
     job = ForceFieldRelaxMaker(
         force_field_name="MACE_MPA_0",
         steps=25,
@@ -333,11 +331,26 @@ def test_mace_mpa_0_relax_maker(
     # validating the outputs of the job
     output = responses[job.uuid][1].output
 
+    job_mol = ForceFieldRelaxMaker(
+        force_field_name="MACE_MPA_0",
+        steps=25,
+        relax_kwargs={"fmax": 0.005},
+    ).make(water_molecule)
+    # run the flow or job and ensure that it finished running successfully
+    responses_mol = run_locally(job_mol, ensure_success=True)
+
+    # validating the outputs of the job
+    output_mol = responses_mol[job_mol.uuid][1].output
+
     assert output.ase_calculator_name == "MLFF.MACE_MPA_0"
     assert output.output.energy == pytest.approx(-10.829493522644043)
     assert output.output.structure.volume == pytest.approx(40.87471552602735)
     assert len(output.output.ionic_steps) == 4
     assert output.structure.volume == output.output.structure.volume
+
+    assert output_mol.ase_calculator_name == "MLFF.MACE_MPA_0"
+    assert output_mol.output.energy == pytest.approx(-13.786081314086914)
+    assert len(output_mol.output.ionic_steps) == 20
 
 
 def test_gap_static_maker(si_structure: Structure, test_dir):
@@ -359,7 +372,7 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
 
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     assert output1.output.energy == approx(-10.8523, rel=1e-4)
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("quippy-ase")
@@ -393,7 +406,7 @@ def test_gap_relax_maker(si_structure: Structure, test_dir: Path, relax_cell: bo
 
     # validating the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     if relax_cell:
         assert not output1.is_force_converged
         assert output1.output.energy == approx(-13.08492, rel=1e-2)
@@ -427,7 +440,7 @@ def test_nep_static_maker(al2_au_structure: Structure, test_dir: Path):
 
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     assert output1.output.energy == approx(-47.65972, rel=1e-4)
     assert output1.output.n_steps == 1
 
@@ -469,7 +482,7 @@ def test_nep_relax_maker(
 
     # validate the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     if relax_cell:
         assert output1.output.energy == approx(-47.6727, rel=1e-3)
         assert output1.output.n_steps == 3
@@ -504,7 +517,7 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
 
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     assert output1.output.energy == approx(-44.40017, rel=1e-4)
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("nequip")
@@ -543,7 +556,7 @@ def test_nequip_relax_maker(
 
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
-    assert isinstance(output1, ForceFieldTaskDocument)
+    assert isinstance(output1, ForceFieldStructureTaskDocument)
     if relax_cell:
         assert output1.output.energy == approx(-44.407, rel=1e-3)
         assert output1.output.n_steps == 5
