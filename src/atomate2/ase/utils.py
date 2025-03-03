@@ -8,6 +8,7 @@ import os
 import sys
 import time
 from copy import deepcopy
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -456,7 +457,7 @@ class AseNebInterface:
         images: list[Atoms | Structure | Molecule],
         fmax: float = 0.1,
         steps: int = 500,
-        traj_file: str = None,
+        traj_file: str | Path | list[str | Path] = None,
         traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
         interval: int = 1,
         verbose: bool = False,
@@ -474,8 +475,16 @@ class AseNebInterface:
             Total force tolerance for relaxation convergence.
         steps : int
             Max number of steps for relaxation.
-        traj_file : str
-            The trajectory file for saving.
+        traj_file : str, Path, or a list of str / Path
+            The trajectory file for saving. If a single str or Path,
+            this specifies the file name prefix. For example,
+                `traj_file = "traj_mp-149.json.gz"`
+            will yield individual trajectory file names:
+                traj_mp-149-image-1.json.gz
+                traj_mp-149-image-2.json.gz
+                ...
+            Alternately, if this is a list of str / Path, this specifies the
+            file name for each image.
         interval : int
             The step interval for saving the trajectories.
         verbose : bool
@@ -506,21 +515,26 @@ class AseNebInterface:
             observers = [TrajectoryObserver(image) for image in images]
             optimizer = self.opt_class(neb_calc, **kwargs)
             for idx in range(num_images):
-                optimizer.attach(observers[idx], interval=interval, atoms=images[idx])
+                optimizer.attach(observers[idx], interval=interval)
             t_i = time.perf_counter()
             optimizer.run(fmax=fmax, steps=steps)
             t_f = time.perf_counter()
             [observers[idx]() for idx in range(num_images)]
 
         if traj_file is not None:
-            for idx in range(num_images):
-                traj_file_split = traj_file.split(".")
-                traj_file_prefix = ".".join(traj_file_split[:-1])
-                traj_file_ext = traj_file[-1]
-                observers[idx].save(
-                    f"{traj_file_prefix}-image-{idx + 1}.{traj_file_ext}",
-                    fmt=traj_file_fmt,
-                )
+            if isinstance(traj_file, str | Path):
+                traj_file = Path(traj_file)
+                traj_file_suffix = "".join(traj_file.suffixes)
+                traj_file_prefix = str(traj_file).split(traj_file_suffix)[0]
+                traj_files = [
+                    f"{traj_file_prefix}-image-{idx + 1}{traj_file_suffix}"
+                    for idx in range(num_images)
+                ]
+            elif isinstance(traj_file, list | tuple):
+                traj_files = [str(f) for f in traj_file]
+
+            for idx, f in enumerate(traj_files):
+                observers[idx].save(f, fmt=traj_file_fmt)
 
         images = [
             self.ase_adaptor.get_structure(image, cls=Molecule if is_mol else Structure)
