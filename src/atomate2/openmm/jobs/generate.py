@@ -297,7 +297,7 @@ def generate_openmm_interchange(
             lj14 = gen.lj14scale
 
     system = ff.createSystem(topology.to_openmm(), nonbondedMethod=PME)
-    if "opls" in ff_kwargs:
+    if (ff_kwargs is not None) and ("opls" in ff_kwargs):
         if (c14 != 0.5) or (lj14 != 0.5):
             raise ValueError(
                 f"NonbondedForce class in XML,"
