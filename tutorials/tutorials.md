@@ -3,7 +3,7 @@
 # Tutorials
 
 The section includes tutorials for workflows in atomate2.
-They can also be found in the form of jupyternotebooks in:
+They can also be found in the form of jupyter notebooks in:
 [https://github.com/materialsproject/atomate2/tree/main/tutorials](https://github.com/materialsproject/atomate2/tree/main/tutorials)
 
 ```{toctree}
@@ -11,6 +11,7 @@ blob_storage
 lobster_workflow
 openmm_tutorial
 phonon_workflow
+grueneisen_workflow
 qha_workflow
 force_fields/phonon_workflow
 ```
