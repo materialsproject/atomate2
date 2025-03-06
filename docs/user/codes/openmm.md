@@ -572,11 +572,11 @@ Functionally, this is equivalent to running the following LigParGen command:
 ligpargen -n EC -p EC -r EC -c 0 -o 3 -cgen CM1A -s C1COC(=O)O1
 ```
 
-Now, just like before, you can create an `Interchange` object. Be sure to include `opls` as a tag so the correct [geometric combination rules](https://traken.chem.yale.edu/ligpargen/openMM_tutorial.html) for OPLS force fields are invoked,
+Now, just like before, you can create an `Interchange` object. Be sure to include `opls` as an `ff_kwargs` so the correct [geometric combination rules](https://traken.chem.yale.edu/ligpargen/openMM_tutorial.html) for OPLS force fields are invoked,
 
 ```python
 elyte_interchange_job = generate_openmm_interchange(
-    mol_specs_dicts, ff_xmls=["EC.xml"], tags=["opls"]
+    mol_specs_dicts, ff_xmls=["EC.xml"], ff_kwargs=["opls"]
 )
 ```
 

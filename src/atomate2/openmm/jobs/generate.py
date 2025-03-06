@@ -183,6 +183,7 @@ def generate_openmm_interchange(
     xml_method_and_scaling: tuple[str, float] = None,
     pack_box_kwargs: dict = None,
     tags: list[str] = None,
+    ff_kwargs: list[str] = None,
 ) -> Response:
     """Generate an OpenMM Interchange object from a list of molecule specifications.
 
@@ -220,6 +221,8 @@ def generate_openmm_interchange(
         toolkit.interchange.components._packmol.pack_box. Default is an empty dict.
     tags : List[str], optional
         A list of tags to attach to the task document.
+    ff_kwargs : List[str], optional
+        A list of additional keyword arguments for force field specification.
 
     Returns
     -------
@@ -294,7 +297,7 @@ def generate_openmm_interchange(
             lj14 = gen.lj14scale
 
     system = ff.createSystem(topology.to_openmm(), nonbondedMethod=PME)
-    if "opls" in tags:
+    if "opls" in ff_kwargs:
         if (c14 != 0.5) or (lj14 != 0.5):
             raise ValueError(
                 f"NonbondedForce class in XML,"
