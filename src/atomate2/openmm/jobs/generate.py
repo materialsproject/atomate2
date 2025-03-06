@@ -5,7 +5,6 @@ from __future__ import annotations
 import copy
 import io
 import re
-import textwrap
 import warnings
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -298,11 +297,10 @@ def generate_openmm_interchange(
     if "opls" in tags:
         if (c14 != 0.5) or (lj14 != 0.5):
             raise ValueError(
-                textwrap.dedent(f"""\
-                    NonbondedForce class in XML,
-                    <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">,
-                    does not match OPLS convention,
-                    <NonbondedForce coulomb14scale="{c14}" lj14scale="{lj14}">.""")
+                f"NonbondedForce class in XML,"
+                f"<NonbondedForce coulomb14scale='0.5' lj14scale='0.5'>,"
+                f"does not match OPLS convention,"
+                f"<NonbondedForce coulomb14scale='{c14}' lj14scale='{lj14}'>."
             )
         system = opls_lj(system)
 
