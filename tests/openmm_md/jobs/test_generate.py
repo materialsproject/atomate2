@@ -19,7 +19,7 @@ from openff.interchange.components._packmol import pack_box
 from openff.units import unit
 
 
-def test_ff_system_from_xml(openmm_data):
+def test_create_ff_from_xml(openmm_data):
     # load strings of xml files into dict
     ff_xmls = [
         XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CCO.xml"),
