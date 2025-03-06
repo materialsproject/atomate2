@@ -11,7 +11,6 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from xml.etree.ElementTree import tostring
 
-import defusedxml.ElementTree as DiffET
 import numpy as np
 from emmet.core.openff import MoleculeSpec
 from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
@@ -47,7 +46,7 @@ class XMLMoleculeFF:
         try:
             self.tree = ET.parse(io.StringIO(xml_string))  # noqa: S314
         except ET.ParseError:
-            self.tree = DiffET.parse(xml_string)
+            self.tree = ET.parse(xml_string)  # noqa: S314
 
         root = self.tree.getroot()
         canonical_order = {}
