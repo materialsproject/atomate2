@@ -137,7 +137,26 @@ def generate_opls_xml(
     output_dir: str | Path,
     overwrite_files: bool = False,
 ) -> None:
-    """Download an OPLS-AA/M XML file from the LigParGen repo & BOSS executable."""
+    """Download an OPLS-AA/M XML file from the LigParGen repo & BOSS executable.
+    
+    Parameters
+    ----------
+    names_params : dict[str, dict[str, str]]
+        Dictionary where keys are molecule names and values are dictionaries,
+        with keys:
+        - smiles : str 
+            SMILES representation of molecule (required).
+        Optional Parameters:
+            - charge : str, optional 
+                Net charge of molecule (default is "0"). If non-zero, must include "-"
+                or "+" sign before integer. 
+            - checkopt : str, optional 
+                Molecule optimization iterations from 0-3 (default is "3"). 
+            - cgen : str, optional 
+                Charge model, either "CM1A-LBCC" (neutral molecules) or (default) "CM1A"
+                (neutral or charged molecules). 
+
+    """
     import subprocess
 
     for name, params in names_params.items():
