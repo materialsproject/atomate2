@@ -106,7 +106,7 @@ strict = [
     "lobsterpy==0.4.9",
     "mdanalysis==2.7.0",
     "monty==2024.10.21",
-    "mp-api==0.43.0",
+    "mp-api==0.45.3",
     "numpy",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.1.1",
