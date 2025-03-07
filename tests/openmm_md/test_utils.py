@@ -16,7 +16,7 @@ from atomate2.openmm.utils import (
 def test_download_xml(tmp_path: Path) -> None:
     pytest.importorskip("selenium")
     mol_dict = {
-        "ethanol": {
+        "CCO": {
             "smiles": "CCO",
             "charge": "0",
         },
@@ -29,7 +29,7 @@ def test_download_xml(tmp_path: Path) -> None:
 
 def test_generate_opls_xml(tmp_path: Path) -> None:
     mol_dict = {
-        "ethanol": {
+        "CCO": {
             "smiles": "CCO",
             "charge": "0",
         },

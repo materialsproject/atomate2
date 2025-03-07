@@ -35,13 +35,7 @@ def test_create_ff_from_xml(openmm_data):
         {"smiles": "CO", "count": 20},
     ]
 
-    topology = pack_box(
-        molecules=[tk.Molecule.from_smiles(spec["smiles"]) for spec in mol_specs],
-        number_of_copies=[spec["count"] for spec in mol_specs],
-        mass_density=0.8 * unit.grams / unit.milliliter,
-    )
-
-    create_ff_from_xml(topology, ff_xmls)
+    create_ff_from_xml(ff_xmls)
 
 
 def test_xml_molecule_from_file(openmm_data):
