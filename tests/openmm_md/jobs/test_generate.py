@@ -15,8 +15,6 @@ from atomate2.openmm.jobs.generate import (
 
 pytest.importorskip("openff.toolkit")
 import openff.toolkit as tk
-from openff.interchange.components._packmol import pack_box
-from openff.units import unit
 
 
 def test_create_ff_from_xml(openmm_data):
@@ -29,11 +27,6 @@ def test_create_ff_from_xml(openmm_data):
     # uncomment to regenerate data
     # download_opls_xml("CCO", opls_xmls / "CCO.xml")
     # download_opls_xml("CO", opls_xmls / "CO.xml")
-
-    mol_specs = [
-        {"smiles": "CCO", "count": 10},
-        {"smiles": "CO", "count": 20},
-    ]
 
     create_ff_from_xml(ff_xmls)
 
