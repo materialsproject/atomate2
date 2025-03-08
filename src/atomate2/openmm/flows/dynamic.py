@@ -2,30 +2,23 @@
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
 from emmet.core.openmm import Calculation, OpenMMInterchange, OpenMMTaskDocument
 from jobflow import CURRENT_JOB, Flow, Job, Maker, Response, job
-from monty.json import MontyDecoder, MontyEncoder
 from scipy.signal import savgol_filter
 
+from atomate2.openmm.flows.core import _get_calcs_reversed, collect_outputs
 from atomate2.openmm.jobs.base import BaseOpenMMMaker, openmm_job
-from atomate2.openmm.jobs.core import NVTMaker, TempChangeMaker
-from atomate2.openmm.flows.core import (
-    _get_calcs_reversed, 
-    _flatten_calcs, 
-    collect_outputs,
-)
-from atomate2.openmm.utils import create_list_summing_to
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
     from openff.interchange import Interchange
+
+    from atomate2.openmm.flows.core import OpenMMFlowMaker
 
 
 def _get_final_jobs(input_jobs: list[Job] | Flow) -> list[Job]:
@@ -44,6 +37,7 @@ def _get_final_jobs(input_jobs: list[Job] | Flow) -> list[Job]:
         # recursively explore .maker.jobs
         return _get_final_jobs(last.maker.jobs)
     return jobs
+
 
 @openmm_job
 def default_should_continue(
@@ -107,6 +101,7 @@ def default_should_continue(
 
     task_doc.should_continue = should_continue
     return Response(output=task_doc)
+
 
 @dataclass
 class DynamicOpenMMFlowMaker(Maker):
@@ -276,4 +271,3 @@ class DynamicOpenMMFlowMaker(Maker):
         stage_n_flow = Flow([stage_job_n, control_stage_n, next_stage_n])
 
         return Response(replace=stage_n_flow, output=next_stage_n.output)
-

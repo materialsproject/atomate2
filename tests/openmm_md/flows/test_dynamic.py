@@ -1,32 +1,53 @@
 from __future__ import annotations
 
-import io
-import json
-from pathlib import Path
+from emmet.core.openmm import OpenMMTaskDocument
 
-import numpy as np
-import pytest
-from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
-from jobflow import Flow
-from MDAnalysis import Universe
-from monty.json import MontyDecoder
-from openmm.app import PDBFile
+from atomate2.openmm.flows.dynamic import (
+    DynamicOpenMMFlowMaker,
+    default_should_continue,
+)
+from atomate2.openmm.jobs import NPTMaker
 
-from atomate2.openmm.flows.core import OpenMMFlowMaker
-from atomate2.openmm.flows.dynamic import DynamicOpenMMFlowMaker
-from atomate2.openmm.jobs import EnergyMinimizationMaker, NPTMaker, NVTMaker
 
-def test_dynamic_flow_maker(interchange, run_job):
+def test_should_continue(interchange, run_job):
+    maker = NPTMaker(n_steps=300, pressure=1.0, state_interval=10, traj_interval=10)
+    base_job = maker.make(interchange)
+    npt_task_doc = run_job(base_job)
+
+    # use low threshold to for should_continue=True
+    should_continue = default_should_continue(
+        [npt_task_doc],
+        stage_index=0,
+        max_stages=15,
+        physical_property="potential_energy",
+        threshold=1e-64,
+    )
+    should_continue_task_doc = run_job(should_continue)
+    assert isinstance(should_continue_task_doc, OpenMMTaskDocument)
+    assert should_continue_task_doc.should_continue
+
+    # use high threshold to false should_continue=False
+    should_continue = default_should_continue(
+        [npt_task_doc],
+        stage_index=0,
+        max_stages=15,
+        physical_property="potential_energy",
+        threshold=1e64,
+    )
+    should_continue_task_doc = run_job(should_continue)
+    assert isinstance(should_continue_task_doc, OpenMMTaskDocument)
+    assert not should_continue_task_doc.should_continue
+
+
+def test_dynamic_flow_maker(interchange, run_dynamic_job):
     from functools import partial
-
-    from jobflow import run_locally
 
     from atomate2.openmm.flows.dynamic import _get_final_jobs, default_should_continue
 
     should_continue = partial(
         default_should_continue,
         physical_property="potential_energy",
-        threshold=1e-2,
+        threshold=1e-3,
     )
     should_continue.__name__ = "should_continue"
 
@@ -34,14 +55,15 @@ def test_dynamic_flow_maker(interchange, run_job):
     dynamic_flow_maker = DynamicOpenMMFlowMaker(
         name="test dynamic equilibration",
         tags=["test"],
-        maker=NPTMaker(n_steps=200, pressure=1.0, state_interval=10, traj_interval=10),
-        max_stages=10,
+        maker=NPTMaker(n_steps=300, pressure=1.0, state_interval=10, traj_interval=10),
+        max_stages=15,
         should_continue=should_continue,
     )
 
-    production_flow = dynamic_flow_maker.make(interchange)
-    response_dict = run_locally(Flow([production_flow]))
-    task_doc = list(response_dict.values())[-1][2].output
+    dynamic_flow = dynamic_flow_maker.make(interchange)
+
+    # run_job not general for dynamic flow, use run_locally
+    task_doc = run_dynamic_job(dynamic_flow)
 
     assert isinstance(task_doc, OpenMMTaskDocument)
     assert task_doc.state == "successful"
@@ -52,7 +74,7 @@ def test_dynamic_flow_maker(interchange, run_job):
     assert task_doc.job_uuids[0] is not None
 
     ## Check the individual jobs in the flow
-    job_list = _get_final_jobs(production_flow)
+    job_list = _get_final_jobs(dynamic_flow)
     npt_job_0 = job_list[0]
     assert isinstance(npt_job_0.maker, NPTMaker)
 
@@ -63,6 +85,4 @@ def test_dynamic_flow_maker(interchange, run_job):
 
     assert (npt_stages - 1) <= dynamic_flow_maker.max_stages
     assert task_doc.calcs_reversed[0].output.traj_file == f"trajectory{npt_stages}.dcd"
-    assert task_doc.calcs_reversed[0].output.traj_file == f"state{npt_stages}.csv"
-
-
+    assert task_doc.calcs_reversed[0].output.state_file == f"state{npt_stages}.csv"

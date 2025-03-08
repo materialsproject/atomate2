@@ -1,18 +1,14 @@
 from __future__ import annotations
 
 import io
-import json
 from pathlib import Path
 
-import numpy as np
-import pytest
 from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
 from jobflow import Flow
 from MDAnalysis import Universe
-from monty.json import MontyDecoder
 from openmm.app import PDBFile
 
-from atomate2.openmm.flows.core import DynamicOpenMMFlowMaker, OpenMMFlowMaker
+from atomate2.openmm.flows.core import OpenMMFlowMaker
 from atomate2.openmm.jobs import EnergyMinimizationMaker, NPTMaker, NVTMaker
 
 
@@ -176,121 +172,3 @@ def test_flow_maker(interchange, run_job):
     u = Universe(topology, str(Path(task_doc.dir_name) / "trajectory5.dcd"))
 
     assert len(u.trajectory) == 5
-
-
-def test_dynamic_flow_maker(interchange, run_job):
-    from functools import partial
-
-    from jobflow import run_locally
-
-    from atomate2.openmm.flows.core import _get_final_jobs, default_should_continue
-
-    should_continue = partial(
-        default_should_continue,
-        physical_property="potential_energy",
-        threshold=1e-2,
-    )
-    should_continue.__name__ = "should_continue"
-
-    # Create an instance of DynamicFlowMaker with custom parameters
-    dynamic_flow_maker = DynamicOpenMMFlowMaker(
-        name="test dynamic equilibration",
-        tags=["test"],
-        maker=NPTMaker(n_steps=200, pressure=1.0, state_interval=10, traj_interval=10),
-        max_stages=10,
-        should_continue=should_continue,
-    )
-
-    production_flow = dynamic_flow_maker.make(interchange)
-    response_dict = run_locally(Flow([production_flow]))
-    task_doc = list(response_dict.values())[-1][2].output
-
-    assert isinstance(task_doc, OpenMMTaskDocument)
-    assert task_doc.state == "successful"
-    assert (len(task_doc.calcs_reversed) - 1) <= dynamic_flow_maker.max_stages
-    assert task_doc.calcs_reversed[-1].task_name == "npt simulation"
-    assert task_doc.calcs_reversed[0].task_name == "npt simulation"
-    assert task_doc.tags == ["test"]
-    assert task_doc.job_uuids[0] is not None
-
-    ## Check the individual jobs in the flow
-    job_list = _get_final_jobs(production_flow)
-    npt_job_0 = job_list[0]
-    assert isinstance(npt_job_0.maker, NPTMaker)
-
-    npt_stages = 0
-    for job in job_list:
-        if isinstance(job.maker, NPTMaker):
-            npt_stages += 1
-
-    assert (npt_stages - 1) <= dynamic_flow_maker.max_stages
-    assert task_doc.calcs_reversed[0].output.traj_file == f"trajectory{npt_stages}.dcd"
-    assert task_doc.calcs_reversed[0].output.traj_file == f"state{npt_stages}.csv"
-
-
-def test_traj_blob_embed(interchange, run_job, tmp_path):
-    nvt = NVTMaker(n_steps=2, traj_interval=1, embed_traj=True)
-
-    # Run the ProductionMaker flow
-    nvt_job = nvt.make(interchange)
-    task_doc = run_job(nvt_job)
-
-    interchange = OpenMMInterchange.model_validate_json(task_doc.interchange)
-    topology = PDBFile(io.StringIO(interchange.topology)).getTopology()
-
-    u = Universe(topology, str(Path(task_doc.dir_name) / "trajectory.dcd"))
-
-    assert len(u.trajectory) == 2
-
-    calc_output = task_doc.calcs_reversed[0].output
-    assert calc_output.traj_blob is not None
-
-    # Write the bytes back to a file
-    with open(tmp_path / "doc_trajectory.dcd", "wb") as f:
-        f.write(bytes.fromhex(calc_output.traj_blob))
-
-    u2 = Universe(topology, str(tmp_path / "doc_trajectory.dcd"))
-
-    assert np.all(u.atoms.positions == u2.atoms.positions)
-
-    with open(Path(task_doc.dir_name) / "taskdoc.json") as file:
-        task_dict = json.load(file, cls=MontyDecoder)
-        task_doc_parsed = OpenMMTaskDocument.model_validate(task_dict)
-
-    parsed_output = task_doc_parsed.calcs_reversed[0].output
-
-    assert parsed_output.traj_blob == calc_output.traj_blob
-
-
-@pytest.mark.skip("for local testing and debugging")
-def test_fireworks(interchange):
-    # Create an instance of ProductionMaker with custom parameters
-
-    production_maker = OpenMMFlowMaker(
-        name="test_production",
-        tags=["test"],
-        makers=[
-            EnergyMinimizationMaker(max_iterations=1),
-            NPTMaker(n_steps=5, pressure=1.0, state_interval=1, traj_interval=1),
-            OpenMMFlowMaker.anneal_flow(anneal_temp=400, final_temp=300, n_steps=5),
-            NVTMaker(n_steps=5),
-        ],
-    )
-
-    interchange_json = interchange.json()
-    # interchange_bytes = interchange_json.encode("utf-8")
-
-    # Run the ProductionMaker flow
-    production_flow = production_maker.make(interchange_json)
-
-    from fireworks import LaunchPad
-    from jobflow.managers.fireworks import flow_to_workflow
-
-    wf = flow_to_workflow(production_flow)
-
-    lpad = LaunchPad.auto_load()
-    lpad.add_wf(wf)
-
-    # from fireworks.core.rocket_launcher import launch_rocket
-    #
-    # launch_rocket(lpad)
