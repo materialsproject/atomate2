@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
-from emmet.core.openmm import Calculation, OpenMMInterchange, OpenMMTaskDocument
 from jobflow import CURRENT_JOB, Flow, Job, Maker, Response, job
 from scipy.signal import savgol_filter
 
@@ -16,9 +15,14 @@ from atomate2.openmm.jobs.base import BaseOpenMMMaker, openmm_job
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    from emmet.core.openmm import (
+        Calculation,
+        OpenMMFlowMaker,
+        OpenMMInterchange,
+        OpenMMTaskDocument,
+    )
+    from mypy_extensions import DefaultNamedArg, NamedArg
     from openff.interchange import Interchange
-
-    from atomate2.openmm.flows.core import OpenMMFlowMaker
 
 
 def _get_final_jobs(input_jobs: list[Job] | Flow) -> list[Job]:
@@ -145,18 +149,23 @@ class DynamicOpenMMFlowMaker(Maker):
     )
     max_stages: int = field(default=5)
     collect_outputs: bool = True
-    (
-        list[OpenMMTaskDocument],
-        int,
-        int,
-        str,
-        float | None,
-        float,
-        float,
-    )
+
     should_continue: Callable[
-        [list[OpenMMTaskDocument], int, int, str, float | None, float, str], Response
+        [
+            NamedArg(list[OpenMMTaskDocument], "task_docs"),
+            NamedArg(int, "stage_index"),
+            NamedArg(int, "max_stages"),
+            DefaultNamedArg(str, "physical_property"),
+            DefaultNamedArg(float | None, "target"),
+            DefaultNamedArg(float, "threshold"),
+            DefaultNamedArg(float, "burn_in_ratio"),
+        ],
+        Response,
     ] = field(default_factory=lambda: default_should_continue)
+
+    # should_continue: Callable[
+    #    [list[OpenMMTaskDocument], int, int, str, float | None, float, str], Response
+    # ] = field(default_factory=lambda: default_should_continue)
 
     jobs: list = field(default_factory=list)
     job_uuids: list = field(default_factory=list)
