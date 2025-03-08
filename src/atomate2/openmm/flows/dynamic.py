@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
+from typing import Protocol, runtime_checkable, TYPE_CHECKING
 
 import numpy as np
 from jobflow import CURRENT_JOB, Flow, Job, Maker, Response, job
@@ -21,7 +21,6 @@ if TYPE_CHECKING:
         OpenMMInterchange,
         OpenMMTaskDocument,
     )
-    from mypy_extensions import DefaultNamedArg, NamedArg
     from openff.interchange import Interchange
 
 
@@ -106,6 +105,19 @@ def default_should_continue(
     task_doc.should_continue = should_continue
     return Response(output=task_doc)
 
+@runtime_checkable
+class ShouldContinueProtocol(Protocol):
+    def __call__(
+        self,
+        task_docs: list[OpenMMTaskDocument],
+        stage_index: int,
+        max_stages: int,
+        physical_property: str = "potential_energy",
+        target: float | None = None,
+        threshold: float = 1e-3,
+        burn_in_ratio: float = 0.2
+    ) -> Response:
+        ...
 
 @dataclass
 class DynamicOpenMMFlowMaker(Maker):
@@ -149,23 +161,9 @@ class DynamicOpenMMFlowMaker(Maker):
     )
     max_stages: int = field(default=5)
     collect_outputs: bool = True
-
-    should_continue: Callable[
-        [
-            NamedArg(list[OpenMMTaskDocument], "task_docs"),
-            NamedArg(int, "stage_index"),
-            NamedArg(int, "max_stages"),
-            DefaultNamedArg(str, "physical_property"),
-            DefaultNamedArg(float | None, "target"),
-            DefaultNamedArg(float, "threshold"),
-            DefaultNamedArg(float, "burn_in_ratio"),
-        ],
-        Response,
-    ] = field(default_factory=lambda: default_should_continue)
-
-    # should_continue: Callable[
-    #    [list[OpenMMTaskDocument], int, int, str, float | None, float, str], Response
-    # ] = field(default_factory=lambda: default_should_continue)
+    should_continue: ShouldContinueProtocol = field(
+        default_factory=lambda: default_should_continue
+    )
 
     jobs: list = field(default_factory=list)
     job_uuids: list = field(default_factory=list)
