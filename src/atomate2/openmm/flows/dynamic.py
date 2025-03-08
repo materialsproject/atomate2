@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Protocol, runtime_checkable, TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 import numpy as np
 from jobflow import CURRENT_JOB, Flow, Job, Maker, Response, job
@@ -13,8 +13,6 @@ from atomate2.openmm.flows.core import _get_calcs_reversed, collect_outputs
 from atomate2.openmm.jobs.base import BaseOpenMMMaker, openmm_job
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
-
     from emmet.core.openmm import (
         Calculation,
         OpenMMFlowMaker,
@@ -105,8 +103,11 @@ def default_should_continue(
     task_doc.should_continue = should_continue
     return Response(output=task_doc)
 
+
 @runtime_checkable
 class ShouldContinueProtocol(Protocol):
+    """Protocol for flexible callback types for should_continue function."""
+
     def __call__(
         self,
         task_docs: list[OpenMMTaskDocument],
@@ -115,9 +116,11 @@ class ShouldContinueProtocol(Protocol):
         physical_property: str = "potential_energy",
         target: float | None = None,
         threshold: float = 1e-3,
-        burn_in_ratio: float = 0.2
+        burn_in_ratio: float = 0.2,
     ) -> Response:
+        """Identical keyword arguments as default_should_continue()."""
         ...
+
 
 @dataclass
 class DynamicOpenMMFlowMaker(Maker):
