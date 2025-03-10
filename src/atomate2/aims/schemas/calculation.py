@@ -7,10 +7,11 @@ import os
 from collections.abc import Sequence
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from ase.spectrum.band_structure import BandStructure
+from emmet.core.math import Matrix3D, Vector3D
 from jobflow.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
@@ -20,9 +21,6 @@ from pymatgen.io.aims.inputs import AimsGeometryIn
 from pymatgen.io.aims.outputs import AimsOutput
 from pymatgen.io.common import VolumetricData
 from typing_extensions import Self
-
-if TYPE_CHECKING:
-    from emmet.core.math import Matrix3D, Vector3D
 
 STORE_VOLUMETRIC_DATA = ("total_density",)
 

@@ -15,12 +15,6 @@ from atomate2.common.schemas.magnetism import MagneticOrderingsDocument
 cwd = os.getcwd()
 
 
-@pytest.mark.skip(
-    reason="pymatgen 2024.11.13 broke this test with ValueError: Structure contains "
-    "magnetic moments on both magmom site properties and spin species properties. This "
-    "is ambiguous. Remove one or the other."
-)
-# TODO re-attempt to fix and unskip this test
 def test_magnetic_orderings(mock_aims, tmp_path, species_dir, mg2mn4o8):
     parameters = {
         "k_grid": [2, 2, 2],
