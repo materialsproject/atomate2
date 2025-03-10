@@ -1,7 +1,11 @@
 import numpy as np
 import pytest
 from jobflow import run_locally
+from pathlib import Path
+
+from pymatgen.core import Structure
 from pymatgen.io.aims.sets.core import SocketIOSetGenerator, StaticSetGenerator
+from pymatgen.core import SETTINGS
 
 from atomate2.aims.flows.anharmonicity import AnharmonicityMaker
 from atomate2.aims.flows.phonons import PhononMaker
@@ -11,8 +15,10 @@ from atomate2.aims.jobs.phonons import (
     PhononDisplacementMakerSocket,
 )
 
+si_structure_file = Path(__file__).parents[2] / "test_data/structures/Si_diamond.cif"
 
-def test_anharmonic_quantification_oneshot(si, clean_dir, mock_aims, species_dir):
+def test_anharmonic_quantification_oneshot(clean_dir, mock_aims, species_dir):
+    si = Structure.from_file(si_structure_file)
     # mapping from job name to directory containing test files
     ref_paths = {
         "Relaxation calculation": "phonon-relax-si",
@@ -21,94 +27,63 @@ def test_anharmonic_quantification_oneshot(si, clean_dir, mock_aims, species_dir
         "phonon static aims anharmonicity quant. 1/1": "anharm-os-si",
     }
 
+    SETTINGS["AIMS_SPECIES_DIR"] = species_dir / "tight"
     # settings passed to fake_run_aims; adjust these to check for certain input settings
     fake_run_aims_kwargs = {}
 
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
-    parameters = {
-        "species_dir": (species_dir / "light").as_posix(),
-        "rlsy_symmetry": "all",
-        "sc_accuracy_rho": 1e-06,
-        "sc_accuracy_forces": 0.0001,
-        "relativistic": "atomic_zora scalar",
-    }
-
-    parameters_phonon_disp = dict(compute_forces=True, **parameters)
-    parameters_phonon_disp["rlsy_symmetry"] = None
-
     phonon_maker = PhononMaker(
-        bulk_relax_maker=RelaxMaker.full_relaxation(
-            user_params=parameters, user_kpoints_settings={"density": 5.0}
-        ),
-        static_energy_maker=StaticMaker(
-            input_set_generator=StaticSetGenerator(
-                user_params=parameters, user_kpoints_settings={"density": 5.0}
-            )
-        ),
+        min_length=3.0,
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        create_thermal_displacements=True,
+        store_force_constants=True,
+        born_maker=None,
         use_symmetrized_structure="primitive",
-        phonon_displacement_maker=PhononDisplacementMaker(
-            input_set_generator=StaticSetGenerator(
-                user_params=parameters_phonon_disp,
-                user_kpoints_settings={"density": 5.0},
-            )
-        ),
     )
 
     maker = AnharmonicityMaker(
         phonon_maker=phonon_maker,
     )
     maker.name = "anharmonicity"
-    flow = maker.make(si, supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3))
+    flow = maker.make(
+        si,
+        supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3),
+        one_shot_approx=True,
+        seed=1234,
+    )
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
-    assert np.round(dct["one-shot"], 3) == 0.104
+    assert np.round(dct["one-shot"], 3) == 0.120
 
 
-def test_anharmonic_quantification_full(si, clean_dir, mock_aims, species_dir):
+def test_anharmonic_quantification_full(clean_dir, mock_aims, species_dir):
+    si = Structure.from_file(si_structure_file)
+
     ref_paths = {
-        "Relaxation calculation": "phonon-relax-si-full",
-        "phonon static aims 1/1": "phonon-disp-si-full",
-        "SCF Calculation": "phonon-energy-si-full",
+        "Relaxation calculation": "phonon-relax-si",
+        "phonon static aims 1/1": "phonon-disp-si",
+        "SCF Calculation": "phonon-energy-si",
         "phonon static aims anharmonicity quant. 1/1": "anharm-si-full",
     }
 
+    SETTINGS["AIMS_SPECIES_DIR"] = species_dir / "tight"
     # settings passed to fake_run_aims; adjust these to check for certain input settings
     fake_run_aims_kwargs = {}
 
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
 
-    parameters = {
-        "species_dir": (species_dir / "light").as_posix(),
-        "rlsy_symmetry": "all",
-        "sc_accuracy_rho": 1e-06,
-        "sc_accuracy_forces": 0.0001,
-        "relativistic": "atomic_zora scalar",
-    }
-
-    parameters_phonon_disp = dict(compute_forces=True, **parameters)
-    parameters_phonon_disp["rlsy_symmetry"] = None
-
     phonon_maker = PhononMaker(
-        bulk_relax_maker=RelaxMaker.full_relaxation(
-            user_params=parameters, user_kpoints_settings={"density": 5.0}
-        ),
-        static_energy_maker=StaticMaker(
-            input_set_generator=StaticSetGenerator(
-                user_params=parameters, user_kpoints_settings={"density": 5.0}
-            )
-        ),
+        min_length=3.0,
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        create_thermal_displacements=True,
+        store_force_constants=True,
+        born_maker=None,
         use_symmetrized_structure="primitive",
-        phonon_displacement_maker=PhononDisplacementMaker(
-            input_set_generator=StaticSetGenerator(
-                user_params=parameters_phonon_disp,
-                user_kpoints_settings={"density": 5.0},
-            )
-        ),
     )
 
     maker = AnharmonicityMaker(
@@ -125,7 +100,8 @@ def test_anharmonic_quantification_full(si, clean_dir, mock_aims, species_dir):
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
     dct = responses[flow.job_uuids[-1]][1].output.sigma_dict
-    assert pytest.approx(dct["full"], 0.001) == 0.12012
+
+    assert pytest.approx(dct["full"], 0.001) == 0.144264
 
 
 def test_mode_resolved_anharmonic_quantification(si, clean_dir, mock_aims, species_dir):
