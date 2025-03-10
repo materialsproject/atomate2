@@ -536,7 +536,7 @@ podman-hpc login docker.io
 Username: USERNAME
 Password:
 
-podman-hpc pull docker.io/USERNAME/ligpargen::latest
+podman-hpc pull docker.io/USERNAME/ligpargen:latest
 ```
 
 #### 2. Set environment variables

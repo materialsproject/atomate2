@@ -1,3 +1,6 @@
+import shutil
+import subprocess
+
 import pytest
 from emmet.core.openmm import OpenMMInterchange
 from jobflow import run_locally
@@ -78,5 +81,13 @@ def output_dir(test_dir):
 @pytest.fixture
 def mock_ligpargen_env(monkeypatch):
     """Ensure environment variables are set for the generate_opls_xml tests."""
-    monkeypatch.setenv("CONTAINER_SOFTWARE", "podman-hpc")
-    monkeypatch.setenv("LPG_IMAGE_NAME", "shehan0807/ligpargen:latest")
+    if shutil.which("podman-hpc") is not None:
+        container = "podman-hpc"
+        monkeypatch.setenv("CONTAINER_SOFTWARE", container)
+    elif shutil.which("docker") is not None:
+        container = "docker"
+        monkeypatch.setenv("CONTAINER_SOFTWARE", container)
+
+    lpg_image = "shehan0807/ligpargen:latest"
+    subprocess.run([container, "pull", f"docker.io/{lpg_image}"], check=False)
+    monkeypatch.setenv("LPG_IMAGE_NAME", lpg_image)
