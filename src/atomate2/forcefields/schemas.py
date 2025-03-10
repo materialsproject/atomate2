@@ -139,6 +139,9 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             MLFF.M3GNet: "matgl",
             MLFF.CHGNet: "chgnet",
             MLFF.MACE: "mace-torch",
+            MLFF.MACE_MP_0: "mace-torch",
+            MLFF.MACE_MPA_0: "mace-torch",
+            MLFF.MACE_MP_0B3: "mace-torch",
             MLFF.GAP: "quippy-ase",
             MLFF.Nequip: "nequip",
         }
