@@ -114,7 +114,7 @@ strict = [
     "pydantic-settings==2.7.0",
     "pydantic==2.9.2",
     "pymatgen-analysis-defects==2024.10.22",
-    "pymatgen==2024.11.13",
+    "pymatgen==2025.1.24",
     "pymongo==4.10.1",
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
