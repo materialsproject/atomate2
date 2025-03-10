@@ -34,7 +34,7 @@ dependencies = [
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.11.13",
+    "pymatgen>=2025.1.24",
     "pymongo<=4.10.1",
 ]
 
@@ -71,7 +71,6 @@ openmm = [
     "openmm>=8.1.0",
 ]
 fireworks = ["FireWorks==2.0.3"]
-jdftx = ["pymatgen>=2025.1.24"]
 docs = [
     "FireWorks==2.0.3",
     "autodoc_pydantic==2.2.0",
