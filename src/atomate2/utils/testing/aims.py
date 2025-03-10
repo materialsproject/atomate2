@@ -1,25 +1,14 @@
+"""Utilities for testing FHI-aims calculations."""
+
 from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal
-
-from pymatgen.io.aims.sets.base import AimsInputGenerator
-from pymatgen.io.aims.inputs import AimsControlIn
-
-import atomate2.aims.jobs.base
-import atomate2.aims.run
-from atomate2.common.files import gunzip_files
-
-from pathlib import Path
-from typing import TYPE_CHECKING, Literal, Any, Final
+from typing import TYPE_CHECKING, Any, Final, Literal
 
 from jobflow import CURRENT_JOB
-from monty.io import zopen
 from monty.os.path import zpath as monty_zpath
-from pymatgen.io.aims.sets import AimsInputSet
 from pymatgen.io.aims.sets.base import AimsInputGenerator
-from pymatgen.util.coord import find_in_coord_list_pbc
 
 import atomate2.aims.jobs.base
 import atomate2.aims.run
@@ -27,14 +16,16 @@ import atomate2.aims.run
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator, Sequence
 
+    from pymatgen.io.aims.sets import AimsInputSet
     from pytest import MonkeyPatch
 
 logger = logging.getLogger("atomate2")
 
 
-_VFILES: Final = ("control.in")
+_VFILES: Final = ("control.in",)
 _REF_PATHS: dict[str, str | Path] = {}
 _FAKE_RUN_AIMS_KWARGS: dict[str, dict] = {}
+
 
 def zpath(path: str | Path) -> Path:
     """Return the path of a zip file.
@@ -48,8 +39,7 @@ def zpath(path: str | Path) -> Path:
 def monkeypatch_aims(
     monkeypatch: MonkeyPatch, ref_path: Path
 ) -> Generator[Callable[[Any, Any], Any], None, None]:
-    """
-    This fixture allows one to mock (fake) running FHI-aims.
+    """Allow one to mock (fake) running FHI-aims.
 
     To use the fixture successfully, the following steps must be followed:
     1. "mock_aims" should be included as an argument to any test that would like to use
@@ -79,7 +69,7 @@ def monkeypatch_aims(
     For examples, see the tests in tests/aims/jobs/core.py.
     """
 
-    def mock_run_aims(*args, **kwargs) -> None:
+    def mock_run_aims(*args, **kwargs) -> None:  # noqa: ARG001
         name = CURRENT_JOB.job.name
         try:
             ref_dir = ref_path / _REF_PATHS[name]
@@ -92,7 +82,7 @@ def monkeypatch_aims(
 
     get_input_set_orig = AimsInputGenerator.get_input_set
 
-    def mock_get_input_set(self, *args, **kwargs) -> AimsInputSet:
+    def mock_get_input_set(self: AimsInputGenerator, *args, **kwargs) -> AimsInputSet:
         return get_input_set_orig(self, *args, **kwargs)
 
     monkeypatch.setattr(atomate2.aims.run, "run_aims", mock_run_aims)
@@ -112,10 +102,10 @@ def monkeypatch_aims(
 
 def fake_run_aims(
     ref_path: str | Path,
-    input_settings: Sequence[str] | None = None,
-    check_inputs: Sequence[Literal["control.in"]] = _VFILES,
+    input_settings: Sequence[str] | None = None,  # noqa: ARG001
+    check_inputs: Sequence[Literal["control.in"]] = _VFILES,  # noqa: ARG001
     clear_inputs: bool = False,
-):
+) -> None:
     """
     Emulate running aims and validate aims input files.
 
@@ -146,17 +136,19 @@ def fake_run_aims(
     logger.info("Generated fake aims outputs")
 
 
-def clear_aims_inputs():
+def clear_aims_inputs() -> None:
+    """Clean up FHI-aims input files."""
     for aims_file in ("control.in", "geometry.in", "parameters.json"):
         if Path(aims_file).exists():
             Path(aims_file).unlink()
     logger.info("Cleared aims inputs")
 
 
-def copy_aims_outputs(ref_path: str | Path):
+def copy_aims_outputs(ref_path: str | Path) -> None:
+    """Copy FHI-aims output files from the reference directory."""
     import shutil
 
-    output_path = ref_path / "outputs"
+    output_path = Path(ref_path) / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")

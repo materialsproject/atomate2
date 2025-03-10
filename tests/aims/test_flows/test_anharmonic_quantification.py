@@ -1,11 +1,10 @@
+from pathlib import Path
+
 import numpy as np
 import pytest
 from jobflow import run_locally
-from pathlib import Path
-
-from pymatgen.core import Structure
+from pymatgen.core import SETTINGS, Structure
 from pymatgen.io.aims.sets.core import SocketIOSetGenerator, StaticSetGenerator
-from pymatgen.core import SETTINGS
 
 from atomate2.aims.flows.anharmonicity import AnharmonicityMaker
 from atomate2.aims.flows.phonons import PhononMaker
@@ -16,6 +15,7 @@ from atomate2.aims.jobs.phonons import (
 )
 
 si_structure_file = Path(__file__).parents[2] / "test_data/structures/Si_diamond.cif"
+
 
 def test_anharmonic_quantification_oneshot(clean_dir, mock_aims, species_dir):
     si = Structure.from_file(si_structure_file)

@@ -1,22 +1,19 @@
 """Test various makers"""
 
 import json
-import pytest
-
 from pathlib import Path
 
+import pytest
+
 si_structure_file = Path(__file__).parents[2] / "test_data/structures/Si_diamond.cif"
+
 
 def test_phonon_flow(clean_dir, mock_aims, species_dir):
     import numpy as np
     from jobflow import run_locally
-
     from pymatgen.core import Structure
-    from pymatgen.io.aims.sets.core import StaticSetGenerator
 
     from atomate2.aims.flows.phonons import PhononMaker
-    from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
-    from atomate2.aims.jobs.phonons import PhononDisplacementMaker
 
     si = Structure.from_file(si_structure_file)
 
