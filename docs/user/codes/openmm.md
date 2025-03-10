@@ -446,6 +446,144 @@ run_locally(flows[rank], ensure_success=True)
 
 </details>
 
+### Varying Forcefields: OPLS
+
+<details>
+<summary>Learn to generate OPLS Forcefield Parameters</summary>
+
+The OpenFF Force Fields provide a powerful starting point to simulate a variety of organic materials using general forcefields like [Parsley](https://doi.org/10.1021/acs.jctc.1c00571) and [Sage](https://pubs.acs.org/doi/10.1021/acs.jctc.3c00039). Just as is done through the OpenFF Toolkit and Interchange machinery, one can automate force field generation for custom force fields. For instance, LigParGen is an automatic OPLS-AA parameter generator for small organic molecules with both a [online server](https://traken.chem.yale.edu/ligpargen/) and open-source [repository](https://traken.chem.yale.edu/ligpargen/). You will see that for any custom parameter generation tool, one can create a container environment as a wrapper to plug into the workflow described up until now.
+
+To do so, you will use the `generate_opls_xml(...)` function in `atomate2/openmm/utils`. This function runs a subprocess to call an image of the LigParGen repository (and all of its respective dependencies). Thus, this requires a local installation of [Docker](https://docs.docker.com/get-started/get-docker/) (otherwise, `download_opls_xml` can be run via the LigParGen website server instead). Once you have docker installed locally, `generate_opls_xml(...)` can be unlocked in three steps:
+
+#### 1. Create a Private LigParGen Image
+
+You will need to install [BOSS](https://zarbi.chem.yale.edu/software.html)--once you receive the email, follow the instructions, LICENSE guidelines, and save the `boss` directory in the same directory as the following `Dockerfile`:
+
+```bash
+FROM ubuntu:20.04
+
+LABEL org.opencontainers.image.version="20.04"
+LABEL org.opencontainers.image.ref.name="ubuntu"
+
+ARG LAUNCHPAD_BUILD_ARCH
+ARG RELEASE
+
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y \
+        libc6:i386 \
+        libncurses5:i386 \
+        libstdc++6:i386 \
+        zlib1g:i386 \
+        gcc-multilib \
+        g++-multilib \
+        binutils \
+        git \
+        curl \
+        libxrender1 \
+        csh && \
+    apt-get clean
+
+RUN curl -L -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
+    rm Miniconda3-latest-Linux-x86_64.sh && \
+    /opt/conda/bin/conda init
+
+RUN /opt/conda/bin/conda create -n ligpargen -y python=3.7 && \
+    /opt/conda/bin/conda install -n ligpargen -y -c rdkit rdkit && \
+    /opt/conda/bin/conda install -n ligpargen -y -c conda-forge openbabel
+
+ENV PATH="/opt/conda/envs/ligpargen/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+RUN git clone https://github.com/Isra3l/ligpargen.git /opt/ligpargen && \
+    cd /opt/ligpargen && \
+    /opt/conda/envs/ligpargen/bin/pip install -e .
+
+COPY ./boss /opt/BOSSdir
+
+RUN chmod +x /opt/BOSSdir/*
+
+ENV BOSSdir="/opt/BOSSdir"
+
+WORKDIR /opt/output
+
+RUN echo "source activate ligpargen" > ~/.bashrc
+
+SHELL ["/bin/bash", "-c"]
+
+CMD ["/bin/bash"]
+```
+
+It will help to have an account either via [DockerHub](https://hub.docker.com/) or the [NERSC registry](https://registry.nersc.gov/account/sign-in?redirect_url=%2Fharbor%2Fprojects) to *privately* upload your image. Next, follow the docker commands to upload an image to your registry of choice:
+
+```bash
+docker build -t USERNAME/ligpargen .
+docker login
+docker push USERNAME/ligpargen
+```
+Note: Be sure to check that on DockerHub, the image `Visibility` is set to `Private`.
+
+Now, you can simply pull your image to which ever HPC cluster environment you choose to proceed with,
+
+```bash
+docker pull USERNAME/ligpargen:latest
+```
+
+On NERSC, users have the option of using [Shifter](https://docs.nersc.gov/development/containers/shifter/how-to-use/) or [Podman](https://docs.nersc.gov/development/containers/podman-hpc/overview/). We recommend Podman in this case to circumvent additional user-level permission requirements. The following Podman commands will work:
+
+```bash
+podman-hpc login docker.io
+Username: USERNAME
+Password:
+
+podman-hpc pull docker.io/USERNAME/ligpargen:latest
+```
+
+#### 2. Set environment variables
+
+Set the image name and container software (Docker, Shifter, Apptainer, etc.) to environment variables (consider adding these to your `~/.bashrc`):
+
+```bash
+export LPG_IMAGE_NAME="USERNAME/ligpargen:latest"
+export CONTAINER_SOFTWARE="podman-hpc" # e.g.
+```
+
+#### 3. Run `generate_opls_xml`
+
+A simple function call will create your desired .XML force field file (e.g., `EC.xml`):
+
+```python
+from atomate2.openmm.utils import generate_opls_xml
+
+mols = {
+    "EC": {
+        "smiles": "C1COC(=O)O1",
+        "charge": "0",  # default_value=0
+        "checkopt": 3,  # default_value=3
+        "charge_method": "CM1A",  # default_value="CM1A"
+    },
+}
+generate_opls_xml(mols)
+```
+
+Functionally, this is equivalent to running the following LigParGen command:
+
+```bash
+ligpargen -n EC -p EC -r EC -c 0 -o 3 -cgen CM1A -s C1COC(=O)O1
+```
+
+Now, just like before, you can create an `Interchange` object. Be sure to include `opls` as an `ff_kwargs` so the correct [geometric combination rules](https://traken.chem.yale.edu/ligpargen/openMM_tutorial.html) for OPLS force fields are invoked,
+
+```python
+elyte_interchange_job = generate_openmm_interchange(
+    mol_specs_dicts, ff_xmls=["EC.xml"], ff_kwargs=["opls"]
+)
+```
+
+See that this general process can work transferably for *any* parameter generation software given you (1) create an image, (2) set the image name as an environment variable, and (3) minimally modify `generate_opls_xml(...)` to your own requirements. In future work, we'll improve this black-box type functionality to support wider parameter generation methods.
+
+</details>
+
 ## Analysis with Emmet
 
 For now, you'll need to make sure you have a particular emmet branch installed.
