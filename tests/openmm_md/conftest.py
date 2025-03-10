@@ -73,3 +73,10 @@ def interchange(openmm_data):
 @pytest.fixture
 def output_dir(test_dir):
     return test_dir / "classical_md" / "output_dir"
+
+
+@pytest.fixture
+def mock_ligpargen_env(monkeypatch):
+    """Ensure environment variables are set for the generate_opls_xml tests."""
+    monkeypatch.setenv("CONTAINER_SOFTWARE", "podman-hpc")
+    monkeypatch.setenv("LPG_IMAGE_NAME", "shehan0807/ligpargen:latest")

@@ -159,6 +159,10 @@ def generate_opls_xml(
     """
     import subprocess
 
+    if os.getenv("CONTAINER_SOFTWARE") is None:
+        raise OSError("CONTAINER_SOFTWARE env variable not set.")
+    if os.getenv("LPG_IMAGE_NAME") is None:
+        raise OSError("LPG_IMAGE_NAME env variable not set.")
     for name, params in names_params.items():
         output_dir = Path(output_dir)
         final_file = output_dir / f"{name}.xml"
