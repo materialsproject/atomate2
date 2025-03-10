@@ -11,10 +11,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
+import openmm
 import openmm.unit as omm_unit
 from emmet.core.openmm import OpenMMInterchange
 from openmm import LangevinMiddleIntegrator, State, XmlSerializer
-from openmm.app import PDBFile, Simulation
+from openmm.app import PDBFile, Simulation, Topology
+from openmm.unit import angstrom
+from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 
 if TYPE_CHECKING:
@@ -172,6 +175,55 @@ def openff_to_openmm_interchange(
             state=XmlSerializer.serialize(state),
             topology=pdb,
         )
+
+
+def structure_to_topology(structure: Structure) -> Topology:
+    """Convert pymatgen structure to openmm topology.
+
+    Parameters
+    ----------
+    structure : Structure
+        The pymatgen structure to convert.
+
+    Returns
+    -------
+    openmm.app.Topology
+        The converted OpenMM topology.
+    """
+    top = Topology()
+    chain = top.addChain()
+    for i, site in enumerate(structure):
+        res = top.addResidue(f"r{i}", chain)
+        element = openmm.app.element.Element.getBySymbol(site.species_string)
+        top.addAtom(f"{element}{i}", element, res)
+    return top
+
+
+def interchange_to_structure(interchange: OpenMMInterchange) -> Structure:
+    """Convert an OpenMMInterchange object to a pymatgen Structure.
+
+    Parameters
+    ----------
+    interchange : OpenMMInterchange
+        The OpenMMInterchange object to convert.
+
+    Returns
+    -------
+    Structure
+        The converted pymatgen Structure.
+    """
+    with io.StringIO(interchange.topology) as buffer:
+        pdb = PDBFile(buffer)
+        topology = pdb.getTopology()
+
+    state = XmlSerializer.deserialize(interchange.state)
+
+    return Structure(
+        lattice=state.getPeriodicBoxVectors(asNumpy=True).value_in_unit(angstrom),
+        species=[atom.element.symbol for atom in topology.atoms()],
+        coords=state.getPositions(asNumpy=True).value_in_unit(angstrom),
+        coords_are_cartesian=True,
+    )
 
 
 class PymatgenTrajectoryReporter:
