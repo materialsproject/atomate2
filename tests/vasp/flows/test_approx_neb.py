@@ -113,6 +113,10 @@ def test_approx_neb_flow(mock_vasp, clean_dir, vasp_test_dir):
         for idx, energy in enumerate(ref_hop.energies)
     )
 
+    from monty.serialization import dumpfn
+
+    dumpfn(output["collate_results"], "/Users/aaronkaplan/Desktop/temp_aneb.json.gz")
+
     assert all(
         getattr(output["collate_results"], f"{direction}_barriers")[k]
         == pytest.approx(getattr(ref_results, f"{direction}_barriers")[k])

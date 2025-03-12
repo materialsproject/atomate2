@@ -160,6 +160,9 @@ def collate_results(
 
         hop_dict[combo_name] = NebResult(
             images=[calc["structure"] for calc in hop if calc["structure"] is not None],
+            image_indices=[
+                idx for idx, calc in enumerate(hop) if calc["structure"] is not None
+            ],
             initial_images=[
                 calc["initial_structure"]
                 for calc in hop
@@ -548,6 +551,9 @@ def collate_images_single_hop(
 
     return NebResult(
         images=[calc["structure"] for calc in calcs if calc["structure"] is not None],
+        image_indices=[
+            idx for idx, calc in enumerate(calcs) if calc["structure"] is not None
+        ],
         initial_images=[
             calc["initial_structure"]
             for calc in calcs
