@@ -95,8 +95,5 @@ def test_workflow_cleanup(tmp_dir):
             expected_file_list.append(_dir / f)
 
     job = remove_workflow_files(dirs, [f.split(".gz")[0] for f in orig_files])
-    resp = run_locally(job)
-    assert sorted([p.absolute() for p in resp[job.uuid][1].output]) == sorted(
-        [p.absolute() for p in expected_file_list]
-    )
+    run_locally(job)
     assert all(not Path(f).is_file() for f in expected_file_list)

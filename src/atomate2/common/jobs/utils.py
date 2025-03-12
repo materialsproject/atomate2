@@ -2,20 +2,16 @@
 
 from __future__ import annotations
 
-import os
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow import Response, job
-from monty.os.path import zpath
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
+from atomate2.common.files import delete_files
 from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-
     from pymatgen.core import Structure
 
 
@@ -147,8 +143,11 @@ def retrieve_structure_from_materials_project(
 
 @job
 def remove_workflow_files(
-    directories: Sequence[str], file_names: Sequence[str], allow_zpath: bool = True
-) -> list[str]:
+    directories: list[str | list[str]],
+    file_names: list[str],
+    allow_zpath: bool = True,
+    **kwargs,
+) -> None:
     """
     Remove files from previous jobs.
 
@@ -158,28 +157,39 @@ def remove_workflow_files(
 
     Parameters
     ----------
-        makers : Sequence[Maker, Flow, Job]
-            Jobs in the flow on which to remove files.
-        file_names : Sequence[str]
+        directories : list of str, or list of list of str
+            Names of directories to clean output from.
+            Can be a list of directories, or a list of lists.
+        file_names : list of str
             The list of file names to remove, ex. ["WAVECAR"] rather than a full path
         allow_zpath : bool = True
-            Whether to allow checking for gzipped output using `monty.os.zpath`
+            Whether to allow checking for zipped output
+        **kwargs
+            Other kwargs to pass to `delete_files`
 
     Returns
     -------
         list[str] : list of removed files
     """
-    abs_paths = [Path(strip_hostname(dir_name)).absolute() for dir_name in directories]
+    if allow_zpath:
+        orig_files = list(file_names)
+        for file in orig_files:
+            file_names.extend(
+                f"{file.removesuffix(ext)}{ext}"
+                for ext in (".gz", ".GZ", ".bz2", ".BZ2", ".z", ".Z")
+            )
 
-    removed_files = []
-    for job_dir in abs_paths:
-        for file in file_names:
-            file_name = job_dir / file
-            if allow_zpath:
-                file_name = Path(zpath(str(file_name)))
+    flattened_dirs = []
+    for dir_name in directories:
+        if isinstance(dir_name, list | tuple):
+            flattened_dirs.extend(dir_name)
+        else:
+            flattened_dirs.append(dir_name)
 
-            if file_name.is_file():
-                removed_files.append(file_name)
-                os.remove(file_name)
-
-    return [str(f) for f in removed_files]
+    for dir_name in flattened_dirs:
+        delete_files(
+            strip_hostname(dir_name),
+            include_files=file_names,
+            allow_missing=True,
+            **kwargs,
+        )
