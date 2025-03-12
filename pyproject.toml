@@ -120,9 +120,10 @@ strict = [
 ]
 strict-openff = [
     "mdanalysis==2.7.0",
-    "monty==2024.10.21",
+    "monty==2024.12.10",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.1.1",
+    "pymatgen==2024.11.13",
 ]
 strict-forcefields = [
     "calorine==3.0",
