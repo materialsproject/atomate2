@@ -2,20 +2,16 @@
 
 from __future__ import annotations
 
-import os
 from typing import TYPE_CHECKING
 
 from jobflow import Response, job
-from monty.os.path import zpath
-from pymatgen.command_line.bader_caller import bader_analysis_from_path
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
+from atomate2.common.files import delete_files
+from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
-    from pathlib import Path
-
     from pymatgen.core import Structure
 
 
@@ -147,8 +143,11 @@ def retrieve_structure_from_materials_project(
 
 @job
 def remove_workflow_files(
-    directories: Sequence[str], file_names: Sequence[str], allow_zpath: bool = True
-) -> list[str]:
+    directories: list[str | list[str]],
+    file_names: list[str],
+    allow_zpath: bool = True,
+    **kwargs,
+) -> None:
     """
     Remove files from previous jobs.
 
@@ -158,47 +157,39 @@ def remove_workflow_files(
 
     Parameters
     ----------
-        makers : Sequence[Maker, Flow, Job]
-            Jobs in the flow on which to remove files.
-        file_names : Sequence[str]
+        directories : list of str, or list of list of str
+            Names of directories to clean output from.
+            Can be a list of directories, or a list of lists.
+        file_names : list of str
             The list of file names to remove, ex. ["WAVECAR"] rather than a full path
         allow_zpath : bool = True
-            Whether to allow checking for gzipped output using `monty.os.zpath`
+            Whether to allow checking for zipped output
+        **kwargs
+            Other kwargs to pass to `delete_files`
 
     Returns
     -------
         list[str] : list of removed files
     """
-    abs_paths = [os.path.abspath(dir_name.split(":")[-1]) for dir_name in directories]
+    if allow_zpath:
+        orig_files = list(file_names)
+        for file in orig_files:
+            file_names.extend(
+                f"{file.removesuffix(ext)}{ext}"
+                for ext in (".gz", ".GZ", ".bz2", ".BZ2", ".z", ".Z")
+            )
 
-    removed_files = []
-    for job_dir in abs_paths:
-        for file in file_names:
-            file_name = os.path.join(job_dir, file)
-            if allow_zpath:
-                file_name = zpath(file_name)
+    flattened_dirs = []
+    for dir_name in directories:
+        if isinstance(dir_name, list | tuple):
+            flattened_dirs.extend(dir_name)
+        else:
+            flattened_dirs.append(dir_name)
 
-            if os.path.isfile(file_name):
-                removed_files.append(file_name)
-                os.remove(file_name)
-
-    return removed_files
-
-
-@job
-def bader_analysis(dir_name: str | Path, suffix: str | None = None) -> dict:
-    """Run Bader charge analysis as a job.
-
-    Parameters
-    ----------
-    dir_name : str or Path
-        The name of the directory to run Bader in.
-    suffix : str or None (default)
-        Suffixes of the files to filter by.
-
-    Returns
-    -------
-    dict of bader charge analysis which is JSONable.
-    """
-    dir_name = os.path.abspath(str(dir_name).split(":")[-1])
-    return bader_analysis_from_path(dir_name, suffix=suffix or "")
+    for dir_name in flattened_dirs:
+        delete_files(
+            strip_hostname(dir_name),
+            include_files=file_names,
+            allow_missing=True,
+            **kwargs,
+        )
