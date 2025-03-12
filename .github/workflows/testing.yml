@@ -87,7 +87,7 @@ jobs:
         # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
         run: |
           micromamba activate a2
-          pytest --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --cov=atomate2 --cov-report=xml
+          pytest --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --ignore=tests/openff_md --ignore=tests/openmm_md --cov=atomate2 --cov-report=xml
 
 
       - uses: codecov/codecov-action@v1
@@ -151,7 +151,7 @@ jobs:
 
         run: |
           micromamba activate a2
-          pytest --ignore=tests/ase --cov=atomate2 --cov-report=xml
+          pytest tests/{openff_md,openmm_md}
 
   test-notebooks-and-ase:
     # prevent this action from running on forks
