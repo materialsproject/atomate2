@@ -3,18 +3,18 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow import Response, job
 from monty.os.path import zpath
-from pymatgen.command_line.bader_caller import bader_analysis_from_path
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
+from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
-    from pathlib import Path
 
     from pymatgen.core import Structure
 
@@ -169,36 +169,17 @@ def remove_workflow_files(
     -------
         list[str] : list of removed files
     """
-    abs_paths = [os.path.abspath(dir_name.split(":")[-1]) for dir_name in directories]
+    abs_paths = [Path(strip_hostname(dir_name)).absolute() for dir_name in directories]
 
     removed_files = []
     for job_dir in abs_paths:
         for file in file_names:
-            file_name = os.path.join(job_dir, file)
+            file_name = job_dir / file
             if allow_zpath:
-                file_name = zpath(file_name)
+                file_name = Path(zpath(str(file_name)))
 
-            if os.path.isfile(file_name):
+            if file_name.is_file():
                 removed_files.append(file_name)
                 os.remove(file_name)
 
-    return removed_files
-
-
-@job
-def bader_analysis(dir_name: str | Path, suffix: str | None = None) -> dict:
-    """Run Bader charge analysis as a job.
-
-    Parameters
-    ----------
-    dir_name : str or Path
-        The name of the directory to run Bader in.
-    suffix : str or None (default)
-        Suffixes of the files to filter by.
-
-    Returns
-    -------
-    dict of bader charge analysis which is JSONable.
-    """
-    dir_name = os.path.abspath(str(dir_name).split(":")[-1])
-    return bader_analysis_from_path(dir_name, suffix=suffix or "")
+    return [str(f) for f in removed_files]
