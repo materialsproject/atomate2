@@ -30,7 +30,7 @@ dependencies = [
     "custodian>=2024.4.18",
     "emmet-core>=0.84.3rc3",
     "jobflow>=0.1.11",
-    "monty>=2025.1.9",
+    "monty>=2024.12.10",
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
@@ -106,10 +106,8 @@ strict = [
     "lobsterpy==0.4.9",
     "mdanalysis==2.7.0",
     "monty==2025.1.9",
-    "mp-api==0.43.0",
+    "mp-api==0.45.3",
     "numpy",
-    "openmm-mdanalysis-reporter==0.1.0",
-    "openmm==8.1.1",
     "phonopy==2.30.1",
     "pydantic-settings==2.7.0",
     "pydantic==2.9.2",
@@ -120,6 +118,13 @@ strict = [
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.12.2",
+]
+strict-openff = [
+    "mdanalysis==2.7.0",
+    "monty==2025.3.3",
+    "openmm-mdanalysis-reporter==0.1.0",
+    "openmm==8.1.1",
+    "pymatgen==2024.11.13",
 ]
 strict-forcefields = [
     "calorine==3.0",
