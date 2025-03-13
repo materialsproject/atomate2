@@ -1,5 +1,34 @@
 # Change log
 
+## v0.0.19
+
+### Bug Fixes 🐛
+* CP2K fixes by @janosh in https://github.com/materialsproject/atomate2/pull/1056
+* bug fix for linear strain passing in qha by @JaGeo in https://github.com/materialsproject/atomate2/pull/1061
+* Fix `generate_phonon_displacements`  magmom removal side effect by @janosh in https://github.com/materialsproject/atomate2/pull/1064
+* Fixed Failing Abinit tests bis by @VicTrqt in https://github.com/materialsproject/atomate2/pull/1108
+### Enhancements 🛠
+* Add trajectory reporter to openmm workflow by @orionarcher in https://github.com/materialsproject/atomate2/pull/1053
+* `PhononMaker` add options to `calculate_pdos` and save force constants to file by @chouyoudou in https://github.com/materialsproject/atomate2/pull/1008
+* Allow `MatPesStaticFlowMaker(static2=None)` by @janosh in https://github.com/materialsproject/atomate2/pull/997
+### Documentation 📖
+* Minor docs cleanup by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1047
+* add openmm description to docs by @JaGeo in https://github.com/materialsproject/atomate2/pull/1069
+* Docs update, forcefield elastic convenience maker, forcefield enum hydration by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1072
+* Added the ChemRxiv citation by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1107
+* Fix docs by @janosh in https://github.com/materialsproject/atomate2/pull/1109
+### House-Keeping 🧹
+* Fix minor phonon code formatting issues + typos by @janosh in https://github.com/materialsproject/atomate2/pull/1070
+* Fix bump phonopy by @naik-aakash in https://github.com/materialsproject/atomate2/pull/1006
+* update calorine version by @naik-aakash in https://github.com/materialsproject/atomate2/pull/1083
+* Deprecated `Structure.ntypesp` in pymatgen by @jmmshn in https://github.com/materialsproject/atomate2/pull/1105
+
+### New Contributors
+* @chouyoudou made their first contribution in https://github.com/materialsproject/atomate2/pull/1008
+* @VicTrqt made their first contribution in https://github.com/materialsproject/atomate2/pull/1108
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.18...v0.0.19
+
 ## v0.0.18
 
 ### New Features 🎉

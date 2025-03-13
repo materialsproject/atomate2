@@ -127,8 +127,7 @@ class ElasticMaker(BaseElasticMaker):
             **(mlff_kwargs or {}),
             "force_field_name": _get_formatted_ff_name(force_field_name),
         }
-        return cls(
-            name=f"{str(force_field_name).split('MLFF.')[-1]} elastic",
+        kwargs.update(
             bulk_relax_maker=ForceFieldRelaxMaker(
                 relax_cell=True,
                 **default_kwargs,
@@ -137,5 +136,8 @@ class ElasticMaker(BaseElasticMaker):
                 relax_cell=False,
                 **default_kwargs,
             ),
+        )
+        return cls(
+            name=f"{str(force_field_name).split('MLFF.')[-1]} elastic",
             **kwargs,
         )

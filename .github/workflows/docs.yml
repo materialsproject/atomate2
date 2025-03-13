@@ -35,11 +35,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install .[strict,docs]
 
+      - name: Copy tutorials
+        run: |
+          cp -r tutorials docs/
+          jupyter nbconvert --to markdown docs/tutorials/*.ipynb
+          jupyter nbconvert --to markdown docs/tutorials/*/*.ipynb
+
       - name: Build
         run: sphinx-build docs docs_build
 
       - name: Upload build artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./docs_build
 
@@ -52,4 +58,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
