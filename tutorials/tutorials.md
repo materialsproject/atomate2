@@ -11,7 +11,8 @@ blob_storage
 lobster_workflow
 openmm_tutorial
 phonon_workflow
+phonon_workflow_aims.ipynb
+force_fields/phonon_workflow
 grueneisen_workflow
 qha_workflow
-force_fields/phonon_workflow
 ```
