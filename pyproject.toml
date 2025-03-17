@@ -70,9 +70,9 @@ openmm = [
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
-fireworks = ["FireWorks==2.0.3"]
+fireworks = ["FireWorks==2.0.4"]
 docs = [
-    "FireWorks==2.0.3",
+    "FireWorks==2.0.4",
     "autodoc_pydantic==2.2.0",
     "furo==2024.8.6",
     "ipython==8.31.0",
@@ -86,7 +86,7 @@ docs = [
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = [
-    "FireWorks==2.0.3",
+    "FireWorks==2.0.4",
     "nbmake==1.5.5",
     "pytest-cov==6.0.0",
     "pytest-mock==3.14.0",
