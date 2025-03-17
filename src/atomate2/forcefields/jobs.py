@@ -15,7 +15,11 @@ from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.ase.jobs import AseRelaxMaker
 from atomate2.forcefields import MLFF, _get_formatted_ff_name
-from atomate2.forcefields.schemas import ForceFieldTaskDocument
+from atomate2.forcefields.schemas import (
+    ForceFieldMoleculeTaskDocument,
+    ForceFieldStructureTaskDocument,
+    ForceFieldTaskDocument,
+)
 from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
 
 if TYPE_CHECKING:
@@ -23,7 +27,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from ase.calculators.calculator import Calculator
-    from pymatgen.core.structure import Structure
+    from pymatgen.core.structure import Molecule, Structure
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +52,9 @@ def forcefield_job(method: Callable) -> job:
     This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
     settings for all forcefield jobs. For example, it ensures that large data objects
     (currently only trajectories) are all stored in the atomate2 data store.
-    It also configures the output schema to be a ForceFieldTaskDocument :obj:`.TaskDoc`.
+    It also configures the output schema to be a
+    ForceFieldStructureTaskDocument :obj:`.TaskDoc`. or
+    ForceFieldMoleculeTaskDocument :obj:`.TaskDoc`.
 
     Any makers that return forcefield jobs (not flows) should decorate the
     ``make`` method with @forcefield_job. For example:
@@ -72,9 +78,7 @@ def forcefield_job(method: Callable) -> job:
     callable
         A decorated version of the make function that will generate forcefield jobs.
     """
-    return job(
-        method, data=_FORCEFIELD_DATA_OBJECTS, output_schema=ForceFieldTaskDocument
-    )
+    return job(method, data=_FORCEFIELD_DATA_OBJECTS)
 
 
 @dataclass
@@ -118,7 +122,8 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
     tags : list[str] or None
         A list of tags for the task.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = "Force field relax"
@@ -146,15 +151,15 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
 
     @forcefield_job
     def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> ForceFieldTaskDocument:
+        self, structure: Molecule | Structure, prev_dir: str | Path | None = None
+    ) -> ForceFieldStructureTaskDocument | ForceFieldMoleculeTaskDocument:
         """
         Perform a relaxation of a structure using a force field.
 
         Parameters
         ----------
-        structure: .Structure
-            pymatgen structure.
+        structure: .Structure or Molecule
+            pymatgen structure or molecule.
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
@@ -170,7 +175,7 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
                 stacklevel=1,
             )
 
-        return ForceFieldTaskDocument.from_ase_compatible_result(
+        return ForceFieldTaskDocument.from_ase_compatible_result_forcefield(
             str(self.force_field_name),  # make mypy happy
             ase_result,
             self.steps,
@@ -212,7 +217,8 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = "Force field static"
@@ -255,7 +261,8 @@ class CHGNetRelaxMaker(ForceFieldRelaxMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.CHGNet} relax"
@@ -291,7 +298,8 @@ class CHGNetStaticMaker(ForceFieldStaticMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.CHGNet} static"
@@ -334,7 +342,8 @@ class M3GNetRelaxMaker(ForceFieldRelaxMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.M3GNet} relax"
@@ -372,7 +381,8 @@ class M3GNetStaticMaker(ForceFieldStaticMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.M3GNet} static"
@@ -415,7 +425,8 @@ class NEPRelaxMaker(ForceFieldRelaxMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.NEP} relax"
@@ -451,7 +462,8 @@ class NEPStaticMaker(ForceFieldStaticMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.NEP} static"
@@ -494,7 +506,8 @@ class NequipRelaxMaker(ForceFieldRelaxMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.Nequip} relax"
@@ -529,7 +542,8 @@ class NequipStaticMaker(ForceFieldStaticMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.Nequip} static"
@@ -576,7 +590,8 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         trained for Matbench Discovery on the MPtrj dataset available at
         https://figshare.com/articles/dataset/22715158.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.MACE_MP_0} relax"
@@ -616,7 +631,8 @@ class MACEStaticMaker(ForceFieldStaticMaker):
         trained for Matbench Discovery on the MPtrj dataset available at
         https://figshare.com/articles/dataset/22715158.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.MACE_MP_0} static"
@@ -665,7 +681,8 @@ class SevenNetRelaxMaker(ForceFieldRelaxMaker):
         trained for Matbench Discovery on the MPtrj dataset available at
         https://figshare.com/articles/dataset/22715158.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.SevenNet} relax"
@@ -707,7 +724,8 @@ class SevenNetStaticMaker(ForceFieldStaticMaker):
         trained for Matbench Discovery on the MPtrj dataset available at
         https://figshare.com/articles/dataset/22715158.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.SevenNet} static"
@@ -747,7 +765,8 @@ class GAPRelaxMaker(ForceFieldRelaxMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.GAP} relax"
@@ -783,7 +802,8 @@ class GAPStaticMaker(ForceFieldStaticMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldStructureTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = f"{MLFF.GAP} static"
