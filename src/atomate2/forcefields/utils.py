@@ -50,7 +50,7 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
 
             calculator = CHGNetCalculator(**kwargs)
 
-        elif calculator_name in (MLFF.M3GNet, MLFF.MATPES_R2SCAN, MLFF.MATPES_PBE,):
+        elif calculator_name in (MLFF.M3GNet, MLFF.MATPES_R2SCAN, MLFF.MATPES_PBE):
             import matgl
             from matgl.ext.ase import PESCalculator
 

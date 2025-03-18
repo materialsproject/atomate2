@@ -180,7 +180,7 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
     def __post_init__(self) -> None:
         """Ensure that ensemble is an enum."""
         if isinstance(self.ensemble, str):
-            self.ensemble = MDEnsemble(self.ensemble)
+            self.ensemble = MDEnsemble(self.ensemble.split("MDEnsemble.")[-1])
 
     @staticmethod
     def _interpolate_quantity(values: Sequence | np.ndarray, n_pts: int) -> np.ndarray:
