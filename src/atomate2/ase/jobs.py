@@ -5,12 +5,15 @@ from __future__ import annotations
 import logging
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
+import time
 from typing import TYPE_CHECKING
 
 from ase.io import Trajectory as AseTrajectory
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from jobflow import Maker, job
+from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
+from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.ase.schemas import AseResult, AseTaskDoc
 from atomate2.ase.utils import AseRelaxer
@@ -21,7 +24,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from ase.calculators.calculator import Calculator
-    from pymatgen.core import Molecule, Structure
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
@@ -33,11 +35,32 @@ class AseMaker(Maker, metaclass=ABCMeta):
     """
     Define basic template of ASE-based jobs.
 
-    This class defines two functions relevant attributes
-    for the ASE TaskDoc schemas, as well as two methods
-    that must be implemented in subclasses:
-        1. `calculator`: the ASE .Calculator object
-        2. `run_ase`: which actually makes the call to ASE.
+    This class defines relevant attributes for the ASE TaskDoc
+    schemas, and one method that must be implemented in subclasses:
+    `calculator`: the ASE .Calculator object
+    
+    The intent of this class is twofold: if users wish to have a
+    high-throughput way to access a calculator, they need only 
+    subclass this class with a calculator defined, e.g., the following
+    is sufficient to define an EMT static calculator with basic I/O:
+    
+    ```python
+    from ase.calculators.emt import EMT
+
+    @dataclass
+    class EMTStaticMaker(AseMaker):
+        name : str = "EMT static maker"
+
+        @property
+        def calculator(self):
+            return EMT()
+    ```
+
+    Note that the user should adapt `run_ase`, which is not a job
+    and makes a call to ASE, and `make`, which is a job, to their uses.
+
+    `run_ase` should return an `AseResult` which has basic calculation info.
+    `make` should return a pydantic-based document model with more details.
 
     Parameters
     ----------
@@ -69,17 +92,14 @@ class AseMaker(Maker, metaclass=ABCMeta):
     store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO
     tags: list[str] | None = None
 
-    @abstractmethod
-    def run_ase(
+    @job(data=_ASE_DATA_OBJECTS)
+    def make(
         self,
-        mol_or_struct: Structure | Molecule,
+        mol_or_struct: Molecule | Structure,
         prev_dir: str | Path | None = None,
-    ) -> AseResult:
+    ) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
         """
-        Run ASE, method to be implemented in subclasses.
-
-        This method exists to permit subclasses to redefine `make`
-        for different output schemas.
+        Run ASE as job, can be re-implemented in subclasses.
 
         Parameters
         ----------
@@ -89,7 +109,40 @@ class AseMaker(Maker, metaclass=ABCMeta):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-        raise NotImplementedError
+        return AseTaskDoc.to_mol_or_struct_metadata_doc(
+            getattr(self.calculator, "name", type(self.calculator).__name__),
+            self.run_ase(mol_or_struct, prev_dir=prev_dir)
+        )
+
+    def run_ase(
+        self,
+        mol_or_struct: Structure | Molecule,
+        prev_dir: str | Path | None = None,
+    ) -> AseResult:
+        """
+        Run ASE, can be re-implemented in subclasses.
+
+        Parameters
+        ----------
+        mol_or_struct: .Molecule or .Structure
+            pymatgen molecule or structure
+        prev_dir : str or Path or None
+            A previous calculation directory to copy output files from. Unused, just
+                added to match the method signature of other makers.
+        """
+
+        is_mol = isinstance(mol_or_struct,Molecule)
+        adaptor = AseAtomsAdaptor()
+        atoms = adaptor.get_atoms(mol_or_struct)
+        atoms.calc = self.calculator
+        t_i = time.perf_counter()
+        final_energy = atoms.get_potential_energy()
+        t_f = time.perf_counter()
+        return AseResult(
+            final_mol_or_struct = getattr(adaptor,f"get_{'molecule' if is_mol else 'structure'}")(atoms),
+            final_energy = final_energy,
+            elapsed_time=t_f - t_i
+        )
 
     @property
     @abstractmethod

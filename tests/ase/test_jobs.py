@@ -3,23 +3,49 @@
 from __future__ import annotations
 
 import os
-
+from dataclasses import dataclass
 import pytest
 from jobflow import run_locally
-from pymatgen.core import Molecule
+from pymatgen.core import Molecule, Structure
+
+from ase.calculators.emt import EMT
 
 from atomate2.ase.jobs import (
+    AseMaker,
     GFNxTBRelaxMaker,
     GFNxTBStaticMaker,
     LennardJonesRelaxMaker,
     LennardJonesStaticMaker,
 )
-from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
+from atomate2.ase.schemas import AseResult, AseMoleculeTaskDoc, AseStructureTaskDoc
 
 try:
     from tblite.ase import TBLite
 except ImportError:
     TBLite = None
+
+@dataclass
+class EMTStaticMaker(AseMaker):
+    name : str = "EMT static maker"
+
+    @property
+    def calculator(self):
+        return EMT()
+
+def test_base_maker(test_dir):
+
+    structure = Structure.from_file(
+        test_dir / "structures" / "Al2Au.cif"
+    )
+    ase_res = EMTStaticMaker().run_ase(structure)
+    assert isinstance(ase_res,AseResult)
+    assert ase_res.final_mol_or_struct == structure
+    assert ase_res.elapsed_time > 0.
+
+    job = EMTStaticMaker().make(structure)
+    resp = run_locally(job)
+    output = resp[job.uuid][1].output
+    assert isinstance(output,AseStructureTaskDoc)
 
 
 def test_lennard_jones_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):
