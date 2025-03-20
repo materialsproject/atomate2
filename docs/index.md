@@ -6,6 +6,7 @@ user/install
 user/running-workflows
 user/key_concepts_overview
 user/docs-schemas-emmet
+user/jobflow-remote
 user/fireworks
 user/atomate-1-vs-2
 user/codes/index
