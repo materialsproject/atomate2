@@ -119,7 +119,6 @@ strict = [
     "typing-extensions==4.12.2",
 ]
 strict-openff = [
-    "mdanalysis==2.9.0",
     "monty==2025.3.3",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.1.1",
