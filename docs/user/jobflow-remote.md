@@ -34,7 +34,8 @@ bandstructure_flow = add_metadata_to_flow(
 )
 
 submit_flow(
-    bandstructure_flow, worker="my_worker", resources=resources, project="my_project")
+    bandstructure_flow, worker="my_worker", resources=resources, project="my_project"
+)
 ```
 
 
