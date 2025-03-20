@@ -91,8 +91,7 @@ class SupercellElectronPhononDisplacedStructureMaker(TransmuterMaker):
         structure: Structure,
         prev_dir: str | Path | None = None,
     ) -> Response:
-        """
-        Run a transmuter VASP job.
+        """Run a transmuter VASP job.
 
         Parameters
         ----------
@@ -155,7 +154,7 @@ def run_elph_displacements(
         "uuids": [],
         "dirs": [],
     }
-    for temp, structure in zip(temperatures, structures):
+    for temp, structure in zip(temperatures, structures, strict=True):
         # create the job
         elph_job = vasp_maker.make(structure, prev_dir=prev_dir)
         elph_job.append_name(f" T={temp}")

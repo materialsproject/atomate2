@@ -1,10 +1,1 @@
-{
-  "xc": "pbe",
-  "relativistic": "atomic_zora scalar",
-  "k_grid": [
-    2,
-    2,
-    2
-  ],
-  "species_dir": "/home/tpurcell/git/fhi-aims-workflows/tests/species_dir"
-}
+{"xc": "pbe", "relativistic": "atomic_zora scalar", "k_grid": [10, 10, 10]}

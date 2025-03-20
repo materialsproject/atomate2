@@ -4,7 +4,7 @@ from collections.abc import Iterable, Sequence
 from pathlib import Path
 
 from monty.serialization import loadfn
-from pymatgen.io.cp2k.inputs import Cp2kInput, Keyword, KeywordList
+from pymatgen.io.cp2k.inputs import Keyword, KeywordList
 
 from atomate2.cp2k.schemas.calc_types import CalcType, RunType, TaskType
 
@@ -71,7 +71,7 @@ def task_type(inputs: dict) -> TaskType:
     """
     calc_type = []
     cp2k_run_type = inputs.get("cp2k_global", {}).get("Run_type", "")
-    ci = Cp2kInput.from_dict(inputs["cp2k_input"])
+    ci = inputs["cp2k_input"]
 
     if cp2k_run_type.upper() in (
         "ENERGY",

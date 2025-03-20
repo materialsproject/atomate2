@@ -1,11 +1,1 @@
-{
-  "xc": "pbe",
-  "relativistic": "atomic_zora scalar",
-  "compute_forces": true,
-  "k_grid": [
-    2,
-    2,
-    2
-  ],
-  "species_dir": "/home/tpurcell/git/fhi-aims-workflows/tests/species_dir"
-}
+{"xc": "pbe", "relativistic": "atomic_zora scalar", "compute_forces": true, "k_grid": [6, 6, 6]}

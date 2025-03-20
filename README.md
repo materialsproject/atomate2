@@ -5,6 +5,7 @@
 [![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
 [![Zenodo](https://img.shields.io/badge/DOI-10.5281/zenodo.10677081-blue?logo=Zenodo&logoColor=white)](https://zenodo.org/records/10677081)
+[![This project supports Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg?logo=python&logoColor=white)](https://python.org/downloads)
 
 [Documentation][docs] | [PyPI][pypi] | [GitHub][github]
 
@@ -21,9 +22,6 @@ workflows using simple Python functions. Features of atomate2 include
   share in a systematic way.
 - It automatically keeps meticulous records of jobs, their directories, runtime
   parameters, and more.
-
-**Note**: Atomate2 is primarily built to work with the [VASP] electronic structure
-software, but we are actively working on adding more codes.
 
 ## Workflows
 
@@ -88,7 +86,7 @@ atomate2 workflows can be run using the [FireWorks] software. See the
 
 ## Installation
 
-Atomate2 is a Python 3.8+ library and can be installed using pip. Full installation
+Atomate2 is a Python 3.10+ library and can be installed using pip. Full installation
 and configuration instructions are provided in the [installation tutorial][installation].
 
 ## Tutorials
@@ -98,6 +96,7 @@ started:
 
 - [Introduction to running workflows][running-workflows]
 - [Using atomate2 with FireWorks][atomate2_fireworks]
+- [Overview of key concepts][key-concepts]
 - [List of VASP workflows][vasp_workflows]
 
 ## Need help?
@@ -126,18 +125,16 @@ A full list of contributors can be found [here][contributors].
 
 ## Citing atomate2
 
-A journal submission for `atomate2` is planned. In the meantime, please use [`citation.cff`](citation.cff) and the [Zenodo record](https://zenodo.org/badge/latestdoi/306414371) to cite `atomate2`.
+A journal submission of `atomate2` is undergoing peer review. In the meantime, please cite the [ChemRxiv preprint](https://chemrxiv.org/engage/chemrxiv/article-details/678e76a16dde43c9085c75e9):
 
 ```bib
-@software{ganose_atomate2_2024,
-  author = {Ganose, Alex and Riebesell, Janosh and George, J. and Shen, Jimmy and S. Rosen, Andrew and Ashok Naik, Aakash and nwinner and Wen, Mingjian and rdguha1995 and Kuner, Matthew and Petretto, Guido and Zhu, Zhuoying and Horton, Matthew and Sahasrabuddhe, Hrushikesh and Kaplan, Aaron and Schmidt, Jonathan and Ertural, Christina and Kingsbury, Ryan and McDermott, Matt and Goodall, Rhys and Bonkowski, Alexander and Purcell, Thomas and Zügner, Daniel and Qi, Ji},
-  doi = {10.5281/zenodo.10677081},
-  license = {cc-by-4.0},
-  month = jan,
-  title = {atomate2},
-  url = {https://github.com/materialsproject/atomate2},
-  version = {0.0.13},
-  year = {2024}
+@article{ganose2025_atomate2,
+    title        = {Atomate2: Modular Workflows for Materials Science},
+    author       = {Ganose, Alex M. and Sahasrabuddhe, Hrushikesh and Asta, Mark and Beck, Kevin and Biswas, Tathagata and Bonkowski, Alexander and Bustamante, Joana and Chen, Xin and Chiang, Yuan and Chrzan, Daryl and Clary, Jacob and Cohen, Orion and Ertural, Christina and Gallant, Max and George, Janine and Gerits, Sophie and Goodall, Rhys and Guha, Rishabh and Hautier, Geoffroy and Horton, Matthew and Kaplan, Aaron and Kingsbury, Ryan and Kuner, Matthew and Li, Bryant and Linn, Xavier and McDermott, Matthew and Mohanakrishnan, Rohith Srinivaas and Naik, Aakash and Neaton, Jeffrey and Persson, Kristin and Petretto, Guido and Purcell, Thomas and Ricci, Francesco and Rich, Benjamin and Riebesell, Janosh and Rignanese, Gian-Marco and Rosen, Andrew and Scheffler, Matthias and Schmidt, Jonathan and Shen, Jimmy-Xuan and Sobolev, Andrei and Sundararaman, Ravishankar and Tezak, Cooper and Trinquet, Victor and Varley, Joel and Vigil-Fowler, Derek and Wang, Duo and Waroquiers, David and Wen, Mingjian and Yang, Han and Zheng, Hui and Zheng, Jiongzhi and Zhu, Zhuoying and Jain, Anubhav},
+    year         = 2025,
+    journal      = {ChemRxiv},
+    url          = {https://chemrxiv.org/engage/chemrxiv/article-details/678e76a16dde43c9085c75e9},
+    urldate      = {2025-01-22},
 }
 ```
 
@@ -155,6 +152,7 @@ A journal submission for `atomate2` is planned. In the meantime, please use [`ci
 [contributors]: https://materialsproject.github.io/atomate2/about/contributors.html
 [license]: https://raw.githubusercontent.com/materialsproject/atomate2/main/LICENSE
 [running-workflows]: https://materialsproject.github.io/atomate2/user/running-workflows.html
+[key-concepts]: https://materialsproject.github.io/atomate2/user/key_concepts_overview.html#key-concepts-in-atomate2-job-flow-makers-inputset-taskdocument-and-builder
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html
 [vasp_workflows]: https://materialsproject.github.io/atomate2/user/codes/vasp.html
 [RelaxBandStructure]: https://materialsproject.github.io/atomate2/user/codes/vasp.html#relax-and-band-structure

@@ -24,26 +24,26 @@ def test_ccd_maker(mock_vasp, clean_dir, test_dir):
     ref_paths = {
         "relax q1": "Si_config_coord/relax_q1",
         "relax q2": "Si_config_coord/relax_q2",
-        "static q1 0": "Si_config_coord/static_q1_0",
-        "static q1 1": "Si_config_coord/static_q1_1",
-        "static q1 2": "Si_config_coord/static_q1_2",
-        "static q1 3": "Si_config_coord/static_q1_3",
-        "static q1 4": "Si_config_coord/static_q1_4",
-        "static q2 0": "Si_config_coord/static_q2_0",
-        "static q2 1": "Si_config_coord/static_q2_1",
-        "static q2 2": "Si_config_coord/static_q2_2",
-        "static q2 3": "Si_config_coord/static_q2_3",
-        "static q2 4": "Si_config_coord/static_q2_4",
+        "static q1 0 q1": "Si_config_coord/static_q1_0",
+        "static q1 1 q1": "Si_config_coord/static_q1_1",
+        "static q1 2 q1": "Si_config_coord/static_q1_2",
+        "static q1 3 q1": "Si_config_coord/static_q1_3",
+        "static q1 4 q1": "Si_config_coord/static_q1_4",
+        "static q2 0 q2": "Si_config_coord/static_q2_0",
+        "static q2 1 q2": "Si_config_coord/static_q2_1",
+        "static q2 2 q2": "Si_config_coord/static_q2_2",
+        "static q2 3 q2": "Si_config_coord/static_q2_3",
+        "static q2 4 q2": "Si_config_coord/static_q2_4",
         "finite diff q1": "Si_config_coord/finite_diff_q1",
         "finite diff q2": "Si_config_coord/finite_diff_q2",
     }
-    fake_run_vasp_kwargs = {k: {"incar_settings": ["ISIF"]} for k in ref_paths}
+    fake_run_vasp_kwargs = {path: {"incar_settings": ["ISIF"]} for path in ref_paths}
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     si_defect = Structure.from_file(
-        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR"
+        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR.gz"
     )
 
     # generate flow
@@ -69,26 +69,26 @@ def test_nonrad_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     ref_paths = {
         "relax q1": "Si_config_coord/relax_q1",
         "relax q2": "Si_config_coord/relax_q2",
-        "static q1 0": "Si_config_coord/static_q1_0",
-        "static q1 1": "Si_config_coord/static_q1_1",
-        "static q1 2": "Si_config_coord/static_q1_2",
-        "static q1 3": "Si_config_coord/static_q1_3",
-        "static q1 4": "Si_config_coord/static_q1_4",
-        "static q2 0": "Si_config_coord/static_q2_0",
-        "static q2 1": "Si_config_coord/static_q2_1",
-        "static q2 2": "Si_config_coord/static_q2_2",
-        "static q2 3": "Si_config_coord/static_q2_3",
-        "static q2 4": "Si_config_coord/static_q2_4",
+        "static q1 0 q1": "Si_config_coord/static_q1_0",
+        "static q1 1 q1": "Si_config_coord/static_q1_1",
+        "static q1 2 q1": "Si_config_coord/static_q1_2",
+        "static q1 3 q1": "Si_config_coord/static_q1_3",
+        "static q1 4 q1": "Si_config_coord/static_q1_4",
+        "static q2 0 q2": "Si_config_coord/static_q2_0",
+        "static q2 1 q2": "Si_config_coord/static_q2_1",
+        "static q2 2 q2": "Si_config_coord/static_q2_2",
+        "static q2 3 q2": "Si_config_coord/static_q2_3",
+        "static q2 4 q2": "Si_config_coord/static_q2_4",
         "finite diff q1": "Si_config_coord/finite_diff_q1",
         "finite diff q2": "Si_config_coord/finite_diff_q2",
     }
-    fake_run_vasp_kwargs = {k: {"incar_settings": ["ISIF"]} for k in ref_paths}
+    fake_run_vasp_kwargs = {path: {"incar_settings": ["ISIF"]} for path in ref_paths}
 
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     si_defect = Structure.from_file(
-        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR"
+        test_dir / "vasp" / "Si_config_coord" / "relax_q1" / "inputs" / "POSCAR.gz"
     )
 
     ccd_maker = ConfigurationCoordinateMaker(distortions=(-0.2, -0.1, 0, 0.1, 0.2))
@@ -140,7 +140,8 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
     }
 
     fake_run_vasp_kwargs = {
-        k: {"incar_settings": ["ISIF"], "check_inputs": ["incar"]} for k in ref_paths
+        path: {"incar_settings": ["ISIF"], "check_inputs": ["incar"]}
+        for path in ref_paths
     }
 
     # automatically use fake VASP and write POTCAR.spec during the test
@@ -177,18 +178,56 @@ def test_formation_energy_maker(mock_vasp, clean_dir, test_dir, monkeypatch):
         plnr_locpot = job["output"]["calcs_reversed"][0]["output"]["locpot"]
         assert set(plnr_locpot) == {"0", "1", "2"}
 
-    for k in ref_paths:
-        _check_plnr_locpot(k)
+    for path in ref_paths:
+        _check_plnr_locpot(path)
 
     # make sure the the you can restart the calculation from prv
     prv_dir = test_dir / "vasp/GaN_Mg_defect/bulk_relax/outputs"
-    flow2 = maker.make(
+    flow2 = maker.make(defects[0], bulk_supercell_dir=prv_dir, defect_index=0)
+    _ = run_locally(flow2, create_folders=True, ensure_success=True)
+
+
+def test_formation_energy_maker_uc(mock_vasp, clean_dir, test_dir, monkeypatch):
+    from jobflow import run_locally
+
+    # mapping from job name to directory containing test files
+    ref_paths = {
+        "relax Mg_Ga-0 q=-2": "GaN_Mg_defect/relax_Mg_Ga-0_q=-2",
+        "relax Mg_Ga-0 q=-1": "GaN_Mg_defect/relax_Mg_Ga-0_q=-1",
+        "relax Mg_Ga-0 q=0": "GaN_Mg_defect/relax_Mg_Ga-0_q=0",
+        "relax Mg_Ga-0 q=1": "GaN_Mg_defect/relax_Mg_Ga-0_q=1",
+    }
+
+    fake_run_vasp_kwargs = {
+        k: {"incar_settings": ["ISIF"], "check_inputs": ["incar"]} for k in ref_paths
+    }
+
+    # automatically use fake VASP and write POTCAR.spec during the test
+    mock_vasp(ref_paths, fake_run_vasp_kwargs)
+
+    struct = Structure.from_file(test_dir / "structures" / "GaN.cif")
+    defects = list(
+        SubstitutionGenerator().get_defects(
+            structure=struct, substitution={"Ga": ["Mg"]}
+        )
+    )
+
+    maker = FormationEnergyMaker(
+        relax_radius="auto",
+        perturb=0.1,
+        collect_defect_entry_data=False,
+        validate_charge=False,
+        uc_bulk=True,
+    )
+    flow = maker.make(
         defects[0],
-        bulk_supercell_dir=prv_dir,
+        supercell_matrix=[[2, 2, 0], [2, -2, 0], [0, 0, 1]],
         defect_index=0,
     )
+
+    # run the flow and ensure that it finished running successfully
     _ = run_locally(
-        flow2,
+        flow,
         create_folders=True,
         ensure_success=True,
     )

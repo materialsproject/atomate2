@@ -13,22 +13,28 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
+from pymatgen.io.vasp.sets import LobsterSet
 
+from atomate2.common.jobs.utils import remove_workflow_files
+from atomate2.common.utils import _recursive_get_dir_names
 from atomate2.lobster.jobs import LobsterMaker
 from atomate2.vasp.flows.core import DoubleRelaxMaker
 from atomate2.vasp.flows.lobster import VaspLobsterMaker
 from atomate2.vasp.jobs.mp import (
+    MP24PreRelaxMaker,
+    MP24RelaxMaker,
+    MP24StaticMaker,
     MPGGARelaxMaker,
     MPGGAStaticMaker,
     MPMetaGGARelaxMaker,
     MPMetaGGAStaticMaker,
     MPPreRelaxMaker,
 )
-from atomate2.vasp.sets.mp import MPGGAStaticSetGenerator
 
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
     from pathlib import Path
 
     from pymatgen.core.structure import Structure
@@ -164,8 +170,7 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
     )
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Create a 2-step flow with a cheap pre-relaxation followed by a high-quality one.
+        """Make a 2-step flow with a cheap pre-relaxation, then a high-quality one.
 
         An optional static calculation can be performed before the relaxation.
 
@@ -193,6 +198,95 @@ class MPMetaGGADoubleRelaxStaticMaker(MPGGADoubleRelaxMaker):
             jobs += [static_job]
 
         return Flow(jobs=jobs, output=output, name=self.name)
+
+
+@dataclass
+class MP24DoubleRelaxMaker(DoubleRelaxMaker):
+    """MP24 PBEsol + r2SCAN double relaxation workflow.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker1 : .BaseVaspMaker
+        Maker to generate the first relaxation.
+    relax_maker2 : .BaseVaspMaker
+        Maker to generate the second relaxation.
+    """
+
+    name: str = "MP24 double relax"
+    relax_maker1: Maker | None = field(default_factory=MP24PreRelaxMaker)
+    relax_maker2: Maker = field(
+        default_factory=lambda: MP24RelaxMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
+        )
+    )
+
+
+@dataclass
+class MP24DoubleRelaxStaticMaker(Maker):
+    """MP24 workflow to relax a structure with r2SCAN.
+
+    Optionally, files can be automatically cleaned following completion
+    of the workflow. By default, WAVECAR files are removed.
+
+    Parameters
+    ----------
+    name : str
+        Name of the flows produced by this maker.
+    relax_maker : .BaseVaspMaker
+        Maker to generate the relaxation.
+    static_maker : .BaseVaspMaker
+        Maker to generate the static calculation before the relaxation.
+    clean_files : Sequence of str or None
+        If a list of strings, names of files to remove following the workflow.
+        By default, this removes the WAVECAR files (gzipped or not).
+    """
+
+    name: str = "MP24 r2SCAN workflow"
+    relax_maker: Maker = field(default_factory=MP24DoubleRelaxMaker)
+    static_maker: Maker = field(
+        default_factory=lambda: MP24StaticMaker(
+            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR", "CHGCAR")}
+        )
+    )
+    clean_files: Sequence[str] | None = ("WAVECAR",)
+
+    def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
+        """Relax a structure with r2SCAN.
+
+        Parameters
+        ----------
+        structure : .Structure
+            A pymatgen structure object.
+        prev_dir : str or Path or None
+            A previous VASP calculation directory to copy output files from.
+
+        Returns
+        -------
+        Flow
+            A flow containing the MP relaxation workflow.
+        """
+        relax_flow = self.relax_maker.make(structure=structure, prev_dir=prev_dir)
+
+        static_job = self.static_maker.make(
+            structure=relax_flow.output.structure, prev_dir=relax_flow.output.dir_name
+        )
+
+        jobs = [relax_flow, static_job]
+
+        self.clean_files = self.clean_files or []
+        if len(self.clean_files) > 0:
+            directories: list[str] = []
+            _recursive_get_dir_names(jobs, directories)
+            cleanup = remove_workflow_files(
+                directories=directories,
+                file_names=self.clean_files,
+                allow_zpath=True,
+            )
+            jobs += [cleanup]
+
+        return Flow(jobs=jobs, output=static_job.output, name=self.name)
 
 
 # update potcars to 54, use correct W potcar
@@ -235,23 +329,7 @@ class MPVaspLobsterMaker(VaspLobsterMaker):
     name: str = "lobster"
     relax_maker: BaseVaspMaker | None = field(default_factory=MPGGADoubleRelaxMaker)
     lobster_static_maker: BaseVaspMaker = field(
-        default_factory=lambda: MPGGAStaticMaker(
-            input_set_generator=MPGGAStaticSetGenerator(
-                user_potcar_functional="PBE_54",
-                user_potcar_settings={"W": "W_sv"},
-                user_kpoints_settings={"reciprocal_density": 310},
-                user_incar_settings={
-                    "EDIFF": 1e-6,
-                    "NSW": 0,
-                    "LWAVE": True,
-                    "ISYM": 0,
-                    "IBRION": -1,
-                    "ISMEAR": -5,
-                    "LORBIT": 11,
-                    "ALGO": "Normal",
-                },
-            )
-        )
+        default_factory=lambda: MPGGAStaticMaker(input_set_generator=LobsterSet())
     )
     lobster_maker: LobsterMaker | None = field(default_factory=LobsterMaker)
     delete_wavecars: bool = True

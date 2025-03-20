@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
 
+from atomate2 import SETTINGS
 from atomate2.common.jobs.phonons import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
@@ -19,6 +20,7 @@ from atomate2.common.jobs.utils import structure_to_conventional, structure_to_p
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from typing import Literal
 
     from emmet.core.math import Matrix3D
     from pymatgen.core.structure import Structure
@@ -27,7 +29,7 @@ if TYPE_CHECKING:
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
 
-SUPPORTED_CODES = ["vasp", "aims", "forcefields"]
+SUPPORTED_CODES = frozenset(("vasp", "aims", "forcefields", "ase"))
 
 
 @dataclass
@@ -67,6 +69,8 @@ class BasePhononMaker(Maker, ABC):
         displacement distance for phonons
     min_length: float
         min length of the supercell that will be built
+    max_length: float
+        max length of the supercell that will be built
     prefer_90_degrees: bool
         if set to True, supercell algorithm will first try to find a supercell
         with 3 90 degree angles
@@ -89,8 +93,8 @@ class BasePhononMaker(Maker, ABC):
           High-throughput electronic band structure calculations:
           Challenges and tools. Computational Materials Science,
           49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
-          We will however use seekpath and primitive structures
-          as determined by from phonopy to compute the phonon band structure
+          We will, however, use seekpath and primitive structures
+          as determined by phonopy to compute the phonon band structure
     bulk_relax_maker: .ForceFieldRelaxMaker, .BaseAimsMaker, .BaseVaspMaker, or None
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
@@ -105,6 +109,12 @@ class BasePhononMaker(Maker, ABC):
         Maker used to compute the forces for a supercell.
     generate_frequencies_eigenvectors_kwargs : dict
         Keyword arguments passed to :obj:`generate_frequencies_eigenvectors`.
+        - create_force_constants_file: bool
+            If True, a force constants file will be created
+        - force_constants_filename: str
+            If store_force_constants is True, the file name to store the force constants
+        - calculate_pdos: bool
+            If True, the projected phonon density of states will be calculated
     create_thermal_displacements: bool
         Bool that determines if thermal_displacement_matrices are computed
     kpath_scheme: str
@@ -118,7 +128,7 @@ class BasePhononMaker(Maker, ABC):
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
     code: str
-        determines the dft or force field code.
+        determines the DFT or force field code.
     store_force_constants: bool
         if True, force constants will be stored
     socket: bool
@@ -127,12 +137,14 @@ class BasePhononMaker(Maker, ABC):
 
     name: str = "phonon"
     sym_reduce: bool = True
-    symprec: float = 1e-4
+    symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
+    max_length: float | None = None
     prefer_90_degrees: bool = True
+    allow_orthorhombic: bool = False
     get_supercell_size_kwargs: dict = field(default_factory=dict)
-    use_symmetrized_structure: str | None = None
+    use_symmetrized_structure: Literal["primitive", "conventional"] | None = None
     bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = None
     static_energy_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = (
         None
@@ -142,7 +154,14 @@ class BasePhononMaker(Maker, ABC):
         None
     )
     create_thermal_displacements: bool = True
-    generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
+    generate_frequencies_eigenvectors_kwargs: dict = field(
+        default_factory=lambda: {
+            "create_force_constants_file": False,
+            "force_constants_filename": "FORCE_CONSTANTS",
+            "calculate_pdos": False,
+        }
+    )
+
     kpath_scheme: str = "seekpath"
     code: str = None
     store_force_constants: bool = True
@@ -157,8 +176,7 @@ class BasePhononMaker(Maker, ABC):
         total_dft_energy_per_formula_unit: float | None = None,
         supercell_matrix: Matrix3D | None = None,
     ) -> Flow:
-        """
-        Make flow to calculate the phonon properties.
+        """Make flow to calculate the phonon properties.
 
         Parameters
         ----------
@@ -169,7 +187,7 @@ class BasePhononMaker(Maker, ABC):
         prev_dir : str or Path or None
             A previous calculation directory to use for copying outputs.
         born: Matrix3D
-            Instead of recomputing born charges and epsilon, these values can also be
+            Instead of recomputing Born charges and epsilon, these values can also be
             provided manually. If born and epsilon_static are provided, the born run
             will be skipped it can be provided in the VASP convention with information
             for every atom in unit cell. Please be careful when converting structures
@@ -182,7 +200,7 @@ class BasePhononMaker(Maker, ABC):
             It has to be given per formula unit (as a result in corresponding Doc).
             Instead of recomputing the energy of the bulk structure every time, this
             value can also be provided in eV. If it is provided, the static run will be
-            skipped. This energy is the typical output dft energy of the dft workflow.
+            skipped. This energy is the typical output dft energy of the DFT workflow.
             No conversion needed.
         supercell_matrix: list
             Instead of min_length, also a supercell_matrix can be given, e.g.
@@ -251,9 +269,11 @@ class BasePhononMaker(Maker, ABC):
         # maker to ensure that cell lengths are really larger than threshold
         if supercell_matrix is None:
             supercell_job = get_supercell_size(
-                structure,
-                self.min_length,
-                self.prefer_90_degrees,
+                structure=structure,
+                min_length=self.min_length,
+                max_length=self.max_length,
+                prefer_90_degrees=self.prefer_90_degrees,
+                allow_orthorhombic=self.allow_orthorhombic,
                 **self.get_supercell_size_kwargs,
             )
             jobs.append(supercell_job)

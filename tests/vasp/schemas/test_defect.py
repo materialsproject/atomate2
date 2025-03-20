@@ -31,11 +31,11 @@ def test_ccd_document(vasp_test_dir):
 
     inputs1 = [
         (task.output.structure, task.output.energy, sdir)
-        for task, sdir in zip(static_tasks1, static_dirs1)
+        for task, sdir in zip(static_tasks1, static_dirs1, strict=True)
     ]
     inputs2 = [
         (task.output.structure, task.output.energy, sdir)
-        for task, sdir in zip(static_tasks2, static_dirs2)
+        for task, sdir in zip(static_tasks2, static_dirs2, strict=True)
     ]
 
     input_dict = defaultdict(list)

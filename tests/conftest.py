@@ -50,7 +50,7 @@ def clean_dir(debug_mode):
         shutil.rmtree(new_path)
 
 
-@pytest.fixture()
+@pytest.fixture
 def tmp_dir():
     """Same as clean_dir but is fresh for every test"""
 
@@ -79,7 +79,7 @@ def lpad(database, debug_mode):
             lpad.db[coll].drop()
 
 
-@pytest.fixture()
+@pytest.fixture
 def memory_jobstore():
     store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
     store.connect()
@@ -92,14 +92,29 @@ def log_to_stdout_auto_use():
     initialize_logger()
 
 
-@pytest.fixture()
+@pytest.fixture
 def si_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "Si.cif")
 
 
-@pytest.fixture()
+@pytest.fixture
+def si_diamond(test_dir):
+    return Structure.from_file(test_dir / "structures" / "Si_diamond.cif")
+
+
+@pytest.fixture
+def al2_au_structure(test_dir):
+    return Structure.from_file(test_dir / "structures" / "Al2Au.cif")
+
+
+@pytest.fixture
 def sr_ti_o3_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "SrTiO3.cif")
+
+
+@pytest.fixture
+def ba_ti_o3_structure(test_dir):
+    return Structure.from_file(test_dir / "structures" / "BaTiO3.cif")
 
 
 @pytest.fixture(autouse=True)
@@ -150,3 +165,13 @@ def symmetry_structure(test_dir, request):
     See https://github.com/hackingmaterials/amset/blob/main/tests/conftest.py
     """
     return loadfn(test_dir / "symmetry_structures" / f"{request.param}.json.gz")
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--abinit-integration",
+        action="store_true",
+        default=False,
+        help="Run abinit integration tests. "
+        "This basically runs the same tests but without the mocking.",
+    )

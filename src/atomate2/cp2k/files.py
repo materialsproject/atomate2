@@ -38,7 +38,7 @@ def copy_cp2k_outputs(
 
     For folders containing multiple calculations (e.g., suffixed with relax1, relax2,
     etc), this function will only copy the files with the highest numbered suffix and
-    the suffix will be removed. Additional cp2k files will be also be  copied with the
+    the suffix will be removed. Additional cp2k files will be also be copied with the
     same suffix applied. Lastly, this function will gunzip any gzipped files.
 
     Parameters
@@ -62,25 +62,27 @@ def copy_cp2k_outputs(
     relax_ext = get_largest_relax_extension(src_dir, src_host, file_client=file_client)
     directory_listing = file_client.listdir(src_dir, host=src_host)
     restart_file = None
-    additional_cp2k_files = additional_cp2k_files if additional_cp2k_files else []
+    additional_cp2k_files = additional_cp2k_files or []
 
     # find required files
-    o = Cp2kOutput(src_dir / get_zfile(directory_listing, "cp2k.out"), auto_load=False)
-    o.parse_files()
+    cp2k_output = Cp2kOutput(
+        src_dir / get_zfile(directory_listing, "cp2k.out"), auto_load=False
+    )
+    cp2k_output.parse_files()
     if restart_to_input:
         additional_cp2k_files += ("restart",)
 
     # copy files
     additional_cp2k_files += ("wfn",)
     files = ["cp2k.inp", "cp2k.out"]
-    for f in set(additional_cp2k_files):
-        if f in o.filenames and o.filenames.get(f):
-            if isinstance(o.filenames[f], str):
-                files.append(Path(o.filenames[f]).name)
+    for file in set(additional_cp2k_files):
+        if file in cp2k_output.filenames and cp2k_output.filenames.get(file):
+            if isinstance(cp2k_output.filenames[file], str):
+                files.append(Path(cp2k_output.filenames[file]).name)
             else:
-                files.append(Path(o.filenames[f][-1]).name)
+                files.append(Path(cp2k_output.filenames[file][-1]).name)
         else:
-            files.append(Path(f).name)
+            files.append(Path(file).name)
     all_files = [
         get_zfile(directory_listing, r + relax_ext, allow_missing=True) for r in files
     ]
@@ -102,8 +104,10 @@ def copy_cp2k_outputs(
     # rename files to remove relax extension
     if relax_ext:
         files_to_rename = {
-            k.name.replace(".gz", ""): k.name.replace(relax_ext, "").replace(".gz", "")
-            for k in all_files
+            file.name.replace(".gz", ""): file.name.replace(relax_ext, "").replace(
+                ".gz", ""
+            )
+            for file in all_files
         }
         rename_files(files_to_rename, allow_missing=True, file_client=file_client)
 

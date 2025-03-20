@@ -36,10 +36,10 @@ class CommonEosMaker(Maker):
     initial_relax_maker : .Maker | None
         Maker to relax the input structure, defaults to None (no initial relaxation).
     eos_relax_maker : .Maker
-        Maker to relax deformationed structures for the EOS fit.
+        Maker to relax deformed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
-    strain : tuple[float]
+    linear_strain : tuple[float]
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
@@ -62,8 +62,7 @@ class CommonEosMaker(Maker):
     _store_transformation_information: bool = False
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
-        """
-        Run an EOS flow.
+        """Run an EOS flow.
 
         Parameters
         ----------
@@ -82,7 +81,10 @@ class CommonEosMaker(Maker):
             ("relax", "static") if self.static_maker else ("relax",)
         )
         flow_output: dict[str, dict] = {
-            key: {quantity: [] for quantity in ("energy", "volume", "stress")}
+            key: {
+                quantity: []
+                for quantity in ("energy", "volume", "stress", "structure", "dir_name")
+            }
             for key in job_types
         }
 
@@ -93,6 +95,12 @@ class CommonEosMaker(Maker):
             )
             relax_flow.name = "EOS equilibrium relaxation"
 
+            try:
+                if len(relax_flow.jobs) > 1:
+                    for job in relax_flow.jobs:
+                        job.append_name(" EOS equilibrium relaxation")
+            except AttributeError:
+                pass
             flow_output["initial_relax"] = {
                 "E0": relax_flow.output.output.energy,
                 "V0": relax_flow.output.structure.volume,
@@ -122,11 +130,11 @@ class CommonEosMaker(Maker):
         if self.initial_relax_maker:
             # Cell without applied strain already included from relax/equilibrium steps.
             # Perturb this point (or these points) if included
-            zero_strain_mask = np.abs(strain_l) < 1.0e-15
+            zero_strain_mask = np.abs(strain_l) < 1e-15
             if np.any(zero_strain_mask):
                 nzs = len(strain_l[zero_strain_mask])
                 shift = strain_delta / (nzs + 1.0) * np.linspace(-1.0, 1.0, nzs)
-                strain_l[np.abs(strain_l) < 1.0e-15] += shift
+                strain_l[np.abs(strain_l) < 1e-15] += shift
 
         deformation_l = [(np.identity(3) * (1.0 + eps)).tolist() for eps in strain_l]
 
@@ -134,7 +142,7 @@ class CommonEosMaker(Maker):
         transformations = apply_strain_to_structure(structure, deformation_l)
         jobs["utility"] += [transformations]
 
-        for idef in range(self.number_of_frames):
+        for frame_idx in range(self.number_of_frames):
             if self._store_transformation_information:
                 with contextlib.suppress(Exception):
                     # write details of the transformation to the
@@ -144,13 +152,19 @@ class CommonEosMaker(Maker):
                     # is automatically converted to a "." in the filename.
                     self.eos_relax_maker.write_additional_data[
                         "transformations:json"
-                    ] = transformations.output[idef]
+                    ] = transformations.output[frame_idx]
 
             relax_job = self.eos_relax_maker.make(
-                structure=transformations.output[idef].final_structure,
+                structure=transformations.output[frame_idx].final_structure,
                 prev_dir=prev_dir,
             )
-            relax_job.name += f" deformation {idef}"
+            relax_job.name += f" deformation {frame_idx}"
+            try:
+                if len(relax_job.jobs) > 1:
+                    for job in relax_job.jobs:
+                        job.append_name(f" deformation {frame_idx}")
+            except AttributeError:
+                pass
             jobs["relax"].append(relax_job)
 
             if self.static_maker:
@@ -158,30 +172,35 @@ class CommonEosMaker(Maker):
                     structure=relax_job.output.structure,
                     prev_dir=relax_job.output.dir_name,
                 )
-                static_job.name += f" {idef}"
+                static_job.name += f" {frame_idx}"
                 jobs["static"].append(static_job)
 
         for key in job_types:
-            for i in range(len(jobs[key])):
-                flow_output[key]["energy"].append(jobs[key][i].output.output.energy)
-                flow_output[key]["volume"].append(jobs[key][i].output.structure.volume)
-                flow_output[key]["stress"].append(jobs[key][i].output.output.stress)
+            for idx in range(len(jobs[key])):
+                output = jobs[key][idx].output.output
+                dir_name = jobs[key][idx].output.dir_name
+                flow_output[key]["energy"] += [output.energy]
+                flow_output[key]["volume"] += [output.structure.volume]
+                flow_output[key]["stress"] += [output.stress]
+                flow_output[key]["structure"] += [output.structure]
+                flow_output[key]["dir_name"] += [dir_name]
 
         if self.postprocessor is not None:
-            if len(jobs["relax"]) < self.postprocessor.min_data_points:
+            min_points = self.postprocessor.min_data_points
+            if len(jobs["relax"]) < min_points:
                 raise ValueError(
                     "To perform least squares EOS fit with "
-                    f"{self.postprocessor.__class__}, you must specify "
-                    f"self.number_of_frames >= {self.postprocessor.min_data_points}."
+                    f"{type(self.postprocessor).__name__}, you must specify "
+                    f"self.number_of_frames >= {min_points}."
                 )
 
-            postprocess = self.postprocessor.make(flow_output)
-            postprocess.name = self.name + " postprocessing"
-            flow_output = postprocess.output
-            jobs["utility"] += [postprocess]
+            post_process = self.postprocessor.make(flow_output)
+            post_process.name = self.name + " postprocessing"
+            flow_output = post_process.output
+            jobs["utility"] += [post_process]
 
-        joblist = []
-        for key in jobs:
-            joblist += jobs[key]
+        job_list = []
+        for val in jobs.values():
+            job_list += val
 
-        return Flow(jobs=joblist, output=flow_output, name=self.name)
+        return Flow(jobs=job_list, output=flow_output, name=self.name)

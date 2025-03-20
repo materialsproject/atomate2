@@ -10,14 +10,14 @@ from atomate2.vasp.jobs.eos import MPGGAEosRelaxMaker, MPGGAEosStaticMaker
 expected_incar_relax = {
     "ISIF": 3,
     "IBRION": 2,
-    "EDIFF": 1.0e-6,
+    "EDIFF": 1e-6,
     "ISMEAR": 0,
     "SIGMA": 0.05,
     "LMAXMIX": 6,
     "KSPACING": 0.22,
 }
 
-expected_incar_static = {**expected_incar_relax, "NSW": 0, "IBRION": -1, "ISMEAR": -5}
+expected_incar_static = expected_incar_relax | {"NSW": 0, "IBRION": -1, "ISMEAR": -5}
 expected_incar_static.pop("ISIF")
 
 
@@ -35,7 +35,7 @@ def test_mp_gga_eos_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
     structure = Structure.from_file(
-        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax']}/inputs/POSCAR"
+        f"{vasp_test_dir}/{ref_paths['EOS MP GGA relax']}/inputs/POSCAR.gz"
     )
     maker = MPGGAEosRelaxMaker()
     job = maker.make(structure)
@@ -67,7 +67,7 @@ def test_mp_gga_eos_static_maker(mock_vasp, clean_dir, vasp_test_dir):
         f"mp-149-PBE-EOS_Deformation_Relax_0/outputs/POSCAR.gz"
     )
     structure = Structure.from_file(
-        f"{vasp_test_dir}/Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0/inputs/POSCAR"
+        f"{vasp_test_dir}/Si_EOS_MP_GGA/mp-149-PBE-EOS_Static_0/inputs/POSCAR.gz"
     )
     assert input_structure == structure
 

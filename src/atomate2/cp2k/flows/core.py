@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core.structure import Structure
+    from typing_extensions import Self
 
     from atomate2.cp2k.jobs.base import BaseCp2kMaker
 
@@ -47,8 +48,7 @@ class DoubleRelaxMaker(Maker):
     relax_maker2: Maker = field(default_factory=RelaxMaker)
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Create a flow with two chained relaxations.
+        """Create a flow with two chained relaxations.
 
         Parameters
         ----------
@@ -73,7 +73,7 @@ class DoubleRelaxMaker(Maker):
         return Flow([relax1, relax2], relax2.output, name=self.name)
 
     @classmethod
-    def from_relax_maker(cls, relax_maker: BaseCp2kMaker) -> DoubleRelaxMaker:
+    def from_relax_maker(cls, relax_maker: BaseCp2kMaker) -> Self:
         """
         Instantiate the DoubleRelaxMaker with two relax makers of the same type.
 
@@ -113,8 +113,7 @@ class BandStructureMaker(Maker):
     bs_maker: Maker = field(default_factory=NonSCFMaker)
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Create a band structure flow.
+        """Create a band structure flow.
 
         Parameters
         ----------
@@ -189,8 +188,7 @@ class RelaxBandStructureMaker(Maker):
     band_structure_maker: Maker = field(default_factory=BandStructureMaker)
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Flow:
-        """
-        Run a relaxation and then calculate the uniform and line mode band structures.
+        """Run a relaxation, then calculate the uniform and line mode band structures.
 
         Parameters
         ----------
@@ -224,7 +222,7 @@ class HybridFlowMaker(Maker):
     initialize_with_pbe
         Whether or not to attach a pre-hybrid flow that can be used to
         kickstart the hybrid flow. This is treated differently than just
-        stiching flows together, because of the screening done in
+        stitching flows together, because of the screening done in
         __post_init__
     pbe_maker
         Maker for the initialization
@@ -253,15 +251,14 @@ class HybridFlowMaker(Maker):
         }
         if self.initialize_with_pbe:
             updates["activate_hybrid"].update(
-                {"screen_on_initial_p": True, "screen_p_forces": True}
+                screen_on_initial_p=True, screen_p_forces=True
             )
         self.hybrid_maker.input_set_generator.user_input_settings = recursive_update(
             updates, self.hybrid_maker.input_set_generator.user_input_settings
         )
 
     def make(self, structure: Structure, prev_dir: str | Path | None = None) -> Job:
-        """
-        Make a hybrid flow.
+        """Make a hybrid flow.
 
         Parameters
         ----------

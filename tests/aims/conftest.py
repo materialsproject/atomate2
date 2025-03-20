@@ -34,7 +34,53 @@ def pytest_addoption(parser):
     )
 
 
-@pytest.fixture()
+@pytest.fixture
+def mg2mn4o8():
+    return Structure(
+        lattice=Lattice(
+            [
+                [5.06882343, 0.00012488, -2.66110167],
+                [-1.39704234, 4.87249911, -2.66110203],
+                [0.00986091, 0.01308528, 6.17649359],
+            ]
+        ),
+        species=[
+            "Mg",
+            "Mg",
+            "Mn",
+            "Mn",
+            "Mn",
+            "Mn",
+            "O",
+            "O",
+            "O",
+            "O",
+            "O",
+            "O",
+            "O",
+            "O",
+        ],
+        coords=[
+            [0.37489726, 0.62510274, 0.75000002],
+            [0.62510274, 0.37489726, 0.24999998],
+            [-0.00000000, -0.00000000, 0.50000000],
+            [-0.00000000, 0.50000000, 0.00000000],
+            [0.50000000, -0.00000000, 0.50000000],
+            [-0.00000000, -0.00000000, 0.00000000],
+            [0.75402309, 0.77826750, 0.50805882],
+            [0.77020285, 0.24594779, 0.99191316],
+            [0.22173254, 0.24597689, 0.99194116],
+            [0.24597691, 0.22173250, 0.49194118],
+            [0.24594765, 0.77020288, 0.49191313],
+            [0.22979715, 0.75405221, 0.00808684],
+            [0.75405235, 0.22979712, 0.50808687],
+            [0.77826746, 0.75402311, 0.00805884],
+        ],
+        site_properties={"magmom": [0, 0, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0]},
+    )
+
+
+@pytest.fixture
 def si():
     return Structure(
         lattice=Lattice(
@@ -45,7 +91,22 @@ def si():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
+def nacl():
+    return Structure(
+        lattice=Lattice(
+            [
+                [3.422015, 0.0, 1.975702],
+                [1.140671, 3.226306, 1.975702],
+                [0.0, 0.0, 3.951402],
+            ]
+        ),
+        species=["Na", "Cl"],
+        coords=[[0, 0, 0], [0.5, 0.5, 0.5]],
+    )
+
+
+@pytest.fixture
 def o2():
     return Molecule(species=["O", "O"], coords=[[0, 0, 0.622978], [0, 0, -0.622978]])
 
@@ -64,7 +125,7 @@ def ref_path():
     return test_dir.resolve()
 
 
-@pytest.fixture()
+@pytest.fixture
 def should_mock_aims(request):
     try:
         return not request.config.getoption("--generate-test-data")
@@ -72,7 +133,7 @@ def should_mock_aims(request):
         return True
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_aims(monkeypatch, ref_path, should_mock_aims):
     """
     This fixture allows one to mock (fake) running FHI-aims.
