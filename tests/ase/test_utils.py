@@ -9,7 +9,7 @@ from ase.calculators.lj import LennardJones
 from ase.optimize import BFGS
 from ase.spacegroup.symmetrize import check_symmetry
 from numpy.testing import assert_allclose
-    
+
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 

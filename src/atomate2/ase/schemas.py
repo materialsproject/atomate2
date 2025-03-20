@@ -43,7 +43,7 @@ class AseResult(BaseModel):
         None, description="The molecule or structure in the final trajectory frame."
     )
 
-    final_energy : float | None = Field(
+    final_energy: float | None = Field(
         None, description="The final total energy from the calculation."
     )
 
@@ -96,9 +96,7 @@ class AseBaseModel(BaseModel):
     mol_or_struct: Structure | Molecule | None = Field(
         None, description="The molecule or structure at this step."
     )
-    structure: Structure | None = Field(
-        None, description="The structure at this step."
-    )
+    structure: Structure | None = Field(None, description="The structure at this step.")
     molecule: Molecule | None = Field(None, description="The molecule at this step.")
 
     def model_post_init(self, _context: Any) -> None:
@@ -117,9 +115,7 @@ class IonicStep(AseBaseModel):
         None, description="The forces on each atom."
     )
     stress: Matrix3D | None = Field(None, description="The stress on the lattice.")
-    magmoms: list[float] | None = Field(
-        None, description="On-site magnetic moments."
-    )
+    magmoms: list[float] | None = Field(None, description="On-site magnetic moments.")
 
 
 class OutputDoc(AseBaseModel):
@@ -127,7 +123,7 @@ class OutputDoc(AseBaseModel):
 
     energy: float | None = Field(None, description="Total energy in units of eV.")
 
-    energy_per_atom: float | None= Field(
+    energy_per_atom: float | None = Field(
         None,
         description="Energy per atom of the final molecule or structure "
         "in units of eV/atom.",
@@ -409,11 +405,13 @@ class AseTaskDoc(AseBaseModel):
         if n_steps:
             for idx in range(n_steps):
                 if trajectory.frame_properties[idx].get("stress") is not None:
-                    trajectory.frame_properties[idx]["stress"] = voigt_6_to_full_3x3_stress(
-                        [
-                            val * -10 / GPa
-                            for val in trajectory.frame_properties[idx]["stress"]
-                        ]
+                    trajectory.frame_properties[idx]["stress"] = (
+                        voigt_6_to_full_3x3_stress(
+                            [
+                                val * -10 / GPa
+                                for val in trajectory.frame_properties[idx]["stress"]
+                            ]
+                        )
                     )
 
             input_mol_or_struct = trajectory[0]
@@ -453,7 +451,7 @@ class AseTaskDoc(AseBaseModel):
             final_forces = None
             final_stress = None
             ionic_steps = None
-            
+
         else:
             final_energy = trajectory.frame_properties[-1]["energy"]
             final_forces = trajectory.frame_properties[-1]["forces"]
@@ -480,7 +478,7 @@ class AseTaskDoc(AseBaseModel):
                         else None
                     )
 
-                    # include "magmoms" in :obj:`ionic_step` if the trajectory has "magmoms"
+                    # include "magmoms" in `ionic_step` if the trajectory has "magmoms"
                     if "magmoms" in trajectory.frame_properties[idx]:
                         _ionic_step_data.update(
                             {
@@ -498,7 +496,6 @@ class AseTaskDoc(AseBaseModel):
                     )
 
                     ionic_steps.append(ionic_step)
-
 
         objects: dict[AseObject, Any] = {}
         if store_trajectory != StoreTrajectoryOption.NO:

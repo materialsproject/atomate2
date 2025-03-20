@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import logging
+import time
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
-import time
 from typing import TYPE_CHECKING
 
 from ase.io import Trajectory as AseTrajectory
@@ -38,18 +38,19 @@ class AseMaker(Maker, metaclass=ABCMeta):
     This class defines relevant attributes for the ASE TaskDoc
     schemas, and one method that must be implemented in subclasses:
     `calculator`: the ASE .Calculator object
-    
+
     The intent of this class is twofold: if users wish to have a
-    high-throughput way to access a calculator, they need only 
+    high-throughput way to access a calculator, they need only
     subclass this class with a calculator defined, e.g., the following
     is sufficient to define an EMT static calculator with basic I/O:
-    
+
     ```python
     from ase.calculators.emt import EMT
 
+
     @dataclass
     class EMTStaticMaker(AseMaker):
-        name : str = "EMT static maker"
+        name: str = "EMT static maker"
 
         @property
         def calculator(self):
@@ -111,7 +112,7 @@ class AseMaker(Maker, metaclass=ABCMeta):
         """
         return AseTaskDoc.to_mol_or_struct_metadata_doc(
             getattr(self.calculator, "name", type(self.calculator).__name__),
-            self.run_ase(mol_or_struct, prev_dir=prev_dir)
+            self.run_ase(mol_or_struct, prev_dir=prev_dir),
         )
 
     def run_ase(
@@ -130,8 +131,7 @@ class AseMaker(Maker, metaclass=ABCMeta):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-
-        is_mol = isinstance(mol_or_struct,Molecule)
+        is_mol = isinstance(mol_or_struct, Molecule)
         adaptor = AseAtomsAdaptor()
         atoms = adaptor.get_atoms(mol_or_struct)
         atoms.calc = self.calculator
@@ -139,9 +139,11 @@ class AseMaker(Maker, metaclass=ABCMeta):
         final_energy = atoms.get_potential_energy()
         t_f = time.perf_counter()
         return AseResult(
-            final_mol_or_struct = getattr(adaptor,f"get_{'molecule' if is_mol else 'structure'}")(atoms),
-            final_energy = final_energy,
-            elapsed_time=t_f - t_i
+            final_mol_or_struct=getattr(
+                adaptor, f"get_{'molecule' if is_mol else 'structure'}"
+            )(atoms),
+            final_energy=final_energy,
+            elapsed_time=t_f - t_i,
         )
 
     @property
