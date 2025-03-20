@@ -33,7 +33,8 @@ bandstructure_flow = add_metadata_to_flow(
     additional_fields={"mp_id": "mp-190"},
 )
 
-submit_flow(bandstructure_flow, worker="my_worker", resources=resources, project="my_project")
+submit_flow(
+    bandstructure_flow, worker="my_worker", resources=resources, project="my_project")
 ```
 
 
