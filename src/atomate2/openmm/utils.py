@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import io
+import os
 import re
+import shutil
 import tempfile
 import time
 import warnings
@@ -13,7 +15,14 @@ from typing import TYPE_CHECKING
 import numpy as np
 import openmm.unit as omm_unit
 from emmet.core.openmm import OpenMMInterchange
-from openmm import LangevinMiddleIntegrator, State, XmlSerializer
+from openmm import (
+    CustomNonbondedForce,
+    LangevinMiddleIntegrator,
+    NonbondedForce,
+    State,
+    System,
+    XmlSerializer,
+)
 from openmm.app import PDBFile, Simulation
 from pymatgen.core.trajectory import Trajectory
 
@@ -23,18 +32,22 @@ if TYPE_CHECKING:
 
 
 def download_opls_xml(
-    names_smiles: dict[str, str], output_dir: str | Path, overwrite_files: bool = False
+    names_params: dict[str, dict[str, str]],
+    output_dir: str | Path,
+    overwrite_files: bool = False,
 ) -> None:
     """Download an OPLS-AA/M XML file from the LigParGen website using Selenium."""
     try:
         from selenium import webdriver
         from selenium.webdriver.chrome.service import Service as ChromeService
         from selenium.webdriver.common.by import By
+        from selenium.webdriver.support import expected_conditions as ec
+        from selenium.webdriver.support.ui import WebDriverWait
         from webdriver_manager.chrome import ChromeDriverManager
 
     except ImportError:
         warnings.warn(
-            "The `selenium` package is not installed. "
+            "The `selenium` or `webdriver_manager` package is not installed. "
             "It's required to run the opls web scraper.",
             stacklevel=1,
         )
@@ -42,8 +55,12 @@ def download_opls_xml(
     # Initialize the Chrome driver
     driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
-    for name, smiles in names_smiles.items():
+    for name, params in names_params.items():
         final_file = Path(output_dir) / f"{name}.xml"
+        smiles = params.get("smiles")
+        charge = params.get("charge", 0)
+        checkopt = params.get("checkopt", 3)
+
         if final_file.exists() and not overwrite_files:
             continue
         try:
@@ -63,8 +80,22 @@ def download_opls_xml(
                 driver.get("https://zarbi.chem.yale.edu/ligpargen/")
 
                 # Find the SMILES input box and enter the SMILES code
-                smiles_input = driver.find_element(By.ID, "smiles")
+                smiles_input = WebDriverWait(driver, 10).until(
+                    ec.presence_of_element_located((By.ID, "smiles"))
+                )
                 smiles_input.send_keys(smiles)
+
+                # Find Molecule Optimization Iterations dropdown menu and select
+                checkopt_input = WebDriverWait(driver, 10).until(
+                    ec.presence_of_element_located((By.NAME, "checkopt"))
+                )
+                checkopt_input.send_keys(checkopt)
+
+                # Find Charge dropdown menu and select
+                charge_input = WebDriverWait(driver, 10).until(
+                    ec.presence_of_element_located((By.NAME, "dropcharge"))
+                )
+                charge_input.send_keys(charge)
 
                 # Find and click the "Submit Molecule" button
                 submit_button = driver.find_element(
@@ -74,7 +105,9 @@ def download_opls_xml(
                 submit_button.click()
 
                 # Wait for the second page to load
-                # time.sleep(2)  # Adjust this delay as needed based on loading time
+                time.sleep(
+                    2 + 0.5 * int(checkopt)
+                )  # Adjust based on loading time and optimization iterations
 
                 # Find and click the "XML" button under Downloads and OpenMM
                 xml_button = driver.find_element(
@@ -86,8 +119,9 @@ def download_opls_xml(
                 time.sleep(0.3)  # Adjust as needed based on the download time
 
                 file = next(Path(tmpdir).iterdir())
+
                 # copy downloaded file to output_file using os
-                Path(file).rename(final_file)
+                shutil.move(file, final_file)
 
         except Exception as e:  # noqa: BLE001
             warnings.warn(
@@ -96,6 +130,78 @@ def download_opls_xml(
             )
 
     driver.quit()
+
+
+def generate_opls_xml(
+    names_params: dict[str, dict[str, str]],
+    output_dir: str | Path,
+    overwrite_files: bool = False,
+) -> None:
+    """Download an OPLS-AA/M XML file from the LigParGen repo & BOSS executable.
+
+    Parameters
+    ----------
+    names_params : dict[str, dict[str, str]]
+        Dictionary where keys are molecule names and values are dictionaries,
+        with keys:
+        - smiles : str
+            SMILES representation of molecule (required).
+        Optional Parameters:
+            - charge : str, optional
+                Net charge of molecule (default is "0"). If non-zero, must include "-"
+                or "+" sign before integer.
+            - checkopt : str, optional
+                Molecule optimization iterations from 0-3 (default is "3").
+            - cgen : str, optional
+                Charge model, either "CM1A-LBCC" (neutral molecules) or (default) "CM1A"
+                (neutral or charged molecules).
+
+    """
+    import subprocess
+
+    if os.getenv("CONTAINER_SOFTWARE") is None:
+        raise OSError("CONTAINER_SOFTWARE env variable not set.")
+    if os.getenv("LPG_IMAGE_NAME") is None:
+        raise OSError("LPG_IMAGE_NAME env variable not set.")
+    for name, params in names_params.items():
+        output_dir = Path(output_dir)
+        final_file = output_dir / f"{name}.xml"
+        smiles = params.get("smiles")
+        charge = params.get("charge", 0)
+        charge_method = params.get("cgen", "CM1A")
+        checkopt = params.get("checkopt", 3)
+
+        if final_file.exists() and not overwrite_files:
+            continue
+        try:
+            # Specify the directory where you want to download files
+            with tempfile.TemporaryDirectory() as tmpdir:
+                download_dir = tmpdir
+
+                # Run LigParGen via Shifter / Docker / Apptainer
+                lpg_cmd = [
+                    f"ligpargen -n {name} -p {name} "
+                    f"-r {name} -c {charge} -o {checkopt} "
+                    f"-cgen {charge_method} -s '{smiles}'"
+                ]
+                run_container = (
+                    f"{os.environ['CONTAINER_SOFTWARE']} "
+                    f"run --rm -v {download_dir}:/opt/output "
+                    f"{os.environ['LPG_IMAGE_NAME']} bash -c"
+                )
+                subprocess.run(run_container.split() + lpg_cmd, check=False)
+
+                file = Path(download_dir) / f"{name}" / f"{name}.openmm.xml"
+
+                # copy downloaded file to output_file using os
+                output_dir.mkdir(parents=True, exist_ok=True)
+                shutil.move(file, final_file)
+
+        except Exception as e:  # noqa: BLE001
+            warnings.warn(
+                f"{name} ({params}) failed to download because an error occurred: {e}",
+                stacklevel=1,
+            )
 
 
 def create_list_summing_to(total_sum: int, n_pieces: int) -> list:
@@ -172,6 +278,61 @@ def openff_to_openmm_interchange(
             state=XmlSerializer.serialize(state),
             topology=pdb,
         )
+
+
+def opls_lj(system: System) -> System:
+    """Update system object combination rules to geometric mean for OPLS convention.
+
+    Except for OPLS-AA, most force fields implement the Lorentz-Berthelot
+    combination rules to obtain epsilon and sigma values. This is also the only
+    combination rule implemented in OpenMM. Herein is a function call to use the
+    OPLS-AA geometric combination rules.
+
+    Ref: https://traken.chem.yale.edu/ligpargen/openMM_tutorial.html
+    See Section 4.1.1 of Gromac Manual for further details.
+
+    Note: OPLS-AA uses the 0.5 scaling factor for 1-4 interactions. LigParGen creates
+    xml files that are consistent with this selection, but if not, the NonbondedForce
+    class should be as follows:
+
+    <NonbondedForce coulomb14scale="0.5" lj14scale="0.5">
+    """
+    forces = {
+        system.getForce(index).__class__.__name__: system.getForce(index)
+        for index in range(system.getNumForces())
+    }
+    nonbonded_force = forces["NonbondedForce"]
+    lorentz = CustomNonbondedForce(
+        """4*epsilon*((sigma/r)^12-(sigma/r)^6);
+        sigma=sqrt(sigma1*sigma2);
+        epsilon=sqrt(epsilon1*epsilon2)"""
+    )
+    # sets nonbonded method to Cutoff Periodic if illegal value supplied
+    lorentz.setNonbondedMethod(
+        min(nonbonded_force.getNonbondedMethod(), NonbondedForce.CutoffPeriodic)
+    )
+    lorentz.addPerParticleParameter("sigma")
+    lorentz.addPerParticleParameter("epsilon")
+    lorentz.setCutoffDistance(nonbonded_force.getCutoffDistance())
+    system.addForce(lorentz)
+    ljset = {}
+    for index in range(nonbonded_force.getNumParticles()):
+        charge, sigma, epsilon = nonbonded_force.getParticleParameters(index)
+        ljset[index] = (sigma, epsilon)
+        lorentz.addParticle([sigma, epsilon])
+        nonbonded_force.setParticleParameters(index, charge, sigma, epsilon * 0)
+    for i in range(nonbonded_force.getNumExceptions()):
+        (p1, p2, q, sig, eps) = nonbonded_force.getExceptionParameters(i)
+        # ALL THE 1-2, 1-3 and 1-4 interactions are EXCLUDED FROM CUSTOM NONBONDED FORCE
+        lorentz.addExclusion(p1, p2)
+        if eps.value_in_unit(eps.unit) != 0.0:
+            # print p1,p2,sig,eps
+            sig14 = omm_unit.sqrt(ljset[p1][0] * ljset[p2][0])
+            # Note: eps14 is in the original reference function provided by ligpargen
+            # however, is not properly scaled by 0.5 and used anywhere in the function
+            # eps14 = sqrt(ljset[p1][1] * ljset[p2][1])
+            nonbonded_force.setExceptionParameters(i, p1, p2, q, sig14, eps)
+    return system
 
 
 class PymatgenTrajectoryReporter:
