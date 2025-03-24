@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 42, < 78.0.0", "versioningit >= 1,< 4", "wheel"]
+requires = ["setuptools >= 42", "versioningit >= 1,< 4", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -36,6 +36,7 @@ dependencies = [
     "pydantic>=2.0.1",
     "pymatgen>=2024.11.13",
     "pymongo<=4.10.1",
+    "setuptools<78",
 ]
 
 [project.optional-dependencies]
