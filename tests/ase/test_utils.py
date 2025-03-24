@@ -18,7 +18,7 @@ from atomate2.ase.utils import AseRelaxer, TrajectoryObserver
 
 def test_trajectory_observer(si_structure: Structure, test_dir, tmp_dir):
     atoms = si_structure.to_ase_atoms()
-    atoms.calc(LennardJones())
+    atoms.calc = LennardJones()
 
     traj = TrajectoryObserver(atoms)
 
