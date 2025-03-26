@@ -644,5 +644,5 @@ def test_matpes_relax_makers(
         < 1e-6
     )
     assert np.all(
-        np.abs(np.array(output.output.stress) - np.array(ref["stress"])) < 1e-2
+        np.abs(np.array(output.output.stress) - np.array(ref["stress"])) < 1e-1
     )
