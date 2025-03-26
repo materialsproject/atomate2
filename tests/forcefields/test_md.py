@@ -79,6 +79,8 @@ def test_ml_ff_md_maker(
         MLFF.NEP: -3.966232215741286,
         MLFF.Nequip: -8.84670181274414,
         MLFF.SevenNet: -5.394115447998047,
+        MLFF.MATPES_PBE: -5.4188947677612305,
+        MLFF.MATPES_R2SCAN: -8.707625389099121,
     }
 
     # ASE can slightly change tolerances on structure positions
