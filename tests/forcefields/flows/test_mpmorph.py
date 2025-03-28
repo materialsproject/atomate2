@@ -9,16 +9,9 @@ from atomate2.forcefields.flows.mpmorph import (
     SlowQuenchMLFFMDMaker,
 )
 from atomate2.forcefields.md import ForceFieldMDMaker
+from atomate2.utils.testing import get_job_uuid_name_map
 
 _velocity_seed = 1234
-
-
-def _get_uuid_from_job(job, dct):
-    if hasattr(job, "jobs"):
-        for j in job.jobs:
-            _get_uuid_from_job(j, dct)
-    else:
-        dct[job.uuid] = job.name
 
 
 @pytest.mark.parametrize(
@@ -92,8 +85,7 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
         quench_maker_kwargs=quench_kwargs,
     ).make(structure)
     """
-    uuids = {}
-    _get_uuid_from_job(flow, uuids)
+    uuids = get_job_uuid_name_map(flow)
 
     response = run_locally(
         flow,
