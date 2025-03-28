@@ -205,6 +205,8 @@ jobs:
         run: uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
       - name: Test Notebooks
+        env:
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}      
         run: |
           micromamba activate a2
           pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields
