@@ -15,7 +15,13 @@ from pymatgen.io.vasp.sets import VaspInputSet
 from pymatgen.util.coord import find_in_coord_list_pbc
 
 import atomate2.vasp.jobs.base
-import atomate2.vasp.jobs.defect
+
+try:
+    import atomate2.vasp.jobs.defect
+    pmg_defects_installed = True
+except ImportError:
+    pmg_defects_installed = False
+
 import atomate2.vasp.run
 from atomate2.vasp.sets.base import VaspInputGenerator
 
@@ -99,7 +105,8 @@ def monkeypatch_vasp(
 
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.base, "run_vasp", mock_run_vasp)
-    monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
+    if pmg_defects_installed:
+        monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(VaspInputSet, "get_input_set", mock_get_input_set)
     monkeypatch.setattr(VaspInputSet, "nelect", mock_nelect)
 
