@@ -67,6 +67,7 @@ jobs:
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           uv pip install .[strict,strict-forcefields,tests,abinit]
+          micromamba install -n a2 -c conda-forge phono3py --yes  # Added
           uv pip install torch-runstats
           uv pip install --no-deps nequip==0.5.6
 
