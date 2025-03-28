@@ -206,7 +206,7 @@ jobs:
 
       - name: Test Notebooks
         env:
-          MP_API_KEY: ${{ secrets.MP_API_KEY }}      
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
           pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields
