@@ -4,6 +4,15 @@ from jobflow import run_locally
 
 
 @pytest.fixture
+def run_dynamic_job(tmp_path):
+    def run_dynamic_job(job):
+        response_dict = run_locally(job, ensure_success=True, root_dir=tmp_path)
+        return list(response_dict.values())[-1][2].output
+
+    return run_dynamic_job
+
+
+@pytest.fixture
 def run_job(tmp_path):
     def run_job(job):
         response_dict = run_locally(job, ensure_success=True, root_dir=tmp_path)
