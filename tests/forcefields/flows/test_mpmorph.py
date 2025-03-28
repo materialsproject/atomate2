@@ -3,13 +3,13 @@
 import pytest
 from jobflow import run_locally
 
-from atomate2.common.utils import get_job_uuid_name_map
 from atomate2.forcefields.flows.mpmorph import (
     FastQuenchMLFFMDMaker,
     MPMorphMLFFMDMaker,
     SlowQuenchMLFFMDMaker,
 )
 from atomate2.forcefields.md import ForceFieldMDMaker
+from atomate2.utils.testing import get_job_uuid_name_map
 
 _velocity_seed = 1234
 

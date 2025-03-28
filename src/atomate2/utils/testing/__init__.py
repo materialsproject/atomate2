@@ -8,3 +8,5 @@ they will not be available to other projects via direct imports.
 
 This module will hold the core logic for those tests.
 """
+
+from atomate2.utils.testing.common import get_job_uuid_name_map

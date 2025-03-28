@@ -2,7 +2,6 @@ import pytest
 from jobflow import run_locally
 from monty.serialization import loadfn
 
-from atomate2.common.utils import get_job_uuid_name_map
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.flows.eos import (
     CHGNetEosMaker,
@@ -10,6 +9,7 @@ from atomate2.forcefields.flows.eos import (
     # M3GNetEosMaker,
     MACEEosMaker,
 )
+from atomate2.utils.testing import get_job_uuid_name_map
 
 ff_maker_map = {
     MLFF.CHGNet.value: CHGNetEosMaker,
