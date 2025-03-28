@@ -18,6 +18,7 @@ import atomate2.vasp.jobs.base
 
 try:
     import atomate2.vasp.jobs.defect
+
     pmg_defects_installed = True
 except ImportError:
     pmg_defects_installed = False

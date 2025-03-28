@@ -14,6 +14,7 @@ from pymatgen.transformations.advanced_transformations import (
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from jobflow import Flow, Job, Response
     from pymatgen.core.structure import Structure
 
 
@@ -209,3 +210,35 @@ def _recursive_get_dir_names(jobs: list, dir_names: list) -> None:
             _recursive_get_dir_names(sub_jobs, dir_names)
         else:
             dir_names.append(a_job.output.dir_name)
+
+
+def get_job_uuid_name_map(job_flow_resp: Job | Flow | Response) -> dict[str, str]:
+    """
+    Get all job UUIDs and map them to the job name.
+
+    Useful for running complex flows locally / testing in CI, where one often
+    wants the output of a job with a specific name.
+
+    Parameters
+    ----------
+    job_flow_resp : jobflow Job, Flow, or Response
+
+    Returns
+    -------
+    dict mapping string UUIDs to string names.
+    """
+    uuid_to_name: dict[str, str] = {}
+
+    def recursive_get_job_names(
+        flow_like: Job | Flow, uuid_to_name: dict[str, str]
+    ) -> None:
+        if flow_jobs := getattr(flow_like, "jobs", None):
+            for job in flow_jobs:
+                recursive_get_job_names(job, uuid_to_name)
+        elif replacement := getattr(flow_like, "replace", None):
+            recursive_get_job_names(replacement, uuid_to_name)
+        else:
+            uuid_to_name[flow_like.uuid] = flow_like.name
+
+    recursive_get_job_names(job_flow_resp, uuid_to_name)
+    return uuid_to_name
