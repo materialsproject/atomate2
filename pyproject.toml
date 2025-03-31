@@ -123,7 +123,7 @@ strict-openff = [
     "monty==2025.3.3",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.1.1",
-    "pymatgen==2024.11.13",
+    "pymatgen==2025.3.10",
     "mdanalysis==2.7.0"
 ]
 strict-forcefields = [
