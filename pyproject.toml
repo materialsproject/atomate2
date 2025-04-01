@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 42", "versioningit >= 1,< 4", "wheel"]
+requires = ["setuptools >= 42, <78", "versioningit >= 1,< 4", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -30,7 +30,7 @@ dependencies = [
     "custodian>=2024.4.18",
     "emmet-core>=0.84.3rc3",
     "jobflow>=0.1.11",
-    "monty>=2024.7.30",
+    "monty>=2024.12.10",
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
@@ -55,7 +55,7 @@ forcefields = [
     "calorine>=3.0",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
-    "matgl>=1.1.3",
+    "matgl>=1.2.1",
     "torchdata<=0.7.1",
     # quippy-ase support for py3.12 tracked in https://github.com/libAtoms/QUIP/issues/645
     "quippy-ase>=0.9.14; python_version < '3.12'",
@@ -70,12 +70,12 @@ openmm = [
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
-fireworks = ["FireWorks==2.0.3"]
+fireworks = ["FireWorks==2.0.4"]
 docs = [
-    "FireWorks==2.0.3",
+    "FireWorks==2.0.4",
     "autodoc_pydantic==2.2.0",
     "furo==2024.8.6",
-    "ipython==8.31.0",
+    "ipython==8.34.0",
     "jsonschema[format]",
     "myst_parser==4.0.0",
     "numpydoc==1.8.0",
@@ -86,7 +86,7 @@ docs = [
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = [
-    "FireWorks==2.0.3",
+    "FireWorks==2.0.4",
     "nbmake==1.5.5",
     "pytest-cov==6.0.0",
     "pytest-mock==3.14.0",
@@ -95,7 +95,7 @@ tests = [
 ]
 strict = [
     "PyYAML==6.0.2",
-    "ase==3.23.0",
+    "ase==3.24.0",
     "cclib==1.8.1",
     "click==8.1.7",
     "custodian==2024.10.16",
@@ -104,31 +104,36 @@ strict = [
     "ijson==3.3.0",
     "jobflow==0.1.19",
     "lobsterpy==0.4.9",
-    "mdanalysis==2.7.0",
-    "monty==2024.10.21",
-    "mp-api==0.43.0",
+    "monty==2025.3.3",
+    "mp-api==0.45.3",
     "numpy",
-    "openmm-mdanalysis-reporter==0.1.0",
-    "openmm==8.1.1",
     "phonopy==2.30.1",
     "pydantic-settings==2.7.0",
     "pydantic==2.9.2",
-    "pymatgen-analysis-defects==2024.10.22",
-    "pymatgen==2024.11.13",
+    "pymatgen-analysis-defects==2025.1.18",
+    "pymatgen==2025.2.18",
     "pymongo==4.10.1",
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.12.2",
 ]
+strict-openff = [
+    "mdanalysis==2.7.0",
+    "monty==2025.3.3",
+    "openmm-mdanalysis-reporter==0.1.0",
+    "openmm==8.1.1",
+    "pymatgen==2025.3.10",
+    "mdanalysis==2.7.0"
+]
 strict-forcefields = [
     "calorine==3.0",
-    "chgnet==0.4.0",
+    "chgnet==0.3.8",
     "mace-torch==0.3.10",
-    "matgl==1.1.3",
+    "matgl==1.2.1",
     "quippy-ase==0.9.14; python_version < '3.12'",
     "sevenn==0.10.3",
-    "torch==2.5.1",
+    "torch==2.2.0",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
 ]
 

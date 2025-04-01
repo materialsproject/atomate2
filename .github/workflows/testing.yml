@@ -58,7 +58,7 @@ jobs:
 
       - name: Install conda dependencies
         run: |
-          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
+          micromamba install -n a2 -c conda-forge enumlib packmol bader --yes
 
       - name: Install dependencies
         run: |
@@ -88,7 +88,7 @@ jobs:
         # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
         run: |
           micromamba activate a2
-          pytest --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --cov=atomate2 --cov-report=xml
+          pytest --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --ignore=tests/openff_md --ignore=tests/openmm_md --cov=atomate2 --cov-report=xml
 
 
       - uses: codecov/codecov-action@v1
@@ -97,6 +97,62 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: coverage${{ matrix.split }}
           file: ./coverage.xml
+
+  test-openff:
+    # prevent this action from running on forks
+    if: github.repository == 'materialsproject/atomate2'
+
+    services:
+      local_mongodb:
+        image: mongo:4.0
+        ports:
+          - 27017:27017
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
+    strategy:
+      matrix:
+        python-version: ["3.10","3.11","3.12"]
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up micromamba
+        uses: mamba-org/setup-micromamba@main
+
+      - name: Create mamba environment
+        run: |
+          micromamba create -n a2 python=${{ matrix.python-version }} --yes
+
+      - name: Install uv
+        run: micromamba run -n a2 pip install uv
+
+      - name: Install conda dependencies
+        run: |
+          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
+
+      - name: Install dependencies
+        run: |
+          micromamba activate a2
+          python -m pip install --upgrade pip
+          uv pip install .[strict-openff,tests]
+
+      - name: Install pymatgen from master if triggered by pymatgen repo dispatch
+        if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
+        run: |
+          micromamba activate a2
+          uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
+
+      - name: Test split ${{ matrix.split }}
+        env:
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}
+
+        run: |
+          micromamba activate a2
+          pytest tests/{openff_md,openmm_md}
 
   test-notebooks-and-ase:
     # prevent this action from running on forks

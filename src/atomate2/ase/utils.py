@@ -379,7 +379,7 @@ class AseRelaxer:
             atoms = self.ase_adaptor.get_atoms(atoms)
         if self.fix_symmetry:
             atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
-        atoms.set_calculator(self.calculator)
+        atoms.calc = self.calculator
         with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell and (not is_mol):

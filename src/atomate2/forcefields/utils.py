@@ -50,11 +50,17 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
 
             calculator = CHGNetCalculator(**kwargs)
 
-        elif calculator_name == MLFF.M3GNet:
+        elif calculator_name in (MLFF.M3GNet, MLFF.MATPES_R2SCAN, MLFF.MATPES_PBE):
             import matgl
             from matgl.ext.ase import PESCalculator
 
-            path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
+            if calculator_name == MLFF.M3GNet:
+                path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
+            elif calculator_name in (MLFF.MATPES_R2SCAN, MLFF.MATPES_PBE):
+                architecture = kwargs.pop("architecture", "TensorNet")
+                matpes_version = kwargs.pop("version", "2025.1")
+                path = f"{architecture}-{calculator_name.value}-v{matpes_version}-PES"
+
             potential = matgl.load_model(path)
             calculator = PESCalculator(potential, **kwargs)
 

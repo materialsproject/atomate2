@@ -146,24 +146,24 @@ def fake_run_vasp(
     logger.info("Running fake VASP.")
 
     if "incar" in check_inputs:
-        check_incar(ref_path, incar_settings, incar_exclude)
+        _check_incar(ref_path, incar_settings, incar_exclude)
 
     if "kpoints" in check_inputs:
-        check_kpoints(ref_path)
+        _check_kpoints(ref_path)
 
     if "poscar" in check_inputs:
         if len(neb_sub_dirs := sorted((ref_path / "inputs").glob("[0-9][0-9]"))) > 0:
             for idx, neb_sub_dir in enumerate(neb_sub_dirs):
-                check_poscar(
+                _check_poscar(
                     neb_sub_dir,
                     user_poscar_path=zpath(Path(f"{idx:02}") / "POSCAR"),
                     ref_poscar_path=zpath(neb_sub_dir / "POSCAR"),
                 )
         else:
-            check_poscar(ref_path)
+            _check_poscar(ref_path)
 
     if "potcar" in check_inputs:
-        check_potcar(ref_path)
+        _check_potcar(ref_path)
 
     # This is useful to check if the WAVECAR has been copied
     if "wavecar" in check_inputs and not Path("WAVECAR").exists():
@@ -172,15 +172,15 @@ def fake_run_vasp(
     logger.info("Verified inputs successfully")
 
     if clear_inputs:
-        clear_vasp_inputs()
+        _clear_vasp_inputs()
 
-    copy_vasp_outputs(ref_path)
+    _copy_vasp_outputs(ref_path)
 
     # pretend to run VASP by copying pre-generated outputs from reference dir
     logger.info("Generated fake vasp outputs")
 
 
-def check_incar(
+def _check_incar(
     ref_path: Path,
     incar_settings: Sequence[str] | None,
     incar_exclude: Sequence[str] | None,
@@ -204,7 +204,7 @@ def check_incar(
             )
 
 
-def check_kpoints(ref_path: Path) -> None:
+def _check_kpoints(ref_path: Path) -> None:
     """Check that KPOINTS file is consistent with the reference calculation."""
     user_kpoints_exists = (user_kpt_path := zpath("KPOINTS")).exists()
     ref_kpoints_exists = (
@@ -244,7 +244,7 @@ def check_kpoints(ref_path: Path) -> None:
             )
 
 
-def check_poscar(
+def _check_poscar(
     ref_path: Path,
     user_poscar_path: Path | None = None,
     ref_poscar_path: Path | None = None,
@@ -277,7 +277,7 @@ def check_poscar(
         )
 
 
-def check_potcar(ref_path: Path) -> None:
+def _check_potcar(ref_path: Path) -> None:
     """Check that POTCAR information is consistent with the reference calculation."""
     potcars = {"reference": None, "user": None}
     paths = {"reference": ref_path / "inputs", "user": Path(".")}
@@ -297,7 +297,7 @@ def check_potcar(ref_path: Path) -> None:
         )
 
 
-def clear_vasp_inputs() -> None:
+def _clear_vasp_inputs() -> None:
     """Clean up VASP input files."""
     for vasp_file in (
         "INCAR",
@@ -314,7 +314,7 @@ def clear_vasp_inputs() -> None:
     logger.info("Cleared vasp inputs")
 
 
-def copy_vasp_outputs(ref_path: Path) -> None:
+def _copy_vasp_outputs(ref_path: Path) -> None:
     """Copy VASP output files from the reference directory."""
     output_path = ref_path / "outputs"
     neb_dirs = sorted(output_path.glob("[0-9][0-9]"))
