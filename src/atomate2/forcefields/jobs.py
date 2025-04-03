@@ -38,6 +38,8 @@ _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.MACE_MP_0: {"model": "medium"},
     MLFF.MACE_MPA_0: {"model": "medium-mpa-0"},
     MLFF.MACE_MP_0B3: {"model": "medium-0b3"},
+    MLFF.MATPES_PBE: {"architecture": "TensorNet", "version": "2025.1"},
+    MLFF.MATPES_R2SCAN: {"architecture": "TensorNet", "version": "2025.1"},
 }
 
 
