@@ -44,6 +44,16 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath>=2.0.0"]
+hiphive = [
+    "phonopy==2.21.2",
+	"hiphive @ git+https://gitlab.com/jsyony37/hiphive.git@personal#egg=hiphive",
+    "f90nml==1.4.4",
+    "spglib>=2.2.0",
+	"ase>=3.22.1",
+    "phono3py==2.8.0",
+    "numpy==1.26.4",
+    "scipy==1.14.1",
+    ]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
 defects = [
     "dscribe>=1.2.0",
@@ -117,6 +127,10 @@ strict = [
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.12.2",
+	"hiphive @ git+https://gitlab.com/jsyony37/hiphive.git@personal#egg=hiphive",
+    "f90nml==1.4.4",
+    "spglib>=2.2.0",
+    "scipy==1.14.1",
 ]
 strict-openff = [
     "mdanalysis==2.7.0",
@@ -230,7 +244,7 @@ isort.known-first-party = ["atomate2"]
 isort.split-on-trailing-comma = false
 
 [tool.ruff.format]
-docstring-code-format = true
+# docstring-code-format = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
