@@ -9,6 +9,7 @@ from atomate2.forcefields.flows.eos import (
     # M3GNetEosMaker,
     MACEEosMaker,
 )
+from atomate2.utils.testing import get_job_uuid_name_map
 
 ff_maker_map = {
     MLFF.CHGNet.value: CHGNetEosMaker,
@@ -22,7 +23,7 @@ ff_maker_map = {
 @pytest.mark.parametrize("mlff", ff_maker_map)
 def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
     job = ForceFieldEosMaker.from_force_field_name(mlff).make(si_structure)
-    job_to_uuid = {job.name: job.uuid for job in job.jobs}
+    job_to_uuid = {v: k for k, v in get_job_uuid_name_map(job).items()}
     post_process_uuid = job_to_uuid[f"{mlff} EOS Maker postprocessing"]
     response = run_locally(job, ensure_success=True)
     output = response[post_process_uuid][1].output
