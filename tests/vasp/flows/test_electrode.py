@@ -17,26 +17,26 @@ def test_electrode_makers(mock_vasp, clean_dir, test_dir):
 
     # mapping from job name to directory containing test files
     ref_paths = {
-        "relax": "H_Graphite/relax",
-        "relax 0 (0) 0": "H_Graphite/relax_0_(0)",
-        "relax 1 (0) 1 0": "H_Graphite/relax_1_(0)",
-        "relax 1 (1) 1 0": "H_Graphite/relax_1_(1)",
-        "relax 1 (2) 1 0": "H_Graphite/relax_1_(2)",
-        "static 0": "H_Graphite/static_0",
-        "static 1 0": "H_Graphite/static_1",
+        "relax 0/2": "H_Graphite/relax",
+        "relax 1/2 (0)": "H_Graphite/relax_0_(0)",
+        "relax 2/2 (0)": "H_Graphite/relax_1_(0)",
+        "relax 2/2 (1)": "H_Graphite/relax_1_(1)",
+        "relax 2/2 (2)": "H_Graphite/relax_1_(2)",
+        "static 0/2": "H_Graphite/static_0",
+        "static 1/2": "H_Graphite/static_1",
     }
 
     fake_run_vasp_kwargs = {
-        "relax": {
+        "relax 0/2": {
             "incar_settings": ["NSW", "ISIF"],
             "check_inputs": ["incar", "poscar"],
         },
-        "relax 0 (0) 0": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
-        "relax 1 (0) 1 0": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
-        "relax 1 (1) 1 0": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
-        "relax 1 (2) 1 0": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
-        "static 0": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
-        "static 1 0": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
+        "relax 1/2 (0)": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
+        "relax 2/2 (0)": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
+        "relax 2/2 (1)": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
+        "relax 2/2 (2)": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
+        "static 0/2": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
+        "static 1/2": {"incar_settings": ["NSW"], "check_inputs": ["incar"]},
     }
 
     # automatically use fake VASP and write POTCAR.spec during the test
