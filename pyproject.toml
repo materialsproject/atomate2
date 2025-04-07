@@ -130,7 +130,7 @@ strict-forcefields = [
     "calorine==3.0",
     "chgnet==0.3.8",
     "mace-torch==0.3.10",
-    "matgl==1.2.1",
+    "matgl==1.2.5",
     "quippy-ase==0.9.14; python_version < '3.12'",
     "sevenn==0.10.3",
     "torch==2.2.0",
