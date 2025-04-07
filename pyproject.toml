@@ -112,7 +112,7 @@ strict = [
     "pydantic==2.11.2",
     "pymatgen-analysis-defects==2025.1.18",
     "pymatgen==2025.2.18",
-    "pymongo==4.10.1",
+    "pymongo==4.11.3",
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
