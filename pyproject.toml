@@ -119,12 +119,12 @@ strict = [
     "typing-extensions==4.12.2",
 ]
 strict-openff = [
-    "mdanalysis==2.7.0",
+    "mdanalysis==2.9.0",
     "monty==2025.3.3",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.1.1",
     "pymatgen==2024.11.13", # TODO: open ff is extremely sensitive to pymatgen version
-    "mdanalysis==2.7.0"
+    "mdanalysis==2.9.0"
 ]
 strict-forcefields = [
     "calorine==3.0",
