@@ -116,7 +116,7 @@ strict = [
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
     "tblite==0.3.0; python_version < '3.12'",
-    "typing-extensions==4.12.2",
+    "typing-extensions==4.13.2",
 ]
 strict-openff = [
     "mdanalysis==2.7.0",
