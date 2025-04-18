@@ -11,13 +11,68 @@ import logging
 import multiprocessing
 import os
 import subprocess
+from collections.abc import Callable
 from shutil import which
+from tempfile import TemporaryDirectory
 from typing import Any
 
 from jobflow import job
+from pydantic import BaseModel
 from pymatgen.core import Structure
 
 logger = logging.getLogger(__name__)
+
+_installed_extra = {"mofid": True}
+try:
+    from mofid.run_mofid import cif2mofid
+except ImportError:
+    _installed_extra["mofid"] = False
+
+
+class MofIdEntry(BaseModel):
+    """
+    Interface for running MOFid calculations.
+
+    This class wraps the mofid executable to extract key MOF components.
+    """
+
+    smiles: str | None = None
+    Topology: str | None = None
+    SmilesLinkers: list[str] | None = None
+    SmilesNodes: list[str] | None = None
+    Mofkey: str | None = None
+    Mofid: str | None = None
+
+    @classmethod
+    def from_structure(cls, structure: Structure, **kwargs) -> "MofIdEntry":
+        """
+        Run MOFid, `cif2mofid` function, in a temporary directory.
+
+        Store MOFid information: MOF topology, linker and metal nodes SMILES.
+        """
+        if not _installed_extra["mofid"]:
+            logger.debug("MOFid not found, skipping MOFid analysis.")
+            return cls()
+        old_cwd = os.getcwd()
+        try:
+            with TemporaryDirectory() as tmp:
+                os.chdir(tmp)
+                structure.to("tmp.cif")
+                mofid_out = cif2mofid("tmp.cif", **kwargs)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("MOFid failed: %s", exc)
+            return cls()
+        os.chdir(old_cwd)
+
+        remap = {
+            "Smiles": "smiles",
+            "Topology": "topology",
+            "SmilesLinkers": "smiles_linkers",
+            "SmilesNodes": "smiles_nodes",
+            "MofKey": "mofkey",
+            "MofId": "mofid",
+        }
+        return cls(**{k: mofid_out.get(v) for k, v in remap.items()})
 
 
 class ZeoPlusPlus:
@@ -25,6 +80,7 @@ class ZeoPlusPlus:
     Interface for running zeo++ calculations for MOF or zeolites.
 
     This class wraps the zeo++ executable to calculate pore properties
+    (e.g, Probe-occupiable volume, Pore diameters - see zeoplusplus.org)
     using given sorbate species.
     """
 
@@ -347,9 +403,10 @@ def run_zeopp_assessment(
     sorbates: list[str] | str | None = None,
     cif_name: str | None = None,
     nproc: int = 1,
+    rules: dict[str, Callable[[dict[str, Any]], bool]] | None = None,
 ) -> dict[str, Any]:
     """
-    Run zeo++ MOF assessment on a structure.
+    Run zeo++ on a structure with user-defined rules.
 
     Parameters
     ----------
@@ -365,11 +422,38 @@ def run_zeopp_assessment(
         Filename for the CIF if structure is a Structure.
     nproc : int, optional
         Number of processes to use.
+    rules : dict[str, Callable[[dict[str, Any]], bool]], optional
+        Mapping of names to functions that take the full output dict
+        and return True/False if the structure passes each rule.
 
     Returns
     -------
     dict[str, Any]
-        Dictionary containing zeo++ outputs for each sorbate and a flag 'is_mof'.
+        Zeo++ outputs (per sorbate) and boolean result for the rule.
+
+    Examples
+    --------
+    Example of custom rules to assess a candidate MOF structure:
+
+    ```python
+    from atomate2.common.jobs.mof import run_zeopp_assessment
+
+
+    def custom_mof_rule(out):
+        props = out["N2"]
+        keys = ["PLD", "POAV_A^3", "PONAV_A^3"]
+        if not all(k in props for k in keys):
+            return False
+        return props["PLD"] > 3.0
+
+
+    response = run_zeopp_assessment(
+        structure=my_struct,
+        sorbates="N2",
+        rules={"is_mof": custom_mof_rule},
+    )
+    # response.output["is_mof"] will be True/False
+    ```
     """
     if sorbates is None:
         sorbates = ["N2", "CO2", "H2O"]
@@ -399,23 +483,11 @@ def run_zeopp_assessment(
         for sorbate in maker.sorbates:
             output[sorbate].update(maker.output[sorbate])
 
-    output["is_mof"] = False
-    if all(
-        k in output["N2"]
-        for k in (
-            "PLD",
-            "POAV_A^3",
-            "PONAV_A^3",
-            "POAV_Volume_fraction",
-            "PONAV_Volume_fraction",
-        )
-    ):
-        output["is_mof"] = (
-            output["N2"]["PLD"] > 2.5
-            and output["N2"]["POAV_Volume_fraction"] > 0.3
-            and output["N2"]["POAV_A^3"] > output["N2"]["PONAV_A^3"]
-            and output["N2"]["POAV_Volume_fraction"]
-            > output["N2"]["PONAV_Volume_fraction"]
-        )
+    if rules is not None:
+        for name, rule_func in rules.items():
+            try:
+                output[name] = bool(rule_func(output))
+            except Exception as e:  # noqa: BLE001
+                output[name] = f"rule_error: {e!s}"
 
     return output
