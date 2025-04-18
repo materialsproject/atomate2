@@ -647,7 +647,7 @@ def test_matpes_relax_makers(
     resp = run_locally(job)
     output = resp[job.uuid][1].output
 
-    assert isinstance(output, ForceFieldTaskDocument)
+    assert isinstance(output, ForceFieldStructureTaskDocument)
 
     ref = refs[ref_func]
     assert output.output.energy == approx(ref["energy"])
