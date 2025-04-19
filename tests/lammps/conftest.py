@@ -146,7 +146,10 @@ def check_lammps_in(ref_path: Path,
     if input_settings:
         for setting in input_settings:
             if ref_input.contains_command(setting) and user_input.contains_command(setting):
-                assert ref_input.get_args(setting) == user_input.get_args(setting), f"{user_input.get_args(setting)} != {ref_input.get_args(setting)}"
+                try:
+                    assert ref_input.get_args(setting) == user_input.get_args(setting), f"{user_input.get_args(setting)} != {ref_input.get_args(setting)}"
+                except AssertionError as e:
+                    raise AssertionError(f"Input setting '{setting}' does not match reference: {e}")
     
 def clear_lammps_inputs():
     for file in ("in.lammps", "system.data"):

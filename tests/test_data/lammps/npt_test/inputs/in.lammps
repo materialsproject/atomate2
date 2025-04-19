@@ -18,7 +18,7 @@ velocity all create 300 42 mom yes rot yes dist gaussian
 neigh_modify delay 5 every 1 check yes
 
 # Ensemble
-fix 1 all npt temp 300 300 0.1 iso 1.0 1.0 0.1
+fix 3 all npt temp 300 300 0.1 iso 1.0 1.0 0.1
 
 # Outputs
 thermo 100

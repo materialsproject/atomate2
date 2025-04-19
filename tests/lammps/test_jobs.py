@@ -87,3 +87,4 @@ def test_minimization_maker(si_structure, tmp_path, test_si_force_field, mock_la
     dump_key = list(output.dump_files.keys())[0]
     assert dump_key.endswith('.dump')
     assert isinstance(output.dump_files[dump_key], str)
+    assert list(output.thermo_log[0]['PotEng'])[-1] == pytest.approx(-327.96091, abs=1e-3), "Final potential energy does not match expected value."
