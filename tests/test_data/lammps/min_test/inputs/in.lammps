@@ -1,31 +1,31 @@
 # LAMMPS input generated from LammpsInputFile with pymatgen v2024.10.29
 
-# Initialization
+# Stage 1
 units metal
 atom_style atomic
 dimension 3
 boundary p p p
+
+# Stage 2
+read_data system.data
+neigh_modify every 1 delay 0 check yes
+
+# Stage 3
 pair_style tersoff
 
-# AtomDefinition
-read_data system.data
-
-# ForceField
+# Stage 4
 include forcefield.lammps
 
-# Velocities
-velocity all create 300 42 mom yes rot yes dist gaussian
-neigh_modify delay 5 every 1 check yes
+# Stage 5
+thermo 5
+thermo_style custom step lx ly lz press pxx pyy pzz pe
+dump dmp all atom 5 run.dump
 
-# Ensemble
+# Stage 6
 min_style cg
 fix 1 all box/relax iso 0 vmax 0.001
+minimize 1e-06 1e-06 1000 10000000
 
-# Outputs
-thermo 100
-dump d1 all custom 100 traj.dump id element x y z vx vy vz fx fy fz
-dump_modify d1 sort id element Si
-
-# Actions
-write_restart minimized.restart
-minimize 1e-06 1e-06 1000 100000
+# Stage 7
+write_data run.data
+write_restart run.restart
