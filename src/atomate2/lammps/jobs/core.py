@@ -23,9 +23,9 @@ class MinimizationMaker(BaseLammpsMaker):
 @dataclass
 class CustomLammpsMaker(BaseLammpsMaker):
     '''
-    Custom LAMMPS job maker. Use this if you want to use a custom LAMMPS input file.
-    This is esp. useful if you have a more complex job that cannot be achieved with a 
-    combination of minimization, NVT, and NPT jobs. 
+    Custom LAMMPS job maker. This maker exists if using a custom LAMMPS input file, 
+    which might end up being a very popular use case (i.e., when you have a more 
+    complex job that cannot be achieved with a combination of minimization, NVT, and NPT jobs). 
     
     args:
         name: str
@@ -38,35 +38,29 @@ class CustomLammpsMaker(BaseLammpsMaker):
         settings: dict
             Additional settings to pass to the input set generator. 
             If you have variables in the input file, pass them here as a dict.
-            (Note: these is not actually passed to input set generator cause of how flexible input files can be!)
+            Commonly used variables such as units, timestep, etc. are validated and set automatically if not provided.
         keep_stages: bool
             Whether to keep the stages of the input file (default is True). 
             Check the LammpsInputFile class for more info on what this means.
+        include_defaults: bool
+            Whether to use the default settings for the input set generator (default is False). 
+            (Check the _BASE_LAMMPS_SETTINGS dict in pymatgen.io.lammps.generators for the default settings)
+        validate_params: bool
+            Whether to validate the parameters in the input file (default is True). 
+            (Only common inputs args such as units, timestep, etc. are validated,)
     '''
     name: str = "custom_lammps_job"
     inputfile : str | LammpsInputFile | Path = field(default=None)
-    settings : dict = field(default_factory={})
+    settings : dict = field(default_factory=dict)
     keep_stages : bool = field(default=True)
+    include_defaults : bool = field(default=False)
+    validate_params: bool = field(default=True)
     
     def __post_init__(self):
         if not self.inputfile:
             raise ValueError("Input file not specified. Use this maker only if you have a custom LAMMPS input file!")
         
-        if self.settings and isinstance(self.inputfile, LammpsInputFile):
-            self.inputfile = self.inputfile.get_str()
-        
-        if isinstance(self.inputfile, Path):
-            with open(self.inputfile, "rt") as f:
-                self.inputfile = f.read()
-        
-        if isinstance(self.inputfile, str):
-            self.inputfile = Template(self.inputfile).safe_substitute(**self.settings)
-        
-        if not isinstance(self.inputfile, LammpsInputFile):
-            self.inputfile = LammpsInputFile.from_str(self.inputfile, keep_stages=self.keep_stages)
-            
         self.input_set_generator = BaseLammpsSetGenerator(inputfile=self.inputfile,
+                                                          include_defaults=self.include_defaults,
                                                           settings=self.settings,
-                                                          calc_type=self.name,
-                                                          override_updates=True,
-                                                          keep_stages=self.keep_stages)
+                                                          validate_params=False)
