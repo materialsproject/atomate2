@@ -14,6 +14,9 @@ from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
+from pymatgen.transformations.advanced_transformations import (
+    CubicSupercellTransformation,
+)
 
 from atomate2.common.schemas.phonons import get_factor
 
@@ -31,6 +34,40 @@ from atomate2.common.schemas.pheasy import Forceconstants, PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
 
+@job
+def get_supercell_size(
+    structure: Structure,
+    min_length: float,
+    max_atoms: int,
+    force_90_degrees: bool,
+    force_diagonal: bool,
+    allow_orthorhombic: bool,
+) -> list[list[float]]:
+    """
+    Determine supercell size with given min_length and max_length.
+
+    Parameters
+    ----------
+    structure: Structure Object
+        Input structure that will be used to determine supercell
+    min_length: float
+        minimum length of cell in Angstrom
+    max_length: float
+        maximum length of cell in Angstrom
+    prefer_90_degrees: bool
+        if True, the algorithm will try to find a cell with 90 degree angles first
+    allow_orthorhombic: bool
+        if True, orthorhombic supercells are allowed
+    **kwargs:
+        Additional parameters that can be set.
+    """
+
+    transformation = CubicSupercellTransformation(min_length=min_length, max_atoms=max_atoms, 
+                                                    force_90_degrees=force_90_degrees, force_diagonal=force_diagonal,
+                                                    angle_tolerance=1e-2, allow_orthorhombic=False)
+    transformation.apply_transformation(structure=structure)
+    matrix = transformation.transformation_matrix.transpose().tolist()
+    return matrix
 
 @job(data=[Structure])
 def generate_phonon_displacements(
@@ -40,8 +77,8 @@ def generate_phonon_displacements(
     num_displaced_supercells: int,
     cal_anhar_fcs: bool,
     displacement_anhar: float,
-    # num_disp_anhar: int,
-    # fcs_cutoff_radius: list[int],
+    num_disp_anhar: int,
+    fcs_cutoff_radius: list[int],
     sym_reduce: bool,
     symprec: float,
     use_symmetrized_structure: str | None,

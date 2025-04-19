@@ -13,7 +13,8 @@ from atomate2.common.jobs.pheasy import (
     generate_phonon_displacements,
     run_phonon_displacements,
 )
-from atomate2.common.jobs.phonons import get_supercell_size, get_total_energy_per_cell
+from atomate2.common.jobs.phonons import get_total_energy_per_cell
+from atomate2.common.jobs.pheasy import get_supercell_size
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 
 if TYPE_CHECKING:
@@ -179,9 +180,11 @@ class BasePhononMaker(Maker, ABC):
     cal_ther_cond: bool = False
     ther_cond_mesh: list = field(default_factory=lambda: [20, 20, 20])
     ther_cond_temp: list = field(default_factory=lambda: [100, 700, 100])
-    min_length: float | None = 12.0
-    max_length: float | None = 16.0
-    prefer_90_degrees: bool = True
+    min_length: float | None = 8.0
+    max_atoms: float | None = 200
+    force_90_degrees: bool = True
+    force_diagonal: bool = True
+    allow_orthorhombic: bool = False
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
     bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = None
@@ -307,9 +310,10 @@ class BasePhononMaker(Maker, ABC):
             supercell_job = get_supercell_size(
                 structure,
                 self.min_length,
-                self.max_length,
-                self.prefer_90_degrees,
-                **self.get_supercell_size_kwargs,
+                self.max_atoms,
+                self.force_90_degrees,
+                self.force_diagonal,
+                self.allow_orthorhombic
             )
             jobs.append(supercell_job)
             supercell_matrix = supercell_job.output
