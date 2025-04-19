@@ -104,14 +104,17 @@ class LammpsTaskDocument(StructureMetadata):
             final_structure = DumpConvertor(dumpfile=os.path.join(dir_name, dump_file_keys[-1]), read_index=-1).to_pymatgen_trajectory().get_structure(-1)        
         else:
             warnings.warn("No dump files found, no trajectory data stored")
+            final_structure = None
             
         try:
             input_file = LammpsInputFile.from_file(os.path.join(dir_name, "in.lammps"), ignore_comments=True)
-            data_files = [LammpsData.from_file(os.path.join(dir_name, file), atom_style=input_file.get_args("atom_style")) for file in glob("*.data*", root_dir=dir_name)]
-   
         except FileNotFoundError:
-            Warning(f"Input or data file not found for {dir_name}")
+            Warning(f"Input file not found for {dir_name}")
             input_file = None
+        try:
+            data_files = [LammpsData.from_file(os.path.join(dir_name, file), atom_style=input_file.get_args("atom_style")) for file in glob("*.data*", root_dir=dir_name)]
+        except FileNotFoundError:
+            Warning(f"Data file not found for {dir_name}")
             data_files = None
             
         inputs = {"in.lammps": input_file, "data_files": data_files}

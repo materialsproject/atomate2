@@ -17,7 +17,7 @@ from atomate2.lammps.schemas.task import LammpsTaskDocument, StoreTrajectoryOpti
 from pymatgen.io.lammps.generators import BaseLammpsSetGenerator
 import warnings
 
-_DATA_OBJECTS: List[str] = ["raw_log_file", "inputs", "metadata", "trajectory", "dump_files"]
+_DATA_OBJECTS: List[str] = ["raw_log_file", "inputs", "metadata", "trajectories", "dump_files"]
 
 __all__ = ("BaseLammpsMaker", "lammps_job")
 
