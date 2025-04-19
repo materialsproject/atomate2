@@ -5,17 +5,28 @@ from __future__ import annotations
 import logging
 import shutil
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Final, Literal
+from tempfile import TemporaryDirectory
+from types import NoneType
+from typing import TYPE_CHECKING, Any, Final, Literal, get_args
 
 from jobflow import CURRENT_JOB
 from monty.io import zopen
 from monty.os.path import zpath as monty_zpath
+from monty.serialization import dumpfn, loadfn
+from pydantic import BaseModel, model_validator
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 from pymatgen.io.vasp.sets import VaspInputSet
 from pymatgen.util.coord import find_in_coord_list_pbc
 
 import atomate2.vasp.jobs.base
-import atomate2.vasp.jobs.defect
+
+try:
+    import atomate2.vasp.jobs.defect
+
+    pmg_defects_installed = True
+except ImportError:
+    pmg_defects_installed = False
+
 import atomate2.vasp.run
 from atomate2.vasp.sets.base import VaspInputGenerator
 
@@ -24,6 +35,7 @@ if TYPE_CHECKING:
 
     from pymatgen.io.vasp.inputs import VaspInput
     from pytest import MonkeyPatch
+    from typing_extensions import Self
 
 
 logger = logging.getLogger("atomate2")
@@ -71,7 +83,8 @@ def monkeypatch_vasp(
     ----------
     monkeypatch: The a MonkeyPatch object from pytest, this is meant as a place-holder
         For the `monkeypatch` fixture in pytest.
-    vasp_test_dir: The root directory for the VASP tests. This is
+    vasp_test_dir: The root directory for the VASP tests. This is where the reference
+        test data is located.
     nelect: The number of electrons in a system is usually calculate using the POTCAR
         which we do not have direct access to during testing. So we have to patch it in.
         TODO: potcar_spec should have the nelect data somehow.
@@ -86,7 +99,14 @@ def monkeypatch_vasp(
                 f"no reference directory found for job {name!r}; "
                 f"reference paths received={_REF_PATHS}"
             ) from None
-        fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
+
+        if "json" in str(ref_path).lower():
+            with TemporaryDirectory() as temp_ref_dir:
+                ref_data = VaspTestData(**loadfn(ref_path))
+                ref_data.reconstruct(out_path=temp_ref_dir)
+                fake_run_vasp(Path(temp_ref_dir), **_FAKE_RUN_VASP_KWARGS.get(name, {}))
+        else:
+            fake_run_vasp(ref_path, **_FAKE_RUN_VASP_KWARGS.get(name, {}))
 
     get_input_set_orig = VaspInputGenerator.get_input_set
 
@@ -99,7 +119,8 @@ def monkeypatch_vasp(
 
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.base, "run_vasp", mock_run_vasp)
-    monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
+    if pmg_defects_installed:
+        monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(VaspInputSet, "get_input_set", mock_get_input_set)
     monkeypatch.setattr(VaspInputSet, "nelect", mock_nelect)
 
@@ -144,16 +165,16 @@ def fake_run_vasp(
     logger.info("Running fake VASP.")
 
     if "incar" in check_inputs:
-        check_incar(ref_path, incar_settings, incar_exclude)
+        _check_incar(ref_path, incar_settings, incar_exclude)
 
     if "kpoints" in check_inputs:
-        check_kpoints(ref_path)
+        _check_kpoints(ref_path)
 
     if "poscar" in check_inputs:
-        check_poscar(ref_path)
+        _check_poscar(ref_path)
 
     if "potcar" in check_inputs:
-        check_potcar(ref_path)
+        _check_potcar(ref_path)
 
     # This is useful to check if the WAVECAR has been copied
     if "wavecar" in check_inputs and not Path("WAVECAR").exists():
@@ -162,15 +183,15 @@ def fake_run_vasp(
     logger.info("Verified inputs successfully")
 
     if clear_inputs:
-        clear_vasp_inputs()
+        _clear_vasp_inputs()
 
-    copy_vasp_outputs(ref_path)
+    _copy_vasp_outputs(ref_path)
 
     # pretend to run VASP by copying pre-generated outputs from reference dir
     logger.info("Generated fake vasp outputs")
 
 
-def check_incar(
+def _check_incar(
     ref_path: Path,
     incar_settings: Sequence[str] | None,
     incar_exclude: Sequence[str] | None,
@@ -194,7 +215,7 @@ def check_incar(
             )
 
 
-def check_kpoints(ref_path: Path) -> None:
+def _check_kpoints(ref_path: Path) -> None:
     """Check that KPOINTS file is consistent with the reference calculation."""
     user_kpoints_exists = (user_kpt_path := zpath("KPOINTS")).exists()
     ref_kpoints_exists = (
@@ -234,7 +255,7 @@ def check_kpoints(ref_path: Path) -> None:
             )
 
 
-def check_poscar(ref_path: Path) -> None:
+def _check_poscar(ref_path: Path) -> None:
     """Check that POSCAR information is consistent with the reference calculation."""
     user_poscar_path = zpath("POSCAR")
     ref_poscar_path = zpath(ref_path / "inputs" / "POSCAR")
@@ -263,7 +284,7 @@ def check_poscar(ref_path: Path) -> None:
         )
 
 
-def check_potcar(ref_path: Path) -> None:
+def _check_potcar(ref_path: Path) -> None:
     """Check that POTCAR information is consistent with the reference calculation."""
     potcars = {"reference": None, "user": None}
     paths = {"reference": ref_path / "inputs", "user": Path(".")}
@@ -283,7 +304,7 @@ def check_potcar(ref_path: Path) -> None:
         )
 
 
-def clear_vasp_inputs() -> None:
+def _clear_vasp_inputs() -> None:
     """Clean up VASP input files."""
     for vasp_file in (
         "INCAR",
@@ -300,9 +321,313 @@ def clear_vasp_inputs() -> None:
     logger.info("Cleared vasp inputs")
 
 
-def copy_vasp_outputs(ref_path: Path) -> None:
+def _copy_vasp_outputs(ref_path: Path) -> None:
     """Copy VASP output files from the reference directory."""
     output_path = ref_path / "outputs"
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")
+
+
+class TestData(BaseModel):
+    """
+    Utility class to group VASP testing data.
+
+    This is the base class, for creating an archive of test data,
+    use `VaspTestData.from_directory` on a valid VASP calculation directory.
+
+    This class also defines methods to establish appropriate directory
+    structure for VASP test data, without user intervention:
+
+    base_dir :
+        - inputs
+            - INCAR
+            - KPOINTS (optional)
+            - POSCAR
+            - POTCAR.spec
+        - outputs
+            - INCAR
+            - KPOINTS (optional)
+            - POSCAR
+            - POTCAR.spec
+            - CONTCAR
+            - OUTCAR
+            - vasprun.xml
+    """
+
+    @model_validator(mode="before")
+    @classmethod
+    def serialize_from_str(cls, config: dict) -> dict:
+        """Ensure class objects are serialized as defined in schema."""
+        init_keys = list(config)
+        for _k in init_keys:
+            k = _k.replace(".", "_")
+            field_class = cls._resolve_non_null_class(cls.model_fields[k].annotation)[0]
+            if hasattr(field_class, "from_str") and isinstance(config[_k], str):
+                config[k] = field_class.from_str(config[_k])
+            if k != _k:
+                config[k] = config.pop(_k)
+        return config
+
+    @staticmethod
+    def flatten_dict(dct: dict, separator: str = ".") -> dict[str, str | bytes]:
+        """
+        Flatten an input dict with a nested structure.
+
+        Parameters
+        ----------
+        dct : dict
+        separator : str = "."
+            The separator to use to flatten keys, e.g.:
+                x = {"a": {"b": 1}}
+            would get flattened into
+                x = {"a.b": 1}
+
+        Returns
+        -------
+        Flattened dict
+        """
+        f: dict[str, str | bytes] = {}
+
+        def _flatten_dict(key: Any, value: Any, flattened: dict) -> Any:
+            if hasattr(value, "items"):
+                for k, v in value.items():
+                    new_key = f"{key}{separator}{k}" if key else k
+                    _flatten_dict(new_key, v, flattened)
+            else:
+                flattened[key] = value
+
+        _flatten_dict("", dct, f)
+        return f
+
+    @staticmethod
+    def _resolve_non_null_class(type_anno: Any) -> Any:
+        """Resolve the possible non-null classes a type annotation includes."""
+        anno_types = get_args(type_anno)
+        return [typ for typ in anno_types if typ != NoneType]
+
+    @classmethod
+    def from_directory(
+        cls, dir_name: str | Path, suffix: str | None = None, **kwargs
+    ) -> Self:
+        """
+        Create an instance of TestData recursively from a directory.
+
+        If a subclass includes nested TestData subclasses, they will also call
+        `from_directory` recursively. This permits an appropriate input / output
+        directory structure to be created automatically.
+
+        This class also removes copyright-protected POTCAR data and converts it to
+        a POTCAR.spec object.
+
+        Note that any field names with "_" characters have these replaced by "."
+        when parsing.
+
+        Parameters
+        ----------
+        dir_name : str or Path
+            Path to where the VASP files are located
+        suffix : str or None (default)
+            suffix of files, like ".orig" if inclusign original inputs.
+        """
+        dir_name = Path(dir_name)
+        for fname, field_info in cls.model_fields.items():
+            fpath = zpath(dir_name / f"{fname.replace('_', '.')}{suffix or ''}")
+            field_class = cls._resolve_non_null_class(field_info.annotation)[0]
+            if fpath.exists():
+                if hasattr(field_class, "from_file"):
+                    kwargs[fname] = field_class.from_file(fpath)
+                else:
+                    typ = "t" if isinstance(field_class, str) else "b"
+                    with zopen(fpath, f"r{typ}") as f:
+                        kwargs[fname] = f.read()
+
+            elif issubclass(field_class, TestData):
+                kwargs[fname] = field_class.from_directory(dir_name)
+
+        return cls(**kwargs)
+
+    def _to_dict(
+        self,
+        dct: dict[str, Any],
+        prefix: str | None = None,
+        suffix: str | None = None,
+    ) -> dict[str, str]:
+        """
+        Recursively parse class to JSON-able dict, internal method only.
+
+        Parameters
+        ----------
+        dct : dict[str,str or bytes]
+        prefix : str or None (default)
+            Hierarchical prefix, e.g., "inputs" or "outputs"
+        suffix : str or None (default)
+            Optional file suffix, e.g., ".orig"
+
+        Returns
+        -------
+        dict[str,str] : JSON-able dict
+        """
+        if prefix and not dct.get(prefix):
+            dct[prefix] = {}
+            _dct = dct[prefix]
+        else:
+            _dct = dct
+
+        for file_name, obj in dict(self).items():
+            if not obj:
+                continue
+
+            if isinstance(obj, TestData):
+                meta = file_name.split("_")
+                sub_suffix = ""
+                if len(meta) > 1:
+                    sub_suffix = "." + ".".join(meta[1:])
+                obj._to_dict(_dct, prefix=meta[0], suffix=sub_suffix)  # noqa: SLF001
+                continue
+
+            alias = f"{file_name.replace('_', '.')}{suffix or ''}"
+            if "POTCAR" in file_name and "spec" not in file_name:
+                fdata = "\n".join(
+                    (Potcar.from_str(obj) if isinstance(obj, str) else obj).symbols
+                )
+                alias += ".spec"
+            elif hasattr(obj, "__str__"):
+                fdata = str(obj)
+            else:
+                fdata = obj
+
+            _dct[alias] = fdata
+
+        return dct
+
+    def to_dict(
+        self, prefix: str | None = None, suffix: str | None = None
+    ) -> dict[str, Any]:
+        """
+        Convert the current test data to a JSON-able dict.
+
+        Parameters
+        ----------
+        prefix : str or None (default)
+            Hierarchical prefix, e.g., "inputs" or "outputs"
+        suffix : str or None (default)
+            Optional file suffix, e.g., ".orig"
+
+        Returns
+        -------
+        dict[str,str] : JSON-able dict
+        """
+        return self._to_dict({}, prefix=prefix, suffix=suffix)
+
+    def to_file(self, file_name: str | Path) -> None:
+        """
+        Dump the dict representation of the test data to a file.
+
+        Parameters
+        ----------
+        file_name : str or Path
+        """
+        dumpfn(self.to_dict(), file_name)
+
+    def reconstruct(
+        self, out_path: str | Path | None = None, copy_input: bool = True
+    ) -> None:
+        """
+        Write the files with correct directory structure to a directory.
+
+        Parameters
+        ----------
+        out_path : str, Path, or None
+            Optional output base directory to write files to. Defaults to "."
+        copy_input : bool = True (default)
+            Whether to copy all input files to the "output" directory.
+            This is the default behavior for VASP test data.
+        """
+        out_path = Path(out_path or ".")
+        for fpath, obj_str in self.flatten_dict(self.to_dict(), separator="/").items():
+            p = out_path / fpath
+            if not p.parent.exists():
+                p.parent.mkdir(exist_ok=True, parents=True)
+            with zopen(p, "wt") as f:
+                f.write(obj_str)
+
+        if copy_input:
+            for p in (out_path / "inputs").glob("*"):
+                if p.is_file():
+                    new_p = Path(str(p).replace("input", "output"))
+                    if not new_p.parent.exists():
+                        new_p.parent.mkdir(exist_ok=True, parents=True)
+                    shutil.copyfile(p, new_p)
+
+
+class VaspInputTestData(TestData):
+    """
+    Schema for input VASP test data.
+
+    Fields
+    -------
+    INCAR : pymatgen.io.vasp.inputs.Incar (optional)
+    KPOINTS : pymatgen.io.vasp.inputs.Kpoints (optional)
+    POSCAR : pymatgen.io.vasp.inputs.Poscar (optional)
+    POTCAR : pymatgen.io.vasp.inputs.Potcar (optional)
+    POTCAR_spec : str (optional)
+        These are just the POTCAR symbols.
+    """
+
+    INCAR: Incar | None = None
+    KPOINTS: Kpoints | None = None
+    POSCAR: Poscar | None = None
+    POTCAR: Potcar | None = None
+    POTCAR_spec: str | None = None
+
+
+class VaspOutputTestData(TestData):
+    """
+    Schema for output VASP test data.
+
+    Fields
+    -------
+    CONTCAR : pymatgen.io.vasp.inputs.Poscar (optional)
+    OUTCAR : str (optional)
+    vasprun_xml : str (optional)
+    WAVECAR : str (optional)
+    CHGCAR : str (optional)
+    """
+
+    CONTCAR: Poscar | None = None
+    OUTCAR: str | None = None
+    vasprun_xml: str | None = None
+    WAVECAR: str | None = None
+    CHGCAR: str | None = None
+
+
+class VaspTestData(TestData):
+    """
+    Schema for a single VASP calculation test data.
+
+    Use this class to automatically generate test data
+    from a single VASP calculation directory, using the
+    `from_directory` method:
+
+    ```python
+    vasp_data = VaspTestData.from_directory("path to VASP calculation")
+    vasp_data.to_file("name of output file.json")
+    ```
+
+    You can use any compression supported by monty.io.zopen.
+
+    Note, if you want original inputs files, add this Field to a subclass:
+
+    ```python
+    inputs_orig: VaspInputTestData | None = None
+    ```
+
+    Fields
+    -------
+    inputs : VaspInputTestData (optional)
+    outputs : VaspOutputTestData (optional)
+    """
+
+    inputs: VaspInputTestData | None = None
+    outputs: VaspOutputTestData | None = None

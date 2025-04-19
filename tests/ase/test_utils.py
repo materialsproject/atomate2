@@ -13,13 +13,12 @@ from numpy.testing import assert_allclose
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-
 from atomate2.ase.utils import AseRelaxer, TrajectoryObserver
 
 
 def test_trajectory_observer(si_structure: Structure, test_dir, tmp_dir):
     atoms = si_structure.to_ase_atoms()
-    atoms.set_calculator(LennardJones())
+    atoms.calc = LennardJones()
 
     traj = TrajectoryObserver(atoms)
 
