@@ -93,7 +93,6 @@ class BaseLammpsMaker(Maker):
             self.input_set_generator.update_settings(
                 {"read_restart": os.path.join(prev_dir, restart_files[0])}
             )
-            # self.input_set_generator._formatted_settings['AtomDefinition'].update({'read_restart': os.path.join(prev_dir, restart_files[0])})
 
         if isinstance(input_structure, Path):
             input_structure = LammpsData.from_file(
