@@ -10,17 +10,14 @@ from typing import Literal
 from monty.serialization import dumpfn
 from monty.json import MSONable
 from emmet.core.vasp.calculation import StoreTrajectoryOption
-from atomate2.lammps.sets.utils import LammpsInterchange
 
 def write_lammps_input_set(
-    data: Structure | LammpsData | LammpsInterchange | CombinedData,
+    data: Structure | LammpsData | CombinedData,
     input_set_generator: BaseLammpsGenerator,
-    force_field : str | None = None,
     additional_data : LammpsData | CombinedData | None = None,
     directory: str | Path = ".",
 ):
     input_set = input_set_generator.get_input_set(data, 
-                                                  force_field,
                                                   additional_data,
                                                   )
     input_set.write_input(directory)
