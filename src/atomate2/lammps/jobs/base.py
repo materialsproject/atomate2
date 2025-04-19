@@ -25,11 +25,6 @@ __all__ = ("BaseLammpsMaker", "lammps_job")
 def lammps_job(method: Callable):
     return job(method, data=_DATA_OBJECTS, output_schema=LammpsTaskDocument)
 
-
-FF_STYLE_KEYS = ["pair_style", "bond_style", "angle_style", "dihedral_style", "improper_style", "kspace_style"]
-FF_COEFF_KEYS = ["pair_coeff", "bond_coeff", "angle_coeff", "dihedral_coeff", "improper_coeff", "kspace_coeff"]
-
-
 @dataclass
 class BaseLammpsMaker(Maker):
     '''
@@ -53,27 +48,19 @@ class BaseLammpsMaker(Maker):
     input_set_generator: BaseLammpsSetGenerator = field(
         default_factory = BaseLammpsSetGenerator
     )
+    force_field : str | dict | None = field(default=None)
     write_input_set_kwargs: dict = field(default_factory=dict)
-    force_field: str | dict = field(default_factory=str)
     run_lammps_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
     write_additional_data: LammpsData | CombinedData = field(default_factory=dict)
     
     def __post_init__(self):
-        if not self.force_field:
-            raise ValueError("Force field not specified")
-        
-        if isinstance(self.force_field, Path):
-            try:
-                with open(self.force_field, 'rt') as f:
-                    self.force_field = f.read()
-            except FileNotFoundError:
-                warnings.warn("Force field file could not be read, given path will be fed as is to LAMMPS. Make sure the path is correct.")
-            
-        # Validate force field here!
-        
-        if self.task_document_kwargs.get('store_trajectory', None) != StoreTrajectoryOption.NO:
+         
+        if self.task_document_kwargs.get('store_trajectory', StoreTrajectoryOption.NO) != StoreTrajectoryOption.NO:
             warnings.warn("Trajectory data might be large, only store if absolutely necessary. Consider manually parsing the dump files instead.")
+        
+        if self.force_field:
+            self.input_set_generator.force_field = self.force_field
 
     @lammps_job
     def make(self, input_structure: Structure | Path | LammpsData = None, prev_dir : Path = None) -> Response:
@@ -83,29 +70,16 @@ class BaseLammpsMaker(Maker):
             restart_files = glob.glob(os.path.join(prev_dir, "*restart*"))
             if len(restart_files) != 1:
                 raise FileNotFoundError("No/More than one restart file found in the previous directory. If present, it should have the extension '.restart'!")
-            self.input_set_generator._formatted_settings['AtomDefinition'].update({'read_restart': os.path.join(prev_dir, restart_files[0])})
+
+            self.input_set_generator.update_settings({'read_restart': os.path.join(prev_dir, restart_files[0])})
+            #self.input_set_generator._formatted_settings['AtomDefinition'].update({'read_restart': os.path.join(prev_dir, restart_files[0])})
 
         if isinstance(input_structure, Path):
             input_structure = LammpsData.from_file(input_structure, atom_style=self.input_set_generator.settings.get('atom_style', 'full'))
-        
-        if isinstance(self.force_field, str):
-            self.input_set_generator._formatted_settings['ForceField'] = {}
-            
-        if isinstance(self.force_field, dict):
-            force_field_coeffs = ''
-            for key, value in self.force_field.items():
-                if key in FF_STYLE_KEYS:
-                    self.input_set_generator._formatted_settings['Initialization'].update({key: value})
-                if key in FF_COEFF_KEYS:
-                   force_field_coeffs += f"{key} {value}\n"
-                else:
-                    warnings.warn(f"Force field key {key} not recognized, will be ignored.")
-            self.force_field = force_field_coeffs
 
         write_lammps_input_set(
             data=input_structure, 
             input_set_generator=self.input_set_generator, 
-            force_field=self.force_field, 
             additional_data=self.write_additional_data,
             **self.write_input_set_kwargs
         )
