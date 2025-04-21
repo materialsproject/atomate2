@@ -121,7 +121,9 @@ strict = [
 strict-openff = [
     "mdanalysis==2.9.0",
     "monty==2025.3.3",
-    "openmm-mdanalysis-reporter==0.1.0",
+    #"openmm-mdanalysis-reporter==0.1.0",
+    "mdareporter @ git+https://github.com/sef43/openmm-mdanalysis-reporter.git@86e8bdffb63bbe9b13430ba97e2a67b85c996048",
+    "h5py==3.13",
     "openmm==8.1.1",
     "pymatgen==2025.4.20", # TODO: open ff is extremely sensitive to pymatgen version
     "mdanalysis==2.9.0"
