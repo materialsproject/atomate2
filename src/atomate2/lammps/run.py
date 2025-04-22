@@ -1,5 +1,6 @@
 """Wrapper to invoke lammps from the CLI."""
 
+import shlex
 import subprocess
 from pathlib import Path
 
@@ -59,10 +60,10 @@ def run_lammps(
         for flag in lammps_run_flags:
             lammps_invocation += [flag]
 
-    if lammps_mpi_cmd is not None:
-        lammps_invocation.extend([lammps_mpi_cmd, "-in", lammps_input_file])
-    else:
-        lammps_invocation.extend([lammps_cmd, "-in", lammps_input_file])
+    lmp_cmd = shlex.split(lammps_mpi_cmd) if lammps_mpi_cmd else shlex.split(lammps_cmd)
+
+    lammps_invocation.extend(lmp_cmd)
+    lammps_invocation.extend(["-in", lammps_input_file])
 
     with open(stdout_file, "a") as stdout, open(stderr_file, "a") as stderr:
         process = subprocess.Popen(
