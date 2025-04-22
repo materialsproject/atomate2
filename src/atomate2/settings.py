@@ -244,7 +244,13 @@ class Atomate2Settings(BaseSettings):
     )
 
     LAMMPS_CMD: str = Field("lmp", description="The command to run LAMMPS.")
-    
+
+    LAMMPS_MPICMD: Optional[str] = Field(
+        None,
+        description="The command to run LAMMPS with MPI, e.g., 'mpirun -n 128' "
+        "or 'mpiexec'. If None, LAMMPS will be run in serial mode.",
+    )
+
     LAMMPS_SUFFIX: list[str] | str | None = Field(
         None,
         description=(
@@ -257,14 +263,14 @@ class Atomate2Settings(BaseSettings):
         None,
         description=(
             "Options to pass to the package command-line flag that controls subpackage "
-            "styles and parameters, e.g., `'gpu 1'` will call `lmp -pk gpu 1` will tell "
+            "styles and parameters, e.g., `'gpu 1'` will call `lmp -pk gpu 1`, tells "
             "LAMMPS to use 1 GPU for this calculation. "
-            "List values are passed with separate '-pk' invocations, e.g., `lmp -pk gpu 1 -pk omp 4`."
+            "List values are passed with separate '-pk' invocations, e.g., "
+            "`lmp -pk gpu 1 -pk omp 4`."
             "See https://docs.lammps.org/Run_options.html#package for more information."
         ),
         examples=["gpu 0", "gpu 1 split 0.75", "gpu 2 split -1.0", "gpu 1 omp 4"],
     )
-
 
     @model_validator(mode="before")
     @classmethod
