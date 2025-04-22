@@ -9,7 +9,7 @@ from atomate2 import SETTINGS
 def run_lammps(
     lammps_input_file: str = "in.lammps",
     lammps_cmd: str = SETTINGS.LAMMPS_CMD,
-    lammps_mpi_cmd: str | None = SETTINGS.MPI_CMD,
+    lammps_mpi_cmd: str | None = SETTINGS.LAMMPS_MPICMD,
     lammps_suffix: list[str] | str | None = SETTINGS.LAMMPS_SUFFIX,
     lammps_pks: list[str] | str | None = SETTINGS.LAMMPS_PACKAGES,
     lammps_run_flags: list[str] | str | None = None,
