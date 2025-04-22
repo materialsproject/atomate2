@@ -1,3 +1,5 @@
+"""Base job maker for LAMMPS calculations."""
+
 import glob
 import os
 import warnings
@@ -22,7 +24,6 @@ from atomate2.lammps.schemas.task import LammpsTaskDocument, StoreTrajectoryOpti
 _DATA_OBJECTS: list[str] = [
     "raw_log_file",
     "inputs",
-    "metadata",
     "trajectories",
     "dump_files",
 ]
@@ -30,7 +31,16 @@ _DATA_OBJECTS: list[str] = [
 __all__ = ("BaseLammpsMaker", "lammps_job")
 
 
-def lammps_job(method: Callable):
+class LammpsRunError(Exception):
+    """Custom exception for LAMMPS jobs."""
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+        self.message = message
+
+
+def lammps_job(method: Callable) -> job:
+    """Job decorator for LAMMPS jobs."""
     return job(method, data=_DATA_OBJECTS, output_schema=LammpsTaskDocument)
 
 
@@ -64,13 +74,16 @@ class BaseLammpsMaker(Maker):
     task_document_kwargs: dict = field(default_factory=dict)
     write_additional_data: LammpsData | CombinedData = field(default_factory=dict)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Post-initialization warnings for the job."""
         if (
             self.task_document_kwargs.get("store_trajectory", StoreTrajectoryOption.NO)
             != StoreTrajectoryOption.NO
         ):
             warnings.warn(
-                "Trajectory data might be large, only store if absolutely necessary. Consider manually parsing the dump files instead."
+                "Trajectory data might be large, only store if absolutely necessary. \
+                Consider manually parsing the dump files instead.",
+                stacklevel=1,
             )
 
         if self.force_field:
@@ -87,7 +100,8 @@ class BaseLammpsMaker(Maker):
             restart_files = glob.glob(os.path.join(prev_dir, "*restart*"))
             if len(restart_files) != 1:
                 raise FileNotFoundError(
-                    "No/More than one restart file found in the previous directory. If present, it should have the extension '.restart'!"
+                    "No/More than one restart file found in the previous directory. \
+                        If present, it should have the extension '.restart'!"
                 )
 
             self.input_set_generator.update_settings(
@@ -122,7 +136,7 @@ class BaseLammpsMaker(Maker):
                         break
             except ValueError:
                 error = "could not parse log file"
-            raise Exception(f"Task {task_doc.task_label} failed, error: {error}")
+            raise LammpsRunError(f"Task {task_doc.task_label} failed, error: {error}")
 
         task_doc.composition = input_structure.composition
         task_doc.reduced_formula = input_structure.composition.reduced_formula
