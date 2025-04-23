@@ -9,9 +9,7 @@ from typing import TYPE_CHECKING, Any
 from jobflow import Flow, Response, job
 from pymatgen.io.lobster import Lobsterin
 
-from atomate2.common.files import delete_files
 from atomate2.lobster.jobs import LobsterMaker
-from atomate2.utils.path import strip_hostname
 from atomate2.vasp.jobs.base import BaseVaspMaker
 from atomate2.vasp.powerups import update_user_incar_settings
 from atomate2.vasp.sets.core import LobsterTightStaticSetGenerator
@@ -202,29 +200,3 @@ def get_lobster_jobs(
 
     flow = Flow(jobs, output=outputs)
     return Response(replace=flow)
-
-
-@job
-def delete_lobster_wavecar(
-    dirs: list[Path | str],
-    lobster_static_dir: Path | str = None,
-) -> None:
-    """
-    Delete all WAVECARs.
-
-    Parameters
-    ----------
-    dirs : list of path or str
-        Path to directories of lobster jobs.
-    lobster_static_dir : Path or str
-        Path to directory of static VASP run.
-    """
-    if lobster_static_dir:
-        dirs.append(lobster_static_dir)
-
-    for dir_name in dirs:
-        delete_files(
-            strip_hostname(dir_name),
-            include_files=["WAVECAR", "WAVECAR.gz"],
-            allow_missing=True,
-        )

@@ -83,7 +83,7 @@ class EosMaker(CommonEosMaker):
         Maker to relax deformed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
-    strain : tuple[float]
+    linear_strain : tuple[float]
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.

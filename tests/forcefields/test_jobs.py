@@ -1,6 +1,7 @@
 from importlib.metadata import version as get_imported_version
 from pathlib import Path
 
+import numpy as np
 import pytest
 from jobflow import run_locally
 from pymatgen.core import Structure
@@ -319,6 +320,27 @@ def test_mace_relax_maker(
         assert output1.output.n_steps == 7
 
 
+def test_mace_mpa_0_relax_maker(
+    si_structure: Structure,
+):
+    job = ForceFieldRelaxMaker(
+        force_field_name="MACE_MPA_0",
+        steps=25,
+        relax_kwargs={"fmax": 0.005},
+    ).make(si_structure)
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validating the outputs of the job
+    output = responses[job.uuid][1].output
+
+    assert output.ase_calculator_name == "MLFF.MACE_MPA_0"
+    assert output.output.energy == pytest.approx(-10.829493522644043)
+    assert output.output.structure.volume == pytest.approx(40.87471552602735)
+    assert len(output.output.ionic_steps) == 4
+    assert output.structure.volume == output.output.structure.volume
+
+
 def test_gap_static_maker(si_structure: Structure, test_dir):
     importorskip("quippy")
 
@@ -537,3 +559,90 @@ def test_nequip_relax_maker(
 
     with pytest.warns(FutureWarning):
         NequipRelaxMaker()
+
+
+@pytest.mark.parametrize("ref_func", ["PBE", "r2SCAN"])
+def test_matpes_relax_makers(
+    sr_ti_o3_structure: Structure,
+    test_dir: Path,
+    ref_func: str,
+):
+    importorskip("matgl")
+
+    refs = {
+        "PBE": {
+            "energy": -39.84724807739258,
+            "volume": 61.41011257095997,
+            "forces": [
+                [
+                    -3.8073078911793345e-08,
+                    -3.715077578902992e-09,
+                    1.567575935723653e-08,
+                ],
+                [-3.306195139884949e-08, 2.2859808268549386e-08, 6.367918103933334e-08],
+                [1.334119588136673e-07, -6.594927981495857e-08, 1.9208528101444244e-09],
+                [
+                    -1.2636883184313774e-07,
+                    1.2200325727462769e-07,
+                    -1.0713119991123676e-07,
+                ],
+                [-1.30385160446167e-08, -5.2666791816591285e-08, 5.960902882407026e-08],
+            ],
+            "stress": [
+                [57.4752333887927, -0.00020727562869236117, 7.977679617705125e-05],
+                [-0.00020727562869236117, 57.47495286586068, 6.531438391807446e-05],
+                [7.977679617705125e-05, 6.531438391807446e-05, 57.47190889361951],
+            ],
+        },
+        "r2SCAN": {
+            "energy": -63.093711853027344,
+            "volume": 60.01868572299112,
+            "forces": [
+                [
+                    -2.518166652976106e-08,
+                    7.450580596923828e-09,
+                    -2.9341576279762194e-08,
+                ],
+                [
+                    7.450580596923828e-08,
+                    -2.3764563650274795e-08,
+                    4.1701653685777273e-08,
+                ],
+                [1.5013409182529358e-08, 6.05359673500061e-09, -6.597362656179939e-09],
+                [
+                    -1.3317912817001343e-07,
+                    -8.288770914077759e-08,
+                    -1.0840228270581065e-08,
+                ],
+                [-5.029141902923584e-08, 4.439064227312883e-09, -6.960369169917158e-09],
+            ],
+            "stress": [
+                [54.37895257366562, -0.0002788105282469702, -0.0007690944765072764],
+                [-0.0002788105282469702, 54.393605420434355, -0.00024891766395251344],
+                [-0.0007690944765072764, -0.00024891766395251344, 54.39318762032282],
+            ],
+        },
+    }
+
+    struct = Structure.from_dict(sr_ti_o3_structure.as_dict())
+    struct = struct.scale_lattice(1.2 * struct.volume)
+
+    job = ForceFieldRelaxMaker(
+        force_field_name=f"MatPES-{ref_func}",
+        steps=25,
+    ).make(struct)
+    resp = run_locally(job)
+    output = resp[job.uuid][1].output
+
+    assert isinstance(output, ForceFieldTaskDocument)
+
+    ref = refs[ref_func]
+    assert output.output.energy == approx(ref["energy"])
+    assert output.structure.volume == approx(ref["volume"])
+    assert np.all(
+        np.abs(np.array(output.output.ionic_steps[-1].forces) - np.array(ref["forces"]))
+        < 1e-6
+    )
+    assert np.all(
+        np.abs(np.array(output.output.stress) - np.array(ref["stress"])) < 1e-1
+    )

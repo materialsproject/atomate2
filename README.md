@@ -13,7 +13,7 @@ Atomate2 is a free, open-source software for performing complex materials scienc
 workflows using simple Python functions. Features of atomate2 include
 
 - It is built on open-source libraries: [pymatgen], [custodian], [jobflow], and
-  [FireWorks].
+  [jobflow-remote] or [FireWorks].
 - A library of "standard" workflows to compute a wide variety of desired materials
   properties.
 - The ability scale from a single material, to 100 materials, or 100,000 materials.
@@ -81,8 +81,8 @@ See the [installation] steps for details how to set all of this up.
 
 In this example, we execute the workflow immediately. In many cases, you might want
 to perform calculations on several materials simultaneously. To achieve this, all
-atomate2 workflows can be run using the [FireWorks] software. See the
-[documentation][atomate2_fireworks] for more details.
+atomate2 workflows can be run using the [jobflow-remote] or [FireWorks] software. See the
+[jobflow-remote-specific documentation][atomate2-jobflow-remote] or [fireworks-specific documentation][atomate2_fireworks] for more details.
 
 ## Installation
 
@@ -96,6 +96,7 @@ started:
 
 - [Introduction to running workflows][running-workflows]
 - [Using atomate2 with FireWorks][atomate2_fireworks]
+- [Overview of key concepts][key-concepts]
 - [List of VASP workflows][vasp_workflows]
 
 ## Need help?
@@ -140,6 +141,7 @@ A journal submission of `atomate2` is undergoing peer review. In the meantime, p
 [pymatgen]: https://pymatgen.org
 [fireworks]: https://materialsproject.github.io/fireworks/
 [jobflow]: https://materialsproject.github.io/jobflow/
+[jobflow-remote]: https://github.com/Matgenix/jobflow-remote
 [custodian]: https://materialsproject.github.io/custodian/
 [VASP]: https://www.vasp.at
 [AMSET]: https://hackingmaterials.lbl.gov/amset/
@@ -151,7 +153,9 @@ A journal submission of `atomate2` is undergoing peer review. In the meantime, p
 [contributors]: https://materialsproject.github.io/atomate2/about/contributors.html
 [license]: https://raw.githubusercontent.com/materialsproject/atomate2/main/LICENSE
 [running-workflows]: https://materialsproject.github.io/atomate2/user/running-workflows.html
+[key-concepts]: https://materialsproject.github.io/atomate2/user/key_concepts_overview.html#key-concepts-in-atomate2-job-flow-makers-inputset-taskdocument-and-builder
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html
+[atomate2-jobflow-remote]: https://materialsproject.github.io/atomate2/user/jobflow-remote.html
 [vasp_workflows]: https://materialsproject.github.io/atomate2/user/codes/vasp.html
 [RelaxBandStructure]: https://materialsproject.github.io/atomate2/user/codes/vasp.html#relax-and-band-structure
 [Lobster]: http://www.cohp.de
