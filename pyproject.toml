@@ -27,7 +27,7 @@ requires-python = ">=3.10"
 dependencies = [
     "PyYAML",
     "click",
-    "custodian>=2024.4.18",
+    "custodian>=2025.4.14",
     "emmet-core>=0.84.3rc3",
     "jobflow>=0.1.11",
     "monty>=2024.12.10",
@@ -98,7 +98,7 @@ strict = [
     "ase==3.24.0",
     "cclib==1.8.1",
     "click==8.1.7",
-    "custodian==2024.10.16",
+    "custodian==2025.4.14",
     "dscribe==2.1.1",
     "emmet-core==0.84.5",
     "ijson==3.3.0",
@@ -151,6 +151,7 @@ atomate2 = ["py.typed"]
 "atomate2.vasp.sets" = ["*.yaml"]
 "atomate2.cp2k.sets" = ["*.yaml"]
 "atomate2.cp2k.schemas.calc_types" = ["*.yaml"]
+"atomate2.jdftx.sets" = ["*.yaml"]
 
 [tool.versioningit.vcs]
 method = "git"
