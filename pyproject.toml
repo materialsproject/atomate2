@@ -63,10 +63,9 @@ forcefields = [
     "torchdata<=0.7.1",                            # TODO: remove when issue fixed
 ]
 ase = ["ase>=3.23.0"]
-# tblite py3.12 support tracked in https://github.com/tblite/tblite/issues/198
-ase-ext = ["tblite>=0.3.0; python_version < '3.12'"]
+ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 openmm = [
-    "mdanalysis>=2.7.0",
+    "mdanalysis>=2.8.0",
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
@@ -115,7 +114,6 @@ strict = [
     "pymongo==4.10.1",
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
-    "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.13.2",
 ]
 strict-openff = [
@@ -123,8 +121,7 @@ strict-openff = [
     "monty==2025.3.3",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.1.1",
-    "pymatgen==2025.4.20", # TODO: open ff is extremely sensitive to pymatgen version
-    "mdanalysis==2.9.0"
+    "pymatgen==2024.11.13", # TODO: open ff is extremely sensitive to pymatgen version
 ]
 strict-forcefields = [
     "calorine==3.0",
@@ -185,6 +182,7 @@ exclude_lines = [
     '^\s*@overload( |$)',
     '^\s*assert False(,|$)',
     'if typing.TYPE_CHECKING:',
+    'if TYPE_CHECKING:',
 ]
 
 [tool.ruff]
