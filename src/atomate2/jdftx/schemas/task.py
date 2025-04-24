@@ -4,7 +4,8 @@
 
 import logging
 from pathlib import Path
-from typing import Any, Optional, Self, TypeVar, Union
+from typing import Any, Optional, TypeVar, Union
+from typing_extensions import Self
 
 from custodian.jdftx.jobs import JDFTxJob  # Waiting on Sophie's PR
 from emmet.core.structure import StructureMetadata
