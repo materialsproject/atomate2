@@ -317,12 +317,6 @@ class BaseOpenMMMaker(Maker):
             if traj_file_type in ("h5md", "nc", "ncdf", "json"):
                 writer_kwargs["velocities"] = report_velocities
                 writer_kwargs["forces"] = False
-            elif report_velocities and traj_file_type != "trr":
-                raise ValueError(
-                    f"File type {traj_file_type} does not support velocities as"
-                    f"of MDAnalysis 2.7.0. Select another file type"
-                    f"or do not attempt to report velocities."
-                )
 
             traj_file = dir_name / f"{traj_file_name}.{traj_file_type}"
 
@@ -341,15 +335,23 @@ class BaseOpenMMMaker(Maker):
             else:
                 if report_velocities:
                     # assert package version
-
-                    kwargs["writer_kwargs"] = writer_kwargs
                     warnings.warn(
                         "Reporting velocities is only supported with the"
                         "development version of MDAnalysis, >= 2.8.0, "
                         "proceed with caution.",
                         stacklevel=1,
                     )
-                traj_reporter = MDAReporter(**kwargs)
+
+                try:
+                    traj_reporter = MDAReporter(**kwargs, writer_kwargs=writer_kwargs)
+                except TypeError:
+                    warnings.warn(
+                        "The current version of `openmm-mdanalysis-reporter` "
+                        "does not support `writer_kwargs`. To use these features, "
+                        "pip install this package from the github source.",
+                        stacklevel=2,
+                    )
+                    traj_reporter = MDAReporter(**kwargs)
 
             sim.reporters.append(traj_reporter)
 
