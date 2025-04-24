@@ -164,7 +164,7 @@ def fake_run_cp2k(
 
     ref_path = Path(ref_path)
 
-    if "cp2k.inp" in check_inputs:
+    if "incar" in check_inputs:
         check_input(ref_path, input_settings)
 
     logger.info("Verified inputs successfully")
