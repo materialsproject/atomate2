@@ -5,11 +5,11 @@
 import logging
 from pathlib import Path
 from typing import Any, Optional, TypeVar, Union
-from typing_extensions import Self
 
 from custodian.jdftx.jobs import JDFTxJob  # Waiting on Sophie's PR
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
+from typing_extensions import Self
 
 from atomate2.jdftx.schemas.calculation import (
     Calculation,
