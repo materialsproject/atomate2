@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.utils.testing.common
+
+.. autodata:: TYPE_CHECKING

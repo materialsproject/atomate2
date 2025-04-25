@@ -1,6 +1,0 @@
-check\_poscar
-=============
-
-.. currentmodule:: atomate2.utils.testing.vasp
-
-.. autofunction:: check_poscar

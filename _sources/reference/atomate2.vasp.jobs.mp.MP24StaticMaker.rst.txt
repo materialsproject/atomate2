@@ -1,0 +1,8 @@
+MP24StaticMaker
+===============
+
+.. currentmodule:: atomate2.vasp.jobs.mp
+
+.. autoclass:: MP24StaticMaker
+   :show-inheritance:
+   :members:

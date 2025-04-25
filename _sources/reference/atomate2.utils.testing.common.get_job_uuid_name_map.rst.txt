@@ -1,0 +1,6 @@
+get\_job\_uuid\_name\_map
+=========================
+
+.. currentmodule:: atomate2.utils.testing.common
+
+.. autofunction:: get_job_uuid_name_map

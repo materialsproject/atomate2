@@ -1,6 +1,0 @@
-get\_charge\_density\_job
-=========================
-
-.. currentmodule:: atomate2.common.jobs.electrode
-
-.. autofunction:: get_charge_density_job

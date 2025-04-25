@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.forcefields.flows.qha
+
+.. autodata:: TYPE_CHECKING

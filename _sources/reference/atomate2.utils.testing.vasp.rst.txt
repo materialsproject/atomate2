@@ -13,12 +13,6 @@ atomate2.utils.testing.vasp
       :toctree:
       :nosignatures:
    
-      check_incar
-      check_kpoints
-      check_poscar
-      check_potcar
-      clear_vasp_inputs
-      copy_vasp_outputs
       fake_run_vasp
       monkeypatch_vasp
       zpath
@@ -27,6 +21,18 @@ atomate2.utils.testing.vasp
 
 
 
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+      
+   
    
       
    
@@ -49,6 +55,9 @@ atomate2.utils.testing.vasp
    
    
    
+      
+   
+   
 
 
    .. rubric:: Classes
@@ -58,5 +67,10 @@ atomate2.utils.testing.vasp
       :nosignatures:
    
       TYPE_CHECKING
+      TestData
+      VaspInputTestData
+      VaspOutputTestData
+      VaspTestData
+      pmg_defects_installed
 
 

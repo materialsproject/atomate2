@@ -1,0 +1,8 @@
+MP24DoubleRelaxStaticMaker
+==========================
+
+.. currentmodule:: atomate2.vasp.flows.mp
+
+.. autoclass:: MP24DoubleRelaxStaticMaker
+   :show-inheritance:
+   :members:

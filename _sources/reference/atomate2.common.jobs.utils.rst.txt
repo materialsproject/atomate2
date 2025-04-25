@@ -13,6 +13,7 @@ atomate2.common.jobs.utils
       :toctree:
       :nosignatures:
    
+      remove_workflow_files
       retrieve_structure_from_materials_project
       structure_to_conventional
       structure_to_primitive
@@ -23,6 +24,7 @@ atomate2.common.jobs.utils
 
    
       
+   
    
    
    

@@ -208,6 +208,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../running-workflows.html">Running Workflows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../key_concepts_overview.html">Key concepts in atomate2: <code class="docutils literal notranslate"><span class="pre">Job</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">Flow</span></code> <code class="docutils literal notranslate"><span class="pre">Makers</span></code>, <code class="docutils literal notranslate"><span class="pre">InputSet</span></code>, <code class="docutils literal notranslate"><span class="pre">TaskDocument</span></code>, and <code class="docutils literal notranslate"><span class="pre">Builder</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../jobflow-remote.html">Using atomate2 with jobflow-remote</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../fireworks.html">Using atomate2 with FireWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../atomate-1-vs-2.html">Atomate 1 vs 2</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Codes</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Codes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
@@ -521,7 +523,6 @@
 </ul>
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.common.jobs.electrode.html">atomate2.common.jobs.electrode</a><input class="toctree-checkbox" id="toctree-checkbox-54" name="toctree-checkbox-54" role="switch" type="checkbox"/><label for="toctree-checkbox-54"><div class="visually-hidden">Toggle navigation of atomate2.common.jobs.electrode</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.electrode.get_charge_density_job.html">get_charge_density_job</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.electrode.get_computed_entries.html">get_computed_entries</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.electrode.get_inserted_structures.html">get_inserted_structures</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.electrode.get_insertion_electrode_doc.html">get_insertion_electrode_doc</a></li>
@@ -582,6 +583,7 @@
 </ul>
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.common.jobs.utils.html">atomate2.common.jobs.utils</a><input class="toctree-checkbox" id="toctree-checkbox-61" name="toctree-checkbox-61" role="switch" type="checkbox"/><label for="toctree-checkbox-61"><div class="visually-hidden">Toggle navigation of atomate2.common.jobs.utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.utils.remove_workflow_files.html">remove_workflow_files</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.utils.retrieve_structure_from_materials_project.html">retrieve_structure_from_materials_project</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.utils.structure_to_conventional.html">structure_to_conventional</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.common.jobs.utils.structure_to_primitive.html">structure_to_primitive</a></li>
@@ -820,10 +822,13 @@
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.phonons.html">atomate2.forcefields.flows.phonons</a><input class="toctree-checkbox" id="toctree-checkbox-98" name="toctree-checkbox-98" role="switch" type="checkbox"/><label for="toctree-checkbox-98"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.phonons</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.phonons.PhononMaker.html">PhononMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.phonons.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.qha.html">atomate2.forcefields.flows.qha</a><input class="toctree-checkbox" id="toctree-checkbox-99" name="toctree-checkbox-99" role="switch" type="checkbox"/><label for="toctree-checkbox-99"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.qha</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.qha.CHGNetQhaMaker.html">CHGNetQhaMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.qha.ForceFieldQhaMaker.html">ForceFieldQhaMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.qha.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.forcefields.flows.relax.html">atomate2.forcefields.flows.relax</a><input class="toctree-checkbox" id="toctree-checkbox-100" name="toctree-checkbox-100" role="switch" type="checkbox"/><label for="toctree-checkbox-100"><div class="visually-hidden">Toggle navigation of atomate2.forcefields.flows.relax</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -1019,57 +1024,70 @@
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.utils.testing.html">atomate2.utils.testing</a><input class="toctree-checkbox" id="toctree-checkbox-128" name="toctree-checkbox-128" role="switch" type="checkbox"/><label for="toctree-checkbox-128"><div class="visually-hidden">Toggle navigation of atomate2.utils.testing</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.html">atomate2.utils.testing.vasp</a><input class="toctree-checkbox" id="toctree-checkbox-129" name="toctree-checkbox-129" role="switch" type="checkbox"/><label for="toctree-checkbox-129"><div class="visually-hidden">Toggle navigation of atomate2.utils.testing.vasp</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.check_incar.html">check_incar</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.check_kpoints.html">check_kpoints</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.check_poscar.html">check_poscar</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.check_potcar.html">check_potcar</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.clear_vasp_inputs.html">clear_vasp_inputs</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.copy_vasp_outputs.html">copy_vasp_outputs</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.utils.testing.aims.html">atomate2.utils.testing.aims</a><input class="toctree-checkbox" id="toctree-checkbox-129" name="toctree-checkbox-129" role="switch" type="checkbox"/><label for="toctree-checkbox-129"><div class="visually-hidden">Toggle navigation of atomate2.utils.testing.aims</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.aims.clear_aims_inputs.html">clear_aims_inputs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.aims.copy_aims_outputs.html">copy_aims_outputs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.aims.fake_run_aims.html">fake_run_aims</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.aims.monkeypatch_aims.html">monkeypatch_aims</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.aims.zpath.html">zpath</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.aims.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.utils.testing.common.html">atomate2.utils.testing.common</a><input class="toctree-checkbox" id="toctree-checkbox-130" name="toctree-checkbox-130" role="switch" type="checkbox"/><label for="toctree-checkbox-130"><div class="visually-hidden">Toggle navigation of atomate2.utils.testing.common</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.common.get_job_uuid_name_map.html">get_job_uuid_name_map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.common.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.html">atomate2.utils.testing.vasp</a><input class="toctree-checkbox" id="toctree-checkbox-131" name="toctree-checkbox-131" role="switch" type="checkbox"/><label for="toctree-checkbox-131"><div class="visually-hidden">Toggle navigation of atomate2.utils.testing.vasp</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.fake_run_vasp.html">fake_run_vasp</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.monkeypatch_vasp.html">monkeypatch_vasp</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.zpath.html">zpath</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.TestData.html">TestData</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.VaspInputTestData.html">VaspInputTestData</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.VaspOutputTestData.html">VaspOutputTestData</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.VaspTestData.html">VaspTestData</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.utils.testing.vasp.pmg_defects_installed.html">pmg_defects_installed</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.html">atomate2.vasp</a><input class="toctree-checkbox" id="toctree-checkbox-130" name="toctree-checkbox-130" role="switch" type="checkbox"/><label for="toctree-checkbox-130"><div class="visually-hidden">Toggle navigation of atomate2.vasp</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.builders.html">atomate2.vasp.builders</a><input class="toctree-checkbox" id="toctree-checkbox-131" name="toctree-checkbox-131" role="switch" type="checkbox"/><label for="toctree-checkbox-131"><div class="visually-hidden">Toggle navigation of atomate2.vasp.builders</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.builders.elastic.html">atomate2.vasp.builders.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-132" name="toctree-checkbox-132" role="switch" type="checkbox"/><label for="toctree-checkbox-132"><div class="visually-hidden">Toggle navigation of atomate2.vasp.builders.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.html">atomate2.vasp</a><input class="toctree-checkbox" id="toctree-checkbox-132" name="toctree-checkbox-132" role="switch" type="checkbox"/><label for="toctree-checkbox-132"><div class="visually-hidden">Toggle navigation of atomate2.vasp</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.builders.html">atomate2.vasp.builders</a><input class="toctree-checkbox" id="toctree-checkbox-133" name="toctree-checkbox-133" role="switch" type="checkbox"/><label for="toctree-checkbox-133"><div class="visually-hidden">Toggle navigation of atomate2.vasp.builders</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.builders.elastic.html">atomate2.vasp.builders.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-134" name="toctree-checkbox-134" role="switch" type="checkbox"/><label for="toctree-checkbox-134"><div class="visually-hidden">Toggle navigation of atomate2.vasp.builders.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.builders.elastic.ElasticBuilder.html">ElasticBuilder</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.builders.elastic.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.drones.html">atomate2.vasp.drones</a><input class="toctree-checkbox" id="toctree-checkbox-133" name="toctree-checkbox-133" role="switch" type="checkbox"/><label for="toctree-checkbox-133"><div class="visually-hidden">Toggle navigation of atomate2.vasp.drones</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.drones.html">atomate2.vasp.drones</a><input class="toctree-checkbox" id="toctree-checkbox-135" name="toctree-checkbox-135" role="switch" type="checkbox"/><label for="toctree-checkbox-135"><div class="visually-hidden">Toggle navigation of atomate2.vasp.drones</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.drones.VaspDrone.html">VaspDrone</a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.files.html">atomate2.vasp.files</a><input class="toctree-checkbox" id="toctree-checkbox-134" name="toctree-checkbox-134" role="switch" type="checkbox"/><label for="toctree-checkbox-134"><div class="visually-hidden">Toggle navigation of atomate2.vasp.files</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.files.html">atomate2.vasp.files</a><input class="toctree-checkbox" id="toctree-checkbox-136" name="toctree-checkbox-136" role="switch" type="checkbox"/><label for="toctree-checkbox-136"><div class="visually-hidden">Toggle navigation of atomate2.vasp.files</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.files.copy_vasp_outputs.html">copy_vasp_outputs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.files.get_largest_relax_extension.html">get_largest_relax_extension</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.files.write_vasp_input_set.html">write_vasp_input_set</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.files.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.html">atomate2.vasp.flows</a><input class="toctree-checkbox" id="toctree-checkbox-135" name="toctree-checkbox-135" role="switch" type="checkbox"/><label for="toctree-checkbox-135"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.adsorption.html">atomate2.vasp.flows.adsorption</a><input class="toctree-checkbox" id="toctree-checkbox-136" name="toctree-checkbox-136" role="switch" type="checkbox"/><label for="toctree-checkbox-136"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.adsorption</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.html">atomate2.vasp.flows</a><input class="toctree-checkbox" id="toctree-checkbox-137" name="toctree-checkbox-137" role="switch" type="checkbox"/><label for="toctree-checkbox-137"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.adsorption.html">atomate2.vasp.flows.adsorption</a><input class="toctree-checkbox" id="toctree-checkbox-138" name="toctree-checkbox-138" role="switch" type="checkbox"/><label for="toctree-checkbox-138"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.adsorption</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.adsorption.AdsorptionMaker.html">AdsorptionMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.adsorption.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.amset.html">atomate2.vasp.flows.amset</a><input class="toctree-checkbox" id="toctree-checkbox-137" name="toctree-checkbox-137" role="switch" type="checkbox"/><label for="toctree-checkbox-137"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.amset</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.amset.html">atomate2.vasp.flows.amset</a><input class="toctree-checkbox" id="toctree-checkbox-139" name="toctree-checkbox-139" role="switch" type="checkbox"/><label for="toctree-checkbox-139"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.amset</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.amset.DeformationPotentialMaker.html">DeformationPotentialMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.amset.HSEVaspAmsetMaker.html">HSEVaspAmsetMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.amset.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.amset.VaspAmsetMaker.html">VaspAmsetMaker</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.core.html">atomate2.vasp.flows.core</a><input class="toctree-checkbox" id="toctree-checkbox-138" name="toctree-checkbox-138" role="switch" type="checkbox"/><label for="toctree-checkbox-138"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.core</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.core.html">atomate2.vasp.flows.core</a><input class="toctree-checkbox" id="toctree-checkbox-140" name="toctree-checkbox-140" role="switch" type="checkbox"/><label for="toctree-checkbox-140"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.core</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.core.BandStructureMaker.html">BandStructureMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.core.DoubleRelaxMaker.html">DoubleRelaxMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.core.HSEBandStructureMaker.html">HSEBandStructureMaker</a></li>
@@ -1083,7 +1101,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.core.UniformBandStructureMaker.html">UniformBandStructureMaker</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.defect.html">atomate2.vasp.flows.defect</a><input class="toctree-checkbox" id="toctree-checkbox-139" name="toctree-checkbox-139" role="switch" type="checkbox"/><label for="toctree-checkbox-139"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.defect</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.defect.html">atomate2.vasp.flows.defect</a><input class="toctree-checkbox" id="toctree-checkbox-141" name="toctree-checkbox-141" role="switch" type="checkbox"/><label for="toctree-checkbox-141"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.defect</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.defect.ConfigurationCoordinateMaker.html">ConfigurationCoordinateMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.defect.DEFECT_INCAR_SETTINGS.html">DEFECT_INCAR_SETTINGS</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.defect.DEFECT_KPOINT_SETTINGS.html">DEFECT_KPOINT_SETTINGS</a></li>
@@ -1093,17 +1111,17 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.defect.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.elastic.html">atomate2.vasp.flows.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-140" name="toctree-checkbox-140" role="switch" type="checkbox"/><label for="toctree-checkbox-140"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.elastic.html">atomate2.vasp.flows.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-142" name="toctree-checkbox-142" role="switch" type="checkbox"/><label for="toctree-checkbox-142"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.elastic.ElasticMaker.html">ElasticMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.elastic.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.electrode.html">atomate2.vasp.flows.electrode</a><input class="toctree-checkbox" id="toctree-checkbox-141" name="toctree-checkbox-141" role="switch" type="checkbox"/><label for="toctree-checkbox-141"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.electrode</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.electrode.html">atomate2.vasp.flows.electrode</a><input class="toctree-checkbox" id="toctree-checkbox-143" name="toctree-checkbox-143" role="switch" type="checkbox"/><label for="toctree-checkbox-143"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.electrode</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.electrode.ElectrodeInsertionMaker.html">ElectrodeInsertionMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.electrode.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.elph.html">atomate2.vasp.flows.elph</a><input class="toctree-checkbox" id="toctree-checkbox-142" name="toctree-checkbox-142" role="switch" type="checkbox"/><label for="toctree-checkbox-142"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.elph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.elph.html">atomate2.vasp.flows.elph</a><input class="toctree-checkbox" id="toctree-checkbox-144" name="toctree-checkbox-144" role="switch" type="checkbox"/><label for="toctree-checkbox-144"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.elph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.elph.DEFAULT_ELPH_TEMPERATURES.html">DEFAULT_ELPH_TEMPERATURES</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.elph.DEFAULT_MIN_SUPERCELL_LENGTH.html">DEFAULT_MIN_SUPERCELL_LENGTH</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.elph.ElectronPhononMaker.html">ElectronPhononMaker</a></li>
@@ -1111,7 +1129,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.elph.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.eos.html">atomate2.vasp.flows.eos</a><input class="toctree-checkbox" id="toctree-checkbox-143" name="toctree-checkbox-143" role="switch" type="checkbox"/><label for="toctree-checkbox-143"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.eos.html">atomate2.vasp.flows.eos</a><input class="toctree-checkbox" id="toctree-checkbox-145" name="toctree-checkbox-145" role="switch" type="checkbox"/><label for="toctree-checkbox-145"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.eos.EosDoubleRelaxMaker.html">EosDoubleRelaxMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.eos.EosMaker.html">EosMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.eos.MPGGAEosDoubleRelaxMaker.html">MPGGAEosDoubleRelaxMaker</a></li>
@@ -1123,31 +1141,33 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.eos.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.ferroelectric.html">atomate2.vasp.flows.ferroelectric</a><input class="toctree-checkbox" id="toctree-checkbox-144" name="toctree-checkbox-144" role="switch" type="checkbox"/><label for="toctree-checkbox-144"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.ferroelectric</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.ferroelectric.html">atomate2.vasp.flows.ferroelectric</a><input class="toctree-checkbox" id="toctree-checkbox-146" name="toctree-checkbox-146" role="switch" type="checkbox"/><label for="toctree-checkbox-146"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.ferroelectric</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.ferroelectric.FerroelectricMaker.html">FerroelectricMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.ferroelectric.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.gruneisen.html">atomate2.vasp.flows.gruneisen</a><input class="toctree-checkbox" id="toctree-checkbox-145" name="toctree-checkbox-145" role="switch" type="checkbox"/><label for="toctree-checkbox-145"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.gruneisen</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.gruneisen.html">atomate2.vasp.flows.gruneisen</a><input class="toctree-checkbox" id="toctree-checkbox-147" name="toctree-checkbox-147" role="switch" type="checkbox"/><label for="toctree-checkbox-147"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.gruneisen</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.gruneisen.GruneisenMaker.html">GruneisenMaker</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.lobster.html">atomate2.vasp.flows.lobster</a><input class="toctree-checkbox" id="toctree-checkbox-146" name="toctree-checkbox-146" role="switch" type="checkbox"/><label for="toctree-checkbox-146"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.lobster</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.lobster.html">atomate2.vasp.flows.lobster</a><input class="toctree-checkbox" id="toctree-checkbox-148" name="toctree-checkbox-148" role="switch" type="checkbox"/><label for="toctree-checkbox-148"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.lobster</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.lobster.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.lobster.VaspLobsterMaker.html">VaspLobsterMaker</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.matpes.html">atomate2.vasp.flows.matpes</a><input class="toctree-checkbox" id="toctree-checkbox-147" name="toctree-checkbox-147" role="switch" type="checkbox"/><label for="toctree-checkbox-147"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.matpes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.matpes.html">atomate2.vasp.flows.matpes</a><input class="toctree-checkbox" id="toctree-checkbox-149" name="toctree-checkbox-149" role="switch" type="checkbox"/><label for="toctree-checkbox-149"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.matpes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.matpes.MatPesStaticFlowMaker.html">MatPesStaticFlowMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.matpes.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.md.html">atomate2.vasp.flows.md</a><input class="toctree-checkbox" id="toctree-checkbox-148" name="toctree-checkbox-148" role="switch" type="checkbox"/><label for="toctree-checkbox-148"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.md</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.md.html">atomate2.vasp.flows.md</a><input class="toctree-checkbox" id="toctree-checkbox-150" name="toctree-checkbox-150" role="switch" type="checkbox"/><label for="toctree-checkbox-150"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.md</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.md.MultiMDMaker.html">MultiMDMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.md.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mp.html">atomate2.vasp.flows.mp</a><input class="toctree-checkbox" id="toctree-checkbox-149" name="toctree-checkbox-149" role="switch" type="checkbox"/><label for="toctree-checkbox-149"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.mp</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mp.html">atomate2.vasp.flows.mp</a><input class="toctree-checkbox" id="toctree-checkbox-151" name="toctree-checkbox-151" role="switch" type="checkbox"/><label for="toctree-checkbox-151"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.mp</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mp.MP24DoubleRelaxMaker.html">MP24DoubleRelaxMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mp.MP24DoubleRelaxStaticMaker.html">MP24DoubleRelaxStaticMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mp.MPGGADoubleRelaxMaker.html">MPGGADoubleRelaxMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mp.MPGGADoubleRelaxStaticMaker.html">MPGGADoubleRelaxStaticMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mp.MPMetaGGADoubleRelaxMaker.html">MPMetaGGADoubleRelaxMaker</a></li>
@@ -1156,31 +1176,31 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mp.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mpmorph.html">atomate2.vasp.flows.mpmorph</a><input class="toctree-checkbox" id="toctree-checkbox-150" name="toctree-checkbox-150" role="switch" type="checkbox"/><label for="toctree-checkbox-150"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.mpmorph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mpmorph.html">atomate2.vasp.flows.mpmorph</a><input class="toctree-checkbox" id="toctree-checkbox-152" name="toctree-checkbox-152" role="switch" type="checkbox"/><label for="toctree-checkbox-152"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.mpmorph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mpmorph.MPMorphFastQuenchVaspMDMaker.html">MPMorphFastQuenchVaspMDMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mpmorph.MPMorphSlowQuenchVaspMDMaker.html">MPMorphSlowQuenchVaspMDMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mpmorph.MPMorphVaspMDMaker.html">MPMorphVaspMDMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mpmorph.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mvl.html">atomate2.vasp.flows.mvl</a><input class="toctree-checkbox" id="toctree-checkbox-151" name="toctree-checkbox-151" role="switch" type="checkbox"/><label for="toctree-checkbox-151"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.mvl</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mvl.html">atomate2.vasp.flows.mvl</a><input class="toctree-checkbox" id="toctree-checkbox-153" name="toctree-checkbox-153" role="switch" type="checkbox"/><label for="toctree-checkbox-153"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.mvl</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mvl.MVLGWBandStructureMaker.html">MVLGWBandStructureMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.mvl.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.phonons.html">atomate2.vasp.flows.phonons</a><input class="toctree-checkbox" id="toctree-checkbox-152" name="toctree-checkbox-152" role="switch" type="checkbox"/><label for="toctree-checkbox-152"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.phonons</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.phonons.html">atomate2.vasp.flows.phonons</a><input class="toctree-checkbox" id="toctree-checkbox-154" name="toctree-checkbox-154" role="switch" type="checkbox"/><label for="toctree-checkbox-154"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.phonons</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.phonons.PhononMaker.html">PhononMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.phonons.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.qha.html">atomate2.vasp.flows.qha</a><input class="toctree-checkbox" id="toctree-checkbox-153" name="toctree-checkbox-153" role="switch" type="checkbox"/><label for="toctree-checkbox-153"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.qha</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.flows.qha.html">atomate2.vasp.flows.qha</a><input class="toctree-checkbox" id="toctree-checkbox-155" name="toctree-checkbox-155" role="switch" type="checkbox"/><label for="toctree-checkbox-155"><div class="visually-hidden">Toggle navigation of atomate2.vasp.flows.qha</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.flows.qha.QhaMaker.html">QhaMaker</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.html">atomate2.vasp.jobs</a><input class="toctree-checkbox" id="toctree-checkbox-154" name="toctree-checkbox-154" role="switch" type="checkbox"/><label for="toctree-checkbox-154"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.adsorption.html">atomate2.vasp.jobs.adsorption</a><input class="toctree-checkbox" id="toctree-checkbox-155" name="toctree-checkbox-155" role="switch" type="checkbox"/><label for="toctree-checkbox-155"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.adsorption</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.html">atomate2.vasp.jobs</a><input class="toctree-checkbox" id="toctree-checkbox-156" name="toctree-checkbox-156" role="switch" type="checkbox"/><label for="toctree-checkbox-156"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.adsorption.html">atomate2.vasp.jobs.adsorption</a><input class="toctree-checkbox" id="toctree-checkbox-157" name="toctree-checkbox-157" role="switch" type="checkbox"/><label for="toctree-checkbox-157"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.adsorption</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.adsorption.adsorption_calculations.html">adsorption_calculations</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.adsorption.generate_adslabs.html">generate_adslabs</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.adsorption.generate_slab.html">generate_slab</a></li>
@@ -1195,7 +1215,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.adsorption.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.amset.html">atomate2.vasp.jobs.amset</a><input class="toctree-checkbox" id="toctree-checkbox-156" name="toctree-checkbox-156" role="switch" type="checkbox"/><label for="toctree-checkbox-156"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.amset</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.amset.html">atomate2.vasp.jobs.amset</a><input class="toctree-checkbox" id="toctree-checkbox-158" name="toctree-checkbox-158" role="switch" type="checkbox"/><label for="toctree-checkbox-158"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.amset</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.amset.calculate_deformation_potentials.html">calculate_deformation_potentials</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.amset.calculate_polar_phonon_frequency.html">calculate_polar_phonon_frequency</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.amset.generate_wavefunction_coefficients.html">generate_wavefunction_coefficients</a></li>
@@ -1207,14 +1227,14 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.amset.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.base.html">atomate2.vasp.jobs.base</a><input class="toctree-checkbox" id="toctree-checkbox-157" name="toctree-checkbox-157" role="switch" type="checkbox"/><label for="toctree-checkbox-157"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.base</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.base.html">atomate2.vasp.jobs.base</a><input class="toctree-checkbox" id="toctree-checkbox-159" name="toctree-checkbox-159" role="switch" type="checkbox"/><label for="toctree-checkbox-159"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.base</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.base.get_vasp_task_document.html">get_vasp_task_document</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.base.vasp_job.html">vasp_job</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.base.BaseVaspMaker.html">BaseVaspMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.base.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.core.html">atomate2.vasp.jobs.core</a><input class="toctree-checkbox" id="toctree-checkbox-158" name="toctree-checkbox-158" role="switch" type="checkbox"/><label for="toctree-checkbox-158"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.core</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.core.html">atomate2.vasp.jobs.core</a><input class="toctree-checkbox" id="toctree-checkbox-160" name="toctree-checkbox-160" role="switch" type="checkbox"/><label for="toctree-checkbox-160"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.core</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.core.DielectricMaker.html">DielectricMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.core.HSEBSMaker.html">HSEBSMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.core.HSERelaxMaker.html">HSERelaxMaker</a></li>
@@ -1232,16 +1252,16 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.core.TransmuterMaker.html">TransmuterMaker</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.defect.html">atomate2.vasp.jobs.defect</a><input class="toctree-checkbox" id="toctree-checkbox-159" name="toctree-checkbox-159" role="switch" type="checkbox"/><label for="toctree-checkbox-159"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.defect</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.defect.html">atomate2.vasp.jobs.defect</a><input class="toctree-checkbox" id="toctree-checkbox-161" name="toctree-checkbox-161" role="switch" type="checkbox"/><label for="toctree-checkbox-161"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.defect</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.defect.calculate_finite_diff.html">calculate_finite_diff</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.elastic.html">atomate2.vasp.jobs.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-160" name="toctree-checkbox-160" role="switch" type="checkbox"/><label for="toctree-checkbox-160"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.elastic.html">atomate2.vasp.jobs.elastic</a><input class="toctree-checkbox" id="toctree-checkbox-162" name="toctree-checkbox-162" role="switch" type="checkbox"/><label for="toctree-checkbox-162"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.elastic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.elastic.ElasticRelaxMaker.html">ElasticRelaxMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.elastic.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.elph.html">atomate2.vasp.jobs.elph</a><input class="toctree-checkbox" id="toctree-checkbox-161" name="toctree-checkbox-161" role="switch" type="checkbox"/><label for="toctree-checkbox-161"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.elph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.elph.html">atomate2.vasp.jobs.elph</a><input class="toctree-checkbox" id="toctree-checkbox-163" name="toctree-checkbox-163" role="switch" type="checkbox"/><label for="toctree-checkbox-163"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.elph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.elph.calculate_electron_phonon_renormalisation.html">calculate_electron_phonon_renormalisation</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.elph.run_elph_displacements.html">run_elph_displacements</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.elph.DEFAULT_ELPH_TEMPERATURES.html">DEFAULT_ELPH_TEMPERATURES</a></li>
@@ -1250,7 +1270,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.elph.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.eos.html">atomate2.vasp.jobs.eos</a><input class="toctree-checkbox" id="toctree-checkbox-162" name="toctree-checkbox-162" role="switch" type="checkbox"/><label for="toctree-checkbox-162"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.eos.html">atomate2.vasp.jobs.eos</a><input class="toctree-checkbox" id="toctree-checkbox-164" name="toctree-checkbox-164" role="switch" type="checkbox"/><label for="toctree-checkbox-164"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.eos.copy_wavecar.html">copy_wavecar</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.eos.EosRelaxMaker.html">EosRelaxMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.eos.MPGGAEosRelaxMaker.html">MPGGAEosRelaxMaker</a></li>
@@ -1263,7 +1283,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.eos.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.ferroelectric.html">atomate2.vasp.jobs.ferroelectric</a><input class="toctree-checkbox" id="toctree-checkbox-163" name="toctree-checkbox-163" role="switch" type="checkbox"/><label for="toctree-checkbox-163"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.ferroelectric</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.ferroelectric.html">atomate2.vasp.jobs.ferroelectric</a><input class="toctree-checkbox" id="toctree-checkbox-165" name="toctree-checkbox-165" role="switch" type="checkbox"/><label for="toctree-checkbox-165"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.ferroelectric</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.ferroelectric.add_interpolation_flow.html">add_interpolation_flow</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.ferroelectric.get_polarization_output.html">get_polarization_output</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.ferroelectric.interpolate_structures.html">interpolate_structures</a></li>
@@ -1271,8 +1291,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.ferroelectric.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.lobster.html">atomate2.vasp.jobs.lobster</a><input class="toctree-checkbox" id="toctree-checkbox-164" name="toctree-checkbox-164" role="switch" type="checkbox"/><label for="toctree-checkbox-164"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.lobster</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.lobster.delete_lobster_wavecar.html">delete_lobster_wavecar</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.lobster.html">atomate2.vasp.jobs.lobster</a><input class="toctree-checkbox" id="toctree-checkbox-166" name="toctree-checkbox-166" role="switch" type="checkbox"/><label for="toctree-checkbox-166"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.lobster</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.lobster.get_basis_infos.html">get_basis_infos</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.lobster.get_lobster_jobs.html">get_lobster_jobs</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.lobster.update_user_incar_settings_maker.html">update_user_incar_settings_maker</a></li>
@@ -1280,19 +1299,22 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.lobster.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.matpes.html">atomate2.vasp.jobs.matpes</a><input class="toctree-checkbox" id="toctree-checkbox-165" name="toctree-checkbox-165" role="switch" type="checkbox"/><label for="toctree-checkbox-165"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.matpes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.matpes.html">atomate2.vasp.jobs.matpes</a><input class="toctree-checkbox" id="toctree-checkbox-167" name="toctree-checkbox-167" role="switch" type="checkbox"/><label for="toctree-checkbox-167"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.matpes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.matpes.MatPesGGAStaticMaker.html">MatPesGGAStaticMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.matpes.MatPesMetaGGAStaticMaker.html">MatPesMetaGGAStaticMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.matpes.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.md.html">atomate2.vasp.jobs.md</a><input class="toctree-checkbox" id="toctree-checkbox-166" name="toctree-checkbox-166" role="switch" type="checkbox"/><label for="toctree-checkbox-166"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.md</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.md.html">atomate2.vasp.jobs.md</a><input class="toctree-checkbox" id="toctree-checkbox-168" name="toctree-checkbox-168" role="switch" type="checkbox"/><label for="toctree-checkbox-168"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.md</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.md.md_output.html">md_output</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.md.MDMaker.html">MDMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.md.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mp.html">atomate2.vasp.jobs.mp</a><input class="toctree-checkbox" id="toctree-checkbox-167" name="toctree-checkbox-167" role="switch" type="checkbox"/><label for="toctree-checkbox-167"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.mp</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mp.html">atomate2.vasp.jobs.mp</a><input class="toctree-checkbox" id="toctree-checkbox-169" name="toctree-checkbox-169" role="switch" type="checkbox"/><label for="toctree-checkbox-169"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.mp</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mp.MP24PreRelaxMaker.html">MP24PreRelaxMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mp.MP24RelaxMaker.html">MP24RelaxMaker</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mp.MP24StaticMaker.html">MP24StaticMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mp.MPGGARelaxMaker.html">MPGGARelaxMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mp.MPGGAStaticMaker.html">MPGGAStaticMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mp.MPMetaGGARelaxMaker.html">MPMetaGGARelaxMaker</a></li>
@@ -1301,27 +1323,27 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mp.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mpmorph.html">atomate2.vasp.jobs.mpmorph</a><input class="toctree-checkbox" id="toctree-checkbox-168" name="toctree-checkbox-168" role="switch" type="checkbox"/><label for="toctree-checkbox-168"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.mpmorph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mpmorph.html">atomate2.vasp.jobs.mpmorph</a><input class="toctree-checkbox" id="toctree-checkbox-170" name="toctree-checkbox-170" role="switch" type="checkbox"/><label for="toctree-checkbox-170"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.mpmorph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mpmorph.BaseMPMorphMDMaker.html">BaseMPMorphMDMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mpmorph.FastQuenchVaspMaker.html">FastQuenchVaspMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mpmorph.SlowQuenchVaspMaker.html">SlowQuenchVaspMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mpmorph.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mvl.html">atomate2.vasp.jobs.mvl</a><input class="toctree-checkbox" id="toctree-checkbox-169" name="toctree-checkbox-169" role="switch" type="checkbox"/><label for="toctree-checkbox-169"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.mvl</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mvl.html">atomate2.vasp.jobs.mvl</a><input class="toctree-checkbox" id="toctree-checkbox-171" name="toctree-checkbox-171" role="switch" type="checkbox"/><label for="toctree-checkbox-171"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.mvl</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mvl.MVLGWMaker.html">MVLGWMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mvl.MVLNonSCFMaker.html">MVLNonSCFMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mvl.MVLStaticMaker.html">MVLStaticMaker</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.mvl.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.phonons.html">atomate2.vasp.jobs.phonons</a><input class="toctree-checkbox" id="toctree-checkbox-170" name="toctree-checkbox-170" role="switch" type="checkbox"/><label for="toctree-checkbox-170"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.phonons</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.phonons.html">atomate2.vasp.jobs.phonons</a><input class="toctree-checkbox" id="toctree-checkbox-172" name="toctree-checkbox-172" role="switch" type="checkbox"/><label for="toctree-checkbox-172"><div class="visually-hidden">Toggle navigation of atomate2.vasp.jobs.phonons</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.jobs.phonons.PhononDisplacementMaker.html">PhononDisplacementMaker</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.powerups.html">atomate2.vasp.powerups</a><input class="toctree-checkbox" id="toctree-checkbox-171" name="toctree-checkbox-171" role="switch" type="checkbox"/><label for="toctree-checkbox-171"><div class="visually-hidden">Toggle navigation of atomate2.vasp.powerups</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.powerups.html">atomate2.vasp.powerups</a><input class="toctree-checkbox" id="toctree-checkbox-173" name="toctree-checkbox-173" role="switch" type="checkbox"/><label for="toctree-checkbox-173"><div class="visually-hidden">Toggle navigation of atomate2.vasp.powerups</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.powerups.add_metadata_to_flow.html">add_metadata_to_flow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.powerups.update_user_incar_settings.html">update_user_incar_settings</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.powerups.update_user_kpoints_settings.html">update_user_kpoints_settings</a></li>
@@ -1332,7 +1354,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.powerups.use_auto_ispin.html">use_auto_ispin</a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.run.html">atomate2.vasp.run</a><input class="toctree-checkbox" id="toctree-checkbox-172" name="toctree-checkbox-172" role="switch" type="checkbox"/><label for="toctree-checkbox-172"><div class="visually-hidden">Toggle navigation of atomate2.vasp.run</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.run.html">atomate2.vasp.run</a><input class="toctree-checkbox" id="toctree-checkbox-174" name="toctree-checkbox-174" role="switch" type="checkbox"/><label for="toctree-checkbox-174"><div class="visually-hidden">Toggle navigation of atomate2.vasp.run</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.run.run_vasp.html">run_vasp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.run.should_stop_children.html">should_stop_children</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.run.DEFAULT_HANDLERS.html">DEFAULT_HANDLERS</a></li>
@@ -1340,32 +1362,32 @@
 <li class="toctree-l4"><a class="reference internal" href="../../reference/atomate2.vasp.run.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.html">atomate2.vasp.schemas</a><input class="toctree-checkbox" id="toctree-checkbox-173" name="toctree-checkbox-173" role="switch" type="checkbox"/><label for="toctree-checkbox-173"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.adsorption.html">atomate2.vasp.schemas.adsorption</a><input class="toctree-checkbox" id="toctree-checkbox-174" name="toctree-checkbox-174" role="switch" type="checkbox"/><label for="toctree-checkbox-174"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas.adsorption</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.html">atomate2.vasp.schemas</a><input class="toctree-checkbox" id="toctree-checkbox-175" name="toctree-checkbox-175" role="switch" type="checkbox"/><label for="toctree-checkbox-175"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.adsorption.html">atomate2.vasp.schemas.adsorption</a><input class="toctree-checkbox" id="toctree-checkbox-176" name="toctree-checkbox-176" role="switch" type="checkbox"/><label for="toctree-checkbox-176"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas.adsorption</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.adsorption.AdsorptionDocument.html">AdsorptionDocument</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.defect.html">atomate2.vasp.schemas.defect</a><input class="toctree-checkbox" id="toctree-checkbox-175" name="toctree-checkbox-175" role="switch" type="checkbox"/><label for="toctree-checkbox-175"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas.defect</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.defect.html">atomate2.vasp.schemas.defect</a><input class="toctree-checkbox" id="toctree-checkbox-177" name="toctree-checkbox-177" role="switch" type="checkbox"/><label for="toctree-checkbox-177"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas.defect</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.defect.FiniteDifferenceDocument.html">FiniteDifferenceDocument</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.elph.html">atomate2.vasp.schemas.elph</a><input class="toctree-checkbox" id="toctree-checkbox-176" name="toctree-checkbox-176" role="switch" type="checkbox"/><label for="toctree-checkbox-176"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas.elph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.elph.html">atomate2.vasp.schemas.elph</a><input class="toctree-checkbox" id="toctree-checkbox-178" name="toctree-checkbox-178" role="switch" type="checkbox"/><label for="toctree-checkbox-178"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas.elph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.elph.ElectronPhononRenormalisationDoc.html">ElectronPhononRenormalisationDoc</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.elph.RawElectronicData.html">RawElectronicData</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.ferroelectric.html">atomate2.vasp.schemas.ferroelectric</a><input class="toctree-checkbox" id="toctree-checkbox-177" name="toctree-checkbox-177" role="switch" type="checkbox"/><label for="toctree-checkbox-177"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas.ferroelectric</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.ferroelectric.html">atomate2.vasp.schemas.ferroelectric</a><input class="toctree-checkbox" id="toctree-checkbox-179" name="toctree-checkbox-179" role="switch" type="checkbox"/><label for="toctree-checkbox-179"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas.ferroelectric</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.ferroelectric.PolarizationDocument.html">PolarizationDocument</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.md.html">atomate2.vasp.schemas.md</a><input class="toctree-checkbox" id="toctree-checkbox-178" name="toctree-checkbox-178" role="switch" type="checkbox"/><label for="toctree-checkbox-178"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas.md</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.md.html">atomate2.vasp.schemas.md</a><input class="toctree-checkbox" id="toctree-checkbox-180" name="toctree-checkbox-180" role="switch" type="checkbox"/><label for="toctree-checkbox-180"><div class="visually-hidden">Toggle navigation of atomate2.vasp.schemas.md</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.schemas.md.MultiMDOutput.html">MultiMDOutput</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.html">atomate2.vasp.sets</a><input class="toctree-checkbox" id="toctree-checkbox-179" name="toctree-checkbox-179" role="switch" type="checkbox"/><label for="toctree-checkbox-179"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.base.html">atomate2.vasp.sets.base</a><input class="toctree-checkbox" id="toctree-checkbox-180" name="toctree-checkbox-180" role="switch" type="checkbox"/><label for="toctree-checkbox-180"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.base</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.html">atomate2.vasp.sets</a><input class="toctree-checkbox" id="toctree-checkbox-181" name="toctree-checkbox-181" role="switch" type="checkbox"/><label for="toctree-checkbox-181"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.base.html">atomate2.vasp.sets.base</a><input class="toctree-checkbox" id="toctree-checkbox-182" name="toctree-checkbox-182" role="switch" type="checkbox"/><label for="toctree-checkbox-182"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.base</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.base.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.base.VaspInputGenerator.html">VaspInputGenerator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.base.g.html">g</a></li>
@@ -1374,7 +1396,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.base.v.html">v</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.core.html">atomate2.vasp.sets.core</a><input class="toctree-checkbox" id="toctree-checkbox-181" name="toctree-checkbox-181" role="switch" type="checkbox"/><label for="toctree-checkbox-181"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.core</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.core.html">atomate2.vasp.sets.core</a><input class="toctree-checkbox" id="toctree-checkbox-183" name="toctree-checkbox-183" role="switch" type="checkbox"/><label for="toctree-checkbox-183"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.core</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.core.ElectronPhononSetGenerator.html">ElectronPhononSetGenerator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.core.HSEBSSetGenerator.html">HSEBSSetGenerator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.core.HSERelaxSetGenerator.html">HSERelaxSetGenerator</a></li>
@@ -1391,14 +1413,14 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.core.TightRelaxSetGenerator.html">TightRelaxSetGenerator</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.defect.html">atomate2.vasp.sets.defect</a><input class="toctree-checkbox" id="toctree-checkbox-182" name="toctree-checkbox-182" role="switch" type="checkbox"/><label for="toctree-checkbox-182"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.defect</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.defect.html">atomate2.vasp.sets.defect</a><input class="toctree-checkbox" id="toctree-checkbox-184" name="toctree-checkbox-184" role="switch" type="checkbox"/><label for="toctree-checkbox-184"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.defect</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.defect.ChargeStateRelaxSetGenerator.html">ChargeStateRelaxSetGenerator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.defect.ChargeStateStaticSetGenerator.html">ChargeStateStaticSetGenerator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.defect.HSEChargeStateRelaxSetGenerator.html">HSEChargeStateRelaxSetGenerator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.defect.HSEChargeStateStaticSetGenerator.html">HSEChargeStateStaticSetGenerator</a></li>
 </ul>
 </li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.eos.html">atomate2.vasp.sets.eos</a><input class="toctree-checkbox" id="toctree-checkbox-183" name="toctree-checkbox-183" role="switch" type="checkbox"/><label for="toctree-checkbox-183"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.eos.html">atomate2.vasp.sets.eos</a><input class="toctree-checkbox" id="toctree-checkbox-185" name="toctree-checkbox-185" role="switch" type="checkbox"/><label for="toctree-checkbox-185"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.eos</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.eos.EosSetGenerator.html">EosSetGenerator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.eos.MPGGAEosRelaxSetGenerator.html">MPGGAEosRelaxSetGenerator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.eos.MPGGAEosStaticSetGenerator.html">MPGGAEosStaticSetGenerator</a></li>
@@ -1408,19 +1430,6 @@
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.eos.MPMetaGGAEosRelaxSetGenerator.html">MPMetaGGAEosRelaxSetGenerator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.eos.MPMetaGGAEosStaticSetGenerator.html">MPMetaGGAEosStaticSetGenerator</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.eos.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
-</ul>
-</li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.matpes.html">atomate2.vasp.sets.matpes</a><input class="toctree-checkbox" id="toctree-checkbox-184" name="toctree-checkbox-184" role="switch" type="checkbox"/><label for="toctree-checkbox-184"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.matpes</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.matpes.MatPesGGAStaticSetGenerator.html">MatPesGGAStaticSetGenerator</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.matpes.MatPesMetaGGAStaticSetGenerator.html">MatPesMetaGGAStaticSetGenerator</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.matpes.TYPE_CHECKING.html">TYPE_CHECKING</a></li>
-</ul>
-</li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.mp.html">atomate2.vasp.sets.mp</a><input class="toctree-checkbox" id="toctree-checkbox-185" name="toctree-checkbox-185" role="switch" type="checkbox"/><label for="toctree-checkbox-185"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.mp</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.mp.MPGGARelaxSetGenerator.html">MPGGARelaxSetGenerator</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.mp.MPGGAStaticSetGenerator.html">MPGGAStaticSetGenerator</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.mp.MPMetaGGARelaxSetGenerator.html">MPMetaGGARelaxSetGenerator</a></li>
-<li class="toctree-l5"><a class="reference internal" href="../../reference/atomate2.vasp.sets.mp.MPMetaGGAStaticSetGenerator.html">MPMetaGGAStaticSetGenerator</a></li>
 </ul>
 </li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../../reference/atomate2.vasp.sets.mpmorph.html">atomate2.vasp.sets.mpmorph</a><input class="toctree-checkbox" id="toctree-checkbox-186" name="toctree-checkbox-186" role="switch" type="checkbox"/><label for="toctree-checkbox-186"><div class="visually-hidden">Toggle navigation of atomate2.vasp.sets.mpmorph</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -1678,7 +1687,23 @@ functional. Full structural relaxation is performed.</p>
 <section id="double-relax">
 <h3>Double Relax<a class="headerlink" href="#double-relax" title="Link to this heading">¶</a></h3>
 <p>Perform two back-to-back relaxations. This can often help avoid errors arising from
-Pulay stress.</p>
+<a class="reference external" href="https://www.vasp.at/wiki/index.php/Pulay_stress">Pulay stress</a>.</p>
+<p>In short: While the cell size, shape, symmetry, etc. can change during a relaxation, the <em>k</em> point grid does not change with it.
+Additionally, the number of plane waves is held constant during a relaxation.
+Both features lead to artificial (numerical) stress due to under-convergence of a relaxation with respect to the basis set.
+To avoid this, we perform a single relaxation, and input its final structure to another relaxation calculation.
+At the start of the second relaxation, the <em>k</em>-point mesh and plane waves are adjusted to reflect the new symmetry of the cell.</p>
+</section>
+<section id="materials-project-structure-optimization">
+<h3>Materials Project structure optimization<a class="headerlink" href="#materials-project-structure-optimization" title="Link to this heading">¶</a></h3>
+<p>The Materials Project hosts a large database of, among other physical properties, optimized structures and their associated total energy, formation enthalpy, and basic electronic structure properties.
+To generate this data, the Materials Project uses a simple double-relaxation followed by a final static calculation.
+While in principle, if the second relaxation calculation is converged, a final static calculation would not be needed.
+However, the second relaxation may have residual Pulay stress, and VASP averages some electronic structure data (<a class="reference external" href="https://www.vasp.at/wiki/index.php/DOSCAR">like the density of states</a>) during a relaxation.
+Thus we need to perform a final single-point (static) calculation, usually using the corrected tetrahedron method (<code class="docutils literal notranslate"><span class="pre">ISMEAR=-5</span></code>) to ensure accurate electronic structure properties.</p>
+<p>The workflows used to produce PBE GGA or GGA+<em>U</em> and r<sup>2</sup>SCAN thermodynamic data are, respectively, <code class="docutils literal notranslate"><span class="pre">MPGGADoubleRelaxStaticMaker</span></code> and <code class="docutils literal notranslate"><span class="pre">MPMetaGGADoubleRelaxStaticMaker</span></code> in <code class="docutils literal notranslate"><span class="pre">atomate2.vasp.flows.mp</span></code>.
+Moving forward, the Materials Project prefers r<sup>2</sup>SCAN calculations, but maintains its older set of GGA-level data which currently has wider coverage.
+For documentation about the calculation parameters used, see the <a class="reference external" href="https://docs.materialsproject.org/methodology/materials-methodology/calculation-details">Materials Project documentation.</a></p>
 </section>
 <section id="band-structure">
 <h3>Band Structure<a class="headerlink" href="#band-structure" title="Link to this heading">¶</a></h3>
@@ -1829,9 +1854,24 @@ It is recommended to check the convergence parameters here and
 adjust them if necessary. The default might not be strict enough
 for your specific case.</p>
 </div>
+<p>You can use the following code to start the default VASP version of the workflow:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.flows.phonons</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhononMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
+
+<span class="n">structure</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span>
+    <span class="n">lattice</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
+    <span class="n">species</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Mg&quot;</span><span class="p">,</span> <span class="s2">&quot;O&quot;</span><span class="p">],</span>
+    <span class="n">coords</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]],</span>
+<span class="p">)</span>
+
+<span class="n">phonon_flow</span> <span class="o">=</span> <span class="n">PhononMaker</span><span class="p">(</span><span class="n">min_length</span><span class="o">=</span><span class="mf">15.0</span><span class="p">,</span> <span class="n">store_force_constants</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+    <span class="n">structure</span><span class="o">=</span><span class="n">structure</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="gruneisen-parameter-workflow">
-<h3>Gruneisen parameter workflow<a class="headerlink" href="#gruneisen-parameter-workflow" title="Link to this heading">¶</a></h3>
+<h3>Grüneisen parameter workflow<a class="headerlink" href="#gruneisen-parameter-workflow" title="Link to this heading">¶</a></h3>
 <p>Calculates mode-dependent Grüneisen parameters with the help of Phonopy.</p>
 <p>Initially, a tight structural relaxation is performed to obtain a structure without
 forces on the atoms. The optimized structure (ground state) is further expanded and
@@ -1839,8 +1879,24 @@ shrunk by 1 % (default) of its volume.
 Subsequently, supercells with one displaced atom are generated for all the three structures
 (ground state, expanded and shrunk volume) and accurate forces are computed for these structures.
 With the help of phonopy, these forces are then converted into a dynamical matrix.
-The dynamical matrices of three structures are then used as an input to the phonopy Grueneisen api
-to compute mode-dependent Grueneisen parameters.</p>
+The dynamical matrices of three structures are then used as an input to the phonopy Grüneisen api
+to compute mode-dependent Grüneisen parameters.</p>
+<p>A Grüneisen workflow for VASP can be started as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.flows.gruneisen</span><span class="w"> </span><span class="kn">import</span> <span class="n">GruneisenMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
+
+
+<span class="n">structure</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span>
+    <span class="n">lattice</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
+    <span class="n">species</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Mg&quot;</span><span class="p">,</span> <span class="s2">&quot;O&quot;</span><span class="p">],</span>
+    <span class="n">coords</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]],</span>
+<span class="p">)</span>
+
+<span class="n">gruneisen_flow</span> <span class="o">=</span> <span class="n">GruneisenMaker</span><span class="p">(</span>
+    <span class="n">kpath_scheme</span><span class="o">=</span><span class="s2">&quot;seekpath&quot;</span><span class="p">,</span> <span class="n">vol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">mesh</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="quasi-harmonic-workflow">
 <h3>Quasi-harmonic Workflow<a class="headerlink" href="#quasi-harmonic-workflow" title="Link to this heading">¶</a></h3>
@@ -1848,13 +1904,50 @@ to compute mode-dependent Grueneisen parameters.</p>
 First, a tight relaxation is performed. Subsequently, several optimizations at different constant
 volumes are performed. At each of the volumes, an additional phonon run is performed as well.
 Afterwards, equation of state fits are performed with phonopy.</p>
+<p>The following script allows you to start the default workflow for VASP with some adjusted parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.flows.qha</span><span class="w"> </span><span class="kn">import</span> <span class="n">QhaMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
+
+
+<span class="n">structure</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span>
+    <span class="n">lattice</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
+    <span class="n">species</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Mg&quot;</span><span class="p">,</span> <span class="s2">&quot;O&quot;</span><span class="p">],</span>
+    <span class="n">coords</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]],</span>
+<span class="p">)</span>
+
+<span class="n">qha_flow</span> <span class="o">=</span> <span class="n">QhaMaker</span><span class="p">(</span>
+    <span class="n">linear_strain</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">),</span>
+    <span class="n">number_of_frames</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="equation-of-state-workflow">
 <h3>Equation of State Workflow<a class="headerlink" href="#equation-of-state-workflow" title="Link to this heading">¶</a></h3>
-<p>An equation of state (EOS) workflow is implemented. First, a tight relaxation is performed. Subsequently, several optimizations at different constant
+<p>An equation of state (EOS) workflow has the following structure: First, a tight relaxation is performed.
+Subsequently, several optimizations at different constant
 volumes are performed. Additional static calculations might be performed afterwards to arrive at more
 accurate energies. Then, an EOS fit is performed with pymatgen.</p>
-<p>The output of the workflow is, by default, a dictionary containing the energy and volume data generated with DFT, in addition to fitted equation of state parameters for all models currently available in pymatgen (Murnaghan, Birch-Murnaghan, Poirier-Tarantola, and Vinet/UBER).</p>
+<p>You can start the workflow as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.flows.eos</span><span class="w"> </span><span class="kn">import</span> <span class="n">EosMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
+
+
+<span class="n">structure</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span>
+    <span class="n">lattice</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
+    <span class="n">species</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Mg&quot;</span><span class="p">,</span> <span class="s2">&quot;O&quot;</span><span class="p">],</span>
+    <span class="n">coords</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]],</span>
+<span class="p">)</span>
+
+<span class="n">eos_flow</span> <span class="o">=</span> <span class="n">EosMaker</span><span class="p">(</span>
+    <span class="n">linear_strain</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">),</span>
+    <span class="n">number_of_frames</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output of the workflow is a dictionary by default containing the energy and volume data generated with DFT,
+in addition to fitted equation of state parameters for all models currently available in pymatgen
+(Murnaghan, Birch-Murnaghan, Poirier-Tarantola, and Vinet/UBER).</p>
 <section id="materials-project-compliant-workflows">
 <h4>Materials Project-compliant workflows<a class="headerlink" href="#materials-project-compliant-workflows" title="Link to this heading">¶</a></h4>
 <p>If the user wishes to reproduce the EOS data currently in the Materials Project, they should use the atomate 1-compatible <code class="docutils literal notranslate"><span class="pre">MPLegacy</span></code>-prefixed flows (and jobs and input sets). For performing updated PBE-GGA EOS flows with Materials Project-compliant parameters, the user should use the <code class="docutils literal notranslate"><span class="pre">MPGGA</span></code>-prefixed classes. Lastly, the <code class="docutils literal notranslate"><span class="pre">MPMetaGGA</span></code>-prefixed classes allow the user to perform Materials Project-compliant r<sup>2</sup>SCAN EOS workflows.</p>
@@ -1928,8 +2021,75 @@ shown below.</p>
 <span class="n">run_locally</span><span class="p">(</span><span class="n">lobster</span><span class="p">,</span> <span class="n">create_folders</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="n">SETTINGS</span><span class="o">.</span><span class="n">JOB_STORE</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>It is, however,  computationally very beneficial to define two different types of job scripts for the VASP and Lobster runs, as VASP and Lobster runs are parallelized differently (MPI vs. OpenMP).
-<a class="reference external" href="https://github.com/materialsproject/fireworks">FireWorks</a> allows one to run the VASP and Lobster jobs with different job scripts. Please check out the <a class="reference external" href="https://materialsproject.github.io/jobflow/tutorials/8-fireworks.html#setting-the-manager-configs">jobflow documentation on FireWorks</a> for more information.</p>
+<p>There are currently three different ways available to run the workflow efficiently, as VASP and LOBSTER rely on a different parallelization (MPI vs. OpenMP).
+One can use a job script (with some restrictions), or <a class="reference external" href="https://matgenix.github.io/jobflow-remote/">Jobflow-remote</a> / <a class="reference external" href="https://github.com/materialsproject/fireworks">Fireworks</a> for high-throughput runs.</p>
+<section id="running-the-lobster-workflow-without-database-and-with-one-job-script-only">
+<h4>Running the LOBSTER workflow without database and with one job script only<a class="headerlink" href="#running-the-lobster-workflow-without-database-and-with-one-job-script-only" title="Link to this heading">¶</a></h4>
+<p>It is possible to run the VASP-LOBSTER workflow efficiently with a minimal setup.
+In this case, you will run the VASP calculations on the same node as the LOBSTER calculations.
+In between, the different computations you will switch from MPI to OpenMP parallelization.</p>
+<p>For example, for a node with 48 cores, you could use an adapted version of the following SLURM script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH -J vasplobsterjob</span>
+<span class="c1">#SBATCH -o ./%x.%j.out</span>
+<span class="c1">#SBATCH -e ./%x.%j.err</span>
+<span class="c1">#SBATCH -D ./</span>
+<span class="c1">#SBATCH --mail-type=END</span>
+<span class="c1">#SBATCH --mail-user=you@you.de</span>
+<span class="c1">#SBATCH --time=24:00:00</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#This needs to be adapted if you run with different cores</span>
+<span class="c1">#SBATCH --ntasks=48</span>
+
+<span class="c1"># ensure you load the modules to run VASP, e.g., module load vasp</span>
+module<span class="w"> </span>load<span class="w"> </span>my_vasp_module
+<span class="c1"># please activate the required conda environment</span>
+conda<span class="w"> </span>activate<span class="w"> </span>my_environment
+<span class="nb">cd</span><span class="w"> </span>my_folder
+<span class="c1"># the following script needs to contain the workflow</span>
+python<span class="w"> </span>xyz.py
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">LOBSTER_CMD</span></code> now needs an additional export of the number of threads.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">VASP_CMD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;&lt;VASP_CMD&gt;&gt;</span>
+<span class="nt">LOBSTER_CMD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OMP_NUM_THREADS=48 &lt;&lt;LOBSTER_CMD&gt;&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="jobflow-remote">
+<h4>Jobflow-remote<a class="headerlink" href="#jobflow-remote" title="Link to this heading">¶</a></h4>
+<p>Please refer first to the general documentation of jobflow-remote: <a class="reference external" href="https://matgenix.github.io/jobflow-remote/">https://matgenix.github.io/jobflow-remote/</a>.</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.flows.lobster</span><span class="w"> </span><span class="kn">import</span> <span class="n">VaspLobsterMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.core.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jobflow_remote</span><span class="w"> </span><span class="kn">import</span> <span class="n">submit_flow</span><span class="p">,</span> <span class="n">set_run_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.powerups</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_user_incar_settings</span>
+
+<span class="n">structure</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">(</span>
+    <span class="n">lattice</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.13</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
+    <span class="n">species</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Mg&quot;</span><span class="p">,</span> <span class="s2">&quot;O&quot;</span><span class="p">],</span>
+    <span class="n">coords</span><span class="o">=</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]],</span>
+<span class="p">)</span>
+
+<span class="n">lobster</span> <span class="o">=</span> <span class="n">VaspLobsterMaker</span><span class="p">()</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">structure</span><span class="p">)</span>
+
+<span class="n">resources</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;partition&quot;</span><span class="p">:</span> <span class="s2">&quot;micro&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;00:55:00&quot;</span><span class="p">,</span> <span class="s2">&quot;ntasks&quot;</span><span class="p">:</span> <span class="mi">144</span><span class="p">}</span>
+
+<span class="n">resources_lobster</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;partition&quot;</span><span class="p">:</span> <span class="s2">&quot;micro&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;02:55:00&quot;</span><span class="p">,</span> <span class="s2">&quot;ntasks&quot;</span><span class="p">:</span> <span class="mi">48</span><span class="p">}</span>
+<span class="n">lobster</span> <span class="o">=</span> <span class="n">set_run_config</span><span class="p">(</span><span class="n">lobster</span><span class="p">,</span> <span class="n">name_filter</span><span class="o">=</span><span class="s2">&quot;lobster&quot;</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="n">resources_lobster</span><span class="p">)</span>
+
+<span class="n">lobster</span> <span class="o">=</span> <span class="n">update_user_incar_settings</span><span class="p">(</span><span class="n">lobster</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;NPAR&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
+<span class="n">submit_flow</span><span class="p">(</span><span class="n">lobster</span><span class="p">,</span> <span class="n">worker</span><span class="o">=</span><span class="s2">&quot;my_worker&quot;</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="n">resources</span><span class="p">,</span> <span class="n">project</span><span class="o">=</span><span class="s2">&quot;my_project&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">LOBSTER_CMD</span></code> also needs an export of the threads.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">VASP_CMD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;&lt;VASP_CMD&gt;&gt;</span>
+<span class="nt">LOBSTER_CMD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OMP_NUM_THREADS=48 &lt;&lt;LOBSTER_CMD&gt;&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="fireworks">
+<h4>Fireworks<a class="headerlink" href="#fireworks" title="Link to this heading">¶</a></h4>
+<p>Please first refer to the general documentation on running atomate2 workflows with fireworks: <a class="reference external" href="https://materialsproject.github.io/atomate2/user/fireworks.html">https://materialsproject.github.io/atomate2/user/fireworks.html</a></p>
 <p>Specifically, you might want to change the <code class="docutils literal notranslate"><span class="pre">_fworker</span></code> for the LOBSTER runs and define a separate <code class="docutils literal notranslate"><span class="pre">lobster</span></code> worker within FireWorks:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">LaunchPad</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jobflow.managers.fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">flow_to_workflow</span>
@@ -1962,6 +2122,14 @@ shown below.</p>
 <span class="n">lpad</span><span class="o">.</span><span class="n">add_wf</span><span class="p">(</span><span class="n">wf</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The <code class="docutils literal notranslate"><span class="pre">LOBSTER_CMD</span></code> can now be adapted to not include the number of threads:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">VASP_CMD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;&lt;VASP_CMD&gt;&gt;</span>
+<span class="nt">LOBSTER_CMD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;&lt;LOBSTER_CMD&gt;&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="analyzing-outputs">
+<h4>Analyzing outputs<a class="headerlink" href="#analyzing-outputs" title="Link to this heading">¶</a></h4>
 <p>Outputs from the automatic analysis with LobsterPy can easily be extracted from the database and also plotted:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">jobflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">SETTINGS</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.electronic_structure.cohp</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cohp</span>
@@ -1996,38 +2164,6 @@ shown below.</p>
     <span class="n">plotter</span><span class="o">.</span><span class="n">save_plot</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plots_cation_anion_bonds</span><span class="si">{</span><span class="n">number</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<section id="running-the-lobster-workflow-without-database-and-with-one-job-script-only">
-<h4>Running the LOBSTER workflow without database and with one job script only<a class="headerlink" href="#running-the-lobster-workflow-without-database-and-with-one-job-script-only" title="Link to this heading">¶</a></h4>
-<p>It is also possible to run the VASP-LOBSTER workflow with a minimal setup.
-In this case, you will run the VASP calculations on the same node as the LOBSTER calculations.
-In between, the different computations you will switch from MPI to OpenMP parallelization.</p>
-<p>For example, for a node with 48 cores, you could use an adapted version of the following SLURM script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-<span class="c1">#SBATCH -J vasplobsterjob</span>
-<span class="c1">#SBATCH -o ./%x.%j.out</span>
-<span class="c1">#SBATCH -e ./%x.%j.err</span>
-<span class="c1">#SBATCH -D ./</span>
-<span class="c1">#SBATCH --mail-type=END</span>
-<span class="c1">#SBATCH --mail-user=you@you.de</span>
-<span class="c1">#SBATCH --time=24:00:00</span>
-<span class="c1">#SBATCH --nodes=1</span>
-<span class="c1">#This needs to be adapted if you run with different cores</span>
-<span class="c1">#SBATCH --ntasks=48</span>
-
-<span class="c1"># ensure you load the modules to run VASP, e.g., module load vasp</span>
-module<span class="w"> </span>load<span class="w"> </span>my_vasp_module
-<span class="c1"># please activate the required conda environment</span>
-conda<span class="w"> </span>activate<span class="w"> </span>my_environment
-<span class="nb">cd</span><span class="w"> </span>my_folder
-<span class="c1"># the following script needs to contain the workflow</span>
-python<span class="w"> </span>xyz.py
-</pre></div>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">LOBSTER_CMD</span></code> now needs an additional export of the number of threads.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">VASP_CMD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;&lt;VASP_CMD&gt;&gt;</span>
-<span class="nt">LOBSTER_CMD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OMP_NUM_THREADS=48 &lt;&lt;LOBSTER_CMD&gt;&gt;</span>
-</pre></div>
-</div>
 </section>
 </section>
 </section>
@@ -2054,6 +2190,29 @@ option is to specify an alternative input set generator:</p>
 the <code class="docutils literal notranslate"><span class="pre">input_set_generator</span></code> attribute maker will update the input set that gets
 written:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">static_job</span><span class="o">.</span><span class="n">maker</span><span class="o">.</span><span class="n">input_set_generator</span><span class="o">.</span><span class="n">user_incar_settings</span><span class="p">[</span><span class="s2">&quot;LOPTICS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>To update <em>k</em>-points, use the <code class="docutils literal notranslate"><span class="pre">user_kpoints_settings</span></code> keyword argument of an input set generator.
+You can supply either a <code class="docutils literal notranslate"><span class="pre">pymatgen.io.vasp.inputs.Kpoints</span></code> object, or a <code class="docutils literal notranslate"><span class="pre">dict</span></code> containing certain <a class="reference external" href="https://github.com/materialsproject/pymatgen/blob/b54ac3e65e46b876de40402e8da59f551fb7d005/src/pymatgen/io/vasp/sets.py#L812">keys</a>.
+We generally recommend the former approach unless the user is familiar with the specific style of <em>k</em>-point updates used by <code class="docutils literal notranslate"><span class="pre">pymatgen</span></code>.
+For example, to use just the <span class="math notranslate nohighlight">\(\Gamma\)</span> point:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.io.vasp.inputs</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kpoints</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.sets.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticSetGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticMaker</span>
+
+<span class="n">custom_gamma_only_set</span> <span class="o">=</span> <span class="n">StaticSetGenerator</span><span class="p">(</span><span class="n">user_kpoints_settings</span><span class="o">=</span><span class="n">Kpoints</span><span class="p">())</span>
+<span class="n">gamma_only_static_maker</span> <span class="o">=</span> <span class="n">StaticMaker</span><span class="p">(</span><span class="n">input_set_generator</span><span class="o">=</span><span class="n">custom_gamma_only_set</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For those who are more familiar with manual <em>k</em>-point generation, you can use a VASP-style KPOINTS file or string to set the <em>k</em>-points as well:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="n">kpoints</span> <span class="o">=</span> <span class="n">Kpoints</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Uniform density Monkhorst-Pack mesh</span>
+<span class="sd">0</span>
+<span class="sd">Monkhorst-pack</span>
+<span class="sd">5 5 5</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="p">)</span>
+<span class="n">custom_static_set</span> <span class="o">=</span> <span class="n">StaticSetGenerator</span><span class="p">(</span><span class="n">user_kpoints_settings</span><span class="o">=</span><span class="n">kpoints</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Finally, sometimes you have a workflow containing many VASP jobs. In this case it can be
@@ -2100,8 +2259,7 @@ modification of several additional VASP settings, such as the k-points
 (<code class="docutils literal notranslate"><span class="pre">user_kpoints_settings</span></code>) and choice of pseudopotentials (<code class="docutils literal notranslate"><span class="pre">user_potcar_settings</span></code>).</p>
 <p>If a greater degree of flexibility is needed, the user can define a default set of input
 arguments (<code class="docutils literal notranslate"><span class="pre">config_dict</span></code>) that can be provided to the <a class="reference internal" href="../../reference/atomate2.vasp.sets.base.VaspInputGenerator.html#atomate2.vasp.sets.base.VaspInputGenerator" title="atomate2.vasp.sets.base.VaspInputGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VaspInputGenerator</span></code></a>.
-By default, the <a class="reference internal" href="../../reference/atomate2.vasp.sets.base.VaspInputGenerator.html#atomate2.vasp.sets.base.VaspInputGenerator" title="atomate2.vasp.sets.base.VaspInputGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VaspInputGenerator</span></code></a> uses a base set of VASP input parameters
-from <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseVaspSet.yaml</span></code>, which each <code class="docutils literal notranslate"><span class="pre">Maker</span></code> is built upon. If desired, the user can
+By default, the <a class="reference internal" href="../../reference/atomate2.vasp.sets.base.VaspInputGenerator.html#atomate2.vasp.sets.base.VaspInputGenerator" title="atomate2.vasp.sets.base.VaspInputGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VaspInputGenerator</span></code></a> uses a base set of VASP input parameters (<code class="docutils literal notranslate"><span class="pre">atomate2.vasp.sets.base._BASE_VASP_SET</span></code>), which each <code class="docutils literal notranslate"><span class="pre">Maker</span></code> is built upon. If desired, the user can
 define a custom <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file that contains a different base set of VASP settings to use.
 An example of how this can be done is shown below for a representative static
 calculation.</p>
@@ -2246,6 +2404,7 @@ calculation and a static calculation.</p>
 <li><a class="reference internal" href="#hse06-relax">HSE06 Relax</a></li>
 <li><a class="reference internal" href="#hse06-tight-relax">HSE06 Tight Relax</a></li>
 <li><a class="reference internal" href="#double-relax">Double Relax</a></li>
+<li><a class="reference internal" href="#materials-project-structure-optimization">Materials Project structure optimization</a></li>
 <li><a class="reference internal" href="#band-structure">Band Structure</a></li>
 <li><a class="reference internal" href="#uniform-band-structure">Uniform Band Structure</a></li>
 <li><a class="reference internal" href="#line-mode-band-structure">Line-Mode Band Structure</a></li>
@@ -2257,7 +2416,7 @@ calculation and a static calculation.</p>
 <li><a class="reference internal" href="#optics">Optics</a></li>
 <li><a class="reference internal" href="#hse06-optics">HSE06 Optics</a></li>
 <li><a class="reference internal" href="#phonons">Phonons</a></li>
-<li><a class="reference internal" href="#gruneisen-parameter-workflow">Gruneisen parameter workflow</a></li>
+<li><a class="reference internal" href="#gruneisen-parameter-workflow">Grüneisen parameter workflow</a></li>
 <li><a class="reference internal" href="#quasi-harmonic-workflow">Quasi-harmonic Workflow</a></li>
 <li><a class="reference internal" href="#equation-of-state-workflow">Equation of State Workflow</a><ul>
 <li><a class="reference internal" href="#materials-project-compliant-workflows">Materials Project-compliant workflows</a></li>
@@ -2266,6 +2425,9 @@ calculation and a static calculation.</p>
 </li>
 <li><a class="reference internal" href="#lobster">LOBSTER</a><ul>
 <li><a class="reference internal" href="#running-the-lobster-workflow-without-database-and-with-one-job-script-only">Running the LOBSTER workflow without database and with one job script only</a></li>
+<li><a class="reference internal" href="#jobflow-remote">Jobflow-remote</a></li>
+<li><a class="reference internal" href="#fireworks">Fireworks</a></li>
+<li><a class="reference internal" href="#analyzing-outputs">Analyzing outputs</a></li>
 </ul>
 </li>
 </ul>
@@ -2283,7 +2445,7 @@ calculation and a static calculation.</p>
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=2fd7553c"></script>
+</div><script src="../../_static/documentation_options.js?v=056c92e6"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>

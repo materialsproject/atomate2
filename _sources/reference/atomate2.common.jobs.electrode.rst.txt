@@ -13,7 +13,6 @@ atomate2.common.jobs.electrode
       :toctree:
       :nosignatures:
    
-      get_charge_density_job
       get_computed_entries
       get_inserted_structures
       get_insertion_electrode_doc
@@ -31,7 +30,6 @@ atomate2.common.jobs.electrode
    
    
       
-   
    
    
    

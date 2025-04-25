@@ -15,6 +15,9 @@ atomate2.forcefields.flows.phonons
       
    
    
+      
+   
+   
    
    
    
@@ -29,5 +32,6 @@ atomate2.forcefields.flows.phonons
       :nosignatures:
    
       PhononMaker
+      TYPE_CHECKING
 
 

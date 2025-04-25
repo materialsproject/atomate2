@@ -1,6 +1,0 @@
-copy\_vasp\_outputs
-===================
-
-.. currentmodule:: atomate2.utils.testing.vasp
-
-.. autofunction:: copy_vasp_outputs

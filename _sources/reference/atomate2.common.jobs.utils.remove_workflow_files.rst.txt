@@ -1,0 +1,6 @@
+remove\_workflow\_files
+=======================
+
+.. currentmodule:: atomate2.common.jobs.utils
+
+.. autofunction:: remove_workflow_files

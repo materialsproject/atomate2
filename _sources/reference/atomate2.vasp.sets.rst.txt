@@ -31,6 +31,4 @@ atomate2.vasp.sets
    core
    defect
    eos
-   matpes
-   mp
    mpmorph

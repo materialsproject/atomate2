@@ -1,0 +1,6 @@
+zpath
+=====
+
+.. currentmodule:: atomate2.utils.testing.aims
+
+.. autofunction:: zpath

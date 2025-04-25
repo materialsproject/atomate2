@@ -1,0 +1,6 @@
+pmg\_defects\_installed
+=======================
+
+.. currentmodule:: atomate2.utils.testing.vasp
+
+.. autodata:: pmg_defects_installed

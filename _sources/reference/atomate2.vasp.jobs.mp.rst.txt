@@ -30,6 +30,15 @@ atomate2.vasp.jobs.mp
       
    
    
+      
+   
+   
+      
+   
+   
+      
+   
+   
    
    
    
@@ -43,6 +52,9 @@ atomate2.vasp.jobs.mp
       :toctree:
       :nosignatures:
    
+      MP24PreRelaxMaker
+      MP24RelaxMaker
+      MP24StaticMaker
       MPGGARelaxMaker
       MPGGAStaticMaker
       MPMetaGGARelaxMaker

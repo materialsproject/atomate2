@@ -1,8 +1,0 @@
-MPGGAStaticSetGenerator
-=======================
-
-.. currentmodule:: atomate2.vasp.sets.mp
-
-.. autoclass:: MPGGAStaticSetGenerator
-   :show-inheritance:
-   :members:

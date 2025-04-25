@@ -13,7 +13,6 @@ atomate2.vasp.jobs.lobster
       :toctree:
       :nosignatures:
    
-      delete_lobster_wavecar
       get_basis_infos
       get_lobster_jobs
       update_user_incar_settings_maker
@@ -27,7 +26,6 @@ atomate2.vasp.jobs.lobster
    
    
       
-   
    
    
    

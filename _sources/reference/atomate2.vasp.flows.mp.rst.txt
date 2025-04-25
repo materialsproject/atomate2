@@ -30,6 +30,12 @@ atomate2.vasp.flows.mp
       
    
    
+      
+   
+   
+      
+   
+   
    
    
    
@@ -43,6 +49,8 @@ atomate2.vasp.flows.mp
       :toctree:
       :nosignatures:
    
+      MP24DoubleRelaxMaker
+      MP24DoubleRelaxStaticMaker
       MPGGADoubleRelaxMaker
       MPGGADoubleRelaxStaticMaker
       MPMetaGGADoubleRelaxMaker

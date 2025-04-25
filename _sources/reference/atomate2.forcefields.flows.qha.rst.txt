@@ -15,6 +15,12 @@ atomate2.forcefields.flows.qha
       
    
    
+      
+   
+   
+      
+   
+   
    
    
    
@@ -29,5 +35,7 @@ atomate2.forcefields.flows.qha
       :nosignatures:
    
       CHGNetQhaMaker
+      ForceFieldQhaMaker
+      TYPE_CHECKING
 
 

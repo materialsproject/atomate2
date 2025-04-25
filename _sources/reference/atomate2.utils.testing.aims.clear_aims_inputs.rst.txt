@@ -1,0 +1,6 @@
+clear\_aims\_inputs
+===================
+
+.. currentmodule:: atomate2.utils.testing.aims
+
+.. autofunction:: clear_aims_inputs

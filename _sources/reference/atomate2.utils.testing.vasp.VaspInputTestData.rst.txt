@@ -1,0 +1,6 @@
+VaspInputTestData
+=================
+
+.. currentmodule:: atomate2.utils.testing.vasp
+
+.. autopydantic_model:: VaspInputTestData

@@ -1,0 +1,6 @@
+fake\_run\_aims
+===============
+
+.. currentmodule:: atomate2.utils.testing.aims
+
+.. autofunction:: fake_run_aims

@@ -1,0 +1,8 @@
+ForceFieldQhaMaker
+==================
+
+.. currentmodule:: atomate2.forcefields.flows.qha
+
+.. autoclass:: ForceFieldQhaMaker
+   :show-inheritance:
+   :members:

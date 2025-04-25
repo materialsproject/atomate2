@@ -27,4 +27,7 @@ atomate2.utils.testing
    :toctree:
    :recursive:
 
+   aims
+   common
+   lobster
    vasp

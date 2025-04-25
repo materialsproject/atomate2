@@ -1,8 +1,0 @@
-MPMetaGGARelaxSetGenerator
-==========================
-
-.. currentmodule:: atomate2.vasp.sets.mp
-
-.. autoclass:: MPMetaGGARelaxSetGenerator
-   :show-inheritance:
-   :members:

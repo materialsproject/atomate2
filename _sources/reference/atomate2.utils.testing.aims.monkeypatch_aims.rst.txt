@@ -1,0 +1,6 @@
+monkeypatch\_aims
+=================
+
+.. currentmodule:: atomate2.utils.testing.aims
+
+.. autofunction:: monkeypatch_aims

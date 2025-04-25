@@ -1,6 +1,0 @@
-check\_potcar
-=============
-
-.. currentmodule:: atomate2.utils.testing.vasp
-
-.. autofunction:: check_potcar
