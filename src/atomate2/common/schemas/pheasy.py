@@ -499,7 +499,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         # not able to find the FORCE_CONSTANTS file. This is because the file is
         # somehow getting generated in some temp directory. Can you fix the bug?
         cwd = Path.cwd()
-        fc_file = cwd / "FORCE_CONSTANT"
+        fc_file = cwd / "FORCE_CONSTANTS"
 
         if cal_anhar_fcs:
             # subprocess.call("rm -f disp_matrix.pkl force_matrix.pkl", shell=True)
