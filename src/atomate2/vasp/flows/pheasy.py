@@ -122,11 +122,15 @@ class PhononMaker(BasePhononMaker):
     num_displaced_supercells: int = 0
     num_disp_anhar: int = 0
     fcs_cutoff_radius: list = field(default_factory=lambda: [-1, 12, 10])
-    min_length: float | None = 12.0
+    min_length: float | None = 8.0
+    max_atoms: float | None = 200
+    force_90_degrees: bool = True
+    force_diagonal: bool = True
+    allow_orthorhombic: bool = False
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
-    create_thermal_displacements: bool = True
+    create_thermal_displacements: bool = False
     generate_frequencies_eigenvectors_kwargs: dict = field(default_factory=dict)
     kpath_scheme: str = "seekpath"
     store_force_constants: bool = True
