@@ -445,6 +445,9 @@ def run_phonon_displacements(
                 phonon_job = phonon_maker.make(displacement)
             phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
 
+            # Explicitly set preserve_fworker here!
+            phonon_job.update_config({"manager_config": {"_preserve_fworker": True}})
+
             # we will add some meta data
             info = {
                 "displacement_number": idx,
