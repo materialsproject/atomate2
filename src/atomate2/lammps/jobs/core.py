@@ -107,4 +107,5 @@ class CustomLammpsMaker(BaseLammpsMaker):
             include_defaults=self.include_defaults,
             settings=self.settings,
             validate_params=False,
+            force_field=self.force_field,
         )
