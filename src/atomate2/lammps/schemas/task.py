@@ -1,3 +1,5 @@
+"""Task Document for LAMMPS calculations."""
+
 import os
 import warnings
 from glob import glob
@@ -18,6 +20,8 @@ from atomate2.utils.datetime import datetime_str
 
 
 class LammpsTaskDocument(StructureMetadata):
+    """Task Document for LAMMPS calculations."""
+
     dir_name: str = Field(None, description="Directory where the task was run")
 
     task_label: str = Field(None, description="Label for the task")
@@ -59,6 +63,12 @@ class LammpsTaskDocument(StructureMetadata):
 
     inputs: dict = Field(None, description="Input files for the task")
 
+    additional_outputs: Optional[dict] = Field(
+        None,
+        description="Additional outputs written out by the lammps run that \
+            do not end with .dump or .log",
+    )
+
     @classmethod
     def from_directory(
         cls: type["LammpsTaskDocument"],
@@ -67,20 +77,27 @@ class LammpsTaskDocument(StructureMetadata):
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         trajectory_format: Literal["pmg", "ase"] = "pmg",
         output_file_pattern: str | None = None,
+        parse_additional_outputs: Optional[list] = None,
     ) -> "LammpsTaskDocument":
         """
-        Create a LammpsTaskDocument from a directory containing the output of a LAMMPS run.
+        Create a LammpsTaskDocument from a directory where LAMMPS was run.
 
         dir_name: str | Path
             Directory where the task was run
         task_label: str
             Label for the task
         store_trajectory: Literal["no", "partial", "full"]
-            Whether to store the trajectory output from the lammps run. Defualt is 'partial', which stores only the positions of the atoms
+            Whether to store the trajectory output from the lammps run.
+            Default is 'no', which does not parse and store any trajectory data.
         trajectory_format: Literal["pmg", "ase"]
             Format of the trajectory output. Default is 'pmg'
         output_file_pattern: str
             Pattern for the output file, written to disk in dir_name. Default is None.
+        additional_outputs: Optional[list]
+            Additional outputs to be stored in the task document that
+            do not end with .dump or .log. Default is None. Provide a list of filenames
+            that need to be parsed (as raw text) and stored in the task document
+            under extra_outputs.
         """
         log_file = os.path.join(dir_name, "log.lammps")
         try:
@@ -89,10 +106,9 @@ class LammpsTaskDocument(StructureMetadata):
             thermo_log = parse_lammps_log(log_file)
             state = TaskState.ERROR if "ERROR" in raw_log else TaskState.SUCCESS
         except ValueError:
-            Warning(f"Error parsing log file for {dir_name}, incomplete job")
-            raw_log = ""
-            thermo_log = []
-            state = TaskState.ERROR
+            raise ValueError(
+                f"Error parsing log file for {dir_name}, incomplete job!"
+            ) from None
 
         if state == TaskState.ERROR:
             return LammpsTaskDocument(
@@ -112,7 +128,10 @@ class LammpsTaskDocument(StructureMetadata):
 
             if store_trajectory != StoreTrajectoryOption.NO:
                 warnings.warn(
-                    "Trajectory data might be large, only store if absolutely necessary. Consider manually parsing the dump files instead."
+                    "Trajectory data might be large, only store if \
+                        absolutely necessary. Consider manually \
+                            parsing the dump files instead.",
+                    stacklevel=1,
                 )
                 if output_file_pattern is None:
                     output_file_pattern = "trajectory"
@@ -134,7 +153,9 @@ class LammpsTaskDocument(StructureMetadata):
                 .get_structure(-1)
             )
         else:
-            warnings.warn("No dump files found, no trajectory data stored")
+            warnings.warn(
+                "No dump files found, no trajectory data stored", stacklevel=1
+            )
             final_structure = None
 
         try:
@@ -142,7 +163,7 @@ class LammpsTaskDocument(StructureMetadata):
                 os.path.join(dir_name, "in.lammps"), ignore_comments=True
             )
         except FileNotFoundError:
-            Warning(f"Input file not found for {dir_name}")
+            warnings.warn(f"Input file not found for {dir_name}", stacklevel=1)
             input_file = None
         try:
             data_files = [
@@ -153,8 +174,21 @@ class LammpsTaskDocument(StructureMetadata):
                 for file in glob("*.data*", root_dir=dir_name)
             ]
         except FileNotFoundError:
-            Warning(f"Data file not found for {dir_name}")
+            warnings.warn(f"Data file not found for {dir_name}", stacklevel=1)
             data_files = None
+
+        if parse_additional_outputs is not None:
+            additional_outputs = {}
+            for output_file in parse_additional_outputs:
+                output_path = os.path.join(dir_name, output_file)
+                if os.path.exists(output_path):
+                    with open(output_path) as f:
+                        additional_outputs[output_file] = f.read()
+                else:
+                    warnings.warn(
+                        f"Additional output file {output_file} not found in {dir_name}",
+                        stacklevel=1,
+                    )
 
         inputs = {"in.lammps": input_file, "data_files": data_files}
         composition = final_structure.composition if final_structure else None
@@ -174,4 +208,5 @@ class LammpsTaskDocument(StructureMetadata):
             reduced_formula=reduced_formula,
             inputs=inputs,
             state=state,
+            additional_outputs=additional_outputs if parse_additional_outputs else None,
         )
