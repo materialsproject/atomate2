@@ -73,8 +73,7 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
             if isinstance(model, str | Path) and Path(model).exists():
                 model_path = model
                 device = kwargs.get("device") or "cpu"
-                if "device" in kwargs:
-                    del kwargs["device"]
+                kwargs.pop("device", None)
                 calculator = MACECalculator(
                     model_paths=model_path,
                     device=device,
