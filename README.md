@@ -102,10 +102,10 @@ started:
 
 In March 2025, the first dedicated school on atomate2 (including the workflow language jobflow and the workflow manager jobflow-remote) took place, and one can access the video material here:
 
-- [Video set 1][videotutorial1]
-- [Video set 2][videotutorial2]
-- [Video set 3][videotutorial3]
-- [Video set 4][videotutorial4]
+- [Jobflow and Jobflow-remote][videotutorial1]
+- [atomate2][videotutorial2]
+- [Advanced Workflows in atomate2: Part 1][videotutorial3]
+- [Advanced Workflows in atomate2: Part 2][videotutorial4]
 
 ## Need help?
 
