@@ -98,6 +98,13 @@ started:
 - [Using atomate2 with FireWorks][atomate2_fireworks]
 - [Overview of key concepts][key-concepts]
 - [List of VASP workflows][vasp_workflows]
+- [Executable tutorials for different workflows][tutorials]
+
+In March 2025, the first dedicated school on atomate2 (including the workflow language jobflow and the workflow manager jobflow-remote) took place, and one can access the video material here:
+- [Video set 1][videotutorial1]
+- [Video set 2][videotutorial2]
+- [Video set 3][videotutorial3]
+- [Video set 4][videotutorial4]
 
 ## Need help?
 
@@ -157,6 +164,7 @@ A journal submission of `atomate2` is undergoing peer review. In the meantime, p
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html
 [atomate2-jobflow-remote]: https://materialsproject.github.io/atomate2/user/jobflow-remote.html
 [vasp_workflows]: https://materialsproject.github.io/atomate2/user/codes/vasp.html
+[tutorials]: https://materialsproject.github.io/atomate2/tutorials/tutorials.html
 [RelaxBandStructure]: https://materialsproject.github.io/atomate2/user/codes/vasp.html#relax-and-band-structure
 [Lobster]: http://www.cohp.de
 [lobsterpy]: https://github.com/JaGeo/LobsterPy
@@ -164,3 +172,8 @@ A journal submission of `atomate2` is undergoing peer review. In the meantime, p
 [docs]: https://materialsproject.github.io/atomate2/
 [github]: https://github.com/materialsproject/atomate2
 [pypi]: https://pypi.org/project/atomate2
+[videotutorial1]: https://lhumos.org/collection/0/680bb4d7e4b0f0d2028027ce
+[videotutorial2]: https://lhumos.org/collection/0/680bb4d3e4b0f0d2028027c9
+[videotutorial3]: https://lhumos.org/collection/0/680bb4d0e4b0f0d2028027c5
+[videotutorial4]: https://lhumos.org/collection/0/680bb4c7e4b0f0d2028027c1
+
