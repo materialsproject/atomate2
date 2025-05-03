@@ -101,6 +101,7 @@ started:
 - [Executable tutorials for different workflows][tutorials]
 
 In March 2025, the first dedicated school on atomate2 (including the workflow language jobflow and the workflow manager jobflow-remote) took place, and one can access the video material here:
+
 - [Video set 1][videotutorial1]
 - [Video set 2][videotutorial2]
 - [Video set 3][videotutorial3]
@@ -176,4 +177,3 @@ A journal submission of `atomate2` is undergoing peer review. In the meantime, p
 [videotutorial2]: https://lhumos.org/collection/0/680bb4d3e4b0f0d2028027c9
 [videotutorial3]: https://lhumos.org/collection/0/680bb4d0e4b0f0d2028027c5
 [videotutorial4]: https://lhumos.org/collection/0/680bb4c7e4b0f0d2028027c1
-
