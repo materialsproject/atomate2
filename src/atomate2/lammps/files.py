@@ -117,7 +117,7 @@ class DumpConvertor:
 
     def save(
         self, filename: str | None = None, fmt: Literal["pmg", "ase"] = "pmg"
-    ) -> None:
+    ) -> PmgTrajectory | AseTrajectory | None:
         """Save the trajectory to a file."""
         filename = str(filename) if filename is not None else None
         if fmt == "pmg" and filename:

@@ -40,10 +40,6 @@ class LammpsTaskDocument(StructureMetadata):
 
     state: TaskState = Field(None, description="State of the calculation")
 
-    reduced_formula: str | None = Field(
-        None, description="Reduced formula of the system"
-    )
-
     dump_files: Optional[dict] = Field(
         None, description="Dump files produced by lammps run"
     )
@@ -62,6 +58,12 @@ class LammpsTaskDocument(StructureMetadata):
     )
 
     inputs: dict = Field(None, description="Input files for the task")
+
+    output_data_files: Optional[list[LammpsData]] = Field(
+        None,
+        description="Output data file from lammps run, \
+            containing structure and topology information",
+    )
 
     additional_outputs: Optional[dict] = Field(
         None,
@@ -119,6 +121,26 @@ class LammpsTaskDocument(StructureMetadata):
                 state=state,
             )
 
+        try:
+            input_file = LammpsInputFile.from_file(
+                os.path.join(dir_name, "in.lammps"), ignore_comments=True
+            )
+            atom_style = input_file.get_args("atom_style")
+        except FileNotFoundError:
+            warnings.warn(f"Input file not found for {dir_name}", stacklevel=1)
+            input_file = None
+            atom_style = "full"
+
+        try:
+            input_data_file = LammpsData.from_file(
+                os.path.join(dir_name, "input.data"),
+                atom_style=atom_style,
+            )
+
+        except FileNotFoundError:
+            warnings.warn(f"Input data file not found for {dir_name}", stacklevel=1)
+            input_data_file = None
+
         dump_file_keys = glob("*dump*", root_dir=dir_name)
         dump_files = {}
         if dump_file_keys:
@@ -145,37 +167,30 @@ class LammpsTaskDocument(StructureMetadata):
                     for i, dump_file in enumerate(dump_files)
                 ]
 
-            final_structure = (
-                DumpConvertor(
-                    dumpfile=os.path.join(dir_name, dump_file_keys[-1]), read_index=-1
-                )
-                .to_pymatgen_trajectory()
-                .get_structure(-1)
-            )
         else:
             warnings.warn(
                 "No dump files found, no trajectory data stored", stacklevel=1
             )
-            final_structure = None
 
-        try:
-            input_file = LammpsInputFile.from_file(
-                os.path.join(dir_name, "in.lammps"), ignore_comments=True
-            )
-        except FileNotFoundError:
-            warnings.warn(f"Input file not found for {dir_name}", stacklevel=1)
-            input_file = None
-        try:
-            data_files = [
-                LammpsData.from_file(
-                    os.path.join(dir_name, file),
-                    atom_style=input_file.get_args("atom_style"),
+        output_data_file_paths = [
+            path for path in glob("*.data*", root_dir=dir_name) if path != "input.data"
+        ]
+        if len(output_data_file_paths):
+            try:
+                output_data_files = [
+                    LammpsData.from_file(
+                        os.path.join(dir_name, file),
+                        atom_style=atom_style,
+                    )
+                    for file in output_data_file_paths
+                ]
+                final_structure = output_data_files[-1].structure
+            except FileNotFoundError:
+                warnings.warn(
+                    "No data files found, system topology might be lost", stacklevel=1
                 )
-                for file in glob("*.data*", root_dir=dir_name)
-            ]
-        except FileNotFoundError:
-            warnings.warn(f"Data file not found for {dir_name}", stacklevel=1)
-            data_files = None
+                output_data_files = None
+                final_structure = None
 
         if parse_additional_outputs is not None:
             additional_outputs = {}
@@ -190,9 +205,8 @@ class LammpsTaskDocument(StructureMetadata):
                         stacklevel=1,
                     )
 
-        inputs = {"in.lammps": input_file, "data_files": data_files}
+        inputs = {"in.lammps": input_file, "data_files": input_data_file}
         composition = final_structure.composition if final_structure else None
-        reduced_formula = composition.reduced_formula if final_structure else None
 
         return LammpsTaskDocument(
             dir_name=str(dir_name),
@@ -205,8 +219,8 @@ class LammpsTaskDocument(StructureMetadata):
             else None,
             structure=final_structure,
             composition=composition,
-            reduced_formula=reduced_formula,
             inputs=inputs,
             state=state,
+            output_data_files=output_data_files,
             additional_outputs=additional_outputs if parse_additional_outputs else None,
         )
