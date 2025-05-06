@@ -324,7 +324,7 @@ class AseRelaxer:
 
     def relax(
         self,
-        atoms: Atoms | Structure | Molecule,
+        atoms: Atoms | Structure | Molecule | list[Atoms] |list[Molecule] |list[Structure],
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
@@ -332,13 +332,13 @@ class AseRelaxer:
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
         **kwargs,
-    ) -> AseResult:
+    ) -> AseResult|list[AseResult]:
         """
-        Relax the molecule or structure.
+        Relax the molecule or structure or a list of those.
 
         Parameters
         ----------
-        atoms : ASE Atoms, pymatgen Structure, or pymatgen Molecule
+        atoms : ASE Atoms, pymatgen .Structure, or pymatgen .Molecule or corresponding lists
             The atoms for relaxation.
         fmax : float
             Total force tolerance for relaxation convergence.
@@ -355,46 +355,53 @@ class AseRelaxer:
 
         Returns
         -------
-            dict including optimized structure and the trajectory
+            dict including optimized structure and the trajectory or a list of those dicts
         """
-        is_mol = isinstance(atoms, Molecule) or (
-            isinstance(atoms, Atoms) and all(not pbc for pbc in atoms.pbc)
-        )
+        is_list=isinstance(atoms[0], Atoms) or isinstance(atoms[0], Molecule) or isinstance(atoms[0], Structure)
 
-        if isinstance(atoms, Structure | Molecule):
-            atoms = self.ase_adaptor.get_atoms(atoms)
-        if self.fix_symmetry:
-            atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
-        atoms.calc = self.calculator
-        with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
-            obs = TrajectoryObserver(atoms)
-            if self.relax_cell and (not is_mol):
-                atoms = cell_filter(atoms)
-            optimizer = self.opt_class(atoms, **kwargs)
-            optimizer.attach(obs, interval=interval)
-            t_i = time.perf_counter()
-            optimizer.run(fmax=fmax, steps=steps)
-            t_f = time.perf_counter()
-            obs()
-        if traj_file is not None:
-            obs.save(traj_file)
-        if isinstance(atoms, cell_filter):
-            atoms = atoms.atoms
+        if not is_list:
+            atoms = [atoms]
 
-        struct = self.ase_adaptor.get_structure(
-            atoms, cls=Molecule if is_mol else Structure
-        )
-        traj = obs.to_pymatgen_trajectory(None)
-        is_force_conv = all(
-            np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
-            for idx in range(len(struct))
-        )
-        return AseResult(
-            final_mol_or_struct=struct,
-            trajectory=traj,
-            is_force_converged=is_force_conv,
-            energy_downhill=traj.frame_properties[-1]["energy"]
-            < traj.frame_properties[0]["energy"],
-            dir_name=os.getcwd(),
-            elapsed_time=t_f - t_i,
-        )
+        list_ase_results = []
+        for atom in atoms:
+            is_mol = isinstance(atoms, Molecule) or (
+                isinstance(atoms, Atoms) and all(not pbc for pbc in atoms.pbc)
+            )
+            if isinstance(atoms, Structure | Molecule):
+                atoms = self.ase_adaptor.get_atoms(atoms)
+            if self.fix_symmetry:
+                atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
+            atoms.calc = self.calculator
+            with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
+                obs = TrajectoryObserver(atoms)
+                if self.relax_cell and (not is_mol):
+                    atoms = cell_filter(atoms)
+                optimizer = self.opt_class(atoms, **kwargs)
+                optimizer.attach(obs, interval=interval)
+                t_i = time.perf_counter()
+                optimizer.run(fmax=fmax, steps=steps)
+                t_f = time.perf_counter()
+                obs()
+            if traj_file is not None:
+                obs.save(traj_file)
+            if isinstance(atoms, cell_filter):
+                atoms = atoms.atoms
+
+            struct = self.ase_adaptor.get_structure(
+                atoms, cls=Molecule if is_mol else Structure
+            )
+            traj = obs.to_pymatgen_trajectory(None)
+            is_force_conv = all(
+                np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
+                for idx in range(len(struct))
+            )
+            list_ase_results.append(AseResult(
+                final_mol_or_struct=struct,
+                trajectory=traj,
+                is_force_converged=is_force_conv,
+                energy_downhill=traj.frame_properties[-1]["energy"]
+                < traj.frame_properties[0]["energy"],
+                dir_name=os.getcwd(),
+                elapsed_time=t_f - t_i,
+            ))
+        return list_ase_results[0] if not is_list else list_ase_results
