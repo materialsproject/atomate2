@@ -1,7 +1,7 @@
 """File I/O functions for LAMMPS input files."""
 
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from ase.io import Trajectory as AseTrajectory
 from ase.io import read
@@ -117,7 +117,7 @@ class DumpConvertor:
 
     def save(
         self, filename: str | None = None, fmt: Literal["pmg", "ase"] = "pmg"
-    ) -> PmgTrajectory | AseTrajectory | None:
+    ) -> Any:
         """Save the trajectory to a file."""
         filename = str(filename) if filename is not None else None
         if fmt == "pmg" and filename:
