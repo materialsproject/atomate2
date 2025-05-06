@@ -88,8 +88,7 @@ class BaseAimsMaker(Maker):
         structure: Structure | Molecule,
         prev_dir: str | Path | None = None,
     ) -> Response:
-        """
-        Run an FHI-aims calculation.
+        """Run an FHI-aims calculation.
 
         Parameters
         ----------

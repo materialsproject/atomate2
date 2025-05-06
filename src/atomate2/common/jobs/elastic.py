@@ -78,7 +78,7 @@ def generate_elastic_deformations(
         strain_magnitudes = [strain_magnitudes] * len(strain_states)  # type: ignore[assignment]
 
     strains = []
-    for state, magnitudes in zip(strain_states, strain_magnitudes):
+    for state, magnitudes in zip(strain_states, strain_magnitudes, strict=True):
         strains.extend([Strain.from_voigt(m * np.array(state)) for m in magnitudes])
 
     # remove zero strains
@@ -172,8 +172,10 @@ def fit_elastic_tensor(
     fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
     symprec: float = SETTINGS.SYMPREC,
     allow_elastically_unstable_structs: bool = True,
+    stress_sign_factor: float = 1.0,
+    max_failed_deformations: float | None = None,
 ) -> ElasticDocument:
-    """
+    r"""
     Analyze stress/strain data to fit the elastic tensor and related properties.
 
     Parameters
@@ -200,20 +202,43 @@ def fit_elastic_tensor(
     allow_elastically_unstable_structs : bool
         Whether to allow the ElasticDocument to still complete in the event that
         the structure is elastically unstable.
+    stress_sign_factor: float
+        Corrections for codes that define stress to be \partial E / \partial n_ij
+    max_failed_deformations: int or float
+        Maximum number of deformations allowed to fail to proceed with the fitting
+        of the elastic tensor. If an int the absolute number of deformations. If
+        a float between 0 an 1 the maximum fraction of deformations. If None any
+        number of deformations allowed.
     """
     stresses = []
     deformations = []
     uuids = []
     job_dirs = []
+    failed_uuids = []
     for data in deformation_data:
         # stress could be none if the deformation calculation failed
         if data["stress"] is None:
+            failed_uuids.append(data["uuid"])
             continue
 
-        stresses.append(Stress(data["stress"]))
+        stresses.append(Stress(stress_sign_factor * np.array(data["stress"])))
         deformations.append(Deformation(data["deformation"]))
         uuids.append(data["uuid"])
         job_dirs.append(data["job_dir"])
+
+    if max_failed_deformations is not None:
+        if 0 < max_failed_deformations < 1:
+            fraction_failed = len(failed_uuids) / len(deformation_data)
+            if fraction_failed > max_failed_deformations:
+                raise RuntimeError(
+                    f"{fraction_failed} fraction of deformation calculations have "
+                    f"failed, maximum fraction allowed: {max_failed_deformations}"
+                )
+        elif len(failed_uuids) > max_failed_deformations:
+            raise RuntimeError(
+                f"{len(failed_uuids)} deformation calculations have failed, maximum "
+                f"allowed: {max_failed_deformations}"
+            )
 
     logger.info("Analyzing stress/strain data")
 
@@ -228,4 +253,5 @@ def fit_elastic_tensor(
         equilibrium_stress=equilibrium_stress,
         symprec=symprec,
         allow_elastically_unstable_structs=allow_elastically_unstable_structs,
+        failed_uuids=failed_uuids,
     )

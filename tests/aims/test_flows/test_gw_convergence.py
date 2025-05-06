@@ -1,4 +1,5 @@
 """A test for GW workflows for FHI-aims."""
+
 import pytest
 
 # from atomate2.aims.utils.msonable_atoms import MSONableAtoms

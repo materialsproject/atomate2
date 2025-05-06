@@ -1,4 +1,5 @@
 """Define the PhononDisplacementMakers for FHI-aims."""
+
 from dataclasses import dataclass, field
 
 from pymatgen.io.aims.sets.base import AimsInputGenerator

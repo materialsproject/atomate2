@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
@@ -31,6 +31,8 @@ from atomate2.cp2k.schemas.task import TaskDocument
 from atomate2.cp2k.sets.base import Cp2kInputGenerator
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from pymatgen.core import Structure
 
 
@@ -92,7 +94,7 @@ class BaseCp2kMaker(Maker):
     ----------
     name : str
         The job name.
-    input_set_generator : .VaspInputGenerator
+    input_set_generator : .Cp2kInputGenerator
         A generator used to make the input set.
     write_input_set_kwargs : dict
         Keyword arguments that will get passed to :obj:`.write_cp2k_input_set`.
@@ -131,8 +133,7 @@ class BaseCp2kMaker(Maker):
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
     ) -> Response:
-        """
-        Run a CP2K calculation.
+        """Run a CP2K calculation.
 
         Parameters
         ----------

@@ -6,13 +6,14 @@
 
 This guide will get you up and running in an environment for running high-throughput
 workflows with atomate2. atomate2 is built on the `pymatgen`, `custodian`, `jobflow`, and
-`FireWorks` libraries. Briefly:
+[`jobflow-remote`] or `FireWorks` libraries. Briefly:
 
 - [`pymatgen`] is used to create input files and analyze the output of materials science codes.
 - [`custodian`] runs your simulation code (e.g., VASP) and performs error checking/handling
   and checkpointing.
 - [`jobflow`] is used to design computational workflows.
-- [`FireWorks`] (optional) is used to manage and execute workflows on HPC machines.
+- [`jobflow-remote`] (optional, option 1) is used to manage and execute workflows on HPC machines.
+- [`FireWorks`] (optional, option 2) is used to manage and execute workflows on HPC machines.
 
 Running and writing your own workflows are covered in later tutorials. For now, these
 topics will be covered in enough depth to get you set up and to help you know where to
@@ -24,6 +25,7 @@ currently in atomate2 pertains to VASP.
 [`pymatgen`]: http://pymatgen.org
 [`custodian`]: https://materialsproject.github.io/custodian
 [`fireworks`]: https://materialsproject.github.io/fireworks
+[`jobflow-remote`]: https://matgenix.github.io/jobflow-remote/
 [`jobflow`]: https://materialsproject.github.io/jobflow
 
 ### Objectives
@@ -136,8 +138,8 @@ atomate2
 ## Create a conda environment
 
 ```{note}
-Make sure to create a Python 3.8+ environment as recent versions of atomate2 only
-support Python 3.8 and higher.
+Make sure to create a Python 3.10+ environment as recent versions of atomate2 only
+support Python 3.10 and higher.
 ```
 
 We highly recommend that you organize your installation of the atomate2 and the other
@@ -174,6 +176,16 @@ To install the packages run:
 ```bash
 pip install atomate2
 ```
+
+If you would like to use more specialized capabilities of `atomate2` such as the phonon, Lobster or force field workflows, you would need to run one of
+
+```bash
+pip install atomate2[phonons]
+pip install atomate2[lobster]
+pip install atomate2[forcefields]
+```
+
+See [`pyproject.toml`](https://github.com/materialsproject/atomate2/blob/main/pyproject.toml) for all available optional dependency sets. More detailed instructions can be found under [dev installation](../dev/dev_install.md).
 
 ## Configure calculation output database
 
@@ -257,6 +269,30 @@ from) by clicking "Network Access" (under "Security" in the left hand menu) and 
 "Add IP address".
 ````
 
+````{note}
+If you do not have access to a Mongo database, you can run `atomate2` using a local `.json` file
+to store outputs using the following `jobflow.yaml` file.
+
+```yaml
+JOB_STORE:
+  docs_store:
+    type: JSONStore
+    uri: <<PATH>>
+    read_only: True
+  additional_stores:
+    data:
+      type: JSONStore
+      uri: <<PATH>>
+      read_only: True
+```
+
+The user doesn't need to have the file at the given `<<PATH>>`, since we have set `read_only: True`.
+In case the file isn't available, a new file with the name mentioned in the `<<PATH>>` will be generated.
+
+**Note that this approach has limitations - it cannot handle simultaneous writes and so is not suitable for high-throughput work.**
+````
+
+
 Atomate2 uses two database collections, one for small documents (such as elastic
 tensors, structures, and energies) called the `docs` store and another for large
 documents such as band structures and density of states called the `data` store.
@@ -286,7 +322,7 @@ This is the command that you would use to run VASP with parallelization
 
 The directory structure of `<<INSTALL_DIR>>/config` should now look like
 
-```txt
+```
 config
 ├── jobflow.yaml
 └── atomate2.yaml
@@ -446,7 +482,9 @@ See the following pages for more information on the topics we covered here:
 
 - To see how to run and customize the existing Workflows in atomate2, try the
   [](running_workflows) tutorial (suggested next step).
-- To see how to manage and execute many workflows at once, try the
+- To learn more about `TaskDocument` and how `atomate2` organizes output data, review
+  the [Introduction to task documents, schemas, and emmet](docs_schemas_emmet.md) tutorial.
+- To see how to manage and execute many workflows at once, try the [](jobflow-remote) or
   [](atomate2_fireWorks) tutorial.
 
 ## Troubleshooting and FAQ

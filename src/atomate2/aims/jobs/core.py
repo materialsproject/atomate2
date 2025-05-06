@@ -1,4 +1,5 @@
 """Define all Core FHI-aims jobs."""
+
 from __future__ import annotations
 
 import logging

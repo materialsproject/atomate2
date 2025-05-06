@@ -4,8 +4,13 @@
 user/index
 user/install
 user/running-workflows
+user/key_concepts_overview
+user/docs-schemas-emmet
+user/jobflow-remote
 user/fireworks
+user/atomate-1-vs-2
 user/codes/index
+tutorials/tutorials
 ```
 
 ```{toctree}
@@ -20,6 +25,7 @@ reference/index
 dev/dev_install
 dev/workflow_tutorial
 dev/vasp_tests
+dev/abinit_tests
 ```
 
 ```{toctree}
