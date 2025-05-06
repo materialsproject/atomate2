@@ -93,7 +93,7 @@ class BaseLammpsMaker(Maker):
     def make(
         self,
         input_structure: Structure | Path | LammpsData = None,
-        prev_dir: Path = None,
+        prev_dir: Path | str = None,
     ) -> Response:
         """Run a LAMMPS calculation."""
         if prev_dir:
@@ -137,11 +137,6 @@ class BaseLammpsMaker(Maker):
             except ValueError:
                 error = "could not parse log file"
             raise LammpsRunError(f"Task {task_doc.task_label} failed, error: {error}")
-
-        task_doc.composition = input_structure.composition
-        task_doc.reduced_formula = input_structure.composition.reduced_formula
-        task_doc.task_label = self.name
-        task_doc.inputs = self.input_set_generator.settings.dict
 
         gzip_files(".")
 
