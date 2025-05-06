@@ -27,14 +27,14 @@ requires-python = ">=3.10"
 dependencies = [
     "PyYAML",
     "click",
-    "custodian>=2024.4.18",
+    "custodian>=2025.4.14",
     "emmet-core>=0.84.3rc3",
     "jobflow>=0.1.11",
     "monty>=2024.12.10",
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.11.13",
+    "pymatgen>=2025.1.24",
     "pymongo<=4.10.1",
 ]
 
@@ -148,6 +148,7 @@ atomate2 = ["py.typed"]
 "atomate2.vasp.sets" = ["*.yaml"]
 "atomate2.cp2k.sets" = ["*.yaml"]
 "atomate2.cp2k.schemas.calc_types" = ["*.yaml"]
+"atomate2.jdftx.sets" = ["*.yaml"]
 
 [tool.versioningit.vcs]
 method = "git"
