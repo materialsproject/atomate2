@@ -222,24 +222,24 @@ class AseRelaxMaker(AseMaker):
         AseStructureTaskDoc or AseMoleculeTaskDoc
         """
         return AseTaskDoc.to_mol_or_struct_metadata_doc(
-                getattr(self.calculator, "name", type(self.calculator).__name__),
-                self.run_ase(mol_or_struct, prev_dir=prev_dir),
-                self.steps,
-                relax_kwargs=self.relax_kwargs,
-                optimizer_kwargs=self.optimizer_kwargs,
-                relax_cell=self.relax_cell,
-                fix_symmetry=self.fix_symmetry,
-                symprec=self.symprec if self.fix_symmetry else None,
-                ionic_step_data=self.ionic_step_data,
-                store_trajectory=self.store_trajectory,
-                tags=self.tags,
-            )
+            getattr(self.calculator, "name", type(self.calculator).__name__),
+            self.run_ase(mol_or_struct, prev_dir=prev_dir),
+            self.steps,
+            relax_kwargs=self.relax_kwargs,
+            optimizer_kwargs=self.optimizer_kwargs,
+            relax_cell=self.relax_cell,
+            fix_symmetry=self.fix_symmetry,
+            symprec=self.symprec if self.fix_symmetry else None,
+            ionic_step_data=self.ionic_step_data,
+            store_trajectory=self.store_trajectory,
+            tags=self.tags,
+        )
 
     def run_ase(
         self,
-        mol_or_struct: Structure | Molecule|list[Molecule]|list[Structure],
+        mol_or_struct: Structure | Molecule | list[Molecule] | list[Structure],
         prev_dir: str | Path | None = None,
-    ) -> AseResult|list[AseResult]:
+    ) -> AseResult | list[AseResult]:
         """
         Relax a structure, molecule or a batch of those using ASE, not as a job.
 

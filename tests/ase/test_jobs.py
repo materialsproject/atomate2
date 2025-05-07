@@ -50,7 +50,7 @@ def test_base_maker(test_dir):
 def test_lennard_jones_batch_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):
     job = LennardJonesRelaxMaker(
         calculator_kwargs=lj_fcc_ne_pars, relax_kwargs={"fmax": 0.001}
-    ).make([fcc_ne_structure,fcc_ne_structure])
+    ).make([fcc_ne_structure, fcc_ne_structure])
 
     response = run_locally(job)
 
@@ -64,8 +64,6 @@ def test_lennard_jones_batch_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):
     assert fcc_ne_structure.matches(output.output.structure[0]), (
         f"{output.output.structure[0]} != {fcc_ne_structure}"
     )
-
-
 
 
 def test_lennard_jones_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):

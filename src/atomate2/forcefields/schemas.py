@@ -49,18 +49,18 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
         description="version of the interatomic potential used for relaxation.",
     )
 
-    dir_name: Optional[str]|list[Optional[str]] = Field(
+    dir_name: Optional[str] | list[Optional[str]] = Field(
         None, description="Directory where the force field calculations are performed."
     )
 
     included_objects: Optional[list[AseObject]] = Field(
         None, description="list of forcefield objects included with this task document"
     )
-    objects: Optional[dict[AseObject, Any]] |list[Optional[dict[AseObject, Any]]]= Field(
-        None, description="Forcefield objects associated with this task"
+    objects: Optional[dict[AseObject, Any]] | list[Optional[dict[AseObject, Any]]] = (
+        Field(None, description="Forcefield objects associated with this task")
     )
 
-    is_force_converged: Optional[bool]|list[Optional[bool]] = Field(
+    is_force_converged: Optional[bool] | list[Optional[bool]] = Field(
         None,
         description=(
             "Whether the calculation is converged with respect to interatomic forces."

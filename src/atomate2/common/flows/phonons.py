@@ -15,8 +15,7 @@ from atomate2.common.jobs.phonons import (
     get_supercell_size,
     get_total_energy_per_cell,
     run_phonon_displacements,
-    chunk_and_aggregate_recur,
-    )
+)
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 
 if TYPE_CHECKING:

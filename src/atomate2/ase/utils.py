@@ -324,7 +324,12 @@ class AseRelaxer:
 
     def relax(
         self,
-        atoms: Atoms | Structure | Molecule | list[Atoms] |list[Molecule] |list[Structure],
+        atoms: Atoms
+        | Structure
+        | Molecule
+        | list[Atoms]
+        | list[Molecule]
+        | list[Structure],
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
@@ -332,7 +337,7 @@ class AseRelaxer:
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
         **kwargs,
-    ) -> AseResult|list[AseResult]:
+    ) -> AseResult | list[AseResult]:
         """
         Relax the molecule or structure or a list of those.
 
@@ -357,12 +362,16 @@ class AseRelaxer:
         -------
             dict including optimized structure and the trajectory or a list of those dicts
         """
-        is_list=isinstance(atoms[0], Atoms) or isinstance(atoms[0], Molecule) or isinstance(atoms[0], Structure)
+        is_list = (
+            isinstance(atoms[0], Atoms)
+            or isinstance(atoms[0], Molecule)
+            or isinstance(atoms[0], Structure)
+        )
 
         if not is_list:
             list_atoms = [atoms]
         else:
-            list_atoms=atoms
+            list_atoms = atoms
         list_ase_results = []
         for atoms in list_atoms:
             is_mol = isinstance(atoms, Molecule) or (
@@ -396,13 +405,15 @@ class AseRelaxer:
                 np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
                 for idx in range(len(struct))
             )
-            list_ase_results.append(AseResult(
-                final_mol_or_struct=struct,
-                trajectory=traj,
-                is_force_converged=is_force_conv,
-                energy_downhill=traj.frame_properties[-1]["energy"]
-                < traj.frame_properties[0]["energy"],
-                dir_name=os.getcwd(),
-                elapsed_time=t_f - t_i,
-            ))
+            list_ase_results.append(
+                AseResult(
+                    final_mol_or_struct=struct,
+                    trajectory=traj,
+                    is_force_converged=is_force_conv,
+                    energy_downhill=traj.frame_properties[-1]["energy"]
+                    < traj.frame_properties[0]["energy"],
+                    dir_name=os.getcwd(),
+                    elapsed_time=t_f - t_i,
+                )
+            )
         return list_ase_results[0] if not is_list else list_ase_results

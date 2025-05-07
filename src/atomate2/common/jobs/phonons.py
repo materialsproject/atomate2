@@ -293,10 +293,10 @@ def run_phonon_displacements(
             "supercell_matrix": supercell_matrix,
             "displaced_structures": displacements,
         }
-        
-        #phonon_job.update_maker_kwargs(
+
+        # phonon_job.update_maker_kwargs(
         #    {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
-        #)
+        # )
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(len(displacements)))
         outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)
@@ -334,20 +334,20 @@ def run_phonon_displacements(
 
 @job(data=["forces", "displaced_structures"])
 def run_phonon_displacements_mod(
-        displacements: list[Structure],
-        structure: Structure,
-        supercell_matrix: Matrix3D,
-        phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
-        prev_dir: str | Path = None,
-        start_inx=0,
-        batch_size=2,
-        outputs: dict[str, list] = {
-            "displacement_number": [],
-            "forces": [],
-            "uuids": [],
-            "dirs": []
-        },
-        stop_inx=None,
+    displacements: list[Structure],
+    structure: Structure,
+    supercell_matrix: Matrix3D,
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
+    prev_dir: str | Path = None,
+    start_inx=0,
+    batch_size=2,
+    outputs: dict[str, list] = {
+        "displacement_number": [],
+        "forces": [],
+        "uuids": [],
+        "dirs": [],
+    },
+    stop_inx=None,
 ):
     """
     Run phonon displacements.
@@ -399,27 +399,34 @@ def run_phonon_displacements_mod(
             # print(outputs['uuids'])
             jobs.append(phonon_job)
 
-        new_job = run_phonon_displacements_mod(structure=structure, supercell_matrix=supercell_matrix,
-                                               displacements=displacements, start_inx=new_inx, stop_inx=stop_inx,
-                                               phonon_maker=phonon_maker, prev_dir=prev_dir)
+        new_job = run_phonon_displacements_mod(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            displacements=displacements,
+            start_inx=new_inx,
+            stop_inx=stop_inx,
+            phonon_maker=phonon_maker,
+            prev_dir=prev_dir,
+        )
 
         return Response(addition=[new_job, *jobs], output=outputs)
 
+
 @job(data=["forces", "displaced_structures"])
 def run_phonon_displacements_mod2(
-        total_displacements:int,
-        displacements: list[Structure],
-        structure: Structure,
-        supercell_matrix: Matrix3D,
-        phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
-        prev_dir: str | Path = None,
-        indexs=list[int],
-        outputs: dict[str, list] = {
-            "displacement_number": [],
-            "forces": [],
-            "uuids": [],
-            "dirs": []
-        },
+    total_displacements: int,
+    displacements: list[Structure],
+    structure: Structure,
+    supercell_matrix: Matrix3D,
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
+    prev_dir: str | Path = None,
+    indexs=list[int],
+    outputs: dict[str, list] = {
+        "displacement_number": [],
+        "forces": [],
+        "uuids": [],
+        "dirs": [],
+    },
 ):
     """
     Run phonon displacements.
@@ -448,7 +455,7 @@ def run_phonon_displacements_mod2(
         # print(idx+start_inx)
         # we will add some meta data
         info = {
-            "displacement_number": indexs[idx]-1,
+            "displacement_number": indexs[idx] - 1,
             "original_structure": structure,
             "supercell_matrix": supercell_matrix,
             "displaced_structures": displacement,
@@ -459,7 +466,7 @@ def run_phonon_displacements_mod2(
                 dict_mod=True,
             )
         # outputs.append(idx+start_inx)
-        outputs["displacement_number"].append(indexs[idx]-1)
+        outputs["displacement_number"].append(indexs[idx] - 1)
         outputs["uuids"].append(phonon_job.output.uuid)
         outputs["dirs"].append(phonon_job.output.dir_name)
         outputs["forces"].append(phonon_job.output.output.forces)
@@ -469,22 +476,23 @@ def run_phonon_displacements_mod2(
     displacement_flow = Flow(jobs)
     return Response(replace=displacement_flow, output=outputs)
 
+
 @job(data=["forces", "displaced_structures"])
 def run_phonon_displacements_recur(
-        total_displacements:int,
-        index_list,
-        chunks_list,
-        structure: Structure,
-        supercell_matrix: Matrix3D,
-        phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
-        prev_dir: str | Path = None,
-        start:int=0,
-        outputs: dict[str, list] = {
-            "displacement_number": [],
-            "forces": [],
-            "uuids": [],
-            "dirs": []
-        },
+    total_displacements: int,
+    index_list,
+    chunks_list,
+    structure: Structure,
+    supercell_matrix: Matrix3D,
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
+    prev_dir: str | Path = None,
+    start: int = 0,
+    outputs: dict[str, list] = {
+        "displacement_number": [],
+        "forces": [],
+        "uuids": [],
+        "dirs": [],
+    },
 ):
     """
     Run phonon displacements.
@@ -503,7 +511,7 @@ def run_phonon_displacements_recur(
     prev_dir : str or Path or None
         A previous vasp calculation directory to use for copying outputs.
     """
-    index_list_here=index_list[start]
+    index_list_here = index_list[start]
     disp_here = chunks_list[start]
     jobs = []
     for idx, displacement in enumerate(disp_here):
@@ -511,7 +519,9 @@ def run_phonon_displacements_recur(
             phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
         else:
             phonon_job = phonon_maker.make(displacement)
-        phonon_job.append_name(f" {index_list_here[idx]}/{total_displacements} : batch {start+1}")
+        phonon_job.append_name(
+            f" {index_list_here[idx]}/{total_displacements} : batch {start + 1}"
+        )
         info = {
             "displacement_number": index_list_here[idx] - 1,
             "original_structure": structure,
@@ -529,19 +539,23 @@ def run_phonon_displacements_recur(
         outputs["dirs"].append(phonon_job.output.dir_name)
         outputs["forces"].append(phonon_job.output.output.forces)
 
-
-    if start+1 != len(index_list):
-        start = start+1
-        new_job = run_phonon_displacements_recur(structure=structure, supercell_matrix=supercell_matrix,
-                                                 chunks_list=chunks_list, index_list=index_list,
-                                                 total_displacements=total_displacements,
-                                                 phonon_maker=phonon_maker, prev_dir=prev_dir,start=start)
+    if start + 1 != len(index_list):
+        start = start + 1
+        new_job = run_phonon_displacements_recur(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            chunks_list=chunks_list,
+            index_list=index_list,
+            total_displacements=total_displacements,
+            phonon_maker=phonon_maker,
+            prev_dir=prev_dir,
+            start=start,
+        )
 
         displacement_flow = Flow([*jobs, new_job])
         return Response(addition=displacement_flow, output=outputs)
-    else:
-        displacement_flow = Flow(jobs)
-        return Response(addition=displacement_flow, output=outputs)
+    displacement_flow = Flow(jobs)
+    return Response(addition=displacement_flow, output=outputs)
 
 
 def chunks(lst, n):
@@ -552,17 +566,18 @@ def chunks(lst, n):
 
 
 @job(data=["forces"])
-def chunk_and_aggregate2(displacement: float,
-                        sym_reduce: bool,
-                        symprec: float,
-                        use_symmetrized_structure: str | None,
-                        kpath_scheme: str,
-                        code: str,
-                        structure,
-                        supercell_matrix,
-                        phonon_maker,
-                        chunk_size=3,
-                        ):
+def chunk_and_aggregate2(
+    displacement: float,
+    sym_reduce: bool,
+    symprec: float,
+    use_symmetrized_structure: str | None,
+    kpath_scheme: str,
+    code: str,
+    structure,
+    supercell_matrix,
+    phonon_maker,
+    chunk_size=3,
+):
     warnings.warn(
         "Initial magnetic moments will not be considered for the determination "
         "of the symmetry of the structure and thus will be removed now.",
@@ -610,13 +625,19 @@ def chunk_and_aggregate2(displacement: float,
         "displacement_number": None,
         "forces": None,
         "uuids": None,
-        "dirs": None
+        "dirs": None,
     }
     for chunk, start_index, end_index in chunks(displacements, chunk_size):
         indexs = list(range(start_index + 1, end_index + 1, 1))
 
-        job = run_phonon_displacements_mod2(total_displacements=len(displacements), displacements=chunk, structure=structure,
-                                            supercell_matrix=supercell_matrix,phonon_maker=phonon_maker, indexs=indexs)
+        job = run_phonon_displacements_mod2(
+            total_displacements=len(displacements),
+            displacements=chunk,
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            phonon_maker=phonon_maker,
+            indexs=indexs,
+        )
         jobs.append(job)
         outputs["displacement_number"] = job.output["displacement_number"]
         outputs["uuids"] = job.output["uuids"]
@@ -624,30 +645,37 @@ def chunk_and_aggregate2(displacement: float,
         outputs["forces"] = job.output["forces"]
 
     displacement_flow = Flow(jobs)
-    return Response(replace=displacement_flow, output=outputs)  # Response(addition=jobs, output=outputs)
+    return Response(
+        replace=displacement_flow, output=outputs
+    )  # Response(addition=jobs, output=outputs)
 
 
 @job
-def chunk_and_aggregate(displacements,
-                        structure,
-                        supercell_matrix,
-                        phonon_maker,
-                        chunk_size=3,
-                        ):
-
+def chunk_and_aggregate(
+    displacements,
+    structure,
+    supercell_matrix,
+    phonon_maker,
+    chunk_size=3,
+):
     jobs = []
     outputs: dict[str, list] = {
         "displacement_number": None,
         "forces": None,
         "uuids": None,
-        "dirs": None
+        "dirs": None,
     }
     for chunk, start_index, end_index in chunks(displacements, chunk_size):
         indexs = list(range(start_index + 1, end_index + 1, 1))
 
-        job = run_phonon_displacements_mod2(total_displacements=len(displacements), displacements=chunk,
-                                            structure=structure,
-                                            supercell_matrix=supercell_matrix, phonon_maker=phonon_maker, indexs=indexs)
+        job = run_phonon_displacements_mod2(
+            total_displacements=len(displacements),
+            displacements=chunk,
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            phonon_maker=phonon_maker,
+            indexs=indexs,
+        )
         jobs.append(job)
         outputs["displacement_number"] = job.output["displacement_number"]
         outputs["uuids"] = job.output["uuids"]
@@ -657,18 +685,19 @@ def chunk_and_aggregate(displacements,
     return Response(replace=jobs, output=outputs)
 
 
-@job(data=["forces", Structure, 'chunks_list', 'index_list'])
-def chunk_and_aggregate_recur(displacement: float,
-                        sym_reduce: bool,
-                        symprec: float,
-                        use_symmetrized_structure: str | None,
-                        kpath_scheme: str,
-                        code: str,
-                        structure,
-                        supercell_matrix,
-                        phonon_maker,
-                        chunk_size=3,
-                        ):
+@job(data=["forces", Structure, "chunks_list", "index_list"])
+def chunk_and_aggregate_recur(
+    displacement: float,
+    sym_reduce: bool,
+    symprec: float,
+    use_symmetrized_structure: str | None,
+    kpath_scheme: str,
+    code: str,
+    structure,
+    supercell_matrix,
+    phonon_maker,
+    chunk_size=3,
+):
     warnings.warn(
         "Initial magnetic moments will not be considered for the determination "
         "of the symmetry of the structure and thus will be removed now.",
@@ -712,41 +741,48 @@ def chunk_and_aggregate_recur(displacement: float,
     displacements = [get_pmg_structure(cell) for cell in supercells]
 
     total_displacements = len(displacements)
-    recur_function_inputs = {'chunks_list': [],
-                             'index_list': []}
+    recur_function_inputs = {"chunks_list": [], "index_list": []}
     # chunks_list = []
     # index_list = []
     for chunk, start_index, end_index in chunks(displacements, chunk_size):
         indexs = list(range(start_index + 1, end_index + 1, 1))
-        recur_function_inputs['chunks_list'].append(chunk)
-        recur_function_inputs['index_list'].append(indexs)
+        recur_function_inputs["chunks_list"].append(chunk)
+        recur_function_inputs["index_list"].append(indexs)
         # chunks_list.append(chunk)
         # index_list.append(indexs)
 
     del supercells, displacements
 
-    displ_job = run_phonon_displacements_recur(total_displacements=total_displacements, structure=structure,
-                                               supercell_matrix=supercell_matrix,phonon_maker=phonon_maker,
-                                               chunks_list=recur_function_inputs['chunks_list'],
-                                               index_list=recur_function_inputs['index_list'], start=0)
+    displ_job = run_phonon_displacements_recur(
+        total_displacements=total_displacements,
+        structure=structure,
+        supercell_matrix=supercell_matrix,
+        phonon_maker=phonon_maker,
+        chunks_list=recur_function_inputs["chunks_list"],
+        index_list=recur_function_inputs["index_list"],
+        start=0,
+    )
 
     displacement_flow = Flow(displ_job, output=displ_job.output)
-    return Response(replace=displacement_flow)  # Response(addition=jobs, output=outputs)
+    return Response(
+        replace=displacement_flow
+    )  # Response(addition=jobs, output=outputs)
 
 
-@job(data=["forces", Structure, 'chunks_list', 'index_list'])
-def all_jobs(displacement: float,
-            sym_reduce: bool,
-            symprec: float,
-            kpath_scheme: str,
-            code: str,
-            structure,
-            supercell_matrix,
-            use_symmetrized_structure: str | None,
-            phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
-            prev_dir: str | Path = None,
-            chunk_size=3
-             ):
+@job(data=["forces", Structure, "chunks_list", "index_list"])
+def all_jobs(
+    displacement: float,
+    sym_reduce: bool,
+    symprec: float,
+    kpath_scheme: str,
+    code: str,
+    structure,
+    supercell_matrix,
+    use_symmetrized_structure: str | None,
+    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker = None,
+    prev_dir: str | Path = None,
+    chunk_size=3,
+):
     warnings.warn(
         "Initial magnetic moments will not be considered for the determination "
         "of the symmetry of the structure and thus will be removed now.",
@@ -795,7 +831,7 @@ def all_jobs(displacement: float,
         "displacement_number": [],
         "forces": [],
         "uuids": [],
-        "dirs": []
+        "dirs": [],
     }
 
     for idx, displacement in enumerate(displacements):
@@ -803,7 +839,7 @@ def all_jobs(displacement: float,
             phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
         else:
             phonon_job = phonon_maker.make(displacement)
-        phonon_job.append_name(f" {[idx+1]}/{len(displacements)}")
+        phonon_job.append_name(f" {[idx + 1]}/{len(displacements)}")
         info = {
             "displacement_number": idx,
             "original_structure": structure,

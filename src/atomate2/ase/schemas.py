@@ -43,22 +43,22 @@ class AseResult(BaseModel):
         None, description="The molecule or structure in the final trajectory frame."
     )
 
-    final_energy: float | None = Field(
+    final_energy: float | list[float] | None = Field(
         None, description="The final total energy from the calculation."
     )
 
-    trajectory: PmgTrajectory | None = Field(
+    trajectory: PmgTrajectory | list[PmgTrajectory] | None = Field(
         None, description="The relaxation or molecular dynamics trajectory."
     )
 
-    is_force_converged: bool | None = Field(
+    is_force_converged: bool | list[bool] | None = Field(
         None,
         description=(
             "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
-    energy_downhill: bool | None = Field(
+    energy_downhill: bool | list[bool] | None = Field(
         None,
         description=(
             "Whether the final trajectory frame has lower total "
@@ -66,11 +66,11 @@ class AseResult(BaseModel):
         ),
     )
 
-    dir_name: str | Path | list[str]|list[Path] |None = Field(
+    dir_name: str | Path | list[str] | list[Path] | None = Field(
         None, description="The directory where the calculation was run"
     )
 
-    elapsed_time: float | None = Field(
+    elapsed_time: float | list[float] | None = Field(
         None, description="The time taken to run the ASE calculation in seconds."
     )
 
@@ -93,17 +93,27 @@ class AseObject(ValueEnum):
 class AseBaseModel(BaseModel):
     """Base document class for ASE input and output."""
 
-    mol_or_struct: Structure | Molecule|list[Structure]|list[Molecule] | None = Field(
-        None, description="The molecule or structure at this step."
+    mol_or_struct: Structure | Molecule | list[Structure] | list[Molecule] | None = (
+        Field(None, description="The molecule or structure at this step.")
     )
-    structure: Structure|list[Structure] | None = Field(None, description="The structure at this step.")
-    molecule: Molecule|list[Molecule] | None = Field(None, description="The molecule at this step.")
+    structure: Structure | list[Structure] | None = Field(
+        None, description="The structure at this step."
+    )
+    molecule: Molecule | list[Molecule] | None = Field(
+        None, description="The molecule at this step."
+    )
 
     def model_post_init(self, _context: Any) -> None:
         """Establish alias to structure and molecule fields."""
-        if self.structure is None and (isinstance(self.mol_or_struct, Structure) or isinstance(self.mol_or_struct[0], Structure)):
+        if self.structure is None and (
+            isinstance(self.mol_or_struct, Structure)
+            or isinstance(self.mol_or_struct[0], Structure)
+        ):
             self.structure = self.mol_or_struct
-        elif self.molecule is None and (isinstance(self.mol_or_struct, Molecule) or isinstance(self.mol_or_struct[0], Molecule)):
+        elif self.molecule is None and (
+            isinstance(self.mol_or_struct, Molecule)
+            or isinstance(self.mol_or_struct[0], Molecule)
+        ):
             self.molecule = self.mol_or_struct
 
 
@@ -121,15 +131,17 @@ class IonicStep(AseBaseModel):
 class OutputDoc(AseBaseModel):
     """The outputs of this job."""
 
-    energy: float|list[float] | None = Field(None, description="Total energy in units of eV.")
+    energy: float | list[float] | None = Field(
+        None, description="Total energy in units of eV."
+    )
 
-    energy_per_atom: float|list[float] | None = Field(
+    energy_per_atom: float | list[float] | None = Field(
         None,
         description="Energy per atom of the final molecule or structure "
         "in units of eV/atom.",
     )
 
-    forces: list[Vector3D]|list[list[Vector3D]] | None = Field(
+    forces: list[Vector3D] | list[list[Vector3D]] | None = Field(
         None,
         description=(
             "The force on each atom in units of eV/A for the final molecule "
@@ -139,21 +151,21 @@ class OutputDoc(AseBaseModel):
 
     # NOTE: units for stresses were converted to kbar (* -10 from standard output)
     #       to comply with MP convention
-    stress: Matrix3D | list[Matrix3D] |None = Field(
+    stress: Matrix3D | list[Matrix3D] | None = Field(
         None, description="The stress on the cell in units of kbar (in Voigt notation)."
     )
 
     # NOTE: the ionic_steps can also be a dict when these are in blob storage and
     #       retrieved as objects.
-    ionic_steps: list[IonicStep]|list[list[IonicStep]] | dict|list[dict] | None = Field(
-        None, description="Step-by-step trajectory of the relaxation."
+    ionic_steps: list[IonicStep] | list[list[IonicStep]] | dict | list[dict] | None = (
+        Field(None, description="Step-by-step trajectory of the relaxation.")
     )
 
-    elapsed_time: float | list[float]|None = Field(
+    elapsed_time: float | list[float] | None = Field(
         None, description="The time taken to run the ASE calculation in seconds."
     )
 
-    n_steps: int | list[int]|None = Field(
+    n_steps: int | list[int] | None = Field(
         None, description="total number of steps needed in the relaxation."
     )
 
@@ -164,6 +176,7 @@ class OutputDoc(AseBaseModel):
             "or structures. Only present for batch calculations."
         ),
     )
+
 
 class InputDoc(AseBaseModel):
     """The inputs used to run this job."""
@@ -211,7 +224,7 @@ class AseStructureTaskDoc(StructureMetadata):
         description="name of the ASE calculator used in the calculation.",
     )
 
-    dir_name: str |list[str] |None = Field(
+    dir_name: str | list[str] | None = Field(
         None, description="Directory where the ASE calculations are performed."
     )
 
@@ -219,18 +232,18 @@ class AseStructureTaskDoc(StructureMetadata):
         None, description="list of ASE objects included with this task document"
     )
     # TODO: check if it needs to be a list
-    objects: dict[AseObject, Any] | list[dict[AseObject, Any]]|None = Field(
+    objects: dict[AseObject, Any] | list[dict[AseObject, Any]] | None = Field(
         None, description="ASE objects associated with this task"
     )
 
-    is_force_converged: bool | list[bool] |None = Field(
+    is_force_converged: bool | list[bool] | None = Field(
         None,
         description=(
             "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
-    energy_downhill: bool|list[bool] | None = Field(
+    energy_downhill: bool | list[bool] | None = Field(
         None,
         description=(
             "Whether the final trajectory frame has lower total "
@@ -265,7 +278,9 @@ class AseStructureTaskDoc(StructureMetadata):
 class AseMoleculeTaskDoc(MoleculeMetadata):
     """Document containing information on molecule manipulation using ASE."""
 
-    molecule: Molecule|list[Molecule] = Field(None, description="Final output molecule from the task")
+    molecule: Molecule | list[Molecule] = Field(
+        None, description="Final output molecule from the task"
+    )
 
     input: InputDoc = Field(
         None, description="The input information used to run this job."
@@ -273,12 +288,12 @@ class AseMoleculeTaskDoc(MoleculeMetadata):
 
     output: OutputDoc = Field(None, description="The output information from this job.")
 
-    ase_calculator_name:  str = Field(
+    ase_calculator_name: str = Field(
         None,
         description="name of the ASE calculator used in the calculation.",
     )
 
-    dir_name: str | list[str]|None = Field(
+    dir_name: str | list[str] | None = Field(
         None, description="Directory where the ASE calculations are performed."
     )
 
@@ -289,14 +304,14 @@ class AseMoleculeTaskDoc(MoleculeMetadata):
         None, description="ASE objects associated with this task"
     )
 
-    is_force_converged: bool|list[bool] | None = Field(
+    is_force_converged: bool | list[bool] | None = Field(
         None,
         description=(
             "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
-    energy_downhill: bool|list[bool] | None = Field(
+    energy_downhill: bool | list[bool] | None = Field(
         None,
         description=(
             "Whether the total energy in the final frame "
@@ -321,7 +336,7 @@ class AseTaskDoc(AseBaseModel):
         description="name of the ASE calculator used for this job.",
     )
 
-    dir_name: str |list[str]| None = Field(
+    dir_name: str | list[str] | None = Field(
         None, description="Directory where the ASE calculations are performed."
     )
 
@@ -329,18 +344,18 @@ class AseTaskDoc(AseBaseModel):
         None, description="list of ASE objects included with this task document"
     )
     # maybe list
-    objects: dict[AseObject, Any] |list[dict[AseObject, Any]] | None = Field(
+    objects: dict[AseObject, Any] | list[dict[AseObject, Any]] | None = Field(
         None, description="ASE objects associated with this task"
     )
 
-    is_force_converged: bool | list[bool] |None = Field(
+    is_force_converged: bool | list[bool] | None = Field(
         None,
         description=(
             "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
-    energy_downhill: bool|list[bool] | None = Field(
+    energy_downhill: bool | list[bool] | None = Field(
         None,
         description=(
             "Whether the total energy in the final frame "
@@ -354,7 +369,7 @@ class AseTaskDoc(AseBaseModel):
     def from_ase_compatible_result(
         cls,
         ase_calculator_name: str,
-        result: AseResult|list[AseResult],
+        result: AseResult | list[AseResult],
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
@@ -404,16 +419,16 @@ class AseTaskDoc(AseBaseModel):
         """
         is_list = not isinstance(result, AseResult)
 
-        results= result if is_list else [result]
+        results = result if is_list else [result]
 
-        output_mol_or_struct=[]
-        input_mol_or_struct=[]
-        final_energy=[]
-        final_forces=[]
-        final_stress=[]
-        ionic_steps =[]
+        output_mol_or_struct = []
+        input_mol_or_struct = []
+        final_energy = []
+        final_forces: list[Vector3D] | list[list[Vector3D]] = []
+        final_stress = []
+        ionic_steps = []
         n_steps = []
-        objects =[]
+        objects = []
 
         for result in results:
             trajectory = result.trajectory
@@ -422,7 +437,7 @@ class AseTaskDoc(AseBaseModel):
             n_steps_here = None
             input_mol_or_struct_here = None
             if trajectory:
-                n_steps_here=len(trajectory)
+                n_steps_here = len(trajectory)
 
             # NOTE: convert stress units from eV/A³ to kBar (* -1 from standard output)
             # and to 3x3 matrix to comply with MP convention
@@ -433,12 +448,14 @@ class AseTaskDoc(AseBaseModel):
                             voigt_6_to_full_3x3_stress(
                                 [
                                     val * -10 / GPa
-                                    for val in trajectory.frame_properties[idx]["stress"]
+                                    for val in trajectory.frame_properties[idx][
+                                        "stress"
+                                    ]
                                 ]
                             )
                         )
 
-                input_mol_or_struct_here=trajectory[0]
+                input_mol_or_struct_here = trajectory[0]
 
             input_mol_or_struct.append(input_mol_or_struct_here)
             n_steps.append(n_steps_here)
@@ -453,7 +470,7 @@ class AseTaskDoc(AseBaseModel):
                     traj_method = "from_structures"
                 elif isinstance(input_mol_or_struct_here, Molecule):
                     traj_method = "from_molecules"
-                trajectory=getattr(PmgTrajectory, traj_method)(
+                trajectory = getattr(PmgTrajectory, traj_method)(
                     [input_mol_or_struct_here],
                     frame_properties=[trajectory.frame_properties[0]],
                     constant_lattice=False,
@@ -523,7 +540,6 @@ class AseTaskDoc(AseBaseModel):
                 objects_structure[AseObject.TRAJECTORY] = trajectory  # type: ignore[index]
             objects.append(objects_structure)
         if not is_list:
-
             input_doc = InputDoc(
                 mol_or_struct=input_mol_or_struct[0],
                 relax_cell=relax_cell,
@@ -557,47 +573,51 @@ class AseTaskDoc(AseBaseModel):
                 tags=tags,
                 **task_document_kwargs,
             )
-        else:
-            input_doc = InputDoc(
-                mol_or_struct=input_mol_or_struct,
-                relax_cell=relax_cell,
-                fix_symmetry=fix_symmetry,
-                symprec=symprec,
-                steps=steps,
-                relax_kwargs=relax_kwargs,
-                optimizer_kwargs=optimizer_kwargs,
-            )
-            output_doc = OutputDoc(
-                mol_or_struct=output_mol_or_struct,
-                energy=final_energy,
-                energy_per_atom=[final_energy_here/len(output_mol_or_struct_here) for final_energy_here, output_mol_or_struct_here  in zip(final_energy, output_mol_or_struct)],
-                forces=final_forces,
-                stress=final_stress,
-                ionic_steps=ionic_steps,
-                elapsed_time=[result.elapsed_time for result in  results],
-                n_steps=n_steps,
-                all_forces=final_forces,
-            )
+        input_doc = InputDoc(
+            mol_or_struct=input_mol_or_struct,
+            relax_cell=relax_cell,
+            fix_symmetry=fix_symmetry,
+            symprec=symprec,
+            steps=steps,
+            relax_kwargs=relax_kwargs,
+            optimizer_kwargs=optimizer_kwargs,
+        )
+        output_doc = OutputDoc(
+            mol_or_struct=output_mol_or_struct,
+            energy=final_energy,
+            energy_per_atom=[
+                final_energy_here / len(output_mol_or_struct_here)
+                for final_energy_here, output_mol_or_struct_here in zip(
+                    final_energy, output_mol_or_struct, strict=False
+                )
+            ],
+            forces=final_forces,
+            stress=final_stress,
+            ionic_steps=ionic_steps,
+            elapsed_time=[result.elapsed_time for result in results],
+            n_steps=n_steps,
+            all_forces=final_forces,
+        )
 
-            return cls(
-                mol_or_struct=output_mol_or_struct[-1], # last structure by default
-                input=input_doc,
-                output=output_doc,
-                ase_calculator_name=ase_calculator_name,
-                included_objects=list(objects[0].keys()),
-                objects=objects,
-                is_force_converged=[result.is_force_converged for result in results],
-                energy_downhill=[result.energy_downhill for result in results],
-                dir_name=[result.dir_name for result in results],
-                tags=tags,
-                **task_document_kwargs,
-            )
+        return cls(
+            mol_or_struct=output_mol_or_struct[-1],  # last structure by default
+            input=input_doc,
+            output=output_doc,
+            ase_calculator_name=ase_calculator_name,
+            included_objects=list(objects[0].keys()),
+            objects=objects,
+            is_force_converged=[result.is_force_converged for result in results],
+            energy_downhill=[result.energy_downhill for result in results],
+            dir_name=[result.dir_name for result in results],
+            tags=tags,
+            **task_document_kwargs,
+        )
 
     @classmethod
     def to_mol_or_struct_metadata_doc(
         cls,
         ase_calculator_name: str,
-        result: AseResult|list[AseResult],
+        result: AseResult | list[AseResult],
         steps: int | None = None,
         **task_document_kwargs,
     ) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
@@ -624,23 +644,19 @@ class AseTaskDoc(AseBaseModel):
         )
         kwargs = {k: getattr(task_doc, k, None) for k in _task_doc_translation_keys}
 
-
-
-        if isinstance(task_doc.mol_or_struct, Structure) or isinstance(task_doc.mol_or_struct[0], Structure):
+        if isinstance(task_doc.mol_or_struct, Structure) or isinstance(
+            task_doc.mol_or_struct[0], Structure
+        ):
             meta_class = AseStructureTaskDoc
             k = "structure"
             if relax_cell := getattr(task_doc, "relax_cell", None):
                 kwargs.update({"relax_cell": relax_cell})
-        elif isinstance(task_doc.mol_or_struct, Molecule) or isinstance(task_doc.mol_or_struct[0], Molecule):
+        elif isinstance(task_doc.mol_or_struct, Molecule) or isinstance(
+            task_doc.mol_or_struct[0], Molecule
+        ):
             meta_class = AseMoleculeTaskDoc
             k = "molecule"
 
         kwargs.update({k: task_doc.mol_or_struct, f"meta_{k}": task_doc.mol_or_struct})
 
         return getattr(meta_class, f"from_{k}")(**kwargs)
-
-
-
-
-
-
