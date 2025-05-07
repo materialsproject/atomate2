@@ -53,15 +53,16 @@ def test_lennard_jones_batch_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):
     ).make([fcc_ne_structure,fcc_ne_structure])
 
     response = run_locally(job)
-    output = response[job.uuid][1].output
-    assert len(output) ==2
 
-    assert output[0].structure.volume == pytest.approx(22.304245)
-    assert output[0].output.energy == pytest.approx(-0.018494767)
-    assert isinstance(output[0], AseStructureTaskDoc)
-    assert isinstance(output[1], AseStructureTaskDoc)
-    assert fcc_ne_structure.matches(output[0].structure), (
-        f"{output.structure[0]} != {fcc_ne_structure}"
+    output = response[job.uuid][1].output
+
+    assert output.output.structure[0].volume == pytest.approx(22.304245)
+    assert output.output.structure[1].volume == pytest.approx(22.304245)
+    assert output.output.energy[0] == pytest.approx(-0.018494767)
+    assert output.output.energy[1] == pytest.approx(-0.018494767)
+    assert isinstance(output, AseStructureTaskDoc)
+    assert fcc_ne_structure.matches(output.output.structure[0]), (
+        f"{output.output.structure[0]} != {fcc_ne_structure}"
     )
 
 

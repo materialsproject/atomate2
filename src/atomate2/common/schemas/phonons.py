@@ -527,6 +527,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         volume_per_formula_unit = structure.volume / formula_units
 
+        if displacement_data["dirs"] is not None:
+            if isinstance(displacement_data["dirs"][0], list):
+                displacement_data["dirs"] = [dir for dir_list in displacement_data["dirs"] for dir in dir_list]
+
+
         doc = cls.from_structure(
             structure=structure,
             meta_structure=structure,

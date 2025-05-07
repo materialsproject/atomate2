@@ -66,7 +66,7 @@ class AseResult(BaseModel):
         ),
     )
 
-    dir_name: str | Path | None = Field(
+    dir_name: str | Path | list[str]|list[Path] |None = Field(
         None, description="The directory where the calculation was run"
     )
 
@@ -196,7 +196,7 @@ class InputDoc(AseBaseModel):
 class AseStructureTaskDoc(StructureMetadata):
     """Document containing information on structure manipulation using ASE."""
 
-    structure: Structure|list[Structure] = Field(
+    structure: Structure = Field(
         None, description="Final output structure from the task"
     )
 
@@ -211,7 +211,7 @@ class AseStructureTaskDoc(StructureMetadata):
         description="name of the ASE calculator used in the calculation.",
     )
 
-    dir_name: str |list[dirname] |None = Field(
+    dir_name: str |list[str] |None = Field(
         None, description="Directory where the ASE calculations are performed."
     )
 
@@ -219,7 +219,7 @@ class AseStructureTaskDoc(StructureMetadata):
         None, description="list of ASE objects included with this task document"
     )
     # TODO: check if it needs to be a list
-    objects: dict[AseObject, Any] | None = Field(
+    objects: dict[AseObject, Any] | list[dict[AseObject, Any]]|None = Field(
         None, description="ASE objects associated with this task"
     )
 
@@ -580,15 +580,15 @@ class AseTaskDoc(AseBaseModel):
             )
 
             return cls(
-                mol_or_struct=output_mol_or_struct[0],
+                mol_or_struct=output_mol_or_struct[-1], # last structure by default
                 input=input_doc,
                 output=output_doc,
                 ase_calculator_name=ase_calculator_name,
                 included_objects=list(objects[0].keys()),
-                objects=objects[0],
-                is_force_converged=results[0].is_force_converged,
-                energy_downhill=results[0].energy_downhill,
-                dir_name=results[0].dir_name,
+                objects=objects,
+                is_force_converged=[result.is_force_converged for result in results],
+                energy_downhill=[result.energy_downhill for result in results],
+                dir_name=[result.dir_name for result in results],
                 tags=tags,
                 **task_document_kwargs,
             )

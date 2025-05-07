@@ -17,7 +17,7 @@ from atomate2.common.schemas.phonons import (
 from atomate2.forcefields.flows.phonons import PhononMaker
 
 
-@pytest.mark.parametrize("from_name, socket", [(False, True), (True,False)])
+@pytest.mark.parametrize("from_name, socket", [(False, True), (False, False), (True,False), (True,True)])
 def test_phonon_wf_force_field(
     clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool, socket: bool
 ):
