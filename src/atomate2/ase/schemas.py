@@ -43,22 +43,22 @@ class AseResult(BaseModel):
         None, description="The molecule or structure in the final trajectory frame."
     )
 
-    final_energy: float | list[float] | None = Field(
+    final_energy: float | None = Field(
         None, description="The final total energy from the calculation."
     )
 
-    trajectory: PmgTrajectory | list[PmgTrajectory] | None = Field(
+    trajectory: PmgTrajectory | None = Field(
         None, description="The relaxation or molecular dynamics trajectory."
     )
 
-    is_force_converged: bool | list[bool] | None = Field(
+    is_force_converged: bool | None = Field(
         None,
         description=(
             "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
-    energy_downhill: bool | list[bool] | None = Field(
+    energy_downhill: bool | None = Field(
         None,
         description=(
             "Whether the final trajectory frame has lower total "
@@ -66,11 +66,11 @@ class AseResult(BaseModel):
         ),
     )
 
-    dir_name: str | Path | list[str] | list[Path] | None = Field(
+    dir_name: str | Path | None = Field(
         None, description="The directory where the calculation was run"
     )
 
-    elapsed_time: float | list[float] | None = Field(
+    elapsed_time: float | None = Field(
         None, description="The time taken to run the ASE calculation in seconds."
     )
 
@@ -105,17 +105,17 @@ class AseBaseModel(BaseModel):
 
     def model_post_init(self, _context: Any) -> None:
         """Establish alias to structure and molecule fields."""
-
         if self.mol_or_struct is not None:
             if self.structure is None and (
-                isinstance(self.mol_or_struct, Structure) or isinstance(self.mol_or_struct[0], Structure)
+                isinstance(self.mol_or_struct, Structure)
+                or isinstance(self.mol_or_struct[0], Structure)
             ):
                 self.structure = self.mol_or_struct
             elif self.molecule is None and (
-                isinstance(self.mol_or_struct, Molecule) or isinstance(self.mol_or_struct[0], Molecule)
+                isinstance(self.mol_or_struct, Molecule)
+                or isinstance(self.mol_or_struct[0], Molecule)
             ):
                 self.molecule = self.mol_or_struct
-
 
 
 class IonicStep(AseBaseModel):
@@ -170,7 +170,7 @@ class OutputDoc(AseBaseModel):
         None, description="total number of steps needed in the relaxation."
     )
 
-    all_forces:  list[list[Vector3D]] | None = Field(
+    all_forces: list[list[Vector3D]] | None = Field(
         None,
         description=(
             "The force on each atom in units of eV/A for the final molecules "
@@ -419,14 +419,14 @@ class AseTaskDoc(AseBaseModel):
             Additional keyword args passed to :obj:`.AseTaskDoc()`.
         """
         is_list = isinstance(result, list)
-        results = result if is_list else [result]
+        results: list[AseResult] = result if isinstance(result, list) else [result]
 
-        output_mol_or_struct = []
-        input_mol_or_struct = []
-        final_energy = []
+        output_mol_or_struct: list[Molecule] | list[Structure] | None = []
+        input_mol_or_struct: list[Molecule] | list[Structure] | None = []
+        final_energy: list[float] = []
         final_forces: list[Vector3D] | list[list[Vector3D]] = []
-        final_stress = []
-        ionic_steps = []
+        final_stress: list[Matrix3D] = []
+        ionic_steps: list[list[IonicStep]] | list[dict] = []
         n_steps = []
         objects = []
 
@@ -490,7 +490,7 @@ class AseTaskDoc(AseBaseModel):
                 final_forces.append(trajectory.frame_properties[-1]["forces"])
                 final_stress.append(trajectory.frame_properties[-1].get("stress"))
 
-                ionic_steps_structure = []
+                ionic_steps_individual: list[IonicStep] = []
                 if ionic_step_data is not None and len(ionic_step_data) > 0:
                     for idx in range(n_steps_here):
                         _ionic_step_data = {
@@ -528,8 +528,8 @@ class AseTaskDoc(AseBaseModel):
                             **_ionic_step_data,
                         )
 
-                        ionic_steps_structure.append(ionic_step)
-                ionic_steps.append(ionic_steps_structure)
+                        ionic_steps_individual.append(ionic_step)
+                ionic_steps.append(ionic_steps_individual)
 
             objects_structure: dict[AseObject, Any] = {}
             if store_trajectory != StoreTrajectoryOption.NO:
@@ -587,8 +587,8 @@ class AseTaskDoc(AseBaseModel):
             mol_or_struct=output_mol_or_struct,
             energy=final_energy,
             energy_per_atom=[
-                final_energy_here / len(output_mol_or_struct_here)
-                for final_energy_here, output_mol_or_struct_here in zip(
+                final_energy_item / len(output_mol_or_struct_item)
+                for final_energy_item, output_mol_or_struct_item in zip(
                     final_energy, output_mol_or_struct, strict=False
                 )
             ],

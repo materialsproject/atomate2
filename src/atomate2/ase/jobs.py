@@ -119,7 +119,7 @@ class AseMaker(Maker, metaclass=ABCMeta):
         self,
         mol_or_struct: Structure | Molecule,
         prev_dir: str | Path | None = None,
-    ) -> AseResult:
+    ) -> AseResult | list[AseResult]:
         """
         Run ASE, can be re-implemented in subclasses.
 
