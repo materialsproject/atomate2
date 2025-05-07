@@ -360,10 +360,11 @@ class AseRelaxer:
         is_list=isinstance(atoms[0], Atoms) or isinstance(atoms[0], Molecule) or isinstance(atoms[0], Structure)
 
         if not is_list:
-            atoms = [atoms]
-
+            list_atoms = [atoms]
+        else:
+            list_atoms=atoms
         list_ase_results = []
-        for atom in atoms:
+        for atoms in list_atoms:
             is_mol = isinstance(atoms, Molecule) or (
                 isinstance(atoms, Atoms) and all(not pbc for pbc in atoms.pbc)
             )

@@ -221,13 +221,9 @@ class AseRelaxMaker(AseMaker):
         -------
         AseStructureTaskDoc or AseMoleculeTaskDoc
         """
-        result=self.run_ase(mol_or_struct, prev_dir=prev_dir)
-        is_list = isinstance(result, list)
-
-        if not is_list:
-            return AseTaskDoc.to_mol_or_struct_metadata_doc(
+        return AseTaskDoc.to_mol_or_struct_metadata_doc(
                 getattr(self.calculator, "name", type(self.calculator).__name__),
-                result,
+                self.run_ase(mol_or_struct, prev_dir=prev_dir),
                 self.steps,
                 relax_kwargs=self.relax_kwargs,
                 optimizer_kwargs=self.optimizer_kwargs,
@@ -238,20 +234,6 @@ class AseRelaxMaker(AseMaker):
                 store_trajectory=self.store_trajectory,
                 tags=self.tags,
             )
-        else:
-            return [AseTaskDoc.to_mol_or_struct_metadata_doc(
-                getattr(self.calculator, "name", type(self.calculator).__name__),
-                resul,
-                self.steps,
-                relax_kwargs=self.relax_kwargs,
-                optimizer_kwargs=self.optimizer_kwargs,
-                relax_cell=self.relax_cell,
-                fix_symmetry=self.fix_symmetry,
-                symprec=self.symprec if self.fix_symmetry else None,
-                ionic_step_data=self.ionic_step_data,
-                store_trajectory=self.store_trajectory,
-                tags=self.tags,
-            ) for resul in result]
 
     def run_ase(
         self,

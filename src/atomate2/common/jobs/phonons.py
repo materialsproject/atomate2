@@ -293,9 +293,10 @@ def run_phonon_displacements(
             "supercell_matrix": supercell_matrix,
             "displaced_structures": displacements,
         }
-        phonon_job.update_maker_kwargs(
-            {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
-        )
+        
+        #phonon_job.update_maker_kwargs(
+        #    {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
+        #)
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(len(displacements)))
         outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)
