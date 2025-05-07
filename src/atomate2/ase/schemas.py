@@ -105,16 +105,17 @@ class AseBaseModel(BaseModel):
 
     def model_post_init(self, _context: Any) -> None:
         """Establish alias to structure and molecule fields."""
-        if self.structure is None and (
-            isinstance(self.mol_or_struct, Structure)
-            or isinstance(self.mol_or_struct[0], Structure)
-        ):
-            self.structure = self.mol_or_struct
-        elif self.molecule is None and (
-            isinstance(self.mol_or_struct, Molecule)
-            or isinstance(self.mol_or_struct[0], Molecule)
-        ):
-            self.molecule = self.mol_or_struct
+
+        if self.mol_or_struct is not None:
+            if self.structure is None and (
+                isinstance(self.mol_or_struct, Structure) or isinstance(self.mol_or_struct[0], Structure)
+            ):
+                self.structure = self.mol_or_struct
+            elif self.molecule is None and (
+                isinstance(self.mol_or_struct, Molecule) or isinstance(self.mol_or_struct[0], Molecule)
+            ):
+                self.molecule = self.mol_or_struct
+
 
 
 class IonicStep(AseBaseModel):
@@ -169,11 +170,11 @@ class OutputDoc(AseBaseModel):
         None, description="total number of steps needed in the relaxation."
     )
 
-    all_forces: list[list[Vector3D]] | None = Field(
+    all_forces:  list[list[Vector3D]] | None = Field(
         None,
         description=(
             "The force on each atom in units of eV/A for the final molecules "
-            "or structures. Only present for batch calculations."
+            "or structures. Useful for batch calculations."
         ),
     )
 
@@ -417,8 +418,7 @@ class AseTaskDoc(AseBaseModel):
         task_document_kwargs : dict
             Additional keyword args passed to :obj:`.AseTaskDoc()`.
         """
-        is_list = not isinstance(result, AseResult)
-
+        is_list = isinstance(result, list)
         results = result if is_list else [result]
 
         output_mol_or_struct = []
@@ -558,6 +558,7 @@ class AseTaskDoc(AseBaseModel):
                 ionic_steps=ionic_steps[0],
                 elapsed_time=results[0].elapsed_time,
                 n_steps=n_steps[0],
+                all_forces=final_forces if final_forces[0] is not None else None,
             )
 
             return cls(
