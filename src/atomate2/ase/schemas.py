@@ -11,7 +11,7 @@ Copyright (c) 2022, Materials Virtual Lab.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from ase.stress import voigt_6_to_full_3x3_stress
 from ase.units import GPa
@@ -426,7 +426,7 @@ class AseTaskDoc(AseBaseModel):
         final_energy: list[float] = []
         final_forces: list[Vector3D] | list[list[Vector3D]] = []
         final_stress: list[Matrix3D] = []
-        ionic_steps: list[list[IonicStep]] | list[dict] = []
+        ionic_steps: list[Optional[list[IonicStep]]] = []
         n_steps = []
         objects = []
 
