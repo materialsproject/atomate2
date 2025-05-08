@@ -133,6 +133,33 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
         CHGNetRelaxMaker()
 
 
+def test_chgnet_batch_static_maker(si_structure: Structure):
+    # translate one atom to ensure a small number of relaxation steps are taken
+    si_structure2 = si_structure.copy()
+    si_structure.translate_sites(0, [0, 0, 0.1])
+    si_structure2.translate_sites(0, [0.1, 0, 0.1])
+
+    # generate job
+    job = ForceFieldStaticMaker(
+        force_field_name="CHGNet",
+    ).make([si_structure, si_structure2])
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validate job outputs
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+
+    assert len(output1.structure) == 2
+    assert output1.output.energy[0] == approx(-9.96250, rel=1e-2)
+    assert output1.output.energy[1] == approx(-9.4781, rel=1e-2)
+
+    # check the force_field_task_doc attributes
+    assert Path(responses[job.uuid][1].output.dir_name[0]).exists()
+    assert Path(responses[job.uuid][1].output.dir_name[1]).exists()
+
+
 @pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
 def test_m3gnet_static_maker(si_structure):
     # generate job
