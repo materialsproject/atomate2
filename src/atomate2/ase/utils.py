@@ -364,12 +364,13 @@ class AseRelaxer:
             dict including optimized structure and the trajectory
             or a list of those dicts
         """
-        is_list = isinstance(atoms[0], (Atoms, Molecule, Structure))
+        is_list = isinstance(atoms[0], (Atoms | Molecule | Structure))
 
         list_atoms: list[Atoms] = [atoms] if not is_list else atoms
 
         list_ase_results = []
-        for atoms_item in list_atoms:
+        for atoms_item_start in list_atoms:
+            atoms_item = atoms_item_start
             is_mol = isinstance(atoms_item, Molecule) or (
                 isinstance(atoms_item, Atoms) and all(not pbc for pbc in atoms_item.pbc)
             )
