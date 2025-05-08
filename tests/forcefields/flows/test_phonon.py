@@ -108,7 +108,7 @@ def test_phonon_wf_force_field(
 
 
 @pytest.mark.parametrize("socket", [True, False])
-def test_phonon_wf_force_field(
+def test_phonon_wf_force_field_diamond(
     clean_dir, si_diamond: Structure, tmp_path: Path, socket: bool
 ):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
@@ -121,8 +121,8 @@ def test_phonon_wf_force_field(
         prefer_90_degrees=False,
         generate_frequencies_eigenvectors_kwargs={
             "tstep": 100,
-            "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),
-            "filename_dos": (filename_dos := f"{tmp_path}/phonon_dos_test.pdf"),
+            "filename_bs": f"{tmp_path}/phonon_bs_test.png",
+            "filename_dos": f"{tmp_path}/phonon_dos_test.pdf",
         },
     )
 
