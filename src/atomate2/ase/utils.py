@@ -343,7 +343,8 @@ class AseRelaxer:
 
         Parameters
         ----------
-        atoms : ASE Atoms, pymatgen .Structure, or pymatgen .Molecule or corresponding lists
+        atoms : ASE Atoms, pymatgen .Structure, or pymatgen .Molecule
+            or lists of those.
             The atoms for relaxation.
         fmax : float
             Total force tolerance for relaxation convergence.
@@ -360,33 +361,28 @@ class AseRelaxer:
 
         Returns
         -------
-            dict including optimized structure and the trajectory or a list of those dicts
+            dict including optimized structure and the trajectory
+            or a list of those dicts
         """
-        is_list = (
-            isinstance(atoms[0], Atoms)
-            or isinstance(atoms[0], Molecule)
-            or isinstance(atoms[0], Structure)
-        )
+        is_list = isinstance(atoms[0], (Atoms, Molecule, Structure))
 
-        if not is_list:
-            list_atoms = [atoms]
-        else:
-            list_atoms = atoms
+        list_atoms: list[Atoms] = [atoms] if not is_list else atoms
+
         list_ase_results = []
-        for atoms in list_atoms:
-            is_mol = isinstance(atoms, Molecule) or (
-                isinstance(atoms, Atoms) and all(not pbc for pbc in atoms.pbc)
+        for atoms_item in list_atoms:
+            is_mol = isinstance(atoms_item, Molecule) or (
+                isinstance(atoms_item, Atoms) and all(not pbc for pbc in atoms_item.pbc)
             )
-            if isinstance(atoms, Structure | Molecule):
-                atoms = self.ase_adaptor.get_atoms(atoms)
+            if isinstance(atoms_item, Structure | Molecule):
+                atoms_item = self.ase_adaptor.get_atoms(atoms_item)
             if self.fix_symmetry:
-                atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
-            atoms.calc = self.calculator
+                atoms_item.set_constraint(FixSymmetry(atoms_item, symprec=self.symprec))
+            atoms_item.calc = self.calculator
             with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
-                obs = TrajectoryObserver(atoms)
+                obs = TrajectoryObserver(atoms_item)
                 if self.relax_cell and (not is_mol):
-                    atoms = cell_filter(atoms)
-                optimizer = self.opt_class(atoms, **kwargs)
+                    atoms_item = cell_filter(atoms_item)
+                optimizer = self.opt_class(atoms_item, **kwargs)
                 optimizer.attach(obs, interval=interval)
                 t_i = time.perf_counter()
                 optimizer.run(fmax=fmax, steps=steps)
@@ -394,11 +390,11 @@ class AseRelaxer:
                 obs()
             if traj_file is not None:
                 obs.save(traj_file)
-            if isinstance(atoms, cell_filter):
-                atoms = atoms.atoms
+            if isinstance(atoms_item, cell_filter):
+                atoms_item = atoms_item.atoms
 
             struct = self.ase_adaptor.get_structure(
-                atoms, cls=Molecule if is_mol else Structure
+                atoms_item, cls=Molecule if is_mol else Structure
             )
             traj = obs.to_pymatgen_trajectory(None)
             is_force_conv = all(

@@ -430,8 +430,8 @@ class AseTaskDoc(AseBaseModel):
         n_steps = []
         objects = []
 
-        for result in results:
-            trajectory = result.trajectory
+        for result_item in results:
+            trajectory = result_item.trajectory
 
             # TODO: fix this
             n_steps_here = None
@@ -477,10 +477,10 @@ class AseTaskDoc(AseBaseModel):
                 )
                 output_mol_or_struct.append(input_mol_or_struct_here)
             else:
-                output_mol_or_struct.append(result.final_mol_or_struct)
+                output_mol_or_struct.append(result_item.final_mol_or_struct)
 
             if trajectory is None:
-                final_energy.append(result.final_energy)
+                final_energy.append(result_item.final_energy)
                 final_forces.append(None)
                 final_stress.append(None)
                 ionic_steps.append(None)
@@ -511,7 +511,8 @@ class AseTaskDoc(AseBaseModel):
                             else None
                         )
 
-                        # include "magmoms" in `ionic_step` if the trajectory has "magmoms"
+                        # include "magmoms" in `ionic_step`
+                        # if the trajectory has "magmoms"
                         if "magmoms" in trajectory.frame_properties[idx]:
                             _ionic_step_data.update(
                                 {
