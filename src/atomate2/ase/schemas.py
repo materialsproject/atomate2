@@ -458,7 +458,6 @@ class AseTaskDoc(AseBaseModel):
                 input_mol_or_struct_here = trajectory[0]
 
             input_mol_or_struct.append(input_mol_or_struct_here)
-            n_steps.append(n_steps_here)
 
             # Workaround for cases where the ASE optimizer does not correctly limit the
             # number of steps for static calculations.
@@ -478,6 +477,8 @@ class AseTaskDoc(AseBaseModel):
                 output_mol_or_struct.append(input_mol_or_struct_here)
             else:
                 output_mol_or_struct.append(result_item.final_mol_or_struct)
+
+            n_steps.append(n_steps_here)
 
             if trajectory is None:
                 final_energy.append(result_item.final_energy)
