@@ -15,7 +15,7 @@ from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
-from atomate2.ase.schemas import AseResult, AseTaskDoc, OutputDoc
+from atomate2.ase.schemas import AseResult, AseTaskDoc, OutputDoc, InputDoc
 from atomate2.ase.utils import AseRelaxer
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
-_ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, OutputDoc]
+_ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, OutputDoc, InputDoc]
 
 
 @dataclass
