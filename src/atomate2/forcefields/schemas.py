@@ -49,18 +49,18 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
         description="version of the interatomic potential used for relaxation.",
     )
 
-    dir_name: Optional[str] = Field(
+    dir_name: Optional[str] | list[Optional[str]] = Field(
         None, description="Directory where the force field calculations are performed."
     )
 
     included_objects: Optional[list[AseObject]] = Field(
         None, description="list of forcefield objects included with this task document"
     )
-    objects: Optional[dict[AseObject, Any]] = Field(
-        None, description="Forcefield objects associated with this task"
+    objects: Optional[dict[AseObject, Any]] | list[Optional[dict[AseObject, Any]]] = (
+        Field(None, description="Forcefield objects associated with this task")
     )
 
-    is_force_converged: Optional[bool] = Field(
+    is_force_converged: Optional[bool] | list[Optional[bool]] = Field(
         None,
         description=(
             "Whether the calculation is converged with respect to interatomic forces."
@@ -71,7 +71,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
     def from_ase_compatible_result(
         cls,
         ase_calculator_name: str,
-        result: AseResult,
+        result: AseResult | list[AseResult],
         steps: int,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
@@ -156,6 +156,8 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
         return cls.from_ase_task_doc(ase_task_doc, **ff_kwargs)
 
     @property
-    def forcefield_objects(self) -> Optional[dict[AseObject, Any]]:
+    def forcefield_objects(
+        self,
+    ) -> Optional[dict[AseObject, Any]] | list[Optional[dict[AseObject, Any]]]:
         """Alias `objects` attr for backwards compatibility."""
         return self.objects
