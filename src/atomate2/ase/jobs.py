@@ -27,7 +27,14 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
-_ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, InputDoc, OutputDoc]
+_ASE_DATA_OBJECTS = [
+    PmgTrajectory,
+    AseTrajectory,
+    InputDoc,
+    OutputDoc,
+    "is_force_converged",
+    "energy_downhill",
+]
 
 
 @dataclass
