@@ -94,7 +94,7 @@ tests = [
 ]
 strict = [
     "PyYAML==6.0.2",
-    "ase==3.24.0",
+    "ase==3.25.0",
     "cclib==1.8.1",
     "click==8.2.0",
     "custodian==2025.4.14",
