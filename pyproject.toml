@@ -96,7 +96,7 @@ strict = [
     "PyYAML==6.0.2",
     "ase==3.24.0",
     "cclib==1.8.1",
-    "click==8.1.7",
+    "click==8.2.0",
     "custodian==2025.4.14",
     "dscribe==2.1.1",
     "emmet-core==0.84.5",
