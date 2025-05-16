@@ -132,7 +132,7 @@ class BasePhononMaker(Maker, ABC):
     store_force_constants: bool
         if True, force constants will be stored
     socket: bool
-        If True, use the socket for the calculation
+        If True, use the socket/batch mode for the calculation
     """
 
     name: str = "phonon"
@@ -166,6 +166,7 @@ class BasePhononMaker(Maker, ABC):
     code: str = None
     store_force_constants: bool = True
     socket: bool = False
+    chunk_size = 2
 
     def make(
         self,
@@ -305,7 +306,6 @@ class BasePhononMaker(Maker, ABC):
             jobs.append(compute_total_energy_job)
             total_dft_energy = compute_total_energy_job.output
 
-        # get a phonon object from phonopy
         displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
@@ -318,7 +318,6 @@ class BasePhononMaker(Maker, ABC):
         )
         jobs.append(displacements)
 
-        # perform the phonon displacement calculations
         displacement_calcs = run_phonon_displacements(
             displacements=displacements.output,
             structure=structure,
@@ -329,7 +328,6 @@ class BasePhononMaker(Maker, ABC):
             prev_dir=prev_dir,
         )
         jobs.append(displacement_calcs)
-
         # Computation of BORN charges
         born_run_job_dir = None
         born_run_uuid = None
