@@ -40,11 +40,11 @@ _FORCEFIELD_DATA_OBJECTS = [
     "input",
     "energy",
     "stress",
-    "energy_per_atom", 
+    "energy_per_atom",
     "elapsed_time",
     "n_steps",
-    "all_forces"
-    ]
+    "all_forces",
+]
 
 _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.CHGNet: {"stress_weight": _GPa_to_eV_per_A3},
