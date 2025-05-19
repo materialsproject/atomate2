@@ -130,7 +130,7 @@ strict-forcefields = [
     "matgl==1.2.6",
     "quippy-ase==0.9.14; python_version < '3.12'",
     "sevenn==0.10.3",
-    "torch==2.2.0",
+    "torch==2.7.0",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
 ]
 
