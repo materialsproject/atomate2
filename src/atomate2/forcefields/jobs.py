@@ -18,6 +18,8 @@ from atomate2.ase.schemas import InputDoc, OutputDoc
 from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
+from pymatgen.core.structure import Structure
+
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -43,7 +45,12 @@ _FORCEFIELD_DATA_OBJECTS = [
     "energy_per_atom", 
     "elapsed_time",
     "n_steps",
-    "all_forces"
+    "all_forces",
+    "dir_name",
+    "objects",
+    "mol_or_struct",
+    "structure",
+    "output",
     ]
 
 _DEFAULT_CALCULATOR_KWARGS = {
