@@ -22,7 +22,6 @@ from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
-from atomate2.ase.schemas import InputDoc, OutputDoc
 
 _task_doc_translation_keys = {
     "input",
