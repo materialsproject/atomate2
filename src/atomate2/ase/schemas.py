@@ -23,6 +23,7 @@ from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
+
 _task_doc_translation_keys = {
     "input",
     "output",
@@ -36,8 +37,6 @@ _task_doc_translation_keys = {
     PmgTrajectory,
     AseTrajectory,
     "ionic_steps",
-    InputDoc,
-    OutputDoc,
     "is_force_converged",
     "energy_downhill",
     "forces",
