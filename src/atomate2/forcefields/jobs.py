@@ -51,6 +51,7 @@ _FORCEFIELD_DATA_OBJECTS = [
     "mol_or_struct",
     "structure",
     "output",
+    Structure
 ]
 
 

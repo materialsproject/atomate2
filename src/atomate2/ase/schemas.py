@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Any, Optional
-
+from ase.io import Trajectory as AseTrajectory
 from ase.stress import voigt_6_to_full_3x3_stress
 from ase.units import GPa
 from emmet.core.math import Matrix3D, Vector3D
@@ -22,6 +22,7 @@ from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
+from atomate2.ase.schemas import InputDoc, OutputDoc
 
 _task_doc_translation_keys = {
     "input",
@@ -33,6 +34,27 @@ _task_doc_translation_keys = {
     "is_force_converged",
     "energy_downhill",
     "tags",
+    PmgTrajectory,
+    AseTrajectory,
+    "ionic_steps",
+    InputDoc,
+    OutputDoc,
+    "is_force_converged",
+    "energy_downhill",
+    "forces",
+    "input",
+    "energy",
+    "stress",
+    "energy_per_atom",
+    "elapsed_time",
+    "n_steps",
+    "all_forces",
+    "dir_name",
+    "objects",
+    "mol_or_struct",
+    "structure",
+    "output",
+    Structure,
 }
 
 

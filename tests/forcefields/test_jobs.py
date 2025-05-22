@@ -133,7 +133,7 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
         CHGNetRelaxMaker()
 
 
-def test_chgnet_batch_static_maker(si_structure: Structure):
+def test_chgnet_batch_static_maker(si_structure: Structure, memory_jobstore):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure2 = si_structure.copy()
     si_structure.translate_sites(0, [0, 0, 0.1])
@@ -145,8 +145,8 @@ def test_chgnet_batch_static_maker(si_structure: Structure):
     ).make([si_structure, si_structure2])
 
     # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, ensure_success=True)
-
+    responses = run_locally(job, ensure_success=True, store=memory_jobstore)
+    print(responses)
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
@@ -158,6 +158,13 @@ def test_chgnet_batch_static_maker(si_structure: Structure):
     # check the force_field_task_doc attributes
     assert Path(responses[job.uuid][1].output.dir_name[0]).exists()
     assert Path(responses[job.uuid][1].output.dir_name[1]).exists()
+    result = memory_jobstore.query_one(
+        {"name": "Force field static"},
+        load=False,
+        sort={"completed_at": -1}  # to get the latest computation
+    )
+
+    print(result)
 
 
 @pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
