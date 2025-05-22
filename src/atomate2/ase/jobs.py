@@ -30,10 +30,25 @@ if TYPE_CHECKING:
 _ASE_DATA_OBJECTS = [
     PmgTrajectory,
     AseTrajectory,
+    "ionic_steps",
     InputDoc,
     OutputDoc,
     "is_force_converged",
     "energy_downhill",
+    "forces",
+    "input",
+    "energy",
+    "stress",
+    "energy_per_atom",
+    "elapsed_time",
+    "n_steps",
+    "all_forces",
+    "dir_name",
+    "objects",
+    "mol_or_struct",
+    "structure",
+    "output",
+    Structure
 ]
 
 
