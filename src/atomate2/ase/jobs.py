@@ -15,7 +15,7 @@ from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
-from atomate2.ase.schemas import AseResult, AseTaskDoc
+from atomate2.ase.schemas import AseResult, AseTaskDoc, InputDoc, OutputDoc
 from atomate2.ase.utils import AseRelaxer
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,29 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
-_ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
+_ASE_DATA_OBJECTS = [
+    PmgTrajectory,
+    AseTrajectory,
+    "ionic_steps",
+    InputDoc,
+    OutputDoc,
+    "is_force_converged",
+    "energy_downhill",
+    "forces",
+    "input",
+    "energy",
+    "stress",
+    "energy_per_atom",
+    "elapsed_time",
+    "n_steps",
+    "all_forces",
+    "dir_name",
+    "objects",
+    "mol_or_struct",
+    "structure",
+    "output",
+    Structure
+]
 
 
 @dataclass
@@ -119,7 +141,7 @@ class AseMaker(Maker, metaclass=ABCMeta):
         self,
         mol_or_struct: Structure | Molecule,
         prev_dir: str | Path | None = None,
-    ) -> AseResult:
+    ) -> AseResult | list[AseResult]:
         """
         Run ASE, can be re-implemented in subclasses.
 
@@ -237,16 +259,16 @@ class AseRelaxMaker(AseMaker):
 
     def run_ase(
         self,
-        mol_or_struct: Structure | Molecule,
+        mol_or_struct: Structure | Molecule | list[Molecule] | list[Structure],
         prev_dir: str | Path | None = None,
-    ) -> AseResult:
+    ) -> AseResult | list[AseResult]:
         """
-        Relax a structure or molecule using ASE, not as a job.
+        Relax a structure, molecule or a batch of those using ASE, not as a job.
 
         Parameters
         ----------
-        mol_or_struct: .Molecule or .Structure
-            pymatgen molecule or structure
+        mol_or_struct: .Molecule or .Structure or list[.Molecule] or list[.Structure]
+            pymatgen molecule or structure or lists of those
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.

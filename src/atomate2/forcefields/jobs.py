@@ -14,9 +14,12 @@ from monty.dev import deprecated
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.ase.jobs import AseRelaxMaker
+from atomate2.ase.schemas import InputDoc, OutputDoc
 from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
+from pymatgen.core.structure import Structure
+
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -27,7 +30,30 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-_FORCEFIELD_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, "ionic_steps"]
+_FORCEFIELD_DATA_OBJECTS = [
+    PmgTrajectory,
+    AseTrajectory,
+    "ionic_steps",
+    InputDoc,
+    OutputDoc,
+    "is_force_converged",
+    "energy_downhill",
+    "forces",
+    "input",
+    "energy",
+    "stress",
+    "energy_per_atom",
+    "elapsed_time",
+    "n_steps",
+    "all_forces",
+    "dir_name",
+    "objects",
+    "mol_or_struct",
+    "structure",
+    "output",
+    Structure
+]
+
 
 _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.CHGNet: {"stress_weight": _GPa_to_eV_per_A3},
