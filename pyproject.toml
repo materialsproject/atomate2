@@ -63,10 +63,9 @@ forcefields = [
     "torchdata<=0.7.1",                            # TODO: remove when issue fixed
 ]
 ase = ["ase>=3.23.0"]
-# tblite py3.12 support tracked in https://github.com/tblite/tblite/issues/198
-ase-ext = ["tblite>=0.3.0; python_version < '3.12'"]
+ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 openmm = [
-    "mdanalysis>=2.7.0",
+    "mdanalysis>=2.8.0",
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
@@ -82,7 +81,7 @@ docs = [
     "sphinx-copybutton==0.5.2",
     "sphinx==8.1.3",
     "sphinx_design==0.6.1",
-    "jupyterlab==4.3.6",
+    "jupyterlab==4.4.2",
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = [
@@ -97,7 +96,7 @@ strict = [
     "PyYAML==6.0.2",
     "ase==3.24.0",
     "cclib==1.8.1",
-    "click==8.1.7",
+    "click==8.2.0",
     "custodian==2025.4.14",
     "dscribe==2.1.1",
     "emmet-core==0.84.5",
@@ -108,14 +107,13 @@ strict = [
     "mp-api==0.45.4",
     "numpy",
     "phonopy==2.30.1",
-    "pydantic-settings==2.8.1",
+    "pydantic-settings==2.9.1",
     "pydantic==2.11.3",
     "pymatgen-analysis-defects==2025.1.18",
     "pymatgen==2025.2.18",
     "pymongo==4.10.1",
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
-    "tblite==0.3.0; python_version < '3.12'",
     "typing-extensions==4.13.2",
 ]
 strict-openff = [
@@ -123,8 +121,7 @@ strict-openff = [
     "monty==2025.3.3",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.1.1",
-    "pymatgen==2025.4.20", # TODO: open ff is extremely sensitive to pymatgen version
-    "mdanalysis==2.9.0"
+    "pymatgen==2024.11.13", # TODO: open ff is extremely sensitive to pymatgen version
 ]
 strict-forcefields = [
     "calorine==3.0",
@@ -185,6 +182,7 @@ exclude_lines = [
     '^\s*@overload( |$)',
     '^\s*assert False(,|$)',
     'if typing.TYPE_CHECKING:',
+    'if TYPE_CHECKING:',
 ]
 
 [tool.ruff]

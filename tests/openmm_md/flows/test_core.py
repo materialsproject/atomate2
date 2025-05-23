@@ -3,6 +3,7 @@ from __future__ import annotations
 import io
 from pathlib import Path
 
+import pytest
 from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
 from jobflow import Flow
 from MDAnalysis import Universe
@@ -10,6 +11,11 @@ from openmm.app import PDBFile
 
 from atomate2.openmm.flows.core import OpenMMFlowMaker
 from atomate2.openmm.jobs import EnergyMinimizationMaker, NPTMaker, NVTMaker
+
+try:
+    import h5py
+except ImportError:
+    h5py = None
 
 
 def test_anneal_maker(interchange, run_job):
@@ -54,6 +60,9 @@ def test_anneal_maker(interchange, run_job):
 
 
 # @pytest.mark.skip("Reporting to HDF5 is broken in MDA upstream.")
+@pytest.mark.skipif(
+    condition=h5py is None, reason="h5py is required for HDF5 features."
+)
 def test_hdf5_writing(interchange, run_job):
     # Create an instance of AnnealMaker with custom parameters
     import MDAnalysis
