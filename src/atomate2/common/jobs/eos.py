@@ -299,7 +299,7 @@ class PostProcessEosPressure(EOSPostProcessor):
             radicand = poly_pars[1] ** 2 - 4.0 * poly_pars[0] * poly_pars[2]
             if radicand < 0.0:
                 v0 = self.results[jobtype]["volume"][
-                    np.argmin(self.results[jobtype]["energy"])
+                    np.argmin(self.results[jobtype]["energies"])
                 ]
             else:
                 min_abs_pressure = 1e20
