@@ -175,7 +175,7 @@ def generate_phonon_displacements(
 
 @job(
     output_schema=PhononBSDOSDoc,
-    data=[PhononDos, PhononBandStructureSymmLine, ForceConstants],
+    data=[PhononDos, PhononBandStructureSymmLine, ForceConstants, Structure, "jobdirs", "uuids"],
 )
 def generate_frequencies_eigenvectors(
     structure: Structure,
@@ -243,7 +243,7 @@ def generate_frequencies_eigenvectors(
     )
 
 
-@job(data=["forces", "displaced_structures", "uuids", "dirs"])
+@job(data=["forces", "displaced_structures", "uuids", "dirs", "displacement_number"])
 def run_phonon_displacements(
     displacements: list[Structure],
     structure: Structure,
