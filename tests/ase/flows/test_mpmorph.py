@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 import pytest
 from jobflow import run_locally
 
-from atomate2.ase.jobs import LennardJonesRelaxMaker
+from atomate2.ase.jobs import LennardJonesStaticMaker
 from atomate2.common.flows.mpmorph import EquilibriumVolumeMaker
 
 if TYPE_CHECKING:
@@ -28,10 +28,8 @@ def test_vol_scale(
     test_structure = test_structure * (2, 2, 2)
 
     flow = EquilibriumVolumeMaker(
-        md_maker=LennardJonesRelaxMaker(
+        md_maker=LennardJonesStaticMaker(
             calculator_kwargs=lj_fcc_ne_pars,
-            ionic_step_data=("structure",),
-            relax_cell=False,
         ),
         min_strain=0.05,
         initial_strain=0.05,
