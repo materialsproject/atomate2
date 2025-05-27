@@ -33,7 +33,13 @@ def test_add_reporters(interchange, tmp_path):
     assert next_dcd[5] is True  # enforce periodic boundaries
     assert isinstance(sim.reporters[1], StateDataReporter)
     next_state = sim.reporters[1].describeNextReport(sim)
-    assert next_state[0] == 50  # steps until next report
+
+    # steps until next report
+    # TODO: make test more robust
+    if isinstance(next_state, dict):
+        assert next_state["steps"] == 50
+    else:
+        assert next_state[0] == 50
 
 
 def test_resolve_attr():
@@ -180,14 +186,12 @@ def test_make_w_velocities(interchange, run_job):
         report_velocities=True,
     )
 
-    with pytest.raises(RuntimeError):
-        run_job(maker1.make(interchange))
-        # run_job(base_job)
-
     import MDAnalysis
     from packaging.version import Version
 
     if Version(MDAnalysis.__version__) < Version("2.8.0"):
+        with pytest.raises(RuntimeError):
+            run_job(maker1.make(interchange))
         return
 
     maker2 = BaseOpenMMMaker(
