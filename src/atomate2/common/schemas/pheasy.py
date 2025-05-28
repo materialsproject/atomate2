@@ -633,6 +633,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         # phonon band structures will always be computed
         filename_band_yaml = "phonon_band_structure.yaml"
+        filename_band_hdf5 = "phonon_band_structure.hdf5"
 
         # TODO: potentially add kwargs to avoid computation of eigenvectors
         phonon.run_band_structure(
@@ -642,6 +643,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             is_band_connection=kwargs.get("band_structure_eigenvectors", False),
         )
         phonon.write_yaml_band_structure(filename=filename_band_yaml)
+        phonon.write_hdf5_band_structure(filename=filename_band_hdf5)
         bs_symm_line = get_ph_bs_symm_line(
             filename_band_yaml, labels_dict=kpath_dict, has_nac=born is not None
         )
