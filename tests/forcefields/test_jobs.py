@@ -193,7 +193,7 @@ mace_paths = pytest.mark.parametrize(
 
 
 @mace_paths
-def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
+def test_mace_static_maker(si_structure: Structure, clean_dir, model):
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = ForceFieldStaticMaker(
@@ -211,6 +211,8 @@ def test_mace_static_maker(si_structure: Structure, test_dir: Path, model):
     assert output1.output.energy == approx(-0.068231, rel=1e-4)
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("mace-torch")
+
+    assert Path("final_atoms_object.xyz").exists()
 
     with pytest.warns(FutureWarning):
         MACEStaticMaker()
