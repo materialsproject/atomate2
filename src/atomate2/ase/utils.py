@@ -367,6 +367,8 @@ class AseRelaxer:
 
         if isinstance(atoms, Structure | Molecule):
             atoms = self.ase_adaptor.get_atoms(atoms)
+
+        input_atoms = atoms.copy()
         if self.fix_symmetry:
             atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
         atoms.calc = self.calculator
@@ -393,8 +395,14 @@ class AseRelaxer:
             np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
             for idx in range(len(struct))
         )
+
         if final_atoms_object_file is not None:
-            write(final_atoms_object_file, atoms, format="extxyz", append=True)
+            if steps <= 1:
+                write_atoms = input_atoms
+                write_atoms.calc = self.calculator
+            else:
+                write_atoms = atoms
+            write(final_atoms_object_file, write_atoms, format="extxyz", append=True)
 
         return AseResult(
             final_mol_or_struct=struct,
