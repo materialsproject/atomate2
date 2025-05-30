@@ -367,7 +367,8 @@ class AseRelaxer:
 
         if isinstance(atoms, Structure | Molecule):
             atoms = self.ase_adaptor.get_atoms(atoms)
-            input_atoms = atoms.copy()
+        
+        input_atoms = atoms.copy()
         if self.fix_symmetry:
             atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
         atoms.calc = self.calculator
