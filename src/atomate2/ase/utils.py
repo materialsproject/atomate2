@@ -16,6 +16,7 @@ from ase.calculators.singlepoint import SinglePointCalculator
 from ase.constraints import FixSymmetry
 from ase.filters import FrechetCellFilter
 from ase.io import Trajectory as AseTrajectory
+from ase.io import write
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from monty.serialization import dumpfn
@@ -328,6 +329,7 @@ class AseRelaxer:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
+        final_atoms_object_file: str = "final_atoms_object.xyz",
         interval: int = 1,
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
@@ -346,6 +348,8 @@ class AseRelaxer:
             Max number of steps for relaxation.
         traj_file : str
             The trajectory file for saving.
+        final_atoms_object_file: str
+            The final atoms object file for saving.
         interval : int
             The step interval for saving the trajectories.
         verbose : bool
@@ -389,6 +393,9 @@ class AseRelaxer:
             np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
             for idx in range(len(struct))
         )
+        if final_atoms_object_file is not None:
+            write(final_atoms_object_file, atoms, format="extxyz", append=True)
+
         return AseResult(
             final_mol_or_struct=struct,
             trajectory=traj,
