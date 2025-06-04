@@ -6,6 +6,7 @@
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
 [![Zenodo](https://img.shields.io/badge/DOI-10.5281/zenodo.10677081-blue?logo=Zenodo&logoColor=white)](https://zenodo.org/records/10677081)
 [![This project supports Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg?logo=python&logoColor=white)](https://python.org/downloads)
+[![PyPI](https://img.shields.io/pypi/dm/atomate2.svg?maxAge=2592000)](https://pypi.python.org/pypi/atomate2)
 
 [Documentation][docs] | [PyPI][pypi] | [GitHub][github]
 
