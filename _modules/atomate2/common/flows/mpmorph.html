@@ -1608,9 +1608,7 @@
                 <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_strain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">postprocessor</span><span class="o">.</span><span class="n">min_data_points</span>
             <span class="p">)</span>
             <span class="n">working_outputs</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;relax&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">key</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;energies&quot;</span><span class="p">,</span> <span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="s2">&quot;stress&quot;</span><span class="p">,</span> <span class="s2">&quot;pressure&quot;</span><span class="p">)</span>
-                <span class="p">}</span>
+                <span class="s2">&quot;relax&quot;</span><span class="p">:</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;energy&quot;</span><span class="p">,</span> <span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="s2">&quot;stress&quot;</span><span class="p">,</span> <span class="s2">&quot;pressure&quot;</span><span class="p">)}</span>
             <span class="p">}</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -1618,7 +1616,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">postprocessor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">working_outputs</span><span class="p">)</span>
             <span class="n">working_outputs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">postprocessor</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
             <span class="n">flow_output</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;working_outputs&quot;</span><span class="p">:</span> <span class="n">working_outputs</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="s2">&quot;structure&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;pressure&quot;</span><span class="p">,</span> <span class="s2">&quot;energy&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;pressure&quot;</span><span class="p">,):</span>
                 <span class="n">working_outputs</span><span class="p">[</span><span class="s2">&quot;relax&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="c1"># Stop flow here if EOS cannot be fit</span>
@@ -1626,11 +1624,8 @@
                 <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">flow_output</span><span class="p">,</span> <span class="n">stop_children</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="c1"># Check if equilibrium volume is in range of attempted volumes</span>
-            <span class="n">v0_in_range</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="p">(</span><span class="n">vmin</span> <span class="o">:=</span> <span class="n">working_outputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Vmin&quot;</span><span class="p">))</span>
-                <span class="o">&lt;=</span> <span class="n">v0</span>
-                <span class="o">&lt;=</span> <span class="p">(</span><span class="n">vmax</span> <span class="o">:=</span> <span class="n">working_outputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Vmax&quot;</span><span class="p">))</span>
-            <span class="p">)</span>
+            <span class="n">vmin</span> <span class="o">=</span> <span class="n">working_outputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Vmin&quot;</span><span class="p">)</span>
+            <span class="n">vmax</span> <span class="o">=</span> <span class="n">working_outputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Vmax&quot;</span><span class="p">)</span>
 
             <span class="c1"># Check if maximum number of refinement NVT runs is set,</span>
             <span class="c1"># and if so, if that limit has been reached</span>
@@ -1639,7 +1634,7 @@
             <span class="p">)</span>
 
             <span class="c1"># Successful fit: return structure at estimated equilibrium volume</span>
-            <span class="k">if</span> <span class="n">v0_in_range</span> <span class="ow">or</span> <span class="n">max_attempts_reached</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">vmin</span> <span class="o">&lt;=</span> <span class="n">v0</span> <span class="o">&lt;=</span> <span class="n">vmax</span><span class="p">)</span> <span class="ow">or</span> <span class="n">max_attempts_reached</span><span class="p">:</span>
                 <span class="n">flow_output</span><span class="p">[</span><span class="s2">&quot;structure&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">structure</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
                 <span class="n">flow_output</span><span class="p">[</span><span class="s2">&quot;structure&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">scale_lattice</span><span class="p">(</span><span class="n">v0</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined]</span>
                 <span class="k">return</span> <span class="n">flow_output</span>
@@ -1658,19 +1653,19 @@
         <span class="n">eos_jobs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">deformation_matrices</span><span class="p">)):</span>
             <span class="n">md_job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">md_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-                <span class="n">structure</span><span class="o">=</span><span class="n">deformed_structures</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">final_structure</span><span class="p">,</span>
+                <span class="n">deformed_structures</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">final_structure</span><span class="p">,</span>
                 <span class="n">prev_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">relaxed_vol</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">working_outputs</span><span class="p">[</span><span class="s2">&quot;relax&quot;</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">])</span>
             <span class="n">md_job</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">md_job</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">relaxed_vol</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
 
-            <span class="n">working_outputs</span><span class="p">[</span><span class="s2">&quot;relax&quot;</span><span class="p">][</span><span class="s2">&quot;energies&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">md_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
+            <span class="n">working_outputs</span><span class="p">[</span><span class="s2">&quot;relax&quot;</span><span class="p">][</span><span class="s2">&quot;energy&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">md_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">energy</span><span class="p">)</span>
             <span class="n">working_outputs</span><span class="p">[</span><span class="s2">&quot;relax&quot;</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">md_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">volume</span><span class="p">)</span>
             <span class="n">working_outputs</span><span class="p">[</span><span class="s2">&quot;relax&quot;</span><span class="p">][</span><span class="s2">&quot;stress&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">md_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">stress</span><span class="p">)</span>
             <span class="n">eos_jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">md_job</span><span class="p">)</span>
 
         <span class="n">recursive</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-            <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span>
+            <span class="n">structure</span><span class="p">,</span>
             <span class="n">prev_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">working_outputs</span><span class="o">=</span><span class="n">working_outputs</span><span class="p">,</span>
         <span class="p">)</span>
@@ -1764,14 +1759,12 @@
             <span class="n">structure</span> <span class="o">=</span> <span class="n">convergence_flow</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s2">&quot;structure&quot;</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">production_md_maker</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; production run&quot;</span>
-        <span class="n">production_run</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">production_md_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-            <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span> <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span>
-        <span class="p">)</span>
+        <span class="n">production_run</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">production_md_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">)</span>
         <span class="n">flow_jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">production_run</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quench_maker</span><span class="p">:</span>
             <span class="n">quench_flow</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quench_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-                <span class="n">structure</span><span class="o">=</span><span class="n">production_run</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span>
+                <span class="n">production_run</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span>
                 <span class="n">prev_dir</span><span class="o">=</span><span class="n">production_run</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">flow_jobs</span> <span class="o">+=</span> <span class="p">[</span><span class="n">quench_flow</span><span class="p">]</span>
@@ -1986,7 +1979,7 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">descent_method</span> <span class="o">==</span> <span class="s2">&quot;stepwise&quot;</span><span class="p">:</span>
                 <span class="n">md_job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_md_maker</span><span class="p">(</span>
-                    <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span>
+                    <span class="n">structure</span><span class="p">,</span>
                     <span class="n">temp</span><span class="o">=</span><span class="n">temp</span><span class="p">,</span>
                     <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">,</span>
                 <span class="p">)</span>
@@ -1995,13 +1988,13 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">descent_method</span> <span class="o">==</span> <span class="s2">&quot;linear with hold&quot;</span>
             <span class="p">):</span>  <span class="c1"># TODO: Work in Progress; needs testing</span>
                 <span class="n">md_job_linear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_md_maker</span><span class="p">(</span>
-                    <span class="n">structure</span><span class="o">=</span><span class="n">structure</span><span class="p">,</span>
+                    <span class="n">structure</span><span class="p">,</span>
                     <span class="n">temp</span><span class="o">=</span><span class="p">[</span><span class="n">temp</span><span class="p">,</span> <span class="n">temp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">quench_temperature_step</span><span class="p">],</span>  <span class="c1"># type: ignore[arg-type]</span>
                     <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">,</span>
                 <span class="p">)</span>
 
                 <span class="n">md_job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_md_maker</span><span class="p">(</span>
-                    <span class="n">structure</span><span class="o">=</span><span class="n">md_job_linear</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span>
+                    <span class="n">md_job_linear</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span>
                     <span class="n">temp</span><span class="o">=</span><span class="n">temp</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">quench_temperature_step</span><span class="p">,</span>
                     <span class="n">prev_dir</span><span class="o">=</span><span class="n">md_job_linear</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span><span class="p">,</span>
                 <span class="p">)</span>
@@ -2086,7 +2079,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=056c92e6"></script>
+</div><script src="../../../../_static/documentation_options.js?v=a11416ff"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>
