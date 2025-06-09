@@ -16,6 +16,7 @@ from ase.calculators.singlepoint import SinglePointCalculator
 from ase.constraints import FixSymmetry
 from ase.filters import FrechetCellFilter
 from ase.io import Trajectory as AseTrajectory
+from ase.io import write
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from monty.serialization import dumpfn
@@ -333,6 +334,7 @@ class AseRelaxer:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
+        final_atoms_object_file: str = "final_atoms_object.xyz",
         interval: int = 1,
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
@@ -352,6 +354,8 @@ class AseRelaxer:
             Max number of steps for relaxation.
         traj_file : str
             The trajectory file for saving.
+        final_atoms_object_file: str
+            The final atoms object file for saving.
         interval : int
             The step interval for saving the trajectories.
         verbose : bool
@@ -368,9 +372,10 @@ class AseRelaxer:
 
         list_atoms: list[Atoms] = [atoms] if not is_list else atoms
 
+
         list_ase_results = []
         for atoms_item_start in list_atoms:
-            atoms_item = atoms_item_start
+            atoms_item = atoms_item_start.copy()
             is_mol = isinstance(atoms_item, Molecule) or (
                 isinstance(atoms_item, Atoms) and all(not pbc for pbc in atoms_item.pbc)
             )
@@ -391,6 +396,14 @@ class AseRelaxer:
                 obs()
             if traj_file is not None:
                 obs.save(traj_file)
+            if final_atoms_object_file is not None:
+                if steps <= 1:
+                    write_atoms = atoms_item_start
+                    write_atoms.calc = self.calculator
+                else:
+                    write_atoms = atoms_item
+                write(final_atoms_object_file, write_atoms, format="extxyz", append=True)
+
             if isinstance(atoms_item, cell_filter):
                 atoms_item = atoms_item.atoms
 
