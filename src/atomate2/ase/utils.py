@@ -403,7 +403,11 @@ class AseRelaxer:
                     write_atoms.calc = self.calculator
                 else:
                     write_atoms = atoms_item
+                if isinstance(write_atoms, cell_filter):
+                    write_atoms = write_atoms.atoms
+
                 write(final_atoms_object_file, write_atoms, format="extxyz", append=True)
+
 
             if isinstance(atoms_item, cell_filter):
                 atoms_item = atoms_item.atoms
