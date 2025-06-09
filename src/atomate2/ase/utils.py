@@ -381,6 +381,7 @@ class AseRelaxer:
             )
             if isinstance(atoms_item, Structure | Molecule):
                 atoms_item = self.ase_adaptor.get_atoms(atoms_item)
+            atoms_item_start_0=atoms_item.copy()
             if self.fix_symmetry:
                 atoms_item.set_constraint(FixSymmetry(atoms_item, symprec=self.symprec))
             atoms_item.calc = self.calculator
@@ -398,7 +399,7 @@ class AseRelaxer:
                 obs.save(traj_file)
             if final_atoms_object_file is not None:
                 if steps <= 1:
-                    write_atoms = atoms_item_start
+                    write_atoms = atoms_item_start_0
                     write_atoms.calc = self.calculator
                 else:
                     write_atoms = atoms_item
