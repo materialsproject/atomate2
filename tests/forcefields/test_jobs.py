@@ -146,7 +146,6 @@ def test_chgnet_batch_static_maker(si_structure: Structure, memory_jobstore):
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True, store=memory_jobstore)
-    print(responses)
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
@@ -163,8 +162,6 @@ def test_chgnet_batch_static_maker(si_structure: Structure, memory_jobstore):
         load=False,
         sort={"completed_at": -1},  # to get the latest computation
     )
-
-    print(result)
 
 
 @pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
