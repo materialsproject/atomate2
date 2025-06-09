@@ -17,13 +17,16 @@ from atomate2.common.schemas.phonons import (
 from atomate2.forcefields.flows.phonons import PhononMaker
 
 
-@pytest.mark.parametrize("from_name", [False, True])
+@pytest.mark.parametrize(
+    "from_name, socket", [(False, True), (False, False), (True, False), (True, True)]
+)
 def test_phonon_wf_force_field(
-    clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool
+    clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool, socket: bool
 ):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
     phonon_kwargs = dict(
+        socket=socket,
         use_symmetrized_structure="conventional",
         create_thermal_displacements=False,
         store_force_constants=False,
@@ -102,3 +105,34 @@ def test_phonon_wf_force_field(
     # check phonon plots exist
     assert os.path.isfile(filename_bs)
     assert os.path.isfile(filename_dos)
+
+
+@pytest.mark.parametrize("socket", [True, False])
+def test_phonon_wf_force_field_diamond(
+    clean_dir, si_diamond: Structure, tmp_path: Path, socket: bool
+):
+    # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
+
+    phonon_kwargs = dict(
+        socket=socket,
+        use_symmetrized_structure="conventional",
+        create_thermal_displacements=False,
+        store_force_constants=False,
+        prefer_90_degrees=False,
+        generate_frequencies_eigenvectors_kwargs={
+            "tstep": 100,
+            "filename_bs": f"{tmp_path}/phonon_bs_test.png",
+            "filename_dos": f"{tmp_path}/phonon_dos_test.pdf",
+        },
+    )
+
+    phonon_maker = PhononMaker(**phonon_kwargs)
+
+    flow = phonon_maker.make(si_diamond)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(flow, create_folders=True, ensure_success=True)
+
+    # validate the outputs
+    ph_bs_dos_doc = responses[flow[-1].uuid][1].output
+    assert isinstance(ph_bs_dos_doc, PhononBSDOSDoc)

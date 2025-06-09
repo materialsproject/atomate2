@@ -111,7 +111,7 @@ class PhononMaker(BasePhononMaker):
     store_force_constants: bool
         if True, force constants will be stored
     socket: bool
-        If True, use the socket for the calculation
+        If True, use the socket/batch mode for the calculation
     """
 
     name: str = "phonon"
@@ -140,6 +140,7 @@ class PhononMaker(BasePhononMaker):
     store_force_constants: bool = True
     code: str = "forcefields"
     born_maker: ForceFieldStaticMaker | None = None
+    socket = True
 
     @property
     def prev_calc_dir_argname(self) -> None:

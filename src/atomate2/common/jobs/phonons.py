@@ -15,6 +15,7 @@ from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 
+from atomate2.ase.jobs import AseMaker
 from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc, get_factor
 from atomate2.common.utils import get_supercell_matrix
 
@@ -174,7 +175,14 @@ def generate_phonon_displacements(
 
 @job(
     output_schema=PhononBSDOSDoc,
-    data=[PhononDos, PhononBandStructureSymmLine, ForceConstants],
+    data=[
+        PhononDos,
+        PhononBandStructureSymmLine,
+        ForceConstants,
+        Structure,
+        "jobdirs",
+        "uuids",
+    ],
 )
 def generate_frequencies_eigenvectors(
     structure: Structure,
@@ -242,7 +250,7 @@ def generate_frequencies_eigenvectors(
     )
 
 
-@job(data=["forces", "displaced_structures"])
+@job(data=["forces", "displaced_structures", "uuids", "dirs", "displacement_number"])
 def run_phonon_displacements(
     displacements: list[Structure],
     structure: Structure,
@@ -293,9 +301,11 @@ def run_phonon_displacements(
             "supercell_matrix": supercell_matrix,
             "displaced_structures": displacements,
         }
-        phonon_job.update_maker_kwargs(
-            {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
-        )
+        if not issubclass(phonon_maker.__class__, AseMaker):
+            phonon_job.update_maker_kwargs(
+                {"_set": {"write_additional_data->phonon_info:json": info}},
+                dict_mod=True,
+            )
         phonon_jobs.append(phonon_job)
         outputs["displacement_number"] = list(range(len(displacements)))
         outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)

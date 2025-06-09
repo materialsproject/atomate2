@@ -7,11 +7,10 @@ import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from ase.io import Trajectory as AseTrajectory
 from ase.units import GPa as _GPa_to_eV_per_A3
 from jobflow import job
 from monty.dev import deprecated
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
+from pymatgen.core.structure import Structure
 
 from atomate2.ase.jobs import AseRelaxMaker
 from atomate2.forcefields import MLFF, _get_formatted_ff_name
@@ -27,7 +26,10 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-_FORCEFIELD_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, "ionic_steps"]
+_FORCEFIELD_DATA_OBJECTS = [
+    "output",  # will put everything in the data store
+]
+
 
 _DEFAULT_CALCULATOR_KWARGS = {
     MLFF.CHGNet: {"stress_weight": _GPa_to_eV_per_A3},
