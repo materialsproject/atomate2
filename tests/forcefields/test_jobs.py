@@ -157,11 +157,6 @@ def test_chgnet_batch_static_maker(si_structure: Structure, memory_jobstore):
     # check the force_field_task_doc attributes
     assert Path(responses[job.uuid][1].output.dir_name[0]).exists()
     assert Path(responses[job.uuid][1].output.dir_name[1]).exists()
-    result = memory_jobstore.query_one(
-        {"name": "Force field static"},
-        load=False,
-        sort={"completed_at": -1},  # to get the latest computation
-    )
 
 
 @pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
