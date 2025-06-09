@@ -31,7 +31,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 _FORCEFIELD_DATA_OBJECTS = [
-    "output",
+    "output", # will put everything in the data store
     ]
 
 
