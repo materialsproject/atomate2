@@ -161,7 +161,7 @@ def test_chgnet_batch_static_maker(si_structure: Structure, memory_jobstore):
     result = memory_jobstore.query_one(
         {"name": "Force field static"},
         load=False,
-        sort={"completed_at": -1}  # to get the latest computation
+        sort={"completed_at": -1},  # to get the latest computation
     )
 
     print(result)

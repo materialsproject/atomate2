@@ -372,7 +372,6 @@ class AseRelaxer:
 
         list_atoms: list[Atoms] = [atoms] if not is_list else atoms
 
-
         list_ase_results = []
         for atoms_item_start in list_atoms:
             atoms_item = atoms_item_start.copy()
@@ -381,7 +380,7 @@ class AseRelaxer:
             )
             if isinstance(atoms_item, Structure | Molecule):
                 atoms_item = self.ase_adaptor.get_atoms(atoms_item)
-            atoms_item_start_0=atoms_item.copy()
+            atoms_item_start_0 = atoms_item.copy()
             if self.fix_symmetry:
                 atoms_item.set_constraint(FixSymmetry(atoms_item, symprec=self.symprec))
             atoms_item.calc = self.calculator
@@ -406,8 +405,9 @@ class AseRelaxer:
                 if isinstance(write_atoms, cell_filter):
                     write_atoms = write_atoms.atoms
 
-                write(final_atoms_object_file, write_atoms, format="extxyz", append=True)
-
+                write(
+                    final_atoms_object_file, write_atoms, format="extxyz", append=True
+                )
 
             if isinstance(atoms_item, cell_filter):
                 atoms_item = atoms_item.atoms

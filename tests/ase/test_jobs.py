@@ -47,7 +47,9 @@ def test_base_maker(test_dir):
     assert isinstance(output, AseStructureTaskDoc)
 
 
-def test_lennard_jones_batch_relax_maker(lj_fcc_ne_pars, fcc_ne_structure, memory_jobstore):
+def test_lennard_jones_batch_relax_maker(
+    lj_fcc_ne_pars, fcc_ne_structure, memory_jobstore
+):
     job = LennardJonesRelaxMaker(
         calculator_kwargs=lj_fcc_ne_pars, relax_kwargs={"fmax": 0.001}
     ).make([fcc_ne_structure, fcc_ne_structure])

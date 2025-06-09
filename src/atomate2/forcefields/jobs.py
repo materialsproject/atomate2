@@ -7,19 +7,15 @@ import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from ase.io import Trajectory as AseTrajectory
 from ase.units import GPa as _GPa_to_eV_per_A3
 from jobflow import job
 from monty.dev import deprecated
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
+from pymatgen.core.structure import Structure
 
 from atomate2.ase.jobs import AseRelaxMaker
-from atomate2.ase.schemas import InputDoc, OutputDoc
 from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
-from pymatgen.core.structure import Structure
-
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -31,8 +27,8 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 _FORCEFIELD_DATA_OBJECTS = [
-    "output", # will put everything in the data store
-    ]
+    "output",  # will put everything in the data store
+]
 
 
 _DEFAULT_CALCULATOR_KWARGS = {

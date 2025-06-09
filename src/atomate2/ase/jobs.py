@@ -8,14 +8,12 @@ from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from ase.io import Trajectory as AseTrajectory
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from jobflow import Maker, job
 from pymatgen.core import Molecule, Structure
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
-from atomate2.ase.schemas import AseResult, AseTaskDoc, InputDoc, OutputDoc
+from atomate2.ase.schemas import AseResult, AseTaskDoc
 from atomate2.ase.utils import AseRelaxer
 
 logger = logging.getLogger(__name__)
@@ -28,8 +26,7 @@ if TYPE_CHECKING:
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
 _ASE_DATA_OBJECTS = [
-    "output", # will put everything in data store
-
+    "output",  # will put everything in data store
 ]
 
 
