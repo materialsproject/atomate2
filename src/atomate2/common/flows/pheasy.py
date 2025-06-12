@@ -11,10 +11,10 @@ from jobflow import Flow, Maker
 from atomate2.common.jobs.pheasy import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
+    get_supercell_size,
     run_phonon_displacements,
 )
 from atomate2.common.jobs.phonons import get_total_energy_per_cell
-from atomate2.common.jobs.pheasy import get_supercell_size
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
 
 if TYPE_CHECKING:
@@ -313,7 +313,7 @@ class BasePhononMaker(Maker, ABC):
                 self.max_atoms,
                 self.force_90_degrees,
                 self.force_diagonal,
-                self.allow_orthorhombic
+                self.allow_orthorhombic,
             )
             jobs.append(supercell_job)
             supercell_matrix = supercell_job.output

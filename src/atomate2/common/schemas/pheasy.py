@@ -337,9 +337,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             try:
                 from alm import ALM
             except ImportError:
-                logging.exception(
-                    "Error importing ALM. Please ensure the 'alm'"
-                    "library is installed."
+                logger.exception(
+                    "Error importing ALM. Please ensure the 'alm'library is installed."
                 )
 
             supercell_ph = phonon.supercell
@@ -525,8 +524,8 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
                 f"{int(supercell_matrix[1][1])} "
                 f"{int(supercell_matrix[2][2])} -s -w 4 --symprec "
                 f"{float(symprec)} "
-                f"--nbody 2 3 3 --c3 {float(fcs_cutoff_radius[1]/1.89)} "
-                f"--c4 {float(fcs_cutoff_radius[2]/1.89)}"
+                f"--nbody 2 3 3 --c3 {float(fcs_cutoff_radius[1] / 1.89)} "
+                f"--c4 {float(fcs_cutoff_radius[2] / 1.89)}"
             )
             logger.info("pheasy_cmd_5 = %s", pheasy_cmd_5)
 

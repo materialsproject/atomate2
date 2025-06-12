@@ -34,6 +34,7 @@ from atomate2.common.schemas.pheasy import Forceconstants, PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
 
+
 @job
 def get_supercell_size(
     structure: Structure,
@@ -41,7 +42,6 @@ def get_supercell_size(
     max_atoms: int,
     force_90_degrees: bool,
     force_diagonal: bool,
-    allow_orthorhombic: bool,
 ) -> list[list[float]]:
     """
     Determine supercell size with given min_length and max_length.
@@ -61,13 +61,17 @@ def get_supercell_size(
     **kwargs:
         Additional parameters that can be set.
     """
-
-    transformation = CubicSupercellTransformation(min_length=min_length, max_atoms=max_atoms, 
-                                                    force_90_degrees=force_90_degrees, force_diagonal=force_diagonal,
-                                                    angle_tolerance=1e-2, allow_orthorhombic=False)
+    transformation = CubicSupercellTransformation(
+        min_length=min_length,
+        max_atoms=max_atoms,
+        force_90_degrees=force_90_degrees,
+        force_diagonal=force_diagonal,
+        angle_tolerance=1e-2,
+        allow_orthorhombic=False,
+    )
     transformation.apply_transformation(structure=structure)
-    matrix = transformation.transformation_matrix.transpose().tolist()
-    return matrix
+    return transformation.transformation_matrix.transpose().tolist()
+
 
 @job(data=[Structure])
 def generate_phonon_displacements(
@@ -168,8 +172,8 @@ def generate_phonon_displacements(
     try:
         from alm import ALM
     except ImportError:
-        logging.exception(
-            "Error importing ALM. Please ensure the 'alm'" "library is installed."
+        logger.exception(
+            "Error importing ALM. Please ensure the 'alm' library is installed."
         )
 
     supercell_ph = phonon.supercell
@@ -241,25 +245,25 @@ def generate_phonon_displacements(
     # Here, the ALM module is used to determine how many free parameters of third and
     # fourth order force constants (FCs) within the specific supercell.
     if cal_anhar_fcs:
-        # # Due to the cutoff radius of the force constants use the unit of Borh in ALM,
-        # # we need to convert the cutoff radius from Angstrom to Bohr.
-        # with ALM(lattice * 1.89, positions, numbers) as alm:
-        #     # Define the force constants up to fourth order with a list of
-        #     # cutoff radius
-        #     alm.define(3, fcs_cutoff_radius)
-        #     # Perform symmetry analysis and suggest irreducible force constants.
-        #     alm.suggest()
-        #     # Get the number of irreducible elements for both 3RD- and 4TH-order
-        #     # force constants
-        #     n_rd_anh = alm._get_number_of_irred_fc_elements(
-        #         2
-        #     ) + alm._get_number_of_irred_fc_elements(3)
-        #     # we can determine how many displaced supercells we need to use to extract
-        #     # the 3rd and 4th order force constants, and we can add a scaling factor
-        #     # to reduce the number of displaced supercells due to we use the lasso
-        #     # technique.
-        #     num_d_anh = int(np.ceil(n_rd_anh / (3.0 * natom)))
-        #     num_dis_cells_anhar = num_disp_anhar if num_disp_anhar != 0 else num_d_anh
+        # Due to the cutoff radius of the force constants use the unit of Borh in ALM,
+        # we need to convert the cutoff radius from Angstrom to Bohr.
+        with ALM(lattice * 1.89, positions, numbers) as alm:
+            # Define the force constants up to fourth order with a list of
+            # cutoff radius
+            alm.define(3, fcs_cutoff_radius)
+            # Perform symmetry analysis and suggest irreducible force constants.
+            alm.suggest()
+            # Get the number of irreducible elements for both 3RD- and 4TH-order
+            # force constants
+            n_rd_anh = alm._get_number_of_irred_fc_elements(  # noqa: SLF001
+                2
+            ) + alm._get_number_of_irred_fc_elements(3)  # noqa: SLF001
+            # we can determine how many displaced supercells we need to use to extract
+            # the 3rd and 4th order force constants, and we can add a scaling factor
+            # to reduce the number of displaced supercells due to we use the lasso
+            # technique.
+            num_d_anh = int(np.ceil(n_rd_anh / (3.0 * natom)))
+            num_dis_cells_anhar = num_disp_anhar if num_disp_anhar != 0 else num_d_anh
 
         num_dis_cells_anhar = 20
         # generate the supercells for anharmonic force constants
