@@ -147,7 +147,7 @@ def test_vasp_mpmorph(
     assert all(
         task_docs[
             "MP Morph VASP Equilibrium Volume Maker "
-            f"Convergence MPMorph VASP MD Maker {1+idx}"
+            f"Convergence MPMorph VASP MD Maker {1 + idx}"
         ].output.energy
         == pytest.approx(ref_eos["energy"][idx])
         for idx in range(3)
@@ -156,7 +156,7 @@ def test_vasp_mpmorph(
     assert all(
         task_docs[
             "MP Morph VASP Equilibrium Volume Maker "
-            f"Convergence MPMorph VASP MD Maker {1+idx}"
+            f"Convergence MPMorph VASP MD Maker {1 + idx}"
         ].output.structure.volume
         == pytest.approx(ref_eos["volume"][idx])
         for idx in range(3)

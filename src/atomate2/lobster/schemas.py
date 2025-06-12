@@ -332,7 +332,7 @@ class CondensedBondingAnalysis(BaseModel):
         dir_name = Path(dir_name)
         cohpcar_path = Path(zpath(str((dir_name / "COHPCAR.lobster").as_posix())))
         charge_path = Path(zpath(str((dir_name / "CHARGE.lobster").as_posix())))
-        structure_path = Path(zpath(str((dir_name / "POSCAR").as_posix())))
+        structure_path = Path(zpath(str((dir_name / "CONTCAR").as_posix())))
         icohplist_path = Path(zpath(str((dir_name / "ICOHPLIST.lobster").as_posix())))
         icobilist_path = Path(zpath(str((dir_name / "ICOBILIST.lobster").as_posix())))
         icooplist_path = Path(zpath(str((dir_name / "ICOOPLIST.lobster").as_posix())))
@@ -586,7 +586,7 @@ class CalcQualitySummary(BaseModel):
             if Path(zpath(str((dir_name / "POTCAR").as_posix()))).exists()
             else None
         )
-        structure_path = Path(zpath(str((dir_name / "POSCAR").as_posix())))
+        structure_path = Path(zpath(str((dir_name / "CONTCAR").as_posix())))
         vasprun_path = Path(zpath(str((dir_name / "vasprun.xml").as_posix())))
 
         # Update calc quality kwargs supplied by user
@@ -597,6 +597,7 @@ class CalcQualitySummary(BaseModel):
             "bva_comp": True,
             **calc_quality_kwargs,
         }
+
         cal_quality_dict = Analysis.get_lobster_calc_quality_summary(
             path_to_poscar=structure_path,
             path_to_vasprun=vasprun_path,
@@ -810,7 +811,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         cobicar_path = Path(zpath(str((dir_name / "COBICAR.lobster").as_posix())))
         coopcar_path = Path(zpath(str((dir_name / "COOPCAR.lobster").as_posix())))
         doscar_path = Path(zpath(str((dir_name / "DOSCAR.lobster").as_posix())))
-        structure_path = Path(zpath(str((dir_name / "POSCAR").as_posix())))
+        structure_path = Path(zpath(str((dir_name / "CONTCAR").as_posix())))
         madelung_energies_path = Path(
             zpath(str((dir_name / "MadelungEnergies.lobster").as_posix()))
         )
@@ -844,34 +845,32 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         calc_quality_text = None
         describe = None
         describe_ionic = None
-        if analyze_outputs:
-            if (
-                icohplist_path.exists()
-                and cohpcar_path.exists()
-                and charge_path.exists()
-            ):
-                (
-                    condensed_bonding_analysis,
-                    describe,
-                    sb_all,
-                ) = CondensedBondingAnalysis.from_directory(
-                    dir_name,
-                    save_cohp_plots=save_cohp_plots,
-                    plot_kwargs=plot_kwargs,
-                    lobsterpy_kwargs=lobsterpy_kwargs,
-                    which_bonds="all",
-                )
-                (
-                    condensed_bonding_analysis_ionic,
-                    describe_ionic,
-                    sb_ionic,
-                ) = CondensedBondingAnalysis.from_directory(
-                    dir_name,
-                    save_cohp_plots=save_cohp_plots,
-                    plot_kwargs=plot_kwargs,
-                    lobsterpy_kwargs=lobsterpy_kwargs,
-                    which_bonds="cation-anion",
-                )
+
+        if analyze_outputs and (
+            icohplist_path.exists() and cohpcar_path.exists() and charge_path.exists()
+        ):
+            (
+                condensed_bonding_analysis,
+                describe,
+                sb_all,
+            ) = CondensedBondingAnalysis.from_directory(
+                dir_name,
+                save_cohp_plots=save_cohp_plots,
+                plot_kwargs=plot_kwargs,
+                lobsterpy_kwargs=lobsterpy_kwargs,
+                which_bonds="all",
+            )
+            (
+                condensed_bonding_analysis_ionic,
+                describe_ionic,
+                sb_ionic,
+            ) = CondensedBondingAnalysis.from_directory(
+                dir_name,
+                save_cohp_plots=save_cohp_plots,
+                plot_kwargs=plot_kwargs,
+                lobsterpy_kwargs=lobsterpy_kwargs,
+                which_bonds="cation-anion",
+            )
             # Get lobster calculation quality summary data
 
             calc_quality_summary = CalcQualitySummary.from_directory(
@@ -971,7 +970,9 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
             if describe_ionic is not None
             else None,
             strongest_bonds_cation_anion=sb_ionic,
-            calc_quality_summary=calc_quality_summary,
+            calc_quality_summary=calc_quality_summary
+            if calc_quality_summary is not None
+            else None,
             calc_quality_text=" ".join(calc_quality_text)
             if calc_quality_text is not None
             else None,

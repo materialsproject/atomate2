@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 import pytest
@@ -7,15 +8,58 @@ from atomate2.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.openmm.utils import (
     PymatgenTrajectoryReporter,
     download_opls_xml,
+    generate_opls_xml,
     increment_name,
 )
+
+"""
+TODO: Needs revision
+"""
 
 
 @pytest.mark.skip("annoying test")
 def test_download_xml(tmp_path: Path) -> None:
     pytest.importorskip("selenium")
+    mol_dict = {
+        "CCO": {
+            "smiles": "CCO",
+            "charge": "0",
+        },
+    }
 
-    download_opls_xml("CCO", tmp_path / "CCO.xml")
+    download_opls_xml(mol_dict, tmp_path / "CCO.xml")
+
+    assert (tmp_path / "CCO.xml").exists()
+
+
+def test_generate_opls_xml_no_container(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.delenv("CONTAINER_SOFTWARE", raising=False)
+    monkeypatch.delenv("LPG_IMAGE_NAME", raising=False)
+
+    mol_dict = {
+        "CCO": {
+            "smiles": "CCO",
+            "charge": "0",
+        },
+    }
+    with pytest.raises(
+        OSError, match=r"^(CONTAINER_SOFTWARE|LPG_IMAGE_NAME) env variable not set\.$"
+    ):
+        generate_opls_xml(mol_dict, tmp_path)
+
+
+@pytest.mark.skipif(
+    shutil.which("podman-hpc") is None and shutil.which("docker") is None,
+    reason="CONTAINER_SOFTWARE 'podman-hpc' or 'docker' must be installed.",
+)
+def test_generate_opls_xml_success(mock_ligpargen_env, tmp_path: Path) -> None:
+    mol_dict = {
+        "CCO": {
+            "smiles": "CCO",
+            "charge": "0",
+        },
+    }
+    generate_opls_xml(mol_dict, tmp_path)
 
     assert (tmp_path / "CCO.xml").exists()
 
@@ -32,9 +76,9 @@ def test_increment_file_name() -> None:
 
     for file_name, expected_output in test_cases:
         result = increment_name(file_name)
-        assert (
-            result == expected_output
-        ), f"Failed for case: {file_name}. Expected: {expected_output}, Got: {result}"
+        assert result == expected_output, (
+            f"Failed for case: {file_name}. Expected: {expected_output}, Got: {result}"
+        )
 
 
 def test_trajectory_reporter(interchange: OpenMMInterchange, tmp_path: Path) -> None:
@@ -67,13 +111,13 @@ def test_trajectory_reporter(interchange: OpenMMInterchange, tmp_path: Path) -> 
     traj = reporter.trajectory
 
     # Check basic properties
-    assert (
-        len(traj) == n_steps
-    ), f"got {len(traj)=}, expected {n_steps=}"  # should have n_steps frames
+    assert len(traj) == n_steps, (
+        f"got {len(traj)=}, expected {n_steps=}"
+    )  # should have n_steps frames
     assert traj.time_step is not None
-    assert len(traj.species) == len(
-        list(simulation.topology.atoms())
-    ), f"got {len(traj.species)=}, expected {len(list(simulation.topology.atoms()))=}"
+    assert len(traj.species) == len(list(simulation.topology.atoms())), (
+        f"got {len(traj.species)=}, expected {len(list(simulation.topology.atoms()))=}"
+    )
 
     # Check frame properties
     assert len(traj.frame_properties) == n_steps

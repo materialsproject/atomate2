@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+import pytest
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
@@ -16,10 +17,13 @@ from atomate2.common.schemas.phonons import (
 from atomate2.forcefields.flows.phonons import PhononMaker
 
 
-def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Path):
+@pytest.mark.parametrize("from_name", [False, True])
+def test_phonon_wf_force_field(
+    clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool
+):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
-    flow = PhononMaker(
+    phonon_kwargs = dict(
         use_symmetrized_structure="conventional",
         create_thermal_displacements=False,
         store_force_constants=False,
@@ -29,7 +33,14 @@ def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Pat
             "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),
             "filename_dos": (filename_dos := f"{tmp_path}/phonon_dos_test.pdf"),
         },
-    ).make(si_structure)
+    )
+
+    if from_name:
+        phonon_maker = PhononMaker.from_force_field_name("CHGNet", **phonon_kwargs)
+    else:
+        phonon_maker = PhononMaker(**phonon_kwargs)
+
+    flow = phonon_maker.make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)

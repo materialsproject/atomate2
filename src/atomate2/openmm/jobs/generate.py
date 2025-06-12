@@ -17,6 +17,7 @@ from emmet.core.vasp.task_valid import TaskState
 from jobflow import Response
 from openmm import Context, LangevinMiddleIntegrator, System, XmlSerializer
 from openmm.app import PME, ForceField
+from openmm.app.forcefield import NonbondedGenerator
 from openmm.app.pdbfile import PDBFile
 from openmm.unit import kelvin, picoseconds
 from pymatgen.core import Element
@@ -24,6 +25,7 @@ from pymatgen.io.openff import get_atom_map
 
 from atomate2.openff.utils import create_mol_spec, merge_specs_by_name_and_smiles
 from atomate2.openmm.jobs.base import openmm_job
+from atomate2.openmm.utils import opls_lj
 
 try:
     import openff.toolkit as tk
@@ -31,8 +33,7 @@ try:
     from openff.units import unit
 except ImportError as e:
     raise ImportError(
-        "Using the atomate2.openmm.generate "
-        "module requires the openff-toolkit package."
+        "Using the atomate2.openmm.generate module requires the openff-toolkit package."
     ) from e
 
 
@@ -41,7 +42,10 @@ class XMLMoleculeFF:
 
     def __init__(self, xml_string: str) -> None:
         """Create an XMLMoleculeFF object from a string version of the XML file."""
-        self.tree = ET.parse(io.StringIO(xml_string))  # noqa: S314
+        try:
+            self.tree = ET.parse(io.StringIO(xml_string))  # noqa: S314
+        except ET.ParseError:
+            self.tree = ET.parse(xml_string)  # noqa: S314
 
         root = self.tree.getroot()
         canonical_order = {}
@@ -154,11 +158,10 @@ class XMLMoleculeFF:
         return cls(xml_str)
 
 
-def create_system_from_xml(
-    topology: tk.Topology,
+def create_ff_from_xml(
     xml_mols: list[XMLMoleculeFF],
 ) -> System:
-    """Create an OpenMM system from a list of molecule specifications and XML files."""
+    """Create OpenMM forcefield from a list of molecule specifications and XML files."""
     io_files = []
     for i, xml in enumerate(xml_mols):
         xml_copy = copy.deepcopy(xml)
@@ -169,7 +172,7 @@ def create_system_from_xml(
     for i, xml in enumerate(io_files[1:]):  # type: ignore[assignment]
         ff.loadFile(xml, resname_prefix=f"_{i + 1}")
 
-    return ff.createSystem(topology.to_openmm(), nonbondedMethod=PME)
+    return ff
 
 
 @openmm_job
@@ -180,6 +183,7 @@ def generate_openmm_interchange(
     xml_method_and_scaling: tuple[str, float] = None,
     pack_box_kwargs: dict = None,
     tags: list[str] = None,
+    ff_kwargs: list[str] = None,
 ) -> Response:
     """Generate an OpenMM Interchange object from a list of molecule specifications.
 
@@ -217,6 +221,8 @@ def generate_openmm_interchange(
         toolkit.interchange.components._packmol.pack_box. Default is an empty dict.
     tags : List[str], optional
         A list of tags to attach to the task document.
+    ff_kwargs : List[str], optional
+        A list of additional keyword arguments for force field specification.
 
     Returns
     -------
@@ -281,7 +287,25 @@ def generate_openmm_interchange(
         **pack_box_kwargs,
     )
 
-    system = create_system_from_xml(topology, xml_mols)
+    ff = create_ff_from_xml(xml_mols)
+
+    # obtain 14 scaling values from forcefield
+    generator = ff.getGenerators()
+    for gen in generator:
+        if isinstance(gen, NonbondedGenerator):
+            c14 = gen.coulomb14scale
+            lj14 = gen.lj14scale
+
+    system = ff.createSystem(topology.to_openmm(), nonbondedMethod=PME)
+    if (ff_kwargs is not None) and ("opls" in ff_kwargs):
+        if (c14 != 0.5) or (lj14 != 0.5):
+            raise ValueError(
+                f"NonbondedForce class in XML,"
+                f"<NonbondedForce coulomb14scale='0.5' lj14scale='0.5'>,"
+                f"does not match OPLS convention,"
+                f"<NonbondedForce coulomb14scale='{c14}' lj14scale='{lj14}'>."
+            )
+        system = opls_lj(system)
 
     # these values don't actually matter because integrator is only
     # used to generate the state

@@ -16,6 +16,7 @@ from ase.calculators.singlepoint import SinglePointCalculator
 from ase.constraints import FixSymmetry
 from ase.filters import FrechetCellFilter
 from ase.io import Trajectory as AseTrajectory
+from ase.io import write
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from monty.serialization import dumpfn
@@ -328,6 +329,7 @@ class AseRelaxer:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
+        final_atoms_object_file: str = "final_atoms_object.xyz",
         interval: int = 1,
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
@@ -346,6 +348,8 @@ class AseRelaxer:
             Max number of steps for relaxation.
         traj_file : str
             The trajectory file for saving.
+        final_atoms_object_file: str
+            The final atoms object file for saving.
         interval : int
             The step interval for saving the trajectories.
         verbose : bool
@@ -363,9 +367,11 @@ class AseRelaxer:
 
         if isinstance(atoms, Structure | Molecule):
             atoms = self.ase_adaptor.get_atoms(atoms)
+
+        input_atoms = atoms.copy()
         if self.fix_symmetry:
             atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
-        atoms.set_calculator(self.calculator)
+        atoms.calc = self.calculator
         with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
             obs = TrajectoryObserver(atoms)
             if self.relax_cell and (not is_mol):
@@ -389,6 +395,15 @@ class AseRelaxer:
             np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
             for idx in range(len(struct))
         )
+
+        if final_atoms_object_file is not None:
+            if steps <= 1:
+                write_atoms = input_atoms
+                write_atoms.calc = self.calculator
+            else:
+                write_atoms = atoms
+            write(final_atoms_object_file, write_atoms, format="extxyz", append=True)
+
         return AseResult(
             final_mol_or_struct=struct,
             trajectory=traj,
