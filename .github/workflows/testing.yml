@@ -76,7 +76,7 @@ jobs:
       - name: Install ALA-Mode
         run: |
           micromamba activate a2
-          micromamba install -n a2 -c conda-forge numpy scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include openmpi --yes  
+          micromamba install -n a2 -c conda-forge scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include openmpi --yes  
           git clone https://github.com/ttadano/ALM.git # do I need to modify this?
           cd ALM # do I need to modify this?
           cd python
