@@ -184,7 +184,6 @@ class BasePhononMaker(Maker, ABC):
     max_atoms: float | None = 200
     force_90_degrees: bool = True
     force_diagonal: bool = True
-    allow_orthorhombic: bool = False
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: str | None = None
     bulk_relax_maker: ForceFieldRelaxMaker | BaseVaspMaker | BaseAimsMaker | None = None
@@ -313,7 +312,6 @@ class BasePhononMaker(Maker, ABC):
                 self.max_atoms,
                 self.force_90_degrees,
                 self.force_diagonal,
-                self.allow_orthorhombic,
             )
             jobs.append(supercell_job)
             supercell_matrix = supercell_job.output

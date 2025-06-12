@@ -48,7 +48,7 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
     )
 
     job = PhononMaker(
-        get_supercell_size_kwargs={"force_diagonal": True},
+        force_diagonal=True,
         min_length=12,
         mp_id="mp-149",
         cal_anhar_fcs=False,
