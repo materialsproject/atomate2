@@ -332,7 +332,7 @@ class CondensedBondingAnalysis(BaseModel):
         dir_name = Path(dir_name)
         cohpcar_path = Path(zpath(str((dir_name / "COHPCAR.lobster").as_posix())))
         charge_path = Path(zpath(str((dir_name / "CHARGE.lobster").as_posix())))
-        structure_path = Path(zpath(str((dir_name / "POSCAR").as_posix())))
+        structure_path = Path(zpath(str((dir_name / "CONTCAR").as_posix())))
         icohplist_path = Path(zpath(str((dir_name / "ICOHPLIST.lobster").as_posix())))
         icobilist_path = Path(zpath(str((dir_name / "ICOBILIST.lobster").as_posix())))
         icooplist_path = Path(zpath(str((dir_name / "ICOOPLIST.lobster").as_posix())))
@@ -586,7 +586,7 @@ class CalcQualitySummary(BaseModel):
             if Path(zpath(str((dir_name / "POTCAR").as_posix()))).exists()
             else None
         )
-        structure_path = Path(zpath(str((dir_name / "POSCAR").as_posix())))
+        structure_path = Path(zpath(str((dir_name / "CONTCAR").as_posix())))
         vasprun_path = Path(zpath(str((dir_name / "vasprun.xml").as_posix())))
 
         # Update calc quality kwargs supplied by user
@@ -811,7 +811,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         cobicar_path = Path(zpath(str((dir_name / "COBICAR.lobster").as_posix())))
         coopcar_path = Path(zpath(str((dir_name / "COOPCAR.lobster").as_posix())))
         doscar_path = Path(zpath(str((dir_name / "DOSCAR.lobster").as_posix())))
-        structure_path = Path(zpath(str((dir_name / "POSCAR").as_posix())))
+        structure_path = Path(zpath(str((dir_name / "CONTCAR").as_posix())))
         madelung_energies_path = Path(
             zpath(str((dir_name / "MadelungEnergies.lobster").as_posix()))
         )
