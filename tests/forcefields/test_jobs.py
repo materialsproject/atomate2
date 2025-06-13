@@ -193,7 +193,7 @@ mace_paths = pytest.mark.parametrize(
 
 
 @mace_paths
-def test_mace_static_maker(si_structure: Structure, clean_dir, model, tmp_dir):
+def test_mace_static_maker(si_structure: Structure, model):
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
     job = ForceFieldStaticMaker(
