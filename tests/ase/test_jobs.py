@@ -98,6 +98,7 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
     response = run_locally(job)
     output = response[job.uuid][1].output
 
+    assert len(output.output.ionic_steps) == 1
     assert output.output.energy == pytest.approx(-0.0179726955438795)
     assert output.structure.volume == pytest.approx(24.334)
     assert isinstance(output, AseStructureTaskDoc)
