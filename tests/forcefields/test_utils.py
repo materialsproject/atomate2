@@ -18,9 +18,12 @@ def test_ext_load(force_field: str):
     }[force_field]
     calc_from_decode = ase_calculator(decode_dict)
     calc_from_preset = ase_calculator(str(MLFF(force_field)))
-    assert type(calc_from_decode) is type(calc_from_preset)
-    assert calc_from_decode.name == calc_from_preset.name
-    assert calc_from_decode.parameters == calc_from_preset.parameters == {}
+    calc_from_enum = ase_calculator(MLFF(force_field))
+
+    for other in (calc_from_preset, calc_from_enum):
+        assert type(calc_from_decode) is type(other)
+        assert calc_from_decode.name == other.name
+        assert calc_from_decode.parameters == other.parameters == {}
 
 
 def test_raises_error():

@@ -306,7 +306,7 @@ class TrajectoryObserver:
         traj_dict = {
             "energy": self.energies,
             "forces": self.forces,
-            "stress": self.stresses,
+            "stresses": self.stresses,
             "atom_positions": self.atom_positions,
             "cells": self.cells,
             "atoms": self.atoms,

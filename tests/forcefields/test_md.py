@@ -183,32 +183,31 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
     assert len(traj_from_file) == n_steps + 1
 
     if traj_file_fmt == "pmg":
-        assert all(
-            np.all(
+        other_traj = {
+            key: [
                 traj_from_file.frame_properties[idx][key]
-                == task_doc.objects["trajectory"].frame_properties[idx].get(key)
-            )
+                for idx in range(len(traj_from_file))
+            ]
             for key in ("energy", "temperature", "forces", "velocities")
-            for idx in range(n_steps + 1)
-        )
+        }
     elif traj_file_fmt == "ase":
-        traj_as_dict = [
-            {
-                "energy": traj_from_file[idx].get_potential_energy(),
-                "temperature": traj_from_file[idx].get_temperature(),
-                "forces": traj_from_file[idx].get_forces(),
-                "velocities": traj_from_file[idx].get_velocities(),
-            }
-            for idx in range(1, n_steps + 1)
-        ]
-        assert all(
-            np.all(
-                traj_as_dict[idx - 1][key]
-                == getattr(task_doc.objects["trajectory"], key)[idx]
-            )
-            for key in ("energy", "temperature", "forces", "velocities")
-            for idx in range(1, n_steps + 1)
+        other_traj = {
+            k: [getattr(traj_from_file[idx], v)() for idx in range(n_steps + 1)]
+            for k, v in {
+                "energy": "get_potential_energy",
+                "temperature": "get_temperature",
+                "forces": "get_forces",
+                "velocities": "get_velocities",
+            }.items()
+        }
+
+    assert all(
+        np.all(
+            np.array(other_traj[key])
+            == np.array(getattr(task_doc.objects["trajectory"], key))
         )
+        for key in ("energy", "temperature", "forces", "velocities")
+    )
 
 
 def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
