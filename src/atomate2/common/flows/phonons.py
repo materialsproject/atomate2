@@ -164,7 +164,6 @@ class BasePhononMaker(Maker, ABC):
 
     kpath_scheme: str = "seekpath"
     code: str = None
-    mp_id: str = None
     store_force_constants: bool = True
     socket: bool = False
 
