@@ -51,7 +51,7 @@ defects = [
     "python-ulid>=2.7",
 ]
 forcefields = [
-    "ase>=3.23.0",
+    "ase>=3.25.0",
     "calorine>=3.0",
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
@@ -62,7 +62,7 @@ forcefields = [
     "sevenn>=0.9.3",
     "torchdata<=0.7.1",                            # TODO: remove when issue fixed
 ]
-ase = ["ase>=3.23.0"]
+ase = ["ase>=3.25.0"]
 ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 openmm = [
     "mdanalysis>=2.8.0",
@@ -94,7 +94,7 @@ tests = [
 ]
 strict = [
     "PyYAML==6.0.2",
-    "ase==3.24.0",
+    "ase==3.25.0",
     "cclib==1.8.1",
     "click==8.2.0",
     "custodian==2025.4.14",
