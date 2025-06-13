@@ -17,7 +17,9 @@ if TYPE_CHECKING:
     from ase.calculators.calculator import Calculator
 
 
-def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | None:
+def ase_calculator(
+    calculator_meta: str | MLFF | dict, **kwargs: Any
+) -> Calculator | None:
     """
     Create an ASE calculator from a given set of metadata.
 
@@ -42,8 +44,10 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
     """
     calculator = None
 
-    if isinstance(calculator_meta, str | MLFF) and calculator_meta in map(str, MLFF):
-        calculator_name = MLFF[calculator_meta.split("MLFF.")[-1]]
+    if (
+        isinstance(calculator_meta, str) and calculator_meta in map(str, MLFF)
+    ) or isinstance(calculator_meta, MLFF):
+        calculator_name = MLFF(calculator_meta)
 
         if calculator_name == MLFF.CHGNet:
             from chgnet.model.dynamics import CHGNetCalculator

@@ -9,6 +9,7 @@ import os
 
 import pytest
 from jobflow import run_locally
+from pymatgen.io.vasp.outputs import Xdatcar
 
 from atomate2.ase.md import GFNxTBMDMaker, LennardJonesMDMaker
 from atomate2.ase.schemas import AseStructureTaskDoc
@@ -27,7 +28,9 @@ _mb_velocity_seed = 2820285082114
 
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))
 def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_dir):
-    reference_energies = {
+    # Langevin thermostat no longer works with single atom structures in ase>3.24.x
+    structure = fcc_ne_structure * (2, 2, 2)
+    reference_energies_per_atom = {
         "LJ": -0.0179726955438795,
         "GFN-xTB": -160.93692979071128,
     }
@@ -40,7 +43,7 @@ def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_
         n_steps=100,
         tags=["test"],
         store_trajectory="partial",
-    ).make(fcc_ne_structure)
+    ).make(structure)
 
     response = run_locally(md_job)
     output = response[md_job.uuid][1].output
@@ -48,7 +51,7 @@ def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_
     assert isinstance(output, AseStructureTaskDoc)
     assert output.tags == ["test"]
     assert output.output.energy_per_atom == pytest.approx(
-        reference_energies[calculator_name]
+        reference_energies_per_atom[calculator_name]
     )
     assert output.structure.volume == pytest.approx(fcc_ne_structure.volume)
 
@@ -57,7 +60,7 @@ def test_ase_nvt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, clean_
 def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, tmp_dir):
     os.environ["OMP_NUM_THREADS"] = "1"
 
-    reference_energies = {
+    reference_energies_per_atom = {
         "LJ": 0.01705592581943574,
     }
 
@@ -82,10 +85,12 @@ def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, tmp_di
 
     assert isinstance(output, AseStructureTaskDoc)
     assert output.output.energy_per_atom == pytest.approx(
-        reference_energies[calculator_name]
+        reference_energies_per_atom[calculator_name]
     )
 
-    # TODO: improve XDATCAR parsing test when class is fixed in pmg
     assert os.path.isfile("XDATCAR")
+    xdatcar = Xdatcar("XDATCAR")
+    assert len(xdatcar) == len(output.objects["trajectory"])
+    assert len(xdatcar) == len(output.output.ionic_steps)
 
-    assert len(output.objects["trajectory"]) == n_steps
+    assert len(output.objects["trajectory"]) == n_steps + 1
