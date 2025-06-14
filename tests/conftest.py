@@ -50,7 +50,7 @@ def clean_dir(debug_mode):
         shutil.rmtree(new_path)
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def tmp_dir():
     """Same as clean_dir but is fresh for every test"""
 
