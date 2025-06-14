@@ -254,7 +254,7 @@ class AseRelaxMaker(AseMaker):
         if self.steps < 0:
             logger.warning(
                 "WARNING: A negative number of steps is not possible. "
-                "Behavior may vary..."
+                "Defaulting to a static calculation."
             )
 
         relaxer = AseRelaxer(
