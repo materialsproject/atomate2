@@ -315,7 +315,6 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
             use_symmetrized_structure=self.use_symmetrized_structure,
             kpath_scheme=self.kpath_scheme,
             code=self.code,
-            mp_id=self.mp_id,
             structure=structure,
             displacement_data=displacement_calcs.output,
             epsilon_static=epsilon_static,
