@@ -212,7 +212,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         -------
         Job|Flow
         """
-        displacements = generate_phonon_displacements(
+        return generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
@@ -227,7 +227,6 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
             kpath_scheme=self.kpath_scheme,
             code=self.code,
         )
-        return displacements
 
     def run_displacements(
         self,
@@ -251,7 +250,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         Job | Flow
         """
         # perform the phonon displacement calculations
-        displacement_calcs = run_phonon_displacements(
+        return run_phonon_displacements(
             displacements=displacements.output,
             structure=structure,
             supercell_matrix=supercell_matrix,
@@ -260,7 +259,6 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
             prev_dir_argname=self.prev_calc_dir_argname,
             prev_dir=prev_dir,
         )
-        return displacement_calcs
 
     def get_results(
         self,
@@ -299,7 +297,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         -------
         Job | Flow
         """
-        phonon_collect = generate_frequencies_eigenvectors(
+        return generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
             num_displaced_supercells=self.num_displaced_supercells,
@@ -333,7 +331,6 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
             store_force_constants=self.store_force_constants,
             **self.generate_frequencies_eigenvectors_kwargs,
         )
-        return phonon_collect
 
     def get_supercell_matrix(self, structure: Structure) -> Job | Flow:
         """
@@ -347,14 +344,13 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         -------
         Job|Flow
         """
-        supercell_job = get_supercell_size(
+        return get_supercell_size(
             structure,
             self.min_length,
             self.max_atoms,
             self.force_90_degrees,
             self.force_diagonal,
         )
-        return supercell_job
 
     @property
     @abstractmethod

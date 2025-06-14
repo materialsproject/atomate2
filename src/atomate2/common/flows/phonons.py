@@ -451,7 +451,7 @@ class BasePhononMaker(Maker, ABC):
         -------
         Job | Flow
         """
-        displacement_calcs = run_phonon_displacements(
+        return run_phonon_displacements(
             displacements=displacements.output,
             structure=structure,
             supercell_matrix=supercell_matrix,
@@ -460,7 +460,6 @@ class BasePhononMaker(Maker, ABC):
             prev_dir_argname=self.prev_calc_dir_argname,
             prev_dir=prev_dir,
         )
-        return displacement_calcs
 
     def get_displacements(
         self, structure: Structure, supercell_matrix: Matrix3D
@@ -477,7 +476,7 @@ class BasePhononMaker(Maker, ABC):
         -------
         Job|Flow
         """
-        displacements = generate_phonon_displacements(
+        return generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
@@ -487,7 +486,6 @@ class BasePhononMaker(Maker, ABC):
             kpath_scheme=self.kpath_scheme,
             code=self.code,
         )
-        return displacements
 
     @property
     @abstractmethod
