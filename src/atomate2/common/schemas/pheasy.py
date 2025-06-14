@@ -172,7 +172,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         use_symmetrized_structure: Union[str, None],
         kpath_scheme: str,
         code: str,
-        mp_id: str,
         displacement_data: dict[str, list],
         total_dft_energy: float,
         epsilon_static: Matrix3D = None,
@@ -943,7 +942,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             supercell_matrix=phonon.supercell_matrix.tolist(),
             primitive_matrix=phonon.primitive_matrix.tolist(),
             code=code,
-            mp_id=mp_id,
             thermal_displacement_data={
                 "temperatures_thermal_displacements": temperature_range_thermal_displacements.tolist(),  # noqa: E501
                 "thermal_displacement_matrix_cif": tdisp_mat_cif,
