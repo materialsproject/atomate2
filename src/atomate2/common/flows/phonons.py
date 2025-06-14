@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from typing import Literal
 
     from emmet.core.math import Matrix3D
+    from jobflow import Job
     from pymatgen.core.structure import Structure
 
     from atomate2.aims.jobs.base import BaseAimsMaker
@@ -347,8 +348,19 @@ class BasePhononMaker(Maker, ABC):
         # create a flow including all jobs for a phonon computation
         return Flow(jobs, phonon_collect.output)
 
-    def get_supercell_matrix(self, structure):
-        supercell_job = get_supercell_size(
+    def get_supercell_matrix(self, structure: Structure) -> Job | Flow:
+        """
+        Get supercell matrix.
+
+        Parameters
+        ----------
+        structure: Structure
+
+        Returns
+        -------
+        Job|Flow
+        """
+        return get_supercell_size(
             structure=structure,
             min_length=self.min_length,
             max_length=self.max_length,
@@ -356,24 +368,45 @@ class BasePhononMaker(Maker, ABC):
             allow_orthorhombic=self.allow_orthorhombic,
             **self.get_supercell_size_kwargs,
         )
-        return supercell_job
 
     def get_results(
         self,
-        born,
-        born_run_job_dir,
-        born_run_uuid,
-        displacement_calcs,
-        epsilon_static,
-        optimization_run_job_dir,
-        optimization_run_uuid,
-        static_run_job_dir,
-        static_run_uuid,
-        structure,
-        supercell_matrix,
-        total_dft_energy,
-    ):
-        phonon_collect = generate_frequencies_eigenvectors(
+        born: Matrix3D,
+        born_run_job_dir: str,
+        born_run_uuid: str,
+        displacement_calcs: Job | Flow,
+        epsilon_static: Matrix3D,
+        optimization_run_job_dir: str,
+        optimization_run_uuid: str,
+        static_run_job_dir: str,
+        static_run_uuid: str,
+        structure: Structure,
+        supercell_matrix: Matrix3D | None,
+        total_dft_energy: float,
+    ) -> Job | Flow:
+        """
+        Calculate the harmonic phonons etc.
+
+        Parameters
+        ----------
+        born: Matrix3D
+        born_run_job_dir:  str
+        born_run_uuid: str
+        displacement_calcs: Job | Flow
+        epsilon_static: Matrix3D
+        optimization_run_job_dir:str
+        optimization_run_uuid:str
+        static_run_job_dir:str
+        static_run_uuid:str
+        structure: Structure
+        supercell_matrix: Matrix3D
+        total_dft_energy: float
+
+        Returns
+        -------
+        Job | Flow
+        """
+        return generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
             sym_reduce=self.sym_reduce,
@@ -396,9 +429,28 @@ class BasePhononMaker(Maker, ABC):
             store_force_constants=self.store_force_constants,
             **self.generate_frequencies_eigenvectors_kwargs,
         )
-        return phonon_collect
 
-    def run_displacements(self, displacements, prev_dir, structure, supercell_matrix):
+    def run_displacements(
+        self,
+        displacements: Job | Flow,
+        prev_dir: str | Path | None,
+        structure: Structure,
+        supercell_matrix: Matrix3D,
+    ) -> Job | Flow:
+        """
+        Perform displacement calculations.
+
+        Parameters
+        ----------
+        displacements: Job | Flow
+        prev_dir: str | Path | None
+        structure: Structure
+        supercell_matrix:  Matrix3D
+
+        Returns
+        -------
+        Job | Flow
+        """
         displacement_calcs = run_phonon_displacements(
             displacements=displacements.output,
             structure=structure,
@@ -410,7 +462,21 @@ class BasePhononMaker(Maker, ABC):
         )
         return displacement_calcs
 
-    def get_displacements(self, structure, supercell_matrix):
+    def get_displacements(
+        self, structure: Structure, supercell_matrix: Matrix3D
+    ) -> Job | Flow:
+        """
+        Get displaced supercells.
+
+        Parameters
+        ----------
+        structure: Structure
+        supercell_matrix: Matrix3D
+
+        Returns
+        -------
+        Job|Flow
+        """
         displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,

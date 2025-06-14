@@ -15,6 +15,12 @@ from atomate2.common.jobs.pheasy import (
 )
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
+    from emmet.core.math import Matrix3D
+    from jobflow import Flow, Job
+    from pymatgen.core.structure import Structure
+
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
     from atomate2.vasp.jobs.base import BaseVaspMaker
@@ -191,9 +197,21 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
     store_force_constants: bool = True
     socket: bool = False
 
-    def get_displacements(self, structure, supercell_matrix):
-        print("test")
-        # get a phonon object from pheasy code using the random-displacement approach
+    def get_displacements(
+        self, structure: Structure, supercell_matrix: Matrix3D
+    ) -> Job | Flow:
+        """
+        Get displaced supercells.
+
+        Parameters
+        ----------
+        structure: Structure
+        supercell_matrix: Matrix3D
+
+        Returns
+        -------
+        Job|Flow
+        """
         displacements = generate_phonon_displacements(
             structure=structure,
             supercell_matrix=supercell_matrix,
@@ -211,7 +229,27 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         )
         return displacements
 
-    def run_displacements(self, displacements, prev_dir, structure, supercell_matrix):
+    def run_displacements(
+        self,
+        displacements: Job | Flow,
+        prev_dir: str | Path | None,
+        structure: Structure,
+        supercell_matrix: Matrix3D,
+    ) -> Job | Flow:
+        """
+        Perform displacement calculations.
+
+        Parameters
+        ----------
+        displacements: Job | Flow
+        prev_dir: str | Path | None
+        structure: Structure
+        supercell_matrix:  Matrix3D
+
+        Returns
+        -------
+        Job | Flow
+        """
         # perform the phonon displacement calculations
         displacement_calcs = run_phonon_displacements(
             displacements=displacements.output,
@@ -226,19 +264,41 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
 
     def get_results(
         self,
-        born,
-        born_run_job_dir,
-        born_run_uuid,
-        displacement_calcs,
-        epsilon_static,
-        optimization_run_job_dir,
-        optimization_run_uuid,
-        static_run_job_dir,
-        static_run_uuid,
-        structure,
-        supercell_matrix,
-        total_dft_energy,
-    ):
+        born: Matrix3D,
+        born_run_job_dir: str,
+        born_run_uuid: str,
+        displacement_calcs: Job | Flow,
+        epsilon_static: Matrix3D,
+        optimization_run_job_dir: str,
+        optimization_run_uuid: str,
+        static_run_job_dir: str,
+        static_run_uuid: str,
+        structure: Structure,
+        supercell_matrix: Matrix3D | None,
+        total_dft_energy: float,
+    ) -> Job | Flow:
+        """
+        Calculate the harmonic phonons etc.
+
+        Parameters
+        ----------
+        born: Matrix3D
+        born_run_job_dir:  str
+        born_run_uuid: str
+        displacement_calcs: Job | Flow
+        epsilon_static: Matrix3D
+        optimization_run_job_dir:str
+        optimization_run_uuid:str
+        static_run_job_dir:str
+        static_run_uuid:str
+        structure: Structure
+        supercell_matrix: Matrix3D
+        total_dft_energy: float
+
+        Returns
+        -------
+        Job | Flow
+        """
         phonon_collect = generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
@@ -275,7 +335,18 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         )
         return phonon_collect
 
-    def get_supercell_matrix(self, structure):
+    def get_supercell_matrix(self, structure: Structure) -> Job | Flow:
+        """
+        Get supercell matrix.
+
+        Parameters
+        ----------
+        structure: Structure
+
+        Returns
+        -------
+        Job|Flow
+        """
         supercell_job = get_supercell_size(
             structure,
             self.min_length,
