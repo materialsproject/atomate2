@@ -16,6 +16,7 @@ from ase.calculators.singlepoint import SinglePointCalculator
 from ase.constraints import FixSymmetry
 from ase.filters import FrechetCellFilter
 from ase.io import Trajectory as AseTrajectory
+from ase.io import write as ase_write
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from monty.serialization import dumpfn
@@ -328,13 +329,17 @@ class AseRelaxer:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
+        final_atoms_object_file: str | os.PathLike[str] = "final_atoms_object.xyz",
         interval: int = 1,
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
+        filter_kwargs: dict | None = None,
         **kwargs,
     ) -> AseResult:
         """
         Relax the molecule or structure.
+
+        If steps <= 1, this will perform a single-point calculation.
 
         Parameters
         ----------
@@ -346,6 +351,8 @@ class AseRelaxer:
             Max number of steps for relaxation.
         traj_file : str
             The trajectory file for saving.
+        final_atoms_object_file: str | os.PathLike
+            The final atoms object file for saving.
         interval : int
             The step interval for saving the trajectories.
         verbose : bool
@@ -363,19 +370,23 @@ class AseRelaxer:
 
         if isinstance(atoms, Structure | Molecule):
             atoms = self.ase_adaptor.get_atoms(atoms)
+
+        input_atoms = atoms.copy()
         if self.fix_symmetry:
             atoms.set_constraint(FixSymmetry(atoms, symprec=self.symprec))
         atoms.calc = self.calculator
         with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
             obs = TrajectoryObserver(atoms)
-            if self.relax_cell and (not is_mol):
-                atoms = cell_filter(atoms)
-            optimizer = self.opt_class(atoms, **kwargs)
-            optimizer.attach(obs, interval=interval)
             t_i = time.perf_counter()
-            optimizer.run(fmax=fmax, steps=steps)
-            t_f = time.perf_counter()
+            if steps > 1:
+                if self.relax_cell and (not is_mol):
+                    atoms = cell_filter(atoms, **(filter_kwargs or {}))
+                optimizer = self.opt_class(atoms, **kwargs)
+                optimizer.attach(obs, interval=interval)
+                optimizer.run(fmax=fmax, steps=steps)
             obs()
+            t_f = time.perf_counter()
+
         if traj_file is not None:
             obs.save(traj_file)
         if isinstance(atoms, cell_filter):
@@ -389,6 +400,17 @@ class AseRelaxer:
             np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
             for idx in range(len(struct))
         )
+
+        if final_atoms_object_file is not None:
+            if steps <= 1:
+                write_atoms = input_atoms
+                write_atoms.calc = self.calculator
+            else:
+                write_atoms = atoms
+            ase_write(
+                final_atoms_object_file, write_atoms, format="extxyz", append=True
+            )
+
         return AseResult(
             final_mol_or_struct=struct,
             trajectory=traj,
