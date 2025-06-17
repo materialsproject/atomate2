@@ -35,7 +35,7 @@ dependencies = [
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
     "pymatgen>=2024.11.13",
-    "pymongo<=4.10.1",
+    "pymongo<=4.12.1",
 ]
 
 [project.optional-dependencies]
@@ -111,7 +111,7 @@ strict = [
     "pydantic==2.11.3",
     "pymatgen-analysis-defects==2025.1.18",
     "pymatgen==2025.2.18",
-    "pymongo==4.10.1",
+    "pymongo==4.12.1",
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
     "typing-extensions==4.13.2",
