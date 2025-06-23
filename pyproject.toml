@@ -124,7 +124,7 @@ strict-openff = [
     "pymatgen==2024.11.13", # TODO: open ff is extremely sensitive to pymatgen version
 ]
 strict-forcefields = [
-    "calorine==3.0",
+    "calorine==3.1",
     "chgnet==0.3.8",
     "mace-torch==0.3.12",
     "matgl==1.2.6",
