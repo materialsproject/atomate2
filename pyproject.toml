@@ -101,7 +101,7 @@ strict = [
     "dscribe==2.1.1",
     "emmet-core==0.84.8",
     "ijson==3.4.0",
-    "jobflow==0.1.19",
+    "jobflow==0.2.0",
     "lobsterpy==0.4.9",
     "monty==2025.3.3",
     "mp-api==0.45.7",
