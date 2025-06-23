@@ -114,7 +114,7 @@ strict = [
     "pymongo==4.10.1",
     "python-ulid==3.0.0",
     "seekpath==2.1.0",
-    "typing-extensions==4.13.2",
+    "typing-extensions==4.14.0",
 ]
 strict-openff = [
     "mdanalysis==2.9.0",
