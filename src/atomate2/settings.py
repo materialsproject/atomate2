@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import warnings
 from pathlib import Path
-from typing import Any, Literal, Optional, Union
+from typing import Any, Literal, Union
 
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -41,7 +41,7 @@ class Atomate2Settings(BaseSettings):
         description="Tolerance for determining if a material is a semiconductor or "
         "metal",
     )
-    CUSTODIAN_SCRATCH_DIR: Optional[str] = Field(
+    CUSTODIAN_SCRATCH_DIR: str | None = Field(
         None, description="Path to scratch directory used by custodian."
     )
 
@@ -55,7 +55,7 @@ class Atomate2Settings(BaseSettings):
     VASP_NCL_CMD: str = Field(
         "vasp_ncl", description="Command to run non-collinear version of VASP."
     )
-    VASP_VDW_KERNEL_DIR: Optional[str] = Field(
+    VASP_VDW_KERNEL_DIR: str | None = Field(
         None, description="Path to VDW VASP kernel."
     )
     VASP_INCAR_UPDATES: dict = Field(
@@ -76,7 +76,7 @@ class Atomate2Settings(BaseSettings):
     VASP_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
     )
-    VASP_STORE_VOLUMETRIC_DATA: Optional[tuple[str]] = Field(
+    VASP_STORE_VOLUMETRIC_DATA: tuple[str] | None = Field(
         None, description="Store data from these files in database if present"
     )
     VASP_STORE_ADDITIONAL_JSON: bool = Field(
@@ -94,7 +94,7 @@ class Atomate2Settings(BaseSettings):
         description="Whether to run the DDEC6 program when parsing VASP calculations."
         "Requires the chargemol executable to be on the path.",
     )
-    DDEC6_ATOMIC_DENSITIES_DIR: Optional[str] = Field(
+    DDEC6_ATOMIC_DENSITIES_DIR: str | None = Field(
         default=None,
         description="Directory where the atomic densities are stored.",
         # TODO uncomment below once that functionality is actually implemented
@@ -163,7 +163,7 @@ class Atomate2Settings(BaseSettings):
     CP2K_CUSTODIAN_MAX_ERRORS: int = Field(
         5, description="Maximum number of errors to correct before custodian gives up"
     )
-    CP2K_STORE_VOLUMETRIC_DATA: Optional[tuple[str]] = Field(
+    CP2K_STORE_VOLUMETRIC_DATA: tuple[str] | None = Field(
         None, description="Store data from these files in database if present"
     )
     CP2K_STORE_ADDITIONAL_JSON: bool = Field(
@@ -190,12 +190,12 @@ class Atomate2Settings(BaseSettings):
     )
 
     # AMSET settings
-    AMSET_SETTINGS_UPDATE: Optional[dict] = Field(
+    AMSET_SETTINGS_UPDATE: dict | None = Field(
         None, description="Additional settings applied to AMSET settings file."
     )
 
     # ABINIT settings
-    ABINIT_MPIRUN_CMD: Optional[str] = Field(None, description="Mpirun command.")
+    ABINIT_MPIRUN_CMD: str | None = Field(None, description="Mpirun command.")
     ABINIT_CMD: str = Field("abinit", description="Abinit command.")
     ABINIT_MRGDDB_CMD: str = Field("mrgddb", description="Mrgddb command.")
     ABINIT_ANADDB_CMD: str = Field("anaddb", description="Anaddb command.")
@@ -207,7 +207,7 @@ class Atomate2Settings(BaseSettings):
         default=False,
         description="Use autoparal to determine optimal parallel configuration.",
     )
-    ABINIT_ABIPY_MANAGER_FILE: Optional[str] = Field(
+    ABINIT_ABIPY_MANAGER_FILE: str | None = Field(
         None,
         description="Config file for task manager of abipy.",
     )

@@ -6,7 +6,7 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
@@ -82,23 +82,23 @@ class CalculationOutput(BaseModel):
         None, description="The Fermi level from the calculation in eV"
     )
 
-    forces: Optional[list[Vector3D]] = Field(
+    forces: list[Vector3D] | None = Field(
         None, description="Forces acting on each atom"
     )
-    stress: Optional[Matrix3D] = Field(None, description="The stress on the cell")
-    is_metal: Optional[bool] = Field(None, description="Whether the system is metallic")
-    bandgap: Optional[float] = Field(
+    stress: Matrix3D | None = Field(None, description="The stress on the cell")
+    is_metal: bool | None = Field(None, description="Whether the system is metallic")
+    bandgap: float | None = Field(
         None, description="The band gap from the calculation in eV"
     )
-    direct_bandgap: Optional[float] = Field(
+    direct_bandgap: float | None = Field(
         None, description="The direct band gap from the calculation in eV"
     )
-    cbm: Optional[float] = Field(
+    cbm: float | None = Field(
         None,
         description="The conduction band minimum, or LUMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    vbm: Optional[float] = Field(
+    vbm: float | None = Field(
         None,
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
@@ -194,7 +194,7 @@ class Calculation(BaseModel):
     event_report: events.EventReport = Field(
         None, description="Event report of this abinit job."
     )
-    output_file_paths: Optional[dict[str, str]] = Field(
+    output_file_paths: dict[str, str] | None = Field(
         None,
         description="Paths (relative to dir_name) of the Abinit output files "
         "associated with this calculation",
