@@ -25,7 +25,6 @@ class AseNebMaker(AseMaker):
 
     name: str = "ASE NEB maker"
     neb_kwargs: dict = field(default_factory=dict)
-    relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float | None = 1e-2
     steps: int = 500
@@ -55,10 +54,7 @@ class AseNebMaker(AseMaker):
         return AseNebInterface(
             calculator=self.calculator,
             fix_symmetry=self.fix_symmetry,
-            relax_cell=self.relax_cell,
             symprec=self.symprec,
-            neb_kwargs=self.neb_kwargs,
-            **self.optimizer_kwargs,
         ).run_neb(
             images,
             steps=self.steps,
@@ -66,6 +62,8 @@ class AseNebMaker(AseMaker):
             traj_file_fmt=self.traj_file_fmt,
             interval=self.traj_interval,
             neb_doc_kwargs=self.neb_doc_kwargs,
+            neb_kwargs=self.neb_kwargs,
+            optimizer_kwargs=self.optimizer_kwargs,
             **self.relax_kwargs,
         )
 

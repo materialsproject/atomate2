@@ -14,7 +14,7 @@ from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 
 @dataclass
-class MLFFApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
+class ForceFieldApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
     """
     Perform ApproxNEB on a single hop using ML forcefields.
 

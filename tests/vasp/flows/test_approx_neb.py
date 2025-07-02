@@ -8,6 +8,7 @@ from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.core import Structure
 
+from atomate2.utils.testing.common import get_job_uuid_name_map
 from atomate2.vasp.flows.approx_neb import ApproxNebMaker
 
 
@@ -66,9 +67,8 @@ def test_approx_neb_flow(mock_vasp, clean_dir, vasp_test_dir):
     # ApproxNEB image relax hop 3+1 image 2
     responses = run_locally(flow, create_folders=True, ensure_success=False)
     output = {
-        job.name: responses[job.uuid][1].output
-        for job in flow.jobs
-        if job.uuid in responses
+        job_name: responses[uuid][1].output
+        for uuid, job_name in get_job_uuid_name_map(flow).items()
     }
 
     assert len(output["collate_results"].hops) == 2
@@ -112,10 +112,6 @@ def test_approx_neb_flow(mock_vasp, clean_dir, vasp_test_dir):
         for k, ref_hop in ref_results.hops.items()
         for idx, energy in enumerate(ref_hop.energies)
     )
-
-    from monty.serialization import dumpfn
-
-    dumpfn(output["collate_results"], "/Users/aaronkaplan/Desktop/temp_aneb.json.gz")
 
     assert all(
         getattr(output["collate_results"], f"{direction}_barriers")[k]

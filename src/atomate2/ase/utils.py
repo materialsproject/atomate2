@@ -162,6 +162,8 @@ class TrajectoryObserver:
             self.to_pymatgen_trajectory(filename=filename, file_format=fmt)  # type: ignore[arg-type]
         elif fmt == "ase":
             self.to_ase_trajectory(filename=filename)
+        else:
+            raise ValueError(f"Unknown trajectory format {fmt}.")
 
     def to_ase_trajectory(
         self, filename: str | None = "atoms.traj"
@@ -443,10 +445,8 @@ class AseNebInterface:
         self,
         calculator: Calculator,
         optimizer: Optimizer | str = "FIRE",
-        relax_cell: bool = True,
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
-        neb_kwargs: dict | None = None,
     ) -> None:
         """Initialize the interface.
 
@@ -454,7 +454,6 @@ class AseNebInterface:
         ----------
         calculator (ase Calculator): an ase calculator
         optimizer (str or ase Optimizer): the optimization algorithm.
-        relax_cell (bool): if True, cell parameters will be optimized.
         fix_symmetry (bool): if True, symmetry will be fixed during relaxation.
         symprec (float): Tolerance for symmetry finding in case of fix_symmetry.
         """
@@ -468,11 +467,9 @@ class AseNebInterface:
             optimizer_obj = optimizer
 
         self.opt_class: Optimizer = optimizer_obj
-        self.relax_cell = relax_cell
         self.ase_adaptor = AseAtomsAdaptor()
         self.fix_symmetry = fix_symmetry
         self.symprec = symprec
-        self.neb_kwargs = neb_kwargs or DEFAULT_NEB_KWARGS.copy()
 
     def run_neb(
         self,
@@ -484,7 +481,8 @@ class AseNebInterface:
         interval: int = 1,
         verbose: bool = False,
         neb_doc_kwargs: dict | None = None,
-        **kwargs,
+        neb_kwargs: dict = DEFAULT_NEB_KWARGS,
+        optimizer_kwargs: dict | None = None,
     ) -> NebResult:
         """
         Perform NEB on a list of molecules or structures.
@@ -511,8 +509,10 @@ class AseNebInterface:
             The step interval for saving the trajectories.
         verbose : bool
             If True, screen output will be shown.
-        **kwargs
-            Further kwargs.
+        neb_kwargs : dict, defaults to DEFAULT_NEB_KWARGS
+            kwargs to pass to ASE's NEB.
+        optimizer_kwargs : dict or None (default)
+            kwargs to pass to the optimizer.
 
         Returns
         -------
@@ -522,6 +522,7 @@ class AseNebInterface:
             isinstance(images[0], Atoms) and all(not pbc for pbc in images[0].pbc)
         )
         num_images = len(images)
+        initial_images = [img.copy() for img in images]
 
         for idx, image in enumerate(images):
             if isinstance(image, Structure | Molecule):
@@ -531,11 +532,11 @@ class AseNebInterface:
                 images[idx].set_constraint(FixSymmetry(image, symprec=self.symprec))
             images[idx].calc = deepcopy(self.calculator)
 
-        neb_calc = NEB(images, **self.neb_kwargs)
+        neb_calc = NEB(images, **neb_kwargs)
 
         with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
             observers = [TrajectoryObserver(image) for image in images]
-            optimizer = self.opt_class(neb_calc, **kwargs)
+            optimizer = self.opt_class(neb_calc, **(optimizer_kwargs or {}))
             for idx in range(num_images):
                 optimizer.attach(observers[idx], interval=interval)
             t_i = time.perf_counter()
@@ -546,8 +547,10 @@ class AseNebInterface:
         if traj_file is not None:
             if isinstance(traj_file, str | Path):
                 traj_file = Path(traj_file)
-                traj_file_suffix = "".join(traj_file.suffixes)
-                traj_file_prefix = str(traj_file).split(traj_file_suffix)[0]
+                if traj_file_suffix := "".join(traj_file.suffixes):
+                    traj_file_prefix = str(traj_file).split(traj_file_suffix)[0]
+                else:
+                    traj_file_prefix = str(traj_file)
                 traj_files = [
                     f"{traj_file_prefix}-image-{idx + 1}{traj_file_suffix}"
                     for idx in range(num_images)
@@ -563,21 +566,27 @@ class AseNebInterface:
             for image in images
         ]
         num_sites = len(images[0])
+
+        tags = [os.getcwd()]
         is_force_conv = all(
             np.linalg.norm(observers[image_idx].forces[-1][site_idx]) < abs(fmax)
             for site_idx in range(num_sites)
             for image_idx in range(num_images)
         )
+        tags += ["force converged" if is_force_conv else "forces not converged"]
+        tags += [f"elapsed time {t_f - t_i} seconds"]
+
         return NebResult(
             images=images,
+            initial_images=initial_images,
             energies=[
                 observers[image_idx].energies[-1] for image_idx in range(num_images)
             ],
             method=NebMethod.CLIMBING_IMAGE
-            if self.neb_kwargs.get("climb", False)
+            if neb_kwargs.get("climb", False)
             else NebMethod.STANDARD,
-            is_force_converged=is_force_conv,
-            dir_name=os.getcwd(),
-            elapsed_time=t_f - t_i,
+            # dir_name=os.getcwd(), # NB: this should be migrated in emmet-core
+            state="successful" if is_force_conv else "failed",
+            tags=tags,
             **neb_doc_kwargs,
         )
