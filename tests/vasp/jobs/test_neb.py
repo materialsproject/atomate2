@@ -2,7 +2,6 @@
 
 from pathlib import Path
 
-import numpy as np
 import pytest
 from emmet.core.neb import BarrierAnalysis, NebMethod, NebTaskDoc
 from jobflow import run_locally
@@ -70,6 +69,10 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
+    """
+    # NB the endpoint structures were generated as follows:
+
+    ```py
     structure = si_structure.to_conventional() * (2, 2, 2)
 
     _, n_idx, _, d = structure.get_neighbor_list(
@@ -81,6 +84,14 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
     endpoints = [structure.copy() for _ in range(2)]
     endpoints[0].remove_sites([0])
     endpoints[1].remove_sites([nn_idx])
+    ```
+    """
+    endpoints = [
+        Structure.from_file(
+            base_neb_dir / f"relax_endpoint_{idx + 1}" / "inputs" / "POSCAR.gz"
+        )
+        for idx in range(2)
+    ]
 
     relax_maker = RelaxMaker(
         input_set_generator=RelaxSetGenerator(
@@ -100,7 +111,7 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
     responses = run_locally(neb_job, create_folders=True, ensure_success=True)
     output = {job.name: responses[job.uuid][1].output for job in neb_job.jobs}
 
-    fixed_cell_vol = structure.volume
+    fixed_cell_vol = endpoints[0].volume
     assert all(
         output[f"relax endpoint {1 + idx}"].output.structure.volume
         == pytest.approx(fixed_cell_vol)

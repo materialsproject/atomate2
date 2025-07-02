@@ -178,9 +178,8 @@ def fake_run_vasp(
         if len(neb_sub_dirs := sorted((ref_path / "inputs").glob("[0-9][0-9]"))) > 0:
             for idx, neb_sub_dir in enumerate(neb_sub_dirs):
                 _check_poscar(
-                    neb_sub_dir,
+                    zpath(neb_sub_dir / "POSCAR"),
                     user_poscar_path=zpath(Path(f"{idx:02}") / "POSCAR"),
-                    ref_poscar_path=zpath(neb_sub_dir / "POSCAR"),
                 )
         else:
             _check_poscar(ref_path)
@@ -268,13 +267,13 @@ def _check_kpoints(ref_path: Path) -> None:
 
 
 def _check_poscar(
-    ref_path: Path,
+    ref_poscar_path: Path,
     user_poscar_path: Path | None = None,
-    ref_poscar_path: Path | None = None,
 ) -> None:
     """Check that POSCAR information is consistent with the reference calculation."""
     user_poscar_path = user_poscar_path or zpath("POSCAR")
-    ref_poscar_path = ref_poscar_path or zpath(ref_path / "inputs" / "POSCAR")
+    if ref_poscar_path.is_dir():
+        ref_poscar_path = zpath(ref_poscar_path / "inputs" / "POSCAR")
 
     user_poscar = Poscar.from_file(user_poscar_path)
     ref_poscar = Poscar.from_file(ref_poscar_path)
@@ -294,8 +293,11 @@ def _check_poscar(
         or user_poscar.site_symbols != ref_poscar.site_symbols
         or not all(coord_match)
     ):
+        no_match = [f"{idx}" for idx, v in enumerate(coord_match) if not v]
+        aux_str = " on site(s) " + ", ".join(no_match) if no_match else ""
         raise ValueError(
-            f"POSCAR files are inconsistent\n\n{ref_poscar_path!s}\n{ref_poscar}"
+            f"POSCAR files are inconsistent{aux_str}"
+            f"\n\n{ref_poscar_path!s}\n{ref_poscar}"
             f"\n\n{user_poscar_path!s}\n{user_poscar}"
         )
 
