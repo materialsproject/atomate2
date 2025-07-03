@@ -6,7 +6,7 @@ from monty.serialization import loadfn
 from pymatgen.core import Structure
 from pymatgen.io.vasp.outputs import Xdatcar
 
-from atomate2.forcefields.neb import ForceFieldNebMaker
+from atomate2.forcefields.neb import ForceFieldNebFromImagesMaker
 
 
 def test_neb_from_images(test_dir, clean_dir):
@@ -24,7 +24,7 @@ def test_neb_from_images(test_dir, clean_dir):
 
     images = endpoints[0].interpolate(endpoints[1], nimages=4, autosort_tol=0.5)
 
-    job = ForceFieldNebMaker(
+    job = ForceFieldNebFromImagesMaker(
         force_field_name="MATPES_PBE",
         traj_file="XDATCAR_si_self_diffusion",
         traj_file_fmt="xdatcar",
@@ -66,7 +66,7 @@ def test_neb_from_images(test_dir, clean_dir):
         assert "forces not converged" in output.tags
 
     images = endpoints[0].interpolate(endpoints[1], nimages=2, autosort_tol=0.5)
-    job = ForceFieldNebMaker(
+    job = ForceFieldNebFromImagesMaker(
         force_field_name="MACE",
         traj_file="si_self_diffusion.json.gz",
         traj_file_fmt="pmg",

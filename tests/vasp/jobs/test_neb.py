@@ -103,7 +103,7 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
         endpoint_relax_maker=relax_maker,
     ).make(
         endpoints=endpoints,
-        num_images=num_images + 1,
+        num_images=num_images,
         autosort_tol=0.5,
     )
 
@@ -174,7 +174,7 @@ def test_neb_from_images_maker(mock_vasp, clean_dir, vasp_test_dir):
         images[idx] == image
         for idx, image in enumerate(
             _get_images_from_endpoints(
-                endpoints, num_images=num_images + 1, autosort_tol=0.5
+                endpoints, num_images=num_images, autosort_tol=0.5
             )
         )
     )

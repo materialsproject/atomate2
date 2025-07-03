@@ -5,22 +5,26 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
+from ase.mep.neb import idpp_interpolate, interpolate
 from emmet.core.neb import NebResult
-from jobflow import job
+from jobflow import Flow, Maker, Response, job
+from pymatgen.core import Molecule, Structure
+from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.ase.jobs import _ASE_DATA_OBJECTS, AseMaker
 from atomate2.ase.utils import AseNebInterface
+from atomate2.common.jobs.neb import NebInterpolation
 
 if TYPE_CHECKING:
     from pathlib import Path
     from typing import Literal
 
+    from ase.atoms import Atoms
     from ase.calculators.calculator import Calculator
-    from pymatgen.core import Molecule, Structure
 
 
 @dataclass
-class AseNebMaker(AseMaker):
+class AseNebFromImagesMaker(AseMaker):
     """Define scheme for performing ASE NEB calculations."""
 
     name: str = "ASE NEB maker"
@@ -37,7 +41,7 @@ class AseNebMaker(AseMaker):
 
     def run_ase(
         self,
-        images: list[Structure | Molecule],
+        images: list[Atoms | Structure | Molecule],
         prev_dir: str | Path | None = None,
     ) -> NebResult:
         """
@@ -87,7 +91,154 @@ class AseNebMaker(AseMaker):
         return self.run_ase(images, prev_dir=prev_dir)
 
 
-class LennardJonesNebMaker(AseNebMaker):
+@dataclass
+class AseNebFromEndpointsMaker(AseNebFromImagesMaker):
+    """Maker to create ASE NEB jobs from two endpoints.
+
+    Optionally relax the two endpoints and return a full NEB hop analysis.
+    If a maker to relax the endpoints is not specified, this job
+    interpolates the provided endpoints and performs NEB on the
+    interpolated images.
+
+    Parameters
+    ----------
+    endpoint_relax_maker : Maker or None (default)
+        Optional maker to initially relax the endpoints.
+    """
+
+    endpoint_relax_maker: Maker | None = None
+
+    @staticmethod
+    def _interpolate_endpoints_ase(
+        endpoints: tuple[Structure | Molecule | Atoms, Structure | Molecule | Atoms],
+        num_images: int,
+        interpolation_method: NebInterpolation | str = NebInterpolation.LINEAR,
+        **interpolation_kwargs,
+    ) -> list[Atoms]:
+        """
+        Interpolate between two endpoints using ASE's methods.
+
+        Note that `num_images` specifies the number of intermediate images
+        between two endpoints. Thus, specifying `num_images = 5` will return
+        the endpoints and 5 intermediate images.
+
+        Parameters
+        ----------
+        endpoints : tuple[Structure,Structure] or list[Structure]
+            A set of two endpoints to interpolate NEB images from.
+        num_images : int
+            The number of images to include in the interpolation.
+        interpolation_method : .NebInterpolation
+            The method to use to interpolate between images.
+        **interpolation_kwargs
+            kwargs to pass to the interpolation function.
+        """
+        endpoint_atoms = [
+            AseAtomsAdaptor().get_atoms(ions)
+            if isinstance(ions, Structure | Molecule)
+            else ions.copy()
+            for ions in endpoints
+        ]
+        images = [
+            endpoint_atoms[0],
+            *[endpoint_atoms[0].copy() for _ in range(num_images)],
+            endpoint_atoms[1],
+        ]
+
+        interp_method = NebInterpolation(interpolation_method)
+        if interp_method == NebInterpolation.LINEAR:
+            interpolate(images, **interpolation_kwargs)
+        elif interp_method == NebInterpolation.IDPP:
+            idpp_interpolate(images, **interpolation_kwargs)
+        return images
+
+    @job
+    def interpolate_endpoints_ase(
+        self,
+        endpoints: tuple[Structure | Molecule | Atoms, Structure | Molecule | Atoms],
+        num_images: int,
+        interpolation_method: NebInterpolation | str = NebInterpolation.LINEAR,
+        **interpolation_kwargs,
+    ) -> list[Atoms]:
+        """
+        Interpolate between two endpoints using ASE's methods, as a job.
+
+        Note that `num_images` specifies the number of intermediate images
+        between two endpoints. Thus, specifying `num_images = 5` will return
+        the endpoints and 5 intermediate images.
+
+        Parameters
+        ----------
+        endpoints : tuple[Structure,Structure] or list[Structure]
+            A set of two endpoints to interpolate NEB images from.
+        num_images : int
+            The number of images to include in the interpolation.
+        interpolation_method : .NebInterpolation
+            The method to use to interpolate between images.
+        **interpolation_kwargs
+            kwargs to pass to the interpolation function.
+        """
+        return self._interpolate_endpoints_ase(
+            endpoints, num_images, interpolation_method, **interpolation_kwargs
+        )
+
+    @job(data=_ASE_DATA_OBJECTS)
+    def make(
+        self,
+        endpoints: tuple[Structure | Molecule, Structure | Molecule]
+        | list[Structure | Molecule],
+        num_images: int,
+        prev_dir: str | Path = None,
+        interpolation_method: NebInterpolation | str = NebInterpolation.LINEAR,
+        **interpolation_kwargs,
+    ) -> Flow:
+        """
+        Make an NEB job from a set of endpoints.
+
+        Parameters
+        ----------
+        endpoints : tuple[Structure,Structure] or list[Structure]
+            A set of two endpoints to interpolate NEB images from.
+        num_images : int
+            The number of images to include in the interpolation.
+        prev_dir : str or Path or None (default)
+            A previous directory to copy outputs from.
+        interpolation_method : .NebInterpolation
+            The method to use to interpolate between images.
+        **interpolation_kwargs
+            kwargs to pass to the interpolation function.
+        """
+        if len(endpoints) != 2:
+            raise ValueError("Please specify exactly two endpoint structures.")
+
+        endpoint_jobs = []
+        if self.endpoint_relax_maker is not None:
+            endpoint_jobs += [
+                self.endpoint_relax_maker.make(endpoint, prev_dir=prev_dir)
+                for endpoint in endpoints
+            ]
+            for idx in range(2):
+                endpoint_jobs[idx].append_name(f" endpoint {idx + 1}")
+            endpoints = [relax_job.output.structure for relax_job in endpoint_jobs]
+
+        get_images = self.interpolate_endpoints_ase(
+            endpoints,
+            num_images,
+            interpolation_method=interpolation_method,
+            **interpolation_kwargs,
+        )
+
+        neb_from_images = super().make(get_images.output)
+
+        flow = Flow(
+            [*endpoint_jobs, get_images, neb_from_images],
+            output=neb_from_images.output,
+        )
+
+        return Response(replace=flow, output=neb_from_images.output)
+
+
+class LennardJonesNebMaker(AseNebFromImagesMaker):
     """Lennard-Jones NEB maker, primarily for testing/debugging."""
 
     name: str = "Lennard-Jones 6-12 NEB"

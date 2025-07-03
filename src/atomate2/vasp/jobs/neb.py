@@ -254,13 +254,8 @@ class NebFromEndpointsMaker(Maker):
         **interpolation_kwargs
             kwargs to pass to the interpolation function.
         """
-        if len(endpoints) < 2:
-            raise ValueError("Cannot interpolate fewer than two endpoint structures!")
-        if len(endpoints) > 2:
-            logger.warning(
-                "More than two endpoint structures specified, "
-                "selecting only the first two."
-            )
+        if len(endpoints) != 2:
+            raise ValueError("Please specify exactly two endpoint structures.")
 
         endpoint_jobs = []
         endpoint_dirs: Sequence[str | Path] | None = None

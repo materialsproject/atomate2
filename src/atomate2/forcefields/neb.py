@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from emmet.core.neb import NebResult
 from jobflow import job
 
-from atomate2.ase.neb import AseNebMaker
+from atomate2.ase.neb import AseNebFromImagesMaker
 from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import (
     _DEFAULT_CALCULATOR_KWARGS,
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class ForceFieldNebMaker(AseNebMaker):
+class ForceFieldNebFromImagesMaker(AseNebFromImagesMaker):
     """Run NEB with an ML forcefield using ASE."""
 
     name: str = "Forcefield NEB"
