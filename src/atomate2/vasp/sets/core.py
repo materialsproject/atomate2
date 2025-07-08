@@ -802,6 +802,7 @@ class NebSetGenerator(VaspInputGenerator):
             "NSW": 99,
             "LCHARG": False,
             "IBRION": 2,
+            "EDIFF": 1e-6,
         }
         if self.climbing_image:
             updates.update(

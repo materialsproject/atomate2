@@ -81,8 +81,30 @@ class NebFromImagesMaker(BaseVaspMaker):
     """
     Maker to create VASP NEB jobs from a set of images.
 
+    Note on KPOINTS / VASP 6:
+    --------------------------
+    There's a bug in VASP 6 compiled with HDF5 support:
+        https://www.vasp.at/forum/viewtopic.php?f=3&t=18721&p=23430&hilit=neb+hdf5+images#p23430
+
+    VASP performs a validation check of whether the KPOINTS file
+    used in the "head" directory (which contains 00, 01, ..., 0N
+    subdirectories) is the same as in each image subdirectory.
+
+    If KSPACING is used, this check isn't performed.
+    However, a "kludge" to get around this issue is to simply
+    copy the KPOINTS file used in the head directory
+    to each image directory.
+
     Parameters
     ----------
+    kpoints_kludge: Kpoints or bool. Default is True.
+        See "Note on KPOINTS / VASP 6" above.
+        If True (default), the job checks for the
+        existence of a KPOINTS file and copies it (if it exists)
+        to each image subdirectory.
+        The user can override this with a Kpoints object of their choice.
+        If kpoints_kludge is set to False, the KPOINTS file will not be
+        copied to each image.
     name : str
         The job name.
     input_set_generator : .VaspInputGenerator
@@ -116,8 +138,7 @@ class NebFromImagesMaker(BaseVaspMaker):
             },
         }
     )
-    lclimb: bool = True
-    kpoints_kludge: Kpoints | None = None
+    kpoints_kludge: Kpoints | bool = True
 
     @vasp_neb_job
     def make(
@@ -140,27 +161,6 @@ class NebFromImagesMaker(BaseVaspMaker):
         num_images = num_frames - 2
         self.input_set_generator.num_images = num_images
 
-        for iimage in range(num_frames):
-            image_dir = f"{iimage:02}"
-            mkdir(image_dir)
-
-            images[iimage].to(f"{image_dir}/POSCAR")
-
-            """
-            Bug in VASP 6 compiled with HDF5 support:
-            https://www.vasp.at/forum/viewtopic.php?f=3&t=18721&p=23430&hilit=neb+hdf5+images#p23430
-
-            Seems like there's a validation check of whether the
-            KPOINTS file used in the head directory
-            is the same as in each IMAGE subdirectory.
-
-            Using KSPACING in INCAR gets around this issue; a
-            kludge to use KPOINTS is to simply copy it
-            to each subdirectory, as we do here
-            """
-            if isinstance(self.kpoints_kludge, Kpoints):
-                self.kpoints_kludge.write_file(f"{image_dir}/KPOINTS")
-
         # copy previous inputs
         from_prev = prev_dir is not None
         if prev_dir is not None:
@@ -172,6 +172,22 @@ class NebFromImagesMaker(BaseVaspMaker):
         write_vasp_input_set(
             images[0], self.input_set_generator, **self.write_input_set_kwargs
         )
+
+        if (
+            Path("KPOINTS").exists()
+            and isinstance(self.kpoints_kludge, bool)
+            and self.kpoints_kludge
+        ):
+            self.kpoints_kludge = Kpoints.from_file("KPOINTS")
+
+        for iimage in range(num_frames):
+            image_dir = f"{iimage:02}"
+            mkdir(image_dir)
+
+            images[iimage].to(f"{image_dir}/POSCAR")
+
+            if isinstance(self.kpoints_kludge, Kpoints):
+                self.kpoints_kludge.write_file(f"{image_dir}/KPOINTS")
 
         # write any additional data
         for filename, data in self.write_additional_data.items():
