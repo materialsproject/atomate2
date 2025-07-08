@@ -36,9 +36,8 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from custodian.custodian import ErrorHandler
-    from emmet.core.neb import NebTaskDoc
+    from emmet.core.neb import NebIntermediateImagesDoc, NebTaskDoc
     from emmet.core.tasks import TaskDoc
-
 
 DEFAULT_HANDLERS = (
     VaspErrorHandler(),
@@ -174,7 +173,7 @@ def run_vasp(
 
 
 def should_stop_children(
-    task_document: TaskDoc | NebTaskDoc,
+    task_document: TaskDoc | NebTaskDoc | NebIntermediateImagesDoc,
     handle_unsuccessful: bool | str = SETTINGS.VASP_HANDLE_UNSUCCESSFUL,
 ) -> bool:
     """

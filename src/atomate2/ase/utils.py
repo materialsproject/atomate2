@@ -399,7 +399,9 @@ class AseRelaxer:
                     atoms = cell_filter(atoms, **(filter_kwargs or {}))
                 optimizer = self.opt_class(atoms, **kwargs)
                 optimizer.attach(obs, interval=interval)
-                optimizer.run(fmax=fmax, steps=steps)
+                converged = optimizer.run(fmax=fmax, steps=steps)
+            else:
+                converged = True
             obs()
             t_f = time.perf_counter()
 
@@ -430,9 +432,11 @@ class AseRelaxer:
         return AseResult(
             final_mol_or_struct=struct,
             trajectory=traj,
+            converged=converged,
             is_force_converged=is_force_conv,
-            energy_downhill=traj.frame_properties[-1]["energy"]
-            < traj.frame_properties[0]["energy"],
+            energy_downhill=(
+                traj.frame_properties[-1]["energy"] < traj.frame_properties[0]["energy"]
+            ),
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
         )
@@ -540,7 +544,7 @@ class AseNebInterface:
             for idx in range(num_images):
                 optimizer.attach(observers[idx], interval=interval)
             t_i = time.perf_counter()
-            optimizer.run(fmax=fmax, steps=steps)
+            converged = optimizer.run(fmax=fmax, steps=steps)
             t_f = time.perf_counter()
             [observers[idx]() for idx in range(num_images)]
 
@@ -585,8 +589,8 @@ class AseNebInterface:
             method=NebMethod.CLIMBING_IMAGE
             if neb_kwargs.get("climb", False)
             else NebMethod.STANDARD,
-            # dir_name=os.getcwd(), # NB: this should be migrated in emmet-core
-            state="successful" if is_force_conv else "failed",
+            dir_name=os.getcwd(),
+            state="successful" if converged else "failed",
             tags=tags,
             **neb_doc_kwargs,
         )

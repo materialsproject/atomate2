@@ -9,7 +9,7 @@ from os import mkdir
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from emmet.core.neb import NebTaskDoc
+from emmet.core.neb import NebIntermediateImagesDoc, NebTaskDoc
 from jobflow import Flow, Maker, Response, job
 from monty.serialization import dumpfn
 from pymatgen.io.vasp import Kpoints
@@ -59,7 +59,7 @@ def vasp_neb_job(method: Callable) -> job:
     callable
         A decorated version of the make function that will generate VASP NEB jobs.
     """
-    return job(method, data=_DATA_OBJECTS, output_schema=NebTaskDoc)
+    return job(method, data=_DATA_OBJECTS, schema=NebIntermediateImagesDoc)
 
 
 @job

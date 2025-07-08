@@ -3,7 +3,12 @@
 from pathlib import Path
 
 import pytest
-from emmet.core.neb import BarrierAnalysis, NebMethod, NebTaskDoc
+from emmet.core.neb import (
+    BarrierAnalysis,
+    NebIntermediateImagesDoc,
+    NebMethod,
+    NebTaskDoc,
+)
 from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.core import Structure
@@ -15,7 +20,6 @@ from atomate2.vasp.sets.core import RelaxSetGenerator
 
 expected_incar_tags_relax = [
     "ALGO",
-    "EDIFF",
     "EDIFFG",
     "ENAUG",
     "ENCUT",
@@ -47,10 +51,11 @@ expected_incar_tags_neb = [
 ]
 
 
-def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_structure):
+def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir):
     """Test nearest-neighbor vacancy migration in Si supercell."""
 
-    num_images = 3
+    num_images = 5
+    intermed_images = num_images - 2
     base_neb_dir = Path(vasp_test_dir) / "Si_NEB"
 
     ref_paths = {
@@ -103,7 +108,7 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
         endpoint_relax_maker=relax_maker,
     ).make(
         endpoints=endpoints,
-        num_images=num_images,
+        num_images=intermed_images,
         autosort_tol=0.5,
     )
 
@@ -119,24 +124,26 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
     )
 
     expected_images = loadfn(str(base_neb_dir / "get_images_from_endpoints.json.gz"))
-    assert len(output["get_images_from_endpoints"]) == num_images + 2
+    assert len(output["get_images_from_endpoints"]) == num_images
     assert (
         output["get_images_from_endpoints"][idx] == image
         for idx, image in enumerate(expected_images)
     )
 
     assert isinstance(output["collect_neb_output"], NebTaskDoc)
-    expected_neb_result = loadfn(str(base_neb_dir / "collect_neb_output.json.gz"))
+    expected_neb_result = NebTaskDoc(
+        **loadfn(str(base_neb_dir / "neb_task_doc.json.gz"))
+    )
     assert all(
         output["collect_neb_output"].energies[i] == pytest.approx(energy)
         for i, energy in enumerate(expected_neb_result.energies)
     )
-    assert (
-        len(output["collect_neb_output"].images) == num_images + 2
-    )  # endpoints + images
-    assert (
-        len(output["collect_neb_output"].image_structures) == num_images
-    )  # just intermediate images
+
+    # endpoints + intermediate images
+    assert len(output["collect_neb_output"].images) == num_images
+
+    # just intermediate images
+    assert len(output["NEB"].images) == intermed_images
 
     assert all(
         getattr(output["collect_neb_output"], f"{direction}_barrier")
@@ -158,7 +165,8 @@ def test_neb_from_endpoints_maker(mock_vasp, clean_dir, vasp_test_dir, si_struct
 
 
 def test_neb_from_images_maker(mock_vasp, clean_dir, vasp_test_dir):
-    num_images = 3
+    num_images = 5
+    intermed_images = num_images - 2
     base_neb_dir = Path(vasp_test_dir) / "Si_NEB"
 
     endpoints = [
@@ -168,13 +176,13 @@ def test_neb_from_images_maker(mock_vasp, clean_dir, vasp_test_dir):
         for idx in range(2)
     ]
     images = endpoints[0].interpolate(
-        endpoints[1], nimages=num_images + 1, autosort_tol=0.5
+        endpoints[1], nimages=intermed_images + 1, autosort_tol=0.5
     )
     assert all(
         images[idx] == image
         for idx, image in enumerate(
             _get_images_from_endpoints(
-                endpoints, num_images=num_images, autosort_tol=0.5
+                endpoints, num_images=intermed_images, autosort_tol=0.5
             )
         )
     )
@@ -186,12 +194,13 @@ def test_neb_from_images_maker(mock_vasp, clean_dir, vasp_test_dir):
     response = run_locally(neb_job, create_folders=True, ensure_success=True)
     output = response[neb_job.uuid][1].output
 
-    ref_neb_task = loadfn(str(base_neb_dir / "neb_task_doc.json.gz"))
-    assert isinstance(output, NebTaskDoc)
-    assert len(output.image_calculations) == num_images
-    assert all(
-        output.image_energies[i] == pytest.approx(energy)
-        for i, energy in enumerate(ref_neb_task.image_energies)
+    ref_neb_task = NebIntermediateImagesDoc.from_directory(
+        Path(ref_paths["NEB"]) / "outputs"
     )
-    assert len(output.endpoint_structures) == 2
+    assert isinstance(output, NebIntermediateImagesDoc)
+    assert len(output.images) == num_images - 2
+    assert all(
+        output.energies[i] == pytest.approx(energy)
+        for i, energy in enumerate(ref_neb_task.energies)
+    )
     assert output.neb_method == NebMethod.CLIMBING_IMAGE
