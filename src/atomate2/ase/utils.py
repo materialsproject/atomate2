@@ -526,7 +526,15 @@ class AseNebInterface:
             isinstance(images[0], Atoms) and all(not pbc for pbc in images[0].pbc)
         )
         num_images = len(images)
-        initial_images = [img.copy() for img in images]
+        initial_images = []
+        for img in images:
+            if isinstance(img, Atoms):
+                image = self.ase_adaptor.get_structure(
+                    img, cls=Molecule if is_mol else Structure
+                )
+            else:
+                image = img.copy()
+            initial_images.append(image)
 
         for idx, image in enumerate(images):
             if isinstance(image, Structure | Molecule):
@@ -582,6 +590,7 @@ class AseNebInterface:
 
         return NebResult(
             images=images,
+            image_indices=list(range(len(images))),
             initial_images=initial_images,
             energies=[
                 observers[image_idx].energies[-1] for image_idx in range(num_images)

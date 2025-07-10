@@ -119,3 +119,28 @@ def test_approx_neb_flow(mock_vasp, clean_dir, vasp_test_dir):
         for direction in ("forward", "reverse")
         for k in ref_results.hops
     )
+
+
+def test_approx_neb_checks(clean_dir, vasp_test_dir):
+    base_dir = Path(vasp_test_dir) / "ApproxNEB"
+    flow_input = loadfn(base_dir / "approx_neb_input.json.gz")
+
+    idxs = list(flow_input["inserted_coords_dict"])
+    for idx in (0, -1):
+        flow_input["inserted_coords_dict"].pop(idxs[idx])
+
+    with pytest.raises(
+        ValueError,
+        match="Missing working ion insertion indices in `inserted_coords_dict`",
+    ):
+        ApproxNebMaker().make(
+            *[
+                flow_input[k]
+                for k in (
+                    "host_structure",
+                    "working_ion",
+                    "inserted_coords_dict",
+                    "inserted_coords_combo",
+                )
+            ]
+        )

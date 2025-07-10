@@ -54,7 +54,7 @@ def get_endpoints_and_relax(
         is a dict containing the energies and relaxed structures of the
         endpoints, with the endpoint indices as keys.
     """
-    ep_distinct = []
+    ep_distinct = set()
     for one_combo in inserted_coords_combo:
         try:
             combo = one_combo.split("+")
@@ -63,8 +63,20 @@ def get_endpoints_and_relax(
             raise ValueError(
                 f"{one_combo} inserted_coords_combo input is incorrect"
             ) from error
-        ep_distinct.extend([ini, fin])
-    ep_distinct = list(set(ep_distinct))
+        ep_distinct.update([ini, fin])
+
+    if (
+        len(
+            missing_idxs := ep_distinct.difference(
+                {int(idx) for idx in endpoint_coords}
+            )
+        )
+        > 0
+    ):
+        raise ValueError(
+            "Missing working ion insertion indices: "
+            f"{', '.join([str(idx) for idx in missing_idxs])}"
+        )
 
     # In principle, it makes sense to use the magmoms from the host
     # structure to initialize the host + inserted working ion calcs

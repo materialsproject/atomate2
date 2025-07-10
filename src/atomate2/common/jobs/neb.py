@@ -57,7 +57,7 @@ def get_images_from_endpoints(
 def _get_images_from_endpoints(
     endpoints: tuple[Structure, Structure] | list[Structure],
     num_images: int,
-    interpolation_method: NebInterpolation = NebInterpolation.LINEAR,
+    interpolation_method: NebInterpolation | str = NebInterpolation.LINEAR,
     **interpolation_kwargs,
 ) -> list[Structure]:
     """
@@ -78,6 +78,7 @@ def _get_images_from_endpoints(
     **interpolation_kwargs
         kwargs to pass to the interpolation function.
     """
+    interpolation_method = NebInterpolation(interpolation_method)
     if interpolation_method == NebInterpolation.LINEAR:
         return endpoints[0].interpolate(
             endpoints[1], nimages=num_images + 1, **interpolation_kwargs

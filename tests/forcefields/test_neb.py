@@ -60,10 +60,8 @@ def test_neb_from_images(test_dir, clean_dir):
         )
     )
 
-    if output.state.value == "successful":
-        assert "force converged" in output.tags
-    else:
-        assert "forces not converged" in output.tags
+    assert output.state.value == "successful"
+    assert "forces not converged" in output.tags
 
     images = endpoints[0].interpolate(endpoints[1], nimages=2, autosort_tol=0.5)
     job = ForceFieldNebFromImagesMaker(

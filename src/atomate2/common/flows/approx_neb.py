@@ -79,13 +79,15 @@ class CommonApproxNebMaker(Maker):
         working_ion: str
             the mobile species in ApproxNEB
         inserted_coords_dict: dict or list
-            a dictionary containing site coords (endpoints) for working ions
-            in the simulation cell
+            a dictionary containing fractional site coords (endpoints)
+            for working ions in the simulation cell.
         inserted_coords_combo: list
             a list of combo strings "a+b" to designate run calculations between
             endpoints a and b
+            inserted_coords_dict should contain all indices specified
+            in inserted_coords_combo
         n_images: int = 5
-            number of images for the ApproxNEB calculation
+            number of intermediate images for the ApproxNEB calculation
         min_images_per_hop : int or None, default = 3
             If an int, the minimum number of image calculations per hop that
             must succeed to mark a hop as successfully calculated.
@@ -100,6 +102,20 @@ class CommonApproxNebMaker(Maker):
         # compatibility with legacy input (list)
         if isinstance(inserted_coords_dict, list):
             inserted_coords_dict = dict(enumerate(inserted_coords_dict))
+
+        # Check to see that all hop indices are included in the dict of endpoints
+        unique_ep_idxs = set()
+        for combo in inserted_coords_combo:
+            unique_ep_idxs.update([int(idx) for idx in combo.split("+")])
+        if len(
+            missing_idxs := unique_ep_idxs.difference(
+                {int(idx) for idx in inserted_coords_dict}
+            )
+        ):
+            raise ValueError(
+                "Missing working ion insertion indices in `inserted_coords_dict`: "
+                f"{', '.join([str(idx) for idx in missing_idxs])}"
+            )
 
         jobs: list[Job] = []
 
@@ -251,7 +267,7 @@ class ApproxNebFromEndpointsMaker(Maker):
     def make(
         self,
         working_ion: CompositionLike,
-        end_point_structures: list[Structure],
+        end_point_structures: list[Structure] | tuple[Structure, Structure],
         charge_density_path: str | Path,
         n_images: int = 5,
         prev_dir: str | Path | None = None,
@@ -276,6 +292,12 @@ class ApproxNebFromEndpointsMaker(Maker):
         Flow
             A flow performing an AppoxNEB calculation for a single hop.
         """
+        if len(end_point_structures) != 2:
+            raise ValueError(
+                "Specify only two endpoint structures, "
+                f"{len(end_point_structures)} structures were supplied."
+            )
+
         ep_jobs: list[Job] = []
         ep_output: dict[str, dict[str, Any]] = {}
         for idx, ep in enumerate(end_point_structures):
