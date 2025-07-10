@@ -268,6 +268,27 @@ class AseRelaxMaker(AseMaker):
 
 
 @dataclass
+class EmtRelaxMaker(AseRelaxMaker):
+    """
+    Relax a structure with an EMT potential.
+
+    This serves mostly as an example of how to create atomate2
+    jobs with existing ASE calculators, and test purposes.
+
+    See `atomate2.ase.AseRelaxMaker` for further documentation.
+    """
+
+    name: str = "EMT relaxation"
+
+    @property
+    def calculator(self) -> Calculator:
+        """EMT calculator."""
+        from ase.calculators.emt import EMT
+
+        return EMT(**self.calculator_kwargs)
+
+
+@dataclass
 class LennardJonesRelaxMaker(AseRelaxMaker):
     """
     Relax a structure with a Lennard-Jones 6-12 potential.

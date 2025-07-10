@@ -17,6 +17,7 @@ from ase.stress import voigt_6_to_full_3x3_stress
 from ase.units import GPa
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import MoleculeMetadata, StructureMetadata
+from emmet.core.tasks import TaskState
 from emmet.core.utils import ValueEnum
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
@@ -30,6 +31,7 @@ _task_doc_translation_keys = {
     "dir_name",
     "included_objects",
     "objects",
+    "state",
     "is_force_converged",
     "energy_downhill",
     "tags",
@@ -49,6 +51,10 @@ class AseResult(BaseModel):
 
     trajectory: PmgTrajectory | None = Field(
         None, description="The relaxation or molecular dynamics trajectory."
+    )
+
+    converged: bool | None = Field(
+        None, description="Whether the ASE optimizer converged."
     )
 
     is_force_converged: bool | None = Field(
@@ -215,6 +221,10 @@ class AseStructureTaskDoc(StructureMetadata):
         None, description="ASE objects associated with this task"
     )
 
+    state: TaskState | None = Field(
+        None, description="Whether the calculation completed successfully."
+    )
+
     is_force_converged: bool | None = Field(
         None,
         description=(
@@ -281,6 +291,10 @@ class AseMoleculeTaskDoc(MoleculeMetadata):
         None, description="ASE objects associated with this task"
     )
 
+    state: TaskState | None = Field(
+        None, description="Whether the calculation completed successfully."
+    )
+
     is_force_converged: bool | None = Field(
         None,
         description=(
@@ -322,6 +336,10 @@ class AseTaskDoc(AseBaseModel):
     )
     objects: dict[AseObject, Any] | None = Field(
         None, description="ASE objects associated with this task"
+    )
+
+    state: TaskState | None = Field(
+        None, description="Whether the calculation completed successfully."
     )
 
     is_force_converged: bool | None = Field(
@@ -516,6 +534,10 @@ class AseTaskDoc(AseBaseModel):
             n_steps=n_steps,
         )
 
+        state = None
+        if result.converged is not None:
+            state = TaskState.SUCCESS if result.converged else TaskState.FAILED
+
         return cls(
             mol_or_struct=output_mol_or_struct,
             input=input_doc,
@@ -523,6 +545,7 @@ class AseTaskDoc(AseBaseModel):
             ase_calculator_name=ase_calculator_name,
             included_objects=list(objects.keys()),
             objects=objects,
+            state=state,
             is_force_converged=result.is_force_converged,
             energy_downhill=result.energy_downhill,
             dir_name=result.dir_name,
