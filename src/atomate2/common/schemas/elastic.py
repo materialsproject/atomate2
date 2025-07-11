@@ -116,8 +116,8 @@ class FittingData(BaseModel):
 class ElasticTensorDocument(BaseModel):
     """Raw and standardized elastic tensors."""
 
-    raw: Optional[MatrixVoigt] = Field(None, description="Raw elastic tensor.")
-    ieee_format: Optional[MatrixVoigt] = Field(
+    raw: Optional[MatrixVoigt | list] = Field(None, description="Raw elastic tensor.")
+    ieee_format: Optional[MatrixVoigt | list] = Field(
         None, description="Elastic tensor in IEEE format."
     )
 
@@ -126,6 +126,21 @@ class ElasticWarnings(Enum):
     """Warnings for elastic document."""
 
     FAILED_PERTURBATIONS = "failed_perturbations"
+
+
+def _safe_voigt_to_list(voigt_data):
+    """Safely convert voigt tensor data to list, handling nested structures."""
+    import numpy as np
+    if voigt_data is None:
+        return None
+    elif isinstance(voigt_data, list):
+        return [_safe_voigt_to_list(item) for item in voigt_data]
+    elif isinstance(voigt_data, np.ndarray):
+        return voigt_data.tolist()
+    elif hasattr(voigt_data, 'tolist'):
+        return voigt_data.tolist()
+    else:
+        return voigt_data
 
 
 class ElasticDocument(StructureMetadata):
@@ -264,7 +279,8 @@ class ElasticDocument(StructureMetadata):
             fitting_method=fitting_method,
             order=order,
             elastic_tensor=ElasticTensorDocument(
-                raw=result.voigt.tolist(), ieee_format=ieee.voigt.tolist()
+                raw=_safe_voigt_to_list(result.voigt),
+                ieee_format=_safe_voigt_to_list(ieee.voigt)
             ),
             fitting_data=FittingData(
                 cauchy_stresses=[s.tolist() for s in stresses],
