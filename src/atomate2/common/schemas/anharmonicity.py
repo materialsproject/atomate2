@@ -1,7 +1,7 @@
 """Schemas for anharmonicity quantification."""
 
 import logging
-from typing import Any, Optional
+from typing import Any
 
 from emmet.core.math import Matrix3D
 from emmet.core.structure import StructureMetadata
@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 class AnharmonicityDoc(StructureMetadata):
     """Collection to store data from anharmonicity workflow."""
 
-    phonon_doc: Optional[PhononBSDOSDoc] = Field(
+    phonon_doc: PhononBSDOSDoc | None = Field(
         None, description="Collection of data from phonon part of the workflow"
     )
 
     supercell_matrix: Matrix3D = Field("Matrix describing the supercell")
 
-    structure: Optional[Structure] = Field(
+    structure: Structure | None = Field(
         None, description="Structure of Materials Project."
     )
 
@@ -30,11 +30,11 @@ class AnharmonicityDoc(StructureMetadata):
         "matrix describing relationship to primitive cell"
     )
 
-    sigma_dict: Optional[dict[str, Any]] = Field(
+    sigma_dict: dict[str, Any] | None = Field(
         None, description="Dictionary with all computed sigma^A forms"
     )
 
-    parameters_dict: Optional[dict] = Field(
+    parameters_dict: dict | None = Field(
         None, description="Parameters used for anharmonicity quantification"
     )
 
@@ -46,7 +46,7 @@ class AnharmonicityDoc(StructureMetadata):
         one_shot: bool,
         temp: float,
         n_samples: int,
-        seed: Optional[int],
+        seed: int | None,
     ) -> "AnharmonicityDoc":
         """
         Generate the collection of data for the anharmonicity workflow.
