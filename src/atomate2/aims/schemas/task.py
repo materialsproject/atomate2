@@ -6,7 +6,7 @@ import json
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 import numpy as np
 from emmet.core.math import Matrix3D, Vector3D
@@ -41,12 +41,12 @@ class AnalysisDoc(BaseModel):
         Errors from the FHI-aims output
     """
 
-    delta_volume: Optional[float] = Field(None, description="Absolute change in volume")
-    delta_volume_as_percent: Optional[float] = Field(
+    delta_volume: float | None = Field(None, description="Absolute change in volume")
+    delta_volume_as_percent: float | None = Field(
         None, description="Percentage change in volume"
     )
-    max_force: Optional[float] = Field(None, description="Maximum force on the atoms")
-    errors: Optional[list[str]] = Field(
+    max_force: float | None = Field(None, description="Maximum force on the atoms")
+    errors: list[str] | None = Field(
         None, description="Errors from the FHI-aims output"
     )
 
@@ -104,7 +104,7 @@ class InputDoc(BaseModel):
     xc: str = Field(
         None, description="Exchange-correlation functional used if not the default"
     )
-    magnetic_moments: Optional[list[float]] = Field(
+    magnetic_moments: list[float] | None = Field(
         None, description="Magnetic moments for each atom"
     )
 
@@ -174,18 +174,18 @@ class OutputDoc(BaseModel):
     energy_per_atom: float = Field(
         None, description="The final DFT energy per atom for the last calculation"
     )
-    bandgap: Optional[float] = Field(
+    bandgap: float | None = Field(
         None, description="The DFT bandgap for the last calculation"
     )
-    cbm: Optional[float] = Field(None, description="CBM for this calculation")
-    vbm: Optional[float] = Field(None, description="VBM for this calculation")
-    forces: Optional[list[Vector3D]] = Field(
+    cbm: float | None = Field(None, description="CBM for this calculation")
+    vbm: float | None = Field(None, description="VBM for this calculation")
+    forces: list[Vector3D] | None = Field(
         None, description="Forces on atoms from the last calculation"
     )
-    stress: Optional[Matrix3D] = Field(
+    stress: Matrix3D | None = Field(
         None, description="Stress on the unit cell from the last calculation"
     )
-    all_forces: Optional[list[list[Vector3D]]] = Field(
+    all_forces: list[list[Vector3D]] | None = Field(
         None, description="Forces on atoms from all calculations."
     )
 
@@ -258,7 +258,7 @@ class ConvergenceSummary(BaseModel):
         None,
         description="The last value of the input setting to study convergence against",
     )
-    asked_epsilon: Optional[float] = Field(
+    asked_epsilon: float | None = Field(
         None,
         description="The difference in the values for the convergence criteria that was"
         " asked for",
@@ -405,7 +405,7 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
     completed_at: str = Field(
         None, description="Timestamp for when this task was completed"
     )
-    input: Optional[InputDoc] = Field(
+    input: InputDoc | None = Field(
         None, description="The input to the first calculation"
     )
     output: OutputDoc = Field(None, description="The output of the final calculation")
@@ -413,32 +413,32 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
         None, description="Final output atoms from the task"
     )
     state: TaskState = Field(None, description="State of this task")
-    included_objects: Optional[list[AimsObject]] = Field(
+    included_objects: list[AimsObject] | None = Field(
         None, description="List of FHI-aims objects included with this task document"
     )
-    aims_objects: Optional[dict[AimsObject, Any]] = Field(
+    aims_objects: dict[AimsObject, Any] | None = Field(
         None, description="FHI-aims objects associated with this task"
     )
-    entry: Optional[ComputedEntry] = Field(
+    entry: ComputedEntry | None = Field(
         None, description="The ComputedEntry from the task doc"
     )
     analysis: AnalysisDoc = Field(
         None, description="Summary of structural relaxation and forces"
     )
     task_label: str = Field(None, description="A description of the task")
-    tags: Optional[list[str]] = Field(
+    tags: list[str] | None = Field(
         None, description="Metadata tags for this task document"
     )
-    author: Optional[str] = Field(
+    author: str | None = Field(
         None, description="Author extracted from transformations"
     )
-    icsd_id: Optional[str] = Field(
+    icsd_id: str | None = Field(
         None, description="International crystal structure database id of the structure"
     )
-    calcs_reversed: Optional[list[Calculation]] = Field(
+    calcs_reversed: list[Calculation] | None = Field(
         None, description="The inputs and outputs for all FHI-aims runs in this task."
     )
-    transformations: Optional[dict[str, Any]] = Field(
+    transformations: dict[str, Any] | None = Field(
         None,
         description="Information on the structural transformations, parsed from a "
         "transformations.json file",
@@ -448,7 +448,7 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
         description="Information on the custodian settings used to run this "
         "calculation, parsed from a custodian.json file",
     )
-    additional_json: Optional[dict[str, Any]] = Field(
+    additional_json: dict[str, Any] | None = Field(
         None, description="Additional json loaded from the calculation directory"
     )
 
@@ -534,7 +534,7 @@ class AimsTaskDoc(BaseTaskDocument, StructureMetadata, MoleculeMetadata):
 
     @staticmethod
     def get_entry(
-        calc_docs: list[Calculation], job_id: Optional[str] = None
+        calc_docs: list[Calculation], job_id: str | None = None
     ) -> ComputedEntry:
         """Get a computed entry from a list of FHI-aims calculation documents.
 
@@ -652,7 +652,7 @@ def _find_aims_files(
     return task_files
 
 
-def _get_max_force(calc_doc: Calculation) -> Optional[float]:
+def _get_max_force(calc_doc: Calculation) -> float | None:
     """Get max force acting on atoms from a calculation document.
 
     Parameters

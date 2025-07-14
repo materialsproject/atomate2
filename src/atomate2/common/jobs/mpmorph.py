@@ -47,8 +47,7 @@ def _get_average_volumes_file(
 
         stream_data = requests.get(_DEFAULT_AVG_VOL_URL, stream=True, timeout=timeout)
         with open(str(_DEFAULT_AVG_VOL_FILE), "wb") as file:
-            for chunk in stream_data.iter_content(chunk_size=chunk_size):
-                file.write(chunk)
+            file.writelines(stream_data.iter_content(chunk_size=chunk_size))
 
     return pd.read_json(_DEFAULT_AVG_VOL_FILE, orient="split")
 
@@ -261,7 +260,7 @@ def get_average_volume_from_database(
     for ielt in range(2, len(composition)):
         for combo in combinations(composition, ielt):
             chem_env_key = _get_chem_env_key_from_composition(
-                Composition({spec: 1 for spec in combo}),
+                Composition(dict.fromkeys(combo, 1)),
                 ignore_oxi_states=ignore_oxi_states,
             )
 
