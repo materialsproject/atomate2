@@ -598,9 +598,9 @@ class Test{maker_name}:
         from atomate2.abinit.schemas.core import AbinitTaskDoc
 
         # load the initial structure, the maker and the ref_paths from the test_dir
-        test_dir = abinit_test_dir / {" / ".join(
-        [f'"{part}"' for part in test_dir.parts[index_part:]]
-    )}
+        test_dir = abinit_test_dir / {
+        " / ".join([f'"{part}"' for part in test_dir.parts[index_part:]])
+    }
         structure = Structure.from_file(test_dir / "initial_structure.json.gz")
         maker_info = loadfn(test_dir / "maker.json.gz")
         maker = maker_info["maker"]

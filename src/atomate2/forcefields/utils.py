@@ -17,7 +17,9 @@ if TYPE_CHECKING:
     from ase.calculators.calculator import Calculator
 
 
-def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | None:
+def ase_calculator(
+    calculator_meta: str | MLFF | dict, **kwargs: Any
+) -> Calculator | None:
     """
     Create an ASE calculator from a given set of metadata.
 
@@ -42,23 +44,33 @@ def ase_calculator(calculator_meta: str | dict, **kwargs: Any) -> Calculator | N
     """
     calculator = None
 
-    if isinstance(calculator_meta, str | MLFF) and calculator_meta in map(str, MLFF):
-        calculator_name = MLFF(calculator_meta.split("MLFF.")[-1])
+    if (
+        isinstance(calculator_meta, str) and calculator_meta in map(str, MLFF)
+    ) or isinstance(calculator_meta, MLFF):
+        calculator_name = MLFF(calculator_meta)
 
         if calculator_name == MLFF.CHGNet:
             from chgnet.model.dynamics import CHGNetCalculator
 
             calculator = CHGNetCalculator(**kwargs)
 
-        elif calculator_name == MLFF.M3GNet:
+        elif calculator_name in (MLFF.M3GNet, MLFF.MATPES_R2SCAN, MLFF.MATPES_PBE):
             import matgl
             from matgl.ext.ase import PESCalculator
 
-            path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
+            if calculator_name == MLFF.M3GNet:
+                path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
+            elif calculator_name in (MLFF.MATPES_R2SCAN, MLFF.MATPES_PBE):
+                architecture = kwargs.pop("architecture", "TensorNet")
+                matpes_version = kwargs.pop("version", "2025.1")
+                path = f"{architecture}-{calculator_name.value}-v{matpes_version}-PES"
+
             potential = matgl.load_model(path)
             calculator = PESCalculator(potential, **kwargs)
 
-        elif calculator_name == MLFF.MACE:
+        elif calculator_name in map(
+            MLFF, ("MACE", "MACE-MP-0", "MACE-MPA-0", "MACE-MP-0b3")
+        ):
             from mace.calculators import MACECalculator, mace_mp
 
             model = kwargs.get("model")

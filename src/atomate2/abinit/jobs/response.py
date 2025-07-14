@@ -269,7 +269,7 @@ def run_rf(
             perturbation=pert,
             prev_outputs=prev_outputs,
         )
-        rf_job.append_name(f"{ipert+1}/{len(perturbations)}")
+        rf_job.append_name(f"{ipert + 1}/{len(perturbations)}")
 
         rf_jobs.append(rf_job)
         outputs["dirs"].append(rf_job.output.dir_name)  # TODO: determine outputs

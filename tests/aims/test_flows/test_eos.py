@@ -13,8 +13,8 @@ cwd = os.getcwd()
 
 # mapping from job name to directory containing test files
 ref_paths = {
-    "Relaxation calculation 1": "double-relax-si/relax-1",
-    "Relaxation calculation 2": "double-relax-si/relax-2",
+    "Relaxation calculation 1 EOS equilibrium relaxation": "double-relax-si/relax-1",
+    "Relaxation calculation 2 EOS equilibrium relaxation": "double-relax-si/relax-2",
     "Relaxation calculation (fixed cell) deformation 0": "eos-si/0",
     "Relaxation calculation (fixed cell) deformation 1": "eos-si/1",
     "Relaxation calculation (fixed cell) deformation 2": "eos-si/2",
