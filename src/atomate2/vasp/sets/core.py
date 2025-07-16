@@ -16,7 +16,7 @@ from atomate2.vasp.sets.base import VaspInputGenerator
 if TYPE_CHECKING:
     from emmet.core.math import Vector3D
     from pymatgen.core import Structure
-    from pymatgen.io.vasp import Kpoints, Outcar, Vasprun
+    from pymatgen.io.vasp import Kpoints
 
 
 logger = logging.getLogger(__name__)
@@ -38,31 +38,13 @@ class RelaxSetGenerator(VaspInputGenerator):
         return {"NSW": 99, "LCHARG": False, "ISIF": 3, "IBRION": 2}
 
 
+@dataclass
 class RelaxConstVolSetGenerator(VaspInputGenerator):
     """Class to generate VASP constant volume relaxation input sets."""
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
-        """Get updates to the INCAR for a constant volume relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
+    @property
+    def incar_updates(self) -> dict:
+        """Get updates to the INCAR for a tight constant volume relaxation job.
 
         Returns
         -------
@@ -104,7 +86,7 @@ class TightRelaxConstVolSetGenerator(VaspInputGenerator):
 
     @property
     def incar_updates(self) -> dict:
-        """Get updates to the INCAR for a static VASP job.
+        """Get updates to the INCAR for a constant volume tight relaxation job.
 
         Returns
         -------
