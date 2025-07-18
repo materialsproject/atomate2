@@ -13,15 +13,95 @@ from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
+from pymatgen.io.abinit.pseudos import AbinitPseudo
 from typing_extensions import Self
 
 from atomate2.abinit.files import load_abinit_input
 from atomate2.abinit.schemas.calculation import AbinitObject, Calculation, TaskState
-from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE
+from atomate2.abinit.utils.common import LOG_FILE_NAME, MPIABORTFILE, OUTPUT_FILE_NAME
 from atomate2.utils.datetime import datetime_str
-from atomate2.utils.path import get_uri, strip_hostname
+from atomate2.utils.path import get_uri
 
 logger = logging.getLogger(__name__)
+
+
+class AbinitPseudoDoc(BaseModel):
+    """Summary of the pseudopotentials used in an Abinit calculation.
+
+    Parameters
+    ----------
+    basename: str
+        Basename of the file.
+    type_psp: str
+        Type of the pseudopotential.
+    symbol: str
+        Symbol of the element.
+    Z: int
+        Atomic number of the element.
+    Z_val: int
+        Valence charge.
+    l_max: int
+        Maximum angular momentum.
+    md5: str
+        MD5 hash value.
+    filepath: str
+        Absolute path to the pseudopotential file.
+    repo_name: str
+        Name of the pseudopotentials repository if applicable.
+    table_name: str
+        Name of the accuracy table associated to the repository if applicable.
+    """
+
+    basename: str = Field(None, description="Name of the pseudopotential file.")
+    type_psp: str = Field(None, description="Type of the pseudopotential.")
+    symbol: str = Field(None, description="Symbol of the element.")
+    Z: int = Field(None, description="Atomic number of the element.")
+    Z_val: int = Field(None, description="Valence charge.")
+    l_max: int = Field(None, description="Maximum angular momentum.")
+    md5: str = Field(None, description="MD5 hash value.")
+    filepath: str = Field(
+        None, description="Absolute path of the pseudopotential file."
+    )
+    repo_name: Optional[str] = Field(
+        None, description="Name of the pseudopotentials repository."
+    )
+    table_name: Optional[str] = Field(
+        None, description="Name of the accuracy table of the repository."
+    )
+
+    @classmethod
+    def from_abinitpseudo(cls, abi_psp: AbinitPseudo) -> Self:
+        """Create a summary from an AbinitPseudo.
+
+        Parameters
+        ----------
+        abi_psp: AbinitPseudo
+            An Abinit pseudopotential.
+
+        Returns
+        -------
+        .AbinitPseudoDoc
+            The abinit pseudopotential summary.
+        """
+        dct_abi_psp = abi_psp.as_dict()
+        split_filepath = dct_abi_psp["filepath"].split("/")[::-1]
+        repo_name = None
+        for isplit in split_filepath:
+            if "ONCVPSP" in isplit or "ATOMPAW" in isplit:
+                repo_name = isplit
+
+        return cls(
+            basename=dct_abi_psp["basename"],
+            type_psp=dct_abi_psp["type"],
+            symbol=dct_abi_psp["symbol"],
+            Z=dct_abi_psp["Z"],
+            Z_val=dct_abi_psp["Z_val"],
+            l_max=dct_abi_psp["l_max"],
+            md5=dct_abi_psp["md5"],
+            filepath=dct_abi_psp["filepath"],
+            repo_name=repo_name,
+            # table_name = # TODO: No way to set it yet
+        )
 
 
 class InputDoc(BaseModel):
@@ -36,6 +116,9 @@ class InputDoc(BaseModel):
     structure: Union[Structure] = Field(None, description="The input structure object")
     abinit_input: AbinitInput = Field(
         None, description="AbinitInput used to perform calculation."
+    )
+    pseudopotentials: list[AbinitPseudoDoc] = Field(
+        None, description="List of the AbinitPseudoDoc used to perform calculation."
     )
     xc: str = Field(
         None, description="Exchange-correlation functional used if not the default"
@@ -59,6 +142,10 @@ class InputDoc(BaseModel):
         return cls(
             structure=abinit_input.structure,
             abinit_input=abinit_input,
+            pseudopotentials=[
+                AbinitPseudoDoc.from_abinitpseudo(abi_psp)
+                for abi_psp in abinit_input.pseudos
+            ],
             xc=str(abinit_input.pseudos[0].xc.name),
         )
 
@@ -92,10 +179,10 @@ class OutputDoc(BaseModel):
     trajectory: Optional[Sequence[Union[Structure]]] = Field(
         None, description="The trajectory of output structures"
     )
-    energy: float = Field(
+    energy: Optional[float] = Field(
         None, description="The final total DFT energy for the last calculation"
     )
-    energy_per_atom: float = Field(
+    energy_per_atom: Optional[float] = Field(
         None, description="The final DFT energy per atom for the last calculation"
     )
     bandgap: Optional[float] = Field(
@@ -108,6 +195,12 @@ class OutputDoc(BaseModel):
     )
     stress: Optional[Matrix3D] = Field(
         None, description="Stress on the unit cell from the last calculation"
+    )
+    walltime: Optional[float] = Field(
+        None, description="Overall walltime to complete the calculation."
+    )
+    cputime: Optional[float] = Field(
+        None, description="Overall cputime to complete the calculation."
     )
 
     @classmethod
@@ -133,6 +226,8 @@ class OutputDoc(BaseModel):
             vbm=calc_doc.output.vbm,
             forces=calc_doc.output.forces,
             stress=calc_doc.output.stress,
+            walltime=calc_doc.output.walltime,
+            cputime=calc_doc.output.cputime,
         )
 
 
@@ -181,6 +276,9 @@ class AbinitTaskDoc(StructureMetadata):
 
     dir_name: Optional[str] = Field(
         None, description="The directory for this Abinit task"
+    )
+    history_dirs: Optional[list[str]] = Field(
+        None, description="The directories for the previously restarted Abinit tasks"
     )
     last_updated: Optional[str] = Field(
         default_factory=datetime_str,
@@ -282,16 +380,13 @@ class AbinitTaskDoc(StructureMetadata):
         tags = additional_fields.get("tags")
 
         dir_name = get_uri(dir_name)  # convert to full uri path
-        dir_name = strip_hostname(
-            dir_name
-        )  # VT: TODO to put here?necessary with laptop at least...
 
         # only store objects from last calculation
         # TODO: make this an option
         abinit_objects = all_abinit_objects[-1]
         included_objects = None
         if abinit_objects:
-            included_objects = list(abinit_objects.keys())
+            included_objects = list(abinit_objects)
 
         # rewrite the original structure save!
 
@@ -364,6 +459,12 @@ def _find_abinit_files(
                 abinit_files["abinit_log_file"] = Path(file).relative_to(path)
             elif file.match(f"*{MPIABORTFILE}{suffix}*"):
                 abinit_files["abinit_abort_file"] = Path(file).relative_to(path)
+            elif file.match(f"*{OUTPUT_FILE_NAME}{suffix}*"):
+                abinit_files["abinit_out_file"] = Path(file).relative_to(path)
+            elif file.match(f"*outdata/out_DDB{suffix}*"):
+                abinit_files["abinit_outddb_file"] = Path(file).relative_to(path)
+            elif file.match(f"*outdata/out_POT{suffix}*"):
+                abinit_files["abinit_outpot_file"] = Path(file).relative_to(path)
 
         return abinit_files
 

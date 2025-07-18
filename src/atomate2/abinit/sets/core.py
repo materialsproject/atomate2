@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -11,11 +12,15 @@ from abipy.abio.factories import (
     ebands_from_gsinput,
     ion_ioncell_relax_input,
     nscf_from_gsinput,
+    scf_for_phonons,
     scf_input,
 )
 from abipy.abio.input_tags import MOLECULAR_DYNAMICS, NSCF, RELAX, SCF
+from pymatgen.analysis.structure_matcher import StructureMatcher
 
 from atomate2.abinit.sets.base import AbinitInputGenerator
+from atomate2.abinit.utils.common import get_final_structure
+from atomate2.utils.path import strip_hostname
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -25,6 +30,8 @@ if TYPE_CHECKING:
     from pymatgen.io.abinit import PseudoTable
     from pymatgen.io.abinit.abiobjects import KSampling
 
+
+logger = logging.getLogger(__name__)
 
 GS_RESTART_FROM_DEPS = (f"{SCF}|{RELAX}|{MOLECULAR_DYNAMICS}:WFK|DEN",)
 
@@ -68,6 +75,29 @@ class StaticSetGenerator(AbinitInputGenerator):
             factory_kwargs=factory_kwargs,
             kpoints_settings=kpoints_settings,
         )
+
+
+@dataclass
+class ShgStaticSetGenerator(StaticSetGenerator):
+    """Class to generate static SCF input sets adapted to DFPT SHG computation."""
+
+    factory: Callable = scf_for_phonons
+    factory_kwargs: dict = field(
+        default_factory=lambda: {
+            "smearing": "nosmearing",
+            "spin_mode": "unpolarized",
+            "kppa": 3000,
+        }
+    )
+
+    user_abinit_settings: dict = field(
+        default_factory=lambda: {
+            "nstep": 500,
+            "toldfe": 1e-22,
+            "autoparal": 1,
+            "npfft": 1,
+        }
+    )
 
 
 @dataclass
@@ -195,6 +225,7 @@ class RelaxSetGenerator(AbinitInputGenerator):
     calc_type: str = "relaxation"
     factory: Callable = ion_ioncell_relax_input
     restart_from_deps: tuple = GS_RESTART_FROM_DEPS
+    prev_outputs_deps: tuple = GS_RESTART_FROM_DEPS
     relax_cell: bool = True
     tolmxf: float = 5e-5
 
@@ -217,6 +248,27 @@ class RelaxSetGenerator(AbinitInputGenerator):
         abinit_settings["tolmxf"] = self.tolmxf
         if input_index is None:
             input_index = 1 if self.relax_cell else 0
+
+        # Handle the case when no structure is provided or
+        # when both a structure and a previous output are provided
+        if prev_outputs is not None:
+            prev_dir = strip_hostname(prev_outputs[-1])  # TODO: to FileCLient?
+            final_structure = get_final_structure(prev_dir)
+            if structure is not None:
+                if not StructureMatcher().fit(final_structure, structure):
+                    logger.warning(
+                        "The structure you provided is different from the one \
+                        of the previous output. \
+                        We will go ahead with the one you provided."
+                    )
+                else:
+                    logger.warning(
+                        "Both the structure you provided and the one \
+                        from the previous output are deemed to be \
+                        the same. We will go ahead with the one you provided."
+                    )
+            else:
+                structure = final_structure
 
         return super().get_abinit_input(
             structure=structure,

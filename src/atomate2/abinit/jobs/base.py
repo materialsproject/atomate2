@@ -16,12 +16,13 @@ from atomate2 import SETTINGS
 from atomate2.abinit.files import write_abinit_input_set
 from atomate2.abinit.run import run_abinit
 from atomate2.abinit.schemas.calculation import TaskState
+from atomate2.abinit.schemas.outfiles import AbinitStoredFile
 from atomate2.abinit.schemas.task import AbinitTaskDoc
 from atomate2.abinit.utils.common import UnconvergedError
 from atomate2.abinit.utils.history import JobHistory
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Sequence
 
     from abipy.flowtk.events import AbinitCriticalWarning
     from pymatgen.core.structure import Structure
@@ -98,6 +99,55 @@ def setup_job(
     )
 
 
+_DATA_OBJECTS = [  # either str (TaskDoc fields) or MSONable class
+    # BandStructure,
+    # BandStructureSymmLine,
+    # DOS,
+    # Dos,
+    # CompleteDos,
+    # VolumetricData,
+    # Trajectory,
+    # DdbFileStr,
+    # PotFileBStr,
+    AbinitStoredFile,
+]
+
+
+def abinit_job(method: Callable) -> job:
+    """
+    Decorate the ``make`` method of ABINIT job makers.
+
+    This is a thin wrapper around :obj:`~jobflow.core.job.job` that configures common
+    settings for all abinit jobs. For example, it ensures that large data objects
+    (band structures, density of states, DDB, etc) are all stored in the
+    atomate2 data store. It also configures the output schema to be an Abinit
+    :obj:`.TaskDocument`.
+
+    Any makers that return Abinit jobs (not flows) should decorate the ``make`` method
+    with @abinit_job. For example:
+
+    .. code-block:: python
+
+        class MyAbinitMaker(BaseAbinitMaker):
+            @abinit_job
+            def make(structure):
+                # code to run abinit job.
+                pass
+
+    Parameters
+    ----------
+    method : callable
+        A BaseAbinitMaker.make method. This should not be specified directly and is
+        implied by the decorator.
+
+    Returns
+    -------
+    callable
+        A decorated version of the make function that will generate Abinit jobs.
+    """
+    return job(method, data=_DATA_OBJECTS, output_schema=AbinitTaskDoc)
+
+
 @dataclass
 class BaseAbinitMaker(Maker):
     """
@@ -115,6 +165,8 @@ class BaseAbinitMaker(Maker):
         Keyword arguments that will get passed to :obj:`.run_abinit`.
     task_document_kwargs : dict[str, Any]
         Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+    stop_jobflow_on_failure : bool
+        If True, stop all other jobs of the flow. False by default.
     """
 
     input_set_generator: AbinitInputGenerator
@@ -122,6 +174,7 @@ class BaseAbinitMaker(Maker):
     wall_time: int | None = None
     run_abinit_kwargs: dict[str, Any] = field(default_factory=dict)
     task_document_kwargs: dict[str, Any] = field(default_factory=dict)
+    stop_jobflow_on_failure: bool = False
 
     # class variables
     CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = ()
@@ -135,7 +188,7 @@ class BaseAbinitMaker(Maker):
         """Get the type of calculation for this maker."""
         return self.input_set_generator.calc_type
 
-    @job
+    @abinit_job
     def make(
         self,
         structure: Structure | None = None,
@@ -183,6 +236,7 @@ class BaseAbinitMaker(Maker):
 
         task_doc = AbinitTaskDoc.from_directory(
             Path.cwd(),
+            additional_fields={"history_dirs": config.history.prev_dirs},
             **self.task_document_kwargs,
         )
         task_doc.task_label = self.name
@@ -224,7 +278,7 @@ class BaseAbinitMaker(Maker):
             return Response(
                 output=task_document,
                 stop_children=True,
-                stop_jobflow=False,
+                stop_jobflow=self.stop_jobflow_on_failure,
                 stored_data={"error": unconverged_error},
             )
 
