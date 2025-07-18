@@ -20,7 +20,6 @@ from atomate2.abinit.jobs.response import (
     generate_dte_perts,
     run_rf,
 )
-from atomate2.abinit.powerups import update_factory_kwargs, update_user_abinit_settings
 from atomate2.abinit.sets.core import ShgStaticSetGenerator, StaticSetGenerator
 
 if TYPE_CHECKING:
@@ -223,6 +222,9 @@ class ShgFlowMaker(DfptFlowMaker):
     """
     Maker to compute the static DFPT second-harmonic generation tensor.
 
+    Maker to compute the electronic contribution to the
+        static DFPT second-harmonic generation tensor.
+
     Parameters
     ----------
     name : str
@@ -237,7 +239,6 @@ class ShgFlowMaker(DfptFlowMaker):
     static_maker: BaseAbinitMaker = field(
         default_factory=lambda: StaticMaker(input_set_generator=ShgStaticSetGenerator())
     )
-    scissor: float | None = None
 
     def make(
         self,
@@ -259,18 +260,43 @@ class ShgFlowMaker(DfptFlowMaker):
         Flow
             A DFPT flow
         """
-        shg_flow = super().make(structure=structure, restart_from=restart_from)
+        return super().make(structure=structure, restart_from=restart_from)
 
-        if self.scissor:
-            shg_flow = update_user_abinit_settings(
-                shg_flow,
-                {"dfpt_sciss": self.scissor * abu.eV_Ha},
-                name_filter="Scf calculation",
-            )
-            shg_flow = update_factory_kwargs(
-                shg_flow,
-                {"nbdbuf": 0},
-                name_filter="Scf calculation",
-            )
+    @classmethod
+    def with_scissor(cls, scissor: float) -> ShgFlowMaker:
+        """
+        Create a DFPT Flow to compute the static SHG tensor with a scissor correction.
 
-        return shg_flow
+        Create a DFPT Flow to compute the electronic contribution
+            to the static SHG tensor with a scissor correction.
+
+        Parameters
+        ----------
+        scissor : float
+            The scissor-correction to the band gap in eV.
+
+        Returns
+        -------
+        Flow
+            An ShgFlowMaker Flow
+        """
+        return cls(
+            static_maker=StaticMaker(
+                input_set_generator=ShgStaticSetGenerator(
+                    user_abinit_settings={
+                        "nstep": 500,
+                        "toldfe": 1e-22,
+                        "autoparal": 1,
+                        "npfft": 1,
+                        "dfpt_sciss": scissor * abu.eV_Ha,
+                    },
+                    factory_kwargs={
+                        "smearing": "nosmearing",
+                        "spin_mode": "unpolarized",
+                        "kppa": 3000,
+                        "nbdbuf": 0,
+                    },
+                )
+            ),
+            name="DFPT Chi2 SHG with scissor",
+        )
