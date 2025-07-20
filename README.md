@@ -144,7 +144,7 @@ A journal submission of `atomate2` is undergoing peer review. In the meantime, p
 	journal = {Digital Discovery},
 	doi = {10.1039/D5DD00019J},
 	url = {https://pubs.rsc.org/en/content/articlelanding/2025/dd/d5dd00019j},
-urldate = {2025-07-01},
+	urldate = {2025-07-01},
 }
 ```
 
