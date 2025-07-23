@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 import jobflow
 from jobflow import Maker, Response, job
-from pymatgen.phonon import PhononDos, PhononBandStructureSymmLine
+from pymatgen.phonon import PhononBandStructureSymmLine, PhononDos
 
 from atomate2.abinit.files import write_anaddb_input_set
 from atomate2.abinit.jobs.base import setup_job

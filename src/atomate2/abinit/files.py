@@ -5,6 +5,7 @@ from __future__ import annotations
 import contextlib
 import logging
 import os
+from itertools import chain
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -284,7 +285,13 @@ def del_gzip_files(
         with contextlib.suppress(TypeError, AttributeError):
             dirs_to_clean.append(o.dir_name)
         with contextlib.suppress(TypeError, AttributeError, KeyError):
-            dirs_to_clean.extend(o["dirs"])
+            o_dirs = o["dirs"]
+            if type(o_dirs) is dict:
+                dirs_to_clean.extend(
+                    list(chain(*o_dirs.values()))
+                )  # flatten values of dict
+            else:
+                dirs_to_clean.extend(o_dirs)
         with contextlib.suppress(TypeError, AttributeError, KeyError):
             dirs_to_clean.append(o["dir_name"])  # to zip run_rf and generate_perts
         with contextlib.suppress(TypeError, AttributeError, KeyError):
