@@ -247,7 +247,7 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
 
             # These use different kwargs for pressure
             if (
-                isinstance(self.dynamics, str | DynamicsPresets)
+                isinstance(self.dynamics, DynamicsPresets)
                 and DynamicsPresets(self.dynamics) == DynamicsPresets.npt_berendsen
             ) or (
                 isinstance(self.dynamics, type)
