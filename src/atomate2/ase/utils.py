@@ -7,6 +7,8 @@ import io
 import os
 import sys
 import time
+from copy import deepcopy
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -17,8 +19,10 @@ from ase.constraints import FixSymmetry
 from ase.filters import FrechetCellFilter
 from ase.io import Trajectory as AseTrajectory
 from ase.io import write as ase_write
+from ase.mep.neb import NEB
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
+from emmet.core.neb import NebMethod, NebResult
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
@@ -45,6 +49,15 @@ OPTIMIZERS = {
     "SciPyFminBFGS": SciPyFminBFGS,
     "BFGSLineSearch": BFGSLineSearch,
 }
+
+FORCE_BASED_OPTIMIZERS = {
+    "FIRE": FIRE,
+    "BFGS": BFGS,
+    "MDMin": MDMin,
+}
+
+# Parameters chosen for consistency with atomate2.vasp.sets.core.NebSetGenerator
+DEFAULT_NEB_KWARGS = {"k": 5.0, "climb": True, "method": "improvedtangent"}
 
 
 class TrajectoryObserver:
@@ -149,6 +162,8 @@ class TrajectoryObserver:
             self.to_pymatgen_trajectory(filename=filename, file_format=fmt)  # type: ignore[arg-type]
         elif fmt == "ase":
             self.to_ase_trajectory(filename=filename)
+        else:
+            raise ValueError(f"Unknown trajectory format {fmt}.")
 
     def to_ase_trajectory(
         self, filename: str | None = "atoms.traj"
@@ -329,6 +344,7 @@ class AseRelaxer:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
+        traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
         final_atoms_object_file: str | os.PathLike[str] = "final_atoms_object.xyz",
         interval: int = 1,
         verbose: bool = False,
@@ -383,12 +399,14 @@ class AseRelaxer:
                     atoms = cell_filter(atoms, **(filter_kwargs or {}))
                 optimizer = self.opt_class(atoms, **kwargs)
                 optimizer.attach(obs, interval=interval)
-                optimizer.run(fmax=fmax, steps=steps)
+                converged = optimizer.run(fmax=fmax, steps=steps)
+            else:
+                converged = True
             obs()
             t_f = time.perf_counter()
 
         if traj_file is not None:
-            obs.save(traj_file)
+            obs.save(traj_file, fmt=traj_file_fmt)
         if isinstance(atoms, cell_filter):
             atoms = atoms.atoms
 
@@ -414,9 +432,174 @@ class AseRelaxer:
         return AseResult(
             final_mol_or_struct=struct,
             trajectory=traj,
+            converged=converged,
             is_force_converged=is_force_conv,
-            energy_downhill=traj.frame_properties[-1]["energy"]
-            < traj.frame_properties[0]["energy"],
+            energy_downhill=(
+                traj.frame_properties[-1]["energy"] < traj.frame_properties[0]["energy"]
+            ),
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
+        )
+
+
+class AseNebInterface:
+    """Perform NEB using the Atomic Simulation Environment."""
+
+    def __init__(
+        self,
+        calculator: Calculator,
+        optimizer: Optimizer | str = "FIRE",
+        fix_symmetry: bool = False,
+        symprec: float = 1e-2,
+    ) -> None:
+        """Initialize the interface.
+
+        Parameters
+        ----------
+        calculator (ase Calculator): an ase calculator
+        optimizer (str or ase Optimizer): the optimization algorithm.
+        fix_symmetry (bool): if True, symmetry will be fixed during relaxation.
+        symprec (float): Tolerance for symmetry finding in case of fix_symmetry.
+        """
+        self.calculator = calculator
+
+        if isinstance(optimizer, str):
+            optimizer_obj = FORCE_BASED_OPTIMIZERS.get(optimizer)
+        elif optimizer is None:
+            raise ValueError("Optimizer cannot be None")
+        else:
+            optimizer_obj = optimizer
+
+        self.opt_class: Optimizer = optimizer_obj
+        self.ase_adaptor = AseAtomsAdaptor()
+        self.fix_symmetry = fix_symmetry
+        self.symprec = symprec
+
+    def run_neb(
+        self,
+        images: list[Atoms | Structure | Molecule],
+        fmax: float = 0.1,
+        steps: int = 500,
+        traj_file: str | Path | list[str | Path] = None,
+        traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
+        interval: int = 1,
+        verbose: bool = False,
+        neb_doc_kwargs: dict | None = None,
+        neb_kwargs: dict = DEFAULT_NEB_KWARGS,
+        optimizer_kwargs: dict | None = None,
+    ) -> NebResult:
+        """
+        Perform NEB on a list of molecules or structures.
+
+        Parameters
+        ----------
+        images : list of ASE Atoms, pymatgen Structure, or pymatgen Molecule
+            The ordered list of atoms to perform NEB on.
+        fmax : float
+            Total force tolerance for relaxation convergence.
+        steps : int
+            Max number of steps for relaxation.
+        traj_file : str, Path, or a list of str / Path
+            The trajectory file for saving. If a single str or Path,
+            this specifies the file name prefix. For example,
+                `traj_file = "traj_mp-149.json.gz"`
+            will yield individual trajectory file names:
+                traj_mp-149-image-1.json.gz
+                traj_mp-149-image-2.json.gz
+                ...
+            Alternately, if this is a list of str / Path, this specifies the
+            file name for each image.
+        interval : int
+            The step interval for saving the trajectories.
+        verbose : bool
+            If True, screen output will be shown.
+        neb_kwargs : dict, defaults to DEFAULT_NEB_KWARGS
+            kwargs to pass to ASE's NEB.
+        optimizer_kwargs : dict or None (default)
+            kwargs to pass to the optimizer.
+
+        Returns
+        -------
+            dict including optimized structure and the trajectory
+        """
+        is_mol = isinstance(images[0], Molecule) or (
+            isinstance(images[0], Atoms) and all(not pbc for pbc in images[0].pbc)
+        )
+        num_images = len(images)
+        initial_images = []
+        for img in images:
+            if isinstance(img, Atoms):
+                image = self.ase_adaptor.get_structure(
+                    img, cls=Molecule if is_mol else Structure
+                )
+            else:
+                image = img.copy()
+            initial_images.append(image)
+
+        for idx, image in enumerate(images):
+            if isinstance(image, Structure | Molecule):
+                images[idx] = self.ase_adaptor.get_atoms(image)
+
+            if self.fix_symmetry:
+                images[idx].set_constraint(FixSymmetry(image, symprec=self.symprec))
+            images[idx].calc = deepcopy(self.calculator)
+
+        neb_calc = NEB(images, **neb_kwargs)
+
+        with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
+            observers = [TrajectoryObserver(image) for image in images]
+            optimizer = self.opt_class(neb_calc, **(optimizer_kwargs or {}))
+            for idx in range(num_images):
+                optimizer.attach(observers[idx], interval=interval)
+            t_i = time.perf_counter()
+            converged = optimizer.run(fmax=fmax, steps=steps)
+            t_f = time.perf_counter()
+            [observers[idx]() for idx in range(num_images)]
+
+        if traj_file is not None:
+            if isinstance(traj_file, str | Path):
+                traj_file = Path(traj_file)
+                if traj_file_suffix := "".join(traj_file.suffixes):
+                    traj_file_prefix = str(traj_file).split(traj_file_suffix)[0]
+                else:
+                    traj_file_prefix = str(traj_file)
+                traj_files = [
+                    f"{traj_file_prefix}-image-{idx + 1}{traj_file_suffix}"
+                    for idx in range(num_images)
+                ]
+            elif isinstance(traj_file, list | tuple):
+                traj_files = [str(f) for f in traj_file]
+
+            for idx, f in enumerate(traj_files):
+                observers[idx].save(f, fmt=traj_file_fmt)
+
+        images = [
+            self.ase_adaptor.get_structure(image, cls=Molecule if is_mol else Structure)
+            for image in images
+        ]
+        num_sites = len(images[0])
+
+        tags = [os.getcwd()]
+        is_force_conv = all(
+            np.linalg.norm(observers[image_idx].forces[-1][site_idx]) < abs(fmax)
+            for site_idx in range(num_sites)
+            for image_idx in range(num_images)
+        )
+        tags += ["force converged" if is_force_conv else "forces not converged"]
+        tags += [f"elapsed time {t_f - t_i} seconds"]
+
+        return NebResult(
+            images=images,
+            image_indices=list(range(len(images))),
+            initial_images=initial_images,
+            energies=[
+                observers[image_idx].energies[-1] for image_idx in range(num_images)
+            ],
+            method=NebMethod.CLIMBING_IMAGE
+            if neb_kwargs.get("climb", False)
+            else NebMethod.STANDARD,
+            dir_name=os.getcwd(),
+            state="successful" if converged else "failed",
+            tags=tags,
+            **neb_doc_kwargs,
         )

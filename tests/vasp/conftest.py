@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Final
+from typing import TYPE_CHECKING, Any
 
 import pytest
 from monty.os.path import zpath as monty_zpath
@@ -15,10 +15,6 @@ if TYPE_CHECKING:
 
 
 logger = logging.getLogger("atomate2")
-
-_VFILES: Final = ("incar", "kpoints", "potcar", "poscar")
-_REF_PATHS: dict[str, str | Path] = {}
-_FAKE_RUN_VASP_KWARGS: dict[str, dict] = {}
 
 
 def zpath(path: str | Path) -> Path:
