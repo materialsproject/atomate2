@@ -26,6 +26,16 @@ from pymatgen.io.openff import (
     mol_graph_to_openff_mol,
 )
 
+# Ensure consistency of test results by fixing atomic masses (no updates)
+LEGACY_ATOMIC_MASSES = {
+    1: 1.00794,
+    3: 6.941,
+    6: 12.0107,
+    8: 15.9994,
+    9: 18.9984032,
+    15: 30.973762,
+}
+
 
 def test_molgraph_to_openff_pf6(mol_files):
     """transform a water MoleculeGraph to a OpenFF water molecule"""
@@ -229,9 +239,13 @@ def test_calculate_elyte_composition():
     solvent_densities = {"O": 1.0, "CCO": 0.8}
 
     comp_dict = calculate_elyte_composition(
-        vol_ratio, salts, solvent_densities, "volume"
+        vol_ratio,
+        salts,
+        solvent_densities,
+        "volume",
+        atomic_masses=LEGACY_ATOMIC_MASSES,
     )
-    counts = counts_from_masses(comp_dict, 100)
+    counts = counts_from_masses(comp_dict, 100, atomic_masses=LEGACY_ATOMIC_MASSES)
     assert sum(counts.values()) == 100
 
     mol_ratio = {
@@ -242,15 +256,19 @@ def test_calculate_elyte_composition():
         "CC#N": 0.130,
         "FC1COC(=O)O1": 0.028,
     }
-    counts2 = counts_from_masses(mol_ratio, 1000)
+    counts2 = counts_from_masses(mol_ratio, 1000, atomic_masses=LEGACY_ATOMIC_MASSES)
     assert np.allclose(sum(counts2.values()), 1000, atol=5)
 
 
 def test_counts_calculators():
     mass_fractions = {"O": 0.5, "CCO": 0.5}
 
-    counts_size = counts_from_box_size(mass_fractions, 3)
-    counts_number = counts_from_masses(mass_fractions, 324)
+    counts_size = counts_from_box_size(
+        mass_fractions, 3, atomic_masses=LEGACY_ATOMIC_MASSES
+    )
+    counts_number = counts_from_masses(
+        mass_fractions, 324, atomic_masses=LEGACY_ATOMIC_MASSES
+    )
 
     assert 200 < sum(counts_size.values()) < 500
 
