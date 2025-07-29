@@ -11,10 +11,12 @@ import openff.toolkit as tk
 from emmet.core.openff import MoleculeSpec
 from pymatgen.core import Element, Molecule
 from pymatgen.io.openff import create_openff_mol
-from scipy.units import Avogadro
+from scipy.constants import Avogadro
 
 if TYPE_CHECKING:
     import pathlib
+
+DEFAULT_ATOMIC_MASSES = {el.Z: el.atomic_mass for el in Element}
 
 
 def create_mol_spec(
@@ -191,7 +193,7 @@ def calculate_elyte_composition(
     }
 
     # Calculate the molecular weights of the solvent
-    atomic_masses = atomic_masses or {el.Z: el.atomic_mass for el in Element}
+    atomic_masses = atomic_masses or DEFAULT_ATOMIC_MASSES
     salt_mws = {}
     for smile in salts:
         mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
@@ -232,7 +234,7 @@ def counts_from_masses(
     numpy.ndarray
         n_mols: Number of each SMILES needed for the given mass ratio.
     """
-    atomic_masses = atomic_masses or {el.Z: el.atomic_mass for el in Element}
+    atomic_masses = atomic_masses or DEFAULT_ATOMIC_MASSES
 
     mol_weights = []
     for smile in species:
@@ -272,7 +274,7 @@ def counts_from_box_size(
     dict of str, float
         Number of each species needed to fill the box with the given density.
     """
-    atomic_masses = atomic_masses or {el.Z: el.atomic_mass for el in Element}
+    atomic_masses = atomic_masses or DEFAULT_ATOMIC_MASSES
 
     volume = (side_length * 1e-7) ** 3  # Convert from nm3 to cm^3
     total_mass = volume * density  # grams
