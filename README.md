@@ -134,7 +134,7 @@ A full list of contributors can be found [here][contributors].
 
 ## Citing atomate2
 
-A journal submission of `atomate2` is undergoing peer review. In the meantime, please cite the [ChemRxiv preprint](https://chemrxiv.org/engage/chemrxiv/article-details/678e76a16dde43c9085c75e9):
+If you use atomate2, please cite the [following article](https://doi.org/10.1039/D5DD00019J):
 
 ```bib
 @article{ganose2025_atomate2,
@@ -143,7 +143,7 @@ A journal submission of `atomate2` is undergoing peer review. In the meantime, p
 	year = {2025},
 	journal = {Digital Discovery},
 	doi = {10.1039/D5DD00019J},
-	url = {https://pubs.rsc.org/en/content/articlelanding/2025/dd/d5dd00019j},
+	url = {https://doi.org/10.1039/D5DD00019J},
 	urldate = {2025-07-01},
 }
 ```
