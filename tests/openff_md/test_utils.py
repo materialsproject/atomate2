@@ -246,7 +246,7 @@ def test_calculate_elyte_composition():
         atomic_masses=LEGACY_ATOMIC_MASSES,
     )
     counts = counts_from_masses(comp_dict, 100, atomic_masses=LEGACY_ATOMIC_MASSES)
-    assert sum(counts.values()) == 100
+    assert counts == {"CCO": 23, "F[P-](F)(F)(F)(F)F": 3, "O": 72, "[Li+]": 3}
 
     mol_ratio = {
         "[Li+]": 0.00616,
@@ -266,10 +266,11 @@ def test_counts_calculators():
     counts_size = counts_from_box_size(
         mass_fractions, 3, atomic_masses=LEGACY_ATOMIC_MASSES
     )
-    counts_number = counts_from_masses(
-        mass_fractions, 324, atomic_masses=LEGACY_ATOMIC_MASSES
-    )
 
-    assert 200 < sum(counts_size.values()) < 500
+    assert sum(counts_size.values()) == 406
+
+    counts_number = counts_from_masses(
+        mass_fractions, 406, atomic_masses=LEGACY_ATOMIC_MASSES
+    )
 
     assert counts_size == counts_number
