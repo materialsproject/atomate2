@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 from abipy.abio.inputs import AbinitInput
 from abipy.flowtk import events
@@ -89,7 +89,7 @@ class OutputDoc(BaseModel):
     """
 
     structure: Union[Structure] = Field(None, description="The output structure object")
-    trajectory: Optional[Sequence[Union[Structure]]] = Field(
+    trajectory: Sequence[Union[Structure]] | None = Field(
         None, description="The trajectory of output structures"
     )
     energy: float = Field(
@@ -98,15 +98,15 @@ class OutputDoc(BaseModel):
     energy_per_atom: float = Field(
         None, description="The final DFT energy per atom for the last calculation"
     )
-    bandgap: Optional[float] = Field(
+    bandgap: float | None = Field(
         None, description="The DFT bandgap for the last calculation"
     )
-    cbm: Optional[float] = Field(None, description="CBM for this calculation")
-    vbm: Optional[float] = Field(None, description="VBM for this calculation")
-    forces: Optional[list[Vector3D]] = Field(
+    cbm: float | None = Field(None, description="CBM for this calculation")
+    vbm: float | None = Field(None, description="VBM for this calculation")
+    forces: list[Vector3D] | None = Field(
         None, description="Forces on atoms from the last calculation"
     )
-    stress: Optional[Matrix3D] = Field(
+    stress: Matrix3D | None = Field(
         None, description="Stress on the unit cell from the last calculation"
     )
 
@@ -179,49 +179,47 @@ class AbinitTaskDoc(StructureMetadata):
         Additional json loaded from the calculation directory
     """
 
-    dir_name: Optional[str] = Field(
-        None, description="The directory for this Abinit task"
-    )
-    last_updated: Optional[str] = Field(
+    dir_name: str | None = Field(None, description="The directory for this Abinit task")
+    last_updated: str | None = Field(
         default_factory=datetime_str,
         description="Timestamp for when this task document was last updated",
     )
-    completed_at: Optional[str] = Field(
+    completed_at: str | None = Field(
         None, description="Timestamp for when this task was completed"
     )
-    input: Optional[InputDoc] = Field(
+    input: InputDoc | None = Field(
         None, description="The input to the first calculation"
     )
-    output: Optional[OutputDoc] = Field(
+    output: OutputDoc | None = Field(
         None, description="The output of the final calculation"
     )
     structure: Union[Structure] = Field(
         None, description="Final output atoms from the task"
     )
-    state: Optional[TaskState] = Field(None, description="State of this task")
-    event_report: Optional[events.EventReport] = Field(
+    state: TaskState | None = Field(None, description="State of this task")
+    event_report: events.EventReport | None = Field(
         None, description="Event report of this abinit job."
     )
-    included_objects: Optional[list[AbinitObject]] = Field(
+    included_objects: list[AbinitObject] | None = Field(
         None, description="List of Abinit objects included with this task document"
     )
-    abinit_objects: Optional[dict[AbinitObject, Any]] = Field(
+    abinit_objects: dict[AbinitObject, Any] | None = Field(
         None, description="Abinit objects associated with this task"
     )
-    task_label: Optional[str] = Field(None, description="A description of the task")
-    tags: Optional[list[str]] = Field(
+    task_label: str | None = Field(None, description="A description of the task")
+    tags: list[str] | None = Field(
         None, description="Metadata tags for this task document"
     )
-    author: Optional[str] = Field(
+    author: str | None = Field(
         None, description="Author extracted from transformations"
     )
-    icsd_id: Optional[str] = Field(
+    icsd_id: str | None = Field(
         None, description="International crystal structure database id of the structure"
     )
-    calcs_reversed: Optional[list[Calculation]] = Field(
+    calcs_reversed: list[Calculation] | None = Field(
         None, description="The inputs and outputs for all Abinit runs in this task."
     )
-    transformations: Optional[dict[str, Any]] = Field(
+    transformations: dict[str, Any] | None = Field(
         None,
         description="Information on the structural transformations, parsed from a "
         "transformations.json file",
@@ -231,7 +229,7 @@ class AbinitTaskDoc(StructureMetadata):
         description="Information on the custodian settings used to run this "
         "calculation, parsed from a custodian.json file",
     )
-    additional_json: Optional[dict[str, Any]] = Field(
+    additional_json: dict[str, Any] | None = Field(
         None, description="Additional json loaded from the calculation directory"
     )
 
