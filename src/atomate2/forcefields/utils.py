@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from ase.io import Trajectory as AseTrajectory
+from ase.units import Bohr
 from ase.units import GPa as _GPa_to_eV_per_A3
 from monty.json import MontyDecoder
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
@@ -223,7 +224,7 @@ def ase_calculator(
             model = kwargs.get("model")
             if isinstance(model, str | Path) and Path(model).exists():
                 model_path = model
-                device = kwargs.get("device") or "cpu"
+                device = kwargs.pop("device", None) or "cpu"
                 if "device" in kwargs:
                     del kwargs["device"]
                 calculator = MACECalculator(
@@ -231,6 +232,25 @@ def ase_calculator(
                     device=device,
                     **kwargs,
                 )
+
+                if kwargs.get("dispersion", False):
+                    # See https://github.com/materialsproject/atomate2/issues/1262
+                    # Specifying an explicit model path unsets the dispersio
+                    # Reset it here.
+                    from ase.calculators.mixing import SumCalculator
+                    from torch_dftd.torch_dftd3_calculator import TorchDFTD3Calculator
+
+                    default_d3_kwargs = {
+                        "damping": "bj",
+                        "dispersion_xc": "pbe",
+                        "dispersion_cutoff": 40.0 * Bohr,
+                    }
+                    for k, v in default_d3_kwargs.items():
+                        if k not in kwargs:
+                            kwargs[k] = v
+
+                    d3_calc = TorchDFTD3Calculator(device=device, **kwargs)
+                    calculator = SumCalculator([calculator, d3_calc])
             else:
                 calculator = mace_mp(**kwargs)
 
