@@ -67,7 +67,7 @@ jobs:
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           uv pip install .[strict,strict-forcefields,tests,abinit,approxneb]
-          uv pip install torch-runstats
+          uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
