@@ -100,7 +100,7 @@ strict = [
     "click==8.2.1",
     "custodian==2025.5.12",
     "dscribe==2.1.1",
-    "emmet-core==0.84.9rc",
+    "emmet-core==0.84.9",
     "ijson==3.4.0",
     "jobflow==0.2.0",
     "lobsterpy==0.4.9",
