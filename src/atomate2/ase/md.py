@@ -247,12 +247,16 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
 
             # These use different kwargs for pressure
             if (
-                isinstance(self.dynamics, DynamicsPresets)
-                and DynamicsPresets(self.dynamics) == DynamicsPresets.npt_berendsen
-            ) or (
-                isinstance(self.dynamics, type)
-                and issubclass(self.dynamics, MolecularDynamics)
-                and self.dynamics.__name__ == "NPTBerendsen"
+                (
+                    isinstance(self.dynamics, DynamicsPresets)
+                    and DynamicsPresets(self.dynamics) == DynamicsPresets.npt_berendsen
+                )
+                or (
+                    isinstance(self.dynamics, type)
+                    and issubclass(self.dynamics, MolecularDynamics)
+                    and self.dynamics.__name__ == "NPTBerendsen"
+                )
+                or (isinstance(self.dynamics, str) and self.dynamics == "berendsen")
             ):
                 stress_kwarg = "pressure_au"
             else:
@@ -388,7 +392,12 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
             dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
             if self.ensemble == MDEnsemble.nvt:
                 return
-            dyn.set_stress(self.p_schedule[dyn.nsteps] * 1e3 * units.bar)
+
+            if "pressure_au" in self.ase_md_kwargs:
+                # set_pressure is broken for NPTBerendsen
+                dyn.pressure = self.p_schedule[dyn.nsteps] * 1e3 * units.bar
+            else:
+                dyn.set_stress(self.p_schedule[dyn.nsteps] * 1e3 * units.bar)
 
         md_runner.attach(_callback, interval=1)
         with contextlib.redirect_stdout(sys.stdout if self.verbose else io.StringIO()):
