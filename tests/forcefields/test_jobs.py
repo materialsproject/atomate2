@@ -192,15 +192,23 @@ mace_paths = pytest.mark.parametrize(
 )
 
 
+@pytest.mark.parametrize("dispersion", [False, True])
 @mace_paths
-def test_mace_static_maker(si_structure: Structure, model):
+def test_mace_static_maker(si_structure: Structure, dispersion: bool, model):
+    from ase.calculators.mixing import SumCalculator
+
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
-    job = ForceFieldStaticMaker(
+    maker = ForceFieldStaticMaker(
         force_field_name="MACE",
         ionic_step_data=("structure", "energy"),
-        calculator_kwargs={"model": model},
-    ).make(si_structure)
+        calculator_kwargs={"model": model, "dispersion": dispersion},
+    )
+    job = maker.make(si_structure)
+    if dispersion:
+        assert isinstance(maker.calculator, SumCalculator)
+    else:
+        assert not isinstance(maker.calculator, SumCalculator)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -208,7 +216,9 @@ def test_mace_static_maker(si_structure: Structure, model):
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-0.068231, rel=1e-4)
+    assert output1.output.energy == approx(
+        -0.6838630169603719 if dispersion else -0.068231, rel=1e-4
+    )
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("mace-torch")
 

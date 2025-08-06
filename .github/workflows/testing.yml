@@ -66,8 +66,8 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,strict-forcefields,tests,abinit]
-          uv pip install torch-runstats
+          uv pip install .[strict,strict-forcefields,tests,abinit,approxneb]
+          uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
@@ -321,7 +321,7 @@ jobs:
         run: sphinx-build docs docs_build
 
   automerge:
-    needs: [lint, test-non-ase, test-notebooks-and-ase, test-force-field-notebook, docs]
+    needs: [docs, lint, test-force-field-notebook, test-non-ase, test-notebooks-and-ase, test-openff]
     runs-on: ubuntu-latest
 
     permissions:
