@@ -217,7 +217,7 @@ def test_mace_static_maker(si_structure: Structure, dispersion: bool, model):
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(
-        -0.6838630169603719 if dispersion else -0.068231, rel=1e-4
+        -0.6819882079032458 if dispersion else -0.068231, rel=1e-4
     )
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("mace-torch")

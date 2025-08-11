@@ -237,13 +237,15 @@ def ase_calculator(
                     # See https://github.com/materialsproject/atomate2/issues/1262
                     # Specifying an explicit model path unsets the dispersio
                     # Reset it here.
+                    import torch
                     from ase.calculators.mixing import SumCalculator
                     from torch_dftd.torch_dftd3_calculator import TorchDFTD3Calculator
 
                     default_d3_kwargs = {
                         "damping": "bj",
-                        "dispersion_xc": "pbe",
-                        "dispersion_cutoff": 40.0 * Bohr,
+                        "xc": "pbe",
+                        "cutoff": 40.0 * Bohr,
+                        "dtype": kwargs.get("default_dtype", torch.get_default_dtype()),
                     }
                     for k, v in default_d3_kwargs.items():
                         if k not in kwargs:
