@@ -89,11 +89,13 @@ class ForceFieldMDMaker(AseMDMaker):
     traj_file : str | Path | None = None
         If a str or Path, the name of the file to save the MD trajectory to.
         If None, the trajectory is not written to disk
-    traj_file_fmt : Literal["ase","pmg","xdatcar"]
+    traj_file_fmt : Literal["ase","pmg","xdatcar","parquet"]
         The format of the trajectory file to write.
         If "ase", writes an ASE .Trajectory.
         If "pmg", writes a Pymatgen .Trajectory.
-        If "xdatcar, writes a VASP-style XDATCAR
+        If "xdatcar", writes a VASP-style XDATCAR.
+        If "parquet", uses emmet.core's Trajectory object to write a high-efficiency
+            parquet format file containing the trajectory.
     traj_interval : int
         The step interval for saving the trajectories.
     mb_velocity_seed : int or None
