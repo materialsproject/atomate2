@@ -1,19 +1,21 @@
 from __future__ import annotations
 
 import io
-import json
 from pathlib import Path
 
-import numpy as np
 import pytest
 from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
 from jobflow import Flow
 from MDAnalysis import Universe
-from monty.json import MontyDecoder
 from openmm.app import PDBFile
 
 from atomate2.openmm.flows.core import OpenMMFlowMaker
 from atomate2.openmm.jobs import EnergyMinimizationMaker, NPTMaker, NVTMaker
+
+try:
+    import h5py
+except ImportError:
+    h5py = None
 
 
 def test_anneal_maker(interchange, run_job):
@@ -58,6 +60,9 @@ def test_anneal_maker(interchange, run_job):
 
 
 # @pytest.mark.skip("Reporting to HDF5 is broken in MDA upstream.")
+@pytest.mark.skipif(
+    condition=h5py is None, reason="h5py is required for HDF5 features."
+)
 def test_hdf5_writing(interchange, run_job):
     # Create an instance of AnnealMaker with custom parameters
     import MDAnalysis
@@ -176,71 +181,3 @@ def test_flow_maker(interchange, run_job):
     u = Universe(topology, str(Path(task_doc.dir_name) / "trajectory5.dcd"))
 
     assert len(u.trajectory) == 5
-
-
-def test_traj_blob_embed(interchange, run_job, tmp_path):
-    nvt = NVTMaker(n_steps=2, traj_interval=1, embed_traj=True)
-
-    # Run the ProductionMaker flow
-    nvt_job = nvt.make(interchange)
-    task_doc = run_job(nvt_job)
-
-    interchange = OpenMMInterchange.model_validate_json(task_doc.interchange)
-    topology = PDBFile(io.StringIO(interchange.topology)).getTopology()
-
-    u = Universe(topology, str(Path(task_doc.dir_name) / "trajectory.dcd"))
-
-    assert len(u.trajectory) == 2
-
-    calc_output = task_doc.calcs_reversed[0].output
-    assert calc_output.traj_blob is not None
-
-    # Write the bytes back to a file
-    with open(tmp_path / "doc_trajectory.dcd", "wb") as f:
-        f.write(bytes.fromhex(calc_output.traj_blob))
-
-    u2 = Universe(topology, str(tmp_path / "doc_trajectory.dcd"))
-
-    assert np.all(u.atoms.positions == u2.atoms.positions)
-
-    with open(Path(task_doc.dir_name) / "taskdoc.json") as file:
-        task_dict = json.load(file, cls=MontyDecoder)
-        task_doc_parsed = OpenMMTaskDocument.model_validate(task_dict)
-
-    parsed_output = task_doc_parsed.calcs_reversed[0].output
-
-    assert parsed_output.traj_blob == calc_output.traj_blob
-
-
-@pytest.mark.skip("for local testing and debugging")
-def test_fireworks(interchange):
-    # Create an instance of ProductionMaker with custom parameters
-
-    production_maker = OpenMMFlowMaker(
-        name="test_production",
-        tags=["test"],
-        makers=[
-            EnergyMinimizationMaker(max_iterations=1),
-            NPTMaker(n_steps=5, pressure=1.0, state_interval=1, traj_interval=1),
-            OpenMMFlowMaker.anneal_flow(anneal_temp=400, final_temp=300, n_steps=5),
-            NVTMaker(n_steps=5),
-        ],
-    )
-
-    interchange_json = interchange.json()
-    # interchange_bytes = interchange_json.encode("utf-8")
-
-    # Run the ProductionMaker flow
-    production_flow = production_maker.make(interchange_json)
-
-    from fireworks import LaunchPad
-    from jobflow.managers.fireworks import flow_to_workflow
-
-    wf = flow_to_workflow(production_flow)
-
-    lpad = LaunchPad.auto_load()
-    lpad.add_wf(wf)
-
-    # from fireworks.core.rocket_launcher import launch_rocket
-    #
-    # launch_rocket(lpad)

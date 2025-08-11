@@ -6,13 +6,14 @@
 
 This guide will get you up and running in an environment for running high-throughput
 workflows with atomate2. atomate2 is built on the `pymatgen`, `custodian`, `jobflow`, and
-`FireWorks` libraries. Briefly:
+[`jobflow-remote`] or `FireWorks` libraries. Briefly:
 
 - [`pymatgen`] is used to create input files and analyze the output of materials science codes.
 - [`custodian`] runs your simulation code (e.g., VASP) and performs error checking/handling
   and checkpointing.
 - [`jobflow`] is used to design computational workflows.
-- [`FireWorks`] (optional) is used to manage and execute workflows on HPC machines.
+- [`jobflow-remote`] (optional, option 1) is used to manage and execute workflows on HPC machines.
+- [`FireWorks`] (optional, option 2) is used to manage and execute workflows on HPC machines.
 
 Running and writing your own workflows are covered in later tutorials. For now, these
 topics will be covered in enough depth to get you set up and to help you know where to
@@ -24,6 +25,7 @@ currently in atomate2 pertains to VASP.
 [`pymatgen`]: http://pymatgen.org
 [`custodian`]: https://materialsproject.github.io/custodian
 [`fireworks`]: https://materialsproject.github.io/fireworks
+[`jobflow-remote`]: https://matgenix.github.io/jobflow-remote/
 [`jobflow`]: https://materialsproject.github.io/jobflow
 
 ### Objectives
@@ -482,7 +484,7 @@ See the following pages for more information on the topics we covered here:
   [](running_workflows) tutorial (suggested next step).
 - To learn more about `TaskDocument` and how `atomate2` organizes output data, review
   the [Introduction to task documents, schemas, and emmet](docs_schemas_emmet.md) tutorial.
-- To see how to manage and execute many workflows at once, try the
+- To see how to manage and execute many workflows at once, try the [](jobflow-remote) or
   [](atomate2_fireWorks) tutorial.
 
 ## Troubleshooting and FAQ

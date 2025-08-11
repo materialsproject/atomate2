@@ -10,23 +10,22 @@ from jobflow import job
 from monty.dev import deprecated
 
 from atomate2.ase.md import AseMDMaker, MDEnsemble
-from atomate2.forcefields import MLFF, _get_formatted_ff_name
-from atomate2.forcefields.jobs import (
+from atomate2.forcefields.schemas import ForceFieldTaskDocument
+from atomate2.forcefields.utils import (
     _DEFAULT_CALCULATOR_KWARGS,
     _FORCEFIELD_DATA_OBJECTS,
+    MLFF,
+    ForceFieldMixin,
 )
-from atomate2.forcefields.schemas import ForceFieldTaskDocument
-from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure
 
 
 @dataclass
-class ForceFieldMDMaker(AseMDMaker):
+class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
     """
     Perform MD with a force field.
 
@@ -107,23 +106,6 @@ class ForceFieldMDMaker(AseMDMaker):
         Options to pass to the TaskDoc.
     """
 
-    name: str = "Forcefield MD"
-    force_field_name: str | MLFF = MLFF.Forcefield
-    task_document_kwargs: dict = None
-
-    def __post_init__(self) -> None:
-        """Ensure that force_field_name is correctly assigned."""
-        super().__post_init__()
-        self.force_field_name = _get_formatted_ff_name(self.force_field_name)
-
-        # Pad calculator_kwargs with default values, but permit user to override them
-        self.calculator_kwargs = {
-            **_DEFAULT_CALCULATOR_KWARGS.get(
-                MLFF(self.force_field_name.split("MLFF.")[-1]), {}
-            ),
-            **self.calculator_kwargs,
-        }
-
     @job(
         data=[*_FORCEFIELD_DATA_OBJECTS, "ionic_steps"],
         output_schema=ForceFieldTaskDocument,
@@ -144,8 +126,7 @@ class ForceFieldMDMaker(AseMDMaker):
             A previous calculation directory to copy output files from. Unused, just
             added to match the method signature of other makers.
         """
-        with revert_default_dtype():
-            md_result = self.run_ase(structure, prev_dir=prev_dir)
+        md_result = self._run_ase_safe(structure, prev_dir=prev_dir)
 
         self.task_document_kwargs = self.task_document_kwargs or {}
         if len(self.task_document_kwargs) > 0:
@@ -171,14 +152,6 @@ class ForceFieldMDMaker(AseMDMaker):
             **self.task_document_kwargs,
         )
 
-    @property
-    def calculator(self) -> Calculator:
-        """ASE calculator, can be overwritten by user."""
-        return ase_calculator(
-            str(self.force_field_name),  # make mypy happy
-            **self.calculator_kwargs,
-        )
-
 
 @deprecated(
     replacement=ForceFieldMDMaker,
@@ -199,14 +172,16 @@ class NEPMDMaker(ForceFieldMDMaker):
 @deprecated(
     replacement=ForceFieldMDMaker,
     deadline=(2025, 1, 1),
-    message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldMDMaker.",
+    message=(
+        "To use MACE-MP-0, set `force_field_name = 'MACE_MP_0'` in ForceFieldMDMaker."
+    ),
 )
 @dataclass
 class MACEMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with MACE."""
+    """Perform an MD run with MACE-MP-0."""
 
-    name: str = f"{MLFF.MACE} MD"
-    force_field_name: str | MLFF = MLFF.MACE
+    name: str = f"{MLFF.MACE_MP_0} MD"
+    force_field_name: str | MLFF = MLFF.MACE_MP_0
     calculator_kwargs: dict = field(
         default_factory=lambda: {"default_dtype": "float32"}
     )

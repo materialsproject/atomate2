@@ -1,4 +1,4 @@
-"""Flows to generate EOS fits using CHGNet, M3GNet, or MACE."""
+"""Flows to generate EOS fits using machine learned interatomic potentials."""
 
 from __future__ import annotations
 
@@ -8,12 +8,14 @@ from typing import TYPE_CHECKING
 from monty.dev import deprecated
 
 from atomate2.common.flows.eos import CommonEosMaker
-from atomate2.forcefields import MLFF, _get_formatted_ff_name
+from atomate2.forcefields import _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
     from jobflow import Maker
     from typing_extensions import Self
+
+    from atomate2.forcefields import MLFF
 
 
 @dataclass
@@ -62,6 +64,7 @@ class ForceFieldEosMaker(CommonEosMaker):
         cls,
         force_field_name: str | MLFF,
         relax_initial_structure: bool = True,
+        **kwargs,
     ) -> Self:
         """
         Create an EOS flow from a forcefield name.
@@ -72,23 +75,30 @@ class ForceFieldEosMaker(CommonEosMaker):
             The name of the force field.
         relax_initial_structure: bool = True
             Whether to relax the initial structure before performing an EOS fit.
+        **kwargs
+            Additional kwargs to pass to ForceFieldEosMaker
+
 
         Returns
         -------
         ForceFieldEosMaker
         """
         force_field_name = _get_formatted_ff_name(force_field_name)
-        return cls(
-            name=f"{force_field_name.split('MLFF.')[-1]} EOS Maker",
-            initial_relax_maker=(
-                ForceFieldRelaxMaker(force_field_name=force_field_name)
-                if relax_initial_structure
-                else None
-            ),
+        if relax_initial_structure:
+            kwargs.update(
+                initial_relax_maker=ForceFieldRelaxMaker(
+                    force_field_name=force_field_name
+                )
+            )
+        kwargs.update(
             eos_relax_maker=ForceFieldRelaxMaker(
                 force_field_name=force_field_name, relax_cell=False
             ),
             static_maker=None,
+        )
+        return cls(
+            name=f"{force_field_name.split('MLFF.')[-1]} EOS Maker",
+            **kwargs,
         )
 
 
@@ -197,12 +207,14 @@ class M3GNetEosMaker(CommonEosMaker):
 @deprecated(
     replacement=ForceFieldEosMaker,
     deadline=(2025, 1, 1),
-    message='Use ForceFieldEosMaker.from_force_field_name(force_field_name = "MACE")',
+    message=(
+        'Use ForceFieldEosMaker.from_force_field_name(force_field_name = "MACE-MP-0")'
+    ),
 )
 @dataclass
 class MACEEosMaker(CommonEosMaker):
     """
-    Generate equation of state data using the MACE ML forcefield.
+    Generate equation of state data using the MACE-MP-0 ML forcefield.
 
     First relax a structure using relax_maker.
     Then perform a series of deformations on the relaxed structure, and
@@ -233,13 +245,13 @@ class MACEEosMaker(CommonEosMaker):
         TODO: remove this when clash is fixed
     """
 
-    name: str = "MACE EOS Maker"
+    name: str = "MACE-MP-0 EOS Maker"
     initial_relax_maker: Maker = field(
-        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="MACE")
+        default_factory=lambda: ForceFieldRelaxMaker(force_field_name="MACE-MP-0")
     )
     eos_relax_maker: Maker = field(
         default_factory=lambda: ForceFieldRelaxMaker(
-            force_field_name="MACE", relax_cell=False
+            force_field_name="MACE-MP-0", relax_cell=False
         )
     )
     static_maker: Maker = None

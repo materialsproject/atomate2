@@ -81,7 +81,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             A previous calculation directory to use for copying outputs.
             Default is None.
         born: Optional[list[Matrix3D]]
-            Instead of recomputing born charges and epsilon, these values can also be
+            Instead of recomputing Born charges and epsilon, these values can also be
             provided manually. If born and epsilon_static are provided, the born run
             will be skipped it can be provided in the VASP convention with information
             for every atom in unit cell. Please be careful when converting structures
@@ -95,7 +95,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
             It has to be given per formula unit (as a result in corresponding Doc).
             Instead of recomputing the energy of the bulk structure every time, this
             value can also be provided in eV. If it is provided, the static run will be
-            skipped. This energy is the typical output dft energy of the dft workflow.
+            skipped. This energy is the typical output DFT energy of the DFT workflow.
             No conversion needed. It is set to 0 by default.
         supercell_matrix: Optional[Matrix3D]
             Instead of min_length, also a supercell_matrix can be given, e.g.

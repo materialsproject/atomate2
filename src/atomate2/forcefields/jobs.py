@@ -7,34 +7,25 @@ import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from ase.io import Trajectory as AseTrajectory
-from ase.units import GPa as _GPa_to_eV_per_A3
 from jobflow import job
 from monty.dev import deprecated
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.ase.jobs import AseRelaxMaker
-from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
-from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
+from atomate2.forcefields.utils import (
+    _DEFAULT_CALCULATOR_KWARGS,
+    _FORCEFIELD_DATA_OBJECTS,
+    MLFF,
+    ForceFieldMixin,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
     from pathlib import Path
 
-    from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
-
-_FORCEFIELD_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, "ionic_steps"]
-
-_DEFAULT_CALCULATOR_KWARGS = {
-    MLFF.CHGNet: {"stress_weight": _GPa_to_eV_per_A3},
-    MLFF.M3GNet: {"stress_weight": _GPa_to_eV_per_A3},
-    MLFF.NEP: {"model_filename": "nep.txt"},
-    MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
-}
 
 
 def forcefield_job(method: Callable) -> job:
@@ -74,7 +65,7 @@ def forcefield_job(method: Callable) -> job:
 
 
 @dataclass
-class ForceFieldRelaxMaker(AseRelaxMaker):
+class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
     """
     Base Maker to calculate forces and stresses using any force field.
 
@@ -128,18 +119,6 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
     calculator_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-    def __post_init__(self) -> None:
-        """Ensure that force_field_name is correctly assigned as str."""
-        self.force_field_name = _get_formatted_ff_name(self.force_field_name)
-
-        # Pad calculator_kwargs with default values, but permit user to override them
-        self.calculator_kwargs = {
-            **_DEFAULT_CALCULATOR_KWARGS.get(
-                MLFF(self.force_field_name.split("MLFF.")[-1]), {}
-            ),
-            **self.calculator_kwargs,
-        }
-
     @forcefield_job
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
@@ -155,8 +134,7 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-        with revert_default_dtype():
-            ase_result = self.run_ase(structure, prev_dir=prev_dir)
+        ase_result = self._run_ase_safe(structure, prev_dir=prev_dir)
 
         if len(self.task_document_kwargs) > 0:
             warnings.warn(
@@ -179,14 +157,6 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
             store_trajectory=self.store_trajectory,
             tags=self.tags,
             **self.task_document_kwargs,
-        )
-
-    @property
-    def calculator(self) -> Calculator:
-        """ASE calculator, can be overwritten by user."""
-        return ase_calculator(
-            str(self.force_field_name),  # make mypy happy
-            **self.calculator_kwargs,
         )
 
 
@@ -536,12 +506,15 @@ class NequipStaticMaker(ForceFieldStaticMaker):
 @deprecated(
     replacement=ForceFieldRelaxMaker,
     deadline=(2025, 1, 1),
-    message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldRelaxMaker.",
+    message=(
+        "To use MACE-MP-0, set `force_field_name = 'MACE-MP-0'` "
+        "in ForceFieldRelaxMaker."
+    ),
 )
 @dataclass
 class MACERelaxMaker(ForceFieldRelaxMaker):
     """
-    Maker to perform a relaxation using the MACE ML force field.
+    Maker to perform a relaxation using the MACE-MP-0 medium ML force field.
 
     Parameters
     ----------
@@ -572,8 +545,8 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = f"{MLFF.MACE} relax"
-    force_field_name: str | MLFF = MLFF.MACE
+    name: str = f"{MLFF.MACE_MP_0} relax"
+    force_field_name: str | MLFF = MLFF.MACE_MP_0
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float = 1e-2
@@ -586,12 +559,15 @@ class MACERelaxMaker(ForceFieldRelaxMaker):
 @deprecated(
     replacement=ForceFieldStaticMaker,
     deadline=(2025, 1, 1),
-    message="To use MACE, set `force_field_name = 'MACE'` in ForceFieldStaticMaker.",
+    message=(
+        "To use MACE-MP-0, set `force_field_name = 'MACE_MP_0'` "
+        "in ForceFieldStaticMaker."
+    ),
 )
 @dataclass
 class MACEStaticMaker(ForceFieldStaticMaker):
     """
-    Maker to calculate forces and stresses using the MACE force field.
+    Maker to calculate forces and stresses using the MACE-MP-0 force field.
 
     Parameters
     ----------
@@ -609,8 +585,8 @@ class MACEStaticMaker(ForceFieldStaticMaker):
         Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
     """
 
-    name: str = f"{MLFF.MACE} static"
-    force_field_name: str | MLFF = MLFF.MACE
+    name: str = f"{MLFF.MACE_MP_0} static"
+    force_field_name: str | MLFF = MLFF.MACE_MP_0
     task_document_kwargs: dict = field(default_factory=dict)
 
 

@@ -22,7 +22,7 @@ class ForcefieldResult(AseResult):
         None, description="The structure in the final trajectory frame."
     )
 
-    def model_post_init(self, __context: Any) -> None:
+    def model_post_init(self, _context: Any) -> None:
         """Populate final_structure attr."""
         self.final_structure = getattr(
             self, "final_structure", self.final_mol_or_struct
@@ -63,8 +63,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
     is_force_converged: Optional[bool] = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
@@ -140,6 +139,9 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             MLFF.M3GNet: "matgl",
             MLFF.CHGNet: "chgnet",
             MLFF.MACE: "mace-torch",
+            MLFF.MACE_MP_0: "mace-torch",
+            MLFF.MACE_MPA_0: "mace-torch",
+            MLFF.MACE_MP_0B3: "mace-torch",
             MLFF.GAP: "quippy-ase",
             MLFF.Nequip: "nequip",
         }

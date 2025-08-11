@@ -1,18 +1,21 @@
 """Test various makers"""
 
 import json
+from pathlib import Path
 
 import pytest
 
+si_structure_file = Path(__file__).parents[2] / "test_data/structures/Si_diamond.cif"
 
-def test_phonon_flow(si, clean_dir, mock_aims, species_dir):
+
+def test_phonon_flow(clean_dir, mock_aims, species_dir):
     import numpy as np
     from jobflow import run_locally
-    from pymatgen.io.aims.sets.core import StaticSetGenerator
+    from pymatgen.core import Structure
 
     from atomate2.aims.flows.phonons import PhononMaker
-    from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
-    from atomate2.aims.jobs.phonons import PhononDisplacementMaker
+
+    si = Structure.from_file(si_structure_file)
 
     # mapping from job name to directory containing test files
     ref_paths = {
@@ -26,26 +29,15 @@ def test_phonon_flow(si, clean_dir, mock_aims, species_dir):
 
     # automatically use fake FHI-aims
     mock_aims(ref_paths, fake_run_aims_kwargs)
-
-    parameters = {
-        "k_grid": [2, 2, 2],
-        "species_dir": (species_dir / "light").as_posix(),
-    }
     # generate job
 
-    parameters_phonon_disp = dict(compute_forces=True, **parameters)
     maker = PhononMaker(
-        bulk_relax_maker=RelaxMaker.full_relaxation(user_params=parameters),
-        static_energy_maker=StaticMaker(
-            input_set_generator=StaticSetGenerator(user_params=parameters)
-        ),
+        min_length=3.0,
+        generate_frequencies_eigenvectors_kwargs={"tstep": 100},
+        create_thermal_displacements=True,
+        store_force_constants=True,
+        born_maker=None,
         use_symmetrized_structure="primitive",
-        phonon_displacement_maker=PhononDisplacementMaker(
-            input_set_generator=StaticSetGenerator(
-                user_params=parameters_phonon_disp,
-                user_kpoints_settings={"density": 5.0, "even": True},
-            )
-        ),
     )
     maker.name = "phonons"
     flow = maker.make(si, supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3))
@@ -84,11 +76,11 @@ def test_phonon_flow(si, clean_dir, mock_aims, species_dir):
     assert output.born is None
     assert not output.has_imaginary_modes
 
-    assert output.temperatures == list(range(0, 500, 10))
+    assert output.temperatures == list(range(0, 500, 100))
     assert output.heat_capacities[0] == 0.0
-    assert np.round(output.heat_capacities[-1], 2) == 23.06
+    assert np.round(output.heat_capacities[-1], 2) == 21.95
     assert output.phonopy_settings.schema_json() == json.dumps(phonopy_settings_schema)
-    assert np.round(output.phonon_bandstructure.bands[-1, 0], 2) == 14.41
+    assert np.round(output.phonon_bandstructure.bands[-1, 0], 2) == 15.1
 
 
 @pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")

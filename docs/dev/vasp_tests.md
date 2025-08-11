@@ -146,6 +146,28 @@ name. For example, there cannot be two calculations called "relax". Instead you
 should ensure they are named something like "relax 1" and "relax 2".
 ```
 
+### 2a. Dealing with larger amounts of test data / directories.
+
+Some complex workflows and tutorials might require a larger than normal amount of test data to execute.
+You might also realize that a branching workflow requires many steps, leading to a sprawling reference directory structure.
+In this case, you may want to use separate tools in `atomate2` which bundle your VASP test data into JSON format archives.
+To do this for a single VASP calculation directory, you might run:
+
+```python
+from atomate2.utils.testing.vasp import VaspTestData
+
+vasp_test_data = VaspTestData.from_directory(
+    "/Users/alex/atomate2/job_2021-11-08-17-24-31-799852-28250"
+)
+vasp_test_data.to_file("tight_relax_1.json.lzma")
+```
+
+You can use any other compression method supported by `monty.io.zpath`, such as GZIP (`.gz`) or bzip2 (`.bz2`).
+The LZMA compression method is shown here because this offers generally the highest compression ratio of the three and is fairly quick to decompress, but it is CPU intensive to compress.
+
+The `VaspTestData` class handles removal of POTCAR copyright information, converting them to POTCAR.spec files as before.
+The test infrastructure using `mock_vasp` is also equipped to handle extraction of VASP files from a compressed JSON archive.
+
 ## 3. Copy the test data folder into atomate2
 
 You can now copy the WF_NAME folder into the atomate2 test files. VASP test files live
@@ -283,9 +305,24 @@ def test_elastic(mock_vasp, clean_dir):
     )
 ```
 
-Note that the `mock_vasp` and `clean_dir` arguments to the test function are
+<b>Note:</b> The `mock_vasp` and `clean_dir` arguments to the test function are
 [pytest fixtures](https://docs.pytest.org/en/6.2.x/fixture.html) and are essential
 for the test to run successfully.
+
+<b>Note:</b> If you used the `VaspTestData` method of creating JSON archives for the test data, you would use the following for `ref_paths`:
+
+```py
+ref_paths = {
+    "elastic relax 1/6": "Si_elastic/elastic_relax_1_6.json.lzma",
+    "elastic relax 2/6": "Si_elastic/elastic_relax_2_6.json.lzma",
+    "elastic relax 3/6": "Si_elastic/elastic_relax_3_6.json.lzma",
+    "elastic relax 4/6": "Si_elastic/elastic_relax_4_6.json.lzma",
+    "elastic relax 5/6": "Si_elastic/elastic_relax_5_6.json.lzma",
+    "elastic relax 6/6": "Si_elastic/elastic_relax_6_6.json.lzma",
+    "tight relax 1": "Si_elastic/tight_relax_1.json.lzma",
+    "tight relax 2": "Si_elastic/tight_relax_2.json.lzma",
+}
+```
 
 ```{warning}
 For `mock_vasp` to work correctly, all imports needed for the test must be
