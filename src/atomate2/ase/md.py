@@ -28,7 +28,6 @@ from jobflow import job
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 from scipy.interpolate import interp1d
-from scipy.linalg import schur
 
 from atomate2.ase.jobs import _ASE_DATA_OBJECTS, AseMaker
 from atomate2.ase.schemas import AseResult, AseTaskDoc
@@ -170,7 +169,7 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
     ionic_step_data: tuple[str, ...] | None = None
     store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.PARTIAL
     traj_file: str | Path | None = None
-    traj_file_fmt: Literal["pmg", "ase"] = "ase"
+    traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase"
     traj_interval: int = 1
     mb_velocity_seed: int | None = None
     zero_linear_momentum: bool = False
@@ -180,7 +179,7 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
     def __post_init__(self) -> None:
         """Ensure that ensemble is an enum."""
         if isinstance(self.ensemble, str):
-            self.ensemble = MDEnsemble(self.ensemble)
+            self.ensemble = MDEnsemble(self.ensemble.split("MDEnsemble.")[-1])
 
     @staticmethod
     def _interpolate_quantity(values: Sequence | np.ndarray, n_pts: int) -> np.ndarray:
@@ -237,11 +236,35 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
             self.ase_md_kwargs.pop("temperature_K", None)
             self.ase_md_kwargs.pop("externalstress", None)
         elif self.ensemble == MDEnsemble.nvt:
-            self.ase_md_kwargs["temperature_K"] = self.t_schedule[0]
+            self.ase_md_kwargs["temperature_K"] = self.ase_md_kwargs.get(
+                "temperature_K", self.t_schedule[0]
+            )
             self.ase_md_kwargs.pop("externalstress", None)
         elif self.ensemble == MDEnsemble.npt:
-            self.ase_md_kwargs["temperature_K"] = self.t_schedule[0]
-            self.ase_md_kwargs["externalstress"] = self.p_schedule[0] * 1e3 * units.bar
+            self.ase_md_kwargs["temperature_K"] = self.ase_md_kwargs.get(
+                "temperature_K", self.t_schedule[0]
+            )
+
+            # These use different kwargs for pressure
+            if (
+                (
+                    isinstance(self.dynamics, DynamicsPresets)
+                    and DynamicsPresets(self.dynamics) == DynamicsPresets.npt_berendsen
+                )
+                or (
+                    isinstance(self.dynamics, type)
+                    and issubclass(self.dynamics, MolecularDynamics)
+                    and self.dynamics.__name__ == "NPTBerendsen"
+                )
+                or (isinstance(self.dynamics, str) and self.dynamics == "berendsen")
+            ):
+                stress_kwarg = "pressure_au"
+            else:
+                stress_kwarg = "externalstress"
+
+            self.ase_md_kwargs[stress_kwarg] = self.ase_md_kwargs.get(
+                stress_kwarg, self.p_schedule[0] * 1e3 * units.bar
+            )
 
         if isinstance(self.dynamics, str) and self.dynamics.lower() == "langevin":
             self.ase_md_kwargs["friction"] = self.ase_md_kwargs.get(
@@ -338,8 +361,7 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
             # `isinstance(dynamics,NPT)` is False
 
             # ASE NPT implementation requires upper triangular cell
-            schur_decomp, _ = schur(atoms.get_cell(complete=True), output="complex")
-            atoms.set_cell(schur_decomp.real, scale_atoms=True)
+            atoms.set_cell(atoms.cell.standard_form(form="upper")[0])
 
         if initial_velocities:
             atoms.set_velocities(initial_velocities)
@@ -370,7 +392,12 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
             dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
             if self.ensemble == MDEnsemble.nvt:
                 return
-            dyn.set_stress(self.p_schedule[dyn.nsteps] * 1e3 * units.bar)
+
+            if "pressure_au" in self.ase_md_kwargs:
+                # set_pressure is broken for NPTBerendsen
+                dyn.pressure = self.p_schedule[dyn.nsteps] * 1e3 * units.bar
+            else:
+                dyn.set_stress(self.p_schedule[dyn.nsteps] * 1e3 * units.bar)
 
         md_runner.attach(_callback, interval=1)
         with contextlib.redirect_stdout(sys.stdout if self.verbose else io.StringIO()):

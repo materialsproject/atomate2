@@ -1,7 +1,16 @@
+"""Test machine learning forcefield utility functions."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import pytest
 
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.utils import ase_calculator
+from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
+
+if TYPE_CHECKING:
+    from pymatgen.core import Structure
 
 
 @pytest.mark.parametrize(("force_field"), [mlff.value for mlff in MLFF])
@@ -18,9 +27,12 @@ def test_ext_load(force_field: str):
     }[force_field]
     calc_from_decode = ase_calculator(decode_dict)
     calc_from_preset = ase_calculator(str(MLFF(force_field)))
-    assert type(calc_from_decode) is type(calc_from_preset)
-    assert calc_from_decode.name == calc_from_preset.name
-    assert calc_from_decode.parameters == calc_from_preset.parameters == {}
+    calc_from_enum = ase_calculator(MLFF(force_field))
+
+    for other in (calc_from_preset, calc_from_enum):
+        assert type(calc_from_decode) is type(other)
+        assert calc_from_decode.name == other.name
+        assert calc_from_decode.parameters == other.parameters == {}
 
 
 def test_raises_error():
@@ -49,3 +61,33 @@ def test_m3gnet_pot():
     assert str(m3gnet_pes_calc.potential) != str(m3gnet_default.potential)
     assert m3gnet_pes_calc.stress_weight == m3gnet_calculator.stress_weight
     assert m3gnet_pes_calc.stress_weight == m3gnet_default.stress_weight
+
+
+def test_mace_explicit_dispersion(ba_ti_o3_structure: Structure):
+    from ase.calculators.mixing import SumCalculator
+    from mace.calculators.foundations_models import download_mace_mp_checkpoint
+
+    energies = {"mace": -39.969810485839844, "d3": -1.3136245271781846}
+
+    model_path = download_mace_mp_checkpoint("medium-mpa-0")
+
+    atoms = ba_ti_o3_structure.to_ase_atoms()
+
+    with revert_default_dtype():
+        calc_no_path = ase_calculator(MLFF.MACE_MPA_0, dispersion=True)
+        assert isinstance(calc_no_path, SumCalculator)
+        assert calc_no_path.get_potential_energy(atoms=atoms) == pytest.approx(
+            sum(energies.values())
+        )
+
+        calc_path = ase_calculator(MLFF.MACE_MPA_0, model=model_path)
+        assert not isinstance(calc_path, SumCalculator)
+        assert calc_path.get_potential_energy(atoms=atoms) == pytest.approx(
+            energies["mace"]
+        )
+
+        calc_path = ase_calculator(MLFF.MACE_MPA_0, model=model_path, dispersion=True)
+        assert isinstance(calc_no_path, SumCalculator)
+        assert calc_path.get_potential_energy(atoms=atoms) == pytest.approx(
+            sum(energies.values())
+        )

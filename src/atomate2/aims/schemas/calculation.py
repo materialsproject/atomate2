@@ -7,7 +7,7 @@ import os
 from collections.abc import Sequence
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 import numpy as np
 from ase.spectrum.band_structure import BandStructure
@@ -20,7 +20,10 @@ from pymatgen.electronic_structure.dos import Dos
 from pymatgen.io.aims.inputs import AimsGeometryIn
 from pymatgen.io.aims.outputs import AimsOutput
 from pymatgen.io.common import VolumetricData
-from typing_extensions import Self
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
+
 
 STORE_VOLUMETRIC_DATA = ("total_density",)
 
@@ -91,7 +94,7 @@ class CalculationOutput(BaseModel):
         None, description="The final DFT energy per atom for the calculation"
     )
 
-    structure: Union[Structure, Molecule] = Field(
+    structure: Structure | Molecule = Field(
         None, description="The final structure from the calculation"
     )
 
@@ -125,7 +128,7 @@ class CalculationOutput(BaseModel):
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    atomic_steps: list[Union[Structure, Molecule]] = Field(
+    atomic_steps: list[Structure | Molecule] = Field(
         None, description="Structures for each ionic step"
     )
 
@@ -196,7 +199,7 @@ class CalculationInput(BaseModel):
         The parameters passed in the control.in file
     """
 
-    structure: Union[Structure, Molecule] = Field(
+    structure: Structure | Molecule = Field(
         None, description="The input structure object"
     )
     parameters: dict[str, Any] = Field(
