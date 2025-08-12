@@ -7,7 +7,6 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
-from fireworks import LaunchPad
 from jobflow import JobStore
 from jobflow.settings import JobflowSettings
 from maggma.stores import MemoryStore
@@ -69,6 +68,12 @@ def debug_mode():
 
 @pytest.fixture(scope="session")
 def lpad(database, debug_mode):
+    try:
+        from fireworks import LaunchPad
+    except ImportError as exc:
+        raise ImportError(
+            "Please pip install fireworks to use this test fixture."
+        ) from exc
     lpad = LaunchPad(name=database)
     lpad.reset("", require_password=False)
     yield lpad

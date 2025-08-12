@@ -254,7 +254,7 @@ class AseRelaxMaker(AseMaker):
         if self.steps < 0:
             logger.warning(
                 "WARNING: A negative number of steps is not possible. "
-                "Behavior may vary..."
+                "Defaulting to a static calculation."
             )
 
         relaxer = AseRelaxer(
@@ -265,6 +265,27 @@ class AseRelaxMaker(AseMaker):
             **self.optimizer_kwargs,
         )
         return relaxer.relax(mol_or_struct, steps=self.steps, **self.relax_kwargs)
+
+
+@dataclass
+class EmtRelaxMaker(AseRelaxMaker):
+    """
+    Relax a structure with an EMT potential.
+
+    This serves mostly as an example of how to create atomate2
+    jobs with existing ASE calculators, and test purposes.
+
+    See `atomate2.ase.AseRelaxMaker` for further documentation.
+    """
+
+    name: str = "EMT relaxation"
+
+    @property
+    def calculator(self) -> Calculator:
+        """EMT calculator."""
+        from ase.calculators.emt import EMT
+
+        return EMT(**self.calculator_kwargs)
 
 
 @dataclass
