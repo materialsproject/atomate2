@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from collections import defaultdict
 from dataclasses import dataclass, field
 from importlib.resources import files as get_mod_path
@@ -12,81 +11,22 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 from monty.serialization import loadfn
 from pymatgen.core.units import ang_to_bohr, eV_to_Ha
-from pymatgen.io.core import InputGenerator, InputSet
-from pymatgen.io.jdftx.inputs import JDFTXInfile, JDFTXStructure
+from pymatgen.io.core import InputGenerator
+from pymatgen.io.jdftx.inputs import JDFTXInfile
+from pymatgen.io.jdftx.sets import JdftxInputSet
 from pymatgen.io.vasp import Kpoints
 
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
     from pymatgen.core import Structure
-    from pymatgen.util.typing import Kpoint, PathLike
 
 
-_BASE_JDFTX_SET = loadfn(get_mod_path("atomate2.jdftx.sets") / "BaseJdftxSet.yaml")
-_BEAST_CONFIG = loadfn(get_mod_path("atomate2.jdftx.sets") / "BeastConfig.yaml")
+_BASE_JDFTX_SET = loadfn(get_mod_path("pymatgen.io.jdftx.sets") / "BaseJdftxSet.yaml")
+_GENERATION_CONFIG = loadfn(
+    get_mod_path("atomate2.jdftx.sets") / "GenerationConfig.yaml"
+)
 _PSEUDO_CONFIG = loadfn(get_mod_path("atomate2.jdftx.sets") / "PseudosConfig.yaml")
-FILE_NAMES = {"in": "init.in", "out": "jdftx.out"}
-
-
-class JdftxInputSet(InputSet):
-    """
-    A class to represent a JDFTx input file as a JDFTx InputSet.
-
-    Parameters
-    ----------
-    jdftxinput
-        A JdftxInput object
-    """
-
-    def __init__(self, jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure) -> None:
-        self.jdftxstructure = jdftxstructure
-        self.jdftxinput = jdftxinput
-
-    def write_input(
-        self,
-        directory: str | Path,
-        infile: PathLike = FILE_NAMES["in"],
-        make_dir: bool = True,
-        overwrite: bool = True,
-    ) -> None:
-        """Write JDFTx input file to a directory.
-
-        Parameters
-        ----------
-        directory
-            Directory to write input files to.
-        make_dir
-            Whether to create the directory if it does not already exist.
-        overwrite
-            Whether to overwrite an input file if it already exists.
-        """
-        directory = Path(directory)
-        if make_dir:
-            os.makedirs(directory, exist_ok=True)
-
-        if not overwrite and (directory / infile).exists():
-            raise FileExistsError(f"{directory / infile} already exists.")
-
-        jdftxinput = condense_jdftxinputs(self.jdftxinput, self.jdftxstructure)
-
-        jdftxinput.write_file(filename=(directory / infile))
-
-    @staticmethod
-    def from_directory(
-        directory: str | Path,
-    ) -> JdftxInputSet:
-        """Load a set of JDFTx inputs from a directory.
-
-        Parameters
-        ----------
-        directory
-            Directory to read JDFTx inputs from.
-        """
-        directory = Path(directory)
-        jdftxinput = JDFTXInfile.from_file(directory / "input.in")
-        jdftxstructure = jdftxinput.to_JDFTXStructure(jdftxinput)
-        return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftxstructure)
 
 
 @dataclass
@@ -123,7 +63,7 @@ class JdftxInputGenerator(InputGenerator):
     potential: None | float = None
     calc_type: str = "bulk"
     pseudopotentials: str = "GBRV"
-    config_dict: dict = field(default_factory=lambda: _BEAST_CONFIG)
+    config_dict: dict = field(default_factory=lambda: _GENERATION_CONFIG)
     default_settings: dict = field(default_factory=lambda: _BASE_JDFTX_SET)
 
     def __post_init__(self) -> None:
@@ -172,13 +112,11 @@ class JdftxInputGenerator(InputGenerator):
         self.set_magnetic_moments(structure=structure)
         self._apply_settings(self.settings)
 
-        jdftx_structure = JDFTXStructure(structure)
-        jdftxinputs = self.settings
-        jdftxinput = JDFTXInfile.from_dict(jdftxinputs)
+        jdftxinput = JDFTXInfile.from_dict(self.settings)
 
-        return JdftxInputSet(jdftxinput=jdftxinput, jdftxstructure=jdftx_structure)
+        return JdftxInputSet(jdftxinput=jdftxinput, structure=structure)
 
-    def set_kgrid(self, structure: Structure) -> Kpoint:
+    def set_kgrid(self, structure: Structure) -> None:
         """Get k-point grid.
 
         Parameters
@@ -267,7 +205,7 @@ class JdftxInputGenerator(InputGenerator):
         for atom in structure.species:
             nelec += _PSEUDO_CONFIG[self.pseudopotentials][str(atom)]
         nbands_add = int(nelec / 2) + 10
-        nbands_mult = int(nelec / 2) * _BEAST_CONFIG["bands_multiplier"]
+        nbands_mult = int(nelec / 2) * self.config_dict["bands_multiplier"]
         self.settings["elec-n-bands"] = max(nbands_add, nbands_mult)
 
     def set_pseudos(
@@ -297,7 +235,7 @@ class JdftxInputGenerator(InputGenerator):
         if "target-mu" in self.settings or self.potential is None:
             return
         solvent_model = self.settings["pcm-variant"]
-        ashep = _BEAST_CONFIG["ASHEP"][solvent_model]
+        ashep = self.config_dict["ASHEP"][solvent_model]
         # calculate absolute potential in Hartree
         mu = -(ashep - self.potential) / eV_to_Ha
         self.settings["target-mu"] = {"mu": mu}
@@ -356,37 +294,6 @@ class JdftxInputGenerator(InputGenerator):
                 tag_str += f"{element} " + " ".join(list(map(str, magmom_list))) + " "
         self.settings["initial-magnetic-moments"] = tag_str
         return
-
-
-def condense_jdftxinputs(
-    jdftxinput: JDFTXInfile, jdftxstructure: JDFTXStructure
-) -> JDFTXInfile:
-    """
-    Combine JDFTXInfile and JDFTxStructure into complete JDFTXInfile.
-
-    Function combines a JDFTXInfile class with calculation
-    settings and a JDFTxStructure that defines the structure
-    into one JDFTXInfile instance.
-
-    Parameters
-    ----------
-        jdftxinput: JDFTXInfile
-            A JDFTXInfile object with calculation settings.
-
-        jdftxstructure: JDFTXStructure
-            A JDFTXStructure object that defines the structure.
-
-    Returns
-    -------
-        JDFTXInfile
-            A JDFTXInfile that includes the calculation
-            parameters and input structure.
-    """
-    # force Cartesian coordinates
-    coords_type = jdftxinput.get("coords-type")
-    return jdftxinput + JDFTXInfile.from_str(
-        jdftxstructure.get_str(in_cart_coords=(coords_type == "Cartesian"))
-    )
 
 
 def center_of_mass(structure: Structure) -> np.ndarray:
