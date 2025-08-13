@@ -55,9 +55,6 @@ class Atomate2Settings(BaseSettings):
     VASP_NCL_CMD: str = Field(
         "vasp_ncl", description="Command to run non-collinear version of VASP."
     )
-    VASP_VDW_KERNEL_DIR: Optional[str] = Field(
-        None, description="Path to VDW VASP kernel."
-    )
     VASP_INCAR_UPDATES: dict = Field(
         default_factory=dict, description="Updates to apply to VASP INCAR files."
     )
