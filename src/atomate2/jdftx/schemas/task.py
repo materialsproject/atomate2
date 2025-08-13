@@ -9,6 +9,7 @@ from typing import Any, Optional, TypeVar, Union
 from custodian.jdftx.jobs import JDFTxJob  # Waiting on Sophie's PR
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
+from pymatgen.io.jdftx.sets import FILE_NAMES
 from typing_extensions import Self
 
 from atomate2.jdftx.schemas.calculation import (
@@ -18,7 +19,6 @@ from atomate2.jdftx.schemas.calculation import (
     RunStatistics,
 )
 from atomate2.jdftx.schemas.enums import JDFTxStatus, TaskType
-from atomate2.jdftx.sets.base import FILE_NAMES
 from atomate2.utils.datetime import datetime_str
 
 __author__ = "Cooper Tezak <cooper.tezak@colorado.edu>"

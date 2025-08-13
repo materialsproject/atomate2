@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING, Any
 
 from custodian.jdftx.jobs import JDFTxJob
 from jobflow.utils import ValueEnum
+from pymatgen.io.jdftx.sets import FILE_NAMES
 
 from atomate2 import SETTINGS
 from atomate2.jdftx.schemas.enums import JDFTxStatus
-from atomate2.jdftx.sets.base import FILE_NAMES
 
 if TYPE_CHECKING:
     from atomate2.jdftx.schemas.task import TaskDoc

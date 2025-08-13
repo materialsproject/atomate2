@@ -3,9 +3,9 @@ from pathlib import Path
 
 import pytest
 from pymatgen.io.jdftx.outputs import JDFTXOutfile
+from pymatgen.io.jdftx.sets import FILE_NAMES
 
 from atomate2.jdftx.schemas.task import TaskDoc
-from atomate2.jdftx.sets.base import FILE_NAMES
 
 
 @pytest.mark.parametrize("task_name", ["sp_test"], indirect=True)
