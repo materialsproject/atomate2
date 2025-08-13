@@ -11,10 +11,11 @@ import pytest
 from jobflow import CURRENT_JOB
 from monty.os.path import zpath as monty_zpath
 from pymatgen.io.jdftx.inputs import JDFTXInfile
+from pymatgen.io.jdftx.sets import FILE_NAMES
 
 import atomate2.jdftx.jobs.base
 import atomate2.jdftx.run
-from atomate2.jdftx.sets.base import FILE_NAMES, JdftxInputGenerator
+from atomate2.jdftx.sets.base import JdftxInputGenerator
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
