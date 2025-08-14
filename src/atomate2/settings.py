@@ -49,7 +49,7 @@ class Atomate2Settings(BaseSettings):
         description="Whether Custodian should gzip the files. This parameter "
         "may make sense to use if you are setting CUSTODIAN_SCRATCH_DIR",
     )
-    
+
     # VASP specific settings
     VASP_CMD: str = Field(
         "vasp_std", description="Command to run standard version of VASP."
