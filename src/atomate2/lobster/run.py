@@ -95,6 +95,7 @@ def run_lobster(
         validators=validators,
         max_errors=max_errors,
         scratch_dir=scratch_dir,
+        gzipped_output=SETTINGS.CUSTODIAN_GZIPPED_OUTPUT,
         **custodian_kwargs,
     )
 
