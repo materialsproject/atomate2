@@ -2,7 +2,6 @@
 
 from copy import deepcopy
 from enum import Enum
-from typing import Optional
 
 import numpy as np
 from emmet.core.math import Matrix3D, MatrixVoigt
@@ -26,61 +25,61 @@ from atomate2 import SETTINGS
 class DerivedProperties(BaseModel):
     """Properties derived from an elastic tensor."""
 
-    k_voigt: Optional[float] = Field(
+    k_voigt: float | None = Field(
         None, description="Voigt average of the bulk modulus."
     )
-    k_reuss: Optional[float] = Field(
+    k_reuss: float | None = Field(
         None, description="Reuss average of the bulk modulus."
     )
-    k_vrh: Optional[float] = Field(
+    k_vrh: float | None = Field(
         None, description="Voigt-Reuss-Hill average of the bulk modulus."
     )
-    g_voigt: Optional[float] = Field(
+    g_voigt: float | None = Field(
         None, description="Voigt average of the shear modulus."
     )
-    g_reuss: Optional[float] = Field(
+    g_reuss: float | None = Field(
         None, description="Reuss average of the shear modulus."
     )
-    g_vrh: Optional[float] = Field(
+    g_vrh: float | None = Field(
         None, description="Voigt-Reuss-Hill average of the shear modulus."
     )
-    universal_anisotropy: Optional[float] = Field(
+    universal_anisotropy: float | None = Field(
         None, description="Universal elastic anisotropy."
     )
-    homogeneous_poisson: Optional[float] = Field(
+    homogeneous_poisson: float | None = Field(
         None, description="Homogeneous poisson ratio."
     )
-    y_mod: Optional[float] = Field(
+    y_mod: float | None = Field(
         None,
         description="Young's modulus (SI units) from the Voight-Reuss-Hill averages of "
         "the bulk and shear moduli.",
     )
-    trans_v: Optional[float] = Field(
+    trans_v: float | None = Field(
         None,
         description="Transverse sound velocity (SI units) obtained from the "
         "Voigt-Reuss-Hill average bulk modulus.",
     )
-    long_v: Optional[float] = Field(
+    long_v: float | None = Field(
         None,
         description="Longitudinal sound velocity (SI units) obtained from the "
         "Voigt-Reuss-Hill average bulk modulus.",
     )
-    snyder_ac: Optional[float] = Field(
+    snyder_ac: float | None = Field(
         None, description="Synder's acoustic sound velocity (SI units)."
     )
-    snyder_opt: Optional[float] = Field(
+    snyder_opt: float | None = Field(
         None, description="Synder's optical sound velocity (SI units)."
     )
-    snyder_total: Optional[float] = Field(
+    snyder_total: float | None = Field(
         None, description="Synder's total sound velocity (SI units)."
     )
-    clark_thermalcond: Optional[float] = Field(
+    clark_thermalcond: float | None = Field(
         None, description="Clarke's thermal conductivity (SI units)."
     )
-    cahill_thermalcond: Optional[float] = Field(
+    cahill_thermalcond: float | None = Field(
         None, description="Cahill's thermal conductivity (SI units)."
     )
-    debye_temperature: Optional[float] = Field(
+    debye_temperature: float | None = Field(
         None,
         description="Debye temperature from longitudinal and transverse sound "
         "velocities (SI units).",
@@ -90,25 +89,25 @@ class DerivedProperties(BaseModel):
 class FittingData(BaseModel):
     """Data used to fit elastic tensors."""
 
-    cauchy_stresses: Optional[list[Matrix3D]] = Field(
+    cauchy_stresses: list[Matrix3D] | None = Field(
         None, description="The Cauchy stresses used to fit the elastic tensor."
     )
-    strains: Optional[list[Matrix3D]] = Field(
+    strains: list[Matrix3D] | None = Field(
         None, description="The strains used to fit the elastic tensor."
     )
-    pk_stresses: Optional[list[Matrix3D]] = Field(
+    pk_stresses: list[Matrix3D] | None = Field(
         None, description="The Piola-Kirchoff stresses used to fit the elastic tensor."
     )
-    deformations: Optional[list[Matrix3D]] = Field(
+    deformations: list[Matrix3D] | None = Field(
         None, description="The deformations corresponding to each strain state."
     )
-    uuids: Optional[list[str]] = Field(
+    uuids: list[str] | None = Field(
         None, description="The uuids of the deformation jobs."
     )
-    job_dirs: Optional[list[Optional[str]]] = Field(
+    job_dirs: list[str | None] | None = Field(
         None, description="The directories where the deformation jobs were run."
     )
-    failed_uuids: Optional[list[str]] = Field(
+    failed_uuids: list[str] | None = Field(
         None, description="The uuids of perturbations that were not completed"
     )
 
@@ -116,8 +115,8 @@ class FittingData(BaseModel):
 class ElasticTensorDocument(BaseModel):
     """Raw and standardized elastic tensors."""
 
-    raw: Optional[MatrixVoigt] = Field(None, description="Raw elastic tensor.")
-    ieee_format: Optional[MatrixVoigt] = Field(
+    raw: MatrixVoigt | None = Field(None, description="Raw elastic tensor.")
+    ieee_format: MatrixVoigt | None = Field(
         None, description="Elastic tensor in IEEE format."
     )
 
@@ -131,28 +130,28 @@ class ElasticWarnings(Enum):
 class ElasticDocument(StructureMetadata):
     """Document containing elastic tensor information and related properties."""
 
-    structure: Optional[Structure] = Field(
+    structure: Structure | None = Field(
         None, description="The structure for which the elastic data is calculated."
     )
-    elastic_tensor: Optional[ElasticTensorDocument] = Field(
+    elastic_tensor: ElasticTensorDocument | None = Field(
         None, description="Fitted elastic tensor."
     )
-    eq_stress: Optional[Matrix3D] = Field(
+    eq_stress: Matrix3D | None = Field(
         None, description="The equilibrium stress of the structure."
     )
-    derived_properties: Optional[DerivedProperties] = Field(
+    derived_properties: DerivedProperties | None = Field(
         None, description="Properties derived from the elastic tensor."
     )
-    fitting_data: Optional[FittingData] = Field(
+    fitting_data: FittingData | None = Field(
         None, description="Data used to fit the elastic tensor."
     )
-    fitting_method: Optional[str] = Field(
+    fitting_method: str | None = Field(
         None, description="Method used to fit the elastic tensor."
     )
-    order: Optional[int] = Field(
+    order: int | None = Field(
         None, description="Order of the expansion of the elastic tensor."
     )
-    warnings: Optional[list[str]] = Field(None, description="Warnings.")
+    warnings: list[str] | None = Field(None, description="Warnings.")
 
     @classmethod
     def from_stresses(
@@ -163,8 +162,8 @@ class ElasticDocument(StructureMetadata):
         uuids: list[str],
         job_dirs: list[str],
         fitting_method: str = SETTINGS.ELASTIC_FITTING_METHOD,
-        order: Optional[int] = None,
-        equilibrium_stress: Optional[Matrix3D] = None,
+        order: int | None = None,
+        equilibrium_stress: Matrix3D | None = None,
         symprec: float = SETTINGS.SYMPREC,
         allow_elastically_unstable_structs: bool = True,
         failed_uuids: list[str] = None,
