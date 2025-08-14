@@ -45,7 +45,7 @@ class Atomate2Settings(BaseSettings):
         None, description="Path to scratch directory used by custodian."
     )
     CUSTODIAN_GZIPPED_OUTPUT: bool = Field(
-        False,
+        default=False,
         description="Whether Custodian should gzip the files. This parameter "
         "may make sense to use if you are setting CUSTODIAN_SCRATCH_DIR",
     )
