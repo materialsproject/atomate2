@@ -1,10 +1,7 @@
 """Schemas for elastic tensor fitting and related properties."""
 
-from __future__ import annotations
-
 from copy import deepcopy
 from enum import Enum
-from typing import TYPE_CHECKING
 
 import numpy as np
 from emmet.core.math import Matrix3D, MatrixVoigt
@@ -24,9 +21,6 @@ from typing_extensions import Self
 
 from atomate2 import SETTINGS
 from atomate2.common.utils import _recursive_to_list
-
-if TYPE_CHECKING:
-    pass
 
 
 class DerivedProperties(BaseModel):
