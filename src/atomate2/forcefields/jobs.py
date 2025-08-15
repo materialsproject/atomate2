@@ -7,48 +7,25 @@ import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from ase.io import Trajectory as AseTrajectory
-from ase.units import GPa as _GPa_to_eV_per_A3
 from jobflow import job
 from monty.dev import deprecated
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.ase.jobs import AseRelaxMaker
-from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
-from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
+from atomate2.forcefields.utils import (
+    _DEFAULT_CALCULATOR_KWARGS,
+    _FORCEFIELD_DATA_OBJECTS,
+    MLFF,
+    ForceFieldMixin,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
     from pathlib import Path
 
-    from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Structure
 
 logger = logging.getLogger(__name__)
-
-_FORCEFIELD_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, "ionic_steps"]
-
-_DEFAULT_CALCULATOR_KWARGS = {
-    MLFF.CHGNet: {"stress_weight": _GPa_to_eV_per_A3},
-    MLFF.M3GNet: {"stress_weight": _GPa_to_eV_per_A3},
-    MLFF.NEP: {"model_filename": "nep.txt"},
-    MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
-    MLFF.MACE: {"model": "medium"},
-    MLFF.MACE_MP_0: {"model": "medium"},
-    MLFF.MACE_MPA_0: {"model": "medium-mpa-0"},
-    MLFF.MACE_MP_0B3: {"model": "medium-0b3"},
-    MLFF.MATPES_PBE: {
-        "architecture": "TensorNet",
-        "version": "2025.1",
-        "stress_unit": "eV/A3",
-    },
-    MLFF.MATPES_R2SCAN: {
-        "architecture": "TensorNet",
-        "version": "2025.1",
-        "stress_unit": "eV/A3",
-    },
-}
 
 
 def forcefield_job(method: Callable) -> job:
@@ -88,7 +65,7 @@ def forcefield_job(method: Callable) -> job:
 
 
 @dataclass
-class ForceFieldRelaxMaker(AseRelaxMaker):
+class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
     """
     Base Maker to calculate forces and stresses using any force field.
 
@@ -142,18 +119,6 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
     calculator_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
-    def __post_init__(self) -> None:
-        """Ensure that force_field_name is correctly assigned as str."""
-        self.force_field_name = _get_formatted_ff_name(self.force_field_name)
-
-        # Pad calculator_kwargs with default values, but permit user to override them
-        self.calculator_kwargs = {
-            **_DEFAULT_CALCULATOR_KWARGS.get(
-                MLFF(self.force_field_name.split("MLFF.")[-1]), {}
-            ),
-            **self.calculator_kwargs,
-        }
-
     @forcefield_job
     def make(
         self, structure: Structure, prev_dir: str | Path | None = None
@@ -169,8 +134,7 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
         """
-        with revert_default_dtype():
-            ase_result = self.run_ase(structure, prev_dir=prev_dir)
+        ase_result = self._run_ase_safe(structure, prev_dir=prev_dir)
 
         if len(self.task_document_kwargs) > 0:
             warnings.warn(
@@ -193,14 +157,6 @@ class ForceFieldRelaxMaker(AseRelaxMaker):
             store_trajectory=self.store_trajectory,
             tags=self.tags,
             **self.task_document_kwargs,
-        )
-
-    @property
-    def calculator(self) -> Calculator:
-        """ASE calculator, can be overwritten by user."""
-        return ase_calculator(
-            str(self.force_field_name),  # make mypy happy
-            **self.calculator_kwargs,
         )
 
 

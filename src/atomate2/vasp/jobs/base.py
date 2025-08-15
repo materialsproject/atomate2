@@ -8,6 +8,7 @@ from pathlib import Path
 from shutil import which
 from typing import TYPE_CHECKING
 
+from emmet.core.neb import NebIntermediateImagesDoc
 from emmet.core.tasks import TaskDoc
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
@@ -248,9 +249,16 @@ class BaseVaspMaker(Maker):
         )
 
 
-def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
+def get_vasp_task_document(
+    path: Path | str, is_neb: bool = False, **kwargs
+) -> TaskDoc | NebIntermediateImagesDoc:
     """Get VASP Task Document using atomate2 settings."""
     kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
+
+    kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
+
+    if is_neb:
+        return NebIntermediateImagesDoc.from_directory(path, **kwargs)
 
     kwargs.setdefault(
         "volume_change_warning_tol", SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
@@ -287,7 +295,5 @@ def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
                 "path",
                 stacklevel=1,
             )
-
-    kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
 
     return TaskDoc.from_directory(path, **kwargs)
