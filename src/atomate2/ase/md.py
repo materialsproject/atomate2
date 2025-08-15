@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import io
+import logging
 import os
 import sys
 import time
@@ -41,6 +42,8 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
+logger = logging.getLogger(__name__)
+
 
 class MDEnsemble(Enum):
     """Define known MD ensembles."""
@@ -60,12 +63,13 @@ class DynamicsPresets(Enum):
     nvt_nose_hoover = "ase.md.npt.NPT"
     npt_berendsen = "ase.md.nptberendsen.NPTBerendsen"
     npt_nose_hoover = "ase.md.npt.NPT"  # noqa: PIE796
+    npt_nose_hoover_chain = "ase.md.nose_hoover_chain.MTKNPT"
 
 
 default_dynamics = {
     MDEnsemble.nve: "velocityverlet",
     MDEnsemble.nvt: "langevin",
-    MDEnsemble.npt: "nose-hoover",
+    MDEnsemble.npt: "nose-hoover-chain",
 }
 
 _valid_dynamics: dict[MDEnsemble, set[str]] = {}
@@ -249,18 +253,23 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
             if (
                 (
                     isinstance(self.dynamics, DynamicsPresets)
-                    and DynamicsPresets(self.dynamics) == DynamicsPresets.npt_berendsen
+                    and DynamicsPresets(self.dynamics)
+                    == DynamicsPresets.npt_nose_hoover
                 )
                 or (
                     isinstance(self.dynamics, type)
                     and issubclass(self.dynamics, MolecularDynamics)
-                    and self.dynamics.__name__ == "NPTBerendsen"
+                    and self.dynamics.__name__ == "NPT"
                 )
-                or (isinstance(self.dynamics, str) and self.dynamics == "berendsen")
+                or (isinstance(self.dynamics, str) and self.dynamics == "nose-hoover")
             ):
-                stress_kwarg = "pressure_au"
-            else:
+                logger.warning(
+                    "The `NPT` module in ASE is no longer recommended."
+                    "Users are advised to switch to Nose-Hoover chain / MTKNPT."
+                )
                 stress_kwarg = "externalstress"
+            else:
+                stress_kwarg = "pressure_au"
 
             self.ase_md_kwargs[stress_kwarg] = self.ase_md_kwargs.get(
                 stress_kwarg, self.p_schedule[0] * 1e3 * units.bar
@@ -338,8 +347,8 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
             if self.dynamics not in _valid_dynamics[self.ensemble]:
                 raise ValueError(
                     f"{self.dynamics} thermostat not available for "
-                    f"{self.ensemble.value}."
-                    f"Available {self.ensemble.value} thermostats are:"
+                    f"{self.ensemble.value}. "
+                    f"Available {self.ensemble.value} thermostats are: "
                     " ".join(_valid_dynamics[self.ensemble])
                 )
 
@@ -389,7 +398,10 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
         def _callback(dyn: MolecularDynamics = md_runner) -> None:
             if self.ensemble == MDEnsemble.nve:
                 return
-            dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
+            if hasattr(dyn, "_temperature_K"):
+                dyn._temperature_K = self.t_schedule[dyn.nsteps]  # noqa: SLF001
+            else:
+                dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
             if self.ensemble == MDEnsemble.nvt:
                 return
 

@@ -5,6 +5,7 @@ Most of the heavy tests of the AseMDMaker class are via forcefields
 Light tests here to validate that base classes work as intended
 """
 
+import logging
 import os
 
 import pytest
@@ -25,51 +26,51 @@ if TBLite is not None:
 _mb_velocity_seed = 2820285082114
 
 
-def test_npt_init_kwargs(si_structure, clean_dir):
+def test_npt_init_kwargs(si_structure, clean_dir, caplog):
     """Checks correct initialization of NPT kwargs."""
 
+    from ase.md.nose_hoover_chain import MTKNPT
     from ase.md.npt import NPT
     from ase.md.nptberendsen import NPTBerendsen
     from ase.units import bar
 
-    npt_berend_str = LennardJonesMDMaker(
-        ensemble="npt",
-        dynamics="berendsen",
-        temperature=300,
-        pressure=1.0,
-        n_steps=1,
-        ase_md_kwargs={"compressibility_au": 4.5 * bar},
-    )
-    # The run_ase is necessary for correct class instantiation
-    npt_berend_str.run_ase(si_structure)
-    assert "pressure_au" in npt_berend_str.ase_md_kwargs
-    assert "externalstress" not in npt_berend_str.ase_md_kwargs
+    for dyn in ("berendsen", NPTBerendsen):
+        npt_berend_str = LennardJonesMDMaker(
+            ensemble="npt",
+            dynamics=dyn,
+            temperature=300,
+            pressure=1.0,
+            n_steps=1,
+            ase_md_kwargs={"compressibility_au": 4.5 * bar},
+        )
+        # The run_ase is necessary for correct class instantiation
+        npt_berend_str.run_ase(si_structure)
+        assert "pressure_au" in npt_berend_str.ase_md_kwargs
+        assert "externalstress" not in npt_berend_str.ase_md_kwargs
 
-    npt_berend_obj = LennardJonesMDMaker(
-        ensemble="npt",
-        dynamics=NPTBerendsen,
-        temperature=300,
-        pressure=1.0,
-        n_steps=1,
-        ase_md_kwargs={"compressibility_au": 4.5 * bar},
-    )
-    npt_berend_obj.run_ase(si_structure)
-    assert "pressure_au" in npt_berend_obj.ase_md_kwargs
-    assert "externalstress" not in npt_berend_obj.ase_md_kwargs
+    for dyn in ("nose-hoover-chain", MTKNPT):
+        npt_mtk_str = LennardJonesMDMaker(
+            ensemble="npt",
+            dynamics=dyn,
+            temperature=300,
+            pressure=1.0,
+            n_steps=1,
+            ase_md_kwargs={"tdamp": 10, "pdamp": 100},
+        )
+        # The run_ase is necessary for correct class instantiation
+        npt_mtk_str.run_ase(si_structure)
+        assert "pressure_au" in npt_mtk_str.ase_md_kwargs
+        assert "externalstress" not in npt_mtk_str.ase_md_kwargs
 
-    npt_nh_str = LennardJonesMDMaker(
-        ensemble="npt", dynamics="nose-hoover", temperature=300, pressure=1.0, n_steps=1
-    )
-    npt_nh_str.run_ase(si_structure)
-    assert "externalstress" in npt_nh_str.ase_md_kwargs
-    assert "pressure_au" not in npt_nh_str.ase_md_kwargs
-
-    npt_nh_obj = LennardJonesMDMaker(
-        ensemble="npt", dynamics=NPT, temperature=300, pressure=1.0, n_steps=1
-    )
-    npt_nh_obj.run_ase(si_structure)
-    assert "externalstress" in npt_nh_obj.ase_md_kwargs
-    assert "pressure_au" not in npt_nh_obj.ase_md_kwargs
+    caplog.set_level(logging.WARNING)
+    for dyn in ("nose-hoover", NPT):
+        npt_nh_str = LennardJonesMDMaker(
+            ensemble="npt", dynamics=dyn, temperature=300, pressure=1.0, n_steps=1
+        )
+        npt_nh_str.run_ase(si_structure)
+        assert "externalstress" in npt_nh_str.ase_md_kwargs
+        assert "pressure_au" not in npt_nh_str.ase_md_kwargs
+        assert "The `NPT` module in ASE is no longer recommended" in caplog.text
 
 
 @pytest.mark.parametrize("calculator_name", list(name_to_maker))
