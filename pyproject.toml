@@ -127,7 +127,7 @@ strict-openff = [
 strict-forcefields = [
     "calorine==3.1",
     "chgnet==0.3.8",
-    "mace-torch==0.3.13",
+    "mace-torch==0.3.14",
     "matgl==1.2.7",
     "quippy-ase==0.9.14; python_version < '3.12'",
     "sevenn==0.10.3",
