@@ -39,10 +39,12 @@ if TYPE_CHECKING:
 
 
 try:
-    # so we can load OpenMM Interchange created by openmmml
-    import openmmml
+    # so we can load OpenMM Interchange created with nnpops
+    import nnpops
+    import openmmtorch
 except ImportError:
-    openmmml = None
+    nnpops = None
+    openmmtorch = None
 
 try:
     from openff.interchange import Interchange
@@ -54,7 +56,7 @@ except ImportError:
         def model_validate(self, _: str) -> None:
             """Parse raw is the first method called on the Interchange object."""
             raise ImportError(
-                "openff-interchange must be installed for OpenMM makers to"
+                "openff-i nterchange must be installed for OpenMM makers to"
                 "to support OpenFF Interchange objects."
             )
 
