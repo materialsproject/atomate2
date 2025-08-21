@@ -140,7 +140,7 @@ def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, tmp_di
 
     assert os.path.isfile("XDATCAR")
     xdatcar = Xdatcar("XDATCAR")
-    assert len(xdatcar) == len(output.objects["trajectory"])
-    assert len(xdatcar) == len(output.output.ionic_steps)
+    assert len(xdatcar.structures) == len(output.objects["trajectory"])
+    assert len(xdatcar.structures) == len(output.output.ionic_steps)
 
     assert len(output.objects["trajectory"]) == n_steps + 1
