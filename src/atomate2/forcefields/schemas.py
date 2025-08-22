@@ -4,36 +4,11 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from emmet.core.utils import ValueEnum
 from emmet.core.vasp.calculation import StoreTrajectoryOption
-from monty.dev import deprecated
 from pydantic import Field
-from pymatgen.core import Structure
 
 from atomate2.ase.schemas import AseObject, AseResult, AseStructureTaskDoc, AseTaskDoc
 from atomate2.forcefields import MLFF
-
-
-@deprecated(replacement=AseResult, deadline=(2025, 1, 1))
-class ForcefieldResult(AseResult):
-    """Schema to store outputs; deprecated."""
-
-    final_structure: Optional[Structure] = Field(
-        None, description="The structure in the final trajectory frame."
-    )
-
-    def model_post_init(self, _context: Any) -> None:
-        """Populate final_structure attr."""
-        self.final_structure = getattr(
-            self, "final_structure", self.final_mol_or_struct
-        )
-
-
-@deprecated(replacement=AseObject, deadline=(2025, 1, 1))
-class ForcefieldObject(ValueEnum):
-    """Types of force-field output data objects."""
-
-    TRAJECTORY = "trajectory"
 
 
 class ForceFieldTaskDocument(AseStructureTaskDoc):

@@ -15,24 +15,7 @@ from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core import Structure
 
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.md import (
-    CHGNetMDMaker,
-    ForceFieldMDMaker,
-    GAPMDMaker,
-    M3GNetMDMaker,
-    MACEMDMaker,
-    NEPMDMaker,
-    NequipMDMaker,
-)
-
-name_to_maker = {
-    MLFF.CHGNet: CHGNetMDMaker,
-    MLFF.M3GNet: M3GNetMDMaker,
-    MLFF.MACE: MACEMDMaker,
-    MLFF.GAP: GAPMDMaker,
-    MLFF.NEP: NEPMDMaker,
-    MLFF.Nequip: NequipMDMaker,
-}
+from atomate2.forcefields.md import ForceFieldMDMaker
 
 
 def test_maker_initialization():
@@ -149,9 +132,6 @@ def test_ml_ff_md_maker(
         getattr(task_doc.objects["trajectory"], key, None) is not None
         for key in ("energy", "forces", "stress", "velocities", "temperature")
     )
-    if ff_maker := name_to_maker.get(ff_name):
-        with pytest.warns(FutureWarning):
-            ff_maker()
 
 
 @pytest.mark.parametrize("traj_file", ["trajectory.json.gz", "atoms.traj"])
