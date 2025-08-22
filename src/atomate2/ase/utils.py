@@ -465,6 +465,22 @@ class AseRelaxer:
                 write_atoms.calc = self.calculator
             else:
                 write_atoms = atoms
+
+            # ase==3.26.0 change: writing FixAtoms and FixCartesian
+            # constraints to extxyz supported.
+            # Write only these constraints to extxyz
+            if len(write_atoms.constraints) > 0:
+                from ase.constraints import FixAtoms, FixCartesian
+
+                write_atoms_constraints = [
+                    cons
+                    for cons in write_atoms.constraints
+                    if isinstance(cons, FixAtoms | FixCartesian)
+                ]
+                del write_atoms.constraints
+                for cons in write_atoms_constraints:
+                    write_atoms.set_constraint(cons)
+
             ase_write(
                 final_atoms_object_file, write_atoms, format="extxyz", append=True
             )
