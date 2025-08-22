@@ -88,6 +88,19 @@ maker = StaticMaker(
 )
 ```
 
+<b>How can I update the magnetic moments (MAGMOM) tag used to start a calculation?</b>
+You can specify MAGMOM using a `dict` of defined values, such as:
+
+```py
+from pymatgen.io.vasp.sets import MPRelaxSet
+
+vis = MPRelaxSet(user_incar_settings={"MAGMOM": {"In": 0.5, "Ga": 0.5, "As": -0.5}})
+```
+You can also specify different magnetic moments for different oxidation states, such as `{"Ga3+": 0.25}`.
+However, note that `"Ga0+"`, which has been assigned zero-valued oxidation state, is distinct from `"Ga"`, which has not been assigned an oxidation state.
+
+Alternatively, MAGMOM can be set by giving a structure assigned magnetic moments: `structure.add_site_property("magmom", list[float])`.
+This will override the default MAGMOM settings of a VASP input set.
 
 (vasp_workflows)=
 
