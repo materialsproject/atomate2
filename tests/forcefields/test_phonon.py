@@ -64,8 +64,9 @@ def test_phonon_maker_initialization_with_all_mlff(
     # TODO fix GAP, currently fails with RuntimeError, see
     # https://github.com/materialsproject/atomate2/pull/918#issuecomment-2253659694
 
-    # skip m3gnet and matpes models due to matcalc requiring DGL which is PyTorch 2.4 incompatible
-    # raises "FileNotFoundError: Cannot find DGL C++ libgraphbolt_pytorch_2.4.1.so"
+    # skip m3gnet and matpes models due to matcalc requiring
+    # DGL which is PyTorch 2.4 incompatible, raises
+    # "FileNotFoundError: Cannot find DGL C++ libgraphbolt_pytorch_2.4.1.so"
     skip_mlff = set(
         map(MLFF, ["Forcefield", "GAP", "M3GNet", "MATPES_R2SCAN", "MATPES_PBE"])
     )
