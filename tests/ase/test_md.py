@@ -10,6 +10,7 @@ import os
 
 import pytest
 from jobflow import run_locally
+from pymatgen.io.vasp.outputs import Xdatcar
 
 from atomate2.ase.md import GFNxTBMDMaker, LennardJonesMDMaker
 from atomate2.ase.schemas import AseStructureTaskDoc
@@ -138,7 +139,9 @@ def test_ase_npt_maker(calculator_name, lj_fcc_ne_pars, fcc_ne_structure, tmp_di
         reference_energies_per_atom[calculator_name]
     )
 
-    # TODO: improve XDATCAR parsing test when class is fixed in pmg
     assert os.path.isfile("XDATCAR")
+    xdatcar = Xdatcar("XDATCAR")
+    assert len(xdatcar.structures) == len(output.objects["trajectory"])
+    assert len(xdatcar.structures) == len(output.output.ionic_steps)
 
     assert len(output.objects["trajectory"]) == n_steps + 1

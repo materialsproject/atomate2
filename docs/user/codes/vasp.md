@@ -42,6 +42,53 @@ The most important settings to consider are:
   NCORE, KPAR etc.
 - `VASP_VDW_KERNEL_DIR`: The path to the VASP Van der Waals kernel.
 
+## FAQs
+
+<b>How can I update the Custodian handlers used in a VASP job?</b>
+- Every `Maker` which derives from `BaseVaspMaker` (see below) has a `run_vasp_kwargs` kwarg.
+So, for example, to run a `StaticMaker` with only the `VaspErrorHandler` as the custodian handler, you would do this:
+
+```py
+from atomate2.vasp.jobs.core import StaticMaker
+from custodian.vasp.handlers import VaspErrorHandler
+
+maker = StaticMaker(run_vasp_kwargs={"handlers": [VaspErrorHandler]})
+```
+
+<b>How can I change the other Custodian settings used to run VASP?</b>
+- These can be set through `run_vasp_kwargs.custodian_kwargs`:
+
+```py
+maker = StaticMaker(
+    run_vasp_kwargs={
+        "custodian_kwargs": {
+            "max_errors_per_job": 5,
+            "monitor_freq": 100,
+        }
+    }
+)
+```
+For all possible `custodian_kwargs`, see the [`Custodian` class](https://github.com/materialsproject/custodian/blob/aa02baf5bc2a1883c5f8a8b6808340eeae324a99/src/custodian/custodian.py#L68).
+NB: You cannot set the following four `Custodian` fields using `custodian_kwargs`: `handlers`, `jobs`, `validators`, `max_errors`, and `scratch_dir`.
+
+<b>Can I change how VASP is run for each per-`Maker`/`Job`?</b>
+Yes! Still using the `run_vasp_kwargs` and either the `vasp_cmd`, which represents the path to (and including) `vasp_std`, and `vasp_gamma_cmd`, which is the path to `vasp_gam`:
+
+```py
+maker = StaticMaker(run_vasp_kwargs={"vasp_cmd": "/path/to/vasp_std"})
+```
+
+<b>How can I use non-colinear VASP?</b>
+The same method as before applies, you can simply set:
+
+```py
+vasp_ncl_path = "/path/to/vasp_ncl"
+maker = StaticMaker(
+    run_vasp_kwargs={"vasp_cmd": vasp_ncl_path, "vasp_gamma_cmd": vasp_ncl_path}
+)
+```
+
+
 (vasp_workflows)=
 
 ## List of VASP workflows

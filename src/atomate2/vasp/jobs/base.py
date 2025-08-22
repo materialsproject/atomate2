@@ -158,6 +158,28 @@ class BaseVaspMaker(Maker):
     """
     Base VASP job maker.
 
+    To modify settings relevant to `custodian`, use `run_vasp_kwargs`:
+    ```
+    run_vasp_kwargs = {
+        "custodian_kwargs": {
+            "max_errors_per_job": 5,
+            "gzipped_output": True,
+        }
+    }
+    ```
+    For other possible VASP run configurations, see `atomate2.vasp.run.run_vasp`.
+    For example, you can change which executable is used by setting
+    ```
+    run_vasp_kwargs["vasp_cmd"] = "/path/to/some/vasp/executable"
+    ```
+    or override the default choice of custodian handlers using the `"handlers"` kwarg:
+    ```
+    run_vasp_kwargs["handlers"] = [PositiveEnergyHandler]
+    ```
+
+    NB: You cannot set the following four fields using `custodian_kwargs`:
+    `handlers`, `jobs`, `validators`, `max_errors`, and `scratch_dir`.
+
     Parameters
     ----------
     name : str
