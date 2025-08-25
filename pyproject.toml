@@ -105,7 +105,7 @@ strict = [
     "jobflow==0.2.0",
     "lobsterpy==0.5.7",
     "monty==2025.3.3",
-    "mp-api==0.45.7",
+    "mp-api==0.45.8",
     "numpy",
     "phonopy==2.30.1",
     "pydantic-settings==2.10.1",
