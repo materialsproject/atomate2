@@ -55,6 +55,9 @@ def test_trajectory_observer(si_structure: Structure, test_dir, tmp_dir):
     [("BFGS", None), (None, None), (BFGS, "log_file.traj")],
 )
 def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
+    from ase.stress import voigt_6_to_full_3x3_stress
+    from ase.units import GPa
+
     expected_lattice = {
         "a": 3.866974,
         "b": 3.866974,
@@ -92,19 +95,17 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
         for key in expected_lattice
     } == pytest.approx(expected_lattice)
 
-    assert relax_output.trajectory.frame_properties[-1]["energy"] == pytest.approx(
-        expected_energy
-    )
+    assert relax_output.trajectory.energy[-1] == pytest.approx(expected_energy)
 
     assert_allclose(
-        relax_output["trajectory"].frame_properties[-1]["forces"],
+        relax_output["trajectory"].forces[-1],
         expected_forces,
         atol=1e-11,
     )
 
     assert_allclose(
-        relax_output["trajectory"].frame_properties[-1]["stress"],
-        expected_stresses,
+        relax_output["trajectory"].stress[-1],
+        voigt_6_to_full_3x3_stress(expected_stresses) * -10 / GPa,
         atol=1e-11,
     )
 
@@ -122,7 +123,10 @@ def test_fix_symmetry(fix_symmetry):
     atoms_al = atoms_al * (2, 2, 2)
     atoms_al.positions[0, 0] += 1e-7
     symmetry_init = check_symmetry(atoms_al, 1e-6)
-    final_struct: Structure = relaxer.relax(atoms=atoms_al, steps=1).final_mol_or_struct
+    final_struct: Structure = relaxer.relax(
+        atoms=atoms_al,
+        steps=2,
+    ).final_mol_or_struct
     symmetry_final = check_symmetry(final_struct.to_ase_atoms(), 1e-6)
     if fix_symmetry:
         assert symmetry_init["number"] == symmetry_final["number"] == 229

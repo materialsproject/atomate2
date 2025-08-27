@@ -15,24 +15,7 @@ from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core import Structure
 
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.md import (
-    CHGNetMDMaker,
-    ForceFieldMDMaker,
-    GAPMDMaker,
-    M3GNetMDMaker,
-    MACEMDMaker,
-    NEPMDMaker,
-    NequipMDMaker,
-)
-
-name_to_maker = {
-    MLFF.CHGNet: CHGNetMDMaker,
-    MLFF.M3GNet: M3GNetMDMaker,
-    MLFF.MACE: MACEMDMaker,
-    MLFF.GAP: GAPMDMaker,
-    MLFF.NEP: NEPMDMaker,
-    MLFF.Nequip: NequipMDMaker,
-}
+from atomate2.forcefields.md import ForceFieldMDMaker
 
 
 def test_maker_initialization():
@@ -146,13 +129,9 @@ def test_ml_ff_md_maker(
     assert len(task_doc.objects["trajectory"]) == n_steps + 1
     assert task_doc.objects == task_doc.forcefield_objects  # test legacy alias
     assert all(
-        key in step
+        getattr(task_doc.objects["trajectory"], key, None) is not None
         for key in ("energy", "forces", "stress", "velocities", "temperature")
-        for step in task_doc.objects["trajectory"].frame_properties
     )
-    if ff_maker := name_to_maker.get(ff_name):
-        with pytest.warns(FutureWarning):
-            ff_maker()
 
 
 @pytest.mark.parametrize("traj_file", ["trajectory.json.gz", "atoms.traj"])
@@ -184,32 +163,31 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
     assert len(traj_from_file) == n_steps + 1
 
     if traj_file_fmt == "pmg":
-        assert all(
-            np.all(
+        other_traj = {
+            key: [
                 traj_from_file.frame_properties[idx][key]
-                == task_doc.objects["trajectory"].frame_properties[idx].get(key)
-            )
+                for idx in range(len(traj_from_file))
+            ]
             for key in ("energy", "temperature", "forces", "velocities")
-            for idx in range(n_steps + 1)
-        )
+        }
     elif traj_file_fmt == "ase":
-        traj_as_dict = [
-            {
-                "energy": traj_from_file[idx].get_potential_energy(),
-                "temperature": traj_from_file[idx].get_temperature(),
-                "forces": traj_from_file[idx].get_forces(),
-                "velocities": traj_from_file[idx].get_velocities(),
-            }
-            for idx in range(1, n_steps + 1)
-        ]
-        assert all(
-            np.all(
-                traj_as_dict[idx - 1][key]
-                == task_doc.objects["trajectory"].frame_properties[idx].get(key)
-            )
-            for key in ("energy", "temperature", "forces", "velocities")
-            for idx in range(1, n_steps + 1)
+        other_traj = {
+            k: [getattr(traj_from_file[idx], v)() for idx in range(n_steps + 1)]
+            for k, v in {
+                "energy": "get_potential_energy",
+                "temperature": "get_temperature",
+                "forces": "get_forces",
+                "velocities": "get_velocities",
+            }.items()
+        }
+
+    assert all(
+        np.all(
+            np.array(other_traj[key])
+            == np.array(getattr(task_doc.objects["trajectory"], key))
         )
+        for key in ("energy", "temperature", "forces", "velocities")
+    )
 
 
 def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
@@ -285,9 +263,7 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output
 
-    temp_history = [
-        step["temperature"] for step in task_doc.objects["trajectory"].frame_properties
-    ]
+    temp_history = task_doc.objects["trajectory"].temperature
 
     assert temp_history[-1] > temp_schedule[0]
 
