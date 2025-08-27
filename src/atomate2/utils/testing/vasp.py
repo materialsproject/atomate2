@@ -58,7 +58,7 @@ def zpath(path: str | Path) -> Path:
 
 def monkeypatch_vasp(
     monkeypatch: MonkeyPatch, vasp_test_dir: Path, nelect: int = 12
-) -> Generator[Callable[[Any, Any], Any], None, None]:
+) -> Generator[Callable[[Any, Any], Any]]:
     """Fake VASP calculations by copying reference files.
 
     This is provided as a generator and can be used as by conextmanagers and

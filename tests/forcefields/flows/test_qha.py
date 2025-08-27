@@ -128,8 +128,8 @@ def test_instantiation(mlff: str, relax_initial_structure: bool, run_eos_flow: b
         no_maker.append("initial_relax_maker")
 
     tests = {
-        **{k: True for k in has_maker},
-        **{k: False for k in no_maker},
+        **dict.fromkeys(has_maker, True),
+        **dict.fromkeys(no_maker, False),
     }
 
     maker = ForceFieldQhaMaker.from_force_field_name(
