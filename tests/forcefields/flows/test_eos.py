@@ -8,7 +8,11 @@ from atomate2.utils.testing import get_job_uuid_name_map
 
 @pytest.mark.parametrize("mlff", ["CHGNet", "MACE"])
 def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
-    job = ForceFieldEosMaker.from_force_field_name(mlff).make(si_structure)
+    maker = ForceFieldEosMaker.from_force_field_name(mlff)
+    job = maker.make(si_structure)
+    for attr in ("initial_relax_maker", "eos_relax_maker"):
+        assert mlff in getattr(maker, attr).force_field_name
+
     job_to_uuid = {v: k for k, v in get_job_uuid_name_map(job).items()}
     post_process_uuid = job_to_uuid[f"{mlff} EOS Maker postprocessing"]
     response = run_locally(job, ensure_success=True)
@@ -24,3 +28,10 @@ def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
                 output["relax"][key][idx] == pytest.approx(value)
                 for idx, value in ref_data["relax"][key].items()
             )
+
+    assert (
+        ForceFieldEosMaker.from_force_field_name(
+            mlff, relax_initial_structure=False
+        ).initial_relax_maker
+        is None
+    )

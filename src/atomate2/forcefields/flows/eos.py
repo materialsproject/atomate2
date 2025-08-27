@@ -82,12 +82,14 @@ class ForceFieldEosMaker(CommonEosMaker):
         ForceFieldEosMaker
         """
         force_field_name = _get_formatted_ff_name(force_field_name)
-        if relax_initial_structure:
-            kwargs.update(
-                initial_relax_maker=ForceFieldRelaxMaker(
-                    force_field_name=force_field_name
-                )
+        kwargs.update(
+            initial_relax_maker=(
+                ForceFieldRelaxMaker(force_field_name=force_field_name)
+                if relax_initial_structure
+                else None
             )
+        )
+
         kwargs.update(
             eos_relax_maker=ForceFieldRelaxMaker(
                 force_field_name=force_field_name, relax_cell=False

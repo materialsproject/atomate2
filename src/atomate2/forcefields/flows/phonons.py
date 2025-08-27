@@ -178,12 +178,16 @@ class PhononMaker(BasePhononMaker):
         PhononMaker
         """
         force_field_name = _get_formatted_ff_name(force_field_name)
-        if relax_initial_structure:
-            kwargs.update(
-                bulk_relax_maker=ForceFieldRelaxMaker(
+
+        kwargs.update(
+            bulk_relax_maker=(
+                ForceFieldRelaxMaker(
                     force_field_name=force_field_name, relax_kwargs={"fmax": 1e-5}
                 )
+                if relax_initial_structure
+                else None
             )
+        )
         kwargs.update(
             static_energy_maker=ForceFieldStaticMaker(
                 force_field_name=force_field_name

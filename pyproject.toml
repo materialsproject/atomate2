@@ -91,6 +91,7 @@ tests = [
     "pytest-cov==6.2.1",
     "pytest-mock==3.14.1",
     "pytest-split==0.10.0",
+    "pytest-xdist==3.8.0",
     "pytest==8.4.1",
 ]
 strict = [
