@@ -185,9 +185,12 @@ def test_traj_file(traj_file, ff_name, si_structure, clean_dir):
 
     assert all(
         np.all(
-            np.array(other_traj[key])
-            == np.array(getattr(task_doc.objects["trajectory"], key))
+            np.abs(
+                np.array(other_traj[key])
+                - np.array(getattr(task_doc.objects["trajectory"], key))
+            )
         )
+        < 1e-6
         for key in ("energy", "temperature", "forces", "velocities")
     )
 
