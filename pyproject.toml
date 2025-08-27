@@ -131,7 +131,7 @@ strict-forcefields = [
     "mace-torch==0.3.14",
     "matgl==1.3.0",
     "quippy-ase==0.9.14; python_version < '3.12'",
-    "sevenn==0.11.2.post1",
+    "sevenn==0.10.4",
     "torch==2.2.0",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
 ]
