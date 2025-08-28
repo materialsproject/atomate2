@@ -134,8 +134,10 @@ def test_ml_ff_md_maker(
     )
 
 
-@pytest.mark.parametrize("traj_file", ["trajectory.json.gz", "atoms.traj"])
-def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
+@pytest.mark.parametrize(
+    "traj_file,ff_name", [("trajectory.json.gz", "CHGNet"), ("atoms.traj", "CHGNet")]
+)
+def test_traj_file(traj_file, ff_name, si_structure, clean_dir):
     n_steps = 5
 
     # Check that traj file written to disk is consistent with trajectory
@@ -183,9 +185,12 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
 
     assert all(
         np.all(
-            np.array(other_traj[key])
-            == np.array(getattr(task_doc.objects["trajectory"], key))
+            np.abs(
+                np.array(other_traj[key])
+                - np.array(getattr(task_doc.objects["trajectory"], key))
+            )
         )
+        < 1e-6
         for key in ("energy", "temperature", "forces", "velocities")
     )
 

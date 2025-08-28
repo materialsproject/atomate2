@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import Field
@@ -14,28 +14,28 @@ from atomate2.forcefields import MLFF
 class ForceFieldTaskDocument(AseStructureTaskDoc):
     """Document containing information on structure manipulation using a force field."""
 
-    forcefield_name: Optional[str] = Field(
+    forcefield_name: str | None = Field(
         None,
         description="name of the interatomic potential used for relaxation.",
     )
 
-    forcefield_version: Optional[str] = Field(
+    forcefield_version: str | None = Field(
         "Unknown",
         description="version of the interatomic potential used for relaxation.",
     )
 
-    dir_name: Optional[str] = Field(
+    dir_name: str | None = Field(
         None, description="Directory where the force field calculations are performed."
     )
 
-    included_objects: Optional[list[AseObject]] = Field(
+    included_objects: list[AseObject] | None = Field(
         None, description="list of forcefield objects included with this task document"
     )
-    objects: Optional[dict[AseObject, Any]] = Field(
+    objects: dict[AseObject, Any] | None = Field(
         None, description="Forcefield objects associated with this task"
     )
 
-    is_force_converged: Optional[bool] = Field(
+    is_force_converged: bool | None = Field(
         None,
         description=(
             "Whether the calculation is converged with respect to interatomic forces."
@@ -133,6 +133,6 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
         return cls.from_ase_task_doc(ase_task_doc, **ff_kwargs)
 
     @property
-    def forcefield_objects(self) -> Optional[dict[AseObject, Any]]:
+    def forcefield_objects(self) -> dict[AseObject, Any] | None:
         """Alias `objects` attr for backwards compatibility."""
         return self.objects
