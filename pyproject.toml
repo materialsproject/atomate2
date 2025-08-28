@@ -35,7 +35,7 @@ dependencies = [
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
     "pymatgen>=2024.11.13",
-    "pymongo<=4.10.1",
+    "pymongo<=4.14.1",
 ]
 
 [project.optional-dependencies]
