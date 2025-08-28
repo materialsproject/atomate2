@@ -103,7 +103,7 @@ class AseBaseModel(BaseModel):
     structure: Structure | None = Field(None, description="The structure at this step.")
     molecule: Molecule | None = Field(None, description="The molecule at this step.")
 
-    def model_post_init(self, _context: Any) -> None:
+    def model_post_init(self, context: Any, /) -> None:
         """Establish alias to structure and molecule fields."""
         if self.structure is None and isinstance(self.mol_or_struct, Structure):
             self.structure = self.mol_or_struct

@@ -41,7 +41,7 @@ dependencies = [
 [project.optional-dependencies]
 abinit = ["abipy>=0.9.3"]
 amset = ["amset>=0.4.15", "pydash"]
-cclib = ["cclib"]
+cclib = ["cclib>=1.8.1"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=1.10.8", "seekpath>=2.0.0"]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
@@ -94,30 +94,6 @@ tests = [
     "pytest-xdist==3.8.0",
     "pytest==8.4.1",
 ]
-strict = [
-    "PyYAML==6.0.2",
-    "ase==3.26.0",
-    "cclib==1.8.1",
-    "click==8.2.1",
-    "custodian==2025.8.13",
-    "dscribe==2.1.1",
-    "emmet-core==v0.84.10rc2",
-    "ijson==3.4.0",
-    "jobflow==0.2.0",
-    "lobsterpy==0.5.7",
-    "monty==2025.3.3",
-    "mp-api==0.45.8",
-    "numpy",
-    "phonopy==2.30.1",
-    "pydantic-settings==2.10.1",
-    "pydantic==2.11.7",
-    "pymatgen-analysis-defects==2025.1.18",
-    "pymatgen==2025.6.14",
-    "pymongo==4.10.1",
-    "python-ulid==3.1.0",
-    "seekpath==2.1.0",
-    "typing-extensions==4.14.1",
-]
 strict-openff = [
     "mdanalysis==2.9.0",
     "monty==2025.3.3",
@@ -134,6 +110,9 @@ strict-forcefields = [
     "sevenn==0.10.4",
     "torch==2.2.0",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
+]
+strict = [
+    "atomate2[strict-forcefields, docs, cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
 ]
 
 [project.scripts]
