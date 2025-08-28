@@ -10,6 +10,7 @@ from pydantic import Field
 from atomate2.ase.schemas import AseObject, AseResult, AseStructureTaskDoc, AseTaskDoc
 from atomate2.forcefields import MLFF
 
+
 class ForceFieldTaskDocument(AseStructureTaskDoc):
     """Document containing information on structure manipulation using a force field."""
 

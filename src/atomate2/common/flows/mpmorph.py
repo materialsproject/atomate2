@@ -160,7 +160,7 @@ class EquilibriumVolumeMaker(Maker):
                 deformed_structures[index].final_structure,
                 prev_dir=None,
             )
-            
+
             relaxed_vol = len(working_outputs["relax"]["volume"])
             md_job.name = f"{self.name} {md_job.name} {relaxed_vol + 1}"
 
