@@ -8,6 +8,7 @@ from pathlib import Path
 from shutil import which
 from typing import TYPE_CHECKING
 
+from emmet.core.neb import NebIntermediateImagesDoc
 from emmet.core.tasks import TaskDoc
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
@@ -157,6 +158,28 @@ class BaseVaspMaker(Maker):
     """
     Base VASP job maker.
 
+    To modify settings relevant to `custodian`, use `run_vasp_kwargs`:
+    ```
+    run_vasp_kwargs = {
+        "custodian_kwargs": {
+            "max_errors_per_job": 5,
+            "gzipped_output": True,
+        }
+    }
+    ```
+    For other possible VASP run configurations, see `atomate2.vasp.run.run_vasp`.
+    For example, you can change which executable is used by setting
+    ```
+    run_vasp_kwargs["vasp_cmd"] = "/path/to/some/vasp/executable"
+    ```
+    or override the default choice of custodian handlers using the `"handlers"` kwarg:
+    ```
+    run_vasp_kwargs["handlers"] = [PositiveEnergyHandler]
+    ```
+
+    NB: You cannot set the following four fields using `custodian_kwargs`:
+    `handlers`, `jobs`, `validators`, `max_errors`, and `scratch_dir`.
+
     Parameters
     ----------
     name : str
@@ -248,9 +271,16 @@ class BaseVaspMaker(Maker):
         )
 
 
-def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
+def get_vasp_task_document(
+    path: Path | str, is_neb: bool = False, **kwargs
+) -> TaskDoc | NebIntermediateImagesDoc:
     """Get VASP Task Document using atomate2 settings."""
     kwargs.setdefault("store_additional_json", SETTINGS.VASP_STORE_ADDITIONAL_JSON)
+
+    kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
+
+    if is_neb:
+        return NebIntermediateImagesDoc.from_directory(path, **kwargs)
 
     kwargs.setdefault(
         "volume_change_warning_tol", SETTINGS.VASP_VOLUME_CHANGE_WARNING_TOL
@@ -287,7 +317,5 @@ def get_vasp_task_document(path: Path | str, **kwargs) -> TaskDoc:
                 "path",
                 stacklevel=1,
             )
-
-    kwargs.setdefault("store_volumetric_data", SETTINGS.VASP_STORE_VOLUMETRIC_DATA)
 
     return TaskDoc.from_directory(path, **kwargs)

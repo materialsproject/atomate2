@@ -77,9 +77,9 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
 
     adsorption_document = next(iter(responses[flow[-1].uuid].values())).output
 
-    assert isinstance(
-        adsorption_document, AdsorptionDocument
-    ), "Output is not an AdsorptionDocument instance."
+    assert isinstance(adsorption_document, AdsorptionDocument), (
+        "Output is not an AdsorptionDocument instance."
+    )
 
     # Extract the adsorption energies
     adsorption_energies = adsorption_document.adsorption_energies
@@ -91,6 +91,6 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         -2.0976731399999906,
     ]
 
-    assert (
-        adsorption_energies == expected_energies
-    ), "Adsorption energies do not match expected values."
+    assert adsorption_energies == expected_energies, (
+        "Adsorption energies do not match expected values."
+    )

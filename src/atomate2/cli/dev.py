@@ -561,9 +561,9 @@ class Test{maker_name}:
         from atomate2.abinit.schemas.core import AbinitTaskDocument
 
         # load the initial structure, the maker and the ref_paths from the test_dir
-        test_dir = abinit_test_dir / {" / ".join(
-        [f'"{part}"' for part in test_dir.parts[index_part:]]
-    )}
+        test_dir = abinit_test_dir / {
+        " / ".join([f'"{part}"' for part in test_dir.parts[index_part:]])
+    }
         structure = Structure.from_file(test_dir / "initial_structure.json.gz")
         maker_info = loadfn(test_dir / "maker.json.gz")
         maker = maker_info["maker"]
@@ -603,13 +603,13 @@ def save_abinit_maker(maker: Maker) -> None:
     author_mail = None
     if git:
         name = subprocess.run(
-            "git config user.name".split(),
+            [git, "config", "user.name"],
             capture_output=True,
             encoding="utf-8",
             check=True,
         )
         mail = subprocess.run(
-            "git config user.email".split(),
+            [git, "config", "user.email"],
             capture_output=True,
             encoding="utf-8",
             check=True,

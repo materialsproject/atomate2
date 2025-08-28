@@ -112,9 +112,7 @@ class EquilibriumVolumeMaker(Maker):
                 *self.initial_strain, self.postprocessor.min_data_points
             )
             working_outputs = {
-                "relax": {
-                    key: [] for key in ("energies", "volume", "stress", "pressure")
-                }
+                "relax": {key: [] for key in ("energy", "volume", "stress", "pressure")}
             }
 
         else:
@@ -122,7 +120,7 @@ class EquilibriumVolumeMaker(Maker):
             self.postprocessor.fit(working_outputs)
             working_outputs = dict(self.postprocessor.results)
             flow_output = {"working_outputs": working_outputs.copy(), "structure": None}
-            for k in ("pressure", "energy"):
+            for k in ("pressure",):
                 working_outputs["relax"].pop(k, None)
 
             # Stop flow here if EOS cannot be fit
@@ -130,11 +128,8 @@ class EquilibriumVolumeMaker(Maker):
                 return Response(output=flow_output, stop_children=True)
 
             # Check if equilibrium volume is in range of attempted volumes
-            v0_in_range = (
-                (vmin := working_outputs.get("Vmin"))
-                <= v0
-                <= (vmax := working_outputs.get("Vmax"))
-            )
+            vmin = working_outputs.get("Vmin")
+            vmax = working_outputs.get("Vmax")
 
             # Check if maximum number of refinement NVT runs is set,
             # and if so, if that limit has been reached
@@ -143,7 +138,7 @@ class EquilibriumVolumeMaker(Maker):
             )
 
             # Successful fit: return structure at estimated equilibrium volume
-            if v0_in_range or max_attempts_reached:
+            if (vmin <= v0 <= vmax) or max_attempts_reached:
                 flow_output["structure"] = structure.copy()
                 flow_output["structure"].scale_lattice(v0)  # type: ignore[attr-defined]
                 return flow_output
@@ -162,19 +157,20 @@ class EquilibriumVolumeMaker(Maker):
         eos_jobs = []
         for index in range(len(deformation_matrices)):
             md_job = self.md_maker.make(
-                structure=deformed_structures[index].final_structure,
+                deformed_structures[index].final_structure,
                 prev_dir=None,
             )
-            n_volumes = len(working_outputs["relax"]["volume"]) + 1
-            md_job.name = f"{self.name} {md_job.name} {n_volumes}"
+            
+            relaxed_vol = len(working_outputs["relax"]["volume"])
+            md_job.name = f"{self.name} {md_job.name} {relaxed_vol + 1}"
 
-            working_outputs["relax"]["energies"].append(md_job.output.output.energy)
+            working_outputs["relax"]["energy"].append(md_job.output.output.energy)
             working_outputs["relax"]["volume"].append(md_job.output.structure.volume)
             working_outputs["relax"]["stress"].append(md_job.output.output.stress)
             eos_jobs.append(md_job)
 
         recursive = self.make(
-            structure=structure,
+            structure,
             prev_dir=None,
             working_outputs=working_outputs,
         )
@@ -262,14 +258,12 @@ class MPMorphMDMaker(Maker, ABC):
             structure = convergence_flow.output["structure"]
 
         self.production_md_maker.name = self.name + " production run"
-        production_run = self.production_md_maker.make(
-            structure=structure, prev_dir=prev_dir
-        )
+        production_run = self.production_md_maker.make(structure, prev_dir=prev_dir)
         flow_jobs.append(production_run)
 
         if self.quench_maker:
             quench_flow = self.quench_maker.make(
-                structure=production_run.output.structure,
+                production_run.output.structure,
                 prev_dir=production_run.output.dir_name,
             )
             flow_jobs += [quench_flow]
@@ -469,7 +463,7 @@ class SlowQuenchMaker(Maker, ABC):
             )
             if self.descent_method == "stepwise":
                 md_job = self.call_md_maker(
-                    structure=structure,
+                    structure,
                     temp=temp,
                     prev_dir=prev_dir,
                 )
@@ -478,13 +472,13 @@ class SlowQuenchMaker(Maker, ABC):
                 self.descent_method == "linear with hold"
             ):  # TODO: Work in Progress; needs testing
                 md_job_linear = self.call_md_maker(
-                    structure=structure,
+                    structure,
                     temp=[temp, temp - self.quench_temperature_step],  # type: ignore[arg-type]
                     prev_dir=prev_dir,
                 )
 
                 md_job = self.call_md_maker(
-                    structure=md_job_linear.output.structure,
+                    md_job_linear.output.structure,
                     temp=temp - self.quench_temperature_step,
                     prev_dir=md_job_linear.output.dir_name,
                 )

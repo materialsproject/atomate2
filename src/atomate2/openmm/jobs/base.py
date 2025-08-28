@@ -26,7 +26,11 @@ from openmm.app import StateDataReporter
 from openmm.unit import angstrom, kelvin, picoseconds
 from pymatgen.core import Structure
 
-from atomate2.openmm.utils import increment_name, task_reports
+from atomate2.openmm.utils import (
+    PymatgenTrajectoryReporter,
+    increment_name,
+    task_reports,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -232,15 +236,17 @@ class BaseOpenMMMaker(Maker):
 
         structure = self._create_structure(sim, prev_task)
 
-        task_doc = self._create_task_doc(
-            interchange, structure, elapsed_time, dir_name, prev_task
-        )
-
         # leaving the MDAReporter makes the builders fail
         for _ in range(len(sim.reporters)):
             reporter = sim.reporters.pop()
+            if hasattr(reporter, "save"):
+                reporter.save()
             del reporter
         del sim
+
+        task_doc = self._create_task_doc(
+            interchange, structure, elapsed_time, dir_name, prev_task
+        )
 
         # write out task_doc json to output dir
         with open(dir_name / "taskdoc.json", "w") as file:
@@ -308,15 +314,9 @@ class BaseOpenMMMaker(Maker):
         if has_steps & (traj_interval > 0):
             writer_kwargs = {}
             # these are the only file types that support velocities
-            if traj_file_type in ["h5md", "nc", "ncdf"]:
+            if traj_file_type in ("h5md", "nc", "ncdf", "json"):
                 writer_kwargs["velocities"] = report_velocities
                 writer_kwargs["forces"] = False
-            elif report_velocities and traj_file_type != "trr":
-                raise ValueError(
-                    f"File type {traj_file_type} does not support velocities as"
-                    f"of MDAnalysis 2.7.0. Select another file type"
-                    f"or do not attempt to report velocities."
-                )
 
             traj_file = dir_name / f"{traj_file_name}.{traj_file_type}"
 
@@ -330,17 +330,28 @@ class BaseOpenMMMaker(Maker):
                 reportInterval=traj_interval,
                 enforcePeriodicBox=wrap_traj,
             )
-            if report_velocities:
-                # assert package version
+            if traj_file_type == "json":
+                traj_reporter = PymatgenTrajectoryReporter(**kwargs)
+            else:
+                if report_velocities:
+                    # assert package version
+                    warnings.warn(
+                        "Reporting velocities is only supported with the"
+                        "development version of MDAnalysis, >= 2.8.0, "
+                        "proceed with caution.",
+                        stacklevel=1,
+                    )
 
-                kwargs["writer_kwargs"] = writer_kwargs
-                warnings.warn(
-                    "Reporting velocities is only supported with the"
-                    "development version of MDAnalysis, >= 2.8.0, "
-                    "proceed with caution.",
-                    stacklevel=1,
-                )
-            traj_reporter = MDAReporter(**kwargs)
+                try:
+                    traj_reporter = MDAReporter(**kwargs, writer_kwargs=writer_kwargs)
+                except TypeError:
+                    warnings.warn(
+                        "The current version of `openmm-mdanalysis-reporter` "
+                        "does not support `writer_kwargs`. To use these features, "
+                        "pip install this package from the github source.",
+                        stacklevel=2,
+                    )
+                    traj_reporter = MDAReporter(**kwargs)
 
             sim.reporters.append(traj_reporter)
 
@@ -423,7 +434,7 @@ class BaseOpenMMMaker(Maker):
         else:
             prev_input = None
 
-        defaults = {**OPENMM_MAKER_DEFAULTS, **(add_defaults or {})}
+        defaults = OPENMM_MAKER_DEFAULTS | (add_defaults or {})
 
         if getattr(self, attr, None) is not None:
             attr_value = getattr(self, attr)

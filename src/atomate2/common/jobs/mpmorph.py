@@ -16,12 +16,16 @@ from __future__ import annotations
 import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
 from jobflow import Job
 from pymatgen.core import Composition, Molecule, Structure
 from pymatgen.io.packmol import PackmolBoxGen
+
+if TYPE_CHECKING:
+    from pymatgen.core import Element, Species
 
 _DEFAULT_AVG_VOL_FILE = Path("~/.cache/atomate2").expanduser() / "db_avg_vols.json.gz"
 if not _DEFAULT_AVG_VOL_FILE.parents[0].exists():
@@ -47,8 +51,7 @@ def _get_average_volumes_file(
 
         stream_data = requests.get(_DEFAULT_AVG_VOL_URL, stream=True, timeout=timeout)
         with open(str(_DEFAULT_AVG_VOL_FILE), "wb") as file:
-            for chunk in stream_data.iter_content(chunk_size=chunk_size):
-                file.write(chunk)
+            file.writelines(stream_data.iter_content(chunk_size=chunk_size))
 
     return pd.read_json(_DEFAULT_AVG_VOL_FILE, orient="split")
 
@@ -73,21 +76,18 @@ def get_average_volume_from_mp_api(
     Returns
     -------
     float
-        The average volume per atom for the composition.
+        The average volume per atom for the composition in Angstrom^3.
     """
     from mp_api.client import MPRester
 
     with MPRester(api_key=mp_api_key) as mpr:
         comp_entries = mpr.get_entries(composition.reduced_formula, inc_structure=True)
 
-    vols = None
+    vols = [
+        entry.structure.volume / entry.structure.num_sites for entry in comp_entries
+    ]
 
-    if len(comp_entries) > 0:
-        vols = [
-            entry.structure.volume / entry.structure.num_sites for entry in comp_entries
-        ]
-
-    else:
+    if not vols:
         # Find all Materials project entries containing the elements in the
         # desired composition to estimate starting volume.
         with MPRester() as mpr:
@@ -103,6 +103,27 @@ def get_average_volume_from_mp_api(
         ]
 
         vols = [entry.structure.volume / entry.structure.num_sites for entry in entries]
+
+    # Fallback: mix atomic volume by relative weight in composition
+    if not vols:
+        by_comp: dict[Element | Species, list[float]] = {
+            ele: [] for ele in composition.elements
+        }
+        for entry in _entries:
+            if len(entry.composition.elements) == 1:
+                by_comp[entry.composition.elements[0]].append(
+                    entry.structure.volume / entry.structure.num_sites
+                )
+        vols = [
+            coeff * np.mean(by_comp[ele]) / composition.num_atoms
+            for ele, coeff in composition.items()
+        ]
+
+        if any(not v for v in by_comp.values()):
+            raise ValueError(
+                "No unary data for "
+                f"{', '.join(str(k) for k, v in by_comp.items() if not v)}."
+            )
 
     return np.mean(vols)
 
@@ -250,10 +271,10 @@ def get_average_volume_from_database(
             return {k: data[k].squeeze() for k in ("avg_vol", "count")}
         return None
 
-    chem_env_key = _get_chem_env_key_from_composition(
+    full_chem_env_key = _get_chem_env_key_from_composition(
         composition, ignore_oxi_states=ignore_oxi_states
     )
-    if (avg_vol := get_entry_from_dict(chem_env_key)) is not None:
+    if (avg_vol := get_entry_from_dict(full_chem_env_key)) is not None:
         return avg_vol["avg_vol"]
 
     vols = []
@@ -268,6 +289,19 @@ def get_average_volume_from_database(
             if (avg_vol := get_entry_from_dict(chem_env_key)) is not None:
                 vols.append(avg_vol["avg_vol"] * avg_vol["count"])
                 counts += avg_vol["count"]
+
+    # Fallback, relative weight of monatomic volumes
+    if counts == 0:
+        by_comp = {ele: get_entry_from_dict(ele.name) for ele in composition.elements}
+        if any(v is None for v in by_comp.values()):
+            raise ValueError(
+                "No unary data for "
+                f"{', '.join(str(k) for k, v in by_comp.items() if v is None)}"
+            )
+        return (
+            sum(coeff * by_comp[ele]["avg_vol"] for ele, coeff in composition.items())
+            / composition.num_atoms
+        )
 
     return sum(vols) / counts
 

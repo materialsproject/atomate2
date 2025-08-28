@@ -17,6 +17,8 @@ from atomate2.common.schemas.gruneisen import GruneisenParameterDocument
 from atomate2.common.schemas.phonons import PhononBSDOSDoc
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     from pymatgen.core.structure import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
@@ -128,11 +130,11 @@ def run_phonon_jobs(
 )
 def compute_gruneisen_param(
     code: str,
-    phonopy_yaml_paths_dict: dict,
-    phonon_imaginary_modes_info: dict,
+    phonopy_yaml_paths_dict: dict[str, Path],
+    phonon_imaginary_modes_info: dict[str, bool],
     kpath_scheme: str,
     symprec: float,
-    mesh: tuple | float = (20, 20, 20),
+    mesh: tuple[int, int, int] | float = (20, 20, 20),
     structure: Structure = None,
     **compute_gruneisen_param_kwargs,
 ) -> GruneisenParameterDocument:
