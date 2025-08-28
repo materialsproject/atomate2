@@ -1,8 +1,0 @@
-MLFF
-====
-
-.. currentmodule:: atomate2.forcefields
-
-.. autoclass:: MLFF
-   :show-inheritance:
-   :members:

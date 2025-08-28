@@ -28,6 +28,7 @@ atomate2.common.jobs
    :recursive:
 
    anharmonicity
+   approx_neb
    defect
    elastic
    electrode
@@ -35,6 +36,7 @@ atomate2.common.jobs
    gruneisen
    magnetism
    mpmorph
+   neb
    phonons
    qha
    utils

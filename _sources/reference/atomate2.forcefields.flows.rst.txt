@@ -27,6 +27,7 @@ atomate2.forcefields.flows
    :toctree:
    :recursive:
 
+   approx_neb
    elastic
    eos
    gruneisen

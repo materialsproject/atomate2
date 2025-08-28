@@ -1,8 +1,0 @@
-NequipRelaxMaker
-================
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: NequipRelaxMaker
-   :show-inheritance:
-   :members:

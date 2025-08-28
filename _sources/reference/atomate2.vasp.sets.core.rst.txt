@@ -54,6 +54,9 @@ atomate2.vasp.sets.core
       
    
    
+      
+   
+   
    
    
    
@@ -74,6 +77,7 @@ atomate2.vasp.sets.core
       HSETightRelaxSetGenerator
       LobsterTightStaticSetGenerator
       MDSetGenerator
+      NebSetGenerator
       NonSCFSetGenerator
       RelaxConstVolSetGenerator
       RelaxSetGenerator

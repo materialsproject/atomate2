@@ -1,8 +1,0 @@
-GAPStaticMaker
-==============
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: GAPStaticMaker
-   :show-inheritance:
-   :members:

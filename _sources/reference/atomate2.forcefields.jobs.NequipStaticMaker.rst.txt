@@ -1,8 +1,0 @@
-NequipStaticMaker
-=================
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: NequipStaticMaker
-   :show-inheritance:
-   :members:

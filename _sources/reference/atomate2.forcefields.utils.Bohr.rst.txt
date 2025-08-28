@@ -1,0 +1,6 @@
+Bohr
+====
+
+.. currentmodule:: atomate2.forcefields.utils
+
+.. autodata:: Bohr

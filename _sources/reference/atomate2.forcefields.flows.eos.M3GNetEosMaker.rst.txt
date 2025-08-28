@@ -1,8 +1,0 @@
-M3GNetEosMaker
-==============
-
-.. currentmodule:: atomate2.forcefields.flows.eos
-
-.. autoclass:: M3GNetEosMaker
-   :show-inheritance:
-   :members:

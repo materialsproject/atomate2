@@ -1,8 +1,0 @@
-CHGNetRelaxMaker
-================
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: CHGNetRelaxMaker
-   :show-inheritance:
-   :members:

@@ -1,8 +1,0 @@
-MACERelaxMaker
-==============
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: MACERelaxMaker
-   :show-inheritance:
-   :members:

@@ -1,0 +1,42 @@
+atomate2.forcefields.neb
+========================
+
+.. automodule:: atomate2.forcefields.neb
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      ForceFieldNebFromEndpointsMaker
+      ForceFieldNebFromImagesMaker
+      TYPE_CHECKING
+
+

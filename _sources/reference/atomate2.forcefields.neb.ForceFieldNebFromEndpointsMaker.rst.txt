@@ -1,0 +1,8 @@
+ForceFieldNebFromEndpointsMaker
+===============================
+
+.. currentmodule:: atomate2.forcefields.neb
+
+.. autoclass:: ForceFieldNebFromEndpointsMaker
+   :show-inheritance:
+   :members:

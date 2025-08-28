@@ -1,8 +1,0 @@
-GAPMDMaker
-==========
-
-.. currentmodule:: atomate2.forcefields.md
-
-.. autoclass:: GAPMDMaker
-   :show-inheritance:
-   :members:

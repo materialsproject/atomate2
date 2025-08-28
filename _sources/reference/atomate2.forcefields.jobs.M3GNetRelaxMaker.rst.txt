@@ -1,8 +1,0 @@
-M3GNetRelaxMaker
-================
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: M3GNetRelaxMaker
-   :show-inheritance:
-   :members:

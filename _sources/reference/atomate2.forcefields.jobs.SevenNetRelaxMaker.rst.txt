@@ -1,8 +1,0 @@
-SevenNetRelaxMaker
-==================
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: SevenNetRelaxMaker
-   :show-inheritance:
-   :members:

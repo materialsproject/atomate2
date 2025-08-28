@@ -29,6 +29,7 @@ atomate2.vasp.flows
 
    adsorption
    amset
+   approx_neb
    core
    defect
    elastic

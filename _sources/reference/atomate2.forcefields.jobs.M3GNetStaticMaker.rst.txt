@@ -1,8 +1,0 @@
-M3GNetStaticMaker
-=================
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: M3GNetStaticMaker
-   :show-inheritance:
-   :members:

@@ -18,15 +18,6 @@ atomate2.forcefields.flows.eos
       
    
    
-      
-   
-   
-      
-   
-   
-      
-   
-   
    
    
    
@@ -40,10 +31,7 @@ atomate2.forcefields.flows.eos
       :toctree:
       :nosignatures:
    
-      CHGNetEosMaker
       ForceFieldEosMaker
-      M3GNetEosMaker
-      MACEEosMaker
       TYPE_CHECKING
 
 

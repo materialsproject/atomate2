@@ -1,0 +1,6 @@
+collect\_neb\_output
+====================
+
+.. currentmodule:: atomate2.vasp.jobs.neb
+
+.. autofunction:: collect_neb_output

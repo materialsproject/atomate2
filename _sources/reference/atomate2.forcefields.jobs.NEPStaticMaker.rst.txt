@@ -1,8 +1,0 @@
-NEPStaticMaker
-==============
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: NEPStaticMaker
-   :show-inheritance:
-   :members:

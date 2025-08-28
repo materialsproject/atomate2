@@ -1,0 +1,50 @@
+atomate2.vasp.jobs.approx\_neb
+==============================
+
+.. automodule:: atomate2.vasp.jobs.approx_neb
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      get_charge_density
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      ApproxNebHostRelaxMaker
+      ApproxNebImageRelaxMaker
+      TYPE_CHECKING
+
+

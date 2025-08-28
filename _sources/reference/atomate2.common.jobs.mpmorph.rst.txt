@@ -24,6 +24,7 @@ atomate2.common.jobs.mpmorph
 
 
    
+      
    
    
    
@@ -37,5 +38,16 @@ atomate2.common.jobs.mpmorph
    
    
    
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      TYPE_CHECKING
 
 

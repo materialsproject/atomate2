@@ -1,0 +1,8 @@
+NebFromImagesMaker
+==================
+
+.. currentmodule:: atomate2.vasp.jobs.neb
+
+.. autoclass:: NebFromImagesMaker
+   :show-inheritance:
+   :members:

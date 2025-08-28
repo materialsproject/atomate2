@@ -1,0 +1,8 @@
+ApproxNebHostRelaxMaker
+=======================
+
+.. currentmodule:: atomate2.vasp.jobs.approx_neb
+
+.. autoclass:: ApproxNebHostRelaxMaker
+   :show-inheritance:
+   :members:

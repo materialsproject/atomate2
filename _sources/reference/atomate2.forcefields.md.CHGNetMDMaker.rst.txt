@@ -1,8 +1,0 @@
-CHGNetMDMaker
-=============
-
-.. currentmodule:: atomate2.forcefields.md
-
-.. autoclass:: CHGNetMDMaker
-   :show-inheritance:
-   :members:

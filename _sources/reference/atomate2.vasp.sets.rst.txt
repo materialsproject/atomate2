@@ -27,6 +27,7 @@ atomate2.vasp.sets
    :toctree:
    :recursive:
 
+   approx_neb
    base
    core
    defect

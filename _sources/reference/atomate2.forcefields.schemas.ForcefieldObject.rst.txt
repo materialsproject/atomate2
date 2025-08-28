@@ -1,8 +1,0 @@
-ForcefieldObject
-================
-
-.. currentmodule:: atomate2.forcefields.schemas
-
-.. autoclass:: ForcefieldObject
-   :show-inheritance:
-   :members:

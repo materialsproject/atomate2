@@ -1,0 +1,8 @@
+ApproxNebSetGenerator
+=====================
+
+.. currentmodule:: atomate2.vasp.sets.approx_neb
+
+.. autoclass:: ApproxNebSetGenerator
+   :show-inheritance:
+   :members:

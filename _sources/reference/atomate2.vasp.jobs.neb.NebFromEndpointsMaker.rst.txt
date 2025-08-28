@@ -1,0 +1,8 @@
+NebFromEndpointsMaker
+=====================
+
+.. currentmodule:: atomate2.vasp.jobs.neb
+
+.. autoclass:: NebFromEndpointsMaker
+   :show-inheritance:
+   :members:

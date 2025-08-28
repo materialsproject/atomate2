@@ -1,0 +1,33 @@
+atomate2.vasp.sets.approx\_neb
+==============================
+
+.. automodule:: atomate2.vasp.sets.approx_neb
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      ApproxNebSetGenerator
+
+

@@ -1,0 +1,8 @@
+NebInterpolation
+================
+
+.. currentmodule:: atomate2.common.jobs.neb
+
+.. autoclass:: NebInterpolation
+   :show-inheritance:
+   :members:

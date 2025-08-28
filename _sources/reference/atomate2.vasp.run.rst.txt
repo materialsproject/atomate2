@@ -30,6 +30,9 @@ atomate2.vasp.run
       
    
    
+      
+   
+   
    
    
    
@@ -49,5 +52,6 @@ atomate2.vasp.run
       DEFAULT_HANDLERS
       JobType
       TYPE_CHECKING
+      VaspNebFilesValidator
 
 

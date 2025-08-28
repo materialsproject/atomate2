@@ -1,8 +1,0 @@
-GAPRelaxMaker
-=============
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: GAPRelaxMaker
-   :show-inheritance:
-   :members:

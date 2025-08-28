@@ -1,8 +1,0 @@
-CHGNetStaticMaker
-=================
-
-.. currentmodule:: atomate2.forcefields.jobs
-
-.. autoclass:: CHGNetStaticMaker
-   :show-inheritance:
-   :members:

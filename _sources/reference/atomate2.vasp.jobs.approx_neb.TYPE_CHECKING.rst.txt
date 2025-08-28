@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.vasp.jobs.approx_neb
+
+.. autodata:: TYPE_CHECKING

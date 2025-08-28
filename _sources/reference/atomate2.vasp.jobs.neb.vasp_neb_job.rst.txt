@@ -1,0 +1,6 @@
+vasp\_neb\_job
+==============
+
+.. currentmodule:: atomate2.vasp.jobs.neb
+
+.. autofunction:: vasp_neb_job

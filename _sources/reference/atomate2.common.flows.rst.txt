@@ -28,6 +28,7 @@ atomate2.common.flows
    :recursive:
 
    anharmonicity
+   approx_neb
    defect
    elastic
    electrode

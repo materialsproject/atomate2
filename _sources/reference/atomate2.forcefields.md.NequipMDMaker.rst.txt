@@ -1,8 +1,0 @@
-NequipMDMaker
-=============
-
-.. currentmodule:: atomate2.forcefields.md
-
-.. autoclass:: NequipMDMaker
-   :show-inheritance:
-   :members:

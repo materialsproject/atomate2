@@ -15,12 +15,6 @@ atomate2.forcefields.schemas
       
    
    
-      
-   
-   
-      
-   
-   
    
    
    
@@ -35,7 +29,5 @@ atomate2.forcefields.schemas
       :nosignatures:
    
       ForceFieldTaskDocument
-      ForcefieldObject
-      ForcefieldResult
 
 

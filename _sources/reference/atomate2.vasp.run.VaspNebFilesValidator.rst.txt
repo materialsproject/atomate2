@@ -1,0 +1,8 @@
+VaspNebFilesValidator
+=====================
+
+.. currentmodule:: atomate2.vasp.run
+
+.. autoclass:: VaspNebFilesValidator
+   :show-inheritance:
+   :members:

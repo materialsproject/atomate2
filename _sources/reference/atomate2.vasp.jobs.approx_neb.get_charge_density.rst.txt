@@ -1,0 +1,6 @@
+get\_charge\_density
+====================
+
+.. currentmodule:: atomate2.vasp.jobs.approx_neb
+
+.. autofunction:: get_charge_density

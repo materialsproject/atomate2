@@ -12,29 +12,12 @@
 
 
    
-      
-   
-   
-      
    
    
    
    
    
    
-   
-   
-   
-
-
-   .. rubric:: Classes
-
-   .. autosummary::
-      :toctree:
-      :nosignatures:
-   
-      MLFF
-      TYPE_CHECKING
 
 
 
@@ -47,5 +30,6 @@
    flows
    jobs
    md
+   neb
    schemas
    utils

@@ -1,0 +1,8 @@
+ForceFieldMixin
+===============
+
+.. currentmodule:: atomate2.forcefields.utils
+
+.. autoclass:: ForceFieldMixin
+   :show-inheritance:
+   :members:

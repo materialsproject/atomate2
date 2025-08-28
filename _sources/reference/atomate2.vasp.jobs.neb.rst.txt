@@ -1,0 +1,54 @@
+atomate2.vasp.jobs.neb
+======================
+
+.. automodule:: atomate2.vasp.jobs.neb
+
+   
+
+
+
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      collect_neb_output
+      vasp_neb_job
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      NebFromEndpointsMaker
+      NebFromImagesMaker
+      TYPE_CHECKING
+
+

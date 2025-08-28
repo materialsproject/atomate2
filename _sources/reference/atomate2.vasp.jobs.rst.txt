@@ -29,6 +29,7 @@ atomate2.vasp.jobs
 
    adsorption
    amset
+   approx_neb
    base
    core
    defect
@@ -42,4 +43,5 @@ atomate2.vasp.jobs
    mp
    mpmorph
    mvl
+   neb
    phonons

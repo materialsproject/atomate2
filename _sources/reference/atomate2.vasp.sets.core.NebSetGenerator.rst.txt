@@ -1,0 +1,8 @@
+NebSetGenerator
+===============
+
+.. currentmodule:: atomate2.vasp.sets.core
+
+.. autoclass:: NebSetGenerator
+   :show-inheritance:
+   :members:
