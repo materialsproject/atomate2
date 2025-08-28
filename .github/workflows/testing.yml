@@ -66,7 +66,7 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,strict-forcefields,tests,abinit,approxneb]
+          uv pip install .[strict,strict-forcefields,tests,abinit,approxneb,aims]
           uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
 
@@ -156,7 +156,7 @@ jobs:
   test-notebooks-and-ase:
     # prevent this action from running on forks
     if: github.repository == 'materialsproject/atomate2'
-    
+
     # It seems like anything torch-dependent and tblite can't be installed in the same environment
     # without the tblite tests failing in CI, see, e.g.:
     # https://github.com/tblite/tblite/issues/116
@@ -267,7 +267,7 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,strict-forcefields,tests,abinit]
+          uv pip install .[strict,strict-forcefields,tests,abinit,aims]
           uv pip install torch-runstats
           uv pip install --no-deps nequip==0.5.6
 
