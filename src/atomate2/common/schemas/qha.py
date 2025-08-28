@@ -1,7 +1,7 @@
 """Schemas for qha documents."""
 
 import logging
-from typing import Optional, Union
+from typing import Union
 
 import numpy as np
 from emmet.core.math import Matrix3D
@@ -17,77 +17,77 @@ logger = logging.getLogger(__name__)
 class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     """Collection of all data produced by the qha workflow."""
 
-    structure: Optional[Structure] = Field(
+    structure: Structure | None = Field(
         None, description="Structure of Materials Project."
     )
 
-    temperatures: Optional[list[float]] = Field(
+    temperatures: list[float] | None = Field(
         None,
         description="temperatures at which the vibrational part of the free energies"
         " and other properties have been computed",
     )
 
-    bulk_modulus: Optional[float] = Field(
+    bulk_modulus: float | None = Field(
         None, description="Bulk modulus in GPa computed without phonon contribution."
     )
-    thermal_expansion: Optional[list[float]] = Field(
+    thermal_expansion: list[float] | None = Field(
         None,
         description="Thermal expansion coefficients at temperatures. "
         "Shape=(temperatures,).",
     )
-    helmholtz_volume: Optional[list[list[float]]] = Field(
+    helmholtz_volume: list[list[float]] | None = Field(
         None,
         description="Free energies (eV) at temperatures and volumes (Angstrom^3)."
         "shape (temperatures, volumes)",  # TODO: add units here
     )
-    volume_temperature: Optional[list[float]] = Field(
+    volume_temperature: list[float] | None = Field(
         None,
         description="Volumes in Angstrom^3 at temperatures.Shape: (temperatures,)",
     )
-    gibbs_temperature: Optional[list[float]] = Field(
+    gibbs_temperature: list[float] | None = Field(
         None,
         description="Gibbs free energies in eV at temperatures. Shape: (temperatures,)",
     )
-    bulk_modulus_temperature: Optional[list[float]] = Field(
+    bulk_modulus_temperature: list[float] | None = Field(
         None,
         description="Bulk modulus in GPa  at temperature.Shape: (temperatures,)",
     )
-    heat_capacity_p_numerical: Optional[list[float]] = Field(
+    heat_capacity_p_numerical: list[float] | None = Field(
         None,
         description="Heat capacities in J/K/mol at constant pressure at temperatures."
         "Shape: (temperatures,)",
     )
-    gruneisen_temperature: Optional[list[float]] = Field(
+    gruneisen_temperature: list[float] | None = Field(
         None,
         description="Gruneisen parameters at temperatures.Shape: (temperatures,)",
     )
-    pressure: Optional[float] = Field(
+    pressure: float | None = Field(
         None, description="Pressure in GPA at which Gibb's energy was computed"
     )
-    t_max: Optional[float] = Field(
+    t_max: float | None = Field(
         None,
         description="Maximum temperature in K up to"
         " which free energy volume curves are evaluated",
     )
-    volumes: Optional[list[float]] = Field(None, description="Volumes in Angstrom^3.")
-    free_energies: Optional[list[list[float]]] = Field(
+    volumes: list[float] | None = Field(None, description="Volumes in Angstrom^3.")
+    free_energies: list[list[float]] | None = Field(
         None,
         description="List of free energies in J/mol for per formula unit. "
         "Shape: (temperatures, volumes)",
     )
-    heat_capacities: Optional[list[list[float]]] = Field(
+    heat_capacities: list[list[float]] | None = Field(
         None,
         description="List of heat capacities in J/K/mol  per formula unit. "
         "Shape: (temperatures, volumes)",
     )
-    entropies: Optional[list[list[float]]] = Field(
+    entropies: list[list[float]] | None = Field(
         None,
         description="List of entropies in J/(K*mol) per formula unit. "
         "Shape: (temperatures, volumes) ",
     )
-    formula_units: Optional[int] = Field(None, description="Formula units")
+    formula_units: int | None = Field(None, description="Formula units")
 
-    supercell_matrix: Optional[Matrix3D] = Field(None, description="Supercell matrix")
+    supercell_matrix: Matrix3D | None = Field(None, description="Supercell matrix")
 
     @classmethod
     def from_phonon_runs(
