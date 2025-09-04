@@ -2,10 +2,11 @@ from collections.abc import Callable
 from pathlib import Path
 
 import numpy as np
-from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
+from emmet.core.openmm import OpenMMTaskDocument
 from monty.serialization import loadfn
 from openmm import XmlSerializer
 
+from atomate2.openmm.interchange import OpenMMInterchange
 from atomate2.openmm.jobs import (
     EnergyMinimizationMaker,
     NPTMaker,
