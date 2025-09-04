@@ -15,7 +15,6 @@ from emmet.core.openmm import (
     Calculation,
     CalculationInput,
     CalculationOutput,
-    OpenMMInterchange,
     OpenMMTaskDocument,
 )
 from jobflow import Maker, Response, job
@@ -26,6 +25,7 @@ from openmm.app import StateDataReporter
 from openmm.unit import angstrom, kelvin, picoseconds
 from pymatgen.core import Structure
 
+from atomate2.openmm.interchange import OpenMMInterchange
 from atomate2.openmm.utils import (
     PymatgenTrajectoryReporter,
     increment_name,

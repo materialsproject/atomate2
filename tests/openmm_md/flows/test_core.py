@@ -4,12 +4,13 @@ import io
 from pathlib import Path
 
 import pytest
-from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
+from emmet.core.openmm import OpenMMTaskDocument
 from jobflow import Flow
 from MDAnalysis import Universe
 from openmm.app import PDBFile
 
 from atomate2.openmm.flows.core import OpenMMFlowMaker
+from atomate2.openmm.interchange import OpenMMInterchange
 from atomate2.openmm.jobs import EnergyMinimizationMaker, NPTMaker, NVTMaker
 
 try:
