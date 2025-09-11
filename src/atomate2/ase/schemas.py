@@ -17,7 +17,7 @@ from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import MoleculeMetadata, StructureMetadata
 from emmet.core.tasks import TaskState
 from emmet.core.trajectory import AtomTrajectory
-from emmet.core.utils import ValueEnum
+from emmet.core.types.enums import ValueEnum
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
