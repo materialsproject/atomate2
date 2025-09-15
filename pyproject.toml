@@ -89,7 +89,7 @@ tests = [
     "FireWorks==2.0.4",
     "nbmake==1.5.5",
     "pytest-cov==7.0.0",
-    "pytest-mock==3.14.1",
+    "pytest-mock==3.15.0",
     "pytest-split==0.10.0",
     "pytest-xdist==3.8.0",
     "pytest==8.4.2",
