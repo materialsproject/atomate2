@@ -7,23 +7,24 @@ from ase.io import Trajectory as AseTrajectory
 from ase.io import read
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from monty.serialization import dumpfn
-from pymatgen.core import Molecule, Structure
+from numpy.typing import ArrayLike
+from pymatgen.core import Lattice, Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
-from pymatgen.io.lammps.data import CombinedData, LammpsData
+from pymatgen.io.lammps.data import CombinedData, LammpsBox, LammpsData
 from pymatgen.io.lammps.generators import BaseLammpsGenerator
 
 
 def write_lammps_input_set(
-    data: Structure | LammpsData | CombinedData,
+    data: Structure | Molecule | LammpsData | CombinedData,
     input_set_generator: BaseLammpsGenerator,
+    box_or_lattice: Lattice | LammpsBox | ArrayLike | None = None,
     additional_data: LammpsData | CombinedData | None = None,
     directory: str | Path = ".",
 ) -> None:
     """Write LAMMPS input set to a directory."""
     input_set = input_set_generator.get_input_set(
-        data,
-        additional_data,
+        data=data, additional_data=additional_data, box_or_lattice=box_or_lattice
     )
     input_set.write_input(directory)
 

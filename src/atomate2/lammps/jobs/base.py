@@ -9,7 +9,7 @@ from pathlib import Path
 
 from emmet.core.vasp.task_valid import TaskState
 from jobflow import Maker, Response, job
-from pymatgen.core import Structure
+from pymatgen.core import Molecule, Structure
 from pymatgen.io.lammps.generators import (
     BaseLammpsSetGenerator,
     CombinedData,
@@ -92,7 +92,7 @@ class BaseLammpsMaker(Maker):
     @lammps_job
     def make(
         self,
-        input_structure: Structure | Path | LammpsData = None,
+        input_structure: Structure | Molecule | Path | LammpsData = None,
         prev_dir: Path | str = None,
     ) -> Response:
         """Run a LAMMPS calculation."""
