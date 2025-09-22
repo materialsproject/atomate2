@@ -19,6 +19,8 @@ from pymatgen.io.vasp.sets import VaspInputSet
 from pymatgen.util.coord import find_in_coord_list_pbc
 
 import atomate2.vasp.jobs.base
+import atomate2.vasp.jobs.defect
+import atomate2.vasp.jobs.neb
 
 try:
     import atomate2.vasp.jobs.defect
@@ -56,7 +58,7 @@ def zpath(path: str | Path) -> Path:
 
 def monkeypatch_vasp(
     monkeypatch: MonkeyPatch, vasp_test_dir: Path, nelect: int = 12
-) -> Generator[Callable[[Any, Any], Any], None, None]:
+) -> Generator[Callable[[Any, Any], Any]]:
     """Fake VASP calculations by copying reference files.
 
     This is provided as a generator and can be used as by conextmanagers and
@@ -119,6 +121,8 @@ def monkeypatch_vasp(
 
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.base, "run_vasp", mock_run_vasp)
+    monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
+    monkeypatch.setattr(atomate2.vasp.jobs.neb, "run_vasp", mock_run_vasp)
     if pmg_defects_installed:
         monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(VaspInputSet, "get_input_set", mock_get_input_set)
@@ -171,7 +175,14 @@ def fake_run_vasp(
         _check_kpoints(ref_path)
 
     if "poscar" in check_inputs:
-        _check_poscar(ref_path)
+        if len(neb_sub_dirs := sorted((ref_path / "inputs").glob("[0-9][0-9]"))) > 0:
+            for idx, neb_sub_dir in enumerate(neb_sub_dirs):
+                _check_poscar(
+                    zpath(neb_sub_dir / "POSCAR"),
+                    user_poscar_path=zpath(Path(f"{idx:02}") / "POSCAR"),
+                )
+        else:
+            _check_poscar(ref_path)
 
     if "potcar" in check_inputs:
         _check_potcar(ref_path)
@@ -255,10 +266,14 @@ def _check_kpoints(ref_path: Path) -> None:
             )
 
 
-def _check_poscar(ref_path: Path) -> None:
+def _check_poscar(
+    ref_poscar_path: Path,
+    user_poscar_path: Path | None = None,
+) -> None:
     """Check that POSCAR information is consistent with the reference calculation."""
-    user_poscar_path = zpath("POSCAR")
-    ref_poscar_path = zpath(ref_path / "inputs" / "POSCAR")
+    user_poscar_path = user_poscar_path or zpath("POSCAR")
+    if ref_poscar_path.is_dir():
+        ref_poscar_path = zpath(ref_poscar_path / "inputs" / "POSCAR")
 
     user_poscar = Poscar.from_file(user_poscar_path)
     ref_poscar = Poscar.from_file(ref_poscar_path)
@@ -278,8 +293,11 @@ def _check_poscar(ref_path: Path) -> None:
         or user_poscar.site_symbols != ref_poscar.site_symbols
         or not all(coord_match)
     ):
+        no_match = [f"{idx}" for idx, v in enumerate(coord_match) if not v]
+        aux_str = " on site(s) " + ", ".join(no_match) if no_match else ""
         raise ValueError(
-            f"POSCAR files are inconsistent\n\n{ref_poscar_path!s}\n{ref_poscar}"
+            f"POSCAR files are inconsistent{aux_str}"
+            f"\n\n{ref_poscar_path!s}\n{ref_poscar}"
             f"\n\n{user_poscar_path!s}\n{user_poscar}"
         )
 
@@ -324,9 +342,17 @@ def _clear_vasp_inputs() -> None:
 def _copy_vasp_outputs(ref_path: Path) -> None:
     """Copy VASP output files from the reference directory."""
     output_path = ref_path / "outputs"
+    neb_dirs = sorted(output_path.glob("[0-9][0-9]"))
+
     for output_file in output_path.iterdir():
         if output_file.is_file():
             shutil.copy(output_file, ".")
+
+    for idx, neb_dir in enumerate(neb_dirs):
+        (copied_neb_dir := Path(f"./{idx:02}")).mkdir(parents=True, exist_ok=True)
+        for output_file in neb_dir.iterdir():
+            if output_file.is_file():
+                shutil.copy(output_file, copied_neb_dir)
 
 
 class TestData(BaseModel):

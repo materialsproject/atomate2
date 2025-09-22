@@ -13,15 +13,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from ase.stress import voigt_6_to_full_3x3_stress
-from ase.units import GPa
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import MoleculeMetadata, StructureMetadata
+from emmet.core.tasks import TaskState
+from emmet.core.trajectory import AtomTrajectory
 from emmet.core.utils import ValueEnum
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 _task_doc_translation_keys = {
     "input",
@@ -30,6 +29,7 @@ _task_doc_translation_keys = {
     "dir_name",
     "included_objects",
     "objects",
+    "state",
     "is_force_converged",
     "energy_downhill",
     "tags",
@@ -47,8 +47,12 @@ class AseResult(BaseModel):
         None, description="The final total energy from the calculation."
     )
 
-    trajectory: PmgTrajectory | None = Field(
+    trajectory: AtomTrajectory | None = Field(
         None, description="The relaxation or molecular dynamics trajectory."
+    )
+
+    converged: bool | None = Field(
+        None, description="Whether the ASE optimizer converged."
     )
 
     is_force_converged: bool | None = Field(
@@ -99,7 +103,7 @@ class AseBaseModel(BaseModel):
     structure: Structure | None = Field(None, description="The structure at this step.")
     molecule: Molecule | None = Field(None, description="The molecule at this step.")
 
-    def model_post_init(self, _context: Any) -> None:
+    def model_post_init(self, context: Any, /) -> None:
         """Establish alias to structure and molecule fields."""
         if self.structure is None and isinstance(self.mol_or_struct, Structure):
             self.structure = self.mol_or_struct
@@ -140,7 +144,7 @@ class OutputDoc(AseBaseModel):
     # NOTE: units for stresses were converted to kbar (* -10 from standard output)
     #       to comply with MP convention
     stress: Matrix3D | None = Field(
-        None, description="The stress on the cell in units of kbar (in Voigt notation)."
+        None, description="The stress on the cell in units of kbar."
     )
 
     # NOTE: the ionic_steps can also be a dict when these are in blob storage and
@@ -215,6 +219,10 @@ class AseStructureTaskDoc(StructureMetadata):
         None, description="ASE objects associated with this task"
     )
 
+    state: TaskState | None = Field(
+        None, description="Whether the calculation completed successfully."
+    )
+
     is_force_converged: bool | None = Field(
         None,
         description=(
@@ -281,6 +289,10 @@ class AseMoleculeTaskDoc(MoleculeMetadata):
         None, description="ASE objects associated with this task"
     )
 
+    state: TaskState | None = Field(
+        None, description="Whether the calculation completed successfully."
+    )
+
     is_force_converged: bool | None = Field(
         None,
         description=(
@@ -322,6 +334,10 @@ class AseTaskDoc(AseBaseModel):
     )
     objects: dict[AseObject, Any] | None = Field(
         None, description="ASE objects associated with this task"
+    )
+
+    state: TaskState | None = Field(
+        None, description="Whether the calculation completed successfully."
     )
 
     is_force_converged: bool | None = Field(
@@ -399,22 +415,7 @@ class AseTaskDoc(AseBaseModel):
         input_mol_or_struct = None
         if trajectory:
             n_steps = len(trajectory)
-
-        # NOTE: convert stress units from eV/A³ to kBar (* -1 from standard output)
-        # and to 3x3 matrix to comply with MP convention
-        if n_steps:
-            for idx in range(n_steps):
-                if trajectory.frame_properties[idx].get("stress") is not None:
-                    trajectory.frame_properties[idx]["stress"] = (
-                        voigt_6_to_full_3x3_stress(
-                            [
-                                val * -10 / GPa
-                                for val in trajectory.frame_properties[idx]["stress"]
-                            ]
-                        )
-                    )
-
-            input_mol_or_struct = trajectory[0]
+            input_mol_or_struct = trajectory.to_pmg(frame_props=tuple(), indices=0)[0]
 
         input_doc = InputDoc(
             mol_or_struct=input_mol_or_struct,
@@ -432,63 +433,43 @@ class AseTaskDoc(AseBaseModel):
             steps = 1
             n_steps = 1
 
-            if isinstance(input_mol_or_struct, Structure):
-                traj_method = "from_structures"
-            elif isinstance(input_mol_or_struct, Molecule):
-                traj_method = "from_molecules"
-
-            trajectory = getattr(PmgTrajectory, traj_method)(
-                [input_mol_or_struct],
-                frame_properties=[trajectory.frame_properties[0]],
-                constant_lattice=False,
-            )
+            if trajectory:
+                trajectory = trajectory[-1]
             output_mol_or_struct = input_mol_or_struct
         else:
             output_mol_or_struct = result.final_mol_or_struct
 
-        if trajectory is None:
-            final_energy = result.final_energy
-            final_forces = None
-            final_stress = None
-            ionic_steps = None
+        final_energy = result.final_energy
+        final_forces = None
+        final_stress = None
+        ionic_steps = None
 
-        else:
-            final_energy = trajectory.frame_properties[-1]["energy"]
-            final_forces = trajectory.frame_properties[-1]["forces"]
-            final_stress = trajectory.frame_properties[-1].get("stress")
+        if trajectory:
+            final_energy = trajectory.energy[-1]
+            final_forces = trajectory.forces[-1]
+            ionic_step_props = ["energy", "forces"]
+            if trajectory.stress:
+                final_stress = trajectory.stress[-1]
+                ionic_step_props.append("stress")
+
+            if trajectory.magmoms:
+                ionic_step_props.append("magmoms")
 
             ionic_steps = []
             if ionic_step_data is not None and len(ionic_step_data) > 0:
                 for idx in range(n_steps):
                     _ionic_step_data = {
                         key: (
-                            trajectory.frame_properties[idx].get(key)
+                            getattr(trajectory, key)[idx]
                             if key in ionic_step_data
                             else None
                         )
-                        for key in ("energy", "forces", "stress")
+                        for key in ionic_step_props
                     }
 
-                    current_mol_or_struct = (
-                        trajectory[idx]
-                        if any(
-                            v in ionic_step_data
-                            for v in ("mol_or_struct", "structure", "molecule")
-                        )
-                        else None
-                    )
-
-                    # include "magmoms" in `ionic_step` if the trajectory has "magmoms"
-                    if "magmoms" in trajectory.frame_properties[idx]:
-                        _ionic_step_data.update(
-                            {
-                                "magmoms": (
-                                    trajectory.frame_properties[idx]["magmoms"]
-                                    if "magmoms" in ionic_step_data
-                                    else None
-                                )
-                            }
-                        )
+                    current_mol_or_struct = trajectory.to_pmg(
+                        frame_props=tuple(), indices=-1
+                    )[0]
 
                     ionic_step = IonicStep(
                         mol_or_struct=current_mol_or_struct,
@@ -516,6 +497,10 @@ class AseTaskDoc(AseBaseModel):
             n_steps=n_steps,
         )
 
+        state = None
+        if result.converged is not None:
+            state = TaskState.SUCCESS if result.converged else TaskState.FAILED
+
         return cls(
             mol_or_struct=output_mol_or_struct,
             input=input_doc,
@@ -523,6 +508,7 @@ class AseTaskDoc(AseBaseModel):
             ase_calculator_name=ase_calculator_name,
             included_objects=list(objects.keys()),
             objects=objects,
+            state=state,
             is_force_converged=result.is_force_converged,
             energy_downhill=result.energy_downhill,
             dir_name=result.dir_name,

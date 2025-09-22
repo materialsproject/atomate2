@@ -13,13 +13,10 @@ from atomate2.openmm.flows.core import _get_calcs_reversed, collect_outputs
 from atomate2.openmm.jobs.base import BaseOpenMMMaker, openmm_job
 
 if TYPE_CHECKING:
-    from emmet.core.openmm import (
-        Calculation,
-        OpenMMFlowMaker,
-        OpenMMInterchange,
-        OpenMMTaskDocument,
-    )
+    from emmet.core.openmm import Calculation, OpenMMFlowMaker, OpenMMTaskDocument
     from openff.interchange import Interchange
+
+    from atomate2.openmm.interchange import OpenMMInterchange
 
 
 def _get_final_jobs(input_jobs: list[Job] | Flow) -> list[Job]:

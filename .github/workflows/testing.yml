@@ -66,8 +66,8 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,strict-forcefields,tests,abinit]
-          uv pip install torch-runstats
+          uv pip install .[strict,strict-forcefields,tests,abinit,approxneb]
+          uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
@@ -87,7 +87,7 @@ jobs:
         # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
         run: |
           micromamba activate a2
-          pytest --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --ignore=tests/openff_md --ignore=tests/openmm_md --cov=atomate2 --cov-report=xml
+          pytest -n auto --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --ignore=tests/openff_md --ignore=tests/openmm_md --cov=atomate2 --cov-report=xml
 
 
       - uses: codecov/codecov-action@v1
@@ -151,7 +151,7 @@ jobs:
 
         run: |
           micromamba activate a2
-          pytest tests/{openff_md,openmm_md}
+          pytest -n auto tests/{openff_md,openmm_md}
 
   test-notebooks-and-ase:
     # prevent this action from running on forks
@@ -210,14 +210,14 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields
+          pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields
 
       - name: Test ASE
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest --splits 1 --group 1 --cov=atomate2 --cov-report=xml tests/ase
+          pytest -n auto --splits 1 --group 1 --cov=atomate2 --cov-report=xml tests/ase
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
@@ -288,7 +288,7 @@ jobs:
         # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
         run: |
           micromamba activate a2
-          pytest --nbmake ./tutorials/force_fields
+          pytest -n auto --nbmake ./tutorials/force_fields
 
 
       - uses: codecov/codecov-action@v1
@@ -321,7 +321,7 @@ jobs:
         run: sphinx-build docs docs_build
 
   automerge:
-    needs: [lint, test-non-ase, test-notebooks-and-ase, test-force-field-notebook, docs]
+    needs: [docs, lint, test-force-field-notebook, test-non-ase, test-notebooks-and-ase, test-openff]
     runs-on: ubuntu-latest
 
     permissions:
