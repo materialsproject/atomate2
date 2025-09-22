@@ -1,5 +1,23 @@
 # Change log
 
+## v0.0.21
+
+### Bug Fixes 🐛
+* switch to CONTCAR read for LOBSTERTaskDoc by @naik-aakash in https://github.com/materialsproject/atomate2/pull/1204
+* cover cases where optimizer does additional steps even though step is set to 0 or 1 for writing xyz files by @JaGeo in https://github.com/materialsproject/atomate2/pull/1207
+* Remove walrus operator to avoid unassigned vmax by @Jonas-Finkler in https://github.com/materialsproject/atomate2/pull/1203
+### Enhancements 🛠
+* add file output xyz file including final atoms object to ase and forcefield jobs by @JaGeo in https://github.com/materialsproject/atomate2/pull/1206
+### Documentation 📖
+* Add video tutorials to README by @JaGeo in https://github.com/materialsproject/atomate2/pull/1191
+* be more concrete for tutorial video names in readme by @JaGeo in https://github.com/materialsproject/atomate2/pull/1192
+* Adding download statistics to readme by @JaGeo in https://github.com/materialsproject/atomate2/pull/1209
+
+## New Contributors
+* @Jonas-Finkler made their first contribution in https://github.com/materialsproject/atomate2/pull/1203
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.20...v0.0.21
+
 ## v0.0.20
 
 ### Enhancements 🛠

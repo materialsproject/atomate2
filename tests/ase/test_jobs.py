@@ -12,6 +12,7 @@ from pymatgen.core import Molecule, Structure
 
 from atomate2.ase.jobs import (
     AseMaker,
+    AseRelaxMaker,
     GFNxTBRelaxMaker,
     GFNxTBStaticMaker,
     LennardJonesRelaxMaker,
@@ -34,6 +35,15 @@ class EMTStaticMaker(AseMaker):
         return EMT()
 
 
+@dataclass
+class EMTRelaxMaker(AseRelaxMaker):
+    name: str = "EMT relax maker"
+
+    @property
+    def calculator(self):
+        return EMT()
+
+
 def test_base_maker(test_dir):
     structure = Structure.from_file(test_dir / "structures" / "Al2Au.cif")
     ase_res = EMTStaticMaker().run_ase(structure)
@@ -45,6 +55,24 @@ def test_base_maker(test_dir):
     resp = run_locally(job)
     output = resp[job.uuid][1].output
     assert isinstance(output, AseStructureTaskDoc)
+
+
+@pytest.mark.parametrize("constant_vol", [True, False])
+def test_filters_and_kwargs(test_dir, constant_vol):
+    structure = Structure.from_file(test_dir / "structures" / "Al2Au.cif")
+    structure = structure.scale_lattice(1.1 * structure.volume)
+
+    job = EMTRelaxMaker(
+        relax_kwargs={"filter_kwargs": {"constant_volume": constant_vol}}
+    ).make(structure)
+    resp = run_locally(job)
+    output = resp[job.uuid][1].output
+
+    assert len(output.output.ionic_steps) > 1
+    if constant_vol:
+        assert output.structure.volume == pytest.approx(structure.volume)
+    else:
+        assert abs(output.structure.volume - structure.volume) > 1e-2
 
 
 def test_lennard_jones_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):
@@ -70,6 +98,7 @@ def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
     response = run_locally(job)
     output = response[job.uuid][1].output
 
+    assert len(output.output.ionic_steps) == 1
     assert output.output.energy == pytest.approx(-0.0179726955438795)
     assert output.structure.volume == pytest.approx(24.334)
     assert isinstance(output, AseStructureTaskDoc)
