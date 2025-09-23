@@ -4,7 +4,7 @@ import os
 import warnings
 from glob import glob
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 
 from emmet.core.structure import StructureMetadata
 from emmet.core.vasp.calculation import StoreTrajectoryOption
@@ -30,7 +30,7 @@ class LammpsTaskDocument(StructureMetadata):
         datetime_str(), description="Timestamp for the last time the task was updated"
     )
 
-    trajectories: Optional[list[Trajectory]] = Field(
+    trajectories: list[Trajectory] | None = Field(
         None, description="Pymatgen trajectories output from lammps run"
     )
 
@@ -40,15 +40,15 @@ class LammpsTaskDocument(StructureMetadata):
 
     state: TaskState = Field(None, description="State of the calculation")
 
-    dump_files: Optional[dict] = Field(
+    dump_files: dict | None = Field(
         None, description="Dump files produced by lammps run"
     )
 
-    structure: Optional[Structure] = Field(
+    structure: Structure | None = Field(
         None, description="Final structure of the system, taken from the last dump file"
     )
 
-    metadata: Optional[dict] = Field(None, description="Metadata for the task")
+    metadata: dict | None = Field(None, description="Metadata for the task")
 
     raw_log_file: str = Field(None, description="Log file output from lammps run")
 
@@ -59,13 +59,13 @@ class LammpsTaskDocument(StructureMetadata):
 
     inputs: dict = Field(None, description="Input files for the task")
 
-    output_data_files: Optional[list[LammpsData]] = Field(
+    output_data_files: list[LammpsData] | None = Field(
         None,
         description="Output data file from lammps run, \
             containing structure and topology information",
     )
 
-    additional_outputs: Optional[dict] = Field(
+    additional_outputs: dict | None = Field(
         None,
         description="Additional outputs written out by the lammps run that \
             do not end with .dump or .log",
@@ -79,7 +79,7 @@ class LammpsTaskDocument(StructureMetadata):
         store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         trajectory_format: Literal["pmg", "ase"] = "pmg",
         output_file_pattern: str | None = None,
-        parse_additional_outputs: Optional[list] = None,
+        parse_additional_outputs: list | None = None,
     ) -> "LammpsTaskDocument":
         """
         Create a LammpsTaskDocument from a directory where LAMMPS was run.
@@ -107,10 +107,10 @@ class LammpsTaskDocument(StructureMetadata):
                 raw_log = f.read()
             thermo_log = parse_lammps_log(log_file)
             state = TaskState.ERROR if "ERROR" in raw_log else TaskState.SUCCESS
-        except ValueError:
+        except ValueError as e:
             raise ValueError(
                 f"Error parsing log file for {dir_name}, incomplete job!"
-            ) from None
+            ) from e
 
         if state == TaskState.ERROR:
             return LammpsTaskDocument(
@@ -175,7 +175,7 @@ class LammpsTaskDocument(StructureMetadata):
         output_data_file_paths = [
             path for path in glob("*.data*", root_dir=dir_name) if path != "input.data"
         ]
-        if len(output_data_file_paths):
+        if output_data_file_paths:
             try:
                 output_data_files = [
                     LammpsData.from_file(

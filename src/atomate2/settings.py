@@ -242,7 +242,7 @@ class Atomate2Settings(BaseSettings):
 
     LAMMPS_CMD: str = Field("lmp", description="The command to run LAMMPS.")
 
-    LAMMPS_MPICMD: Optional[str] = Field(
+    LAMMPS_MPICMD: str | None = Field(
         None,
         description="The command to run LAMMPS with MPI, e.g., 'mpirun -n 128' "
         "or 'mpiexec'. If None, LAMMPS will be run in serial mode.",
