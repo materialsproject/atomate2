@@ -14,8 +14,7 @@ class LammpsNVESet(BaseLammpsSetGenerator):
     settings: dict | None = None
 
     def __init__(self, settings: dict | None = None, **kwargs) -> None:
-        self.settings = settings or {}
-        self.settings.update(settings)
+        self.settings = settings if settings else {}
         self.settings.update(
             {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS}
         )
@@ -57,8 +56,7 @@ class LammpsNVTSet(BaseLammpsSetGenerator):
         self.thermostat = thermostat
         self.start_temp = start_temp
         self.end_temp = end_temp
-        self.settings = settings or {}
-        self.settings.update(settings)
+        self.settings = settings if settings else {}
 
         self.settings.update(
             {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS}
@@ -109,7 +107,7 @@ class LammpsNPTSet(BaseLammpsSetGenerator):
         self.end_pressure = end_pressure
         self.start_temp = start_temp
         self.end_temp = end_temp
-        self.settings = settings or {}
+        self.settings = settings if settings else {}
         self.settings.update(
             {
                 "ensemble": self.ensemble.value,
@@ -121,7 +119,6 @@ class LammpsNPTSet(BaseLammpsSetGenerator):
                 "friction": friction,
             }
         )
-        self.settings.update(settings)
         self.settings.update(
             {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS}
         )
@@ -151,7 +148,7 @@ class LammpsMinimizeSet(BaseLammpsSetGenerator):
         self.max_steps = max_steps
         self.tol = tol
         self.pressure = pressure
-        self.settings = settings or {}
+        self.settings = settings if settings else {}
         self.settings.update(
             {
                 "ensemble": "minimize",
@@ -161,7 +158,6 @@ class LammpsMinimizeSet(BaseLammpsSetGenerator):
                 "tol": self.tol,
             }
         )
-        self.settings.update(settings)
         self.settings.update(
             {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS}
         )
