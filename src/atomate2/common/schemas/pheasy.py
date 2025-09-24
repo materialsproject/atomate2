@@ -250,7 +250,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         )
 
         # Write the POSCAR and SPOSCAR files for the input of pheasy code
-        supercell = phonon.get_supercell()
+        supercell = phonon._supercell  # noqa: SLF001
         write_vasp("POSCAR", cell)
         write_vasp("SPOSCAR", supercell)
 
