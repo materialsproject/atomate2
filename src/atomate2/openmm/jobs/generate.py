@@ -13,7 +13,7 @@ from xml.etree.ElementTree import tostring
 import numpy as np
 from emmet.core.openff import MoleculeSpec
 from emmet.core.openmm import OpenMMTaskDocument
-from emmet.core.vasp.task_valid import TaskState
+from emmet.core.types.enums import TaskState
 from jobflow import Response
 from openmm import Context, LangevinMiddleIntegrator, System, XmlSerializer
 from openmm.app import PME, ForceField
