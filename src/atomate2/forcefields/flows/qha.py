@@ -118,20 +118,25 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         ForceFieldQhaMaker
         """
         force_field_name = _get_formatted_ff_name(force_field_name)
-        if relax_initial_structure:
-            kwargs.update(
-                initial_relax_maker=ForceFieldRelaxMaker(
-                    force_field_name=force_field_name
-                ),
+        kwargs.update(
+            initial_relax_maker=(
+                ForceFieldRelaxMaker(force_field_name=force_field_name)
+                if relax_initial_structure
+                else None
             )
-        if run_eos_flow:
-            kwargs.update(
-                eos_relax_maker=ForceFieldRelaxMaker(
+        )
+
+        kwargs.update(
+            eos_relax_maker=(
+                ForceFieldRelaxMaker(
                     force_field_name=force_field_name,
                     relax_cell=False,
                     relax_kwargs={"fmax": 1e-5},
                 )
+                if run_eos_flow
+                else None
             )
+        )
         return cls(
             phonon_maker=PhononMaker.from_force_field_name(
                 force_field_name=force_field_name, relax_initial_structure=False

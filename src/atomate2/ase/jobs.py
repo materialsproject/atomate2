@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -31,7 +31,7 @@ _ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
 
 
 @dataclass
-class AseMaker(Maker, metaclass=ABCMeta):
+class AseMaker(Maker, ABC):
     """
     Define basic template of ASE-based jobs.
 
@@ -265,6 +265,27 @@ class AseRelaxMaker(AseMaker):
             **self.optimizer_kwargs,
         )
         return relaxer.relax(mol_or_struct, steps=self.steps, **self.relax_kwargs)
+
+
+@dataclass
+class EmtRelaxMaker(AseRelaxMaker):
+    """
+    Relax a structure with an EMT potential.
+
+    This serves mostly as an example of how to create atomate2
+    jobs with existing ASE calculators, and test purposes.
+
+    See `atomate2.ase.AseRelaxMaker` for further documentation.
+    """
+
+    name: str = "EMT relaxation"
+
+    @property
+    def calculator(self) -> Calculator:
+        """EMT calculator."""
+        from ase.calculators.emt import EMT
+
+        return EMT(**self.calculator_kwargs)
 
 
 @dataclass

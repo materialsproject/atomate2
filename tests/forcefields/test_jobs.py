@@ -8,22 +8,7 @@ from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pytest import approx, importorskip
 
-from atomate2.forcefields.jobs import (
-    CHGNetRelaxMaker,
-    CHGNetStaticMaker,
-    ForceFieldRelaxMaker,
-    ForceFieldStaticMaker,
-    GAPRelaxMaker,
-    GAPStaticMaker,
-    M3GNetRelaxMaker,
-    M3GNetStaticMaker,
-    MACERelaxMaker,
-    MACEStaticMaker,
-    NEPRelaxMaker,
-    NEPStaticMaker,
-    NequipRelaxMaker,
-    NequipStaticMaker,
-)
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 
 
@@ -59,9 +44,6 @@ def test_chgnet_static_maker(si_structure):
     assert output1.output.n_steps == 1
 
     assert output1.forcefield_version == get_imported_version("chgnet")
-
-    with pytest.warns(FutureWarning):
-        CHGNetStaticMaker()
 
 
 @pytest.mark.parametrize(
@@ -129,9 +111,6 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     # check the force_field_task_doc attributes
     assert Path(responses[job.uuid][1].output.dir_name).exists()
 
-    with pytest.warns(FutureWarning):
-        CHGNetRelaxMaker()
-
 
 @pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
 def test_m3gnet_static_maker(si_structure):
@@ -151,9 +130,6 @@ def test_m3gnet_static_maker(si_structure):
     assert output1.output.n_steps == 1
 
     assert output1.forcefield_version == get_imported_version("matgl")
-
-    with pytest.warns(FutureWarning):
-        M3GNetStaticMaker()
 
 
 @pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
@@ -178,9 +154,6 @@ def test_m3gnet_relax_maker(si_structure):
     assert output1.output.energy == approx(-10.8, abs=0.2)
     assert output1.output.n_steps == 24
 
-    with pytest.warns(FutureWarning):
-        M3GNetRelaxMaker()
-
 
 mace_paths = pytest.mark.parametrize(
     "model",
@@ -192,15 +165,23 @@ mace_paths = pytest.mark.parametrize(
 )
 
 
+@pytest.mark.parametrize("dispersion", [False, True])
 @mace_paths
-def test_mace_static_maker(si_structure: Structure, model):
+def test_mace_static_maker(si_structure: Structure, dispersion: bool, model):
+    from ase.calculators.mixing import SumCalculator
+
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
-    job = ForceFieldStaticMaker(
+    maker = ForceFieldStaticMaker(
         force_field_name="MACE",
         ionic_step_data=("structure", "energy"),
-        calculator_kwargs={"model": model},
-    ).make(si_structure)
+        calculator_kwargs={"model": model, "dispersion": dispersion},
+    )
+    job = maker.make(si_structure)
+    if dispersion:
+        assert isinstance(maker.calculator, SumCalculator)
+    else:
+        assert not isinstance(maker.calculator, SumCalculator)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
@@ -208,14 +189,13 @@ def test_mace_static_maker(si_structure: Structure, model):
     # validation the outputs of the job
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-0.068231, rel=1e-4)
+    assert output1.output.energy == approx(
+        -0.6819882079032458 if dispersion else -0.068231, rel=1e-4
+    )
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("mace-torch")
 
     assert Path("final_atoms_object.xyz").exists()
-
-    with pytest.warns(FutureWarning):
-        MACEStaticMaker()
 
 
 @pytest.mark.parametrize(
@@ -248,9 +228,6 @@ def test_mace_relax_maker_fix_symmetry(
         assert initial_space_group == final_space_group
     else:
         assert initial_space_group != final_space_group
-
-    with pytest.warns(FutureWarning):
-        MACERelaxMaker()
 
 
 @pytest.mark.parametrize(
@@ -367,9 +344,6 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("quippy-ase")
 
-    with pytest.warns(FutureWarning):
-        GAPStaticMaker()
-
 
 @pytest.mark.parametrize("relax_cell", [True, False])
 def test_gap_relax_maker(si_structure: Structure, test_dir: Path, relax_cell: bool):
@@ -406,9 +380,6 @@ def test_gap_relax_maker(si_structure: Structure, test_dir: Path, relax_cell: bo
         assert output1.output.energy == approx(-10.8523, rel=1e-4)
         assert output1.output.n_steps == 17
 
-    with pytest.warns(FutureWarning):
-        GAPRelaxMaker()
-
 
 def test_nep_static_maker(al2_au_structure: Structure, test_dir: Path):
     # NOTE: The test NEP model is specifically trained on 16 elemental metals
@@ -433,9 +404,6 @@ def test_nep_static_maker(al2_au_structure: Structure, test_dir: Path):
     assert isinstance(output1, ForceFieldTaskDocument)
     assert output1.output.energy == approx(-47.65972, rel=1e-4)
     assert output1.output.n_steps == 1
-
-    with pytest.warns(FutureWarning):
-        NEPStaticMaker()
 
 
 @pytest.mark.parametrize(
@@ -485,9 +453,6 @@ def test_nep_relax_maker(
     final_spg_num = output1.output.structure.get_space_group_info()[1]
     assert final_spg_num == 225
 
-    with pytest.warns(FutureWarning):
-        NEPRelaxMaker()
-
 
 def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     importorskip("nequip")
@@ -511,9 +476,6 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     assert output1.output.energy == approx(-44.40017, rel=1e-4)
     assert output1.output.n_steps == 1
     assert output1.forcefield_version == get_imported_version("nequip")
-
-    with pytest.warns(FutureWarning):
-        NequipStaticMaker()
 
 
 @pytest.mark.parametrize(
@@ -558,9 +520,6 @@ def test_nequip_relax_maker(
     # just testing that passing fix_symmetry doesn't break
     final_spg_num = output1.output.structure.get_space_group_info()[1]
     assert final_spg_num == 99
-
-    with pytest.warns(FutureWarning):
-        NequipRelaxMaker()
 
 
 @pytest.mark.parametrize("ref_func", ["PBE", "r2SCAN"])

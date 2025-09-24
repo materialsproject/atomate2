@@ -6,7 +6,7 @@ import pickle
 import shlex
 import subprocess
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 import numpy as np
 
@@ -66,68 +66,68 @@ class Forceconstants(MSONable):
 class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     """Collection of all data produced by the phonon workflow."""
 
-    structure: Optional[Structure] = Field(
+    structure: Structure | None = Field(
         None, description="Structure of Materials Project."
     )
 
-    phonon_bandstructure: Optional[PhononBandStructureSymmLine] = Field(
+    phonon_bandstructure: PhononBandStructureSymmLine | None = Field(
         None,
         description="Phonon band structure object.",
     )
 
-    phonon_dos: Optional[PhononDos] = Field(
+    phonon_dos: PhononDos | None = Field(
         None,
         description="Phonon density of states object.",
     )
 
-    free_energies: Optional[list[float]] = Field(
+    free_energies: list[float] | None = Field(
         None,
         description="vibrational part of the free energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
 
-    heat_capacities: Optional[list[float]] = Field(
+    heat_capacities: list[float] | None = Field(
         None,
         description="heat capacities in J/K/mol per "
         "formula unit for temperatures in temperature_list",
     )
 
-    internal_energies: Optional[list[float]] = Field(
+    internal_energies: list[float] | None = Field(
         None,
         description="internal energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
-    entropies: Optional[list[float]] = Field(
+    entropies: list[float] | None = Field(
         None,
         description="entropies in J/(K*mol) per formula unit"
         "for temperatures in temperature_list ",
     )
 
-    temperatures: Optional[list[int]] = Field(
+    temperatures: list[int] | None = Field(
         None,
         description="temperatures at which the vibrational"
         " part of the free energies"
         " and other properties have been computed",
     )
 
-    total_dft_energy: Optional[float] = Field("total DFT energy per formula unit in eV")
+    total_dft_energy: float | None = Field("total DFT energy per formula unit in eV")
 
-    has_imaginary_modes: Optional[bool] = Field(
+    has_imaginary_modes: bool | None = Field(
         None, description="if true, structure has imaginary modes"
     )
 
     # needed, e.g. to compute Grueneisen parameter etc
-    force_constants: Optional[Forceconstants] = Field(
+    force_constants: Forceconstants | None = Field(
         None, description="Force constants between every pair of atoms in the structure"
     )
 
-    born: Optional[list[Matrix3D]] = Field(
+    born: list[Matrix3D] | None = Field(
         None,
         description="born charges as computed from phonopy. Only for symmetrically "
         "different atoms",
     )
 
-    epsilon_static: Optional[Matrix3D] = Field(
+    epsilon_static: Matrix3D | None = Field(
         None, description="The high-frequency dielectric constant"
     )
 
@@ -142,15 +142,15 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         "Field including settings for Phonopy"
     )
 
-    thermal_displacement_data: Optional[ThermalDisplacementData] = Field(
+    thermal_displacement_data: ThermalDisplacementData | None = Field(
         "Includes all data of the computation of the thermal displacements"
     )
 
-    jobdirs: Optional[PhononJobDirs] = Field(
+    jobdirs: PhononJobDirs | None = Field(
         "Field including all relevant job directories"
     )
 
-    uuids: Optional[PhononUUIDs] = Field("Field including all relevant uuids")
+    uuids: PhononUUIDs | None = Field("Field including all relevant uuids")
 
     @classmethod
     def from_forces_born(
