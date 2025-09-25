@@ -6,7 +6,7 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from abipy.abio.outputs import AbinitOutputFile
 from abipy.electrons.gsr import GsrFile
@@ -78,46 +78,46 @@ class CalculationOutput(BaseModel):
         The valence band maximum in eV (if system is not metallic)
     """
 
-    energy: Optional[float] = Field(
+    energy: float | None = Field(
         None, description="The final total DFT energy for the calculation"
     )
-    energy_per_atom: Optional[float] = Field(
+    energy_per_atom: float | None = Field(
         None, description="The final DFT energy per atom for the calculation"
     )
 
-    structure: Union[Structure] = Field(
+    structure: Structure | None = Field(
         None, description="The final structure from the calculation"
     )
 
-    efermi: Optional[float] = Field(
+    efermi: float | None = Field(
         None, description="The Fermi level from the calculation in eV"
     )
 
-    forces: Optional[list[Vector3D]] = Field(
+    forces: list[Vector3D] | None = Field(
         None, description="Forces acting on each atom"
     )
-    stress: Optional[Matrix3D] = Field(None, description="The stress on the cell")
-    is_metal: Optional[bool] = Field(None, description="Whether the system is metallic")
-    bandgap: Optional[float] = Field(
+    stress: Matrix3D | None = Field(None, description="The stress on the cell")
+    is_metal: bool | None = Field(None, description="Whether the system is metallic")
+    bandgap: float | None = Field(
         None, description="The band gap from the calculation in eV"
     )
-    direct_bandgap: Optional[float] = Field(
+    direct_bandgap: float | None = Field(
         None, description="The direct band gap from the calculation in eV"
     )
-    cbm: Optional[float] = Field(
+    cbm: float | None = Field(
         None,
         description="The conduction band minimum, or LUMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    vbm: Optional[float] = Field(
+    vbm: float | None = Field(
         None,
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    walltime: Optional[float] = Field(
+    walltime: float | None = Field(
         None, description="Overall walltime to complete the calculation."
     )
-    cputime: Optional[float] = Field(
+    cputime: float | None = Field(
         None, description="Overall cputime to complete the calculation."
     )
 
@@ -226,22 +226,22 @@ class Calculation(BaseModel):
     """
 
     dir_name: str = Field(None, description="The directory for this Abinit calculation")
-    abinit_version: str = Field(
+    abinit_version: str | None = Field(
         None, description="Abinit version used to perform the calculation"
     )
-    has_abinit_completed: TaskState = Field(
+    has_abinit_completed: TaskState | None = Field(
         None, description="Whether Abinit completed the calculation successfully"
     )
-    output: Optional[CalculationOutput] = Field(
+    output: CalculationOutput | None = Field(
         None, description="The Abinit calculation output"
     )
     completed_at: str = Field(
         None, description="Timestamp for when the calculation was completed"
     )
-    event_report: events.EventReport = Field(
+    event_report: events.EventReport | None = Field(
         None, description="Event report of this abinit job."
     )
-    output_file_paths: Optional[dict[str, str]] = Field(
+    output_file_paths: dict[str, str] | None = Field(
         None,
         description="Paths (relative to dir_name) of the Abinit output files "
         "associated with this calculation",

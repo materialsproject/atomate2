@@ -11,13 +11,7 @@ from jobflow import Flow, Maker
 
 from atomate2.abinit.jobs.core import StaticMaker
 from atomate2.abinit.jobs.mrgddb import MrgddbMaker
-from atomate2.abinit.jobs.response import (
-    DdeMaker,
-    DdkMaker,
-    DteMaker,
-    WfqMaker,
-    generate_perts,
-)
+from atomate2.abinit.jobs.response import generate_perts
 from atomate2.abinit.sets.core import StaticSetGenerator
 
 if TYPE_CHECKING:
@@ -83,10 +77,10 @@ class DfptFlowMaker(Maker):
             input_set_generator=StaticSetGenerator(factory=scf_for_phonons)
         )
     )
-    ddk_maker: BaseAbinitMaker | None = field(default_factory=DdkMaker)  # |
-    dde_maker: BaseAbinitMaker | None = field(default_factory=DdeMaker)  # |
-    dte_maker: BaseAbinitMaker | None = field(default_factory=DteMaker)  # |
-    wfq_maker: BaseAbinitMaker | None = field(default_factory=WfqMaker)  # |
+    ddk_maker: BaseAbinitMaker | None = None  # |
+    dde_maker: BaseAbinitMaker | None = None  # |
+    dte_maker: BaseAbinitMaker | None = None  # |
+    wfq_maker: BaseAbinitMaker | None = None  # |
     phonon_maker: BaseAbinitMaker | None = None  # |
     mrgddb_maker: Maker | None = field(default_factory=MrgddbMaker)  # |
     mrgdv_maker: Maker | None = None  # |

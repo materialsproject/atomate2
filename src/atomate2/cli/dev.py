@@ -299,6 +299,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
 
     from atomate2.abinit.schemas.anaddb import AnaddbTaskDoc
     from atomate2.abinit.schemas.mrgddb import MrgddbTaskDoc
+    from atomate2.abinit.schemas.mrgdvdb import MrgdvdbTaskDoc
     from atomate2.abinit.schemas.task import AbinitTaskDoc
     from atomate2.common.files import copy_files
     from atomate2.utils.path import strip_hostname
@@ -459,6 +460,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
         if (
             not isinstance(output.output, AbinitTaskDoc)
             and not isinstance(output.output, MrgddbTaskDoc)
+            and not isinstance(output.output, MrgdvdbTaskDoc)
             and not isinstance(output.output, AnaddbTaskDoc)
         ):
             # this is not an Abinit job

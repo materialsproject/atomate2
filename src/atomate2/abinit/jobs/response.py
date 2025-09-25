@@ -4,10 +4,9 @@ from __future__ import annotations
 
 import itertools
 import logging
-import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
 import numpy as np
 from abipy.flowtk.events import (
@@ -50,7 +49,6 @@ __all__ = [
     "WfqMaker",
     "generate_perts",
     "get_jobs",
-    "run_rf",
 ]
 
 
@@ -368,6 +366,15 @@ def generate_perts(
             nscf_qpt = []
             for qpt_i, q in enumerate(qpt_list):
                 if list(q) not in kpts:
+                    if wfq_maker is None:
+                        raise RuntimeError(
+                            "q-mesh not commensurate with k-mesh!"
+                            "Either use commensurate grid or define a WFQ maker. "
+                            "If this does not mean much to you, you can remove "
+                            "your definition of ngqpt and/or qpt_list and "
+                            "you will obtain a bandstructure on a q-mesh that is the "
+                            "same as the k-mesh used for your groundstate calculation."
+                        )
                     nscf_qpt.append(q)
                     wfq_job = wfq_maker.make(
                         prev_outputs=scf_output,
@@ -465,58 +472,13 @@ def get_jobs(
 
         if is_phonon:
             qpt_str = f"{pert['qpt'][0]:.2f},{pert['qpt'][1]:.2f},{pert['qpt'][2]:.2f}"
-            rf_job.append_name(
-                f", q = {qpt_str}, idir = {pert['idir']}, ipert = {pert['ipert']}"
-            )
+            # rf_job.append_name(
+            #    f", q = {qpt_str}, idir = {pert['idir']}, ipert = {pert['ipert']}"
+            # )
+            rf_job.append_name(f" q={qpt_str}({ipert + 1}/{len(perturbations)})")
         else:
             rf_job.append_name(f"{ipert + 1}/{len(perturbations)}")
 
         rf_jobs.append(rf_job)
 
     return rf_jobs
-
-
-@job
-def run_rf(
-    perturbations: list[dict],
-    rf_maker: ResponseMaker,
-    prev_outputs: str | list[str] | None = None,
-) -> Flow:
-    """
-    Run the RF calculations.
-
-    Parameters
-    ----------
-    perturbations : a list of dict with the direction of the perturbation
-        under the Abipy format.
-    rf_maker : Maker to create a job with a Response Function ABINIT calculation.
-    prev_outputs : a list of previous output directories
-    """
-    rf_jobs = []
-    is_phonon = isinstance(rf_maker, PhononResponseMaker)
-    outputs: dict[str, Any] = {"dirs": []}
-
-    if isinstance(rf_maker, DdeMaker | DteMaker | PhononResponseMaker):
-        # Flatten the list of previous outputs dir
-        # prev_outputs = [item for sublist in prev_outputs for item in sublist]
-        prev_outputs = list(np.hstack(prev_outputs))
-
-    for ipert, pert in enumerate(perturbations):
-        rf_job = rf_maker.make(
-            perturbation=pert,
-            prev_outputs=prev_outputs,
-        )
-
-        if is_phonon:
-            qpt_str = f"{pert['qpt'][0]:.2f},{pert['qpt'][1]:.2f},{pert['qpt'][2]:.2f}"
-            rf_job.append_name(f", q = {qpt_str} ({ipert + 1}/{len(perturbations)})")
-        else:
-            rf_job.append_name(f"{ipert + 1}/{len(perturbations)}")
-
-        rf_jobs.append(rf_job)
-        outputs["dirs"].append(rf_job.output.dir_name)  # TODO: determine outputs
-
-    outputs["dir_name"] = Path(os.getcwd())  # to make the dir of run_rf accessible
-    rf_flow = Flow(rf_jobs, outputs)
-
-    return Response(replace=rf_flow)

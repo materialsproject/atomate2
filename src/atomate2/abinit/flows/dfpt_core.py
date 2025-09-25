@@ -12,7 +12,12 @@ from atomate2.abinit.flows.dfpt_base import DfptFlowMaker
 from atomate2.abinit.jobs.anaddb import AnaddbDfptDteMaker, AnaddbPhBandsDOSMaker
 from atomate2.abinit.jobs.core import StaticMaker
 from atomate2.abinit.jobs.mrgdv import MrgdvMaker
-from atomate2.abinit.jobs.response import PhononResponseMaker
+from atomate2.abinit.jobs.response import (
+    DdeMaker,
+    DdkMaker,
+    PhononResponseMaker,
+    WfqMaker,
+)
 from atomate2.abinit.sets.core import ShgStaticSetGenerator, StaticSetGenerator
 
 if TYPE_CHECKING:
@@ -137,51 +142,22 @@ class PhononMaker(DfptFlowMaker):
             input_set_generator=StaticSetGenerator(factory=scf_for_phonons)
         )
     )
+    ddk_maker: BaseAbinitMaker = field(default_factory=DdkMaker)
+    dde_maker: BaseAbinitMaker = field(default_factory=DdeMaker)
     phonon_maker: BaseAbinitMaker = field(default_factory=PhononResponseMaker)
     mrgdv_maker: Maker | None = field(default_factory=MrgdvMaker)
     anaddb_maker: Maker | None = field(default_factory=AnaddbPhBandsDOSMaker)
-    dte_maker: BaseAbinitMaker | None = None
+    wfq_maker: BaseAbinitMaker = field(default_factory=WfqMaker)
     qptopt: int | None = 1
 
     def __post_init__(self) -> None:
         """Process post-init configuration."""
         if not self.with_dde:
-            """
-            To turn off the DDE calculations, turn off DDK as well.
-            If a DDK maker is provided, it will be removed
-            """
             self.ddk_maker = None
             self.dde_maker = None
 
         if not self.run_mrgdv:
-            """Turn off the merge of DDB files"""
             self.mrgdv_maker = None
 
         if not self.run_anaddb:
-            """Turn off the anaddb calculations"""
             self.anaddb_maker = None
-
-    def make(
-        self,
-        structure: Structure | None = None,
-        restart_from: str | Path | None = None,
-    ) -> Flow:
-        """
-        Create a phonon flow.
-
-        Parameters
-        ----------
-        structure : Structure
-            A pymatgen structure object.
-        restart_from : str or Path or None
-            One previous directory to restart from.
-
-        Returns
-        -------
-        Flow
-            A phonon flow.
-        """
-        return super().make(
-            structure=structure,
-            restart_from=restart_from,
-        )

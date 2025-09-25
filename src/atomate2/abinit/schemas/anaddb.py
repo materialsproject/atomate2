@@ -6,9 +6,7 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-
-# from typing import Type, TypeVar, Union, Optional, List
-from typing import Any, Optional, Union
+from typing import Any
 
 import abipy.core.abinit_units as abu
 import numpy as np
@@ -73,60 +71,60 @@ class OutputDoc(BaseModel):
         different atoms
     """
 
-    structure: Optional[Structure] = Field(
+    structure: Structure | None = Field(
         None, description="The final structure from the calculation"
     )
-    dijk: Optional[list] = Field(
+    dijk: list | None = Field(
         None, description="Conventional SHG tensor in pm/V (Chi^(2)/2)"
     )
-    e_electronic: Optional[list] = Field(
+    e_electronic: list | None = Field(
         None, description="Electronic contribution to the dielectric tensor"
     )
-    phonon_bandstructure: Optional[PhononBandStructureSymmLine] = Field(
+    phonon_bandstructure: PhononBandStructureSymmLine | None = Field(
         None,
         description="Phonon band structure object.",
     )
-    phonon_dos: Optional[pmgPhononDos] = Field(
+    phonon_dos: pmgPhononDos | None = Field(
         None,
         description="Phonon density of states object.",
     )
-    free_energies: Optional[list[float]] = Field(
+    free_energies: list[float] | None = Field(
         None,
         description="vibrational part of the free energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
-    heat_capacities: Optional[list[float]] = Field(
+    heat_capacities: list[float] | None = Field(
         None,
         description="heat capacities in J/K/mol per "
         "formula unit for temperatures in temperature_list",
     )
-    internal_energies: Optional[list[float]] = Field(
+    internal_energies: list[float] | None = Field(
         None,
         description="internal energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
-    entropies: Optional[list[float]] = Field(
+    entropies: list[float] | None = Field(
         None,
         description="entropies in J/(K*mol) per formula unit"
         "for temperatures in temperature_list ",
     )
-    temperatures: Optional[list[int]] = Field(
+    temperatures: list[int] | None = Field(
         None,
         description="temperatures at which the vibrational"
         " part of the free energies"
         " and other properties have been computed",
     )
-    volume_per_formula_unit: Optional[float] = Field(
+    volume_per_formula_unit: float | None = Field(
         None, description="volume per formula unit in Angstrom**3"
     )
 
-    formula_units: Optional[int] = Field(None, description="Formula units per cell")
+    formula_units: int | None = Field(None, description="Formula units per cell")
 
-    has_imaginary_modes: Optional[bool] = Field(
+    has_imaginary_modes: bool | None = Field(
         None, description="if true, structure has imaginary modes"
     )
 
-    born: Optional[list[Matrix3D]] = Field(
+    born: list[Matrix3D] | None = Field(
         None,
         description="Born charges as computed from phonopy. Only for symmetrically "
         "different atoms",
@@ -194,7 +192,7 @@ class OutputDoc(BaseModel):
             }
         else:
             phonon_bandstructure = None
-        phonon_dos = abinit_phdos.to_pymatgen() if abinit_phbst else None
+        phonon_dos = abinit_phdos.to_pymatgen() if abinit_phdos else None
 
         if phonon_dos:
             temperatures = [int(t) for t in abinit_phdos.get_free_energy().mesh]
@@ -289,29 +287,25 @@ class AnaddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         Metadata tags for this task document
     """
 
-    dir_name: Optional[str] = Field(
-        None, description="The directory for this Abinit task"
-    )
-    completed_at: Optional[str] = Field(
+    dir_name: str | None = Field(None, description="The directory for this Abinit task")
+    completed_at: str | None = Field(
         None, description="Timestamp for when this task was completed"
     )
-    output: Optional[OutputDoc] = Field(
-        None, description="The output of the final calculation"
-    )
-    structure: Union[Structure] = Field(
+    output: str | None = Field(None, description="The output of the final calculation")
+    structure: Structure | None = Field(
         None, description="Final output atoms from the task"
     )
-    event_report: Optional[events.EventReport] = Field(
+    event_report: events.EventReport | None = Field(
         None, description="Event report of this abinit job."
     )
-    included_objects: Optional[list[AbinitObject]] = Field(
+    included_objects: list[AbinitObject] | None = Field(
         None, description="List of Abinit objects included with this task document"
     )
-    abinit_objects: Optional[dict[AbinitObject, Any]] = Field(
+    abinit_objects: dict[AbinitObject, Any] | None = Field(
         None, description="Abinit objects associated with this task"
     )
-    task_label: Optional[str] = Field(None, description="A description of the task")
-    tags: Optional[list[str]] = Field(
+    task_label: str | None = Field(None, description="A description of the task")
+    tags: list[str] | None = Field(
         None, description="Metadata tags for this task document"
     )
 
