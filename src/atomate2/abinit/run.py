@@ -88,11 +88,6 @@ def run_mrgddb(
 
     max_end_time = 0.0
     if wall_time is not None:
-        mrgddb_timelimit = wall_time
-        if mrgddb_timelimit > 480:
-            # TODO: allow tuning this timelimit buffer for mrgddb,
-            #  e.g. using a config variable or possibly per job
-            mrgddb_timelimit -= 240
         max_end_time = start_time + wall_time
 
     with (
@@ -134,11 +129,6 @@ def run_mrgdv(
 
     max_end_time = 0.0
     if wall_time is not None:
-        mrgdv_timelimit = wall_time
-        if mrgdv_timelimit > 480:
-            # TODO: allow tuning this timelimit buffer for mrgddb,
-            #  e.g. using a config variable or possibly per job
-            mrgdv_timelimit -= 240
         max_end_time = start_time + wall_time
 
     with (
@@ -178,11 +168,6 @@ def run_anaddb(
 
     max_end_time = 0.0
     if wall_time is not None:
-        anaddb_timelimit = wall_time
-        if anaddb_timelimit > 480:
-            # TODO: allow tuning this timelimit buffer for anaddb,
-            #  e.g. using a config variable or possibly per job
-            anaddb_timelimit -= 240
         max_end_time = start_time + wall_time
 
     with (

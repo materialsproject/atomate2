@@ -3,7 +3,7 @@
 import base64
 import os
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 from monty.json import MSONable
 from typing_extensions import Self
@@ -71,7 +71,7 @@ class AbinitStoredFile(MSONable):
         """Return the extension of the source file."""
         return str(self.source_filepath).split("_")[-1]
 
-    def write(self, filepath: Optional[Union[str, Path]] = None) -> None:
+    def write(self, filepath: Union[str, Path] | None = None) -> None:
         """Write the data into a file."""
         filepath = filepath or self.filename
         if self.data_type == "bytes":

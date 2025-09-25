@@ -6,7 +6,7 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from emmet.core.structure import StructureMetadata
 from jobflow.utils import ValueEnum
@@ -54,21 +54,19 @@ class MrgdvdbTaskDoc(StructureMetadata):
         Metadata tags for this task document
     """
 
-    dir_name: Optional[str] = Field(
-        None, description="The directory for this Abinit task"
-    )
-    completed_at: Optional[str] = Field(
+    dir_name: str | None = Field(None, description="The directory for this Abinit task")
+    completed_at: str | None = Field(
         None, description="Timestamp for when this task was completed"
     )
-    included_objects: Optional[list[MrgdvdbObject]] = Field(
+    included_objects: list[MrgdvdbObject] | None = Field(
         None, description="List of Mrgdv objects included with this task document"
     )
-    mrgdv_objects: Optional[dict[MrgdvdbObject, Any]] = Field(
+    mrgdv_objects: dict[MrgdvdbObject, Any] | None = Field(
         None, description="Mrgdv objects associated with this task"
     )
-    task_label: Optional[str] = Field(None, description="A description of the task")
+    task_label: str | None = Field(None, description="A description of the task")
 
-    tags: Optional[list[str]] = Field(
+    tags: list[str] | None = Field(
         None, description="Metadata tags for this task document"
     )
 
