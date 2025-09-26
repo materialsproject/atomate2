@@ -6,7 +6,7 @@ import logging
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from abipy.dfpt.ddb import DdbFile
 from emmet.core.structure import StructureMetadata
@@ -56,22 +56,20 @@ class MrgddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         Metadata tags for this task document
     """
 
-    dir_name: Optional[str] = Field(
-        None, description="The directory for this Abinit task"
-    )
-    completed_at: Optional[str] = Field(
+    dir_name: str | None = Field(None, description="The directory for this Abinit task")
+    completed_at: str | None = Field(
         None, description="Timestamp for when this task was completed"
     )
-    structure: Union[Structure] = Field(
+    structure: Structure | None = Field(
         None, description="Final output atoms from the task"
     )
-    included_objects: Optional[list[MrgddbObject]] = Field(
+    included_objects: list[MrgddbObject] | None = Field(
         None, description="List of Mrgddb objects included with this task document"
     )
-    mrgddb_objects: Optional[dict[MrgddbObject, Any]] = Field(
+    mrgddb_objects: dict[MrgddbObject, Any] | None = Field(
         None, description="Mrgddb objects associated with this task"
     )
-    tags: Optional[list[str]] = Field(
+    tags: list[str] | None = Field(
         None, description="Metadata tags for this task document"
     )
 
@@ -79,7 +77,7 @@ class MrgddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     def from_directory(
         cls,
         dir_name: Path | str,
-        additional_fields: dict[str, Any] = None,
+        additional_fields: dict[str, Any] | None = None,
     ) -> MrgddbTaskDoc:
         """Create a task document from a directory containing Abinit/Mrgddb files.
 

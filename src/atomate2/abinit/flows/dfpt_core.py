@@ -15,16 +15,14 @@ from atomate2.abinit.jobs.mrgdv import MrgdvMaker
 from atomate2.abinit.jobs.response import (
     DdeMaker,
     DdkMaker,
+    DteMaker,
     PhononResponseMaker,
     WfqMaker,
 )
 from atomate2.abinit.sets.core import ShgStaticSetGenerator, StaticSetGenerator
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
-    from jobflow import Flow, Maker
-    from pymatgen.core.structure import Structure
+    from jobflow import Maker
 
     from atomate2.abinit.jobs.base import BaseAbinitMaker
 
@@ -46,33 +44,14 @@ class ShgFlowMaker(DfptFlowMaker):
     """
 
     name: str = "DFPT Chi2 SHG"
-    anaddb_maker: Maker | None = field(default_factory=AnaddbDfptDteMaker)
     use_dde_sym: bool = False
     static_maker: BaseAbinitMaker = field(
         default_factory=lambda: StaticMaker(input_set_generator=ShgStaticSetGenerator())
     )
-
-    def make(
-        self,
-        structure: Structure | None = None,
-        restart_from: str | Path | None = None,
-    ) -> Flow:
-        """
-        Create a DFPT flow.
-
-        Parameters
-        ----------
-        structure : Structure
-            A pymatgen structure object.
-        restart_from : str or Path or None
-            One previous directory to restart from.
-
-        Returns
-        -------
-        Flow
-            A DFPT flow
-        """
-        return super().make(structure=structure, restart_from=restart_from)
+    ddk_maker: BaseAbinitMaker = field(default_factory=DdkMaker)
+    dde_maker: BaseAbinitMaker = field(default_factory=DdeMaker)
+    dte_maker: BaseAbinitMaker = field(default_factory=DteMaker)
+    anaddb_maker: Maker | None = field(default_factory=AnaddbDfptDteMaker)
 
     @classmethod
     def with_scissor(cls, scissor: float) -> ShgFlowMaker:

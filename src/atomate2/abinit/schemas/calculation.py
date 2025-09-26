@@ -225,7 +225,9 @@ class Calculation(BaseModel):
         associated with this calculation
     """
 
-    dir_name: str = Field(None, description="The directory for this Abinit calculation")
+    dir_name: str | None = Field(
+        None, description="The directory for this Abinit calculation"
+    )
     abinit_version: str | None = Field(
         None, description="Abinit version used to perform the calculation"
     )
@@ -235,7 +237,7 @@ class Calculation(BaseModel):
     output: CalculationOutput | None = Field(
         None, description="The Abinit calculation output"
     )
-    completed_at: str = Field(
+    completed_at: str | None = Field(
         None, description="Timestamp for when the calculation was completed"
     )
     event_report: events.EventReport | None = Field(
@@ -351,10 +353,12 @@ class Calculation(BaseModel):
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
 
+        abinit_version = abinit_out.version if abinit_out is not None else None
+
         instance = cls(
             dir_name=str(dir_name),
             task_name=task_name,
-            abinit_version=abinit_out.version,
+            abinit_version=abinit_version,
             has_abinit_completed=has_abinit_completed,
             completed_at=completed_at,
             output=output_doc,
