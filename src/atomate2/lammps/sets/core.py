@@ -16,9 +16,13 @@ class LammpsNVESet(BaseLammpsSetGenerator):
     def __init__(self, settings: dict | None = None, **kwargs) -> None:
         self.settings = settings if settings else {}
         self.settings.update(
-            {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS}
+            {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS["periodic"]}
         )
-        kwargs = {k: v for k, v in kwargs.items() if k not in _BASE_LAMMPS_SETTINGS}
+        kwargs_to_pass = {
+            k: v
+            for k, v in kwargs.items()
+            if k not in _BASE_LAMMPS_SETTINGS["periodic"]
+        }
         self.settings.update(
             {
                 "ensemble": self.ensemble.value,
@@ -29,7 +33,9 @@ class LammpsNVESet(BaseLammpsSetGenerator):
         )
 
         super().__init__(
-            calc_type=f"lammps_{self.ensemble.value}", settings=self.settings, **kwargs
+            calc_type=f"lammps_{self.ensemble.value}",
+            settings=self.settings,
+            **kwargs_to_pass,
         )
 
 
@@ -59,9 +65,13 @@ class LammpsNVTSet(BaseLammpsSetGenerator):
         self.settings = settings if settings else {}
 
         self.settings.update(
-            {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS}
+            {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS["periodic"]}
         )
-        kwargs = {k: v for k, v in kwargs.items() if k not in _BASE_LAMMPS_SETTINGS}
+        kwargs_to_pass = {
+            k: v
+            for k, v in kwargs.items()
+            if k not in _BASE_LAMMPS_SETTINGS["periodic"]
+        }
 
         self.settings.update(
             {
@@ -74,7 +84,9 @@ class LammpsNVTSet(BaseLammpsSetGenerator):
         )
 
         super().__init__(
-            calc_type=f"lammps_{self.ensemble.value}", settings=self.settings, **kwargs
+            calc_type=f"lammps_{self.ensemble.value}",
+            settings=self.settings,
+            **kwargs_to_pass,
         )
 
 
@@ -120,12 +132,18 @@ class LammpsNPTSet(BaseLammpsSetGenerator):
             }
         )
         self.settings.update(
-            {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS}
+            {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS["periodic"]}
         )
-        kwargs = {k: v for k, v in kwargs.items() if k not in _BASE_LAMMPS_SETTINGS}
+        kwargs_to_pass = {
+            k: v
+            for k, v in kwargs.items()
+            if k not in _BASE_LAMMPS_SETTINGS["periodic"]
+        }
 
         super().__init__(
-            calc_type=f"lammps_{self.ensemble.value}", settings=self.settings, **kwargs
+            calc_type=f"lammps_{self.ensemble.value}",
+            settings=self.settings,
+            **kwargs_to_pass,
         )
 
 
@@ -159,10 +177,14 @@ class LammpsMinimizeSet(BaseLammpsSetGenerator):
             }
         )
         self.settings.update(
-            {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS}
+            {k: v for k, v in kwargs.items() if k in _BASE_LAMMPS_SETTINGS["periodic"]}
         )
-        kwargs = {k: v for k, v in kwargs.items() if k not in _BASE_LAMMPS_SETTINGS}
+        kwargs_to_pass = {
+            k: v
+            for k, v in kwargs.items()
+            if k not in _BASE_LAMMPS_SETTINGS["periodic"]
+        }
 
         super().__init__(
-            calc_type="lammps_minimization", settings=self.settings, **kwargs
+            calc_type="lammps_minimization", settings=self.settings, **kwargs_to_pass
         )
