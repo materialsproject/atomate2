@@ -133,6 +133,13 @@ class LammpsTaskDocument(StructureMetadata):
             input_file = None
             atom_style = "full"
 
+        dump_files = {}
+        trajectories = None
+        additional_outputs = {}
+        input_data_file = None
+        final_structure = None
+        output_data_files = None
+
         try:
             input_data_file = LammpsData.from_file(
                 os.path.join(dir_name, "input.data"),
@@ -144,7 +151,7 @@ class LammpsTaskDocument(StructureMetadata):
             input_data_file = None
 
         dump_file_keys = glob("*dump*", root_dir=dir_name)
-        dump_files = {}
+
         if dump_file_keys and store_trajectory != StoreTrajectoryOption.NO:
             for dump_file in dump_file_keys:
                 with open(os.path.join(dir_name, dump_file)) as f:
@@ -178,9 +185,6 @@ class LammpsTaskDocument(StructureMetadata):
             path for path in glob("*.data*", root_dir=dir_name) if path != "input.data"
         ]
 
-        final_structure = None
-        output_data_files = None
-
         if output_data_file_paths:
             try:
                 output_data_files = [
@@ -197,7 +201,6 @@ class LammpsTaskDocument(StructureMetadata):
                 )
 
         if parse_additional_outputs is not None:
-            additional_outputs = {}
             for output_file in parse_additional_outputs:
                 output_path = os.path.join(dir_name, output_file)
                 if os.path.exists(output_path):
