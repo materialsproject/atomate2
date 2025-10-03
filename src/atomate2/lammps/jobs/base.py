@@ -22,7 +22,6 @@ from atomate2.lammps.run import run_lammps
 from atomate2.lammps.schemas.task import LammpsTaskDocument, StoreTrajectoryOption
 
 _DATA_OBJECTS: list[str] = [
-    "raw_log_file",
     "inputs",
     "trajectories",
     "dump_files",
