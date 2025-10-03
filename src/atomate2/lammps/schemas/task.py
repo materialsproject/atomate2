@@ -135,7 +135,7 @@ class LammpsTaskDocument(StructureMetadata):
             input_data_file = LammpsData.from_file(
                 os.path.join(dir_name, "input.data"),
                 atom_style=atom_style,
-            )
+            ).as_dict()
 
         except FileNotFoundError:
             warnings.warn(f"Input data file not found for {dir_name}", stacklevel=1)
