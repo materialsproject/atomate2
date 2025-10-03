@@ -14,6 +14,7 @@ from pymatgen.io.lammps.generators import (
     BaseLammpsSetGenerator,
     CombinedData,
     LammpsData,
+    LammpsForceField,
 )
 
 from atomate2.common.files import gzip_files
@@ -67,7 +68,7 @@ class BaseLammpsMaker(Maker):
     input_set_generator: BaseLammpsSetGenerator = field(
         default_factory=BaseLammpsSetGenerator
     )
-    force_field: str | dict | None = field(default=None)
+    force_field: str | dict | LammpsForceField | None = field(default=None)
     write_input_set_kwargs: dict = field(default_factory=dict)
     run_lammps_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
@@ -86,6 +87,8 @@ class BaseLammpsMaker(Maker):
             )
 
         if self.force_field:
+            if isinstance(self.force_field, dict):
+                self.force_field = LammpsForceField.from_dict(self.force_field)
             self.input_set_generator.force_field = self.force_field
 
     @lammps_job
