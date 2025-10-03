@@ -76,7 +76,7 @@ class LammpsTaskDocument(StructureMetadata):
         cls: type["LammpsTaskDocument"],
         dir_name: str | Path,
         task_label: str,
-        store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
+        store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.PARTIAL,
         trajectory_format: Literal["pmg", "ase"] = "pmg",
         output_file_pattern: str | None = None,
         parse_additional_outputs: list | None = None,
@@ -90,7 +90,9 @@ class LammpsTaskDocument(StructureMetadata):
             Label for the task
         store_trajectory: Literal["no", "partial", "full"]
             Whether to store the trajectory output from the lammps run.
-            Default is 'no', which does not parse and store any trajectory data.
+            Default is 'partial', which stores the dump files output from the
+            lammps run,but does not convert them to the heavier pymatgen/ase
+            trajectory objects.
         trajectory_format: Literal["pmg", "ase"]
             Format of the trajectory output. Default is 'pmg'
         output_file_pattern: str
@@ -143,12 +145,12 @@ class LammpsTaskDocument(StructureMetadata):
 
         dump_file_keys = glob("*dump*", root_dir=dir_name)
         dump_files = {}
-        if dump_file_keys:
+        if dump_file_keys and store_trajectory != StoreTrajectoryOption.NO:
             for dump_file in dump_file_keys:
                 with open(os.path.join(dir_name, dump_file)) as f:
                     dump_files[dump_file] = f.read()
 
-            if store_trajectory != StoreTrajectoryOption.NO:
+            if store_trajectory == StoreTrajectoryOption.FULL:
                 warnings.warn(
                     "Trajectory data might be large, only store if \
                         absolutely necessary. Consider manually \
@@ -175,6 +177,10 @@ class LammpsTaskDocument(StructureMetadata):
         output_data_file_paths = [
             path for path in glob("*.data*", root_dir=dir_name) if path != "input.data"
         ]
+
+        final_structure = None
+        output_data_files = None
+
         if output_data_file_paths:
             try:
                 output_data_files = [
@@ -189,8 +195,6 @@ class LammpsTaskDocument(StructureMetadata):
                 warnings.warn(
                     "No data files found, system topology might be lost", stacklevel=1
                 )
-                output_data_files = None
-                final_structure = None
 
         if parse_additional_outputs is not None:
             additional_outputs = {}
