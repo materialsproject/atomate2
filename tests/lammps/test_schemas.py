@@ -30,10 +30,7 @@ def test_task_doc(ref_path):
     assert task_doc.state is not None
     assert task_doc.structure is not None
     assert task_doc.trajectories is None
-    assert len(list(task_doc.dump_files.keys())) == 1
-    dump_key = next(iter(task_doc.dump_files.keys()))
-    assert dump_key.endswith(".dump")
-    assert isinstance(task_doc.dump_files[dump_key], str)
+    assert len(list(task_doc.dump_files.keys())) == 0
 
     task_doc = LammpsTaskDocument.from_directory(
         dir_name=ref_output_files,
@@ -45,6 +42,7 @@ def test_task_doc(ref_path):
     assert task_doc.composition is not None
     assert task_doc.state is not None
     assert task_doc.structure is not None
-    assert task_doc.trajectories is not None
-    assert len(task_doc.trajectories[0]) == 1001
-    assert task_doc.trajectories[0].frame_properties is None
+    assert len(list(task_doc.dump_files.keys())) == 1
+    dump_key = next(iter(task_doc.dump_files.keys()))
+    assert dump_key.endswith(".dump")
+    assert isinstance(task_doc.dump_files[dump_key], str)
