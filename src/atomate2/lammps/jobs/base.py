@@ -17,7 +17,7 @@ from pymatgen.io.lammps.generators import (
     LammpsForceField,
 )
 
-from atomate2.common.files import gzip_files
+from atomate2.common.files import gunzip_files, gzip_files
 from atomate2.lammps.files import write_lammps_input_set
 from atomate2.lammps.run import run_lammps
 from atomate2.lammps.schemas.task import LammpsTaskDocument, StoreTrajectoryOption
@@ -106,9 +106,13 @@ class BaseLammpsMaker(Maker):
                         If present, it should have the extension '.restart'!"
                 )
 
-            self.input_set_generator.update_settings(
-                {"read_restart": os.path.join(prev_dir, restart_files[0])}
-            )
+            restart_file = restart_files[0]
+            if restart_file.endswith(".restart.gz"):
+                gunzip_files(
+                    directory=prev_dir, include_files=[restart_file], force=True
+                )
+                restart_file = str(Path(restart_file).with_suffix(""))
+            self.input_set_generator.update_settings({"read_restart": restart_file})
 
         if isinstance(input_structure, Path):
             input_structure = LammpsData.from_file(
