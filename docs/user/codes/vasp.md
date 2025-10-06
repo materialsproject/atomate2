@@ -342,9 +342,16 @@ phonon_flow = PhononMaker(min_length=15.0, store_force_constants=False).make(
 )
 ```
 
+#### Pheasy
+
+Alternatively, users can accelerate the calculation of interatomic force constants using the machine-learning-based [Pheasy code](https://doi.org/10.48550/arXiv.2508.01020).
+By design, these workflows have the same basic structure as the harmonic forcefield workflows and use [Phonopy](https://doi.org/10.7566/JPSJ.92.012001) in part to compute the phonon spectrum.
+To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
+By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg.
+
 ### Grüneisen parameter workflow
 
-Calculates mode-dependent Grüneisen parameters with the help of Phonopy.
+Calculates mode-dependent Grüneisen parameters with the help of [Phonopy](https://doi.org/10.7566/JPSJ.92.012001).
 
 Initially, a tight structural relaxation is performed to obtain a structure without
 forces on the atoms. The optimized structure (ground state) is further expanded and
