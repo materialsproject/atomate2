@@ -11,8 +11,8 @@ from atomate2.common.jobs.pheasy import (
     generate_frequencies_eigenvectors,
     generate_phonon_displacements,
     get_supercell_size,
-    run_phonon_displacements,
 )
+from atomate2.common.jobs.phonons import run_phonon_displacements
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -258,6 +258,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
             socket=self.socket,
             prev_dir_argname=self.prev_calc_dir_argname,
             prev_dir=prev_dir,
+            store_displaced_structures=True,
         )
 
     def get_results(
@@ -341,7 +342,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
 
         Returns
         -------
-        Job|Flow
+        Job | Flow
         """
         return get_supercell_size(
             structure,

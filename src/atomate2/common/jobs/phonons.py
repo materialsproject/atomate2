@@ -90,6 +90,91 @@ def get_supercell_size(
     )
 
 
+def _generate_phonon_object_for_displacements(
+    structure: Structure,
+    supercell_matrix: np.array,
+    displacement: float,
+    sym_reduce: bool,
+    symprec: float,
+    use_symmetrized_structure: str | None,
+    kpath_scheme: str,
+    code: str,
+    verbose: bool = False,
+) -> Phonopy:
+    """Bundle commonly-used Phonopy object construction.
+
+    Parameters
+    ----------
+    structure: Structure object
+        Fully optimized input structure for phonon run
+    supercell_matrix: np.array
+        array to describe supercell matrix
+    displacement: float
+        displacement in Angstrom
+    sym_reduce: bool
+        if True, symmetry will be used to generate displacements
+    symprec: float
+        precision to determine symmetry
+    use_symmetrized_structure: str or None
+        primitive, conventional or None
+    kpath_scheme: str
+        scheme to generate kpath
+    code:
+        code to perform the computations
+    use_min_dof : bool = False
+        Whether to use the minimal number of degrees of freedom
+        in calculating randomly-displaced structures.
+        Requires ALAMODE.
+    verbose : bool = False
+        Whether to log error messages.
+
+    Returns
+    -------
+    Phonopy object.
+    """
+    if "magmom" in structure.site_properties and verbose:
+        warnings.warn(
+            "Initial magnetic moments will not be considered for the determination "
+            "of the symmetry of the structure and thus will be removed now.",
+            stacklevel=2,
+        )
+
+    cell = get_phonopy_structure(
+        structure.copy().remove_site_property(property_name="magmom")
+        if "magmom" in structure.site_properties
+        else structure.copy()
+    )
+    factor = get_factor(code)
+
+    # a bit of code repetition here as I currently
+    # do not see how to pass the phonopy object?
+    primitive_matrix: np.ndarray | str = (
+        np.eye(3)
+        if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath"
+        else "auto"
+    )
+
+    # TARP: THIS IS BAD! Including for discussions sake
+    if cell.magnetic_moments is not None and primitive_matrix == "auto":
+        if np.any(cell.magnetic_moments != 0.0):
+            raise ValueError(
+                "For materials with magnetic moments, "
+                "use_symmetrized_structure must be 'primitive'"
+            )
+        cell.magnetic_moments = None
+
+    phonon = Phonopy(
+        cell,
+        supercell_matrix,
+        primitive_matrix=primitive_matrix,
+        factor=factor,
+        symprec=symprec,
+        is_symmetry=sym_reduce,
+    )
+    phonon.generate_displacements(distance=displacement)
+    return phonon
+
+
 @job(data=[Structure])
 def generate_phonon_displacements(
     structure: Structure,
@@ -100,6 +185,7 @@ def generate_phonon_displacements(
     use_symmetrized_structure: str | None,
     kpath_scheme: str,
     code: str,
+    verbose: bool = False,
 ) -> list[Structure]:
     """
     Generate displaced structures with phonopy.
@@ -122,51 +208,29 @@ def generate_phonon_displacements(
         scheme to generate kpath
     code:
         code to perform the computations
+    use_min_dof : bool = False
+        Whether to use the minimal number of degrees of freedom
+        in calculating randomly-displaced structures.
+        Requires ALAMODE.
+    verbose : bool = False
+        Whether to log error messages.
 
     Returns
     -------
     List[Structure]
         Displaced structures
     """
-    warnings.warn(
-        "Initial magnetic moments will not be considered for the determination "
-        "of the symmetry of the structure and thus will be removed now.",
-        stacklevel=2,
-    )
-    if "magmom" in structure.site_properties:
-        # remove_site_property is in-place so make a structure copy first
-        no_mag_struct = structure.copy().remove_site_property(property_name="magmom")
-    else:
-        no_mag_struct = structure
-    cell = get_phonopy_structure(no_mag_struct)
-    factor = get_factor(code)
-
-    # a bit of code repetition here as I currently
-    # do not see how to pass the phonopy object?
-    if use_symmetrized_structure == "primitive" and kpath_scheme != "seekpath":
-        primitive_matrix: np.ndarray | str = np.eye(3)
-    else:
-        primitive_matrix = "auto"
-
-    # TARP: THIS IS BAD! Including for discussions sake
-    if cell.magnetic_moments is not None and primitive_matrix == "auto":
-        if np.any(cell.magnetic_moments != 0.0):
-            raise ValueError(
-                "For materials with magnetic moments, "
-                "use_symmetrized_structure must be 'primitive'"
-            )
-        cell.magnetic_moments = None
-
-    phonon = Phonopy(
-        cell,
+    phonon = _generate_phonon_object_for_displacements(
+        structure,
         supercell_matrix,
-        primitive_matrix=primitive_matrix,
-        factor=factor,
-        symprec=symprec,
-        is_symmetry=sym_reduce,
+        displacement,
+        sym_reduce,
+        symprec,
+        use_symmetrized_structure,
+        kpath_scheme,
+        code,
+        verbose=verbose,
     )
-    phonon.generate_displacements(distance=displacement)
-
     supercells = phonon.supercells_with_displacements
 
     return [get_pmg_structure(cell) for cell in supercells]
@@ -251,6 +315,7 @@ def run_phonon_displacements(
     prev_dir: str | Path = None,
     prev_dir_argname: str = None,
     socket: bool = False,
+    store_displaced_structures: bool = False,
 ) -> Flow:
     """
     Run phonon displacements.
@@ -274,14 +339,15 @@ def run_phonon_displacements(
         argument name for the prev_dir variable
     socket: bool
         If True use the socket-io interface to increase performance
+    store_displaced_structures : bool = False
+        Whether to also save the displaced structures.
     """
     phonon_jobs = []
-    outputs: dict[str, list] = {
-        "displacement_number": [],
-        "forces": [],
-        "uuids": [],
-        "dirs": [],
-    }
+    save_props = {"displacement_number", "forces", "uuids", "dirs"}
+    if store_displaced_structures:
+        save_props.add("displaced_structures")
+    outputs: dict[str, list] = {k: [] for k in save_props}
+
     phonon_job_kwargs = {}
     if prev_dir is not None and prev_dir_argname is not None:
         phonon_job_kwargs[prev_dir_argname] = prev_dir
@@ -301,12 +367,13 @@ def run_phonon_displacements(
         outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)
         outputs["dirs"] = [phonon_job.output.dir_name] * len(displacements)
         outputs["forces"] = phonon_job.output.output.all_forces
+
+        # TODO: ensure order is correct.
+        if store_displaced_structures:
+            outputs["displaced_structures"] = displacements
     else:
         for idx, displacement in enumerate(displacements):
-            if prev_dir is not None:
-                phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
-            else:
-                phonon_job = phonon_maker.make(displacement)
+            phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
             phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
 
             # we will add some meta data
@@ -326,6 +393,8 @@ def run_phonon_displacements(
             outputs["uuids"].append(phonon_job.output.uuid)
             outputs["dirs"].append(phonon_job.output.dir_name)
             outputs["forces"].append(phonon_job.output.output.forces)
+            if store_displaced_structures:
+                outputs["displaced_structures"].append(displacement)
 
     displacement_flow = Flow(phonon_jobs, outputs)
     return Response(replace=displacement_flow)

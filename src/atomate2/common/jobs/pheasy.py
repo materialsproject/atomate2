@@ -2,32 +2,23 @@
 
 from __future__ import annotations
 
-import contextlib
 import logging
-import warnings
 from typing import TYPE_CHECKING
 
 import numpy as np
-from jobflow import Flow, Response, job
-from phonopy import Phonopy
+from jobflow import job
 from pymatgen.core import Structure
-from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
+from pymatgen.io.phonopy import get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
 from pymatgen.phonon.dos import PhononDos
 from pymatgen.transformations.advanced_transformations import (
     CubicSupercellTransformation,
 )
 
-from atomate2.common.schemas.phonons import get_factor
+from atomate2.common.jobs.phonons import _generate_phonon_object_for_displacements
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from emmet.core.math import Matrix3D
-
-    from atomate2.aims.jobs.base import BaseAimsMaker
-    from atomate2.forcefields.jobs import ForceFieldStaticMaker
-    from atomate2.vasp.jobs.base import BaseVaspMaker
 
 # move to here to avoid circular import
 from atomate2.common.schemas.pheasy import Forceconstants, PhononBSDOSDoc
@@ -134,46 +125,16 @@ def generate_phonon_displacements(
         raise ValueError(
             "Error importing ALM. Please ensure the 'alm' library is installed."
         )
-
-    if "magmom" in structure.site_properties and verbose:
-        warnings.warn(
-            "Initial magnetic moments will not be considered for the determination "
-            "of the symmetry of the structure and thus will be removed now.",
-            stacklevel=1,
-        )
-
-    cell = get_phonopy_structure(
-        structure.remove_site_property(property_name="magmom")
-        if "magmom" in structure.site_properties
-        else structure
-    )
-    factor = get_factor(code)
-
-    # a bit of code repetition here as I currently
-    # do not see how to pass the phonopy object?
-    primitive_matrix: np.ndarray | str = (
-        np.eye(3)
-        if use_symmetrized_structure == "primitive" and kpath_scheme == "seekpath"
-        else "auto"
-    )
-
-    # TARP: THIS IS BAD! Including for discussions sake
-    if cell.magnetic_moments is not None and primitive_matrix == "auto":
-        if np.any(cell.magnetic_moments != 0.0):
-            raise ValueError(
-                "For materials with magnetic moments, "
-                "use_symmetrized_structure must be 'primitive'"
-            )
-        cell.magnetic_moments = None
-    # create the phonopy object to get some information
-    # for the displacement generation in ALM code.
-    phonon = Phonopy(
-        cell,
+    phonon = _generate_phonon_object_for_displacements(
+        structure,
         supercell_matrix,
-        primitive_matrix=primitive_matrix,
-        factor=factor,
-        symprec=symprec,
-        is_symmetry=sym_reduce,
+        displacement,
+        sym_reduce,
+        symprec,
+        use_symmetrized_structure,
+        kpath_scheme,
+        code,
+        verbose=verbose,
     )
 
     # 1. the ALM module is used to determine the number of free parameters
@@ -207,8 +168,6 @@ def generate_phonon_displacements(
     # displacement method to generate the supercells.
     phonon.generate_displacements(distance=displacement)
     num_disp_f = len(phonon.displacements)
-    if num_disp_f > 3:
-        num_d = int(np.ceil(num_disp_sc * 1.8)) + 1
 
     if verbose:
         logger.info(
@@ -224,18 +183,15 @@ def generate_phonon_displacements(
         )
 
     if num_disp_f > 3:
-        if num_displaced_supercells != 0:
-            phonon.generate_displacements(
-                distance=displacement,
-                number_of_snapshots=num_displaced_supercells,
-                random_seed=random_seed,
-            )
-        else:
-            phonon.generate_displacements(
-                distance=displacement,
-                number_of_snapshots=num_d,
-                random_seed=random_seed,
-            )
+        phonon.generate_displacements(
+            distance=displacement,
+            number_of_snapshots=(
+                num_displaced_supercells
+                if num_displaced_supercells != 0
+                else int(np.ceil(num_disp_sc * 1.8)) + 1
+            ),
+            random_seed=random_seed,
+        )
 
     supercells = phonon.supercells_with_displacements
     displacements = [get_pmg_structure(cell) for cell in supercells]
@@ -367,103 +323,3 @@ def generate_frequencies_eigenvectors(
         born=born,
         **kwargs,
     )
-
-
-# I did not directly import this job from the phonon module
-# because I modified the job to pass the displaced structures
-# to the output.
-@job(data=["forces", "displaced_structures"])
-def run_phonon_displacements(
-    displacements: list[Structure],
-    structure: Structure,
-    supercell_matrix: Matrix3D,
-    phonon_maker: BaseVaspMaker | ForceFieldStaticMaker | BaseAimsMaker = None,
-    prev_dir: str | Path = None,
-    prev_dir_argname: str = None,
-    socket: bool = False,
-) -> Flow:
-    """
-    Run phonon displacements.
-
-    Note, this job will replace itself with N displacement calculations,
-    or a single socket calculation for all displacements.
-
-    Parameters
-    ----------
-    displacements: Sequence
-        All displacements to calculate
-    structure: Structure object
-        Fully optimized structure used for phonon computations.
-    supercell_matrix: Matrix3D
-        supercell matrix for meta data
-    phonon_maker : .BaseVaspMaker or .ForceFieldStaticMaker or .BaseAimsMaker
-        A maker to use to generate dispacement calculations
-    prev_dir: str or Path
-        The previous working directory
-    prev_dir_argname: str
-        argument name for the prev_dir variable
-    socket: bool
-        If True use the socket-io interface to increase performance
-    """
-    phonon_jobs = []
-    outputs: dict[str, list] = {
-        "displacement_number": [],
-        "forces": [],
-        "uuids": [],
-        "dirs": [],
-        "displaced_structures": [],
-    }
-    phonon_job_kwargs = {}
-    if prev_dir is not None and prev_dir_argname is not None:
-        phonon_job_kwargs[prev_dir_argname] = prev_dir
-
-    if socket:
-        phonon_job = phonon_maker.make(displacements, **phonon_job_kwargs)
-        info = {
-            "original_structure": structure,
-            "supercell_matrix": supercell_matrix,
-            "displaced_structures": displacements,
-        }
-        phonon_job.update_maker_kwargs(
-            {"_set": {"write_additional_data->phonon_info:json": info}}, dict_mod=True
-        )
-        phonon_jobs.append(phonon_job)
-        outputs["displacement_number"] = list(range(len(displacements)))
-        outputs["uuids"] = [phonon_job.output.uuid] * len(displacements)
-        outputs["dirs"] = [phonon_job.output.dir_name] * len(displacements)
-        outputs["forces"] = phonon_job.output.output.all_forces
-        # add the displaced structures, still need to be careful with the order,
-        # experimental feature
-        outputs["displaced_structures"] = displacements
-    else:
-        for idx, displacement in enumerate(displacements):
-            if prev_dir is not None:
-                phonon_job = phonon_maker.make(displacement, prev_dir=prev_dir)
-            else:
-                phonon_job = phonon_maker.make(displacement)
-            phonon_job.append_name(f" {idx + 1}/{len(displacements)}")
-
-            # Explicitly set preserve_fworker here!
-            phonon_job.update_config({"manager_config": {"_preserve_fworker": True}})
-
-            # we will add some meta data
-            info = {
-                "displacement_number": idx,
-                "original_structure": structure,
-                "supercell_matrix": supercell_matrix,
-                "displaced_structure": displacement,
-            }
-            with contextlib.suppress(Exception):
-                phonon_job.update_maker_kwargs(
-                    {"_set": {"write_additional_data->phonon_info:json": info}},
-                    dict_mod=True,
-                )
-            phonon_jobs.append(phonon_job)
-            outputs["displacement_number"].append(idx)
-            outputs["uuids"].append(phonon_job.output.uuid)
-            outputs["dirs"].append(phonon_job.output.dir_name)
-            outputs["forces"].append(phonon_job.output.output.forces)
-            outputs["displaced_structures"].append(displacement)
-
-    displacement_flow = Flow(phonon_jobs, outputs)
-    return Response(replace=displacement_flow)
