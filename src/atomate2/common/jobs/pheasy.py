@@ -1,4 +1,4 @@
-"""Jobs for running phonon calculations."""
+"""Jobs for running phonon calculations with phonopy and pheasy."""
 
 from __future__ import annotations
 
@@ -33,6 +33,11 @@ if TYPE_CHECKING:
 from atomate2.common.schemas.pheasy import Forceconstants, PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
+
+try:
+    from alm import ALM
+except ImportError:
+    ALM = None
 
 
 @job
@@ -88,10 +93,10 @@ def generate_phonon_displacements(
     use_symmetrized_structure: str | None,
     kpath_scheme: str,
     code: str,
+    random_seed: int | None = 103,
+    verbose: bool = False,
 ) -> list[Structure]:
-    """
-
-    Generate small-distance perturbed structures with phonopy based on two ways.
+    """Generate small-distance perturbed structures with phonopy based on two ways.
 
     (we will directly use the pheasy to generate the supercell in the near future)
     1. finite-displacment method (one displaced atom) when the displacement number
@@ -116,15 +121,27 @@ def generate_phonon_displacements(
         primitive, conventional or None
     kpath_scheme: str
         scheme to generate kpath
-    code:
+    code: str
         code to perform the computations
+    random_seed : int | None = 103
+        Random seed to use in generating randomly-displaced structures.
+    verbose : bool = False
+        Whether to log warnings.
 
     """
-    warnings.warn(
-        "Initial magnetic moments will not be considered for the determination "
-        "of the symmetry of the structure and thus will be removed now.",
-        stacklevel=1,
-    )
+    # TODO: remove ALMODE dependence for 2nd order force constants
+    if not ALM:
+        raise ValueError(
+            "Error importing ALM. Please ensure the 'alm' library is installed."
+        )
+
+    if "magmom" in structure.site_properties and verbose:
+        warnings.warn(
+            "Initial magnetic moments will not be considered for the determination "
+            "of the symmetry of the structure and thus will be removed now.",
+            stacklevel=1,
+        )
+
     cell = get_phonopy_structure(
         structure.remove_site_property(property_name="magmom")
         if "magmom" in structure.site_properties
@@ -134,10 +151,11 @@ def generate_phonon_displacements(
 
     # a bit of code repetition here as I currently
     # do not see how to pass the phonopy object?
-    if use_symmetrized_structure == "primitive" and kpath_scheme == "seekpath":
-        primitive_matrix: np.ndarray | str = np.eye(3)
-    else:
-        primitive_matrix = "auto"
+    primitive_matrix: np.ndarray | str = (
+        np.eye(3)
+        if use_symmetrized_structure == "primitive" and kpath_scheme == "seekpath"
+        else "auto"
+    )
 
     # TARP: THIS IS BAD! Including for discussions sake
     if cell.magnetic_moments is not None and primitive_matrix == "auto":
@@ -158,24 +176,16 @@ def generate_phonon_displacements(
         is_symmetry=sym_reduce,
     )
 
-    # 1. the ALM module is used to determine how many free parameters
-    # (irreducible force constants) of second order force constants (FCs)
-    # within the supercell.
+    # 1. the ALM module is used to determine the number of free parameters
+    # (irreducible force constants) corresponding to the second order
+    # force constants (FCs) given a supercell.
     # 2. Based on the number of free parameters, we can determine how many
     # displaced supercells we need to use to extract the second order force
     # constants. Generally, the number of free parameters should be less than
     # 3 * natom(supercell) * num_displaced_supercells. However, the full rank
-    # of matrix can not always guarantee the accurate result sometimes, you
-    # may need to displace more random configurations. At least use one or
+    # of the matrix can not always guarantee accurate results, you
+    # may need to displace more random configurations. Use at least one or
     # two more configurations based on the suggested number of displacements.
-
-    try:
-        from alm import ALM
-    except ImportError:
-        logger.exception(
-            "Error importing ALM. Please ensure the 'alm' library is installed."
-        )
-
     supercell_ph = phonon.supercell
     lattice = supercell_ph.cell
     positions = supercell_ph.scaled_positions
@@ -189,7 +199,7 @@ def generate_phonon_displacements(
         n_fp = alm._get_number_of_irred_fc_elements(1)  # noqa: SLF001
 
     # get the number of displaced supercells based on the number of free parameters
-    num = int(np.ceil(n_fp / (3.0 * natom)))
+    num_disp_sc = int(np.ceil(n_fp / (3.0 * natom)))
 
     # get the number of displaced supercells from phonopy to compared with the number
     # of 3, if the number of displaced supercells is less than 3, we will use the finite
@@ -198,52 +208,40 @@ def generate_phonon_displacements(
     phonon.generate_displacements(distance=displacement)
     num_disp_f = len(phonon.displacements)
     if num_disp_f > 3:
-        num_d = int(np.ceil(num * 1.8)) + 1
-    else:
-        pass
+        num_d = int(np.ceil(num_disp_sc * 1.8)) + 1
 
-    logger.info(
-        "The number of free parameters of Second Order Force Constants is %s", n_fp
-    )
-    logger.info("")
-
-    logger.info(
-        "The Number of Equations Used to Obtain the 2ND FCs is %s", 3 * natom * num
-    )
-    logger.info("")
-
-    logger.warning(
-        "Be Careful!!! Full Rank of Matrix cannot always guarantee the correct result\
-        sometimes.\n"
-        "If the total atoms in the supercell are less than 100 and\n"
-        "lattice constants are less than 10 angstroms,\n"
-        "I highly suggest displacing more random configurations.\n"
-        "At least use one or two more configurations based on the suggested\
-        number of displacements."
-    )
-    logger.info("")
+    if verbose:
+        logger.info(
+            f"There are {n_fp} free parameters for the second-order "
+            "force constants (FCs)."
+            f"There are {3 * natom * num_disp_sc} equations used to "
+            "obtain the second-order FCs."
+            "CAUTION: you may need to increase the number of "
+            "displacements in some cases."
+            "If the number of atoms in the supercell are less than 100 and "
+            "all lattice constants are less than 10 Å, the user is advised "
+            "to use 1-2 more randomly-displaced configurations."
+        )
 
     if num_disp_f > 3:
         if num_displaced_supercells != 0:
             phonon.generate_displacements(
                 distance=displacement,
                 number_of_snapshots=num_displaced_supercells,
-                random_seed=103,
+                random_seed=random_seed,
             )
         else:
             phonon.generate_displacements(
                 distance=displacement,
                 number_of_snapshots=num_d,
-                random_seed=103,
+                random_seed=random_seed,
             )
-    else:
-        pass
 
     supercells = phonon.supercells_with_displacements
     displacements = [get_pmg_structure(cell) for cell in supercells]
 
-    # Here, the ALM module is used to determine how many free parameters of third and
-    # fourth order force constants (FCs) within the specific supercell.
+    # Here, the ALAMODE copde is used to determine the number of
+    # third and fourth-order FCs are needed for the supercell
     if cal_anhar_fcs:
         # Due to the cutoff radius of the force constants use the unit of Borh in ALM,
         # we need to convert the cutoff radius from Angstrom to Bohr.
@@ -270,12 +268,10 @@ def generate_phonon_displacements(
         phonon.generate_displacements(
             distance=displacement_anhar,
             number_of_snapshots=num_dis_cells_anhar,
-            random_seed=103,
+            random_seed=random_seed,
         )
         supercells = phonon.supercells_with_displacements
         displacements += [get_pmg_structure(cell) for cell in supercells]
-    else:
-        pass
 
     # add the equilibrium structure to the list for calculating
     # the residual forces.
