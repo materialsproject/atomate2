@@ -113,7 +113,7 @@ strict-forcefields = [
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
 ]
 strict = [
-    "atomate2[strict-forcefields, docs, cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
+    "atomate2[strict-forcefields, docs, cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext, aims]",
 ]
 
 [project.scripts]
