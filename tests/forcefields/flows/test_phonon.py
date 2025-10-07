@@ -2,18 +2,17 @@ import os
 from pathlib import Path
 
 import pytest
+from emmet.core.phonon import (
+    CalcMeta,
+    PhononBS,
+    PhononBSDOSDoc,
+    PhononComputationalSettings,
+    PhononDOS,
+)
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
-from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
-from pymatgen.phonon.dos import PhononDos
 
-from atomate2.common.schemas.phonons import (
-    PhononBSDOSDoc,
-    PhononComputationalSettings,
-    PhononJobDirs,
-    PhononUUIDs,
-)
 from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
@@ -63,23 +62,15 @@ def test_phonon_wf_force_field(
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
     assert isinstance(ph_bs_dos_doc, PhononBSDOSDoc)
 
-    assert_allclose(
-        ph_bs_dos_doc.free_energies,
-        [5058.4521752, 4907.4957516, 3966.5493299, 2157.8178928, -357.5054580],
-        atol=1000,
-    )
-
     ph_band_struct = ph_bs_dos_doc.phonon_bandstructure
-    assert isinstance(ph_band_struct, PhononBandStructureSymmLine)
+    assert isinstance(ph_band_struct, PhononBS)
 
     ph_dos = ph_bs_dos_doc.phonon_dos
-    assert isinstance(ph_dos, PhononDos)
+    assert isinstance(ph_dos, PhononDOS)
     assert ph_bs_dos_doc.thermal_displacement_data is None
     assert isinstance(ph_bs_dos_doc.structure, Structure)
-    assert_allclose(ph_bs_dos_doc.temperatures, [0, 100, 200, 300, 400])
     assert ph_bs_dos_doc.force_constants is None
-    assert isinstance(ph_bs_dos_doc.jobdirs, PhononJobDirs)
-    assert isinstance(ph_bs_dos_doc.uuids, PhononUUIDs)
+    assert all(isinstance(cm, CalcMeta) for cm in ph_bs_dos_doc.calc_meta)
     assert_allclose(ph_bs_dos_doc.total_dft_energy, -5.37245798, 4)
     assert ph_bs_dos_doc.born is None
     assert ph_bs_dos_doc.epsilon_static is None
@@ -93,24 +84,37 @@ def test_phonon_wf_force_field(
         atol=1e-8,
     )
     assert ph_bs_dos_doc.code == "forcefields"
-    assert isinstance(ph_bs_dos_doc.phonopy_settings, PhononComputationalSettings)
-    assert ph_bs_dos_doc.phonopy_settings.npoints_band == 101
-    assert ph_bs_dos_doc.phonopy_settings.kpath_scheme == "seekpath"
-    assert ph_bs_dos_doc.phonopy_settings.kpoint_density_dos == 7_000
-    assert_allclose(
-        ph_bs_dos_doc.entropies,
-        [0.0, 4.78393981, 13.99318695, 21.88641334, 28.19110667],
-        atol=2,
+    assert isinstance(ph_bs_dos_doc.post_process_settings, PhononComputationalSettings)
+    assert ph_bs_dos_doc.post_process_settings.npoints_band == 101
+    assert ph_bs_dos_doc.post_process_settings.kpath_scheme == "seekpath"
+    assert ph_bs_dos_doc.post_process_settings.kpoint_density_dos == 7_000
+
+    ref_vals = {
+        "entropy": [0.0, 4.78393981, 13.99318695, 21.88641334, 28.19110667],
+        "heat_capacity": [0.0, 8.86060586, 17.55758943, 21.08903916, 22.62587271],
+        "internal_energy": [
+            5058.44158791,
+            5385.88058579,
+            6765.19854165,
+            8723.78588089,
+            10919.0199409,
+        ],
+        "free_energy": [
+            5058.4521752,
+            4907.4957516,
+            3966.5493299,
+            2157.8178928,
+            -357.5054580,
+        ],
+    }
+    thermo_props = ph_bs_dos_doc.compute_thermo_quantities(
+        [0, 100, 200, 300, 400], normalization="atoms"
     )
-    assert_allclose(
-        ph_bs_dos_doc.heat_capacities,
-        [0.0, 8.86060586, 17.55758943, 21.08903916, 22.62587271],
-        atol=2,
-    )
-    assert_allclose(
-        ph_bs_dos_doc.internal_energies,
-        [5058.44158791, 5385.88058579, 6765.19854165, 8723.78588089, 10919.0199409],
-        atol=1000,
+    assert all(
+        thermo_props[k][i]
+        == pytest.approx(val, atol=2 if k in {"entropy", "heat_capacity"} else 1000)
+        for k, vals in ref_vals.items()
+        for i, val in enumerate(vals)
     )
 
     # check phonon plots exist
