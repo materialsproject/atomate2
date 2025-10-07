@@ -284,10 +284,8 @@ def _get_differences_tol(
         self_dataset_dict = dict(self_dataset)
         other_dataset_dict = dict(other_dataset)
         for k in to_ignore:
-            if k in self_dataset_dict:
-                del self_dataset_dict[k]
-            if k in other_dataset_dict:
-                del other_dataset_dict[k]
+            self_dataset_dict.pop(k, None)
+            other_dataset_dict.pop(k, None)
         common_keys = set(self_dataset_dict.keys()).intersection(
             other_dataset_dict.keys()
         )

@@ -22,7 +22,10 @@ from ase.io import write as ase_write
 from ase.mep.neb import NEB
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
+from ase.stress import voigt_6_to_full_3x3_stress
+from ase.units import GPa
 from emmet.core.neb import NebMethod, NebResult
+from emmet.core.trajectory import AtomTrajectory
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
@@ -83,7 +86,7 @@ class TrajectoryObserver:
         self.forces: list[np.ndarray] = []
 
         self._calc_kwargs = {
-            "stress": (
+            "stresses": (
                 "stress" in self.atoms.calc.implemented_properties and self._is_periodic
             ),
             "magmoms": True,
@@ -113,7 +116,7 @@ class TrajectoryObserver:
         # When _store_md_outputs is True, ideal gas contribution to
         # stress is included.
         # Only store stress for periodic systems.
-        if self._calc_kwargs["stress"]:
+        if self._calc_kwargs["stresses"]:
             self.stresses.append(
                 self.atoms.get_stress(include_ideal_gas=self._store_md_outputs)
             )
@@ -144,7 +147,7 @@ class TrajectoryObserver:
     def save(
         self,
         filename: str | PathLike | None,
-        fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
+        fmt: Literal["pmg", "ase", "xdatcar", "parquet"] = "ase",
     ) -> None:
         """
         Save the trajectory file using monty.serialization.
@@ -162,6 +165,8 @@ class TrajectoryObserver:
             self.to_pymatgen_trajectory(filename=filename, file_format=fmt)  # type: ignore[arg-type]
         elif fmt == "ase":
             self.to_ase_trajectory(filename=filename)
+        elif fmt == "parquet":
+            self.to_emmet_trajectory(filename=filename)
         else:
             raise ValueError(f"Unknown trajectory format {fmt}.")
 
@@ -189,7 +194,7 @@ class TrajectoryObserver:
                 "energy": self.energies[idx],
                 "forces": self.forces[idx],
             }
-            if self._calc_kwargs["stress"]:
+            if self._calc_kwargs["stresses"]:
                 kwargs["stress"] = self.stresses[idx]
             if self._calc_kwargs["magmoms"]:
                 kwargs["magmom"] = self.magmoms[idx]
@@ -218,7 +223,7 @@ class TrajectoryObserver:
             If "xdatcar", writes a VASP-format XDATCAR object to file
         """
         frame_property_keys = ["energy", "forces"]
-        for k in ("stress", "magmoms", "velocities", "temperature"):
+        for k in ("stresses", "magmoms", "velocities", "temperature"):
             if self._calc_kwargs[k]:
                 frame_property_keys += [k]
 
@@ -276,12 +281,47 @@ class TrajectoryObserver:
 
         return pmg_traj
 
+    def to_emmet_trajectory(
+        self, filename: str | PathLike | None = None
+    ) -> AtomTrajectory:
+        """Create an emmet.core.AtomTrajectory."""
+        frame_props = {
+            "cells": "lattice",
+            "energies": "energy",
+            "forces": "forces",
+            "stresses": "stress",
+            "magmoms": "magmoms",
+            "velocities": "velocities",
+            "temperatures": "temperature",
+        }
+        for k in ("stresses", "magmoms"):
+            if not self._calc_kwargs[k]:
+                frame_props.pop(k)
+
+        ionic_step_data = {v: getattr(self, k) for k, v in frame_props.items()}
+        if self._calc_kwargs["stresses"]:
+            # NOTE: convert stress units from eV/A³ to kBar (* -1 from standard output)
+            # and to 3x3 matrix to comply with MP convention
+            ionic_step_data["stress"] = [
+                voigt_6_to_full_3x3_stress(val * -10 / GPa) for val in self.stresses
+            ]
+
+        traj = AtomTrajectory(
+            elements=self.atoms.get_atomic_numbers(),
+            cart_coords=self.atom_positions,
+            num_ionic_steps=len(self.atom_positions),
+            **ionic_step_data,
+        )
+        if filename:
+            traj.to(file_name=filename)
+        return traj
+
     def as_dict(self) -> dict:
         """Make JSONable dict representation of the Trajectory."""
         traj_dict = {
             "energy": self.energies,
             "forces": self.forces,
-            "stress": self.stresses,
+            "stresses": self.stresses,
             "atom_positions": self.atom_positions,
             "cells": self.cells,
             "atoms": self.atoms,
@@ -413,9 +453,9 @@ class AseRelaxer:
         struct = self.ase_adaptor.get_structure(
             atoms, cls=Molecule if is_mol else Structure
         )
-        traj = obs.to_pymatgen_trajectory(None)
+        traj = obs.to_emmet_trajectory(filename=None)
         is_force_conv = all(
-            np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
+            np.linalg.norm(traj.forces[-1][idx]) < abs(fmax)
             for idx in range(len(struct))
         )
 
@@ -425,6 +465,22 @@ class AseRelaxer:
                 write_atoms.calc = self.calculator
             else:
                 write_atoms = atoms
+
+            # ase==3.26.0 change: writing FixAtoms and FixCartesian
+            # constraints to extxyz supported.
+            # Write only these constraints to extxyz
+            if len(write_atoms.constraints) > 0:
+                from ase.constraints import FixAtoms, FixCartesian
+
+                write_atoms_constraints = [
+                    cons
+                    for cons in write_atoms.constraints
+                    if isinstance(cons, FixAtoms | FixCartesian)
+                ]
+                del write_atoms.constraints
+                for cons in write_atoms_constraints:
+                    write_atoms.set_constraint(cons)
+
             ase_write(
                 final_atoms_object_file, write_atoms, format="extxyz", append=True
             )
@@ -434,9 +490,7 @@ class AseRelaxer:
             trajectory=traj,
             converged=converged,
             is_force_converged=is_force_conv,
-            energy_downhill=(
-                traj.frame_properties[-1]["energy"] < traj.frame_properties[0]["energy"]
-            ),
+            energy_downhill=traj.energy[-1] < traj.energy[0],
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
         )

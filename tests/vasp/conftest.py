@@ -34,7 +34,7 @@ def lobster_test_dir(test_dir):
 @pytest.fixture
 def mock_vasp(
     monkeypatch: MonkeyPatch, vasp_test_dir: Path
-) -> Generator[Callable[[Any, Any], Any], None, None]:
+) -> Generator[Callable[[Any, Any], Any]]:
     """
     This fixture allows one to mock (fake) running VASP.
 

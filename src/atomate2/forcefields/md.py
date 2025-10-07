@@ -3,20 +3,14 @@
 from __future__ import annotations
 
 import warnings
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from jobflow import job
-from monty.dev import deprecated
 
 from atomate2.ase.md import AseMDMaker, MDEnsemble
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
-from atomate2.forcefields.utils import (
-    _DEFAULT_CALCULATOR_KWARGS,
-    _FORCEFIELD_DATA_OBJECTS,
-    MLFF,
-    ForceFieldMixin,
-)
+from atomate2.forcefields.utils import _FORCEFIELD_DATA_OBJECTS, ForceFieldMixin
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -88,11 +82,13 @@ class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
     traj_file : str | Path | None = None
         If a str or Path, the name of the file to save the MD trajectory to.
         If None, the trajectory is not written to disk
-    traj_file_fmt : Literal["ase","pmg","xdatcar"]
+    traj_file_fmt : Literal["ase","pmg","xdatcar","parquet"]
         The format of the trajectory file to write.
         If "ase", writes an ASE .Trajectory.
         If "pmg", writes a Pymatgen .Trajectory.
-        If "xdatcar, writes a VASP-style XDATCAR
+        If "xdatcar", writes a VASP-style XDATCAR.
+        If "parquet", uses emmet.core's Trajectory object to write a high-efficiency
+            parquet format file containing the trajectory.
     traj_interval : int
         The step interval for saving the trajectories.
     mb_velocity_seed : int or None
@@ -151,92 +147,3 @@ class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
             tags=self.tags,
             **self.task_document_kwargs,
         )
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use NEP, set `force_field_name = 'NEP'` in ForceFieldMDMaker.",
-)
-@dataclass
-class NEPMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with NEP."""
-
-    name: str = f"{MLFF.NEP} MD"
-    force_field_name: str | MLFF = MLFF.NEP
-    calculator_kwargs: dict = field(
-        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.NEP]
-    )
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message=(
-        "To use MACE-MP-0, set `force_field_name = 'MACE_MP_0'` in ForceFieldMDMaker."
-    ),
-)
-@dataclass
-class MACEMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with MACE-MP-0."""
-
-    name: str = f"{MLFF.MACE_MP_0} MD"
-    force_field_name: str | MLFF = MLFF.MACE_MP_0
-    calculator_kwargs: dict = field(
-        default_factory=lambda: {"default_dtype": "float32"}
-    )
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use M3GNet, set `force_field_name = 'M3GNet'` in ForceFieldMDMaker.",
-)
-@dataclass
-class M3GNetMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with M3GNet."""
-
-    name: str = f"{MLFF.M3GNet} MD"
-    force_field_name: str | MLFF = MLFF.M3GNet
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use CHGNet, set `force_field_name = 'CHGNet'` in ForceFieldMDMaker.",
-)
-@dataclass
-class CHGNetMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with CHGNet."""
-
-    name: str = f"{MLFF.CHGNet} MD"
-    force_field_name: str | MLFF = MLFF.CHGNet
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use GAP, set `force_field_name = 'GAP'` in ForceFieldMDMaker.",
-)
-@dataclass
-class GAPMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with GAP."""
-
-    name: str = f"{MLFF.GAP} MD"
-    force_field_name: str | MLFF = MLFF.GAP
-    calculator_kwargs: dict = field(
-        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.GAP]
-    )
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use Nequip, set `force_field_name = 'Nequip'` in ForceFieldMDMaker.",
-)
-@dataclass
-class NequipMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with nequip."""
-
-    name: str = f"{MLFF.Nequip} MD"
-    force_field_name: str = f"{MLFF.Nequip}"
