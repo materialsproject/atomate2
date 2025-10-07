@@ -11,7 +11,11 @@ from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.math import Matrix3D, Vector3D
-from emmet.core.types.enums import ValueEnum
+
+try:
+    from emmet.core.types.enums import ValueEnum
+except ImportError:
+    from emmet.core.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from typing_extensions import Self

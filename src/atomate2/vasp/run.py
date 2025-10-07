@@ -27,7 +27,11 @@ from custodian.vasp.handlers import (
 )
 from custodian.vasp.jobs import VaspJob, VaspNEBJob
 from custodian.vasp.validators import VaspFilesValidator, VasprunXMLValidator
-from emmet.core.types.enums import ValueEnum
+
+try:
+    from emmet.core.types.enums import ValueEnum
+except ImportError:
+    from emmet.core.utils import ValueEnum
 
 from atomate2 import SETTINGS
 

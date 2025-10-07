@@ -1,6 +1,10 @@
 import pytest
 from emmet.core.tasks import TaskDoc
-from emmet.core.types.enums import VaspObject
+
+try:
+    from emmet.core.types.enums import VaspObject
+except ImportError:
+    from emmet.core.vasp.calculation import VaspObject
 from jobflow import run_locally
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
