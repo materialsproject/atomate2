@@ -7,7 +7,7 @@ from pathlib import Path
 from shutil import which
 from typing import Any, Union
 
-from jobflow.utils import ValueEnum
+from emmet.core.types.enums import ValueEnum
 from pydantic import BaseModel, Field, field_validator
 from pymatgen.command_line.bader_caller import BaderAnalysis
 from pymatgen.core.structure import Molecule, Structure
