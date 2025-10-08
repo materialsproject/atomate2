@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from emmet.core.utils import ValueEnum
+from emmet.core.types.enums import ValueEnum
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from monty.dev import deprecated
 from pydantic import Field
