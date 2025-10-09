@@ -5,9 +5,10 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+import numpy as np
+from emmet.core.phonon import PhononBSDOSDoc
 from jobflow import Flow, Response, job
 
-from atomate2.common.schemas.phonons import PhononBSDOSDoc
 from atomate2.common.schemas.qha import PhononQHADoc
 from atomate2.common.utils import get_supercell_matrix
 
@@ -101,6 +102,8 @@ def analyze_free_energy(
     pressure: float = None,
     ignore_imaginary_modes: bool = False,
     eos_type: str = "vinet",
+    t_min: float = 0.0,
+    t_step: int = 10,
     **kwargs,
 ) -> Flow:
     """Analyze the free energy from all phonon runs.
@@ -135,7 +138,7 @@ def analyze_free_energy(
     ]
     supercell_matrix: list[list[float]] = phonon_outputs[0].supercell_matrix
 
-    for itemp, temp in enumerate(phonon_outputs[0].temperatures):
+    for itemp, temp in enumerate(np.arange(t_min, t_max or 500, t_step)):
         temperatures.append(float(temp))
         sorted_volume = []
         electronic_energies.append([])
@@ -148,9 +151,13 @@ def analyze_free_energy(
             if (not output.has_imaginary_modes) or ignore_imaginary_modes:
                 electronic_energies[itemp].append(output.total_dft_energy)
                 # convert from J/mol in kJ/mol
-                free_energies[itemp].append(output.free_energies[itemp] / 1000.0)
-                heat_capacities[itemp].append(output.heat_capacities[itemp])
-                entropies[itemp].append(output.entropies[itemp])
+                free_energies[itemp].append(
+                    output.free_energy(temp, normalization=None) / 1000.0
+                )
+                heat_capacities[itemp].append(
+                    output.heat_capacity(temp, normalization=None)
+                )
+                entropies[itemp].append(output.entropy(temp, normalization=None))
                 sorted_volume.append(output.volume_per_formula_unit)
                 formula_units.append(output.formula_units)
 

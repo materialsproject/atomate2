@@ -112,7 +112,7 @@ def test_phonon_wf_force_field(
     )
     assert all(
         thermo_props[k][i]
-        == pytest.approx(val, atol=2 if k in {"entropy", "heat_capacity"} else 1000)
+        == pytest.approx(val, abs=2 if k in {"entropy", "heat_capacity"} else 1000)
         for k, vals in ref_vals.items()
         for i, val in enumerate(vals)
     )
