@@ -45,6 +45,7 @@ class DdeSetGenerator(StaticSetGenerator):
 
     calc_type: str = "DDE"
     factory: Callable = ddepert_from_gsinput
+    # Set pseudos to None to recover them from previous jobs
     pseudos: str | list[str] | PseudoTable | None = None
     restart_from_deps: tuple = (f"{DDE}:1WF|1DEN",)
     prev_outputs_deps: tuple = (f"{SCF}:WFK", f"{DDK}:1WF")

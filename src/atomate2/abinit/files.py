@@ -57,6 +57,8 @@ def fname2ext(filepath: Path | str) -> None | str:
     ext = filename.split("_")[-1].replace(".nc", "")
     if "1WF" in ext:
         ext = "1WF"
+    # For perturbations, the density file is named out_DENxx
+    # instead of out_1DENxx
     if "DEN" in ext and ext[-1].isdigit():
         ext = "1DEN"
     if ext not in ALL_ABIEXTS:

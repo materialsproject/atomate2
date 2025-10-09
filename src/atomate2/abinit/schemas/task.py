@@ -375,7 +375,7 @@ class AbinitTaskDoc(StructureMetadata):
             calcs_reversed.append(calc_doc)
             all_abinit_objects.append(abinit_objects)
 
-        tags = additional_fields.get("tags")
+        tags = additional_fields.pop("tags", None)
 
         dir_name = get_uri(dir_name)  # convert to full uri path
 

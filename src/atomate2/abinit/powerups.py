@@ -230,7 +230,7 @@ def update_generator_attributes(
     return update_maker_kwargs(class_filter, dict_mod_updates, flow, name_filter)
 
 
-def update_taskdoc(
+def update_taskdoc_kwargs(
     flow: Job | Flow | Maker,
     taskdoc_updates: dict[str, Any],
     name_filter: str | None = None,
