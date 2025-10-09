@@ -10,12 +10,14 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from ase.io import read as ase_read
+from emmet.core import __version__ as _emmet_core_version
 from emmet.core.phonon import PhononBSDOSDoc
 from hiphive import ClusterSpace, ForceConstantPotential, enforce_rotational_sum_rules
 from hiphive import ForceConstants as HiPhiveForceConstants
 from hiphive.cutoffs import estimate_maximum_cutoff
 from hiphive.utilities import extract_parameters
 from jobflow import job
+from packaging.version import parse as parse_version
 from phonopy.file_IO import parse_FORCE_CONSTANTS, write_force_constants_to_hdf5
 from phonopy.interface.vasp import write_vasp
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
@@ -121,6 +123,10 @@ def generate_phonon_displacements(
         displacement in Angstrom (default: 0.01)
     num_displaced_supercells: int
         number of displaced supercells defined by users
+    cal_anhar_fcs: bool
+        TODO : docstr
+    displacement_anhar: float
+        TODO : docstr
     sym_reduce: bool
         if True, symmetry will be used to generate displacements
     symprec: float
@@ -210,7 +216,7 @@ def generate_phonon_displacements(
     supercells = phonon.supercells_with_displacements
     displacements = [get_pmg_structure(cell) for cell in supercells]
 
-    # Here, the ALAMODE copde is used to determine the number of
+    # Here, the ALAMODE code is used to determine the number of
     # third and fourth-order FCs are needed for the supercell
     if cal_anhar_fcs:
         # Due to the cutoff radius of the force constants use the unit of Borh in ALM,
@@ -257,9 +263,6 @@ def generate_frequencies_eigenvectors(
     structure: Structure,
     supercell_matrix: np.array,
     displacement: float,
-    displacement_anhar: float,
-    num_displaced_supercells: int,
-    num_disp_anhar: int,
     cal_anhar_fcs: bool,
     fcs_cutoff_radius: list[int],
     renorm_phonon: bool,
@@ -625,7 +628,6 @@ def generate_frequencies_eigenvectors(
     filename_band_yaml = "phonon_band_structure.yaml"
     filename_band_hdf5 = "phonon_band_structure.hdf5"
 
-    # TODO: potentially add kwargs to avoid computation of eigenvectors
     phonon.run_band_structure(
         qpoints,
         path_connections=connections,
@@ -864,12 +866,14 @@ def generate_frequencies_eigenvectors(
         total_dft_energy / formula_units if total_dft_energy is not None else None
     )
 
-    return PhononBSDOSDoc.from_structure(
+    cls_constructor = (
+        "migrate_fields"
+        if parse_version(_emmet_core_version) >= parse_version("0.85.1")
+        else "from_structure"
+    )
+    return getattr(PhononBSDOSDoc, cls_constructor)(
         structure=structure,
         meta_structure=structure,
-        num_displaced_supercells=num_displaced_supercells,
-        displacement_anhar=displacement_anhar,
-        num_disp_anhar=num_disp_anhar,
         phonon_bandstructure=bs_symm_line,
         phonon_dos=dos,
         total_dft_energy=total_dft_energy_per_formula_unit,
@@ -905,7 +909,7 @@ def generate_frequencies_eigenvectors(
             "optimization_run_uuid": kwargs["optimization_run_uuid"],
             "static_run_uuid": kwargs["static_run_uuid"],
         },
-        phonopy_settings={
+        post_process_settings={
             "npoints_band": npoints_band,
             "kpath_scheme": kpath_scheme,
             "kpoint_density_dos": kpoint_density_dos,

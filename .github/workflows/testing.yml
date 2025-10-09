@@ -63,12 +63,7 @@ jobs:
       - name: Install ALA-Mode
         run: |
           micromamba activate a2
-          micromamba install -n a2 -c conda-forge "numpy<=2.2" scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include openmpi --yes  
-          git clone https://github.com/ttadano/ALM.git # do I need to modify this?
-          cd ALM # do I need to modify this?
-          cd python
-          python setup.py build # do I need to modify this?
-          uv pip install -e . # do I need to modify this?
+          micromamba install -n a2 -c conda-forge alm
 
       - name: Install dependencies
         run: |

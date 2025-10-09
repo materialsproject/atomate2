@@ -301,10 +301,7 @@ class BasePhononMaker(PurePhonopyMaker, ABC):
         return generate_frequencies_eigenvectors(
             supercell_matrix=supercell_matrix,
             displacement=self.displacement,
-            num_displaced_supercells=self.num_displaced_supercells,
             cal_anhar_fcs=self.cal_anhar_fcs,
-            displacement_anhar=self.displacement_anhar,
-            num_disp_anhar=self.num_disp_anhar,
             fcs_cutoff_radius=self.fcs_cutoff_radius,
             renorm_phonon=self.renorm_phonon,
             renorm_temp=self.renorm_temp,

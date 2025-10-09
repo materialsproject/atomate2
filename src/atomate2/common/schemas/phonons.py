@@ -1,4 +1,4 @@
-"""Deprecated stub to use in place of modern emmet-core dependencies."""
+"""Deprecated stub; use emmet.core.phonon instead."""
 
 from __future__ import annotations
 

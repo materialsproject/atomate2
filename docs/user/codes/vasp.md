@@ -350,14 +350,25 @@ By design, these workflows have the same basic structure as the harmonic forcefi
 To use `Pheasy` in the previous example, we would replace the import string to `from atomate2.vasp.flows.pheasy import PhononMaker`.
 
 By default, this workflow does not compute anharmonic force constants, but can be extended to using the `cal_anhar_fcs` kwarg and the `ALAMODE` code.
-To install ALAMODE, see their [installation guidelines](https://alamode.readthedocs.io/en/latest/install.html#), or try the following installation using `conda`:
 
+To install ALAMODE, see their [installation guidelines](https://alamode.readthedocs.io/en/latest/install.html#).
+Linux and MacOS x86-64 users can try to install using conda forge:
+```
+conda install -c conda-forge alm
+```
+
+Windows and MacOS ARM users cannot use the pre-built wheels on conda forge at this time, and should instead try the following installation using `conda`:
 ```
 conda install -c conda-forge "numpy<=2.2" scipy h5py compilers “libblas=*=*mkl” spglib boost eigen cmake ipython mkl-include openmpi --yes
 git clone https://github.com/ttadano/ALM.git
 cd ALM/python
 python setup.py build
 pip install -e .
+```
+NB: MacOS users will need to ensure that `gcc` and `g++` are used rather than `clang` - both can be installed with `homebrew`.
+For example, using `gcc-15` from `homebrew`, one might set:
+```
+export CC=gcc-15 ; CXX=g++-15 ; CXX_FLAGS=-DOPENMP
 ```
 
 ### Grüneisen parameter workflow

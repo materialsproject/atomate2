@@ -10,8 +10,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
+from emmet.core import __version__ as _emmet_core_version
 from emmet.core.phonon import PhononBSDOSDoc
 from jobflow import Flow, Response, job
+from packaging.version import parse as parse_version
 from phonopy import Phonopy
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
@@ -543,7 +545,12 @@ def generate_frequencies_eigenvectors(
 
     volume_per_formula_unit = structure.volume / formula_units
 
-    return PhononBSDOSDoc.from_structure(
+    cls_constructor = (
+        "migrate_fields"
+        if parse_version(_emmet_core_version) >= parse_version("0.85.1")
+        else "from_structure"
+    )
+    return getattr(PhononBSDOSDoc, cls_constructor)(
         structure=structure,
         meta_structure=structure,
         phonon_bandstructure=bs_symm_line.as_dict(),
@@ -581,7 +588,7 @@ def generate_frequencies_eigenvectors(
             "optimization_run_uuid": kwargs["optimization_run_uuid"],
             "static_run_uuid": kwargs["static_run_uuid"],
         },
-        phonopy_settings={
+        post_process_settings={
             "npoints_band": npoints_band,
             "kpath_scheme": kpath_scheme,
             "kpoint_density_dos": kpoint_density_dos,
