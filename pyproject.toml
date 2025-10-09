@@ -28,13 +28,13 @@ dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core>=v0.84.10rc2",
+    "emmet-core>=v0.84.10",
     "jobflow>=0.1.11",
     "monty>=2024.12.10",
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.11.13",
+    "pymatgen>=2024.11.13,<2025.10.7",
     "pymongo<=4.10.1",
 ]
 
@@ -70,9 +70,9 @@ openmm = [
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
-fireworks = ["FireWorks==2.0.4"]
+fireworks = ["fireworks==2.0.5"]
 docs = [
-    "FireWorks==2.0.4",
+    "fireworks==2.0.5",
     "autodoc_pydantic==2.2.0",
     "furo==2025.7.19",
     "ipython==8.37.0",
@@ -86,10 +86,10 @@ docs = [
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = [
-    "FireWorks==2.0.4",
+    "fireworks==2.0.5",
     "nbmake==1.5.5",
     "pytest-cov==7.0.0",
-    "pytest-mock==3.15.0",
+    "pytest-mock==3.15.1",
     "pytest-split==0.10.0",
     "pytest-xdist==3.8.0",
     "pytest==8.4.2",
