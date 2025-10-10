@@ -125,7 +125,8 @@ class AbinitMixinInputGenerator(InputGenerator):
 
         # Currently, a single previous job maps to one dependency, unless
         # "restart_from_deps" or "prev_outputs_deps" are tuples of multiple items.
-        # However, these are currently tuples of ONE item, which can have multiple
+        # However, these are currently tuples of ONE item (except for DDE, DTE,
+        # and Phonons), which can have multiple
         # run_levels and extensions. If a previous job's run_level matches any of the
         # specified run_levels, the first matching extension in its output files is
         # used (e.g., WFK, then DEN if WFK is missing).
@@ -138,9 +139,9 @@ class AbinitMixinInputGenerator(InputGenerator):
         for ext in exts:
             # TODO: how to check that we have the files we need ?
             #  Should we raise if don't find at least one file for a given extension ?
-            if ext in ("1WF", "1DEN"):
+            if ext in ("1WF", "1DEN", "DDK"):
                 # Special treatment for 1WF and 1DEN files
-                if ext == "1WF":
+                if ext in ["1WF", "DDK"]:
                     files = prev_outdir.find_1wf_files()
                 elif ext == "1DEN":
                     files = prev_outdir.find_1den_files()

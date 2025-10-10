@@ -86,7 +86,7 @@ class DfptFlowMaker(Maker):
     mrgdv_maker: Maker | None = None  # |
     anaddb_maker: Maker | None = None  # |
     use_dde_sym: bool = True
-    dte_skip_permutations: bool | None = False
+    dte_skip_permutations: bool | None = True
     qpt_list: list[list] | None = None
     ngqpt: list | None = None
     qptopt: int | None = None
