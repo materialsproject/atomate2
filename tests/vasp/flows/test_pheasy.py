@@ -4,6 +4,7 @@ from emmet.core.phonon import (
     PhononBSDOSDoc,
     PhononComputationalSettings,
     PhononDOS,
+    ThermalDisplacementData,
 )
 from jobflow import run_locally
 from numpy.testing import assert_allclose
@@ -81,10 +82,10 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
         PhononBS,
     )
     assert isinstance(ph_doc.phonon_dos, PhononDOS)
-    # assert isinstance(
-    #     ph_doc.thermal_displacement_data,
-    #     ThermalDisplacementData,
-    # )
+    assert isinstance(
+        ph_doc.thermal_displacement_data,
+        ThermalDisplacementData,
+    )
     assert isinstance(ph_doc.structure, Structure)
     assert ph_doc.has_imaginary_modes is False
     assert isinstance(ph_doc.force_constants, tuple)
@@ -100,13 +101,9 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
     assert_allclose(
         ph_doc.epsilon_static,
         (
-            (13.31020238, 0.0, -0.000000000000000000000000000000041086505480261033),
-            (0.000000000000000000000000000000032869204384208823, 13.31020238, 0.0),
-            (
-                0.00000000000000000000000000000003697785493223493,
-                -0.00000000000000000000000000000005310360021821649,
-                13.31020238,
-            ),
+            (13.31020238, 0.0, -0.0),
+            (0.0, 13.31020238, 0.0),
+            (0.0, -0.0, 13.31020238),
         ),
         atol=1e-8,
     )
