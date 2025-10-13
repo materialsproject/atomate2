@@ -90,29 +90,29 @@ def test_phonon_wf_force_field(
     assert ph_bs_dos_doc.post_process_settings.kpoint_density_dos == 7_000
 
     ref_vals = {
-        "entropy": [0.0, 4.78393981, 13.99318695, 21.88641334, 28.19110667],
-        "heat_capacity": [0.0, 8.86060586, 17.55758943, 21.08903916, 22.62587271],
+        "entropy": [0.0, 7.45806197, 24.99582177, 40.53981354, 53.0450785],
+        "heat_capacity": [0.0, 15.9212379, 34.32542093, 41.73809612, 44.95600976],
         "internal_energy": [
-            5058.44158791,
-            5385.88058579,
-            6765.19854165,
-            8723.78588089,
-            10919.0199409,
+            10510.17946131,
+            11038.76862405,
+            13676.21828021,
+            17534.72238986,
+            21889.29538244,
         ],
         "free_energy": [
-            5058.4521752,
-            4907.4957516,
-            3966.5493299,
-            2157.8178928,
-            -357.5054580,
+            10510.17946131,
+            10292.96242722,
+            8677.0539271,
+            5372.77832663,
+            671.26398379,
         ],
     }
     thermo_props = ph_bs_dos_doc.compute_thermo_quantities(
-        [0, 100, 200, 300, 400], normalization="atoms"
+        [0, 100, 200, 300, 400], normalization=None
     )
+
     assert all(
-        thermo_props[k][i]
-        == pytest.approx(val, abs=2 if k in {"entropy", "heat_capacity"} else 1000)
+        thermo_props[k][i] == pytest.approx(val, rel=0.1)
         for k, vals in ref_vals.items()
         for i, val in enumerate(vals)
     )
