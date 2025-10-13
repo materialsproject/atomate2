@@ -74,7 +74,7 @@ fireworks = ["fireworks==2.0.5"]
 docs = [
     "fireworks==2.0.5",
     "autodoc_pydantic==2.2.0",
-    "furo==2025.7.19",
+    "furo==2025.9.25",
     "ipython==8.37.0",
     "jsonschema[format]",
     "myst_parser==4.0.1",
