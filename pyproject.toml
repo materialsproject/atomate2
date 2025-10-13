@@ -71,11 +71,11 @@ openmm = [
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
-fireworks = ["fireworks==2.0.5"]
+fireworks = ["fireworks==2.0.6"]
 docs = [
-    "fireworks==2.0.5",
+    "fireworks==2.0.6",
     "autodoc_pydantic==2.2.0",
-    "furo==2025.7.19",
+    "furo==2025.9.25",
     "ipython==8.37.0",
     "jsonschema[format]",
     "myst_parser==4.0.1",
@@ -87,7 +87,7 @@ docs = [
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = [
-    "fireworks==2.0.5",
+    "fireworks==2.0.6",
     "nbmake==1.5.5",
     "pytest-cov==7.0.0",
     "pytest-mock==3.15.1",
