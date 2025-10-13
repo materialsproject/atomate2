@@ -3,8 +3,8 @@ from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
 from ruamel.yaml import YAML
 
-from atomate2.common.jobs.phonons import PhononBSDOSDoc
 from atomate2.common.jobs.qha import PhononQHADoc, analyze_free_energy
+from atomate2.common.schemas.qha import PhononSummaryData
 
 
 def test_analyze_free_energy(tmp_dir, test_dir):
@@ -66,7 +66,7 @@ def test_analyze_free_energy(tmp_dir, test_dir):
         fe = [v["free_energy"] * 1000.0 for v in thermal_properties]
 
         phonon_docs.append(
-            PhononBSDOSDoc(
+            PhononSummaryData(
                 free_energies=fe,
                 heat_capacities=cv,
                 entropies=entropy,
@@ -143,7 +143,7 @@ def test_analyze_free_energy_small(tmp_dir, test_dir):
         fe = [v["free_energy"] * 1000.0 for v in thermal_properties]
 
         phonon_docs.append(
-            PhononBSDOSDoc(
+            PhononSummaryData(
                 free_energies=fe,
                 heat_capacities=cv,
                 entropies=entropy,

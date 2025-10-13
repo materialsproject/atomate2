@@ -9,7 +9,7 @@ import numpy as np
 from emmet.core.phonon import PhononBSDOSDoc
 from jobflow import Flow, Response, job
 
-from atomate2.common.schemas.qha import PhononQHADoc
+from atomate2.common.schemas.qha import PhononQHADoc, PhononSummaryData
 from atomate2.common.utils import get_supercell_matrix
 
 if TYPE_CHECKING:
@@ -87,7 +87,10 @@ def get_phonon_jobs(
         phonon_job.append_name(f" eos deformation {istructure + 1}")
         phonon_jobs.append(phonon_job)
         outputs.append(phonon_job.output)
-    replace_flow = Flow(phonon_jobs, outputs)
+    concat_output_job = calc_thermo_data(outputs)
+    replace_flow = Flow(
+        [*phonon_jobs, concat_output_job], output=concat_output_job.output
+    )
     return Response(replace=replace_flow)
 
 
@@ -96,22 +99,20 @@ def get_phonon_jobs(
     data=["free_energies", "heat_capacities", "entropies", "helmholtz_volume"],
 )
 def analyze_free_energy(
-    phonon_outputs: list[PhononBSDOSDoc],
+    phonon_outputs: list[PhononSummaryData],
     structure: Structure,
     t_max: float = None,
     pressure: float = None,
     ignore_imaginary_modes: bool = False,
     eos_type: str = "vinet",
-    t_min: float = 0.0,
-    t_step: int = 10,
     **kwargs,
 ) -> Flow:
     """Analyze the free energy from all phonon runs.
 
     Parameters
     ----------
-    phonon_outputs: list[PhononBSDOSDoc]
-        list of PhononBSDOSDoc objects
+    phonon_outputs: list[PhononSummaryData]
+        list of PhononSummaryData objects
     structure: Structure object
         Corresponding structure object.
     t_max: float
@@ -138,7 +139,7 @@ def analyze_free_energy(
     ]
     supercell_matrix: list[list[float]] = phonon_outputs[0].supercell_matrix
 
-    for itemp, temp in enumerate(np.arange(t_min, t_max or 500, t_step)):
+    for itemp, temp in enumerate(phonon_outputs[0].temperatures):
         temperatures.append(float(temp))
         sorted_volume = []
         electronic_energies.append([])
@@ -151,13 +152,9 @@ def analyze_free_energy(
             if (not output.has_imaginary_modes) or ignore_imaginary_modes:
                 electronic_energies[itemp].append(output.total_dft_energy)
                 # convert from J/mol in kJ/mol
-                free_energies[itemp].append(
-                    output.free_energy(temp, normalization=None) / 1000.0
-                )
-                heat_capacities[itemp].append(
-                    output.heat_capacity(temp, normalization=None)
-                )
-                entropies[itemp].append(output.entropy(temp, normalization=None))
+                free_energies[itemp].append(output.free_energies[itemp] * 1e-3)
+                heat_capacities[itemp].append(output.heat_capacities[itemp])
+                entropies[itemp].append(output.entropies[itemp])
                 sorted_volume.append(output.volume_per_formula_unit)
                 formula_units.append(output.formula_units)
 
@@ -181,3 +178,60 @@ def analyze_free_energy(
         supercell_matrix=supercell_matrix,
         **kwargs,
     )
+
+
+@job(data=[PhononSummaryData])
+def calc_thermo_data(
+    phonon_docs: list[PhononBSDOSDoc],
+    t_min: float = 0.0,
+    t_max: float = 500.0,
+    t_step: int = 10,
+) -> list[PhononSummaryData]:
+    """Save temperature-depdenent thermodynamic state variables.
+
+    Parameters
+    ----------
+    phonon_docs : list of PhononBSDOSDoc
+        List of phonon output documents.
+    t_min: float = 0.0
+        Minimum temperature in K to compute data, defaults to 0 K.
+    t_max : float = 500.
+        Maximum temperature in K to compute data, defaults to 500 K.
+    t_step: int = 10
+        Increments for temperature data in K, defaults to 10 K.
+
+    Returns
+    -------
+    list of PhononSummaryData containing high-level thermodynamic data
+    """
+    temperature = np.arange(t_min, t_max, t_step)
+    remap = {
+        "temperature": "temperatures",
+        "entropy": "entropies",
+        "heat_capacity": "heat_capacities",
+        "internal_energy": "internal_energies",
+        "free_energy": "free_energies",
+        "structure": "meta_structure",
+    }
+    return [
+        PhononSummaryData.from_structure(
+            **{
+                remap.get(k, k): getattr(ph_doc, k, None)
+                for k in (
+                    "structure",
+                    "total_dft_energy",
+                    "has_imaginary_modes",
+                    "volume_per_formula_unit",
+                    "formula_units",
+                    "supercell_matrix",
+                )
+            },
+            **{
+                remap[k]: vals
+                for k, vals in ph_doc.compute_thermo_quantities(
+                    temperature, normalization=None
+                ).items()
+            },
+        )
+        for ph_doc in phonon_docs
+    ]
