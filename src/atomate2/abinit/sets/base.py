@@ -440,7 +440,7 @@ class AbinitInputGenerator(AbinitMixinInputGenerator):
 
     def get_input_set(
         self,
-        structure: Structure = None,
+        structure: Structure | None = None,
         restart_from: str | tuple | list | Path | None = None,
         prev_outputs: str | tuple | list | Path | None = None,
     ) -> AbinitInputSet:
@@ -622,7 +622,7 @@ class AbinitInputGenerator(AbinitMixinInputGenerator):
 
         if not self.prev_outputs_deps and prev_outputs:
             msg = (
-                f"Previous outputs not allowed for {type(self).__name__} "
+                f"Previous outputs not allowed for {type(self).__name__}. "
                 "Consider if restart_from argument of get_input_set method "
                 "can fit your needs instead."
             )
