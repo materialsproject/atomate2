@@ -21,7 +21,7 @@ class PhononSummaryData(StructureMetadata):
         None,
         description=(
             "Structure associated with the phonon calculation "
-            "used to generate this data",
+            "used to generate this data"
         ),
     )
 
