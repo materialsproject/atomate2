@@ -20,6 +20,13 @@ _REF_PATHS = {}
 _ABINIT_FILES = ("run.abi", "abinit_input.json")
 _FAKE_RUN_ABINIT_KWARGS = {}
 
+# Do this here to prevent issues with threaded CI runners
+# In abipy, it's possible to have thread collisions in
+# making this directory because `exist_ok = False` there
+_ABINIT_PATH = Path("~/.abinit").expanduser()
+if not _ABINIT_PATH.is_dir():
+    _ABINIT_PATH.mkdir(exist_ok=True)
+
 
 @pytest.fixture(scope="session")
 def abinit_test_dir(test_dir):
