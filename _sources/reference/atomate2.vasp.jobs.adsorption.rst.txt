@@ -16,7 +16,6 @@ atomate2.vasp.jobs.adsorption
       adsorption_calculations
       generate_adslabs
       generate_slab
-      get_boxed_molecule
       remove_adsorbate
       run_adslabs_job
 
@@ -41,7 +40,6 @@ atomate2.vasp.jobs.adsorption
    
    
       
-   
    
    
    
