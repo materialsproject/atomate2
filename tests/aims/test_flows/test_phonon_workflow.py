@@ -4,6 +4,10 @@ import json
 from pathlib import Path
 
 import pytest
+from pymatgen.io.aims.sets.core import StaticSetGenerator
+
+from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
+from atomate2.aims.jobs.phonons import PhononDisplacementMaker
 
 si_structure_file = Path(__file__).parents[2] / "test_data/structures/Si_diamond.cif"
 
@@ -31,6 +35,11 @@ def test_phonon_flow(clean_dir, mock_aims, species_dir):
     mock_aims(ref_paths, fake_run_aims_kwargs)
     # generate job
 
+    parameters = {
+        "k_grid": [2, 2, 2],
+        "species_dir": (species_dir / "light").as_posix(),
+    }
+
     maker = PhononMaker(
         min_length=3.0,
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
@@ -38,6 +47,16 @@ def test_phonon_flow(clean_dir, mock_aims, species_dir):
         store_force_constants=True,
         born_maker=None,
         use_symmetrized_structure="primitive",
+        bulk_relax_maker=RelaxMaker.full_relaxation(user_params=parameters),
+        static_energy_maker=StaticMaker(
+            input_set_generator=StaticSetGenerator(user_params=parameters)
+        ),
+        phonon_displacement_maker=PhononDisplacementMaker(
+            input_set_generator=StaticSetGenerator(
+                user_params={"compute_forces": True, **parameters},
+                user_kpoints_settings={"density": 5.0, "even": True},
+            )
+        ),
     )
     maker.name = "phonons"
     flow = maker.make(si, supercell_matrix=np.ones((3, 3)) - 2 * np.eye(3))

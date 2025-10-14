@@ -14,7 +14,6 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 import openmm.unit as omm_unit
-from emmet.core.openmm import OpenMMInterchange
 from openmm import (
     CustomNonbondedForce,
     LangevinMiddleIntegrator,
@@ -25,6 +24,8 @@ from openmm import (
 )
 from openmm.app import PDBFile, Simulation
 from pymatgen.core.trajectory import Trajectory
+
+from atomate2.openmm.interchange import OpenMMInterchange
 
 if TYPE_CHECKING:
     from emmet.core.openmm import OpenMMTaskDocument

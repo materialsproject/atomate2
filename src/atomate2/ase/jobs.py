@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import logging
 import time
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from ase.io import Trajectory as AseTrajectory
-from emmet.core.vasp.calculation import StoreTrajectoryOption
+
+try:
+    from emmet.core.types.enums import StoreTrajectoryOption
+except ImportError:
+    from emmet.core.vasp.calculation import StoreTrajectoryOption
 from jobflow import Maker, job
 from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
@@ -31,7 +35,7 @@ _ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
 
 
 @dataclass
-class AseMaker(Maker, metaclass=ABCMeta):
+class AseMaker(Maker, ABC):
     """
     Define basic template of ASE-based jobs.
 

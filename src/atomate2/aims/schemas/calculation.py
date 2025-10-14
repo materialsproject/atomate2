@@ -7,12 +7,16 @@ import os
 from collections.abc import Sequence
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from ase.spectrum.band_structure import BandStructure
 from emmet.core.math import Matrix3D, Vector3D
-from jobflow.utils import ValueEnum
+
+try:
+    from emmet.core.types.enums import ValueEnum
+except ImportError:
+    from emmet.core.utils import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory
@@ -98,24 +102,24 @@ class CalculationOutput(BaseModel):
         None, description="The final structure from the calculation"
     )
 
-    efermi: Optional[float] = Field(
+    efermi: float | None = Field(
         None, description="The Fermi level from the calculation in eV"
     )
 
-    forces: Optional[list[Vector3D]] = Field(
+    forces: list[Vector3D] | None = Field(
         None, description="Forces acting on each atom"
     )
-    all_forces: Optional[list[list[Vector3D]]] = Field(
+    all_forces: list[list[Vector3D]] | None = Field(
         None,
         description="Forces acting on each atom for each structure in the output file",
     )
-    stress: Optional[Matrix3D] = Field(None, description="The stress on the cell")
-    stresses: Optional[list[Matrix3D]] = Field(
+    stress: Matrix3D | None = Field(None, description="The stress on the cell")
+    stresses: list[Matrix3D] | None = Field(
         None, description="The atomic virial stresses"
     )
 
-    is_metal: Optional[bool] = Field(None, description="Whether the system is metallic")
-    bandgap: Optional[float] = Field(
+    is_metal: bool | None = Field(None, description="Whether the system is metallic")
+    bandgap: float | None = Field(
         None, description="The band gap from the calculation in eV"
     )
     cbm: float = Field(
@@ -123,7 +127,7 @@ class CalculationOutput(BaseModel):
         description="The conduction band minimum, or LUMO for molecules, in eV "
         "(if system is not metallic)",
     )
-    vbm: Optional[float] = Field(
+    vbm: float | None = Field(
         None,
         description="The valence band maximum, or HOMO for molecules, in eV "
         "(if system is not metallic)",
@@ -264,7 +268,7 @@ class Calculation(BaseModel):
         parse_dos: str | bool = False,
         parse_bandstructure: str | bool = False,
         store_trajectory: bool = False,
-        store_volumetric_data: Optional[Sequence[str]] = STORE_VOLUMETRIC_DATA,
+        store_volumetric_data: Sequence[str] | None = STORE_VOLUMETRIC_DATA,
     ) -> tuple[Self, dict[AimsObject, dict]]:
         """Create an FHI-aims calculation document from a directory and file paths.
 
@@ -393,7 +397,7 @@ def _get_output_file_paths(volumetric_files: list[str]) -> dict[AimsObject, str]
 def _get_volumetric_data(
     dir_name: Path,
     output_file_paths: dict[AimsObject, str],
-    store_volumetric_data: Optional[Sequence[str]],
+    store_volumetric_data: Sequence[str] | None,
 ) -> dict[AimsObject, VolumetricData]:
     """
     Load volumetric data files from a directory.
@@ -430,7 +434,7 @@ def _get_volumetric_data(
     return volumetric_data
 
 
-def _parse_dos(parse_dos: str | bool, aims_output: AimsOutput) -> Optional[Dos]:
+def _parse_dos(parse_dos: str | bool, aims_output: AimsOutput) -> Dos | None:
     """Parse DOS outputs from FHI-aims calculation.
 
     Parameters
@@ -458,7 +462,7 @@ def _parse_dos(parse_dos: str | bool, aims_output: AimsOutput) -> Optional[Dos]:
 
 def _parse_bandstructure(
     parse_bandstructure: str | bool, aims_output: AimsOutput
-) -> Optional[BandStructure]:
+) -> BandStructure | None:
     """
     Get the band structure.
 
@@ -478,7 +482,7 @@ def _parse_bandstructure(
     return None
 
 
-def _parse_trajectory(aims_output: AimsOutput) -> Optional[Trajectory]:
+def _parse_trajectory(aims_output: AimsOutput) -> Trajectory | None:
     """Grab a Trajectory object given an FHI-aims output object.
 
     Parameters

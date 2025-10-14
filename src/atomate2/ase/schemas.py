@@ -15,10 +15,14 @@ from typing import Any
 
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import MoleculeMetadata, StructureMetadata
-from emmet.core.tasks import TaskState
 from emmet.core.trajectory import AtomTrajectory
-from emmet.core.utils import ValueEnum
-from emmet.core.vasp.calculation import StoreTrajectoryOption
+
+try:
+    from emmet.core.types.enums import StoreTrajectoryOption, TaskState, ValueEnum
+except ImportError:
+    from emmet.core.tasks import TaskState
+    from emmet.core.utils import ValueEnum
+    from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule, Structure
 
@@ -103,7 +107,7 @@ class AseBaseModel(BaseModel):
     structure: Structure | None = Field(None, description="The structure at this step.")
     molecule: Molecule | None = Field(None, description="The molecule at this step.")
 
-    def model_post_init(self, _context: Any) -> None:
+    def model_post_init(self, context: Any, /) -> None:
         """Establish alias to structure and molecule fields."""
         if self.structure is None and isinstance(self.mol_or_struct, Structure):
             self.structure = self.mol_or_struct

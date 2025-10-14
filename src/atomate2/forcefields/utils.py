@@ -225,8 +225,7 @@ def ase_calculator(
             if isinstance(model, str | Path) and Path(model).exists():
                 model_path = model
                 device = kwargs.pop("device", None) or "cpu"
-                if "device" in kwargs:
-                    del kwargs["device"]
+                kwargs.pop("device", None)
                 calculator = MACECalculator(
                     model_paths=model_path,
                     device=device,
@@ -287,7 +286,7 @@ def ase_calculator(
 
 
 @contextmanager
-def revert_default_dtype() -> Generator[None, None, None]:
+def revert_default_dtype() -> Generator[None]:
     """Context manager for torch.default_dtype.
 
     Reverts it to whatever torch.get_default_dtype() was when entering the context.

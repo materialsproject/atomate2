@@ -8,7 +8,7 @@ import logging
 import os
 import sys
 import time
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from enum import Enum
@@ -24,7 +24,11 @@ from ase.md.velocitydistribution import (
     Stationary,
     ZeroRotation,
 )
-from emmet.core.vasp.calculation import StoreTrajectoryOption
+
+try:
+    from emmet.core.types.enums import StoreTrajectoryOption
+except ImportError:
+    from emmet.core.vasp.calculation import StoreTrajectoryOption
 from jobflow import job
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -82,7 +86,7 @@ for preset in DynamicsPresets.__members__:
 
 
 @dataclass
-class AseMDMaker(AseMaker, metaclass=ABCMeta):
+class AseMDMaker(AseMaker, ABC):
     """
     Perform MD with the Atomic Simulation Environment (ASE).
 

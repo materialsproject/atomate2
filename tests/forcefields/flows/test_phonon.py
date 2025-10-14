@@ -15,6 +15,7 @@ from atomate2.common.schemas.phonons import (
     PhononUUIDs,
 )
 from atomate2.forcefields.flows.phonons import PhononMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 
 @pytest.mark.parametrize("from_name", [False, True])
@@ -37,6 +38,19 @@ def test_phonon_wf_force_field(
 
     if from_name:
         phonon_maker = PhononMaker.from_force_field_name("CHGNet", **phonon_kwargs)
+        if phonon_kwargs.get("relax_initial_structure", True):
+            assert isinstance(phonon_maker.bulk_relax_maker, ForceFieldRelaxMaker)
+            assert "CHGNet" in phonon_maker.bulk_relax_maker.force_field_name
+
+        for attr in ("static_energy_maker", "phonon_displacement_maker"):
+            assert "CHGNet" in getattr(phonon_maker, attr).force_field_name
+
+        assert (
+            PhononMaker.from_force_field_name(
+                "CHGNet", relax_initial_structure=False
+            ).bulk_relax_maker
+            is None
+        )
     else:
         phonon_maker = PhononMaker(**phonon_kwargs)
 

@@ -5,7 +5,7 @@ import json
 import logging
 import time
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 import numpy as np
 from emmet.core.structure import StructureMetadata
@@ -55,15 +55,15 @@ def zpath(pathname: Union[str, Path]) -> str:
 class LobsteroutModel(BaseModel):
     """Definition of computational settings from the LOBSTER computation."""
 
-    restart_from_projection: Optional[bool] = Field(
+    restart_from_projection: bool | None = Field(
         None,
         description="Bool indicating if the run has been restarted from a projection",
     )
-    lobster_version: Optional[str] = Field(None, description="Lobster version")
-    threads: Optional[int] = Field(
+    lobster_version: str | None = Field(None, description="Lobster version")
+    threads: int | None = Field(
         None, description="Number of threads that Lobster ran on"
     )
-    dft_program: Optional[str] = Field(
+    dft_program: str | None = Field(
         None, description="DFT program was used for this run"
     )
     charge_spilling: list[float] = Field(description="Absolute charge spilling")
@@ -72,48 +72,48 @@ class LobsteroutModel(BaseModel):
     basis_type: list[str] = Field(description="Basis set used in Lobster")
     basis_functions: list[list[str]] = Field(description="basis_functions")
     timing: dict[str, dict[str, str]] = Field(description="Dict with infos on timing")
-    warning_lines: Optional[list] = Field(None, description="Warnings")
-    info_orthonormalization: Optional[list] = Field(
+    warning_lines: list | None = Field(None, description="Warnings")
+    info_orthonormalization: list | None = Field(
         None, description="additional information on orthonormalization"
     )
-    info_lines: Optional[list] = Field(
+    info_lines: list | None = Field(
         None, description="list of strings with additional info lines"
     )
-    has_doscar: Optional[bool] = Field(
+    has_doscar: bool | None = Field(
         None, description="Bool indicating if DOSCAR is present."
     )
-    has_doscar_lso: Optional[bool] = Field(
+    has_doscar_lso: bool | None = Field(
         None, description="Bool indicating if DOSCAR.LSO is present."
     )
-    has_cohpcar: Optional[bool] = Field(
+    has_cohpcar: bool | None = Field(
         None, description="Bool indicating if COHPCAR is present."
     )
-    has_coopcar: Optional[bool] = Field(
+    has_coopcar: bool | None = Field(
         None, description="Bool indicating if COOPCAR is present."
     )
-    has_cobicar: Optional[bool] = Field(
+    has_cobicar: bool | None = Field(
         None, description="Bool indicating if COBICAR is present."
     )
-    has_charge: Optional[bool] = Field(
+    has_charge: bool | None = Field(
         None, description="Bool indicating if CHARGE is present."
     )
-    has_madelung: Optional[bool] = Field(
+    has_madelung: bool | None = Field(
         None,
         description="Bool indicating if Site Potentials and Madelung file is present.",
     )
-    has_projection: Optional[bool] = Field(
+    has_projection: bool | None = Field(
         None, description="Bool indicating if projection file is present."
     )
-    has_bandoverlaps: Optional[bool] = Field(
+    has_bandoverlaps: bool | None = Field(
         None, description="Bool indicating if BANDOVERLAPS file is present"
     )
-    has_fatbands: Optional[bool] = Field(
+    has_fatbands: bool | None = Field(
         None, description="Bool indicating if Fatbands are present."
     )
-    has_grosspopulation: Optional[bool] = Field(
+    has_grosspopulation: bool | None = Field(
         None, description="Bool indicating if GROSSPOP file is present."
     )
-    has_density_of_energies: Optional[bool] = Field(
+    has_density_of_energies: bool | None = Field(
         None, description="Bool indicating if DensityofEnergies is present"
     )
 
@@ -124,24 +124,24 @@ class LobsterinModel(BaseModel):
     cohpstartenergy: float = Field(description="Start energy for COHP computation")
     cohpendenergy: float = Field(description="End energy for COHP computation")
 
-    gaussiansmearingwidth: Optional[float] = Field(
+    gaussiansmearingwidth: float | None = Field(
         None, description="Set the smearing width in eV,default is 0.2 (eV)"
     )
-    usedecimalplaces: Optional[int] = Field(
+    usedecimalplaces: int | None = Field(
         None,
         description="Set the decimal places to print in output files, default is 5",
     )
-    cohpsteps: Optional[float] = Field(
+    cohpsteps: float | None = Field(
         None, description="Number steps in COHPCAR; similar to NEDOS of VASP"
     )
     basisset: str = Field(description="basis set of computation")
     cohpgenerator: str = Field(
         description="Build the list of atom pairs to be analyzed using given distance"
     )
-    saveprojectiontofile: Optional[bool] = Field(
+    saveprojectiontofile: bool | None = Field(
         None, description="Save the results of projections"
     )
-    lsodos: Optional[bool] = Field(
+    lsodos: bool | None = Field(
         None, description="Writes DOS output from the orthonormalized LCAO basis"
     )
     basisfunctions: list[str] = Field(
@@ -152,22 +152,20 @@ class LobsterinModel(BaseModel):
 class Bonding(BaseModel):
     """Model describing bonding field of BondsInfo."""
 
-    integral: Optional[float] = Field(
+    integral: float | None = Field(
         None, description="Integral considering only bonding contributions from COHPs"
     )
-    perc: Optional[float] = Field(
-        None, description="Percentage of bonding contribution"
-    )
+    perc: float | None = Field(None, description="Percentage of bonding contribution")
 
 
 class Antibonding(BaseModel):
     """Model describing antibonding field of BondsInfo."""
 
-    integral: Optional[float] = Field(
+    integral: float | None = Field(
         None,
         description="Integral considering only anti-bonding contributions from COHPs",
     )
-    perc: Optional[float] = Field(
+    perc: float | None = Field(
         None, description="Percentage of anti-bonding contribution"
     )
 
@@ -277,7 +275,7 @@ class CondensedBondingAnalysis(BaseModel):
         description="Bool that states if the spin channels in the "
         "cohp_plot_data are summed.",
     )
-    start: Optional[float] = Field(
+    start: float | None = Field(
         None,
         description="Sets the lower limit of energy relative to Fermi for evaluating"
         " bonding/anti-bonding percentages in the bond"
@@ -412,8 +410,7 @@ class CondensedBondingAnalysis(BaseModel):
                 with open(f"{filename}.json", "w") as fp:
                     json.dump(analyse.condensed_bonding_analysis, fp)
                 with open(f"{filename}.txt", "w") as fp:
-                    for line in describe.text:
-                        fp.write(f"{line}\n")
+                    fp.writelines(f"{line}\n" for line in describe.text)
 
             # Read in strongest icohp values
             sb = _identify_strongest_bonds(
@@ -432,27 +429,27 @@ class CondensedBondingAnalysis(BaseModel):
 class DosComparisons(BaseModel):
     """Model describing the DOS comparisons field in the CalcQualitySummary model."""
 
-    tanimoto_orb_s: Optional[float] = Field(
+    tanimoto_orb_s: float | None = Field(
         None,
         description="Tanimoto similarity index between s orbital of "
         "VASP and LOBSTER DOS",
     )
-    tanimoto_orb_p: Optional[float] = Field(
+    tanimoto_orb_p: float | None = Field(
         None,
         description="Tanimoto similarity index between p orbital of "
         "VASP and LOBSTER DOS",
     )
-    tanimoto_orb_d: Optional[float] = Field(
+    tanimoto_orb_d: float | None = Field(
         None,
         description="Tanimoto similarity index between d orbital of "
         "VASP and LOBSTER DOS",
     )
-    tanimoto_orb_f: Optional[float] = Field(
+    tanimoto_orb_f: float | None = Field(
         None,
         description="Tanimoto similarity index between f orbital of "
         "VASP and LOBSTER DOS",
     )
-    tanimoto_summed: Optional[float] = Field(
+    tanimoto_summed: float | None = Field(
         None,
         description="Tanimoto similarity index for summed PDOS between "
         "VASP and LOBSTER",
@@ -460,7 +457,7 @@ class DosComparisons(BaseModel):
     e_range: list[Union[float, None]] = Field(
         description="Energy range used for evaluating the Tanimoto similarity index"
     )
-    n_bins: Optional[int] = Field(
+    n_bins: int | None = Field(
         None,
         description="Number of bins used for discretizing the VASP and LOBSTER PDOS"
         "(Affects the Tanimoto similarity index)",
@@ -470,13 +467,13 @@ class DosComparisons(BaseModel):
 class ChargeComparisons(BaseModel):
     """Model describing the charges field in the CalcQualitySummary model."""
 
-    bva_mulliken_agree: Optional[bool] = Field(
+    bva_mulliken_agree: bool | None = Field(
         None,
         description="Bool indicating whether atoms classification as cation "
         "or anion based on Mulliken charge signs of LOBSTER "
         "agree with BVA analysis",
     )
-    bva_loewdin_agree: Optional[bool] = Field(
+    bva_loewdin_agree: bool | None = Field(
         None,
         description="Bool indicating whether atoms classification as cations "
         "or anions based on Loewdin charge signs of LOBSTER "
@@ -491,22 +488,22 @@ class BandOverlapsComparisons(BaseModel):
         description="Boolean indicating whether the bandOverlaps.lobster "
         "file is generated during the LOBSTER run",
     )
-    limit_maxDeviation: Optional[float] = Field(  # noqa: N815
+    limit_maxDeviation: float | None = Field(  # noqa: N815
         None,
         description="Limit set for maximal deviation in pymatgen parser",
     )
-    has_good_quality_maxDeviation: Optional[bool] = Field(  # noqa: N815
+    has_good_quality_maxDeviation: bool | None = Field(  # noqa: N815
         None,
         description="Boolean indicating whether the deviation at each k-point "
         "is within the threshold set using limit_maxDeviation "
         "for analyzing the bandOverlaps.lobster file data",
     )
-    max_deviation: Optional[float] = Field(
+    max_deviation: float | None = Field(
         None,
         description="Maximum deviation from ideal identity matrix from the observed in "
         "the bandOverlaps.lobster file",
     )
-    percent_kpoints_abv_limit: Optional[float] = Field(
+    percent_kpoints_abv_limit: float | None = Field(
         None,
         description="Percent of k-points that show deviations above "
         "the limit_maxDeviation threshold set in pymatgen parser.",
@@ -534,15 +531,15 @@ class CalcQualitySummary(BaseModel):
     charge_spilling: ChargeSpilling = Field(
         description="Model describing the charge spilling from the LOBSTER runs",
     )
-    charge_comparisons: Optional[ChargeComparisons] = Field(
+    charge_comparisons: ChargeComparisons | None = Field(
         None,
         description="Model describing the charge sign comparison results",
     )
-    band_overlaps_analysis: Optional[BandOverlapsComparisons] = Field(
+    band_overlaps_analysis: BandOverlapsComparisons | None = Field(
         None,
         description="Model describing the band overlap file analysis results",
     )
-    dos_comparisons: Optional[DosComparisons] = Field(
+    dos_comparisons: DosComparisons | None = Field(
         None,
         description="Model describing the VASP and LOBSTER PDOS comparisons results",
     )
@@ -618,20 +615,20 @@ class StrongestBonds(BaseModel):
     LobsterPy is used for the extraction.
     """
 
-    which_bonds: Optional[str] = Field(
+    which_bonds: str | None = Field(
         None,
         description="Denotes whether the information "
         "is for cation-anion pairs or all bonds",
     )
-    strongest_bonds_icoop: Optional[dict] = Field(
+    strongest_bonds_icoop: dict | None = Field(
         None,
         description="Dict with infos on bond strength and bond length based on ICOOP.",
     )
-    strongest_bonds_icohp: Optional[dict] = Field(
+    strongest_bonds_icohp: dict | None = Field(
         None,
         description="Dict with infos on bond strength and bond length based on ICOHP.",
     )
-    strongest_bonds_icobi: Optional[dict] = Field(
+    strongest_bonds_icobi: dict | None = Field(
         None,
         description="Dict with infos on bond strength and bond length based on ICOBI.",
     )
@@ -648,85 +645,85 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-    charges: Optional[Charge] = Field(
+    charges: Charge | None = Field(
         None,
         description="pymatgen Charge obj. Contains atomic charges based on Mulliken "
         "and Loewdin charge analysis",
     )
     lobsterout: LobsteroutModel = Field(description="Lobster out data")
     lobsterin: LobsterinModel = Field(description="Lobster calculation inputs")
-    lobsterpy_data: Optional[CondensedBondingAnalysis] = Field(
+    lobsterpy_data: CondensedBondingAnalysis | None = Field(
         None, description="Model describing the LobsterPy data"
     )
-    lobsterpy_text: Optional[str] = Field(
+    lobsterpy_text: str | None = Field(
         None, description="Stores LobsterPy automatic analysis summary text"
     )
-    calc_quality_summary: Optional[CalcQualitySummary] = Field(
+    calc_quality_summary: CalcQualitySummary | None = Field(
         None,
         description="Model summarizing results of lobster runs like charge spillings, "
         "band overlaps, DOS comparisons with VASP runs and quantum chemical LOBSTER "
         "charge sign comparisons with BVA method",
     )
-    calc_quality_text: Optional[str] = Field(
+    calc_quality_text: str | None = Field(
         None, description="Stores calculation quality analysis summary text"
     )
-    strongest_bonds: Optional[StrongestBonds] = Field(
+    strongest_bonds: StrongestBonds | None = Field(
         None,
         description="Describes the strongest cation-anion ICOOP, ICOBI and ICOHP bonds",
     )
-    lobsterpy_data_cation_anion: Optional[CondensedBondingAnalysis] = Field(
+    lobsterpy_data_cation_anion: CondensedBondingAnalysis | None = Field(
         None, description="Model describing the LobsterPy data"
     )
-    lobsterpy_text_cation_anion: Optional[str] = Field(
+    lobsterpy_text_cation_anion: str | None = Field(
         None,
         description="Stores LobsterPy automatic analysis summary text",
     )
-    strongest_bonds_cation_anion: Optional[StrongestBonds] = Field(
+    strongest_bonds_cation_anion: StrongestBonds | None = Field(
         None,
         description="Describes the strongest cation-anion ICOOP, ICOBI and ICOHP bonds",
     )
-    dos: Optional[LobsterCompleteDos] = Field(
+    dos: LobsterCompleteDos | None = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
-    lso_dos: Optional[LobsterCompleteDos] = Field(
+    lso_dos: LobsterCompleteDos | None = Field(
         None, description="pymatgen pymatgen.io.lobster.Doscar.completedos data"
     )
-    madelung_energies: Optional[MadelungEnergies] = Field(
+    madelung_energies: MadelungEnergies | None = Field(
         None,
         description="pymatgen Madelung energies obj. Contains madelung energies"
         "based on Mulliken and Loewdin charges",
     )
-    site_potentials: Optional[SitePotential] = Field(
+    site_potentials: SitePotential | None = Field(
         None,
         description="pymatgen Site potentials obj. Contains site potentials "
         "based on Mulliken and Loewdin charges",
     )
-    gross_populations: Optional[Grosspop] = Field(
+    gross_populations: Grosspop | None = Field(
         None,
         description="pymatgen Grosspopulations obj. Contains gross populations "
         " based on Mulliken and Loewdin charges ",
     )
-    band_overlaps: Optional[Bandoverlaps] = Field(
+    band_overlaps: Bandoverlaps | None = Field(
         None,
         description="pymatgen Bandoverlaps obj for each k-point from"
         " bandOverlaps.lobster file if it exists",
     )
-    cohp_data: Optional[CompleteCohp] = Field(
+    cohp_data: CompleteCohp | None = Field(
         None, description="pymatgen CompleteCohp object with COHP data"
     )
-    coop_data: Optional[CompleteCohp] = Field(
+    coop_data: CompleteCohp | None = Field(
         None, description="pymatgen CompleteCohp object with COOP data"
     )
-    cobi_data: Optional[CompleteCohp] = Field(
+    cobi_data: CompleteCohp | None = Field(
         None, description="pymatgen CompleteCohp object with COBI data"
     )
-    icohp_list: Optional[Icohplist] = Field(
+    icohp_list: Icohplist | None = Field(
         None, description="pymatgen Icohplist object with ICOHP data"
     )
-    icoop_list: Optional[Icohplist] = Field(
+    icoop_list: Icohplist | None = Field(
         None, description="pymatgen Icohplist object with ICOOP data"
     )
-    icobi_list: Optional[Icohplist] = Field(
+    icobi_list: Icohplist | None = Field(
         None, description="pymatgen Icohplist object with ICOBI data"
     )
 
@@ -1073,12 +1070,6 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                 data = {"lso_dos": doc.lso_dos}  # add LSO DOS of lobster
                 monty_encoded_json_doc = jsanitize(
                     data, allow_bson=True, strict=True, enum_values=True
-                )
-                json.dump(monty_encoded_json_doc, file)
-                file.write(",")
-                data = {"builder_meta": doc.builder_meta}  # add builder metadata
-                monty_encoded_json_doc = jsanitize(
-                    data, allow_bson=False, strict=True, enum_values=True
                 )
                 json.dump(monty_encoded_json_doc, file)
                 del data, monty_encoded_json_doc
