@@ -1,25 +1,23 @@
 import numpy as np
 import pytest
-from emmet.core.openmm import OpenMMInterchange
 from jobflow import Flow
 from openmm import XmlSerializer
 
 from atomate2.openff.utils import create_mol_spec
+from atomate2.openmm.interchange import OpenMMInterchange
 from atomate2.openmm.jobs import EnergyMinimizationMaker
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.openmm.jobs.generate import (
     XMLMoleculeFF,
-    create_system_from_xml,
+    create_ff_from_xml,
     generate_openmm_interchange,
 )
 
 pytest.importorskip("openff.toolkit")
-import openff.toolkit as tk  # noqa: E402
-from openff.interchange.components._packmol import pack_box  # noqa: E402
-from openff.units import unit  # noqa: E402
+import openff.toolkit as tk
 
 
-def test_create_system_from_xml(openmm_data):
+def test_create_ff_from_xml(openmm_data):
     # load strings of xml files into dict
     ff_xmls = [
         XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CCO.xml"),
@@ -30,18 +28,7 @@ def test_create_system_from_xml(openmm_data):
     # download_opls_xml("CCO", opls_xmls / "CCO.xml")
     # download_opls_xml("CO", opls_xmls / "CO.xml")
 
-    mol_specs = [
-        {"smiles": "CCO", "count": 10},
-        {"smiles": "CO", "count": 20},
-    ]
-
-    topology = pack_box(
-        molecules=[tk.Molecule.from_smiles(spec["smiles"]) for spec in mol_specs],
-        number_of_copies=[spec["count"] for spec in mol_specs],
-        mass_density=0.8 * unit.grams / unit.milliliter,
-    )
-
-    create_system_from_xml(topology, ff_xmls)
+    create_ff_from_xml(ff_xmls)
 
 
 def test_xml_molecule_from_file(openmm_data):

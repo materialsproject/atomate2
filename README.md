@@ -4,8 +4,9 @@
 [![code coverage](https://img.shields.io/codecov/c/gh/materialsproject/atomate2)](https://codecov.io/gh/materialsproject/atomate2)
 [![pypi version](https://img.shields.io/pypi/v/atomate2?color=blue)](https://pypi.org/project/atomate2)
 ![supported python versions](https://img.shields.io/pypi/pyversions/atomate2)
-[![Zenodo](https://img.shields.io/badge/DOI-10.5281/zenodo.10677081-blue?logo=Zenodo&logoColor=white)](https://zenodo.org/records/10677081)
+[![Zenodo](https://img.shields.io/badge/DOI-10.5281/zenodo.10677080-blue?logo=Zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.15603088)
 [![This project supports Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg?logo=python&logoColor=white)](https://python.org/downloads)
+[![PyPI](https://img.shields.io/pypi/dm/atomate2.svg?maxAge=2592000)](https://pypi.python.org/pypi/atomate2)
 
 [Documentation][docs] | [PyPI][pypi] | [GitHub][github]
 
@@ -13,7 +14,7 @@ Atomate2 is a free, open-source software for performing complex materials scienc
 workflows using simple Python functions. Features of atomate2 include
 
 - It is built on open-source libraries: [pymatgen], [custodian], [jobflow], and
-  [FireWorks].
+  [jobflow-remote] or [FireWorks].
 - A library of "standard" workflows to compute a wide variety of desired materials
   properties.
 - The ability scale from a single material, to 100 materials, or 100,000 materials.
@@ -81,8 +82,8 @@ See the [installation] steps for details how to set all of this up.
 
 In this example, we execute the workflow immediately. In many cases, you might want
 to perform calculations on several materials simultaneously. To achieve this, all
-atomate2 workflows can be run using the [FireWorks] software. See the
-[documentation][atomate2_fireworks] for more details.
+atomate2 workflows can be run using the [jobflow-remote] or [FireWorks] software. See the
+[jobflow-remote-specific documentation][atomate2-jobflow-remote] or [fireworks-specific documentation][atomate2_fireworks] for more details.
 
 ## Installation
 
@@ -96,7 +97,16 @@ started:
 
 - [Introduction to running workflows][running-workflows]
 - [Using atomate2 with FireWorks][atomate2_fireworks]
+- [Overview of key concepts][key-concepts]
 - [List of VASP workflows][vasp_workflows]
+- [Executable tutorials for different workflows][tutorials]
+
+In March 2025, the first dedicated school on atomate2 (including the workflow language jobflow and the workflow manager jobflow-remote) took place, and one can access the video material here:
+
+- [Jobflow and Jobflow-remote][videotutorial1]
+- [atomate2][videotutorial2]
+- [Advanced Workflows in atomate2: Part 1][videotutorial3]
+- [Advanced Workflows in atomate2: Part 2][videotutorial4]
 
 ## Need help?
 
@@ -124,24 +134,24 @@ A full list of contributors can be found [here][contributors].
 
 ## Citing atomate2
 
-A journal submission for `atomate2` is planned. In the meantime, please use [`citation.cff`](citation.cff) and the [Zenodo record](https://zenodo.org/badge/latestdoi/306414371) to cite `atomate2`.
+If you use atomate2, please cite the [following article](https://doi.org/10.1039/D5DD00019J):
 
 ```bib
-@software{ganose_atomate2_2024,
-  author = {Ganose, Alex and Riebesell, Janosh and George, J. and Shen, Jimmy and S. Rosen, Andrew and Ashok Naik, Aakash and nwinner and Wen, Mingjian and rdguha1995 and Kuner, Matthew and Petretto, Guido and Zhu, Zhuoying and Horton, Matthew and Sahasrabuddhe, Hrushikesh and Kaplan, Aaron and Schmidt, Jonathan and Ertural, Christina and Kingsbury, Ryan and McDermott, Matt and Goodall, Rhys and Bonkowski, Alexander and Purcell, Thomas and Zügner, Daniel and Qi, Ji},
-  doi = {10.5281/zenodo.10677081},
-  license = {cc-by-4.0},
-  month = jan,
-  title = {atomate2},
-  url = {https://github.com/materialsproject/atomate2},
-  version = {0.0.13},
-  year = {2024}
+@article{ganose2025_atomate2,
+	title = {Atomate2: modular workflows for materials science},
+	author = {Ganose, Alex M. and Sahasrabuddhe, Hrushikesh and Asta, Mark and Beck, Kevin and Biswas, Tathagata and Bonkowski, Alexander and Bustamante, Joana and Chen, Xin and Chiang, Yuan and Chrzan, Daryl C. and Clary, Jacob and Cohen, Orion A. and Ertural, Christina and Gallant, Max C. and George, Janine and Gerits, Sophie and Goodall, Rhys E. A. and Guha, Rishabh D. and Hautier, Geoffroy and Horton, Matthew and Inizan, T. J. and Kaplan, Aaron D. and Kingsbury, Ryan S. and Kuner, Matthew C. and Li, Bryant and Linn, Xavier and McDermott, Matthew J. and Mohanakrishnan, Rohith Srinivaas and Naik, Aakash A. and Neaton, Jeffrey B. and Parmar, Shehan M. and Persson, Kristin A. and Petretto, Guido and Purcell, Thomas A. R. and Ricci, Francesco and Rich, Benjamin and Riebesell, Janosh and Rignanese, Gian-Marco and Rosen, Andrew S. and Scheffler, Matthias and Schmidt, Jonathan and Shen, Jimmy-Xuan and Sobolev, Andrei and Sundararaman, Ravishankar and Tezak, Cooper and Trinquet, Victor and Varley, Joel B. and Vigil-Fowler, Derek and Wang, Duo and Waroquiers, David and Wen, Mingjian and Yang, Han and Zheng, Hui and Zheng, Jiongzhi and Zhu, Zhuoying and Jain, Anubhav},
+	year = {2025},
+	journal = {Digital Discovery},
+	doi = {10.1039/D5DD00019J},
+	url = {https://doi.org/10.1039/D5DD00019J},
+	urldate = {2025-07-01},
 }
 ```
 
 [pymatgen]: https://pymatgen.org
 [fireworks]: https://materialsproject.github.io/fireworks/
 [jobflow]: https://materialsproject.github.io/jobflow/
+[jobflow-remote]: https://github.com/Matgenix/jobflow-remote
 [custodian]: https://materialsproject.github.io/custodian/
 [VASP]: https://www.vasp.at
 [AMSET]: https://hackingmaterials.lbl.gov/amset/
@@ -153,8 +163,11 @@ A journal submission for `atomate2` is planned. In the meantime, please use [`ci
 [contributors]: https://materialsproject.github.io/atomate2/about/contributors.html
 [license]: https://raw.githubusercontent.com/materialsproject/atomate2/main/LICENSE
 [running-workflows]: https://materialsproject.github.io/atomate2/user/running-workflows.html
+[key-concepts]: https://materialsproject.github.io/atomate2/user/key_concepts_overview.html#key-concepts-in-atomate2-job-flow-makers-inputset-taskdocument-and-builder
 [atomate2_fireworks]: https://materialsproject.github.io/atomate2/user/fireworks.html
+[atomate2-jobflow-remote]: https://materialsproject.github.io/atomate2/user/jobflow-remote.html
 [vasp_workflows]: https://materialsproject.github.io/atomate2/user/codes/vasp.html
+[tutorials]: https://materialsproject.github.io/atomate2/tutorials/tutorials.html
 [RelaxBandStructure]: https://materialsproject.github.io/atomate2/user/codes/vasp.html#relax-and-band-structure
 [Lobster]: http://www.cohp.de
 [lobsterpy]: https://github.com/JaGeo/LobsterPy
@@ -162,3 +175,7 @@ A journal submission for `atomate2` is planned. In the meantime, please use [`ci
 [docs]: https://materialsproject.github.io/atomate2/
 [github]: https://github.com/materialsproject/atomate2
 [pypi]: https://pypi.org/project/atomate2
+[videotutorial1]: https://lhumos.org/collection/0/680bb4d7e4b0f0d2028027ce
+[videotutorial2]: https://lhumos.org/collection/0/680bb4d3e4b0f0d2028027c9
+[videotutorial3]: https://lhumos.org/collection/0/680bb4d0e4b0f0d2028027c5
+[videotutorial4]: https://lhumos.org/collection/0/680bb4c7e4b0f0d2028027c1

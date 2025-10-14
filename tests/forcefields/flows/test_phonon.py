@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+import pytest
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
@@ -14,12 +15,16 @@ from atomate2.common.schemas.phonons import (
     PhononUUIDs,
 )
 from atomate2.forcefields.flows.phonons import PhononMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 
-def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Path):
+@pytest.mark.parametrize("from_name", [False, True])
+def test_phonon_wf_force_field(
+    clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool
+):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
-    flow = PhononMaker(
+    phonon_kwargs = dict(
         use_symmetrized_structure="conventional",
         create_thermal_displacements=False,
         store_force_constants=False,
@@ -29,7 +34,27 @@ def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Pat
             "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),
             "filename_dos": (filename_dos := f"{tmp_path}/phonon_dos_test.pdf"),
         },
-    ).make(si_structure)
+    )
+
+    if from_name:
+        phonon_maker = PhononMaker.from_force_field_name("CHGNet", **phonon_kwargs)
+        if phonon_kwargs.get("relax_initial_structure", True):
+            assert isinstance(phonon_maker.bulk_relax_maker, ForceFieldRelaxMaker)
+            assert "CHGNet" in phonon_maker.bulk_relax_maker.force_field_name
+
+        for attr in ("static_energy_maker", "phonon_displacement_maker"):
+            assert "CHGNet" in getattr(phonon_maker, attr).force_field_name
+
+        assert (
+            PhononMaker.from_force_field_name(
+                "CHGNet", relax_initial_structure=False
+            ).bulk_relax_maker
+            is None
+        )
+    else:
+        phonon_maker = PhononMaker(**phonon_kwargs)
+
+    flow = phonon_maker.make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)

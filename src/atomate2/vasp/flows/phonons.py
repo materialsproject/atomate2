@@ -55,6 +55,8 @@ class PhononMaker(BasePhononMaker):
         displacement distance for phonons
     min_length: float = 20.0
         min length of the supercell that will be built
+    max_length: float
+        max length of the supercell that will be built
     prefer_90_degrees: bool = True
         if set to True, supercell algorithm will first try to find a supercell
         with 3 90 degree angles
@@ -77,8 +79,8 @@ class PhononMaker(BasePhononMaker):
           High-throughput electronic band structure calculations:
           Challenges and tools. Computational Materials Science,
           49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
-          We will however use seekpath and primitive structures
-          as determined by from phonopy to compute the phonon band structure
+          We will, however, use seekpath and primitive structures
+          as determined by phonopy to compute the phonon band structure
     bulk_relax_maker : .BaseVaspMaker or None
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
@@ -120,6 +122,7 @@ class PhononMaker(BasePhononMaker):
     symprec: float = SETTINGS.PHONON_SYMPREC
     displacement: float = 0.01
     min_length: float | None = 20.0
+    max_length: float | None = None
     prefer_90_degrees: bool = True
     get_supercell_size_kwargs: dict = field(default_factory=dict)
     use_symmetrized_structure: Literal["primitive", "conventional"] | None = None

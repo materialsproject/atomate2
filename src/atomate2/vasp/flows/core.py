@@ -6,7 +6,10 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from emmet.core.vasp.calculation import VaspObject
+try:
+    from emmet.core.types.enums import VaspObject
+except ImportError:
+    from emmet.core.vasp.calculation import VaspObject
 from jobflow import Flow, Maker
 
 from atomate2.vasp.jobs.core import (
@@ -66,13 +69,13 @@ class DoubleRelaxMaker(Maker):
         if self.relax_maker1:
             # Run a pre-relaxation
             relax1 = self.relax_maker1.make(structure, prev_dir=prev_dir)
-            relax1.name += " 1"
+            relax1.append_name(" 1")
             jobs += [relax1]
             structure = relax1.output.structure
             prev_dir = relax1.output.dir_name
 
         relax2 = self.relax_maker2.make(structure, prev_dir=prev_dir)
-        relax2.name += " 2"
+        relax2.append_name(" 2")
         jobs += [relax2]
 
         return Flow(jobs, output=relax2.output, name=self.name)

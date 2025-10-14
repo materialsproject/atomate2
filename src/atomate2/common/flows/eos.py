@@ -39,7 +39,7 @@ class CommonEosMaker(Maker):
         Maker to relax deformed structures for the EOS fit.
     static_maker : .Maker | None
         Maker to generate statics after each relaxation, defaults to None.
-    strain : tuple[float]
+    linear_strain : tuple[float]
         Percentage linear strain to apply as a deformation, default = -5% to 5%.
     number_of_frames : int
         Number of strain calculations to do for EOS fit, default = 6.
@@ -95,6 +95,12 @@ class CommonEosMaker(Maker):
             )
             relax_flow.name = "EOS equilibrium relaxation"
 
+            try:
+                if len(relax_flow.jobs) > 1:
+                    for job in relax_flow.jobs:
+                        job.append_name(" EOS equilibrium relaxation")
+            except AttributeError:
+                pass
             flow_output["initial_relax"] = {
                 "E0": relax_flow.output.output.energy,
                 "V0": relax_flow.output.structure.volume,
@@ -153,6 +159,12 @@ class CommonEosMaker(Maker):
                 prev_dir=prev_dir,
             )
             relax_job.name += f" deformation {frame_idx}"
+            try:
+                if len(relax_job.jobs) > 1:
+                    for job in relax_job.jobs:
+                        job.append_name(f" deformation {frame_idx}")
+            except AttributeError:
+                pass
             jobs["relax"].append(relax_job)
 
             if self.static_maker:

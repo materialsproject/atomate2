@@ -2,69 +2,46 @@
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
-from emmet.core.utils import ValueEnum
-from emmet.core.vasp.calculation import StoreTrajectoryOption
-from monty.dev import deprecated
+try:
+    from emmet.core.types.enums import StoreTrajectoryOption
+except ImportError:
+    from emmet.core.vasp.calculation import StoreTrajectoryOption
 from pydantic import Field
-from pymatgen.core import Structure
 
 from atomate2.ase.schemas import AseObject, AseResult, AseStructureTaskDoc, AseTaskDoc
 from atomate2.forcefields import MLFF
 
 
-@deprecated(replacement=AseResult, deadline=(2025, 1, 1))
-class ForcefieldResult(AseResult):
-    """Schema to store outputs; deprecated."""
-
-    final_structure: Optional[Structure] = Field(
-        None, description="The structure in the final trajectory frame."
-    )
-
-    def model_post_init(self, __context: Any) -> None:
-        """Populate final_structure attr."""
-        self.final_structure = getattr(
-            self, "final_structure", self.final_mol_or_struct
-        )
-
-
-@deprecated(replacement=AseObject, deadline=(2025, 1, 1))
-class ForcefieldObject(ValueEnum):
-    """Types of force-field output data objects."""
-
-    TRAJECTORY = "trajectory"
-
-
 class ForceFieldTaskDocument(AseStructureTaskDoc):
     """Document containing information on structure manipulation using a force field."""
 
-    forcefield_name: Optional[str] = Field(
+    forcefield_name: str | None = Field(
         None,
         description="name of the interatomic potential used for relaxation.",
     )
 
-    forcefield_version: Optional[str] = Field(
+    forcefield_version: str | None = Field(
         "Unknown",
         description="version of the interatomic potential used for relaxation.",
     )
 
-    dir_name: Optional[str] = Field(
+    dir_name: str | None = Field(
         None, description="Directory where the force field calculations are performed."
     )
 
-    included_objects: Optional[list[AseObject]] = Field(
+    included_objects: list[AseObject] | None = Field(
         None, description="list of forcefield objects included with this task document"
     )
-    objects: Optional[dict[AseObject, Any]] = Field(
+    objects: dict[AseObject, Any] | None = Field(
         None, description="Forcefield objects associated with this task"
     )
 
-    is_force_converged: Optional[bool] = Field(
+    is_force_converged: bool | None = Field(
         None,
         description=(
-            "Whether the calculation is converged with respect "
-            "to interatomic forces."
+            "Whether the calculation is converged with respect to interatomic forces."
         ),
     )
 
@@ -140,8 +117,13 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             MLFF.M3GNet: "matgl",
             MLFF.CHGNet: "chgnet",
             MLFF.MACE: "mace-torch",
+            MLFF.MACE_MP_0: "mace-torch",
+            MLFF.MACE_MPA_0: "mace-torch",
+            MLFF.MACE_MP_0B3: "mace-torch",
             MLFF.GAP: "quippy-ase",
             MLFF.Nequip: "nequip",
+            MLFF.MATPES_PBE: "matgl",
+            MLFF.MATPES_R2SCAN: "matgl",
         }
 
         if pkg_name := {str(k): v for k, v in model_to_pkg_map.items()}.get(
@@ -154,6 +136,6 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
         return cls.from_ase_task_doc(ase_task_doc, **ff_kwargs)
 
     @property
-    def forcefield_objects(self) -> Optional[dict[AseObject, Any]]:
+    def forcefield_objects(self) -> dict[AseObject, Any] | None:
         """Alias `objects` attr for backwards compatibility."""
         return self.objects

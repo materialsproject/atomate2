@@ -34,7 +34,7 @@ class GruneisenMaker(BaseGruneisenMaker):
     bulk_relax_maker: .ForceFieldRelaxMaker, .BaseAimsMaker, .BaseVaspMaker, or None
         A maker to perform an initial tight relaxation on the bulk.
     code: str
-        determines the dft or force field code.
+        determines the DFT or force field code.
     const_vol_relax_maker: .ForceFieldRelaxMaker, .BaseAimsMaker,
         .BaseVaspMaker, or None. A maker to perform a tight relaxation
         on the expanded and shrunk structures at constant volume.

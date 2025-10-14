@@ -2,14 +2,10 @@
 
 import logging
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
-import matplotlib.pyplot as plt
-import numpy as np
 import phonopy
 from emmet.core.structure import StructureMetadata
-from matplotlib import colors
-from matplotlib.colors import LinearSegmentedColormap
 from phonopy.api_gruneisen import PhonopyGruneisen
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from pydantic import BaseModel, Field
@@ -24,12 +20,7 @@ from pymatgen.phonon.gruneisen import (
     GruneisenParameter,
     GruneisenPhononBandStructureSymmLine,
 )
-from pymatgen.phonon.plotter import (
-    GruneisenPhononBSPlotter,
-    GruneisenPlotter,
-    freq_units,
-)
-from pymatgen.util.plotting import pretty_plot
+from pymatgen.phonon.plotter import GruneisenPhononBSPlotter, GruneisenPlotter
 from typing_extensions import Self
 
 from atomate2.common.schemas.phonons import PhononBSDOSDoc
@@ -40,13 +31,13 @@ logger = logging.getLogger(__name__)
 class GruneisenInputDirs(BaseModel):
     """Collection with all input directories relevant for the Grueneisen run."""
 
-    ground: Optional[str] = Field(
+    ground: str | None = Field(
         None, description="The directory with ground state structure phonopy yaml"
     )
-    plus: Optional[str] = Field(
+    plus: str | None = Field(
         None, description="The directory with expanded structure phonopy yaml"
     )
-    minus: Optional[str] = Field(
+    minus: str | None = Field(
         None, description="The directory with contracted structure phonopy yaml"
     )
 
@@ -57,13 +48,13 @@ class PhononRunsImaginaryModes(BaseModel):
     Information extracted from phonon run for ground, expanded and contracted structures
     """
 
-    ground: Optional[bool] = Field(
+    ground: bool | None = Field(
         None, description="if true, ground state structure has imaginary modes"
     )
-    plus: Optional[bool] = Field(
+    plus: bool | None = Field(
         None, description="if true, expanded structure has imaginary modes"
     )
-    minus: Optional[bool] = Field(
+    minus: bool | None = Field(
         None, description="if true, contracted structure has imaginary modes"
     )
 
@@ -71,10 +62,10 @@ class PhononRunsImaginaryModes(BaseModel):
 class GruneisenDerivedProperties(BaseModel):
     """Collection of data derived from the Grueneisen workflow."""
 
-    average_gruneisen: Optional[float] = Field(
+    average_gruneisen: float | None = Field(
         None, description="The average Grueneisen parameter"
     )
-    thermal_conductivity_slack: Optional[float] = Field(
+    thermal_conductivity_slack: float | None = Field(
         None,
         description="The thermal conductivity at the acoustic "
         "Debye temperature with the Slack formula.",
@@ -88,18 +79,18 @@ class GruneisenParameterDocument(StructureMetadata):
     gruneisen_parameter_inputs: GruneisenInputDirs = Field(
         None, description="The directories where the phonon jobs were run."
     )
-    phonon_runs_has_imaginary_modes: Optional[PhononRunsImaginaryModes] = Field(
+    phonon_runs_has_imaginary_modes: PhononRunsImaginaryModes | None = Field(
         None,
         description="Collection indicating whether the structures from the "
         "phonon runs have imaginary modes",
     )
-    gruneisen_parameter: Optional[GruneisenParameter] = Field(
+    gruneisen_parameter: GruneisenParameter | None = Field(
         None, description="Grueneisen parameter object"
     )
-    gruneisen_band_structure: Optional[GruneisenPhononBandStructureSymmLine] = Field(
+    gruneisen_band_structure: GruneisenPhononBandStructureSymmLine | None = Field(
         None, description="Grueneisen phonon band structure symmetry line object"
     )
-    derived_properties: Optional[GruneisenDerivedProperties] = Field(
+    derived_properties: GruneisenDerivedProperties | None = Field(
         None, description="Properties derived from the Grueneisen parameter."
     )
 
@@ -164,7 +155,7 @@ class GruneisenParameterDocument(StructureMetadata):
                 mesh=mesh,
                 shift=compute_gruneisen_param_kwargs.get("shift"),
                 is_gamma_center=compute_gruneisen_param_kwargs.get(
-                    "is_gamma_center", True
+                    "is_gamma_center", False
                 ),
                 is_time_reversal=compute_gruneisen_param_kwargs.get(
                     "is_time_reversal", True
@@ -184,7 +175,7 @@ class GruneisenParameterDocument(StructureMetadata):
                 mesh=kpoint.kpts[0],
                 shift=compute_gruneisen_param_kwargs.get("shift"),
                 is_gamma_center=compute_gruneisen_param_kwargs.get(
-                    "is_gamma_center", True
+                    "is_gamma_center", False
                 ),
                 is_time_reversal=compute_gruneisen_param_kwargs.get(
                     "is_time_reversal", True
@@ -228,9 +219,14 @@ class GruneisenParameterDocument(StructureMetadata):
             labels_dict=kpath_dict,
         )
         gp_bs_plot = GruneisenPhononBSPlotter(bs=gruneisen_band_structure)
-        GruneisenParameterDocument.get_gruneisen_weighted_bandstructure(
-            gruneisen_band_symline_plotter=gp_bs_plot,
-            save_fig=True,
+
+        gruneisen_bs_plot = compute_gruneisen_param_kwargs.get(
+            "gruneisen_bs", "gruneisen_band.pdf"
+        )
+        gp_bs_plot.save_plot_gs(
+            filename=gruneisen_bs_plot,
+            plot_ph_bs_with_gruneisen=True,
+            img_format=compute_gruneisen_param_kwargs.get("img_format", "pdf"),
             **compute_gruneisen_param_kwargs,
         )
         gruneisen_parameter_inputs = {
@@ -261,82 +257,3 @@ class GruneisenParameterDocument(StructureMetadata):
             gruneisen_band_structure=gruneisen_band_structure,
             derived_properties=derived_properties,
         )
-
-    @staticmethod
-    def get_gruneisen_weighted_bandstructure(
-        gruneisen_band_symline_plotter: GruneisenPhononBSPlotter,
-        save_fig: bool = True,
-        **kwargs,
-    ) -> None:
-        """Save a phonon band structure weighted with Grueneisen parameters.
-
-        Parameters
-        ----------
-        gruneisen_band_symline_plotter: GruneisenPhononBSPlotter
-            pymatgen GruneisenPhononBSPlotter obj
-        save_fig: bool
-            bool to save plots
-        kwargs: dict
-            keyword arguments to adjust plotter
-
-        Returns
-        -------
-        None
-        """
-        u = freq_units(kwargs.get("units", "THz"))
-        ax = pretty_plot(12, 8)
-        gruneisen_band_symline_plotter._make_ticks(ax)  # noqa: SLF001
-
-        # plot y=0 line
-        ax.axhline(0, linewidth=1, color="black")
-
-        # Create custom colormap (default is red to blue)
-        cmap = LinearSegmentedColormap.from_list(
-            "mycmap", kwargs.get("mycmap", ["red", "blue"])
-        )
-
-        data = gruneisen_band_symline_plotter.bs_plot_data()
-
-        # extract min and max Grüneisen parameter values
-        max_gruneisen = np.array(data["gruneisen"]).max()
-        min_gruneisen = np.array(data["gruneisen"]).min()
-
-        # LogNormalize colormap based on the min and max Grüneisen parameter values
-        norm = colors.SymLogNorm(
-            vmin=min_gruneisen,
-            vmax=max_gruneisen,
-            linthresh=1e-2,
-            linscale=1,
-        )
-
-        for (dists_inx, dists), (_, freqs) in zip(
-            enumerate(data["distances"]), enumerate(data["frequency"]), strict=True
-        ):
-            for band_idx in range(gruneisen_band_symline_plotter.n_bands):
-                ys = [freqs[band_idx][j] * u.factor for j in range(len(dists))]
-                ys_gru = [
-                    data["gruneisen"][dists_inx][band_idx][idx]
-                    for idx in range(len(data["distances"][dists_inx]))
-                ]
-                sc = ax.scatter(
-                    dists, ys, c=ys_gru, cmap=cmap, norm=norm, marker="o", s=1
-                )
-
-        # Main X and Y Labels
-        ax.set_xlabel(r"$\mathrm{Wave\ Vector}$", fontsize=30)
-        units = kwargs.get("units", "THz")
-        ax.set_ylabel(f"Frequencies ({units})", fontsize=30)
-        # X range (K)
-        # last distance point
-        x_max = data["distances"][-1][-1]
-        ax.set_xlim(0, x_max)
-
-        cbar = plt.colorbar(sc, ax=ax)
-        cbar.set_label(r"$\gamma \ \mathrm{(logarithmized)}$", fontsize=30)
-        plt.tight_layout()
-        gruneisen_band_plot = kwargs.get("gruneisen_bs", "gruneisen_band.pdf")
-        if save_fig:
-            plt.savefig(fname=gruneisen_band_plot)
-            plt.close()
-        else:
-            plt.close()
