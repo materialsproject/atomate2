@@ -60,7 +60,9 @@ _DEFAULT_FILE_PATHS = {
     "dos_plot": "phonon_dos.pdf",
     "force_constants": "FORCE_CONSTANTS",
     "harmonic_displacements": "disp_matrix.npy",
+    "anharmonic_displacements": "disp_matrix_anhar.npy",
     "harmonic_force_matrix": "force_matrix.npy",
+    "anharmonic_force_matrix": "force_matrix_anhar.npy",
     "website": "phonon_website.json",
 }
 
@@ -433,7 +435,8 @@ def generate_frequencies_eigenvectors(
         dataset_disps_array_use[:num_har, :, :],
     )
     np.save(
-        _DEFAULT_FILE_PATHS["force_matrix"], dataset_forces_array_disp[:num_har, :, :]
+        _DEFAULT_FILE_PATHS["harmonic_force_matrix"],
+        dataset_forces_array_disp[:num_har, :, :],
     )
 
     # get the born charges and dielectric constant
@@ -540,8 +543,14 @@ def generate_frequencies_eigenvectors(
     fc_file = cwd / _DEFAULT_FILE_PATHS["force_constants"]
 
     if cal_anhar_fcs:
-        np.save("disp_matrix_anhar.npy", dataset_disps_array_use[num_har:, :, :])
-        np.save("force_matrix_anhar.npy", dataset_forces_array_disp[num_har:, :, :])
+        np.save(
+            _DEFAULT_FILE_PATHS["anharmonic_displacements"],
+            dataset_disps_array_use[num_har:, :, :],
+        )
+        np.save(
+            _DEFAULT_FILE_PATHS["anharmonic_force_matrix"],
+            dataset_forces_array_disp[num_har:, :, :],
+        )
         num_anhar = dataset_forces_array_disp.shape[0] - num_har
 
         # We next begin to generate the anharmonic force constants up to fourth
