@@ -9,8 +9,9 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from jobflow import Maker, job
-from monty.serialization import dumpfn
 from pymatgen.transformations.advanced_transformations import SQSTransformation
+
+from atomate2.common.schemas.transform import SQSTask, TransformTask
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -21,18 +22,25 @@ if TYPE_CHECKING:
 
 @dataclass
 class Transformer(Maker):
-    """Apply a pymatgen transformation, as a job."""
+    """Apply a pymatgen transformation, as a job.
+
+    For many of the standard and advanced transformations,
+    this will work just by supplying the transformation.
+    """
 
     transformation: AbstractTransformation
 
-    def _make(self, structure: Structure, **kwargs) -> Structure:
-        """Define methods to apply transformations to a structure."""
-        return self.transformation.apply_transformation(structure, **kwargs)
-
     @job
-    def make(self, structure: Structure, **kwargs) -> Structure:
-        """Run the transformation, should not be modified in subclasses."""
-        return self._make(structure, **kwargs)
+    def make(self, structure: Structure, **kwargs) -> TransformTask:
+        """Run the transformation."""
+        transformed_structure = self.transformation.apply_transformation(
+            structure, **kwargs
+        )
+        return TransformTask(
+            input_structure=structure,
+            final_structure=transformed_structure,
+            transformation=self.transformation,
+        )
 
 
 @dataclass
@@ -81,11 +89,11 @@ class SQS(Transformer):
             )
         return struct
 
-    def _make(  # type: ignore[override]
+    @job
+    def make(  # type: ignore[override]
         self,
         structure: Structure,
         return_ranked_list: bool | int = False,
-        output_filename: str | Path | None = None,
         archive_instances: bool = False,
     ) -> dict:
         """Perform a parallelized SQS search.
@@ -103,9 +111,6 @@ class SQS(Transformer):
         return_ranked_list: bool | int = False
             Whether to return a list of SQS structures ranked by objective function
             (bool), or how many to return (int). False returns only the best.
-        output_filename : str | Path | None = None
-            If a str, the name of the file to log SQS output.
-            If None, no file is written.
 
         Returns
         -------
@@ -115,14 +120,14 @@ class SQS(Transformer):
         """
         original_directory = os.getcwd()
 
-        structure = self.check_structure(structure, self.transformation.scaling)
+        valid_struct = self.check_structure(structure, self.transformation.scaling)
         if return_ranked_list and self.transformation.instances == 1:
             raise ValueError(
                 "`return_ranked_list` should only be used for parallel MCSQS runs."
             )
 
         sqs_structs = self.transformation.apply_transformation(
-            structure, return_ranked_list=return_ranked_list
+            valid_struct, return_ranked_list=return_ranked_list
         )
 
         if return_ranked_list:
@@ -140,17 +145,8 @@ class SQS(Transformer):
                     mcsqs_corr_file.read_text().split("Objective_function=")[-1].strip()
                 )
 
-        output = {
-            "input_structure": structure,
-            "sqs_structures": sqs_structs,
-            "best_sqs_structure": best_sqs,
-            "best_objective": best_objective,
-        }
-
         # MCSQS caller changes the directory
         os.chdir(original_directory)
-        if output_filename:
-            dumpfn(output, output_filename)
 
         if archive_instances and self.transformation.sqs_method == "mcsqs":
             # MCSQS is the only SQS maker which requires a working directory
@@ -174,4 +170,20 @@ class SQS(Transformer):
             if len(list(os.scandir(mcsqs_dir))) == 0:
                 mcsqs_dir.unlink()
 
-        return output
+        return SQSTask.from_structure(
+            transformation=self.transformation,
+            input_structure=structure,
+            final_structure=best_sqs,
+            final_objective=best_objective,
+            sqs_structures=(
+                [entry["structure"] for entry in sqs_structs[1:]]
+                if len(sqs_structs) > 1
+                else None
+            ),
+            sqs_scores=(
+                [entry["objective_function"] for entry in sqs_structs[1:]]
+                if len(sqs_structs) > 1
+                else None
+            ),
+            sqs_method=self.transformation.sqs_method,
+        )
