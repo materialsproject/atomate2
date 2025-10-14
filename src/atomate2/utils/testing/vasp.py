@@ -16,7 +16,7 @@ from monty.serialization import dumpfn, loadfn
 from pydantic import BaseModel, model_validator
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 from pymatgen.io.vasp.sets import VaspInputSet
-from pymatgen.util.coord import find_in_coord_list_pbc
+from pymatgen.util.coord import in_coord_list_pbc
 
 import atomate2.vasp.jobs.base
 import atomate2.vasp.jobs.neb
@@ -283,7 +283,7 @@ def _check_poscar(
     # To account for this, we check that the sites are the same, within a tolerance,
     # while accounting for PBC.
     coord_match = [
-        len(find_in_coord_list_pbc(ref_frac_coords, coord, atol=1e-3)) > 0
+        in_coord_list_pbc(ref_frac_coords, coord, atol=1e-3)
         for coord in user_frac_coords
     ]
     if (
