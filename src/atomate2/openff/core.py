@@ -7,7 +7,11 @@ from typing import TYPE_CHECKING
 
 import openff.toolkit as tk
 from emmet.core.openff import ClassicalMDTaskDocument, MoleculeSpec
-from emmet.core.vasp.task_valid import TaskState
+
+try:
+    from emmet.core.types.enums import TaskState
+except ImportError:
+    from emmet.core.tasks import TaskState
 from jobflow import Response, job
 from openff.interchange import Interchange
 from openff.interchange.components._packmol import pack_box

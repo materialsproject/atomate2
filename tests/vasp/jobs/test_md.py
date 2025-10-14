@@ -1,6 +1,7 @@
 import pytest
 from emmet.core.tasks import TaskDoc
-from emmet.core.vasp.calculation import IonicStep, VaspObject
+from emmet.core.types.enums import VaspObject
+from emmet.core.vasp.calculation import IonicStep
 from jobflow import run_locally
 
 from atomate2.vasp.jobs.md import MDMaker

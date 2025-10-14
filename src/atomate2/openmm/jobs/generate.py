@@ -12,8 +12,12 @@ from xml.etree.ElementTree import tostring
 
 import numpy as np
 from emmet.core.openff import MoleculeSpec
-from emmet.core.openmm import OpenMMInterchange, OpenMMTaskDocument
-from emmet.core.vasp.task_valid import TaskState
+from emmet.core.openmm import OpenMMTaskDocument
+
+try:
+    from emmet.core.types.enums import TaskState
+except ImportError:
+    from emmet.core.tasks import TaskState
 from jobflow import Response
 from openmm import Context, LangevinMiddleIntegrator, System, XmlSerializer
 from openmm.app import PME, ForceField
@@ -24,6 +28,7 @@ from pymatgen.core import Element
 from pymatgen.io.openff import get_atom_map
 
 from atomate2.openff.utils import create_mol_spec, merge_specs_by_name_and_smiles
+from atomate2.openmm.interchange import OpenMMInterchange
 from atomate2.openmm.jobs.base import openmm_job
 from atomate2.openmm.utils import opls_lj
 

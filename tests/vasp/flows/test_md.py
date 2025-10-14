@@ -1,4 +1,4 @@
-from emmet.core.vasp.calculation import VaspObject
+from emmet.core.types.enums import VaspObject
 from jobflow import Flow
 
 from atomate2.vasp.flows.md import MultiMDMaker

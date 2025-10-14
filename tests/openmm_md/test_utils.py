@@ -2,8 +2,8 @@ import shutil
 from pathlib import Path
 
 import pytest
-from emmet.core.openmm import OpenMMInterchange
 
+from atomate2.openmm.interchange import OpenMMInterchange
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.openmm.utils import (
     PymatgenTrajectoryReporter,

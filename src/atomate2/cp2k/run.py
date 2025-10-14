@@ -21,7 +21,11 @@ from custodian.cp2k.handlers import (
 )
 from custodian.cp2k.jobs import Cp2kJob
 from custodian.cp2k.validators import Cp2kOutputValidator
-from jobflow.utils import ValueEnum
+
+try:
+    from emmet.core.types.enums import ValueEnum
+except ImportError:
+    from emmet.core.utils import ValueEnum
 
 from atomate2 import SETTINGS
 

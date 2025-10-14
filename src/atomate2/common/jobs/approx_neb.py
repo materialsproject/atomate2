@@ -6,7 +6,11 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 from emmet.core.neb import HopFailureReason, NebMethod, NebPathwayResult, NebResult
-from emmet.core.vasp.task_valid import TaskState
+
+try:
+    from emmet.core.types.enums import TaskState
+except ImportError:
+    from emmet.core.tasks import TaskState
 from jobflow import Flow, Response, job
 from pymatgen.analysis.diffusion.neb.pathfinder import ChgcarPotential, NEBPathfinder
 from pymatgen.core import Element
