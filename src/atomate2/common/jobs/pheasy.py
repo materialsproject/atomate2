@@ -49,6 +49,21 @@ try:
 except ImportError:
     ALM = None
 
+_DEFAULT_FILE_PATHS = {
+    "force_displacements": "dataset_forces.npy",
+    "displacements": "dataset_disps.npy",
+    "displacements_folded": "dataset_disps_array_rr.npy",
+    "phonopy": "phonopy.yaml",
+    "band_structure": "phonon_band_structure.yaml",
+    "band_structure_plot": "phonon_band_structure.pdf",
+    "dos": "phonon_dos.yaml",
+    "dos_plot": "phonon_dos.pdf",
+    "force_constants": "FORCE_CONSTANTS",
+    "harmonic_displacements": "disp_matrix.npy",
+    "harmonic_force_matrix": "force_matrix.npy",
+    "website": "phonon_website.json",
+}
+
 
 @job
 def get_supercell_size(
@@ -333,7 +348,7 @@ def generate_frequencies_eigenvectors(
 
     # get the force-displacement dataset from previous calculations
     dataset_forces = np.array(displacement_data["forces"])
-    np.save("dataset_forces.npy", dataset_forces)
+    np.save(_DEFAULT_FILE_PATHS["force_displacements"], dataset_forces)
 
     # To deduct the residual forces on an equilibrium structure to eliminate the
     # fitting error
@@ -346,12 +361,12 @@ def generate_frequencies_eigenvectors(
     dataset_disps = np.array(
         [disps.frac_coords for disps in displacement_data["displaced_structures"]]
     )
-    np.save("dataset_forces.npy", dataset_disps)
+    np.save(_DEFAULT_FILE_PATHS["displacements"], dataset_disps)
 
     dataset_disps_array_rr = np.round(
         (dataset_disps - supercell.get_scaled_positions()), decimals=16
     )
-    np.save("dataset_disps_array_rr.npy", dataset_disps_array_rr)
+    np.save(_DEFAULT_FILE_PATHS["displacements_folded"], dataset_disps_array_rr)
 
     dataset_disps_array_rr = np.where(
         dataset_disps_array_rr > 0.5,
@@ -413,8 +428,13 @@ def generate_frequencies_eigenvectors(
         num_disp_f = len(phonon.displacements)
         num_har = int(np.ceil(num * 1.8)) if num_disp_f > 3 else num_disp_f
 
-    np.save("disp_matrix.npy", dataset_disps_array_use[:num_har, :, :])
-    np.save("force_matrix.npy", dataset_forces_array_disp[:num_har, :, :])
+    np.save(
+        _DEFAULT_FILE_PATHS["harmonic_displacements"],
+        dataset_disps_array_use[:num_har, :, :],
+    )
+    np.save(
+        _DEFAULT_FILE_PATHS["force_matrix"], dataset_forces_array_disp[:num_har, :, :]
+    )
 
     # get the born charges and dielectric constant
     if born is not None and epsilon_static is not None:
@@ -517,7 +537,7 @@ def generate_frequencies_eigenvectors(
     # not able to find the FORCE_CONSTANTS file. This is because the file is
     # somehow getting generated in some temp directory. Can you fix the bug?
     cwd = Path.cwd()
-    fc_file = cwd / "FORCE_CONSTANTS"
+    fc_file = cwd / _DEFAULT_FILE_PATHS["force_constants"]
 
     if cal_anhar_fcs:
         np.save("disp_matrix_anhar.npy", dataset_disps_array_use[num_har:, :, :])
@@ -610,7 +630,7 @@ def generate_frequencies_eigenvectors(
     phonon.symmetrize_force_constants()
 
     # with phonopy.load("phonopy.yaml") the phonopy API can be used
-    phonon.save("phonopy.yaml")
+    phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
 
     # get phonon band structure
     kpath_dict, kpath_concrete = _get_kpath(
@@ -624,24 +644,26 @@ def generate_frequencies_eigenvectors(
         kpath_concrete, npoints=kwargs.get("npoints_band", 101)
     )
 
-    # phonon band structures will always be computed
-    filename_band_yaml = "phonon_band_structure.yaml"
-    filename_band_hdf5 = "phonon_band_structure.hdf5"
-
     phonon.run_band_structure(
         qpoints,
         path_connections=connections,
         with_eigenvectors=kwargs.get("band_structure_eigenvectors", False),
         is_band_connection=kwargs.get("band_structure_eigenvectors", False),
     )
-    phonon.write_yaml_band_structure(filename=filename_band_yaml)
-    phonon.write_hdf5_band_structure(filename=filename_band_hdf5)
+    # phonon.write_hdf5_band_structure(filename=_DEFAULT_FILE_PATHS["band_structure"])
+    phonon.write_yaml_band_structure(filename=_DEFAULT_FILE_PATHS["band_structure"])
     bs_symm_line = get_ph_bs_symm_line(
-        filename_band_yaml, labels_dict=kpath_dict, has_nac=born is not None
+        _DEFAULT_FILE_PATHS["band_structure"],
+        labels_dict=kpath_dict,
+        has_nac=born is not None,
     )
+
+    bs_plot_file = kwargs.get("filename_bs", _DEFAULT_FILE_PATHS["band_structure_plot"])
+    dos_plot_file = kwargs.get("filename_dos", _DEFAULT_FILE_PATHS["dos_plot"])
+
     new_plotter = PhononBSPlotter(bs=bs_symm_line)
     new_plotter.save_plot(
-        filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
+        filename=bs_plot_file,
         units=kwargs.get("units", "THz"),
     )
 
@@ -681,38 +703,37 @@ def generate_frequencies_eigenvectors(
         # constants and write to a phonopy file
         fcp = ForceConstantPotential(cs, parameters_rot)
         fcs = fcp.get_force_constants(supercell)
-        fcs.write_to_phonopy("FORCE_CONSTANTS_new", format="text")
+        new_fc_file = f"{_DEFAULT_FILE_PATHS['force_constants']}_short_cutoff"
+        fcs.write_to_phonopy(new_fc_file, format="text")
 
-        force_constants = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS_new")
+        force_constants = parse_FORCE_CONSTANTS(filename=new_fc_file)
         phonon.force_constants = force_constants
         phonon.symmetrize_force_constants()
 
         phonon.run_band_structure(
             qpoints, path_connections=connections, with_eigenvectors=True
         )
-        phonon.write_yaml_band_structure(filename=filename_band_yaml)
+        phonon.write_yaml_band_structure(filename=_DEFAULT_FILE_PATHS["band_structure"])
         bs_symm_line = get_ph_bs_symm_line(
-            filename_band_yaml, labels_dict=kpath_dict, has_nac=born is not None
+            _DEFAULT_FILE_PATHS["band_structure"],
+            labels_dict=kpath_dict,
+            has_nac=born is not None,
         )
 
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
 
         new_plotter.save_plot(
-            filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
+            filename=bs_plot_file,
             units=kwargs.get("units", "THz"),
         )
 
-        imaginary_modes_hiphive = bs_symm_line.has_imaginary_freq(
+        imaginary_modes = bs_symm_line.has_imaginary_freq(
             tol=kwargs.get("tol_imaginary_modes", 1e-5)
         )
 
-    else:
-        imaginary_modes_hiphive = False
-        imaginary_modes = False
-
     # Using a shorter cutoff (10 A) to generate the force constants to
     # eliminate the imaginary modes near Gamma point in phesay code
-    if imaginary_modes_hiphive:
+    if imaginary_modes:
         pheasy_cmd_11 = (
             f"pheasy --dim {int(supercell_matrix[0][0])} "
             f"{int(supercell_matrix[1][1])} "
@@ -761,11 +782,11 @@ def generate_frequencies_eigenvectors(
         subprocess.call(shlex.split(pheasy_cmd_13))
         subprocess.call(shlex.split(pheasy_cmd_14))
 
-        force_constants = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
+        force_constants = parse_FORCE_CONSTANTS(filename=new_fc_file)
         phonon.force_constants = force_constants
         phonon.symmetrize_force_constants()
 
-        phonon.save("phonopy.yaml")
+        phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
 
         # get phonon band structure
         kpath_dict, kpath_concrete = _get_kpath(
@@ -779,34 +800,32 @@ def generate_frequencies_eigenvectors(
             kpath_concrete, npoints=kwargs.get("npoints_band", 101)
         )
 
-        # phonon band structures will always be cmouted
-        filename_band_yaml = "phonon_band_structure.yaml"
+        # phonon band structures will always be computed
         phonon.run_band_structure(
             qpoints, path_connections=connections, with_eigenvectors=True
         )
-        phonon.write_yaml_band_structure(filename=filename_band_yaml)
+        phonon.write_yaml_band_structure(filename=_DEFAULT_FILE_PATHS["band_structure"])
         bs_symm_line = get_ph_bs_symm_line(
-            filename_band_yaml, labels_dict=kpath_dict, has_nac=born is not None
+            _DEFAULT_FILE_PATHS["band_structure"],
+            labels_dict=kpath_dict,
+            has_nac=born is not None,
         )
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
 
         new_plotter.save_plot(
-            filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
+            filename=bs_plot_file,
             units=kwargs.get("units", "THz"),
         )
 
-        imaginary_modes_cutoff = bs_symm_line.has_imaginary_freq(
+        imaginary_modes = bs_symm_line.has_imaginary_freq(
             tol=kwargs.get("tol_imaginary_modes", 1e-5)
         )
-        imaginary_modes = imaginary_modes_cutoff
 
     # gets data for visualization on website - yaml is also enough
     if kwargs.get("band_structure_eigenvectors"):
-        bs_symm_line.write_phononwebsite("phonon_website.json")
+        bs_symm_line.write_phononwebsite(_DEFAULT_FILE_PATHS["website"])
 
     # get phonon density of states
-    filename_dos_yaml = "phonon_dos.yaml"
-
     kpoint_density_dos = kwargs.get("kpoint_density_dos", 7_000)
     kpoint = Kpoints.automatic_density(
         structure=get_pmg_structure(phonon.primitive),
@@ -815,12 +834,12 @@ def generate_frequencies_eigenvectors(
     )
     phonon.run_mesh(kpoint.kpts[0])
     phonon.run_total_dos()
-    phonon.write_total_dos(filename=filename_dos_yaml)
-    dos = get_ph_dos(filename_dos_yaml)
+    phonon.write_total_dos(filename=_DEFAULT_FILE_PATHS["dos"])
+    dos = get_ph_dos(_DEFAULT_FILE_PATHS["dos"])
     new_plotter_dos = PhononDosPlotter()
     new_plotter_dos.add_dos(label="total", dos=dos)
     new_plotter_dos.save_plot(
-        filename=kwargs.get("filename_dos", "phonon_dos.pdf"),
+        filename=dos_plot_file,
         units=kwargs.get("units", "THz"),
     )
 
