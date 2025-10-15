@@ -16,12 +16,14 @@ def test_nvt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
     mock_lammps(ref_paths, fake_run_lammps_kwargs=fake_run_lammps_kwargs)
 
     generator = LammpsNVTSet(
-        start_temp=300,
-        end_temp=1000,
-        nsteps=100000,
-        timestep=0.001,
-        friction=0.1,
-        log_interval=500,
+        settings={
+            "start_temp": 300,
+            "end_temp": 1000,
+            "friction": 0.1,
+            "nsteps": 100000,
+            "timestep": 0.001,
+            "log_interval": 500,
+        }
     )
     maker = LammpsNVTMaker(
         force_field=test_si_force_field,

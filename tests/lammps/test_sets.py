@@ -2,7 +2,7 @@ from atomate2.lammps.sets.core import LammpsMinimizeSet, LammpsNVTSet
 
 
 def test_nvt_set():
-    nvt = LammpsNVTSet(timestep=0.005, thermostat="langevin")
+    nvt = LammpsNVTSet(settings={"thermostat": "langevin", "timestep": 0.005})
     if isinstance(nvt.settings, dict):
         assert nvt.settings["ensemble"] == "nvt"
         assert nvt.settings["thermostat"] == "langevin"
