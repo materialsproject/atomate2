@@ -539,8 +539,7 @@ def generate_frequencies_eigenvectors(
     # When this code is run on Github tests, it is failing because it is
     # not able to find the FORCE_CONSTANTS file. This is because the file is
     # somehow getting generated in some temp directory. Can you fix the bug?
-    cwd = Path.cwd()
-    fc_file = cwd / _DEFAULT_FILE_PATHS["force_constants"]
+    fc_file = _DEFAULT_FILE_PATHS["force_constants"]
 
     if cal_anhar_fcs:
         np.save(
