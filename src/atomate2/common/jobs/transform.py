@@ -29,6 +29,7 @@ class Transformer(Maker):
     """
 
     transformation: AbstractTransformation
+    name: str = "pymatgen transformation maker"
 
     @job
     def make(self, structure: Structure, **kwargs) -> TransformTask:
@@ -47,8 +48,11 @@ class Transformer(Maker):
 class SQS(Transformer):
     """Generate special quasi-random structures (SQSs)."""
 
+    name: str = "SQS"
+
     transformation: SQSTransformation = field(
         default_factory=SQSTransformation(
+            scaling=1,
             search_time=60,
             directory=Path(".") / "sqs_runs",
             remove_duplicate_structures=True,
