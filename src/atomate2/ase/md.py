@@ -24,7 +24,11 @@ from ase.md.velocitydistribution import (
     Stationary,
     ZeroRotation,
 )
-from emmet.core.vasp.calculation import StoreTrajectoryOption
+
+try:
+    from emmet.core.types.enums import StoreTrajectoryOption
+except ImportError:
+    from emmet.core.vasp.calculation import StoreTrajectoryOption
 from jobflow import job
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
