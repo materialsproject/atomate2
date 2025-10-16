@@ -58,8 +58,10 @@ class AdsorptionMaker(Maker):
         The minimum size of layers of the slab. In Angstroms or number of hkl planes.
     min_lw: float
         Minimum length and width of the slab
-    surface_idx: tuple
+    surface_idx: tuple of int
         Miller index [h, k, l] of plane parallel to surface.
+    mol_box_size: tuple of float
+        Box size to use in calculating the molecule energetics in PBC.
     """  # noqa: E501
 
     name: str = "adsorption workflow"
@@ -72,6 +74,7 @@ class AdsorptionMaker(Maker):
     min_slab_size: float = 10.0
     min_lw: float = 10.0
     surface_idx: tuple[int, int, int] = (0, 0, 1)
+    mol_box_size: tuple[float, float, float] = (10, 10, 10)
 
     def make(
         self,
@@ -99,7 +102,7 @@ class AdsorptionMaker(Maker):
         Flow
             A flow object for calculating adsorption energies.
         """  # noqa: E501
-        molecule_structure = molecule.get_boxed_structure(10, 10, 10)
+        molecule_structure = molecule.get_boxed_structure(*self.mol_box_size)
 
         jobs: list[Job] = []
 

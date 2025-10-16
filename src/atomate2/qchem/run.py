@@ -10,8 +10,11 @@ from typing import TYPE_CHECKING, Any
 from custodian import Custodian
 from custodian.qchem.handlers import QChemErrorHandler
 from custodian.qchem.jobs import QCJob
-from jobflow.utils import ValueEnum
 
+try:
+    from emmet.core.types.enums import ValueEnum
+except ImportError:
+    from emmet.core.utils import ValueEnum
 from atomate2 import SETTINGS
 
 if TYPE_CHECKING:
