@@ -40,7 +40,7 @@ dependencies = [
 
 [project.optional-dependencies]
 abinit = ["abipy>=0.9.3"]
-aims = ["pymatgen-io-aims>=0.0.3","pymatgen>=2025.10.7"]
+aims = ["pymatgen-io-aims>=0.0.4","pymatgen>=2025.10.7"]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib>=1.8.1"]
 mp = ["mp-api>=0.37.5"]
