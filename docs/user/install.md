@@ -158,8 +158,8 @@ which provides access to the `conda` binary. If the `conda` tool is not availabl
 install it by following the installation instructions for
 [Miniconda](https://docs.conda.io/en/latest/miniconda.html). To set up your conda environment:
 
-1. Create a new conda environment called atomate2 with Python 3.9 using
-   `conda create -n atomate2 python=3.9`.
+1. Create a new conda environment called atomate2 with Python 3.10 using
+   `conda create -n atomate2 python=3.10`.
 2. Activate your environment by running `conda activate atomate2`. Now, when you use
    the command `python`, you'll be using the version of `python` in the atomate2
    conda environment folder.
