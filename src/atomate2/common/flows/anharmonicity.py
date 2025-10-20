@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from warnings import warn
 
-from jobflow import Flow, Maker
+from jobflow import Flow, Maker, Response, job
 
 from atomate2.common.jobs.anharmonicity import (
     displace_structure,
@@ -160,6 +160,7 @@ class BaseAnharmonicityMaker(Maker, ABC):
         jobs = [phonon_flow, anharmon_flow, results]
         return Flow(jobs, results.output)
 
+    @job
     def make_from_phonon_doc(
         self,
         phonon_doc: PhononBSDOSDoc,
@@ -266,7 +267,8 @@ class BaseAnharmonicityMaker(Maker, ABC):
         jobs.append(sigma_calcs)
         sigma_a_vals = sigma_calcs.output
 
-        return Flow(jobs, sigma_a_vals)
+        flow = Flow(jobs, sigma_a_vals)
+        return Response(replace=flow, output=flow.output)
 
     @property
     @abstractmethod

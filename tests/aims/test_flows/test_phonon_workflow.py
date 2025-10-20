@@ -1,6 +1,5 @@
 """Test various makers"""
 
-import json
 from pathlib import Path
 
 import pytest
@@ -10,6 +9,34 @@ from atomate2.aims.jobs.core import RelaxMaker, StaticMaker
 from atomate2.aims.jobs.phonons import PhononDisplacementMaker
 
 si_structure_file = Path(__file__).parents[2] / "test_data/structures/Si_diamond.cif"
+
+phonopy_settings_schema = {
+    "description": "Collection to store computational settings for "
+    "the phonon computation.",
+    "properties": {
+        "npoints_band": {
+            "description": "number of points for band structure computation",
+            "title": "Npoints Band",
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "default": None,
+        },
+        "kpath_scheme": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": None,
+            "description": "indicates the kpath scheme",
+            "title": "Kpath Scheme",
+        },
+        "kpoint_density_dos": {
+            "anyOf": [{"type": "integer"}, {"type": "null"}],
+            "default": None,
+            "description": "number of points for computation of free energies "
+            "and densities of states",
+            "title": "Kpoint Density Dos",
+        },
+    },
+    "title": "PhononComputationalSettings",
+    "type": "object",
+}
 
 
 def test_phonon_flow(clean_dir, mock_aims, species_dir):
@@ -67,39 +94,14 @@ def test_phonon_flow(clean_dir, mock_aims, species_dir):
     # validation the outputs of the job
     output = responses[flow.job_uuids[-1]][1].output
 
-    phonopy_settings_schema = {
-        "description": "Collection to store computational settings for the "
-        "phonon computation.",
-        "properties": {
-            "npoints_band": {
-                "default": "number of points for band structure computation",
-                "title": "Npoints Band",
-                "type": "integer",
-            },
-            "kpath_scheme": {
-                "default": "indicates the kpath scheme",
-                "title": "Kpath Scheme",
-                "type": "string",
-            },
-            "kpoint_density_dos": {
-                "default": "number of points for computation of free energies and"
-                " densities of states",
-                "title": "Kpoint Density Dos",
-                "type": "integer",
-            },
-        },
-        "title": "PhononComputationalSettings",
-        "type": "object",
-    }
     assert output.code == "aims"
     assert output.born is None
     assert not output.has_imaginary_modes
 
-    assert output.temperatures == list(range(0, 500, 100))
-    assert output.heat_capacities[0] == 0.0
-    assert np.round(output.heat_capacities[-1], 2) == 21.95
-    assert output.phonopy_settings.schema_json() == json.dumps(phonopy_settings_schema)
-    assert np.round(output.phonon_bandstructure.bands[-1, 0], 2) == 15.1
+    assert output.heat_capacity(0.0) == 0.0
+    assert output.heat_capacity(400.0) == pytest.approx(21.95, abs=1e-2)
+    assert output.post_process_settings.schema() == phonopy_settings_schema
+    assert np.round(output.phonon_bandstructure.frequencies[-1][0], 2) == 15.1
 
 
 @pytest.mark.skip(reason="Currently not mocked and needs FHI-aims binary")
@@ -157,39 +159,14 @@ def test_phonon_socket_flow(si, clean_dir, mock_aims, species_dir):
 
     # validation the outputs of the job
     output = responses[flow.job_uuids[-1]][1].output
-    phonopy_settings_schema = {
-        "description": "Collection to store computational settings for the "
-        "phonon computation.",
-        "properties": {
-            "npoints_band": {
-                "default": "number of points for band structure computation",
-                "title": "Npoints Band",
-                "type": "integer",
-            },
-            "kpath_scheme": {
-                "default": "indicates the kpath scheme",
-                "title": "Kpath Scheme",
-                "type": "string",
-            },
-            "kpoint_density_dos": {
-                "default": "number of points for computation of free energies and"
-                " densities of states",
-                "title": "Kpoint Density Dos",
-                "type": "integer",
-            },
-        },
-        "title": "PhononComputationalSettings",
-        "type": "object",
-    }
     assert output.code == "aims"
     assert output.born is None
     assert not output.has_imaginary_modes
 
-    assert output.temperatures == list(range(0, 500, 10))
-    assert output.heat_capacities[0] == 0.0
-    assert np.round(output.heat_capacities[-1], 2) == 23.06
-    assert output.phonopy_settings.schema_json() == json.dumps(phonopy_settings_schema)
-    assert np.round(output.phonon_bandstructure.bands[-1, 0], 2) == 14.41
+    assert output.heat_capacity(0.0) == 0.0
+    assert output.heat_capacity(400.0) == pytest.approx(23.06, abs=1e-2)
+    assert output.post_process_settings.schema() == phonopy_settings_schema
+    assert np.round(output.phonon_bandstructure.frequencies[-1][0], 2) == 14.41
 
 
 def test_phonon_default_flow(si, clean_dir, mock_aims, species_dir):
@@ -225,39 +202,15 @@ def test_phonon_default_flow(si, clean_dir, mock_aims, species_dir):
 
     # validation the outputs of the job
     output = responses[flow.job_uuids[-1]][1].output
-    phonopy_settings_schema = {
-        "description": "Collection to store computational settings for "
-        "the phonon computation.",
-        "properties": {
-            "npoints_band": {
-                "default": "number of points for band structure computation",
-                "title": "Npoints Band",
-                "type": "integer",
-            },
-            "kpath_scheme": {
-                "default": "indicates the kpath scheme",
-                "title": "Kpath Scheme",
-                "type": "string",
-            },
-            "kpoint_density_dos": {
-                "default": "number of points for computation of free energies "
-                "and densities of states",
-                "title": "Kpoint Density Dos",
-                "type": "integer",
-            },
-        },
-        "title": "PhononComputationalSettings",
-        "type": "object",
-    }
+
     assert output.code == "aims"
     assert output.born is None
     assert not output.has_imaginary_modes
 
-    assert output.temperatures == list(range(0, 500, 10))
-    assert output.heat_capacities[0] == 0.0
-    assert np.round(output.heat_capacities[-1], 2) == 22.85
-    assert output.phonopy_settings.schema_json() == json.dumps(phonopy_settings_schema)
-    assert np.round(output.phonon_bandstructure.bands[-1, 0], 2) == 15.02
+    assert output.heat_capacity(0.0) == 0.0
+    assert output.heat_capacity(490.0) == pytest.approx(22.85, abs=1e-2)
+    assert output.post_process_settings.schema() == phonopy_settings_schema
+    assert np.round(output.phonon_bandstructure.frequencies[-1][0], 2) == 15.02
 
     if aims_sd is not None:
         SETTINGS["AIMS_SPECIES_DIR"] = aims_sd
@@ -299,39 +252,14 @@ def test_phonon_default_socket_flow(si, clean_dir, mock_aims, species_dir):
     # validation the outputs of the job
     output = responses[flow.job_uuids[-1]][1].output
 
-    phonopy_settings_schema = {
-        "description": "Collection to store computational settings for "
-        "the phonon computation.",
-        "properties": {
-            "npoints_band": {
-                "default": "number of points for band structure computation",
-                "title": "Npoints Band",
-                "type": "integer",
-            },
-            "kpath_scheme": {
-                "default": "indicates the kpath scheme",
-                "title": "Kpath Scheme",
-                "type": "string",
-            },
-            "kpoint_density_dos": {
-                "default": "number of points for computation of free energies "
-                "and densities of states",
-                "title": "Kpoint Density Dos",
-                "type": "integer",
-            },
-        },
-        "title": "PhononComputationalSettings",
-        "type": "object",
-    }
     assert output.code == "aims"
     assert output.born is None
     assert not output.has_imaginary_modes
 
-    assert output.temperatures == list(range(0, 500, 10))
-    assert output.heat_capacities[0] == 0.0
-    assert np.round(output.heat_capacities[-1], 2) == 22.85
-    assert output.phonopy_settings.schema_json() == json.dumps(phonopy_settings_schema)
-    assert np.round(output.phonon_bandstructure.bands[-1, 0], 2) == 15.02
+    assert output.heat_capacity(0.0) == 0.0
+    assert output.heat_capacity(490.0) == pytest.approx(22.85, abs=1e-2)
+    assert output.post_process_settings.schema() == phonopy_settings_schema
+    assert np.round(output.phonon_bandstructure.frequencies[-1][0], 2) == 15.02
 
     if aims_sd is not None:
         SETTINGS["AIMS_SPECIES_DIR"] = aims_sd

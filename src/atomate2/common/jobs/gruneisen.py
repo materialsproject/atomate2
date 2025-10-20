@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+from emmet.core.phonon import PhononBSDOSDoc
 from jobflow import Flow, Response, job
 from pymatgen.phonon.gruneisen import (
     GruneisenParameter,
@@ -14,7 +15,6 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 from atomate2.common.schemas.gruneisen import GruneisenParameterDocument
-from atomate2.common.schemas.phonons import PhononBSDOSDoc
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -85,8 +85,7 @@ def run_phonon_jobs(
     set_symmetry = list(set(symmetry))
     if len(set_symmetry) == 1:
         jobs = []
-        phonon_yaml_dirs = dict.fromkeys(("ground", "plus", "minus"), None)
-        phonon_imaginary_modes = dict.fromkeys(("ground", "plus", "minus"), None)
+        _for_post_process = {}
         for st, struct in opt_struct.items():
             # phonon run for all 3 optimized structures (ground state, expanded, shrunk)
             phonon_kwargs = {}
@@ -107,21 +106,39 @@ def run_phonon_jobs(
             )
             jobs.append(phonon_job)
             # store each phonon run task doc
-            phonon_yaml_dirs[st] = phonon_job.output.jobdirs.taskdoc_run_job_dir
-            phonon_imaginary_modes[st] = phonon_job.output.has_imaginary_modes
+            _for_post_process[st] = phonon_job.output
 
+        processed = get_calc_meta(_for_post_process)
         return Response(
-            replace=Flow(jobs),
-            output={
-                "phonon_yaml": phonon_yaml_dirs,
-                "imaginary_modes": phonon_imaginary_modes,
-            },
+            replace=Flow([*jobs, processed]),
+            output=processed.output,
         )
     logger.warning(
         msg="Different space groups were detected for the optimized structures."
         "Please try a different symprec."
     )
     return Response(output={"error": "different space groups"}, stop_jobflow=True)
+
+
+@job
+def get_calc_meta(
+    phonon_jobs_output: dict[str, PhononBSDOSDoc],
+) -> dict[str, dict[str, Path | bool]]:
+    """Return the metadata associated with a set of phonon calculations."""
+    return {
+        "phonon_yaml": {
+            label: next(
+                iter(
+                    [cm.dir_name for cm in pbd.calc_meta if cm.name == "taskdoc_run"]
+                    or [None]
+                )
+            )
+            for label, pbd in phonon_jobs_output.items()
+        },
+        "imaginary_modes": {
+            label: pbd.has_imaginary_modes for label, pbd in phonon_jobs_output.items()
+        },
+    }
 
 
 @job(
