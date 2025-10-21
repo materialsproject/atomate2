@@ -168,7 +168,9 @@ class DfptFlowMaker(Maker):
                     perturbation=pert,
                     prev_outputs=static_job.output.dir_name,
                 )
-                ddk_job.append_name(f"{ipert + 1}/{len(perturbations)}")
+                ddk_job.append_name(
+                    f" - {ipert + 1}/{len(perturbations)}", dynamic=False
+                )
 
                 ddk_jobs.append(ddk_job)
                 outputs["dirs"].append(ddk_job.output.dir_name)

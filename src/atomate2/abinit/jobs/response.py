@@ -477,7 +477,7 @@ def get_jobs(
             # )
             rf_job.append_name(f" q={qpt_str}({ipert + 1}/{len(perturbations)})")
         else:
-            rf_job.append_name(f"{ipert + 1}/{len(perturbations)}")
+            rf_job.append_name(f" - {ipert + 1}/{len(perturbations)}", dynamic=False)
 
         rf_jobs.append(rf_job)
 
