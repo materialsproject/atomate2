@@ -373,10 +373,6 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
             raise RuntimeError(f"Source directory {src_dirdata} does not exist")
         dest_dirdata = dest_dir / dirdata_name
         _makedir(dest_dirdata, force_overwrite=force_overwrite)
-        empty_file = dest_dirdata / ".empty"
-        empty_file.write_text(
-            "Empty file for git to be able to have an empty directory"
-        )
         if include_files:
             copy_files(
                 src_dirdata,
@@ -408,6 +404,12 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
                     raise RuntimeError(
                         "File is not a symbolic link nor a regular file."
                     )
+        # Checking if the dest_dirdata is empty or not
+        if len(os.listdir(dest_dirdata)) == 0:
+            empty_file = dest_dirdata / ".empty"
+            empty_file.write_text(
+                "Empty file for git to be able to have an empty directory"
+            )
 
     # can return out_DENxxx from the filename out_DEN and idem for out_1WFxxx
     def check_file_ext_pert(filename: str | Path, dirname: str | Path) -> str | Path:
@@ -540,7 +542,7 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
             output_dir,
             include_files=[
                 "run.abo",
-                "run.err",
+                # "run.err",
                 "run.log",
             ],
             allow_missing=True,
@@ -549,10 +551,10 @@ def abinit_test_data(test_name: str, test_data_dir: str | None, force: bool) -> 
             src_dir=orig_job_dir,
             dest_dir=output_dir,
             indata_files=None,
-            outdata_files=["out_GSR.nc", "out_FATBANDS.nc", "out_DDB", "out_anaddb.nc"],
+            outdata_files=["out_GSR.nc", "out_DDB", "out_anaddb.nc"],
             tmpdata_files=None,
             indata_fake_files=None,
-            outdata_fake_files=["out_DEN", "out_WFK", "out_1WF", "out_DDB"],
+            outdata_fake_files=["out_DEN", "out_WFK", "out_1WF"],
             tmpdata_fake_files=None,
             force_overwrite=force,
             allow_missing=True,

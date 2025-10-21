@@ -271,7 +271,7 @@ class RelaxSetGenerator(AbinitInputGenerator):
         if prev_outputs is not None:
             prev_dir = strip_hostname(prev_outputs[-1])  # TODO: to FileCLient?
             final_structure = get_final_structure(prev_dir)
-            if structure is not None:
+            if structure is not None and final_structure != structure:
                 if not StructureMatcher().fit(final_structure, structure):
                     logger.warning(
                         "The structure you provided is different from the one \

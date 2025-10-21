@@ -45,15 +45,16 @@ class DdeSetGenerator(StaticSetGenerator):
 
     calc_type: str = "DDE"
     factory: Callable = ddepert_from_gsinput
+    # Set pseudos to None to recover them from previous jobs
     pseudos: str | list[str] | PseudoTable | None = None
     restart_from_deps: tuple = (f"{DDE}:1WF|1DEN",)
-    prev_outputs_deps: tuple = (f"{SCF}:WFK", f"{DDK}:1WF")
+    prev_outputs_deps: tuple = (
+        f"{SCF}:WFK",
+        f"{DDK}:DDK",
+    )  # put DDK instead of 1WF should solve Guido's comment no?
     factory_prev_inputs_kwargs: dict | None = field(
         default_factory=lambda: {"gs_input": (SCF,)}
     )
-    user_abinit_settings: dict = field(
-        default_factory=lambda: {"irdddk": 1, "ird1wf": 0}
-    )  # TODO: find common solution if more jobs will need to set irdddk=1
 
 
 @dataclass

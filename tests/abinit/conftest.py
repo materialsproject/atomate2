@@ -318,13 +318,13 @@ def check_mrgddb_inputs(
             str_in = file.readlines()
         str_in.pop(1)
 
-        with zopen(ref_path / "inputs" / "mrgddb.in.gz", "r") as file:
+        with zopen(
+            ref_path / "inputs" / "mrgddb.in.gz", "rt", encoding="utf-8"
+        ) as file:
             ref_str = file.readlines()
         ref_str.pop(1)
 
-        assert str_in[1] == ref_str[1].decode(), (
-            "'mrgddb.in' is different from reference."
-        )
+        assert str_in[1] == ref_str[1], "'mrgddb.in' is different from reference."
 
         str_in.pop(1)
         ref_str.pop(1)
@@ -335,7 +335,7 @@ def check_mrgddb_inputs(
             ]  # Only keep the "outdata/out_DDB\n" from the path
             ref_str[i] = ref_str[i][
                 -16:
-            ].decode()  # Only keep the "outdata/out_DDB\n" from the path
+            ]  # Only keep the "outdata/out_DDB\n" from the path
 
         assert str_in == ref_str, "'mrgddb.in' is different from reference."
 
@@ -416,12 +416,12 @@ def check_anaddb_inputs(
 
 
 def convert_file_to_dict(file_path):
-    import gzip
+    from monty.io import zopen
 
     result_dict = {}
 
     if file_path.endswith(".gz"):
-        file_opener = gzip.open
+        file_opener = zopen
         mode = "rt"  # read text mode for gzip
     else:
         file_opener = open

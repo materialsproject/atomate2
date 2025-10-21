@@ -17,6 +17,7 @@ from atomate2.abinit.sets.base import (
     AbinitInputGenerator,
     AbinitInputSet,
     as_pseudo_table,
+    set_workdir,
 )
 from atomate2.abinit.utils.common import INDIR_NAME, OUTDIR_NAME, InitializationError
 
@@ -56,7 +57,7 @@ def test_abinit_input_set_init(abinit_test_dir):
 
 def test_abinit_input_set_set_workdir():
     with ScratchDir(".") as tmp:
-        indir, outdir, tmpdir = AbinitInputSet.set_workdir("someworkdir")
+        indir, outdir, tmpdir = set_workdir("someworkdir")
         indata = os.path.join("someworkdir", "indata")
         outdata = os.path.join("someworkdir", "outdata")
         tmpdata = os.path.join("someworkdir", "tmpdata")

@@ -291,7 +291,9 @@ class AnaddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     completed_at: str | None = Field(
         None, description="Timestamp for when this task was completed"
     )
-    output: str | None = Field(None, description="The output of the final calculation")
+    output: OutputDoc | None = Field(
+        None, description="The output of the final calculation"
+    )
     structure: Structure | None = Field(
         None, description="Final output atoms from the task"
     )
@@ -379,7 +381,7 @@ class AnaddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
             )
         )
 
-        tags = additional_fields.get("tags")
+        tags = additional_fields.pop("tags", None)
 
         dir_name = get_uri(dir_name)  # convert to full uri path
 

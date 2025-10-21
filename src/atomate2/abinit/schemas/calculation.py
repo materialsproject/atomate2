@@ -49,6 +49,7 @@ class AbinitObject(ValueEnum):
     POTENTIAL = "potential"  # POT file as b-string
     PHBSTFILE = "phbst"  # Phonon Bandstructure file
     PHDOSFILE = "phdos"  # Phonon DOS file
+    GSRESULTS = "ground_state_results"  # GSR file
 
 
 class CalculationOutput(BaseModel):
@@ -283,8 +284,6 @@ class Calculation(BaseModel):
             Path to the output _DDB file of the abinit job, relative to dir_name.
         abinit_outpot_file: Path or str
             Path to the output _POT file of the abinit job, relative to dir_name.
-        store_pot_files: bool
-            True if the files _POT should be saved.
 
         Returns
         -------
@@ -309,6 +308,10 @@ class Calculation(BaseModel):
         if abinit_outpot_file.exists() and "POT" in files_to_store:
             abinit_objects[AbinitObject.POTENTIAL] = AbinitStoredFile.from_file(  # type: ignore[index]
                 filepath=abinit_outpot_file, data_type=bytes
+            )
+        if abinit_gsr_file.exists() and "GSR" in files_to_store:
+            abinit_objects[AbinitObject.GSRESULTS] = AbinitStoredFile.from_file(  # type: ignore[index]
+                filepath=abinit_gsr_file, data_type=bytes
             )
 
         output_doc = None
