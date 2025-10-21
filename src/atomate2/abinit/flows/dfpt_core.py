@@ -132,11 +132,14 @@ class PhononMaker(DfptFlowMaker):
     def __post_init__(self) -> None:
         """Process post-init configuration."""
         if not self.with_dde:
+            # turn off the DDE calculations, in this case the DDK can be skipped too
             self.ddk_maker = None
             self.dde_maker = None
 
         if not self.run_mrgdv:
+            # turn off the mrgdv calculation
             self.mrgdv_maker = None
 
         if not self.run_anaddb:
+            # turn off the anaddb calculation
             self.anaddb_maker = None

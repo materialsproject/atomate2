@@ -36,7 +36,7 @@ class DdkSetGenerator(NonSCFSetGenerator):
     factory: Callable = ddkpert_from_gsinput
     restart_from_deps: tuple = (f"{DDK}:1WF",)
     prev_outputs_deps: tuple = (f"{SCF}:WFK",)
-    nbands_factor: float = 1.0  # TODO: to decide if nbdbuf or not
+    nbands_factor: float = 1.0
 
 
 @dataclass

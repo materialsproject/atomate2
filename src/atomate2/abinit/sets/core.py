@@ -101,6 +101,24 @@ class ShgStaticSetGenerator(StaticSetGenerator):
 
 
 @dataclass
+class PhononsStaticSetGenerator(StaticSetGenerator):
+    """Class to generate static SCF input sets adapted to DFPT Phonons computation."""
+
+    factory: Callable = scf_for_phonons
+    factory_kwargs: dict = field(
+        default_factory=lambda: {
+            "kppa": 3000,
+        }
+    )
+
+    user_abinit_settings: dict = field(
+        default_factory=lambda: {
+            "nstep": 500,
+        }
+    )
+
+
+@dataclass
 class NonSCFSetGenerator(AbinitInputGenerator):
     """Class to generate Abinit non-SCF input sets."""
 
@@ -110,7 +128,6 @@ class NonSCFSetGenerator(AbinitInputGenerator):
     restart_from_deps: tuple = (f"{NSCF}:WFK",)
     prev_outputs_deps: tuple = (f"{SCF}:DEN",)
     nbands_factor: float = 1.2
-    factory_kwargs: dict = field(default_factory=dict)
 
     factory_prev_inputs_kwargs: dict | None = field(
         default_factory=lambda: {"gs_input": (SCF,)}

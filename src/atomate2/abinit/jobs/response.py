@@ -390,14 +390,12 @@ def generate_perts(
         for qpt_i, q in enumerate(qpt_list):
             perts = gsinput.abiget_irred_phperts(qpt=q, workdir=cwd / f"q_{qpt_i}")
             ph_perts.extend(perts)
-            ph_jobs.extend(
-                get_jobs(
-                    perts,
-                    rf_maker=phonon_maker,
-                    prev_outputs=scf_output + outputs["dirs"]["wfq"][qpt_i],
-                    is_phonon=True,
-                )
-            )
+
+        ph_jobs = get_jobs(
+            ph_perts,
+            rf_maker=phonon_maker,
+            prev_outputs=scf_output + outputs["dirs"]["wfq"][qpt_i],
+        )
 
         outputs["perts"]["phonon"] = [j.output for j in ph_jobs]
         outputs["dirs"]["phonon"] = [j.output.dir_name for j in ph_jobs]
@@ -449,7 +447,6 @@ def get_jobs(
     perturbations: list[dict],
     rf_maker: ResponseMaker,
     prev_outputs: str | list[str] | None = None,
-    is_phonon: bool = False,
 ) -> list[Job]:
     """
     Set up the response jobs for each perturbations.
@@ -470,14 +467,7 @@ def get_jobs(
             prev_outputs=prev_outputs,
         )
 
-        if is_phonon:
-            qpt_str = f"{pert['qpt'][0]:.2f},{pert['qpt'][1]:.2f},{pert['qpt'][2]:.2f}"
-            # rf_job.append_name(
-            #    f", q = {qpt_str}, idir = {pert['idir']}, ipert = {pert['ipert']}"
-            # )
-            rf_job.append_name(f" q={qpt_str}({ipert + 1}/{len(perturbations)})")
-        else:
-            rf_job.append_name(f"{ipert + 1}/{len(perturbations)}")
+        rf_job.append_name(f"{ipert + 1}/{len(perturbations)}")
 
         rf_jobs.append(rf_job)
 
