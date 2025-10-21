@@ -82,7 +82,7 @@ class AbinitMixinInputGenerator(InputGenerator):
         return [str(prev_dir) for prev_dir in prev_dirs]
 
     def resolve_deps(
-        self, prev_dirs: list[str], deps: str | tuple, check_runlevel: bool = True
+        self, prev_dirs: list[str], deps: tuple, check_runlevel: bool = True
     ) -> tuple[dict, list]:
         """Resolve dependencies.
 
@@ -123,12 +123,25 @@ class AbinitMixinInputGenerator(InputGenerator):
         prev_outdir = Directory(os.path.join(prev_dir, OUTDIR_NAME))
         inp_files = []
 
+        # Currently, a single previous job maps to one dependency, unless
+        # "restart_from_deps" or "prev_outputs_deps" are tuples of multiple items.
+        # However, these are currently tuples of ONE item (except for DDE, DTE,
+        # and Phonons), which can have multiple
+        # run_levels and extensions. If a previous job's run_level matches any of the
+        # specified run_levels, the first matching extension in its output files is
+        # used (e.g., WFK, then DEN if WFK is missing).
+        #
+        # Example: ("scf|relax|md:WFK|DEN",) means:
+        #   - If the previous job is scf/relax/md, its outputs are considered.
+        #   - WFK is prioritized; if missing, DEN is used.
+        #
+        # In light of this behavior, the use of break makes sense right now
         for ext in exts:
             # TODO: how to check that we have the files we need ?
             #  Should we raise if don't find at least one file for a given extension ?
-            if ext in ("1WF", "1DEN"):
+            if ext in ("1WF", "1DEN", "DDK"):
                 # Special treatment for 1WF and 1DEN files
-                if ext == "1WF":
+                if ext in ["1WF", "DDK"]:
                     files = prev_outdir.find_1wf_files()
                 elif ext == "1DEN":
                     files = prev_outdir.find_1den_files()
@@ -231,7 +244,7 @@ class AbinitInputSet(InputSet):
             zip_inputs=zip_inputs,
         )
         del self.inputs["abinit_input.json"]
-        indir, _outdir, _tmpdir = self.set_workdir(workdir=directory)
+        indir, _outdir, _tmpdir = set_workdir(workdir=directory)
 
         if self.input_files:
             out_to_in(
@@ -268,26 +281,6 @@ class AbinitInputSet(InputSet):
     def abinit_input(self) -> AbinitInput:
         """Get the AbinitInput object."""
         return self[INPUT_FILE_NAME]
-
-    @staticmethod
-    def set_workdir(workdir: Path | str) -> tuple[Directory, Directory, Directory]:
-        """Set up the working directory.
-
-        This also sets up and creates standard input, output and temporary directories.
-        """
-        workdir = os.path.abspath(workdir)
-
-        # Directories with input|output|temporary data.
-        indir = Directory(os.path.join(workdir, INDIR_NAME))
-        outdir = Directory(os.path.join(workdir, OUTDIR_NAME))
-        tmpdir = Directory(os.path.join(workdir, TMPDIR_NAME))
-
-        # Create dirs for input, output and tmp data.
-        indir.makedirs()
-        outdir.makedirs()
-        tmpdir.makedirs()
-
-        return indir, outdir, tmpdir
 
     def set_vars(self, *args, **kwargs) -> dict:
         """Set the values of abinit variables.
@@ -439,15 +432,15 @@ class AbinitInputGenerator(AbinitMixinInputGenerator):
     factory_kwargs: dict = field(default_factory=dict)
     user_abinit_settings: dict = field(default_factory=dict)
     user_kpoints_settings: dict | KSampling = field(default_factory=dict)
-    restart_from_deps: str | tuple | None = None
-    prev_outputs_deps: str | tuple | None = None
+    restart_from_deps: tuple | None = None
+    prev_outputs_deps: tuple | None = None
     factory_prev_inputs_kwargs: dict | None = None
     force_gamma: bool = True
     symprec: float = SETTINGS.SYMPREC
 
     def get_input_set(
         self,
-        structure: Structure = None,
+        structure: Structure | None = None,
         restart_from: str | tuple | list | Path | None = None,
         prev_outputs: str | tuple | list | Path | None = None,
     ) -> AbinitInputSet:
@@ -523,41 +516,6 @@ class AbinitInputGenerator(AbinitMixinInputGenerator):
             input_files=input_files,
             link_files=True,
         )
-
-    @staticmethod
-    def check_format_prev_dirs(
-        prev_dirs: str | tuple | list | Path | None,
-    ) -> list[str] | None:
-        """Check and format the prev_dirs (restart or dependency)."""
-        if prev_dirs is None:
-            return None
-        if isinstance(prev_dirs, str | Path):
-            return [str(prev_dirs)]
-        return [str(prev_dir) for prev_dir in prev_dirs]
-
-    def resolve_deps(
-        self, prev_dirs: list[str], deps: str | tuple, check_runlevel: bool = True
-    ) -> tuple[dict, list]:
-        """Resolve dependencies.
-
-        This method assumes that prev_dirs is in the correct format, i.e.
-        a list of directories as str or Path.
-        """
-        input_files = []
-        deps_irdvars = {}
-        for prev_dir in prev_dirs:
-            if check_runlevel:
-                abinit_input = load_abinit_input(prev_dir)
-            for dep in deps:
-                runlevel = set(dep.split(":")[0].split("|"))
-                exts = list(dep.split(":")[1].split("|"))
-                if not check_runlevel or runlevel.intersection(abinit_input.runlevel):
-                    irdvars, inp_files = self.resolve_dep_exts(
-                        prev_dir=prev_dir, exts=exts
-                    )
-                    input_files.extend(inp_files)
-                    deps_irdvars.update(irdvars)
-        return deps_irdvars, input_files
 
     def resolve_prev_inputs(
         self, prev_dirs: list[str], prev_inputs_kwargs: dict
@@ -664,7 +622,7 @@ class AbinitInputGenerator(AbinitMixinInputGenerator):
 
         if not self.prev_outputs_deps and prev_outputs:
             msg = (
-                f"Previous outputs not allowed for {type(self).__name__} "
+                f"Previous outputs not allowed for {type(self).__name__}. "
                 "Consider if restart_from argument of get_input_set method "
                 "can fit your needs instead."
             )
@@ -894,3 +852,23 @@ def get_ksampling(
         raise ValueError("Invalid k-point generation algo.")
 
     return _combine_kpoints(base_kpoints, added_kpoints)
+
+
+def set_workdir(workdir: Path | str) -> tuple[Directory, Directory, Directory]:
+    """Set up the working directory.
+
+    This also sets up and creates standard input, output and temporary directories.
+    """
+    workdir = os.path.abspath(workdir)
+
+    # Directories with input|output|temporary data.
+    indir = Directory(os.path.join(workdir, INDIR_NAME))
+    outdir = Directory(os.path.join(workdir, OUTDIR_NAME))
+    tmpdir = Directory(os.path.join(workdir, TMPDIR_NAME))
+
+    # Create dirs for input, output and tmp data.
+    indir.makedirs()
+    outdir.makedirs()
+    tmpdir.makedirs()
+
+    return indir, outdir, tmpdir

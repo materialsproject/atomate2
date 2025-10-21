@@ -13,13 +13,8 @@ from abipy.abio.input_tags import DDE, DTE, PH_Q_PERT
 from abipy.flowtk.utils import Directory
 from pymatgen.io.core import InputSet
 
-from atomate2.abinit.sets.base import AbinitMixinInputGenerator
-from atomate2.abinit.utils.common import (
-    INDIR_NAME,
-    MRGDV_INPUT_FILE_NAME,
-    OUTDIR_NAME,
-    TMPDIR_NAME,
-)
+from atomate2.abinit.sets.base import AbinitMixinInputGenerator, set_workdir
+from atomate2.abinit.utils.common import MRGDV_INPUT_FILE_NAME, OUTDIR_NAME
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -71,7 +66,7 @@ class MrgdvInputSet(InputSet):
             overwrite=overwrite,
             zip_inputs=zip_inputs,
         )
-        indir, outdir, tmpdir = self.set_workdir(workdir=directory)
+        indir, outdir, tmpdir = set_workdir(workdir=directory)
 
     def validate(self) -> bool:
         """Validate the input set.
@@ -89,26 +84,6 @@ class MrgdvInputSet(InputSet):
     def mrgdv_input(self) -> str:
         """Get the Mrgdv input (str)."""
         return self[MRGDV_INPUT_FILE_NAME]
-
-    @staticmethod
-    def set_workdir(workdir: Path | str) -> tuple[Directory, Directory, Directory]:
-        """Set up the working directory.
-
-        This also sets up and creates standard input, output and temporary directories.
-        """
-        workdir = os.path.abspath(workdir)
-
-        # Directories with input|output|temporary data.
-        indir = Directory(os.path.join(workdir, INDIR_NAME))
-        outdir = Directory(os.path.join(workdir, OUTDIR_NAME))
-        tmpdir = Directory(os.path.join(workdir, TMPDIR_NAME))
-
-        # Create dirs for input, output and tmp data.
-        indir.makedirs()
-        outdir.makedirs()
-        tmpdir.makedirs()
-
-        return indir, outdir, tmpdir
 
     def deepcopy(self) -> MrgdvInputSet:
         """Deep copy of the input set."""

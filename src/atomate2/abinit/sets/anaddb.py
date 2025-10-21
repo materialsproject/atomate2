@@ -11,19 +11,12 @@ from typing import TYPE_CHECKING, Any
 
 from abipy.abio.inputs import AnaddbInput
 from abipy.dfpt.ddb import DdbFile
-from abipy.flowtk.utils import Directory
 from monty.json import MontyEncoder, jsanitize
 from pymatgen.io.core import InputSet
 
 from atomate2.abinit.files import out_to_in
-from atomate2.abinit.sets.base import AbinitMixinInputGenerator
-from atomate2.abinit.utils.common import (
-    ANADDB_INPUT_FILE_NAME,
-    INDATA_PREFIX,
-    INDIR_NAME,
-    OUTDIR_NAME,
-    TMPDIR_NAME,
-)
+from atomate2.abinit.sets.base import AbinitMixinInputGenerator, set_workdir
+from atomate2.abinit.utils.common import ANADDB_INPUT_FILE_NAME, INDATA_PREFIX
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
@@ -85,7 +78,7 @@ class AnaddbInputSet(InputSet):
             zip_inputs=zip_inputs,
         )
         del self.inputs["anaddb_input.json"]
-        indir, _outdir, _tmpdir = self.set_workdir(workdir=directory)
+        indir, _outdir, _tmpdir = set_workdir(workdir=directory)
 
         if self.input_files:
             out_to_in(
@@ -110,26 +103,6 @@ class AnaddbInputSet(InputSet):
     def anaddb_input(self) -> AnaddbInput:
         """Get the AnaddbInput object."""
         return self[ANADDB_INPUT_FILE_NAME]
-
-    @staticmethod
-    def set_workdir(workdir: Path | str) -> tuple[Directory, Directory, Directory]:
-        """Set up the working directory.
-
-        This also sets up and creates standard input, output and temporary directories.
-        """
-        workdir = os.path.abspath(workdir)
-
-        # Directories with input|output|temporary data.
-        indir = Directory(os.path.join(workdir, INDIR_NAME))
-        outdir = Directory(os.path.join(workdir, OUTDIR_NAME))
-        tmpdir = Directory(os.path.join(workdir, TMPDIR_NAME))
-
-        # Create dirs for input, output and tmp data.
-        indir.makedirs()
-        outdir.makedirs()
-        tmpdir.makedirs()
-
-        return indir, outdir, tmpdir
 
     def set_vars(self, *args, **kwargs) -> dict:
         """Set the values of anaddb variables.
@@ -213,9 +186,7 @@ class AnaddbInputGenerator(AbinitMixinInputGenerator):
     calc_type: str = "anaddb"
     factory_kwargs: dict = field(default_factory=dict)
     user_abinit_settings: dict = field(default_factory=dict)
-    prev_outputs_deps: str | tuple | None = field(
-        default_factory=lambda: ("MRGDDB:DDB",)
-    )
+    prev_outputs_deps: tuple | None = field(default_factory=lambda: ("MRGDDB:DDB",))
 
     def get_input_set(
         self,

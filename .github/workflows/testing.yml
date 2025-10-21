@@ -58,6 +58,7 @@ jobs:
 
       - name: Install conda dependencies
         run: |
+          # abinit is needed to generate the perturbations (dte, phonons, dde)
           micromamba install -n a2 -c conda-forge enumlib packmol bader abinit --yes
 
       - name: Install dependencies

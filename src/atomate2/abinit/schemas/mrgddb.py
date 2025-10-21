@@ -135,7 +135,7 @@ class MrgddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         if not report["run_completed"]:
             raise RuntimeError("mrgddb execution was not completed")
 
-        tags = additional_fields.get("tags")
+        tags = additional_fields.pop("tags", None)
 
         dir_name = get_uri(dir_name)  # convert to full uri path
 

@@ -100,15 +100,6 @@ def setup_job(
 
 
 _DATA_OBJECTS = [  # either str (TaskDoc fields) or MSONable class
-    # BandStructure,
-    # BandStructureSymmLine,
-    # DOS,
-    # Dos,
-    # CompleteDos,
-    # VolumetricData,
-    # Trajectory,
-    # DdbFileStr,
-    # PotFileBStr,
     AbinitStoredFile,
 ]
 
