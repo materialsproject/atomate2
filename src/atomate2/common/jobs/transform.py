@@ -174,20 +174,18 @@ class SQS(Transformer):
             if len(list(os.scandir(mcsqs_dir))) == 0:
                 mcsqs_dir.unlink()
 
-        return SQSTask.from_structure(
+        sqs_structures = None
+        sqs_scores = None
+        if isinstance(sqs_structs, list) and len(sqs_structs) > 1:
+            sqs_structures = [entry["structure"] for entry in sqs_structs[1:]]
+            sqs_scores = [entry["objective_function"] for entry in sqs_structs[1:]]
+
+        return SQSTask(
             transformation=self.transformation,
             input_structure=structure,
             final_structure=best_sqs,
             final_objective=best_objective,
-            sqs_structures=(
-                [entry["structure"] for entry in sqs_structs[1:]]
-                if len(sqs_structs) > 1
-                else None
-            ),
-            sqs_scores=(
-                [entry["objective_function"] for entry in sqs_structs[1:]]
-                if len(sqs_structs) > 1
-                else None
-            ),
+            sqs_structures=sqs_structures,
+            sqs_scores=sqs_scores,
             sqs_method=self.transformation.sqs_method,
         )
