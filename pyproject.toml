@@ -28,7 +28,7 @@ dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core>=v0.84.10,<0.85.1",
+    "emmet-core>=v0.84.10",
     "jobflow>=0.1.11",
     "monty>=2024.12.10",
     "numpy",
@@ -44,7 +44,7 @@ aims = ["pymatgen-io-aims>=0.0.5", "pymatgen>=2025.10.7"]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib>=1.8.1"]
 mp = ["mp-api>=0.37.5"]
-phonons = ["phonopy>=1.10.8", "seekpath>=2.0.0"]
+phonons = ["phonopy>=1.10.8,<2.43.3", "seekpath>=2.0.0"] # issue writing CIFs because of bug in phonopy >=2.43.3
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
 defects = [
     "dscribe>=1.2.0",

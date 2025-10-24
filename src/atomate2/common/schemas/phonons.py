@@ -503,7 +503,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             )
             for idx, temp in enumerate(temperature_range_thermal_displacements):
                 phonon.thermal_displacement_matrices.write_cif(
-                    phonon.primitive, idx, filename=f"tdispmat_{temp}K.cif"
+                    phonon.primitive.cell, idx, filename=f"tdispmat_{temp}K.cif"
                 )
             _disp_mat = phonon._thermal_displacement_matrices  # noqa: SLF001
             tdisp_mat = _disp_mat.thermal_displacement_matrices.tolist()
