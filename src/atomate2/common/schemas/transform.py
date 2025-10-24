@@ -26,7 +26,7 @@ class TransformTask(BaseModel):
         description="The transformation applied to a structure."
     )
 
-    final_strcture: Structure = Field(
+    final_structure: Structure = Field(
         description="The structure after the transformation."
     )
 
