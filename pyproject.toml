@@ -34,16 +34,17 @@ dependencies = [
     "numpy",
     "pydantic-settings>=2.0.3",
     "pydantic>=2.0.1",
-    "pymatgen>=2024.11.13,<2025.10.7",
+    "pymatgen>=2024.11.13",
     "pymongo<=4.10.1",
 ]
 
 [project.optional-dependencies]
 abinit = ["abipy>=0.9.3"]
+aims = ["pymatgen-io-aims>=0.0.5", "pymatgen>=2025.10.7"]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib>=1.8.1"]
 mp = ["mp-api>=0.37.5"]
-phonons = ["phonopy>=1.10.8", "seekpath>=2.0.0"]
+phonons = ["phonopy>=1.10.8,<2.43.3", "seekpath>=2.0.0"] # issue writing CIFs because of bug in phonopy >=2.43.3
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
 defects = [
     "dscribe>=1.2.0",
@@ -98,8 +99,8 @@ strict-openff = [
     "mdanalysis==2.9.0",
     "monty==2025.3.3",
     "openmm-mdanalysis-reporter==0.1.0",
-    "openmm==8.2.0",
-    "pymatgen==2025.6.14", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
+    "openmm==8.3.1",
+    "pymatgen==2025.10.7", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 strict-forcefields = [
     "calorine==3.2; python_version >= '3.12'",
