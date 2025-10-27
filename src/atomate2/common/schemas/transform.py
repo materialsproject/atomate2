@@ -49,7 +49,7 @@ class SQSTask(TransformTask):
     sqs_structures: list[Structure] | None = Field(
         None, description="A list of other good SQS candidates."
     )
-    sqs_scores: list[Structure] | None = Field(
+    sqs_scores: list[float] | None = Field(
         None,
         description=(
             "The objective function values for the structures in `sqs_structures`"

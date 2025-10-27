@@ -70,7 +70,11 @@ class SQS(Transformer):
 
         if isinstance(scaling, int):
             nsites = scaling * len(struct)
-        elif hasattr(scaling, "__len__") and len(scaling) == 3:
+        elif (
+            hasattr(scaling, "__len__")
+            and all(isinstance(sf, int) for sf in scaling)
+            and len(scaling) == 3
+        ):
             nsites = len(struct * scaling)
         else:
             raise ValueError(
