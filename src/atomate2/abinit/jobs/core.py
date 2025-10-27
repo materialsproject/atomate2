@@ -17,7 +17,6 @@ from atomate2.abinit.jobs.base import BaseAbinitMaker, abinit_job
 from atomate2.abinit.sets.core import (
     LineNonSCFSetGenerator,
     NonSCFSetGenerator,
-    NonScfWfqInputGenerator,
     RelaxSetGenerator,
     StaticSetGenerator,
     UniformNonSCFSetGenerator,
@@ -144,23 +143,6 @@ class NonSCFMaker(BaseAbinitMaker):
             restart_from=restart_from,
             history=history,
         )
-
-
-@dataclass
-class NonSCFWfqMaker(NonSCFMaker):
-    """Maker to create non SCF calculations for the WFQ."""
-
-    calc_type: str = "nscf_wfq"
-    name: str = "non-Scf calculation"
-
-    input_set_generator: AbinitInputGenerator = field(
-        default_factory=NonScfWfqInputGenerator
-    )
-
-    # Non dataclass variables:
-    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
-        NscfConvergenceWarning,
-    )
 
 
 @dataclass

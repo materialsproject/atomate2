@@ -22,6 +22,8 @@ _ABINIT_FILES = ("run.abi", "abinit_input.json")
 _FAKE_RUN_ABINIT_KWARGS = {}
 _MRGDDB_FILES = "mrgddb.in"
 _FAKE_RUN_MRGDDB_KWARGS = {}
+_MRGDV_FILES = "mrgdv.in"
+_FAKE_RUN_MRGDV_KWARGS = {}
 _ANADDB_FILES = ("anaddb.in", "anaddb_input.json")
 _FAKE_RUN_ANADDB_KWARGS = {}
 
@@ -343,6 +345,99 @@ def check_mrgddb_inputs(
 
 
 @pytest.fixture
+def mock_mrgdvdb(mocker, abinit_test_dir, abinit_integration_tests):
+    """
+    This fixture allows one to mock running Mrgdvdb.
+
+    It works by monkeypatching (replacing) calls to run_mrgdv.
+
+    The primary idea is that instead of running Mrgdvdb to generate the output files,
+    reference files will be copied into the directory instead.
+    """
+    import atomate2.abinit.files
+    import atomate2.abinit.jobs.mrgdv
+    import atomate2.abinit.run
+
+    # Wrap the write_mrgdb_input_set so that we can check inputs after calling it
+    def wrapped_write_mrgdv_input_set(*args, **kwargs):
+        from jobflow import CURRENT_JOB
+
+        name = CURRENT_JOB.job.name
+        index = CURRENT_JOB.job.index
+        ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
+
+        atomate2.abinit.files.write_mrgdv_input_set(*args, **kwargs)
+        check_mrgdv_inputs(ref_path)
+
+    mocker.patch.object(
+        atomate2.abinit.jobs.mrgdv,
+        "write_mrgdv_input_set",
+        wrapped_write_mrgdv_input_set,
+    )
+
+    if not abinit_integration_tests:
+        # Mock abinit run (i.e. this will copy reference files)
+        def mock_run_mrgdv(wall_time=None, start_time=None):
+            from jobflow import CURRENT_JOB
+
+            name = CURRENT_JOB.job.name
+            index = CURRENT_JOB.job.index
+            ref_path = abinit_test_dir / _REF_PATHS[name][str(index)]
+            check_mrgdv_inputs(ref_path)
+            fake_run_abinit(ref_path)
+
+        mocker.patch.object(atomate2.abinit.run, "run_mrgdv", mock_run_mrgdv)
+        mocker.patch.object(atomate2.abinit.jobs.mrgdv, "run_mrgdv", mock_run_mrgdv)
+
+        def _run(ref_paths, fake_run_mrgdv_kwargs=None):
+            if fake_run_mrgdv_kwargs is None:
+                fake_run_mrgdv_kwargs = {}
+            _REF_PATHS.update(ref_paths)
+            _FAKE_RUN_MRGDV_KWARGS.update(fake_run_mrgdv_kwargs)
+
+        yield _run
+
+    mocker.stopall()
+    _REF_PATHS.clear()
+    _FAKE_RUN_MRGDV_KWARGS.clear()
+
+
+def check_mrgdv_inputs(
+    ref_path: str | Path,
+    check_inputs: Sequence[Literal["mrgdv.in"]] = _MRGDV_FILES,
+):
+    ref_path = Path(ref_path)
+
+    if "mrgdv.in" in check_inputs:
+        from monty.io import zopen
+
+        with open("mrgdv.in") as file:
+            str_in = file.readlines()
+        str_in.pop(1)
+
+        with zopen(ref_path / "inputs" / "mrgdv.in.gz", "rt", encoding="utf-8") as file:
+            ref_str = file.readlines()
+        ref_str.pop(1)
+
+        assert str_in[1] == ref_str[1], "'mrgdv.in' is different from reference."
+
+        str_in.pop(1)
+        ref_str.pop(1)
+
+        for i, _ in enumerate(str_in):
+            str_in[i] = "/".join(
+                str_in[i].split("/")[-2:]
+            )  # Only keep the "outdata/out_POT*\n" from the path
+            ref_str[i] = "/".join(
+                ref_str[i].split("/")[-2:]
+            )  # Only keep the "outdata/out_POT*\n" from the path
+
+        assert str_in == ref_str, "'mrgdv.in' is different from reference."
+
+    logger.info("Verified inputs successfully")
+
+
+@pytest.fixture
 def mock_anaddb(mocker, abinit_test_dir, abinit_integration_tests):
     """
     This fixture allows one to mock running Anaddb.
@@ -489,6 +584,8 @@ def check_anaddb_input_json(ref_path: str | Path):
         ref_v = ref_args[k]
         if isinstance(user_v, str):
             assert user_v == ref_v, f"{k = }-->{user_v = } versus {ref_v = }"
+        elif user_v is None and ref_v is None:
+            continue
         else:
             assert np.allclose(user_v, ref_v), f"{k = }-->{user_v = } versus {ref_v = }"
 

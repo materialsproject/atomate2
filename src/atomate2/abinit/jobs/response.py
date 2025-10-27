@@ -15,6 +15,7 @@ from abipy.flowtk.events import (
     ScfConvergenceWarning,
 )
 from jobflow import Flow, Job, Response, job
+from jobflow.core.reference import OutputReference
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker, abinit_job
 from atomate2.abinit.jobs.core import NonSCFMaker
@@ -197,7 +198,8 @@ class WfqMaker(NonSCFMaker):
         qpt: list, tuple
             q point to shift the k grid
         """
-        self.input_set_generator.user_abinit_settings.update({"qpt": qpt})
+        self.input_set_generator.factory_kwargs.update({"qpt": qpt})
+
         return super().make.original(
             self,
             structure=structure,
@@ -364,6 +366,7 @@ def generate_perts(
             # find which q points are needed and build nscf inputs to calculate the WFQ
             kpts = gsinput.abiget_ibz(shiftk=(0, 0, 0), kptopt=3).points.tolist()
             nscf_qpt = []
+            wfq_j = 0
             for qpt_i, q in enumerate(qpt_list):
                 if list(q) not in kpts:
                     if wfq_maker is None:
@@ -375,26 +378,30 @@ def generate_perts(
                             "you will obtain a bandstructure on a q-mesh that is the "
                             "same as the k-mesh used for your groundstate calculation."
                         )
+                    wfq_j += 1
                     nscf_qpt.append(q)
                     wfq_job = wfq_maker.make(
                         prev_outputs=scf_output,
                         qpt=q,
                     )
+                    wfq_job.append_name(f" - {wfq_j}")
                     wfq_jobs.append(wfq_job)
-                    outputs["dirs"]["wfq"][qpt_i] = [
-                        j.output.dir_name for j in wfq_jobs
-                    ]
+                    outputs["dirs"]["wfq"][qpt_i] = [wfq_job.output.dir_name]
 
         ph_perts = list()
         ph_jobs = list()
+        prev_outputs: list[str] = list()
         for qpt_i, q in enumerate(qpt_list):
             perts = gsinput.abiget_irred_phperts(qpt=q, workdir=cwd / f"q_{qpt_i}")
             ph_perts.extend(perts)
+            prev_outputs.extend(
+                scf_output + outputs["dirs"]["wfq"][qpt_i] for _ in range(len(perts))
+            )
 
         ph_jobs = get_jobs(
             ph_perts,
             rf_maker=phonon_maker,
-            prev_outputs=scf_output + outputs["dirs"]["wfq"][qpt_i],
+            prev_outputs=prev_outputs,
         )
 
         outputs["perts"]["phonon"] = [j.output for j in ph_jobs]
@@ -446,7 +453,7 @@ def generate_perts(
 def get_jobs(
     perturbations: list[dict],
     rf_maker: ResponseMaker,
-    prev_outputs: str | list[str] | None = None,
+    prev_outputs: str | OutputReference | list[str] | list[list[str]] | None = None,
 ) -> list[Job]:
     """
     Set up the response jobs for each perturbations.
@@ -461,13 +468,35 @@ def get_jobs(
     """
     rf_jobs = []
 
-    for ipert, pert in enumerate(perturbations):
-        rf_job = rf_maker.make(
-            perturbation=pert,
-            prev_outputs=prev_outputs,
+    if isinstance(prev_outputs, str | OutputReference):
+        prev_outputs = [[prev_outputs] for _ in range(len(perturbations))]
+    elif isinstance(prev_outputs, list) and all(
+        isinstance(i, str | OutputReference) for i in prev_outputs
+    ):
+        prev_outputs = [prev_outputs for _ in range(len(perturbations))]
+    elif isinstance(prev_outputs, list) and all(
+        isinstance(i, list) and all(isinstance(j, str | OutputReference) for j in i)
+        for i in prev_outputs
+    ):
+        if len(prev_outputs) != len(perturbations):
+            raise ValueError(
+                "If a list of lists is passed as prev_outputs "
+                "its length must match the number of perturbations"
+            )
+    else:
+        raise ValueError(
+            "Please provide the prev_outputs as str or list[str] or list[list[str]]"
         )
 
-        rf_job.append_name(f"{ipert + 1}/{len(perturbations)}")
+    for ipert, (pert, prev_output) in enumerate(
+        zip(perturbations, prev_outputs, strict=False)
+    ):
+        rf_job = rf_maker.make(
+            perturbation=pert,
+            prev_outputs=prev_output,
+        )
+
+        rf_job.append_name(f" - {ipert + 1}/{len(perturbations)}", dynamic=False)
 
         rf_jobs.append(rf_job)
 

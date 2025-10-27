@@ -191,51 +191,6 @@ class UniformNonSCFSetGenerator(NonSCFSetGenerator):
 
 
 @dataclass
-class NonScfWfqInputGenerator(AbinitInputGenerator):
-    """Input set generator for Non-Scf Wfq calculations."""
-
-    calc_type: str = "nscf_wfq"
-
-    wfq_tol: dict = field(default_factory=lambda: {"tolwfr": 1e-18})
-
-    restart_from_deps: tuple = (f"{NSCF}:WFQ",)
-    prev_outputs_deps: tuple = (f"{SCF}:DEN",)
-
-    def get_abinit_input(
-        self,
-        structure: Structure | None = None,
-        pseudos: PseudoTable | None = None,
-        prev_outputs: list[str] | None = None,
-        abinit_settings: dict | None = None,
-        factory_kwargs: dict | None = None,
-        kpoints_settings: dict | KSampling | None = None,
-        input_index: int | None = None,
-    ) -> AbinitInput:
-        """Get AbinitInput object for Non-SCF Wfq calculation."""
-        raise NotImplementedError
-
-
-@dataclass
-class DdkInputGenerator(AbinitInputGenerator):
-    """Input set generator for Non-Scf Wfq calculations."""
-
-    calc_type: str = "ddk"
-
-    def get_abinit_input(
-        self,
-        structure: Structure | None = None,
-        pseudos: PseudoTable | None = None,
-        prev_outputs: list[str] | None = None,
-        abinit_settings: dict | None = None,
-        factory_kwargs: dict | None = None,
-        kpoints_settings: dict | KSampling | None = None,
-        input_index: int | None = None,
-    ) -> AbinitInput:
-        """Get the abinit input for Ddk calculation."""
-        raise NotImplementedError
-
-
-@dataclass
 class RelaxSetGenerator(AbinitInputGenerator):
     """Common class for ground-state generators."""
 

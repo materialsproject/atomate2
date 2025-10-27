@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import abipy.core.abinit_units as abu
-from abipy.abio.factories import scf_for_phonons
 
 from atomate2.abinit.flows.dfpt_base import DfptFlowMaker
 from atomate2.abinit.jobs.anaddb import AnaddbDfptDteMaker, AnaddbPhBandsDOSMaker
@@ -19,7 +18,7 @@ from atomate2.abinit.jobs.response import (
     PhononResponseMaker,
     WfqMaker,
 )
-from atomate2.abinit.sets.core import ShgStaticSetGenerator, StaticSetGenerator
+from atomate2.abinit.sets.core import PhononsStaticSetGenerator, ShgStaticSetGenerator
 
 if TYPE_CHECKING:
     from jobflow import Maker
@@ -118,7 +117,7 @@ class PhononMaker(DfptFlowMaker):
     run_mrgdv: bool = False
     static_maker: BaseAbinitMaker = field(
         default_factory=lambda: StaticMaker(
-            input_set_generator=StaticSetGenerator(factory=scf_for_phonons)
+            input_set_generator=PhononsStaticSetGenerator()
         )
     )
     ddk_maker: BaseAbinitMaker = field(default_factory=DdkMaker)

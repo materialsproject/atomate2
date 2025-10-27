@@ -10,6 +10,7 @@ from abipy.abio.factories import (
     ddkpert_from_gsinput,
     dtepert_from_gsinput,
     phononpert_from_gsinput,
+    wfq_nscf_from_gsinput,
 )
 from abipy.abio.input_tags import DDE, DDK, DTE, NSCF, PH_Q_PERT, SCF
 
@@ -96,9 +97,6 @@ class NscfWfqSetGenerator(NonSCFSetGenerator):
     """Class to generate a Non-SCF input set with a k point grid shifted by q."""
 
     calc_type: str = "wfq"
-    user_abinit_settings: dict = field(
-        default_factory=lambda: {
-            "kptopt": 3,
-            "nqpt": 1,
-        }
-    )
+    factory: Callable = wfq_nscf_from_gsinput
+    prev_outputs_deps: tuple = (f"{SCF}:DEN", f"{SCF}:WFK")
+    nbands_factor: float = 1.0
