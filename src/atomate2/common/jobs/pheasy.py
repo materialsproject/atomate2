@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-import os
 import shlex
 import subprocess
 from pathlib import Path
@@ -540,10 +539,9 @@ def generate_frequencies_eigenvectors(
     # When this code is run on Github tests, it is failing because it is
     # not able to find the FORCE_CONSTANTS file. This is because the file is
     # somehow getting generated in some temp directory. Can you fix the bug?
-    fc_file = _DEFAULT_FILE_PATHS["force_constants"]
-    print("debug", Path.cwd(), os.listdir(Path.cwd()))  # noqa: T201
+    fc_file = Path(_DEFAULT_FILE_PATHS["force_constants"])
 
-    if cal_anhar_fcs:
+    if cal_anhar_fcs and fc_file.exists():
         np.save(
             _DEFAULT_FILE_PATHS["anharmonic_displacements"],
             dataset_disps_array_use[num_har:, :, :],
@@ -607,7 +605,7 @@ def generate_frequencies_eigenvectors(
 
     # begin to convert the force constants to the phonopy and phono3py format
     # for the further lattice thermal conductivity calculations
-    if cal_ther_cond:
+    if cal_ther_cond and fc_file.exists():
         # convert the 2ND order force constants to the phonopy format
         fc_phonopy_text = parse_FORCE_CONSTANTS(filename=fc_file)
         write_force_constants_to_hdf5(fc_phonopy_text, filename="fc2.hdf5")
@@ -632,12 +630,13 @@ def generate_frequencies_eigenvectors(
 
         subprocess.call(shlex.split(phono3py_cmd))
 
-    # Read the force constants from the output file of pheasy code
-    force_constants = parse_FORCE_CONSTANTS(filename=fc_file)
-    phonon.force_constants = force_constants
-    # symmetrize the force constants to make them physically correct based on
-    # the space group symmetry of the crystal structure.
-    phonon.symmetrize_force_constants()
+    if fc_file.exists():
+        # Read the force constants from the output file of pheasy code
+        force_constants = parse_FORCE_CONSTANTS(filename=fc_file)
+        phonon.force_constants = force_constants
+        # symmetrize the force constants to make them physically correct based on
+        # the space group symmetry of the crystal structure.
+        phonon.symmetrize_force_constants()
 
     # with phonopy.load("phonopy.yaml") the phonopy API can be used
     phonon.save(_DEFAULT_FILE_PATHS["phonopy"])
