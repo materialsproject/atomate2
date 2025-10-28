@@ -14,6 +14,48 @@ from typing_extensions import Self
 logger = logging.getLogger(__name__)
 
 
+class PhononSummaryData(StructureMetadata):
+    """Save thermodynamic state variables at a series of temperatures."""
+
+    structure: Structure | None = Field(
+        None,
+        description=(
+            "Structure associated with the phonon calculation "
+            "used to generate this data"
+        ),
+    )
+
+    supercell_matrix: Matrix3D | None = Field(
+        None, description="matrix describing the supercell."
+    )
+
+    total_dft_energy: float | None = Field(
+        None, description="The total DFT energy associated with the structure."
+    )
+
+    volume_per_formula_unit: float | None = Field(
+        None, description="volume per formula unit in Angstrom**3."
+    )
+
+    formula_units: int | None = Field(None, description="Formula units per cell.")
+
+    has_imaginary_modes: bool | None = Field(
+        None, description="Whether the phonon spectrum has imaginary modes."
+    )
+
+    temperatures: list[float] | None = Field(None, description="Temperature in K.")
+    free_energies: list[float] | None = Field(
+        None, description="Helmholtz free energies in J/mol."
+    )
+    heat_capacities: list[float] | None = Field(
+        None, description="Heat capacities in J/(K . mol)."
+    )
+    entropies: list[float] | None = Field(None, description="Entropies in J/K.")
+    internal_energies: list[float] | None = Field(
+        None, description="Internal energies in J/mol"
+    )
+
+
 class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     """Collection of all data produced by the qha workflow."""
 

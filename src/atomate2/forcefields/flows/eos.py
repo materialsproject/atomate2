@@ -95,6 +95,7 @@ class ForceFieldEosMaker(CommonEosMaker):
                 force_field_name=force_field_name, relax_cell=False
             ),
             static_maker=None,
+            **kwargs,
         )
         return cls(
             name=f"{force_field_name.split('MLFF.')[-1]} EOS Maker",

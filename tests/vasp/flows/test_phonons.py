@@ -1,19 +1,20 @@
 import numpy as np
 import pytest
+from emmet.core.base import CalcMeta
+from emmet.core.phonon import (
+    PhononBS,
+    PhononBSDOSDoc,
+    PhononComputationalSettings,
+    PhononDOS,
+    ThermalDisplacementData,
+)
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
-from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
-from pymatgen.phonon.dos import PhononDos
 
-from atomate2.common.schemas.phonons import (
-    PhononBSDOSDoc,
-    PhononComputationalSettings,
-    PhononJobDirs,
-    PhononUUIDs,
-    ThermalDisplacementData,
-)
 from atomate2.vasp.flows.phonons import PhononMaker
+
+# TODO: re-enable `total_dft_energy` checks once patched on emmet-core side
 
 
 def test_phonon_wf_vasp_only_displacements3(
@@ -49,72 +50,67 @@ def test_phonon_wf_vasp_only_displacements3(
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate the outputs
-    assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
-
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.free_energies,
-        [6115.980051, 6059.749756, 5490.929122, 4173.234384, 2194.164562],
-    )
+    ph_doc = responses[job.jobs[-1].uuid][1].output
+    assert isinstance(ph_doc, PhononBSDOSDoc)
 
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonon_bandstructure,
-        PhononBandStructureSymmLine,
+        ph_doc.phonon_bandstructure,
+        PhononBS,
     )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.phonon_dos, PhononDos)
-    assert responses[job.jobs[-1].uuid][1].output.thermal_displacement_data is None
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.structure, Structure)
+    assert isinstance(ph_doc.phonon_dos, PhononDOS)
+    assert ph_doc.thermal_displacement_data is None
+    assert isinstance(ph_doc.structure, Structure)
+
+    assert ph_doc.has_imaginary_modes is False
+    assert ph_doc.force_constants is None
+    assert all(isinstance(cm, CalcMeta) for cm in ph_doc.calc_meta)
+
+    # assert_allclose(
+    #     ph_doc.total_dft_energy, -5.74555232
+    # )
+
+    assert ph_doc.born is None
+    assert ph_doc.epsilon_static is None
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
-    )
-    assert responses[job.jobs[-1].uuid][1].output.has_imaginary_modes is False
-    assert responses[job.jobs[-1].uuid][1].output.force_constants is None
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.74555232
-    )
-    assert responses[job.jobs[-1].uuid][1].output.born is None
-    assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.supercell_matrix,
+        ph_doc.supercell_matrix,
         np.eye(3),
     )
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.primitive_matrix,
+        ph_doc.primitive_matrix,
         (np.ones((3, 3)) - np.eye(3)) / 2,
         atol=1e-8,
     )
-    assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
+    assert ph_doc.code == "vasp"
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings,
+        ph_doc.post_process_settings,
         PhononComputationalSettings,
     )
-    assert responses[job.jobs[-1].uuid][1].output.phonopy_settings.npoints_band == 101
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
-        == "seekpath"
+    assert ph_doc.post_process_settings.npoints_band == 101
+    assert ph_doc.post_process_settings.kpath_scheme == "seekpath"
+    assert ph_doc.post_process_settings.kpoint_density_dos == 7_000
+
+    ref_vals = {
+        "entropy": [0.0, 0.548554, 2.369651, 4.17177, 5.675544],
+        "heat_capacity": [0.0, 1.437528, 3.852217, 4.958031, 5.460526],
+        "internal_energy": [
+            1528.995013,
+            1569.79283,
+            1846.662406,
+            2294.839547,
+            2818.758881,
+        ],
+        "free_energy": [1528.995013, 1514.937439, 1372.73228, 1043.308596, 548.54114],
+    }
+    thermo_props = ph_doc.compute_thermo_quantities(
+        [0, 100, 200, 300, 400], normalization="atoms"
     )
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7_000
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.entropies,
-        [0.0, 2.194216, 9.478603, 16.687079, 22.702177],
-        atol=1e-6,
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [0.0, 5.750113, 15.408866, 19.832123, 21.842104],
-        atol=1e-6,
+    assert all(
+        thermo_props[k][i] == pytest.approx(val)
+        for k, vals in ref_vals.items()
+        for i, val in enumerate(vals)
     )
 
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [6115.980051, 6279.17132, 7386.649622, 9179.358187, 11275.035523],
-        atol=1e-6,
-    )
-    assert responses[job.jobs[-1].uuid][1].output.chemsys == "Si"
+    assert ph_doc.chemsys == "Si"
 
 
 # structure will be kept in the format that was transferred
@@ -151,64 +147,61 @@ def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate settings
-    assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
+    ph_doc = responses[job.jobs[-1].uuid][1].output
+    assert ph_doc.code == "vasp"
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings,
+        ph_doc.post_process_settings,
         PhononComputationalSettings,
     )
-    assert responses[job.jobs[-1].uuid][1].output.phonopy_settings.npoints_band == 101
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
-        == "seekpath"
-    )
-    phonopy_settings = responses[job.jobs[-1].uuid][1].output.phonopy_settings
-    assert phonopy_settings.kpoint_density_dos == 7_000
+    assert ph_doc.post_process_settings.npoints_band == 101
+    assert ph_doc.post_process_settings.kpath_scheme == "seekpath"
+    post_process_settings = ph_doc.post_process_settings
+    assert post_process_settings.kpoint_density_dos == 7_000
 
     # validate the outputs
-    assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
+    assert isinstance(ph_doc, PhononBSDOSDoc)
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonon_bandstructure,
-        PhononBandStructureSymmLine,
+        ph_doc.phonon_bandstructure,
+        PhononBS,
     )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.phonon_dos, PhononDos)
-    assert responses[job.jobs[-1].uuid][1].output.thermal_displacement_data is None
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.structure, Structure)
+    assert isinstance(ph_doc.phonon_dos, PhononDOS)
+    assert ph_doc.thermal_displacement_data is None
+    assert isinstance(ph_doc.structure, Structure)
+
+    assert ph_doc.has_imaginary_modes is False
+    assert ph_doc.force_constants is None
+    assert all(isinstance(cm, CalcMeta) for cm in ph_doc.calc_meta)
+    # assert_allclose(
+    #     ph_doc.total_dft_energy, -5.74555232
+    # )
+    assert ph_doc.born is None
+    assert ph_doc.epsilon_static is None
+    assert ph_doc.supercell_matrix == tuple(map(tuple, np.eye(3)))
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
-    )
-    assert responses[job.jobs[-1].uuid][1].output.has_imaginary_modes is False
-    assert responses[job.jobs[-1].uuid][1].output.force_constants is None
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.74555232
-    )
-    assert responses[job.jobs[-1].uuid][1].output.born is None
-    assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
-    assert responses[job.jobs[-1].uuid][1].output.supercell_matrix == tuple(
-        map(tuple, np.eye(3))
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.primitive_matrix,
+        ph_doc.primitive_matrix,
         ((0, 0.5, 0.5), (0.5, 0, 0.5), (0.5, 0.5, 0)),
         atol=1e-8,
     )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.free_energies,
-        [6115.980051, 6059.749756, 5490.929122, 4173.234384, 2194.164562],
+
+    ref_vals = {
+        "entropy": [0.0, 0.548554, 2.369651, 4.17177, 5.675544],
+        "heat_capacity": [0.0, 1.437528, 3.852217, 4.958031, 5.460526],
+        "internal_energy": [
+            1528.995013,
+            1569.79283,
+            1846.662406,
+            2294.839547,
+            2818.758881,
+        ],
+        "free_energy": [1528.995013, 1514.937439, 1372.73228, 1043.308596, 548.54114],
+    }
+    thermo_props = ph_doc.compute_thermo_quantities(
+        [0, 100, 200, 300, 400], normalization="atoms"
     )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.entropies,
-        [0.0, 2.194216, 9.478603, 16.687079, 22.702177],
-        atol=1e-6,
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [0.0, 5.750113, 15.408866, 19.832123, 21.842104],
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [6115.980051, 6279.17132, 7386.649622, 9179.358187, 11275.035523],
+    assert all(
+        thermo_props[k][i] == pytest.approx(val)
+        for k, vals in ref_vals.items()
+        for i, val in enumerate(vals)
     )
 
 
@@ -247,35 +240,46 @@ def test_phonon_wf_vasp_only_displacements_kpath(
     ph_doc = responses[job.jobs[-1].uuid][1].output
     assert isinstance(ph_doc, PhononBSDOSDoc)
 
-    assert_allclose(
-        ph_doc.free_energies,
-        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.49078355],
-        atol=1e-3,
+    ref_vals = {
+        "temperature": [0, 100, 200, 300, 400],
+        "free_energy": [
+            5776.14995034,
+            5617.74737777,
+            4725.50269363,
+            3043.81827626,
+            694.49078355,
+        ],
+    }
+    assert all(
+        ph_doc.free_energy(t) == pytest.approx(ref_vals["free_energy"][i])
+        for i, t in enumerate(ref_vals["temperature"])
     )
 
-    assert isinstance(ph_doc.phonon_bandstructure, PhononBandStructureSymmLine)
-    assert isinstance(ph_doc.phonon_dos, PhononDos)
+    assert isinstance(ph_doc.phonon_bandstructure, PhononBS)
+    assert isinstance(ph_doc.phonon_dos, PhononDOS)
     assert isinstance(ph_doc.thermal_displacement_data, ThermalDisplacementData)
     assert isinstance(ph_doc.structure, Structure)
-    assert_allclose(ph_doc.temperatures, [0, 100, 200, 300, 400])
     assert ph_doc.has_imaginary_modes is False
-    force_const = ph_doc.force_constants.force_constants[0][0][0][0]
+    force_const = ph_doc.force_constants[0][0][0][0]
     assert force_const == pytest.approx(13.032324)
-    assert isinstance(ph_doc.jobdirs, PhononJobDirs)
-    assert isinstance(ph_doc.uuids, PhononUUIDs)
+    assert all(isinstance(cm, CalcMeta) for cm in ph_doc.calc_meta)
     assert ph_doc.total_dft_energy is None
     assert ph_doc.born is None
     assert ph_doc.epsilon_static is None
-    assert ph_doc.supercell_matrix == ((-1, 1, 1), (1, -1, 1), (1, 1, -1))
-    assert ph_doc.primitive_matrix == ((1, 0, 0), (0, 1, 0), (0, 0, 1))
+    assert_allclose(
+        ph_doc.supercell_matrix, ((-1, 1, 1), (1, -1, 1), (1, 1, -1)), atol=1e-6
+    )
+    assert_allclose(
+        ph_doc.primitive_matrix, ((1, 0, 0), (0, 1, 0), (0, 0, 1)), atol=1e-6
+    )
     assert ph_doc.code == "vasp"
     assert isinstance(
-        ph_doc.phonopy_settings,
+        ph_doc.post_process_settings,
         PhononComputationalSettings,
     )
-    assert ph_doc.phonopy_settings.npoints_band == 101
-    assert ph_doc.phonopy_settings.kpath_scheme == kpath_scheme
-    assert ph_doc.phonopy_settings.kpoint_density_dos == 7_000
+    assert ph_doc.post_process_settings.npoints_band == 101
+    assert ph_doc.post_process_settings.kpath_scheme == kpath_scheme
+    assert ph_doc.post_process_settings.kpoint_density_dos == 7_000
 
 
 # test supply of Born charges, epsilon, DFT energy, supercell
@@ -358,68 +362,64 @@ def test_phonon_wf_vasp_only_displacements_add_inputs(
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate the outputs
-    # print(type(responses))
-    assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
+    ph_doc = responses[job.jobs[-1].uuid][1].output
+    assert isinstance(ph_doc, PhononBSDOSDoc)
 
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.free_energies,
-        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.49078355],
-        atol=1e-3,
+    ref_vals = {
+        "temperature": [0, 100, 200, 300, 400],
+        "free_energy": [
+            5776.14995034,
+            5617.74737777,
+            4725.50269363,
+            3043.81827626,
+            694.49078355,
+        ],
+    }
+    assert all(
+        ph_doc.free_energy(t) == pytest.approx(ref_vals["free_energy"][i])
+        for i, t in enumerate(ref_vals["temperature"])
     )
 
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonon_bandstructure,
-        PhononBandStructureSymmLine,
+        ph_doc.phonon_bandstructure,
+        PhononBS,
     )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.phonon_dos, PhononDos)
+    assert isinstance(ph_doc.phonon_dos, PhononDOS)
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.thermal_displacement_data,
+        ph_doc.thermal_displacement_data,
         ThermalDisplacementData,
     )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.structure, Structure)
+    assert isinstance(ph_doc.structure, Structure)
+    assert ph_doc.has_imaginary_modes is False
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
-    )
-    assert responses[job.jobs[-1].uuid][1].output.has_imaginary_modes is False
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.force_constants.force_constants[0][0][0][
-            0
-        ],
+        ph_doc.force_constants[0][0][0][0],
         13.032324,
     )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
-    assert_allclose(responses[job.jobs[-1].uuid][1].output.born, born)
+
+    assert all(isinstance(cm, CalcMeta) for cm in ph_doc.calc_meta)
+    assert_allclose(ph_doc.born, born)
+    # assert_allclose(
+    #     ph_doc.total_dft_energy,
+    #     total_dft_energy_per_formula_unit,
+    # )
+    assert_allclose(ph_doc.epsilon_static, epsilon_static, atol=1e-8)
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.total_dft_energy,
-        total_dft_energy_per_formula_unit,
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.epsilon_static, epsilon_static, atol=1e-8
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.supercell_matrix,
+        ph_doc.supercell_matrix,
         [[-1, 1, 1], [1, -1, 1], [1, 1, -1]],
     )
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.primitive_matrix,
+        ph_doc.primitive_matrix,
         [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
         atol=1e-8,
     )
-    assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
+    assert ph_doc.code == "vasp"
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings,
+        ph_doc.post_process_settings,
         PhononComputationalSettings,
     )
-    assert responses[job.jobs[-1].uuid][1].output.phonopy_settings.npoints_band == 101
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
-        == "seekpath"
-    )
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7_000
-    )
+    assert ph_doc.post_process_settings.npoints_band == 101
+    assert ph_doc.post_process_settings.kpath_scheme == "seekpath"
+    assert ph_doc.post_process_settings.kpoint_density_dos == 7_000
 
 
 # test optional parameters
@@ -451,70 +451,66 @@ def test_phonon_wf_vasp_only_displacements_optional_settings(
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate the outputs
-    assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
+    ph_doc = responses[job.jobs[-1].uuid][1].output
+    assert isinstance(ph_doc, PhononBSDOSDoc)
 
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.free_energies,
-        [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.49078355],
-        atol=1e-3,
+    ref_vals = {
+        "free_energy": [
+            5776.14995034,
+            5617.74737777,
+            4725.50269363,
+            3043.81827626,
+            694.49078355,
+        ],
+        "entropy": [0, 4.79066818, 13.03470621, 20.37400284, 26.41425489],
+        "heat_capacity": [0.0, 8.05373626, 15.98005669, 19.98031234, 21.88513476],
+        "internal_energy": [
+            5776.14995034,
+            6096.81419519,
+            7332.44393529,
+            9156.01912756,
+            11260.1927412,
+        ],
+    }
+    thermo_props = ph_doc.compute_thermo_quantities(
+        [0, 100, 200, 300, 400], normalization="atoms"
     )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.entropies,
-        [0, 4.79066818, 13.03470621, 20.37400284, 26.41425489],
-        atol=1e-8,
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [0.0, 8.05373626, 15.98005669, 19.98031234, 21.88513476],
-        atol=1e-8,
-    )
-
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [5776.14995034, 6096.81419519, 7332.44393529, 9156.01912756, 11260.1927412],
-        atol=1e-8,
+    assert all(
+        thermo_props[k][i] == pytest.approx(val)
+        for k, vals in ref_vals.items()
+        for i, val in enumerate(vals)
     )
 
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonon_bandstructure,
-        PhononBandStructureSymmLine,
+        ph_doc.phonon_bandstructure,
+        PhononBS,
     )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.phonon_dos, PhononDos)
-    assert responses[job.jobs[-1].uuid][1].output.thermal_displacement_data is None
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.structure, Structure)
+    assert isinstance(ph_doc.phonon_dos, PhononDOS)
+    assert ph_doc.thermal_displacement_data is None
+    assert isinstance(ph_doc.structure, Structure)
+    assert ph_doc.has_imaginary_modes is False
+    assert ph_doc.force_constants is None
+    assert all(isinstance(cm, CalcMeta) for cm in ph_doc.calc_meta)
+    assert ph_doc.total_dft_energy is None
+    assert ph_doc.born is None
+    assert ph_doc.epsilon_static is None
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
-    )
-    assert responses[job.jobs[-1].uuid][1].output.has_imaginary_modes is False
-    assert responses[job.jobs[-1].uuid][1].output.force_constants is None
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
-    assert responses[job.jobs[-1].uuid][1].output.total_dft_energy is None
-    assert responses[job.jobs[-1].uuid][1].output.born is None
-    assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.supercell_matrix,
+        ph_doc.supercell_matrix,
         [[-1.0, 1.0, 1.0], [1.0, -1.0, 1.0], [1.0, 1.0, -1.0]],
     )
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.primitive_matrix,
+        ph_doc.primitive_matrix,
         [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
         atol=1e-8,
     )
-    assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
+    assert ph_doc.code == "vasp"
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings,
+        ph_doc.post_process_settings,
         PhononComputationalSettings,
     )
-    assert responses[job.jobs[-1].uuid][1].output.phonopy_settings.npoints_band == 101
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
-        == "seekpath"
-    )
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7_000
-    )
+    assert ph_doc.post_process_settings.npoints_band == 101
+    assert ph_doc.post_process_settings.kpath_scheme == "seekpath"
+    assert ph_doc.post_process_settings.kpoint_density_dos == 7_000
 
 
 # test run including all steps of the computation for Si
@@ -552,66 +548,66 @@ def test_phonon_wf_vasp_all_steps(mock_vasp, clean_dir, si_structure: Structure)
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate the outputs
-    assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
+    ph_doc = responses[job.jobs[-1].uuid][1].output
+    assert isinstance(ph_doc, PhononBSDOSDoc)
 
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.free_energies,
-        [5853.74150399, 5692.29089555, 4798.67784919, 3122.48296003, 782.17345333],
+    ref_vals = {
+        "temperature": [0, 100, 200, 300, 400],
+        "free_energy": [
+            5853.74150399,
+            5692.29089555,
+            4798.67784919,
+            3122.48296003,
+            782.17345333,
+        ],
+    }
+    assert all(
+        ph_doc.free_energy(t) == pytest.approx(ref_vals["free_energy"][i])
+        for i, t in enumerate(ref_vals["temperature"])
     )
 
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonon_bandstructure,
-        PhononBandStructureSymmLine,
+        ph_doc.phonon_bandstructure,
+        PhononBS,
     )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.phonon_dos, PhononDos)
+    assert isinstance(ph_doc.phonon_dos, PhononDOS)
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.thermal_displacement_data,
+        ph_doc.thermal_displacement_data,
         ThermalDisplacementData,
     )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.structure, Structure)
+    assert isinstance(ph_doc.structure, Structure)
+    assert ph_doc.has_imaginary_modes is False
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
-    )
-    assert responses[job.jobs[-1].uuid][1].output.has_imaginary_modes is False
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.force_constants.force_constants[0][0][0][
-            0
-        ],
+        ph_doc.force_constants[0][0][0][0],
         13.41185599,
     )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
-    assert_allclose(responses[job.jobs[-1].uuid][1].output.born, np.zeros((2, 3, 3)))
+
+    assert all(isinstance(cm, CalcMeta) for cm in ph_doc.calc_meta)
+    assert_allclose(ph_doc.born, np.zeros((2, 3, 3)))
+    # assert_allclose(
+    #     ph_doc.total_dft_energy, -5.74629058
+    # )
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.74629058
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.epsilon_static,
+        ph_doc.epsilon_static,
         ((13.19242034, -0.0, 0.0), (-0.0, 13.19242034, 0.0), (0.0, 0.0, 13.19242034)),
         atol=1e-8,
     )
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.supercell_matrix,
+        ph_doc.supercell_matrix,
         [[-1.0, 1.0, 1.0], [1.0, -1.0, 1.0], [1.0, 1.0, -1.0]],
     )
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.primitive_matrix,
+        ph_doc.primitive_matrix,
         [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
     )
-    assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
+    assert ph_doc.code == "vasp"
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings,
+        ph_doc.post_process_settings,
         PhononComputationalSettings,
     )
-    assert responses[job.jobs[-1].uuid][1].output.phonopy_settings.npoints_band == 101
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
-        == "seekpath"
-    )
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7_000
-    )
+    assert ph_doc.post_process_settings.npoints_band == 101
+    assert ph_doc.post_process_settings.kpath_scheme == "seekpath"
+    assert ph_doc.post_process_settings.kpoint_density_dos == 7_000
 
 
 # use a structure where Born charges are actually useful for the computation and change
