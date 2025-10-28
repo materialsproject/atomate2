@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 import shlex
 import subprocess
 from pathlib import Path
@@ -540,6 +541,7 @@ def generate_frequencies_eigenvectors(
     # not able to find the FORCE_CONSTANTS file. This is because the file is
     # somehow getting generated in some temp directory. Can you fix the bug?
     fc_file = _DEFAULT_FILE_PATHS["force_constants"]
+    print("debug", Path.cwd(), os.listdir(Path.cwd()))  # noqa: T201
 
     if cal_anhar_fcs:
         np.save(
@@ -607,7 +609,7 @@ def generate_frequencies_eigenvectors(
     # for the further lattice thermal conductivity calculations
     if cal_ther_cond:
         # convert the 2ND order force constants to the phonopy format
-        fc_phonopy_text = parse_FORCE_CONSTANTS(filename="FORCE_CONSTANTS")
+        fc_phonopy_text = parse_FORCE_CONSTANTS(filename=fc_file)
         write_force_constants_to_hdf5(fc_phonopy_text, filename="fc2.hdf5")
 
         # convert the 3RD order force constants to the phonopy format

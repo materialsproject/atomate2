@@ -366,6 +366,7 @@ python setup.py build
 pip install -e .
 ```
 NB: MacOS users will need to ensure that `gcc` and `g++` are used rather than `clang` - both can be installed with `homebrew`.
+Note also that `boost` and `eigen` can be installed via `homebrew`.
 For example, using `gcc-15` from `homebrew`, one might set:
 ```
 export CC=gcc-15 ; CXX=g++-15 ; CXX_FLAGS=-DOPENMP
