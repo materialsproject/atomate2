@@ -21,23 +21,33 @@ if TYPE_CHECKING:
 
     from atomate2.abinit.jobs.base import BaseAbinitMaker
 
+__all__ = ["BandStructureMaker", "RelaxFlowMaker"]
+
 
 @dataclass
 class BandStructureMaker(Maker):
     """
-    Maker to generate abinit band structures.
+    Maker to generate abinit band structures and density of states.
 
-    This is a static calculation followed by two non-self-consistent field
-    calculations, one uniform and one line mode.
+    This flow consists of a static self-consistent calculation followed by
+    two non-self-consistent field calculations: one with a uniform k-point
+    mesh for density of states and one with a line-mode k-path for the
+    band structure.
 
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
-    scf_maker : .BaseAbinitMaker
-        The maker to use for the static calculation.
-    bs_maker : .BaseAbinitMaker
-        The maker to use for the non-self-consistent field calculations.
+    static_maker : .BaseAbinitMaker
+        The maker to use for the initial static self-consistent calculation.
+    bs_maker : .BaseAbinitMaker or None
+        The maker to use for the line-mode non-self-consistent field
+        calculation to generate the band structure. If None, the band
+        structure calculation will be skipped.
+    dos_maker : .BaseAbinitMaker or None
+        The maker to use for the uniform k-point non-self-consistent field
+        calculation to generate the density of states. If None, the DOS
+        calculation will be skipped.
     """
 
     name: str = "band structure - dos"
@@ -50,19 +60,27 @@ class BandStructureMaker(Maker):
         structure: Structure,
         restart_from: str | Path | None = None,
     ) -> Flow:
-        """Create a band structure flow.
+        """
+        Create a band structure and density of states flow.
+
+        This method creates a workflow consisting of:
+        1. A static self-consistent field calculation
+        2. A uniform k-point non-SCF calculation for DOS (if dos_maker is set)
+        3. A line-mode k-point non-SCF calculation for band structure
+           (if bs_maker is set)
 
         Parameters
         ----------
         structure : Structure
-            A pymatgen structure object.
+            A pymatgen Structure object defining the crystal structure.
         restart_from : str or Path or None
-            One previous directory to restart from.
+            Path to a previous calculation directory to restart from.
 
         Returns
         -------
         Flow
-            A band structure flow.
+            A jobflow Flow containing the static job and any requested
+            non-self-consistent field jobs for band structure and DOS.
         """
         static_job = self.static_maker.make(structure, restart_from=restart_from)
         jobs = [static_job]
@@ -85,14 +103,21 @@ class BandStructureMaker(Maker):
 @dataclass
 class RelaxFlowMaker(Maker):
     """
-    Maker to generate a relaxation flow with abinit.
+    Maker to generate a sequential relaxation flow.
+
+    This flow runs multiple relaxation calculations in sequence, where each
+    calculation uses the output structure from the previous one. By default,
+    it performs ionic relaxation followed by full relaxation (ions + cell).
 
     Parameters
     ----------
     name : str
         Name of the flows produced by this maker.
-    relaxation_makers : .BaseAbinitMaker
-        The maker or list of makers to use for the relaxation flow.
+    relaxation_makers : list[Maker]
+        A list of Maker objects to use for the sequential relaxation steps.
+        Each maker in the list will be run in order, with each subsequent
+        calculation using the relaxed structure from the previous step.
+        Defaults to [ionic_relaxation, full_relaxation].
     """
 
     name: str = "relaxation"
@@ -108,19 +133,27 @@ class RelaxFlowMaker(Maker):
         structure: Structure | None = None,
         restart_from: str | Path | None = None,
     ) -> Flow:
-        """Create a relaxation flow.
+        """
+        Create a sequential relaxation flow.
+
+        The first relaxation maker uses the provided structure and optional
+        restart directory. Each subsequent relaxation uses the relaxed
+        structure from the previous calculation, allowing for progressive
+        relaxation (e.g., ions first, then ions + cell).
 
         Parameters
         ----------
-        structure : Structure
-            A pymatgen structure object.
+        structure : Structure or None
+            A pymatgen Structure object. If None, must provide restart_from.
         restart_from : str or Path or None
-            One previous directory to restart from.
+            Path to a previous calculation directory to restart the first
+            relaxation from. Allows reusing wavefunctions and density.
 
         Returns
         -------
         Flow
-            A relaxation flow.
+            A jobflow Flow containing all sequential relaxation jobs.
+            The Flow output is set to the output of the final relaxation.
         """
         relax_job1 = self.relaxation_makers[0].make(
             structure=structure, restart_from=restart_from
@@ -132,8 +165,29 @@ class RelaxFlowMaker(Maker):
         return Flow(jobs, output=jobs[-1].output, name=self.name)
 
     @classmethod
-    def ion_ioncell_relaxation(cls, *args, **kwargs) -> Flow:
-        """Create a double relaxation (ionic relaxation + full relaxation)."""
+    def ion_ioncell_relaxation(cls, *args, **kwargs) -> RelaxFlowMaker:
+        """
+        Create a RelaxFlowMaker with ionic then full relaxation.
+
+        This convenience classmethod creates a two-step relaxation workflow:
+        first relaxing only ionic positions, then performing a full relaxation
+        of both ions and cell parameters.
+
+        Parameters
+        ----------
+        *args
+            Positional arguments passed to both RelaxMaker.ionic_relaxation()
+            and RelaxMaker.full_relaxation().
+        **kwargs
+            Keyword arguments passed to both RelaxMaker.ionic_relaxation()
+            and RelaxMaker.full_relaxation().
+
+        Returns
+        -------
+        RelaxFlowMaker
+            A RelaxFlowMaker instance configured with two sequential makers:
+            ionic relaxation followed by full relaxation.
+        """
         ion_rlx_maker = RelaxMaker.ionic_relaxation(*args, **kwargs)
         ioncell_rlx_maker = RelaxMaker.full_relaxation(*args, **kwargs)
         return cls(relaxation_makers=[ion_rlx_maker, ioncell_rlx_maker])

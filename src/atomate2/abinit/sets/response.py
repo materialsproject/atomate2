@@ -1,4 +1,4 @@
-"""Module defining response function Abinit input set generators."""
+"""Module defining response function ABINIT input set generators."""
 
 from __future__ import annotations
 
@@ -10,7 +10,6 @@ from abipy.abio.factories import (
     ddkpert_from_gsinput,
     dtepert_from_gsinput,
     phononpert_from_gsinput,
-    wfq_nscf_from_gsinput,
 )
 from abipy.abio.input_tags import DDE, DDK, DTE, NSCF, PH_Q_PERT, SCF
 
@@ -31,7 +30,26 @@ __all__ = [
 
 @dataclass
 class DdkSetGenerator(NonSCFSetGenerator):
-    """Class to generate Abinit DDK input sets."""
+    """
+    Generator for ABINIT DDK (derivative of wavefunctions with respect to k) input sets.
+
+    This class generates input sets for calculating the derivative of wavefunctions
+    with respect to wavevector k, which is needed for electric field perturbations
+    in DFPT calculations.
+
+    Attributes
+    ----------
+    calc_type : str
+        Type of calculation. Default is "DDK".
+    factory : Callable
+        Factory function for generating the input. Default is ddkpert_from_gsinput.
+    restart_from_deps : tuple
+        Dependencies for restarting calculations. Default is (f"{DDK}:1WF",).
+    prev_outputs_deps : tuple
+        Dependencies from previous calculations. Default is (f"{SCF}:WFK",).
+    nbands_factor : float
+        Factor to multiply the number of bands. Default is 1.0.
+    """
 
     calc_type: str = "DDK"
     factory: Callable = ddkpert_from_gsinput
@@ -42,17 +60,41 @@ class DdkSetGenerator(NonSCFSetGenerator):
 
 @dataclass
 class DdeSetGenerator(StaticSetGenerator):
-    """Class to generate Abinit DDE input sets."""
+    """
+    Generator for ABINIT DDE (electric field perturbation) input sets.
+
+    This class generates input sets for calculating the electronic dielectric
+    tensor and Born effective charges using density functional perturbation
+    theory (DFPT) with electric field perturbations.
+
+    Attributes
+    ----------
+    calc_type : str
+        Type of calculation. Default is "DDE".
+    factory : Callable
+        Factory function for generating the input. Default is ddepert_from_gsinput.
+    pseudos : str or list[str] or PseudoTable or None
+        Pseudopotentials specification. Default is None.
+    restart_from_deps : tuple
+        Dependencies for restarting calculations. Default is (f"{DDE}:1WF|1DEN",).
+    prev_outputs_deps : tuple
+        Dependencies from previous calculations (SCF and DDK).
+        Default is (f"{SCF}:WFK", f"{DDK}:DDK").
+    factory_prev_inputs_kwargs : dict or None
+        Mapping of factory arguments to previous calculation types.
+        Default is {"gs_input": (SCF,)}.
+    """
 
     calc_type: str = "DDE"
     factory: Callable = ddepert_from_gsinput
-    # Set pseudos to None to recover them from previous jobs
+    # Pseudos set to None to automatically recover them from the previous
+    # SCF calculation
     pseudos: str | list[str] | PseudoTable | None = None
     restart_from_deps: tuple = (f"{DDE}:1WF|1DEN",)
     prev_outputs_deps: tuple = (
         f"{SCF}:WFK",
         f"{DDK}:DDK",
-    )  # put DDK instead of 1WF should solve Guido's comment no?
+    )
     factory_prev_inputs_kwargs: dict | None = field(
         default_factory=lambda: {"gs_input": (SCF,)}
     )
@@ -60,10 +102,35 @@ class DdeSetGenerator(StaticSetGenerator):
 
 @dataclass
 class DteSetGenerator(StaticSetGenerator):
-    """Class to generate Abinit DTE input sets."""
+    """
+    Generator for ABINIT DTE (mixed electric field-atomic displacement) input sets.
+
+    This class generates input sets for calculating second-order derivatives
+    with respect to both electric field and atomic displacements using DFPT.
+
+    Attributes
+    ----------
+    calc_type : str
+        Type of calculation. Default is "DTE".
+    factory : Callable
+        Factory function for generating the input. Default is dtepert_from_gsinput.
+    pseudos : str or list[str] or PseudoTable or None
+        Pseudopotentials specification. Default is None.
+    restart_from_deps : tuple
+        Dependencies for restarting calculations. Default is (f"{DTE}:1WF|1DEN",).
+    prev_outputs_deps : tuple
+        Dependencies from previous calculations (SCF, DDE, and phonon perturbations).
+        Default is (f"{SCF}:WFK", f"{DDE}:1WF", f"{DDE}:1DEN",
+        f"{PH_Q_PERT}:1WF", f"{PH_Q_PERT}:1DEN").
+    factory_prev_inputs_kwargs : dict or None
+        Mapping of factory arguments to previous calculation types.
+        Default is {"gs_input": (SCF,)}.
+    """
 
     calc_type: str = "DTE"
     factory: Callable = dtepert_from_gsinput
+    # Pseudos set to None to automatically recover them from the previous
+    # SCF calculation
     pseudos: str | list[str] | PseudoTable | None = None
     restart_from_deps: tuple = (f"{DTE}:1WF|1DEN",)
     prev_outputs_deps: tuple = (
@@ -80,23 +147,38 @@ class DteSetGenerator(StaticSetGenerator):
 
 @dataclass
 class PhononSetGenerator(StaticSetGenerator):
-    """Class to generate Abinit Phonon input sets."""
+    """
+    Generator for ABINIT phonon perturbation input sets.
+
+    This class generates input sets for calculating phonon properties using
+    density functional perturbation theory (DFPT) with atomic displacement
+    perturbations.
+
+    Attributes
+    ----------
+    calc_type : str
+        Type of calculation. Default is "Phonon".
+    factory : Callable
+        Factory function for generating the input. Default is phononpert_from_gsinput.
+    pseudos : str or list[str] or PseudoTable or None
+        Pseudopotentials specification. Default is None.
+    restart_from_deps : tuple
+        Dependencies for restarting calculations. Default is (f"{SCF}:WFK",).
+    prev_outputs_deps : tuple
+        Dependencies from previous calculations (SCF and NSCF with q-shifted grid).
+        Default is (f"{SCF}:WFK", f"{NSCF}:WFQ").
+    factory_prev_inputs_kwargs : dict or None
+        Mapping of factory arguments to previous calculation types.
+        Default is {"gs_input": (SCF,)}.
+    """
 
     calc_type: str = "Phonon"
     factory: Callable = phononpert_from_gsinput
+    # Pseudos set to None to automatically recover them from the previous
+    # SCF calculation
     pseudos: str | list[str] | PseudoTable | None = None
     restart_from_deps: tuple = (f"{SCF}:WFK",)
     prev_outputs_deps: tuple = (f"{SCF}:WFK", f"{NSCF}:WFQ")
     factory_prev_inputs_kwargs: dict | None = field(
         default_factory=lambda: {"gs_input": (SCF,)}
     )
-
-
-@dataclass
-class NscfWfqSetGenerator(NonSCFSetGenerator):
-    """Class to generate a Non-SCF input set with a k point grid shifted by q."""
-
-    calc_type: str = "wfq"
-    factory: Callable = wfq_nscf_from_gsinput
-    prev_outputs_deps: tuple = (f"{SCF}:DEN", f"{SCF}:WFK")
-    nbands_factor: float = 1.0

@@ -1,4 +1,4 @@
-"""Merge DDB jobs for merging DDB files from ABINIT calculations."""
+"""ANADDB jobs for analyzing DDB files from ABINIT DFPT calculations."""
 
 from __future__ import annotations
 
@@ -78,19 +78,30 @@ def anaddb_job(method: Callable) -> job:
 
 @dataclass
 class AnaddbMaker(Maker):
-    """Maker to create a job to analyze a DDB file with the utility anaddb.
+    """
+    Maker to create a job to analyze DDB files using ANADDB.
+
+    ANADDB (ANAlysis of Derivative DataBase) is an ABINIT utility that
+    post-processes derivative database (DDB) files from DFPT calculations
+    to extract physical properties.
 
     Parameters
     ----------
     name : str
         The job name.
+    input_set_generator : AnaddbInputGenerator
+        Generator for ANADDB input files. Defaults to AnaddbInputGenerator.
+    factory_kwargs : dict
+        Additional keyword arguments passed to the input set generator
+        factory methods.
+    task_document_kwargs : dict
+        Additional keyword arguments passed to AnaddbTaskDoc.from_directory().
     """
 
     name: str = "Anaddb"
     input_set_generator: AnaddbInputGenerator = field(
         default_factory=AnaddbInputGenerator
     )
-    wall_time: int | None = None
     factory_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
@@ -107,13 +118,25 @@ class AnaddbMaker(Maker):
         history: JobHistory | None = None,
     ) -> jobflow.Response:
         """
-        Return an AnaDDB jobflow.Job.
+        Create an ANADDB job to analyze a DDB file.
 
         Parameters
         ----------
-        prev_outputs : TODO: add description from sets.base
-        history : JobHistory
-            A JobHistory object containing the history of this job.
+        structure : Structure
+            A pymatgen Structure object. Required for ANADDB analysis to
+            interpret the DDB file and generate outputs like phonon bands.
+        prev_outputs : str or list[str] or None
+            Path(s) to previous calculation directories containing DDB files
+            to analyze. Can be a single path or a list of paths.
+        history : JobHistory or None
+            A JobHistory object containing the history of previous jobs in
+            the workflow.
+
+        Returns
+        -------
+        Response
+            A jobflow Response containing an AnaddbTaskDoc with the analysis
+            results.
         """
         # Setup job and get general job configuration
         config = setup_job(
@@ -134,11 +157,10 @@ class AnaddbMaker(Maker):
 
         # Run anaddb
         run_anaddb(
-            wall_time=config.wall_time,
             start_time=config.start_time,
         )
 
-        # parse Anaddb DDB output
+        # Parse ANADDB output
         task_doc = AnaddbTaskDoc.from_directory(
             Path.cwd(),
             **self.task_document_kwargs,
@@ -150,12 +172,25 @@ class AnaddbMaker(Maker):
 
 @dataclass
 class AnaddbDfptDteMaker(AnaddbMaker):
-    """Maker to get info from DFPT calculations (with DTE) from a merged DDB file.
+    """
+    Maker to extract DFPT properties including DTE tensors from a merged DDB.
+
+    This maker uses ANADDB to analyze merged DDB files from DFPT calculations
+    that include derivative with respect to electric field (DTE).
+    It extracts the static SHG and dielectric tensors.
 
     Parameters
     ----------
     name : str
         The job name.
+    input_set_generator : AnaddbInputGenerator
+        Generator for ANADDB input files. Defaults to
+        AnaddbDfptDteInputGenerator, which is configured for DTE analysis.
+    factory_kwargs : dict
+        Additional keyword arguments passed to the input set generator
+        factory methods.
+    task_document_kwargs : dict
+        Additional keyword arguments passed to AnaddbTaskDoc.from_directory().
     """
 
     name: str = "Anaddb"
@@ -166,12 +201,27 @@ class AnaddbDfptDteMaker(AnaddbMaker):
 
 @dataclass
 class AnaddbPhBandsDOSMaker(AnaddbMaker):
-    """Maker to compute phonon bands and DOS from a merged DDB file.
+    """
+    Maker to compute phonon band structure and density of states from a DDB.
+
+    This maker uses ANADDB to interpolate phonon frequencies from a merged
+    DDB file, generating phonon band structures along high-symmetry paths
+    and phonon density of states. It can also compute thermodynamic
+    properties such as heat capacity, entropy, and free energy.
 
     Parameters
     ----------
     name : str
         The job name.
+    input_set_generator : AnaddbInputGenerator
+        Generator for ANADDB input files. Defaults to
+        AnaddbPhbandsDOSInputGenerator, which is configured for phonon
+        band structure and DOS analysis.
+    factory_kwargs : dict
+        Additional keyword arguments passed to the input set generator
+        factory methods.
+    task_document_kwargs : dict
+        Additional keyword arguments passed to AnaddbTaskDoc.from_directory().
     """
 
     name: str = "Anaddb PhbandsDOS"

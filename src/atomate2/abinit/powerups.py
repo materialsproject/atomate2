@@ -1,4 +1,10 @@
-"""Powerups for performing common modifications on ABINIT jobs and flows."""
+"""Powerups for performing common modifications on ABINIT jobs and flows.
+
+Powerups are utility functions that modify Job, Flow, or Maker objects to
+update their configuration, such as ABINIT settings, k-points, or factory
+parameters. All powerup functions return modified copies without altering
+the original objects.
+"""
 
 from __future__ import annotations
 
@@ -14,6 +20,15 @@ from atomate2.abinit.jobs.base import BaseAbinitMaker
 if TYPE_CHECKING:
     from pathlib import Path
 
+__all__ = [
+    "append_clean_flow",
+    "update_factory_kwargs",
+    "update_generator_attributes",
+    "update_taskdoc_kwargs",
+    "update_user_abinit_settings",
+    "update_user_kpoints_settings",
+]
+
 
 def update_maker_kwargs(
     class_filter: Maker | None,
@@ -22,27 +37,28 @@ def update_maker_kwargs(
     name_filter: str | None,
 ) -> Job | Flow | Maker:
     """
-    Update an object inside a Job, a Flow or a Maker.
+    Update an object inside a Job, Flow, or Maker.
 
-    A generic method to be shared for more specific updates that will
-    build the dict_mod_updates.
+    A generic method to be shared for more specific update functions that
+    will build the dict_mod_updates. Returns a copy of the original
+    Job/Flow/Maker without modifying the input in place.
 
     Parameters
     ----------
-    flow : .Job or .Flow or .Maker
-        A job, flow or Maker.
+    class_filter : Maker or None
+        A filter for the class used to generate the flows. The class filter
+        will match any subclasses. Default is None.
     dict_mod_updates : dict
         The updates to apply.
+    flow : Job or Flow or Maker
+        A job, flow, or Maker to update.
     name_filter : str or None
-        A filter for the name of the jobs.
-    class_filter : Maker or None
-        A filter for the class used to generate the flows. Note the class
-        filter will match any subclasses.
+        A filter for the name of the jobs. Default is None.
 
     Returns
     -------
     Job or Flow or Maker
-        A copy of the input modified flow/job/maker.
+        A copy of the input flow/job/maker with the applied updates.
     """
     updated_flow = deepcopy(flow)
     if isinstance(updated_flow, Maker):
@@ -71,29 +87,28 @@ def update_user_abinit_settings(
     """
     Update the user_abinit_settings of any AbinitInputGenerator in the flow.
 
-    Alternatively, if a Maker is supplied, the user_abinit_settings of the maker will
-    be updated.
-
-    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
-    happen in place.
+    Alternatively, if a Maker is supplied, the user_abinit_settings of the maker
+    will be updated. Returns a copy of the original Job/Flow/Maker without
+    modifying the input in place.
 
     Parameters
     ----------
-    flow : .Job or .Flow or .Maker
-        A job, flow or Maker.
-    abinit_updates : dict
-        The updates to apply. Existing keys in user_abinit_settings will not be modified
-        unless explicitly specified in ``abinit_updates``.
+    flow : Job or Flow or Maker
+        A job, flow, or Maker to update.
+    abinit_updates : dict[str, Any]
+        The updates to apply. Existing keys in user_abinit_settings will not
+        be modified unless explicitly specified in ``abinit_updates``.
     name_filter : str or None
-        A filter for the name of the jobs.
-    class_filter : Maker or None
-        A filter for the BaseAbinitMaker class used to generate the flows. Note the
-        class filter will match any subclasses.
+        A filter for the name of the jobs. Default is None.
+    class_filter : type[Maker] or None
+        A filter for the BaseAbinitMaker class used to generate the flows.
+        The class filter will match any subclasses. Default is BaseAbinitMaker.
 
     Returns
     -------
     Job or Flow or Maker
-        A copy of the input flow/job/maker modified to use the updated abinit settings.
+        A copy of the input flow/job/maker modified to use the updated
+        ABINIT settings.
     """
     dict_mod_updates = {
         f"input_set_generator->user_abinit_settings->{k}": v
@@ -112,29 +127,28 @@ def update_factory_kwargs(
     """
     Update the factory_kwargs of any AbinitInputGenerator in the flow.
 
-    Alternatively, if a Maker is supplied, the factory_kwargs of the maker will
-    be updated.
-
-    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
-    happen in place.
+    Alternatively, if a Maker is supplied, the factory_kwargs of the maker
+    will be updated. Returns a copy of the original Job/Flow/Maker without
+    modifying the input in place.
 
     Parameters
     ----------
-    flow : .Job or .Flow or .Maker
-        A job, flow or Maker.
-    factory_updates : dict
-        The updates to apply. Existing keys in factory_kwargs will not be modified
-        unless explicitly specified in ``factory_updates``.
+    flow : Job or Flow or Maker
+        A job, flow, or Maker to update.
+    factory_updates : dict[str, Any]
+        The updates to apply. Existing keys in factory_kwargs will not be
+        modified unless explicitly specified in ``factory_updates``.
     name_filter : str or None
-        A filter for the name of the jobs.
-    class_filter : Maker or None
-        A filter for the BaseAbinitMaker class used to generate the flows. Note the
-        class filter will match any subclasses.
+        A filter for the name of the jobs. Default is None.
+    class_filter : type[Maker] or None
+        A filter for the BaseAbinitMaker class used to generate the flows.
+        The class filter will match any subclasses. Default is BaseAbinitMaker.
 
     Returns
     -------
     Job or Flow or Maker
-        A copy of the input flow/job/maker modified to use the updated factory settings.
+        A copy of the input flow/job/maker modified to use the updated
+        factory settings.
     """
     dict_mod_updates = {
         f"input_set_generator->factory_kwargs->{k}": v
@@ -153,30 +167,30 @@ def update_user_kpoints_settings(
     """
     Update the user_kpoints_settings of any AbinitInputGenerator in the flow.
 
-    Alternatively, if a Maker is supplied, the user_kpoints_settings of the maker will
-    be updated.
-
-    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
-    happen in place.
+    Alternatively, if a Maker is supplied, the user_kpoints_settings of the maker
+    will be updated. Returns a copy of the original Job/Flow/Maker without
+    modifying the input in place.
 
     Parameters
     ----------
-    flow : .Job or .Flow or .Maker
-        A job, flow or Maker.
-    kpoints_updates : dict
-        The updates to apply. Can be specified as a dictionary or as a KSampling object.
-        If a dictionary is supplied, existing keys in user_kpoints_settings will not be
-        modified unless explicitly specified in ``kpoints_updates``.
+    flow : Job or Flow or Maker
+        A job, flow, or Maker to update.
+    kpoints_updates : dict[str, Any] or KSampling
+        The updates to apply. Can be specified as a dictionary or as a
+        KSampling object. If a dictionary is supplied, existing keys in
+        user_kpoints_settings will not be modified unless explicitly
+        specified in ``kpoints_updates``.
     name_filter : str or None
-        A filter for the name of the jobs.
-    class_filter : Maker or None
-        A filter for the BaseAbinitMaker class used to generate the flows. Note the
-        class filter will match any subclasses.
+        A filter for the name of the jobs. Default is None.
+    class_filter : type[Maker] or None
+        A filter for the BaseAbinitMaker class used to generate the flows.
+        The class filter will match any subclasses. Default is BaseAbinitMaker.
 
     Returns
     -------
     Job or Flow or Maker
-        A copy of the input flow/job/maker modified to use the updated kpoints settings.
+        A copy of the input flow/job/maker modified to use the updated
+        k-points settings.
     """
     if isinstance(kpoints_updates, KSampling):
         dict_mod_updates = {
@@ -200,28 +214,27 @@ def update_generator_attributes(
     """
     Update any attribute of any AbinitInputGenerator in the flow.
 
-    Alternatively, if a Maker is supplied, the attributes of the maker will
-    be updated.
-
-    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
-    happen in place.
+    Alternatively, if a Maker is supplied, the attributes of the maker
+    will be updated. Returns a copy of the original Job/Flow/Maker without
+    modifying the input in place.
 
     Parameters
     ----------
-    flow : .Job or .Flow or .Maker
-        A job, flow or Maker.
-    generator_updates : dict
+    flow : Job or Flow or Maker
+        A job, flow, or Maker to update.
+    generator_updates : dict[str, Any]
         The updates to apply to the input generator.
     name_filter : str or None
-        A filter for the name of the jobs.
-    class_filter : Maker or None
-        A filter for the BaseAbinitMaker class used to generate the flows. Note the
-        class filter will match any subclasses.
+        A filter for the name of the jobs. Default is None.
+    class_filter : type[Maker] or None
+        A filter for the BaseAbinitMaker class used to generate the flows.
+        The class filter will match any subclasses. Default is BaseAbinitMaker.
 
     Returns
     -------
     Job or Flow or Maker
-        A copy of the input flow/job/maker modified to use the updated factory settings.
+        A copy of the input flow/job/maker modified to use the updated
+        generator attributes.
     """
     dict_mod_updates = {
         f"input_set_generator->{k}": v for k, v in generator_updates.items()
@@ -239,28 +252,27 @@ def update_taskdoc_kwargs(
     """
     Update any attribute of any AbinitTaskDoc in the flow.
 
-    Alternatively, if a Maker is supplied, the attributes of the maker will
-    be updated.
-
-    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
-    happen in place.
+    Alternatively, if a Maker is supplied, the attributes of the maker
+    will be updated. Returns a copy of the original Job/Flow/Maker without
+    modifying the input in place.
 
     Parameters
     ----------
-    flow : .Job or .Flow or .Maker
-        A job, flow or Maker.
-    taskdoc_updates : dict
-        The updates to apply to the input generator.
+    flow : Job or Flow or Maker
+        A job, flow, or Maker to update.
+    taskdoc_updates : dict[str, Any]
+        The updates to apply to the task document kwargs.
     name_filter : str or None
-        A filter for the name of the jobs.
-    class_filter : Maker or None
-        A filter for the BaseAbinitMaker class used to generate the flows. Note the
-        class filter will match any subclasses.
+        A filter for the name of the jobs. Default is None.
+    class_filter : type[Maker] or None
+        A filter for the BaseAbinitMaker class used to generate the flows.
+        The class filter will match any subclasses. Default is BaseAbinitMaker.
 
     Returns
     -------
     Job or Flow or Maker
-        A copy of the input flow/job/maker modified to use the updated factory settings.
+        A copy of the input flow/job/maker modified to use the updated
+        task document kwargs.
     """
     dict_mod_updates = {
         f"task_document_kwargs->{k}": v for k, v in taskdoc_updates.items()
@@ -275,34 +287,35 @@ def append_clean_flow(
     delete: bool = True,
     exclude_files_from_del: list[str | Path] | None = None,
     include_files_to_del: list[str | Path] | None = None,
-) -> Job | Flow | Maker:
+) -> Flow:
     r"""
     Append a job to delete and/or compress files of the flow.
 
-    Note, this returns a copy of the original Job/Flow/Maker. I.e., the update does not
-    happen in place.
+    Returns a copy of the original Job/Flow without modifying the input
+    in place.
 
     Parameters
     ----------
-    flow : .Job or .Flow
-        A job, or flow.
-    exclude_files_from_zip
-        Filenames to exclude from the compression.
-        Supports glob file matching, e.g., "\*.dat".
-    delete: bool = True,
-        Activates the deletion of the files or not.
-    exclude_files_from_del
-        Filenames to exclude from the compression.
-        Supports glob file matching, e.g., "\*.dat".
-    include_files_to_del
-        Filenames to include as a list of str or Path objects given relative to
-        directory. Glob file paths are supported, e.g. "\*.dat". If ``None``, all files
-        in the directory will be deleted.
+    flow : Job or Flow
+        A job or flow to append cleanup to.
+    exclude_files_from_zip : list[str or Path] or None
+        Filenames to exclude from compression. Supports glob file matching,
+        e.g., "\*.dat". Default is None.
+    delete : bool
+        Whether to activate deletion of files. Default is True.
+    exclude_files_from_del : list[str or Path] or None
+        Filenames to exclude from deletion. Supports glob file matching,
+        e.g., "\*.dat". Default is None.
+    include_files_to_del : list[str or Path] or None
+        Filenames to include for deletion as a list of str or Path objects
+        given relative to directory. Glob file paths are supported,
+        e.g., "\*.dat". If None, all files in the directory will be deleted.
+        Default is None.
 
     Returns
     -------
-    Job or Flow
-        A copy of the input flow/job/maker modified to delete/compress files
+    Flow
+        A copy of the input flow/job modified to delete/compress files
         once completed.
     """
     copied_flow = deepcopy(flow)
@@ -314,8 +327,8 @@ def append_clean_flow(
             outputs_to_clean.append(job.output)
     else:
         raise TypeError(
-            f"The function 'del_gzip_files' accepts Job or Flow \
-            as input, but {type(copied_flow)} was passed."
+            f"The function 'del_gzip_files' accepts Job or Flow as input, "
+            f"but {type(copied_flow)} was passed."
         )
 
     return Flow(

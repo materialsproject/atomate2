@@ -1,4 +1,4 @@
-"""Merge DDB jobs for merging DDB files from ABINIT calculations."""
+"""MRGDDB jobs for merging derivative database files from ABINIT DFPT calculations."""
 
 from __future__ import annotations
 
@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 __all__ = [
     "MrgddbMaker",
+    "mrgddb_job",
 ]
 
 _MRGDDB_DATA_OBJECTS = [
@@ -36,55 +37,60 @@ _MRGDDB_DATA_OBJECTS = [
 
 def mrgddb_job(method: Callable) -> job:
     """
-    Decorate the ``make`` method of mrgddb job makers.
+    Decorate the ``make`` method of MRGDDB job makers.
 
-    This is a thin wrapper around :obj:`~jobflow.core.job.job` that configures common
-    settings for all mrgddb jobs. For example, it ensures that large data objects
-    (band structures, density of states, Cubes, etc) are all stored in the
-    atomate2 data store. It also configures the output schema to be a mrgddb
-    :obj:`.TaskDocument`.
+    This is a thin wrapper around :obj:`~jobflow.core.job.job` that configures
+    common settings for all MRGDDB jobs. It ensures that large data objects
+    (merged DDB files) are stored in the atomate2 data store and configures
+    the output schema to be a :obj:`.MrgddbTaskDoc`.
 
-    Any makers that return mrgddb jobs (not flows) should decorate the ``make`` method
-    with @mrgddb_job. For example:
+    Any makers that return MRGDDB jobs (not flows) should decorate the ``make``
+    method with @mrgddb_job. For example:
 
     .. code-block:: python
 
         class MyMrgddbMaker(MrgddbMaker):
             @mrgddb_job
-            def make(structure):
+            def make(prev_outputs):
                 # code to run mrgddb job.
                 pass
 
     Parameters
     ----------
     method : callable
-        A BaseMrgddbMaker.make method. This should not be specified directly and is
-        implied by the decorator.
+        A MrgddbMaker.make method. This should not be specified directly and
+        is implied by the decorator.
 
     Returns
     -------
     callable
-        A decorated version of the make function that will generate mrgddb jobs.
+        A decorated version of the make function that will generate MRGDDB jobs.
     """
     return job(method, data=_MRGDDB_DATA_OBJECTS, output_schema=MrgddbTaskDoc)
 
 
 @dataclass
 class MrgddbMaker(Maker):
-    """Maker to create a job with a merge of DDB files from ABINIT.
+    """
+    Maker to create jobs for merging DDB files using MRGDDB.
+
+    MRGDDB (MeRGe Derivative DataBase) is an ABINIT utility that merges
+    multiple derivative database (DDB) files from different DFPT calculations
+    into a single DDB file. This is typically needed before running ANADDB
+    analysis.
 
     Parameters
     ----------
     name : str
-        The job name.
+        The job name. Default is "Merge DDB".
+    input_set_generator : MrgddbInputGenerator
+        Generator for MRGDDB input files. Defaults to MrgddbInputGenerator.
     """
 
     name: str = "Merge DDB"
     input_set_generator: MrgddbInputGenerator = field(
         default_factory=MrgddbInputGenerator
     )
-    # input_set_generator: MrgddbInputGenerator = MrgddbInputGenerator()
-    wall_time: int | None = None
 
     @property
     def calc_type(self) -> str:
@@ -98,16 +104,25 @@ class MrgddbMaker(Maker):
         history: JobHistory | None = None,
     ) -> jobflow.Response:
         """
-        Return a MRGDDB jobflow.Job.
+        Create a MRGDDB job to merge DDB files.
 
         Parameters
         ----------
-        prev_outputs : TODO: add description from sets.base
-        history : JobHistory
-            A JobHistory object containing the history of this job.
+        prev_outputs : list[str] or None
+            List of paths to previous calculation directories containing DDB
+            files to merge. Can be a nested list, which will be flattened.
+            Must be provided to merge DDB files.
+        history : JobHistory or None
+            A JobHistory object containing the history of previous jobs in
+            the workflow.
+
+        Returns
+        -------
+        Response
+            A jobflow Response containing a MrgddbTaskDoc with the merged
+            DDB file information.
         """
-        # Flatten the list of previous outputs dir
-        # prev_outputs = [item for sublist in prev_outputs for item in sublist]
+        # Flatten nested list of previous output directories
         prev_outputs = list(np.hstack(prev_outputs))
 
         # Setup job and get general job configuration
@@ -116,7 +131,7 @@ class MrgddbMaker(Maker):
             prev_outputs=prev_outputs,
             restart_from=None,
             history=history,
-            wall_time=self.wall_time,
+            wall_time=None,
         )
 
         # Write mrgddb input set
@@ -128,15 +143,11 @@ class MrgddbMaker(Maker):
 
         # Run mrgddb
         run_mrgddb(
-            wall_time=config.wall_time,
             start_time=config.start_time,
         )
 
-        # parse Mrgddb DDB output
-        task_doc = MrgddbTaskDoc.from_directory(
-            Path.cwd(),
-            # **self.task_document_kwargs,
-        )
+        # Parse MRGDDB output
+        task_doc = MrgddbTaskDoc.from_directory(Path.cwd())
         task_doc.task_label = self.name
 
         return Response(

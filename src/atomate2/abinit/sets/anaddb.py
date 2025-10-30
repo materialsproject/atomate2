@@ -1,4 +1,4 @@
-"""Module defining base anaddb input set and generator."""
+"""Module defining base ANADDB input set and generator."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import json
 import logging
 import os
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from abipy.abio.inputs import AnaddbInput
 from abipy.dfpt.ddb import DdbFile
@@ -27,17 +27,29 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+__all__ = [
+    "AnaddbDfptDteInputGenerator",
+    "AnaddbInputGenerator",
+    "AnaddbInputSet",
+    "AnaddbPhbandsDOSInputGenerator",
+    "anaddbinp_dfpt_dte",
+    "anaddbinp_phbands_dos",
+]
+
 
 class AnaddbInputSet(InputSet):
     """
-    A class to represent a set of Anaddb inputs.
+    A class to represent a set of ANADDB inputs.
 
     Parameters
     ----------
-    anaddb_input
+    anaddb_input : AnaddbInput
         An AnaddbInput object.
-    input_file
-        A list with one input file (out_DDB) needed for the calculation.
+    input_files : Iterable[tuple[str, str]] or None
+        A list of (source_path, dest_name) tuples for input files needed
+        for the calculation (e.g., out_DDB). Default is None.
+    link_files : bool
+        Whether to link files (True) or copy them (False). Default is True.
     """
 
     def __init__(
@@ -64,10 +76,22 @@ class AnaddbInputSet(InputSet):
         overwrite: bool = True,
         zip_inputs: bool = False,
     ) -> None:
-        """Write Anaddb input files to a directory."""
-        # TODO: do we allow zipping ? not sure if it really makes sense for abinit as
-        #  the abinit input set also sets up links to previous files, sets up the
-        #  indir, outdir and tmpdir, ...
+        """
+        Write ANADDB input files to a directory.
+
+        Parameters
+        ----------
+        directory : str or Path
+            Directory to write input files to.
+        make_dir : bool
+            Whether to create the directory if it does not exist. Default is True.
+        overwrite : bool
+            Whether to overwrite existing files. Default is True.
+        zip_inputs : bool
+            Whether to zip the input files. Default is False.
+        """
+        # Note: zipping may not be practical for ABINIT/ANADDB as the input set
+        # manages links to previous files and sets up indir, outdir, and tmpdir
         self.inputs["anaddb_input.json"] = json.dumps(
             jsanitize(self.anaddb_input.as_dict())
         )
@@ -88,9 +112,15 @@ class AnaddbInputSet(InputSet):
             )
 
     def validate(self) -> bool:
-        """Validate the input set.
+        """
+        Validate the input set.
 
-        Check that the input file exists and is a DDB file.
+        Checks that required input files exist and include a DDB file.
+
+        Returns
+        -------
+        bool
+            True if validation passes, False otherwise.
         """
         if not self.input_files:
             return False
@@ -101,85 +131,116 @@ class AnaddbInputSet(InputSet):
 
     @property
     def anaddb_input(self) -> AnaddbInput:
-        """Get the AnaddbInput object."""
+        """
+        Get the AnaddbInput object.
+
+        Returns
+        -------
+        AnaddbInput
+            The AnaddbInput object for this input set.
+        """
         return self[ANADDB_INPUT_FILE_NAME]
 
     def set_vars(self, *args, **kwargs) -> dict:
-        """Set the values of anaddb variables.
+        """
+        Set the values of ANADDB variables.
 
-        This sets the anaddb variables in the abipy AnaddbInput object.
+        Sets ANADDB variables in the abipy AnaddbInput object. Variables can be
+        passed as a dictionary or as keyword arguments, or a combination of both.
 
-        One can pass a dictionary mapping the anaddb variables to their values or
-        the anaddb variables as keyword arguments. A combination of the two
-        options is also allowed.
+        Parameters
+        ----------
+        *args
+            Positional arguments, typically a dictionary of variable names and values.
+        **kwargs
+            Keyword arguments where keys are variable names and values are the
+            corresponding values to set.
 
         Returns
         -------
         dict
-            dictionary with the variables that have been added.
+            Dictionary with the variables that have been added.
         """
         return self.anaddb_input.set_vars(*args, **kwargs)
 
     def remove_vars(self, keys: Iterable[str] | str, strict: bool = True) -> dict:
-        """Remove the anaddb variables listed in keys.
+        """
+        Remove ANADDB variables from the input.
 
-        This removes the anaddb variables from the abipy AnaddbInput object.
+        Removes the specified ANADDB variables from the abipy AnaddbInput object.
 
         Parameters
         ----------
-        keys
-            string or list of strings with the names of the anaddb variables
-            to be removed.
-        strict
-            whether to raise a KeyError if one of the anaddb variables to be
-            removed is not present.
+        keys : str or Iterable[str]
+            String or iterable of strings with the names of the ANADDB variables
+            to remove.
+        strict : bool
+            Whether to raise a KeyError if a variable to be removed is not present.
+            Default is True.
 
         Returns
         -------
         dict
-            dictionary with the variables that have been removed.
+            Dictionary with the variables that have been removed.
         """
         return self.anaddb_input.remove_vars(keys=keys, strict=strict)
 
-    def set_structure(self, structure: Any) -> Structure:
-        """Set the structure for this input set.
+    def set_structure(self, structure: Structure) -> Structure:
+        """
+        Set the structure for this input set.
 
-        This basically forwards the setting of the structure to the abipy
-        AnaddbInput object.
+        This forwards the structure setting to the abipy AnaddbInput object.
+
+        Parameters
+        ----------
+        structure : Structure
+            Pymatgen Structure object to set.
+
+        Returns
+        -------
+        Structure
+            The structure that was set.
         """
         return self.anaddb_input.set_structure(structure)
 
     def deepcopy(self) -> AnaddbInputSet:
-        """Deep copy of the input set."""
+        """
+        Create a deep copy of the input set.
+
+        Returns
+        -------
+        AnaddbInputSet
+            A deep copy of this input set.
+        """
         return copy.deepcopy(self)
 
 
 @dataclass
 class AnaddbInputGenerator(AbinitMixinInputGenerator):
     """
-    A class to generate Anaddb input sets.
+    Generator for ANADDB input sets.
+
+    This class generates ANADDB input sets using a factory function and handles
+    dependencies on previous calculations (typically DDB files from DFPT runs).
 
     Parameters
     ----------
-    calc_type
-        A short description of the calculation type
-    user_anaddb_settings
-        A dictionary that allows to set any Abinit variable in the AbinitInput
-        after it has been generated from the factory function. This will override
-        any value or default previously set. Set a value to None to remove it
-        from the input.
-    prev_outputs_deps
-        Defines the files that needs to be linked from previous calculations and
-        are required for the execution of the current calculation.
-        The format is a tuple where each element is a list of  "|" separated
-        run levels (as defined in the AbinitInput object) followed by a colon and
-        a list of "|" list of extensions of files that needs to be linked.
-        The runlevel defines the type of calculations from which the file can
-        be linked. An example is (f"{NSCF}:WFK",).
-    force_gamma
-        Force gamma centered kpoint generation.
-    symprec
-        Tolerance for symmetry finding, used for line mode band structure k-points.
+    factory : Callable or None
+        Factory function to generate the AnaddbInput. Default is None.
+    calc_type : str
+        Short description of the calculation type. Default is "anaddb".
+    factory_kwargs : dict
+        Dictionary of additional keyword arguments passed to the factory function.
+        Default is an empty dict.
+    user_abinit_settings : dict
+        Dictionary to override any ANADDB variable after generation from the
+        factory function. Set a value to None to remove it from the input.
+        Default is an empty dict.
+    prev_outputs_deps : tuple or None
+        Defines files that need to be linked from previous calculations.
+        Format is a tuple where each element is "|"-separated run levels
+        followed by a colon and "|"-separated file extensions.
+        Example: ("MRGDDB:DDB",). Default is ("MRGDDB:DDB",).
     """
 
     factory: Callable | None = None
@@ -193,20 +254,25 @@ class AnaddbInputGenerator(AbinitMixinInputGenerator):
         structure: Structure,
         prev_outputs: str | tuple | list | Path | None = None,
     ) -> AnaddbInputSet:
-        """Generate an AnaddbInputSet object.
+        """
+        Generate an AnaddbInputSet object.
 
-        Here we assume that and prev_outputs is
-        a list of directories. We also assume there is an abinit_input.json file
-        in each of these directories containing the AbinitInput object used to
-        execute abinit.
+        Assumes prev_outputs is a directory or list of directories. Each directory
+        should contain an abinit_input.json file with the AbinitInput object used
+        to execute ABINIT.
 
         Parameters
         ----------
         structure : Structure
             Pymatgen Structure object.
-        prev_outputs : str or Path or list or tuple
-            Directory (as a str or Path) or list/tuple of directories (as a str
-            or Path) needed as dependencies for the AbinitInputSet generated.
+        prev_outputs : str or Path or list or tuple or None
+            Directory or list/tuple of directories (as str or Path) needed as
+            dependencies for the AnaddbInputSet. Default is None.
+
+        Returns
+        -------
+        AnaddbInputSet
+            The generated AnaddbInputSet object.
         """
         prev_outputs = self.check_format_prev_dirs(prev_outputs)
 
@@ -215,7 +281,7 @@ class AnaddbInputGenerator(AbinitMixinInputGenerator):
             raise RuntimeError(
                 f"Previous outputs not allowed for {self.__class__.__name__}."
             )
-        irdvars, files = self.resolve_deps(
+        _irdvars, files = self.resolve_deps(
             prev_outputs, self.prev_outputs_deps, check_runlevel=False
         )
         input_files.extend(files)
@@ -225,9 +291,8 @@ class AnaddbInputGenerator(AbinitMixinInputGenerator):
             input_files=input_files,
         )
 
+        # Set the DDB file path for ANADDB to read
         anaddb_input.set_vars({"ddb_filepath": f'"{INDATA_PREFIX}_DDB"'})
-        # anaddb_input["ddb_filepath"] = (f'"{INDATA_PREFIX}_DDB"',)
-        # anaddb_input["outdata_prefix"] = (f'"{OUTDATA_PREFIX}"',)
 
         return AnaddbInputSet(
             anaddb_input=anaddb_input,
@@ -250,18 +315,21 @@ class AnaddbInputGenerator(AbinitMixinInputGenerator):
 
         Parameters
         ----------
-        structure
-            A structure.
-        prev_outputs
-            A list of previous output directories.
-        anaddb_settings
-            A dictionary with additional abinit keywords to set.
-        factory_kwargs
-            A dictionary with additional factory keywords to set.
+        structure : Structure or None
+            Pymatgen Structure object. Default is None.
+        prev_outputs : list[str] or None
+            List of previous output directories. Default is None.
+        abinit_settings : dict or None
+            Dictionary with additional ANADDB settings to set. Default is None.
+        factory_kwargs : dict or None
+            Dictionary with additional factory keywords to set. Default is None.
+        input_files : list or None
+            List of input files. Default is None.
 
         Returns
         -------
-            An AnaddbInput
+        AnaddbInput
+            The generated AnaddbInput object.
         """
         total_factory_kwargs = dict(self.factory_kwargs) if self.factory_kwargs else {}
 
@@ -285,22 +353,22 @@ class AnaddbInputGenerator(AbinitMixinInputGenerator):
 
 
 def anaddbinp_dfpt_dte(
-    structure: Structure, anaddb_kwargs: None | dict = None
+    structure: Structure, anaddb_kwargs: dict | None = None
 ) -> AnaddbInput:
     """
-    Generate the AnaddbInput to retrieve information from the DTE.
+    Generate ANADDB input to compute the static SHG tensor from DTE.
 
     Parameters
     ----------
-    structure
-        A structure.
-    anaddb_kwargs
-        A dictionary with additional anaddb keywords to set.
+    structure : Structure
+        Pymatgen Structure object.
+    anaddb_kwargs : dict or None
+        Dictionary with additional ANADDB keywords to set. Default is None.
 
     Returns
     -------
-        An AnaddbInput
-
+    AnaddbInput
+        The generated AnaddbInput object for DTE analysis.
     """
     return AnaddbInput.dfpt(structure=structure, dte=True, anaddb_kwargs=anaddb_kwargs)
 
@@ -308,22 +376,19 @@ def anaddbinp_dfpt_dte(
 @dataclass
 class AnaddbDfptDteInputGenerator(AnaddbInputGenerator):
     """
-    A class to generate the AnaddbInput to retrieve information from the DTE.
+    Generator for ANADDB inputs to compute the static SHG tensor.
+
+    This class generates ANADDB input files for post-processing DFPT calculations
+    to extract the static second harmonic generation (SHG) tensor from DTE data.
 
     Parameters
     ----------
-    factory
-        A callable to generate the AnaddbInput for DTE DFPT.
-
-    Returns
-    -------
-        An AnaddbInput
-
+    factory : Callable
+        Callable to generate the AnaddbInput for DTE DFPT. Default is
+        anaddbinp_dfpt_dte.
     """
 
     factory: Callable = anaddbinp_dfpt_dte
-    # partial does not a __name__ so cannot jsanitize...
-    # factory: Callable = partial(AnaddbInput.dfpt, dte=True)
 
 
 def anaddbinp_phbands_dos(
@@ -331,19 +396,19 @@ def anaddbinp_phbands_dos(
     **kwargs,
 ) -> AnaddbInput:
     """
-    Generate the AnaddbInput for phonon bands and DOS.
+    Generate ANADDB input for phonon band structure and DOS calculations.
 
     Parameters
     ----------
-    structure
-        A structure.
-    kwargs
-        A dictionary with anaddb keywords.
+    structure : Structure
+        Pymatgen Structure object.
+    **kwargs
+        Additional keyword arguments passed to AnaddbInput.phbands_and_dos.
 
     Returns
     -------
-        An AnaddbInput
-
+    AnaddbInput
+        The generated AnaddbInput object for phonon bands and DOS.
     """
     return AnaddbInput.phbands_and_dos(structure=structure, **kwargs)
 
@@ -351,19 +416,18 @@ def anaddbinp_phbands_dos(
 @dataclass
 class AnaddbPhbandsDOSInputGenerator(AnaddbInputGenerator):
     """
-    A class to generate the AnaddbInput for phonon bands and DOS.
+    Generator for ANADDB inputs for phonon band structure and DOS calculations.
+
+    This class generates ANADDB input files for computing phonon band structures
+    and density of states (DOS) from DFPT calculations.
 
     Parameters
     ----------
-    factory
-        A callable to generate the AnaddbInput for phonon bands and DOS.
-    factory_kwargs
-        A dictionary with factory keywords.
-
-    Returns
-    -------
-        An AnaddbInput
-
+    factory : Callable
+        Callable to generate the AnaddbInput for phonon bands and DOS. Default is
+        anaddbinp_phbands_dos.
+    factory_kwargs : dict
+        Dictionary with factory keywords. Default includes {"nqsmall": 15}.
     """
 
     factory: Callable = anaddbinp_phbands_dos
@@ -377,12 +441,33 @@ class AnaddbPhbandsDOSInputGenerator(AnaddbInputGenerator):
         factory_kwargs: dict | None = None,
         input_files: list | None = None,
     ) -> AnaddbInput:
-        """Determine ngqpt used in DFPT calculation to be used in anaddb."""
+        """
+        Generate AnaddbInput, determining ngqpt from the DFPT DDB file.
+
+        Parameters
+        ----------
+        structure : Structure or None
+            Pymatgen Structure object. Default is None.
+        prev_outputs : list[str] or None
+            List of previous output directories. Default is None.
+        abinit_settings : dict or None
+            Dictionary with additional ANADDB settings. Default is None.
+        factory_kwargs : dict or None
+            Dictionary with additional factory keywords. Default is None.
+        input_files : list or None
+            List of input files. Default is None.
+
+        Returns
+        -------
+        AnaddbInput
+            The generated AnaddbInput object with ngqpt automatically determined
+            from the DDB file if not explicitly provided.
+        """
         factory_kwargs = factory_kwargs or {}
 
         if "ngqpt" not in factory_kwargs and "ngqpt" not in self.factory_kwargs:
-            # required to resolve the deps here as well to get access to
-            irdvars, files = self.resolve_deps(
+            # Resolve dependencies to access the DDB file
+            _irdvars, _files = self.resolve_deps(
                 prev_outputs, self.prev_outputs_deps, check_runlevel=False
             )
             for infile in input_files:

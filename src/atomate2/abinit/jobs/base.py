@@ -31,26 +31,73 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["BaseAbinitMaker"]
+__all__ = ["BaseAbinitMaker", "JobSetupVars", "abinit_job", "setup_job"]
 
 
 class JobSetupVars(NamedTuple):
+    """
+    Configuration variables for setting up an ABINIT job.
+
+    Attributes
+    ----------
+    start_time : float
+        Unix timestamp when the job started.
+    history : JobHistory
+        Job history tracking restarts and previous runs.
+    workdir : str
+        Working directory path for the job.
+    abipy_manager : None
+        Manager for AbiPy operations. Currently disabled.
+    wall_time : int or None
+        Maximum wall time in seconds, or None if no limit.
+    """
+
     start_time: float
     history: JobHistory
     workdir: str
-    abipy_manager: None  # To change in the future
+    abipy_manager: None
     wall_time: int | None
 
 
 def setup_job(
-    structure: Structure,
+    structure: Structure | None,
     prev_outputs: str | Path | list[str] | None,
     restart_from: str | Path | list[str] | None,
-    history: JobHistory,
+    history: JobHistory | None,
     wall_time: int | None,
 ) -> JobSetupVars:
-    """Set up job."""
-    # Get the start time.
+    """
+    Set up an ABINIT job with configuration and logging.
+
+    This function initializes the job environment, including creating the
+    job history, setting up the working directory, and configuring logging.
+
+    Parameters
+    ----------
+    structure : Structure or None
+        A pymatgen Structure object. At least one of structure, prev_outputs,
+        or restart_from must be provided.
+    prev_outputs : str or Path or list[str] or None
+        Path(s) to previous calculation directories to use as inputs.
+    restart_from : str or Path or list[str] or None
+        Path(s) to previous calculation directories to restart from. If
+        provided and history is not None, a restart will be logged.
+    history : JobHistory or None
+        Job history object. If None, a new JobHistory is created.
+    wall_time : int or None
+        Maximum wall time in seconds for the job.
+
+    Returns
+    -------
+    JobSetupVars
+        Configuration variables for the job including start time, history,
+        working directory, and wall time.
+
+    Raises
+    ------
+    RuntimeError
+        If none of structure, prev_outputs, or restart_from are provided.
+    """
     start_time = time.time()
 
     if structure is None and prev_outputs is None and restart_from is None:
@@ -59,37 +106,26 @@ def setup_job(
         )
 
     if history is None:
-        # Supposedly the first time the job is created
+        # First time the job is created
         history = JobHistory()
     elif restart_from is not None:
-        # We want to log the restart only if the restart_from is due to
-        # an automatic restart, not a restart from e.g. another scf or relax
-        # with different parameters.
+        # Log restart only for automatic restarts (unconverged jobs),
+        # not for manual restarts with different parameters
         history.log_restart()
 
-    # Set up working directory
     workdir = os.getcwd()
-
-    # Log information about the start of the job
     history.log_start(workdir=workdir, start_time=start_time)
 
-    # Set up logging
+    # Configure logging to atomate2_abinit.log for all ABINIT-related loggers
     log_handler = logging.FileHandler("atomate2_abinit.log")
     log_handler.setFormatter(logging.Formatter(logging.BASIC_FORMAT))
     logging.getLogger("pymatgen.io.abinit").addHandler(log_handler)
     logging.getLogger("abipy").addHandler(log_handler)
     logging.getLogger("atomate2").addHandler(log_handler)
 
-    # Load the atomate settings for abinit to get configuration parameters
-    # TODO: how to allow for tuned parameters on a per-job basis ?
-    #  (similar to fw_spec-passed settings)
-    abipy_manager = None  # Currently disabled as it is needed for autoparal,
-    # which is not yet supported
-    # abipy_manager = get_abipy_manager(SETTINGS)
+    # AbiPy manager currently disabled (needed for autoparal, not yet supported)
+    abipy_manager = None
 
-    # set walltime, if possible
-    # TODO: see in set_walltime, where to put this walltime_command
-    # wall_time = wall_time
     return JobSetupVars(
         start_time=start_time,
         history=history,
@@ -144,20 +180,25 @@ class BaseAbinitMaker(Maker):
     """
     Base ABINIT job maker.
 
+    This is the base class for all ABINIT job makers. It provides common
+    functionality for running ABINIT calculations including input generation,
+    execution, output parsing, and automatic restart logic.
+
     Parameters
     ----------
     input_set_generator : AbinitInputGenerator
-        Input generator to be used.
+        Generator for creating ABINIT input files.
     name : str
-        The job name.
-    wall_time : int
-        The wall time for the job.
+        The job name. Default is "base abinit job".
+    wall_time : int or None
+        Maximum wall time in seconds for the job. If None, no limit is set.
     run_abinit_kwargs : dict
-        Keyword arguments that will get passed to :obj:`.run_abinit`.
+        Additional keyword arguments passed to :obj:`.run_abinit`.
     task_document_kwargs : dict[str, Any]
-        Keyword arguments that will get passed to :obj:`.TaskDoc.from_directory`.
+        Additional keyword arguments passed to :obj:`.TaskDoc.from_directory`.
     stop_jobflow_on_failure : bool
-        If True, stop all other jobs of the flow. False by default.
+        If True, stop the entire jobflow when this job fails after maximum
+        restarts. Default is False.
     """
 
     input_set_generator: AbinitInputGenerator
@@ -171,7 +212,12 @@ class BaseAbinitMaker(Maker):
     CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = ()
 
     def __post_init__(self) -> None:
-        """Process post-init configuration."""
+        """
+        Initialize critical events list from class variable.
+
+        This converts the class-level CRITICAL_EVENTS tuple to an instance
+        list that can be modified per-instance if needed.
+        """
         self.critical_events = list(self.CRITICAL_EVENTS)
 
     @property
@@ -187,16 +233,30 @@ class BaseAbinitMaker(Maker):
         restart_from: str | Path | list[str] | None = None,
         history: JobHistory | None = None,
     ) -> jobflow.Job:
-        """Get an ABINIT jobflow.Job.
+        """
+        Create an ABINIT job.
 
         Parameters
         ----------
-        structure : Structure
-            A pymatgen structure object.
-        prev_outputs : TODO: add description from sets.base
-        restart_from : TODO: add description from sets.base
-        history : JobHistory
-            A JobHistory object containing the history of this job.
+        structure : Structure or None
+            A pymatgen Structure object. At least one of structure,
+            prev_outputs, or restart_from must be provided.
+        prev_outputs : str or Path or list[str] or None
+            Path(s) to previous calculation directories. Used to chain
+            calculations where outputs from previous jobs are needed as
+            inputs (e.g., using a previous DEN file).
+        restart_from : str or Path or list[str] or None
+            Path(s) to previous calculation directories to restart from.
+            Used when continuing an unconverged calculation with the same
+            parameters.
+        history : JobHistory or None
+            A JobHistory object tracking previous runs and restarts.
+
+        Returns
+        -------
+        Response
+            A jobflow Response containing an AbinitTaskDoc and potential
+            restart jobs if the calculation did not converge.
         """
         # Setup job and get general job configuration
         config = setup_job(
@@ -223,8 +283,7 @@ class BaseAbinitMaker(Maker):
             **self.run_abinit_kwargs,
         )
 
-        # parse Abinit outputs
-
+        # Parse ABINIT outputs
         task_doc = AbinitTaskDoc.from_directory(
             Path.cwd(),
             additional_fields={"history_dirs": config.history.prev_dirs},
@@ -235,7 +294,7 @@ class BaseAbinitMaker(Maker):
             task_doc = task_doc.model_copy(update={"state": TaskState.UNCONVERGED})
             task_doc.calcs_reversed[-1] = task_doc.calcs_reversed[-1].model_copy(
                 update={"has_abinit_completed": TaskState.UNCONVERGED}
-            )  # optional I think
+            )
 
         return self.get_response(
             task_document=task_doc,
@@ -251,15 +310,39 @@ class BaseAbinitMaker(Maker):
         max_restarts: int = 5,
         prev_outputs: str | tuple | list | Path | None = None,
     ) -> Response:
-        """Get new job to restart abinit calculation."""
+        """
+        Generate a response with restart logic for unconverged calculations.
+
+        This method examines the task document state and determines whether
+        to return the result as-is, create a restart job, or stop the workflow
+        if maximum restarts are exceeded.
+
+        Parameters
+        ----------
+        task_document : AbinitTaskDoc
+            The task document from the completed calculation.
+        history : JobHistory
+            Job history tracking previous runs and restarts.
+        max_restarts : int
+            Maximum number of restart attempts. Default is 5.
+        prev_outputs : str or tuple or list or Path or None
+            Path(s) to pass to restart jobs for chaining calculations.
+
+        Returns
+        -------
+        Response
+            A jobflow Response. Contains the task document and either:
+            - Nothing else if calculation succeeded
+            - A replacement job if restarting
+            - stop_children/stop_jobflow flags if max restarts exceeded
+        """
         if task_document.state == TaskState.SUCCESS:
             return Response(
                 output=task_document,
             )
 
         if history.run_number > max_restarts:
-            # TODO: check here if we should stop jobflow or children or
-            #  if we should throw an error.
+            # Max restarts exceeded - stop children and create error
             unconverged_error = UnconvergedError(
                 self,
                 msg=f"Unconverged after {history.run_number} runs.",

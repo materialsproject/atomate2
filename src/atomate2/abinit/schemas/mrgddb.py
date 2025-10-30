@@ -1,4 +1,4 @@
-"""Core definitions of Abinit calculations documents."""
+"""Schema definitions for MRGDDB task documents."""
 
 from __future__ import annotations
 
@@ -20,6 +20,8 @@ from atomate2.utils.path import get_uri
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["MrgddbObject", "MrgddbTaskDoc", "TaskState"]
+
 
 class TaskState(ValueEnum):
     """Mrgddb calculation state."""
@@ -36,24 +38,22 @@ class MrgddbObject(ValueEnum):
 
 
 class MrgddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
-    """Definition of task document about an Mrgddb Job.
+    """Task document for an MRGDDB job.
 
-    Parameters
+    Attributes
     ----------
-    dir_name: str
-        The directory for this Abinit task
-    completed_at: str
-        Timestamp for when this task was completed
-    structure: Structure
-        Final output structure from the task
-    state: .TaskState
-        State of this task
-    included_objects: List[.MrgddbObject]
-        List of Abinit objects included with this task document
-    abinit_objects: Dict[.MrgddbObject, Any]
-        Abinit objects associated with this task
-    tags: List[str]
-        Metadata tags for this task document
+    dir_name : str or None
+        The directory for this MRGDDB task.
+    completed_at : str or None
+        Timestamp for when this task was completed.
+    structure : Structure or None
+        Output structure from the merged DDB file.
+    included_objects : list[MrgddbObject] or None
+        List of MRGDDB objects included with this task document.
+    mrgddb_objects : dict[MrgddbObject, Any] or None
+        MRGDDB objects associated with this task.
+    tags : list[str] or None
+        Metadata tags for this task document.
     """
 
     dir_name: str | None = Field(None, description="The directory for this Abinit task")
@@ -79,19 +79,20 @@ class MrgddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         dir_name: Path | str,
         additional_fields: dict[str, Any] | None = None,
     ) -> MrgddbTaskDoc:
-        """Create a task document from a directory containing Abinit/Mrgddb files.
+        """Create a task document from a directory containing MRGDDB files.
 
         Parameters
         ----------
-        dir_name: Path or str
-            The path to the folder containing the calculation outputs.
-        additional_fields: Dict[str, Any]
-            Dictionary of additional fields to add to output document.
+        dir_name : Path or str
+            The path to the folder containing the MRGDDB calculation outputs.
+        additional_fields : dict[str, Any] or None
+            Dictionary of additional fields to add to the output document.
+            Default is None.
 
         Returns
         -------
-        .MrgddbTaskDoc
-            A task document for the calculation.
+        MrgddbTaskDoc
+            A task document for the MRGDDB calculation.
         """
         logger.info(f"Getting task doc in: {dir_name}")
 
@@ -159,7 +160,24 @@ class MrgddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
 def _find_abinit_files(
     path: Path | str,
 ) -> dict[str, Any]:
-    """Find Abinit files."""
+    """
+    Find MRGDDB output files in a directory.
+
+    This function searches for MRGDDB output files (out_DDB and run.log)
+    in the specified directory and its outdata subdirectory.
+
+    Parameters
+    ----------
+    path : Path or str
+        The directory to search for MRGDDB output files.
+
+    Returns
+    -------
+    dict[str, Any]
+        A dictionary with task files organized by calculation type.
+        Keys are task identifiers (e.g., "standard"), values are dicts
+        mapping file types to their relative paths.
+    """
     path = Path(path)
     task_files = {}
 

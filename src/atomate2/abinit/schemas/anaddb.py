@@ -1,4 +1,4 @@
-"""Core definitions of Abinit calculations documents."""
+"""Schema definitions for ANADDB output documents."""
 
 from __future__ import annotations
 
@@ -29,46 +29,47 @@ from atomate2.utils.path import get_uri
 
 logger = logging.getLogger(__name__)
 
+__all__ = ["AnaddbTaskDoc", "OutputDoc"]
+
 
 class OutputDoc(BaseModel):
-    """Summary of the outputs for a anaddb calculation.
+    """Summary of the outputs for an ANADDB calculation.
 
-    Parameters
+    Attributes
     ----------
-    structure: Structure
-        The final pymatgen Structure of the final system
-    dijk: list (3x3x3)
-        The conventional static SHG tensor in pm/V (Chi^(2)/2)
-    e_electronic: list (3x3)
-        The electronic contribution to the dielectric tensor
-    phonon_bandstructure: PhononBandStructureSymmLine
+    structure : Structure or None
+        The final pymatgen Structure of the system.
+    dijk : list or None
+        The conventional static SHG tensor in pm/V (Chi^(2)/2), shape (3, 3, 3).
+    e_electronic : list or None
+        The electronic contribution to the dielectric tensor, shape (3, 3).
+    phonon_bandstructure : PhononBandStructureSymmLine or None
         The phonon band structure object.
-    phonon_dos: PhononDos
+    phonon_dos : PhononDos or None
         The phonon density of states object.
-    free_energies: list
-        The vibrational part of the free energies in J/mol per
-        formula unit for temperatures in temperature_list
-    heat_capacities: list
-        The heat capacities in J/K/mol per
-        formula unit for temperatures in temperature_list
-    internal_energies: list
-        The internal energies in J/mol per
-        formula unit for temperatures in temperature_list
-    entropies: list
-        The entropies in J/(K*mol) per formula unit
-        for temperatures in temperature_list
-    temperatures: list
-        The temperatures at which the vibrational
-        part of the free energies and other properties have been computed
-    volume_per_formula_unit: float
-        The volume per formula unit in Angstrom**3
-    formula_units: int
-        The number of formula units per cell
-    has_imaginary_modes: bool
-        Whether the structure has imaginary modes
-    born: list
-        The Born charges as computed from phonopy. Only for symmetrically
-        different atoms
+    free_energies : list[float] or None
+        The vibrational part of the free energies in J/mol per formula unit
+        for temperatures in temperature_list.
+    heat_capacities : list[float] or None
+        The heat capacities in J/K/mol per formula unit for temperatures
+        in temperature_list.
+    internal_energies : list[float] or None
+        The internal energies in J/mol per formula unit for temperatures
+        in temperature_list.
+    entropies : list[float] or None
+        The entropies in J/(K*mol) per formula unit for temperatures
+        in temperature_list.
+    temperatures : list[int] or None
+        The temperatures at which the vibrational part of the free energies
+        and other properties have been computed.
+    volume_per_formula_unit : float or None
+        The volume per formula unit in Angstrom**3.
+    formula_units : int or None
+        The number of formula units per cell.
+    has_imaginary_modes : bool or None
+        Whether the structure has imaginary phonon modes.
+    born : list[Matrix3D] or None
+        The Born effective charges. Only for symmetrically distinct atoms.
     """
 
     structure: Structure | None = Field(
@@ -140,27 +141,29 @@ class OutputDoc(BaseModel):
         abinit_phdos_file: Path | str = "out_PHDOS.nc",
     ) -> OutputDoc:
         """
-        Create a anaddb calculation document from a directory and file paths.
+        Create an ANADDB calculation document from a directory and file paths.
 
         Parameters
         ----------
-        dir_name: Path or str
+        dir_name : Path or str
             The directory containing the calculation outputs.
-        abinit_anaddb_file: Path or str
-            Path to the merged DDB file, relative to dir_name.
-        abinit_analog_file: Path or str
-            Path to the main log of anaddb job, relative to dir_name.
-        abinit_phbst_file: Path or str
-            Path to the PHBST file, relative to dir_name
-        abinit_phdos_file: Path or str
-            Path to the PHDOS file, relative to dir_name
-        other_files: dict
-
+        abinit_anaddb_file : Path or str
+            Path to the ANADDB netCDF output file, relative to dir_name.
+            Default is "out_anaddb.nc".
+        abinit_analog_file : Path or str
+            Path to the main log file of the ANADDB job, relative to dir_name.
+            Default is "run.log".
+        abinit_phbst_file : Path or str
+            Path to the phonon band structure file, relative to dir_name.
+            Default is "out_PHBST.nc".
+        abinit_phdos_file : Path or str
+            Path to the phonon DOS file, relative to dir_name.
+            Default is "out_PHDOS.nc".
 
         Returns
         -------
-        .OuputDoc
-            An anaddb output document.
+        OutputDoc
+            An ANADDB output document.
         """
         dir_name = Path(dir_name)
         abinit_anaddb_file = dir_name / abinit_anaddb_file
@@ -265,26 +268,28 @@ class OutputDoc(BaseModel):
 
 
 class AnaddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
-    """Definition of task document about an anaddb Job.
+    """Task document for an ANADDB job.
 
-    Parameters
+    Attributes
     ----------
-    dir_name: str
-        The directory for this Abinit task
-    completed_at: str
-        Timestamp for when this task was completed
-    output: .OutputDoc
-        The output of the final calculation
-    structure: Structure
-        Final output structure from the task
-    included_objects: List[.AbinitObject]
-        List of Abinit objects included with this task document
-    abinit_objects: Dict[.AbinitObject, Any]
-        Abinit objects associated with this task
-    task_label: str
-        A description of the task
-    tags: List[str]
-        Metadata tags for this task document
+    dir_name : str or None
+        The directory for this ANADDB task.
+    completed_at : str or None
+        Timestamp for when this task was completed.
+    output : OutputDoc or None
+        The output document of the ANADDB calculation.
+    structure : Structure or None
+        Final output structure from the task.
+    event_report : EventReport or None
+        Event report from the ANADDB job.
+    included_objects : list[AbinitObject] or None
+        List of ABINIT objects included with this task document.
+    abinit_objects : dict[AbinitObject, Any] or None
+        ABINIT objects associated with this task.
+    task_label : str or None
+        A description of the task.
+    tags : list[str] or None
+        Metadata tags for this task document.
     """
 
     dir_name: str | None = Field(None, description="The directory for this Abinit task")
@@ -315,29 +320,41 @@ class AnaddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     def from_directory(
         cls,
         dir_name: Path | str,
-        additional_fields: dict[str, Any] = None,
+        additional_fields: dict[str, Any] | None = None,
         abinit_phbst_file: Path | str = "out_PHBST.nc",
         abinit_phdos_file: Path | str = "out_PHDOS.nc",
         abinit_analog_file: Path | str = "run.log",
-        files_to_store: list | None = None,
+        files_to_store: list[str] | None = None,
         **output_doc_kwargs,
     ) -> AnaddbTaskDoc:
-        """Create a task document from a directory containing Abinit/anaddb files.
+        """Create a task document from a directory containing ANADDB files.
 
         Parameters
         ----------
-        dir_name: Path or str
+        dir_name : Path or str
             The path to the folder containing the calculation outputs.
-        additional_fields: Dict[str, Any]
-            Dictionary of additional fields to add to output document.
-        **abinit_calculation_kwargs
-            Additional parsing options that will be passed to the
-            :obj:`.Calculation.from_abinit_files` function.
+        additional_fields : dict[str, Any] or None
+            Dictionary of additional fields to add to the output document.
+            Default is None.
+        abinit_phbst_file : Path or str
+            Path to the phonon band structure file, relative to dir_name.
+            Default is "out_PHBST.nc".
+        abinit_phdos_file : Path or str
+            Path to the phonon DOS file, relative to dir_name.
+            Default is "out_PHDOS.nc".
+        abinit_analog_file : Path or str
+            Path to the main log file of the ANADDB job, relative to dir_name.
+            Default is "run.log".
+        files_to_store : list[str] or None
+            List of file types to store (e.g., ["PHBST", "PHDOS"]).
+            Default is None.
+        **output_doc_kwargs
+            Additional keyword arguments passed to OutputDoc.from_abinit_files().
 
         Returns
         -------
-        .AnaddbTaskDoc
-            A task document for the calculation.
+        AnaddbTaskDoc
+            A task document for the ANADDB calculation.
         """
         logger.info(f"Getting task doc in: {dir_name}")
 
@@ -410,7 +427,25 @@ class AnaddbTaskDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
 def _find_abinit_files(
     path: Path | str,
 ) -> dict[str, Any]:
-    """Find Abinit files."""
+    """
+    Find ANADDB output files in a directory.
+
+    This function searches for ANADDB output files (anaddb.nc, PHBST.nc,
+    PHDOS.nc, and run.log) in the specified directory and its outdata
+    subdirectory.
+
+    Parameters
+    ----------
+    path : Path or str
+        The directory to search for ANADDB output files.
+
+    Returns
+    -------
+    dict[str, Any]
+        A dictionary with task files organized by calculation type.
+        Keys are task identifiers (e.g., "standard"), values are dicts
+        mapping file types to their relative paths.
+    """
     path = Path(path)
     task_files = {}
 

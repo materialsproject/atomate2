@@ -18,14 +18,12 @@ from jobflow import Flow, Job, Response, job
 from jobflow.core.reference import OutputReference
 
 from atomate2.abinit.jobs.base import BaseAbinitMaker, abinit_job
-from atomate2.abinit.jobs.core import NonSCFMaker
 from atomate2.abinit.powerups import update_user_abinit_settings
 from atomate2.abinit.sets.base import get_ksampling
 from atomate2.abinit.sets.response import (
     DdeSetGenerator,
     DdkSetGenerator,
     DteSetGenerator,
-    NscfWfqSetGenerator,
     PhononSetGenerator,
 )
 
@@ -36,6 +34,7 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
     from pymatgen.io.abinit.abiobjects import KSampling
 
+    from atomate2.abinit.jobs.core import NonSCFMaker
     from atomate2.abinit.sets.base import AbinitInputGenerator
     from atomate2.abinit.utils.history import JobHistory
 
@@ -47,7 +46,6 @@ __all__ = [
     "DteMaker",
     "PhononResponseMaker",
     "ResponseMaker",
-    "WfqMaker",
     "generate_perts",
     "get_jobs",
 ]
@@ -55,14 +53,25 @@ __all__ = [
 
 @dataclass
 class ResponseMaker(BaseAbinitMaker):
-    """Maker for a Response Function ABINIT calculation job.
+    """
+    Base maker for DFPT response function calculations.
+
+    This is the base class for all DFPT response function makers including
+    DDK, DDE, DTE, and phonon perturbations. It handles setting up the
+    perturbation direction for the calculation.
 
     Parameters
     ----------
     calc_type : str
-        The type of RF.
+        The type of response function calculation. Default is "RF".
     name : str
-        The job name.
+        The job name. Default is "RF calculation".
+    task_document_kwargs : dict
+        Additional keyword arguments passed to TaskDoc.from_directory().
+    input_set_generator : AbinitInputGenerator
+        Generator for ABINIT input files. Must be provided by subclasses.
+    stop_jobflow_on_failure : bool
+        If True, stop the entire jobflow when this job fails. Default is True.
     """
 
     calc_type: str = "RF"
@@ -85,15 +94,30 @@ class ResponseMaker(BaseAbinitMaker):
         perturbation: dict | None = None,
     ) -> Job:
         """
-        Run a RF ABINIT job. The type of RF is defined by self.calc_type.
+        Create a response function ABINIT job.
+
+        The type of response function is determined by self.calc_type (DDK,
+        DDE, DTE, or Phonon).
 
         Parameters
         ----------
-        structure : .Structure
-            A pymatgen structure object
-        perturbation : dict
-            Direction of the perturbation for the RF calculation.
-            Abipy format.
+        structure : Structure or None
+            A pymatgen Structure object. At least one of structure,
+            prev_outputs, or restart_from must be provided.
+        prev_outputs : str or list[str] or None
+            Path(s) to previous calculation directories to use as inputs.
+        restart_from : str or list[str] or None
+            Path(s) to previous calculation directories to restart from.
+        history : JobHistory or None
+            Job history tracking previous runs and restarts.
+        perturbation : dict or None
+            Direction of the perturbation for the response function
+            calculation, in AbiPy format (e.g., {"idir": 1}).
+
+        Returns
+        -------
+        Job
+            A jobflow Job for the response function calculation.
         """
         if perturbation:
             self.input_set_generator.factory_kwargs.update(
@@ -111,12 +135,20 @@ class ResponseMaker(BaseAbinitMaker):
 
 @dataclass
 class DdkMaker(ResponseMaker):
-    """Maker to create a job with a DDK ABINIT calculation.
+    """
+    Maker for DDK (derivative of wavefunctions with respect to k) calculations.
+
+    DDK calculations compute the derivative of wavefunctions with respect to
+    the k-point, which is required for electric field perturbations (DDE).
 
     Parameters
     ----------
+    calc_type : str
+        The calculation type identifier. Default is "DDK".
     name : str
-        The job name.
+        The job name. Default is "DDK calculation".
+    input_set_generator : AbinitInputGenerator
+        Generator for ABINIT input files. Defaults to DdkSetGenerator.
     """
 
     calc_type: str = "DDK"
@@ -131,12 +163,21 @@ class DdkMaker(ResponseMaker):
 
 @dataclass
 class DdeMaker(ResponseMaker):
-    """Maker to create a job with a DDE ABINIT calculation.
+    """
+    Maker for DDE (derivative with respect to electric field) calculations.
+
+    DDE calculations compute the response to an electric field perturbation,
+    yielding Born effective charges and the electronic dielectric tensor.
+    Requires DDK calculations as input.
 
     Parameters
     ----------
+    calc_type : str
+        The calculation type identifier. Default is "DDE".
     name : str
-        The job name.
+        The job name. Default is "DDE calculation".
+    input_set_generator : AbinitInputGenerator
+        Generator for ABINIT input files. Defaults to DdeSetGenerator.
     """
 
     calc_type: str = "DDE"
@@ -150,12 +191,21 @@ class DdeMaker(ResponseMaker):
 
 @dataclass
 class DteMaker(ResponseMaker):
-    """Maker to create a job with a DTE ABINIT calculation.
+    """
+    Maker for DTE (mixed derivative) calculations.
+
+    DTE calculations compute the response to combined perturbations, yielding properties
+    like static SHG and elastic tensors.
+    Requires both DDE and phonon calculations as input.
 
     Parameters
     ----------
+    calc_type : str
+        The calculation type identifier. Default is "DTE".
     name : str
-        The job name.
+        The job name. Default is "DTE calculation".
+    input_set_generator : AbinitInputGenerator
+        Generator for ABINIT input files. Defaults to DteSetGenerator.
     """
 
     calc_type: str = "DTE"
@@ -168,56 +218,22 @@ class DteMaker(ResponseMaker):
 
 
 @dataclass
-class WfqMaker(NonSCFMaker):
-    """Maker for non SCF wfq calculation."""
-
-    calc_type: str = "wfq"
-    name: str = "WFQ nscf Calculation"
-    input_set_generator: AbinitInputGenerator = field(
-        default_factory=NscfWfqSetGenerator
-    )
-
-    CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = (
-        NscfConvergenceWarning,
-    )
-
-    @abinit_job
-    def make(
-        self,
-        structure: Structure | None = None,
-        prev_outputs: str | list[str] | None = None,
-        restart_from: str | list[str] | None = None,
-        history: JobHistory | None = None,
-        mode: str = "uniform",
-        qpt: list | tuple | None = None,
-    ) -> Job:
-        """Run a WFQ Abinit job.
-
-        Parameters
-        ----------
-        qpt: list, tuple
-            q point to shift the k grid
-        """
-        self.input_set_generator.factory_kwargs.update({"qpt": qpt})
-
-        return super().make.original(
-            self,
-            structure=structure,
-            prev_outputs=prev_outputs,
-            restart_from=restart_from,
-            history=history,
-            mode=mode,
-        )
-
-
-@dataclass
 class PhononResponseMaker(ResponseMaker):
-    """Maker to create a job with a Phonon ABINIT calculation.
+    """
+    Maker for phonon response calculations.
+
+    Phonon calculations compute the response to atomic displacement
+    perturbations at specific q-points, yielding the dynamical matrix
+    and phonon frequencies.
 
     Parameters
     ----------
+    calc_type : str
+        The calculation type identifier. Default is "Phonon".
     name : str
-        The job name.
+        The job name. Default is "Phonon calculation".
+    input_set_generator : AbinitInputGenerator
+        Generator for ABINIT input files. Defaults to PhononSetGenerator.
     """
 
     calc_type: str = "Phonon"
@@ -248,46 +264,69 @@ def generate_perts(
     dte_maker: ResponseMaker | None = None,
 ) -> Flow:
     """
-    Generate the perturbations for the DTE calculations.
+    Generate DFPT perturbation calculations for response properties.
+
+    This function creates a flow of DFPT calculations including DDE (electric
+    field), phonon (atomic displacement), and DTE (mixed) perturbations. It
+    automatically determines which perturbations are needed, handles symmetries,
+    and creates WFQ calculations when q-points are incommensurate with the
+    k-point grid.
 
     Parameters
     ----------
     gsinput : AbinitInput
-        an |AbinitInput| representing a ground state calculation,
-        likely the SCF performed to get the WFK.
-    scf_output : str or list of str
-        The output directory of the SCF calculation.
-    ddk_output : str or list of str
-        The output directory of the DDK calculation.
-    skip_dte_permutations: Since the current version of abinit always performs
-        all the permutations of the perturbations, even if only one is asked,
-        if True avoids the creation of inputs that will produce duplicated outputs.
-    use_dde_symmetries: bool
-        True if only the irreducible DDE perturbations should be considered,
-        False otherwise.
-    ngqpt : list or tuple
-        Monkhorst-Pack divisions for the phonon q-mesh.
-        Default is the same as the one used in the GS calculation.
-    qptopt : int
-        Option for the generation of the q-points list, default same as kptopt in gs.
-    qpt_list : list of lists
-        A list of q points to compute the phonons.
-    user_qpoints_settings : dict or KSampling
-        Allows user to define the qmesh by supplying a dict. E.g.,
-        ``{"reciprocal_density": 1000}``. User can also supply a KSampling object.
-    dde_maker : ResponseMaker
-        The maker to use for the DDE calculations.
-    wfq_maker : NonSCFMaker
-        The maker to use for the WFQ calculations.
-    phonon_maker : ResponseMaker
-        The maker to use for the phonon calculations.
-    dte_maker : ResponseMaker
-        The maker to use for the DTE calculations.
+        An AbinitInput object representing the ground state calculation,
+        typically the SCF calculation used to generate the WFK file.
+    scf_output : str or list[str]
+        Path(s) to the output directory of the SCF calculation.
+    ddk_output : str or list[str] or None
+        Path(s) to the output directory of the DDK calculation. Required
+        if dde_maker is provided.
+    skip_dte_permutations : bool or None
+        If True, skip creation of redundant DTE inputs. Since ABINIT always
+        computes all permutations of perturbations even when only one is
+        requested, this avoids duplicated outputs. Default is False.
+    use_dde_symmetries : bool or None
+        If True, use symmetries to reduce DDE perturbations to only
+        irreducible ones. Default is False.
+    ngqpt : list or tuple or None
+        Monkhorst-Pack divisions for the phonon q-point mesh (e.g., [4, 4, 4]).
+        If None, uses the same grid as the ground state k-points.
+    qptopt : int or None
+        Option for q-point generation. Default is 1 (same as kptopt in ground state).
+    qpt_list : list[list] or None
+        Explicit list of q-points for phonon calculations. Cannot be used
+        with ngqpt or user_qpoints_settings.
+    user_qpoints_settings : dict or KSampling or None
+        Custom q-point settings (e.g., {"reciprocal_density": 1000}) or a
+        KSampling object. Cannot be used with ngqpt or qpt_list.
+    dde_maker : ResponseMaker or None
+        Maker for DDE (electric field) calculations. If None, DDE
+        calculations are skipped.
+    wfq_maker : NonSCFMaker or None
+        Maker for WFQ calculations. Required if the q-point mesh is not
+        commensurate with the k-point mesh.
+    phonon_maker : ResponseMaker or None
+        Maker for phonon (atomic displacement) calculations. If None,
+        phonon calculations are skipped.
+    dte_maker : ResponseMaker or None
+        Maker for DTE (mixed derivative) calculations. If None, DTE
+        calculations are skipped.
 
-    Outputs
+    Returns
     -------
-    rf_flow: Flow
-        Flow with the response functions
+    Flow
+        A jobflow Flow containing all perturbation calculations, with outputs
+        organized by perturbation type (dde, phonon, dte, wfq).
+
+    Raises
+    ------
+    ValueError
+        If no response makers are provided, or if DDK output is missing when
+        dde_maker is provided, or if multiple q-point specification methods
+        are used simultaneously.
+    RuntimeError
+        If q-mesh is not commensurate with k-mesh and no wfq_maker is provided.
     """
     if all(not m for m in [dde_maker, phonon_maker, dte_maker]):
         raise ValueError("At least one of the response makers should be defined")
@@ -317,9 +356,7 @@ def generate_perts(
             gsinput = gsinput.deepcopy()
             gsinput.pop_vars(["autoparal"])
             gsinput.pop_par_vars(all=True)
-            dde_perts = gsinput.abiget_irred_ddeperts(
-                workdir=cwd / "dde"
-            )  # TODO: quid manager?
+            dde_perts = gsinput.abiget_irred_ddeperts(workdir=cwd / "dde")
         else:
             dde_perts = [{"idir": 1}, {"idir": 2}, {"idir": 3}]
 
@@ -360,10 +397,10 @@ def generate_perts(
                 ngkpt=ngqpt, shiftk=(0, 0, 0), kptopt=qptopt
             ).points
 
-        # check that qpt are consistent with kpt grid
+        # Check if q-mesh is commensurate with k-mesh, create WFQ jobs if needed
         outputs["dirs"]["wfq"] = [[] for _ in range(len(qpt_list))]
         if ngqpt is None or any(gsinput["ngkpt"] % ngqpt != 0):
-            # find which q points are needed and build nscf inputs to calculate the WFQ
+            # Find incommensurate q-points and create WFQ calculations for them
             kpts = gsinput.abiget_ibz(shiftk=(0, 0, 0), kptopt=3).points.tolist()
             nscf_qpt = []
             wfq_j = 0
@@ -411,7 +448,7 @@ def generate_perts(
     if dte_maker:
         dte_perts = gsinput.abiget_irred_dteperts(
             phonon_pert=phonon_maker is not None, workdir=cwd / "dte"
-        )  # TODO: quid manager?
+        )
 
         if skip_dte_permutations:
             perts_to_skip: list = []
@@ -445,9 +482,7 @@ def generate_perts(
     jobs = dde_jobs + wfq_jobs + ph_jobs + dte_jobs
 
     rf_flow = Flow(jobs, outputs)
-    return Response(
-        replace=rf_flow, output={"dir_name": cwd}
-    )  # TODO what is the output here?
+    return Response(replace=rf_flow, output={"dir_name": cwd})
 
 
 def get_jobs(
@@ -456,15 +491,38 @@ def get_jobs(
     prev_outputs: str | OutputReference | list[str] | list[list[str]] | None = None,
 ) -> list[Job]:
     """
-    Set up the response jobs for each perturbations.
+    Create response function jobs for multiple perturbations.
+
+    This function creates a list of jobs for response function calculations,
+    one for each perturbation direction. It handles different formats of
+    prev_outputs (single path, list of paths, or list of lists).
 
     Parameters
     ----------
-    perturbations : a list of dict with the direction of the perturbation
-        under the Abipy format.
-    rf_maker : Maker to create a job with a Response Function ABINIT calculation.
-    prev_outputs : a list of previous output directories
-    is_phonon: whether this is a phonon calculation
+    perturbations : list[dict]
+        List of perturbation dictionaries in AbiPy format. Each dict
+        specifies the direction and type of perturbation (e.g., {"idir": 1}).
+    rf_maker : ResponseMaker
+        Maker to create response function ABINIT jobs. Can be any subclass
+        of ResponseMaker (DdkMaker, DdeMaker, PhononResponseMaker, etc.).
+    prev_outputs : str or OutputReference or list[str] or list[list[str]] or None
+        Previous output directories to use as inputs. Can be:
+        - A single path (str or OutputReference): used for all perturbations
+        - A list of paths: used for all perturbations
+        - A list of lists: each inner list used for the corresponding perturbation
+          (must have same length as perturbations)
+
+    Returns
+    -------
+    list[Job]
+        List of response function jobs, one per perturbation, with names
+        appended to indicate progress (e.g., " - 1/3", " - 2/3").
+
+    Raises
+    ------
+    ValueError
+        If prev_outputs is a list of lists but its length doesn't match the
+        number of perturbations, or if prev_outputs format is invalid.
     """
     rf_jobs = []
 
