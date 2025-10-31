@@ -43,15 +43,23 @@ class SQSTask(TransformTask):
         None,
         description=(
             "The minimum value of the SQS obejective function, "
-            "corresponding to the structure in `final_structure`"
+            "corresponding to the structure in `final_structure`."
+            "If None, but `found_perfect_match` is True, then the "
+            "ideal SQS structure was found."
         ),
     )
     sqs_structures: list[Structure] | None = Field(
         None, description="A list of other good SQS candidates."
     )
-    sqs_scores: list[float] | None = Field(
+    sqs_scores: list[float | None] | None = Field(
         None,
         description=(
-            "The objective function values for the structures in `sqs_structures`"
+            "The objective function values for the structures in `sqs_structures`."
+            "If any value is `None` and `found_perfect_match` is True, then the "
+            "ideal SQS structure was found."
         ),
+    )
+    found_perfect_match: bool = Field(
+        default=False,
+        description="Whether the lowest possible SQS objective was attained.",
     )

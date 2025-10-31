@@ -178,11 +178,25 @@ class SQS(Transformer):
             if len(list(os.scandir(mcsqs_dir))) == 0:
                 mcsqs_dir.unlink()
 
+        # For MCSQS, check whether the `perfect_match` was found
+        # otherwise, SQSTask will throw a validation error
+        found_perfect_match = False
+        if (
+            isinstance(best_objective, str)
+            and best_objective.lower() == "perfect_match"
+        ):
+            best_objective = None
+            found_perfect_match = True
+
         sqs_structures = None
         sqs_scores = None
         if isinstance(sqs_structs, list) and len(sqs_structs) > 1:
             sqs_structures = [entry["structure"] for entry in sqs_structs[1:]]
             sqs_scores = [entry["objective_function"] for entry in sqs_structs[1:]]
+            for i, score in enumerate(sqs_scores):
+                if isinstance(score, str) and score.lower() == "perfect_match":
+                    sqs_scores[i] = None
+                    found_perfect_match = True
 
         return SQSTask(
             transformation=self.transformation,
@@ -192,4 +206,5 @@ class SQS(Transformer):
             sqs_structures=sqs_structures,
             sqs_scores=sqs_scores,
             sqs_method=self.transformation.sqs_method,
+            found_perfect_match=found_perfect_match,
         )
