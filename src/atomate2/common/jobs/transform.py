@@ -25,18 +25,42 @@ class Transformer(Maker):
     """Apply a pymatgen transformation, as a job.
 
     For many of the standard and advanced transformations,
-    this will work just by supplying the transformation.
+    this should "just work" by supplying the transformation.
     """
 
     transformation: AbstractTransformation
     name: str = "pymatgen transformation maker"
 
     @job
-    def make(self, structure: Structure, **kwargs) -> TransformTask:
-        """Run the transformation."""
+    def make(
+        self, structure: Structure, **kwargs
+    ) -> TransformTask | list[TransformTask]:
+        """Evaluate the transformation.
+
+        Parameters
+        ----------
+        structure : Structure to transform
+        **kwargs : to pass to the `apply_transformation` method
+
+        Returns
+        -------
+        list of TransformTask, if `self.transformation.is_one_to_many`
+        (many structures are produced from a single transformation)
+
+        TransformTask, otherwise
+        """
         transformed_structure = self.transformation.apply_transformation(
             structure, **kwargs
         )
+        if self.transformation.is_one_to_many:
+            return [
+                TransformTask(
+                    input_structure=structure,
+                    final_structure=dct["structure"],
+                    transformation=dct.get("transformation") or self.transformation,
+                )
+                for dct in transformed_structure
+            ]
         return TransformTask(
             input_structure=structure,
             final_structure=transformed_structure,
