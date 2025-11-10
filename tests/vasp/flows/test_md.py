@@ -49,9 +49,9 @@ def test_multi_md_flow(mock_vasp, clean_dir, si_structure):
     # validate the outputs
     output_md_1 = responses[flow.jobs[0].jobs[0].uuid][1].output
     traj = output_md_1.vasp_objects[VaspObject.TRAJECTORY]
-    assert isinstance(traj,RelaxTrajectory)
+    assert isinstance(traj, RelaxTrajectory)
     assert all(
-        len(getattr(traj,k)) == 3 for k in ("energy","forces","lattice","stress")
+        len(getattr(traj, k)) == 3 for k in ("energy", "forces", "lattice", "stress")
     )
     assert isinstance(output_md_1, TaskDoc)
 

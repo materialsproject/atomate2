@@ -11,7 +11,6 @@ from typing import TYPE_CHECKING
 from emmet.core.neb import NebIntermediateImagesDoc
 from emmet.core.tasks import TaskDoc
 from emmet.core.types.enums import VaspObject
-
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
