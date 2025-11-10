@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
+from emmet.core.band_theory import ElectronicBS
 from jobflow import Flow, Response, job
 
 from atomate2.vasp.jobs.base import BaseVaspMaker, vasp_job
@@ -18,8 +19,6 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from pymatgen.core import Structure
-    from pymatgen.electronic_structure.bandstructure import BandStructure
-
 
 DEFAULT_ELPH_TEMPERATURES = (0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000)
 DEFAULT_MIN_SUPERCELL_LENGTH = 15
@@ -188,11 +187,11 @@ def run_elph_displacements(
 @job(output_schema=ElectronPhononRenormalisationDoc)
 def calculate_electron_phonon_renormalisation(
     temperatures: list[float],
-    displacement_band_structures: list[BandStructure],
+    displacement_band_structures: list[ElectronicBS],
     displacement_structures: list[Structure],
     displacement_uuids: list[str],
     displacement_dirs: list[str],
-    bulk_band_structure: BandStructure,
+    bulk_band_structure: ElectronicBS,
     bulk_structure: Structure,
     bulk_uuid: str,
     bulk_dir: str,
@@ -207,7 +206,7 @@ def calculate_electron_phonon_renormalisation(
     ----------
     temperatures : list of float
         The temperatures at which electron phonon properties were calculated.
-    displacement_band_structures : list of BandStructure
+    displacement_band_structures : list of ElectronicBS
         The electron-phonon displaced band structures.
     displacement_structures : list of Structure
         The electron-phonon displaced structures.
@@ -216,7 +215,7 @@ def calculate_electron_phonon_renormalisation(
     displacement_dirs : list of str
         The calculation directories of the electron-phonon displaced band structure
         calculations.
-    bulk_band_structure : BandStructure
+    bulk_band_structure : ElectronicBS
         The band structure of the bulk undisplaced supercell calculation.
     bulk_structure : Structure
         The structure of the bulk undisplaced supercell.
@@ -242,7 +241,7 @@ def calculate_electron_phonon_renormalisation(
     # filter band structures that are None (i.e., the displacement calculation failed)
     keep = [idx for idx, b in enumerate(displacement_band_structures) if b is not None]
     temperatures = [temperatures[i] for i in keep]
-    displacement_band_structures = [displacement_band_structures[i] for i in keep]
+    displacement_band_structures = [ElectronicBS(**displacement_band_structures[i]).to_pmg() for i in keep]
     displacement_structures = [displacement_structures[i] for i in keep]
     displacement_uuids = [displacement_uuids[i] for i in keep]
     displacement_dirs = [displacement_dirs[i] for i in keep]
@@ -255,7 +254,7 @@ def calculate_electron_phonon_renormalisation(
         displacement_structures,
         displacement_uuids,
         displacement_dirs,
-        bulk_band_structure,
+        ElectronicBS(**bulk_band_structure).to_pmg(),
         bulk_structure,
         bulk_uuid,
         bulk_dir,

@@ -10,9 +10,11 @@ from typing import TYPE_CHECKING
 
 from emmet.core.neb import NebIntermediateImagesDoc
 from emmet.core.tasks import TaskDoc
+from emmet.core.types.enums import VaspObject
+
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
-from pymatgen.core.trajectory import Trajectory
+from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
     BandStructureSymmLine,
@@ -40,6 +42,11 @@ _CHARGEMOL_EXE_EXISTS = bool(
 )
 
 _DATA_OBJECTS = [
+    # emmet-core models for continuing support
+    # Because the emmet-core models deserialize to JSON
+    # on model_dump, we just pass field names here, not object types
+    *[f.value for f in VaspObject],
+    # pymatgen models for legacy support
     BandStructure,
     BandStructureSymmLine,
     DOS,
@@ -48,7 +55,7 @@ _DATA_OBJECTS = [
     Locpot,
     Chgcar,
     Wavecar,
-    Trajectory,
+    PmgTrajectory,
     "force_constants",
     "normalmode_eigenvecs",
     "bandstructure",  # FIX: BandStructure is not currently MSONable
