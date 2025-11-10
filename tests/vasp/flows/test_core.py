@@ -1,12 +1,7 @@
 import pytest
-from emmet.core.tasks import TaskDoc
-
-try:
-    from emmet.core.types.enums import VaspObject
-except ImportError:
-    from emmet.core.vasp.calculation import VaspObject
-
 from emmet.core.band_theory import ElectronicBS
+from emmet.core.tasks import TaskDoc
+from emmet.core.types.enums import VaspObject
 from jobflow import run_locally
 
 from atomate2.vasp.flows.core import (

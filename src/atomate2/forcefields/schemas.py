@@ -4,10 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-try:
-    from emmet.core.types.enums import StoreTrajectoryOption
-except ImportError:
-    from emmet.core.vasp.calculation import StoreTrajectoryOption
+from emmet.core.types.enums import StoreTrajectoryOption
 from pydantic import Field
 
 from atomate2.ase.schemas import AseObject, AseResult, AseStructureTaskDoc, AseTaskDoc
