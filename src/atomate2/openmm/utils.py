@@ -323,7 +323,7 @@ def opls_lj(system: System) -> System:
         lorentz.addParticle([sigma, epsilon])
         nonbonded_force.setParticleParameters(index, charge, sigma, epsilon * 0)
     for i in range(nonbonded_force.getNumExceptions()):
-        (p1, p2, q, sig, eps) = nonbonded_force.getExceptionParameters(i)
+        (p1, p2, q, _, eps) = nonbonded_force.getExceptionParameters(i)
         # ALL THE 1-2, 1-3 and 1-4 interactions are EXCLUDED FROM CUSTOM NONBONDED FORCE
         lorentz.addExclusion(p1, p2)
         if eps.value_in_unit(eps.unit) != 0.0:

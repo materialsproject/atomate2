@@ -1072,12 +1072,6 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                     data, allow_bson=True, strict=True, enum_values=True
                 )
                 json.dump(monty_encoded_json_doc, file)
-                file.write(",")
-                data = {"builder_meta": doc.builder_meta}  # add builder metadata
-                monty_encoded_json_doc = jsanitize(
-                    data, allow_bson=False, strict=True, enum_values=True
-                )
-                json.dump(monty_encoded_json_doc, file)
                 del data, monty_encoded_json_doc
                 file.write("]")
 
