@@ -57,11 +57,10 @@ forcefields = [
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.2.1",
-    "torchdata<=0.7.1",
+    "torchdata<=0.7.1", # TODO: remove when issue fixed
     # quippy-ase support for py3.12 tracked in https://github.com/libAtoms/QUIP/issues/645
     "quippy-ase>=0.9.14; python_version < '3.12'",
     "sevenn>=0.9.3",
-    "torchdata<=0.7.1",                            # TODO: remove when issue fixed
 ]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 ase = ["ase>=3.26.0"]
