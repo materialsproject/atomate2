@@ -50,6 +50,16 @@ class MinimizationMaker(BaseLammpsMaker):
 
 
 @dataclass
+class LammpsNPzATMaker(BaseLammpsMaker):
+    """LAMMPS job maker for NPzAT simulations."""
+
+    name: str = "npzat"
+    input_set_generator: BaseLammpsSetGenerator = field(
+        default_factory=lambda: LammpsNPTSet(settings={"psymm": "z"})
+    )
+
+
+@dataclass
 class CustomLammpsMaker(BaseLammpsMaker):
     """
     Custom LAMMPS job maker.

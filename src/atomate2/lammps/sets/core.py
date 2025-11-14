@@ -196,6 +196,7 @@ class LammpsNPTSet(BaseLammpsSetGenerator):
                 "friction": settings_dict.get(
                     "friction", _BASE_LAMMPS_SETTINGS["periodic"]["friction"]
                 ),
+                "psymm": settings_dict.get("psymm", "iso"),
             }
         )
 

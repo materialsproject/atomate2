@@ -7,7 +7,7 @@ from jobflow import Flow, Maker
 from pymatgen.core import Structure
 
 from atomate2.lammps.jobs.base import BaseLammpsMaker
-from atomate2.lammps.jobs.core import LammpsNPTMaker, LammpsNVTMaker
+from atomate2.lammps.jobs.core import LammpsNPTMaker, LammpsNVTMaker, LammpsNPzATMaker
 
 
 @dataclass
