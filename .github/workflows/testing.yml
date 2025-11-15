@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
           cache: pip
           cache-dependency-path: pyproject.toml
 
@@ -39,7 +39,7 @@ jobs:
         shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.11", "3.12"]
         split: [1, 2, 3]
 
     steps:
@@ -91,7 +91,7 @@ jobs:
 
 
       - uses: codecov/codecov-action@v1
-        if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
+        if: matrix.python-version == '3.11' && github.repository == 'materialsproject/atomate2'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: coverage${{ matrix.split }}
@@ -113,7 +113,7 @@ jobs:
         shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
     strategy:
       matrix:
-        python-version: ["3.10","3.11","3.12"]
+        python-version: ["3.11","3.12"]
 
     steps:
       - name: Check out repo
@@ -174,7 +174,7 @@ jobs:
         shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.11", "3.12"]
 
     steps:
       - name: Check out repo
@@ -220,7 +220,7 @@ jobs:
           pytest -n auto --splits 1 --group 1 --cov=atomate2 --cov-report=xml tests/ase
 
       - uses: codecov/codecov-action@v1
-        if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
+        if: matrix.python-version == '3.11' && github.repository == 'materialsproject/atomate2'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
@@ -241,7 +241,7 @@ jobs:
         shell: bash -l {0} # enables conda/mamba env activation by reading bash profile
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.11", "3.11", "3.12"]
 
     steps:
       - name: Check out repo
@@ -292,7 +292,7 @@ jobs:
 
 
       - uses: codecov/codecov-action@v1
-        if: matrix.python-version == '3.10' && github.repository == 'materialsproject/atomate2'
+        if: matrix.python-version == '3.11' && github.repository == 'materialsproject/atomate2'
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: coverage
@@ -308,7 +308,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
           cache: pip
           cache-dependency-path: pyproject.toml
 
