@@ -11,11 +11,7 @@ from typing import TYPE_CHECKING, Any
 from custodian import Custodian
 from custodian.lobster.handlers import EnoughBandsValidator, LobsterFilesValidator
 from custodian.lobster.jobs import LobsterJob
-
-try:
-    from emmet.core.types.enums import ValueEnum
-except ImportError:
-    from emmet.core.utils import ValueEnum
+from emmet.core.types.enums import ValueEnum
 
 from atomate2 import SETTINGS
 

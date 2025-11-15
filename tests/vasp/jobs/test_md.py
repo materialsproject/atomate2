@@ -3,6 +3,7 @@ from emmet.core.tasks import TaskDoc
 from emmet.core.types.enums import VaspObject
 from emmet.core.vasp.calculation import IonicStep
 from jobflow import run_locally
+from pymatgen.core import Element, Structure
 
 from atomate2.vasp.jobs.md import MDMaker
 
@@ -46,9 +47,22 @@ def test_molecular_dynamics(mock_vasp, clean_dir, si_structure):
     # check ionic steps stored as pymatgen Trajectory
     assert output1.calcs_reversed[0].output.ionic_steps is None
     traj = output1.vasp_objects[VaspObject.TRAJECTORY]
-    assert len(traj.frame_properties) == nsw
+    assert all(
+        len(getattr(traj, k)) == nsw for k in ("energy", "forces", "lattice", "stress")
+    )
     # check that a frame property can be converted to an IonicStep
     energies = [-11.47041923, -11.46905352, -11.46520398]
-    for idx, frame in enumerate(traj.frame_properties):
-        ionic_step = IonicStep(**frame)
+    for idx in range(traj.num_ionic_steps):
+        ionic_step = IonicStep(
+            **{
+                k: getattr(traj, k)[idx]
+                for k in ("energy", "forces", "stress", "e_wo_entrp")
+            },
+            structure=Structure(
+                traj.lattice[idx],
+                [Element.from_Z(z) for z in traj.elements],
+                traj.cart_coords[idx],
+                coords_are_cartesian=True,
+            ),
+        )
         assert ionic_step.e_wo_entrp == pytest.approx(energies[idx])

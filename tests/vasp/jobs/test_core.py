@@ -1,7 +1,8 @@
-import jobflow
 import numpy as np
 from emmet.core.tasks import TaskDoc
-from jobflow import run_locally
+from emmet.core.vasp.models import ChgcarLike
+from jobflow import JobStore, run_locally
+from maggma.stores import MemoryStore
 from numpy.testing import assert_allclose
 from pytest import approx
 
@@ -16,8 +17,7 @@ from atomate2.vasp.jobs.core import (
 
 
 def test_static_maker(mock_vasp, clean_dir, si_structure):
-    job_store = jobflow.SETTINGS.JOB_STORE
-
+    job_store = JobStore(MemoryStore(), additional_stores={"data": MemoryStore()})
     # mapping from job name to directory containing test files
     ref_paths = {"static": "Si_band_structure/static"}
 
@@ -35,7 +35,9 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
     )
 
     # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, create_folders=True, ensure_success=True)
+    responses = run_locally(
+        job, create_folders=True, ensure_success=True, store=job_store
+    )
 
     # validate job outputs
     output1 = responses[job.uuid][1].output
@@ -44,7 +46,7 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
 
     with job_store.additional_stores["data"] as store:
         doc = store.query_one({"job_uuid": job.uuid})
-    assert doc["data"]["@class"] == "Chgcar"
+    assert all(k in doc["data"] for k in ChgcarLike.model_fields)
 
 
 def test_relax_maker(mock_vasp, clean_dir, si_structure):

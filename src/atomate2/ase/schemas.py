@@ -16,15 +16,10 @@ from typing import Any
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import MoleculeMetadata, StructureMetadata
 from emmet.core.trajectory import AtomTrajectory
-
-try:
-    from emmet.core.types.enums import StoreTrajectoryOption, TaskState, ValueEnum
-except ImportError:
-    from emmet.core.tasks import TaskState
-    from emmet.core.utils import ValueEnum
-    from emmet.core.vasp.calculation import StoreTrajectoryOption
-from pydantic import BaseModel, Field
+from emmet.core.types.enums import StoreTrajectoryOption, TaskState, ValueEnum
+from pydantic import BaseModel, Field, PrivateAttr
 from pymatgen.core import Molecule, Structure
+from pymatgen.entries.computed_entries import ComputedEntry
 
 _task_doc_translation_keys = {
     "input",
@@ -244,6 +239,8 @@ class AseStructureTaskDoc(StructureMetadata):
 
     tags: list[str] | None = Field(None, description="List of tags for the task.")
 
+    _entry: ComputedEntry | None = PrivateAttr(None)
+
     @classmethod
     def from_ase_task_doc(
         cls, ase_task_doc: AseTaskDoc, **task_document_kwargs
@@ -264,6 +261,16 @@ class AseStructureTaskDoc(StructureMetadata):
         return cls.from_structure(
             meta_structure=ase_task_doc.mol_or_struct, **task_document_kwargs
         )
+
+    @property
+    def entry(self) -> ComputedEntry:
+        """Get the Computed Entry associated with this calculation."""
+        if self._entry is None:
+            self._entry = ComputedEntry(
+                composition=self.composition,
+                energy=self.output.energy,
+            )
+        return self._entry
 
 
 class AseMoleculeTaskDoc(MoleculeMetadata):
