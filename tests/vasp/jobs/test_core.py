@@ -46,7 +46,7 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
 
     with job_store.additional_stores["data"] as store:
         doc = store.query_one({"job_uuid": job.uuid})
-    assert all(k in doc["data"] for k in ChgcarLike.model_fields)
+    assert all(k in doc["data"]["chgcar"] for k in ChgcarLike.model_fields)
 
 
 def test_relax_maker(mock_vasp, clean_dir, si_structure):
