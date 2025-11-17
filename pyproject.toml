@@ -114,6 +114,7 @@ strict-forcefields = [
 ]
 strict = [
     "atomate2[strict-forcefields, docs, cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
+    "'numpy<2.0'"
 ]
 
 [project.scripts]
