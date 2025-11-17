@@ -92,7 +92,7 @@ tests = [
     "pytest-mock==3.15.1",
     "pytest-split==0.10.0",
     "pytest-xdist==3.8.0",
-    "pytest==8.4.2",
+    "pytest==9.0.1",
 ]
 strict-openff = [
     "mdanalysis==2.9.0",
