@@ -1,11 +1,11 @@
 import numpy as np
 from emmet.core.tasks import TaskDoc
-from emmet.core.vasp.models import ChgcarLike
 from jobflow import JobStore, run_locally
 from maggma.stores import MemoryStore
 from numpy.testing import assert_allclose
 from pytest import approx
 
+from atomate2 import SETTINGS
 from atomate2.vasp.jobs.core import (
     DielectricMaker,
     HSERelaxMaker,
@@ -14,6 +14,9 @@ from atomate2.vasp.jobs.core import (
     StaticMaker,
     TransmuterMaker,
 )
+
+if SETTINGS.VASP_USE_EMMET_MODELS:
+    from emmet.core.vasp.models import ChgcarLike
 
 
 def test_static_maker(mock_vasp, clean_dir, si_structure):
@@ -46,7 +49,11 @@ def test_static_maker(mock_vasp, clean_dir, si_structure):
 
     with job_store.additional_stores["data"] as store:
         doc = store.query_one({"job_uuid": job.uuid})
-    assert all(k in doc["data"] for k in ChgcarLike.model_fields)
+
+    if SETTINGS.VASP_USE_EMMET_MODELS:
+        assert all(k in doc["data"] for k in ChgcarLike.model_fields)
+    else:
+        assert doc["data"]["@class"] == "Chgcar"
 
 
 def test_relax_maker(mock_vasp, clean_dir, si_structure):

@@ -116,7 +116,7 @@ class ElectronPhononMaker(Maker):
                     user_incar_settings={"LORBIT": 10},  # disable site projections
                 ),
                 task_document_kwargs={
-                    "strip_bandstructure_projections": True,
+                    "strip_bandstructure_projections": False,
                     "strip_dos_projections": True,
                 },
             ),

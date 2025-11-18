@@ -41,25 +41,30 @@ _CHARGEMOL_EXE_EXISTS = bool(
 )
 
 _DATA_OBJECTS = [
-    # emmet-core models for continuing support
-    # Because the emmet-core models deserialize to JSON
-    # on model_dump, we just pass field names here, not object types
-    *[f.value for f in VaspObject],
-    # "vasp_objects",
-    # pymatgen models for legacy support
-    BandStructure,
-    BandStructureSymmLine,
-    DOS,
-    Dos,
-    CompleteDos,
-    Locpot,
-    Chgcar,
     Wavecar,
-    PmgTrajectory,
     "force_constants",
     "normalmode_eigenvecs",
     "bandstructure",  # FIX: BandStructure is not currently MSONable
 ]
+
+if SETTINGS.VASP_USE_EMMET_MODELS:
+    # Because the emmet-core models deserialize to JSON
+    # on model_dump, we just pass field names here, not object types
+    _DATA_OBJECTS.extend([f.value for f in VaspObject])
+else:
+    # Store pymatgen objects
+    _DATA_OBJECTS.extend(
+        [
+            BandStructure,
+            BandStructureSymmLine,
+            DOS,
+            Dos,
+            CompleteDos,
+            Locpot,
+            Chgcar,
+            PmgTrajectory,
+        ]
+    )
 
 # Input files. Partially from https://www.vasp.at/wiki/index.php/Category:Input_files
 # Exclude those that are also outputs
@@ -325,4 +330,7 @@ def get_vasp_task_document(
                 stacklevel=1,
             )
 
+    kwargs["use_emmet_models"] = kwargs.get(
+        "use_emmet_models", SETTINGS.VASP_USE_EMMET_MODELS
+    )
     return TaskDoc.from_directory(path, **kwargs)

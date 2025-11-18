@@ -1,9 +1,9 @@
 import pytest
-from emmet.core.band_theory import ElectronicBS
 from emmet.core.tasks import TaskDoc
 from emmet.core.types.enums import VaspObject
 from jobflow import run_locally
 
+from atomate2 import SETTINGS
 from atomate2.vasp.flows.core import (
     BandStructureMaker,
     DoubleRelaxMaker,
@@ -17,6 +17,20 @@ from atomate2.vasp.flows.core import (
 )
 from atomate2.vasp.jobs.core import RelaxMaker
 from atomate2.vasp.sets.core import RelaxSetGenerator
+
+if SETTINGS.VASP_USE_EMMET_MODELS:
+    from emmet.core.band_theory import ElectronicBS
+
+    BS_UNIF_TYPE = ElectronicBS
+    BS_LINE_TYPE = ElectronicBS
+else:
+    from pymatgen.electronic_structure.bandstructure import (
+        BandStructure,
+        BandStructureSymmLine,
+    )
+
+    BS_UNIF_TYPE = BandStructure
+    BS_LINE_TYPE = BandStructureSymmLine
 
 
 def test_double_relax(mock_vasp, clean_dir, si_structure):
@@ -121,9 +135,9 @@ def test_band_structure(mock_vasp, clean_dir, si_structure):
         VaspObject.DOS,
     }
 
-    assert isinstance(line_output.vasp_objects[VaspObject.BANDSTRUCTURE], ElectronicBS)
+    assert isinstance(line_output.vasp_objects[VaspObject.BANDSTRUCTURE], BS_LINE_TYPE)
     assert isinstance(
-        uniform_output.vasp_objects[VaspObject.BANDSTRUCTURE], ElectronicBS
+        uniform_output.vasp_objects[VaspObject.BANDSTRUCTURE], BS_UNIF_TYPE
     )
 
 
@@ -160,7 +174,7 @@ def test_uniform_band_structure(mock_vasp, clean_dir, si_structure):
         VaspObject.DOS,
     }
     assert isinstance(
-        uniform_output.vasp_objects[VaspObject.BANDSTRUCTURE], ElectronicBS
+        uniform_output.vasp_objects[VaspObject.BANDSTRUCTURE], BS_UNIF_TYPE
     )
 
 
@@ -192,7 +206,7 @@ def test_line_mode_band_structure(mock_vasp, clean_dir, si_structure):
 
     assert static_output.output.energy == pytest.approx(-10.85037078)
     assert static_output.included_objects is None
-    assert isinstance(line_output.vasp_objects[VaspObject.BANDSTRUCTURE], ElectronicBS)
+    assert isinstance(line_output.vasp_objects[VaspObject.BANDSTRUCTURE], BS_LINE_TYPE)
 
 
 def test_hse_band_structure(mock_vasp, clean_dir, si_structure):
@@ -233,9 +247,9 @@ def test_hse_band_structure(mock_vasp, clean_dir, si_structure):
         VaspObject.DOS,
     }
 
-    assert isinstance(line_output.vasp_objects[VaspObject.BANDSTRUCTURE], ElectronicBS)
+    assert isinstance(line_output.vasp_objects[VaspObject.BANDSTRUCTURE], BS_LINE_TYPE)
     assert isinstance(
-        uniform_output.vasp_objects[VaspObject.BANDSTRUCTURE], ElectronicBS
+        uniform_output.vasp_objects[VaspObject.BANDSTRUCTURE], BS_UNIF_TYPE
     )
 
 
@@ -274,7 +288,7 @@ def test_hse_uniform_band_structure(mock_vasp, clean_dir, si_structure):
         VaspObject.DOS,
     }
     assert isinstance(
-        uniform_output.vasp_objects[VaspObject.BANDSTRUCTURE], ElectronicBS
+        uniform_output.vasp_objects[VaspObject.BANDSTRUCTURE], BS_UNIF_TYPE
     )
 
 
@@ -307,7 +321,7 @@ def test_hse_line_mode_band_structure(mock_vasp, clean_dir, si_structure):
 
     assert static_output.output.energy == pytest.approx(-12.52887403)
     assert static_output.included_objects is None
-    assert isinstance(line_output.vasp_objects[VaspObject.BANDSTRUCTURE], ElectronicBS)
+    assert isinstance(line_output.vasp_objects[VaspObject.BANDSTRUCTURE], BS_LINE_TYPE)
 
 
 def test_optics(mock_vasp, clean_dir, si_structure):
