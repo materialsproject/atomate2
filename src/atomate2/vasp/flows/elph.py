@@ -117,7 +117,7 @@ class ElectronPhononMaker(Maker):
                 ),
                 task_document_kwargs={
                     "strip_bandstructure_projections": False,
-                    "strip_dos_projections": True,
+                    "strip_dos_projections": False,
                 },
             ),
         )
