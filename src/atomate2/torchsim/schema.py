@@ -2,23 +2,22 @@
 
 from __future__ import annotations
 
-from enum import StrEnum
+import pathlib  # noqa: TC003
+from enum import StrEnum  # type: ignore[attr-defined]
 from typing import TYPE_CHECKING, Any, Literal
 
+import numpy as np  # noqa: TC002
 import torch_sim as ts
 from pydantic import BaseModel, ConfigDict, Field
+from pymatgen.core import Structure  # noqa: TC002
+from torch_sim.integrators import Integrator  # noqa: TC002
+from torch_sim.optimizers import Optimizer  # noqa: TC002
 
 if TYPE_CHECKING:
-    import pathlib
     from collections.abc import Callable
 
-    import numpy as np
-    from pymatgen.core import Structure
-    from torch_sim.integrators import Integrator
-    from torch_sim.optimizers import Optimizer
 
-
-class TSModelType(StrEnum):
+class TSModelType(StrEnum):  # type: ignore[attr-defined]
     """Enum for model types."""
 
     FAIRCHEMV1 = "FairChemV1Model"
@@ -33,7 +32,7 @@ class TSModelType(StrEnum):
     LENNARD_JONES = "LennardJonesModel"
 
 
-class ConvergenceFn(StrEnum):
+class ConvergenceFn(StrEnum):  # type: ignore[attr-defined]
     """Enum for convergence function types."""
 
     ENERGY = "energy"
@@ -107,8 +106,6 @@ class TrajectoryReporterDetails(BaseModel):
         None, description="List of output filenames for trajectory data."
     )
 
-    model_config = ConfigDict(extra="allow")
-
 
 class AutobatcherDetails(BaseModel):
     """Details for a TorchSim autobatcher configuration."""
@@ -141,8 +138,6 @@ class AutobatcherDetails(BaseModel):
         None, description="Maximum padding for memory allocation."
     )
 
-    model_config = ConfigDict(extra="allow")
-
 
 class TSCalculation(BaseModel):
     """Schema for TorchSim calculation tasks."""
@@ -155,12 +150,12 @@ class TSCalculation(BaseModel):
         ..., description="List of final structures from the calculation."
     )
 
-    trajectory_reporter: TrajectoryReporterDetails = Field(
-        ..., description="Configuration for the trajectory reporter."
+    trajectory_reporter: TrajectoryReporterDetails | None = Field(
+        None, description="Configuration for the trajectory reporter."
     )
 
-    autobatcher: AutobatcherDetails = Field(
-        ..., description="Configuration for the autobatcher."
+    autobatcher: AutobatcherDetails | None = Field(
+        None, description="Configuration for the autobatcher."
     )
 
     model: TSModelType = Field(
@@ -224,6 +219,8 @@ class TSStaticCalculation(TSCalculation):
     all_properties: list[dict[str, np.ndarray]] = Field(
         ..., description="List of calculated properties for each structure."
     )
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class TSTaskDoc(BaseModel):

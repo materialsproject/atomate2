@@ -62,6 +62,7 @@ forcefields = [
     "quippy-ase>=0.9.14; python_version < '3.12'",
     "sevenn>=0.9.3",
     "torchdata<=0.7.1",                            # TODO: remove when issue fixed
+    "torch_sim==0.4.1",
 ]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 ase = ["ase>=3.26.0"]

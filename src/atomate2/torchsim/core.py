@@ -13,15 +13,15 @@ from jobflow import Maker, Response, job
 from torch_sim.autobatching import BinningAutoBatcher, InFlightAutoBatcher
 
 from atomate2.torchsim.schema import (
-    AutobatcherDetails,
-    ConvergenceFn,
     CONVERGENCE_FN_REGISTRY,
     PROPERTY_FN_REGISTRY,
+    AutobatcherDetails,
+    ConvergenceFn,
     PropertyFn,
+    TrajectoryReporterDetails,
     TSModelType,
     TSOpimizeCalculation,
     TSTaskDoc,
-    TrajectoryReporterDetails,
 )
 
 if TYPE_CHECKING:
@@ -164,7 +164,7 @@ def process_in_flight_autobatcher_dict(
         if not autobatcher_dict:
             return False, None
         # otherwise, configure the autobatcher, with the private runners method
-        autobatcher = ts.runners._configure_in_flight_autobatcher(
+        autobatcher = ts.runners._configure_in_flight_autobatcher(  # noqa: SLF001
             state, model, autobatcher=autobatcher_dict, max_iterations=max_iterations
         )
     else:
@@ -195,7 +195,7 @@ def process_binning_autobatcher_dict(
     """
     if isinstance(autobatcher_dict, bool):
         # otherwise, configure the autobatcher, with the private runners method
-        autobatcher = ts.runners._configure_batches_iterator(
+        autobatcher = ts.runners._configure_batches_iterator(  # noqa: SLF001
             state, model, autobatcher=autobatcher_dict
         )
         # list means no autobatcher
@@ -316,7 +316,7 @@ class TSOptimizeMaker(Maker):
     model_path: str | Path
     model_kwargs: dict[str, Any] = field(default_factory=dict)
     name: str = "torchsim optimize"
-    convergence_fn: ConvergenceFn = ConvergenceFn.FORCE
+    convergence_fn: ConvergenceFn = ConvergenceFn.FORCE  # type: ignore[assignment]
     convergence_fn_kwargs: dict | None = None
     trajectory_reporter_dict: dict | None = None
     autobatcher_dict: dict | bool = False
