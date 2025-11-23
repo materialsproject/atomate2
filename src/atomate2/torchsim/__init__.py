@@ -2,5 +2,4 @@
 
 from atomate2.torchsim.core import TSIntegrateMaker, TSOptimizeMaker, TSStaticMaker
 
-__all__ = ["TSOptimizeMaker", "TSIntegrateMaker", "TSStaticMaker"]
-
+__all__ = ["TSIntegrateMaker", "TSOptimizeMaker", "TSStaticMaker"]
