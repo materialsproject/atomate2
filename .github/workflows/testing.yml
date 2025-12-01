@@ -48,10 +48,11 @@ jobs:
 
       - name: Set up micromamba
         uses: mamba-org/setup-micromamba@main
-
-      - name: Create mamba environment
-        run: |
-          micromamba create -n a2 python=${{ matrix.python-version }} --yes
+        with:
+          environment-name: a2
+          cache-environment: false
+          create-args: >-
+            python=${{ matrix.python-version }}
 
       - name: Install uv
         run: micromamba run -n a2 pip install uv
