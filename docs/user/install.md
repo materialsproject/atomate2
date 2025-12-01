@@ -379,6 +379,8 @@ export ATOMATE2_VASP_USE_EMMET_MODEL=true
 ```
 Note that there is an equivalent `emmet-core` setting, which can be set by the environment variable `EMMET_USE_EMMET_MODELS`.
 
+For ASE and machine learning forcefield jobs, you can use the `ASE_FORCEFIELD_USE_EMMET_MODELS` flag in `atomate2.yaml` to toggle the same functionality.
+
 The default in `atomate2` is to use `pymatgen` models.
 
 [materials project]: https://materialsproject.org/dashboard

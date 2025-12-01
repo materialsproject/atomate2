@@ -3,6 +3,7 @@
 import pytest
 from jobflow import run_locally
 
+from atomate2 import SETTINGS
 from atomate2.forcefields.flows.mpmorph import (
     FastQuenchMLFFMDMaker,
     MPMorphMLFFMDMaker,
@@ -162,14 +163,19 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
     # this is designed to check if MD is injected with approximately
     # the right temperature, and that's why tolerance is so high
     assert all(
-        doc.forcefield_objects["trajectory"].temperature[0]
-        == pytest.approx(temp, abs=50)
+        (
+            doc.forcefield_objects["trajectory"].temperature[0]
+            if SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
+            else doc.forcefield_objects["trajectory"].frame_properties[0]["temperature"]
+        ) == pytest.approx(temp, abs=50)
         for name, doc in task_docs.items()
         if "MD Maker" in name
     )
-    assert task_docs["production run"].forcefield_objects["trajectory"].temperature[
-        0
-    ] == pytest.approx(temp, abs=50)
+    assert (
+        task_docs["production run"].forcefield_objects["trajectory"].temperature[0]
+        if SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
+        else task_docs["production run"].forcefield_objects["trajectory"].frame_properties[0]["temperature"]
+    ) == pytest.approx(temp, abs=50)
 
     # check that MD Maker Energies are close
     # TODO: This may be unnecessary because it changes from model to model
@@ -211,7 +217,11 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
 
         assert all(
             any(
-                doc.forcefield_objects["trajectory"].temperature[0]
+                (
+                    doc.forcefield_objects["trajectory"].temperature[0]
+                    if SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
+                    else doc.forcefield_objects["trajectory"].frame_properties[0]["temperature"]
+                )
                 == pytest.approx(T, abs=100)
                 for name, doc in task_docs.items()
                 if "K" in name

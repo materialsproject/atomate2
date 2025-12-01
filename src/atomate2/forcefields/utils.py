@@ -9,11 +9,9 @@ from enum import Enum
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ase.io import Trajectory as AseTrajectory
 from ase.units import Bohr
 from ase.units import GPa as _GPa_to_eV_per_A3
 from monty.json import MontyDecoder
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -23,7 +21,7 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseResult
 
-_FORCEFIELD_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, "ionic_steps"]
+_FORCEFIELD_DATA_OBJECTS = ["trajectory", "ionic_steps"]
 
 
 class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+

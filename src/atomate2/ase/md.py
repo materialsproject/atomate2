@@ -30,6 +30,7 @@ from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 from scipy.interpolate import interp1d
 
+from atomate2 import SETTINGS
 from atomate2.ase.jobs import _ASE_DATA_OBJECTS, AseMaker
 from atomate2.ase.schemas import AseResult, AseTaskDoc
 from atomate2.ase.utils import TrajectoryObserver
@@ -161,6 +162,9 @@ class AseMDMaker(AseMaker, ABC):
         Whether to initialize the atomic velocities with zero angular momentum
     verbose : bool = False
         Whether to print stdout to screen during the MD run.
+    use_emmet_models : bool = False
+        Whether to use emmet-core (True) or pymatgen (False)
+        data models for larger objects, e.g., trajectories.
     """
 
     name: str = "ASE MD"
@@ -181,6 +185,7 @@ class AseMDMaker(AseMaker, ABC):
     zero_linear_momentum: bool = False
     zero_angular_momentum: bool = False
     verbose: bool = False
+    use_emmet_models : bool = SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
 
     def __post_init__(self) -> None:
         """Ensure that ensemble is an enum."""
@@ -429,7 +434,10 @@ class AseMDMaker(AseMaker, ABC):
 
         return AseResult(
             final_mol_or_struct=mol_or_struct,
-            trajectory=md_observer.to_emmet_trajectory(filename=None),
+            trajectory=getattr(
+                md_observer,
+                "to_emmet_trajectory" if self.use_emmet_models else "to_pymatgen_trajectory"
+            )(filename=None),
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
         )
