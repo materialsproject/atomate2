@@ -11,13 +11,11 @@ Copyright (c) 2022, Materials Virtual Lab.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
-
 from ase.stress import voigt_6_to_full_3x3_stress
 from ase.units import GPa
-
 from emmet.core.math import Matrix3D, Vector3D
 from emmet.core.structure import MoleculeMetadata, StructureMetadata
 from emmet.core.trajectory import AtomTrajectory
@@ -44,7 +42,7 @@ _task_doc_translation_keys = {
 }
 
 
-def convert_stress_from_voigt_to_symm(voigt : Vector6D) -> Matrix3D:
+def convert_stress_from_voigt_to_symm(voigt: Vector6D) -> Matrix3D:
     """Convert Voigt representation stress in GPa to 3x3 tensor in kilobar.
 
     Converts stress units from eV/A³ to kBar (* -1 from standard output)
@@ -54,6 +52,7 @@ def convert_stress_from_voigt_to_symm(voigt : Vector6D) -> Matrix3D:
         The Voigt representation of the stress in eV/A³
     """
     return tuple(voigt_6_to_full_3x3_stress(np.array(voigt) * -10 / GPa).tolist())
+
 
 class AseResult(BaseModel):
     """Schema to store outputs in AseTaskDocument."""
@@ -443,8 +442,10 @@ class AseTaskDoc(AseBaseModel):
         input_mol_or_struct = None
         if trajectory:
             n_steps = len(trajectory)
-            if isinstance(trajectory,AtomTrajectory):
-                input_mol_or_struct = trajectory.to_pmg(frame_props=tuple(), indices=0)[0]
+            if isinstance(trajectory, AtomTrajectory):
+                input_mol_or_struct = trajectory.to_pmg(frame_props=tuple(), indices=0)[
+                    0
+                ]
             else:
                 input_mol_or_struct = trajectory[0]
 
@@ -477,10 +478,10 @@ class AseTaskDoc(AseBaseModel):
 
         if trajectory:
             ionic_step_props = {"energy", "forces"}
-            if isinstance(trajectory,AtomTrajectory):
+            if isinstance(trajectory, AtomTrajectory):
                 final_energy = trajectory.energy[-1]
                 final_forces = trajectory.forces[-1]
-                
+
                 if trajectory.stress:
                     final_stress = trajectory.stress[-1]
                     ionic_step_props.add("stress")
@@ -491,21 +492,29 @@ class AseTaskDoc(AseBaseModel):
                 final_energy = trajectory.frame_properties[-1]["energy"]
                 final_forces = trajectory.frame_properties[-1]["forces"]
                 if any(frame.get("stress") for frame in trajectory.frame_properties):
-                    final_stress = convert_stress_from_voigt_to_symm(trajectory.frame_properties[-1]["stress"])
+                    final_stress = convert_stress_from_voigt_to_symm(
+                        trajectory.frame_properties[-1]["stress"]
+                    )
                     ionic_step_props.add("stress")
 
                 if any(frame.get("magmoms") for frame in trajectory.frame_properties):
                     ionic_step_props.add("magmoms")
 
             ionic_steps = []
-            if len(
-                use_ionic_step_props := ionic_step_props.intersection(ionic_step_data or set())
-            ) > 0:
+            if (
+                len(
+                    use_ionic_step_props := ionic_step_props.intersection(
+                        ionic_step_data or set()
+                    )
+                )
+                > 0
+            ):
                 if isinstance(trajectory, AtomTrajectory):
                     ionic_steps = [
                         IonicStep(
-                            mol_or_struct = trajectory.to_pmg(
-                                frame_props=tuple(), indices=idx,
+                            mol_or_struct=trajectory.to_pmg(
+                                frame_props=tuple(),
+                                indices=idx,
                             )[0],
                             **{
                                 key: getattr(trajectory, key)[idx]
@@ -518,7 +527,7 @@ class AseTaskDoc(AseBaseModel):
                 else:
                     ionic_steps = [
                         IonicStep(
-                            mol_or_struct = atoms,
+                            mol_or_struct=atoms,
                             **{
                                 key: convert_stress_from_voigt_to_symm(
                                     trajectory.frame_properties[idx].get(key)

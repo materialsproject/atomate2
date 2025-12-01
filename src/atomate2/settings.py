@@ -218,9 +218,10 @@ class Atomate2Settings(BaseSettings):
         5, description="Maximum number of restarts of a job."
     )
 
-    ASE_FORCEFIELD_USE_EMMET_MODELS : bool = Field(
-        False, description="Whether to use emmet-core models (False) or pymatgen (True) models "
-        "for larger data objects, such as trajectories."
+    ASE_FORCEFIELD_USE_EMMET_MODELS: bool = Field(
+        default=False,
+        description="Whether to use emmet-core models (False) or pymatgen (True) "
+        "models for larger data objects, such as trajectories.",
     )
 
     model_config = SettingsConfigDict(env_prefix=_ENV_PREFIX)

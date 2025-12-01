@@ -55,8 +55,9 @@ def test_trajectory_observer(si_structure: Structure, test_dir, tmp_dir):
     ("optimizer", "traj_file", "use_emmet_models"),
     [("BFGS", None, True), (None, None, False), (BFGS, "log_file.traj", False)],
 )
-def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file, use_emmet_models):
-
+def test_relaxer(
+    si_structure, test_dir, tmp_dir, optimizer, traj_file, use_emmet_models
+):
     expected_lattice = {
         "a": 3.866974,
         "b": 3.866974,
@@ -88,7 +89,9 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file, use_emme
     )
 
     try:
-        relax_output = relaxer.relax(atoms=si_structure, traj_file=traj_file, use_emmet_models = use_emmet_models,)
+        relax_output = relaxer.relax(
+            atoms=si_structure, traj_file=traj_file, use_emmet_models=use_emmet_models
+        )
     except TypeError:
         return
 
@@ -99,13 +102,13 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file, use_emme
 
     if use_emmet_models:
         final_frame_attrs = {
-            k : getattr(relax_output.trajectory,k)[-1]
-            for k in ("energy","forces","stress")
+            k: getattr(relax_output.trajectory, k)[-1]
+            for k in ("energy", "forces", "stress")
         }
     else:
         final_frame_attrs = {
-            k : relax_output.trajectory.frame_properties[-1].get(k)
-            for k in ("energy","forces","stress")
+            k: relax_output.trajectory.frame_properties[-1].get(k)
+            for k in ("energy", "forces", "stress")
         }
     assert final_frame_attrs["energy"] == pytest.approx(expected_energy)
 
@@ -118,7 +121,8 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file, use_emme
     assert_allclose(
         final_frame_attrs["stress"],
         convert_stress_from_voigt_to_symm(expected_stresses)
-        if use_emmet_models else expected_stresses,
+        if use_emmet_models
+        else expected_stresses,
         atol=1e-11,
     )
 

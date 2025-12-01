@@ -185,7 +185,7 @@ class AseMDMaker(AseMaker, ABC):
     zero_linear_momentum: bool = False
     zero_angular_momentum: bool = False
     verbose: bool = False
-    use_emmet_models : bool = SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
+    use_emmet_models: bool = SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
 
     def __post_init__(self) -> None:
         """Ensure that ensemble is an enum."""
@@ -436,7 +436,9 @@ class AseMDMaker(AseMaker, ABC):
             final_mol_or_struct=mol_or_struct,
             trajectory=getattr(
                 md_observer,
-                "to_emmet_trajectory" if self.use_emmet_models else "to_pymatgen_trajectory"
+                "to_emmet_trajectory"
+                if self.use_emmet_models
+                else "to_pymatgen_trajectory",
             )(filename=None),
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,

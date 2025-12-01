@@ -354,7 +354,7 @@ and then return to this tutorial.
 ### Materials Project API key
 
 You can get an API key from the [Materials Project] by logging in and going to your
-[Dashboard](materials project). 
+[Dashboard](materials project).
 
 Add this to your `.bashrc`, `.zshrc`, etc. as an environment variable:
 ```console

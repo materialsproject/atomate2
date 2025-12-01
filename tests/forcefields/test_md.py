@@ -10,16 +10,16 @@ import pytest
 from ase import units
 from ase.io import Trajectory as AseTrajectory
 from ase.md.verlet import VelocityVerlet
+from emmet.core.trajectory import AtomTrajectory
 from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core import Structure
+from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.md import ForceFieldMDMaker
 
-from emmet.core.trajectory import AtomTrajectory
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 def test_maker_initialization():
     # test that makers can be initialized from str or value enum
@@ -40,9 +40,15 @@ def test_maker_initialization():
             ) == ForceFieldMDMaker(force_field_name=mlff)
 
 
-@pytest.mark.parametrize("ff_name, use_emmet_models", product(MLFF,[True,False]))
+@pytest.mark.parametrize("ff_name, use_emmet_models", product(MLFF, [True, False]))
 def test_ml_ff_md_maker(
-    ff_name, use_emmet_models, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
+    ff_name,
+    use_emmet_models,
+    si_structure,
+    sr_ti_o3_structure,
+    al2_au_structure,
+    test_dir,
+    clean_dir,
 ):
     if ff_name in map(MLFF, ("Forcefield", "MACE")):
         return  # nothing to test here, MLFF.Forcefield is just a generic placeholder
@@ -106,7 +112,7 @@ def test_ml_ff_md_maker(
         store_trajectory="partial",
         ionic_step_data=("energy", "forces", "stress", "mol_or_struct"),
         calculator_kwargs=calculator_kwargs,
-        use_emmet_models = use_emmet_models,
+        use_emmet_models=use_emmet_models,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output
@@ -138,14 +144,14 @@ def test_ml_ff_md_maker(
             getattr(task_doc.objects["trajectory"], key, None) is not None
             for key in ("energy", "forces", "stress", "velocities", "temperature")
         )
-        assert isinstance(task_doc.objects["trajectory"],AtomTrajectory)
+        assert isinstance(task_doc.objects["trajectory"], AtomTrajectory)
     else:
         assert all(
             frame.get(key) is not None
             for key in ("energy", "forces", "stress", "velocities", "temperature")
             for frame in task_doc.objects["trajectory"].frame_properties
         )
-        assert isinstance(task_doc.objects["trajectory"],PmgTrajectory)
+        assert isinstance(task_doc.objects["trajectory"], PmgTrajectory)
 
 
 @pytest.mark.parametrize(
@@ -279,7 +285,7 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
         dynamics="nose-hoover",
         temperature=temp_schedule,
         ase_md_kwargs={"ttime": 50.0 * units.fs, "pfactor": None},
-        use_emmet_models = True,
+        use_emmet_models=True,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output

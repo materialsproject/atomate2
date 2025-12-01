@@ -61,6 +61,7 @@ FORCE_BASED_OPTIMIZERS = {
 # Parameters chosen for consistency with atomate2.vasp.sets.core.NebSetGenerator
 DEFAULT_NEB_KWARGS = {"k": 5.0, "climb": True, "method": "improvedtangent"}
 
+
 class TrajectoryObserver:
     """Trajectory observer.
 
@@ -386,7 +387,7 @@ class AseRelaxer:
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
         filter_kwargs: dict | None = None,
-        use_emmet_models : bool = SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS,
+        use_emmet_models: bool = SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS,
         **kwargs,
     ) -> AseResult:
         """
@@ -457,11 +458,13 @@ class AseRelaxer:
         if use_emmet_models:
             traj = obs.to_emmet_trajectory(filename=None)
             final_forces = traj.forces[-1]
-            first_last_energy = [traj.energy[idx] for idx in (0,-1)]
+            first_last_energy = [traj.energy[idx] for idx in (0, -1)]
         else:
-            traj = obs.to_pymatgen_trajectory(filename=None,file_format="pmg")
+            traj = obs.to_pymatgen_trajectory(filename=None, file_format="pmg")
             final_forces = traj.frame_properties[-1]["forces"]
-            first_last_energy = [traj.frame_properties[idx]["energy"] for idx in (0,-1)]
+            first_last_energy = [
+                traj.frame_properties[idx]["energy"] for idx in (0, -1)
+            ]
 
         if final_atoms_object_file is not None:
             if steps <= 1:
@@ -494,7 +497,7 @@ class AseRelaxer:
             trajectory=traj,
             converged=converged,
             is_force_converged=np.all(
-                np.linalg.norm(np.array(final_forces),axis=1) < abs(fmax)
+                np.linalg.norm(np.array(final_forces), axis=1) < abs(fmax)
             ),
             energy_downhill=first_last_energy[-1] < first_last_energy[0],
             dir_name=os.getcwd(),

@@ -167,14 +167,17 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
             doc.forcefield_objects["trajectory"].temperature[0]
             if SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
             else doc.forcefield_objects["trajectory"].frame_properties[0]["temperature"]
-        ) == pytest.approx(temp, abs=50)
+        )
+        == pytest.approx(temp, abs=50)
         for name, doc in task_docs.items()
         if "MD Maker" in name
     )
     assert (
         task_docs["production run"].forcefield_objects["trajectory"].temperature[0]
         if SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
-        else task_docs["production run"].forcefield_objects["trajectory"].frame_properties[0]["temperature"]
+        else task_docs["production run"]
+        .forcefield_objects["trajectory"]
+        .frame_properties[0]["temperature"]
     ) == pytest.approx(temp, abs=50)
 
     # check that MD Maker Energies are close
@@ -220,7 +223,9 @@ def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
                 (
                     doc.forcefield_objects["trajectory"].temperature[0]
                     if SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
-                    else doc.forcefield_objects["trajectory"].frame_properties[0]["temperature"]
+                    else doc.forcefield_objects["trajectory"].frame_properties[0][
+                        "temperature"
+                    ]
                 )
                 == pytest.approx(T, abs=100)
                 for name, doc in task_docs.items()
