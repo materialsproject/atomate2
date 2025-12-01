@@ -354,19 +354,32 @@ and then return to this tutorial.
 ### Materials Project API key
 
 You can get an API key from the [Materials Project] by logging in and going to your
-[Dashboard](materials project). Add this also to
-your `~/.config/.pmgrc.yaml` so that it looks like the following
+[Dashboard](materials project). 
 
+Add this to your `.bashrc`, `.zshrc`, etc. as an environment variable:
+```console
+export MP_API_KEY=your_api_key_here
+```
+
+## Emmet-core setup
+
+The `emmet-core` package is used to define data schemas for parsing outputs of workflows.
+It is also used in building the Materials Project data, therefore its use in `atomate2` is to broadly ensure compatibility with the Materials Project's data structures.
+`emmet-core` allows you to use either `pymatgen` or `emmet-core`-defined models for larger data objects, such as charge densities (`CHGCAR`, `AECCAR*`), or trajectories (relaxation, MD, etc.).
+The `pymatgen` objects have long been the default in workflows, and are structured to be output as JSON files.
+The `emmet-core` objects have been designed with both JSON and Apache parquet as storage formats.
+
+If you will be storing data in the cloud, or would like to use these newer data models which may use less storage, you can either add a line to your `atomate2.yaml` file:
 ```yaml
-PMG_VASP_PSP_DIR: <<INSTALL_DIR>>/pps
-PMG_MAPI_KEY: <<YOUR_API_KEY>>
+VASP_USE_EMMET_MODELS: true
 ```
-
-You can generate this file and set these values using the `pymatgen` CLI:
-
-```bash
-pmg config --add PMG_VASP_PSP_DIR /abs/path/to/psp PMG_MAPI_KEY your_api_key
+or use an environment variable in your `.bashrc`:
+```console
+export ATOMATE2_VASP_USE_EMMET_MODEL=true
 ```
+Note that there is an equivalent `emmet-core` setting, which can be set by the environment variable `EMMET_USE_EMMET_MODELS`.
+
+The default in `atomate2` is to use `pymatgen` models.
 
 [materials project]: https://materialsproject.org/dashboard
 
