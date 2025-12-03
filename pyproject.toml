@@ -98,7 +98,7 @@ strict-openff = [
     "mdanalysis==2.9.0",
     "monty==2025.3.3",
     "openmm-mdanalysis-reporter==0.1.0",
-    "openmm==8.4.0",
+    "openmm==8.4.0.post2",
     "pymatgen==2025.10.7", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 strict-forcefields = [
