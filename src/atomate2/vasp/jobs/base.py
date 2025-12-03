@@ -10,9 +10,10 @@ from typing import TYPE_CHECKING
 
 from emmet.core.neb import NebIntermediateImagesDoc
 from emmet.core.tasks import TaskDoc
+from emmet.core.types.enums import VaspObject
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
-from pymatgen.core.trajectory import Trajectory
+from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
     BandStructureSymmLine,
@@ -40,19 +41,30 @@ _CHARGEMOL_EXE_EXISTS = bool(
 )
 
 _DATA_OBJECTS = [
-    BandStructure,
-    BandStructureSymmLine,
-    DOS,
-    Dos,
-    CompleteDos,
-    Locpot,
-    Chgcar,
     Wavecar,
-    Trajectory,
     "force_constants",
     "normalmode_eigenvecs",
     "bandstructure",  # FIX: BandStructure is not currently MSONable
 ]
+
+if SETTINGS.VASP_USE_EMMET_MODELS:
+    # Because the emmet-core models deserialize to JSON
+    # on model_dump, we just pass field names here, not object types
+    _DATA_OBJECTS.extend([f.value for f in VaspObject])
+else:
+    # Store pymatgen objects
+    _DATA_OBJECTS.extend(
+        [
+            BandStructure,
+            BandStructureSymmLine,
+            DOS,
+            Dos,
+            CompleteDos,
+            Locpot,
+            Chgcar,
+            PmgTrajectory,
+        ]
+    )
 
 # Input files. Partially from https://www.vasp.at/wiki/index.php/Category:Input_files
 # Exclude those that are also outputs
@@ -318,4 +330,7 @@ def get_vasp_task_document(
                 stacklevel=1,
             )
 
+    kwargs["use_emmet_models"] = kwargs.get(
+        "use_emmet_models", SETTINGS.VASP_USE_EMMET_MODELS
+    )
     return TaskDoc.from_directory(path, **kwargs)

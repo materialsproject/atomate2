@@ -114,6 +114,12 @@ class Atomate2Settings(BaseSettings):
         "VaspInputGenerator.",
     )
 
+    VASP_USE_EMMET_MODELS: bool = Field(
+        default=False,
+        description="Whether to use emmet models (True) for VASP electronic "
+        "structure data, or the pymatgen models (False).",
+    )
+
     LOBSTER_CMD: str = Field(
         default="lobster", description="Command to run standard version of VASP."
     )
@@ -210,6 +216,12 @@ class Atomate2Settings(BaseSettings):
     )
     ABINIT_MAX_RESTARTS: int = Field(
         5, description="Maximum number of restarts of a job."
+    )
+
+    ASE_FORCEFIELD_USE_EMMET_MODELS: bool = Field(
+        default=False,
+        description="Whether to use emmet-core models (False) or pymatgen (True) "
+        "models for larger data objects, such as trajectories.",
     )
 
     model_config = SettingsConfigDict(env_prefix=_ENV_PREFIX)

@@ -193,7 +193,6 @@ def fake_run_vasp(
 
     if clear_inputs:
         _clear_vasp_inputs()
-
     _copy_vasp_outputs(ref_path)
 
     # pretend to run VASP by copying pre-generated outputs from reference dir

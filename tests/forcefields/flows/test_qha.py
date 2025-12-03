@@ -63,8 +63,6 @@ def test_qha_dir_change_defaults(clean_dir, si_structure: Structure, tmp_path: P
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
-    # print(responses)
-
     # # validate the outputs
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
     assert isinstance(ph_bs_dos_doc, PhononQHADoc)
@@ -94,8 +92,6 @@ def test_qha_dir_manual_supercell(clean_dir, si_structure: Structure, tmp_path: 
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-
-    # print(responses)
 
     # # validate the outputs
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
