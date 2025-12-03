@@ -7,12 +7,11 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
-from fireworks import LaunchPad
 from jobflow import JobStore
 from jobflow.settings import JobflowSettings
 from maggma.stores import MemoryStore
 from monty.serialization import loadfn
-from pymatgen.core import Molecule, Structure
+from pymatgen.core import Structure
 
 from atomate2.utils.log import initialize_logger
 
@@ -44,7 +43,7 @@ def clean_dir(debug_mode):
     os.chdir(new_path)
     yield
     if debug_mode:
-        print(f"Tests ran in {new_path}")  # noqa: T201
+        initialize_logger().log(f"Tests ran in {new_path}")
     else:
         os.chdir(old_cwd)
         shutil.rmtree(new_path)
@@ -69,6 +68,12 @@ def debug_mode():
 
 @pytest.fixture(scope="session")
 def lpad(database, debug_mode):
+    try:
+        from fireworks import LaunchPad
+    except ImportError as exc:
+        raise ImportError(
+            "Please pip install fireworks to use this test fixture."
+        ) from exc
     lpad = LaunchPad(name=database)
     lpad.reset("", require_password=False)
     yield lpad
@@ -115,12 +120,6 @@ def sr_ti_o3_structure(test_dir):
 @pytest.fixture
 def ba_ti_o3_structure(test_dir):
     return Structure.from_file(test_dir / "structures" / "BaTiO3.cif")
-
-
-@pytest.fixture
-def water_molecule(test_dir):
-    return Molecule.from_file(test_dir / "molecules" / "water.xyz")
-
 
 @pytest.fixture(autouse=True)
 def mock_jobflow_settings(memory_jobstore):

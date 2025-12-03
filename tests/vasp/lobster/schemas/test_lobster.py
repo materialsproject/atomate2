@@ -202,7 +202,6 @@ def test_lobster_task_doc_saved_jsons(lobster_test_dir):
         "calc_quality_text",
         "dos",
         "lso_dos",
-        "builder_meta",
     ]
 
     for cba_key in expected_cba_keys_json:
@@ -256,7 +255,6 @@ def test_lobster_task_doc_saved_jsons(lobster_test_dir):
     )
 
     expected_computational_data_keys_json = [
-        "builder_meta",
         "structure",
         "charges",
         "lobsterout",

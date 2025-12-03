@@ -4,15 +4,13 @@ from __future__ import annotations
 
 import logging
 import time
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from ase.io import Trajectory as AseTrajectory
-from emmet.core.vasp.calculation import StoreTrajectoryOption
+from emmet.core.types.enums import StoreTrajectoryOption
 from jobflow import Maker, job
 from pymatgen.core import Molecule, Structure
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
 from atomate2.ase.schemas import AseResult, AseTaskDoc
@@ -27,11 +25,11 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
 
-_ASE_DATA_OBJECTS = [PmgTrajectory, AseTrajectory]
+_ASE_DATA_OBJECTS = ["trajectory"]
 
 
 @dataclass
-class AseMaker(Maker, metaclass=ABCMeta):
+class AseMaker(Maker, ABC):
     """
     Define basic template of ASE-based jobs.
 
@@ -265,6 +263,27 @@ class AseRelaxMaker(AseMaker):
             **self.optimizer_kwargs,
         )
         return relaxer.relax(mol_or_struct, steps=self.steps, **self.relax_kwargs)
+
+
+@dataclass
+class EmtRelaxMaker(AseRelaxMaker):
+    """
+    Relax a structure with an EMT potential.
+
+    This serves mostly as an example of how to create atomate2
+    jobs with existing ASE calculators, and test purposes.
+
+    See `atomate2.ase.AseRelaxMaker` for further documentation.
+    """
+
+    name: str = "EMT relaxation"
+
+    @property
+    def calculator(self) -> Calculator:
+        """EMT calculator."""
+        from ase.calculators.emt import EMT
+
+        return EMT(**self.calculator_kwargs)
 
 
 @dataclass

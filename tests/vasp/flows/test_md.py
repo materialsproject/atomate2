@@ -1,9 +1,19 @@
-from emmet.core.vasp.calculation import VaspObject
+from emmet.core.types.enums import VaspObject
 from jobflow import Flow
 
+from atomate2 import SETTINGS
 from atomate2.vasp.flows.md import MultiMDMaker
 from atomate2.vasp.powerups import update_user_kpoints_settings
 from atomate2.vasp.schemas.md import MultiMDOutput
+
+if SETTINGS.VASP_USE_EMMET_MODELS:
+    from emmet.core.trajectory import RelaxTrajectory
+
+    TRAJ_TYPE = RelaxTrajectory
+else:
+    from pymatgen.core.trajectory import Trajectory
+
+    TRAJ_TYPE = Trajectory
 
 
 def test_multi_md_flow(mock_vasp, clean_dir, si_structure):
@@ -48,7 +58,15 @@ def test_multi_md_flow(mock_vasp, clean_dir, si_structure):
     # validate the outputs
     output_md_1 = responses[flow.jobs[0].jobs[0].uuid][1].output
     traj = output_md_1.vasp_objects[VaspObject.TRAJECTORY]
-    assert len(traj.frame_properties) == 3
+    assert isinstance(traj, TRAJ_TYPE)
+    if SETTINGS.VASP_USE_EMMET_MODELS:
+        assert traj.num_ionic_steps == 3
+        assert all(
+            len(getattr(traj, k)) == traj.num_ionic_steps
+            for k in ("energy", "forces", "lattice", "stress")
+        )
+    else:
+        assert len(traj.frame_properties) == 3
     assert isinstance(output_md_1, TaskDoc)
 
     output_recap_1 = responses[flow.jobs[0].jobs[2].uuid][1].output

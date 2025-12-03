@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any
 from custodian import Custodian
 from custodian.lobster.handlers import EnoughBandsValidator, LobsterFilesValidator
 from custodian.lobster.jobs import LobsterJob
-from jobflow.utils import ValueEnum
+from emmet.core.types.enums import ValueEnum
 
 from atomate2 import SETTINGS
 

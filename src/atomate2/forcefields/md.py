@@ -3,34 +3,28 @@
 from __future__ import annotations
 
 import warnings
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from jobflow import job
-from monty.dev import deprecated
 
 from atomate2.ase.md import AseMDMaker, MDEnsemble
-from atomate2.forcefields import MLFF, _get_formatted_ff_name
-from atomate2.forcefields.jobs import (
-    _DEFAULT_CALCULATOR_KWARGS,
-    _FORCEFIELD_DATA_OBJECTS,
-)
-from atomate2.forcefields.schemas import (
-    ForceFieldMoleculeTaskDocument,
-    ForceFieldStructureTaskDocument,
-    ForceFieldTaskDocument,
-)
-from atomate2.forcefields.utils import ase_calculator, revert_default_dtype
+from atomate2.forcefields.utils import _FORCEFIELD_DATA_OBJECTS, ForceFieldMixin
+from atomate2.forcefields.schemas import BaseForceFieldTaskDocument
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from ase.calculators.calculator import Calculator
     from pymatgen.core.structure import Molecule, Structure
+
+    from atomate2.forcefields.schemas import (
+        ForceFieldMoleculeTaskDocument,
+        ForceFieldTaskDocument,
+    )
 
 
 @dataclass
-class ForceFieldMDMaker(AseMDMaker):
+class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
     """
     Perform MD with a force field.
 
@@ -93,11 +87,13 @@ class ForceFieldMDMaker(AseMDMaker):
     traj_file : str | Path | None = None
         If a str or Path, the name of the file to save the MD trajectory to.
         If None, the trajectory is not written to disk
-    traj_file_fmt : Literal["ase","pmg","xdatcar"]
+    traj_file_fmt : Literal["ase","pmg","xdatcar","parquet"]
         The format of the trajectory file to write.
         If "ase", writes an ASE .Trajectory.
         If "pmg", writes a Pymatgen .Trajectory.
-        If "xdatcar, writes a VASP-style XDATCAR
+        If "xdatcar", writes a VASP-style XDATCAR.
+        If "parquet", uses emmet.core's Trajectory object to write a high-efficiency
+            parquet format file containing the trajectory.
     traj_interval : int
         The step interval for saving the trajectories.
     mb_velocity_seed : int or None
@@ -111,23 +107,6 @@ class ForceFieldMDMaker(AseMDMaker):
         Options to pass to the TaskDoc.
     """
 
-    name: str = "Forcefield MD"
-    force_field_name: str | MLFF = MLFF.Forcefield
-    task_document_kwargs: dict = None
-
-    def __post_init__(self) -> None:
-        """Ensure that force_field_name is correctly assigned."""
-        super().__post_init__()
-        self.force_field_name = _get_formatted_ff_name(self.force_field_name)
-
-        # Pad calculator_kwargs with default values, but permit user to override them
-        self.calculator_kwargs = {
-            **_DEFAULT_CALCULATOR_KWARGS.get(
-                MLFF(self.force_field_name.split("MLFF.")[-1]), {}
-            ),
-            **self.calculator_kwargs,
-        }
-
     @job(
         data=[*_FORCEFIELD_DATA_OBJECTS, "ionic_steps"],
     )
@@ -135,7 +114,7 @@ class ForceFieldMDMaker(AseMDMaker):
         self,
         structure: Molecule | Structure,
         prev_dir: str | Path | None = None,
-    ) -> ForceFieldStructureTaskDocument | ForceFieldMoleculeTaskDocument:
+    ) -> ForceFieldTaskDocument | ForceFieldMoleculeTaskDocument:
         """
         Perform MD on a structure using forcefields and jobflow.
 
@@ -147,8 +126,7 @@ class ForceFieldMDMaker(AseMDMaker):
             A previous calculation directory to copy output files from. Unused, just
             added to match the method signature of other makers.
         """
-        with revert_default_dtype():
-            md_result = self.run_ase(structure, prev_dir=prev_dir)
+        md_result = self._run_ase_safe(structure, prev_dir=prev_dir)
 
         self.task_document_kwargs = self.task_document_kwargs or {}
         if len(self.task_document_kwargs) > 0:
@@ -159,7 +137,7 @@ class ForceFieldMDMaker(AseMDMaker):
                 stacklevel=1,
             )
 
-        return ForceFieldTaskDocument.from_ase_compatible_result_forcefield(
+        return BaseForceFieldTaskDocument.from_ase_compatible_result(
             str(self.force_field_name),  # make mypy happy
             md_result,
             relax_cell=(self.ensemble == MDEnsemble.npt),
@@ -173,100 +151,3 @@ class ForceFieldMDMaker(AseMDMaker):
             tags=self.tags,
             **self.task_document_kwargs,
         )
-
-    @property
-    def calculator(self) -> Calculator:
-        """ASE calculator, can be overwritten by user."""
-        return ase_calculator(
-            str(self.force_field_name),  # make mypy happy
-            **self.calculator_kwargs,
-        )
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use NEP, set `force_field_name = 'NEP'` in ForceFieldMDMaker.",
-)
-@dataclass
-class NEPMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with NEP."""
-
-    name: str = f"{MLFF.NEP} MD"
-    force_field_name: str | MLFF = MLFF.NEP
-    calculator_kwargs: dict = field(
-        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.NEP]
-    )
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message=(
-        "To use MACE-MP-0, set `force_field_name = 'MACE_MP_0'` in ForceFieldMDMaker."
-    ),
-)
-@dataclass
-class MACEMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with MACE-MP-0."""
-
-    name: str = f"{MLFF.MACE_MP_0} MD"
-    force_field_name: str | MLFF = MLFF.MACE_MP_0
-    calculator_kwargs: dict = field(
-        default_factory=lambda: {"default_dtype": "float32"}
-    )
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use M3GNet, set `force_field_name = 'M3GNet'` in ForceFieldMDMaker.",
-)
-@dataclass
-class M3GNetMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with M3GNet."""
-
-    name: str = f"{MLFF.M3GNet} MD"
-    force_field_name: str | MLFF = MLFF.M3GNet
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use CHGNet, set `force_field_name = 'CHGNet'` in ForceFieldMDMaker.",
-)
-@dataclass
-class CHGNetMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with CHGNet."""
-
-    name: str = f"{MLFF.CHGNet} MD"
-    force_field_name: str | MLFF = MLFF.CHGNet
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use GAP, set `force_field_name = 'GAP'` in ForceFieldMDMaker.",
-)
-@dataclass
-class GAPMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with GAP."""
-
-    name: str = f"{MLFF.GAP} MD"
-    force_field_name: str | MLFF = MLFF.GAP
-    calculator_kwargs: dict = field(
-        default_factory=lambda: _DEFAULT_CALCULATOR_KWARGS[MLFF.GAP]
-    )
-
-
-@deprecated(
-    replacement=ForceFieldMDMaker,
-    deadline=(2025, 1, 1),
-    message="To use Nequip, set `force_field_name = 'Nequip'` in ForceFieldMDMaker.",
-)
-@dataclass
-class NequipMDMaker(ForceFieldMDMaker):
-    """Perform an MD run with nequip."""
-
-    name: str = f"{MLFF.Nequip} MD"
-    force_field_name: str = f"{MLFF.Nequip}"

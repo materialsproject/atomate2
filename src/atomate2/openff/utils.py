@@ -11,9 +11,12 @@ import openff.toolkit as tk
 from emmet.core.openff import MoleculeSpec
 from pymatgen.core import Element, Molecule
 from pymatgen.io.openff import create_openff_mol
+from scipy.constants import Avogadro
 
 if TYPE_CHECKING:
     import pathlib
+
+DEFAULT_ATOMIC_MASSES = {el.Z: el.atomic_mass for el in Element}
 
 
 def create_mol_spec(
@@ -145,6 +148,7 @@ def calculate_elyte_composition(
     salts: dict[str, float],
     solvent_densities: dict = None,
     solvent_ratio_dimension: Literal["mass", "volume"] = "mass",
+    atomic_masses: dict[int, float] | None = None,
 ) -> dict[str, float]:
     """Calculate the normalized mass ratios of an electrolyte solution.
 
@@ -158,6 +162,9 @@ def calculate_elyte_composition(
         Dictionary of solvent SMILES strings and their densities (g/ml).
     solvent_ratio_dimension: optional, str
         Whether the solvents are included with a ratio of "mass" or "volume"
+    atomic_masses : dict[int,float] or None (Default)
+        The mass of each element in the species dict. Defaults to the
+        most recent data from pymatgen.core.periodic_table.Element
 
     Returns
     -------
@@ -186,11 +193,11 @@ def calculate_elyte_composition(
     }
 
     # Calculate the molecular weights of the solvent
-    masses = {el.Z: el.atomic_mass for el in Element}
+    atomic_masses = atomic_masses or DEFAULT_ATOMIC_MASSES
     salt_mws = {}
     for smile in salts:
         mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
-        salt_mws[smile] = sum(masses[atom.atomic_number] for atom in mol.atoms)
+        salt_mws[smile] = sum(atomic_masses[atom.atomic_number] for atom in mol.atoms)
 
     # Convert salt mole ratios to mass ratios
     salt_mass_ratio = {
@@ -207,7 +214,9 @@ def calculate_elyte_composition(
     return {species: mass / total_mass for species, mass in combined_mass_ratio.items()}
 
 
-def counts_from_masses(species: dict[str, float], n_mol: int) -> dict[str, float]:
+def counts_from_masses(
+    species: dict[str, float], n_mol: int, atomic_masses: dict[int, float] | None = None
+) -> dict[str, float]:
     """Calculate the number of mols needed to yield a given mass ratio.
 
     Parameters
@@ -216,19 +225,21 @@ def counts_from_masses(species: dict[str, float], n_mol: int) -> dict[str, float
         Dictionary of species SMILES strings and their relative mass fractions.
     n_mol : float
         Total number of mols. Returned array will sum to near n_mol.
-
+    atomic_masses : dict[int,float] or None (Default)
+        The mass of each element in the species dict. Defaults to the
+        most recent data from pymatgen.core.periodic_table.Element
 
     Returns
     -------
     numpy.ndarray
         n_mols: Number of each SMILES needed for the given mass ratio.
     """
-    masses = {el.Z: el.atomic_mass for el in Element}
+    atomic_masses = atomic_masses or DEFAULT_ATOMIC_MASSES
 
     mol_weights = []
     for smile in species:
         mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
-        mol_weights.append(sum(masses[atom.atomic_number] for atom in mol.atoms))
+        mol_weights.append(sum(atomic_masses[atom.atomic_number] for atom in mol.atoms))
 
     mol_ratio = np.array(list(species.values())) / np.array(mol_weights)
     mol_ratio /= sum(mol_ratio)
@@ -239,7 +250,10 @@ def counts_from_masses(species: dict[str, float], n_mol: int) -> dict[str, float
 
 
 def counts_from_box_size(
-    species: dict[str, float], side_length: float, density: float = 0.8
+    species: dict[str, float],
+    side_length: float,
+    density: float = 0.8,
+    atomic_masses: dict[int, float] | None = None,
 ) -> dict[str, float]:
     """Calculate the number of molecules needed to fill a box.
 
@@ -251,15 +265,17 @@ def counts_from_box_size(
         Side length of the cubic simulation box in nm.
     density : int, optional
         Density of the system in g/cm^3. Default is 1 g/cm^3.
+    atomic_masses : dict[int,float] or None (Default)
+        The mass of each element in the species dict. Defaults to the
+        most recent data from pymatgen.core.periodic_table.Element
 
     Returns
     -------
     dict of str, float
         Number of each species needed to fill the box with the given density.
     """
-    masses = {el.Z: el.atomic_mass for el in Element}
+    atomic_masses = atomic_masses or DEFAULT_ATOMIC_MASSES
 
-    na = 6.02214076e23  # Avogadro's number
     volume = (side_length * 1e-7) ** 3  # Convert from nm3 to cm^3
     total_mass = volume * density  # grams
 
@@ -267,9 +283,9 @@ def counts_from_box_size(
     mol_weights = []
     for smile in species:
         mol = tk.Molecule.from_smiles(smile, allow_undefined_stereo=True)
-        mol_weights.append(sum(masses[atom.atomic_number] for atom in mol.atoms))
+        mol_weights.append(sum(atomic_masses[atom.atomic_number] for atom in mol.atoms))
     mean_mw = np.mean(mol_weights)
-    n_mol = (total_mass / mean_mw) * na
+    n_mol = (total_mass / mean_mw) * Avogadro
 
     # Calculate the number of moles needed for each species
     mol_ratio = np.array(list(species.values())) / np.array(mol_weights)

@@ -2,37 +2,23 @@
 
 import sys
 from contextlib import nullcontext
+from itertools import product
 from pathlib import Path
 
 import numpy as np
 import pytest
 from ase import units
-from ase.io import Trajectory
+from ase.io import Trajectory as AseTrajectory
 from ase.md.verlet import VelocityVerlet
+from emmet.core.trajectory import AtomTrajectory
 from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core import Structure
+from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.md import (
-    CHGNetMDMaker,
-    ForceFieldMDMaker,
-    GAPMDMaker,
-    M3GNetMDMaker,
-    MACEMDMaker,
-    NEPMDMaker,
-    NequipMDMaker,
-)
-
-name_to_maker = {
-    MLFF.CHGNet: CHGNetMDMaker,
-    MLFF.M3GNet: M3GNetMDMaker,
-    MLFF.MACE: MACEMDMaker,
-    MLFF.GAP: GAPMDMaker,
-    MLFF.NEP: NEPMDMaker,
-    MLFF.Nequip: NequipMDMaker,
-}
+from atomate2.forcefields.md import ForceFieldMDMaker
 
 
 def test_maker_initialization():
@@ -54,9 +40,16 @@ def test_maker_initialization():
             ) == ForceFieldMDMaker(force_field_name=mlff)
 
 
-@pytest.mark.parametrize("ff_name", MLFF)
+@pytest.mark.parametrize("ff_name, use_emmet_models", product(MLFF, [True, False]))
 def test_ml_ff_md_maker(
-    ff_name, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
+    ff_name,
+    use_emmet_models,
+    si_structure,
+    sr_ti_o3_structure,
+    al2_au_structure,
+    test_dir,
+    clean_dir,
+    get_deepmd_pretrained_model_path,
 ):
     if ff_name in map(MLFF, ("Forcefield", "MACE")):
         return  # nothing to test here, MLFF.Forcefield is just a generic placeholder
@@ -79,8 +72,9 @@ def test_ml_ff_md_maker(
         MLFF.NEP: -3.966232215741286,
         MLFF.Nequip: -8.84670181274414,
         MLFF.SevenNet: -5.394115447998047,
-        MLFF.MATPES_PBE: -5.4188947677612305,
-        MLFF.MATPES_R2SCAN: -8.707625389099121,
+        MLFF.DeepMD: -744.6197365326168,
+        MLFF.MATPES_PBE: -5.230762481689453,
+        MLFF.MATPES_R2SCAN: -8.561729431152344,
     }
 
     # ASE can slightly change tolerances on structure positions
@@ -109,6 +103,9 @@ def test_ml_ff_md_maker(
             "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
         }
         unit_cell_structure = sr_ti_o3_structure.copy()
+    elif ff_name == MLFF.DeepMD:
+        calculator_kwargs = {"model": get_deepmd_pretrained_model_path}
+        unit_cell_structure = sr_ti_o3_structure.copy()
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
@@ -120,6 +117,7 @@ def test_ml_ff_md_maker(
         store_trajectory="partial",
         ionic_step_data=("energy", "forces", "stress", "mol_or_struct"),
         calculator_kwargs=calculator_kwargs,
+        use_emmet_models=use_emmet_models,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output
@@ -145,18 +143,26 @@ def test_ml_ff_md_maker(
     assert task_doc.included_objects == ["trajectory"]
     assert len(task_doc.objects["trajectory"]) == n_steps + 1
     assert task_doc.objects == task_doc.forcefield_objects  # test legacy alias
-    assert all(
-        key in step
-        for key in ("energy", "forces", "stress", "velocities", "temperature")
-        for step in task_doc.objects["trajectory"].frame_properties
-    )
-    if ff_maker := name_to_maker.get(ff_name):
-        with pytest.warns(FutureWarning):
-            ff_maker()
+
+    if use_emmet_models:
+        assert all(
+            getattr(task_doc.objects["trajectory"], key, None) is not None
+            for key in ("energy", "forces", "stress", "velocities", "temperature")
+        )
+        assert isinstance(task_doc.objects["trajectory"], AtomTrajectory)
+    else:
+        assert all(
+            frame.get(key) is not None
+            for key in ("energy", "forces", "stress", "velocities", "temperature")
+            for frame in task_doc.objects["trajectory"].frame_properties
+        )
+        assert isinstance(task_doc.objects["trajectory"], PmgTrajectory)
 
 
-@pytest.mark.parametrize("traj_file", ["trajectory.json.gz", "atoms.traj"])
-def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
+@pytest.mark.parametrize(
+    "traj_file,ff_name", [("trajectory.json.gz", "CHGNet"), ("atoms.traj", "CHGNet")]
+)
+def test_traj_file(traj_file, ff_name, si_structure, clean_dir):
     n_steps = 5
 
     # Check that traj file written to disk is consistent with trajectory
@@ -167,7 +173,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
         traj_file_loader = loadfn
     else:
         traj_file_fmt = "ase"
-        traj_file_loader = Trajectory
+        traj_file_loader = AseTrajectory
 
     structure = si_structure.to_conventional() * (2, 2, 2)
     job = ForceFieldMDMaker(
@@ -175,6 +181,7 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
         n_steps=n_steps,
         traj_file=traj_file,
         traj_file_fmt=traj_file_fmt,
+        use_emmet_models=True,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output
@@ -184,32 +191,34 @@ def test_traj_file(traj_file, si_structure, clean_dir, ff_name="CHGNet"):
     assert len(traj_from_file) == n_steps + 1
 
     if traj_file_fmt == "pmg":
-        assert all(
-            np.all(
+        other_traj = {
+            key: [
                 traj_from_file.frame_properties[idx][key]
-                == task_doc.objects["trajectory"].frame_properties[idx].get(key)
-            )
+                for idx in range(len(traj_from_file))
+            ]
             for key in ("energy", "temperature", "forces", "velocities")
-            for idx in range(n_steps + 1)
-        )
+        }
     elif traj_file_fmt == "ase":
-        traj_as_dict = [
-            {
-                "energy": traj_from_file[idx].get_potential_energy(),
-                "temperature": traj_from_file[idx].get_temperature(),
-                "forces": traj_from_file[idx].get_forces(),
-                "velocities": traj_from_file[idx].get_velocities(),
-            }
-            for idx in range(1, n_steps + 1)
-        ]
-        assert all(
-            np.all(
-                traj_as_dict[idx - 1][key]
-                == task_doc.objects["trajectory"].frame_properties[idx].get(key)
+        other_traj = {
+            k: [getattr(traj_from_file[idx], v)() for idx in range(n_steps + 1)]
+            for k, v in {
+                "energy": "get_potential_energy",
+                "temperature": "get_temperature",
+                "forces": "get_forces",
+                "velocities": "get_velocities",
+            }.items()
+        }
+
+    assert all(
+        np.all(
+            np.abs(
+                np.array(other_traj[key])
+                - np.array(getattr(task_doc.objects["trajectory"], key))
             )
-            for key in ("energy", "temperature", "forces", "velocities")
-            for idx in range(1, n_steps + 1)
         )
+        < 1e-6
+        for key in ("energy", "temperature", "forces", "velocities")
+    )
 
 
 def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
@@ -281,13 +290,12 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
         dynamics="nose-hoover",
         temperature=temp_schedule,
         ase_md_kwargs={"ttime": 50.0 * units.fs, "pfactor": None},
+        use_emmet_models=True,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output
 
-    temp_history = [
-        step["temperature"] for step in task_doc.objects["trajectory"].frame_properties
-    ]
+    temp_history = task_doc.objects["trajectory"].temperature
 
     assert temp_history[-1] > temp_schedule[0]
 

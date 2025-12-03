@@ -7,6 +7,8 @@ import io
 import os
 import sys
 import time
+from copy import deepcopy
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -17,14 +19,18 @@ from ase.constraints import FixSymmetry
 from ase.filters import FrechetCellFilter
 from ase.io import Trajectory as AseTrajectory
 from ase.io import write as ase_write
+from ase.mep.neb import NEB
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
+from emmet.core.neb import NebMethod, NebResult
+from emmet.core.trajectory import AtomTrajectory
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
-from atomate2.ase.schemas import AseResult
+from atomate2 import SETTINGS
+from atomate2.ase.schemas import AseResult, convert_stress_from_voigt_to_symm
 
 if TYPE_CHECKING:
     from os import PathLike
@@ -45,6 +51,15 @@ OPTIMIZERS = {
     "SciPyFminBFGS": SciPyFminBFGS,
     "BFGSLineSearch": BFGSLineSearch,
 }
+
+FORCE_BASED_OPTIMIZERS = {
+    "FIRE": FIRE,
+    "BFGS": BFGS,
+    "MDMin": MDMin,
+}
+
+# Parameters chosen for consistency with atomate2.vasp.sets.core.NebSetGenerator
+DEFAULT_NEB_KWARGS = {"k": 5.0, "climb": True, "method": "improvedtangent"}
 
 
 class TrajectoryObserver:
@@ -70,7 +85,7 @@ class TrajectoryObserver:
         self.forces: list[np.ndarray] = []
 
         self._calc_kwargs = {
-            "stress": (
+            "stresses": (
                 "stress" in self.atoms.calc.implemented_properties and self._is_periodic
             ),
             "magmoms": True,
@@ -100,7 +115,7 @@ class TrajectoryObserver:
         # When _store_md_outputs is True, ideal gas contribution to
         # stress is included.
         # Only store stress for periodic systems.
-        if self._calc_kwargs["stress"]:
+        if self._calc_kwargs["stresses"]:
             self.stresses.append(
                 self.atoms.get_stress(include_ideal_gas=self._store_md_outputs)
             )
@@ -131,7 +146,7 @@ class TrajectoryObserver:
     def save(
         self,
         filename: str | PathLike | None,
-        fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
+        fmt: Literal["pmg", "ase", "xdatcar", "parquet"] = "ase",
     ) -> None:
         """
         Save the trajectory file using monty.serialization.
@@ -149,6 +164,10 @@ class TrajectoryObserver:
             self.to_pymatgen_trajectory(filename=filename, file_format=fmt)  # type: ignore[arg-type]
         elif fmt == "ase":
             self.to_ase_trajectory(filename=filename)
+        elif fmt == "parquet":
+            self.to_emmet_trajectory(filename=filename)
+        else:
+            raise ValueError(f"Unknown trajectory format {fmt}.")
 
     def to_ase_trajectory(
         self, filename: str | None = "atoms.traj"
@@ -174,7 +193,7 @@ class TrajectoryObserver:
                 "energy": self.energies[idx],
                 "forces": self.forces[idx],
             }
-            if self._calc_kwargs["stress"]:
+            if self._calc_kwargs["stresses"]:
                 kwargs["stress"] = self.stresses[idx]
             if self._calc_kwargs["magmoms"]:
                 kwargs["magmom"] = self.magmoms[idx]
@@ -203,7 +222,7 @@ class TrajectoryObserver:
             If "xdatcar", writes a VASP-format XDATCAR object to file
         """
         frame_property_keys = ["energy", "forces"]
-        for k in ("stress", "magmoms", "velocities", "temperature"):
+        for k in ("stresses", "magmoms", "velocities", "temperature"):
             if self._calc_kwargs[k]:
                 frame_property_keys += [k]
 
@@ -261,12 +280,45 @@ class TrajectoryObserver:
 
         return pmg_traj
 
+    def to_emmet_trajectory(
+        self, filename: str | PathLike | None = None
+    ) -> AtomTrajectory:
+        """Create an emmet.core.AtomTrajectory."""
+        frame_props = {
+            "cells": "lattice",
+            "energies": "energy",
+            "forces": "forces",
+            "stresses": "stress",
+            "magmoms": "magmoms",
+            "velocities": "velocities",
+            "temperatures": "temperature",
+        }
+        for k in ("stresses", "magmoms"):
+            if not self._calc_kwargs[k]:
+                frame_props.pop(k)
+
+        ionic_step_data = {v: getattr(self, k) for k, v in frame_props.items()}
+        if self._calc_kwargs["stresses"]:
+            ionic_step_data["stress"] = [
+                convert_stress_from_voigt_to_symm(val) for val in self.stresses
+            ]
+
+        traj = AtomTrajectory(
+            elements=self.atoms.get_atomic_numbers(),
+            cart_coords=self.atom_positions,
+            num_ionic_steps=len(self.atom_positions),
+            **ionic_step_data,
+        )
+        if filename:
+            traj.to(file_name=filename)
+        return traj
+
     def as_dict(self) -> dict:
         """Make JSONable dict representation of the Trajectory."""
         traj_dict = {
             "energy": self.energies,
             "forces": self.forces,
-            "stress": self.stresses,
+            "stresses": self.stresses,
             "atom_positions": self.atom_positions,
             "cells": self.cells,
             "atoms": self.atoms,
@@ -329,11 +381,13 @@ class AseRelaxer:
         fmax: float = 0.1,
         steps: int = 500,
         traj_file: str = None,
+        traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
         final_atoms_object_file: str | os.PathLike[str] = "final_atoms_object.xyz",
         interval: int = 1,
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
         filter_kwargs: dict | None = None,
+        use_emmet_models: bool = SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS,
         **kwargs,
     ) -> AseResult:
         """
@@ -357,6 +411,9 @@ class AseRelaxer:
             The step interval for saving the trajectories.
         verbose : bool
             If True, screen output will be shown.
+        use_emmet_models : bool
+            Whether to use emmet-core (True) or pymatgen (False)
+            data models for larger objects, e.g., trajectories.
         **kwargs
             Further kwargs.
 
@@ -383,23 +440,31 @@ class AseRelaxer:
                     atoms = cell_filter(atoms, **(filter_kwargs or {}))
                 optimizer = self.opt_class(atoms, **kwargs)
                 optimizer.attach(obs, interval=interval)
-                optimizer.run(fmax=fmax, steps=steps)
+                converged = optimizer.run(fmax=fmax, steps=steps)
+            else:
+                converged = True
             obs()
             t_f = time.perf_counter()
 
         if traj_file is not None:
-            obs.save(traj_file)
+            obs.save(traj_file, fmt=traj_file_fmt)
         if isinstance(atoms, cell_filter):
             atoms = atoms.atoms
 
         struct = self.ase_adaptor.get_structure(
             atoms, cls=Molecule if is_mol else Structure
         )
-        traj = obs.to_pymatgen_trajectory(None)
-        is_force_conv = all(
-            np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
-            for idx in range(len(struct))
-        )
+
+        if use_emmet_models:
+            traj = obs.to_emmet_trajectory(filename=None)
+            final_forces = traj.forces[-1]
+            first_last_energy = [traj.energy[idx] for idx in (0, -1)]
+        else:
+            traj = obs.to_pymatgen_trajectory(filename=None, file_format="pmg")
+            final_forces = traj.frame_properties[-1]["forces"]
+            first_last_energy = [
+                traj.frame_properties[idx]["energy"] for idx in (0, -1)
+            ]
 
         if final_atoms_object_file is not None:
             if steps <= 1:
@@ -407,6 +472,22 @@ class AseRelaxer:
                 write_atoms.calc = self.calculator
             else:
                 write_atoms = atoms
+
+            # ase==3.26.0 change: writing FixAtoms and FixCartesian
+            # constraints to extxyz supported.
+            # Write only these constraints to extxyz
+            if len(write_atoms.constraints) > 0:
+                from ase.constraints import FixAtoms, FixCartesian
+
+                write_atoms_constraints = [
+                    cons
+                    for cons in write_atoms.constraints
+                    if isinstance(cons, FixAtoms | FixCartesian)
+                ]
+                del write_atoms.constraints
+                for cons in write_atoms_constraints:
+                    write_atoms.set_constraint(cons)
+
             ase_write(
                 final_atoms_object_file, write_atoms, format="extxyz", append=True
             )
@@ -414,9 +495,174 @@ class AseRelaxer:
         return AseResult(
             final_mol_or_struct=struct,
             trajectory=traj,
-            is_force_converged=is_force_conv,
-            energy_downhill=traj.frame_properties[-1]["energy"]
-            < traj.frame_properties[0]["energy"],
+            converged=converged,
+            is_force_converged=np.all(
+                np.linalg.norm(np.array(final_forces), axis=1) < abs(fmax)
+            ),
+            energy_downhill=first_last_energy[-1] < first_last_energy[0],
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
+        )
+
+
+class AseNebInterface:
+    """Perform NEB using the Atomic Simulation Environment."""
+
+    def __init__(
+        self,
+        calculator: Calculator,
+        optimizer: Optimizer | str = "FIRE",
+        fix_symmetry: bool = False,
+        symprec: float = 1e-2,
+    ) -> None:
+        """Initialize the interface.
+
+        Parameters
+        ----------
+        calculator (ase Calculator): an ase calculator
+        optimizer (str or ase Optimizer): the optimization algorithm.
+        fix_symmetry (bool): if True, symmetry will be fixed during relaxation.
+        symprec (float): Tolerance for symmetry finding in case of fix_symmetry.
+        """
+        self.calculator = calculator
+
+        if isinstance(optimizer, str):
+            optimizer_obj = FORCE_BASED_OPTIMIZERS.get(optimizer)
+        elif optimizer is None:
+            raise ValueError("Optimizer cannot be None")
+        else:
+            optimizer_obj = optimizer
+
+        self.opt_class: Optimizer = optimizer_obj
+        self.ase_adaptor = AseAtomsAdaptor()
+        self.fix_symmetry = fix_symmetry
+        self.symprec = symprec
+
+    def run_neb(
+        self,
+        images: list[Atoms | Structure | Molecule],
+        fmax: float = 0.1,
+        steps: int = 500,
+        traj_file: str | Path | list[str | Path] = None,
+        traj_file_fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
+        interval: int = 1,
+        verbose: bool = False,
+        neb_doc_kwargs: dict | None = None,
+        neb_kwargs: dict = DEFAULT_NEB_KWARGS,
+        optimizer_kwargs: dict | None = None,
+    ) -> NebResult:
+        """
+        Perform NEB on a list of molecules or structures.
+
+        Parameters
+        ----------
+        images : list of ASE Atoms, pymatgen Structure, or pymatgen Molecule
+            The ordered list of atoms to perform NEB on.
+        fmax : float
+            Total force tolerance for relaxation convergence.
+        steps : int
+            Max number of steps for relaxation.
+        traj_file : str, Path, or a list of str / Path
+            The trajectory file for saving. If a single str or Path,
+            this specifies the file name prefix. For example,
+                `traj_file = "traj_mp-149.json.gz"`
+            will yield individual trajectory file names:
+                traj_mp-149-image-1.json.gz
+                traj_mp-149-image-2.json.gz
+                ...
+            Alternately, if this is a list of str / Path, this specifies the
+            file name for each image.
+        interval : int
+            The step interval for saving the trajectories.
+        verbose : bool
+            If True, screen output will be shown.
+        neb_kwargs : dict, defaults to DEFAULT_NEB_KWARGS
+            kwargs to pass to ASE's NEB.
+        optimizer_kwargs : dict or None (default)
+            kwargs to pass to the optimizer.
+
+        Returns
+        -------
+            dict including optimized structure and the trajectory
+        """
+        is_mol = isinstance(images[0], Molecule) or (
+            isinstance(images[0], Atoms) and all(not pbc for pbc in images[0].pbc)
+        )
+        num_images = len(images)
+        initial_images = []
+        for img in images:
+            if isinstance(img, Atoms):
+                image = self.ase_adaptor.get_structure(
+                    img, cls=Molecule if is_mol else Structure
+                )
+            else:
+                image = img.copy()
+            initial_images.append(image)
+
+        for idx, image in enumerate(images):
+            if isinstance(image, Structure | Molecule):
+                images[idx] = self.ase_adaptor.get_atoms(image)
+
+            if self.fix_symmetry:
+                images[idx].set_constraint(FixSymmetry(image, symprec=self.symprec))
+            images[idx].calc = deepcopy(self.calculator)
+
+        neb_calc = NEB(images, **neb_kwargs)
+
+        with contextlib.redirect_stdout(sys.stdout if verbose else io.StringIO()):
+            observers = [TrajectoryObserver(image) for image in images]
+            optimizer = self.opt_class(neb_calc, **(optimizer_kwargs or {}))
+            for idx in range(num_images):
+                optimizer.attach(observers[idx], interval=interval)
+            t_i = time.perf_counter()
+            converged = optimizer.run(fmax=fmax, steps=steps)
+            t_f = time.perf_counter()
+            [observers[idx]() for idx in range(num_images)]
+
+        if traj_file is not None:
+            if isinstance(traj_file, str | Path):
+                traj_file = Path(traj_file)
+                if traj_file_suffix := "".join(traj_file.suffixes):
+                    traj_file_prefix = str(traj_file).split(traj_file_suffix)[0]
+                else:
+                    traj_file_prefix = str(traj_file)
+                traj_files = [
+                    f"{traj_file_prefix}-image-{idx + 1}{traj_file_suffix}"
+                    for idx in range(num_images)
+                ]
+            elif isinstance(traj_file, list | tuple):
+                traj_files = [str(f) for f in traj_file]
+
+            for idx, f in enumerate(traj_files):
+                observers[idx].save(f, fmt=traj_file_fmt)
+
+        images = [
+            self.ase_adaptor.get_structure(image, cls=Molecule if is_mol else Structure)
+            for image in images
+        ]
+        num_sites = len(images[0])
+
+        tags = [os.getcwd()]
+        is_force_conv = all(
+            np.linalg.norm(observers[image_idx].forces[-1][site_idx]) < abs(fmax)
+            for site_idx in range(num_sites)
+            for image_idx in range(num_images)
+        )
+        tags += ["force converged" if is_force_conv else "forces not converged"]
+        tags += [f"elapsed time {t_f - t_i} seconds"]
+
+        return NebResult(
+            images=images,
+            image_indices=list(range(len(images))),
+            initial_images=initial_images,
+            energies=[
+                observers[image_idx].energies[-1] for image_idx in range(num_images)
+            ],
+            method=NebMethod.CLIMBING_IMAGE
+            if neb_kwargs.get("climb", False)
+            else NebMethod.STANDARD,
+            dir_name=os.getcwd(),
+            state="successful" if converged else "failed",
+            tags=tags,
+            **neb_doc_kwargs,
         )
