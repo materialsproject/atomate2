@@ -79,4 +79,4 @@ docs/reference/atomate2.*
 .ipynb_checkpoints
 .aider*
 
-test_data/forcefields/deepmd_graph.pb
+tests/test_data/forcefields/deepmd_graph.pb
