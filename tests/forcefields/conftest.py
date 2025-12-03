@@ -24,7 +24,7 @@ def pytest_runtest_setup(item: Any) -> None:
 def download_deepmd_pretrained_model(test_dir: Path) -> None:
     # Download DeepMD pretrained model from GitHub
     file_url = "https://raw.github.com/sliutheorygroup/UniPero/main/model/graph.pb"
-    local_path = test_dir / "forcefields" / "deepmd" / "graph.pb"
+    local_path = test_dir / "forcefields" / "deepmd_graph.pb"
     ref_md5 = "2814ae7f2eb1c605dd78f2964187de40"
     _, http_message = urllib.request.urlretrieve(file_url, local_path)  # noqa: S310
     if "Content-Type: text/html" in http_message:

@@ -529,7 +529,7 @@ def test_deepmd_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     job = ForceFieldStaticMaker(
         force_field_name="DeepMD",
         ionic_step_data=("structure", "energy"),
-        calculator_kwargs={"model": test_dir / "forcefields" / "deepmd" / "graph.pb"},
+        calculator_kwargs={"model": test_dir / "forcefields" / "deepmd_graph.pb"},
     ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -563,7 +563,7 @@ def test_deepmd_relax_maker(
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
         fix_symmetry=fix_symmetry,
-        calculator_kwargs={"model": test_dir / "forcefields" / "deepmd" / "graph.pb"},
+        calculator_kwargs={"model": test_dir / "forcefields" / "deepmd_graph.pb"},
     ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully

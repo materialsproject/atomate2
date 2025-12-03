@@ -103,7 +103,7 @@ def test_ml_ff_md_maker(
         }
         unit_cell_structure = sr_ti_o3_structure.copy()
     elif ff_name == MLFF.DeepMD:
-        calculator_kwargs = {"model": test_dir / "forcefields" / "deepmd" / "graph.pb"}
+        calculator_kwargs = {"model": test_dir / "forcefields" / "deepmd_graph.pb"}
         unit_cell_structure = sr_ti_o3_structure.copy()
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
