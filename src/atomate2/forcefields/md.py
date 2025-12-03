@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 from jobflow import job
 
 from atomate2.ase.md import AseMDMaker, MDEnsemble
-from atomate2.forcefields.schemas import BaseForceFieldTaskDocument
+from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import _FORCEFIELD_DATA_OBJECTS, ForceFieldMixin
 
 if TYPE_CHECKING:
@@ -17,10 +17,7 @@ if TYPE_CHECKING:
 
     from pymatgen.core.structure import Molecule, Structure
 
-    from atomate2.forcefields.schemas import (
-        ForceFieldMoleculeTaskDocument,
-        ForceFieldTaskDocument,
-    )
+    from atomate2.forcefields.schemas import ForceFieldMoleculeTaskDocument
 
 
 @dataclass
@@ -137,7 +134,7 @@ class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
                 stacklevel=1,
             )
 
-        return BaseForceFieldTaskDocument.from_ase_compatible_result(
+        return ForceFieldTaskDocument.from_ase_compatible_result(
             str(self.force_field_name),  # make mypy happy
             md_result,
             relax_cell=(self.ensemble == MDEnsemble.npt),

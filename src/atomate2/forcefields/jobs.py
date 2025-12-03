@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 from jobflow import job
 
 from atomate2.ase.jobs import AseRelaxMaker
-from atomate2.forcefields.schemas import BaseForceFieldTaskDocument
+from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import _FORCEFIELD_DATA_OBJECTS, MLFF, ForceFieldMixin
 
 if TYPE_CHECKING:
@@ -19,10 +19,7 @@ if TYPE_CHECKING:
 
     from pymatgen.core.structure import Molecule, Structure
 
-    from atomate2.forcefields.schemas import (
-        ForceFieldMoleculeTaskDocument,
-        ForceFieldTaskDocument,
-    )
+    from atomate2.forcefields.schemas import ForceFieldMoleculeTaskDocument
 
 logger = logging.getLogger(__name__)
 
@@ -144,7 +141,7 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
                 stacklevel=1,
             )
 
-        return BaseForceFieldTaskDocument.from_ase_compatible_result(
+        return ForceFieldTaskDocument.from_ase_compatible_result(
             str(self.force_field_name),  # make mypy happy
             ase_result,
             self.steps,
