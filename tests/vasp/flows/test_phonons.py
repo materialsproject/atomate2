@@ -123,8 +123,8 @@ def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
 ):
     # mapping from job name to directory containing test files
     ref_paths = {
-        "phonon static 1/1": "Si_phonons_3/phonon_static_1_1",
-        "static": "Si_phonons_3/static",
+        "phonon static 1/1": "Si_phonons_2/phonon_static_1_1",
+        "static": "Si_phonons_2/static",
     }
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings
@@ -145,33 +145,27 @@ def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
         store_force_constants=False,
         prefer_90_degrees=False,
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
-    ).make(si_structure)
+    ).make(si_structure.to_conventional())
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
+    # validate settings
+    assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
+    assert isinstance(
+        responses[job.jobs[-1].uuid][1].output.phonopy_settings,
+        PhononComputationalSettings,
+    )
+    assert responses[job.jobs[-1].uuid][1].output.phonopy_settings.npoints_band == 101
+    assert (
+        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
+        == "seekpath"
+    )
+    phonopy_settings = responses[job.jobs[-1].uuid][1].output.phonopy_settings
+    assert phonopy_settings.kpoint_density_dos == 7_000
+
     # validate the outputs
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
-
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.free_energies,
-        [5927.157337, 5905.309813, 5439.530414, 4207.379685, 2297.576147],
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.entropies,
-        [0.0, 1.256496, 8.511348, 15.928285, 22.063785],
-        atol=1e-6,
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [0.0, 4.958763, 15.893881, 20.311967, 22.196143],
-    )
-
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [5927.157337, 6030.959432, 7141.800004, 8985.865319, 11123.090225],
-    )
-
     assert isinstance(
         responses[job.jobs[-1].uuid][1].output.phonon_bandstructure,
         PhononBandStructureSymmLine,
@@ -187,7 +181,7 @@ def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
     assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
     assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.74525804
+        responses[job.jobs[-1].uuid][1].output.total_dft_energy, -5.74555232
     )
     assert responses[job.jobs[-1].uuid][1].output.born is None
     assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
@@ -196,40 +190,25 @@ def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.primitive_matrix,
-        ((0, 1, 0), (0, 0, 1), (1, 0, 0)),
+        ((0, 0.5, 0.5), (0.5, 0, 0.5), (0.5, 0.5, 0)),
         atol=1e-8,
     )
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.primitive_matrix,
-        ((0, 1, 0), (0, 0, 1), (1, 0, 0)),
+        responses[job.jobs[-1].uuid][1].output.free_energies,
+        [6115.980051, 6059.749756, 5490.929122, 4173.234384, 2194.164562],
     )
-    assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
-    assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings,
-        PhononComputationalSettings,
-    )
-    assert responses[job.jobs[-1].uuid][1].output.phonopy_settings.npoints_band == 101
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
-        == "seekpath"
-    )
-    phonopy_settings = responses[job.jobs[-1].uuid][1].output.phonopy_settings
-    assert phonopy_settings.kpoint_density_dos == 7_000
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.entropies,
-        [0.0, 1.256496, 8.511348, 15.928285, 22.063785],
+        [0.0, 2.194216, 9.478603, 16.687079, 22.702177],
         atol=1e-6,
     )
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.heat_capacities,
-        [0.0, 4.958763, 15.893881, 20.311967, 22.196143],
-        atol=1e-6,
+        [0.0, 5.750113, 15.408866, 19.832123, 21.842104],
     )
-
     assert_allclose(
         responses[job.jobs[-1].uuid][1].output.internal_energies,
-        [5927.157337, 6030.959432, 7141.800004, 8985.865319, 11123.090225],
-        atol=1e-6,
+        [6115.980051, 6279.17132, 7386.649622, 9179.358187, 11275.035523],
     )
 
 
@@ -265,66 +244,41 @@ def test_phonon_wf_vasp_only_displacements_kpath(
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate the outputs
-    # print(type(responses))
-    assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
+    ph_doc = responses[job.jobs[-1].uuid][1].output
+    assert isinstance(ph_doc, PhononBSDOSDoc)
 
     assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.free_energies,
+        ph_doc.free_energies,
         [5776.14995034, 5617.74737777, 4725.50269363, 3043.81827626, 694.49078355],
         atol=1e-3,
     )
 
+    assert isinstance(ph_doc.phonon_bandstructure, PhononBandStructureSymmLine)
+    assert isinstance(ph_doc.phonon_dos, PhononDos)
+    assert isinstance(ph_doc.thermal_displacement_data, ThermalDisplacementData)
+    assert isinstance(ph_doc.structure, Structure)
+    assert_allclose(ph_doc.temperatures, [0, 100, 200, 300, 400])
+    assert ph_doc.has_imaginary_modes is False
+    force_const = ph_doc.force_constants.force_constants[0][0][0][0]
+    assert force_const == pytest.approx(13.032324)
+    assert isinstance(ph_doc.jobdirs, PhononJobDirs)
+    assert isinstance(ph_doc.uuids, PhononUUIDs)
+    assert ph_doc.total_dft_energy is None
+    assert ph_doc.born is None
+    assert ph_doc.epsilon_static is None
+    assert ph_doc.supercell_matrix == ((-1, 1, 1), (1, -1, 1), (1, 1, -1))
+    assert ph_doc.primitive_matrix == ((1, 0, 0), (0, 1, 0), (0, 0, 1))
+    assert ph_doc.code == "vasp"
     assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonon_bandstructure,
-        PhononBandStructureSymmLine,
-    )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.phonon_dos, PhononDos)
-    assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.thermal_displacement_data,
-        ThermalDisplacementData,
-    )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.structure, Structure)
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.temperatures, [0, 100, 200, 300, 400]
-    )
-    assert responses[job.jobs[-1].uuid][1].output.has_imaginary_modes is False
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.force_constants.force_constants[0][0][0][
-            0
-        ],
-        13.032324,
-    )
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.jobdirs, PhononJobDirs)
-    assert isinstance(responses[job.jobs[-1].uuid][1].output.uuids, PhononUUIDs)
-    assert responses[job.jobs[-1].uuid][1].output.total_dft_energy is None
-    assert responses[job.jobs[-1].uuid][1].output.born is None
-    assert responses[job.jobs[-1].uuid][1].output.epsilon_static is None
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.supercell_matrix,
-        [[-1.0, 1.0, 1.0], [1.0, -1.0, 1.0], [1.0, 1.0, -1.0]],
-    )
-    assert_allclose(
-        responses[job.jobs[-1].uuid][1].output.primitive_matrix,
-        [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
-        atol=1e-8,
-    )
-    assert responses[job.jobs[-1].uuid][1].output.code == "vasp"
-    assert isinstance(
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings,
+        ph_doc.phonopy_settings,
         PhononComputationalSettings,
     )
-    assert responses[job.jobs[-1].uuid][1].output.phonopy_settings.npoints_band == 101
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpath_scheme
-        == kpath_scheme
-    )
-    assert (
-        responses[job.jobs[-1].uuid][1].output.phonopy_settings.kpoint_density_dos
-        == 7_000
-    )
+    assert ph_doc.phonopy_settings.npoints_band == 101
+    assert ph_doc.phonopy_settings.kpath_scheme == kpath_scheme
+    assert ph_doc.phonopy_settings.kpoint_density_dos == 7_000
 
 
-# test supply of born charges, epsilon, DFT energy, supercell
+# test supply of Born charges, epsilon, DFT energy, supercell
 def test_phonon_wf_vasp_only_displacements_add_inputs_raises(
     mock_vasp, clean_dir, si_structure: Structure
 ):
@@ -337,16 +291,9 @@ def test_phonon_wf_vasp_only_displacements_add_inputs_raises(
     # automatically use fake VASP and write POTCAR.spec during the test
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    born = [
-        [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
-        [[0, 0, 0], [0, 0, 0], [0, 0, 0]],
-        [[0, 0, 0], [0, 0, 0], [0, 0, 0.1]],
-    ]
-    epsilon_static = [
-        [5.25, 0, 0],
-        [0, 5.25, 0],
-        [0, 0, 5.25],
-    ]
+    born = np.zeros((3, 3))
+    born[-1, -1] = 0.1
+    epsilon_static = 5.25 * np.eye(3)
     total_dft_energy_per_formula_unit = -5
 
     job = PhononMaker(
@@ -368,7 +315,7 @@ def test_phonon_wf_vasp_only_displacements_add_inputs_raises(
         run_locally(job, create_folders=True, ensure_success=True)
 
 
-# test supply of born charges, epsilon, DFT energy, supercell
+# test supply of Born charges, epsilon, DFT energy, supercell
 def test_phonon_wf_vasp_only_displacements_add_inputs(
     mock_vasp, clean_dir, si_structure: Structure
 ):
@@ -411,7 +358,6 @@ def test_phonon_wf_vasp_only_displacements_add_inputs(
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate the outputs
-    # print(type(responses))
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
     assert_allclose(
@@ -574,11 +520,11 @@ def test_phonon_wf_vasp_only_displacements_optional_settings(
 def test_phonon_wf_vasp_all_steps(mock_vasp, clean_dir, si_structure: Structure):
     # mapping from job name to directory containing test files
     ref_paths = {
-        "phonon static 1/1": "Si_phonons_4/phonon_static_1_1",
-        "static": "Si_phonons_4/static",
-        "tight relax 1": "Si_phonons_4/tight_relax_1",
-        "tight relax 2": "Si_phonons_4/tight_relax_2",
-        "dielectric": "Si_phonons_4/dielectric",
+        "phonon static 1/1": "Si_phonons_3/phonon_static_1_1",
+        "static": "Si_phonons_3/static",
+        "tight relax 1": "Si_phonons_3/tight_relax_1",
+        "tight relax 2": "Si_phonons_3/tight_relax_2",
+        "dielectric": "Si_phonons_3/dielectric",
     }
 
     # settings passed to fake_run_vasp; adjust these to check for certain INCAR settings

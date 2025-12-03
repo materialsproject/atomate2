@@ -2,7 +2,7 @@
 
 # Key concepts in atomate2: `Job` & `Flow` `Makers`, `InputSet`, `TaskDocument`, and `Builder`
 
-# Introduction
+## Introduction
 This tutorial will give you a comprehensive high-level overview of the key concepts in atomate2, diving into the important features of `Job` and `Flow` makers, as well as `InputSets`, `TaskDocuments`, and `Builders`.
 
 ## `Job` and `Flow` makers
@@ -94,11 +94,11 @@ Oftentimes, such flows then involve dynamic jobs. For the phonon calculations th
 In this particular case, the flow maker `BasePhononMaker` is also inheriting from `ABC` (Abstract Base Classes). <!--more comprehensive explanation on ABCs?-->
 
 
-# InputSet
+## InputSet
 
 An `InputSet` is a convenient way to provide a collection of input data for one or more input files as dict-like container. They set the backbone framework to handle the input settings for a variety of computational codes, like e.g. VASP, Q-Chem, LAMMPS, CP2K and ABINIT.
 
-## Basics
+### Basics
 
 The [pymatgen](https://github.com/materialsproject/pymatgen) class `InputSet` is a core class to manage and write the input files for the several computational codes to a file location the user specifies.
 There are predefined "recipes" for generating `InputSets` tailored to specific tasks like structural relaxation or the band structure calculation and more, that are provided as `InputGenerator` classes.
@@ -137,7 +137,7 @@ class InputSet(MSONable, MutableMapping):
 
 It is essential to emphasize that all `InputSet` must implement the `from_directory` classmethod.
 
-## Examples
+### Examples
 
 Diving into the specifics for the `VaspInputSet` will demonstrate you some important features of an input set.
 
@@ -173,15 +173,15 @@ If necessary, it is also possible to specify optional files. The `VaspInputSet` 
 
 The corresponding input generator is the `VaspInputGenerator`.
 
-# TaskDocument
+## TaskDocument
 A `TaskDocument` (often shorted to TaskDoc) is a dictionary object that makes it feasible to collect all the information of the respective computational chemistry calculation run.
 
-## Basics
+### Basics
 
 `TaskDocuments` are schemas that contain and store all the information of a calculation run, like the (resulting) structure, input data (`InputDoc`), output data (`OutputDoc`), task directory name (`dir_name`) and many more items depending on the respective prerequisites of the computational software that is used.
 Task documents are a very practical way to transfer (input and output) data between two different jobs. For instance, when you need the structure or path to the (current) job directory in the subsequent step, you can pass it in form of `taskdoc.structure` and `taskdoc.dir_name`, with `taskdoc` as an example instance of the task document class in question.
 
-## Technical Aspects
+### Technical Aspects
 
 In atomate2, the `TaskDocument` objects inherit from the [emmet](https://github.com/materialsproject/emmet/) classes `StructureMetadata` or `MoleculeMetadata`.
 
@@ -191,7 +191,7 @@ class StructureMetadata(EmmetBaseModel):
 ```
 They contain the structure or molecule metadata, tailored to the variety of computational software.
 
-## Examples
+### Examples
 
 Let's take the `ForceFieldTaskDocument` as an illustrative example for task documents, inheriting from the `StructureMetadata` class.
 
@@ -263,16 +263,16 @@ class TaskDocument(StructureMetadata, MoleculeMetadata):
 ```
 Now, the TaskDoc stores structure or molecule metadata like `structure`, CP2K-specific items like `included_objects` or `cp2k_objects` and more items.
 
-# Builder
+## Builder
 
 The `Builder` object is provided by the [maggma](https://github.com/materialsproject/maggma/) toolkit and serves as a data processing step.
 
-## Basics
+### Basics
 
 `Builders` offer an interface for writing data transformations: you can get items from a `Store`, process and manipulate the input data and prepare an output document, as well as update and add the processed items to the target store(s).
 
 
-## Technical Aspects
+### Technical Aspects
 
 The `Builder` and `Store` are the core classes of maggma and give the user tools to build data pipelines from different types of data sources.
 
@@ -299,7 +299,7 @@ class Builder(MSONable, metaclass=ABCMeta):
 ```
 The `Builder` class has three main functionalities that are `get_items` to retrieve data from the source store(s), `process_item` to handle the input items and create an output document to be then added to the target store(s) by `update_target`.
 
-## Examples
+### Examples
 
 Atomate2 supplies us with the `ElasticBuilder` that is a handy example for a `Builder`:
 ```
@@ -330,6 +330,6 @@ Then during the data and item processing stage, the deformations will be grouped
 Finally, the builder compiles the processed items into an ElasticDocument from the group of tasks, and adds the new elastic documents to the elasticity store.
 
 
-# Exercises
+## Exercises
 
 Construct a flow for a `DoubleRelaxMaker` (a workflow consisting of two relax jobs) based on the `CHGNetRelaxMaker`. Then add a final non-SCF static job using the `CHGNetStaticMaker`. Compare your result with the [DoubleRelaxMaker for VASP](https://materialsproject.github.io/atomate2/reference/atomate2.vasp.flows.core.DoubleRelaxMaker.html#atomate2.vasp.flows.core.DoubleRelaxMaker). Try to replicate one of the other [VASP workflows](https://materialsproject.github.io/atomate2/user/codes/vasp.html#list-of-vasp-workflows) as well!

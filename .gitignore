@@ -5,6 +5,11 @@ docs/_build/*
 docs/_build/*/*
 docs/_build/*/*/*
 docs_build/*
+docs/tutorials/*
+docs/tutorials/*/*
+
+# tutorial output files
+tutorials/*.json.gz
 
 # C extensions
 *.so

@@ -191,22 +191,6 @@ class SlabStaticMaker(BaseVaspMaker):
     )
 
 
-def get_boxed_molecule(molecule: Molecule) -> Structure:
-    """Get the molecule structure.
-
-    Parameters
-    ----------
-    molecule: Molecule
-        The molecule to be adsorbed.
-
-    Returns
-    -------
-    Structure
-        The molecule structure.
-    """
-    return molecule.get_boxed_structure(10, 10, 10)
-
-
 def remove_adsorbate(slab: Structure) -> Structure:
     """
     Remove adsorbate from the given slab.
@@ -221,16 +205,13 @@ def remove_adsorbate(slab: Structure) -> Structure:
     Structure
         The modified slab with adsorbates removed.
     """
-    adsorbate_indices = []
-    for i, site in enumerate(slab):
-        if site.properties.get("surface_properties") == "adsorbate":
-            adsorbate_indices.append(i)
-    # Reverse the indices list to avoid index shifting after removing sites
-    adsorbate_indices.reverse()
-    # Remove the adsorbate sites
-    for idx in adsorbate_indices:
-        slab.remove_sites([idx])
-    return slab
+    adsorbate_indices = [
+        i
+        for i, site in enumerate(slab)
+        if site.properties.get("surface_properties") == "adsorbate"
+    ]
+    # Remove the adsorbate sites - must be this way to avoid change of indices
+    return slab.remove_sites(adsorbate_indices)
 
 
 @job
@@ -274,7 +255,9 @@ def generate_slab(
     )
     temp_slab = slab_generator.get_slab()
     ads_slabs = AdsorbateSiteFinder(temp_slab).generate_adsorption_structures(
-        hydrogen, translate=True, min_lw=min_lw
+        hydrogen,
+        translate=True,
+        min_lw=min_lw,
     )
     return remove_adsorbate(ads_slabs[0])
 
@@ -321,7 +304,9 @@ def generate_adslabs(
     slab = slab_generator.get_slab()
 
     return AdsorbateSiteFinder(slab).generate_adsorption_structures(
-        molecule_structure, translate=True, min_lw=min_lw
+        molecule_structure,
+        translate=True,
+        min_lw=min_lw,
     )
 
 
@@ -416,15 +401,15 @@ def adsorption_calculations(
     )
 
     # Apply the sorted indices to all lists
-    sorted_structures = [adslab_structures[i] for i in sorted_indices]
-    sorted_configuration_numbers = [configuration_numbers[i] for i in sorted_indices]
-    sorted_adsorption_energies = [adsorption_energies[i] for i in sorted_indices]
-    sorted_job_dirs = [job_dirs[i] for i in sorted_indices]
-
-    # Create and return the AdsorptionDocument instance
+    # Then create and return the AdsorptionDocument instance
     return AdsorptionDocument(
-        structures=sorted_structures,
-        configuration_numbers=sorted_configuration_numbers,
-        adsorption_energies=sorted_adsorption_energies,
-        job_dirs=sorted_job_dirs,
+        **{
+            k: [v[i] for i in sorted_indices]
+            for k, v in {
+                "structures": adslab_structures,
+                "configuration_numbers": configuration_numbers,
+                "adsorption_energies": adsorption_energies,
+                "job_dirs": job_dirs,
+            }.items()
+        }
     )

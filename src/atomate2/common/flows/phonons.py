@@ -69,6 +69,8 @@ class BasePhononMaker(Maker, ABC):
         displacement distance for phonons
     min_length: float
         min length of the supercell that will be built
+    max_length: float
+        max length of the supercell that will be built
     prefer_90_degrees: bool
         if set to True, supercell algorithm will first try to find a supercell
         with 3 90 degree angles
@@ -91,8 +93,8 @@ class BasePhononMaker(Maker, ABC):
           High-throughput electronic band structure calculations:
           Challenges and tools. Computational Materials Science,
           49(2), 299-312. doi:10.1016/j.commatsci.2010.05.010.
-          We will however use seekpath and primitive structures
-          as determined by from phonopy to compute the phonon band structure
+          We will, however, use seekpath and primitive structures
+          as determined by phonopy to compute the phonon band structure
     bulk_relax_maker: .ForceFieldRelaxMaker, .BaseAimsMaker, .BaseVaspMaker, or None
         A maker to perform a tight relaxation on the bulk.
         Set to ``None`` to skip the
@@ -126,7 +128,7 @@ class BasePhononMaker(Maker, ABC):
         it relies on phonopy to handle the relationship
         to the primitive cell and not pymatgen
     code: str
-        determines the dft or force field code.
+        determines the DFT or force field code.
     store_force_constants: bool
         if True, force constants will be stored
     socket: bool
@@ -185,7 +187,7 @@ class BasePhononMaker(Maker, ABC):
         prev_dir : str or Path or None
             A previous calculation directory to use for copying outputs.
         born: Matrix3D
-            Instead of recomputing born charges and epsilon, these values can also be
+            Instead of recomputing Born charges and epsilon, these values can also be
             provided manually. If born and epsilon_static are provided, the born run
             will be skipped it can be provided in the VASP convention with information
             for every atom in unit cell. Please be careful when converting structures
@@ -198,7 +200,7 @@ class BasePhononMaker(Maker, ABC):
             It has to be given per formula unit (as a result in corresponding Doc).
             Instead of recomputing the energy of the bulk structure every time, this
             value can also be provided in eV. If it is provided, the static run will be
-            skipped. This energy is the typical output dft energy of the dft workflow.
+            skipped. This energy is the typical output dft energy of the DFT workflow.
             No conversion needed.
         supercell_matrix: list
             Instead of min_length, also a supercell_matrix can be given, e.g.

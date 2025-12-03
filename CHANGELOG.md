@@ -1,5 +1,84 @@
 # Change log
 
+## v0.0.21
+
+### Bug Fixes 🐛
+* switch to CONTCAR read for LOBSTERTaskDoc by @naik-aakash in https://github.com/materialsproject/atomate2/pull/1204
+* cover cases where optimizer does additional steps even though step is set to 0 or 1 for writing xyz files by @JaGeo in https://github.com/materialsproject/atomate2/pull/1207
+* Remove walrus operator to avoid unassigned vmax by @Jonas-Finkler in https://github.com/materialsproject/atomate2/pull/1203
+### Enhancements 🛠
+* add file output xyz file including final atoms object to ase and forcefield jobs by @JaGeo in https://github.com/materialsproject/atomate2/pull/1206
+### Documentation 📖
+* Add video tutorials to README by @JaGeo in https://github.com/materialsproject/atomate2/pull/1191
+* be more concrete for tutorial video names in readme by @JaGeo in https://github.com/materialsproject/atomate2/pull/1192
+* Adding download statistics to readme by @JaGeo in https://github.com/materialsproject/atomate2/pull/1209
+
+## New Contributors
+* @Jonas-Finkler made their first contribution in https://github.com/materialsproject/atomate2/pull/1203
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.20...v0.0.21
+
+## v0.0.20
+
+### Enhancements 🛠
+* Add MatPES forcefields by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1158
+* Add `DynamicOpenMMFlowMaker` for dynamic OpenMM Simulations by @shehan807 in https://github.com/materialsproject/atomate2/pull/1115
+* atomate2 / OpenMM OPLS-AA Enhancements by @shehan807 in https://github.com/materialsproject/atomate2/pull/1111
+* Add updated MP workflows + cleanup by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1139
+### Documentation 📖
+* Improve documentation LOBSTER and PHONON workflow by @JaGeo in https://github.com/materialsproject/atomate2/pull/1117
+* Add key concept tutorial to tutorial list in README by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/1120
+* Fixing headline levels in key_concepts_overview.md by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/1121
+* try to fix the doc by @JaGeo in https://github.com/materialsproject/atomate2/pull/1125
+* Added code snippets for Grüneisen, QHA and EOS wfs documentation by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/1130
+* a few improvements for the tutorials by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/1132
+* Update tutorials.md by @JaGeo in https://github.com/materialsproject/atomate2/pull/1138
+* Electrode workflow and documentation improvements by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1055
+* Update index.md by @JaGeo in https://github.com/materialsproject/atomate2/pull/1155
+### House-Keeping 🧹
+* More CI fixes by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1141
+### Other Changes
+* Pin MACE calculator version, add missing metadata to AseStructureTaskDoc by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1119
+* Tutorials for QHA and Grüneisen workflows by @JaGeo in https://github.com/materialsproject/atomate2/pull/1122
+* add more headlines to tutorials and fix a typo by @JaGeo in https://github.com/materialsproject/atomate2/pull/1126
+* Minor update to tutorials by @naik-aakash in https://github.com/materialsproject/atomate2/pull/1128
+* adjust example flow names by @QuantumChemist in https://github.com/materialsproject/atomate2/pull/1131
+* Aims phonon tutorials by @tpurcell90 in https://github.com/materialsproject/atomate2/pull/1136
+* fix gruneisen tutorial by @JaGeo in https://github.com/materialsproject/atomate2/pull/1142
+* fix link again for aims tutorial by @JaGeo in https://github.com/materialsproject/atomate2/pull/1143
+* Append name relax by @JaGeo in https://github.com/materialsproject/atomate2/pull/1150
+* add more info on jobflow-remote by @JaGeo in https://github.com/materialsproject/atomate2/pull/1154
+* Add example MP-compatible phase diagram tutorial by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1159
+
+## v0.0.19
+
+### Bug Fixes 🐛
+* CP2K fixes by @janosh in https://github.com/materialsproject/atomate2/pull/1056
+* bug fix for linear strain passing in qha by @JaGeo in https://github.com/materialsproject/atomate2/pull/1061
+* Fix `generate_phonon_displacements`  magmom removal side effect by @janosh in https://github.com/materialsproject/atomate2/pull/1064
+* Fixed Failing Abinit tests bis by @VicTrqt in https://github.com/materialsproject/atomate2/pull/1108
+### Enhancements 🛠
+* Add trajectory reporter to openmm workflow by @orionarcher in https://github.com/materialsproject/atomate2/pull/1053
+* `PhononMaker` add options to `calculate_pdos` and save force constants to file by @chouyoudou in https://github.com/materialsproject/atomate2/pull/1008
+* Allow `MatPesStaticFlowMaker(static2=None)` by @janosh in https://github.com/materialsproject/atomate2/pull/997
+### Documentation 📖
+* Minor docs cleanup by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1047
+* add openmm description to docs by @JaGeo in https://github.com/materialsproject/atomate2/pull/1069
+* Docs update, forcefield elastic convenience maker, forcefield enum hydration by @esoteric-ephemera in https://github.com/materialsproject/atomate2/pull/1072
+* Added the ChemRxiv citation by @hrushikesh-s in https://github.com/materialsproject/atomate2/pull/1107
+* Fix docs by @janosh in https://github.com/materialsproject/atomate2/pull/1109
+### House-Keeping 🧹
+* Fix minor phonon code formatting issues + typos by @janosh in https://github.com/materialsproject/atomate2/pull/1070
+* Fix bump phonopy by @naik-aakash in https://github.com/materialsproject/atomate2/pull/1006
+* update calorine version by @naik-aakash in https://github.com/materialsproject/atomate2/pull/1083
+* Deprecated `Structure.ntypesp` in pymatgen by @jmmshn in https://github.com/materialsproject/atomate2/pull/1105
+
+### New Contributors
+* @chouyoudou made their first contribution in https://github.com/materialsproject/atomate2/pull/1008
+* @VicTrqt made their first contribution in https://github.com/materialsproject/atomate2/pull/1108
+
+**Full Changelog**: https://github.com/materialsproject/atomate2/compare/v0.0.18...v0.0.19
+
 ## v0.0.18
 
 ### New Features 🎉

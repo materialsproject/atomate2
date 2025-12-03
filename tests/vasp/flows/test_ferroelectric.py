@@ -1,15 +1,14 @@
 import pytest
+from emmet.core.tasks import TaskDoc
+from jobflow import run_locally
+from pymatgen.core import Structure
+
+from atomate2.vasp.flows.ferroelectric import FerroelectricMaker
+from atomate2.vasp.powerups import update_user_incar_settings
+from atomate2.vasp.schemas.ferroelectric import PolarizationDocument
 
 
-def test_my_flow(mock_vasp, clean_dir, test_dir):
-    from emmet.core.tasks import TaskDoc
-    from jobflow import run_locally
-    from pymatgen.core import Structure
-
-    from atomate2.vasp.flows.ferroelectric import FerroelectricMaker
-    from atomate2.vasp.powerups import update_user_incar_settings
-    from atomate2.vasp.schemas.ferroelectric import PolarizationDocument
-
+def test_ferroelectric_flow(mock_vasp, clean_dir, test_dir):
     # mapping from job name to directory containing test files
     ref_paths = {
         "polarization interpolation_0": "KNbO3_ferroelectric/polarization_interpolation_0",  # noqa: E501
