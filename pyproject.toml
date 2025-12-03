@@ -82,7 +82,7 @@ docs = [
     "sphinx-copybutton==0.5.2",
     "sphinx==8.1.3",
     "sphinx_design==0.6.1",
-    "jupyterlab==4.4.10",
+    "jupyterlab==4.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = [
@@ -98,7 +98,7 @@ strict-openff = [
     "mdanalysis==2.9.0",
     "monty==2025.3.3",
     "openmm-mdanalysis-reporter==0.1.0",
-    "openmm==8.4.0",
+    "openmm==8.4.0.post2",
     "pymatgen==2025.10.7", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 strict-forcefields = [
@@ -106,7 +106,7 @@ strict-forcefields = [
     "calorine==3.1; python_version < '3.12'",
     "chgnet==0.3.8",
     "mace-torch==0.3.14",
-    "matgl==2.0.2",
+    "matgl==2.0.4",
     "quippy-ase==0.9.14; python_version < '3.12'",
     "sevenn==0.10.4",
     "torch==2.2.0",
