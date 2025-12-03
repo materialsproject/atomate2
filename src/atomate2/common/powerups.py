@@ -87,12 +87,10 @@ def update_custodian_handlers(
     >>> handlers = (VaspErrorHandler(), MeshSymmetryErrorHandler())
     >>> flow = update_custodian_handlers(flow, handlers, RelaxBandStructureMaker)
     """
+    code = class_filter.name.split(" ")[1]
+
     flow.update_maker_kwargs(
-        {
-            "_set": {
-                f"run_{class_filter.__name__.lower()}_kwargs->handlers": custom_handlers
-            }
-        },
+        {"_set": {f"run_{code}_kwargs->handlers": custom_handlers}},
         dict_mod=True,
         class_filter=class_filter,
     )
