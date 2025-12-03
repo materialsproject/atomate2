@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 import torch
+from emmet.core.utils import get_hash_blocked
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -30,10 +31,5 @@ def download_deepmd_pretrained_model(test_dir: Path) -> None:
         raise RuntimeError(f"Failed to download from: {file_url}")
 
     # Check MD5 to ensure file integrity
-    md5_hash = hashlib.md5()
-    with open(local_path, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            md5_hash.update(chunk)
-    file_md5 = md5_hash.hexdigest()
-    if file_md5 != ref_md5:
+    if (file_md5 := get_hash_blocked(local_path, hasher=hashlib.md5())) != ref_md5:
         raise RuntimeError(f"MD5 mismatch: {file_md5} != {ref_md5}")
