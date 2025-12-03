@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING
 from jobflow import job
 
 from atomate2.ase.md import AseMDMaker, MDEnsemble
-from atomate2.forcefields.utils import _FORCEFIELD_DATA_OBJECTS, ForceFieldMixin
 from atomate2.forcefields.schemas import BaseForceFieldTaskDocument
+from atomate2.forcefields.utils import _FORCEFIELD_DATA_OBJECTS, ForceFieldMixin
 
 if TYPE_CHECKING:
     from pathlib import Path

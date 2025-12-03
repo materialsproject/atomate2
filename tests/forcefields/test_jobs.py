@@ -302,8 +302,7 @@ def test_mace_relax_maker(
         assert output1.output.n_steps == 7
 
 
-def test_mace_mpa_0_relax_maker(si_structure: Structure, test_dir : Path, tmp_dir):
-
+def test_mace_mpa_0_relax_maker(si_structure: Structure, test_dir: Path, tmp_dir):
     job = ForceFieldRelaxMaker(
         force_field_name="MACE_MPA_0",
         steps=25,
@@ -541,7 +540,9 @@ def test_nequip_relax_maker(
     assert final_spg_num == 99
 
 
-def test_deepmd_static_maker(sr_ti_o3_structure: Structure, test_dir: Path, get_deepmd_pretrained_model_path):
+def test_deepmd_static_maker(
+    sr_ti_o3_structure: Structure, test_dir: Path, get_deepmd_pretrained_model_path
+):
     importorskip("deepmd")
 
     # generate job
@@ -571,7 +572,7 @@ def test_deepmd_relax_maker(
     test_dir: Path,
     relax_cell: bool,
     fix_symmetry: bool,
-    get_deepmd_pretrained_model_path : Path,
+    get_deepmd_pretrained_model_path: Path,
 ):
     importorskip("deepmd")
     # translate one atom to ensure a small number of relaxation steps are taken

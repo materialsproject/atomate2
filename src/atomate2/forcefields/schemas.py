@@ -51,7 +51,7 @@ class ForceFieldMeta(BaseModel):
     )
 
     @property
-    def forcefield_objects(self) -> Optional[dict[AseObject, Any]]:
+    def forcefield_objects(self) -> dict[AseObject, Any] | None:
         """Alias `objects` attr for backwards compatibility."""
         return self.objects
 
@@ -59,8 +59,10 @@ class ForceFieldMeta(BaseModel):
 class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
     """Document containing information on structure manipulation using a force field."""
 
+
 class ForceFieldMoleculeTaskDocument(AseMoleculeTaskDoc, ForceFieldMeta):
     """Document containing information on structure manipulation using a force field."""
+
 
 class BaseForceFieldTaskDocument(AseTaskDoc):
     """Document containing information on structure manipulation using a force field."""
@@ -94,7 +96,7 @@ class BaseForceFieldTaskDocument(AseTaskDoc):
     )
 
     @classmethod
-    def from_ase_compatible_result(
+    def from_ase_compatible_result(  # type: ignore[override]
         cls,
         ase_calculator_name: str,
         result: AseResult,

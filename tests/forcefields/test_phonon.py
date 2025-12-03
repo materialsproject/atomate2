@@ -55,7 +55,7 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
 
 
 def test_phonon_maker_initialization_with_all_mlff(
-    si_structure: Structure, test_dir: Path, get_deepmd_pretrained_model_path : Path
+    si_structure: Structure, test_dir: Path, get_deepmd_pretrained_model_path: Path
 ):
     """Test PhononMaker can be initialized with all MLFF static and relax makers."""
 
