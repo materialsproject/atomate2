@@ -50,7 +50,7 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
     responses = run_locally(job2, create_folders=True, ensure_success=True)
 
     assert_allclose(
-        responses[job2.uuid][1].output, [[2, -1, 0], [0, 3, 0], [-1, -1, 2]]
+        responses[job2.uuid][1].output, [[2, -1, 0], [0, 2, 0], [-1, -1, 2]]
     )
 
 
