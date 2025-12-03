@@ -79,4 +79,5 @@ docs/reference/atomate2.*
 .ipynb_checkpoints
 .aider*
 
-tests/test_data/forcefields/deepmd_graph.pb
+# deepmd-kit files
+**/*.pb

@@ -4,12 +4,15 @@ from pathlib import Path
 import numpy as np
 import pytest
 from jobflow import run_locally
-from pymatgen.core import Structure
+from pymatgen.core import Molecule, Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pytest import approx, importorskip
 
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
-from atomate2.forcefields.schemas import ForceFieldTaskDocument
+from atomate2.forcefields.schemas import (
+    ForceFieldMoleculeTaskDocument,
+    ForceFieldTaskDocument,
+)
 
 
 def test_maker_initialization():
@@ -299,9 +302,7 @@ def test_mace_relax_maker(
         assert output1.output.n_steps == 7
 
 
-def test_mace_mpa_0_relax_maker(
-    si_structure: Structure,
-):
+def test_mace_mpa_0_relax_maker(si_structure: Structure, test_dir: Path, tmp_dir):
     job = ForceFieldRelaxMaker(
         force_field_name="MACE_MPA_0",
         steps=25,
@@ -313,11 +314,28 @@ def test_mace_mpa_0_relax_maker(
     # validating the outputs of the job
     output = responses[job.uuid][1].output
 
+    water_molecule = Molecule.from_file(test_dir / "molecules" / "water.xyz.gz")
+    job_mol = ForceFieldRelaxMaker(
+        force_field_name="MACE_MPA_0",
+        steps=25,
+        relax_kwargs={"fmax": 0.005},
+    ).make(water_molecule)
+    # run the flow or job and ensure that it finished running successfully
+    responses_mol = run_locally(job_mol, ensure_success=True)
+
+    # validating the outputs of the job
+    output_mol = responses_mol[job_mol.uuid][1].output
+    assert isinstance(output_mol, ForceFieldMoleculeTaskDocument)
+
     assert output.ase_calculator_name == "MLFF.MACE_MPA_0"
     assert output.output.energy == pytest.approx(-10.829493522644043)
     assert output.output.structure.volume == pytest.approx(40.87471552602735)
     assert len(output.output.ionic_steps) == 4
     assert output.structure.volume == output.output.structure.volume
+
+    assert output_mol.ase_calculator_name == "MLFF.MACE_MPA_0"
+    assert output_mol.output.energy == pytest.approx(-13.786081314086914)
+    assert len(output_mol.output.ionic_steps) == 20
 
 
 def test_gap_static_maker(si_structure: Structure, test_dir):
@@ -522,14 +540,16 @@ def test_nequip_relax_maker(
     assert final_spg_num == 99
 
 
-def test_deepmd_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
+def test_deepmd_static_maker(
+    sr_ti_o3_structure: Structure, test_dir: Path, get_deepmd_pretrained_model_path
+):
     importorskip("deepmd")
 
     # generate job
     job = ForceFieldStaticMaker(
         force_field_name="DeepMD",
         ionic_step_data=("structure", "energy"),
-        calculator_kwargs={"model": test_dir / "forcefields" / "deepmd_graph.pb"},
+        calculator_kwargs={"model": get_deepmd_pretrained_model_path},
     ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully
@@ -552,6 +572,7 @@ def test_deepmd_relax_maker(
     test_dir: Path,
     relax_cell: bool,
     fix_symmetry: bool,
+    get_deepmd_pretrained_model_path: Path,
 ):
     importorskip("deepmd")
     # translate one atom to ensure a small number of relaxation steps are taken
@@ -563,7 +584,7 @@ def test_deepmd_relax_maker(
         optimizer_kwargs={"optimizer": "BFGSLineSearch"},
         relax_cell=relax_cell,
         fix_symmetry=fix_symmetry,
-        calculator_kwargs={"model": test_dir / "forcefields" / "deepmd_graph.pb"},
+        calculator_kwargs={"model": get_deepmd_pretrained_model_path},
     ).make(sr_ti_o3_structure)
 
     # run the flow or job and ensure that it finished running successfully

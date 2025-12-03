@@ -49,6 +49,7 @@ def test_ml_ff_md_maker(
     al2_au_structure,
     test_dir,
     clean_dir,
+    get_deepmd_pretrained_model_path,
 ):
     if ff_name in map(MLFF, ("Forcefield", "MACE")):
         return  # nothing to test here, MLFF.Forcefield is just a generic placeholder
@@ -103,7 +104,7 @@ def test_ml_ff_md_maker(
         }
         unit_cell_structure = sr_ti_o3_structure.copy()
     elif ff_name == MLFF.DeepMD:
-        calculator_kwargs = {"model": test_dir / "forcefields" / "deepmd_graph.pb"}
+        calculator_kwargs = {"model": get_deepmd_pretrained_model_path}
         unit_cell_structure = sr_ti_o3_structure.copy()
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)

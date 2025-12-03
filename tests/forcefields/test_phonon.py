@@ -55,7 +55,7 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
 
 
 def test_phonon_maker_initialization_with_all_mlff(
-    si_structure: Structure, test_dir: Path
+    si_structure: Structure, test_dir: Path, get_deepmd_pretrained_model_path: Path
 ):
     """Test PhononMaker can be initialized with all MLFF static and relax makers."""
 
@@ -74,7 +74,7 @@ def test_phonon_maker_initialization_with_all_mlff(
         calc_kwargs = {
             MLFF.Nequip: {"model_path": f"{chk_pt_dir}/nequip/nequip_ff_sr_ti_o3.pth"},
             MLFF.NEP: {"model_filename": f"{test_dir}/forcefields/nep/nep.txt"},
-            MLFF.DeepMD: {"model": test_dir / "forcefields" / "deepmd_graph.pb"},
+            MLFF.DeepMD: {"model": get_deepmd_pretrained_model_path},
         }.get(mlff, {})
         static_maker = ForceFieldStaticMaker(
             name=f"{mlff} static",
