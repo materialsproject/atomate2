@@ -31,7 +31,7 @@ class ForceFieldMeta(BaseModel):
     )
 
     forcefield_version: str | None = Field(
-        None,
+        "Unknown",
         description="version of the interatomic potential used for relaxation.",
     )
 
@@ -88,7 +88,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
     """Document containing information on atomistic manipulation using a force field."""
 
     @classmethod
-    def from_ase_compatible_result(  # type: ignore[override]
+    def from_ase_compatible_result(
         cls,
         ase_calculator_name: str,
         result: AseResult,
