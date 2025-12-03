@@ -38,22 +38,22 @@ def update_vasp_input_generators(
 
     Parameters
     ----------
-    flow : Job | Flow | Maker
+    flow : Job or Flow or Maker
         A job, flow, or maker to update.
     dict_mod_updates : dict[str, Any]
         Dictionary of updates to apply using arrow notation (e.g.,
         'input_set_generator->user_incar_settings->ENCUT'). Existing keys are
         preserved unless explicitly overridden.
-    name_filter : str | None, optional
+    name_filter : str or None, optional
         Filter to apply updates only to jobs matching this name pattern.
         Default is None (no filtering).
-    class_filter : type[Maker] | None, optional
+    class_filter : type[Maker] or None, optional
         Filter to apply updates only to makers of this class or its subclasses.
         Default is BaseVaspMaker.
 
     Returns
     -------
-    Job | Flow | Maker
+    Job or Flow or Maker
         A deep copy of the input with updated VASP input generator settings.
     """
     updated_flow = deepcopy(flow)
@@ -86,21 +86,21 @@ def update_user_incar_settings(
 
     Parameters
     ----------
-    flow : Job | Flow | Maker
+    flow : Job or Flow or Maker
         A job, flow, or maker to update.
     incar_updates : dict[str, Any]
         Dictionary mapping INCAR tags to their new values (e.g.,
         {'ENCUT': 520, 'EDIFF': 1e-5}). Only specified keys are modified.
-    name_filter : str | None, optional
+    name_filter : str or None, optional
         Filter to apply updates only to jobs matching this name pattern.
         Default is None (no filtering).
-    class_filter : type[Maker] | None, optional
+    class_filter : type[Maker] or None, optional
         Filter to apply updates only to makers of this class or its subclasses.
         Default is BaseVaspMaker.
 
     Returns
     -------
-    Job | Flow | Maker
+    Job or Flow or Maker
         A deep copy of the input with updated INCAR settings.
 
     Examples
@@ -131,21 +131,21 @@ def update_user_potcar_settings(
 
     Parameters
     ----------
-    flow : Job | Flow | Maker
+    flow : Job or Flow or Maker
         A job, flow, or maker to update.
     potcar_updates : dict[str, Any]
         Dictionary mapping element symbols to POTCAR specifications (e.g.,
         {'Fe': 'Fe_pv', 'O': 'O'}). Only specified elements are modified.
-    name_filter : str | None, optional
+    name_filter : str or None, optional
         Filter to apply updates only to jobs matching this name pattern.
         Default is None (no filtering).
-    class_filter : type[Maker] | None, optional
+    class_filter : type[Maker] or None, optional
         Filter to apply updates only to makers of this class or its subclasses.
         Default is BaseVaspMaker.
 
     Returns
     -------
-    Job | Flow | Maker
+    Job or Flow or Maker
         A deep copy of the input with updated POTCAR settings.
 
     Examples
@@ -176,20 +176,20 @@ def update_user_potcar_functional(
 
     Parameters
     ----------
-    flow : Job | Flow | Maker
+    flow : Job or Flow or Maker
         A job, flow, or maker to update.
     potcar_functional : str
         The POTCAR functional to use (e.g., 'PBE', 'PBE_52', 'PBE_54', 'LDA').
-    name_filter : str | None, optional
+    name_filter : str or None, optional
         Filter to apply updates only to jobs matching this name pattern.
         Default is None (no filtering).
-    class_filter : type[Maker] | None, optional
+    class_filter : type[Maker] or None, optional
         Filter to apply updates only to makers of this class or its subclasses.
         Default is BaseVaspMaker.
 
     Returns
     -------
-    Job | Flow | Maker
+    Job or Flow or Maker
         A deep copy of the input with updated POTCAR functional.
 
     Examples
@@ -219,22 +219,22 @@ def update_user_kpoints_settings(
 
     Parameters
     ----------
-    flow : Job | Flow | Maker
+    flow : Job or Flow or Maker
         A job, flow, or maker to update.
-    kpoints_updates : dict[str, Any] | Kpoints
+    kpoints_updates : dict[str, Any] or Kpoints
         K-points updates to apply. Can be either:
         - A dictionary with k-points settings (e.g., {'reciprocal_density': 100})
         - A Kpoints object that replaces the entire user_kpoints_settings
-    name_filter : str | None, optional
+    name_filter : str or None, optional
         Filter to apply updates only to jobs matching this name pattern.
         Default is None (no filtering).
-    class_filter : type[Maker] | None, optional
+    class_filter : type[Maker] or None, optional
         Filter to apply updates only to makers of this class or its subclasses.
         Default is BaseVaspMaker.
 
     Returns
     -------
-    Job | Flow | Maker
+    Job or Flow or Maker
         A deep copy of the input with updated k-points settings.
 
     Examples
@@ -274,20 +274,20 @@ def use_auto_ispin(
 
     Parameters
     ----------
-    flow : Job | Flow | Maker
+    flow : Job or Flow or Maker
         A job, flow, or maker to update.
     value : bool, optional
         Whether to enable automatic ISPIN determination. Default is True.
-    name_filter : str | None, optional
+    name_filter : str or None, optional
         Filter to apply updates only to jobs matching this name pattern.
         Default is None (no filtering).
-    class_filter : type[Maker] | None, optional
+    class_filter : type[Maker] or None, optional
         Filter to apply updates only to makers of this class or its subclasses.
         Default is BaseVaspMaker.
 
     Returns
     -------
-    Job | Flow | Maker
+    Job or Flow or Maker
         A deep copy of the input with updated auto_ispin setting.
 
     Notes

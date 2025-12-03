@@ -18,6 +18,9 @@ def add_metadata_to_flow(
     This function updates the task document kwargs for jobs in the flow,
     allowing metadata to be added for easier querying of results from a database.
 
+    This function does not add metadata to the job themselves, only to the output
+    generated upon job completion.
+
     Parameters
     ----------
     flow : Flow
