@@ -521,6 +521,7 @@ def test_nequip_relax_maker(
     final_spg_num = output1.output.structure.get_space_group_info()[1]
     assert final_spg_num == 99
 
+
 def test_deepmd_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     importorskip("deepmd")
 
@@ -582,6 +583,7 @@ def test_deepmd_relax_maker(
     # just testing that passing fix_symmetry doesn't break
     final_spg_num = output1.output.structure.get_space_group_info()[1]
     assert final_spg_num == 99
+
 
 @pytest.mark.parametrize("ref_func", ["PBE", "r2SCAN"])
 def test_matpes_relax_makers(
