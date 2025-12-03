@@ -110,7 +110,7 @@ strict-forcefields = [
     "matgl==2.0.4",
     "quippy-ase==0.9.14; python_version < '3.12'",
     "sevenn==0.10.4",
-    "torch==2.2.0",
+    "torch==2.9.1",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
     "deepmd-kit==2.2.11",
     "tensorflow-cpu==2.16.2",
