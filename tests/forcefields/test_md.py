@@ -106,11 +106,6 @@ def test_ml_ff_md_maker(
         calculator_kwargs = {"model": test_dir / "forcefields" / "deepmd" / "graph.pb"}
         unit_cell_structure = sr_ti_o3_structure.copy()
 
-    elif ff_name == MLFF.MACE:
-        calculator_kwargs = {
-            "model": "https://github.com/ACEsuit/mace-mp/releases/download/mace_mp_0/2023-12-10-mace-128-L0_epoch-199.model"
-        }
-
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
     job = ForceFieldMDMaker(
