@@ -1,8 +1,0 @@
-BaseAnharmonicityMaker
-======================
-
-.. currentmodule:: atomate2.common.flows.anharmonicity
-
-.. autoclass:: BaseAnharmonicityMaker
-   :show-inheritance:
-   :members:

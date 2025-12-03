@@ -1,6 +1,0 @@
-AimsTaskDoc
-===========
-
-.. currentmodule:: atomate2.aims.schemas.task
-
-.. autopydantic_model:: AimsTaskDoc

@@ -1,6 +1,0 @@
-calc\_sigma\_a
-==============
-
-.. currentmodule:: atomate2.common.jobs.anharmonicity
-
-.. autofunction:: calc_sigma_a

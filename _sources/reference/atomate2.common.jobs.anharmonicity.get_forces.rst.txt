@@ -1,6 +1,0 @@
-get\_forces
-===========
-
-.. currentmodule:: atomate2.common.jobs.anharmonicity
-
-.. autofunction:: get_forces

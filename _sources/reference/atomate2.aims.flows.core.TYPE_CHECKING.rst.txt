@@ -1,6 +1,0 @@
-TYPE\_CHECKING
-==============
-
-.. currentmodule:: atomate2.aims.flows.core
-
-.. autodata:: TYPE_CHECKING

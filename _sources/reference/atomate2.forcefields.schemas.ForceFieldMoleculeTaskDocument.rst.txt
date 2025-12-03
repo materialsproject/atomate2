@@ -1,0 +1,6 @@
+ForceFieldMoleculeTaskDocument
+==============================
+
+.. currentmodule:: atomate2.forcefields.schemas
+
+.. autopydantic_model:: ForceFieldMoleculeTaskDocument

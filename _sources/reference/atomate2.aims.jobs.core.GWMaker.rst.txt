@@ -1,8 +1,0 @@
-GWMaker
-=======
-
-.. currentmodule:: atomate2.aims.jobs.core
-
-.. autoclass:: GWMaker
-   :show-inheritance:
-   :members:

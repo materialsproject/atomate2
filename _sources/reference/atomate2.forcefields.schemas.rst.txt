@@ -15,6 +15,16 @@ atomate2.forcefields.schemas
       
    
    
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
    
    
    
@@ -28,6 +38,9 @@ atomate2.forcefields.schemas
       :toctree:
       :nosignatures:
    
+      ForceFieldMeta
+      ForceFieldMoleculeTaskDocument
       ForceFieldTaskDocument
+      TYPE_CHECKING
 
 

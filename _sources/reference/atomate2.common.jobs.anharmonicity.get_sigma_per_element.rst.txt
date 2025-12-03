@@ -1,6 +1,0 @@
-get\_sigma\_per\_element
-========================
-
-.. currentmodule:: atomate2.common.jobs.anharmonicity
-
-.. autofunction:: get_sigma_per_element

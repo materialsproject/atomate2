@@ -1,8 +1,0 @@
-BaseAimsMaker
-=============
-
-.. currentmodule:: atomate2.aims.jobs.base
-
-.. autoclass:: BaseAimsMaker
-   :show-inheritance:
-   :members:

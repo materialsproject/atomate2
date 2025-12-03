@@ -1,6 +1,0 @@
-TYPE\_CHECKING
-==============
-
-.. currentmodule:: atomate2.aims.jobs.core
-
-.. autodata:: TYPE_CHECKING

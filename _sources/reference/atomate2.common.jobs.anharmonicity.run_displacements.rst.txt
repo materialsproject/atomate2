@@ -1,6 +1,0 @@
-run\_displacements
-==================
-
-.. currentmodule:: atomate2.common.jobs.anharmonicity
-
-.. autofunction:: run_displacements

@@ -1,8 +1,0 @@
-BandStructureMaker
-==================
-
-.. currentmodule:: atomate2.aims.jobs.core
-
-.. autoclass:: BandStructureMaker
-   :show-inheritance:
-   :members:

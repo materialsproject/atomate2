@@ -1,8 +1,0 @@
-AimsEosMaker
-============
-
-.. currentmodule:: atomate2.aims.flows.eos
-
-.. autoclass:: AimsEosMaker
-   :show-inheritance:
-   :members:

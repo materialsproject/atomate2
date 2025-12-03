@@ -1,8 +1,0 @@
-MagneticRelaxMaker
-==================
-
-.. currentmodule:: atomate2.aims.jobs.magnetism
-
-.. autoclass:: MagneticRelaxMaker
-   :show-inheritance:
-   :members:

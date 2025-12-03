@@ -1,8 +1,0 @@
-TaskState
-=========
-
-.. currentmodule:: atomate2.aims.schemas.calculation
-
-.. autoclass:: TaskState
-   :show-inheritance:
-   :members:

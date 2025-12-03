@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.forcefields.schemas
+
+.. autodata:: TYPE_CHECKING

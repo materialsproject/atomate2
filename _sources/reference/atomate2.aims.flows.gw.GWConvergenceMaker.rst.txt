@@ -1,8 +1,0 @@
-GWConvergenceMaker
-==================
-
-.. currentmodule:: atomate2.aims.flows.gw
-
-.. autoclass:: GWConvergenceMaker
-   :show-inheritance:
-   :members:

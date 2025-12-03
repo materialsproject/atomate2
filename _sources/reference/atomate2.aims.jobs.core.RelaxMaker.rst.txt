@@ -1,8 +1,0 @@
-RelaxMaker
-==========
-
-.. currentmodule:: atomate2.aims.jobs.core
-
-.. autoclass:: RelaxMaker
-   :show-inheritance:
-   :members:

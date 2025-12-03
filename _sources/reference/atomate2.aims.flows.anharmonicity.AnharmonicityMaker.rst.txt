@@ -1,8 +1,0 @@
-AnharmonicityMaker
-==================
-
-.. currentmodule:: atomate2.aims.flows.anharmonicity
-
-.. autoclass:: AnharmonicityMaker
-   :show-inheritance:
-   :members:

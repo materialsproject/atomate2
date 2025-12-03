@@ -1,6 +1,0 @@
-STORE\_VOLUMETRIC\_DATA
-=======================
-
-.. currentmodule:: atomate2.aims.schemas.calculation
-
-.. autodata:: STORE_VOLUMETRIC_DATA

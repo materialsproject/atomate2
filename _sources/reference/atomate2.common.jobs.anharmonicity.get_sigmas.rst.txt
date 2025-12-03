@@ -1,6 +1,0 @@
-get\_sigmas
-===========
-
-.. currentmodule:: atomate2.common.jobs.anharmonicity
-
-.. autofunction:: get_sigmas

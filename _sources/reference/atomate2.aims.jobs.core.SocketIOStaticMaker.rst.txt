@@ -1,8 +1,0 @@
-SocketIOStaticMaker
-===================
-
-.. currentmodule:: atomate2.aims.jobs.core
-
-.. autoclass:: SocketIOStaticMaker
-   :show-inheritance:
-   :members:
