@@ -6,17 +6,12 @@ import logging
 from typing import TYPE_CHECKING, NamedTuple
 
 from emmet.core.electrode import InsertionElectrodeDoc
-from emmet.core.mpid import MPID, check_ulid
+from emmet.core.mpid import MPID, AlphaID, check_ulid
 from emmet.core.structure_group import StructureGroupDoc
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from ulid import ULID
-
-try:
-    from emmet.core.mpid import AlphaID
-except ImportError:
-    AlphaID = None
 
 if TYPE_CHECKING:
     from collections.abc import Callable
