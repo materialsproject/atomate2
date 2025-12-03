@@ -20,7 +20,7 @@ def test_mlff(force_field: str):
 
 
 @pytest.mark.parametrize(("force_field"), ["CHGNet", "MACE"])
-def test_ext_load(force_field: str):
+def test_ext_load(force_field: str, test_dir):
     decode_dict = {
         "CHGNet": {"@module": "chgnet.model.dynamics", "@callable": "CHGNetCalculator"},
         "MACE": {"@module": "mace.calculators", "@callable": "mace_mp"},

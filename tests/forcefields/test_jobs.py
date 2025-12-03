@@ -522,6 +522,69 @@ def test_nequip_relax_maker(
     assert final_spg_num == 99
 
 
+def test_deepmd_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
+    importorskip("deepmd")
+
+    # generate job
+    job = ForceFieldStaticMaker(
+        force_field_name="DeepMD",
+        ionic_step_data=("structure", "energy"),
+        calculator_kwargs={"model": test_dir / "forcefields" / "deepmd_graph.pb"},
+    ).make(sr_ti_o3_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validate the outputs of the job
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    assert output1.output.energy == approx(-3723.09868, rel=1e-4)
+    assert output1.output.n_steps == 1
+    assert output1.forcefield_version == get_imported_version("deepmd-kit")
+
+
+@pytest.mark.parametrize(
+    ("relax_cell", "fix_symmetry"),
+    [(True, False), (False, True)],
+)
+def test_deepmd_relax_maker(
+    sr_ti_o3_structure: Structure,
+    test_dir: Path,
+    relax_cell: bool,
+    fix_symmetry: bool,
+):
+    importorskip("deepmd")
+    # translate one atom to ensure a small number of relaxation steps are taken
+    sr_ti_o3_structure.translate_sites(0, [0, 0, 0.01])
+    # generate job
+    job = ForceFieldRelaxMaker(
+        force_field_name="DeepMD",
+        steps=25,
+        optimizer_kwargs={"optimizer": "BFGSLineSearch"},
+        relax_cell=relax_cell,
+        fix_symmetry=fix_symmetry,
+        calculator_kwargs={"model": test_dir / "forcefields" / "deepmd_graph.pb"},
+    ).make(sr_ti_o3_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validate the outputs of the job
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    if relax_cell:
+        assert output1.output.energy == approx(-3723.099519623731, rel=1e-3)
+        assert output1.output.n_steps == 3
+    else:
+        assert output1.output.energy == approx(-3723.0981880334643, rel=1e-4)
+        assert output1.output.n_steps == 3
+
+    # fix_symmetry makes no difference for this structure relaxer combo
+    # just testing that passing fix_symmetry doesn't break
+    final_spg_num = output1.output.structure.get_space_group_info()[1]
+    assert final_spg_num == 99
+
+
 @pytest.mark.parametrize("ref_func", ["PBE", "r2SCAN"])
 def test_matpes_relax_makers(
     sr_ti_o3_structure: Structure,

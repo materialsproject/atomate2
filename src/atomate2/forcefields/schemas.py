@@ -119,6 +119,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc):
             MLFF.MACE_MP_0B3: "mace-torch",
             MLFF.GAP: "quippy-ase",
             MLFF.Nequip: "nequip",
+            MLFF.DeepMD: "deepmd-kit",
             MLFF.MATPES_PBE: "matgl",
             MLFF.MATPES_R2SCAN: "matgl",
         }

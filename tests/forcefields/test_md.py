@@ -71,6 +71,7 @@ def test_ml_ff_md_maker(
         MLFF.NEP: -3.966232215741286,
         MLFF.Nequip: -8.84670181274414,
         MLFF.SevenNet: -5.394115447998047,
+        MLFF.DeepMD: -744.6197365326168,
         MLFF.MATPES_PBE: -5.230762481689453,
         MLFF.MATPES_R2SCAN: -8.561729431152344,
     }
@@ -100,6 +101,9 @@ def test_ml_ff_md_maker(
         calculator_kwargs = {
             "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
         }
+        unit_cell_structure = sr_ti_o3_structure.copy()
+    elif ff_name == MLFF.DeepMD:
+        calculator_kwargs = {"model": test_dir / "forcefields" / "deepmd_graph.pb"}
         unit_cell_structure = sr_ti_o3_structure.copy()
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)

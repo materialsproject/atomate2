@@ -40,6 +40,7 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     SevenNet = "SevenNet"
     MATPES_R2SCAN = "MatPES-r2SCAN"
     MATPES_PBE = "MatPES-PBE"
+    DeepMD = "DeepMD"
 
     @classmethod
     def _missing_(cls, value: Any) -> Any:
@@ -272,6 +273,11 @@ def ase_calculator(
             from sevenn.sevennet_calculator import SevenNetCalculator
 
             calculator = SevenNetCalculator(**{"model": "7net-0"} | kwargs)
+
+        elif calculator_name == MLFF.DeepMD:
+            from deepmd.calculator import DP
+
+            calculator = DP(**kwargs)
 
     elif isinstance(calculator_meta, dict):
         calc_cls = MontyDecoder().process_decoded(calculator_meta)
