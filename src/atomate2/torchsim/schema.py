@@ -62,6 +62,14 @@ class PropertyFn(StrEnum):
     TEMPERATURE = "temperature"
 
 
+class TaskType(StrEnum):  # type: ignore[attr-defined]
+    """Enum for TorchSim task types."""
+
+    STATIC = "Static"
+    STRUCTURE_OPTIMIZATION = "Structure Optimization"
+    MOLECULAR_DYNAMICS = "Molecular Dynamics"
+
+
 PROPERTY_FN_REGISTRY: dict[str, Callable] = {
     "potential_energy": lambda state: state.energy,
     "forces": lambda state: state.forces,
@@ -140,8 +148,13 @@ class AutobatcherDetails(BaseModel):
 
 
 class TorchSimCalculation(BaseModel):
-    """Schema for TorchSim calculation tasks."""
+    """Schema for TorchSim calculation tasks.
 
+    This schema supports three task types: Static, Structure Optimization,
+    and Molecular Dynamics. Different fields are populated depending on the task_type.
+    """
+
+    # Common fields (always present)
     initial_structures: list[Structure] = Field(
         ..., description="List of initial structures for the calculation."
     )
@@ -164,60 +177,57 @@ class TorchSimCalculation(BaseModel):
 
     model_path: str = Field(..., description="Path to the model file.")
 
-
-class TorchSimOptimizeCalculation(TorchSimCalculation):
-    """Schema for TorchSim optimization tasks."""
-
-    optimizer: Optimizer = Field(
-        ..., description="The TorchSim optimizer instance used for optimization."
+    task_type: TaskType = Field(
+        ...,
+        description="Type of calculation performed (Static, Structure Optimization, "
+        "or Molecular Dynamics).",
     )
 
-    max_steps: int = Field(
-        ..., description="Maximum number of optimization steps to perform."
+    # Optimization-specific fields (populated when task_type == STRUCTURE_OPTIMIZATION)
+    optimizer: Optimizer | None = Field(
+        None, description="The TorchSim optimizer instance used for optimization."
     )
 
-    steps_between_swaps: int = Field(
-        ..., description="Number of steps between system swaps in the optimizer."
+    max_steps: int | None = Field(
+        None, description="Maximum number of optimization steps to perform."
+    )
+
+    steps_between_swaps: int | None = Field(
+        None, description="Number of steps between system swaps in the optimizer."
     )
 
     init_kwargs: dict[str, Any] | None = Field(
         None, description="Additional keyword arguments for initialization."
     )
 
-    optimizer_kwargs: dict[str, Any] = Field(
-        default_factory=dict,
-        description="Keyword arguments for the optimizer configuration.",
+    optimizer_kwargs: dict[str, Any] | None = Field(
+        None, description="Keyword arguments for the optimizer configuration."
     )
 
-
-class TorchSimIntegrateCalculation(TorchSimCalculation):
-    """Schema for TorchSim integration (MD) tasks."""
-
-    integrator: Integrator = Field(
-        ..., description="The TorchSim integrator instance used for MD simulation."
+    # MD-specific fields (populated when task_type == MOLECULAR_DYNAMICS)
+    integrator: Integrator | None = Field(
+        None, description="The TorchSim integrator instance used for MD simulation."
     )
 
-    n_steps: int = Field(..., description="Number of integration steps to perform.")
-
-    temperature: float | list[float] = Field(
-        ..., description="Temperature(s) for the simulation in Kelvin."
+    n_steps: int | None = Field(
+        None, description="Number of integration steps to perform."
     )
 
-    timestep: float = Field(
-        ..., description="Timestep for the integration in femtoseconds."
+    temperature: float | list[float] | None = Field(
+        None, description="Temperature(s) for the simulation in Kelvin."
     )
 
-    integrator_kwargs: dict[str, Any] = Field(
-        default_factory=dict,
-        description="Keyword arguments for the integrator configuration.",
+    timestep: float | None = Field(
+        None, description="Timestep for the integration in femtoseconds."
     )
 
+    integrator_kwargs: dict[str, Any] | None = Field(
+        None, description="Keyword arguments for the integrator configuration."
+    )
 
-class TorchSimStaticCalculation(TorchSimCalculation):
-    """Schema for TorchSim static calculation tasks."""
-
-    all_properties: list[dict[str, np.ndarray]] = Field(
-        ..., description="List of calculated properties for each structure."
+    # Static calculation-specific fields (populated when task_type == STATIC)
+    all_properties: list[dict[str, np.ndarray]] | None = Field(
+        None, description="List of calculated properties for each structure."
     )
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -230,11 +240,9 @@ class TorchSimTaskDoc(BaseModel):
         ..., description="List of final structures from the calculation."
     )
 
-    calcs_reversed: list[
-        TorchSimIntegrateCalculation
-        | TorchSimOptimizeCalculation
-        | TorchSimStaticCalculation
-    ] = Field(..., description="List of calculations for the task.")
+    calcs_reversed: list[TorchSimCalculation] = Field(
+        ..., description="List of calculations for the task."
+    )
 
     time_elapsed: float = Field(
         ..., description="Time elapsed for the calculation in seconds."

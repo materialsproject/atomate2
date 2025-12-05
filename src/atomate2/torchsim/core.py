@@ -18,8 +18,9 @@ from atomate2.torchsim.schema import (
     AutobatcherDetails,
     ConvergenceFn,
     PropertyFn,
+    TaskType,
+    TorchSimCalculation,
     TorchSimModelType,
-    TorchSimOptimizeCalculation,
     TorchSimTaskDoc,
     TrajectoryReporterDetails,
 )
@@ -386,13 +387,14 @@ class TorchSimOptimizeMaker(Maker):
         final_structures = state.to_structures()
 
         # Create calculation object
-        calculation = TorchSimOptimizeCalculation(
+        calculation = TorchSimCalculation(
             initial_structures=structures,
             structures=final_structures,
             trajectory_reporter=trajectory_reporter_details,
             autobatcher=autobatcher_details,
             model=self.model_type,
             model_path=str(Path(self.model_path).resolve()),
+            task_type=TaskType.STRUCTURE_OPTIMIZATION,
             optimizer=self.optimizer,
             max_steps=self.max_steps,
             steps_between_swaps=self.steps_between_swaps,
@@ -475,8 +477,6 @@ class TorchSimIntegrateMaker(Maker):
         Response
             A response object containing the output task document.
         """
-        from atomate2.torchsim.schema import TorchSimIntegrateCalculation
-
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
         state = ts.initialize_state(structures, model.device, model.dtype)
@@ -510,13 +510,14 @@ class TorchSimIntegrateMaker(Maker):
         final_structures = state.to_structures()
 
         # Create calculation object
-        calculation = TorchSimIntegrateCalculation(
+        calculation = TorchSimCalculation(
             initial_structures=structures,
             structures=final_structures,
             trajectory_reporter=trajectory_reporter_details,
             autobatcher=autobatcher_details,
             model=self.model_type,
             model_path=str(Path(self.model_path).resolve()),
+            task_type=TaskType.MOLECULAR_DYNAMICS,
             integrator=self.integrator,
             n_steps=self.n_steps,
             temperature=self.temperature,
@@ -584,8 +585,6 @@ class TorchSimStaticMaker(Maker):
         Response
             A response object containing the output task document.
         """
-        from atomate2.torchsim.schema import TorchSimStaticCalculation
-
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
         state = ts.initialize_state(structures, model.device, model.dtype)
@@ -616,13 +615,14 @@ class TorchSimStaticMaker(Maker):
         ]
 
         # Create calculation object
-        calculation = TorchSimStaticCalculation(
+        calculation = TorchSimCalculation(
             initial_structures=structures,
             structures=structures,
             trajectory_reporter=trajectory_reporter_details,
             autobatcher=autobatcher_details,
             model=self.model_type,
             model_path=str(Path(self.model_path).resolve()),
+            task_type=TaskType.STATIC,
             all_properties=all_properties_numpy,
         )
 
