@@ -8,6 +8,9 @@ docs_build/*
 docs/tutorials/*
 docs/tutorials/*/*
 
+# tutorial output files
+tutorials/*.json.gz
+
 # C extensions
 *.so
 
@@ -75,3 +78,6 @@ docs/reference/atomate2.*
 
 .ipynb_checkpoints
 .aider*
+
+# deepmd-kit files
+**/*.pb

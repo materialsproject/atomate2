@@ -6,10 +6,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-try:
-    from emmet.core.types.enums import VaspObject
-except ImportError:
-    from emmet.core.vasp.calculation import VaspObject
+from emmet.core.types.enums import VaspObject
 from jobflow import Flow, Maker
 
 from atomate2.vasp.jobs.core import (

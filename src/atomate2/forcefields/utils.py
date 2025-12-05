@@ -9,11 +9,9 @@ from enum import Enum
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ase.io import Trajectory as AseTrajectory
 from ase.units import Bohr
 from ase.units import GPa as _GPa_to_eV_per_A3
 from monty.json import MontyDecoder
-from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -23,7 +21,7 @@ if TYPE_CHECKING:
 
     from atomate2.ase.schemas import AseResult
 
-_FORCEFIELD_DATA_OBJECTS = [PmgTrajectory, AseTrajectory, "ionic_steps"]
+_FORCEFIELD_DATA_OBJECTS = ["trajectory", "ionic_steps"]
 
 
 class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
@@ -42,6 +40,7 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     SevenNet = "SevenNet"
     MATPES_R2SCAN = "MatPES-r2SCAN"
     MATPES_PBE = "MatPES-PBE"
+    DeepMD = "DeepMD"
 
     @classmethod
     def _missing_(cls, value: Any) -> Any:
@@ -274,6 +273,11 @@ def ase_calculator(
             from sevenn.sevennet_calculator import SevenNetCalculator
 
             calculator = SevenNetCalculator(**{"model": "7net-0"} | kwargs)
+
+        elif calculator_name == MLFF.DeepMD:
+            from deepmd.calculator import DP
+
+            calculator = DP(**kwargs)
 
     elif isinstance(calculator_meta, dict):
         calc_cls = MontyDecoder().process_decoded(calculator_meta)

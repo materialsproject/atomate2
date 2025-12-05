@@ -28,7 +28,7 @@ dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core>=v0.84.10",
+    "emmet-core>=0.86.1",
     "jobflow>=0.1.11",
     "monty>=2024.12.10",
     "numpy",
@@ -57,11 +57,11 @@ forcefields = [
     "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.2.1",
-    "torchdata<=0.7.1",
+    "torchdata<=0.7.1", # TODO: remove when issue fixed
     # quippy-ase support for py3.12 tracked in https://github.com/libAtoms/QUIP/issues/645
     "quippy-ase>=0.9.14; python_version < '3.12'",
     "sevenn>=0.9.3",
-    "torchdata<=0.7.1",                            # TODO: remove when issue fixed
+    "deepmd-kit>=2.1.4",
 ]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 ase = ["ase>=3.26.0"]
@@ -83,7 +83,7 @@ docs = [
     "sphinx-copybutton==0.5.2",
     "sphinx==8.1.3",
     "sphinx_design==0.6.1",
-    "jupyterlab==4.4.10",
+    "jupyterlab==4.5.0",
 ]
 dev = ["pre-commit>=2.12.1"]
 tests = [
@@ -99,7 +99,7 @@ strict-openff = [
     "mdanalysis==2.9.0",
     "monty==2025.3.3",
     "openmm-mdanalysis-reporter==0.1.0",
-    "openmm==8.4.0",
+    "openmm==8.4.0.post2",
     "pymatgen==2025.10.7", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 strict-forcefields = [
@@ -107,14 +107,17 @@ strict-forcefields = [
     "calorine==3.1; python_version < '3.12'",
     "chgnet==0.3.8",
     "mace-torch==0.3.14",
-    "matgl==1.3.0",
+    "matgl==2.0.4",
     "quippy-ase==0.9.14; python_version < '3.12'",
     "sevenn==0.10.4",
     "torch==2.2.0",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
+    "deepmd-kit==2.2.11",
+    "tensorflow-cpu==2.16.2",
 ]
 strict = [
     "atomate2[strict-forcefields, docs, cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
+    "numpy<2.0",
 ]
 
 [project.scripts]
