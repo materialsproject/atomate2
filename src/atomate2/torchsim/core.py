@@ -31,7 +31,6 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
     from torch_sim.models.interface import ModelInterface
     from torch_sim.optimizers import Optimizer
-    from torch_sim.state import SimState
     from torch_sim.trajectory import TrajectoryReporter
 
 
@@ -137,7 +136,7 @@ def _get_autobatcher_details(
 
 
 def process_in_flight_autobatcher_dict(
-    state: SimState,
+    structures: list[Structure],
     model: ModelInterface,
     autobatcher_dict: dict[str, Any] | bool,
     max_iterations: int,
@@ -146,8 +145,8 @@ def process_in_flight_autobatcher_dict(
 
     Parameters
     ----------
-    state : SimState
-        The simulation state.
+    structures : list[Structure]
+        List of pymatgen Structures.
     model : ModelInterface
         The model interface.
     autobatcher_dict : dict[str, Any] | bool
@@ -165,6 +164,7 @@ def process_in_flight_autobatcher_dict(
         if not autobatcher_dict:
             return False, None
         # otherwise, configure the autobatcher, with the private runners method
+        state = ts.initialize_state(structures, model.device, model.dtype)
         autobatcher = ts.runners._configure_in_flight_autobatcher(  # noqa: SLF001
             state, model, autobatcher=autobatcher_dict, max_iterations=max_iterations
         )
@@ -176,14 +176,16 @@ def process_in_flight_autobatcher_dict(
 
 
 def process_binning_autobatcher_dict(
-    state: SimState, model: ModelInterface, autobatcher_dict: dict[str, Any] | bool
+    structures: list[Structure],
+    model: ModelInterface,
+    autobatcher_dict: dict[str, Any] | bool,
 ) -> tuple[BinningAutoBatcher | bool, AutobatcherDetails | None]:
     """Process the input dict into a BinningAutoBatcher and details dictionary.
 
     Parameters
     ----------
-    state : SimState
-        The simulation state.
+    structures : list[Structure]
+        List of pymatgen Structures.
     model : ModelInterface
         The model interface.
     autobatcher_dict : dict[str, Any] | bool
@@ -196,6 +198,7 @@ def process_binning_autobatcher_dict(
     """
     if isinstance(autobatcher_dict, bool):
         # otherwise, configure the autobatcher, with the private runners method
+        state = ts.initialize_state(structures, model.device, model.dtype)
         autobatcher = ts.runners._configure_batches_iterator(  # noqa: SLF001
             state, model, autobatcher=autobatcher_dict
         )
@@ -351,8 +354,6 @@ class TorchSimOptimizeMaker(Maker):
             **(self.convergence_fn_kwargs or {})
         )
 
-        state = ts.initialize_state(structures, model.device, model.dtype)
-
         # Configure trajectory reporter
         trajectory_reporter, trajectory_reporter_details = (
             process_trajectory_reporter_dict(self.trajectory_reporter_dict)
@@ -361,7 +362,7 @@ class TorchSimOptimizeMaker(Maker):
         # Configure autobatcher
         max_iterations = self.max_steps // self.steps_between_swaps
         autobatcher, autobatcher_details = process_in_flight_autobatcher_dict(
-            state,
+            structures,
             model,
             autobatcher_dict=self.autobatcher_dict,
             max_iterations=max_iterations,
@@ -371,7 +372,7 @@ class TorchSimOptimizeMaker(Maker):
 
         start_time = time.time()
         state = ts.optimize(
-            system=state,
+            system=structures,
             model=model,
             optimizer=self.optimizer,
             convergence_fn=convergence_fn_obj,
@@ -479,8 +480,6 @@ class TorchSimIntegrateMaker(Maker):
         """
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
-        state = ts.initialize_state(structures, model.device, model.dtype)
-
         # Configure trajectory reporter
         trajectory_reporter, trajectory_reporter_details = (
             process_trajectory_reporter_dict(self.trajectory_reporter_dict)
@@ -488,14 +487,14 @@ class TorchSimIntegrateMaker(Maker):
 
         # Configure autobatcher
         autobatcher, autobatcher_details = process_binning_autobatcher_dict(
-            state, model, autobatcher_dict=self.autobatcher_dict
+            structures, model, autobatcher_dict=self.autobatcher_dict
         )
 
         integrator_kwargs = self.integrator_kwargs or {}
 
         start_time = time.time()
         state = ts.integrate(
-            system=state,
+            system=structures,
             model=model,
             integrator=self.integrator,
             n_steps=self.n_steps,
@@ -587,8 +586,6 @@ class TorchSimStaticMaker(Maker):
         """
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
-        state = ts.initialize_state(structures, model.device, model.dtype)
-
         # Configure trajectory reporter
         trajectory_reporter, trajectory_reporter_details = (
             process_trajectory_reporter_dict(self.trajectory_reporter_dict)
@@ -596,21 +593,21 @@ class TorchSimStaticMaker(Maker):
 
         # Configure autobatcher
         autobatcher, autobatcher_details = process_binning_autobatcher_dict(
-            state, model, autobatcher_dict=self.autobatcher_dict
+            structures, model, autobatcher_dict=self.autobatcher_dict
         )
 
         start_time = time.time()
         all_properties = ts.static(
-            system=state,
+            system=structures,
             model=model,
             trajectory_reporter=trajectory_reporter,
             autobatcher=autobatcher,
         )
         elapsed_time = time.time() - start_time
 
-        # Convert tensors to numpy arrays
+        # Convert tensors to lists
         all_properties_numpy = [
-            {name: t.cpu().numpy() for name, t in prop_dict.items()}
+            {name: t.tolist() for name, t in prop_dict.items()}
             for prop_dict in all_properties
         ]
 

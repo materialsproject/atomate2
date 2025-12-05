@@ -6,9 +6,8 @@ import pathlib  # noqa: TC003
 from enum import StrEnum  # type: ignore[attr-defined]
 from typing import TYPE_CHECKING, Any, Literal
 
-import numpy as np  # noqa: TC002
 import torch_sim as ts
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 from pymatgen.core import Structure  # noqa: TC002
 from torch_sim.integrators import Integrator  # noqa: TC002
 from torch_sim.optimizers import Optimizer  # noqa: TC002
@@ -226,11 +225,9 @@ class TorchSimCalculation(BaseModel):
     )
 
     # Static calculation-specific fields (populated when task_type == STATIC)
-    all_properties: list[dict[str, np.ndarray]] | None = Field(
+    all_properties: list[dict[str, list]] | None = Field(
         None, description="List of calculated properties for each structure."
     )
-
-    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class TorchSimTaskDoc(BaseModel):
