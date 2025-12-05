@@ -18,10 +18,10 @@ from atomate2.torchsim.schema import (
     AutobatcherDetails,
     ConvergenceFn,
     PropertyFn,
+    TorchSimModelType,
+    TorchSimOptimizeCalculation,
+    TorchSimTaskDoc,
     TrajectoryReporterDetails,
-    TSModelType,
-    TSOpimizeCalculation,
-    TSTaskDoc,
 )
 
 if TYPE_CHECKING:
@@ -39,7 +39,7 @@ def torchsim_job(method: Callable) -> job:
 
     This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
     settings for all TorchSim jobs. Namely, configures the output schema to be a
-    :obj:`.TSTaskDoc`.
+    :obj:`.TorchSimTaskDoc`.
 
     Parameters
     ----------
@@ -52,7 +52,7 @@ def torchsim_job(method: Callable) -> job:
     callable
         A decorated version of the make function that will generate jobs.
     """
-    return job(method, output_schema=TSTaskDoc)
+    return job(method, output_schema=TorchSimTaskDoc)
 
 
 def process_trajectory_reporter_dict(
@@ -212,13 +212,13 @@ def process_binning_autobatcher_dict(
 
 
 def pick_model(
-    model_type: TSModelType, model_path: str | Path, **model_kwargs: Any
+    model_type: TorchSimModelType, model_path: str | Path, **model_kwargs: Any
 ) -> ModelInterface:
     """Pick and instantiate a model based on the model type.
 
     Parameters
     ----------
-    model_type : TSModelType
+    model_type : TorchSimModelType
         The type of model to instantiate.
     model_path : str | Path
         Path to the model file or checkpoint.
@@ -235,43 +235,43 @@ def pick_model(
     ValueError
         If an invalid model type is provided.
     """
-    if model_type == TSModelType.FAIRCHEMV1:
+    if model_type == TorchSimModelType.FAIRCHEMV1:
         from torch_sim.models.fairchem_legacy import FairChemV1Model
 
         return FairChemV1Model(model=model_path, **model_kwargs)
-    if model_type == TSModelType.FAIRCHEM:
+    if model_type == TorchSimModelType.FAIRCHEM:
         from torch_sim.models.fairchem import FairChemModel
 
         return FairChemModel(model=model_path, **model_kwargs)
-    if model_type == TSModelType.GRAPHPESWRAPPER:
+    if model_type == TorchSimModelType.GRAPHPESWRAPPER:
         from torch_sim.models.graphpes import GraphPESWrapper
 
         return GraphPESWrapper(model=model_path, **model_kwargs)
-    if model_type == TSModelType.MACE:
+    if model_type == TorchSimModelType.MACE:
         from torch_sim.models.mace import MaceModel
 
         return MaceModel(model=model_path, **model_kwargs)
-    if model_type == TSModelType.MATTERSIM:
+    if model_type == TorchSimModelType.MATTERSIM:
         from torch_sim.models.mattersim import MatterSimModel
 
         return MatterSimModel(model=model_path, **model_kwargs)
-    if model_type == TSModelType.METATOMIC:
+    if model_type == TorchSimModelType.METATOMIC:
         from torch_sim.models.metatomic import MetatomicModel
 
         return MetatomicModel(model=model_path, **model_kwargs)
-    if model_type == TSModelType.NEQUIPFRAMEWORK:
+    if model_type == TorchSimModelType.NEQUIPFRAMEWORK:
         from torch_sim.models.nequip_framework import NequIPFrameworkModel
 
         return NequIPFrameworkModel(model=model_path, **model_kwargs)
-    if model_type == TSModelType.ORB:
+    if model_type == TorchSimModelType.ORB:
         from torch_sim.models.orb import OrbModel
 
         return OrbModel(model=model_path, **model_kwargs)
-    if model_type == TSModelType.SEVENNET:
+    if model_type == TorchSimModelType.SEVENNET:
         from torch_sim.models.sevennet import SevenNetModel
 
         return SevenNetModel(model=model_path, **model_kwargs)
-    if model_type == TSModelType.LENNARD_JONES:
+    if model_type == TorchSimModelType.LENNARD_JONES:
         from torch_sim.models.lennard_jones import LennardJonesModel
 
         return LennardJonesModel(**model_kwargs)
@@ -280,7 +280,7 @@ def pick_model(
 
 
 @dataclass
-class TSOptimizeMaker(Maker):
+class TorchSimOptimizeMaker(Maker):
     """A maker class for performing optimization using TorchSim.
 
     Parameters
@@ -312,7 +312,7 @@ class TSOptimizeMaker(Maker):
     """
 
     optimizer: Optimizer
-    model_type: TSModelType
+    model_type: TorchSimModelType
     model_path: str | Path
     model_kwargs: dict[str, Any] = field(default_factory=dict)
     name: str = "torchsim optimize"
@@ -328,7 +328,7 @@ class TSOptimizeMaker(Maker):
 
     @torchsim_job
     def make(
-        self, structures: list[Structure], prev_task: TSTaskDoc | None = None
+        self, structures: list[Structure], prev_task: TorchSimTaskDoc | None = None
     ) -> Response:
         """Run a TorchSim optimization calculation.
 
@@ -336,7 +336,7 @@ class TSOptimizeMaker(Maker):
         ----------
         structures : list[Structure]
             List of pymatgen Structures to optimize.
-        prev_task : TSTaskDoc | None
+        prev_task : TorchSimTaskDoc | None
             Previous task document if continuing from a previous calculation.
 
         Returns
@@ -386,7 +386,7 @@ class TSOptimizeMaker(Maker):
         final_structures = state.to_structures()
 
         # Create calculation object
-        calculation = TSOpimizeCalculation(
+        calculation = TorchSimOptimizeCalculation(
             initial_structures=structures,
             structures=final_structures,
             trajectory_reporter=trajectory_reporter_details,
@@ -401,7 +401,7 @@ class TSOptimizeMaker(Maker):
         )
 
         # Create task document
-        task_doc = TSTaskDoc(
+        task_doc = TorchSimTaskDoc(
             structures=final_structures,
             calcs_reversed=(
                 [calculation] + ([prev_task.calcs_reversed] if prev_task else [])
@@ -413,14 +413,14 @@ class TSOptimizeMaker(Maker):
 
 
 @dataclass
-class TSIntegrateMaker(Maker):
+class TorchSimIntegrateMaker(Maker):
     """A maker class for performing molecular dynamics using TorchSim.
 
     Parameters
     ----------
     name : str
         The name of the job.
-    model_type : TSModelType
+    model_type : TorchSimModelType
         The type of model to use.
     model_path : str | Path
         Path to the model file or checkpoint.
@@ -444,7 +444,7 @@ class TSIntegrateMaker(Maker):
         Tags for the job.
     """
 
-    model_type: TSModelType
+    model_type: TorchSimModelType
     model_path: str | Path
     integrator: Any  # Integrator type from torch_sim
     n_steps: int
@@ -459,7 +459,7 @@ class TSIntegrateMaker(Maker):
 
     @torchsim_job
     def make(
-        self, structures: list[Structure], prev_task: TSTaskDoc | None = None
+        self, structures: list[Structure], prev_task: TorchSimTaskDoc | None = None
     ) -> Response:
         """Run a TorchSim molecular dynamics calculation.
 
@@ -467,7 +467,7 @@ class TSIntegrateMaker(Maker):
         ----------
         structures : list[Structure]
             List of pymatgen Structures to simulate.
-        prev_task : TSTaskDoc | None
+        prev_task : TorchSimTaskDoc | None
             Previous task document if continuing from a previous calculation.
 
         Returns
@@ -475,7 +475,7 @@ class TSIntegrateMaker(Maker):
         Response
             A response object containing the output task document.
         """
-        from atomate2.torchsim.schema import TSIntegrateCalculation
+        from atomate2.torchsim.schema import TorchSimIntegrateCalculation
 
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
@@ -510,7 +510,7 @@ class TSIntegrateMaker(Maker):
         final_structures = state.to_structures()
 
         # Create calculation object
-        calculation = TSIntegrateCalculation(
+        calculation = TorchSimIntegrateCalculation(
             initial_structures=structures,
             structures=final_structures,
             trajectory_reporter=trajectory_reporter_details,
@@ -525,7 +525,7 @@ class TSIntegrateMaker(Maker):
         )
 
         # Create task document
-        task_doc = TSTaskDoc(
+        task_doc = TorchSimTaskDoc(
             structures=final_structures,
             calcs_reversed=(
                 [calculation] + ([prev_task.calcs_reversed] if prev_task else [])
@@ -537,14 +537,14 @@ class TSIntegrateMaker(Maker):
 
 
 @dataclass
-class TSStaticMaker(Maker):
+class TorchSimStaticMaker(Maker):
     """A maker class for performing static calculations using TorchSim.
 
     Parameters
     ----------
     name : str
         The name of the job.
-    model_type : TSModelType
+    model_type : TorchSimModelType
         The type of model to use.
     model_path : str | Path
         Path to the model file or checkpoint.
@@ -558,7 +558,7 @@ class TSStaticMaker(Maker):
         Tags for the job.
     """
 
-    model_type: TSModelType
+    model_type: TorchSimModelType
     model_path: str | Path
     name: str = "torchsim static"
     model_kwargs: dict[str, Any] = field(default_factory=dict)
@@ -568,7 +568,7 @@ class TSStaticMaker(Maker):
 
     @torchsim_job
     def make(
-        self, structures: list[Structure], prev_task: TSTaskDoc | None = None
+        self, structures: list[Structure], prev_task: TorchSimTaskDoc | None = None
     ) -> Response:
         """Run a TorchSim static calculation.
 
@@ -576,7 +576,7 @@ class TSStaticMaker(Maker):
         ----------
         structures : list[Structure]
             List of pymatgen Structures to calculate properties for.
-        prev_task : TSTaskDoc | None
+        prev_task : TorchSimTaskDoc | None
             Previous task document if continuing from a previous calculation.
 
         Returns
@@ -584,7 +584,7 @@ class TSStaticMaker(Maker):
         Response
             A response object containing the output task document.
         """
-        from atomate2.torchsim.schema import TSStaticCalculation
+        from atomate2.torchsim.schema import TorchSimStaticCalculation
 
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
@@ -616,7 +616,7 @@ class TSStaticMaker(Maker):
         ]
 
         # Create calculation object
-        calculation = TSStaticCalculation(
+        calculation = TorchSimStaticCalculation(
             initial_structures=structures,
             structures=structures,
             trajectory_reporter=trajectory_reporter_details,
@@ -627,7 +627,7 @@ class TSStaticMaker(Maker):
         )
 
         # Create task document
-        task_doc = TSTaskDoc(
+        task_doc = TorchSimTaskDoc(
             structures=structures,
             calcs_reversed=(
                 [calculation] + ([prev_task.calcs_reversed] if prev_task else [])

@@ -12,8 +12,12 @@ from mace.calculators.foundations_models import download_mace_mp_checkpoint
 from pymatgen.core import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 
-from atomate2.torchsim.core import TSIntegrateMaker, TSOptimizeMaker, TSStaticMaker
-from atomate2.torchsim.schema import ConvergenceFn, TSModelType
+from atomate2.torchsim.core import (
+    TorchSimIntegrateMaker,
+    TorchSimOptimizeMaker,
+    TorchSimStaticMaker,
+)
+from atomate2.torchsim.schema import ConvergenceFn, TorchSimModelType
 
 
 @pytest.fixture
@@ -57,8 +61,8 @@ def test_relax_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     # Create autobatcher
     autobatcher_dict = False
 
-    maker = TSOptimizeMaker(
-        model_type=TSModelType.LENNARD_JONES,
+    maker = TorchSimOptimizeMaker(
+        model_type=TorchSimModelType.LENNARD_JONES,
         model_path="",
         optimizer=ts.Optimizer.fire,
         convergence_fn=ConvergenceFn.FORCE,
@@ -89,7 +93,7 @@ def test_relax_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     calc = result.calcs_reversed[0]
 
     # Check model name
-    assert calc.model == TSModelType.LENNARD_JONES
+    assert calc.model == TorchSimModelType.LENNARD_JONES
     assert calc.model_path is not None
 
     # Check optimizer
@@ -135,8 +139,8 @@ def test_relax_job_mace(
 
     autobatcher_dict = {"memory_scales_with": "n_atoms", "max_memory_scaler": 260}
 
-    maker = TSOptimizeMaker(
-        model_type=TSModelType.MACE,
+    maker = TorchSimOptimizeMaker(
+        model_type=TorchSimModelType.MACE,
         model_path=mace_model_path,
         optimizer=ts.Optimizer.fire,
         convergence_fn=ConvergenceFn.FORCE,
@@ -157,7 +161,7 @@ def test_relax_job_mace(
     assert len(result.calcs_reversed) == 1
 
     calc = result.calcs_reversed[0]
-    assert calc.model == TSModelType.MACE
+    assert calc.model == TorchSimModelType.MACE
     assert calc.autobatcher is not None
     assert calc.autobatcher.memory_scales_with == "n_atoms"
 
@@ -177,8 +181,8 @@ def test_md_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     # Create autobatcher
     autobatcher_dict = False
 
-    maker = TSIntegrateMaker(
-        model_type=TSModelType.LENNARD_JONES,
+    maker = TorchSimIntegrateMaker(
+        model_type=TorchSimModelType.LENNARD_JONES,
         model_path="",
         integrator=ts.Integrator.nvt_langevin,
         n_steps=20,
@@ -208,7 +212,7 @@ def test_md_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     calc = result.calcs_reversed[0]
 
     # Check model name
-    assert calc.model == TSModelType.LENNARD_JONES
+    assert calc.model == TorchSimModelType.LENNARD_JONES
     assert calc.model_path is not None
 
     # Check integrator
@@ -248,8 +252,8 @@ def test_static_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     # Create autobatcher
     autobatcher_dict = False
 
-    maker = TSStaticMaker(
-        model_type=TSModelType.LENNARD_JONES,
+    maker = TorchSimStaticMaker(
+        model_type=TorchSimModelType.LENNARD_JONES,
         model_path="",
         trajectory_reporter_dict=trajectory_reporter_dict,
         autobatcher_dict=autobatcher_dict,
@@ -275,7 +279,7 @@ def test_static_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     calc = result.calcs_reversed[0]
 
     # Check model name
-    assert calc.model == TSModelType.LENNARD_JONES
+    assert calc.model == TorchSimModelType.LENNARD_JONES
     assert calc.model_path is not None
 
     # Check trajectory reporter details

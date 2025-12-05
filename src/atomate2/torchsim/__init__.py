@@ -1,5 +1,9 @@
 """TorchSim module for atomate2."""
 
-from atomate2.torchsim.core import TSIntegrateMaker, TSOptimizeMaker, TSStaticMaker
+from atomate2.torchsim.core import (
+    TorchSimIntegrateMaker,
+    TorchSimOptimizeMaker,
+    TorchSimStaticMaker,
+)
 
-__all__ = ["TSIntegrateMaker", "TSOptimizeMaker", "TSStaticMaker"]
+__all__ = ["TorchSimIntegrateMaker", "TorchSimOptimizeMaker", "TorchSimStaticMaker"]

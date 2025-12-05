@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 
 
-class TSModelType(StrEnum):  # type: ignore[attr-defined]
+class TorchSimModelType(StrEnum):  # type: ignore[attr-defined]
     """Enum for model types."""
 
     FAIRCHEMV1 = "FairChemV1Model"
@@ -139,7 +139,7 @@ class AutobatcherDetails(BaseModel):
     )
 
 
-class TSCalculation(BaseModel):
+class TorchSimCalculation(BaseModel):
     """Schema for TorchSim calculation tasks."""
 
     initial_structures: list[Structure] = Field(
@@ -158,14 +158,14 @@ class TSCalculation(BaseModel):
         None, description="Configuration for the autobatcher."
     )
 
-    model: TSModelType = Field(
+    model: TorchSimModelType = Field(
         ..., description="Name of the model used for the calculation."
     )
 
     model_path: str = Field(..., description="Path to the model file.")
 
 
-class TSOpimizeCalculation(TSCalculation):
+class TorchSimOptimizeCalculation(TorchSimCalculation):
     """Schema for TorchSim optimization tasks."""
 
     optimizer: Optimizer = Field(
@@ -190,7 +190,7 @@ class TSOpimizeCalculation(TSCalculation):
     )
 
 
-class TSIntegrateCalculation(TSCalculation):
+class TorchSimIntegrateCalculation(TorchSimCalculation):
     """Schema for TorchSim integration (MD) tasks."""
 
     integrator: Integrator = Field(
@@ -213,7 +213,7 @@ class TSIntegrateCalculation(TSCalculation):
     )
 
 
-class TSStaticCalculation(TSCalculation):
+class TorchSimStaticCalculation(TorchSimCalculation):
     """Schema for TorchSim static calculation tasks."""
 
     all_properties: list[dict[str, np.ndarray]] = Field(
@@ -223,7 +223,7 @@ class TSStaticCalculation(TSCalculation):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
-class TSTaskDoc(BaseModel):
+class TorchSimTaskDoc(BaseModel):
     """Base schema for TorchSim tasks."""
 
     structures: list[Structure] = Field(
@@ -231,7 +231,9 @@ class TSTaskDoc(BaseModel):
     )
 
     calcs_reversed: list[
-        TSIntegrateCalculation | TSOpimizeCalculation | TSStaticCalculation
+        TorchSimIntegrateCalculation
+        | TorchSimOptimizeCalculation
+        | TorchSimStaticCalculation
     ] = Field(..., description="List of calculations for the task.")
 
     time_elapsed: float = Field(
