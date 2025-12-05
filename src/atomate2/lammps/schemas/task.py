@@ -76,7 +76,7 @@ class LammpsTaskDocument(StructureMetadata):
         cls: type["LammpsTaskDocument"],
         dir_name: str | Path,
         task_label: str,
-        store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.PARTIAL,
+        store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO,
         trajectory_format: Literal["pmg", "ase"] = "pmg",
         output_file_pattern: str | None = None,
         parse_additional_outputs: list | None = None,
@@ -88,11 +88,14 @@ class LammpsTaskDocument(StructureMetadata):
             Directory where the task was run
         task_label: str
             Label for the task
-        store_trajectory: Literal["no", "partial", "full"]
+        store_trajectory: StoreTrajectoryOption
             Whether to store the trajectory output from the lammps run.
-            Default is 'partial', which stores the dump files output from the
+            Default is 'NO', which does not store the trajectory output from the
+            lammps run. 'PARTIAL' stores the dump files output from the
             lammps run,but does not convert them to the heavier pymatgen/ase
-            trajectory objects.
+            trajectory objects. 'FULL' stores the dump files output from the
+            lammps run, and converts them to the heavier pymatgen/ase
+            trajectory objects for easier downstream processing.
         trajectory_format: Literal["pmg", "ase"]
             Format of the trajectory output. Default is 'pmg'
         output_file_pattern: str
