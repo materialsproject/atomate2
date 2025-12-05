@@ -15,7 +15,9 @@ from atomate2.forcefields.utils import _FORCEFIELD_DATA_OBJECTS, ForceFieldMixin
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from pymatgen.core.structure import Structure
+    from pymatgen.core.structure import Molecule, Structure
+
+    from atomate2.forcefields.schemas import ForceFieldMoleculeTaskDocument
 
 
 @dataclass
@@ -104,19 +106,18 @@ class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
 
     @job(
         data=[*_FORCEFIELD_DATA_OBJECTS, "ionic_steps"],
-        output_schema=ForceFieldTaskDocument,
     )
     def make(
         self,
-        structure: Structure,
+        structure: Molecule | Structure,
         prev_dir: str | Path | None = None,
-    ) -> ForceFieldTaskDocument:
+    ) -> ForceFieldTaskDocument | ForceFieldMoleculeTaskDocument:
         """
         Perform MD on a structure using forcefields and jobflow.
 
         Parameters
         ----------
-        structure: .Structure
+        structure: .Structure or Molecule
             pymatgen structure.
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just

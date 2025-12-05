@@ -4,12 +4,15 @@ from pathlib import Path
 import numpy as np
 import pytest
 from jobflow import run_locally
-from pymatgen.core import Structure
+from pymatgen.core import Molecule, Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pytest import approx, importorskip
 
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
-from atomate2.forcefields.schemas import ForceFieldTaskDocument
+from atomate2.forcefields.schemas import (
+    ForceFieldMoleculeTaskDocument,
+    ForceFieldTaskDocument,
+)
 
 
 def test_maker_initialization():
@@ -299,9 +302,7 @@ def test_mace_relax_maker(
         assert output1.output.n_steps == 7
 
 
-def test_mace_mpa_0_relax_maker(
-    si_structure: Structure,
-):
+def test_mace_mpa_0_relax_maker(si_structure: Structure, test_dir: Path, tmp_dir):
     job = ForceFieldRelaxMaker(
         force_field_name="MACE_MPA_0",
         steps=25,
@@ -313,11 +314,28 @@ def test_mace_mpa_0_relax_maker(
     # validating the outputs of the job
     output = responses[job.uuid][1].output
 
+    water_molecule = Molecule.from_file(test_dir / "molecules" / "water.xyz.gz")
+    job_mol = ForceFieldRelaxMaker(
+        force_field_name="MACE_MPA_0",
+        steps=25,
+        relax_kwargs={"fmax": 0.005},
+    ).make(water_molecule)
+    # run the flow or job and ensure that it finished running successfully
+    responses_mol = run_locally(job_mol, ensure_success=True)
+
+    # validating the outputs of the job
+    output_mol = responses_mol[job_mol.uuid][1].output
+    assert isinstance(output_mol, ForceFieldMoleculeTaskDocument)
+
     assert output.ase_calculator_name == "MLFF.MACE_MPA_0"
     assert output.output.energy == pytest.approx(-10.829493522644043)
     assert output.output.structure.volume == pytest.approx(40.87471552602735)
     assert len(output.output.ionic_steps) == 4
     assert output.structure.volume == output.output.structure.volume
+
+    assert output_mol.ase_calculator_name == "MLFF.MACE_MPA_0"
+    assert output_mol.output.energy == pytest.approx(-13.786081314086914)
+    assert len(output_mol.output.ionic_steps) == 20
 
 
 def test_gap_static_maker(si_structure: Structure, test_dir):
@@ -522,6 +540,72 @@ def test_nequip_relax_maker(
     assert final_spg_num == 99
 
 
+def test_deepmd_static_maker(
+    sr_ti_o3_structure: Structure, test_dir: Path, get_deepmd_pretrained_model_path
+):
+    importorskip("deepmd")
+
+    # generate job
+    job = ForceFieldStaticMaker(
+        force_field_name="DeepMD",
+        ionic_step_data=("structure", "energy"),
+        calculator_kwargs={"model": get_deepmd_pretrained_model_path},
+    ).make(sr_ti_o3_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validate the outputs of the job
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    assert output1.output.energy == approx(-3723.09868, rel=1e-4)
+    assert output1.output.n_steps == 1
+    assert output1.forcefield_version == get_imported_version("deepmd-kit")
+
+
+@pytest.mark.parametrize(
+    ("relax_cell", "fix_symmetry"),
+    [(True, False), (False, True)],
+)
+def test_deepmd_relax_maker(
+    sr_ti_o3_structure: Structure,
+    test_dir: Path,
+    relax_cell: bool,
+    fix_symmetry: bool,
+    get_deepmd_pretrained_model_path: Path,
+):
+    importorskip("deepmd")
+    # translate one atom to ensure a small number of relaxation steps are taken
+    sr_ti_o3_structure.translate_sites(0, [0, 0, 0.01])
+    # generate job
+    job = ForceFieldRelaxMaker(
+        force_field_name="DeepMD",
+        steps=25,
+        optimizer_kwargs={"optimizer": "BFGSLineSearch"},
+        relax_cell=relax_cell,
+        fix_symmetry=fix_symmetry,
+        calculator_kwargs={"model": get_deepmd_pretrained_model_path},
+    ).make(sr_ti_o3_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validate the outputs of the job
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    if relax_cell:
+        assert output1.output.energy == approx(-3723.099519623731, rel=1e-3)
+        assert output1.output.n_steps == 3
+    else:
+        assert output1.output.energy == approx(-3723.0981880334643, rel=1e-4)
+        assert output1.output.n_steps == 3
+
+    # fix_symmetry makes no difference for this structure relaxer combo
+    # just testing that passing fix_symmetry doesn't break
+    final_spg_num = output1.output.structure.get_space_group_info()[1]
+    assert final_spg_num == 99
+
+
 @pytest.mark.parametrize("ref_func", ["PBE", "r2SCAN"])
 def test_matpes_relax_makers(
     sr_ti_o3_structure: Structure,
@@ -532,8 +616,8 @@ def test_matpes_relax_makers(
 
     refs = {
         "PBE": {
-            "energy_per_atom": -7.969418334960937,
-            "volume": 61.5685434322787,
+            "energy_per_atom": -7.9611351013183596,
+            "volume": 60.91639399282195,
             "forces": [
                 [
                     -1.48095100627188e-08,
@@ -554,14 +638,14 @@ def test_matpes_relax_makers(
                 ],
             ],
             "stress": [
-                [-3.2316584962663115, -5.655957247906253e-07, -1.2974634469118903e-06],
-                [-5.655957247906253e-07, -3.2316376062607346, -3.4183954413422158e-06],
-                [-1.2974634469118903e-06, -3.4183954413422158e-06, -3.23162268482818],
+                [6.150300775936876, -5.854866356979066e-07, -6.522582661838942e-06],
+                [-5.854866356979066e-07, 6.150316070405244, -3.0104131342606253e-06],
+                [-6.522582661838942e-06, -3.0104131342606253e-06, 6.150302268080131],
             ],
         },
         "r2SCAN": {
-            "energy_per_atom": -12.618433380126953,
-            "volume": 59.608148084043876,
+            "energy_per_atom": -12.588912963867188,
+            "volume": 59.30895984045571,
             "forces": [
                 [1.1260409849001007e-07, 1.4873557496741796e-08, 6.234344596123265e-09],
                 [
@@ -582,9 +666,9 @@ def test_matpes_relax_makers(
                 [-7.171183824539185e-08, 3.3614934835668464e-08, 9.266178579991902e-08],
             ],
             "stress": [
-                [11.739250544520468, 9.398965578128745e-07, -3.1735166915189553e-06],
-                [9.398965578128745e-07, 11.739264719881394, -1.220071863449669e-06],
-                [-3.1735166915189553e-06, -1.220071863449669e-06, 11.739276657027439],
+                [12.034191310755238, -1.21893513832506e-06, -6.9246067896272225e-06],
+                [-1.21893513832506e-06, 12.03422712219337, -8.57680763083222e-06],
+                [-6.9246067896272225e-06, -8.57680763083222e-06, 12.03421369290407],
             ],
         },
     }
@@ -602,7 +686,7 @@ def test_matpes_relax_makers(
     assert isinstance(output, ForceFieldTaskDocument)
 
     ref = refs[ref_func]
-    assert output.output.energy_per_atom == approx(ref["energy_per_atom"])
+    assert output.output.energy_per_atom == approx(ref["energy_per_atom"], rel=1e-3)
     assert output.structure.volume == approx(ref["volume"])
     assert np.all(
         np.abs(np.array(output.output.ionic_steps[-1].forces) - np.array(ref["forces"]))

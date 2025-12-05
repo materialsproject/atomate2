@@ -17,7 +17,9 @@ if TYPE_CHECKING:
     from collections.abc import Callable
     from pathlib import Path
 
-    from pymatgen.core.structure import Structure
+    from pymatgen.core.structure import Molecule, Structure
+
+    from atomate2.forcefields.schemas import ForceFieldMoleculeTaskDocument
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +31,9 @@ def forcefield_job(method: Callable) -> job:
     This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
     settings for all forcefield jobs. For example, it ensures that large data objects
     (currently only trajectories) are all stored in the atomate2 data store.
-    It also configures the output schema to be a ForceFieldTaskDocument :obj:`.TaskDoc`.
+    It also configures the output schema to be a
+    ForceFieldTaskDocument :obj:`.TaskDoc`. or
+    ForceFieldMoleculeTaskDocument :obj:`.TaskDoc`.
 
     Any makers that return forcefield jobs (not flows) should decorate the
     ``make`` method with @forcefield_job. For example:
@@ -53,9 +57,7 @@ def forcefield_job(method: Callable) -> job:
     callable
         A decorated version of the make function that will generate forcefield jobs.
     """
-    return job(
-        method, data=_FORCEFIELD_DATA_OBJECTS, output_schema=ForceFieldTaskDocument
-    )
+    return job(method, data=_FORCEFIELD_DATA_OBJECTS)
 
 
 @dataclass
@@ -99,7 +101,8 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
     tags : list[str] or None
         A list of tags for the task.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = "Force field relax"
@@ -115,15 +118,15 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
 
     @forcefield_job
     def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> ForceFieldTaskDocument:
+        self, structure: Molecule | Structure, prev_dir: str | Path | None = None
+    ) -> ForceFieldTaskDocument | ForceFieldMoleculeTaskDocument:
         """
         Perform a relaxation of a structure using a force field.
 
         Parameters
         ----------
-        structure: .Structure
-            pymatgen structure.
+        structure: .Structure or Molecule
+            pymatgen structure or molecule.
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
@@ -172,7 +175,8 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = "Force field static"
