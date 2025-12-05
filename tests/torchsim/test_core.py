@@ -1,11 +1,14 @@
 """Tests for TorchSim core makers."""
+# ruff: noqa: E402
 
 from __future__ import annotations
 
 from pathlib import Path
 
 import pytest
-import torch_sim as ts
+
+ts = pytest.importorskip("torch_sim")
+
 from ase.build import bulk
 from jobflow import run_locally
 from mace.calculators.foundations_models import download_mace_mp_checkpoint
