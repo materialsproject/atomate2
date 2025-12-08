@@ -267,7 +267,12 @@ def ase_calculator(
         elif calculator_name == MLFF.Nequip:
             from nequip.ase import NequIPCalculator
 
-            calculator = NequIPCalculator.from_deployed_model(**kwargs)
+            calculator = getattr(
+                NequIPCalculator,
+                "from_compiled_model"
+                if hasattr(NequIPCalculator, "from_compiled_model")
+                else "from_deployed_model",
+            )(**kwargs)
 
         elif calculator_name == MLFF.SevenNet:
             from sevenn.sevennet_calculator import SevenNetCalculator
