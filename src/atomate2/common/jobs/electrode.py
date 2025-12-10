@@ -9,6 +9,7 @@ from emmet.core.electrode import InsertionElectrodeDoc
 from emmet.core.mpid import MPID, AlphaID, check_ulid
 from emmet.core.structure_group import StructureGroupDoc
 from jobflow import Flow, Maker, Response, job
+from jobflow.core.reference import OnMissing
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
 from pymatgen.entries.computed_entries import ComputedStructureEntry
 from ulid import ULID
@@ -111,6 +112,8 @@ def get_stable_inserted_results(
         ref_structure=structure,
         structure_matcher=structure_matcher,
     )
+    min_en_job.config.on_missing_references = OnMissing.NONE
+
     next_step = get_stable_inserted_results(
         structure=min_en_job.output[0],
         inserted_element=inserted_element,
@@ -298,7 +301,10 @@ def get_min_energy_summary(
     topotactic_summaries = [
         summary
         for summary in relaxed_summaries
-        if structure_matcher.fit(ref_structure, summary.structure)
+        if (
+            summary.structure
+            and structure_matcher.fit(ref_structure, summary.structure)
+        )
     ]
 
     if len(topotactic_summaries) == 0:

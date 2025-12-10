@@ -150,6 +150,8 @@ class CommonApproxNebMaker(Maker):
             selective_dynamics_scheme=self.selective_dynamics_scheme,
             min_hop_distance=self.min_hop_distance,
         )
+        # Still proceed if one of the endpoints failed
+        image_relax_jobs.config.on_missing_references = OnMissing.NONE
 
         collect_output = collate_results(
             host_structure,
