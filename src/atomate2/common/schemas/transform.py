@@ -63,3 +63,8 @@ class SQSTask(TransformTask):
         default=False,
         description="Whether the lowest possible SQS objective was attained.",
     )
+
+    @property
+    def all_structures(self) -> list[Structure]:
+        """Return all structures, not just the most optimal SQS structure."""
+        return [self.final_structure, *(self.sqs_structures or [])]
