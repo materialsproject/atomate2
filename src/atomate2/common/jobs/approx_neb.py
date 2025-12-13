@@ -232,6 +232,8 @@ def get_images_and_relax(
         If a list of ints, the number of images to use in that hop,
     charge_density_path: str | Path
         The path to the calculation of the host_structure
+    get_charge_density: Callable[[str | Path], VolumetricData]
+        Function to get the charge density
     relax_maker : Maker
         Maker to relax images
     selective_dynamics_scheme : "fix_two_atoms" or None
@@ -289,10 +291,11 @@ def get_images_and_relax(
 
         # See if we can proceed with this hop calculation:
         skip_reasons = []
-        if not all(ep_structures.get(idx) for idx in [ini_ind, fin_ind]):
+        if any(not ep_structures.get(idx) for idx in [ini_ind, fin_ind]):
             # At least one endpoint calculation failed
             skip_reasons.append(HopFailureReason.ENDPOINT)
-        if (
+
+        elif (
             isinstance(min_hop_distance, float)
             and get_hop_distance_from_endpoints(
                 [ep_structures[ini_ind], ep_structures[fin_ind]], working_ion
