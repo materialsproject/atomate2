@@ -96,7 +96,7 @@ tests = [
     "pytest==8.4.2",
 ]
 strict-openff = [
-    "mdanalysis==2.9.0",
+    "mdanalysis==2.10.0",
     "monty==2025.3.3",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.4.0.post2",
