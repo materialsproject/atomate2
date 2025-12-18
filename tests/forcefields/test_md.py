@@ -117,7 +117,8 @@ def test_ml_ff_md_maker(
         traj_file="md_traj.json.gz",
         traj_file_fmt="pmg",
         store_trajectory="partial",
-        ionic_step_data=("energy", "forces", "stress", "mol_or_struct"),
+        # check that `structure` alias to `mol_or_struct` works:
+        ionic_step_data=("energy", "forces", "stress", "structure"),
         calculator_kwargs=calculator_kwargs,
         use_emmet_models=use_emmet_models,
     ).make(structure)
@@ -137,8 +138,13 @@ def test_ml_ff_md_maker(
     # Check that the ionic steps have the expected physical properties
     assert all(
         key in step.model_dump()
-        for key in ("energy", "forces", "stress", "mol_or_struct", "structure")
+        for key in ("energy", "forces", "stress", "mol_or_struct")
         for step in task_doc.output.ionic_steps
+    )
+
+    # `structure` aliases `mol_or_struct`
+    assert all(
+        step.structure == step.mol_or_struct for step in task_doc.output.ionic_steps
     )
 
     # Check that the trajectory has expected physical properties
