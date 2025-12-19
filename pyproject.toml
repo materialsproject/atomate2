@@ -61,7 +61,7 @@ forcefields = [
     # quippy-ase support for py3.12 tracked in https://github.com/libAtoms/QUIP/issues/645
     "quippy-ase>=0.9.14; python_version < '3.12'",
     # TODO: remove when f90wrap issue resolved: https://github.com/jameskermode/f90wrap/issues/352
-    "f90wrap==0.2.16",
+    "f90wrap==0.2.16; python_version < '3.12'",
     "sevenn>=0.9.3",
     "deepmd-kit>=2.1.4",
 ]
