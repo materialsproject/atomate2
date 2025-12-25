@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from atomate2.common.flows.eos import CommonEosMaker
-from atomate2.forcefields import _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
@@ -81,22 +80,19 @@ class ForceFieldEosMaker(CommonEosMaker):
         -------
         ForceFieldEosMaker
         """
-        force_field_name = _get_formatted_ff_name(force_field_name)
+        eos_relax_maker = ForceFieldRelaxMaker(
+            force_field_name=force_field_name, relax_cell=False
+        )
         kwargs.update(
             initial_relax_maker=(
                 ForceFieldRelaxMaker(force_field_name=force_field_name)
                 if relax_initial_structure
                 else None
-            )
-        )
-
-        kwargs.update(
-            eos_relax_maker=ForceFieldRelaxMaker(
-                force_field_name=force_field_name, relax_cell=False
             ),
+            eos_relax_maker=eos_relax_maker,
             static_maker=None,
         )
         return cls(
-            name=f"{force_field_name.split('MLFF.')[-1]} EOS Maker",
+            name=f"{eos_relax_maker.mlff.name} EOS Maker",
             **kwargs,
         )
