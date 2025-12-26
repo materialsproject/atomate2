@@ -116,3 +116,17 @@ def test_phonon_wf_force_field(
     # check phonon plots exist
     assert os.path.isfile(filename_bs)
     assert os.path.isfile(filename_dos)
+
+
+def test_ext_load_phonon_initialization():
+    calculator_meta = {
+        "@module": "chgnet.model.dynamics",
+        "@callable": "CHGNetCalculator",
+    }
+    maker = PhononMaker.from_force_field_name(
+        force_field_name=calculator_meta,
+        relax_initial_structure=True,
+    )
+    assert maker.bulk_relax_maker.ase_calculator_name == "CHGNetCalculator"
+    assert maker.static_energy_maker.ase_calculator_name == "CHGNetCalculator"
+    assert maker.phonon_displacement_maker.ase_calculator_name == "CHGNetCalculator"

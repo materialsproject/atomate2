@@ -73,7 +73,7 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str or .MLFF
+    force_field_name : str or .MLFF or dict
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
@@ -106,7 +106,7 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
     """
 
     name: str = "Force field relax"
-    force_field_name: str | MLFF = MLFF.Forcefield
+    force_field_name: str | MLFF | dict = MLFF.Forcefield
     relax_cell: bool = True
     fix_symmetry: bool = False
     symprec: float | None = 1e-2
@@ -142,7 +142,8 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
             )
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
-            str(self.force_field_name),  # make mypy happy
+            self.ase_calculator_name,
+            self.calculator_meta,
             ase_result,
             self.steps,
             relax_kwargs=self.relax_kwargs,
@@ -170,7 +171,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str or .MLFF
+    force_field_name : str or .MLFF or dict
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
@@ -180,7 +181,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     """
 
     name: str = "Force field static"
-    force_field_name: str | MLFF = MLFF.Forcefield
+    force_field_name: str | MLFF | dict = MLFF.Forcefield
     relax_cell: bool = False
     steps: int = 1
     relax_kwargs: dict = field(default_factory=dict)

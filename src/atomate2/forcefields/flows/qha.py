@@ -92,7 +92,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
     @classmethod
     def from_force_field_name(
         cls,
-        force_field_name: str | MLFF,
+        force_field_name: str | MLFF | dict,
         relax_initial_structure: bool = True,
         run_eos_flow: bool = True,
         **kwargs,
@@ -102,7 +102,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
 
         Parameters
         ----------
-        force_field_name : str or .MLFF
+        force_field_name : str or .MLFF or dict
             The name of the force field.
         relax_initial_structure: bool = True
             Whether to relax the initial structure before performing an EOS fit.
@@ -110,7 +110,6 @@ class ForceFieldQhaMaker(CommonQhaMaker):
             Whether to perform an EOS fit.
         **kwargs
             Additional kwargs to pass to ForceFieldEosMaker
-
 
         Returns
         -------

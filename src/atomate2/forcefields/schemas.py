@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Any
 from emmet.core.types.enums import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule
+from typing_extensions import assert_never
 
 from atomate2.ase.schemas import (
     AseMoleculeTaskDoc,
@@ -17,6 +18,7 @@ from atomate2.ase.schemas import (
     _task_doc_translation_keys,
 )
 from atomate2.forcefields import MLFF
+from atomate2.forcefields.utils import _load_calc_cls
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -91,6 +93,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
     def from_ase_compatible_result(
         cls,
         ase_calculator_name: str,
+        calculator_meta: MLFF | dict,
         result: AseResult,
         steps: int,
         relax_kwargs: dict = None,
@@ -114,6 +117,8 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
         ----------
         ase_calculator_name : str
             Name of the ASE calculator used.
+        calculator_meta : MLFF or dict
+            Metadata about the calculator used.
         result : AseResult
             The output results from the task.
         fix_symmetry : bool
@@ -151,9 +156,24 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
         ff_kwargs = {
             "forcefield_name": task_document_kwargs.get(
                 "forcefield_name", ase_calculator_name
-            )
+            ),
         }
 
+        if pkg_name := _get_pkg_name(calculator_meta):
+            import importlib.metadata
+
+            ff_kwargs["forcefield_version"] = importlib.metadata.version(pkg_name)
+
+        return (
+            ForceFieldMoleculeTaskDocument
+            if isinstance(result.final_mol_or_struct, Molecule)
+            else cls
+        ).from_ase_task_doc(ase_task_doc, **ff_kwargs)
+
+
+def _get_pkg_name(calculator_meta: MLFF | dict) -> str | None:
+    """Get the package name for a given force field."""
+    if isinstance(calculator_meta, MLFF):
         # map force field name to its package name
         model_to_pkg_map = {
             MLFF.M3GNet: "matgl",
@@ -168,16 +188,8 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
             MLFF.MATPES_PBE: "matgl",
             MLFF.MATPES_R2SCAN: "matgl",
         }
-
-        if pkg_name := {str(k): v for k, v in model_to_pkg_map.items()}.get(
-            ff_kwargs["forcefield_name"]
-        ):
-            import importlib.metadata
-
-            ff_kwargs["forcefield_version"] = importlib.metadata.version(pkg_name)
-
-        return (
-            ForceFieldMoleculeTaskDocument
-            if isinstance(result.final_mol_or_struct, Molecule)
-            else cls
-        ).from_ase_task_doc(ase_task_doc, **ff_kwargs)
+        return model_to_pkg_map.get(calculator_meta)
+    if isinstance(calculator_meta, dict):
+        calc_cls = _load_calc_cls(calculator_meta)
+        return calc_cls.__module__.split(".")[0]
+    assert_never(calculator_meta)
