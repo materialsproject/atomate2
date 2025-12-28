@@ -9,8 +9,8 @@ from pymatgen.io.vasp.outputs import Chgcar
 from typing_extensions import Self
 
 from atomate2.common.flows.approx_neb import ApproxNebFromEndpointsMaker
-from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+from atomate2.forcefields.utils import MLFF
 
 
 @dataclass
@@ -84,15 +84,11 @@ class ForceFieldApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
         -------
         MLFFApproxNebFromEndpointsMaker
         """
-        force_field_name = _get_formatted_ff_name(force_field_name)
-        kwargs.update(
-            image_relax_maker=ForceFieldRelaxMaker(
-                force_field_name=force_field_name, relax_cell=False
-            ),
+        image_relax_maker = ForceFieldRelaxMaker(
+            force_field_name=force_field_name, relax_cell=False
         )
+        kwargs.update(image_relax_maker=image_relax_maker)
         return cls(
-            name=(
-                f"{force_field_name.split('MLFF.')[-1]} ApproxNEB from endpoints Maker"
-            ),
+            name=(f"{image_relax_maker.mlff.name} ApproxNEB from endpoints Maker"),
             **kwargs,
         )

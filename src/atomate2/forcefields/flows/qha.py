@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal
 
 from atomate2.common.flows.qha import CommonQhaMaker
-from atomate2.forcefields import _get_formatted_ff_name
 from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
@@ -117,16 +116,12 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         -------
         ForceFieldQhaMaker
         """
-        force_field_name = _get_formatted_ff_name(force_field_name)
         kwargs.update(
             initial_relax_maker=(
                 ForceFieldRelaxMaker(force_field_name=force_field_name)
                 if relax_initial_structure
                 else None
-            )
-        )
-
-        kwargs.update(
+            ),
             eos_relax_maker=(
                 ForceFieldRelaxMaker(
                     force_field_name=force_field_name,
@@ -135,13 +130,14 @@ class ForceFieldQhaMaker(CommonQhaMaker):
                 )
                 if run_eos_flow
                 else None
-            )
+            ),
+        )
+        phonon_maker = PhononMaker.from_force_field_name(
+            force_field_name=force_field_name, relax_initial_structure=False
         )
         return cls(
-            phonon_maker=PhononMaker.from_force_field_name(
-                force_field_name=force_field_name, relax_initial_structure=False
-            ),
-            name=f"{force_field_name.split('MLFF.')[-1]} QHA Maker",
+            phonon_maker=phonon_maker,
+            name=f"{phonon_maker.mlff.name} QHA Maker",
             **kwargs,
         )
 

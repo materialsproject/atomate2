@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING, Literal
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.phonons import BasePhononMaker
-from atomate2.forcefields import _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
+from atomate2.forcefields.utils import MLFF
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -153,6 +153,11 @@ class PhononMaker(BasePhononMaker):
         """
         return
 
+    @property
+    def mlff(self) -> MLFF:
+        """The MLFF enum corresponding to the force field name."""
+        return self.phonon_displacement_maker.mlff
+
     @classmethod
     def from_force_field_name(
         cls,
@@ -177,8 +182,7 @@ class PhononMaker(BasePhononMaker):
         -------
         PhononMaker
         """
-        force_field_name = _get_formatted_ff_name(force_field_name)
-
+        static_energy_maker = ForceFieldStaticMaker(force_field_name=force_field_name)
         kwargs.update(
             bulk_relax_maker=(
                 ForceFieldRelaxMaker(
@@ -186,15 +190,14 @@ class PhononMaker(BasePhononMaker):
                 )
                 if relax_initial_structure
                 else None
-            )
-        )
-        kwargs.update(
-            static_energy_maker=ForceFieldStaticMaker(
-                force_field_name=force_field_name
             ),
+            static_energy_maker=static_energy_maker,
             phonon_displacement_maker=ForceFieldStaticMaker(
                 force_field_name=force_field_name
             ),
             born_maker=None,
         )
-        return cls(name=f"{force_field_name.split('MLFF.')[-1]} Phonon Maker", **kwargs)
+        return cls(
+            name=(f"{static_energy_maker.mlff.name} Phonon Maker"),
+            **kwargs,
+        )

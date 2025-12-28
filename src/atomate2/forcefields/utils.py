@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 from ase.units import Bohr
 from ase.units import GPa as _GPa_to_eV_per_A3
 from monty.json import MontyDecoder
+from typing_extensions import deprecated
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -75,6 +76,47 @@ _DEFAULT_CALCULATOR_KWARGS = {
 }
 
 
+def _get_standardized_mlff(force_field_name: str | MLFF) -> MLFF:
+    """Get the standardized force field name.
+
+    Parameters
+    ----------
+    force_field_name : str or .MLFF
+        The name of the force field
+        For str, accept both with and without the `MLFF.` prefix.
+
+    Returns
+    -------
+    MLFF: the name of the forcefield
+    """
+    if isinstance(force_field_name, str):
+        # ensure `force_field_name` uses enum format
+        if force_field_name.startswith("MLFF."):
+            force_field_name = force_field_name.split("MLFF.")[-1]
+
+        if force_field_name in MLFF.__members__:
+            force_field_name = MLFF[force_field_name]
+        elif force_field_name in [v.value for v in MLFF]:
+            force_field_name = MLFF(force_field_name)
+        else:
+            raise ValueError(
+                f"force_field_name={force_field_name} is not a valid MLFF name."
+            )
+
+    if force_field_name == MLFF.MACE:
+        warnings.warn(
+            "Because the default MP-trained MACE model is constantly evolving, "
+            "we no longer recommend using `MACE` or `MLFF.MACE` to specify "
+            "a MACE model. For reproducibility purposes, specifying `MACE` "
+            "will still default to MACE-MP-0 (medium), which is identical to "
+            "specifying `MLFF.MACE_MP_0`.",
+            category=UserWarning,
+            stacklevel=2,
+        )
+    return force_field_name
+
+
+@deprecated("Use _get_standardized_mlff instead.")
 def _get_formatted_ff_name(force_field_name: str | MLFF) -> str:
     """
     Get the standardized force field name.
@@ -88,24 +130,8 @@ def _get_formatted_ff_name(force_field_name: str | MLFF) -> str:
     -------
     str : the name of the forcefield from MLFF
     """
-    if isinstance(force_field_name, str):
-        # ensure `force_field_name` uses enum format
-        if force_field_name in MLFF.__members__:
-            force_field_name = MLFF[force_field_name]
-        elif force_field_name in [v.value for v in MLFF]:
-            force_field_name = MLFF(force_field_name)
-    force_field_name = str(force_field_name)
-    if force_field_name in {"MLFF.MACE", "MACE"}:
-        warnings.warn(
-            "Because the default MP-trained MACE model is constantly evolving, "
-            "we no longer recommend using `MACE` or `MLFF.MACE` to specify "
-            "a MACE model. For reproducibility purposes, specifying `MACE` "
-            "will still default to MACE-MP-0 (medium), which is identical to "
-            "specifying `MLFF.MACE_MP_0`.",
-            category=UserWarning,
-            stacklevel=2,
-        )
-    return force_field_name
+    force_field_name = _get_standardized_mlff(force_field_name)
+    return str(force_field_name)
 
 
 @dataclass
@@ -134,18 +160,17 @@ class ForceFieldMixin:
         if hasattr(super(), "__post_init__"):
             super().__post_init__()  # type: ignore[misc]
 
-        self.force_field_name = _get_formatted_ff_name(self.force_field_name)
+        mlff = _get_standardized_mlff(self.force_field_name)
+        self.force_field_name: str = str(mlff)  # Narrow-down type for mypy
 
         # Pad calculator_kwargs with default values, but permit user to override them
         self.calculator_kwargs = {
-            **_DEFAULT_CALCULATOR_KWARGS.get(
-                MLFF(self.force_field_name.split("MLFF.")[-1]), {}
-            ),
+            **_DEFAULT_CALCULATOR_KWARGS.get(mlff, {}),
             **self.calculator_kwargs,
         }
 
         if not self.task_document_kwargs.get("force_field_name"):
-            self.task_document_kwargs["force_field_name"] = str(self.force_field_name)
+            self.task_document_kwargs["force_field_name"] = self.force_field_name
 
     def _run_ase_safe(self, *args, **kwargs) -> AseResult:
         if not hasattr(self, "run_ase"):
@@ -159,9 +184,14 @@ class ForceFieldMixin:
     def calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
         return ase_calculator(
-            str(self.force_field_name),  # make mypy happy
+            self.force_field_name,
             **self.calculator_kwargs,
         )
+
+    @property
+    def mlff(self) -> MLFF:
+        """The MLFF enum corresponding to the force field name."""
+        return MLFF(str(self.force_field_name).split("MLFF.")[-1])
 
 
 def ase_calculator(
