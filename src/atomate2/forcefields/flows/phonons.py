@@ -158,10 +158,15 @@ class PhononMaker(BasePhononMaker):
         """The MLFF enum corresponding to the force field name."""
         return self.phonon_displacement_maker.mlff
 
+    @property
+    def ase_calculator_name(self) -> str:
+        """The name of the ASE calculator used in this flow."""
+        return self.phonon_displacement_maker.ase_calculator_name
+
     @classmethod
     def from_force_field_name(
         cls,
-        force_field_name: str | MLFF,
+        force_field_name: str | MLFF | dict,
         relax_initial_structure: bool = True,
         **kwargs,
     ) -> Self:
@@ -170,13 +175,12 @@ class PhononMaker(BasePhononMaker):
 
         Parameters
         ----------
-        force_field_name : str or .MLFF
+        force_field_name : str or .MLFF or dict
             The name of the force field.
         relax_initial_structure: bool = True
             Whether to relax the initial structure before performing an EOS fit.
         **kwargs
             Additional kwargs to pass to PhononMaker
-
 
         Returns
         -------

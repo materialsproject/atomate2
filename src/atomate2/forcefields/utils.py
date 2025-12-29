@@ -6,16 +6,17 @@ import warnings
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from enum import Enum
+from functools import cached_property
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from ase.units import Bohr
 from ase.units import GPa as _GPa_to_eV_per_A3
 from monty.json import MontyDecoder
-from typing_extensions import deprecated
+from typing_extensions import assert_never, deprecated
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Callable, Generator
     from typing import Any
 
     from ase.calculators.calculator import Calculator
@@ -144,6 +145,8 @@ class ForceFieldMixin:
         Name of the forcefield which will be
         correctly deserialized/standardized if the forcefield is
         a known `MLFF`.
+    calculator_meta : MLFF or dict
+        Actual metadata to instantiate the ASE calculator.
     calculator_kwargs : dict = field(default_factory=dict)
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs: dict = field(default_factory=dict)
@@ -151,7 +154,8 @@ class ForceFieldMixin:
         or another final document schema.
     """
 
-    force_field_name: str | MLFF = MLFF.Forcefield
+    force_field_name: str | MLFF | dict = MLFF.Forcefield
+    calculator_meta: MLFF | dict = field(init=False)
     calculator_kwargs: dict = field(default_factory=dict)
     task_document_kwargs: dict = field(default_factory=dict)
 
@@ -160,7 +164,13 @@ class ForceFieldMixin:
         if hasattr(super(), "__post_init__"):
             super().__post_init__()  # type: ignore[misc]
 
-        mlff = _get_standardized_mlff(self.force_field_name)
+        if isinstance(self.force_field_name, dict):
+            mlff = MLFF.Forcefield  # Fallback to placeholder
+            self.calculator_meta = self.force_field_name.copy()
+        else:
+            mlff = _get_standardized_mlff(self.force_field_name)
+            self.calculator_meta = mlff
+
         self.force_field_name: str = str(mlff)  # Narrow-down type for mypy
 
         # Pad calculator_kwargs with default values, but permit user to override them
@@ -184,7 +194,7 @@ class ForceFieldMixin:
     def calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
         return ase_calculator(
-            self.force_field_name,
+            self.calculator_meta,
             **self.calculator_kwargs,
         )
 
@@ -192,6 +202,16 @@ class ForceFieldMixin:
     def mlff(self) -> MLFF:
         """The MLFF enum corresponding to the force field name."""
         return MLFF(str(self.force_field_name).split("MLFF.")[-1])
+
+    @cached_property
+    def ase_calculator_name(self) -> str:
+        """The name of the ASE calculator for schemas."""
+        if isinstance(self.calculator_meta, MLFF):
+            return str(self.force_field_name)
+        if isinstance(self.calculator_meta, dict):
+            calc_cls = _load_calc_cls(self.calculator_meta)
+            return calc_cls.__name__
+        assert_never(self.calculator_meta)
 
 
 def ase_calculator(
@@ -315,13 +335,19 @@ def ase_calculator(
             calculator = DP(**kwargs)
 
     elif isinstance(calculator_meta, dict):
-        calc_cls = MontyDecoder().process_decoded(calculator_meta)
+        calc_cls = _load_calc_cls(calculator_meta)
         calculator = calc_cls(**kwargs)
 
     if calculator is None:
         raise ValueError(f"Could not create ASE calculator for {calculator_meta}.")
 
     return calculator
+
+
+def _load_calc_cls(
+    calculator_meta: dict,
+) -> type[Calculator] | Callable[..., Calculator]:
+    return MontyDecoder().process_decoded(calculator_meta)
 
 
 @contextmanager

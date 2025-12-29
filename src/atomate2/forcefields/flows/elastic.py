@@ -103,7 +103,7 @@ class ElasticMaker(BaseElasticMaker):
     @classmethod
     def from_force_field_name(
         cls,
-        force_field_name: str | MLFF,
+        force_field_name: str | MLFF | dict,
         mlff_kwargs: dict | None = None,
         **kwargs,
     ) -> Self:
@@ -112,7 +112,7 @@ class ElasticMaker(BaseElasticMaker):
 
         Parameters
         ----------
-        force_field_name : str or .MLFF
+        force_field_name : str or .MLFF or dict
             The name of the force field.
         mlff_kwargs : dict or None (default)
             kwargs to pass to `ForceFieldRelaxMaker`.

@@ -66,7 +66,7 @@ class ForceFieldApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
     @classmethod
     def from_force_field_name(
         cls,
-        force_field_name: str | MLFF,
+        force_field_name: str | MLFF | dict,
         **kwargs,
     ) -> Self:
         """
@@ -74,11 +74,10 @@ class ForceFieldApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
 
         Parameters
         ----------
-        force_field_name : str or .MLFF
+        force_field_name : str or .MLFF or dict
             The name of the force field.
         **kwargs
             Additional kwargs to pass to ApproxNEB
-
 
         Returns
         -------

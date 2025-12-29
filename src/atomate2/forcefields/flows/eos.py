@@ -59,7 +59,7 @@ class ForceFieldEosMaker(CommonEosMaker):
     @classmethod
     def from_force_field_name(
         cls,
-        force_field_name: str | MLFF,
+        force_field_name: str | MLFF | dict,
         relax_initial_structure: bool = True,
         **kwargs,
     ) -> Self:
@@ -68,7 +68,7 @@ class ForceFieldEosMaker(CommonEosMaker):
 
         Parameters
         ----------
-        force_field_name : str or .MLFF
+        force_field_name : str or .MLFF or dict
             The name of the force field.
         relax_initial_structure: bool = True
             Whether to relax the initial structure before performing an EOS fit.

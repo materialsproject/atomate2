@@ -142,3 +142,18 @@ def test_instantiation(mlff: str, relax_initial_structure: bool, run_eos_flow: b
             assert mlff in sub_maker.force_field_name
         else:
             assert sub_maker is None
+
+
+def test_ext_load_qha_initialization():
+    calculator_meta = {
+        "@module": "chgnet.model.dynamics",
+        "@callable": "CHGNetCalculator",
+    }
+    maker = ForceFieldQhaMaker.from_force_field_name(
+        calculator_meta, relax_initial_structure=True, run_eos_flow=True
+    )
+
+    ase_calculator_name = "CHGNetCalculator"
+    assert maker.initial_relax_maker.ase_calculator_name == ase_calculator_name
+    assert maker.eos_relax_maker.ase_calculator_name == ase_calculator_name
+    assert maker.phonon_maker.ase_calculator_name == ase_calculator_name
