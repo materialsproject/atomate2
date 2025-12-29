@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING, Any
 
 from emmet.core.types.enums import StoreTrajectoryOption
@@ -18,7 +19,7 @@ from atomate2.ase.schemas import (
     _task_doc_translation_keys,
 )
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.utils import _load_calc_cls
+from atomate2.forcefields.utils import _get_standardized_mlff, _load_calc_cls
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -93,9 +94,9 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
     def from_ase_compatible_result(
         cls,
         ase_calculator_name: str,
-        calculator_meta: MLFF | dict,
         result: AseResult,
         steps: int,
+        calculator_meta: MLFF | dict | None = None,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
         fix_symmetry: bool = False,
@@ -117,14 +118,14 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
         ----------
         ase_calculator_name : str
             Name of the ASE calculator used.
-        calculator_meta : MLFF or dict
-            Metadata about the calculator used.
         result : AseResult
             The output results from the task.
         fix_symmetry : bool
             Whether to fix the symmetry of the ions during relaxation.
         symprec : float
             Tolerance for symmetry finding in case of fix_symmetry.
+        calculator_meta : Optional, MLFF or dict or None
+            Metadata about the calculator used.
         steps : int
             Maximum number of ionic steps allowed during relaxation.
         relax_kwargs : dict
@@ -159,7 +160,17 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
             ),
         }
 
-        if pkg_name := _get_pkg_name(calculator_meta):
+        # Infer `calculator_meta` for MLFFs if not provided
+        if (calculator_meta is None) and ase_calculator_name.startswith("MLFF."):
+            calculator_meta = _get_standardized_mlff(ase_calculator_name)
+        # Populate forcefield version if possible
+        if calculator_meta is None:
+            warnings.warn(
+                "Could not determine forcefield version as calculator_meta was not "
+                "provided.",
+                stacklevel=2,
+            )
+        elif pkg_name := _get_pkg_name(calculator_meta):
             import importlib.metadata
 
             ff_kwargs["forcefield_version"] = importlib.metadata.version(pkg_name)

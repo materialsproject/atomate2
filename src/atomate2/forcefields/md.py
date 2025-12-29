@@ -136,10 +136,10 @@ class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.ase_calculator_name,
-            self.calculator_meta,
             md_result,
             relax_cell=(self.ensemble == MDEnsemble.npt),
             steps=self.n_steps,
+            calculator_meta=self.calculator_meta,
             relax_kwargs=None,
             optimizer_kwargs=None,
             fix_symmetry=False,

@@ -143,9 +143,9 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
             self.ase_calculator_name,
-            self.calculator_meta,
             ase_result,
             self.steps,
+            calculator_meta=self.calculator_meta,
             relax_kwargs=self.relax_kwargs,
             optimizer_kwargs=self.optimizer_kwargs,
             relax_cell=self.relax_cell,
