@@ -252,6 +252,9 @@ class Atomate2Settings(BaseSettings):
         "parsing QChem directories useful for storing duplicate of FW.json",
     )
 
+    # Phono3py settings
+    PHONO3PY_CMD: str = Field("phono3py", description="Command to run phono3py.")
+
     @model_validator(mode="before")
     @classmethod
     def load_default_settings(cls, values: dict[str, Any]) -> dict[str, Any]:
