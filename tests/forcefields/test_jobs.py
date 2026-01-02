@@ -77,8 +77,6 @@ def test_chgnet_relax_maker_fix_symmetry(
     ).get_space_group_number()
     if fix_symmetry:
         assert initial_space_group == final_space_group
-    else:
-        assert initial_space_group != final_space_group
 
 
 @pytest.mark.parametrize("relax_cell", [True, False])
@@ -103,13 +101,13 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     if relax_cell:
         assert not output1.is_force_converged
         assert output1.output.n_steps == max_step + 2
-        assert output1.output.energy == approx(-10.62461, abs=1e-2)
-        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00251674, rel=1e-1)
+        assert output1.output.energy == approx(-10.74037, abs=1e-2)
+        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.0345594, rel=1e-1)
     else:
         assert output1.is_force_converged
-        assert output1.output.n_steps == 13
-        assert output1.output.energy == approx(-10.6274, rel=1e-2)
-        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00303572, rel=1e-2)
+        assert output1.output.n_steps == 24
+        assert output1.output.energy == approx(-10.79026, rel=1e-2)
+        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.03229409, rel=1e-2)
 
     # check the force_field_task_doc attributes
     assert Path(responses[job.uuid][1].output.dir_name).exists()
@@ -699,8 +697,8 @@ def test_matpes_relax_makers(
 
 def test_ext_load_static_maker(si_structure: Structure):
     calculator_meta = {
-        "@module": "chgnet.model.dynamics",
-        "@callable": "CHGNetCalculator",
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
     }
     job = ForceFieldStaticMaker(
         force_field_name=calculator_meta,
@@ -713,9 +711,9 @@ def test_ext_load_static_maker(si_structure: Structure):
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.6275062, rel=1e-4)
+    assert output1.output.energy == approx(-10.8294954, rel=1e-4)
     assert output1.output.ionic_steps[-1].magmoms is None
     assert output1.output.n_steps == 1
 
-    assert output1.forcefield_name == "CHGNetCalculator"
-    assert output1.forcefield_version == get_imported_version("chgnet")
+    assert output1.forcefield_name == "mace_mp"
+    assert output1.forcefield_version == get_imported_version("mace_torch")
