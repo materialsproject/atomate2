@@ -89,7 +89,7 @@ strict-forcefields = [
     # TODO: remove when f90wrap issue resolved: https://github.com/jameskermode/f90wrap/issues/352
     "f90wrap==0.2.16; python_version < '3.12'",
     "sevenn==0.10.4",
-    "torch==2.2.0",
+    "torch==2.9.1",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
     "deepmd-kit==2.2.11",
     "tensorflow-cpu==2.16.2",
