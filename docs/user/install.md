@@ -277,19 +277,30 @@ to store outputs using the following `jobflow.yaml` file.
 JOB_STORE:
   docs_store:
     type: JSONStore
-    uri: <<PATH>>
-    read_only: True
+    paths: <<PATH>>
+    read_only: False
   additional_stores:
     data:
       type: JSONStore
-      uri: <<PATH>>
-      read_only: True
+      paths: <<PATH>>
+      read_only: False
 ```
 
-The user doesn't need to have the file at the given `<<PATH>>`, since we have set `read_only: True`.
+The user doesn't need to have the file at the given `<<PATH>>`, since we have set `read_only: False`.
 In case the file isn't available, a new file with the name mentioned in the `<<PATH>>` will be generated.
 
 **Note that this approach has limitations - it cannot handle simultaneous writes and so is not suitable for high-throughput work.**
+
+Optionally, you can also test your installation with a MemoryStore, which stores everything in memory.
+
+```yaml
+JOB_STORE:
+  docs_store:
+    type: MemoryStore
+  additional_stores:
+    data:
+      type: MemoryStore
+```
 ````
 
 
