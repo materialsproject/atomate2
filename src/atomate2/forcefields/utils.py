@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import warnings
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -247,9 +248,6 @@ def ase_calculator(
 
         match calculator_name:
             case MLFF.CHGNet | MLFF.M3GNet | MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
-                import matgl
-                from matgl.ext.ase import PESCalculator
-
                 match calculator_name:
                     case MLFF.M3GNet:
                         path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
@@ -262,6 +260,10 @@ def ase_calculator(
                         )
                     case MLFF.CHGNet:
                         path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
+                        os.environ["MATGL_BACKEND"] = "DGL"
+
+                import matgl
+                from matgl.ext.ase import PESCalculator
 
                 potential = matgl.load_model(path)
                 calculator = PESCalculator(potential, **kwargs)
