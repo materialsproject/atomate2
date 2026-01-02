@@ -22,11 +22,7 @@ from atomate2.common.jobs.phonons import (
     run_phonon_displacements,
 )
 from atomate2.common.jobs.utils import structure_to_conventional, structure_to_primitive
-from atomate2.forcefields.jobs import (
-    CHGNetStaticMaker,
-    ForceFieldRelaxMaker,
-    ForceFieldStaticMaker,
-)
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
 # Atomate2 packages
 from atomate2.vasp.jobs.phonons import PhononDisplacementMaker
@@ -85,7 +81,7 @@ class BaseHiphiveMaker(Maker, ABC):
         The VASP input generator for phonon displacement calculations,
         default is PhononDisplacementMaker.
     ff_displacement_maker (BaseVaspMaker | None):
-        The force field displacement maker, default is CHGNetStaticMaker.
+        The force field displacement maker, default is ForceFieldStaticMaker.
     min_length (float):
         Minimum length of supercell lattice vectors in Angstroms, default is 13.0.
     max_length (float):
@@ -146,7 +142,7 @@ class BaseHiphiveMaker(Maker, ABC):
         )
     )
     ff_displacement_maker: ForceFieldStaticMaker | None = field(
-        default_factory=CHGNetStaticMaker
+        default_factory=lambda: ForceFieldStaticMaker(force_field_name="CHGNet")
     )
     min_length: float | None = 13.0
     max_length: float | None = 25.0
@@ -382,7 +378,7 @@ class BaseHiphiveMaker(Maker, ABC):
         return Flow(
             jobs=jobs,
             output=phonon_collect.output,
-            name=f"{mpid}_" f"{disp_cut}_" f"{cutoffs}_" f"{self.name}",
+            name=f"{mpid}_{disp_cut}_{cutoffs}_{self.name}",
         )
 
     @property

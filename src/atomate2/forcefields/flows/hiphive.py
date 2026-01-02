@@ -11,12 +11,7 @@ import logging
 from dataclasses import dataclass, field
 
 from atomate2.common.flows.hiphive import BaseHiphiveMaker
-from atomate2.forcefields.jobs import (
-    ForceFieldRelaxMaker,
-    ForceFieldStaticMaker,
-    MACERelaxMaker,
-    MACEStaticMaker,
-)
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 
 logger = logging.getLogger(__name__)
 
@@ -68,13 +63,15 @@ class HiphiveMaker(BaseHiphiveMaker):
 
     name: str = "Lattice-Dynamics-FORCE_FIELD"
     static_energy_maker: ForceFieldStaticMaker | None = field(
-        default_factory=MACEStaticMaker
+        default_factory=lambda: ForceFieldStaticMaker(force_field_name="MACE")
     )
     bulk_relax_maker: ForceFieldRelaxMaker = field(
-        default_factory=lambda: MACERelaxMaker(relax_kwargs={"fmax": 0.00001})
+        default_factory=lambda: ForceFieldRelaxMaker(
+            force_field_name="MACE", relax_kwargs={"fmax": 0.00001}
+        )
     )
     phonon_displacement_maker: ForceFieldStaticMaker = field(
-        default_factory=MACEStaticMaker
+        default_factory=lambda: ForceFieldStaticMaker(force_field_name="MACE")
     )
     # ff_displacement_maker: ForceFieldStaticMaker = field(
     #     default_factory=CHGNetStaticMaker
