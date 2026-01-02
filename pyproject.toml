@@ -46,12 +46,12 @@ cclib = ["cclib>=1.8.1"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=2.43.6", "seekpath>=2.0.0"]
 hiphive = [
-    "phonopy==2.21.2",
+    "atomate2[phonons]",
 	"hiphive @ git+https://gitlab.com/jsyony37/hiphive.git@personal#egg=hiphive",
     "f90nml==1.4.4",
     "spglib>=2.2.0",
 	"ase>=3.22.1",
-    "phono3py==2.8.0",
+    "phono3py>=3.20.0",
     "numpy==1.26.4",
     "scipy==1.14.1",
     ]
