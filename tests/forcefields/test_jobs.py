@@ -695,3 +695,27 @@ def test_matpes_relax_makers(
     assert np.all(
         np.abs(np.array(output.output.stress) - np.array(ref["stress"])) < 1e-1
     )
+
+
+def test_ext_load_static_maker(si_structure: Structure):
+    calculator_meta = {
+        "@module": "chgnet.model.dynamics",
+        "@callable": "CHGNetCalculator",
+    }
+    job = ForceFieldStaticMaker(
+        force_field_name=calculator_meta,
+        ionic_step_data=("structure", "energy"),
+    ).make(si_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validate job outputs
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    assert output1.output.energy == approx(-10.6275062, rel=1e-4)
+    assert output1.output.ionic_steps[-1].magmoms is None
+    assert output1.output.n_steps == 1
+
+    assert output1.forcefield_name == "CHGNetCalculator"
+    assert output1.forcefield_version == get_imported_version("chgnet")

@@ -2,6 +2,7 @@
 
 import sys
 from contextlib import nullcontext
+from importlib.metadata import version as get_imported_version
 from itertools import product
 from pathlib import Path
 
@@ -19,6 +20,7 @@ from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.md import ForceFieldMDMaker
+from atomate2.forcefields.schemas import ForceFieldTaskDocument
 
 
 def test_maker_initialization():
@@ -330,3 +332,28 @@ def test_press_schedule(ff_name, si_structure, clean_dir):
     ]
 
     assert stress_history[-1] < stress_history[0]
+
+
+def test_ext_load_md_maker(si_structure: Structure):
+    calculator_meta = {
+        "@module": "chgnet.model.dynamics",
+        "@callable": "CHGNetCalculator",
+    }
+
+    unit_cell_structure = si_structure.copy()
+    structure = unit_cell_structure.to_conventional() * (2, 2, 2)
+
+    job = ForceFieldMDMaker(
+        force_field_name=calculator_meta,
+        n_steps=5,
+        traj_file="md_traj.json.gz",
+        traj_file_fmt="pmg",
+        store_trajectory="partial",
+        ionic_step_data=("energy", "forces", "stress", "mol_or_struct"),
+    ).make(structure)
+    response = run_locally(job, ensure_success=True)
+    task_doc = response[next(iter(response))][1].output
+    assert isinstance(task_doc, ForceFieldTaskDocument)
+
+    assert task_doc.forcefield_name == "CHGNetCalculator"
+    assert task_doc.forcefield_version == get_imported_version("chgnet")

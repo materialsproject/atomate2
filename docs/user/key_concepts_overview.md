@@ -103,7 +103,7 @@ An `InputSet` is a convenient way to provide a collection of input data for one 
 The [pymatgen](https://github.com/materialsproject/pymatgen) class `InputSet` is a core class to manage and write the input files for the several computational codes to a file location the user specifies.
 There are predefined "recipes" for generating `InputSets` tailored to specific tasks like structural relaxation or the band structure calculation and more, that are provided as `InputGenerator` classes.
 
-## Technical Aspects
+### Technical Aspects
 
 The `InputSet` objects posses the `write_input()` method that is used to write all the necessary files.
 
