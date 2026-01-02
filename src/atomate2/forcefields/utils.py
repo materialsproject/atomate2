@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import warnings
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -251,10 +250,8 @@ def ase_calculator(
                 match calculator_name:
                     case MLFF.M3GNet:
                         path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
-                        os.environ["MATGL_BACKEND"] = "DGL"
                     case MLFF.CHGNet:
                         path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
-                        os.environ["MATGL_BACKEND"] = "DGL"
                     case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
                         path = (
                             f"{kwargs.pop('architecture', 'TensorNet')}"

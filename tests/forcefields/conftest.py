@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import tempfile
 import urllib.request
 from pathlib import Path
@@ -19,6 +20,9 @@ def pytest_runtest_setup(item: Any) -> None:
     torch.set_default_dtype(torch.float32)
     # For consistent performance across hardware, explicitly set device to CPU
     torch.set_default_device("cpu")
+
+    # To use CHGNet and M3GNet, need dgl
+    os.environ["MATGL_BACKEND"] = "DGL"
 
 
 @pytest.fixture(scope="session", autouse=True)
