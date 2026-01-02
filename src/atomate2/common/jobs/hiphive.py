@@ -40,8 +40,8 @@ hbar = sp.constants.hbar  # J-s
 kb = sp.constants.Boltzmann  # J/K
 
 __all__ = [
-    "generate_phonon_displacements",
     "generate_frequencies_eigenvectors",
+    "generate_phonon_displacements",
 ]
 
 __author__ = "Alex Ganose, Junsoo Park, Zhuoying Zhu, Hrushikesh Sahasrabuddhe"
