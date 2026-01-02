@@ -251,6 +251,10 @@ def ase_calculator(
                 match calculator_name:
                     case MLFF.M3GNet:
                         path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
+                        os.environ["MATGL_BACKEND"] = "DGL"
+                    case MLFF.CHGNet:
+                        path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
+                        os.environ["MATGL_BACKEND"] = "DGL"
                     case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
                         path = (
                             f"{kwargs.pop('architecture', 'TensorNet')}"
@@ -258,9 +262,6 @@ def ase_calculator(
                             f"-v{kwargs.pop('version', '2025.1')}"
                             "-PES"
                         )
-                    case MLFF.CHGNet:
-                        path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
-                        os.environ["MATGL_BACKEND"] = "DGL"
 
                 import matgl
                 from matgl.ext.ase import PESCalculator

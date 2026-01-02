@@ -14,6 +14,11 @@ from atomate2.forcefields.schemas import (
     ForceFieldTaskDocument,
 )
 
+try:
+    import dgl
+except ImportError:
+    dgl = None
+
 
 def test_maker_initialization():
     # test that makers can be initialized from str or value enum
@@ -29,6 +34,7 @@ def test_maker_initialization():
         ) == ForceFieldRelaxMaker(force_field_name=mlff)
 
 
+@pytest.mark.skipif(dgl is None, reason="CHGNet requires DGL which is not installed")
 def test_chgnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
@@ -42,13 +48,14 @@ def test_chgnet_static_maker(si_structure):
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.6275062, rel=1e-4)
+    assert output1.output.energy == approx(-10.7907495, rel=1e-4)
     assert output1.output.ionic_steps[-1].magmoms is None
     assert output1.output.n_steps == 1
 
-    assert output1.forcefield_version == get_imported_version("chgnet")
+    assert output1.forcefield_version == get_imported_version("matgl")
 
 
+@pytest.mark.skipif(dgl is None, reason="CHGNet requires DGL which is not installed")
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
@@ -79,6 +86,7 @@ def test_chgnet_relax_maker_fix_symmetry(
         assert initial_space_group == final_space_group
 
 
+@pytest.mark.skipif(dgl is None, reason="CHGNet requires DGL which is not installed")
 @pytest.mark.parametrize("relax_cell", [True, False])
 def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     # translate one atom to ensure a small number of relaxation steps are taken
@@ -113,7 +121,7 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     assert Path(responses[job.uuid][1].output.dir_name).exists()
 
 
-@pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
+@pytest.mark.skipif(dgl is None, reason="M3GNet requires DGL which is not installed")
 def test_m3gnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
@@ -133,7 +141,7 @@ def test_m3gnet_static_maker(si_structure):
     assert output1.forcefield_version == get_imported_version("matgl")
 
 
-@pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
+@pytest.mark.skipif(dgl is None, reason="M3GNet requires DGL which is not installed")
 def test_m3gnet_relax_maker(si_structure):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
