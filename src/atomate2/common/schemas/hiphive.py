@@ -10,7 +10,7 @@ import os
 import warnings
 from itertools import product
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -37,7 +37,6 @@ from phono3py.phonon3.gruneisen import Gruneisen
 # Phonopy & Phono3py
 from phonopy import Phonopy
 from phonopy.file_IO import parse_FORCE_CONSTANTS
-from phonopy.interface.hiphive_interface import phonopy_atoms_to_ase
 from phonopy.phonon.band_structure import get_band_qpoints_and_path_connections
 from phonopy.structure.symmetry import symmetrize_borns_and_epsilon
 from phonopy.units import VaspToTHz
@@ -70,7 +69,23 @@ warnings.filterwarnings("ignore", module="ase")
 if TYPE_CHECKING:
     from ase.atoms import Atoms
     from emmet.core.math import Matrix3D
+    from phonopy.structure.atoms import PhonopyAtoms
     from pymatgen.core.structure import Structure
+
+
+def phonopy_atoms_to_ase(atoms_phonopy: PhonopyAtoms) -> Atoms:
+    """Convert PhonopyAtoms to Atoms."""
+    try:
+        from ase.atoms import Atoms
+    except ImportError as exc:
+        raise ModuleNotFoundError("ASE python module was not found.") from exc
+
+    return Atoms(
+        cell=atoms_phonopy.cell,
+        scaled_positions=atoms_phonopy.scaled_positions,
+        numbers=atoms_phonopy.numbers,
+        pbc=True,
+    )
 
 
 logger = logging.getLogger(__name__)
@@ -106,7 +121,7 @@ def get_factor(code: str) -> float:
     raise ValueError(f"Frequency conversion factor for code ({code}) not defined.")
 
 
-def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
+def get_cutoffs(supercell_structure: Structure) -> list[list[int]]:
     """
     Determine the trial cutoffs based on a supercell structure.
 
@@ -418,7 +433,6 @@ def get_cutoffs(supercell_structure: Structure) -> list[list[float]]:
 
         logger.info(f"Unique DOFs: {seen_dofs}")
         logger.info(f"New cutoffs: {new_cutoffs}")
-
         return new_cutoffs
 
     cutoffs = filter_cutoffs(cutoffs, dofs_list)
@@ -449,15 +463,15 @@ class ThermalDisplacementData(BaseModel):
         "cutoff frequency in THz to avoid numerical issues in the "
         "computation of the thermal displacement parameters"
     )
-    thermal_displacement_matrix_cif: Optional[list[list[Matrix3D]]] = Field(
+    thermal_displacement_matrix_cif: list[list[Matrix3D]] | None = Field(
         None, description="field including thermal displacement matrices in CIF format"
     )
-    thermal_displacement_matrix: Optional[list[list[Matrix3D]]] = Field(
+    thermal_displacement_matrix: list[list[Matrix3D]] | None = Field(
         None,
         description="field including thermal displacement matrices in Cartesian "
         "coordinate system",
     )
-    temperatures_thermal_displacements: Optional[list[int]] = Field(
+    temperatures_thermal_displacements: list[int] | None = Field(
         None,
         description="temperatures at which the thermal displacement matrices"
         "have been computed",
@@ -467,14 +481,12 @@ class ThermalDisplacementData(BaseModel):
 class PhononUUIDs(BaseModel):
     """Collection to save all uuids connected to the phonon run."""
 
-    optimization_run_uuid: Optional[str] = Field(
-        None, description="optimization run uuid"
-    )
-    displacements_uuids: Optional[list[str]] = Field(
+    optimization_run_uuid: str | None = Field(None, description="optimization run uuid")
+    displacements_uuids: list[str] | None = Field(
         None, description="The uuids of the displacement jobs."
     )
-    static_run_uuid: Optional[str] = Field(None, description="static run uuid")
-    born_run_uuid: Optional[str] = Field(None, description="born run uuid")
+    static_run_uuid: str | None = Field(None, description="static run uuid")
+    born_run_uuid: str | None = Field(None, description="born run uuid")
 
 
 class ForceConstants(MSONable):
@@ -487,19 +499,19 @@ class ForceConstants(MSONable):
 class PhononJobDirs(BaseModel):
     """Collection to save all job directories relevant for the phonon run."""
 
-    displacements_job_dirs: Optional[list[Optional[str]]] = Field(
+    displacements_job_dirs: list[str | None] | None = Field(
         None, description="The directories where the displacement jobs were run."
     )
-    static_run_job_dir: Optional[Optional[str]] = Field(
+    static_run_job_dir: str | None = Field(
         None, description="Directory where static run was performed."
     )
-    born_run_job_dir: Optional[str] = Field(
+    born_run_job_dir: str | None = Field(
         None, description="Directory where born run was performed."
     )
-    optimization_run_job_dir: Optional[str] = Field(
+    optimization_run_job_dir: str | None = Field(
         None, description="Directory where optimization run was performed."
     )
-    taskdoc_run_job_dir: Optional[str] = Field(
+    taskdoc_run_job_dir: str | None = Field(
         None, description="Directory where task doc was generated."
     )
 
@@ -507,68 +519,68 @@ class PhononJobDirs(BaseModel):
 class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
     """Collection of all data produced by the phonon workflow."""
 
-    structure: Optional[Structure] = Field(
+    structure: Structure | None = Field(
         None, description="Structure of Materials Project."
     )
 
-    phonon_bandstructure: Optional[PhononBandStructureSymmLine] = Field(
+    phonon_bandstructure: PhononBandStructureSymmLine | None = Field(
         None,
         description="Phonon band structure object.",
     )
 
-    phonon_dos: Optional[PhononDos] = Field(
+    phonon_dos: PhononDos | None = Field(
         None,
         description="Phonon density of states object.",
     )
 
-    free_energies: Optional[list[float]] = Field(
+    free_energies: list[float] | None = Field(
         None,
         description="vibrational part of the free energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
 
-    heat_capacities: Optional[list[float]] = Field(
+    heat_capacities: list[float] | None = Field(
         None,
         description="heat capacities in J/K/mol per "
         "formula unit for temperatures in temperature_list",
     )
 
-    internal_energies: Optional[list[float]] = Field(
+    internal_energies: list[float] | None = Field(
         None,
         description="internal energies in J/mol per "
         "formula unit for temperatures in temperature_list",
     )
-    entropies: Optional[list[float]] = Field(
+    entropies: list[float] | None = Field(
         None,
         description="entropies in J/(K*mol) per formula unit"
         "for temperatures in temperature_list ",
     )
 
-    temperatures: Optional[list[int]] = Field(
+    temperatures: list[int] | None = Field(
         None,
         description="temperatures at which the vibrational"
         " part of the free energies"
         " and other properties have been computed",
     )
 
-    total_dft_energy: Optional[float] = Field("total DFT energy per formula unit in eV")
+    total_dft_energy: float | None = Field("total DFT energy per formula unit in eV")
 
-    has_imaginary_modes: Optional[bool] = Field(
+    has_imaginary_modes: bool | None = Field(
         None, description="if true, structure has imaginary modes"
     )
 
     # needed, e.g. to compute Grueneisen parameter etc
-    force_constants: Optional[ForceConstants] = Field(
+    force_constants: ForceConstants | None = Field(
         None, description="Force constants between every pair of atoms in the structure"
     )
 
-    born: Optional[list[Matrix3D]] = Field(
+    born: list[Matrix3D] | None = Field(
         None,
         description="born charges as computed from phonopy. Only for symmetrically "
         "different atoms",
     )
 
-    epsilon_static: Optional[Matrix3D] = Field(
+    epsilon_static: Matrix3D | None = Field(
         None, description="The high-frequency dielectric constant"
     )
 
@@ -583,15 +595,15 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         "Field including settings for Phonopy"
     )
 
-    thermal_displacement_data: Optional[ThermalDisplacementData] = Field(
+    thermal_displacement_data: ThermalDisplacementData | None = Field(
         "Includes all data of the computation of the thermal displacements"
     )
 
-    jobdirs: Optional[PhononJobDirs] = Field(
+    jobdirs: PhononJobDirs | None = Field(
         "Field including all relevant job directories"
     )
 
-    uuids: Optional[PhononUUIDs] = Field("Field including all relevant uuids")
+    uuids: PhononUUIDs | None = Field("Field including all relevant uuids")
 
     @classmethod
     def from_forces_born(
@@ -601,7 +613,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         displacement: float,
         sym_reduce: bool,
         symprec: float,
-        use_symmetrized_structure: Union[str, None],
+        use_symmetrized_structure: str | None,
         kpath_scheme: str,
         code: str,
         displacement_data: dict[str, list],
@@ -657,7 +669,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         cell = get_phonopy_structure(structure)
 
         if use_symmetrized_structure == "primitive":
-            primitive_matrix: Union[np.ndarray, str] = np.eye(3)
+            primitive_matrix: np.ndarray | str = np.eye(3)
         else:
             primitive_matrix = "auto"
 
@@ -708,7 +720,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             epsilon = None
 
         # Produces all force constants
-        phonon.produce_force_constants(forces=set_of_forces)
+        # For some there is a discrepancy with number of displacements and set_of_forces
+        # logger.info(phonon._dataset["first_atoms"])
+        # logger.info(len(phonon.supercells_with_displacements))
+        # logger.info(len(set_of_forces))
+        phonon.produce_force_constants(forces=set_of_forces[:1])
         # add the def run_hiphive() here and get the 2nd order FCs out.
         # then use JZ's way to add FC to the phonon object.
 
@@ -1424,7 +1440,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         fit_kwargs: dict[str, Any],
         imaginary_tol: float = 0.025,  # in THz
     ) -> dict[str, Any]:
-        logger.info(f"Testing cutoffs {i+1} out of {n_cutoffs}: {cutoffs}")
+        logger.info(f"Testing cutoffs {i + 1} out of {n_cutoffs}: {cutoffs}")
         logger.info(f"fit_method is {fit_method}")
         supercell_atoms = AseAtomsAdaptor.get_atoms(supercell_structure)
         supercell_atoms = structures[0]
@@ -1477,7 +1493,6 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
 
         parent_phonopy = get_phonopy_structure(parent_structure)
         phonopy = Phonopy(parent_phonopy, supercell_matrix=supercell_matrix)
-        phonopy.primitive.get_number_of_atoms()
 
         # Ensure supercell_matrix is a numpy array
         supercell_matrix = np.array(supercell_matrix)
@@ -1490,8 +1505,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         fcs = fcp.get_force_constants(supercell_atoms)
         logger.info("Did you get the large Condition number error?")
 
-        phonopy.set_force_constants(fcs.get_fc_array(2))
-        phonopy.set_mesh(mesh, is_eigenvectors=True, is_mesh_symmetry=True)
+        phonopy.force_constants = fcs.get_fc_array(2)
         phonopy.run_mesh(mesh, with_eigenvectors=True, is_mesh_symmetry=True)
         omega = phonopy.mesh.frequencies  # THz
         omega = np.sort(omega.flatten())
@@ -1646,10 +1660,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             logger.info(f"Mean Forces: {mean_forces}")
             # Calculate standard deviation of displacements
             std_displacements = np.linalg.norm(displacements, axis=1).std()
-            logger.info(f"Standard deviation of displacements: " f"{std_displacements}")
+            logger.info(f"Standard deviation of displacements: {std_displacements}")
             # Calculate standard deviation of forces
             std_forces = np.linalg.norm(forces, axis=1).std()
-            logger.info(f"Standard deviation of forces: " f"{std_forces}")
+            logger.info(f"Standard deviation of forces: {std_forces}")
             if not separate_fit:  # fit all
                 sc.add_structure(structure)
             # for harmonic fitting
@@ -1727,12 +1741,14 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         mesh = [10, 10, 10]  # TODO change this later
         logger.info(f"Mesh: {mesh}")
 
-        phonopy.set_force_constants(fcs2)
-        phonopy.set_mesh(mesh, is_eigenvectors=True, is_mesh_symmetry=False)
+        phonopy.force_constants = fcs2
+        phonopy.run_mesh(mesh, with_eigenvectors=True, is_mesh_symmetry=False)
         phonopy.run_thermal_properties(temperatures=temperature)
         logger.info("Thermal properties successfully run!")
 
-        _, free_energy, entropy, heat_capacity = phonopy.get_thermal_properties()
+        _, free_energy, entropy, heat_capacity = (
+            phonopy.thermal_properties.thermal_properties
+        )
 
         ## Use the following lines to convert the units to eV/atom
         # free_energy *= 1000/sp.constants.Avogadro/eV2J/natom # kJ/mol to eV/atom
@@ -2069,7 +2085,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             # Convert heat_capacity to an array if it's a scalar
             # heat_capacity = np.array([heat_capacity])
             logger.info(f"heat capacity = {heat_capacity}")
-            vol = phonopy.primitive.get_volume()
+            vol = phonopy.unitcell.volume
 
             logger.info(f"grun_tot: {grun_tot}")
             # logger.info(f"grun_tot shape: {grun_tot.shape}")
