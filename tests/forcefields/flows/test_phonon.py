@@ -120,13 +120,13 @@ def test_phonon_wf_force_field(
 
 def test_ext_load_phonon_initialization():
     calculator_meta = {
-        "@module": "chgnet.model.dynamics",
-        "@callable": "CHGNetCalculator",
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
     }
     maker = PhononMaker.from_force_field_name(
         force_field_name=calculator_meta,
         relax_initial_structure=True,
     )
-    assert maker.bulk_relax_maker.ase_calculator_name == "CHGNetCalculator"
-    assert maker.static_energy_maker.ase_calculator_name == "CHGNetCalculator"
-    assert maker.phonon_displacement_maker.ase_calculator_name == "CHGNetCalculator"
+    assert maker.bulk_relax_maker.ase_calculator_name == "mace_mp"
+    assert maker.static_energy_maker.ase_calculator_name == "mace_mp"
+    assert maker.phonon_displacement_maker.ase_calculator_name == "mace_mp"

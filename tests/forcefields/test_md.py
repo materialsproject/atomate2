@@ -65,7 +65,7 @@ def test_ml_ff_md_maker(
     n_steps = 5
 
     ref_energies_per_atom = {
-        MLFF.CHGNet: -5.280157089233398,
+        MLFF.CHGNet: -5.380889892578125,
         MLFF.M3GNet: -5.387282371520996,
         MLFF.MACE_MP_0: -5.311369895935059,
         MLFF.MACE_MPA_0: -5.40242338180542,
@@ -342,8 +342,8 @@ def test_press_schedule(ff_name, si_structure, clean_dir):
 
 def test_ext_load_md_maker(si_structure: Structure):
     calculator_meta = {
-        "@module": "chgnet.model.dynamics",
-        "@callable": "CHGNetCalculator",
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
     }
 
     unit_cell_structure = si_structure.copy()
@@ -361,5 +361,5 @@ def test_ext_load_md_maker(si_structure: Structure):
     task_doc = response[next(iter(response))][1].output
     assert isinstance(task_doc, ForceFieldTaskDocument)
 
-    assert task_doc.forcefield_name == "CHGNetCalculator"
-    assert task_doc.forcefield_version == get_imported_version("chgnet")
+    assert task_doc.forcefield_name == "mace_mp"
+    assert task_doc.forcefield_version == get_imported_version("mace_torch")

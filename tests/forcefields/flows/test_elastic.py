@@ -46,11 +46,11 @@ def test_elastic_wf_with_mace(
 
 def test_ext_load_elastic_initialization():
     calculator_meta = {
-        "@module": "chgnet.model.dynamics",
-        "@callable": "CHGNetCalculator",
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
     }
     maker = ElasticMaker.from_force_field_name(
         force_field_name=calculator_meta,
     )
-    assert maker.bulk_relax_maker.ase_calculator_name == "CHGNetCalculator"
-    assert maker.elastic_relax_maker.ase_calculator_name == "CHGNetCalculator"
+    assert maker.bulk_relax_maker.ase_calculator_name == "mace_mp"
+    assert maker.elastic_relax_maker.ase_calculator_name == "mace_mp"
