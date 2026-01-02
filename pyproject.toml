@@ -85,7 +85,6 @@ docs = [
     "sphinx_design==0.6.1",
     "jupyterlab==4.5.0",
 ]
-dev = ["pre-commit>=2.12.1"]
 tests = [
     "fireworks==2.0.8",
     "nbmake==1.5.5",
@@ -218,6 +217,11 @@ isort.split-on-trailing-comma = false
 
 [tool.ruff.format]
 docstring-code-format = true
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.5.1",
+]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
