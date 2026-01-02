@@ -270,8 +270,19 @@ from) by clicking "Network Access" (under "Security" in the left hand menu) and 
 ````
 
 ````{note}
-If you do not have access to a Mongo database, you can run `atomate2` using a local `.json` file
-to store outputs using the following `jobflow.yaml` file.
+If you do not have access to a Mongo database, you can run `atomate2` without setting anything. Under the hood,
+`jobflow` will use MemoryStore to store everything in memory. You can explicitly set this too:
+
+```yaml
+JOB_STORE:
+  docs_store:
+    type: MemoryStore
+  additional_stores:
+    data:
+      type: MemoryStore
+```
+
+You can also use a local `.json` file to store outputs using the following `jobflow.yaml` file.
 
 ```yaml
 JOB_STORE:
@@ -290,17 +301,6 @@ The user doesn't need to have the file at the given `<<PATH>>`, since we have se
 In case the file isn't available, a new file with the name mentioned in the `<<PATH>>` will be generated.
 
 **Note that this approach has limitations - it cannot handle simultaneous writes and so is not suitable for high-throughput work.**
-
-Optionally, you can also test your installation with a MemoryStore, which stores everything in memory.
-
-```yaml
-JOB_STORE:
-  docs_store:
-    type: MemoryStore
-  additional_stores:
-    data:
-      type: MemoryStore
-```
 ````
 
 
