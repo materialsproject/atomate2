@@ -40,8 +40,8 @@ def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
 
 def test_ext_load_eos_initialization():
     calculator_meta = {
-        "@module": "chgnet.model.dynamics",
-        "@callable": "CHGNetCalculator",
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
     }
     maker = ForceFieldEosMaker.from_force_field_name(
         force_field_name=calculator_meta,
@@ -49,5 +49,5 @@ def test_ext_load_eos_initialization():
     )
     assert isinstance(maker.initial_relax_maker, ForceFieldRelaxMaker)
     assert isinstance(maker.eos_relax_maker, ForceFieldRelaxMaker)
-    assert maker.initial_relax_maker.ase_calculator_name == "CHGNetCalculator"
-    assert maker.eos_relax_maker.ase_calculator_name == "CHGNetCalculator"
+    assert maker.initial_relax_maker.ase_calculator_name == "mace_mp"
+    assert maker.eos_relax_maker.ase_calculator_name == "mace_mp"

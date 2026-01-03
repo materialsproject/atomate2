@@ -86,10 +86,10 @@ def test_neb_from_images(test_dir, clean_dir):
 
 def test_ext_load_neb_initialization():
     calculator_meta = {
-        "@module": "chgnet.model.dynamics",
-        "@callable": "CHGNetCalculator",
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
     }
     maker = ForceFieldNebFromImagesMaker(
         force_field_name=calculator_meta,
     )
-    assert maker.ase_calculator_name == "CHGNetCalculator"
+    assert maker.ase_calculator_name == "mace_mp"

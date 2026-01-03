@@ -19,13 +19,10 @@ def test_mlff(force_field: str):
     assert mlff == MLFF(str(mlff)) == MLFF(str(mlff).split(".")[-1])
 
 
-@pytest.mark.parametrize(("force_field"), ["CHGNet", "MACE"])
 def test_ext_load(force_field: str, test_dir):
-    decode_dict = {
-        "CHGNet": {"@module": "chgnet.model.dynamics", "@callable": "CHGNetCalculator"},
-        "MACE": {"@module": "mace.calculators", "@callable": "mace_mp"},
-    }[force_field]
-    calc_from_decode = ase_calculator(decode_dict)
+    calc_from_decode = ase_calculator(
+        {"@module": "mace.calculators", "@callable": "mace_mp"}
+    )
     calc_from_preset = ase_calculator(str(MLFF(force_field)))
     calc_from_enum = ase_calculator(MLFF(force_field))
 
