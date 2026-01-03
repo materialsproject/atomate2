@@ -19,6 +19,8 @@ if TYPE_CHECKING:
 
     from atomate2.vasp.sets.base import VaspInputGenerator
 
+__all__ = ["copy_hiphive_outputs", "copy_vasp_outputs", "get_largest_relax_extension"]
+
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +39,7 @@ def copy_vasp_outputs(
 
     For folders containing multiple calculations (e.g., suffixed with relax1, relax2,
     etc), this function will only copy the files with the highest numbered suffix and
-    the suffix will be removed. Additional vasp files will be also be copied with the
+    the suffix will be removed. Additional vasp files will be also be  copied with the
     same suffix applied. Lastly, this function will gunzip any gzipped files.
 
     Parameters
@@ -103,10 +105,8 @@ def copy_vasp_outputs(
     if relax_ext:
         all_files = optional_files + required_files
         files_to_rename = {
-            file.name.replace(".gz", ""): file.name.replace(relax_ext, "").replace(
-                ".gz", ""
-            )
-            for file in all_files
+            k.name.replace(".gz", ""): k.name.replace(relax_ext, "").replace(".gz", "")
+            for k in all_files
         }
         rename_files(files_to_rename, allow_missing=True, file_client=file_client)
 
@@ -201,3 +201,66 @@ def write_vasp_input_set(
 
     logger.info("Writing VASP input set.")
     vis.write_input(directory, **kwargs)
+
+
+@auto_fileclient
+def copy_hiphive_outputs(
+    src_dir: Path | str,
+    src_host: str | None = None,
+    file_client: FileClient | None = None,
+) -> None:
+    """
+    Copy Non-VASP output files to the current directory.
+
+    Parameters
+    ----------
+    src_dir : str or Path
+        The source directory.
+    src_host : str or None
+        The source hostname used to specify a remote filesystem. Can be given as
+        either "username@remote_host" or just "remote_host" in which case the username
+        will be inferred from the current user. If ``None``, the local filesystem will
+        be used as the source.
+    file_client : .FileClient
+        A file client to use for performing file operations.
+    """
+    src_dir = strip_hostname(src_dir)  # TODO: Handle hostnames properly.
+
+    logger.info(f"Copying Non-VASP inputs from {src_dir}")
+
+    directory_listing = file_client.listdir(src_dir, host=src_host)
+    optional_files = []
+
+    for file in [
+        "cluster_space.cs",
+        "force_constants.fcs",
+        "force_constants_potential.fcp",
+        "parameters.txt",
+        "fitting_data.json",
+        "phonopy_params.yaml",
+        "thermal_data.json",
+        "renorm_thermal_data.json",
+        "structure.json",
+        "relaxed_structure.json",
+        "structure_data.json",
+        "perturbed_structures.json",
+        "perturbed_forces.json",
+        "perturbed_forces_new.json",
+        "fc2.hdf5",
+        "fc3.hdf5",
+        "FORCE_CONSTANTS_2ND",
+        "FORCE_CONSTANTS_3RD",
+    ]:
+        found_file = get_zfile(directory_listing, file, allow_missing=True)
+        if found_file is not None:
+            optional_files.append(found_file)
+
+    copy_files(
+        src_dir,
+        src_host=src_host,
+        # include_files=required_files + optional_files,
+        include_files=optional_files,
+        file_client=file_client,
+    )
+
+    logger.info("Finished copying Non-VASP inputs")
