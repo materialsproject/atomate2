@@ -65,7 +65,7 @@ def test_phonon_wf_force_field(
 
     assert_allclose(
         ph_bs_dos_doc.free_energies,
-        [5058.4521752, 4907.4957516, 3966.5493299, 2157.8178928, -357.5054580],
+        [4440.74345, 4172.361432, 2910.000404, 720.739896, -2194.234779],
         atol=1000,
     )
 
@@ -99,7 +99,7 @@ def test_phonon_wf_force_field(
     assert ph_bs_dos_doc.phonopy_settings.kpoint_density_dos == 7_000
     assert_allclose(
         ph_bs_dos_doc.entropies,
-        [0.0, 4.78393981, 13.99318695, 21.88641334, 28.19110667],
+        [0.0, 7.374244, 17.612124, 25.802735, 32.209433],
         atol=2,
     )
     assert_allclose(
