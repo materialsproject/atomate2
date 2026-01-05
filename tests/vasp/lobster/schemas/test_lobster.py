@@ -117,7 +117,11 @@ def test_lobster_task_document_non_gzip(lobster_test_dir, tmp_path):
     """
 
     # copy test files to temp path
-    copy_files(src_dir=lobster_test_dir / "lobsteroutputs/mp-2534", dest_dir=tmp_path)
+    copy_files(
+        src_dir=lobster_test_dir / "lobsteroutputs/mp-2534",
+        dest_dir=tmp_path,
+        allow_missing=True,
+    )
     # Unzip test files to check if schema still works
     gunzip_files(tmp_path)
 
