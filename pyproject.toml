@@ -41,7 +41,7 @@ dependencies = [
 [project.optional-dependencies]
 abinit = [
     "abipy>=0.9.3",
-    "netcdf<1.7.4", # TODO: latest NetCDF missing 3.12 support: https://github.com/Unidata/netcdf4-python/issues/1461
+    "netCDF4<1.7.4", # TODO: latest NetCDF missing 3.12 support: https://github.com/Unidata/netcdf4-python/issues/1461
 ]
 aims = ["pymatgen-io-aims>=0.0.5", "pymatgen>=2025.10.7"]
 amset = ["amset>=0.4.15", "pydash"]
