@@ -39,7 +39,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-abinit = ["abipy>=0.9.3"]
+abinit = [
+    "abipy>=0.9.3",
+    "netCDF4<1.7.4", # TODO: latest NetCDF missing 3.12 support: https://github.com/Unidata/netcdf4-python/issues/1461
+]
 aims = ["pymatgen-io-aims>=0.0.5", "pymatgen>=2025.10.7"]
 amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib>=1.8.1"]
@@ -57,8 +60,7 @@ forcefields = [
     "mace-torch>=0.3.3",
     "matgl>=1.2.1",
     "torchdata<=0.7.1", # TODO: remove when issue fixed
-    # quippy-ase support for py3.12 tracked in https://github.com/libAtoms/QUIP/issues/645
-    "quippy-ase>=0.9.14; python_version < '3.12'",
+    "quippy-ase>=0.9.14",
     "sevenn>=0.9.3",
     "deepmd-kit>=2.1.4",
 ]
@@ -84,9 +86,7 @@ strict-forcefields = [
     "mace-torch==0.3.14",
     "matgl==2.0.6",
     "dgl<=2.4.0",
-    "quippy-ase==0.9.14; python_version < '3.12'",
-    # TODO: remove when f90wrap issue resolved: https://github.com/jameskermode/f90wrap/issues/352
-    "f90wrap==0.2.16; python_version < '3.12'",
+    "quippy-ase==0.10.1",
     "sevenn==0.10.4",
     "torch==2.2.0",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
@@ -129,7 +129,7 @@ docs = [
     "sphinx-copybutton==0.5.2",
     "sphinx==8.1.3",
     "sphinx_design==0.6.1",
-    "jupyterlab==4.5.0",
+    "jupyterlab==4.5.1",
 ]
 
 [tool.setuptools.package-data]
