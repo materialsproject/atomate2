@@ -127,7 +127,7 @@ docs = [
     "myst_parser==4.0.1",
     "numpydoc==1.10.0",
     "sphinx-copybutton==0.5.2",
-    "sphinx==8.1.3",
+    "sphinx==9.0.4",
     "sphinx_design==0.6.1",
     "jupyterlab==4.5.1",
 ]
