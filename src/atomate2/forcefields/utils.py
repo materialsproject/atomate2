@@ -256,6 +256,15 @@ def ase_calculator(
                     case MLFF.CHGNet:
                         path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
                         matgl.config.BACKEND = "DGL"
+                        warnings.warn(
+                            "The CHGNet functionality in atomate2 has been migrated "
+                            "from the `chgnet` package to `matgl` to ensure continuing "
+                            "support. If you want to use the `chgnet` package, "
+                            "`pip install chgnet` and then specify "
+                            '`calculator_meta = {"@module": "chgnet.model.dynamics", '
+                            '"@callable": "CHGNetCalculator"}`',
+                            stacklevel=2,
+                        )
                     case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
                         path = (
                             f"{kwargs.pop('architecture', 'TensorNet')}"
