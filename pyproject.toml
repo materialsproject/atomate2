@@ -91,7 +91,7 @@ strict-forcefields = [
     "sevenn==0.10.4",
     "torch==2.2.0",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
-    "deepmd-kit==2.2.11",
+    "deepmd-kit==3.1.2",
     "tensorflow-cpu==2.16.2",
 ]
 strict = [
