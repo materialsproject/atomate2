@@ -19,12 +19,12 @@ def test_mlff(force_field: str):
     assert mlff == MLFF(str(mlff)) == MLFF(str(mlff).split(".")[-1])
 
 
-def test_ext_load(force_field: str, test_dir):
+def test_ext_load(test_dir):
     calc_from_decode = ase_calculator(
         {"@module": "mace.calculators", "@callable": "mace_mp"}
     )
-    calc_from_preset = ase_calculator(str(MLFF(force_field)))
-    calc_from_enum = ase_calculator(MLFF(force_field))
+    calc_from_preset = ase_calculator(str(MLFF.MACE_MP_0))
+    calc_from_enum = ase_calculator(MLFF.MACE_MP_0)
 
     for other in (calc_from_preset, calc_from_enum):
         assert type(calc_from_decode) is type(other)
