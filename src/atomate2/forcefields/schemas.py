@@ -171,9 +171,18 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
                 stacklevel=2,
             )
         elif pkg_name := _get_pkg_name(calculator_meta):
-            import importlib.metadata
+            from importlib.metadata import PackageNotFoundError, version
 
-            ff_kwargs["forcefield_version"] = importlib.metadata.version(pkg_name)
+            try:
+                ff_kwargs["forcefield_version"] = version(pkg_name)
+            except PackageNotFoundError:
+                # In cases where the package name (`mace_torch`) is not the same
+                # as the import string
+                from importlib import import_module
+
+                ff_kwargs["forcefield_version"] = getattr(
+                    import_module(pkg_name), "__version__", None
+                )
 
         return (
             ForceFieldMoleculeTaskDocument
@@ -186,21 +195,20 @@ def _get_pkg_name(calculator_meta: MLFF | dict) -> str | None:
     """Get the package name for a given force field."""
     if isinstance(calculator_meta, MLFF):
         # map force field name to its package name
-        model_to_pkg_map = {
-            MLFF.M3GNet: "matgl",
-            MLFF.CHGNet: "chgnet",
-            MLFF.MACE: "mace-torch",
-            MLFF.MACE_MP_0: "mace-torch",
-            MLFF.MACE_MPA_0: "mace-torch",
-            MLFF.MACE_MP_0B3: "mace-torch",
-            MLFF.GAP: "quippy-ase",
-            MLFF.Nequip: "nequip",
-            MLFF.DeepMD: "deepmd-kit",
-            MLFF.MATPES_PBE: "matgl",
-            MLFF.MATPES_R2SCAN: "matgl",
-        }
-        return model_to_pkg_map.get(calculator_meta)
+        ff_pkg = None
+        match calculator_meta:
+            case MLFF.M3GNet | MLFF.CHGNet | MLFF.MATPES_PBE | MLFF.MATPES_R2SCAN:
+                ff_pkg = "matgl"
+            case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
+                ff_pkg = "mace-torch"
+            case MLFF.GAP:
+                ff_pkg = "quippy-ase"
+            case MLFF.Nequip:
+                ff_pkg = "nequip"
+            case MLFF.DeepMD:
+                ff_pkg = "deepmd-kit"
+        return ff_pkg
     if isinstance(calculator_meta, dict):
         calc_cls = _load_calc_cls(calculator_meta)
-        return calc_cls.__module__.split(".")[0]
+        return calc_cls.__module__.split(".", 1)[0]
     assert_never(calculator_meta)

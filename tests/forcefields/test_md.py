@@ -65,7 +65,7 @@ def test_ml_ff_md_maker(
     n_steps = 5
 
     ref_energies_per_atom = {
-        MLFF.CHGNet: -5.280157089233398,
+        MLFF.CHGNet: -5.380889892578125,
         MLFF.M3GNet: -5.387282371520996,
         MLFF.MACE_MP_0: -5.311369895935059,
         MLFF.MACE_MPA_0: -5.40242338180542,
@@ -117,7 +117,8 @@ def test_ml_ff_md_maker(
         traj_file="md_traj.json.gz",
         traj_file_fmt="pmg",
         store_trajectory="partial",
-        ionic_step_data=("energy", "forces", "stress", "mol_or_struct"),
+        # check that `structure` alias to `mol_or_struct` works:
+        ionic_step_data=("energy", "forces", "stress", "structure"),
         calculator_kwargs=calculator_kwargs,
         use_emmet_models=use_emmet_models,
     ).make(structure)
@@ -137,8 +138,13 @@ def test_ml_ff_md_maker(
     # Check that the ionic steps have the expected physical properties
     assert all(
         key in step.model_dump()
-        for key in ("energy", "forces", "stress", "mol_or_struct", "structure")
+        for key in ("energy", "forces", "stress", "mol_or_struct")
         for step in task_doc.output.ionic_steps
+    )
+
+    # `structure` aliases `mol_or_struct`
+    assert all(
+        step.structure == step.mol_or_struct for step in task_doc.output.ionic_steps
     )
 
     # Check that the trajectory has expected physical properties
@@ -249,7 +255,7 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
         output[key] = response[job.uuid][1].output
 
     # check that energy and volume are constants
-    ref_toten = -10.6
+    ref_toten = -10.7
     assert output["from_str"].output.energy == pytest.approx(ref_toten, abs=0.1)
     assert output["from_str"].output.structure.volume == pytest.approx(
         output["from_str"].input.structure.volume
@@ -302,7 +308,7 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
     assert temp_history[-1] > temp_schedule[0]
 
 
-@pytest.mark.parametrize("ff_name", ["CHGNet"])
+@pytest.mark.parametrize("ff_name", ["MACE-MP-0"])
 def test_press_schedule(ff_name, si_structure, clean_dir):
     n_steps = 20
     press_schedule = [0, 10]  # kBar
@@ -336,8 +342,8 @@ def test_press_schedule(ff_name, si_structure, clean_dir):
 
 def test_ext_load_md_maker(si_structure: Structure):
     calculator_meta = {
-        "@module": "chgnet.model.dynamics",
-        "@callable": "CHGNetCalculator",
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
     }
 
     unit_cell_structure = si_structure.copy()
@@ -355,5 +361,5 @@ def test_ext_load_md_maker(si_structure: Structure):
     task_doc = response[next(iter(response))][1].output
     assert isinstance(task_doc, ForceFieldTaskDocument)
 
-    assert task_doc.forcefield_name == "CHGNetCalculator"
-    assert task_doc.forcefield_version == get_imported_version("chgnet")
+    assert task_doc.forcefield_name == "mace_mp"
+    assert task_doc.forcefield_version == get_imported_version("mace_torch")

@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from ase.units import Bohr
-from ase.units import GPa as _GPa_to_eV_per_A3
 from monty.json import MontyDecoder
 from typing_extensions import assert_never, deprecated
 
@@ -56,8 +55,8 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
 
 
 _DEFAULT_CALCULATOR_KWARGS = {
-    MLFF.CHGNet: {"stress_weight": _GPa_to_eV_per_A3},
-    MLFF.M3GNet: {"stress_weight": _GPa_to_eV_per_A3},
+    MLFF.CHGNet: {"stress_unit": "eV/A3"},
+    MLFF.M3GNet: {"stress_unit": "eV/A3"},
     MLFF.NEP: {"model_filename": "nep.txt"},
     MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
     MLFF.MACE: {"model": "medium"},
@@ -246,93 +245,113 @@ def ase_calculator(
     ) or isinstance(calculator_meta, MLFF):
         calculator_name = MLFF(calculator_meta)
 
-        if calculator_name == MLFF.CHGNet:
-            from chgnet.model.dynamics import CHGNetCalculator
+        match calculator_name:
+            case MLFF.CHGNet | MLFF.M3GNet | MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
+                import matgl
 
-            calculator = CHGNetCalculator(**kwargs)
+                match calculator_name:
+                    case MLFF.M3GNet:
+                        path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
+                        matgl.config.BACKEND = "DGL"
+                    case MLFF.CHGNet:
+                        path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
+                        matgl.config.BACKEND = "DGL"
+                        warnings.warn(
+                            "The CHGNet functionality in atomate2 has been migrated "
+                            "from the `chgnet` package to `matgl` to ensure continuing "
+                            "support. If you want to use the `chgnet` package, "
+                            "`pip install chgnet` and then specify "
+                            '`calculator_meta = {"@module": "chgnet.model.dynamics", '
+                            '"@callable": "CHGNetCalculator"}`',
+                            stacklevel=2,
+                        )
+                    case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
+                        path = (
+                            f"{kwargs.pop('architecture', 'TensorNet')}"
+                            f"-{calculator_name.value}"
+                            f"-v{kwargs.pop('version', '2025.1')}"
+                            "-PES"
+                        )
+                        matgl.config.BACKEND = "PYG"
 
-        elif calculator_name in (MLFF.M3GNet, MLFF.MATPES_R2SCAN, MLFF.MATPES_PBE):
-            import matgl
-            from matgl.ext.ase import PESCalculator
+                if matgl.config.BACKEND == "DGL":
+                    from matgl.ext._ase_dgl import PESCalculator
+                else:
+                    from matgl.ext._ase_pyg import PESCalculator
 
-            if calculator_name == MLFF.M3GNet:
-                path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
-            elif calculator_name in (MLFF.MATPES_R2SCAN, MLFF.MATPES_PBE):
-                architecture = kwargs.pop("architecture", "TensorNet")
-                matpes_version = kwargs.pop("version", "2025.1")
-                path = f"{architecture}-{calculator_name.value}-v{matpes_version}-PES"
+                potential = matgl.load_model(path)
+                calculator = PESCalculator(potential, **kwargs)
 
-            potential = matgl.load_model(path)
-            calculator = PESCalculator(potential, **kwargs)
+            case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
+                from mace.calculators import MACECalculator, mace_mp
 
-        elif calculator_name in map(
-            MLFF, ("MACE", "MACE-MP-0", "MACE-MPA-0", "MACE-MP-0b3")
-        ):
-            from mace.calculators import MACECalculator, mace_mp
+                model = kwargs.get("model")
+                if isinstance(model, str | Path) and Path(model).exists():
+                    model_path = model
+                    device = kwargs.pop("device", None) or "cpu"
+                    kwargs.pop("device", None)
+                    calculator = MACECalculator(
+                        model_paths=model_path,
+                        device=device,
+                        **kwargs,
+                    )
 
-            model = kwargs.get("model")
-            if isinstance(model, str | Path) and Path(model).exists():
-                model_path = model
-                device = kwargs.pop("device", None) or "cpu"
-                kwargs.pop("device", None)
-                calculator = MACECalculator(
-                    model_paths=model_path,
-                    device=device,
-                    **kwargs,
-                )
+                    if kwargs.get("dispersion", False):
+                        # See https://github.com/materialsproject/atomate2/issues/1262
+                        # Specifying an explicit model path unsets the dispersio
+                        # Reset it here.
+                        import torch
+                        from ase.calculators.mixing import SumCalculator
+                        from torch_dftd.torch_dftd3_calculator import (
+                            TorchDFTD3Calculator,
+                        )
 
-                if kwargs.get("dispersion", False):
-                    # See https://github.com/materialsproject/atomate2/issues/1262
-                    # Specifying an explicit model path unsets the dispersio
-                    # Reset it here.
-                    import torch
-                    from ase.calculators.mixing import SumCalculator
-                    from torch_dftd.torch_dftd3_calculator import TorchDFTD3Calculator
+                        default_d3_kwargs = {
+                            "damping": "bj",
+                            "xc": "pbe",
+                            "cutoff": 40.0 * Bohr,
+                            "dtype": kwargs.get(
+                                "default_dtype", torch.get_default_dtype()
+                            ),
+                        }
+                        for k, v in default_d3_kwargs.items():
+                            if k not in kwargs:
+                                kwargs[k] = v
 
-                    default_d3_kwargs = {
-                        "damping": "bj",
-                        "xc": "pbe",
-                        "cutoff": 40.0 * Bohr,
-                        "dtype": kwargs.get("default_dtype", torch.get_default_dtype()),
-                    }
-                    for k, v in default_d3_kwargs.items():
-                        if k not in kwargs:
-                            kwargs[k] = v
+                        d3_calc = TorchDFTD3Calculator(device=device, **kwargs)
+                        calculator = SumCalculator([calculator, d3_calc])
+                else:
+                    calculator = mace_mp(**kwargs)
 
-                    d3_calc = TorchDFTD3Calculator(device=device, **kwargs)
-                    calculator = SumCalculator([calculator, d3_calc])
-            else:
-                calculator = mace_mp(**kwargs)
+            case MLFF.GAP:
+                from quippy.potential import Potential
 
-        elif calculator_name == MLFF.GAP:
-            from quippy.potential import Potential
+                calculator = Potential(**kwargs)
 
-            calculator = Potential(**kwargs)
+            case MLFF.NEP:
+                from calorine.calculators import CPUNEP
 
-        elif calculator_name == MLFF.NEP:
-            from calorine.calculators import CPUNEP
+                calculator = CPUNEP(**kwargs)
 
-            calculator = CPUNEP(**kwargs)
+            case MLFF.Nequip:
+                from nequip.ase import NequIPCalculator
 
-        elif calculator_name == MLFF.Nequip:
-            from nequip.ase import NequIPCalculator
+                calculator = getattr(
+                    NequIPCalculator,
+                    "from_compiled_model"
+                    if hasattr(NequIPCalculator, "from_compiled_model")
+                    else "from_deployed_model",
+                )(**kwargs)
 
-            calculator = getattr(
-                NequIPCalculator,
-                "from_compiled_model"
-                if hasattr(NequIPCalculator, "from_compiled_model")
-                else "from_deployed_model",
-            )(**kwargs)
+            case MLFF.SevenNet:
+                from sevenn.sevennet_calculator import SevenNetCalculator
 
-        elif calculator_name == MLFF.SevenNet:
-            from sevenn.sevennet_calculator import SevenNetCalculator
+                calculator = SevenNetCalculator(**{"model": "7net-0"} | kwargs)
 
-            calculator = SevenNetCalculator(**{"model": "7net-0"} | kwargs)
+            case MLFF.DeepMD:
+                from deepmd.calculator import DP
 
-        elif calculator_name == MLFF.DeepMD:
-            from deepmd.calculator import DP
-
-            calculator = DP(**kwargs)
+                calculator = DP(**kwargs)
 
     elif isinstance(calculator_meta, dict):
         calc_cls = _load_calc_cls(calculator_meta)
