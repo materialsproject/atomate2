@@ -18,12 +18,12 @@ if TYPE_CHECKING:
         ("MLFF.CHGNet", None, False),
         ("MLFF.CHGNet", MLFF.CHGNet, False),
         (
-            "CHGNetCalculator",
-            {"@module": "chgnet.model.dynamics", "@callable": "CHGNetCalculator"},
+            "mace_mp",
+            {"@module": "mace.calculators", "@callable": "mace_mp"},
             False,
         ),
         (
-            "CHGNetCalculator",
+            "mace_mp",
             None,
             True,
         ),  # Should warn as we cannot get package version

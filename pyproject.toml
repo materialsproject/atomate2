@@ -57,7 +57,6 @@ defects = [
 forcefields = [
     "ase>=3.26.0",
     "calorine>=3.0",
-    "chgnet>=0.2.2",
     "mace-torch>=0.3.3",
     "matgl>=1.2.1",
     "torchdata<=0.7.1", # TODO: remove when issue fixed
@@ -84,9 +83,9 @@ strict-openff = [
 strict-forcefields = [
     "calorine==3.2; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
-    "chgnet==0.3.8",
     "mace-torch==0.3.14",
     "matgl==2.0.6",
+    "dgl<=2.4.0",
     "quippy-ase==0.10.1",
     "sevenn==0.10.4",
     "torch==2.2.0",
