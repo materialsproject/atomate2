@@ -1,12 +1,7 @@
 """Define schemas for SQS runs."""
 
+from emmet.core.types.enums import ValueEnum
 from pydantic import BaseModel, Field
-
-try:
-    from emmet.core.types.enums import ValueEnum
-except ImportError:
-    from emmet.core.utils import ValueEnum
-
 from pymatgen.core import Structure
 from pymatgen.transformations.transformation_abc import AbstractTransformation
 
