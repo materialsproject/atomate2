@@ -9,7 +9,8 @@ from atomate2.common.flows.magnetism import MagneticOrderingsMaker
 from atomate2.common.schemas.magnetism import MagneticOrderingsDocument
 
 
-def test_magnetic_orderings(mock_vasp, clean_dir, test_dir):
+@pytest.mark.parametrize("set_relax_maker_to_none", [False, True])
+def test_magnetic_orderings(mock_vasp, clean_dir, test_dir, set_relax_maker_to_none: bool):
     structure = Structure.from_file(
         test_dir
         / "vasp"
@@ -38,8 +39,11 @@ def test_magnetic_orderings(mock_vasp, clean_dir, test_dir):
     }
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
-
-    flow = MagneticOrderingsMaker().make(structure)
+    
+    if set_relax_maker_to_none:
+        flow = MagneticOrderingsMaker(relax_maker=None).make(structure)
+    else:
+        flow = MagneticOrderingsMaker().make(structure)
 
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
