@@ -207,7 +207,8 @@ jobs:
         run: |
           micromamba activate a2
           python -m pip install --upgrade pip
-          uv pip install .[strict,aims] --group tests
+          uv pip install .[strict,aims,torchsim] --group tests
+          uv pip install mace-torch>=0.3.3
           uv pip install tblite>=0.4.0
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
@@ -219,7 +220,17 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields
+          pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/ --ignore=./tutorials/torchsim_tutorial.ipynb
+          force_fields
+
+      - name: Test TorchSim notebook
+        if: ${{ matrix.python-version >= '3.12' }}
+        env:
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}
+        run: |
+          micromamba activate a2
+          pytest -n auto --nbmake ./tutorials/torchsim_tutorial.ipynb
+          force_fields
 
       - name: Test ASE
         env:

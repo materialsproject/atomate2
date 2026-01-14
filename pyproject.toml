@@ -65,7 +65,7 @@ forcefields = [
     "deepmd-kit>=2.1.4",
 ]
 torchsim = [
-    "torch-sim-atomistic==0.4.1; python_version >= '3.12'"
+    "torch-sim-atomistic==0.5.0; python_version >= '3.12'"
 ]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 ase = ["ase>=3.26.0"]
