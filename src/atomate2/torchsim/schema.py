@@ -146,6 +146,20 @@ class AutobatcherDetails(BaseModel):
     )
 
 
+class CalculationOutput(BaseModel):
+    """Schema for the output of a TorchSim calculation."""
+
+    energy: list[float] = Field(..., description="Potential energy of the systems.")
+
+    forces: list[list[list[float]]] | None = Field(
+        ..., description="Forces on each atom in each system."
+    )
+
+    stress: list[list[list[float]]] | None = Field(
+        ..., description="Stress tensor for each system."
+    )
+
+
 class TorchSimCalculation(BaseModel):
     """Schema for TorchSim calculation tasks.
 
@@ -160,6 +174,10 @@ class TorchSimCalculation(BaseModel):
 
     structures: list[Structure] = Field(
         ..., description="List of final structures from the calculation."
+    )
+
+    output: CalculationOutput = Field(
+        ..., description="Output properties from the calculation."
     )
 
     trajectory_reporter: TrajectoryReporterDetails | None = Field(
@@ -244,3 +262,7 @@ class TorchSimTaskDoc(BaseModel):
     time_elapsed: float = Field(
         ..., description="Time elapsed for the calculation in seconds."
     )
+
+    uuid: str = Field(..., description="Unique identifier for the task.")
+
+    dir_name: str = Field(..., description="Directory name where the task was run.")

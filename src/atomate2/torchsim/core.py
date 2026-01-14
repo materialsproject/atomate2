@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import os
 import time
+import uuid
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -16,6 +18,7 @@ from atomate2.torchsim.schema import (
     CONVERGENCE_FN_REGISTRY,
     PROPERTY_FN_REGISTRY,
     AutobatcherDetails,
+    CalculationOutput,
     ConvergenceFn,
     PropertyFn,
     TaskType,
@@ -53,6 +56,77 @@ def torchsim_job(method: Callable) -> job:
         A decorated version of the make function that will generate jobs.
     """
     return job(method, output_schema=TorchSimTaskDoc)
+
+
+def properties_to_calculation_output(
+    all_properties_lists: list[dict[str, list]],
+) -> CalculationOutput:
+    """Convert properties from ts.static to a CalculationOutput.
+
+    Parameters
+    ----------
+    all_properties_lists : list[dict[str, list]]
+        List of property dictionaries from ts.static, with tensors converted to lists.
+
+    Returns
+    -------
+    CalculationOutput
+        The calculation output containing energy, forces, and stress.
+    """
+    # When trajectory_reporter is used, ts.static returns empty dicts
+
+    energy = [prop_dict["potential_energy"][0] for prop_dict in all_properties_lists]
+    forces = (
+        [prop_dict["forces"] for prop_dict in all_properties_lists]
+        if "forces" in all_properties_lists[-1]
+        else None
+    )
+    stress = (
+        [prop_dict["stress"][0] for prop_dict in all_properties_lists]
+        if "stress" in all_properties_lists[-1]
+        else None
+    )
+    return CalculationOutput(
+        energy=energy, forces=forces or None, stress=stress or None
+    )
+
+
+def get_calculation_output(
+    state: ts.SimState,
+    model: ModelInterface,
+    autobatcher: BinningAutoBatcher | InFlightAutoBatcher | bool = False,
+) -> CalculationOutput:
+    """Run a static calculation and return the output.
+
+    Parameters
+    ----------
+    state : ts.SimState
+        The simulation state to calculate properties for.
+    model : ModelInterface
+        The model to use for the calculation.
+    autobatcher : BinningAutoBatcher | InFlightAutoBatcher | bool
+        Optional autobatcher for batching calculations. If an InFlightAutoBatcher
+        is passed, it will be converted to a BinningAutoBatcher.
+
+    Returns
+    -------
+    CalculationOutput
+        The calculation output containing energy, forces, and stress.
+    """
+    # Convert InFlightAutoBatcher to BinningAutoBatcher for ts.static
+    if isinstance(autobatcher, InFlightAutoBatcher):
+        autobatcher = BinningAutoBatcher(
+            model=model,
+            memory_scales_with=autobatcher.memory_scales_with,
+            max_memory_scaler=autobatcher.max_memory_scaler,
+        )
+
+    properties = ts.static(system=state, model=model, autobatcher=autobatcher)
+
+    all_properties_lists = [
+        {name: t.tolist() for name, t in prop_dict.items()} for prop_dict in properties
+    ]
+    return properties_to_calculation_output(all_properties_lists)
 
 
 def process_trajectory_reporter_dict(
@@ -387,10 +461,14 @@ class TorchSimOptimizeMaker(Maker):
 
         final_structures = state.to_structures()
 
+        # Get final calculation output
+        calculation_output = get_calculation_output(state, model, autobatcher)
+
         # Create calculation object
         calculation = TorchSimCalculation(
             initial_structures=structures,
             structures=final_structures,
+            output=calculation_output,
             trajectory_reporter=trajectory_reporter_details,
             autobatcher=autobatcher_details,
             model=self.model_type,
@@ -407,9 +485,11 @@ class TorchSimOptimizeMaker(Maker):
         task_doc = TorchSimTaskDoc(
             structures=final_structures,
             calcs_reversed=(
-                [calculation] + ([prev_task.calcs_reversed] if prev_task else [])
+                [calculation] + (prev_task.calcs_reversed if prev_task else [])
             ),
             time_elapsed=elapsed_time,
+            uuid=str(uuid.uuid4()),
+            dir_name=os.getcwd(),
         )
 
         return Response(output=task_doc)
@@ -506,12 +586,16 @@ class TorchSimIntegrateMaker(Maker):
         )
         elapsed_time = time.time() - start_time
 
+        # run a static calc to get energies and forces
+        calculation_output = get_calculation_output(state, model, autobatcher)
+
         final_structures = state.to_structures()
 
         # Create calculation object
         calculation = TorchSimCalculation(
             initial_structures=structures,
             structures=final_structures,
+            output=calculation_output,
             trajectory_reporter=trajectory_reporter_details,
             autobatcher=autobatcher_details,
             model=self.model_type,
@@ -528,9 +612,11 @@ class TorchSimIntegrateMaker(Maker):
         task_doc = TorchSimTaskDoc(
             structures=final_structures,
             calcs_reversed=(
-                [calculation] + ([prev_task.calcs_reversed] if prev_task else [])
+                [calculation] + (prev_task.calcs_reversed if prev_task else [])
             ),
             time_elapsed=elapsed_time,
+            uuid=str(uuid.uuid4()),
+            dir_name=os.getcwd(),
         )
 
         return Response(output=task_doc)
@@ -606,30 +692,36 @@ class TorchSimStaticMaker(Maker):
         elapsed_time = time.time() - start_time
 
         # Convert tensors to lists
-        all_properties_numpy = [
+        all_properties_lists = [
             {name: t.tolist() for name, t in prop_dict.items()}
             for prop_dict in all_properties
         ]
+
+        # Extract calculation output from properties
+        calculation_output = properties_to_calculation_output(all_properties_lists)
 
         # Create calculation object
         calculation = TorchSimCalculation(
             initial_structures=structures,
             structures=structures,
+            output=calculation_output,
             trajectory_reporter=trajectory_reporter_details,
             autobatcher=autobatcher_details,
             model=self.model_type,
             model_path=str(Path(self.model_path).resolve()),
             task_type=TaskType.STATIC,
-            all_properties=all_properties_numpy,
+            all_properties=all_properties_lists,
         )
 
         # Create task document
         task_doc = TorchSimTaskDoc(
             structures=structures,
             calcs_reversed=(
-                [calculation] + ([prev_task.calcs_reversed] if prev_task else [])
+                [calculation] + (prev_task.calcs_reversed if prev_task else [])
             ),
             time_elapsed=elapsed_time,
+            uuid=str(uuid.uuid4()),
+            dir_name=os.getcwd(),
         )
 
         return Response(output=task_doc)
