@@ -24,7 +24,7 @@ class ForceFieldNebFromImagesMaker(ForceFieldMixin, AseNebFromImagesMaker):
     """Run NEB with an ML forcefield using ASE."""
 
     name: str = "Forcefield NEB from images"
-    force_field_name: str | MLFF = MLFF.Forcefield
+    force_field_name: str | MLFF | dict = MLFF.Forcefield
 
     @job(data=_FORCEFIELD_DATA_OBJECTS, schema=NebResult)
     def make(
@@ -49,7 +49,7 @@ class ForceFieldNebFromEndpointsMaker(ForceFieldMixin, AseNebFromEndpointsMaker)
     """Run NEB with an ML forcefield using ASE."""
 
     name: str = "Forcefield NEB from endpoints"
-    force_field_name: str | MLFF = MLFF.Forcefield
+    force_field_name: str | MLFF | dict = MLFF.Forcefield
 
     @job(data=_FORCEFIELD_DATA_OBJECTS, schema=NebResult)
     def make(
@@ -69,19 +69,21 @@ class ForceFieldNebFromEndpointsMaker(ForceFieldMixin, AseNebFromEndpointsMaker)
         return self._run_ase_safe(images=images, prev_dir=prev_dir)
 
     @classmethod
-    def from_force_field_name(cls, force_field_name: str | MLFF, **kwargs) -> Self:
+    def from_force_field_name(
+        cls, force_field_name: str | MLFF | dict, **kwargs
+    ) -> Self:
         """Create a force field NEB job from its name.
 
         Parameters
         ----------
-        force_field_name : str or MLFF
-            The name of the forcefield. Should be a valid MLFF member.
+        force_field_name : str or MLFF or dict
+            The name of the forcefield.
         **kwargs
             kwargs to pass to ForceFieldNebFromEndpointsMaker.
         """
         endpoint_relax_maker = ForceFieldRelaxMaker(force_field_name=force_field_name)
         return cls(
-            name=f"{force_field_name} NEB from endpoints maker",
+            name=f"{endpoint_relax_maker.mlff.name} NEB from endpoints maker",
             endpoint_relax_maker=endpoint_relax_maker,
             force_field_name=force_field_name,
             **kwargs,

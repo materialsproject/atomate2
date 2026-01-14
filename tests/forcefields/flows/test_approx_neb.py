@@ -49,3 +49,14 @@ def test_approx_neb_from_endpoints(test_dir, clean_dir):
         image.volume == pytest.approx(endpoints[0].volume)
         for image in output["collate_images_single_hop"].images
     )
+
+
+def test_ext_load_approx_neb_initialization():
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+    maker = ForceFieldApproxNebFromEndpointsMaker(
+        image_relax_maker=ForceFieldStaticMaker(force_field_name=calculator_meta)
+    )
+    assert maker.image_relax_maker.ase_calculator_name == "mace_mp"

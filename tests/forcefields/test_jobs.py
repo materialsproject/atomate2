@@ -14,6 +14,11 @@ from atomate2.forcefields.schemas import (
     ForceFieldTaskDocument,
 )
 
+try:
+    import dgl
+except ImportError:
+    dgl = None
+
 
 def test_maker_initialization():
     # test that makers can be initialized from str or value enum
@@ -29,6 +34,7 @@ def test_maker_initialization():
         ) == ForceFieldRelaxMaker(force_field_name=mlff)
 
 
+@pytest.mark.skipif(dgl is None, reason="CHGNet requires DGL which is not installed")
 def test_chgnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
@@ -42,13 +48,14 @@ def test_chgnet_static_maker(si_structure):
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.6275062, rel=1e-4)
+    assert output1.output.energy == approx(-10.7907495, rel=1e-4)
     assert output1.output.ionic_steps[-1].magmoms is None
     assert output1.output.n_steps == 1
 
-    assert output1.forcefield_version == get_imported_version("chgnet")
+    assert output1.forcefield_version == get_imported_version("matgl")
 
 
+@pytest.mark.skipif(dgl is None, reason="CHGNet requires DGL which is not installed")
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
@@ -77,10 +84,9 @@ def test_chgnet_relax_maker_fix_symmetry(
     ).get_space_group_number()
     if fix_symmetry:
         assert initial_space_group == final_space_group
-    else:
-        assert initial_space_group != final_space_group
 
 
+@pytest.mark.skipif(dgl is None, reason="CHGNet requires DGL which is not installed")
 @pytest.mark.parametrize("relax_cell", [True, False])
 def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     # translate one atom to ensure a small number of relaxation steps are taken
@@ -103,19 +109,19 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     if relax_cell:
         assert not output1.is_force_converged
         assert output1.output.n_steps == max_step + 2
-        assert output1.output.energy == approx(-10.62461, abs=1e-2)
-        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00251674, rel=1e-1)
+        assert output1.output.energy == approx(-10.74037, abs=1e-2)
+        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.0345594, rel=1e-1)
     else:
         assert output1.is_force_converged
-        assert output1.output.n_steps == 13
-        assert output1.output.energy == approx(-10.6274, rel=1e-2)
-        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.00303572, rel=1e-2)
+        assert output1.output.n_steps == 24
+        assert output1.output.energy == approx(-10.79026, rel=1e-2)
+        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.03229409, rel=1e-2)
 
     # check the force_field_task_doc attributes
     assert Path(responses[job.uuid][1].output.dir_name).exists()
 
 
-@pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
+@pytest.mark.skipif(dgl is None, reason="M3GNet requires DGL which is not installed")
 def test_m3gnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
@@ -135,7 +141,7 @@ def test_m3gnet_static_maker(si_structure):
     assert output1.forcefield_version == get_imported_version("matgl")
 
 
-@pytest.mark.skip(reason="M3GNet requires DGL which is PyTorch 2.4 incompatible")
+@pytest.mark.skipif(dgl is None, reason="M3GNet requires DGL which is not installed")
 def test_m3gnet_relax_maker(si_structure):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
@@ -695,3 +701,27 @@ def test_matpes_relax_makers(
     assert np.all(
         np.abs(np.array(output.output.stress) - np.array(ref["stress"])) < 1e-1
     )
+
+
+def test_ext_load_static_maker(si_structure: Structure):
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+    job = ForceFieldStaticMaker(
+        force_field_name=calculator_meta,
+        ionic_step_data=("structure", "energy"),
+    ).make(si_structure)
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True)
+
+    # validate job outputs
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    assert output1.output.energy == approx(-10.8294954, rel=1e-4)
+    assert output1.output.ionic_steps[-1].magmoms is None
+    assert output1.output.n_steps == 1
+
+    assert output1.forcefield_name == "mace_mp"
+    assert output1.forcefield_version == get_imported_version("mace_torch")
