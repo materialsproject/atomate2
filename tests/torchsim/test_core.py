@@ -116,6 +116,16 @@ def test_relax_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     assert calc.steps_between_swaps == 10
     assert calc.init_kwargs["cell_filter"] == ts.CellFilter.unit
 
+    # Check calculation output (energy, forces, stress)
+    assert calc.output is not None
+    assert calc.output.energy is not None
+    assert len(calc.output.energy) == n_systems
+    assert all(isinstance(e, float) for e in calc.output.energy)
+    assert calc.output.forces is not None
+    assert len(calc.output.forces) == n_systems
+    assert calc.output.stress is not None
+    assert len(calc.output.stress) == n_systems
+
     # Check time elapsed
     assert result.time_elapsed > 0
 
@@ -235,6 +245,16 @@ def test_md_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     # Check autobatcher details
     assert calc.autobatcher is None
 
+    # Check calculation output (energy, forces, stress)
+    assert calc.output is not None
+    assert calc.output.energy is not None
+    assert len(calc.output.energy) == n_systems
+    assert all(isinstance(e, float) for e in calc.output.energy)
+    assert calc.output.forces is not None
+    assert len(calc.output.forces) == n_systems
+    assert calc.output.stress is not None
+    assert len(calc.output.stress) == n_systems
+
     # Check time elapsed
     assert result.time_elapsed > 0
 
@@ -248,8 +268,7 @@ def test_static_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     trajectory_reporter_dict = {
         "filenames": [tmp_path / f"static_{i}.h5md" for i in range(n_systems)],
         "state_frequency": 1,
-        "prop_calculators": {1: ["potential_energy"]},
-        "state_kwargs": {"save_forces": True},
+        "prop_calculators": {1: ["potential_energy", "forces", "stress"]},
     }
 
     # Create autobatcher
@@ -289,8 +308,6 @@ def test_static_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     assert calc.trajectory_reporter is not None
     assert calc.trajectory_reporter.state_frequency == 1
     assert hasattr(calc.trajectory_reporter, "prop_calculators")
-    assert hasattr(calc.trajectory_reporter, "state_kwargs")
-    assert calc.trajectory_reporter.state_kwargs["save_forces"] is True
     assert all(Path(f).is_file() for f in calc.trajectory_reporter.filenames)
 
     # Check autobatcher details
@@ -300,6 +317,16 @@ def test_static_job_comprehensive(ar_structure: Structure, tmp_path) -> None:
     assert hasattr(calc, "all_properties")
     assert isinstance(calc.all_properties, list)
     assert len(calc.all_properties) == n_systems
+
+    # Check calculation output (energy, forces, stress)
+    assert calc.output is not None
+    assert calc.output.energy is not None
+    assert len(calc.output.energy) == n_systems
+    assert all(isinstance(e, float) for e in calc.output.energy)
+    assert calc.output.forces is not None
+    assert len(calc.output.forces) == n_systems
+    assert calc.output.stress is not None
+    assert len(calc.output.stress) == n_systems
 
     # Check time elapsed
     assert result.time_elapsed > 0
