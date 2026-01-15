@@ -482,6 +482,7 @@ def test_torchsim_phonon_maker_integration(si_structure: Structure, tmp_path) ->
         optimizer=ts.Optimizer.fire,
         model_kwargs={"sigma": 2.0, "epsilon": 0.01, "compute_stress": True},
         max_steps=100,
+        init_kwargs={"cell_filter": ts.CellFilter.unit},
     )
 
     static_maker = TorchSimStaticMaker(
