@@ -342,7 +342,7 @@ jobs:
           micromamba activate a2
           python -m pip install --upgrade pip
           uv pip install torch --index-url https://download.pytorch.org/whl/cpu
-          uv pip install .[torchsim] --group tests
+          uv pip install .[torchsim,ase] --group tests
 
       - name: Test TorchSim
         env:
