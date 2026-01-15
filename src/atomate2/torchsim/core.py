@@ -87,7 +87,7 @@ def properties_to_calculation_output(
         else None
     )
     return CalculationOutput(
-        energy=energy, forces=forces or None, stress=stress or None
+        energies=energy, all_forces=forces or None, stress=stress or None
     )
 
 
@@ -406,14 +406,16 @@ class TorchSimOptimizeMaker(Maker):
 
     @torchsim_job
     def make(
-        self, structures: list[Structure], prev_task: TorchSimTaskDoc | None = None
+        self,
+        structures: Structure | list[Structure],
+        prev_task: TorchSimTaskDoc | None = None,
     ) -> Response:
         """Run a TorchSim optimization calculation.
 
         Parameters
         ----------
-        structures : list[Structure]
-            List of pymatgen Structures to optimize.
+        structures : Structure | list[Structure]
+            A pymatgen Structure or list of Structures to optimize.
         prev_task : TorchSimTaskDoc | None
             Previous task document if continuing from a previous calculation.
 
@@ -422,6 +424,11 @@ class TorchSimOptimizeMaker(Maker):
         Response
             A response object containing the output task document.
         """
+        from pymatgen.core import Structure
+
+        if isinstance(structures, Structure):
+            structures = [structures]
+
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
         convergence_fn_obj = CONVERGENCE_FN_REGISTRY[self.convergence_fn](
@@ -542,14 +549,16 @@ class TorchSimIntegrateMaker(Maker):
 
     @torchsim_job
     def make(
-        self, structures: list[Structure], prev_task: TorchSimTaskDoc | None = None
+        self,
+        structures: Structure | list[Structure],
+        prev_task: TorchSimTaskDoc | None = None,
     ) -> Response:
         """Run a TorchSim molecular dynamics calculation.
 
         Parameters
         ----------
-        structures : list[Structure]
-            List of pymatgen Structures to simulate.
+        structures : Structure | list[Structure]
+            A pymatgen Structure or list of Structures to simulate.
         prev_task : TorchSimTaskDoc | None
             Previous task document if continuing from a previous calculation.
 
@@ -558,6 +567,11 @@ class TorchSimIntegrateMaker(Maker):
         Response
             A response object containing the output task document.
         """
+        from pymatgen.core import Structure
+
+        if isinstance(structures, Structure):
+            structures = [structures]
+
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
         # Configure trajectory reporter
@@ -654,14 +668,16 @@ class TorchSimStaticMaker(Maker):
 
     @torchsim_job
     def make(
-        self, structures: list[Structure], prev_task: TorchSimTaskDoc | None = None
+        self,
+        structures: Structure | list[Structure],
+        prev_task: TorchSimTaskDoc | None = None,
     ) -> Response:
         """Run a TorchSim static calculation.
 
         Parameters
         ----------
-        structures : list[Structure]
-            List of pymatgen Structures to calculate properties for.
+        structures : Structure | list[Structure]
+            A pymatgen Structure or list of Structures to calculate properties for.
         prev_task : TorchSimTaskDoc | None
             Previous task document if continuing from a previous calculation.
 
@@ -670,6 +686,11 @@ class TorchSimStaticMaker(Maker):
         Response
             A response object containing the output task document.
         """
+        from pymatgen.core import Structure
+
+        if isinstance(structures, Structure):
+            structures = [structures]
+
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
         # Configure trajectory reporter

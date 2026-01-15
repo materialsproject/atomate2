@@ -7,7 +7,8 @@ from enum import StrEnum  # type: ignore[attr-defined]
 from typing import TYPE_CHECKING, Any, Literal
 
 import torch_sim as ts
-from pydantic import BaseModel, Field
+from emmet.core.math import Matrix3D, Vector3D  # noqa: TC002
+from pydantic import BaseModel, Field, model_validator
 from pymatgen.core import Structure  # noqa: TC002
 from torch_sim.integrators import Integrator  # noqa: TC002
 from torch_sim.optimizers import Optimizer  # noqa: TC002
@@ -149,15 +150,29 @@ class AutobatcherDetails(BaseModel):
 class CalculationOutput(BaseModel):
     """Schema for the output of a TorchSim calculation."""
 
-    energy: list[float] = Field(..., description="Potential energy of the systems.")
+    energies: list[float] = Field(..., description="Potential energy of the systems.")
 
-    forces: list[list[list[float]]] | None = Field(
-        ..., description="Forces on each atom in each system."
+    all_forces: list[list[Vector3D]] | None = Field(
+        None, description="Forces on each atom in each system."
     )
 
-    stress: list[list[list[float]]] | None = Field(
-        ..., description="Stress tensor for each system."
+    stress: list[Matrix3D] | None = Field(
+        None, description="Stress tensor for each system."
     )
+
+    @property
+    def energy(self) -> float | None:
+        """Return energy for the first/only structure (for phonon compatibility)."""
+        if self.energies is None or len(self.energies) == 0:
+            return None
+        return self.energies[0]
+
+    @property
+    def forces(self) -> list[Vector3D] | None:
+        """Return forces for the first/only structure (for single-structure mode)."""
+        if self.all_forces is None or len(self.all_forces) == 0:
+            return None
+        return self.all_forces[0]
 
 
 class TorchSimCalculation(BaseModel):
@@ -266,3 +281,21 @@ class TorchSimTaskDoc(BaseModel):
     uuid: str = Field(..., description="Unique identifier for the task.")
 
     dir_name: str = Field(..., description="Directory name where the task was run.")
+
+    # Compatibility fields for phonon workflow integration
+    structure: Structure | None = Field(
+        None, description="First/only final structure (for single-structure workflows)."
+    )
+
+    output: CalculationOutput | None = Field(
+        None, description="Output from the most recent calculation."
+    )
+
+    @model_validator(mode="after")
+    def set_compatibility_fields(self) -> TorchSimTaskDoc:
+        """Set structure and output fields for workflow compatibility."""
+        if self.structure is None and self.structures:
+            object.__setattr__(self, "structure", self.structures[0])
+        if self.output is None and self.calcs_reversed:
+            object.__setattr__(self, "output", self.calcs_reversed[0].output)
+        return self
