@@ -75,7 +75,7 @@ jobs:
         if: matrix.python-version == '3.12'
         run: |
           micromamba activate a2
-          uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+          uv pip install torch==2.2.0 --index-url https://download.pytorch.org/whl/cpu
           uv pip install .[torchsim]
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
@@ -208,7 +208,7 @@ jobs:
         run: |
           micromamba activate a2
           python -m pip install --upgrade pip
-          uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+          uv pip install torch==2.2.0 --index-url https://download.pytorch.org/whl/cpu
           uv pip install .[strict,aims,torchsim] --group tests
           uv pip install mace-torch>=0.3.3
           uv pip install tblite>=0.4.0
