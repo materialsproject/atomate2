@@ -349,7 +349,7 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest -n auto tests/forcefields/test_torchsim.py --cov=atomate2 --cov-report=xml
+          pytest -n auto tests/torchsim --cov=atomate2 --cov-report=xml
 
       - name: Test TorchSim notebook
         env:
