@@ -53,7 +53,7 @@ def get_factor(code: str) -> float:
     ValueError
         If code is not defined
     """
-    if code in ["ase", "forcefields", "vasp"]:
+    if code in ["ase", "forcefields", "vasp", "torchsim"]:
         return VaspToTHz
     if code == "aims":
         return omegaToTHz  # Based on CODATA 2002
