@@ -462,7 +462,7 @@ def test_torchsim_output_schema_compatibility(
             assert len(row) == 3
 
 
-def test_torchsim_phonon_maker_integration(si_structure: Structure) -> None:
+def test_torchsim_phonon_maker_integration(si_structure: Structure, tmp_path) -> None:
     """Test that TorchSim makers can be used within PhononMaker.
 
     This test validates that TorchSimOptimizeMaker and TorchSimStaticMaker
@@ -510,9 +510,10 @@ def test_torchsim_phonon_maker_integration(si_structure: Structure) -> None:
         bulk_relax_maker=relax_maker,
         static_energy_maker=static_maker,
         phonon_displacement_maker=static_maker,
-        use_symmetrized_structure="conventional",
+        use_symmetrized_structure="primitive",  # required for non-seekpath kpath
         create_thermal_displacements=False,
         store_force_constants=False,
+        kpath_scheme="setyawan_curtarolo",  # avoid seekpath dependency
     )
 
     # Create the phonon flow
@@ -526,3 +527,6 @@ def test_torchsim_phonon_maker_integration(si_structure: Structure) -> None:
     job_names = [j.name for j in flow]
     assert "torchsim optimize" in job_names, f"Expected relax job, got {job_names}"
     assert "torchsim static" in job_names, f"Expected static job, got {job_names}"
+
+    # Run the flow locally to verify end-to-end execution
+    run_locally(flow, create_folders=True, ensure_success=True, root_dir=tmp_path)

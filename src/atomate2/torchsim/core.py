@@ -407,17 +407,21 @@ class TorchSimOptimizeMaker(Maker):
     @torchsim_job
     def make(
         self,
-        structures: Structure | list[Structure],
+        structure: Structure | list[Structure],
         prev_task: TorchSimTaskDoc | None = None,
+        prev_dir: str | Path | None = None,
     ) -> Response:
         """Run a TorchSim optimization calculation.
 
         Parameters
         ----------
-        structures : Structure | list[Structure]
+        structure : Structure | list[Structure]
             A pymatgen Structure or list of Structures to optimize.
         prev_task : TorchSimTaskDoc | None
             Previous task document if continuing from a previous calculation.
+        prev_dir : str | Path | None
+            A previous calculation directory to copy output files from. Unused, just
+            added to match the method signature of other makers.
 
         Returns
         -------
@@ -426,8 +430,7 @@ class TorchSimOptimizeMaker(Maker):
         """
         from pymatgen.core import Structure
 
-        if isinstance(structures, Structure):
-            structures = [structures]
+        structures = [structure] if isinstance(structure, Structure) else structure
 
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
@@ -550,17 +553,21 @@ class TorchSimIntegrateMaker(Maker):
     @torchsim_job
     def make(
         self,
-        structures: Structure | list[Structure],
+        structure: Structure | list[Structure],
         prev_task: TorchSimTaskDoc | None = None,
+        prev_dir: str | Path | None = None,
     ) -> Response:
         """Run a TorchSim molecular dynamics calculation.
 
         Parameters
         ----------
-        structures : Structure | list[Structure]
+        structure : Structure | list[Structure]
             A pymatgen Structure or list of Structures to simulate.
         prev_task : TorchSimTaskDoc | None
             Previous task document if continuing from a previous calculation.
+        prev_dir : str | Path | None
+            A previous calculation directory to copy output files from. Unused, just
+            added to match the method signature of other makers.
 
         Returns
         -------
@@ -569,8 +576,7 @@ class TorchSimIntegrateMaker(Maker):
         """
         from pymatgen.core import Structure
 
-        if isinstance(structures, Structure):
-            structures = [structures]
+        structures = [structure] if isinstance(structure, Structure) else structure
 
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
@@ -669,17 +675,21 @@ class TorchSimStaticMaker(Maker):
     @torchsim_job
     def make(
         self,
-        structures: Structure | list[Structure],
+        structure: Structure | list[Structure],
         prev_task: TorchSimTaskDoc | None = None,
+        prev_dir: str | Path | None = None,
     ) -> Response:
         """Run a TorchSim static calculation.
 
         Parameters
         ----------
-        structures : Structure | list[Structure]
+        structure : Structure | list[Structure]
             A pymatgen Structure or list of Structures to calculate properties for.
         prev_task : TorchSimTaskDoc | None
             Previous task document if continuing from a previous calculation.
+        prev_dir : str | Path | None
+            A previous calculation directory to copy output files from. Unused, just
+            added to match the method signature of other makers.
 
         Returns
         -------
@@ -688,8 +698,7 @@ class TorchSimStaticMaker(Maker):
         """
         from pymatgen.core import Structure
 
-        if isinstance(structures, Structure):
-            structures = [structures]
+        structures = [structure] if isinstance(structure, Structure) else structure
 
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
 
