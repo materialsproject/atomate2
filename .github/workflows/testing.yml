@@ -222,8 +222,7 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/ --ignore=./tutorials/torchsim_tutorial.ipynb
-          force_fields
+          pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb
 
       - name: Test TorchSim notebook
         if: ${{ matrix.python-version >= '3.12' }}
@@ -232,7 +231,6 @@ jobs:
         run: |
           micromamba activate a2
           pytest -n auto --nbmake ./tutorials/torchsim_tutorial.ipynb
-          force_fields
 
       - name: Test ASE
         env:
