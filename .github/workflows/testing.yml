@@ -343,6 +343,7 @@ jobs:
           python -m pip install --upgrade pip
           uv pip install torch --index-url https://download.pytorch.org/whl/cpu
           uv pip install .[torchsim,ase] --group tests
+          uv pip install mace-torch>=0.3.3
 
       - name: Test TorchSim
         env:
