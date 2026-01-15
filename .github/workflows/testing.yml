@@ -220,24 +220,18 @@ jobs:
       - name: Test Notebooks
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: |
-          micromamba activate a2
-          pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb
+        run: micromamba run -n a2 pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb
 
       - name: Test TorchSim notebook
         if: ${{ matrix.python-version >= '3.12' }}
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: |
-          micromamba activate a2
-          pytest -n auto --nbmake ./tutorials/torchsim_tutorial.ipynb
+        run: micromamba run -n a2 pytest -n auto --nbmake ./tutorials/torchsim_tutorial.ipynb
 
       - name: Test ASE
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
-        run: |
-          micromamba activate a2
-          pytest -n auto --splits 1 --group 1 --cov=atomate2 --cov-report=xml tests/ase
+        run: micromamba run -n a2 pytest -n auto --splits 1 --group 1 --cov=atomate2 --cov-report=xml tests/ase
 
       - uses: codecov/codecov-action@v1
         if: matrix.python-version == '3.11' && github.repository == 'materialsproject/atomate2'
