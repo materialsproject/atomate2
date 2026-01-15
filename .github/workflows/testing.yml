@@ -202,7 +202,6 @@ jobs:
           micromamba activate a2
           python -m pip install --upgrade pip
           uv pip install .[strict,aims] --group tests
-          uv pip install mace-torch>=0.3.3
           uv pip install tblite>=0.4.0
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
