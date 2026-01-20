@@ -359,32 +359,70 @@ def pick_model(
 
 @dataclass
 class TorchSimOptimizeMaker(Maker):
-    """A maker class for performing optimization using TorchSim.
+    """A maker class for performing geometry optimization using TorchSim.
 
     Parameters
     ----------
+    optimizer : Optimizer
+        The TorchSim optimizer to use (e.g., ts.FIRE, ts.LBFGS).
+    model_type : TorchSimModelType
+        The type of model to use, limited to types supported by TorchSim.
+        See :obj:`.TorchSimModelType` for available options.
+    model_path : str | Path
+        Path to the model file or checkpoint. For some models, string names
+        may be allowed (e.g., "uma-s-1" for FairChemModel).
+    model_kwargs : dict[str, Any]
+        Keyword arguments passed to the model constructor.
     name : str
         The name of the job.
-    model : tuple[ModelType, str | Path]
-        The model to use for optimization. A tuple of (model_type, model_path).
-    optimizer : Optimizer
-        The TorchSim optimizer to use.
-    convergence_fn : ConvergenceFn | None
-        The convergence function type to use.
+    convergence_fn : ConvergenceFn
+        The convergence function type, either "energy" or "force". This uses
+        either ts.generate_energy_convergence_fn or ts.generate_force_convergence_fn
+        to internally generate the convergence function. Arguments can be supplied
+        via convergence_fn_kwargs. See :obj:`.CONVERGENCE_FN_REGISTRY` for options.
     convergence_fn_kwargs : dict | None
-        Keyword arguments for the convergence function.
+        Keyword arguments passed to the convergence function generator (e.g.,
+        {"fmax": 0.01} for force convergence or {"energy_tol": 1e-6} for energy).
     trajectory_reporter_dict : dict | None
-        Dictionary configuration for the trajectory reporter.
-    autobatcher_dict : dict | None
-        Dictionary configuration for the autobatcher.
+        Dictionary configuration for the trajectory reporter. Available keys:
+
+        - ``filenames``: str | Path | list[str | Path] - Output filenames for
+          trajectory data (typically .h5md files).
+        - ``state_frequency``: int | None - Frequency at which states are reported.
+        - ``prop_calculators``: dict[int, list[PropertyFn]] | None - Property
+          calculators to apply at specific frequencies. Keys are frequencies,
+          values are lists of :obj:`.PropertyFn` enums (e.g., "potential_energy",
+          "forces", "stress", "kinetic_energy", "temperature", "max_force").
+        - ``state_kwargs``: dict[str, Any] | None - Keyword arguments for state
+          reporting.
+        - ``metadata``: dict[str, str] | None - Optional metadata for the trajectory.
+        - ``trajectory_kwargs``: dict[str, Any] | None - Keyword arguments for
+          trajectory reporter initialization.
+    autobatcher_dict : dict | bool
+        Dictionary configuration for the autobatcher or a boolean. If True,
+        TorchSim will automatically configure an InFlightAutoBatcher. If False,
+        no autobatching is used. If a dict, available keys are:
+
+        - ``memory_scales_with``: "n_atoms" | "n_atoms_x_density" - How memory
+          usage scales with system size.
+        - ``max_memory_scaler``: float | None - Maximum memory scaling factor.
+        - ``max_atoms_to_try``: int | None - Maximum number of atoms to try in
+          batching.
+        - ``memory_scaling_factor``: float | None - Factor for memory scaling
+          calculations.
+        - ``max_iterations``: int | None - Maximum number of autobatching
+          iterations (only used by InFlightAutoBatcher).
+        - ``max_memory_padding``: float | None - Maximum padding for memory
+          allocation.
     max_steps : int
-        Maximum number of optimization steps.
+        Maximum number of optimization steps to run.
     steps_between_swaps : int
-        Number of steps between system swaps.
+        Number of steps to take before checking convergence and swapping out
+        converged systems.
     init_kwargs : dict | None
-        Additional initialization keyword arguments.
+        Keyword arguments passed to the optimizer initialization function.
     optimizer_kwargs : dict | None
-        Keyword arguments for the optimizer.
+        Keyword arguments passed to the optimizer step function.
     tags : list[str] | None
         Tags for the job.
     """
@@ -511,40 +549,68 @@ class TorchSimIntegrateMaker(Maker):
 
     Parameters
     ----------
-    name : str
-        The name of the job.
-    model_type : TorchSimModelType
-        The type of model to use.
-    model_path : str | Path
-        Path to the model file or checkpoint.
     integrator : Integrator
-        The TorchSim integrator to use.
+        The TorchSim integrator to use (e.g., ts.nvt_langevin, ts.npt_langevin).
+    model_type : TorchSimModelType
+        The type of model to use, limited to types supported by TorchSim.
+        See :obj:`.TorchSimModelType` for available options.
+    model_path : str | Path
+        Path to the model file or checkpoint. For some models, string names
+        may be allowed (e.g., "uma-s-1" for FairChemModel).
     n_steps : int
         Number of integration steps to perform.
     temperature : float | list[float]
-        Temperature(s) for the simulation in Kelvin.
+        Temperature(s) for the simulation in Kelvin. Can be a single value or
+        a list for temperature ramping.
     timestep : float
         Timestep for the integration in femtoseconds.
     model_kwargs : dict[str, Any]
-        Keyword arguments for the model.
+        Keyword arguments passed to the model constructor.
+    name : str
+        The name of the job.
     trajectory_reporter_dict : dict | None
-        Dictionary configuration for the trajectory reporter.
+        Dictionary configuration for the trajectory reporter. Available keys:
+
+        - ``filenames``: str | Path | list[str | Path] - Output filenames for
+          trajectory data (typically .h5md files).
+        - ``state_frequency``: int | None - Frequency at which states are reported.
+        - ``prop_calculators``: dict[int, list[PropertyFn]] | None - Property
+          calculators to apply at specific frequencies. Keys are frequencies,
+          values are lists of :obj:`.PropertyFn` enums (e.g., "potential_energy",
+          "forces", "stress", "kinetic_energy", "temperature", "max_force").
+        - ``state_kwargs``: dict[str, Any] | None - Keyword arguments for state
+          reporting.
+        - ``metadata``: dict[str, str] | None - Optional metadata for the trajectory.
+        - ``trajectory_kwargs``: dict[str, Any] | None - Keyword arguments for
+          trajectory reporter initialization.
     autobatcher_dict : dict | bool
-        Dictionary configuration for the autobatcher.
+        Dictionary configuration for the autobatcher or a boolean. If True,
+        TorchSim will automatically configure a BinningAutoBatcher. If False,
+        no autobatching is used. If a dict, available keys are:
+
+        - ``memory_scales_with``: "n_atoms" | "n_atoms_x_density" - How memory
+          usage scales with system size.
+        - ``max_memory_scaler``: float | None - Maximum memory scaling factor.
+        - ``max_atoms_to_try``: int | None - Maximum number of atoms to try in
+          batching.
+        - ``memory_scaling_factor``: float | None - Factor for memory scaling
+          calculations.
+        - ``max_memory_padding``: float | None - Maximum padding for memory
+          allocation.
     integrator_kwargs : dict | None
-        Keyword arguments for the integrator.
+        Keyword arguments passed to the integrator step function.
     tags : list[str] | None
         Tags for the job.
     """
 
+    integrator: Any  # Integrator type from torch_sim
     model_type: TorchSimModelType
     model_path: str | Path
-    integrator: Any  # Integrator type from torch_sim
     n_steps: int
     temperature: float | list[float]
     timestep: float
-    name: str = "torchsim integrate"
     model_kwargs: dict[str, Any] = field(default_factory=dict)
+    name: str = "torchsim integrate"
     trajectory_reporter_dict: dict | None = None
     autobatcher_dict: dict | bool = False
     integrator_kwargs: dict | None = None
@@ -644,30 +710,60 @@ class TorchSimIntegrateMaker(Maker):
 
 @dataclass
 class TorchSimStaticMaker(Maker):
-    """A maker class for performing static calculations using TorchSim.
+    """A maker class for performing static (single-point) calculations using TorchSim.
+
+    This maker calculates energy, forces, and stress for a given structure or
+    list of structures without performing any geometry optimization or dynamics.
 
     Parameters
     ----------
+    model_type : TorchSimModelType
+        The type of model to use, limited to types supported by TorchSim.
+        See :obj:`.TorchSimModelType` for available options.
+    model_path : str | Path
+        Path to the model file or checkpoint. For some models, string names
+        may be allowed (e.g., "uma-s-1" for FairChemModel).
+    model_kwargs : dict[str, Any]
+        Keyword arguments passed to the model constructor.
     name : str
         The name of the job.
-    model_type : TorchSimModelType
-        The type of model to use.
-    model_path : str | Path
-        Path to the model file or checkpoint.
-    model_kwargs : dict[str, Any]
-        Keyword arguments for the model.
     trajectory_reporter_dict : dict | None
-        Dictionary configuration for the trajectory reporter.
+        Dictionary configuration for the trajectory reporter. Available keys:
+
+        - ``filenames``: str | Path | list[str | Path] - Output filenames for
+          trajectory data (typically .h5md files).
+        - ``state_frequency``: int | None - Frequency at which states are reported.
+        - ``prop_calculators``: dict[int, list[PropertyFn]] | None - Property
+          calculators to apply at specific frequencies. Keys are frequencies,
+          values are lists of :obj:`.PropertyFn` enums (e.g., "potential_energy",
+          "forces", "stress", "kinetic_energy", "temperature", "max_force").
+        - ``state_kwargs``: dict[str, Any] | None - Keyword arguments for state
+          reporting.
+        - ``metadata``: dict[str, str] | None - Optional metadata for the trajectory.
+        - ``trajectory_kwargs``: dict[str, Any] | None - Keyword arguments for
+          trajectory reporter initialization.
     autobatcher_dict : dict | bool
-        Dictionary configuration for the autobatcher.
+        Dictionary configuration for the autobatcher or a boolean. If True,
+        TorchSim will automatically configure a BinningAutoBatcher. If False,
+        no autobatching is used. If a dict, available keys are:
+
+        - ``memory_scales_with``: "n_atoms" | "n_atoms_x_density" - How memory
+          usage scales with system size.
+        - ``max_memory_scaler``: float | None - Maximum memory scaling factor.
+        - ``max_atoms_to_try``: int | None - Maximum number of atoms to try in
+          batching.
+        - ``memory_scaling_factor``: float | None - Factor for memory scaling
+          calculations.
+        - ``max_memory_padding``: float | None - Maximum padding for memory
+          allocation.
     tags : list[str] | None
         Tags for the job.
     """
 
     model_type: TorchSimModelType
     model_path: str | Path
-    name: str = "torchsim static"
     model_kwargs: dict[str, Any] = field(default_factory=dict)
+    name: str = "torchsim static"
     trajectory_reporter_dict: dict | None = None
     autobatcher_dict: dict | bool = False
     tags: list[str] | None = None
