@@ -1,4 +1,4 @@
-"""Schemas for qha documents."""
+"""Schemas for QHA documents."""
 
 import logging
 from typing import Union
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
-    """Collection of all data produced by the qha workflow."""
+    """Collection of all data produced by the QHA workflow."""
 
     structure: Structure | None = Field(
         None, description="Structure of Materials Project."
@@ -62,7 +62,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         description="Gruneisen parameters at temperatures.Shape: (temperatures,)",
     )
     pressure: float | None = Field(
-        None, description="Pressure in GPA at which Gibb's energy was computed"
+        None, description="Pressure in GPa at which the Gibbs energy was computed."
     )
     t_max: float | None = Field(
         None,
@@ -106,7 +106,7 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         eos_type: str = "vinet",
         **kwargs,
     ) -> Self:
-        """Generate qha results.
+        """Generate QHA results.
 
         Parameters
         ----------
@@ -149,35 +149,28 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
 
         # create some plots here
         # add kwargs to change the names and file types
+        fig_ext = kwargs.get("plot_type", "pdf")
         qha.plot_helmholtz_volume().savefig(
-            f"{kwargs.get('helmholtz_volume_filename', 'helmholtz_volume')}"
-            f".{kwargs.get('plot_type', 'pdf')}"
+            f"{kwargs.get('helmholtz_volume_filename', 'helmholtz_volume')}.{fig_ext}"
         )
         qha.plot_volume_temperature().savefig(
-            f"{kwargs.get('volume_temperature_plot', 'volume_temperature')}"
-            f".{kwargs.get('plot_type', 'pdf')}"
+            f"{kwargs.get('volume_temperature_plot', 'volume_temperature')}.{fig_ext}"
         )
         qha.plot_thermal_expansion().savefig(
-            f"{kwargs.get('thermal_expansion_plot', 'thermal_expansion')}"
-            f".{kwargs.get('plot_type', 'pdf')}"
+            f"{kwargs.get('thermal_expansion_plot', 'thermal_expansion')}.{fig_ext}"
         )
         qha.plot_gibbs_temperature().savefig(
-            f"{kwargs.get('gibbs_temperature_plot', 'gibbs_temperature')}"
-            f".{kwargs.get('plot_type', 'pdf')}"
+            f"{kwargs.get('gibbs_temperature_plot', 'gibbs_temperature')}.{fig_ext}"
         )
         qha.plot_bulk_modulus_temperature().savefig(
-            f"{kwargs.get('bulk_modulus_plot', 'bulk_modulus_temperature')}"
-            f".{kwargs.get('plot_type', 'pdf')}"
+            f"{kwargs.get('bulk_modulus_plot', 'bulk_modulus_temperature')}.{fig_ext}"
         )
         qha.plot_heat_capacity_P_numerical().savefig(
-            f"{kwargs.get('heat_capacity_plot', 'heat_capacity_P_numerical')}"
-            f".{kwargs.get('plot_type', 'pdf')}"
+            f"{kwargs.get('heat_capacity_plot', 'heat_capacity_P_numerical')}.{fig_ext}"
         )
         # qha.plot_heat_capacity_P_polyfit().savefig("heat_capacity_P_polyfit.eps")
-        qha.plot_gruneisen_temperature().savefig(
-            f"{kwargs.get('gruneisen_temperature_plot', 'gruneisen_temperature')}"
-            f".{kwargs.get('plot_type', 'pdf')}"
-        )
+        ge_temp_plot = kwargs.get("gruneisen_temperature_plot", "gruneisen_temperature")
+        qha.plot_gruneisen_temperature().savefig(f"{ge_temp_plot}.{fig_ext}")
 
         qha.write_helmholtz_volume(
             filename=kwargs.get("helmholtz_volume_datafile", "helmholtz_volume.dat")
@@ -197,21 +190,16 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
         qha.write_gibbs_temperature(
             filename=kwargs.get("gibbs_temperature_datafile", "gibbs_temperature.dat")
         )
-        qha.write_gruneisen_temperature(
-            filename=kwargs.get(
-                "gruneisen_temperature_datafile", "gruneisen_temperature.dat"
-            )
+        ge_temp_file = kwargs.get(
+            "gruneisen_temperature_datafile", "gruneisen_temperature.dat"
         )
+        qha.write_gruneisen_temperature(filename=ge_temp_file)
         qha.write_heat_capacity_P_numerical(
             filename=kwargs.get(
                 "heat_capacity_datafile", "heat_capacity_P_numerical.dat"
             )
         )
-        qha.write_gruneisen_temperature(
-            filename=kwargs.get(
-                "gruneisen_temperature_datafile", "gruneisen_temperature.dat"
-            )
-        )
+        qha.write_gruneisen_temperature(filename=ge_temp_file)
 
         # write files as well - might be easier for plotting
 

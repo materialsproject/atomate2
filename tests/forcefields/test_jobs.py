@@ -16,7 +16,7 @@ from atomate2.forcefields.schemas import (
 
 try:
     import dgl
-except ImportError:
+except Exception:  # noqa: BLE001
     dgl = None
 
 

@@ -42,6 +42,9 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     MATPES_R2SCAN = "MatPES-r2SCAN"
     MATPES_PBE = "MatPES-PBE"
     DeepMD = "DeepMD"
+    Allegro = "Allegro"
+    OCP = "OCP"  # for loading model checkpoint with fairchem.core.OCPCalculator
+    MatterSim = "MatterSim"
 
     @classmethod
     def _missing_(cls, value: Any) -> Any:
@@ -352,6 +355,23 @@ def ase_calculator(
                 from deepmd.calculator import DP
 
                 calculator = DP(**kwargs)
+
+            case MLFF.Allegro:
+                from allegro.ase import AllegroCalculator
+
+                calculator = AllegroCalculator.from_deployed_model(**kwargs)
+
+            case MLFF.OCP:
+                # Not available on PyPI, needs to be installed from source
+                # see https://github.com/FAIR-Chem/fairchem?tab=readme-ov-file#installation
+                from fairchem.core import OCPCalculator
+
+                calculator = OCPCalculator(**kwargs)
+
+            case MLFF.MatterSim:
+                from mattersim.forcefield import MatterSimCalculator
+
+                calculator = MatterSimCalculator(**kwargs)
 
     elif isinstance(calculator_meta, dict):
         calc_cls = _load_calc_cls(calculator_meta)
