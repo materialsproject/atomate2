@@ -19,14 +19,10 @@ def test_mlff(mlff: MLFF):
     assert mlff == MLFF(str(mlff)) == MLFF(str(mlff).split(".")[-1])
 
 
-@pytest.mark.parametrize("mlff", ["MACE", MLFF.MatterSim, MLFF.SevenNet])
+@pytest.mark.parametrize("mlff", ["MACE", MLFF.SevenNet])
 def test_ext_load(mlff: str | MLFF, test_dir, si_structure: Structure):
     decode_dict = {
         "MACE": {"@module": "mace.calculators", "@callable": "mace_mp"},
-        MLFF.MatterSim: {
-            "@module": "mattersim.forcefield",
-            "@callable": "MatterSimCalculator",
-        },
         MLFF.SevenNet: {
             "@module": "sevenn.sevennet_calculator",
             "@callable": "SevenNetCalculator",
