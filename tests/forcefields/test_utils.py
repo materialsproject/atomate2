@@ -28,9 +28,10 @@ def test_ext_load(mlff: str | MLFF, test_dir, si_structure: Structure):
             "@callable": "SevenNetCalculator",
         },
     }[mlff]
+    formatted_mlff = MLFF(mlff)
     calc_from_decode = ase_calculator(decode_dict)
-    calc_from_preset = ase_calculator(str(MLFF.MACE_MP_0))
-    calc_from_enum = ase_calculator(MLFF.MACE_MP_0)
+    calc_from_preset = ase_calculator(str(formatted_mlff))
+    calc_from_enum = ase_calculator(formatted_mlff)
 
     for other in (calc_from_preset, calc_from_enum):
         assert type(calc_from_decode) is type(other)
