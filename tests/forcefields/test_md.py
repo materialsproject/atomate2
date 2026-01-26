@@ -53,7 +53,7 @@ def test_ml_ff_md_maker(
     clean_dir,
     get_deepmd_pretrained_model_path,
 ):
-    if ff_name in map(MLFF, ("Forcefield", "MACE", "Mattersim")):
+    if ff_name in map(MLFF, ("Forcefield", "MACE", "MatterSim")):
         return  # nothing to test here, MLFF.Forcefield is just a generic placeholder
     if ff_name == MLFF.GAP and sys.version_info >= (3, 12):
         pytest.skip(
