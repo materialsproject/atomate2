@@ -6,7 +6,7 @@ import logging
 from typing import TYPE_CHECKING, NamedTuple
 
 from emmet.core.electrode import InsertionElectrodeDoc
-from emmet.core.mpid import MPID
+from emmet.core.mpid import MPID, AlphaID, check_ulid
 from emmet.core.structure_group import StructureGroupDoc
 from jobflow import Flow, Maker, Response, job
 from pymatgen.analysis.defects.generators import ChargeInterstitialGenerator
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from pymatgen.analysis.structure_matcher import StructureMatcher
     from pymatgen.core import Structure
     from pymatgen.entries.computed_entries import ComputedEntry
-    from pymatgen.io.vasp.outputs import VolumetricData
+    from pymatgen.io.common import VolumetricData
 
 
 logger = logging.getLogger(__name__)
@@ -84,17 +84,21 @@ def get_stable_inserted_results(
         The number of ions inserted so far, used to help assign a unique name to the
         different jobs.
     """
-    if structure is None:
-        return []
-    if n_steps is not None and n_steps <= 0:
+    if (
+        (structure is None)
+        or (n_steps is not None and n_steps <= 0)
+        or (n_inserted > n_steps)
+    ):
         return []
     # append job name
-    add_name = f"{n_inserted}"
+    _shown_steps = str(n_steps) if n_steps else "inf"
+    add_name = f"{n_inserted}/{_shown_steps}"
 
     static_job = static_maker.make(structure=structure)
-    chg_job = get_charge_density_job(static_job.output.dir_name, get_charge_density)
+    static_job.append_name(f" {n_inserted - 1}/{_shown_steps}")
     insertion_job = get_inserted_structures(
-        chg_job.output,
+        static_job.output.dir_name,
+        get_charge_density,
         inserted_species=inserted_element,
         insertions_per_step=insertions_per_step,
     )
@@ -107,7 +111,6 @@ def get_stable_inserted_results(
         ref_structure=structure,
         structure_matcher=structure_matcher,
     )
-    nn_step = n_steps - 1 if n_steps is not None else None
     next_step = get_stable_inserted_results(
         structure=min_en_job.output[0],
         inserted_element=inserted_element,
@@ -116,17 +119,14 @@ def get_stable_inserted_results(
         relax_maker=relax_maker,
         get_charge_density=get_charge_density,
         insertions_per_step=insertions_per_step,
-        n_steps=nn_step,
+        n_steps=n_steps,
         n_inserted=n_inserted + 1,
     )
 
-    for job_ in [static_job, chg_job, insertion_job, min_en_job, relax_jobs, next_step]:
-        job_.append_name(f" {add_name}")
     combine_job = get_computed_entries(next_step.output, min_en_job.output)
     replace_flow = Flow(
         jobs=[
             static_job,
-            chg_job,
             insertion_job,
             relax_jobs,
             min_en_job,
@@ -196,7 +196,12 @@ def get_insertion_electrode_doc(
 ) -> Response:
     """Return a `InsertionElectrodeDoc`."""
     for ient in computed_entries:
-        ient.data["material_id"] = ient.entry_id
+        if AlphaID and check_ulid.fullmatch(ient.entry_id):
+            # AlphaID not compatible with ULID, MPID is but ID validation
+            # does not permit ULIDs, just their integer values.
+            ient.data["material_id"] = AlphaID(int(ULID.from_str(ient.entry_id)))
+        else:
+            ient.data["material_id"] = ient.entry_id
     return InsertionElectrodeDoc.from_entries(
         computed_entries, working_ion_entry, battery_id=None
     )
@@ -204,7 +209,8 @@ def get_insertion_electrode_doc(
 
 @job
 def get_inserted_structures(
-    chg: VolumetricData,
+    prev_dir: Path | str,
+    get_charge_density: Callable[[str | Path], VolumetricData],
     inserted_species: ElementLike,
     insertions_per_step: int = 4,
     charge_insertion_generator: ChargeInterstitialGenerator | None = None,
@@ -213,7 +219,8 @@ def get_inserted_structures(
 
     Parameters
     ----------
-    chg: The charge density.
+    prev_dir: The previous directory where the static calculation was performed.
+    get_charge_density: A function to get the charge density from a run directory.
     inserted_species: The species to insert.
     insertions_per_step: The maximum number of ion insertion sites to attempt.
     charge_insertion_generator: The charge insertion generator to use,
@@ -226,6 +233,7 @@ def get_inserted_structures(
     """
     if charge_insertion_generator is None:
         charge_insertion_generator = ChargeInterstitialGenerator()
+    chg = get_charge_density(prev_dir)
     gen = charge_insertion_generator.generate(chg, insert_species=[inserted_species])
     inserted_structures = [defect.defect_structure for defect in gen]
     return inserted_structures[:insertions_per_step]
@@ -297,22 +305,3 @@ def get_min_energy_summary(
         return None
 
     return min(topotactic_summaries, key=lambda x: x.entry.energy_per_atom)
-
-
-@job
-def get_charge_density_job(
-    prev_dir: Path | str,
-    get_charge_density: Callable,
-) -> VolumetricData:
-    """Get the charge density from a task document.
-
-    Parameters
-    ----------
-    prev_dir: The previous directory where the static calculation was performed.
-    get_charge_density: A function to get the charge density from a task document.
-
-    Returns
-    -------
-        The charge density.
-    """
-    return get_charge_density(prev_dir)

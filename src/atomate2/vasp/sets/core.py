@@ -16,7 +16,7 @@ from atomate2.vasp.sets.base import VaspInputGenerator
 if TYPE_CHECKING:
     from emmet.core.math import Vector3D
     from pymatgen.core import Structure
-    from pymatgen.io.vasp import Kpoints, Outcar, Vasprun
+    from pymatgen.io.vasp import Kpoints
 
 
 logger = logging.getLogger(__name__)
@@ -38,31 +38,13 @@ class RelaxSetGenerator(VaspInputGenerator):
         return {"NSW": 99, "LCHARG": False, "ISIF": 3, "IBRION": 2}
 
 
+@dataclass
 class RelaxConstVolSetGenerator(VaspInputGenerator):
     """Class to generate VASP constant volume relaxation input sets."""
 
-    def get_incar_updates(
-        self,
-        structure: Structure,
-        prev_incar: dict = None,
-        bandgap: float = None,
-        vasprun: Vasprun = None,
-        outcar: Outcar = None,
-    ) -> dict:
-        """Get updates to the INCAR for a constant volume relaxation job.
-
-        Parameters
-        ----------
-        structure
-            A structure.
-        prev_incar
-            An incar from a previous calculation.
-        bandgap
-            The band gap.
-        vasprun
-            A vasprun from a previous calculation.
-        outcar
-            An outcar from a previous calculation.
+    @property
+    def incar_updates(self) -> dict:
+        """Get updates to the INCAR for a tight constant volume relaxation job.
 
         Returns
         -------
@@ -104,7 +86,7 @@ class TightRelaxConstVolSetGenerator(VaspInputGenerator):
 
     @property
     def incar_updates(self) -> dict:
-        """Get updates to the INCAR for a static VASP job.
+        """Get updates to the INCAR for a constant volume tight relaxation job.
 
         Returns
         -------
@@ -687,13 +669,18 @@ class MDSetGenerator(VaspInputGenerator):
     @staticmethod
     def _get_ensemble_defaults(structure: Structure, ensemble: str) -> dict[str, Any]:
         """Get default params for the ensemble."""
+        # Handle both old (ntypesp) and new (n_elems) pymatgen versions
+        n_types = getattr(structure, "n_elems", None)
+        if n_types is None:
+            n_types = structure.ntypesp
+
         defaults = {
             "nve": {"MDALGO": 1, "ISIF": 2, "ANDERSEN_PROB": 0.0},
             "nvt": {"MDALGO": 2, "ISIF": 2, "SMASS": 0},
             "npt": {
                 "MDALGO": 3,
                 "ISIF": 3,
-                "LANGEVIN_GAMMA": [10] * structure.ntypesp,
+                "LANGEVIN_GAMMA": [10] * n_types,
                 "LANGEVIN_GAMMA_L": 1,
                 "PMASS": 10,
                 "PSTRESS": 0,
@@ -757,3 +744,55 @@ class LobsterTightStaticSetGenerator(LobsterSet):
             "LWAVE": True,
             "ISYM": 0,
         }
+
+
+@dataclass
+class NebSetGenerator(VaspInputGenerator):
+    """
+    Class to generate VASP NEB input sets.
+
+    Parameters
+    ----------
+    num_images : int
+        Number of NEB images to use.
+    climbing_image : bool
+        Whether to enable defaults for climbing image NEB.
+    **kwargs
+        Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
+    """
+
+    auto_ismear: bool = False
+    auto_kspacing: bool = False
+    inherit_incar: bool = False
+    num_images: int = 1
+    climbing_image: bool = True
+
+    @property
+    def incar_updates(self) -> dict:
+        """Get updates to the INCAR for an NEB job.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        updates = {
+            "ISIF": 2,
+            "SPRING": -5,
+            "IMAGES": self.num_images,
+            "PREC": "Normal",
+            "NSW": 99,
+            "LCHARG": False,
+            "IBRION": 2,
+            "EDIFF": 1e-6,
+        }
+        if self.climbing_image:
+            updates.update(
+                {
+                    "LCLIMB": True,
+                    "IOPT": 1,
+                    "IBRION": 3,
+                    "POTIM": 0,
+                }
+            )
+        return updates

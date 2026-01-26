@@ -28,7 +28,7 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
         min_length=5,
         max_length=10,
         prefer_90_degrees=False,
-        allow_orhtorhombic=True,
+        allow_orthorhombic=True,
     )
 
     # run the flow or job and ensure that it finished running successfully
@@ -43,35 +43,38 @@ def test_supercell_orthorhombic(clean_dir, si_structure: Structure):
         min_length=5,
         max_length=10,
         prefer_90_degrees=True,
-        allow_orhtorhombic=True,
+        allow_orthorhombic=True,
     )
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job2, create_folders=True, ensure_success=True)
 
     assert_allclose(
-        responses[job2.uuid][1].output, [[2, -1, 0], [0, 3, 0], [-1, -1, 2]]
+        responses[job2.uuid][1].output, [[2, -1, 0], [0, 2, 0], [-1, -1, 2]]
     )
 
 
 def test_phonon_maker_initialization_with_all_mlff(
-    si_structure: Structure, test_dir: Path
+    si_structure: Structure, test_dir: Path, get_deepmd_pretrained_model_path: Path
 ):
     """Test PhononMaker can be initialized with all MLFF static and relax makers."""
 
     chk_pt_dir = test_dir / "forcefields"
-    for mlff in MLFF:
-        if mlff in {MLFF.GAP, MLFF.Forcefield}:
-            continue  # TODO fix GAP, currently fails with RuntimeError, see
-            # https://github.com/materialsproject/atomate2/pull/918#issuecomment-2253659694
-        # skip m3gnet due M3GNet requiring DGL which is PyTorch 2.4 incompatible
-        # raises "FileNotFoundError: Cannot find DGL C++ libgraphbolt_pytorch_2.4.1.so"
-        if mlff == MLFF.M3GNet:
-            continue
 
+    # TODO fix GAP, currently fails with RuntimeError, see
+    # https://github.com/materialsproject/atomate2/pull/918#issuecomment-2253659694
+
+    # skip m3gnet and matpes models due to matcalc requiring
+    # DGL which is PyTorch 2.4 incompatible, raises
+    # "FileNotFoundError: Cannot find DGL C++ libgraphbolt_pytorch_2.4.1.so"
+    skip_mlff = set(
+        map(MLFF, ["Forcefield", "GAP", "M3GNet", "MATPES_R2SCAN", "MATPES_PBE"])
+    )
+    for mlff in set(MLFF).difference(skip_mlff):
         calc_kwargs = {
             MLFF.Nequip: {"model_path": f"{chk_pt_dir}/nequip/nequip_ff_sr_ti_o3.pth"},
             MLFF.NEP: {"model_filename": f"{test_dir}/forcefields/nep/nep.txt"},
+            MLFF.DeepMD: {"model": get_deepmd_pretrained_model_path},
         }.get(mlff, {})
         static_maker = ForceFieldStaticMaker(
             name=f"{mlff} static",

@@ -194,3 +194,30 @@ def parse_additional_json(dir_name: Path) -> dict[str, Any]:
         if key not in ("custodian", "transformations", "FW"):
             additional_json[key] = loadfn(filename, cls=None)
     return additional_json
+
+
+def _recursive_get_dir_names(jobs: list, dir_names: list) -> None:
+    """Recursively get all `output.dir_name` from a list of jobs.
+
+    Parameters
+    ----------
+    jobs : list of jobs, Makers, Flows, etc.
+    dir_names : a list to add the `dir_name`'s to.
+    """
+    for a_job in jobs:
+        if (sub_jobs := getattr(a_job, "jobs", None)) is not None:
+            _recursive_get_dir_names(sub_jobs, dir_names)
+        else:
+            dir_names.append(a_job.output.dir_name)
+
+
+def _recursive_to_list(voigt_data: Any) -> Any:
+    """Recursively convert tensor-like data to nested lists.
+
+    Useful for converting numpy or torch arrays to lists.
+    """
+    if isinstance(voigt_data, list):
+        return [_recursive_to_list(item) for item in voigt_data]
+    if hasattr(voigt_data, "tolist"):
+        return voigt_data.tolist()
+    return voigt_data

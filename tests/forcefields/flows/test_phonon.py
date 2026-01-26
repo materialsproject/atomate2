@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+import pytest
 from jobflow import run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
@@ -14,12 +15,16 @@ from atomate2.common.schemas.phonons import (
     PhononUUIDs,
 )
 from atomate2.forcefields.flows.phonons import PhononMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 
-def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Path):
+@pytest.mark.parametrize("from_name", [False, True])
+def test_phonon_wf_force_field(
+    clean_dir, si_structure: Structure, tmp_path: Path, from_name: bool
+):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
-    flow = PhononMaker(
+    phonon_kwargs = dict(
         use_symmetrized_structure="conventional",
         create_thermal_displacements=False,
         store_force_constants=False,
@@ -29,7 +34,27 @@ def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Pat
             "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),
             "filename_dos": (filename_dos := f"{tmp_path}/phonon_dos_test.pdf"),
         },
-    ).make(si_structure)
+    )
+
+    if from_name:
+        phonon_maker = PhononMaker.from_force_field_name("CHGNet", **phonon_kwargs)
+        if phonon_kwargs.get("relax_initial_structure", True):
+            assert isinstance(phonon_maker.bulk_relax_maker, ForceFieldRelaxMaker)
+            assert "CHGNet" in phonon_maker.bulk_relax_maker.force_field_name
+
+        for attr in ("static_energy_maker", "phonon_displacement_maker"):
+            assert "CHGNet" in getattr(phonon_maker, attr).force_field_name
+
+        assert (
+            PhononMaker.from_force_field_name(
+                "CHGNet", relax_initial_structure=False
+            ).bulk_relax_maker
+            is None
+        )
+    else:
+        phonon_maker = PhononMaker(**phonon_kwargs)
+
+    flow = phonon_maker.make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
@@ -40,7 +65,7 @@ def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Pat
 
     assert_allclose(
         ph_bs_dos_doc.free_energies,
-        [5058.4521752, 4907.4957516, 3966.5493299, 2157.8178928, -357.5054580],
+        [4440.74345, 4172.361432, 2910.000404, 720.739896, -2194.234779],
         atol=1000,
     )
 
@@ -74,7 +99,7 @@ def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Pat
     assert ph_bs_dos_doc.phonopy_settings.kpoint_density_dos == 7_000
     assert_allclose(
         ph_bs_dos_doc.entropies,
-        [0.0, 4.78393981, 13.99318695, 21.88641334, 28.19110667],
+        [0.0, 7.374244, 17.612124, 25.802735, 32.209433],
         atol=2,
     )
     assert_allclose(
@@ -91,3 +116,17 @@ def test_phonon_wf_force_field(clean_dir, si_structure: Structure, tmp_path: Pat
     # check phonon plots exist
     assert os.path.isfile(filename_bs)
     assert os.path.isfile(filename_dos)
+
+
+def test_ext_load_phonon_initialization():
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+    maker = PhononMaker.from_force_field_name(
+        force_field_name=calculator_meta,
+        relax_initial_structure=True,
+    )
+    assert maker.bulk_relax_maker.ase_calculator_name == "mace_mp"
+    assert maker.static_energy_maker.ase_calculator_name == "mace_mp"
+    assert maker.phonon_displacement_maker.ase_calculator_name == "mace_mp"
