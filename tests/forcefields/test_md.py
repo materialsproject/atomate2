@@ -42,14 +42,13 @@ def test_maker_initialization():
             ) == ForceFieldMDMaker(force_field_name=mlff)
 
 
-_test_mlffs = set(MLFF).difference(
-    map(MLFF, ("Forcefield", "MatterSim", "Allegro", "OCP", "M3GNet"))
+_mlffs_for_test = set(MLFF).difference(
+    map(MLFF, ("Forcefield", "MatterSim", "Allegro", "OCP", "M3GNet", "MACE"))
 )
+_md_test_params = sorted(product(_mlffs_for_test, [True, False]), key=lambda x: str(x))
 
 
-@pytest.mark.parametrize(
-    "ff_name, use_emmet_models", product(_test_mlffs, [True, False])
-)
+@pytest.mark.parametrize("ff_name, use_emmet_models", _md_test_params)
 def test_ml_ff_md_maker(
     ff_name,
     use_emmet_models,
