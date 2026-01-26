@@ -42,7 +42,14 @@ def test_maker_initialization():
             ) == ForceFieldMDMaker(force_field_name=mlff)
 
 
-@pytest.mark.parametrize("ff_name, use_emmet_models", product(MLFF, [True, False]))
+_test_mlffs = set(MLFF).difference(
+    map(MLFF, ("Forcefield", "MatterSim", "Allegro", "OCP", "M3GNet"))
+)
+
+
+@pytest.mark.parametrize(
+    "ff_name, use_emmet_models", product(_test_mlffs, [True, False])
+)
 def test_ml_ff_md_maker(
     ff_name,
     use_emmet_models,
@@ -53,14 +60,10 @@ def test_ml_ff_md_maker(
     clean_dir,
     get_deepmd_pretrained_model_path,
 ):
-    if ff_name in map(MLFF, ("Forcefield", "MACE", "MatterSim")):
-        return  # nothing to test here, MLFF.Forcefield is just a generic placeholder
     if ff_name == MLFF.GAP and sys.version_info >= (3, 12):
         pytest.skip(
             "GAP model not compatible with Python 3.12, waiting on https://github.com/libAtoms/QUIP/issues/645"
         )
-    if ff_name == MLFF.M3GNet:
-        pytest.skip("M3GNet requires DGL which is PyTorch 2.4 incompatible")
 
     n_steps = 5
 
