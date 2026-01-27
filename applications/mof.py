@@ -5,6 +5,27 @@ calculate pore properties
 For information about the current flows, contact:
 - Theo Jaffrelot Inizan (@tjaffrel)
 - Aaron Kaplan (@esoteric-ephemera)
+
+References
+----------
+Preprint:
+@misc{inizan2025agenticaidiscoverymetalorganic,
+    title={System of Agentic AI for the Discovery of Metal-Organic Frameworks},
+    author={
+        Theo Jaffrelot Inizan and Sherry Yang and Aaron Kaplan and Yen-hsu Lin
+        and Jian Yin and Saber Mirzaei and Mona Abdelgaid and Ali H. Alawadhi
+        and KwangHwan Cho and Zhiling Zheng and Ekin Dogus Cubuk and Christian Borgs
+        and Jennifer T. Chayes and Kristin A. Persson and Omar M. Yaghi
+    },
+    year={2025},
+    eprint={2504.14110},
+    archivePrefix={arXiv},
+    primaryClass={cond-mat.mtrl-sci},
+    url={https://arxiv.org/abs/2504.14110},
+}
+
+Database:
+https://next-gen.materialsproject.org/contribs/MOFGen_2025
 """
 
 import logging
