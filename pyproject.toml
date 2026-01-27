@@ -61,6 +61,7 @@ forcefields = [
     "matgl>=1.2.1",
     "torchdata<=0.7.1", # TODO: remove when issue fixed
     "quippy-ase>=0.9.14",
+    "mattersim>=1.0.1",
     "sevenn>=0.9.3",
     "deepmd-kit>=2.1.4",
 ]
@@ -84,7 +85,7 @@ strict-openff = [
     "pymatgen==2025.10.7", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 strict-forcefields = [
-    "calorine==3.2; python_version >= '3.12'",
+    "calorine==3.3; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
     "mace-torch==0.3.14",
     "matgl==2.0.6",
