@@ -743,6 +743,7 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
         additional_fields: dict = None,
         add_coxxcar_to_task_document: bool = False,
         analyze_outputs: bool = True,
+        skip_calc_quality: bool = False,
         calc_quality_kwargs: dict = None,
         lobsterpy_kwargs: dict = None,
         plot_kwargs: dict = None,
@@ -764,6 +765,8 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
             to the task document.
         analyze_outputs: bool.
             If True, will enable lobsterpy analysis.
+        skip_calc_quality: bool. 
+            The calc quality analysis will be skipped.
         calc_quality_kwargs : dict.
             kwargs to change calc quality summary options in lobsterpy.
         lobsterpy_kwargs : dict.
@@ -869,15 +872,15 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                 which_bonds="cation-anion",
             )
             # Get lobster calculation quality summary data
-
-            calc_quality_summary = CalcQualitySummary.from_directory(
-                dir_name,
-                calc_quality_kwargs=calc_quality_kwargs,
-            )
-
-            calc_quality_text = Description.get_calc_quality_description(
-                calc_quality_summary.model_dump()
-            )
+            if not skip_calc_quality: 
+                calc_quality_summary = CalcQualitySummary.from_directory(
+                    dir_name,
+                    calc_quality_kwargs=calc_quality_kwargs,
+                )
+    
+                calc_quality_text = Description.get_calc_quality_description(
+                    calc_quality_summary.model_dump()
+                )
 
         # Read in charges
         charges = None
@@ -1052,14 +1055,15 @@ class LobsterTaskDocument(StructureMetadata, extra="allow"):  # type: ignore[cal
                     data, allow_bson=True, strict=True, enum_values=True
                 )
                 json.dump(monty_encoded_json_doc, file)
-                file.write(",")
-                data = {
-                    "calc_quality_text": ["".join(doc.calc_quality_text)]  # type: ignore[dict-item]
-                }  # add calc quality summary dict
-                monty_encoded_json_doc = jsanitize(
-                    data, allow_bson=True, strict=True, enum_values=True
-                )
-                json.dump(monty_encoded_json_doc, file)
+                if not skip_calc_quality:
+                    file.write(",")
+                    data = {
+                        "calc_quality_text": ["".join(doc.calc_quality_text)]  # type: ignore[dict-item]
+                    }  # add calc quality summary dict
+                    monty_encoded_json_doc = jsanitize(
+                        data, allow_bson=True, strict=True, enum_values=True
+                    )
+                    json.dump(monty_encoded_json_doc, file)
                 file.write(",")
                 data = {"dos": doc.dos}  # add NON LSO of lobster
                 monty_encoded_json_doc = jsanitize(
