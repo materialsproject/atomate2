@@ -313,48 +313,59 @@ def pick_model(
     ValueError
         If an invalid model type is provided.
     """
-    if model_type == TorchSimModelType.FAIRCHEMV1:
-        from torch_sim.models.fairchem_legacy import FairChemV1Model
+    match model_type:
+        case TorchSimModelType.FAIRCHEMV1:
+            from torch_sim.models.fairchem_legacy import FairChemV1Model
 
-        return FairChemV1Model(model=model_path, **model_kwargs)
-    if model_type == TorchSimModelType.FAIRCHEM:
-        from torch_sim.models.fairchem import FairChemModel
+            return FairChemV1Model(model=model_path, **model_kwargs)
 
-        return FairChemModel(model=model_path, **model_kwargs)
-    if model_type == TorchSimModelType.GRAPHPESWRAPPER:
-        from torch_sim.models.graphpes import GraphPESWrapper
+        case TorchSimModelType.FAIRCHEM:
+            from torch_sim.models.fairchem import FairChemModel
 
-        return GraphPESWrapper(model=model_path, **model_kwargs)
-    if model_type == TorchSimModelType.MACE:
-        from torch_sim.models.mace import MaceModel
+            return FairChemModel(model=model_path, **model_kwargs)
 
-        return MaceModel(model=model_path, **model_kwargs)
-    if model_type == TorchSimModelType.MATTERSIM:
-        from torch_sim.models.mattersim import MatterSimModel
+        case TorchSimModelType.GRAPHPESWRAPPER:
+            from torch_sim.models.graphpes import GraphPESWrapper
 
-        return MatterSimModel(model=model_path, **model_kwargs)
-    if model_type == TorchSimModelType.METATOMIC:
-        from torch_sim.models.metatomic import MetatomicModel
+            return GraphPESWrapper(model=model_path, **model_kwargs)
 
-        return MetatomicModel(model=model_path, **model_kwargs)
-    if model_type == TorchSimModelType.NEQUIPFRAMEWORK:
-        from torch_sim.models.nequip_framework import NequIPFrameworkModel
+        case TorchSimModelType.MACE:
+            from torch_sim.models.mace import MaceModel
 
-        return NequIPFrameworkModel(model=model_path, **model_kwargs)
-    if model_type == TorchSimModelType.ORB:
-        from torch_sim.models.orb import OrbModel
+            return MaceModel(model=model_path, **model_kwargs)
 
-        return OrbModel(model=model_path, **model_kwargs)
-    if model_type == TorchSimModelType.SEVENNET:
-        from torch_sim.models.sevennet import SevenNetModel
+        case TorchSimModelType.MATTERSIM:
+            from torch_sim.models.mattersim import MatterSimModel
 
-        return SevenNetModel(model=model_path, **model_kwargs)
-    if model_type == TorchSimModelType.LENNARD_JONES:
-        from torch_sim.models.lennard_jones import LennardJonesModel
+            return MatterSimModel(model=model_path, **model_kwargs)
 
-        return LennardJonesModel(**model_kwargs)
+        case TorchSimModelType.METATOMIC:
+            from torch_sim.models.metatomic import MetatomicModel
 
-    raise ValueError(f"Invalid model type: {model_type}")
+            return MetatomicModel(model=model_path, **model_kwargs)
+
+        case TorchSimModelType.NEQUIPFRAMEWORK:
+            from torch_sim.models.nequip_framework import NequIPFrameworkModel
+
+            return NequIPFrameworkModel(model=model_path, **model_kwargs)
+
+        case TorchSimModelType.ORB:
+            from torch_sim.models.orb import OrbModel
+
+            return OrbModel(model=model_path, **model_kwargs)
+
+        case TorchSimModelType.SEVENNET:
+            from torch_sim.models.sevennet import SevenNetModel
+
+            return SevenNetModel(model=model_path, **model_kwargs)
+
+        case TorchSimModelType.LENNARD_JONES:
+            from torch_sim.models.lennard_jones import LennardJonesModel
+
+            return LennardJonesModel(**model_kwargs)
+
+        case _:
+            raise ValueError(f"Invalid model type: {model_type}")
 
 
 @dataclass
