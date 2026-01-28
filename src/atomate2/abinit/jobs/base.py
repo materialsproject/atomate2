@@ -206,7 +206,7 @@ class BaseAbinitMaker(Maker):
     wall_time: int | None = None
     run_abinit_kwargs: dict[str, Any] = field(default_factory=dict)
     task_document_kwargs: dict[str, Any] = field(default_factory=dict)
-    stop_jobflow_on_failure: bool = False
+    handle_unsuccessful: str = SETTINGS.ABINIT_HANDLE_UNSUCCESSFUL
 
     # class variables
     CRITICAL_EVENTS: ClassVar[Sequence[AbinitCriticalWarning]] = ()
@@ -335,6 +335,7 @@ class BaseAbinitMaker(Maker):
             - Nothing else if calculation succeeded
             - A replacement job if restarting
             - stop_children/stop_jobflow flags if max restarts exceeded
+                depending on the value of handle_unsuccessful
         """
         if task_document.state == TaskState.SUCCESS:
             return Response(
@@ -342,19 +343,37 @@ class BaseAbinitMaker(Maker):
             )
 
         if history.run_number > max_restarts:
-            # Max restarts exceeded - stop children and create error
             unconverged_error = UnconvergedError(
                 self,
                 msg=f"Unconverged after {history.run_number} runs.",
                 abinit_input=task_document.input.abinit_input,
                 history=history,
             )
-            return Response(
-                output=task_document,
-                stop_children=True,
-                stop_jobflow=self.stop_jobflow_on_failure,
-                stored_data={"error": unconverged_error},
-            )
+            # Max restarts exceeded - action depends on self.handle_unsuccessful
+            if self.handle_unsuccessful == "error":
+                raise unconverged_error
+            if self.handle_unsuccessful == "stop_flow":
+                return Response(
+                    output=task_document,
+                    stop_children=True,
+                    stop_jobflow=True,
+                    stored_data={"error": unconverged_error},
+                )
+            if self.handle_unsuccessful == "stop_children":
+                return Response(
+                    output=task_document,
+                    stop_children=True,
+                    stop_jobflow=False,
+                    stored_data={"error": unconverged_error},
+                )
+            if self.handle_unsuccessful == "continue":
+                return Response(
+                    output=task_document,
+                    stop_children=False,
+                    stop_jobflow=False,
+                    stored_data={"error": unconverged_error},
+                )
+            raise RuntimeError(f"Unknown option for {self.handle_unsuccessful=}")
 
         logger.info("Getting restart job.")
 
