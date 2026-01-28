@@ -21,8 +21,15 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         "slab_static_maker__static_adsconfig_2": ("Au_adsorption/ads_static_3_3"),
     }
 
+    # TODO: Some POSCAR consistency checks failing with numpy < 2, passing numpy >= 2?
     fake_run_vasp_kwargs = {
-        path: {"incar_settings": ["ISIF", "NSW"]} for path in ref_paths
+        path: {
+            "incar_settings": ["ISIF", "NSW"],
+            "check_inputs": ("incar", "kpoints", "potcar")
+            if "__adsconfig_" in path
+            else ("incar", "kpoints", "potcar", "poscar"),
+        }
+        for path in ref_paths
     }
 
     # automatically use fake VASP and write POTCAR.spec during the test
@@ -32,9 +39,8 @@ def test_adsorption(mock_vasp, clean_dir, test_dir):
         test_dir / "vasp/Au_adsorption/mol_relax/inputs/POSCAR"
     )
 
-    molecule_indices = [i for i, site in enumerate(molcule_str)]
-    molecule_coords = [molcule_str[i].coords for i in molecule_indices]
-    molecule_species = [molcule_str[i].species_string for i in molecule_indices]
+    molecule_coords = [site.coords for site in molcule_str]
+    molecule_species = [site.species_string for site in molcule_str]
 
     molecule = Molecule(molecule_species, molecule_coords)
     bulk_structure = Structure.from_file(

@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from emmet.core.openmm import Calculation, OpenMMInterchange, OpenMMTaskDocument
+from emmet.core.openmm import Calculation, OpenMMTaskDocument
 from jobflow import Flow, Job, Maker, Response
 from monty.json import MontyDecoder, MontyEncoder
 
@@ -18,6 +18,7 @@ from atomate2.openmm.utils import create_list_summing_to
 if TYPE_CHECKING:
     from openff.interchange import Interchange
 
+    from atomate2.openmm.interchange import OpenMMInterchange
     from atomate2.openmm.jobs.base import BaseOpenMMMaker
 
 

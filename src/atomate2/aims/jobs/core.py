@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from jobflow import Response, job
 from monty.serialization import dumpfn
-from pymatgen.io.aims.parsers import read_aims_output
+from pyfhiaims.external_interfaces.ase.io import read_aims_output
 from pymatgen.io.aims.sets.bs import BandStructureSetGenerator, GWSetGenerator
 from pymatgen.io.aims.sets.core import (
     RelaxSetGenerator,

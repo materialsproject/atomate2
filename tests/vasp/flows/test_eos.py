@@ -72,14 +72,17 @@ def test_mp_eos_double_relax_maker(mock_vasp, clean_dir, vasp_test_dir):
     assert len(responses) == len(ref_paths)
 
 
-@pytest.mark.parametrize("do_statics", [False, True])
+@pytest.mark.parametrize(
+    "do_statics, n_frames, linear_strain",
+    [(False, 2, (-0.05, 0.05)), (True, 2, (-0.05, 0.05))],
+)
 def test_mp_eos_maker(
     do_statics: bool,
+    n_frames: int,
+    linear_strain: tuple[float, float],
     mock_vasp,
     clean_dir,
     vasp_test_dir,
-    n_frames: int = 2,
-    linear_strain: tuple = (-0.05, 0.05),
 ):
     relax_job_name_1 = "EOS MP GGA relax 1 EOS equilibrium relaxation"
     relax_job_name_2 = "EOS MP GGA relax 2 EOS equilibrium relaxation"

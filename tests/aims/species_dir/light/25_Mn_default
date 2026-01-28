@@ -69,9 +69,9 @@
 #     hydro 5 g 10.8
 #     hydro 3 s 3.8
 #  "Third tier" - improvements: -1.38 meV to -0.13 meV
-#     hydro 5 p 8.6   -1.38 meV
-#     hydro 6 h 16    -0.73 meV
-#     hydro 3 d 10.8  -0.43 meV
+#     hydro 5 p 8.6
+#     hydro 6 h 16
+#     hydro 3 d 10.8
 #     hydro 5 f 6.8   # forced: -0.26 meV
 #     hydro 5 g 6.4   # forced: -0.21 meV
 #     hydro 5 s 9.8   # forced: -0.13 meV

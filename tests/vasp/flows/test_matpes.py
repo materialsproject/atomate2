@@ -6,6 +6,7 @@ from jobflow import run_locally
 from pymatgen.core import Structure
 
 from atomate2.vasp.flows.matpes import MatPesStaticFlowMaker
+from atomate2.vasp.jobs.matpes import MatPesGGAStaticMaker
 
 
 def test_matpes_static_flow_maker(mock_vasp, clean_dir, vasp_test_dir):
@@ -59,7 +60,9 @@ def test_matpes_static_flow_maker(mock_vasp, clean_dir, vasp_test_dir):
     assert flow[0].name == "MatPES GGA static"
 
     # Test setting two makers to None
-    flow_maker = MatPesStaticFlowMaker(static1=None, static2=None)
+    flow_maker = MatPesStaticFlowMaker(
+        static1=None, static2=None, static3=MatPesGGAStaticMaker()
+    )
     flow = flow_maker.make(si_struct)
     assert len(flow) == 0
 
@@ -68,7 +71,9 @@ def test_matpes_static_flow_maker(mock_vasp, clean_dir, vasp_test_dir):
         MatPesStaticFlowMaker(static1=None, static2=None, static3=None)
 
     # Test no static3 if structure requires no Hubbard U corrections
-    flow_maker = MatPesStaticFlowMaker(static1=None, static2=None)
+    flow_maker = MatPesStaticFlowMaker(
+        static1=None, static2=None, static3=MatPesGGAStaticMaker()
+    )
     flow = flow_maker.make(si_struct)
     assert len(flow) == 0
     assert flow.output == {}

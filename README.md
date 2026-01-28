@@ -134,16 +134,16 @@ A full list of contributors can be found [here][contributors].
 
 ## Citing atomate2
 
-A journal submission of `atomate2` is undergoing peer review. In the meantime, please cite the [ChemRxiv preprint](https://chemrxiv.org/engage/chemrxiv/article-details/678e76a16dde43c9085c75e9):
+If you use atomate2, please cite the [following article](https://doi.org/10.1039/D5DD00019J):
 
 ```bib
 @article{ganose2025_atomate2,
 	title = {Atomate2: modular workflows for materials science},
-	author = {Ganose, Alex M. and Sahasrabuddhe, Hrushikesh and Asta, Mark and Beck, Kevin and Biswas, Tathagata and Bonkowski, Alexander and Bustamante, Joana and Chen, Xin and Chiang, Yuan and Chrzan, Daryl C. and Clary, Jacob and Cohen, Orion A. and Ertural, Christina and Gallant, Max C. and George, Janine and Gerits, Sophie and Goodall, Rhys E. A. and Guha, Rishabh D. and Hautier, Geoffroy and Horton, Matthew and Inizan, T. J. and Kaplan, Aaron D. and Kingsbury, Ryan S. and Kuner, Matthew C. and Li, Bryant and Linn, Xavier and McDermott, Matthew J. and Mohanakrishnan, Rohith Srinivaas and Naik, Aakash N. and Neaton, Jeffrey B. and Parmar, Shehan M. and Persson, Kristin A. and Petretto, Guido and Purcell, Thomas A. R. and Ricci, Francesco and Rich, Benjamin and Riebesell, Janosh and Rignanese, Gian-Marco and Rosen, Andrew S. and Scheffler, Matthias and Schmidt, Jonathan and Shen, Jimmy-Xuan and Sobolev, Andrei and Sundararaman, Ravishankar and Tezak, Cooper and Trinquet, Victor and Varley, Joel B. and Vigil-Fowler, Derek and Wang, Duo and Waroquiers, David and Wen, Mingjian and Yang, Han and Zheng, Hui and Zheng, Jiongzhi and Zhu, Zhuoying and Jain, Anubhav},
+	author = {Ganose, Alex M. and Sahasrabuddhe, Hrushikesh and Asta, Mark and Beck, Kevin and Biswas, Tathagata and Bonkowski, Alexander and Bustamante, Joana and Chen, Xin and Chiang, Yuan and Chrzan, Daryl C. and Clary, Jacob and Cohen, Orion A. and Ertural, Christina and Gallant, Max C. and George, Janine and Gerits, Sophie and Goodall, Rhys E. A. and Guha, Rishabh D. and Hautier, Geoffroy and Horton, Matthew and Inizan, T. J. and Kaplan, Aaron D. and Kingsbury, Ryan S. and Kuner, Matthew C. and Li, Bryant and Linn, Xavier and McDermott, Matthew J. and Mohanakrishnan, Rohith Srinivaas and Naik, Aakash A. and Neaton, Jeffrey B. and Parmar, Shehan M. and Persson, Kristin A. and Petretto, Guido and Purcell, Thomas A. R. and Ricci, Francesco and Rich, Benjamin and Riebesell, Janosh and Rignanese, Gian-Marco and Rosen, Andrew S. and Scheffler, Matthias and Schmidt, Jonathan and Shen, Jimmy-Xuan and Sobolev, Andrei and Sundararaman, Ravishankar and Tezak, Cooper and Trinquet, Victor and Varley, Joel B. and Vigil-Fowler, Derek and Wang, Duo and Waroquiers, David and Wen, Mingjian and Yang, Han and Zheng, Hui and Zheng, Jiongzhi and Zhu, Zhuoying and Jain, Anubhav},
 	year = {2025},
 	journal = {Digital Discovery},
 	doi = {10.1039/D5DD00019J},
-	url = {https://pubs.rsc.org/en/content/articlelanding/2025/dd/d5dd00019j},
+	url = {https://doi.org/10.1039/D5DD00019J},
 	urldate = {2025-07-01},
 }
 ```

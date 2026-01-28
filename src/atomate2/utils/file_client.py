@@ -40,17 +40,21 @@ class FileClient:
         Path to private key file (for remote connections only).
     config_filename : str or Path
         Path to OpenSSH config file defining host connection settings.
+    verbose : bool, defaults to False
+        Whether to log messages during file interactions.
     """
 
     def __init__(
         self,
         key_filename: str | Path = "~/.ssh/id_rsa",
         config_filename: str | Path = "~/.ssh/config",
+        verbose: bool = False,
     ) -> None:
         self.key_filename = key_filename
         self.config_filename = config_filename
 
         self.connections: dict[str, dict[str, Any]] = {}
+        self.verbose = verbose
 
     def connect(self, host: str) -> None:
         """
@@ -248,7 +252,7 @@ class FileClient:
             # copying between the same remote machine.
             ssh = self.get_ssh(src_host)
             _, _, stderr = ssh.exec_command(f"cp {src_filename} {dest_filename}")
-            if len(stderr.readlines()) > 0:
+            if len(stderr.readlines()) > 0 and self.verbose:
                 warnings.warn(f"Copy command gave error: {stderr}", stacklevel=2)
         else:
             # copying between two remote hosts; this is a pain and it is unlikely anyone
@@ -399,11 +403,13 @@ class FileClient:
         path_gz = path.parent / f"{path.name}.gz"
 
         if str(path).lower().endswith("gz"):
-            warnings.warn(f"{path} is already gzipped, skipping...", stacklevel=1)
+            if self.verbose:
+                warnings.warn(f"{path} is already gzipped, skipping...", stacklevel=1)
             return
 
         if self.is_dir(path, host=host):
-            warnings.warn(f"{path} is a directory, skipping...", stacklevel=1)
+            if self.verbose:
+                warnings.warn(f"{path} is a directory, skipping...", stacklevel=1)
             return
 
         if self.exists(path_gz, host=host):
@@ -412,9 +418,10 @@ class FileClient:
             if force is True or force == "force":
                 pass
             elif force == "skip":
-                warnings.warn(
-                    f"{path_gz} file already exists, skipping...", stacklevel=2
-                )
+                if self.verbose:
+                    warnings.warn(
+                        f"{path_gz} file already exists, skipping...", stacklevel=2
+                    )
                 return
             else:
                 raise ValueError(
@@ -461,7 +468,8 @@ class FileClient:
         path_nongz = path.with_suffix("")
 
         if not str(path).lower().endswith("gz"):
-            warnings.warn(f"{path} is not gzipped, skipping...", stacklevel=2)
+            if self.verbose:
+                warnings.warn(f"{path} is not gzipped, skipping...", stacklevel=2)
             return
 
         if self.exists(path_nongz, host=host):
@@ -470,9 +478,10 @@ class FileClient:
             if force is True or force == "force":
                 pass
             elif force == "skip":
-                warnings.warn(
-                    f"{path_nongz} file already exists, skipping...", stacklevel=2
-                )
+                if self.verbose:
+                    warnings.warn(
+                        f"{path_nongz} file already exists, skipping...", stacklevel=2
+                    )
                 return
             else:
                 raise ValueError(

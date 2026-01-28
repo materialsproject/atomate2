@@ -2,7 +2,21 @@ import pytest
 from pymatgen.core import Lattice, Species, Structure
 from pymatgen.io.vasp.sets import MPScanRelaxSet
 
-from atomate2.vasp.sets.core import StaticSetGenerator
+from atomate2.vasp.sets.core import (
+    ElectronPhononSetGenerator,
+    HSEBSSetGenerator,
+    HSERelaxSetGenerator,
+    HSEStaticSetGenerator,
+    HSETightRelaxSetGenerator,
+    LobsterTightStaticSetGenerator,
+    MDSetGenerator,
+    NonSCFSetGenerator,
+    RelaxConstVolSetGenerator,
+    RelaxSetGenerator,
+    StaticSetGenerator,
+    TightRelaxConstVolSetGenerator,
+    TightRelaxSetGenerator,
+)
 
 
 @pytest.fixture(scope="module")
@@ -199,3 +213,82 @@ def test_set_kspacing_bandgap_tol_and_auto_ismear(
 
     actual = {key: incar[key] for key in expected_params}
     assert actual == pytest.approx(expected_params)
+
+
+def test_core(struct_no_magmoms):
+    input_gen = RelaxSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["ISIF"] == 3
+    assert incar["IBRION"] == 2
+
+    input_gen = RelaxConstVolSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["ISIF"] == 2
+    assert incar["IBRION"] == 2
+    assert incar["EDIFF"] == 1e-5
+
+    input_gen = TightRelaxSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["ISIF"] == 3
+    assert incar["IBRION"] == 2
+    assert incar["EDIFF"] == 1e-7
+
+    input_gen = TightRelaxConstVolSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["ISIF"] == 2
+    assert incar["IBRION"] == 2
+    assert incar["EDIFF"] == 1e-7
+
+    input_gen = StaticSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["ISMEAR"] == -5
+    assert incar["NSW"] == 0
+
+    input_gen = NonSCFSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["NSW"] == 0
+    assert incar["ISYM"] == 0
+
+    input_gen = HSERelaxSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["PRECFOCK"] == "Fast"
+    assert incar["HFSCREEN"] == 0.2
+    assert incar["EDIFF"] == 1e-5
+
+    input_gen = HSETightRelaxSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["PRECFOCK"] == "Fast"
+    assert incar["HFSCREEN"] == 0.2
+    assert incar["EDIFF"] == 1e-7
+
+    input_gen = HSEStaticSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["PRECFOCK"] == "Fast"
+    assert incar["HFSCREEN"] == 0.2
+    assert incar["EDIFF"] == 1e-5
+    assert incar["NSW"] == 0
+
+    input_gen = HSEBSSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["PRECFOCK"] == "Fast"
+    assert incar["HFSCREEN"] == 0.2
+    assert incar["EDIFF"] == 1e-5
+    assert incar["NSW"] == 0
+    assert incar["ISMEAR"] == 0
+
+    input_gen = ElectronPhononSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["PHON_NSTRUCT"] == 0
+    assert incar["NSW"] == 1
+    assert incar["ISMEAR"] == 0
+
+    input_gen = MDSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["TEBEG"] == 300
+    assert incar["TEEND"] == 300
+
+    input_gen = LobsterTightStaticSetGenerator()
+    incar = input_gen.get_input_set(struct_no_magmoms, potcar_spec=True)["INCAR"]
+    assert incar["EDIFF"] == 1e-7
+    assert incar["ISYM"] == 0
+    assert incar["LWAVE"] is True

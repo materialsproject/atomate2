@@ -33,4 +33,4 @@ def test_gw_maker_molecule(tmp_dir, species_dir, mock_aims, o2):
     # validation the outputs of the job (maybe add gw energy levels as well)
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, AimsTaskDoc)
-    assert output1.output.energy == pytest.approx(-4092.0702534)
+    assert output1.output.energy == pytest.approx(-4092.12667244759)

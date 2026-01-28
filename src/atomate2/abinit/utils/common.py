@@ -622,7 +622,7 @@ def get_final_structure(dir_name: Path | str) -> Structure:
         try:
             gsr_file = GsrFile(gsr_path)
         except Exception:
-            logging.exception("Exception occurred")
+            logging.exception("Exception occurred")  # noqa: LOG015
         else:
             return gsr_file.structure
 
@@ -631,7 +631,7 @@ def get_final_structure(dir_name: Path | str) -> Structure:
         try:
             ddb_file = DdbFile(ddb_path)
         except Exception:
-            logging.exception("Exception occurred")
+            logging.exception("Exception occurred")  # noqa: LOG015
         else:
             return ddb_file.structure
 
@@ -640,7 +640,7 @@ def get_final_structure(dir_name: Path | str) -> Structure:
         try:
             ab_out = AbinitOutputFile.from_file(out_path.path)
         except Exception:
-            logging.exception("Exception occurred")
+            logging.exception("Exception occurred")  # noqa: LOG015
         else:
             return ab_out.final_structure
 
@@ -695,7 +695,7 @@ def get_event_report(
                     report.append(last_abort_event)
                 else:
                     report.append(last_abort_event)
-    except (ValueError, RuntimeError, Exception) as exc:
+    except (ValueError, RuntimeError, Exception) as exc:  # noqa: BLE001
         logger.critical(f"{ofile}: Exception while parsing ABINIT events:\n {exc!s}")
         return parser.report_exception(ofile.path, exc)
     else:

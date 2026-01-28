@@ -2,8 +2,9 @@ import shutil
 import subprocess
 
 import pytest
-from emmet.core.openmm import OpenMMInterchange
 from jobflow import run_locally
+
+from atomate2.openmm.interchange import OpenMMInterchange
 
 
 @pytest.fixture

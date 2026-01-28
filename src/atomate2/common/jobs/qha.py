@@ -1,4 +1,4 @@
-"""Jobs for running qha calculations."""
+"""Jobs for running QHA calculations."""
 
 from __future__ import annotations
 

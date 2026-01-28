@@ -58,16 +58,7 @@ class MatPesStaticFlowMaker(Maker):
             copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)}
         )
     )
-    # optional 3rd PBE+U static in case structure contains elements with +U corrections
-    static3: Maker | None = field(
-        default_factory=lambda: MatPesGGAStaticMaker(
-            name="MatPES GGA+U static",
-            input_set_generator=MatPESStaticSet(
-                user_incar_settings={"LDAU:": True},  # enable +U corrections
-            ),
-            copy_vasp_kwargs={"additional_vasp_files": ("WAVECAR",)},
-        )
-    )
+    static3: Maker | None = None
 
     def __post_init__(self) -> None:
         """Validate flow."""
