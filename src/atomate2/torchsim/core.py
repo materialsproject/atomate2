@@ -8,10 +8,11 @@ import uuid
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import torch_sim as ts
 from jobflow import Maker, Response, job
+from pymatgen.core import Structure
 from torch_sim.autobatching import BinningAutoBatcher, InFlightAutoBatcher
 
 from atomate2.torchsim.schema import (
@@ -30,8 +31,8 @@ from atomate2.torchsim.schema import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+    from typing import Any
 
-    from pymatgen.core import Structure
     from torch_sim.models.interface import ModelInterface
     from torch_sim.optimizers import Optimizer
     from torch_sim.trajectory import TrajectoryReporter
@@ -477,8 +478,6 @@ class TorchSimOptimizeMaker(Maker):
         Response
             A response object containing the output task document.
         """
-        from pymatgen.core import Structure
-
         structures = [structure] if isinstance(structure, Structure) else structure
 
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
@@ -651,8 +650,6 @@ class TorchSimIntegrateMaker(Maker):
         Response
             A response object containing the output task document.
         """
-        from pymatgen.core import Structure
-
         structures = [structure] if isinstance(structure, Structure) else structure
 
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
@@ -803,8 +800,6 @@ class TorchSimStaticMaker(Maker):
         Response
             A response object containing the output task document.
         """
-        from pymatgen.core import Structure
-
         structures = [structure] if isinstance(structure, Structure) else structure
 
         model = pick_model(self.model_type, self.model_path, **self.model_kwargs)
