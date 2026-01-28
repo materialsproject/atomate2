@@ -95,7 +95,7 @@ strict-forcefields = [
     "torch==2.2.0",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
     "deepmd-kit==2.2.11",
-    "tensorflow-cpu==2.16.2",
+    "tensorflow-cpu==2.20.0",
 ]
 strict = [
     "atomate2[strict-forcefields, cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
