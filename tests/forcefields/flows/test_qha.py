@@ -63,8 +63,6 @@ def test_qha_dir_change_defaults(clean_dir, si_structure: Structure, tmp_path: P
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
 
-    # print(responses)
-
     # # validate the outputs
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
     assert isinstance(ph_bs_dos_doc, PhononQHADoc)
@@ -94,8 +92,6 @@ def test_qha_dir_manual_supercell(clean_dir, si_structure: Structure, tmp_path: 
 
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(flow, create_folders=True, ensure_success=True)
-
-    # print(responses)
 
     # # validate the outputs
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
@@ -146,3 +142,18 @@ def test_instantiation(mlff: str, relax_initial_structure: bool, run_eos_flow: b
             assert mlff in sub_maker.force_field_name
         else:
             assert sub_maker is None
+
+
+def test_ext_load_qha_initialization():
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+    maker = ForceFieldQhaMaker.from_force_field_name(
+        calculator_meta, relax_initial_structure=True, run_eos_flow=True
+    )
+
+    ase_calculator_name = "mace_mp"
+    assert maker.initial_relax_maker.ase_calculator_name == ase_calculator_name
+    assert maker.eos_relax_maker.ase_calculator_name == ase_calculator_name
+    assert maker.phonon_maker.ase_calculator_name == ase_calculator_name

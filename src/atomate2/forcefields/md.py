@@ -15,7 +15,9 @@ from atomate2.forcefields.utils import _FORCEFIELD_DATA_OBJECTS, ForceFieldMixin
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from pymatgen.core.structure import Structure
+    from pymatgen.core.structure import Molecule, Structure
+
+    from atomate2.forcefields.schemas import ForceFieldMoleculeTaskDocument
 
 
 @dataclass
@@ -41,7 +43,7 @@ class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
     ----------
     name : str
         The name of the MD Maker
-    force_field_name : str or .MLFF
+    force_field_name : str or .MLFF or dict
         The name of the forcefield (for provenance)
     time_step : float | None = None.
         The timestep of the MD run in fs.
@@ -104,19 +106,18 @@ class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
 
     @job(
         data=[*_FORCEFIELD_DATA_OBJECTS, "ionic_steps"],
-        output_schema=ForceFieldTaskDocument,
     )
     def make(
         self,
-        structure: Structure,
+        structure: Molecule | Structure,
         prev_dir: str | Path | None = None,
-    ) -> ForceFieldTaskDocument:
+    ) -> ForceFieldTaskDocument | ForceFieldMoleculeTaskDocument:
         """
         Perform MD on a structure using forcefields and jobflow.
 
         Parameters
         ----------
-        structure: .Structure
+        structure: .Structure or Molecule
             pymatgen structure.
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
@@ -134,10 +135,11 @@ class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
             )
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
-            str(self.force_field_name),  # make mypy happy
+            self.ase_calculator_name,
             md_result,
             relax_cell=(self.ensemble == MDEnsemble.npt),
             steps=self.n_steps,
+            calculator_meta=self.calculator_meta,
             relax_kwargs=None,
             optimizer_kwargs=None,
             fix_symmetry=False,

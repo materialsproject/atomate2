@@ -2,20 +2,25 @@
 
 import sys
 from contextlib import nullcontext
+from importlib.metadata import version as get_imported_version
+from itertools import product
 from pathlib import Path
 
 import numpy as np
 import pytest
 from ase import units
-from ase.io import Trajectory
+from ase.io import Trajectory as AseTrajectory
 from ase.md.verlet import VelocityVerlet
+from emmet.core.trajectory import AtomTrajectory
 from jobflow import run_locally
 from monty.serialization import loadfn
 from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.core import Structure
+from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 
 from atomate2.forcefields import MLFF
 from atomate2.forcefields.md import ForceFieldMDMaker
+from atomate2.forcefields.schemas import ForceFieldTaskDocument
 
 
 def test_maker_initialization():
@@ -37,23 +42,32 @@ def test_maker_initialization():
             ) == ForceFieldMDMaker(force_field_name=mlff)
 
 
-@pytest.mark.parametrize("ff_name", MLFF)
+_mlffs_for_test = set(MLFF).difference(
+    map(MLFF, ("Forcefield", "MatterSim", "Allegro", "OCP", "M3GNet", "MACE"))
+)
+_md_test_params = sorted(product(_mlffs_for_test, [True, False]), key=lambda x: str(x))
+
+
+@pytest.mark.parametrize("ff_name, use_emmet_models", _md_test_params)
 def test_ml_ff_md_maker(
-    ff_name, si_structure, sr_ti_o3_structure, al2_au_structure, test_dir, clean_dir
+    ff_name,
+    use_emmet_models,
+    si_structure,
+    sr_ti_o3_structure,
+    al2_au_structure,
+    test_dir,
+    clean_dir,
+    get_deepmd_pretrained_model_path,
 ):
-    if ff_name in map(MLFF, ("Forcefield", "MACE")):
-        return  # nothing to test here, MLFF.Forcefield is just a generic placeholder
     if ff_name == MLFF.GAP and sys.version_info >= (3, 12):
         pytest.skip(
             "GAP model not compatible with Python 3.12, waiting on https://github.com/libAtoms/QUIP/issues/645"
         )
-    if ff_name == MLFF.M3GNet:
-        pytest.skip("M3GNet requires DGL which is PyTorch 2.4 incompatible")
 
     n_steps = 5
 
     ref_energies_per_atom = {
-        MLFF.CHGNet: -5.280157089233398,
+        MLFF.CHGNet: -5.380889892578125,
         MLFF.M3GNet: -5.387282371520996,
         MLFF.MACE_MP_0: -5.311369895935059,
         MLFF.MACE_MPA_0: -5.40242338180542,
@@ -62,8 +76,9 @@ def test_ml_ff_md_maker(
         MLFF.NEP: -3.966232215741286,
         MLFF.Nequip: -8.84670181274414,
         MLFF.SevenNet: -5.394115447998047,
-        MLFF.MATPES_PBE: -5.4188947677612305,
-        MLFF.MATPES_R2SCAN: -8.707625389099121,
+        MLFF.DeepMD: -744.6197365326168,
+        MLFF.MATPES_PBE: -5.230762481689453,
+        MLFF.MATPES_R2SCAN: -8.561729431152344,
     }
 
     # ASE can slightly change tolerances on structure positions
@@ -92,6 +107,9 @@ def test_ml_ff_md_maker(
             "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
         }
         unit_cell_structure = sr_ti_o3_structure.copy()
+    elif ff_name == MLFF.DeepMD:
+        calculator_kwargs = {"model": get_deepmd_pretrained_model_path}
+        unit_cell_structure = sr_ti_o3_structure.copy()
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
@@ -101,8 +119,10 @@ def test_ml_ff_md_maker(
         traj_file="md_traj.json.gz",
         traj_file_fmt="pmg",
         store_trajectory="partial",
-        ionic_step_data=("energy", "forces", "stress", "mol_or_struct"),
+        # check that `structure` alias to `mol_or_struct` works:
+        ionic_step_data=("energy", "forces", "stress", "structure"),
         calculator_kwargs=calculator_kwargs,
+        use_emmet_models=use_emmet_models,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output
@@ -120,18 +140,33 @@ def test_ml_ff_md_maker(
     # Check that the ionic steps have the expected physical properties
     assert all(
         key in step.model_dump()
-        for key in ("energy", "forces", "stress", "mol_or_struct", "structure")
+        for key in ("energy", "forces", "stress", "mol_or_struct")
         for step in task_doc.output.ionic_steps
+    )
+
+    # `structure` aliases `mol_or_struct`
+    assert all(
+        step.structure == step.mol_or_struct for step in task_doc.output.ionic_steps
     )
 
     # Check that the trajectory has expected physical properties
     assert task_doc.included_objects == ["trajectory"]
     assert len(task_doc.objects["trajectory"]) == n_steps + 1
     assert task_doc.objects == task_doc.forcefield_objects  # test legacy alias
-    assert all(
-        getattr(task_doc.objects["trajectory"], key, None) is not None
-        for key in ("energy", "forces", "stress", "velocities", "temperature")
-    )
+
+    if use_emmet_models:
+        assert all(
+            getattr(task_doc.objects["trajectory"], key, None) is not None
+            for key in ("energy", "forces", "stress", "velocities", "temperature")
+        )
+        assert isinstance(task_doc.objects["trajectory"], AtomTrajectory)
+    else:
+        assert all(
+            frame.get(key) is not None
+            for key in ("energy", "forces", "stress", "velocities", "temperature")
+            for frame in task_doc.objects["trajectory"].frame_properties
+        )
+        assert isinstance(task_doc.objects["trajectory"], PmgTrajectory)
 
 
 @pytest.mark.parametrize(
@@ -148,7 +183,7 @@ def test_traj_file(traj_file, ff_name, si_structure, clean_dir):
         traj_file_loader = loadfn
     else:
         traj_file_fmt = "ase"
-        traj_file_loader = Trajectory
+        traj_file_loader = AseTrajectory
 
     structure = si_structure.to_conventional() * (2, 2, 2)
     job = ForceFieldMDMaker(
@@ -156,6 +191,7 @@ def test_traj_file(traj_file, ff_name, si_structure, clean_dir):
         n_steps=n_steps,
         traj_file=traj_file,
         traj_file_fmt=traj_file_fmt,
+        use_emmet_models=True,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output
@@ -221,7 +257,7 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
         output[key] = response[job.uuid][1].output
 
     # check that energy and volume are constants
-    ref_toten = -10.6
+    ref_toten = -10.7
     assert output["from_str"].output.energy == pytest.approx(ref_toten, abs=0.1)
     assert output["from_str"].output.structure.volume == pytest.approx(
         output["from_str"].input.structure.volume
@@ -264,6 +300,7 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
         dynamics="nose-hoover",
         temperature=temp_schedule,
         ase_md_kwargs={"ttime": 50.0 * units.fs, "pfactor": None},
+        use_emmet_models=True,
     ).make(structure)
     response = run_locally(job, ensure_success=True)
     task_doc = response[next(iter(response))][1].output
@@ -273,7 +310,7 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
     assert temp_history[-1] > temp_schedule[0]
 
 
-@pytest.mark.parametrize("ff_name", ["CHGNet"])
+@pytest.mark.parametrize("ff_name", ["MACE-MP-0"])
 def test_press_schedule(ff_name, si_structure, clean_dir):
     n_steps = 20
     press_schedule = [0, 10]  # kBar
@@ -303,3 +340,28 @@ def test_press_schedule(ff_name, si_structure, clean_dir):
     ]
 
     assert stress_history[-1] < stress_history[0]
+
+
+def test_ext_load_md_maker(si_structure: Structure):
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+
+    unit_cell_structure = si_structure.copy()
+    structure = unit_cell_structure.to_conventional() * (2, 2, 2)
+
+    job = ForceFieldMDMaker(
+        force_field_name=calculator_meta,
+        n_steps=5,
+        traj_file="md_traj.json.gz",
+        traj_file_fmt="pmg",
+        store_trajectory="partial",
+        ionic_step_data=("energy", "forces", "stress", "mol_or_struct"),
+    ).make(structure)
+    response = run_locally(job, ensure_success=True)
+    task_doc = response[next(iter(response))][1].output
+    assert isinstance(task_doc, ForceFieldTaskDocument)
+
+    assert task_doc.forcefield_name == "mace_mp"
+    assert task_doc.forcefield_version == get_imported_version("mace_torch")

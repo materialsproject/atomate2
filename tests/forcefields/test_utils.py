@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import numpy as np
 import pytest
 
 from atomate2.forcefields import MLFF
@@ -13,26 +14,40 @@ if TYPE_CHECKING:
     from pymatgen.core import Structure
 
 
-@pytest.mark.parametrize(("force_field"), [mlff.value for mlff in MLFF])
-def test_mlff(force_field: str):
-    mlff = MLFF(force_field)
+@pytest.mark.parametrize("mlff", MLFF)
+def test_mlff(mlff: MLFF):
     assert mlff == MLFF(str(mlff)) == MLFF(str(mlff).split(".")[-1])
 
 
-@pytest.mark.parametrize(("force_field"), ["CHGNet", "MACE"])
-def test_ext_load(force_field: str):
+@pytest.mark.parametrize("mlff", ["MACE", MLFF.SevenNet])
+def test_ext_load(mlff: str | MLFF, test_dir, si_structure: Structure):
     decode_dict = {
-        "CHGNet": {"@module": "chgnet.model.dynamics", "@callable": "CHGNetCalculator"},
         "MACE": {"@module": "mace.calculators", "@callable": "mace_mp"},
-    }[force_field]
+        MLFF.SevenNet: {
+            "@module": "sevenn.sevennet_calculator",
+            "@callable": "SevenNetCalculator",
+        },
+    }[mlff]
+    formatted_mlff = MLFF(mlff)
     calc_from_decode = ase_calculator(decode_dict)
-    calc_from_preset = ase_calculator(str(MLFF(force_field)))
-    calc_from_enum = ase_calculator(MLFF(force_field))
+    calc_from_preset = ase_calculator(str(formatted_mlff))
+    calc_from_enum = ase_calculator(formatted_mlff)
 
     for other in (calc_from_preset, calc_from_enum):
         assert type(calc_from_decode) is type(other)
         assert calc_from_decode.name == other.name
         assert calc_from_decode.parameters == other.parameters == {}
+
+    atoms = si_structure.to_ase_atoms()
+
+    atoms.calc = calc_from_preset
+    energy = atoms.get_potential_energy()
+    forces = atoms.get_forces()
+
+    assert isinstance(energy, float | np.floating)
+    assert energy < 0
+    assert forces.shape == (2, 3)
+    assert abs(forces.sum()) < 1e-6, f"unexpectedly large net {forces=}"
 
 
 def test_raises_error():

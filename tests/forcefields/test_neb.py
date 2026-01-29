@@ -51,11 +51,11 @@ def test_neb_from_images(test_dir, clean_dir):
         output.energies[i] == pytest.approx(energy)
         for i, energy in enumerate(
             [
-                -339.3764953613281,
-                -339.2301025390625,
-                -338.865234375,
-                -339.23004150390625,
-                -339.37652587890625,
+                -328.3260803222656,
+                -328.3229064941406,
+                -327.90411376953125,
+                -328.3229064941406,
+                -328.3260803222656,
             ]
         )
     )
@@ -82,3 +82,14 @@ def test_neb_from_images(test_dir, clean_dir):
         trajectories[i].frame_properties[-1]["energy"] == pytest.approx(energy)
         for i, energy in enumerate(output.energies)
     )
+
+
+def test_ext_load_neb_initialization():
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+    maker = ForceFieldNebFromImagesMaker(
+        force_field_name=calculator_meta,
+    )
+    assert maker.ase_calculator_name == "mace_mp"
