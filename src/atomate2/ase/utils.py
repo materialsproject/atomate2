@@ -122,7 +122,11 @@ class TrajectoryObserver:
 
         if self._calc_kwargs["magmoms"]:
             try:
-                self.magmoms.append(self.atoms.get_magnetic_moments())
+                magmoms = self.atoms.get_magnetic_moments()
+                # This block needed for CHGNet
+                if len(magmoms.shape) == 2 and magmoms.T.shape[0] == 1:
+                    magmoms = magmoms.T[0]
+                self.magmoms.append(magmoms)
             except PropertyNotImplementedError:
                 self._calc_kwargs["magmoms"] = False
 

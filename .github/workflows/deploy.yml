@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[strict,docs]
+          pip install .[strict] --group docs
 
       - name: Build
         run: sphinx-build docs docs_build

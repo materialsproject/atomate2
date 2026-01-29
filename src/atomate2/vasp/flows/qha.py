@@ -20,7 +20,7 @@ class QhaMaker(CommonQhaMaker):
     First relax a structure using relax_maker.
     Then perform a series of deformations on the relaxed structure, and
     then compute harmonic phonons for each deformed structure.
-    Finally, compute Gibb's free energy.
+    Finally, compute Gibbs free energy.
 
     Parameters
     ----------

@@ -67,7 +67,7 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,strict-forcefields,tests,abinit,approxneb,aims]
+          uv pip install .[strict,strict-forcefields,abinit,approxneb,aims] --group tests
           uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
 
@@ -139,7 +139,7 @@ jobs:
         run: |
           micromamba activate a2
           python -m pip install --upgrade pip
-          uv pip install .[strict-openff,tests]
+          uv pip install .[strict-openff] --group tests
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
@@ -201,19 +201,21 @@ jobs:
         run: |
           micromamba activate a2
           python -m pip install --upgrade pip
-          uv pip install .[strict,tests,aims]
+          uv pip install .[strict,aims] --group tests
           uv pip install tblite>=0.4.0
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
-        run: uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
+        run: |
+          micromamba activate a2
+          uv pip install --upgrade 'git+https://github.com/materialsproject/pymatgen@${{ github.event.client_payload.pymatgen_ref }}'
 
       - name: Test Notebooks
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields
+          pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb
 
       - name: Test ASE
         env:
@@ -271,7 +273,7 @@ jobs:
           python -m pip install --upgrade pip
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
-          uv pip install .[strict,strict-forcefields,tests,abinit,aims]
+          uv pip install .[strict,strict-forcefields,abinit,aims] --group tests
           uv pip install torch-runstats
           uv pip install --no-deps nequip==0.5.6
 
@@ -304,6 +306,64 @@ jobs:
 
 
 
+  test-torchsim:
+    # prevent this action from running on forks
+    if: github.repository == 'materialsproject/atomate2'
+
+    services:
+      local_mongodb:
+        image: mongo:4.0
+        ports:
+          - 27017:27017
+
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up micromamba
+        uses: mamba-org/setup-micromamba@main
+        with:
+          environment-name: a2
+          cache-environment: false
+          create-args: >-
+            python=3.12
+
+      - name: Install uv
+        run: micromamba run -n a2 pip install uv
+
+      - name: Install dependencies
+        run: |
+          micromamba activate a2
+          python -m pip install --upgrade pip
+          uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+          uv pip install .[torchsim,ase,phonons] --group tests
+          uv pip install mace-torch>=0.3.3
+
+      - name: Test TorchSim
+        env:
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}
+        run: |
+          micromamba activate a2
+          pytest -n auto tests/torchsim --cov=atomate2 --cov-report=xml
+
+      - name: Test TorchSim notebook
+        env:
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}
+        run: |
+          micromamba activate a2
+          pytest -n auto --nbmake ./tutorials/torchsim_tutorial.ipynb
+
+      - uses: codecov/codecov-action@v1
+        if: github.repository == 'materialsproject/atomate2'
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+
   docs:
     runs-on: ubuntu-latest
 
@@ -319,13 +379,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[strict,strict-forcefields,docs]
+          pip install .[strict,strict-forcefields] --group docs
 
       - name: Build
         run: sphinx-build docs docs_build
 
   automerge:
-    needs: [docs, lint, test-force-field-notebook, test-non-ase, test-notebooks-and-ase, test-openff]
+    needs: [docs, lint, test-force-field-notebook, test-non-ase, test-notebooks-and-ase, test-openff, test-torchsim]
     runs-on: ubuntu-latest
 
     permissions:

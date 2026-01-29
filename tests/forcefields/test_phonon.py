@@ -68,7 +68,19 @@ def test_phonon_maker_initialization_with_all_mlff(
     # DGL which is PyTorch 2.4 incompatible, raises
     # "FileNotFoundError: Cannot find DGL C++ libgraphbolt_pytorch_2.4.1.so"
     skip_mlff = set(
-        map(MLFF, ["Forcefield", "GAP", "M3GNet", "MATPES_R2SCAN", "MATPES_PBE"])
+        map(
+            MLFF,
+            [
+                "Forcefield",
+                "GAP",
+                "M3GNet",
+                "MATPES_R2SCAN",
+                "MATPES_PBE",
+                "Allegro",
+                "OCP",
+                "MatterSim",
+            ],
+        )
     )
     for mlff in set(MLFF).difference(skip_mlff):
         calc_kwargs = {

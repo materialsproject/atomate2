@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING, Any
 
 from emmet.core.types.enums import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule
+from typing_extensions import assert_never
 
 from atomate2.ase.schemas import (
     AseMoleculeTaskDoc,
@@ -17,6 +19,7 @@ from atomate2.ase.schemas import (
     _task_doc_translation_keys,
 )
 from atomate2.forcefields import MLFF
+from atomate2.forcefields.utils import _get_standardized_mlff, _load_calc_cls
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -93,6 +96,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
         ase_calculator_name: str,
         result: AseResult,
         steps: int,
+        calculator_meta: MLFF | dict | None = None,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
         fix_symmetry: bool = False,
@@ -120,6 +124,8 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
             Whether to fix the symmetry of the ions during relaxation.
         symprec : float
             Tolerance for symmetry finding in case of fix_symmetry.
+        calculator_meta : Optional, MLFF or dict or None
+            Metadata about the calculator used.
         steps : int
             Maximum number of ionic steps allowed during relaxation.
         relax_kwargs : dict
@@ -151,33 +157,58 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
         ff_kwargs = {
             "forcefield_name": task_document_kwargs.get(
                 "forcefield_name", ase_calculator_name
+            ),
+        }
+
+        # Infer `calculator_meta` for MLFFs if not provided
+        if (calculator_meta is None) and ase_calculator_name.startswith("MLFF."):
+            calculator_meta = _get_standardized_mlff(ase_calculator_name)
+        # Populate forcefield version if possible
+        if calculator_meta is None:
+            warnings.warn(
+                "Could not determine forcefield version as calculator_meta was not "
+                "provided.",
+                stacklevel=2,
             )
-        }
+        elif pkg_name := _get_pkg_name(calculator_meta):
+            from importlib.metadata import PackageNotFoundError, version
 
-        # map force field name to its package name
-        model_to_pkg_map = {
-            MLFF.M3GNet: "matgl",
-            MLFF.CHGNet: "chgnet",
-            MLFF.MACE: "mace-torch",
-            MLFF.MACE_MP_0: "mace-torch",
-            MLFF.MACE_MPA_0: "mace-torch",
-            MLFF.MACE_MP_0B3: "mace-torch",
-            MLFF.GAP: "quippy-ase",
-            MLFF.Nequip: "nequip",
-            MLFF.DeepMD: "deepmd-kit",
-            MLFF.MATPES_PBE: "matgl",
-            MLFF.MATPES_R2SCAN: "matgl",
-        }
+            try:
+                ff_kwargs["forcefield_version"] = version(pkg_name)
+            except PackageNotFoundError:
+                # In cases where the package name (`mace_torch`) is not the same
+                # as the import string
+                from importlib import import_module
 
-        if pkg_name := {str(k): v for k, v in model_to_pkg_map.items()}.get(
-            ff_kwargs["forcefield_name"]
-        ):
-            import importlib.metadata
-
-            ff_kwargs["forcefield_version"] = importlib.metadata.version(pkg_name)
+                ff_kwargs["forcefield_version"] = getattr(
+                    import_module(pkg_name), "__version__", None
+                )
 
         return (
             ForceFieldMoleculeTaskDocument
             if isinstance(result.final_mol_or_struct, Molecule)
             else cls
         ).from_ase_task_doc(ase_task_doc, **ff_kwargs)
+
+
+def _get_pkg_name(calculator_meta: MLFF | dict) -> str | None:
+    """Get the package name for a given force field."""
+    if isinstance(calculator_meta, MLFF):
+        # map force field name to its package name
+        ff_pkg = None
+        match calculator_meta:
+            case MLFF.M3GNet | MLFF.CHGNet | MLFF.MATPES_PBE | MLFF.MATPES_R2SCAN:
+                ff_pkg = "matgl"
+            case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
+                ff_pkg = "mace-torch"
+            case MLFF.GAP:
+                ff_pkg = "quippy-ase"
+            case MLFF.Nequip:
+                ff_pkg = "nequip"
+            case MLFF.DeepMD:
+                ff_pkg = "deepmd-kit"
+        return ff_pkg
+    if isinstance(calculator_meta, dict):
+        calc_cls = _load_calc_cls(calculator_meta)
+        return calc_cls.__module__.split(".", 1)[0]
+    assert_never(calculator_meta)

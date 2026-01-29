@@ -345,7 +345,7 @@ class CondensedBondingAnalysis(BaseModel):
             "orbital_resolved": False,
             "start": None,
             "summed_spins": False,  # we will always use spin polarization here
-            "type_charge": None,
+            "type_charge": "Mulliken",
             **lobsterpy_kwargs,
         }
 
