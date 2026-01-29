@@ -13,6 +13,7 @@ from numpy.testing import assert_allclose
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
+from atomate2.ase.schemas import convert_stress_from_voigt_to_symm
 from atomate2.ase.utils import AseRelaxer, TrajectoryObserver
 
 
@@ -51,10 +52,12 @@ def test_trajectory_observer(si_structure: Structure, test_dir, tmp_dir):
 
 
 @pytest.mark.parametrize(
-    ("optimizer", "traj_file"),
-    [("BFGS", None), (None, None), (BFGS, "log_file.traj")],
+    ("optimizer", "traj_file", "use_emmet_models"),
+    [("BFGS", None, True), (None, None, False), (BFGS, "log_file.traj", False)],
 )
-def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
+def test_relaxer(
+    si_structure, test_dir, tmp_dir, optimizer, traj_file, use_emmet_models
+):
     expected_lattice = {
         "a": 3.866974,
         "b": 3.866974,
@@ -80,10 +83,15 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
             AseRelaxer(calculator=LennardJones(), optimizer=optimizer)
         return
 
-    relaxer = AseRelaxer(calculator=LennardJones(), optimizer=optimizer)
+    relaxer = AseRelaxer(
+        calculator=LennardJones(),
+        optimizer=optimizer,
+    )
 
     try:
-        relax_output = relaxer.relax(atoms=si_structure, traj_file=traj_file)
+        relax_output = relaxer.relax(
+            atoms=si_structure, traj_file=traj_file, use_emmet_models=use_emmet_models
+        )
     except TypeError:
         return
 
@@ -92,19 +100,29 @@ def test_relaxer(si_structure, test_dir, tmp_dir, optimizer, traj_file):
         for key in expected_lattice
     } == pytest.approx(expected_lattice)
 
-    assert relax_output.trajectory.frame_properties[-1]["energy"] == pytest.approx(
-        expected_energy
-    )
+    if use_emmet_models:
+        final_frame_attrs = {
+            k: getattr(relax_output.trajectory, k)[-1]
+            for k in ("energy", "forces", "stress")
+        }
+    else:
+        final_frame_attrs = {
+            k: relax_output.trajectory.frame_properties[-1].get(k)
+            for k in ("energy", "forces", "stress")
+        }
+    assert final_frame_attrs["energy"] == pytest.approx(expected_energy)
 
     assert_allclose(
-        relax_output["trajectory"].frame_properties[-1]["forces"],
+        final_frame_attrs["forces"],
         expected_forces,
         atol=1e-11,
     )
 
     assert_allclose(
-        relax_output["trajectory"].frame_properties[-1]["stress"],
-        expected_stresses,
+        final_frame_attrs["stress"],
+        convert_stress_from_voigt_to_symm(expected_stresses)
+        if use_emmet_models
+        else expected_stresses,
         atol=1e-11,
     )
 

@@ -358,7 +358,6 @@ def test_phonon_wf_vasp_only_displacements_add_inputs(
     responses = run_locally(job, create_folders=True, ensure_success=True)
 
     # validate the outputs
-    # print(type(responses))
     assert isinstance(responses[job.jobs[-1].uuid][1].output, PhononBSDOSDoc)
 
     assert_allclose(

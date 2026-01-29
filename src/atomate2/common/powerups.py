@@ -5,30 +5,43 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from jobflow import Flow, Maker
+    from jobflow.core.flow import Flow
+    from jobflow.core.maker import Maker
 
 
 def add_metadata_to_flow(
-    flow: Flow, additional_fields: dict, class_filter: Maker
+    flow: Flow, additional_fields: dict, class_filter: type[Maker]
 ) -> Flow:
     """
-    Return the flow with additional field(metadata) to the task doc.
+    Add additional metadata fields to task documents in a flow.
 
-    This allows adding metadata to the task-docs, could be useful
-    to query results from DB.
+    This function updates the task document kwargs for jobs in the flow,
+    allowing metadata to be added for easier querying of results from a database.
+
+    This function does not add metadata to the job themselves, only to the output
+    generated upon job completion.
 
     Parameters
     ----------
-    flow:
+    flow : Flow
+        The jobflow Flow object to modify.
     additional_fields : dict
-        A dict with metadata.
-    class_filter: .Maker
-        The Maker to which additional metadata needs to be added
+        Dictionary containing metadata fields and their values to add to task documents.
+    class_filter : type[Maker]
+        The Maker class type to which additional metadata should be added.
+        Only jobs created by this Maker type will be modified.
 
     Returns
     -------
     Flow
-        Flow with added metadata to the task-doc.
+        The modified flow with added metadata in the task documents.
+
+    Examples
+    --------
+    >>> from atomate2.vasp.flows.core import RelaxBandStructureMaker
+    >>> flow = RelaxBandStructureMaker().make(structure)
+    >>> metadata = {"project": "battery_materials", "version": "2.0"}
+    >>> flow = add_metadata_to_flow(flow, metadata, RelaxBandStructureMaker)
     """
     flow.update_maker_kwargs(
         {
@@ -45,28 +58,40 @@ def add_metadata_to_flow(
 
 
 def update_custodian_handlers(
-    flow: Flow, custom_handlers: tuple, class_filter: Maker
+    flow: Flow, custom_handlers: tuple, class_filter: type[Maker]
 ) -> Flow:
     """
-    Return the flow with custom custodian handlers for VASP jobs.
+    Update custodian error handlers for VASP jobs in a flow.
 
-    This allows user to selectively set error correcting handlers for VASP jobs
-    or completely unset error handlers.
+    This function allows selective configuration of error-correcting handlers
+    for VASP jobs or complete removal of error handlers.
 
     Parameters
     ----------
-    flow:
+    flow : Flow
+        The jobflow Flow object to modify.
     custom_handlers : tuple
-        A tuple with custodian handlers.
-    class_filter: .Maker
-        The Maker to which custom custodian handler needs to be added
+        Tuple of custodian handler objects to use for error correction.
+        Pass an empty tuple to disable all error handlers.
+    class_filter : type[Maker]
+        The Maker class type to which custom custodian handlers should be applied.
+        Only jobs created by this Maker type will be modified.
 
     Returns
     -------
     Flow
-        Flow with modified custodian handlers.
+        The modified flow with updated custodian handlers.
+
+    Examples
+    --------
+    >>> from custodian.vasp.handlers import VaspErrorHandler, MeshSymmetryErrorHandler
+    >>> from atomate2.vasp.flows.core import RelaxBandStructureMaker
+    >>> flow = RelaxBandStructureMaker().make(structure)
+    >>> handlers = (VaspErrorHandler(), MeshSymmetryErrorHandler())
+    >>> flow = update_custodian_handlers(flow, handlers, RelaxBandStructureMaker)
     """
     code = class_filter.name.split(" ")[1]
+
     flow.update_maker_kwargs(
         {"_set": {f"run_{code}_kwargs->handlers": custom_handlers}},
         dict_mod=True,

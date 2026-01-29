@@ -15,7 +15,7 @@ from custodian.vasp.handlers import (
     StdErrHandler,
     VaspErrorHandler,
 )
-from emmet.core.vasp.calculation import StoreTrajectoryOption
+from emmet.core.types.enums import StoreTrajectoryOption
 from jobflow import Response, job
 
 from atomate2.vasp.jobs.base import BaseVaspMaker

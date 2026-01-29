@@ -13,7 +13,7 @@ from abipy.electrons.gsr import GsrFile
 from abipy.flowtk import events
 from abipy.flowtk.utils import File
 from emmet.core.math import Matrix3D, Vector3D
-from jobflow.utils import ValueEnum
+from emmet.core.types.enums import ValueEnum
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from typing_extensions import Self
@@ -374,7 +374,7 @@ class Calculation(BaseModel):
             if report.run_completed:
                 has_abinit_completed = TaskState.SUCCESS
 
-        except (ValueError, RuntimeError, Exception) as exc:
+        except (ValueError, RuntimeError, Exception) as exc:  # noqa: BLE001
             msg = f"{cls} exception while parsing event_report:\n{exc}"
             logger.critical(msg)
 

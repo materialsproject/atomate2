@@ -144,7 +144,7 @@ class AnaddbMaker(Maker):
             prev_outputs=prev_outputs,
             restart_from=None,
             history=history,
-            wall_time=self.wall_time,
+            wall_time=None,
         )
 
         # Write anaddb input set

@@ -38,7 +38,7 @@ def zpath(path: str | Path) -> Path:
 
 def monkeypatch_aims(
     monkeypatch: MonkeyPatch, ref_path: Path
-) -> Generator[Callable[[Any, Any], Any], None, None]:
+) -> Generator[Callable[[Any, Any], Any]]:
     """Allow one to mock (fake) running FHI-aims.
 
     To use the fixture successfully, the following steps must be followed:

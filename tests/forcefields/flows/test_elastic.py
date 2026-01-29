@@ -42,3 +42,15 @@ def test_elastic_wf_with_mace(
         0.002005039, abs=0.01
     )
     assert elastic_output.chemsys == "Si"
+
+
+def test_ext_load_elastic_initialization():
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+    maker = ElasticMaker.from_force_field_name(
+        force_field_name=calculator_meta,
+    )
+    assert maker.bulk_relax_maker.ase_calculator_name == "mace_mp"
+    assert maker.elastic_relax_maker.ase_calculator_name == "mace_mp"

@@ -1,10 +1,10 @@
 import numpy as np
 import pytest
-from emmet.core.openmm import OpenMMInterchange
 from jobflow import Flow
 from openmm import XmlSerializer
 
 from atomate2.openff.utils import create_mol_spec
+from atomate2.openmm.interchange import OpenMMInterchange
 from atomate2.openmm.jobs import EnergyMinimizationMaker
 from atomate2.openmm.jobs.base import BaseOpenMMMaker
 from atomate2.openmm.jobs.generate import (

@@ -3,7 +3,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 from emmet.core.structure import MoleculeMetadata
 from monty.dev import requires
@@ -34,26 +34,26 @@ class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
     For the list of supported packages, see https://cclib.github.io
     """
 
-    molecule: Optional[Molecule] = Field(
+    molecule: Molecule | None = Field(
         None, description="Final output molecule from the task"
     )
-    energy: Optional[float] = Field(None, description="Final total energy")
-    dir_name: Optional[str] = Field(
+    energy: float | None = Field(None, description="Final total energy")
+    dir_name: str | None = Field(
         None, description="Directory where the output is parsed"
     )
-    logfile: Optional[str] = Field(
+    logfile: str | None = Field(
         None, description="Path to the log file used in the post-processing analysis"
     )
-    attributes: Optional[dict] = Field(
+    attributes: dict | None = Field(
         None, description="Computed properties and calculation outputs"
     )
-    metadata: Optional[dict] = Field(
+    metadata: dict | None = Field(
         None,
         description="Calculation metadata, including input parameters and runtime "
         "statistics",
     )
-    task_label: Optional[str] = Field(None, description="A description of the task")
-    tags: Optional[list[str]] = Field(
+    task_label: str | None = Field(None, description="A description of the task")
+    tags: list[str] | None = Field(
         None, description="Optional tags for this task document"
     )
     last_updated: str = Field(
@@ -71,9 +71,9 @@ class TaskDocument(MoleculeMetadata, extra="allow"):  # type: ignore[call-arg]
         dir_name: Union[str, Path],
         logfile_extensions: Union[str, list[str]],
         store_trajectory: bool = False,
-        additional_fields: Optional[dict[str, Any]] = None,
-        analysis: Optional[Union[str, list[str]]] = None,
-        proatom_dir: Optional[Union[Path, str]] = None,
+        additional_fields: dict[str, Any] | None = None,
+        analysis: Union[str, list[str]] | None = None,
+        proatom_dir: Union[Path, str] | None = None,
     ) -> Self:
         """Create a TaskDocument from a log file.
 
@@ -259,7 +259,7 @@ def cclib_calculate(
     method: str,
     cube_file: Union[Path, str],
     proatom_dir: Union[Path, str],
-) -> Optional[dict[str, Any]]:
+) -> dict[str, Any] | None:
     """
     Run a cclib population analysis.
 
@@ -353,7 +353,7 @@ def cclib_calculate(
 
 def _get_homos_lumos(
     mo_energies: list[list[float]], homo_indices: list[int]
-) -> tuple[list[float], Optional[list[float]], Optional[list[float]]]:
+) -> tuple[list[float], list[float] | None, list[float] | None]:
     """
     Calculate the HOMO, LUMO, and HOMO-LUMO gap energies in eV.
 
