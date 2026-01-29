@@ -60,7 +60,10 @@ def test_npt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
 
     mock_lammps(ref_paths, fake_run_lammps_kwargs=fake_run_lammps_kwargs)
 
-    maker = LammpsNPTMaker(force_field=test_si_force_field)
+    maker = LammpsNPTMaker(
+        force_field=test_si_force_field,
+        task_document_kwargs={"store_trajectory": StoreTrajectoryOption.PARTIAL},
+    )
     maker.name = "npt_test"
     job = maker.make(si_structure.make_supercell([5, 5, 5]))
 
@@ -83,7 +86,10 @@ def test_minimization_maker(si_structure, tmp_path, test_si_force_field, mock_la
 
     mock_lammps(ref_paths, fake_run_lammps_kwargs=fake_run_lammps_kwargs)
 
-    maker = MinimizationMaker(force_field=test_si_force_field)
+    maker = MinimizationMaker(
+        force_field=test_si_force_field,
+        task_document_kwargs={"store_trajectory": StoreTrajectoryOption.PARTIAL},
+    )
     maker.input_set_generator.update_settings({"nsteps": 1000})
     maker.name = "min_test"
     supercell = si_structure.make_supercell([5, 5, 5])
