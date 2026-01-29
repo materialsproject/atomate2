@@ -421,7 +421,7 @@ def generate_perts(
                         prev_outputs=scf_output,
                         qpt=q,
                     )
-                    wfq_job.append_name(f" - {wfq_j}")
+                    wfq_job.append_name(f" - {wfq_j}", dynamic=False)
                     wfq_jobs.append(wfq_job)
                     outputs["dirs"]["wfq"][qpt_i] = [wfq_job.output.dir_name]
 
