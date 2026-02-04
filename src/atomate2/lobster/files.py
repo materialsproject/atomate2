@@ -12,41 +12,45 @@ from atomate2.utils.path import strip_hostname
 if TYPE_CHECKING:
     from pathlib import Path
 
-LOBSTEROUTPUT_FILES = [
+LOBSTEROUT_5_FILES: list[str] = [
     "BWDF.lobster",
     "BWDFCOHP.lobster",
-    "CHARGE.lobster",
     "CHARGE.LCFO.lobster",
-    "COBICAR.lobster",
     "COBICAR.LCFO.lobster",
-    "COHPCAR.lobster",
     "COHPCAR.LCFO.lobster",
-    "COOPCAR.lobster",
-    "DOSCAR.lobster",
     "DOSCAR.LCFO.lobster",
-    "DOSCAR.LSO.lobster",
-    "GROSSPOP.lobster",
     "GROSSPOP.LCFO.lobster",
-    "ICOBILIST.lobster",
     "ICOBILIST.LCFO.lobster",
-    "ICOHPLIST.lobster",
     "ICOHPLIST.LCFO.lobster",
-    "ICOOPLIST.lobster",
     "IMOFELIST.lobster",
     "LCFO_Fragments.lobster",
-    "lobsterout",
-    "lobster.out",
-    "projectionData.lobster",
     "POLARIZATION.lobster",
     "POSCAR.lobster",
     "POSCAR.lobster.vasp",
-    "MadelungEnergies.lobster",
     "MOFECAR.lobster",
-    "SitePotentials.lobster",
-    "bandOverlaps.lobster",
 ]
 
-VASP_OUTPUT_FILES = [
+LOBSTEROUTPUT_FILES: list[str] = [
+    "CHARGE.lobster",
+    "COBICAR.lobster",
+    "COHPCAR.lobster",
+    "COOPCAR.lobster",
+    "DOSCAR.lobster",
+    "DOSCAR.LSO.lobster",
+    "GROSSPOP.lobster",
+    "ICOBILIST.lobster",
+    "ICOHPLIST.lobster",
+    "ICOOPLIST.lobster",
+    "lobsterout",
+    "lobster.out",
+    "projectionData.lobster",
+    "MadelungEnergies.lobster",
+    "SitePotentials.lobster",
+    "bandOverlaps.lobster",
+    *LOBSTEROUT_5_FILES,
+]
+
+VASP_OUTPUT_FILES: list[str] = [
     "OUTCAR",
     "vasprun.xml",
     "CHG",

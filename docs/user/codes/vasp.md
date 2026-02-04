@@ -708,11 +708,13 @@ gamma_only_static_maker = StaticMaker(input_set_generator=custom_gamma_only_set)
 For those who are more familiar with manual *k*-point generation, you can use a VASP-style KPOINTS file or string to set the *k*-points as well:
 
 ```py
-kpoints = Kpoints.from_str("""Uniform density Monkhorst-Pack mesh
+kpoints = Kpoints.from_str(
+    """Uniform density Monkhorst-Pack mesh
 0
 Monkhorst-pack
 5 5 5
-""")
+"""
+)
 custom_static_set = StaticSetGenerator(user_kpoints_settings=kpoints)
 ```
 

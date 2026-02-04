@@ -28,7 +28,7 @@ dependencies = [
     "PyYAML",
     "click",
     "custodian>=2024.4.18",
-    "emmet-core>=0.86.1",
+    "emmet-core>=0.86.1,<0.86.3",
     "jobflow>=0.1.11",
     "monty>=2024.12.10",
     "numpy",
