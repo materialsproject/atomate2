@@ -45,7 +45,7 @@ def test_maker_initialization():
 _mlffs_for_test = set(MLFF).difference(
     map(MLFF, ("Forcefield", "MatterSim", "Allegro", "OCP", "M3GNet", "MACE"))
 )
-_md_test_params = sorted(product(_mlffs_for_test, [True, False]), key=lambda x: str(x))
+_md_test_params = sorted(product(_mlffs_for_test, [True, False]), key=str)
 
 
 @pytest.mark.parametrize("ff_name, use_emmet_models", _md_test_params)
