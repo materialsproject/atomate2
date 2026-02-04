@@ -156,9 +156,7 @@ class DynamicOpenMMFlowMaker(Maker):
 
     name: str = field(default=None)
     tags: list[str] = field(default_factory=list)
-    maker: BaseOpenMMMaker | OpenMMFlowMaker = field(
-        default_factory=lambda: BaseOpenMMMaker()
-    )
+    maker: BaseOpenMMMaker | OpenMMFlowMaker = field(default_factory=BaseOpenMMMaker)
     max_stages: int = field(default=5)
     collect_outputs: bool = True
     should_continue: ShouldContinueProtocol = field(
