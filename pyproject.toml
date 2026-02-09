@@ -29,7 +29,7 @@ dependencies = [
     "click",
     "custodian>=2024.4.18",
     "emmet-core>=0.86.1",
-    "jobflow>=0.1.11,<0.3.0",
+    "jobflow>=0.1.11",
     "monty>=2024.12.10",
     "numpy",
     "pydantic-settings>=2.0.3",
