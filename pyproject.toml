@@ -90,7 +90,7 @@ strict-forcefields = [
     "mace-torch==0.3.14",
     "matgl==2.0.6",
     "dgl<=2.4.0",
-    "quippy-ase==0.10.1",
+    "quippy-ase==0.10.2",
     "sevenn==0.10.4",
     "torch==2.2.0",
     "torchdata==0.7.1",                            # TODO: remove when issue fixed
