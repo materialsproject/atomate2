@@ -128,7 +128,7 @@ docs = [
     "furo==2025.12.19",
     "ipython==9.9.0",
     "jsonschema[format]",
-    "myst_parser==4.0.1",
+    "myst_parser==5.0.0",
     "numpydoc==1.10.0",
     "sphinx-copybutton==0.5.2",
     "sphinx==8.2.3",
