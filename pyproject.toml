@@ -126,7 +126,7 @@ docs = [
     "fireworks==2.0.8",
     "autodoc_pydantic==2.2.0",
     "furo==2025.12.19",
-    "ipython==9.9.0",
+    "ipython==9.10.0",
     "jsonschema[format]",
     "myst_parser==5.0.0",
     "numpydoc==1.10.0",
