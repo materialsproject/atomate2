@@ -121,7 +121,7 @@ strict-forcefields-e3nn-limited = [
 
 strict = [
     "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
-    "numpy<3.0"
+    "numpy<2.0"
 ]
 
 [project.scripts]
