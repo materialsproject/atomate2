@@ -100,6 +100,7 @@ strict-forcefields-torch-limited = [
 ]
 strict-forcefields-e3nn-limited = [
     "mace-torch==0.3.14",
+    "torch-dftd==0.5.2",
 ]
 strict = [
     "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
