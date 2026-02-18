@@ -8,7 +8,12 @@ from pymatgen.io.vasp.outputs import Xdatcar
 
 from atomate2.forcefields.neb import ForceFieldNebFromImagesMaker
 
+from .conftest import mlff_is_installed
 
+
+@pytest.mark.skipif(
+    not mlff_is_installed("MATPES_PBE"), reason="matgl is not installed"
+)
 def test_neb_from_images(test_dir, clean_dir):
     endpoints = [
         Structure.from_file(
@@ -84,6 +89,9 @@ def test_neb_from_images(test_dir, clean_dir):
     )
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MACE"), reason="mace_torch is not installed."
+)
 def test_ext_load_neb_initialization():
     calculator_meta = {
         "@module": "mace.calculators",
