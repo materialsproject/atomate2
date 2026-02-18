@@ -108,7 +108,10 @@ def test_ml_ff_md_maker(
         unit_cell_structure = al2_au_structure.copy()
     elif ff_name == MLFF.Nequip:
         calculator_kwargs = {
-            "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+            "compile_path": test_dir
+            / "forcefields"
+            / "nequip"
+            / "nequip_ff_sr_ti_o3.nequip.pth"
         }
         unit_cell_structure = sr_ti_o3_structure.copy()
     elif ff_name == MLFF.DeepMD:

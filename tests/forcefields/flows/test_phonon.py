@@ -59,7 +59,9 @@ def test_phonon_maker_initialization_with_all_mlff(
     chk_pt_dir = test_dir / "forcefields"
 
     calc_kwargs = {
-        MLFF.Nequip: {"model_path": f"{chk_pt_dir}/nequip/nequip_ff_sr_ti_o3.pth"},
+        MLFF.Nequip: {
+            "compile_path": f"{chk_pt_dir}/nequip/nequip_ff_sr_ti_o3.nequip.pth"
+        },
         MLFF.NEP: {"model_filename": f"{test_dir}/forcefields/nep/nep.txt"},
         MLFF.DeepMD: {"model": get_deepmd_pretrained_model_path},
     }.get(mlff, {})

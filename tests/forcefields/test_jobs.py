@@ -517,7 +517,10 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
         force_field_name="Nequip",
         ionic_step_data=("structure", "energy"),
         calculator_kwargs={
-            "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+            "compile_path": test_dir
+            / "forcefields"
+            / "nequip"
+            / "nequip_ff_sr_ti_o3.nequip.pth"
         },
     ).make(sr_ti_o3_structure)
 
@@ -553,7 +556,10 @@ def test_nequip_relax_maker(
         relax_cell=relax_cell,
         fix_symmetry=fix_symmetry,
         calculator_kwargs={
-            "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+            "compile_path": test_dir
+            / "forcefields"
+            / "nequip"
+            / "nequip_ff_sr_ti_o3.nequip.pth"
         },
     ).make(sr_ti_o3_structure)
 
