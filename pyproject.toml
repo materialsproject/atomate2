@@ -107,9 +107,11 @@ strict-forcefields-torch-limited = [
     # That enforces a simultaneous pin on torch / torchdata
     # Linux users can acces newer versions of dgl / torch / torchdata via conda.
     # Mac / Windows users will need to install from source
-    "dgl==2.2.0",
+    "dgl==2.2.0; sys_platform == 'darwin' or sys_platform == 'win32'",
+    "dgl<=2.4.0; sys_platform == 'linux'",
+    "torch==2.2.2; sys_platform == 'darwin' or sys_platform == 'win32'",
+    "torch==2.2.0; sys_platform == 'linux'",
     "torchdata==0.7.1",
-    "torch==2.2.2",
     "numpy==1.26.4",
 ]
 strict-forcefields-e3nn-limited = [
