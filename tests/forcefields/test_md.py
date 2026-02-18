@@ -45,7 +45,7 @@ def test_maker_initialization(mlff):
 
 
 _mlffs_for_test = set(INSTALLED_MLFF).difference(
-    map(MLFF, ("Forcefield", "MatterSim", "Allegro", "M3GNet", "MACE"))
+    map(MLFF, ("Forcefield", "Allegro", "M3GNet", "MACE"))
 )
 _md_test_params = sorted(product(_mlffs_for_test, [True, False]), key=str)
 
@@ -82,7 +82,7 @@ def test_ml_ff_md_maker(
         MLFF.MATPES_PBE: -5.230762481689453,
         MLFF.MATPES_R2SCAN: -8.561729431152344,
         MLFF.FAIRChem: -5.4,
-        # MLFF.MatterSim: 1e20,
+        MLFF.MatterSim: -5.4,
     }
 
     # ASE can slightly change tolerances on structure positions
