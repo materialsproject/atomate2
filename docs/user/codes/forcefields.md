@@ -33,6 +33,8 @@ Support is provided for the following models, which can be selected using `atoma
 | Neuroevolution Potential (NEP) | `NEP` | [10.1103/PhysRevB.104.104309](https://doi.org/10.1103/PhysRevB.104.104309) | Relies on `calorine` package |
 | Neural Equivariant Interatomic Potentials (Nequip) | `Nequip` | [10.1038/s41467-022-29939-5](https://doi.org/10.1038/s41467-022-29939-5) | Relies on the `nequip` package |
 | SevenNet | `SevenNet` | [10.1021/acs.jctc.4c00190](https://doi.org/10.1021/acs.jctc.4c00190) | Relies on the `sevenn` package |
+| FAIRChem | `FAIRChem` | [Meta's FAIRChem Github](https://github.com/facebookresearch/fairchem) | Proprietary, requires extra authentication. See notes below. |
+| MatterSim | `MatterSim` | [arXiv:2405.04967](https://arxiv.org/abs/2405.04967) | |
 
 ## Using custom forcefields by dictionary
 
@@ -48,3 +50,33 @@ job = ForceFieldStaticMaker(
 ```
 
 [^calculator-meta-type-annotation]: In this context, the type annotation of the decoded dict should be either `Type[Calculator]` or `Callable[..., Calculator]`, where `Calculator` is from `ase.calculators.calculator`.
+
+## Notes on FairChem (Meta) models
+
+The FAIRChem models provided by Meta require extra authentication via HuggingFace:
+1. Request access to the UMA models [via HuggingFace](https://huggingface.co/facebook/UMA). You will need to set up a HuggingFace account. You will need to receive approval for the UMA models to proceed.
+2. Install the HuggingFace CLI with `pip install 'huggingface_hub'`.
+3. Run `huggingface-cli login` from a shell to authenticate your session. You will need to set up an access token.
+4. You can now use the FAIRChem calculators. The general syntax for setting up a FAIRChem calculator in `atomate2` is:
+```py
+calculator_kwargs = {
+    "predict_unit": {"model_name": "uma-s-1p1"},
+    "task_name": "omat",
+}
+```
+
+`atomate2` will then set up a `FAIRChemCalculator`:
+```py
+from atomate2.forcefields.utils import MLFF, _DEFAULT_CALCULATOR_KWARGS
+from fairchem.core import FAIRChemCalculator, pretrained_mlip
+
+predict_unit_kwargs = calculator_kwargs.pop(
+    "predict_unit", _DEFAULT_CALCULATOR_KWARGS[MLFF.FAIRChem]["predict_unit"]
+)
+calculator = FAIRChemCalculator(
+    pretrained_mlip.get_predict_unit(predict_unit_kwargs),
+    **{k: v for k, v in calculator_kwargs.items() if k != "predict_unit"},
+)
+```
+
+The default in `atomate2` is the OMat24 model with `uma-s-1p1`.

@@ -37,7 +37,7 @@ skip_mlff = set(
             "MATPES_R2SCAN",
             "MATPES_PBE",
             "Allegro",
-            "OCP",
+            "FAIRChem",
             "MatterSim",
         ],
     )

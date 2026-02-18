@@ -112,11 +112,16 @@ strict-forcefields-torch-limited = [
     "torch==2.2.2; sys_platform == 'darwin' or sys_platform == 'win32'",
     "torch==2.2.0; sys_platform == 'linux'",
     "torchdata==0.7.1",
+    "nequip==0.16.2", # requires numpy<2 because of matscipy
     "numpy==1.26.4",
 ]
 strict-forcefields-e3nn-limited = [
     "mace-torch==0.3.14",
     "torch-dftd==0.5.2",
+]
+strict-forcefields-numpy-limited = [
+    "nequip-allegro==0.8.1",
+    "numpy==1.26.4",
 ]
 
 strict = [

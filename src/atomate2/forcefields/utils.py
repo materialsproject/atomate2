@@ -43,7 +43,7 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     MATPES_PBE = "MatPES-PBE"
     DeepMD = "DeepMD"
     Allegro = "Allegro"
-    OCP = "OCP"  # for loading model checkpoint with fairchem.core.OCPCalculator
+    FAIRChem = "FAIRChem"
     MatterSim = "MatterSim"
 
     @classmethod
@@ -57,7 +57,7 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
         return None
 
 
-_DEFAULT_CALCULATOR_KWARGS = {
+_DEFAULT_CALCULATOR_KWARGS: dict[MLFF, Any] = {
     MLFF.CHGNet: {"stress_unit": "eV/A3"},
     MLFF.M3GNet: {"stress_unit": "eV/A3"},
     MLFF.NEP: {"model_filename": "nep.txt"},
@@ -75,6 +75,10 @@ _DEFAULT_CALCULATOR_KWARGS = {
         "architecture": "TensorNet",
         "version": "2025.1",
         "stress_unit": "eV/A3",
+    },
+    MLFF.FAIRChem: {
+        "predict_unit": {"model_name": "uma-s-1p1"},
+        "task_name": "omat",
     },
 }
 
@@ -336,7 +340,7 @@ def ase_calculator(
 
                 calculator = CPUNEP(**kwargs)
 
-            case MLFF.Nequip:
+            case MLFF.Nequip | MLFF.Allegro:
                 from nequip.ase import NequIPCalculator
 
                 calculator = getattr(
@@ -356,17 +360,17 @@ def ase_calculator(
 
                 calculator = DP(**kwargs)
 
-            case MLFF.Allegro:
-                from allegro.ase import AllegroCalculator
+            case MLFF.FAIRChem:
+                from fairchem.core import FAIRChemCalculator, pretrained_mlip
 
-                calculator = AllegroCalculator.from_deployed_model(**kwargs)
-
-            case MLFF.OCP:
-                # Not available on PyPI, needs to be installed from source
-                # see https://github.com/FAIR-Chem/fairchem?tab=readme-ov-file#installation
-                from fairchem.core import OCPCalculator
-
-                calculator = OCPCalculator(**kwargs)
+                predict_unit_kwargs = kwargs.pop(
+                    "predict_unit",
+                    _DEFAULT_CALCULATOR_KWARGS[MLFF.FAIRChem]["predict_unit"],
+                )
+                calculator = FAIRChemCalculator(
+                    pretrained_mlip.get_predict_unit(**predict_unit_kwargs),
+                    **{k: v for k, v in kwargs.items() if k != "predict_unit"},
+                )
 
             case MLFF.MatterSim:
                 from mattersim.forcefield import MatterSimCalculator
