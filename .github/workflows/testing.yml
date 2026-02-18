@@ -389,7 +389,7 @@ jobs:
         run: sphinx-build docs docs_build
 
   automerge:
-    needs: [docs, lint, test-force-field-notebook, test-non-ase, test-notebooks-and-ase, test-openff, test-torchsim]
+    needs: [docs, lint, test-forcefields, test-non-ase, test-notebooks-and-ase, test-openff, test-torchsim]
     runs-on: ubuntu-latest
 
     permissions:
