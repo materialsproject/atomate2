@@ -82,7 +82,7 @@ def test_m3gnet_pot():
     assert m3gnet_pes_calc.stress_weight == m3gnet_default.stress_weight
 
 
-@pytest.mark.skipif(not mlff_is_installed["MACE"], reason="mace_torch is not installed")
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
 def test_mace_explicit_dispersion(ba_ti_o3_structure: Structure):
     from ase.calculators.mixing import SumCalculator
     from mace.calculators.foundations_models import download_mace_mp_checkpoint

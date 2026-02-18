@@ -706,18 +706,10 @@ gamma_only_static_maker = StaticMaker(input_set_generator=custom_gamma_only_set)
 ```
 
 For those who are more familiar with manual *k*-point generation, you can use a VASP-style KPOINTS file or string to set the *k*-points as well:
-# fmt: off
 ```py
-kpoints = Kpoints.from_str(
-    """Uniform density Monkhorst-Pack mesh
-0
-Monkhorst-pack
-5 5 5
-"""
-)
+kpoints = Kpoints.from_str("Regular mesh\n0\nMonkhorst-pack\n5 5 5")
 custom_static_set = StaticSetGenerator(user_kpoints_settings=kpoints)
 ```
-# fmt: on
 
 Finally, sometimes you have a workflow containing many VASP jobs. In this case it can be
 tedious to update the input sets for each job individually. Atomate2 provides helper
