@@ -79,14 +79,9 @@ jobs:
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
 
-        # regenerate durations file with `pytest --store-durations --durations-path tests/.pytest-split-durations`
-        # Note the use of `--splitting-algorithm least_duration`.
-        # This helps prevent a test split having no tests to run, and then the GH action failing, see:
-        # https://github.com/jerry-git/pytest-split/issues/95
-        # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
         run: |
           micromamba activate a2
-          pytest -n auto --durations-path tests/forcefields --cov=atomate2 --cov-report=xml
+          pytest -n auto --cov=atomate2 --cov-report=xml tests/forcefields
 
       - name: Forcefield tutorial
         if: matrix.dep-group == 'torch-limited'
