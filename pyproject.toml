@@ -84,27 +84,42 @@ strict-openff = [
     "openmm==8.4.0.post2",
     "pymatgen==2025.10.7", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
+
+# Forcefields have separate strict groupings because of conflicting dependencies.
+# The labels below should not be taken as fixed in time.
+# They are meant to be instructive as to why certain forcefields are grouped together.
+# Ex: `strict-forcefields-torch-limited` might indicate that these require a lower version of `pytorch`
+# Whereas `strict-forcefields-generic` might indicate that no dependency conflicts are known for the group
+
+# ALWAYS REMEMBER to update `.github/workflows/testing.yml` to reflect the current set of
+# forcefield dependency groups.
 strict-forcefields-generic = [
     "calorine==3.3; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
     "quippy-ase==0.10.1",
-    "sevenn==0.10.4",
+    "sevenn==0.12.0",
     "deepmd-kit==3.1.2",
     "tensorflow-cpu==2.20.0",
 ]
 strict-forcefields-torch-limited = [
     "matgl==2.0.6",
-    "dgl<=2.4.0",
+    # Note that DGL stopped building new releases for Mac + Windows after 2.2.0.
+    # That enforces a simultaneous pin on torch / torchdata
+    # Linux users can acces newer versions of dgl / torch / torchdata via conda.
+    # Mac / Windows users will need to install from source
+    "dgl==2.2.0",
     "torchdata==0.7.1",
-    "torch==2.2.0",
+    "torch==2.2.2",
+    "numpy==1.26.4",
 ]
 strict-forcefields-e3nn-limited = [
     "mace-torch==0.3.14",
     "torch-dftd==0.5.2",
 ]
+
 strict = [
     "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
-    "numpy<2.0"
+    "numpy<3.0"
 ]
 
 [project.scripts]
