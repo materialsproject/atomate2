@@ -16,13 +16,15 @@ The `force_field_name` should be either one of predefined `atomate2.forcefields.
 
 ## Using predefined forcefields supported via `atomate2.forcefields.utils.MLFF`
 
-Support is provided for the following models, which can be selected using `atomate2.forcefields.utils.MLFF`, as shown in the table below.
+Support is provided for the following models, which can be selected using `atomate2.forcefields.utils.MLFF`, as shown in the table below (in alphabetical order):
 **You need only install packages for the forcefields you wish to use.**
 
 | Forcefield Name | `MLFF` | Reference | Description |
 | ---- | ---- | ---- | ---- |
+| Allegro | `Allegro` | [10.1038/s41467-023-36329-y](https://doi.org/10.1038/s41467-023-36329-y) | Requires the `nequip-allegro` package |
 | CHGNet | `CHGNet` | [10.1038/s42256-023-00716-3](https://doi.org/10.1038/s42256-023-00716-3) | Available via the `chgnet` and `matgl` packages |
-| DeepMD | `MLFF.DeepMD` | [10.1103/PhysRevB.108.L180104](https://doi.org/10.1103/PhysRevB.108.L180104) | The Deep Potential model used for this test is `UniPero`, a universal interatomic potential for perovskite oxides. It can be downloaded [here](https://github.com/sliutheorygroup/UniPero) |
+| DeepMD | `DeepMD` | [10.1103/PhysRevB.108.L180104](https://doi.org/10.1103/PhysRevB.108.L180104) | The Deep Potential model used for this test is `UniPero`, a universal interatomic potential for perovskite oxides. It can be downloaded [here](https://github.com/sliutheorygroup/UniPero) |
+| FAIRChem | `FAIRChem` | [Meta's FAIRChem Github](https://github.com/facebookresearch/fairchem) | Proprietary, requires extra authentication. See notes below. |
 | Gaussian Approximation Potential (GAP) | `GAP` | [10.1103/PhysRevLett.104.136403](https://doi.org/10.1103/PhysRevLett.104.136403) |  Relies on `quippy-ase` package |
 | M3GNet | `M3GNet` | [10.1038/s43588-022-00349-3](https://doi.org/10.1038/s43588-022-00349-3) | Relies on `matgl` package |
 | MACE-MP-0 | `MACE` or `MACE_MP_0` (recommended) | [10.1063/5.0297006](https://doi.org/10.1063/5.0297006) | Relies on `mace_torch` and optionally `torch_dftd` packages |
@@ -30,11 +32,10 @@ Support is provided for the following models, which can be selected using `atoma
 | MACE-MPA-0 | `MACE_MPA_0` | [10.1063/5.0297006](https://doi.org/10.1063/5.0297006) | Relies on `mace_torch` and optionally `torch_dftd` packages |
 | MatPES-PBE | `MATPES_PBE` | [10.48550/arXiv.2503.04070](https://doi.org/10.48550/arXiv.2503.04070) | Relies on `matgl`. Defaults to TensorNet architecture, but can also use M3GNet or CHGNet architectures via kwargs. See `atomate2.forcefields.utils._DEFAULT_CALCULATOR_KWARGS` for more options. |
 | MatPES-r<sup>2</sup>SCAN | `MATPES_R2SCAN`| [10.48550/arXiv.2503.04070](https://doi.org/10.48550/arXiv.2503.04070) | Relies on `matgl`. Defaults to TensorNet architecture, but can also use M3GNet or CHGNet architectures via kwargs. See `atomate2.forcefields.utils._DEFAULT_CALCULATOR_KWARGS` for more options. |
+| MatterSim | `MatterSim` | [arXiv:2405.04967](https://arxiv.org/abs/2405.04967) | Requires the `mattersim` package |
 | Neuroevolution Potential (NEP) | `NEP` | [10.1103/PhysRevB.104.104309](https://doi.org/10.1103/PhysRevB.104.104309) | Relies on `calorine` package |
 | Neural Equivariant Interatomic Potentials (Nequip) | `Nequip` | [10.1038/s41467-022-29939-5](https://doi.org/10.1038/s41467-022-29939-5) | Relies on the `nequip` package |
 | SevenNet | `SevenNet` | [10.1021/acs.jctc.4c00190](https://doi.org/10.1021/acs.jctc.4c00190) | Relies on the `sevenn` package |
-| FAIRChem | `FAIRChem` | [Meta's FAIRChem Github](https://github.com/facebookresearch/fairchem) | Proprietary, requires extra authentication. See notes below. |
-| MatterSim | `MatterSim` | [arXiv:2405.04967](https://arxiv.org/abs/2405.04967) | |
 
 ## Using custom forcefields by dictionary
 
@@ -51,7 +52,7 @@ job = ForceFieldStaticMaker(
 
 [^calculator-meta-type-annotation]: In this context, the type annotation of the decoded dict should be either `Type[Calculator]` or `Callable[..., Calculator]`, where `Calculator` is from `ase.calculators.calculator`.
 
-## Notes on FairChem (Meta) models
+## Notes on FairChem (Meta) models {#fairchem-notes}
 
 The FAIRChem models provided by Meta require extra authentication via HuggingFace:
 1. Request access to the UMA models [via HuggingFace](https://huggingface.co/facebook/UMA). You will need to set up a HuggingFace account. You will need to receive approval for the UMA models to proceed.

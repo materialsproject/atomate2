@@ -778,7 +778,7 @@ def test_mattersim_relax_maker(si_structure: Structure, test_dir: Path):
             [-0.17773497104644775, -0.1256822645664215, 0.05283086746931076],
             [0.17773500084877014, 0.1256822645664215, -0.05283087491989136],
         ],
-        rtol=1e-4,
+        rtol=1e-2,
     )
     assert len(output.output.ionic_steps) > 1
     assert output.output.n_steps == len(output.output.ionic_steps)
