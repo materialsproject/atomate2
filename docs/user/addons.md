@@ -8,7 +8,7 @@
 
 Matgenix has kindly created an [add-on template](https://github.com/Matgenix/atomate2-addon-template) for `atomate2`. You can use this template to add a submodule with new code features for `atomate2` without contributing back to the source code. This is a useful tool when developing a new set of workflows, or if your development work has access restrictions that might conflict with the open-source license of `atomate2`.
 
-Some add ons for `atomate2` are:
+Some add-ons for `atomate2` are:
 - [An extension to turbomole from Matgenix](https://github.com/Matgenix/atomate2-turbomole)
 - [An extension to LAMMPs from Matgenix](https://github.com/Matgenix/atomate2-lammps). This feature set is currently being migrated into the core features of `atomate2`.
 

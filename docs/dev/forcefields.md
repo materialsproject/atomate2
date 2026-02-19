@@ -4,7 +4,7 @@ Some of these points are already noted in the `pyproject.toml`. This goes into a
 
 ## Overview
 
-`atomate2` contains a convenience interface to many common machine learning interatomic forcefields (MLFFs) via the atomic simulation environment (ASE). In the literature, these may also be known as machine learning interatomic potentials (MLIPs), or, when specifically referring to MLIPs with coverage of most of the periodic table, foundation potentials (FPs). 
+`atomate2` contains a convenience interface to many common machine learning interatomic forcefields (MLFFs) via the atomic simulation environment (ASE). In the literature, these may also be known as machine learning interatomic potentials (MLIPs), or, when specifically referring to MLIPs with coverage of most of the periodic table, foundation potentials (FPs).
 
 There is both an `ase` module in `atomate2`, based around general `ase` `Calculator`s, and a `forcefields`-specific module which has a higher number of workflows.
 
