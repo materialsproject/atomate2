@@ -7,7 +7,7 @@ name = "atomate2"
 description = "atomate2 is a library of materials science workflows"
 readme = "README.md"
 keywords = ["automated", "dft", "high-throughput", "vasp", "workflow"]
-license = { text = "modified BSD" }
+license = "BSD-3-Clause-LBNL"
 authors = [{ name = "Alex Ganose", email = "alexganose@gmail.com" }]
 dynamic = ["version"]
 classifiers = [
