@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING, Any
 from emmet.core.types.enums import StoreTrajectoryOption
 from pydantic import BaseModel, Field
 from pymatgen.core import Molecule
-from typing_extensions import assert_never
 
 from atomate2.ase.schemas import (
     AseMoleculeTaskDoc,
@@ -19,7 +18,7 @@ from atomate2.ase.schemas import (
     _task_doc_translation_keys,
 )
 from atomate2.forcefields import MLFF
-from atomate2.forcefields.utils import _get_standardized_mlff, _load_calc_cls
+from atomate2.forcefields.utils import _get_pkg_name, _get_standardized_mlff
 
 if TYPE_CHECKING:
     from typing_extensions import Self
@@ -189,26 +188,3 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
             if isinstance(result.final_mol_or_struct, Molecule)
             else cls
         ).from_ase_task_doc(ase_task_doc, **ff_kwargs)
-
-
-def _get_pkg_name(calculator_meta: MLFF | dict) -> str | None:
-    """Get the package name for a given force field."""
-    if isinstance(calculator_meta, MLFF):
-        # map force field name to its package name
-        ff_pkg = None
-        match calculator_meta:
-            case MLFF.M3GNet | MLFF.CHGNet | MLFF.MATPES_PBE | MLFF.MATPES_R2SCAN:
-                ff_pkg = "matgl"
-            case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
-                ff_pkg = "mace-torch"
-            case MLFF.GAP:
-                ff_pkg = "quippy-ase"
-            case MLFF.Nequip:
-                ff_pkg = "nequip"
-            case MLFF.DeepMD:
-                ff_pkg = "deepmd-kit"
-        return ff_pkg
-    if isinstance(calculator_meta, dict):
-        calc_cls = _load_calc_cls(calculator_meta)
-        return calc_cls.__module__.split(".", 1)[0]
-    assert_never(calculator_meta)

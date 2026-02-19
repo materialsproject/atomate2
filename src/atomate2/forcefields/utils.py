@@ -407,3 +407,47 @@ def revert_default_dtype() -> Generator[None]:
     orig = torch.get_default_dtype()
     yield
     torch.set_default_dtype(orig)
+
+
+def _get_pkg_name(calculator_meta: MLFF | dict[str, Any]) -> str | None:
+    """Get the package name for a given force field.
+
+    Parameters
+    ----------
+    calculator_meta : MLFF or JSONable dict
+        The calculator metadata used to load the calculator,
+        or an MLFF enum.
+
+    Returns
+    -------
+    str or None: The package name of the force field if it could be identified,
+        None otherwise.
+    """
+    if isinstance(calculator_meta, MLFF):
+        # map force field name to its package name
+        match calculator_meta:
+            case MLFF.Allegro | MLFF.Nequip:
+                ff_pkg = "nequip"
+            case MLFF.CHGNet | MLFF.M3GNet | MLFF.MATPES_PBE | MLFF.MATPES_R2SCAN:
+                ff_pkg = "matgl"
+            case MLFF.DeepMD:
+                ff_pkg = "deepmd-kit"
+            case MLFF.FAIRChem:
+                ff_pkg = "fairchem.core"
+            case MLFF.GAP:
+                ff_pkg = "quippy-ase"
+            case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
+                ff_pkg = "mace-torch"
+            case MLFF.MatterSim:
+                ff_pkg = "mattersim"
+            case MLFF.NEP:
+                ff_pkg = "calorine"
+            case MLFF.SevenNet:
+                ff_pkg = "sevenn"
+            case _:
+                ff_pkg = None
+        return ff_pkg
+    if isinstance(calculator_meta, dict):
+        calc_cls = _load_calc_cls(calculator_meta)
+        return calc_cls.__module__.split(".", 1)[0]
+    assert_never(calculator_meta)

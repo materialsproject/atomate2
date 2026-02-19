@@ -742,6 +742,49 @@ def test_matpes_relax_makers(
     )
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MatterSim"), reason="mattersim is not installed."
+)
+def test_mattersim_static_maker(si_structure: Structure, test_dir: Path):
+    job = ForceFieldStaticMaker(force_field_name="MatterSim").make(si_structure)
+    responses = run_locally(job, ensure_success=True)
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    assert output1.output.energy == approx(-10.828996658325195, rel=1e-4)
+    assert output1.output.ionic_steps[-1].magmoms is None
+    assert output1.output.n_steps == 1
+    assert output1.forcefield_version == get_imported_version("mattersim")
+
+
+@pytest.mark.skipif(
+    not mlff_is_installed("MatterSim"), reason="mattersim is not installed."
+)
+def test_mattersim_relax_maker(si_structure: Structure, test_dir: Path):
+
+    # translate one atom to ensure a small number of relaxation steps are taken
+    si_structure.translate_sites(0, [0, 0, 0.1])
+    # generate job
+    job = ForceFieldRelaxMaker(
+        force_field_name="MatterSim",
+        steps=25,
+    ).make(si_structure)
+    responses = run_locally(job, ensure_success=True)
+    output = responses[job.uuid][1].output
+    assert isinstance(output, ForceFieldTaskDocument)
+    assert output.output.energy == approx(-10.825555801391602, rel=1e-4)
+    assert np.allclose(
+        output.output.ionic_steps[-1].forces,
+        [
+            [-0.17773497104644775, -0.1256822645664215, 0.05283086746931076],
+            [0.17773500084877014, 0.1256822645664215, -0.05283087491989136],
+        ],
+        rtol=1e-4,
+    )
+    assert len(output.output.ionic_steps) > 1
+    assert output.output.n_steps == len(output.output.ionic_steps)
+    assert output.forcefield_version == get_imported_version("mattersim")
+
+
 @pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
 def test_ext_load_static_maker(si_structure: Structure):
     calculator_meta = {
