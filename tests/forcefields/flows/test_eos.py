@@ -6,8 +6,12 @@ from atomate2.forcefields.flows.eos import ForceFieldEosMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 from atomate2.utils.testing import get_job_uuid_name_map
 
+from ..conftest import mlff_is_installed  # noqa: TID252
 
-@pytest.mark.parametrize("mlff", ["CHGNet", "MACE"])
+
+@pytest.mark.parametrize(
+    "mlff", [mlff for mlff in ["CHGNet", "MACE"] if mlff_is_installed(mlff)]
+)
 def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
     maker = ForceFieldEosMaker.from_force_field_name(mlff)
     job = maker.make(si_structure)
@@ -39,6 +43,7 @@ def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
 
 
 def test_ext_load_eos_initialization():
+    pytest.importorskip("mace")
     calculator_meta = {
         "@module": "mace.calculators",
         "@callable": "mace_mp",

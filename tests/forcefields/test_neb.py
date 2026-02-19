@@ -8,9 +8,12 @@ from pymatgen.io.vasp.outputs import Xdatcar
 
 from atomate2.forcefields.neb import ForceFieldNebFromImagesMaker
 
+from .conftest import mlff_is_installed
 
-def test_neb_from_images(test_dir, clean_dir):
-    endpoints = [
+
+@pytest.fixture(scope="module")
+def endpoints(test_dir):
+    return [
         Structure.from_file(
             test_dir
             / "vasp"
@@ -21,6 +24,12 @@ def test_neb_from_images(test_dir, clean_dir):
         )
         for i in range(2)
     ]
+
+
+@pytest.mark.skipif(
+    not mlff_is_installed("MATPES_PBE"), reason="matgl is not installed"
+)
+def test_neb_from_images_matpes_pbe(endpoints, clean_dir):
 
     images = endpoints[0].interpolate(endpoints[1], nimages=4, autosort_tol=0.5)
 
@@ -63,6 +72,10 @@ def test_neb_from_images(test_dir, clean_dir):
     assert output.state.value == "successful"
     assert "forces not converged" in output.tags
 
+
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
+def test_neb_from_images_mace(endpoints, clean_dir):
+
     images = endpoints[0].interpolate(endpoints[1], nimages=2, autosort_tol=0.5)
     job = ForceFieldNebFromImagesMaker(
         force_field_name="MACE",
@@ -74,6 +87,7 @@ def test_neb_from_images(test_dir, clean_dir):
     response = run_locally(job)
     output = response[job.uuid][1].output
 
+    cwd = next(Path(p) for p in output.tags if Path(p).exists())
     trajectories = [
         loadfn(cwd / f"si_self_diffusion-image-{idx + 1}.json.gz") for idx in range(3)
     ]
@@ -84,6 +98,9 @@ def test_neb_from_images(test_dir, clean_dir):
     )
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MACE"), reason="mace_torch is not installed."
+)
 def test_ext_load_neb_initialization():
     calculator_meta = {
         "@module": "mace.calculators",

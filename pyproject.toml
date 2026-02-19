@@ -7,7 +7,7 @@ name = "atomate2"
 description = "atomate2 is a library of materials science workflows"
 readme = "README.md"
 keywords = ["automated", "dft", "high-throughput", "vasp", "workflow"]
-license = { text = "modified BSD" }
+license = "BSD-3-Clause-LBNL"
 authors = [{ name = "Alex Ganose", email = "alexganose@gmail.com" }]
 dynamic = ["version"]
 classifiers = [
@@ -84,22 +84,51 @@ strict-openff = [
     "openmm==8.4.0.post2",
     "pymatgen==2025.10.7", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
-strict-forcefields = [
+
+# Forcefields have separate strict groupings because of conflicting dependencies.
+# The labels below should not be taken as fixed in time.
+# They are meant to be instructive as to why certain forcefields are grouped together.
+# Ex: `strict-forcefields-torch-limited` might indicate that these require a lower version of `pytorch`
+# Whereas `strict-forcefields-generic` might indicate that no dependency conflicts are known for the group
+
+# ALWAYS REMEMBER to update `.github/workflows/testing.yml` to reflect the current set of
+# forcefield dependency groups.
+strict-forcefields-generic = [
     "calorine==3.3; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
-    "mace-torch==0.3.14",
-    "matgl==2.0.6",
-    "dgl<=2.4.0",
-    "quippy-ase==0.10.1",
-    "sevenn==0.10.4",
-    "torch==2.2.0",
-    "torchdata==0.7.1",                            # TODO: remove when issue fixed
+    "quippy-ase==0.10.2",
+    "sevenn==0.12.0",
     "deepmd-kit==3.1.2",
     "tensorflow-cpu==2.20.0",
+    "mattersim==1.2.0",
 ]
+strict-forcefields-torch-limited = [
+    "matgl==2.0.6",
+    # Note that DGL stopped building new releases for Mac + Windows after 2.2.0.
+    # That enforces a simultaneous pin on torch / torchdata
+    # Linux users can acces newer versions of dgl / torch / torchdata via conda.
+    # Mac / Windows users will need to install from source
+    "dgl==2.2.0; sys_platform == 'darwin' or sys_platform == 'win32'",
+    "dgl<=2.4.0; sys_platform == 'linux'",
+    "torch==2.2.2; sys_platform == 'darwin' or sys_platform == 'win32'",
+    "torch==2.2.0; sys_platform == 'linux'",
+    "torchdata==0.7.1",
+    "nequip==0.16.2", # requires numpy<2 because of matscipy
+    "numpy==1.26.4",
+]
+strict-forcefields-e3nn-limited = [
+    "mace-torch==0.3.14",
+    "torch-dftd==0.5.2",
+]
+strict-forcefields-numpy-limited = [
+    "nequip-allegro==0.8.1",
+    "numpy==1.26.4",
+]
+
 strict = [
-    "atomate2[strict-forcefields, cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
-    "numpy<2.0",
+    "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
+    "numpy<3.0",
+    "numba>=0.60.0", # needed to get numpy >2,<3 installed
 ]
 
 [project.scripts]
@@ -126,7 +155,7 @@ docs = [
     "fireworks==2.0.8",
     "autodoc_pydantic==2.2.0",
     "furo==2025.12.19",
-    "ipython==9.9.0",
+    "ipython==9.10.0",
     "jsonschema[format]",
     "myst_parser==5.0.0",
     "numpydoc==1.10.0",

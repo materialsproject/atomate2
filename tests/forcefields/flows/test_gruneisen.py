@@ -6,6 +6,7 @@ from pymatgen.phonon.gruneisen import (
     GruneisenParameter,
     GruneisenPhononBandStructureSymmLine,
 )
+from pytest import importorskip
 
 from atomate2.common.schemas.gruneisen import (
     GruneisenDerivedProperties,
@@ -18,6 +19,8 @@ from atomate2.forcefields.flows.phonons import PhononMaker
 
 
 def test_gruneisen_wf_ff(clean_dir, si_structure: Structure, tmp_path: Path):
+    importorskip("matgl")
+
     flow = GruneisenMaker(
         symprec=1e-2,
         compute_gruneisen_param_kwargs={

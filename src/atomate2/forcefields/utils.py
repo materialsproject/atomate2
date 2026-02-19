@@ -43,7 +43,7 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     MATPES_PBE = "MatPES-PBE"
     DeepMD = "DeepMD"
     Allegro = "Allegro"
-    OCP = "OCP"  # for loading model checkpoint with fairchem.core.OCPCalculator
+    FAIRChem = "FAIRChem"
     MatterSim = "MatterSim"
 
     @classmethod
@@ -57,7 +57,7 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
         return None
 
 
-_DEFAULT_CALCULATOR_KWARGS = {
+_DEFAULT_CALCULATOR_KWARGS: dict[MLFF, Any] = {
     MLFF.CHGNet: {"stress_unit": "eV/A3"},
     MLFF.M3GNet: {"stress_unit": "eV/A3"},
     MLFF.NEP: {"model_filename": "nep.txt"},
@@ -75,6 +75,10 @@ _DEFAULT_CALCULATOR_KWARGS = {
         "architecture": "TensorNet",
         "version": "2025.1",
         "stress_unit": "eV/A3",
+    },
+    MLFF.FAIRChem: {
+        "predict_unit": {"model_name": "uma-s-1p1"},
+        "task_name": "omat",
     },
 }
 
@@ -336,7 +340,7 @@ def ase_calculator(
 
                 calculator = CPUNEP(**kwargs)
 
-            case MLFF.Nequip:
+            case MLFF.Nequip | MLFF.Allegro:
                 from nequip.ase import NequIPCalculator
 
                 calculator = getattr(
@@ -356,17 +360,17 @@ def ase_calculator(
 
                 calculator = DP(**kwargs)
 
-            case MLFF.Allegro:
-                from allegro.ase import AllegroCalculator
+            case MLFF.FAIRChem:
+                from fairchem.core import FAIRChemCalculator, pretrained_mlip
 
-                calculator = AllegroCalculator.from_deployed_model(**kwargs)
-
-            case MLFF.OCP:
-                # Not available on PyPI, needs to be installed from source
-                # see https://github.com/FAIR-Chem/fairchem?tab=readme-ov-file#installation
-                from fairchem.core import OCPCalculator
-
-                calculator = OCPCalculator(**kwargs)
+                predict_unit_kwargs = kwargs.pop(
+                    "predict_unit",
+                    _DEFAULT_CALCULATOR_KWARGS[MLFF.FAIRChem]["predict_unit"],
+                )
+                calculator = FAIRChemCalculator(
+                    pretrained_mlip.get_predict_unit(**predict_unit_kwargs),
+                    **{k: v for k, v in kwargs.items() if k != "predict_unit"},
+                )
 
             case MLFF.MatterSim:
                 from mattersim.forcefield import MatterSimCalculator
@@ -403,3 +407,47 @@ def revert_default_dtype() -> Generator[None]:
     orig = torch.get_default_dtype()
     yield
     torch.set_default_dtype(orig)
+
+
+def _get_pkg_name(calculator_meta: MLFF | dict[str, Any]) -> str | None:
+    """Get the package name for a given force field.
+
+    Parameters
+    ----------
+    calculator_meta : MLFF or JSONable dict
+        The calculator metadata used to load the calculator,
+        or an MLFF enum.
+
+    Returns
+    -------
+    str or None: The package name of the force field if it could be identified,
+        None otherwise.
+    """
+    if isinstance(calculator_meta, MLFF):
+        # map force field name to its package name
+        match calculator_meta:
+            case MLFF.Allegro | MLFF.Nequip:
+                ff_pkg = "nequip"
+            case MLFF.CHGNet | MLFF.M3GNet | MLFF.MATPES_PBE | MLFF.MATPES_R2SCAN:
+                ff_pkg = "matgl"
+            case MLFF.DeepMD:
+                ff_pkg = "deepmd-kit"
+            case MLFF.FAIRChem:
+                ff_pkg = "fairchem.core"
+            case MLFF.GAP:
+                ff_pkg = "quippy-ase"
+            case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
+                ff_pkg = "mace-torch"
+            case MLFF.MatterSim:
+                ff_pkg = "mattersim"
+            case MLFF.NEP:
+                ff_pkg = "calorine"
+            case MLFF.SevenNet:
+                ff_pkg = "sevenn"
+            case _:
+                ff_pkg = None
+        return ff_pkg
+    if isinstance(calculator_meta, dict):
+        calc_cls = _load_calc_cls(calculator_meta)
+        return calc_cls.__module__.split(".", 1)[0]
+    assert_never(calculator_meta)

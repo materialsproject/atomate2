@@ -22,28 +22,30 @@ from atomate2.forcefields import MLFF
 from atomate2.forcefields.md import ForceFieldMDMaker
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 
+from .conftest import mlff_is_installed
 
-def test_maker_initialization():
+INSTALLED_MLFF = [mlff for mlff in MLFF if mlff_is_installed(mlff)]
+
+
+@pytest.mark.parametrize("mlff", INSTALLED_MLFF)
+def test_maker_initialization(mlff):
     # test that makers can be initialized from str or value enum
 
-    from atomate2.forcefields import MLFF
+    context_mgr = nullcontext()
+    if mlff == "MACE":
+        context_mgr = pytest.warns(UserWarning, match="default MP-trained MACE")
 
-    for mlff in MLFF.__members__:
-        context_mgr = nullcontext()
-        if mlff == "MACE":
-            context_mgr = pytest.warns(UserWarning, match="default MP-trained MACE")
-
-        with context_mgr:
-            assert ForceFieldMDMaker(force_field_name=MLFF(mlff)) == ForceFieldMDMaker(
-                force_field_name=mlff
-            )
-            assert ForceFieldMDMaker(
-                force_field_name=str(MLFF(mlff))
-            ) == ForceFieldMDMaker(force_field_name=mlff)
+    with context_mgr:
+        assert ForceFieldMDMaker(force_field_name=MLFF(mlff)) == ForceFieldMDMaker(
+            force_field_name=mlff
+        )
+        assert ForceFieldMDMaker(force_field_name=str(MLFF(mlff))) == ForceFieldMDMaker(
+            force_field_name=mlff
+        )
 
 
-_mlffs_for_test = set(MLFF).difference(
-    map(MLFF, ("Forcefield", "MatterSim", "Allegro", "OCP", "M3GNet", "MACE"))
+_mlffs_for_test = set(INSTALLED_MLFF).difference(
+    map(MLFF, ("Forcefield", "Allegro", "M3GNet", "MACE"))
 )
 _md_test_params = sorted(product(_mlffs_for_test, [True, False]), key=str)
 
@@ -79,6 +81,8 @@ def test_ml_ff_md_maker(
         MLFF.DeepMD: -744.6197365326168,
         MLFF.MATPES_PBE: -5.230762481689453,
         MLFF.MATPES_R2SCAN: -8.561729431152344,
+        MLFF.FAIRChem: -5.4,
+        MLFF.MatterSim: -5.4,
     }
 
     # ASE can slightly change tolerances on structure positions
@@ -104,7 +108,10 @@ def test_ml_ff_md_maker(
         unit_cell_structure = al2_au_structure.copy()
     elif ff_name == MLFF.Nequip:
         calculator_kwargs = {
-            "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+            "compile_path": test_dir
+            / "forcefields"
+            / "nequip"
+            / "nequip_ff_sr_ti_o3.nequip.pth"
         }
         unit_cell_structure = sr_ti_o3_structure.copy()
     elif ff_name == MLFF.DeepMD:
@@ -169,6 +176,7 @@ def test_ml_ff_md_maker(
         assert isinstance(task_doc.objects["trajectory"], PmgTrajectory)
 
 
+@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed.")
 @pytest.mark.parametrize(
     "traj_file,ff_name", [("trajectory.json.gz", "CHGNet"), ("atoms.traj", "CHGNet")]
 )
@@ -231,6 +239,7 @@ def test_traj_file(traj_file, ff_name, si_structure, clean_dir):
     )
 
 
+@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed.")
 def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
     # This test serves two purposes:
     # 1. Test the NVE calculator
@@ -286,6 +295,7 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
             )
 
 
+@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed.")
 @pytest.mark.parametrize("ff_name", ["CHGNet"])
 def test_temp_schedule(ff_name, si_structure, clean_dir):
     n_steps = 50
@@ -310,6 +320,9 @@ def test_temp_schedule(ff_name, si_structure, clean_dir):
     assert temp_history[-1] > temp_schedule[0]
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MACE"), reason="mace_torch is not installed."
+)
 @pytest.mark.parametrize("ff_name", ["MACE-MP-0"])
 def test_press_schedule(ff_name, si_structure, clean_dir):
     n_steps = 20
@@ -342,6 +355,9 @@ def test_press_schedule(ff_name, si_structure, clean_dir):
     assert stress_history[-1] < stress_history[0]
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MACE"), reason="mace_torch is not installed."
+)
 def test_ext_load_md_maker(si_structure: Structure):
     calculator_meta = {
         "@module": "mace.calculators",

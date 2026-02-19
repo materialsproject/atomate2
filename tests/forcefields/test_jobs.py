@@ -6,13 +6,16 @@ import pytest
 from jobflow import run_locally
 from pymatgen.core import Molecule, Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pytest import approx, importorskip
+from pytest import approx
 
+from atomate2.forcefields import MLFF
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 from atomate2.forcefields.schemas import (
     ForceFieldMoleculeTaskDocument,
     ForceFieldTaskDocument,
 )
+
+from .conftest import mlff_is_installed
 
 try:
     import dgl
@@ -20,21 +23,22 @@ except Exception:  # noqa: BLE001
     dgl = None
 
 
-def test_maker_initialization():
+@pytest.mark.parametrize("mlff", [mlff for mlff in MLFF if mlff_is_installed(mlff)])
+def test_maker_initialization(mlff):
     # test that makers can be initialized from str or value enum
 
-    from atomate2.forcefields import MLFF
-
-    for mlff in MLFF.__members__:
-        assert ForceFieldRelaxMaker(
-            force_field_name=MLFF(mlff)
-        ) == ForceFieldRelaxMaker(force_field_name=mlff)
-        assert ForceFieldRelaxMaker(
-            force_field_name=str(MLFF(mlff))
-        ) == ForceFieldRelaxMaker(force_field_name=mlff)
+    assert ForceFieldRelaxMaker(force_field_name=MLFF(mlff)) == ForceFieldRelaxMaker(
+        force_field_name=mlff
+    )
+    assert ForceFieldRelaxMaker(
+        force_field_name=str(MLFF(mlff))
+    ) == ForceFieldRelaxMaker(force_field_name=mlff)
 
 
-@pytest.mark.skipif(dgl is None, reason="CHGNet requires DGL which is not installed")
+@pytest.mark.skipif(
+    dgl is None or not mlff_is_installed("CHGNet"),
+    reason="CHGNet requires DGL which is not installed",
+)
 def test_chgnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
@@ -55,7 +59,10 @@ def test_chgnet_static_maker(si_structure):
     assert output1.forcefield_version == get_imported_version("matgl")
 
 
-@pytest.mark.skipif(dgl is None, reason="CHGNet requires DGL which is not installed")
+@pytest.mark.skipif(
+    dgl is None or not mlff_is_installed("CHGNet"),
+    reason="CHGNet requires DGL which is not installed",
+)
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
@@ -86,7 +93,10 @@ def test_chgnet_relax_maker_fix_symmetry(
         assert initial_space_group == final_space_group
 
 
-@pytest.mark.skipif(dgl is None, reason="CHGNet requires DGL which is not installed")
+@pytest.mark.skipif(
+    dgl is None or not mlff_is_installed("CHGNet"),
+    reason="CHGNet requires DGL which is not installed",
+)
 @pytest.mark.parametrize("relax_cell", [True, False])
 def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     # translate one atom to ensure a small number of relaxation steps are taken
@@ -121,7 +131,10 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
     assert Path(responses[job.uuid][1].output.dir_name).exists()
 
 
-@pytest.mark.skipif(dgl is None, reason="M3GNet requires DGL which is not installed")
+@pytest.mark.skipif(
+    dgl is None or not mlff_is_installed("M3GNet"),
+    reason="M3GNet requires DGL which is not installed",
+)
 def test_m3gnet_static_maker(si_structure):
     # generate job
     job = ForceFieldStaticMaker(
@@ -141,7 +154,10 @@ def test_m3gnet_static_maker(si_structure):
     assert output1.forcefield_version == get_imported_version("matgl")
 
 
-@pytest.mark.skipif(dgl is None, reason="M3GNet requires DGL which is not installed")
+@pytest.mark.skipif(
+    dgl is None or not mlff_is_installed("M3GNet"),
+    reason="M3GNet requires DGL which is not installed",
+)
 def test_m3gnet_relax_maker(si_structure):
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
@@ -174,6 +190,9 @@ mace_paths = pytest.mark.parametrize(
 )
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MACE"), reason="mace_torch is not installed."
+)
 @pytest.mark.parametrize("dispersion", [False, True])
 @mace_paths
 def test_mace_static_maker(si_structure: Structure, dispersion: bool, model):
@@ -207,6 +226,9 @@ def test_mace_static_maker(si_structure: Structure, dispersion: bool, model):
     assert Path("final_atoms_object.xyz").exists()
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MACE"), reason="mace_torch is not installed."
+)
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
@@ -239,6 +261,9 @@ def test_mace_relax_maker_fix_symmetry(
         assert initial_space_group != final_space_group
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MACE"), reason="mace_torch is not installed."
+)
 @pytest.mark.parametrize(
     "fix_symmetry, symprec", [(True, 1e-2), (False, 1e-2), (True, 1e-1)]
 )
@@ -308,6 +333,9 @@ def test_mace_relax_maker(
         assert output1.output.n_steps == 7
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MACE"), reason="mace_torch is not installed."
+)
 def test_mace_mpa_0_relax_maker(si_structure: Structure, test_dir: Path, tmp_dir):
     job = ForceFieldRelaxMaker(
         force_field_name="MACE_MPA_0",
@@ -344,8 +372,8 @@ def test_mace_mpa_0_relax_maker(si_structure: Structure, test_dir: Path, tmp_dir
     assert len(output_mol.output.ionic_steps) == 20
 
 
+@pytest.mark.skipif(not mlff_is_installed("GAP"), reason="quippy is not installed.")
 def test_gap_static_maker(si_structure: Structure, test_dir):
-    importorskip("quippy")
 
     # generate job
     # Test files have been provided by @YuanbinLiu (University of Oxford)
@@ -369,9 +397,9 @@ def test_gap_static_maker(si_structure: Structure, test_dir):
     assert output1.forcefield_version == get_imported_version("quippy-ase")
 
 
+@pytest.mark.skipif(not mlff_is_installed("GAP"), reason="quippy is not installed.")
 @pytest.mark.parametrize("relax_cell", [True, False])
 def test_gap_relax_maker(si_structure: Structure, test_dir: Path, relax_cell: bool):
-    importorskip("quippy")
 
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
@@ -405,6 +433,7 @@ def test_gap_relax_maker(si_structure: Structure, test_dir: Path, relax_cell: bo
         assert output1.output.n_steps == 17
 
 
+@pytest.mark.skipif(not mlff_is_installed("NEP"), reason="calorine is not installed.")
 def test_nep_static_maker(al2_au_structure: Structure, test_dir: Path):
     # NOTE: The test NEP model is specifically trained on 16 elemental metals
     # thus a new Al2Au structure is added.
@@ -430,6 +459,7 @@ def test_nep_static_maker(al2_au_structure: Structure, test_dir: Path):
     assert output1.output.n_steps == 1
 
 
+@pytest.mark.skipif(not mlff_is_installed("NEP"), reason="calorine is not installed.")
 @pytest.mark.parametrize(
     ("relax_cell", "fix_symmetry"),
     [(True, False), (False, True)],
@@ -478,8 +508,8 @@ def test_nep_relax_maker(
     assert final_spg_num == 225
 
 
+@pytest.mark.skipif(not mlff_is_installed("Nequip"), reason="nequip is not installed.")
 def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
-    importorskip("nequip")
 
     # generate job
     # NOTE the test model is not trained on Si, so the energy is not accurate
@@ -487,7 +517,10 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
         force_field_name="Nequip",
         ionic_step_data=("structure", "energy"),
         calculator_kwargs={
-            "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+            "compile_path": test_dir
+            / "forcefields"
+            / "nequip"
+            / "nequip_ff_sr_ti_o3.nequip.pth"
         },
     ).make(sr_ti_o3_structure)
 
@@ -502,6 +535,7 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     assert output1.forcefield_version == get_imported_version("nequip")
 
 
+@pytest.mark.skipif(not mlff_is_installed("Nequip"), reason="nequip is not installed.")
 @pytest.mark.parametrize(
     ("relax_cell", "fix_symmetry"),
     [(True, False), (False, True)],
@@ -512,7 +546,6 @@ def test_nequip_relax_maker(
     relax_cell: bool,
     fix_symmetry: bool,
 ):
-    importorskip("nequip")
     # translate one atom to ensure a small number of relaxation steps are taken
     sr_ti_o3_structure.translate_sites(0, [0, 0, 0.2])
     # generate job
@@ -523,7 +556,10 @@ def test_nequip_relax_maker(
         relax_cell=relax_cell,
         fix_symmetry=fix_symmetry,
         calculator_kwargs={
-            "model_path": test_dir / "forcefields" / "nequip" / "nequip_ff_sr_ti_o3.pth"
+            "compile_path": test_dir
+            / "forcefields"
+            / "nequip"
+            / "nequip_ff_sr_ti_o3.nequip.pth"
         },
     ).make(sr_ti_o3_structure)
 
@@ -546,10 +582,10 @@ def test_nequip_relax_maker(
     assert final_spg_num == 99
 
 
+@pytest.mark.skipif(not mlff_is_installed("DeepMD"), reason="deepmd is not installed.")
 def test_deepmd_static_maker(
     sr_ti_o3_structure: Structure, test_dir: Path, get_deepmd_pretrained_model_path
 ):
-    importorskip("deepmd")
 
     # generate job
     job = ForceFieldStaticMaker(
@@ -569,6 +605,7 @@ def test_deepmd_static_maker(
     assert output1.forcefield_version == get_imported_version("deepmd-kit")
 
 
+@pytest.mark.skipif(not mlff_is_installed("DeepMD"), reason="deepmd is not installed.")
 @pytest.mark.parametrize(
     ("relax_cell", "fix_symmetry"),
     [(True, False), (False, True)],
@@ -580,7 +617,7 @@ def test_deepmd_relax_maker(
     fix_symmetry: bool,
     get_deepmd_pretrained_model_path: Path,
 ):
-    importorskip("deepmd")
+
     # translate one atom to ensure a small number of relaxation steps are taken
     sr_ti_o3_structure.translate_sites(0, [0, 0, 0.01])
     # generate job
@@ -612,13 +649,15 @@ def test_deepmd_relax_maker(
     assert final_spg_num == 99
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MATPES_PBE"), reason="matgl is not installed."
+)
 @pytest.mark.parametrize("ref_func", ["PBE", "r2SCAN"])
 def test_matpes_relax_makers(
     sr_ti_o3_structure: Structure,
     test_dir: Path,
     ref_func: str,
 ):
-    importorskip("matgl")
 
     refs = {
         "PBE": {
@@ -703,6 +742,50 @@ def test_matpes_relax_makers(
     )
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("MatterSim"), reason="mattersim is not installed."
+)
+def test_mattersim_static_maker(si_structure: Structure, test_dir: Path):
+    job = ForceFieldStaticMaker(force_field_name="MatterSim").make(si_structure)
+    responses = run_locally(job, ensure_success=True)
+    output1 = responses[job.uuid][1].output
+    assert isinstance(output1, ForceFieldTaskDocument)
+    assert output1.output.energy == approx(-10.828996658325195, rel=1e-4)
+    assert output1.output.ionic_steps[-1].magmoms is None
+    assert output1.output.n_steps == 1
+    assert output1.forcefield_version == get_imported_version("mattersim")
+
+
+@pytest.mark.skipif(
+    not mlff_is_installed("MatterSim"), reason="mattersim is not installed."
+)
+def test_mattersim_relax_maker(si_structure: Structure, test_dir: Path):
+
+    # translate one atom to ensure a small number of relaxation steps are taken
+    si_structure.translate_sites(0, [0, 0, 0.1])
+    # generate job
+    job = ForceFieldRelaxMaker(
+        force_field_name="MatterSim",
+        steps=25,
+    ).make(si_structure)
+    responses = run_locally(job, ensure_success=True)
+    output = responses[job.uuid][1].output
+    assert isinstance(output, ForceFieldTaskDocument)
+    assert output.output.energy == approx(-10.825555801391602, rel=1e-4)
+    assert np.allclose(
+        output.output.ionic_steps[-1].forces,
+        [
+            [-0.17773497104644775, -0.1256822645664215, 0.05283086746931076],
+            [0.17773500084877014, 0.1256822645664215, -0.05283087491989136],
+        ],
+        rtol=1e-2,
+    )
+    assert len(output.output.ionic_steps) > 1
+    assert output.output.n_steps == len(output.output.ionic_steps)
+    assert output.forcefield_version == get_imported_version("mattersim")
+
+
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
 def test_ext_load_static_maker(si_structure: Structure):
     calculator_meta = {
         "@module": "mace.calculators",

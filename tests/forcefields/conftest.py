@@ -10,8 +10,30 @@ import pytest
 import torch
 from emmet.core.utils import get_hash_blocked
 
+from atomate2.forcefields.utils import MLFF, ase_calculator
+
 if TYPE_CHECKING:
     from typing import Any
+
+_INSTALLED_MLFF: dict[str, bool] = {MLFF.Forcefield.name: False}
+for mlff in (x for x in MLFF if x.value != "Forcefield"):
+    try:
+        _ = ase_calculator(mlff)
+        _INSTALLED_MLFF[mlff.name] = True
+    except (ImportError, ValueError):
+        _INSTALLED_MLFF[mlff.name] = False
+    except Exception:  # noqa: BLE001
+        # Some calculators, like GAP, require extra potential files
+        # Generally, thesea re
+        _INSTALLED_MLFF[mlff.name] = True
+
+
+def mlff_is_installed(mlff: str | MLFF) -> bool:
+    if not isinstance(mlff, str | MLFF):
+        raise TypeError(f"Unknown `MLFF = {MLFF}` type, {type(mlff)}")
+
+    ff: str = (MLFF(mlff.split("MLFF.", 1)[-1]) if isinstance(mlff, str) else mlff).name
+    return _INSTALLED_MLFF[ff]
 
 
 def pytest_runtest_setup(item: Any) -> None:
