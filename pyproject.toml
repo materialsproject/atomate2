@@ -96,7 +96,7 @@ strict-openff = [
 strict-forcefields-generic = [
     "calorine==3.3; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
-    "quippy-ase==0.10.1",
+    "quippy-ase==0.10.2",
     "sevenn==0.12.0",
     "deepmd-kit==3.1.2",
     "tensorflow-cpu==2.20.0",
@@ -155,7 +155,7 @@ docs = [
     "fireworks==2.0.8",
     "autodoc_pydantic==2.2.0",
     "furo==2025.12.19",
-    "ipython==9.9.0",
+    "ipython==9.10.0",
     "jsonschema[format]",
     "myst_parser==5.0.0",
     "numpydoc==1.10.0",
