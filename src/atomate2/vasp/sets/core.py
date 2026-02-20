@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -20,6 +21,16 @@ if TYPE_CHECKING:
 
 
 logger = logging.getLogger(__name__)
+
+
+def _emit_magmom_warning() -> None:
+    warnings.warn(
+        "Removing the MAGMOM tag is not recommended generally, "
+        "but is permitted to allow for previous behavior in atomate2. "
+        "See https://vasp.at/wiki/MAGMOM to understand how "
+        "magnetic initialization is affected by MAGMOM, CHGCAR, and WAVECAR.",
+        stacklevel=2,
+    )
 
 
 @dataclass
@@ -170,6 +181,10 @@ class NonSCFSetGenerator(VaspInputGenerator):
     nbands_factor
         Multiplicative factor for NBANDS when starting from a previous calculation.
         Choose a higher number if you are doing an LOPTICS calculation.
+    remove_magmoms
+        Whether to remove the MAGMOM tag from a previous calculation and
+        use the initialization of the set. NOT RECOMMENDED. Included to allow for
+        backwards compatible behavior.
     **kwargs
         Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
@@ -182,6 +197,7 @@ class NonSCFSetGenerator(VaspInputGenerator):
     optics: bool = False
     nbands_factor: float = 1.2
     auto_ispin: bool = True
+    remove_magmoms: bool = False
 
     def __post_init__(self) -> None:
         """Ensure mode is set correctly."""
@@ -259,7 +275,9 @@ class NonSCFSetGenerator(VaspInputGenerator):
             # underestimates, so set it explicitly
             updates.update(LOPTICS=True, LREAL=False, CSHIFT=1e-5, NEDOS=2000)
 
-        updates["MAGMOM"] = None
+        if self.remove_magmoms:
+            _emit_magmom_warning()
+            updates["MAGMOM"] = None
 
         return updates
 
@@ -419,6 +437,10 @@ class HSEBSSetGenerator(VaspInputGenerator):
         Choose a higher number if you are doing an LOPTICS calculation.
     added_kpoints
         A list of kpoints in fractional coordinates to add as zero-weighted points.
+    remove_magmoms
+        Whether to remove the MAGMOM tag from a previous calculation and
+        use the initialization of the set. NOT RECOMMENDED. Included to allow for
+        backwards compatible behavior.
     **kwargs
         Other keyword arguments that will be passed to :obj:`VaspInputGenerator`.
     """
@@ -432,6 +454,7 @@ class HSEBSSetGenerator(VaspInputGenerator):
     nbands_factor: float = 1.2
     added_kpoints: list[Vector3D] = field(default_factory=list)
     auto_ispin: bool = True
+    remove_magmoms: bool = False
 
     def __post_init__(self) -> None:
         """Ensure mode is set correctly."""
@@ -520,7 +543,9 @@ class HSEBSSetGenerator(VaspInputGenerator):
             # LREAL not supported with LOPTICS
             updates.update(LOPTICS=True, LREAL=False, CSHIFT=1e-5)
 
-        updates["MAGMOM"] = None
+        if self.remove_magmoms:
+            _emit_magmom_warning()
+            updates["MAGMOM"] = None
 
         return updates
 
