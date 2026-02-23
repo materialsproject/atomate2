@@ -117,7 +117,7 @@ strict-forcefields-torch-limited = [
     "numpy==1.26.4",
 ]
 strict-forcefields-e3nn-limited = [
-    "mace-torch==0.3.14",
+    "mace-torch==0.3.15",
     "torch-dftd==0.5.2",
 ]
 strict-forcefields-numpy-limited = [
