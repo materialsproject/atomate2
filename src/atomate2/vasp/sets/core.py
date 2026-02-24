@@ -695,6 +695,76 @@ class MDSetGenerator(VaspInputGenerator):
 
 
 @dataclass
+class MLMDSetGenerator(MDSetGenerator):
+    """
+    Class to generate VASP molecular dynamics input sets using MLFF feature of Vasp.
+
+    Parameters
+    ----------
+    ml_mode
+        Operation mode for MLFF. Can be "train", "select", "refit" or "run"
+    **kwargs
+        Other keyword arguments that will be passed to :obj:`MDSetGenerator`.
+    """
+
+    ml_mode: str = "train"
+
+    def __post_init__(self) -> None:
+        """Ensure validity of inputs."""
+        super().__post_init__()
+
+        supported_ml_modes = ("train", "select", "refit", "run")
+        if self.ml_mode not in supported_ml_modes:
+            raise ValueError(
+                f"Supported values for ml_mode are: {', '.join(supported_ml_modes)}"
+            )
+
+    def get_incar_updates(
+        self,
+        structure: Structure,
+        prev_incar: dict = None,
+        bandgap: float = None,
+        vasprun: Vasprun = None,
+        outcar: Outcar = None,
+    ) -> dict:
+        """
+        Get updates to the INCAR for a molecular dynamics job.
+
+        Parameters
+        ----------
+        structure
+            A structure.
+        prev_incar
+            An incar from a previous calculation.
+        bandgap
+            The band gap.
+        vasprun
+            A vasprun from a previous calculation.
+        outcar
+            An outcar from a previous calculation.
+
+        Returns
+        -------
+        dict
+            A dictionary of updates to apply.
+        """
+        updates = super().get_incar_updates(
+            structure=structure,
+            prev_incar=prev_incar,
+            bandgap=bandgap,
+            vasprun=vasprun,
+            outcar=outcar,
+        )
+        updates.update(
+            {
+                "ML_LMLFF": True,
+                "ML_MODE": self.ml_mode,
+            }
+        )
+        return updates
+
+
+@dataclass
 class LobsterTightStaticSetGenerator(LobsterSet):
     """
     Class to generate well-converged statics for LOBSTER analysis.
