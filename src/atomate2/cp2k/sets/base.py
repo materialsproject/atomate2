@@ -177,7 +177,7 @@ class Cp2kInputGenerator(InputGenerator):
     user_input_settings: dict = field(default_factory=dict)
     user_kpoints_settings: dict | Kpoints = field(default_factory=dict)
     auto_kspacing: bool = True
-    use_structure_charge: bool = False
+    use_structure_charge: bool = True
     sort_structure: bool = True
     symprec: float = SETTINGS.SYMPREC
     force_gamma: bool = False
