@@ -39,11 +39,18 @@ def test_xml_molecule_from_file(openmm_data):
 
 
 def test_to_openff_molecule(openmm_data):
-    xml_mol = XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CO.xml")
+    co_xml = XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "CO.xml")
 
-    mol = xml_mol.to_openff_molecule()
-    assert len(mol.atoms) == 6
-    assert len(mol.bonds) == 5
+    co = co_xml.to_openff_molecule()
+    assert len(co.atoms) == 6
+    assert len(co.bonds) == 5
+
+    clo4_template = tk.Molecule.from_smiles("[O-]Cl(=O)(=O)=O")
+    clo4_xml = XMLMoleculeFF.from_file(openmm_data / "opls_xml_files" / "ClO4.xml")
+    clo4 = clo4_xml.to_openff_molecule(clo4_template)
+    assert len(clo4.atoms) == 5
+    assert len(clo4.bonds) == 4
+    assert clo4.to_smiles()
 
 
 def test_assign_partial_charges_w_mol(openmm_data):
