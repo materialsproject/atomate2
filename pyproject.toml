@@ -48,6 +48,16 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib>=1.8.1"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=2.43.6", "seekpath>=2.0.0"]
+hiphive = [
+    "atomate2[phonons]",
+	"hiphive @ git+https://gitlab.com/jsyony37/hiphive.git@personal#egg=hiphive",
+    "f90nml==1.4.4",
+    "spglib>=2.2.0",
+	"ase>=3.22.1",
+    "phono3py>=3.20.0",
+    "numpy==1.26.4",
+    "scipy==1.14.1",
+    ]
 lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
 defects = [
     "dscribe>=1.2.0",
@@ -251,7 +261,7 @@ isort.known-first-party = ["atomate2"]
 isort.split-on-trailing-comma = false
 
 [tool.ruff.format]
-docstring-code-format = true
+# docstring-code-format = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
