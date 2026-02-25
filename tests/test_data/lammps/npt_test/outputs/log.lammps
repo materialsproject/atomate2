@@ -1,0 +1,115 @@
+LAMMPS (29 Aug 2024 - Development - patch_29Aug2024-704-g6d0e633edf)
+# LAMMPS input generated from LammpsInputFile with pymatgen v2024.10.29
+
+# Initialization
+units metal
+atom_style atomic
+dimension 3
+boundary p p p
+pair_style tersoff
+
+# AtomDefinition
+read_data system.data
+Reading data file ...
+  triclinic box = (0 0 0) to (19.334873 16.744491 15.786858) with tilt (9.667437 9.667437 5.581497)
+WARNING: Triclinic box skew is large. LAMMPS will run inefficiently. (src/domain.cpp:221)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  250 atoms
+  read_data CPU = 0.001 seconds
+
+# ForceField
+include forcefield.lammps
+pair_coeff * * /Users/virkaran/Code/Notebooks/lammps_flows/pmg_data/Si.tersoff Si
+Reading tersoff potential file /Users/virkaran/Code/Notebooks/lammps_flows/pmg_data/Si.tersoff with DATE: 2007-10-25
+
+# Velocities
+velocity all create 300 42 mom yes rot yes dist gaussian
+neigh_modify delay 5 every 1 check yes
+
+# Ensemble
+fix 1 all npt temp 300 300 0.1 iso 1.0 1.0 0.1
+
+# Outputs
+thermo 100
+dump d1 all custom 100 traj.dump id element x y z vx vy vz fx fy fz
+dump_modify d1 sort id element Si
+
+# Actions
+timestep 0.001
+run 1000
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Your simulation uses code contributions which should be cited:
+
+- Type Label Framework: https://doi.org/10.1021/acs.jpcb.3c08419
+
+@Article{Gissinger24,
+ author = {Jacob R. Gissinger, Ilia Nikiforov, Yaser Afshar, Brendon Waters, Moon-ki Choi, Daniel S. Karls, Alexander Stukowski, Wonpil Im, Hendrik Heinz, Axel Kohlmeyer, and Ellad B. Tadmor},
+ title = {Type Label Framework for Bonded Force Fields in LAMMPS},
+ journal = {J. Phys. Chem. B},
+ year =    2024,
+ volume =  128,
+ number =  13,
+ pages =   {3282--3297}
+}
+
+CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE-CITE
+
+Neighbor list info ...
+  update: every = 1 steps, delay = 5 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 5.2
+  ghost atom cutoff = 5.2
+  binsize = 2.6, bins = 15 9 7
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair tersoff, perpetual
+      attributes: full, newton on
+      pair build: full/bin/atomonly
+      stencil: full/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 3.117 | 3.117 | 3.117 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press          Volume    
+         0   300           -1156.9637      0             -1147.3079     -17230.329      5111.0364    
+       100   161.35918     -1151.9434      0             -1146.7499     -5284.2016      5010.3809    
+       200   237.97159     -1152.4047      0             -1144.7454     -2837.8624      5020.9192    
+       300   214.18309     -1149.3738      0             -1142.4802     -2097.8356      5009.1231    
+       400   291.03317     -1149.3732      0             -1140.0061     -1944.6177      5020.8595    
+       500   310.55624     -1147.8817      0             -1137.8862     -2798.8809      5006.7268    
+       600   307.70946     -1146.3263      0             -1136.4225     -4995.2675      5018.0707    
+       700   370.57201     -1148.3663      0             -1136.4392     -5622.264       5045.3577    
+       800   278.55574     -1146.9591      0             -1137.9935     -2925.3125      5010.8237    
+       900   278.87134     -1147.7923      0             -1138.8166     -1315.0657      5000.8301    
+      1000   297.43893     -1148.4428      0             -1138.8695     -1257.4949      5008.1469    
+Loop time of 0.381613 on 1 procs for 1000 steps with 250 atoms
+
+Performance: 226.407 ns/day, 0.106 hours/ns, 2620.454 timesteps/s, 655.114 katom-step/s
+98.0% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.36642    | 0.36642    | 0.36642    |   0.0 | 96.02
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.0023196  | 0.0023196  | 0.0023196  |   0.0 |  0.61
+Output  | 0.0051521  | 0.0051521  | 0.0051521  |   0.0 |  1.35
+Modify  | 0.0067327  | 0.0067327  | 0.0067327  |   0.0 |  1.76
+Other   |            | 0.0009893  |            |       |  0.26
+
+Nlocal:            250 ave         250 max         250 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:            774 ave         774 max         774 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:         7000 ave        7000 max        7000 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 7000
+Ave neighs/atom = 28
+Neighbor list builds = 0
+Dangerous builds = 0
+write_restart md.restart
+System init for write_restart ...
+Total wall time: 0:00:00
