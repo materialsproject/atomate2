@@ -112,7 +112,7 @@ strict-forcefields-torch-limited = [
     "dgl<=2.4.0; sys_platform == 'linux'",
     "torch==2.2.2; sys_platform == 'darwin' or sys_platform == 'win32'",
     "torch==2.2.0; sys_platform == 'linux'",
-    "torchdata==0.7.1",
+    "torchdata==0.11.0",
     "nequip==0.16.2", # requires numpy<2 because of matscipy
     "numpy==1.26.4",
 ]
