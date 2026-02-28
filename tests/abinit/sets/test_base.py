@@ -316,7 +316,7 @@ def test_generator_resolve_deps():
             assert len(input_files) == 2
 
 
-def test_generator_get_input_set(si_structure, mocker):
+def test_generator_get_input_set(si_structure, monkeypatch):
     with ScratchDir(".") as tmpdir:
         saisg = SomeAbinitInputSetGenerator(factory=mocked_factory)
         abinit_input_set = saisg.get_input_set(
@@ -336,10 +336,10 @@ def test_generator_get_input_set(si_structure, mocker):
         out_den1b = Path(os.path.join(output1b, OUTDIR_NAME, "out_DEN"))
         out_den1b.touch()
 
-        mocker.patch.object(
+        monkeypatch.setattr(
             atomate2.abinit.sets.base,
             "get_final_structure",
-            return_value=si_structure,
+            value=lambda x: si_structure,  # noqa : ARG005
         )
         abinit_input_set = saisg.get_input_set(
             structure=si_structure,

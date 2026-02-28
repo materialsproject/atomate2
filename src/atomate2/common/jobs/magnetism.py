@@ -128,6 +128,8 @@ def run_ordering_calculations(
             structure = relax_job.output.structure
             parent_uuid = relax_job.output.uuid
             static_job_kwargs["prev_dir"] = relax_job.output.dir_name
+        else:
+            structure = struct
 
         static_job = static_maker.make(structure, **static_job_kwargs)
         static_job.append_name(" " + name)

@@ -23,12 +23,14 @@ from ase.mep.neb import NEB
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
 from emmet.core.neb import NebMethod, NebResult
+from emmet.core.trajectory import AtomTrajectory
 from monty.serialization import dumpfn
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
-from atomate2.ase.schemas import AseResult
+from atomate2 import SETTINGS
+from atomate2.ase.schemas import AseResult, convert_stress_from_voigt_to_symm
 
 if TYPE_CHECKING:
     from os import PathLike
@@ -83,7 +85,7 @@ class TrajectoryObserver:
         self.forces: list[np.ndarray] = []
 
         self._calc_kwargs = {
-            "stress": (
+            "stresses": (
                 "stress" in self.atoms.calc.implemented_properties and self._is_periodic
             ),
             "magmoms": True,
@@ -113,14 +115,18 @@ class TrajectoryObserver:
         # When _store_md_outputs is True, ideal gas contribution to
         # stress is included.
         # Only store stress for periodic systems.
-        if self._calc_kwargs["stress"]:
+        if self._calc_kwargs["stresses"]:
             self.stresses.append(
                 self.atoms.get_stress(include_ideal_gas=self._store_md_outputs)
             )
 
         if self._calc_kwargs["magmoms"]:
             try:
-                self.magmoms.append(self.atoms.get_magnetic_moments())
+                magmoms = self.atoms.get_magnetic_moments()
+                # This block needed for CHGNet
+                if len(magmoms.shape) == 2 and magmoms.T.shape[0] == 1:
+                    magmoms = magmoms.T[0]
+                self.magmoms.append(magmoms)
             except PropertyNotImplementedError:
                 self._calc_kwargs["magmoms"] = False
 
@@ -144,7 +150,7 @@ class TrajectoryObserver:
     def save(
         self,
         filename: str | PathLike | None,
-        fmt: Literal["pmg", "ase", "xdatcar"] = "ase",
+        fmt: Literal["pmg", "ase", "xdatcar", "parquet"] = "ase",
     ) -> None:
         """
         Save the trajectory file using monty.serialization.
@@ -162,6 +168,8 @@ class TrajectoryObserver:
             self.to_pymatgen_trajectory(filename=filename, file_format=fmt)  # type: ignore[arg-type]
         elif fmt == "ase":
             self.to_ase_trajectory(filename=filename)
+        elif fmt == "parquet":
+            self.to_emmet_trajectory(filename=filename)
         else:
             raise ValueError(f"Unknown trajectory format {fmt}.")
 
@@ -189,7 +197,7 @@ class TrajectoryObserver:
                 "energy": self.energies[idx],
                 "forces": self.forces[idx],
             }
-            if self._calc_kwargs["stress"]:
+            if self._calc_kwargs["stresses"]:
                 kwargs["stress"] = self.stresses[idx]
             if self._calc_kwargs["magmoms"]:
                 kwargs["magmom"] = self.magmoms[idx]
@@ -218,7 +226,7 @@ class TrajectoryObserver:
             If "xdatcar", writes a VASP-format XDATCAR object to file
         """
         frame_property_keys = ["energy", "forces"]
-        for k in ("stress", "magmoms", "velocities", "temperature"):
+        for k in ("stresses", "magmoms", "velocities", "temperature"):
             if self._calc_kwargs[k]:
                 frame_property_keys += [k]
 
@@ -276,12 +284,45 @@ class TrajectoryObserver:
 
         return pmg_traj
 
+    def to_emmet_trajectory(
+        self, filename: str | PathLike | None = None
+    ) -> AtomTrajectory:
+        """Create an emmet.core.AtomTrajectory."""
+        frame_props = {
+            "cells": "lattice",
+            "energies": "energy",
+            "forces": "forces",
+            "stresses": "stress",
+            "magmoms": "magmoms",
+            "velocities": "velocities",
+            "temperatures": "temperature",
+        }
+        for k in ("stresses", "magmoms"):
+            if not self._calc_kwargs[k]:
+                frame_props.pop(k)
+
+        ionic_step_data = {v: getattr(self, k) for k, v in frame_props.items()}
+        if self._calc_kwargs["stresses"]:
+            ionic_step_data["stress"] = [
+                convert_stress_from_voigt_to_symm(val) for val in self.stresses
+            ]
+
+        traj = AtomTrajectory(
+            elements=self.atoms.get_atomic_numbers(),
+            cart_coords=self.atom_positions,
+            num_ionic_steps=len(self.atom_positions),
+            **ionic_step_data,
+        )
+        if filename:
+            traj.to(file_name=filename)
+        return traj
+
     def as_dict(self) -> dict:
         """Make JSONable dict representation of the Trajectory."""
         traj_dict = {
             "energy": self.energies,
             "forces": self.forces,
-            "stress": self.stresses,
+            "stresses": self.stresses,
             "atom_positions": self.atom_positions,
             "cells": self.cells,
             "atoms": self.atoms,
@@ -350,6 +391,7 @@ class AseRelaxer:
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
         filter_kwargs: dict | None = None,
+        use_emmet_models: bool = SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS,
         **kwargs,
     ) -> AseResult:
         """
@@ -373,6 +415,9 @@ class AseRelaxer:
             The step interval for saving the trajectories.
         verbose : bool
             If True, screen output will be shown.
+        use_emmet_models : bool
+            Whether to use emmet-core (True) or pymatgen (False)
+            data models for larger objects, e.g., trajectories.
         **kwargs
             Further kwargs.
 
@@ -413,11 +458,17 @@ class AseRelaxer:
         struct = self.ase_adaptor.get_structure(
             atoms, cls=Molecule if is_mol else Structure
         )
-        traj = obs.to_pymatgen_trajectory(None)
-        is_force_conv = all(
-            np.linalg.norm(traj.frame_properties[-1]["forces"][idx]) < abs(fmax)
-            for idx in range(len(struct))
-        )
+
+        if use_emmet_models:
+            traj = obs.to_emmet_trajectory(filename=None)
+            final_forces = traj.forces[-1]
+            first_last_energy = [traj.energy[idx] for idx in (0, -1)]
+        else:
+            traj = obs.to_pymatgen_trajectory(filename=None, file_format="pmg")
+            final_forces = traj.frame_properties[-1]["forces"]
+            first_last_energy = [
+                traj.frame_properties[idx]["energy"] for idx in (0, -1)
+            ]
 
         if final_atoms_object_file is not None:
             if steps <= 1:
@@ -425,6 +476,22 @@ class AseRelaxer:
                 write_atoms.calc = self.calculator
             else:
                 write_atoms = atoms
+
+            # ase==3.26.0 change: writing FixAtoms and FixCartesian
+            # constraints to extxyz supported.
+            # Write only these constraints to extxyz
+            if len(write_atoms.constraints) > 0:
+                from ase.constraints import FixAtoms, FixCartesian
+
+                write_atoms_constraints = [
+                    cons
+                    for cons in write_atoms.constraints
+                    if isinstance(cons, FixAtoms | FixCartesian)
+                ]
+                del write_atoms.constraints
+                for cons in write_atoms_constraints:
+                    write_atoms.set_constraint(cons)
+
             ase_write(
                 final_atoms_object_file, write_atoms, format="extxyz", append=True
             )
@@ -433,10 +500,10 @@ class AseRelaxer:
             final_mol_or_struct=struct,
             trajectory=traj,
             converged=converged,
-            is_force_converged=is_force_conv,
-            energy_downhill=(
-                traj.frame_properties[-1]["energy"] < traj.frame_properties[0]["energy"]
+            is_force_converged=np.all(
+                np.linalg.norm(np.array(final_forces), axis=1) < abs(fmax)
             ),
+            energy_downhill=first_last_energy[-1] < first_last_energy[0],
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
         )

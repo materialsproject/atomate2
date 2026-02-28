@@ -20,6 +20,13 @@ _REF_PATHS = {}
 _ABINIT_FILES = ("run.abi", "abinit_input.json")
 _FAKE_RUN_ABINIT_KWARGS = {}
 
+# Do this here to prevent issues with threaded CI runners
+# In abipy, it's possible to have thread collisions in
+# making this directory because `exist_ok = False` there
+_ABINIT_PATH = Path("~/.abinit").expanduser()
+if not _ABINIT_PATH.is_dir():
+    _ABINIT_PATH.mkdir(exist_ok=True, parents=True)
+
 
 @pytest.fixture(scope="session")
 def abinit_test_dir(test_dir):
@@ -32,7 +39,7 @@ def abinit_integration_tests(pytestconfig):
 
 
 @pytest.fixture
-def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
+def mock_abinit(monkeypatch, abinit_test_dir, abinit_integration_tests):
     """
     This fixture allows one to mock running ABINIT.
 
@@ -56,7 +63,7 @@ def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
         atomate2.abinit.files.write_abinit_input_set(*args, **kwargs)
         check_abinit_inputs(ref_path)
 
-    mocker.patch.object(
+    monkeypatch.setattr(
         atomate2.abinit.jobs.base,
         "write_abinit_input_set",
         wrapped_write_abinit_input_set,
@@ -73,8 +80,8 @@ def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
             check_abinit_inputs(ref_path)
             fake_run_abinit(ref_path)
 
-        mocker.patch.object(atomate2.abinit.run, "run_abinit", mock_run_abinit)
-        mocker.patch.object(atomate2.abinit.jobs.base, "run_abinit", mock_run_abinit)
+        monkeypatch.setattr(atomate2.abinit.run, "run_abinit", mock_run_abinit)
+        monkeypatch.setattr(atomate2.abinit.jobs.base, "run_abinit", mock_run_abinit)
 
         def _run(ref_paths, fake_run_abinit_kwargs=None):
             if fake_run_abinit_kwargs is None:
@@ -84,7 +91,7 @@ def mock_abinit(mocker, abinit_test_dir, abinit_integration_tests):
 
         yield _run
 
-    mocker.stopall()
+    monkeypatch.undo()
     _REF_PATHS.clear()
     _FAKE_RUN_ABINIT_KWARGS.clear()
 
@@ -284,10 +291,8 @@ def _get_differences_tol(
         self_dataset_dict = dict(self_dataset)
         other_dataset_dict = dict(other_dataset)
         for k in to_ignore:
-            if k in self_dataset_dict:
-                del self_dataset_dict[k]
-            if k in other_dataset_dict:
-                del other_dataset_dict[k]
+            self_dataset_dict.pop(k, None)
+            other_dataset_dict.pop(k, None)
         common_keys = set(self_dataset_dict.keys()).intersection(
             other_dataset_dict.keys()
         )

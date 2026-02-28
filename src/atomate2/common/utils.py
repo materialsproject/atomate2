@@ -209,3 +209,15 @@ def _recursive_get_dir_names(jobs: list, dir_names: list) -> None:
             _recursive_get_dir_names(sub_jobs, dir_names)
         else:
             dir_names.append(a_job.output.dir_name)
+
+
+def _recursive_to_list(voigt_data: Any) -> Any:
+    """Recursively convert tensor-like data to nested lists.
+
+    Useful for converting numpy or torch arrays to lists.
+    """
+    if isinstance(voigt_data, list):
+        return [_recursive_to_list(item) for item in voigt_data]
+    if hasattr(voigt_data, "tolist"):
+        return voigt_data.tolist()
+    return voigt_data
