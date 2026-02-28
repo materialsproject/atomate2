@@ -1,0 +1,35 @@
+latt-move-scale 0.0 0.0 0.0
+lattice \
+     6.328500573514  2.109500191171  0.000000000000 \
+     0.000000000000  5.966567560367  0.000000000000 \
+     3.653761509685  3.653761509685  7.307523019371
+ion Si  0.250000000000  0.250000000000  0.250000000000 1
+ion Si  0.000000000000  0.000000000000  0.000000000000 1
+core-overlap-check none
+ion-species GBRV_v1.5/$ID_pbe_v1.uspp
+kpoint-folding 7 7 7
+symmetries none
+elec-n-bands 14
+coords-type Lattice
+initial-magnetic-moments Si 0 0
+
+elec-ex-corr gga
+van-der-waals D3
+elec-cutoff 20.0 100.0
+elec-smearing Fermi 0.001
+spintype z-spin
+elec-initial-magnetization 5 no
+converge-empty-states yes
+coulomb-interaction Periodic
+
+ionic-minimize \
+    nIterations 100
+lattice-minimize \
+    nIterations 0
+electronic-minimize \
+    nIterations 100 \
+    energyDiffThreshold 1e-07
+
+dump-name jdftx.$VAR
+band-projection-params yes no
+dump End Dtot State BandEigs BandProjections BoundCharge DOS Ecomponents EigStats ElecDensity Forces KEdensity VfluidTot
