@@ -68,6 +68,7 @@ forcefields = [
 torchsim = [
     "torch-sim-atomistic==0.5.0; python_version >= '3.12'"
 ]
+jdftx = ["pymatgen==2025.10.7"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 ase = ["ase>=3.26.0"]
 ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
