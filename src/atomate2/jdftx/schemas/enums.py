@@ -1,6 +1,6 @@
 """Enums for constants across JDFTx schemas."""
 
-from emmet.core.utils import ValueEnum
+from emmet.core.types.enums import ValueEnum
 
 
 class JDFTxStatus(ValueEnum):

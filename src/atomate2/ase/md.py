@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import contextlib
 import io
+import logging
 import os
 import sys
 import time
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from enum import Enum
@@ -23,12 +24,13 @@ from ase.md.velocitydistribution import (
     Stationary,
     ZeroRotation,
 )
-from emmet.core.vasp.calculation import StoreTrajectoryOption
+from emmet.core.types.enums import StoreTrajectoryOption
 from jobflow import job
 from pymatgen.core.structure import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
 from scipy.interpolate import interp1d
 
+from atomate2 import SETTINGS
 from atomate2.ase.jobs import _ASE_DATA_OBJECTS, AseMaker
 from atomate2.ase.schemas import AseResult, AseTaskDoc
 from atomate2.ase.utils import TrajectoryObserver
@@ -40,6 +42,8 @@ if TYPE_CHECKING:
     from ase.calculators.calculator import Calculator
 
     from atomate2.ase.schemas import AseMoleculeTaskDoc, AseStructureTaskDoc
+
+logger = logging.getLogger(__name__)
 
 
 class MDEnsemble(Enum):
@@ -60,12 +64,13 @@ class DynamicsPresets(Enum):
     nvt_nose_hoover = "ase.md.npt.NPT"
     npt_berendsen = "ase.md.nptberendsen.NPTBerendsen"
     npt_nose_hoover = "ase.md.npt.NPT"  # noqa: PIE796
+    npt_nose_hoover_chain = "ase.md.nose_hoover_chain.MTKNPT"
 
 
 default_dynamics = {
     MDEnsemble.nve: "velocityverlet",
     MDEnsemble.nvt: "langevin",
-    MDEnsemble.npt: "nose-hoover",
+    MDEnsemble.npt: "nose-hoover-chain",
 }
 
 _valid_dynamics: dict[MDEnsemble, set[str]] = {}
@@ -78,7 +83,7 @@ for preset in DynamicsPresets.__members__:
 
 
 @dataclass
-class AseMDMaker(AseMaker, metaclass=ABCMeta):
+class AseMDMaker(AseMaker, ABC):
     """
     Perform MD with the Atomic Simulation Environment (ASE).
 
@@ -139,11 +144,13 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
     traj_file : str | Path | None = None
         If a str or Path, the name of the file to save the MD trajectory to.
         If None, the trajectory is not written to disk
-    traj_file_fmt : Literal["ase","pmg","xdatcar"]
+    traj_file_fmt : Literal["ase","pmg","xdatcar", "parquet"]
         The format of the trajectory file to write.
         If "ase", writes an ASE .Trajectory.
         If "pmg", writes a Pymatgen .Trajectory.
-        If "xdatcar, writes a VASP-style XDATCAR
+        If "xdatcar", writes a VASP-style XDATCAR
+        If "parquet", uses emmet.core's Trajectory object to write a high-efficiency
+            parquet format file containing the trajectory.
     traj_interval : int
         The step interval for saving the trajectories.
     mb_velocity_seed : int or None
@@ -155,6 +162,9 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
         Whether to initialize the atomic velocities with zero angular momentum
     verbose : bool = False
         Whether to print stdout to screen during the MD run.
+    use_emmet_models : bool = False
+        Whether to use emmet-core (True) or pymatgen (False)
+        data models for larger objects, e.g., trajectories.
     """
 
     name: str = "ASE MD"
@@ -175,6 +185,7 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
     zero_linear_momentum: bool = False
     zero_angular_momentum: bool = False
     verbose: bool = False
+    use_emmet_models: bool = SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS
 
     def __post_init__(self) -> None:
         """Ensure that ensemble is an enum."""
@@ -249,18 +260,23 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
             if (
                 (
                     isinstance(self.dynamics, DynamicsPresets)
-                    and DynamicsPresets(self.dynamics) == DynamicsPresets.npt_berendsen
+                    and DynamicsPresets(self.dynamics)
+                    == DynamicsPresets.npt_nose_hoover
                 )
                 or (
                     isinstance(self.dynamics, type)
                     and issubclass(self.dynamics, MolecularDynamics)
-                    and self.dynamics.__name__ == "NPTBerendsen"
+                    and self.dynamics.__name__ == "NPT"
                 )
-                or (isinstance(self.dynamics, str) and self.dynamics == "berendsen")
+                or (isinstance(self.dynamics, str) and self.dynamics == "nose-hoover")
             ):
-                stress_kwarg = "pressure_au"
-            else:
+                logger.warning(
+                    "The `NPT` module in ASE is no longer recommended."
+                    "Users are advised to switch to Nose-Hoover chain / MTKNPT."
+                )
                 stress_kwarg = "externalstress"
+            else:
+                stress_kwarg = "pressure_au"
 
             self.ase_md_kwargs[stress_kwarg] = self.ase_md_kwargs.get(
                 stress_kwarg, self.p_schedule[0] * 1e3 * units.bar
@@ -338,8 +354,8 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
             if self.dynamics not in _valid_dynamics[self.ensemble]:
                 raise ValueError(
                     f"{self.dynamics} thermostat not available for "
-                    f"{self.ensemble.value}."
-                    f"Available {self.ensemble.value} thermostats are:"
+                    f"{self.ensemble.value}. "
+                    f"Available {self.ensemble.value} thermostats are: "
                     " ".join(_valid_dynamics[self.ensemble])
                 )
 
@@ -389,7 +405,10 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
         def _callback(dyn: MolecularDynamics = md_runner) -> None:
             if self.ensemble == MDEnsemble.nve:
                 return
-            dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
+            if hasattr(dyn, "_temperature_K"):
+                dyn._temperature_K = self.t_schedule[dyn.nsteps]  # noqa: SLF001
+            else:
+                dyn.set_temperature(temperature_K=self.t_schedule[dyn.nsteps])
             if self.ensemble == MDEnsemble.nvt:
                 return
 
@@ -415,7 +434,12 @@ class AseMDMaker(AseMaker, metaclass=ABCMeta):
 
         return AseResult(
             final_mol_or_struct=mol_or_struct,
-            trajectory=md_observer.to_pymatgen_trajectory(filename=None),
+            trajectory=getattr(
+                md_observer,
+                "to_emmet_trajectory"
+                if self.use_emmet_models
+                else "to_pymatgen_trajectory",
+            )(filename=None),
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
         )

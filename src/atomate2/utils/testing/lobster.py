@@ -42,8 +42,6 @@ def monkeypatch_lobster(
     monkeypatch: pytest.MonkeyPatch, lobster_test_dir: Path
 ) -> Generator[
     Callable[[dict[str, str | Path], dict[str, dict[str, Sequence]]], None],
-    None,
-    None,
 ]:
     """Monkeypatch LOBSTER run calls for testing purposes.
 

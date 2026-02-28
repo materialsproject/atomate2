@@ -16,10 +16,9 @@ from monty.serialization import dumpfn, loadfn
 from pydantic import BaseModel, model_validator
 from pymatgen.io.vasp import Incar, Kpoints, Poscar, Potcar
 from pymatgen.io.vasp.sets import VaspInputSet
-from pymatgen.util.coord import find_in_coord_list_pbc
+from pymatgen.util.coord import in_coord_list_pbc
 
 import atomate2.vasp.jobs.base
-import atomate2.vasp.jobs.defect
 import atomate2.vasp.jobs.neb
 
 try:
@@ -58,7 +57,7 @@ def zpath(path: str | Path) -> Path:
 
 def monkeypatch_vasp(
     monkeypatch: MonkeyPatch, vasp_test_dir: Path, nelect: int = 12
-) -> Generator[Callable[[Any, Any], Any], None, None]:
+) -> Generator[Callable[[Any, Any], Any]]:
     """Fake VASP calculations by copying reference files.
 
     This is provided as a generator and can be used as by conextmanagers and
@@ -121,7 +120,6 @@ def monkeypatch_vasp(
 
     monkeypatch.setattr(atomate2.vasp.run, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.base, "run_vasp", mock_run_vasp)
-    monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
     monkeypatch.setattr(atomate2.vasp.jobs.neb, "run_vasp", mock_run_vasp)
     if pmg_defects_installed:
         monkeypatch.setattr(atomate2.vasp.jobs.defect, "run_vasp", mock_run_vasp)
@@ -195,7 +193,6 @@ def fake_run_vasp(
 
     if clear_inputs:
         _clear_vasp_inputs()
-
     _copy_vasp_outputs(ref_path)
 
     # pretend to run VASP by copying pre-generated outputs from reference dir
@@ -285,7 +282,7 @@ def _check_poscar(
     # To account for this, we check that the sites are the same, within a tolerance,
     # while accounting for PBC.
     coord_match = [
-        len(find_in_coord_list_pbc(ref_frac_coords, coord, atol=1e-3)) > 0
+        in_coord_list_pbc(ref_frac_coords, coord, atol=1e-3)
         for coord in user_frac_coords
     ]
     if (

@@ -13,13 +13,10 @@ from atomate2.openmm.flows.core import _get_calcs_reversed, collect_outputs
 from atomate2.openmm.jobs.base import BaseOpenMMMaker, openmm_job
 
 if TYPE_CHECKING:
-    from emmet.core.openmm import (
-        Calculation,
-        OpenMMFlowMaker,
-        OpenMMInterchange,
-        OpenMMTaskDocument,
-    )
+    from emmet.core.openmm import Calculation, OpenMMFlowMaker, OpenMMTaskDocument
     from openff.interchange import Interchange
+
+    from atomate2.openmm.interchange import OpenMMInterchange
 
 
 def _get_final_jobs(input_jobs: list[Job] | Flow) -> list[Job]:
@@ -159,9 +156,7 @@ class DynamicOpenMMFlowMaker(Maker):
 
     name: str = field(default=None)
     tags: list[str] = field(default_factory=list)
-    maker: BaseOpenMMMaker | OpenMMFlowMaker = field(
-        default_factory=lambda: BaseOpenMMMaker()
-    )
+    maker: BaseOpenMMMaker | OpenMMFlowMaker = field(default_factory=BaseOpenMMMaker)
     max_stages: int = field(default=5)
     collect_outputs: bool = True
     should_continue: ShouldContinueProtocol = field(

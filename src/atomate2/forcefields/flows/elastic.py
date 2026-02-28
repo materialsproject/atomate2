@@ -7,13 +7,14 @@ from typing import TYPE_CHECKING
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.elastic import BaseElasticMaker
-from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
 if TYPE_CHECKING:
     from typing import Any
 
     from typing_extensions import Self
+
+    from atomate2.forcefields import MLFF
 
 # default options for the forcefield makers in ElasticMaker
 _DEFAULT_RELAX_KWARGS: dict[str, Any] = {
@@ -102,7 +103,7 @@ class ElasticMaker(BaseElasticMaker):
     @classmethod
     def from_force_field_name(
         cls,
-        force_field_name: str | MLFF,
+        force_field_name: str | MLFF | dict,
         mlff_kwargs: dict | None = None,
         **kwargs,
     ) -> Self:
@@ -111,7 +112,7 @@ class ElasticMaker(BaseElasticMaker):
 
         Parameters
         ----------
-        force_field_name : str or .MLFF
+        force_field_name : str or .MLFF or dict
             The name of the force field.
         mlff_kwargs : dict or None (default)
             kwargs to pass to `ForceFieldRelaxMaker`.
@@ -125,19 +126,20 @@ class ElasticMaker(BaseElasticMaker):
         default_kwargs: dict[str, Any] = {
             **_DEFAULT_RELAX_KWARGS,
             **(mlff_kwargs or {}),
-            "force_field_name": _get_formatted_ff_name(force_field_name),
+            "force_field_name": force_field_name,
         }
+        bulk_relax_maker = ForceFieldRelaxMaker(
+            relax_cell=True,
+            **default_kwargs,
+        )
         kwargs.update(
-            bulk_relax_maker=ForceFieldRelaxMaker(
-                relax_cell=True,
-                **default_kwargs,
-            ),
+            bulk_relax_maker=bulk_relax_maker,
             elastic_relax_maker=ForceFieldRelaxMaker(
                 relax_cell=False,
                 **default_kwargs,
             ),
         )
         return cls(
-            name=f"{str(force_field_name).split('MLFF.')[-1]} elastic",
+            name=f"{bulk_relax_maker.mlff.name} elastic",
             **kwargs,
         )

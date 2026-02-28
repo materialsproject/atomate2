@@ -11,6 +11,8 @@ from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 def test_elastic_wf_with_mace(
     clean_dir, si_structure, test_dir, convenience_constructor: bool
 ):
+    pytest.importorskip("mace")
+
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
     model_path = f"{test_dir}/forcefields/mace/MACE.model"
     common_kwds = {
@@ -42,3 +44,16 @@ def test_elastic_wf_with_mace(
         0.002005039, abs=0.01
     )
     assert elastic_output.chemsys == "Si"
+
+
+def test_ext_load_elastic_initialization():
+    pytest.importorskip("mace")
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+    maker = ElasticMaker.from_force_field_name(
+        force_field_name=calculator_meta,
+    )
+    assert maker.bulk_relax_maker.ase_calculator_name == "mace_mp"
+    assert maker.elastic_relax_maker.ase_calculator_name == "mace_mp"

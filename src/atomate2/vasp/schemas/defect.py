@@ -2,7 +2,7 @@
 
 import logging
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 from pydantic import BaseModel, Field
 from pymatgen.io.vasp.outputs import WSWQ
@@ -35,8 +35,8 @@ class FiniteDifferenceDocument(BaseModel):
     def from_directory(
         cls,
         directory: Union[str, Path],
-        ref_dir: Optional[Union[str, Path]] = None,
-        distorted_dirs: Optional[list[str]] = None,
+        ref_dir: Union[str, Path] | None = None,
+        distorted_dirs: list[str] | None = None,
     ) -> Self:
         """Read the FiniteDiff file.
 

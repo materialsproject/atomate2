@@ -125,8 +125,7 @@ class FerroelectricMaker(Maker):
             add_interp_flow.output,
         )
 
-        jobs.append(add_interp_flow)
-        jobs.append(pol_analysis)
+        jobs += (add_interp_flow, pol_analysis)
 
         return Flow(
             jobs=jobs,

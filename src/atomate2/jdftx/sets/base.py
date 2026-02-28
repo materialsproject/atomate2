@@ -21,8 +21,7 @@ from atomate2 import SETTINGS
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-
-_BASE_JDFTX_SET = loadfn(get_mod_path("pymatgen.io.jdftx.sets") / "BaseJdftxSet.yaml")
+_BASE_JDFTX_SET = loadfn(get_mod_path("pymatgen.io.jdftx") / "BaseJdftxSet.yaml")
 _GENERATION_CONFIG = loadfn(
     get_mod_path("atomate2.jdftx.sets") / "GenerationConfig.yaml"
 )
