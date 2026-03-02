@@ -794,9 +794,6 @@ def test_upet_relax_maker(si_structure: Structure, test_dir: Path):
     job = ForceFieldRelaxMaker(
         force_field_name="UPET",
         steps=25,
-        calculator_kwargs={
-            "model": "pet-omad-xs",  # Use extra small (~18MB)
-        },
     ).make(si_structure)
     responses = run_locally(job, ensure_success=True)
     output = responses[job.uuid][1].output
