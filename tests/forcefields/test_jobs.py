@@ -785,6 +785,36 @@ def test_mattersim_relax_maker(si_structure: Structure, test_dir: Path):
     assert output.forcefield_version == get_imported_version("mattersim")
 
 
+@pytest.mark.skipif(not mlff_is_installed("UPET"), reason="upet is not installed.")
+def test_upet_relax_maker(si_structure: Structure, test_dir: Path):
+
+    # translate one atom to ensure a small number of relaxation steps are taken
+    si_structure.translate_sites(0, [0, 0, 0.1])
+    # generate job
+    job = ForceFieldRelaxMaker(
+        force_field_name="UPET",
+        steps=25,
+        calculator_kwargs={
+            "model": "pet-omad-xs",  # Use extra small (~18MB)
+        },
+    ).make(si_structure)
+    responses = run_locally(job, ensure_success=True)
+    output = responses[job.uuid][1].output
+    assert isinstance(output, ForceFieldTaskDocument)
+    assert output.output.energy == approx(-11.241942405700684, rel=1e-4)
+    assert np.allclose(
+        output.output.ionic_steps[-1].forces,
+        [
+            [-0.16317394375801086, -0.11385675519704819, 0.09085404127836227],
+            [0.16317394375801086, 0.113856740295887, -0.09085404127836227],
+        ],
+        rtol=1e-2,
+    )
+    assert len(output.output.ionic_steps) > 1
+    assert output.output.n_steps == len(output.output.ionic_steps)
+    assert output.forcefield_version == get_imported_version("upet")
+
+
 @pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
 def test_ext_load_static_maker(si_structure: Structure):
     calculator_meta = {

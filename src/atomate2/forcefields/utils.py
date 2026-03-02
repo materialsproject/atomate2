@@ -45,6 +45,7 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
     Allegro = "Allegro"
     FAIRChem = "FAIRChem"
     MatterSim = "MatterSim"
+    UPET = "UPET"
 
     @classmethod
     def _missing_(cls, value: Any) -> Any:
@@ -79,6 +80,10 @@ _DEFAULT_CALCULATOR_KWARGS: dict[MLFF, Any] = {
     MLFF.FAIRChem: {
         "predict_unit": {"model_name": "uma-s-1p1"},
         "task_name": "omat",
+    },
+    MLFF.UPET: {
+        "model": "pet-oam-xl",
+        "version": "1.0.0",
     },
 }
 
@@ -377,6 +382,11 @@ def ase_calculator(
 
                 calculator = MatterSimCalculator(**kwargs)
 
+            case MLFF.UPET:
+                from upet.calculator import UPETCalculator
+
+                calculator = UPETCalculator(**kwargs)
+
     elif isinstance(calculator_meta, dict):
         calc_cls = _load_calc_cls(calculator_meta)
         calculator = calc_cls(**kwargs)
@@ -444,6 +454,8 @@ def _get_pkg_name(calculator_meta: MLFF | dict[str, Any]) -> str | None:
                 ff_pkg = "calorine"
             case MLFF.SevenNet:
                 ff_pkg = "sevenn"
+            case MLFF.UPET:
+                ff_pkg = "upet"
             case _:
                 ff_pkg = None
         return ff_pkg
