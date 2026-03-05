@@ -1,9 +1,10 @@
 import os
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import pytest
 from ase.calculators.calculator import Calculator
-from jobflow import Flow, run_locally
+from jobflow import Flow, JobStore, run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
@@ -113,6 +114,26 @@ def test_phonon_wf_force_field(
 ):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
+    # See issue: https://github.com/materialsproject/atomate2/issues/1395
+    # Testing JSON store explicitly to avoid regression for this flow
+    json_dir = TemporaryDirectory()
+    json_store = JobStore.from_dict_spec(
+        {
+            "docs_store": {
+                "type": "JSONStore",
+                "paths": str(Path(json_dir.name) / "output.json"),
+                "read_only": False,
+            },
+            "additional_stores": {
+                "data": {
+                    "type": "JSONStore",
+                    "paths": str(Path(json_dir.name) / "blob_output.json"),
+                    "read_only": False,
+                }
+            },
+        }
+    )
+
     phonon_kwargs = dict(
         use_symmetrized_structure="conventional",
         create_thermal_displacements=False,
@@ -146,7 +167,12 @@ def test_phonon_wf_force_field(
     flow = phonon_maker.make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(flow, create_folders=True, ensure_success=True)
+    responses = run_locally(
+        flow, create_folders=True, ensure_success=True, store=json_store
+    )
+
+    # close temp dir for JSON store
+    json_dir.cleanup()
 
     # validate the outputs
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output

@@ -20,8 +20,12 @@ for mlff in (x for x in MLFF if x.value != "Forcefield"):
     try:
         _ = ase_calculator(mlff)
         _INSTALLED_MLFF[mlff.name] = True
-    except (ImportError, ValueError):
-        _INSTALLED_MLFF[mlff.name] = False
+    except (ImportError, ValueError) as exc:
+        # Note that UPET calculator raises a ValueError if no kwargs are passed
+        # Catch that here
+        _INSTALLED_MLFF[mlff.name] = (
+            "'model' parameter is required when not using checkpoint_path" in str(exc)
+        )
     except Exception:  # noqa: BLE001
         # Some calculators, like GAP, require extra potential files
         # Generally, thesea re
