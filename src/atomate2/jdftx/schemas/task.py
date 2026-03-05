@@ -1,12 +1,10 @@
-# mypy: ignore-errors
-
 """Core definition of a JDFTx Task Document."""
 
 import logging
 from pathlib import Path
-from typing import Any, Optional, TypeVar, Union
+from typing import Any, TypeVar
 
-from custodian.jdftx.jobs import JDFTxJob  # Waiting on Sophie's PR
+from custodian.jdftx.jobs import JDFTxJob
 from emmet.core.structure import StructureMetadata
 from pydantic import BaseModel, Field
 from pymatgen.io.jdftx.sets import FILE_NAMES
@@ -31,13 +29,13 @@ _T = TypeVar("_T", bound="TaskDoc")
 class CustodianDoc(BaseModel):
     """Custodian data for JDFTx calculations."""
 
-    corrections: Optional[list[Any]] = Field(
+    corrections: list[Any] | None = Field(
         None,
         title="Custodian Corrections",
         description="list of custodian correction data for calculation.",
     )
 
-    job: Optional[Union[dict[str, Any], JDFTxJob]] = Field(
+    job: dict[str, Any] | JDFTxJob | None = Field(
         None,
         title="Custodian Job Data",
         description="Job data logged by custodian.",
@@ -47,38 +45,38 @@ class CustodianDoc(BaseModel):
 class TaskDoc(StructureMetadata):
     """Calculation-level details about JDFTx calculations."""
 
-    dir_name: Optional[Union[str, Path]] = Field(
+    dir_name: str | Path | None = Field(
         None, description="The directory for this JDFTx task"
     )
     last_updated: str = Field(
         default_factory=datetime_str,
         description="Timestamp for this task document was last updated",
     )
-    comnpleted_at: Optional[str] = Field(
+    comnpleted_at: str | None = Field(
         None, description="Timestamp for when this task was completed"
     )
-    calc_inputs: Optional[CalculationInput] = Field(
+    calc_inputs: CalculationInput | None = Field(
         {}, description="JDFTx calculation inputs"
     )
-    run_stats: Optional[dict[str, RunStatistics]] = Field(
+    run_stats: dict[str, RunStatistics] | None = Field(
         None,
         description="Summary of runtime statistics for each calculation in this task",
     )
-    calc_outputs: Optional[CalculationOutput] = Field(
+    calc_outputs: CalculationOutput | None = Field(
         None,
         description="JDFTx calculation outputs",
     )
-    state: Optional[JDFTxStatus] = Field(
+    state: JDFTxStatus | None = Field(
         None, description="State of this JDFTx calculation"
     )
-    task_type: Optional[TaskType] = Field(
+    task_type: TaskType | None = Field(
         None, description="The type of task this calculation is"
     )
 
     @classmethod
     def from_directory(
         cls: type[_T],
-        dir_name: Union[Path, str],
+        dir_name: Path | str,
         additional_fields: dict[str, Any] = None,
         # **jdftx_calculation_kwargs, #TODO implement
     ) -> Self:
@@ -122,30 +120,3 @@ class TaskDoc(StructureMetadata):
         )
 
         return doc.model_copy(update=additional_fields)
-
-
-def get_uri(dir_name: Union[str, Path]) -> str:
-    """
-    Return the URI path for a directory.
-
-    This allows files hosted on different file servers to have distinct locations.
-
-    Parameters
-    ----------
-    dir_name : str or Path
-        A directory name.
-
-    Returns
-    -------
-    str
-        Full URI path, e.g., "fileserver.host.com:/full/payj/of/fir_name".
-    """
-    import socket
-
-    fullpath = Path(dir_name).absolute()
-    hostname = socket.gethostname()
-    try:
-        hostname = socket.gethostbyaddr(hostname)[0]
-    except (socket.gaierror, socket.herror) as e:
-        raise Warning(f"Could not resolve hostname for {fullpath}") from e
-    return f"{hostname}:{fullpath}"

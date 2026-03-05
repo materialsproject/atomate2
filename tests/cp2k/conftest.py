@@ -111,11 +111,9 @@ def mock_cp2k(monkeypatch, cp2k_test_dir):
 
         name = CURRENT_JOB.job.name
         ref_path = cp2k_test_dir / _REF_PATHS[name]
-        fake_run_cp2k(check_input, ref_path, **_FAKE_RUN_CP2K_KWARGS.get(name, {}))
+        fake_run_cp2k(ref_path, **_FAKE_RUN_CP2K_KWARGS.get(name, {}))
 
-    get_input_set_orig = (
-        Cp2kInputGenerator.get_input_set
-    )  # doesn't call it, just assigns the method
+    get_input_set_orig = Cp2kInputGenerator.get_input_set
 
     def mock_get_input_set(self, *args, **kwargs):
         return get_input_set_orig(self, *args, **kwargs)
@@ -139,7 +137,6 @@ def mock_cp2k(monkeypatch, cp2k_test_dir):
 
 
 def fake_run_cp2k(
-    check_input,
     ref_path: str | Path,
     input_settings: Sequence[str] = (),
     check_inputs: Sequence[Literal["cp2k.inp"]] = _VFILES,
@@ -183,11 +180,7 @@ def check_input():
     from pymatgen.io.cp2k.inputs import Cp2kInput
 
     def _check_input(ref_path, user_input: Cp2kInput):
-        logger.info("Entering _check_input")
-        logger.info("ref_path: %s", ref_path)
-        logger.info("user_input: %s", user_input)
         ref_input = Cp2kInput.from_file(ref_path / "inputs" / "cp2k.inp")
-
         user_input.verbosity(verbosity=False)
         ref_input.verbosity(verbosity=False)
         user_string = " ".join(user_input.get_str().lower().split())
