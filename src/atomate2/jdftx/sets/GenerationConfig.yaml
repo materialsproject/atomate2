@@ -1,0 +1,5 @@
+kpoint-density: 1000
+coulomb-truncation: True
+bands_multiplier: 1.2
+ASHEP: # absolute SHE potential in V
+  CANDLE: -4.66
