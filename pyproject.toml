@@ -64,7 +64,7 @@ forcefields = [
     "mattersim>=1.0.1",
     "sevenn>=0.9.3",
     "deepmd-kit>=2.1.4",
-    "upet>=0.2.0",
+    "upet>=0.2.1",
 ]
 torchsim = [
     "torch-sim-atomistic==0.5.0; python_version >= '3.12'"
@@ -104,7 +104,7 @@ strict-forcefields-generic = [
     "tensorflow-cpu==2.20.0",
     "mattersim==1.2.1",
     "wandb>=0.24.0", # required for mattersim
-    "upet>=0.2.0",
+    "upet>=0.2.1",
 ]
 strict-forcefields-torch-limited = [
     "matgl==2.0.6",

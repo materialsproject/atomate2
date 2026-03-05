@@ -82,8 +82,8 @@ _DEFAULT_CALCULATOR_KWARGS: dict[MLFF, Any] = {
         "task_name": "omat",
     },
     MLFF.UPET: {
-        "model": "pet-omad-xs",
-        "version": "1.0.0",
+        "model": "pet-mad-s",
+        "version": "1.5.0",
     },
 }
 

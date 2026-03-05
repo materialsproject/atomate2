@@ -64,6 +64,7 @@ def test_phonon_maker_initialization_with_all_mlff(
         },
         MLFF.NEP: {"model_filename": f"{test_dir}/forcefields/nep/nep.txt"},
         MLFF.DeepMD: {"model": get_deepmd_pretrained_model_path},
+        MLFF.UPET: {"model": "pet-mad-xs"},
     }.get(mlff, {})
     static_maker = ForceFieldStaticMaker(
         name=f"{mlff} static",
