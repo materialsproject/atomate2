@@ -2,7 +2,7 @@
 
 import logging
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import Any
 
 from custodian.jdftx.jobs import JDFTxJob
 from emmet.core.structure import StructureMetadata
@@ -22,7 +22,6 @@ from atomate2.utils.datetime import datetime_str
 __author__ = "Cooper Tezak <cooper.tezak@colorado.edu>"
 
 logger = logging.getLogger(__name__)
-_T = TypeVar("_T", bound="TaskDoc")
 # _DERIVATIVE_FILES = ("GRAD", "HESS")
 
 
@@ -75,7 +74,7 @@ class TaskDoc(StructureMetadata):
 
     @classmethod
     def from_directory(
-        cls: type[_T],
+        cls,
         dir_name: Path | str,
         additional_fields: dict[str, Any] = None,
         # **jdftx_calculation_kwargs, #TODO implement

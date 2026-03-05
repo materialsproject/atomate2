@@ -246,20 +246,20 @@ class Calculation(BaseModel):
         Calculation
             A JDFTx calculation document.
         """
-        jdftxinput_file = dir_name / jdftxinput_file
-        jdftxoutput_file = dir_name / jdftxoutput_file
+        jdftxinput_file = Path(dir_name) / jdftxinput_file
+        jdftxoutput_file = Path(dir_name) / jdftxoutput_file
 
-        jdftxinput_kwargs = jdftxinput_kwargs if jdftxinput_kwargs else {}
+        jdftxinput_kwargs = jdftxinput_kwargs or {}
         jdftxinput = JDFTXInfile.from_file(jdftxinput_file)
 
-        jdftxoutput_kwargs = jdftxoutput_kwargs if jdftxoutput_kwargs else {}
+        jdftxoutput_kwargs = jdftxoutput_kwargs or {}
         jdftxoutput = JDFTXOutfile.from_file(jdftxoutput_file)
 
         input_doc = CalculationInput.from_jdftxinput(jdftxinput, **jdftxinput_kwargs)
         output_doc = CalculationOutput.from_jdftxoutput(
             jdftxoutput, **jdftxoutput_kwargs
         )
-        logging.log(logging.DEBUG, f"{output_doc}")
+        logger.log(logging.DEBUG, f"{output_doc}")
         converged = Convergence.from_jdftxoutput(jdftxoutput)
         run_stats = RunStatistics.from_jdftxoutput(jdftxoutput)
 
