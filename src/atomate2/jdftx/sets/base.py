@@ -21,7 +21,12 @@ from atomate2 import SETTINGS
 if TYPE_CHECKING:
     from pymatgen.core import Structure
 
-_BASE_JDFTX_SET = loadfn(get_mod_path("pymatgen.io.jdftx") / "BaseJdftxSet.yaml")
+# TODO: remove atomate2 import + yaml once pymatgen reorg is finalized / released
+for module_path in ("pymatgen.io.jdftx", "atomate2.jdftx.sets"):
+    if (_set_path := Path(get_mod_path(module_path) / "BaseJdftxSet.yaml")).exists():  # type: ignore[arg-type]
+        _BASE_JDFTX_SET = loadfn(_set_path)
+        break
+
 _GENERATION_CONFIG = loadfn(
     get_mod_path("atomate2.jdftx.sets") / "GenerationConfig.yaml"
 )
