@@ -794,16 +794,17 @@ def test_upet_relax_maker(si_structure: Structure, test_dir: Path):
     job = ForceFieldRelaxMaker(
         force_field_name="UPET",
         steps=25,
+        calculator_kwargs={"model": "pet-mad-xs"},
     ).make(si_structure)
     responses = run_locally(job, ensure_success=True)
     output = responses[job.uuid][1].output
     assert isinstance(output, ForceFieldTaskDocument)
-    assert output.output.energy == approx(-11.241942405700684, rel=1e-4)
+    assert output.output.energy == approx(-11.784157752990723, rel=1e-4)
     assert np.allclose(
         output.output.ionic_steps[-1].forces,
         [
-            [-0.16317394375801086, -0.11385675519704819, 0.09085404127836227],
-            [0.16317394375801086, 0.113856740295887, -0.09085404127836227],
+            [-0.11604171991348267, -0.0830397754907608, 0.040690336376428604],
+            [0.11604174226522446, 0.0830397680401802, -0.040690336376428604],
         ],
         rtol=1e-2,
     )

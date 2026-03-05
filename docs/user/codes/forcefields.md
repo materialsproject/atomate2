@@ -36,7 +36,7 @@ Support is provided for the following models, which can be selected using `atoma
 | Neuroevolution Potential (NEP) | `NEP` | [10.1103/PhysRevB.104.104309](https://doi.org/10.1103/PhysRevB.104.104309) | Relies on `calorine` package |
 | Neural Equivariant Interatomic Potentials (Nequip) | `Nequip` | [10.1038/s41467-022-29939-5](https://doi.org/10.1038/s41467-022-29939-5) | Relies on the `nequip` package |
 | SevenNet | `SevenNet` | [10.1021/acs.jctc.4c00190](https://doi.org/10.1021/acs.jctc.4c00190) | Relies on the `sevenn` package |
-| Universal Point Edge Transformer (UPET) | `UPET` | [10.1038/s41467-025-65662-7](https://doi.org/10.1038/s41467-025-65662-7) | Relies on the `upet` package. Defaults to the smallest "pet-mad-xs" model. |
+| Universal Point Edge Transformer (UPET) | `UPET` | [10.1038/s41467-025-65662-7](https://doi.org/10.1038/s41467-025-65662-7) | Relies on the `upet` package. Defaults to the "pet-mad-s" model. |
 
 ## Using custom forcefields by dictionary
 

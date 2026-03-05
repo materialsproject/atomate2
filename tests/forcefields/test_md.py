@@ -118,6 +118,8 @@ def test_ml_ff_md_maker(
     elif ff_name == MLFF.DeepMD:
         calculator_kwargs = {"model": get_deepmd_pretrained_model_path}
         unit_cell_structure = sr_ti_o3_structure.copy()
+    elif ff_name == MLFF.UPET:
+        calculator_kwargs = {"model": "pet-mad-xs"}
 
     structure = unit_cell_structure.to_conventional() * (2, 2, 2)
 
