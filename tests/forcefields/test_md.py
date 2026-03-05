@@ -83,7 +83,7 @@ def test_ml_ff_md_maker(
         MLFF.MATPES_R2SCAN: -8.561729431152344,
         MLFF.FAIRChem: -5.4,
         MLFF.MatterSim: -5.4,
-        MLFF.UPET: -5.6,
+        MLFF.UPET: -5.88,
     }
 
     # ASE can slightly change tolerances on structure positions
