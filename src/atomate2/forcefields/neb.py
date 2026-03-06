@@ -95,5 +95,6 @@ class ForceFieldNebFromEndpointsMaker(ForceFieldMixin, AseNebFromEndpointsMaker)
             name=f"{endpoint_relax_maker.mlff.name} NEB from endpoints maker",
             endpoint_relax_maker=endpoint_relax_maker,
             force_field_name=force_field_name,
-            calculator_kwargs=calculator_kwargs**kwargs,
+            calculator_kwargs=calculator_kwargs,
+            **kwargs,
         )
