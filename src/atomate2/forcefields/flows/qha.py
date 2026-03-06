@@ -44,7 +44,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
     t_max: float | None
         Maximum temperature until which the QHA will be performed
     pressure: float | None
-        Pressure at which the QHA will be performed (default None, no pressure)
+        Pressure (GPa) at which the QHA will be performed (default None, no pressure)
     skip_analysis: bool
         Skips the analysis step and only performs EOS and phonon computations.
     ignore_imaginary_modes: bool
@@ -109,7 +109,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         run_eos_flow : bool = True
             Whether to perform an EOS fit.
         **kwargs
-            Additional kwargs to pass to ForceFieldEosMaker
+            Additional kwargs to pass to ForceFieldQhaMaker
 
         Returns
         -------
