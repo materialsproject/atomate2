@@ -104,7 +104,6 @@ class ElasticMaker(BaseElasticMaker):
     def from_force_field_name(
         cls,
         force_field_name: str | MLFF | dict,
-        calculator_kwargs: dict | None = None,
         mlff_kwargs: dict | None = None,
         **kwargs,
     ) -> Self:

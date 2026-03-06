@@ -17,7 +17,6 @@ from atomate2.common.flows.mpmorph import (
     MPMorphMDMaker,
     SlowQuenchMaker,
 )
-from atomate2.forcefields import MLFF
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 from atomate2.forcefields.md import ForceFieldMDMaker
 
@@ -27,6 +26,8 @@ if TYPE_CHECKING:
     from jobflow import Flow, Job
     from pymatgen.core import Structure
     from typing_extensions import Self
+
+    from atomate2.forcefields import MLFF
 
 
 @dataclass
