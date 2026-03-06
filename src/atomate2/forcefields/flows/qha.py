@@ -123,7 +123,10 @@ class ForceFieldQhaMaker(CommonQhaMaker):
             calculator_kwargs = {}
         kwargs.update(
             initial_relax_maker=(
-                ForceFieldRelaxMaker(force_field_name=force_field_name, calculator_kwargs=calculator_kwargs)
+                ForceFieldRelaxMaker(
+                    force_field_name=force_field_name,
+                    calculator_kwargs=calculator_kwargs,
+                )
                 if relax_initial_structure
                 else None
             ),
@@ -137,6 +140,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
                 if run_eos_flow
                 else None
             ),
+        )
         phonon_maker = PhononMaker.from_force_field_name(
             force_field_name=force_field_name,
             calculator_kwargs=calculator_kwargs,
