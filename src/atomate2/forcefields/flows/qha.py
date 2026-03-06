@@ -108,6 +108,8 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         ----------
         force_field_name : str or .MLFF or dict
             The name of the force field.
+        calculator_kwargs : dict | None
+            The keyword arguments to pass to the calculator
         relax_initial_structure: bool = True
             Whether to relax the initial structure before performing an EOS fit.
         run_eos_flow : bool = True
