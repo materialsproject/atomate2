@@ -143,6 +143,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
                 if run_eos_flow
                 else None
             ),
+        )
         phonon_maker = PhononMaker.from_force_field_name(
             force_field_name=force_field_name,
             calculator_kwargs=calculator_kwargs,
