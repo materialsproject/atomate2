@@ -93,6 +93,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
     def from_force_field_name(
         cls,
         force_field_name: str | MLFF | dict,
+        calculator_kwargs: dict | None = None,
         relax_initial_structure: bool = True,
         run_eos_flow: bool = True,
         **kwargs,
@@ -115,9 +116,11 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         -------
         ForceFieldQhaMaker
         """
+        if calculator_kwargs is None:
+            calculator_kwargs = {}
         kwargs.update(
             initial_relax_maker=(
-                ForceFieldRelaxMaker(force_field_name=force_field_name)
+                ForceFieldRelaxMaker(force_field_name=force_field_name, calculator_kwargs=calculator_kwargs)
                 if relax_initial_structure
                 else None
             ),
@@ -130,9 +133,13 @@ class ForceFieldQhaMaker(CommonQhaMaker):
                 if run_eos_flow
                 else None
             ),
-        )
-        phonon_maker = PhononMaker.from_force_field_name(
-            force_field_name=force_field_name, relax_initial_structure=False
+            phonon_maker = (
+                PhononMaker.from_force_field_name(
+                    force_field_name=force_field_name,
+                    calculator_kwargs=calculator_kwargs,
+                    relax_initial_structure=False
+                )
+            ),
         )
         return cls(
             phonon_maker=phonon_maker,
