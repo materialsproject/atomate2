@@ -220,7 +220,7 @@ class FastQuenchMLFFMDMaker(FastQuenchMaker):
 
         Parameters
         ----------
-        force_field_name : str or .MLFF
+        force_field_name : str or .MLFF or dict
             The name of the forcefield or its enum value
         calculator_kwargs : dict | None
             The keyword arguments to pass to the calculator
