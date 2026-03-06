@@ -127,20 +127,15 @@ class ForceFieldQhaMaker(CommonQhaMaker):
             eos_relax_maker=(
                 ForceFieldRelaxMaker(
                     force_field_name=force_field_name,
+                    calculator_kwargs=calculator_kwargs,
                     relax_cell=False,
                     relax_kwargs={"fmax": 1e-5},
                 )
                 if run_eos_flow
                 else None
             ),
-            phonon_maker = (
-                PhononMaker.from_force_field_name(
-                    force_field_name=force_field_name,
-                    calculator_kwargs=calculator_kwargs,
-                    relax_initial_structure=False
-                )
-            ),
-        )
+        phonon_maker = PhononMaker.from_force_field_name(
+            force_field_name=force_field_name,calculator_kwargs=calculator_kwargs, relax_initial_structure=False
         return cls(
             phonon_maker=phonon_maker,
             name=f"{phonon_maker.mlff.name} QHA Maker",
