@@ -78,6 +78,8 @@ class CommonQhaMaker(Maker, ABC):
     prefer_90_degrees: bool
         if set to True, supercell algorithm will first try to find a supercell
         with 3 90 degree angles
+    allow_orthorhomic: bool
+        Whether the supercell should be allowed to be orthorhombic
     get_supercell_size_kwargs: dict
         kwargs that will be passed to get_supercell_size to determine supercell size
     """
