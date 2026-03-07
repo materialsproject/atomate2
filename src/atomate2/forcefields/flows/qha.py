@@ -93,6 +93,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
     def from_force_field_name(
         cls,
         force_field_name: str | MLFF | dict,
+        calculator_kwargs: dict | None = None,
         relax_initial_structure: bool = True,
         run_eos_flow: bool = True,
         **kwargs,
@@ -104,6 +105,8 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         ----------
         force_field_name : str or .MLFF or dict
             The name of the force field.
+        calculator_kwargs : dict | None
+            The keyword arguments to pass to the calculator
         relax_initial_structure: bool = True
             Whether to relax the initial structure before performing an EOS fit.
         run_eos_flow : bool = True
@@ -115,10 +118,13 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         -------
         ForceFieldQhaMaker
         """
+        if calculator_kwargs is None:
+            calculator_kwargs = {}
         kwargs.update(
             initial_relax_maker=(
                 ForceFieldRelaxMaker(
                     force_field_name=force_field_name,
+                    calculator_kwargs=calculator_kwargs,
                     steps=5000,
                     relax_kwargs={"fmax": 1e-5},
                 )
@@ -128,6 +134,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
             eos_relax_maker=(
                 ForceFieldRelaxMaker(
                     force_field_name=force_field_name,
+                    calculator_kwargs=calculator_kwargs,
                     relax_cell=False,
                     steps=5000,
                     relax_kwargs={"fmax": 1e-5},
@@ -137,7 +144,9 @@ class ForceFieldQhaMaker(CommonQhaMaker):
             ),
         )
         phonon_maker = PhononMaker.from_force_field_name(
-            force_field_name=force_field_name, relax_initial_structure=False
+            force_field_name=force_field_name,
+            calculator_kwargs=calculator_kwargs,
+            relax_initial_structure=False,
         )
         return cls(
             phonon_maker=phonon_maker,
