@@ -176,6 +176,8 @@ class CommonQhaMaker(Maker, ABC):
 
     def __post_init__(self) -> None:
         """Test settings during the initialisation."""
+        if self.phonon_maker is None:
+            return
         if self.phonon_maker.bulk_relax_maker is not None:
             warnings.warn(
                 "An additional bulk_relax_maker has been added "
