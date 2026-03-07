@@ -125,6 +125,8 @@ class ForceFieldQhaMaker(CommonQhaMaker):
                 ForceFieldRelaxMaker(
                     force_field_name=force_field_name,
                     calculator_kwargs=calculator_kwargs,
+                    steps=5000,
+                    relax_kwargs={"fmax": 1e-5},
                 )
                 if relax_initial_structure
                 else None
@@ -134,6 +136,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
                     force_field_name=force_field_name,
                     calculator_kwargs=calculator_kwargs,
                     relax_cell=False,
+                    steps=5000,
                     relax_kwargs={"fmax": 1e-5},
                 )
                 if run_eos_flow
