@@ -25,9 +25,6 @@ class ForceFieldQhaMaker(CommonQhaMaker):
     then compute harmonic phonons for each deformed structure.
     Finally, compute Gibb's free energy.
 
-    To use this class, you must call `.from_force_field_name()` and pass
-    any keyword arguments through the `**kwargs` of `.from_force_field_name()`
-
     Parameters
     ----------
     name: str
