@@ -16,14 +16,16 @@ def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
 
     calculator_kwargs = {}
     if mlff == "CHGNet":
-        calculator_kwargs = {"path": "CHGNet-MatPES-PBE-2025.2.10-2.7M-PES"}            
+        calculator_kwargs = {"path": "CHGNet-MatPES-PBE-2025.2.10-2.7M-PES"}
     elif mlff == "MACE":
         calculator_kwargs = {"model": "medium-0b3"}
 
-    maker = ForceFieldEosMaker.from_force_field_name(mlff,calculator_kwargs=calculator_kwargs)
+    maker = ForceFieldEosMaker.from_force_field_name(
+        mlff, calculator_kwargs=calculator_kwargs
+    )
 
-    # Note that some calculator_kwargs, like stress_unit, are set by `ase_calculator` for consistency
-    # Test only the subset of user-specified kwargs here
+    # Note that some calculator_kwargs, like stress_unit, are set by `ase_calculator`
+    # for consistency - test only the subset of user-specified kwargs here
     assert all(
         v == maker.initial_relax_maker.calculator_kwargs[k]
         for k, v in calculator_kwargs.items()
@@ -55,7 +57,7 @@ def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
 
     assert (
         ForceFieldEosMaker.from_force_field_name(
-            mlff,relax_initial_structure=False
+            mlff, relax_initial_structure=False
         ).initial_relax_maker
         is None
     )

@@ -253,11 +253,8 @@ def ase_calculator(
     calculator = None
 
     if (
-        isinstance(calculator_meta, str) 
-        and (
-            calculator_meta in map(str, MLFF)
-            or calculator_meta in MLFF
-        )
+        isinstance(calculator_meta, str)
+        and (calculator_meta in map(str, MLFF) or calculator_meta in MLFF)
     ) or isinstance(calculator_meta, MLFF):
         calculator_name = MLFF(calculator_meta)
 
