@@ -115,7 +115,7 @@ class ElasticMaker(BaseElasticMaker):
         force_field_name : str or .MLFF or dict
             The name of the force field.
         calculator_kwargs : dict or None (default)
-            kwargs to pass to `ForceFieldRelaxMaker`.
+            calculator_kwargs to pass to `ForceFieldRelaxMaker`.
         **kwargs
             Additional kwargs to pass to ElasticMaker.
 
@@ -126,23 +126,27 @@ class ElasticMaker(BaseElasticMaker):
 
         if (mlff_kwargs := kwargs.pop("mlff_kwargs",None)) is not None:
             warnings.warn(
-                "`mlff_kwargs` has been renamed to `calculator_kwargs`. "
-                "Please use this kwarg in future workflows. ",
+                "`mlff_kwargs` has been marked for deprecation. "
+                "To specify `calculator_kwargs`, use that kwarg instead. "
+                "To obtain finer control over the makers used, specify them "
+                "directly in `ElasticMaker`.",
                 category=UserWarning,
                 stacklevel=2,
             )
-            if calculator_kwargs:
-                raise ValueError(
-                    "You have specified both `calculator_kwargs` and "
-                    "`mlff_kwargs`. `calculator_kwargs` is preferred, and "
-                    "`mlff_kwargs` may not be supported in the future."
-                )
-            calculator_kwargs = mlff_kwargs.copy()
+            if mlff_kwargs.get("calculator_kwargs"):
+                if calculator_kwargs:
+                    raise ValueError(
+                        "You have specified both `calculator_kwargs` and "
+                        "`mlff_kwargs`. `calculator_kwargs` is preferred, and "
+                        "`mlff_kwargs` may not be supported in the future."
+                    )
+                calculator_kwargs = mlff_kwargs.pop("calculator_kwargs",{})
 
         default_kwargs: dict[str, Any] = {
             **_DEFAULT_RELAX_KWARGS,
-            **(calculator_kwargs or {}),
+            **(mlff_kwargs or {}),
             "force_field_name": force_field_name,
+            "calculator_kwargs" : calculator_kwargs,
         }
         bulk_relax_maker = ForceFieldRelaxMaker(
             relax_cell=True,
