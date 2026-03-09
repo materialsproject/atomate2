@@ -231,18 +231,19 @@ class FastQuenchMLFFMDMaker(FastQuenchMaker):
             A fast quench maker that consists of a double relax + static using
             the specified MLFF.
         """
-        if calculator_kwargs is None:
-            calculator_kwargs = {}
-
+        calculator_kwargs = calculator_kwargs or {}
         return cls(
             name=f"{force_field_name} fast quench maker",
             relax_maker=ForceFieldRelaxMaker(
-                force_field_name=force_field_name, calculator_kwargs=calculator_kwargs
+                force_field_name=force_field_name,
+                calculator_kwargs=calculator_kwargs,
             ),
             relax_maker2=ForceFieldRelaxMaker(
-                force_field_name=force_field_name, calculator_kwargs=calculator_kwargs
+                force_field_name=force_field_name,
+                calculator_kwargs=calculator_kwargs,
             ),
             static_maker=ForceFieldStaticMaker(
-                force_field_name=force_field_name, calculator_kwargs=calculator_kwargs
+                force_field_name=force_field_name,
+                calculator_kwargs=calculator_kwargs,
             ),
         )

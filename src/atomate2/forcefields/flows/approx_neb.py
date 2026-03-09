@@ -86,11 +86,9 @@ class ForceFieldApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
         -------
         MLFFApproxNebFromEndpointsMaker
         """
-        if calculator_kwargs is None:
-            calculator_kwargs = {}
         image_relax_maker = ForceFieldRelaxMaker(
             force_field_name=force_field_name,
-            calculator_kwargs=calculator_kwargs,
+            calculator_kwargs=calculator_kwargs or {},
             relax_cell=False,
         )
         kwargs.update(image_relax_maker=image_relax_maker)
