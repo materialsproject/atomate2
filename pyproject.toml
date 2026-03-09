@@ -77,7 +77,7 @@ openmm = [
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
-fireworks = ["fireworks==2.0.8"]
+fireworks = ["fireworks==2.0.9"]
 strict-openff = [
     "mdanalysis==2.10.0",
     "monty==2026.2.18",
@@ -146,7 +146,7 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 [dependency-groups]
 dev = ["pre-commit>=4.5.1"]
 tests = [
-    "fireworks==2.0.8",
+    "fireworks==2.0.9",
     "nbmake==1.5.5",
     "pytest-cov==7.0.0",
     "pytest-mock==3.15.1",
@@ -155,7 +155,7 @@ tests = [
     "pytest==8.4.2",
 ]
 docs = [
-    "fireworks==2.0.8",
+    "fireworks==2.0.9",
     "autodoc_pydantic==2.2.0",
     "furo==2025.12.19",
     "ipython==9.10.0",
