@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
-import warnings
 
 from atomate2 import SETTINGS
 from atomate2.common.flows.elastic import BaseElasticMaker
@@ -22,6 +22,7 @@ _DEFAULT_RELAX_KWARGS: dict[str, Any] = {
     "force_field_name": "CHGNet",
     "relax_kwargs": {"fmax": 0.00001},
 }
+
 
 @dataclass
 class ElasticMaker(BaseElasticMaker):
@@ -123,8 +124,7 @@ class ElasticMaker(BaseElasticMaker):
         -------
         ElasticMaker
         """
-
-        if (mlff_kwargs := kwargs.pop("mlff_kwargs",None)) is not None:
+        if (mlff_kwargs := kwargs.pop("mlff_kwargs", None)) is not None:
             warnings.warn(
                 "`mlff_kwargs` has been marked for deprecation. "
                 "To specify `calculator_kwargs`, use that kwarg instead. "
@@ -140,13 +140,13 @@ class ElasticMaker(BaseElasticMaker):
                         "`mlff_kwargs`. `calculator_kwargs` is preferred, and "
                         "`mlff_kwargs` may not be supported in the future."
                     )
-                calculator_kwargs = mlff_kwargs.pop("calculator_kwargs",{})
+                calculator_kwargs = mlff_kwargs.pop("calculator_kwargs", {})
 
         default_kwargs: dict[str, Any] = {
             **_DEFAULT_RELAX_KWARGS,
             **(mlff_kwargs or {}),
             "force_field_name": force_field_name,
-            "calculator_kwargs" : calculator_kwargs,
+            "calculator_kwargs": calculator_kwargs,
         }
         bulk_relax_maker = ForceFieldRelaxMaker(
             relax_cell=True,

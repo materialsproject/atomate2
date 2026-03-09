@@ -25,29 +25,33 @@ def test_elastic_wf_with_mace(
         common_kwds.pop("force_field_name")
 
         # Test legacy kwarg catches for backwards compatibility
-        with pytest.raises(ValueError,match = "You have specified both `calculator_kwargs` and"):
+        with pytest.raises(
+            ValueError, match="You have specified both `calculator_kwargs` and"
+        ):
             ElasticMaker.from_force_field_name(
                 force_field_name="MACE",
                 mlff_kwargs=common_kwds,
-                calculator_kwargs = common_kwds,
+                calculator_kwargs=common_kwds,
             )
 
-        with pytest.warns(UserWarning,match = "`mlff_kwargs` has been marked for deprecation."):
+        with pytest.warns(
+            UserWarning, match="`mlff_kwargs` has been marked for deprecation."
+        ):
             maker = ElasticMaker.from_force_field_name(
                 force_field_name="MACE",
                 mlff_kwargs=common_kwds,
             )
         assert all(
-            v == getattr(maker.bulk_relax_maker,k,None)
+            v == getattr(maker.bulk_relax_maker, k, None)
             for k, v in common_kwds.items()
         )
-    
+
     else:
         maker = ElasticMaker(
             bulk_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=True),
             elastic_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=False),
         )
-        
+
     flow = maker.make(si_prim)
 
     # run the flow or job and ensure that it finished running successfully
