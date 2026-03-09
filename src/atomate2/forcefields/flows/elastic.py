@@ -146,7 +146,7 @@ class ElasticMaker(BaseElasticMaker):
             **_DEFAULT_RELAX_KWARGS,
             **(mlff_kwargs or {}),
             "force_field_name": force_field_name,
-            "calculator_kwargs": calculator_kwargs,
+            "calculator_kwargs": calculator_kwargs or {},
         }
         bulk_relax_maker = ForceFieldRelaxMaker(
             relax_cell=True,

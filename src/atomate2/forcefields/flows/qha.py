@@ -118,8 +118,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         -------
         ForceFieldQhaMaker
         """
-        if calculator_kwargs is None:
-            calculator_kwargs = {}
+        calculator_kwargs = calculator_kwargs or {}
         kwargs.update(
             initial_relax_maker=(
                 ForceFieldRelaxMaker(

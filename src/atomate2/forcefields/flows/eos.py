@@ -83,8 +83,7 @@ class ForceFieldEosMaker(CommonEosMaker):
         -------
         ForceFieldEosMaker
         """
-        if calculator_kwargs is None:
-            calculator_kwargs = {}
+        calculator_kwargs = calculator_kwargs or {}
         eos_relax_maker = ForceFieldRelaxMaker(
             force_field_name=force_field_name,
             calculator_kwargs=calculator_kwargs,

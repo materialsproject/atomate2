@@ -86,8 +86,7 @@ class ForceFieldNebFromEndpointsMaker(ForceFieldMixin, AseNebFromEndpointsMaker)
         **kwargs
             kwargs to pass to ForceFieldNebFromEndpointsMaker.
         """
-        if calculator_kwargs is None:
-            calculator_kwargs = {}
+        calculator_kwargs = calculator_kwargs or {}
         endpoint_relax_maker = ForceFieldRelaxMaker(
             force_field_name=force_field_name, calculator_kwargs=calculator_kwargs
         )

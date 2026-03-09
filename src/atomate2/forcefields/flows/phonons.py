@@ -189,10 +189,10 @@ class PhononMaker(BasePhononMaker):
         -------
         PhononMaker
         """
-        if calculator_kwargs is None:
-            calculator_kwargs = {}
+        calculator_kwargs = calculator_kwargs or {}
         static_energy_maker = ForceFieldStaticMaker(
-            force_field_name=force_field_name, calculator_kwargs=calculator_kwargs
+            force_field_name=force_field_name,
+            calculator_kwargs=calculator_kwargs,
         )
         kwargs.update(
             bulk_relax_maker=(
@@ -206,7 +206,8 @@ class PhononMaker(BasePhononMaker):
             ),
             static_energy_maker=static_energy_maker,
             phonon_displacement_maker=ForceFieldStaticMaker(
-                force_field_name=force_field_name, calculator_kwargs=calculator_kwargs
+                force_field_name=force_field_name,
+                calculator_kwargs=calculator_kwargs,
             ),
             born_maker=None,
         )
