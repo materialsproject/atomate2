@@ -32,17 +32,16 @@ def test_elastic_wf_with_mace(
                 calculator_kwargs = common_kwds,
             )
 
-        with pytest.warns(UserWarning,match = "`mlff_kwargs` has been renamed to `calculator_kwargs`"):
-            ElasticMaker.from_force_field_name(
+        with pytest.warns(UserWarning,match = "`mlff_kwargs` has been marked for deprecation."):
+            maker = ElasticMaker.from_force_field_name(
                 force_field_name="MACE",
                 mlff_kwargs=common_kwds,
             )
-        
-        maker = ElasticMaker.from_force_field_name(
-            force_field_name="MACE",
-            calculator_kwargs=common_kwds,
+        assert all(
+            v == getattr(maker.bulk_relax_maker,k,None)
+            for k, v in common_kwds.items()
         )
-
+    
     else:
         maker = ElasticMaker(
             bulk_relax_maker=ForceFieldRelaxMaker(**common_kwds, relax_cell=True),
