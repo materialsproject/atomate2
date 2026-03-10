@@ -633,9 +633,9 @@ class AseTaskDoc(AseBaseModel):
         if isinstance(task_doc.mol_or_struct, Structure):
             meta_class = AseStructureTaskDoc
             k = "structure"
-            for k in ("relax_cell", "relax_shape"):
-                if relax_val := getattr(task_doc, "relax_cell", None):
-                    kwargs[k] = relax_val
+            for relax_k in ("relax_cell", "relax_shape"):
+                if relax_val := getattr(task_doc, relax_k, None):
+                    kwargs[relax_k] = relax_val
         elif isinstance(task_doc.mol_or_struct, Molecule):
             meta_class = AseMoleculeTaskDoc
             k = "molecule"
