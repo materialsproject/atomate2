@@ -172,11 +172,7 @@ class CalculationOutput(BaseModel):
         cbm = jdftxoutput.lumo
         vbm = jdftxoutput.homo
         structure = joutstruct_to_struct(joutstruct=optimized_structure)
-        if kwargs.get("store_trajectory", True):
-            trajectory: Trajectory = jdftxoutput.trajectory
-            trajectory = trajectory.as_dict()
-        else:
-            trajectory = None
+
         return cls(
             structure=structure,
             forces=forces,
@@ -188,7 +184,11 @@ class CalculationOutput(BaseModel):
             stress=stress,
             cbm=cbm,
             vbm=vbm,
-            trajectory=trajectory,
+            trajectory=(
+                jdftxoutput.trajectory.as_dict()
+                if kwargs.get("store_trajectory", True)
+                else None
+            ),
             parameters=jdftxoutput.to_dict(),
         )
 
