@@ -347,7 +347,7 @@ def ase_calculator(
                 calculator = CPUNEP(**kwargs)
 
             case MLFF.Nequip | MLFF.Allegro:
-                from nequip.ase import NequIPCalculator
+                from nequip.integrations.ase import NequIPCalculator
 
                 calculator = getattr(
                     NequIPCalculator,
