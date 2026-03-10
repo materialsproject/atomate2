@@ -13,7 +13,28 @@ from ..conftest import mlff_is_installed  # noqa: TID252
     "mlff", [mlff for mlff in ["CHGNet", "MACE"] if mlff_is_installed(mlff)]
 )
 def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
-    maker = ForceFieldEosMaker.from_force_field_name(mlff)
+
+    calculator_kwargs = {}
+    if mlff == "CHGNet":
+        calculator_kwargs = {"path": "CHGNet-MatPES-PBE-2025.2.10-2.7M-PES"}
+    elif mlff == "MACE":
+        calculator_kwargs = {"model": "medium-0b3"}
+
+    maker = ForceFieldEosMaker.from_force_field_name(
+        mlff, calculator_kwargs=calculator_kwargs
+    )
+
+    # Note that some calculator_kwargs, like stress_unit, are set by `ase_calculator`
+    # for consistency - test only the subset of user-specified kwargs here
+    assert all(
+        v == maker.initial_relax_maker.calculator_kwargs[k]
+        for k, v in calculator_kwargs.items()
+    )
+    assert all(
+        v == maker.eos_relax_maker.calculator_kwargs[k]
+        for k, v in calculator_kwargs.items()
+    )
+
     job = maker.make(si_structure)
     for attr in ("initial_relax_maker", "eos_relax_maker"):
         assert mlff in getattr(maker, attr).force_field_name

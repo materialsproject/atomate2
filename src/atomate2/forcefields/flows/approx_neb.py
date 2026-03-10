@@ -67,6 +67,7 @@ class ForceFieldApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
     def from_force_field_name(
         cls,
         force_field_name: str | MLFF | dict,
+        calculator_kwargs: dict | None = None,
         **kwargs,
     ) -> Self:
         """
@@ -76,6 +77,8 @@ class ForceFieldApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
         ----------
         force_field_name : str or .MLFF or dict
             The name of the force field.
+        calculator_kwargs : dict | None
+            The keyword arguments to pass to the calculator
         **kwargs
             Additional kwargs to pass to ApproxNEB
 
@@ -84,7 +87,9 @@ class ForceFieldApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
         MLFFApproxNebFromEndpointsMaker
         """
         image_relax_maker = ForceFieldRelaxMaker(
-            force_field_name=force_field_name, relax_cell=False
+            force_field_name=force_field_name,
+            calculator_kwargs=calculator_kwargs or {},
+            relax_cell=False,
         )
         kwargs.update(image_relax_maker=image_relax_maker)
         return cls(

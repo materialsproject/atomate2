@@ -78,7 +78,7 @@ openmm = [
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
-fireworks = ["fireworks==2.0.8"]
+fireworks = ["fireworks==2.0.9"]
 strict-openff = [
     "mdanalysis==2.10.0",
     "monty==2026.2.18",
@@ -99,7 +99,7 @@ strict-forcefields-generic = [
     "calorine==3.3; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
     "quippy-ase==0.10.2",
-    "sevenn==0.12.0",
+    "sevenn==0.12.1",
     "deepmd-kit==3.1.2",
     "tensorflow-cpu==2.20.0",
     "mattersim==1.2.1",
@@ -117,7 +117,7 @@ strict-forcefields-torch-limited = [
     "torch==2.2.2; sys_platform == 'darwin' or sys_platform == 'win32'",
     "torch==2.2.0; sys_platform == 'linux'",
     "torchdata==0.7.1",
-    "nequip==0.16.2", # requires numpy<2 because of matscipy
+    "nequip==0.17.0", # requires numpy<2 because of matscipy
     "numpy==1.26.4",
 ]
 strict-forcefields-e3nn-limited = [
@@ -125,7 +125,7 @@ strict-forcefields-e3nn-limited = [
     "torch-dftd==0.5.2",
 ]
 strict-forcefields-numpy-limited = [
-    "nequip-allegro==0.8.1",
+    "nequip-allegro==0.8.2",
     "numpy==1.26.4",
 ]
 
@@ -147,7 +147,7 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 [dependency-groups]
 dev = ["pre-commit>=4.5.1"]
 tests = [
-    "fireworks==2.0.8",
+    "fireworks==2.0.9",
     "nbmake==1.5.5",
     "pytest-cov==7.0.0",
     "pytest-mock==3.15.1",
@@ -156,7 +156,7 @@ tests = [
     "pytest==8.4.2",
 ]
 docs = [
-    "fireworks==2.0.8",
+    "fireworks==2.0.9",
     "autodoc_pydantic==2.2.0",
     "furo==2025.12.19",
     "ipython==9.10.0",

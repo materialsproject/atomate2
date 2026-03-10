@@ -44,7 +44,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
     t_max: float | None
         Maximum temperature until which the QHA will be performed
     pressure: float | None
-        Pressure at which the QHA will be performed (default None, no pressure)
+        Pressure (GPa) at which the QHA will be performed (default None, no pressure)
     skip_analysis: bool
         Skips the analysis step and only performs EOS and phonon computations.
     ignore_imaginary_modes: bool
@@ -93,6 +93,7 @@ class ForceFieldQhaMaker(CommonQhaMaker):
     def from_force_field_name(
         cls,
         force_field_name: str | MLFF | dict,
+        calculator_kwargs: dict | None = None,
         relax_initial_structure: bool = True,
         run_eos_flow: bool = True,
         **kwargs,
@@ -104,27 +105,37 @@ class ForceFieldQhaMaker(CommonQhaMaker):
         ----------
         force_field_name : str or .MLFF or dict
             The name of the force field.
+        calculator_kwargs : dict | None
+            The keyword arguments to pass to the calculator
         relax_initial_structure: bool = True
             Whether to relax the initial structure before performing an EOS fit.
         run_eos_flow : bool = True
             Whether to perform an EOS fit.
         **kwargs
-            Additional kwargs to pass to ForceFieldEosMaker
+            Additional kwargs to pass to ForceFieldQhaMaker
 
         Returns
         -------
         ForceFieldQhaMaker
         """
+        calculator_kwargs = calculator_kwargs or {}
         kwargs.update(
             initial_relax_maker=(
-                ForceFieldRelaxMaker(force_field_name=force_field_name)
+                ForceFieldRelaxMaker(
+                    force_field_name=force_field_name,
+                    calculator_kwargs=calculator_kwargs,
+                    steps=5000,
+                    relax_kwargs={"fmax": 1e-5},
+                )
                 if relax_initial_structure
                 else None
             ),
             eos_relax_maker=(
                 ForceFieldRelaxMaker(
                     force_field_name=force_field_name,
+                    calculator_kwargs=calculator_kwargs,
                     relax_cell=False,
+                    steps=5000,
                     relax_kwargs={"fmax": 1e-5},
                 )
                 if run_eos_flow
@@ -132,7 +143,9 @@ class ForceFieldQhaMaker(CommonQhaMaker):
             ),
         )
         phonon_maker = PhononMaker.from_force_field_name(
-            force_field_name=force_field_name, relax_initial_structure=False
+            force_field_name=force_field_name,
+            calculator_kwargs=calculator_kwargs,
+            relax_initial_structure=False,
         )
         return cls(
             phonon_maker=phonon_maker,
