@@ -468,5 +468,5 @@ def _get_pkg_version(calculator_meta: MLFF | dict[str, Any]) -> str | None:
             try:
                 return getattr(import_module(pkg_name), "__version__", None)
             except ImportError:
-                return None
+                pass
     return None
