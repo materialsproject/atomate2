@@ -204,6 +204,8 @@ class AseRelaxMaker(AseMaker):
 
     def __post_init__(self) -> None:
         """Ensure that physical relaxation settings are used."""
+        if hasattr(super(), "__post_init__"):
+            super().__post_init__()  # type: ignore[misc]
         if self.relax_cell and self.relax_shape:
             raise ValueError(
                 "You have set both `relax_cell` (relaxing the cell shape and volume) "

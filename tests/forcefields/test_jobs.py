@@ -104,7 +104,6 @@ def test_chgnet_relax_maker_fix_symmetry(
 def test_chgnet_relax_maker(
     si_structure: Structure, tmp_dir, relax_cell: bool, relax_shape: bool
 ):
-
     if relax_cell and relax_shape:
         # Quick return, only want to ensure that the `ValueError is raised`
         with pytest.raises(ValueError, match="You have set both `relax_cell`"):
