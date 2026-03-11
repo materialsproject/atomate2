@@ -539,8 +539,7 @@ def test_nep_relax_maker(
     assert final_spg_num == 225
 
 
-@pytest.mark.xfail(reason="Need recompiled Nequip model", strict=False)
-@pytest.mark.skipif(not mlff_is_installed("Nequip"), reason="nequip is not installed.")
+@pytest.mark.skip(reason="Need recompiled Nequip model")
 def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
 
     # generate job
@@ -567,8 +566,7 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     assert output1.forcefield_version == get_imported_version("nequip")
 
 
-@pytest.mark.xfail(reason="Need recompiled Nequip model", strict=False)
-@pytest.mark.skipif(not mlff_is_installed("Nequip"), reason="nequip is not installed.")
+@pytest.mark.skip(reason="Need recompiled Nequip model")
 @pytest.mark.parametrize(
     ("relax_cell", "fix_symmetry"),
     [(True, False), (False, True)],
