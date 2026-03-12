@@ -138,6 +138,7 @@ class ForceFieldMDMaker(ForceFieldMixin, AseMDMaker):
             self.ase_calculator_name,
             md_result,
             relax_cell=(self.ensemble == MDEnsemble.npt),
+            relax_shape=False,
             steps=self.n_steps,
             calculator_meta=self.calculator_meta,
             relax_kwargs=None,

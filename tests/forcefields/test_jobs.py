@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from importlib.metadata import version as get_imported_version
 from pathlib import Path
 
@@ -97,8 +98,22 @@ def test_chgnet_relax_maker_fix_symmetry(
     dgl is None or not mlff_is_installed("CHGNet"),
     reason="CHGNet requires DGL which is not installed",
 )
-@pytest.mark.parametrize("relax_cell", [True, False])
-def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
+@pytest.mark.parametrize(
+    "relax_cell,relax_shape", [(b1, b2) for b1 in (True, False) for b2 in (True, False)]
+)
+def test_chgnet_relax_maker(
+    si_structure: Structure, tmp_dir, relax_cell: bool, relax_shape: bool
+):
+    if relax_cell and relax_shape:
+        # Quick return, only want to ensure that the `ValueError is raised`
+        with pytest.raises(ValueError, match="You have set both `relax_cell`"):
+            ForceFieldRelaxMaker(
+                force_field_name="CHGNet",
+                relax_cell=relax_cell,
+                relax_shape=relax_shape,
+            )
+        return
+
     # translate one atom to ensure a small number of relaxation steps are taken
     si_structure.translate_sites(0, [0, 0, 0.1])
 
@@ -108,10 +123,18 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
         force_field_name="CHGNet",
         steps=max_step,
         relax_cell=relax_cell,
+        relax_shape=relax_shape,
     ).make(si_structure)
 
     # run the flow or job and ensure that it finished running successfully
-    responses = run_locally(job, ensure_success=True)
+    with (
+        pytest.warns(
+            UserWarning, match="The `relax_shape` functionality in ASE can break"
+        )
+        if relax_shape
+        else nullcontext()
+    ):
+        responses = run_locally(job, ensure_success=True)
 
     # validate job outputs
     output1 = responses[job.uuid][1].output
@@ -121,6 +144,14 @@ def test_chgnet_relax_maker(si_structure: Structure, relax_cell: bool):
         assert output1.output.n_steps == max_step + 2
         assert output1.output.energy == approx(-10.74037, abs=1e-2)
         assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.0345594, rel=1e-1)
+    elif relax_shape:
+        assert not output1.is_force_converged
+        assert output1.output.n_steps == max_step + 2
+        assert output1.output.energy == approx(-10.743172645568848, abs=1e-2)
+        assert output1.output.ionic_steps[-1].magmoms[0] == approx(0.024537, rel=1e-1)
+        assert output1.output.structure.volume == approx(
+            output1.input.structure.volume, rel=1e-6
+        )
     else:
         assert output1.is_force_converged
         assert output1.output.n_steps == 24
@@ -508,7 +539,7 @@ def test_nep_relax_maker(
     assert final_spg_num == 225
 
 
-@pytest.mark.skipif(not mlff_is_installed("Nequip"), reason="nequip is not installed.")
+@pytest.mark.skip(reason="Need recompiled Nequip model")
 def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
 
     # generate job
@@ -535,7 +566,7 @@ def test_nequip_static_maker(sr_ti_o3_structure: Structure, test_dir: Path):
     assert output1.forcefield_version == get_imported_version("nequip")
 
 
-@pytest.mark.skipif(not mlff_is_installed("Nequip"), reason="nequip is not installed.")
+@pytest.mark.skip(reason="Need recompiled Nequip model")
 @pytest.mark.parametrize(
     ("relax_cell", "fix_symmetry"),
     [(True, False), (False, True)],
