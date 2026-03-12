@@ -288,10 +288,10 @@ def ase_calculator(
                 match calculator_name:
                     case MLFF.M3GNet:
                         path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
-                        matgl.config.BACKEND = "DGL"
+                        matgl.set_backend("DGL")
                     case MLFF.CHGNet:
                         path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
-                        matgl.config.BACKEND = "DGL"
+                        matgl.set_backend("DGL")
                         warnings.warn(
                             "The CHGNet functionality in atomate2 has been migrated "
                             "from the `chgnet` package to `matgl` to ensure continuing "
@@ -308,15 +308,14 @@ def ase_calculator(
                             f"-v{kwargs.pop('version', '2025.1')}"
                             "-PES"
                         )
-                        matgl.config.BACKEND = "PYG"
+                        matgl.set_backend("PYG")
 
-                if matgl.config.BACKEND == "DGL":
-                    from matgl.ext._ase_dgl import PESCalculator
-                else:
-                    from matgl.ext._ase_pyg import PESCalculator
-
-                potential = matgl.load_model(path)
-                calculator = PESCalculator(potential, **kwargs)
+                matgl_calc = getattr(
+                    import_module(f"matgl.ext._ase_{matgl.config.BACKEND.lower()}"),
+                    "PESCalculator",
+                    None,
+                )
+                calculator = matgl_calc(matgl.load_model(path), **kwargs)
 
             case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
                 from mace.calculators import MACECalculator, mace_mp
