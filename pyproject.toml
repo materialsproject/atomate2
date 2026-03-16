@@ -166,7 +166,7 @@ docs = [
     "sphinx-copybutton==0.5.2",
     "sphinx==9.0.4",
     "sphinx_design==0.7.0",
-    "jupyterlab==4.5.5",
+    "jupyterlab==4.5.6",
 ]
 
 [tool.setuptools.package-data]
