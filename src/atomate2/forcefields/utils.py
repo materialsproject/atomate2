@@ -288,10 +288,10 @@ def ase_calculator(
                 match calculator_name:
                     case MLFF.M3GNet:
                         path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
-                        matgl.set_backend("DGL")
+                        matgl.config.BACKEND = "DGL"
                     case MLFF.CHGNet:
                         path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
-                        matgl.set_backend("DGL")
+                        matgl.config.BACKEND = "DGL"
                         warnings.warn(
                             "The CHGNet functionality in atomate2 has been migrated "
                             "from the `chgnet` package to `matgl` to ensure continuing "
@@ -308,7 +308,7 @@ def ase_calculator(
                             f"-v{kwargs.pop('version', '2025.1')}"
                             "-PES"
                         )
-                        matgl.set_backend("PYG")
+                        matgl.config.BACKEND = "PYG"
 
                 matgl_calc = getattr(
                     import_module(f"matgl.ext._ase_{matgl.config.BACKEND.lower()}"),

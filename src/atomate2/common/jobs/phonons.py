@@ -7,9 +7,15 @@ import logging
 import warnings
 from typing import TYPE_CHECKING
 
+try:
+    from phonopy import Phonopy
+except ImportError as exc:
+    raise ImportError(
+        "`pip install phonopy` to use `atomate2.common.jobs.phonons`"
+    ) from exc
+
 import numpy as np
 from jobflow import Flow, Response, job
-from phonopy import Phonopy
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
