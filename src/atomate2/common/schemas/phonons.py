@@ -308,10 +308,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             cell,
             supercell_matrix,
             primitive_matrix=primitive_matrix,
-            factor=factor,
             symprec=symprec,
             is_symmetry=sym_reduce,
         )
+        phonon.unit_conversion_factor = factor
         phonon.generate_displacements(distance=displacement)
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 

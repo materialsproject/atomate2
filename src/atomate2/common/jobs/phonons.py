@@ -167,10 +167,10 @@ def generate_phonon_displacements(
         cell,
         supercell_matrix,
         primitive_matrix=primitive_matrix,
-        factor=factor,
         symprec=symprec,
         is_symmetry=sym_reduce,
     )
+    phonon.unit_conversion_factor = factor
     phonon.generate_displacements(distance=displacement)
 
     supercells = phonon.supercells_with_displacements
