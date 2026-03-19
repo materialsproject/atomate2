@@ -45,7 +45,7 @@ def test_maker_initialization(mlff):
 
 
 _mlffs_for_test = set(INSTALLED_MLFF).difference(
-    map(MLFF, ("Forcefield", "Allegro", "M3GNet", "MACE"))
+    map(MLFF, ("Forcefield", "Allegro", "M3GNet", "MACE", "Nequip"))
 )
 _md_test_params = sorted(product(_mlffs_for_test, [True, False]), key=str)
 

@@ -194,6 +194,10 @@ class InputDoc(AseBaseModel):
         None,
         description="Whether cell lattice was allowed to change during relaxation.",
     )
+    relax_shape: bool | None = Field(
+        None,
+        description="Whether the cell shape was allowed to relax, at fixed volume.",
+    )
     fix_symmetry: bool | None = Field(
         None,
         description=(
@@ -400,6 +404,7 @@ class AseTaskDoc(AseBaseModel):
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
         relax_cell: bool = True,
+        relax_shape: bool = False,
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
         ionic_step_data: tuple[str, ...] | None = (
@@ -425,6 +430,9 @@ class AseTaskDoc(AseBaseModel):
             Maximum number of ionic steps allowed during relaxation.
         relax_cell : bool = True
             Whether to allow the cell shape/volume to change during relaxation.
+        relax_shape : bool = True
+            Whether to allow the cell shape to relax at fixed volume.
+            Cannot be used together with `relax_cell=True`.
         fix_symmetry : bool
             Whether to fix the symmetry of the ions during relaxation.
         symprec : float
@@ -459,6 +467,7 @@ class AseTaskDoc(AseBaseModel):
         input_doc = InputDoc(
             mol_or_struct=input_mol_or_struct,
             relax_cell=relax_cell,
+            relax_shape=relax_shape,
             fix_symmetry=fix_symmetry,
             symprec=symprec,
             steps=steps,
@@ -624,8 +633,9 @@ class AseTaskDoc(AseBaseModel):
         if isinstance(task_doc.mol_or_struct, Structure):
             meta_class = AseStructureTaskDoc
             k = "structure"
-            if relax_cell := getattr(task_doc, "relax_cell", None):
-                kwargs.update({"relax_cell": relax_cell})
+            for relax_k in ("relax_cell", "relax_shape"):
+                if relax_val := getattr(task_doc, relax_k, None):
+                    kwargs[relax_k] = relax_val
         elif isinstance(task_doc.mol_or_struct, Molecule):
             meta_class = AseMoleculeTaskDoc
             k = "molecule"

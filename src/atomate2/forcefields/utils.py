@@ -7,6 +7,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from enum import Enum
 from functools import cached_property
+from importlib import import_module
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -60,13 +62,16 @@ class MLFF(Enum):  # TODO inherit from StrEnum when 3.11+
 
 _DEFAULT_CALCULATOR_KWARGS: dict[MLFF, Any] = {
     MLFF.CHGNet: {"stress_unit": "eV/A3"},
-    MLFF.M3GNet: {"stress_unit": "eV/A3"},
-    MLFF.NEP: {"model_filename": "nep.txt"},
+    MLFF.FAIRChem: {
+        "predict_unit": {"model_name": "uma-s-1p1"},
+        "task_name": "omat",
+    },
     MLFF.GAP: {"args_str": "IP GAP", "param_filename": "gap.xml"},
+    MLFF.M3GNet: {"stress_unit": "eV/A3"},
     MLFF.MACE: {"model": "medium"},
     MLFF.MACE_MP_0: {"model": "medium"},
-    MLFF.MACE_MPA_0: {"model": "medium-mpa-0"},
     MLFF.MACE_MP_0B3: {"model": "medium-0b3"},
+    MLFF.MACE_MPA_0: {"model": "medium-mpa-0"},
     MLFF.MATPES_PBE: {
         "architecture": "TensorNet",
         "version": "2025.1",
@@ -77,10 +82,8 @@ _DEFAULT_CALCULATOR_KWARGS: dict[MLFF, Any] = {
         "version": "2025.1",
         "stress_unit": "eV/A3",
     },
-    MLFF.FAIRChem: {
-        "predict_unit": {"model_name": "uma-s-1p1"},
-        "task_name": "omat",
-    },
+    MLFF.NEP: {"model_filename": "nep.txt"},
+    MLFF.SevenNet: {"model": "7net-0"},
     MLFF.UPET: {
         "model": "pet-mad-s",
         "version": "1.5.0",
@@ -259,6 +262,26 @@ def ase_calculator(
         calculator_name = MLFF(calculator_meta)
 
         match calculator_name:
+            # Simple APIs
+            case (
+                MLFF.DeepMD
+                | MLFF.GAP
+                | MLFF.MatterSim
+                | MLFF.NEP
+                | MLFF.SevenNet
+                | MLFF.UPET
+            ):
+                import_str = {
+                    MLFF.DeepMD: "deepmd.calculator.DP",
+                    MLFF.GAP: "quippy.potential.Potential",
+                    MLFF.MatterSim: "mattersim.forcefield.MatterSimCalculator",
+                    MLFF.NEP: "calorine.calculators.CPUNEP",
+                    MLFF.SevenNet: "sevenn.sevennet_calculator.SevenNetCalculator",
+                    MLFF.UPET: "upet.calculator.UPETCalculator",
+                }
+                _mod, _cls = import_str[calculator_name].rsplit(".", 1)
+                calculator = getattr(import_module(_mod), _cls, None)(**kwargs)
+
             case MLFF.CHGNet | MLFF.M3GNet | MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
                 import matgl
 
@@ -287,13 +310,12 @@ def ase_calculator(
                         )
                         matgl.config.BACKEND = "PYG"
 
-                if matgl.config.BACKEND == "DGL":
-                    from matgl.ext._ase_dgl import PESCalculator
-                else:
-                    from matgl.ext._ase_pyg import PESCalculator
-
-                potential = matgl.load_model(path)
-                calculator = PESCalculator(potential, **kwargs)
+                matgl_calc = getattr(
+                    import_module(f"matgl.ext._ase_{matgl.config.BACKEND.lower()}"),
+                    "PESCalculator",
+                    None,
+                )
+                calculator = matgl_calc(matgl.load_model(path), **kwargs)
 
             case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
                 from mace.calculators import MACECalculator, mace_mp
@@ -336,18 +358,8 @@ def ase_calculator(
                 else:
                     calculator = mace_mp(**kwargs)
 
-            case MLFF.GAP:
-                from quippy.potential import Potential
-
-                calculator = Potential(**kwargs)
-
-            case MLFF.NEP:
-                from calorine.calculators import CPUNEP
-
-                calculator = CPUNEP(**kwargs)
-
             case MLFF.Nequip | MLFF.Allegro:
-                from nequip.ase import NequIPCalculator
+                from nequip.integrations.ase import NequIPCalculator
 
                 calculator = getattr(
                     NequIPCalculator,
@@ -355,16 +367,6 @@ def ase_calculator(
                     if hasattr(NequIPCalculator, "from_compiled_model")
                     else "from_deployed_model",
                 )(**kwargs)
-
-            case MLFF.SevenNet:
-                from sevenn.sevennet_calculator import SevenNetCalculator
-
-                calculator = SevenNetCalculator(**{"model": "7net-0"} | kwargs)
-
-            case MLFF.DeepMD:
-                from deepmd.calculator import DP
-
-                calculator = DP(**kwargs)
 
             case MLFF.FAIRChem:
                 from fairchem.core import FAIRChemCalculator, pretrained_mlip
@@ -377,16 +379,6 @@ def ase_calculator(
                     pretrained_mlip.get_predict_unit(**predict_unit_kwargs),
                     **{k: v for k, v in kwargs.items() if k != "predict_unit"},
                 )
-
-            case MLFF.MatterSim:
-                from mattersim.forcefield import MatterSimCalculator
-
-                calculator = MatterSimCalculator(**kwargs)
-
-            case MLFF.UPET:
-                from upet.calculator import UPETCalculator
-
-                calculator = UPETCalculator(**kwargs)
 
     elif isinstance(calculator_meta, dict):
         calc_cls = _load_calc_cls(calculator_meta)
@@ -464,3 +456,16 @@ def _get_pkg_name(calculator_meta: MLFF | dict[str, Any]) -> str | None:
         calc_cls = _load_calc_cls(calculator_meta)
         return calc_cls.__module__.split(".", 1)[0]
     assert_never(calculator_meta)
+
+
+def _get_pkg_version(calculator_meta: MLFF | dict[str, Any]) -> str | None:
+    """Try to establish the imported version of a forcefield python package."""
+    if isinstance(pkg_name := _get_pkg_name(calculator_meta), str):
+        try:
+            return version(pkg_name)
+        except PackageNotFoundError:
+            try:
+                return getattr(import_module(pkg_name), "__version__", None)
+            except ImportError:
+                pass
+    return None
