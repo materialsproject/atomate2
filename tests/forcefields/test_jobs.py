@@ -175,7 +175,7 @@ def test_m3gnet_static_maker(si_structure: Structure, monkeypatch: pytest.Monkey
     monkeypatch.setattr(matgl.config, "BACKEND", "DGL")
 
     try:
-        fpaths = matgl.utils.io._get_file_paths("M3GNet-MP-2021.2.8-PES")
+        fpaths = matgl.utils.io._get_file_paths(Path("M3GNet-MP-2021.2.8-PES"))
         with open(fpaths["model.json"]) as f:
             d = json.load(f)
             modname = d["@module"]
