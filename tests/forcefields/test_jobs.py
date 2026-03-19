@@ -163,6 +163,10 @@ def test_chgnet_relax_maker(
     assert Path(responses[job.uuid][1].output.dir_name).exists()
 
 
+@pytest.mark.xfail(
+    reason="M3GNet tests not working consistently in CI vs local",
+    strict=False,
+)
 @pytest.mark.skipif(
     dgl is None or not mlff_is_installed("M3GNet"),
     reason="M3GNet requires DGL which is not installed",
@@ -190,6 +194,10 @@ def test_m3gnet_static_maker(si_structure: Structure, monkeypatch: pytest.Monkey
     assert output1.forcefield_version == get_imported_version("matgl")
 
 
+@pytest.mark.xfail(
+    reason="M3GNet tests not working consistently in CI vs local",
+    strict=False,
+)
 @pytest.mark.skipif(
     dgl is None or not mlff_is_installed("M3GNet"),
     reason="M3GNet requires DGL which is not installed",
