@@ -168,7 +168,9 @@ def test_chgnet_relax_maker(
 )
 def test_m3gnet_static_maker(si_structure: Structure, monkeypatch: pytest.MonkeyPatch):
     # generate job
-    monkeypatch.setenv("MATGL_BACKEND", "DGL")
+    import matgl
+
+    monkeypatch.setattr(matgl.config, "BACKEND", "DGL")
     job = ForceFieldStaticMaker(
         force_field_name="M3GNet",
         ionic_step_data=("structure", "energy"),
@@ -192,7 +194,9 @@ def test_m3gnet_static_maker(si_structure: Structure, monkeypatch: pytest.Monkey
 )
 def test_m3gnet_relax_maker(si_structure: Structure, monkeypatch: pytest.MonkeyPatch):
     # translate one atom to ensure a small number of relaxation steps are taken
-    monkeypatch.setenv("MATGL_BACKEND", "DGL")
+    import matgl
+
+    monkeypatch.setattr(matgl.config, "BACKEND", "DGL")
 
     si_structure.translate_sites(0, [0, 0, 0.1])
 
