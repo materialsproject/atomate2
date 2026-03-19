@@ -77,7 +77,7 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
-    relax_shape : bool = True
+    relax_shape : bool = False
         Whether to allow the cell shape to relax at fixed volume.
         Cannot be used together with `relax_cell=True`.
     fix_symmetry : bool = False

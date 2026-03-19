@@ -166,8 +166,9 @@ def test_chgnet_relax_maker(
     dgl is None or not mlff_is_installed("M3GNet"),
     reason="M3GNet requires DGL which is not installed",
 )
-def test_m3gnet_static_maker(si_structure):
+def test_m3gnet_static_maker(si_structure: Structure, monkeypatch: pytest.MonkeyPatch):
     # generate job
+    monkeypatch.setenv("MATGL_BACKEND", "DGL")
     job = ForceFieldStaticMaker(
         force_field_name="M3GNet",
         ionic_step_data=("structure", "energy"),
@@ -189,8 +190,10 @@ def test_m3gnet_static_maker(si_structure):
     dgl is None or not mlff_is_installed("M3GNet"),
     reason="M3GNet requires DGL which is not installed",
 )
-def test_m3gnet_relax_maker(si_structure):
+def test_m3gnet_relax_maker(si_structure: Structure, monkeypatch: pytest.MonkeyPatch):
     # translate one atom to ensure a small number of relaxation steps are taken
+    monkeypatch.setenv("MATGL_BACKEND", "DGL")
+
     si_structure.translate_sites(0, [0, 0, 0.1])
 
     # generate job

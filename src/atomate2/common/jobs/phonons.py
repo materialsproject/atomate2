@@ -11,7 +11,7 @@ try:
     from phonopy import Phonopy
 except ImportError as exc:
     raise ImportError(
-        "`pip install phonopy` to use `atomate2.common.jobs.phonons`"
+        "`pip install phonopy seekpath` to use `atomate2.common.jobs.phonons`"
     ) from exc
 
 import numpy as np
