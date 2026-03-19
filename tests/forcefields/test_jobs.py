@@ -1,3 +1,4 @@
+import importlib
 from contextlib import nullcontext
 from importlib.metadata import version as get_imported_version
 from pathlib import Path
@@ -168,25 +169,10 @@ def test_chgnet_relax_maker(
 )
 def test_m3gnet_static_maker(si_structure: Structure, monkeypatch: pytest.MonkeyPatch):
     # generate job
-    import json
-
     import matgl
 
     monkeypatch.setattr(matgl.config, "BACKEND", "DGL")
-
-    try:
-        fpaths = matgl.utils.io._get_file_paths(Path("M3GNet-MP-2021.2.8-PES"))
-        with open(fpaths["model.json"]) as f:
-            d = json.load(f)
-            modname = d["@module"]
-            classname = d["@class"]
-
-            mod = __import__(modname, globals(), locals(), [classname], 0)
-            cls_ = getattr(mod, classname)
-            cls_.load(fpaths)
-    except Exception as exc:
-        print(f"lookforme: {exc}")
-
+    importlib.reload(matgl)
     job = ForceFieldStaticMaker(
         force_field_name="M3GNet",
         ionic_step_data=("structure", "energy"),
@@ -213,6 +199,7 @@ def test_m3gnet_relax_maker(si_structure: Structure, monkeypatch: pytest.MonkeyP
     import matgl
 
     monkeypatch.setattr(matgl.config, "BACKEND", "DGL")
+    importlib.reload(matgl)
 
     si_structure.translate_sites(0, [0, 0, 0.1])
 

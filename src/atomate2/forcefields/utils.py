@@ -310,20 +310,12 @@ def ase_calculator(
                         )
                         matgl.config.BACKEND = "PYG"
 
-                if matgl.config.BACKEND == "DGL":
-                    from matgl.ext._ase_dgl import PESCalculator
-                else:
-                    from matgl.ext._ase_pyg import PESCalculator
-
-                potential = matgl.load_model(path)
-                calculator = PESCalculator(potential, **kwargs)
-
-                # matgl_calc = getattr(
-                #     import_module(f"matgl.ext._ase_{matgl.config.BACKEND.lower()}"),
-                #     "PESCalculator",
-                #     None,
-                # )
-                # calculator = matgl_calc(matgl.load_model(path), **kwargs)
+                matgl_calc = getattr(
+                    import_module(f"matgl.ext._ase_{matgl.config.BACKEND.lower()}"),
+                    "PESCalculator",
+                    None,
+                )
+                calculator = matgl_calc(matgl.load_model(path), **kwargs)
 
             case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
                 from mace.calculators import MACECalculator, mace_mp
