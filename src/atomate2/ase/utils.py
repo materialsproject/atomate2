@@ -7,6 +7,7 @@ import io
 import os
 import sys
 import time
+import warnings
 from copy import deepcopy
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -22,8 +23,6 @@ from ase.io import write as ase_write
 from ase.mep.neb import NEB
 from ase.optimize import BFGS, FIRE, LBFGS, BFGSLineSearch, LBFGSLineSearch, MDMin
 from ase.optimize.sciopt import SciPyFminBFGS, SciPyFminCG
-from ase.stress import voigt_6_to_full_3x3_stress
-from ase.units import GPa
 from emmet.core.neb import NebMethod, NebResult
 from emmet.core.trajectory import AtomTrajectory
 from monty.serialization import dumpfn
@@ -31,7 +30,8 @@ from pymatgen.core.structure import Molecule, Structure
 from pymatgen.core.trajectory import Trajectory as PmgTrajectory
 from pymatgen.io.ase import AseAtomsAdaptor
 
-from atomate2.ase.schemas import AseResult
+from atomate2 import SETTINGS
+from atomate2.ase.schemas import AseResult, convert_stress_from_voigt_to_symm
 
 if TYPE_CHECKING:
     from os import PathLike
@@ -123,7 +123,11 @@ class TrajectoryObserver:
 
         if self._calc_kwargs["magmoms"]:
             try:
-                self.magmoms.append(self.atoms.get_magnetic_moments())
+                magmoms = self.atoms.get_magnetic_moments()
+                # This block needed for CHGNet
+                if len(magmoms.shape) == 2 and magmoms.T.shape[0] == 1:
+                    magmoms = magmoms.T[0]
+                self.magmoms.append(magmoms)
             except PropertyNotImplementedError:
                 self._calc_kwargs["magmoms"] = False
 
@@ -300,10 +304,8 @@ class TrajectoryObserver:
 
         ionic_step_data = {v: getattr(self, k) for k, v in frame_props.items()}
         if self._calc_kwargs["stresses"]:
-            # NOTE: convert stress units from eV/A³ to kBar (* -1 from standard output)
-            # and to 3x3 matrix to comply with MP convention
             ionic_step_data["stress"] = [
-                voigt_6_to_full_3x3_stress(val * -10 / GPa) for val in self.stresses
+                convert_stress_from_voigt_to_symm(val) for val in self.stresses
             ]
 
         traj = AtomTrajectory(
@@ -350,6 +352,7 @@ class AseRelaxer:
         calculator: Calculator,
         optimizer: Optimizer | str = "FIRE",
         relax_cell: bool = True,
+        relax_shape: bool = False,
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
     ) -> None:
@@ -360,6 +363,8 @@ class AseRelaxer:
         calculator (ase Calculator): an ase calculator
         optimizer (str or ase Optimizer): the optimization algorithm.
         relax_cell (bool): if True, cell parameters will be optimized.
+        relax_shape (bool): if True, allows the shape of the cell to relax at fixed
+            cell volume. Cannot be used in conjunction with `relax_cell = True`.
         fix_symmetry (bool): if True, symmetry will be fixed during relaxation.
         symprec (float): Tolerance for symmetry finding in case of fix_symmetry.
         """
@@ -373,7 +378,24 @@ class AseRelaxer:
             optimizer_obj = optimizer
 
         self.opt_class: Optimizer = optimizer_obj
+        if relax_cell and relax_shape:
+            raise ValueError(
+                "You have set both `relax_cell` (relaxing the cell shape and volume) "
+                "and `relax_shape` (relaxing only the cell shape at fixed volume) "
+                "to be `True`. Select at most one option to be `True`."
+            )
+
+        if relax_shape:
+            warnings.warn(
+                "The `relax_shape` functionality in ASE can break "
+                "energy conservation, and should not be used in conjunction "
+                "with a force-based optimizer.",
+                category=UserWarning,
+                stacklevel=2,
+            )
+
         self.relax_cell = relax_cell
+        self.relax_shape = relax_shape
         self.ase_adaptor = AseAtomsAdaptor()
         self.fix_symmetry = fix_symmetry
         self.symprec = symprec
@@ -390,6 +412,7 @@ class AseRelaxer:
         verbose: bool = False,
         cell_filter: Filter = FrechetCellFilter,
         filter_kwargs: dict | None = None,
+        use_emmet_models: bool = SETTINGS.ASE_FORCEFIELD_USE_EMMET_MODELS,
         **kwargs,
     ) -> AseResult:
         """
@@ -413,6 +436,9 @@ class AseRelaxer:
             The step interval for saving the trajectories.
         verbose : bool
             If True, screen output will be shown.
+        use_emmet_models : bool
+            Whether to use emmet-core (True) or pymatgen (False)
+            data models for larger objects, e.g., trajectories.
         **kwargs
             Further kwargs.
 
@@ -437,6 +463,8 @@ class AseRelaxer:
             if steps > 1:
                 if self.relax_cell and (not is_mol):
                     atoms = cell_filter(atoms, **(filter_kwargs or {}))
+                elif self.relax_shape and (not is_mol):
+                    atoms = cell_filter(atoms, constant_volume=True)
                 optimizer = self.opt_class(atoms, **kwargs)
                 optimizer.attach(obs, interval=interval)
                 converged = optimizer.run(fmax=fmax, steps=steps)
@@ -453,11 +481,17 @@ class AseRelaxer:
         struct = self.ase_adaptor.get_structure(
             atoms, cls=Molecule if is_mol else Structure
         )
-        traj = obs.to_emmet_trajectory(filename=None)
-        is_force_conv = all(
-            np.linalg.norm(traj.forces[-1][idx]) < abs(fmax)
-            for idx in range(len(struct))
-        )
+
+        if use_emmet_models:
+            traj = obs.to_emmet_trajectory(filename=None)
+            final_forces = traj.forces[-1]
+            first_last_energy = [traj.energy[idx] for idx in (0, -1)]
+        else:
+            traj = obs.to_pymatgen_trajectory(filename=None, file_format="pmg")
+            final_forces = traj.frame_properties[-1]["forces"]
+            first_last_energy = [
+                traj.frame_properties[idx]["energy"] for idx in (0, -1)
+            ]
 
         if final_atoms_object_file is not None:
             if steps <= 1:
@@ -489,8 +523,10 @@ class AseRelaxer:
             final_mol_or_struct=struct,
             trajectory=traj,
             converged=converged,
-            is_force_converged=is_force_conv,
-            energy_downhill=traj.energy[-1] < traj.energy[0],
+            is_force_converged=np.all(
+                np.linalg.norm(np.array(final_forces), axis=1) < abs(fmax)
+            ),
+            energy_downhill=first_last_energy[-1] < first_last_energy[0],
             dir_name=os.getcwd(),
             elapsed_time=t_f - t_i,
         )

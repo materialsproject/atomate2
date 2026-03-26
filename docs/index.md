@@ -10,6 +10,7 @@ user/jobflow-remote
 user/fireworks
 user/atomate-1-vs-2
 user/codes/index
+user/addons
 tutorials/tutorials
 ```
 
@@ -26,6 +27,7 @@ dev/dev_install
 dev/workflow_tutorial
 dev/vasp_tests
 dev/abinit_tests
+dev/forcefields
 ```
 
 ```{toctree}

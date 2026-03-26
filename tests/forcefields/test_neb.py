@@ -8,9 +8,12 @@ from pymatgen.io.vasp.outputs import Xdatcar
 
 from atomate2.forcefields.neb import ForceFieldNebFromImagesMaker
 
+from .conftest import mlff_is_installed
 
-def test_neb_from_images(test_dir, clean_dir):
-    endpoints = [
+
+@pytest.fixture(scope="module")
+def endpoints(test_dir):
+    return [
         Structure.from_file(
             test_dir
             / "vasp"
@@ -21,6 +24,12 @@ def test_neb_from_images(test_dir, clean_dir):
         )
         for i in range(2)
     ]
+
+
+@pytest.mark.skipif(
+    not mlff_is_installed("MATPES_PBE"), reason="matgl is not installed"
+)
+def test_neb_from_images_matpes_pbe(endpoints, clean_dir):
 
     images = endpoints[0].interpolate(endpoints[1], nimages=4, autosort_tol=0.5)
 
@@ -51,17 +60,21 @@ def test_neb_from_images(test_dir, clean_dir):
         output.energies[i] == pytest.approx(energy)
         for i, energy in enumerate(
             [
-                -339.3764953613281,
-                -339.2301025390625,
-                -338.865234375,
-                -339.23004150390625,
-                -339.37652587890625,
+                -328.3260803222656,
+                -328.3229064941406,
+                -327.90411376953125,
+                -328.3229064941406,
+                -328.3260803222656,
             ]
         )
     )
 
     assert output.state.value == "successful"
     assert "forces not converged" in output.tags
+
+
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
+def test_neb_from_images_mace(endpoints, clean_dir):
 
     images = endpoints[0].interpolate(endpoints[1], nimages=2, autosort_tol=0.5)
     job = ForceFieldNebFromImagesMaker(
@@ -74,6 +87,7 @@ def test_neb_from_images(test_dir, clean_dir):
     response = run_locally(job)
     output = response[job.uuid][1].output
 
+    cwd = next(Path(p) for p in output.tags if Path(p).exists())
     trajectories = [
         loadfn(cwd / f"si_self_diffusion-image-{idx + 1}.json.gz") for idx in range(3)
     ]
@@ -82,3 +96,17 @@ def test_neb_from_images(test_dir, clean_dir):
         trajectories[i].frame_properties[-1]["energy"] == pytest.approx(energy)
         for i, energy in enumerate(output.energies)
     )
+
+
+@pytest.mark.skipif(
+    not mlff_is_installed("MACE"), reason="mace_torch is not installed."
+)
+def test_ext_load_neb_initialization():
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+    maker = ForceFieldNebFromImagesMaker(
+        force_field_name=calculator_meta,
+    )
+    assert maker.ase_calculator_name == "mace_mp"

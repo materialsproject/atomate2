@@ -17,7 +17,6 @@ from atomate2.common.flows.mpmorph import (
     MPMorphMDMaker,
     SlowQuenchMaker,
 )
-from atomate2.forcefields import MLFF
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker, ForceFieldStaticMaker
 from atomate2.forcefields.md import ForceFieldMDMaker
 
@@ -27,6 +26,8 @@ if TYPE_CHECKING:
     from jobflow import Flow, Job
     from pymatgen.core import Structure
     from typing_extensions import Self
+
+    from atomate2.forcefields import MLFF
 
 
 @dataclass
@@ -209,14 +210,20 @@ class FastQuenchMLFFMDMaker(FastQuenchMaker):
     static_maker: ForceFieldStaticMaker = field(default_factory=ForceFieldStaticMaker)
 
     @classmethod
-    def from_force_field_name(cls, force_field_name: str | MLFF) -> Self:
+    def from_force_field_name(
+        cls,
+        force_field_name: str | MLFF | dict,
+        calculator_kwargs: dict | None = None,
+    ) -> Self:
         """
         Create a fast quench maker from the force field name.
 
         Parameters
         ----------
-        force_field_name : str or .MLFF
+        force_field_name : str or .MLFF or dict
             The name of the forcefield or its enum value
+        calculator_kwargs : dict | None
+            The keyword arguments to pass to the calculator
 
         Returns
         -------
@@ -224,14 +231,19 @@ class FastQuenchMLFFMDMaker(FastQuenchMaker):
             A fast quench maker that consists of a double relax + static using
             the specified MLFF.
         """
-        if isinstance(force_field_name, str) and force_field_name in MLFF.__members__:
-            # ensure `force_field_name` uses enum format
-            force_field_name = MLFF(force_field_name)
-        force_field_name = str(force_field_name)
-
+        calculator_kwargs = calculator_kwargs or {}
         return cls(
             name=f"{force_field_name} fast quench maker",
-            relax_maker=ForceFieldRelaxMaker(force_field_name=force_field_name),
-            relax_maker2=ForceFieldRelaxMaker(force_field_name=force_field_name),
-            static_maker=ForceFieldStaticMaker(force_field_name=force_field_name),
+            relax_maker=ForceFieldRelaxMaker(
+                force_field_name=force_field_name,
+                calculator_kwargs=calculator_kwargs,
+            ),
+            relax_maker2=ForceFieldRelaxMaker(
+                force_field_name=force_field_name,
+                calculator_kwargs=calculator_kwargs,
+            ),
+            static_maker=ForceFieldStaticMaker(
+                force_field_name=force_field_name,
+                calculator_kwargs=calculator_kwargs,
+            ),
         )

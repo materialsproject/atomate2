@@ -9,8 +9,8 @@ from pymatgen.io.vasp.outputs import Chgcar
 from typing_extensions import Self
 
 from atomate2.common.flows.approx_neb import ApproxNebFromEndpointsMaker
-from atomate2.forcefields import MLFF, _get_formatted_ff_name
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
+from atomate2.forcefields.utils import MLFF
 
 
 @dataclass
@@ -66,7 +66,8 @@ class ForceFieldApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
     @classmethod
     def from_force_field_name(
         cls,
-        force_field_name: str | MLFF,
+        force_field_name: str | MLFF | dict,
+        calculator_kwargs: dict | None = None,
         **kwargs,
     ) -> Self:
         """
@@ -74,25 +75,24 @@ class ForceFieldApproxNebFromEndpointsMaker(ApproxNebFromEndpointsMaker):
 
         Parameters
         ----------
-        force_field_name : str or .MLFF
+        force_field_name : str or .MLFF or dict
             The name of the force field.
+        calculator_kwargs : dict | None
+            The keyword arguments to pass to the calculator
         **kwargs
             Additional kwargs to pass to ApproxNEB
-
 
         Returns
         -------
         MLFFApproxNebFromEndpointsMaker
         """
-        force_field_name = _get_formatted_ff_name(force_field_name)
-        kwargs.update(
-            image_relax_maker=ForceFieldRelaxMaker(
-                force_field_name=force_field_name, relax_cell=False
-            ),
+        image_relax_maker = ForceFieldRelaxMaker(
+            force_field_name=force_field_name,
+            calculator_kwargs=calculator_kwargs or {},
+            relax_cell=False,
         )
+        kwargs.update(image_relax_maker=image_relax_maker)
         return cls(
-            name=(
-                f"{force_field_name.split('MLFF.')[-1]} ApproxNEB from endpoints Maker"
-            ),
+            name=(f"{image_relax_maker.mlff.name} ApproxNEB from endpoints Maker"),
             **kwargs,
         )

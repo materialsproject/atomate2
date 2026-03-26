@@ -3,12 +3,38 @@ from jobflow import run_locally
 from monty.serialization import loadfn
 
 from atomate2.forcefields.flows.eos import ForceFieldEosMaker
+from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 from atomate2.utils.testing import get_job_uuid_name_map
 
+from ..conftest import mlff_is_installed  # noqa: TID252
 
-@pytest.mark.parametrize("mlff", ["CHGNet", "MACE"])
+
+@pytest.mark.parametrize(
+    "mlff", [mlff for mlff in ["CHGNet", "MACE"] if mlff_is_installed(mlff)]
+)
 def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
-    maker = ForceFieldEosMaker.from_force_field_name(mlff)
+
+    calculator_kwargs = {}
+    if mlff == "CHGNet":
+        calculator_kwargs = {"path": "CHGNet-MatPES-PBE-2025.2.10-2.7M-PES"}
+    elif mlff == "MACE":
+        calculator_kwargs = {"model": "medium-0b3"}
+
+    maker = ForceFieldEosMaker.from_force_field_name(
+        mlff, calculator_kwargs=calculator_kwargs
+    )
+
+    # Note that some calculator_kwargs, like stress_unit, are set by `ase_calculator`
+    # for consistency - test only the subset of user-specified kwargs here
+    assert all(
+        v == maker.initial_relax_maker.calculator_kwargs[k]
+        for k, v in calculator_kwargs.items()
+    )
+    assert all(
+        v == maker.eos_relax_maker.calculator_kwargs[k]
+        for k, v in calculator_kwargs.items()
+    )
+
     job = maker.make(si_structure)
     for attr in ("initial_relax_maker", "eos_relax_maker"):
         assert mlff in getattr(maker, attr).force_field_name
@@ -35,3 +61,19 @@ def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
         ).initial_relax_maker
         is None
     )
+
+
+def test_ext_load_eos_initialization():
+    pytest.importorskip("mace")
+    calculator_meta = {
+        "@module": "mace.calculators",
+        "@callable": "mace_mp",
+    }
+    maker = ForceFieldEosMaker.from_force_field_name(
+        force_field_name=calculator_meta,
+        relax_initial_structure=True,
+    )
+    assert isinstance(maker.initial_relax_maker, ForceFieldRelaxMaker)
+    assert isinstance(maker.eos_relax_maker, ForceFieldRelaxMaker)
+    assert maker.initial_relax_maker.ase_calculator_name == "mace_mp"
+    assert maker.eos_relax_maker.ase_calculator_name == "mace_mp"

@@ -17,7 +17,9 @@ if TYPE_CHECKING:
     from collections.abc import Callable
     from pathlib import Path
 
-    from pymatgen.core.structure import Structure
+    from pymatgen.core.structure import Molecule, Structure
+
+    from atomate2.forcefields.schemas import ForceFieldMoleculeTaskDocument
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +31,9 @@ def forcefield_job(method: Callable) -> job:
     This is a thin wrapper around :obj:`~jobflow.core.job.Job` that configures common
     settings for all forcefield jobs. For example, it ensures that large data objects
     (currently only trajectories) are all stored in the atomate2 data store.
-    It also configures the output schema to be a ForceFieldTaskDocument :obj:`.TaskDoc`.
+    It also configures the output schema to be a
+    ForceFieldTaskDocument :obj:`.TaskDoc`. or
+    ForceFieldMoleculeTaskDocument :obj:`.TaskDoc`.
 
     Any makers that return forcefield jobs (not flows) should decorate the
     ``make`` method with @forcefield_job. For example:
@@ -53,9 +57,7 @@ def forcefield_job(method: Callable) -> job:
     callable
         A decorated version of the make function that will generate forcefield jobs.
     """
-    return job(
-        method, data=_FORCEFIELD_DATA_OBJECTS, output_schema=ForceFieldTaskDocument
-    )
+    return job(method, data=_FORCEFIELD_DATA_OBJECTS)
 
 
 @dataclass
@@ -71,10 +73,13 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str or .MLFF
+    force_field_name : str or .MLFF or dict
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
+    relax_shape : bool = False
+        Whether to allow the cell shape to relax at fixed volume.
+        Cannot be used together with `relax_cell=True`.
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
         Refines the symmetry of the initial structure.
@@ -99,12 +104,14 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
     tags : list[str] or None
         A list of tags for the task.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = "Force field relax"
-    force_field_name: str | MLFF = MLFF.Forcefield
+    force_field_name: str | MLFF | dict = MLFF.Forcefield
     relax_cell: bool = True
+    relax_shape: bool = False
     fix_symmetry: bool = False
     symprec: float | None = 1e-2
     steps: int = 500
@@ -115,15 +122,15 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
 
     @forcefield_job
     def make(
-        self, structure: Structure, prev_dir: str | Path | None = None
-    ) -> ForceFieldTaskDocument:
+        self, structure: Molecule | Structure, prev_dir: str | Path | None = None
+    ) -> ForceFieldTaskDocument | ForceFieldMoleculeTaskDocument:
         """
         Perform a relaxation of a structure using a force field.
 
         Parameters
         ----------
-        structure: .Structure
-            pymatgen structure.
+        structure: .Structure or Molecule
+            pymatgen structure or molecule.
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
@@ -139,12 +146,14 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
             )
 
         return ForceFieldTaskDocument.from_ase_compatible_result(
-            str(self.force_field_name),  # make mypy happy
+            self.ase_calculator_name,
             ase_result,
             self.steps,
+            calculator_meta=self.calculator_meta,
             relax_kwargs=self.relax_kwargs,
             optimizer_kwargs=self.optimizer_kwargs,
             relax_cell=self.relax_cell,
+            relax_shape=self.relax_shape,
             fix_symmetry=self.fix_symmetry,
             symprec=self.symprec if self.fix_symmetry else None,
             ionic_step_data=self.ionic_step_data,
@@ -167,17 +176,19 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     ----------
     name : str
         The job name.
-    force_field_name : str or .MLFF
+    force_field_name : str or .MLFF or dict
         The name of the force field.
     calculator_kwargs : dict
         Keyword arguments that will get passed to the ASE calculator.
     task_document_kwargs : dict (deprecated)
-        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()`.
+        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()` or
+          :obj: `ForceFieldMoleculeTaskDocument`.
     """
 
     name: str = "Force field static"
-    force_field_name: str | MLFF = MLFF.Forcefield
+    force_field_name: str | MLFF | dict = MLFF.Forcefield
     relax_cell: bool = False
+    relax_shape: bool = False
     steps: int = 1
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)

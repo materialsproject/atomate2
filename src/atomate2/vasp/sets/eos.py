@@ -25,7 +25,7 @@ class EosSetGenerator(VaspInputGenerator):
     force_gamma: bool = True
     auto_ismear: bool = False
     auto_kspacing: bool = False
-    inherit_incar: bool = False
+    inherit_incar: bool | list[str] = False
 
     @property
     def incar_updates(self) -> dict:
@@ -60,7 +60,7 @@ class MPLegacyEosRelaxSetGenerator(VaspInputGenerator):
     config_dict: dict = field(default_factory=lambda: MPRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
-    inherit_incar: bool = False
+    inherit_incar: bool | list[str] = False
 
     @property
     def incar_updates(self) -> dict:
@@ -103,7 +103,7 @@ class MPLegacyEosStaticSetGenerator(EosSetGenerator):
     config_dict: dict = field(default_factory=lambda: MPRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
-    inherit_incar: bool = False
+    inherit_incar: bool | list[str] = False
 
     @property
     def incar_updates(self) -> dict:
@@ -138,7 +138,7 @@ class MPGGAEosRelaxSetGenerator(VaspInputGenerator):
     config_dict: dict = field(default_factory=lambda: MPScanRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
-    inherit_incar: bool = False
+    inherit_incar: bool | list[str] = False
 
     @property
     def incar_updates(self) -> dict:
@@ -173,7 +173,7 @@ class MPGGAEosStaticSetGenerator(EosSetGenerator):
     config_dict: dict = field(default_factory=lambda: MPScanRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
-    inherit_incar: bool = False
+    inherit_incar: bool | list[str] = False
 
     @property
     def incar_updates(self) -> dict:
@@ -207,7 +207,7 @@ class MPMetaGGAEosStaticSetGenerator(VaspInputGenerator):
     config_dict: dict = field(default_factory=lambda: MPScanRelaxSet.CONFIG)
     auto_ismear: bool = False
     auto_kspacing: bool = False
-    inherit_incar: bool = False
+    inherit_incar: bool | list[str] = False
 
     @property
     def incar_updates(self) -> dict:
@@ -250,7 +250,7 @@ class MPMetaGGAEosRelaxSetGenerator(VaspInputGenerator):
     bandgap_tol: float = 1e-4
     auto_ismear: bool = False
     auto_kspacing: bool = False
-    inherit_incar: bool = False
+    inherit_incar: bool | list[str] = False
 
     @property
     def incar_updates(self) -> dict:
@@ -295,7 +295,7 @@ class MPMetaGGAEosPreRelaxSetGenerator(VaspInputGenerator):
     bandgap_tol: float = 1e-4
     auto_ismear: bool = False
     auto_kspacing: bool = False
-    inherit_incar: bool = False
+    inherit_incar: bool | list[str] = False
 
     @property
     def incar_updates(self) -> dict:

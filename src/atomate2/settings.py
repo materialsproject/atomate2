@@ -114,6 +114,12 @@ class Atomate2Settings(BaseSettings):
         "VaspInputGenerator.",
     )
 
+    VASP_USE_EMMET_MODELS: bool = Field(
+        default=False,
+        description="Whether to use emmet models (True) for VASP electronic "
+        "structure data, or the pymatgen models (False).",
+    )
+
     LOBSTER_CMD: str = Field(
         default="lobster", description="Command to run standard version of VASP."
     )
@@ -212,6 +218,12 @@ class Atomate2Settings(BaseSettings):
         5, description="Maximum number of restarts of a job."
     )
 
+    ASE_FORCEFIELD_USE_EMMET_MODELS: bool = Field(
+        default=False,
+        description="Whether to use emmet-core models (False) or pymatgen (True) "
+        "models for larger data objects, such as trajectories.",
+    )
+
     model_config = SettingsConfigDict(env_prefix=_ENV_PREFIX)
 
     # QChem specific settings
@@ -238,6 +250,12 @@ class Atomate2Settings(BaseSettings):
         default=True,
         description="Ingest any additional JSON data present into database when "
         "parsing QChem directories useful for storing duplicate of FW.json",
+    )
+
+    JDFTX_CMD: str = Field("jdftx", description="Command to run jdftx.")
+
+    JDFTX_PSEUDOS_DIR: str = Field(
+        "GBRV_v1.5", description="location of JDFTX pseudopotentials."
     )
 
     @model_validator(mode="before")

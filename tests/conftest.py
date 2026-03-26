@@ -43,7 +43,7 @@ def clean_dir(debug_mode):
     os.chdir(new_path)
     yield
     if debug_mode:
-        print(f"Tests ran in {new_path}")  # noqa: T201
+        initialize_logger().log(f"Tests ran in {new_path}")
     else:
         os.chdir(old_cwd)
         shutil.rmtree(new_path)

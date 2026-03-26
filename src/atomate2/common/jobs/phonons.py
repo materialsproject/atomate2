@@ -9,6 +9,13 @@ import warnings
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+try:
+    from phonopy import Phonopy
+except ImportError as exc:
+    raise ImportError(
+        "`pip install phonopy seekpath` to use `atomate2.common.jobs.phonons`"
+    ) from exc
+
 import numpy as np
 from emmet.core import __version__ as _emmet_core_version
 from emmet.core.phonon import PhononBSDOSDoc
@@ -243,10 +250,10 @@ def _generate_phonon_object(
         cell,
         supercell_matrix,
         primitive_matrix=primitive_matrix,
-        factor=factor,
         symprec=symprec,
         is_symmetry=sym_reduce,
     )
+    phonon.unit_conversion_factor = factor
     phonon.generate_displacements(distance=displacement)
     return phonon
 

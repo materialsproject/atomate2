@@ -51,7 +51,7 @@ If you're planning on contributing to the atomate2 source, you should also insta
 the developer requirements with:
 
 ```bash
-pip install -e .[dev]
+pip install -e . --group dev
 pre-commit install
 ```
 
@@ -65,7 +65,7 @@ Unit tests can be run from the source folder using `pytest`. First, the requirem
 to run tests must be installed:
 
 ```bash
-pip install .[tests]
+pip install . --group tests
 ```
 
 And the tests run using:
@@ -79,7 +79,7 @@ pytest
 The atomate2 documentation can be built using the sphinx package. First, install the requirements:
 
 ```bash
-pip install .[docs]
+pip install . --group docs
 ```
 
 Next, the docs can be built to the `docs_build` directory:
