@@ -450,6 +450,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         new_plotter_dos.add_dos(label="total", dos=dos)
         new_plotter_dos.save_plot(
             filename=kwargs.get("filename_dos", "phonon_dos.pdf"),
+            img_format=kwargs.get("filetype_dos", "pdf"),
             units=kwargs.get("units", "THz"),
         )
 
