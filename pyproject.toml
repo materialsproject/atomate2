@@ -17,9 +17,9 @@ classifiers = [
     "Intended Audience :: System Administrators",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
@@ -48,7 +48,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib>=1.8.1"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=2.43.6", "seekpath>=2.0.0"]
-lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
+lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
 defects = [
     "dscribe>=1.2.0",
     "pymatgen-analysis-defects>=2024.5.11",
@@ -69,7 +69,7 @@ forcefields = [
 torchsim = [
     "torch-sim-atomistic==0.5.0; python_version >= '3.12'"
 ]
-jdftx = ["pymatgen==2025.10.7"]
+jdftx = ["pymatgen==2026.3.23"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 ase = ["ase>=3.26.0"]
 ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
@@ -84,7 +84,7 @@ strict-openff = [
     "monty==2026.2.18",
     "openmm-mdanalysis-reporter==0.1.0",
     "openmm==8.4.0.post2",
-    "pymatgen==2025.10.7", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
+    "pymatgen==2026.3.23", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
 
 # Forcefields have separate strict groupings because of conflicting dependencies.
