@@ -365,8 +365,11 @@ def generate_frequencies_eigenvectors(
     )
     np.save(_DEFAULT_FILE_PATHS["displacements"], dataset_disps)
 
+    supercell_scaled_positions = np.array(supercell.scaled_positions)
+
     dataset_disps_array_rr = np.round(
-        (dataset_disps - supercell.get_scaled_positions()), decimals=16
+        dataset_disps - supercell_scaled_positions,
+        decimals=16,
     )
     np.save(_DEFAULT_FILE_PATHS["displacements_folded"], dataset_disps_array_rr)
 
@@ -499,7 +502,8 @@ def generate_frequencies_eigenvectors(
         f"{int(supercell_matrix[1][1])} "
         f"{int(supercell_matrix[2][2])} -w 2 -d "
         f"--symprec {float(symprec)} "
-        f"--ndata {int(num_har)} --disp_file"
+        f"--ndata {int(num_har)} --disp_file "
+        f"--disp_matrix_file {_DEFAULT_FILE_PATHS['harmonic_displacements']}"
     )
 
     # Here we set a criteria to determine which method to use to generate the
@@ -516,7 +520,8 @@ def generate_frequencies_eigenvectors(
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -f --full_ifc "
             f"-w 2 --symprec {float(symprec)} "
-            f"-l LASSO --std --rasr BHH --ndata {int(num_har)}"
+            f"-l LASSO --std --rasr BHH --ndata {int(num_har)} "
+            f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
         )
 
     else:
@@ -526,7 +531,8 @@ def generate_frequencies_eigenvectors(
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -f --full_ifc "
             f"-w 2 --symprec {float(symprec)} "
-            f"--rasr BHH --ndata {int(num_har)}"
+            f"--rasr BHH --ndata {int(num_har)} "
+            f"--force_matrix_file {_DEFAULT_FILE_PATHS['harmonic_force_matrix']}"
         )
 
     logger.info("Start running pheasy in cluster")
@@ -574,7 +580,8 @@ def generate_frequencies_eigenvectors(
             f"{int(supercell_matrix[1][1])} "
             f"{int(supercell_matrix[2][2])} -w 4 -d --symprec "
             f"{float(symprec)} "
-            f"--ndata {int(num_anhar)} --disp_file"
+            f"--ndata {int(num_anhar)} --disp_file "
+            f"--disp_matrix_file {_DEFAULT_FILE_PATHS['anharmonic_displacements']}"
         )
         pheasy_cmd_8 = (
             f"pheasy --dim {int(supercell_matrix[0][0])} "
@@ -582,6 +589,7 @@ def generate_frequencies_eigenvectors(
             f"{int(supercell_matrix[2][2])} -f -w 4 --fix_fc2 "
             f"--symprec {float(symprec)} "
             f"--ndata {int(num_anhar)} "
+            f"--force_matrix_file {_DEFAULT_FILE_PATHS['anharmonic_force_matrix']}"
         )
 
         subprocess.call(shlex.split(pheasy_cmd_5))

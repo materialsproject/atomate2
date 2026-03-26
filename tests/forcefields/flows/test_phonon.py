@@ -3,6 +3,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
+from ase.calculators.calculator import Calculator
 from emmet.core.phonon import (
     CalcMeta,
     PhononBS,
@@ -10,7 +11,6 @@ from emmet.core.phonon import (
     PhononComputationalSettings,
     PhononDOS,
 )
-from ase.calculators.calculator import Calculator
 from jobflow import Flow, JobStore, run_locally
 from numpy.testing import assert_allclose
 from pymatgen.core.structure import Structure
