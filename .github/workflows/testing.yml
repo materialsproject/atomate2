@@ -68,7 +68,6 @@ jobs:
           mkdir -p ~/.abinit/pseudos
           cp -r tests/test_data/abinit/pseudos/ONCVPSP-PBE-SR-PDv0.4 ~/.abinit/pseudos
           uv pip install .[strict,strict-forcefields-${{ matrix.dep-group }},abinit,approxneb,aims] --group tests
-          uv pip install pytest pytest-xdist pytest-cov pytest-split nbmake
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
@@ -146,7 +145,6 @@ jobs:
           uv pip install .[strict,abinit,approxneb,aims,pheasy,alamode] --group tests
           uv pip install torch-runstats torch_dftd
           uv pip install --no-deps nequip==0.5.6
-          uv pip install pytest pytest-xdist pytest-cov pytest-split nbmake
           
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
@@ -217,7 +215,6 @@ jobs:
           micromamba activate a2
           python -m pip install --upgrade pip
           uv pip install .[strict-openff] --group tests
-          uv pip install pytest pytest-xdist pytest-cov pytest-split nbmake
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
@@ -281,7 +278,6 @@ jobs:
           python -m pip install --upgrade pip
           uv pip install .[strict,aims] --group tests
           uv pip install tblite>=0.4.0
-          uv pip install pytest pytest-xdist pytest-cov pytest-split nbmake
 
       - name: Install pymatgen from master if triggered by pymatgen repo dispatch
         if: github.event_name == 'repository_dispatch' && github.event.action == 'pymatgen-ci-trigger'
@@ -346,7 +342,6 @@ jobs:
           uv pip install torch --index-url https://download.pytorch.org/whl/cpu
           uv pip install .[torchsim,ase,phonons] --group tests
           uv pip install mace-torch>=0.3.3
-          uv pip install pytest pytest-xdist pytest-cov pytest-split nbmake
 
       - name: Test TorchSim
         env:

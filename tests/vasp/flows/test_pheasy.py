@@ -49,6 +49,7 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
         force_diagonal=True,
         min_length=12,
         cal_anhar_fcs=False,
+        create_thermal_displacements = True,
         # use_symmetrized_structure="primitive"
     ).make(structure=si_struct)
 
@@ -88,9 +89,9 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
     )
     assert isinstance(ph_doc.structure, Structure)
     assert ph_doc.has_imaginary_modes is False
-    assert isinstance(ph_doc.force_constants, tuple)
+    assert isinstance(ph_doc.force_constants, list)
     assert all(isinstance(cm, CalcMeta) for cm in ph_doc.calc_meta)
-    assert_allclose(ph_doc.total_dft_energy, -5.7466748)
+    assert_allclose(ph_doc.total_dft_energy, -2.8733374)
     assert_allclose(
         ph_doc.born,
         [

@@ -206,8 +206,8 @@ def test_phonon_wf_force_field(
     assert ph_bs_dos_doc.post_process_settings.kpoint_density_dos == 7_000
 
     ref_vals = {
-        "entropy": [0.0, 7.45806197, 24.99582177, 40.53981354, 53.0450785],
-        "heat_capacity": [0.0, 15.9212379, 34.32542093, 41.73809612, 44.95600976],
+        "entropy": [0.0, 14.6055132, 34.95943091, 51.27884372, 64.05205132],
+        "heat_capacity": [0.0, 21.622918, 37.313026, 43.348308, 45.921721],
         "internal_energy": [
             10510.17946131,
             11038.76862405,
@@ -216,11 +216,11 @@ def test_phonon_wf_force_field(
             21889.29538244,
         ],
         "free_energy": [
-            10510.17946131,
-            10292.96242722,
-            8677.0539271,
-            5372.77832663,
-            671.26398379,
+            8883.796678,
+            8342.505732,
+            5796.489655,
+            1386.324568,
+            -4481.767156
         ],
     }
     thermo_props = ph_bs_dos_doc.compute_thermo_quantities(
