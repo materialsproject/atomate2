@@ -132,8 +132,8 @@ jobs:
         run: micromamba run -n a2 pip install uv
 
       - name: Install conda dependencies
-        run: |
-          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
+        run: |  # TODO: migrate openff tests to use non smirnoff99frosst forcefields - requires old setuptools / pkg_resources
+          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 'setuptools<81' --yes
 
       - name: Install dependencies
         run: |
@@ -195,7 +195,7 @@ jobs:
 
       - name: Install conda dependencies
         run: |
-          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
+          micromamba install -n a2 -c conda-forge enumlib packmol openbabel --yes
 
       - name: Install dependencies
         run: |
@@ -262,10 +262,6 @@ jobs:
 
       - name: Install uv
         run: micromamba run -n a2 pip install uv
-
-      - name: Install conda dependencies
-        run: |
-          micromamba install -n a2 -c conda-forge enumlib packmol bader openbabel openff-toolkit==0.16.2 openff-interchange==0.3.22 --yes
 
       - name: Install dependencies
         run: |

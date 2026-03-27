@@ -343,7 +343,7 @@ class CCDDocument(BaseModel):
         """Get the distorted task documents."""
 
         def remove_host_name(dir_name: str) -> str:
-            return dir_name.split(":")[-1]
+            return dir_name.rsplit(":", maxsplit=1)[-1]
 
         static1_task_docs = [
             TaskDoc.from_directory(remove_host_name(dir_name))
