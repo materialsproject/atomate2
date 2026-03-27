@@ -66,10 +66,14 @@ class PhononComputationalSettings(BaseModel):
     """Collection to store computational settings for the phonon computation."""
 
     # could be optional and implemented at a later stage?
-    npoints_band: int = Field("number of points for band structure computation")
-    kpath_scheme: str = Field("indicates the kpath scheme")
+    npoints_band: int = Field(
+        None, description="number of points for band structure computation"
+    )
+    kpath_scheme: str = Field(None, description="indicates the kpath scheme")
     kpoint_density_dos: int = Field(
-        "number of points for computation of free energies and densities of states",
+        None,
+        description="number of points for computation of free energies and "
+        "densities of states",
     )
 
 
