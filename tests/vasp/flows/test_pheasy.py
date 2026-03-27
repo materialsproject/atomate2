@@ -49,7 +49,7 @@ def test_pheasy_wf_vasp(mock_vasp, clean_dir, si_structure: Structure, test_dir)
         force_diagonal=True,
         min_length=12,
         cal_anhar_fcs=False,
-        create_thermal_displacements = True,
+        create_thermal_displacements=True,
         # use_symmetrized_structure="primitive"
     ).make(structure=si_struct)
 
