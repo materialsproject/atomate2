@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias
 
 import numpy as np
-from emmet.core.phonon import PhononBSDOSDoc
+from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
 from jobflow import Flow, Response, job
 
+from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
 from atomate2.common.schemas.qha import PhononQHADoc, PhononSummaryData
 from atomate2.common.utils import get_supercell_matrix
 
@@ -16,6 +17,8 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
+
+PhononDoc: TypeAlias = EmmetPhononBSDOSDoc | Atomate2PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +60,7 @@ def get_supercell_size(
     )
 
 
-@job(data=[PhononBSDOSDoc])
+@job
 def get_phonon_jobs(
     phonon_maker: BasePhononMaker, eos_output: dict, supercell_matrix: list[list[float]]
 ) -> Flow:
@@ -182,7 +185,7 @@ def analyze_free_energy(
 
 @job(data=[PhononSummaryData])
 def calc_thermo_data(
-    phonon_docs: list[PhononBSDOSDoc],
+    phonon_docs: list[PhononDoc],
     t_min: float = 0.0,
     t_max: float = 500.0,
     t_step: int = 10,

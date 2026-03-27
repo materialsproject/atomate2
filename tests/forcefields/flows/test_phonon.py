@@ -139,6 +139,7 @@ def test_phonon_wf_force_field(
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
+        phonon_doc_schema="emmet",
         generate_frequencies_eigenvectors_kwargs={
             "tstep": 100,
             "filename_bs": (filename_bs := f"{tmp_path}/phonon_bs_test.png"),

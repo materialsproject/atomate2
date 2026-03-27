@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias
 
-from emmet.core.phonon import PhononBSDOSDoc
+from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
 from jobflow import Flow, Response, job
 from pymatgen.phonon.gruneisen import (
     GruneisenParameter,
@@ -15,6 +15,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 from atomate2.common.schemas.gruneisen import GruneisenParameterDocument
+from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -22,6 +23,8 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
+
+PhononDoc: TypeAlias = EmmetPhononBSDOSDoc | Atomate2PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +53,7 @@ def shrink_expand_structure(structure: Structure, perc_vol: float) -> Response:
     return Response(output={"plus": plus_struct, "minus": minus_struct})
 
 
-@job(data=[PhononBSDOSDoc])
+@job
 def run_phonon_jobs(
     opt_struct: dict,
     phonon_maker: BasePhononMaker = None,
@@ -120,23 +123,35 @@ def run_phonon_jobs(
     return Response(output={"error": "different space groups"}, stop_jobflow=True)
 
 
+def _get_taskdoc_run_dir(pbd: PhononDoc) -> str | None:
+    calc_meta = getattr(pbd, "calc_meta", None)
+    if calc_meta is not None:
+        return next(
+            iter(
+                [cm.dir_name for cm in calc_meta if cm.name == "taskdoc_run"] or [None]
+            )
+        )
+
+    jobdirs = getattr(pbd, "jobdirs", None)
+    if jobdirs is not None:
+        return getattr(jobdirs, "taskdoc_run_job_dir", None)
+
+    return None
+
+
 @job
 def get_calc_meta(
-    phonon_jobs_output: dict[str, PhononBSDOSDoc],
-) -> dict[str, dict[str, Path | bool]]:
+    phonon_jobs_output: dict[str, PhononDoc],
+) -> dict[str, dict[str, str | Path | bool | None]]:
     """Return the metadata associated with a set of phonon calculations."""
     return {
         "phonon_yaml": {
-            label: next(
-                iter(
-                    [cm.dir_name for cm in pbd.calc_meta if cm.name == "taskdoc_run"]
-                    or [None]
-                )
-            )
+            label: _get_taskdoc_run_dir(pbd)
             for label, pbd in phonon_jobs_output.items()
         },
         "imaginary_modes": {
-            label: pbd.has_imaginary_modes for label, pbd in phonon_jobs_output.items()
+            label: bool(pbd.has_imaginary_modes)
+            for label, pbd in phonon_jobs_output.items()
         },
     }
 

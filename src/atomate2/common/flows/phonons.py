@@ -154,6 +154,7 @@ class BasePhononMaker(Maker, ABC):
     phonon_displacement_maker: ForceFieldStaticMaker | BaseVaspMaker | BaseAimsMaker = (
         None
     )
+    phonon_doc_schema: Literal["atomate2", "emmet"] = "atomate2"
     create_thermal_displacements: bool = True
     generate_frequencies_eigenvectors_kwargs: dict = field(
         default_factory=lambda: {
@@ -416,6 +417,7 @@ class BasePhononMaker(Maker, ABC):
             code=self.code,
             structure=structure,
             displacement_data=displacement_calcs.output,
+            phonon_doc_schema=self.phonon_doc_schema,
             epsilon_static=epsilon_static,
             born=born,
             total_dft_energy=total_dft_energy,

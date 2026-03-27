@@ -43,6 +43,7 @@ def test_phonon_wf_vasp_only_displacements3(
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
+        phonon_doc_schema="emmet",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
     ).make(si_structure)
 
@@ -140,6 +141,7 @@ def test_phonon_wf_vasp_only_displacements_no_structural_transformation(
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
+        phonon_doc_schema="emmet",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
     ).make(si_structure.to_conventional())
 
@@ -228,6 +230,7 @@ def test_phonon_wf_vasp_only_displacements_kpath(
         born_maker=None,
         use_symmetrized_structure="primitive",
         kpath_scheme=kpath_scheme,
+        phonon_doc_schema="emmet",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         create_thermal_displacements=True,
         store_force_constants=True,
@@ -306,6 +309,7 @@ def test_phonon_wf_vasp_only_displacements_add_inputs_raises(
         static_energy_maker=None,
         born_maker=None,
         use_symmetrized_structure="primitive",
+        phonon_doc_schema="emmet",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         create_thermal_displacements=True,
         store_force_constants=True,
@@ -348,6 +352,7 @@ def test_phonon_wf_vasp_only_displacements_add_inputs(
         static_energy_maker=None,
         born_maker=None,
         use_symmetrized_structure="primitive",
+        phonon_doc_schema="emmet",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         create_thermal_displacements=True,
         store_force_constants=True,
@@ -444,6 +449,7 @@ def test_phonon_wf_vasp_only_displacements_optional_settings(
         create_thermal_displacements=False,
         store_force_constants=False,
         prefer_90_degrees=False,
+        phonon_doc_schema="emmet",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
     ).make(si_structure)
 
@@ -539,6 +545,7 @@ def test_phonon_wf_vasp_all_steps(mock_vasp, clean_dir, si_structure: Structure)
     job = PhononMaker(
         min_length=3.0,
         use_symmetrized_structure=None,
+        phonon_doc_schema="emmet",
         generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         create_thermal_displacements=True,
         store_force_constants=True,
@@ -645,6 +652,7 @@ def test_phonon_wf_vasp_only_displacements_kpath_raises_no_cell_change(
             born_maker=None,
             use_symmetrized_structure=None,
             kpath_scheme=kpath_scheme,
+            phonon_doc_schema="emmet",
             generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         ).make(si_structure)
 
@@ -675,6 +683,7 @@ def test_phonon_wf_vasp_only_displacements_kpath_raises(
             born_maker=None,
             use_symmetrized_structure="conventional",
             kpath_scheme=kpath_scheme,
+            phonon_doc_schema="emmet",
             generate_frequencies_eigenvectors_kwargs={"tstep": 100},
         ).make(si_structure)
 
@@ -717,7 +726,9 @@ def test_phonon_wf_vasp_all_steps_na_cl(mock_vasp, clean_dir):
 
     mock_vasp(ref_paths, fake_run_vasp_kwargs)
 
-    phonon_flow = PhononMaker(min_length=3.0, bulk_relax_maker=None).make(structure)
+    phonon_flow = PhononMaker(
+        min_length=3.0, bulk_relax_maker=None, phonon_doc_schema="emmet"
+    ).make(structure)
 
     # run the job
     responses = run_locally(phonon_flow, create_folders=True, ensure_success=True)
@@ -788,6 +799,7 @@ def test_phonon_wf_vasp_all_steps_na_cl(mock_vasp, clean_dir):
             static_energy_maker=None,
             use_symmetrized_structure="primitive",
             kpath_scheme="setyawan_curtarolo",
+            phonon_doc_schema="emmet",
         ).make(structure)
 
         # run the job

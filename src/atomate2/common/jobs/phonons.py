@@ -18,7 +18,7 @@ except ImportError as exc:
 
 import numpy as np
 from emmet.core import __version__ as _emmet_core_version
-from emmet.core.phonon import PhononBSDOSDoc
+from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
 from jobflow import Flow, Response, job
 from packaging.version import parse as parse_version
 from phonopy import Phonopy
@@ -40,6 +40,7 @@ from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
 
 from atomate2.aims.utils.units import omegaToTHz
+from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
 from atomate2.common.utils import get_supercell_matrix
 
 if TYPE_CHECKING:
@@ -319,7 +320,7 @@ def generate_phonon_displacements(
 
 
 @job(
-    output_schema=PhononBSDOSDoc,
+    output_schema=None,
     data=[PhononDos, PhononBandStructureSymmLine, "force_constants"],
 )
 def generate_frequencies_eigenvectors(
@@ -336,7 +337,7 @@ def generate_frequencies_eigenvectors(
     epsilon_static: Matrix3D | None = None,
     born: Matrix3D | None = None,
     **kwargs,
-) -> PhononBSDOSDoc:
+) -> EmmetPhononBSDOSDoc | Atomate2PhononBSDOSDoc:
     """
     Analyze the phonon runs and summarize the results.
 
@@ -369,6 +370,12 @@ def generate_frequencies_eigenvectors(
     kwargs: dict
         Additional parameters that are passed to PhononBSDOSDoc.from_forces_born
     """
+    phonon_doc_schema = kwargs.pop("phonon_doc_schema", "atomate2")
+    if phonon_doc_schema not in {"atomate2", "emmet"}:
+        raise ValueError(
+            f"Invalid phonon_doc_schema={phonon_doc_schema!r}. "
+            "Expected one of {'atomate2', 'emmet'}."
+        )
     phonon = _generate_phonon_object(
         structure,
         supercell_matrix,
@@ -552,12 +559,30 @@ def generate_frequencies_eigenvectors(
 
     volume_per_formula_unit = structure.volume / formula_units
 
+    if phonon_doc_schema == "atomate2":
+        return Atomate2PhononBSDOSDoc.from_forces_born(
+            structure=structure,
+            supercell_matrix=supercell_matrix,
+            displacement=displacement,
+            sym_reduce=sym_reduce,
+            symprec=symprec,
+            use_symmetrized_structure=use_symmetrized_structure,
+            kpath_scheme=kpath_scheme,
+            code=code,
+            displacement_data=displacement_data,
+            total_dft_energy=total_dft_energy,
+            epsilon_static=epsilon_static,
+            born=born,
+            **kwargs,
+        )
+
     cls_constructor = (
         "migrate_fields"
         if parse_version(_emmet_core_version) >= parse_version("0.85.1")
         else "from_structure"
     )
-    return getattr(PhononBSDOSDoc, cls_constructor)(
+
+    return getattr(EmmetPhononBSDOSDoc, cls_constructor)(
         structure=structure,
         meta_structure=structure,
         phonon_bandstructure=bs_symm_line.as_dict(),
