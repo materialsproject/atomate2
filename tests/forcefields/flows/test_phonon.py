@@ -220,7 +220,7 @@ def test_phonon_wf_force_field(
             8342.505732,
             5796.489655,
             1386.324568,
-            -4481.767156
+            -4481.767156,
         ],
     }
     thermo_props = ph_bs_dos_doc.compute_thermo_quantities(
