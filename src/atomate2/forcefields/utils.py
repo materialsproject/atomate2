@@ -310,6 +310,9 @@ def ase_calculator(
                         )
                         matgl.config.BACKEND = "PYG"
 
+                if new_dtype := kwargs.pop("dtype", None):
+                    matgl.set_default_dtype(new_dtype)
+
                 matgl_calc = getattr(
                     import_module(f"matgl.ext._ase_{matgl.config.BACKEND.lower()}"),
                     "PESCalculator",
