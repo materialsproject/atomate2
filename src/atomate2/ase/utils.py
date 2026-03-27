@@ -7,6 +7,7 @@ import io
 import os
 import sys
 import time
+import warnings
 from copy import deepcopy
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -351,6 +352,7 @@ class AseRelaxer:
         calculator: Calculator,
         optimizer: Optimizer | str = "FIRE",
         relax_cell: bool = True,
+        relax_shape: bool = False,
         fix_symmetry: bool = False,
         symprec: float = 1e-2,
     ) -> None:
@@ -361,6 +363,8 @@ class AseRelaxer:
         calculator (ase Calculator): an ase calculator
         optimizer (str or ase Optimizer): the optimization algorithm.
         relax_cell (bool): if True, cell parameters will be optimized.
+        relax_shape (bool): if True, allows the shape of the cell to relax at fixed
+            cell volume. Cannot be used in conjunction with `relax_cell = True`.
         fix_symmetry (bool): if True, symmetry will be fixed during relaxation.
         symprec (float): Tolerance for symmetry finding in case of fix_symmetry.
         """
@@ -374,7 +378,24 @@ class AseRelaxer:
             optimizer_obj = optimizer
 
         self.opt_class: Optimizer = optimizer_obj
+        if relax_cell and relax_shape:
+            raise ValueError(
+                "You have set both `relax_cell` (relaxing the cell shape and volume) "
+                "and `relax_shape` (relaxing only the cell shape at fixed volume) "
+                "to be `True`. Select at most one option to be `True`."
+            )
+
+        if relax_shape:
+            warnings.warn(
+                "The `relax_shape` functionality in ASE can break "
+                "energy conservation, and should not be used in conjunction "
+                "with a force-based optimizer.",
+                category=UserWarning,
+                stacklevel=2,
+            )
+
         self.relax_cell = relax_cell
+        self.relax_shape = relax_shape
         self.ase_adaptor = AseAtomsAdaptor()
         self.fix_symmetry = fix_symmetry
         self.symprec = symprec
@@ -442,6 +463,8 @@ class AseRelaxer:
             if steps > 1:
                 if self.relax_cell and (not is_mol):
                     atoms = cell_filter(atoms, **(filter_kwargs or {}))
+                elif self.relax_shape and (not is_mol):
+                    atoms = cell_filter(atoms, constant_volume=True)
                 optimizer = self.opt_class(atoms, **kwargs)
                 optimizer.attach(obs, interval=interval)
                 converged = optimizer.run(fmax=fmax, steps=steps)

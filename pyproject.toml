@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 42, < 81", "versioningit >= 1,< 4", "wheel"]
+requires = ["setuptools >= 42, < 83", "versioningit >= 1,< 4", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,7 +7,7 @@ name = "atomate2"
 description = "atomate2 is a library of materials science workflows"
 readme = "README.md"
 keywords = ["automated", "dft", "high-throughput", "vasp", "workflow"]
-license = { text = "modified BSD" }
+license = "BSD-3-Clause-LBNL"
 authors = [{ name = "Alex Ganose", email = "alexganose@gmail.com" }]
 dynamic = ["version"]
 classifiers = [
@@ -17,9 +17,9 @@ classifiers = [
     "Intended Audience :: System Administrators",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Other/Nonlisted Topic",
     "Topic :: Scientific/Engineering",
 ]
@@ -48,7 +48,7 @@ amset = ["amset>=0.4.15", "pydash"]
 cclib = ["cclib>=1.8.1"]
 mp = ["mp-api>=0.37.5"]
 phonons = ["phonopy>=2.43.6", "seekpath>=2.0.0"]
-lobster = ["ijson>=3.2.2", "lobsterpy>=0.4.0"]
+lobster = ["ijson>=3.2.2", "lobsterpy>=0.6.0"]
 defects = [
     "dscribe>=1.2.0",
     "pymatgen-analysis-defects>=2024.5.11",
@@ -64,10 +64,12 @@ forcefields = [
     "mattersim>=1.0.1",
     "sevenn>=0.9.3",
     "deepmd-kit>=2.1.4",
+    "upet>=0.2.1",
 ]
 torchsim = [
     "torch-sim-atomistic==0.5.0; python_version >= '3.12'"
 ]
+jdftx = ["pymatgen==2026.3.23"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
 ase = ["ase>=3.26.0"]
 ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
@@ -76,30 +78,62 @@ openmm = [
     "openmm-mdanalysis-reporter>=0.1.0",
     "openmm>=8.1.0",
 ]
-fireworks = ["fireworks==2.0.8"]
+fireworks = ["fireworks==2.0.9"]
 strict-openff = [
     "mdanalysis==2.10.0",
-    "monty==2025.3.3",
+    "monty==2026.2.18",
     "openmm-mdanalysis-reporter==0.1.0",
-    "openmm==8.4.0.post2",
-    "pymatgen==2025.10.7", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
+    "openmm==8.5.0",
+    "pymatgen==2026.3.23", # EXERCISE CAUTION WHEN UPDATING - open ff is extremely sensitive to pymatgen version
 ]
-strict-forcefields = [
+
+# Forcefields have separate strict groupings because of conflicting dependencies.
+# The labels below should not be taken as fixed in time.
+# They are meant to be instructive as to why certain forcefields are grouped together.
+# Ex: `strict-forcefields-torch-limited` might indicate that these require a lower version of `pytorch`
+# Whereas `strict-forcefields-generic` might indicate that no dependency conflicts are known for the group
+
+# ALWAYS REMEMBER to update `.github/workflows/testing.yml` to reflect the current set of
+# forcefield dependency groups.
+strict-forcefields-generic = [
     "calorine==3.3; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
-    "mace-torch==0.3.14",
-    "matgl==2.0.6",
-    "dgl<=2.4.0",
-    "quippy-ase==0.10.1",
-    "sevenn==0.10.4",
-    "torch==2.2.0",
-    "torchdata==0.7.1",                            # TODO: remove when issue fixed
-    "deepmd-kit==3.1.2",
-    "tensorflow-cpu==2.20.0",
+    "quippy-ase==0.10.2",
+    "sevenn==0.12.1",
+    "deepmd-kit==3.1.3",
+    "tensorflow-cpu==2.21.0",
+    "mattersim==1.2.1",
+    "ase<3.28.0", # TODO: remove, required for mattersim because of ase.constraints import
+    "wandb>=0.24.0", # required for mattersim
+    "upet>=0.2.1",
 ]
+strict-forcefields-torch-limited = [
+    "matgl==2.0.6",
+    # Note that DGL stopped building new releases for Mac + Windows after 2.2.0.
+    # That enforces a simultaneous pin on torch / torchdata
+    # Linux users can acces newer versions of dgl / torch / torchdata via conda.
+    # Mac / Windows users will need to install from source
+    "dgl==2.2.1; sys_platform == 'darwin' or sys_platform == 'win32'",
+    "dgl<=2.4.0; sys_platform == 'linux'",
+    "torch==2.2.2; sys_platform == 'darwin' or sys_platform == 'win32'",
+    "torch==2.2.0; sys_platform == 'linux'",
+    "torchdata==0.7.1",
+    "nequip==0.17.0", # requires numpy<2 because of matscipy
+    "numpy==1.26.4",
+]
+strict-forcefields-e3nn-limited = [
+    "mace-torch==0.3.15",
+    "torch-dftd==0.5.3",
+]
+strict-forcefields-numpy-limited = [
+    "nequip-allegro==0.8.2",
+    "numpy==1.26.4",
+]
+
 strict = [
-    "atomate2[strict-forcefields, cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
-    "numpy<2.0",
+    "atomate2[cclib, phonons, lobster, openmm, mp, defects, ase, ase-ext]",
+    "numpy<3.0",
+    "numba>=0.60.0", # needed to get numpy >2,<3 installed
 ]
 
 [project.scripts]
@@ -114,26 +148,26 @@ changelog = "https://github.com/materialsproject/atomate2/blob/main/CHANGELOG.md
 [dependency-groups]
 dev = ["pre-commit>=4.5.1"]
 tests = [
-    "fireworks==2.0.8",
+    "fireworks==2.0.9",
     "nbmake==1.5.5",
     "pytest-cov==7.0.0",
     "pytest-mock==3.15.1",
-    "pytest-split==0.10.0",
+    "pytest-split==0.11.0",
     "pytest-xdist==3.8.0",
-    "pytest==8.4.2",
+    "pytest==9.0.2",
 ]
 docs = [
-    "fireworks==2.0.8",
+    "fireworks==2.0.9",
     "autodoc_pydantic==2.2.0",
     "furo==2025.12.19",
-    "ipython==9.9.0",
+    "ipython==9.10.0",
     "jsonschema[format]",
-    "myst_parser==4.0.1",
+    "myst_parser==5.0.0",
     "numpydoc==1.10.0",
     "sphinx-copybutton==0.5.2",
-    "sphinx==8.2.3",
-    "sphinx_design==0.6.1",
-    "jupyterlab==4.5.1",
+    "sphinx==9.0.4",
+    "sphinx_design==0.7.0",
+    "jupyterlab==4.5.6",
 ]
 
 [tool.setuptools.package-data]
@@ -141,6 +175,7 @@ atomate2 = ["py.typed"]
 "atomate2.vasp.sets" = ["*.yaml"]
 "atomate2.cp2k.sets" = ["*.yaml"]
 "atomate2.cp2k.schemas.calc_types" = ["*.yaml"]
+"atomate2.jdftx.sets" = ["*.yaml"]
 
 [tool.versioningit.vcs]
 method = "git"

@@ -16,7 +16,7 @@ from phonopy.units import VaspToTHz
 from pydantic import BaseModel, Field
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import (
-    get_ph_bs_symm_line,
+    get_ph_bs_symm_line_from_dict,
     get_ph_dos,
     get_phonopy_structure,
     get_pmg_structure,
@@ -27,6 +27,7 @@ from pymatgen.phonon.dos import PhononDos
 from pymatgen.phonon.plotter import PhononBSPlotter, PhononDosPlotter
 from pymatgen.symmetry.bandstructure import HighSymmKpath
 from pymatgen.symmetry.kpath import KPathSeek
+from ruamel.yaml import YAML
 from typing_extensions import Self
 
 from atomate2.aims.utils.units import omegaToTHz
@@ -307,10 +308,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             cell,
             supercell_matrix,
             primitive_matrix=primitive_matrix,
-            factor=factor,
             symprec=symprec,
             is_symmetry=sym_reduce,
         )
+        phonon.unit_conversion_factor = factor
         phonon.generate_displacements(distance=displacement)
         set_of_forces = [np.array(forces) for forces in displacement_data["forces"]]
 
@@ -393,8 +394,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             is_band_connection=kwargs.get("band_structure_eigenvectors", False),
         )
         phonon.write_yaml_band_structure(filename=filename_band_yaml)
-        bs_symm_line = get_ph_bs_symm_line(
-            filename_band_yaml, labels_dict=kpath_dict, has_nac=born is not None
+        bs_symm_line = get_ph_bs_symm_line_from_dict(
+            YAML(typ="safe").load(Path(filename_band_yaml).read_text()),
+            has_nac=born is not None,
+            labels_dict=kpath_dict,
         )
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
         new_plotter.save_plot(
@@ -447,6 +450,7 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         new_plotter_dos.add_dos(label="total", dos=dos)
         new_plotter_dos.save_plot(
             filename=kwargs.get("filename_dos", "phonon_dos.pdf"),
+            img_format=kwargs.get("filetype_dos", "pdf"),
             units=kwargs.get("units", "THz"),
         )
 

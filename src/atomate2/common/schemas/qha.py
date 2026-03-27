@@ -199,7 +199,6 @@ class PhononQHADoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg]
                 "heat_capacity_datafile", "heat_capacity_P_numerical.dat"
             )
         )
-        qha.write_gruneisen_temperature(filename=ge_temp_file)
 
         # write files as well - might be easier for plotting
 

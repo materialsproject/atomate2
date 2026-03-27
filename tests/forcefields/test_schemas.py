@@ -8,26 +8,27 @@ from atomate2.ase.schemas import AseResult
 from atomate2.forcefields.schemas import ForceFieldTaskDocument
 from atomate2.forcefields.utils import MLFF
 
+from .conftest import mlff_is_installed
+
 if TYPE_CHECKING:
     from pymatgen.core import Structure
+
+params = []
+if mlff_is_installed("CHGNet"):
+    params += [
+        ("MLFF.CHGNet", None, False),
+        ("MLFF.CHGNet", MLFF.CHGNet, False),
+    ]
+if mlff_is_installed("MACE"):
+    params += [
+        ("mace_mp", {"@module": "mace.calculators", "@callable": "mace_mp"}, False),
+        ("mace_mp", None, True),
+    ]
 
 
 @pytest.mark.parametrize(
     "ase_calculator_name,calculator_meta,warning",
-    [
-        ("MLFF.CHGNet", None, False),
-        ("MLFF.CHGNet", MLFF.CHGNet, False),
-        (
-            "mace_mp",
-            {"@module": "mace.calculators", "@callable": "mace_mp"},
-            False,
-        ),
-        (
-            "mace_mp",
-            None,
-            True,
-        ),  # Should warn as we cannot get package version
-    ],
+    params,
 )
 def test_forcefield_task_doc_calculator_meta(
     recwarn,

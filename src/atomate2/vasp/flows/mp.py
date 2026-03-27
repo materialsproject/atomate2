@@ -13,7 +13,11 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from jobflow import Flow, Maker
-from pymatgen.io.vasp.sets import LobsterSet
+
+try:
+    from pymatgen.io.vasp.sets import LobsterSet  # type: ignore[attr-defined]
+except ImportError:
+    from pymatgen.io.lobster.sets import LobsterSet  # type: ignore[attr-defined]
 
 from atomate2.common.jobs.utils import remove_workflow_files
 from atomate2.common.utils import _recursive_get_dir_names

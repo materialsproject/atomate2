@@ -10,8 +10,25 @@ import pytest
 import torch
 from emmet.core.utils import get_hash_blocked
 
+from atomate2.forcefields.utils import MLFF, _get_pkg_version
+
 if TYPE_CHECKING:
     from typing import Any
+
+_INSTALLED_MLFF: dict[str, bool] = {
+    mlff.name: (
+        isinstance(_get_pkg_version(mlff), str) if mlff.name != "Forcefield" else False
+    )
+    for mlff in MLFF
+}
+
+
+def mlff_is_installed(mlff: str | MLFF) -> bool:
+    if not isinstance(mlff, str | MLFF):
+        raise TypeError(f"Unknown `MLFF = {MLFF}` type, {type(mlff)}")
+
+    ff: str = (MLFF(mlff.split("MLFF.", 1)[-1]) if isinstance(mlff, str) else mlff).name
+    return _INSTALLED_MLFF[ff]
 
 
 def pytest_runtest_setup(item: Any) -> None:
