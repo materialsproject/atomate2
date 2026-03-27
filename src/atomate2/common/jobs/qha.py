@@ -208,33 +208,46 @@ def calc_thermo_data(
     list of PhononSummaryData containing high-level thermodynamic data
     """
     temperature = np.arange(t_min, t_max, t_step)
-    remap = {
-        "temperature": "temperatures",
-        "entropy": "entropies",
-        "heat_capacity": "heat_capacities",
-        "internal_energy": "internal_energies",
-        "free_energy": "free_energies",
-        "structure": "meta_structure",
-    }
-    return [
-        PhononSummaryData.from_structure(
-            **{
-                remap.get(k, k): getattr(ph_doc, k, None)
-                for k in (
-                    "structure",
-                    "total_dft_energy",
-                    "has_imaginary_modes",
-                    "volume_per_formula_unit",
-                    "formula_units",
-                    "supercell_matrix",
+
+    def _shared_fields(ph_doc: PhononDoc) -> dict[str, object]:
+        return {
+            "meta_structure": getattr(ph_doc, "structure", None),
+            "total_dft_energy": getattr(ph_doc, "total_dft_energy", None),
+            "has_imaginary_modes": getattr(ph_doc, "has_imaginary_modes", None),
+            "volume_per_formula_unit": getattr(ph_doc, "volume_per_formula_unit", None),
+            "formula_units": getattr(ph_doc, "formula_units", None),
+            "supercell_matrix": getattr(ph_doc, "supercell_matrix", None),
+        }
+
+    summaries = []
+    for ph_doc in phonon_docs:
+        shared = _shared_fields(ph_doc)
+
+        # legacy atomate2 phonon doc
+        if hasattr(ph_doc, "compute_thermo_quantities"):
+            thermo = ph_doc.compute_thermo_quantities(temperature, normalization=None)
+            summaries.append(
+                PhononSummaryData.from_structure(
+                    **shared,
+                    temperatures=thermo["temperature"],
+                    entropies=thermo["entropy"],
+                    heat_capacities=thermo["heat_capacity"],
+                    internal_energies=thermo["internal_energy"],
+                    free_energies=thermo["free_energy"],
                 )
-            },
-            **{
-                remap[k]: vals
-                for k, vals in ph_doc.compute_thermo_quantities(
-                    temperature, normalization=None
-                ).items()
-            },
+            )
+            continue
+
+        # emmet-style phonon doc
+        summaries.append(
+            PhononSummaryData.from_structure(
+                **shared,
+                temperatures=getattr(ph_doc, "temperatures", None),
+                entropies=getattr(ph_doc, "entropies", None),
+                heat_capacities=getattr(ph_doc, "heat_capacities", None),
+                internal_energies=getattr(ph_doc, "internal_energies", None),
+                free_energies=getattr(ph_doc, "free_energies", None),
+            )
         )
-        for ph_doc in phonon_docs
-    ]
+
+    return summaries

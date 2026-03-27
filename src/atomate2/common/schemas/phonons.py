@@ -2,6 +2,7 @@
 
 import copy
 import logging
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Union
 
@@ -236,6 +237,41 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
         None, description="Field including all relevant uuids"
     )
 
+    def _get_thermo_value(
+        self,
+        temperatures: Sequence[float] | None,
+        values: Sequence[float] | None,
+        temp: float,
+    ) -> float:
+        """Interpolate a thermodynamic quantity at a given temperature."""
+        if temperatures is None or values is None:
+            raise AttributeError(
+                "Thermodynamic data not available in this PhononBSDOSDoc."
+            )
+
+        return float(np.interp(temp, np.array(temperatures), np.array(values)))
+
+    def heat_capacity(self, temp: float) -> float:
+        """Return heat capacity at a given temperature."""
+        return self._get_thermo_value(self.temperatures, self.heat_capacities, temp)
+
+    def entropy(self, temp: float) -> float:
+        """Return entropy at a given temperature."""
+        return self._get_thermo_value(self.temperatures, self.entropies, temp)
+
+    def free_energy(self, temp: float) -> float:
+        """Return Helmholtz free energy at a given temperature."""
+        return self._get_thermo_value(self.temperatures, self.free_energies, temp)
+
+    def internal_energy(self, temp: float) -> float:
+        """Return internal energy at a given temperature."""
+        return self._get_thermo_value(self.temperatures, self.internal_energies, temp)
+
+    @property
+    def post_process_settings(self) -> PhononComputationalSettings | None:
+        """Backward-compatible alias for legacy callers/tests."""
+        return self.phonopy_settings
+
     @classmethod
     def from_forces_born(
         cls,
@@ -296,7 +332,11 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             primitive_matrix = "auto"
 
         # TARP: THIS IS BAD! Including for discussions sake
-        if cell.magnetic_moments is not None and primitive_matrix == "auto":
+        if (
+            cell.magnetic_moments is not None
+            and isinstance(primitive_matrix, str)
+            and primitive_matrix == "auto"
+        ):
             if np.any(cell.magnetic_moments != 0.0):
                 raise ValueError(
                     "For materials with magnetic moments, "
