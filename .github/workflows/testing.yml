@@ -80,8 +80,6 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
 
         run: |
-          # micromamba activate a2
-          # pytest -n auto --cov=atomate2 --cov-report=xml tests/forcefields
           micromamba run -n a2 python -m pytest -n auto --cov=atomate2 --cov-report=xml tests/forcefields
 
       - name: Forcefield tutorial
@@ -89,8 +87,6 @@ jobs:
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
-          # micromamba activate a2
-          # pytest -n auto --nbmake ./tutorials/force_fields
           micromamba run -n a2 python -m pytest -n auto --nbmake ./tutorials/force_fields
 
       - uses: codecov/codecov-action@v1
@@ -164,8 +160,6 @@ jobs:
         # https://github.com/jerry-git/pytest-split/issues/95
         # However this `splitting-algorithm` means that tests cannot depend sensitively on the order they're executed in.
         run: |
-          # micromamba activate a2
-          # pytest -n auto --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --ignore=tests/openff_md --ignore=tests/openmm_md --ignore=tests/forcefields --cov=atomate2 --cov-report=xml
           micromamba run -n a2 python -m pytest -n auto --splits 3 --group ${{ matrix.split }} --durations-path tests/.pytest-split-durations --splitting-algorithm least_duration --ignore=tests/ase --ignore=tests/openff_md --ignore=tests/openmm_md --ignore=tests/forcefields --cov=atomate2 --cov-report=xml
 
       - uses: codecov/codecov-action@v1
@@ -229,8 +223,6 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
 
         run: |
-          # micromamba activate a2
-          # pytest -n auto tests/{openff_md,openmm_md}
           micromamba run -n a2 python -m pytest -n auto tests/{openff_md,openmm_md}
 
   test-notebooks-and-ase:
@@ -292,16 +284,12 @@ jobs:
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
-          # micromamba activate a2
-          # pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb
           micromamba run -n a2 python -m pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb
 
       - name: Test ASE
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
-          # micromamba activate a2
-          # pytest -n auto --splits 1 --group 1 --cov=atomate2 --cov-report=xml tests/ase
           micromamba run -n a2 python -m pytest -n auto --splits 1 --group 1 --cov=atomate2 --cov-report=xml tests/ase
 
       - uses: codecov/codecov-action@v1
@@ -352,16 +340,12 @@ jobs:
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
-          # micromamba activate a2
-          # pytest -n auto tests/torchsim --cov=atomate2 --cov-report=xml
           micromamba run -n a2 python -m pytest -n auto tests/torchsim --cov=atomate2 --cov-report=xml
 
       - name: Test TorchSim notebook
         env:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
-          # micromamba activate a2
-          # pytest -n auto --nbmake ./tutorials/torchsim_tutorial.ipynb
           micromamba run -n a2 python -m pytest -n auto --nbmake ./tutorials/torchsim_tutorial.ipynb
 
       - uses: codecov/codecov-action@v1
