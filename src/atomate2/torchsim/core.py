@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING
 import torch_sim as ts
 from jobflow import Maker, Response, job
 from pymatgen.core import Structure
+from pymatgen.util.due import Doi, due
 from torch_sim.autobatching import BinningAutoBatcher, InFlightAutoBatcher
 
 from atomate2.torchsim.schema import (
@@ -38,6 +39,7 @@ if TYPE_CHECKING:
     from torch_sim.trajectory import TrajectoryReporter
 
 
+@due.dcite(Doi("10.1088/3050-287X/ae1799"), description="TorchSim")
 def torchsim_job(method: Callable) -> job:
     """Decorate the ``make`` method of TorchSim job makers.
 
