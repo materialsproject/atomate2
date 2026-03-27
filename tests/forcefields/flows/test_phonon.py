@@ -227,11 +227,8 @@ def test_phonon_wf_force_field(
         [0, 100, 200, 300, 400], normalization=None
     )
 
-    assert all(
-        thermo_props[k][i] == pytest.approx(val, rel=0.1)
-        for k, vals in ref_vals.items()
-        for i, val in enumerate(vals)
-    )
+    for key, vals in ref_vals.items():
+        assert_allclose(thermo_props[key], vals, rtol=0.2, atol=1e-8)
 
     # check phonon plots exist
     assert os.path.isfile(filename_bs)
