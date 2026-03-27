@@ -66,11 +66,11 @@ class PhononComputationalSettings(BaseModel):
     """Collection to store computational settings for the phonon computation."""
 
     # could be optional and implemented at a later stage?
-    npoints_band: int = Field(
+    npoints_band: int | None = Field(
         None, description="number of points for band structure computation"
     )
-    kpath_scheme: str = Field(None, description="indicates the kpath scheme")
-    kpoint_density_dos: int = Field(
+    kpath_scheme: str | None = Field(None, description="indicates the kpath scheme")
+    kpoint_density_dos: int | None = Field(
         None,
         description="number of points for computation of free energies and "
         "densities of states",
@@ -443,6 +443,10 @@ class PhononBSDOSDoc(StructureMetadata, extra="allow"):  # type: ignore[call-arg
             has_nac=born is not None,
             labels_dict=kpath_dict,
         )
+        # Backward compatibility for older atomate2 tests/callers
+        if not hasattr(bs_symm_line, "frequencies") and hasattr(bs_symm_line, "bands"):
+            bs_symm_line.frequencies = np.array(bs_symm_line.bands)
+
         new_plotter = PhononBSPlotter(bs=bs_symm_line)
         new_plotter.save_plot(
             filename=kwargs.get("filename_bs", "phonon_band_structure.pdf"),
