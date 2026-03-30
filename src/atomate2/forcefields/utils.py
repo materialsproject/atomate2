@@ -338,6 +338,7 @@ def ase_calculator(
                     calculator = MACECalculator(
                         model_paths=model_path,
                         device=device,
+                        default_dtype=default_dtype or "",
                         **kwargs,
                     )
 
@@ -355,9 +356,7 @@ def ase_calculator(
                             "damping": "bj",
                             "xc": "pbe",
                             "cutoff": 40.0 * Bohr,
-                            "dtype": default_dtype
-                            if default_dtype is not None
-                            else torch.get_default_dtype(),
+                            "dtype": default_dtype or torch.get_default_dtype(),
                         }
                         kwargs.update(
                             {
@@ -370,7 +369,7 @@ def ase_calculator(
                         d3_calc = TorchDFTD3Calculator(device=device, **kwargs)
                         calculator = SumCalculator([calculator, d3_calc])
                 else:
-                    calculator = mace_mp(**kwargs)
+                    calculator = mace_mp(default_dtype=default_dtype or "", **kwargs)
 
             case MLFF.Nequip | MLFF.Allegro:
                 from nequip.integrations.ase import NequIPCalculator

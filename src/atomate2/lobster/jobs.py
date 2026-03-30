@@ -28,7 +28,13 @@ logger = logging.getLogger(__name__)
 _FILES_TO_ZIP = [*LOBSTEROUTPUT_FILES, "lobsterin", *VASP_OUTPUT_FILES]
 
 
-@due.dcite(Doi("https://doi.org/10.1002/jcc.26353"), description="Most recent LOBSTER paper. Please cite the publications mentioned in the LOBSTER Terms of Use.")
+@due.dcite(
+    Doi("https://doi.org/10.1002/jcc.26353"),
+    description=(
+        "Most recent LOBSTER paper. "
+        "Please cite the publications mentioned in the LOBSTER Terms of Use."
+    ),
+)
 @dataclass
 class LobsterMaker(Maker):
     """
