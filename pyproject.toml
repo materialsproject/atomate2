@@ -160,7 +160,7 @@ docs = [
     "fireworks==2.0.9",
     "autodoc_pydantic==2.2.0",
     "furo==2025.12.19",
-    "ipython==9.10.0",
+    "ipython==9.10.1",
     "jsonschema[format]",
     "myst_parser==5.0.0",
     "numpydoc==1.10.0",
