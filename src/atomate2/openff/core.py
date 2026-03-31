@@ -13,6 +13,7 @@ from openff.interchange import Interchange
 from openff.interchange.components._packmol import pack_box
 from openff.toolkit import ForceField
 from openff.units import unit
+from pymatgen.util.due import Doi, due
 
 from atomate2.openff.utils import create_mol_spec_list, merge_specs_by_name_and_smiles
 
@@ -56,6 +57,7 @@ def openff_job(method: Callable) -> job:
     )
 
 
+@due.dcite(Doi("10.1021/acs.jpcb.4c01558"), description="Open forcefield initiative")
 @openff_job
 def generate_interchange(
     input_mol_specs: list[MoleculeSpec | dict],

@@ -20,6 +20,11 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Generator
     from typing import Any
 
+    try:
+        from torch import dtype as torch_dtype
+    except ImportError:
+        torch_dtype = str
+
     from ase.calculators.calculator import Calculator
 
     from atomate2.ase.schemas import AseResult
@@ -229,7 +234,9 @@ class ForceFieldMixin:
 
 
 def ase_calculator(
-    calculator_meta: str | MLFF | dict, **kwargs: Any
+    calculator_meta: str | MLFF | dict,
+    default_dtype: str | torch_dtype | None = None,
+    **kwargs: Any,
 ) -> Calculator | None:
     """
     Create an ASE calculator from a given set of metadata.
@@ -246,7 +253,7 @@ def ase_calculator(
                 "@callable": "CHGNetCalculator"
             }
         ```
-    args : optional args to pass to a calculator
+    default_dtype (str or pytorch dtype) : optional pytorch dtype to use if applicable
     kwargs : optional kwargs to pass to a calculator
 
     Returns
@@ -310,6 +317,9 @@ def ase_calculator(
                         )
                         matgl.config.BACKEND = "PYG"
 
+                if default_dtype is not None:
+                    matgl.set_default_dtype(default_dtype)
+
                 matgl_calc = getattr(
                     import_module(f"matgl.ext._ase_{matgl.config.BACKEND.lower()}"),
                     "PESCalculator",
@@ -328,6 +338,7 @@ def ase_calculator(
                     calculator = MACECalculator(
                         model_paths=model_path,
                         device=device,
+                        default_dtype=default_dtype or "",
                         **kwargs,
                     )
 
@@ -345,18 +356,20 @@ def ase_calculator(
                             "damping": "bj",
                             "xc": "pbe",
                             "cutoff": 40.0 * Bohr,
-                            "dtype": kwargs.get(
-                                "default_dtype", torch.get_default_dtype()
-                            ),
+                            "dtype": default_dtype or torch.get_default_dtype(),
                         }
-                        for k, v in default_d3_kwargs.items():
-                            if k not in kwargs:
-                                kwargs[k] = v
+                        kwargs.update(
+                            {
+                                k: v
+                                for k, v in default_d3_kwargs.items()
+                                if k not in kwargs
+                            }
+                        )
 
                         d3_calc = TorchDFTD3Calculator(device=device, **kwargs)
                         calculator = SumCalculator([calculator, d3_calc])
                 else:
-                    calculator = mace_mp(**kwargs)
+                    calculator = mace_mp(default_dtype=default_dtype or "", **kwargs)
 
             case MLFF.Nequip | MLFF.Allegro:
                 from nequip.integrations.ase import NequIPCalculator

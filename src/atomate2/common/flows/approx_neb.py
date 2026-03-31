@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 
 from emmet.core.mobility.migrationgraph import MigrationGraphDoc
 from jobflow import Flow, Maker, OnMissing
+from pymatgen.util.due import Doi, due
 
 from atomate2.common.jobs.approx_neb import (
     collate_images_single_hop,
@@ -25,6 +26,7 @@ if TYPE_CHECKING:
     from pymatgen.util.typing import CompositionLike
 
 
+@due.dcite(Doi("https://doi.org/10.1063/1.4960790"), description="ApproxNEB")
 @dataclass
 class CommonApproxNebMaker(Maker):
     """Run an ApproxNEB workflow.

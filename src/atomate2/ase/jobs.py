@@ -12,6 +12,7 @@ from emmet.core.types.enums import StoreTrajectoryOption
 from jobflow import Maker, job
 from pymatgen.core import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
+from pymatgen.util.due import Doi, due
 
 from atomate2.ase.schemas import AseResult, AseTaskDoc
 from atomate2.ase.utils import AseRelaxer
@@ -28,6 +29,9 @@ if TYPE_CHECKING:
 _ASE_DATA_OBJECTS = ["trajectory"]
 
 
+@due.dcite(
+    Doi("10.1088/1361-648X/aa680e"), description="Atomic simulation environment."
+)
 @dataclass
 class AseMaker(Maker, ABC):
     """
