@@ -21,6 +21,7 @@ if TYPE_CHECKING:
 _DEFAULT_RELAX_KWARGS: dict[str, Any] = {
     "force_field_name": "CHGNet",
     "relax_kwargs": {"fmax": 0.00001},
+    "fix_symmetry": True,
 }
 
 
@@ -106,6 +107,7 @@ class ElasticMaker(BaseElasticMaker):
         cls,
         force_field_name: str | MLFF | dict,
         calculator_kwargs: dict | None = None,
+        relax_initial_structure: bool = True,
         **kwargs,
     ) -> Self:
         """
@@ -117,6 +119,9 @@ class ElasticMaker(BaseElasticMaker):
             The name of the force field.
         calculator_kwargs : dict or None (default)
             calculator_kwargs to pass to `ForceFieldRelaxMaker`.
+        relax_initial_structure : bool = True (default)
+            Whether to relax the structure before computing
+            the elastic tensor.
         **kwargs
             Additional kwargs to pass to ElasticMaker.
 
@@ -124,6 +129,14 @@ class ElasticMaker(BaseElasticMaker):
         -------
         ElasticMaker
         """
+        warnings.warn(
+            "Fixed symmetry relaxations are automatically enabled "
+            "to improve elastic tensor stability. To disable this "
+            "specify ForceFieldRelaxMaker objects explicitly. ",
+            category=UserWarning,
+            stacklevel=2,
+        )
+
         if (mlff_kwargs := kwargs.pop("mlff_kwargs", None)) is not None:
             warnings.warn(
                 "`mlff_kwargs` has been marked for deprecation. "
@@ -148,18 +161,22 @@ class ElasticMaker(BaseElasticMaker):
             "force_field_name": force_field_name,
             "calculator_kwargs": calculator_kwargs or {},
         }
-        bulk_relax_maker = ForceFieldRelaxMaker(
-            relax_cell=True,
+
+        elastic_relax_maker = ForceFieldRelaxMaker(
+            relax_cell=False,
             **default_kwargs,
         )
-        kwargs.update(
-            bulk_relax_maker=bulk_relax_maker,
-            elastic_relax_maker=ForceFieldRelaxMaker(
-                relax_cell=False,
-                **default_kwargs,
-            ),
-        )
+
         return cls(
-            name=f"{bulk_relax_maker.mlff.name} elastic",
+            name=f"{elastic_relax_maker.mlff.name} elastic",
             **kwargs,
+            bulk_relax_maker=(
+                ForceFieldRelaxMaker(
+                    relax_cell=True,
+                    **default_kwargs,
+                )
+                if relax_initial_structure
+                else None
+            ),
+            elastic_relax_maker=elastic_relax_maker,
         )
