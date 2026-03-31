@@ -3,4 +3,6 @@ PhononRunsImaginaryModes
 
 .. currentmodule:: atomate2.common.schemas.gruneisen
 
-.. autopydantic_model:: PhononRunsImaginaryModes
+.. autoclass:: PhononRunsImaginaryModes
+   :show-inheritance:
+   :members:

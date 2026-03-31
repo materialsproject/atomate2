@@ -3,4 +3,6 @@ PolarizationDocument
 
 .. currentmodule:: atomate2.vasp.schemas.ferroelectric
 
-.. autopydantic_model:: PolarizationDocument
+.. autoclass:: PolarizationDocument
+   :show-inheritance:
+   :members:

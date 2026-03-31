@@ -3,4 +3,6 @@ MagneticOrderingRelaxation
 
 .. currentmodule:: atomate2.common.schemas.magnetism
 
-.. autopydantic_model:: MagneticOrderingRelaxation
+.. autoclass:: MagneticOrderingRelaxation
+   :show-inheritance:
+   :members:

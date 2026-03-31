@@ -1,0 +1,6 @@
+JobType
+=======
+
+.. currentmodule:: atomate2.vasp.powerups
+
+.. autodata:: JobType

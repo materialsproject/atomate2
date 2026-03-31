@@ -1,0 +1,8 @@
+Transformer
+===========
+
+.. currentmodule:: atomate2.common.jobs.transform
+
+.. autoclass:: Transformer
+   :show-inheritance:
+   :members:

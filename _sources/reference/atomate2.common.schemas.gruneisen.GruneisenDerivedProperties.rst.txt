@@ -3,4 +3,6 @@ GruneisenDerivedProperties
 
 .. currentmodule:: atomate2.common.schemas.gruneisen
 
-.. autopydantic_model:: GruneisenDerivedProperties
+.. autoclass:: GruneisenDerivedProperties
+   :show-inheritance:
+   :members:

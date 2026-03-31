@@ -3,4 +3,6 @@ ThermalDisplacementData
 
 .. currentmodule:: atomate2.common.schemas.phonons
 
-.. autopydantic_model:: ThermalDisplacementData
+.. autoclass:: ThermalDisplacementData
+   :show-inheritance:
+   :members:

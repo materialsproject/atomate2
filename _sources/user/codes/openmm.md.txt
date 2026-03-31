@@ -85,7 +85,6 @@ for PF6- here, the built in partial charge method fails.
 import numpy as np
 from pymatgen.core.structure import Molecule
 
-
 pf6 = Molecule(
     ["P", "F", "F", "F", "F", "F", "F"],
     [
@@ -141,7 +140,6 @@ from atomate2.openmm.jobs.core import (
     NVTMaker,
 )
 from jobflow import Flow, run_locally
-
 
 production_maker = OpenMMFlowMaker(
     name="production_flow",

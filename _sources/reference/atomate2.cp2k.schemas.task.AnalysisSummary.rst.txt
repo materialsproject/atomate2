@@ -3,4 +3,6 @@ AnalysisSummary
 
 .. currentmodule:: atomate2.cp2k.schemas.task
 
-.. autopydantic_model:: AnalysisSummary
+.. autoclass:: AnalysisSummary
+   :show-inheritance:
+   :members:

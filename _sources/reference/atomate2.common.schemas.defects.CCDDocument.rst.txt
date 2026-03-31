@@ -3,4 +3,6 @@ CCDDocument
 
 .. currentmodule:: atomate2.common.schemas.defects
 
-.. autopydantic_model:: CCDDocument
+.. autoclass:: CCDDocument
+   :show-inheritance:
+   :members:

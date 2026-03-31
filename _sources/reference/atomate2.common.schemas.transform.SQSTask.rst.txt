@@ -1,0 +1,8 @@
+SQSTask
+=======
+
+.. currentmodule:: atomate2.common.schemas.transform
+
+.. autoclass:: SQSTask
+   :show-inheritance:
+   :members:

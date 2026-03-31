@@ -3,4 +3,6 @@ FittingData
 
 .. currentmodule:: atomate2.common.schemas.elastic
 
-.. autopydantic_model:: FittingData
+.. autoclass:: FittingData
+   :show-inheritance:
+   :members:

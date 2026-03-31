@@ -3,4 +3,6 @@ UsageStats
 
 .. currentmodule:: atomate2.amset.schemas
 
-.. autopydantic_model:: UsageStats
+.. autoclass:: UsageStats
+   :show-inheritance:
+   :members:

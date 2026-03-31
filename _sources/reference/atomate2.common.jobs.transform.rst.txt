@@ -1,0 +1,41 @@
+atomate2.common.jobs.transform
+==============================
+
+.. automodule:: atomate2.common.jobs.transform
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      SQS
+      TYPE_CHECKING
+      Transformer
+
+

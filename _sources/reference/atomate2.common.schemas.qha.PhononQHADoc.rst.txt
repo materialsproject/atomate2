@@ -3,4 +3,6 @@ PhononQHADoc
 
 .. currentmodule:: atomate2.common.schemas.qha
 
-.. autopydantic_model:: PhononQHADoc
+.. autoclass:: PhononQHADoc
+   :show-inheritance:
+   :members:

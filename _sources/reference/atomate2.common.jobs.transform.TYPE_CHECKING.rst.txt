@@ -1,0 +1,6 @@
+TYPE\_CHECKING
+==============
+
+.. currentmodule:: atomate2.common.jobs.transform
+
+.. autodata:: TYPE_CHECKING

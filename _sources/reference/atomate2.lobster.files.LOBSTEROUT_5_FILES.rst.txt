@@ -1,0 +1,6 @@
+LOBSTEROUT\_5\_FILES
+====================
+
+.. currentmodule:: atomate2.lobster.files
+
+.. autodata:: LOBSTEROUT_5_FILES

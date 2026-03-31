@@ -3,4 +3,6 @@ MeshData
 
 .. currentmodule:: atomate2.amset.schemas
 
-.. autopydantic_model:: MeshData
+.. autoclass:: MeshData
+   :show-inheritance:
+   :members:

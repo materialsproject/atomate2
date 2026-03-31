@@ -3,4 +3,6 @@ BandOverlapsComparisons
 
 .. currentmodule:: atomate2.lobster.schemas
 
-.. autopydantic_model:: BandOverlapsComparisons
+.. autoclass:: BandOverlapsComparisons
+   :show-inheritance:
+   :members:

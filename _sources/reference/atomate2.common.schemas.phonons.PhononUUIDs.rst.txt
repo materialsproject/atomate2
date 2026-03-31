@@ -3,4 +3,6 @@ PhononUUIDs
 
 .. currentmodule:: atomate2.common.schemas.phonons
 
-.. autopydantic_model:: PhononUUIDs
+.. autoclass:: PhononUUIDs
+   :show-inheritance:
+   :members:

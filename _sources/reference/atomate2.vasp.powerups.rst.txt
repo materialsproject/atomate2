@@ -5,6 +5,14 @@ atomate2.vasp.powerups
 
    
 
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      JobType
+
 
 
    .. rubric:: Functions
@@ -26,6 +34,7 @@ atomate2.vasp.powerups
 
 
 
+   
    
    
    

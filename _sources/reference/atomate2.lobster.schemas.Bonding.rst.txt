@@ -3,4 +3,6 @@ Bonding
 
 .. currentmodule:: atomate2.lobster.schemas
 
-.. autopydantic_model:: Bonding
+.. autoclass:: Bonding
+   :show-inheritance:
+   :members:

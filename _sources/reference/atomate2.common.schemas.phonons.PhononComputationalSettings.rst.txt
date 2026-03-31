@@ -3,4 +3,6 @@ PhononComputationalSettings
 
 .. currentmodule:: atomate2.common.schemas.phonons
 
-.. autopydantic_model:: PhononComputationalSettings
+.. autoclass:: PhononComputationalSettings
+   :show-inheritance:
+   :members:

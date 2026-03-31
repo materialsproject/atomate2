@@ -3,4 +3,6 @@ VaspOutputTestData
 
 .. currentmodule:: atomate2.utils.testing.vasp
 
-.. autopydantic_model:: VaspOutputTestData
+.. autoclass:: VaspOutputTestData
+   :show-inheritance:
+   :members:

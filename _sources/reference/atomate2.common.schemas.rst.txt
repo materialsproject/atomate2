@@ -35,3 +35,4 @@ atomate2.common.schemas
    magnetism
    phonons
    qha
+   transform

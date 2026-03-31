@@ -3,4 +3,6 @@ CalculationOutput
 
 .. currentmodule:: atomate2.cp2k.schemas.calculation
 
-.. autopydantic_model:: CalculationOutput
+.. autoclass:: CalculationOutput
+   :show-inheritance:
+   :members:

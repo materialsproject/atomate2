@@ -1,0 +1,8 @@
+SQSMethod
+=========
+
+.. currentmodule:: atomate2.common.schemas.transform
+
+.. autoclass:: SQSMethod
+   :show-inheritance:
+   :members:

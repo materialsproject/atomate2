@@ -3,4 +3,6 @@ ForceFieldMeta
 
 .. currentmodule:: atomate2.forcefields.schemas
 
-.. autopydantic_model:: ForceFieldMeta
+.. autoclass:: ForceFieldMeta
+   :show-inheritance:
+   :members:

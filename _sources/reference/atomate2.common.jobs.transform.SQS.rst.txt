@@ -1,0 +1,8 @@
+SQS
+===
+
+.. currentmodule:: atomate2.common.jobs.transform
+
+.. autoclass:: SQS
+   :show-inheritance:
+   :members:

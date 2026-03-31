@@ -3,4 +3,6 @@ ElasticDocument
 
 .. currentmodule:: atomate2.common.schemas.elastic
 
-.. autopydantic_model:: ElasticDocument
+.. autoclass:: ElasticDocument
+   :show-inheritance:
+   :members:

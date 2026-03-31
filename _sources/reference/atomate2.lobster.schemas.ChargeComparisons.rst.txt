@@ -3,4 +3,6 @@ ChargeComparisons
 
 .. currentmodule:: atomate2.lobster.schemas
 
-.. autopydantic_model:: ChargeComparisons
+.. autoclass:: ChargeComparisons
+   :show-inheritance:
+   :members:

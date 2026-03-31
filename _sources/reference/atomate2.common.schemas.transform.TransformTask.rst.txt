@@ -1,0 +1,8 @@
+TransformTask
+=============
+
+.. currentmodule:: atomate2.common.schemas.transform
+
+.. autoclass:: TransformTask
+   :show-inheritance:
+   :members:

@@ -3,4 +3,6 @@ Sites
 
 .. currentmodule:: atomate2.lobster.schemas
 
-.. autopydantic_model:: Sites
+.. autoclass:: Sites
+   :show-inheritance:
+   :members:

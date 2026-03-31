@@ -3,4 +3,6 @@ MagneticOrderingOutput
 
 .. currentmodule:: atomate2.common.schemas.magnetism
 
-.. autopydantic_model:: MagneticOrderingOutput
+.. autoclass:: MagneticOrderingOutput
+   :show-inheritance:
+   :members:

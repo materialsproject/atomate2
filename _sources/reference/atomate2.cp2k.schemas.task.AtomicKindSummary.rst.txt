@@ -3,4 +3,6 @@ AtomicKindSummary
 
 .. currentmodule:: atomate2.cp2k.schemas.task
 
-.. autopydantic_model:: AtomicKindSummary
+.. autoclass:: AtomicKindSummary
+   :show-inheritance:
+   :members:

@@ -3,4 +3,6 @@ PhononJobDirs
 
 .. currentmodule:: atomate2.common.schemas.phonons
 
-.. autopydantic_model:: PhononJobDirs
+.. autoclass:: PhononJobDirs
+   :show-inheritance:
+   :members:

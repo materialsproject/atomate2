@@ -1,0 +1,41 @@
+atomate2.common.schemas.transform
+=================================
+
+.. automodule:: atomate2.common.schemas.transform
+
+   
+
+
+
+
+
+
+
+   
+      
+   
+   
+      
+   
+   
+      
+   
+   
+   
+   
+   
+   
+   
+
+
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      SQSMethod
+      SQSTask
+      TransformTask
+
+
