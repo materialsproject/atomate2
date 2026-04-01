@@ -22,6 +22,8 @@ if TYPE_CHECKING:
     from pathlib import Path
     from typing import Any
 
+    from emmet.core.math import Matrix3D
+
     from atomate2.aims.jobs.base import BaseAimsMaker
     from atomate2.common.schemas.phonons import ForceConstants, PhononBSDOSDoc
     from atomate2.forcefields.jobs import ForceFieldStaticMaker
@@ -338,7 +340,7 @@ def displace_structure(
 
 
 def build_dynmat(
-    force_constants: ForceConstants,
+    force_constants: ForceConstants | list[list[Matrix3D]],
     structure: Structure,
 ) -> np.ndarray:
     """Build the dynamical matrix.
@@ -356,7 +358,7 @@ def build_dynmat(
         The dynamical matrix
     """
     force_constants_2d = (
-        np.array(force_constants.force_constants)
+        np.array(getattr(force_constants, "force_constants", force_constants))
         .swapaxes(1, 2)
         .reshape(2 * (len(structure) * 3,))
     )
@@ -449,7 +451,7 @@ def get_sigma_a_per_mode(
 
 @job
 def get_forces(
-    force_constants: ForceConstants,
+    force_constants: ForceConstants | list[list[Matrix3D]],
     phonon_supercell: Structure,
     displaced_structures: dict[str, list],
 ) -> list[np.ndarray]:
@@ -470,7 +472,7 @@ def get_forces(
         List of forces in the form [DFT forces, harmonic forces]
     """
     force_constants_2d = np.swapaxes(
-        force_constants.force_constants,
+        getattr(force_constants, "force_constants", force_constants),
         1,
         2,
     ).reshape(2 * (len(phonon_supercell) * 3,))

@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias
 
+from emmet.core.phonon import PhononBSDOSDoc as EmmetPhononBSDOSDoc
 from jobflow import Flow, Response, job
 from pymatgen.phonon.gruneisen import (
     GruneisenParameter,
@@ -14,7 +15,7 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
 from atomate2 import SETTINGS
 from atomate2.common.schemas.gruneisen import GruneisenParameterDocument
-from atomate2.common.schemas.phonons import PhononBSDOSDoc
+from atomate2.common.schemas.phonons import PhononBSDOSDoc as Atomate2PhononBSDOSDoc
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -22,6 +23,8 @@ if TYPE_CHECKING:
     from pymatgen.core.structure import Structure
 
     from atomate2.common.flows.phonons import BasePhononMaker
+
+PhononDoc: TypeAlias = EmmetPhononBSDOSDoc | Atomate2PhononBSDOSDoc
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +53,7 @@ def shrink_expand_structure(structure: Structure, perc_vol: float) -> Response:
     return Response(output={"plus": plus_struct, "minus": minus_struct})
 
 
-@job(data=[PhononBSDOSDoc])
+@job
 def run_phonon_jobs(
     opt_struct: dict,
     phonon_maker: BasePhononMaker = None,
@@ -85,8 +88,7 @@ def run_phonon_jobs(
     set_symmetry = list(set(symmetry))
     if len(set_symmetry) == 1:
         jobs = []
-        phonon_yaml_dirs = dict.fromkeys(("ground", "plus", "minus"), None)
-        phonon_imaginary_modes = dict.fromkeys(("ground", "plus", "minus"), None)
+        _for_post_process = {}
         for st, struct in opt_struct.items():
             # phonon run for all 3 optimized structures (ground state, expanded, shrunk)
             phonon_kwargs = {}
@@ -107,21 +109,51 @@ def run_phonon_jobs(
             )
             jobs.append(phonon_job)
             # store each phonon run task doc
-            phonon_yaml_dirs[st] = phonon_job.output.jobdirs.taskdoc_run_job_dir
-            phonon_imaginary_modes[st] = phonon_job.output.has_imaginary_modes
+            _for_post_process[st] = phonon_job.output
 
+        processed = get_calc_meta(_for_post_process)
         return Response(
-            replace=Flow(jobs),
-            output={
-                "phonon_yaml": phonon_yaml_dirs,
-                "imaginary_modes": phonon_imaginary_modes,
-            },
+            replace=Flow([*jobs, processed]),
+            output=processed.output,
         )
     logger.warning(
         msg="Different space groups were detected for the optimized structures."
         "Please try a different symprec."
     )
     return Response(output={"error": "different space groups"}, stop_jobflow=True)
+
+
+def _get_taskdoc_run_dir(pbd: PhononDoc) -> str | None:
+    calc_meta = getattr(pbd, "calc_meta", None)
+    if calc_meta is not None:
+        return next(
+            iter(
+                [cm.dir_name for cm in calc_meta if cm.name == "taskdoc_run"] or [None]
+            )
+        )
+
+    jobdirs = getattr(pbd, "jobdirs", None)
+    if jobdirs is not None:
+        return getattr(jobdirs, "taskdoc_run_job_dir", None)
+
+    return None
+
+
+@job
+def get_calc_meta(
+    phonon_jobs_output: dict[str, PhononDoc],
+) -> dict[str, dict[str, str | Path | bool | None]]:
+    """Return the metadata associated with a set of phonon calculations."""
+    return {
+        "phonon_yaml": {
+            label: _get_taskdoc_run_dir(pbd)
+            for label, pbd in phonon_jobs_output.items()
+        },
+        "imaginary_modes": {
+            label: bool(pbd.has_imaginary_modes)
+            for label, pbd in phonon_jobs_output.items()
+        },
+    }
 
 
 @job(

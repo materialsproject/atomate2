@@ -100,6 +100,7 @@ class ForceFieldEosMaker(CommonEosMaker):
             ),
             eos_relax_maker=eos_relax_maker,
             static_maker=None,
+            **kwargs,
         )
         return cls(
             name=f"{eos_relax_maker.mlff.name} EOS Maker",
