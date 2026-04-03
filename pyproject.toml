@@ -103,7 +103,7 @@ strict-forcefields-generic = [
     "upet>=0.2.1",
 ]
 strict-forcefields-torch-limited = [
-    "matgl==2.0.6",
+    "matgl==2.1.1",
     # Note that DGL stopped building new releases for Mac + Windows after 2.2.0.
     # That enforces a simultaneous pin on torch / torchdata
     # Linux users can acces newer versions of dgl / torch / torchdata via conda.
