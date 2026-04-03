@@ -9,6 +9,7 @@ from enum import Enum
 from functools import cached_property
 from importlib import import_module
 from importlib.metadata import PackageNotFoundError, version
+from importlib.util import find_spec
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -290,6 +291,15 @@ def ase_calculator(
                 calculator = getattr(import_module(_mod), _cls, None)(**kwargs)
 
             case MLFF.CHGNet | MLFF.M3GNet | MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
+                if calculator_name == MLFF.CHGNet:
+                    # Legacy interface to `chgnet` package
+                    try:
+                        from chgnet.model.dynamics import CHGNetCalculator
+
+                        return CHGNetCalculator(**kwargs)
+                    except ImportError:
+                        pass
+
                 import matgl
 
                 match calculator_name:
@@ -299,13 +309,12 @@ def ase_calculator(
                     case MLFF.CHGNet:
                         path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
                         matgl.config.BACKEND = "DGL"
+
                         warnings.warn(
                             "The CHGNet functionality in atomate2 has been migrated "
                             "from the `chgnet` package to `matgl` to ensure continuing "
                             "support. If you want to use the `chgnet` package, "
-                            "`pip install chgnet` and then specify "
-                            '`calculator_meta = {"@module": "chgnet.model.dynamics", '
-                            '"@callable": "CHGNetCalculator"}`',
+                            "`pip install chgnet`",
                             stacklevel=2,
                         )
                     case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
@@ -444,7 +453,13 @@ def _get_pkg_name(calculator_meta: MLFF | dict[str, Any]) -> str | None:
         match calculator_meta:
             case MLFF.Allegro | MLFF.Nequip:
                 ff_pkg = "nequip"
-            case MLFF.CHGNet | MLFF.M3GNet | MLFF.MATPES_PBE | MLFF.MATPES_R2SCAN:
+            case MLFF.CHGNet:
+                # Check if CHGNet is installed
+                try:
+                    ff_pkg = next(pkg for pkg in ("chgnet", "matgl") if find_spec(pkg))
+                except StopIteration:
+                    ff_pkg = None
+            case MLFF.M3GNet | MLFF.MATPES_PBE | MLFF.MATPES_R2SCAN:
                 ff_pkg = "matgl"
             case MLFF.DeepMD:
                 ff_pkg = "deepmd-kit"

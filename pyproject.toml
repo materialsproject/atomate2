@@ -54,17 +54,10 @@ defects = [
     "pymatgen-analysis-defects>=2024.5.11",
     "python-ulid>=2.7",
 ]
+
 forcefields = [
     "ase>=3.26.0",
-    "calorine>=3.0",
-    "mace-torch>=0.3.3",
-    "matgl>=1.2.1",
-    "torchdata<=0.7.1", # TODO: remove when issue fixed
-    "quippy-ase>=0.9.14",
-    "mattersim>=1.0.1",
-    "sevenn>=0.9.3",
-    "deepmd-kit>=2.1.4",
-    "upet>=0.2.1",
+    "chgnet>=0.4.2",
 ]
 torchsim = [
     "torch-sim-atomistic==0.5.0; python_version >= '3.12'"
@@ -98,10 +91,12 @@ strict-openff = [
 strict-forcefields-generic = [
     "calorine==3.3; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
+    "chgnet==0.4.2",
     "quippy-ase==0.10.2",
     "sevenn==0.12.1",
     "deepmd-kit==3.1.3",
-    "tensorflow-cpu==2.21.0",
+    "tensorflow-cpu==2.21.0; sys_platform == 'linux'",
+    "tensorflow==2.21.0; sys_platform == 'darwin' or sys_platform == 'win32'",
     "mattersim==1.2.1",
     "ase<3.28.0", # TODO: remove, required for mattersim because of ase.constraints import
     "wandb>=0.24.0", # required for mattersim
@@ -113,7 +108,7 @@ strict-forcefields-torch-limited = [
     # That enforces a simultaneous pin on torch / torchdata
     # Linux users can acces newer versions of dgl / torch / torchdata via conda.
     # Mac / Windows users will need to install from source
-    "dgl==2.2.1; sys_platform == 'darwin' or sys_platform == 'win32'",
+    "dgl==2.2.0; sys_platform == 'darwin' or sys_platform == 'win32'",
     "dgl<=2.4.0; sys_platform == 'linux'",
     "torch==2.2.2; sys_platform == 'darwin' or sys_platform == 'win32'",
     "torch==2.2.0; sys_platform == 'linux'",
