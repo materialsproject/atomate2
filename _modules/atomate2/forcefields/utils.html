@@ -1401,6 +1401,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">importlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">import_module</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">PackageNotFoundError</span><span class="p">,</span> <span class="n">version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">importlib.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_spec</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
@@ -1690,6 +1691,15 @@
                 <span class="n">calculator</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">import_module</span><span class="p">(</span><span class="n">_mod</span><span class="p">),</span> <span class="n">_cls</span><span class="p">,</span> <span class="kc">None</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
             <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">CHGNet</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">M3GNet</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MATPES_R2SCAN</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MATPES_PBE</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">calculator_name</span> <span class="o">==</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">CHGNet</span><span class="p">:</span>
+                    <span class="c1"># Legacy interface to `chgnet` package</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="kn">from</span><span class="w"> </span><span class="nn">chgnet.model.dynamics</span><span class="w"> </span><span class="kn">import</span> <span class="n">CHGNetCalculator</span>
+
+                        <span class="k">return</span> <span class="n">CHGNetCalculator</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
                 <span class="kn">import</span><span class="w"> </span><span class="nn">matgl</span>
 
                 <span class="k">match</span> <span class="n">calculator_name</span><span class="p">:</span>
@@ -1699,13 +1709,12 @@
                     <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">CHGNet</span><span class="p">:</span>
                         <span class="n">path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="s2">&quot;CHGNet-MPtrj-2023.12.1-2.7M-PES&quot;</span><span class="p">)</span>
                         <span class="n">matgl</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">BACKEND</span> <span class="o">=</span> <span class="s2">&quot;DGL&quot;</span>
+
                         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                             <span class="s2">&quot;The CHGNet functionality in atomate2 has been migrated &quot;</span>
                             <span class="s2">&quot;from the `chgnet` package to `matgl` to ensure continuing &quot;</span>
                             <span class="s2">&quot;support. If you want to use the `chgnet` package, &quot;</span>
-                            <span class="s2">&quot;`pip install chgnet` and then specify &quot;</span>
-                            <span class="s1">&#39;`calculator_meta = {&quot;@module&quot;: &quot;chgnet.model.dynamics&quot;, &#39;</span>
-                            <span class="s1">&#39;&quot;@callable&quot;: &quot;CHGNetCalculator&quot;}`&#39;</span><span class="p">,</span>
+                            <span class="s2">&quot;`pip install chgnet`&quot;</span><span class="p">,</span>
                             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                         <span class="p">)</span>
                     <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MATPES_R2SCAN</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MATPES_PBE</span><span class="p">:</span>
@@ -1848,7 +1857,13 @@
         <span class="k">match</span> <span class="n">calculator_meta</span><span class="p">:</span>
             <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">Allegro</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">Nequip</span><span class="p">:</span>
                 <span class="n">ff_pkg</span> <span class="o">=</span> <span class="s2">&quot;nequip&quot;</span>
-            <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">CHGNet</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">M3GNet</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MATPES_PBE</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MATPES_R2SCAN</span><span class="p">:</span>
+            <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">CHGNet</span><span class="p">:</span>
+                <span class="c1"># Check if CHGNet is installed</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">ff_pkg</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">pkg</span> <span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;chgnet&quot;</span><span class="p">,</span> <span class="s2">&quot;matgl&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">find_spec</span><span class="p">(</span><span class="n">pkg</span><span class="p">))</span>
+                <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                    <span class="n">ff_pkg</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">M3GNet</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MATPES_PBE</span> <span class="o">|</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">MATPES_R2SCAN</span><span class="p">:</span>
                 <span class="n">ff_pkg</span> <span class="o">=</span> <span class="s2">&quot;matgl&quot;</span>
             <span class="k">case</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">DeepMD</span><span class="p">:</span>
                 <span class="n">ff_pkg</span> <span class="o">=</span> <span class="s2">&quot;deepmd-kit&quot;</span>
@@ -1924,7 +1939,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=01f34227"></script>
+</div><script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

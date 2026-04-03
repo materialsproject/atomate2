@@ -1453,13 +1453,15 @@ calculations are performed for each ordering (relax -&gt; static)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="atomate2.forcefields.flows.elastic.ElasticMaker.from_force_field_name">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_force_field_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_field_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/atomate2/forcefields/flows/elastic.html#ElasticMaker.from_force_field_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#atomate2.forcefields.flows.elastic.ElasticMaker.from_force_field_name" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_force_field_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_field_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relax_initial_structure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/atomate2/forcefields/flows/elastic.html#ElasticMaker.from_force_field_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#atomate2.forcefields.flows.elastic.ElasticMaker.from_force_field_name" title="Link to this definition">¶</a></dt>
 <dd><p>Create an elastic flow from a forcefield name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>force_field_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>.MLFF</em><em> or </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The name of the force field.</p></li>
 <li><p><strong>calculator_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><em>None</em><em> (</em><em>default</em><em>)</em>) – calculator_kwargs to pass to <cite>ForceFieldRelaxMaker</cite>.</p></li>
+<li><p><strong>relax_initial_structure</strong> (<em>bool = True</em><em> (</em><em>default</em><em>)</em>) – Whether to relax the structure before computing
+the elastic tensor.</p></li>
 <li><p><strong>**kwargs</strong> – Additional kwargs to pass to ElasticMaker.</p></li>
 </ul>
 </dd>
@@ -1551,7 +1553,7 @@ calculations are performed for each ordering (relax -&gt; static)</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=01f34227"></script>
+</div><script src="../_static/documentation_options.js?v=a58bc63e"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -1403,6 +1403,11 @@
           <section class="tex2jax_ignore mathjax_ignore" id="machine-learning-forcefields-interatomic-potentials">
 <span id="codes-forcefields"></span><h1>Machine Learning forcefields / interatomic potentials<a class="headerlink" href="#machine-learning-forcefields-interatomic-potentials" title="Link to this heading">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">atomate2</span></code> includes an interface to a few common machine learning interatomic potentials (MLIPs), also known variously as machine learning forcefields (MLFFs), or foundation potentials (FPs) for universal variants.</p>
+<p><em><strong>As of <code class="docutils literal notranslate"><span class="pre">atomate2==0.1.1</span></code>, most forcefield packages are opt-in only. You must install those forcefields which you plan to use.</strong></em>
+Running <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">'atomate2[forcefields]'</span></code> will install the <code class="docutils literal notranslate"><span class="pre">chgnet</span></code> package to permit you to try the forcefield classes.
+You can then select other forcefields you want to use.</p>
+<p>We have made this choice both to avoid the appearance of favoritism (both <code class="docutils literal notranslate"><span class="pre">chgnet</span></code> and <code class="docutils literal notranslate"><span class="pre">atomate2</span></code> are Materials Project-supported projects), and to avoid dependency conflicts between MLFF packages.
+If you need a sense of which forcefields are compatible, you can use the <a class="reference external" href="https://github.com/materialsproject/atomate2/blob/a8bc6505e439503a114f5346aec916aafae7f27b/pyproject.toml#L90">pyproject.toml</a> to see which versions are grouped together for testing.</p>
 <p>Most of <code class="docutils literal notranslate"><span class="pre">Maker</span></code> classes using the forcefields inherit from <code class="docutils literal notranslate"><span class="pre">atomate2.forcefields.utils.ForceFieldMixin</span></code> to specify which forcefield to use.
 The <code class="docutils literal notranslate"><span class="pre">ForceFieldMixin</span></code> mixin provides the following configurable parameters:</p>
 <ul class="simple">
@@ -1637,7 +1642,7 @@ For example, a <code class="docutils literal notranslate"><span class="pre">Job<
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=01f34227"></script>
+</div><script src="../../_static/documentation_options.js?v=a58bc63e"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

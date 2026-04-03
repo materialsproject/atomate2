@@ -1413,6 +1413,7 @@
 <span class="n">_DEFAULT_RELAX_KWARGS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;force_field_name&quot;</span><span class="p">:</span> <span class="s2">&quot;CHGNet&quot;</span><span class="p">,</span>
     <span class="s2">&quot;relax_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fmax&quot;</span><span class="p">:</span> <span class="mf">0.00001</span><span class="p">},</span>
+    <span class="s2">&quot;fix_symmetry&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -1502,6 +1503,7 @@
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">force_field_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">MLFF</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
         <span class="n">calculator_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">relax_initial_structure</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1513,6 +1515,9 @@
 <span class="sd">            The name of the force field.</span>
 <span class="sd">        calculator_kwargs : dict or None (default)</span>
 <span class="sd">            calculator_kwargs to pass to `ForceFieldRelaxMaker`.</span>
+<span class="sd">        relax_initial_structure : bool = True (default)</span>
+<span class="sd">            Whether to relax the structure before computing</span>
+<span class="sd">            the elastic tensor.</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            Additional kwargs to pass to ElasticMaker.</span>
 
@@ -1520,6 +1525,14 @@
 <span class="sd">        -------</span>
 <span class="sd">        ElasticMaker</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Fixed symmetry relaxations are automatically enabled &quot;</span>
+            <span class="s2">&quot;to improve elastic tensor stability. To disable this &quot;</span>
+            <span class="s2">&quot;specify ForceFieldRelaxMaker objects explicitly. &quot;</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+
         <span class="k">if</span> <span class="p">(</span><span class="n">mlff_kwargs</span> <span class="o">:=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;mlff_kwargs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="s2">&quot;`mlff_kwargs` has been marked for deprecation. &quot;</span>
@@ -1544,20 +1557,24 @@
             <span class="s2">&quot;force_field_name&quot;</span><span class="p">:</span> <span class="n">force_field_name</span><span class="p">,</span>
             <span class="s2">&quot;calculator_kwargs&quot;</span><span class="p">:</span> <span class="n">calculator_kwargs</span> <span class="ow">or</span> <span class="p">{},</span>
         <span class="p">}</span>
-        <span class="n">bulk_relax_maker</span> <span class="o">=</span> <span class="n">ForceFieldRelaxMaker</span><span class="p">(</span>
-            <span class="n">relax_cell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+
+        <span class="n">elastic_relax_maker</span> <span class="o">=</span> <span class="n">ForceFieldRelaxMaker</span><span class="p">(</span>
+            <span class="n">relax_cell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="o">**</span><span class="n">default_kwargs</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-            <span class="n">bulk_relax_maker</span><span class="o">=</span><span class="n">bulk_relax_maker</span><span class="p">,</span>
-            <span class="n">elastic_relax_maker</span><span class="o">=</span><span class="n">ForceFieldRelaxMaker</span><span class="p">(</span>
-                <span class="n">relax_cell</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                <span class="o">**</span><span class="n">default_kwargs</span><span class="p">,</span>
-            <span class="p">),</span>
-        <span class="p">)</span>
+
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bulk_relax_maker</span><span class="o">.</span><span class="n">mlff</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> elastic&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">elastic_relax_maker</span><span class="o">.</span><span class="n">mlff</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> elastic&quot;</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+            <span class="n">bulk_relax_maker</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">ForceFieldRelaxMaker</span><span class="p">(</span>
+                    <span class="n">relax_cell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">default_kwargs</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">relax_initial_structure</span>
+                <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">),</span>
+            <span class="n">elastic_relax_maker</span><span class="o">=</span><span class="n">elastic_relax_maker</span><span class="p">,</span>
         <span class="p">)</span></div>
 </div>
 
@@ -1599,7 +1616,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=01f34227"></script>
+</div><script src="../../../../_static/documentation_options.js?v=a58bc63e"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
