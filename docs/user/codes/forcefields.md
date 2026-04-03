@@ -4,6 +4,10 @@
 
 `atomate2` includes an interface to a few common machine learning interatomic potentials (MLIPs), also known variously as machine learning forcefields (MLFFs), or foundation potentials (FPs) for universal variants.
 
+***As of `atomate2==0.1.1`, all forcefield packages are opt-in only. You must install those forcefields which you plan to use.***
+This is partly to avoid the appearance of favoritism, and also to avoid dependency conflicts between these packages.
+If you need a sense of which forcefields are compatible, you can use the [pyproject.toml](https://github.com/materialsproject/atomate2/blob/a8bc6505e439503a114f5346aec916aafae7f27b/pyproject.toml#L90) to see which versions are grouped together for testing.
+
 Most of `Maker` classes using the forcefields inherit from `atomate2.forcefields.utils.ForceFieldMixin` to specify which forcefield to use.
 The `ForceFieldMixin` mixin provides the following configurable parameters:
 
