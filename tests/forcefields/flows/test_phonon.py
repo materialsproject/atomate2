@@ -1,4 +1,5 @@
 import os
+from importlib.util import find_spec
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -135,6 +136,8 @@ def test_phonon_wf_force_field(
         }
     )
 
+    is_matgl_chgnet = find_spec("matgl") is not None
+
     phonon_kwargs = dict(
         use_symmetrized_structure="conventional",
         create_thermal_displacements=False,
@@ -181,7 +184,9 @@ def test_phonon_wf_force_field(
 
     assert_allclose(
         ph_bs_dos_doc.free_energies,
-        [4440.74345, 4172.361432, 2910.000404, 720.739896, -2194.234779],
+        [4440.74345, 4172.361432, 2910.000404, 720.739896, -2194.234779]
+        if is_matgl_chgnet
+        else [5271.300306, 5162.674841, 4353.717375, 2698.616337, 343.125174],
         atol=1000,
     )
 
@@ -215,7 +220,9 @@ def test_phonon_wf_force_field(
     assert ph_bs_dos_doc.phonopy_settings.kpoint_density_dos == 7_000
     assert_allclose(
         ph_bs_dos_doc.entropies,
-        [0.0, 7.374244, 17.612124, 25.802735, 32.209433],
+        [0.0, 7.374244, 17.612124, 25.802735, 32.209433]
+        if is_matgl_chgnet
+        else [0.0, 3.733666, 12.536534, 20.344558, 26.627292],
         atol=2,
     )
     assert_allclose(
