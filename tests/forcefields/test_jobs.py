@@ -1,6 +1,7 @@
 import importlib
 from contextlib import nullcontext
 from importlib.metadata import version as get_imported_version
+from importlib.util import find_spec
 from pathlib import Path
 
 import numpy as np
@@ -38,7 +39,10 @@ def test_maker_initialization(mlff):
 
 
 @pytest.mark.skipif(
-    dgl is None or not mlff_is_installed("CHGNet"),
+    # test to see if CHGNet is installed, or that matgl is installed without dgl
+    # Note that this should be the only test for interface with
+    # the legacy `chgnet` package
+    not mlff_is_installed("CHGNet") or (mlff_is_installed("M3GNet") and dgl is None),
     reason="CHGNet requires DGL which is not installed",
 )
 def test_chgnet_static_maker(si_structure):
@@ -48,17 +52,21 @@ def test_chgnet_static_maker(si_structure):
         ionic_step_data=("structure", "energy"),
     ).make(si_structure)
 
+    pkg_name = "matgl" if find_spec("matgl") else "chgnet"
+
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.7907495, rel=1e-4)
+    assert output1.output.energy == approx(
+        -10.7907495 if pkg_name == "matgl" else -10.6275053, rel=1e-4
+    )
     assert output1.output.ionic_steps[-1].magmoms is None
     assert output1.output.n_steps == 1
 
-    assert output1.forcefield_version == get_imported_version("matgl")
+    assert output1.forcefield_version == get_imported_version(pkg_name)
 
 
 @pytest.mark.skipif(

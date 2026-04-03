@@ -55,9 +55,9 @@ defects = [
     "python-ulid>=2.7",
 ]
 
-# NB: the `forcefields` install is vestigial. All forcefields are opt-in as of atomate2>=0.1.1.
 forcefields = [
     "ase>=3.26.0",
+    "chgnet>=0.4.2",
 ]
 torchsim = [
     "torch-sim-atomistic==0.5.0; python_version >= '3.12'"
@@ -91,6 +91,7 @@ strict-openff = [
 strict-forcefields-generic = [
     "calorine==3.3; python_version >= '3.12'",
     "calorine==3.1; python_version < '3.12'",
+    "chgnet==0.4.2",
     "quippy-ase==0.10.2",
     "sevenn==0.12.1",
     "deepmd-kit==3.1.3",
