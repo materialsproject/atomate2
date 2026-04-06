@@ -98,7 +98,7 @@ strict-forcefields-generic = [
     "tensorflow-cpu==2.21.0; sys_platform == 'linux'",
     "tensorflow==2.21.0; sys_platform == 'darwin' or sys_platform == 'win32'",
     "mattersim==1.2.2",
-    "ase<3.28.0", # TODO: remove, required for mattersim because of ase.constraints import
+    "ase<3.29.0", # TODO: remove, required for mattersim because of ase.constraints import
     "wandb>=0.24.0", # required for mattersim
     "upet>=0.2.1",
 ]
