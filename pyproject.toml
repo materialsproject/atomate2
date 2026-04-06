@@ -55,17 +55,15 @@ defects = [
     "python-ulid>=2.7",
 ]
 
-forcefields = [
-    "ase>=3.26.0",
-    "chgnet>=0.4.2",
-]
+ase = ["ase>=3.26.0"]
+ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
+forcefields-demo = ["chgnet>=0.3.8","atomate2[ase]"]
+
 torchsim = [
     "torch-sim-atomistic==0.5.0; python_version >= '3.12'"
 ]
 jdftx = ["pymatgen==2026.3.23"]
 approxneb = ["pymatgen-analysis-diffusion>=2024.7.15"]
-ase = ["ase>=3.26.0"]
-ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
 openmm = [
     "mdanalysis>=2.8.0",
     "openmm-mdanalysis-reporter>=0.1.0",
