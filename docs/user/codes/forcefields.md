@@ -3,7 +3,7 @@
 # Machine Learning forcefields / interatomic potentials
 
 `atomate2` includes an interface to a few common machine learning interatomic potentials (MLIPs), also known variously as machine learning forcefields (MLFFs), or foundation potentials (FPs) for universal variants.
-These can be installed using `pip install 'atomate2[forcefields-base]'` or `pip install 'atomate2[ase]'`.
+These can be installed using `pip install 'atomate2[ase]'`.
 
 ***As of `atomate2==0.1.2`, all forcefield packages are opt-in only. You must install those forcefields which you plan to use.***
 
