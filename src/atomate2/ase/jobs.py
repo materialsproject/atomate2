@@ -101,24 +101,37 @@ class AseMaker(Maker, ABC):
     @job(data=_ASE_DATA_OBJECTS)
     def make(
         self,
-        mol_or_struct: Molecule | Structure,
+        mol_or_struct: Molecule | Structure | list[Molecule | Structure],
         prev_dir: str | Path | None = None,
-    ) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
+    ) -> (
+        AseStructureTaskDoc
+        | AseMoleculeTaskDoc
+        | list[AseStructureTaskDoc | AseMoleculeTaskDoc]
+    ):
         """
         Run ASE as job, can be re-implemented in subclasses.
 
         Parameters
         ----------
-        mol_or_struct: .Molecule or .Structure
-            pymatgen molecule or structure
+        mol_or_struct: .Molecule, .Structure, or a list thereof
+            pymatgen molecule(s) or structure(s)
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
+
+        Returns
+        -------
+        AseStructureTaskDoc, AseMoleculeTaskDoc, or list thereof.
         """
-        return AseTaskDoc.to_mol_or_struct_metadata_doc(
-            getattr(self.calculator, "name", type(self.calculator).__name__),
-            self.run_ase(mol_or_struct, prev_dir=prev_dir),
-        )
+        batch_mode = isinstance(mol_or_struct, list)
+        results = [
+            AseTaskDoc.to_mol_or_struct_metadata_doc(
+                getattr(self.calculator, "name", type(self.calculator).__name__),
+                self.run_ase(atoms, prev_dir=prev_dir),
+            )
+            for atoms in (mol_or_struct if batch_mode else [mol_or_struct])
+        ]
+        return results if batch_mode else results[0]
 
     def run_ase(
         self,
@@ -229,38 +242,48 @@ class AseRelaxMaker(AseMaker):
     @job(data=_ASE_DATA_OBJECTS)
     def make(
         self,
-        mol_or_struct: Molecule | Structure,
+        mol_or_struct: Molecule | Structure | list[Molecule | Structure],
         prev_dir: str | Path | None = None,
-    ) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
+    ) -> (
+        AseStructureTaskDoc
+        | AseMoleculeTaskDoc
+        | list[AseStructureTaskDoc | AseMoleculeTaskDoc]
+    ):
         """
         Relax a structure or molecule using ASE as a job.
 
         Parameters
         ----------
-        mol_or_struct: .Molecule or .Structure
-            pymatgen molecule or structure
+        mol_or_struct: .Molecule or .Structure, or list thereof
+            pymatgen molecule(s) or structure(s)
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
 
         Returns
         -------
-        AseStructureTaskDoc or AseMoleculeTaskDoc
+        AseStructureTaskDoc or AseMoleculeTaskDoc, or list thereof
         """
-        return AseTaskDoc.to_mol_or_struct_metadata_doc(
-            getattr(self.calculator, "name", type(self.calculator).__name__),
-            self.run_ase(mol_or_struct, prev_dir=prev_dir),
-            self.steps,
-            relax_kwargs=self.relax_kwargs,
-            optimizer_kwargs=self.optimizer_kwargs,
-            relax_cell=self.relax_cell,
-            relax_shape=self.relax_shape,
-            fix_symmetry=self.fix_symmetry,
-            symprec=self.symprec if self.fix_symmetry else None,
-            ionic_step_data=self.ionic_step_data,
-            store_trajectory=self.store_trajectory,
-            tags=self.tags,
-        )
+        batch_mode = isinstance(mol_or_struct, list)
+
+        results = [
+            AseTaskDoc.to_mol_or_struct_metadata_doc(
+                getattr(self.calculator, "name", type(self.calculator).__name__),
+                self.run_ase(atoms, prev_dir=prev_dir),
+                self.steps,
+                relax_kwargs=self.relax_kwargs,
+                optimizer_kwargs=self.optimizer_kwargs,
+                relax_cell=self.relax_cell,
+                relax_shape=self.relax_shape,
+                fix_symmetry=self.fix_symmetry,
+                symprec=self.symprec if self.fix_symmetry else None,
+                ionic_step_data=self.ionic_step_data,
+                store_trajectory=self.store_trajectory,
+                tags=self.tags,
+            )
+            for atoms in (mol_or_struct if batch_mode else [mol_or_struct])
+        ]
+        return results if batch_mode else results[0]
 
     def run_ase(
         self,

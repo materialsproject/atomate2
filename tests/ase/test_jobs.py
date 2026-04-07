@@ -89,6 +89,27 @@ def test_lennard_jones_relax_maker(lj_fcc_ne_pars, fcc_ne_structure):
     )
 
 
+def test_lennard_jones_batch_relax_maker(
+    lj_fcc_ne_pars, fcc_ne_structure, memory_jobstore
+):
+    job = LennardJonesRelaxMaker(
+        calculator_kwargs=lj_fcc_ne_pars, relax_kwargs={"fmax": 0.001}
+    ).make([fcc_ne_structure, fcc_ne_structure])
+
+    response = run_locally(job, store=memory_jobstore)
+
+    output = response[job.uuid][1].output
+
+    assert [calc.output.structure.volume for calc in output] == pytest.approx(
+        [22.304245, 22.304245]
+    )
+    assert [calc.output.energy for calc in output] == pytest.approx(
+        [-0.018494767, -0.018494767]
+    )
+    assert all(isinstance(calc, AseStructureTaskDoc) for calc in output)
+    assert fcc_ne_structure.matches(output[0].output.structure)
+
+
 def test_lennard_jones_static_maker(lj_fcc_ne_pars, fcc_ne_structure):
     job = LennardJonesStaticMaker(calculator_kwargs=lj_fcc_ne_pars).make(
         fcc_ne_structure
