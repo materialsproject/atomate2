@@ -8,7 +8,7 @@ import logging
 import os
 import sys
 import time
-from abc import ABC, abstractmethod
+from abc import ABC
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from enum import Enum
@@ -189,6 +189,7 @@ class AseMDMaker(AseMaker, ABC):
 
     def __post_init__(self) -> None:
         """Ensure that ensemble is an enum."""
+        super().__post_init__()
         if isinstance(self.ensemble, str):
             self.ensemble = MDEnsemble(self.ensemble.split("MDEnsemble.")[-1])
 
@@ -444,12 +445,6 @@ class AseMDMaker(AseMaker, ABC):
             elapsed_time=t_f - t_i,
         )
 
-    @property
-    @abstractmethod
-    def calculator(self) -> Calculator:
-        """ASE calculator, to be overwritten by user."""
-        raise NotImplementedError
-
 
 @dataclass
 class LennardJonesMDMaker(AseMDMaker):
@@ -461,8 +456,7 @@ class LennardJonesMDMaker(AseMDMaker):
 
     name: str = "Lennard-Jones 6-12 MD"
 
-    @property
-    def calculator(self) -> Calculator:
+    def _get_calculator(self) -> Calculator:
         """Lennard-Jones calculator."""
         from ase.calculators.lj import LennardJones
 
@@ -495,8 +489,7 @@ class GFNxTBMDMaker(AseMDMaker):
         }
     )
 
-    @property
-    def calculator(self) -> Calculator:
+    def _get_calculator(self) -> Calculator:
         """GFN-xTB / TBLite calculator."""
         try:
             from tblite.ase import TBLite

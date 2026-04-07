@@ -257,8 +257,7 @@ class EmtNebFromImagesMaker(AseNebFromImagesMaker):
 
     name: str = "EMT NEB from images maker"
 
-    @property
-    def calculator(self) -> Calculator:
+    def _get_calculator(self) -> Calculator:
         """EMT calculator."""
         from ase.calculators.emt import EMT
 

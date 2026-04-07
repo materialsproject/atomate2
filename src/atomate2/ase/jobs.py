@@ -54,8 +54,7 @@ class AseMaker(Maker, ABC):
     class EMTStaticMaker(AseMaker):
         name: str = "EMT static maker"
 
-        @property
-        def calculator(self):
+        def _get_calculator(self):
             return EMT()
     ```
 
@@ -94,6 +93,10 @@ class AseMaker(Maker, ABC):
     )
     store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO
     tags: list[str] | None = None
+
+    def __post_init__(self) -> None:
+        """Enable caching of the ASE calculator via private attribute."""
+        self._calculator: Calculator | None = None
 
     @job(data=_ASE_DATA_OBJECTS)
     def make(
@@ -148,11 +151,18 @@ class AseMaker(Maker, ABC):
             elapsed_time=t_f - t_i,
         )
 
-    @property
     @abstractmethod
+    def _get_calculator(self) -> Calculator:
+        """Load ASE calculator, to be implemented by the user."""
+
+    @property
     def calculator(self) -> Calculator:
-        """ASE calculator, method to be implemented in subclasses."""
-        raise NotImplementedError
+        """Retrieve cached ASE calculator."""
+        if getattr(self, "_calculator", None) is None:
+            self._calculator = self._get_calculator()
+        if self._calculator is None:
+            raise ValueError("ASE calculator not properly initialized.")
+        return self._calculator
 
 
 @dataclass
@@ -208,8 +218,7 @@ class AseRelaxMaker(AseMaker):
 
     def __post_init__(self) -> None:
         """Ensure that physical relaxation settings are used."""
-        if hasattr(super(), "__post_init__"):
-            super().__post_init__()  # type: ignore[misc]
+        super().__post_init__()
         if self.relax_cell and self.relax_shape:
             raise ValueError(
                 "You have set both `relax_cell` (relaxing the cell shape and volume) "
@@ -299,8 +308,7 @@ class EmtRelaxMaker(AseRelaxMaker):
 
     name: str = "EMT relaxation"
 
-    @property
-    def calculator(self) -> Calculator:
+    def _get_calculator(self) -> Calculator:
         """EMT calculator."""
         from ase.calculators.emt import EMT
 
@@ -320,8 +328,7 @@ class LennardJonesRelaxMaker(AseRelaxMaker):
 
     name: str = "Lennard-Jones 6-12 relaxation"
 
-    @property
-    def calculator(self) -> Calculator:
+    def _get_calculator(self) -> None:
         """Lennard-Jones calculator."""
         from ase.calculators.lj import LennardJones
 
@@ -378,8 +385,7 @@ class GFNxTBRelaxMaker(AseRelaxMaker):
         }
     )
 
-    @property
-    def calculator(self) -> Calculator:
+    def _get_calculator(self) -> None:
         """GFN-xTB / TBLite calculator."""
         try:
             from tblite.ase import TBLite

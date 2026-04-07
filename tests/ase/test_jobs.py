@@ -30,8 +30,7 @@ except ImportError:
 class EMTStaticMaker(AseMaker):
     name: str = "EMT static maker"
 
-    @property
-    def calculator(self):
+    def _get_calculator(self):
         return EMT()
 
 
@@ -39,8 +38,7 @@ class EMTStaticMaker(AseMaker):
 class EMTRelaxMaker(AseRelaxMaker):
     name: str = "EMT relax maker"
 
-    @property
-    def calculator(self):
+    def _get_calculator(self):
         return EMT()
 
 
