@@ -749,7 +749,7 @@ def generate_frequencies_eigenvectors(
         )
 
     # Using a shorter cutoff (10 A) to generate the force constants to
-    # eliminate the imaginary modes near Gamma point in phesay code
+    # eliminate the imaginary modes near Gamma point in pheasy code
     if imaginary_modes:
         pheasy_cmd_11 = (
             f"pheasy --dim {int(supercell_matrix[0][0])} "
