@@ -1,0 +1,31 @@
+# LAMMPS input generated from LammpsInputFile with pymatgen v2024.10.29
+
+# Initialization
+units metal
+atom_style atomic
+dimension 3
+boundary p p p
+pair_style tersoff
+
+# AtomDefinition
+read_data system.data
+
+# ForceField
+include forcefield.lammps
+
+# Velocities
+velocity all create 300 42 mom yes rot yes dist gaussian
+neigh_modify delay 5 every 1 check yes
+
+# Ensemble
+fix 1 all npt temp 300 3000 0.1 iso 1.0 1.0 0.1
+
+# Outputs
+thermo 100
+dump d1 all custom 100 traj.dump id element x y z vx vy vz fx fy fz
+dump_modify d1 sort id element Si
+
+# Actions
+write_restart md.restart
+timestep 0.001
+run 10000
