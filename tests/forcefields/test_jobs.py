@@ -895,10 +895,7 @@ def test_ext_load_static_maker(si_structure: Structure):
     assert output1.forcefield_version == get_imported_version("mace_torch")
 
 
-@pytest.mark.skipif(
-    not mlff_is_installed("CHGNet") or (mlff_is_installed("M3GNet") and dgl is None),
-    reason="chgnet is not installed",
-)
+@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="chgnet is not installed")
 @pytest.mark.parametrize("as_str", [True, False])
 def test_roundtrip(si_structure: Structure, as_str: bool):
 
