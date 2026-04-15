@@ -895,17 +895,17 @@ def test_ext_load_static_maker(si_structure: Structure):
     assert output1.forcefield_version == get_imported_version("mace_torch")
 
 
-@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="chgnet is not installed")
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="MACE is not installed")
 @pytest.mark.parametrize("as_str", [True, False])
 def test_roundtrip(si_structure: Structure, as_str: bool):
 
     import json
 
     from ase.calculators.calculator import Calculator
-    from chgnet.model.dynamics import CHGNetCalculator
+    from mace.calculators import MACECalculator
     from monty.json import MontyDecoder, MontyEncoder
 
-    import_str = "chgnet.model.dynamics.CHGNetCalculator"
+    import_str = "mace.calculators.mace_mp"
     module, klass = import_str.rsplit(".", 1)
 
     # If using an import string, one must specify this through `calculator_meta`
@@ -919,7 +919,8 @@ def test_roundtrip(si_structure: Structure, as_str: bool):
                 calc_kwarg: (
                     import_str if as_str else {"@module": module, "@callable": klass}
                 )
-            }
+            },
+            calculator_kwargs={"model": "medium"},
         ).make(si_structure)
 
         roundtrip_job = MontyDecoder().decode(json.dumps(job, cls=MontyEncoder))
@@ -927,5 +928,5 @@ def test_roundtrip(si_structure: Structure, as_str: bool):
         for j in (job, roundtrip_job):
             assert j.maker.calculator_meta == import_str
             assert j.maker.mlff == MLFF.Forcefield
-            assert isinstance(j.maker.calculator, CHGNetCalculator)
+            assert isinstance(j.maker.calculator, MACECalculator)
             assert isinstance(j.maker.calculator, Calculator)
