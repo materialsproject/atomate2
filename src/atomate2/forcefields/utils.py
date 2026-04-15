@@ -210,7 +210,10 @@ class ForceFieldMixin:
                 calculator_meta[k] for k in ("@module", "@callable")
             )
         else:
-            self.calculator_meta = calculator_meta
+            try:
+                self.calculator_meta = _get_standardized_mlff(calculator_meta)
+            except ValueError:
+                self.calculator_meta = calculator_meta
 
         self.force_field_name: str = str(mlff)  # Narrow-down type for mypy
 
@@ -423,7 +426,9 @@ def ase_calculator(
                     **{k: v for k, v in kwargs.items() if k != "predict_unit"},
                 )
 
-    elif isinstance(calculator_meta, str | dict):
+    elif isinstance(calculator_meta, dict) or (
+        isinstance(calculator_meta, str) and calculator_meta.count(".") >= 1
+    ):
         calc_cls = _load_calc_cls(calculator_meta)
         calculator = calc_cls(**kwargs)
 
@@ -451,7 +456,7 @@ def _load_calc_cls(
     ase Calculator
     """
     if isinstance(calculator_meta, str):
-        module, klass = ["chgnet.model.dynamics", "CHGNetCalculator"]
+        module, klass = calculator_meta.rsplit(".", 1)
         return getattr(import_module(module), klass)
     return MontyDecoder().process_decoded(calculator_meta)
 
