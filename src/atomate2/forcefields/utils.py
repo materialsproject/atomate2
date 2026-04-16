@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 import warnings
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -13,6 +14,7 @@ from importlib.util import find_spec
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from ase.calculators.calculator import Calculator
 from ase.units import Bohr
 from monty.json import MontyDecoder
 from typing_extensions import assert_never, deprecated
@@ -25,8 +27,6 @@ if TYPE_CHECKING:
         from torch import dtype as torch_dtype
     except ImportError:
         torch_dtype = str
-
-    from ase.calculators.calculator import Calculator
 
     from atomate2.ase.schemas import AseResult
 
@@ -195,9 +195,23 @@ class ForceFieldMixin:
         if hasattr(super(), "__post_init__"):
             super().__post_init__()  # type: ignore[misc]
 
+        mlff: MLFF = MLFF.Forcefield  # Fallback to placeholder
         if isinstance(self.force_field_name, dict):
-            mlff = MLFF.Forcefield  # Fallback to placeholder
             calculator_meta: str | dict[str, Any] | MLFF = self.force_field_name.copy()
+
+        elif (
+            (
+                inspect.isclass(self.force_field_name)
+                and issubclass(self.force_field_name, Calculator)
+            )
+            or isinstance(self.force_field_name, Calculator)
+            or inspect.isfunction(self.force_field_name)  # for mace_mp specifically
+        ):
+            # can happen with deserialization of legacy documents from JSON
+            calculator_meta = ".".join(
+                getattr(self.force_field_name, k) for k in ("__module__", "__name__")
+            )
+
         else:
             mlff = _get_standardized_mlff(self.force_field_name)
             # On round-trip deserialization, `calculator_meta` will be a dict

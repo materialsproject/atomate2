@@ -927,6 +927,54 @@ def test_roundtrip(si_structure: Structure, as_str: bool):
 
         for j in (job, roundtrip_job):
             assert j.maker.calculator_meta == import_str
+            assert j.maker.force_field_name == str(MLFF.Forcefield)
             assert j.maker.mlff == MLFF.Forcefield
             assert isinstance(j.maker.calculator, MACECalculator)
             assert isinstance(j.maker.calculator, Calculator)
+
+
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="MACE is not installed")
+@pytest.mark.parametrize(
+    "import_str",
+    [
+        "mace.calculators.foundations_models.mace_mp",
+        "mace.calculators.mace.MACECalculator",
+    ],
+)
+def test_roundtrip_legacy(si_structure: Structure, import_str: str):
+    # Test backwards compatibility. Legacy docs can contain dict for
+    # `force_field_name` which will be deserialized by monty into an ase
+    # `Calculator`. `ForceFieldMixin` needs to handle this and
+    # narrow types correctly
+
+    import json
+
+    from ase.calculators.calculator import Calculator
+    from mace.calculators import MACECalculator
+    from mace.calculators.foundations_models import download_mace_mp_checkpoint
+    from monty.json import MontyDecoder, MontyEncoder
+
+    module, klass = import_str.rsplit(".", 1)
+
+    job = ForceFieldRelaxMaker(
+        force_field_name={"@module": module, "@callable": klass},
+        calculator_kwargs=(
+            {"model": "medium"}
+            if klass == "mace_mp"
+            else {"model_paths": download_mace_mp_checkpoint("medium")}
+        ),
+    ).make(si_structure)
+
+    job_dct = json.loads(MontyEncoder().encode(job))
+    job_dct["function"]["@bound"]["force_field_name"] = {
+        "@module": module,
+        "@callable": klass,
+    }
+    job_dct["function"]["@bound"].pop("calculator_meta")
+
+    deser = MontyDecoder().process_decoded(job_dct)
+    assert deser.maker.calculator_meta == import_str
+    assert deser.maker.force_field_name == str(MLFF.Forcefield)
+    assert deser.maker.mlff == MLFF.Forcefield
+    assert isinstance(deser.maker.calculator, MACECalculator)
+    assert isinstance(deser.maker.calculator, Calculator)
