@@ -68,7 +68,7 @@ job = ForceFieldStaticMaker(
     }
 ).make(structure)
 ```
-Note that one can also specify `force_field_name = {"@module": ...,"@class": ...}` in the second example for backwards compatibility.
+Note that one can also specify `force_field_name = {"@module": ...,"@callable": ...}` in the second example for backwards compatibility.
 However, this may not be preserved in future versions, and `calculator_meta` is preferred.
 
 [^calculator-meta-type-annotation]: In this context, the type annotation of the decoded dict should be either `Type[Calculator]` or `Callable[..., Calculator]`, where `Calculator` is from `ase.calculators.calculator`.

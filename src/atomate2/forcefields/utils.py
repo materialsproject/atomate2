@@ -220,8 +220,10 @@ class ForceFieldMixin:
 
         # avoids unintentional deserialization from monty on round-trip
         if isinstance(calculator_meta, dict):
+            # Should always be @callable but being safe here to be sure
+            cls_key = next(k for k in ("@callable", "@class") if k in calculator_meta)
             self.calculator_meta: str | MLFF = ".".join(
-                calculator_meta[k] for k in ("@module", "@callable")
+                calculator_meta[k] for k in ("@module", cls_key)
             )
         else:
             try:
