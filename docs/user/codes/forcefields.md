@@ -48,16 +48,28 @@ Support is provided for the following models, which can be selected using `atoma
 
 ## Using custom forcefields by dictionary
 
-`force_field_name` also accepts a MSONable dictionary for specifying a custom ASE calculator class or function [^calculator-meta-type-annotation].
-For example, a `Job` created with the following code snippet instantiates `chgnet.model.dynamics.CHGNetCalculator` as the ASE calculator:
+`force_field_name` also accepts an import-like string, or MSONable dictionary to specify a custom ASE calculator class or function [^calculator-meta-type-annotation].
+For example, a `Job` created with the either of the following two code snippets instantiates a `chgnet.model.dynamics.CHGNetCalculator` as the ASE calculator.
 ```python
+# simple import string
 job = ForceFieldStaticMaker(
-    force_field_name={
+    calculator_meta="chgnet.model.dynamics.CHGNetCalculator",
+).make(structure)
+```
+
+or using `force_field_name` when
+
+```python
+# monty MSONable style
+job = ForceFieldStaticMaker(
+    calculator_meta={
         "@module": "chgnet.model.dynamics",
         "@callable": "CHGNetCalculator",
     }
 ).make(structure)
 ```
+Note that one can also specify `force_field_name = {"@module": ...,"@callable": ...}` in the second example for backwards compatibility.
+However, this may not be preserved in future versions, and `calculator_meta` is preferred.
 
 [^calculator-meta-type-annotation]: In this context, the type annotation of the decoded dict should be either `Type[Calculator]` or `Callable[..., Calculator]`, where `Calculator` is from `ase.calculators.calculator`.
 

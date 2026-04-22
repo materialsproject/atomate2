@@ -893,3 +893,88 @@ def test_ext_load_static_maker(si_structure: Structure):
 
     assert output1.forcefield_name == "mace_mp"
     assert output1.forcefield_version == get_imported_version("mace_torch")
+
+
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="MACE is not installed")
+@pytest.mark.parametrize("as_str", [True, False])
+def test_roundtrip(si_structure: Structure, as_str: bool):
+
+    import json
+
+    from ase.calculators.calculator import Calculator
+    from mace.calculators import MACECalculator
+    from monty.json import MontyDecoder, MontyEncoder
+
+    import_str = "mace.calculators.mace_mp"
+    module, klass = import_str.rsplit(".", 1)
+
+    # If using an import string, one must specify this through `calculator_meta`
+    # If using a monty-style dict, one can use either `calculator_meta` (preferred)
+    # or `force_field_name` (for backwards compatibility)
+    valid_kwargs = ["calculator_meta"] + ([] if as_str else ["force_field_name"])
+
+    for calc_kwarg in valid_kwargs:
+        job = ForceFieldRelaxMaker(
+            **{
+                calc_kwarg: (
+                    import_str if as_str else {"@module": module, "@callable": klass}
+                )
+            },
+            calculator_kwargs={"model": "medium"},
+        ).make(si_structure)
+
+        roundtrip_job = MontyDecoder().decode(json.dumps(job, cls=MontyEncoder))
+
+        for j in (job, roundtrip_job):
+            assert j.maker.calculator_meta == import_str
+            assert j.maker.force_field_name == str(MLFF.Forcefield)
+            assert j.maker.mlff == MLFF.Forcefield
+            assert isinstance(j.maker.calculator, MACECalculator)
+            assert isinstance(j.maker.calculator, Calculator)
+
+
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="MACE is not installed")
+@pytest.mark.parametrize(
+    "import_str",
+    [
+        "mace.calculators.foundations_models.mace_mp",
+        "mace.calculators.mace.MACECalculator",
+    ],
+)
+def test_roundtrip_legacy(si_structure: Structure, import_str: str):
+    # Test backwards compatibility. Legacy docs can contain dict for
+    # `force_field_name` which will be deserialized by monty into an ase
+    # `Calculator`. `ForceFieldMixin` needs to handle this and
+    # narrow types correctly
+
+    import json
+
+    from ase.calculators.calculator import Calculator
+    from mace.calculators import MACECalculator
+    from mace.calculators.foundations_models import download_mace_mp_checkpoint
+    from monty.json import MontyDecoder, MontyEncoder
+
+    module, klass = import_str.rsplit(".", 1)
+
+    job = ForceFieldRelaxMaker(
+        force_field_name={"@module": module, "@callable": klass},
+        calculator_kwargs=(
+            {"model": "medium"}
+            if klass == "mace_mp"
+            else {"model_paths": download_mace_mp_checkpoint("medium")}
+        ),
+    ).make(si_structure)
+
+    job_dct = json.loads(MontyEncoder().encode(job))
+    job_dct["function"]["@bound"]["force_field_name"] = {
+        "@module": module,
+        "@callable": klass,
+    }
+    job_dct["function"]["@bound"].pop("calculator_meta")
+
+    deser = MontyDecoder().process_decoded(job_dct)
+    assert deser.maker.calculator_meta == import_str
+    assert deser.maker.force_field_name == str(MLFF.Forcefield)
+    assert deser.maker.mlff == MLFF.Forcefield
+    assert isinstance(deser.maker.calculator, MACECalculator)
+    assert isinstance(deser.maker.calculator, Calculator)
