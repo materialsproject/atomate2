@@ -46,6 +46,10 @@ class CommonEosMaker(Maker):
     postprocessor : .atomate2.common.jobs.EOSPostProcessor
         Optional postprocessing step, defaults to
         `atomate2.common.jobs.PostProcessEosEnergy`.
+    socket : bool
+        Whether to run in socket/batch mode (True: single job performing multiple
+        relaxations/statics). Defaults to creating separate jobs for each
+        relaxation/static (False)
     _store_transformation_information : .bool = False
         Whether to store the information about transformations. Unfortunately
         needed at present to handle issues with emmet and pydantic validation
@@ -159,25 +163,25 @@ class CommonEosMaker(Maker):
                 jobs["static"].append(static_job)
 
             for key in job_types:
-                flow_output[key].update(
-                    energy=[
-                        jobs[key][-1].output[idx].output.energy
-                        for idx in range(self.number_of_frames)
-                    ],
-                    volume=[
-                        jobs[key][-1].output[idx].output.structure.volume
-                        for idx in range(self.number_of_frames)
-                    ],
-                    stress=[
-                        jobs[key][-1].output[idx].output.stress
-                        for idx in range(self.number_of_frames)
-                    ],
-                    structure=[
-                        jobs[key][-1].output[idx].output.structure
-                        for idx in range(self.number_of_frames)
-                    ],
-                    dir_name=[jobs[key][-1].output[0].dir_name] * self.number_of_frames,
-                )
+                flow_output[key]["energy"] += [
+                    jobs[key][-1].output[idx].output.energy
+                    for idx in range(self.number_of_frames)
+                ]
+                flow_output[key]["volume"] += [
+                    jobs[key][-1].output[idx].output.structure.volume
+                    for idx in range(self.number_of_frames)
+                ]
+                flow_output[key]["stress"] += [
+                    jobs[key][-1].output[idx].output.stress
+                    for idx in range(self.number_of_frames)
+                ]
+                flow_output[key]["structure"] += [
+                    jobs[key][-1].output[idx].output.structure
+                    for idx in range(self.number_of_frames)
+                ]
+                flow_output[key]["dir_name"] += [
+                    jobs[key][-1].output[0].dir_name
+                ] * self.number_of_frames
 
         else:
             for frame_idx in range(self.number_of_frames):
@@ -224,9 +228,9 @@ class CommonEosMaker(Maker):
                     flow_output[key]["dir_name"] += [dir_name]
 
         if self.postprocessor is not None:
-            if self.number_of_frames < (
-                min_points := self.postprocessor.min_data_points
-            ):
+            if self.number_of_frames + (
+                1 if self.initial_relax_maker is not None else 0
+            ) < (min_points := self.postprocessor.min_data_points):
                 raise ValueError(
                     "To perform least squares EOS fit with "
                     f"{type(self.postprocessor).__name__}, you must specify "

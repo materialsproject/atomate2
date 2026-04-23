@@ -25,7 +25,7 @@ def test_ml_ff_eos_makers(
     if mlff == "CHGNet":
         calculator_kwargs = {"path": "CHGNet-MatPES-PBE-2025.2.10-2.7M-PES"}
     elif mlff == "MACE":
-        calculator_kwargs = {"model": "medium-0b3"}
+        calculator_kwargs = {"model": "medium-0b3", "default_dtype": "float32"}
 
     maker = ForceFieldEosMaker.from_force_field_name(
         mlff,
