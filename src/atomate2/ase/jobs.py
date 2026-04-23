@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
-from abc import ABC, abstractmethod
+from abc import ABC
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -164,9 +164,16 @@ class AseMaker(Maker, ABC):
             elapsed_time=t_f - t_i,
         )
 
-    @abstractmethod
     def _get_calculator(self) -> Calculator:
-        """Load ASE calculator, to be implemented by the user."""
+        """Load ASE calculator, to be implemented by the user.
+
+        NB: To avoid breaking behavior, this method by default
+        does nothing and *should not* be an `abstractmethod`.
+
+        Previously, users would define the `calculator` attr
+        directly. That is still possible but will not benefit
+        from caching the calculator.
+        """
 
     @property
     def calculator(self) -> Calculator:

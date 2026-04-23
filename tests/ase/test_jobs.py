@@ -35,10 +35,13 @@ class EMTStaticMaker(AseMaker):
 
 
 @dataclass
-class EMTRelaxMaker(AseRelaxMaker):
-    name: str = "EMT relax maker"
+class LegacyEMTRelaxMaker(AseRelaxMaker):
+    """Test backwards compatibility with direct `calculator` definition."""
 
-    def _get_calculator(self):
+    name: str = "EMT legacy relax maker"
+
+    @property
+    def calculator(self):
         return EMT()
 
 
@@ -60,7 +63,7 @@ def test_filters_and_kwargs(test_dir, constant_vol):
     structure = Structure.from_file(test_dir / "structures" / "Al2Au.cif")
     structure = structure.scale_lattice(1.1 * structure.volume)
 
-    job = EMTRelaxMaker(
+    job = LegacyEMTRelaxMaker(
         relax_kwargs={"filter_kwargs": {"constant_volume": constant_vol}}
     ).make(structure)
     resp = run_locally(job)
