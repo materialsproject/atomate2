@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
-from abc import ABC, abstractmethod
+from abc import ABC
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -54,8 +54,7 @@ class AseMaker(Maker, ABC):
     class EMTStaticMaker(AseMaker):
         name: str = "EMT static maker"
 
-        @property
-        def calculator(self):
+        def _get_calculator(self):
             return EMT()
     ```
 
@@ -95,27 +94,44 @@ class AseMaker(Maker, ABC):
     store_trajectory: StoreTrajectoryOption = StoreTrajectoryOption.NO
     tags: list[str] | None = None
 
+    def __post_init__(self) -> None:
+        """Enable caching of the ASE calculator via private attribute."""
+        self._calculator: Calculator | None = None
+
     @job(data=_ASE_DATA_OBJECTS)
     def make(
         self,
-        mol_or_struct: Molecule | Structure,
+        mol_or_struct: Molecule | Structure | list[Molecule | Structure],
         prev_dir: str | Path | None = None,
-    ) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
+    ) -> (
+        AseStructureTaskDoc
+        | AseMoleculeTaskDoc
+        | list[AseStructureTaskDoc | AseMoleculeTaskDoc]
+    ):
         """
         Run ASE as job, can be re-implemented in subclasses.
 
         Parameters
         ----------
-        mol_or_struct: .Molecule or .Structure
-            pymatgen molecule or structure
+        mol_or_struct: .Molecule, .Structure, or a list thereof
+            pymatgen molecule(s) or structure(s)
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
+
+        Returns
+        -------
+        AseStructureTaskDoc, AseMoleculeTaskDoc, or list thereof.
         """
-        return AseTaskDoc.to_mol_or_struct_metadata_doc(
-            getattr(self.calculator, "name", type(self.calculator).__name__),
-            self.run_ase(mol_or_struct, prev_dir=prev_dir),
-        )
+        batch_mode = isinstance(mol_or_struct, list)
+        results = [
+            AseTaskDoc.to_mol_or_struct_metadata_doc(
+                getattr(self.calculator, "name", type(self.calculator).__name__),
+                self.run_ase(atoms, prev_dir=prev_dir),
+            )
+            for atoms in (mol_or_struct if batch_mode else [mol_or_struct])
+        ]
+        return results if batch_mode else results[0]
 
     def run_ase(
         self,
@@ -148,11 +164,25 @@ class AseMaker(Maker, ABC):
             elapsed_time=t_f - t_i,
         )
 
+    def _get_calculator(self) -> Calculator:
+        """Load ASE calculator, to be implemented by the user.
+
+        NB: To avoid breaking behavior, this method by default
+        does nothing and *should not* be an `abstractmethod`.
+
+        Previously, users would define the `calculator` attr
+        directly. That is still possible but will not benefit
+        from caching the calculator.
+        """
+
     @property
-    @abstractmethod
     def calculator(self) -> Calculator:
-        """ASE calculator, method to be implemented in subclasses."""
-        raise NotImplementedError
+        """Retrieve cached ASE calculator."""
+        if getattr(self, "_calculator", None) is None:
+            self._calculator = self._get_calculator()
+        if self._calculator is None:
+            raise ValueError("ASE calculator not properly initialized.")
+        return self._calculator
 
 
 @dataclass
@@ -208,8 +238,7 @@ class AseRelaxMaker(AseMaker):
 
     def __post_init__(self) -> None:
         """Ensure that physical relaxation settings are used."""
-        if hasattr(super(), "__post_init__"):
-            super().__post_init__()  # type: ignore[misc]
+        super().__post_init__()
         if self.relax_cell and self.relax_shape:
             raise ValueError(
                 "You have set both `relax_cell` (relaxing the cell shape and volume) "
@@ -220,38 +249,48 @@ class AseRelaxMaker(AseMaker):
     @job(data=_ASE_DATA_OBJECTS)
     def make(
         self,
-        mol_or_struct: Molecule | Structure,
+        mol_or_struct: Molecule | Structure | list[Molecule | Structure],
         prev_dir: str | Path | None = None,
-    ) -> AseStructureTaskDoc | AseMoleculeTaskDoc:
+    ) -> (
+        AseStructureTaskDoc
+        | AseMoleculeTaskDoc
+        | list[AseStructureTaskDoc | AseMoleculeTaskDoc]
+    ):
         """
         Relax a structure or molecule using ASE as a job.
 
         Parameters
         ----------
-        mol_or_struct: .Molecule or .Structure
-            pymatgen molecule or structure
+        mol_or_struct: .Molecule or .Structure, or list thereof
+            pymatgen molecule(s) or structure(s)
         prev_dir : str or Path or None
             A previous calculation directory to copy output files from. Unused, just
                 added to match the method signature of other makers.
 
         Returns
         -------
-        AseStructureTaskDoc or AseMoleculeTaskDoc
+        AseStructureTaskDoc or AseMoleculeTaskDoc, or list thereof
         """
-        return AseTaskDoc.to_mol_or_struct_metadata_doc(
-            getattr(self.calculator, "name", type(self.calculator).__name__),
-            self.run_ase(mol_or_struct, prev_dir=prev_dir),
-            self.steps,
-            relax_kwargs=self.relax_kwargs,
-            optimizer_kwargs=self.optimizer_kwargs,
-            relax_cell=self.relax_cell,
-            relax_shape=self.relax_shape,
-            fix_symmetry=self.fix_symmetry,
-            symprec=self.symprec if self.fix_symmetry else None,
-            ionic_step_data=self.ionic_step_data,
-            store_trajectory=self.store_trajectory,
-            tags=self.tags,
-        )
+        batch_mode = isinstance(mol_or_struct, list)
+
+        results = [
+            AseTaskDoc.to_mol_or_struct_metadata_doc(
+                getattr(self.calculator, "name", type(self.calculator).__name__),
+                self.run_ase(atoms, prev_dir=prev_dir),
+                self.steps,
+                relax_kwargs=self.relax_kwargs,
+                optimizer_kwargs=self.optimizer_kwargs,
+                relax_cell=self.relax_cell,
+                relax_shape=self.relax_shape,
+                fix_symmetry=self.fix_symmetry,
+                symprec=self.symprec if self.fix_symmetry else None,
+                ionic_step_data=self.ionic_step_data,
+                store_trajectory=self.store_trajectory,
+                tags=self.tags,
+            )
+            for atoms in (mol_or_struct if batch_mode else [mol_or_struct])
+        ]
+        return results if batch_mode else results[0]
 
     def run_ase(
         self,
@@ -299,8 +338,7 @@ class EmtRelaxMaker(AseRelaxMaker):
 
     name: str = "EMT relaxation"
 
-    @property
-    def calculator(self) -> Calculator:
+    def _get_calculator(self) -> Calculator:
         """EMT calculator."""
         from ase.calculators.emt import EMT
 
@@ -320,8 +358,7 @@ class LennardJonesRelaxMaker(AseRelaxMaker):
 
     name: str = "Lennard-Jones 6-12 relaxation"
 
-    @property
-    def calculator(self) -> Calculator:
+    def _get_calculator(self) -> None:
         """Lennard-Jones calculator."""
         from ase.calculators.lj import LennardJones
 
@@ -378,8 +415,7 @@ class GFNxTBRelaxMaker(AseRelaxMaker):
         }
     )
 
-    @property
-    def calculator(self) -> Calculator:
+    def _get_calculator(self) -> None:
         """GFN-xTB / TBLite calculator."""
         try:
             from tblite.ase import TBLite

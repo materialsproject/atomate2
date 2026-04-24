@@ -171,6 +171,36 @@ def test_chgnet_relax_maker(
     assert Path(responses[job.uuid][1].output.dir_name).exists()
 
 
+@pytest.mark.skipif(
+    not mlff_is_installed("CHGNet"),
+    reason="Required packages (chgnet or matgl/dgl) are not installed",
+)
+def test_chgnet_batch_static_maker(si_structure: Structure, memory_jobstore):
+    # translate one atom to ensure a small number of relaxation steps are taken
+    si_structure2 = si_structure.copy()
+    si_structure.translate_sites(0, [0, 0, 0.1])
+    si_structure2.translate_sites(0, [0.1, 0, 0.1])
+
+    # generate job
+    job = ForceFieldStaticMaker(
+        force_field_name="CHGNet",
+    ).make([si_structure, si_structure2])
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True, store=memory_jobstore)
+    # validate job outputs
+    output = responses[job.uuid][1].output
+    assert all(isinstance(calc, ForceFieldTaskDocument) for calc in output)
+
+    assert len(output) == 2
+    assert [calc.output.energy for calc in output] == approx(
+        [-9.96250, -9.4781], rel=1e-2
+    )
+
+    # check the force_field_task_doc attributes
+    assert all(Path(calc.dir_name).exists() for calc in output)
+
+
 @pytest.mark.xfail(
     reason="M3GNet tests not working consistently in CI vs local",
     strict=False,

@@ -46,6 +46,10 @@ class CommonEosMaker(Maker):
     postprocessor : .atomate2.common.jobs.EOSPostProcessor
         Optional postprocessing step, defaults to
         `atomate2.common.jobs.PostProcessEosEnergy`.
+    socket : bool
+        Whether to run in socket/batch mode (True: single job performing multiple
+        relaxations/statics). Defaults to creating separate jobs for each
+        relaxation/static (False)
     _store_transformation_information : .bool = False
         Whether to store the information about transformations. Unfortunately
         needed at present to handle issues with emmet and pydantic validation
@@ -59,6 +63,7 @@ class CommonEosMaker(Maker):
     linear_strain: tuple[float, float] = (-0.05, 0.05)
     number_of_frames: int = 6
     postprocessor: EOSPostProcessor = field(default_factory=PostProcessEosEnergy)
+    socket: bool = False
     _store_transformation_information: bool = False
 
     def make(self, structure: Structure, prev_dir: str | Path = None) -> Flow:
@@ -142,52 +147,90 @@ class CommonEosMaker(Maker):
         transformations = apply_strain_to_structure(structure, deformation_l)
         jobs["utility"] += [transformations]
 
-        for frame_idx in range(self.number_of_frames):
-            if self._store_transformation_information:
-                with contextlib.suppress(Exception):
-                    # write details of the transformation to the
-                    # transformations.json file. This file will automatically get
-                    # added to the task document and allow the elastic builder
-                    # to reconstruct the elastic document. Note the ":"
-                    # is automatically converted to a "." in the filename.
-                    self.eos_relax_maker.write_additional_data[
-                        "transformations:json"
-                    ] = transformations.output[frame_idx]
-
+        if self.socket:
             relax_job = self.eos_relax_maker.make(
-                structure=transformations.output[frame_idx].final_structure,
-                prev_dir=prev_dir,
+                [
+                    transformations.output[idx].final_structure
+                    for idx in range(self.number_of_frames)
+                ]
             )
-            relax_job.name += f" deformation {frame_idx}"
-            try:
-                if len(relax_job.jobs) > 1:
-                    for job in relax_job.jobs:
-                        job.append_name(f" deformation {frame_idx}")
-            except AttributeError:
-                pass
             jobs["relax"].append(relax_job)
 
             if self.static_maker:
                 static_job = self.static_maker.make(
-                    structure=relax_job.output.structure,
-                    prev_dir=relax_job.output.dir_name,
+                    [relax.output.structure for relax in relax_job.output]
                 )
-                static_job.name += f" {frame_idx}"
                 jobs["static"].append(static_job)
 
-        for key in job_types:
-            for idx in range(len(jobs[key])):
-                output = jobs[key][idx].output.output
-                dir_name = jobs[key][idx].output.dir_name
-                flow_output[key]["energy"] += [output.energy]
-                flow_output[key]["volume"] += [output.structure.volume]
-                flow_output[key]["stress"] += [output.stress]
-                flow_output[key]["structure"] += [output.structure]
-                flow_output[key]["dir_name"] += [dir_name]
+            for key in job_types:
+                flow_output[key]["energy"] += [
+                    jobs[key][-1].output[idx].output.energy
+                    for idx in range(self.number_of_frames)
+                ]
+                flow_output[key]["volume"] += [
+                    jobs[key][-1].output[idx].output.structure.volume
+                    for idx in range(self.number_of_frames)
+                ]
+                flow_output[key]["stress"] += [
+                    jobs[key][-1].output[idx].output.stress
+                    for idx in range(self.number_of_frames)
+                ]
+                flow_output[key]["structure"] += [
+                    jobs[key][-1].output[idx].output.structure
+                    for idx in range(self.number_of_frames)
+                ]
+                flow_output[key]["dir_name"] += [
+                    jobs[key][-1].output[0].dir_name
+                ] * self.number_of_frames
+
+        else:
+            for frame_idx in range(self.number_of_frames):
+                if self._store_transformation_information:
+                    with contextlib.suppress(Exception):
+                        # write details of the transformation to the
+                        # transformations.json file. This file will automatically get
+                        # added to the task document and allow the elastic builder
+                        # to reconstruct the elastic document. Note the ":"
+                        # is automatically converted to a "." in the filename.
+                        self.eos_relax_maker.write_additional_data[
+                            "transformations:json"
+                        ] = transformations.output[frame_idx]
+
+                relax_job = self.eos_relax_maker.make(
+                    structure=transformations.output[frame_idx].final_structure,
+                    prev_dir=prev_dir,
+                )
+                relax_job.name += f" deformation {frame_idx}"
+                try:
+                    if len(relax_job.jobs) > 1:
+                        for job in relax_job.jobs:
+                            job.append_name(f" deformation {frame_idx}")
+                except AttributeError:
+                    pass
+                jobs["relax"].append(relax_job)
+
+                if self.static_maker:
+                    static_job = self.static_maker.make(
+                        structure=relax_job.output.structure,
+                        prev_dir=relax_job.output.dir_name,
+                    )
+                    static_job.name += f" {frame_idx}"
+                    jobs["static"].append(static_job)
+
+            for key in job_types:
+                for idx in range(len(jobs[key])):
+                    output = jobs[key][idx].output.output
+                    dir_name = jobs[key][idx].output.dir_name
+                    flow_output[key]["energy"] += [output.energy]
+                    flow_output[key]["volume"] += [output.structure.volume]
+                    flow_output[key]["stress"] += [output.stress]
+                    flow_output[key]["structure"] += [output.structure]
+                    flow_output[key]["dir_name"] += [dir_name]
 
         if self.postprocessor is not None:
-            min_points = self.postprocessor.min_data_points
-            if len(jobs["relax"]) < min_points:
+            if self.number_of_frames + (
+                1 if self.initial_relax_maker is not None else 0
+            ) < (min_points := self.postprocessor.min_data_points):
                 raise ValueError(
                     "To perform least squares EOS fit with "
                     f"{type(self.postprocessor).__name__}, you must specify "
@@ -199,8 +242,8 @@ class CommonEosMaker(Maker):
             flow_output = post_process.output
             jobs["utility"] += [post_process]
 
-        job_list = []
-        for val in jobs.values():
-            job_list += val
-
-        return Flow(jobs=job_list, output=flow_output, name=self.name)
+        return Flow(
+            jobs=[j for j_sub in jobs.values() for j in j_sub],
+            output=flow_output,
+            name=self.name,
+        )
