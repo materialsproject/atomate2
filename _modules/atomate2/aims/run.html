@@ -1401,7 +1401,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="kn">import</span> <span class="n">expandvars</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.aims</span><span class="w"> </span><span class="kn">import</span> <span class="n">Aims</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.aims</span><span class="w"> </span><span class="kn">import</span> <span class="n">Aims</span><span class="p">,</span> <span class="n">AimsProfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.socketio</span><span class="w"> </span><span class="kn">import</span> <span class="n">SocketIOCalculator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">monty.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">MontyDecoder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.io.ase</span><span class="w"> </span><span class="kn">import</span> <span class="n">AseAtomsAdaptor</span>
@@ -1512,9 +1512,13 @@
         <span class="n">parameters</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">aims_cmd</span><span class="p">:</span>
-        <span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;command&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aims_cmd</span>
-    <span class="k">elif</span> <span class="s2">&quot;command&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
-        <span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;command&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SETTINGS</span><span class="o">.</span><span class="n">AIMS_CMD</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">aims_cmd</span>
+    <span class="k">elif</span> <span class="s2">&quot;command&quot;</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;command&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">SETTINGS</span><span class="o">.</span><span class="n">AIMS_CMD</span>
+
+    <span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;profile&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AimsProfile</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">)</span>
 
     <span class="n">calculator</span> <span class="o">=</span> <span class="n">Aims</span><span class="p">(</span><span class="o">**</span><span class="n">parameters</span><span class="p">)</span>
     <span class="n">port</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s2">&quot;use_pimd_wrapper&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
@@ -1572,7 +1576,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
+</div><script src="../../../_static/documentation_options.js?v=92734c54"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -1402,12 +1402,12 @@
         <article role="main" id="furo-main-content">
           <section class="tex2jax_ignore mathjax_ignore" id="machine-learning-forcefields-interatomic-potentials">
 <span id="codes-forcefields"></span><h1>Machine Learning forcefields / interatomic potentials<a class="headerlink" href="#machine-learning-forcefields-interatomic-potentials" title="Link to this heading">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">atomate2</span></code> includes an interface to a few common machine learning interatomic potentials (MLIPs), also known variously as machine learning forcefields (MLFFs), or foundation potentials (FPs) for universal variants.</p>
-<p><em><strong>As of <code class="docutils literal notranslate"><span class="pre">atomate2==0.1.1</span></code>, most forcefield packages are opt-in only. You must install those forcefields which you plan to use.</strong></em>
-Running <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">'atomate2[forcefields]'</span></code> will install the <code class="docutils literal notranslate"><span class="pre">chgnet</span></code> package to permit you to try the forcefield classes.
-You can then select other forcefields you want to use.</p>
-<p>We have made this choice both to avoid the appearance of favoritism (both <code class="docutils literal notranslate"><span class="pre">chgnet</span></code> and <code class="docutils literal notranslate"><span class="pre">atomate2</span></code> are Materials Project-supported projects), and to avoid dependency conflicts between MLFF packages.
-If you need a sense of which forcefields are compatible, you can use the <a class="reference external" href="https://github.com/materialsproject/atomate2/blob/a8bc6505e439503a114f5346aec916aafae7f27b/pyproject.toml#L90">pyproject.toml</a> to see which versions are grouped together for testing.</p>
+<p><code class="docutils literal notranslate"><span class="pre">atomate2</span></code> includes an interface to a few common machine learning interatomic potentials (MLIPs), also known variously as machine learning forcefields (MLFFs), or foundation potentials (FPs) for universal variants.
+These can be installed using <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">'atomate2[ase]'</span></code>.</p>
+<p><em><strong>As of <code class="docutils literal notranslate"><span class="pre">atomate2==0.1.2</span></code>, all forcefield packages are opt-in only. You must install those forcefields which you plan to use.</strong></em></p>
+<p>Running <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">'atomate2[forcefields-demo]'</span></code> will install the <code class="docutils literal notranslate"><span class="pre">chgnet</span></code> package to permit you to try the forcefield jobs/workflows.
+You can then install additional forcefield libraries.</p>
+<p>If you need a sense of which forcefields are compatible, you can use the <a class="reference external" href="https://github.com/materialsproject/atomate2/blob/a8bc6505e439503a114f5346aec916aafae7f27b/pyproject.toml#L90">pyproject.toml</a> to see which versions are grouped together for testing.</p>
 <p>Most of <code class="docutils literal notranslate"><span class="pre">Maker</span></code> classes using the forcefields inherit from <code class="docutils literal notranslate"><span class="pre">atomate2.forcefields.utils.ForceFieldMixin</span></code> to specify which forcefield to use.
 The <code class="docutils literal notranslate"><span class="pre">ForceFieldMixin</span></code> mixin provides the following configurable parameters:</p>
 <ul class="simple">
@@ -1516,16 +1516,26 @@ The <code class="docutils literal notranslate"><span class="pre">ForceFieldMixin
 </section>
 <section id="using-custom-forcefields-by-dictionary">
 <h2>Using custom forcefields by dictionary<a class="headerlink" href="#using-custom-forcefields-by-dictionary" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">force_field_name</span></code> also accepts a MSONable dictionary for specifying a custom ASE calculator class or function <a class="footnote-reference brackets" href="#calculator-meta-type-annotation" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.
-For example, a <code class="docutils literal notranslate"><span class="pre">Job</span></code> created with the following code snippet instantiates <code class="docutils literal notranslate"><span class="pre">chgnet.model.dynamics.CHGNetCalculator</span></code> as the ASE calculator:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">job</span> <span class="o">=</span> <span class="n">ForceFieldStaticMaker</span><span class="p">(</span>
-    <span class="n">force_field_name</span><span class="o">=</span><span class="p">{</span>
+<p><code class="docutils literal notranslate"><span class="pre">force_field_name</span></code> also accepts an import-like string, or MSONable dictionary to specify a custom ASE calculator class or function <a class="footnote-reference brackets" href="#calculator-meta-type-annotation" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.
+For example, a <code class="docutils literal notranslate"><span class="pre">Job</span></code> created with the either of the following two code snippets instantiates a <code class="docutils literal notranslate"><span class="pre">chgnet.model.dynamics.CHGNetCalculator</span></code> as the ASE calculator.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># simple import string</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">ForceFieldStaticMaker</span><span class="p">(</span>
+    <span class="n">calculator_meta</span><span class="o">=</span><span class="s2">&quot;chgnet.model.dynamics.CHGNetCalculator&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">structure</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or using <code class="docutils literal notranslate"><span class="pre">force_field_name</span></code> when</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># monty MSONable style</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">ForceFieldStaticMaker</span><span class="p">(</span>
+    <span class="n">calculator_meta</span><span class="o">=</span><span class="p">{</span>
         <span class="s2">&quot;@module&quot;</span><span class="p">:</span> <span class="s2">&quot;chgnet.model.dynamics&quot;</span><span class="p">,</span>
         <span class="s2">&quot;@callable&quot;</span><span class="p">:</span> <span class="s2">&quot;CHGNetCalculator&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">)</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">structure</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Note that one can also specify <code class="docutils literal notranslate"><span class="pre">force_field_name</span> <span class="pre">=</span> <span class="pre">{&quot;&#64;module&quot;:</span> <span class="pre">...,&quot;&#64;callable&quot;:</span> <span class="pre">...}</span></code> in the second example for backwards compatibility.
+However, this may not be preserved in future versions, and <code class="docutils literal notranslate"><span class="pre">calculator_meta</span></code> is preferred.</p>
 </section>
 <section id="notes-on-fairchem-meta-models-fairchem-notes">
 <h2>Notes on FairChem (Meta) models {#fairchem-notes}<a class="headerlink" href="#notes-on-fairchem-meta-models-fairchem-notes" title="Link to this heading">¶</a></h2>
@@ -1642,7 +1652,7 @@ For example, a <code class="docutils literal notranslate"><span class="pre">Job<
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+</div><script src="../../_static/documentation_options.js?v=92734c54"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

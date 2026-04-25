@@ -3,12 +3,13 @@
 # Machine Learning forcefields / interatomic potentials
 
 `atomate2` includes an interface to a few common machine learning interatomic potentials (MLIPs), also known variously as machine learning forcefields (MLFFs), or foundation potentials (FPs) for universal variants.
+These can be installed using `pip install 'atomate2[ase]'`.
 
-***As of `atomate2==0.1.1`, most forcefield packages are opt-in only. You must install those forcefields which you plan to use.***
-Running `pip install 'atomate2[forcefields]'` will install the `chgnet` package to permit you to try the forcefield classes.
-You can then select other forcefields you want to use.
+***As of `atomate2==0.1.2`, all forcefield packages are opt-in only. You must install those forcefields which you plan to use.***
 
-We have made this choice both to avoid the appearance of favoritism (both `chgnet` and `atomate2` are Materials Project-supported projects), and to avoid dependency conflicts between MLFF packages.
+Running `pip install 'atomate2[forcefields-demo]'` will install the `chgnet` package to permit you to try the forcefield jobs/workflows.
+You can then install additional forcefield libraries.
+
 If you need a sense of which forcefields are compatible, you can use the [pyproject.toml](https://github.com/materialsproject/atomate2/blob/a8bc6505e439503a114f5346aec916aafae7f27b/pyproject.toml#L90) to see which versions are grouped together for testing.
 
 Most of `Maker` classes using the forcefields inherit from `atomate2.forcefields.utils.ForceFieldMixin` to specify which forcefield to use.
@@ -47,16 +48,28 @@ Support is provided for the following models, which can be selected using `atoma
 
 ## Using custom forcefields by dictionary
 
-`force_field_name` also accepts a MSONable dictionary for specifying a custom ASE calculator class or function [^calculator-meta-type-annotation].
-For example, a `Job` created with the following code snippet instantiates `chgnet.model.dynamics.CHGNetCalculator` as the ASE calculator:
+`force_field_name` also accepts an import-like string, or MSONable dictionary to specify a custom ASE calculator class or function [^calculator-meta-type-annotation].
+For example, a `Job` created with the either of the following two code snippets instantiates a `chgnet.model.dynamics.CHGNetCalculator` as the ASE calculator.
 ```python
+# simple import string
 job = ForceFieldStaticMaker(
-    force_field_name={
+    calculator_meta="chgnet.model.dynamics.CHGNetCalculator",
+).make(structure)
+```
+
+or using `force_field_name` when
+
+```python
+# monty MSONable style
+job = ForceFieldStaticMaker(
+    calculator_meta={
         "@module": "chgnet.model.dynamics",
         "@callable": "CHGNetCalculator",
     }
 ).make(structure)
 ```
+Note that one can also specify `force_field_name = {"@module": ...,"@callable": ...}` in the second example for backwards compatibility.
+However, this may not be preserved in future versions, and `calculator_meta` is preferred.
 
 [^calculator-meta-type-annotation]: In this context, the type annotation of the decoded dict should be either `Type[Calculator]` or `Callable[..., Calculator]`, where `Calculator` is from `ase.calculators.calculator`.
 

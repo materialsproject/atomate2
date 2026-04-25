@@ -1404,26 +1404,18 @@
 <h1>ForceFieldMixin<a class="headerlink" href="#forcefieldmixin" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="atomate2.forcefields.utils.ForceFieldMixin">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">atomate2.forcefields.utils.</span></span><span class="sig-name descname"><span class="pre">ForceFieldMixin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_field_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">MLFF.Forcefield</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_document_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/atomate2/forcefields/utils.html#ForceFieldMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#atomate2.forcefields.utils.ForceFieldMixin" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">atomate2.forcefields.utils.</span></span><span class="sig-name descname"><span class="pre">ForceFieldMixin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_field_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">MLFF.Forcefield</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator_meta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calculator_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_document_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/atomate2/forcefields/utils.html#ForceFieldMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#atomate2.forcefields.utils.ForceFieldMixin" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Mix-in class for force-fields.</p>
+<p>All basic forcefield jobs should inherit from this class
+to easily access <cite>ase_calculator</cite>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>force_field_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference internal" href="atomate2.forcefields.utils.MLFF.html#atomate2.forcefields.utils.MLFF" title="atomate2.forcefields.utils.MLFF"><em>MLFF</em></a>) – Name of the forcefield which will be
-correctly deserialized/standardized if the forcefield is
-a known <cite>MLFF</cite>.</p></li>
-<li><p><strong>calculator_meta</strong> (<a class="reference internal" href="atomate2.forcefields.utils.MLFF.html#atomate2.forcefields.utils.MLFF" title="atomate2.forcefields.utils.MLFF"><em>MLFF</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Actual metadata to instantiate the ASE calculator.</p></li>
-<li><p><strong>calculator_kwargs</strong> (<em>dict = field</em><em>(</em><em>default_factory=dict</em><em>)</em>) – Keyword arguments that will get passed to the ASE calculator.</p></li>
-<li><p><strong>task_document_kwargs</strong> (<em>dict = field</em><em>(</em><em>default_factory=dict</em><em>)</em>) – Additional keyword args passed to :obj:<a href="#id1"><span class="problematic" id="id2">`</span></a>.ForceFieldTaskDocument()
-or another final document schema.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
 <li><p><strong>force_field_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference internal" href="atomate2.forcefields.utils.MLFF.html#atomate2.forcefields.utils.MLFF" title="atomate2.forcefields.utils.MLFF"><em>MLFF</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>)</p></li>
-<li><p><strong>calculator_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>)</p></li>
-<li><p><strong>task_document_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>)</p></li>
+<li><p><strong>calculator_meta</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference internal" href="atomate2.forcefields.utils.MLFF.html#atomate2.forcefields.utils.MLFF" title="atomate2.forcefields.utils.MLFF"><em>MLFF</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>calculator_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>)</p></li>
+<li><p><strong>task_document_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1528,7 +1520,7 @@ or another final document schema.</p></li>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=a58bc63e"></script>
+</div><script src="../_static/documentation_options.js?v=92734c54"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

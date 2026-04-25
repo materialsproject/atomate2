@@ -1394,6 +1394,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
@@ -1405,6 +1406,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Calculator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ase.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bohr</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">monty.json</span><span class="w"> </span><span class="kn">import</span> <span class="n">MontyDecoder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_never</span><span class="p">,</span> <span class="n">deprecated</span>
@@ -1417,8 +1419,6 @@
         <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">dtype</span> <span class="k">as</span> <span class="n">torch_dtype</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="n">torch_dtype</span> <span class="o">=</span> <span class="nb">str</span>
-
-    <span class="kn">from</span><span class="w"> </span><span class="nn">ase.calculators.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Calculator</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.ase.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">AseResult</span>
 
@@ -1556,42 +1556,82 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">ForceFieldMixin</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Mix-in class for force-fields.</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    force_field_name : str or MLFF</span>
-<span class="sd">        Name of the forcefield which will be</span>
-<span class="sd">        correctly deserialized/standardized if the forcefield is</span>
-<span class="sd">        a known `MLFF`.</span>
-<span class="sd">    calculator_meta : MLFF or dict</span>
-<span class="sd">        Actual metadata to instantiate the ASE calculator.</span>
-<span class="sd">    calculator_kwargs : dict = field(default_factory=dict)</span>
-<span class="sd">        Keyword arguments that will get passed to the ASE calculator.</span>
-<span class="sd">    task_document_kwargs: dict = field(default_factory=dict)</span>
-<span class="sd">        Additional keyword args passed to :obj:`.ForceFieldTaskDocument()</span>
-<span class="sd">        or another final document schema.</span>
+<span class="sd">    All basic forcefield jobs should inherit from this class</span>
+<span class="sd">    to easily access `ase_calculator`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">force_field_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">MLFF</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">Forcefield</span>
-    <span class="n">calculator_meta</span><span class="p">:</span> <span class="n">MLFF</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">calculator_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-    <span class="n">task_document_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">calculator_meta</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">MLFF</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">calculator_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">task_document_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure that force_field_name is correctly assigned.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate input data types.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        force_field_name : str, MLFF, or dict</span>
+<span class="sd">            If a str or MLFF: Name of the forcefield which will be</span>
+<span class="sd">            correctly deserialized/standardized if the forcefield is</span>
+<span class="sd">            a known `MLFF`.</span>
+<span class="sd">            If a dict, a monty-style dict.</span>
+
+<span class="sd">        calculator_meta : MLFF, str, or dict</span>
+<span class="sd">            Actual metadata to instantiate the ASE calculator.</span>
+<span class="sd">            If a MLFF, that default interface in `ase_calculator` will be used.</span>
+<span class="sd">            If an import-style str or monty-style dict, the calculator will</span>
+<span class="sd">            be dynamically loaded.</span>
+
+<span class="sd">        calculator_kwargs : dict = {}</span>
+<span class="sd">            Keyword arguments that will get passed to the ASE calculator.</span>
+
+<span class="sd">        task_document_kwargs: dict = {}</span>
+<span class="sd">            Additional keyword args passed to :obj:`.ForceFieldTaskDocument()</span>
+<span class="sd">            or another final document schema.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">super</span><span class="p">(),</span> <span class="s2">&quot;__post_init__&quot;</span><span class="p">):</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__post_init__</span><span class="p">()</span>  <span class="c1"># type: ignore[misc]</span>
 
+        <span class="n">mlff</span><span class="p">:</span> <span class="n">MLFF</span> <span class="o">=</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">Forcefield</span>  <span class="c1"># Fallback to placeholder</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">mlff</span> <span class="o">=</span> <span class="n">MLFF</span><span class="o">.</span><span class="n">Forcefield</span>  <span class="c1"># Fallback to placeholder</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">calculator_meta</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="n">MLFF</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="p">,</span> <span class="n">Calculator</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="p">,</span> <span class="n">Calculator</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="p">)</span>  <span class="c1"># for mace_mp specifically</span>
+        <span class="p">):</span>
+            <span class="c1"># can happen with deserialization of legacy documents from JSON</span>
+            <span class="n">calculator_meta</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;__module__&quot;</span><span class="p">,</span> <span class="s2">&quot;__name__&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">mlff</span> <span class="o">=</span> <span class="n">_get_standardized_mlff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span> <span class="o">=</span> <span class="n">mlff</span>
+            <span class="c1"># On round-trip deserialization, `calculator_meta` will be a dict</span>
+            <span class="c1"># of the calculator information</span>
+            <span class="n">calculator_meta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span> <span class="ow">or</span> <span class="n">mlff</span>
+
+        <span class="c1"># avoids unintentional deserialization from monty on round-trip</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="c1"># Should always be @callable but being safe here to be sure</span>
+            <span class="n">cls_key</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;@callable&quot;</span><span class="p">,</span> <span class="s2">&quot;@class&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">calculator_meta</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">MLFF</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">calculator_meta</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;@module&quot;</span><span class="p">,</span> <span class="n">cls_key</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span> <span class="o">=</span> <span class="n">_get_standardized_mlff</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span> <span class="o">=</span> <span class="n">calculator_meta</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">mlff</span><span class="p">)</span>  <span class="c1"># Narrow-down type for mypy</span>
 
         <span class="c1"># Pad calculator_kwargs with default values, but permit user to override them</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">calculator_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calculator_kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="o">**</span><span class="n">_DEFAULT_CALCULATOR_KWARGS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mlff</span><span class="p">,</span> <span class="p">{}),</span>
             <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">calculator_kwargs</span><span class="p">,</span>
         <span class="p">}</span>
@@ -1625,7 +1665,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The name of the ASE calculator for schemas.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="n">MLFF</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force_field_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">calc_cls</span> <span class="o">=</span> <span class="n">_load_calc_cls</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">calc_cls</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="n">assert_never</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span><span class="p">)</span></div>
@@ -1802,7 +1842,9 @@
                     <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s2">&quot;predict_unit&quot;</span><span class="p">},</span>
                 <span class="p">)</span>
 
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span>
+        <span class="nb">isinstance</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">calculator_meta</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+    <span class="p">):</span>
         <span class="n">calc_cls</span> <span class="o">=</span> <span class="n">_load_calc_cls</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">)</span>
         <span class="n">calculator</span> <span class="o">=</span> <span class="n">calc_cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -1814,8 +1856,25 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_load_calc_cls</span><span class="p">(</span>
-    <span class="n">calculator_meta</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">calculator_meta</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">Calculator</span><span class="p">]</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Calculator</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load an ASE calculator using monty or importlib.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    calculator_meta : str or dict</span>
+<span class="sd">        If a str, should be a dot-separated import string:</span>
+<span class="sd">            &quot;chgnet.model.dynamics.CHGNetCalculator&quot;</span>
+<span class="sd">        If a dict, should be a monty-style JSONable dict:</span>
+<span class="sd">            {&quot;@module&quot;: &quot;chgnet.model.dynamics&quot;, &quot;@callable&quot;: &quot;CHGNetCalculator&quot;}</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ase Calculator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">module</span><span class="p">,</span> <span class="n">klass</span> <span class="o">=</span> <span class="n">calculator_meta</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">import_module</span><span class="p">(</span><span class="n">module</span><span class="p">),</span> <span class="n">klass</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">MontyDecoder</span><span class="p">()</span><span class="o">.</span><span class="n">process_decoded</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">)</span>
 
 
@@ -1838,12 +1897,12 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_get_pkg_name</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">:</span> <span class="n">MLFF</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_pkg_name</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">:</span> <span class="n">MLFF</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the package name for a given force field.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    calculator_meta : MLFF or JSONable dict</span>
+<span class="sd">    calculator_meta : MLFF, import-style str, or JSONable dict</span>
 <span class="sd">        The calculator metadata used to load the calculator,</span>
 <span class="sd">        or an MLFF enum.</span>
 
@@ -1884,13 +1943,13 @@
             <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
                 <span class="n">ff_pkg</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">ff_pkg</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">calc_cls</span> <span class="o">=</span> <span class="n">_load_calc_cls</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">calc_cls</span><span class="o">.</span><span class="vm">__module__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">assert_never</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_get_pkg_version</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">:</span> <span class="n">MLFF</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_pkg_version</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="n">MLFF</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Try to establish the imported version of a forcefield python package.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pkg_name</span> <span class="o">:=</span> <span class="n">_get_pkg_name</span><span class="p">(</span><span class="n">calculator_meta</span><span class="p">),</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -1939,7 +1998,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
+</div><script src="../../../_static/documentation_options.js?v=92734c54"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
