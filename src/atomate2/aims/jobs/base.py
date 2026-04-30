@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any
 from jobflow import Maker, Response, job
 from monty.serialization import dumpfn
 from pymatgen.io.aims.sets.base import AimsInputGenerator
+from pymatgen.util.due import Doi, due
 
 from atomate2 import SETTINGS
 from atomate2.aims.files import (
@@ -40,6 +41,7 @@ _OUTPUT_FILES = ["aims.out", "geometry.in.next_step", "hessian.aims", "*.cube", 
 _FILES_TO_ZIP = _INPUT_FILES + _OUTPUT_FILES
 
 
+@due.dcite(Doi("10.1016/j.cpc.2009.06.022"), description="FHI-AIMS")
 @dataclass
 class BaseAimsMaker(Maker):
     """

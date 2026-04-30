@@ -167,6 +167,7 @@ class PhononMaker(BasePhononMaker):
     def from_force_field_name(
         cls,
         force_field_name: str | MLFF | dict,
+        calculator_kwargs: dict | None = None,
         relax_initial_structure: bool = True,
         **kwargs,
     ) -> Self:
@@ -177,6 +178,8 @@ class PhononMaker(BasePhononMaker):
         ----------
         force_field_name : str or .MLFF or dict
             The name of the force field.
+        calculator_kwargs : dict | None
+            The keyword arguments to pass to the calculator
         relax_initial_structure: bool = True
             Whether to relax the initial structure before performing an EOS fit.
         **kwargs
@@ -186,18 +189,25 @@ class PhononMaker(BasePhononMaker):
         -------
         PhononMaker
         """
-        static_energy_maker = ForceFieldStaticMaker(force_field_name=force_field_name)
+        calculator_kwargs = calculator_kwargs or {}
+        static_energy_maker = ForceFieldStaticMaker(
+            force_field_name=force_field_name,
+            calculator_kwargs=calculator_kwargs,
+        )
         kwargs.update(
             bulk_relax_maker=(
                 ForceFieldRelaxMaker(
-                    force_field_name=force_field_name, relax_kwargs={"fmax": 1e-5}
+                    force_field_name=force_field_name,
+                    calculator_kwargs=calculator_kwargs,
+                    relax_kwargs={"fmax": 1e-5},
                 )
                 if relax_initial_structure
                 else None
             ),
             static_energy_maker=static_energy_maker,
             phonon_displacement_maker=ForceFieldStaticMaker(
-                force_field_name=force_field_name
+                force_field_name=force_field_name,
+                calculator_kwargs=calculator_kwargs,
             ),
             born_maker=None,
         )

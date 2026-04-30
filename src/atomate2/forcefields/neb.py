@@ -70,7 +70,10 @@ class ForceFieldNebFromEndpointsMaker(ForceFieldMixin, AseNebFromEndpointsMaker)
 
     @classmethod
     def from_force_field_name(
-        cls, force_field_name: str | MLFF | dict, **kwargs
+        cls,
+        force_field_name: str | MLFF | dict,
+        calculator_kwargs: dict | None = None,
+        **kwargs,
     ) -> Self:
         """Create a force field NEB job from its name.
 
@@ -78,13 +81,19 @@ class ForceFieldNebFromEndpointsMaker(ForceFieldMixin, AseNebFromEndpointsMaker)
         ----------
         force_field_name : str or MLFF or dict
             The name of the forcefield.
+        calculator_kwargs : dict | None
+            The keyword arguments to pass to the calculator
         **kwargs
             kwargs to pass to ForceFieldNebFromEndpointsMaker.
         """
-        endpoint_relax_maker = ForceFieldRelaxMaker(force_field_name=force_field_name)
+        calculator_kwargs = calculator_kwargs or {}
+        endpoint_relax_maker = ForceFieldRelaxMaker(
+            force_field_name=force_field_name, calculator_kwargs=calculator_kwargs
+        )
         return cls(
             name=f"{endpoint_relax_maker.mlff.name} NEB from endpoints maker",
             endpoint_relax_maker=endpoint_relax_maker,
             force_field_name=force_field_name,
+            calculator_kwargs=calculator_kwargs,
             **kwargs,
         )

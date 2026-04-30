@@ -20,6 +20,7 @@ from pymatgen.electronic_structure.bandstructure import (
 )
 from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.vasp import Chgcar, Locpot, Wavecar
+from pymatgen.util.due import Doi, due
 
 from atomate2 import SETTINGS
 from atomate2.common.files import gzip_output_folder
@@ -165,6 +166,10 @@ def vasp_job(method: Callable) -> job:
     return job(method, data=_DATA_OBJECTS, output_schema=TaskDoc)
 
 
+@due.dcite(Doi("10.1103/PhysRevB.47.558"), description="VASP: MD for metals")
+@due.dcite(Doi("10.1103/PhysRevB.49.14251"), description="VASP: MD")
+@due.dcite(Doi("10.1016/0927-0256(96)00008-0"), description="VASP: core algorithms")
+@due.dcite(Doi("10.1103/PhysRevB.54.11169"), description="VASP: self-consistency")
 @dataclass
 class BaseVaspMaker(Maker):
     """

@@ -12,26 +12,45 @@ from atomate2.utils.path import strip_hostname
 if TYPE_CHECKING:
     from pathlib import Path
 
-LOBSTEROUTPUT_FILES = [
-    "lobsterout",
+LOBSTEROUT_5_FILES: list[str] = [
+    "BWDF.lobster",
+    "BWDFCOHP.lobster",
+    "CHARGE.LCFO.lobster",
+    "COBICAR.LCFO.lobster",
+    "COHPCAR.LCFO.lobster",
+    "DOSCAR.LCFO.lobster",
+    "GROSSPOP.LCFO.lobster",
+    "ICOBILIST.LCFO.lobster",
+    "ICOHPLIST.LCFO.lobster",
+    "IMOFELIST.lobster",
+    "LCFO_Fragments.lobster",
+    "POLARIZATION.lobster",
+    "POSCAR.lobster",
+    "POSCAR.lobster.vasp",
+    "MOFECAR.lobster",
+]
+
+LOBSTEROUTPUT_FILES: list[str] = [
     "CHARGE.lobster",
+    "COBICAR.lobster",
     "COHPCAR.lobster",
     "COOPCAR.lobster",
     "DOSCAR.lobster",
     "DOSCAR.LSO.lobster",
     "GROSSPOP.lobster",
+    "ICOBILIST.lobster",
     "ICOHPLIST.lobster",
     "ICOOPLIST.lobster",
+    "lobsterout",
     "lobster.out",
     "projectionData.lobster",
     "MadelungEnergies.lobster",
     "SitePotentials.lobster",
     "bandOverlaps.lobster",
-    "ICOBILIST.lobster",
-    "COBICAR.lobster",
+    *LOBSTEROUT_5_FILES,
 ]
 
-VASP_OUTPUT_FILES = [
+VASP_OUTPUT_FILES: list[str] = [
     "OUTCAR",
     "vasprun.xml",
     "CHG",

@@ -7,9 +7,15 @@ import logging
 import warnings
 from typing import TYPE_CHECKING
 
+try:
+    from phonopy import Phonopy
+except ImportError as exc:
+    raise ImportError(
+        "`pip install phonopy seekpath` to use `atomate2.common.jobs.phonons`"
+    ) from exc
+
 import numpy as np
 from jobflow import Flow, Response, job
-from phonopy import Phonopy
 from pymatgen.core import Structure
 from pymatgen.io.phonopy import get_phonopy_structure, get_pmg_structure
 from pymatgen.phonon.bandstructure import PhononBandStructureSymmLine
@@ -161,10 +167,10 @@ def generate_phonon_displacements(
         cell,
         supercell_matrix,
         primitive_matrix=primitive_matrix,
-        factor=factor,
         symprec=symprec,
         is_symmetry=sym_reduce,
     )
+    phonon.unit_conversion_factor = factor
     phonon.generate_displacements(distance=displacement)
 
     supercells = phonon.supercells_with_displacements
