@@ -12,7 +12,10 @@ from atomate2.forcefields.flows.phonons import PhononMaker
 from atomate2.forcefields.flows.qha import CHGNetQhaMaker, ForceFieldQhaMaker
 from atomate2.forcefields.jobs import ForceFieldRelaxMaker
 
+from ..conftest import mlff_is_installed  # noqa: TID252
 
+
+@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
 def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
@@ -40,6 +43,7 @@ def test_qha_dir(clean_dir, si_structure: Structure, tmp_path: Path):
     assert isinstance(ph_bs_dos_doc, PhononQHADoc)
 
 
+@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
 def test_qha_dir_change_defaults(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
 
@@ -71,8 +75,10 @@ def test_qha_dir_change_defaults(clean_dir, si_structure: Structure, tmp_path: P
     assert ph_bs_dos_doc.volumes[4] == pytest.approx(ph_bs_dos_doc.volumes[2] * 1.03**3)
 
 
+@pytest.mark.skipif(not mlff_is_installed("CHGNet"), reason="matgl is not installed")
 def test_qha_dir_manual_supercell(clean_dir, si_structure: Structure, tmp_path: Path):
     # TODO brittle due to inability to adjust dtypes in CHGNetRelaxMaker
+
     matrix = [[2.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
     flow = CHGNetQhaMaker(
         number_of_frames=4,
@@ -99,9 +105,12 @@ def test_qha_dir_manual_supercell(clean_dir, si_structure: Structure, tmp_path: 
     assert_allclose(ph_bs_dos_doc.supercell_matrix, matrix)
 
 
+_MLFFS_TO_TEST = [mlff for mlff in ("CHGNet", "M3GNet") if mlff_is_installed(mlff)]
+
+
 @pytest.mark.parametrize(
     "mlff,relax_initial_structure,run_eos_flow",
-    list(product(("CHGNet", "M3GNet"), (True, False), (True, False))),
+    list(product(_MLFFS_TO_TEST, (True, False), (True, False))),
 )
 def test_instantiation(mlff: str, relax_initial_structure: bool, run_eos_flow: bool):
     no_maker = ["phonon_maker.bulk_relax_maker"]
@@ -144,6 +153,7 @@ def test_instantiation(mlff: str, relax_initial_structure: bool, run_eos_flow: b
             assert sub_maker is None
 
 
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="mace_torch is not installed")
 def test_ext_load_qha_initialization():
     calculator_meta = {
         "@module": "mace.calculators",

@@ -117,7 +117,7 @@ class ZeoPlusPlus:
         elif isinstance(sorbates, str):
             sorbates = [sorbates]
         self._cif_path = cif_path
-        self.cif_name = os.path.basename(cif_path.split(".cif")[0])
+        self.cif_name = os.path.basename(cif_path.split(".cif", maxsplit=1)[0])
         self.zeopp_path = zeopp_path or which("zeo++") or os.environ.get("ZEO_PATH")
         self.sorbates: list[str] = sorbates
         self.working_dir = working_dir or os.path.dirname(cif_path)

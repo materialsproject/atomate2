@@ -24,6 +24,9 @@ _velocity_seed = 1234
     ],
 )
 def test_mpmorph_mlff_maker(ff_name, si_structure, test_dir, clean_dir):
+
+    pytest.importorskip("mace")
+
     temp = 300
     n_steps_convergence = 10
     n_steps_production = 20

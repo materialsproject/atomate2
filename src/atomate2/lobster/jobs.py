@@ -10,6 +10,7 @@ from jobflow import Maker, job
 from pymatgen.electronic_structure.cohp import CompleteCohp
 from pymatgen.electronic_structure.dos import LobsterCompleteDos
 from pymatgen.io.lobster import Bandoverlaps, Icohplist, Lobsterin
+from pymatgen.util.due import Doi, due
 
 from atomate2 import SETTINGS
 from atomate2.common.files import gzip_output_folder
@@ -27,6 +28,13 @@ logger = logging.getLogger(__name__)
 _FILES_TO_ZIP = [*LOBSTEROUTPUT_FILES, "lobsterin", *VASP_OUTPUT_FILES]
 
 
+@due.dcite(
+    Doi("https://doi.org/10.1002/jcc.26353"),
+    description=(
+        "Most recent LOBSTER paper. "
+        "Please cite the publications mentioned in the LOBSTER Terms of Use."
+    ),
+)
 @dataclass
 class LobsterMaker(Maker):
     """

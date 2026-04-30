@@ -12,6 +12,7 @@ from emmet.core.types.enums import StoreTrajectoryOption
 from jobflow import Maker, job
 from pymatgen.core import Molecule, Structure
 from pymatgen.io.ase import AseAtomsAdaptor
+from pymatgen.util.due import Doi, due
 
 from atomate2.ase.schemas import AseResult, AseTaskDoc
 from atomate2.ase.utils import AseRelaxer
@@ -28,6 +29,9 @@ if TYPE_CHECKING:
 _ASE_DATA_OBJECTS = ["trajectory"]
 
 
+@due.dcite(
+    Doi("10.1088/1361-648X/aa680e"), description="Atomic simulation environment."
+)
 @dataclass
 class AseMaker(Maker, ABC):
     """
@@ -165,6 +169,9 @@ class AseRelaxMaker(AseMaker):
         The job name.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
+    relax_shape : bool = False
+        Whether to allow the cell shape to relax at fixed volume.
+        Cannot be used together with `relax_cell=True`.
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
         Refines the symmetry of the initial structure.
@@ -192,11 +199,23 @@ class AseRelaxMaker(AseMaker):
 
     name: str = "ASE relaxation"
     relax_cell: bool = True
+    relax_shape: bool = False
     fix_symmetry: bool = False
     symprec: float | None = 1e-2
     steps: int = 500
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        """Ensure that physical relaxation settings are used."""
+        if hasattr(super(), "__post_init__"):
+            super().__post_init__()  # type: ignore[misc]
+        if self.relax_cell and self.relax_shape:
+            raise ValueError(
+                "You have set both `relax_cell` (relaxing the cell shape and volume) "
+                "and `relax_shape` (relaxing only the cell shape at fixed volume) "
+                "to be `True`. Select at most one option to be `True`."
+            )
 
     @job(data=_ASE_DATA_OBJECTS)
     def make(
@@ -226,6 +245,7 @@ class AseRelaxMaker(AseMaker):
             relax_kwargs=self.relax_kwargs,
             optimizer_kwargs=self.optimizer_kwargs,
             relax_cell=self.relax_cell,
+            relax_shape=self.relax_shape,
             fix_symmetry=self.fix_symmetry,
             symprec=self.symprec if self.fix_symmetry else None,
             ionic_step_data=self.ionic_step_data,
@@ -258,6 +278,7 @@ class AseRelaxMaker(AseMaker):
         relaxer = AseRelaxer(
             self.calculator,
             relax_cell=self.relax_cell,
+            relax_shape=self.relax_shape,
             fix_symmetry=self.fix_symmetry,
             symprec=self.symprec,
             **self.optimizer_kwargs,

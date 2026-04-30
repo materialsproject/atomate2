@@ -77,6 +77,9 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
         The name of the force field.
     relax_cell : bool = True
         Whether to allow the cell shape/volume to change during relaxation.
+    relax_shape : bool = False
+        Whether to allow the cell shape to relax at fixed volume.
+        Cannot be used together with `relax_cell=True`.
     fix_symmetry : bool = False
         Whether to fix the symmetry during relaxation.
         Refines the symmetry of the initial structure.
@@ -108,6 +111,7 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
     name: str = "Force field relax"
     force_field_name: str | MLFF | dict = MLFF.Forcefield
     relax_cell: bool = True
+    relax_shape: bool = False
     fix_symmetry: bool = False
     symprec: float | None = 1e-2
     steps: int = 500
@@ -149,6 +153,7 @@ class ForceFieldRelaxMaker(ForceFieldMixin, AseRelaxMaker):
             relax_kwargs=self.relax_kwargs,
             optimizer_kwargs=self.optimizer_kwargs,
             relax_cell=self.relax_cell,
+            relax_shape=self.relax_shape,
             fix_symmetry=self.fix_symmetry,
             symprec=self.symprec if self.fix_symmetry else None,
             ionic_step_data=self.ionic_step_data,
@@ -183,6 +188,7 @@ class ForceFieldStaticMaker(ForceFieldRelaxMaker):
     name: str = "Force field static"
     force_field_name: str | MLFF | dict = MLFF.Forcefield
     relax_cell: bool = False
+    relax_shape: bool = False
     steps: int = 1
     relax_kwargs: dict = field(default_factory=dict)
     optimizer_kwargs: dict = field(default_factory=dict)

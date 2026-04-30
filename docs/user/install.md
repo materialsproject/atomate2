@@ -126,20 +126,19 @@ organizes all these items.
    name might simply be `atomate2`.
 
 2. Now you should scaffold the rest of your `<<INSTALL_DIR>>` for the things we are
-   going to do next. Run `mkdir -p atomate2/{config,logs}` to create directories named
-   `logs` and `config` so your directory structure looks like:
+   going to do next. Run `mkdir -p atomate2/config` to create a directory named
+   `config`, so your directory structure looks like:
 
 ```text
 atomate2
 ├── config
-└── logs
 ```
 
 ## Create a conda environment
 
 ```{note}
-Make sure to create a Python 3.10+ environment as recent versions of atomate2 only
-support Python 3.10 and higher.
+Make sure to create a Python 3.11+ environment as recent versions of atomate2 only
+support Python 3.11 and higher.
 ```
 
 We highly recommend that you organize your installation of the atomate2 and the other
@@ -158,8 +157,8 @@ which provides access to the `conda` binary. If the `conda` tool is not availabl
 install it by following the installation instructions for
 [Miniconda](https://docs.conda.io/en/latest/miniconda.html). To set up your conda environment:
 
-1. Create a new conda environment called atomate2 with Python 3.10 using
-   `conda create -n atomate2 python=3.10`.
+1. Create a new conda environment called atomate2 with Python 3.12 using
+   `conda create -n atomate2 python=3.12`.
 2. Activate your environment by running `conda activate atomate2`. Now, when you use
    the command `python`, you'll be using the version of `python` in the atomate2
    conda environment folder.
