@@ -374,6 +374,14 @@ def ase_calculator(
                     "PESCalculator",
                     None,
                 )
+
+                # matgl has removed many of the old models,
+                # need to hard code paths to previous models
+                if "path" not in kwargs:
+                    base_matgl_url = "https://github.com/materialyzeai/matgl/raw/v2.1.1/pretrained_models/"
+                    matgl.config.PRETRAINED_MODELS_BASE_URL = base_matgl_url
+                    matgl.utils.io.PRETRAINED_MODELS_BASE_URL = base_matgl_url
+
                 calculator = matgl_calc(matgl.load_model(path), **kwargs)
 
             case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
