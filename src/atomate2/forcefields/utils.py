@@ -344,7 +344,7 @@ def ase_calculator(
 
                 # matgl has removed many of the old models,
                 # need to hard code paths to previous models
-                base_matgl_path = r"https://github.com/materialyzeai/matgl/tree/v2.1.1/pretrained_models"
+                base_matgl_path = r"https://github.com/materialyzeai/matgl/raw/v2.1.1/pretrained_models"
                 match calculator_name:
                     case MLFF.M3GNet:
                         path = kwargs.get(
