@@ -340,8 +340,6 @@ def ase_calculator(
                     except ImportError:
                         pass
 
-                from urllib.parse import urljoin
-
                 import matgl
 
                 # matgl has removed many of the old models,
@@ -350,13 +348,13 @@ def ase_calculator(
                 match calculator_name:
                     case MLFF.M3GNet:
                         path = kwargs.get(
-                            "path", urljoin(base_matgl_path, "M3GNet-MP-2021.2.8-PES")
+                            "path", f"{base_matgl_path}/M3GNet-MP-2021.2.8-PES"
                         )
                         matgl.config.BACKEND = "DGL"
                     case MLFF.CHGNet:
                         path = kwargs.get(
                             "path",
-                            urljoin(base_matgl_path, "CHGNet-MPtrj-2023.12.1-2.7M-PES"),
+                            f"{base_matgl_path}/CHGNet-MPtrj-2023.12.1-2.7M-PES",
                         )
                         matgl.config.BACKEND = "DGL"
 
@@ -368,8 +366,8 @@ def ase_calculator(
                             stacklevel=2,
                         )
                     case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
-                        path = urljoin(
-                            base_matgl_path,
+                        path = (
+                            f"{base_matgl_path}/",
                             f"{kwargs.pop('architecture', 'TensorNet')}"
                             f"-{calculator_name.value}"
                             f"-v{kwargs.pop('version', '2025.1')}"
