@@ -1413,8 +1413,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.phonon.bandstructure</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhononBandStructureSymmLine</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pymatgen.phonon.dos</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhononDos</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.ase.jobs</span><span class="w"> </span><span class="kn">import</span> <span class="n">AseRelaxMaker</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.common.schemas.phonons</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForceConstants</span><span class="p">,</span> <span class="n">PhononBSDOSDoc</span><span class="p">,</span> <span class="n">get_factor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_supercell_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.forcefields.jobs</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForceFieldRelaxMaker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseVaspMaker</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -1422,9 +1425,6 @@
     <span class="kn">from</span><span class="w"> </span><span class="nn">emmet.core.math</span><span class="w"> </span><span class="kn">import</span> <span class="n">Matrix3D</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.aims.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseAimsMaker</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.forcefields.jobs</span><span class="w"> </span><span class="kn">import</span> <span class="n">ForceFieldStaticMaker</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">atomate2.vasp.jobs.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseVaspMaker</span>
-
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -1659,7 +1659,10 @@
     <span class="n">displacements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Structure</span><span class="p">],</span>
     <span class="n">structure</span><span class="p">:</span> <span class="n">Structure</span><span class="p">,</span>
     <span class="n">supercell_matrix</span><span class="p">:</span> <span class="n">Matrix3D</span><span class="p">,</span>
-    <span class="n">phonon_maker</span><span class="p">:</span> <span class="n">BaseVaspMaker</span> <span class="o">|</span> <span class="n">ForceFieldStaticMaker</span> <span class="o">|</span> <span class="n">BaseAimsMaker</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">phonon_maker</span><span class="p">:</span> <span class="n">BaseVaspMaker</span>
+    <span class="o">|</span> <span class="n">AseRelaxMaker</span>
+    <span class="o">|</span> <span class="n">ForceFieldRelaxMaker</span>
+    <span class="o">|</span> <span class="n">BaseAimsMaker</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">prev_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">prev_dir_argname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">socket</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1678,14 +1681,16 @@
 <span class="sd">        Fully optimized structure used for phonon computations.</span>
 <span class="sd">    supercell_matrix: Matrix3D</span>
 <span class="sd">        supercell matrix for meta data</span>
-<span class="sd">    phonon_maker : .BaseVaspMaker or .ForceFieldStaticMaker or .BaseAimsMaker</span>
-<span class="sd">        A maker to use to generate dispacement calculations</span>
+<span class="sd">    phonon_maker : .BaseVaspMaker, .AseRelaxMaker,</span>
+<span class="sd">        .ForceFieldRelaxMaker, or .BaseAimsMaker</span>
+<span class="sd">        A maker to use to generate dispacement calculations.</span>
+<span class="sd">        NB: this should be a static maker.</span>
 <span class="sd">    prev_dir: str or Path</span>
 <span class="sd">        The previous working directory</span>
 <span class="sd">    prev_dir_argname: str</span>
 <span class="sd">        argument name for the prev_dir variable</span>
 <span class="sd">    socket: bool</span>
-<span class="sd">        If True use the socket-io interface to increase performance</span>
+<span class="sd">        If True use the socket-io (batch-mode) interface to increase performance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">phonon_jobs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">outputs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
@@ -1698,28 +1703,39 @@
     <span class="k">if</span> <span class="n">prev_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">prev_dir_argname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">phonon_job_kwargs</span><span class="p">[</span><span class="n">prev_dir_argname</span><span class="p">]</span> <span class="o">=</span> <span class="n">prev_dir</span>
 
+    <span class="n">num_disp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">displacements</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">socket</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phonon_maker</span><span class="p">,</span> <span class="n">BaseVaspMaker</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;VASP makers do not currently support socket/batch mode.&quot;</span><span class="p">)</span>
+
         <span class="n">phonon_job</span> <span class="o">=</span> <span class="n">phonon_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">displacements</span><span class="p">,</span> <span class="o">**</span><span class="n">phonon_job_kwargs</span><span class="p">)</span>
         <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;original_structure&quot;</span><span class="p">:</span> <span class="n">structure</span><span class="p">,</span>
             <span class="s2">&quot;supercell_matrix&quot;</span><span class="p">:</span> <span class="n">supercell_matrix</span><span class="p">,</span>
             <span class="s2">&quot;displaced_structures&quot;</span><span class="p">:</span> <span class="n">displacements</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">phonon_job</span><span class="o">.</span><span class="n">update_maker_kwargs</span><span class="p">(</span>
-            <span class="p">{</span><span class="s2">&quot;_set&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;write_additional_data-&gt;phonon_info:json&quot;</span><span class="p">:</span> <span class="n">info</span><span class="p">}},</span> <span class="n">dict_mod</span><span class="o">=</span><span class="kc">True</span>
-        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phonon_maker</span><span class="p">,</span> <span class="n">AseRelaxMaker</span> <span class="o">|</span> <span class="n">ForceFieldRelaxMaker</span><span class="p">):</span>
+            <span class="n">phonon_job</span><span class="o">.</span><span class="n">update_maker_kwargs</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;_set&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;write_additional_data-&gt;phonon_info:json&quot;</span><span class="p">:</span> <span class="n">info</span><span class="p">}},</span>
+                <span class="n">dict_mod</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+
         <span class="n">phonon_jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phonon_job</span><span class="p">)</span>
-        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;displacement_number&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">displacements</span><span class="p">)))</span>
-        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;uuids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">phonon_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">uuid</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">displacements</span><span class="p">)</span>
-        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;dirs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">phonon_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">displacements</span><span class="p">)</span>
-        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;forces&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phonon_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">all_forces</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;displacement_number&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_disp</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phonon_maker</span><span class="p">,</span> <span class="n">AseRelaxMaker</span> <span class="o">|</span> <span class="n">ForceFieldRelaxMaker</span><span class="p">):</span>
+            <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;uuids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">phonon_job</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">uuid</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_disp</span>
+            <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;dirs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">phonon_job</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dir_name</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_disp</span>
+            <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;forces&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">phonon_job</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">forces</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_disp</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;uuids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">phonon_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">uuid</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_disp</span>
+            <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;dirs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">phonon_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_disp</span>
+            <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;forces&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phonon_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">all_forces</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">displacement</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">displacements</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">prev_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">phonon_job</span> <span class="o">=</span> <span class="n">phonon_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">displacement</span><span class="p">,</span> <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">phonon_job</span> <span class="o">=</span> <span class="n">phonon_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">displacement</span><span class="p">)</span>
-            <span class="n">phonon_job</span><span class="o">.</span><span class="n">append_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">displacements</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">phonon_job</span> <span class="o">=</span> <span class="n">phonon_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">displacement</span><span class="p">,</span> <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">)</span>
+            <span class="n">phonon_job</span><span class="o">.</span><span class="n">append_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_disp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="c1"># we will add some meta data</span>
             <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
@@ -1729,10 +1745,11 @@
                 <span class="s2">&quot;displaced_structure&quot;</span><span class="p">:</span> <span class="n">displacement</span><span class="p">,</span>
             <span class="p">}</span>
             <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-                <span class="n">phonon_job</span><span class="o">.</span><span class="n">update_maker_kwargs</span><span class="p">(</span>
-                    <span class="p">{</span><span class="s2">&quot;_set&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;write_additional_data-&gt;phonon_info:json&quot;</span><span class="p">:</span> <span class="n">info</span><span class="p">}},</span>
-                    <span class="n">dict_mod</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phonon_maker</span><span class="p">,</span> <span class="n">AseRelaxMaker</span> <span class="o">|</span> <span class="n">ForceFieldRelaxMaker</span><span class="p">):</span>
+                    <span class="n">phonon_job</span><span class="o">.</span><span class="n">update_maker_kwargs</span><span class="p">(</span>
+                        <span class="p">{</span><span class="s2">&quot;_set&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;write_additional_data-&gt;phonon_info:json&quot;</span><span class="p">:</span> <span class="n">info</span><span class="p">}},</span>
+                        <span class="n">dict_mod</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="p">)</span>
             <span class="n">phonon_jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phonon_job</span><span class="p">)</span>
             <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;displacement_number&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
             <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;uuids&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">phonon_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
@@ -1780,7 +1797,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=92734c54"></script>
+</div><script src="../../../../_static/documentation_options.js?v=360bc84d"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

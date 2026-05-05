@@ -1440,6 +1440,10 @@
 <span class="sd">    postprocessor : .atomate2.common.jobs.EOSPostProcessor</span>
 <span class="sd">        Optional postprocessing step, defaults to</span>
 <span class="sd">        `atomate2.common.jobs.PostProcessEosEnergy`.</span>
+<span class="sd">    socket : bool</span>
+<span class="sd">        Whether to run in socket/batch mode (True: single job performing multiple</span>
+<span class="sd">        relaxations/statics). Defaults to creating separate jobs for each</span>
+<span class="sd">        relaxation/static (False)</span>
 <span class="sd">    _store_transformation_information : .bool = False</span>
 <span class="sd">        Whether to store the information about transformations. Unfortunately</span>
 <span class="sd">        needed at present to handle issues with emmet and pydantic validation</span>
@@ -1453,6 +1457,7 @@
     <span class="n">linear_strain</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
     <span class="n">number_of_frames</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span>
     <span class="n">postprocessor</span><span class="p">:</span> <span class="n">EOSPostProcessor</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">PostProcessEosEnergy</span><span class="p">)</span>
+    <span class="n">socket</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">_store_transformation_information</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="CommonEosMaker.make">
@@ -1538,52 +1543,90 @@
         <span class="n">transformations</span> <span class="o">=</span> <span class="n">apply_strain_to_structure</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">deformation_l</span><span class="p">)</span>
         <span class="n">jobs</span><span class="p">[</span><span class="s2">&quot;utility&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">transformations</span><span class="p">]</span>
 
-        <span class="k">for</span> <span class="n">frame_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_frames</span><span class="p">):</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store_transformation_information</span><span class="p">:</span>
-                <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-                    <span class="c1"># write details of the transformation to the</span>
-                    <span class="c1"># transformations.json file. This file will automatically get</span>
-                    <span class="c1"># added to the task document and allow the elastic builder</span>
-                    <span class="c1"># to reconstruct the elastic document. Note the &quot;:&quot;</span>
-                    <span class="c1"># is automatically converted to a &quot;.&quot; in the filename.</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">eos_relax_maker</span><span class="o">.</span><span class="n">write_additional_data</span><span class="p">[</span>
-                        <span class="s2">&quot;transformations:json&quot;</span>
-                    <span class="p">]</span> <span class="o">=</span> <span class="n">transformations</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">frame_idx</span><span class="p">]</span>
-
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="p">:</span>
             <span class="n">relax_job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eos_relax_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-                <span class="n">structure</span><span class="o">=</span><span class="n">transformations</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">frame_idx</span><span class="p">]</span><span class="o">.</span><span class="n">final_structure</span><span class="p">,</span>
-                <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">,</span>
+                <span class="p">[</span>
+                    <span class="n">transformations</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">final_structure</span>
+                    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_frames</span><span class="p">)</span>
+                <span class="p">]</span>
             <span class="p">)</span>
-            <span class="n">relax_job</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; deformation </span><span class="si">{</span><span class="n">frame_idx</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">relax_job</span><span class="o">.</span><span class="n">jobs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">relax_job</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
-                        <span class="n">job</span><span class="o">.</span><span class="n">append_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; deformation </span><span class="si">{</span><span class="n">frame_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-                <span class="k">pass</span>
             <span class="n">jobs</span><span class="p">[</span><span class="s2">&quot;relax&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">relax_job</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_maker</span><span class="p">:</span>
                 <span class="n">static_job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
-                    <span class="n">structure</span><span class="o">=</span><span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span>
-                    <span class="n">prev_dir</span><span class="o">=</span><span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span><span class="p">,</span>
+                    <span class="p">[</span><span class="n">relax</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span> <span class="k">for</span> <span class="n">relax</span> <span class="ow">in</span> <span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="p">]</span>
                 <span class="p">)</span>
-                <span class="n">static_job</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">frame_idx</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">jobs</span><span class="p">[</span><span class="s2">&quot;static&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">static_job</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">job_types</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">])):</span>
-                <span class="n">output</span> <span class="o">=</span> <span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output</span>
-                <span class="n">dir_name</span> <span class="o">=</span> <span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span>
-                <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;energy&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">energy</span><span class="p">]</span>
-                <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">volume</span><span class="p">]</span>
-                <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;stress&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">stress</span><span class="p">]</span>
-                <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;structure&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="p">]</span>
-                <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;dir_name&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">dir_name</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">job_types</span><span class="p">:</span>
+                <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;energy&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span>
+                    <span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">energy</span>
+                    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_frames</span><span class="p">)</span>
+                <span class="p">]</span>
+                <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span>
+                    <span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">volume</span>
+                    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_frames</span><span class="p">)</span>
+                <span class="p">]</span>
+                <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;stress&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span>
+                    <span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">stress</span>
+                    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_frames</span><span class="p">)</span>
+                <span class="p">]</span>
+                <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;structure&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span>
+                    <span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span>
+                    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_frames</span><span class="p">)</span>
+                <span class="p">]</span>
+                <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;dir_name&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span>
+                    <span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dir_name</span>
+                <span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_frames</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">frame_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_frames</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store_transformation_information</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+                        <span class="c1"># write details of the transformation to the</span>
+                        <span class="c1"># transformations.json file. This file will automatically get</span>
+                        <span class="c1"># added to the task document and allow the elastic builder</span>
+                        <span class="c1"># to reconstruct the elastic document. Note the &quot;:&quot;</span>
+                        <span class="c1"># is automatically converted to a &quot;.&quot; in the filename.</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">eos_relax_maker</span><span class="o">.</span><span class="n">write_additional_data</span><span class="p">[</span>
+                            <span class="s2">&quot;transformations:json&quot;</span>
+                        <span class="p">]</span> <span class="o">=</span> <span class="n">transformations</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">frame_idx</span><span class="p">]</span>
+
+                <span class="n">relax_job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eos_relax_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+                    <span class="n">structure</span><span class="o">=</span><span class="n">transformations</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="n">frame_idx</span><span class="p">]</span><span class="o">.</span><span class="n">final_structure</span><span class="p">,</span>
+                    <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">relax_job</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; deformation </span><span class="si">{</span><span class="n">frame_idx</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">relax_job</span><span class="o">.</span><span class="n">jobs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">relax_job</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
+                            <span class="n">job</span><span class="o">.</span><span class="n">append_name</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; deformation </span><span class="si">{</span><span class="n">frame_idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="n">jobs</span><span class="p">[</span><span class="s2">&quot;relax&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">relax_job</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_maker</span><span class="p">:</span>
+                    <span class="n">static_job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">static_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
+                        <span class="n">structure</span><span class="o">=</span><span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="p">,</span>
+                        <span class="n">prev_dir</span><span class="o">=</span><span class="n">relax_job</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">static_job</span><span class="o">.</span><span class="n">name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">frame_idx</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">jobs</span><span class="p">[</span><span class="s2">&quot;static&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">static_job</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">job_types</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">])):</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">output</span>
+                    <span class="n">dir_name</span> <span class="o">=</span> <span class="n">jobs</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">dir_name</span>
+                    <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;energy&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">energy</span><span class="p">]</span>
+                    <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="o">.</span><span class="n">volume</span><span class="p">]</span>
+                    <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;stress&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">stress</span><span class="p">]</span>
+                    <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;structure&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">structure</span><span class="p">]</span>
+                    <span class="n">flow_output</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;dir_name&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">dir_name</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">postprocessor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">min_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postprocessor</span><span class="o">.</span><span class="n">min_data_points</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">[</span><span class="s2">&quot;relax&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">min_points</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_frames</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_relax_maker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">min_points</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postprocessor</span><span class="o">.</span><span class="n">min_data_points</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;To perform least squares EOS fit with &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">postprocessor</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">, you must specify &quot;</span>
@@ -1595,11 +1638,11 @@
             <span class="n">flow_output</span> <span class="o">=</span> <span class="n">post_process</span><span class="o">.</span><span class="n">output</span>
             <span class="n">jobs</span><span class="p">[</span><span class="s2">&quot;utility&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">post_process</span><span class="p">]</span>
 
-        <span class="n">job_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">jobs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">job_list</span> <span class="o">+=</span> <span class="n">val</span>
-
-        <span class="k">return</span> <span class="n">Flow</span><span class="p">(</span><span class="n">jobs</span><span class="o">=</span><span class="n">job_list</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">flow_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">Flow</span><span class="p">(</span>
+            <span class="n">jobs</span><span class="o">=</span><span class="p">[</span><span class="n">j</span> <span class="k">for</span> <span class="n">j_sub</span> <span class="ow">in</span> <span class="n">jobs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">j_sub</span><span class="p">],</span>
+            <span class="n">output</span><span class="o">=</span><span class="n">flow_output</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="p">)</span></div>
 </div>
 
 </pre></div>
@@ -1640,7 +1683,7 @@
       
     </aside>
   </div>
-</div><script src="../../../../_static/documentation_options.js?v=92734c54"></script>
+</div><script src="../../../../_static/documentation_options.js?v=360bc84d"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -1521,21 +1521,29 @@
 <a class="viewcode-back" href="../../../reference/atomate2.forcefields.jobs.ForceFieldRelaxMaker.html#atomate2.forcefields.jobs.ForceFieldRelaxMaker.make">[docs]</a>
     <span class="nd">@forcefield_job</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">make</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">structure</span><span class="p">:</span> <span class="n">Molecule</span> <span class="o">|</span> <span class="n">Structure</span><span class="p">,</span> <span class="n">prev_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ForceFieldTaskDocument</span> <span class="o">|</span> <span class="n">ForceFieldMoleculeTaskDocument</span><span class="p">:</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">structure</span><span class="p">:</span> <span class="n">Molecule</span> <span class="o">|</span> <span class="n">Structure</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">Molecule</span> <span class="o">|</span> <span class="n">Structure</span><span class="p">],</span>
+        <span class="n">prev_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="n">ForceFieldTaskDocument</span>
+        <span class="o">|</span> <span class="n">ForceFieldMoleculeTaskDocument</span>
+        <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">ForceFieldTaskDocument</span> <span class="o">|</span> <span class="n">ForceFieldMoleculeTaskDocument</span><span class="p">]</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform a relaxation of a structure using a force field.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        structure: .Structure or Molecule</span>
-<span class="sd">            pymatgen structure or molecule.</span>
+<span class="sd">        structure: .Molecule or .Structure, or a list thereof</span>
+<span class="sd">            pymatgen molecule(s) or structure(s)</span>
 <span class="sd">        prev_dir : str or Path or None</span>
 <span class="sd">            A previous calculation directory to copy output files from. Unused, just</span>
 <span class="sd">                added to match the method signature of other makers.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ase_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_ase_safe</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">)</span>
 
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            ForceFieldTaskDocument, ForceFieldMoleculeTaskDocument, or a list thereof</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task_document_kwargs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="s2">&quot;`task_document_kwargs` is now deprecated, please use the top-level &quot;</span>
@@ -1544,22 +1552,33 @@
                 <span class="n">stacklevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">ForceFieldTaskDocument</span><span class="o">.</span><span class="n">from_ase_compatible_result</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ase_calculator_name</span><span class="p">,</span>
-            <span class="n">ase_result</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span>
-            <span class="n">calculator_meta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span><span class="p">,</span>
-            <span class="n">relax_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">relax_kwargs</span><span class="p">,</span>
-            <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span><span class="p">,</span>
-            <span class="n">relax_cell</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">relax_cell</span><span class="p">,</span>
-            <span class="n">relax_shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">relax_shape</span><span class="p">,</span>
-            <span class="n">fix_symmetry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fix_symmetry</span><span class="p">,</span>
-            <span class="n">symprec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symprec</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_symmetry</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">ionic_step_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ionic_step_data</span><span class="p">,</span>
-            <span class="n">store_trajectory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">store_trajectory</span><span class="p">,</span>
-            <span class="n">tags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
-            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">task_document_kwargs</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="n">batch_mode</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+
+        <span class="n">ase_results</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_run_ase_safe</span><span class="p">(</span><span class="n">atoms</span><span class="p">,</span> <span class="n">prev_dir</span><span class="o">=</span><span class="n">prev_dir</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">atoms</span> <span class="ow">in</span> <span class="p">(</span><span class="n">structure</span> <span class="k">if</span> <span class="n">batch_mode</span> <span class="k">else</span> <span class="p">[</span><span class="n">structure</span><span class="p">])</span>
+        <span class="p">]</span>
+
+        <span class="n">task_docs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">ForceFieldTaskDocument</span><span class="o">.</span><span class="n">from_ase_compatible_result</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ase_calculator_name</span><span class="p">,</span>
+                <span class="n">ase_result</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">steps</span><span class="p">,</span>
+                <span class="n">calculator_meta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calculator_meta</span><span class="p">,</span>
+                <span class="n">relax_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">relax_kwargs</span><span class="p">,</span>
+                <span class="n">optimizer_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer_kwargs</span><span class="p">,</span>
+                <span class="n">relax_cell</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">relax_cell</span><span class="p">,</span>
+                <span class="n">relax_shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">relax_shape</span><span class="p">,</span>
+                <span class="n">fix_symmetry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fix_symmetry</span><span class="p">,</span>
+                <span class="n">symprec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">symprec</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix_symmetry</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">ionic_step_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ionic_step_data</span><span class="p">,</span>
+                <span class="n">store_trajectory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">store_trajectory</span><span class="p">,</span>
+                <span class="n">tags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
+                <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">task_document_kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">ase_result</span> <span class="ow">in</span> <span class="n">ase_results</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">task_docs</span> <span class="k">if</span> <span class="n">batch_mode</span> <span class="k">else</span> <span class="n">task_docs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 </div>
 
 
@@ -1636,7 +1655,7 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=92734c54"></script>
+</div><script src="../../../_static/documentation_options.js?v=360bc84d"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
