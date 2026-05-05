@@ -344,18 +344,13 @@ def ase_calculator(
 
                 # matgl has removed many of the old models,
                 # need to hard code paths to previous models
-                base_matgl_path = r"https://github.com/materialyzeai/matgl/raw/v2.1.1/pretrained_models"
+                matgl.config.PRETRAINED_MODELS_BASE_URL = "https://github.com/materialyzeai/matgl/raw/v2.1.1/pretrained_models"
                 match calculator_name:
                     case MLFF.M3GNet:
-                        path = kwargs.get(
-                            "path", f"{base_matgl_path}/M3GNet-MP-2021.2.8-PES"
-                        )
+                        path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
                         matgl.config.BACKEND = "DGL"
                     case MLFF.CHGNet:
-                        path = kwargs.get(
-                            "path",
-                            f"{base_matgl_path}/CHGNet-MPtrj-2023.12.1-2.7M-PES",
-                        )
+                        path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
                         matgl.config.BACKEND = "DGL"
 
                         warnings.warn(
@@ -367,7 +362,6 @@ def ase_calculator(
                         )
                     case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
                         path = (
-                            f"{base_matgl_path}/",
                             f"{kwargs.pop('architecture', 'TensorNet')}"
                             f"-{calculator_name.value}"
                             f"-v{kwargs.pop('version', '2025.1')}"
