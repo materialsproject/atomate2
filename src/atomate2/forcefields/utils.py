@@ -378,7 +378,9 @@ def ase_calculator(
                 # matgl has removed many of the old models,
                 # need to hard code paths to previous models
                 if "path" not in kwargs:
-                    matgl.config.PRETRAINED_MODELS_BASE_URL = "https://github.com/materialyzeai/matgl/raw/v2.1.1/pretrained_models"
+                    base_matgl_url = "https://github.com/materialyzeai/matgl/raw/v2.1.1/pretrained_models/"
+                    matgl.config.PRETRAINED_MODELS_BASE_URL = base_matgl_url
+                    matgl.utils.io.PRETRAINED_MODELS_BASE_URL = base_matgl_url
 
                 calculator = matgl_calc(matgl.load_model(path), **kwargs)
 
