@@ -238,7 +238,7 @@ class JdftxInputGenerator(InputGenerator):
         solvent_model = self.settings["pcm-variant"]
         ashep = self.config_dict["ASHEP"][solvent_model]
         # calculate absolute potential in Hartree
-        mu = -(ashep - self.potential) / eV_to_Ha
+        mu = -(-ashep + self.potential) * eV_to_Ha
         self.settings["target-mu"] = {"mu": mu}
         return
 
