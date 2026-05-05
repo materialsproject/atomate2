@@ -250,8 +250,7 @@ class ForceFieldMixin:
         with revert_default_dtype():
             return self.run_ase(*args, **kwargs)
 
-    @property
-    def calculator(self) -> Calculator:
+    def _get_calculator(self) -> Calculator:
         """ASE calculator, can be overwritten by user."""
         return ase_calculator(
             self.calculator_meta,
