@@ -344,7 +344,7 @@ def ase_calculator(
 
                 match calculator_name:
                     case MLFF.M3GNet:
-                        path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
+                        path = "https://github.com/materialyzeai/matgl/tree/v2.2.1/pretrained_models/M3GNet-MP-2021.2.8-PES"
                         matgl.config.BACKEND = "DGL"
                     case MLFF.CHGNet:
                         path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
