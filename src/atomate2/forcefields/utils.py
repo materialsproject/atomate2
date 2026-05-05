@@ -365,7 +365,7 @@ def ase_calculator(
                             f"{kwargs.pop('architecture', 'TensorNet')}"
                             f"-{calculator_name.value}"
                             f"-v{kwargs.pop('version', '2025.1')}"
-                            "-PES",
+                            "-PES"
                         )
                         matgl.config.BACKEND = "PYG"
 
