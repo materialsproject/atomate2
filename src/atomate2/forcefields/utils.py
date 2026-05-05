@@ -342,9 +342,6 @@ def ase_calculator(
 
                 import matgl
 
-                # matgl has removed many of the old models,
-                # need to hard code paths to previous models
-                matgl.config.PRETRAINED_MODELS_BASE_URL = "https://github.com/materialyzeai/matgl/raw/v2.1.1/pretrained_models"
                 match calculator_name:
                     case MLFF.M3GNet:
                         path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
@@ -377,6 +374,12 @@ def ase_calculator(
                     "PESCalculator",
                     None,
                 )
+
+                # matgl has removed many of the old models,
+                # need to hard code paths to previous models
+                if "path" not in kwargs:
+                    matgl.config.PRETRAINED_MODELS_BASE_URL = "https://github.com/materialyzeai/matgl/raw/v2.1.1/pretrained_models"
+
                 calculator = matgl_calc(matgl.load_model(path), **kwargs)
 
             case MLFF.MACE | MLFF.MACE_MP_0 | MLFF.MACE_MPA_0 | MLFF.MACE_MP_0B3:
