@@ -10,7 +10,7 @@ There is both an `ase` module in `atomate2`, based around general `ase` `Calcula
 
 The `ase` module should be used to manage high-level tasks, such as geometry optimization, molecular dynamics, and nudged elastic band. Any further developments to these tools in `ase` should also warrant updates in this module in `atomate2`. For example, when `ase` rolled out the `MTKNPT` NPT MD barostat as a replacement for the default barostat, this was also made the default in `atomate2`.
 
-The `forcefields` library should be used to develop concrete implementations of workflows, e.g., harmonic phonon, Grüneisen parameter, ApproxNEB.
+The `forcefields` library should be used to develop concrete implementations of workflows, e.g., harmonic phonon, Grüneisen parameter, [ApproxNEB](https://doi.org/10.1063/1.4960790).
 
 ## Dependency Chaos
 

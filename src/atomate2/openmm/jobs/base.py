@@ -24,6 +24,7 @@ from openmm import Integrator, LangevinMiddleIntegrator, Platform, XmlSerializer
 from openmm.app import StateDataReporter
 from openmm.unit import angstrom, kelvin, picoseconds
 from pymatgen.core import Structure
+from pymatgen.util.due import Doi, due
 
 from atomate2.openmm.interchange import OpenMMInterchange
 from atomate2.openmm.utils import (
@@ -113,6 +114,7 @@ def openmm_job(method: Callable) -> job:
     )
 
 
+@due.dcite(Doi("10.1021/acs.jpcb.3c06662"), description="OpenMM 8")
 @dataclass
 class BaseOpenMMMaker(Maker):
     """Base class for OpenMM simulation makers.

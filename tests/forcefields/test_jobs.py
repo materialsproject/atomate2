@@ -1,6 +1,7 @@
 import importlib
 from contextlib import nullcontext
 from importlib.metadata import version as get_imported_version
+from importlib.util import find_spec
 from pathlib import Path
 
 import numpy as np
@@ -38,7 +39,10 @@ def test_maker_initialization(mlff):
 
 
 @pytest.mark.skipif(
-    dgl is None or not mlff_is_installed("CHGNet"),
+    # test to see if CHGNet is installed, or that matgl is installed without dgl
+    # Note that this should be the only test for interface with
+    # the legacy `chgnet` package
+    not mlff_is_installed("CHGNet") or (mlff_is_installed("M3GNet") and dgl is None),
     reason="CHGNet requires DGL which is not installed",
 )
 def test_chgnet_static_maker(si_structure):
@@ -48,17 +52,21 @@ def test_chgnet_static_maker(si_structure):
         ionic_step_data=("structure", "energy"),
     ).make(si_structure)
 
+    pkg_name = "matgl" if find_spec("matgl") else "chgnet"
+
     # run the flow or job and ensure that it finished running successfully
     responses = run_locally(job, ensure_success=True)
 
     # validate job outputs
     output1 = responses[job.uuid][1].output
     assert isinstance(output1, ForceFieldTaskDocument)
-    assert output1.output.energy == approx(-10.7907495, rel=1e-4)
+    assert output1.output.energy == approx(
+        -10.7907495 if pkg_name == "matgl" else -10.6275053, rel=1e-4
+    )
     assert output1.output.ionic_steps[-1].magmoms is None
     assert output1.output.n_steps == 1
 
-    assert output1.forcefield_version == get_imported_version("matgl")
+    assert output1.forcefield_version == get_imported_version(pkg_name)
 
 
 @pytest.mark.skipif(
@@ -161,6 +169,36 @@ def test_chgnet_relax_maker(
 
     # check the force_field_task_doc attributes
     assert Path(responses[job.uuid][1].output.dir_name).exists()
+
+
+@pytest.mark.skipif(
+    not mlff_is_installed("CHGNet"),
+    reason="Required packages (chgnet or matgl/dgl) are not installed",
+)
+def test_chgnet_batch_static_maker(si_structure: Structure, memory_jobstore):
+    # translate one atom to ensure a small number of relaxation steps are taken
+    si_structure2 = si_structure.copy()
+    si_structure.translate_sites(0, [0, 0, 0.1])
+    si_structure2.translate_sites(0, [0.1, 0, 0.1])
+
+    # generate job
+    job = ForceFieldStaticMaker(
+        force_field_name="CHGNet",
+    ).make([si_structure, si_structure2])
+
+    # run the flow or job and ensure that it finished running successfully
+    responses = run_locally(job, ensure_success=True, store=memory_jobstore)
+    # validate job outputs
+    output = responses[job.uuid][1].output
+    assert all(isinstance(calc, ForceFieldTaskDocument) for calc in output)
+
+    assert len(output) == 2
+    assert [calc.output.energy for calc in output] == approx(
+        [-9.96250, -9.4781], rel=1e-2
+    )
+
+    # check the force_field_task_doc attributes
+    assert all(Path(calc.dir_name).exists() for calc in output)
 
 
 @pytest.mark.xfail(
@@ -885,3 +923,88 @@ def test_ext_load_static_maker(si_structure: Structure):
 
     assert output1.forcefield_name == "mace_mp"
     assert output1.forcefield_version == get_imported_version("mace_torch")
+
+
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="MACE is not installed")
+@pytest.mark.parametrize("as_str", [True, False])
+def test_roundtrip(si_structure: Structure, as_str: bool):
+
+    import json
+
+    from ase.calculators.calculator import Calculator
+    from mace.calculators import MACECalculator
+    from monty.json import MontyDecoder, MontyEncoder
+
+    import_str = "mace.calculators.mace_mp"
+    module, klass = import_str.rsplit(".", 1)
+
+    # If using an import string, one must specify this through `calculator_meta`
+    # If using a monty-style dict, one can use either `calculator_meta` (preferred)
+    # or `force_field_name` (for backwards compatibility)
+    valid_kwargs = ["calculator_meta"] + ([] if as_str else ["force_field_name"])
+
+    for calc_kwarg in valid_kwargs:
+        job = ForceFieldRelaxMaker(
+            **{
+                calc_kwarg: (
+                    import_str if as_str else {"@module": module, "@callable": klass}
+                )
+            },
+            calculator_kwargs={"model": "medium"},
+        ).make(si_structure)
+
+        roundtrip_job = MontyDecoder().decode(json.dumps(job, cls=MontyEncoder))
+
+        for j in (job, roundtrip_job):
+            assert j.maker.calculator_meta == import_str
+            assert j.maker.force_field_name == str(MLFF.Forcefield)
+            assert j.maker.mlff == MLFF.Forcefield
+            assert isinstance(j.maker.calculator, MACECalculator)
+            assert isinstance(j.maker.calculator, Calculator)
+
+
+@pytest.mark.skipif(not mlff_is_installed("MACE"), reason="MACE is not installed")
+@pytest.mark.parametrize(
+    "import_str",
+    [
+        "mace.calculators.foundations_models.mace_mp",
+        "mace.calculators.mace.MACECalculator",
+    ],
+)
+def test_roundtrip_legacy(si_structure: Structure, import_str: str):
+    # Test backwards compatibility. Legacy docs can contain dict for
+    # `force_field_name` which will be deserialized by monty into an ase
+    # `Calculator`. `ForceFieldMixin` needs to handle this and
+    # narrow types correctly
+
+    import json
+
+    from ase.calculators.calculator import Calculator
+    from mace.calculators import MACECalculator
+    from mace.calculators.foundations_models import download_mace_mp_checkpoint
+    from monty.json import MontyDecoder, MontyEncoder
+
+    module, klass = import_str.rsplit(".", 1)
+
+    job = ForceFieldRelaxMaker(
+        force_field_name={"@module": module, "@callable": klass},
+        calculator_kwargs=(
+            {"model": "medium"}
+            if klass == "mace_mp"
+            else {"model_paths": download_mace_mp_checkpoint("medium")}
+        ),
+    ).make(si_structure)
+
+    job_dct = json.loads(MontyEncoder().encode(job))
+    job_dct["function"]["@bound"]["force_field_name"] = {
+        "@module": module,
+        "@callable": klass,
+    }
+    job_dct["function"]["@bound"].pop("calculator_meta")
+
+    deser = MontyDecoder().process_decoded(job_dct)
+    assert deser.maker.calculator_meta == import_str
+    assert deser.maker.force_field_name == str(MLFF.Forcefield)
+    assert deser.maker.mlff == MLFF.Forcefield
+    assert isinstance(deser.maker.calculator, MACECalculator)
+    assert isinstance(deser.maker.calculator, Calculator)

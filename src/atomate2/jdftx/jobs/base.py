@@ -13,6 +13,7 @@ from pymatgen.electronic_structure.bandstructure import (
     BandStructure,
     BandStructureSymmLine,
 )
+from pymatgen.util.due import Doi, due
 
 from atomate2.jdftx.files import write_jdftx_input_set
 from atomate2.jdftx.run import run_jdftx, should_stop_children
@@ -73,6 +74,7 @@ def jdftx_job(method: Callable) -> job:
     return job(method, data=_DATA_OBJECTS, output_schema=TaskDoc)
 
 
+@due.dcite(Doi("10.1016/j.softx.2017.10.006"), description="JDFTx")
 @dataclass
 class BaseJdftxMaker(Maker):
     """

@@ -74,7 +74,7 @@ class DerivedProperties(BaseModel):
     snyder_total: float | None = Field(
         None, description="Synder's total sound velocity (SI units)."
     )
-    clark_thermalcond: float | None = Field(
+    clarke_thermalcond: float | None = Field(
         None, description="Clarke's thermal conductivity (SI units)."
     )
     cahill_thermalcond: float | None = Field(

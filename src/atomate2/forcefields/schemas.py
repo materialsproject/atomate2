@@ -95,7 +95,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
         ase_calculator_name: str,
         result: AseResult,
         steps: int,
-        calculator_meta: MLFF | dict | None = None,
+        calculator_meta: str | MLFF | dict | None = None,
         relax_kwargs: dict = None,
         optimizer_kwargs: dict = None,
         fix_symmetry: bool = False,
@@ -123,7 +123,7 @@ class ForceFieldTaskDocument(AseStructureTaskDoc, ForceFieldMeta):
             Whether to fix the symmetry of the ions during relaxation.
         symprec : float
             Tolerance for symmetry finding in case of fix_symmetry.
-        calculator_meta : Optional, MLFF or dict or None
+        calculator_meta : Optional, str, MLFF, dict, or None
             Metadata about the calculator used.
         steps : int
             Maximum number of ionic steps allowed during relaxation.

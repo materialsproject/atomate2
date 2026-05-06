@@ -16,7 +16,7 @@ def test_elastic_wf_with_mace(
     si_prim = SpacegroupAnalyzer(si_structure).get_primitive_standard_structure()
     model_path = f"{test_dir}/forcefields/mace/MACE.model"
     common_kwds = {
-        "force_field_name": "MACE",
+        "force_field_name": "MACE-MP-0",
         "calculator_kwargs": {"model": model_path, "default_dtype": "float64"},
         "relax_kwargs": {"fmax": 0.00001},
     }
@@ -29,7 +29,7 @@ def test_elastic_wf_with_mace(
             ValueError, match="You have specified both `calculator_kwargs` and"
         ):
             ElasticMaker.from_force_field_name(
-                force_field_name="MACE",
+                force_field_name="MACE-MP-0",
                 mlff_kwargs=common_kwds,
                 calculator_kwargs=common_kwds,
             )
@@ -38,7 +38,7 @@ def test_elastic_wf_with_mace(
             UserWarning, match="`mlff_kwargs` has been marked for deprecation."
         ):
             maker = ElasticMaker.from_force_field_name(
-                force_field_name="MACE",
+                force_field_name="MACE-MP-0",
                 mlff_kwargs=common_kwds,
             )
         assert all(

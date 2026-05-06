@@ -17,6 +17,7 @@ from pymatgen.electronic_structure.bandstructure import (
 )
 from pymatgen.electronic_structure.dos import DOS, CompleteDos, Dos
 from pymatgen.io.common import VolumetricData
+from pymatgen.util.due import Doi, due
 
 from atomate2 import SETTINGS
 from atomate2.common.files import gzip_files, gzip_output_folder
@@ -85,6 +86,13 @@ def cp2k_job(method: Callable) -> job:
     return job(method, data=_DATA_OBJECTS, output_schema=TaskDocument)
 
 
+@due.dcite(
+    Doi("10.1063/5.0007045"),
+    description=(
+        "CP2K review - ensure you cite all references "
+        'in the "R E F E R E N C E S" section of the CP2K output'
+    ),
+)
 @dataclass
 class BaseCp2kMaker(Maker):
     """
