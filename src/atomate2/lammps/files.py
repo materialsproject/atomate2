@@ -102,6 +102,7 @@ class DumpConvertor:
                         species=species,
                         coords=atoms.get_positions(),
                         charge=atoms.get_charges(),
+                        properties={"box": atoms.get_cell().tolist()},
                     )
                 )
         traj_method = "from_structures" if self.is_periodic else "from_molecules"

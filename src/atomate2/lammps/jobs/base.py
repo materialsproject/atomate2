@@ -144,6 +144,7 @@ class BaseLammpsMaker(Maker):
                 error = "could not parse log file"
             raise LammpsRunError(f"Task {task_doc.task_label} failed, error: {error}")
 
+        # TODO: Only gzip LAMMPS files, not job scheduler related files
         gzip_files(".")
 
         return Response(output=task_doc)

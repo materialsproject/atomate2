@@ -10,7 +10,7 @@ from emmet.core.vasp.task_valid import TaskState
 from monty.io import zopen
 from monty.os.path import zpath
 from pydantic import Field
-from pymatgen.core import Composition, Structure
+from pymatgen.core import Structure
 from pymatgen.core.trajectory import Trajectory
 from pymatgen.io.lammps.generators import LammpsData, LammpsInputFile
 from pymatgen.io.lammps.outputs import parse_lammps_log
@@ -32,10 +32,6 @@ class LammpsTaskDocument(StructureMetadata):
 
     trajectories: list[Trajectory] | None = Field(
         None, description="Pymatgen trajectories output from lammps run"
-    )
-
-    composition: Composition | None = Field(
-        None, description="Composition of the system"
     )
 
     state: TaskState = Field(None, description="State of the calculation")
