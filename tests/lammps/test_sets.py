@@ -1,4 +1,4 @@
-from atomate2.lammps.sets.core import LammpsMinimizeSet, LammpsNVTSet, LammpsNPTSet
+from atomate2.lammps.sets.core import LammpsMinimizeSet, LammpsNPTSet, LammpsNVTSet
 
 
 def test_nvt_set():

@@ -1,1 +1,1 @@
-# Add more imports here
+"""Define LAMMPS schemas."""

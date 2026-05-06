@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import pytest
 from jobflow import run_locally
@@ -49,7 +50,7 @@ def test_nvt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
     assert output.structure.volume == pytest.approx(supercell.volume)
     assert len(list(output.dump_files.keys())) == 1
     dump_key = next(iter(output.dump_files.keys()))
-    assert dump_key.endswith(".dump")
+    assert ".dump" in Path(dump_key).suffixes
     assert isinstance(output.dump_files[dump_key], str)
 
 
@@ -75,7 +76,7 @@ def test_npt_maker(si_structure, tmp_path, test_si_force_field, mock_lammps):
     assert isinstance(output, LammpsTaskDocument)
     assert len(output.dump_files.keys()) == 1
     dump_key = next(iter(output.dump_files.keys()))
-    assert dump_key.endswith(".dump")
+    assert ".dump" in Path(dump_key).suffixes
     assert isinstance(output.dump_files[dump_key], str)
 
 
@@ -103,7 +104,7 @@ def test_minimization_maker(si_structure, tmp_path, test_si_force_field, mock_la
     assert isinstance(output, LammpsTaskDocument)
     assert len(output.dump_files.keys()) == 1
     dump_key = next(iter(output.dump_files.keys()))
-    assert dump_key.endswith(".dump")
+    assert ".dump" in Path(dump_key).suffixes
     assert isinstance(output.dump_files[dump_key], str)
     assert list(output.thermo_log[0]["PotEng"])[-1] == pytest.approx(
         -327.96091, abs=1e-3

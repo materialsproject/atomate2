@@ -107,7 +107,7 @@ class DumpConvertor:
         traj_method = "from_structures" if self.is_periodic else "from_molecules"
         pmg_traj = getattr(PmgTrajectory, traj_method)(
             frames,
-            frame_properties=frame_properties if frame_properties else None,
+            frame_properties=frame_properties or None,
             constant_lattice=False,
         )
 

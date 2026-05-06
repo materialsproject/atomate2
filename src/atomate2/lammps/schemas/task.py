@@ -1,14 +1,14 @@
 """Task Document for LAMMPS calculations."""
 
-import os
 import warnings
-from glob import glob
 from pathlib import Path
 from typing import Literal
 
 from emmet.core.structure import StructureMetadata
 from emmet.core.vasp.calculation import StoreTrajectoryOption
 from emmet.core.vasp.task_valid import TaskState
+from monty.io import zopen
+from monty.os.path import zpath
 from pydantic import Field
 from pymatgen.core import Composition, Structure
 from pymatgen.core.trajectory import Trajectory
@@ -40,7 +40,7 @@ class LammpsTaskDocument(StructureMetadata):
 
     state: TaskState = Field(None, description="State of the calculation")
 
-    dump_files: dict | None = Field(
+    dump_files: dict[str, str] | None = Field(
         None, description="Dump files produced by lammps run"
     )
 
@@ -106,9 +106,10 @@ class LammpsTaskDocument(StructureMetadata):
             that need to be parsed (as raw text) and stored in the task document
             under extra_outputs.
         """
-        log_file = os.path.join(dir_name, "log.lammps")
+        base_path = Path(dir_name)
+        log_file = zpath(base_path / "log.lammps")
         try:
-            with open(log_file) as f:
+            with zopen(log_file, "rt") as f:
                 raw_log = f.read()
             thermo_log = parse_lammps_log(log_file)
             state = TaskState.ERROR if "ERROR" in raw_log else TaskState.SUCCESS
@@ -128,7 +129,7 @@ class LammpsTaskDocument(StructureMetadata):
 
         try:
             input_file = LammpsInputFile.from_file(
-                os.path.join(dir_name, "in.lammps"), ignore_comments=True
+                zpath(base_path / "in.lammps"), ignore_comments=True
             )
             atom_style = input_file.get_args("atom_style")
         except FileNotFoundError:
@@ -145,7 +146,7 @@ class LammpsTaskDocument(StructureMetadata):
 
         try:
             input_data_file = LammpsData.from_file(
-                os.path.join(dir_name, "input.data"),
+                zpath(base_path / "input.data"),
                 atom_style=atom_style,
             ).as_dict()
 
@@ -153,12 +154,12 @@ class LammpsTaskDocument(StructureMetadata):
             warnings.warn(f"Input data file not found for {dir_name}", stacklevel=1)
             input_data_file = None
 
-        dump_file_keys = glob("*dump*", root_dir=dir_name)
+        dump_file_keys = base_path.glob("*dump*")
 
         if dump_file_keys and store_trajectory != StoreTrajectoryOption.NO:
             for dump_file in dump_file_keys:
-                with open(os.path.join(dir_name, dump_file)) as f:
-                    dump_files[dump_file] = f.read()
+                with zopen(dump_file, "rt") as f:
+                    dump_files[str(dump_file)] = f.read()
 
             if store_trajectory == StoreTrajectoryOption.FULL:
                 warnings.warn(
@@ -172,7 +173,7 @@ class LammpsTaskDocument(StructureMetadata):
                 trajectories = [
                     DumpConvertor(
                         store_md_outputs=store_trajectory,
-                        dumpfile=os.path.join(dir_name, dump_file),
+                        dumpfile=dump_file,
                     ).save(
                         filename=f"{output_file_pattern}{i}.traj", fmt=trajectory_format
                     )
@@ -185,14 +186,16 @@ class LammpsTaskDocument(StructureMetadata):
             )
 
         output_data_file_paths = [
-            path for path in glob("*.data*", root_dir=dir_name) if path != "input.data"
+            path
+            for path in base_path.glob("*.data*")
+            if not path.name.startswith("input.data")
         ]
 
         if output_data_file_paths:
             try:
                 output_data_files = [
                     LammpsData.from_file(
-                        os.path.join(dir_name, file),
+                        file,
                         atom_style=atom_style,
                     )
                     for file in output_data_file_paths
@@ -205,10 +208,8 @@ class LammpsTaskDocument(StructureMetadata):
 
         if parse_additional_outputs is not None:
             for output_file in parse_additional_outputs:
-                output_path = os.path.join(dir_name, output_file)
-                if os.path.exists(output_path):
-                    with open(output_path) as f:
-                        additional_outputs[output_file] = f.read()
+                if (output_path := base_path / output_file).is_file():
+                    additional_outputs[output_file] = output_path.read_text()
                 else:
                     warnings.warn(
                         f"Additional output file {output_file} not found in {dir_name}",
