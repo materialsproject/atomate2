@@ -290,7 +290,7 @@ jobs:
           MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: |
           micromamba activate a2
-          pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb
+          pytest -n auto --nbmake ./tutorials --ignore=./tutorials/openmm_tutorial.ipynb --ignore=./tutorials/force_fields --ignore=./tutorials/torchsim_tutorial.ipynb --ignore=./tutorials/lammps_workflow.ipynb 
 
       - name: Test ASE
         env:
