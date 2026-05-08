@@ -1,3 +1,5 @@
+from itertools import product
+
 import pytest
 from jobflow import run_locally
 from monty.serialization import loadfn
@@ -10,18 +12,25 @@ from ..conftest import mlff_is_installed  # noqa: TID252
 
 
 @pytest.mark.parametrize(
-    "mlff", [mlff for mlff in ["CHGNet", "MACE"] if mlff_is_installed(mlff)]
+    "mlff,batch_mode",
+    product(
+        [mlff for mlff in ["CHGNet", "MACE"] if mlff_is_installed(mlff)], [True, False]
+    ),
 )
-def test_ml_ff_eos_makers(mlff: str, si_structure, clean_dir, test_dir):
+def test_ml_ff_eos_makers(
+    mlff: str, batch_mode: bool, si_structure, clean_dir, test_dir
+):
 
     calculator_kwargs = {}
     if mlff == "CHGNet":
         calculator_kwargs = {"path": "CHGNet-MatPES-PBE-2025.2.10-2.7M-PES"}
     elif mlff == "MACE":
-        calculator_kwargs = {"model": "medium-0b3"}
+        calculator_kwargs = {"model": "medium-0b3", "default_dtype": "float32"}
 
     maker = ForceFieldEosMaker.from_force_field_name(
-        mlff, calculator_kwargs=calculator_kwargs
+        mlff,
+        calculator_kwargs=calculator_kwargs,
+        socket=batch_mode,
     )
 
     # Note that some calculator_kwargs, like stress_unit, are set by `ase_calculator`

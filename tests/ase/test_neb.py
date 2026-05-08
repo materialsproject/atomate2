@@ -47,8 +47,7 @@ class EmtNebFromEndpointsMaker(AseNebFromEndpointsMaker):
         default_factory=EmtRelaxMaker,
     )
 
-    @property
-    def calculator(self):
+    def _get_calculator(self):
         return EMT(**self.calculator_kwargs)
 
 
