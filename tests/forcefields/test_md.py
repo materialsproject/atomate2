@@ -3,6 +3,7 @@
 import sys
 from contextlib import nullcontext
 from importlib.metadata import version as get_imported_version
+from importlib.util import find_spec
 from itertools import product
 from pathlib import Path
 
@@ -269,9 +270,9 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
         output[key] = response[job.uuid][1].output
 
     # check that energy and volume are constants
-    # Reference reflects MatPES-PBE-2025.2.10 CHGNet (matgl 3.x); legacy
-    # MPtrj-trained CHGNet was around -10.7 eV.
-    ref_toten = -10.85
+    # `chgnet` (legacy package) is MPtrj-trained (~-10.63 eV); the matgl-served
+    # CHGNet was switched to MatPES-PBE-2025.2.10 in matgl 3.x (~-10.85 eV).
+    ref_toten = -10.85 if find_spec("chgnet") is None else -10.63
     assert output["from_str"].output.energy == pytest.approx(ref_toten, abs=0.1)
     assert output["from_str"].output.structure.volume == pytest.approx(
         output["from_str"].input.structure.volume
