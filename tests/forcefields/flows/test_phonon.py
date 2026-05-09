@@ -186,9 +186,12 @@ def test_phonon_wf_force_field(
     ph_bs_dos_doc = responses[flow[-1].uuid][1].output
     assert isinstance(ph_bs_dos_doc, PhononBSDOSDoc)
 
+    # Reference values for `is_matgl_chgnet` reflect the MatPES-PBE-2025.2.10
+    # CHGNet weights distributed by matgl 3.x; the legacy MPtrj-trained CHGNet
+    # references are kept for the `chgnet` package path.
     assert_allclose(
         ph_bs_dos_doc.free_energies,
-        [4440.74345, 4172.361432, 2910.000404, 720.739896, -2194.234779]
+        [3164.0, 3053.0, 2351.0, 999.0, -868.0]
         if is_matgl_chgnet
         else [5271.300306, 5162.674841, 4353.717375, 2698.616337, 343.125174],
         atol=1000,

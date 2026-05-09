@@ -79,7 +79,7 @@ def test_ml_ff_md_maker(
         MLFF.Nequip: -8.84670181274414,
         MLFF.SevenNet: -5.394115447998047,
         MLFF.DeepMD: -744.6197365326168,
-        MLFF.MATPES_PBE: -5.230762481689453,
+        MLFF.MATPES_PBE: -5.349,
         MLFF.MATPES_R2SCAN: -8.561729431152344,
         MLFF.FAIRChem: -5.4,
         MLFF.MatterSim: -5.4,

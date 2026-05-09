@@ -351,11 +351,11 @@ def ase_calculator(
                         # Only the MatPES-trained PyG M3GNet potential is
                         # distributed on HF for matgl 3.x.
                         path = kwargs.get("path", "M3GNet-PES-MatPES-PBE-2025.2")
-                        matgl.config.BACKEND = "PYG"
+                        backend = "PYG"
                     case MLFF.CHGNet:
                         # The MatPES-trained CHGNet weights remain DGL-backed.
                         path = kwargs.get("path", "CHGNet-PES-MatPES-PBE-2025.2.10")
-                        matgl.config.BACKEND = "DGL"
+                        backend = "DGL"
 
                         warnings.warn(
                             "The CHGNet functionality in atomate2 has been migrated "
@@ -374,7 +374,9 @@ def ase_calculator(
                             "path",
                             f"{architecture}-PES-MatPES-{functional}-{version}",
                         )
-                        matgl.config.BACKEND = "PYG"
+                        backend = "PYG"
+
+                _set_matgl_backend(backend)
 
                 if default_dtype is not None:
                     matgl.set_default_dtype(default_dtype)
@@ -486,6 +488,37 @@ def _load_calc_cls(
         module, klass = calculator_meta.rsplit(".", 1)
         return getattr(import_module(module), klass)
     return MontyDecoder().process_decoded(calculator_meta)
+
+
+def _set_matgl_backend(backend: str) -> None:
+    """Switch the active matgl backend, reloading dependent submodules.
+
+    matgl reads ``matgl.config.BACKEND`` once when ``matgl.models`` /
+    ``matgl.apps.pes`` are first imported, and the conditional imports inside
+    those packages decide which backend-specific classes (e.g.
+    ``matgl.models.CHGNet``) are exposed. Mutating ``matgl.config.BACKEND``
+    after those modules have been loaded does not re-run the imports, so a
+    second forcefield call requesting a different backend in the same Python
+    process raises ``AttributeError: module 'matgl.models' has no attribute
+    'CHGNet'`` when ``matgl.load_model`` looks up the class.
+
+    Reload the affected submodules so subsequent loads pick the correct
+    backend-specific implementations. No-op if the backend is already set.
+    """
+    import importlib
+    import sys
+
+    import matgl
+
+    if backend == matgl.config.BACKEND:
+        return
+
+    matgl.config.BACKEND = backend
+    # Submodules that read BACKEND at import time and need to be re-evaluated
+    # so that backend-specific classes/functions get re-bound.
+    for modname in ("matgl.models", "matgl.apps.pes", "matgl.apps"):
+        if modname in sys.modules:
+            importlib.reload(sys.modules[modname])
 
 
 @contextmanager
