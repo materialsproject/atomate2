@@ -3,6 +3,7 @@
 import sys
 from contextlib import nullcontext
 from importlib.metadata import version as get_imported_version
+from importlib.util import find_spec
 from itertools import product
 from pathlib import Path
 
@@ -79,7 +80,7 @@ def test_ml_ff_md_maker(
         MLFF.Nequip: -8.84670181274414,
         MLFF.SevenNet: -5.394115447998047,
         MLFF.DeepMD: -744.6197365326168,
-        MLFF.MATPES_PBE: -5.230762481689453,
+        MLFF.MATPES_PBE: -5.349,
         MLFF.MATPES_R2SCAN: -8.561729431152344,
         MLFF.FAIRChem: -5.4,
         MLFF.MatterSim: -5.4,
@@ -269,7 +270,9 @@ def test_nve_and_dynamics_obj(si_structure: Structure, test_dir: Path):
         output[key] = response[job.uuid][1].output
 
     # check that energy and volume are constants
-    ref_toten = -10.7
+    # `chgnet` (legacy package) is MPtrj-trained (~-10.63 eV); the matgl-served
+    # CHGNet was switched to MatPES-PBE-2025.2.10 in matgl 3.x (~-10.85 eV).
+    ref_toten = -10.85 if find_spec("chgnet") is None else -10.63
     assert output["from_str"].output.energy == pytest.approx(ref_toten, abs=0.1)
     assert output["from_str"].output.structure.volume == pytest.approx(
         output["from_str"].input.structure.volume

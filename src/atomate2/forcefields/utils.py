@@ -80,12 +80,12 @@ _DEFAULT_CALCULATOR_KWARGS: dict[MLFF, Any] = {
     MLFF.MACE_MPA_0: {"model": "medium-mpa-0"},
     MLFF.MATPES_PBE: {
         "architecture": "TensorNet",
-        "version": "2025.1",
+        "version": "2025.2",
         "stress_unit": "eV/A3",
     },
     MLFF.MATPES_R2SCAN: {
         "architecture": "TensorNet",
-        "version": "2025.1",
+        "version": "2025.2",
         "stress_unit": "eV/A3",
     },
     MLFF.NEP: {"model_filename": "nep.txt"},
@@ -341,13 +341,21 @@ def ase_calculator(
 
                 import matgl
 
+                # matgl >= 3.0 dropped the legacy MP-2021.2.8 / MPtrj weights and
+                # the GitHub `pretrained_models/` fallback. All pre-trained
+                # weights now live on the `materialyze` HF org with the
+                # ``<Architecture>-PES-<Dataset>-<Func>-<Version>`` naming.
+                # See https://huggingface.co/materialyze for the canonical list.
                 match calculator_name:
                     case MLFF.M3GNet:
-                        path = kwargs.get("path", "M3GNet-MP-2021.2.8-PES")
-                        matgl.config.BACKEND = "DGL"
+                        # Only the MatPES-trained PyG M3GNet potential is
+                        # distributed on HF for matgl 3.x.
+                        path = kwargs.get("path", "M3GNet-PES-MatPES-PBE-2025.2")
+                        backend = "PYG"
                     case MLFF.CHGNet:
-                        path = kwargs.get("path", "CHGNet-MPtrj-2023.12.1-2.7M-PES")
-                        matgl.config.BACKEND = "DGL"
+                        # The MatPES-trained CHGNet weights remain DGL-backed.
+                        path = kwargs.get("path", "CHGNet-PES-MatPES-PBE-2025.2.10")
+                        backend = "DGL"
 
                         warnings.warn(
                             "The CHGNet functionality in atomate2 has been migrated "
@@ -357,13 +365,18 @@ def ase_calculator(
                             stacklevel=2,
                         )
                     case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
-                        path = (
-                            f"{kwargs.pop('architecture', 'TensorNet')}"
-                            f"-{calculator_name.value}"
-                            f"-v{kwargs.pop('version', '2025.1')}"
-                            "-PES"
+                        # ``calculator_name.value`` is e.g. "MatPES-PBE";
+                        # take the suffix to construct the HF repo name.
+                        functional = calculator_name.value.split("-", 1)[-1]
+                        architecture = kwargs.pop("architecture", "TensorNet")
+                        version = kwargs.pop("version", "2025.2")
+                        path = kwargs.get(
+                            "path",
+                            f"{architecture}-PES-MatPES-{functional}-{version}",
                         )
-                        matgl.config.BACKEND = "PYG"
+                        backend = "PYG"
+
+                _set_matgl_backend(backend)
 
                 if default_dtype is not None:
                     matgl.set_default_dtype(default_dtype)
@@ -373,13 +386,6 @@ def ase_calculator(
                     "PESCalculator",
                     None,
                 )
-
-                # matgl has removed many of the old models,
-                # need to hard code paths to previous models
-                if "path" not in kwargs:
-                    base_matgl_url = "https://github.com/materialyzeai/matgl/raw/v2.1.1/pretrained_models/"
-                    matgl.config.PRETRAINED_MODELS_BASE_URL = base_matgl_url
-                    matgl.utils.io.PRETRAINED_MODELS_BASE_URL = base_matgl_url
 
                 calculator = matgl_calc(matgl.load_model(path), **kwargs)
 
@@ -482,6 +488,37 @@ def _load_calc_cls(
         module, klass = calculator_meta.rsplit(".", 1)
         return getattr(import_module(module), klass)
     return MontyDecoder().process_decoded(calculator_meta)
+
+
+def _set_matgl_backend(backend: str) -> None:
+    """Switch the active matgl backend, reloading dependent submodules.
+
+    matgl reads ``matgl.config.BACKEND`` once when ``matgl.models`` /
+    ``matgl.apps.pes`` are first imported, and the conditional imports inside
+    those packages decide which backend-specific classes (e.g.
+    ``matgl.models.CHGNet``) are exposed. Mutating ``matgl.config.BACKEND``
+    after those modules have been loaded does not re-run the imports, so a
+    second forcefield call requesting a different backend in the same Python
+    process raises ``AttributeError: module 'matgl.models' has no attribute
+    'CHGNet'`` when ``matgl.load_model`` looks up the class.
+
+    Reload the affected submodules so subsequent loads pick the correct
+    backend-specific implementations. No-op if the backend is already set.
+    """
+    import importlib
+    import sys
+
+    import matgl
+
+    if backend == matgl.config.BACKEND:
+        return
+
+    matgl.config.BACKEND = backend
+    # Submodules that read BACKEND at import time and need to be re-evaluated
+    # so that backend-specific classes/functions get re-bound.
+    for modname in ("matgl.models", "matgl.apps.pes", "matgl.apps"):
+        if modname in sys.modules:
+            importlib.reload(sys.modules[modname])
 
 
 @contextmanager
