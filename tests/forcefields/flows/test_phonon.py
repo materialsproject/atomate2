@@ -225,22 +225,28 @@ def test_phonon_wf_force_field(
     assert ph_bs_dos_doc.phonopy_settings.npoints_band == 101
     assert ph_bs_dos_doc.phonopy_settings.kpath_scheme == "seekpath"
     assert ph_bs_dos_doc.phonopy_settings.kpoint_density_dos == 7_000
+    # Reference values for `is_matgl_chgnet` reflect the MatPES-PBE-2025.2.10
+    # CHGNet weights distributed by matgl 3.x.
     assert_allclose(
         ph_bs_dos_doc.entropies,
-        [0.0, 7.374244, 17.612124, 25.802735, 32.209433]
+        [0.0, 3.46, 10.50, 16.31, 20.85]
         if is_matgl_chgnet
         else [0.0, 3.733666, 12.536534, 20.344558, 26.627292],
         atol=2,
     )
+    # heat_capacities and internal_energies depend strongly on the phonon
+    # spectrum; loose tolerances let the test work for both the legacy
+    # chgnet-package CHGNet and the matgl-served MatPES-PBE-2025.2.10 variant
+    # (which has a softer phonon spectrum).
     assert_allclose(
         ph_bs_dos_doc.heat_capacities,
         [0.0, 8.86060586, 17.55758943, 21.08903916, 22.62587271],
-        atol=2,
+        atol=10,
     )
     assert_allclose(
         ph_bs_dos_doc.internal_energies,
         [5058.44158791, 5385.88058579, 6765.19854165, 8723.78588089, 10919.0199409],
-        atol=1000,
+        atol=4000,
     )
 
     # check phonon plots exist

@@ -158,16 +158,18 @@ def test_chgnet_relax_maker(
     # verify the structural/relaxation behaviour and that energies/magmoms
     # land in a physically reasonable band for Si.
     si_energy_band = approx(-10.84, abs=0.3)
+    # The MatPES-PBE-2025.2.10 CHGNet (matgl 3.x) is well-trained for Si and
+    # converges within max_step in cases the legacy MPtrj-trained CHGNet did
+    # not. Don't pin convergence outcome; just check n_steps stays bounded
+    # and energy/magmom land in a reasonable band.
     if relax_cell:
-        assert not output1.is_force_converged
-        assert output1.output.n_steps == max_step + 2
+        assert output1.output.n_steps <= max_step + 2
         assert output1.output.energy == si_energy_band
         # CHGNet predicts magmoms; values are tiny for elemental Si — just
         # require finite output rather than an exact value.
         assert np.isfinite(output1.output.ionic_steps[-1].magmoms[0])
     elif relax_shape:
-        assert not output1.is_force_converged
-        assert output1.output.n_steps == max_step + 2
+        assert output1.output.n_steps <= max_step + 2
         assert output1.output.energy == si_energy_band
         assert np.isfinite(output1.output.ionic_steps[-1].magmoms[0])
         assert output1.output.structure.volume == approx(
@@ -769,7 +771,7 @@ def test_matpes_relax_makers(
     refs = {
         "PBE": {
             "energy_per_atom": -7.982941436767578,
-            "stress_diag": 6.15,
+            "stress_diag": 5.486,
         },
         "r2SCAN": {
             "energy_per_atom": -12.632112884521485,
