@@ -339,6 +339,15 @@ def ase_calculator(
                     except ImportError:
                         pass
 
+                warnings.warn(
+                    "The default M3GNet, CHGNet, and MatPES models in matgl have been"
+                    "retrained on a newer 2025.2 version of the MatPES dataset. "
+                    "To use the older MPtrj-trained M3GNet or CHGNet, or the "
+                    "2025.1 versions of the MatPES models, use atomate2==0.1.3.",
+                    category=UserWarning,
+                    stacklevel=2,
+                )
+
                 import matgl
 
                 # matgl >= 3.0 dropped the legacy MP-2021.2.8 / MPtrj weights and
@@ -357,13 +366,6 @@ def ase_calculator(
                         path = kwargs.get("path", "CHGNet-PES-MatPES-PBE-2025.2.10")
                         backend = "DGL"
 
-                        warnings.warn(
-                            "The CHGNet functionality in atomate2 has been migrated "
-                            "from the `chgnet` package to `matgl` to ensure continuing "
-                            "support. If you want to use the `chgnet` package, "
-                            "`pip install chgnet`",
-                            stacklevel=2,
-                        )
                     case MLFF.MATPES_R2SCAN | MLFF.MATPES_PBE:
                         # ``calculator_name.value`` is e.g. "MatPES-PBE";
                         # take the suffix to construct the HF repo name.
