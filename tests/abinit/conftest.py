@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import gzip
 import logging
+import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
@@ -13,6 +15,7 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from pymatgen.core.structure import Structure
+    from pytest import TempPathFactory
 
 
 logger = logging.getLogger("atomate2")
@@ -54,7 +57,7 @@ def abinit_test_dir(test_dir: Path) -> Path:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def load_pseudos(abinit_test_dir: Path) -> None:
+def load_pseudos(abinit_test_dir: Path, tmp_path_factory: TempPathFactory):
     """
     Configure the pseudopotential repository root directory for tests.
 
@@ -63,9 +66,30 @@ def load_pseudos(abinit_test_dir: Path) -> None:
     abinit_test_dir
         The ABINIT test directory containing the pseudos subdirectory.
     """
+    # Create a session-scoped temp directory
+    temp_dir = tmp_path_factory.mktemp("pseudos")
+    temp_dir = Path(temp_dir)
+
+    # Path to the compressed pseudos
+    compressed_pseudos_dir = abinit_test_dir / "pseudos"
+
+    # Iterate over all .gz files in subdirectories
+    for gz_file in compressed_pseudos_dir.glob("**/*.gz"):
+        # Recreate the relative path in the temp directory
+        relative_path = gz_file.relative_to(compressed_pseudos_dir)
+        target_dir = temp_dir / relative_path.parent
+        target_dir.mkdir(parents=True, exist_ok=True)
+
+        # Uncompress the file to the target directory
+        target_file = target_dir / relative_path.stem
+        with gzip.open(gz_file, "rb") as f_in, open(target_file, "wb") as f_out:
+            shutil.copyfileobj(f_in, f_out)
+
+    # Set the REPOS_ROOT to the temp directory
     import abipy.flowtk.psrepos
 
-    abipy.flowtk.psrepos.REPOS_ROOT = str(abinit_test_dir / "pseudos")
+    abipy.flowtk.psrepos.REPOS_ROOT = str(temp_dir)
+    # Cleanup is automatic for tmp_path_factory
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -224,7 +248,7 @@ def check_run_abi(ref_path: str | Path) -> None:
         ref_str = file.read()
     ref = AbinitInputFile.from_string(ref_str)
     # Ignore pseudos and pp_dirpath as they depend on the pseudo root directory
-    diffs = _get_differences_tol(user, ref, ignore_vars=["pseudos", "pp_dirpath"])
+    diffs = user.get_differences(ref, ignore_vars=["pseudos", "pp_dirpath"])
     # TODO: Should we still add some check on the pseudos here?
     assert diffs == [], f"'run.abi' is different from reference: \n{diffs}"
 
@@ -774,121 +798,10 @@ def copy_abinit_outputs(ref_path: str | Path) -> None:
             decompress_file(output_file.name)
     for data_dir in ("indata", "outdata", "tmpdata"):
         ref_data_dir = output_path / data_dir
+        if not ref_data_dir.exists():
+            # means this ref dir was empty and thus removed
+            continue
         for file in ref_data_dir.iterdir():
             if file.is_file():
                 shutil.copy(file, data_dir)
                 decompress_file(str(Path(data_dir, file.name)))
-
-
-# Patch to allow for a tolerance in the comparison of the ABINIT input variables
-# TODO: Remove once new version of Abipy is released
-def _get_differences_tol(
-    abi1,
-    abi2,
-    ignore_vars: set[str] | None = None,
-    rtol: float = 1e-5,
-    atol: float = 1e-12,
-) -> list[str]:
-    """
-    Get the differences between two AbinitInputFile objects with tolerance.
-
-    This is a patched version that allows tolerance when comparing floating-point
-    ABINIT input variables. This function compares two ABINIT input files and
-    returns a list of differences, ignoring structure-related variables and
-    optionally other specified variables.
-
-    Parameters
-    ----------
-    abi1
-        First AbinitInputFile object.
-    abi2
-        Second AbinitInputFile object to compare against.
-    ignore_vars
-        Set of variable names to ignore during comparison.
-    rtol
-        Relative tolerance for floating-point comparison.
-    atol
-        Absolute tolerance for floating-point comparison.
-
-    Returns
-    -------
-    list[str]
-        List of difference descriptions. Empty list if files are identical.
-    """
-    diffs = []
-    to_ignore = {
-        "acell",
-        "angdeg",
-        "rprim",
-        "ntypat",
-        "natom",
-        "znucl",
-        "typat",
-        "xred",
-        "xcart",
-        "xangst",
-    }
-    if ignore_vars is not None:
-        to_ignore.update(ignore_vars)
-    if abi1.ndtset != abi2.ndtset:
-        diffs.append(
-            f"Number of datasets in this file is {abi1.ndtset} "
-            f"while other file has {abi2.ndtset} datasets."
-        )
-        return diffs
-    for idataset, self_dataset in enumerate(abi1.datasets):
-        other_dataset = abi2.datasets[idataset]
-        if self_dataset.structure != other_dataset.structure:
-            diffs.append("Structures are different.")
-        self_dataset_dict = dict(self_dataset)
-        other_dataset_dict = dict(other_dataset)
-        for k in to_ignore:
-            self_dataset_dict.pop(k, None)
-            other_dataset_dict.pop(k, None)
-        common_keys = set(self_dataset_dict.keys()).intersection(
-            other_dataset_dict.keys()
-        )
-        self_only_keys = set(self_dataset_dict.keys()).difference(
-            other_dataset_dict.keys()
-        )
-        other_only_keys = set(other_dataset_dict.keys()).difference(
-            self_dataset_dict.keys()
-        )
-        if self_only_keys:
-            diffs.append(
-                f"The following variables are in this file but not in other: "
-                f"{', '.join([str(k) for k in self_only_keys])}"
-            )
-        if other_only_keys:
-            diffs.append(
-                f"The following variables are in other file but not in this one: "
-                f"{', '.join([str(k) for k in other_only_keys])}"
-            )
-        for k in common_keys:
-            val1 = self_dataset_dict[k]
-            val2 = other_dataset_dict[k]
-            matched = False
-            if isinstance(val1, str):
-                if val1.endswith(" Ha"):
-                    val1 = val1.replace(" Ha", "")
-                if val1.count(".") <= 1 and val1.replace(".", "").isdecimal():
-                    val1 = float(val1)
-
-            if isinstance(val2, str):
-                if val2.endswith(" Ha"):
-                    val2 = val2.replace(" Ha", "")
-                if val2.count(".") <= 1 and val2.replace(".", "").isdecimal():
-                    val2 = float(val2)
-
-            if isinstance(val1, float):
-                matched = pytest.approx(val1, rel=rtol, abs=atol) == val2
-            else:
-                matched = self_dataset_dict[k] == other_dataset_dict[k]
-
-            if not matched:
-                diffs.append(
-                    f"The variable '{k}' is different in the two files:\n"
-                    f" - this file:  '{self_dataset_dict[k]}'\n"
-                    f" - other file: '{other_dataset_dict[k]}'"
-                )
-    return diffs
