@@ -341,7 +341,9 @@ def ase_calculator(
 
                 warnings.warn(
                     "The default M3GNet, CHGNet, and MatPES models in matgl have been"
-                    "retrained on a newer 2025.2 version of the MatPES dataset.",
+                    "retrained on a newer 2025.2 version of the MatPES dataset. "
+                    "To use the older MPtrj-trained M3GNet or CHGNet, or the "
+                    "2025.1 versions of the MatPES models, use atomate2==0.1.3.",
                     category=UserWarning,
                     stacklevel=2,
                 )
