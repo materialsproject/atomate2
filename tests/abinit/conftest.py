@@ -798,6 +798,9 @@ def copy_abinit_outputs(ref_path: str | Path) -> None:
             decompress_file(output_file.name)
     for data_dir in ("indata", "outdata", "tmpdata"):
         ref_data_dir = output_path / data_dir
+        if not ref_data_dir.exists():
+            # means this ref dir was empty and thus removed
+            continue
         for file in ref_data_dir.iterdir():
             if file.is_file():
                 shutil.copy(file, data_dir)
