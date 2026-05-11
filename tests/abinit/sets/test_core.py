@@ -1,5 +1,6 @@
 import os
 
+import abipy.flowtk.psrepos
 import pytest
 from abipy.abio.inputs import AbinitInput
 
@@ -13,7 +14,7 @@ def test_init_static_generator():
 
 def test_static_generator_get_abinit_input(si_structure, abinit_test_dir):
     ssg = StaticSetGenerator()
-    si_pseudo = os.path.join(abinit_test_dir, "pseudos", "14si.fhi")
+    si_pseudo = os.path.join(abipy.flowtk.psrepos.REPOS_ROOT, "14si.fhi")
     abinit_input = ssg.get_abinit_input(structure=si_structure, pseudos=si_pseudo)
     assert isinstance(abinit_input, AbinitInput)
     with pytest.raises(RuntimeError, match=r"Structure is mandatory.*"):
