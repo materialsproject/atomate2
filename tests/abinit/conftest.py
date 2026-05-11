@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import gzip
 import logging
+import shutil
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
@@ -13,6 +15,7 @@ if TYPE_CHECKING:
     from collections.abc import Sequence
 
     from pymatgen.core.structure import Structure
+    from pytest import TempPathFactory
 
 
 logger = logging.getLogger("atomate2")
@@ -54,7 +57,7 @@ def abinit_test_dir(test_dir: Path) -> Path:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def load_pseudos(abinit_test_dir: Path) -> None:
+def load_pseudos(abinit_test_dir: Path, tmp_path_factory: TempPathFactory):
     """
     Configure the pseudopotential repository root directory for tests.
 
@@ -63,9 +66,30 @@ def load_pseudos(abinit_test_dir: Path) -> None:
     abinit_test_dir
         The ABINIT test directory containing the pseudos subdirectory.
     """
+    # Create a session-scoped temp directory
+    temp_dir = tmp_path_factory.mktemp("pseudos")
+    temp_dir = Path(temp_dir)
+
+    # Path to the compressed pseudos
+    compressed_pseudos_dir = abinit_test_dir / "pseudos"
+
+    # Iterate over all .gz files in subdirectories
+    for gz_file in compressed_pseudos_dir.glob("**/*.gz"):
+        # Recreate the relative path in the temp directory
+        relative_path = gz_file.relative_to(compressed_pseudos_dir)
+        target_dir = temp_dir / relative_path.parent
+        target_dir.mkdir(parents=True, exist_ok=True)
+
+        # Uncompress the file to the target directory
+        target_file = target_dir / relative_path.stem
+        with gzip.open(gz_file, "rb") as f_in, open(target_file, "wb") as f_out:
+            shutil.copyfileobj(f_in, f_out)
+
+    # Set the REPOS_ROOT to the temp directory
     import abipy.flowtk.psrepos
 
-    abipy.flowtk.psrepos.REPOS_ROOT = str(abinit_test_dir / "pseudos")
+    abipy.flowtk.psrepos.REPOS_ROOT = str(temp_dir)
+    # Cleanup is automatic for tmp_path_factory
 
 
 @pytest.fixture(scope="session", autouse=True)
