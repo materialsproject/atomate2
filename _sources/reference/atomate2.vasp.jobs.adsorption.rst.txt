@@ -52,7 +52,6 @@ atomate2.vasp.jobs.adsorption
    
    
    
-   
 
 
    .. rubric:: Classes

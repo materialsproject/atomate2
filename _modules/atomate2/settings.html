@@ -1652,6 +1652,35 @@
         <span class="s2">&quot;GBRV_v1.5&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;location of JDFTX pseudopotentials.&quot;</span>
     <span class="p">)</span>
 
+    <span class="n">LAMMPS_CMD</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;lmp&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The command to run LAMMPS.&quot;</span><span class="p">)</span>
+
+    <span class="n">LAMMPS_MPICMD</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The command to run LAMMPS with MPI, e.g., &#39;mpirun -n 128&#39; &quot;</span>
+        <span class="s2">&quot;or &#39;mpiexec&#39;. If None, LAMMPS will be run in serial mode.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">LAMMPS_SUFFIX</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;The LAMMPS style suffix(es) to use.&quot;</span>
+            <span class="s2">&quot;See https://docs.lammps.org/Run_options.html#suffix for more information.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gpu&quot;</span><span class="p">,</span> <span class="s2">&quot;kk&quot;</span><span class="p">,</span> <span class="s2">&quot;intel&quot;</span><span class="p">,</span> <span class="s2">&quot;omp&quot;</span><span class="p">,</span> <span class="s2">&quot;opt&quot;</span><span class="p">,</span> <span class="p">[[</span><span class="s2">&quot;gpu&quot;</span><span class="p">,</span> <span class="s2">&quot;kk&quot;</span><span class="p">]]],</span>
+    <span class="p">)</span>
+    <span class="n">LAMMPS_PACKAGES</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Options to pass to the package command-line flag that controls subpackage &quot;</span>
+            <span class="s2">&quot;styles and parameters, e.g., `&#39;gpu 1&#39;` will call `lmp -pk gpu 1`, tells &quot;</span>
+            <span class="s2">&quot;LAMMPS to use 1 GPU for this calculation. &quot;</span>
+            <span class="s2">&quot;List values are passed with separate &#39;-pk&#39; invocations, e.g., &quot;</span>
+            <span class="s2">&quot;`lmp -pk gpu 1 -pk omp 4`.&quot;</span>
+            <span class="s2">&quot;See https://docs.lammps.org/Run_options.html#package for more information.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">examples</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gpu 0&quot;</span><span class="p">,</span> <span class="s2">&quot;gpu 1 split 0.75&quot;</span><span class="p">,</span> <span class="s2">&quot;gpu 2 split -1.0&quot;</span><span class="p">,</span> <span class="s2">&quot;gpu 1 omp 4&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
 <div class="viewcode-block" id="Atomate2Settings.load_default_settings">
 <a class="viewcode-back" href="../../reference/atomate2.settings.Atomate2Settings.html#atomate2.settings.Atomate2Settings.load_default_settings">[docs]</a>
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">)</span>
@@ -1731,7 +1760,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=360bc84d"></script>
+</div><script src="../../_static/documentation_options.js?v=fd825880"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
