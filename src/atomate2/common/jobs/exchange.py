@@ -1,0 +1,119 @@
+"""Jobs for fitting Heisenberg exchange parameters and building exchange docs.
+
+These replace the atomate1 ``HeisenbergModelMapping``, ``HeisenbergModelToDb`` and
+``VampireToDb`` firetasks. Outputs flow between jobs through jobflow references
+rather than a MongoDB collection.
+"""
+
+from __future__ import annotations
+
+import logging
+from typing import TYPE_CHECKING
+
+from jobflow import job
+from pymatgen.analysis.magnetism.heisenberg import HeisenbergMapper
+
+from atomate2.common.schemas.exchange import ExchangeDocument
+from atomate2.vampire import VampireCaller
+
+if TYPE_CHECKING:
+    from pymatgen.analysis.magnetism.heisenberg import HeisenbergModel
+    from pymatgen.core.structure import Structure
+
+    from atomate2.vampire import VampireOutput
+
+
+logger = logging.getLogger(__name__)
+
+
+@job(name="heisenberg mapping")
+def heisenberg_mapping(
+    structures: list[Structure],
+    energies: list[float],
+    heisenberg_settings: dict | None = None,
+) -> HeisenbergModel:
+    """Fit a classical Heisenberg Hamiltonian to magnetic structures and energies.
+
+    This wraps pymatgen's ``HeisenbergMapper`` to extract exchange parameters
+    ``J_ij`` and the average exchange ``<J>`` (``javg``).
+
+    Parameters
+    ----------
+    structures : list[Structure]
+        Magnetic structures, each carrying a "magmom" site property. These should be
+        ordered with the ground state first (index 0).
+    energies : list[float]
+        Energies **per atom** (eV) corresponding to each structure. These are
+        converted to total energies internally, as required by HeisenbergMapper.
+    heisenberg_settings : dict or None
+        Keyword arguments for HeisenbergMapper, e.g. ``{"cutoff": 3.0, "tol": 0.04}``.
+
+    Returns
+    -------
+    HeisenbergModel
+        The fitted, MSONable Heisenberg model.
+    """
+    heisenberg_settings = heisenberg_settings or {}
+    total_energies = [e * len(s) for s, e in zip(structures, energies, strict=True)]
+    hmapper = HeisenbergMapper(structures, total_energies, **heisenberg_settings)
+    return hmapper.get_heisenberg_model()
+
+
+@job(name="run vampire")
+def run_vampire(
+    heisenberg_model: HeisenbergModel,
+    mc_settings: dict | None = None,
+) -> VampireOutput:
+    """Run Vampire Monte-Carlo to estimate the critical temperature.
+
+    This wraps the (vendored) ``VampireCaller``, which shells out to the external
+    ``vampire-serial`` binary. A clear error is raised if the binary is not found
+    on PATH.
+
+    Parameters
+    ----------
+    heisenberg_model : HeisenbergModel
+        The fitted Heisenberg model from :func:`heisenberg_mapping`.
+    mc_settings : dict or None
+        Keyword arguments for VampireCaller, e.g. ``mc_box_size``,
+        ``equil_timesteps``, ``mc_timesteps``, ``avg``.
+
+    Returns
+    -------
+    VampireOutput
+        The Vampire Monte-Carlo result, exposing ``critical_temp``.
+    """
+    mc_settings = mc_settings or {}
+    vampire_caller = VampireCaller(hm=heisenberg_model, **mc_settings)
+    return vampire_caller.output
+
+
+@job(name="build exchange doc")
+def build_exchange_doc(
+    heisenberg_model: HeisenbergModel,
+    parent_structure: Structure | None = None,
+    vampire_output: VampireOutput | None = None,
+) -> ExchangeDocument:
+    """Assemble the final ExchangeDocument from a fitted model and optional Tc run.
+
+    Parameters
+    ----------
+    heisenberg_model : HeisenbergModel
+        The fitted Heisenberg model from :func:`heisenberg_mapping`.
+    parent_structure : Structure or None
+        The full ground-state structure, used to populate the document's
+        parent_structure/formula fields. If None, the model's (magnetic-only)
+        structure is used instead.
+    vampire_output : VampireOutput or None
+        The Vampire Monte-Carlo result, if the critical-temperature step was run.
+
+    Returns
+    -------
+    ExchangeDocument
+        The final summary document.
+    """
+    return ExchangeDocument.from_model(
+        heisenberg_model,
+        parent_structure=parent_structure,
+        vampire_output=vampire_output,
+    )
