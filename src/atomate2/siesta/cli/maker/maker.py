@@ -23,6 +23,14 @@ console = Console()
 @click.pass_context
 def cli(ctx, interactive):
     """Generate ready-to-run atomate2siesta workflow scripts."""
+    # Show the welcome banner here (gated on the setting) instead of at import
+    # time, so importing the library has no stdout side effects.
+    from atomate2.siesta import SETTINGS
+    from atomate2.siesta.jobs.base import display_welcome_banner
+
+    if SETTINGS.SIESTA_SHOW_BANNER:
+        display_welcome_banner()
+
     if ctx.invoked_subcommand is None and interactive:
         run_interactive_mode()
     elif ctx.invoked_subcommand is None:

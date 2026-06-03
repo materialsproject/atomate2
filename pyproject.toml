@@ -54,6 +54,15 @@ defects = [
     "pymatgen-analysis-defects>=2024.5.11",
     "python-ulid>=2.7",
 ]
+siesta = [
+    "sisl>=0.16.2",
+    "pyfiglet",
+    "questionary>=2.0.0",
+    "rich",
+    "colorama",
+    "seaborn",
+    "atomate2[ase,phonons]",
+]
 
 ase = ["ase>=3.26.0"]
 ase-ext = ["tblite>=0.3.0; platform_system=='Linux'"]
@@ -131,6 +140,20 @@ strict = [
 
 [project.scripts]
 atm = "atomate2.cli:cli"
+# SIESTA command-line tools
+atomate2siesta-info = "atomate2.siesta.cli.info:cli"
+atomate2siesta-presets = "atomate2.siesta.cli.tiers.tiers:cli"
+atomate2siesta-recipe = "atomate2.siesta.cli.recipe.recipe:cli"
+atomate2siesta-tutorials = "atomate2.siesta.cli.tutorial.browser:tutorials"
+atomate2siesta-maker = "atomate2.siesta.cli.maker.maker:cli"
+atomate2siesta-database = "atomate2.siesta.cli.database.siesta_database:cli"
+atomate2siesta-cluster = "atomate2.siesta.cli.cluster:cli"
+atomate2siesta-jobflow-remote = "atomate2.siesta.cli.jobflow_remote:cli"
+atomate2siesta-config = "atomate2.siesta.cli.config:cli"
+atomate2siesta-inputs = "atomate2.siesta.cli.inputs:cli"
+atomate2siesta-pseudos = "atomate2.siesta.cli.pseudo.siesta_pseudos:cli"
+atomate2siesta-plot-pseudo = "atomate2.siesta.cli.pseudo.plot_pseudopotential:plot_pseudopotential"
+atomate2siesta-structure = "atomate2.siesta.cli.structure:cli"
 
 [project.urls]
 homepage = "https://materialsproject.github.io/atomate2/"

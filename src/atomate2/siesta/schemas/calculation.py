@@ -25,8 +25,7 @@ from pydantic import Field
 from pymatgen.core import Structure
 from typing_extensions import Self
 
-from atomate2.siesta.files import read_directly_from_siesta_out
-from atomate2.common.jobs.eos import extract_siesta_timing
+from atomate2.siesta.files import extract_siesta_timing, read_directly_from_siesta_out
 from rich.console import Console
 
 logger = logging.getLogger(__name__)

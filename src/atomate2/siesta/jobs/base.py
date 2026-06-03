@@ -37,9 +37,9 @@ def display_welcome_banner():
     """
     Display the atomate2siesta welcome banner and configuration settings.
 
-    This function prints the logo and current SIESTA configuration.
-    Can be called explicitly or is automatically displayed on module import
-    unless disabled via ATOMATE2_SIESTA_SHOW_BANNER=0 environment variable.
+    This function prints the logo and current SIESTA configuration. It must be
+    called explicitly (importing the package has no stdout side effects); gate
+    the call on ``SETTINGS.SIESTA_SHOW_BANNER`` where a banner is wanted.
     """
     print_fancy_logo()
 
@@ -78,9 +78,10 @@ def display_welcome_banner():
     print_in_box_rich(text_dict)
 
 
-# Display banner automatically on import unless disabled
-if SETTINGS.SIESTA_SHOW_BANNER:
-    display_welcome_banner()
+# NOTE: the welcome banner is intentionally NOT displayed at import time.
+# Importing a library must have no stdout side effects. Call
+# display_welcome_banner() explicitly (e.g. from a CLI entry point) and gate
+# it on SETTINGS.SIESTA_SHOW_BANNER where a banner is actually wanted.
 
 
 if TYPE_CHECKING:

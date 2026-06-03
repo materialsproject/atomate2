@@ -311,3 +311,77 @@ def copy_file_from_flos(file_name: str, destination_dir: Path | str) -> None:
     else:
         shutil.copy(source_file, destination_file)
         logger.info(f"Copied FLOS file {file_name} to {destination_dir}")
+
+
+def extract_siesta_timing(dir_name: str | Path) -> float | None:
+    """
+    Extract wall time from SIESTA output file.
+
+    Parameters
+    ----------
+    dir_name : str or Path
+        Directory containing SIESTA output
+
+    Returns
+    -------
+    float : Wall time in seconds, or None if not found
+    """
+    import gzip
+    import re
+
+    dir_path = Path(dir_name)
+
+    # Check for siesta.times.gz first (most reliable)
+    timing_files = [
+        dir_path / "siesta_compressed" / "siesta.times.gz",
+        dir_path / "siesta.times.gz",
+        dir_path / "siesta.times",
+    ]
+
+    for timing_file in timing_files:
+        if timing_file.exists():
+            try:
+                use_gzip = str(timing_file).endswith(".gz")
+                open_func = gzip.open if use_gzip else open
+                mode = "rt" if use_gzip else "r"
+
+                with open_func(timing_file, mode) as f:
+                    for line in f:
+                        # Look for: "timer: Total elapsed wall-clock time (sec) =  0.592"
+                        match = re.search(
+                            r"timer:\s+Total elapsed wall-clock time \(sec\)\s+=\s+([\d.]+)",
+                            line,
+                        )
+                        if match:
+                            return float(match.group(1))
+            except Exception:
+                continue
+
+    # Fallback: check siesta.out files
+    output_files = [
+        dir_path / "siesta_compressed" / "siesta.out.gz",
+        dir_path / "siesta.out.gz",
+        dir_path / "siesta.out",
+    ]
+
+    for output_file in output_files:
+        if output_file.exists():
+            try:
+                use_gzip = str(output_file).endswith(".gz")
+                open_func = gzip.open if use_gzip else open
+                mode = "rt" if use_gzip else "r"
+
+                with open_func(output_file, mode) as f:
+                    for line in f:
+                        # Alternative timing patterns in siesta.out
+                        match = re.search(
+                            r"timer:\s+(?:Total elapsed |Elapsed )"
+                            r"wall(?:-clock)? time \(sec\)\s+=\s+([\d.]+)",
+                            line,
+                        )
+                        if match:
+                            return float(match.group(1))
+            except Exception:
+                continue
+
+    return None

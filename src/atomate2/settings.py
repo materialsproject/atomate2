@@ -287,6 +287,53 @@ class Atomate2Settings(BaseSettings):
         examples=["gpu 0", "gpu 1 split 0.75", "gpu 2 split -1.0", "gpu 1 omp 4"],
     )
 
+    # SIESTA specific settings
+    SIESTA_CMD: str = Field(
+        "siesta < siesta.fdf > siesta.out",
+        description="The default command used to run SIESTA.",
+    )
+    VIBRA_CMD: str = Field(
+        "vibra < siesta.fdf > siesta.vibra.out",
+        description="The default command used to run Vibra.",
+    )
+    OPTICAL_INPUT_CMD: str = Field(
+        "optical_input < siesta.EPSIMG",
+        description="The default command used to run optical_input.",
+    )
+    OPTICAL_CMD: str = Field(
+        "optical < siesta.EPSIMG",
+        description="The default command used to run optical.",
+    )
+    SIESTA_PP_PATH: str | None = Field(
+        None, description="The path where SIESTA pseudopotential files are stored."
+    )
+    FLOS_PATH: str | None = Field(
+        None, description="The path where SIESTA FLOS (Lua) files are stored."
+    )
+    SIESTA_ZIP_FILES: bool | Literal["atomate"] = Field(
+        "atomate",
+        description="Determine if the files in folder are being compressed. If True "
+        "all the files are compressed. If 'atomate' only a selection of files related "
+        "to the simulation will be compressed. If False no file is compressed.",
+    )
+    SIESTA_SHOW_BANNER: bool = Field(
+        default=True,
+        description="Whether to display the welcome banner and logo on module import.",
+    )
+    SIESTA_SHOW_PARAMETER_EVOLUTION: Literal[
+        "none", "user", "diff", "summary", "full"
+    ] = Field(
+        "summary",
+        description="Control parameter evolution display level: 'none' (no display), "
+        "'user' (initial user-provided parameters only), 'diff' (changes only), "
+        "'summary' (initial + changes summary), 'full' (all stages with final table).",
+    )
+    SIESTA_SHOW_DOCSTRINGS: bool = Field(
+        default=True,
+        description="Whether to display FlowMaker docstrings in Rich panels when "
+        ".make() is called.",
+    )
+
     @model_validator(mode="before")
     @classmethod
     def load_default_settings(cls, values: dict[str, Any]) -> dict[str, Any]:
