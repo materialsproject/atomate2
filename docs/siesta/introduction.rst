@@ -223,7 +223,7 @@ Dynamic workflow customization without recreating makers:
    * Comprehensive feature documentation
 
 **Configuration Management**
-   * Simple YAML configuration (`~/.atomate2siesta.yaml`)
+   * Simple YAML configuration (`~/.atomate2.yaml`)
    * Environment variable support
    * Programmatic override capability
    * Validation and helpful error messages

@@ -211,7 +211,7 @@ Lua: ERROR: module 'flos' not found
 # Clone FLOS repository
 git clone https://github.com/siesta-project/flos.git
 
-# Set FLOS_PATH in ~/.atomate2siesta.yaml
+# Set FLOS_PATH in ~/.atomate2.yaml
 FLOS_PATH: "/path/to/flos"
 ```
 
@@ -300,7 +300,7 @@ siesta < test.fdf
 
 ```bash
 # Verify FLOS_PATH is set
-grep FLOS_PATH ~/.atomate2siesta.yaml
+grep FLOS_PATH ~/.atomate2.yaml
 
 # Check Lua can find FLOS
 lua -e "package.path='/path/to/flos/?.lua;' .. package.path; require 'flos'"

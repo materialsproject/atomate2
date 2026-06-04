@@ -118,8 +118,8 @@ msgstr "**مورد نیاز knowledge**: Bsic understوing of electronic structu
 
 #: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:35
 #: 7c6e879ee05c4b928579bdc7bb3670ed
-msgid "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up correctly"
-msgstr "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up correctly"
+msgid "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
+msgstr "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
 
 #: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:36
 #: 0aaee9a26e774434a1fe98b47dc088d8

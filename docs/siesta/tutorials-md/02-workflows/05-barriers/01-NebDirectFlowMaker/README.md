@@ -53,7 +53,7 @@ git clone https://github.com/siesta-project/flos.git
 export FLOS_PATH="$PWD/flos"
 ```
 
-**Configure in ~/.atomate2siesta.yaml**:
+**Configure in ~/.atomate2.yaml**:
 ```yaml
 FLOS_PATH: /path/to/flos
 ```
@@ -559,7 +559,7 @@ FLOS_PATH not set
 # Install FLOS
 git clone https://github.com/siesta-project/flos.git
 
-# Set in ~/.atomate2siesta.yaml
+# Set in ~/.atomate2.yaml
 FLOS_PATH: /full/path/to/flos
 
 # Or export in shell

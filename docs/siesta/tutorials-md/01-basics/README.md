@@ -8,7 +8,7 @@
 - Python 3.9+
 - SIESTA installed and configured
 - Basic understanding of DFT calculations
-- `~/.atomate2siesta.yaml` configuration file
+- `~/.atomate2.yaml` configuration file
 
 ---
 
@@ -151,7 +151,7 @@ submit_flow(job, project="production")
 ## Common Issues
 
 ### Issue 1: "SIESTA command not found"
-**Solution**: Configure `SIESTA_CMD` in `~/.atomate2siesta.yaml`:
+**Solution**: Configure `SIESTA_CMD` in `~/.atomate2.yaml`:
 ```yaml
 SIESTA_CMD: "mpirun -np 4 siesta < siesta.fdf > siesta.out"
 ```
@@ -162,7 +162,7 @@ SIESTA_CMD: "mpirun -np 4 siesta < siesta.fdf > siesta.out"
 atomate2siesta-pseudos install ONCVPSP-PBE-SR-PDv0.4-Standard
 ```
 
-Then configure in `~/.atomate2siesta.yaml`:
+Then configure in `~/.atomate2.yaml`:
 ```yaml
 SIESTA_PP_PATH: "~/.atomate2siesta/pseudos/ONCVPSP-PBE-SR-PDv0.4-Standard"
 ```

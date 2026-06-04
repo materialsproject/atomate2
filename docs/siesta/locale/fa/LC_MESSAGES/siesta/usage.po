@@ -53,8 +53,8 @@ msgid "SIESTA Settings File"
 msgstr "فایل تنظیمات SIESTA"
 
 #: ../../source/usage.rst:47 8b9f9962294a4c169c97115eb57a2276
-msgid "Create ``~/.atomate2siesta.yaml`` with your SIESTA configuration:"
-msgstr "فایل ``~/.atomate2siesta.yaml`` را با پیکربندی SIESTA خود ایجاد کنید:"
+msgid "Create ``~/.atomate2.yaml`` with your SIESTA configuration:"
+msgstr "فایل ``~/.atomate2.yaml`` را با پیکربندی SIESTA خود ایجاد کنید:"
 
 #: ../../source/usage.rst:65 f17307b8b8204facbc96ae59c5280fd3
 msgid "Using Environment Variables"

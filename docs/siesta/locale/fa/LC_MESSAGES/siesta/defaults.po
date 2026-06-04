@@ -711,8 +711,8 @@ msgid "Configuration File"
 msgstr "فایل پیکربندی"
 
 #: ../../source/defaults.rst:357 a0691ccd645d4707b26b9dbbb3b286da
-msgid "**Default Location**: ``~/.atomate2siesta.yaml``"
-msgstr "**مکان پیش‌فرض**: ``~/.atomate2siesta.yaml``"
+msgid "**Default Location**: ``~/.atomate2.yaml``"
+msgstr "**مکان پیش‌فرض**: ``~/.atomate2.yaml``"
 
 #: ../../source/defaults.rst:359 03f7fd894fac454b9e15aaa0dd182c68
 msgid "**Default Contents** (if file doesn't exist):"
@@ -731,8 +731,8 @@ msgid "**Medium**: Environment variables (``SIESTA_PP_PATH``, etc.)"
 msgstr "**متوسط**: متغیرهای محیطی (``SIESTA_PP_PATH`` و غیره)"
 
 #: ../../source/defaults.rst:377 2b99c276cb714ac3882457d5218e34b0
-msgid "**Lowest**: Configuration file (``~/.atomate2siesta.yaml``)"
-msgstr "**پایین‌ترین**: فایل پیکربندی (``~/.atomate2siesta.yaml``)"
+msgid "**Lowest**: Configuration file (``~/.atomate2.yaml``)"
+msgstr "**پایین‌ترین**: فایل پیکربندی (``~/.atomate2.yaml``)"
 
 #: ../../source/defaults.rst:378 1e6b5105e00c44328ac1d739dec2325a
 msgid "**Fallback**: Dataclass defaults (documented on this page)"

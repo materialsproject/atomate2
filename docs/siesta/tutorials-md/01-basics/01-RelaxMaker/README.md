@@ -32,7 +32,7 @@ This tutorial introduces structural relaxation using `RelaxMaker`, the fundament
 
 ## Prerequisites
 
-- **SIESTA installed and configured**: `~/.atomate2siesta.yaml` set up
+- **SIESTA installed and configured**: `~/.atomate2.yaml` set up
 - **Pseudopotentials installed**: Use `atomate2siesta-pseudos install ONCVPSP-PBE-SR-PDv0.4-Standard`
 - **Structure files**: Located in [00-structures](../../00-structures/)
 - **Python 3.9+** with atomate2siesta installed
@@ -330,8 +330,8 @@ print(f"Volume change %: {(final.volume / initial.volume - 1) * 100:.2f}%")
 # Install pseudopotentials
 atomate2siesta-pseudos install ONCVPSP-PBE-SR-PDv0.4-Standard
 
-# Configure path in ~/.atomate2siesta.yaml
-echo "SIESTA_PP_PATH: ~/.atomate2siesta/pseudos/ONCVPSP-PBE-SR-PDv0.4-Standard" >> ~/.atomate2siesta.yaml
+# Configure path in ~/.atomate2.yaml
+echo "SIESTA_PP_PATH: ~/.atomate2siesta/pseudos/ONCVPSP-PBE-SR-PDv0.4-Standard" >> ~/.atomate2.yaml
 ```
 
 ### Issue 5: "Unknown FDF parameter: fdf_arguments"

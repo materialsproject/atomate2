@@ -146,8 +146,8 @@ msgstr "**مورد نیاز knowledge**: فونون bsics, برایce constnts"
 
 #: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:41
 #: 219b6aca83024abc9a92a4fd6dacb850
-msgid "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up"
-msgstr "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up"
+msgid "**SIESTA configuration**: `~/.atomate2.yaml` set up"
+msgstr "**SIESTA configuration**: `~/.atomate2.yaml` set up"
 
 #: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:42
 #: db9bb496a84543d3bc2201fbf7899159

@@ -602,7 +602,7 @@ Key Features
 * SSH-based cluster configuration with multiple authentication methods
 * Automatic conda environment creation with all dependencies
 * Optional SIESTA installation from conda-forge
-* Automatic ``.atomate2siesta.yaml`` configuration file generation
+* Automatic ``.atomate2.yaml`` configuration file generation
 * Environment status checking and verification
 
 Available Commands
@@ -2748,7 +2748,7 @@ Development History
 **October 2025**: Cluster Setup Enhancements
 
 * Added SIESTA installation from conda-forge
-* Automatic ``.atomate2siesta.yaml`` configuration generation
+* Automatic ``.atomate2.yaml`` configuration generation
 * Enhanced error handling with manual fallback instructions
 
 **October 2025**: CLI Tools Introduction

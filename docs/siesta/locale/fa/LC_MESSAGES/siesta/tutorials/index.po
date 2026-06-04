@@ -787,7 +787,7 @@ msgid "Install atomate2siesta:"
 msgstr ""
 
 #: ../../source/tutorials/index.rst:453 e88415802648469ba81caa8d3d11d09b
-msgid "Configure in ``~/.atomate2siesta.yaml``:"
+msgid "Configure in ``~/.atomate2.yaml``:"
 msgstr ""
 
 #: ../../source/tutorials/index.rst:460 2f5b99d60b1649f49893b04e992a0baf

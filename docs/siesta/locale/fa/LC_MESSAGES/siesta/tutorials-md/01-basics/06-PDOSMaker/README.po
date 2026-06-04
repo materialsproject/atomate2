@@ -121,8 +121,8 @@ msgstr "**مورد نیاز knowledge**: درک of tomic یاbitls و DOS"
 
 #: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:35
 #: 63d692464ea741d28a18b3cacb5c9ca1
-msgid "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up correctly"
-msgstr "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up correctly"
+msgid "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
+msgstr "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
 
 #: ../../source/tutorials-md/01-basics/06-PDOSMaker/README.md:36
 #: b2b72383e0d54976b4082e410a335000

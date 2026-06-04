@@ -44,7 +44,7 @@ Configuration
 SIESTA Settings File
 --------------------
 
-Create ``~/.atomate2siesta.yaml`` with your SIESTA configuration:
+Create ``~/.atomate2.yaml`` with your SIESTA configuration:
 
 .. code-block:: yaml
 
@@ -385,7 +385,7 @@ Use MPI for SIESTA calculations:
 
 .. code-block:: yaml
 
-   # In ~/.atomate2siesta.yaml
+   # In ~/.atomate2.yaml
    SIESTA_CMD: "mpirun -np 16 siesta"
 
 Optimize performance with proper resource allocation.

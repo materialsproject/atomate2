@@ -450,7 +450,7 @@ Install atomate2siesta:
 
    pip install -e ".[dev,tests,docs]"
 
-Configure in ``~/.atomate2siesta.yaml``:
+Configure in ``~/.atomate2.yaml``:
 
 .. code-block:: yaml
 

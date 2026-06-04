@@ -85,12 +85,11 @@ Configuration File Not Found
 
 .. code-block:: bash
 
-   # Correct location and name (NO hyphen after atomate2)
-   ~/.atomate2siesta.yaml
+   # Correct location and name
+   ~/.atomate2.yaml
 
-   # NOT these:
-   # ~/.atomate2-siesta.yaml  ❌ (wrong: has hyphen)
-   # ~/.atomate2/siesta.yaml  ❌ (wrong: subdirectory)
+   # SIESTA settings live in the shared atomate2 config file
+   # (the same file used by the other codes), not a separate file.
 
 **Verify configuration is loaded**:
 
@@ -110,7 +109,7 @@ SIESTA Command Not Found
 
    .. code-block:: yaml
 
-      # ~/.atomate2siesta.yaml
+      # ~/.atomate2.yaml
       SIESTA_CMD: "/usr/local/bin/siesta < siesta.fdf > siesta.out"
 
 2. **Add SIESTA to PATH**:
@@ -137,7 +136,7 @@ Pseudopotential Issues
 
    .. code-block:: yaml
 
-      # ~/.atomate2siesta.yaml
+      # ~/.atomate2.yaml
       SIESTA_PP_PATH: "/path/to/pseudopotentials"
 
 2. **Download pseudopotentials**:
@@ -289,7 +288,7 @@ Memory Errors
 
    .. code-block:: yaml
 
-      # ~/.atomate2siesta.yaml
+      # ~/.atomate2.yaml
       SIESTA_CMD: "mpirun -np 8 siesta < siesta.fdf > siesta.out"
 
 Walltime/Timeout Errors
@@ -566,7 +565,7 @@ Calculation Too Slow
 
    .. code-block:: yaml
 
-      # ~/.atomate2siesta.yaml
+      # ~/.atomate2.yaml
       # Try different processor counts
       SIESTA_CMD: "mpirun -np 8 siesta < siesta.fdf > siesta.out"
 
@@ -628,7 +627,7 @@ MongoDB Connection Failed
 
    .. code-block:: yaml
 
-      # ~/.atomate2siesta.yaml
+      # ~/.atomate2.yaml
       SIESTA_STORE: "mongodb://localhost:27017/atomate2siesta"
 
 Query Returns No Results

@@ -354,7 +354,7 @@ Solver and Performance
 Configuration File
 ===================
 
-**Default Location**: ``~/.atomate2siesta.yaml``
+**Default Location**: ``~/.atomate2.yaml``
 
 **Default Contents** (if file doesn't exist):
 
@@ -374,7 +374,7 @@ Configuration File
 
 1. **Highest**: User params in code (``user_params`` argument)
 2. **Medium**: Environment variables (``SIESTA_PP_PATH``, etc.)
-3. **Lowest**: Configuration file (``~/.atomate2siesta.yaml``)
+3. **Lowest**: Configuration file (``~/.atomate2.yaml``)
 4. **Fallback**: Dataclass defaults (documented on this page)
 
 Tier System Defaults

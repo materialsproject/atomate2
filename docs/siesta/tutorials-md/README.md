@@ -193,7 +193,7 @@ pip install -e .
 ```
 
 ### Configuration
-Create `~/.atomate2siesta.yaml`:
+Create `~/.atomate2.yaml`:
 ```yaml
 SIESTA_CMD: "mpirun -np 4 siesta < siesta.fdf > siesta.out"
 SIESTA_PP_PATH: "/path/to/pseudopotentials"

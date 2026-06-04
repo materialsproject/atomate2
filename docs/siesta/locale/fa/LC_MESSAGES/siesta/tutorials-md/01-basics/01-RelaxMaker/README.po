@@ -117,8 +117,8 @@ msgstr "پیش‌نیازها"
 
 #: ../../source/tutorials-md/01-basics/01-RelaxMaker/README.md:34
 #: b674a4a99d7543fe940610d41d6762a3
-msgid "**SIESTA installed and configured**: `~/.atomate2siesta.yaml` set up"
-msgstr "**SIESTA installed and configured**: `~/.atomate2siesta.yaml` set up"
+msgid "**SIESTA installed and configured**: `~/.atomate2.yaml` set up"
+msgstr "**SIESTA installed and configured**: `~/.atomate2.yaml` set up"
 
 #: ../../source/tutorials-md/01-basics/01-RelaxMaker/README.md:35
 #: 7410443374f743af834c31ee815a8a1f

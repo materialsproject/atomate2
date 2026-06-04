@@ -57,8 +57,8 @@ msgstr "Bsic understوing of DFT clcultions"
 
 #: ../../source/tutorials-md/01-basics/README.md:11
 #: ea2db15c73df44578e77786c0e8ca209
-msgid "`~/.atomate2siesta.yaml` configuration file"
-msgstr "`~/.atomate2siesta.yaml` configuration file"
+msgid "`~/.atomate2.yaml` configuration file"
+msgstr "`~/.atomate2.yaml` configuration file"
 
 #: ../../source/tutorials-md/01-basics/README.md:15
 #: ea1d25092d1342c1b18f18448fbceb7b
@@ -304,8 +304,8 @@ msgstr "Issue 1: \"SIESTA commو not found\""
 
 #: ../../source/tutorials-md/01-basics/README.md:154
 #: df37d5fe77ce4729bca09c5572d19519
-msgid "**Solution**: Configure `SIESTA_CMD` in `~/.atomate2siesta.yaml`:"
-msgstr "**Solution**: Configure `SIESTA_CMD` in `~/.atomate2siesta.yaml`:"
+msgid "**Solution**: Configure `SIESTA_CMD` in `~/.atomate2.yaml`:"
+msgstr "**Solution**: Configure `SIESTA_CMD` in `~/.atomate2.yaml`:"
 
 #: ../../source/tutorials-md/01-basics/README.md:159
 #: d17263832d484e42ab5f4e40e8b737fc
@@ -319,8 +319,8 @@ msgstr "**Solution**: Instll pseudopotentils و configure pth:"
 
 #: ../../source/tutorials-md/01-basics/README.md:165
 #: 32affb516ccc4c0681d3844ed25a5dd2
-msgid "Then configure in `~/.atomate2siesta.yaml`:"
-msgstr "Then configure in `~/.atomate2siesta.yaml`:"
+msgid "Then configure in `~/.atomate2.yaml`:"
+msgstr "Then configure in `~/.atomate2.yaml`:"
 
 #: ../../source/tutorials-md/01-basics/README.md:170
 #: 8a349a1cdb144488890321327e8215e0

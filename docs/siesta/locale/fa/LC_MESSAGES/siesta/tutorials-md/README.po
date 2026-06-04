@@ -632,8 +632,8 @@ msgid "Configuration"
 msgstr "Configurtion"
 
 #: ../../source/tutorials-md/README.md:192 fb6744ab51364c2f90e0e0ddf8ad0f17
-msgid "Create `~/.atomate2siesta.yaml`:"
-msgstr "Create `~/.atomate2siesta.yaml`:"
+msgid "Create `~/.atomate2.yaml`:"
+msgstr "Create `~/.atomate2.yaml`:"
 
 #: ../../source/tutorials-md/README.md:198 89cce3e1579f4b55bbde5e743f382a25
 msgid "Pseudopotentials"

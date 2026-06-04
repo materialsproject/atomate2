@@ -32,7 +32,7 @@ This tutorial demonstrates how to calculate electronic band structure using the 
 
 - **Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/)
 - **Required knowledge**: Basic understanding of electronic band structure
-- **SIESTA configuration**: `~/.atomate2siesta.yaml` set up correctly
+- **SIESTA configuration**: `~/.atomate2.yaml` set up correctly
 - **Structure files**: Located in [00-structures](../../00-structures/)
 
 ---

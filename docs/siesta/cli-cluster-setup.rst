@@ -13,7 +13,7 @@ This tool provides a streamlined way to:
 * Create conda environments in ``$HOME``
 * Install jobflow-remote and atomate2siesta from GitHub
 * Optionally install SIESTA from conda-forge
-* Generate ``.atomate2siesta.yaml`` configuration file
+* Generate ``.atomate2.yaml`` configuration file
 * Verify installations and check environment status
 
 Commands
@@ -108,11 +108,11 @@ Set up a conda environment on a remote cluster with atomate2siesta installed.
 5. Installs atomate2siesta from GitHub (main branch)
 6. Optionally installs SIESTA from conda-forge
 7. Verifies installations (checks package versions)
-8. Creates ``~/.atomate2siesta.yaml`` configuration file with default SIESTA settings
+8. Creates ``~/.atomate2.yaml`` configuration file with default SIESTA settings
 
 **Configuration File:**
 
-The setup command automatically creates ``~/.atomate2siesta.yaml`` on the remote cluster with these default settings:
+The setup command automatically creates ``~/.atomate2.yaml`` on the remote cluster with these default settings:
 
 .. code-block:: yaml
 
@@ -920,7 +920,7 @@ This automatically:
 
 * Creates conda environment with jobflow-remote and atomate2siesta
 * Installs SIESTA from conda-forge (if ``--install-siesta`` is used)
-* Generates ``~/.atomate2siesta.yaml`` configuration file
+* Generates ``~/.atomate2.yaml`` configuration file
 
 2. SSH to Cluster and Activate Environment
 -------------------------------------------
@@ -947,11 +947,11 @@ This automatically:
 4. Verify and Customize Configuration (Optional)
 -------------------------------------------------
 
-The ``~/.atomate2siesta.yaml`` file has been automatically created. You may need to edit it to match your cluster setup:
+The ``~/.atomate2.yaml`` file has been automatically created. You may need to edit it to match your cluster setup:
 
 .. code-block:: bash
 
-   nano ~/.atomate2siesta.yaml
+   nano ~/.atomate2.yaml
 
 Edit paths if needed:
 
@@ -1216,18 +1216,18 @@ SIESTA Installation Fails
 * Check internet connectivity on cluster
 * Verify conda-forge channel is accessible
 * Try manual installation: ``conda install -c conda-forge "siesta=*=*mpich*"``
-* If unsuccessful, install SIESTA manually and update ``SIESTA_CMD`` in ``~/.atomate2siesta.yaml``
+* If unsuccessful, install SIESTA manually and update ``SIESTA_CMD`` in ``~/.atomate2.yaml``
 
 Configuration File Creation Fails
 ----------------------------------
 
-**Error:** Failed to create ``.atomate2siesta.yaml``
+**Error:** Failed to create ``.atomate2.yaml``
 
 **Solution:** Create manually on the cluster:
 
 .. code-block:: bash
 
-   cat > ~/.atomate2siesta.yaml << 'EOF'
+   cat > ~/.atomate2.yaml << 'EOF'
    SIESTA_CMD: siesta < siesta.fdf > siesta.out
    SIESTA_PP_PATH: '$HOME/.siesta/pseudos/ONCVPSP-PBEsol-FR-PDv0.4-Standard/'
    FLOS_PATH: "$HOME/apps/flos"

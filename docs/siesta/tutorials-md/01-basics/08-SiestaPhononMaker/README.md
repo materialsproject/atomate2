@@ -38,7 +38,7 @@ This tutorial demonstrates phonon calculations using SIESTA's native force const
 
 - **Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/), [07-PhonopyMaker](../07-PhonopyMaker/)
 - **Required knowledge**: Phonon basics, force constants
-- **SIESTA configuration**: `~/.atomate2siesta.yaml` set up
+- **SIESTA configuration**: `~/.atomate2.yaml` set up
 - **Comparison recommended**: Complete [07-PhonopyMaker](../07-PhonopyMaker/) first
 
 ---

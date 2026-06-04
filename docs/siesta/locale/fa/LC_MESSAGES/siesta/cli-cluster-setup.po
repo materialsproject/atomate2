@@ -56,8 +56,8 @@ msgid "Optionally install SIESTA from conda-forge"
 msgstr "نصب اختیاری SIESTA از conda-forge"
 
 #: ../../source/cli-cluster-setup.rst:16 f487a2fa10014847b1d2d8dce66863d7
-msgid "Generate ``.atomate2siesta.yaml`` configuration file"
-msgstr "تولید فایل پیکربندی ``.atomate2siesta.yaml``"
+msgid "Generate ``.atomate2.yaml`` configuration file"
+msgstr "تولید فایل پیکربندی ``.atomate2.yaml``"
 
 #: ../../source/cli-cluster-setup.rst:17 64a2baef8ffb42348bd0c7726611a64e
 msgid "Verify installations and check environment status"
@@ -212,9 +212,9 @@ msgstr "تأیید نصب‌ها (بررسی نسخه‌های بسته)"
 
 #: ../../source/cli-cluster-setup.rst:100 3efb76d1beac474baec587c7d0239d87
 msgid ""
-"Creates ``~/.atomate2siesta.yaml`` configuration file with default SIESTA"
+"Creates ``~/.atomate2.yaml`` configuration file with default SIESTA"
 " settings"
-msgstr "ایجاد فایل پیکربندی ``~/.atomate2siesta.yaml`` با تنظیمات پیش‌فرض SIESTA"
+msgstr "ایجاد فایل پیکربندی ``~/.atomate2.yaml`` با تنظیمات پیش‌فرض SIESTA"
 
 #: ../../source/cli-cluster-setup.rst:102 9c200bd07ab441bfbbe7803279cd4d66
 msgid "**Configuration File:**"
@@ -222,9 +222,9 @@ msgstr "**فایل پیکربندی:**"
 
 #: ../../source/cli-cluster-setup.rst:104 18d73686afaa4dac82f19170ef51d663
 msgid ""
-"The setup command automatically creates ``~/.atomate2siesta.yaml`` on the"
+"The setup command automatically creates ``~/.atomate2.yaml`` on the"
 " remote cluster with these default settings:"
-msgstr "دستور راه‌اندازی به طور خودکار فایل ``~/.atomate2siesta.yaml`` را بر روی خوشه از راه دور با این تنظیمات پیش‌فرض ایجاد می‌کند:"
+msgstr "دستور راه‌اندازی به طور خودکار فایل ``~/.atomate2.yaml`` را بر روی خوشه از راه دور با این تنظیمات پیش‌فرض ایجاد می‌کند:"
 
 #: ../../source/cli-cluster-setup.rst:114 0bf0b2bec7c84510a14cd77f878e8f08
 msgid ""
@@ -703,8 +703,8 @@ msgid "Installs SIESTA from conda-forge (if ``--install-siesta`` is used)"
 msgstr "نصب SIESTA از conda-forge (اگر ``--install-siesta`` استفاده شود)"
 
 #: ../../source/cli-cluster-setup.rst:486 311edc7d388a43ebb49dba20e8e5079b
-msgid "Generates ``~/.atomate2siesta.yaml`` configuration file"
-msgstr "تولید فایل پیکربندی ``~/.atomate2siesta.yaml``"
+msgid "Generates ``~/.atomate2.yaml`` configuration file"
+msgstr "تولید فایل پیکربندی ``~/.atomate2.yaml``"
 
 #: ../../source/cli-cluster-setup.rst:489 b16c9fc02051423da5c7e0fe8ab5eb05
 msgid "2. SSH to Cluster and Activate Environment"
@@ -720,9 +720,9 @@ msgstr "۴. تأیید و سفارشی‌سازی پیکربندی (اختیار
 
 #: ../../source/cli-cluster-setup.rst:513 299fccb05ece48e0b0953aead3f9420d
 msgid ""
-"The ``~/.atomate2siesta.yaml`` file has been automatically created. You "
+"The ``~/.atomate2.yaml`` file has been automatically created. You "
 "may need to edit it to match your cluster setup:"
-msgstr "فایل ``~/.atomate2siesta.yaml`` به طور خودکار ایجاد شده است. ممکن است نیاز داشته باشید آن را برای تطبیق با راه‌اندازی خوشه خود ویرایش کنید:"
+msgstr "فایل ``~/.atomate2.yaml`` به طور خودکار ایجاد شده است. ممکن است نیاز داشته باشید آن را برای تطبیق با راه‌اندازی خوشه خود ویرایش کنید:"
 
 #: ../../source/cli-cluster-setup.rst:519 ec1639e6db1445dbbf76ad2df5b33a60
 msgid "Edit paths if needed:"
@@ -1082,16 +1082,16 @@ msgstr "نصب دستی را امتحان کنید: ``conda install -c conda-for
 #: ../../source/cli-cluster-setup.rst:770 01562991d4e24ec59c5c9cdb1d6c64f9
 msgid ""
 "If unsuccessful, install SIESTA manually and update ``SIESTA_CMD`` in "
-"``~/.atomate2siesta.yaml``"
-msgstr "اگر ناموفق بود، SIESTA را به صورت دستی نصب کنید و ``SIESTA_CMD`` را در ``~/.atomate2siesta.yaml`` به‌روزرسانی کنید"
+"``~/.atomate2.yaml``"
+msgstr "اگر ناموفق بود، SIESTA را به صورت دستی نصب کنید و ``SIESTA_CMD`` را در ``~/.atomate2.yaml`` به‌روزرسانی کنید"
 
 #: ../../source/cli-cluster-setup.rst:773 3a3035d5b42b4d44a5355c2dea816665
 msgid "Configuration File Creation Fails"
 msgstr "شکست در ایجاد فایل پیکربندی"
 
 #: ../../source/cli-cluster-setup.rst:775 4e67327eea174f93ae58ce6a2c0f4edc
-msgid "**Error:** Failed to create ``.atomate2siesta.yaml``"
-msgstr "**خطا:** شکست در ایجاد ``.atomate2siesta.yaml``"
+msgid "**Error:** Failed to create ``.atomate2.yaml``"
+msgstr "**خطا:** شکست در ایجاد ``.atomate2.yaml``"
 
 #: ../../source/cli-cluster-setup.rst:777 a3059d18c54a4ea4a00c3a642e38906e
 msgid "**Solution:** Create manually on the cluster:"

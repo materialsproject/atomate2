@@ -117,8 +117,8 @@ msgstr "**مورد نیاز knowledge**: Bsic understوing of electronic bو str
 
 #: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:35
 #: 7791eb235d314486bb5733056015ec11
-msgid "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up correctly"
-msgstr "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up correctly"
+msgid "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
+msgstr "**SIESTA configuration**: `~/.atomate2.yaml` set up correctly"
 
 #: ../../source/tutorials-md/01-basics/02-BandStructureMaker/README.md:36
 #: 04c32ac72b15410c9b1a8c1ad45e4e10

@@ -512,7 +512,7 @@ flow = KpointsConvergenceMaker(static_maker=static_maker)
 import os
 os.environ["SIESTA_PP_PATH"] = "/path/to/pseudopotentials"
 
-# Or in ~/.atomate2siesta.yaml:
+# Or in ~/.atomate2.yaml:
 # SIESTA_PP_PATH: /path/to/pseudopotentials
 ```
 

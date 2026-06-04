@@ -21,7 +21,7 @@ pip install -e .
 
 ## Step 2: Configuration (1 minute)
 
-Create a configuration file at `~/.atomate2siesta.yaml`:
+Create a configuration file at `~/.atomate2.yaml`:
 
 ```yaml
 # Minimal configuration
@@ -172,7 +172,7 @@ flow = RecipeBook.complete_material_study(structure)
 ## Common Issues
 
 ### "SIESTA command not found"
-**Solution**: Update your `SIESTA_CMD` in `~/.atomate2siesta.yaml` with the full path:
+**Solution**: Update your `SIESTA_CMD` in `~/.atomate2.yaml` with the full path:
 ```yaml
 SIESTA_CMD: "/usr/local/bin/siesta < siesta.fdf > siesta.out"
 ```

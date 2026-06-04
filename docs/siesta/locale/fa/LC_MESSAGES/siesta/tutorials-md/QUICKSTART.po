@@ -55,8 +55,8 @@ msgid "Step 2: Configuration (1 minute)"
 msgstr "Step 2: Configurtion (1 minute)"
 
 #: ../../source/tutorials-md/QUICKSTART.md:24 c595cc988ff2457c9a1b7c5bf03f642b
-msgid "Create a configuration file at `~/.atomate2siesta.yaml`:"
-msgstr "Create a configuration file at `~/.atomate2siesta.yaml`:"
+msgid "Create a configuration file at `~/.atomate2.yaml`:"
+msgstr "Create a configuration file at `~/.atomate2.yaml`:"
 
 #: ../../source/tutorials-md/QUICKSTART.md:32 24c8333e83284d81b485dafd6f7999df
 msgid ""
@@ -196,7 +196,7 @@ msgstr "\"SIESTA commو not found\""
 
 #: ../../source/tutorials-md/QUICKSTART.md:175 65087b34d9af457abf1a1f9559a1544a
 msgid ""
-"**Solution**: Update your `SIESTA_CMD` in `~/.atomate2siesta.yaml` with "
+"**Solution**: Update your `SIESTA_CMD` in `~/.atomate2.yaml` with "
 "the full path:"
 msgstr ""
 

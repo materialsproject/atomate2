@@ -811,7 +811,7 @@ msgid "Optional SIESTA installation from conda-forge"
 msgstr ""
 
 #: ../../source/cli-tools.rst:581 ade3af374d7644109e0e61dd535ecd5b
-msgid "Automatic ``.atomate2siesta.yaml`` configuration file generation"
+msgid "Automatic ``.atomate2.yaml`` configuration file generation"
 msgstr ""
 
 #: ../../source/cli-tools.rst:582 6dde35791ba343d3b7101feacc311f7b
@@ -3790,7 +3790,7 @@ msgid "Added SIESTA installation from conda-forge"
 msgstr ""
 
 #: ../../source/cli-tools.rst:2722 9b514b8a225d492aaf31067460e6d8d1
-msgid "Automatic ``.atomate2siesta.yaml`` configuration generation"
+msgid "Automatic ``.atomate2.yaml`` configuration generation"
 msgstr ""
 
 #: ../../source/cli-tools.rst:2723 48086c89174b434ea3ff92c7fea81c5e

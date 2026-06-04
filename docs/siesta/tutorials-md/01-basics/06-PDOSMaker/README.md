@@ -32,7 +32,7 @@ This tutorial demonstrates how to calculate the projected density of states (PDO
 
 - **Required tutorials**: [05-DOSMaker](../05-DOSMaker/)
 - **Required knowledge**: Understanding of atomic orbitals and DOS
-- **SIESTA configuration**: `~/.atomate2siesta.yaml` set up correctly
+- **SIESTA configuration**: `~/.atomate2.yaml` set up correctly
 - **Structure files**: Located in [00-structures](../../00-structures/)
 
 ---

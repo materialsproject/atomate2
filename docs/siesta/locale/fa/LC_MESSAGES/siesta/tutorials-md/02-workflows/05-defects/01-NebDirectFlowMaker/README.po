@@ -138,7 +138,7 @@ msgstr "**FLOS Librry** (required):"
 
 #: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:56
 #: 42828e8cb9da40a5857108d2b29577af
-msgid "**Configure in ~/.atomate2siesta.yaml**:"
+msgid "**Configure in ~/.atomate2.yaml**:"
 msgstr "**Configure in ~/.tomte2siest.yml**:"
 
 #: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:61

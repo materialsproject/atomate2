@@ -661,8 +661,8 @@ msgid "**Configuration Management**"
 msgstr "**مدیریت پیکربندی**"
 
 #: ../../source/introduction.rst:226 a9a608879f3f47ada4ac731d3e011029
-msgid "Simple YAML configuration (`~/.atomate2siesta.yaml`)"
-msgstr "پیکربندی ساده YAML (`~/.atomate2siesta.yaml`)"
+msgid "Simple YAML configuration (`~/.atomate2.yaml`)"
+msgstr "پیکربندی ساده YAML (`~/.atomate2.yaml`)"
 
 #: ../../source/introduction.rst:227 c0046d63863740389e7dbf3706929c6f
 msgid "Environment variable support"
