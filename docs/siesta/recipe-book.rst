@@ -19,7 +19,7 @@ Key Benefits
 ⚡ **10x Faster Setup**
    Reduce 50+ lines of setup code to 1 line
 
-🤖 **Smart Defaults**
+**Smart Defaults**
    Automatic parameter detection based on your structure
 
 📚 **Best Practices**
@@ -570,7 +570,7 @@ Implementation Details
 * ``catalysis.py`` - Surface and catalysis (7 recipes)
 * ``convergence.py`` - Convergence testing (7 recipes)
 
-**Testing**: 164 tests with ~75% coverage (100% pass rate)
+**Testing**: comprehensive test coverage (fully passing)
 
 Performance Metrics
 ===================
@@ -602,7 +602,7 @@ Status
 
    * 39 recipes across 6 categories
    * 16 comprehensive tutorials (7,900+ lines)
-   * 164 tests (100% pass rate)
+   * comprehensive tests (fully passing)
    * ~75% code coverage
    * First computational materials science package with complete recipe documentation
 

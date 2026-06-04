@@ -1525,13 +1525,13 @@ Testing & Quality
 
 **Comprehensive Test Suite**:
 
-* **750 tests** (100% passing, 44% coverage)
+* **Comprehensive test suite** (fully passing)
 * Infrastructure tests: parser (39%), file_client (86%), schemas (97%)
 * Module registry validation (tier system: 100% coverage)
 * Tier preset verification
 * Integration tests for workflows (Grüneisen, QHA, custodian)
 * Performance benchmarks
-* **Fast execution**: 17 seconds for full test suite
+* **Fast execution**: full test suite runs in seconds
 
 **Coverage by Component**:
 
@@ -1574,7 +1574,7 @@ Testing & Quality
 * Expert tier: ~23 ms
 * < 25 ms overhead for all modules
 * Sub-linear scaling with structure size
-* Test suite: 17 seconds (750 tests)
+* Test suite: runs in seconds
 
 **Testing Patterns Established**:
 

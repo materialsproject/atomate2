@@ -1231,7 +1231,7 @@ msgid "Comprehensive Test Suite"
 msgstr "مجموعه تست جامع"
 
 #: ../../source/tier-system.rst:787 2af8de475f1246e6bbd1635b3b5a15f7
-msgid "**74 tests, 100% passing**:"
+msgid "**Comprehensive tests, fully passing**:"
 msgstr "**۷۴ تست، ۱۰۰٪ موفق**:"
 
 #: ../../source/tier-system.rst:789 82393f426c204fd297376f7a0f0109cd

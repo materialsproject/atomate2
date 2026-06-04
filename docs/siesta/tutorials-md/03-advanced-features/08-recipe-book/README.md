@@ -16,7 +16,7 @@ The **Recipe Book** is the fastest, easiest way to set up atomate2siesta workflo
 ## 🎯 Key Benefits
 
 - **⚡ 10x faster**: Reduce 50+ lines of setup code to 1 line
-- **🤖 Smart defaults**: Automatic parameter detection based on your structure
+- **Smart defaults**: Automatic parameter detection based on your structure
 - **📚 Best practices**: Encodes expert knowledge and proven workflows
 - **🎨 Flexible**: Easy to customize while keeping simplicity
 - **📊 Comprehensive**: Covers all major material properties

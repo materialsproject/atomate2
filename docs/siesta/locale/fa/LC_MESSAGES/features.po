@@ -1972,7 +1972,7 @@ msgstr ""
 
 #: ../../source/features.rst:1501 cbdea0d0c06f4b108826ed069ced125c
 #, python-format
-msgid "**750 tests** (100% passing, 44% coverage)"
+msgid "**Comprehensive test suite** (fully passing)"
 msgstr ""
 
 #: ../../source/features.rst:1502 9dade6d7776642bca9beeac8327f3bb4
@@ -1997,7 +1997,7 @@ msgid "Performance benchmarks"
 msgstr ""
 
 #: ../../source/features.rst:1507 5b038fa239524bf38844873671b36f3f
-msgid "**Fast execution**: 17 seconds for full test suite"
+msgid "**Fast execution**: full test suite runs in seconds"
 msgstr ""
 
 #: ../../source/features.rst:1509 817cadd6c7b64a2e85ad038e8c262638
@@ -2131,7 +2131,7 @@ msgid "Sub-linear scaling with structure size"
 msgstr ""
 
 #: ../../source/features.rst:1550 ad8716a575414b56bb7eef7f8b142e0d
-msgid "Test suite: 17 seconds (750 tests)"
+msgid "Test suite: runs in seconds"
 msgstr ""
 
 #: ../../source/features.rst:1552 9167351b75804ddf8670879184839f82

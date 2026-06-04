@@ -761,7 +761,7 @@ msgid "Example generated script:"
 msgstr ""
 
 #: ../../source/cli-tools.rst:557 dc84b9a1f06345d9bef4dcb6bb83c885
-msgid "**Status:** ✅ Production-ready with 16 tests (100% pass rate)"
+msgid "**Status:** ✅ Production-ready"
 msgstr ""
 
 #: ../../source/cli-tools.rst:559 ../../source/cli-tools.rst:985

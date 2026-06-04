@@ -129,7 +129,7 @@ Example Output
    ║ 🔬 Production-ready DFT workflows     ║
    ║ ⚡ significant code reduction              ║
    ║ 🛠️ 13 CLI tools                       ║
-   ║ 📚 195+ tutorials                     ║
+   ║ 📚 Many tutorials                     ║
    ╚═══════════════════════════════════════╝
 
    📦 Workflows    13+ production workflows
@@ -578,7 +578,7 @@ Example generated script:
    # Run workflow
    results = run_locally(job, create_folders=True)
 
-**Status:** ✅ Production-ready with 16 tests (100% pass rate)
+**Status:** ✅ Production-ready
 
 **Benefits:**
 

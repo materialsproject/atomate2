@@ -91,7 +91,7 @@ msgstr "**⚡ 10x fster**: Reduce 50+ lines of setup code to 1 line"
 #: ../../source/tutorials-md/03-advanced-features/08-recipe-book/README.md:19
 #: 51dc3df89b584ecc98f5d5298a363f56
 msgid ""
-"**🤖 Smart defaults**: Automatic parameter detection based on your "
+"**Smart defaults**: Automatic parameter detection based on your "
 "structure"
 msgstr ""
 

@@ -256,7 +256,7 @@ msgstr "یکپارچگی پایگاه داده (MongoDB/Maggma)"
 
 #: ../../source/index.rst:149 4ffd42d5c9924385803fa288a4e38fae
 #, python-format
-msgid "Comprehensive test suite (750 tests, 44% coverage, 100% passing)"
+msgid "Comprehensive, fully passing test suite"
 msgstr ""
 
 #: ../../source/index.rst:150 c6b2566841514c0298652886717cca68
@@ -274,7 +274,7 @@ msgstr ""
 #: ../../source/index.rst:158 fafb812e92bc49a6bbf464889c926a11
 #, python-format
 msgid ""
-"Major testing initiative: 270 new tests added, achieving 44% coverage (up"
+"Major testing initiative: a substantial set of new tests expanding coverage (up"
 " from 25%). Critical infrastructure now comprehensively tested: parser "
 "(39%), file_client (86%), task schemas (97%). Established mock-based "
 "testing patterns for future development."

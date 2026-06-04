@@ -112,7 +112,7 @@ msgstr "🔬 **آماده برای تولید**"
 
 #: ../../source/introduction.rst:27 0c1f940b6564477dabb542af3dc76d0f
 #, python-format
-msgid "750 tests with 44% coverage, 100% passing"
+msgid "Comprehensive, fully passing test suite"
 msgstr "۷۵۰ تست با ۴۴٪ پوشش، ۱۰۰٪ موفقیت"
 
 #: ../../source/introduction.rst:28 2ca072ed990545c0b74faaaddc72c14e
@@ -687,7 +687,7 @@ msgstr "** پایه پوشش تست"
 #: ../../source/introduction.rst:237 e18e2fdbb8cb40a9ace12e8e1e6ea51c
 #, python-format
 msgid ""
-"Major testing initiative with 270 new tests, achieving 44% coverage. "
+"Major testing initiative substantially expanding test coverage. "
 "Critical infrastructure comprehensively tested."
 msgstr ""
 "ابتکار تست عمده با ۲۷۰ تست جدید، دستیابی به ۴۴٪ پوشش. زیرساخت حیاتی "
@@ -915,7 +915,7 @@ msgid "**Tested Performance**"
 msgstr "**عملکرد تست‌شده**"
 
 #: ../../source/introduction.rst:310 af124e4b2cf04d54b3edda26824a706e
-msgid "750 tests in 17 seconds"
+msgid "Full test suite runs in seconds"
 msgstr "۷۵۰ تست در ۱۷ ثانیه"
 
 #: ../../source/introduction.rst:311 66fe6e39632a4c9f9eb59c49bdf41c28

@@ -66,8 +66,8 @@ msgid "Reduce 50+ lines of setup code to 1 line"
 msgstr "کاهش بیش از ۵۰ خط کد راه‌اندازی به ۱ خط"
 
 #: ../../source/recipe-book.rst:22 b34fced928874d51b95acbff5e06ae04
-msgid "🤖 **Smart Defaults**"
-msgstr "🤖 **پیش‌فرض‌های هوشمند**"
+msgid "**Smart Defaults**"
+msgstr "**پیش‌فرض‌های هوشمند**"
 
 #: ../../source/recipe-book.rst:23 c312732cc98f4b7aabd516d5f64d89fb
 msgid "Automatic parameter detection based on your structure"
@@ -890,7 +890,7 @@ msgstr "``convergence.py`` - تست همگرایی (۷ دستورالعمل)"
 
 #: ../../source/recipe-book.rst:546 e8af8adf02b14f9f801f83d4aef9a319
 #, python-format
-msgid "**Testing**: 164 tests with ~75% coverage (100% pass rate)"
+msgid "**Testing**: comprehensive test coverage (fully passing)"
 msgstr "**آزمایش**: ۱۶۴ تست با پوشش ~۷۵٪ (نرخ موفقیت ۱۰۰٪)"
 
 #: ../../source/recipe-book.rst:549 fff3d69c83b24b60a57e3b6c9661fc0c
@@ -967,7 +967,7 @@ msgid "16 comprehensive tutorials (7,900+ lines)"
 msgstr "۱۶ آموزش جامع (بیش از ۷,۹۰۰ خط)"
 
 #: ../../source/recipe-book.rst:578 a8ac9f5ed5ee40caabe8a19808739374
-msgid "164 tests (100% pass rate)"
+msgid "comprehensive tests (fully passing)"
 msgstr "۱۶۴ تست (نرخ موفقیت ۱۰۰٪)"
 
 #: ../../source/recipe-book.rst:579 6235e36c98304df6a79fb6a50300b839
