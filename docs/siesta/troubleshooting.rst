@@ -775,7 +775,7 @@ Common Error Messages Quick Reference
 Additional Resources
 --------------------
 
-- **Full Documentation**: :doc:`index`
+- **Full Documentation**: :doc:`/user/codes/siesta`
 - **Tutorials**: ``tutorials/README.md``
 - **Custodian Guide**: :doc:`custodian`
 - **CLI Tools**: :doc:`cli-tools`
