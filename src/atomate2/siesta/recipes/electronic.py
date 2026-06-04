@@ -450,7 +450,7 @@ def optical_properties(
             "Optical.Energy.Minimum": f"{energy_range[0]} eV",
             "Optical.Energy.Maximum": f"{energy_range[1]} eV",
             "Optical.Broaden": "0.1 eV",
-            "Optical.Mesh": "[100, 100, 100]",
+            "%block Optical.Mesh": "[100, 100, 100]",
         }
     )
     kwargs["user_params"] = user_params

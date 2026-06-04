@@ -230,19 +230,26 @@ class SiestaOutputValidator(Validator):
         bool
             True if energy is finite
         """
-        # Look for total energy line
-        match = re.search(r"Total\s*=\s*([-+]?[0-9]*\.?[0-9]+)", content)
+        # Look for the final energy line. Match a normal float OR the
+        # non-finite tokens NaN/Inf that SIESTA can emit on a failed run.
+        match = re.search(
+            r"Final energy \(eV\):\s*"
+            r"([-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?"
+            r"|[Nn]a[Nn]|[-+]?[Ii]nf(?:inity)?)",
+            content,
+        )
         if not match:
             return True  # Can't find energy, don't fail
 
         energy_str = match.group(1)
         try:
-            energy = float(energy_str)
-            import math
-
-            return math.isfinite(energy)
+            energy = float(energy_str)  # also parses 'nan', 'inf', '-inf'
         except ValueError:
             return False
+
+        import math
+
+        return math.isfinite(energy)
 
     def _check_forces_present(self, content: str) -> bool:
         """Check that forces are present.

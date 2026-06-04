@@ -551,6 +551,17 @@ def common_options(func):
         default="default",
         help="Jobflow-remote worker name (requires --remote)",
     )(func)
+    func = click.argument("structure_file", type=click.Path(exists=True))(func)
+    return func
+
+
+def database_options(func):
+    """Add MongoDB database-configuration options.
+
+    Only applied to commands that actually build a database config into the
+    generated script (currently ``relax``); other commands must not receive
+    these kwargs.
+    """
     func = click.option(
         "--database",
         is_flag=True,
@@ -577,7 +588,6 @@ def common_options(func):
         default="tasks",
         help="MongoDB collection name (requires --database)",
     )(func)
-    func = click.argument("structure_file", type=click.Path(exists=True))(func)
     return func
 
 
@@ -683,6 +693,7 @@ def generate_workflow_script(workflow_type, structure_file, options):
 # Basic workflows
 @cli.command()
 @common_options
+@database_options
 @click.option(
     "--cell-type",
     type=click.Choice(["fixed", "variable"]),

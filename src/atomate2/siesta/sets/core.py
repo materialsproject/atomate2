@@ -39,8 +39,9 @@ class RelaxSetGenerator(SiestaInputGenerator):
 
     relax_cell: bool = False
     relaxation: MolecularDynamicsAndRelaxation = field(
-        init=False
-    )  # Initialize this later
+        init=False, repr=False
+    )  # Initialized lazily in _initialize_modules(); repr=False so repr()
+    # works before the input set is generated
     enable_lua: bool = False  # Disable Lua for RelaxSetGenerator
 
     def __post_init__(self):
@@ -179,8 +180,9 @@ class LuaSetGenerator(SiestaInputGenerator):
     enable_lua: bool = True  # Enable Lua for LuaSetGenerator
 
     relaxation: MolecularDynamicsAndRelaxation = field(
-        init=False
-    )  # Initialize this later
+        init=False, repr=False
+    )  # Initialized lazily in _initialize_modules(); repr=False so repr()
+    # works before the input set is generated
 
     def __post_init__(self):
         """

@@ -12,24 +12,28 @@ from __future__ import annotations
 
 TIER_CATEGORIES = {
     "Structural": [
-        "basic_relax",
+        "relax_dirty",
         "relax_standard",
-        "high_accuracy_relax",
-        "bulk_metal",
-        "bulk_semiconductor",
+        "relax_high_accuracy",
+        "relax_bulk_metal",
+        "relax_bulk_semiconductor",
         "molecule_gas_phase",
         "adsorbate_screening",
     ],
     "Surface": [
+        "surface_basic",
+        "surface_dirty",
         "surface_metal",
         "surface_semiconductor",
     ],
     "2D Materials": [
         "2d_metal",
+        "2d_metal_rough_auto",
         "2d_semiconductor",
         "2d_insulator",
         "2d_magnetic",
         "2d_vdw",
+        "2d_vdw_dirty",
         "2d_optical",
         "2d_screening",
     ],
@@ -45,6 +49,19 @@ TIER_CATEGORIES = {
     "Optical": [
         "optical_response",
         "band_structure",
+    ],
+    "Defects": [
+        "defect_dirty",
+        "defect_standard",
+        "defect_accurate",
+        "defect_metal",
+        "defect_oxide",
+    ],
+    "Electrocatalysis": [
+        "electrocatalysis_dirty",
+        "electrocatalysis_basic",
+        "electrocatalysis_intermediate",
+        "electrocatalysis_gas_phase",
     ],
     "Performance": [
         "large_system",

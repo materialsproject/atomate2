@@ -802,8 +802,6 @@ class SiestaInputGenerator(InputGenerator):
             # Create a Rich Table for fancy display of SIESTA parameters only
             if siesta_params_display:
                 # Check SIESTA_SHOW_PARAMETER_EVOLUTION setting
-                from atomate2.siesta import SETTINGS
-
                 display_level = SETTINGS.SIESTA_SHOW_PARAMETER_EVOLUTION
 
                 if display_level == "none":
@@ -1059,8 +1057,6 @@ class SiestaInputGenerator(InputGenerator):
             return  # Skip if not verbose enough
 
         # Check SIESTA_SHOW_PARAMETER_EVOLUTION setting
-        from atomate2.siesta import SETTINGS
-
         display_level = SETTINGS.SIESTA_SHOW_PARAMETER_EVOLUTION
 
         if display_level == "none":

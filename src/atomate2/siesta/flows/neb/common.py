@@ -64,8 +64,11 @@ def generate_neb_band(
     images += [initial_ase.copy() for _ in range(number_of_images)]
     images += [final_ase]
 
-    neb = NEB(images)
-    neb.interpolate(interpolation_method)  # Interpolate using specified method
+    # With no intermediate images there is nothing to interpolate (and ASE's
+    # NEB.interpolate() raises on a 2-image band), so only do it when needed.
+    if number_of_images > 0:
+        neb = NEB(images)
+        neb.interpolate(interpolation_method)  # Interpolate using specified method
 
     # Save each NEB image as .xyz
     neb_image_files = []

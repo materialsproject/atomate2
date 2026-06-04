@@ -259,8 +259,16 @@ def validate_fdf_parameter(key: str, value: Any) -> tuple[bool, str]:
             # Internal parameter - allow it
             return (True, "")
 
+        # kpts is an atomate2siesta internal parameter (not in the FDF
+        # registry), but we still validate its shape here.
+        if key == "kpts":
+            if not isinstance(value, (list, tuple)) or len(value) != 3:
+                return (False, "kpts must be a list of 3 integers: [k1, k2, k3]")
+            if not all(isinstance(v, int) and v > 0 for v in value):
+                return (False, "kpts values must be positive integers")
+            return (True, "")
+
         if key in [
-            "kpts",
             "kgrid_cutoff",
             "mesh_cutoff",
             "xc",
@@ -296,13 +304,7 @@ def validate_fdf_parameter(key: str, value: Any) -> tuple[bool, str]:
             pass
 
     # Validate specific parameter types
-    if key == "kpts":
-        if not isinstance(value, (list, tuple)) or len(value) != 3:
-            return (False, "kpts must be a list of 3 integers: [k1, k2, k3]")
-        if not all(isinstance(v, int) and v > 0 for v in value):
-            return (False, "kpts values must be positive integers")
-
-    elif key == "Spin":
+    if key == "Spin":
         valid_spin = ["polarized", "non-polarized", "spin-orbit", "none"]
         if isinstance(value, str) and value.lower() not in valid_spin:
             return (

@@ -67,6 +67,7 @@ class NebVacancyExchangeFlowMaker(BaseSiestaFlowMaker):
     number_of_images: int = 5
     A: int = None
     B: int = None
+    interpolation_method: str = "idpp"
 
     def generate_neb_images(
         self, structure: Structure, A: int, B: int

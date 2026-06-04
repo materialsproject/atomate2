@@ -5,6 +5,7 @@ from rich.console import Console
 
 from .inspect import inspect
 from .modify_db import modify_db
+from .recreate import recreate
 from .setup import download, info, install, runner, setup, test, update
 from .update_resources import update_resources
 
@@ -93,6 +94,7 @@ def job(ctx):
 
 job.add_command(inspect)
 job.add_command(modify_db)
+job.add_command(recreate)
 job.add_command(update_resources)
 
 if __name__ == "__main__":
