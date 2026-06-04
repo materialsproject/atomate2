@@ -1,0 +1,321 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:1
+#: 9e9d141ada9a4984a41e520137ca69ba
+msgid "Debugging Workflows"
+msgstr "Debugging گردش کارs"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:3
+#: 56483efc821c4f4bbb2586b8d28ad9ea
+msgid ""
+"**Category**: troubleshooting/debugging_workflows **Difficulty**: "
+"Intermediate **Time**: 45 minutes total"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:7
+#: b6ba1083477849fdbf6f596a76e45279
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:9
+#: d7d690c54eac456691afa1872a83c054
+msgid ""
+"This section provides systematic debugging strategies for atomate2siesta "
+"workflows. Learn how to identify failures, trace job dependencies, and "
+"analyze intermediate outputs."
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:11
+#: 137129dbf4164461927bb9259f8adb54
+msgid "Available Tutorials"
+msgstr "Avilble Tutیاils"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:13
+#: 823adaf53c25404099947e84785fd113
+msgid "01_tracing_job_failures.py"
+msgstr "01_tracing_job_failures.py"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:15
+#: e5cd263395834a1a85c352892baf7585
+msgid "**Tracing Job Failures**"
+msgstr "**Trcing Job Filures**"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:17
+#: 054676f33a1a4b53ba385a3cb51f0ddb
+msgid "Identifying which job failed in a flow"
+msgstr "Identifying which job filed in  flow"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:18
+#: 07b0e03723a04e0c8d8e2791c1cc90e6
+msgid "Examining job directories and output files"
+msgstr "Exmining job directیاies و output files"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:19
+#: 598da4bbe3854841bc06c062e7487510
+msgid "Using dry-run mode for testing"
+msgstr "استفاده از dry-run mode برای testing"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:20
+#: 2787e5c4d1d146e2999a2c4df1835348
+msgid "Jobflow-remote debugging commands"
+msgstr "Jobflow-remote debugging commوs"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:21
+#: 1e6548e8534b46649506a5b065677ab4
+msgid "Common debugging patterns"
+msgstr "Common debugging ptterns"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:22
+#: a6d7073d3d3c4156854046bdb93ad64b
+msgid "Comprehensive debugging checklist"
+msgstr "Comprehensive debugging checklist"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:24
+#: 2d8cd39b6f4e45ee9333a1cc4cbe8b93
+msgid "**Time**: 20 minutes"
+msgstr "**زمان**: 20 minutes"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:26
+#: d748e2510760402e98d9907bc94853db
+msgid "02_analyzing_intermediate_outputs.py"
+msgstr "02_analyzing_intermediate_outputs.py"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:28
+#: 4bf85aef0bc64b2b895b17a794eb7f6f
+msgid "**Analyzing Intermediate Outputs**"
+msgstr "**Anlyzing متوسط Outputs**"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:30
+#: 09a9f20886434b0885184d0d3ba6e452
+msgid "Understanding SIESTA output files"
+msgstr "درک SIESTA output files"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:31
+#: b9d048321ef647b59f597dd2c3ad7998
+msgid "Parsing SCF convergence history"
+msgstr "Prsing SCF convergence histیاy"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:32
+#: 8d293f505c604b94bcd98e6de5df8686
+msgid "Parsing geometry optimization data"
+msgstr "Prsing geometry optimiztion dt"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:33
+#: 09f41c14f8c648d689d8df2e646deb04
+msgid "Plotting convergence (matplotlib)"
+msgstr "Plotting convergence (mtplotlib)"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:34
+#: 44ca037b329a4f1493ff62a30ff1a62e
+msgid "Comparing calculated vs reference results"
+msgstr "Compring clculted vs reference results"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:35
+#: c5cc426bd5a844018fdd03ab75d74462
+msgid "Reading final structures"
+msgstr "Reding finl structures"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:37
+#: 8f2dcc4afe0b4c008f4a211bcb82af4a
+msgid "**Time**: 25 minutes"
+msgstr "**زمان**: 25 minutes"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:39
+#: aff787d44775420387fb8994d17e138a
+msgid "Key Debugging Techniques"
+msgstr "Key Debugging Techniques"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:41
+#: 1f6ed58b96404c3ea9810b744f8116e9
+msgid "1. Dry-Run Mode"
+msgstr "1. Dry-Run Mode"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:43
+#: 76412f381959493d8e594cd3b750efb4
+msgid "Always test workflows before running:"
+msgstr "Alwys test wیاkflows beبرایe running:"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:49
+#: 7c1ca9c31d8f42fea03bcb565f2df9aa
+msgid "2. Job Directory Inspection"
+msgstr "2. Job Directیاy Inspection"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:62
+#: c56da14dd88e424aa1424dd9d8fb27c0
+msgid "3. Jobflow-Remote Commands"
+msgstr "3. Jobflow-Remote Commوs"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:75
+#: f5bfa0965b2c41919435169136af151e
+msgid "Common Issues and Solutions"
+msgstr "مشکلات رایج و Solutions"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: 283cdaf6aead485896f90a01113bd64b
+msgid "Issue"
+msgstr "Issue"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: 0811b2e682364d7caf85936d35790571
+msgid "Symptom"
+msgstr "Symptom"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: fe03c4cbd333437ab525bea64b073e6d
+msgid "Solution"
+msgstr "Solution"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: 312ae2998d0240a2bc56dcba2b9e2300
+msgid "SCF oscillating"
+msgstr "SCF oscillting"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: cf1d6709f36a4b8d9c7fdc0726276000
+msgid "Energy goes up/down"
+msgstr "Energy goes up/down"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: 2517ac5e1100481fbf61ad0c97091c29
+msgid "Reduce SCF.Mixer.Weight"
+msgstr "Reduce SCF.Mixer.Weight"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: 115f46f84bab43be86d551a0a43942c8
+msgid "Geometry stuck"
+msgstr "Geometry stuck"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: 092a2eb59eff4638b10a094c6f42564a
+msgid "Forces not decreasing"
+msgstr "Fیاces not decresing"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: 0c19831e260340f79eae2c01a439b282
+msgid "Increase MD.NumCGsteps"
+msgstr "Increse MD.NumCGsteps"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: 6327fd98a3cf415ab1389105e3d10eda
+msgid "Job not starting"
+msgstr "Job not strting"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: f6f66cd3b79b4461b33816b8c0fb0412
+msgid "No output files"
+msgstr "No output files"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: 3d4657f239ba41acbc3de2ba65ae3015
+msgid "Check resource allocation"
+msgstr "Check resource lloction"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: a7253e6a70ad438aac20bea4f279b991
+msgid "Wrong results"
+msgstr "Wrong results"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: ffd750ab3cc44eef924f6d6abd166fcf
+msgid "Energy differs"
+msgstr "Energy differs"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md
+#: 38b5e109c98b493297432d77280d151f
+msgid "Verify pseudopotentials"
+msgstr "Verify pseudopotentils"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:84
+#: bc985c8fc2924f739ab13e875b665f65
+msgid "Quick Reference"
+msgstr "Quick Reference"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:86
+#: 6b002f3ea215499e8502d5f3aa2078d0
+msgid "Debugging Checklist"
+msgstr "Debugging Checklist"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:88
+#: dbb0c3c56c134ce6a18c3f430913e093
+msgid "Test with dry_run=True first"
+msgstr "Test با dry_run=True first"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:89
+#: 25610e14993b4890af37a5f1c978aac1
+msgid "Check structure validity"
+msgstr "Check structure vlidity"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:90
+#: c08ac19d0ccd42b9bcf4cf2463bed485
+msgid "Verify pseudopotentials installed"
+msgstr "Verify pseudopotentils instlled"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:91
+#: f4ba86a098e74528968b0252ff7bbf22
+msgid "Read error messages carefully"
+msgstr "Red errیا messges crefully"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:92
+#: 7f17cb97804e4938b0693d433c254550
+msgid "Check SCF convergence"
+msgstr "Check SCF convergence"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:93
+#: 5d4f52fae6114bd0a75dab718261f942
+msgid "One change at a time"
+msgstr "One chnge t  time"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:95
+#: a720cb9c91dd431fbb1fd9aefe2b111f
+msgid "Useful Patterns"
+msgstr "Useful Ptterns"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:108
+#: f98239cb9988477aa25b3d006235309f
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:110
+#: d33fc4244ec8424183bfa5986b9f92c0
+msgid "After mastering debugging:"
+msgstr "After mstering debugging:"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:112
+#: 35826b717a0944bf84a42ac96a0457b1
+msgid "`../performance_optimization/` - Making calculations faster"
+msgstr "`../performance_optimization/` - Making calculations faster"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:113
+#: ef7cb9528788405d9d8689e6a64d942c
+msgid "`../common_errors/` - Specific error fixes"
+msgstr "`../common_errors/` - Specific error fixes"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:114
+#: 51f4d5685e434a44bfc4490b42e239dc
+msgid "`../../03-advanced-features/04-error-handling/` - Custodian automation"
+msgstr "`../../03-advanced-features/04-error-handling/` - Custodian automation"
+
+#: ../../source/tutorials-md/05-troubleshooting/debugging_workflows/README.md:118
+#: bd542fdde19d4c0b9c7450365fd60f10
+msgid "*Back to Troubleshooting Index*"
+msgstr "*Bck to عیب‌یابی Index*"

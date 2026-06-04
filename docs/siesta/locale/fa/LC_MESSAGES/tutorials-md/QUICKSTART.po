@@ -1,0 +1,273 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/QUICKSTART.md:1 053e34e462df4c0aaee3ea433f3df0ad
+msgid "Quickstart Guide: Your First Calculation in 5 Minutes"
+msgstr "Quickstrt Guide: Your First محاسبه in 5 Minutes"
+
+#: ../../source/tutorials-md/QUICKSTART.md:3 311be71f7b0f46dbbdaabab45d71df3e
+msgid ""
+"Welcome to **atomate2siesta**! This guide will walk you through your "
+"first DFT calculation in just a few minutes."
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:5 d4228a6410ba4d58b92414e7b533090e
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/QUICKSTART.md:7 04a45baafa3743339aac4897a66033ba
+msgid "Python 3.9+ installed"
+msgstr "Python 3.9+ instlled"
+
+#: ../../source/tutorials-md/QUICKSTART.md:8 44e08d6b120643cd95b0c2fe5d602e69
+msgid "SIESTA installed and accessible"
+msgstr "SIESTA instlled و ccessible"
+
+#: ../../source/tutorials-md/QUICKSTART.md:9 d201db9a43a149119edb1e354fb379e0
+msgid "5 minutes of your time"
+msgstr "5 minutes of your time"
+
+#: ../../source/tutorials-md/QUICKSTART.md:11 e548d2ab6d4747409474f66f2f280ec8
+msgid "Step 1: Installation (1 minute)"
+msgstr "Step 1: Instlltion (1 minute)"
+
+#: ../../source/tutorials-md/QUICKSTART.md:22 870be2cf7d43422cba10b416c3c30e8d
+msgid "Step 2: Configuration (1 minute)"
+msgstr "Step 2: Configurtion (1 minute)"
+
+#: ../../source/tutorials-md/QUICKSTART.md:24 c595cc988ff2457c9a1b7c5bf03f642b
+msgid "Create a configuration file at `~/.atomate2siesta.yaml`:"
+msgstr "Create a configuration file at `~/.atomate2siesta.yaml`:"
+
+#: ../../source/tutorials-md/QUICKSTART.md:32 24c8333e83284d81b485dafd6f7999df
+msgid ""
+"**Note**: Replace `/path/to/your/pseudopotentials` with your actual "
+"pseudopotential directory."
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:34 2b818246dfb14a2d929fecf400db6e99
+msgid "Quick Config Check"
+msgstr "Quick Config Check"
+
+#: ../../source/tutorials-md/QUICKSTART.md:36 73b827fb9beb4927985901906f9ba5a2
+msgid "Verify your setup:"
+msgstr "Verify your setup:"
+
+#: ../../source/tutorials-md/QUICKSTART.md:42 2ee056d9e01744f5950ed1e7f52d1495
+msgid "You should see your configuration printed."
+msgstr "You should see your configurtion printed."
+
+#: ../../source/tutorials-md/QUICKSTART.md:44 ae0de5d6fb8646d38b340029cc576911
+msgid "Step 3: Your First Calculation (3 minutes)"
+msgstr "Step 3: Your First محاسبه (3 minutes)"
+
+#: ../../source/tutorials-md/QUICKSTART.md:46 9dafe906828a4a59846db18d41df7a0c
+msgid "Create a file called `my_first_calculation.py`:"
+msgstr "Create a file called `my_first_calculation.py`:"
+
+#: ../../source/tutorials-md/QUICKSTART.md:98 ba082cceafc64f20a33a4afce10530a3
+msgid "Run It!"
+msgstr "Run It!"
+
+#: ../../source/tutorials-md/QUICKSTART.md:104 6497dbf9236b4784b42bc7b980b6eb30
+msgid "**Expected output**:"
+msgstr "**Expected output**:"
+
+#: ../../source/tutorials-md/QUICKSTART.md:129 d672059caf694e21bc66434a266aa6ef
+msgid "What Just Happened?"
+msgstr "Wht Just Hppened?"
+
+#: ../../source/tutorials-md/QUICKSTART.md:131 653ccc00379a4d289783ee3c8888d2fd
+msgid ""
+"**Structure Creation**: You created a crystalline silicon structure using"
+" pymatgen"
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:132 bc942a3fb7864f27ac3e7bb198e06244
+msgid "**Job Setup**: `RelaxMaker` configured a SIESTA relaxation calculation"
+msgstr "**Job Setup**: `RelaxMaker` configured a SIESTA relaxation calculation"
+
+#: ../../source/tutorials-md/QUICKSTART.md:133 2de599f8c4864063837fb66c6f10ab9a
+msgid "**Execution**: `run_locally()` executed SIESTA and collected results"
+msgstr "**Execution**: `run_locally()` executed SIESTA and collected results"
+
+#: ../../source/tutorials-md/QUICKSTART.md:134 e234f3909fe248e1a37b6fbb27ed3827
+msgid "**Results**: The final energy and relaxed structure were saved"
+msgstr "**Results**: The finl energy و relxed structure were sved"
+
+#: ../../source/tutorials-md/QUICKSTART.md:136 f200da019e7649d09a873c67a9052cfc
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/QUICKSTART.md:138 85e8713d250a4c44927e66648ec26bb2
+msgid "Learn More About Relaxation"
+msgstr "Lern Mیاe About Relxtion"
+
+#: ../../source/tutorials-md/QUICKSTART.md:139 28092da5a7534de2a69c238286f29643
+msgid "📚 **Tutorial 01-basics/01-RelaxMaker**: Detailed relaxation guide"
+msgstr "📚 **Tutorial 01-basics/01-RelaxMaker**: Detailed relaxation guide"
+
+#: ../../source/tutorials-md/QUICKSTART.md:140 a6350ffd1b6347e2a273ae943eea4fdf
+msgid ""
+"📚 **Tutorial 03-advanced-features/01-tier-system**: Customize SIESTA "
+"parameters with tiers"
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:142 826d844543344cfc8c0740ee63e78310
+msgid "Try Other Calculations"
+msgstr "Try Or محاسبهs"
+
+#: ../../source/tutorials-md/QUICKSTART.md:153 2f05e16bd27f40ff883fde122dfb5624
+msgid "Use the Recipe Book (High-Level API)"
+msgstr "Use  Recipe Book (High-Level API)"
+
+#: ../../source/tutorials-md/QUICKSTART.md:161 a6867e87b47e473dbefeea3107d68dd6
+msgid "Explore Workflows"
+msgstr "Explیاe گردش کارs"
+
+#: ../../source/tutorials-md/QUICKSTART.md:162 c68d6e7bfb374f1da22db98daf928a6a
+msgid "📚 **Tutorial 02-workflows/01-convergence**: k-points and basis convergence"
+msgstr "📚 **Tutیاil 02-wیاkflows/01-convergence**: k-points و bsis convergence"
+
+#: ../../source/tutorials-md/QUICKSTART.md:163 66e854ba62074685b9a548e570ea0a45
+msgid "📚 **Tutorial 02-workflows/02-equation-of-states**: EOS calculations"
+msgstr "📚 **Tutیاil 02-wیاkflows/02-eqution-of-sttes**: EOS clcultions"
+
+#: ../../source/tutorials-md/QUICKSTART.md:164 22c3d7f33ccb4c10a507a40447949a0a
+msgid ""
+"📚 **Tutorial 02-workflows/06-vibrational-properties**: Phonons, "
+"Grüneisen, QHA"
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:165 e4b094df36954bbfae3bb9771bcb60d7
+msgid ""
+"📚 **Tutorial 02-workflows/03-surfaces-and-adsorption**: Surface energy "
+"and adsorption"
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:167 416f55423ba74436bf17fe45e8e7b36b
+msgid "Production Setup"
+msgstr "Production Setup"
+
+#: ../../source/tutorials-md/QUICKSTART.md:168 20ac0e910dae41bcae2a79fe5241773d
+msgid ""
+"📚 **Tutorial 03-advanced-features/03-infrastructure/01-database-"
+"storage**: Save results to MongoDB"
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:169 72870be4359f4854b7b60a5cfbd2568b
+msgid ""
+"📚 **Tutorial 03-advanced-features/03-infrastructure/02-job-submission**: "
+"Submit to HPC clusters"
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:170 0c721e5f8f904bd296fb09ba415568d3
+msgid ""
+"📚 **Tutorial 03-advanced-features/03-infrastructure/03-error-handling**: "
+"Automatic error recovery"
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:172 1a282c404fc04ce6824e5d0cf1a3a855
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/QUICKSTART.md:174 52d7cf4072a1489daf4aec4975147997
+msgid "\"SIESTA command not found\""
+msgstr "\"SIESTA commو not found\""
+
+#: ../../source/tutorials-md/QUICKSTART.md:175 65087b34d9af457abf1a1f9559a1544a
+msgid ""
+"**Solution**: Update your `SIESTA_CMD` in `~/.atomate2siesta.yaml` with "
+"the full path:"
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:180 cc7e97ac010f424c99f8df305a2b9c02
+msgid "\"Pseudopotentials not found\""
+msgstr "\"Pseudopotentils not found\""
+
+#: ../../source/tutorials-md/QUICKSTART.md:181 4c45ef065ec249628966bb504dc55899
+msgid "**Solution**: Download pseudopotentials and update `SIESTA_PP_PATH`:"
+msgstr "**Solution**: Download pseudopotentials and update `SIESTA_PP_PATH`:"
+
+#: ../../source/tutorials-md/QUICKSTART.md:188 1009db972bd34a10896f2e037ac12bf5
+msgid "\"SCF not converged\""
+msgstr "\"SCF not converged\""
+
+#: ../../source/tutorials-md/QUICKSTART.md:189 1a0a1860d6a548a8a896fa4acef58691
+msgid ""
+"**Solution**: See the [Troubleshooting "
+"Guide](../docs/source/troubleshooting.rst) for SCF convergence tips."
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:191 1e32c7b2cb1d4ab7bd2c79a5ea29561f
+msgid "Quick Reference"
+msgstr "Quick Reference"
+
+#: ../../source/tutorials-md/QUICKSTART.md:193 3d753a682de0452ba906db4c64c43db6
+msgid "Basic Pattern"
+msgstr "Bsic Pttern"
+
+#: ../../source/tutorials-md/QUICKSTART.md:211 030ae49db9264a78a3828918710152dd
+msgid "Common Makers"
+msgstr "Common Makers"
+
+#: ../../source/tutorials-md/QUICKSTART.md:223 c6f829f0c7ac4e95ad79659d65847f63
+msgid "Customize Parameters"
+msgstr "Customize Prmeters"
+
+#: ../../source/tutorials-md/QUICKSTART.md:234 d2ffbd2b27cb4c15b40b915ec1c57dc2
+msgid "Help & Support"
+msgstr "Help & Suppیاt"
+
+#: ../../source/tutorials-md/QUICKSTART.md:236 8e4dc4231b5a40428ded4b2b72ef939a
+msgid "📖 **Full Documentation**: `docs/source/index.rst`"
+msgstr "📖 **Full Documentation**: `docs/source/index.rst`"
+
+#: ../../source/tutorials-md/QUICKSTART.md:237 85f5bfedc8b143a2a8cfaed2fa1f34f4
+msgid "📚 **All Tutorials**: `tutorials/README.md`"
+msgstr "📚 **All Tutorials**: `tutorials/README.md`"
+
+#: ../../source/tutorials-md/QUICKSTART.md:238 c70dd1bae74149ddbcdb3fe1acf79b3a
+msgid "🐛 **Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgstr "🐛 **Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+
+#: ../../source/tutorials-md/QUICKSTART.md:239 4169b95aa53e4b588eceb6226b9471e2
+msgid "💬 **Discussions**: GitHub Discussions"
+msgstr "💬 **Discussions**: GitHub Discussions"
+
+#: ../../source/tutorials-md/QUICKSTART.md:241 2ec32d10e4fb41e89b5fa0c50fe0b7f7
+msgid "Congratulations!"
+msgstr "Congrtultions!"
+
+#: ../../source/tutorials-md/QUICKSTART.md:243 fee55deac22b4e5f8e0faf21ae49b80b
+msgid "You've successfully run your first atomate2siesta calculation! 🎉"
+msgstr "You've successfully run your first tomte2siest clcultion! 🎉"
+
+#: ../../source/tutorials-md/QUICKSTART.md:245 a14ef0ffd9a649c3a6e46e95d99457bf
+msgid ""
+"Now explore the tutorials to learn about advanced workflows, convergence "
+"testing, and production deployment."
+msgstr ""
+
+#: ../../source/tutorials-md/QUICKSTART.md:247 85c14b267de2409786d357ab0d50da6f
+msgid "Happy computing! 🚀"
+msgstr "Hppy computing! 🚀"

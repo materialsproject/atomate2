@@ -1,0 +1,1111 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/README.md:1
+#: 5f0d43a9e6434ef1817df760f8dc2dd6
+msgid "02-Workflows: Multi-Step FlowMaker Workflows"
+msgstr "02-Workflows: Multi-Step FlowMaker Workflows"
+
+#: ../../source/tutorials-md/02-workflows/README.md:3
+#: 040fa7a7e4c14e00976dbb0a2bb5774b
+msgid "**Focus**: Production-ready multi-step workflows for materials properties"
+msgstr "**Focus**: Production-redy multi-step wیاkflows برای mterils properties"
+
+#: ../../source/tutorials-md/02-workflows/README.md:5
+#: 7b3e72cac7844813ba6ad973b1ce5fc6
+msgid "**Difficulty**: Intermediate to Advanced"
+msgstr "**سطح سختی**: متوسط to پیشرفته"
+
+#: ../../source/tutorials-md/02-workflows/README.md:7
+#: 755a8bc2d0c94aac973246760fc0c9b4
+msgid "**Prerequisites**:"
+msgstr "**پیش‌نیازها**:"
+
+#: ../../source/tutorials-md/02-workflows/README.md:8
+#: 2397bebc48994841b7e6db86795b993f
+msgid "Completed [01-basics](../01-basics/)"
+msgstr "Completed [01-bsics](../01-bsics/)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:9
+#: 909ea547396f41459576b62362b8c847
+msgid "Understanding of convergence testing"
+msgstr "درک of convergence testing"
+
+#: ../../source/tutorials-md/02-workflows/README.md:10
+#: 11f3055716304541b4711bc5530895f0
+msgid "Familiarity with jobflow Flow concepts"
+msgstr "Familiarity with jobflow Flow concepts"
+
+#: ../../source/tutorials-md/02-workflows/README.md:11
+#: b75c1c7d337f4653acf594354eb5d603
+msgid "Knowledge of materials properties (EOS, elasticity, phonons)"
+msgstr "Knowledge of mterils properties (EOS, elsticity, phonons)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:15
+#: 899091318862447785da7bc47707dbef
+msgid "Tutorials in This Category"
+msgstr "Tutیاils in This دسته‌بندی"
+
+#: ../../source/tutorials-md/02-workflows/README.md:17
+#: f34071953fa04b14bd041877568ea9a3
+msgid ""
+"This category contains 6 workflow subcategories covering all production-"
+"level calculations:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:19
+#: 898d64ae2abc4e56877680398c87b70a
+msgid "[01-convergence](01-convergence/)"
+msgstr "[01-convergence](01-convergence/)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:20
+#: 34b22425b7c2491b8e782c932e0c4795
+msgid ""
+"**Description**: Systematic convergence testing for k-points, mesh "
+"cutoff, and basis parameters **Workflows**: "
+"MeshCutoffConvergenceFlowMaker, KpointsConvergenceFlowMaker, "
+"MeshKpointConvergenceFlowMaker, BasisConvergenceFlowMaker **Difficulty**:"
+" Intermediate **Time**: ~5 min (dry-run), ~1-3 hours (full calculation) "
+"**Key Concepts**: Convergence criteria, multi-property tracking (energy, "
+"forces, stress, Fermi, bandgap), automatic plotting **Files**: 6 "
+"tutorials covering mesh cutoff, k-points, combined mesh+kpoints, basis "
+"parameters"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:27
+#: e9cf8029ceb7418194d974c67522a326
+msgid "[02-equation-of-states](02-equation-of-states/)"
+msgstr "[02-eqution-of-sttes](02-eqution-of-sttes/)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:28
+#: f066651acd5c42c8b9d652e5f3ed0e07
+msgid ""
+"**Description**: Equation of State (EOS) calculations for bulk modulus "
+"and equilibrium volume **Workflows**: EOSFlowMaker **Difficulty**: "
+"Intermediate **Time**: ~5 min (dry-run), ~30-60 min (full calculation) "
+"**Key Concepts**: Volume scaling, Birch-Murnaghan fitting, bulk modulus, "
+"pressure-volume curves **Files**: Multiple examples with different volume"
+" ranges and fitting methods"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:35
+#: ee25ba0be2e44a53b52f5ad32012397f
+msgid "[03-surfaces-and-adsorption](03-surfaces-and-adsorption/)"
+msgstr "[03-surfces-و-dsیاption](03-surfces-و-dsیاption/)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:36
+#: 5cba74f069c44f508dd945a97c2b64aa
+msgid ""
+"**Description**: Surface energy calculations and adsorption site scanning"
+" **Workflows**: SurfaceEnergyFlowMaker, AdsorptionScanFlowMaker "
+"**Difficulty**: Advanced **Time**: ~5 min (dry-run), ~2-6 hours (full "
+"calculation) **Key Concepts**: Surface generation, slab models, "
+"adsorption site scanning, height scanning, 3D potential energy surfaces, "
+"automatic plotting **Files**: 12 tutorials covering surface basics, "
+"multi-surface comparison, adsorption scanning with grid/height modes"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:43
+#: 997e9aff52de49ce9590a794c07e6e4b
+msgid "[04-mechanical](04-mechanical/)"
+msgstr "[04-mechnicl](04-mechnicl/)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:44
+#: e4949be6fe89472bae3f52217680ed34
+msgid ""
+"**Description**: Elastic constants and mechanical properties "
+"**Workflows**: ElasticFlowMaker **Difficulty**: Advanced **Time**: ~5 min"
+" (dry-run), ~1-2 hours (full calculation) **Key Concepts**: Elastic "
+"tensor, strain perturbations, bulk/shear modulus, Young's modulus, "
+"Poisson's ratio **Files**: Elastic constant calculation examples"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:51
+#: efb5397ea16f454a9083730d9d3d8c0f
+msgid "[05-defects](05-defects/)"
+msgstr "[05-defects](05-defects/)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:52
+#: 591fb287f91c421797580e982e8e9790
+msgid ""
+"**Description**: Point defect calculations (vacancies, interstitials, "
+"substitutions) **Workflows**: DefectFlowMaker **Difficulty**: Advanced "
+"**Time**: ~5 min (dry-run), ~1-3 hours (full calculation) **Key "
+"Concepts**: Defect formation energy, supercell generation, charge "
+"corrections **Files**: Vacancy and substitutional defect examples"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:59
+#: bea51db6d9ba4eee8f5724a47c8dd8bd
+msgid "[06-vibrational-properties](06-vibrational-properties/)"
+msgstr "[06-vibrtionl-properties](06-vibrtionl-properties/)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:60
+#: 0227b8ef167d46bdb3111c7bd064cc72
+msgid ""
+"**Description**: Phonon calculations, Grüneisen parameters, and quasi-"
+"harmonic approximation (QHA) **Workflows**: PhonopyFlowMaker, "
+"GruneisenFlowMaker, QhaFlowMaker **Difficulty**: Intermediate to Advanced"
+" **Time**: ~5 min (dry-run), ~1-6 hours (full calculation) **Key "
+"Concepts**: Phonon band structure, phonon DOS, thermal properties, "
+"thermal expansion, Grüneisen parameters, automatic plotting **Files**: 5 "
+"comprehensive tutorials (01-phonons, 02-gruneisen, 03-qha) with tier "
+"preset examples"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:69
+#: f843a054cb364fed994a35bc9b2664ba
+msgid "Learning Path"
+msgstr "Lerning Pth"
+
+#: ../../source/tutorials-md/02-workflows/README.md:71
+#: 3bc83038d83e4a20a989eebfb7c056d2
+msgid "Choose tutorials based on your research needs:"
+msgstr "Choose tutیاils bsed on your reserch needs:"
+
+#: ../../source/tutorials-md/02-workflows/README.md:73
+#: b0ebe06ec493476796eef0b260037de4
+msgid "Essential for All Users"
+msgstr "ضروری برای All Users"
+
+#: ../../source/tutorials-md/02-workflows/README.md:74
+#: a0861e62a78d4ecaa5d8690f2f605b60
+msgid ""
+"**[01-convergence](01-convergence/)** - MUST DO FIRST for production "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:75
+#: 191e2a3f950f4484bfbb6b896dac64f7
+msgid "Learn systematic parameter optimization"
+msgstr "Lern systemtic prmeter optimiztion"
+
+#: ../../source/tutorials-md/02-workflows/README.md:76
+#: 6c218ff37044436eb7f4a0388bd8b693
+msgid "Multi-property convergence testing"
+msgstr "Multi-property convergence testing"
+
+#: ../../source/tutorials-md/02-workflows/README.md:77
+#: 2aad4f850605406f91013ec79dc14c6f
+msgid "Establish baseline parameters for your system"
+msgstr "Estblish bseline prmeters برای your system"
+
+#: ../../source/tutorials-md/02-workflows/README.md:79
+#: 8ba0dcad6dab400c8c854b5de103f839
+msgid "Structural Properties Track"
+msgstr "Structurl Properties Trck"
+
+#: ../../source/tutorials-md/02-workflows/README.md:80
+#: d644a3dc422642ff84f3c0d2c24ba38b
+msgid ""
+"**[02-equation-of-states](02-equation-of-states/)** - Bulk modulus and "
+"equilibrium volume"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:81
+#: 8a75586e19f1499892306454de8d0be5
+msgid ""
+"**[04-mechanical](04-mechanical/)** - Complete elastic tensor and "
+"mechanical properties"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:83
+#: 73e38a11c0f949ce874577a741e6d557
+msgid "Surface Chemistry Track"
+msgstr "Surfce Chemistry Trck"
+
+#: ../../source/tutorials-md/02-workflows/README.md:84
+#: f27851bf84c546e7bf73aff6712914a9
+msgid ""
+"**[03-surfaces-and-adsorption](03-surfaces-and-adsorption/)** - Surface "
+"energy and adsorption sites"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:85
+#: f5d6a60ba2594bfc9e5056beb938dcd6
+msgid "Surface slab generation and termination discovery"
+msgstr "Surfce slb genertion و termintion discovery"
+
+#: ../../source/tutorials-md/02-workflows/README.md:86
+#: dfcc9abc8d204526b5f8a0204143563f
+msgid "Grid-based adsorption site scanning"
+msgstr "Grid-bsed dsیاption site scnning"
+
+#: ../../source/tutorials-md/02-workflows/README.md:87
+#: 03ccee03b3da4b859f9f96cfc58c535b
+msgid "Height-scanned 3D potential energy surfaces"
+msgstr "Height-scnned 3D potentil energy surfces"
+
+#: ../../source/tutorials-md/02-workflows/README.md:89
+#: ec01852df2d0451284058624c0cded11
+msgid "Vibrational Properties Track"
+msgstr "Vibrtionl Properties Trck"
+
+#: ../../source/tutorials-md/02-workflows/README.md:90
+#: b5f0874553154716976b2b27fa9c89ae
+msgid ""
+"**[06-vibrational-properties](06-vibrational-properties/)** - Phonons, "
+"Grüneisen, QHA"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:91
+#: 02a885a7637d4c58abceb916dc962543
+msgid "Phonon band structure and DOS"
+msgstr "فونون bو structure و DOS"
+
+#: ../../source/tutorials-md/02-workflows/README.md:92
+#: 3d54421f8fa24bbdaa1c48a1cfd06d7f
+msgid "Thermal expansion coefficients"
+msgstr "Therml expnsion coefficients"
+
+#: ../../source/tutorials-md/02-workflows/README.md:93
+#: 94cf1b3218ad475181ad0c364336df9a
+msgid "Quasi-harmonic approximation for thermodynamics"
+msgstr "Qusi-hrmonic pproximtion برای rmodynmics"
+
+#: ../../source/tutorials-md/02-workflows/README.md:95
+#: 87fc9539176c4481b17efaa354b80d76
+msgid "Defect Chemistry Track"
+msgstr "Defect Chemistry Trck"
+
+#: ../../source/tutorials-md/02-workflows/README.md:96
+#: 0b61955defc844088395e6b224082ff5
+msgid "**[05-defects](05-defects/)** - Point defects and formation energies"
+msgstr "**[05-defects](05-defects/)** - Point defects و برایmtion energies"
+
+#: ../../source/tutorials-md/02-workflows/README.md:97
+#: 540469af5f414a2db4c551e17e3cc5f6
+msgid "Vacancy formation energy"
+msgstr "Vcncy برایmtion energy"
+
+#: ../../source/tutorials-md/02-workflows/README.md:98
+#: 44ce01c7b50a451faf591e4581f43dab
+msgid "Substitutional and interstitial defects"
+msgstr "Substitutionl و interstitil defects"
+
+#: ../../source/tutorials-md/02-workflows/README.md:102
+#: d7e1b8889ce64896ac619a4a593155b2
+msgid "Workflow Characteristics"
+msgstr "گردش کار Chrcteristics"
+
+#: ../../source/tutorials-md/02-workflows/README.md:104
+#: 3abb0725723a4fb48a4db6299be65101
+msgid "All workflows in this category:"
+msgstr "All wیاkflows in this ctegیاy:"
+
+#: ../../source/tutorials-md/02-workflows/README.md:105
+#: 2fe94a936a664480a307ac61a13d2401
+msgid "✅ **Multi-step**: Automatically manage job dependencies"
+msgstr "✅ **Multi-step**: Automticlly mnge job dependencies"
+
+#: ../../source/tutorials-md/02-workflows/README.md:106
+#: 1e5e1039f7cf4979bd0b75b6eb2ac216
+msgid "✅ **Self-contained**: No manual intervention required"
+msgstr "✅ **Self-contined**: No mnul intervention required"
+
+#: ../../source/tutorials-md/02-workflows/README.md:107
+#: d6538d6c70d74528972364f45f792ae9
+msgid "✅ **Production-ready**: Suitable for publication-quality results"
+msgstr "✅ **Production-redy**: Suitble برای publiction-qulity results"
+
+#: ../../source/tutorials-md/02-workflows/README.md:108
+#: ec703af24bbb4b2cb1540a7083b0d85e
+msgid "✅ **Automatic analysis**: Generate plots and summary files"
+msgstr "✅ **Automtic nlysis**: Generte plots و summry files"
+
+#: ../../source/tutorials-md/02-workflows/README.md:109
+#: 5d046b21c568465691499d2884339475
+msgid "✅ **Database-compatible**: Store results in MongoDB"
+msgstr "✅ **Dtbse-comptible**: Stیاe results in MongoDB"
+
+#: ../../source/tutorials-md/02-workflows/README.md:110
+#: f9ed00db895141508c2f0a61c08af480
+msgid "✅ **Checkpoint/restart**: Resume failed workflows (where applicable)"
+msgstr "✅ **Checkpoint/restrt**: Resume filed wیاkflows (where pplicble)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:111
+#: aaa1d738c36348a8af20319282571391
+msgid "✅ **Tier preset compatible**: Use material-specific parameter sets"
+msgstr "✅ **Tier preset comptible**: Use mteril-specific prmeter sets"
+
+#: ../../source/tutorials-md/02-workflows/README.md:115
+#: 0c1ccbcc851b4375b9cce7e791717209
+msgid "Quick Start Pattern"
+msgstr "شروع سریع Pttern"
+
+#: ../../source/tutorials-md/02-workflows/README.md:117
+#: 885bc3ac99624221b89d8fca05550169
+msgid "All FlowMakers follow a consistent pattern:"
+msgstr "All FlowMakers follow a consistent pattern:"
+
+#: ../../source/tutorials-md/02-workflows/README.md:142
+#: 7504fd7008444f6880f2a6e2cf0a50ae
+msgid "Execution Modes"
+msgstr "Execution Modes"
+
+#: ../../source/tutorials-md/02-workflows/README.md:144
+#: 27c99da25e2b432db79c58b87709d841
+msgid "All workflows support three execution modes:"
+msgstr "All wیاkflows suppیاt three execution modes:"
+
+#: ../../source/tutorials-md/02-workflows/README.md:146
+#: 7046a4edc2d2429187c261cf16b40dfa
+msgid "1. Dry-Run Mode (Preview)"
+msgstr "1. Dry-Run Mode (Preview)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:156
+#: df3059ba99a04f5eb06700a62804e274
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../source/tutorials-md/02-workflows/README.md:165
+#: ab877a31c7764e1e9acfe9f98303b93b
+msgid "3. Remote HPC Submission"
+msgstr "3. Remote HPC Submission"
+
+#: ../../source/tutorials-md/02-workflows/README.md:178
+#: b066a522a24f4061a3647f7e54dbe86a
+msgid "Using Tier Presets with Workflows"
+msgstr "استفاده از Tier Presets با گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/README.md:180
+#: 4c76d173aa0a467e8947f67c5e2a5dfc
+msgid "All FlowMakers accept tier presets or custom parameters:"
+msgstr "All FlowMakers accept tier presets or custom parameters:"
+
+#: ../../source/tutorials-md/02-workflows/README.md:201
+#: 0e30df84c2cb4fdd9ef73f1c43765629
+msgid "Common Workflow Parameters"
+msgstr "Common گردش کار Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/README.md:203
+#: ../../source/tutorials-md/02-workflows/README.md:235
+#: 4fb462eeab5649c29efe7f5e1a64d119 63ea6a0e99e34eee9b445e9fd49bfe9f
+msgid "Convergence Workflows"
+msgstr "همگرایی گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/README.md:204
+#: 5b1d59905103485d9f98a9138ec67c15
+msgid "**Mesh cutoff range**: 100-400 Ry (7-9 points)"
+msgstr "**Mesh cutoff rnge**: 100-400 Ry (7-9 points)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:205
+#: 5501d3da50784c2c975bbcac67f20761
+msgid "**K-points range**: [2,2,2] to [12,12,12] (4-6 points)"
+msgstr "**K-points rnge**: [2,2,2] to [12,12,12] (4-6 points)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:206
+#: ce859b37831445f3a19a25dc884f55cf
+msgid ""
+"**Convergence criteria**: Energy (0.01 eV), Forces (0.05 eV/Å), Stress "
+"(0.1 GPa)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:207
+#: bb32b09258bc44b1a03b06b729c88e34
+msgid ""
+"**Multi-property tracking**: Energy, Fermi energy, band gap, forces, "
+"stress"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:209
+#: 6712d0dc66ed4c918cfaec5fac2f7f4c
+msgid "EOS Workflows"
+msgstr "EOS گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/README.md:210
+#: 6e2e40f94599408facccdb084c7c6b69
+msgid "**Volume range**: ±6% (scales: 0.94-1.06)"
+msgstr "**Volume rnge**: ±6% (scles: 0.94-1.06)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:211
+#: 96dbd4c803c74dc0a61ef34c917f013b
+msgid "**Number of points**: 7-11 (more for accurate fitting)"
+msgstr "**Number of points**: 7-11 (mیاe برای ccurte fitting)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:212
+#: 92448c2cbf5f486bbb559d273b91aeef
+msgid "**Fitting method**: Birch-Murnaghan (3rd or 4th order)"
+msgstr "**Fitting method**: Birch-Murnghn (3rd یا 4th یاder)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:214
+#: 2bc245e86c984b889d730a92c13b126c
+msgid "Surface Workflows"
+msgstr "Surfce گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/README.md:215
+#: a51b92f221934ac2b718e8b479eca6f0
+msgid "**Slab thickness**: 10-20 Å (depends on material)"
+msgstr "**Slb thickness**: 10-20 Å (depends on mteril)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:216
+#: 0bfdcaeed95948269712dbe92b469f72
+msgid "**Vacuum spacing**: 15-20 Å"
+msgstr "**Vcuum spcing**: 15-20 Å"
+
+#: ../../source/tutorials-md/02-workflows/README.md:217
+#: 6b78e391ffba46a484ee1208683592c5
+msgid "**Adsorption grid**: 4×4 or 6×6 points"
+msgstr "**Adsیاption grid**: 4×4 یا 6×6 points"
+
+#: ../../source/tutorials-md/02-workflows/README.md:218
+#: 9d08592709064e08bf5a7042ade56601
+msgid "**Height scanning**: 2.0-3.5 Å (0.1-0.2 Å steps)"
+msgstr "**Height scnning**: 2.0-3.5 Å (0.1-0.2 Å steps)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:220
+#: 34e6dc64677b4e94909866f458269c0a
+msgid "Phonon Workflows"
+msgstr "فونون گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/README.md:221
+#: bda6b91b9d9f4713b7b9a37eb3a62c89
+msgid "**Supercell size**: 2×2×2 or larger (min_length ≥ 15 Å)"
+msgstr "**Supercell size**: 2×2×2 یا lrger (min_length ≥ 15 Å)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:222
+#: 1a5599eae2e14339a538a3ade09fae9c
+msgid "**Displacement**: 0.01 Å (default)"
+msgstr "**Displcement**: 0.01 Å (defult)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:223
+#: c0b6e2e6a4df44f49354ed5456d6ee58
+msgid "**Force constants**: Symmetry-reduced"
+msgstr "**Fیاce constnts**: Symmetry-reduced"
+
+#: ../../source/tutorials-md/02-workflows/README.md:224
+#: 2e62d20ef9b84dc58d73ac1841c93016
+msgid "**Automatic plotting**: Band structure, DOS, thermal properties"
+msgstr "**Automtic plotting**: Bو structure, DOS, rml properties"
+
+#: ../../source/tutorials-md/02-workflows/README.md:226
+#: bc22f987ee2348a4ae73ef6891137713
+msgid "Elastic Workflows"
+msgstr "Elstic گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/README.md:227
+#: 267af96080ae4df4a4a032ced04d72c4
+#, python-format
+msgid "**Strain magnitude**: 0.01 (1% strain)"
+msgstr "**Strin mgnitude**: 0.01 (1% strin)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:228
+#: be4f0961b5d8429593458356976a0bdb
+msgid "**Number of strains**: 24 (cubic) or more (lower symmetry)"
+msgstr "**Number of strins**: 24 (cubic) یا mیاe (lower symmetry)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:229
+#: 60b187d6626c4f9cbedaefaecd9a1105
+msgid "**Symmetry**: Automatic detection and reduction"
+msgstr "**Symmetry**: Automtic detection و reduction"
+
+#: ../../source/tutorials-md/02-workflows/README.md:233
+#: c312fe7befa9449785084dde5a5c3f35
+msgid "Expected Output Files"
+msgstr "خروجی مورد انتظار فایلs"
+
+#: ../../source/tutorials-md/02-workflows/README.md:236
+#: dc1b4a7578de4f1a8a9a77ff3d6f74f7
+msgid "`mesh_cutoff_convergence.png` - Convergence plot (6 properties)"
+msgstr "`mesh_cutoff_convergence.png` - Convergence plot (6 properties)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:237
+#: f8c0df91caf34a1891676841a19f69f6
+msgid "`convergence_summary.json` - Converged parameters"
+msgstr "`convergence_summary.json` - Converged parameters"
+
+#: ../../source/tutorials-md/02-workflows/README.md:238
+#: 9a62504740804c6784ac9b4bf60859cc
+msgid "`parameter_evolution.log` - Full parameter tracking"
+msgstr "`parameter_evolution.log` - Full parameter tracking"
+
+#: ../../source/tutorials-md/02-workflows/README.md:240
+#: 0f5dce80167846d695a3ac84adfa482a
+msgid "EOS Workflow"
+msgstr "EOS گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/README.md:241
+#: aaca0cbfc8bd4c709c1f64234489bd4b
+msgid "`eos_plot.png` - E vs V curve with fitted EOS"
+msgstr "`eos_plot.png` - E vs V curve with fitted EOS"
+
+#: ../../source/tutorials-md/02-workflows/README.md:242
+#: 9160817d4aea4bcda1419fa3ad466309
+msgid "`eos_summary.txt` - Bulk modulus, equilibrium volume"
+msgstr "`eos_summary.txt` - Bulk modulus, equilibrium volume"
+
+#: ../../source/tutorials-md/02-workflows/README.md:243
+#: b262058ed688485f9887fdcb6fae6b8f
+msgid "Fitted parameters (B₀, V₀, B'₀)"
+msgstr "Fitted prmeters (B₀, V₀, B'₀)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:245
+#: 652d3a500de64145a690d0f498b4fd76
+msgid "Surface Workflow"
+msgstr "Surfce گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/README.md:246
+#: 147503d0a0a0495d89c2e3902d221f2e
+msgid "`multi_surface_comparison.png` - Energy comparison plot"
+msgstr "`multi_surface_comparison.png` - Energy comparison plot"
+
+#: ../../source/tutorials-md/02-workflows/README.md:247
+#: 9930b5e6963b4b26a812d128936c474b
+msgid "`multi_surface_summary.txt` - Surface energies table"
+msgstr "`multi_surface_summary.txt` - Surface energies table"
+
+#: ../../source/tutorials-md/02-workflows/README.md:248
+#: 603ed0db4fcb4b63b94e91ba0992558d
+msgid "Individual surface structures (CIF files)"
+msgstr "Individul surfce structures (CIF files)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:250
+#: 1d98b60b27d04895a271290de3f6fdf0
+msgid "Adsorption Workflow"
+msgstr "Adsیاption گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/README.md:251
+#: ae28179bac714d07af1085c134b8e672
+msgid "`adsorption_energy_map.png` - Energy heatmap (2D or height-resolved)"
+msgstr "`adsorption_energy_map.png` - Energy heatmap (2D or height-resolved)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:252
+#: 4760034f65d741d5bddba3ff0003d292
+msgid "`adsorption_sites.png` - Discrete site energies"
+msgstr "`adsorption_sites.png` - Discrete site energies"
+
+#: ../../source/tutorials-md/02-workflows/README.md:253
+#: dff12c1b38c045d38665ce2363834586
+msgid "`optimal_height_map.png` - Best height at each (x,y) position"
+msgstr "`optimal_height_map.png` - Best height at each (x,y) position"
+
+#: ../../source/tutorials-md/02-workflows/README.md:254
+#: 76636beb159d44a5989af4a156a73527
+msgid "`best_structure.cif` - Lowest energy configuration"
+msgstr "`best_structure.cif` - Lowest energy configuration"
+
+#: ../../source/tutorials-md/02-workflows/README.md:255
+#: ed2af454765f4736aed45f6fccc06f18
+msgid "`adsorption_summary.txt` - Best site and energy"
+msgstr "`adsorption_summary.txt` - Best site and energy"
+
+#: ../../source/tutorials-md/02-workflows/README.md:257
+#: 1dcfd77fca3b42948c9763f4d7fa5e73
+msgid "Phonon Workflow"
+msgstr "فونون گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/README.md:258
+#: 1b2387151ff5428b8a35ff71314a0342
+msgid "`phonon_bands.png` - Phonon dispersion curves"
+msgstr "`phonon_bands.png` - Phonon dispersion curves"
+
+#: ../../source/tutorials-md/02-workflows/README.md:259
+#: d2d4723acd984707a5bc9b0c339d8f2f
+msgid "`phonon_dos.png` - Phonon density of states"
+msgstr "`phonon_dos.png` - Phonon density of states"
+
+#: ../../source/tutorials-md/02-workflows/README.md:260
+#: 1479b649ec1c4a7f97de29600d174e1a
+msgid "`thermal_properties.png` - Cv, entropy, free energy vs T"
+msgstr "`thermal_properties.png` - Cv, entropy, free energy vs T"
+
+#: ../../source/tutorials-md/02-workflows/README.md:261
+#: 2ce93ee3d61141a098cbbfbd4f690fc1
+msgid "`force_constants.hdf5` - Force constants matrix"
+msgstr "`force_constants.hdf5` - Force constants matrix"
+
+#: ../../source/tutorials-md/02-workflows/README.md:263
+#: 74d5081925c94c248b1c9ae1e5487a38
+msgid "Grüneisen Workflow"
+msgstr "Grüneisen گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/README.md:264
+#: 83d482ca5a934339899d799bf9dd5ca8
+msgid ""
+"6 plots: band structure, DOS, thermal properties, Grüneisen parameters, "
+"thermal expansion, heat capacity"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:265
+#: 5beaebe152ae41258af80f39641e237a
+msgid "`gruneisen_summary.txt` - Thermal expansion coefficients"
+msgstr "`gruneisen_summary.txt` - Thermal expansion coefficients"
+
+#: ../../source/tutorials-md/02-workflows/README.md:269
+#: ff446d12752b457aa0219bf2c61c88ea
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/README.md:271
+#: fce66213b91c40c5ba4009485acd2544
+msgid "Issue 1: \"Convergence test takes too long\""
+msgstr "Issue 1: \"همگرایی test tkes too long\""
+
+#: ../../source/tutorials-md/02-workflows/README.md:272
+#: ../../source/tutorials-md/02-workflows/README.md:279
+#: ../../source/tutorials-md/02-workflows/README.md:286
+#: ../../source/tutorials-md/02-workflows/README.md:293
+#: ../../source/tutorials-md/02-workflows/README.md:300
+#: 032c439692f543ac88d79175b1c057cb 158e05c955494082a98dd149aa246c72
+#: 257cc0915462402299e80d75d9b9cddb e2788b480767493aae890d1f15e92033
+#: e2fcc901d4d94501bc68ce18f5fc106b
+msgid "**Solution**:"
+msgstr "**Solution**:"
+
+#: ../../source/tutorials-md/02-workflows/README.md:273
+#: a2f15e21907640d58216d3bd3f086aa2
+msgid "Use dry-run to verify number of jobs"
+msgstr "Use dry-run to verify number of jobs"
+
+#: ../../source/tutorials-md/02-workflows/README.md:274
+#: cb7e1432040b48b3878be148956149cb
+msgid "Start with fewer test points (5 instead of 9)"
+msgstr "Strt با fewer test points (5 insted of 9)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:275
+#: b94ec122f57a4e4380ea3e27236489ee
+msgid ""
+"Submit to HPC cluster (see [03-advanced-features/03-infrastructure](../03"
+"-advanced-features/03-infrastructure/))"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:276
+#: 8f109d325dd24b908440bcbe02b3e47a
+msgid "Use checkpoint/restart for failed jobs"
+msgstr "Use checkpoint/restrt برای filed jobs"
+
+#: ../../source/tutorials-md/02-workflows/README.md:278
+#: b89b721b0de2402f8375d39a2f3ffb72
+msgid "Issue 2: \"EOS fitting fails\""
+msgstr "Issue 2: \"EOS fitting fils\""
+
+#: ../../source/tutorials-md/02-workflows/README.md:280
+#: e4ff14f8c73f4d20b60c0ee8bafb4bb0
+#, python-format
+msgid "Increase volume range (±8% or ±10%)"
+msgstr "Increse volume rnge (±8% یا ±10%)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:281
+#: ebf0472ed3af47a3a2956e8a55f35c1b
+msgid "Add more data points (9 or 11 volumes)"
+msgstr "Add mیاe dt points (9 یا 11 volumes)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:282
+#: 91fb07852c38425a93aca4bd384d4d9d
+msgid "Check for structural instabilities"
+msgstr "Check برای structurl instbilities"
+
+#: ../../source/tutorials-md/02-workflows/README.md:283
+#: e965cacd163c40cdadcb75e668b980df
+msgid "Ensure relaxations converged properly"
+msgstr "Ensure relxtions converged properly"
+
+#: ../../source/tutorials-md/02-workflows/README.md:285
+#: 0d4cf91e93ca4469bf5fc22395f70879
+msgid "Issue 3: \"Surface energy is negative or unrealistic\""
+msgstr "Issue 3: \"Surfce energy is negtive یا unrelistic\""
+
+#: ../../source/tutorials-md/02-workflows/README.md:287
+#: 98219d393771401dbe91eb3949ae924b
+msgid "Increase slab thickness (>10 Å)"
+msgstr "Increse slb thickness (>10 Å)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:288
+#: c9e550dcdc8243c28035c78384aa67bb
+msgid "Increase vacuum spacing (>15 Å)"
+msgstr "Increse vcuum spcing (>15 Å)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:289
+#: da7065bc9a5040e4b075bd80d755e76a
+msgid "Check surface is charge-neutral"
+msgstr "Check surfce is chrge-neutrl"
+
+#: ../../source/tutorials-md/02-workflows/README.md:290
+#: 1b2b8b11b9224747ae958a3ac304fda7
+msgid "Use converged bulk parameters"
+msgstr "Use converged bulk prmeters"
+
+#: ../../source/tutorials-md/02-workflows/README.md:292
+#: 7842e77a0b924e879cf9b13c08782496
+msgid "Issue 4: \"Phonon has imaginary modes at Γ\""
+msgstr "Issue 4: \"فونون hs imginry modes t Γ\""
+
+#: ../../source/tutorials-md/02-workflows/README.md:294
+#: 9d5929adab334245bb5fbcd2baa1dad5
+msgid "Ensure structure is fully relaxed and stable"
+msgstr "Ensure structure is fully relxed و stble"
+
+#: ../../source/tutorials-md/02-workflows/README.md:295
+#: 2c0759dd0da04216a9dfc33696114500
+msgid "Increase supercell size (min_length ≥ 15 Å)"
+msgstr "Increse supercell size (min_length ≥ 15 Å)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:296
+#: 0fcaa9c1bcf14ec99bd158dc4d7f5793
+msgid "Check force convergence threshold"
+msgstr "Check برایce convergence threshold"
+
+#: ../../source/tutorials-md/02-workflows/README.md:297
+#: adae1a1f03774cbdaa7bd3d2ccabd668
+msgid "Use tighter SCF convergence"
+msgstr "Use tighter SCF convergence"
+
+#: ../../source/tutorials-md/02-workflows/README.md:299
+#: 12ded4b932b54d66962b0a642d7ff4de
+msgid "Issue 5: \"Elastic constants don't satisfy stability criteria\""
+msgstr "Issue 5: \"Elstic constnts don't stisfy stbility criteri\""
+
+#: ../../source/tutorials-md/02-workflows/README.md:301
+#: db7708cf463d4d71a1eb0aa4a4998963
+msgid "Ensure structure is at equilibrium (relaxed)"
+msgstr "Ensure structure is t equilibrium (relxed)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:302
+#: 082128b9b76e4aa4aa40e5801926f142
+msgid "Use well-converged parameters"
+msgstr "Use well-converged prmeters"
+
+#: ../../source/tutorials-md/02-workflows/README.md:303
+#: ee813bcdde07422aac908ad9ed750b3d
+msgid "Check for numerical noise (reduce strain magnitude)"
+msgstr "Check برای numericl noise (reduce strin mgnitude)"
+
+#: ../../source/tutorials-md/02-workflows/README.md:304
+#: bf8f0cba0f5340168e61021549130e0a
+msgid "Verify crystal symmetry is correct"
+msgstr "Verify crystl symmetry is cیاrect"
+
+#: ../../source/tutorials-md/02-workflows/README.md:308
+#: f4b6ee68a191420cb9715ddcf03ac6f7
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/README.md:310
+#: b365e3b2db7d4549bf9f0677112d6859
+msgid ""
+"**Always converge first**: Complete [01-convergence](01-convergence/) "
+"before other workflows"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:311
+#: e8a20812e433419a9c1508e389f61c18
+msgid "**Start with dry-run**: Preview structure transformations and job counts"
+msgstr "**Strt با dry-run**: Preview structure trnsبرایmtions و job counts"
+
+#: ../../source/tutorials-md/02-workflows/README.md:312
+#: d8d462710ccd4ce5ac921d9484ac4703
+msgid "**Use tier presets**: Material-specific presets for consistent parameters"
+msgstr "**Use tier presets**: Mteril-specific presets برای consistent prmeters"
+
+#: ../../source/tutorials-md/02-workflows/README.md:313
+#: 36150243d81140f7ab90eb63996abbb6
+msgid ""
+"**Enable database**: Store results for later analysis (see [03-advanced-"
+"features/03-infrastructure](../03-advanced-features/03-infrastructure/))"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:314
+#: c10c69ffdaae47b08e4436adcb076509
+msgid "**Document parameters**: Keep workflow parameters for reproducibility"
+msgstr "**Document prmeters**: Keep wیاkflow prmeters برای reproducibility"
+
+#: ../../source/tutorials-md/02-workflows/README.md:315
+#: 83f2dd97a9004053aac8fd79f5806089
+msgid "**Validate results**: Compare with literature/experiments"
+msgstr "**Vlidte results**: Compre با literture/experiments"
+
+#: ../../source/tutorials-md/02-workflows/README.md:316
+#: 9542d94d03e54b918e24a877fc696309
+msgid "**Checkpoint long jobs**: Enable restart for multi-hour calculations"
+msgstr "**Checkpoint long jobs**: Enble restrt برای multi-hour clcultions"
+
+#: ../../source/tutorials-md/02-workflows/README.md:320
+#: bbd11bb0a45a49debc6c015ad42e0e9d
+msgid "Workflow Scaling"
+msgstr "گردش کار Scling"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 0fd3225b4e0e4d8e93ef3c72fe4199af
+msgid "Workflow"
+msgstr "گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 606d088e50fc4a7397f0e4b03dabe985
+msgid "Typical Jobs"
+msgstr "Typicl Jobs"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: cba53a94722341acb2858ed2f127fc0a
+msgid "Est. Time (local)"
+msgstr "Est. زمان (locl)"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 9f05c0166c244436a4b618c694ef2622
+msgid "Est. Time (HPC)"
+msgstr "Est. زمان (HPC)"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 986d8644997a441aa8ce9269d51f727b
+msgid "Mesh cutoff conv."
+msgstr "Mesh cutoff conv."
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: aee17654532c4a2a83fa67b11e9e0899
+msgid "7-9"
+msgstr "7-9"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 7aaa8459cfb14ce093852ef11ba88a30 d7f94cc58d314ce5a187315fc367dbaa
+msgid "1-2 hours"
+msgstr "1-2 hours"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: a35b29c7b4484873b29a3e5e916bcc71
+msgid "10-20 min"
+msgstr "10-20 min"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 0f40b6cb82634b1cb307c39193829104
+msgid "K-points conv."
+msgstr "K-points conv."
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: fe0b26adeae642ceae4f22a9a97951f5
+msgid "5-7"
+msgstr "5-7"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 68aef2b4946a434f8e31ac7738f434e1 83063b8ed85a4eeba047f39e721f82cc
+msgid "1-3 hours"
+msgstr "1-3 hours"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: d03de01202a84abe83cfee344ba3244a
+msgid "15-30 min"
+msgstr "15-30 min"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 3f1463d8f2c445c5a4b9bfb98c56f2c7
+msgid "Combined conv."
+msgstr "Combined conv."
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 95618164d1d14330abc09394f8d0fca1
+msgid "10-15"
+msgstr "10-15"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 93af7813b02344c9ae550b2cb9f5b84c
+msgid "3-6 hours"
+msgstr "3-6 hours"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 9a4b00f565294357b1af42e24e050ea6 b4af0c0009554c6f95cb6d0f31cf0440
+#: dbb20aeac83f49959f5a7ac16b8d8a63
+msgid "30-60 min"
+msgstr "30-60 min"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: de6a8e79db3d4a34874ed484f950172e
+msgid "EOS"
+msgstr "EOS"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 3e8bd406e0ee42ccaa156e4e9a462ff0
+msgid "7-11"
+msgstr "7-11"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 07cce79c68f54fa3ab9c89c843fc3e17
+msgid "10-15 min"
+msgstr "10-15 min"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: c1891e0f05ac4d9f9dd689c9fa04b4ee
+msgid "Elastic"
+msgstr "Elstic"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: b433f62378bb4cfebad5aa5e9acc075b
+msgid "24+"
+msgstr "24+"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 9b15c52f750845fd8ec93a38820e9dcb
+msgid "20-40 min"
+msgstr "20-40 min"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: bd8e090e7a8742bc87c073136d6b8949
+msgid "Phonon"
+msgstr "فونون"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: db033b7380ce43a1ab6eebf937bf309a
+msgid "20-50"
+msgstr "20-50"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: ef774dabfd9d44f1a04e0640eda275cd
+msgid "2-6 hours"
+msgstr "2-6 hours"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 43bc7debfda0400d949e7076069a3625
+msgid "30-90 min"
+msgstr "30-90 min"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 45457c79e9934c969ce6294302ff2bd6
+msgid "Grüneisen"
+msgstr "Grüneisen"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 3df7da9b9cfd4a6391a9029074086099
+msgid "60-150"
+msgstr "60-150"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 7b29287cec574134aebe07024a558f16
+msgid "6-12 hours"
+msgstr "6-12 hours"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 7b4a2df8832a47a58433e274d6c1c2b7
+msgid "Adsorption scan"
+msgstr "Adsیاption scn"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 7e7b4ef83dde47ecae9d6653953b971a
+msgid "16-36"
+msgstr "16-36"
+
+#: ../../source/tutorials-md/02-workflows/README.md
+#: 08f39c7841534a329741e54c1d357f71
+msgid "2-4 hours"
+msgstr "2-4 hours"
+
+#: ../../source/tutorials-md/02-workflows/README.md:333
+#: dd71d8e3bec04bae9f3de9d8e7b9e8ef
+msgid ""
+"*Times assume Si-like system with DZP basis. Scale accordingly for larger"
+" systems.*"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:337
+#: 9d7911fe2bf74c678a97ce330d39f684
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/README.md:339
+#: d47de5188e7241ac9796dc86a6751a14
+msgid "After completing workflows, proceed to:"
+msgstr "After completing wیاkflows, proceed to:"
+
+#: ../../source/tutorials-md/02-workflows/README.md:341
+#: 31bdd24e8f3b4ebf891a46a18bc3074f
+msgid "Advanced Workflow Features"
+msgstr "پیشرفته گردش کار ویژگی‌ها"
+
+#: ../../source/tutorials-md/02-workflows/README.md:342
+#: 91fb955f541449c198ac49677178bb2e
+msgid ""
+"**[03-advanced-features/03-powerups](../03-advanced-"
+"features/03-powerups/)** - Customize workflows dynamically"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:343
+#: 6849797af4f14611a1ef07250fa9492a
+msgid ""
+"**[03-advanced-features/08-recipe-book](../03-advanced-features/08"
+"-recipe-book/)** - High-level workflow system (39 recipes)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:344
+#: 12c09b328b08463fb36772d3d5929d34
+msgid ""
+"**[03-advanced-features/03-infrastructure](../03-advanced-"
+"features/03-infrastructure/)** - Database, HPC, error handling"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:346
+#: f1cbe6bc823e40eb890a9b8a0af48c49
+msgid "Specialized Calculations"
+msgstr "Specilized محاسبهs"
+
+#: ../../source/tutorials-md/02-workflows/README.md:347
+#: 142eff9800214db2bf339416eb8b9cd0
+msgid ""
+"**[03-advanced-features/16-magnetic-calculations](../03-advanced-"
+"features/16-magnetic-calculations/)** - Spin-polarized systems"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:348
+#: 524c9e89c0974a9a8d5b6ee948f4f12a
+msgid ""
+"**[03-advanced-features/08-dftu](../03-advanced-features/08-dftu/)** - "
+"DFT+U for correlated electrons"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:349
+#: 024d85121b8f4e039dfcc267e7ddb87a
+msgid ""
+"**[03-advanced-features/07-optical-properties](../03-advanced-features/07"
+"-optical-properties/)** - Optical absorption"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:353
+#: 1194d36fc6fe4101ba66c3378d5d4c06
+msgid "Tutorial Metrics"
+msgstr "Tutیاil Metrics"
+
+#: ../../source/tutorials-md/02-workflows/README.md:355
+#: deb8fbc200974c37a353a91615a282f3
+msgid "**Total workflow categories**: 6 main categories"
+msgstr "**Totl wیاkflow ctegیاies**: 6 min ctegیاies"
+
+#: ../../source/tutorials-md/02-workflows/README.md:356
+#: e5c29df69ebc475896617bcf3cf137a0
+msgid "**Total FlowMakers**: 13 production workflows"
+msgstr "**Total FlowMakers**: 13 production workflows"
+
+#: ../../source/tutorials-md/02-workflows/README.md:357
+#: b25e78ec73a0474987a907588df18b36
+msgid "**Total tutorial files**: 50+ Python scripts"
+msgstr "**Totl tutیاil files**: 50+ Python scripts"
+
+#: ../../source/tutorials-md/02-workflows/README.md:358
+#: 08ef34608c674964b3dcd509408542c2
+msgid "**Coverage**: All major materials properties"
+msgstr "**Coverge**: All mjیا mterils properties"
+
+#: ../../source/tutorials-md/02-workflows/README.md:359
+#: e048ae061a2a4dd49eaa0a8df974651a
+msgid ""
+"**Difficulty**: Intermediate (convergence, EOS, phonons) + Advanced "
+"(surfaces, defects, elastic)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/README.md:363
+#: 02af049ea52a4773b23341e87347daaa
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"

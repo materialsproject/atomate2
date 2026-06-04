@@ -1,0 +1,389 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/index.rst:42
+msgid "Getting Started"
+msgstr "شروع کار"
+
+#: ../../source/index.rst:53
+msgid "CLI Tools"
+msgstr "ابزارهای خط فرمان"
+
+#: ../../source/index.rst:65
+msgid "Key Features"
+msgstr "ویژگی‌های کلیدی"
+
+#: ../../source/index.rst:80
+msgid "Learning Paths"
+msgstr "مسیرهای یادگیری"
+
+#: ../../source/index.rst:90
+msgid "Tutorials (Hands-On)"
+msgstr "آموزش‌های عملی"
+
+#: ../../source/index.rst:99
+msgid "API Reference"
+msgstr "مرجع API"
+
+#: ../../source/index.rst:105
+msgid "Development"
+msgstr "توسعه"
+
+#: ../../source/index.rst:5 591d171a0c1a46d6880a5260027b707e
+msgid "atomate2siesta: Automated SIESTA Workflows"
+msgstr "atomate2siesta: جریان‌های کار خودکار SIESTA"
+
+#: ../../source/index.rst:7 58e28bfe1f154cbea63140d4d3cbe906
+msgid "Atomate2-Siesta logo"
+msgstr "لوگوی Atomate2-Siesta"
+
+#: ../../source/index.rst:14 037d4c51983c4de2b0aa8640f6262ae9
+msgid ""
+"**Powerful, production-ready computational materials science workflows "
+"with SIESTA and Atomate2**"
+msgstr ""
+"**جریان‌های کار قدرتمند و آماده برای تولید در علم محاسباتی مواد با SIESTA و Atomate2**"
+
+#: ../../source/index.rst:18 564dbe736ef941a58d192293b3ba0dda
+msgid ""
+"atomate2siesta integrates the quantum chemistry code SIESTA with the "
+"Atomate2 workflow framework, providing automated, scalable, and "
+"reproducible materials simulations with intelligent error recovery and "
+"extensive analysis tools."
+msgstr ""
+"atomate2siesta کد شیمی کوانتومی SIESTA را با چارچوب جریان کار Atomate2 یکپارچه می‌کند و "
+"شبیه‌سازی‌های مواد خودکار، مقیاس‌پذیر و قابل بازتولید را با بازیابی هوشمند خطا و "
+"ابزارهای تحلیلی گسترده فراهم می‌آورد."
+
+#: ../../source/index.rst:25 ba7f128b1955474abe06368ef2b77be8
+msgid "Quick Links"
+msgstr "پیوندهای سریع"
+
+#: ../../source/index.rst:27 68c3c69f40124c10b4763e006716d5e8
+msgid ""
+"🚀 **Quickstart**: `5-Minute Tutorial <https://github.com/arsalan-"
+"akhtar/atomate2siesta/blob/main/tutorials/QUICKSTART.md>`_ - Your first "
+"calculation"
+msgstr ""
+
+#: ../../source/index.rst:28 464c09654b1c437f9b62f10ddc7b9910
+msgid ""
+"📖 **Installation**: :doc:`installation` - Installation guide and basic "
+"setup"
+msgstr ""
+
+#: ../../source/index.rst:29 b82183e624e24e7199b0aea6d55b86ed
+msgid ""
+"🛠️ **CLI Tools**: :doc:`cli-tools` - Database management, cluster setup, "
+"and job submission"
+msgstr ""
+
+#: ../../source/index.rst:30 52742bcfcabe490e9001e8ead15b96ef
+msgid ""
+"📚 **Learning Paths**: :doc:`tutorials/index` - Structured guides from "
+"basics to advanced workflows"
+msgstr ""
+
+#: ../../source/index.rst:31 cb906eb29fc64a87a1f284332e70f2f9
+msgid ""
+"📖 **Tutorials**: :doc:`tutorials-index` - 57 hands-on tutorials with "
+"complete examples"
+msgstr ""
+
+#: ../../source/index.rst:32 fc802019ea954f0f849f608771b68a69
+msgid ""
+"⚡ **Features**: :doc:`features` - Latest enhancements: Phonons, Surface "
+"Energy, Tier System"
+msgstr ""
+
+#: ../../source/index.rst:33 fa2cd256ef2f463896b9dde3bfa2ce67
+msgid ""
+"🔧 **Advanced Workflows**: :doc:`advanced-workflows` - Complex multi-step "
+"calculations"
+msgstr ""
+
+#: ../../source/index.rst:34 7824ce79351b464fbf248c50b87236c3
+msgid ""
+"🆘 **Troubleshooting**: :doc:`troubleshooting` - Common issues and "
+"solutions"
+msgstr ""
+
+#: ../../source/index.rst:35 10030373232140e0bf598272f64f21d6
+msgid ""
+"📋 **Cheat Sheets**: `Quick References <https://github.com/arsalan-"
+"akhtar/atomate2siesta/tree/main/docs/cheatsheets>`_ - Workflows, CLI, "
+"Parameters"
+msgstr ""
+
+#: ../../source/index.rst:40 fb08eafc905a42bb9d9f8f364f7b8ac8
+msgid "Documentation Contents"
+msgstr "محتویات مستندات"
+
+#: ../../source/index.rst:115 2acdc9ce179f4f6c9072404b86d5e1ca
+msgid "Key Capabilities"
+msgstr "قابلیت‌های کلیدی"
+
+#: ../../source/index.rst:117 f4f80ebd09f341b0ace5bcdff0a0f839
+msgid "🎯 **Automated Workflows**"
+msgstr "🎯 **جریان‌های کار خودکار**"
+
+#: ../../source/index.rst:118 81e675aacd0e4583b22ccc07867e269d
+msgid "Structure relaxation (fixed/variable cell)"
+msgstr "بهینه‌سازی ساختار (سلول ثابت/متغیر)"
+
+#: ../../source/index.rst:119 15a611e908644bf59f06b47d1fe20a29
+msgid "Band structure and DOS calculations"
+msgstr "محاسبات ساختار نواری و چگالی حالت‌ها"
+
+#: ../../source/index.rst:120 54ee2f494ece4937aa288b0f03489a61
+msgid "Equation of State (EOS) fitting"
+msgstr "برازش معادله حالت (EOS)"
+
+#: ../../source/index.rst:121 d9d29aafbcd64267974f40dd9108c348
+msgid "Elastic constants and mechanical properties"
+msgstr "ثابت‌های الاستیک و خواص مکانیکی"
+
+#: ../../source/index.rst:122 71e311aa2bac4522b15c2cbdc568c844
+msgid "Nudged Elastic Band (NEB) transition states"
+msgstr "حالت‌های گذار نوار الاستیک تکان‌داده‌شده (NEB)"
+
+#: ../../source/index.rst:123 b90a1c21b725448c8c04e07ecdba5314
+msgid "Phonon calculations with phonopy integration"
+msgstr "محاسبات فونون با یکپارچگی phonopy"
+
+#: ../../source/index.rst:124 6da2c6df5e2c44b6b42ea76333d2ee5f
+msgid "Surface energy calculations"
+msgstr "محاسبات انرژی سطح"
+
+#: ../../source/index.rst:125 e26749bbee2b4e3faa100b8cccc49eb3
+msgid "Optical properties"
+msgstr "خواص اپتیکی"
+
+#: ../../source/index.rst:127 7162091b50114d9b92948a4ecb2f938d
+msgid "🧠 **Intelligent Error Recovery**"
+msgstr "🧠 **بازیابی هوشمند خطا**"
+
+#: ../../source/index.rst:128 b16171c7becb4c37baf967c2a16c1b5b
+msgid "Automatic detection of 10+ error types"
+msgstr "تشخیص خودکار بیش از ۱۰ نوع خطا"
+
+#: ../../source/index.rst:129 a20ae565988b490ba035c9a29db441a3
+msgid "Progressive correction strategies"
+msgstr "استراتژی‌های اصلاح تدریجی"
+
+#: ../../source/index.rst:130 6b43cf13fdea44e4b75cf6006a514e46
+msgid "SCF convergence rescue (5-level approach)"
+msgstr "نجات همگرایی SCF (رویکرد ۵ سطحی)"
+
+#: ../../source/index.rst:131 622e5c63e6ec4d8ab25a120a1aae99ec
+msgid "Memory and time limit handling"
+msgstr "مدیریت محدودیت حافظه و زمان"
+
+#: ../../source/index.rst:132 5f9505e7c17745c3bfb7a137d1841669
+msgid "Built on MaterialsProject/custodian library"
+msgstr "ساخته‌شده بر اساس کتابخانه MaterialsProject/custodian"
+
+#: ../../source/index.rst:134 27671be73a4941fca2addf00ac7f48cd
+msgid "⚙️ **Tier-Based Input Architecture**"
+msgstr "⚙️ **معماری ورودی مبتنی بر سطح**"
+
+#: ../../source/index.rst:135 1a98a0bdd2894253932535175715abd5
+msgid "4 complexity tiers: basic → intermediate → advanced → expert"
+msgstr "۴ سطح پیچیدگی: پایه → متوسط → پیشرفته → متخصص"
+
+#: ../../source/index.rst:136 ac5d9f2e31e94bafbdbe0c1f94c972e9
+msgid "24+ dataclass modules for parameter organization"
+msgstr "بیش از ۲۴ ماژول کلاس داده برای سازماندهی پارامترها"
+
+#: ../../source/index.rst:137 ef72108ea67e4862abe6bf2975926482
+msgid "14 material-specific presets"
+msgstr "۱۴ پیش‌تنظیم ویژه مواد"
+
+#: ../../source/index.rst:138 a6ccc20539e14ff593e44f07ce8d7c1f
+msgid "Automatic module activation"
+msgstr "فعال‌سازی خودکار ماژول"
+
+#: ../../source/index.rst:140 aa78dc20d80540bbb3e592626c7d35d8
+msgid "📊 **Rich Analysis & Visualization**"
+msgstr "📊 **تحلیل و تصویرسازی غنی**"
+
+#: ../../source/index.rst:141 ff0d3fb83862403297930087f222bdad
+msgid "Publication-quality plots (phonons, EOS, surfaces)"
+msgstr "نمودارهای با کیفیت انتشار (فونون‌ها، EOS، سطوح)"
+
+#: ../../source/index.rst:142 c12926d611034b91ad649967d9de06cc
+msgid "Comprehensive text summaries"
+msgstr "خلاصه‌های متنی جامع"
+
+#: ../../source/index.rst:143 07bc896d09724b1984080a4815baa8f2
+msgid "JSON outputs for programmatic access"
+msgstr "خروجی‌های JSON برای دسترسی برنامه‌نویسی"
+
+#: ../../source/index.rst:144 9dcd276c1b6e4b6f93d4c6fec5fc5f28
+msgid "Convergence tracking and validation"
+msgstr "ردیابی و اعتبارسنجی همگرایی"
+
+#: ../../source/index.rst:146 28d8d0a17b1e41488ce477c881e0bd51
+msgid "🔬 **Production-Ready**"
+msgstr "🔬 **آماده برای تولید**"
+
+#: ../../source/index.rst:147 6e85b597a69845c0b29e3899585c2d5c
+msgid "HPC cluster support (SLURM, PBS, SGE)"
+msgstr "پشتیبانی از خوشه‌های HPC (SLURM، PBS، SGE)"
+
+#: ../../source/index.rst:148 d0be6f4d1eec40b3968331313486a934
+msgid "Database integration (MongoDB/Maggma)"
+msgstr "یکپارچگی پایگاه داده (MongoDB/Maggma)"
+
+#: ../../source/index.rst:149 4ffd42d5c9924385803fa288a4e38fae
+#, python-format
+msgid "Comprehensive test suite (750 tests, 44% coverage, 100% passing)"
+msgstr ""
+
+#: ../../source/index.rst:150 c6b2566841514c0298652886717cca68
+msgid "Performance benchmarked (< 25ms overhead, 17s test execution)"
+msgstr ""
+
+#: ../../source/index.rst:155 4d114f923c284da38f775b586cffa3f1
+msgid "Latest Enhancements (2025)"
+msgstr "آخرین بهبودها (۲۰۲۵)"
+
+#: ../../source/index.rst:157 37cec893bdc44b109692acf95332d84b
+msgid "**Test Coverage Foundation** (October 2025)"
+msgstr ""
+
+#: ../../source/index.rst:158 fafb812e92bc49a6bbf464889c926a11
+#, python-format
+msgid ""
+"Major testing initiative: 270 new tests added, achieving 44% coverage (up"
+" from 25%). Critical infrastructure now comprehensively tested: parser "
+"(39%), file_client (86%), task schemas (97%). Established mock-based "
+"testing patterns for future development."
+msgstr ""
+
+#: ../../source/index.rst:162 63f321b6a995460a844bfe87fea4e64c
+msgid "**Grüneisen Parameters & Thermal Expansion**"
+msgstr ""
+
+#: ../../source/index.rst:163 84ff6ca1e11d49089b1810405eab80e2
+msgid ""
+"Complete visualization suite with 6 plotting functions for Grüneisen "
+"parameter analysis. Temperature-dependent thermal expansion calculation "
+"using Debye model. Publication-quality plots (300 DPI) with physical "
+"interpretation and material classification."
+msgstr ""
+
+#: ../../source/index.rst:167 63e2eb6935b94a308342a499f99e63a5
+msgid "**Thermal Expansion Analysis**"
+msgstr ""
+
+#: ../../source/index.rst:168 9b7a344c16734af098085a9122d3cefd
+msgid ""
+"Enhanced Grüneisen parameter workflows with comprehensive thermal "
+"property calculations. Seamless dict/Pydantic compatibility for testing "
+"and production use."
+msgstr ""
+
+#: ../../source/index.rst:171 f61fe72cf0114a28a3de35d3761a84c1
+msgid "**Code Quality & Tier System Refinement**"
+msgstr ""
+
+#: ../../source/index.rst:172 670e9b6174ab405aa894d1a8cc3bc737
+#, python-format
+msgid ""
+"TODO cleanup (42 → 16, 62% reduction). Added missing tier system "
+"classmethods. Eliminated initialization warnings. Enhanced dataclass "
+"validation docstrings."
+msgstr ""
+
+#: ../../source/index.rst:175 98240464e1484dc9ac4109bdba68bab7
+msgid "**Tier-Based Input Architecture**"
+msgstr ""
+
+#: ../../source/index.rst:176 08f63ad416fc4136855a9cfa266c4e75
+msgid ""
+"Complete module registry system with automatic initialization based on "
+"calculation complexity. 14 material-specific presets for common "
+"calculation types."
+msgstr ""
+
+#: ../../source/index.rst:179 88eebc1eafd14c339858c989d2d6d2a9
+msgid "**Custodian Error Handling**"
+msgstr ""
+
+#: ../../source/index.rst:180 f91b164c7ba84dfbb419e61683e18687
+msgid ""
+"Refactored to use MaterialsProject/custodian library. Automatic error "
+"detection and recovery with JSON logging and validation framework."
+msgstr ""
+
+#: ../../source/index.rst:183 567e0669aa014898a71f41c0332ada4b
+msgid "**Phonon & Surface Energy**"
+msgstr ""
+
+#: ../../source/index.rst:184 d17890ea5b97447a9a00e21c518fe343
+msgid ""
+"Full phonopy integration with automatic plotting. Multi-surface energy "
+"workflows with symmetry analysis and comprehensive documentation."
+msgstr ""
+
+#: ../../source/index.rst:189 17cc4678c2c64c6fa414796444483a3b
+msgid "Full development history in :doc:`changelog`"
+msgstr ""
+
+#: ../../source/index.rst:194 d672febf029c4a57b74b7d9b0db3521b
+msgid "Community & Support"
+msgstr "جامعه و پشتیبانی"
+
+#: ../../source/index.rst:196 4468f2cd63c743749057a80b4afe8a80
+msgid "📖 **Documentation**: https://atomate2siesta.readthedocs.io"
+msgstr ""
+
+#: ../../source/index.rst:198 6c5e09b4d78b4c38901fb69a3a8944c2
+msgid "🐛 **Bug Reports**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgstr ""
+
+#: ../../source/index.rst:200 6c2bb1d6808943bab740bae43c7e1de7
+msgid ""
+"💬 **Discussions**: https://github.com/arsalan-"
+"akhtar/atomate2siesta/discussions"
+msgstr ""
+
+#: ../../source/index.rst:202 31144a59a2004e7084f0b4f830c54967
+msgid "🤝 **Contributing**: See :doc:`contributing` for guidelines"
+msgstr ""
+
+#: ../../source/index.rst:207 16472fc4725545eb8c24d8990262aecd
+msgid "Indices and Tables"
+msgstr "فهرست‌ها و جداول"
+
+#: ../../source/index.rst:209 ec86ec70b26d4589ae4b5dc2338ac174
+msgid ":ref:`genindex`"
+msgstr ":ref:`genindex`"
+
+#: ../../source/index.rst:210 c83dc08863b54c00b11abc92c092228e
+msgid ":ref:`modindex`"
+msgstr ":ref:`modindex`"
+
+#: ../../source/index.rst:211 fc17a259385342d08735829d8a369721
+msgid ":ref:`search`"
+msgstr ":ref:`search`"

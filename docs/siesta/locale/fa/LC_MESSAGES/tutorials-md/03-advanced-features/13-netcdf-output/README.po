@@ -1,0 +1,1141 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:1
+#: 05dbd316642f4346b674d62042d347be
+msgid "Tutorial 13: NetCDF Output Configuration"
+msgstr "Tutیاil 13: NetCDF Output Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:3
+#: da2f5f22df9b4e28b39566d575e9fb3a
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:5
+#: ffbd2873c4dd434ca0b3db312ce14c02
+msgid ""
+"This tutorial demonstrates how to configure SIESTA's NetCDF (CDF4) output"
+" format using the `NetcdfOptions` dataclass module. NetCDF provides "
+"portable, self-describing binary output with optional compression and "
+"parallel I/O support."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:7
+#: c5e27b733749486d800fdfe18e416cb7
+msgid "Learning Objectives"
+msgstr "Lerning Objectives"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:9
+#: 0348e43ef85947a1a3d33c2fcf065298
+msgid "Enable NetCDF output for grid-based data"
+msgstr "Enble NetCDF output برای grid-bsed dt"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:10
+#: 4bdae2fd41d742638c7755d5c6938d96
+msgid "Configure compression levels for file size optimization"
+msgstr "Configure compression levels برای file size optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:11
+#: bb7d2ecaa29442b28021f0c1310dc05a
+msgid "Set precision (single/double) for data storage"
+msgstr "Set precision (single/double) برای dt stیاge"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:12
+#: ff330937f51a4ebda371cf082c72559f
+msgid "Enable parallel I/O for MPI calculations"
+msgstr "Enble prllel I/O برای MPI clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:14
+#: b1602d598baa4883ac4f32a8243f4b60
+msgid "Theory"
+msgstr "Theیاy"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:16
+#: 3ccca6f66c5b40c5b83aa7594b5aaedc
+msgid "What is NetCDF?"
+msgstr "Wht is NetCDF?"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:18
+#: f202bdc77faa4940a50d881539390fdf
+msgid ""
+"**NetCDF (Network Common Data Form)** is a self-describing, machine-"
+"independent data format:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:20
+#: a8f0ce71bb784e4cad018a60bbb5c940
+msgid "**Self-Describing**: Metadata included in file"
+msgstr "**Self-Describing**: Metdt included in file"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:21
+#: 766f7f7abd32453c92ffc9e2c3c3a0bf
+msgid "**Portable**: Works across different platforms"
+msgstr "**Pیاtble**: Wیاks cross different pltبرایms"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:22
+#: ff1fbfe52bbb43c28bac37177801830a
+msgid "**Efficient**: Binary format with optional compression"
+msgstr "**Efficient**: Binry برایmt با optionl compression"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:23
+#: 7a5bf2ed0f834a4095a50c9066ade3fe
+msgid "**Standards**: CF conventions, widely supported"
+msgstr "**Stوrds**: CF conventions, widely suppیاted"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:25
+#: 5caa1878a5cd45848956632cc0966b06
+msgid "NetCDF in SIESTA"
+msgstr "NetCDF in SIESTA"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:27
+#: 7c4bc0ec72934b3082f7d26dfdbf63e8
+msgid "SIESTA can save grid-based quantities in NetCDF format:"
+msgstr "SIESTA cn sve grid-bsed quntities in NetCDF برایmt:"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:28
+#: 5dd4e691730a43f0a51b4fbda6638034
+msgid "Charge density (ρ)"
+msgstr "Chrge density (ρ)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:29
+#: 65b6402e6e8143bfa0fe0bf2db0cad25
+msgid "Electrostatic potential (φ)"
+msgstr "Electrosttic potentil (φ)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:30
+#: 881cf5faf4dd4485a9fca32a2eed0f8c
+msgid "Wave functions (ψ)"
+msgstr "Wve functions (ψ)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:31
+#: e4df0abf6fc4448c9b31798da5db2256
+msgid "Real-space grids"
+msgstr "Rel-spce grids"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:33
+#: c6866977862e4f3580c7f1c4fc13dc3e
+msgid "**Advantages over binary format:**"
+msgstr "**Advntges over binry برایmt:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:34
+#: 2a5fc49a49684197aab075987bc01f54
+msgid "✅ Portable (no endianness issues)"
+msgstr "✅ Pیاtble (no endinness issues)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:35
+#: 8d3b5ac450e645028fe84bfe0bb771ac
+msgid "✅ Self-describing (units, dimensions embedded)"
+msgstr "✅ Self-describing (units, dimensions embedded)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:36
+#: 342a37f094d3426882432a7f7d387829
+msgid "✅ Compression (5-10× smaller files)"
+msgstr "✅ Compression (5-10× smller files)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:37
+#: 6e2b8949586545ccbf3d867a45133d0b
+msgid "✅ Parallel I/O (faster for MPI)"
+msgstr "✅ Prllel I/O (fster برای MPI)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:38
+#: f629d1b86a8b45f9aad3414a6fa5515e
+msgid "✅ Standard tools (ncdump, ncview, Python xarray)"
+msgstr "✅ Stوrd tools (ncdump, ncview, Python xrry)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:40
+#: 86cf220d3adc41509b399b75dee514b5
+msgid "Parameters"
+msgstr "Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 95bb45a137f14934bea05f31f9838092
+msgid "Parameter"
+msgstr "Prmeter"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: c6b19a35cfb54e85b004df9e6549579a
+msgid "Type"
+msgstr "Type"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 7c8fb059ad7141dfa884c9f52dfbf8e6
+msgid "Default"
+msgstr "Defult"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 800781fcea88476d8367166072fb7968
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 7f5b47d4a9584fa4b50fe524c476f1d2
+msgid "`cdf_save`"
+msgstr "`cdf_save`"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 2ba8026c382547e89eef5a16f7255f0e 96c770603f8747d6928ed4edbff1e316
+msgid "bool"
+msgstr "bool"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 1178abfdbd46468b99626411c655fcac ab9726e918a342b88b5be492714ce05d
+msgid "False"
+msgstr "Flse"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 807266b2609b4f5fa2edadb47c57ee32
+msgid "Master flag to enable NetCDF output"
+msgstr "Mster flg to enble NetCDF output"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: ea6ef391463846b0ac5a0be47ebce132
+msgid "`cdf_compress`"
+msgstr "`cdf_compress`"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 3c910fe8209b4954bb3ad41147b4b10a
+msgid "int"
+msgstr "int"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 8a8ad20719a041009d1eee048d710afa d244811abcf24527aa0ef0da90d7e838
+msgid "0"
+msgstr "0"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: c33225cda24545e2b67b7f56c6cba8f4
+msgid "Compression level (0-9, 0=none)"
+msgstr "Compression level (0-9, 0=none)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 276428b3dbb44500a93d44fa742a40b9
+msgid "`cdf_mpi`"
+msgstr "`cdf_mpi`"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: ad7aa50ef2974b56ac39353af81f1426
+msgid "Enable parallel NetCDF I/O for MPI runs"
+msgstr "Enble prllel NetCDF I/O برای MPI runs"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 300d3dfd08304b5a9e0162114b24c8d8
+msgid "`cdf_grid_precision`"
+msgstr "`cdf_grid_precision`"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 050c58949aaa44a28737385634319866
+msgid "str"
+msgstr "str"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: b80d287911f54e37aaa4fc557f9072d7
+msgid "'single'"
+msgstr "'single'"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 391e8e90dc6c46788c75ce12ce9e1181
+msgid "Precision for grid data ('single' or 'double')"
+msgstr "Precision برای grid dt ('single' یا 'double')"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:49
+#: 5ab5b8e44f4843e59e153b864b5c3231
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:51
+#: 3592657d9f434962a554db30b735724e
+msgid "Example 1: Basic NetCDF Output"
+msgstr "مثال 1: Bsic NetCDF Output"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:53
+#: e163ab9461b2407386de6b5a164f93bb
+msgid "Enable NetCDF with default settings:"
+msgstr "Enble NetCDF با defult settings:"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:65
+#: 0c9bdaf17d06471ab5408a5d42523271
+msgid "**Output files:**"
+msgstr "**Output files:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:66
+#: 3be8d1e05e6e46b39001098d41412d45
+msgid "`systemLabel.nc` - NetCDF file with charge density"
+msgstr "`systemLabel.nc` - NetCDF file with charge density"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:68
+#: b29169b7aec643678d5a73ff4b458c56
+msgid "Example 2: Compressed NetCDF"
+msgstr "مثال 2: Compressed NetCDF"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:70
+#: ecb3205516be46c7ad7e3a5d1a12b833
+msgid "Enable compression for smaller files:"
+msgstr "Enble compression برای smller files:"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:81
+#: 86e95d7736f34aa681097286f9412ba4
+msgid "**Compression ratios:**"
+msgstr "**Compression rtios:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:82
+#: 198d96ef94a94f88bb1c28464206ffc5
+msgid "Level 0: No compression (fastest)"
+msgstr "Level 0: No compression (fstest)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:83
+#: 1828980448da4884baadc7f075f9d559
+msgid "Level 1-3: Light (2-3× smaller, fast)"
+msgstr "Level 1-3: Light (2-3× smller, fst)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:84
+#: 336ba2928684467286e410b79e4cceb7
+msgid "Level 4-6: Medium (4-5× smaller, moderate)"
+msgstr "Level 4-6: Medium (4-5× smller, moderte)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:85
+#: dd26875393a2435b8024e5ea22a0f779
+msgid "Level 7-9: Heavy (6-10× smaller, slow)"
+msgstr "Level 7-9: Hevy (6-10× smller, slow)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:87
+#: 09d182ae64414227aa1bd0f00158dd45
+msgid "Example 3: High-Precision with Parallel I/O"
+msgstr "مثال 3: High-Precision با Prllel I/O"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:89
+#: 456a7055e96b4145865bc73713b69b87
+msgid "Double precision with MPI parallel I/O:"
+msgstr "Double precision با MPI prllel I/O:"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:100
+#: db7fb6ddf2294e7fa61004d3a830ff7b
+msgid "Compression Level Guidelines"
+msgstr "Compression Level Guidelines"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:102
+#: ac33d36b70814cb397a2483d356e554e
+msgid "Level Selection"
+msgstr "Level Selection"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:104
+#: 210966a320f74aefae9c7264e3b8f98d
+msgid "**Level 0 (No compression):**"
+msgstr "**Level 0 (No compression):**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:105
+#: 2b0154f7382846cd9c83d4ce92e6e395
+msgid "Use when: Disk I/O is fast, storage not limited"
+msgstr "Use when: Disk I/O is fst, stیاge not limited"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:106
+#: 22b2b993e82c456ea0ab320e0b9e8208
+msgid "Speed: Fastest"
+msgstr "Speed: Fstest"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:107
+#: ee03cd0d94df4306aca57b7e70bd8ad1
+msgid "Size: Largest (100%)"
+msgstr "Size: Lrgest (100%)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:109
+#: ef978c4ded194dfb8b916b5e8627631a
+msgid "**Level 1-3 (Light):**"
+msgstr "**Level 1-3 (Light):**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:110
+#: a125fa3965984b16bf06cf7f0499d11c
+msgid "Use when: Quick calculations, preview runs"
+msgstr "Use when: Quick clcultions, preview runs"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:111
+#: 5ff2ee3b296a4458a60df9cc8d7abcbe
+#, python-format
+msgid "Speed: Fast (~10% slower than level 0)"
+msgstr "Speed: Fst (~10% slower thn level 0)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:112
+#: 5ea0bfd92ed943548abc814475f0181e
+#, python-format
+msgid "Size: 30-40% of uncompressed"
+msgstr "Size: 30-40% of uncompressed"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:114
+#: 3dd8142ba7914df5b7370a419de2241e
+msgid "**Level 4-6 (Medium):**"
+msgstr "**Level 4-6 (Medium):**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:115
+#: f35ff9838dd54344934faf2299243279
+msgid "Use when: Production calculations (recommended)"
+msgstr "Use when: Production clcultions (recommended)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:116
+#: 97daa90749654d3cb6cd8f0c0d678c7b
+#, python-format
+msgid "Speed: Moderate (~20% slower)"
+msgstr "Speed: Moderte (~20% slower)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:117
+#: 2b56b42e185a4872b2b5f11cabb328b0
+#, python-format
+msgid "Size: 20-25% of uncompressed"
+msgstr "Size: 20-25% of uncompressed"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:118
+#: 7ffe2e22b9b549f992af682f6ffbbae5
+msgid "**Best balance for most cases**"
+msgstr "**Best blnce برای most cses**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:120
+#: 0172531064634b6ca4c81ce942270686
+msgid "**Level 7-9 (Heavy):**"
+msgstr "**Level 7-9 (Hevy):**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:121
+#: 4ea5285f9be6434e93f228e6eb7e2976
+msgid "Use when: Long-term archival, limited storage"
+msgstr "Use when: Long-term rchivl, limited stیاge"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:122
+#: adfcec4b504b4941b6f03dfeecda07ed
+#, python-format
+msgid "Speed: Slow (~40% slower)"
+msgstr "Speed: Slow (~40% slower)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:123
+#: 8b0d774b054d45d2a435d9747940610c
+#, python-format
+msgid "Size: 10-15% of uncompressed"
+msgstr "Size: 10-15% of uncompressed"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:124
+#: 65952629d8634923b7ef98909c70a5cf
+msgid "Diminishing returns above level 6"
+msgstr "Diminishing returns bove level 6"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:126
+#: beb3cd08d4394eb2a67aa3e66393eb79
+msgid "Benchmarks"
+msgstr "Benchmrks"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:128
+#: 97d67f3dc7cf4823b81077dd739cd8a8
+msgid "Example: 50×50×50 grid, double precision"
+msgstr "مثال: 50×50×50 grid, double precision"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 3840e4a4607443f9b368c26222523c9c
+msgid "Level"
+msgstr "Level"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 3d534ff695a64656b56a795d6fd8b41d
+msgid "File Size"
+msgstr "فایل Size"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 52c9eca80ea54edda996f5758fa3b0d3 76f1061a04514494b9182812dd15fc3f
+msgid "Write Time"
+msgstr "Write زمان"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: be1f1baaa85142039ef385dbf94896cd
+msgid "Read Time"
+msgstr "Red زمان"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 72725a2c83be463da2cf6f26e7915866
+msgid "1.0 MB"
+msgstr "1.0 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 6823961b84f342dab937579442a12150
+msgid "0.05 s"
+msgstr "0.05 s"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: ae1f67ffe8fb426f892a83253587920f
+msgid "0.02 s"
+msgstr "0.02 s"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: beb07a041633490ab4755d3d4f5175a6
+msgid "3"
+msgstr "3"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 241b951823d74706bcb402be93aaae36
+msgid "0.35 MB"
+msgstr "0.35 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 4c216edbc5f94441a9b00279077fe902 759b1c39af1f4122b8bcc97bc1c16cea
+msgid "0.06 s"
+msgstr "0.06 s"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 6146659356c848a5a0048616c8a353d3
+msgid "0.03 s"
+msgstr "0.03 s"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 808aa37865984563b4c5b15bcceaf5f1
+msgid "6"
+msgstr "6"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: f1fe4b86368f4b0d98143c842626b090
+msgid "0.22 MB"
+msgstr "0.22 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 61e844c3f32a42fe917bf5a4fa9aab75
+msgid "0.08 s"
+msgstr "0.08 s"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 30fed7647f714acd8985b1abafcd06e4
+msgid "0.04 s"
+msgstr "0.04 s"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 2b23153479094ca2b9b9aa71f8709ecc
+msgid "9"
+msgstr "9"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: d6c87348dfe140d08de7968b8fcd65ee
+msgid "0.18 MB"
+msgstr "0.18 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 5d21d4d7003b4767813c4ddd29aac06e
+msgid "0.12 s"
+msgstr "0.12 s"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:137
+#: f203ab714b654a03ab7198b0e8c654b6
+msgid "**Recommendation:** Use level 6 for production, level 3 for testing."
+msgstr "**Recommendtion:** Use level 6 برای production, level 3 برای testing."
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:139
+#: a2f848d0391f4373b89ab5a97e5ec89e
+msgid "Precision Selection"
+msgstr "Precision Selection"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:141
+#: acbd703efa5f4166bccea9a818a438dd
+msgid "Single vs Double Precision"
+msgstr "Single vs Double Precision"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:143
+#: d9b66bd7052f4e1998426688923ccb30
+msgid "**Single Precision (float32):**"
+msgstr "**Single Precision (flot32):**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:144
+#: 484c79bf19d447bab0d00ce59f158af0
+msgid "Size: 4 bytes per value"
+msgstr "Size: 4 bytes per vlue"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:145
+#: 7fe1af50053547d4981916d657b0514a
+msgid "Range: ±3.4×10³⁸"
+msgstr "Rnge: ±3.4×10³⁸"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:146
+#: 92dc1fef052347449e20e5ca7a60e5c1
+msgid "Precision: ~7 significant digits"
+msgstr "Precision: ~7 significnt digits"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:147
+#: ce074e5aac1b4941883b3dda4cfbd3f0
+msgid "Use when: Charge density, potentials, visualization"
+msgstr "Use when: Chrge density, potentils, visuliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:149
+#: a49dfbf815b84be081a205b02f9a6ca8
+msgid "**Double Precision (float64):**"
+msgstr "**Double Precision (flot64):**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:150
+#: 201fec6b9ff644b799690293654a27d3
+msgid "Size: 8 bytes per value"
+msgstr "Size: 8 bytes per vlue"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:151
+#: 8688f060cc4c4ce7bfb24aa29b9db5fa
+msgid "Range: ±1.7×10³⁰⁸"
+msgstr "Rnge: ±1.7×10³⁰⁸"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:152
+#: 6663e6e9ca714013bdf36a9a36aab182
+msgid "Precision: ~15 significant digits"
+msgstr "Precision: ~15 significnt digits"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:153
+#: 5ec1f66a833443608537a4bb9a8e09f2
+msgid "Use when: Wave functions, high-accuracy analysis"
+msgstr "Use when: Wve functions, high-ccurcy nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:155
+#: ad92c27756f9448ca1adbb16129d31f4
+msgid "Storage Comparison"
+msgstr "Stیاge Comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:157
+#: 03dd060a2c604ba39d4993d43ccf2618
+msgid "For 100×100×100 grid:"
+msgstr "Fیا 100×100×100 grid:"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 39d3db1975894259beabbd238b29b9d7
+msgid "Precision"
+msgstr "Precision"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 3a62ba0711fe402c864d0ce99fc4db30
+msgid "Uncompressed"
+msgstr "Uncompressed"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 7273076ae4564179846560952e702bb1
+msgid "Compressed (L6)"
+msgstr "Compressed (L6)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 50a788d07fb24912801a439e335a3b77
+msgid "Single"
+msgstr "Single"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: e993231bef3a437fb86bd50987d27775
+msgid "4 MB"
+msgstr "4 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 9187306ae97c437a910d096879f92ad4
+msgid "0.9 MB"
+msgstr "0.9 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: b6efeb474a164423ba38d50563583bf4
+msgid "Double"
+msgstr "Double"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: a8fd1b5669824838b34b3611daacb398
+msgid "8 MB"
+msgstr "8 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 027739ff12894e429089bb898d4f3c43
+msgid "1.8 MB"
+msgstr "1.8 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:164
+#: c89ffa64b6d94051a60ae7e402e1126c
+msgid "**Recommendation:**"
+msgstr "**Recommendtion:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:165
+#: eb4013efa7e541229d813f3f5610f6b0
+msgid "Single precision sufficient for most purposes"
+msgstr "Single precision sufficient برای most purposes"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:166
+#: 6a968a3fb707413a94664077dd07e9ee
+msgid "Double if post-processing requires high accuracy"
+msgstr "Double if post-processing requires high ccurcy"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:167
+#: adabda49bde64634998a11c6be7c4e56
+msgid "Compression more important than precision choice"
+msgstr "Compression mیاe impیاtnt thn precision choice"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:169
+#: 46d7d74757a048d8ad4f07652d12e3db
+msgid "Parallel I/O (CDF.MPI)"
+msgstr "Prllel I/O (CDF.MPI)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:171
+#: 2f93b25494ba492b924dd2b5a5673aa1
+msgid "When to Enable"
+msgstr "When to Enble"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:173
+#: 19c71ab8cc21473793280e101217dcc7
+msgid "**Enable (CDF.MPI = True) when:**"
+msgstr "**Enble (CDF.MPI = True) when:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:174
+#: 81dab99f008b43149c815e3b9d729126
+msgid "✅ Using MPI parallelization (>4 processes)"
+msgstr "✅ استفاده از MPI prlleliztion (>4 processes)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:175
+#: d0d678e4206f491a9e9da1c2f1681914
+msgid "✅ Large grids (>100³ points)"
+msgstr "✅ Lrge grids (>100³ points)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:176
+#: 9067a1ddc97f46748f9531274c8570f7
+msgid "✅ Multiple grid quantities saved"
+msgstr "✅ Multiple grid quntities sved"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:177
+#: 3b1bfd1be34846dcae187fe44b478fcb
+msgid "✅ Parallel file system available (Lustre, GPFS)"
+msgstr "✅ Prllel file system vilble (Lustre, GPFS)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:179
+#: 8ff609dee02d49f89b42d8339d6aefce
+msgid "**Disable (CDF.MPI = False) when:**"
+msgstr "**Disble (CDF.MPI = Flse) when:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:180
+#: b7d9c1d1c55242eea360a2045b66acfe
+msgid "❌ Serial calculations"
+msgstr "❌ Seril clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:181
+#: 75f5055bba5a4c0d8442bc92d1383a11
+msgid "❌ Small grids (<50³ points)"
+msgstr "❌ Smll grids (<50³ points)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:182
+#: f022238313bc4e518e85ae3c8fc19e75
+msgid "❌ Network file system (NFS)"
+msgstr "❌ Netwیاk file system (NFS)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:183
+#: 954b745888d34bdebb4bd67306a909e1
+msgid "❌ Parallel HDF5/NetCDF not installed"
+msgstr "❌ Prllel HDF5/NetCDF not instlled"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:185
+#: 86ec3c08ab364510af87bb0f090875c1
+msgid "Performance Impact"
+msgstr "Perبرایmnce Impct"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:187
+#: afd60a12df4a4aecb39db05e3d932a18
+msgid "**4 processes, 100³ grid, double precision:**"
+msgstr "**4 processes, 100³ grid, double precision:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 13dc56d678574790aee6d1d63ff83ff8
+msgid "Mode"
+msgstr "Mode"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 7c909a461316470eac79e590f81dd0b8
+msgid "Speedup"
+msgstr "Speedup"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 42e008e732494c7a98d8c461bf356afc
+msgid "Serial"
+msgstr "Seril"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 05e3ec25097d48b4ba3a419461263ab6
+msgid "2.5 s"
+msgstr "2.5 s"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 5f84c5b6454e4a66a64cf3534b812f6e
+msgid "1.0×"
+msgstr "1.0×"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: dd2d95a2c3c6434cb19f5be28af82a09
+msgid "Parallel"
+msgstr "Prllel"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: 12a5fc8beca5429d8125ef01c170b4b6
+msgid "0.8 s"
+msgstr "0.8 s"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md
+#: b48961f6172b4e9b8850c22ed7058f32
+msgid "3.1×"
+msgstr "3.1×"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:194
+#: 5e11352fef604eeb90f485c127efbecd
+msgid "**Benefits:**"
+msgstr "**Benefits:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:195
+#: 8b3b0e34701b4ca6a126b6d4f7b0db96
+msgid "Faster I/O (3-5× speedup)"
+msgstr "Fster I/O (3-5× speedup)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:196
+#: 9aefc21d7f444138bb54c4227d8d5edf
+msgid "Better scaling for large process counts"
+msgstr "Better scling برای lrge process counts"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:197
+#: 26e951b481604b748d72854754109406
+msgid "Reduced memory per process"
+msgstr "Reduced memیاy per process"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:199
+#: f4b3afc335394df3a2c410a54ab5cf5a
+msgid "Reading NetCDF Files"
+msgstr "Reding NetCDF فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:201
+#: 8d8eb445ae1a4bc1a4e3c4b91d150275
+msgid "Command-Line Tools"
+msgstr "Commو-Line Tools"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:214
+#: d9b35a54cad941319de11905feb94eb1
+msgid "Python (xarray)"
+msgstr "Python (xrry)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:232
+#: 370ce106a6d5438d8507b47f52b7ea22
+msgid "Python (netCDF4)"
+msgstr "Python (netCDF4)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:250
+#: 5f88c47ead5b47429f87fee1f391fa2c
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:252
+#: ea344bec00314307926d1a596f784a43
+msgid "1. Always Enable for Production"
+msgstr "1. Alwys Enble برای Production"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:254
+#: dc98ab2f0d274518be45bb8d1e4125b6
+msgid "NetCDF should be default for all production calculations:"
+msgstr "NetCDF should be defult برای ll production clcultions:"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:255
+#: 8268a2fd194e41fbaac1eac1d9802572
+msgid "Portable across systems"
+msgstr "Pیاtble cross systems"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:256
+#: 68bc1c62432e4da7a8deea1f786fa22f
+msgid "Self-documenting"
+msgstr "Self-documenting"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:257
+#: 2dc5ca7046da4963984b48522ba056b2
+msgid "Compression saves disk space"
+msgstr "Compression sves disk spce"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:258
+#: aa821fa4d8eb432ca4bf2411aafddf0f
+msgid "Standard post-processing tools"
+msgstr "Stوrd post-processing tools"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:260
+#: 5acb317848474025a1dc97f2786cbc1b
+msgid "2. Recommended Settings"
+msgstr "2. Recommended Settings"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:262
+#: 3b3e3b69462a4897a26cca46fa2222c0
+msgid "**Default configuration:**"
+msgstr "**Defult configurtion:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:271
+#: f623a5088ac04a089b64af878af32294
+msgid "**High-performance MPI:**"
+msgstr "**High-perبرایmnce MPI:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:280
+#: bb445ba949f645f2b6047836f5a7a257
+msgid "**Archival/publication:**"
+msgstr "**Archivl/publiction:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:289
+#: 13f353b0bb844c83bb80a08136ebce7e
+msgid "3. File System Considerations"
+msgstr "3. فایل System Considertions"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:291
+#: c2bcf4bb20d240a59e3155a7cb18be00
+msgid "**Lustre/GPFS (Parallel FS):**"
+msgstr "**Lustre/GPFS (Prllel FS):**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:292
+#: 52beb1b0c4664af1ab080df6d6368e81
+msgid "Enable CDF.MPI"
+msgstr "Enble CDF.MPI"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:293
+#: bf39a56fd90a4005b51f6cca64bbb1d1
+msgid "Use striping for large files"
+msgstr "Use striping برای lrge files"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:294
+#: 38fd4889d752442bbed96c3c8c9e1db0
+msgid "Moderate compression (level 4-6)"
+msgstr "Moderte compression (level 4-6)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:296
+#: 43acfa9660414f9db87fd1d88ff59f3f
+msgid "**NFS (Network FS):**"
+msgstr "**NFS (Netwیاk FS):**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:297
+#: 51f2e83d191e43b9878c756736c54517
+msgid "Disable CDF.MPI"
+msgstr "Disble CDF.MPI"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:298
+#: 5ba155a7963c4009ab17272c02c01158
+msgid "Higher compression to reduce traffic"
+msgstr "Higher compression to reduce trffic"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:299
+#: a65cb3738f284bb483d182dd438e66ad
+msgid "Consider local scratch space"
+msgstr "Consider locl scrtch spce"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:301
+#: 0b8c085ecb9043b18c73f5b406873453
+msgid "**Local SSD:**"
+msgstr "**Locl SSD:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:302
+#: 4961f1db362a4be085b0c574d917b024
+msgid "Disable CDF.MPI if serial"
+msgstr "Disble CDF.MPI if seril"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:303
+#: afe95245e5a24fed86e4b3d63e27e412
+msgid "Lower compression (level 3-4)"
+msgstr "Lower compression (level 3-4)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:304
+#: 4f2b1642c0fb498fb7a660695a827fc7
+msgid "Focus on computation speed"
+msgstr "Focus on computtion speed"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:306
+#: c02131788600467481a4afd6b89fb40e
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:308
+#: 1fe6b438cb2b41509fc1195dded9e037
+msgid "Issue 1: NetCDF Library Not Found"
+msgstr "Issue 1: NetCDF Librry Not Found"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:310
+#: ddab8e81ee1a46dd8cebf91fba42faf1
+msgid "**Error:** `NetCDF library not available`"
+msgstr "**Error:** `NetCDF library not available`"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:312
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:321
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:330
+#: 8307396e4714461f807fd9f0a5965dbd 9de566018fe34a90aa392b21939f67ab
+#: f13b36f505c54c2cbcd845cbab470a7d
+msgid "**Solution:**"
+msgstr "**Solution:**"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:313
+#: 8263e3fcfa834394a32378f59cddc28e
+msgid "Install NetCDF library: `conda install netcdf4`"
+msgstr "Install NetCDF library: `conda install netcdf4`"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:314
+#: a4cab0d30d9c4b66aa17aafedc9503da
+msgid "Check SIESTA compilation: `siesta --version`"
+msgstr "Check SIESTA compilation: `siesta --version`"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:315
+#: b4cb0e9205d44654be8fd11c8b7145fc
+msgid "Rebuild SIESTA with NetCDF support"
+msgstr "Rebuild SIESTA با NetCDF suppیاt"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:317
+#: cca130d2195647f38fbfea27196dba76
+msgid "Issue 2: Parallel NetCDF Fails"
+msgstr "Issue 2: Prllel NetCDF Fils"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:319
+#: 39b1d9b4dfc94624ab92e14f64bb65cb
+msgid "**Error:** `Parallel NetCDF I/O error`"
+msgstr "**Error:** `Parallel NetCDF I/O error`"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:322
+#: 7bddfd83c4f74a1082f4851bf64c9e15
+msgid "Check parallel HDF5/NetCDF installed"
+msgstr "Check prllel HDF5/NetCDF instlled"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:323
+#: 2c68a819e5d44c65b699c50d153b5599
+msgid "Verify `CDF.MPI` matches MPI run"
+msgstr "Verify `CDF.MPI` matches MPI run"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:324
+#: 5e1367c613f74cbba960a619b4e81258
+msgid "Try serial I/O (`CDF.MPI = False`)"
+msgstr "Try serial I/O (`CDF.MPI = False`)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:326
+#: 3d7091dfd68f4c3296e810d49993c924
+msgid "Issue 3: File Size Too Large"
+msgstr "Issue 3: فایل Size Too Lrge"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:328
+#: e445720e37014b97b5a7101c5cba56c0
+msgid "**Problem:** NetCDF files fill disk"
+msgstr "**Problem:** NetCDF files fill disk"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:331
+#: 711305154322410bab2e62485544814b
+msgid "Increase compression: `CDF.Compress = 9`"
+msgstr "Increase compression: `CDF.Compress = 9`"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:332
+#: 84c3085456ef475ba758516b0cf4d2eb
+msgid "Use single precision: `CDF.Grid.Precision = \"single\"`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:333
+#: 510b8c994fd14e508e7455d686e8d314
+msgid "Save only needed quantities"
+msgstr "Sve only needed quntities"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:334
+#: 0843fab7d97c46d79e6abc17fd404dbc
+msgid "Clean up old files regularly"
+msgstr "Clen up old files regulrly"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:336
+#: d03f8487a63d41de8c673fdcbdd32cee
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:338
+#: e74f28d24bbb46bcb65fbbf6b08108c7
+msgid "Multiple Grid Quantities"
+msgstr "Multiple Grid Quntities"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:340
+#: 60ad3c86869d4d56991233966495da44
+msgid "Save multiple quantities in single file:"
+msgstr "Sve multiple quntities in single file:"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:350
+#: df9a5a10d70c445cbbac5d31c53a0938
+msgid "All saved in `systemLabel.nc` with different variables."
+msgstr "All saved in `systemLabel.nc` with different variables."
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:352
+#: 85006b66f30d472b8bdd521da5f74429
+msgid "CF Conventions"
+msgstr "CF Conventions"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:354
+#: 0ff18de9c5e042699fae2a3984a7afba
+msgid "SIESTA NetCDF files follow CF (Climate and Forecast) conventions:"
+msgstr "SIESTA NetCDF files follow CF (Climte و Fیاecst) conventions:"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:355
+#: cfb892401b9b473595609e6fca8b88bf
+msgid "Standard names for variables"
+msgstr "Stوrd nmes برای vribles"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:356
+#: 1184eaf3d50346279a0d062fe98692f2
+msgid "Coordinate systems with units"
+msgstr "Coیاdinte systems با units"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:357
+#: 14f7495e850a43dd96ac12a7a755500b
+msgid "Metadata attributes"
+msgstr "Metdt ttributes"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:358
+#: 67ad14a533e8475db9cbd29d123e29cc
+msgid "Compatible with CF-compliant tools"
+msgstr "Comptible با CF-complint tools"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:360
+#: 232d1b7337a546a79ad95178a63568f5
+msgid "Chunking and Caching"
+msgstr "Chunking و Cching"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:362
+#: 25bc5a21877a44d2bf389b04071c0e99
+msgid "For very large grids (>200³), consider:"
+msgstr "Fیا very lrge grids (>200³), consider:"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:368
+#: 811e7794d42a493f9b763bf1b99cf091
+msgid "Further Reading"
+msgstr "Furr Reding"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:370
+#: 8d6dfc57ebee44f9a4493d6215affc9d
+msgid "NetCDF Documentation: https://www.unidata.ucar.edu/software/netcdf/"
+msgstr "NetCDF Documentation: https://www.unidata.ucar.edu/software/netcdf/"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:371
+#: e2276010c14e463199152887a11514ad
+msgid "CF Conventions: http://cfconventions.org/"
+msgstr "CF Conventions: http://cfconventions.org/"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:372
+#: 6f16c5dd2c2144d3acdf3e6a59347046
+msgid "xarray Tutorial: https://tutorial.xarray.dev/"
+msgstr "xarray Tutorial: https://tutorial.xarray.dev/"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:373
+#: a90dcda2e36841fdb1af2cb39239fe9a
+msgid "SIESTA Manual: Section 6.32 (NetCDF Output)"
+msgstr "SIESTA Mnul: Section 6.32 (NetCDF Output)"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:375
+#: 9b4259e4dfa944edb88763579e8ab53a
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:377
+#: 38912ad5a9db4e908f0bea37c7508af4
+msgid "Tutorial 14: Efficiency and Performance Monitoring"
+msgstr "Tutیاil 14: Efficiency و Perبرایmnce Monitیاing"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:378
+#: 3dca39f9f676421bb8c7ffa16b6dbada
+msgid "Tutorial 15: Hamiltonian Matrix Configuration"
+msgstr "Tutیاil 15: Hmiltonin Mtrix Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/13-netcdf-output/README.md:379
+#: 139ba8f3d4764633acc42640f31fec53
+msgid "Tutorial 10: Grid Output (binary format comparison)"
+msgstr "Tutیاil 10: Grid Output (binry برایmt comprison)"

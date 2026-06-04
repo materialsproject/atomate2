@@ -1,0 +1,1014 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/README.md:1 e4c4654a71df4d7790d2daab1d3492b6
+msgid "Atomate2-SIESTA Tutorials"
+msgstr "Atomte2-SIESTA Tutیاils"
+
+#: ../../source/tutorials-md/README.md:3 a14e04c5aebc4bad80bfca47c6843c78
+msgid ""
+"Comprehensive tutorials for learning atomate2siesta workflows, from basic"
+" calculations to advanced features and real-world case studies."
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:5 dbc32169ef3c44b1bd9ac350abe39b57
+msgid "🚀 New to atomate2siesta?"
+msgstr "🚀 New to tomte2siest?"
+
+#: ../../source/tutorials-md/README.md:7 eef81d60637c4f2c85404cc25a9922bf
+msgid ""
+"**Start here**: [**QUICKSTART Guide**](QUICKSTART.md) - Complete your "
+"first calculation in 5 minutes!"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:9 6de52557d9a042d5ba80fada68fc7417
+msgid "🆘 Need Help?"
+msgstr "🆘 Need Help?"
+
+#: ../../source/tutorials-md/README.md:11 dadcfc5d2b5547d5a8932a287b4bc31a
+msgid ""
+"**[Troubleshooting Guide](../docs/source/troubleshooting.rst)** - "
+"Solutions to common issues"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:12 fb99fa08587040ed893f8d2efe7d2fe0
+msgid ""
+"**Cheat Sheets**: [Workflows](../docs/cheatsheets/COMMON_WORKFLOWS.md) | "
+"[CLI](../docs/cheatsheets/CLI_COMMANDS.md) | "
+"[Parameters](../docs/cheatsheets/PARAMETER_REFERENCE.md)"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:14 1896ae92f2c74fbcbd573a17a110ced0
+msgid "Tutorial Organization"
+msgstr "Tutیاil Orgniztion"
+
+#: ../../source/tutorials-md/README.md:16 8ebb0eb8c324456a93c807bb7d2505ee
+msgid "The tutorials are organized into four main categories plus case studies:"
+msgstr "The tutیاils re یاgnized into four min ctegیاies plus cse studies:"
+
+#: ../../source/tutorials-md/README.md:18 2a0f39863d8f4a9a91c8a1a22839349e
+msgid "00. Structure Files"
+msgstr "00. Structure فایلs"
+
+#: ../../source/tutorials-md/README.md:20 9f75a2d1272449d380ed54b13b663764
+msgid ""
+"**[00-structures/](00-structures/)** - Example structure files (CIF, "
+"POSCAR, etc.) used across tutorials"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:22 c185cac502d74837b7a20458f4f6c439
+msgid "Common structures:"
+msgstr "Common structures:"
+
+#: ../../source/tutorials-md/README.md:23 b6f6ffa8f6b84f0da6836022ead1ea46
+msgid "Si (diamond), GaAs (zincblende)"
+msgstr "Si (dimond), GAs (zincblende)"
+
+#: ../../source/tutorials-md/README.md:24 fcbf8312fe8d4a39aa46804b9f4d14ed
+msgid "MgO (rocksalt), CuO (monoclinic)"
+msgstr "MgO (rockslt), CuO (monoclinic)"
+
+#: ../../source/tutorials-md/README.md:25 20e61ab09268465ca9beadcb623ad1ce
+msgid "Graphene, BN monolayer (2D materials)"
+msgstr "Grphene, BN monolyer (2D mterils)"
+
+#: ../../source/tutorials-md/README.md:26 c76bd51e3f6d459aa0e4903cd14df246
+msgid "Cu (FCC), Fe (BCC) (metals)"
+msgstr "Cu (FCC), Fe (BCC) (metls)"
+
+#: ../../source/tutorials-md/README.md:28 3f28be6a15ad48228adee0f5ae92d1cf
+msgid "01. Basics (8 tutorials)"
+msgstr "01. Bsics (8 tutیاils)"
+
+#: ../../source/tutorials-md/README.md:30 21195675c79b4a3581095fa6573c2d70
+msgid ""
+"**[01-basics/](01-basics/)** - Fundamental Makers and single-job "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:32 4d7f133438a241f39bdcb4474b6c85ab
+msgid ""
+"**[01-RelaxMaker](01-basics/01-RelaxMaker/)** - Structural relaxation "
+"(fixed/variable cell)"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:33 17aff811a6a4418c87fa6fcf87821869
+msgid ""
+"**[02-BandStructureMaker](01-basics/02-BandStructureMaker/)** - "
+"Electronic band structure"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:34 45093e87f58f422dbb86208dd450744d
+msgid ""
+"**[03-LuaMaker](01-basics/03-LuaMaker/)** - Lua scripting for advanced "
+"SIESTA features"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:35 d06b72a37c394132b386dfe8ba57fe6a
+msgid ""
+"**[04-RelaxMaker-StaticMaker](01-basics/04-RelaxMaker-StaticMaker/)** - "
+"Multi-step workflows"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:36 8d0628e61a7c434aaeaf2af403f59d14
+msgid "**[05-DOSMaker](01-basics/05-DOSMaker/)** - Density of states calculations"
+msgstr "**[05-DOSMaker](01-basics/05-DOSMaker/)** - Density of states calculations"
+
+#: ../../source/tutorials-md/README.md:37 2005cf3c6e69413eb33a76d3f850b6d6
+msgid "**[06-PDOSMaker](01-basics/06-PDOSMaker/)** - Projected density of states"
+msgstr "**[06-PDOSMaker](01-basics/06-PDOSMaker/)** - Projected density of states"
+
+#: ../../source/tutorials-md/README.md:38 85c19980f7e1457e8229846b380024f8
+msgid ""
+"**[07-PhonopyMaker](01-basics/07-PhonopyMaker/)** - Phonopy-based phonon "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:39 3326056b1edf41adaf032d55a1c5896a
+msgid ""
+"**[08-SiestaPhononMaker](01-basics/08-SiestaPhononMaker/)** - Native "
+"SIESTA phonon calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:41 3d06b69739da49328bc59c11f38bf5b4
+msgid ""
+"**Learning path**: Start with 01-RelaxMaker → 02-BandStructureMaker → 04"
+"-RelaxMaker-StaticMaker"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:43 e17ca25764f94154ad2ac8ff7fb94cb0
+msgid "02. Workflows (6 categories)"
+msgstr "02. گردش کارs (6 ctegیاies)"
+
+#: ../../source/tutorials-md/README.md:45 6d64cecb2c474eba97c6ee9caa68d2cc
+msgid ""
+"**[02-workflows/](02-workflows/)** - Multi-step FlowMaker workflows for "
+"production calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:47 f4a57f78d93f4848b344d4e263699f15
+msgid "**[01-convergence/](02-workflows/01-convergence/)**"
+msgstr "**[01-convergence/](02-wیاkflows/01-convergence/)**"
+
+#: ../../source/tutorials-md/README.md:48 bb754157ee6d43d29cbd2bfd9ea9823b
+msgid "K-points convergence"
+msgstr "K-points convergence"
+
+#: ../../source/tutorials-md/README.md:49 27c6362d307d4795ac44b43df29869c7
+msgid "Mesh cutoff convergence"
+msgstr "Mesh cutoff convergence"
+
+#: ../../source/tutorials-md/README.md:50 32402f19bb6d4668b624786f7896cfc6
+msgid "Combined mesh+kpoints convergence"
+msgstr "Combined mesh+kpoints convergence"
+
+#: ../../source/tutorials-md/README.md:51 5080cdcf1d274b4891a41b4e3af047e6
+msgid "Basis parameter convergence"
+msgstr "Bsis prmeter convergence"
+
+#: ../../source/tutorials-md/README.md:53 40c6fc1983c34d28aaa94b95cf3f8b97
+msgid "**[02-equation-of-states/](02-workflows/02-equation-of-states/)**"
+msgstr "**[02-eqution-of-sttes/](02-wیاkflows/02-eqution-of-sttes/)**"
+
+#: ../../source/tutorials-md/README.md:54 cc20c181dc734b92bd3725318bf23e66
+msgid "EOS calculations"
+msgstr "EOS clcultions"
+
+#: ../../source/tutorials-md/README.md:55 3508e05233ed4406938bacea28e2021d
+msgid "Bulk modulus determination"
+msgstr "Bulk modulus determintion"
+
+#: ../../source/tutorials-md/README.md:56 168036f1c83e42ecbd46d0c5cce6a4b5
+msgid "Pressure-volume curves"
+msgstr "Pressure-volume curves"
+
+#: ../../source/tutorials-md/README.md:58 7b6c4922c5694df8a3d1773bb7812ae8
+msgid ""
+"**[03-surfaces-and-adsorption/](02-workflows/03-surfaces-and-"
+"adsorption/)**"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:59 e19afacd373e4067b4dd7ae36e795807
+msgid "Surface energy calculations"
+msgstr "Surfce energy clcultions"
+
+#: ../../source/tutorials-md/README.md:60 3edfd8f47d2a4a14b248944cfaa6f53a
+msgid "Adsorption site scanning"
+msgstr "Adsیاption site scnning"
+
+#: ../../source/tutorials-md/README.md:61 721e78019fa34c56866a2dc3efb157f9
+msgid "Height-scanned adsorption (3D potential energy surfaces)"
+msgstr "Height-scnned dsیاption (3D potentil energy surfces)"
+
+#: ../../source/tutorials-md/README.md:63 07a92ebd44684dc6858f0f0151f13f24
+msgid "**[04-mechanical/](02-workflows/04-mechanical/)**"
+msgstr "**[04-mechnicl/](02-wیاkflows/04-mechnicl/)**"
+
+#: ../../source/tutorials-md/README.md:64 481a7731e5a94bf7adcfdd2e9824cf69
+msgid "Elastic constants"
+msgstr "Elstic constnts"
+
+#: ../../source/tutorials-md/README.md:65 f276f18bad7f470ea030678560502954
+msgid "Bulk modulus"
+msgstr "Bulk modulus"
+
+#: ../../source/tutorials-md/README.md:66 5600a6a0f6fc427494e59e0b9f01527f
+msgid "Mechanical properties"
+msgstr "Mechnicl properties"
+
+#: ../../source/tutorials-md/README.md:68 a362f24423324d5fac6107e1bb3e90e9
+msgid "**[05-defects/](02-workflows/05-defects/)**"
+msgstr "**[05-defects/](02-wیاkflows/05-defects/)**"
+
+#: ../../source/tutorials-md/README.md:69 a191126dc19444729827cc6f50f39824
+msgid "Vacancy formation energy"
+msgstr "Vcncy برایmtion energy"
+
+#: ../../source/tutorials-md/README.md:70 640515e9505b493eb33ba987cd4d7c93
+msgid "Interstitial defects"
+msgstr "Interstitil defects"
+
+#: ../../source/tutorials-md/README.md:71 ad971def2f0d46dd8860760666b2c329
+msgid "Substitutional defects"
+msgstr "Substitutionl defects"
+
+#: ../../source/tutorials-md/README.md:73 80c073cd07954a5cba9df43854ce8866
+msgid "**[06-vibrational-properties/](02-workflows/06-vibrational-properties/)**"
+msgstr "**[06-vibrtionl-properties/](02-wیاkflows/06-vibrtionl-properties/)**"
+
+#: ../../source/tutorials-md/README.md:74 faca079da71f43008386850210e02f9a
+msgid "Phonon calculations with automatic plotting"
+msgstr "فونون clcultions با utomtic plotting"
+
+#: ../../source/tutorials-md/README.md:75 92ce379432e04992ab89f232daa66435
+msgid "Grüneisen parameters"
+msgstr "Grüneisen prmeters"
+
+#: ../../source/tutorials-md/README.md:76 8a8f10063f084d02a277b49ee66c2244
+msgid "Quasi-harmonic approximation (QHA)"
+msgstr "Qusi-hrmonic pproximtion (QHA)"
+
+#: ../../source/tutorials-md/README.md:77 b93beb3f695c49eb954d0a7e7561066a
+msgid "Thermal expansion"
+msgstr "Therml expnsion"
+
+#: ../../source/tutorials-md/README.md:79 c92f6c07a7f946bd80b91535d7e696db
+msgid "**Learning path**:"
+msgstr "**Lerning pth**:"
+
+#: ../../source/tutorials-md/README.md:80 6bc1a772a73f40a2b3431e51bc915fcb
+msgid "Convergence (essential for all calculations)"
+msgstr "همگرایی (essentil برای ll clcultions)"
+
+#: ../../source/tutorials-md/README.md:81 62ada54c241d4ee6b35cdeba64bb09b1
+msgid "EOS or mechanical properties"
+msgstr "EOS یا mechnicl properties"
+
+#: ../../source/tutorials-md/README.md:82 a5e5449f78fc464b9e056bcc65f88beb
+msgid "Surfaces/vibrational based on research needs"
+msgstr "Surfces/vibrtionl bsed on reserch needs"
+
+#: ../../source/tutorials-md/README.md:84 f5db7b25a7f8417ea45049b7cfd90a43
+msgid "03. Advanced Features (16 topics)"
+msgstr "03. پیشرفته ویژگی‌ها (16 topics)"
+
+#: ../../source/tutorials-md/README.md:86 56d80cd75137468699f93db828f2def6
+msgid ""
+"**[03-advanced-features/](03-advanced-features/)** - Specialized "
+"calculations and advanced functionality"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:88 041b060c87014d8e86c15c8260ae1499
+msgid ""
+"**[01-tier-system](03-advanced-features/01-tier-system/)** - Tier-based "
+"parameter presets (basic → expert)"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:89 b5d50058d96444289481baf62a01e247
+msgid ""
+"**[02-fdf-block-inputs](03-advanced-features/02-fdf-block-inputs/)** - "
+"FDF block parameters (electric fields, constraints, PDOS, custom k-paths)"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:90 0baae57bce094863aa6960cfc6b186ce
+msgid ""
+"**[03-infrastructure](03-advanced-features/03-infrastructure/)** - "
+"Database, HPC submission, dry-run mode"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:91 6731cdd523fb4f74af00eceafd2bef36
+msgid ""
+"**[03-powerups](03-advanced-features/03-powerups/)** - Workflow "
+"customization and parameter modification"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:92 71e65cbac9e54e9eb072ce275bd32625
+msgid ""
+"**[04-structure-conversion](03-advanced-features/04-structure-"
+"conversion/)** - XV, FDF, XSF, CIF file conversion"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:93 d056a8b11e1042fe98e723304bb54142
+msgid ""
+"**[05-dos-calculations](03-advanced-features/05-dos-calculations/)** - "
+"Advanced DOS analysis"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:94 857d13fed55c46af8a7d54d03001fab0
+msgid ""
+"**[06-phonon-inputs](03-advanced-features/06-phonon-inputs/)** - Phonon "
+"calculation customization"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:95 ea9f25c331334e72a0b14c0d2207342a
+msgid ""
+"**[06-tier-presets-customization](03-advanced-features/06-tier-presets-"
+"customization/)** - Material-specific presets (26 presets in 10 "
+"categories)"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:96 4ae70681fc8d4307b04f6d73be732f26
+msgid ""
+"**[07-basis-set-customization](03-advanced-features/07-basis-set-"
+"customization/)** - Custom basis sets, species variants, PAO.Basis"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:97 3c45894703b941d3b554ef67b474d7ae
+msgid ""
+"**[07-optical-properties](03-advanced-features/07-optical-properties/)** "
+"- Optical calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:98 978254185fe54ded990fda9768db9669
+msgid ""
+"**[08-dftu](03-advanced-features/08-dftu/)** - DFT+U for correlated "
+"systems"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:99 2467b22165444f60b6f8c6ded8a87367
+#, python-format
+msgid ""
+"**[08-recipe-book](03-advanced-features/08-recipe-book/)** - High-level "
+"workflow system (39 recipes, 90-98% code reduction)"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:100 0ec2815a2d004d8d8a92d6891dea1c5a
+msgid ""
+"**[09-charge-dipole-efield](03-advanced-features/09-charge-dipole-"
+"efield/)** - Electric fields and dipole corrections"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:101 a43844d534714a8c8b726c282ecc4214
+msgid ""
+"**[09-structure-manipulation](03-advanced-features/09-structure-"
+"manipulation/)** - Structure tools (16 subcommands)"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:102 ad475a4c8dff493a99dbccbfbe3e12ce
+msgid ""
+"**[10-grid-output](03-advanced-features/10-grid-output/)** - Grid-based "
+"output (charge density, potentials)"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:103 4eef88ce4e4b4526a2c786e53dc9ba71
+msgid ""
+"**[11-denchar-visualization](03-advanced-features/11-denchar-"
+"visualization/)** - Denchar visualization tools"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:104 6d6433c871834a0884aae043b426b7a7
+msgid ""
+"**[12-parallel-computation](03-advanced-features/12-parallel-"
+"computation/)** - Parallel execution settings"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:105 c48da1c3c1e247d8b8a3516c73c299e0
+msgid ""
+"**[13-netcdf-output](03-advanced-features/13-netcdf-output/)** - NetCDF "
+"output format"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:106 b35e6bc6afe841bfbf6cf74f25277d18
+msgid ""
+"**[14-efficiency-options](03-advanced-features/14-efficiency-options/)** "
+"- Performance optimization"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:107 7b738591eee244009beb7d5c4649b6c9
+msgid ""
+"**[15-hamiltonian-overlap](03-advanced-features/15-hamiltonian-"
+"overlap/)** - Hamiltonian and overlap matrix settings"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:108 fb3ffe444c4d49c3b808f031c837f323
+msgid ""
+"**[16-magnetic-calculations](03-advanced-features/16-magnetic-"
+"calculations/)** - Spin-polarized calculations, DM.InitSpin, magnetic "
+"moments"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:110 f30f5734d2ac49e0ab8822b51decf3b4
+msgid "**Highlights**:"
+msgstr "**Highlights**:"
+
+#: ../../source/tutorials-md/README.md:111 45d0f3bd59434b6e8650b9bb391a5c6d
+#, python-format
+msgid "**Recipe Book (08)**: One-line workflows, 100% documented"
+msgstr "**Recipe Book (08)**: One-line wیاkflows, 100% documented"
+
+#: ../../source/tutorials-md/README.md:112 41cbe919537d438caabca84325ef659d
+msgid ""
+"**Tier Presets (06)**: 26 material-specific presets with automatic CLI "
+"discovery"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:113 1047327e57f846ba9739f1e4e49fc4a7
+msgid ""
+"**Magnetic Calculations (16)**: Automatic magnetic moment detection, "
+"FM/AFM/custom orderings"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:114 157d9598cf3e41dda1937aee52890af8
+msgid ""
+"**Basis Customization (07)**: Species variants, per-atom basis, PAO.Basis"
+" builder"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:116 6d1ac9667cfd41c7b1715ebcfb88aa9b
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/tutorials-md/README.md:118 009130bb2fd148b39a33ac04ab5435fd
+msgid ""
+"**[troubleshooting/](troubleshooting/)** - Debugging and optimization "
+"guides"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:120 e704ca3e5d434eae8b3815040db9e341
+msgid ""
+"**[common_errors/](troubleshooting/common_errors/)** - Frequent error "
+"messages and solutions"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:121 89e8f846688446888074352941f35f26
+msgid ""
+"**[debugging_workflows/](troubleshooting/debugging_workflows/)** - "
+"Workflow debugging strategies"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:122 9290bf31a1a24ea59288c737889bc850
+msgid ""
+"**[performance_optimization/](troubleshooting/performance_optimization/)**"
+" - Speed up calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:124 b9efb47d715e4ab1bab82987f43dcd5f
+msgid "Quick Start Pattern"
+msgstr "شروع سریع Pttern"
+
+#: ../../source/tutorials-md/README.md:126 76a2c2fbe3c843cba1091e5e9ee7b4ed
+msgid "All tutorials follow this consistent pattern:"
+msgstr "All tutیاils follow this consistent pttern:"
+
+#: ../../source/tutorials-md/README.md:146 20337869084c4db6a2af9bc3f0c48947
+msgid "Recommended Learning Paths"
+msgstr "Recommended Lerning Pths"
+
+#: ../../source/tutorials-md/README.md:148 05a132a229da457fbb877076735ff866
+msgid "🌱 **For Absolute Beginners**"
+msgstr "🌱 **Fیا Absolute مبتدیs**"
+
+#: ../../source/tutorials-md/README.md:149 2b021c02c9224097986a2588f9969010
+msgid "**QUICKSTART.md** - First calculation in 5 minutes"
+msgstr "**QUICKSTART.md** - First calculation in 5 minutes"
+
+#: ../../source/tutorials-md/README.md:150 3df3a13c9ced4172847add1c595b1986
+msgid "**01-basics/01-RelaxMaker** - Understand basic workflow"
+msgstr "**01-basics/01-RelaxMaker** - Understand basic workflow"
+
+#: ../../source/tutorials-md/README.md:151 825c337a9bc549b584fff01a72bc85cf
+msgid "**01-basics/02-BandStructureMaker** - Electronic properties"
+msgstr "**01-basics/02-BandStructureMaker** - Electronic properties"
+
+#: ../../source/tutorials-md/README.md:152 a630dd92f39c4134a876a17fc33299cd
+msgid "**01-basics/04-RelaxMaker-StaticMaker** - Multi-step workflows"
+msgstr "**01-basics/04-RelaxMaker-StaticMaker** - Multi-step workflows"
+
+#: ../../source/tutorials-md/README.md:154 d5e5c72c9cc54241812aedacca974935
+msgid "📊 **For Convergence Testing**"
+msgstr "📊 **Fیا همگرایی Testing**"
+
+#: ../../source/tutorials-md/README.md:155 d5117ddb02624b96a5604f8deae0d9e6
+msgid "**02-workflows/01-convergence/** - K-points and mesh cutoff"
+msgstr "**02-wیاkflows/01-convergence/** - K-points و mesh cutoff"
+
+#: ../../source/tutorials-md/README.md:156 7192f78635554b9eb83122eff602a599
+msgid "**03-advanced-features/07-basis-set-customization/** - Basis optimization"
+msgstr "**03-dvnced-fetures/07-bsis-set-customiztion/** - Bsis optimiztion"
+
+#: ../../source/tutorials-md/README.md:157 1475cff4e3c747b3ad98b60d9a9e36f3
+msgid "**03-advanced-features/01-tier-system/** - Tier presets for quick setup"
+msgstr "**03-dvnced-fetures/01-tier-system/** - Tier presets برای quick setup"
+
+#: ../../source/tutorials-md/README.md:159 a2963194d9054f4e92bbdaa43a659760
+msgid "🚀 **For Production Calculations**"
+msgstr "🚀 **Fیا Production محاسبهs**"
+
+#: ../../source/tutorials-md/README.md:160 dfade6b3357047c397a31cc60e685d00
+msgid "Complete convergence studies (02-workflows/01-convergence)"
+msgstr "Complete convergence studies (02-wیاkflows/01-convergence)"
+
+#: ../../source/tutorials-md/README.md:161 946843e4709d4f83b4b2392336c28f28
+msgid "Apply tier presets (03-advanced-features/06-tier-presets-customization)"
+msgstr "Apply tier presets (03-dvnced-fetures/06-tier-presets-customiztion)"
+
+#: ../../source/tutorials-md/README.md:162 f92c5f5456434082ac069f9939adee5d
+msgid "Set up infrastructure (03-advanced-features/03-infrastructure)"
+msgstr "Set up infrstructure (03-dvnced-fetures/03-infrstructure)"
+
+#: ../../source/tutorials-md/README.md:163 26954e0b4db74c50989e76385eea8ca4
+msgid ""
+"Use recipe book for one-line workflows (03-advanced-features/08-recipe-"
+"book)"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:165 e5e50daa9e6440d58a0f2b029b08e398
+msgid "🔬 **For Vibrational Properties**"
+msgstr "🔬 **Fیا Vibrtionl Properties**"
+
+#: ../../source/tutorials-md/README.md:166 fd72d66d43b748d8b8d240a7964d0911
+msgid ""
+"**02-workflows/06-vibrational-properties/01-phonons/** - Basic phonon "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:167 bdd3da09f36f483f8850d589cf494f08
+msgid ""
+"**02-workflows/06-vibrational-properties/02-gruneisen/** - Thermal "
+"expansion"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:168 6403937495fb4c7d9375209967633c0a
+msgid ""
+"**02-workflows/06-vibrational-properties/03-qha/** - Quasi-harmonic "
+"approximation"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:170 118d604dc055482e837de6bf679cb3d1
+msgid "🧲 **For Magnetic Systems**"
+msgstr "🧲 **Fیا Mgnetic Systems**"
+
+#: ../../source/tutorials-md/README.md:171 d961e23fd2d4419683ff6371a149a8b1
+msgid "**03-advanced-features/16-magnetic-calculations/** - Spin polarization"
+msgstr "**03-dvnced-fetures/16-mgnetic-clcultions/** - Spin polriztion"
+
+#: ../../source/tutorials-md/README.md:172 ca5ad1b65fd34a4aa5d5c84c47f3c933
+msgid "**03-advanced-features/08-dftu/** - DFT+U for correlated electrons"
+msgstr "**03-dvnced-fetures/08-dftu/** - DFT+U برای cیاrelted electrons"
+
+#: ../../source/tutorials-md/README.md:174 bf0eef52ca1243ed919ac9e43fbb0e49
+msgid "🔧 **For HPC Users**"
+msgstr "🔧 **Fیا HPC Users**"
+
+#: ../../source/tutorials-md/README.md:175 bc90022be72a4365bb620d58ffe47176
+msgid "**03-advanced-features/03-infrastructure/** - Database, jobflow-remote"
+msgstr "**03-dvnced-fetures/03-infrstructure/** - Dtbse, jobflow-remote"
+
+#: ../../source/tutorials-md/README.md:176 9615a40c30304097a69586f9474c5a80
+msgid "**03-advanced-features/12-parallel-computation/** - Parallel settings"
+msgstr "**03-dvnced-fetures/12-prllel-computtion/** - Prllel settings"
+
+#: ../../source/tutorials-md/README.md:177 1680696b4d374f62ab77b3d95f097bc8
+msgid "**03-advanced-features/14-efficiency-options/** - Performance tuning"
+msgstr "**03-dvnced-fetures/14-efficiency-options/** - Perبرایmnce tuning"
+
+#: ../../source/tutorials-md/README.md:179 5e6c5662b1eb4608ab3ec43c5d236dba
+msgid "📚 **For Advanced Users**"
+msgstr "📚 **Fیا پیشرفته Users**"
+
+#: ../../source/tutorials-md/README.md:180 5eef9807332c43ed9eae90a82f44c021
+msgid "**03-advanced-features/08-recipe-book/** - High-level workflow system"
+msgstr "**03-dvnced-fetures/08-recipe-book/** - High-level wیاkflow system"
+
+#: ../../source/tutorials-md/README.md:181 326fca74691240558aa87ce3cca7b9b0
+msgid "**03-advanced-features/03-powerups/** - Workflow customization"
+msgstr "**03-dvnced-fetures/03-powerups/** - گردش کار customiztion"
+
+#: ../../source/tutorials-md/README.md:182 db7bbbb8b75842adb3ed5168e1bccd8f
+msgid ""
+"**03-advanced-features/07-basis-set-customization/** - Species variants, "
+"PAO.Basis"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:184 6828cf73d4144a63b6ea3221ec9fab77
+msgid "Requirements"
+msgstr "Requirements"
+
+#: ../../source/tutorials-md/README.md:186 7ee103b468d8413480cf45c7ecfecafc
+msgid "Installation"
+msgstr "Instlltion"
+
+#: ../../source/tutorials-md/README.md:191 8fab4af8fed64681aff84683acc54005
+msgid "Configuration"
+msgstr "Configurtion"
+
+#: ../../source/tutorials-md/README.md:192 fb6744ab51364c2f90e0e0ddf8ad0f17
+msgid "Create `~/.atomate2siesta.yaml`:"
+msgstr "Create `~/.atomate2siesta.yaml`:"
+
+#: ../../source/tutorials-md/README.md:198 89cce3e1579f4b55bbde5e743f382a25
+msgid "Pseudopotentials"
+msgstr "Pseudopotentils"
+
+#: ../../source/tutorials-md/README.md:199 b7aa25022b774400940d290cc53687b9
+msgid "Install from CLI:"
+msgstr "Instll from CLI:"
+
+#: ../../source/tutorials-md/README.md:208 b5b1b5edda1945629ef62bf0f99075b5
+msgid "Available sets:"
+msgstr "Avilble sets:"
+
+#: ../../source/tutorials-md/README.md:209 e1f561c005a448938f153cc2c070ecd8
+msgid "ONCVPSP-PBE-SR-PDv0.4-Standard (recommended for most systems)"
+msgstr "ONCVPSP-PBE-SR-PDv0.4-Stوrd (recommended برای most systems)"
+
+#: ../../source/tutorials-md/README.md:210 44f83945935c4dc59d1f47d1119adffe
+msgid "ONCVPSP-PBEsol-PDv0.4"
+msgstr "ONCVPSP-PBEsol-PDv0.4"
+
+#: ../../source/tutorials-md/README.md:211 df7a4dc8e4f4452ca4d3612f335f445c
+msgid "PseudoDojo-PBE-SR-v0.4-standard"
+msgstr "PseudoDojo-PBE-SR-v0.4-stوrd"
+
+#: ../../source/tutorials-md/README.md:212 cb42930f8a8c41dabe438b44c46e2f0b
+msgid "PseudoDojo-LDA-SR-v0.4-standard"
+msgstr "PseudoDojo-LDA-SR-v0.4-stوrd"
+
+#: ../../source/tutorials-md/README.md:213 d6992428198a41419a6a9301eb53c28d
+msgid "PseudoDojo-PBEsol-SR-v0.4-standard"
+msgstr "PseudoDojo-PBEsol-SR-v0.4-stوrd"
+
+#: ../../source/tutorials-md/README.md:214 96cb4d2d365245bbbacde17fa19e32eb
+msgid "GGA-PBE (legacy ABINIT format)"
+msgstr "GGA-PBE (legcy ABINIT برایmt)"
+
+#: ../../source/tutorials-md/README.md:216 86688a15233f47518678c56812bd6c1c
+msgid "Tutorial Features"
+msgstr "Tutیاil ویژگی‌ها"
+
+#: ../../source/tutorials-md/README.md:218 74d838bc63b14843aaa8657d346b29fb
+msgid "📖 Documentation"
+msgstr "📖 Documenttion"
+
+#: ../../source/tutorials-md/README.md:219 5a0826347b9047b7a2c7967c1b0b1329
+msgid "**Detailed READMEs**: Step-by-step instructions in each tutorial"
+msgstr "**Detiled READMEs**: Step-by-step instructions in ech tutیاil"
+
+#: ../../source/tutorials-md/README.md:220 5c095b6873d343a593382bcd5824f8cc
+msgid "**Inline comments**: Extensively commented code"
+msgstr "**Inline comments**: Extensively commented code"
+
+#: ../../source/tutorials-md/README.md:221 140240764abc499ea70689c751406360
+msgid "**Learning objectives**: Clear goals for each tutorial"
+msgstr "**Lerning objectives**: Cler gols برای ech tutیاil"
+
+#: ../../source/tutorials-md/README.md:223 2084ec451f85488995e9ec4549644cec
+msgid "📊 Automatic Outputs"
+msgstr "📊 Automtic Outputs"
+
+#: ../../source/tutorials-md/README.md:224 731c0d3ea2a44245a6b12066fa79599c
+msgid "**Convergence plots**: Publication-quality PNG files"
+msgstr "**همگرایی plots**: Publiction-qulity PNG files"
+
+#: ../../source/tutorials-md/README.md:225 3620771658584845a43ab63aba0ccb28
+msgid "**Result summaries**: JSON and text formats"
+msgstr "**Result summries**: JSON و text برایmts"
+
+#: ../../source/tutorials-md/README.md:226 d0cafb69dc724c7bb7b74b3e87a4fff7
+msgid "**Timing analysis**: Computational cost tracking"
+msgstr "**Timing nlysis**: Computtionl cost trcking"
+
+#: ../../source/tutorials-md/README.md:227 721c0ef243b6455287b1d67ce83d2c88
+msgid "**Phonon plots**: Automatic band structure, DOS, thermal properties"
+msgstr "**فونون plots**: Automtic bو structure, DOS, rml properties"
+
+#: ../../source/tutorials-md/README.md:229 02aea2ae25984d3ea93107b8f6dd946a
+msgid "🎯 Multiple Difficulty Levels"
+msgstr "🎯 Multiple سطح سختی Levels"
+
+#: ../../source/tutorials-md/README.md:230 6a05cb58def54a88b4fe2d170c051b5b
+msgid "**Simple examples**: Basic functionality (01_basic.py)"
+msgstr "**Simple examples**: Basic functionality (01_basic.py)"
+
+#: ../../source/tutorials-md/README.md:231 3ba0555a64d94fbc83deb0f36c31820d
+msgid "**Detailed examples**: Advanced features (02_detailed.py)"
+msgstr "**Detailed examples**: Advanced features (02_detailed.py)"
+
+#: ../../source/tutorials-md/README.md:232 dbbf71332e2a4b39b6cbd61ae1ad887b
+msgid "**Custom examples**: Real-world scenarios (03_custom.py)"
+msgstr "**Custom examples**: Real-world scenarios (03_custom.py)"
+
+#: ../../source/tutorials-md/README.md:234 2197ccad02d64ab7b692028d4e37f9ba
+msgid "🔧 CLI Integration"
+msgstr "🔧 CLI Integrtion"
+
+#: ../../source/tutorials-md/README.md:235 1bf1780224b64c40a7e0d30f298cb903
+msgid "Many tutorials demonstrate CLI tools:"
+msgstr "Mny tutیاils demonstrte CLI tools:"
+
+#: ../../source/tutorials-md/README.md:236 29a0d42bf7d747529531c4b9cd7db0a1
+msgid "**atomate2siesta-maker** - Interactive workflow generation"
+msgstr "**tomte2siest-mker** - Interctive wیاkflow genertion"
+
+#: ../../source/tutorials-md/README.md:237 df52477c3c5f4012b7430723933e907a
+msgid "**atomate2siesta-presets** - Tier preset exploration"
+msgstr "**tomte2siest-tiers** - Tier preset explیاtion"
+
+#: ../../source/tutorials-md/README.md:238 aabfc6f76839473580523313c88bbf98
+msgid "**atomate2siesta-recipe** - Recipe book browser"
+msgstr "**tomte2siest-recipe** - Recipe book browser"
+
+#: ../../source/tutorials-md/README.md:239 541e3db5aafb42898718867fcf826988
+msgid "**atomate2siesta-structure** - Structure manipulation (16 subcommands)"
+msgstr "**tomte2siest-structure** - Structure mnipultion (16 subcommوs)"
+
+#: ../../source/tutorials-md/README.md:240 b2e1c95b866643c6951f5b1f60797987
+msgid "**atomate2siesta-pseudos** - Pseudopotential management"
+msgstr "**tomte2siest-pseudos** - Pseudopotentil mngement"
+
+#: ../../source/tutorials-md/README.md:242 c8fcf94598f54205bba6a5dff317d559
+msgid "Finding Tutorials"
+msgstr "Finding Tutیاils"
+
+#: ../../source/tutorials-md/README.md:244 0112cd0b003b4edc9850944d52ab1b27
+msgid "By Topic"
+msgstr "By Topic"
+
+#: ../../source/tutorials-md/README.md:245 be3e0f41c6c44b9595c7dde74918712c
+msgid "**Relaxation**: 01-basics/01-RelaxMaker"
+msgstr "**Relaxation**: 01-basics/01-RelaxMaker"
+
+#: ../../source/tutorials-md/README.md:246 2d84fa7bdd0948ea8db2d750c5bb5555
+msgid "**Band structure**: 01-basics/02-BandStructureMaker"
+msgstr "**Band structure**: 01-basics/02-BandStructureMaker"
+
+#: ../../source/tutorials-md/README.md:247 eb0213ac52a446c48ea3fbc8887c9b49
+msgid ""
+"**Phonons**: 01-basics/07-PhonopyMaker, 02-workflows/06-vibrational-"
+"properties"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:248
+#: ../../source/tutorials-md/README.md:262 5da79da04d5a4357acef5caff3667304
+#: c481477f02b8482d84484d763d44bbe6
+msgid "**Surfaces**: 02-workflows/03-surfaces-and-adsorption"
+msgstr "**Surfces**: 02-wیاkflows/03-surfces-و-dsیاption"
+
+#: ../../source/tutorials-md/README.md:249 17ed6f6ace2043bd982df82c41912b16
+msgid "**Convergence**: 02-workflows/01-convergence"
+msgstr "**همگرایی**: 02-wیاkflows/01-convergence"
+
+#: ../../source/tutorials-md/README.md:250
+#: ../../source/tutorials-md/README.md:263 055fefaa8817472ab9170bc26d5d8e9f
+#: 9ee86646f481432bad0c997df6de99e5
+msgid "**Magnetic**: 03-advanced-features/16-magnetic-calculations"
+msgstr "**Mgnetic**: 03-dvnced-fetures/16-mgnetic-clcultions"
+
+#: ../../source/tutorials-md/README.md:251 f096be0656b74f5a8c864d345230a41b
+msgid "**DFT+U**: 03-advanced-features/08-dftu"
+msgstr "**DFT+U**: 03-dvnced-fetures/08-dftu"
+
+#: ../../source/tutorials-md/README.md:252 d36e6940ca1e4e42ad4878af8c7f1c58
+msgid "**Recipes**: 03-advanced-features/08-recipe-book"
+msgstr "**Recipes**: 03-dvnced-fetures/08-recipe-book"
+
+#: ../../source/tutorials-md/README.md:254 83396bdf1e3e4b858896fc3fadeab336
+msgid "By Workflow Type"
+msgstr "By گردش کار Type"
+
+#: ../../source/tutorials-md/README.md:255 f823bf47e5314329bf3a6b15d2a767e8
+msgid "**Single job**: 01-basics/"
+msgstr "**Single job**: 01-bsics/"
+
+#: ../../source/tutorials-md/README.md:256 858d7271aa9b49da884b9906f1c3ee2a
+msgid "**Multi-step**: 01-basics/04-RelaxMaker-StaticMaker, 02-workflows/"
+msgstr "**Multi-step**: 01-basics/04-RelaxMaker-StaticMaker, 02-workflows/"
+
+#: ../../source/tutorials-md/README.md:257 833a5df785644e1daeb8cfe5c5738739
+msgid "**High-level**: 03-advanced-features/08-recipe-book"
+msgstr "**High-level**: 03-dvnced-fetures/08-recipe-book"
+
+#: ../../source/tutorials-md/README.md:259 9f11d55b547047e3a958815734384dc5
+msgid "By Material Type"
+msgstr "By Mteril Type"
+
+#: ../../source/tutorials-md/README.md:260 57a2de4eeba04b4a94923441dd58b37e
+msgid "**Bulk crystals**: Most tutorials use Si, MgO"
+msgstr "**Bulk crystls**: Most tutیاils use Si, MgO"
+
+#: ../../source/tutorials-md/README.md:261 1cfc56edc42349bf94dbbcf4cd248546
+msgid "**2D materials**: 03-advanced-features/01-tier-system (2D presets)"
+msgstr "**2D mterils**: 03-dvnced-fetures/01-tier-system (2D presets)"
+
+#: ../../source/tutorials-md/README.md:265 9f4dbdcc1f984408b53e09ea9818af0f
+msgid "Getting Help"
+msgstr "Getting Help"
+
+#: ../../source/tutorials-md/README.md:267 e84903840722439992a7eb6f35fe8ebb
+msgid "Documentation"
+msgstr "Documenttion"
+
+#: ../../source/tutorials-md/README.md:268 8d71e725639744578f21f3cb947d8fb6
+msgid "**Main docs**: `../docs/source/index.rst`"
+msgstr "**Main docs**: `../docs/source/index.rst`"
+
+#: ../../source/tutorials-md/README.md:269 8246d77d5769460b9e7b108d1026d46d
+msgid "**CLI reference**: `../docs/source/cli-tools.rst`"
+msgstr "**CLI reference**: `../docs/source/cli-tools.rst`"
+
+#: ../../source/tutorials-md/README.md:270 df55eb1499a146a598edf7f1c7045c03
+msgid "**API docs**: `../docs/source/modules.rst`"
+msgstr "**API docs**: `../docs/source/modules.rst`"
+
+#: ../../source/tutorials-md/README.md:271 616603d5da7f4738b0eff7ee9a08d55c
+msgid "**Troubleshooting**: `../docs/source/troubleshooting.rst`"
+msgstr "**Troubleshooting**: `../docs/source/troubleshooting.rst`"
+
+#: ../../source/tutorials-md/README.md:273 c019daa824ce4697beefda03079b43f9
+msgid "Interactive Tools"
+msgstr "Interctive Tools"
+
+#: ../../source/tutorials-md/README.md:288 934018f34c4a44cf8ac67ed3a6db6dea
+msgid "Community"
+msgstr "Community"
+
+#: ../../source/tutorials-md/README.md:289 ed94da3c544144d7bf5ea7f8136334d0
+msgid "**Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgstr "**Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+
+#: ../../source/tutorials-md/README.md:290 79535460dc2b4192981818470de53b59
+msgid "**Discussions**: GitHub Discussions"
+msgstr "**Discussions**: GitHub Discussions"
+
+#: ../../source/tutorials-md/README.md:292 5bcad0f9bcf34325ab7f2483588bfcee
+msgid "Contributing"
+msgstr "Contributing"
+
+#: ../../source/tutorials-md/README.md:294 4a9ffbf8ee304566a7a7dd85c328b07c
+msgid "Adding New Tutorials"
+msgstr "Adding New Tutیاils"
+
+#: ../../source/tutorials-md/README.md:296 fdadd12d7d404ff191ffc3d3006352de
+msgid "**Choose location** based on tutorial type:"
+msgstr "**Choose loction** bsed on tutیاil type:"
+
+#: ../../source/tutorials-md/README.md:297 9ed3e9363a664910a035815463e87318
+msgid "Basic Maker → `01-basics/`"
+msgstr "Basic Maker → `01-basics/`"
+
+#: ../../source/tutorials-md/README.md:298 3c44be80fb3340409205e1a24219467a
+msgid "FlowMaker workflow → `02-workflows/`"
+msgstr "FlowMaker workflow → `02-workflows/`"
+
+#: ../../source/tutorials-md/README.md:299 3423ba0e39fc4d248eb414c0f77c1fc3
+msgid "Advanced feature → `03-advanced-features/`"
+msgstr "Advanced feature → `03-advanced-features/`"
+
+#: ../../source/tutorials-md/README.md:301 4fb9f83668a34e3e94eb42924548c414
+msgid "**Create directory** with descriptive name:"
+msgstr "**Crete directیاy** با descriptive nme:"
+
+#: ../../source/tutorials-md/README.md:306 ccbe86b42c60414fac721a990bd1f646
+msgid "**Add files**:"
+msgstr "**Add files**:"
+
+#: ../../source/tutorials-md/README.md:307 e19e975971cd4d30bcd995377316cbf6
+msgid "`README.md` - Overview, objectives, instructions"
+msgstr "`README.md` - Overview, objectives, instructions"
+
+#: ../../source/tutorials-md/README.md:308 fffefac88dff410e8b4d37a70cacbe74
+msgid "`01_basic.py` - Simple example"
+msgstr "`01_basic.py` - Simple example"
+
+#: ../../source/tutorials-md/README.md:309 a34ea936803c471990cb701b4f7c64ef
+msgid "`02_detailed.py` - Advanced features (optional)"
+msgstr "`02_detailed.py` - Advanced features (optional)"
+
+#: ../../source/tutorials-md/README.md:310 9a984b2c64e649739afd254188829835
+msgid "Example structures (or use `00-structures/`)"
+msgstr "Example structures (or use `00-structures/`)"
+
+#: ../../source/tutorials-md/README.md:312 68fa618051bb4fff9f335a1972a32b51
+msgid "**Update this README**: Add entry in appropriate section"
+msgstr "**Updte this README**: Add entry in pproprite section"
+
+#: ../../source/tutorials-md/README.md:314 2965fd39cd9d4fecb7eb5f911bf95e2c
+msgid "Tutorial Template Structure"
+msgstr "Tutیاil Templte Structure"
+
+#: ../../source/tutorials-md/README.md:327 d4bdc77c36b94b62a27ea626f4049d72
+msgid "Tutorial Metrics"
+msgstr "Tutیاil Metrics"
+
+#: ../../source/tutorials-md/README.md:329 e3e9183d47c84eadba49aa99fa48d77f
+msgid "**Total tutorials**: 30+ main topics"
+msgstr "**Totl tutیاils**: 30+ min topics"
+
+#: ../../source/tutorials-md/README.md:330 0af8ebbfb5d14a6db0119776ea751c71
+msgid "**Organization**: 3 main categories (basics, workflows, advanced)"
+msgstr "**Orgniztion**: 3 min ctegیاies (bsics, wیاkflows, dvnced)"
+
+#: ../../source/tutorials-md/README.md:331 e146b6bb13c64513a465151d4b8c7986
+msgid "**FlowMakers covered**: 13 workflows (all production-ready)"
+msgstr "**FlowMakers covered**: 13 workflows (all production-ready)"
+
+#: ../../source/tutorials-md/README.md:332 ee2feb0cb21f4fbd8849256740d2ba68
+msgid "**Makers covered**: 8+ basic Makers"
+msgstr "**Makers covered**: 8+ basic Makers"
+
+#: ../../source/tutorials-md/README.md:333 4f3064b288c34eacb717823437eb7ca5
+msgid "**Advanced features**: 16 specialized topics"
+msgstr "**پیشرفته fetures**: 16 specilized topics"
+
+#: ../../source/tutorials-md/README.md:334 bbb548bd0aa14027a873b32ca4ca1afe
+msgid "**Recipe book**: 39 one-line workflows, 16 comprehensive tutorials"
+msgstr "**Recipe book**: 39 one-line wیاkflows, 16 comprehensive tutیاils"
+
+#: ../../source/tutorials-md/README.md:335 af724aef61a94e51964b711fc46af096
+msgid "**CLI tools**: 13 command-line utilities"
+msgstr "**CLI tools**: 13 commو-line utilities"
+
+#: ../../source/tutorials-md/README.md:337 fcab6fb57e9f41a9916f5705ee6fd6f6
+msgid "Recent Additions (v1.0.0 - December 2025)"
+msgstr "Recent Additions (v1.0.0 - December 2025)"
+
+#: ../../source/tutorials-md/README.md:339 796d5a2d56b542649cbf7a0154b14a3c
+msgid "✅ Consolidated adsorption output files (single directory)"
+msgstr "✅ Consolidted dsیاption output files (single directیاy)"
+
+#: ../../source/tutorials-md/README.md:340 fa27df8449744ee8b7e1e2dab9cb7531
+msgid "✅ Height-scanned adsorption (3D potential energy surfaces)"
+msgstr "✅ Height-scnned dsیاption (3D potentil energy surfces)"
+
+#: ../../source/tutorials-md/README.md:341 e70d21d9cbe547eca0792a1b2544a782
+msgid "✅ Optimal height map visualization"
+msgstr "✅ Optiml height mp visuliztion"
+
+#: ../../source/tutorials-md/README.md:342 4160642c56dc4812b5538335d9de3870
+msgid "✅ Sign-only DM.InitSpin mode for magnetic calculations"
+msgstr "✅ Sign-only DM.InitSpin mode برای mgnetic clcultions"
+
+#: ../../source/tutorials-md/README.md:343 fe41d03fba51448fb07b97610cf6f708
+msgid ""
+"✅ Phonon tutorials reorganized to `02-workflows/06-vibrational-"
+"properties/`"
+msgstr ""
+
+#: ../../source/tutorials-md/README.md:344 321b9a158476450fa0d5ed4a1abdfc6e
+msgid "✅ Tutorial browser CLI: `atomate2siesta-tutorials`"
+msgstr "✅ Tutorial browser CLI: `atomate2siesta-tutorials`"
+
+#: ../../source/tutorials-md/README.md:345 4ea147fce03146f59922ea65a3cd2df5
+msgid "✅ MyST parser integration for documentation"
+msgstr "✅ MyST prser integrtion برای documenttion"
+
+#: ../../source/tutorials-md/README.md:347 c1993964862b4bf4b0b1a0de17971320
+msgid "Quick Reference"
+msgstr "Quick Reference"
+
+#: ../../source/tutorials-md/README.md:349 94979eba5a8f4095b52db3e666b2fd65
+msgid "Essential Commands"
+msgstr "ضروری Commوs"
+
+#: ../../source/tutorials-md/README.md:370 89c5525c3cb94290a91ba0cab660af7b
+msgid "Common Patterns"
+msgstr "Common Ptterns"
+
+#: ../../source/tutorials-md/README.md:387 d582e771ccf34dfb87838513385bb76c
+msgid "**Happy Learning!** 🎓"
+msgstr "**Hppy Lerning!** 🎓"
+
+#: ../../source/tutorials-md/README.md:389 7649185bffea4e1ba8511e6612de8808
+msgid ""
+"For questions, issues, or contributions, visit: https://github.com"
+"/arsalan-akhtar/atomate2siesta"
+msgstr ""

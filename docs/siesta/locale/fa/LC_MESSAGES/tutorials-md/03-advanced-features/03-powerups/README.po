@@ -1,0 +1,290 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:1
+#: 6076bd3a393e4478bbdd7465aa651770
+msgid "Powerups Tutorial"
+msgstr "Powerups Tutیاil"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:3
+#: 0ddaafb3319d441ab68766f14a568460
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:5
+#: f47df9a1f336465ba6cad8fc3c9b27c5
+msgid ""
+"**Powerups** are functions that modify jobs and workflows **after "
+"creation** to customize parameters, add functionality, or build high-"
+"throughput screening workflows. They provide flexible post-creation "
+"modifications without changing maker definitions."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:7
+#: 951562ea82fe42019009ff5404b9388d
+msgid "**Why use powerups?**"
+msgstr "**Why use powerups?**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:8
+#: 1ae61b214d804fffa7c21e0770df9509
+msgid "✅ **Flexible**: Modify jobs after creation"
+msgstr "✅ **Flexible**: Modify jobs fter cretion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:9
+#: 3d3103e8d3844abea35df3374a9ce674
+msgid "✅ **Reusable**: Apply same changes to multiple jobs"
+msgstr "✅ **Reusble**: Apply sme chnges to multiple jobs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:10
+#: c205e277d2db46fba616e2a859f64dae
+msgid "✅ **Clean**: Separate workflow logic from parameters"
+msgstr "✅ **Clen**: Seprte wیاkflow logic from prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:11
+#: 8bb42fc9d49a4480aa18300e82d06bf5
+msgid "✅ **Powerful**: Enable high-throughput screening"
+msgstr "✅ **Powerful**: Enble high-throughput screening"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:12
+#: af3bb3458b0a4b37a70a5f63ee80f181
+msgid "✅ **Chainable**: Combine multiple powerups"
+msgstr "✅ **Chinble**: Combine multiple powerups"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:16
+#: cbfda6507d76401cbfa15c1b21abd686
+msgid "Core Powerups"
+msgstr "Cیاe Powerups"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:18
+#: 118232a4a7f948e189a6a325cad9a13a
+msgid "1. `update_user_siesta_settings()`"
+msgstr "1. `update_user_siesta_settings()`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:20
+#: 9339fcc6dd8e424d9748514295ce1a96
+msgid "Update SIESTA parameters for jobs or workflows."
+msgstr "Updte SIESTA prmeters برای jobs یا wیاkflows."
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:44
+#: 18aae0d65bba42dab5d5ccf406927ee2
+msgid "2. `add_metadata()`"
+msgstr "2. `add_metadata()`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:46
+#: 59e70c7f52dd452eb6ef5439638f06e2
+msgid "Attach custom metadata to jobs for tracking and organization."
+msgstr "Attch custom metdt to jobs برای trcking و یاgniztion."
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:62
+#: e6e243f75d084ee69695ed8f471788a2
+msgid "3. `use_fake_siesta()`"
+msgstr "3. `use_fake_siesta()`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:64
+#: e483478ba2214fef97b6188a44b8513b
+msgid "Replace SIESTA with fake calculator for testing workflow logic."
+msgstr "Replce SIESTA با fke clcultیا برای testing wیاkflow logic."
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:79
+#: a4acd47f34364bbf98594bd54aea7937
+msgid "Basic Usage"
+msgstr "Bsic Usge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:81
+#: 7fbc786a4d904cf9adbd1f70d4077ecd
+msgid "Update Parameters After Creation"
+msgstr "Updte Prmeters After Cretion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:107
+#: 1e8171863755413ba3ab278d7b5d5f28
+msgid "Chain Multiple Powerups"
+msgstr "Chin Multiple Powerups"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:127
+#: 1ca6942856374e8f94f3d04dbf43e9d1
+msgid "Flow Customization"
+msgstr "Flow Customization"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:129
+#: 802f938dec0644a0a28542424445074d
+msgid "Apply Settings to Entire Workflow"
+msgstr "Apply Settings to Entire گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:153
+#: fc46b3ea25984b7cb5392d030bbac977
+msgid "Add Metadata to Workflows"
+msgstr "Add Metdt to گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:170
+#: 295071e79fe142c39098719f413cdd99
+msgid "High-Throughput Screening"
+msgstr "High-Throughput Screening"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:172
+#: de87bf4ddb5749ce87af467590f270fc
+msgid "Basis Set Screening"
+msgstr "Bsis Set Screening"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:199
+#: 9c8f97eb4d804ed1a4effa5ab27d6bdb
+msgid "Multi-Structure Screening"
+msgstr "Multi-Structure Screening"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:237
+#: 7972360213254a30ba6676284e571b91
+msgid "Parameter Grid Search"
+msgstr "Prmeter Grid Serch"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:273
+#: 39961973e5a341b2a3902adfef43660e
+msgid "Advanced Patterns"
+msgstr "پیشرفته Ptterns"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:275
+#: f78f224f04db4cfca2b9f5af45039467
+msgid "Conditional Parameter Updates"
+msgstr "Conditionl Prmeter Updtes"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:317
+#: 113d638f4e1f4b259faa753fa4528614
+msgid "Workflow Templates"
+msgstr "گردش کار Templtes"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:352
+#: 703d33601b684e49b2d93aedfa48f3b1
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:354
+#: 02c9a2925a7349c2a043c67bb9c3b374
+msgid "1. Use Powerups for Customization"
+msgstr "1. Use Powerups برای Customiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:367
+#: 11ee7446f9ec436194a6d390b3fa9c1c
+msgid "2. Separate Logic from Parameters"
+msgstr "2. Seprte Logic from Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:378
+#: 62fed246487f4468b91001e2c50fb89a
+msgid "3. Add Metadata for Tracking"
+msgstr "3. Add Metdt برای Trcking"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:393
+#: a68455a36de14951b2baeea99422dcc8
+msgid "4. Test with Fake SIESTA First"
+msgstr "4. Test با Fke SIESTA First"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:408
+#: 02ab1c41c9054bf2aa8f7030789d5b0b
+msgid "Integration with Other Features"
+msgstr "Integrtion با Or ویژگی‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:410
+#: cd1534b8b6104fd2b202875034a2e174
+msgid "With Dry-Run Mode"
+msgstr "With Dry-Run Mode"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:425
+#: f811e50c0ce944f1988af15f963d7086
+msgid "With Tier System"
+msgstr "With Tier System"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:436
+#: 0655986bf3e247e8866b2878ec089595
+msgid "With Database Storage"
+msgstr "With Dtbse Stیاge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:458
+#: 542723eb09254129bc1584d83758bbda
+msgid "Summary"
+msgstr "Summry"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:460
+#: 7e5e63730b814a7b97c36589f8161c32
+msgid "Key Takeaways"
+msgstr "Key Tkewys"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:462
+#: 464d587e7ff54823b63226d2317b5ef6
+msgid ""
+"✅ **Powerups modify jobs AFTER creation** (post-processing) ✅ "
+"**update_user_siesta_settings()** updates any SIESTA parameter ✅ **Works "
+"on jobs or workflows** (applies to all child jobs) ✅ **add_metadata()** "
+"attaches custom tracking information ✅ **Chainable** - combine multiple "
+"powerups ✅ **Perfect for screening** - loop + powerup pattern"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:469
+#: 666e624b59434548bab0e2ebca6670a8
+msgid "Essential Powerups"
+msgstr "ضروری Powerups"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:482
+#: bb0cf77c20ca40a9b0c2c4902fee60a2
+msgid "Quick Reference"
+msgstr "Quick Reference"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:501
+#: add22656b845401fb7aa5ccca829b935
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:503
+#: 95908a199c954b039a4b62fa9b7f173d
+msgid "**Try the tutorial**: `python tutorial.py`"
+msgstr "**Try the tutorial**: `python tutorial.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:504
+#: 97ade8d7403b46f186098ff7de43ae05
+msgid "**Test example types**:"
+msgstr "**Test exmple types**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:505
+#: d755f3e7d2c9456d992cdcd0717c4860
+msgid "`'basic'`: Parameter updates"
+msgstr "`'basic'`: Parameter updates"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:506
+#: d59458a5434a47bc9caa7d1aab5770aa
+msgid "`'flow'`: Workflow customization"
+msgstr "`'flow'`: Workflow customization"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:507
+#: 8b572543d5c1492183a9d35eee9228d7
+msgid "`'screening'`: High-throughput screening"
+msgstr "`'screening'`: High-throughput screening"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:508
+#: 72805f16ac6d474292b46ac56f072f1f
+msgid "**Build your own screening workflows**"
+msgstr "**Build your own screening wیاkflows**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:509
+#: 53c57d21cfe845e69c91e0dfd44adf26
+msgid "**Combine with database storage** for data management"
+msgstr "**Combine با dtbse stیاge** برای dt mngement"
+
+#: ../../source/tutorials-md/03-advanced-features/03-powerups/README.md:513
+#: 10ee5baab27c4c29afdfb75c78f3dcbe
+msgid "**Make powerups part of your workflow customization strategy!** ⚡"
+msgstr "**Mke powerups prt of your wیاkflow customiztion strtegy!** ⚡"

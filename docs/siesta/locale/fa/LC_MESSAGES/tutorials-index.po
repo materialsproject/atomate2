@@ -1,0 +1,144 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-index.rst:25
+msgid "Browse by Category"
+msgstr "مرور بر اساس دسته‌بندی"
+
+#: ../../source/tutorials-index.rst:2 df117d68ddda4936bfb7b15759e38bd8
+msgid "Tutorial Index"
+msgstr "فهرست آموزش‌ها"
+
+#: ../../source/tutorials-index.rst:4 ec0b68ad1f0d4271abbf25ce0ca994b8
+msgid ""
+"Interactive tutorials for atomate2siesta. All tutorials include working "
+"code examples and can be run in three modes: dry-run (preview), local "
+"execution, or HPC submission."
+msgstr ""
+"آموزش‌های تعاملی برای atomate2siesta. تمام آموزش‌ها شامل مثال‌های کد "
+"کاربردی هستند و می‌توانند در سه حالت اجرا شوند: dry-run (پیش‌نمایش)، "
+"اجرای محلی، یا ارسال به HPC."
+
+#: ../../source/tutorials-index.rst:8 496831e5f9f741d1b5a0c17670e7e3ce
+msgid ""
+"**New to atomate2siesta?** Start with :doc:`tutorials-auto/01-basics` and"
+" the relaxation tutorial."
+msgstr ""
+"**تازه‌وارد atomate2siesta هستید؟** با :doc:`tutorials-auto/01-basics` و "
+"آموزش relaxation شروع کنید."
+
+#: ../../source/tutorials-index.rst:12 9c7b6cc04a07401bafb1b30eea1d2a4f
+msgid "Generate tutorial scripts automatically with the CLI:"
+msgstr "اسکریپت‌های آموزشی را به‌طور خودکار با CLI تولید کنید:"
+
+#: ../../source/tutorials-index.rst:23 24e560b08a344db8bc716dd14d4e9179
+msgid "Tutorial Categories"
+msgstr "دسته‌بندی آموزش‌ها"
+
+#: ../../source/tutorials-index.rst:38 513a04e0b9ec495e9b6b3a6e116d4adb
+msgid "Quick Links"
+msgstr "پیوندهای سریع"
+
+#: ../../source/tutorials-index.rst:40 55cc5c237a5d40be882a09b97358d6ed
+msgid "**Getting Started**"
+msgstr "**شروع کار**"
+
+#: ../../source/tutorials-index.rst:41 1cd472c317c94fc8849daa3eb828e310
+msgid ":doc:`tutorials-auto/01-basics` - Essential basics for all users"
+msgstr ":doc:`tutorials-auto/01-basics` - مبانی ضروری برای همه کاربران"
+
+#: ../../source/tutorials-index.rst:42 d6beff5a7d374299992640e4da8bb30e
+msgid ":doc:`installation` - Setup guide"
+msgstr ":doc:`installation` - راهنمای نصب و پیکربندی"
+
+#: ../../source/tutorials-index.rst:43 a70854e4ad994d09be9b7ae3a1e6ceda
+msgid ":doc:`cli-tools` - Command-line tools"
+msgstr ":doc:`cli-tools` - ابزارهای خط فرمان"
+
+#: ../../source/tutorials-index.rst:45 688b2f24dbdd4de4bf39c8bcc9e0956c
+msgid "**Advanced Topics**"
+msgstr "**موضوعات پیشرفته**"
+
+#: ../../source/tutorials-index.rst:46 71057eb459564465a032dbc42472ab95
+msgid ":doc:`tutorials-auto/02-workflows` - Complex multi-step calculations"
+msgstr ":doc:`tutorials-auto/02-workflows` - محاسبات پیچیده چندمرحله‌ای"
+
+#: ../../source/tutorials-index.rst:47 1c08648e45f6439fb2fa1ffdade23883
+msgid ":doc:`tutorials-auto/03-advanced-features` - Expert features"
+msgstr ":doc:`tutorials-auto/03-advanced-features` - ویژگی‌های تخصصی"
+
+#: ../../source/tutorials-index.rst:48 c9e2f20172414dcb83c19041ddcbf970
+msgid ":doc:`tier-system` - Material-specific presets"
+msgstr ":doc:`tier-system` - پیش‌تنظیمات اختصاصی مواد"
+
+#: ../../source/tutorials-index.rst:50 c171062008424f73bd77481165516b61
+msgid "**Workflow Optimization**"
+msgstr "**بهینه‌سازی جریان کار**"
+
+#: ../../source/tutorials-index.rst:51 674a894b11904976890439c493b10e1c
+msgid ":doc:`makers-vs-flowmakers` - Parameter customization guide"
+msgstr ":doc:`makers-vs-flowmakers` - راهنمای سفارشی‌سازی پارامترها"
+
+#: ../../source/tutorials-index.rst:52 81b10314a79f448e9ed1d8f9cd330568
+msgid ":doc:`recipe-book` - High-level workflow recipes"
+msgstr ":doc:`recipe-book` - دستورهای جریان کار سطح بالا"
+
+#: ../../source/tutorials-index.rst:55 e07d95ee39c64614b13f43783a18432a
+msgid "Tutorial Statistics"
+msgstr "آمار آموزش‌ها"
+
+#: ../../source/tutorials-index.rst:57 434b201d1d9641719d51173275da3db4
+msgid "**00 Structures**: 1 tutorials"
+msgstr "**۰۰ ساختارها**: ۱ آموزش"
+
+#: ../../source/tutorials-index.rst:58 377ed87262a94281909e00f7b5a3ad1b
+#, fuzzy
+msgid "**01 Basic Tutorials**: 9 tutorials"
+msgstr "**۰۱ مبانی**: ۹ آموزش"
+
+#: ../../source/tutorials-index.rst:59 1000f530627b433097d474ef7216e7c1
+#, fuzzy
+msgid "**02 Workflows**: 21 tutorials"
+msgstr "**۰۲ جریان‌های کار**: ۱۹ آموزش"
+
+#: ../../source/tutorials-index.rst:60 b4bcc3f63bda4b69b3b35e7b9091e4cb
+#, fuzzy
+msgid "**03 Advanced Features**: 33 tutorials"
+msgstr "**۰۳ ویژگی‌های پیشرفته**: ۳۴ آموزش"
+
+#: ../../source/tutorials-index.rst:61 06b37ad404094513bf08c45ad17f26db
+#, fuzzy
+msgid "**04 Notebooks**: 1 tutorials"
+msgstr "**نوت‌بوک‌ها**: ۱ آموزش"
+
+#: ../../source/tutorials-index.rst:62 e399593b1d334d5891789bd0822e9013
+#, fuzzy
+msgid "**05 Troubleshooting**: 3 tutorials"
+msgstr "**عیب‌یابی**: ۱ آموزش"
+
+#: ../../source/tutorials-index.rst:64 d8b9cd4bb1014dc08183be93f424c9b1
+#, fuzzy
+msgid "**Total**: 68 interactive tutorials"
+msgstr "**مجموع**: ۶۶ آموزش تعاملی"
+
+#~ msgid "**Case Studies**: 1 tutorials"
+#~ msgstr "**مطالعات موردی**: ۱ آموزش"

@@ -1,0 +1,1315 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:1
+#: a8aa92cc2531466e96393e0b914f1732
+msgid "Tutorial: Multi-Step Workflows"
+msgstr "آموزش: Multi-Step گردش کارs"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:3
+#: cda05f99d5a74c6ab39e95f049a66a3b
+msgid ""
+"**Category**: 01-basics **Difficulty**: Beginner **Time**: ~5 min (dry-"
+"run), ~30-45 min (full calculation)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:9
+#: 42bfdd7048b144c7a371283911ae71f2
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:11
+#: 34a9073ecd30406b88eedbe8bb2251ef
+msgid ""
+"Learn how to create multi-step workflows by chaining multiple jobs "
+"together. This tutorial demonstrates using Flow makers to automatically "
+"run calculations with different parameters and compare results."
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:15
+#: 45fb6975b9b0427b8dc189d7ccc89d24
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:17
+#: ef77cf899cd64b598e10bb51a7cefa94
+msgid "Creating multi-job workflows with Flow makers"
+msgstr "Creating multi-job workflows with Flow makers"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:18
+#: 77c2f9d1693342e2973556832b472f52
+msgid "`DifferentBasisRelaxMaker` for basis set comparison"
+msgstr "`DifferentBasisRelaxMaker` for basis set comparison"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:19
+#: 34b8441ef33045449a3475d5ec40c8f3
+msgid "Job dependencies and data flow"
+msgstr "Job dependencies و dt flow"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:20
+#: e1cc2e86d9634ffbb08a33e12d5df758
+msgid "Automatic result comparison"
+msgstr "Automtic result comprison"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:21
+#: 612990228e3d4871a50e147f337fbb33
+msgid "Applying powerups to entire workflows"
+msgstr "Applying powerups to entire wیاkflows"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:22
+#: e243ebbc0074453cb68dd724cddfcae6
+msgid "Sequential vs parallel job execution"
+msgstr "Sequentil vs prllel job execution"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:26
+#: 5e6f72d3cc6547f295ee3e241161d1dc
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:28
+#: a53d11c30e04422ab3d8c6c3e8822d7c
+msgid "**Required**: [01-relaxation](../01-RelaxMaker/) completed"
+msgstr "**Required**: [01-relaxation](../01-RelaxMaker/) completed"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:29
+#: 16215f8ca4df496fac7690b48aa44b46
+msgid "**Required**: [02-relaxation-parameters](../02-BandStructureMaker/)"
+msgstr "**Required**: [02-relaxation-parameters](../02-BandStructureMaker/)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:30
+#: b07a492595374cabb9aec82529c9db70
+msgid "**Recommended**: Understanding of SIESTA basis sets"
+msgstr "**Recommended**: درک of SIESTA bsis sets"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:34
+#: 34784fbcd0c84ea080c8e9e2646fc774
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:36
+#: c10c00ecf47740a6a8acff2a2a11d4d3
+msgid "What is a Workflow (Flow)?"
+msgstr "What is a Workflow (Flow)?"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:38
+#: f1b41e8f3e0c49edb9fc6797612e5d08
+msgid ""
+"A **workflow** (or **flow**) is a collection of jobs with dependencies. "
+"Jobs can run:"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:40
+#: 6ba2608a6a7945b5bce477886beecf08
+msgid "**Sequentially**: Job B waits for Job A to finish"
+msgstr "**Sequentilly**: Job B wits برای Job A to finish"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:41
+#: 39d9ebf20a934bc489ff35ff4916615b
+msgid "**In parallel**: Independent jobs run simultaneously"
+msgstr "**In prllel**: Independent jobs run simultneously"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:42
+#: c7f0f952664041e7afb1c8325157f291
+msgid "**Conditionally**: Job C runs only if Job B succeeds"
+msgstr "**Conditionlly**: Job C runs only if Job B succeeds"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:44
+#: a1fbc4e65e244063af5917e69e1aede3
+msgid "**Single Job**:"
+msgstr "**Single Job**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:50
+#: 5076019954694d8e8d5ea0d9d45a4161
+msgid "**Workflow (Flow)**:"
+msgstr "**Workflow (Flow)**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:56
+#: 2d4f91604cd04de1bee1ad1b07f462cb
+msgid "Restart Techniques (NEW!)"
+msgstr "Restrt Techniques (NEW!)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:58
+#: 38ccea19877e4080a0e096c89fe2e898
+msgid "SIESTA provides powerful restart capabilities for faster calculations:"
+msgstr "SIESTA provides powerful restrt cpbilities برای fster clcultions:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:60
+#: 3d3180ab46084df6977fe2a7126330cc
+msgid "**Density Matrix (DM) Restart**:"
+msgstr "**Density Mtrix (DM) Restrt**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:61
+#: 70ddf23cc3c941ad810c7249792b0632
+msgid "**What**: Reuse converged electronic structure from previous calculation"
+msgstr "**Wht**: Reuse converged electronic structure from previous clcultion"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:62
+#: 2aa153d95fa24fcdb1f11cf741d63877
+#, python-format
+msgid "**Benefit**: 50-70% fewer SCF iterations"
+msgstr "**Benefit**: 50-70% fewer SCF itertions"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:63
+#: 641555c708cf4d8bac76356d8eef5957
+msgid ""
+"**Use when**: Refining k-points, tightening tolerance, adding post-"
+"processing"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:64
+#: 5e9daca849c84fe7b773c69c8f0c512f
+msgid "**Tutorial**: `02_restart_from_dm.py`"
+msgstr "**Tutorial**: `02_restart_from_dm.py`"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:66
+#: b764c2d871354d38898e20a05ea51471
+msgid "**Geometry (XV) Restart**:"
+msgstr "**Geometry (XV) Restrt**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:67
+#: ae49a7e9925447bfbc01e50924c3b554
+msgid "**What**: Continue geometry optimization from previous atomic positions"
+msgstr "**Wht**: Continue geometry optimiztion from previous tomic positions"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:68
+#: b1ad25906a554196b22ddfa7e764921f
+#, python-format
+msgid "**Benefit**: 50-70% fewer relaxation steps"
+msgstr "**Benefit**: 50-70% fewer relxtion steps"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:69
+#: c8e4e1c8057f41879dae86e2a8a9df91
+msgid ""
+"**Use when**: Two-stage relaxation (loose→tight), resuming interrupted "
+"jobs"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:70
+#: 4f2a60100d934e91aead28f563dd9f24
+msgid "**Tutorial**: `03_restart_from_xv.py`"
+msgstr "**Tutorial**: `03_restart_from_xv.py`"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:72
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:244
+#: 236069f3d7794ae9bcea9c4dec4b8701 b6d2d0ab66c64f3f9f32e0bfc6f09dff
+msgid "**Combined DM + XV**:"
+msgstr "**Combined DM + XV**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:73
+#: 04b47a9874344ecc9bbbc543235f78f9
+msgid "Maximum efficiency: faster SCF AND fewer geometry steps"
+msgstr "Mximum efficiency: fster SCF AND fewer geometry steps"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:74
+#: d07b8241b2b944da9b6cafef8a7a6421
+msgid "Ideal for multi-stage high-accuracy workflows"
+msgstr "Idel برای multi-stge high-ccurcy wیاkflows"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:78
+#: 03b9cf96db8b42be9f34f1db2bc2f554
+msgid "Restart Techniques: Detailed Guide"
+msgstr "Restrt Techniques: Detiled Guide"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:80
+#: 9d9dd187c60043d699ecf5d982fa0d96
+msgid "Density Matrix (DM) Restart"
+msgstr "Density Mtrix (DM) Restrt"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:82
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:121
+#: 0c6f3e5884a44d749c462f4cb4c74520 9f5e7173e87c4f998621f01f55ccaf0a
+msgid "**Physics Background**:"
+msgstr "**Physics Bckground**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:84
+#: 5d7d980aee104dfeb4c1b55dd6769417
+msgid ""
+"The density matrix contains the self-consistent electronic structure "
+"solution. By starting with a converged DM from a similar calculation, "
+"SIESTA can:"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:85
+#: 0360d038db8e4abab921c20eaa74a720
+#, python-format
+msgid "Skip many SCF iterations (typically 50-70% reduction)"
+msgstr "Skip mny SCF itertions (typiclly 50-70% reduction)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:86
+#: 2943df71b503407aa3411a85ba6b9d48
+msgid "Achieve better initial guess for difficult-to-converge systems"
+msgstr "Achieve better initil guess برای difficult-to-converge systems"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:87
+#: 851b098a922145f3aadfd4545cde54b2
+msgid "Maintain consistent orbital character across parameter changes"
+msgstr "Mintin consistent یاbitl chrcter cross prmeter chnges"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:89
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:128
+#: 6b138ee03a034929a90464367a98744a d41f3e9da82444db9301ce7cacea5b7a
+msgid "**When to Use**:"
+msgstr "**When to Use**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:90
+#: 75dd741baf584e3a9f6e6702b28fe837
+msgid "✓ Refining k-point mesh (2×2×2 → 4×4×4)"
+msgstr "✓ Refining k-point mesh (2×2×2 → 4×4×4)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:91
+#: ac631b3ee1234eb9b4f0511a4a01e2a6
+msgid "✓ Tightening SCF convergence criteria"
+msgstr "✓ Tightening SCF convergence criteri"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:92
+#: 7d87c6a0f33645d48f2d45aab9adb5b4
+msgid "✓ Small geometry adjustments"
+msgstr "✓ Smll geometry djustments"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:93
+#: b593560f01e24c9e816bdbc7167bf188
+msgid "✓ Adding post-processing (DOS, bands) to converged structure"
+msgstr "✓ Adding post-processing (DOS, bوs) to converged structure"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:94
+#: 8689f0c89a8141d7aac6e52c87e3c28d
+msgid "✗ Large structural changes (DM won't match well)"
+msgstr "✗ Lrge structurl chnges (DM won't mtch well)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:95
+#: 106d19cb0f9c4574ae86e7d2974c93ea
+msgid "✗ Changing number of atoms (DM incompatible)"
+msgstr "✗ Chnging number of toms (DM incomptible)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:96
+#: 8a230bff4bb4443c8a9e4aede3ea44d9
+msgid "✗ Changing basis set (orbital count changes)"
+msgstr "✗ Chnging bsis set (یاbitl count chnges)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:98
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:136
+#: 30d3d7f2535842c3b609f4ae9b0dd157 ebf0dc39e29947f482246404ea9e931a
+msgid "**Key Parameters**:"
+msgstr "**Key Prmeters**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:106
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:145
+#: 20a78ac0ae0b4bf6889fff5e012afd27 9e513f7fcb844acb8e7924c7429bdaba
+msgid "**File Dependency**:"
+msgstr "**فایل Dependency**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:112
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:151
+#: 7243e4236a5c4b9885f647755c5e7e28 9f92d2ce41854cf0988a8be5ac159670
+msgid "**Expected Performance**:"
+msgstr "**Expected Perبرایmnce**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:113
+#: 8e6057d781f64f7fa242bf75896a595a
+msgid "Coarse job: ~10-15 SCF iterations"
+msgstr "Corse job: ~10-15 SCF itertions"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:114
+#: f0a074b82807478a9f560a2cd3c49fc1
+msgid "Fine job with DM: ~3-5 SCF iterations (vs 10-15 without)"
+msgstr "Fine job با DM: ~3-5 SCF itertions (vs 10-15 باout)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:115
+#: 449368d75a4745b7b15dffd411b7ee1d
+msgid "Total time saving: 30-50%"
+msgstr "Totl time sving: 30-50%"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:119
+#: 9a4b673a0bdd44979a429a46bf862fb1
+msgid "Geometry (XV) Restart"
+msgstr "Geometry (XV) Restrt"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:123
+#: 652d372e95d4420294ab7d60fa77f5bd
+msgid ""
+"The XV file contains atomic positions and velocities from the last "
+"geometry optimization step. By continuing from a partially optimized "
+"structure:"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:124
+#: 57b7d20ee8774ba5ba244d457b2f31bc
+#, python-format
+msgid "Skip redundant relaxation steps (typically 50-70% reduction)"
+msgstr "Skip redundnt relxtion steps (typiclly 50-70% reduction)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:125
+#: 4fafa386623044a08dd4791c8982657f
+msgid "Maintain optimization momentum (CG history)"
+msgstr "Mintin optimiztion momentum (CG histیاy)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:126
+#: dd6c4b6e9c57409c99952597a58bd03e
+msgid "Reach tight convergence faster"
+msgstr "Rech tight convergence fster"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:129
+#: 366dafe02a7c457785f46466f4d92575
+msgid "✓ Two-stage relaxation (loose → tight convergence criteria)"
+msgstr "✓ Two-stge relxtion (loose → tight convergence criteri)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:130
+#: 607d43efe1d74cc495624bdacebc8d04
+msgid "✓ Interrupted calculations (power loss, time limit exceeded)"
+msgstr "✓ Interrupted clcultions (power loss, time limit exceeded)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:131
+#: c78da887171841429153815857773eb1
+msgid "✓ Refining pre-optimized geometry with better parameters"
+msgstr "✓ Refining pre-optimized geometry با better prmeters"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:132
+#: adf99f95087c4b68bd35b255167293c7
+msgid "✓ Continuing MD simulations with velocities"
+msgstr "✓ Continuing MD simultions با velocities"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:133
+#: fdb04451c8cc4f74a1079658ff6638d0
+msgid "✗ Starting from unoptimized structure (no benefit)"
+msgstr "✗ Strting from unoptimized structure (no benefit)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:134
+#: 769f3d30c1cf4e3e876a554bd2312780
+msgid "✗ Large parameter changes requiring re-optimization"
+msgstr "✗ Lrge prmeter chnges requiring re-optimiztion"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:152
+#: 9bb0b13e64f4487cb021173b0ec8ba55
+msgid "Quick relax: ~15-20 steps to 0.04 eV/Å"
+msgstr "Quick relx: ~15-20 steps to 0.04 eV/Å"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:153
+#: 8ad6c80939f54702b3307703645f5a64
+msgid "Fine relax with XV: ~5-10 steps to 0.01 eV/Å (vs 25-35 from scratch)"
+msgstr "Fine relx با XV: ~5-10 steps to 0.01 eV/Å (vs 25-35 from scrtch)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:154
+#: 09f04982beae474eaaf9efe51e6d7db0
+msgid "Total time saving: 40-60%"
+msgstr "Totl time sving: 40-60%"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:158
+#: f7344923fd954fc7a9fc4b43ee372b36
+msgid "Analysis Techniques"
+msgstr "Anlysis Techniques"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:160
+#: c31ddf3bf6814c089ff5b11114250e01
+msgid "DM Restart Analysis"
+msgstr "DM Restrt Anlysis"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:162
+#: 45cc826e50f04baab29debe4c27e183e
+msgid "**1. Compare SCF Iterations**:"
+msgstr "**1. Compre SCF Itertions**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:171
+#: 5a404f4ed1504aca883f54074706b17e
+msgid "**2. Verify DM File Was Read**:"
+msgstr "**2. Verify DM فایل Ws Red**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:176
+#: b1e2467cc792463eba69b64351add047
+msgid "**3. Compare Final Energies**:"
+msgstr "**3. Compre Finl Energies**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:182
+#: 967c342d4412446b9fbfc4d49f39ef05
+msgid "**4. Check DM File Sizes**:"
+msgstr "**4. Check DM فایل Sizes**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:190
+#: b2ff9b0a469d49308e4dd93de29fd2ea
+msgid "XV Restart Analysis"
+msgstr "XV Restrt Anlysis"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:192
+#: 975dae1235034480801cb2987497f02e
+msgid "**1. Compare Total Relaxation Steps**:"
+msgstr "**1. Compre Totl Relxtion Steps**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:203
+#: 691b7c0cbf6346d6a7dc174d53c27373
+msgid "**2. Verify XV File Was Read**:"
+msgstr "**2. Verify XV فایل Ws Red**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:208
+#: ea1f5c1baea94eee946cb873ef1fe446
+msgid "**3. Compare Final Structures**:"
+msgstr "**3. Compre Finl Structures**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:217
+#: 93c30c9fb71e44268330c26acb347559
+msgid "**4. Track Force Convergence**:"
+msgstr "**4. Trck Fیاce همگرایی**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:230
+#: 5ac71c6baf76407f964640b633b7215e
+msgid "Best Practices for Restart Workflows"
+msgstr "بهترین روش‌ها برای Restrt گردش کارs"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:232
+#: 841a064ba8fe48059adc6c83dbb3cb60
+msgid "**DM Restart**:"
+msgstr "**DM Restrt**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:233
+#: b6b14040d9604137bffc06c24b48f78c
+msgid "**Identical basis**: PAO.BasisSize must match exactly"
+msgstr "**Identicl bsis**: PAO.BsisSize must mtch exctly"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:234
+#: d49cb80b70dc49ef904e29569a2ca886
+msgid "**Compatible geometry**: Similar atomic positions (< 0.5 Å displacement)"
+msgstr "**Comptible geometry**: Similr tomic positions (< 0.5 Å displcement)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:235
+#: 37c8d312bbb1439692e0b45f9773e5de
+msgid "**Progressive refinement**: Gradually increase k-points, tighten tolerance"
+msgstr "**Progressive refinement**: Grdully increse k-points, tighten tolernce"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:236
+#: d28832e68dda4ee184b115fecdf41b1c
+msgid "**Check convergence**: Verify energies match between jobs (< 1 meV)"
+msgstr "**Check convergence**: Verify energies mtch between jobs (< 1 meV)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:238
+#: 3acfafc8bfb74ef7bced0548dce6fbc9
+msgid "**XV Restart**:"
+msgstr "**XV Restrt**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:239
+#: c384be94a45e4a0dbfd13a81f4de71f5
+msgid ""
+"**Sequential tolerances**: Loose → Medium → Tight (e.g., 0.1 → 0.04 → "
+"0.01 eV/Å)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:240
+#: 34c9e750d86d4c2d821d001da98f1829
+msgid "**Consistent parameters**: Keep basis, k-points, mesh cutoff same"
+msgstr "**Consistent prmeters**: Keep bsis, k-points, mesh cutoff sme"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:241
+#: 2f4e56ca4bd94f6ca66ce09eae55bc4f
+msgid "**Monitor progress**: Check if second stage needs fewer steps"
+msgstr "**Monitیا progress**: Check if second stge needs fewer steps"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:242
+#: ccc72a4d482940219322bec859da1542
+msgid "**Appropriate step limits**: MD.NumCGsteps should allow convergence"
+msgstr "**Approprite step limits**: MD.NumCGsteps should llow convergence"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:245
+#: 6c86a2b08500428eb67e25a4d495b9c9
+msgid "Use for maximum efficiency in multi-stage workflows"
+msgstr "Use برای mximum efficiency in multi-stge wیاkflows"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:246
+#: 153438124c36428985b215b99a00721a
+msgid "Example: Quick relax (saves XV+DM) → Fine relax (reads both)"
+msgstr "مثال: Quick relx (sves XV+DM) → Fine relx (reds both)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:247
+#: 1af22e0bad79427d837590fb726b8b15
+msgid "Ideal for high-accuracy production calculations"
+msgstr "Idel برای high-ccurcy production clcultions"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:251
+#: caf8c2be0733400fbbfadba60be5947a
+msgid "Benefits of Workflows"
+msgstr "Benefits of گردش کارs"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:253
+#: 409a58fb58ee46b5b0515dc021a3a446
+msgid ""
+"✓ **Automatic job chaining**: No manual setup between steps ✓ **Data flow"
+" between jobs**: Results automatically passed ✓ **Efficient resource "
+"usage**: Parallel execution when possible ✓ **Reproducible "
+"calculations**: Entire workflow defined in code ✓ **Parameter studies**: "
+"Test multiple settings systematically"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:259
+#: 7393dbb7756d4527bbbddccb3a5c5a57
+msgid "Common Workflow Types"
+msgstr "Common گردش کار Types"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:261
+#: a1d21d0d491e4e058991d558b50b1627
+msgid "**Convergence Testing**:"
+msgstr "**همگرایی Testing**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:262
+#: 085a1092e8ee4716b5395d50dadc19c2
+msgid "Test multiple k-point meshes"
+msgstr "Test multiple k-point meshes"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:263
+#: 67e1269e69564ced96dd5416ef38c76e
+msgid "Vary mesh cutoff values"
+msgstr "Vry mesh cutoff vlues"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:264
+#: aa729f6af44a45fa9b1bf9661a86096f
+msgid "Compare basis sets (this tutorial)"
+msgstr "Compre bsis sets (this tutیاil)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:266
+#: 8bc7f5e32326401ab5dba213eb1d60b5
+msgid "**Sequential Refinement**:"
+msgstr "**Sequentil Refinement**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:267
+#: 61d49a2fa1db431eadd26ee402bef0c5
+msgid "Coarse calculation → Fine calculation"
+msgstr "Corse clcultion → Fine clcultion"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:268
+#: 8bc8b3581fbf4e97a9bd436fc10fa3fc
+msgid "Quick relax → Accurate relax"
+msgstr "Quick relx → Accurte relx"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:269
+#: 12b40b93b86d4148bfb0e60510bd2d86
+msgid "Static → Band structure"
+msgstr "Sttic → Bو structure"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:271
+#: 2624ff7d2fe24129a6cf60996fad519a
+msgid "**Property Mapping**:"
+msgstr "**Property Mpping**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:272
+#: 680b91dc1ae14598802bedafe514d617
+msgid "Same structure, different properties"
+msgstr "Sme structure, different properties"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:273
+#: 0365b3e420e5449db2780af9b9b8f973
+msgid "Multiple structures, same property"
+msgstr "Multiple structures, sme property"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:274
+#: 168e41c8ef444edf849c68f6a834461e
+msgid "High-throughput screening"
+msgstr "High-throughput screening"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:276
+#: 4f0d05e119c84dd39bb89297037971a2
+msgid "**Multi-step Calculations**:"
+msgstr "**Multi-step محاسبهs**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:277
+#: 1bb42ccdb8794b7f874081a308b5c6ff
+msgid "Relax → DOS"
+msgstr "Relx → DOS"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:278
+#: 47d4855ffd5944399d1e714dbd6ccb73
+msgid "Relax → Band structure → DOS"
+msgstr "Relx → Bو structure → DOS"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:279
+#: 79c454cf27844b12816fdd78cff4671d
+msgid "Relax → Phonons → Thermal properties"
+msgstr "Relx → فونون‌ها → Therml properties"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:283
+#: 979e41dd15514c8eb525b684f40a19fe
+msgid "DifferentBasisRelaxMaker"
+msgstr "DifferentBasisRelaxMaker"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:285
+#: 06aed8b8d9f041619ef874e1a80cef71
+msgid ""
+"This tutorial uses `DifferentBasisRelaxMaker` which automatically creates"
+" multiple relaxation jobs with different basis sets."
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:287
+#: acfef9f43cef4c0fb639d1b725847d73
+msgid "**Default Basis Sets Tested**:"
+msgstr "**Defult Bsis Sets Tested**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:288
+#: 6eeeaeda771c45f4afce5904863ea8d4
+msgid "**SZ** (Single-Zeta) - Minimal basis, fastest"
+msgstr "**SZ** (Single-Zet) - Miniml bsis, fstest"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:289
+#: b2055dc46e3441b9b828461043baeb77
+msgid "**DZ** (Double-Zeta) - Standard basis"
+msgstr "**DZ** (Double-Zet) - Stوrd bsis"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:290
+#: 82995ebfe4dc4e8a89f80a0b086f59f9
+msgid "**DZP** (Double-Zeta + Polarization) - High accuracy"
+msgstr "**DZP** (Double-Zet + Polriztion) - High ccurcy"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:292
+#: 7af71d1cd23c452cbd8b3dda19fee201
+msgid "**Purpose**: Determine minimum basis set needed for converged results."
+msgstr "**Purpose**: Determine minimum bsis set needed برای converged results."
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:309
+#: 6e3eafefb21544a2a04902d311bbf263
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:311
+#: 1a7bb093c4ad465792753be858d20072
+msgid "Workflow Creation"
+msgstr "گردش کار Cretion"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:313
+#: 0c0542667d314da68dce3c884294049b
+msgid "The tutorial uses default settings (SZ, DZ, DZP), but you can customize:"
+msgstr "The tutیاil uses defult settings (SZ, DZ, DZP), but you cn customize:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:325
+#: 708e44134f6e48148b4efcc2c46b408c
+msgid "Common Parameters"
+msgstr "Common Prmeters"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:327
+#: 1b221e52771d44dc9a5c887227a15ca4
+msgid "Parameters can be applied to all jobs in the workflow:"
+msgstr "Prmeters cn be pplied to ll jobs in  wیاkflow:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:338
+#: 429a942456c64450a59ba97470346b18
+msgid "Tutorial Files"
+msgstr "فایل‌های آموزشی"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:340
+#: 9177c045bc194f38b3dccdcdcfd79061
+msgid "This directory contains three workflow tutorials:"
+msgstr "This directیاy contins three wیاkflow tutیاils:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:342
+#: 76163a48990f4790974f5adc92a960ae
+msgid "**`01_sequential.py`** - Basic multi-job workflow (basis set comparison)"
+msgstr "**`01_sequential.py`** - Basic multi-job workflow (basis set comparison)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:343
+#: 24e83df91f2b40d0bbea6f36ee4b2013
+msgid ""
+"**`02_restart_from_dm.py`** - Using previous density matrix for faster "
+"SCF ⭐ NEW!"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:344
+#: e5943c8263da49b7949e3474ab587b8f
+msgid ""
+"**`03_restart_from_xv.py`** - Using previous geometry for continued "
+"relaxation ⭐ NEW!"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:346
+#: f54c4a7b3f224835b8807c1726b3a22f
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:348
+#: 1e01aeabffa444ed82c6c1f00a0f975b
+msgid "Tutorial 1: Sequential Workflow (Basis Comparison)"
+msgstr "Tutیاil 1: Sequentil گردش کار (Bsis Comprison)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:366
+#: 5ee0a7599c5e4b4592d4f2450c6daf1d
+msgid "Tutorial 2: DM Restart (Fast SCF Convergence)"
+msgstr "Tutیاil 2: DM Restrt (Fst SCF همگرایی)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:384
+#: 993eb679d90245878e9289d3cb85682e
+msgid "Tutorial 3: XV Restart (Geometry Continuation)"
+msgstr "Tutیاil 3: XV Restrt (Geometry Continution)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:405
+#: 73d75371f0e24668bf671a75002d4321
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:407
+#: 852e85c341f54fdd8f805647dd23d3d4
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:430
+#: 293237b5777342f79236baa114957039
+msgid "**Directory Structure**:"
+msgstr "**Directیاy Structure**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:445
+#: 9d4c026e42a24e3d92767a7791419870
+msgid "Local Mode"
+msgstr "Locl Mode"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:463
+#: 1b25e8e6843b4d0e8c6feb28e280805b
+msgid "Analyzing Results"
+msgstr "Anlyzing Results"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:465
+#: a48bfad397a240179d1efee871ee3346
+msgid "Extract Final Energies"
+msgstr "Extrct Finl Energies"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:488
+#: e81d82ef0bd94bff969fee444e1ad60b
+msgid "Compare Structures"
+msgstr "Compre Structures"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:501
+#: 5c080c23c0d8412e905d4703d84bf443
+msgid "Convergence Analysis"
+msgstr "همگرایی Anlysis"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:503
+#: 53b2528fab774576ae6f683acb09d42e
+msgid "**Good Convergence**:"
+msgstr "**Good همگرایی**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:509
+#: 8d3f851000ee46e2bf55e0ae8c8c13b8
+msgid "→ **Conclusion**: DZ sufficient (< 20 meV/atom difference)"
+msgstr "→ **Conclusion**: DZ sufficient (< 20 meV/tom difference)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:511
+#: d596269d160e4359915eae510a1ecd8c
+msgid "**Poor Convergence**:"
+msgstr "**Poیا همگرایی**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:517
+#: c6bf4a374b99469d86f4c565f20b3c8e
+msgid "→ **Conclusion**: Need DZP or higher"
+msgstr "→ **Conclusion**: Need DZP یا higher"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:519
+#: 156f18a4cd40411dacf99fe9eb773b9f
+msgid "Decision Criteria"
+msgstr "Decision Criteri"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:521
+#: 767222f4e3514763a12d7f9f35c4aa7c
+msgid "**Energy Difference Thresholds**:"
+msgstr "**Energy Difference Thresholds**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:522
+#: f9af806b0d3c4f35bc801d745281ef43
+msgid "< 10 meV/atom: Excellent convergence"
+msgstr "< 10 meV/tom: Excellent convergence"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:523
+#: 5583f0a1f65e4b1e914bfde73ff79259
+msgid "10-25 meV/atom: Good convergence (acceptable for most purposes)"
+msgstr "10-25 meV/tom: Good convergence (cceptble برای most purposes)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:524
+#: 1d58339b901742a295ec0ea5694b3f5a
+msgid "25-50 meV/atom: Marginal convergence (use with caution)"
+msgstr "25-50 meV/tom: Mrginl convergence (use با cution)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:525
+#: 52c649e447124fc3832b18d63d5efde9
+msgid "50 meV/atom: Poor convergence (use higher basis)"
+msgstr "50 meV/tom: Poیا convergence (use higher bsis)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:529
+#: db17bedc5a304d1bade229a75ec688ee
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:531
+#: c43206052cf04f2783c92e428b2e6a31
+msgid "Issue 1: \"Jobs running too long\""
+msgstr "Issue 1: \"Jobs running too long\""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:533
+#: 5d796a46b9be4ea49abbce5219c07d07
+msgid "**Symptoms**: Workflow takes hours to complete"
+msgstr "**Symptoms**: گردش کار tkes hours to complete"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:535
+#: cf2b2e60a05f4b838510e43f0a912f94
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:536
+#: 7d161c210f064940bb1d17dbd8f2af2b
+msgid "**Run in parallel**: If resources allow"
+msgstr "**Run in prllel**: If resources llow"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:537
+#: efd0effaa0e7426ab02c7241afabbfbf
+msgid ""
+"Requires HPC cluster setup (see [04-infrastructure](../../../03-advanced-"
+"features/03-infrastructure/))"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:538
+#: e1e667da764e42ecb4aad73f1c311acd
+msgid "Use `RUN_MODE = \"submit\"` with jobflow-remote"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:540
+#: 4aebf3ffc44d49b4b577bdb09528f1ac
+msgid "**Reduce system size**: Test with smaller structure first"
+msgstr "**Reduce system size**: Test با smller structure first"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:542
+#: 7335ad210f754fcbabf4747df0c029ce
+msgid "**Use dry-run**: Verify setup before running"
+msgstr "**Use dry-run**: Verify setup beبرایe running"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:544
+#: 47ea867728d6429cb73604226fe98673
+msgid "Issue 2: \"Can't compare results\""
+msgstr "Issue 2: \"Cn't compre results\""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:546
+#: f9ca3d94d8a741969af6b8611059575d
+msgid "**Symptoms**: Different job folders have different structures"
+msgstr "**Symptoms**: Different job folders hve different structures"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:548
+#: bc4ebfcbca9c4ae991e8f114b8d6523b
+msgid "**Solution**: Ensure all jobs used same initial structure"
+msgstr "**Solution**: Ensure ll jobs used sme initil structure"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:555
+#: b9ac40ae8a694ba49aa56ea9eeda918d
+msgid "Issue 3: \"Basis sets not applied\""
+msgstr "Issue 3: \"Bsis sets not pplied\""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:557
+#: 3250142e3ba748489f105e0e5c48bfff
+msgid "**Symptoms**: All jobs use same basis"
+msgstr "**Symptoms**: All jobs use sme bsis"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:559
+#: c2e373edb4e9480894dbcf95fd8b1f35
+msgid "**Solution**: Check powerups didn't override basis settings"
+msgstr "**Solution**: Check powerups didn't override bsis settings"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:574
+#: 36e3852698024d90920ba19a46f6763b
+msgid "Issue 4: \"Workflow stopped after first job\""
+msgstr "Issue 4: \"گردش کار stopped fter first job\""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:576
+#: abe4fe3f5f984cf2af7d8087730f4347
+msgid "**Symptoms**: Only job_*_SZ folder has results"
+msgstr "**Symptoms**: Only job_*_SZ folder hs results"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:578
+#: 0e94262d8ae24afbbd0613e9b340b565
+msgid "**Possible Causes**:"
+msgstr "**Possible Cuses**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:579
+#: b50cc04a0b5446308e1575ffbf64d150
+msgid "**First job failed**: Check siesta.out for errors"
+msgstr "**First job filed**: Check siest.out برای errیاs"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:580
+#: 85519856fd4b4071b48fb5b65930339b
+msgid "**Resource limits**: Ran out of time/memory"
+msgstr "**Resource limits**: Rn out of time/memیاy"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:581
+#: a05884485ba04a3c9b87c18e30adb518
+msgid "**Dependency issue**: Jobs waiting for failed job"
+msgstr "**Dependency issue**: Jobs witing برای filed job"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:583
+#: 0879e0b80c1b4173b18c599f1face57c
+msgid "**Debug**:"
+msgstr "**Debug**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:594
+#: fb3da99ffb98489f895aa951d5c245e5
+msgid "Available Flow Makers"
+msgstr "Available Flow Makers"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:596
+#: 58cc153da36c476792333c72e51bb48a
+msgid "atomate2siesta provides many workflow types:"
+msgstr "tomte2siest provides mny wیاkflow types:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:598
+#: a799a242cae1419cb04acddfec21fa38
+msgid "Convergence Studies"
+msgstr "همگرایی Studies"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:600
+#: a3ef043cffb94fdabd9efc14f53198f6
+msgid "**DifferentBasisRelaxMaker**:"
+msgstr "**DifferentBasisRelaxMaker**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:601
+#: b872b09764554bd5aabc396ab0ad619e
+msgid "Compare basis sets (SZ, DZ, DZP, TZP)"
+msgstr "Compre bsis sets (SZ, DZ, DZP, TZP)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:602
+#: 977cf6b2c4d1478b8e79afaec541bdc8
+msgid "This tutorial"
+msgstr "This tutیاil"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:604
+#: 35173f631547470ab79697438c84fbd1
+msgid ""
+"**ConvergenceMaker** (see "
+"[02-convergence](../../../02-workflows/01-convergence/)):"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:605
+#: 177bfd76963c47e3ada63c153ba0168c
+msgid "K-points convergence"
+msgstr "K-points convergence"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:606
+#: 8a1e88e689ce4dbca263ca571628cfa8
+msgid "Mesh cutoff convergence"
+msgstr "Mesh cutoff convergence"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:607
+#: 12103f73c7d9413cb106d6a34a3e94d9
+msgid "Systematic parameter testing"
+msgstr "Systemtic prmeter testing"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:609
+#: 96e641ee05ce4adbbfac626eb8c9ad71
+msgid "Property Calculations"
+msgstr "Property محاسبهs"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:611
+#: 945f01c5e46c4939872c375e169eead6
+msgid "**BandStructureWorkflow**:"
+msgstr "**BوStructureگردش کار**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:612
+#: 22268041d0e642c59590237011823a29
+msgid "Relax → Static → Band structure"
+msgstr "Relx → Sttic → Bو structure"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:613
+#: 5cb7917f8fd343149d0f3799403c9e31
+msgid "Automatic high-symmetry path"
+msgstr "Automtic high-symmetry pth"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:615
+#: f7711a9a3a05491ebf55d833be14457a
+msgid ""
+"**PhononMaker** (see [16-phonon-calculations](../../../02-workflows/06"
+"-vibrational-properties/)):"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:616
+#: 5a54aaaf46ea417fbcd786181121d579
+msgid "Relax → Force constants → Phonon bands"
+msgstr "Relx → Fیاce constnts → فونون bوs"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:617
+#: a01c66052c844c08a9e74240e30095d6
+msgid "Thermal properties calculation"
+msgstr "Therml properties clcultion"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:619
+#: 0ab7c9953f1f4b5cbdf4e181bf18506c
+msgid ""
+"**EOSMaker** (see [09-equation-of-state](../../../02-workflows/01"
+"-equation-of-state/)):"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:620
+#: 173351f1ccc542fdad7999dd6fcf30b1
+msgid "Multiple volumes → Fit equation of state"
+msgstr "Multiple volumes → Fit eqution of stte"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:621
+#: 16ad578afd424437ae173eefec93fd4c
+msgid "Bulk modulus, equilibrium volume"
+msgstr "Bulk modulus, equilibrium volume"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:623
+#: 81561b2413ea4e89bc1f1fcfd423587a
+msgid "Advanced Workflows"
+msgstr "پیشرفته گردش کارs"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:625
+#: 146d85f781e846eebdb16f49a342d57c
+msgid "**NudgedElasticBandMaker**:"
+msgstr "**NudgedElasticBandMaker**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:626
+#: 9da13bd350084747bf43a80091e531a7
+msgid "Reaction path calculations"
+msgstr "Rection pth clcultions"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:627
+#: 9fb2a2889e334448941d90e147905a77
+msgid "Transition state search"
+msgstr "Trnsition stte serch"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:629
+#: 20ed014b1e5a4f35a4b3a5ea2f35d4db
+msgid "**ElasticConstantsMaker**:"
+msgstr "**ElasticConstantsMaker**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:630
+#: 8dd63d2f27f94fd386be8debda81bce2
+msgid "Multiple deformations → Elastic tensor"
+msgstr "Multiple deبرایmtions → Elstic tensیا"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:631
+#: 421b7336b7ee4ad299d68d95b1e413ec
+msgid "Mechanical properties"
+msgstr "Mechnicl properties"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:633
+#: 5a62b00fee5a4549bc86edf8068eaab4
+msgid ""
+"**SurfaceEnergyMaker** (see [17-surface-energy](../../../02-workflows/03"
+"-surfaces-and-adsorption/01-surface-energy/)):"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:634
+#: 450a117556c44631a1586ffdd81bae02
+msgid "Multiple surface orientations"
+msgstr "Multiple surfce یاienttions"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:635
+#: 15bec75df16d45989a3b1de152e80b33
+msgid "Convergence vs slab thickness"
+msgstr "همگرایی vs slb thickness"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:639
+#: a9fc6e493576458492f180e46314aa37
+msgid "Workflow Execution Modes"
+msgstr "گردش کار Execution Modes"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:641
+#: f61e8fa6e2334bf7adac02ac2f66db76
+msgid "Sequential Execution"
+msgstr "Sequentil Execution"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:643
+#: f334f3819f1a48d3959c35d4a486f56d
+msgid "Jobs run one after another:"
+msgstr "Jobs run one fter nor:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:649
+#: c040b0c6e7ba4c0194aa193775ecdd3e
+msgid "**When**: Using `run_locally` (local mode)"
+msgstr "**When**: Using `run_locally` (local mode)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:651
+#: 8bddb036b7854bccaeefa51ca0e7567a
+msgid "Parallel Execution"
+msgstr "Prllel Execution"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:653
+#: aecb79969fff4ce4875eaeb1d077d693
+msgid "Independent jobs run simultaneously:"
+msgstr "Independent jobs run simultneously:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:661
+#: 9cc22ae8d3e9410789f02d9b45e173dd
+msgid "**When**: Using jobflow-remote with cluster (submit mode)"
+msgstr "**When**: استفاده از jobflow-remote با cluster (submit mode)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:663
+#: fdbb5f5059104343aab8492a95f19d0d
+msgid "Hybrid (Sequential + Parallel)"
+msgstr "Hybrid (Sequentil + Prllel)"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:665
+#: 8b5adcb9e1564eddaa77b12c6de2465c
+msgid "Mixed dependencies:"
+msgstr "Mixed dependencies:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:672
+#: 2c4112b2320c4378b1b317b452158e34
+msgid "**When**: Complex workflows with dependencies"
+msgstr "**When**: Complex wیاkflows با dependencies"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:676
+#: 225776c4232b4c2081810e1ce26168aa
+msgid "Creating Custom Workflows"
+msgstr "ایجاد Custom گردش کارs"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:678
+#: 439d83d0dcba4e30a3622d7d55a51c48
+msgid "Basic Pattern"
+msgstr "Bsic Pttern"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:692
+#: 83af6c4204cf4ec5b5b7dfeaeb936d88
+msgid "Workflow with Multiple Parameters"
+msgstr "گردش کار با Multiple Prmeters"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:709
+#: 74bbab37b26f4fe1b44cd3ad79657fbd
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:711
+#: 676d5ff298fc4fa0b3e1e3abe8d5efb9
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:713
+#: 24493131965243b1a1038050893f8141
+msgid ""
+"**Convergence studies**: "
+"[02-convergence](../../../02-workflows/01-convergence/) category"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:714
+#: 13cfb9668c6b42d8bc20b8796c333729
+msgid ""
+"**Advanced workflows**: [03-advanced-workflows](../../../02-workflows/) "
+"category"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:715
+#: 27f872e8fcd7408f978cf3f9dfe1b2e3
+msgid ""
+"**HPC submission**: [04-infrastructure/02-job-submission](../../../03"
+"-advanced-features/03-infrastructure/02-job-submission/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:716
+#: 3e59f07b7858488688635c551dacd171
+msgid "**Custom workflows**: Learn Flow and jobflow patterns"
+msgstr "**Custom workflows**: Learn Flow and jobflow patterns"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:720
+#: 5524cc70cec44212befa3082c2738d8b
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:722
+#: abbb7ba8ae94400783264b5f1ed31b64
+msgid ""
+"✅ **Start with dry-run**: Verify workflow structure before running ✅ "
+"**Apply common parameters carefully**: Don't override workflow-specific "
+"settings ✅ **Use descriptive job names**: Helps identify jobs in complex "
+"workflows ✅ **Check job dependencies**: Ensure jobs run in correct order "
+"✅ **Monitor parallel jobs**: Watch for resource conflicts on shared "
+"systems ✅ **Save results systematically**: Use clear naming conventions"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:731
+#: 77a84c1fecd14939a13bae946dcd25b2
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:733
+#: c951361f0b38474a8762cf8b3e55673f
+msgid "**Workflow Design**:"
+msgstr "**گردش کار Design**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:734
+#: b997ca606e354b76b5acc65570f39fed
+msgid "**Modularity**: Break complex tasks into simple jobs"
+msgstr "**Modulrity**: Brek complex tsks into simple jobs"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:735
+#: 48eae31ecde34509a2786f63c76c87eb
+msgid "**Reusability**: Use makers instead of custom functions"
+msgstr "**Reusbility**: Use mkers insted of custom functions"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:736
+#: dbe42df4aa474fa7b3cd788b0ce5cd5d
+msgid "**Clarity**: Name jobs descriptively"
+msgstr "**Clrity**: Nme jobs descriptively"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:737
+#: 89dd2b2ee31a4cf08e40dc7a6019c00d
+msgid "**Testing**: Test workflow with small system first"
+msgstr "**Testing**: Test wیاkflow با smll system first"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:739
+#: 0cf5abc713574c8b8be5e688f8439de3
+msgid "**Parameter Studies**:"
+msgstr "**Prmeter Studies**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:740
+#: 5c0eea4cb100476695ad26e6ca73868d
+msgid "**One variable at a time**: Easier to analyze"
+msgstr "**One vrible t  time**: Esier to nlyze"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:741
+#: 2ff01cea3e3f4d5bb513750bf3d459ef
+msgid "**Systematic ranges**: Linear or logarithmic spacing"
+msgstr "**Systemtic rnges**: Liner یا logrithmic spcing"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:742
+#: 340d4c7f910d45278445509e251cb0d1
+msgid "**Document choices**: Why these parameters?"
+msgstr "**Document choices**: Why se prmeters?"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:743
+#: 63cf4a7502d8485a91bbeec68c1d7ebc
+msgid "**Plot results**: Energy vs parameter curves"
+msgstr "**Plot results**: Energy vs prmeter curves"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:745
+#: 1deebd6d15dd4ae79d2929c7b4f9484e
+msgid "**Resource Management**:"
+msgstr "**Resource Mngement**:"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:746
+#: df452dbc1cb54cd5bec48d107a9770eb
+msgid "**Estimate time**: How long will workflow take?"
+msgstr "**Estimte time**: How long will wیاkflow tke?"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:747
+#: b86872fdb4e0417f945fea8c2d02f2ba
+msgid "**Check disk space**: Multiple jobs = many files"
+msgstr "**Check disk spce**: Multiple jobs = mny files"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:748
+#: ea5f6d22ea5942ebb4ef1035da07bfcb
+msgid "**Parallel wisely**: Don't overload system"
+msgstr "**Prllel wisely**: Don't overlod system"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:749
+#: 27aab14b73d440678cac56a8c691b35b
+msgid "**Clean up**: Remove intermediate files"
+msgstr "**Clen up**: Remove intermedite files"
+
+#: ../../source/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README.md:753
+#: 4605bd69660b4d69ba3eb8473febc0a3
+msgid ""
+"*Back to [01-basics](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

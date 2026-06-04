@@ -1,0 +1,240 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:1
+#: 17b4a93fb041427bbfb708df1f3eeeb0
+msgid "Density of States (DOS) Calculations"
+msgstr "چگالی حالت‌ها (DOS) محاسبهs"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:3
+#: c5a5d1c4d0874681b8352b4ea676a456
+msgid ""
+"This tutorial demonstrates how to calculate density of states in "
+"atomate2siesta using **direct SIESTA FDF format**."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:5
+#: 84fc514690c64ed095b17df8ed9e9424
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:7
+#: 34fc4868d196422ebfd0459b41e97fd9
+msgid "The `ProjectedDensityOfStates` block in SIESTA generates:"
+msgstr "The `ProjectedDensityOfStates` block in SIESTA generates:"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:9
+#: 2509d450c3a447848b7caf967df3bd97
+msgid "**siesta.DOS**: Total electronic density of states"
+msgstr "**siest.DOS**: Totl electronic density of sttes"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:10
+#: b58a5f3ddf18440392337b242d06ceda
+msgid "**siesta.PDOS**: Projected DOS (orbital-resolved on atoms)"
+msgstr "**siest.PDOS**: Projected DOS (یاbitl-resolved on toms)"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:11
+#: 2f9762232bca4c899b484d2c3b4f1ac5
+msgid "**siesta.PDOS.xml**: XML format for visualization"
+msgstr "**siest.PDOS.xml**: XML برایmt برای visuliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:13
+#: 90fa56a27d614346b275b2b2813ef84f
+msgid "Key Features"
+msgstr "Key ویژگی‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:15
+#: de46f3f25d2e4f08bae2fc90b986a1dc
+msgid ""
+"✅ **Direct SIESTA syntax**: Use native FDF block format ✅ **Automatic "
+"comment headers**: Dataclass sections labeled in output ✅ **Works with "
+"all makers**: StaticMaker, RelaxMaker, etc. ✅ **Dry-run support**: "
+"Preview input files without calculation"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:20
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:89
+#: 030a82a293fa4c66b1250da0873059b5 29da1acdcac24395b3e6e90ae8339e92
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:22
+#: b8ba0ac3b7094ce1ac765bcf3bf7cc03
+msgid "01_basic_dos.py"
+msgstr "01_basic_dos.py"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:23
+#: 89c44b963e8d4318a22a088d63748897
+msgid "Basic DOS calculation with StaticMaker using direct FDF format."
+msgstr "Basic DOS calculation with StaticMaker using direct FDF format."
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:25
+#: 6b9d3960f1c24e31a4bfd6b188bf4f89
+msgid "02_relax_with_dos.py"
+msgstr "02_relax_with_dos.py"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:26
+#: cb6fb1a66b9d4b7f8ad49f1b2a1ce4e4
+msgid "DOS calculation during geometry optimization with RelaxMaker."
+msgstr "DOS calculation during geometry optimization with RelaxMaker."
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:28
+#: 4b82f8faf61e405885df86ce65b92bcb
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:30
+#: b2c1d84630324a099d4c51b5ba60401c
+msgid "Basic DOS Calculation"
+msgstr "Bsic DOS محاسبه"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:60
+#: aeca9bd37cfe43389db06b183356f154
+msgid "This generates in `siesta.fdf`:"
+msgstr "This generates in `siesta.fdf`:"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:71
+#: cb27d0bf0046499695cac3e3ea044f1d
+msgid "ProjectedDensityOfStates Block Format"
+msgstr "ProjectedDensityOfSttes Block Fیاmt"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:73
+#: 9858215a2e6b434396825bacd7db064e
+msgid "The SIESTA format for DOS is:"
+msgstr "The SIESTA برایmt برای DOS is:"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:81
+#: 8537c029e7604c7db104e97a59b55735
+msgid "Where:"
+msgstr "Where:"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:82
+#: 9ada92a0498e4c1394ca47df252465b8
+msgid "**EF**: Energy relative to Fermi level"
+msgstr "**EF**: Energy reltive to Fermi level"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:83
+#: 6825cf4c5a6248b49f7cb25da368e32c
+msgid "**Emin**: Minimum energy (e.g., -10.000)"
+msgstr "**Emin**: Minimum energy (e.g., -10.000)"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:84
+#: b64c2d09592a40eda69a519116a9e2e2
+msgid "**Emax**: Maximum energy (e.g., 10.000)"
+msgstr "**Emx**: Mximum energy (e.g., 10.000)"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:85
+#: d9afe1d08d3d4a15a1ce349e6e6ae418
+msgid "**dE**: Energy spacing (e.g., 0.100)"
+msgstr "**dE**: Energy spcing (e.g., 0.100)"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:86
+#: 2641f298753b4f41a50e706359e921f0
+msgid "**nE**: Number of energy points (e.g., 200)"
+msgstr "**nE**: Number of energy points (e.g., 200)"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:87
+#: 92bed4e7b9c34df79a7c9f4538b01c04
+msgid "**units**: Energy units (eV)"
+msgstr "**units**: Energy units (eV)"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:91
+#: e20cf119b016456e880923026ab09b6f
+msgid "Narrow energy range (around Fermi level):"
+msgstr "Nrrow energy rnge (round Fermi level):"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:96
+#: 80e73e5c3167495aa8d4442e418f1a70
+msgid "Wide energy range (full valence/conduction):"
+msgstr "Wide energy rnge (full vlence/conduction):"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:101
+#: e0696267bab44cef912593f77e047bc5
+msgid "High resolution (fine energy spacing):"
+msgstr "High resolution (fine energy spcing):"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:106
+#: 331f5f013a384eeab1e663dadc195e59
+msgid "Output Files"
+msgstr "Output فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:108
+#: 6d15936b98424831bd9acd1671add329
+msgid "When you run the calculation (not dry-run), SIESTA generates:"
+msgstr "When you run  clcultion (not dry-run), SIESTA genertes:"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:110
+#: 53207fa401b94ebca429c3e860d795a5
+msgid "**siesta.DOS** - Total density of states (energy vs DOS)"
+msgstr "**siest.DOS** - Totl density of sttes (energy vs DOS)"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:111
+#: 66ad2eb47eef4347bb72b36d061baa66
+msgid "**siesta.PDOS** - Projected DOS on atoms/orbitals"
+msgstr "**siest.PDOS** - Projected DOS on toms/یاbitls"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:112
+#: 081310e813ba407aae94a1a62ae83810
+msgid "**siesta.PDOS.xml** - XML format for visualization tools"
+msgstr "**siest.PDOS.xml** - XML برایmt برای visuliztion tools"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:114
+#: 4b9f5ed2dc21418ea1972acfe00cc9eb
+msgid "Usage with Different Makers"
+msgstr "Usage with Different Makers"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:116
+#: 0aaac9ccaaec491cb759405a6585f4ca
+msgid "StaticMaker (SCF only)"
+msgstr "StaticMaker (SCF only)"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:125
+#: db6f9f4532e040eb9af5c02251fe0ca8
+msgid "RelaxMaker (geometry optimization)"
+msgstr "RelaxMaker (geometry optimization)"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:134
+#: 9d4465c89bda4e8ea6ce9649931c3170
+msgid "BandStructureMaker (bands + DOS)"
+msgstr "BandStructureMaker (bands + DOS)"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:143
+#: 2115d8060a0144869a123f328f7c3037
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:145
+#: 626c16f32ca14815a1bff9afbb66d17f
+msgid "**Band structure calculations**: `tutorials/01-basics/03-band-structure/`"
+msgstr "**Band structure calculations**: `tutorials/01-basics/03-band-structure/`"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:146
+#: 3978a0e0bfb3483d9994c83c7aae0121
+msgid "**SIESTA Manual**: Section on ProjectedDensityOfStates"
+msgstr "**SIESTA Mnul**: Section on ProjectedDensityOfSttes"
+
+#: ../../source/tutorials-md/03-advanced-features/05-dos-calculations/README.md:147
+#: 268a95a753a64594b08e74da1cb5623b
+msgid ""
+"**Dataclass reference**: "
+"`src/atomate2/siesta/dataclass/density_of_states_and_band_structure.py`"
+msgstr ""

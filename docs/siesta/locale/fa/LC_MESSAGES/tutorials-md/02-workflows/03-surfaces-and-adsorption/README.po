@@ -1,0 +1,746 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:1
+#: c3fb5dff957249edb8cb106e87e46dca
+msgid "06: Surfaces and Adsorption"
+msgstr "06: Surfces و Adsیاption"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:3
+#: 2c12aac7d4204dec81419a8021ffb128
+msgid "**Focus**: Surface chemistry, catalysis, and adsorption site screening"
+msgstr "**Focus**: Surfce chemistry, ctlysis, و dsیاption site screening"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:5
+#: 0c7b944cd2f44ee2b840e2cdd1c1fe02
+msgid "**Difficulty**: Advanced"
+msgstr "**سطح سختی**: پیشرفته"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:7
+#: e42ead8fe1c74d0787314f0c4b7671b7
+msgid "**Prerequisites**:"
+msgstr "**پیش‌نیازها**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:8
+#: 8ce81b8c5a38403281f03733a213973a
+msgid ""
+"Completed [01-basics](../01-basics/) and "
+"[02-convergence](../../02-workflows/01-convergence/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:9
+#: 3d104d76f84a4bd5a1a576e1c0a7d589
+msgid "Understanding of surface science concepts"
+msgstr "درک of surfce science concepts"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:10
+#: c2875d252cfc4dee95ed318f8dfe8b61
+msgid "Familiarity with Miller indices and slab models"
+msgstr "Fmilirity با Miller indices و slb models"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:11
+#: fc211fc2926949079a2b0b46b4b756d9
+msgid "Converged bulk calculation parameters"
+msgstr "Converged bulk clcultion prmeters"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:15
+#: 57e68779d33e45518414f6c7301f7f9c
+msgid "Tutorials in This Category"
+msgstr "Tutیاils in This دسته‌بندی"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:17
+#: 2384b9590bf64054811c6dccaa3a3e8b
+msgid "[01-surface-energy](01-surface-energy/)"
+msgstr "[01-surfce-energy](01-surfce-energy/)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:18
+#: 8519223307fd4d13932a2df21e0fdf63
+msgid ""
+"**Description**: Surface energy calculations with automatic slab "
+"generation and termination analysis **Difficulty**: Advanced **Time**: "
+"~10 min (dry-run), ~2-4 hours (full calculation) **Key Concepts**: Miller"
+" indices, slab models, surface energy, terminations, vacuum spacing, "
+"symmetric slabs"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:23
+#: 499d6bded80a4431b7edf66fd478e635
+msgid "[02-adsorption-scanning](02-adsorption-scanning/)"
+msgstr "[02-dsیاption-scnning](02-dsیاption-scnning/)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:24
+#: 0216779a435b427c82a7ee58a986ba51
+msgid ""
+"**Description**: Grid-based adsorption site screening with automatic "
+"structure generation **Difficulty**: Advanced **Time**: ~5 min (dry-run),"
+" ~4-12 hours (full calculation) **Key Concepts**: Adsorption sites, grid "
+"scanning, adsorbate orientation, binding energy, coverage effects"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:31
+#: 376134b8b0e54f0080c958a95cfa0cfe
+msgid "Learning Path"
+msgstr "Lerning Pth"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:33
+#: 3bbe36e894084ef8b3edbce9ce4e4b10
+msgid "**Sequential approach**:"
+msgstr "**Sequentil pproch**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:35
+#: 0e61bf692d4746e584413fadadeb4b23
+msgid ""
+"**Foundation**: [01-surface-energy](01-surface-energy/) - Understand "
+"surface models"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:36
+#: 29b3d3e3aefe40bba1a8282a0bd3f614
+msgid ""
+"**Application**: [02-adsorption-scanning](02-adsorption-scanning/) - "
+"Screen adsorption sites"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:38
+#: e1ace2d252ee489ebbcd047e5d66ca6d
+msgid "**Why this order?**"
+msgstr "**Why this یاder?**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:39
+#: 1537a85673fa404ea1f43e1f58cf74b1
+msgid "Need converged slab model before adding adsorbates"
+msgstr "Need converged slb model beبرایe dding dsیاbtes"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:40
+#: 94fa454c938d4cdfaf4055084a3f662d
+msgid "Surface energy provides reference for adsorption energies"
+msgstr "Surfce energy provides reference برای dsیاption energies"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:44
+#: 2f8bf44aa561450c82488b7627371ef5
+msgid "Surface Science Basics"
+msgstr "Surfce Science Bsics"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:46
+#: 89cd456dc048421285b6a8b332e8faff
+msgid "Surface Energy"
+msgstr "Surfce Energy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:48
+#: 819f17fb7f5843f794223e0980b7dfa3
+msgid "Surface energy (γ) measures the cost of creating a surface:"
+msgstr "Surfce energy (γ) mesures  cost of creting  surfce:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:54
+#: c9409c94dd68464bb231d96a72995730
+msgid "Where:"
+msgstr "Where:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:55
+#: e8f09eece1574817ba98d5fe06909e50
+msgid "E_slab = Total energy of slab"
+msgstr "E_slb = Totl energy of slb"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:56
+#: 97e8a5ae0a574ca7aef1dc465a71ffa7
+msgid "E_bulk = Energy per atom in bulk"
+msgstr "E_bulk = Energy per tom in bulk"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:57
+#: 7b2444a34beb4de781d61e049184c7b3
+msgid "N = Number of atoms in slab"
+msgstr "N = Number of toms in slb"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:58
+#: 23661ab1e5b14806b50f958788920ecc
+msgid "A = Surface area"
+msgstr "A = Surfce re"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:59
+#: 01b03830ad60466e9f2fedeee35f16ad
+msgid "Factor of 2 = Two surfaces (top + bottom)"
+msgstr "Fctیا of 2 = Two surfces (top + bottom)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:61
+#: 4cbd643f2fce44d088f8604d704e7e62
+msgid "**Typical values**:"
+msgstr "**Typicl vlues**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:62
+#: c0c49544c40045308ad46fefe20e4d1d
+msgid "Metals: 1-3 J/m² (low surface energy)"
+msgstr "Metls: 1-3 J/m² (low surfce energy)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:63
+#: e4abda1a0ca04efeb644f383c11465d8
+msgid "Ionic crystals: 0.5-2 J/m²"
+msgstr "Ionic crystls: 0.5-2 J/m²"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:64
+#: a3532ad8c55444baad97ec65d155946f
+msgid "Covalent materials: 2-4 J/m²"
+msgstr "Covlent mterils: 2-4 J/m²"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:66
+#: df48fc03cb104102b789e3cdc9081937
+msgid "Adsorption Energy"
+msgstr "Adsیاption Energy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:68
+#: b319164877ba4a1bb7cadb2a77ec752b
+msgid "Adsorption energy (E_ads) measures binding strength:"
+msgstr "Adsیاption energy (E_ds) mesures binding strength:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:74
+#: 1d04b8bacaa94ebf838b41b1369fbada
+msgid "**Sign convention**:"
+msgstr "**Sign convention**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:75
+#: b5e2cadc62364a7fb509b12fdcf497e0
+msgid "E_ads < 0: Exothermic adsorption (stable)"
+msgstr "E_ds < 0: Exormic dsیاption (stble)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:76
+#: db111a65532d479eacbc2e8a7e10330d
+msgid "E_ads > 0: Endothermic adsorption (unstable)"
+msgstr "E_ds > 0: Endormic dsیاption (unstble)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:80
+#: b89819c37a694845837bf46c15bb60fa
+msgid "Critical Parameters"
+msgstr "Criticl Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:82
+#: 14458754af3d483bb8b8039c329e5b4d
+msgid "Slab Construction"
+msgstr "Slb Construction"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:84
+#: 15c251a40f9945ffb03957ed37e717ba
+msgid "**Number of layers**:"
+msgstr "**Number of lyers**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:85
+#: fe9282af695f4ab2ad315a73bebee0b3
+msgid "Minimum: 3-4 layers (quick test)"
+msgstr "Minimum: 3-4 lyers (quick test)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:86
+#: 904476a8df734567ad0536628c0bcdc6
+msgid "Recommended: 5-7 layers (publication)"
+msgstr "Recommended: 5-7 lyers (publiction)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:87
+#: 131ced05bffa416e881adf23b40a4fa4
+msgid "Large systems: 3-4 may suffice"
+msgstr "Lrge systems: 3-4 my suffice"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:89
+#: e5590eaa6ace4a2aa728b537d5ef315c
+msgid "**Vacuum spacing**:"
+msgstr "**Vcuum spcing**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:90
+#: 3cac2fbb5ec643bbbcfa5b4b0409de16
+msgid "Minimum: 15 Å (prevent slab-slab interaction)"
+msgstr "Minimum: 15 Å (prevent slb-slb interction)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:91
+#: 6b0723dfeff9451792714866aef123a6
+msgid "Recommended: 20 Å (safe for all cases)"
+msgstr "Recommended: 20 Å (sfe برای ll cses)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:92
+#: 339afe03f5294b73b2c1ac5cc8a6d9f3
+msgid "Check: Plot electron density decay"
+msgstr "Check: Plot electron density decy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:94
+#: 630bf589863948468695653dc46676f1
+msgid "**Symmetry**:"
+msgstr "**Symmetry**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:95
+#: 83c072f2afca4b28990c2e223df7c6c5
+msgid "Symmetric slabs: Both surfaces identical"
+msgstr "Symmetric slbs: Both surfces identicl"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:96
+#: 6b3de78a98c04142b2cc1940c144c3b9
+msgid "Asymmetric slabs: Different terminations (needs dipole correction)"
+msgstr "Asymmetric slbs: Different termintions (needs dipole cیاrection)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:98
+#: 4fd91e58ae614fc78bd9bb4f75a0196e
+msgid "**K-points**:"
+msgstr "**K-points**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:99
+#: e8f5fe5135cb4098a2250fda81c49b65
+msgid "In-plane: Dense (6×6 or higher for metals)"
+msgstr "In-plne: Dense (6×6 یا higher برای metls)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:100
+#: f003811a616d4c9396f8e8dd90d1f26b
+msgid "Out-of-plane: 1 (periodic in x,y only)"
+msgstr "Out-of-plne: 1 (periodic in x,y only)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:102
+#: b690859e99c6417a950f38ee44003c59
+msgid "Adsorption Sites"
+msgstr "Adsیاption Sites"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:104
+#: 005eec64cfab44478dce821a4c5b9277
+msgid "**Grid resolution**:"
+msgstr "**Grid resolution**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:105
+#: 0b13655160604f53817161be9536d73b
+msgid "Coarse scan: 3×3 or 4×4 grid"
+msgstr "Corse scn: 3×3 یا 4×4 grid"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:106
+#: fa19de68d7854f65a3ae5151731d45d8
+msgid "Fine scan: 5×5 or 6×6 grid"
+msgstr "Fine scn: 5×5 یا 6×6 grid"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:107
+#: a511c14a9a744ec3af1a685da3a96215
+msgid "Ultra-fine: 10×10 grid (computationally expensive)"
+msgstr "Ultr-fine: 10×10 grid (computtionlly expensive)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:109
+#: ccc2123a6721440b8deb405dbcb564f5
+msgid "**Height above surface**:"
+msgstr "**Height bove surfce**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:110
+#: 3804835719234219add1fb17e2932bc1
+msgid "Typical: 1.5-2.5 Å"
+msgstr "Typicl: 1.5-2.5 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:111
+#: eed2bdff21344771b85e2f4cfa3bd2aa
+msgid "Depends on adsorbate size"
+msgstr "Depends on dsیاbte size"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:112
+#: ece33d55e6df4ae4a0c05247fc284b94
+msgid "Auto-optimized in relaxation"
+msgstr "Auto-optimized in relxtion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:114
+#: bd0459d1508b4c1ca31940083dd21ff1
+msgid "**Adsorbate orientation**:"
+msgstr "**Adsیاbte یاienttion**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:115
+#: 1c111418d5f94432b3c36c144db025c3
+msgid "Important for molecules (H2O, CO2, etc.)"
+msgstr "مهم برای molecules (H2O, CO2, etc.)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:116
+#: 3ccac8e9122d41bda70442e9289452cb
+msgid "Use `target_vector` to specify orientation"
+msgstr "Use `target_vector` to specify orientation"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:117
+#: 495a0118ac1c4811a5fccd80c4785e2b
+msgid "Test multiple orientations for complex molecules"
+msgstr "Test multiple یاienttions برای complex molecules"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:121
+#: 7956cf5d9532473dbc62753b38beca80
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:123
+#: 0cfcf4ff1ca345e2b8ae71799c642d7c
+msgid "Surface Energy Calculation"
+msgstr "Surfce Energy محاسبه"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:144
+#: 4d109e40d64e47c9872ecd4e177138fa
+msgid "Multi-Surface Comparison"
+msgstr "Multi-Surfce Comprison"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:164
+#: aec45d2085754701881b50295ac9c1e6
+msgid "Adsorption Site Scanning"
+msgstr "Adsیاption Site Scnning"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:188
+#: 56d59d0c37604402a92d29acf439c777
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:190
+#: 687c6bb253eb41a8841973835a7642eb
+msgid "Surface Energy Issues"
+msgstr "Surfce Energy Issues"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:192
+#: 1329947c3e884b5e9c869fa625f3d622
+msgid ""
+"**Issue 1**: \"Surface energy is negative\" **Cause**: Bulk energy "
+"reference is wrong **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:200
+#: ef3f1e434a4e4a85819e2a20b0adae1b
+msgid ""
+"**Issue 2**: \"Different terminations have huge energy difference\" "
+"**Cause**: Polar surfaces (dipole moment) **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:208
+#: e8715d74926f4cc8aabc2d98f0bb1146
+msgid ""
+"**Issue 3**: \"Surface energy doesn't converge with layers\" **Cause**: "
+"Insufficient slab thickness **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:216
+#: 0c9672ea6de845a8817c89a5159ac6c5
+msgid "Adsorption Issues"
+msgstr "Adsیاption Issues"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:218
+#: 94a04fb08b724049b8e99c705ed35e8c
+msgid ""
+"**Issue 1**: \"Adsorbate falls through slab\" **Cause**: Too close to "
+"surface initially **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:226
+#: f4e5c26aa2a2497584efbef4e405f5ef
+msgid ""
+"**Issue 2**: \"All sites have similar energy\" **Cause**: Grid too "
+"coarse, missing site-specific features **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:234
+#: 9ebff86b538a474883b2134e53bb54c5
+msgid ""
+"**Issue 3**: \"Adsorption energies are all positive (unstable)\" "
+"**Cause**: Wrong adsorbate structure or surface termination **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:243
+#: ba572507097e4979b17cf5436a04b981
+msgid ""
+"**Issue 4**: \"Scan takes too long (25+ calculations)\" **Cause**: Large "
+"grid size **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:254
+#: fa5f33e5b5414f889100cd0386bcbbce
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:256
+#: 26594996cd7c4861b3a1524544b22ef2
+msgid "Surface Preparation"
+msgstr "Surfce Preprtion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:258
+#: 071cd5439ca24215ae736b91d62217ad
+msgid "**Relax bulk first**:"
+msgstr "**Relx bulk first**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:264
+#: 40e5b68d745f44b9b5b1b2ee1dd386b4
+msgid "**Test slab convergence**:"
+msgstr "**Test slb convergence**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:271
+#: 1385dcef317e4dac854e7e6986ebc463
+msgid "**Check symmetry**:"
+msgstr "**Check symmetry**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:277
+#: d5b8966f48914bfca2c5dbbbcc452ed0
+msgid "**Optimize k-points**:"
+msgstr "**Optimize k-points**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:283
+#: ddd5f91a903d406ba30edb365dc2c091
+msgid "Adsorption Studies"
+msgstr "Adsیاption Studies"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:285
+#: 799dd1cf80cd45fe9ed0205701c4536c
+msgid "**Start with dry-run**:"
+msgstr "**Strt با dry-run**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:291
+#: c2be6b06a3384585b0e8bed9d4aaf250
+msgid "**Test adsorbate orientation**:"
+msgstr "**Test dsیاbte یاienttion**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:297
+#: 31a75cff7f114eebbf6964e9f9d056f0
+msgid "**Incremental complexity**:"
+msgstr "**Incrementl complexity**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:304
+#: 70d6b5d2390a4e6bb79d17a1059763c1
+msgid "**Analyze systematically**:"
+msgstr "**Anlyze systemticlly**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:313
+#: d8f8276e00f34fb280b2ff846959f3f3
+msgid "Validation and Analysis"
+msgstr "Vlidtion و Anlysis"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:315
+#: a1e1e0b04f214a44be0f1fafdd8638fd
+msgid "Surface Energy Validation"
+msgstr "Surfce Energy Vlidtion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:317
+#: c15a4c49538043c6ba0f6d9f9f683827
+msgid "**Compare with experiments**: Wulff construction vs crystal habit"
+msgstr "**Compre با experiments**: Wulff construction vs crystl hbit"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:318
+#: 36d143ae903d402b8a58c4bf11649327
+msgid "**Compare with literature**: DFT values (within ±10-20%)"
+msgstr "**Compre با literture**: DFT vlues (باin ±10-20%)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:319
+#: f33fc773cb6148ab985ac12deffadf70
+msgid "**Check trends**: Lower-index surfaces typically lower energy"
+msgstr "**Check trends**: Lower-index surfces typiclly lower energy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:321
+#: 91a894e7837648899dc82aef46d19271
+msgid "Adsorption Energy Validation"
+msgstr "Adsیاption Energy Vlidtion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:323
+#: bfad4bf61af54d22902b4ac3218973bc
+msgid "**Compare with TPD**: Temperature-programmed desorption"
+msgstr "**Compre با TPD**: Temperture-progrmmed desیاption"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:324
+#: 3dd7907d530b49e59c0e7c0e3d33b36c
+msgid "**Compare with literature**: Similar systems"
+msgstr "**Compre با literture**: Similr systems"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:325
+#: 20d57e83e28e42eb935d4f8592f27288
+msgid "**Check physical sense**:"
+msgstr "**Check physicl sense**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:326
+#: eeee3a08051a44e68b7ef5204d6e08e2
+msgid "Metals: E_ads ~ -0.5 to -3 eV (chemisorption)"
+msgstr "Metls: E_ds ~ -0.5 to -3 eV (chemisیاption)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:327
+#: 0dbea0b7198b4ccdb37dae112eb1df4e
+msgid "Physisorption: E_ads ~ -0.1 to -0.5 eV"
+msgstr "Physisیاption: E_ds ~ -0.1 to -0.5 eV"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:331
+#: 6808a280705b4ed097ca99553ab4d96c
+msgid "Common Adsorption Sites"
+msgstr "Common Adsیاption Sites"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:333
+#: 5fb680b7321647a0bbf3d644f84232ac
+msgid "FCC (111) Surface"
+msgstr "FCC (111) Surfce"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:334
+#: 0b047b2aea1d46cb9acab0396bf9302f
+msgid "**Top**: Above single surface atom"
+msgstr "**Top**: Above single surfce tom"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:335
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:341
+#: 9f95040722ad476787c6ac986abc5fc3 d759f3ff247f4ba9bfe2b042e8f76e84
+msgid "**Bridge**: Between two atoms"
+msgstr "**Bridge**: Between two toms"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:336
+#: f43bfef5eee24d85bbaad86c6cf47a36
+msgid "**Hollow (FCC)**: Above subsurface atom"
+msgstr "**Hollow (FCC)**: Above subsurfce tom"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:337
+#: 53f4b2683e2a4d9c82b45644ef8d376d
+msgid "**Hollow (HCP)**: No subsurface atom below"
+msgstr "**Hollow (HCP)**: No subsurfce tom below"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:339
+#: 9c19edbd08744697a61389240731a4d4
+msgid "FCC (100) Surface"
+msgstr "FCC (100) Surfce"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:340
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:345
+#: 0f6faabc055b45f0ad5c94353a1aaa48 fa7b3fb6d6ce4324850e32d47f6c10d0
+msgid "**Top**: Above single atom"
+msgstr "**Top**: Above single tom"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:342
+#: acd6bf770b3d488f8f778ecb5cca72be
+msgid "**Hollow**: Four-fold hollow site"
+msgstr "**Hollow**: Four-fold hollow site"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:344
+#: bcb3da851fb84529bff34f455832e963
+msgid "BCC (110) Surface"
+msgstr "BCC (110) Surfce"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:346
+#: ef87e4bb995e4d3bb2f35ab013d3d628
+msgid "**Long bridge**: Along close-packed rows"
+msgstr "**Long bridge**: Along close-pcked rows"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:347
+#: d1f92941f470481f83cba68d26edb6e4
+msgid "**Short bridge**: Perpendicular to rows"
+msgstr "**Shیاt bridge**: Perpendiculr to rows"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:348
+#: d8580c4b191046499185a9fde0403a54
+msgid "**Hollow**: Pseudo-three-fold"
+msgstr "**Hollow**: Pseudo-three-fold"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:352
+#: 377eaa5c50e94d9f82ab2253bbd38c70
+msgid "Expected Results"
+msgstr "Expected Results"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:354
+#: 30a094e9684b43a8aa9e64f3c3da5f78
+msgid "Surface Energy Calculations"
+msgstr "Surfce Energy محاسبهs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:355
+#: 64bd419d5cf24feda4c26c079dc6a8b7
+msgid "Surface energy vs termination"
+msgstr "Surfce energy vs termintion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:356
+#: 30a86a4dd1d64a7198d6d5821a5284bb
+msgid "Wulff construction (equilibrium shape)"
+msgstr "Wulff construction (equilibrium shpe)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:357
+#: f24f6f9116304fb181cf1e159006b4fb
+msgid "Layer convergence plots"
+msgstr "Lyer convergence plots"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:358
+#: fbda1665693645369939c3a0bb49fc80
+msgid "Vacuum convergence plots"
+msgstr "Vcuum convergence plots"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:360
+#: e9d282bbc7724ef5a71936fa2f058fe4
+msgid "Adsorption Scanning"
+msgstr "Adsیاption Scnning"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:361
+#: 29ff2994d10a4b289237c821ef815c75
+msgid "Binding energy heatmap (2D map)"
+msgstr "Binding energy hetmp (2D mp)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:362
+#: 632b7be9c9314c7aba5b359c5e6b1cc0
+msgid "Top 5-10 most stable sites"
+msgstr "Top 5-10 most stble sites"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:363
+#: 252978b246164116a4ae69806998a0a4
+msgid "Site classification (top/bridge/hollow)"
+msgstr "Site clssifiction (top/bridge/hollow)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:364
+#: 5ecf565079d44665a71919833e95975d
+msgid "Energy distribution histogram"
+msgstr "Energy distribution histogrm"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:365
+#: 9f29c675f5ee44909002dc9355423532
+msgid "Structure files for all sites"
+msgstr "Structure files برای ll sites"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:369
+#: a7da592e49c94bdcb14d6fe7e9b4ce08
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:371
+#: d4e6a8c33b6642f58a7897add281fd87
+msgid "Charged Systems"
+msgstr "Chrged Systems"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:377
+#: 887e76a6abe94b9199073d453b33a02c
+msgid "Spin-Polarized Calculations"
+msgstr "Spin-Polrized محاسبهs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:383
+#: f3c45f1dc15845d1b2d80b8c2aaf60d4
+msgid "Solvation Effects"
+msgstr "Solvtion Effects"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:391
+#: 8f3994d4137b47a5b554b1b9b4365681
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:393
+#: 8d7108ccaeb748f38fb965021be46855
+msgid "After mastering surfaces and adsorption:"
+msgstr "After mstering surfces و dsیاption:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:394
+#: a03fefabc0474470af0032782b4e06ec
+msgid ""
+"Combine with [05-vibrational-properties](../05-vibrational-properties/) "
+"for surface phonons"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:395
+#: 44f8355271894565803afcfe44a5a742
+msgid ""
+"Explore [07-advanced-features](../../03-advanced-features/) for workflow "
+"automation"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:396
+#: b938d449cd294c2eb424692e54fe4158
+msgid "Study reaction mechanisms (NEB on surfaces)"
+msgstr "Study rection mechnisms (NEB on surfces)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/README.md:400
+#: 0f87e99da6af4a67bba08dd38d46ce9f
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"

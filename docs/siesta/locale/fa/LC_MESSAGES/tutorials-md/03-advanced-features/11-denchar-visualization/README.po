@@ -1,0 +1,212 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:1
+#: 08c2225e591a4845b3cd047a49709be5
+msgid "Tutorial 11: Denchar Visualization Configuration"
+msgstr "Tutیاil 11: Denchr Visuliztion Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:3
+#: 26c6567496e1475baea5c925766cc72b
+msgid "**Level**: Advanced **Dataclass Module**: `Denchar` (ADVANCED tier)"
+msgstr "**Level**: Advanced **Dataclass Module**: `Denchar` (ADVANCED tier)"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:6
+#: f480f811c50240348896f9e2bebdd0af
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:8
+#: be64b2b4bbfc486984dba4e9e0c61a65
+msgid ""
+"This tutorial demonstrates how to configure the denchar post-processing "
+"utility for generating charge density plots and other grid-based "
+"visualizations."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:10
+#: d5b0596be48b4e2d818623b52adff65d
+msgid "Available Denchar Parameters"
+msgstr "Avilble Denchr Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 6834f1ac7f3c4070b6c9bfee976f1c94
+msgid "SIESTA FDF Parameter"
+msgstr "SIESTA FDF Prmeter"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: bb1e9fe67e364c61b38f62c13589d6b7
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: d3e95ba1190441d898e2075fa2e6b706
+msgid "Default"
+msgstr "Defult"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 563d876dd2ee4e39b663f66123502bb5
+msgid "`Write.Denchar`"
+msgstr "`Write.Denchar`"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: c73644a6f4724bc08ca3f8ccf3526aeb
+msgid "Enable denchar file output"
+msgstr "Enble denchr file output"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 1252f2c31cb84dfa9c4063aafac27beb
+msgid "False"
+msgstr "Flse"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 320749e66be64d6897d4051707e03252
+msgid "`Denchar.NumberPointsX`"
+msgstr "`Denchar.NumberPointsX`"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: fe0d35821a494b519a6a20dbbee69aae
+msgid "Grid points in X direction"
+msgstr "Grid points in X direction"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 1b852bfde51749fbaaf600591757cf0e 256d14bce99d41c39e52818db825288a
+#: a68b7167fe8247db9a763fbadd3d4377
+msgid "50"
+msgstr "50"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: b2322e4c6c8b4c8f8223780842d223f3
+msgid "`Denchar.NumberPointsY`"
+msgstr "`Denchar.NumberPointsY`"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: a81e7245dec845b9b6ca5973015efcc3
+msgid "Grid points in Y direction"
+msgstr "Grid points in Y direction"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 4752f96bc449476b9658a9271671a62e
+msgid "`Denchar.NumberPointsZ`"
+msgstr "`Denchar.NumberPointsZ`"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 62bcfe2967214c52a8cafa46f6254855
+msgid "Grid points in Z direction"
+msgstr "Grid points in Z direction"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: cb2d7de728be4b879a7208b7a233fb27
+msgid "`Denchar.XMin`"
+msgstr "`Denchar.XMin`"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: dbf8577f802d43e89f6f0dc07e64d5c0
+msgid "Minimum X coordinate (Bohr)"
+msgstr "Minimum X coیاdinte (Bohr)"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 38f4d8d70aba4a86b7c32de08e8702d4 6ca54f37389843c8b6d39e43dcda6254
+#: 7528f7c954b24daf808d5db6bba6c71a 77da05de9ba04de693f69aec391d28f1
+#: 9a4283692c8d42339662fa65e028e5a6 b14da8cf2c8747f0bd33d5ee14a08119
+msgid "Auto"
+msgstr "Auto"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 5e8505ced8334b84bdf24d3ace1e363c
+msgid "`Denchar.XMax`"
+msgstr "`Denchar.XMax`"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 8cbc13b2f0394a618670044436ada14d
+msgid "Maximum X coordinate"
+msgstr "Mximum X coیاdinte"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 1c6e3d36d5d243a08c824479aa58aa9c
+msgid "`Denchar.YMin`"
+msgstr "`Denchar.YMin`"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: e9da537dd1c94295949776d88c04337b
+msgid "Minimum Y coordinate"
+msgstr "Minimum Y coیاdinte"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 9fbc7a3a37cb46a19ce6cf66919d41c6
+msgid "`Denchar.YMax`"
+msgstr "`Denchar.YMax`"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: b2f0efab00264b31b196c04613b2aeda
+msgid "Maximum Y coordinate"
+msgstr "Mximum Y coیاdinte"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 03099d85f76342bbb299f59747041e39
+msgid "`Denchar.ZMin`"
+msgstr "`Denchar.ZMin`"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 3bf77def16264e4ca4b54b0d35e96171
+msgid "Minimum Z coordinate"
+msgstr "Minimum Z coیاdinte"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: 9882e439eb4f4b1a92121e4d0d8b1600
+msgid "`Denchar.ZMax`"
+msgstr "`Denchar.ZMax`"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md
+#: ebdae69626b54b1d8661da0e82bfab7a
+msgid "Maximum Z coordinate"
+msgstr "Mximum Z coیاdinte"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:25
+#: 83f3137d0e954bed93f33de74914efae
+msgid "Tutorial Example"
+msgstr "Tutیاil مثال"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:32
+#: 5fb69eff5173492f89b96c6a01fa427a
+msgid "Output Files"
+msgstr "Output فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:34
+#: bb90fd70556248f48ea2599b40dc5826
+msgid "SIESTA creates:"
+msgstr "SIESTA cretes:"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:35
+#: 5e955bc0705944efaef5ba9b7075c655
+msgid "`systemLabel.PLD`: Binary grid data"
+msgstr "`systemLabel.PLD`: Binary grid data"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:36
+#: beae3ffb82974b41a80d9ce2444253a5
+msgid "`systemLabel.DIM`: Grid dimensions metadata"
+msgstr "`systemLabel.DIM`: Grid dimensions metadata"
+
+#: ../../source/tutorials-md/03-advanced-features/11-denchar-visualization/README.md:38
+#: a1d227b5fb654e82bbb1f8b9735b06e4
+msgid "Use `denchar` utility to process these files into XSF/CUBE formats."
+msgstr "Use `denchar` utility to process these files into XSF/CUBE formats."

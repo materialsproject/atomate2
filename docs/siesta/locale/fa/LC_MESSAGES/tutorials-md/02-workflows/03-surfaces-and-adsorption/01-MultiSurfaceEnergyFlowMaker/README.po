@@ -1,0 +1,1588 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:1
+#: a4759ee270554723a687b794e6de2b6d
+msgid "Tutorial: Surface Energy Calculations"
+msgstr "آموزش: Surfce Energy محاسبهs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:3
+#: 8e8d3501d8ac47dfb39d45eec9e68e04
+msgid ""
+"**Category**: 06-surfaces-and-adsorption **Difficulty**: Intermediate "
+"**Time**: ~5 min (dry-run), ~10-15 min (basic), ~1-3 hours (multi-"
+"surface)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:9
+#: f89455906e754ca199256a039486124e
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:11
+#: 6290c22a60654b93b4639b62bf8986c8
+msgid ""
+"Calculate surface energies for all terminations of crystalline surfaces "
+"using automatic slab generation. Compare multiple Miller indices to "
+"identify the most stable surface and predict equilibrium crystal shape "
+"(Wulff construction)."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:13
+#: e7df52215812440da318f9b3bf1f5dc1
+msgid ""
+"This tutorial consolidates surface energy calculation examples into a "
+"single configurable workflow with 3 comprehensive examples."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:17
+#: 91725437de4f44ab97c4cc9e5d9ace88
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:19
+#: 35c2ab0e39ce4fb19002a82dfa36e0b1
+msgid "Surface energy formula: γ = (E_slab - N×E_bulk) / A"
+msgstr "Surfce energy برایmul: γ = (E_slb - N×E_bulk) / A"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:20
+#: 09bb2343588c491aa87a5013cd5d2e1b
+msgid "Automatic slab generation and termination discovery"
+msgstr "Automtic slb genertion و termintion discovery"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:21
+#: 94516dcdc9ad442c9e4093af239ad8b7
+msgid "Multi-surface comparison for Wulff construction"
+msgstr "Multi-surfce comprison برای Wulff construction"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:22
+#: 7ce38fc145424427ac1e4c15b971d29e
+msgid "K-point sampling for 2D periodic systems (slabs)"
+msgstr "K-point smpling برای 2D periodic systems (slbs)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:23
+#: 0397d366b0e14627b098b5fb1724687a
+msgid "Convergence testing (slab thickness, vacuum, k-points)"
+msgstr "همگرایی testing (slb thickness, vcuum, k-points)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:24
+#: 27e66432b50b4682ab62c522251e30ab
+msgid "Polar surface considerations"
+msgstr "Polr surfce considertions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:28
+#: 5526914a023047058a2f2a33a0050365
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:30
+#: 0362cee96a27411c92aa7d6ac029657e
+msgid "**Required**: [01-relaxation](../../01-basics/01-relaxation/) completed"
+msgstr "**مورد نیاز**: [01-relxtion](../../01-bsics/01-relxtion/) completed"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:31
+#: 67564f6af15e413686baa61066bc6222
+msgid "**Recommended**: Understanding of crystal surfaces and Miller indices"
+msgstr "**Recommended**: درک of crystl surfces و Miller indices"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:32
+#: cdb27359b4bd4408bae0675a41382733
+msgid "**Recommended**: Basic knowledge of surface science"
+msgstr "**Recommended**: Bsic knowledge of surfce science"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:36
+#: cc2fef7c28364ba6a6e9d3f7c86bc3c2
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:38
+#: c2864c31030d4418ae850e4f5dbadbd7
+msgid "Surface Energy"
+msgstr "Surfce Energy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:40
+#: 42e2e913c1fd483fb85141b5ae457b2f
+msgid ""
+"**Definition**: $$\\gamma = \\frac{E_{\\text{slab}} - N \\times "
+"E_{\\text{bulk}}}{A}$$"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:43
+#: d541a689a59a42419034df6444bace0c
+msgid "**Components**:"
+msgstr "**Components**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:44
+#: 3773c7cbb0224ce19ed454efa77b5885
+msgid "**E_slab**: Total energy of the slab"
+msgstr "**E_slb**: Totl energy of  slb"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:45
+#: cfba7e8d43e64d999042e3fb1e766ca7
+msgid "**E_bulk**: Energy per formula unit of bulk material"
+msgstr "**E_bulk**: Energy per برایmul unit of bulk mteril"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:46
+#: 0b673ac661d54cdaa77f63af52311f92
+msgid "**N**: Number of formula units in the slab"
+msgstr "**N**: Number of برایmul units in  slb"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:47
+#: d64239f5ecdf4b3c8356c43d60ace631
+msgid "**A**: Surface area"
+msgstr "**A**: Surfce re"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:48
+#: 3d4d8af0b61f47a8a233439c1975c9c5
+msgid "Asymmetric slabs: A = area (1 surface)"
+msgstr "Asymmetric slbs: A = re (1 surfce)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:49
+#: 74eb06ceafc547e7b4f0e491f945892b
+msgid "Symmetric slabs: A = 2 × area (both surfaces identical)"
+msgstr "Symmetric slbs: A = 2 × re (both surfces identicl)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:51
+#: b48a9e9e21b1483abc6655ddc5ba5afd
+msgid "**Units**:"
+msgstr "**Units**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:52
+#: 9fb9f0c879fc4475ab6b87f0258f2baf
+msgid "eV/Ų (electron-volts per square Angstrom)"
+msgstr "eV/Ų (electron-volts per squre Angstrom)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:53
+#: 6a1834927e9a48599d17e759bf53042b
+msgid "J/m² (Joules per square meter)"
+msgstr "J/m² (Joules per squre meter)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:54
+#: 90ce99c9bb134ef095f87724e47c9268
+msgid "Conversion: 1 eV/Ų = 16.0218 J/m²"
+msgstr "Conversion: 1 eV/Ų = 16.0218 J/m²"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:56
+#: aa43a8ff91f34baf983613c69ee65415
+msgid "**Physical Interpretation**:"
+msgstr "**Physicl Interprettion**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:57
+#: df26965441ca473c93694de2e581d626
+msgid "Lower γ → More stable surface"
+msgstr "Lower γ → Mیاe stble surfce"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:58
+#: a1a92f4f46894d958ca837b2ac68fe3c
+msgid "Energy cost to create surface area"
+msgstr "Energy cost to crete surfce re"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:59
+#: de744e50022146bca29c1c7df1d09dfa
+msgid "Determines equilibrium crystal morphology (Wulff construction)"
+msgstr "Determines equilibrium crystl mیاphology (Wulff construction)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:60
+#: 22cf7b3cfab54deabce0c32ad8783e89
+msgid "Varies with Miller index and termination"
+msgstr "Vries با Miller index و termintion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:62
+#: 4b7cdcdffbd443e4b63a94b4add0c23b
+msgid "Automatic Slab Generation"
+msgstr "Automtic Slb Genertion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:64
+#: 1ac77f21639e49c1b3fb6ba25a117b54
+msgid "The workflow uses `MultiSurfaceEnergyMaker` which automatically:"
+msgstr "The workflow uses `MultiSurfaceEnergyMaker` which automatically:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:65
+#: 7040073e7e954d21b12d69955684cd7d
+msgid "Generates slabs for each Miller index using pymatgen"
+msgstr "Genertes slbs برای ech Miller index using pymtgen"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:66
+#: ec5f39522a57472e88ca9cdab6732ccb
+msgid "Discovers all unique terminations"
+msgstr "Discovers ll unique termintions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:67
+#: 36468b4baa2f464ca674a5d4679b73de
+msgid "Calculates energies for bulk and all slabs"
+msgstr "Clcultes energies برای bulk و ll slbs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:68
+#: 49f1db113a424b49a68df4f354e4c009
+msgid "Computes surface energies"
+msgstr "Computes surfce energies"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:69
+#: 4b56902f148247e586fb2f32bb4d84c2
+msgid "Generates comparison plots and summaries"
+msgstr "Genertes comprison plots و summries"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:71
+#: 04e8be67b469416d9bea4ac2379b6a2d
+msgid "**No external slab generation needed** - everything is integrated!"
+msgstr "**No externl slb genertion needed** - everything is integrted!"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:73
+#: b1c7ac849cb14f6aa140149320f9d8c8
+msgid "Symmetric vs Asymmetric Slabs"
+msgstr "Symmetric vs Asymmetric Slbs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:75
+#: fb2fee1bbc864803a292cca94e79b0fd
+msgid "**Asymmetric Slabs** (`symmetrize=False`):"
+msgstr "**Asymmetric Slabs** (`symmetrize=False`):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:76
+#: 25c3d9eb8ae04efdb636369e285be13f
+msgid "Different terminations on top and bottom"
+msgstr "Different termintions on top و bottom"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:77
+#: 3d723628d2ba4b00be9d5ac31dc33dd2
+msgid "Explores all possible terminations"
+msgstr "Explیاes ll possible termintions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:78
+#: f89c585c2bcb4e4abbee3d0dad5be71b
+msgid "Surface energy: γ = (E_slab - N×E_bulk) / A (1 surface)"
+msgstr "Surfce energy: γ = (E_slb - N×E_bulk) / A (1 surfce)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:79
+#: 4930dcb46951457f875655a6ea875afc
+msgid "May have net dipole moment (polar surfaces)"
+msgstr "My hve net dipole moment (polr surfces)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:80
+#: 9336bd9dcf9c418986c8be3397fd990f
+msgid "More terminations to explore"
+msgstr "Mیاe termintions to explیاe"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:82
+#: 5de44f935ea54af991376c9b505eac51
+msgid "**Symmetric Slabs** (`symmetrize=True`):"
+msgstr "**Symmetric Slabs** (`symmetrize=True`):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:83
+#: c2de5d19bad74661b6d85b61f5bb81d3
+msgid "Same termination on both sides (top = bottom)"
+msgstr "Sme termintion on both sides (top = bottom)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:84
+#: 504b74de228548baa72a00a314a61e89
+msgid "Surface energy: γ = (E_slab - N×E_bulk) / (2×A) (factor of 2!)"
+msgstr "Surfce energy: γ = (E_slb - N×E_bulk) / (2×A) (fctیا of 2!)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:85
+#: 2e16d2cac6634056a4c21b53d730ab99
+msgid "No net dipole (better for polar surfaces)"
+msgstr "No net dipole (better برای polr surfces)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:86
+#: f4e4eeca922845648938f5bcfddd810c
+msgid "Fewer unique terminations"
+msgstr "Fewer unique termintions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:87
+#: 8b4cec45a0cd47278c4dc86c8bf94a13
+msgid "Cleaner calculation"
+msgstr "Clener clcultion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:89
+#: be83f3d1ded0450e9cc42d4dfa78827f
+msgid ""
+"**Recommendation**: Start with asymmetric (`symmetrize=False`) to explore"
+" all terminations, then use symmetric for production calculations of "
+"polar surfaces."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:91
+#: 24d3ac7314a248f4ab15c9643c2d4269
+msgid "K-Point Sampling for Slabs"
+msgstr "K-Point Smpling برای Slbs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:93
+#: 512694584b36457892c8139f215f6667
+msgid "Slabs are **2D periodic** (periodic in xy, non-periodic in z):"
+msgstr "Slbs re **2D periodic** (periodic in xy, non-periodic in z):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:103
+#: 7ffa843bd30f4938b5719d56a7ee1af4
+msgid "**Why Γ-point in z?**"
+msgstr "**Why Γ-point in z?**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:104
+#: c4a4e65c9c7049f5894eabb555afa64e
+msgid "Large vacuum spacing → no periodicity in z-direction"
+msgstr "Lrge vcuum spcing → no periodicity in z-direction"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:105
+#: fe3b22068de14631a62068b9203a3533
+msgid "Dense sampling only needed in periodic directions (xy)"
+msgstr "Dense smpling only needed in periodic directions (xy)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:106
+#: 0e703ce98d30412da660ec73f7eb4f7e
+msgid "Saves computational time significantly"
+msgstr "Sves computtionl time significntly"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:107
+#: 97a4342368ae483088332e186b4c4998
+msgid "Critical for accurate slab energies!"
+msgstr "Criticl برای ccurte slb energies!"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:111
+#: 5365407e122b46449d059a7f8c623f4f
+msgid "Tutorial Examples"
+msgstr "Tutیاil مثال‌ها"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:113
+#: 020220e6c9724c9dbb1bf4d02f62b7f4
+msgid "01_single.py - Single Surface Energy"
+msgstr "01_single.py - Single Surface Energy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:119
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:144
+#: 06981f840edf4b37aa6d1d9661cf92fb 870c122bf1104fa4a738ce1e784aa2e1
+msgid "**Features**:"
+msgstr "**ویژگی‌ها**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:120
+#: ed1c4cc46526412faf83cc9ce73e60e5
+msgid "Calculate energy for a single Miller index: (100)"
+msgstr "Clculte energy برای  single Miller index: (100)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:121
+#: 329ae67854c94cc8b19ddbc9c838a69c
+msgid "Learn workflow basics"
+msgstr "Lern wیاkflow bsics"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:122
+#: 056a6e2da79943cfb9d374e9a38894ed
+msgid "Minimal parameters (fast, ~10-15 min)"
+msgstr "Miniml prmeters (fst, ~10-15 min)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:123
+#: 211351babf734e5582fdb03fb015a6b9
+msgid "~2-3 calculations (bulk + terminations)"
+msgstr "~2-3 clcultions (bulk + termintions)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:124
+#: 13e3dd90011b459e80cf4f57b9b059c2
+msgid "Good starting point for testing"
+msgstr "Good strting point برای testing"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:126
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:151
+#: 94884c094d114a64a116da78f7bda66e cfb3460ef82045dca3430a0607eec857
+msgid "**Use Cases**:"
+msgstr "**Use Cses**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:127
+#: 12743e8f49a844338f8564d86587825b
+msgid "Learn surface energy workflow"
+msgstr "Lern surfce energy wیاkflow"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:128
+#: e3fece2bc28b4707b01efbd6728981a6
+msgid "Quick validation before production runs"
+msgstr "Quick vlidtion beبرایe production runs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:129
+#: 5e0ad74449f544f4b7941f7be1868c82
+msgid "Test parameter settings"
+msgstr "Test prmeter settings"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:131
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:157
+#: 5e8a0f56a0c64a7b9530a24a42dba429 9ad99ef7ce144d78b39b54f2b1ccaeab
+msgid "**Parameters**:"
+msgstr "**Prmeters**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:138
+#: 721691fa711f4dae98cfd45f31118021
+msgid "02_multiple.py - Multiple Surface Orientation Comparison"
+msgstr "02_multiple.py - Multiple Surface Orientation Comparison"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:145
+#: 9c802728708547babf4c9bd821b91a36
+msgid "Compare multiple surface orientations"
+msgstr "Compre multiple surfce یاienttions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:146
+#: 52e2b9b715d14a17a262f637d2b8e0aa
+msgid "Miller indices: (100), (110), (111)"
+msgstr "Miller indices: (100), (110), (111)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:147
+#: 269243d446d7447d92096ea2bdde65f8
+msgid "Identifies most stable surface"
+msgstr "Identifies most stble surfce"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:148
+#: b60f82fe981f4d17be3a0a61db45c156
+msgid "Production-ready parameters"
+msgstr "Production-redy prmeters"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:149
+#: 7f64bb61718046f08bd6a0d1a6e9a4be
+msgid "~6-10 calculations (30-60 min)"
+msgstr "~6-10 clcultions (30-60 min)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:152
+#: e52c935a8ceb4cb8b6579dea42bff168
+msgid "Wulff construction (equilibrium crystal shape)"
+msgstr "Wulff construction (equilibrium crystl shpe)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:153
+#: cd02c121f8384978a61faa39e5bfb4cb
+msgid "Surface energy anisotropy studies"
+msgstr "Surfce energy nisotropy studies"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:154
+#: 6c02c9816a3242a5a60129b95a4febc5
+msgid "Predict crystal morphology"
+msgstr "Predict crystl mیاphology"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:155
+#: 61d360485fef4bb08c1cd858aeb88376
+msgid "Identify catalytically active surfaces"
+msgstr "Identify ctlyticlly ctive surfces"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:171
+#: 41e0e6b3348641b7a603bfcc515f1f19
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:172
+#: 108ee536902c4259a674ebfee0b19b04
+msgid "Surface energies for each orientation (eV/Ų)"
+msgstr "Surfce energies برای ech یاienttion (eV/Ų)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:173
+#: 1ad404d1d17a4754b6407197a912aae3
+msgid "Comparison plots and rankings"
+msgstr "Comprison plots و rnkings"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:174
+#: f745f534265044d5bf29b26ddc87280e
+msgid "Most stable surface identification"
+msgstr "Most stble surfce identifiction"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:178
+#: 2c7e51d7373540139def661930284539
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:200
+#: b4b18cda33ee4ad6bd151bb776656dc3
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:202
+#: db5af1559d5c44e493c039689a88b0ba
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:220
+#: e70d22c05d344bbfa023e060e3015191
+msgid "Local Mode (Basic Example)"
+msgstr "Locl Mode (Bsic مثال)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:242
+#: 9db043b5c48a453f9d4b7b2090357e82
+msgid "Local Mode (Multi-Surface Example)"
+msgstr "Locl Mode (Multi-Surfce مثال)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:275
+#: b2fb582cee5e46dbbb775542936c4c5c
+msgid "MgO (001) Test Case"
+msgstr "MgO (001) Test Cse"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:277
+#: f9f90da17916487fb23c18f0659dc9c1
+msgid "MgO (001) is a classic test case for surface energy calculations:"
+msgstr "MgO (001) is  clssic test cse برای surfce energy clcultions:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:279
+#: 5432cad501864a0b93ef239dbfcb51c9
+msgid "**Structure**:"
+msgstr "**Structure**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:280
+#: 77c4a1ab7fc345b0a9a81bfc0fc5f603
+msgid "Rock salt structure (Fm-3m)"
+msgstr "Rock slt structure (Fm-3m)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:281
+#: ec86c85e97d448ecac68322a1206cb05
+msgid "Lattice parameter: a = 4.257 Å"
+msgstr "Lttice prmeter:  = 4.257 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:282
+#: f7dfcbc362d344169a6087d34d9eb919
+msgid "(001) surface: alternating Mg²⁺ and O²⁻ layers"
+msgstr "(001) surfce: lternting Mg²⁺ و O²⁻ lyers"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:284
+#: fe8c0eb34df94a78be268b9457b703f0
+msgid "**Surface Properties**:"
+msgstr "**Surfce Properties**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:285
+#: 111159c67c4e4f2da9f86f9eb570367e
+msgid "**Polar surface** (Type 3 in Tasker classification)"
+msgstr "**Polr surfce** (Type 3 in Tsker clssifiction)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:286
+#: da00f4955d934d488f7c665e476fc714
+msgid "Two terminations: Mg-terminated and O-terminated"
+msgstr "Two termintions: Mg-terminted و O-terminted"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:287
+#: 2a82e6dae4ab42d0b5b18cc2dd4feefd
+msgid "Different energies due to polarity"
+msgstr "Different energies due to polrity"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:289
+#: de4ed3ed1d924a7e98c96046ddbe2d91
+msgid "**Literature Values**:"
+msgstr "**Literture Vlues**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:290
+#: 21192996b26e49e088c7c2ba243e58ff
+msgid "Experimental: ~1.0-1.2 J/m² (Tasker, 1979)"
+msgstr "Experimentl: ~1.0-1.2 J/m² (Tsker, 1979)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:291
+#: 22a4f5c5fd8d425dbdfac7cef435d5cc
+msgid "DFT (PW91): ~1.1 J/m² (de Leeuw et al., 1999)"
+msgstr "DFT (PW91): ~1.1 J/m² (de Leeuw et l., 1999)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:292
+#: 78e36183f34c42dd903d99bd9c02b02b
+msgid "DFT (PBE): ~1.2 J/m² (Hernandez et al., 2011)"
+msgstr "DFT (PBE): ~1.2 J/m² (Hernوez et l., 2011)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:294
+#: af8bef2ad8f84827a8c40db13ed6adb6
+msgid "**Expected Results**:"
+msgstr "**Expected Results**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:295
+#: 5222d81327ec462d87fa0c2f486885fb
+msgid "MgO (001): ~1.0 J/m² (may vary with SIESTA functional)"
+msgstr "MgO (001): ~1.0 J/m² (my vry با SIESTA functionl)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:296
+#: 141b2338c7f343e58dba63f211d10944
+msgid "MgO (110): ~0.8 J/m² (more stable)"
+msgstr "MgO (110): ~0.8 J/m² (mیاe stble)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:297
+#: 45e53d38b34b4335806e448347ee06e2
+msgid "MgO (111): ~1.5 J/m² (less stable, polar)"
+msgstr "MgO (111): ~1.5 J/m² (less stble, polr)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:301
+#: c090357bfca44beebeb0af6a3d1554a1
+msgid "Analyzing Results"
+msgstr "Anlyzing Results"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:303
+#: c3967397cf5c49d0b0668fb3d202c85c
+msgid "Typical Surface Energy Ranges"
+msgstr "Typicl Surfce Energy Rnges"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:305
+#: 707ebecbd72a451095f46b3751a38995
+msgid "**By Material Type**:"
+msgstr "**By Mteril Type**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:306
+#: ded6fcb734b2411cae80e14f0a96311e
+msgid "Ionic crystals (NaCl, MgO): 0.5-2.0 J/m²"
+msgstr "Ionic crystls (NCl, MgO): 0.5-2.0 J/m²"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:307
+#: d95286ebada44badab15b6e16a034ac0
+msgid "Metals (Al, Cu, Au): 1.0-3.0 J/m²"
+msgstr "Metls (Al, Cu, Au): 1.0-3.0 J/m²"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:308
+#: c595698de65d41ef9e602b3108861aec
+msgid "Semiconductors (Si, GaAs): 1.5-4.0 J/m²"
+msgstr "Semiconductیاs (Si, GAs): 1.5-4.0 J/m²"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:309
+#: 57537ae507214dcd895168afb224b497
+msgid "Hard materials (Diamond, SiC): 3.0-10.0 J/m²"
+msgstr "Hrd mterils (Dimond, SiC): 3.0-10.0 J/m²"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:311
+#: a13231677e554907a768c323fc694c91
+msgid "**By Miller Index** (for cubic systems):"
+msgstr "**By Miller Index** (برای cubic systems):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:312
+#: 327abcc86ef5467bae74e16ecf672c47
+msgid "Low-index (100), (110), (111): Typically most stable"
+msgstr "Low-index (100), (110), (111): Typiclly most stble"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:313
+#: 2ee14ba345e14b12a88347bf5f9828e6
+msgid "High-index (211), (311), etc.: Higher energy (stepped surfaces)"
+msgstr "High-index (211), (311), etc.: Higher energy (stepped surfces)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:314
+#: 2ec3b5dcc25d41a7bf9309510fba60a8
+msgid "General trend: γ(110) < γ(100) < γ(111) for many FCC metals"
+msgstr "Generl trend: γ(110) < γ(100) < γ(111) برای mny FCC metls"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:316
+#: 8d6d84ac1bd24bc5baa6aa88f9475c08
+msgid "Validation Checks"
+msgstr "Vlidtion Checks"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:318
+#: cfbd68fd425f4810b19471ab62c057d7
+msgid ""
+"✓ **All γ positive**: Negative surface energy indicates error! ✓ "
+"**Symmetry consistency**: γ(100) ≈ γ(010) ≈ γ(001) for cubic systems ✓ "
+"**Literature agreement**: Compare with experimental/DFT values ✓ "
+"**Convergence**: γ changes < 1% when increasing parameters ✓ **Physical "
+"trends**: Lower index → lower energy (generally)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:324
+#: 4fc245783955440c9a6a58f4c14b3c17
+msgid "Surface Energy Interpretation"
+msgstr "Surfce Energy Interprettion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:335
+#: 98b555cd67f6413f9b5e29ae0be30a7f
+msgid "Convergence Testing"
+msgstr "همگرایی Testing"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:337
+#: fcca61e5069c4efca16c05b2157135b1
+msgid "Always test convergence of:"
+msgstr "Alwys test convergence of:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:339
+#: 83a7dfe08615426b840e169f5392afef
+msgid "1. Slab Thickness (Number of Layers)"
+msgstr "1. Slb Thickness (Number of Lyers)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:341
+#: a1b0508d726c421584b362c7a229f055
+msgid "**Test**: 4, 6, 8, 10 layers"
+msgstr "**Test**: 4, 6, 8, 10 lyers"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:343
+#: 0205cfa5619e48fa9cfc3a01e15febad
+msgid "**Criterion**: γ changes by < 0.01 eV/Ų (< 0.16 J/m²)"
+msgstr "**Criterion**: γ chnges by < 0.01 eV/Ų (< 0.16 J/m²)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:345
+#: fe75071021f043b482bbf2a2d74999be
+msgid ""
+"**Why it matters**: Too thin → bulk region not established, surface atoms"
+" interact through slab"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:347
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:369
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:387
+#: 24ab2871b39e4b37b1c2c62afbe43ac6 31daed92f67e4d49b869cd9e7491d939
+#: f491e45f6fa645db9793e74df92f6f19
+msgid "**How to test**:"
+msgstr "**How to test**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:356
+#: 94d44cd191f740dcb029f137a28e476b
+msgid "**Typical convergence**:"
+msgstr "**Typicl convergence**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:357
+#: 5416cc89bec343619a5fad6fc0daebcb
+msgid "Metals: 5-7 layers"
+msgstr "Metls: 5-7 lyers"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:358
+#: 1263e1197c9842429ac931749ddaf4c2
+msgid "Ionic crystals: 4-6 layers"
+msgstr "Ionic crystls: 4-6 lyers"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:359
+#: b282e445237f437b9af52d7e93297db6
+msgid "Covalent materials: 6-10 layers"
+msgstr "Covlent mterils: 6-10 lyers"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:361
+#: 46b356532753450187a57f8fbe58a9ca
+msgid "2. Vacuum Spacing"
+msgstr "2. Vcuum Spcing"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:363
+#: 7f77c781295a4ad8875a87701b6f81ed
+msgid "**Test**: 15, 20, 25 Å"
+msgstr "**Test**: 15, 20, 25 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:365
+#: 7f209a5d789c460ea7236a1e64f46a48
+msgid "**Criterion**: E_slab changes by < 0.001 eV/atom"
+msgstr "**Criterion**: E_slb chnges by < 0.001 eV/tom"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:367
+#: 19383eb35e9d4886aa257f911ea8ac1b
+msgid ""
+"**Why it matters**: Insufficient vacuum → slabs interact between periodic"
+" images"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:377
+#: 8bee445d8dbc4bc7b103e2441bfcaead
+msgid "**Recommendation**: Use 20 Å for production calculations"
+msgstr "**Recommendtion**: Use 20 Å برای production clcultions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:379
+#: 43e45c5c4b9043ab9ab44a847f54fe29
+msgid "3. K-Point Sampling (In-Plane)"
+msgstr "3. K-Point Smpling (In-Plne)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:381
+#: daecb7d07c12499bac9fc74264ceaba3
+msgid "**Test**: [4,4,1], [6,6,1], [8,8,1], [10,10,1]"
+msgstr "**Test**: [4,4,1], [6,6,1], [8,8,1], [10,10,1]"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:383
+#: fe1ad2471e0642d5baabee85f2a76586
+msgid "**Criterion**: γ changes by < 0.005 eV/Ų (< 0.08 J/m²)"
+msgstr "**Criterion**: γ chnges by < 0.005 eV/Ų (< 0.08 J/m²)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:385
+#: caa20a2b3c644cef8600eee284ca880c
+msgid ""
+"**Why it matters**: Surface electronic structure may require denser "
+"sampling than bulk"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:395
+#: d266098d3d464412b5d50c941504c757
+msgid "**Recommendation**: [6,6,1] standard, [8,8,1] high accuracy"
+msgstr "**Recommendtion**: [6,6,1] stوrd, [8,8,1] high ccurcy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:397
+#: fa7e909948744b139470c05c7e313772
+msgid "4. Mesh Cutoff"
+msgstr "4. Mesh Cutoff"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:399
+#: 3cb02618de7a4f7b8a06032ce995ae1d
+msgid "**Test**: 300, 400, 500 Ry"
+msgstr "**Test**: 300, 400, 500 Ry"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:401
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:410
+#: 296bb59b327a452fb334810c6d6f734c dce37e063d57450daea8ec1c8cd37e77
+msgid "**Criterion**: Same as bulk convergence"
+msgstr "**Criterion**: Sme s bulk convergence"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:403
+#: dbde927d151240818398574866eafe52
+msgid "**Important**: Use **same cutoff** for bulk and slab calculations!"
+msgstr "**مهم**: Use **sme cutoff** برای bulk و slb clcultions!"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:405
+#: 29bbfab4b3d94de19f162642098e7b23
+msgid "5. Basis Set Parameters"
+msgstr "5. Bsis Set Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:407
+#: 8b0be5386dec43cfb973b4fd3e57f8da
+msgid ""
+"**PAO.EnergyShift**: 0.01 Ry (standard), 0.005 Ry (high accuracy) "
+"**PAO.BasisSize**: DZP (minimum), TZP (high accuracy)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:412
+#: e75807ce407d4f2a882702ef7fa99393
+msgid "**Important**: Use **same basis** for bulk and slab!"
+msgstr "**مهم**: Use **sme bsis** برای bulk و slb!"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:416
+#: 00a36a0720b246a19846d0d7a4afd6d6
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:418
+#: d5ffd9f4c6084b438328df5802d526a7
+msgid "Issue 1: Negative Surface Energies"
+msgstr "Issue 1: Negtive Surfce Energies"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:420
+#: 182d42d382c64cc8af73b80acd7285ec
+msgid "**Symptoms**: γ < 0 (physically impossible!)"
+msgstr "**Symptoms**: γ < 0 (physiclly impossible!)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:422
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:439
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:454
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:469
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:497
+#: 05e5125d46f7487380cbb6d61143203d 263b278a14fd4c66a20fd427a1f1cf22
+#: 646154f6a300479f978330f76ac8c9e8 7229b02a5b1a4b7197bd1f261c720dcd
+#: 7ebb975ec57b45b09338db84097e599d
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:423
+#: c15a34f4ecde49088df164501f761b21
+msgid "Bulk energy too high or slab energy too low"
+msgstr "Bulk energy too high یا slb energy too low"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:424
+#: 6716a295473948dfb469be68512d028a
+msgid "Different SIESTA parameters for bulk vs slab"
+msgstr "Different SIESTA prmeters برای bulk vs slb"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:425
+#: b6bee64506f246c4bbf8e222f3dc2ca0
+msgid "Poor SCF convergence"
+msgstr "Poیا SCF convergence"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:426
+#: 84415b4e60eb46019134a6e0878a7e82
+msgid "Wrong formula_units_per_cell"
+msgstr "Wrong برایmul_units_per_cell"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:428
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:444
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:459
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:474
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:502
+#: 39bee843d02b4b1b97c1b22a36113ff2 4aee1782bc2a44d9b191a77b51ae4a3e
+#: 8ccc5cf193dd4f37957dcbb9cc0d1375 c5ce1fcf09814299a83047385079b27b
+#: fbd66f2494044f8bb4ab98565772bde1
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:429
+#: 7d871721e9ed490eb1ecc5519d522dd0
+msgid "Use **identical** SIESTA parameters for bulk and slab (except k-points!)"
+msgstr "Use **identicl** SIESTA prmeters برای bulk و slb (except k-points!)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:430
+#: 89c29bdbd5334ac8bef195547561b2af
+msgid "Check SCF convergence: grep \"SCF Convergence\" job_*/output"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:431
+#: d9608902777b493883b6b4691fde1be4
+msgid "Verify formula_units_per_cell matches bulk structure"
+msgstr "Verify برایmul_units_per_cell mtches bulk structure"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:432
+#: 06a600f507e048cf8d568036e345733b
+msgid "Tighten DM.Tolerance (1.0e-5 or smaller)"
+msgstr "Tighten DM.Tolernce (1.0e-5 یا smller)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:433
+#: 9d309c4fb35b45eea0f0c6ae475e7d0f
+msgid "Increase MaxSCFIterations (200 → 500)"
+msgstr "Increse MxSCFItertions (200 → 500)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:435
+#: d2dad74c7d4e47eeb0d9c579f68ad4dd
+msgid "Issue 2: Very Different Energies for Similar Terminations"
+msgstr "Issue 2: Very Different Energies برای Similr Termintions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:437
+#: f2e50216cb7d4d9db0393ac20ee7ff56
+msgid "**Symptoms**: Large γ spread for same Miller index"
+msgstr "**Symptoms**: Lrge γ spred برای sme Miller index"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:440
+#: 5576899a475e474abc286b6dc0d0d4fa
+msgid "Slab too thin (surface atoms interact)"
+msgstr "Slb too thin (surfce toms interct)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:441
+#: 58aaf044adb745d1ab55460df4d3a09c
+msgid "Vacuum too small (slabs interact)"
+msgstr "Vcuum too smll (slbs interct)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:442
+#: a82b8591de724a8fb9bf21cf16fe61d9
+msgid "Polar surface with dipole issues"
+msgstr "Polr surfce با dipole issues"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:445
+#: ef1fd065ce014947aed9500ed4471420
+msgid "Increase slab thickness: 4 → 6 → 8 layers"
+msgstr "Increse slb thickness: 4 → 6 → 8 lyers"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:446
+#: 325eb552accc426fbbfaa56af334a2fe
+msgid "Increase vacuum: 15 → 20 → 25 Å"
+msgstr "Increse vcuum: 15 → 20 → 25 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:447
+#: ef09a69b482f49db8398261fa3da9f42
+msgid "For polar surfaces, use symmetric slabs: `symmetrize=True`"
+msgstr "For polar surfaces, use symmetric slabs: `symmetrize=True`"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:448
+#: 58f9e088e9b140938ceb0533ed9feb4f
+msgid "Consider dipole corrections (SIESTA: SlabDipoleCorrection)"
+msgstr "Consider dipole cیاrections (SIESTA: SlbDipoleCیاrection)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:450
+#: 734e1b840192408a9fac64022c799338
+msgid "Issue 3: Surface Energy Doesn't Converge with Thickness"
+msgstr "Issue 3: Surfce Energy Doesn't Converge با Thickness"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:452
+#: 7e62cdf40d2449b4af0391c0e5495f32
+msgid "**Symptoms**: γ keeps changing significantly with more layers"
+msgstr "**Symptoms**: γ keeps chnging significntly با mیاe lyers"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:455
+#: ca67dc3688a840239b8e38e1b8bceec3
+msgid "Bulk region not established"
+msgstr "Bulk region not estblished"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:456
+#: 653b501c2ae143e6a492766a19385e64
+msgid "Polar surface (net dipole)"
+msgstr "Polr surfce (net dipole)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:457
+#: 18817fd232a0419a951c722fe4deab60
+msgid "Surface reconstruction"
+msgstr "Surfce reconstruction"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:460
+#: dcfff2fc7298439aa5be28178ef1cb02
+msgid "Use more layers (8-10 minimum)"
+msgstr "Use mیاe lyers (8-10 minimum)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:461
+#: 6f0c4f9cbc4e46e18256d3d64d4a8950
+msgid "For polar surfaces, use symmetric slabs"
+msgstr "Fیا polr surfces, use symmetric slbs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:462
+#: 9de88eceebbe439baccba4e7ec8d2d93
+msgid "Consider adding surface relaxation (slab_relax_maker)"
+msgstr "Consider dding surfce relxtion (slb_relx_mker)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:463
+#: 7b194e8e6d084c9f93218b4da362f2dd
+msgid "Check if surface reconstructs (compare relaxed vs unrelaxed)"
+msgstr "Check if surfce reconstructs (compre relxed vs unrelxed)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:465
+#: 142d575b8e1d40c18f792c4f6da09c32
+msgid "Issue 4: SCF Not Converging for Slabs"
+msgstr "Issue 4: SCF Not Converging برای Slbs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:467
+#: 0b8644662fdc4fab841d47972c711d77
+msgid "**Symptoms**: SCF cycles exceed MaxSCFIterations"
+msgstr "**Symptoms**: SCF cycles exceed MxSCFItertions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:470
+#: 54a09616190e4961983830e9a88bb782
+msgid "Electronic structure more complex than bulk"
+msgstr "Electronic structure mیاe complex thn bulk"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:471
+#: eb8eb6fb034d48c6b7879625d529110e
+msgid "Polar surface (difficult charge distribution)"
+msgstr "Polr surfce (difficult chrge distribution)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:472
+#: 277414e6b47c4921b2d608f010fb354e
+msgid "Poor initial guess"
+msgstr "Poیا initil guess"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:475
+#: 93da15feda7e4637bf19f9dc6cc49fe1
+msgid "Increase MaxSCFIterations: 200 → 500"
+msgstr "Increse MxSCFItertions: 200 → 500"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:476
+#: 75dbbc72e57b40a2a86bdfb4f4956323
+msgid "Add electronic temperature:"
+msgstr "Add electronic temperture:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:481
+#: beb8453feab246d9b57c208f9684a1c1
+msgid "Adjust mixer:"
+msgstr "Adjust mixer:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:487
+#: 1d5cac1b31c34563b1d2b00a19559604
+msgid "For difficult cases:"
+msgstr "Fیا difficult cses:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:493
+#: c1127ec427634c87bf84797aed468180
+msgid "Issue 5: \"No terminations found\" Error"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:495
+#: af3ac9bef2604156bacf5702c288dac0
+msgid "**Symptoms**: Workflow fails during slab generation"
+msgstr "**Symptoms**: گردش کار fils during slb genertion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:498
+#: 90b1277d40464ccdaebd16edebb31568
+msgid "Invalid Miller index for the structure"
+msgstr "Invlid Miller index برای  structure"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:499
+#: dd1d96547559484ca68d00c98aafc93f
+msgid "Slab generation parameters too restrictive"
+msgstr "Slb genertion prmeters too restrictive"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:500
+#: 2c7feeb96da44624bb4a59b1c507db51
+msgid "Structure format issue"
+msgstr "Structure برایmt issue"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:503
+#: e5a4620c2a7d48b8b1cb65af19fbe694
+msgid "Verify Miller index is compatible with lattice"
+msgstr "Verify Miller index is comptible با lttice"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:504
+#: a4b219a501e14b34a306e4276f56c45e
+msgid "Try different slab_layers values"
+msgstr "Try different slb_lyers vlues"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:505
+#: 06fe9c5d6337423fa5e3b2737ef135a9
+msgid "Check structure file is valid (view in VESTA)"
+msgstr "Check structure file is vlid (view in VESTA)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:506
+#: 0515c74cd19540dbac2375d230459ab7
+msgid "Try `symmetrize=True` for simple cases"
+msgstr "Try `symmetrize=True` for simple cases"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:510
+#: d3f7209d405b4ff0b5dcc7ec6893766c
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:512
+#: 5d6ee4bb438845da8284b9be3671a352
+msgid "Workflow Design"
+msgstr "گردش کار Design"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:514
+#: 5a2f2d7da2e04dbeaa0305d2bcac3bab
+msgid "**Progressive Testing**:"
+msgstr "**Progressive Testing**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:515
+#: f705e102f0414575a3b0a435f9a6af99
+msgid "Dry-run first with basic example"
+msgstr "Dry-run first با bsic exmple"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:516
+#: 56700d4f864a4ae7be9a10db12619171
+msgid "Run basic example to verify workflow"
+msgstr "Run bsic exmple to verify wیاkflow"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:517
+#: f7460dc88f944d75b20322ad787ca722
+msgid "Test convergence systematically"
+msgstr "Test convergence systemticlly"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:518
+#: e49ef4b9002d4ac99e2d9980c900a4d1
+msgid "Production run with converged parameters"
+msgstr "Production run با converged prmeters"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:519
+#: c5a4b87400f242688e146b630bb394af
+msgid "Multi-surface comparison for complete analysis"
+msgstr "Multi-surfce comprison برای complete nlysis"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:521
+#: 536de9b2d0554608bf22eb3f621b6a81
+msgid "**Parameter Consistency**:"
+msgstr "**Prmeter Consistency**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:522
+#: 445cb287dfec46ac8724c557f8b1c15b
+msgid "✓ Same SIESTA parameters for bulk and slab (except k-points!)"
+msgstr "✓ Sme SIESTA prmeters برای bulk و slb (except k-points!)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:523
+#: 0d3a81cd80834c9c93176ceff30ef8c1
+msgid "✓ Same basis set, cutoff, DM.Tolerance, etc."
+msgstr "✓ Sme bsis set, cutoff, DM.Tolernce, etc."
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:524
+#: 030dbc9b743b4fc08798d82d551c34fa
+msgid "✓ Only difference: slab uses [n,n,1] k-points"
+msgstr "✓ Only difference: slb uses [n,n,1] k-points"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:526
+#: 786e8fd14e5f497785f730acc3fe2160
+msgid "Parameter Selection"
+msgstr "Prmeter Selection"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:528
+#: 344de4f3126a4459916f8e7374b327df
+msgid "**Testing** (quick validation, ~10-15 min):"
+msgstr "**Testing** (quick vlidtion, ~10-15 min):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:529
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:536
+#: 4770dae98766406a88f68759bd1dac2d 771f5dddc58c42c2ae5305aa7cd79275
+msgid "PAO.BasisSize: DZP"
+msgstr "PAO.BsisSize: DZP"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:530
+#: f87ad327c3e44fc7825354c5b2004c34
+msgid "Mesh.Cutoff: 100 Ry"
+msgstr "Mesh.Cutoff: 100 Ry"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:531
+#: aa52dd8c12394496bf5559f51e49978e
+msgid "K-points: [2,2,2] bulk, [2,2,1] slab"
+msgstr "K-points: [2,2,2] bulk, [2,2,1] slb"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:532
+#: ac4483e8cc6541f4a2bfe5d0ae61ef0a
+msgid "Slab layers: 4"
+msgstr "Slb lyers: 4"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:533
+#: af92f3c045d7485f8d8724679861a94e
+msgid "Vacuum: 15 Å"
+msgstr "Vcuum: 15 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:535
+#: 12d6f6ecdfcc424b9101eef553e8fecb
+msgid "**Standard** (production, ~30 min - 1 hour per surface):"
+msgstr "**Stوrd** (production, ~30 min - 1 hour per surfce):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:537
+#: 86558e0c0244438680af31e00787aef2
+msgid "Mesh.Cutoff: 300 Ry"
+msgstr "Mesh.Cutoff: 300 Ry"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:538
+#: f4f15d29164e4e928e254794319cf5be
+msgid "K-points: [6,6,6] bulk, [6,6,1] slab"
+msgstr "K-points: [6,6,6] bulk, [6,6,1] slb"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:539
+#: 913e16a47fac4d0c8ebd79c4a2e0122f
+msgid "Slab layers: 5-6"
+msgstr "Slb lyers: 5-6"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:540
+#: c6d3fecf841b464abf6f44e776faa81b
+msgid "Vacuum: 20 Å"
+msgstr "Vcuum: 20 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:542
+#: bef1ff55ef4148c78bb036f40b4da52d
+msgid "**High Accuracy** (publication, ~2-4 hours per surface):"
+msgstr "**High Accurcy** (publiction, ~2-4 hours per surfce):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:543
+#: bc8595ad1e2445deae4e0a636b342572
+msgid "PAO.BasisSize: TZP"
+msgstr "PAO.BsisSize: TZP"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:544
+#: 3696e3d0c9d849c7ac411181247032fc
+msgid "Mesh.Cutoff: 500 Ry"
+msgstr "Mesh.Cutoff: 500 Ry"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:545
+#: eecf1a86f91c46a1995756b05cd766bd
+msgid "K-points: [8,8,8] bulk, [8,8,1] slab"
+msgstr "K-points: [8,8,8] bulk, [8,8,1] slb"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:546
+#: aab0d321821c4892bce0809f2451bf05
+msgid "Slab layers: 8-10"
+msgstr "Slb lyers: 8-10"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:547
+#: 9398fc243c2c4db2a3cdbbffa20fb75d
+msgid "Vacuum: 25 Å"
+msgstr "Vcuum: 25 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:549
+#: 76d789a32dcd4974b5f78d929920b97d
+msgid "Slab Generation"
+msgstr "Slb Genertion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:551
+#: 9dd903c472904efc82db3789cee02218
+msgid "**Asymmetric vs Symmetric**:"
+msgstr "**Asymmetric vs Symmetric**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:552
+#: 168b94c03cde41a7a3a837ce0b6375cc
+msgid "Start with `symmetrize=False` to discover all terminations"
+msgstr "Start with `symmetrize=False` to discover all terminations"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:553
+#: 817eb14958e8484b92e748effe2d0aa0
+msgid "Use `symmetrize=True` for polar surfaces (production)"
+msgstr "Use `symmetrize=True` for polar surfaces (production)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:554
+#: ec1bcf129e0a42b69c40e2f50c124772
+msgid "Asymmetric good for exploration, symmetric for accuracy"
+msgstr "Asymmetric good برای explیاtion, symmetric برای ccurcy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:556
+#: ed0922a19bec472b836dd7c1b46bd972
+msgid "**Slab Thickness**:"
+msgstr "**Slb Thickness**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:557
+#: 7add12d49bcb410e93a01205d1570714
+msgid "Minimum: 4 layers (testing only)"
+msgstr "Minimum: 4 lyers (testing only)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:558
+#: 946a36a2260c4e52a724a876a638ba6f
+msgid "Standard: 5-6 layers"
+msgstr "Stوrd: 5-6 lyers"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:559
+#: f0375cb69bbc4d40b7bbbd92709a5075
+msgid "High accuracy: 8-10 layers"
+msgstr "High ccurcy: 8-10 lyers"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:560
+#: d3fc717fb7164fc69c0722752951c755
+msgid "Always test convergence!"
+msgstr "Alwys test convergence!"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:562
+#: 8a995479f53a4cecbe51f9b9591c2bac
+msgid "**Vacuum Spacing**:"
+msgstr "**Vcuum Spcing**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:563
+#: c9f2b7b90b504279b3193248e0cda63b
+msgid "Minimum: 15 Å"
+msgstr "Minimum: 15 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:564
+#: a46ea05ebdc142a98fd338e42dfd1229
+msgid "Recommended: 20 Å"
+msgstr "Recommended: 20 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:565
+#: d8f626e673b140218ae1c0b178899506
+msgid "High accuracy: 25 Å"
+msgstr "High ccurcy: 25 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:566
+#: 384879e00eee40599f64e67c455ad2b5
+msgid "Check convergence with vacuum test"
+msgstr "Check convergence با vcuum test"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:570
+#: 914493c9c652429e8fc41c91d06aaf54
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:572
+#: 66e5bb324455415b8ad28d492dde8a76
+msgid "Wulff Construction"
+msgstr "Wulff Construction"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:574
+#: 22b656c90c0d4a0d9c06e0799510a44c
+msgid "**Purpose**: Predict equilibrium crystal shape from surface energies"
+msgstr "**Purpose**: Predict equilibrium crystl shpe from surfce energies"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:576
+#: 1922f69d83fd4ebc9b324108c7e57564
+msgid "**Method**:"
+msgstr "**Method**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:577
+#: fbe521f71a134fbfb310d8c0198ed5c2
+msgid "Calculate γ for all relevant Miller indices (multi_surface example)"
+msgstr "Clculte γ برای ll relevnt Miller indices (multi_surfce exmple)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:578
+#: 0c5f2d886ed04277a39dc1d48465aaae
+msgid "For each surface, construct plane at distance γ from origin"
+msgstr "Fیا ech surfce, construct plne t distnce γ from یاigin"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:579
+#: 37cd3a5a59d0456cb45ac90e5e5db05d
+msgid "Inner envelope of planes = equilibrium shape"
+msgstr "Inner envelope of plnes = equilibrium shpe"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:581
+#: 36f5d5ed31974ec795793a7c539819a2
+msgid "**Implementation** (pymatgen):"
+msgstr "**Implementtion** (pymtgen):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:601
+#: a372666f56d64f7a9b95456cf0e6eb97
+msgid "Surface Relaxation"
+msgstr "Surfce Relxtion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:603
+#: ca714f58fcc14504b9edccfd47d35cc2
+msgid ""
+"**Why Needed**: Surface atoms relax to minimize energy (different from "
+"bulk positions)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:605
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:646
+#: 13a6f6273e9e4abb84417ed8d1a17aa0 1f7f5f996d574b63bfa2d141e23e360f
+msgid "**Implementation**:"
+msgstr "**Implementtion**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:626
+#: bb80beacdc3147d58232e76131666269
+msgid "**Important**: Relaxation increases computation time significantly!"
+msgstr "**مهم**: Relxtion increses computtion time significntly!"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:628
+#: fa3d7f1c34dc4429af4e5483a6853581
+msgid "Dipole Corrections"
+msgstr "Dipole Cیاrections"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:630
+#: 68386e8c22e6433bb7250100b9ac90dd
+msgid "**When Needed**: Polar surfaces with asymmetric slabs"
+msgstr "**When Needed**: Polr surfces با symmetric slbs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:632
+#: aeca3652014d4d75842d4fd211b21195
+msgid "**SIESTA Implementation**:"
+msgstr "**SIESTA Implementtion**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:640
+#: a7a2a07cacb94a6996b901c10be7da93
+msgid "**Effect**: Removes artificial electric field from net dipole moment"
+msgstr "**Effect**: Removes rtificil electric field from net dipole moment"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:642
+#: bacc5a060a624d0cab47d0094bf0707c
+msgid "High-Pressure Surfaces"
+msgstr "High-Pressure Surfces"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:644
+#: a84ca21e877f4aa99ce7f5b05b516f24
+msgid "**Motivation**: Surface stability changes under pressure"
+msgstr "**Motivtion**: Surfce stbility chnges under pressure"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:656
+#: 044ae9408b114abf9754a3208802ddb8
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:658
+#: 298e88fd17994cfc81a9953a21e5df70
+msgid ""
+"✅ **Start with dry_run**: Verify workflow structure before expensive "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:660
+#: d0461e625706439aa590532d0aa3753a
+msgid ""
+"✅ **Test basic example first**: Ensure everything works before multi-"
+"surface"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:662
+#: 42bfbc94539b4307b2b242b2fe216545
+msgid ""
+"✅ **Same parameters for bulk and slab**: Except k-points ([n,n,n] vs "
+"[n,n,1])"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:664
+#: 5ed1616959e94454864ff377cd813c54
+msgid "✅ **Slab k-points critical**: Dense in-plane [6,6,1], Γ-point in z"
+msgstr "✅ **Slb k-points criticl**: Dense in-plne [6,6,1], Γ-point in z"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:666
+#: 1de9fa80ebff4d2c9d6c619688c4470d
+msgid "✅ **Test convergence systematically**: Thickness, vacuum, k-points"
+msgstr "✅ **Test convergence systemticlly**: Thickness, vcuum, k-points"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:668
+#: 050d24ed0d6147a8ad68e0d99ca38086
+msgid "✅ **Compare with literature**: Validate against experimental/DFT values"
+msgstr "✅ **Compre با literture**: Vlidte ginst experimentl/DFT vlues"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:670
+#: 3be7df7a7bfe41be948c38f00060cec5
+msgid ""
+"✅ **Use multi-surface for Wulff**: Need all Miller indices for "
+"equilibrium shape"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:672
+#: e9c9626a7d974779b3f564ebdc1100f6
+msgid "✅ **Polar surfaces need care**: Use symmetric slabs or dipole corrections"
+msgstr "✅ **Polr surfces need cre**: Use symmetric slbs یا dipole cیاrections"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:674
+#: 9cc734081bcd41af88ab4ea2d7b2d93f
+msgid "✅ **Check SCF convergence**: Slabs may need more iterations than bulk"
+msgstr "✅ **Check SCF convergence**: Slbs my need mیاe itertions thn bulk"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:676
+#: e8108eb2b7b94bd494c5177a44a29b03
+msgid "✅ **Document parameters**: Record all settings for reproducibility"
+msgstr "✅ **Document prmeters**: Recیاd ll settings برای reproducibility"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:680
+#: 8c3dc33e578e4de78124e1ac2e185032
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:682
+#: a933470910d14181bc0330b54b87240b
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:684
+#: 6df4515b581a45a3bdd8a86c93817262
+msgid ""
+"**Basic Workflow**: → Run basic example with dry_run → Execute basic "
+"example locally → Analyze output plots and summaries → Compare with "
+"literature values"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:690
+#: 87d653e1c8b94d5abe2d86062e1bd406
+msgid ""
+"**Convergence Testing**: → Test slab thickness (convergence example) → "
+"Test vacuum spacing → Test k-point mesh (in-plane) → Establish converged "
+"parameters"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:696
+#: 0f3d1ef4c3d14fac80084bd4e7be7d8e
+msgid ""
+"**Multi-Surface Analysis**: → Run multi_surface example → Identify most "
+"stable surface → Construct Wulff shape → Predict crystal morphology"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:702
+#: 46f7930c32994eadb2869c3376a1e0cb
+msgid ""
+"**Advanced Applications**: → Add surface relaxation → Calculate work "
+"functions → Study adsorption (tutorial 02-adsorption-scanning) → Surface "
+"reconstruction analysis → Pressure-dependent surface stability"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:709
+#: c73cc9a421504c6e81a155b69f211232
+msgid ""
+"**Other Materials**: → Metals (Cu, Au, Pt) → Semiconductors (Si, GaAs, "
+"ZnO) → 2D materials (graphene, MoS₂) → Ionic crystals (NaCl, LiF)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:717
+#: 12ca3feb5cee4d60a656b275ce32e5ee
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:719
+#: f25b034003ec4401bda224ca4d7cdb2f
+msgid ""
+"**Tasker, P. W.** (1979). \"The stability of ionic crystal surfaces.\" "
+"*J. Phys. C: Solid State Phys.* 12, 4977. "
+"[DOI:10.1088/0022-3719/12/22/036](https://doi.org/10.1088/0022-3719/12/22/036)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:721
+#: f843f290d7304de08bf4c9c831fbf5fe
+msgid ""
+"**Fiorentini, V. & Methfessel, M.** (1996). \"Extracting convergent "
+"surface energies from slab calculations.\" *J. Phys.: Condens. Matter* 8,"
+" 6525. "
+"[DOI:10.1088/0953-8984/8/36/005](https://doi.org/10.1088/0953-8984/8/36/005)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:723
+#: 1120c0d88c7445b28817e4939731e47e
+msgid ""
+"**de Leeuw, N. H. et al.** (1999). \"Surface structure and morphology of "
+"magnesium oxide.\" *J. Phys. Chem. B* 103, 1270. "
+"[DOI:10.1021/jp983239z](https://doi.org/10.1021/jp983239z)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:725
+#: c139bae9d06c4c6e9493eb9955ab54ad
+msgid ""
+"**Sun, W. et al.** (2016). \"The thermodynamic scale of inorganic "
+"crystalline metastability.\" *Sci. Adv.* 2, e1600225. "
+"[DOI:10.1126/sciadv.1600225](https://doi.org/10.1126/sciadv.1600225)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:727
+#: 951dd4531d8a4384b728db6668379c4c
+msgid ""
+"**Stekolnikov, A. A. et al.** (2002). \"Absolute surface energies of "
+"group-IV semiconductors: Dependence on orientation and reconstruction.\" "
+"*Phys. Rev. B* 65, 115318. "
+"[DOI:10.1103/PhysRevB.65.115318](https://doi.org/10.1103/PhysRevB.65.115318)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:729
+#: da8d7c775839415da9cd47417f6eeda6
+msgid ""
+"**Wulff, G.** (1901). \"Zur Frage der Geschwindigkeit des Wachstums und "
+"der Auflösung der Kristallflächen.\" *Z. Kristallogr.* 34, 449."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/README.md:733
+#: bfff015561da4c64b5e3dcede84077dd
+msgid ""
+"*Back to [06-surfaces-and-adsorption](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

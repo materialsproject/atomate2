@@ -1,0 +1,1556 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tier-system.rst:3 3389b690dee441a98e61721ad54fa3d9
+msgid "Tier-Based Input System"
+msgstr "سیستم ورودی مبتنی بر سطح‌بندی"
+
+#: ../../source/tier-system.rst:5 00beaedc2a854b5191088fc85b9567fa
+msgid ""
+"**Automatic activation of SIESTA parameter modules based on calculation "
+"complexity**"
+msgstr ""
+"**فعال‌سازی خودکار ماژول‌های پارامتر SIESTA بر اساس پیچیدگی محاسبات**"
+
+#: ../../source/tier-system.rst:7 7da7ea8ee8304a098d47fc2ba462578b
+msgid ""
+"The tier-based input architecture organizes 24+ SIESTA parameter "
+"dataclass modules into four hierarchical complexity tiers, enabling "
+"automatic module activation and material-specific presets."
+msgstr ""
+"معماری ورودی مبتنی بر سطح‌بندی بیش از ۲۴ ماژول کلاس داده پارامتر SIESTA را "
+"در چهار سطح سلسله‌مراتبی پیچیدگی سازماندهی می‌کند و امکان فعال‌سازی خودکار "
+"ماژول‌ها و پیش‌تنظیم‌های اختصاصی مواد را فراهم می‌آورد."
+
+#: ../../source/tier-system.rst:10 d13e218f6c8b449594f2263bdfb93c74
+msgid "Complete module registry system with automatic initialization"
+msgstr "سیستم ثبت کامل ماژول با مقداردهی اولیه خودکار"
+
+#: ../../source/tier-system.rst:14 a8ae61e3011648489f7422a478fc69dd
+msgid ""
+"**Common Confusion**: The tier system has two separate concepts - tier "
+"levels (for module activation) and tier defaults (parameter sets). If you"
+" encounter errors like \"Invalid tier\" or \"'RelaxSetGenerator' object "
+"has no attribute '_md_relaxation_module'\", see :doc:`tier-system-"
+"clarification` for detailed explanation and solutions."
+msgstr ""
+"**سردرگمی رایج**: سیستم سطح‌بندی دو مفهوم جداگانه دارد - سطوح (برای فعال‌سازی ماژول) "
+"و پیش‌فرض‌های سطح (مجموعه پارامترها). اگر با خطاهایی مانند \"Invalid tier\" یا "
+"\"'RelaxSetGenerator' object has no attribute '_md_relaxation_module'\" مواجه شدید، "
+"برای توضیحات تفصیلی و راه‌حل‌ها به :doc:`tier-system-clarification` مراجعه کنید."
+
+#: ../../source/tier-system.rst:22 623d6d96a7e94a0c812ae37bf838da03
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tier-system.rst:25 5b96e9eb5c2e43a68db7521424180efd
+msgid "Problem Solved"
+msgstr "مشکل حل‌شده"
+
+#: ../../source/tier-system.rst:27 44d5637ef60240aea263037b8306981e
+msgid ""
+"Previously, only 7 out of 28 dataclass modules were manually initialized,"
+" meaning:"
+msgstr ""
+"قبلاً، تنها ۷ مورد از ۲۸ ماژول کلاس داده به صورت دستی مقداردهی اولیه می‌شدند، "
+"به این معنی که:"
+
+#: ../../source/tier-system.rst:29 69330f992a714ab8afc3338854446db6
+#, python-format
+msgid "75% of SIESTA parameters were inaccessible via powerups"
+msgstr "۷۵٪ از پارامترهای SIESTA از طریق powerup ها قابل دسترسی نبودند"
+
+#: ../../source/tier-system.rst:30 99de0c1227b84601a2169e148ef21b44
+msgid "Manual code changes required to activate new parameter categories"
+msgstr "تغییرات دستی کد برای فعال‌سازی دسته‌بندی‌های جدید پارامتر مورد نیاز بود"
+
+#: ../../source/tier-system.rst:31 e7caec268b624462a072c333f1d74f51
+msgid "No organization by calculation complexity"
+msgstr "سازماندهی بر اساس پیچیدگی محاسبات وجود نداشت"
+
+#: ../../source/tier-system.rst:32 7dd1fba7fc6049fe9363ef48137a5787
+msgid "Difficult to manage parameter combinations for different materials"
+msgstr "مدیریت ترکیبات پارامتر برای مواد مختلف دشوار بود"
+
+#: ../../source/tier-system.rst:35 2fc726cadf6b4401b6fd45ee37b4c16c
+msgid "Solution"
+msgstr "راه‌حل"
+
+#: ../../source/tier-system.rst:37 20b7fceaeb344b709f5a826ae872c872
+msgid "The tier system provides:"
+msgstr "سیستم سطح‌بندی ارائه می‌دهد:"
+
+#: ../../source/tier-system.rst:39 cb93f6881e714bc8962d404ef51fc8d8
+msgid "✅ **Automatic module activation** based on calculation type"
+msgstr "✅ **فعال‌سازی خودکار ماژول** بر اساس نوع محاسبات"
+
+#: ../../source/tier-system.rst:41 f3a8343f040440638d5494bb058a5007
+msgid "✅ **4-tier hierarchy**: basic → intermediate → advanced → expert"
+msgstr "✅ **سلسله‌مراتب ۴ سطحی**: basic → intermediate → advanced → expert"
+
+#: ../../source/tier-system.rst:43 a193f74a71d946e9a43decb4883b815e
+msgid "✅ **24+ modules** organized by complexity and priority"
+msgstr "✅ **بیش از ۲۴ ماژول** سازماندهی‌شده بر اساس پیچیدگی و اولویت"
+
+#: ../../source/tier-system.rst:45 2362b63304844be29a3b7175a7896a58
+msgid "✅ **14 material-specific presets** for common calculations"
+msgstr "✅ **۱۴ پیش‌تنظیم اختصاصی مواد** برای محاسبات رایج"
+
+#: ../../source/tier-system.rst:47 251dda5b479347b9a137df84fb8aa033
+msgid "✅ **< 25ms overhead** for full module set (performance-tested)"
+msgstr "✅ **سربار کمتر از ۲۵ میلی‌ثانیه** برای مجموعه کامل ماژول‌ها (تست عملکرد شده)"
+
+#: ../../source/tier-system.rst:52 33d3e92870cb430aa8265bcf71a53f98
+msgid "The Four-Tier Hierarchy"
+msgstr "سلسله‌مراتب چهار سطحی"
+
+#: ../../source/tier-system.rst:54 2f0d726243624130916dd5b9e4c5aefc
+msgid ""
+"Tiers are **hierarchical** (cumulative): advanced tier includes all basic"
+" + intermediate + advanced modules."
+msgstr ""
+"سطوح **سلسله‌مراتبی** (تجمعی) هستند: سطح advanced شامل تمام ماژول‌های "
+"basic + intermediate + advanced است."
+
+#: ../../source/tier-system.rst:60 6bda940f507c4198a573af5d60879059
+msgid "Tier"
+msgstr "سطح"
+
+#: ../../source/tier-system.rst:61 c49f110c48b543c193b3c8c6a8f95c2a
+msgid "Modules"
+msgstr "ماژول‌ها"
+
+#: ../../source/tier-system.rst:62 3941e114074c4ba3a5633d0df82264ef
+msgid "Use Case"
+msgstr "مورد استفاده"
+
+#: ../../source/tier-system.rst:63 ../../source/tier-system.rst:609
+#: 24dab3e8ad7b49b38d98696324a6ed34 395944a3ff1f4936a9a0203400f8e931
+msgid "Performance"
+msgstr "عملکرد"
+
+#: ../../source/tier-system.rst:64 15827d044cd14bdb8eda7695b5534b12
+msgid "When to Use"
+msgstr "چه زمانی استفاده شود"
+
+#: ../../source/tier-system.rst:65 0c84f95a2d084a4e8e116cbffec15733
+msgid "**basic**"
+msgstr "**basic**"
+
+#: ../../source/tier-system.rst:66 cbc43cc0557341ffa567332520f8600c
+msgid "6"
+msgstr "۶"
+
+#: ../../source/tier-system.rst:67 54b158f103a942d0a5b8bb93f3642c9e
+msgid "Quick tests, workflow debugging"
+msgstr "تست‌های سریع، اشکال‌زدایی جریان کار"
+
+#: ../../source/tier-system.rst:68 afd2b3b3660d447cbef5061718334647
+msgid "~17 ms"
+msgstr "~۱۷ میلی‌ثانیه"
+
+#: ../../source/tier-system.rst:69 20ca28229b8f417595ab1ddca64399fd
+msgid "Testing only"
+msgstr "فقط آزمایش"
+
+#: ../../source/tier-system.rst:70 1f07204f8b4246ac96b06cc5975f275f
+msgid "**intermediate**"
+msgstr "**intermediate**"
+
+#: ../../source/tier-system.rst:71 7e83db2ed83b4830a3871acb7b9d7295
+msgid "12"
+msgstr "۱۲"
+
+#: ../../source/tier-system.rst:72 a490fa1091b24f1fa35c927f9e1282e2
+msgid "Standard calculations (DEFAULT)"
+msgstr "محاسبات استاندارد (پیش‌فرض)"
+
+#: ../../source/tier-system.rst:73 f76b57918ff1494c98ded3d606f22300
+msgid "~20 ms"
+msgstr "~۲۰ میلی‌ثانیه"
+
+#: ../../source/tier-system.rst:74 4de070d3202841b39ae1432b11ccfaf4
+msgid "Most production work"
+msgstr "بیشتر کارهای تولیدی"
+
+#: ../../source/tier-system.rst:75 96b5b0f7cc8c454db922268841467550
+msgid "**advanced**"
+msgstr "**advanced**"
+
+#: ../../source/tier-system.rst:76 5947e865813040299a1c553a2935c808
+msgid "19"
+msgstr "۱۹"
+
+#: ../../source/tier-system.rst:77 6406beb16202492ab61654d295481d5c
+msgid "Phonons, optical, DFT+U, surfaces"
+msgstr "فونون‌ها، نوری، DFT+U، سطوح"
+
+#: ../../source/tier-system.rst:78 ed72c41f211047f7996870665f335d9d
+msgid "~22 ms"
+msgstr "~۲۲ میلی‌ثانیه"
+
+#: ../../source/tier-system.rst:79 7e8077528da1440e951ae9085cee9e27
+msgid "Specialized properties"
+msgstr "ویژگی‌های تخصصی"
+
+#: ../../source/tier-system.rst:80 3fa3c24373b441b4bf2545b0e4fd7c10
+msgid "**expert**"
+msgstr "**expert**"
+
+#: ../../source/tier-system.rst:81 6b92791c05e54093aea071fc4aaa9713
+msgid "24"
+msgstr "۲۴"
+
+#: ../../source/tier-system.rst:82 e99566c1533344acbee30fb9260540f7
+msgid "Performance tuning, large systems"
+msgstr "تنظیم عملکرد، سیستم‌های بزرگ"
+
+#: ../../source/tier-system.rst:83 cde2ef6739504393b501e46e992a3441
+msgid "~23 ms"
+msgstr "~۲۳ میلی‌ثانیه"
+
+#: ../../source/tier-system.rst:84 56215c767da54feca723b7386e22e7a2
+msgid "HPC optimization"
+msgstr "بهینه‌سازی HPC"
+
+#: ../../source/tier-system.rst:87 07dd1df885664009af1852a90c0da462
+msgid "Module Categories by Tier"
+msgstr "دسته‌بندی ماژول‌ها بر اساس سطح"
+
+#: ../../source/tier-system.rst:90 213f619d062e4492bd4019534bfa5c84
+msgid "Basic Tier (6 modules)"
+msgstr "سطح پایه (۶ ماژول)"
+
+#: ../../source/tier-system.rst:92 ebb69d6e09874e9fa47d67b6fc4f63f2
+msgid "**Essential for any calculation**:"
+msgstr "**ضروری برای هر محاسبه‌ای**:"
+
+#: ../../source/tier-system.rst:94 99ab9c7028134b7daa3a0b2356a947fb
+msgid "``pseudopotentials`` - Pseudopotential file paths"
+msgstr "``pseudopotentials`` - مسیرهای فایل شبه‌پتانسیل"
+
+#: ../../source/tier-system.rst:95 bb47f81db7f54e4d80044cdb569c4aac
+msgid ""
+"``basis_sets_and_projectors`` - PAO basis set parameters (size, shift, "
+"norm)"
+msgstr ""
+"``basis_sets_and_projectors`` - پارامترهای مجموعه پایه PAO (اندازه، انتقال، نرم)"
+
+#: ../../source/tier-system.rst:96 cea5aefca5dc4177875205c931bdddfa
+msgid "``xc_functional`` - Exchange-correlation functional (LDA, GGA, etc.)"
+msgstr "``xc_functional`` - تابعک تبادل-همبستگی (LDA، GGA و غیره)"
+
+#: ../../source/tier-system.rst:97 ea1bbcca16c0463e9542f4ddd7c99bfc
+msgid "``kpoints`` - K-point sampling for Brillouin zone"
+msgstr "``kpoints`` - نمونه‌برداری نقاط k برای ناحیه بریلوئن"
+
+#: ../../source/tier-system.rst:98 d705ce8bc2ec45a7956f2e6bfae97e38
+msgid "``mesh_cutoff`` - Real-space grid cutoff energy"
+msgstr "``mesh_cutoff`` - انرژی برش شبکه فضای حقیقی"
+
+#: ../../source/tier-system.rst:99 4af62ad329e2454d980bffe6a04f2e4d
+msgid "``general_system`` - System descriptors (label, energy units)"
+msgstr "``general_system`` - توصیف‌گرهای سیستم (برچسب، واحدهای انرژی)"
+
+#: ../../source/tier-system.rst:102 284b714a9005453fabe6dfb3d7a4873b
+msgid "Intermediate Tier (+6 modules)"
+msgstr "سطح متوسط (۶+ ماژول)"
+
+#: ../../source/tier-system.rst:104 c1cd9d7587154aa9ae2a2421d7dae131
+msgid "**Common advanced features**:"
+msgstr "**ویژگی‌های پیشرفته رایج**:"
+
+#: ../../source/tier-system.rst:106 2fc91ac34df14f0e886160cc28bf5eaf
+msgid "``spin`` - Spin polarization settings"
+msgstr "``spin`` - تنظیمات قطبش اسپین"
+
+#: ../../source/tier-system.rst:107 88ff0fd7349d4b3db595d85c098f27c4
+msgid "``scf_loop_parameters`` - SCF convergence (mixer, tolerance)"
+msgstr "``scf_loop_parameters`` - همگرایی SCF (مخلوط‌کننده، تلرانس)"
+
+#: ../../source/tier-system.rst:108 f0e29f5b18174e9fb14760729d1074a1
+msgid ""
+"``electronic_structure_calculation_options`` - Occupation functions, "
+"smearing"
+msgstr ""
+"``electronic_structure_calculation_options`` - توابع اشغال، گسترش"
+
+#: ../../source/tier-system.rst:109 f3e9142633024a53b092e2ba671b960f
+msgid "``md_relaxation`` - MD and geometry relaxation settings"
+msgstr "``md_relaxation`` - تنظیمات آرام‌سازی MD و هندسه"
+
+#: ../../source/tier-system.rst:110 314031ba48ad4c65be1cf3d19baf0272
+msgid "``constraints`` - Atomic position/cell constraints"
+msgstr "``constraints`` - محدودیت‌های موقعیت اتمی/سلول"
+
+#: ../../source/tier-system.rst:111 3fe858599f724179b5afb9a2754bfbd9
+msgid "``lua_scripting`` - Lua scripting for advanced features (FLOS)"
+msgstr "``lua_scripting`` - اسکریپت‌نویسی Lua برای ویژگی‌های پیشرفته (FLOS)"
+
+#: ../../source/tier-system.rst:114 6239bf20f2224020a87f91e9386d0007
+msgid "Advanced Tier (+7 modules)"
+msgstr "سطح پیشرفته (۷+ ماژول)"
+
+#: ../../source/tier-system.rst:116 248c560b31bc4722b1b4d70412cdc8b6
+msgid "**Specialized calculations**:"
+msgstr "**محاسبات تخصصی**:"
+
+#: ../../source/tier-system.rst:118 bc143c0867a34925b4cc7a5e979fd4da
+msgid "``phonons`` - Phonon calculation parameters"
+msgstr "``phonons`` - پارامترهای محاسبات فونون"
+
+#: ../../source/tier-system.rst:119 c1e0b0a64bbe4ac184312145f5831f09
+msgid "``optical`` - Optical properties and polarizability"
+msgstr "``optical`` - خواص نوری و قطبش‌پذیری"
+
+#: ../../source/tier-system.rst:120 d0b7d288105c4772a2c61940b8f54c1c
+msgid "``dos_bands`` - DOS and band structure options"
+msgstr "``dos_bands`` - گزینه‌های DOS و ساختار نواری"
+
+#: ../../source/tier-system.rst:121 c4d20d72329744359548474d1a9d2f94
+msgid "``dftu`` - DFT+U parameters for correlated systems"
+msgstr "``dftu`` - پارامترهای DFT+U برای سیستم‌های همبسته"
+
+#: ../../source/tier-system.rst:122 6b12242c05bc40a6b8110122f7d4e78e
+msgid "``charge_dipole`` - Electric fields, dipole corrections"
+msgstr "``charge_dipole`` - میدان‌های الکتریکی، تصحیحات دوقطبی"
+
+#: ../../source/tier-system.rst:123 1b15384f746b4481b053f454829d4d64
+msgid "``grids_advanced`` - Advanced real-space grid settings"
+msgstr "``grids_advanced`` - تنظیمات پیشرفته شبکه فضای حقیقی"
+
+#: ../../source/tier-system.rst:124 6b52b481eb474c16b748b85be03c7c88
+msgid "``denchar`` - Charge density plotting options"
+msgstr "``denchar`` - گزینه‌های رسم چگالی بار"
+
+#: ../../source/tier-system.rst:127 4c1c643f7db84f11b227319ea730d948
+msgid "Expert Tier (+5 modules)"
+msgstr "سطح خبره (۵+ ماژول)"
+
+#: ../../source/tier-system.rst:129 ee6eb9c4f88f418294cce3342db624db
+msgid "**Performance tuning and optimization**:"
+msgstr "**تنظیم و بهینه‌سازی عملکرد**:"
+
+#: ../../source/tier-system.rst:131 71d8679329574d558e9d426c4919e02e
+msgid "``parallel`` - MPI parallelization settings"
+msgstr "``parallel`` - تنظیمات موازی‌سازی MPI"
+
+#: ../../source/tier-system.rst:132 f9f60024a3de4e75bc65c59266571865
+msgid "``solvers`` - Diagonalization methods and solvers"
+msgstr "``solvers`` - روش‌های قطری‌سازی و حل‌کننده‌ها"
+
+#: ../../source/tier-system.rst:133 e07026b8bec44b5b8d1d83c418c2b748
+msgid "``efficiency`` - Memory and I/O optimization"
+msgstr "``efficiency`` - بهینه‌سازی حافظه و ورودی/خروجی"
+
+#: ../../source/tier-system.rst:134 fc4c73943fee4b2096de731e23a7e63a
+msgid "``hamiltonian_overlap`` - Matrix storage and cutoffs"
+msgstr "``hamiltonian_overlap`` - ذخیره‌سازی ماتریس و برش‌ها"
+
+#: ../../source/tier-system.rst:135 89f62f06be90478db1b6088be904b9e9
+msgid "``netcdf`` - NetCDF output options"
+msgstr "``netcdf`` - گزینه‌های خروجی NetCDF"
+
+#: ../../source/tier-system.rst:140 1825f6e83324499987895fa67c14a799
+msgid "Usage Examples"
+msgstr "نمونه‌های استفاده"
+
+#: ../../source/tier-system.rst:143 bab30628c64f4c968e1a163f913d5c6d
+msgid "Method 1: Direct Tier Parameter"
+msgstr "روش ۱: پارامتر مستقیم سطح"
+
+#: ../../source/tier-system.rst:145 d8b013414ae1478d888dd7fbbb5d699e
+msgid "Pass ``tier`` directly to Maker:"
+msgstr "``tier`` را مستقیماً به Maker ارسال کنید:"
+
+#: ../../source/tier-system.rst:165 0d60a115456843f99ed1276e2401520f
+msgid "Method 2: Material-Specific Presets"
+msgstr "روش ۲: پیش‌تنظیم‌های اختصاصی مواد"
+
+#: ../../source/tier-system.rst:167 c65f4b3a16bd417e8f22f4fbcdd358e3
+msgid "Use pre-configured tier + parameter combinations:"
+msgstr "از ترکیبات سطح + پارامتر پیش‌پیکربندی‌شده استفاده کنید:"
+
+#: ../../source/tier-system.rst:189 346210d2294343aab744c38d38e91c5d
+msgid "Method 3: Custom Tier with Overrides"
+msgstr "روش ۳: سطح سفارشی با بازنویسی‌ها"
+
+#: ../../source/tier-system.rst:191 7ca17de2bbe444a9a8a6035b9ee20090
+msgid "Start with a tier, enable specific modules:"
+msgstr "با یک سطح شروع کنید، ماژول‌های خاص را فعال کنید:"
+
+#: ../../source/tier-system.rst:203 0d351b0cf1104001b1fd32d959d87e80
+msgid "Method 4: Override Preset Parameters"
+msgstr "روش ۴: بازنویسی پارامترهای پیش‌تنظیم"
+
+#: ../../source/tier-system.rst:205 59d7dc21f9594c729b4626868088eecc
+msgid "Apply preset, then customize:"
+msgstr "پیش‌تنظیم را اعمال کنید، سپس سفارشی‌سازی کنید:"
+
+#: ../../source/tier-system.rst:228 48f2f9d7a4024bcaabe86caf683f1762
+msgid ""
+"To modify preset parameters, use ``override_params`` in "
+"``apply_tier_preset()``:"
+msgstr ""
+"برای تغییر پارامترهای پیش‌تنظیم، از ``override_params`` در "
+"``apply_tier_preset()`` استفاده کنید:"
+
+#: ../../source/tier-system.rst:249 5f4fa9b2d1734739b7d2e08744250b63
+msgid "Material-Specific Presets"
+msgstr "پیش‌تنظیم‌های اختصاصی مواد"
+
+#: ../../source/tier-system.rst:251 978545931ba347518c25f78eccbed08d
+msgid ""
+"2025 Tier presets reorganized into modular package structure for better "
+"maintainability. All functionality remains backward compatible."
+msgstr ""
+"پیش‌تنظیم‌های سطح ۲۰۲۵ برای قابلیت نگهداری بهتر به ساختار بسته ماژولار سازماندهی "
+"مجدد شده‌اند. تمام عملکردها سازگار با نسخه‌های قبلی باقی می‌مانند."
+
+#: ../../source/tier-system.rst:255 43f662f30c4a4685a501cbd75ecad4da
+msgid "18 pre-configured presets organized into 7 categories:"
+msgstr "۱۸ پیش‌تنظیم پیش‌پیکربندی‌شده سازماندهی‌شده در ۷ دسته:"
+
+#: ../../source/tier-system.rst:257 faea623ce0734a0eb720bdbd0f9a953b
+msgid "**New Organization** (November 2025):"
+msgstr "**سازماندهی جدید** (نوامبر ۲۰۲۵):"
+
+#: ../../source/tier-system.rst:259 76513dadb3f840409d4204371264e2f2
+msgid ""
+"The tier preset system has been reorganized from a single file into a "
+"well-structured package for better maintainability:"
+msgstr ""
+"سیستم پیش‌تنظیم سطح از یک فایل واحد به یک بسته با ساختار مناسب برای قابلیت "
+"نگهداری بهتر سازماندهی مجدد شده است:"
+
+#: ../../source/tier-system.rst:278 a07ac2a9bf0644e4be3969ffc2a3493b
+msgid ""
+"All imports remain backward compatible. See project documentation for "
+"migration details."
+msgstr ""
+"تمام import ها سازگار با نسخه‌های قبلی باقی می‌مانند. برای جزئیات مهاجرت به "
+"مستندات پروژه مراجعه کنید."
+
+#: ../../source/tier-system.rst:281 6a05f4382edc4d85a4bbaeda898548c7
+msgid "Structural Presets (3)"
+msgstr "پیش‌تنظیم‌های ساختاری (۳)"
+
+#: ../../source/tier-system.rst:284 f49e1af757004fe5b8f72f6c2539883c
+msgid "``basic_relax``"
+msgstr "``basic_relax``"
+
+#: ../../source/tier-system.rst:286 33a4036b3fd744c3ae9835d257715f82
+msgid "Minimal parameters for quick tests:"
+msgstr "پارامترهای حداقلی برای تست‌های سریع:"
+
+#: ../../source/tier-system.rst:288 dbac74a7dc104ee290c0c9d1ef6d8273
+msgid "Tier: basic"
+msgstr "سطح: basic"
+
+#: ../../source/tier-system.rst:289 740da7214ea64b76b96ce897957c5008
+msgid "``PAO.BasisSize``: SZ"
+msgstr "``PAO.BasisSize``: SZ"
+
+#: ../../source/tier-system.rst:290 923fe6368ccf4bc187dc87ea391b89cb
+msgid "``kpts``: [1, 1, 1]"
+msgstr "``kpts``: [۱، ۱، ۱]"
+
+#: ../../source/tier-system.rst:291 39998cfb71b14e28b3212dbc6c101921
+msgid "``Mesh.Cutoff``: 200 Ry"
+msgstr "``Mesh.Cutoff``: ۲۰۰ Ry"
+
+#: ../../source/tier-system.rst:293 b9b7d6e206524c9386da63249ab9d46b
+msgid "**Use for**: Workflow debugging, quick checks"
+msgstr "**استفاده برای**: اشکال‌زدایی جریان کار، بررسی‌های سریع"
+
+#: ../../source/tier-system.rst:296 b61216bae11d425e8dab58442a1a6ed9
+msgid "``standard_relax``"
+msgstr "``standard_relax``"
+
+#: ../../source/tier-system.rst:298 cb915279794f4aa988105f69c6e1e111
+msgid "Default production relaxation:"
+msgstr "آرام‌سازی پیش‌فرض تولیدی:"
+
+#: ../../source/tier-system.rst:300 ../../source/tier-system.rst:313
+#: ../../source/tier-system.rst:330 ../../source/tier-system.rst:360
+#: 2d32aced0f5547fb8e31021467de2f48 64f58e6d2237401d84a18d47c9cf4037
+#: 769d97a053254fba811324a001acee7b cbff5a61840a4a738183f605cbe04cf7
+msgid "Tier: intermediate"
+msgstr "سطح: intermediate"
+
+#: ../../source/tier-system.rst:301 a4e405eeea2d4ed791c18d9f7dcd050c
+msgid "``PAO.BasisSize``: DZP"
+msgstr "``PAO.BasisSize``: DZP"
+
+#: ../../source/tier-system.rst:302 32e248bfb7df4748aacdbc798bd9f607
+msgid "``kpts``: [4, 4, 4]"
+msgstr "``kpts``: [۴، ۴، ۴]"
+
+#: ../../source/tier-system.rst:303 a6c7d3408e3b40d38c5f3dd06c2913e2
+msgid "``Mesh.Cutoff``: 300 Ry"
+msgstr "``Mesh.Cutoff``: ۳۰۰ Ry"
+
+#: ../../source/tier-system.rst:304 bcc05046087e4c7eb03acdaf540b143c
+msgid "``MD.MaxForceTol``: 0.02 eV/Å"
+msgstr "``MD.MaxForceTol``: ۰.۰۲ eV/Å"
+
+#: ../../source/tier-system.rst:306 e0320743864f4b188b5fd2c9f6c1a481
+msgid "**Use for**: Standard production calculations"
+msgstr "**استفاده برای**: محاسبات استاندارد تولیدی"
+
+#: ../../source/tier-system.rst:309 ../../source/tier-system.rst:970
+#: c53920e81c5f42fe9d6f478cf8cdce56 fcf645c3bd9248b191dc62d8839837fe
+msgid "``high_accuracy_relax``"
+msgstr "``high_accuracy_relax``"
+
+#: ../../source/tier-system.rst:311 1d025e66b2d145f39ecf60730450337b
+msgid "Tight convergence:"
+msgstr "همگرایی محکم:"
+
+#: ../../source/tier-system.rst:314 c7a57699f90c4978b7e0fc938fd507fa
+msgid "``PAO.BasisSize``: TZP"
+msgstr "``PAO.BasisSize``: TZP"
+
+#: ../../source/tier-system.rst:315 ../../source/tier-system.rst:403
+#: ../../source/tier-system.rst:420 ../../source/tier-system.rst:432
+#: 0940073daf7442bab42b543061cf4c9c 87f2672162484547b96e0019bf3a47dd
+#: b7a5ed08916c4371ab9c74be0006c433 d8ee2d01aad14b879da7a9651a829e22
+msgid "``kpts``: [8, 8, 8]"
+msgstr "``kpts``: [۸، ۸، ۸]"
+
+#: ../../source/tier-system.rst:316 ../../source/tier-system.rst:404
+#: 3e0de52aab6447108448528fd2cdd176 469ccc51a1af45a8b86bc2b06a4d4178
+msgid "``Mesh.Cutoff``: 500 Ry"
+msgstr "``Mesh.Cutoff``: ۵۰۰ Ry"
+
+#: ../../source/tier-system.rst:317 ../../source/tier-system.rst:405
+#: 3189fc5982a645c88339f74ddcb848e8 7f42677faaa04a66a00e87e0b168f01c
+msgid "``MD.MaxForceTol``: 0.005 eV/Å"
+msgstr "``MD.MaxForceTol``: ۰.۰۰۵ eV/Å"
+
+#: ../../source/tier-system.rst:318 ../../source/tier-system.rst:406
+#: 4afa1ef886914c29b1ce54919a3d32db f51f4cd779e948d9abd3646a62ec9722
+msgid "``SCF.DM.Tolerance``: 1e-6"
+msgstr "``SCF.DM.Tolerance``: ۱e-۶"
+
+#: ../../source/tier-system.rst:320 1ad40299b9734186acb39efdf6df7caf
+msgid "**Use for**: Publication-quality results, benchmarking"
+msgstr "**استفاده برای**: نتایج با کیفیت انتشار، معیارسنجی"
+
+#: ../../source/tier-system.rst:323 73d33798f0a34cbe9bbdc4ef439ec118
+msgid "Surface Presets (2)"
+msgstr "پیش‌تنظیم‌های سطح (۲)"
+
+#: ../../source/tier-system.rst:326 ../../source/tier-system.rst:952
+#: 15fdec030b794c7eacf8d5583f52fd8f 329122a559a74cb79fa7b014dd57f44f
+msgid "``surface_metal``"
+msgstr "``surface_metal``"
+
+#: ../../source/tier-system.rst:328 548f06fda3a74b9c8240c7b39f147e1b
+msgid "Metallic surfaces with MP smearing:"
+msgstr "سطوح فلزی با گسترش MP:"
+
+#: ../../source/tier-system.rst:331 45597445f34d4b42aabf3b37736c5433
+msgid "``OccupationFunction``: MP"
+msgstr "``OccupationFunction``: MP"
+
+#: ../../source/tier-system.rst:332 65203ee0c6bf4e719585c9fc06bf9040
+msgid "``ElectronicTemperature``: 300 K"
+msgstr "``ElectronicTemperature``: ۳۰۰ K"
+
+#: ../../source/tier-system.rst:333 fb0e4f7c9f8a4ebd855f6f6101c66fa2
+msgid "``SCF.Mixer.Weight``: 0.005"
+msgstr "``SCF.Mixer.Weight``: ۰.۰۰۵"
+
+#: ../../source/tier-system.rst:334 d38e33a94aa7470f8a7f1ae7acdfc58e
+msgid "``SCF.Mixer.Method``: Pulay"
+msgstr "``SCF.Mixer.Method``: Pulay"
+
+#: ../../source/tier-system.rst:335 037450bf7f2c429a87d8839580ecb315
+msgid "``SCF.Mixer.History``: 8"
+msgstr "``SCF.Mixer.History``: ۸"
+
+#: ../../source/tier-system.rst:336 e3cf4cbeaea8404db5498039b62ecd2b
+msgid "``kpts``: [6, 6, 1]  # 2D sampling"
+msgstr "``kpts``: [۶، ۶، ۱]  # نمونه‌برداری دوبعدی"
+
+#: ../../source/tier-system.rst:338 ea2a5021c5a84e0b94516c57ecdbfc82
+msgid "**Use for**: Metallic surfaces, high DOS at Fermi level"
+msgstr "**استفاده برای**: سطوح فلزی، DOS بالا در سطح فرمی"
+
+#: ../../source/tier-system.rst:341 5e1222fdc7ae44279bf88bfc08ab71f6
+msgid "``surface_semiconductor``"
+msgstr "``surface_semiconductor``"
+
+#: ../../source/tier-system.rst:343 f7c1d88970be4b42b38ed6e04ca8197f
+msgid "Semiconductor surfaces with dipole corrections:"
+msgstr "سطوح نیمه‌رسانا با تصحیحات دوقطبی:"
+
+#: ../../source/tier-system.rst:345 ../../source/tier-system.rst:373
+#: ../../source/tier-system.rst:388 ../../source/tier-system.rst:401
+#: ../../source/tier-system.rst:418 ../../source/tier-system.rst:430
+#: 03a7d5a0282f4f3d88721b7cd606c373 12b1a90d32274ae1b1b993d45a73f268
+#: 4d6f445ef62f4aa7931cfda36c46d326 7833c54610864c6992d7546df28d45f2
+#: 8f9af5e3d5c44d8eb7e9845533f6e1c1 bc8ec0863fd44856b3575d7c03614c30
+msgid "Tier: advanced"
+msgstr "سطح: advanced"
+
+#: ../../source/tier-system.rst:346 8a13333a79e1440aa5c8d4eae6b49809
+msgid "Enabled modules: ``charge_dipole``"
+msgstr "ماژول‌های فعال: ``charge_dipole``"
+
+#: ../../source/tier-system.rst:347 398198d3e32645fe9f9fd309d778b404
+msgid "``SlabDipoleCorrection``: True"
+msgstr "``SlabDipoleCorrection``: True"
+
+#: ../../source/tier-system.rst:348 ../../source/tier-system.rst:362
+#: 4187e514260f42edb28f972306c19afb 51f3f52941094e6ab7757d76eb15cf09
+msgid "``kpts``: [6, 6, 1]"
+msgstr "``kpts``: [۶، ۶، ۱]"
+
+#: ../../source/tier-system.rst:350 4fafb897f39543ed932b71f4f6e5125b
+msgid "**Use for**: Polar semiconductor surfaces"
+msgstr "**استفاده برای**: سطوح نیمه‌رسانای قطبی"
+
+#: ../../source/tier-system.rst:353 065e02a08058475cac01f5993b977377
+msgid "Magnetic Presets (2)"
+msgstr "پیش‌تنظیم‌های مغناطیسی (۲)"
+
+#: ../../source/tier-system.rst:356 ../../source/tier-system.rst:961
+#: 2b3e3d14ba62482b8f4eb74965cc7a4e ebe8c0026867422793599652d862a0cb
+msgid "``magnetic_2d``"
+msgstr "``magnetic_2d``"
+
+#: ../../source/tier-system.rst:358 343bd5c81db2498fbcb6cde33d293061
+msgid "2D magnetic materials:"
+msgstr "مواد مغناطیسی دوبعدی:"
+
+#: ../../source/tier-system.rst:361 ../../source/tier-system.rst:375
+#: dfcf87658cb54898a7c84adfe1f31fcd efd519d27a0446c6b2e5acefeadb37a2
+msgid "``spin``: polarized"
+msgstr "``spin``: polarized"
+
+#: ../../source/tier-system.rst:363 0bf81d7c1d984b7383112b63734bc99a
+msgid "``OccupationFunction``: FD"
+msgstr "``OccupationFunction``: FD"
+
+#: ../../source/tier-system.rst:364 59612f2040e7419a9004b9ccfae3ef2a
+msgid "``ElectronicTemperature``: 100 K"
+msgstr "``ElectronicTemperature``: ۱۰۰ K"
+
+#: ../../source/tier-system.rst:366 d3f3122cd9014ce5a149e8d9765b3f8b
+msgid "**Use for**: 2D magnets, spin-polarized systems"
+msgstr "**استفاده برای**: مغناطیس‌های دوبعدی، سیستم‌های قطبیده اسپینی"
+
+#: ../../source/tier-system.rst:369 469d4c83204346aeabdecd50fd04f748
+msgid "``magnetic_correlated``"
+msgstr "``magnetic_correlated``"
+
+#: ../../source/tier-system.rst:371 95126d596a124ae9af29709aab991c2e
+msgid "DFT+U for strongly correlated systems:"
+msgstr "DFT+U برای سیستم‌های به شدت همبسته:"
+
+#: ../../source/tier-system.rst:374 b08e1d8881af470bbd55647247a2f17e
+msgid "Enabled modules: ``dftu``"
+msgstr "ماژول‌های فعال: ``dftu``"
+
+#: ../../source/tier-system.rst:376 463b5ae336f247938ddfbecd3bfb20e8
+msgid "DFT.U.Projectors: specified per element"
+msgstr "DFT.U.Projectors: مشخص‌شده برای هر عنصر"
+
+#: ../../source/tier-system.rst:378 c842d4fe7e91430aae42df9ee1ae3e77
+msgid "**Use for**: Transition metal oxides, f-electron systems"
+msgstr "**استفاده برای**: اکسیدهای فلزات واسطه، سیستم‌های الکترونی f"
+
+#: ../../source/tier-system.rst:381 a62fd6aee4d944fcb451eed3dfe0a47e
+msgid "Phonon Presets (2)"
+msgstr "پیش‌تنظیم‌های فونون (۲)"
+
+#: ../../source/tier-system.rst:384 ../../source/tier-system.rst:964
+#: 15edf282665a48879b54fd42bdd0ee66 6627e1e3baeb453fae55efd855f9c075
+msgid "``phonon_standard``"
+msgstr "``phonon_standard``"
+
+#: ../../source/tier-system.rst:386 7a74e6811ee04e5e9e307ed3ba33a5ea
+msgid "Standard phonon calculations:"
+msgstr "محاسبات استاندارد فونون:"
+
+#: ../../source/tier-system.rst:389 b8f9923c1d4343b590e664a6fc2221b8
+msgid "Enabled modules: ``phonons``"
+msgstr "ماژول‌های فعال: ``phonons``"
+
+#: ../../source/tier-system.rst:390 1e174a384f594066baa1bbb88b19e02b
+msgid "``kpts``: [6, 6, 6]"
+msgstr "``kpts``: [۶، ۶، ۶]"
+
+#: ../../source/tier-system.rst:391 50a274f4e13c41819a2d9bbc380bf8a6
+msgid "``Mesh.Cutoff``: 400 Ry"
+msgstr "``Mesh.Cutoff``: ۴۰۰ Ry"
+
+#: ../../source/tier-system.rst:392 64ec287266ad49368744f18c910bfe80
+msgid "``MD.MaxForceTol``: 0.01 eV/Å"
+msgstr "``MD.MaxForceTol``: ۰.۰۱ eV/Å"
+
+#: ../../source/tier-system.rst:394 2b2f3634810b427abb7fb087faeae892
+msgid "**Use for**: Routine phonon calculations"
+msgstr "**استفاده برای**: محاسبات معمول فونون"
+
+#: ../../source/tier-system.rst:397 833964def8fd4d60b8020127239213da
+msgid "``phonon_high_accuracy``"
+msgstr "``phonon_high_accuracy``"
+
+#: ../../source/tier-system.rst:399 8b74d79eb32a4c689ddaab593b26b827
+msgid "Tight forces for accurate phonons:"
+msgstr "نیروهای محکم برای فونون‌های دقیق:"
+
+#: ../../source/tier-system.rst:402 cfa5ed849b81431c85fdf4159d5001f0
+msgid "Enabled modules: ``phonons``, ``dos_bands``"
+msgstr "ماژول‌های فعال: ``phonons``، ``dos_bands``"
+
+#: ../../source/tier-system.rst:408 2475e21ce74b4a8c879d7770cf417aeb
+msgid "**Use for**: Publication-quality phonon dispersions"
+msgstr "**استفاده برای**: پراکندگی‌های فونونی با کیفیت انتشار"
+
+#: ../../source/tier-system.rst:411 ef29da0d6cda405980161ac35e738d6c
+msgid "Optical Presets (2)"
+msgstr "پیش‌تنظیم‌های نوری (۲)"
+
+#: ../../source/tier-system.rst:414 ../../source/tier-system.rst:967
+#: 3d124547728140c3bcd691e412790827 c4ff2eb858cb4478b68e188910c44a96
+msgid "``optical_response``"
+msgstr "``optical_response``"
+
+#: ../../source/tier-system.rst:416 1a033eed505b44ecb63011a49acf01eb
+msgid "Optical absorption and dielectric properties:"
+msgstr "جذب نوری و خواص دی‌الکتریک:"
+
+#: ../../source/tier-system.rst:419 3974547d89d4479f85265133c8ef7ea0
+msgid "Enabled modules: ``optical``, ``dos_bands``"
+msgstr "ماژول‌های فعال: ``optical``، ``dos_bands``"
+
+#: ../../source/tier-system.rst:421 89807150901642efa766b91a8e9b536f
+msgid "Optical calculation parameters enabled"
+msgstr "پارامترهای محاسبات نوری فعال شده"
+
+#: ../../source/tier-system.rst:423 86e67a60088d4f31a10ea9813ab3a007
+msgid "**Use for**: Optical properties, absorption spectra"
+msgstr "**استفاده برای**: خواص نوری، طیف‌های جذب"
+
+#: ../../source/tier-system.rst:426 0af99ea67ab9426990eaf2a543d17e9d
+msgid "``band_structure``"
+msgstr "``band_structure``"
+
+#: ../../source/tier-system.rst:428 fd937bef296e443da2b52679051e7046
+msgid "Electronic band structure and DOS:"
+msgstr "ساختار نواری الکترونی و DOS:"
+
+#: ../../source/tier-system.rst:431 b307d35483ac4b6b8b22c74277974e26
+msgid "Enabled modules: ``dos_bands``"
+msgstr "ماژول‌های فعال: ``dos_bands``"
+
+#: ../../source/tier-system.rst:433 18fb9ad2588044a2937b9e6045c7d899
+msgid "Dense k-path for bands"
+msgstr "مسیر k متراکم برای نوارها"
+
+#: ../../source/tier-system.rst:435 05ad0ed4b1d04b3899a3d8afde18a129
+msgid "**Use for**: Electronic structure analysis"
+msgstr "**استفاده برای**: تحلیل ساختار الکترونی"
+
+#: ../../source/tier-system.rst:438 39e756d5d23249c686201d6edc425825
+msgid "Performance Presets (2)"
+msgstr "پیش‌تنظیم‌های عملکرد (۲)"
+
+#: ../../source/tier-system.rst:441 19648829269942008f54ea71f9149659
+msgid "``large_system``"
+msgstr "``large_system``"
+
+#: ../../source/tier-system.rst:443 04a38b7c15a84f49bdc912102b88ecd2
+msgid "Linear-scaling for >100 atoms:"
+msgstr "مقیاس‌بندی خطی برای بیش از ۱۰۰ اتم:"
+
+#: ../../source/tier-system.rst:445 ../../source/tier-system.rst:457
+#: 2d46628f103d4c44b7b4698b700b5013 6a2610bddf944f15a9e92e68cab29be3
+msgid "Tier: expert"
+msgstr "سطح: expert"
+
+#: ../../source/tier-system.rst:446 459e3cdbcf13434eb174f8463d99addc
+msgid "Enabled modules: ``parallel``, ``solvers``, ``efficiency``"
+msgstr "ماژول‌های فعال: ``parallel``، ``solvers``، ``efficiency``"
+
+#: ../../source/tier-system.rst:447 05d38a7b48c14de08dded2b8e3b475e8
+msgid "``SolutionMethod``: OrderN"
+msgstr "``SolutionMethod``: OrderN"
+
+#: ../../source/tier-system.rst:448 45813faf87334e9fa7d4c580fa712c47
+msgid "``ON.MaxNumIter``: 1000"
+msgstr "``ON.MaxNumIter``: ۱۰۰۰"
+
+#: ../../source/tier-system.rst:450 8b22be8ff64440a29caff606c8b5dd79
+msgid "**Use for**: Large systems (>100 atoms), biomolecules"
+msgstr "**استفاده برای**: سیستم‌های بزرگ (بیش از ۱۰۰ اتم)، بیومولکول‌ها"
+
+#: ../../source/tier-system.rst:453 ec3881da4f924a3ebaf1ca5f33959ed1
+msgid "``parallel_hpc``"
+msgstr "``parallel_hpc``"
+
+#: ../../source/tier-system.rst:455 268fa98c8131414e9fd7aa87f7303973
+msgid "MPI optimization for HPC:"
+msgstr "بهینه‌سازی MPI برای HPC:"
+
+#: ../../source/tier-system.rst:458 2a9b2e146ce84f24abd9dc08345a168d
+msgid "Enabled modules: ``parallel``, ``solvers``"
+msgstr "ماژول‌های فعال: ``parallel``، ``solvers``"
+
+#: ../../source/tier-system.rst:459 b4bec7d69b5745459843997f59c66d07
+msgid "Diagonalization parallelization settings"
+msgstr "تنظیمات موازی‌سازی قطری‌سازی"
+
+#: ../../source/tier-system.rst:460 9c288b582d85426cac009951e36ba0f9
+msgid "MPI-related optimizations"
+msgstr "بهینه‌سازی‌های مرتبط با MPI"
+
+#: ../../source/tier-system.rst:462 76faac2a196c450289c65587cd0249c5
+msgid "**Use for**: HPC clusters, parallel efficiency tuning"
+msgstr "**استفاده برای**: خوشه‌های HPC، تنظیم کارایی موازی"
+
+#: ../../source/tier-system.rst:465 14b13bd22eeb42a89fb3f3a8cb850734
+msgid "Testing Preset (1)"
+msgstr "پیش‌تنظیم تست (۱)"
+
+#: ../../source/tier-system.rst:468 ../../source/tier-system.rst:976
+#: a51cc9df23e2467886cbd36f78e2aa36 fa74d8037916443c8f66625db0e6f598
+msgid "``convergence_test``"
+msgstr "``convergence_test``"
+
+#: ../../source/tier-system.rst:470 0ed2160641a249df9550ab6f90e61d30
+msgid "All modules for comprehensive testing:"
+msgstr "تمام ماژول‌ها برای تست جامع:"
+
+#: ../../source/tier-system.rst:472 052021f0a6544afbbe54e0b7ba8b2592
+msgid "Tier: expert (all 24 modules)"
+msgstr "سطح: expert (تمام ۲۴ ماژول)"
+
+#: ../../source/tier-system.rst:473 e1e3c4bce130439ca1841cbecf686699
+msgid "Comprehensive parameter exploration"
+msgstr "کاوش جامع پارامترها"
+
+#: ../../source/tier-system.rst:475 7ee0a75924de421d8676ee1f3c4d3b59
+msgid "**Use for**: Testing, debugging, full parameter access"
+msgstr "**استفاده برای**: تست، اشکال‌زدایی، دسترسی کامل به پارامترها"
+
+#: ../../source/tier-system.rst:480 7308e7ee27d34c6b9563acf55b939889
+msgid "Listing Presets"
+msgstr "فهرست پیش‌تنظیم‌ها"
+
+#: ../../source/tier-system.rst:483 e6a8203463ff49b1a774fef45cebe748
+msgid "Programmatic Access"
+msgstr "دسترسی برنامه‌نویسی"
+
+#: ../../source/tier-system.rst:505 8d5b8389c3c7418db418961b1075b219
+msgid "Interactive Display"
+msgstr "نمایش تعاملی"
+
+#: ../../source/tier-system.rst:513 bb3fcc8215904e96a81a6aa62661745f
+msgid "Output:"
+msgstr "خروجی:"
+
+#: ../../source/tier-system.rst:530 e4af9cdc5dbd45f7a9008c3277e053b1
+msgid "Implementation Details"
+msgstr "جزئیات پیاده‌سازی"
+
+#: ../../source/tier-system.rst:533 d8f8de1206ad489a89d1511af34ead0f
+msgid "Module Registry"
+msgstr "ثبت ماژول"
+
+#: ../../source/tier-system.rst:535 8e1df5868614418d915f56511604bf27
+msgid "All modules registered in ``src/atomate2/siesta/dataclass/registry.py``:"
+msgstr "تمام ماژول‌های ثبت‌شده در ``src/atomate2/siesta/dataclass/registry.py``:"
+
+#: ../../source/tier-system.rst:554 8a17f6cdc1ba4894a6b902d7ed64cf84
+msgid "**Priority-Based Initialization**:"
+msgstr "**مقداردهی اولیه مبتنی بر اولویت**:"
+
+#: ../../source/tier-system.rst:556 ecd4d4887c954b44abf634e98fe8a681
+msgid "1-19: Core modules (pseudos, basis, XC, mesh, kpoints)"
+msgstr "۱-۱۹: ماژول‌های اصلی (شبه‌پتانسیل‌ها، پایه، XC، شبکه، نقاط k)"
+
+#: ../../source/tier-system.rst:557 7640f949d7b6429a96410547c9162536
+msgid "20-39: Electronic structure (spin, SCF, occupation)"
+msgstr "۲۰-۳۹: ساختار الکترونی (اسپین، SCF، اشغال)"
+
+#: ../../source/tier-system.rst:558 4458e3622b0b46e69c777b95331a0888
+msgid "40-59: Structural (MD, relaxation, constraints)"
+msgstr "۴۰-۵۹: ساختاری (MD، آرام‌سازی، محدودیت‌ها)"
+
+#: ../../source/tier-system.rst:559 ef44b1edeb484b04bcf6a2e3fc003042
+msgid "60-79: Specialized (phonons, optical, DOS/bands)"
+msgstr "۶۰-۷۹: تخصصی (فونون‌ها، نوری، DOS/نوارها)"
+
+#: ../../source/tier-system.rst:560 25e70cd0e3004407a3787117d4477698
+msgid "80-99: Performance & advanced"
+msgstr "۸۰-۹۹: عملکرد و پیشرفته"
+
+#: ../../source/tier-system.rst:563 e115f57e93de48bbb1b6ea307ca614e0
+msgid "Auto-Initialization"
+msgstr "مقداردهی اولیه خودکار"
+
+#: ../../source/tier-system.rst:565 b3df773945914ad6bd584928329a99fa
+msgid "Modules automatically initialized in ``SiestaInputGenerator``:"
+msgstr "ماژول‌هایی که به‌طور خودکار در ``SiestaInputGenerator`` مقداردهی اولیه می‌شوند:"
+
+#: ../../source/tier-system.rst:582 87e8fefc2f9941c7bc40393f54b87174
+msgid "Dynamic Module Loading"
+msgstr "بارگذاری پویای ماژول"
+
+#: ../../source/tier-system.rst:584 11d392914c964b829facc3f1eba8abd4
+msgid "Uses Python's ``importlib`` for dynamic imports:"
+msgstr "از ``importlib`` پایتون برای import های پویا استفاده می‌کند:"
+
+#: ../../source/tier-system.rst:612 ca358d009905470faeaf3a11ff05c562
+msgid "Benchmarked Performance"
+msgstr "عملکرد معیارسنجی‌شده"
+
+#: ../../source/tier-system.rst:618 aa489e9cd3a64d8488a26eb5058c5210
+msgid "Configuration"
+msgstr "پیکربندی"
+
+#: ../../source/tier-system.rst:619 13bcfbc7306c4403b0aa586a742c912a
+msgid "Time (ms)"
+msgstr "زمان (میلی‌ثانیه)"
+
+#: ../../source/tier-system.rst:620 90dddad8787b4c62834f35a8bf8a9cea
+msgid "Overhead"
+msgstr "سربار"
+
+#: ../../source/tier-system.rst:621 ec60835deed840dc842aea28d92cf30a
+msgid "Assessment"
+msgstr "ارزیابی"
+
+#: ../../source/tier-system.rst:622 846c9d78687a45acb4d36c92f8701d7b
+msgid "Basic tier (6 modules)"
+msgstr "سطح پایه (۶ ماژول)"
+
+#: ../../source/tier-system.rst:623 7a2fcecd56754a1588c7459dea3f18c6
+msgid "~17"
+msgstr "~۱۷"
+
+#: ../../source/tier-system.rst:624 aba94e2d65294efda6a7f7f4ccad2a6c
+msgid "Baseline"
+msgstr "خط پایه"
+
+#: ../../source/tier-system.rst:625 ../../source/tier-system.rst:629
+#: ../../source/tier-system.rst:633 181e31c084774f1eb9932bb61b7a4a6d
+#: 4ce62b1709f94cffb401d959658119e0 f89a8fa4f8664b5198a7eca4925ae273
+msgid "✅ Fast"
+msgstr "✅ سریع"
+
+#: ../../source/tier-system.rst:626 2653e22223464bc8912411ccf2f91c2a
+msgid "Intermediate tier (12)"
+msgstr "سطح متوسط (۱۲)"
+
+#: ../../source/tier-system.rst:627 46ce0d7d14cc4817b391e71e3a776fa4
+msgid "~20"
+msgstr "~۲۰"
+
+#: ../../source/tier-system.rst:628 6cf2984cf9c04f8484a35bdcec2e1647
+msgid "+18%"
+msgstr "+۱۸٪"
+
+#: ../../source/tier-system.rst:630 dd88f967c9d64232bdb4a59650ea7e4e
+msgid "Advanced tier (19)"
+msgstr "سطح پیشرفته (۱۹)"
+
+#: ../../source/tier-system.rst:631 62ed0f3d27c3487896de7c0ac8542f66
+msgid "~22"
+msgstr "~۲۲"
+
+#: ../../source/tier-system.rst:632 cce55b54c0f9440c8b3ed8ce4c18e184
+msgid "+29%"
+msgstr "+۲۹٪"
+
+#: ../../source/tier-system.rst:634 445e3d5063434bdab147cd2fc62a3145
+msgid "Expert tier (24)"
+msgstr "سطح خبره (۲۴)"
+
+#: ../../source/tier-system.rst:635 3d7855b982fe43fba63f413b6685c2b0
+msgid "~23"
+msgstr "~۲۳"
+
+#: ../../source/tier-system.rst:636 48cd446d728740f7853598a73a92f43c
+msgid "+35%"
+msgstr "+۳۵٪"
+
+#: ../../source/tier-system.rst:637 76f0eb4e77534328bddc7485b6a0cc25
+msgid "✅ Acceptable"
+msgstr "✅ قابل قبول"
+
+#: ../../source/tier-system.rst:638 a82a34c51d6d4369a5704e936390a387
+msgid "Preset application"
+msgstr "اعمال پیش‌تنظیم"
+
+#: ../../source/tier-system.rst:639 7028415642094612963e21710b5c38c3
+msgid "< 1"
+msgstr "< ۱"
+
+#: ../../source/tier-system.rst:640 a47ccd7a0e04488eafb3f91ca80bb67c
+msgid "Negligible"
+msgstr "ناچیز"
+
+#: ../../source/tier-system.rst:641 15f7daaaf0444990a32ca0919c1513ba
+msgid "✅ Negligible"
+msgstr "✅ ناچیز"
+
+#: ../../source/tier-system.rst:643 ff2472ea8a594a9e96009830d34bf383
+msgid ""
+"**Conclusion**: ✅ Production-ready with minimal performance impact (< "
+"25ms for all modules)"
+msgstr ""
+"**نتیجه**: ✅ آماده تولید با تأثیر حداقلی بر عملکرد (کمتر از ۲۵ میلی‌ثانیه برای تمام ماژول‌ها)"
+
+#: ../../source/tier-system.rst:646 afffe2f144404bc6a42251b74ae1415c
+msgid "Scaling Characteristics"
+msgstr "ویژگی‌های مقیاس‌بندی"
+
+#: ../../source/tier-system.rst:648 1bf92dfdc3124c188cb146e78201d332
+msgid "**Structure size**: Sub-linear scaling (1.29× for 4× structure size)"
+msgstr "**اندازه ساختار**: مقیاس‌بندی زیرخطی (۱.۲۹× برای ۴× اندازه ساختار)"
+
+#: ../../source/tier-system.rst:649 1b49fcbbcc1048d4bd4d6fea95cd3ad5
+msgid "**Module count**: Linear scaling (predictable overhead)"
+msgstr "**تعداد ماژول**: مقیاس‌بندی خطی (سربار قابل پیش‌بینی)"
+
+#: ../../source/tier-system.rst:650 f4396797415541ed9b240036c3cb4011
+msgid "**Preset overhead**: < 0.5ms (negligible)"
+msgstr "**سربار پیش‌تنظیم**: < ۰.۵ میلی‌ثانیه (ناچیز)"
+
+#: ../../source/tier-system.rst:652 792f35f448814743ac70a003960886d0
+msgid "📄 **Full benchmarks**: ``tests/performance/BENCHMARK_RESULTS.md``"
+msgstr "📄 **معیارسنجی‌های کامل**: ``tests/performance/BENCHMARK_RESULTS.md``"
+
+#: ../../source/tier-system.rst:657 eba57b31a8734a2081f6c9a89b36a19c
+msgid "Best Practices"
+msgstr "بهترین شیوه‌ها"
+
+#: ../../source/tier-system.rst:660 4588c273455e4889868e883dea43f200
+msgid "When to Use Each Tier"
+msgstr "چه زمانی از هر سطح استفاده شود"
+
+#: ../../source/tier-system.rst:662 3fd92d3f82bd452a9cb8a0349d1cdbbb
+msgid "**Basic Tier**:"
+msgstr "**سطح پایه**:"
+
+#: ../../source/tier-system.rst:664 0bf89580031b4160a7758b93c6cb01b0
+msgid "✅ Quick convergence tests"
+msgstr "✅ تست‌های همگرایی سریع"
+
+#: ../../source/tier-system.rst:666 131d0aa9c44c4f55a913579b8b7444c6
+msgid "✅ Workflow debugging"
+msgstr "✅ اشکال‌زدایی جریان کار"
+
+#: ../../source/tier-system.rst:668 a22586b71c834266a9422651f2b4df3f
+msgid "✅ Preliminary structure checks"
+msgstr "✅ بررسی‌های مقدماتی ساختار"
+
+#: ../../source/tier-system.rst:670 fd8f5aedb8394131a885ebad457669ac
+msgid "❌ Production calculations"
+msgstr "❌ محاسبات تولیدی"
+
+#: ../../source/tier-system.rst:672 6a217144b5804298a7d5ef50b67fccf7
+msgid "**Intermediate Tier (DEFAULT)**:"
+msgstr "**سطح متوسط (پیش‌فرض)**:"
+
+#: ../../source/tier-system.rst:674 ab92c3d12d154a438fd5b7bc96881e84
+msgid "✅ Standard relaxations"
+msgstr "✅ آرام‌سازی‌های استاندارد"
+
+#: ../../source/tier-system.rst:676 bfc193cbfda941c99cb41d8c7a752c68
+msgid "✅ Band structure calculations"
+msgstr "✅ محاسبات ساختار نواری"
+
+#: ../../source/tier-system.rst:678 130086efbd44456295dd1ebfb52abd48
+msgid "✅ Most production work"
+msgstr "✅ بیشتر کارهای تولیدی"
+
+#: ../../source/tier-system.rst:680 902a315fca80430cb2fcb1807af6e6b3
+msgid "✅ SCF convergence control"
+msgstr "✅ کنترل همگرایی SCF"
+
+#: ../../source/tier-system.rst:682 c4005a380be7440c9421ae7ec2a7e2a2
+msgid "✅ Spin-polarized calculations"
+msgstr "✅ محاسبات قطبیده اسپینی"
+
+#: ../../source/tier-system.rst:684 029a2a6e92864d749ede6b92899d3d30
+msgid "**Advanced Tier**:"
+msgstr "**سطح پیشرفته**:"
+
+#: ../../source/tier-system.rst:686 600d4397174c47e1ad98e0b81efc20e8
+msgid "✅ Phonon calculations"
+msgstr "✅ محاسبات فونون"
+
+#: ../../source/tier-system.rst:688 571b70e43f044745b7144f3fbe034cc2
+msgid "✅ Optical properties"
+msgstr "✅ خواص نوری"
+
+#: ../../source/tier-system.rst:690 22229ee252b14e79a963cced8c6b8aeb
+msgid "✅ DFT+U correlated systems"
+msgstr "✅ سیستم‌های همبسته DFT+U"
+
+#: ../../source/tier-system.rst:692 e5c04523930b4a98881a79e3209556d7
+msgid "✅ Surface calculations with dipole corrections"
+msgstr "✅ محاسبات سطح با تصحیحات دوقطبی"
+
+#: ../../source/tier-system.rst:694 d3a22bb5ba47414b9b9fbddbe1c47d8b
+msgid "✅ Advanced analysis (DOS, bands)"
+msgstr "✅ تحلیل پیشرفته (DOS، نوارها)"
+
+#: ../../source/tier-system.rst:696 7e899bfc0ed041138569818c82e0b6f6
+msgid "**Expert Tier**:"
+msgstr "**سطح خبره**:"
+
+#: ../../source/tier-system.rst:698 7b2914541e2d4bf8a9da711eb92c2689
+msgid "✅ Large systems (>100 atoms)"
+msgstr "✅ سیستم‌های بزرگ (بیش از ۱۰۰ اتم)"
+
+#: ../../source/tier-system.rst:700 e28922feb5104105b48411092a9d1752
+msgid "✅ HPC parallel optimizations"
+msgstr "✅ بهینه‌سازی‌های موازی HPC"
+
+#: ../../source/tier-system.rst:702 c665880b05b448e2b08d8b5882649d56
+msgid "✅ Custom solver configurations"
+msgstr "✅ پیکربندی‌های سفارشی حل‌کننده"
+
+#: ../../source/tier-system.rst:704 d718d579c4144e908e13d646912be541
+msgid "✅ Memory/IO tuning"
+msgstr "✅ تنظیم حافظه/ورودی-خروجی"
+
+#: ../../source/tier-system.rst:706 7338a1cb4f1d49f181decb6e3e6efbff
+msgid "✅ Full parameter control"
+msgstr "✅ کنترل کامل پارامتر"
+
+#: ../../source/tier-system.rst:709 6161f54efb5340a6a4e051d7655b7e4f
+msgid "Preset Usage Guidelines"
+msgstr "راهنمای استفاده از پیش‌تنظیم"
+
+#: ../../source/tier-system.rst:711 6e326f8d95b14c37ac7fe342fc6ec3ad
+msgid "**Start with presets**: Use material-specific presets as starting point"
+msgstr "**با پیش‌تنظیم‌ها شروع کنید**: از پیش‌تنظیم‌های اختصاصی مواد به عنوان نقطه شروع استفاده کنید"
+
+#: ../../source/tier-system.rst:712 eb947d4fa75945f495f21b02e0f71f8b
+msgid "**Override as needed**: Customize specific parameters"
+msgstr "**در صورت نیاز بازنویسی کنید**: پارامترهای خاص را سفارشی‌سازی کنید"
+
+#: ../../source/tier-system.rst:713 82c48cd92317485e9354e9adf906b176
+msgid "**Document choices**: Note preset + overrides in workflow scripts"
+msgstr "**انتخاب‌ها را مستند کنید**: پیش‌تنظیم + بازنویسی‌ها را در اسکریپت‌های جریان کار یادداشت کنید"
+
+#: ../../source/tier-system.rst:714 26c0aa2396d94b4dac5e91c89014ba25
+msgid "**Test locally**: Verify preset works for your system"
+msgstr "**به صورت محلی تست کنید**: بررسی کنید که پیش‌تنظیم برای سیستم شما کار می‌کند"
+
+#: ../../source/tier-system.rst:715 cd37f002a206440691745b72b2cdf27f
+msgid "**Combine with powerups**: Presets + powerups for maximum flexibility"
+msgstr "**با powerup ها ترکیب کنید**: پیش‌تنظیم‌ها + powerup ها برای انعطاف‌پذیری بیشینه"
+
+#: ../../source/tier-system.rst:718 969f4ad166754afbb6543cb66c908d57
+msgid "Common Pitfalls"
+msgstr "دام‌های رایج"
+
+#: ../../source/tier-system.rst:720 25416dfe89f34db8b17a3a75ff2c4633
+msgid "❌ **Don't** use expert tier unless you need performance tuning"
+msgstr "❌ از سطح expert استفاده **نکنید** مگر اینکه به تنظیم عملکرد نیاز دارید"
+
+#: ../../source/tier-system.rst:722 3cd6ad179c3340c1b2741cc31f37b2bc
+msgid "❌ **Don't** try to use modules without setup methods (they'll be skipped)"
+msgstr "❌ سعی **نکنید** از ماژول‌های بدون متدهای راه‌اندازی استفاده کنید (نادیده گرفته خواهند شد)"
+
+#: ../../source/tier-system.rst:724 82c236675b904ba1a2e2b74134867702
+msgid "❌ **Don't** forget to document your tier/preset choices"
+msgstr "❌ مستندسازی انتخاب‌های سطح/پیش‌تنظیم خود را فراموش **نکنید**"
+
+#: ../../source/tier-system.rst:726 22d10964fb00427d92e14492525af55e
+msgid "✅ **Do** start with presets and override as needed"
+msgstr "✅ با پیش‌تنظیم‌ها شروع کنید و در صورت نیاز بازنویسی **کنید**"
+
+#: ../../source/tier-system.rst:728 595b45be4fc743d493786df343e445e4
+msgid "✅ **Do** use intermediate tier (default) for most work"
+msgstr "✅ از سطح intermediate (پیش‌فرض) برای بیشتر کارها استفاده **کنید**"
+
+#: ../../source/tier-system.rst:730 5da2a41dddbf4477bc6f0112ae9ca2b2
+msgid "✅ **Do** check module warnings to see which modules couldn't initialize"
+msgstr "✅ هشدارهای ماژول را بررسی **کنید** تا ببینید کدام ماژول‌ها نتوانستند مقداردهی اولیه شوند"
+
+#: ../../source/tier-system.rst:735 7aaf9d3a63c3434cbfaa0c978581b770
+msgid "Advanced Usage"
+msgstr "استفاده پیشرفته"
+
+#: ../../source/tier-system.rst:738 1473e41ddbfb4186882e5a811aab20a1
+msgid "Creating Custom Presets (Programmatically)"
+msgstr "ایجاد پیش‌تنظیم‌های سفارشی (به صورت برنامه‌نویسی)"
+
+#: ../../source/tier-system.rst:740 33873329ac0e4941b8ad4cef9fe61ad6
+msgid ""
+"While you can't add presets without modifying source code, create "
+"reusable functions:"
+msgstr ""
+"در حالی که نمی‌توانید بدون تغییر کد منبع پیش‌تنظیم اضافه کنید، توابع قابل استفاده "
+"مجدد ایجاد کنید:"
+
+#: ../../source/tier-system.rst:762 dcb2e109e5794bfa820d16ada6c54d3c
+msgid "Combining with Powerups"
+msgstr "ترکیب با Powerup ها"
+
+#: ../../source/tier-system.rst:764 0fb83e8e72914861ae6290b6e6892755
+msgid "Presets work seamlessly with powerup functions:"
+msgstr "پیش‌تنظیم‌ها به طور یکپارچه با توابع powerup کار می‌کنند:"
+
+#: ../../source/tier-system.rst:782 b7d62d6854c04eababf6b57a009334bd
+msgid "Testing & Validation"
+msgstr "تست و اعتبارسنجی"
+
+#: ../../source/tier-system.rst:785 9935745fd3bf4ce7b120708e89c2bd4f
+msgid "Comprehensive Test Suite"
+msgstr "مجموعه تست جامع"
+
+#: ../../source/tier-system.rst:787 2af8de475f1246e6bbd1635b3b5a15f7
+msgid "**74 tests, 100% passing**:"
+msgstr "**۷۴ تست، ۱۰۰٪ موفق**:"
+
+#: ../../source/tier-system.rst:789 82393f426c204fd297376f7a0f0109cd
+msgid "26 tests: Module registry validation"
+msgstr "۲۶ تست: اعتبارسنجی ثبت ماژول"
+
+#: ../../source/tier-system.rst:790 cdbb61082ab445fd9aaacf8394664f49
+msgid "33 tests: Tier preset verification"
+msgstr "۳۳ تست: تأیید پیش‌تنظیم سطح"
+
+#: ../../source/tier-system.rst:791 5bc481d37c674ba0ab76aa777e737d0a
+msgid "15 tests: Integration tests (end-to-end)"
+msgstr "۱۵ تست: تست‌های یکپارچگی (سرتاسر)"
+
+#: ../../source/tier-system.rst:793 bb26dd44503f4506bccdca33bad3dfc4
+msgid "📄 **Test documentation**: ``tests/TEST_SUMMARY.md``"
+msgstr "📄 **مستندات تست**: ``tests/TEST_SUMMARY.md``"
+
+#: ../../source/tier-system.rst:796 dbaaed16c39d4e66942e975135955773
+msgid "Running Tests"
+msgstr "اجرای تست‌ها"
+
+#: ../../source/tier-system.rst:813 77402cc08e9f455cba18332855019c0c
+msgid "Adding Custom Tiers and Presets"
+msgstr "افزودن سطوح و پیش‌تنظیم‌های سفارشی"
+
+#: ../../source/tier-system.rst:815 b89f7805dc5d437cafd95c0d3046aa82
+msgid ""
+"The CLI tools automatically detect new tiers and presets - no manual "
+"updates needed!"
+msgstr ""
+"ابزارهای CLI به طور خودکار سطوح و پیش‌تنظیم‌های جدید را شناسایی می‌کنند - به "
+"به‌روزرسانی دستی نیازی نیست!"
+
+#: ../../source/tier-system.rst:818 36793e7af6a940138d5fbb041f392604
+msgid "Adding New Tier Defaults"
+msgstr "افزودن پیش‌فرض‌های سطح جدید"
+
+#: ../../source/tier-system.rst:820 714acbfa77e640629d4ee2e7f3760e0f
+msgid "**File**: ``src/atomate2/siesta/sets/tiers/defaults.py``"
+msgstr "**فایل**: ``src/atomate2/siesta/sets/tiers/defaults.py``"
+
+#: ../../source/tier-system.rst:822 071b1bd6f782427da68aa7fbfd38d01b
+msgid "Add a new tier level to ``TIER_DEFAULTS``:"
+msgstr "یک سطح جدید به ``TIER_DEFAULTS`` اضافه کنید:"
+
+#: ../../source/tier-system.rst:845 ../../source/tier-system.rst:883
+#: b4f3c644ee20441aa16f27f9ffa20263 f32228ae734c4b3cb339980d4fe52d05
+msgid "**Result**: Automatically appears in CLI:"
+msgstr "**نتیجه**: به طور خودکار در CLI ظاهر می‌شود:"
+
+#: ../../source/tier-system.rst:853 d069213732f34695b9c64edd3aae58c2
+msgid "✅ **Dynamic detection** - CLI counts and displays all tiers automatically"
+msgstr "✅ **شناسایی پویا** - CLI همه سطوح را به طور خودکار شمارش و نمایش می‌دهد"
+
+#: ../../source/tier-system.rst:856 34b3e9be5b1e4ec3bc9639959d8039d0
+msgid "Adding New Presets"
+msgstr "افزودن پیش‌تنظیم‌های جدید"
+
+#: ../../source/tier-system.rst:858 8be7dc1c0cc54f30bdb0b2ee6a705cd3
+msgid "**Files**: ``src/atomate2/siesta/sets/tiers/presets/*.py``"
+msgstr "**فایل‌ها**: ``src/atomate2/siesta/sets/tiers/presets/*.py``"
+
+#: ../../source/tier-system.rst:860 19d9e05b1b824781ad87658c586d803a
+msgid "Add a preset to the appropriate category file:"
+msgstr "یک پیش‌تنظیم به فایل دسته مناسب اضافه کنید:"
+
+#: ../../source/tier-system.rst:862 a088f9c88b2149cc96f53788b9c27f7a
+msgid "**Example 1: Add to existing category**"
+msgstr "**مثال ۱: افزودن به دسته موجود**"
+
+#: ../../source/tier-system.rst:864 88e180eb11e044a0a651417331bf9cca
+msgid "Edit ``src/atomate2/siesta/sets/tiers/presets/surface.py``:"
+msgstr "ویرایش ``src/atomate2/siesta/sets/tiers/presets/surface.py``:"
+
+#: ../../source/tier-system.rst:896 aa7e05f80b3446f38933270c5d34372c
+msgid "**Example 2: Create new category file**"
+msgstr "**مثال ۲: ایجاد فایل دسته جدید**"
+
+#: ../../source/tier-system.rst:898 7f7f71864f304ba78b9fd3ff445b6c15
+msgid "Create ``src/atomate2/siesta/sets/tiers/presets/catalysis.py``:"
+msgstr "ایجاد ``src/atomate2/siesta/sets/tiers/presets/catalysis.py``:"
+
+#: ../../source/tier-system.rst:920 3c7230dd03f34a53904c361d4a2306e0
+msgid "Update ``src/atomate2/siesta/sets/tiers/presets/__init__.py``:"
+msgstr "به‌روزرسانی ``src/atomate2/siesta/sets/tiers/presets/__init__.py``:"
+
+#: ../../source/tier-system.rst:933 39d8127dacc4478197d6af70b1315c98
+msgid ""
+"**Result**: All ``catalysis_*`` or ``reaction_*`` presets automatically "
+"categorized"
+msgstr ""
+"**نتیجه**: تمام پیش‌تنظیم‌های ``catalysis_*`` یا ``reaction_*`` به طور خودکار "
+"دسته‌بندی می‌شوند"
+
+#: ../../source/tier-system.rst:936 ba0ba5aa201e4a84914b8fe0f157fac1
+msgid "Automatic CLI Detection Rules"
+msgstr "قوانین شناسایی خودکار CLI"
+
+#: ../../source/tier-system.rst:938 8caebebcb22f4aaba5e52db67f389968
+msgid "The CLI automatically categorizes presets based on naming patterns:"
+msgstr "CLI به طور خودکار پیش‌تنظیم‌ها را بر اساس الگوهای نام‌گذاری دسته‌بندی می‌کند:"
+
+#: ../../source/tier-system.rst:944 c81ab783cdbf4a55ad58d96415c7de28
+msgid "Preset Name Pattern"
+msgstr "الگوی نام پیش‌تنظیم"
+
+#: ../../source/tier-system.rst:945 f295fadbffaa4aba923e87bdd2bae1f2
+msgid "Category"
+msgstr "دسته"
+
+#: ../../source/tier-system.rst:946 716c5244a89641f5aaa38b85a38c31f9
+msgid "Example"
+msgstr "مثال"
+
+#: ../../source/tier-system.rst:947 2148af288d9c41a78e4f44f887221371
+msgid "``2d_*``"
+msgstr "``2d_*``"
+
+#: ../../source/tier-system.rst:948 d9dac89d4966442090cbe8b3797db2c5
+msgid "2d"
+msgstr "۲d"
+
+#: ../../source/tier-system.rst:949 410d6817891f4d57ab39613018bef498
+msgid "``2d_metal_rough``"
+msgstr "``2d_metal_rough``"
+
+#: ../../source/tier-system.rst:950 0027c81b9d694d68993a2bd386a9d80a
+msgid "``surface_*``"
+msgstr "``surface_*``"
+
+#: ../../source/tier-system.rst:951 ../../source/tier-system.rst:954
+#: 8388446e32b841d0bb1d0623f332c774 d8c3daaab2014fa39c68f1ed9b34a536
+msgid "surface"
+msgstr "سطح"
+
+#: ../../source/tier-system.rst:953 a8152bc3651e44a3a0cfe3850e10561e
+msgid "``adsorbate_*``"
+msgstr "``adsorbate_*``"
+
+#: ../../source/tier-system.rst:955 baad1b10462c4b1990fe081ddfe1268c
+msgid "``adsorbate_screening``"
+msgstr "``adsorbate_screening``"
+
+#: ../../source/tier-system.rst:956 e8d934144a3f434da87d1f482f1d682f
+msgid "``molecule_*``, ``molecular_*``"
+msgstr "``molecule_*``، ``molecular_*``"
+
+#: ../../source/tier-system.rst:957 1c9f7ea6094f48468a98413382f9b8f1
+msgid "molecular"
+msgstr "مولکولی"
+
+#: ../../source/tier-system.rst:958 df0736614fd44b9cbd51300af64247a8
+msgid "``molecule_gas_phase``"
+msgstr "``molecule_gas_phase``"
+
+#: ../../source/tier-system.rst:959 db3e0f1cc256447c963b2048ac9cfffb
+msgid "``magnetic_*``"
+msgstr "``magnetic_*``"
+
+#: ../../source/tier-system.rst:960 d3b09184090e4cef9b7a4f99ed024d50
+msgid "magnetic"
+msgstr "مغناطیسی"
+
+#: ../../source/tier-system.rst:962 d367dc1a665a4eb2b1e23f9ee2656931
+msgid "``phonon_*``"
+msgstr "``phonon_*``"
+
+#: ../../source/tier-system.rst:963 19074f621afc4588bc14b5e86212f638
+msgid "phonon"
+msgstr "فونون"
+
+#: ../../source/tier-system.rst:965 88031cb7dfcc47da8c22e0e72852f228
+msgid "``optical_*``"
+msgstr "``optical_*``"
+
+#: ../../source/tier-system.rst:966 a314202fa9d34d58a3bdaf4fd2bd956f
+msgid "optical"
+msgstr "نوری"
+
+#: ../../source/tier-system.rst:968 3b3a00a62b674521aec8bf38b1abacc8
+msgid "Contains ``relax``"
+msgstr "شامل ``relax``"
+
+#: ../../source/tier-system.rst:969 456aa93e8a064ddeb12f3d05a80db88a
+msgid "structural"
+msgstr "ساختاری"
+
+#: ../../source/tier-system.rst:971 768b9596d3884b54a651a396a0b25169
+msgid "``bulk_*``, ``band_structure``"
+msgstr "``bulk_*``، ``band_structure``"
+
+#: ../../source/tier-system.rst:972 f86911fa8e1a4e3cb15f671b5bdf7854
+msgid "electronic"
+msgstr "الکترونی"
+
+#: ../../source/tier-system.rst:973 976285e15d9a45499504e8f9515dc7ee
+msgid "``bulk_metal``"
+msgstr "``bulk_metal``"
+
+#: ../../source/tier-system.rst:974 7482427e6133401aa229716d0c0e55bf
+msgid "``large_system``, ``parallel_hpc``"
+msgstr "``large_system``، ``parallel_hpc``"
+
+#: ../../source/tier-system.rst:975 7f705d8828024b458d9c0ada6fe7d156
+msgid "performance"
+msgstr "عملکرد"
+
+#: ../../source/tier-system.rst:978 4b54f98dda844bb19921a85227c1bed1
+msgid ""
+"**Best Practice**: Name presets with appropriate prefixes for automatic "
+"categorization."
+msgstr ""
+"**بهترین شیوه**: پیش‌تنظیم‌ها را با پیشوندهای مناسب برای دسته‌بندی خودکار نام‌گذاری کنید."
+
+#: ../../source/tier-system.rst:981 fc6536fa94a041cab40d04bca11d75c0
+msgid "Viewing Your Changes"
+msgstr "مشاهده تغییرات شما"
+
+#: ../../source/tier-system.rst:983 219b6b9bb9d8411787ef3eac47b97bb2
+msgid "After adding new tiers or presets:"
+msgstr "پس از افزودن سطوح یا پیش‌تنظیم‌های جدید:"
+
+#: ../../source/tier-system.rst:1002 91f7f1f7f5e64f848b0b9e1c27ae6f09
+msgid "**No restart or reinstall needed** - changes detected immediately!"
+msgstr "**نیازی به راه‌اندازی مجدد یا نصب مجدد نیست** - تغییرات بلافاصله شناسایی می‌شوند!"
+
+#: ../../source/tier-system.rst:1005 1ff2b48f2692467db4c8d2fa8beabdb8
+msgid "Complete Workflow Example"
+msgstr "مثال کامل جریان کار"
+
+#: ../../source/tier-system.rst:1007 cb430f6f2553417a94b2098effec8c5c
+msgid "**Goal**: Add a fast screening preset for metal-organic frameworks"
+msgstr "**هدف**: افزودن یک پیش‌تنظیم غربالگری سریع برای چارچوب‌های آلی-فلزی"
+
+#: ../../source/tier-system.rst:1009 65cb224b61c744bbaa531687fc7ee14d
+msgid "**Step 1**: Add to ``presets/molecular.py``:"
+msgstr "**مرحله ۱**: به ``presets/molecular.py`` اضافه کنید:"
+
+#: ../../source/tier-system.rst:1029 93c6766ba51c44ca88a44ce3395cc967
+msgid "**Step 2**: Verify in CLI:"
+msgstr "**مرحله ۲**: در CLI تأیید کنید:"
+
+#: ../../source/tier-system.rst:1039 67a4bc9bf98e4ee6957d685f0987e900
+msgid "**Step 3**: Use in code:"
+msgstr "**مرحله ۳**: در کد استفاده کنید:"
+
+#: ../../source/tier-system.rst:1050 a13c0be3ea3b4f9a81e5dc608306f73b
+msgid "**Done!** No CLI updates, no documentation changes - everything automatic."
+msgstr "**انجام شد!** بدون به‌روزرسانی CLI، بدون تغییر مستندات - همه چیز خودکار."
+
+#: ../../source/tier-system.rst:1055 0ffd7268a5834f959ff98569a32e567a
+msgid "Future Enhancements"
+msgstr "بهبودهای آینده"
+
+#: ../../source/tier-system.rst:1058 72622c620c0b48c3aa4f81470797320b
+msgid "Planned Improvements"
+msgstr "بهبودهای برنامه‌ریزی‌شده"
+
+#: ../../source/tier-system.rst:1060 9c8860c33a544997a6164e5992c42503
+msgid "**Missing Setup Methods** (12 modules need implementation):"
+msgstr "**متدهای راه‌اندازی ناموجود** (۱۲ ماژول نیاز به پیاده‌سازی دارند):"
+
+#: ../../source/tier-system.rst:1062 6d5f5bbb84f0420490307f5a9a3b6b73
+msgid "``md_relaxation``, ``constraints``, ``phonons``, ``optical``"
+msgstr "``md_relaxation``، ``constraints``، ``phonons``، ``optical``"
+
+#: ../../source/tier-system.rst:1063 16bdeb4f60214296975a9e3b256dc8f1
+msgid "``dos_bands``, ``charge_dipole``, ``grids_advanced``, ``denchar``"
+msgstr "``dos_bands``، ``charge_dipole``، ``grids_advanced``، ``denchar``"
+
+#: ../../source/tier-system.rst:1064 8eaf1f40a653450e9b0e8fd075aecd08
+msgid "``parallel``, ``solvers``, ``efficiency``, ``hamiltonian_overlap``"
+msgstr "``parallel``، ``solvers``، ``efficiency``، ``hamiltonian_overlap``"
+
+#: ../../source/tier-system.rst:1066 f6ef4c31f7174d4d9008463869c55f35
+msgid "**Interactive Preset Selection**:"
+msgstr "**انتخاب تعاملی پیش‌تنظیم**:"
+
+#: ../../source/tier-system.rst:1068 40ab844daeb44660bbd8680ede06b30c
+msgid "``SiestaConfigurationWizard`` for guided preset selection"
+msgstr "``SiestaConfigurationWizard`` برای انتخاب راهنمایی‌شده پیش‌تنظیم"
+
+#: ../../source/tier-system.rst:1069 4f645be5009041adb7f7c45f65720fa4
+msgid "Structure property-based recommendations"
+msgstr "توصیه‌های مبتنی بر ویژگی ساختار"
+
+#: ../../source/tier-system.rst:1071 60bddc11fc3e48c68275b611b390d7a4
+msgid "**More Presets**:"
+msgstr "**پیش‌تنظیم‌های بیشتر**:"
+
+#: ../../source/tier-system.rst:1073 38fe437975834a9098f4b920e7f6eae0
+msgid "Specific material classes (perovskites, 2D materials, etc.)"
+msgstr "کلاس‌های خاص مواد (پروسکایت‌ها، مواد دوبعدی و غیره)"
+
+#: ../../source/tier-system.rst:1074 907ca6b4b7d94edf8296be7261bce48e
+msgid "Calculation type presets (screening, production, benchmark)"
+msgstr "پیش‌تنظیم‌های نوع محاسبات (غربالگری، تولید، معیارسنجی)"
+
+#: ../../source/tier-system.rst:1079 c5df3fc00f6b4d6a98d17fdde211da33
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/tier-system.rst:1081 1e184b76627640d8a0396180110cddde
+msgid ":doc:`features` - Overview of all recent features"
+msgstr ":doc:`features` - نمای کلی تمام ویژگی‌های اخیر"
+
+#: ../../source/tier-system.rst:1082 c3002408c0da49199ab555ba7647b384
+msgid ":doc:`tutorials/advanced` - Tutorial 18 (tier-based calculations)"
+msgstr ":doc:`tutorials/advanced` - آموزش ۱۸ (محاسبات مبتنی بر سطح‌بندی)"
+
+#: ../../source/tier-system.rst:1083 f827700757f944558381390885ffc7eb
+msgid ":doc:`tutorials/infrastructure` - Production deployment"
+msgstr ":doc:`tutorials/infrastructure` - استقرار تولیدی"
+
+#: ../../source/tier-system.rst:1089 581a82cd71d54f3bad8ccb6cb3f3f265
+msgid ""
+"The tier system is production-ready (2024) with comprehensive testing and"
+" performance validation. All 14 presets are fully functional."
+msgstr ""
+"سیستم سطح‌بندی آماده تولید (۲۰۲۴) با تست جامع و اعتبارسنجی عملکرد است. تمام "
+"۱۴ پیش‌تنظیم به طور کامل کاربردی هستند."

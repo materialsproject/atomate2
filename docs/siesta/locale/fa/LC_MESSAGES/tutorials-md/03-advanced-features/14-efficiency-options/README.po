@@ -1,0 +1,1322 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:1
+#: 238247523dd141fd91526531c64f7fe2
+msgid "Tutorial 14: Efficiency and Performance Monitoring"
+msgstr "Tutیاil 14: Efficiency و Perبرایmnce Monitیاing"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:3
+#: d41fb57423a74ef480daa41e9ff215fe
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:5
+#: 239b9b6e9a7a48168fbd55535969cdb5
+msgid ""
+"This tutorial demonstrates how to configure SIESTA's efficiency and "
+"performance monitoring options using the `EfficiencyOptions` dataclass "
+"module. These settings help optimize calculations, monitor resource "
+"usage, and manage long-running jobs on HPC clusters."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:7
+#: 38cec86e84f44e3c9a632a94e39fb242
+msgid "Learning Objectives"
+msgstr "Lerning Objectives"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:9
+#: 536646c9bd724a2c843df537681a9fc1
+msgid "Configure memory allocation reporting for debugging"
+msgstr "Configure memیاy lloction repیاting برای debugging"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:10
+#: 3d7adf5a18d64764af03319a40f61503
+msgid "Enable timing analysis for performance profiling"
+msgstr "Enble timing nlysis برای perبرایmnce profiling"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:11
+#: 3d10b929c18a46f5a5a6ed8e24991a7f
+msgid "Set walltime limits for cluster job management"
+msgstr "Set wlltime limits برای cluster job mngement"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:12
+#: 9d60cdbeae9e4cdbb79e4351f4511342
+msgid "Optimize calculation efficiency with DirectPhi"
+msgstr "Optimize clcultion efficiency با DirectPhi"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:13
+#: 007d1bca208c48ddbf14404e9696d9ce
+msgid "Use restart data for interrupted calculations"
+msgstr "Use restrt dt برای interrupted clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:15
+#: b48a2cda0d9647a095f44d7bab42349b
+msgid "Theory"
+msgstr "Theیاy"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:17
+#: 61aedee2fb4746a3859d0835eec48935
+msgid "Performance Monitoring in SIESTA"
+msgstr "Perبرایmnce Monitیاing in SIESTA"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:19
+#: 9686fd9031da401ebe498bd245ce6e78
+msgid ""
+"SIESTA provides comprehensive monitoring tools to help identify "
+"bottlenecks and optimize calculations:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:21
+#: 58b1e6c322a442e6a84381fa334a9f4d
+msgid ""
+"**Memory Allocation Reporting**: Track memory usage at different "
+"verbosity levels"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:22
+#: 896d99fe76ed43e189190db021bbcb3f
+msgid "**Timing Analysis**: Measure time spent in different code sections"
+msgstr "**Timing Anlysis**: Mesure time spent in different code sections"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:23
+#: 05224226c87e4d3cbfd4549a5f95a2d9
+msgid "**Walltime Management**: Gracefully handle cluster time limits"
+msgstr "**Wlltime Mngement**: Grcefully hوle cluster time limits"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:24
+#: 20222f50b55f4dc5be8cfc733ed70144
+msgid "**Calculation Optimization**: Skip unnecessary intermediate steps"
+msgstr "**محاسبه Optimiztion**: Skip unnecessry intermedite steps"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:26
+#: f87595573e5240aeba901123d1352b5b
+msgid "Why Monitor Performance?"
+msgstr "Why Monitیا Perبرایmnce?"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:28
+#: fa37ea40f0044f72924e8bf74cfc7e01
+msgid "**Memory Issues:**"
+msgstr "**Memیاy Issues:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:29
+#: ff1693af9ff04b299ad6acd55a3701b4
+msgid "Identify memory leaks and allocation patterns"
+msgstr "Identify memیاy leks و lloction ptterns"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:30
+#: 3213d08887ba4dee9866cae7834a4eab
+msgid "Optimize memory usage for large systems"
+msgstr "Optimize memیاy usge برای lrge systems"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:31
+#: dc8311922995457b8a5c9081e32fd287
+msgid "Debug out-of-memory errors"
+msgstr "Debug out-of-memیاy errیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:33
+#: b767ebb25660436185d009f593571de0
+msgid "**Performance Bottlenecks:**"
+msgstr "**Perبرایmnce Bottlenecks:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:34
+#: 677c17fb011a4e16ac86d49edae3bc50
+msgid "Find slow code sections (diagonalization, grid operations, etc.)"
+msgstr "Find slow code sections (digonliztion, grid opertions, etc.)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:35
+#: a80bc4332f58406f99e260957924429d
+msgid "Balance load across MPI processes"
+msgstr "Blnce lod cross MPI processes"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:36
+#: e680b2e1997549849de066ddff59816b
+msgid "Optimize parallelization strategy"
+msgstr "Optimize prlleliztion strtegy"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:38
+#: afeee02b4df845729493955ea58b29cc
+msgid "**Job Management:**"
+msgstr "**Job Mngement:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:39
+#: 777b4d0da22646d9a2b351bd5a66cf62
+msgid "Ensure calculations complete before cluster time limits"
+msgstr "Ensure clcultions complete beبرایe cluster time limits"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:40
+#: f12c01e77dc5435d8a7151c024b2fbb0
+msgid "Create restart files automatically"
+msgstr "Crete restrt files utomticlly"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:41
+#: f4a249c5d74841a2b8d159e3b6c4d20e
+msgid "Avoid wasted compute time"
+msgstr "Avoid wsted compute time"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:43
+#: 27a7fd79e83d42938c183bd75d15c8bb
+msgid "Parameters"
+msgstr "Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: f04d1a21233845b5a6b76d2c5b070616
+msgid "Parameter"
+msgstr "Prmeter"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 312c6466e31a489da608555d8fde7feb
+msgid "Type"
+msgstr "Type"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: c2390ed22be14064a5468c8fb66b6ee6
+msgid "Default"
+msgstr "Defult"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: b518d21ff0e547bba19508d4fa9a189d
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: e7f017849454404da6e91a7050ec755b
+msgid "`direct_phi`"
+msgstr "`direct_phi`"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 08e318fbe22b4f26a0e227f057190a82 24ea1d4889ab436f883da9229960c329
+#: 2a27b91cdbf643298c8a995aefa6a347 321e717b8d7a4f6f80713ec70d69a0a9
+#: 6370c967ece143b681163a0c130eef47
+msgid "bool"
+msgstr "bool"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 3427ad3f715f4602ba387ed82fab290d 376686775b4649d689f237996725747f
+#: 563d5179458948f0a13d897add9d19ae 7208aa0870e945e5b77bf6c551dc58f1
+#: 8df373a965d349bc93baf453c5e54ff5 f9a5b5d919804009bc689b5ef46dcbbb
+msgid "False"
+msgstr "Flse"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: df497281473e4bc0ade3e50552d6fd85
+msgid "Skip intermediate phi calculations"
+msgstr "Skip intermedite phi clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 95b6e63e47c248c59bf56c34fb43635f
+msgid "`alloc_report_level`"
+msgstr "`alloc_report_level`"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: e85276685bac4f0999126c92a15ed004
+msgid "int"
+msgstr "int"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 772fa59081114b358d53a434c3576dc7 a9645dc5331d4808b06a018a3f681256
+msgid "0"
+msgstr "0"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: e5f947a39a724d7cbe7e7dbcda6955cf
+msgid "Memory allocation verbosity (0-3)"
+msgstr "Memیاy lloction verbosity (0-3)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 51b171bac09f4e4eb4d8eddea658ef69
+msgid "`alloc_report_threshold`"
+msgstr "`alloc_report_threshold`"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 14c26bfeb5b242cdbcf9ae2d64918d8e 30b392a462eb4c1dbd93cafa1d919a8c
+#: bc6d2da3c45446ba82a1783c542b867b c6f04b327fd343f988cd015ebd187fe2
+msgid "float"
+msgstr "flot"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 6167e844cf9840e0b28b7cee1d518ade 98683459b005431f984ac8684021dade
+msgid "0.0"
+msgstr "0.0"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 5eee404f330648aa9f8ac555f1d414db
+msgid "Min memory (MB) to report"
+msgstr "Min memیاy (MB) to repیاt"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: f463c3149d944e998f4cea0e962aab59
+msgid "`timer_report_threshold`"
+msgstr "`timer_report_threshold`"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 8791937a1f0841819b95400446ab3941
+msgid "Min time (s) to report"
+msgstr "Min time (s) to repیاt"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: c9aeae4bd8c64757826726102bb2b784
+msgid "`user_tree_timer`"
+msgstr "`user_tree_timer`"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 11000d4e236a45bf809baa6af3ece1ab
+msgid "Enable hierarchical timing tree"
+msgstr "Enble hierrchicl timing tree"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 7329dd8f227246c9b5eed6cba6f71d82
+msgid "`user_parallel_timer`"
+msgstr "`user_parallel_timer`"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 3f1cfd5e1b134159bcbadbb6a6c35e6d
+msgid "Per-process timing reports"
+msgstr "Per-process timing repیاts"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 979d2dd6dccd48f4a9414bedfbf246b2
+msgid "`timing_split_scf_steps`"
+msgstr "`timing_split_scf_steps`"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 35521af6368349a1af79d45cd1aa324c
+msgid "Time individual SCF steps"
+msgstr "زمان individul SCF steps"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 7440ff00fa3c418e928369b0317846ec
+msgid "`max_walltime`"
+msgstr "`max_walltime`"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 0b7c8d6baf7e4c468410b3f5c725727b 6e099149067242b4a6b0dec306f27283
+#: 841d5277932b48a2947eb0c2d803417c
+msgid "None"
+msgstr "None"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: cea4e19843264b9d84c6d3e4ed1c6e5b
+msgid "Maximum runtime (seconds)"
+msgstr "Mximum runtime (seconds)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 90d80e62916d44e1b876d930c8117e5f
+msgid "`max_walltime_slack`"
+msgstr "`max_walltime_slack`"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 801f6ef84a25436e9d837e55ead74de0
+msgid "5.0"
+msgstr "5.0"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: b22a8701e9af4b478f42752135e3c2cc
+msgid "Safety margin (seconds)"
+msgstr "Sfety mrgin (seconds)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: b14cbaa923754d34b883396c6bb5ea73
+msgid "`use_save_data`"
+msgstr "`use_save_data`"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 6e20f38a7ba240b8b5fc884010b1d44d
+msgid "Use restart data if available"
+msgstr "Use restrt dt if vilble"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:58
+#: 38ac947d09e143799b4940e0796d69ea
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:60
+#: e1c5ac9a87a74d7d8682884750cf8a5c
+msgid "Example 1: Memory Allocation Reporting"
+msgstr "مثال 1: Memیاy Alloction Repیاting"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:62
+#: aef90b1da93c459a8fd335d98d7c2dbf
+msgid "Monitor memory usage during calculation:"
+msgstr "Monitیا memیاy usge during clcultion:"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:73
+#: a16e5f00265d44e89258751edcf5a660
+msgid "**AllocReportLevel options:**"
+msgstr "**AllocRepیاtLevel options:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:74
+#: d3d9349009d541d0aa26a47655eb8574
+msgid "**0**: No reporting (default)"
+msgstr "**0**: No repیاting (defult)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:75
+#: 3bad7cd2ade94fbda4b4a7bfb04e2b63
+msgid "**1**: Major allocations only"
+msgstr "**1**: Mjیا lloctions only"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:76
+#: 0680cd25351a458cb30cd100deb8c2eb
+msgid "**2**: Moderate verbosity (recommended)"
+msgstr "**2**: Moderte verbosity (recommended)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:77
+#: ceb5ea8e343a472183c4e6fe48fc5729
+msgid "**3**: All allocations (very verbose)"
+msgstr "**3**: All lloctions (very verbose)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:79
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:388
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:414
+#: 0c075306a90240538470a7260501cb8d 56c321a9d938463ea6fbe223dac3595d
+#: 5aeaa528e7344145b470cb28a28f7ba5
+msgid "**When to use:**"
+msgstr "**When to use:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:80
+#: 907f43959456408ab13bf290efedd582
+msgid "Debugging memory issues"
+msgstr "Debugging memیاy issues"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:81
+#: 5fe520c801fd44958a01060f2140b6b9
+msgid "Optimizing large calculations"
+msgstr "Optimizing lrge clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:82
+#: 1f5f415841254478887ed5ba6fd4935b
+msgid "Identifying memory-intensive operations"
+msgstr "Identifying memیاy-intensive opertions"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:84
+#: 0f88b59c7d8f49a9ad69c08ea473d19a
+msgid "Example 2: Walltime Limits for Cluster Jobs"
+msgstr "مثال 2: Wlltime Limits برای Cluster Jobs"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:86
+#: 85c91b5be6e243c9a9d9fe6eedbf7279
+msgid "Set maximum runtime with automatic restart:"
+msgstr "Set mximum runtime با utomtic restrt:"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:98
+#: 15443220130d43d180323a7eef17d89e
+msgid "**Best practices:**"
+msgstr "**Best prctices:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:99
+#: 3eaa38679f9b4cfea17dd6ba22ece5c1
+#, python-format
+msgid "Set MaxWalltime to 90-95% of cluster limit"
+msgstr "Set MxWlltime to 90-95% of cluster limit"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:100
+#: 779ce3d0db8f4eaa87c60bf18e53c67c
+msgid "Use slack time for clean shutdown"
+msgstr "Use slck time برای clen shutdown"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:101
+#: b59d2550a5bc44e090f5f09b2db6faa6
+msgid "Enable UseSaveData for continuation"
+msgstr "Enble UseSveDt برای continution"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:103
+#: 7ba819ea4ecb43d3b5e889e217207f90
+msgid "**Example: 1-hour job queue**"
+msgstr "**مثال: 1-hour job queue**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:111
+#: 86c178c9658746a083bfe15062b771ef
+msgid "Example 3: Comprehensive Timing Analysis"
+msgstr "مثال 3: Comprehensive Timing Anlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:113
+#: 3cd96a11385c41158d0ab0931a84d761
+msgid "Enable detailed performance profiling:"
+msgstr "Enble detiled perبرایmnce profiling:"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:126
+#: 7e8ecf0a192a48378084d736be2948d1
+msgid "**Timing output includes:**"
+msgstr "**Timing output includes:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:127
+#: e971bd79c4a74422ba598e39ae677bdc
+msgid "Total time per major section (setup, SCF, forces)"
+msgstr "Totl time per mjیا section (setup, SCF, برایces)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:128
+#: 976950ac8fd64752a05c3096a6e2ef51
+msgid "Per-process timing for load balance analysis"
+msgstr "Per-process timing برای lod blnce nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:129
+#: 27385d33637c4ec8847e45ac482f5679
+msgid "Individual SCF step timing"
+msgstr "Individul SCF step timing"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:130
+#: 6b840bd7d1b242ba9b04c614bc298940
+msgid "Grid operations, diagonalization, communication"
+msgstr "Grid opertions, digonliztion, communiction"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:132
+#: d1064e5728b743bd867c67181be19cac
+msgid "Memory Allocation Reporting"
+msgstr "Memیاy Alloction Repیاting"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:134
+#: 862d765f8e6e45979ca8692c07861291
+msgid "Configuration Levels"
+msgstr "Configurtion Levels"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:136
+#: c5d7b3c0b2314f70bbd20d3ba0200120
+msgid "**Level 0 (None):**"
+msgstr "**Level 0 (None):**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:141
+#: 11123e8dd7e94458b8474b583d58f1db
+msgid "**Level 1 (Major):**"
+msgstr "**Level 1 (Mjیا):**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:148
+#: 50765d9ebbce4ff694a5fe9233d767fb
+msgid "Output: Major arrays (density matrix, Hamiltonian, grids)"
+msgstr "Output: Mjیا rrys (density mtrix, Hmiltonin, grids)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:150
+#: da739a8900f546a89552b29452c69e68
+msgid "**Level 2 (Moderate):**"
+msgstr "**Level 2 (Moderte):**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:157
+#: 68eceebe6bff4f24b4e6005b4cc60859
+msgid "Output: Most allocations with reasonable verbosity"
+msgstr "Output: Most lloctions با resonble verbosity"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:159
+#: f91b641d7c344a6a84487e0b9aaf3dcc
+msgid "**Level 3 (All):**"
+msgstr "**Level 3 (All):**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:166
+#: 294be4108b5e4a3b872ae42b1237810f
+msgid "Output: Every allocation (very verbose, for debugging only)"
+msgstr "Output: Every lloction (very verbose, برای debugging only)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:168
+#: 7569aa5b2c994e1a8a553d831cb09745
+msgid "Example Output"
+msgstr "مثال Output"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:179
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:521
+#: 41d3f4b1f7c24d5a8130b4815a1c7cf3 4cea72b8aa504742a1b0bba6a8d8f5fc
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:181
+#: 00741e6d01064895990a5f64c5a89123
+msgid "**Production calculations:**"
+msgstr "**Production clcultions:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:188
+#: 0cbfde28b521482db85e9f0625919e2b
+msgid "**Development/debugging:**"
+msgstr "**Development/debugging:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:196
+#: 2a20214499ee4a1aa479e11ce3f5b225
+msgid "**Memory issues:**"
+msgstr "**Memیاy issues:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:204
+#: c35785f47493443f8b67421842cee2d2
+msgid "Timing Analysis"
+msgstr "Timing Anlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:206
+#: 0d6d33da892d4ae8ab46bcdae58a0e28
+msgid "Timer Types"
+msgstr "زمانr Types"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:208
+#: 39001b21900e4b2e904dbb2e4dbfda28
+msgid "**1. Tree Timer (UserTreeTimer)**"
+msgstr "**1. Tree زمانr (UserTreeزمانr)**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:210
+#: 1d7aca38f4a84bab940e91a97d90188a
+msgid "Hierarchical timing breakdown:"
+msgstr "Hierrchicl timing brekdown:"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:224
+#: 0525b3479e4d4b2693acd7053af41d87
+msgid "**2. Parallel Timer (UserParallelTimer)**"
+msgstr "**2. Prllel زمانr (UserPrllelزمانr)**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:226
+#: 51ec15b00a0b4416acb9ad7c5b061142
+msgid "Per-process timing for load balancing:"
+msgstr "Per-process timing برای lod blncing:"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:236
+#: cee7d2485cab4c06886b7dd22555b024
+msgid "**3. SCF Step Timing (TimingSplitSCFSteps)**"
+msgstr "**3. SCF Step Timing (TimingSplitSCFSteps)**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:238
+#: e5539c699cb446d581ca61d44c5bbeb4
+msgid "Individual SCF iteration timing:"
+msgstr "Individul SCF itertion timing:"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:249
+#: 455a06783bbf45a78b4fe91df9c1aa36
+msgid "Configuration Examples"
+msgstr "Configurtion مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:251
+#: 0f1c8f0e6a4a4add89733c808b44bdb5
+msgid "**Quick profiling:**"
+msgstr "**Quick profiling:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:259
+#: 6155e8e1664e4955bbda60148ecc20a5
+msgid "**Load balance analysis:**"
+msgstr "**Lod blnce nlysis:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:267
+#: bcc1d213ea524b5199e8f5b27b959267
+msgid "**SCF convergence profiling:**"
+msgstr "**SCF convergence profiling:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:274
+#: b0f1a2dc56954115b74e3df4c90e7371
+msgid "**Complete profiling:**"
+msgstr "**Complete profiling:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:284
+#: 2f70c0ce95de4e0894124b79e65f172e
+msgid "Walltime Management"
+msgstr "Wlltime Mngement"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:286
+#: f0f44dbad236462ea7ddcd6fe988893c
+msgid "Why Use Walltime Limits?"
+msgstr "Why Use Wlltime Limits?"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:288
+#: 4689b1809f8c4b9d821d6a503966efb0
+msgid "**Cluster job queues** have time limits:"
+msgstr "**Cluster job queues** hve time limits:"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:289
+#: 153f28b7fb3d421a90f32ab61af82e6d
+msgid "Short queue: 1-4 hours"
+msgstr "Shیاt queue: 1-4 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:290
+#: 3d37671898d4495a8b5261bf96ecea1d
+msgid "Medium queue: 12-24 hours"
+msgstr "Medium queue: 12-24 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:291
+#: 137a229df12245c29ed8bf3c40c10f8b
+msgid "Long queue: 48-168 hours"
+msgstr "Long queue: 48-168 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:293
+#: 7672dfdb152f4a9dbd99b3f79881f508
+msgid "**Without walltime limits:**"
+msgstr "**Without wlltime limits:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:294
+#: 8c8460b16aa9475ea57f7a003cd1e2a5
+msgid "Job killed abruptly when time expires"
+msgstr "Job killed bruptly when time expires"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:295
+#: be9b719b5cbc402da80c3abfc07cfa48
+msgid "No restart files saved"
+msgstr "No restrt files sved"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:296
+#: b17799f07a114d9793825fc7a5f5dcbd
+msgid "Wasted compute time"
+msgstr "Wsted compute time"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:298
+#: aece9bb01c724bef848891092ca5eae0
+msgid "**With walltime limits:**"
+msgstr "**With wlltime limits:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:299
+#: 8b7694a2619d4320b5882d754460db76
+msgid "Calculation stops gracefully"
+msgstr "محاسبه stops grcefully"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:300
+#: 32c71b6fae70421b83e88dd32ed1cddd
+msgid "Restart files saved automatically"
+msgstr "Restrt files sved utomticlly"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:301
+#: 942dab25ed414fa681db963e79a8131a
+msgid "Can continue in next job"
+msgstr "Cn continue in next job"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:303
+#: 389273243085406ca92fa39d662e8399
+msgid "Configuration Strategy"
+msgstr "Configurtion Strtegy"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:305
+#: 37a6d37aee4e4d8e98fceccc2de9da67
+msgid "**1. Determine cluster time limit:**"
+msgstr "**1. Determine cluster time limit:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:311
+#: fe64b9bd66964b2f927cc7be835458e6
+msgid "**2. Set MaxWalltime with safety margin:**"
+msgstr "**2. Set MxWlltime با sfety mrgin:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:317
+#: 2b955534c8ed437dbd1ac51cbd9af5a9
+msgid "**3. Configure slack time:**"
+msgstr "**3. Configure slck time:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:323
+#: 1cf6f741f1c9417b9e49bfb82cfe1778
+msgid "**4. Enable restart:**"
+msgstr "**4. Enble restrt:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:332
+#: ef1595b7dd2c486395a46c36104719df
+msgid "Example Configurations"
+msgstr "مثال Configurtions"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:334
+#: aedb6c0c48c347ba964b5976e731d850
+msgid "**1-hour queue:**"
+msgstr "**1-hour queue:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:343
+#: 49413da7d6f7483483a19f6c00c7bfbc
+msgid "**12-hour queue:**"
+msgstr "**12-hour queue:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:352
+#: f0a7dfbe1ef148c092ff397352469204
+msgid "**Development (no limit):**"
+msgstr "**Development (no limit):**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:359
+#: 3abafd8317e9477ab41bc3bab21fe9ce
+msgid "Restart Workflow"
+msgstr "Restrt گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:361
+#: 770d78316ce14eada06b442d3260eab0
+msgid "**First job (incomplete):**"
+msgstr "**First job (incomplete):**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:373
+#: de73cdccf74249c494080f1c6bec112c
+msgid "**Second job (continuation):**"
+msgstr "**Second job (continution):**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:380
+#: c8d9100f2ee741e3a382c82edccadc03
+msgid "Calculation Optimization"
+msgstr "محاسبه Optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:382
+#: 4bf9a2ebf26e43dfada8cb8cb25524d8
+msgid "DirectPhi Option"
+msgstr "DirectPhi Option"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:384
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:410
+#: 69c4fc14ccb64579ab2c7000c77642c7 deeb1fff413041aa99591cfc9c742bc7
+msgid "**What it does:**"
+msgstr "**Wht it does:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:385
+#: 772af3580ad347f0a1b5f53d7c67e77e
+msgid "Skips intermediate electrostatic potential (φ) calculations"
+msgstr "Skips intermedite electrosttic potentil (φ) clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:386
+#: cd30a0bbacde47eaaa3b0d2ac020cc82
+msgid "Only computes final φ after SCF convergence"
+msgstr "Only computes finl φ fter SCF convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:395
+#: 01aebac0c2574298b301696c9a25b435
+msgid "**Benefits:**"
+msgstr "**Benefits:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:396
+#: 831308d511e449e78b982044ed3d096b
+#, python-format
+msgid "✅ Faster SCF iterations (10-20% speedup)"
+msgstr "✅ Fster SCF itertions (10-20% speedup)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:397
+#: 6f7f4714d6e94d9da02fc7278ee6a6b0
+msgid "✅ Reduced I/O operations"
+msgstr "✅ Reduced I/O opertions"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:398
+#: ed1eb40d269a48cc827c28460726ebe7
+msgid "✅ Less memory usage"
+msgstr "✅ Less memیاy usge"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:400
+#: 620ec5e823264d90aa85bdf6dc448bf4
+msgid "**Drawbacks:**"
+msgstr "**Drwbcks:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:401
+#: a43dadf4f9534565a7ec38a853f34008
+msgid "❌ No intermediate φ analysis"
+msgstr "❌ No intermedite φ nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:402
+#: 6fbc3db553de4e69ade02097b3371416
+msgid "❌ Cannot monitor potential convergence"
+msgstr "❌ Cnnot monitیا potentil convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:404
+#: eda7fa2f61404e40a3b8b323275bcd92
+msgid "**Recommendation:**"
+msgstr "**Recommendtion:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:405
+#: f77b12c2ab474f9d9279e5baf627e502
+msgid "Enable for production calculations"
+msgstr "Enble برای production clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:406
+#: c55976f2e4c74314863f023f855c02b0
+msgid "Disable for debugging or analysis"
+msgstr "Disble برای debugging یا nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:408
+#: 4d92617b9bcf41aca8a21592a1fd348f
+msgid "UseSaveData Option"
+msgstr "UseSveDt Option"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:411
+#: e6f2c6acc34145fa85df46edf83f1e28
+msgid "Reads density matrix from previous calculation"
+msgstr "Reds density mtrix from previous clcultion"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:412
+#: 602478fb5ab9424bb8eb2dc0aef3b4c2
+msgid "Accelerates SCF convergence (better initial guess)"
+msgstr "Accelertes SCF convergence (better initil guess)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:421
+#: 2bd01f2e251341a9ac0a9fa0a3c8ad24
+msgid "**Use cases:**"
+msgstr "**Use cses:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:422
+#: d2955d868d0741d0890420ba2a5434af
+msgid "**Continuation runs**: Restart after walltime limit"
+msgstr "**Continution runs**: Restrt fter wlltime limit"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:423
+#: 34e2c30fa96f40adba631f59da9c8a1d
+msgid "**Similar structures**: Use converged density as starting point"
+msgstr "**Similr structures**: Use converged density s strting point"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:424
+#: fbf2f7cd79044d18a49e410c8a4304b3
+msgid "**Multi-step workflows**: EOS, phonons, elastic constants"
+msgstr "**Multi-step wیاkflows**: EOS, phonons, elstic constnts"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:426
+#: a718d2ed536b46c496d45a4b1570d9fe
+msgid "**Example: EOS workflow**"
+msgstr "**مثال: EOS wیاkflow**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:436
+#: 2067e533c0d649198801275498cb772b
+msgid "Performance Benchmarks"
+msgstr "Perبرایmnce Benchmrks"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:438
+#: d747345549fc4212a2b90d03558490f8
+msgid "Memory Reporting Overhead"
+msgstr "Memیاy Repیاting Overhed"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 76500174c3ea415a9dfc9edf494ffa42
+msgid "Level"
+msgstr "Level"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 0080f76ffa214918a94a17c878a5f6f3 d514dffae0d54c31a9dd68407e829031
+msgid "Overhead"
+msgstr "Overhed"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 841ab722c9b544a58ac24b2abb6f7211
+msgid "Output Size"
+msgstr "Output Size"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 248f1cce2ffc4e0e87a845794a58da6d 7957f2d2ca474540a43133b541670aa1
+msgid "0%"
+msgstr "0%"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 6207811b3d1e4495b084b49d9c5be6c5
+msgid "1"
+msgstr "1"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 4cb0dd8ede9c46849f61157a36f65d15 8b2a5735eb5f4634a256b0cf51db40dd
+#: d8273c34370340a88827408d798cbed2
+msgid "<1%"
+msgstr "<1%"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: d19603a60067456bbe4edaee491b1965
+msgid "~10 KB"
+msgstr "~10 KB"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 2fcd752a25bb4e02a561e303c4c3452a
+msgid "2"
+msgstr "2"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 5af2f4b3a45642b3b69642ee0ee289c1 83a3beccffe64370ad96177d1b0e6d94
+msgid "~2%"
+msgstr "~2%"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: bafc54f07332439983269200b3e38e5e
+msgid "~100 KB"
+msgstr "~100 KB"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: feeb4fc3271a4fe4af6b1e3b91d14579
+msgid "3"
+msgstr "3"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 39c29086778a47aba91967eb489b4724
+msgid "~5%"
+msgstr "~5%"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: bc40437b617d40b2a106b424d9027db8
+msgid "~1 MB"
+msgstr "~1 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:447
+#: 4319a65e5df54c9b8c35d31b15fdc54e
+msgid "**Recommendation**: Level 2 for development, level 0 for production"
+msgstr "**Recommendtion**: Level 2 برای development, level 0 برای production"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:449
+#: 0937b1bffb724c52bea6a0d566c22e1d
+msgid "Timing Analysis Overhead"
+msgstr "Timing Anlysis Overhed"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 694d2860cac345a5be36da3b59db0c38
+msgid "Timer Type"
+msgstr "زمانr Type"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 9047845667264475a4b49a057065f483
+msgid "Use Case"
+msgstr "Use Cse"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 52bd8e17a5a641bc90f8bf6057bb5f3d
+msgid "Production"
+msgstr "Production"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: a49fea1f534642998075d192703018a0
+msgid "Tree"
+msgstr "Tree"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 7e4513222531449fb1f8f81ac1b47b2c
+msgid "Bottleneck identification"
+msgstr "Bottleneck identifiction"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 7e66858297f34342aafca51bceabb3a4
+msgid "Parallel"
+msgstr "Prllel"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: fdf5efc7f75d402e8ea77adf17cbd15e
+msgid "Load balance analysis"
+msgstr "Lod blnce nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 2f4c3ae840f049b393f4e04393ef11cc
+msgid "SCF Split"
+msgstr "SCF Split"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: b66db54580c741f5acb5955fca422e4f
+msgid "SCF convergence study"
+msgstr "SCF convergence study"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: a252a44b078f46faa81e559e7684981f
+msgid "All"
+msgstr "All"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: ddfee98885754ce2a46aeeb09e47ecf3
+msgid "~3%"
+msgstr "~3%"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: d1e9caf73a5c49a98f0d7dbd135df130
+msgid "Complete profiling"
+msgstr "Complete profiling"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:459
+#: d1a0cbcf39fa47f38ae9c499bbec025c
+msgid "**Recommendation**: Enable only when needed, disable for production"
+msgstr "**Recommendtion**: Enble only when needed, disble برای production"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:461
+#: efb621930feb4024bc13c0ee0499eece
+msgid "DirectPhi Performance"
+msgstr "DirectPhi Perبرایmnce"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:463
+#: 6c0d8a8699e64c609df4915d6b3bc0a5
+msgid "**100-atom system, DZP basis:**"
+msgstr "**100-tom system, DZP bsis:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 6b5d16fb6ba74fa489f05ac2c92d9104
+msgid "DirectPhi"
+msgstr "DirectPhi"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 4c64cbcac599462eb5d3029b7d462d78
+msgid "SCF Time"
+msgstr "SCF زمان"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 3c58d55de0744c45a71594bd24c7c61d
+msgid "I/O Operations"
+msgstr "I/O Opertions"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 563ca65e79ab45fb8d5d023e45cdf797
+msgid "120 s"
+msgstr "120 s"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 73f400fc0e54421b81fba973a8993625
+msgid "250"
+msgstr "250"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 8659edc0c3f3434bb8b28d80e5dc1b5c
+msgid "True"
+msgstr "True"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: b1e5f533d1694fbea5f81cf5dd664aca
+msgid "100 s"
+msgstr "100 s"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: 20b895f3e01948a5bd347d8afbf502e3
+msgid "150"
+msgstr "150"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: ebaab0f3b3124ac780a78ec1457d9981
+msgid "**Speedup**"
+msgstr "**Speedup**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: c52083cbef8d454bb2e6961985861349
+msgid "**17%**"
+msgstr "**17%**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md
+#: c6d2a999f0a44690b2a649585d0c7a5b
+#, python-format
+msgid "**40% fewer**"
+msgstr "**40% fewer**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:471
+#: e6879c1a74a944bb885afef6233ca644
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:473
+#: 7e2dff7505a74bd0bec33fc0b52559ec
+msgid "Issue 1: Memory Allocation Reports Too Verbose"
+msgstr "Issue 1: Memیاy Alloction Repیاts Too Verbose"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:475
+#: fdc9207476d246e3acd28e6fb10a2e1d
+msgid "**Problem:** Level 3 produces GB of output"
+msgstr "**Problem:** Level 3 produces GB of output"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:477
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:490
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:512
+#: 074165a11d1640e0921a333e6b4677ae 14a06ae08c7d443f8a3689ae0916ee90
+#: fe720159ba2c4512a97d8cba48d113ca
+msgid "**Solution:**"
+msgstr "**Solution:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:486
+#: e193e1074f414327b3dde95157f207ed
+msgid "Issue 2: Job Killed Before Walltime"
+msgstr "Issue 2: Job Killed Beبرایe Wlltime"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:488
+#: 3652b9bd1c7645089e0e43073d538255
+msgid "**Problem:** MaxWalltime too close to cluster limit"
+msgstr "**Problem:** MxWlltime too close to cluster limit"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:499
+#: e6c0d080d57e4ac68fc1f08631da1de2
+msgid "Issue 3: Restart Not Working"
+msgstr "Issue 3: Restrt Not Wیاking"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:501
+#: e582699997eb48bbaf08ded48dcc2af2
+msgid "**Problem:** UseSaveData=True but calculation starts from scratch"
+msgstr "**Problem:** UseSveDt=True but clcultion strts from scrtch"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:503
+#: 8a2232ce2bcd4f60baed6767866057d2
+msgid "**Solutions:**"
+msgstr "**Solutions:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:504
+#: 0f3c357b6add4b83aac674ab099925e5
+msgid "Check restart files exist (*.DM, *.HSX)"
+msgstr "Check restrt files exist (*.DM, *.HSX)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:505
+#: 45127d81bf8443c7b91566261c5695bb
+msgid "Verify prev_dir path is correct"
+msgstr "Verify prev_dir pth is cیاrect"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:506
+#: 1982591523fb49b2bc72c8a4629d2ebd
+msgid "Ensure system is identical (atoms, cell, parameters)"
+msgstr "Ensure system is identicl (toms, cell, prmeters)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:508
+#: 6676f74b765c476aa11b463872352e93
+msgid "Issue 4: Timing Overhead Too High"
+msgstr "Issue 4: Timing Overhed Too High"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:510
+#: 81c8a2e7344347209cebfe396d4171e2
+msgid "**Problem:** Timers slow down calculation"
+msgstr "**Problem:** زمانrs slow down clcultion"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:523
+#: 3ab1e1af078940bdb5b0ad3ac1a263b1
+msgid "1. Development vs Production"
+msgstr "1. Development vs Production"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:525
+#: af0d8c780db34312a6df05d29c7ba2d3
+msgid "**Development:**"
+msgstr "**Development:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:535
+#: 007333519f644bf3b1b059827e870679
+msgid "**Production:**"
+msgstr "**Production:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:544
+#: ad59b6e7b3c045f19eaecc708c0d4650
+msgid "2. Cluster Job Configuration"
+msgstr "2. Cluster Job Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:546
+#: fcd8c7a5299c49449aca390d0c798dff
+msgid "**Always set for cluster jobs:**"
+msgstr "**Alwys set برای cluster jobs:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:555
+#: 985a13ed9b7d4d56813542e3cffe4c93
+msgid "3. Performance Profiling"
+msgstr "3. Perبرایmnce Profiling"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:557
+#: 85501f12f7164018a77d18edc7ce4d19
+msgid "**Step 1: Identify bottleneck**"
+msgstr "**Step 1: Identify bottleneck**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:562
+#: 8df2e00c4d6b41b096d788526ebfc5b1
+msgid "**Step 2: Analyze load balance**"
+msgstr "**Step 2: Anlyze lod blnce**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:567
+#: 2738b8c789be4c58a3f58789b9937ae4
+msgid "**Step 3: Study SCF convergence**"
+msgstr "**Step 3: Study SCF convergence**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:572
+#: 0a5c62fd9ffb4b65a14ba06f9e5cd874
+msgid "4. Memory Optimization"
+msgstr "4. Memیاy Optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:574
+#: 9d8614d378cf43a49bd4f1fd38091c76
+msgid "**Step 1: Monitor usage**"
+msgstr "**Step 1: Monitیا usge**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:579
+#: e3b8be96287842409e40e0c7b79e1007
+msgid "**Step 2: Identify large arrays**"
+msgstr "**Step 2: Identify lrge rrys**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:580
+#: 207c5e2643384e058b3c6f3ba25e1c46
+msgid "Grid size (reduce Mesh.Cutoff if needed)"
+msgstr "Grid size (reduce Mesh.Cutoff if needed)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:581
+#: 5d789c7b53a94d10ad42f8c758b50753
+msgid "Basis size (consider smaller basis)"
+msgstr "Bsis size (consider smller bsis)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:582
+#: 068b513325384e3884fb8b5b5dfda49b
+msgid "K-point sampling (reduce if possible)"
+msgstr "K-point smpling (reduce if possible)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:584
+#: 581de41738d948fc9fdd12015529f0ac
+msgid "**Step 3: Optimize parallelization**"
+msgstr "**Step 3: Optimize prlleliztion**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:585
+#: 5ff16da854534b49a73cf7a8c0b02f97
+msgid "More MPI processes = less memory per process"
+msgstr "Mیاe MPI processes = less memیاy per process"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:586
+#: bfb2f685ea74432eafefd097d4dbf700
+msgid "Consider hybrid MPI+OpenMP"
+msgstr "Consider hybrid MPI+OpenMP"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:588
+#: a0110396e24646f598c291cbe2478977
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:590
+#: 0d6e38706177474e9d5f62edee22b16e
+msgid "Combining Multiple Options"
+msgstr "Combining Multiple Options"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:592
+#: b60b76d471374bcb8669d9adec4632bd
+msgid "**Complete monitoring setup:**"
+msgstr "**Complete monitیاing setup:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:615
+#: f5ee03656d03414db5ce2354a608011a
+msgid "Parsing Timing Output"
+msgstr "Prsing Timing Output"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:617
+#: ec3ec1ce01a9489ba3e8c299065c124b
+msgid "**Extract timing data from output:**"
+msgstr "**Extrct timing dt from output:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:640
+#: d1fad3d7748c4ad796d9e0daeaed51f3
+msgid "Memory Usage Estimation"
+msgstr "Memیاy Usge Estimtion"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:642
+#: 7605ef473cf04540b5de4268bbf85305
+msgid "**Estimate memory requirements:**"
+msgstr "**Estimte memیاy requirements:**"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:671
+#: 3bdf9b25bd9b4a0691cf548e8cefa52f
+msgid "Further Reading"
+msgstr "Furr Reding"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:673
+#: 5201734b867a47e1934780ba2a7ac981
+msgid "SIESTA Manual: Section 6.31 (Memory and Timing)"
+msgstr "SIESTA Mnul: Section 6.31 (Memیاy و Timing)"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:674
+#: 3d6bd4cbac924e13983d5066fe15b85b
+msgid "HPC Job Management: Best practices for queue systems"
+msgstr "HPC Job Mngement: Best prctices برای queue systems"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:675
+#: 60f3f4f4f85e4a759e5c429f7fb6ff3d
+msgid "Performance Optimization: SIESTA scaling studies"
+msgstr "Perبرایmnce Optimiztion: SIESTA scling studies"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:676
+#: ea15b31d02cd46128f57d2c20e703561
+msgid "Profiling Tools: GNU gprof, Intel VTune"
+msgstr "Profiling Tools: GNU gprof, Intel VTune"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:678
+#: 6ef93068adc2443f92291f353d7a94d6
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:680
+#: ed2cb4722e7c47f59c9f1bc1684b6d1a
+msgid "Tutorial 15: Hamiltonian and Overlap Matrix Configuration"
+msgstr "Tutیاil 15: Hmiltonin و Overlp Mtrix Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:681
+#: a8a5467679934952bf0bfe8c13311f2a
+msgid "Tutorial 12: Parallel Computation Options"
+msgstr "Tutیاil 12: Prllel Computtion Options"
+
+#: ../../source/tutorials-md/03-advanced-features/14-efficiency-options/README.md:682
+#: d584aae8156846cea40531467e67f68c
+msgid "Tutorial 04: Job Submission and Cluster Management"
+msgstr "Tutیاil 04: Job Submission و Cluster Mngement"

@@ -1,0 +1,1143 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/cli-jobflow-remote.rst:3 462f18d53ebe466987706ccc26f5c003
+msgid "Jobflow Remote CLI Reference"
+msgstr "مرجع رابط خط فرمان Jobflow Remote"
+
+#: ../../source/cli-jobflow-remote.rst:5 09debcea387146178a42a4b1d7a8dd80
+msgid ""
+"Comprehensive guide to managing jobflow-remote configurations with "
+"``atomate2siesta-jobflow-remote``."
+msgstr ""
+"راهنمای جامع برای مدیریت پیکربندی‌های jobflow-remote با استفاده از "
+"``atomate2siesta-jobflow-remote``."
+
+#: ../../source/cli-jobflow-remote.rst:8 e2aad6b81fc14011a4ccbbb63e7bddbb
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/cli-jobflow-remote.rst:10 29c9cbae5d384d8ab82bd42494aa3b4e
+msgid ""
+"The ``atomate2siesta-jobflow-remote`` CLI provides comprehensive tools "
+"for managing jobflow-remote configurations. It simplifies:"
+msgstr ""
+"رابط خط فرمان ``atomate2siesta-jobflow-remote`` ابزارهای جامعی برای مدیریت "
+"پیکربندی‌های jobflow-remote فراهم می‌کند. این ابزار ساده‌سازی می‌کند:"
+
+#: ../../source/cli-jobflow-remote.rst:12 1f31900ab3094193bc397cdd1bfab29e
+msgid "Installing and setting up jobflow-remote"
+msgstr "نصب و راه‌اندازی jobflow-remote"
+
+#: ../../source/cli-jobflow-remote.rst:13 4de55a6125fe4bf4a585a35020035d70
+msgid "Managing multiple project configurations"
+msgstr "مدیریت چندین پیکربندی پروژه"
+
+#: ../../source/cli-jobflow-remote.rst:14 749092a51b1c4a64aeb93dbfbda4bab8
+msgid "Updating MongoDB connection settings"
+msgstr "به‌روزرسانی تنظیمات اتصال MongoDB"
+
+#: ../../source/cli-jobflow-remote.rst:15 372680e54c0748b5b78cda8f9d156eb3
+msgid "Adding descriptive comments to configuration files"
+msgstr "افزودن توضیحات توصیفی به فایل‌های پیکربندی"
+
+#: ../../source/cli-jobflow-remote.rst:16 ba619325adb748dcb85752d02aee666c
+msgid "Viewing project details and worker information"
+msgstr "مشاهده جزئیات پروژه و اطلاعات کارگر"
+
+#: ../../source/cli-jobflow-remote.rst:19 b233c39d06364d7a81efb83d73565f2d
+msgid "Key Features"
+msgstr "ویژگی‌های کلیدی"
+
+#: ../../source/cli-jobflow-remote.rst:21 81a97912a3aa4789b51850184d785cf3
+msgid "**Multi-project support**: Manage multiple jobflow-remote projects"
+msgstr "**پشتیبانی چند پروژه**: مدیریت چندین پروژه jobflow-remote"
+
+#: ../../source/cli-jobflow-remote.rst:22 1d3144a615084fd3b8952efea9213086
+msgid "**Safe updates**: Automatic backups before modifications"
+msgstr "**به‌روزرسانی‌های ایمن**: پشتیبان‌گیری خودکار قبل از تغییرات"
+
+#: ../../source/cli-jobflow-remote.rst:23 80887766414e4b94aa0a8f46ee8c7cdb
+msgid "**Self-documenting configs**: Add inline comments to YAML files"
+msgstr "**پیکربندی‌های خودمستند**: افزودن توضیحات درون‌خطی به فایل‌های YAML"
+
+#: ../../source/cli-jobflow-remote.rst:24 6a13d75a35c0462e9f6f195cd73eccda
+msgid "**Project discovery**: List and inspect all configured projects"
+msgstr "**کشف پروژه**: فهرست و بازرسی تمام پروژه‌های پیکربندی‌شده"
+
+#: ../../source/cli-jobflow-remote.rst:25 a6a7a8b7c58340538e324ba7a4bbd3f8
+msgid "**Selective updates**: Update specific settings without touching others"
+msgstr "**به‌روزرسانی‌های انتخابی**: به‌روزرسانی تنظیمات خاص بدون دست‌زدن به سایرین"
+
+#: ../../source/cli-jobflow-remote.rst:28 a115aeba83c347f6a36e3aefd4cc295f
+msgid "Installation"
+msgstr "نصب"
+
+#: ../../source/cli-jobflow-remote.rst:30 a84a504bb55b4054a2ec6a21106f0297
+msgid "The CLI is included with atomate2siesta:"
+msgstr "رابط خط فرمان به همراه atomate2siesta ارائه می‌شود:"
+
+#: ../../source/cli-jobflow-remote.rst:36 977b5b57948d4e229744399355638d5e
+msgid "Verify installation:"
+msgstr "تأیید نصب:"
+
+#: ../../source/cli-jobflow-remote.rst:43 8773dc4b91424d7cbcf70ba0647c916b
+msgid "Available Commands"
+msgstr "دستورات موجود"
+
+#: ../../source/cli-jobflow-remote.rst:49 21b1c9eb5a1a4b0f97741fd973fde4f2
+msgid "Command"
+msgstr "دستور"
+
+#: ../../source/cli-jobflow-remote.rst:50 59c5e8d7143545299fa87bfa5c9b2995
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/cli-jobflow-remote.rst:51 6f05fbfdb8364b4cb4578af7f7ec0d22
+msgid "``install``"
+msgstr "``install``"
+
+#: ../../source/cli-jobflow-remote.rst:52 9bc9dfefd579498b9c3ccc1b4109ceb2
+msgid "Install jobflow-remote package"
+msgstr "نصب بسته jobflow-remote"
+
+#: ../../source/cli-jobflow-remote.rst:53 83655785e1f84f51af50de5188e4afb5
+msgid "``setup``"
+msgstr "``setup``"
+
+#: ../../source/cli-jobflow-remote.rst:54 4e34715a6da640498da172937921acdd
+msgid "Generate or update project configuration"
+msgstr "تولید یا به‌روزرسانی پیکربندی پروژه"
+
+#: ../../source/cli-jobflow-remote.rst:55 205deb6d73174f419789060a3f0fe250
+msgid "``update``"
+msgstr "``update``"
+
+#: ../../source/cli-jobflow-remote.rst:56 b21735e5450b4c80a3c74c549e0ac7e6
+msgid "Update existing project configuration"
+msgstr "به‌روزرسانی پیکربندی موجود پروژه"
+
+#: ../../source/cli-jobflow-remote.rst:57 5f0fc68181bf49ec8f7b82548deed1c6
+msgid "``info``"
+msgstr "``info``"
+
+#: ../../source/cli-jobflow-remote.rst:58 b35afb11fa8d4d20a06ccefec4ee9803
+msgid "Show project information and list all projects"
+msgstr "نمایش اطلاعات پروژه و فهرست تمام پروژه‌ها"
+
+#: ../../source/cli-jobflow-remote.rst:59 c26b8bfaac134e028432d1bd7325ade8
+msgid "``test``"
+msgstr "``test``"
+
+#: ../../source/cli-jobflow-remote.rst:60 3eaecc11c9684437b387b0706cc90b0e
+msgid "Submit test job to verify setup"
+msgstr "ارسال کار آزمایشی برای تأیید راه‌اندازی"
+
+#: ../../source/cli-jobflow-remote.rst:61 caa44420a46a43b489e8226b5ae65b40
+msgid "``runner``"
+msgstr "``runner``"
+
+#: ../../source/cli-jobflow-remote.rst:62 68dfe207262c4688a2cdfe1ce660b8b5
+msgid "Display runner management commands"
+msgstr "نمایش دستورات مدیریت اجراکننده"
+
+#: ../../source/cli-jobflow-remote.rst:65 0a289d49f5c549a39e780a6ab5a40977
+msgid "Command Details"
+msgstr "جزئیات دستورات"
+
+#: ../../source/cli-jobflow-remote.rst:68 d58175aae0434c49b5e673f6f5e1bc8d
+msgid "1. Install Command"
+msgstr "۱. دستور Install"
+
+#: ../../source/cli-jobflow-remote.rst:70 9cb19b04b42c47b39a91fa608fe2a02f
+msgid "Install jobflow-remote package (stable or development version)."
+msgstr "نصب بسته jobflow-remote (نسخه پایدار یا توسعه)."
+
+#: ../../source/cli-jobflow-remote.rst:72
+#: ../../source/cli-jobflow-remote.rst:115
+#: ../../source/cli-jobflow-remote.rst:229
+#: ../../source/cli-jobflow-remote.rst:338
+#: ../../source/cli-jobflow-remote.rst:398
+#: ../../source/cli-jobflow-remote.rst:447
+#: ../../source/cli-jobflow-remote.rst:472
+#: ../../source/cli-jobflow-remote.rst:591 387113c7b8db4894817d5c9b2d6a1b77
+#: 57cc376e8ea24784a1b185ea56b4ebfe 62b793b04f314923afe1f66de2a6bed8
+#: 6a02f3b545d14f258d09d1d64777cd47 6b85aae7534b4efd885a360789670138
+#: 7b945fb6dbbc4288b6a39206da7d4398 7dd7ab48aad64efe821cc116aca89926
+#: cc504b64f353413f88dd90e8220af5d2
+msgid "**Basic Usage:**"
+msgstr "**استفاده پایه:**"
+
+#: ../../source/cli-jobflow-remote.rst:82
+#: ../../source/cli-jobflow-remote.rst:134
+#: ../../source/cli-jobflow-remote.rst:248
+#: ../../source/cli-jobflow-remote.rst:348
+#: ../../source/cli-jobflow-remote.rst:491
+#: ../../source/cli-jobflow-remote.rst:612 002eec170e914c9cb4340064fac39c0d
+#: 2e3e0bb3bcbc453dab4212f3cb8497d9 49f15812aab14fa4af883cb729e348c9
+#: 70f155cd1b8f4957b9cd4a5fd6749aaf a6c7599c794c4daa81d366154946b391
+#: bf03f8ab27464dfebacf2776f2d2d17b
+msgid "**Options:**"
+msgstr "**گزینه‌ها:**"
+
+#: ../../source/cli-jobflow-remote.rst:84 09318c1a648046ffa3853fd57c509db8
+msgid "``--dev``: Install latest development version from GitHub"
+msgstr "``--dev``: نصب آخرین نسخه توسعه از GitHub"
+
+#: ../../source/cli-jobflow-remote.rst:86
+#: ../../source/cli-jobflow-remote.rst:521
+#: ../../source/cli-jobflow-remote.rst:725 cfbde1b2d12246ffa1f6b9481a50c4fb
+#: ea877b130787497090e92e2f4c39468d eb5cdf9e85cb40e68adafd41893fdd0f
+msgid "**Example Output:**"
+msgstr "**خروجی نمونه:**"
+
+#: ../../source/cli-jobflow-remote.rst:111 5265f756b0d840bcae446362bb315017
+msgid "2. Setup Command"
+msgstr "۲. دستور Setup"
+
+#: ../../source/cli-jobflow-remote.rst:113 11416b38bd9f45cca2cb7f499e8c81cd
+msgid "Generate new project configuration or update existing ones."
+msgstr "تولید پیکربندی پروژه جدید یا به‌روزرسانی پیکربندی‌های موجود."
+
+#: ../../source/cli-jobflow-remote.rst:136 056a2887baba48ee8cb9b6a9b1645424
+msgid "``--project-name TEXT``: Project name (default: \"atomate2siesta\")"
+msgstr "``--project-name TEXT``: نام پروژه (پیش‌فرض: \"atomate2siesta\")"
+
+#: ../../source/cli-jobflow-remote.rst:137 22a9b00f3cab4397825641c02d461545
+msgid "``--worker-name TEXT``: Worker name (default: \"local_shell\")"
+msgstr "``--worker-name TEXT``: نام کارگر (پیش‌فرض: \"local_shell\")"
+
+#: ../../source/cli-jobflow-remote.rst:138 9020ece91151415d8a9534965f63d0e8
+msgid "``--database TEXT``: MongoDB database name (default: \"atomate2siesta\")"
+msgstr "``--database TEXT``: نام پایگاه داده MongoDB (پیش‌فرض: \"atomate2siesta\")"
+
+#: ../../source/cli-jobflow-remote.rst:139 cd71d941f7964b85b228f9df151d3ec3
+msgid "``--host TEXT``: MongoDB host (default: \"localhost\")"
+msgstr "``--host TEXT``: میزبان MongoDB (پیش‌فرض: \"localhost\")"
+
+#: ../../source/cli-jobflow-remote.rst:140 310e3129ddba49528570112fa7b83eb8
+msgid "``--port INTEGER``: MongoDB port (default: 27017)"
+msgstr "``--port INTEGER``: پورت MongoDB (پیش‌فرض: ۲۷۰۱۷)"
+
+#: ../../source/cli-jobflow-remote.rst:141 7fb42381c0ae48ce82d27c7d70b588be
+msgid "``--update``: Update existing config instead of generating new one"
+msgstr "``--update``: به‌روزرسانی پیکربندی موجود به‌جای تولید پیکربندی جدید"
+
+#: ../../source/cli-jobflow-remote.rst:142
+#: ../../source/cli-jobflow-remote.rst:255 39d6ea42a18d41b5897da3d742941523
+#: 8faf929494bc44cb91aeb839e0dcbd9b
+msgid "``--backup/--no-backup``: Create backup before updating (default: True)"
+msgstr "``--backup/--no-backup``: ایجاد پشتیبان قبل از به‌روزرسانی (پیش‌فرض: True)"
+
+#: ../../source/cli-jobflow-remote.rst:144
+#: ../../source/cli-jobflow-remote.rst:257
+#: ../../source/cli-jobflow-remote.rst:404 13b7eb7b97d44c02a8093a9762dcf799
+#: 980cc49da869400fa7dadbcd7d7737c4 f06a2c062a724d18852315a92131b939
+msgid "**What It Does:**"
+msgstr "**کارکرد:**"
+
+#: ../../source/cli-jobflow-remote.rst:146 e96164c2e8b040a79f9e97cd9ff7abd4
+msgid "**New Configuration Mode** (without ``--update``):"
+msgstr "**حالت پیکربندی جدید** (بدون ``--update``):"
+
+#: ../../source/cli-jobflow-remote.rst:148 a26d3497b46a44a996cd7e4812fdf260
+msgid "Runs ``jf project generate <project_name>``"
+msgstr "اجرای ``jf project generate <project_name>``"
+
+#: ../../source/cli-jobflow-remote.rst:149 f5159cbdee8f409c9166c89bf6fcb30f
+msgid "Creates ``~/.jfremote/<project_name>.yaml``"
+msgstr "ایجاد ``~/.jfremote/<project_name>.yaml``"
+
+#: ../../source/cli-jobflow-remote.rst:150 675bb7c6847640d98a13ee4414301123
+msgid "Displays configuration instructions"
+msgstr "نمایش دستورالعمل‌های پیکربندی"
+
+#: ../../source/cli-jobflow-remote.rst:152 48e5c1e62a024ad3be9385cba5fa88bc
+msgid "**Update Mode** (with ``--update``):"
+msgstr "**حالت به‌روزرسانی** (با ``--update``):"
+
+#: ../../source/cli-jobflow-remote.rst:154 740ab4f6607f4a26ba97056126a7865f
+msgid "Creates timestamped backup of existing config"
+msgstr "ایجاد پشتیبان با مُهر زمانی از پیکربندی موجود"
+
+#: ../../source/cli-jobflow-remote.rst:155 33c54b9fd8304ed482e0ebd813c5f4ee
+msgid "Updates MongoDB settings in:"
+msgstr "به‌روزرسانی تنظیمات MongoDB در:"
+
+#: ../../source/cli-jobflow-remote.rst:157 a8754fccba1049f5ad2f0babb6f1610d
+msgid "``queue.store``"
+msgstr "``queue.store``"
+
+#: ../../source/cli-jobflow-remote.rst:158 c39662d3782c4610b0e0adb8b628dbbc
+msgid "``jobstore.docs_store``"
+msgstr "``jobstore.docs_store``"
+
+#: ../../source/cli-jobflow-remote.rst:159 391ed4c0d68b4374a292b8043305822a
+msgid "``jobstore.additional_stores`` (if present)"
+msgstr "``jobstore.additional_stores`` (در صورت وجود)"
+
+#: ../../source/cli-jobflow-remote.rst:161 f39d3cb257194709b2ca0debbf2fe995
+msgid "Preserves all other settings (workers, etc.)"
+msgstr "حفظ تمام تنظیمات دیگر (کارگرها و غیره)"
+
+#: ../../source/cli-jobflow-remote.rst:163 9d42a9a1f7784703b301df8088feecf6
+msgid "**Example: Generate New Project**"
+msgstr "**مثال: تولید پروژه جدید**"
+
+#: ../../source/cli-jobflow-remote.rst:193 e3a42baea31f46feba5c8b3700de7335
+msgid "**Example: Update Existing Configuration**"
+msgstr "**مثال: به‌روزرسانی پیکربندی موجود**"
+
+#: ../../source/cli-jobflow-remote.rst:225 aab5a7a70b324b6cbd25711035b290fb
+msgid "3. Update Command"
+msgstr "۳. دستور Update"
+
+#: ../../source/cli-jobflow-remote.rst:227 62f699a6587e4a0dac49432361e10dd3
+msgid ""
+"Dedicated command for updating existing configurations with advanced "
+"features."
+msgstr ""
+"دستور اختصاصی برای به‌روزرسانی پیکربندی‌های موجود با ویژگی‌های پیشرفته."
+
+#: ../../source/cli-jobflow-remote.rst:250 098dd72d89ff465f870d33cb22a8134c
+msgid "``--project-name TEXT``: Project to update (default: \"atomate2siesta\")"
+msgstr "``--project-name TEXT``: پروژه مورد نظر برای به‌روزرسانی (پیش‌فرض: \"atomate2siesta\")"
+
+#: ../../source/cli-jobflow-remote.rst:251 247aed4aa14744bbac2cd1dbcca48e34
+msgid "``--database TEXT``: MongoDB database name to update"
+msgstr "``--database TEXT``: نام پایگاه داده MongoDB برای به‌روزرسانی"
+
+#: ../../source/cli-jobflow-remote.rst:252 6de07277bd9341cabbf0bdb90c2f60cf
+msgid "``--host TEXT``: MongoDB host to update"
+msgstr "``--host TEXT``: میزبان MongoDB برای به‌روزرسانی"
+
+#: ../../source/cli-jobflow-remote.rst:253 407bca6d66ae43e3b803e164bbf191a6
+msgid "``--port INTEGER``: MongoDB port to update"
+msgstr "``--port INTEGER``: پورت MongoDB برای به‌روزرسانی"
+
+#: ../../source/cli-jobflow-remote.rst:254 480b4602c4aa4bb3a98ffc646dfc3fea
+msgid "``--add-comments``: Add descriptive comments to all config entries"
+msgstr "``--add-comments``: افزودن توضیحات توصیفی به تمام ورودی‌های پیکربندی"
+
+#: ../../source/cli-jobflow-remote.rst:259 a4488b9be59b418a95f1ed745ecaaecd
+msgid "Creates timestamped backup (unless ``--no-backup``)"
+msgstr "ایجاد پشتیبان با مُهر زمانی (مگر اینکه ``--no-backup`` استفاده شود)"
+
+#: ../../source/cli-jobflow-remote.rst:260 9d91cf2be716499fbf6f0d90ded8651e
+msgid "Loads existing configuration"
+msgstr "بارگذاری پیکربندی موجود"
+
+#: ../../source/cli-jobflow-remote.rst:261 1ed2fef96e794dd4a846eba02222bc6a
+msgid "Updates specified MongoDB settings (if provided)"
+msgstr "به‌روزرسانی تنظیمات مشخص‌شده MongoDB (در صورت ارائه)"
+
+#: ../../source/cli-jobflow-remote.rst:262 55045a34b76a481e9ec1fd18aa03ddf1
+msgid "Optionally rewrites entire file with inline comments"
+msgstr "بازنویسی اختیاری کل فایل با توضیحات درون‌خطی"
+
+#: ../../source/cli-jobflow-remote.rst:263 50f284b90cbc4339b1da68c8c1459893
+msgid "Preserves all other configuration (workers, etc.)"
+msgstr "حفظ تمام پیکربندی‌های دیگر (کارگرها و غیره)"
+
+#: ../../source/cli-jobflow-remote.rst:265 011f0fbf67d642a6be91378fe4106b48
+msgid "**Example: Add Comments to Configuration**"
+msgstr "**مثال: افزودن توضیحات به پیکربندی**"
+
+#: ../../source/cli-jobflow-remote.rst:287 a51f791e482c4de39381badadf37fa45
+msgid "**Before adding comments:**"
+msgstr "**قبل از افزودن توضیحات:**"
+
+#: ../../source/cli-jobflow-remote.rst:304 996a3204b5964163b16e0c6067d4ba9e
+msgid "**After adding comments:**"
+msgstr "**بعد از افزودن توضیحات:**"
+
+#: ../../source/cli-jobflow-remote.rst:334 99c211bfb99d488daaf63b7fc641a3cc
+msgid "4. Info Command"
+msgstr "۴. دستور Info"
+
+#: ../../source/cli-jobflow-remote.rst:336 13fe93b0dc9645d5bfa5bfb31a799980
+msgid ""
+"Display jobflow-remote installation status, list all projects, and show "
+"detailed project information."
+msgstr ""
+"نمایش وضعیت نصب jobflow-remote، فهرست تمام پروژه‌ها و نمایش اطلاعات "
+"تفصیلی پروژه."
+
+#: ../../source/cli-jobflow-remote.rst:350 50a1916aedcd40009e77d1e642bc8213
+msgid "``--project-name TEXT``: Show details for a specific project"
+msgstr "``--project-name TEXT``: نمایش جزئیات برای یک پروژه خاص"
+
+#: ../../source/cli-jobflow-remote.rst:352 92d1728f904a44fe8b7315c0e4955e1a
+msgid "**Example: List All Projects**"
+msgstr "**مثال: فهرست تمام پروژه‌ها**"
+
+#: ../../source/cli-jobflow-remote.rst:394 16f37434658348e6b4f1ac06213d30da
+msgid "5. Test Command"
+msgstr "۵. دستور Test"
+
+#: ../../source/cli-jobflow-remote.rst:396 278bd4513fbe4c589037ee15c80d83f6
+msgid "Submit a test job to verify jobflow-remote setup."
+msgstr "ارسال کار آزمایشی برای تأیید راه‌اندازی jobflow-remote."
+
+#: ../../source/cli-jobflow-remote.rst:406 f6467733eb8942dcbe220eb0e143bf40
+msgid "Creates simple test flow: ``add(1, 2) + 3``"
+msgstr "ایجاد جریان آزمایشی ساده: ``add(1, 2) + 3``"
+
+#: ../../source/cli-jobflow-remote.rst:407 7cc74faf2bda44d7a00e9b9349cb3b22
+msgid "Submits to jobflow-remote"
+msgstr "ارسال به jobflow-remote"
+
+#: ../../source/cli-jobflow-remote.rst:408 8fb3956341d8448b94fa677f92d01b2d
+msgid "Returns job ID"
+msgstr "بازگشت شناسه کار"
+
+#: ../../source/cli-jobflow-remote.rst:409 dbef51b432914ede8ee5e097ada918d1
+msgid "Displays commands to check job status"
+msgstr "نمایش دستورات برای بررسی وضعیت کار"
+
+#: ../../source/cli-jobflow-remote.rst:411 fc817de10df54670b2588d185704b0fb
+msgid "**Example:**"
+msgstr "**مثال:**"
+
+#: ../../source/cli-jobflow-remote.rst:443 506ea901ef2842e4ab5841a6cad11902
+msgid "6. Runner Command"
+msgstr "۶. دستور Runner"
+
+#: ../../source/cli-jobflow-remote.rst:445 ff3abbedddfc4ad4839c2c5ad4c1829d
+msgid "Display runner management and job control commands."
+msgstr "نمایش دستورات مدیریت اجراکننده و کنترل کار."
+
+#: ../../source/cli-jobflow-remote.rst:453
+#: ../../source/cli-jobflow-remote.rst:498 176af8c51d204833ac4481545ac59bc8
+#: 41670378213543c5899d3d0b52c17ace
+msgid "**What It Shows:**"
+msgstr "**چه چیزی نمایش می‌دهد:**"
+
+#: ../../source/cli-jobflow-remote.rst:455 3bcf5a7a7bbb4bef853e6a7280d0e178
+msgid "Runner daemon commands (start, stop, status, restart, logs)"
+msgstr "دستورات شبح اجراکننده (start, stop, status, restart, logs)"
+
+#: ../../source/cli-jobflow-remote.rst:456 17d4aad7bb2b4c64a9d5443d7fc8e40c
+msgid "Job management commands (list, info, output, cancel, retry)"
+msgstr "دستورات مدیریت کار (list, info, output, cancel, retry)"
+
+#: ../../source/cli-jobflow-remote.rst:457 ee5dfd0e9d924b8bbd23fe7e5d389a44
+msgid "Useful tips for common operations"
+msgstr "نکات مفید برای عملیات رایج"
+
+#: ../../source/cli-jobflow-remote.rst:462 94437d928aba4ae4b28df814340e1ba4
+msgid "Job Management Commands"
+msgstr "دستورات مدیریت کار"
+
+#: ../../source/cli-jobflow-remote.rst:464 3824215b9d9a40d0a365e715926ba519
+msgid ""
+"The CLI provides powerful tools for inspecting and modifying jobflow-"
+"remote jobs, including SIESTA FDF parameter modification."
+msgstr ""
+"رابط خط فرمان ابزارهای قدرتمندی برای بازرسی و تغییر کارهای jobflow-"
+"remote فراهم می‌کند، از جمله تغییر پارامترهای FDF در SIESTA."
+
+#: ../../source/cli-jobflow-remote.rst:468 6e38b0a3d7e74ebf9432f46dfda86bd0
+msgid "7. Job Inspect Command"
+msgstr "۷. دستور Job Inspect"
+
+#: ../../source/cli-jobflow-remote.rst:470 54abc51df3434d5e9a602de0fd356cc4
+msgid ""
+"Inspect job details and SIESTA FDF parameters stored in the jobflow-"
+"remote database."
+msgstr ""
+"بازرسی جزئیات کار و پارامترهای FDF در SIESTA که در پایگاه داده jobflow-"
+"remote ذخیره شده‌اند."
+
+#: ../../source/cli-jobflow-remote.rst:493 a5c1f9f4db2c431fa239f9b93ccca572
+msgid "``--full``: Show full job details including FDF parameters"
+msgstr "``--full``: نمایش جزئیات کامل کار شامل پارامترهای FDF"
+
+#: ../../source/cli-jobflow-remote.rst:494 0cdc959bd71a4029b460c6201008b6e4
+msgid "``--fdf-only``: Show only FDF parameters"
+msgstr "``--fdf-only``: نمایش فقط پارامترهای FDF"
+
+#: ../../source/cli-jobflow-remote.rst:495 4bd2063a51a0473aa0d243dd97651207
+msgid ""
+"``--show-all-defaults``: Show what tier preset contributes (includes "
+"default parameters)"
+msgstr ""
+"``--show-all-defaults``: نمایش سهم پیش‌تنظیم سطح (شامل پارامترهای "
+"پیش‌فرض)"
+
+#: ../../source/cli-jobflow-remote.rst:496 2939262d0c644ce3994441838d4fdd4f
+msgid ""
+"``--show-actual-fdf``: Show the actual generated siesta.fdf file from job"
+" run directory"
+msgstr ""
+"``--show-actual-fdf``: نمایش فایل واقعی تولیدشده siesta.fdf از دایرکتوری "
+"اجرای کار"
+
+#: ../../source/cli-jobflow-remote.rst:500 12b41a5808ad44bf968ae40d0fc7ac0e
+msgid ""
+"**Basic job information** (always shown): - Job name, index, UUID - State"
+" (READY, RUNNING, COMPLETED, FAILED) - Worker assignment - Run directory "
+"path"
+msgstr ""
+"**اطلاعات پایه کار** (همیشه نمایش داده می‌شود): - نام کار، شاخص، UUID - وضعیت "
+"(READY, RUNNING, COMPLETED, FAILED) - تخصیص کارگر - مسیر دایرکتوری اجرا"
+
+#: ../../source/cli-jobflow-remote.rst:506 c3fe51e68d3c44fba72aa8349e11db3f
+msgid ""
+"**FDF parameters** (with ``--full`` or ``--fdf-only``): - User-"
+"configurable parameters from job definition - These are the parameters "
+"you can modify with ``job modify-db`` - Does NOT include SIESTA defaults "
+"or auto-generated blocks"
+msgstr ""
+"**پارامترهای FDF** (با ``--full`` یا ``--fdf-only``): - پارامترهای قابل‌پیکربندی "
+"کاربر از تعریف کار - این‌ها پارامترهایی هستند که می‌توانید با ``job modify-db`` "
+"تغییر دهید - شامل پیش‌فرض‌های SIESTA یا بلوک‌های خودکار تولیدشده نمی‌شود"
+
+#: ../../source/cli-jobflow-remote.rst:511 222c862332dd411e8bae8619bd7990e1
+msgid ""
+"**Tier defaults** (with ``--show-all-defaults``): - Parameters "
+"contributed by tier preset (basic, intermediate, advanced, expert) - "
+"Shows what the tier preset adds beyond user parameters - Helps understand"
+" complete parameter set"
+msgstr ""
+"**پیش‌فرض‌های سطح** (با ``--show-all-defaults``): - پارامترهای ارائه‌شده توسط "
+"پیش‌تنظیم سطح (basic, intermediate, advanced, expert) - نمایش آنچه پیش‌تنظیم "
+"سطح فراتر از پارامترهای کاربر اضافه می‌کند - کمک به درک مجموعه کامل پارامترها"
+
+#: ../../source/cli-jobflow-remote.rst:516 ceda4e48bed54ea998eb7f6996e49a52
+msgid ""
+"**Actual FDF file** (with ``--show-actual-fdf``): - Complete generated "
+"siesta.fdf file from job run directory - Includes all parameters: user "
+"params + tier defaults + SIESTA defaults - Retrieved via multiple methods"
+" (local file, SSH, jobflow-remote download)"
+msgstr ""
+"**فایل واقعی FDF** (با ``--show-actual-fdf``): - فایل کامل تولیدشده siesta.fdf "
+"از دایرکتوری اجرای کار - شامل تمام پارامترها: پارامترهای کاربر + پیش‌فرض‌های "
+"سطح + پیش‌فرض‌های SIESTA - بازیابی از طریق روش‌های متعدد (فایل محلی، SSH، "
+"دانلود jobflow-remote)"
+
+#: ../../source/cli-jobflow-remote.rst:573 7fcde8de42d8488090baa5cc821c754e
+msgid "8. Job Modify-DB Command"
+msgstr "۸. دستور Job Modify-DB"
+
+#: ../../source/cli-jobflow-remote.rst:575 be9173cb2fd34eba96ac222db44b651e
+msgid "Modify job FDF parameters directly in the MongoDB database (RISKY method)."
+msgstr "تغییر پارامترهای FDF کار مستقیماً در پایگاه داده MongoDB (روش پرخطر)."
+
+#: ../../source/cli-jobflow-remote.rst:579 be956c0f290e4c868ca94f1294e56af1
+msgid "**⚠️  DANGER - DATABASE MODIFICATION ⚠️**"
+msgstr "**⚠️  خطر - تغییر پایگاه داده ⚠️**"
+
+#: ../../source/cli-jobflow-remote.rst:581 bf1a5d6b81f744a5b441fe31bf711f62
+msgid ""
+"This command modifies jobs DIRECTLY in the MongoDB database! This can "
+"cause:"
+msgstr ""
+"این دستور کارها را مستقیماً در پایگاه داده MongoDB تغییر می‌دهد! این می‌تواند "
+"باعث شود:"
+
+#: ../../source/cli-jobflow-remote.rst:584 21e97fa8e55b4533a8aa5b8e0be98ca8
+msgid "Job execution failures"
+msgstr "شکست‌های اجرای کار"
+
+#: ../../source/cli-jobflow-remote.rst:585 7ed6b6a757204521aac7ae6f2dbc5539
+msgid "Data corruption"
+msgstr "خرابی داده"
+
+#: ../../source/cli-jobflow-remote.rst:586 e1bf7f1c0644443698e16b2dbab92c8b
+msgid "Loss of reproducibility"
+msgstr "از دست دادن قابلیت بازتولید"
+
+#: ../../source/cli-jobflow-remote.rst:587 90bdcf5dae234493bfbe1dc09cecc71e
+msgid "Broken workflow tracking"
+msgstr "شکست ردیابی جریان کار"
+
+#: ../../source/cli-jobflow-remote.rst:589 318768ee62944d258844088062f2634a
+msgid "Use ONLY when you understand the risks and have database backups."
+msgstr "فقط زمانی استفاده کنید که خطرات را درک می‌کنید و پشتیبان از پایگاه داده دارید."
+
+#: ../../source/cli-jobflow-remote.rst:614 7d0f35df857446298487290ddef55cbe
+msgid ""
+"``-p, --param TEXT``: Parameter to modify (format: ``key=value``). Can be"
+" used multiple times."
+msgstr ""
+"``-p, --param TEXT``: پارامتر برای تغییر (قالب: ``key=value``). می‌تواند چندین "
+"بار استفاده شود."
+
+#: ../../source/cli-jobflow-remote.rst:615 eccbd01c59c44000bf6364bcac7eec70
+msgid "``--force``: Skip safety confirmation prompts (USE WITH EXTREME CAUTION)"
+msgstr "``--force``: نادیده گرفتن پیام‌های تأیید ایمنی (با احتیاط شدید استفاده کنید)"
+
+#: ../../source/cli-jobflow-remote.rst:616 974087d62bbd49cab97354e5d8f8faa9
+msgid ""
+"``--backup / --no-backup``: Create backup before modification (default: "
+"True)"
+msgstr ""
+"``--backup / --no-backup``: ایجاد پشتیبان قبل از تغییر (پیش‌فرض: "
+"True)"
+
+#: ../../source/cli-jobflow-remote.rst:618 a2d3e29ee88943acb54525443ba470d8
+msgid "**Parameter Syntax:**"
+msgstr "**نحو پارامتر:**"
+
+#: ../../source/cli-jobflow-remote.rst:620 988885f7ecca469682b5fb2ca7b8ed09
+msgid "**Single-line parameters:**"
+msgstr "**پارامترهای تک‌خطی:**"
+
+#: ../../source/cli-jobflow-remote.rst:629 0405c6dcb5c04b3a97e1ffbbcdd95fa8
+msgid "**Block parameters (use Python list syntax):**"
+msgstr "**پارامترهای بلوکی (از نحو لیست Python استفاده کنید):**"
+
+#: ../../source/cli-jobflow-remote.rst:637 991fc2acd12f4215b915eed6507f0203
+msgid "**Numeric and boolean values:**"
+msgstr "**مقادیر عددی و بولی:**"
+
+#: ../../source/cli-jobflow-remote.rst:646 e232fbdfdb0648cb9a6d56306931bb6f
+msgid "**Case Sensitivity:**"
+msgstr "**حساسیت به حروف بزرگ و کوچک:**"
+
+#: ../../source/cli-jobflow-remote.rst:648 c6554c45d403482ab25cfda4c5c98fb3
+msgid ""
+"Parameter names are **case-insensitive** for validation, but you should "
+"use standard SIESTA capitalization for clarity:"
+msgstr ""
+"نام پارامترها برای اعتبارسنجی **حساس به حروف بزرگ و کوچک نیست**، اما باید از "
+"بزرگ‌نویسی استاندارد SIESTA برای وضوح استفاده کنید:"
+
+#: ../../source/cli-jobflow-remote.rst:662 25fc004b6fba4cdcb3db168ab7407532
+msgid "**What Gets Modified:**"
+msgstr "**چه چیزی تغییر می‌کند:**"
+
+#: ../../source/cli-jobflow-remote.rst:664 40b45037605840c2837b0a497872995a
+msgid "The command updates the MongoDB document at:"
+msgstr "دستور سند MongoDB را در این مسیر به‌روزرسانی می‌کند:"
+
+#: ../../source/cli-jobflow-remote.rst:670 bad2f13acb1e4700a062bf58f15a909b
+msgid "**Internal parameters are automatically filtered out:**"
+msgstr "**پارامترهای داخلی به‌طور خودکار فیلتر می‌شوند:**"
+
+#: ../../source/cli-jobflow-remote.rst:672 01432df8eb484eaaa5e8efef70d55af3
+msgid ""
+"``tier``, ``xc``, ``mesh_cutoff``, ``kpts``, ``kgrid_cutoff`` "
+"(atomate2siesta internal)"
+msgstr ""
+"``tier``, ``xc``, ``mesh_cutoff``, ``kpts``, ``kgrid_cutoff`` "
+"(داخلی atomate2siesta)"
+
+#: ../../source/cli-jobflow-remote.rst:673 6c1bb3d8a1174e5b944ac5283e12907e
+msgid "``a2s_*``, ``atomate2siesta_*`` (prefixed internal parameters)"
+msgstr "``a2s_*``, ``atomate2siesta_*`` (پارامترهای داخلی با پیشوند)"
+
+#: ../../source/cli-jobflow-remote.rst:674 4a2cb63f53504c4e84e9b2c0c73d7643
+msgid "``fdf_arguments`` (handled separately)"
+msgstr "``fdf_arguments`` (به‌طور جداگانه مدیریت می‌شود)"
+
+#: ../../source/cli-jobflow-remote.rst:676 a00bc4ed312f483b96d2508a66c9040e
+msgid "These are NOT modified to prevent deserialization errors."
+msgstr "این‌ها تغییر نمی‌یابند تا از خطاهای غیرسریال‌سازی جلوگیری شود."
+
+#: ../../source/cli-jobflow-remote.rst:678 a60491f7cf8f4b0e8b5f365af54c13c2
+msgid "**Parameter Validation:**"
+msgstr "**اعتبارسنجی پارامتر:**"
+
+#: ../../source/cli-jobflow-remote.rst:680 5a31fc9e0710475490b679f19c0712d1
+msgid ""
+"All parameters are validated against the **dataclass registry** (456 "
+"registered parameters):"
+msgstr ""
+"تمام پارامترها در برابر **رجیستری کلاس داده** اعتبارسنجی می‌شوند (۴۵۶ "
+"پارامتر ثبت‌شده):"
+
+#: ../../source/cli-jobflow-remote.rst:697 381c8d99884c4ec7b5f2d2f75911f743
+msgid "**Example Workflow:**"
+msgstr "**جریان کار نمونه:**"
+
+#: ../../source/cli-jobflow-remote.rst:784 79b3703d9bcf4da68c44512744b4f6f1
+msgid "**Safety Features:**"
+msgstr "**ویژگی‌های ایمنی:**"
+
+#: ../../source/cli-jobflow-remote.rst:786 30c50b38dcd443ec981ced9a0f4fd42c
+msgid "**Double confirmation**: Two separate confirmation prompts"
+msgstr "**تأیید دوگانه**: دو پیام تأیید جداگانه"
+
+#: ../../source/cli-jobflow-remote.rst:787 f4724be35c5b4209afe7b34b2084f382
+msgid ""
+"**Automatic backup**: Creates timestamped backup in ``jobs_backup`` "
+"collection"
+msgstr ""
+"**پشتیبان‌گیری خودکار**: ایجاد پشتیبان با مُهر زمانی در مجموعه ``jobs_backup``"
+
+#: ../../source/cli-jobflow-remote.rst:788 8b44af004e224ada9b25d1e6d21bec3a
+msgid "**Preview changes**: Shows exactly what will be modified before applying"
+msgstr "**پیش‌نمایش تغییرات**: نمایش دقیق آنچه قبل از اعمال تغییر می‌یابد"
+
+#: ../../source/cli-jobflow-remote.rst:789 1ffc794e9e28469188984771f4324cb8
+msgid "**Parameter validation**: Validates against 456 registered FDF parameters"
+msgstr "**اعتبارسنجی پارامتر**: اعتبارسنجی در برابر ۴۵۶ پارامتر ثبت‌شده FDF"
+
+#: ../../source/cli-jobflow-remote.rst:790 ae348e5cfd824c00990b130ec33c7cf5
+msgid ""
+"**Internal param filtering**: Prevents corruption by filtering internal "
+"parameters"
+msgstr ""
+"**فیلتر پارامترهای داخلی**: جلوگیری از خرابی با فیلتر کردن پارامترهای "
+"داخلی"
+
+#: ../../source/cli-jobflow-remote.rst:791 65ea4a32c3914085832e00174c78529e
+msgid "**Error detection**: Catches typos and suggests corrections"
+msgstr "**تشخیص خطا**: شناسایی اشتباهات تایپی و پیشنهاد تصحیح"
+
+#: ../../source/cli-jobflow-remote.rst:793 364296ca05ff4a35ac992b46d8605dca
+msgid "**Backup Management:**"
+msgstr "**مدیریت پشتیبان:**"
+
+#: ../../source/cli-jobflow-remote.rst:795 45ede9a23ff9434cb20a99785ef9450b
+msgid "Backups are stored in MongoDB collection ``jobs_backup``:"
+msgstr "پشتیبان‌ها در مجموعه MongoDB با نام ``jobs_backup`` ذخیره می‌شوند:"
+
+#: ../../source/cli-jobflow-remote.rst:805 fd2e70b0bc7e44e29fe2d743ffb67535
+msgid "**When to Use:**"
+msgstr "**چه موقع استفاده کنیم:**"
+
+#: ../../source/cli-jobflow-remote.rst:807 66eb863dfb4d4006970ad16894fd6400
+msgid "✅ **Safe scenarios:**"
+msgstr "✅ **سناریوهای ایمن:**"
+
+#: ../../source/cli-jobflow-remote.rst:809 fe07ab07507a40b880dd16820b90af0e
+msgid "Job is in READY state (not running)"
+msgstr "کار در وضعیت READY است (در حال اجرا نیست)"
+
+#: ../../source/cli-jobflow-remote.rst:810 9041f943bec1484ebbaec195998c9fb5
+msgid "You have database backups"
+msgstr "شما پشتیبان از پایگاه داده دارید"
+
+#: ../../source/cli-jobflow-remote.rst:811 a6e2a6c16b0c46649994140b90e0c783
+msgid "You need to fix a parameter typo"
+msgstr "نیاز به اصلاح اشتباه تایپی پارامتر دارید"
+
+#: ../../source/cli-jobflow-remote.rst:812 fe9b094849c4464ab8b5e179a3b14fd2
+msgid "You want to adjust convergence parameters"
+msgstr "می‌خواهید پارامترهای همگرایی را تنظیم کنید"
+
+#: ../../source/cli-jobflow-remote.rst:813 f4313003a74c418f8ca508070374595d
+msgid "You understand MongoDB and jobflow-remote"
+msgstr "MongoDB و jobflow-remote را می‌فهمید"
+
+#: ../../source/cli-jobflow-remote.rst:815 1b0bda20a51c4481a740e285e56a0728
+msgid "✗ **Unsafe scenarios:**"
+msgstr "✗ **سناریوهای ناایمن:**"
+
+#: ../../source/cli-jobflow-remote.rst:817 3feeb85813eb4a3388d77c0b29611c6b
+msgid "Job is RUNNING or COMPLETED"
+msgstr "کار در حالت RUNNING یا COMPLETED است"
+
+#: ../../source/cli-jobflow-remote.rst:818 f369f9d955334b2c94bd5c7b934d2d46
+msgid "No database backups"
+msgstr "بدون پشتیبان پایگاه داده"
+
+#: ../../source/cli-jobflow-remote.rst:819 38231862a1ad45e79e9891781a729737
+msgid "You don't understand the parameter system"
+msgstr "سیستم پارامتر را نمی‌فهمید"
+
+#: ../../source/cli-jobflow-remote.rst:820 4adf87d02e4c471f9433d39b084f2343
+msgid "You're not sure what you're doing"
+msgstr "مطمئن نیستید چه کاری می‌کنید"
+
+#: ../../source/cli-jobflow-remote.rst:822 df47b32036264f9d8f8476529a43d273
+msgid "**Troubleshooting:**"
+msgstr "**عیب‌یابی:**"
+
+#: ../../source/cli-jobflow-remote.rst:824 8b02a4febbf846c4bd215fa1911d8e8f
+msgid "**Error: Unknown FDF parameter(s): mesh_cutoff, tier, xc**"
+msgstr "**خطا: پارامتر(های) ناشناخته FDF: mesh_cutoff, tier, xc**"
+
+#: ../../source/cli-jobflow-remote.rst:826 f08f3c11a2e64bc396ab81ef837f7958
+msgid ""
+"This error occurred in earlier versions when internal parameters weren't "
+"filtered. The current version automatically filters these out."
+msgstr ""
+"این خطا در نسخه‌های قبلی زمانی رخ می‌داد که پارامترهای داخلی فیلتر نمی‌شدند. "
+"نسخه فعلی به‌طور خودکار این‌ها را فیلتر می‌کند."
+
+#: ../../source/cli-jobflow-remote.rst:829 c689a64f4e5d45a78063a7ef01fa8657
+msgid "**Solution:** Update to latest version."
+msgstr "**راه‌حل:** به‌روزرسانی به آخرین نسخه."
+
+#: ../../source/cli-jobflow-remote.rst:831 433862e47f6a4071a4745f8984397bde
+msgid "**Error: No documents modified**"
+msgstr "**خطا: هیچ سندی تغییر نکرد**"
+
+#: ../../source/cli-jobflow-remote.rst:833 68312b02a1774d74b4573b840ca2dc06
+msgid "The query couldn't find the job in the database."
+msgstr "پرس‌وجو نتوانست کار را در پایگاه داده پیدا کند."
+
+#: ../../source/cli-jobflow-remote.rst:835
+#: ../../source/cli-jobflow-remote.rst:1114
+#: ../../source/cli-jobflow-remote.rst:1135
+#: ../../source/cli-jobflow-remote.rst:1163 17ffa2701ac84c718696c73a9b52b4b0
+#: 4bb051a20cd54a3c920f335db0dbec5a bd64b60d2b9541bbb045ec8c39ff5a4b
+#: fcfee70777ab482e97a53908e5e85080
+msgid "**Solution:**"
+msgstr "**راه‌حل:**"
+
+#: ../../source/cli-jobflow-remote.rst:845 11bb3c51c4d8495db67a3a07e5bc901f
+msgid "**Error: Duplicate key error in jobs_backup**"
+msgstr "**خطا: خطای کلید تکراری در jobs_backup**"
+
+#: ../../source/cli-jobflow-remote.rst:847 953cb7c8a5e047d5b7a307e92d8482c8
+msgid "The backup collection already has this job (from previous modification)."
+msgstr "مجموعه پشتیبان از قبل این کار را دارد (از تغییر قبلی)."
+
+#: ../../source/cli-jobflow-remote.rst:849 09f0038c60c8492593cce9deb67c93f3
+msgid ""
+"**Solution:** This is now automatically handled by removing ``_id`` and "
+"adding timestamps."
+msgstr ""
+"**راه‌حل:** این مورد اکنون به‌طور خودکار با حذف ``_id`` و افزودن مُهر زمانی "
+"مدیریت می‌شود."
+
+#: ../../source/cli-jobflow-remote.rst:852 490015a33a744fa1bc452e98c29916db
+msgid "Use Case 9: Inspecting Failed Jobs"
+msgstr "مورد استفاده ۹: بازرسی کارهای شکست‌خورده"
+
+#: ../../source/cli-jobflow-remote.rst:854 003fd455bcc949fb8c9d7824cc1def1b
+msgid ""
+"**Scenario:** A job failed and you need to understand why and fix "
+"parameters."
+msgstr ""
+"**سناریو:** یک کار شکست خورد و شما نیاز دارید دلیل آن را بفهمید و پارامترها را "
+"اصلاح کنید."
+
+#: ../../source/cli-jobflow-remote.rst:876 79b22c79198842bd8bedfe1e4109fd51
+msgid "Use Case 10: Enabling Spin-Polarized Calculations"
+msgstr "مورد استفاده ۱۰: فعال‌سازی محاسبات اسپین‌قطبیده"
+
+#: ../../source/cli-jobflow-remote.rst:878 a67d46260b4c49b89c4be8c3d436d3f5
+msgid "**Scenario:** You need to enable spin polarization for a magnetic system."
+msgstr "**سناریو:** نیاز دارید قطبش اسپین را برای یک سیستم مغناطیسی فعال کنید."
+
+#: ../../source/cli-jobflow-remote.rst:901 57535826783840b2a536e43b288d79eb
+msgid "Use Case 11: Batch Parameter Modification"
+msgstr "مورد استفاده ۱۱: تغییر دسته‌ای پارامترها"
+
+#: ../../source/cli-jobflow-remote.rst:903 8512b4a8d3874a5a8d76e69a437bf65e
+msgid ""
+"**Scenario:** You need to modify multiple parameters at once for "
+"convergence."
+msgstr ""
+"**سناریو:** نیاز دارید چندین پارامتر را به‌طور همزمان برای همگرایی تغییر دهید."
+
+#: ../../source/cli-jobflow-remote.rst:919 97812f3d9e034a368f900a6609a0efc1
+msgid "Use Case 12: Comparing User Params vs Tier Defaults"
+msgstr "مورد استفاده ۱۲: مقایسه پارامترهای کاربر در برابر پیش‌فرض‌های سطح"
+
+#: ../../source/cli-jobflow-remote.rst:921 603e93300cda47409367060ae0e55b02
+msgid "**Scenario:** You want to understand what the tier preset contributes."
+msgstr "**سناریو:** می‌خواهید بفهمید پیش‌تنظیم سطح چه چیزی ارائه می‌دهد."
+
+#: ../../source/cli-jobflow-remote.rst:940 ae191cf1b2d84a4daccbcd32302e09bb
+msgid "Common Use Cases"
+msgstr "موارد استفاده رایج"
+
+#: ../../source/cli-jobflow-remote.rst:943 ca1b04481a8f416b922ddf1457d8188b
+msgid "Use Case 1: Setting Up a New Project"
+msgstr "مورد استفاده ۱: راه‌اندازی پروژه جدید"
+
+#: ../../source/cli-jobflow-remote.rst:945 97278d29ae914aeb9368172fe1e0c1b9
+msgid "**Scenario:** You need to set up jobflow-remote for the first time."
+msgstr "**سناریو:** نیاز دارید jobflow-remote را برای اولین بار راه‌اندازی کنید."
+
+#: ../../source/cli-jobflow-remote.rst:974 07dde0c4cc5347f599c08107bf4f26e2
+msgid "Use Case 2: Managing Multiple HPC Clusters"
+msgstr "مورد استفاده ۲: مدیریت چندین خوشه HPC"
+
+#: ../../source/cli-jobflow-remote.rst:976 5bd245ee6b08468bb76814b36617e3ef
+msgid ""
+"**Scenario:** You have three HPC systems and want separate configurations"
+" for each."
+msgstr ""
+"**سناریو:** شما سه سیستم HPC دارید و برای هر کدام پیکربندی جداگانه می‌خواهید."
+
+#: ../../source/cli-jobflow-remote.rst:1001 76680e704ff04abba7573e07e45bd3e7
+msgid "Use Case 3: Migrating MongoDB Database"
+msgstr "مورد استفاده ۳: مهاجرت پایگاه داده MongoDB"
+
+#: ../../source/cli-jobflow-remote.rst:1003 a82ad46ef862483585fc4c5cd2895749
+msgid "**Scenario:** Your MongoDB server is moving to a new host."
+msgstr "**سناریو:** سرور MongoDB شما به میزبان جدیدی منتقل می‌شود."
+
+#: ../../source/cli-jobflow-remote.rst:1036 c1328a5efa5049d5b8bb5334099b306c
+msgid "Best Practices"
+msgstr "بهترین شیوه‌ها"
+
+#: ../../source/cli-jobflow-remote.rst:1039 c8dbe492b946489d85770b709e73065a
+msgid "1. Always Use Backups"
+msgstr "۱. همیشه از پشتیبان استفاده کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1050 fdd8a5d9d6464243a1a596e65a745f30
+msgid "2. Add Comments Early"
+msgstr "۲. زودتر توضیحات اضافه کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1061 67cbee99f6f9482ca92d25bfa1daa709
+msgid "3. Verify After Updates"
+msgstr "۳. بعد از به‌روزرسانی تأیید کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1073 f175911870ef4e65a479e2073a7d036b
+msgid "4. Document Worker Configurations"
+msgstr "۴. پیکربندی‌های کارگر را مستند کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1075 dd3f7cb93f644ce3a4a78a4a0c454c19
+msgid "Use descriptive worker names and add comments:"
+msgstr "از نام‌های توصیفی کارگر استفاده کنید و توضیحات اضافه کنید:"
+
+#: ../../source/cli-jobflow-remote.rst:1089 1666eff2329b462885b950be15954d05
+msgid "5. Use Project-Specific Commands"
+msgstr "۵. از دستورات اختصاصی پروژه استفاده کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1102 6a7bafef7a3e469a97db8bab942b6e76
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/cli-jobflow-remote.rst:1105 89dd8258f2f6405090f92420e05f9c91
+msgid "Configuration file not found"
+msgstr "فایل پیکربندی پیدا نشد"
+
+#: ../../source/cli-jobflow-remote.rst:1107
+#: ../../source/cli-jobflow-remote.rst:1128 79f00c20b4e143289b6880bef6228caf
+#: f563d790dd744d62bce4732a39711ba6
+msgid "**Error:**"
+msgstr "**خطا:**"
+
+#: ../../source/cli-jobflow-remote.rst:1126 0edc8cda7ae647b28884131c023b79e9
+msgid "jobflow-remote is not installed"
+msgstr "jobflow-remote نصب نیست"
+
+#: ../../source/cli-jobflow-remote.rst:1149 e57fbca7f9b645dd886807c3e1cbde2b
+msgid "MongoDB connection fails after update"
+msgstr "اتصال MongoDB بعد از به‌روزرسانی شکست می‌خورد"
+
+#: ../../source/cli-jobflow-remote.rst:1151 0a334f39d99c4654a3ece73018a7c19a
+msgid "**Symptoms:** ``jf project check --errors`` shows connection errors."
+msgstr "**علائم:** ``jf project check --errors`` خطاهای اتصال را نشان می‌دهد."
+
+#: ../../source/cli-jobflow-remote.rst:1153 04b0f87ce2b44f33ad04198f7575082f
+msgid "**Diagnosis:**"
+msgstr "**تشخیص:**"
+
+#: ../../source/cli-jobflow-remote.rst:1181 3ab76f19e28d4ccc8899685fba1d8bc5
+msgid "Summary"
+msgstr "خلاصه"
+
+#: ../../source/cli-jobflow-remote.rst:1183 8d6c3045ffaf486fb29df9e45e78e1c6
+msgid ""
+"The ``atomate2siesta-jobflow-remote`` CLI provides comprehensive tools "
+"for managing jobflow-remote configurations and jobs:"
+msgstr ""
+"رابط خط فرمان ``atomate2siesta-jobflow-remote`` ابزارهای جامعی برای مدیریت "
+"پیکربندی‌ها و کارهای jobflow-remote فراهم می‌کند:"
+
+#: ../../source/cli-jobflow-remote.rst:1185 170755b9bfa54573ae0c2479b8ee2f0d
+msgid "**Setup & Configuration Commands:**"
+msgstr "**دستورات راه‌اندازی و پیکربندی:**"
+
+#: ../../source/cli-jobflow-remote.rst:1187 10798d13805d4d2f9570e97a5a4b73dd
+msgid "``install`` - Install jobflow-remote"
+msgstr "``install`` - نصب jobflow-remote"
+
+#: ../../source/cli-jobflow-remote.rst:1188 17a8bcf92ee9486eaf74a145b29c2858
+msgid "``setup`` - Generate/update project configurations"
+msgstr "``setup`` - تولید/به‌روزرسانی پیکربندی‌های پروژه"
+
+#: ../../source/cli-jobflow-remote.rst:1189 5316fd6e0bf44311ae7ac91e5278f5d4
+msgid "``update`` - Advanced configuration updates with inline comments"
+msgstr "``update`` - به‌روزرسانی‌های پیشرفته پیکربندی با توضیحات درون‌خطی"
+
+#: ../../source/cli-jobflow-remote.rst:1190 e27a476a6a2145c09c3f6f308db6e5b5
+msgid "``info`` - List and inspect all projects"
+msgstr "``info`` - فهرست و بازرسی تمام پروژه‌ها"
+
+#: ../../source/cli-jobflow-remote.rst:1191 7c50eb38d3b248bc97f90c33dfbb0e47
+msgid "``test`` - Submit test job to verify setup"
+msgstr "``test`` - ارسال کار آزمایشی برای تأیید راه‌اندازی"
+
+#: ../../source/cli-jobflow-remote.rst:1192 1d495f1482204ee39af46d8b475bb620
+msgid "``runner`` - Display runner management commands"
+msgstr "``runner`` - نمایش دستورات مدیریت اجراکننده"
+
+#: ../../source/cli-jobflow-remote.rst:1194 5a6cafd0bbf54d97933b82a4589ecd86
+msgid "**Job Management Commands:**"
+msgstr "**دستورات مدیریت کار:**"
+
+#: ../../source/cli-jobflow-remote.rst:1196 ecc460d7c5f54492b2fbb4d9b6dfeb59
+msgid "``job inspect`` - View job details and FDF parameters"
+msgstr "``job inspect`` - مشاهده جزئیات کار و پارامترهای FDF"
+
+#: ../../source/cli-jobflow-remote.rst:1197 3261381c7d304c1c8b30dec54e8a60bc
+msgid "``job modify-db`` - Modify job parameters directly in MongoDB (risky)"
+msgstr "``job modify-db`` - تغییر پارامترهای کار مستقیماً در MongoDB (پرخطر)"
+
+#: ../../source/cli-jobflow-remote.rst:1199 41d82b56844a4108b8aa1ffd95838bc0
+msgid "**Key Features:**"
+msgstr "**ویژگی‌های کلیدی:**"
+
+#: ../../source/cli-jobflow-remote.rst:1201 97cb24c81e69440ca43878e16d6558f9
+msgid "**Multi-project management**: Handle multiple HPC clusters"
+msgstr "**مدیریت چند پروژه**: مدیریت چندین خوشه HPC"
+
+#: ../../source/cli-jobflow-remote.rst:1202 aec55c693c4546acb37e1107e8b83e3f
+msgid "**Automatic backups**: Safe updates with timestamped backups"
+msgstr "**پشتیبان‌گیری خودکار**: به‌روزرسانی‌های ایمن با پشتیبان‌های دارای مُهر زمانی"
+
+#: ../../source/cli-jobflow-remote.rst:1203 8d9aeeda0b2449b09de9a9cef7e5ebec
+msgid "**Self-documenting configs**: Inline comments for all settings"
+msgstr "**پیکربندی‌های خودمستند**: توضیحات درون‌خطی برای تمام تنظیمات"
+
+#: ../../source/cli-jobflow-remote.rst:1204 b447c802cf784c7fbf33162224631060
+msgid ""
+"**Safe MongoDB updates**: Update database settings without breaking "
+"configs"
+msgstr ""
+"**به‌روزرسانی‌های ایمن MongoDB**: به‌روزرسانی تنظیمات پایگاه داده بدون خراب "
+"کردن پیکربندی‌ها"
+
+#: ../../source/cli-jobflow-remote.rst:1205 afce93909ac94c3993c4ae57e6013119
+msgid ""
+"**Job parameter inspection**: View FDF params, tier defaults, actual FDF "
+"files"
+msgstr ""
+"**بازرسی پارامترهای کار**: مشاهده پارامترهای FDF، پیش‌فرض‌های سطح، فایل‌های "
+"واقعی FDF"
+
+#: ../../source/cli-jobflow-remote.rst:1206 bc44ce47f7a44c8098a6becdc09e4c7d
+msgid ""
+"**In-place parameter modification**: Modify running/failed jobs without "
+"recreating flows"
+msgstr ""
+"**تغییر پارامتر در محل**: تغییر کارهای در حال اجرا/شکست‌خورده بدون بازسازی "
+"جریان‌ها"
+
+#: ../../source/cli-jobflow-remote.rst:1207 667672c109c04e10bb77d699134c7304
+msgid ""
+"**Parameter validation**: 456 registered FDF parameters with typo "
+"detection"
+msgstr ""
+"**اعتبارسنجی پارامتر**: ۴۵۶ پارامتر ثبت‌شده FDF با تشخیص اشتباهات تایپی"
+
+#: ../../source/cli-jobflow-remote.rst:1208 66fc373024d24bd885b6bfb9a24ec2e7
+msgid "**Internal param filtering**: Prevents deserialization errors"
+msgstr "**فیلتر پارامترهای داخلی**: جلوگیری از خطاهای غیرسریال‌سازی"
+
+#: ../../source/cli-jobflow-remote.rst:1209 dcddebf9a4094c3fa0ade4369baf0485
+msgid "**Case-insensitive**: Accepts Mesh.Cutoff, mesh.cutoff, MESH.CUTOFF"
+msgstr "**حساس به حروف بزرگ و کوچک نیست**: Mesh.Cutoff، mesh.cutoff، MESH.CUTOFF را می‌پذیرد"
+
+#: ../../source/cli-jobflow-remote.rst:1211 9d77d9c8cd2240d2ab2ababd5a727355
+msgid "**Best Practices:**"
+msgstr "**بهترین شیوه‌ها:**"
+
+#: ../../source/cli-jobflow-remote.rst:1213 adba90f3320345a18bf1201b5fd604f9
+msgid "**For Setup:**"
+msgstr "**برای راه‌اندازی:**"
+
+#: ../../source/cli-jobflow-remote.rst:1215 df7797047d96406883fa614369c67fe1
+msgid "Always use backups (enabled by default)"
+msgstr "همیشه از پشتیبان استفاده کنید (به‌طور پیش‌فرض فعال است)"
+
+#: ../../source/cli-jobflow-remote.rst:1216 cdd14c7b31884d24a19880988eb313ab
+msgid "Add comments after initial setup for documentation"
+msgstr "بعد از راه‌اندازی اولیه برای مستندسازی توضیحات اضافه کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1217 f83ef710f8bd4dca9cb6b60b5d6bf626
+msgid "Verify configurations after updates with ``jf project check``"
+msgstr "پیکربندی‌ها را بعد از به‌روزرسانی با ``jf project check`` تأیید کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1218 19b4b4cd5ca145658f42975097495707
+msgid "Use descriptive worker names"
+msgstr "از نام‌های توصیفی کارگر استفاده کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1219 c84cb3f982b64fa98f12d1436f4a7a70
+msgid "Keep recent backups"
+msgstr "پشتیبان‌های اخیر را نگه دارید"
+
+#: ../../source/cli-jobflow-remote.rst:1221 25b461c1e0784acb96ad4882f1fda55f
+msgid "**For Job Modification:**"
+msgstr "**برای تغییر کار:**"
+
+#: ../../source/cli-jobflow-remote.rst:1223 50a957a6986c4df4a1ec872781cb0a2f
+msgid ""
+"**Inspect before modifying**: Use ``job inspect --full`` to see current "
+"params"
+msgstr ""
+"**قبل از تغییر بازرسی کنید**: از ``job inspect --full`` برای مشاهده پارامترهای "
+"فعلی استفاده کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1224 242303ea591f48b8a2a799d167c74aa9
+msgid "**Use backups**: Never disable backup creation"
+msgstr "**از پشتیبان استفاده کنید**: هرگز ایجاد پشتیبان را غیرفعال نکنید"
+
+#: ../../source/cli-jobflow-remote.rst:1225 1f30aeeaaf994b84b4ea622deab22b4e
+msgid "**Validate changes**: Check with ``job inspect`` after modification"
+msgstr "**تغییرات را اعتبارسنجی کنید**: بعد از تغییر با ``job inspect`` بررسی کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1226 a9e32b75b2374289a3b435eda5b22f40
+msgid "**Understand risks**: Direct DB modification can cause data corruption"
+msgstr "**خطرات را بفهمید**: تغییر مستقیم پایگاه داده می‌تواند باعث خرابی داده شود"
+
+#: ../../source/cli-jobflow-remote.rst:1227 28fca4fd447c4a04b3906e507c1f68c0
+msgid "**Only modify READY jobs**: Don't modify RUNNING or COMPLETED jobs"
+msgstr "**فقط کارهای READY را تغییر دهید**: کارهای RUNNING یا COMPLETED را تغییر ندهید"
+
+#: ../../source/cli-jobflow-remote.rst:1228 84ea1e2d21a546269ab853850cb7a44a
+msgid ""
+"**Case doesn't matter**: Use standard capitalization (Mesh.Cutoff) for "
+"clarity"
+msgstr ""
+"**حروف بزرگ و کوچک مهم نیست**: از بزرگ‌نویسی استاندارد (Mesh.Cutoff) برای وضوح "
+"استفاده کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1229 b187deff60f5436fad319badc62005e0
+msgid ""
+"**Check tier defaults**: Use ``--show-all-defaults`` to understand preset"
+" contributions"
+msgstr ""
+"**پیش‌فرض‌های سطح را بررسی کنید**: از ``--show-all-defaults`` برای درک سهم "
+"پیش‌تنظیم‌ها استفاده کنید"
+
+#: ../../source/cli-jobflow-remote.rst:1232 af88909ce0a343a08cee22169cb59943
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/cli-jobflow-remote.rst:1234 16047e66137b44eb80e2daa53c30f3ee
+msgid "`Official Documentation <https://matgenix.github.io/jobflow-remote/>`_"
+msgstr "`مستندات رسمی <https://matgenix.github.io/jobflow-remote/>`_"
+
+#: ../../source/cli-jobflow-remote.rst:1235 badb91a1966949d8923daa65b3077c9f
+msgid "`GitHub Repository <https://github.com/Matgenix/jobflow-remote>`_"
+msgstr "`مخزن GitHub <https://github.com/Matgenix/jobflow-remote>`_"
+
+#: ../../source/cli-jobflow-remote.rst:1236 f6ebe2d201874c8892e92488195a08fe
+msgid ":doc:`cli-database` - Database CLI Reference"
+msgstr ":doc:`cli-database` - مرجع رابط خط فرمان پایگاه داده"
+
+#: ../../source/cli-jobflow-remote.rst:1237 54b5c3d5ef4f4246ae219c7143042b7e
+msgid ":doc:`cli-cluster-setup` - Cluster Setup CLI"
+msgstr ":doc:`cli-cluster-setup` - رابط خط فرمان راه‌اندازی خوشه"

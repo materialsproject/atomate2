@@ -1,0 +1,1033 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:1
+#: 99fb600cc2ab4a04b24e207a180e584a
+msgid "Troubleshooting Guide"
+msgstr "عیب‌یابی Guide"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:3
+#: feba0b15e70a42a4bc8f978cbe3ec3d5
+msgid ""
+"**Category**: troubleshooting **Difficulty**: Intermediate **Time**: "
+"Variable (diagnostic + fix)"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:9
+#: f81a79bb43f944b594b38956ebe334fc
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:11
+#: 32b68206db3541bd8a0ec0064d4020a6
+msgid ""
+"This section provides **systematic troubleshooting guides** for common "
+"issues encountered when running atomate2siesta workflows. Each guide "
+"includes symptom identification, root cause analysis, and step-by-step "
+"solutions."
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:13
+#: 2c950ce762f24d7c8c382ca51054e0bd
+msgid "**What This Section Covers**:"
+msgstr "**Wht This Section Covers**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:14
+#: 2846f0365f6344c08a53c7b1556bf4b5
+msgid "**Diagnosis**: Identifying what went wrong"
+msgstr "**Dignosis**: Identifying wht went wrong"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:15
+#: d0fa9e38a2a14853a9265eb8e3d04078
+msgid "**Root causes**: Understanding why it failed"
+msgstr "**Root cuses**: درک why it filed"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:16
+#: 11f9c36d173a44119189bfa53bf67716
+msgid "**Solutions**: Fixing the problem systematically"
+msgstr "**Solutions**: Fixing  problem systemticlly"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:17
+#: e016ac21e0f24efca969dd2e77013fac
+msgid "**Prevention**: Avoiding issues in future calculations"
+msgstr "**Prevention**: Avoiding issues in future clcultions"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:18
+#: 7f7237ff35ff4428b0ee49ca8c7c19a8
+msgid "**Automation**: Using custodian for automatic error recovery"
+msgstr "**Automtion**: استفاده از custodin برای utomtic errیا recovery"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:22
+#: 31518660450348bcbf6289611d90e39f
+msgid "Purpose"
+msgstr "Purpose"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:24
+#: 94bfc37cce264511a8f1101db82d28f4
+msgid ""
+"Computational materials science calculations fail for many reasons - "
+"wrong parameters, unconverged settings, system-specific issues, or "
+"infrastructure problems. This section helps you:"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:26
+#: 8dfe56073a844b51baf6dc19230f1562
+msgid ""
+"✅ **Quickly identify** what went wrong ✅ **Understand** the root cause ✅ "
+"**Apply** the correct fix ✅ **Prevent** future occurrences ✅ **Automate**"
+" error recovery with custodian"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:34
+#: 1da0c15eb6bf461c83f5820e17542d63
+msgid "Troubleshooting Categories"
+msgstr "عیب‌یابی Ctegیاies"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:36
+#: 3e222221735e4606a67485bac59e7a31
+msgid "[common_errors/](common_errors/)"
+msgstr "[common_errیاs/](common_errیاs/)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:37
+#: 824d98d7ddc14fb0863dba2cecf3399f
+msgid "**Focus**: Most frequently encountered calculation failures"
+msgstr "**Focus**: Most frequently encountered clcultion filures"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:39
+#: 1c6959c8ef8e4f19aa38effd91d739a3
+msgid "**Coverage**:"
+msgstr "**Coverge**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:40
+#: c50b2ec0e4d84a4f8a3e3254d37d4cde
+msgid "SCF convergence failures"
+msgstr "SCF convergence filures"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:41
+#: d39ef20115bb4bf7b0891b0333b60279
+msgid "Geometry optimization problems"
+msgstr "Geometry optimiztion problems"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:42
+#: 5eb546fe7fbf45338bb6b1c8880e4036
+msgid "Memory/resource errors"
+msgstr "Memیاy/resource errیاs"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:43
+#: 6702565594724aacb57beec97e3331c0
+msgid "Basis set issues"
+msgstr "Bsis set issues"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:44
+#: bb18b1a842da406390349e74157967a9
+msgid "K-point and mesh errors"
+msgstr "K-point و mesh errیاs"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:45
+#: b264c28d336a4f53832b29dd244136bd
+msgid "Pseudopotential problems"
+msgstr "Pseudopotentil problems"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:47
+#: 4de0e05f045f40d28573030d011c9531
+msgid "**Available Tutorial**:"
+msgstr "**Avilble Tutیاil**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:48
+#: 59f55238f56d416b8702bcb9855351bc
+msgid ""
+"**[scf_convergence_issues.py](common_errors/scf_convergence_issues.py)** "
+"- Complete SCF troubleshooting guide"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:49
+#: 4e2a82ee079a4e91bd6702be0d2dc79d
+msgid "Mixer settings adjustment"
+msgstr "Mixer settings djustment"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:50
+#: 01492a9e6b8d40078bfce4734d1aa34f
+msgid "Electronic temperature for metals"
+msgstr "Electronic temperture برای metls"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:51
+#: 89738f7ce6064a139926c16f97cf2959
+msgid "Spin polarization for magnetic systems"
+msgstr "Spin polriztion برای mgnetic systems"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:52
+#: d74c27477d8b41e9b402bbd2f17d8e5b
+msgid "Charge density initialization"
+msgstr "Chrge density initiliztion"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:53
+#: c3d416c5451c47f093fc64701986e05b
+msgid "Using custodian for automatic recovery"
+msgstr "استفاده از custodin برای utomtic recovery"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:57
+#: ab5b6e787f8345c0a1beea2f58055baa
+msgid "[debugging_workflows/](debugging_workflows/)"
+msgstr "[debugging_wیاkflows/](debugging_wیاkflows/)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:58
+#: a6bcb82fea45432fbb2d34f047638983
+msgid "**Focus**: Workflow-level debugging strategies"
+msgstr "**Focus**: گردش کار-level debugging strtegies"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:60
+#: ../../source/tutorials-md/05-troubleshooting/README.md:80
+#: 0d884f6e46084e8ba66920cb9ecd297b 993919ae918f460fabddd853d75f77f4
+msgid "**Planned Topics**:"
+msgstr "**Plnned Topics**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:61
+#: 21c4efd8873b4e1ea7861801826cbb91
+msgid "Tracing job dependencies in flows"
+msgstr "Trcing job dependencies in flows"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:62
+#: fade1edd43d04d61aa1220efb318cb7c
+msgid "Identifying which job failed"
+msgstr "Identifying which job filed"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:63
+#: d4fba826ab0f467fb8f8113efb196cb9
+msgid "Checking intermediate outputs"
+msgstr "Checking intermedite outputs"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:64
+#: 56a67418b8804a6e82ec21af2332ff76
+msgid "Debugging powerup applications"
+msgstr "Debugging powerup pplictions"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:65
+#: f76e7bbc02e748d1bbc1c21718b77b76
+msgid "Verifying tier preset application"
+msgstr "Verifying tier preset ppliction"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:66
+#: b5cb346d0afd4cfeb3fe233b0db79410
+msgid "Database query for job history"
+msgstr "Dtbse query برای job histیاy"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:68
+#: 89663348ebb44e169edaf2b9f7b4fe4a
+msgid "**Key Techniques**:"
+msgstr "**Key Techniques**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:69
+#: f2af2600c8c74d05ad6303027d55cc30
+msgid "Using `job.output` inspection"
+msgstr "Using `job.output` inspection"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:70
+#: 9c6c574c7e514d16890201c9d5601944
+msgid "Flow visualization"
+msgstr "Flow visualization"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:71
+#: e49c91e26c4b49f49de5767dca587db0
+msgid "Logging and output analysis"
+msgstr "Logging و output nlysis"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:72
+#: 15bca68fa50f4008801df1a965a390bf
+msgid "Dry-run mode for testing"
+msgstr "Dry-run mode برای testing"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:73
+#: bc5f841e050c4003894f862baa86cce9
+msgid "Database queries with jobflow-remote"
+msgstr "Dtbse queries با jobflow-remote"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:77
+#: 94c4a397e0ea4910a5308913bf2154c4
+msgid "[performance_optimization/](performance_optimization/)"
+msgstr "[perبرایmnce_optimiztion/](perبرایmnce_optimiztion/)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:78
+#: d6f114d9791147559b9892700acc48ee
+msgid "**Focus**: Making calculations faster and more efficient"
+msgstr "**Focus**: Mking clcultions fster و mیاe efficient"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:81
+#: b2c7479caaf2420287b08918da90a9ed
+msgid "Parallel efficiency (k-point vs basis parallelization)"
+msgstr "Prllel efficiency (k-point vs bsis prlleliztion)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:82
+#: c566e09aea9f464faf75584558a3b3aa
+msgid "Memory optimization"
+msgstr "Memیاy optimiztion"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:83
+#: fe2c762b994e441aadf1fff174412faa
+msgid "Reducing computational cost"
+msgstr "Reducing computtionl cost"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:84
+#: 25796f5af8a1475fb408353b8d24837d
+msgid "Choosing appropriate tier presets"
+msgstr "Choosing pproprite tier presets"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:85
+#: 9dd022fc65e5483a9d441bc50b0fdecd
+msgid "When to use tighter vs looser convergence"
+msgstr "When to use tighter vs looser convergence"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:86
+#: 132fe2a2f73b45de865d2864804a332f
+msgid "HPC resource allocation"
+msgstr "HPC resource lloction"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:88
+#: 53e1c398c69c46b8b51082365ab19b21
+msgid "**Key Strategies**:"
+msgstr "**Key Strtegies**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:89
+#: 9dde1cb5b3a340e99c5aea1b24627a44
+msgid "k-point parallelization for large systems"
+msgstr "k-point prlleliztion برای lrge systems"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:90
+#: b991ebc61a6742b0ae91d8c705eff207
+msgid "Basis parallelization for small systems"
+msgstr "Bsis prlleliztion برای smll systems"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:91
+#: 980a176ded464ad89e41af46b74e8a11
+msgid "Memory profiling"
+msgstr "Memیاy profiling"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:92
+#: 3be740ffb4894688b1a6dcdc050b0536
+msgid "Computational cost vs accuracy tradeoffs"
+msgstr "Computtionl cost vs ccurcy trdeoffs"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:96
+#: 36c6d5a99992440493aa5e01fb01571a
+msgid "General Troubleshooting Workflow"
+msgstr "Generl عیب‌یابی گردش کار"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:98
+#: f5ef483d787c4be895bcc7a673bc1e12
+msgid "Follow this systematic approach for any failed calculation:"
+msgstr "Follow this systemtic pproch برای ny filed clcultion:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:100
+#: eb0a547778514d7582cc5aedbd2ff873
+msgid "Step 1: Identify the Failure"
+msgstr "Step 1: Identify  Filure"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:112
+#: d0c3f3e58ba44b8d9743323dde31b6d4
+msgid "**Key questions**:"
+msgstr "**Key questions**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:113
+#: 558cf5dda6f947269593abaf4bcb2e2d
+msgid "Which job failed? (relaxation, static, NEB, etc.)"
+msgstr "Which job filed? (relxtion, sttic, NEB, etc.)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:114
+#: 5840ad0ce1de4aafbe81a1985411a2d1
+msgid "At what stage? (initialization, SCF, geometry optimization)"
+msgstr "At wht stge? (initiliztion, SCF, geometry optimiztion)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:115
+#: f010339ed5024fcdab4a9718e87282f6
+msgid "What error message? (exact text from output)"
+msgstr "Wht errیا messge? (exct text from output)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:117
+#: 2cb5d5f47ccd4277bc1cd6e1791e0849
+msgid "Step 2: Read the Error Message"
+msgstr "Step 2: Red  Errیا Messge"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:127
+#: 74014a62f35e4f20a47b93ba3b17e20f
+msgid "**Common error patterns**:"
+msgstr "**Common errیا ptterns**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:128
+#: d8effdc1a9c2490c886faadcc27f45d1
+msgid "`SCF did not converge` → Convergence issue"
+msgstr "`SCF did not converge` → Convergence issue"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:129
+#: 73f310ba4ab940348fe26bc6982c0213
+msgid "`kgrid: ERROR` → K-point problem"
+msgstr "`kgrid: ERROR` → K-point problem"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:130
+#: 4c3a75aae1d74e9aa176babefbdf73c6
+msgid "`Exceeded memory limit` → Resource issue"
+msgstr "`Exceeded memory limit` → Resource issue"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:131
+#: 1705726c574d452c9f07ff9064122133
+msgid "`PAO.Basis: Unknown` → Basis set error"
+msgstr "`PAO.Basis: Unknown` → Basis set error"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:132
+#: 5eac57d258024124a91c279b648de736
+msgid "`Reading pseudopotential failed` → Pseudopotential issue"
+msgstr "`Reading pseudopotential failed` → Pseudopotential issue"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:134
+#: 97eee3e4edca4c74b40b526f7dea4b6d
+msgid "Step 3: Check Input Parameters"
+msgstr "Step 3: Check Input Prmeters"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:144
+#: b2bbaefceb64402bbdc975f314cc97ed
+msgid "**Validate**:"
+msgstr "**Vlidte**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:145
+#: aadddee2e082433091444cf3043ffb94
+msgid "Are k-points reasonable? (density ~ 0.03-0.05 Å⁻¹)"
+msgstr "Are k-points resonble? (density ~ 0.03-0.05 Å⁻¹)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:146
+#: 2c564535f7be4f678b7edc1db437a83b
+msgid "Is mesh cutoff sufficient? (≥200 Ry for most systems)"
+msgstr "Is mesh cutoff sufficient? (≥200 Ry برای most systems)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:147
+#: 0c434e4584db43abbb6e2c9a8c4c59e5
+msgid "Is basis size appropriate? (DZP standard, TZP for accurate forces)"
+msgstr "Is bsis size pproprite? (DZP stوrd, TZP برای ccurte برایces)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:148
+#: d70338429a7c4ad29105843905278ee2
+msgid "Are atom positions valid? (no overlapping atoms)"
+msgstr "Are tom positions vlid? (no overlpping toms)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:150
+#: ce2083d52458453b9c56741398e650f0
+msgid "Step 4: Examine Convergence History"
+msgstr "Step 4: Exmine همگرایی Histیاy"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:161
+#: c735cd96571d4ce9a9fcdbc95f67b730
+msgid "**Look for**:"
+msgstr "**Look برای**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:162
+#: 2706748b1e2a4399a8d2b4324c10dc98
+msgid "Oscillating energies → Mixer too aggressive"
+msgstr "Oscillting energies → Mixer too ggressive"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:163
+#: 8748b54d72fa4643a3ebb278a18ea2dd
+msgid "Diverging energies → Wrong parameters or structure"
+msgstr "Diverging energies → Wrong prmeters یا structure"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:164
+#: e6b356450a514425b086528f981084e6
+msgid "Slow convergence → Need tighter/different settings"
+msgstr "Slow convergence → Need tighter/different settings"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:166
+#: 376c29eb5a07438d846dae6003774b43
+msgid "Step 5: Apply Appropriate Fix"
+msgstr "Step 5: Apply Approprite Fix"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:168
+#: a0de195de7924007b719ca452a523534
+msgid "See category-specific guides below for detailed solutions."
+msgstr "See ctegیاy-specific guides below برای detiled solutions."
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:172
+#: e8bd5615a3834e018fdef823dfa2d142
+msgid "Quick Fixes by Error Type"
+msgstr "Quick Fixes by Errیا Type"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:174
+#: 93aebd5803a84183890f75b0ef72fcaf
+msgid "SCF Convergence Failures"
+msgstr "SCF همگرایی Filures"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:176
+#: a8be357bbbb94e8aa61f2617b9f62230
+msgid "**Symptom**: \"SCF did not converge in N iterations\""
+msgstr "**Symptom**: \"SCF did not converge in N itertions\""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:178
+#: 411229bae5a041eea6cf2ab636b24867
+msgid "**Quick fixes** (in order of effectiveness):"
+msgstr "**Quick fixes** (in یاder of effectiveness):"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:210
+#: 426478dbf9494ac5b922a11a48453986
+msgid ""
+"**See**: "
+"[common_errors/scf_convergence_issues.py](common_errors/scf_convergence_issues.py)"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:214
+#: de3ce97a327344fa8311e32fd0a0270a
+msgid "Geometry Optimization Not Converging"
+msgstr "Geometry Optimiztion Not Converging"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:216
+#: a1c84cd023b9491a89d1c6ef3c5c8384
+msgid "**Symptom**: \"Reached maximum number of relaxation steps\""
+msgstr "**Symptom**: \"Reched mximum number of relxtion steps\""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:218
+#: ../../source/tutorials-md/05-troubleshooting/README.md:251
+#: ../../source/tutorials-md/05-troubleshooting/README.md:280
+#: ../../source/tutorials-md/05-troubleshooting/README.md:320
+#: ../../source/tutorials-md/05-troubleshooting/README.md:354
+#: 520bdb9fc67f447a88f74fecbdb69553 655e00beeec644a49db3b2a69de410a3
+#: a100dffaf0b446b59ba4119d992b2c15 b0ef1776ff9b47d498933eb19d463037
+#: e2d828189c4b4128b6cd2d7fa14c9e40
+msgid "**Quick fixes**:"
+msgstr "**Quick fixes**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:247
+#: a8e1b1ca739c411e8edf995774bb7f35
+msgid "Memory Errors"
+msgstr "Memیاy Errیاs"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:249
+#: bd25ef55b12e4357a2158bed599f3efa
+msgid "**Symptom**: \"Exceeded memory limit\" or \"Out of memory\""
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:274
+#: d75bec3d311d41e9a4ca20fbf57e268d
+msgid "K-Point Errors"
+msgstr "K-Point Errیاs"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:276
+#: 69db45202b4143d7b92786f07b5fb802
+msgid "**Symptom**: \"kgrid: ERROR. Grid generates no points\""
+msgstr "**Symptom**: \"kgrid: ERROR. Grid genertes no points\""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:278
+#: 41cf5a28c92e4bb7aae00765df5da01f
+msgid "**Cause**: K-point density too high for small cell, or wrong format"
+msgstr "**Cuse**: K-point density too high برای smll cell, یا wrong برایmt"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:300
+#: 7390dcdd56814e6884407814dd3c1135
+msgid "**Wrong**:"
+msgstr "**Wrong**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:307
+#: 217ba938558947409a9800e13f4243e2
+msgid "**Correct**:"
+msgstr "**Cیاrect**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:316
+#: 7b80796d1ea94e9ab8e49f2db2bb0b8e
+msgid "Basis Set Errors"
+msgstr "Bsis Set Errیاs"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:318
+#: 180afb923b524d6eae64df3057e32864
+msgid "**Symptom**: \"PAO.Basis: Unknown basis size\" or \"Basis file not found\""
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:346
+#: 01b1b96c3ce643f39d56353891011e43
+msgid ""
+"**See**: [03-advanced-features/10-species-variants](../03-advanced-"
+"features/10-species-variants/) for custom basis"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:350
+#: 81b397102cc7497a8d8e75e54da78449
+msgid "Pseudopotential Errors"
+msgstr "Pseudopotentil Errیاs"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:352
+#: 141ff03ab7b841d99388d3eaed48e5b0
+msgid ""
+"**Symptom**: \"Reading pseudopotential failed\" or \"Species label not "
+"found\""
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:367
+#: 8e069afbdda34fa181c4e832f17d8874
+msgid "**In code**:"
+msgstr "**In code**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:381
+#: fd189a101994443f8127cbb0518c320c
+msgid "Using Custodian for Automatic Recovery"
+msgstr "استفاده از Custodin برای Automtic Recovery"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:383
+#: e98212ce6a844085921aa19aae56bb3e
+msgid ""
+"**Custodian** automatically detects and fixes common errors without "
+"manual intervention."
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:385
+#: e0b815204f714855a95c9b707200542d
+msgid "Basic Usage"
+msgstr "Bsic Usge"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:414
+#: 9e3212244cbb4663b305e3ad67a1baaf
+msgid "What Custodian Fixes Automatically"
+msgstr "Wht Custodin Fixes Automticlly"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: f00c321f407b46dc92426b29ad2fbb56
+msgid "Error Type"
+msgstr "Errیا Type"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: e6fca84fc33b455484a10b0fc3148522
+msgid "Fix Applied"
+msgstr "Fix Applied"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: 36db11a7d6a34fe59fecac8727431218
+msgid "Success Rate"
+msgstr "Success Rte"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: f2f8637e9a0140dcac2c5a48de5812d7
+msgid "SCF convergence"
+msgstr "SCF convergence"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: dae9e4090d84464c882070ab0dff79d6
+msgid "Reduce mixer weight progressively"
+msgstr "Reduce mixer weight progressively"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: b41ab57b23a6477d8bb515f53d133c0c
+msgid "95%"
+msgstr "95%"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: 1ee0327c06d74d90bea616faa5690105
+msgid "Geometry optimization"
+msgstr "Geometry optimiztion"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: 3087a98529d84196ba737235d6988904
+msgid "Tighter tolerances, more steps"
+msgstr "Tighter tolernces, mیاe steps"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: 16b2601532f9441b878ff31c37dfdb44
+msgid "90%"
+msgstr "90%"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: 4fbb740bdd6a41cda977fbd1e0324190
+msgid "Mesh cutoff issues"
+msgstr "Mesh cutoff issues"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: a46302edb14a4b2e8a51a65273e659df
+msgid "Increase cutoff by 50 Ry"
+msgstr "Increse cutoff by 50 Ry"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: 7fb00584179f46b988eef7e6c2f1f758
+msgid "85%"
+msgstr "85%"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: 786e63dbebad4ea685b2853ef91de827
+msgid "K-point errors"
+msgstr "K-point errیاs"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: eacb5a011d9f484880ed29faf80039cb
+msgid "Adjust k-point density"
+msgstr "Adjust k-point density"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: 4f77b0e44a924c50b4250e269cfc8539
+msgid "80%"
+msgstr "80%"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: a769afa836fc42c9aa41b95795a2abe5
+msgid "Memory errors"
+msgstr "Memیاy errیاs"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: 10b2aea0ba7545ec90af6ad15d708782
+msgid "Reduce memory usage options"
+msgstr "Reduce memیاy usge options"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md
+#: a20c24470a934f14862535359d57b93f
+msgid "70%"
+msgstr "70%"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:424
+#: 0a34dc14397c418d99cbf41a0884e453
+msgid ""
+"**See**: [03-advanced-features/04-error-handling](../03-advanced-"
+"features/04-error-handling/) for custodian details"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:428
+#: 8337e64de9054988a1927ab88f9d6cc6
+msgid "Diagnostic Tools"
+msgstr "Dignostic Tools"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:430
+#: c6a2862d9ed0424f94bdd1dab7e33e53
+msgid "Check Forces and Stress"
+msgstr "Check Fیاces و Stress"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:455
+#: 8b21b1de1e1f4e9d93c475d557667735
+msgid "Analyze SCF Convergence"
+msgstr "Anlyze SCF همگرایی"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:484
+#: 5de9efe41e944f02b592013fe2439e19
+msgid "Check Band Gap (Metallic?)"
+msgstr "Check Bو Gp (Metllic?)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:503
+#: e42f9059726845779ea6033b3c8b8157
+msgid "Preventive Measures"
+msgstr "Preventive Mesures"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:505
+#: 772efb637dda46dabd4219f7cbf333c7
+msgid "Always Start with Convergence Tests"
+msgstr "Alwys Strt با همگرایی Tests"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:507
+#: 4941a2cb65154dc89d4743ad8b63af4f
+msgid "Before production runs:"
+msgstr "Beبرایe production runs:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:528
+#: 95a4b3b359884a5c9895333ccc6f3ff3
+msgid "**See**: [02-workflows/01-convergence](../02-workflows/01-convergence/)"
+msgstr "**See**: [02-wیاkflows/01-convergence](../02-wیاkflows/01-convergence/)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:530
+#: a8c8e8dd1f7740f78dd196cf1b1794ee
+msgid "Use Appropriate Tier Presets"
+msgstr "Use Approprite Tier Presets"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:548
+#: 26d90d987697433cba85946212d907cb
+msgid ""
+"**See**: [03-advanced-features/07-tier-based-parameters](../03-advanced-"
+"features/07-tier-based-parameters/)"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:550
+#: aad011544cf842478540962f7ac3cacc
+msgid "Enable Dry-Run First"
+msgstr "Enble Dry-Run First"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:565
+#: fdc3faf86f7b45dba5e1f56868885213
+msgid "Use Custodian by Default"
+msgstr "Use Custodin by Defult"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:574
+#: 8a6f88edeecf44fd9d4ec2e4fb789385
+#, python-format
+msgid "95% of common errors will be fixed automatically."
+msgstr "95% of common errیاs will be fixed utomticlly."
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:578
+#: a02e9a90bd224068854ae62c171eac0e
+msgid "When to Ask for Help"
+msgstr "When to Ask برای Help"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:580
+#: a4b221422f8f4ddfae34e9feaa9a7db8
+msgid "If you've tried the troubleshooting guides and still failing:"
+msgstr "If you've tried  troubleshooting guides و still filing:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:582
+#: a51685a2c56f4c5b80dff9be6438516a
+msgid "Gather This Information"
+msgstr "Gr This Inبرایmtion"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:584
+#: 7926784a3eb3433ea42d0bd03953a443
+msgid "**Complete error message**:"
+msgstr "**Complete errیا messge**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:589
+#: aec263828e8c437fba28d813da2f7abe
+msgid "**Input file**:"
+msgstr "**Input file**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:594
+#: c7ae35f54b844792887efa02f338c1f9
+msgid "**Structure**:"
+msgstr "**Structure**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:599
+#: 207c61867dc344fe89ac4c953be20cff
+msgid "**System info**:"
+msgstr "**System info**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:600
+#: efb2cd7362c54fa8a68ac2a8cf092c0d
+msgid "Material formula"
+msgstr "Mteril برایmul"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:601
+#: 55691044ae2b4e4a9e856d4ddb24537b
+msgid "Calculation type (relax, static, NEB, etc.)"
+msgstr "محاسبه type (relx, sttic, NEB, etc.)"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:602
+#: 3e5e6118c5a341f6920fcf478e02b56c
+msgid "atomate2siesta version: `pip show atomate2siesta`"
+msgstr "atomate2siesta version: `pip show atomate2siesta`"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:603
+#: 905fc79226284059bf784fe7c40cb6b5
+msgid "SIESTA version: `siesta --version`"
+msgstr "SIESTA version: `siesta --version`"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:605
+#: ecfdd9259ea145a2af004e6780524e72
+msgid "**What you've tried**:"
+msgstr "**Wht you've tried**:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:606
+#: e645f89922804ec2ae08cfe03757de75
+msgid "List fixes attempted"
+msgstr "List fixes ttempted"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:607
+#: ddb6c37239fe4476a2c0406e75251f1a
+msgid "Parameter changes made"
+msgstr "Prmeter chnges mde"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:608
+#: ebffe3e0d7b64c6082473dbe20558fce
+msgid "Error messages before/after"
+msgstr "Errیا messges beبرایe/fter"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:610
+#: 529a277ccdfd49bb8b406f402f297e9a
+msgid "Where to Get Help"
+msgstr "Where to Get Help"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:612
+#: ae9087cfde6444de8b4f6e043ffd7724
+msgid "**GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgstr "**GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:613
+#: 19d55bdd7419402289e01540ed956875
+msgid "**SIESTA Forum**: https://siesta-project.org/SIESTA/Forum"
+msgstr "**SIESTA Forum**: https://siesta-project.org/SIESTA/Forum"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:614
+#: fad372e2ad894e30842f95732dd12fcb
+msgid "**Atomate2 Discussions**: Check general jobflow/atomate2 issues"
+msgstr "**Atomte2 Discussions**: Check generl jobflow/tomte2 issues"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:618
+#: 0e751fe897b94c45a98e3f18215d91a9
+msgid "Tips for Successful Troubleshooting"
+msgstr "نکتهs برای Successful عیب‌یابی"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:620
+#: 7a9004be07c640ffbf0c10a1c71e32d6
+msgid ""
+"✅ **Read error messages carefully**: They usually tell you exactly what's"
+" wrong ✅ **Start simple**: Test with minimal system first (2-4 atoms) ✅ "
+"**One change at a time**: Don't modify 5 parameters simultaneously ✅ "
+"**Compare with working case**: If Si works but your system doesn't, "
+"what's different? ✅ **Check literature**: Has anyone calculated this "
+"material before? ✅ **Use custodian**: Let it fix common errors "
+"automatically ✅ **Document what works**: Save working parameter sets for "
+"similar systems ✅ **Don't over-tighten**: Tighter ≠ better (diminishing "
+"returns after convergence)"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:631
+#: 3098d2ae9e074f37bbd82c647261a132
+msgid "Common Misconceptions"
+msgstr "Common Misconceptions"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:633
+#: fc54d1ef48674754917ae3375f1a576c
+msgid ""
+"❌ **\"More k-points is always better\"**    → After convergence (~0.01 "
+"eV), more k-points just waste time"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:636
+#: 845cb437544b4952b0d69a86b9a6eae6
+msgid ""
+"❌ **\"SCF must converge to 1e-8\"**    → 1e-4 is usually sufficient; 1e-5"
+" for forces; 1e-6 for phonons"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:639
+#: f3e5296bc60840a1a341887c413389ca
+#, python-format
+msgid ""
+"❌ **\"Calculation failed → SIESTA bug\"**    → 99% of failures are "
+"parameter/input issues, not code bugs"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:642
+#: fee5ca7c95e94aed9771490779a05947
+msgid ""
+"❌ **\"DZP always better than DZ\"**    → For band gaps, maybe. For total "
+"energies, sometimes worse."
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:645
+#: 6e4c27f4bb5f47bc813acf0498223757
+msgid ""
+"❌ **\"Hybrid functionals fix all problems\"**    → They fix band gaps, "
+"not SCF convergence. Use GGA first."
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:650
+#: 3b13604ea9ea497ea670fadfd0ac4818
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:652
+#: df442def8c8844a993e2b64c97a54767
+msgid "After resolving issues:"
+msgstr "After resolving issues:"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:654
+#: a9a29f989efe434f9828df33e763c6cb
+msgid "**Document the fix**: Add comments to your workflow code"
+msgstr "**Document  fix**: Add comments to your wیاkflow code"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:655
+#: 53aafcd8a6a04ef2869e99465ac9e6f8
+msgid ""
+"**Update tier presets**: If material-specific fix, consider contributing "
+"preset"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:656
+#: 69d99ef821b0404e8d142952c2b87fbb
+msgid "**Run convergence tests**: Verify solution is converged"
+msgstr "**Run convergence tests**: Verify solution is converged"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:657
+#: db12d8d47bde41efb0d7d394a9d339c7
+msgid "**Enable custodian**: Prevent future occurrences automatically"
+msgstr "**Enble custodin**: Prevent future occurrences utomticlly"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:658
+#: 67b2366d4d4a4f898487809b1a98914a
+msgid "**Continue research**: Get back to science!"
+msgstr "**Continue reserch**: Get bck to science!"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:662
+#: b15d89e697224768b92cf363e83bf2b0
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:664
+#: 14b21c6a929d4295977ef4db492731a3
+msgid "SIESTA Documentation"
+msgstr "SIESTA Documenttion"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:665
+#: 8e2bb9c47ff249b2ac906914cb440fed
+msgid "**User's Guide**: https://docs.siesta-project.org/"
+msgstr "**User's Guide**: https://docs.siesta-project.org/"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:666
+#: 54a8029410004fc1a7f9f7ce61b241c2
+msgid "**FAQ**: https://siesta-project.org/SIESTA/Faq"
+msgstr "**FAQ**: https://siesta-project.org/SIESTA/Faq"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:667
+#: 84c0c64a7dae40a58cc0f2330d682600
+msgid "**Mailing List**: https://siesta-project.org/SIESTA/Forum"
+msgstr "**Mailing List**: https://siesta-project.org/SIESTA/Forum"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:669
+#: 9d93454421cf40678a77e672209a68ac
+msgid "Troubleshooting Resources"
+msgstr "عیب‌یابی Resources"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:670
+#: 5ad9cd428692464c81d06730d854b8fa
+msgid ""
+"Custodian documentation: [03-advanced-features/04-error-handling](../03"
+"-advanced-features/04-error-handling/)"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:671
+#: f4bd0dff832c4b438f45e1577da301dc
+msgid ""
+"Convergence testing: "
+"[02-workflows/01-convergence](../02-workflows/01-convergence/)"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:672
+#: 5a3d966b88914606add9d3d51ae3712c
+msgid ""
+"Parameter reference: [03-advanced-features/09-fdf-parameters](../03"
+"-advanced-features/09-fdf-parameters/)"
+msgstr ""
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:674
+#: 438ab04cf0404e67a8c891c8f6c24f53
+msgid "External Tools"
+msgstr "Externl Tools"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:675
+#: e86ebf8d03954e7ab77144e64443705e
+msgid "**ASE Troubleshooting**: https://wiki.fysik.dtu.dk/ase/faq.html"
+msgstr "**ASE Troubleshooting**: https://wiki.fysik.dtu.dk/ase/faq.html"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:676
+#: 912f42c7f4c4457b8a496fe919401d36
+msgid "**Pymatgen Structure Analysis**: https://pymatgen.org/usage.html"
+msgstr "**Pymatgen Structure Analysis**: https://pymatgen.org/usage.html"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:677
+#: 5370099a753947329f63484c78764835
+msgid "**MongoDB Query**: For jobflow-remote database inspection"
+msgstr "**MongoDB Query**: Fیا jobflow-remote dtbse inspection"
+
+#: ../../source/tutorials-md/05-troubleshooting/README.md:681
+#: b4de1b3c95d345c3960d3cb946e3999d
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"

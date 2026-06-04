@@ -1,0 +1,890 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials/index.rst:3 5005f1c921c54aa5a87c86565a06f2f0
+msgid "Learning Paths"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:5 9b75754f5ab44f9db2d0e5386d0116aa
+msgid ""
+"Comprehensive learning paths for mastering atomate2siesta workflows, from"
+" basic calculations to advanced convergence studies and production "
+"workflows."
+msgstr ""
+
+#: ../../source/tutorials/index.rst:11 5dfc96d5b33a46ca9d8aed9d50b0b1d6
+msgid "📚 Tutorial Organization"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:13 25d1f7ec90324cdb8fb396e6c8e0d95c
+msgid ""
+"The tutorials are organized into four categories based on complexity and "
+"topic:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:15 8958c126b5ce476898b7cbef8389a4f7
+msgid ""
+"🎯 **Basic Tutorials (01-05)**: :doc:`basic` - Fundamental concepts and "
+"simple calculations"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:16 c91e5205febf42e79bf886e12a35980e
+msgid ""
+"📊 **Convergence Studies (06-08)**: :doc:`convergence` - Systematic "
+"parameter optimization"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:17 9d4fd9f531b54551bb8305afe72f2ddf
+msgid ""
+"🚀 **Advanced Workflows (09-27)**: :doc:`advanced` - Complex multi-step "
+"calculations and advanced features"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:18 61b7cb1ea8b24316936f155fa887e7fc
+msgid ""
+"⚙️ **Infrastructure (13-15)**: :doc:`infrastructure` - Database, HPC, "
+"error handling"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:23 91723c6df1404b22b4a111ec2eac2514
+msgid "Quick Start Example"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:25 eccb4e2d9c65440ba5763e6fa554101f
+msgid "All tutorials follow this consistent pattern:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:57 52f357c3213b4319b56826d95b914fc4
+msgid "Complete Tutorial Listing"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:60 e95193152ee54b80bcb88ec68a1eb745
+msgid "🎯 Basic Tutorials (01-05)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:62 556936069ae64f18bf0bb1559110998b
+msgid "Introduction to fundamental workflow concepts and simple calculations."
+msgstr ""
+
+#: ../../source/tutorials/index.rst:68 ../../source/tutorials/index.rst:102
+#: ../../source/tutorials/index.rst:130 ../../source/tutorials/index.rst:157
+#: ../../source/tutorials/index.rst:180 ../../source/tutorials/index.rst:199
+#: ../../source/tutorials/index.rst:218 ../../source/tutorials/index.rst:252
+#: 2a927daf5e9348d59e53dc60a053a888 9d8952f177f3486cbb08e57a4844cd62
+#: b1462564a7274dff8b51c9047a713977 c8772978c7b24704a454951c6311b5fc
+#: e913d20b6171448a924dd826b2c593dd f40b5e2ee3e44ea095913752c743d74b
+#: f4b7ced1e4c34c11b490b131986f4dd4 fa19e4c57af64a92a103647c782157c6
+msgid "Tutorial"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:69 ../../source/tutorials/index.rst:103
+#: ../../source/tutorials/index.rst:131 ../../source/tutorials/index.rst:158
+#: ../../source/tutorials/index.rst:181 ../../source/tutorials/index.rst:200
+#: ../../source/tutorials/index.rst:219 ../../source/tutorials/index.rst:253
+#: 071299f7431a4eb380cab2a23f21a707 15bcd481e7bf4dfa965f3a4340cbf1c9
+#: 17fb53d8fd284016abd1a3eb346e8b9d 220122c5dc48442c85f6e717208beb7e
+#: 4218c98348c14facac93cd7cebaf8aa1 7500f8471ee044288cc782940a4c6d56
+#: e4b1973b34134c6c8aa173e835e450ad ea63d2a954784c45b958db1ed7480de5
+msgid "Description"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:70 ../../source/tutorials/index.rst:104
+#: ../../source/tutorials/index.rst:132 ../../source/tutorials/index.rst:159
+#: ../../source/tutorials/index.rst:182 ../../source/tutorials/index.rst:201
+#: ../../source/tutorials/index.rst:220 ../../source/tutorials/index.rst:254
+#: 0c018c57c40041cdb93bee4b293efb0e 1245c254d8d242dcadea9190791f70bd
+#: 1d3ab5d952a94d148325b62ccf314794 2eb21ecfd5cf486d8b1bfadd7b9b0edf
+#: 73ffaec10fe4455296fa5a15ce5a21c4 ac6609007b5b4b93a2526c1b8ef72049
+#: e41d02eaa6364415b81b0334115687c4 faae0b61cdce4c948e65a5122acaa8ce
+msgid "Time"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:71 ../../source/tutorials/index.rst:105
+#: ../../source/tutorials/index.rst:133 ../../source/tutorials/index.rst:160
+#: ../../source/tutorials/index.rst:183 ../../source/tutorials/index.rst:202
+#: ../../source/tutorials/index.rst:221 ../../source/tutorials/index.rst:255
+#: 66c96eba83d441a7af6a73fc6fe50bfa 68fc5498abcf41ce9edef242a28577ff
+#: 96c95d1ca504459f980a951d6247c60a b7a0d600a029492f817df51590c6bed6
+#: bb423fc87a134c1abb3c86f112966a9e beef346a92114fe09f0105da5acb7c9a
+#: c8000270d2a24fd0bf8dad7ba77d3334 ff88db52453e419eb6d9ab7070ee7779
+msgid "Difficulty"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:72 d78dd30bd96e47c4b1986819932d8d95
+msgid "**01**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:73 81703e676971485bbcec2341dec375af
+msgid ""
+":doc:`/tutorials-md/01-basics/01-RelaxMaker/README` - Relaxation basics "
+"with default settings"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:74 fb989c73ae824379b8ee3e2ca50dbf96
+msgid "10 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:75 ../../source/tutorials/index.rst:79
+#: 103abe880a6e4b2f872dea9c3133423f 8b5658e5a31441a79877991d681a73b3
+msgid "⭐"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:76 093c5df6dbdb457da1ae445ca11fb4d7
+msgid "**02**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:77 7306697bd79b47de9ded2d8100626bb9
+msgid ""
+":doc:`/tutorials-md/01-basics/02-BandStructureMaker/README` - Band "
+"structure calculations"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:78 ../../source/tutorials/index.rst:228
+#: 30338a8b677c4c58a578050af905be4f b27c4601f55e416cb93fad78d109a09a
+msgid "15 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:80 af66abe4912c46b5ba84c70973867b3b
+msgid "**03**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:81 26ac865c8c024af7978eeb4278442b5c
+msgid ""
+":doc:`/tutorials-md/01-basics/03-LuaMaker/README` - Lua scripts for "
+"advanced features"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:82 ../../source/tutorials/index.rst:224
+#: 7970786679984a77b6a3b5286cc834dd bec53e441402413ab39a93506d2c0645
+msgid "20 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:83 ../../source/tutorials/index.rst:87
+#: ../../source/tutorials/index.rst:91 ../../source/tutorials/index.rst:109
+#: ../../source/tutorials/index.rst:137 ../../source/tutorials/index.rst:206
+#: ../../source/tutorials/index.rst:210 ../../source/tutorials/index.rst:225
+#: ../../source/tutorials/index.rst:229 ../../source/tutorials/index.rst:233
+#: ../../source/tutorials/index.rst:259 ../../source/tutorials/index.rst:263
+#: ../../source/tutorials/index.rst:271 1dc25e3c38e34a8c837fa1888e0fef76
+#: 226c7000f6f146b8babbfe221bc4d1ef 3335d2bc3e3043509e301186885ad925
+#: 3e20e1b51f534d59b340a28d6b1bb379 8c440e01e6284d1a943e1b883e42d932
+#: a09bd34f65ff4b6093caf706fb2edac4 b1856beb9bf94785a1bb6efe0eab4483
+#: b98e9d5d0e434cdfa611e9371c359603 ddc1e449c6254f4aa9e7f3c12d865221
+#: e3187c4ccce64e859e6b6cf1bea816a9 f03cb602e50c4bbcb42f600e1d6111be
+#: f1a452208f7a4ab2b3714f344266e191 f529720dc2414f6bb65c3d7bcc45a5f1
+msgid "⭐⭐"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:84 d656ebcff3ae4b0f993a094e38269be3
+msgid "**04**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:85 79225e2b42784a66bdb0c7762d57f857
+msgid ""
+":doc:`/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README` - Multi-"
+"step workflows"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:86 ../../source/tutorials/index.rst:205
+#: ../../source/tutorials/index.rst:236 ../../source/tutorials/index.rst:262
+#: 0202aad966a14dba854c85aec4efa9eb 1032423417304c6796e4b4f8e9e5b88b
+#: 19cc081fdf664c0192062e191045e483 fa20ab3ac1fb477ab5f4b4a006b20537
+msgid "30 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:88 ac912a5e53834528a4a0c14302211761
+msgid "**05**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:89 44b017b51cc04653bea1d2e786447050
+msgid ":doc:`/tutorials-md/01-basics/05-DOSMaker/README` - DOS calculations"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:90 ../../source/tutorials/index.rst:232
+#: ../../source/tutorials/index.rst:240 3a7ffc9e17514d629ae678b879619217
+#: 9839e882421c4c688176507be13a83f8 bf534825d09c4b41bf15da487ea81e3c
+msgid "25 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:94 55ec815e4da74669a793d1fd30ffeb43
+msgid "📊 Convergence Studies (06-08)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:96 cccdb330d7cb4571a4fce9a6d63bae91
+msgid "Systematic parameter optimization for production calculations."
+msgstr ""
+
+#: ../../source/tutorials/index.rst:106 1088cc5b3344413d8e09f9bfa6293e9c
+msgid "**06**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:107 8776fa7883204715b15201eaeb0bb7ae
+msgid ""
+":doc:`/tutorials-md/02-workflows/01-convergence/README` - K-points and "
+"mesh cutoff convergence"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:108 ../../source/tutorials/index.rst:209
+#: ../../source/tutorials/index.rst:258 ../../source/tutorials/index.rst:270
+#: 0f3018e4c70844709e77cfef71109eb6 31e33d36fd294263b6b6a617bc61740b
+#: 6360a6b965ec4e9ea55667c499900136 9303b7c098c74fdf80c01dd194791b5d
+msgid "45 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:110 0704fe2f1bec4d178b73337d1c60fdb3
+msgid "**07**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:111 124dbf4f3c0c40b9b39b9da7c174dbe2
+msgid ""
+":doc:`/tutorials-md/01-basics/07-PhonopyMaker/README` - Phonon "
+"calculations with Phonopy"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:112 ../../source/tutorials/index.rst:144
+#: ../../source/tutorials/index.rst:163 ../../source/tutorials/index.rst:266
+#: 057ea2602d89499fb74768e056006a6a 1314710f3a05437381e91bd01897500b
+#: 27e18b3a10ea40448a1f7179c7d26d4f 60a565eb8dce4d04b2bc04306461469f
+msgid "60 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:113 ../../source/tutorials/index.rst:117
+#: ../../source/tutorials/index.rst:141 ../../source/tutorials/index.rst:145
+#: ../../source/tutorials/index.rst:164 ../../source/tutorials/index.rst:191
+#: ../../source/tutorials/index.rst:237 ../../source/tutorials/index.rst:241
+#: ../../source/tutorials/index.rst:267 12eee79be2f84e1e876c7fa44f4767f5
+#: 1d0764c8549e43fcaa8b4a679fe656f6 1fef6054ca7c4dd6914bb06953c09ffd
+#: 48b3ff98bdfb4db8bbdc17739bf2c631 5524161d360d4feb9d237f81fe52e88a
+#: 883678bbf79e4851b8556f4dee707bc4 ac8f6596ef504908a14088125eabc3db
+#: e95bd20b474d4e598227ac48931b9597 feca63af46ef49b38f63368b320d6b50
+msgid "⭐⭐⭐"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:114 8ac2091be0a041c59216e33f81859a85
+msgid "**08**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:115 fd7fc6583162487aa73033e5d86421c2
+msgid "Complete basis set convergence (size, shift, norm)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:116 ../../source/tutorials/index.rst:140
+#: ../../source/tutorials/index.rst:167 ../../source/tutorials/index.rst:186
+#: 8d683050a40d41ef88a519d64a7b5a89 cba576c35bb74cccb150cb8bcf5b7ceb
+#: e5e13928ae0048d5a553505421e71553 fa4ddc53e871429b9e7432e652ce66c5
+msgid "90 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:120 a20e9e6d349c4f8b8fd661904ff640e7
+msgid "🚀 Advanced Workflows (09-27)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:122 307e7f8601a34e96991b1388877adcad
+msgid ""
+"Complex multi-step calculations for materials properties and advanced "
+"features."
+msgstr ""
+
+#: ../../source/tutorials/index.rst:124 c12122334f0c416985012996a04a17c4
+msgid "**Structural & Mechanical (09-12)**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:134 208cb037167b45e89ec1f54293f37e13
+msgid "**09**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:135 fcce98e2d6074595ad4947d133b6d974
+msgid "Equation of State (EOS) calculations"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:136 1b9a0baa36ca432c8586cfd2f2bea8e1
+msgid "40 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:138 848b4d7bb7cc43329ededebe609cb375
+msgid "**10**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:139 44304f601fae45d88ae6958aaca35612
+msgid "EOS with basis parameter convergence"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:142 321c0565aeed48e3b4f99b4e8de9bfe4
+msgid "**11**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:143 878a2ba52896486799547c9a5c664b74
+msgid "Elastic constants and mechanical properties"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:146 9661d49e17a74533b3cc5fd857e46bfe
+msgid "**12**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:147 9da95d6a300d4fa5b0e377b31d462799
+msgid "Nudged Elastic Band (NEB) for transition states"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:148 ../../source/tutorials/index.rst:171
+#: 3f06a2341125474395a1c57c3cf6a0da 9a5a0eef99f9454795401bbf1200a154
+msgid "120 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:149 ../../source/tutorials/index.rst:168
+#: ../../source/tutorials/index.rst:172 ../../source/tutorials/index.rst:187
+#: 976dfe102a794296b344f3e1fc68903d ca6c8a0bd92142ecb906c27fc4c03c28
+#: dc9306f3e77d4d3fb57935a3bce9a725 e92b6225f8f14954968d6d6e3092d18b
+msgid "⭐⭐⭐⭐"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:151 b6c4b4049d2f4ad3b5431543cdeedc57
+msgid "**Vibrational & Thermal Properties (16, 20-21)**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:161 a5f1664df899485dac1fd05e5b2fc876
+msgid "**16**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:162 2261c248270b4f6788cc175a124fc001
+msgid "**NEW** Phonon calculations with phonopy integration"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:165 f877c6c3c2784359bd094bd8f3263338
+msgid "**20**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:166 2678e966b1994d2fbe03ab03610441a3
+msgid "**NEW** Grüneisen parameters and thermal expansion"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:169 10f674d9eb2a45aba795a839e5036657
+msgid "**21**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:170 97b41f32f815470ebc842db1c9e364e3
+msgid "**NEW** Quasi-harmonic approximation (QHA) thermodynamics"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:174 9da9a424b30f4d1f9c6e99f45c9b1a61
+msgid "**Surface & Adsorption (17, 19)**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:184 c2e8005d573a4da9b3eea27d7c5449d1
+msgid "**17**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:185 f5a0455bd34f45c5a3c6ec58379d11ec
+msgid "**NEW** Surface energy calculations"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:188 e2c7be60bfc54988803585824ce1dce3
+msgid "**19**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:189 a8f44c7a9d5e49ccad446ca609d18cdb
+msgid "**NEW** Adsorption site scanning"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:190 71f5c2cfc1924d51860f668c50a9a26b
+msgid "75 min"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:193 d94dc3003fc345c8bccc6e021c8e7ea6
+msgid "**Advanced Configuration (18, 22)**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:203 595b999d5c594410bfcbeacee6b558b2
+msgid "**18**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:204 73a04a742016419b9e65ae5d7d15a7b4
+msgid "**NEW** Tier-based calculations and presets"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:207 fae9c24bb3b34a5aa140c644007fc4d6
+msgid "**22**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:208 c5ca4b749b0b4f969ea87805dee5a815
+msgid "**NEW** Powerups - Advanced workflow customization"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:212 a3c1284bc122493bb52b9a58b764e86c
+msgid "**Advanced Features (23-27)** ⭐ NEW"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:222 5625c036bc2c40da977dbcafffcb6b7f
+msgid "**23**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:223 7ad159c1dd8947758f6733c6ec509efb
+msgid "**NEW** DOS calculations with direct SIESTA FDF format"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:226 39086badcc0a49bcaf1dd75989deb51f
+msgid "**24**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:227 1fb0767d73b5445d9b59c90a77ccc34e
+msgid "**NEW** Phonon inputs (force constants parameters)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:230 e86b672f225044a98eaea00551cd3418
+msgid "**25**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:231 05f2770942f04a74b513de2c526b6cd4
+msgid "**NEW** Optical properties (absorption, dielectric)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:234 e4154ac02bb14fa5b9f80956ccb59d9f
+msgid "**26**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:235 586c99d1cc814a5d994790c59ec0cba6
+msgid "**NEW** DFT+U calculations for correlated systems"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:238 c0604557b04e4d8da52e4de832cb7f33
+msgid "**27**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:239 fb11b017a1c542f6a70142eab1e6e46d
+msgid "**NEW** Charge/dipole/electric field calculations"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:244 1c40ba60199a466d9c6099de9259a22f
+msgid "⚙️ Infrastructure (13-15)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:246 993450957ea0487bb9efab1ca6c45e56
+msgid "Database integration, HPC submission, and error recovery."
+msgstr ""
+
+#: ../../source/tutorials/index.rst:256 a7108c3c0ba34d7b812f789d4804863f
+msgid "**13**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:257 dbe9173c91704d1eba6a0ec53a8a9e9a
+msgid "Database storage (MongoDB/Maggma)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:260 e0e33cedefe94d28aba76e4bba43c576
+msgid "**14**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:261 6177ecf08a764686afde4a6cd1680102
+msgid ""
+"**RECOMMENDED** HPC job submission with jobflow-remote (SLURM, PBS, SGE, "
+"local)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:264 c8faeecedcd74e00beb9d1bf34295319
+msgid "**14b**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:265 a528bdb36725406daf8e5aa767e38295
+msgid "Alternative: FireWorks for HPC submission"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:268 ba1dad04c5ba473d8b411bf3f65fba37
+msgid "**15**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:269 76952e52edfa42b6aae9c83d0bf9844f
+msgid "**NEW** Custodian error handling and recovery"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:276 503059196d274e4e8a9fd1d535b48a10
+msgid "📖 Recommended Learning Paths"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:279 90944ef222c143739e917e3f7d2b74d7
+msgid "For Beginners"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:281 916c0679c8b242d68e4842a5028c287b
+msgid "Start with fundamental workflow concepts:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:283 1b80e023689147edbced888474cf241c
+msgid "**Tutorial 01** - Relaxation basics (understand Maker pattern)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:284 ca902d67f5514bb486f3923a2321cefc
+msgid "**Tutorial 02** - Parameter customization (user_params)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:285 043bbd1423a74966b3d64df13150484a
+msgid "**Tutorial 03** - Band structure (electronic properties)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:286 2b8337ead88e471d8f508860b445b7cb
+msgid "**Tutorial 05** - Multi-step workflows (Flow composition)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:289 40742a9feeb54ffabf3328b9407a0b19
+msgid "For Convergence Testing"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:291 3447be6bdef94356886911114f6539be
+msgid "Essential for all production calculations:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:293 a7cfa8c16e9a4a5e9f7e72d1f3afeb83
+msgid "**Tutorial 06** - K-points and cutoff (most critical parameters)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:294 e8d3c3e720584f62812e6db43a2d542e
+msgid "**Tutorial 07** - Basis parameters (quality vs. speed tradeoff)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:295 2d1a2d6d0c684d0e9680f96ff1989762
+msgid "**Tutorial 08** - Complete basis convergence (comprehensive)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:297 34d86abe3a884762ba1dab6f8735c215
+msgid "Apply converged parameters to all subsequent calculations."
+msgstr ""
+
+#: ../../source/tutorials/index.rst:300 b99bbf5deca844b2b9ba1376faddc64d
+msgid "For Production Calculations"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:302 aebfd65fec9449b88573bcd03e61a891
+msgid "Complete workflow development:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:304 7b9df64e0c874cd2a75fc61bac653334
+msgid "Complete convergence studies (**Tutorials 06-08**)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:305 b496fef6a2984d219f0f79f94c7725f2
+msgid "Apply to production workflows (**Tutorials 09-12**)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:306 3cbb2790a73644698a2cb5840947ced6
+msgid "Set up database storage (**Tutorial 13**)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:307 7542e8d30a1541fa93d4618dca300607
+msgid ""
+"Configure HPC submission with **jobflow-remote** (**Tutorial 14** - "
+"recommended) or FireWorks (**Tutorial 14b**)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:308 9d728c62237f44d2868c7b6ec0909eb9
+msgid "Enable error handling (**Tutorial 15**)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:311 71b127e61e4542dc957636a4d091b9a4
+msgid "For Specific Properties"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:313 dd29741c117d4aaa92bc8424cc29aa5b
+msgid "**Vibrational Properties**:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:314 e95a64c403534795b841be5d2ce19d3f
+msgid "**Tutorial 16** - Phonon calculations with phonopy"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:315 2ce45cfb93804f7782ab75662b7fda9c
+msgid "**Tutorial 20** - Grüneisen parameters and thermal expansion"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:316 b0965be8481b44fdb2b35a44f4ea369e
+msgid "**Tutorial 21** - Quasi-harmonic approximation (QHA)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:318 b932d2d8c7a242638883837ee82f88c0
+msgid "**Surface Chemistry**:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:319 591425c974eb475d8c8e041aae2c8d8d
+msgid "**Tutorial 17** - Surface energy calculations"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:320 8e44be25704a4b73bd70371a553392cf
+msgid "**Tutorial 19** - Adsorption site scanning"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:322 abcf7d805a8841bfaeba02cef2d01aff
+msgid "**Transition States**:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:323 584e85221c0741d5a79d521bd140642a
+msgid "Start with **Tutorial 12** (NEB calculations)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:325 34d2a7e527f348a1829e4491942c344c
+msgid "**Mechanical Properties**:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:326 650fb997504142288b7e19918890a61a
+msgid "Start with **Tutorial 11** (Elastic constants)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:328 7b7ed26f41404db2b53d6abd7b204852
+msgid "**Workflow Customization**:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:329 0d516b675e814089bded8255e872d5c3
+msgid "**Tutorial 22** - Powerups for advanced parameter control"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:332 39d91e79f5d44112b29eef08b1158f1a
+msgid "For Advanced Users"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:334 8b9822b903a64482bbf782f1538bb4db
+msgid "**Tier-Based Configuration**:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:335 7c9004b9a0ce407b8c3ee84019528a5b
+msgid ""
+"**Tutorial 18** - Material-specific presets and automatic module "
+"activation"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:337 3abaadcc05684b6ca74d31c24da20744
+msgid "**Custom Workflows**:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:338 cef6568eb27e4a2fb3f733e71e67890a
+msgid "Combine Makers with powerups, use **Tutorial 05** as starting point"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:340 7bd129fe264c40aaa7e6b0e431a3d8ba
+msgid "**Error Recovery**:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:341 5f4cdf3d7e7b40febe9d6cf372682032
+msgid "**Tutorial 15** - Custodian integration for robust calculations"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:346 4e47cba9cb7b4e99a4cf0901e4dbb336
+msgid "🎓 Tutorial Features"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:348 143f8dcdf58a4a3fbcbd3ac061617de0
+msgid "Each tutorial includes:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:350 0dfc166227c7497c8eeb55dff223d5ef
+msgid "✅ **Detailed READMEs**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:351 cc1b9bc3e05746b29f78888bcb3ca323
+msgid "Comprehensive documentation with theory and best practices"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:353 bf0b5b2d83d24a25bb43c68445f6e03c
+msgid "✅ **Multiple Examples**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:354 174e01352273418b89b30fc6b7bcee53
+msgid "Simple and detailed versions for different use cases"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:356 19ab3e8e3751474eb05569953ad8270a
+msgid "✅ **Automatic Plotting**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:357 3eec97322f464713b294cf9b781d54e7
+msgid "Publication-quality plots generated automatically"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:359 6837d49aafe64924b47054b62ca62862
+msgid "✅ **Result Summaries**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:360 35cedd3f27ad4ea5bb8620f59c717efc
+msgid "Text and JSON outputs for easy analysis"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:362 915b5d3df83741b98b4f110b864eea66
+msgid "✅ **Timing Analysis**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:363 e4f8b4be3a744d3aa51c21ccf597c362
+msgid "Computational cost tracking (Tutorials 07, 10)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:365 abba81c3a8f0467ab4185ca44bdb8acb
+msgid "✅ **Convergence Criteria**"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:366 2da9eed24ab043378d549327288ed4b2
+msgid "Clear guidelines for parameter selection"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:371 16a2446f5a614a848fbe960d7fb38096
+msgid "⚡ Quick Reference"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:374 28f9db72ccc34de7877627b8c393de39
+msgid "Common Calculation Types"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:406 7f945959cb5045578d1c33d04f58cd3b
+msgid "Parameter Customization"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:433 82277c0a360a4eda8d3e3aee84fc5d3b
+msgid "💡 Best Practices"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:435 ec2e8e8f97274955a98968a89317d0db
+msgid "**Always converge parameters first** (Tutorials 06-08)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:436 1ca29a57304a4827a482ab257dfb510e
+msgid "**Use tier presets** for material-specific settings (Tutorial 18)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:437 289c7070927249db97e17111fde07ea6
+msgid "**Enable custodian** for production runs (Tutorial 15)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:438 1f80b066edbe471195ef708854647a98
+msgid "**Store results in database** for high-throughput (Tutorial 13)"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:439 ff300842b26640289952c214d7762d51
+msgid "**Validate against literature** when available"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:440 a55e874809184616b8b3fbab0d8bb568
+msgid "**Document your parameters** in workflow scripts"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:445 f9ba8c0b77cb4619b4d556c8c60a37dd
+msgid "🛠️ Setup Requirements"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:447 6a8c71fe9031499ab18db85b8ee7eb90
+msgid "Install atomate2siesta:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:453 e88415802648469ba81caa8d3d11d09b
+msgid "Configure in ``~/.atomate2siesta.yaml``:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:460 2f5b99d60b1649f49893b04e992a0baf
+msgid "For database storage (Tutorial 13):"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:466 ad10e1a08e3c4ae98043de9ddd61bfc4
+msgid "For HPC submission (Tutorial 14):"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:475 cc7818f6a11d46a3bd1eed48722621d1
+msgid "📞 Getting Help"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:477 8c1199cc9f034226bb5f846756278422
+msgid "Check individual tutorial READMEs for detailed documentation"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:478 538cc0dfe5e14bcfadb590ced009ea98
+msgid "See main documentation: :doc:`/index`"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:479 8c8d922b474a48299aefe028be43fda0
+msgid "Report issues: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:480 84c08ab6c8e74e079eb35a23ca72bdc8
+msgid ""
+"Ask questions: https://github.com/arsalan-"
+"akhtar/atomate2siesta/discussions"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:485 c8c7b1038ada44cab704961a1348e502
+msgid "🤝 Contributing"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:487 ba741dc0f8244c3097330747f51ee3d1
+msgid "To add a new tutorial:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:489 67c535fe4a67400585f4f5e36173b2ec
+msgid "Create numbered directory following the organization above"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:490 7ef561357a4543febfd30a6f7dd828a4
+msgid "Include a comprehensive README.md with:"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:492 591d6414ea134b7fa44b9b040a0bef31
+msgid "Overview and learning objectives"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:493 a87f5aed440144cb90f873547a3d3c0d
+msgid "Requirements and setup"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:494 6a805347d973463a80a770a79a7ab1f1
+msgid "Step-by-step instructions"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:495 77fc5a6b244f4419ad5ebb4f4df6dea9
+msgid "Expected output"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:496 06f4e41d6acc4be692f7ffa6b9d72715
+msgid "Troubleshooting tips"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:498 dd5e9630e28844cd979293205aea5af4
+msgid "Provide both simple and detailed example scripts"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:499 25f3fababc2840e4a1b3432ab67344e2
+msgid "Update this index with your tutorial entry"
+msgstr ""
+
+#: ../../source/tutorials/index.rst:500 81470725de8840d9ae60eb9a44c3e8c5
+msgid "Add tutorial.rst file to ``docs/source/tutorials/``"
+msgstr ""
+
+#~ msgid ":doc:`/tutorials/example-1` - Relaxation basics with default settings"
+#~ msgstr ""
+
+#~ msgid ":doc:`/tutorials/example-2` - Customizing SIESTA parameters"
+#~ msgstr ""
+
+#~ msgid ":doc:`/tutorials/example-3` - Band structure calculations"
+#~ msgstr ""
+
+#~ msgid ":doc:`/tutorials/example-4` - Lua scripts for advanced features"
+#~ msgstr ""
+
+#~ msgid ":doc:`/tutorials/example-5` - Multi-step workflows with Flow"
+#~ msgstr ""
+
+#~ msgid ":doc:`/tutorials/example-6` - K-points and mesh cutoff convergence"
+#~ msgstr ""
+
+#~ msgid ":doc:`/tutorials/example-7` - PAO.EnergyShift and SplitNorm with timing"
+#~ msgstr ""

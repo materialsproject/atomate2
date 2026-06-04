@@ -1,0 +1,1012 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/recipe-book.rst:3 7ee22edf6bb544e4bbd1515370c5417d
+msgid "Recipe Book: One-Line Workflows"
+msgstr "کتاب دستورالعمل: جریان‌های کار تک‌خطی"
+
+#: ../../source/recipe-book.rst:5 8fc4bb2c8433484da8b7e765c4b42468
+msgid ""
+"The **Recipe Book** is the fastest and easiest way to set up "
+"atomate2siesta workflows. It provides high-level \"recipes\" that "
+"transform complex multi-step calculations into simple one-liners."
+msgstr ""
+"**کتاب دستورالعمل** سریع‌ترین و ساده‌ترین راه برای راه‌اندازی جریان‌های کار "
+"atomate2siesta است. این کتاب «دستورالعمل‌های» سطح بالایی ارائه می‌دهد که "
+"محاسبات پیچیده چند مرحله‌ای را به تک‌خطی‌های ساده تبدیل می‌کند."
+
+#: ../../source/recipe-book.rst:9 146429dd49df4535860c7471d55da17a
+msgid "Quick Navigation"
+msgstr "ناوبری سریع"
+
+#: ../../source/recipe-book.rst:12 51ac37c63c26454591fc08ce476cb38b
+msgid "Overview"
+msgstr "مرور کلی"
+
+#: ../../source/recipe-book.rst:14 a80ce16671d8481e9855b020eb89ac15
+#, python-format
+msgid ""
+"The Recipe Book achieves **90-98% code reduction** by encapsulating best "
+"practices and expert knowledge into easy-to-use functions. What normally "
+"requires 50+ lines of boilerplate code can be reduced to a single line."
+msgstr ""
+"کتاب دستورالعمل با کپسوله‌سازی بهترین شیوه‌ها و دانش تخصصی در توابع آسان‌استفاده، "
+"**کاهش کد ۹۰-۹۸٪** را حاصل می‌کند. آنچه معمولاً نیاز به بیش از ۵۰ خط کد "
+"پیش‌فرض دارد، می‌تواند به یک خط کاهش یابد."
+
+#: ../../source/recipe-book.rst:17 1474ac88ccb94d3ab8f6db508cdd989e
+msgid "Key Benefits"
+msgstr "مزایای کلیدی"
+
+#: ../../source/recipe-book.rst:19 00b7de839fb0461d9ae76e021c62a764
+msgid "⚡ **10x Faster Setup**"
+msgstr "⚡ **راه‌اندازی ۱۰ برابر سریع‌تر**"
+
+#: ../../source/recipe-book.rst:20 051dc7a83aa842e1bb4049209ee3a656
+msgid "Reduce 50+ lines of setup code to 1 line"
+msgstr "کاهش بیش از ۵۰ خط کد راه‌اندازی به ۱ خط"
+
+#: ../../source/recipe-book.rst:22 b34fced928874d51b95acbff5e06ae04
+msgid "🤖 **Smart Defaults**"
+msgstr "🤖 **پیش‌فرض‌های هوشمند**"
+
+#: ../../source/recipe-book.rst:23 c312732cc98f4b7aabd516d5f64d89fb
+msgid "Automatic parameter detection based on your structure"
+msgstr "تشخیص خودکار پارامترها بر اساس ساختار شما"
+
+#: ../../source/recipe-book.rst:25 1c3618dfb2774a3aa9af28ee7baf829e
+msgid "📚 **Best Practices**"
+msgstr "📚 **بهترین شیوه‌ها**"
+
+#: ../../source/recipe-book.rst:26 7455f6c071414828a17fa0f3e4cffa82
+msgid "Encodes expert knowledge and proven workflows"
+msgstr "رمزگذاری دانش تخصصی و جریان‌های کار اثبات‌شده"
+
+#: ../../source/recipe-book.rst:28 288a4ec4fca3498ab7afd088a88a743f
+msgid "🎨 **Flexible**"
+msgstr "🎨 **انعطاف‌پذیر**"
+
+#: ../../source/recipe-book.rst:29 02dae9082de84c8ca9a058971ff7c04a
+msgid "Easy to customize while maintaining simplicity"
+msgstr "سفارشی‌سازی آسان با حفظ سادگی"
+
+#: ../../source/recipe-book.rst:31 438a2e864395408b90820bd67ed2176c
+msgid "📊 **Comprehensive**"
+msgstr "📊 **جامع**"
+
+#: ../../source/recipe-book.rst:32 0b5338adf7434a4d830a0bf6b5ecb872
+msgid "Covers all major material properties"
+msgstr "پوشش تمام خواص اصلی مواد"
+
+#: ../../source/recipe-book.rst:34 d08dc31a666a408ea0f33633f09b068c
+msgid "✅ **Production-Ready**"
+msgstr "✅ **آماده برای تولید**"
+
+#: ../../source/recipe-book.rst:35 dc2f859fc4c74c5b8cceffad4e356a8f
+#, python-format
+msgid "100% documented with 16 comprehensive tutorials"
+msgstr "۱۰۰٪ مستندسازی‌شده با ۱۶ آموزش جامع"
+
+#: ../../source/recipe-book.rst:38 61cc773944024fd9b92c63e53c88bb4b
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/recipe-book.rst:41 54f4d8ba92504da7947555c131aebe03
+msgid "The Ultimate One-Liner"
+msgstr "نهایت کد تک‌خطی"
+
+#: ../../source/recipe-book.rst:58 86db4fba6c934ae49cef052cc71d9d5a
+msgid "That's it! This automatically:"
+msgstr "همین! این به‌طور خودکار:"
+
+#: ../../source/recipe-book.rst:60 f008aea4f9fc4f229bec94a6ca7f7c42
+msgid "✅ Analyzes your material type (metal/semiconductor/insulator)"
+msgstr "✅ نوع ماده شما را تحلیل می‌کند (فلز/نیمه‌هادی/عایق)"
+
+#: ../../source/recipe-book.rst:61 b8c23f96eace4b8589b3ceb23b559328
+msgid "✅ Selects optimal SIESTA parameters"
+msgstr "✅ پارامترهای بهینه SIESTA را انتخاب می‌کند"
+
+#: ../../source/recipe-book.rst:62 9036dcaae3284387bb154810420c976c
+msgid "✅ Calculates electronic properties (bands, DOS)"
+msgstr "✅ خواص الکترونی (نوارها، DOS) را محاسبه می‌کند"
+
+#: ../../source/recipe-book.rst:63 e3d56942f322419fa1caedea1aa722b7
+msgid "✅ Calculates mechanical properties (elastic constants, bulk modulus)"
+msgstr "✅ خواص مکانیکی (ثابت‌های الاستیک، مدول حجمی) را محاسبه می‌کند"
+
+#: ../../source/recipe-book.rst:64 a6eb27e6d5af4d78a416ea52e2ccc21e
+msgid "✅ Calculates thermal properties (phonons, QHA, thermal expansion)"
+msgstr "✅ خواص حرارتی (فونون‌ها، QHA، انبساط حرارتی) را محاسبه می‌کند"
+
+#: ../../source/recipe-book.rst:65 aec41eb9fa1746c1a36d41600df0b853
+msgid "✅ Generates publication-quality plots"
+msgstr "✅ نمودارهای با کیفیت انتشار تولید می‌کند"
+
+#: ../../source/recipe-book.rst:68 8d6d1c006f0647c38c86365c6b16d2b0
+msgid "All 39 Recipes"
+msgstr "تمام ۳۹ دستورالعمل"
+
+#: ../../source/recipe-book.rst:70 2a00e809fe9e4e81b200a10ad6a7337a
+msgid "The Recipe Book contains **39 recipes** organized into **6 categories**:"
+msgstr "کتاب دستورالعمل شامل **۳۹ دستورالعمل** سازماندهی‌شده در **۶ دسته** است:"
+
+#: ../../source/recipe-book.rst:73 ff8446e150e748648bc664e4c6783aa9
+msgid "Complete Workflows (2 recipes)"
+msgstr "جریان‌های کار کامل (۲ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:79 ../../source/recipe-book.rst:93
+#: ../../source/recipe-book.rst:121 ../../source/recipe-book.rst:143
+#: ../../source/recipe-book.rst:169 ../../source/recipe-book.rst:193
+#: 2bf3c441efd24eacad8af8d3a663b03d 460c88a203a147f8b0858edac466fa9e
+#: b260bb69a4ea4a2aa7074f3cdaa1c603 b4008da25a9047a9b069254bcf452191
+#: b7380a27d60143828ab61a7318a9255f d02f57c7ce524f58bf4a555cfbaf488d
+msgid "Recipe"
+msgstr "دستورالعمل"
+
+#: ../../source/recipe-book.rst:80 ../../source/recipe-book.rst:94
+#: ../../source/recipe-book.rst:122 ../../source/recipe-book.rst:144
+#: ../../source/recipe-book.rst:170 ../../source/recipe-book.rst:194
+#: 127e55f60b99411d97d8393d572a533e 43ea63f52c604017b09594b9576c8be0
+#: 695e68d7210542b7b0fac2032e7d13ea 7ef603e3385148e1b473604d56bae6cd
+#: dd71076ff688450c944d53863a2d422b ec74c5120c9144abb32696fda73237e9
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/recipe-book.rst:81 6111bb2c01cf46a6a3fef0dfc5b3e00d
+msgid "``complete_material_study()``"
+msgstr "``complete_material_study()``"
+
+#: ../../source/recipe-book.rst:82 2978109630584dfe8aef33d281d7245c
+msgid "Full characterization: electronic + mechanical + thermal"
+msgstr "مشخصه‌یابی کامل: الکترونی + مکانیکی + حرارتی"
+
+#: ../../source/recipe-book.rst:83 e8a70d20428b4e75a0ff8ea530fefd7d
+msgid "``quick_characterization()``"
+msgstr "``quick_characterization()``"
+
+#: ../../source/recipe-book.rst:84 40c5d8d3a571439096eb3094708635e2
+msgid "Fast essential properties (1-2 hours)"
+msgstr "خواص ضروری سریع (۱-۲ ساعت)"
+
+#: ../../source/recipe-book.rst:87 0b3219ca40d9476697a10e08f4c898f1
+msgid "Electronic Properties (9 recipes)"
+msgstr "خواص الکترونی (۹ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:95 3338f573e497401c9350ff4e95ad6717
+msgid "``band_structure_workflow()``"
+msgstr "``band_structure_workflow()``"
+
+#: ../../source/recipe-book.rst:96 4beb25130ba24ddbb020a8fb6bc2ac65
+msgid "Relaxation + band structure calculation"
+msgstr "آرام‌سازی + محاسبه ساختار نواری"
+
+#: ../../source/recipe-book.rst:97 c6c5f91cbe31479b87a2c4b6e08ab84a
+msgid "``band_structure_uniform()``"
+msgstr "``band_structure_uniform()``"
+
+#: ../../source/recipe-book.rst:98 2c0d03ffb22849aaba56e6aec0fc1e1c
+msgid "Uniform k-point band structure"
+msgstr "ساختار نواری با نقاط k یکنواخت"
+
+#: ../../source/recipe-book.rst:99 6beab876c6484146bf3a2932d1a1a19f
+msgid "``band_structure_line_mode()``"
+msgstr "``band_structure_line_mode()``"
+
+#: ../../source/recipe-book.rst:100 d8e4ae57fa3141b3a7cd5c5965886987
+msgid "Line-mode band structure (publication quality)"
+msgstr "ساختار نواری حالت خطی (کیفیت انتشار)"
+
+#: ../../source/recipe-book.rst:101 297f756fbc5a42e08c3ed3a8f426ab04
+msgid "``dos_workflow()``"
+msgstr "``dos_workflow()``"
+
+#: ../../source/recipe-book.rst:102 80a45b2ec71749cfb310c9bfcc8cae28
+msgid "Density of states calculation"
+msgstr "محاسبه چگالی حالت‌ها"
+
+#: ../../source/recipe-book.rst:103 e1b1a62ec4fb4d64944aad35ed3612cc
+msgid "``projected_dos()``"
+msgstr "``projected_dos()``"
+
+#: ../../source/recipe-book.rst:104 a61bc4f87ed64b82ae81169e892b5a7e
+msgid "Element/orbital-projected DOS"
+msgstr "DOS تصویرشده به عنصر/اوربیتال"
+
+#: ../../source/recipe-book.rst:105 ac2f9bc5bd594bcdb76ce95971a51981
+msgid "``band_structure_and_dos()``"
+msgstr "``band_structure_and_dos()``"
+
+#: ../../source/recipe-book.rst:106 ed6ea7df5cc64b28a211c48cd2b958d5
+msgid "Combined bands + DOS"
+msgstr "نوارها + DOS ترکیبی"
+
+#: ../../source/recipe-book.rst:107 6b0659b5459348ffb166c014795eaf0d
+msgid "``optical_properties()``"
+msgstr "``optical_properties()``"
+
+#: ../../source/recipe-book.rst:108 4ed3c302b8c1400ea075c2093293ec31
+msgid "Optical absorption, dielectric function"
+msgstr "جذب نوری، تابع دی‌الکتریک"
+
+#: ../../source/recipe-book.rst:109 3f55ab0927e848e2b018b53f14709477
+msgid "``electronic_structure_metals()``"
+msgstr "``electronic_structure_metals()``"
+
+#: ../../source/recipe-book.rst:110 74c5a83955c84c6f9f471a40b1e2884d
+msgid "Optimized for metallic systems"
+msgstr "بهینه‌شده برای سیستم‌های فلزی"
+
+#: ../../source/recipe-book.rst:111 320dea907b954959a69bc7aa7a87fab0
+msgid "``electronic_structure_insulators()``"
+msgstr "``electronic_structure_insulators()``"
+
+#: ../../source/recipe-book.rst:112 8a37e3dc682846cf9b3071ef22455446
+msgid "Optimized for insulators/semiconductors"
+msgstr "بهینه‌شده برای عایق‌ها/نیمه‌هادی‌ها"
+
+#: ../../source/recipe-book.rst:115 ca6c2abfdfb64627bf13c89d759385f6
+msgid "Mechanical Properties (6 recipes)"
+msgstr "خواص مکانیکی (۶ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:123 6b496c0de8c34b5bbe3ae11c09b28d34
+msgid "``elastic_constants_workflow()``"
+msgstr "``elastic_constants_workflow()``"
+
+#: ../../source/recipe-book.rst:124 a7e31905f743414ab7ce2b7669ace7c6
+msgid "Full elastic tensor"
+msgstr "تانسور الاستیک کامل"
+
+#: ../../source/recipe-book.rst:125 68652132bdb44af9ab1c9fcdea9f8dae
+msgid "``elastic_moduli()``"
+msgstr "``elastic_moduli()``"
+
+#: ../../source/recipe-book.rst:126 4398489f879143fcbb521afc999afad4
+msgid "Bulk/shear/Young's moduli"
+msgstr "مدول‌های حجمی/برشی/یانگ"
+
+#: ../../source/recipe-book.rst:127 57b369f2c83c4fb1992f42ffe0068a70
+msgid "``bulk_modulus_quick()``"
+msgstr "``bulk_modulus_quick()``"
+
+#: ../../source/recipe-book.rst:128 3b99d948fc914679a7ff23ebe8b26bfb
+msgid "Fast bulk modulus estimate"
+msgstr "تخمین سریع مدول حجمی"
+
+#: ../../source/recipe-book.rst:129 6494cdde268a430faa4937a75d6dc167
+msgid "``equation_of_state()``"
+msgstr "``equation_of_state()``"
+
+#: ../../source/recipe-book.rst:130 3d22a94872c5419eaf6c6cefc1670d23
+msgid "EOS fitting with multiple models"
+msgstr "برازش EOS با مدل‌های متعدد"
+
+#: ../../source/recipe-book.rst:131 bb3a0034912e4274bb42b8b1823babde
+msgid "``stress_strain_curve()``"
+msgstr "``stress_strain_curve()``"
+
+#: ../../source/recipe-book.rst:132 dcde974976a74326afb65a07f3282cb6
+msgid "Uniaxial stress-strain"
+msgstr "تنش-کرنش تک‌محوری"
+
+#: ../../source/recipe-book.rst:133 cecfab4f748d428ebde7c825fed44104
+msgid "``hardness_estimation()``"
+msgstr "``hardness_estimation()``"
+
+#: ../../source/recipe-book.rst:134 19d3d26d4149406b80bdf5e0e22c6753
+msgid "Vickers hardness prediction"
+msgstr "پیش‌بینی سختی ویکرز"
+
+#: ../../source/recipe-book.rst:137 62ec3f3fd0cb4638a4c4b9811b3b101f
+msgid "Thermal Properties (8 recipes)"
+msgstr "خواص حرارتی (۸ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:145 cf2e63dcd9d843298a5e88cec13ed038
+msgid "``phonon_workflow()``"
+msgstr "``phonon_workflow()``"
+
+#: ../../source/recipe-book.rst:146 8f5c4bc8badd43408bf2a0c62725301d
+msgid "Phonon calculation with automatic plotting"
+msgstr "محاسبه فونون با رسم خودکار نمودار"
+
+#: ../../source/recipe-book.rst:147 a138dc7f2d9c4449a7cde3ce57e745e1
+msgid "``phonon_with_custom_params()``"
+msgstr "``phonon_with_custom_params()``"
+
+#: ../../source/recipe-book.rst:148 e9d4071b69144f48a73b64d58b952a1e
+msgid "Separate relaxation/force parameters"
+msgstr "پارامترهای جداگانه آرام‌سازی/نیرو"
+
+#: ../../source/recipe-book.rst:149 e369acd4d2e048a7999942d671940fc3
+msgid "``gruneisen_parameters()``"
+msgstr "``gruneisen_parameters()``"
+
+#: ../../source/recipe-book.rst:150 aa9d9ddc34994c58a3a867a7913d0c46
+msgid "Grüneisen parameters and mode analysis"
+msgstr "پارامترهای گرونایزن و تحلیل مُد"
+
+#: ../../source/recipe-book.rst:151 18b01a0dee1c4975b1d3543eae98cf57
+msgid "``thermal_expansion()``"
+msgstr "``thermal_expansion()``"
+
+#: ../../source/recipe-book.rst:152 6ca7a150642e40389e80006d63fd7c4e
+msgid "Temperature-dependent thermal expansion"
+msgstr "انبساط حرارتی وابسته به دما"
+
+#: ../../source/recipe-book.rst:153 7602d4eb3509418db8c4b8e9e46e5d0e
+msgid "``qha_workflow()``"
+msgstr "``qha_workflow()``"
+
+#: ../../source/recipe-book.rst:154 bbf240cb59934d5199e8c534473aefff
+msgid "Quasi-harmonic approximation"
+msgstr "تقریب شبه‌هارمونیک"
+
+#: ../../source/recipe-book.rst:155 56531246885b4b4d9e3c72449a4a1429
+msgid "``thermodynamic_properties()``"
+msgstr "``thermodynamic_properties()``"
+
+#: ../../source/recipe-book.rst:156 7496a4eb3cd5446c971115cfd31f5c4e
+msgid "Cp, Cv, entropy, free energy"
+msgstr "Cp، Cv، آنتروپی، انرژی آزاد"
+
+#: ../../source/recipe-book.rst:157 a114ec1a37714da98564a1e2e3d6fa02
+msgid "``debye_temperature()``"
+msgstr "``debye_temperature()``"
+
+#: ../../source/recipe-book.rst:158 62b0f3618b7e439596db11fc8090862f
+msgid "Debye temperature estimation"
+msgstr "تخمین دمای دبای"
+
+#: ../../source/recipe-book.rst:159 5732a5981cd54db69c02296ee017162a
+msgid "``thermal_conductivity()``"
+msgstr "``thermal_conductivity()``"
+
+#: ../../source/recipe-book.rst:160 29460a89c0884160b075ff9ccf058278
+msgid "Lattice thermal conductivity (Grüneisen-based)"
+msgstr "رسانایی حرارتی شبکه (بر اساس گرونایزن)"
+
+#: ../../source/recipe-book.rst:163 05b07f8c82294cb4960ea88e3a06a652
+msgid "Surface & Catalysis (7 recipes)"
+msgstr "سطح و کاتالیز (۷ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:171 42f9c36014e040fa9eab8653f5822298
+msgid "``surface_energy_workflow()``"
+msgstr "``surface_energy_workflow()``"
+
+#: ../../source/recipe-book.rst:172 64a0f9c296ea4482b91947f5879e5d20
+msgid "Multi-termination surface energies"
+msgstr "انرژی‌های سطح چندپایانه"
+
+#: ../../source/recipe-book.rst:173 d7b711e478f74e5f9f54739ac6a5153d
+msgid "``surface_stability()``"
+msgstr "``surface_stability()``"
+
+#: ../../source/recipe-book.rst:174 fa86cf0b25ac46e1b91d3d363fc91e73
+msgid "Wulff construction and shapes"
+msgstr "ساختار وولف و اشکال"
+
+#: ../../source/recipe-book.rst:175 f67a6a8760694d2988ae30cb920d5d23
+msgid "``adsorption_site_scanning()``"
+msgstr "``adsorption_site_scanning()``"
+
+#: ../../source/recipe-book.rst:176 e7a809b9010845e79fcfb22a08f7cb3c
+msgid "Grid-based site scanning"
+msgstr "اسکن مکان مبتنی بر شبکه"
+
+#: ../../source/recipe-book.rst:177 e9b1467f243d47ae8ffefa1d8c36b440
+msgid "``adsorption_energy()``"
+msgstr "``adsorption_energy()``"
+
+#: ../../source/recipe-book.rst:178 21eedeb2a4524147907370f70fc61687
+msgid "Single adsorbate binding energy"
+msgstr "انرژی پیوند جذب‌شونده منفرد"
+
+#: ../../source/recipe-book.rst:179 2b58ba3973e24478b5adc14442af3a43
+msgid "``reaction_barrier_neb()``"
+msgstr "``reaction_barrier_neb()``"
+
+#: ../../source/recipe-book.rst:180 6ffba85fcbd14a7db902b7a7de5697a2
+msgid "Nudged elastic band transition states"
+msgstr "حالت‌های گذار نوار الاستیک تلنگرزده"
+
+#: ../../source/recipe-book.rst:181 bed31e632ec64910847df0637882722c
+msgid "``surface_phase_diagram()``"
+msgstr "``surface_phase_diagram()``"
+
+#: ../../source/recipe-book.rst:182 f763dd16f00b44e8bb3d8f288298970d
+msgid "Temperature/pressure stability"
+msgstr "پایداری دما/فشار"
+
+#: ../../source/recipe-book.rst:183 3edc27a9f39749359402687437e576d7
+msgid "``catalysis_workflow()``"
+msgstr "``catalysis_workflow()``"
+
+#: ../../source/recipe-book.rst:184 0290d66bac5046a3904d087eba6b73e8
+msgid "Complete catalytic cycle analysis"
+msgstr "تحلیل چرخه کامل کاتالیزوری"
+
+#: ../../source/recipe-book.rst:187 37f92958cafb4e128a1cfb642110e1e4
+msgid "Convergence Testing (7 recipes)"
+msgstr "تست همگرایی (۷ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:195 733d4cda26f6406bae1d132fa37dec7e
+msgid "``kpoints_convergence()``"
+msgstr "``kpoints_convergence()``"
+
+#: ../../source/recipe-book.rst:196 3f05473bf229484fbca470ecd8a0b8e8
+msgid "K-point mesh convergence"
+msgstr "همگرایی شبکه نقاط k"
+
+#: ../../source/recipe-book.rst:197 943fb19eb529445284bfcb133a41caff
+msgid "``mesh_cutoff_convergence()``"
+msgstr "``mesh_cutoff_convergence()``"
+
+#: ../../source/recipe-book.rst:198 a13a47f2004040929c0bca641b61df68
+msgid "Real-space grid convergence"
+msgstr "همگرایی شبکه فضای واقعی"
+
+#: ../../source/recipe-book.rst:199 f6266c246f2847fdb0dbb72115af23dc
+msgid "``basis_convergence()``"
+msgstr "``basis_convergence()``"
+
+#: ../../source/recipe-book.rst:200 93191fdeadb44b44920025ab7052b956
+msgid "Basis size convergence (SZ → DZ → DZP → TZP)"
+msgstr "همگرایی اندازه پایه (SZ → DZ → DZP → TZP)"
+
+#: ../../source/recipe-book.rst:201 a2276dac40984f3581f6a13417c3e1c8
+msgid "``pao_energy_shift_convergence()``"
+msgstr "``pao_energy_shift_convergence()``"
+
+#: ../../source/recipe-book.rst:202 3c3461981d3e4b99ba488b86a450cbcd
+msgid "Energy shift parameter tuning"
+msgstr "تنظیم پارامتر جابجایی انرژی"
+
+#: ../../source/recipe-book.rst:203 89b9a690ea734ce2a4e51c7ea4c1cf90
+msgid "``full_convergence_study()``"
+msgstr "``full_convergence_study()``"
+
+#: ../../source/recipe-book.rst:204 d6d48b352f04474baab111dcd9d2ac5d
+msgid "All parameters (comprehensive)"
+msgstr "تمام پارامترها (جامع)"
+
+#: ../../source/recipe-book.rst:205 c1afb6f5850b4372a1abca90179252f9
+msgid "``accuracy_vs_cost()``"
+msgstr "``accuracy_vs_cost()``"
+
+#: ../../source/recipe-book.rst:206 67023c4b104a492a90468a880703d675
+msgid "Pareto frontier analysis"
+msgstr "تحلیل مرز پارتو"
+
+#: ../../source/recipe-book.rst:207 29e165722d6e49a988ce9a6e3286def6
+msgid "``recommended_parameters()``"
+msgstr "``recommended_parameters()``"
+
+#: ../../source/recipe-book.rst:208 ad81e1bfda61438ca5622ac5028af676
+msgid "Automatic optimal parameter suggestion"
+msgstr "پیشنهاد خودکار پارامتر بهینه"
+
+#: ../../source/recipe-book.rst:211 d8387e80e7e449d89ec3b2ad764aa549
+msgid "Code Reduction Examples"
+msgstr "نمونه‌های کاهش کد"
+
+#: ../../source/recipe-book.rst:214 d12e218923c341989e2f95bc9071c8ac
+#, python-format
+msgid "Example 1: Band Structure (98% reduction)"
+msgstr "نمونه ۱: ساختار نواری (کاهش ۹۸٪)"
+
+#: ../../source/recipe-book.rst:216 6551b461ef0d403696082dd9a8431238
+msgid "**Without Recipe Book** (52 lines):"
+msgstr "**بدون کتاب دستورالعمل** (۵۲ خط):"
+
+#: ../../source/recipe-book.rst:262 ../../source/recipe-book.rst:317
+#: 35a350a807374e8eae66d5dffb460a34 abb32e4e5d664b5ba85c2520e9c6c4bc
+msgid "**With Recipe Book** (1 line):"
+msgstr "**با کتاب دستورالعمل** (۱ خط):"
+
+#: ../../source/recipe-book.rst:274 bdec9714df79403aa7d87349f0def8e9
+#, python-format
+msgid "**Result**: 52 lines → 1 line (98% reduction)"
+msgstr "**نتیجه**: ۵۲ خط ← ۱ خط (کاهش ۹۸٪)"
+
+#: ../../source/recipe-book.rst:277 fb63e64211434084b7478e67f55ed9e1
+#, python-format
+msgid "Example 2: Phonon Calculation (95% reduction)"
+msgstr "نمونه ۲: محاسبه فونون (کاهش ۹۵٪)"
+
+#: ../../source/recipe-book.rst:279 94ee235e66ad49b39245f6196a0ae580
+msgid "**Without Recipe Book** (45 lines):"
+msgstr "**بدون کتاب دستورالعمل** (۴۵ خط):"
+
+#: ../../source/recipe-book.rst:329 fb5c1f78473348bc891b46fa81613f33
+#, python-format
+msgid "**Result**: 45 lines → 1 line (95% reduction)"
+msgstr "**نتیجه**: ۴۵ خط ← ۱ خط (کاهش ۹۵٪)"
+
+#: ../../source/recipe-book.rst:332 8502979ecb1f4a4eb46aa749422fe92e
+msgid "Structure Analysis"
+msgstr "تحلیل ساختار"
+
+#: ../../source/recipe-book.rst:334 cb8ec9b85a0d44f5a5fc8e8d27a7f08a
+msgid ""
+"Before running calculations, analyze your structure to see what the "
+"Recipe Book recommends:"
+msgstr ""
+"قبل از اجرای محاسبات، ساختار خود را تحلیل کنید تا ببینید کتاب دستورالعمل "
+"چه چیزی را توصیه می‌کند:"
+
+#: ../../source/recipe-book.rst:346 7d5360c40dfe4754ac22d1825d563cbd
+msgid "**Output**:"
+msgstr "**خروجی**:"
+
+#: ../../source/recipe-book.rst:386 90c27ba405104ce29e4e31965b608178
+msgid "Customization"
+msgstr "سفارشی‌سازی"
+
+#: ../../source/recipe-book.rst:388 3b3806b9e49d46c892f59170ab26f885
+msgid "While recipes provide smart defaults, you can still customize them:"
+msgstr "در حالی که دستورالعمل‌ها پیش‌فرض‌های هوشمند ارائه می‌دهند، همچنان می‌توانید آنها را سفارشی کنید:"
+
+#: ../../source/recipe-book.rst:391 842cfa799e394476bf38d76cff58b29a
+msgid "Method 1: Override Parameters"
+msgstr "روش ۱: بازنویسی پارامترها"
+
+#: ../../source/recipe-book.rst:405 fc19302e1f624d7f8022c90f8ade1541
+msgid "Method 2: Apply Tier Preset"
+msgstr "روش ۲: اعمال پیش‌تنظیم سطح"
+
+#: ../../source/recipe-book.rst:415 8a9e5baf533342f69c39da6e5114cc45
+msgid "Method 3: Modify Returned Flow"
+msgstr "روش ۳: تغییر جریان برگشتی"
+
+#: ../../source/recipe-book.rst:430 9fc7e4a8c321480a948dd47e2296f28e
+msgid "Method 4: Select Properties"
+msgstr "روش ۴: انتخاب خواص"
+
+#: ../../source/recipe-book.rst:442 8201a747af5d4defad69f0d36e69e642
+msgid "Tutorials"
+msgstr "آموزش‌ها"
+
+#: ../../source/recipe-book.rst:444 c85cd53a84974c008b341eba5232d36e
+#, python-format
+msgid ""
+"The Recipe Book is **100% documented** with **16 comprehensive "
+"tutorials** covering all 39 recipes:"
+msgstr ""
+"کتاب دستورالعمل **۱۰۰٪ مستندسازی‌شده** با **۱۶ آموزش جامع** است که "
+"تمام ۳۹ دستورالعمل را پوشش می‌دهد:"
+
+#: ../../source/recipe-book.rst:450 6e99c4fcae744e1c96fd8d95e591b113
+msgid "Tutorial"
+msgstr "آموزش"
+
+#: ../../source/recipe-book.rst:451 6e239c18529f43fb90dde5f43a82baee
+msgid "Recipes Covered"
+msgstr "دستورالعمل‌های پوشش‌داده‌شده"
+
+#: ../../source/recipe-book.rst:452 910810eac0204ff59074d3495a0e0a8f
+msgid "``01_basic_usage/``"
+msgstr "``01_basic_usage/``"
+
+#: ../../source/recipe-book.rst:453 260a8c4353434ac5ac5eb983015f022a
+msgid "Getting started, structure analysis"
+msgstr "شروع، تحلیل ساختار"
+
+#: ../../source/recipe-book.rst:454 401e1dab69974a92ab5a775c4aaafa3a
+msgid "``02_complete_workflows/``"
+msgstr "``02_complete_workflows/``"
+
+#: ../../source/recipe-book.rst:455 24266b0ac23b4d8f97945783950f4a81
+msgid "complete_material_study, quick_characterization"
+msgstr "complete_material_study، quick_characterization"
+
+#: ../../source/recipe-book.rst:456 93ae0ef2f7fe47faaecf8d4945601f92
+msgid "``03_electronic_recipes/``"
+msgstr "``03_electronic_recipes/``"
+
+#: ../../source/recipe-book.rst:457 837dc98ed3354fe4bf78823766d9d118
+msgid "All 9 electronic property recipes"
+msgstr "تمام ۹ دستورالعمل خواص الکترونی"
+
+#: ../../source/recipe-book.rst:458 82a924a748bd43809f3af2861a850049
+msgid "``04_mechanical_recipes/``"
+msgstr "``04_mechanical_recipes/``"
+
+#: ../../source/recipe-book.rst:459 85519cb9457d4c7db6df54f9e9d54fbe
+msgid "All 6 mechanical property recipes"
+msgstr "تمام ۶ دستورالعمل خواص مکانیکی"
+
+#: ../../source/recipe-book.rst:460 36a105da734245a49166b95f370e57cc
+msgid "``05_thermal_recipes/``"
+msgstr "``05_thermal_recipes/``"
+
+#: ../../source/recipe-book.rst:461 5797428f8a18492f8a2e06816fd16afa
+msgid "All 8 thermal property recipes"
+msgstr "تمام ۸ دستورالعمل خواص حرارتی"
+
+#: ../../source/recipe-book.rst:462 410ad10840ed46939f8b9efe7dedb19b
+msgid "``06_catalysis_recipes/``"
+msgstr "``06_catalysis_recipes/``"
+
+#: ../../source/recipe-book.rst:463 a7f5b4bf04a24608b680a04544e451fb
+msgid "All 7 surface/catalysis recipes"
+msgstr "تمام ۷ دستورالعمل سطح/کاتالیز"
+
+#: ../../source/recipe-book.rst:464 0dac32c7d8744d52b16bb8a96bfb7a16
+msgid "``07_convergence_recipes/``"
+msgstr "``07_convergence_recipes/``"
+
+#: ../../source/recipe-book.rst:465 b7372075b56a41e6a7833436200cf345
+msgid "All 7 convergence testing recipes"
+msgstr "تمام ۷ دستورالعمل تست همگرایی"
+
+#: ../../source/recipe-book.rst:466 71fedb91cd5e4a5c98f3e84afda36b20
+msgid "``08_combined_recipes/``"
+msgstr "``08_combined_recipes/``"
+
+#: ../../source/recipe-book.rst:467 5d59c08b35d54657b7ba4ccf38581020
+msgid "Multi-property workflows"
+msgstr "جریان‌های کار چند خاصیتی"
+
+#: ../../source/recipe-book.rst:469 88e0de767ca24b5590dc55d968bd6a42
+msgid "**Tutorial Location**: ``tutorials/08-recipe-book/``"
+msgstr "**موقعیت آموزش**: ``tutorials/08-recipe-book/``"
+
+#: ../../source/recipe-book.rst:471 45058b2ba7a64320b653fd37db0d4d0b
+msgid "**Total Documentation**: 7,900+ lines across 16 files"
+msgstr "**مستندات کل**: بیش از ۷,۹۰۰ خط در ۱۶ فایل"
+
+#: ../../source/recipe-book.rst:474 d4a887ceb294467080f37a7fe13ce650
+msgid "Recipe Book vs Traditional Approach"
+msgstr "کتاب دستورالعمل در مقابل رویکرد سنتی"
+
+#: ../../source/recipe-book.rst:480 6717659506da4d43a2bc05b701d06a4a
+msgid "Aspect"
+msgstr "جنبه"
+
+#: ../../source/recipe-book.rst:481 d06ff76bc41a42b0aff46256f5fd68bc
+msgid "Traditional Approach"
+msgstr "رویکرد سنتی"
+
+#: ../../source/recipe-book.rst:482 6eccd8256efe4ea7bfbcf87cdf4c80ce
+msgid "Recipe Book"
+msgstr "کتاب دستورالعمل"
+
+#: ../../source/recipe-book.rst:483 fe0d0d53aafa4ccaba748a8697db60ed
+msgid "**Lines of Code**"
+msgstr "**خطوط کد**"
+
+#: ../../source/recipe-book.rst:484 93845b8ea5bd4f23b49fea22a74c58bb
+msgid "50-100 lines"
+msgstr "۵۰-۱۰۰ خط"
+
+#: ../../source/recipe-book.rst:485 8b2f8fdb35464bd68e620caae5e9c7a7
+msgid "1-5 lines"
+msgstr "۱-۵ خط"
+
+#: ../../source/recipe-book.rst:486 5c83f8bcebcb49f49a97e774a98a225d
+msgid "**Setup Time**"
+msgstr "**زمان راه‌اندازی**"
+
+#: ../../source/recipe-book.rst:487 43c517936aa646888456d83efaa24f4a
+msgid "30-60 minutes"
+msgstr "۳۰-۶۰ دقیقه"
+
+#: ../../source/recipe-book.rst:488 4c129ab2f9854d42819a4f871d001207
+msgid "30 seconds"
+msgstr "۳۰ ثانیه"
+
+#: ../../source/recipe-book.rst:489 21d4d8af708d4313ac0862c0a16d89c4
+msgid "**Parameter Selection**"
+msgstr "**انتخاب پارامتر**"
+
+#: ../../source/recipe-book.rst:490 c3a7fa5dc03442dcbd58f7e5b468b2c0
+msgid "Manual research"
+msgstr "تحقیق دستی"
+
+#: ../../source/recipe-book.rst:491 94cb82f7e7854860a6059f7fa2876b74
+msgid "Automatic based on structure"
+msgstr "خودکار بر اساس ساختار"
+
+#: ../../source/recipe-book.rst:492 28f2fab413484f5cb3898658fac7f525
+msgid "**Best Practices**"
+msgstr "**بهترین شیوه‌ها**"
+
+#: ../../source/recipe-book.rst:493 a718173f90ee4fc2924f2875aa8353f6
+msgid "Must know them"
+msgstr "باید بدانید"
+
+#: ../../source/recipe-book.rst:494 b06763bc50ab4d4a822b75423a9eb26b
+msgid "Built-in"
+msgstr "داخلی"
+
+#: ../../source/recipe-book.rst:495 e7f2a766ad7640039a4462c998f4efb5
+msgid "**Error Prone**"
+msgstr "**مستعد خطا**"
+
+#: ../../source/recipe-book.rst:496 4b333b9e01cd468db97bd8f7895f58b0
+msgid "Yes (typos, inconsistencies)"
+msgstr "بله (غلط‌های تایپی، ناسازگاری‌ها)"
+
+#: ../../source/recipe-book.rst:497 dbf8a7e98e32482182955beb6484b972
+msgid "No (tested recipes)"
+msgstr "خیر (دستورالعمل‌های آزمایش‌شده)"
+
+#: ../../source/recipe-book.rst:498 4fca5f7e0bdd4ff69b7bdca16e5aaba0
+msgid "**Customization**"
+msgstr "**سفارشی‌سازی**"
+
+#: ../../source/recipe-book.rst:499 5261407020b8488e977f9c87c0e7e00f
+msgid "Full control"
+msgstr "کنترل کامل"
+
+#: ../../source/recipe-book.rst:500 db625c6ea30d498d99eb0663253cc5f0
+msgid "Easy overrides available"
+msgstr "بازنویسی‌های آسان موجود"
+
+#: ../../source/recipe-book.rst:501 8fc2fc9792d047c3812390514330e02d
+msgid "**Learning Curve**"
+msgstr "**منحنی یادگیری**"
+
+#: ../../source/recipe-book.rst:502 4ef6cebce7534bbeb0f5bcf8b79ef179
+msgid "Steep"
+msgstr "تند"
+
+#: ../../source/recipe-book.rst:503 1f693c97a9714a4aafd54f830519622b
+msgid "Gentle"
+msgstr "ملایم"
+
+#: ../../source/recipe-book.rst:504 aefbbc255b15486483fb4e2b0648a22e
+msgid "**Production Ready**"
+msgstr "**آماده برای تولید**"
+
+#: ../../source/recipe-book.rst:505 f866e1f9598147e6b08868098a55af08
+msgid "Requires validation"
+msgstr "نیاز به اعتبارسنجی"
+
+#: ../../source/recipe-book.rst:506 34c7dfc29fde4b99876a720fffe5dcdc
+msgid "Pre-validated"
+msgstr "از پیش اعتبارسنجی‌شده"
+
+#: ../../source/recipe-book.rst:509 a0638beb332e4aac865abf4677d695c3
+msgid "When to Use Recipe Book"
+msgstr "چه زمانی از کتاب دستورالعمل استفاده کنیم"
+
+#: ../../source/recipe-book.rst:511 409a6ec4a4f640839ad358386cc981c0
+msgid "✅ **Use Recipe Book When**:"
+msgstr "✅ **زمانی از کتاب دستورالعمل استفاده کنید که**:"
+
+#: ../../source/recipe-book.rst:513 89dc287ccb6d446282080fe6dae4aaea
+msgid "Starting a new project (fastest setup)"
+msgstr "شروع پروژه جدید (سریع‌ترین راه‌اندازی)"
+
+#: ../../source/recipe-book.rst:514 3740989a7ced40eb93f0dceff07db53d
+msgid "Running standard calculations (bands, phonons, etc.)"
+msgstr "اجرای محاسبات استاندارد (نوارها، فونون‌ها، و غیره)"
+
+#: ../../source/recipe-book.rst:515 b4a7a0efe3b140a198497ca258f52184
+msgid "Need reliable defaults"
+msgstr "نیاز به پیش‌فرض‌های قابل اعتماد"
+
+#: ../../source/recipe-book.rst:516 d1ee79568b9a416188d18db8ff62cfc3
+msgid "Want publication-quality outputs"
+msgstr "خواستن خروجی‌های با کیفیت انتشار"
+
+#: ../../source/recipe-book.rst:517 7b18206842f840918629702c1104a484
+msgid "Limited SIESTA experience"
+msgstr "تجربه محدود SIESTA"
+
+#: ../../source/recipe-book.rst:518 e54ee71d74a946798be9c42ab7d6a2be
+msgid "Time-sensitive projects"
+msgstr "پروژه‌های حساس به زمان"
+
+#: ../../source/recipe-book.rst:520 e86c7174e5d546629e4e51c3ab3af2b7
+msgid "⚠️ **Use Traditional Approach When**:"
+msgstr "⚠️ **زمانی از رویکرد سنتی استفاده کنید که**:"
+
+#: ../../source/recipe-book.rst:522 a1466d9d51ab4eac8ee4651a95b7ad1c
+msgid "Very specialized calculations"
+msgstr "محاسبات بسیار تخصصی"
+
+#: ../../source/recipe-book.rst:523 2dccd46b329449ccace3f513957bf88b
+msgid "Need complete low-level control"
+msgstr "نیاز به کنترل کامل سطح پایین"
+
+#: ../../source/recipe-book.rst:524 6c1cd36a10db40988a27d9d0bc1edca8
+msgid "Developing new workflow types"
+msgstr "توسعه انواع جدید جریان کار"
+
+#: ../../source/recipe-book.rst:525 8d864e7925e444bdbaf9f767d6f64acf
+msgid "Benchmarking different settings"
+msgstr "آزمون مقایسه‌ای تنظیمات مختلف"
+
+#: ../../source/recipe-book.rst:526 cd2f98537ff148c38a133dd17bff32be
+msgid "Research on methodology itself"
+msgstr "تحقیق روی خود روش‌شناسی"
+
+#: ../../source/recipe-book.rst:530 2a84da403018474b98af8f7b63b58375
+msgid ""
+"**Best Practice**: Start with Recipe Book for rapid prototyping, then "
+"customize specific parameters if needed. You get both speed and "
+"flexibility."
+msgstr ""
+"**بهترین شیوه**: با کتاب دستورالعمل برای نمونه‌سازی سریع شروع کنید، سپس "
+"پارامترهای خاص را در صورت نیاز سفارشی کنید. هم سرعت و هم انعطاف‌پذیری را "
+"به‌دست می‌آورید."
+
+#: ../../source/recipe-book.rst:533 5f77e099594a4eb5ba251943d4a6f774
+msgid "Implementation Details"
+msgstr "جزئیات پیاده‌سازی"
+
+#: ../../source/recipe-book.rst:535 33ef2ba7e6804cb28f6bf5bf9d6cce60
+msgid "**Location**: ``src/atomate2/siesta/recipes/``"
+msgstr "**موقعیت**: ``src/atomate2/siesta/recipes/``"
+
+#: ../../source/recipe-book.rst:537 b66394a15b2c404797c3a97e70ab2e1b
+msgid "**Modules**:"
+msgstr "**ماژول‌ها**:"
+
+#: ../../source/recipe-book.rst:539 55d88b01f4d94df2945f6bad13370e27
+msgid "``complete.py`` - Complete workflow recipes (2 recipes)"
+msgstr "``complete.py`` - دستورالعمل‌های جریان کار کامل (۲ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:540 cf31e973d1d4426c94e77648ee2cf467
+msgid "``electronic.py`` - Electronic properties (9 recipes)"
+msgstr "``electronic.py`` - خواص الکترونی (۹ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:541 5c4cdec81bc34728a74c4a6cd9ad2e59
+msgid "``mechanical.py`` - Mechanical properties (6 recipes)"
+msgstr "``mechanical.py`` - خواص مکانیکی (۶ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:542 1a2b8836f10a490f92a61be956f249e3
+msgid "``thermal.py`` - Thermal properties (8 recipes)"
+msgstr "``thermal.py`` - خواص حرارتی (۸ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:543 6ada67853d9a4d4a8aa2de3ebfa767c9
+msgid "``catalysis.py`` - Surface and catalysis (7 recipes)"
+msgstr "``catalysis.py`` - سطح و کاتالیز (۷ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:544 a78a9b16ea734c91b9432f11aa5a1175
+msgid "``convergence.py`` - Convergence testing (7 recipes)"
+msgstr "``convergence.py`` - تست همگرایی (۷ دستورالعمل)"
+
+#: ../../source/recipe-book.rst:546 e8af8adf02b14f9f801f83d4aef9a319
+#, python-format
+msgid "**Testing**: 164 tests with ~75% coverage (100% pass rate)"
+msgstr "**آزمایش**: ۱۶۴ تست با پوشش ~۷۵٪ (نرخ موفقیت ۱۰۰٪)"
+
+#: ../../source/recipe-book.rst:549 fff3d69c83b24b60a57e3b6c9661fc0c
+msgid "Performance Metrics"
+msgstr "معیارهای عملکرد"
+
+#: ../../source/recipe-book.rst:551 fb2af8b6aab045ef889b4273de10d2dc
+msgid "**Code Reduction**:"
+msgstr "**کاهش کد**:"
+
+#: ../../source/recipe-book.rst:553 d5e92268839e4ffd810f317ce10477fe
+#, python-format
+msgid "Average: 92% reduction (50 lines → 4 lines)"
+msgstr "میانگین: کاهش ۹۲٪ (۵۰ خط ← ۴ خط)"
+
+#: ../../source/recipe-book.rst:554 2d02b7f1b0a548cabbf8cdbb16325c79
+#, python-format
+msgid "Best case: 98% reduction (52 lines → 1 line)"
+msgstr "بهترین حالت: کاهش ۹۸٪ (۵۲ خط ← ۱ خط)"
+
+#: ../../source/recipe-book.rst:555 2db9f59fe5fa41e1874408297f759ec9
+#, python-format
+msgid "Worst case: 85% reduction (20 lines → 3 lines)"
+msgstr "بدترین حالت: کاهش ۸۵٪ (۲۰ خط ← ۳ خط)"
+
+#: ../../source/recipe-book.rst:557 f4d5d3836bd743eca478e33379353f7c
+msgid "**Time Savings**:"
+msgstr "**صرفه‌جویی در زمان**:"
+
+#: ../../source/recipe-book.rst:559 c01aae7a9645408291283f687f54d6df
+#, python-format
+msgid "Setup time: 30 minutes → 30 seconds (99% reduction)"
+msgstr "زمان راه‌اندازی: ۳۰ دقیقه ← ۳۰ ثانیه (کاهش ۹۹٪)"
+
+#: ../../source/recipe-book.rst:560 f75c30d4c7574bdaa0b1ee1dbd51d92a
+msgid "Learning curve: Weeks → Hours"
+msgstr "منحنی یادگیری: هفته‌ها ← ساعت‌ها"
+
+#: ../../source/recipe-book.rst:561 05fa06e5deb049fb804e2651164d1800
+msgid "Debugging time: Minimal (pre-tested recipes)"
+msgstr "زمان اشکال‌زدایی: حداقل (دستورالعمل‌های از پیش آزمایش‌شده)"
+
+#: ../../source/recipe-book.rst:563 a0a341e1e7dc4f48833c17b9c7e3331b
+msgid "**Accuracy**:"
+msgstr "**دقت**:"
+
+#: ../../source/recipe-book.rst:565 aa95495963954fd5ba046e38c5a662dd
+msgid "Same results as manual workflows (validated)"
+msgstr "نتایج یکسان با جریان‌های کار دستی (اعتبارسنجی‌شده)"
+
+#: ../../source/recipe-book.rst:566 33d475b782f244eba9db88eca142792d
+msgid "Best-practice parameters included"
+msgstr "پارامترهای بهترین شیوه شامل شده"
+
+#: ../../source/recipe-book.rst:567 79ec5383eda34f7f9e0a96184ce303e2
+msgid "Automatic error handling via custodian"
+msgstr "مدیریت خودکار خطا از طریق custodian"
+
+#: ../../source/recipe-book.rst:570 3f206d387d6c406ca220578191484e60
+msgid "Status"
+msgstr "وضعیت"
+
+#: ../../source/recipe-book.rst:574 f87e9c598c4d4d0f81f622b8cacafd14
+#, python-format
+msgid "**Status**: ✅ Production-ready with 100% documentation coverage"
+msgstr "**وضعیت**: ✅ آماده برای تولید با پوشش مستندات ۱۰۰٪"
+
+#: ../../source/recipe-book.rst:576 7a896f8f6afa4fc7a1afbf5da7f1a3e3
+msgid "39 recipes across 6 categories"
+msgstr "۳۹ دستورالعمل در ۶ دسته"
+
+#: ../../source/recipe-book.rst:577 e90a0f7a2de347d0bdbeafda6f6a777b
+msgid "16 comprehensive tutorials (7,900+ lines)"
+msgstr "۱۶ آموزش جامع (بیش از ۷,۹۰۰ خط)"
+
+#: ../../source/recipe-book.rst:578 a8ac9f5ed5ee40caabe8a19808739374
+msgid "164 tests (100% pass rate)"
+msgstr "۱۶۴ تست (نرخ موفقیت ۱۰۰٪)"
+
+#: ../../source/recipe-book.rst:579 6235e36c98304df6a79fb6a50300b839
+#, python-format
+msgid "~75% code coverage"
+msgstr "~۷۵٪ پوشش کد"
+
+#: ../../source/recipe-book.rst:580 a82c5f32fb5e4cd495990a25eb23924f
+msgid ""
+"First computational materials science package with complete recipe "
+"documentation"
+msgstr ""
+"اولین بسته علم مواد محاسباتی با مستندات کامل دستورالعمل"
+
+#: ../../source/recipe-book.rst:583 e9e19c885b6c4eeab5df37d0b222dc8d
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/recipe-book.rst:585 aaa150c82c854b82aeaa1738ca11467d
+msgid "``tutorials/08-recipe-book/`` - Complete tutorial series"
+msgstr "``tutorials/08-recipe-book/`` - سری آموزشی کامل"
+
+#: ../../source/recipe-book.rst:586 38f0d1ba862e4cb2b4e1b25a18094941
+msgid ":doc:`usage` - Basic usage patterns"
+msgstr ":doc:`usage` - الگوهای استفاده پایه"
+
+#: ../../source/recipe-book.rst:587 c30f45d593bc42459b41fdec845d65c6
+msgid ":doc:`tier-system` - Material-specific presets"
+msgstr ":doc:`tier-system` - پیش‌تنظیم‌های اختصاصی مواد"
+
+#: ../../source/recipe-book.rst:588 fb7f523879394cb6863e0f0e3a5ab1a7
+msgid ":doc:`advanced-workflows` - Complex multi-step calculations"
+msgstr ":doc:`advanced-workflows` - محاسبات پیچیده چند مرحله‌ای"
+
+#: ../../source/recipe-book.rst:589 77bcf66058334f4eafa475260b29245e
+msgid ""
+"`GitHub Recipe Book <https://github.com/arsalan-"
+"akhtar/atomate2siesta/tree/main/tutorials/08-recipe-book>`_ - Tutorial "
+"source code"
+msgstr ""
+"`کتاب دستورالعمل GitHub <https://github.com/arsalan-"
+"akhtar/atomate2siesta/tree/main/tutorials/08-recipe-book>`_ - کد منبع آموزشی"

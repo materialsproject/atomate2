@@ -1,0 +1,227 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:1
+#: dbf65fc5d8154323a7867bda38542ea0
+msgid "Phonon Input Parameters"
+msgstr "فونون Input Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:3
+#: d5aa146aa64f43258177bdb138b00be6
+msgid ""
+"Direct SIESTA FDF format for phonon-related parameters. These control "
+"force constants calculation used in phonon workflows."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:5
+#: 75d264a7344c44c9ac5e7569147b0236
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:7
+#: b9a537522a2f4be0ae980385f3d0b4f5
+msgid ""
+"Phonon calculations in SIESTA use molecular dynamics (MD) mode for force "
+"constants:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:9
+#: fc7e26d097bb43b885f3cdd349e4e66a
+msgid "**MD.TypeOfRun = FC**: Force constants calculation mode"
+msgstr "**MD.TypeOfRun = FC**: Fیاce constnts clcultion mode"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:10
+#: 431b6602f8e84bacb98cb64e9b994d5f
+msgid "**MD.FCDispl**: Atomic displacement magnitude"
+msgstr "**MD.FCDispl**: Atomic displcement mgnitude"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:11
+#: acaec617645c4581be7b2c3611846a20
+msgid "**MD.FCfirst**: First atom to displace"
+msgstr "**MD.FCfirst**: First tom to displce"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:12
+#: a3aa1739e68e4026a479a1bffeb3d2d0
+msgid "**MD.FClast**: Last atom to displace"
+msgstr "**MD.FClst**: Lst tom to displce"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:14
+#: 6f49bab5b76d4451a90f22b3f7b69296
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:29
+#: 75d02a123b5344f998ffc3b191a01ece
+msgid "Key Parameters"
+msgstr "Key Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: b5559381f11f4b21a9e2edb777d4059b
+msgid "Parameter"
+msgstr "Prmeter"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: e3171cb4c6464888b95c766b17baf0ed
+msgid "Type"
+msgstr "Type"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: e122cc4465b0474c85f5195137272a41
+msgid "Default"
+msgstr "Defult"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: 3ffde30e04ad4dfc88662f04a2bf7a66
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: 29ae06e3eab645c5819d7677c2740b8b
+msgid "MD.TypeOfRun"
+msgstr "MD.TypeOfRun"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: a04ba22091cd4dde91585ab7d861fb61 c932adafd7854f1db1c7056d59ab8cfd
+msgid "str"
+msgstr "str"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: 35d146ded9ef4ef6bfbe3e5264c99f12
+msgid "\"CG\""
+msgstr "\"CG\""
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: b4550c2c12ca408cb1d5305edb545971
+msgid "Type of MD run (use \"FC\" for phonons)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: abced751e2f3446badf603188a95a86c
+msgid "MD.FCDispl"
+msgstr "MD.FCDispl"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: a605a01827ca4407bf46648247fb2e1c
+msgid "\"0.04 Bohr\""
+msgstr "\"0.04 Bohr\""
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: ccb585bbcf474826b8b045468506417c
+msgid "Displacement for force constants"
+msgstr "Displcement برای برایce constnts"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: 08bde59a834b4da19b770a03c7560f6b
+msgid "MD.FCfirst"
+msgstr "MD.FCfirst"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: 20fc0112e2d34e3db6149134ef31049c d88221b93b3b4de2804e134bcabb261a
+msgid "int"
+msgstr "int"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: f95d34fba07e4f78aa4797e90cb58133
+msgid "1"
+msgstr "1"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: ebababb065a140a29b37c593b031fbb8
+msgid "First atom index to displace"
+msgstr "First tom index to displce"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: 28b09909b0ed4eb9bc00c409b62b3348
+msgid "MD.FClast"
+msgstr "MD.FClst"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: d2804bab523a4fb38b4005adf53c7b8b
+msgid "N"
+msgstr "N"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md
+#: 126acb9d99db430c8992a8f2abd70958
+msgid "Last atom index to displace"
+msgstr "Lst tom index to displce"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:38
+#: 5540c5099b974fc4b033771fd7a02c98
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:40
+#: da27411e07594ddca02ac3546fcead59
+msgid "Small displacement (high-precision phonons)"
+msgstr "Smll displcement (high-precision phonons)"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:45
+#: 0170bf134dd64ab7a061c478f06842ad
+msgid "Large displacement (faster convergence)"
+msgstr "Lrge displcement (fster convergence)"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:50
+#: 4052141274ae436e83f4d3b467ebac38
+msgid "Displace only certain atoms"
+msgstr "Displce only certin toms"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:56
+#: 02c5cb75cdf341c08411d9a3a3e04c2b
+msgid "Notes"
+msgstr "توجهs"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:58
+#: 315345cf222641ac9b57b5571c8a9ab1
+msgid ""
+"For full phonon workflows, use `PhonopyMaker` from "
+"`atomate2.siesta.jobs.phonopy`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:59
+#: 39683c911517427ea14a525ff2268eaa
+msgid "These parameters are automatically set by phonon workflows"
+msgstr "These prmeters re utomticlly set by phonon wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:60
+#: 283144a5f0264d14862d5bad144ef365
+msgid "Manual control useful for testing or custom phonon calculations"
+msgstr "Mnul control useful برای testing یا custom phonon clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:62
+#: 033e93179b1c40bfa73fce9f1435b0e9
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:64
+#: 9bf37b4b170442369c89d20e730cfa8b
+msgid "**Phonon workflows**: `tutorials/05-vibrational-properties/01-phonons/`"
+msgstr "**Phonon workflows**: `tutorials/05-vibrational-properties/01-phonons/`"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:65
+#: 4764d05879b447d281345f7f09edc914
+msgid "**SIESTA Manual**: Section on Force Constants"
+msgstr "**SIESTA Mnul**: Section on Fیاce Constnts"
+
+#: ../../source/tutorials-md/03-advanced-features/06-phonon-inputs/README.md:66
+#: a7fdfd5a73214692a11845ddc11b1027
+msgid "**Dataclass**: `src/atomate2/siesta/dataclass/phonon_calculations.py`"
+msgstr "**Dataclass**: `src/atomate2/siesta/dataclass/phonon_calculations.py`"

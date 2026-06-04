@@ -1,0 +1,1015 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/introduction.rst:3 3665361c83274e079ee9f6d0216627cb
+msgid "Introduction"
+msgstr "مقدمه"
+
+#: ../../source/introduction.rst:5 8c00ac79fdc84072bb30ada63dddd320
+msgid ""
+"**atomate2siesta** is a production-ready library for automated "
+"computational materials science workflows, integrating the `SIESTA <https"
+"://siesta-project.org>`_ quantum chemistry code with the `Atomate2 "
+"<https://materialsproject.github.io/atomate2/>`_ workflow framework. It "
+"provides scalable, reproducible, and intelligent workflows for materials "
+"simulations with comprehensive error recovery and analysis tools."
+msgstr ""
+"**atomate2siesta** یک کتابخانه آماده برای تولید است که جریان‌های کار خودکار "
+"علم مواد محاسباتی را فراهم می‌کند و کد شیمی کوانتومی `SIESTA <https"
+"://siesta-project.org>`_ را با چارچوب جریان کار `Atomate2 "
+"<https://materialsproject.github.io/atomate2/>`_ یکپارچه می‌سازد. این کتابخانه "
+"جریان‌های کار مقیاس‌پذیر، تکرارپذیر و هوشمند برای شبیه‌سازی مواد با ابزارهای "
+"جامع بازیابی خطا و تحلیل ارائه می‌دهد."
+
+#: ../../source/introduction.rst:10 78287d06f1a14b2c85b7b86fe43e5d86
+msgid "Why atomate2siesta?"
+msgstr "چرا atomate2siesta؟"
+
+#: ../../source/introduction.rst:12 214d58cecb774d788685a86cfd85b238
+msgid "🎯 **Comprehensive Workflow Coverage**"
+msgstr "🎯 **پوشش جامع جریان‌های کار**"
+
+#: ../../source/introduction.rst:13 5586a6133ef443ef8d4277fce68e43c7
+msgid ""
+"From simple structure relaxations to complex multi-step calculations: "
+"phonons, surface energy, elastic constants, Grüneisen parameters, quasi-"
+"harmonic approximation, and more."
+msgstr ""
+"از آرام‌سازی ساختار ساده تا محاسبات چند مرحله‌ای پیچیده: فونون‌ها، انرژی سطح، "
+"ثابت‌های الاستیک، پارامترهای Grüneisen، تقریب شبه‌هارمونیک، و موارد دیگر."
+
+#: ../../source/introduction.rst:15 a813ab7560f74c46a33020c04eb2de53
+msgid "🧠 **Intelligent Error Recovery**"
+msgstr "🧠 **بازیابی هوشمند خطا**"
+
+#: ../../source/introduction.rst:16 ed8d72dc16f349beb1dbb066a11d09d4
+msgid ""
+"Built-in custodian integration detects and automatically recovers from "
+"10+ error types including SCF failures, memory issues, and time "
+"limits—ensuring robust production runs."
+msgstr ""
+"یکپارچه‌سازی داخلی custodian بیش از ۱۰ نوع خطا را شناسایی و به‌طور خودکار "
+"بازیابی می‌کند، از جمله شکست‌های SCF، مشکلات حافظه و محدودیت‌های زمانی—که "
+"اجراهای تولید قوی را تضمین می‌کند."
+
+#: ../../source/introduction.rst:18 972aeeec81494871834e648f28a75d83
+msgid "⚙️ **Flexible Parameter Management**"
+msgstr "⚙️ **مدیریت انعطاف‌پذیر پارامترها**"
+
+#: ../../source/introduction.rst:19 8764bceb17534a0da93343833392f90a
+msgid ""
+"**Tier-based architecture**: 4 complexity levels with automatic module "
+"activation"
+msgstr ""
+"**معماری مبتنی بر سطح**: ۴ سطح پیچیدگی با فعال‌سازی خودکار ماژول"
+
+#: ../../source/introduction.rst:20 82f0ad27c7d8412caea8b894e7bab18d
+msgid ""
+"**14 material-specific presets**: Optimized settings for metals, "
+"semiconductors, surfaces"
+msgstr ""
+"**۱۴ پیش‌تنظیم اختصاصی مواد**: تنظیمات بهینه‌شده برای فلزات، نیمه‌رساناها، سطوح"
+
+#: ../../source/introduction.rst:21 4d1a22838fee4ccca20dac31a4ecf3d0
+msgid "**Powerups system**: Dynamic parameter modification without recreation"
+msgstr ""
+"**سیستم Powerups**: تغییر پویای پارامترها بدون نیاز به ایجاد مجدد"
+
+#: ../../source/introduction.rst:23 56a7b16be2104114adcd0e68a62fbf6e
+msgid "📊 **Rich Analysis & Visualization**"
+msgstr "📊 **تحلیل و تجسم غنی**"
+
+#: ../../source/introduction.rst:24 0615e44c2d1d450b9103cc5b581951b1
+msgid ""
+"Automatic generation of publication-quality plots, comprehensive text "
+"summaries, and JSON outputs for all workflows."
+msgstr ""
+"تولید خودکار نمودارهای با کیفیت انتشاراتی، خلاصه‌های متنی جامع، و خروجی‌های JSON "
+"برای تمام جریان‌های کار."
+
+#: ../../source/introduction.rst:26 f5ca395775da4162b3238f2313d39d10
+msgid "🔬 **Production-Ready**"
+msgstr "🔬 **آماده برای تولید**"
+
+#: ../../source/introduction.rst:27 0c1f940b6564477dabb542af3dc76d0f
+#, python-format
+msgid "750 tests with 44% coverage, 100% passing"
+msgstr "۷۵۰ تست با ۴۴٪ پوشش، ۱۰۰٪ موفقیت"
+
+#: ../../source/introduction.rst:28 2ca072ed990545c0b74faaaddc72c14e
+msgid "HPC cluster support (SLURM, PBS, SGE)"
+msgstr "پشتیبانی از خوشه‌های HPC (SLURM، PBS، SGE)"
+
+#: ../../source/introduction.rst:29 882b0cce203142b4b7843d76a75683fa
+msgid "MongoDB integration for high-throughput campaigns"
+msgstr "یکپارچه‌سازی MongoDB برای کمپین‌های با توان عملیاتی بالا"
+
+#: ../../source/introduction.rst:30 4768ab2d84bc4275a2e8d645f42c13fb
+msgid "Performance optimized (< 25ms overhead)"
+msgstr "بهینه‌سازی عملکرد (سربار کمتر از ۲۵ میلی‌ثانیه)"
+
+#: ../../source/introduction.rst:35 a5c4a1dd14a5463b9747cd2d10a03967
+msgid "Key Features"
+msgstr "ویژگی‌های کلیدی"
+
+#: ../../source/introduction.rst:38 edeebc72f56f44f2b823e3c2379681d4
+msgid "1. Automated Workflow Library"
+msgstr "۱. کتابخانه جریان‌های کار خودکار"
+
+#: ../../source/introduction.rst:40 494e36c05180479ab1dd4f120a850330
+msgid "**Electronic Structure**"
+msgstr "**ساختار الکترونی**"
+
+#: ../../source/introduction.rst:41 d3dc0aa8caab47b9a9cb4038e0776898
+msgid "Structure relaxation (fixed/variable cell) with geometric optimization"
+msgstr "آرام‌سازی ساختار (سلول ثابت/متغیر) با بهینه‌سازی هندسی"
+
+#: ../../source/introduction.rst:42 efec4d49aea547e28b073cd09bf155d4
+msgid "Band structure and density of states (DOS) calculations"
+msgstr "محاسبات ساختار نواری و چگالی حالت‌ها (DOS)"
+
+#: ../../source/introduction.rst:43 b421f3b64f3b4425ba0826343cac9091
+msgid "Optical properties (dielectric function, absorption)"
+msgstr "خواص نوری (تابع دی‌الکتریک، جذب)"
+
+#: ../../source/introduction.rst:44 c483ab03f89a494c8053c251333cdd5e
+msgid "Electronic analysis tools"
+msgstr "ابزارهای تحلیل الکترونی"
+
+#: ../../source/introduction.rst:46 6b78e9b195b04c02863186a60945456c
+msgid "**Mechanical & Thermodynamic Properties**"
+msgstr "**خواص مکانیکی و ترمودینامیکی**"
+
+#: ../../source/introduction.rst:47 f09763e0cac1427d8517d6e7d9808ff6
+msgid "Equation of State (EOS) with automatic fitting"
+msgstr "معادله حالت (EOS) با برازش خودکار"
+
+#: ../../source/introduction.rst:48 35e162e8620e43b3b660a6c273dffb6a
+msgid "Elastic constants and full elastic tensor"
+msgstr "ثابت‌های الاستیک و تانسور الاستیک کامل"
+
+#: ../../source/introduction.rst:49 ebc92198f2d74978b72b60155fcd8aa2
+msgid "Mechanical properties (bulk/shear modulus, Young's modulus, Poisson ratio)"
+msgstr "خواص مکانیکی (مدول حجمی/برشی، مدول یانگ، نسبت پواسون)"
+
+#: ../../source/introduction.rst:50 746c0f74cec1451eb50aafebc209b219
+msgid "Nudged Elastic Band (NEB) for transition state searching"
+msgstr "روش نوار الاستیک تکان‌داده‌شده (NEB) برای جستجوی حالت گذار"
+
+#: ../../source/introduction.rst:52 4e60f0a6173b44bd8b9c3106b18df4fb
+msgid "**Vibrational & Thermal Properties**"
+msgstr "**خواص ارتعاشی و حرارتی**"
+
+#: ../../source/introduction.rst:53 e024db88a61a4f6ebabb190d6f3b136d
+msgid "**Phonon calculations** with full phonopy integration"
+msgstr "**محاسبات فونون** با یکپارچه‌سازی کامل phonopy"
+
+#: ../../source/introduction.rst:54 c1cc0c8b5f674e54a5967fda4f4518b5
+msgid "**Grüneisen parameters** with 6 comprehensive plotting functions"
+msgstr "**پارامترهای Grüneisen** با ۶ تابع رسم جامع"
+
+#: ../../source/introduction.rst:55 29c3954e2a7042b7bc68920cbd1c696f
+msgid ""
+"**Quasi-harmonic approximation (QHA)** for finite-temperature "
+"thermodynamics"
+msgstr ""
+"**تقریب شبه‌هارمونیک (QHA)** برای ترمودینامیک در دمای محدود"
+
+#: ../../source/introduction.rst:56 ac752b4716f044edb140e2d1364228de
+msgid "Thermal expansion, heat capacity, entropy calculations"
+msgstr "انبساط حرارتی، ظرفیت گرمایی، محاسبات آنتروپی"
+
+#: ../../source/introduction.rst:57 e236f6fa84f24f50b018909b2e7cb891
+#, python-format
+msgid "Automatic symmetry reduction (50-80% fewer force calculations)"
+msgstr "کاهش خودکار تقارن (۵۰-۸۰٪ کاهش محاسبات نیرو)"
+
+#: ../../source/introduction.rst:59 5daf4407e7174a2280fb57ab1036404d
+msgid "**Surface Chemistry**"
+msgstr "**شیمی سطح**"
+
+#: ../../source/introduction.rst:60 a70ce7a3069144aa8ed10aedfc837aa5
+msgid "**Surface energy calculations** with automatic termination discovery"
+msgstr "**محاسبات انرژی سطح** با کشف خودکار پایانه‌ها"
+
+#: ../../source/introduction.rst:61 bbb87b6325ae434a9cce1fe207d28527
+msgid "**Multi-surface comparison** for Miller indices screening"
+msgstr "**مقایسه چند سطح** برای غربالگری شاخص‌های Miller"
+
+#: ../../source/introduction.rst:62 55bff157f3b249acb1e20feb8573d6b0
+msgid "**Adsorption site scanning** with grid-based energy mapping"
+msgstr "**اسکن سایت جذب** با نقشه‌برداری انرژی مبتنی بر شبکه"
+
+#: ../../source/introduction.rst:63 4591b0d119a044beae3e423093db1a90
+msgid "Molecule orientation control and automatic visualization"
+msgstr "کنترل جهت‌گیری مولکول و تجسم خودکار"
+
+#: ../../source/introduction.rst:66 db70033d3e05495185de2844d4b657ff
+msgid "2. Intelligent Error Handling"
+msgstr "۲. مدیریت هوشمند خطا"
+
+#: ../../source/introduction.rst:68 4c159d4c9d6249e9838b474585c353e9
+msgid "Built on MaterialsProject/custodian library with:"
+msgstr "ساخته‌شده بر اساس کتابخانه MaterialsProject/custodian با:"
+
+#: ../../source/introduction.rst:70 799e386a905d4a12ac5f5fcd822e0791
+msgid "**Automatic Error Detection**"
+msgstr "**تشخیص خودکار خطا**"
+
+#: ../../source/introduction.rst:71 f20714c850ed408e810b73279ea65646
+msgid "SCF convergence failures (5-level progressive rescue)"
+msgstr "شکست‌های همگرایی SCF (نجات تدریجی ۵ سطحی)"
+
+#: ../../source/introduction.rst:72 e57f27e4f38f4c529d0e444b63e824f9
+msgid "Memory and walltime limit issues"
+msgstr "مشکلات محدودیت حافظه و زمان دیواری"
+
+#: ../../source/introduction.rst:73 e53f01477ed74ea2aa5a2857069ad199
+msgid "Basis set and pseudopotential problems"
+msgstr "مشکلات مجموعه پایه و شبه‌پتانسیل"
+
+#: ../../source/introduction.rst:74 4f0667a5daf2418d816621496e3dcbba
+msgid "Geometry optimization failures"
+msgstr "شکست‌های بهینه‌سازی هندسی"
+
+#: ../../source/introduction.rst:75 d487bfdf3d4847a69fdb19e6ffcb5fb3
+msgid "Electronic structure anomalies"
+msgstr "ناهنجاری‌های ساختار الکترونی"
+
+#: ../../source/introduction.rst:77 9ccad7cc3b264da78856789e2666785b
+msgid "**Progressive Correction Strategies**"
+msgstr "**استراتژی‌های اصلاح تدریجی**"
+
+#: ../../source/introduction.rst:78 e91676e06c444315961b4f845c25ad28
+msgid "Automatic parameter adjustment (mixing, k-points, basis)"
+msgstr "تنظیم خودکار پارامترها (میکسر، k-points، پایه)"
+
+#: ../../source/introduction.rst:79 438faf8d09034f179d1b49895f3632a8
+msgid "Restart from checkpoints"
+msgstr "راه‌اندازی مجدد از نقاط بررسی"
+
+#: ../../source/introduction.rst:80 3a197a1c5feb4d328c2447acc89e1034
+msgid "JSON logging (`custodian.json`) for full auditability"
+msgstr "ثبت وقایع JSON (`custodian.json`) برای قابلیت حسابرسی کامل"
+
+#: ../../source/introduction.rst:81 8b0f0a5f5e05457b9df093452aba0f3b
+msgid "Validation framework for correction effectiveness"
+msgstr "چارچوب اعتبارسنجی برای اثربخشی اصلاحات"
+
+#: ../../source/introduction.rst:83 7d58579e14d841b5a9677c3330e8c038
+msgid "**10+ Specialized Handlers**"
+msgstr "**بیش از ۱۰ مدیریت‌کننده تخصصی**"
+
+#: ../../source/introduction.rst:84 af65300deaba4d30a927d3b611a5d4b4
+msgid "``SCFConvergenceHandler`` - Multi-level mixing adjustments"
+msgstr "``SCFConvergenceHandler`` - تنظیمات میکسر چند سطحی"
+
+#: ../../source/introduction.rst:85 e3df6096aca74d4d8f61b871db95779f
+msgid "``MemoryHandler`` - Dynamic memory management"
+msgstr "``MemoryHandler`` - مدیریت پویای حافظه"
+
+#: ../../source/introduction.rst:86 434a94e2f2724531a2918bb320d13e7d
+msgid "``WalltimeHandler`` - Time limit recovery"
+msgstr "``WalltimeHandler`` - بازیابی محدودیت زمانی"
+
+#: ../../source/introduction.rst:87 051acb1412ea414789e905651deb2023
+msgid "``BasisSetHandler`` - PAO parameter optimization"
+msgstr "``BasisSetHandler`` - بهینه‌سازی پارامترهای PAO"
+
+#: ../../source/introduction.rst:88 38abe7276a3344189b6158063da8cb84
+msgid "``GeometryHandler`` - Stuck relaxation recovery"
+msgstr "``GeometryHandler`` - بازیابی آرام‌سازی متوقف‌شده"
+
+#: ../../source/introduction.rst:89 86cbf57e22134dd59a933648ac6d04e2
+msgid "...and more"
+msgstr "... و موارد دیگر"
+
+#: ../../source/introduction.rst:92 8ba43e62542e40d8bbcb948e4539ce98
+msgid "3. Tier-Based Input Architecture"
+msgstr "۳. معماری ورودی مبتنی بر سطح"
+
+#: ../../source/introduction.rst:96 d7a9fc8dbe2d450eb56f49b342605651
+msgid "**4-Tier Complexity System**"
+msgstr "**سیستم پیچیدگی ۴ سطحی**"
+
+#: ../../source/introduction.rst:97 0c39e2c191ed4b81bc4e91242515db04
+msgid "**basic** (6 modules): Essential parameters for simple calculations"
+msgstr "**پایه** (۶ ماژول): پارامترهای ضروری برای محاسبات ساده"
+
+#: ../../source/introduction.rst:98 9ec7708041464c5198518924d3c8355e
+msgid "**intermediate** (12 modules): Standard production runs"
+msgstr "**متوسط** (۱۲ ماژول): اجراهای تولید استاندارد"
+
+#: ../../source/introduction.rst:99 3020c4b0c4b048e08a5ead18b98201e1
+msgid "**advanced** (19 modules): Fine-tuned control"
+msgstr "**پیشرفته** (۱۹ ماژول): کنترل دقیق"
+
+#: ../../source/introduction.rst:100 3df0921ee1684e3d877253b903e01a1b
+msgid "**expert** (24 modules): All available parameters"
+msgstr "**متخصص** (۲۴ ماژول): تمام پارامترهای موجود"
+
+#: ../../source/introduction.rst:102 dc3927ea0e8c4a379e115df3d4a88510
+msgid "**Automatic Module Activation**"
+msgstr "**فعال‌سازی خودکار ماژول**"
+
+#: ../../source/introduction.rst:103 7ec949baf9a34a93b18297064b39315d
+msgid "Modules load based on calculation complexity"
+msgstr "ماژول‌ها بر اساس پیچیدگی محاسبات بارگذاری می‌شوند"
+
+#: ../../source/introduction.rst:104 4b979a51f61b453a9cca8ef583762cd8
+msgid "Zero configuration for simple cases"
+msgstr "بدون نیاز به پیکربندی برای موارد ساده"
+
+#: ../../source/introduction.rst:105 8ceab4d800bf454091d48896137febf2
+msgid "Full control when needed"
+msgstr "کنترل کامل در صورت نیاز"
+
+#: ../../source/introduction.rst:107 37ee6a0291e64cb49bb22b436840fed4
+msgid "**24+ Dataclass Modules**"
+msgstr "**بیش از ۲۴ ماژول Dataclass**"
+
+#: ../../source/introduction.rst:108 a16c7175135c41d8b274ff7c00e489be
+msgid "Organized by functionality:"
+msgstr "سازمان‌دهی شده بر اساس عملکرد:"
+
+#: ../../source/introduction.rst:110 a7c00b83551f4fba9f200f5a938da0a9
+msgid "``BasisSetsAndProjectors`` - PAO basis configuration"
+msgstr "``BasisSetsAndProjectors`` - پیکربندی پایه PAO"
+
+#: ../../source/introduction.rst:111 2f54c5b9c12249c18eb2e664cc2a69bc
+msgid "``SCFLoopParameters`` - Self-consistent field control"
+msgstr "``SCFLoopParameters`` - کنترل میدان خودسازگار"
+
+#: ../../source/introduction.rst:112 1d80afcf9b3c4d70a37c6a17941b6c1b
+msgid "``MolecularDynamicsAndRelaxation`` - Geometry optimization"
+msgstr "``MolecularDynamicsAndRelaxation`` - بهینه‌سازی هندسی"
+
+#: ../../source/introduction.rst:113 6b1221da618643a5a823c50640167362
+msgid "``PhononCalculations`` - Vibrational properties"
+msgstr "``PhononCalculations`` - خواص ارتعاشی"
+
+#: ../../source/introduction.rst:114 ad040e060e314f549d91582e5f7224d5
+msgid "``ExchangeCorrelationFunctionals`` - DFT functionals"
+msgstr "``ExchangeCorrelationFunctionals`` - تابعک‌های DFT"
+
+#: ../../source/introduction.rst:115 b1d3a22fca2f4eb8b79779849ad41b46
+msgid "``SpinSettings`` - Magnetic calculations"
+msgstr "``SpinSettings`` - محاسبات مغناطیسی"
+
+#: ../../source/introduction.rst:116 bbb377638885491cb4b03a80a478623b
+msgid "...and 18 more"
+msgstr "... و ۱۸ مورد دیگر"
+
+#: ../../source/introduction.rst:118 bf18d24f9b604e66b156a8162d2f51e9
+msgid "**14 Material-Specific Presets**"
+msgstr "**۱۴ پیش‌تنظیم اختصاصی مواد**"
+
+#: ../../source/introduction.rst:119 6174bbbf684548b5976cdb9fc63433ea
+msgid "``standard_relax`` - General-purpose relaxation"
+msgstr "``standard_relax`` - آرام‌سازی عمومی"
+
+#: ../../source/introduction.rst:120 e6c8e3d7917f41e3a314027711162856
+msgid "``high_accuracy`` - Converged production runs"
+msgstr "``high_accuracy`` - اجراهای تولید همگرا"
+
+#: ../../source/introduction.rst:121 0c0fab5345be479fa7e7b943f3a7e007
+msgid "``band_structure_precise`` - Electronic structure"
+msgstr "``band_structure_precise`` - ساختار الکترونی"
+
+#: ../../source/introduction.rst:122 efdecf2fe31643a5ac17230e796c1ca2
+msgid "``surface_metal`` - Metallic surface calculations"
+msgstr "``surface_metal`` - محاسبات سطح فلزی"
+
+#: ../../source/introduction.rst:123 fe7e51def9674c5b8d5cce3ac9530a53
+msgid "``surface_semiconductor`` - Semiconductor surfaces"
+msgstr "``surface_semiconductor`` - سطوح نیمه‌رسانا"
+
+#: ../../source/introduction.rst:124 c0ed6151da8543abbde79d6fbb4f0473
+msgid "``phonon_high_accuracy`` - Vibrational properties"
+msgstr "``phonon_high_accuracy`` - خواص ارتعاشی"
+
+#: ../../source/introduction.rst:125 b824f41915834537a5ef8fc62880c2d7
+msgid "``magnetic_system`` - Spin-polarized calculations"
+msgstr "``magnetic_system`` - محاسبات اسپین-قطبیده"
+
+#: ../../source/introduction.rst:126 7e17cab2d9a24eaeb8f8f85461c0ecdb
+msgid "...and 7 more"
+msgstr "... و ۷ مورد دیگر"
+
+#: ../../source/introduction.rst:129 c725fead4a0c459789c63a573523474e
+msgid "4. Advanced Analysis & Visualization"
+msgstr "۴. تحلیل و تجسم پیشرفته"
+
+#: ../../source/introduction.rst:131 214ed522b5544deaa10a5c4664304771
+msgid "**Grüneisen Parameter Analysis**"
+msgstr "**تحلیل پارامتر Grüneisen**"
+
+#: ../../source/introduction.rst:132 1038c9dad8d54c00be8a4da242f01b65
+msgid "6 plotting functions for comprehensive analysis:"
+msgstr "۶ تابع رسم برای تحلیل جامع:"
+
+#: ../../source/introduction.rst:134 52df66f96ec345c8b5a14c707ae80352
+msgid "Scatter plots with mode classification"
+msgstr "نمودارهای پراکنش با طبقه‌بندی مد"
+
+#: ../../source/introduction.rst:135 221c7cc80a624c0fa9879f4010b3e5c4
+msgid "Histograms with statistical analysis"
+msgstr "هیستوگرام‌ها با تحلیل آماری"
+
+#: ../../source/introduction.rst:136 3e6836d73d6246faa9e2f7e6e6e8ed7e
+msgid "Dual-panel phonon band structures"
+msgstr "ساختارهای نواری فونون دو پنلی"
+
+#: ../../source/introduction.rst:137 2bd42e1b326e4d44b9e76f94890a7b8f
+msgid "Thermal expansion vs temperature"
+msgstr "انبساط حرارتی در مقابل دما"
+
+#: ../../source/introduction.rst:138 5db7ded9b3d14481a890ac684bb7613f
+msgid "Physical interpretation and material classification"
+msgstr "تفسیر فیزیکی و طبقه‌بندی مواد"
+
+#: ../../source/introduction.rst:140 222b5ae710864b23ba2cf2682654d2d5
+msgid "Temperature-dependent thermal expansion using Debye model"
+msgstr "انبساط حرارتی وابسته به دما با استفاده از مدل Debye"
+
+#: ../../source/introduction.rst:141 fcaa4f12dcaa40a3907eeee01724e979
+msgid "Publication-quality output (300 DPI)"
+msgstr "خروجی با کیفیت انتشاراتی (۳۰۰ DPI)"
+
+#: ../../source/introduction.rst:143 9e548ebcc6ea4a6cb3ea42460fb1fc78
+msgid "**Phonon Analysis Suite**"
+msgstr "**مجموعه تحلیل فونون**"
+
+#: ../../source/introduction.rst:144 5d146358a5984bbd9d1a32c7ec0bd155
+msgid "Automatic phonon band structure plots"
+msgstr "نمودارهای خودکار ساختار نواری فونون"
+
+#: ../../source/introduction.rst:145 3bd616477c1340afb90e015cf6c77f49
+msgid "Phonon density of states (DOS)"
+msgstr "چگالی حالت‌های فونون (DOS)"
+
+#: ../../source/introduction.rst:146 dbbcca70e0c24943a87268a91b256015
+msgid "Thermal properties (Cv, S, F vs T)"
+msgstr "خواص حرارتی (Cv، S، F در مقابل T)"
+
+#: ../../source/introduction.rst:147 56a96f2a0a814f34a99878200e8a9cbf
+msgid "Comprehensive text summaries with convergence recommendations"
+msgstr "خلاصه‌های متنی جامع با توصیه‌های همگرایی"
+
+#: ../../source/introduction.rst:149 07a71cdcf33b405e8839cde9f8289410
+msgid "**Surface Energy Workflows**"
+msgstr "**جریان‌های کار انرژی سطح**"
+
+#: ../../source/introduction.rst:150 535f931e936748129a0b8e521f8752fc
+msgid "Multi-surface energy comparison plots"
+msgstr "نمودارهای مقایسه انرژی چند سطح"
+
+#: ../../source/introduction.rst:151 306973d244eb4ff99b21ee4d5ccf566e
+msgid "Automatic Wulff construction"
+msgstr "ساخت خودکار Wulff"
+
+#: ../../source/introduction.rst:152 a78659c6bde4463eaa9f3b8d48e4d598
+msgid "Surface stability analysis"
+msgstr "تحلیل پایداری سطح"
+
+#: ../../source/introduction.rst:153 21dd4cf8e8c04d3f80d0e94591cf0ddd
+msgid "Termination-specific energies"
+msgstr "انرژی‌های اختصاصی پایانه"
+
+#: ../../source/introduction.rst:155 d04164f079c541f0ab0e08814bbae463
+msgid "**Convergence Studies**"
+msgstr "**مطالعات همگرایی**"
+
+#: ../../source/introduction.rst:156 2a872778cbb740079e0a40a48b790b71
+msgid "Automatic convergence plots (k-points, mesh cutoff, basis)"
+msgstr "نمودارهای خودکار همگرایی (k-points، برش شبکه، پایه)"
+
+#: ../../source/introduction.rst:157 5c3041cc4103473c9f621a0e508b09a5
+msgid "Energy vs parameter visualization"
+msgstr "تجسم انرژی در مقابل پارامتر"
+
+#: ../../source/introduction.rst:158 1a28ee74facc4348a9d17e57afd28d42
+msgid "Threshold indicators (1 meV, 5 meV)"
+msgstr "شاخص‌های آستانه (۱ meV، ۵ meV)"
+
+#: ../../source/introduction.rst:159 a5d80eb3ba004a90a7d3efaf8b2546bc
+msgid "Timing analysis for cost optimization"
+msgstr "تحلیل زمان‌بندی برای بهینه‌سازی هزینه"
+
+#: ../../source/introduction.rst:162 cbf422f86f5341a5a09f75ad4800072f
+msgid "5. Powerups System"
+msgstr "۵. سیستم Powerups"
+
+#: ../../source/introduction.rst:166 585b99125b344b5a9d9731dcdef9c3ba
+msgid "Dynamic workflow customization without recreating makers:"
+msgstr "سفارشی‌سازی پویای جریان کار بدون ایجاد مجدد makers:"
+
+#: ../../source/introduction.rst:182 fdf9e0bae9434b9a8121f249610b67bb
+msgid "**Key Capabilities**:"
+msgstr "**قابلیت‌های کلیدی:**"
+
+#: ../../source/introduction.rst:183 d87f652235854db28aaf3b9142c757b5
+msgid "Apply to Jobs, Flows, or Makers"
+msgstr "اعمال به Jobs، Flows یا Makers"
+
+#: ../../source/introduction.rst:184 3b12260ef8ec421497fda511ec4f73ae
+msgid "Selective updates using ``name_filter``"
+msgstr "به‌روزرسانی‌های انتخابی با استفاده از ``name_filter``"
+
+#: ../../source/introduction.rst:185 d6005c6820034a77a4e82acdeb98ed6b
+msgid "Material-specific parameter sets"
+msgstr "مجموعه پارامترهای اختصاصی مواد"
+
+#: ../../source/introduction.rst:186 16ab784eb1ed4ed99a26c8ef188f9457
+msgid "High-throughput screening patterns"
+msgstr "الگوهای غربالگری با توان عملیاتی بالا"
+
+#: ../../source/introduction.rst:187 fafc76f21288455c9bc12c48ef78f449
+msgid "Workflow builder patterns"
+msgstr "الگوهای ساخت جریان کار"
+
+#: ../../source/introduction.rst:190 4f43acfb146b4d289a569fbf83f1d4c9
+msgid "6. Production Infrastructure"
+msgstr "۶. زیرساخت تولید"
+
+#: ../../source/introduction.rst:192 eefea005c3c44d29ae621ff2f30d2c30
+msgid "**Database Integration**"
+msgstr "**یکپارچه‌سازی پایگاه داده**"
+
+#: ../../source/introduction.rst:193 7184c309747c4b5580399a2590f97484
+msgid "MongoDB/Maggma support for result storage"
+msgstr "پشتیبانی MongoDB/Maggma برای ذخیره‌سازی نتایج"
+
+#: ../../source/introduction.rst:194 b76aa69bb04e4c1e94a3f32fa1822fe0
+msgid "Automatic task document generation"
+msgstr "تولید خودکار سند کار"
+
+#: ../../source/introduction.rst:195 e9039428fb6f40f389f07560e31e527b
+msgid "Query interface for high-throughput campaigns"
+msgstr "رابط جستجو برای کمپین‌های با توان عملیاتی بالا"
+
+#: ../../source/introduction.rst:196 338900b551f44aa99293845d321f29b1
+msgid "GridFS for large data (wavefunctions, charge densities)"
+msgstr "GridFS برای داده‌های بزرگ (توابع موج، چگالی‌های بار)"
+
+#: ../../source/introduction.rst:198 38587ae6ef0444398a74ad05ce94548e
+msgid "**HPC Cluster Support**"
+msgstr "**پشتیبانی از خوشه HPC**"
+
+#: ../../source/introduction.rst:199 1560d482337947f4b4c060eb693bb0b3
+msgid "SLURM, PBS, SGE queue systems"
+msgstr "سیستم‌های صف SLURM، PBS، SGE"
+
+#: ../../source/introduction.rst:200 ce55d41afbb7416f90c18495896359f3
+msgid "jobflow-remote integration"
+msgstr "یکپارچه‌سازی jobflow-remote"
+
+#: ../../source/introduction.rst:201 35c22d60971841e4be8156d819e98f94
+msgid "Automatic resource management"
+msgstr "مدیریت خودکار منابع"
+
+#: ../../source/introduction.rst:202 48accb0802f14071a3396f36e071d39f
+msgid "Remote job submission and monitoring"
+msgstr "ارسال و نظارت راه‌دور کارها"
+
+#: ../../source/introduction.rst:204 282f5aea505a44e4bd92a436c4335d4e
+msgid "**Testing & Quality**"
+msgstr "**تست و کیفیت**"
+
+#: ../../source/introduction.rst:205 c6fa105f288847eb818f7d3077b054b1
+msgid "750 comprehensive tests (mock-based for speed)"
+msgstr "۷۵۰ تست جامع (مبتنی بر mock برای سرعت)"
+
+#: ../../source/introduction.rst:206 9abdf3c52eca47b0802bd299851fa1af
+#, python-format
+msgid "44% code coverage"
+msgstr "۴۴٪ پوشش کد"
+
+#: ../../source/introduction.rst:207 adcaac63982240fb8672b8f5a308e0e7
+msgid "100% test pass rate"
+msgstr "۱۰۰٪ نرخ موفقیت تست"
+
+#: ../../source/introduction.rst:208 1591079964424100ac32a35c1a44143d
+msgid "17-second full test suite execution"
+msgstr "اجرای ۱۷ ثانیه‌ای مجموعه تست کامل"
+
+#: ../../source/introduction.rst:209 ad54d02ea0cf490b9dc7219fdb86b162
+msgid "Critical infrastructure: parser (39%), file_client (86%), schemas (97%)"
+msgstr "زیرساخت حیاتی: parser (۳۹٪)، file_client (۸۶٪)، schemas (۹۷٪)"
+
+#: ../../source/introduction.rst:212 f2f61b0347404efcb4e925010ac4596e
+msgid "7. Developer-Friendly Design"
+msgstr "۷. طراحی دوستدار توسعه‌دهنده"
+
+#: ../../source/introduction.rst:214 ec8e4d5cc09344c8b24863885dd6e8dd
+msgid "**Modular Architecture**"
+msgstr "**معماری ماژولار**"
+
+#: ../../source/introduction.rst:215 30b3359b3e684da082e39174aa33c11f
+msgid "Clean separation of concerns (jobs, flows, sets, schemas)"
+msgstr "جداسازی واضح دغدغه‌ها (jobs، flows، sets، schemas)"
+
+#: ../../source/introduction.rst:216 e521756eea384156b3573c2ad0eb66e5
+msgid "Extensible maker pattern"
+msgstr "الگوی maker قابل گسترش"
+
+#: ../../source/introduction.rst:217 f3cce99a20b74f98a8efe44a6034b3db
+msgid "Type-annotated throughout"
+msgstr "حاشیه‌نویسی نوع در سراسر کد"
+
+#: ../../source/introduction.rst:218 30b8d5b148bf4137a37bfcc58e0917a3
+msgid "Comprehensive docstrings"
+msgstr "رشته‌های مستندسازی جامع"
+
+#: ../../source/introduction.rst:220 ab6f51532cfa44488bb25a02283a3fc7
+msgid "**Documentation**"
+msgstr "**مستندسازی**"
+
+#: ../../source/introduction.rst:221 fde23290c3bd4a068b153b8b321025b3
+msgid "22 comprehensive tutorials (basics → advanced)"
+msgstr "۲۲ آموزش جامع (مبانی ← پیشرفته)"
+
+#: ../../source/introduction.rst:222 44dd783133c74137b919416ede69b44a
+msgid "Complete API reference"
+msgstr "مرجع کامل API"
+
+#: ../../source/introduction.rst:223 85c132f9ac064d0790b67cf3e4324de4
+msgid "Comprehensive feature documentation"
+msgstr "مستندات جامع ویژگی‌ها"
+
+#: ../../source/introduction.rst:225 d86b66b678f44206aac8a90ab90184d2
+msgid "**Configuration Management**"
+msgstr "**مدیریت پیکربندی**"
+
+#: ../../source/introduction.rst:226 a9a608879f3f47ada4ac731d3e011029
+msgid "Simple YAML configuration (`~/.atomate2siesta.yaml`)"
+msgstr "پیکربندی ساده YAML (`~/.atomate2siesta.yaml`)"
+
+#: ../../source/introduction.rst:227 c0046d63863740389e7dbf3706929c6f
+msgid "Environment variable support"
+msgstr "پشتیبانی از متغیرهای محیطی"
+
+#: ../../source/introduction.rst:228 bfd236eaf2f24556a7d375f801f23015
+msgid "Programmatic override capability"
+msgstr "قابلیت بازنویسی برنامه‌ای"
+
+#: ../../source/introduction.rst:229 d80d0a2276e747b8b2d3b5a222225c50
+msgid "Validation and helpful error messages"
+msgstr "اعتبارسنجی و پیام‌های خطای مفید"
+
+#: ../../source/introduction.rst:234 882e390766fb471cb04dff72184c7216
+msgid "Recent Enhancements (2025)"
+msgstr "بهبودهای اخیر (۲۰۲۵)"
+
+#: ../../source/introduction.rst:236 3ccaa42426c8402cb788e5a64483087d
+msgid "** Test Coverage Foundation"
+msgstr "** پایه پوشش تست"
+
+#: ../../source/introduction.rst:237 e18e2fdbb8cb40a9ace12e8e1e6ea51c
+#, python-format
+msgid ""
+"Major testing initiative with 270 new tests, achieving 44% coverage. "
+"Critical infrastructure comprehensively tested."
+msgstr ""
+"ابتکار تست عمده با ۲۷۰ تست جدید، دستیابی به ۴۴٪ پوشش. زیرساخت حیاتی "
+"به‌طور جامع تست شده است."
+
+#: ../../source/introduction.rst:239 0429a05e633b48d6b2a9982f86c26259
+msgid "** Grüneisen Parameters & Thermal Expansion"
+msgstr "** پارامترهای Grüneisen و انبساط حرارتی"
+
+#: ../../source/introduction.rst:240 fbfeb02342ec4addb820409641edf4fb
+msgid ""
+"Complete 6-function visualization suite for Grüneisen analysis with "
+"publication-quality plots and physical interpretation."
+msgstr ""
+"مجموعه تجسم کامل ۶ تابعی برای تحلیل Grüneisen با نمودارهای با کیفیت انتشاراتی "
+"و تفسیر فیزیکی."
+
+#: ../../source/introduction.rst:242 8c434465f8ba45908fd812df29b64dd9
+msgid "** Thermal Expansion Analysis"
+msgstr "** تحلیل انبساط حرارتی"
+
+#: ../../source/introduction.rst:243 e1df02c204e94525bf3a1484c139a5cc
+msgid ""
+"Enhanced Grüneisen workflows with comprehensive thermal property "
+"calculations and seamless dict/Pydantic compatibility."
+msgstr ""
+"جریان‌های کار Grüneisen بهبودیافته با محاسبات جامع خواص حرارتی و سازگاری "
+"یکپارچه dict/Pydantic."
+
+#: ../../source/introduction.rst:245 97c2e5ec05ac4be9831227a719ded8f9
+msgid "** Code Quality Improvements"
+msgstr "** بهبودهای کیفیت کد"
+
+#: ../../source/introduction.rst:246 ad5c7f39cf724ac0b4d2ee3c3c29ee77
+#, python-format
+msgid ""
+"TODO cleanup (62% reduction), eliminated tier system warnings, enhanced "
+"validation docstrings."
+msgstr ""
+"پاکسازی TODO (کاهش ۶۲٪)، حذف هشدارهای سیستم سطح، بهبود رشته‌های مستندسازی "
+"اعتبارسنجی."
+
+#: ../../source/introduction.rst:248 4fe1c32ae9ae4582b8d4d786ef7b4949
+msgid "** Adsorption Site Scanning"
+msgstr "** اسکن سایت جذب"
+
+#: ../../source/introduction.rst:249 1af09478830b4342b68ffdba540e21bf
+msgid ""
+"Grid-based adsorption energy mapping with molecule orientation control "
+"and automatic visualization."
+msgstr ""
+"نقشه‌برداری انرژی جذب مبتنی بر شبکه با کنترل جهت‌گیری مولکول و تجسم خودکار."
+
+#: ../../source/introduction.rst:251 6d63cc393a734fb8bf2d4bb8293f6cee
+msgid "** Tier-Based Architecture"
+msgstr "** معماری مبتنی بر سطح"
+
+#: ../../source/introduction.rst:252 63b61cf7226a45be9ce22aadc93330cb
+msgid ""
+"Complete module registry with automatic initialization and 14 material-"
+"specific presets."
+msgstr ""
+"رجیستری کامل ماژول با راه‌اندازی خودکار و ۱۴ پیش‌تنظیم اختصاصی مواد."
+
+#: ../../source/introduction.rst:254 37cf1eaae4704004ab070920257bfa69
+msgid "** QHA Thermodynamics"
+msgstr "** ترمودینامیک QHA"
+
+#: ../../source/introduction.rst:255 7d4c95dc5f4a4dae9e23e47d7b3689a5
+msgid ""
+"Quasi-harmonic approximation for finite-temperature properties using "
+"phonon calculations."
+msgstr ""
+"تقریب شبه‌هارمونیک برای خواص دمای محدود با استفاده از محاسبات فونون."
+
+#: ../../source/introduction.rst:257 59af7661ae1a4727a3490cd2a77073ad
+msgid "** Custodian Integration"
+msgstr "** یکپارچه‌سازی Custodian"
+
+#: ../../source/introduction.rst:258 27373f3a4cfd4da8905689c7876dd1a1
+msgid ""
+"Refactored to MaterialsProject/custodian library with 10+ error handlers "
+"and JSON logging."
+msgstr ""
+"بازنویسی به کتابخانه MaterialsProject/custodian با بیش از ۱۰ مدیریت‌کننده خطا "
+"و ثبت وقایع JSON."
+
+#: ../../source/introduction.rst:260 e2767d40a0a64d4886a2a6d2cbd3ee89
+msgid "** Phonons & Surface Energy"
+msgstr "** فونون‌ها و انرژی سطح"
+
+#: ../../source/introduction.rst:261 0e5f167427f74fa4b3cce9f31c3652a1
+msgid ""
+"Full phonopy integration and multi-surface workflows with symmetry "
+"analysis."
+msgstr ""
+"یکپارچه‌سازی کامل phonopy و جریان‌های کار چند سطح با تحلیل تقارن."
+
+#: ../../source/introduction.rst:266 685a9426337c45fa98aefeb8165aaae6
+msgid "Integration with Atomate2 Ecosystem"
+msgstr "یکپارچه‌سازی با اکوسیستم Atomate2"
+
+#: ../../source/introduction.rst:268 ee32df00d82c4a93b94faabd218cfb62
+msgid "atomate2siesta seamlessly integrates with the broader Atomate2 framework:"
+msgstr "atomate2siesta به‌طور یکپارچه با چارچوب گسترده‌تر Atomate2 ادغام می‌شود:"
+
+#: ../../source/introduction.rst:270 ef7c467318064128ad9a56d5556487c7
+msgid "**Jobflow**"
+msgstr "**Jobflow**"
+
+#: ../../source/introduction.rst:271 728312dc50a04958af7544add1d55b5a
+msgid "Modern workflow management with DAG execution"
+msgstr "مدیریت جریان کار مدرن با اجرای DAG"
+
+#: ../../source/introduction.rst:272 07e59d1bf2a947a2a4427a9c5aca23e0
+msgid "Job dependency tracking"
+msgstr "ردیابی وابستگی کارها"
+
+#: ../../source/introduction.rst:273 a986d702889d4e578ef362afce8decfb
+msgid "Stateful workflows with checkpointing"
+msgstr "جریان‌های کار با حالت و نقاط بررسی"
+
+#: ../../source/introduction.rst:274 d618f133edde44b3838a923a46a010b7
+msgid "Parallel and distributed execution"
+msgstr "اجرای موازی و توزیع‌شده"
+
+#: ../../source/introduction.rst:276 fa290ffbf71a4d319062ffe5269e193e
+msgid "**Pymatgen**"
+msgstr "**Pymatgen**"
+
+#: ../../source/introduction.rst:277 c3d6b19efddf4b269330eed82ab01a1f
+msgid "Structure manipulation and analysis"
+msgstr "دستکاری و تحلیل ساختار"
+
+#: ../../source/introduction.rst:278 204726d4dd1f4457ad457698b5d796d5
+msgid "Automatic k-point generation"
+msgstr "تولید خودکار k-point"
+
+#: ../../source/introduction.rst:279 c6bf9167acbf4ab5b71514f24ba05c0e
+msgid "Symmetry detection"
+msgstr "تشخیص تقارن"
+
+#: ../../source/introduction.rst:280 e31124dc5605455eaaa79fec9a9bcbd9
+msgid "File I/O for multiple formats"
+msgstr "ورودی/خروجی فایل برای فرمت‌های متعدد"
+
+#: ../../source/introduction.rst:282 64ccdee99d484eff9431e77292cb5abd
+msgid "**Maggma**"
+msgstr "**Maggma**"
+
+#: ../../source/introduction.rst:283 e77eb4b8c9c84d72a723d13719e442b9
+msgid "MongoDB data storage"
+msgstr "ذخیره‌سازی داده MongoDB"
+
+#: ../../source/introduction.rst:284 63641cf310144300ba3e0648907f2f27
+msgid "Builder pattern for data processing"
+msgstr "الگوی ساخت برای پردازش داده"
+
+#: ../../source/introduction.rst:285 2f8e9c833c6c4d08b1fd6ce575aebdf3
+msgid "Query interface for data analysis"
+msgstr "رابط جستجو برای تحلیل داده"
+
+#: ../../source/introduction.rst:287 731cb07fa5544e28a2dc1f2b21d54a09
+msgid "**Custodian**"
+msgstr "**Custodian**"
+
+#: ../../source/introduction.rst:288 5ac508c817214b55ab8d98bc5943ad0e
+msgid "Error detection and recovery"
+msgstr "تشخیص و بازیابی خطا"
+
+#: ../../source/introduction.rst:289 cbb6f62907724080bf4a31975ba43598
+msgid "Job monitoring"
+msgstr "نظارت بر کار"
+
+#: ../../source/introduction.rst:290 85d45553a7aa40b6937f6f89fe36328d
+msgid "Automatic correction strategies"
+msgstr "استراتژی‌های اصلاح خودکار"
+
+#: ../../source/introduction.rst:295 a3f054e88fe74493bb13eec670780c1d
+msgid "Performance & Scalability"
+msgstr "عملکرد و مقیاس‌پذیری"
+
+#: ../../source/introduction.rst:297 1d4e4d4cf72d4ef9bc98c2c6b4ebd987
+msgid "**Optimized for High-Throughput**"
+msgstr "**بهینه‌شده برای توان عملیاتی بالا**"
+
+#: ../../source/introduction.rst:298 aedcee5f0af74f8abf9cc979cbad9fa9
+msgid "< 25ms framework overhead per calculation"
+msgstr "سربار چارچوب کمتر از ۲۵ میلی‌ثانیه به ازای هر محاسبه"
+
+#: ../../source/introduction.rst:299 85be5bd09465454380c47c90526ac52d
+msgid "Efficient parameter passing (no redundant copies)"
+msgstr "انتقال کارآمد پارامترها (بدون کپی‌های زائد)"
+
+#: ../../source/introduction.rst:300 36c7f1ec0b1e48a0abb32f56f87ccae7
+msgid "Lazy evaluation where possible"
+msgstr "ارزیابی تنبل در جایی که ممکن است"
+
+#: ../../source/introduction.rst:301 ac2cd963e7b64d31bbbc29d199f1d7d4
+msgid "Minimal memory footprint"
+msgstr "ردپای حافظه حداقلی"
+
+#: ../../source/introduction.rst:303 ff00718a4db440c28ece8235374ba979
+msgid "**Scalable Execution**"
+msgstr "**اجرای مقیاس‌پذیر**"
+
+#: ../../source/introduction.rst:304 b17528d03ab049b9a26305deafad83e4
+msgid "Parallel job execution with jobflow"
+msgstr "اجرای موازی کار با jobflow"
+
+#: ../../source/introduction.rst:305 ca29f25c15aa4b42bc5d3f9178c10568
+msgid "HPC cluster integration"
+msgstr "یکپارچه‌سازی خوشه HPC"
+
+#: ../../source/introduction.rst:306 66caef96d15640b9bf0f866e5f678dd2
+msgid "Remote execution with jobflow-remote"
+msgstr "اجرای راه‌دور با jobflow-remote"
+
+#: ../../source/introduction.rst:307 c4932a2b6d744297b7a41a38b7f2e3d6
+msgid "Database-backed result storage"
+msgstr "ذخیره‌سازی نتایج پشتیبانی‌شده با پایگاه داده"
+
+#: ../../source/introduction.rst:309 72078ea5944d4840a2b8af30df21cb84
+msgid "**Tested Performance**"
+msgstr "**عملکرد تست‌شده**"
+
+#: ../../source/introduction.rst:310 af124e4b2cf04d54b3edda26824a706e
+msgid "750 tests in 17 seconds"
+msgstr "۷۵۰ تست در ۱۷ ثانیه"
+
+#: ../../source/introduction.rst:311 66fe6e39632a4c9f9eb59c49bdf41c28
+msgid "Mock-based testing for rapid development"
+msgstr "تست مبتنی بر mock برای توسعه سریع"
+
+#: ../../source/introduction.rst:312 fbbb0960f6ff4858986619eb909e70ba
+msgid "Benchmarked on real calculations"
+msgstr "معیارسنجی شده بر روی محاسبات واقعی"
+
+#: ../../source/introduction.rst:313 a167984cbaf0402cac3bd2578ae49b92
+msgid "Production-validated on HPC clusters"
+msgstr "اعتبارسنجی‌شده در تولید بر روی خوشه‌های HPC"
+
+#: ../../source/introduction.rst:318 842f2cc4cd7e4b0987015229395580c3
+msgid "Getting Started"
+msgstr "شروع کار"
+
+#: ../../source/introduction.rst:320 6924b1dee10d437ca261607c33fb28f3
+msgid "**Installation**"
+msgstr "**نصب**"
+
+#: ../../source/introduction.rst:326 f31cca1a7d3d45c5acddca1defe03d57
+msgid "**Basic Usage**"
+msgstr "**استفاده پایه**"
+
+#: ../../source/introduction.rst:339 30387d2714084d648a231792494c8a43
+msgid "**Next Steps**"
+msgstr "**مراحل بعدی**"
+
+#: ../../source/introduction.rst:340 5a14325ba76e46539c5b53834d96e31b
+msgid ":doc:`installation` - Complete installation guide"
+msgstr ":doc:`installation` - راهنمای کامل نصب"
+
+#: ../../source/introduction.rst:341 03c596d8ffc7458eb78d686d1ef0160f
+msgid ":doc:`usage` - Common usage patterns"
+msgstr ":doc:`usage` - الگوهای استفاده رایج"
+
+#: ../../source/introduction.rst:342 c99230c64b82405f9f2570816b80a48e
+msgid ":doc:`tutorials/index` - 22 comprehensive tutorials"
+msgstr ":doc:`tutorials/index` - ۲۲ آموزش جامع"
+
+#: ../../source/introduction.rst:343 8c481d841ad1491fad4c1be202e8abca
+msgid ":doc:`features` - Detailed feature documentation"
+msgstr ":doc:`features` - مستندات جزئی ویژگی‌ها"
+
+#: ../../source/introduction.rst:348 3ebd4f9e80ed4959bd45a870145f72b7
+msgid "Community & Support"
+msgstr "جامعه و پشتیبانی"
+
+#: ../../source/introduction.rst:350 05c28a08fbdf4bae9a5c4d6002e02ab0
+msgid "**Documentation**: https://atomate2siesta.readthedocs.io"
+msgstr "**مستندات**: https://atomate2siesta.readthedocs.io"
+
+#: ../../source/introduction.rst:351 66efe36c943d48d393280a5699caa6ad
+msgid "**GitHub**: https://github.com/arsalan-akhtar/atomate2siesta"
+msgstr "**GitHub**: https://github.com/arsalan-akhtar/atomate2siesta"
+
+#: ../../source/introduction.rst:352 0d6ac7654b204b608bae1f51d913821f
+msgid "**Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgstr "**مشکلات**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+
+#: ../../source/introduction.rst:353 6dd55734f50141cf90765a620bb281c6
+msgid ""
+"**Discussions**: https://github.com/arsalan-"
+"akhtar/atomate2siesta/discussions"
+msgstr ""
+"**بحث‌ها**: https://github.com/arsalan-"
+"akhtar/atomate2siesta/discussions"
+
+#: ../../source/introduction.rst:358 341fd1b956aa41ca8637eb93a7bb937c
+msgid "License & Citation"
+msgstr "مجوز و استناد"
+
+#: ../../source/introduction.rst:360 cb463be9cb2d4aa18e70801175ed678d
+msgid "atomate2siesta is released under the BSD-3-Clause license."
+msgstr "atomate2siesta تحت مجوز BSD-3-Clause منتشر شده است."
+
+#: ../../source/introduction.rst:362 3b6f9219ecaa4a36b320db7a41dfe5bf
+msgid "If you use atomate2siesta in your research, please cite:"
+msgstr "اگر از atomate2siesta در تحقیقات خود استفاده می‌کنید، لطفاً به موارد زیر استناد کنید:"
+
+#: ../../source/introduction.rst:364 75e302850b164bcb98617ec463898c15
+msgid "The atomate2 framework"
+msgstr "چارچوب atomate2"
+
+#: ../../source/introduction.rst:365 f37565c36c3841c1bfb5e13677014021
+msgid "SIESTA: https://doi.org/10.1088/0953-8984/14/11/302"
+msgstr "SIESTA: https://doi.org/10.1088/0953-8984/14/11/302"
+
+#: ../../source/introduction.rst:366 7343f520c8ea40cc8683a25f0777c572
+msgid "Relevant feature papers (phonopy, pymatgen, custodian, jobflow)"
+msgstr "مقالات ویژگی‌های مرتبط (phonopy، pymatgen، custodian، jobflow)"
+
+#: ../../source/introduction.rst:368 2225b27556bc4672bbeecf304709883f
+msgid "See :doc:`contributing` for guidelines on contributing to the project."
+msgstr "برای راهنمایی‌های مشارکت در پروژه :doc:`contributing` را ببینید."

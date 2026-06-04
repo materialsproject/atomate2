@@ -1,0 +1,1204 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/cli-cluster-setup.rst:3 1a4ca2897eaf430cb7403293914054c7
+msgid "Remote Cluster Setup CLI"
+msgstr "رابط خط فرمان راه‌اندازی خوشه از راه دور"
+
+#: ../../source/cli-cluster-setup.rst:5 27e5e47239c5499ab053f54c0f011361
+msgid ""
+"The ``atomate2siesta-cluster`` command-line tool helps you set up remote "
+"HPC clusters for atomate2siesta calculations by automating the process of"
+" creating conda environments and installing necessary packages via SSH."
+msgstr "ابزار خط فرمان ``atomate2siesta-cluster`` به شما کمک می‌کند خوشه‌های HPC از راه دور را برای محاسبات atomate2siesta راه‌اندازی کنید با خودکارسازی فرآیند ایجاد محیط‌های conda و نصب بسته‌های لازم از طریق SSH."
+
+#: ../../source/cli-cluster-setup.rst:8 d68d6146bc6848ab88d3339e92a50368
+msgid "Overview"
+msgstr "مرور کلی"
+
+#: ../../source/cli-cluster-setup.rst:10 f223fca2fd14464383f13d6919c49796
+msgid "This tool provides a streamlined way to:"
+msgstr "این ابزار روشی ساده برای موارد زیر فراهم می‌کند:"
+
+#: ../../source/cli-cluster-setup.rst:12 09addfca2b304f5ebe2254cafe045a2d
+msgid "SSH to remote HPC clusters"
+msgstr "اتصال SSH به خوشه‌های HPC از راه دور"
+
+#: ../../source/cli-cluster-setup.rst:13 6db41cd47fda48759295729c5a856023
+msgid "Create conda environments in ``$HOME``"
+msgstr "ایجاد محیط‌های conda در ``$HOME``"
+
+#: ../../source/cli-cluster-setup.rst:14 7aa534af2a6e49afbecc9cf8c989bfda
+msgid "Install jobflow-remote and atomate2siesta from GitHub"
+msgstr "نصب jobflow-remote و atomate2siesta از GitHub"
+
+#: ../../source/cli-cluster-setup.rst:15 9e6d8fa3309149b5ac7dfd1e54aa26b9
+msgid "Optionally install SIESTA from conda-forge"
+msgstr "نصب اختیاری SIESTA از conda-forge"
+
+#: ../../source/cli-cluster-setup.rst:16 f487a2fa10014847b1d2d8dce66863d7
+msgid "Generate ``.atomate2siesta.yaml`` configuration file"
+msgstr "تولید فایل پیکربندی ``.atomate2siesta.yaml``"
+
+#: ../../source/cli-cluster-setup.rst:17 64a2baef8ffb42348bd0c7726611a64e
+msgid "Verify installations and check environment status"
+msgstr "تأیید نصب‌ها و بررسی وضعیت محیط"
+
+#: ../../source/cli-cluster-setup.rst:20 f49d3fd2c95e43389c4c4325b70d0e8e
+msgid "Commands"
+msgstr "دستورات"
+
+#: ../../source/cli-cluster-setup.rst:23 2c889e6f35a64c5a8717d243eff68d87
+msgid "setup"
+msgstr "setup"
+
+#: ../../source/cli-cluster-setup.rst:25 f0b22d6d64ce429dbd4ae9e0b8535a02
+msgid ""
+"Set up a conda environment on a remote cluster with atomate2siesta "
+"installed."
+msgstr "راه‌اندازی محیط conda بر روی خوشه از راه دور با نصب atomate2siesta."
+
+#: ../../source/cli-cluster-setup.rst:27 ../../source/cli-cluster-setup.rst:123
+#: ../../source/cli-cluster-setup.rst:161
+#: ../../source/cli-cluster-setup.rst:176 2aac5c3ea8c5433398b8588aec51c4e0
+#: 56350afcc2a549cfb5867c2b11d53565 c92b9431faf6471482f5e1c262a3dbe9
+#: f8cc6abbc18548e381efa14d4ffa9b91
+msgid "**Usage:**"
+msgstr "**نحوه استفاده:**"
+
+#: ../../source/cli-cluster-setup.rst:33 ../../source/cli-cluster-setup.rst:129
+#: ../../source/cli-cluster-setup.rst:182 42e277bf7af4403d899a5b5545fe659e
+#: 6f53c85882b8458bbe5cd707ac183414 bdfecf255d0e4364bd2425e54c288f0a
+msgid "**Options:**"
+msgstr "**گزینه‌ها:**"
+
+#: ../../source/cli-cluster-setup.rst:35 82f4a82911ab4702875de3d0fc5f0ef0
+msgid ""
+"``--host TEXT`` (required): Remote cluster hostname, IP address, or SSH "
+"config alias"
+msgstr "``--host TEXT`` (الزامی): نام میزبان خوشه از راه دور، آدرس IP، یا نام مستعار پیکربندی SSH"
+
+#: ../../source/cli-cluster-setup.rst:36 108c4f4799604e40a153a7dc41fc1134
+msgid ""
+"``--user TEXT``: Username for SSH connection (not needed if using SSH "
+"config)"
+msgstr "``--user TEXT``: نام کاربری برای اتصال SSH (در صورت استفاده از پیکربندی SSH نیازی نیست)"
+
+#: ../../source/cli-cluster-setup.rst:37 ../../source/cli-cluster-setup.rst:133
+#: bf7cf0de89a34fd88a99405658a92dc4 e92a1b0685d141558cd791416ba2618a
+msgid "``-i, --identity-file TEXT``: Path to SSH private key file"
+msgstr "``-i, --identity-file TEXT``: مسیر فایل کلید خصوصی SSH"
+
+#: ../../source/cli-cluster-setup.rst:38 ../../source/cli-cluster-setup.rst:134
+#: 119103cec19a428cbf9113a15a3a24c7 26a51a2c10c54aeaac0be0fd251527c9
+msgid "``--password``: Prompt for password authentication"
+msgstr "``--password``: درخواست رمز عبور برای احراز هویت"
+
+#: ../../source/cli-cluster-setup.rst:39 df67cc802a7d4fdf8891ee13e8d5bffb
+msgid "``--ssh-config``: Use SSH config alias (no user@ prefix needed)"
+msgstr "``--ssh-config``: استفاده از نام مستعار پیکربندی SSH (نیازی به پیشوند user@ نیست)"
+
+#: ../../source/cli-cluster-setup.rst:40 ../../source/cli-cluster-setup.rst:185
+#: 5343686ad0e84c91bf5285032f4ae383 8bdc38c45c1645eb903ac41cfda4757e
+msgid ""
+"``--env-name TEXT``: Name for conda environment (default: ``jobflow-"
+"remote``)"
+msgstr "``--env-name TEXT``: نام محیط conda (پیش‌فرض: ``jobflow-remote``)"
+
+#: ../../source/cli-cluster-setup.rst:41 ../../source/cli-cluster-setup.rst:186
+#: 1df12ddc0ae84a3ba0a04d42d66d8c48 8595acfc88744a9c9f1d3923f8af046e
+msgid "``--python-version TEXT``: Python version (default: ``3.11``)"
+msgstr "``--python-version TEXT``: نسخه Python (پیش‌فرض: ``۳.۱۱``)"
+
+#: ../../source/cli-cluster-setup.rst:42 7fde72411b5a41baada710a66cf6bbeb
+msgid "``--git-ssh``: Use SSH URL for Git clone (requires SSH key on cluster)"
+msgstr "``--git-ssh``: استفاده از URL SSH برای Git clone (نیاز به کلید SSH بر روی خوشه)"
+
+#: ../../source/cli-cluster-setup.rst:43 74ef5e35a36e461fa065d80edcf0cedd
+msgid ""
+"``--git-token TEXT``: GitHub personal access token for private repo "
+"(HTTPS only)"
+msgstr "``--git-token TEXT``: توکن دسترسی شخصی GitHub برای مخزن خصوصی (فقط HTTPS)"
+
+#: ../../source/cli-cluster-setup.rst:44 3dfc04e9d78449a6bbc8b0c9b424d1f0
+msgid ""
+"``--install-siesta``: Install SIESTA from conda-forge "
+"(``siesta=*=*mpich*``)"
+msgstr "``--install-siesta``: نصب SIESTA از conda-forge (``siesta=*=*mpich*``)"
+
+#: ../../source/cli-cluster-setup.rst:45 f5edbb153c1349f1b41cd7ff34faf637
+msgid ""
+"``--proxy TEXT``: HTTP/HTTPS proxy URL (e.g., "
+"``http://proxy.cluster.edu:8080``)"
+msgstr "``--proxy TEXT``: آدرس پروکسی HTTP/HTTPS (مثال: ``http://proxy.cluster.edu:8080``)"
+
+#: ../../source/cli-cluster-setup.rst:46 e6a9c0a81d8e4e76815e599701c5102a
+msgid "``--auto-proxy``: Try to auto-detect proxy settings from remote cluster"
+msgstr "``--auto-proxy``: تلاش برای تشخیص خودکار تنظیمات پروکسی از خوشه از راه دور"
+
+#: ../../source/cli-cluster-setup.rst:47 6f2fcbd2633d47cd8736ba720eed771a
+msgid ""
+"``--ssh-tunnel``: Create SSH tunnel for internet access (uses local "
+"machine as proxy)"
+msgstr "``--ssh-tunnel``: ایجاد تونل SSH برای دسترسی به اینترنت (از دستگاه محلی به عنوان پروکسی استفاده می‌کند)"
+
+#: ../../source/cli-cluster-setup.rst:48 a96021ddfcfc4b5696500c1d279d619d
+msgid "``--tunnel-port INT``: Local port for SSH tunnel (default: 3129)"
+msgstr "``--tunnel-port INT``: پورت محلی برای تونل SSH (پیش‌فرض: ۳۱۲۹)"
+
+#: ../../source/cli-cluster-setup.rst:49 75524269815b47d59c912c236d63b083
+msgid "``-v, --verbose``: Show detailed command output (stdout/stderr)"
+msgstr "``-v, --verbose``: نمایش خروجی دقیق دستور (stdout/stderr)"
+
+#: ../../source/cli-cluster-setup.rst:51 ../../source/cli-cluster-setup.rst:137
+#: ../../source/cli-cluster-setup.rst:198 1c24b855ffe8462abd05b5ab662eb330
+#: 3b4862be437445c79f9df33a27dec44e 842f23cc7f4e48e3b8880dbf0ea41328
+msgid "**Examples:**"
+msgstr "**مثال‌ها:**"
+
+#: ../../source/cli-cluster-setup.rst:91 ../../source/cli-cluster-setup.rst:211
+#: 357fb6e1acd74d838ff89e1ca919b3d0 f344277f6dfa4da09f802598106c3562
+msgid "**What it does:**"
+msgstr "**کارهایی که انجام می‌دهد:**"
+
+#: ../../source/cli-cluster-setup.rst:93 687791f9b0dd4f90ae37e412f33785ed
+msgid "Tests SSH connection to the remote host"
+msgstr "آزمایش اتصال SSH به میزبان از راه دور"
+
+#: ../../source/cli-cluster-setup.rst:94 1d69c6d065234f93a76da4ace6f6d956
+msgid "Checks for conda/miniconda installation"
+msgstr "بررسی نصب conda/miniconda"
+
+#: ../../source/cli-cluster-setup.rst:95 18602022fac844f9a26daa34df3f2483
+msgid "Creates a new conda environment (or removes existing one if requested)"
+msgstr "ایجاد محیط جدید conda (یا حذف محیط موجود در صورت درخواست)"
+
+#: ../../source/cli-cluster-setup.rst:96 ../../source/cli-cluster-setup.rst:215
+#: 24a452aaa19841afbfbd57cefed5f97a e181ae90a47140338758cd3c4ac881a4
+msgid "Installs jobflow-remote from PyPI"
+msgstr "نصب jobflow-remote از PyPI"
+
+#: ../../source/cli-cluster-setup.rst:97 642b4ec6d7ed482793c07d1b2fb8fc94
+msgid "Installs atomate2siesta from GitHub (main branch)"
+msgstr "نصب atomate2siesta از GitHub (شاخه اصلی)"
+
+#: ../../source/cli-cluster-setup.rst:98 ../../source/cli-cluster-setup.rst:217
+#: be632299459e47beb80742edbd8e0880 d4e339625f784d939522d9b363aad062
+msgid "Optionally installs SIESTA from conda-forge"
+msgstr "نصب اختیاری SIESTA از conda-forge"
+
+#: ../../source/cli-cluster-setup.rst:99 269639b4ae8542568f5895b6d1027153
+msgid "Verifies installations (checks package versions)"
+msgstr "تأیید نصب‌ها (بررسی نسخه‌های بسته)"
+
+#: ../../source/cli-cluster-setup.rst:100 3efb76d1beac474baec587c7d0239d87
+msgid ""
+"Creates ``~/.atomate2siesta.yaml`` configuration file with default SIESTA"
+" settings"
+msgstr "ایجاد فایل پیکربندی ``~/.atomate2siesta.yaml`` با تنظیمات پیش‌فرض SIESTA"
+
+#: ../../source/cli-cluster-setup.rst:102 9c200bd07ab441bfbbe7803279cd4d66
+msgid "**Configuration File:**"
+msgstr "**فایل پیکربندی:**"
+
+#: ../../source/cli-cluster-setup.rst:104 18d73686afaa4dac82f19170ef51d663
+msgid ""
+"The setup command automatically creates ``~/.atomate2siesta.yaml`` on the"
+" remote cluster with these default settings:"
+msgstr "دستور راه‌اندازی به طور خودکار فایل ``~/.atomate2siesta.yaml`` را بر روی خوشه از راه دور با این تنظیمات پیش‌فرض ایجاد می‌کند:"
+
+#: ../../source/cli-cluster-setup.rst:114 0bf0b2bec7c84510a14cd77f878e8f08
+msgid ""
+"All paths use ``$HOME`` for portability across different user accounts. "
+"You can edit this file later to customize paths for your cluster setup."
+msgstr "تمام مسیرها از ``$HOME`` برای قابلیت انتقال در حساب‌های کاربری مختلف استفاده می‌کنند. می‌توانید این فایل را بعداً برای سفارشی‌سازی مسیرها برای راه‌اندازی خوشه خود ویرایش کنید."
+
+#: ../../source/cli-cluster-setup.rst:119 3b12d0932a864c22bb1a5bf1ed7c31e4
+msgid "status"
+msgstr "status"
+
+#: ../../source/cli-cluster-setup.rst:121 c44c487f3a8041d8ad670a9737331534
+msgid "Check the status of a remote cluster environment."
+msgstr "بررسی وضعیت محیط خوشه از راه دور."
+
+#: ../../source/cli-cluster-setup.rst:131 bb955c994b9448fbafb8673484bf878d
+msgid "``--host TEXT`` (required): Remote cluster hostname or IP address"
+msgstr "``--host TEXT`` (الزامی): نام میزبان یا آدرس IP خوشه از راه دور"
+
+#: ../../source/cli-cluster-setup.rst:132 d9a74bcf4b234466a4f31bff6b3ef87a
+msgid "``--user TEXT``: Username for SSH connection (defaults to current user)"
+msgstr "``--user TEXT``: نام کاربری برای اتصال SSH (پیش‌فرض: کاربر فعلی)"
+
+#: ../../source/cli-cluster-setup.rst:135 a65419dd983d4940baec9936b8d89e06
+msgid ""
+"``--env-name TEXT``: Name of environment to check (default: "
+"``atomate2siesta``)"
+msgstr "``--env-name TEXT``: نام محیطی که باید بررسی شود (پیش‌فرض: ``atomate2siesta``)"
+
+#: ../../source/cli-cluster-setup.rst:147 313d97ef6dd64667a771e052e060a169
+msgid "**What it shows:**"
+msgstr "**چه چیزی نمایش می‌دهد:**"
+
+#: ../../source/cli-cluster-setup.rst:149 4d37583b98174d0d8c0c4997f6841f7b
+msgid "SSH connection status"
+msgstr "وضعیت اتصال SSH"
+
+#: ../../source/cli-cluster-setup.rst:150 ec534088c6654e4c862cab068e9b512f
+msgid "Conda version"
+msgstr "نسخه Conda"
+
+#: ../../source/cli-cluster-setup.rst:151 33831be7c325470caaff98e16faa7d93
+msgid "Environment existence"
+msgstr "وجود محیط"
+
+#: ../../source/cli-cluster-setup.rst:152 cd32c1b982b948ba9ad946eba5f5bc18
+msgid "Installed packages (atomate2siesta, jobflow-remote, pymatgen, sisl)"
+msgstr "بسته‌های نصب شده (atomate2siesta، jobflow-remote، pymatgen، sisl)"
+
+#: ../../source/cli-cluster-setup.rst:157 3a6292f0626a46d7ae980b4a4c3f8a99
+msgid "info"
+msgstr "info"
+
+#: ../../source/cli-cluster-setup.rst:159 c53a2e7bf36d43cd892faeea0594e222
+msgid ""
+"Show comprehensive information about the cluster setup tool, including "
+"usage examples, authentication methods, and workflow guidance."
+msgstr "نمایش اطلاعات جامع درباره ابزار راه‌اندازی خوشه، شامل مثال‌های استفاده، روش‌های احراز هویت و راهنمای گردش کار."
+
+#: ../../source/cli-cluster-setup.rst:170 57d2a77bd484428daab4da096bd9a73e
+msgid "build-offline"
+msgstr "build-offline"
+
+#: ../../source/cli-cluster-setup.rst:172 e9e780a7ddf54416a21c0a3c8c7c5367
+msgid ""
+"Build an offline conda environment package for air-gapped clusters (like "
+"MareNostrum 5)."
+msgstr "ساخت بسته محیط conda آفلاین برای خوشه‌های جدا از اینترنت (مانند MareNostrum 5)."
+
+#: ../../source/cli-cluster-setup.rst:174 64aeb69fed4440e7ae9188084e4638c7
+msgid ""
+"**IMPORTANT**: Use this command when the target cluster blocks ALL "
+"outgoing internet connections, including proxy access."
+msgstr "**مهم**: از این دستور زمانی استفاده کنید که خوشه هدف تمام اتصالات خروجی به اینترنت، از جمله دسترسی پروکسی را مسدود می‌کند."
+
+#: ../../source/cli-cluster-setup.rst:184 bf11dfd391ce4914a3fc4cfc731c45d4
+msgid ""
+"``--output, -o TEXT``: Output filename for packed environment (default: "
+"``jobflow-remote.tar.gz``)"
+msgstr "``--output, -o TEXT``: نام فایل خروجی برای محیط بسته‌بندی شده (پیش‌فرض: ``jobflow-remote.tar.gz``)"
+
+#: ../../source/cli-cluster-setup.rst:187 3bc411535bb143b885b64a2f99bab059
+msgid ""
+"``--git-ssh``: Use SSH URL for Git clone (requires GitHub SSH key "
+"configured locally)"
+msgstr "``--git-ssh``: استفاده از URL SSH برای Git clone (نیاز به پیکربندی کلید SSH GitHub به صورت محلی)"
+
+#: ../../source/cli-cluster-setup.rst:188 5e628c94fa0643cea535521b813b2822
+msgid "``--git-token TEXT``: GitHub personal access token for private repo"
+msgstr "``--git-token TEXT``: توکن دسترسی شخصی GitHub برای مخزن خصوصی"
+
+#: ../../source/cli-cluster-setup.rst:189 435264b7e24f4e90a240e8f6ba848a24
+msgid "``--install-siesta``: Include SIESTA in the packed environment"
+msgstr "``--install-siesta``: شامل کردن SIESTA در محیط بسته‌بندی شده"
+
+#: ../../source/cli-cluster-setup.rst:191 0678c437d5394538927c08615c25a486
+msgid "**Requirements:**"
+msgstr "**پیش‌نیازها:**"
+
+#: ../../source/cli-cluster-setup.rst:193 9282023e53d74b6c88e957d767888c04
+msgid "Linux x86_64 architecture (must match target cluster)"
+msgstr "معماری Linux x86_64 (باید با خوشه هدف مطابقت داشته باشد)"
+
+#: ../../source/cli-cluster-setup.rst:194 4c6f150b81c540e495480943cc9bc430
+msgid "conda or miniconda installed locally"
+msgstr "نصب conda یا miniconda به صورت محلی"
+
+#: ../../source/cli-cluster-setup.rst:195 595155070bf3493fb43d76fa14532d38
+msgid "conda-pack package (will be installed automatically if missing)"
+msgstr "بسته conda-pack (در صورت عدم وجود به طور خودکار نصب می‌شود)"
+
+#: ../../source/cli-cluster-setup.rst:196 920ccb5a7cc643beb71dc4197b282b7b
+msgid "GitHub access for atomate2siesta"
+msgstr "دسترسی GitHub برای atomate2siesta"
+
+#: ../../source/cli-cluster-setup.rst:213 22facd85d09d45088bc6e058cf8bbf06
+msgid "Checks system compatibility (Linux x86_64 recommended)"
+msgstr "بررسی سازگاری سیستم (Linux x86_64 توصیه می‌شود)"
+
+#: ../../source/cli-cluster-setup.rst:214 128d620e97294b19b9545d126404ae52
+msgid "Creates local conda environment with specified Python version"
+msgstr "ایجاد محیط محلی conda با نسخه مشخص شده Python"
+
+#: ../../source/cli-cluster-setup.rst:216 d2a61d389e5b4a5caaedf11e422843a5
+msgid "Installs atomate2siesta from GitHub"
+msgstr "نصب atomate2siesta از GitHub"
+
+#: ../../source/cli-cluster-setup.rst:218 25a8db42ef904cf1b26944e4db6e655c
+msgid "Packs entire environment using conda-pack (~500 MB - 1.5 GB)"
+msgstr "بسته‌بندی کامل محیط با استفاده از conda-pack (حدود ۵۰۰ مگابایت - ۱.۵ گیگابایت)"
+
+#: ../../source/cli-cluster-setup.rst:219 f03af64f89f44f9dbf8265379506ddb4
+msgid "Displays transfer and installation instructions"
+msgstr "نمایش دستورالعمل‌های انتقال و نصب"
+
+#: ../../source/cli-cluster-setup.rst:221 71ad879f755f4c209d23d7db25fc9f0c
+msgid "**Transfer to Cluster:**"
+msgstr "**انتقال به خوشه:**"
+
+#: ../../source/cli-cluster-setup.rst:223 ad98a19316fa4280ba524cb21825b5d1
+msgid "After building, transfer the packed environment to the cluster:"
+msgstr "پس از ساخت، محیط بسته‌بندی شده را به خوشه منتقل کنید:"
+
+#: ../../source/cli-cluster-setup.rst:233 a5111289345b45e8862405887262c869
+msgid "**Install on Cluster:**"
+msgstr "**نصب بر روی خوشه:**"
+
+#: ../../source/cli-cluster-setup.rst:235 97fb39a9aec24eb99e8067631d40f002
+msgid "SSH to the cluster and unpack:"
+msgstr "اتصال SSH به خوشه و باز کردن بسته:"
+
+#: ../../source/cli-cluster-setup.rst:248 1913aa73656a4052853b4b6b7f7292a3
+msgid "**When to Use:**"
+msgstr "**چه زمانی استفاده شود:**"
+
+#: ../../source/cli-cluster-setup.rst:250 b7452fe9336647d0b55adaaa94a9e312
+msgid "✅ **MareNostrum 5** (blocks all outgoing connections)"
+msgstr "✅ **MareNostrum 5** (تمام اتصالات خروجی را مسدود می‌کند)"
+
+#: ../../source/cli-cluster-setup.rst:251 3c9332bfa39a4e92840f95bf7675bad6
+msgid "✅ Air-gapped clusters (no internet access)"
+msgstr "✅ خوشه‌های جدا از اینترنت (بدون دسترسی به اینترنت)"
+
+#: ../../source/cli-cluster-setup.rst:252 f2863e68b4cf46898d0a457e1c9745ed
+msgid "✅ When proxy configuration is unavailable or doesn't work"
+msgstr "✅ زمانی که پیکربندی پروکسی در دسترس نیست یا کار نمی‌کند"
+
+#: ../../source/cli-cluster-setup.rst:253 1e3b26b098644996886f24accb689b27
+msgid "✅ For reproducible environments across multiple clusters"
+msgstr "✅ برای محیط‌های قابل بازتولید در خوشه‌های متعدد"
+
+#: ../../source/cli-cluster-setup.rst:256 34df172eaa7b4f649dbaafd4b3af9da2
+msgid "Authentication Methods"
+msgstr "روش‌های احراز هویت"
+
+#: ../../source/cli-cluster-setup.rst:259 863f6ce7c3ea42c3b535311f9b6fcd97
+msgid "SSH Key Authentication (Recommended)"
+msgstr "احراز هویت با کلید SSH (توصیه شده)"
+
+#: ../../source/cli-cluster-setup.rst:261 36863a0c018c4064b35f8a11ec227258
+msgid "Use your SSH private key for secure, password-less authentication:"
+msgstr "از کلید خصوصی SSH خود برای احراز هویت امن و بدون رمز عبور استفاده کنید:"
+
+#: ../../source/cli-cluster-setup.rst:268 5fcce033a41847608ab52f07223879c0
+msgid "Password Authentication"
+msgstr "احراز هویت با رمز عبور"
+
+#: ../../source/cli-cluster-setup.rst:270 8105b97af97a43c08efb50404caf47ca
+msgid "Prompt for password (requires ``sshpass`` to be installed locally):"
+msgstr "درخواست رمز عبور (نیاز به نصب ``sshpass`` به صورت محلی):"
+
+#: ../../source/cli-cluster-setup.rst:277 5db61dc26ab145eda1360d0ffda58d4e
+msgid "SSH Agent"
+msgstr "SSH Agent"
+
+#: ../../source/cli-cluster-setup.rst:279 68a17c2f304e422bad9103d851262330
+msgid ""
+"If you have SSH keys configured and loaded in ssh-agent, you can omit "
+"authentication flags:"
+msgstr "اگر کلیدهای SSH پیکربندی شده و در ssh-agent بارگذاری شده‌اند، می‌توانید پرچم‌های احراز هویت را حذف کنید:"
+
+#: ../../source/cli-cluster-setup.rst:286 563846db11b44f6992099679145c99aa
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/cli-cluster-setup.rst:289 84dea8bd6d904802a8e66e6659746138
+msgid "Local Machine"
+msgstr "دستگاه محلی"
+
+#: ../../source/cli-cluster-setup.rst:291 28f2e37f9466401a88005bef7e247f1e
+msgid "SSH access to the remote cluster"
+msgstr "دسترسی SSH به خوشه از راه دور"
+
+#: ../../source/cli-cluster-setup.rst:292 a19e84702f954a21a55fdabbe4cbece1
+msgid ""
+"``sshpass`` (if using password authentication): ``brew install sshpass`` "
+"(macOS) or ``apt-get install sshpass`` (Linux)"
+msgstr "``sshpass`` (در صورت استفاده از احراز هویت رمز عبور): ``brew install sshpass`` (macOS) یا ``apt-get install sshpass`` (Linux)"
+
+#: ../../source/cli-cluster-setup.rst:295 ee73bfded30a45a2bd0dd4d14304c09c
+msgid "Remote Cluster"
+msgstr "خوشه از راه دور"
+
+#: ../../source/cli-cluster-setup.rst:297 e267f634d84f49e0adf6a3a07a220079
+msgid "Conda or Miniconda installed and in PATH"
+msgstr "نصب Conda یا Miniconda و در PATH"
+
+#: ../../source/cli-cluster-setup.rst:298 71005fe71bad4cb7819e691e5eb01aba
+msgid ""
+"Internet access for package installation (may require proxy configuration"
+" on secure clusters)"
+msgstr "دسترسی به اینترنت برای نصب بسته (ممکن است در خوشه‌های امن نیاز به پیکربندی پروکسی داشته باشد)"
+
+#: ../../source/cli-cluster-setup.rst:299 d120ff65ab8345e2a45626ee56fb0f3f
+msgid "Sufficient disk space in ``$HOME`` for conda environment"
+msgstr "فضای کافی دیسک در ``$HOME`` برای محیط conda"
+
+#: ../../source/cli-cluster-setup.rst:302 2ccbd83f1906444b9fb0fee391076b0a
+msgid "Installing Conda on Remote Cluster"
+msgstr "نصب Conda بر روی خوشه از راه دور"
+
+#: ../../source/cli-cluster-setup.rst:304 4b481fa027c14221be2edbefd9a0a4b4
+msgid "If conda is not installed on the remote cluster, SSH to it and run:"
+msgstr "اگر conda بر روی خوشه از راه دور نصب نشده است، از طریق SSH به آن متصل شوید و اجرا کنید:"
+
+#: ../../source/cli-cluster-setup.rst:313 11cf5c24f83a45179d0eda26673fe6bd
+msgid "Log out and log back in for the changes to take effect."
+msgstr "برای اعمال تغییرات، خروج و ورود مجدد کنید."
+
+#: ../../source/cli-cluster-setup.rst:316 6b3c6b9341294d4789e05bf8046ae9fb
+msgid "Proxy Configuration"
+msgstr "پیکربندی پروکسی"
+
+#: ../../source/cli-cluster-setup.rst:318 27c9f33bb75442e0a61b2162c4b86b8d
+msgid ""
+"Many HPC clusters block direct internet access from login nodes for "
+"security reasons and require HTTP/HTTPS proxy servers for internet "
+"connectivity. This is especially common on supercomputing centers like "
+"BSC's MN5."
+msgstr "بسیاری از خوشه‌های HPC دسترسی مستقیم به اینترنت از گره‌های ورود را به دلایل امنیتی مسدود می‌کنند و به سرورهای پروکسی HTTP/HTTPS برای اتصال به اینترنت نیاز دارند. این امر به ویژه در مراکز ابررایانه‌ای مانند MN5 BSC رایج است."
+
+#: ../../source/cli-cluster-setup.rst:320 8f976545ef4a41ac9f6040aafb353e17
+msgid "**When to Use Proxy Options**"
+msgstr "**چه زمانی از گزینه‌های پروکسی استفاده شود**"
+
+#: ../../source/cli-cluster-setup.rst:322 9d93ebb01269470091ec49ad51f3216b
+msgid "You need proxy configuration if:"
+msgstr "شما به پیکربندی پروکسی نیاز دارید اگر:"
+
+#: ../../source/cli-cluster-setup.rst:324 fdf60316d39b485eb912b1e083bccc57
+msgid "Your cluster blocks direct internet access from login nodes"
+msgstr "خوشه شما دسترسی مستقیم به اینترنت از گره‌های ورود را مسدود می‌کند"
+
+#: ../../source/cli-cluster-setup.rst:325 fc29b623f7564accaf9935fbf0ec6303
+msgid "You see errors like ``CondaHTTPError: HTTP 000 CONNECTION FAILED``"
+msgstr "خطاهایی مانند ``CondaHTTPError: HTTP 000 CONNECTION FAILED`` می‌بینید"
+
+#: ../../source/cli-cluster-setup.rst:326 62e474f28ce94865a472411915a8dba8
+msgid ""
+"Package installation fails with ``Connection refused`` or ``Connection "
+"reset by peer``"
+msgstr "نصب بسته با ``Connection refused`` یا ``Connection reset by peer`` شکست می‌خورد"
+
+#: ../../source/cli-cluster-setup.rst:327 7efc37bd04144f9bb2bee7cac5c61e7c
+msgid "Your cluster documentation mentions proxy servers for internet access"
+msgstr "مستندات خوشه شما به سرورهای پروکسی برای دسترسی به اینترنت اشاره می‌کند"
+
+#: ../../source/cli-cluster-setup.rst:329 ba4488299df04eb59b09cfba5ccbe6d0
+msgid "**Using Proxy Options**"
+msgstr "**استفاده از گزینه‌های پروکسی**"
+
+#: ../../source/cli-cluster-setup.rst:331 a2deec45eb1d4aa28c91beeb28273326
+msgid "Option 1: Specify proxy URL directly (recommended if you know the proxy):"
+msgstr "گزینه ۱: مشخص کردن مستقیم آدرس پروکسی (توصیه می‌شود اگر پروکسی را می‌دانید):"
+
+#: ../../source/cli-cluster-setup.rst:337 ed17b043247f48e5a53dcb5ba8c922f7
+msgid "Option 2: Auto-detect proxy from remote environment:"
+msgstr "گزینه ۲: تشخیص خودکار پروکسی از محیط از راه دور:"
+
+#: ../../source/cli-cluster-setup.rst:343 a65c5aa7a0fe4691a3955068fe093b99
+msgid "**How Proxy Configuration Works**"
+msgstr "**نحوه کار پیکربندی پروکسی**"
+
+#: ../../source/cli-cluster-setup.rst:345 1445594929f341c58b122c92e3753ee8
+msgid "The setup command configures proxy for conda and pip by:"
+msgstr "دستور راه‌اندازی پروکسی را برای conda و pip با موارد زیر پیکربندی می‌کند:"
+
+#: ../../source/cli-cluster-setup.rst:347 40fa0b0e3ce24738969465f44016af35
+msgid "Creating ``~/.condarc`` with proxy settings:"
+msgstr "ایجاد ``~/.condarc`` با تنظیمات پروکسی:"
+
+#: ../../source/cli-cluster-setup.rst:355 4de9a80b98334e0c8909b98d7584fe6f
+msgid "Creating ``~/.config/pip/pip.conf`` with proxy settings:"
+msgstr "ایجاد ``~/.config/pip/pip.conf`` با تنظیمات پروکسی:"
+
+#: ../../source/cli-cluster-setup.rst:362 e4463a49745d4312b8a36c7b497d1845
+msgid "Setting environment variables for all conda/pip commands"
+msgstr "تنظیم متغیرهای محیطی برای تمام دستورات conda/pip"
+
+#: ../../source/cli-cluster-setup.rst:364 5c691eaf7a544748896bef6b8f162bb9
+msgid "**Common Proxy URLs**"
+msgstr "**آدرس‌های پروکسی رایج**"
+
+#: ../../source/cli-cluster-setup.rst:366
+#: ../../source/cli-cluster-setup.rst:655 acba790e91f9428c9ff3e3863da621ae
+#: ed0410f8b9424f58943b89baf3d244a6
+msgid "BSC MN5: ``http://proxy.bsc.es:8080``"
+msgstr "BSC MN5: ``http://proxy.bsc.es:8080``"
+
+#: ../../source/cli-cluster-setup.rst:367 691108e5811245edaf8019f53223a937
+msgid "Ask your cluster administrator for the correct proxy URL"
+msgstr "از مدیر خوشه خود آدرس صحیح پروکسی را بپرسید"
+
+#: ../../source/cli-cluster-setup.rst:369 64f790da56d34cee86cd1f051e9c62c6
+msgid ""
+"**Note:** If proxy auto-detection finds existing proxy settings in your "
+"remote environment, it will use those automatically."
+msgstr "**توجه:** اگر تشخیص خودکار پروکسی تنظیمات پروکسی موجود را در محیط از راه دور شما پیدا کند، به طور خودکار از آنها استفاده می‌کند."
+
+#: ../../source/cli-cluster-setup.rst:372 5a58e3ef402345a59e42823a2287e82b
+msgid "SSH Tunnel for Air-Gapped Clusters"
+msgstr "تونل SSH برای خوشه‌های جدا از اینترنت"
+
+#: ../../source/cli-cluster-setup.rst:374 2a64eea2610c4a5e9fe61d9ae674a11d
+msgid ""
+"**RECOMMENDED for MareNostrum 5** and other clusters that block ALL "
+"outgoing connections."
+msgstr "**توصیه می‌شود برای MareNostrum 5** و سایر خوشه‌هایی که تمام اتصالات خروجی را مسدود می‌کنند."
+
+#: ../../source/cli-cluster-setup.rst:376 c470202aca124d8cb3c6e3f33cfd47ae
+msgid ""
+"**Problem:** Traditional proxy configuration requires outgoing "
+"connections to the proxy server. MN5 blocks ALL outgoing connections, so "
+"proxy won't work."
+msgstr "**مشکل:** پیکربندی سنتی پروکسی نیاز به اتصالات خروجی به سرور پروکسی دارد. MN5 تمام اتصالات خروجی را مسدود می‌کند، بنابراین پروکسی کار نمی‌کند."
+
+#: ../../source/cli-cluster-setup.rst:378 4ddb9a1910d14d788eec1796626cf84b
+msgid ""
+"**Solution:** SSH tunnel with SOCKS proxy - route internet through your "
+"local machine!"
+msgstr "**راه‌حل:** تونل SSH با پروکسی SOCKS - مسیریابی اینترنت از طریق دستگاه محلی شما!"
+
+#: ../../source/cli-cluster-setup.rst:380 6e9f841ef8eb4e68b5898ff143772452
+msgid "**How it works:**"
+msgstr "**نحوه کار:**"
+
+#: ../../source/cli-cluster-setup.rst:386 cf9b1f239b774a6e871e7a8b9a801925
+msgid "**Automated Approach** (recommended):"
+msgstr "**رویکرد خودکار** (توصیه می‌شود):"
+
+#: ../../source/cli-cluster-setup.rst:393
+#: ../../source/cli-cluster-setup.rst:482 15da60fa9afd4e00afe0bc21bfbeca55
+#: edb9380057db4bedab27d9ab26ca89b6
+msgid "This automatically:"
+msgstr "این به طور خودکار:"
+
+#: ../../source/cli-cluster-setup.rst:395 faa21deaae05418bb2fc8cdea9e68cdf
+msgid "Creates SSH tunnel with dynamic port forwarding (port 3129)"
+msgstr "ایجاد تونل SSH با انتقال پورت پویا (پورت ۳۱۲۹)"
+
+#: ../../source/cli-cluster-setup.rst:396 9b6164a3909949adbb3a0483ee4ee9d0
+msgid "Configures MN5 to use ``http://127.0.0.1:3129`` as proxy"
+msgstr "پیکربندی MN5 برای استفاده از ``http://127.0.0.1:3129`` به عنوان پروکسی"
+
+#: ../../source/cli-cluster-setup.rst:397 b2a000966b544fd49b89aa57a48b2061
+msgid "Installs all packages through the tunnel"
+msgstr "نصب تمام بسته‌ها از طریق تونل"
+
+#: ../../source/cli-cluster-setup.rst:398 6167c2413237487db020764cefc61d5d
+msgid "Cleans up tunnel when done"
+msgstr "پاکسازی تونل پس از اتمام"
+
+#: ../../source/cli-cluster-setup.rst:400 7ec26622de424d09a30892cdd024fc14
+msgid "**Manual Approach** (for more control):"
+msgstr "**رویکرد دستی** (برای کنترل بیشتر):"
+
+#: ../../source/cli-cluster-setup.rst:402 3e0f68b7187c468c8874a19f28efed84
+msgid "Step 1 - Create tunnel on your local machine:"
+msgstr "مرحله ۱ - ایجاد تونل بر روی دستگاه محلی شما:"
+
+#: ../../source/cli-cluster-setup.rst:414 1c08612f013f4601afcfd0e6f4f03795
+msgid "Step 2 - Configure proxy on MN5:"
+msgstr "مرحله ۲ - پیکربندی پروکسی بر روی MN5:"
+
+#: ../../source/cli-cluster-setup.rst:427 18d440ee53844f7b9190274e7ddd8c31
+msgid "Step 3 - Make it permanent (optional):"
+msgstr "مرحله ۳ - دائمی کردن آن (اختیاری):"
+
+#: ../../source/cli-cluster-setup.rst:435 2158110ccd4a4341a031d37adea34163
+msgid "**Managing the tunnel:**"
+msgstr "**مدیریت تونل:**"
+
+#: ../../source/cli-cluster-setup.rst:448 81f32bdbbf7b4b0280b5518717cd7f7e
+msgid "**Advantages:**"
+msgstr "**مزایا:**"
+
+#: ../../source/cli-cluster-setup.rst:450 53f9aac9e36b47cd8d673d9888c2a35d
+msgid "✅ Works on completely air-gapped clusters"
+msgstr "✅ بر روی خوشه‌های کاملاً جدا از اینترنت کار می‌کند"
+
+#: ../../source/cli-cluster-setup.rst:451 4ae8f6e91dda4de9a40dd5d2687af87b
+msgid "✅ No additional software needed (uses built-in SSH)"
+msgstr "✅ نیازی به نرم‌افزار اضافی نیست (از SSH داخلی استفاده می‌کند)"
+
+#: ../../source/cli-cluster-setup.rst:452 a6a44aac740b4c5ca6a54486bcb67f55
+msgid "✅ Secure (all traffic encrypted through SSH)"
+msgstr "✅ امن (تمام ترافیک از طریق SSH رمزگذاری شده است)"
+
+#: ../../source/cli-cluster-setup.rst:453 399fab28022c46d194d5bd6db52f206f
+msgid "✅ Flexible (can install/update packages anytime)"
+msgstr "✅ انعطاف‌پذیر (می‌توانید هر زمان بسته‌ها را نصب/به‌روزرسانی کنید)"
+
+#: ../../source/cli-cluster-setup.rst:455 73422975c04c4a678e1cba98db94eb4f
+msgid "**Compared to SquidMan:**"
+msgstr "**در مقایسه با SquidMan:**"
+
+#: ../../source/cli-cluster-setup.rst:457 855d2540068b427fac0399714e15086e
+msgid ""
+"SquidMan is a macOS GUI application that creates a local proxy. However, "
+"SSH's built-in dynamic port forwarding (``-D`` flag) provides the same "
+"functionality without additional software:"
+msgstr "SquidMan یک برنامه رابط گرافیکی macOS است که یک پروکسی محلی ایجاد می‌کند. با این حال، انتقال پورت پویای داخلی SSH (پرچم ``-D``) همان قابلیت را بدون نرم‌افزار اضافی فراهم می‌کند:"
+
+#: ../../source/cli-cluster-setup.rst:459 5fdf6c5fda134387910e17173ea36e4b
+msgid "**SSH Tunnel**: ``ssh -D 3129 -N -f mn5`` (built-in, cross-platform)"
+msgstr "**تونل SSH**: ``ssh -D 3129 -N -f mn5`` (داخلی، چند پلتفرمی)"
+
+#: ../../source/cli-cluster-setup.rst:460 a9529fc6247c4b14bfd4eaf1b7a85fb1
+msgid "**SquidMan**: GUI app + SSH (macOS only, extra software)"
+msgstr "**SquidMan**: برنامه رابط گرافیکی + SSH (فقط macOS، نرم‌افزار اضافی)"
+
+#: ../../source/cli-cluster-setup.rst:462 5306a5256e5647c68a82441b40893256
+msgid "Both work identically - SSH tunnel is simpler!"
+msgstr "هر دو به طور یکسان کار می‌کنند - تونل SSH ساده‌تر است!"
+
+#: ../../source/cli-cluster-setup.rst:465 98bc583dcd204885b7d222073c706edd
+msgid "Complete Workflow"
+msgstr "گردش کار کامل"
+
+#: ../../source/cli-cluster-setup.rst:467 3831f416bb0b444e9366ed0fc0399e34
+msgid ""
+"Here's a complete workflow for setting up a remote cluster for "
+"atomate2siesta calculations:"
+msgstr "در اینجا گردش کار کاملی برای راه‌اندازی خوشه از راه دور برای محاسبات atomate2siesta آمده است:"
+
+#: ../../source/cli-cluster-setup.rst:470 4406ac1fc1a845e88680fec64f0069ac
+msgid "1. Set Up Cluster Environment"
+msgstr "۱. راه‌اندازی محیط خوشه"
+
+#: ../../source/cli-cluster-setup.rst:484 1dea73cdbb544742b248c9101694fac6
+msgid "Creates conda environment with jobflow-remote and atomate2siesta"
+msgstr "ایجاد محیط conda با jobflow-remote و atomate2siesta"
+
+#: ../../source/cli-cluster-setup.rst:485 8a9ab85e3a6440468c1c49d11d369fa6
+msgid "Installs SIESTA from conda-forge (if ``--install-siesta`` is used)"
+msgstr "نصب SIESTA از conda-forge (اگر ``--install-siesta`` استفاده شود)"
+
+#: ../../source/cli-cluster-setup.rst:486 311edc7d388a43ebb49dba20e8e5079b
+msgid "Generates ``~/.atomate2siesta.yaml`` configuration file"
+msgstr "تولید فایل پیکربندی ``~/.atomate2siesta.yaml``"
+
+#: ../../source/cli-cluster-setup.rst:489 b16c9fc02051423da5c7e0fe8ab5eb05
+msgid "2. SSH to Cluster and Activate Environment"
+msgstr "۲. اتصال SSH به خوشه و فعال‌سازی محیط"
+
+#: ../../source/cli-cluster-setup.rst:497 eba5de1b42134fc3b134ba91c6cf4d42
+msgid "3. Configure Jobflow-Remote on Cluster"
+msgstr "۳. پیکربندی Jobflow-Remote بر روی خوشه"
+
+#: ../../source/cli-cluster-setup.rst:511 244912b6bad94f938ccbf612fe268749
+msgid "4. Verify and Customize Configuration (Optional)"
+msgstr "۴. تأیید و سفارشی‌سازی پیکربندی (اختیاری)"
+
+#: ../../source/cli-cluster-setup.rst:513 299fccb05ece48e0b0953aead3f9420d
+msgid ""
+"The ``~/.atomate2siesta.yaml`` file has been automatically created. You "
+"may need to edit it to match your cluster setup:"
+msgstr "فایل ``~/.atomate2siesta.yaml`` به طور خودکار ایجاد شده است. ممکن است نیاز داشته باشید آن را برای تطبیق با راه‌اندازی خوشه خود ویرایش کنید:"
+
+#: ../../source/cli-cluster-setup.rst:519 ec1639e6db1445dbbf76ad2df5b33a60
+msgid "Edit paths if needed:"
+msgstr "در صورت نیاز، مسیرها را ویرایش کنید:"
+
+#: ../../source/cli-cluster-setup.rst:521 bd6936cea1a54da18c501ae3bce90e71
+msgid "``SIESTA_CMD``: Path to SIESTA executable (default assumes it's in PATH)"
+msgstr "``SIESTA_CMD``: مسیر فایل اجرایی SIESTA (پیش‌فرض فرض می‌کند در PATH است)"
+
+#: ../../source/cli-cluster-setup.rst:522 b8ba376f72474163abec163069b05de6
+msgid "``SIESTA_PP_PATH``: Path to pseudopotential directory"
+msgstr "``SIESTA_PP_PATH``: مسیر پوشه شبه‌پتانسیل"
+
+#: ../../source/cli-cluster-setup.rst:523 9c0d9837cdf54af88e02029fe76dfa45
+msgid "``FLOS_PATH``: Path to FLOS library for advanced MD/optimization"
+msgstr "``FLOS_PATH``: مسیر کتابخانه FLOS برای دینامیک مولکولی/بهینه‌سازی پیشرفته"
+
+#: ../../source/cli-cluster-setup.rst:524 fd76cdc45e0f43ba87aacdb7e50a9ec1
+msgid ""
+"``OPTICAL_INPUT_CMD`` and ``OPTICAL_CMD``: Commands for optical "
+"calculations"
+msgstr "``OPTICAL_INPUT_CMD`` و ``OPTICAL_CMD``: دستورات برای محاسبات نوری"
+
+#: ../../source/cli-cluster-setup.rst:526 65371835f8594392a1d14fc78e511efd
+msgid ""
+"If you used ``--install-siesta``, SIESTA is already installed from conda-"
+"forge and should be available in your PATH."
+msgstr "اگر از ``--install-siesta`` استفاده کردید، SIESTA از قبل از conda-forge نصب شده است و باید در PATH شما در دسترس باشد."
+
+#: ../../source/cli-cluster-setup.rst:529 9ea74ca93e37472589e9e18685997764
+msgid "5. Start Runner on Cluster"
+msgstr "۵. شروع کارگر بر روی خوشه"
+
+#: ../../source/cli-cluster-setup.rst:540 74cd759848bd43318a2aa6c150f21c57
+msgid "6. Submit Jobs from Local Machine"
+msgstr "۶. ارسال کارها از دستگاه محلی"
+
+#: ../../source/cli-cluster-setup.rst:542 3e2eedc70dc04a769bcbfd676c87d41f
+msgid "On your local machine, create a Python script to submit workflows:"
+msgstr "بر روی دستگاه محلی خود، یک اسکریپت Python برای ارسال گردش کارها ایجاد کنید:"
+
+#: ../../source/cli-cluster-setup.rst:562 4206e2c813c2434891669c4c381d4fa0
+msgid "7. Monitor Jobs"
+msgstr "۷. نظارت بر کارها"
+
+#: ../../source/cli-cluster-setup.rst:576 a011814e0fec4b8d9c205e7978d0d7f2
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/cli-cluster-setup.rst:579 4b7872c332ea40558d4cfeb694023ffe
+msgid "SSH Connection Fails"
+msgstr "شکست اتصال SSH"
+
+#: ../../source/cli-cluster-setup.rst:581 130d07937d50443396ad74a630801aaa
+msgid "**Error:** ``SSH connection failed!``"
+msgstr "**خطا:** ``SSH connection failed!``"
+
+#: ../../source/cli-cluster-setup.rst:583
+#: ../../source/cli-cluster-setup.rst:602
+#: ../../source/cli-cluster-setup.rst:621
+#: ../../source/cli-cluster-setup.rst:635
+#: ../../source/cli-cluster-setup.rst:740
+#: ../../source/cli-cluster-setup.rst:765 2bd620354cf341ac979ebd09b5676c55
+#: 36b40484044f4d139a2680bb3afabc8a 4635d4932d754452ade1c9d54f5fec3e
+#: e7806e068ab74ed482eaa59da0336414 ebb58591c1b648b5baa663ffbca277c1
+#: f1ce2149f1c24b6abe598a150573fc50
+msgid "**Solutions:**"
+msgstr "**راه‌حل‌ها:**"
+
+#: ../../source/cli-cluster-setup.rst:585 5c9be000a81349b58cc0ae424f27d5be
+msgid "Verify hostname and username are correct"
+msgstr "تأیید صحیح بودن نام میزبان و نام کاربری"
+
+#: ../../source/cli-cluster-setup.rst:586 a7c380e686e64e81b63479339e18374f
+msgid "Check that SSH key has correct permissions: ``chmod 600 ~/.ssh/id_rsa``"
+msgstr "بررسی کنید که کلید SSH دارای مجوزهای صحیح است: ``chmod 600 ~/.ssh/id_rsa``"
+
+#: ../../source/cli-cluster-setup.rst:587 ca020cd58b7249c88defbc663e4799ab
+msgid "Test manual SSH connection: ``ssh user@host``"
+msgstr "آزمایش اتصال دستی SSH: ``ssh user@host``"
+
+#: ../../source/cli-cluster-setup.rst:588 81822d4853314746986ba3a7d1fb83ba
+msgid "Ensure firewall allows SSH connections"
+msgstr "اطمینان از اینکه فایروال اتصالات SSH را مجاز می‌کند"
+
+#: ../../source/cli-cluster-setup.rst:591 6846c3dd0d5042109fbb80fa142d3598
+msgid "Conda Not Found"
+msgstr "Conda پیدا نشد"
+
+#: ../../source/cli-cluster-setup.rst:593 9278b55bc07f4fafada34b92b6b6338b
+msgid "**Error:** ``conda not found on remote host!``"
+msgstr "**خطا:** ``conda not found on remote host!``"
+
+#: ../../source/cli-cluster-setup.rst:595 1d108f3303404e34bfdbe39562f10c7c
+msgid ""
+"**Solution:** Install Miniconda/Anaconda on the remote cluster (see "
+"Prerequisites section above)"
+msgstr "**راه‌حل:** نصب Miniconda/Anaconda بر روی خوشه از راه دور (بخش پیش‌نیازها در بالا را ببینید)"
+
+#: ../../source/cli-cluster-setup.rst:598 25465dfdac55407cb5b357721716b288
+msgid "sshpass Not Found"
+msgstr "sshpass پیدا نشد"
+
+#: ../../source/cli-cluster-setup.rst:600 350a41b1ecf1468fbbc3dd5a99d074f8
+msgid "**Error:** ``sshpass not found``"
+msgstr "**خطا:** ``sshpass not found``"
+
+#: ../../source/cli-cluster-setup.rst:604 67a1d0863a734880a86f944649e1f726
+msgid ""
+"Install sshpass: ``brew install sshpass`` (macOS) or ``apt-get install "
+"sshpass`` (Linux)"
+msgstr "نصب sshpass: ``brew install sshpass`` (macOS) یا ``apt-get install sshpass`` (Linux)"
+
+#: ../../source/cli-cluster-setup.rst:605 c2f937b03d284d02a1fce922778f80d2
+msgid "Use SSH key authentication instead: ``--identity-file ~/.ssh/id_rsa``"
+msgstr "به جای آن از احراز هویت کلید SSH استفاده کنید: ``--identity-file ~/.ssh/id_rsa``"
+
+#: ../../source/cli-cluster-setup.rst:608 21dbd943013b4c3fb0e227470f96f753
+msgid "Environment Already Exists"
+msgstr "محیط از قبل وجود دارد"
+
+#: ../../source/cli-cluster-setup.rst:610 097a4b23b5d74ac6a5f5357c03b3300e
+msgid ""
+"The tool will detect existing environments and prompt you to remove and "
+"recreate them. Answer \"yes\" to proceed or \"no\" to cancel."
+msgstr "ابزار محیط‌های موجود را تشخیص می‌دهد و از شما می‌خواهد که آنها را حذف و دوباره ایجاد کنید. برای ادامه \"yes\" و برای لغو \"no\" پاسخ دهید."
+
+#: ../../source/cli-cluster-setup.rst:613 18d20013ca9d4edf8fbef8cfa0b4ce46
+msgid "Package Installation Fails"
+msgstr "شکست نصب بسته"
+
+#: ../../source/cli-cluster-setup.rst:615 fb142e89e7314e6e8dda0d83c161e522
+msgid "**Common causes:**"
+msgstr "**علل رایج:**"
+
+#: ../../source/cli-cluster-setup.rst:617 529cdda15a524a7ca025d83a31652404
+msgid "Network connectivity issues on cluster (may need proxy configuration)"
+msgstr "مشکلات اتصال شبکه در خوشه (ممکن است نیاز به پیکربندی پروکسی داشته باشد)"
+
+#: ../../source/cli-cluster-setup.rst:618 a07bf8c9ff4e4a9a8be4b421573940d9
+msgid "Insufficient disk space"
+msgstr "فضای کافی دیسک وجود ندارد"
+
+#: ../../source/cli-cluster-setup.rst:619 70103a432fea41a9bff3502fe689af2c
+msgid "Package conflicts"
+msgstr "تضاد بسته‌ها"
+
+#: ../../source/cli-cluster-setup.rst:623
+#: ../../source/cli-cluster-setup.rst:767 9999a84d91f74f84bf50b5e53699e7e5
+#: cd44557feefb4121a5f59eebd4bc79d9
+msgid "Check internet connectivity on cluster"
+msgstr "بررسی اتصال اینترنت در خوشه"
+
+#: ../../source/cli-cluster-setup.rst:624 e8fde8bbdd054380954de671dc54ab07
+msgid ""
+"If cluster blocks internet access, use ``--proxy`` or ``--auto-proxy`` "
+"flag"
+msgstr "اگر خوشه دسترسی به اینترنت را مسدود می‌کند، از پرچم ``--proxy`` یا ``--auto-proxy`` استفاده کنید"
+
+#: ../../source/cli-cluster-setup.rst:625 67e75ee91b9043a0b51e16fd777f0237
+msgid "Clear conda cache: ``conda clean --all``"
+msgstr "پاک کردن حافظه پنهان conda: ``conda clean --all``"
+
+#: ../../source/cli-cluster-setup.rst:626 2c3a0bad9bb042198221ff22226e975f
+msgid "Try development installation with ``--dev`` flag"
+msgstr "امتحان نصب توسعه‌دهنده با پرچم ``--dev``"
+
+#: ../../source/cli-cluster-setup.rst:629 06aa48455d814f0397298a6e28ebcd1b
+msgid "Internet Connection Errors (Proxy Required)"
+msgstr "خطاهای اتصال اینترنت (پروکسی مورد نیاز است)"
+
+#: ../../source/cli-cluster-setup.rst:631 33f0927d52ab41ef883e268c4b3ac36d
+msgid ""
+"**Error:** ``CondaHTTPError: HTTP 000 CONNECTION FAILED`` or ``Connection"
+" reset by peer``"
+msgstr "**خطا:** ``CondaHTTPError: HTTP 000 CONNECTION FAILED`` یا ``Connection reset by peer``"
+
+#: ../../source/cli-cluster-setup.rst:633 d3cd9669e9b94e59abff7eba9d9cbaed
+msgid ""
+"**Cause:** Many HPC clusters block direct internet access and require "
+"proxy configuration."
+msgstr "**علت:** بسیاری از خوشه‌های HPC دسترسی مستقیم به اینترنت را مسدود می‌کنند و نیاز به پیکربندی پروکسی دارند."
+
+#: ../../source/cli-cluster-setup.rst:637 aa4dc643a11843c7bf285cd28a9bea94
+msgid "**Ask your cluster administrator** for the proxy URL"
+msgstr "**از مدیر خوشه خود** آدرس پروکسی را بپرسید"
+
+#: ../../source/cli-cluster-setup.rst:639 c91c99fcf9b34065a46b691140a1f257
+msgid "**Use proxy flag** with the setup command:"
+msgstr "**از پرچم پروکسی** با دستور راه‌اندازی استفاده کنید:"
+
+#: ../../source/cli-cluster-setup.rst:645 df34227918dd46a78e770e432902cacf
+msgid "**Try auto-detection** to use existing proxy settings:"
+msgstr "**تشخیص خودکار را امتحان کنید** برای استفاده از تنظیمات پروکسی موجود:"
+
+#: ../../source/cli-cluster-setup.rst:651 57f79ba476664a7983108f89da00fcb7
+msgid "**Check cluster documentation** for proxy configuration"
+msgstr "**مستندات خوشه را بررسی کنید** برای پیکربندی پروکسی"
+
+#: ../../source/cli-cluster-setup.rst:653 5246f4eda0484133822b938e308947dd
+msgid "**Common Proxy URLs:**"
+msgstr "**آدرس‌های پروکسی رایج:**"
+
+#: ../../source/cli-cluster-setup.rst:656 897b2c80c04346ebbb9c45c73c7ab22d
+msgid "Your cluster: Ask administrator"
+msgstr "خوشه شما: از مدیر بپرسید"
+
+#: ../../source/cli-cluster-setup.rst:659 5f40b1cadc0a4d56872911d8e8fcf409
+msgid "MareNostrum 5 Setup (Air-Gapped Cluster)"
+msgstr "راه‌اندازی MareNostrum 5 (خوشه جدا از اینترنت)"
+
+#: ../../source/cli-cluster-setup.rst:661 36a534758ff846a087488f75ad4bb7d2
+msgid ""
+"**Issue:** MareNostrum 5 (MN5) blocks **ALL outgoing internet "
+"connections**, including proxy access."
+msgstr "**مشکل:** MareNostrum 5 (MN5) **تمام اتصالات خروجی به اینترنت**، از جمله دسترسی پروکسی را مسدود می‌کند."
+
+#: ../../source/cli-cluster-setup.rst:663 e76f98f175e54f969683842e9a7d6701
+msgid "**Official Documentation:** According to BSC:"
+msgstr "**مستندات رسمی:** طبق BSC:"
+
+#: ../../source/cli-cluster-setup.rst:665 6808cb7b1c7d4180a3f3b5ab92cc53a3
+msgid ""
+"*\"Once you are logged into MareNostrum you cannot make outgoing "
+"connections for security reasons. Only incoming connections are allowed "
+"in the whole cluster.\"*"
+msgstr "*\"وقتی به MareNostrum وارد می‌شوید، به دلایل امنیتی نمی‌توانید اتصالات خروجی برقرار کنید. فقط اتصالات ورودی در کل خوشه مجاز هستند.\"*"
+
+#: ../../source/cli-cluster-setup.rst:667 034bda4789ce424097cef206bbe0f432
+msgid "**Why Standard Setup Fails:**"
+msgstr "**چرا راه‌اندازی استاندارد شکست می‌خورد:**"
+
+#: ../../source/cli-cluster-setup.rst:669 bd3ee9b5fc8c4031938e09a00502153f
+msgid "Regular ``setup`` command requires internet access to install packages"
+msgstr "دستور معمولی ``setup`` برای نصب بسته‌ها نیاز به دسترسی اینترنت دارد"
+
+#: ../../source/cli-cluster-setup.rst:670 87b4e4ed9a9448de9948f86d3e1394a6
+msgid "Proxy configuration (``--proxy`` or ``--auto-proxy``) does NOT work on MN5"
+msgstr "پیکربندی پروکسی (``--proxy`` یا ``--auto-proxy``) بر روی MN5 کار نمی‌کند"
+
+#: ../../source/cli-cluster-setup.rst:671 959b0b1bc4f74efea18032441bbec357
+msgid "All conda/pip commands will fail with connection errors"
+msgstr "تمام دستورات conda/pip با خطاهای اتصال شکست می‌خورند"
+
+#: ../../source/cli-cluster-setup.rst:673 3dc4d7fd26004d2fb76a488024e1bb6a
+msgid "**Solution 1: SSH Tunnel (RECOMMENDED)** ✅"
+msgstr "**راه‌حل ۱: تونل SSH (توصیه می‌شود)** ✅"
+
+#: ../../source/cli-cluster-setup.rst:675 8e16ea1d584044cdb02b814bd7a5794d
+msgid "Use your local machine as a proxy via SSH tunneling:"
+msgstr "از دستگاه محلی خود به عنوان پروکسی از طریق تونل‌سازی SSH استفاده کنید:"
+
+#: ../../source/cli-cluster-setup.rst:693 fe14a094fee44fb4afd1031e1d81362d
+msgid "See \"SSH Tunnel for Air-Gapped Clusters\" section above for full details."
+msgstr "برای جزئیات کامل بخش \"تونل SSH برای خوشه‌های جدا از اینترنت\" در بالا را ببینید."
+
+#: ../../source/cli-cluster-setup.rst:695 a8e22fd3742b4ee99e2586b04ea858b3
+msgid "**Solution 2: Offline Environment Transfer** (if SSH tunnel doesn't work)"
+msgstr "**راه‌حل ۲: انتقال محیط آفلاین** (اگر تونل SSH کار نکند)"
+
+#: ../../source/cli-cluster-setup.rst:697 e78f2f4f52434469ada4ed39d5d224c4
+msgid "**Build on Linux Machine** (your local machine or another cluster):"
+msgstr "**ساخت بر روی دستگاه Linux** (دستگاه محلی شما یا خوشه دیگر):"
+
+#: ../../source/cli-cluster-setup.rst:703 67d193394ed343aa923dfb0ce2f8c63b
+msgid "**Transfer to MN5:**"
+msgstr "**انتقال به MN5:**"
+
+#: ../../source/cli-cluster-setup.rst:709 3256ee3686df4c54bd152e762b7a42b2
+msgid "**Install on MN5:**"
+msgstr "**نصب بر روی MN5:**"
+
+#: ../../source/cli-cluster-setup.rst:719 8b0e893700b74a6abd9f42fa74eb44b2
+msgid "**Verify:**"
+msgstr "**تأیید:**"
+
+#: ../../source/cli-cluster-setup.rst:725 231f9f1f6567483e88b55eb7720039af
+msgid "**Alternative: Contact BSC Support**"
+msgstr "**جایگزین: تماس با پشتیبانی BSC**"
+
+#: ../../source/cli-cluster-setup.rst:727 f2b2bedb1cff443795a012b68c415280
+msgid "Ask about:"
+msgstr "درباره موارد زیر بپرسید:"
+
+#: ../../source/cli-cluster-setup.rst:729 7afe1e216b53448cbc76bc4a6f3a10ea
+msgid "Internal package mirrors or conda channels"
+msgstr "آینه‌های داخلی بسته یا کانال‌های conda"
+
+#: ../../source/cli-cluster-setup.rst:730 d6c15ed581414a45b469cd9397cd988c
+msgid "Pre-installed Python/conda modules"
+msgstr "ماژول‌های از پیش نصب شده Python/conda"
+
+#: ../../source/cli-cluster-setup.rst:731 27e56789eda544cf840f5bd35e81d87d
+msgid "BSC-recommended package installation procedures"
+msgstr "روش‌های نصب بسته توصیه شده توسط BSC"
+
+#: ../../source/cli-cluster-setup.rst:733 c415e8caf1d24fba9dda8f5664842ef2
+msgid "Email: support@bsc.es"
+msgstr "ایمیل: support@bsc.es"
+
+#: ../../source/cli-cluster-setup.rst:736 0305afd5effd4af6b08ef4b1f634b436
+msgid "GitHub Clone Fails (Private Repository)"
+msgstr "شکست GitHub Clone (مخزن خصوصی)"
+
+#: ../../source/cli-cluster-setup.rst:738 5c49c664e11649a48650e532489d1a44
+msgid "**Error:** Failed to install atomate2siesta - authentication failed"
+msgstr "**خطا:** شکست در نصب atomate2siesta - احراز هویت شکست خورد"
+
+#: ../../source/cli-cluster-setup.rst:742 229e6c9832ad4de986bb2f887067322d
+msgid "**Option 1: Use SSH (Recommended)**"
+msgstr "**گزینه ۱: استفاده از SSH (توصیه می‌شود)**"
+
+#: ../../source/cli-cluster-setup.rst:744 a5b0ad47704d41959b40d1d7a382dc6d
+msgid "Ensure SSH key is set up on cluster for GitHub:"
+msgstr "اطمینان حاصل کنید که کلید SSH بر روی خوشه برای GitHub تنظیم شده است:"
+
+#: ../../source/cli-cluster-setup.rst:753 0eff4e68fdc8461180994a950e8db5a1
+msgid ""
+"Use ``--git-ssh`` flag: ``atomate2siesta-cluster setup --host cluster "
+"--git-ssh``"
+msgstr "از پرچم ``--git-ssh`` استفاده کنید: ``atomate2siesta-cluster setup --host cluster --git-ssh``"
+
+#: ../../source/cli-cluster-setup.rst:755 d06f27131987463587cbd03a894d3df8
+msgid "**Option 2: Use Personal Access Token**"
+msgstr "**گزینه ۲: استفاده از توکن دسترسی شخصی**"
+
+#: ../../source/cli-cluster-setup.rst:757 46da15ce015d4a7687a714808cabc953
+msgid ""
+"Generate token at https://github.com/settings/tokens (requires ``repo`` "
+"scope)"
+msgstr "تولید توکن در https://github.com/settings/tokens (نیاز به محدوده ``repo``)"
+
+#: ../../source/cli-cluster-setup.rst:758 f93d6ef2b83f4b18b81b95bf5b46024f
+msgid ""
+"Use ``--git-token`` flag: ``atomate2siesta-cluster setup --host cluster "
+"--git-token ghp_xxxxx``"
+msgstr "از پرچم ``--git-token`` استفاده کنید: ``atomate2siesta-cluster setup --host cluster --git-token ghp_xxxxx``"
+
+#: ../../source/cli-cluster-setup.rst:761 39f7b80e36054fd7b7ec4ea4e62cc0f0
+msgid "SIESTA Installation Fails"
+msgstr "شکست نصب SIESTA"
+
+#: ../../source/cli-cluster-setup.rst:763 1974235c01ad4de19fb723d99adba1bb
+msgid "**Error:** Failed to install SIESTA from conda-forge"
+msgstr "**خطا:** شکست در نصب SIESTA از conda-forge"
+
+#: ../../source/cli-cluster-setup.rst:768 e0b9c4118812462199a960f126b6e09b
+msgid "Verify conda-forge channel is accessible"
+msgstr "تأیید قابل دسترس بودن کانال conda-forge"
+
+#: ../../source/cli-cluster-setup.rst:769 03d45f0aae9240fdb00cc17d853dbc35
+msgid ""
+"Try manual installation: ``conda install -c conda-forge "
+"\"siesta=*=*mpich*\"``"
+msgstr "نصب دستی را امتحان کنید: ``conda install -c conda-forge \"siesta=*=*mpich*\"``"
+
+#: ../../source/cli-cluster-setup.rst:770 01562991d4e24ec59c5c9cdb1d6c64f9
+msgid ""
+"If unsuccessful, install SIESTA manually and update ``SIESTA_CMD`` in "
+"``~/.atomate2siesta.yaml``"
+msgstr "اگر ناموفق بود، SIESTA را به صورت دستی نصب کنید و ``SIESTA_CMD`` را در ``~/.atomate2siesta.yaml`` به‌روزرسانی کنید"
+
+#: ../../source/cli-cluster-setup.rst:773 3a3035d5b42b4d44a5355c2dea816665
+msgid "Configuration File Creation Fails"
+msgstr "شکست در ایجاد فایل پیکربندی"
+
+#: ../../source/cli-cluster-setup.rst:775 4e67327eea174f93ae58ce6a2c0f4edc
+msgid "**Error:** Failed to create ``.atomate2siesta.yaml``"
+msgstr "**خطا:** شکست در ایجاد ``.atomate2siesta.yaml``"
+
+#: ../../source/cli-cluster-setup.rst:777 a3059d18c54a4ea4a00c3a642e38906e
+msgid "**Solution:** Create manually on the cluster:"
+msgstr "**راه‌حل:** به صورت دستی بر روی خوشه ایجاد کنید:"
+
+#: ../../source/cli-cluster-setup.rst:790 662f1060adab42b0aa453b4a07e1ac18
+msgid "Advanced Usage"
+msgstr "استفاده پیشرفته"
+
+#: ../../source/cli-cluster-setup.rst:793 ed99870d0690454282b6eafef130c354
+msgid "Custom Worker Configuration"
+msgstr "پیکربندی سفارشی کارگر"
+
+#: ../../source/cli-cluster-setup.rst:795 f234a2ec46ab43e48d9b9a94b6ba5e4b
+msgid ""
+"After setting up the cluster, you may want to configure custom workers in"
+" jobflow-remote:"
+msgstr "پس از راه‌اندازی خوشه، ممکن است بخواهید کارگرهای سفارشی را در jobflow-remote پیکربندی کنید:"
+
+#: ../../source/cli-cluster-setup.rst:797 2005ef611f3b486db4d6447bb2da6b32
+msgid "Edit ``~/.jfremote/<project>.yaml``"
+msgstr "ویرایش ``~/.jfremote/<project>.yaml``"
+
+#: ../../source/cli-cluster-setup.rst:798 650bbffdcaa04cf8bfeec5bc531c29b3
+msgid "Add worker configurations for different partitions/queues"
+msgstr "افزودن پیکربندی‌های کارگر برای پارتیشن‌ها/صف‌های مختلف"
+
+#: ../../source/cli-cluster-setup.rst:799 8e8488d9bf134ffb9c60ee1204f2f137
+msgid "Specify resource requirements (nodes, cores, memory, time)"
+msgstr "مشخص کردن نیازهای منابع (گره‌ها، هسته‌ها، حافظه، زمان)"
+
+#: ../../source/cli-cluster-setup.rst:800 5bfe8b7705f6424aa36b57cb5a441c71
+msgid "Configure scheduler settings (SLURM, PBS, etc.)"
+msgstr "پیکربندی تنظیمات زمان‌بند (SLURM، PBS و غیره)"
+
+#: ../../source/cli-cluster-setup.rst:802 0e8cb75eee10422d8ddf53cc49e34a54
+msgid "Example worker configuration for SLURM:"
+msgstr "مثال پیکربندی کارگر برای SLURM:"
+
+#: ../../source/cli-cluster-setup.rst:822 4ebd08c5b8ea4c96a8822c11d8770565
+msgid "Multiple Environments"
+msgstr "محیط‌های متعدد"
+
+#: ../../source/cli-cluster-setup.rst:824 c29dfb31f8804c31bcb8f8bc6d41bd37
+msgid ""
+"You can set up multiple environments on the same cluster for different "
+"purposes:"
+msgstr "می‌توانید محیط‌های متعددی را بر روی همان خوشه برای اهداف مختلف راه‌اندازی کنید:"
+
+#: ../../source/cli-cluster-setup.rst:838 2adbb2051ed3413b83dbd77abcba49e6
+msgid "Batch Setup for Multiple Clusters"
+msgstr "راه‌اندازی دسته‌ای برای خوشه‌های متعدد"
+
+#: ../../source/cli-cluster-setup.rst:840 cc9d63d21cfc46aeb27879ee918bda78
+msgid "Create a shell script to set up multiple clusters:"
+msgstr "یک اسکریپت پوسته برای راه‌اندازی خوشه‌های متعدد ایجاد کنید:"
+
+#: ../../source/cli-cluster-setup.rst:858 17cf7c6fb0924d07ab44c149bd89da29
+msgid "Integration with Existing Workflows"
+msgstr "یکپارچگی با گردش کارهای موجود"
+
+#: ../../source/cli-cluster-setup.rst:860 d010fc119c8c4b8a95b5bdd6995e86ba
+msgid "This tool integrates seamlessly with:"
+msgstr "این ابزار به طور یکپارچه با موارد زیر ادغام می‌شود:"
+
+#: ../../source/cli-cluster-setup.rst:862 bc96071401414b0391cb29feb5353f14
+msgid ""
+"**Database CLI** (``atomate2siesta-database``): Set up MongoDB for "
+"storing calculation results"
+msgstr "**رابط خط فرمان پایگاه داده** (``atomate2siesta-database``): راه‌اندازی MongoDB برای ذخیره نتایج محاسبات"
+
+#: ../../source/cli-cluster-setup.rst:863 fcb50720877a47fab6439e981d1cd170
+msgid ""
+"**Jobflow-Remote CLI** (``atomate2siesta-jobflow-remote``): Configure job"
+" submission from local machine"
+msgstr "**رابط خط فرمان Jobflow-Remote** (``atomate2siesta-jobflow-remote``): پیکربندی ارسال کار از دستگاه محلی"
+
+#: ../../source/cli-cluster-setup.rst:864 7e153b64bebd4d55a1ff9c9150d7c999
+msgid ""
+"**Input Generator** (``atomate2siesta-inputs``): Generate SIESTA input "
+"files"
+msgstr "**تولیدکننده ورودی** (``atomate2siesta-inputs``): تولید فایل‌های ورودی SIESTA"
+
+#: ../../source/cli-cluster-setup.rst:865 5c711d07308245a78153e4753e763b9e
+msgid ""
+"**Pseudopotential Manager** (``atomate2siesta-pseudos``): Manage "
+"pseudopotential libraries"
+msgstr "**مدیر شبه‌پتانسیل** (``atomate2siesta-pseudos``): مدیریت کتابخانه‌های شبه‌پتانسیل"
+
+#: ../../source/cli-cluster-setup.rst:868 716adc50926e48b98df685ab33824932
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/cli-cluster-setup.rst:870 06ce064a105f400291c23ddc00363460
+msgid ":doc:`cli-database` - Database CLI Documentation"
+msgstr ":doc:`cli-database` - مستندات رابط خط فرمان پایگاه داده"
+
+#: ../../source/cli-cluster-setup.rst:871 b5ede846a0434c8d85cc2bbe0f0fa47e
+msgid ":doc:`cli-jobflow-remote` - Jobflow-Remote Setup"
+msgstr ":doc:`cli-jobflow-remote` - راه‌اندازی Jobflow-Remote"
+
+#: ../../source/cli-cluster-setup.rst:872 c324904351794b69b31faab45e273d79
+msgid "Tutorial 14: Job Submission"
+msgstr "آموزش ۱۴: ارسال کار"
+
+#: ../../source/cli-cluster-setup.rst:873 dfe9e3c0f03c4b25ba99d2c2bcc5c6f6
+msgid ""
+"`Jobflow-Remote Documentation <https://matgenix.github.io/jobflow-"
+"remote/>`_"
+msgstr "`مستندات Jobflow-Remote <https://matgenix.github.io/jobflow-remote/>`_"

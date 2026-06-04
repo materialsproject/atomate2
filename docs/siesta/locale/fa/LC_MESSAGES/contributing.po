@@ -1,0 +1,818 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/contributing.rst:3 050c260241be43ec81d53c0f0146ae71
+msgid "Contributing"
+msgstr "مشارکت"
+
+#: ../../source/contributing.rst:5 303fcde94b9b45bcbc03796f7f8d2e99
+msgid ""
+"Thank you for your interest in contributing to atomate2siesta! This guide"
+" will help you get started."
+msgstr ""
+"از علاقه شما به مشارکت در atomate2siesta متشکریم! این راهنما به شما کمک "
+"می‌کند تا شروع کنید."
+
+#: ../../source/contributing.rst:10 0fa7c141a76848259e75555e1004e131
+msgid "Getting Started"
+msgstr "شروع کار"
+
+#: ../../source/contributing.rst:13 5381b593e8c348a29e8b12403447f0c8
+msgid "Development Installation"
+msgstr "نصب توسعه"
+
+#: ../../source/contributing.rst:15 516905b70db5486fad29c2c586a4d48a
+msgid "Clone the repository and install in development mode:"
+msgstr "مخزن را کلون کرده و در حالت توسعه نصب کنید:"
+
+#: ../../source/contributing.rst:23 5f9cecd1e22f4dd5902a1c2ffbee1b60
+msgid "This installs atomate2siesta with all development dependencies:"
+msgstr "این atomate2siesta را با تمام وابستگی‌های توسعه نصب می‌کند:"
+
+#: ../../source/contributing.rst:25 917d5a415298483a963354f13d50b223
+msgid "**dev**: Pre-commit hooks, code formatters"
+msgstr "**dev**: قلاب‌های پیش از commit، قالب‌بندهای کد"
+
+#: ../../source/contributing.rst:26 6f4f3b045ab049aaa91a63980b43c9c0
+msgid "**tests**: pytest, coverage tools"
+msgstr "**tests**: pytest، ابزارهای پوشش"
+
+#: ../../source/contributing.rst:27 8f38136235564be3a213fe9ba0f821d7
+msgid "**docs**: Sphinx documentation tools"
+msgstr "**docs**: ابزارهای مستندسازی Sphinx"
+
+#: ../../source/contributing.rst:30 239e7f23660d4c51b51043fce577423b
+msgid "Pre-commit Hooks"
+msgstr "قلاب‌های پیش از Commit"
+
+#: ../../source/contributing.rst:32 b1f363a3693448ed94db50d95ec42c39
+msgid "Set up pre-commit hooks for code quality:"
+msgstr "قلاب‌های پیش از commit را برای کیفیت کد راه‌اندازی کنید:"
+
+#: ../../source/contributing.rst:38 2fe2745b8b3443419180043802541927
+msgid "The hooks will automatically run:"
+msgstr "قلاب‌ها به طور خودکار اجرا خواهند شد:"
+
+#: ../../source/contributing.rst:40 560a50dd2f4e42cfaf57ac49494e38fe
+msgid "``ruff`` - Python linter and formatter"
+msgstr "``ruff`` - Linter و قالب‌بند Python"
+
+#: ../../source/contributing.rst:41 49c51eef3fa7406b8871ea4c4d6d289d
+msgid "``mypy`` - Type checking"
+msgstr "``mypy`` - بررسی نوع"
+
+#: ../../source/contributing.rst:42 16f851aa4ed54b24acf3234d9e5d708a
+msgid "``trailing-whitespace`` - Remove trailing spaces"
+msgstr "``trailing-whitespace`` - حذف فضاهای خالی انتهایی"
+
+#: ../../source/contributing.rst:43 6bfe009a04e748fe9d8fd5ac11e7e47a
+msgid "``end-of-file-fixer`` - Ensure files end with newline"
+msgstr "``end-of-file-fixer`` - اطمینان از پایان فایل‌ها با خط جدید"
+
+#: ../../source/contributing.rst:48 a407c625daa6469c8ef24bc2c50213ac
+msgid "Development Workflow"
+msgstr "جریان کار توسعه"
+
+#: ../../source/contributing.rst:51 bf1cc4ea29f24262abf2de93bd46808e
+msgid "1. Create a Branch"
+msgstr "۱. ایجاد یک شاخه"
+
+#: ../../source/contributing.rst:53 cd08d64f8040412aadc6d7ebe9c19349
+msgid "Create a feature branch for your changes:"
+msgstr "یک شاخه ویژگی برای تغییرات خود ایجاد کنید:"
+
+#: ../../source/contributing.rst:59 4093d145f8d04f40b97a3031703a1baf
+msgid "Use descriptive branch names:"
+msgstr "از نام‌های توصیفی برای شاخه‌ها استفاده کنید:"
+
+#: ../../source/contributing.rst:61 76f9f3b22fd740cb9955ae1be4df2be9
+msgid "``feature/phonon-animations`` - New feature"
+msgstr "``feature/phonon-animations`` - ویژگی جدید"
+
+#: ../../source/contributing.rst:62 5314a63d8fa74474afcb14911d067d8d
+msgid "``fix/scf-convergence-bug`` - Bug fix"
+msgstr "``fix/scf-convergence-bug`` - رفع اشکال"
+
+#: ../../source/contributing.rst:63 a32f4f20b7784157a1ddcb8db9c4876a
+msgid "``docs/tutorial-update`` - Documentation"
+msgstr "``docs/tutorial-update`` - مستندسازی"
+
+#: ../../source/contributing.rst:64 7045799c1c454e40b31759bae4a172f6
+msgid "``test/parser-coverage`` - Test improvements"
+msgstr "``test/parser-coverage`` - بهبودهای تست"
+
+#: ../../source/contributing.rst:67 83a4e9f2c280429db5c41ecf8f55d1b7
+msgid "2. Make Changes"
+msgstr "۲. انجام تغییرات"
+
+#: ../../source/contributing.rst:69 08996dec332440b89a344a523c269e53
+msgid "Follow the project conventions:"
+msgstr "قراردادهای پروژه را دنبال کنید:"
+
+#: ../../source/contributing.rst:71 28b1c4e226a948b7b4955dd590d6293d
+msgid "**Code Style**:"
+msgstr "**سبک کد**:"
+
+#: ../../source/contributing.rst:73 fc12638352254383be3bdf8d25d42b5f
+msgid "Follow PEP 8 conventions"
+msgstr "قراردادهای PEP 8 را دنبال کنید"
+
+#: ../../source/contributing.rst:74 fda84c286b6e47a39666fad683df66de
+msgid "Use type hints for all functions"
+msgstr "از راهنماهای نوع برای تمام توابع استفاده کنید"
+
+#: ../../source/contributing.rst:75 d7bf28d4592341678dd3d8136e2fde09
+msgid "Maximum line length: 88 characters (Black default)"
+msgstr "حداکثر طول خط: ۸۸ کاراکتر (پیش‌فرض Black)"
+
+#: ../../source/contributing.rst:76 7ffd8e2ec47e4fb49454a109aebd40e1
+msgid "Use docstrings for all public functions"
+msgstr "از رشته‌های مستند برای تمام توابع عمومی استفاده کنید"
+
+#: ../../source/contributing.rst:78 2d363cfd6b2c405b90635fcdb0c36e91
+msgid "**Naming Conventions**:"
+msgstr "**قراردادهای نام‌گذاری**:"
+
+#: ../../source/contributing.rst:80 a7c8662c40654d1f9f253c3c33c1e0da
+msgid "Classes: ``PascalCase`` (e.g., ``RelaxMaker``)"
+msgstr "کلاس‌ها: ``PascalCase`` (مثلاً ``RelaxMaker``)"
+
+#: ../../source/contributing.rst:81 f9a8c864dbef4fd28585033a5d2e4b6c
+msgid "Functions/variables: ``snake_case`` (e.g., ``make_structure``)"
+msgstr "توابع/متغیرها: ``snake_case`` (مثلاً ``make_structure``)"
+
+#: ../../source/contributing.rst:82 9dfd47ebf72a47cbacd423f8f32fde16
+msgid "Constants: ``UPPER_CASE`` (e.g., ``DEFAULT_CUTOFF``)"
+msgstr "ثابت‌ها: ``UPPER_CASE`` (مثلاً ``DEFAULT_CUTOFF``)"
+
+#: ../../source/contributing.rst:83 4b3d7db5c47c49d7817bb7252516bd80
+msgid "Private methods: ``_leading_underscore``"
+msgstr "متدهای خصوصی: ``_leading_underscore``"
+
+#: ../../source/contributing.rst:85 151cc1fa90324df7a318fc42ffe18177
+msgid "**Documentation**:"
+msgstr "**مستندسازی**:"
+
+#: ../../source/contributing.rst:87 f311e700ca0146d8b08da1ec10d0cc68
+msgid "Add docstrings to all public APIs"
+msgstr "رشته‌های مستند را به تمام APIهای عمومی اضافه کنید"
+
+#: ../../source/contributing.rst:88 1c077824980747cf8fff5729f2865580
+msgid "Follow NumPy docstring format"
+msgstr "از قالب رشته مستند NumPy پیروی کنید"
+
+#: ../../source/contributing.rst:89 ../../source/contributing.rst:155
+#: 66842c55c69f41e3bba3b958dff865c8 8746462cebb24d9393d2cefc9b185111
+msgid "Include examples in docstrings"
+msgstr "مثال‌ها را در رشته‌های مستند قرار دهید"
+
+#: ../../source/contributing.rst:90 e932fafff58b40a992c38e6387bc1410
+msgid "Update relevant tutorials"
+msgstr "آموزش‌های مرتبط را به‌روزرسانی کنید"
+
+#: ../../source/contributing.rst:93 3fd52d7d3aee422a8d5e133f35e07789
+msgid "3. Write Tests"
+msgstr "۳. نوشتن تست‌ها"
+
+#: ../../source/contributing.rst:95 c834967c083a40dcbbeb4c3792250699
+msgid "All new features must include tests:"
+msgstr "تمام ویژگی‌های جدید باید شامل تست‌ها باشند:"
+
+#: ../../source/contributing.rst:123 bcd71df65218475f818c06a82b1da0a3
+msgid "**Testing Patterns**:"
+msgstr "**الگوهای تست**:"
+
+#: ../../source/contributing.rst:125 be25c9caa4634eddaa101f55c148fd06
+msgid "Use fixtures from ``tests/conftest.py``"
+msgstr "از fixtureهای ``tests/conftest.py`` استفاده کنید"
+
+#: ../../source/contributing.rst:126 7d98eb9c2cc3412e80e092140d8dac88
+msgid "Mock SIESTA execution (don't run real calculations)"
+msgstr "اجرای SIESTA را شبیه‌سازی کنید (محاسبات واقعی را اجرا نکنید)"
+
+#: ../../source/contributing.rst:127 0a09ab8fa5ea484fbeeef236637faeab
+msgid "Test edge cases (None values, empty structures)"
+msgstr "موارد لبه‌ای را تست کنید (مقادیر None، ساختارهای خالی)"
+
+#: ../../source/contributing.rst:128 6416ce99e3b94d62ad9396f0ddb56d5f
+msgid "Use parametrize for multiple test cases"
+msgstr "از parametrize برای موارد تست چندگانه استفاده کنید"
+
+#: ../../source/contributing.rst:129 26817ff6ec424a6ca3fb2fd080eee4c1
+#, fuzzy, python-format
+msgid "Aim for >80% coverage for new code"
+msgstr "هدف پوشش بیش از 80 درصد برای کد جدید"
+
+#: ../../source/contributing.rst:131 1f0c25cdfc3340e4a7c574c444296ab3
+msgid "**Run Tests**:"
+msgstr "**اجرای تست‌ها**:"
+
+#: ../../source/contributing.rst:148 328af6a344d448fbadcb9fbe45c2e287
+msgid "4. Update Documentation"
+msgstr "۴. به‌روزرسانی مستندات"
+
+#: ../../source/contributing.rst:150 7421fa522f9d496898c877bb23c71641
+msgid "Update relevant documentation files:"
+msgstr "فایل‌های مستندات مرتبط را به‌روزرسانی کنید:"
+
+#: ../../source/contributing.rst:152 c735c7b2d61b46efa209f226edaf562a
+msgid "**Code Documentation**:"
+msgstr "**مستندات کد**:"
+
+#: ../../source/contributing.rst:154 66592f9b29cb4ee8b0d0e3e078af6aff
+msgid "Add/update docstrings"
+msgstr "رشته‌های مستند را اضافه/به‌روزرسانی کنید"
+
+#: ../../source/contributing.rst:156 3df1813a72c0423e81d436826832744f
+msgid "Document parameters and return types"
+msgstr "پارامترها و انواع برگشتی را مستند کنید"
+
+#: ../../source/contributing.rst:158 bf048356c798474287d5f8c6cd33b135
+msgid "**User Documentation**:"
+msgstr "**مستندات کاربر**:"
+
+#: ../../source/contributing.rst:160 e00fad197561419a81f9681439ba900f
+msgid "Update ``docs/source/features.rst`` for new features"
+msgstr "``docs/source/features.rst`` را برای ویژگی‌های جدید به‌روزرسانی کنید"
+
+#: ../../source/contributing.rst:161 be4a0608d2444239b564af40c5e06e28
+msgid "Create tutorial if needed (``tutorials/XX-feature-name/``)"
+msgstr "در صورت نیاز آموزش ایجاد کنید (``tutorials/XX-feature-name/``)"
+
+#: ../../source/contributing.rst:162 6b50323e78c245bc8885976927e52ad4
+#, fuzzy
+msgid "Update ``ATOMATE2SIESTA.md`` for architecture changes"
+msgstr "``ATOMATE2_SIESTA.md`` را برای تغییرات معماری به‌روزرسانی کنید"
+
+#: ../../source/contributing.rst:164 8ffd5bede97042b3bd0520c0f6099c4d
+msgid "**Developer Documentation**:"
+msgstr "**مستندات توسعه‌دهنده**:"
+
+#: ../../source/contributing.rst:166 721db8dc76dd444a99b7fc3ce8fb696e
+msgid "Update changelog for feature additions"
+msgstr "changelog را برای افزودن ویژگی‌ها به‌روزرسانی کنید"
+
+#: ../../source/contributing.rst:167 c8830af1b5b4410e8e8a12946912e78f
+msgid "Document test strategies and coverage improvements"
+msgstr "استراتژی‌های تست و بهبودهای پوشش را مستند کنید"
+
+#: ../../source/contributing.rst:170 3b7e6f99c0f845b6a00537f99b132605
+msgid "5. Run Quality Checks"
+msgstr "۵. اجرای بررسی‌های کیفیت"
+
+#: ../../source/contributing.rst:172 cc99b8e3f3474e499d9c9461aea36d88
+msgid "Before committing, run quality checks:"
+msgstr "قبل از commit کردن، بررسی‌های کیفیت را اجرا کنید:"
+
+#: ../../source/contributing.rst:192 bffbd6366e68451991d1707e57f3fdb8
+msgid "6. Commit Changes"
+msgstr "۶. ثبت تغییرات (Commit)"
+
+#: ../../source/contributing.rst:194 ab7a3dafd02541d99827a3aa2ba2de79
+msgid "Write clear commit messages:"
+msgstr "پیام‌های واضح commit بنویسید:"
+
+#: ../../source/contributing.rst:201 cd4ff958ec84451c9a16cb35eef18311
+msgid "**Commit Message Format**:"
+msgstr "**قالب پیام Commit**:"
+
+#: ../../source/contributing.rst:203 645943e553e3460595934a6a284dcfc7
+msgid "``feat:`` - New feature"
+msgstr "``feat:`` - ویژگی جدید"
+
+#: ../../source/contributing.rst:204 b0d3398be2d44fcdb049df385c83c806
+msgid "``fix:`` - Bug fix"
+msgstr "``fix:`` - رفع اشکال"
+
+#: ../../source/contributing.rst:205 33405bb17a8f464a84417caf9f6ab233
+msgid "``docs:`` - Documentation changes"
+msgstr "``docs:`` - تغییرات مستندسازی"
+
+#: ../../source/contributing.rst:206 89ff276a6e4544ec97b4530413d97af0
+msgid "``test:`` - Test additions/changes"
+msgstr "``test:`` - افزودن/تغییرات تست"
+
+#: ../../source/contributing.rst:207 f506d64e92c14ffbbdda3628886b26ca
+msgid "``refactor:`` - Code refactoring"
+msgstr "``refactor:`` - بازسازی کد"
+
+#: ../../source/contributing.rst:208 71ca42c83c8c43fc976fe851f7a7ff21
+msgid "``perf:`` - Performance improvements"
+msgstr "``perf:`` - بهبودهای عملکرد"
+
+#: ../../source/contributing.rst:209 5030cf1c70904e9fa2b8f57833710da5
+msgid "``chore:`` - Maintenance tasks"
+msgstr "``chore:`` - وظایف نگهداری"
+
+#: ../../source/contributing.rst:211 ec0d0e869fa6421c8c14137b875144f5
+msgid "**Good Commit Messages**:"
+msgstr "**پیام‌های خوب Commit**:"
+
+#: ../../source/contributing.rst:213 cca27e0e415d4bc3af8240789bbc9885
+msgid "``feat: add thermal expansion plotting function``"
+msgstr "``feat: add thermal expansion plotting function``"
+
+#: ../../source/contributing.rst:214 6eb90e85aa4340e1ade632d9dd15cc0d
+msgid "``fix: correct PAO.BasisSize parameter matching``"
+msgstr "``fix: correct PAO.BasisSize parameter matching``"
+
+#: ../../source/contributing.rst:215 2c2695c510e1470697b40de2ef9c2ed6
+msgid "``test: add parser edge case coverage``"
+msgstr "``test: add parser edge case coverage``"
+
+#: ../../source/contributing.rst:216 741112d8237942959dd40d44e640bb7f
+msgid "``docs: update test coverage achievements``"
+msgstr "``docs: update test coverage achievements``"
+
+#: ../../source/contributing.rst:219 371938a9f4254a14a2277c7a0bb7a247
+msgid "7. Push and Create PR"
+msgstr "۷. Push و ایجاد درخواست Pull"
+
+#: ../../source/contributing.rst:221 6f5d0e3f30ab4e0b886c36f5b40e4620
+msgid "Push your branch and create a pull request:"
+msgstr "شاخه خود را push کرده و یک درخواست pull ایجاد کنید:"
+
+#: ../../source/contributing.rst:227 c9031f2b91bd4fae9bb84fe711baa9ac
+msgid "On GitHub:"
+msgstr "در GitHub:"
+
+#: ../../source/contributing.rst:229 add3c1f8058a463392f393ca049de1ed
+msgid "Create pull request with clear description"
+msgstr "درخواست pull با توضیحات واضح ایجاد کنید"
+
+#: ../../source/contributing.rst:230 58e73993573b496a8d623124cdef6e1c
+msgid "Reference related issues"
+msgstr "به مسائل مرتبط ارجاع دهید"
+
+#: ../../source/contributing.rst:231 099c683874f14991b27374e964e2cfe8
+msgid "Add examples/screenshots if relevant"
+msgstr "در صورت ارتباط، مثال‌ها/اسکرین‌شات‌ها اضافه کنید"
+
+#: ../../source/contributing.rst:232 3c8267f04c9d40649de0d50d4345c9e8
+msgid "Wait for CI checks to pass"
+msgstr "منتظر موفقیت بررسی‌های CI باشید"
+
+#: ../../source/contributing.rst:233 fe9f9cdf4c724422b1ae21cecf3887e6
+msgid "Address review comments"
+msgstr "به نظرات بررسی پاسخ دهید"
+
+#: ../../source/contributing.rst:238 957e6cdff69d4da39e3b1898eec8177e
+msgid "Contribution Areas"
+msgstr "حوزه‌های مشارکت"
+
+#: ../../source/contributing.rst:241 260716501cd64cdcbc6bf4bf9b9c5599
+msgid "Where to Contribute"
+msgstr "کجا مشارکت کنیم"
+
+#: ../../source/contributing.rst:243 743e742db60e457ea20ea29ade564b22
+msgid "**High Priority**:"
+msgstr "**اولویت بالا**:"
+
+#: ../../source/contributing.rst:245 b896979585b54475a71c7bc8107deebd
+msgid ""
+"**Core Job Tests** - RelaxMaker, StaticMaker, BandStructureMaker "
+"(CRITICAL)"
+msgstr "**تست‌های Job اصلی** - RelaxMaker، StaticMaker، BandStructureMaker (حیاتی)"
+
+#: ../../source/contributing.rst:246 d57f9864d44845eead380adf3bdc6753
+msgid "**Flow Tests** - Workflow composition and integration"
+msgstr "**تست‌های Flow** - ترکیب و یکپارچه‌سازی جریان کار"
+
+#: ../../source/contributing.rst:247 7142fbcfcda649fbba17da95099e4d49
+msgid "**Input Set Tests** - FDF file generation and parameter merging"
+msgstr "**تست‌های مجموعه ورودی** - تولید فایل FDF و ادغام پارامتر"
+
+#: ../../source/contributing.rst:248 81f0153ffe8742b482d880049a867a90
+msgid "**Documentation** - Tutorial updates and examples"
+msgstr "**مستندسازی** - به‌روزرسانی آموزش‌ها و مثال‌ها"
+
+#: ../../source/contributing.rst:250 fe151516da314a0ca28df5f8a937838c
+msgid "**Medium Priority**:"
+msgstr "**اولویت متوسط**:"
+
+#: ../../source/contributing.rst:252 ad064b915f98418a8428a5c3051cbba7
+msgid "**Feature Testing** - Adsorption, surface energy, phonons"
+msgstr "**تست ویژگی** - جذب سطحی، انرژی سطح، فونون‌ها"
+
+#: ../../source/contributing.rst:253 ac47ef81ac11434f98c34ce8854b8ff2
+msgid "**Dataclass Validation** - Edge cases and parameter validation"
+msgstr "**اعتبارسنجی Dataclass** - موارد لبه‌ای و اعتبارسنجی پارامتر"
+
+#: ../../source/contributing.rst:254 48256b7a502f48f08beb7b025a8b4a21
+msgid "**Performance Optimization** - Profiling and improvements"
+msgstr "**بهینه‌سازی عملکرد** - پروفایلینگ و بهبودها"
+
+#: ../../source/contributing.rst:255 69a9ada661ca4fcb8e95b38b51ea0a3b
+msgid "**Tutorial Creation** - Missing tutorials (Tutorial 19, etc.)"
+msgstr "**ایجاد آموزش** - آموزش‌های گم‌شده (آموزش ۱۹، و غیره)"
+
+#: ../../source/contributing.rst:257 081df1b6b16e43e4bb596ed9c4b15732
+msgid "**Feature Requests**:"
+msgstr "**درخواست‌های ویژگی**:"
+
+#: ../../source/contributing.rst:259 2e46c30161f9449ea909bb9800bf0024
+msgid "**Phonon Animations** - Mode visualization"
+msgstr "**انیمیشن‌های فونون** - تصویرسازی حالت"
+
+#: ../../source/contributing.rst:260 fea11ed74cbb489380bb0ebcaddb5a76
+msgid "**Optical Properties** - Enhanced analysis"
+msgstr "**ویژگی‌های نوری** - تحلیل پیشرفته"
+
+#: ../../source/contributing.rst:261 6fab5591d01646efba3bf080209d1aa1
+msgid "**Defect Calculations** - Point defects workflow"
+msgstr "**محاسبات نقص** - جریان کار نقص نقطه‌ای"
+
+#: ../../source/contributing.rst:262 baf9594dc6c944a7bba81692a0f05177
+msgid "**Machine Learning Potentials** - Integration with ML tools"
+msgstr "**پتانسیل‌های یادگیری ماشین** - یکپارچه‌سازی با ابزارهای ML"
+
+#: ../../source/contributing.rst:265 ba0d5529b99c474baf34ada3cea72d0a
+msgid "Reporting Bugs"
+msgstr "گزارش اشکالات"
+
+#: ../../source/contributing.rst:267 a67c7fb4081c4a209d2e0d51889f2af0
+msgid "Found a bug? Please report it:"
+msgstr "اشکالی پیدا کردید؟ لطفاً آن را گزارش کنید:"
+
+#: ../../source/contributing.rst:269 c90246bce762492689661b9a89a30293
+msgid ""
+"Check existing issues: https://github.com/arsalan-"
+"akhtar/atomate2siesta/issues"
+msgstr ""
+"مسائل موجود را بررسی کنید: https://github.com/arsalan-"
+"akhtar/atomate2siesta/issues"
+
+#: ../../source/contributing.rst:270 01bd134c9bb24710820f1d71b8ad9b8d
+msgid ""
+"If new, create issue with: * Clear description of problem * Steps to "
+"reproduce * Expected vs actual behavior * Environment (OS, Python "
+"version, SIESTA version) * Minimal example code"
+msgstr ""
+"اگر جدید است، مسئله را با موارد زیر ایجاد کنید: * توضیح واضح مشکل * مراحل"
+" بازتولید * رفتار مورد انتظار در مقابل رفتار واقعی * محیط (سیستم‌عامل، "
+"نسخه Python، نسخه SIESTA) * کد مثال حداقلی"
+
+#: ../../source/contributing.rst:278 e0196af323e24f718e1aeb77d8586165
+msgid "Requesting Features"
+msgstr "درخواست ویژگی‌ها"
+
+#: ../../source/contributing.rst:280 322ec1e0706e4bb3aef0442a8cb7a7f1
+msgid "Have a feature idea?"
+msgstr "ایده ویژگی دارید؟"
+
+#: ../../source/contributing.rst:282 803e893bc3b945e1a1e22e5419d46116
+msgid ""
+"Open discussion: https://github.com/arsalan-"
+"akhtar/atomate2siesta/discussions"
+msgstr "بحث باز کنید: https://github.com/arsalan-akhtar/atomate2siesta/discussions"
+
+#: ../../source/contributing.rst:283 08b4aaaacf7a40ba9e51fcfd92c0b14e
+msgid ""
+"Provide: * Use case description * Proposed API/interface * Example usage "
+"* Why it's valuable"
+msgstr ""
+"ارائه دهید: * توضیح مورد استفاده * API/رابط پیشنهادی * مثال استفاده * چرا"
+" ارزشمند است"
+
+#: ../../source/contributing.rst:292 03792b5fd8ff488bb134c6e0a50be532
+msgid "Code Review Process"
+msgstr "فرآیند بررسی کد"
+
+#: ../../source/contributing.rst:295 7332264368f5442e83459a963ebc263d
+msgid "What Reviewers Look For"
+msgstr "بررسی‌کنندگان به دنبال چه هستند"
+
+#: ../../source/contributing.rst:297 a8d1fafa8c4446f596e0c2ca22fa413e
+msgid "**Correctness**: Does the code work as intended?"
+msgstr "**صحت**: آیا کد همانطور که قصد شده کار می‌کند؟"
+
+#: ../../source/contributing.rst:298 a72ea0ef14694511a47345d5d830e8ce
+msgid "**Tests**: Are there sufficient tests? Do they cover edge cases?"
+msgstr "**تست‌ها**: آیا تست‌های کافی وجود دارد؟ آیا موارد لبه‌ای را پوشش می‌دهند؟"
+
+#: ../../source/contributing.rst:299 564aa31b40c348d3b035abbcc3838e98
+msgid "**Documentation**: Are docstrings clear? Is user documentation updated?"
+msgstr ""
+"**مستندسازی**: آیا رشته‌های مستند واضح هستند؟ آیا مستندات کاربر "
+"به‌روزرسانی شده است؟"
+
+#: ../../source/contributing.rst:300 5076a76bbae44cdabe7456c75f8bacc5
+msgid "**Style**: Does code follow project conventions?"
+msgstr "**سبک**: آیا کد از قراردادهای پروژه پیروی می‌کند؟"
+
+#: ../../source/contributing.rst:301 f63294052c7b4ade9a43b28214426003
+msgid "**Performance**: Are there obvious performance issues?"
+msgstr "**عملکرد**: آیا مشکلات عملکرد آشکاری وجود دارد؟"
+
+#: ../../source/contributing.rst:302 d816c65be5454f12ae13e55c6fb83c22
+msgid "**Compatibility**: Does it break existing functionality?"
+msgstr "**سازگاری**: آیا عملکرد موجود را خراب می‌کند؟"
+
+#: ../../source/contributing.rst:305 ac20181dd86f44bfb3f9b2a822e9f0f6
+msgid "Review Timeline"
+msgstr "جدول زمانی بررسی"
+
+#: ../../source/contributing.rst:307 2cd4ea522dd443988ec135a300ea92ba
+msgid "Initial review: Usually within 1-3 days"
+msgstr "بررسی اولیه: معمولاً در عرض ۱-۳ روز"
+
+#: ../../source/contributing.rst:308 ccd6a506fa214b6f801815e25864cb7e
+msgid "Follow-up: Within 1-2 days of addressing comments"
+msgstr "پیگیری: در عرض ۱-۲ روز پس از رسیدگی به نظرات"
+
+#: ../../source/contributing.rst:309 800d1701f7fa453b8d71a2149c1760ba
+msgid "Merge: After approval and passing CI checks"
+msgstr "ادغام: پس از تایید و موفقیت بررسی‌های CI"
+
+#: ../../source/contributing.rst:314 571e29e7969d4437995c43d8a84bbbc0
+msgid "Testing Guidelines"
+msgstr "راهنماهای تست"
+
+#: ../../source/contributing.rst:317 1449137ddbf34bb1b33844f3112f9186
+msgid "Testing Philosophy"
+msgstr "فلسفه تست"
+
+#: ../../source/contributing.rst:319 8a1e85a3690b45f5a04c0c62e6cb202b
+msgid "**Mock-based testing**: Don't run real SIESTA calculations in tests"
+msgstr "**تست مبتنی بر Mock**: محاسبات واقعی SIESTA را در تست‌ها اجرا نکنید"
+
+#: ../../source/contributing.rst:320 8e0aca1e001b4ba1aff3547f94ec51de
+msgid "**Fast execution**: Test suite should complete in < 30 seconds"
+msgstr "**اجرای سریع**: مجموعه تست باید در کمتر از ۳۰ ثانیه تکمیل شود"
+
+#: ../../source/contributing.rst:321 5fd5e343e8ea42328788120e41d18643
+msgid "**Clear naming**: Test names describe what they test"
+msgstr "**نام‌گذاری واضح**: نام‌های تست آنچه را که تست می‌کنند توضیح می‌دهند"
+
+#: ../../source/contributing.rst:322 bd767006bf814422bc659673d34f0004
+msgid "**Edge cases**: Test None, empty, and error conditions"
+msgstr "**موارد لبه‌ای**: موارد None، خالی و شرایط خطا را تست کنید"
+
+#: ../../source/contributing.rst:323 376675289e3e4f1e84b37dc87f53a655
+msgid "**Fixtures**: Use shared fixtures from ``conftest.py``"
+msgstr "**Fixtureها**: از fixtureهای مشترک از ``conftest.py`` استفاده کنید"
+
+#: ../../source/contributing.rst:326 02285fd6686b40859446edc162b2bed7
+msgid "Coverage Goals"
+msgstr "اهداف پوشش"
+
+#: ../../source/contributing.rst:328 8dee038c189149268d688f683c662a6c
+msgid "**Current Status**:"
+msgstr "**وضعیت فعلی**:"
+
+#: ../../source/contributing.rst:330 4fd67f002b8a4e439974c4cc4928dc83
+msgid "Overall: 44% (target: 80%)"
+msgstr "کلی: ۴۴% (هدف: ۸۰%)"
+
+#: ../../source/contributing.rst:331 3bee5e12533744afa17b4793e4ce5b5d
+msgid "Tier system: 100% ✅"
+msgstr "سیستم سطح: ۱۰۰% ✅"
+
+#: ../../source/contributing.rst:332 c8ba65cb7b1042feb50065dd20b13e2a
+msgid "Schemas: 87-97% ✅"
+msgstr "طرح‌ها: ۸۷-۹۷% ✅"
+
+#: ../../source/contributing.rst:333 9979461b913840a8bb6de4824152b88a
+msgid "File client: 86% ✅"
+msgstr "کلاینت فایل: ۸۶% ✅"
+
+#: ../../source/contributing.rst:334 bfda6f89772845b5a3bba8ccc13b205b
+msgid "Parser: 39% 🔄"
+msgstr "تجزیه‌کننده: ۳۹% 🔄"
+
+#: ../../source/contributing.rst:335 4fd4cc84204447dfb7a98562b5536e36
+msgid "Jobs/Flows: ~15% ⏭️"
+msgstr "Jobها/Flowها: ~۱۵% ⏭️"
+
+#: ../../source/contributing.rst:337 a6cb8b2819274ee4b80cc53c9db73b34
+msgid "**Target Coverage by Component**:"
+msgstr "**پوشش هدف بر اساس جزء**:"
+
+#: ../../source/contributing.rst:339 12cf4940b7f8494e8ef5729bbbeba74a
+msgid "Critical infrastructure (jobs, flows, sets): 70-80%"
+msgstr "زیرساخت حیاتی (jobها، flowها، مجموعه‌ها): ۷۰-۸۰%"
+
+#: ../../source/contributing.rst:340 074da2590f8a4c14a0462294b9c907e3
+msgid "Workflows (phonons, surfaces, etc.): 75%"
+msgstr "جریان‌های کار (فونون‌ها، سطوح، و غیره): ۷۵%"
+
+#: ../../source/contributing.rst:341 db5b51464f24408a80edb8f71ba0b767
+msgid "Utilities and helpers: 60-70%"
+msgstr "ابزارها و کمکی‌ها: ۶۰-۷۰%"
+
+#: ../../source/contributing.rst:342 9ba9c566e6494fa5bb61a513546a399c
+msgid "Dataclass validation: 60%"
+msgstr "اعتبارسنجی Dataclass: ۶۰%"
+
+#: ../../source/contributing.rst:345 66487aeed21343ee85fd82bc7517df18
+msgid "Test Organization"
+msgstr "سازماندهی تست"
+
+#: ../../source/contributing.rst:373 29960cb3490f47e68e4bad7ecad8d1ce
+msgid "Documentation Guidelines"
+msgstr "راهنماهای مستندسازی"
+
+#: ../../source/contributing.rst:376 9db70e05171040c39f5703e76249de5b
+msgid "Docstring Format"
+msgstr "قالب رشته مستند"
+
+#: ../../source/contributing.rst:378 1bc753eb7d954f149ec08b56a35f9785
+msgid "Use NumPy-style docstrings:"
+msgstr "از رشته‌های مستند به سبک NumPy استفاده کنید:"
+
+#: ../../source/contributing.rst:433 3e9d068945ee4d09a07689c4bb838f0d
+msgid "Tutorial Structure"
+msgstr "ساختار آموزش"
+
+#: ../../source/contributing.rst:435 8d6125b40ee041bab670f00c3800d781
+msgid "Each tutorial should include:"
+msgstr "هر آموزش باید شامل موارد زیر باشد:"
+
+#: ../../source/contributing.rst:437 800a3c4bd9fe45ad88de673e6c7b607a
+msgid "**Overview**: What the tutorial covers"
+msgstr "**بررسی کلی**: آموزش چه موضوعاتی را پوشش می‌دهد"
+
+#: ../../source/contributing.rst:438 0a682cd9395842c0b8e8b6eaba215dd0
+msgid "**Prerequisites**: Required knowledge/previous tutorials"
+msgstr "**پیش‌نیازها**: دانش مورد نیاز/آموزش‌های قبلی"
+
+#: ../../source/contributing.rst:439 e7893aa67cad4fd2b5f3937e187a6969
+msgid "**Theory** (optional): Background physics/chemistry"
+msgstr "**تئوری** (اختیاری): پیش‌زمینه فیزیک/شیمی"
+
+#: ../../source/contributing.rst:440 2db008cb5f6446ada964edc4e0b4c87d
+msgid "**Setup**: Environment and structure preparation"
+msgstr "**راه‌اندازی**: آماده‌سازی محیط و ساختار"
+
+#: ../../source/contributing.rst:441 d3ab906453bd439aa0487367a22c80dc
+msgid "**Step-by-step**: Code examples with explanations"
+msgstr "**گام به گام**: مثال‌های کد با توضیحات"
+
+#: ../../source/contributing.rst:442 c748306bce634943bcf072816e4a40a8
+msgid "**Results**: Expected output and interpretation"
+msgstr "**نتایج**: خروجی مورد انتظار و تفسیر"
+
+#: ../../source/contributing.rst:443 6ca76927b5d84953bf4df89a6bfd1ddc
+msgid "**Exercises** (optional): Try-it-yourself tasks"
+msgstr "**تمرین‌ها** (اختیاری): وظایف خودتان امتحان کنید"
+
+#: ../../source/contributing.rst:444 bcb9366055e24f6da551218a47901849
+msgid "**Next Steps**: What to learn next"
+msgstr "**مراحل بعدی**: چه چیزی بعداً یاد بگیریم"
+
+#: ../../source/contributing.rst:449 e83f3e21bcd14afc8cd4127b943a9283
+msgid "Getting Help"
+msgstr "دریافت کمک"
+
+#: ../../source/contributing.rst:452 4fa92805956f4501b12d55e78564bce5
+msgid "Resources"
+msgstr "منابع"
+
+#: ../../source/contributing.rst:454 5937d69f445f4b28ba103d3a6e7c97c1
+msgid "**Documentation**: https://atomate2siesta.readthedocs.io"
+msgstr "**مستندات**: https://atomate2siesta.readthedocs.io"
+
+#: ../../source/contributing.rst:455 eef0eeff743c4252a0dd221486c851b4
+msgid "**GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgstr "**مسائل GitHub**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+
+#: ../../source/contributing.rst:456 1af424c23ec346c3842afd6fce427a76
+msgid ""
+"**Discussions**: https://github.com/arsalan-"
+"akhtar/atomate2siesta/discussions"
+msgstr "**بحث‌ها**: https://github.com/arsalan-akhtar/atomate2siesta/discussions"
+
+#: ../../source/contributing.rst:459 9f6660e79d434584bda04520709890e9
+msgid "Contact"
+msgstr "تماس"
+
+#: ../../source/contributing.rst:461 f1e92cc646ca4f4c899a4ee7fadae03f
+msgid "**Maintainer**: Arsalan Akhtar (sr.arsalan.akhtar@gmail.com)"
+msgstr "**نگهدارنده**: Arsalan Akhtar (sr.arsalan.akhtar@gmail.com)"
+
+#: ../../source/contributing.rst:462 0c9e028c020948acae07ef28583eabdb
+msgid "**Issues**: Use GitHub issue tracker"
+msgstr "**مسائل**: از ردیاب مسائل GitHub استفاده کنید"
+
+#: ../../source/contributing.rst:463 e7ed2a18ef914d54964a781187af88fe
+msgid "**Feature Discussions**: Use GitHub discussions"
+msgstr "**بحث‌های ویژگی**: از بحث‌های GitHub استفاده کنید"
+
+#: ../../source/contributing.rst:468 b1d48f9f2aa94770b6cb3f7c818ee90c
+msgid "Code of Conduct"
+msgstr "قوانین رفتاری"
+
+#: ../../source/contributing.rst:471 75e78fcb492048d2ad19beea397e909d
+msgid "Be Respectful"
+msgstr "محترمانه باشید"
+
+#: ../../source/contributing.rst:473 92d7c830ecce40fa8b5edf766c60078d
+msgid "Treat all contributors with respect"
+msgstr "با تمام مشارکت‌کنندگان با احترام رفتار کنید"
+
+#: ../../source/contributing.rst:474 776f79c165084891abef026e699d5eff
+msgid "Welcome newcomers and help them learn"
+msgstr "به تازه‌واردان خوشامد بگویید و به یادگیری آنها کمک کنید"
+
+#: ../../source/contributing.rst:475 e8681dcf70db4b9f847e22f2bc4ccddd
+msgid "Be patient with questions"
+msgstr "در برابر سوالات صبور باشید"
+
+#: ../../source/contributing.rst:476 b6bfa6a9dd0a4cbfb97c00f29e858871
+msgid "Provide constructive feedback"
+msgstr "بازخورد سازنده ارائه دهید"
+
+#: ../../source/contributing.rst:479 dfd84593ed8b4e21ba2c30c4767999ae
+msgid "Be Professional"
+msgstr "حرفه‌ای باشید"
+
+#: ../../source/contributing.rst:481 2cf6832861664f2baf2873369b3ed6be
+msgid "Focus on the code, not the person"
+msgstr "روی کد تمرکز کنید، نه روی شخص"
+
+#: ../../source/contributing.rst:482 2ce7774e9f4d40a99fbf344bec18f951
+msgid "Accept criticism gracefully"
+msgstr "انتقاد را با وقار بپذیرید"
+
+#: ../../source/contributing.rst:483 abec2f343f0d46e5b812e840f7647c29
+msgid "Acknowledge contributions"
+msgstr "مشارکت‌ها را تصدیق کنید"
+
+#: ../../source/contributing.rst:484 fc624a75a708446e94e63ba3cefdb82e
+msgid "Give credit where due"
+msgstr "در جای مناسب اعتبار بدهید"
+
+#: ../../source/contributing.rst:487 c5732f67c7e74972971c1eaeee1cf96f
+msgid "Be Collaborative"
+msgstr "مشارکتی باشید"
+
+#: ../../source/contributing.rst:489 3ac31a21154244e0865440c38971abad
+msgid "Share knowledge and best practices"
+msgstr "دانش و بهترین روش‌ها را به اشتراک بگذارید"
+
+#: ../../source/contributing.rst:490 79cb080780384354ae185caf26de1c30
+msgid "Help others learn and improve"
+msgstr "به دیگران در یادگیری و بهبود کمک کنید"
+
+#: ../../source/contributing.rst:491 760b3782349643c5a96c91158b922e15
+msgid "Review PRs thoughtfully"
+msgstr "درخواست‌های Pull را با دقت بررسی کنید"
+
+#: ../../source/contributing.rst:492 cadb358555a74f64a4f98e4e24a7d4bb
+msgid "Contribute to discussions"
+msgstr "در بحث‌ها مشارکت کنید"
+
+#: ../../source/contributing.rst:497 e1330474cafa43a5ab1487bfe7c706b8
+msgid "Recognition"
+msgstr "شناسایی"
+
+#: ../../source/contributing.rst:499 79dfbd2002784bf7a87a750cc722f2cc
+msgid "Contributors are recognized in:"
+msgstr "مشارکت‌کنندگان در موارد زیر شناسایی می‌شوند:"
+
+#: ../../source/contributing.rst:501 08963c2bff2e488f9e9a81c371836f97
+msgid "``CONTRIBUTORS.md`` file (if exists)"
+msgstr "فایل ``CONTRIBUTORS.md`` (در صورت وجود)"
+
+#: ../../source/contributing.rst:502 def5ffa341f44c67bbf375daa489e21d
+msgid "Release notes"
+msgstr "یادداشت‌های انتشار"
+
+#: ../../source/contributing.rst:503 08d14c303d804143a174ad0e6cfe8a52
+msgid "Commit history"
+msgstr "تاریخچه commit"
+
+#: ../../source/contributing.rst:504 6558db8f9bb04f6ca285ddffb3fb440f
+msgid "Co-authorship on papers (for significant contributions)"
+msgstr "هم‌نویسندگی در مقالات (برای مشارکت‌های قابل توجه)"
+
+#: ../../source/contributing.rst:506 96de06ac10e4422cb578ec45f0bc33ea
+msgid "Thank you for contributing to atomate2siesta! 🎉"
+msgstr "از مشارکت شما در atomate2siesta متشکریم! 🎉"
+
+#: ../../source/contributing.rst:512 4d8e5399ad6b487ca5a1e7de2296f5a6
+msgid ":doc:`changelog` - Release history"
+msgstr ":doc:`changelog` - تاریخچه انتشار"
+
+#: ../../source/contributing.rst:513 f284ee7b5fef453bb60451fa15901502
+msgid ":doc:`features` - Feature documentation"
+msgstr ":doc:`features` - مستندات ویژگی‌ها"

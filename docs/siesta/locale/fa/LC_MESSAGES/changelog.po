@@ -1,0 +1,558 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/changelog.rst:3 2bb8171f0f6f47b8966fb44d71d0b900
+msgid "Changelog"
+msgstr "تاریخچه تغییرات"
+
+#: ../../source/changelog.rst:5 705864d6919a47b9bbe74513a73cf255
+msgid "This page documents major releases of atomate2siesta."
+msgstr "این صفحه انتشارهای اصلی atomate2siesta را مستند می‌کند."
+
+#: ../../source/changelog.rst:10 dd7a758f32c14945a34840392a9ef9af
+#, fuzzy
+msgid "Version 1.0.0 (2025)"
+msgstr "نسخه ۱.۰.۱ (۲۰۲۵)"
+
+#: ../../source/changelog.rst:12 deebb18d8d7b4eb39c3a7a89d127752a
+#, fuzzy
+msgid "**Release Date**: December 2025"
+msgstr "**تاریخ انتشار**: دسامبر ۲۰۲۴"
+
+#: ../../source/changelog.rst:15 ../../source/changelog.rst:111
+#: ../../source/changelog.rst:147 32a8a5a58ae0447a90225e67fbc57937
+#: ce02d9ae724441a8a029a16d6fe0c468 fba3b3ceced74f85b20bb494aeeb004a
+msgid "New Features"
+msgstr "ویژگی‌های جدید"
+
+#: ../../source/changelog.rst:17 3993cbc8652f474da50096c1c3ef58ec
+msgid ""
+"**Structure Info CLI**: New ``atomate2siesta-structure info`` subcommand "
+"for comprehensive structure analysis including crystal symmetry, lattice "
+"parameters, atomic composition, and automatic magnetic property detection"
+msgstr ""
+"**CLI اطلاعات ساختار**: دستور فرعی جدید ``atomate2siesta-structure info``"
+" برای تحلیل جامع ساختار شامل تقارن بلوری، پارامترهای شبکه، ترکیب اتمی و "
+"تشخیص خودکار خواص مغناطیسی"
+
+#: ../../source/changelog.rst:18 499079fd58e4414b877c55da192a6762
+msgid ""
+"**Automatic Format Detection**: ``atomate2siesta-structure convert`` now "
+"automatically detects input format from file extension (.fdf, .xv, .cif, "
+".xsf) with support for CIF and XSF input formats"
+msgstr ""
+"**تشخیص خودکار فرمت**: ``atomate2siesta-structure convert`` اکنون فرمت "
+"ورودی را به‌طور خودکار از پسوند فایل (.fdf، .xv، .cif، .xsf) تشخیص می‌دهد"
+" با پشتیبانی از فرمت‌های ورودی CIF و XSF"
+
+#: ../../source/changelog.rst:19 c0e4bee8c6f64f45bb5850662d13b4b5
+msgid ""
+"**DM.InitSpin Comments**: Automatic generation of descriptive comments "
+"for each atom showing species name, atom number, and Cartesian "
+"coordinates for easier debugging of magnetic structures"
+msgstr ""
+"**توضیحات DM.InitSpin**: تولید خودکار توضیحات توصیفی برای هر اتم که نام "
+"گونه، شماره اتم و مختصات دکارتی را نشان می‌دهد برای اشکال‌زدایی آسان‌تر "
+"ساختارهای مغناطیسی"
+
+#: ../../source/changelog.rst:20 072c534d09c747ab96a549ed06f60909
+msgid ""
+"**Cu Magnetic Detection**: Added Cu (Z=29) to automatic magnetic element "
+"detection with default 0.6 μB moment for DFT+U calculations"
+msgstr ""
+"**تشخیص مغناطیسی Cu**: افزودن Cu (Z=۲۹) به تشخیص خودکار عنصر مغناطیسی با "
+"گشتاور پیش‌فرض ۰.۶ μB برای محاسبات DFT+U"
+
+#: ../../source/changelog.rst:23 9f13debc9dee42c4b915bedd93e472c5
+msgid "Architecture Improvements"
+msgstr "بهبودهای معماری"
+
+#: ../../source/changelog.rst:25 1be972318ea64db8afb86744982878d7
+msgid ""
+"**Single Source of Truth**: Magnetic moment (DM.InitSpin) generation now "
+"exclusively handled by SpinSettings dataclass, eliminating duplicate "
+"logic and architectural inconsistency (~50 lines removed from ASE writer)"
+msgstr ""
+"**منبع واحد حقیقت**: تولید گشتاور مغناطیسی (DM.InitSpin) اکنون منحصراً "
+"توسط کلاس داده SpinSettings انجام می‌شود و منطق تکراری و ناسازگاری معماری"
+" را حذف می‌کند (~۵۰ خط از نویسنده ASE حذف شد)"
+
+#: ../../source/changelog.rst:26 031af3c5eae5471b89a1a0dc7573c503
+msgid ""
+"**Internal Parameter Naming System**: Introduced dual-prefix system "
+"(``a2s_`` alias and ``atomate2siesta_`` full) to clearly distinguish "
+"framework control parameters from SIESTA FDF parameters with automatic "
+"filtering"
+msgstr ""
+"**سیستم نام‌گذاری پارامترهای داخلی**: معرفی سیستم دو پیشوندی (``a2s_`` "
+"مخفف و ``atomate2siesta_`` کامل) برای تمایز واضح پارامترهای کنترل چارچوب "
+"از پارامترهای FDF سیستا با فیلتر خودکار"
+
+#: ../../source/changelog.rst:27 4161646092e04f61ad1a92c2e7e05c99
+msgid ""
+"**CLI Reorganization**: Removed deprecated ``atomate2siesta-convert`` "
+"command in favor of structured ``atomate2siesta-structure`` group with "
+"room for future subcommands (scale, rotate, translate, etc.)"
+msgstr ""
+"**بازسازماندهی CLI**: حذف دستور منسوخ ``atomate2siesta-convert`` به نفع "
+"گروه ساختاریافته ``atomate2siesta-structure`` با فضای کافی برای دستورات "
+"فرعی آینده (مقیاس‌بندی، چرخش، انتقال و غیره)"
+
+#: ../../source/changelog.rst:30 ../../source/changelog.rst:132
+#: 34bbe75190de4ef99f690613dc086b5d f763f84ce5a243369a454eaf1e519ec8
+msgid "Bug Fixes"
+msgstr "رفع اشکالات"
+
+#: ../../source/changelog.rst:32 754caf7c9aa547c18eb33032757967a6
+msgid ""
+"Fixed empty ``%block DM.InitSpin`` blocks when structure has no magnetic "
+"moments"
+msgstr ""
+"رفع بلوک‌های خالی ``%block DM.InitSpin`` زمانی که ساختار گشتاور مغناطیسی "
+"ندارد"
+
+#: ../../source/changelog.rst:33 bf32cc9636d340aea9c4cd03687a158b
+msgid "Fixed duplicate DM.InitSpin generation sources (SpinSettings + ASE writer)"
+msgstr "رفع منابع تکراری تولید DM.InitSpin (SpinSettings + نویسنده ASE)"
+
+#: ../../source/changelog.rst:34 09fc0887b1f54d85829bc258e9bf30e7
+msgid ""
+"Fixed ``magnetic_ordering`` appearing as invalid SIESTA keyword in FDF "
+"files"
+msgstr ""
+"رفع ظاهر شدن ``magnetic_ordering`` به عنوان کلمه کلیدی نامعتبر سیستا در "
+"فایل‌های FDF"
+
+#: ../../source/changelog.rst:35 b2cdd5baff3d440691fe5a039d70636a
+msgid "Updated stale imports after CLI reorganization"
+msgstr "به‌روزرسانی واردات‌های قدیمی پس از بازسازماندهی CLI"
+
+#: ../../source/changelog.rst:38 2103eba5ba954906a0948575e49d0eb5
+msgid "Strategic Planning"
+msgstr "برنامه‌ریزی راهبردی"
+
+#: ../../source/changelog.rst:40 01eaebffca1d4bd9bebda8237f4763f4
+msgid ""
+"**Structure Manipulation Roadmap**: Comprehensive 16-command expansion "
+"plan organized in 4 priority tiers with implementation timeline, testing "
+"strategy, and success metrics"
+msgstr ""
+"**نقشه راه دستکاری ساختار**: طرح جامع گسترش ۱۶ دستور سازماندهی شده در ۴ "
+"سطح اولویت با جدول زمانی پیاده‌سازی، استراتژی تست و معیارهای موفقیت"
+
+#: ../../source/changelog.rst:43 3cd80c2851b24813ba56709f6cd06972
+msgid "Breaking Changes"
+msgstr "تغییرات ناسازگار"
+
+#: ../../source/changelog.rst:45 fd541217ee544a5dabc7cfc507ea5be4
+msgid ""
+"**CLI**: ``atomate2siesta-convert`` command removed; use "
+"``atomate2siesta-structure convert`` instead"
+msgstr ""
+"**CLI**: دستور ``atomate2siesta-convert`` حذف شد؛ به جای آن از "
+"``atomate2siesta-structure convert`` استفاده کنید"
+
+#: ../../source/changelog.rst:46 0b376d10236e4b148efb9660dc14d502
+msgid ""
+"**CLI**: ``--xv`` flag removed from ``atomate2siesta-structure convert``;"
+" file format is now automatically detected from extension"
+msgstr ""
+"**CLI**: پرچم ``--xv`` از ``atomate2siesta-structure convert`` حذف شد؛ "
+"فرمت فایل اکنون به‌طور خودکار از پسوند تشخیص داده می‌شود"
+
+#: ../../source/changelog.rst:49 fea42c34143d4b5ba4bec6be7c518751
+msgid "Migration Guide"
+msgstr "راهنمای مهاجرت"
+
+#: ../../source/changelog.rst:51 f7364dc8086b493baf8119d1f5814208
+msgid "**Internal Parameter Naming (v1.0.0)**"
+msgstr "**نام‌گذاری پارامترهای داخلی (نسخه ۱.۰.۰)**"
+
+#: ../../source/changelog.rst:53 da72f17884794cb59ecf61dd0bf35226
+msgid ""
+"atomate2siesta now uses prefixed parameter names to distinguish framework"
+" control parameters from SIESTA FDF parameters:"
+msgstr ""
+"atomate2siesta اکنون از نام‌های پارامتر با پیشوند استفاده می‌کند تا "
+"پارامترهای کنترل چارچوب را از پارامترهای FDF سیستا متمایز کند:"
+
+#: ../../source/changelog.rst:55 1aea5529d2f046f481264952384cf902
+msgid "**Old (Deprecated - Still Works):**"
+msgstr "**قدیمی (منسوخ - هنوز کار می‌کند):**"
+
+#: ../../source/changelog.rst:68 fee38233e18f4d6795c9f2a9adbbe81f
+msgid "**New (Recommended):**"
+msgstr "**جدید (توصیه شده):**"
+
+#: ../../source/changelog.rst:87 c758852b4281408f87896356cb54aab1
+msgid "**Migration Timeline:**"
+msgstr "**جدول زمانی مهاجرت:**"
+
+#: ../../source/changelog.rst:89 3c5230f4029b4dba88fa66d43141035e
+msgid "**v1.0.0+**: Only prefixed names allowed (strict validation, current)"
+msgstr "**نسخه ۱.۰.۰+**: فقط نام‌های با پیشوند مجاز هستند (اعتبارسنجی دقیق، فعلی)"
+
+#: ../../source/changelog.rst:91 4ed3d720bcd443af8cce8962b93fa0b3
+msgid "**Why the Change?**"
+msgstr "**چرا این تغییر؟**"
+
+#: ../../source/changelog.rst:93 a3834762f93d40c4a4326d2b1e6305ac
+msgid ""
+"**Visual Clarity**: Instantly distinguish atomate2siesta controls "
+"(``a2s_*``) from SIESTA parameters"
+msgstr ""
+"**وضوح بصری**: تمایز فوری کنترل‌های atomate2siesta (``a2s_*``) از "
+"پارامترهای سیستا"
+
+#: ../../source/changelog.rst:94 ac7a3a7ebdf84cb4825c17381c786bdf
+msgid ""
+"**No Collisions**: Separate namespace prevents conflicts with SIESTA "
+"keywords"
+msgstr ""
+"**بدون تداخل**: فضای نام جداگانه از تضادها با کلمات کلیدی سیستا جلوگیری "
+"می‌کند"
+
+#: ../../source/changelog.rst:95 8d5d7a42db1b40b5af5a2590f05d61e7
+msgid "**Scalable**: Add unlimited new control parameters without risk"
+msgstr "**مقیاس‌پذیر**: افزودن پارامترهای کنترل جدید نامحدود بدون ریسک"
+
+#: ../../source/changelog.rst:96 5bde9e3ec2d44556a0a7840f58cbdbb1
+msgid "**Self-Documenting**: Prefix reveals parameter source"
+msgstr "**خودمستندساز**: پیشوند منبع پارامتر را آشکار می‌کند"
+
+#: ../../source/changelog.rst:98 c90cb250858c4c7f9468b0d7b0c5cc94
+msgid "**See Also:**"
+msgstr "**همچنین ببینید:**"
+
+#: ../../source/changelog.rst:100 c7495d49eacd4ae0a530fa40b922284a
+msgid ":doc:`fdf-parameters` - Complete internal parameter documentation"
+msgstr ":doc:`fdf-parameters` - مستندات کامل پارامترهای داخلی"
+
+#: ../../source/changelog.rst:101 21ba7cf992dd45848c49b6c5de1b1bd1
+msgid "``README.md`` - Usage examples with new parameter names"
+msgstr "``README.md`` - نمونه‌های استفاده با نام‌های پارامتر جدید"
+
+#: ../../source/changelog.rst:106 53612398c1794b09aab54afcc1bba055
+msgid "Version 0.2.0 (2025)"
+msgstr "نسخه ۰.۲.۰ (۲۰۲۵)"
+
+#: ../../source/changelog.rst:108 4a00e615d671484c92b0b0c406fde771
+msgid "**Release Date**: October 2025"
+msgstr "**تاریخ انتشار**: اکتبر ۲۰۲۵"
+
+#: ../../source/changelog.rst:113 b58f3f884e6e4613900ff3dcb4ca1706
+msgid ""
+"**Dataclass Tutorials & Comment Headers**: 7 comprehensive tutorials for "
+"MEDIUM priority dataclass modules (DOS, optical properties, phonon "
+"inputs, DFT+U, charge/field calculations) with automatic comment header "
+"generation for FDF output"
+msgstr ""
+"**آموزش‌های کلاس داده و سرصفحه‌های توضیح**: ۷ آموزش جامع برای ماژول‌های "
+"کلاس داده با اولویت متوسط (DOS، خواص نوری، ورودی‌های فونون، DFT+U، "
+"محاسبات بار/میدان) با تولید خودکار سرصفحه توضیح برای خروجی FDF"
+
+#: ../../source/changelog.rst:114 8230856e08f144558258c7433c196f89
+msgid ""
+"**Recipe Book System**: 39 high-level recipes across 6 categories "
+"reducing workflow complexity from 50+ lines to 1-line function calls with"
+" MaterialAnalyzer for automatic parameter recommendations"
+msgstr ""
+"**سیستم کتاب دستورها**: ۳۹ دستور سطح بالا در ۶ دسته که پیچیدگی جریان کار "
+"را از ۵۰+ خط به فراخوانی‌های تابع تک‌خطی کاهش می‌دهند با MaterialAnalyzer"
+" برای توصیه‌های خودکار پارامتر"
+
+#: ../../source/changelog.rst:115 2dbcdcb56b9f4a0eb4afd62f33431e1e
+msgid ""
+"**Universal Dry-Run Support**: All 10 workflow makers support dry_run "
+"mode with 99.9% time savings for workflow preview"
+msgstr ""
+"**پشتیبانی جامع اجرای آزمایشی**: تمام ۱۰ سازنده جریان کار از حالت dry_run"
+" با ۹۹.۹٪ صرفه‌جویی در زمان برای پیش‌نمایش جریان کار پشتیبانی می‌کنند"
+
+#: ../../source/changelog.rst:116 a81695fda85c46909043350e122da22d
+msgid ""
+"**Grüneisen Parameters & Thermal Expansion**: Complete analysis suite "
+"with 6 plotting functions, temperature-dependent calculations, and "
+"publication-quality output"
+msgstr ""
+"**پارامترهای گرونایزن و انبساط حرارتی**: مجموعه تحلیل کامل با ۶ تابع رسم،"
+" محاسبات وابسته به دما و خروجی کیفیت انتشار"
+
+#: ../../source/changelog.rst:117 e4f9cfda705f4c3396c31fab4d250598
+msgid ""
+"**Powerups System**: Dynamic workflow customization with flow-level "
+"parameter updates and selective job modification"
+msgstr ""
+"**سیستم Powerups**: سفارشی‌سازی پویای جریان کار با به‌روزرسانی‌های "
+"پارامتر سطح جریان و تغییر انتخابی کار"
+
+#: ../../source/changelog.rst:118 eaa8ce5d035046d4bf54d823ac5de0bb
+msgid ""
+"**Adsorption Site Scanning**: Grid-based automatic scanning with molecule"
+" orientation control and energy ranking"
+msgstr ""
+"**اسکن سایت جذب**: اسکن خودکار مبتنی بر شبکه با کنترل جهت‌گیری مولکول و "
+"رتبه‌بندی انرژی"
+
+#: ../../source/changelog.rst:119 b43b7d074457412c8f2c41bd1bf95d07
+#, python-format
+msgid ""
+"**Comprehensive Testing**: 750 tests with 44% code coverage and 17-second"
+" execution time"
+msgstr "**تست جامع**: ۷۵۰ تست با ۴۴٪ پوشش کد و زمان اجرای ۱۷ ثانیه‌ای"
+
+#: ../../source/changelog.rst:122 ../../source/changelog.rst:156
+#: 60865b5b2f5b48c6bf2570de7faefa6d 9bbab3e12deb42c8bd65a90b4a5d89b9
+msgid "Improvements"
+msgstr "بهبودها"
+
+#: ../../source/changelog.rst:124 2229d9cbf7e345cd94cf828f1b07b5d9
+msgid ""
+"**Automatic Comment Headers**: 21 FDF parameter mappings for automatic "
+"dataclass comment header detection in direct SIESTA FDF format"
+msgstr ""
+"**سرصفحه‌های توضیح خودکار**: ۲۱ نگاشت پارامتر FDF برای تشخیص خودکار "
+"سرصفحه توضیح کلاس داده در فرمت FDF مستقیم سیستا"
+
+#: ../../source/changelog.rst:125 1b3fb2e4623a40d587394127d860b524
+msgid ""
+"**Tutorial Coverage**: 30+ tutorials with comprehensive READMEs (600-800 "
+"lines) covering theory, best practices, and troubleshooting"
+msgstr ""
+"**پوشش آموزشی**: ۳۰+ آموزش با READMEهای جامع (۶۰۰-۸۰۰ خط) که تئوری، "
+"بهترین شیوه‌ها و عیب‌یابی را پوشش می‌دهند"
+
+#: ../../source/changelog.rst:126 406953d310f147c088db1991062cc6c1
+msgid "Enhanced basis parameter matching (PAO.BasisSize fuzzy matching)"
+msgstr "تطبیق پارامتر پایه بهبودیافته (تطبیق فازی PAO.BasisSize)"
+
+#: ../../source/changelog.rst:127 616c4ceafdc54d9f95f9b19f55e31ed4
+msgid "Complete tier system with all 24 modules operational"
+msgstr "سیستم سطح‌بندی کامل با تمام ۲۴ ماژول عملیاتی"
+
+#: ../../source/changelog.rst:128 14bfb15895da45d9a1636fba56bc1a93
+#, python-format
+msgid "62% reduction in TODO items with comprehensive docstrings"
+msgstr "کاهش ۶۲٪ در موارد TODO با رشته‌های مستندسازی جامع"
+
+#: ../../source/changelog.rst:129 f60f6aba40a44769b62132cda59e5452
+msgid "Better error messages and validation"
+msgstr "پیام‌های خطا و اعتبارسنجی بهتر"
+
+#: ../../source/changelog.rst:134 8c91dac2ed24441c991bdc4e4a877f0b
+msgid "Fixed PAO.BasisSize parameter being silently ignored"
+msgstr "رفع نادیده گرفته شدن بی‌صدای پارامتر PAO.BasisSize"
+
+#: ../../source/changelog.rst:135 71800daf23274a6db0102e99c1ac4120
+msgid "Added missing tier system classmethods"
+msgstr "افزودن classmethodهای گمشده سیستم سطح‌بندی"
+
+#: ../../source/changelog.rst:136 9c7e0edfa83d459d9c2d9b95a6e65e90
+msgid "Eliminated initialization warnings"
+msgstr "حذف هشدارهای مقداردهی اولیه"
+
+#: ../../source/changelog.rst:137 9883e09e64ca402cb4e15e4513b65e7d
+msgid "Fixed basis size propagation in EOS workflows"
+msgstr "رفع انتشار اندازه پایه در جریان‌های کار EOS"
+
+#: ../../source/changelog.rst:142 6368cb018b2f49da8e317aa71e1c7482
+msgid "Version 0.1.0 (2024)"
+msgstr "نسخه ۰.۱.۰ (۲۰۲۴)"
+
+#: ../../source/changelog.rst:144 0f196b4e817d46b992f3c0ce0facc8a8
+msgid "**Release Date**: December 2024"
+msgstr "**تاریخ انتشار**: دسامبر ۲۰۲۴"
+
+#: ../../source/changelog.rst:149 9a43be801b704ba0b372bcf41c154718
+msgid ""
+"**Custodian Error Handling**: Intelligent recovery from 10+ error types "
+"with progressive SCF convergence rescue"
+msgstr ""
+"**مدیریت خطای Custodian**: بازیابی هوشمند از ۱۰+ نوع خطا با نجات همگرایی "
+"SCF تدریجی"
+
+#: ../../source/changelog.rst:150 ed19678f776c49c7a686bc142e6e2a97
+msgid ""
+"**Phonon Calculations**: Full phonopy integration with symmetry-reduced "
+"displacements and automatic plotting (4 plot types)"
+msgstr ""
+"**محاسبات فونون**: یکپارچه‌سازی کامل phonopy با جابجایی‌های کاهش‌یافته "
+"تقارن و رسم خودکار (۴ نوع نمودار)"
+
+#: ../../source/changelog.rst:151 b911c19f02d14adaa0eb83b3d7e7352e
+msgid ""
+"**Surface Energy Workflows**: Multi-surface comparison with automatic "
+"termination discovery and publication-quality output"
+msgstr ""
+"**جریان‌های کار انرژی سطح**: مقایسه چند سطحی با کشف خودکار پایانه و خروجی"
+" کیفیت انتشار"
+
+#: ../../source/changelog.rst:152 5c7e811f892f49b98c80308570c8b544
+msgid ""
+"**Tier-Based Configuration**: 4-tier hierarchy (basic → expert) with 14 "
+"material-specific presets"
+msgstr ""
+"**پیکربندی مبتنی بر سطح**: سلسله‌مراتب ۴ سطحی (پایه ← خبره) با ۱۴ "
+"پیش‌تنظیم ویژه مواد"
+
+#: ../../source/changelog.rst:153 134dd97fed7b4902b70d81955ff0cdf3
+msgid ""
+"**Advanced Workflows**: Elastic constants, equation of state, and timing "
+"analysis"
+msgstr "**جریان‌های کار پیشرفته**: ثابت‌های کشسان، معادله حالت و تحلیل زمان‌بندی"
+
+#: ../../source/changelog.rst:158 c9d0ccf3c8054d6fbea44a144cca63af
+msgid "Enhanced SCF convergence parameters"
+msgstr "پارامترهای همگرایی SCF بهبودیافته"
+
+#: ../../source/changelog.rst:159 ddc8af570a49457cbaca2a5827235d2d
+msgid "Occupation function flexibility"
+msgstr "انعطاف‌پذیری تابع اشغال"
+
+#: ../../source/changelog.rst:160 31e4ed9ce1ca4377875c6d66e902fb60
+msgid "Improved field name matching"
+msgstr "تطبیق نام فیلد بهبودیافته"
+
+#: ../../source/changelog.rst:161 cb483405d4d1458d83d1963847d4345a
+msgid "Electronic temperature settings"
+msgstr "تنظیمات دمای الکترونیکی"
+
+#: ../../source/changelog.rst:162 84725a513f88456db530ea31396f3a77
+msgid "Better documentation structure"
+msgstr "ساختار مستندسازی بهتر"
+
+#: ../../source/changelog.rst:167 c4b8ed06163849d390158089cc55835a
+msgid "Version 0.0.1 (2024)"
+msgstr "نسخه ۰.۰.۱ (۲۰۲۴)"
+
+#: ../../source/changelog.rst:169 81dfa315db6e4711ac88835254157f54
+msgid "**Release Date**: August 2024"
+msgstr "**تاریخ انتشار**: آگوست ۲۰۲۴"
+
+#: ../../source/changelog.rst:172 fb32709cfdb74b0da0845856f674cf69
+msgid "Initial Release"
+msgstr "انتشار اولیه"
+
+#: ../../source/changelog.rst:174 f758abff786b454bbd52829bc152e9a7
+msgid ""
+"**Core Job Types**: RelaxMaker, StaticMaker, BandStructureMaker, "
+"SiestaPhononFlowMaker"
+msgstr ""
+"**انواع کار اصلی**: RelaxMaker، StaticMaker، BandStructureMaker، "
+"SiestaPhononFlowMaker"
+
+#: ../../source/changelog.rst:175 e8582bd02ec544ce94f0d2b6b5fae95f
+msgid ""
+"**Flow System**: Multi-step workflow composition with database "
+"integration and HPC support"
+msgstr ""
+"**سیستم جریان**: ترکیب جریان کار چند مرحله‌ای با یکپارچه‌سازی پایگاه داده"
+" و پشتیبانی HPC"
+
+#: ../../source/changelog.rst:176 efca00161be747b582b38a112840b397
+msgid ""
+"**Input Generation**: FDF file generation with 24 dataclass modules and "
+"pseudopotential handling"
+msgstr "**تولید ورودی**: تولید فایل FDF با ۲۴ ماژول کلاس داده و مدیریت شبه‌پتانسیل"
+
+#: ../../source/changelog.rst:177 ba34c6b909494d23a6110a0510664b63
+msgid ""
+"**Output Processing**: Comprehensive schema system with structure, "
+"energy, forces, and stress extraction"
+msgstr "**پردازش خروجی**: سیستم طرح جامع با استخراج ساختار، انرژی، نیروها و تنش"
+
+#: ../../source/changelog.rst:178 34af5e31058c4dda872389edffdb8d40
+msgid ""
+"**Basic Workflows**: Relaxation, band structure, NEB, and convergence "
+"studies"
+msgstr "**جریان‌های کار پایه**: آرام‌سازی، ساختار نوار، NEB و مطالعات همگرایی"
+
+#: ../../source/changelog.rst:179 48c9c5a21b6a4aeb9ee0beccb250b0b5
+msgid ""
+"**14 Tutorials**: Covering basics, convergence studies, advanced "
+"workflows, and infrastructure"
+msgstr "**۱۴ آموزش**: پوشش مبانی، مطالعات همگرایی، جریان‌های کار پیشرفته و زیرساخت"
+
+#: ../../source/changelog.rst:184 799bbc1669a34d2995fbc1e706dc223b
+msgid "Upgrade Notes"
+msgstr "یادداشت‌های ارتقا"
+
+#: ../../source/changelog.rst:187 a61f5b13c7c14e88a636fc893e10bca9
+msgid "Version 0.2.0"
+msgstr "نسخه ۰.۲.۰"
+
+#: ../../source/changelog.rst:189 248385bd934045049397871ca30f96d0
+msgid "No breaking changes"
+msgstr "بدون تغییرات ناسازگار"
+
+#: ../../source/changelog.rst:190 4d6554eee0aa44c590004fac392ec375
+msgid "New tutorials: 19 (adsorption), 20 (Grüneisen), 22 (powerups)"
+msgstr "آموزش‌های جدید: ۱۹ (جذب)، ۲۰ (گرونایزن)، ۲۲ (powerups)"
+
+#: ../../source/changelog.rst:191 6a102fbba5884b00a1836a0152114dd7
+msgid ""
+"New advanced features tutorials: DOS calculations, phonon inputs, optical"
+" properties, DFT+U, charge/dipole/electric field"
+msgstr ""
+"آموزش‌های ویژگی‌های پیشرفته جدید: محاسبات DOS، ورودی‌های فونون، خواص "
+"نوری، DFT+U، بار/دوقطبی/میدان الکتریکی"
+
+#: ../../source/changelog.rst:192 8d20646bb8d74cf39a6642ffe7f70aa6
+msgid "Recipe Book: 39 high-level recipes for simplified workflow creation"
+msgstr "کتاب دستورها: ۳۹ دستور سطح بالا برای ایجاد جریان کار ساده‌شده"
+
+#: ../../source/changelog.rst:195 830229cff5b043a5b4e102752c64aded
+msgid "Version 0.1.0"
+msgstr "نسخه ۰.۱.۰"
+
+#: ../../source/changelog.rst:197 3aac3e36540f4c92b4fb417970f615e9
+msgid "Custodian integration may require updating custom error handlers"
+msgstr ""
+"یکپارچه‌سازی Custodian ممکن است نیاز به به‌روزرسانی مدیریت‌کننده‌های خطای"
+" سفارشی داشته باشد"
+
+#: ../../source/changelog.rst:198 c3b1998de580421aa0a3b0100f1d530c
+msgid "Tier system replaces some direct parameter settings"
+msgstr "سیستم سطح‌بندی برخی تنظیمات پارامتر مستقیم را جایگزین می‌کند"
+
+#: ../../source/changelog.rst:199 3935256a2b604fd4aabe0f57a9d3dd00
+msgid "New tutorials: 15 (custodian), 16 (phonons), 17 (surfaces), 18 (tiers)"
+msgstr "آموزش‌های جدید: ۱۵ (custodian)، ۱۶ (فونون‌ها)، ۱۷ (سطوح)، ۱۸ (سطح‌بندی)"
+
+#: ../../source/changelog.rst:204 5391aee673df4d2999143bfdddaffaf5
+msgid "Citation"
+msgstr "استناد"
+
+#: ../../source/changelog.rst:206 7a0e4974594c4cbeab49506694b28ca0
+msgid "If you use atomate2siesta in your research, please cite:"
+msgstr "اگر از atomate2siesta در تحقیقات خود استفاده می‌کنید، لطفاً استناد کنید:"
+
+#: ../../source/changelog.rst:220 98b5edbb84a2472ba7dcfb1d75c0c43e
+msgid "License"
+msgstr "مجوز"
+
+#: ../../source/changelog.rst:222 c7e8b41fed2e4403870d5330c225f37c
+msgid "atomate2siesta is released under the MIT License."
+msgstr "atomate2siesta تحت مجوز MIT منتشر شده است."
+
+#~ msgid "**Release Date**: November 2025"
+#~ msgstr "**تاریخ انتشار**: نوامبر ۲۰۲۵"

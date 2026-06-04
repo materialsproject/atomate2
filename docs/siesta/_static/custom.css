@@ -1,0 +1,291 @@
+/* Custom CSS for atomate2siesta Documentation */
+
+/* Color scheme for atomate2siesta */
+:root {
+    --a2s-primary: #0066CC;
+    --a2s-secondary: #66B3FF;
+    --a2s-accent: #FF6B35;
+    --a2s-dark: #003D82;
+    --a2s-light: #CCE5FF;
+}
+
+/* Headers */
+h1, h2, h3 {
+    color: var(--a2s-dark);
+    font-weight: 600;
+}
+
+h1 {
+    border-bottom: 3px solid var(--a2s-primary);
+    padding-bottom: 10px;
+}
+
+h2 {
+    border-bottom: 2px solid var(--a2s-secondary);
+    padding-bottom: 8px;
+}
+
+/* Code blocks */
+.highlight {
+    border-left: 4px solid var(--a2s-primary);
+    border-radius: 4px;
+}
+
+code.literal {
+    background-color: var(--a2s-light);
+    color: var(--a2s-dark);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Consolas', monospace;
+}
+
+/* Admonitions */
+.admonition {
+    border-left: 4px solid var(--a2s-primary);
+    border-radius: 4px;
+    padding: 12px;
+    margin: 20px 0;
+}
+
+.admonition.note {
+    border-left-color: var(--a2s-secondary);
+    background-color: rgba(102, 179, 255, 0.1);
+}
+
+.admonition.important {
+    border-left-color: var(--a2s-accent);
+    background-color: rgba(255, 107, 53, 0.05);
+}
+
+.admonition.tip {
+    border-left-color: #52B788;
+    background-color: rgba(82, 183, 136, 0.05);
+}
+
+.admonition-title {
+    font-weight: 700;
+    color: var(--a2s-dark);
+}
+
+/* Tables */
+table.docutils {
+    border: 2px solid var(--a2s-primary);
+    border-collapse: collapse;
+}
+
+table.docutils th {
+    background-color: var(--a2s-primary);
+    color: white;
+    padding: 10px;
+}
+
+table.docutils td {
+    border: 1px solid var(--a2s-secondary);
+    padding: 8px;
+}
+
+table.docutils tr:nth-child(even) {
+    background-color: rgba(204, 229, 255, 0.3);
+}
+
+/* Links */
+a {
+    color: var(--a2s-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--a2s-accent);
+    text-decoration: underline;
+}
+
+/* Sidebar */
+.wy-side-nav-search {
+    background-color: var(--a2s-dark);
+}
+
+.wy-nav-top {
+    background-color: var(--a2s-primary);
+}
+
+/* Language switcher - Fixed for dark sidebar */
+.language-switcher {
+    padding: 15px;
+    margin: 15px 0;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    border-left: 4px solid var(--a2s-secondary);
+}
+
+.language-switcher h3 {
+    color: #e3e3e3;
+    font-size: 1em;
+    margin: 0 0 10px 0;
+    padding: 0;
+    border: none;
+    font-weight: 600;
+}
+
+.language-switcher ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.language-switcher li {
+    margin: 5px 0;
+}
+
+.language-switcher a {
+    color: #b3d9ff;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: all 0.2s;
+}
+
+.language-switcher a:hover {
+    color: #FFD700;
+    padding-left: 5px;
+}
+
+.language-switcher strong {
+    color: #ffffff;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+/* ========================================================================== */
+/* Vazirmatn Font for Persian - Direct font-face declarations */
+/* ========================================================================== */
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ========================================================================== */
+/* RTL support for Persian/Farsi */
+/* ========================================================================== */
+
+html[lang="fa"] {
+    direction: rtl;
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html[lang="fa"] body,
+html[lang="fa"] .wy-nav-content {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Apply Vazirmatn to all text elements in Persian */
+html[lang="fa"] h1,
+html[lang="fa"] h2,
+html[lang="fa"] h3,
+html[lang="fa"] h4,
+html[lang="fa"] h5,
+html[lang="fa"] h6,
+html[lang="fa"] p,
+html[lang="fa"] li,
+html[lang="fa"] td,
+html[lang="fa"] th,
+html[lang="fa"] div,
+html[lang="fa"] span,
+html[lang="fa"] a,
+html[lang="fa"] .wy-menu-vertical a,
+html[lang="fa"] .wy-nav-content {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+html[lang="fa"] .wy-nav-content {
+    direction: rtl;
+    text-align: right;
+}
+
+html[lang="fa"] .document {
+    direction: rtl;
+}
+
+html[lang="fa"] .wy-menu-vertical a {
+    text-align: right;
+}
+
+/* Keep code blocks and pre elements LTR (left-to-right) for readability */
+html[lang="fa"] code,
+html[lang="fa"] pre,
+html[lang="fa"] .highlight,
+html[lang="fa"] .highlight pre,
+html[lang="fa"] div.highlight,
+html[lang="fa"] .literal-block,
+html[lang="fa"] .code-block {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: embed;
+}
+
+/* Inline code should remain inline */
+html[lang="fa"] code.literal,
+html[lang="fa"] code.docutils {
+    display: inline;
+    direction: ltr !important;
+    unicode-bidi: embed;
+}
+
+/* Block-level code elements */
+html[lang="fa"] div.highlight,
+html[lang="fa"] .literal-block,
+html[lang="fa"] pre {
+    display: block;
+}
+
+/* Math expressions remain LTR */
+html[lang="fa"] .math,
+html[lang="fa"] div.math {
+    direction: ltr;
+    text-align: left;
+}
+
+/* Improve readability */
+.document {
+    line-height: 1.7;
+}
+
+p {
+    margin: 12px 0;
+}
+
+/* Print styles */
+@media print {
+    .wy-nav-side,
+    .wy-nav-content-wrap,
+    .rst-versions,
+    .language-switcher {
+        display: none;
+    }
+}

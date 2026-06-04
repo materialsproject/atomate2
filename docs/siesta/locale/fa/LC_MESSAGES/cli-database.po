@@ -1,0 +1,423 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/cli-database.rst:3 111d7e5159284b7e92985438cb78e76b
+msgid "Database CLI Reference"
+msgstr "مرجع رابط خط فرمان پایگاه داده"
+
+#: ../../source/cli-database.rst:5 a26432fe506d42169fbdea5b636e76b4
+msgid ""
+"The ``atomate2siesta-database`` command-line interface provides tools for"
+" testing, managing, and querying MongoDB databases used for "
+"atomate2siesta workflow storage."
+msgstr ""
+"رابط خط فرمان ``atomate2siesta-database`` ابزارهایی را برای تست، مدیریت و پرس‌وجو "
+"پایگاه‌های داده MongoDB که برای ذخیره‌سازی گردش کارهای atomate2siesta استفاده می‌شوند، "
+"فراهم می‌کند."
+
+#: ../../source/cli-database.rst:8 c4ecf252f20c4c23931c5240e28cff6f
+msgid "Installation"
+msgstr "نصب"
+
+#: ../../source/cli-database.rst:10 251b2f60449e4a01a38bf1c28c29be83
+msgid "The CLI is automatically installed with atomate2siesta:"
+msgstr "رابط خط فرمان به طور خودکار با atomate2siesta نصب می‌شود:"
+
+#: ../../source/cli-database.rst:17 c9400e422f0e4a4f8a95ecc53bef48c1
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/cli-database.rst:37 dff7bf70af584d51bdac84b8fa198a39
+msgid "Commands"
+msgstr "دستورات"
+
+#: ../../source/cli-database.rst:40 29befbe25a994526a9e4f6b82061de96
+msgid "test"
+msgstr "تست"
+
+#: ../../source/cli-database.rst:42 83aad9fca4a64137b7337dff723e7ff7
+msgid "Test MongoDB connection and display database statistics."
+msgstr "تست اتصال MongoDB و نمایش آمارهای پایگاه داده."
+
+#: ../../source/cli-database.rst:44 ../../source/cli-database.rst:85
+#: ../../source/cli-database.rst:127 ../../source/cli-database.rst:172
+#: ../../source/cli-database.rst:210 ../../source/cli-database.rst:251
+#: 0c5621926c6547a19434bbadd2907609 1c41fafc43e048ca8924b154b8ecfa42
+#: 4c901a6f9c9c490fa570b96953cd7203 4eb338e5040146419466c9f11f2a1ec0
+#: 9b682de7887742909db9a4043dd760fd f53c58d8b3874891bdbd55fe8ab9eebc
+msgid "**Usage:**"
+msgstr "**استفاده:**"
+
+#: ../../source/cli-database.rst:50 ../../source/cli-database.rst:91
+#: ../../source/cli-database.rst:137 ../../source/cli-database.rst:178
+#: ../../source/cli-database.rst:216 420f924bf99b4a52b493751ad9e82741
+#: 91e10a04801b4ddd99bf57ea3fcf063f 92e4c406b152498c8d94cbee7bcf0a28
+#: a0b423d5784e4a76b594cd927425c29f fad96b0d46a04d738b6120ca9f6912e9
+msgid "**Options:**"
+msgstr "**گزینه‌ها:**"
+
+#: ../../source/cli-database.rst:52 ../../source/cli-database.rst:93
+#: ../../source/cli-database.rst:139 ../../source/cli-database.rst:180
+#: ../../source/cli-database.rst:218 15d7025450d74b899a9ae6a284e82473
+#: 4fe5100dc6aa426a8ce9b2176e8c4cc5 704cda5f941a4bc39d291f07544ea7bd
+#: cf81550f836447c5849bdd3bd7baae0a d8c37b03bb1446b5837b0cd3ab48de43
+msgid "``--host TEXT``: MongoDB host address (default: localhost)"
+msgstr "``--host TEXT``: آدرس میزبان MongoDB (پیش‌فرض: localhost)"
+
+#: ../../source/cli-database.rst:53 ../../source/cli-database.rst:94
+#: ../../source/cli-database.rst:140 ../../source/cli-database.rst:181
+#: ../../source/cli-database.rst:219 5f38438693724d9d9fd1ccb552a61c20
+#: 60ed81b16efa404aa31d716628950f38 94509ad415314bf5b9716153f7074d80
+#: ae63513613f74eb4ac591870ba1f5a1e d6257c5cb9fd41f6bc82efb56f85f30e
+msgid "``--port INTEGER``: MongoDB port (default: 27017)"
+msgstr "``--port INTEGER``: پورت MongoDB (پیش‌فرض: ۲۷۰۱۷)"
+
+#: ../../source/cli-database.rst:54 ../../source/cli-database.rst:95
+#: ../../source/cli-database.rst:141 ../../source/cli-database.rst:182
+#: ../../source/cli-database.rst:220 1f5afd686ca64e159de19faf4d9d4fab
+#: 22b5b28cd2bf4811b1204d1937880cac 2dc8b301e8194836b117a50d71685a13
+#: c87afba8b1d248f9b3ef0336ec6a0800 d30c08c4d381472187e0c1b37bcc6274
+msgid "``--database TEXT``: Database name (default: atomate2siesta)"
+msgstr "``--database TEXT``: نام پایگاه داده (پیش‌فرض: atomate2siesta)"
+
+#: ../../source/cli-database.rst:55 ../../source/cli-database.rst:96
+#: ../../source/cli-database.rst:142 ../../source/cli-database.rst:221
+#: 1528ba4af2b84d01b91f421939ebf250 6c683d199d4e437f961404e401535085
+#: bf5fc3b342234c20bddd87636349adb1 f240b27881544a86a8ef6cb4605448d9
+msgid "``--collection TEXT``: Collection name (default: tasks)"
+msgstr "``--collection TEXT``: نام مجموعه (پیش‌فرض: tasks)"
+
+#: ../../source/cli-database.rst:57 ../../source/cli-database.rst:99
+#: ../../source/cli-database.rst:144 ../../source/cli-database.rst:184
+#: ../../source/cli-database.rst:224 159ef89c8b3e406c9b3968e804a5019a
+#: 5520966e1a2f4bd19768d6b52b751f83 98515fe721eb4045ae525f51d52f6d01
+#: 9de9cc068a4c4986a7537a416bff0fec d948bb44007e4e48a7e39e78cd54e0d0
+msgid "**Examples:**"
+msgstr "**مثال‌ها:**"
+
+#: ../../source/cli-database.rst:70 ../../source/cli-database.rst:197
+#: ../../source/cli-database.rst:257 358e799ea7a84c8d9fb5f78dd8191af0
+#: 8b202c0e38124ce096db84ac44f47ce3 ae013e0eb7c841c09b5ceb2d36e8ad1a
+msgid "**Output:**"
+msgstr "**خروجی:**"
+
+#: ../../source/cli-database.rst:72 d38b306840af4307964492c710c95f9c
+msgid "Connection status (PyMongo and Maggma)"
+msgstr "وضعیت اتصال (PyMongo و Maggma)"
+
+#: ../../source/cli-database.rst:73 b721c0b08a124efa958537e432785020
+msgid "Document count"
+msgstr "تعداد اسناد"
+
+#: ../../source/cli-database.rst:74 2af17eeb7b5e4cc4ba41105cc1f50568
+msgid "Database size"
+msgstr "حجم پایگاه داده"
+
+#: ../../source/cli-database.rst:75 d72c9341a59f4ba5a63fff5bc3c84eca
+msgid "Storage size"
+msgstr "حجم ذخیره‌سازی"
+
+#: ../../source/cli-database.rst:76 438174e47afa4953b5a5d89625ba5ad9
+msgid "Index count"
+msgstr "تعداد ایندکس‌ها"
+
+#: ../../source/cli-database.rst:81 649220661635450f88af20deb44b2f21
+msgid "list"
+msgstr "لیست"
+
+#: ../../source/cli-database.rst:83 27fa9f9d3da74e1d88d69f24c2dc79b7
+msgid "List recent documents in the database with key metadata."
+msgstr "نمایش اسناد اخیر در پایگاه داده به همراه فراداده‌های کلیدی."
+
+#: ../../source/cli-database.rst:97 6ad4e6fec92f42d89c487ce556a9f89c
+msgid "``--limit INTEGER``: Maximum number of documents to display (default: 10)"
+msgstr "``--limit INTEGER``: حداکثر تعداد اسناد برای نمایش (پیش‌فرض: ۱۰)"
+
+#: ../../source/cli-database.rst:112 ../../source/cli-database.rst:157
+#: 2f58afb654d7491693031846dd4e4248 4bb01eb520184255a866fc49fc4f1587
+msgid "**Output Table Columns:**"
+msgstr "**ستون‌های جدول خروجی:**"
+
+#: ../../source/cli-database.rst:114 3487c0c9473849acacea1d59ea2a0be5
+msgid "UUID (first 36 characters)"
+msgstr "UUID (۳۶ کاراکتر اول)"
+
+#: ../../source/cli-database.rst:115 b054cf51cc1d44aab04544820da79bf9
+msgid "Chemical formula"
+msgstr "فرمول شیمیایی"
+
+#: ../../source/cli-database.rst:116 02e56be8b1f2493b9997a9e2c7aa826d
+msgid "Calculation state (successful, failed, etc.)"
+msgstr "وضعیت محاسبه (موفق، ناموفق و غیره)"
+
+#: ../../source/cli-database.rst:117 ../../source/cli-database.rst:161
+#: 1aba7be34e964de38cb02f4fa8b1798c eaf41e4d1ea44cb3974b038e6b03862d
+msgid "Total energy (eV)"
+msgstr "انرژی کل (eV)"
+
+#: ../../source/cli-database.rst:118 ../../source/cli-database.rst:162
+#: 3c1d68715a514ff78fac900c14fbbc9c a142545fb0884e15b120ce606a8ca8d4
+msgid "Calculation type"
+msgstr "نوع محاسبه"
+
+#: ../../source/cli-database.rst:123 d26e136006e8453f95772bc9e3aadb9c
+msgid "query"
+msgstr "پرس‌وجو"
+
+#: ../../source/cli-database.rst:125 37d640e16ceb4115b315601f5aa591a8
+msgid "Query documents by chemical formula and display detailed results."
+msgstr "پرس‌وجو اسناد بر اساس فرمول شیمیایی و نمایش نتایج جزئی."
+
+#: ../../source/cli-database.rst:133 1c2f093de15e4dc9bbaf9c3cc347d650
+msgid "**Arguments:**"
+msgstr "**آرگومان‌ها:**"
+
+#: ../../source/cli-database.rst:135 c6415e426b0d4024ba0755af16876bf8
+msgid "``FORMULA``: Chemical formula to search for (e.g., Si, Fe2O3, Al2O3)"
+msgstr "``FORMULA``: فرمول شیمیایی برای جستجو (مثل Si، Fe2O3، Al2O3)"
+
+#: ../../source/cli-database.rst:159 06651474f3b54eca93cd97fa84477b44
+msgid "UUID"
+msgstr "شناسه UUID"
+
+#: ../../source/cli-database.rst:160 2a2e2907f16646299fc57671fe306b7b
+msgid "Calculation state"
+msgstr "وضعیت محاسبه"
+
+#: ../../source/cli-database.rst:163 674ab5c24df2456f8b6d92290c04d1b2
+msgid "K-point grid"
+msgstr "شبکه نقاط K"
+
+#: ../../source/cli-database.rst:168 cbaaf4c9e5624e3c88de0e7693bb59e1
+msgid "stats"
+msgstr "آمار"
+
+#: ../../source/cli-database.rst:170 8b03e3478ff94c5ebe0d01e04f3f5f1d
+msgid "Display comprehensive statistics for all collections in the database."
+msgstr "نمایش آمارهای جامع برای تمام مجموعه‌ها در پایگاه داده."
+
+#: ../../source/cli-database.rst:199 47dd31c425564da09a14c29f65d50768
+msgid "Collection-level statistics (documents, size, avg doc size)"
+msgstr "آمارهای سطح مجموعه (اسناد، حجم، میانگین حجم سند)"
+
+#: ../../source/cli-database.rst:200 5bba7660d03e4e1dbefa20431606f02d
+msgid "Database-level statistics (total data size, storage size, indexes)"
+msgstr "آمارهای سطح پایگاه داده (حجم کل داده‌ها، حجم ذخیره‌سازی، ایندکس‌ها)"
+
+#: ../../source/cli-database.rst:201 5171b7e510cc494a840e53399d56c679
+msgid "Summary totals"
+msgstr "جمع کل خلاصه"
+
+#: ../../source/cli-database.rst:206 719197eb6e69455188abbd39602171a9
+msgid "clear"
+msgstr "پاک‌سازی"
+
+#: ../../source/cli-database.rst:208 d68298265fac4946855f88b43cb5eefb
+msgid "Clear all documents from a collection (USE WITH CAUTION)."
+msgstr "پاک‌سازی تمام اسناد از یک مجموعه (با احتیاط استفاده کنید)."
+
+#: ../../source/cli-database.rst:222 80f7fd81c3e040289961ff1af29beb7e
+msgid "``--force``: Skip confirmation prompt"
+msgstr "``--force``: نادیده گرفتن پیام تأیید"
+
+#: ../../source/cli-database.rst:242 a90914fcd0c94066a029204715f47b07
+msgid ""
+"This command permanently deletes all documents in the specified "
+"collection. Use with extreme caution, especially with ``--force`` flag."
+msgstr ""
+"این دستور به طور دائم تمام اسناد در مجموعه مشخص شده را حذف می‌کند. با احتیاط "
+"زیادی، به ویژه با پرچم ``--force`` استفاده کنید."
+
+#: ../../source/cli-database.rst:247 6c5aebf2e3424cc099ed7a9ccb13daa9
+msgid "config"
+msgstr "پیکربندی"
+
+#: ../../source/cli-database.rst:249 8c2e13778a4745e49b5d13a19af386e9
+msgid "Show example configuration files for jobflow and Python usage."
+msgstr "نمایش فایل‌های پیکربندی نمونه برای jobflow و استفاده در Python."
+
+#: ../../source/cli-database.rst:259 0958e3e6c9354f0e8fc1ddb8c559124c
+msgid "Example ``~/.jobflow.yaml`` configuration"
+msgstr "نمونه پیکربندی ``~/.jobflow.yaml``"
+
+#: ../../source/cli-database.rst:260 974cc9a4b75342b7a6267ffd83668c69
+msgid "Example Python code for using MongoStore"
+msgstr "نمونه کد Python برای استفاده از MongoStore"
+
+#: ../../source/cli-database.rst:261 268f442170234e2a893ffa8688c2dbdb
+msgid "Setup instructions"
+msgstr "دستورالعمل‌های راه‌اندازی"
+
+#: ../../source/cli-database.rst:263 b577a5efa93f4bc192a8cd6241ae4036
+msgid "**Example:**"
+msgstr "**مثال:**"
+
+#: ../../source/cli-database.rst:270 8571d34e104e4bf8b98e4a4615868587
+msgid "Common Use Cases"
+msgstr "موارد کاربرد رایج"
+
+#: ../../source/cli-database.rst:273 b59ccf77fb4e4a3a92794c4b540b2564
+msgid "Initial Setup and Testing"
+msgstr "راه‌اندازی اولیه و تست"
+
+#: ../../source/cli-database.rst:291 0b6eb804734e4445923cf129beb0baaa
+msgid "Monitoring Running Workflows"
+msgstr "نظارت بر گردش کارهای در حال اجرا"
+
+#: ../../source/cli-database.rst:305 13408ca9437c43bda9bc53f1ea0c5f32
+msgid "Production Database Management"
+msgstr "مدیریت پایگاه داده تولیدی"
+
+#: ../../source/cli-database.rst:319 5a11e66a8c34433a99b11f7250b53b42
+msgid "Development and Testing"
+msgstr "توسعه و تست"
+
+#: ../../source/cli-database.rst:333 7f21ead366c2467f83f570c7db6eeca9
+msgid "Remote Database Access"
+msgstr "دسترسی به پایگاه داده راه دور"
+
+#: ../../source/cli-database.rst:346 5be7307e938f4880830c9838dd5e52e8
+msgid "Integration with Python"
+msgstr "یکپارچه‌سازی با Python"
+
+#: ../../source/cli-database.rst:348 7afc2559657a48b8aeb8800a17b9eb1a
+msgid "The CLI complements Python-based database operations:"
+msgstr "رابط خط فرمان مکمل عملیات پایگاه داده مبتنی بر Python است:"
+
+#: ../../source/cli-database.rst:375 7efad1358f3b45a6b5355d4631c3d00c
+msgid "Error Handling"
+msgstr "مدیریت خطا"
+
+#: ../../source/cli-database.rst:378 1dfedc831ba64147939af329fe6a1ced
+msgid "Connection Failed"
+msgstr "اتصال ناموفق"
+
+#: ../../source/cli-database.rst:385 faf7be95f29a4ec2a1d02c3848d536da
+msgid "**Solution:** Start MongoDB service:"
+msgstr "**راه‌حل:** راه‌اندازی سرویس MongoDB:"
+
+#: ../../source/cli-database.rst:387 53fa3a6521ac4f36b06a642f5cae907b
+msgid "macOS: ``brew services start mongodb-community``"
+msgstr "macOS: ``brew services start mongodb-community``"
+
+#: ../../source/cli-database.rst:388 e3bf278c2a9648bfb318a257df95fd04
+msgid "Linux: ``sudo systemctl start mongodb``"
+msgstr "Linux: ``sudo systemctl start mongodb``"
+
+#: ../../source/cli-database.rst:391 24209bae1e17431f8568ab8855f8d813
+msgid "Module Not Found"
+msgstr "ماژول پیدا نشد"
+
+#: ../../source/cli-database.rst:398 a730ff0b04f148ce8cc73f9fcc663a73
+msgid "**Solution:** Install required packages:"
+msgstr "**راه‌حل:** نصب بسته‌های موردنیاز:"
+
+#: ../../source/cli-database.rst:405 b8ab51e2e6ad41569b2e04875712c2b7
+msgid "Permission Denied"
+msgstr "دسترسی رد شد"
+
+#: ../../source/cli-database.rst:412 8461dd0e05bb4c9db8916a387dda880e
+msgid ""
+"**Solution:** Provide credentials in connection string or configure "
+"MongoDB authentication properly."
+msgstr ""
+"**راه‌حل:** اعتبارنامه‌ها را در رشته اتصال قرار دهید یا احراز هویت MongoDB را به "
+"درستی پیکربندی کنید."
+
+#: ../../source/cli-database.rst:415 b827a6442fe9475da00b368ff07c7084
+msgid "Environment Variables"
+msgstr "متغیرهای محیطی"
+
+#: ../../source/cli-database.rst:417 89e379e7ba434e849a6542b62321c90e
+msgid "You can set default values using environment variables:"
+msgstr "می‌توانید مقادیر پیش‌فرض را با استفاده از متغیرهای محیطی تنظیم کنید:"
+
+#: ../../source/cli-database.rst:427 d397dc1ec07b4882be94a3bfb39de22b
+msgid "Command-line options always override environment variables."
+msgstr "گزینه‌های خط فرمان همیشه متغیرهای محیطی را لغو می‌کنند."
+
+#: ../../source/cli-database.rst:430 c4d05cd20b9f4fffa2b5852b9e529a19
+msgid "Tips and Best Practices"
+msgstr "نکات و بهترین شیوه‌ها"
+
+#: ../../source/cli-database.rst:432 d2452c9072ce4df6b1a7d8a332722540
+msgid ""
+"**Regular Monitoring**: Use ``stats`` command regularly to monitor "
+"database growth"
+msgstr ""
+"**نظارت منظم**: از دستور ``stats`` به طور منظم برای نظارت بر رشد پایگاه داده "
+"استفاده کنید"
+
+#: ../../source/cli-database.rst:433 47f954e7bd164a94911e4ee65b989880
+msgid "**Backup Before Clear**: Always backup before using ``clear`` command"
+msgstr ""
+"**پشتیبان‌گیری قبل از پاک‌سازی**: همیشه قبل از استفاده از دستور ``clear`` پشتیبان "
+"بگیرید"
+
+#: ../../source/cli-database.rst:434 8017c4eb22c6441bb800c45169526f7a
+msgid ""
+"**Use Descriptive Databases**: Use different database names for "
+"dev/test/production"
+msgstr ""
+"**استفاده از پایگاه‌های داده توصیفی**: از نام‌های پایگاه داده متفاوت برای توسعه/تست/"
+"تولید استفاده کنید"
+
+#: ../../source/cli-database.rst:435 8663f8d62a614550b7a1050615128fa6
+msgid "**Index Important Fields**: Create indexes for frequently queried fields"
+msgstr ""
+"**ایندکس‌گذاری فیلدهای مهم**: برای فیلدهای پرجستجو ایندکس ایجاد کنید"
+
+#: ../../source/cli-database.rst:436 f340d05655bd448b985d0bb0836d2005
+msgid ""
+"**SSH Tunnels for Remote Access**: Use SSH tunneling for secure remote "
+"database access"
+msgstr ""
+"**تونل‌های SSH برای دسترسی راه دور**: از تونل‌سازی SSH برای دسترسی ایمن به پایگاه "
+"داده راه دور استفاده کنید"
+
+#: ../../source/cli-database.rst:437 91c822da013945c38a58c7f4cdbc3003
+msgid ""
+"**Test Connection First**: Always run ``test`` before attempting "
+"operations on a new database"
+msgstr ""
+"**ابتدا اتصال را تست کنید**: همیشه قبل از تلاش برای انجام عملیات روی یک پایگاه داده "
+"جدید، ``test`` را اجرا کنید"
+
+#: ../../source/cli-database.rst:440 11b6602620564fcb8af9c845c48a8ffc
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/cli-database.rst:442 5714675d351045729bb22c89645bd477
+msgid "Tutorial 13: Database Storage"
+msgstr "آموزش ۱۳: ذخیره‌سازی پایگاه داده"
+
+#: ../../source/cli-database.rst:443 86df917edc164037bee9c3b98b131574
+msgid "`MongoDB Documentation <https://docs.mongodb.com/>`_"
+msgstr "`مستندات MongoDB <https://docs.mongodb.com/>`_"
+
+#: ../../source/cli-database.rst:444 6c9d4baba3554d6fad65188403a0ab24
+msgid "`Maggma Documentation <https://materialsproject.github.io/maggma/>`_"
+msgstr "`مستندات Maggma <https://materialsproject.github.io/maggma/>`_"
+
+#: ../../source/cli-database.rst:445 18ce84839caa4f30af36f61b92e7f5f1
+msgid "`Jobflow Database Guide <https://materialsproject.github.io/jobflow/>`_"
+msgstr "`راهنمای پایگاه داده Jobflow <https://materialsproject.github.io/jobflow/>`_"

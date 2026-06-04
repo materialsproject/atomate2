@@ -1,0 +1,672 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:1
+#: 3ad0cabd767f4a63b92653b518c3c11d
+msgid "Tutorial 07: Basis Set Customization"
+msgstr "Tutیاil 07: Bsis Set Customiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:3
+#: 2e76f5f262474c8bb64bf23b9d5d287c
+msgid ""
+"This tutorial series demonstrates how to customize basis sets in SIESTA "
+"calculations using atomate2siesta. Basis sets are crucial for balancing "
+"accuracy and computational cost."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:5
+#: 6c1e375f485540a7988b2a835a4520c0
+msgid "Tutorial Overview"
+msgstr "Tutیاil نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: e5faa24eb06140c2baef4732f947dd88
+msgid "File"
+msgstr "فایل"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: a6eedcc422fb4697916cc5f7439e33be
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: ab74c3c0be5f4fda90440ce22b8c010f
+msgid "Complexity"
+msgstr "Complexity"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 8a05a10e8c2b47a4b4e367e7d23a2727
+msgid "`01_global_basis_size.py`"
+msgstr "`01_global_basis_size.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 6e7e30b21daa45588413daa34747a558
+msgid "Set global basis size (SZ, DZ, DZP, TZP)"
+msgstr "Set globl bsis size (SZ, DZ, DZP, TZP)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 1f0b65374b0f48b993970f6525770646
+msgid "⭐ Beginner"
+msgstr "⭐ مبتدی"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 990f871ff1294b9daf46f1b1705e7cb5
+msgid "`02_single_atom_override.py`"
+msgstr "`02_single_atom_override.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 6ec7d7e393d14530a5f86dac6f74ee4a
+msgid "Per-species basis with %block PAO.BasisSizes"
+msgstr "Per-species bsis با %block PAO.BsisSizes"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: fd86a3160da44044a8acb49a00d9d833
+msgid "⭐⭐ Beginner"
+msgstr "⭐⭐ مبتدی"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 1797e6ca88014582b7a950e52ddb9703
+msgid "**`03_1_per_atom_direct.py`**"
+msgstr "**`03_1_per_atom_direct.py`**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: dc2e97e902174bb2b3f02e14a089252c
+msgid "**🆕 Per-atom basis (direct specification)**"
+msgstr "**🆕 Per-tom bsis (direct specifiction)**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 4ccea89a31fa400ca4151f52b2891b0f bffc6ab1845e4aaf80d6cca28e4c10f2
+#: eb932c543e914e6a9059c5f8460383ff
+msgid "⭐⭐ Intermediate"
+msgstr "⭐⭐ متوسط"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 05577843d7994828af6931a5c67df5a8
+msgid "**`03_2_per_atom_grouped.py`**"
+msgstr "**`03_2_per_atom_grouped.py`**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: fa6d19ec78a54f65822a2bfb36d4f755
+msgid "**🆕 Per-atom basis (grouped/layer-based)**"
+msgstr "**🆕 Per-tom bsis (grouped/lyer-bsed)**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: f95a039642664e8dbfcc3329e3441050
+msgid "`04_custom_pao_basis_simple.py`"
+msgstr "`04_custom_pao_basis_simple.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 55a6525e5be54c0880ba1e43e8dc5e45
+msgid "Full custom basis specification with %block PAO.Basis"
+msgstr "Full custom bsis specifiction با %block PAO.Bsis"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 047691f50c58453abfc57c3d198293e7 1e79965091da41cfb2a24e3a8a2ce105
+#: e4eeab4920be41ca8cf428820b06dcf4
+msgid "⭐⭐⭐ Advanced"
+msgstr "⭐⭐⭐ پیشرفته"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 1899a34d649a4532a0a86be35e177fb6
+msgid "`05_custom_pao_basis_with_polarization.py`"
+msgstr "`05_custom_pao_basis_with_polarization.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 36b3d55c787f4dc0bb3af9eb260934aa
+msgid "Custom basis + polarization orbitals"
+msgstr "Custom bsis + polriztion یاbitls"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 52b0f814116a43cd85a3c6d8c359d028
+msgid "`06_multispecies_custom_basis.py`"
+msgstr "`06_multispecies_custom_basis.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 682418c2f15d4459b1d47523a207fc79
+msgid "Custom basis for multiple species (Mg+O)"
+msgstr "Custom bsis برای multiple species (Mg+O)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 7f0389b66b26425a8a400bb16ff0215b defedba2f9524a88bb8c77f277d798be
+msgid "⭐⭐⭐⭐ Advanced"
+msgstr "⭐⭐⭐⭐ پیشرفته"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: d23d37d4bcbc40d69d81ef8de1bacb24
+msgid "`07_combining_blocks.py`"
+msgstr "`07_combining_blocks.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 6eb48355d55b45be9a0f64752c9fbea5
+msgid "Combine PAO.BasisSize with %block PAO.Basis"
+msgstr "Combine PAO.BsisSize با %block PAO.Bsis"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 5d8b1adff8af4bd9b397859e20e10270
+msgid "⭐⭐⭐⭐ Expert"
+msgstr "⭐⭐⭐⭐ Expert"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: ef342a3a7c794c7ebba0971c801b4654
+msgid "**`08_species_variants_surface.py`**"
+msgstr "**`08_species_variants_surface.py`**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 2ccb49fcb12343858fe3c1e13b737b3a
+msgid "**🆕 Species variants for surface calculations (dict format)**"
+msgstr "**🆕 Species vrints برای surfce clcultions (dict برایmt)**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 3cdfa69eade740688ab7cb5a1c88a48c
+msgid "**`09_species_variants_adsorption.py`**"
+msgstr "**`09_species_variants_adsorption.py`**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 4071994d334042c5b20546e1c3e9cc22
+msgid "**🆕 Species variants for adsorption studies**"
+msgstr "**🆕 Species vrints برای dsیاption studies**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: a37dbbb3ec584954b184a10718d2137f
+msgid "⭐⭐⭐ Intermediate-Advanced"
+msgstr "⭐⭐⭐ متوسط-پیشرفته"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: ddc77187de754748a4b7808d631a82c8
+msgid "**`10_species_variants_bsse_ghost.py`**"
+msgstr "**`10_species_variants_bsse_ghost.py`**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: fc1a3037b0e14ce4833b34166eccab34
+msgid "**🆕 Species variants for BSSE corrections (ghost atoms)**"
+msgstr "**🆕 Species vrints برای BSSE cیاrections (ghost toms)**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: c8e48e8bd8244377ab3de299e917f7e0
+msgid "**`11_pao_basis_helpers.py`**"
+msgstr "**`11_pao_basis_helpers.py`**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md
+#: 817ebdc6491b4615899a60d2fef12ae8
+msgid "**🆕 PAO.Basis helper functions (programmatic generation)**"
+msgstr "**🆕 PAO.Bsis helper functions (progrmmtic genertion)**"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:22
+#: 6c9bbd307c814f34862fd9e605a40997
+msgid "Quick Reference"
+msgstr "Quick Reference"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:24
+#: 748e3eb885c34502819f4ebcf17f5b84
+msgid "Standard Basis Sizes"
+msgstr "Stوrd Bsis Sizes"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:34
+#: 562d07ddd1a945f7a7820fc31699ab70
+msgid "Per-Species Basis Override"
+msgstr "Per-Species Bsis Override"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:44
+#: 2cdb9fdc45cd4e7094a90a1fb8ee018e
+msgid ""
+"Note: This is per-SPECIES (element type), not per-atom. All Mg atoms get "
+"DZP, all O atoms get TZP."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:46
+#: 4fdbb87afe9746dca07040f28ae40a8b
+msgid "Per-Atom Basis (🆕 NEW in v1.0.0)"
+msgstr "Per-Atom Bsis (🆕 NEW in v1.0.0)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:48
+#: 0f1eb78ddc574d2183e8411add37f60e
+msgid "The **per-atom basis helpers** enable atom-level precision control:"
+msgstr "The **per-tom bsis helpers** enble tom-level precision control:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:82
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:108
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:165
+#: 657bcaf64c0746c3866261538167e8f9 6f35b534704148afadabf1f7a5ae656d
+#: c3fcef69305644028bf61348d79ff23e
+msgid "**Use Cases**:"
+msgstr "**Use Cses**:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:83
+#: f9bf96ef98c640f08b9de5ee815bf49c
+msgid ""
+"**Surface slabs**: Different basis for surface vs bulk atoms (even same "
+"element)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:84
+#: f614dec8e71340be9abf1f63241f09a5
+msgid "**Defects**: High accuracy around defect site"
+msgstr "**Defects**: High ccurcy round defect site"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:85
+#: 2202065f21f84e23839740c57387afa9
+msgid "**Dopants**: Special treatment for specific doped atoms"
+msgstr "**Dopnts**: Specil tretment برای specific doped toms"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:86
+#: 8c04eb0ad47c40afaef8640912cc6743
+msgid "**Layer-based systems**: Automatic grouping by z-coordinate"
+msgstr "**Lyer-bsed systems**: Automtic grouping by z-coیاdinte"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:88
+#: 934f2aeeac5d49999c68e011c41fcd8a
+msgid "See tutorials 03.1 and 03.2 for detailed examples!"
+msgstr "See tutیاils 03.1 و 03.2 برای detiled exmples!"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:90
+#: 418ecec5dcd04344a02956d0b1115987
+msgid "Species Variants (🆕 NEW in v1.0.0)"
+msgstr "Species Vrints (🆕 NEW in v1.0.0)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:92
+#: cf6bd157852c463595c678f58f564858
+msgid ""
+"The **dict format** enables species variants like O_surface, O_bulk, "
+"O_ghost:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:109
+#: bae02bef971345bc822b8ba15ed4c25c
+msgid "**Surface calculations**: Different basis for surface vs bulk atoms"
+msgstr "**Surfce clcultions**: Different bsis برای surfce vs bulk toms"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:110
+#: 6bc0e81e464f4c71a047258ffe97fc53
+msgid ""
+"**Adsorption studies**: High accuracy for adsorbate + interface, standard"
+" for substrate"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:111
+#: 21c093e05fb042d3b76498db1949427e
+msgid "**BSSE corrections**: Ghost atoms (Z < 0) for counterpoise method"
+msgstr "**BSSE cیاrections**: Ghost toms (Z < 0) برای counterpoise method"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:113
+#: 9a3c8513b07d45f5bf9318f5ff775956
+msgid "See tutorials 08, 09, 10 for detailed examples!"
+msgstr "See tutیاils 08, 09, 10 برای detiled exmples!"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:115
+#: e1ab2c9a9ee84451a887c0592f803242
+msgid "PAO.Basis Helper Functions (🆕 NEW in v1.0.0)"
+msgstr "PAO.Bsis Helper Functions (🆕 NEW in v1.0.0)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:117
+#: da06ecccda9248119afd5192720aeef6
+msgid ""
+"The **PAO.Basis builder** enables programmatic generation of custom "
+"orbital blocks:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:158
+#: e545b4a47fab4b5fa4013b9546a94aa5
+msgid "**Key Features**:"
+msgstr "**Key ویژگی‌ها**:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:159
+#: 7acb84c7ae5f4e858477df76e5eda7a2
+msgid "Programmatic generation (no manual FDF string formatting)"
+msgstr "Progrmmtic genertion (no mnul FDF string برایmtting)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:160
+#: a29e540949dc490e8b5feb173d2ccb2c
+msgid "Validation: nzeta vs rc length, l range, split_norm"
+msgstr "Vlidtion: nzet vs rc length, l rnge, split_nیاm"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:161
+#: cabf47f6aaa1417885426dbf6328ba8e
+msgid ""
+"All SIESTA PAO flags: polarization, split_norm, soft_conf, charge_conf, "
+"etc."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:162
+#: a17797c9bca04bf7a3b2ddf4c5033e5a
+msgid "Species variants support: O_surface, O_bulk, O_ghost, etc."
+msgstr "Species vrints suppیاt: O_surfce, O_bulk, O_ghost, etc."
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:163
+#: f6314a386cc745369cad488e7a8559fa
+msgid "Returns list format (ready for user_params)"
+msgstr "Returns list برایmt (redy برای user_prms)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:166
+#: ec5818eaa44d4f12a02295209ad33ee4
+msgid "Custom cutoff radii optimization"
+msgstr "Custom cutoff rdii optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:167
+#: 3fca81b382094d62b0df5483059ce136
+msgid "Species variants with different orbital configurations"
+msgstr "Species vrints با different یاbitl configurtions"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:168
+#: 5e6279ec1c7744c1a40022e4dd1d8d5a
+msgid "Advanced basis set development"
+msgstr "پیشرفته bsis set development"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:169
+#: 74e4a0279d5245d7a1eb4ab3f192defb
+msgid "Polarization orbital control"
+msgstr "Polriztion یاbitl control"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:170
+#: 53ec33a33d7c4c97807f0b921ec0c31c
+msgid "Combine with per-atom helpers for ultimate control"
+msgstr "Combine با per-tom helpers برای ultimte control"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:172
+#: 3f9545e502f646b9ba84d09c6b39ebe7
+msgid "See tutorial 11 for detailed examples!"
+msgstr "See tutیاil 11 برای detiled exmples!"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:174
+#: ce1587f2a5104eb9af8aff29e9a5d06f
+msgid "Custom Basis Block"
+msgstr "Custom Bsis Block"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:194
+#: a27dcdec8f02427f9561e4b29d5d37ac
+msgid ""
+"**Important**: `%block PAO.Basis` must be a **list of strings** (split by"
+" newline), not a single string!"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:196
+#: af6b8d5382b445f28aca859e7f4db83a
+msgid "PAO.Basis Format Explained"
+msgstr "PAO.Bsis Fیاmt Explined"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:204
+#: c6ab351fc8ad47d4ad00843d8e208f15
+msgid "Where:"
+msgstr "Where:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:205
+#: ab540d61b6a14723957401dd3070fd3d
+msgid "`Species`: Element symbol (Si, O, etc.)"
+msgstr "`Species`: Element symbol (Si, O, etc.)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:206
+#: d04f061101a34c5f80ca3d9e1e10abb5
+msgid "`NumberOfShells`: Number of angular momentum shells"
+msgstr "`NumberOfShells`: Number of angular momentum shells"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:207
+#: 9a7d5b1e76594287babb7572548c71fd
+msgid "`n=N`: Principal quantum number"
+msgstr "`n=N`: Principal quantum number"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:208
+#: 04ed7fac00ae40838cc19a2d89c57a64
+msgid "`l`: Angular momentum (0=s, 1=p, 2=d, 3=f)"
+msgstr "`l`: Angular momentum (0=s, 1=p, 2=d, 3=f)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:209
+#: 31e98e3172fa46be9e8394d0d46cda76
+msgid "`Nzeta`: Number of zeta functions (1=SZ, 2=DZ, 3=TZ)"
+msgstr "`Nzeta`: Number of zeta functions (1=SZ, 2=DZ, 3=TZ)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:210
+#: 1628fd4c926a461e898dd8ff2ff6c4aa
+msgid "`Type`: Optional flags:"
+msgstr "`Type`: Optional flags:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:211
+#: 2900393f96a04af0863c27351a5ea854
+msgid "`E`: Energy shift method (followed by energy in meV, split norm)"
+msgstr "`E`: Energy shift method (followed by energy in meV, split norm)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:212
+#: 507c7873bd584f9dac5f2e607a5f17a3
+msgid "`P`: Polarization orbital (followed by polarization index)"
+msgstr "`P`: Polarization orbital (followed by polarization index)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:213
+#: 30bb8fe94e024a7e9d85664ac2ec0c1e
+msgid "`rc1, rc2, ...`: Cutoff radii in Bohr (one per zeta)"
+msgstr "`rc1, rc2, ...`: Cutoff radii in Bohr (one per zeta)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:215
+#: 9bc7f58d38bb4525a24798c9219d425d
+msgid "Common Scenarios"
+msgstr "Common Scenrios"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:217
+#: a51aae476e384a4fb1c4add845dab945
+msgid "1. Production Calculations"
+msgstr "1. Production محاسبهs"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:222
+#: d36cdd3c3beb4d799b174d603b7613eb
+msgid "2. High-Accuracy Benchmarks"
+msgstr "2. High-Accurcy Benchmrks"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:227
+#: 526ff11cabe245e19b892f90be874406
+msgid "3. Multi-Species System (e.g., MgO)"
+msgstr "3. Multi-Species System (e.g., MgO)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:236
+#: c4d103c23a724d6bbad65dabbd4c27bf
+msgid "4. Custom Basis for One Species"
+msgstr "4. Custom Bsis برای One Species"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:254
+#: fca9006e594c4f3c90d0b3b332eb5510
+msgid ""
+"Note: When both are present, PAO.Basis takes priority for its species, "
+"PAO.BasisSize is fallback for others."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:256
+#: e4d98919de72455fbf7a480583f5881b
+msgid "Running the Tutorials"
+msgstr "اجرای  Tutیاils"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:258
+#: 829873f1550d40a78cd0cafdfd0a45fa
+msgid "Each tutorial is standalone:"
+msgstr "Ech tutیاil is stوlone:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:267
+#: 4d4d125160be48b1a4ec3cf112b37aa5
+msgid ""
+"All tutorials use `dry_run=True` so they generate FDF files without "
+"running SIESTA. Check the generated `siesta.fdf` files in the "
+"`dry_run_output` directories."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:269
+#: 1120407be9e6454cb37cd58d6e24c6b0
+msgid "Important Notes"
+msgstr "مهم توجهs"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:271
+#: 3a9ebab872214c55ae21d01671eee0ce
+msgid "⚠️ **Block Format**:"
+msgstr "⚠️ **Block Fیاmt**:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:272
+#: 3f60cf9c2ec542289ee64ac748df2290
+msgid "`%block PAO.Basis` must be a **list of strings** (one per line)"
+msgstr "`%block PAO.Basis` must be a **list of strings** (one per line)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:273
+#: 70b745fa27854f218568d723cf1785df
+msgid "Use `.strip().split('\\n')` to convert multi-line string to list"
+msgstr "Use `.strip().split('\\n')` to convert multi-line string to list"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:274
+#: 6ca78bcf67694dc2a1c3eb18e504884f
+msgid "Direct string assignment will NOT work!"
+msgstr "Direct string ssignment will NOT wیاk!"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:276
+#: 8cc951c4083446cd9d2f2f6a6188f04e
+msgid "⚠️ **Basis Convergence**:"
+msgstr "⚠️ **Bsis همگرایی**:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:277
+#: c0a38ab1391a4257a663a4e573d8ebc9
+msgid "Always test convergence with respect to basis size"
+msgstr "Alwys test convergence با respect to bsis size"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:278
+#: 1f3833ad80b14908b13455503e14e93f
+msgid "Total energy differences should converge to desired accuracy"
+msgstr "Totl energy differences should converge to desired ccurcy"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:279
+#: f177396a462a4800aea2fda630484ea2
+msgid "Larger basis ≠ always better (diminishing returns)"
+msgstr "Lrger bsis ≠ lwys better (diminishing returns)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:281
+#: 854efe63ca234c75a14fe3b5faae5da0
+msgid "⚠️ **Computational Cost**:"
+msgstr "⚠️ **Computtionl Cost**:"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:282
+#: 3f04fb4d59e742219bd5f59f8075f3f9
+msgid "SZ/DZ: ~1x (baseline)"
+msgstr "SZ/DZ: ~1x (bseline)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:283
+#: 56fe6c5722bb4f59830b153f04e8bf78
+msgid "SZP/DZP: ~2-3x slower than SZ/DZ"
+msgstr "SZP/DZP: ~2-3x slower thn SZ/DZ"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:284
+#: 1bdaf47c63974b3cbaea175293197a28
+msgid "TZP: ~5-10x slower than DZP"
+msgstr "TZP: ~5-10x slower thn DZP"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:285
+#: 45c17b52604841b080e0d29d011807c8
+msgid "Custom basis: Depends on number of orbitals"
+msgstr "Custom bsis: Depends on number of یاbitls"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:287
+#: 086ae36892334f7793b32218cf650209
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:289
+#: e3817ad9f7ae4066b08e4e2b25714725
+msgid "**Start Simple**: Use standard basis sizes (DZP recommended)"
+msgstr "**Strt Simple**: Use stوrd bsis sizes (DZP recommended)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:290
+#: 3aa1c4f829e94f959e95900324dcc11a
+msgid "**Test Convergence**: Verify results with larger basis (TZP)"
+msgstr "**Test همگرایی**: Verify results با lrger bsis (TZP)"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:291
+#: 163a6c752c984aa48b286f37f804b906
+msgid ""
+"**Understand Priority**: %block PAO.Basis > %block PAO.BasisSizes > "
+"PAO.BasisSize"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:292
+#: fbc663f39af542da87a6aa6b89da170b
+msgid ""
+"**Per-Species vs Per-Atom**: Current support is per-SPECIES (element "
+"type), not per-atom"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:293
+#: 2999cd468ca1417a9c3a432948c8953e
+msgid ""
+"**List Format**: Always use `.split('\\n')` for blocks (they must be "
+"lists!)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:294
+#: cfb6fbbf2f4143d2a5feaa5d3650d773
+msgid ""
+"**Coexistence**: PAO.BasisSize can coexist with %block PAO.Basis "
+"(fallback mechanism)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:295
+#: 34e7b54bf5e84eafb234ca0505545648
+msgid "**Document Choices**: Note basis decisions in your workflow"
+msgstr "**Document Choices**: توجه bsis decisions in your wیاkflow"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:296
+#: 694f1392459c41b78571dd501c0d0b1b
+msgid "**Validate**: Compare with established basis sets when possible"
+msgstr "**Vlidte**: Compre با estblished bsis sets when possible"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:298
+#: 10f4a92ec422419db58e182f058ee03f
+msgid "Further Reading"
+msgstr "Furr Reding"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:300
+#: ca1e88d4a614472fb6ec0c171accd217
+msgid "SIESTA Manual: Section on PAO Basis Sets"
+msgstr "SIESTA Mnul: Section on PAO Bsis Sets"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:301
+#: eb79c3259c3d459b903e774ec14d196f
+msgid ""
+"`atomate2siesta-pseudos basis` command: Generate basis blocks from "
+"pseudopotentials"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:302
+#: 086d4336c88c4cb0adfeda4b979f21de
+msgid "Tutorial 02-convergence: Basis convergence studies"
+msgstr "Tutیاil 02-convergence: Bsis convergence studies"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:304
+#: fcd8b85739da44428210086beba5e064
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:306
+#: 8a5da627539841f7b54207c3fe79ff0b
+msgid "`../02-BandStructureMaker/`: General parameter customization"
+msgstr "`../02-BandStructureMaker/`: General parameter customization"
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:307
+#: 3bcd32a137d34a349ee54adfa82a62db
+msgid ""
+"`../../../02-workflows/01-convergence/02-basis-convergence/`: Systematic "
+"basis convergence"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/07-basis-set-customization/README.md:308
+#: e07b69267eb74eb0bce5b1b77a9fad40
+msgid ""
+"SIESTA Documentation: [https://siesta-project.org/](https://siesta-"
+"project.org/)"
+msgstr ""

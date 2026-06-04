@@ -1,0 +1,446 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/siesta-inputs.rst:6
+msgid "Contents:"
+msgstr "محتویات:"
+
+#: ../../source/siesta-inputs.rst:2 b8758df76b294695ab4a1c0b98374671
+msgid "SIESTA Data Classes CLI Documentation"
+msgstr "مستندات رابط خط فرمان کلاس‌های داده SIESTA"
+
+#: ../../source/siesta-inputs.rst:4 a3cb141be7f2428abe143a49ac43756e
+msgid ""
+"``siesta-inputs`` is a command-line interface (CLI) for managing and "
+"displaying informatiton about Siesta dataclasses. The following commands "
+"are available:"
+msgstr "``siesta-inputs`` یک رابط خط فرمان (CLI) برای مدیریت و نمایش اطلاعات درباره کلاس‌های داده Siesta است. دستورات زیر در دسترس هستند:"
+
+#: ../../source/siesta-inputs.rst:11 637937474e1f476195ad74cd6c0b06fd
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/siesta-inputs.rst:13 53f45543b9cc41dc9fb14fe6771eae14
+msgid ""
+"This Python script provides a command-line interface (CLI) built with the"
+" ``click`` library to inspect and query data classes from the "
+"``atomate2.siesta.sets.dataclasses`` module. These data classes represent"
+" various parameters and settings for SIESTA simulations, integrated "
+"within the Atomate2 workflow framework for Siesta extension. The tool "
+"leverages ``dataclasses`` for structured parameter handling, drawing from"
+" libraries like ``sisl``, ``ase``, and ``pymatgen`` for materials science"
+" computations."
+msgstr "این اسکریپت پایتون یک رابط خط فرمان (CLI) ساخته شده با کتابخانه ``click`` فراهم می‌کند تا کلاس‌های داده از ماژول ``atomate2.siesta.sets.dataclasses`` را بررسی و جستجو کند. این کلاس‌های داده پارامترها و تنظیمات مختلف برای شبیه‌سازی‌های SIESTA را نمایش می‌دهند که در چارچوب گردش کار Atomate2 برای افزونه Siesta یکپارچه شده‌اند. این ابزار از ``dataclasses`` برای مدیریت ساختاریافته پارامترها استفاده می‌کند و از کتابخانه‌هایی مانند ``sisl``، ``ase`` و ``pymatgen`` برای محاسبات علوم مواد بهره می‌برد."
+
+#: ../../source/siesta-inputs.rst:15 5ccb0f71b5154ad0b04d21968c2c0c8a
+msgid ""
+"The CLI allows users to: - List available data classes. - Display "
+"detailed information about a specific data class, including attributes, "
+"types, defaults, descriptions, SIESTA keywords, and units. - Search for "
+"attributes across all data classes by keyword, with options for exact "
+"matching."
+msgstr "این رابط خط فرمان به کاربران اجازه می‌دهد: - لیست کلاس‌های داده موجود را مشاهده کنند. - اطلاعات دقیق درباره یک کلاس داده خاص را نمایش دهند، شامل ویژگی‌ها، انواع، مقادیر پیش‌فرض، توضیحات، کلیدواژه‌های SIESTA و واحدها. - ویژگی‌ها را در تمام کلاس‌های داده با کلیدواژه جستجو کنند، با گزینه‌هایی برای تطابق دقیق."
+
+#: ../../source/siesta-inputs.rst:20 640f3c6fce2f4306b513b2886d1de566
+msgid ""
+"This tool is useful for developers and users working on Siesta workflows "
+"in Atomate2, enabling quick reference to parameter metadata without "
+"diving into source code."
+msgstr "این ابزار برای توسعه‌دهندگان و کاربرانی که بر روی گردش‌کارهای Siesta در Atomate2 کار می‌کنند مفید است و امکان مراجعه سریع به فراداده پارامترها را بدون نیاز به بررسی کد منبع فراهم می‌کند."
+
+#: ../../source/siesta-inputs.rst:23 30b09bc856d542b5a891e2fdd7d3380d
+msgid "Requirements"
+msgstr "پیش‌نیازها"
+
+#: ../../source/siesta-inputs.rst:25 678b1e6b4b8f4262bae0a4b4f585ea9a
+msgid "Python 3.12 or compatible."
+msgstr "پایتون ۳.۱۲ یا سازگار."
+
+#: ../../source/siesta-inputs.rst:26 f561b6ae7319430e8a423462fb825d35
+msgid ""
+"Installed packages: ``click``, ``atomate2`` (with Siesta extension), "
+"``sisl``, ``ase``, ``pymatgen``."
+msgstr "بسته‌های نصب شده: ``click``، ``atomate2`` (با افزونه Siesta)، ``sisl``، ``ase``، ``pymatgen``."
+
+#: ../../source/siesta-inputs.rst:27 f91e1b215c58415ea4cd9e8afaebf55a
+msgid "No additional installations needed beyond the Atomate2 Siesta setup."
+msgstr "نیازی به نصب اضافی فراتر از راه‌اندازی Atomate2 Siesta نیست."
+
+#: ../../source/siesta-inputs.rst:30 af185759deee44848b7eafd7e5947686
+msgid "Usage"
+msgstr "نحوه استفاده"
+
+#: ../../source/siesta-inputs.rst:32 3a503c31dacb44ff809b960e71ae27a6
+msgid "Run the script as a standalone CLI:"
+msgstr "اجرای اسکریپت به عنوان یک رابط خط فرمان مستقل:"
+
+#: ../../source/siesta-inputs.rst:39 6e8a8c2826444093acc83f330372bf3e
+msgid "Commands"
+msgstr "دستورات"
+
+#: ../../source/siesta-inputs.rst:42 8290e81c9ff24b6e99bc0d6ae76a851f
+msgid "list"
+msgstr "list"
+
+#: ../../source/siesta-inputs.rst:44 094a0656f7c7422081a4c5c3bf75a9d1
+msgid "List all available SIESTA data classes."
+msgstr "لیست تمام کلاس‌های داده موجود SIESTA."
+
+#: ../../source/siesta-inputs.rst:46 1ad66883846c486a9bff85f0ded5f993
+msgid "**Usage:**"
+msgstr "**نحوه استفاده:**"
+
+#: ../../source/siesta-inputs.rst:52 ../../source/siesta-inputs.rst:148
+#: 45959b9224344266a28d63fad31bcbc0 d6cdab2ea54f440fa3047671ae23a2a5
+msgid "**Output Example:**"
+msgstr "**نمونه خروجی:**"
+
+#: ../../source/siesta-inputs.rst:54 e4ae4e5c4560414a9dca02e1ab1dc222
+msgid ""
+"Available SIESTA Data Classes: - BasisSetsAndProjectors - "
+"ChargeDipoleElectricField - ChemicalAnalysis - ..."
+msgstr "کلاس‌های داده موجود SIESTA: - BasisSetsAndProjectors - ChargeDipoleElectricField - ChemicalAnalysis - ..."
+
+#: ../../source/siesta-inputs.rst:61 d5df7dffada74d479db12d4c7b8938e6
+msgid "show"
+msgstr "show"
+
+#: ../../source/siesta-inputs.rst:63 c62b42875eb540368d21af188cbd6118
+msgid "Show detailed information about a specific data class."
+msgstr "نمایش اطلاعات دقیق درباره یک کلاس داده خاص."
+
+#: ../../source/siesta-inputs.rst:65 ../../source/siesta-inputs.rst:126
+#: 81b91b613909459d9c3505cbfd60b498 fb551ad168174c80971bc27d24c20811
+msgid "**Arguments:**"
+msgstr "**آرگومان‌ها:**"
+
+#: ../../source/siesta-inputs.rst:67 313db2f422594972aaca6d7a6949bdcf
+msgid ""
+"``CLASS_NAME``: The name of the data class (required). Use the ``list`` "
+"command to view available classes."
+msgstr "``CLASS_NAME``: نام کلاس داده (الزامی). از دستور ``list`` برای مشاهده کلاس‌های موجود استفاده کنید."
+
+#: ../../source/siesta-inputs.rst:69 ../../source/siesta-inputs.rst:130
+#: 8d73bf09fd674f1386e0decb4cae5117 b1e3621251694c26a1b0617f0f681493
+msgid "**Options:**"
+msgstr "**گزینه‌ها:**"
+
+#: ../../source/siesta-inputs.rst:71 7159c2dd155442c5a59f2f7f2fb505dc
+msgid ""
+"``-c, --complete``: Show complete detailed info, including descriptions "
+"and SIESTA keywords."
+msgstr "``-c, --complete``: نمایش اطلاعات کامل و دقیق، شامل توضیحات و کلیدواژه‌های SIESTA."
+
+#: ../../source/siesta-inputs.rst:72 cecdc207f87f42708da8c0eaf08da2da
+msgid "``-s, --siesta``: Show SIESTA keywords info only."
+msgstr "``-s, --siesta``: فقط اطلاعات کلیدواژه‌های SIESTA را نمایش بده."
+
+#: ../../source/siesta-inputs.rst:73 d965b384f9c049a1b1adeb43dbcebf1d
+msgid "``-u, --unit``: Show units of keywords."
+msgstr "``-u, --unit``: واحدهای کلیدواژه‌ها را نمایش بده."
+
+#: ../../source/siesta-inputs.rst:74 1fbd0dd7f2824a719500830d51fec538
+msgid ""
+"If no options are provided, displays basic attribute info (name, type, "
+"default)."
+msgstr "اگر هیچ گزینه‌ای ارائه نشود، اطلاعات پایه ویژگی‌ها (نام، نوع، مقدار پیش‌فرض) نمایش داده می‌شود."
+
+#: ../../source/siesta-inputs.rst:76 ../../source/siesta-inputs.rst:134
+#: 47e085784e8c42f5a2dbc57195a8ee15 631643f9e57d4e7eb68e32eb45220a6b
+msgid "**Usage Examples:**"
+msgstr "**نمونه‌های استفاده:**"
+
+#: ../../source/siesta-inputs.rst:78 dac60fedb8b24c2180a4dbd8edab7efa
+msgid "Basic info:"
+msgstr "اطلاعات پایه:"
+
+#: ../../source/siesta-inputs.rst:84 5059e0b64115477ca165d6f2a98e0a8e
+msgid "With complete details:"
+msgstr "با جزئیات کامل:"
+
+#: ../../source/siesta-inputs.rst:90 c9c2136f77f74d028424afd53c69c658
+msgid "**Output Example (Basic):**"
+msgstr "**نمونه خروجی (پایه):**"
+
+#: ../../source/siesta-inputs.rst:93 ../../source/siesta-inputs.rst:105
+#: 8088e1ca47d84151bb89cb12338ffb5d 8fadbcf1be644157943b575908f4e2d5
+msgid "Data Class: GeneralSystemDescriptors"
+msgstr "کلاس داده: GeneralSystemDescriptors"
+
+#: ../../source/siesta-inputs.rst:94 ../../source/siesta-inputs.rst:106
+#: 745f038d63d74591bbd14064990baa16 7a1ca7f849144dbc9fcd2c3b2b3f8259
+msgid "Description: No docstring available."
+msgstr "توضیحات: هیچ docstring موجود نیست."
+
+#: ../../source/siesta-inputs.rst:97 b7d2226e166345c0b0fdb997bc633b42
+msgid ""
+"Attributes: - system_name: str (default: 'None') - number_of_species: int"
+" (default: 'None') - ..."
+msgstr "ویژگی‌ها: - system_name: str (پیش‌فرض: 'None') - number_of_species: int (پیش‌فرض: 'None') - ..."
+
+#: ../../source/siesta-inputs.rst:102 a0fca9fe4ed74770992a2b142498781a
+msgid "**Output Example (Complete):**"
+msgstr "**نمونه خروجی (کامل):**"
+
+#: ../../source/siesta-inputs.rst:109 24d80473dd404327bd133a0e8b1abbdd
+msgid "Attributes:"
+msgstr "ویژگی‌ها:"
+
+#: ../../source/siesta-inputs.rst:111 2c7c06005ca6474f8aa3c25943ea8ced
+msgid ""
+"system_name: str (default: 'None') SIESTA keyword: SystemName "
+"Description: No description available."
+msgstr "system_name: str (پیش‌فرض: 'None') کلیدواژه SIESTA: SystemName توضیحات: هیچ توضیحی موجود نیست."
+
+#: ../../source/siesta-inputs.rst:115 ffab342552b849bb969dc5bd0bdb8777
+msgid ""
+"number_of_species: int (default: 'None') SIESTA keyword: NumberOfSpecies "
+"Description: No description available."
+msgstr "number_of_species: int (پیش‌فرض: 'None') کلیدواژه SIESTA: NumberOfSpecies توضیحات: هیچ توضیحی موجود نیست."
+
+#: ../../source/siesta-inputs.rst:119 ../../source/siesta-inputs.rst:162
+#: 1542824e86024b90811617de7d491cb5 54fdce23c5b74bbfab9f8bf4b108f566
+msgid "..."
+msgstr "..."
+
+#: ../../source/siesta-inputs.rst:122 e351f76714e54a258d5585b488aa4752
+msgid "search"
+msgstr "search"
+
+#: ../../source/siesta-inputs.rst:124 fe89bf3a7d464b26aedfe5afa47b6bfd
+msgid ""
+"Search for data class attributes by keyword in name, type, default, "
+"description, or SIESTA keyword. The search is case-insensitive."
+msgstr "جستجوی ویژگی‌های کلاس داده با کلیدواژه در نام، نوع، مقدار پیش‌فرض، توضیحات یا کلیدواژه SIESTA. جستجو به حروف بزرگ و کوچک حساس نیست."
+
+#: ../../source/siesta-inputs.rst:128 5f46b818b76f4e91b825de12def02ea4
+msgid "``KEYWORD``: The search term (required)."
+msgstr "``KEYWORD``: عبارت جستجو (الزامی)."
+
+#: ../../source/siesta-inputs.rst:132 3ce0e381d6004b2bab8da1670f735128
+msgid ""
+"``-r, --restrict``: Restrict search to exact word matches (using regex "
+"word boundaries)."
+msgstr "``-r, --restrict``: محدود کردن جستجو به تطابق دقیق کلمات (با استفاده از مرزهای کلمه regex)."
+
+#: ../../source/siesta-inputs.rst:136 55aaa116d1674d6fbd376e5e464beb11
+msgid "Basic search:"
+msgstr "جستجوی پایه:"
+
+#: ../../source/siesta-inputs.rst:142 4cb757531f1a48e89ed6373093b9375d
+msgid "Exact match:"
+msgstr "تطابق دقیق:"
+
+#: ../../source/siesta-inputs.rst:150 a36935a9ac0b446aa147b1bda178bec0
+msgid "Found 3 attribute(s) matching 'spin':"
+msgstr "۳ ویژگی منطبق با 'spin' یافت شد:"
+
+#: ../../source/siesta-inputs.rst:152 ../../source/siesta-inputs.rst:157
+#: 1f6de8e77fa0477f8f643bf2548568e3 850877b113ff4b6a8d25ecf0d2a00610
+msgid "SpinSettings:"
+msgstr "SpinSettings:"
+
+#: ../../source/siesta-inputs.rst:153 27de7635356f496d9c53ac714e8505d5
+msgid ""
+"spin_polarized: bool (default: False) SIESTA keyword: SpinPolarized "
+"Description: No description available."
+msgstr "spin_polarized: bool (پیش‌فرض: False) کلیدواژه SIESTA: SpinPolarized توضیحات: هیچ توضیحی موجود نیست."
+
+#: ../../source/siesta-inputs.rst:158 93a71be4770d4aecac9c17c17bc5cb8d
+msgid ""
+"non_collinear_spin: bool (default: False) SIESTA keyword: "
+"NonCollinearSpin Description: No description available."
+msgstr "non_collinear_spin: bool (پیش‌فرض: False) کلیدواژه SIESTA: NonCollinearSpin توضیحات: هیچ توضیحی موجود نیست."
+
+#: ../../source/siesta-inputs.rst:165 91fa9bf4defb41e28a69c849808fedbb
+msgid "Data Classes Overview"
+msgstr "نمای کلی کلاس‌های داده"
+
+#: ../../source/siesta-inputs.rst:167 838d5b823d4f4ffcace20c59fc00f81f
+msgid ""
+"The following data classes are defined in "
+"``atomate2.siesta.sets.dataclasses`` and accessible via this CLI:"
+msgstr "کلاس‌های داده زیر در ``atomate2.siesta.sets.dataclasses`` تعریف شده‌اند و از طریق این رابط خط فرمان قابل دسترسی هستند:"
+
+#: ../../source/siesta-inputs.rst:169 66787093613b464482eec508202f6de7
+msgid "**GeneralSystemDescriptors**: General descriptors for the system."
+msgstr "**GeneralSystemDescriptors**: توصیف‌کننده‌های عمومی برای سیستم."
+
+#: ../../source/siesta-inputs.rst:170 378ecd44de794a4a872e6529e9921ec3
+msgid "**Pseudopotentials**: Settings for pseudopotentials."
+msgstr "**Pseudopotentials**: تنظیمات برای شبه‌پتانسیل‌ها."
+
+#: ../../source/siesta-inputs.rst:171 c10e2f0b50744c1cb2f9f6e418144960
+msgid "**BasisSetsAndProjectors**: Basis sets and projector configurations."
+msgstr "**BasisSetsAndProjectors**: مجموعه‌های پایه و پیکربندی‌های تصویرگر."
+
+#: ../../source/siesta-inputs.rst:172 c1b212f65ed74ee992a375a5be650298
+msgid "**StructuralInformationVersion1**: Structural info (version 1)."
+msgstr "**StructuralInformationVersion1**: اطلاعات ساختاری (نسخه ۱)."
+
+#: ../../source/siesta-inputs.rst:173 2fd9c07acea14a37a9bccefb7ca9241f
+msgid "**StructuralInformationVersion2**: Structural info (version 2)."
+msgstr "**StructuralInformationVersion2**: اطلاعات ساختاری (نسخه ۲)."
+
+#: ../../source/siesta-inputs.rst:174 29a17f21b5664383912652f2fb2cf555
+msgid "**KPointSampling**: K-point sampling parameters."
+msgstr "**KPointSampling**: پارامترهای نمونه‌برداری نقاط k."
+
+#: ../../source/siesta-inputs.rst:175 df8805b0c71644c2a0357c8123dc7ca9
+msgid "**ExchangeCorrelationFunctionals**: XC functionals."
+msgstr "**ExchangeCorrelationFunctionals**: تابعک‌های XC."
+
+#: ../../source/siesta-inputs.rst:176 07a62f8f30dc47588ff3094b3223e02d
+msgid "**SpinSettings**: Spin-related settings."
+msgstr "**SpinSettings**: تنظیمات مرتبط با اسپین."
+
+#: ../../source/siesta-inputs.rst:177 2e447def1f9b4d5a858de9209738fa77
+msgid "**SCFLoopParameters**: Self-consistent field loop params."
+msgstr "**SCFLoopParameters**: پارامترهای حلقه میدان خودسازگار."
+
+#: ../../source/siesta-inputs.rst:178 149aa054284a4ae0b23a8d3717fec77a
+msgid "**RealSpaceGridParameters**: Real-space grid settings."
+msgstr "**RealSpaceGridParameters**: تنظیمات شبکه فضای حقیقی."
+
+#: ../../source/siesta-inputs.rst:179 871aea8d0c9f4ca782e6e547b35ad8ae
+msgid "**HamiltonianAndOverlapParameters**: Hamiltonian and overlap params."
+msgstr "**HamiltonianAndOverlapParameters**: پارامترهای هامیلتونی و همپوشانی."
+
+#: ../../source/siesta-inputs.rst:180 29475f626f8d4295abceaab9a56743c6
+msgid "**ElectronicStructureCalculationOptions**: Electronic structure options."
+msgstr "**ElectronicStructureCalculationOptions**: گزینه‌های محاسبه ساختار الکترونی."
+
+#: ../../source/siesta-inputs.rst:181 8e5734def754431fb858605d62e1572e
+msgid "**SolversAndPerformanceOptions**: Solvers and performance tweaks."
+msgstr "**SolversAndPerformanceOptions**: حل‌کننده‌ها و تنظیمات عملکرد."
+
+#: ../../source/siesta-inputs.rst:182 39edd239e97f43a4870f808aef3a928a
+msgid "**DensityOfStatesAndBandStructure**: DOS and band structure."
+msgstr "**DensityOfStatesAndBandStructure**: چگالی حالت‌ها و ساختار نواری."
+
+#: ../../source/siesta-inputs.rst:183 ad40f90fee8d422396bfddeaced28b5d
+msgid "**ChemicalAnalysis**: Chemical analysis tools."
+msgstr "**ChemicalAnalysis**: ابزارهای تحلیل شیمیایی."
+
+#: ../../source/siesta-inputs.rst:184 ff5f1223af324e80afdfa4c1747c8f11
+msgid "**OpticalProperties**: Optical properties calculations."
+msgstr "**OpticalProperties**: محاسبات خواص نوری."
+
+#: ../../source/siesta-inputs.rst:185 fba37d0753bb4d8fa5769f032a4865c9
+msgid "**Wannier90**: Wannier90 interface."
+msgstr "**Wannier90**: رابط Wannier90."
+
+#: ../../source/siesta-inputs.rst:186 5262801223a24f50939d338c79b9ef55
+msgid "**ChargeDipoleElectricField**: Charge, dipole, and electric field."
+msgstr "**ChargeDipoleElectricField**: بار، دوقطبی و میدان الکتریکی."
+
+#: ../../source/siesta-inputs.rst:187 ec2d494ac6f94e72a492a92b38e61b65
+msgid "**Grids**: Grid-related settings."
+msgstr "**Grids**: تنظیمات مرتبط با شبکه."
+
+#: ../../source/siesta-inputs.rst:188 31cc0d57196f41129165f3e8b9000a63
+msgid "**AuxiliaryForceField**: Auxiliary force fields."
+msgstr "**AuxiliaryForceField**: میدان‌های نیروی کمکی."
+
+#: ../../source/siesta-inputs.rst:189 31fb1328c6754e33b62461de3998dc11
+msgid "**ParallelOptions**: Parallelization options."
+msgstr "**ParallelOptions**: گزینه‌های موازی‌سازی."
+
+#: ../../source/siesta-inputs.rst:190 08ee5778981f468ba70c56e38ab6e3f6
+msgid "**EfficiencyOptions**: Efficiency optimizations."
+msgstr "**EfficiencyOptions**: بهینه‌سازی‌های کارایی."
+
+#: ../../source/siesta-inputs.rst:191 192358f7d21c4b6aabc609735d8aacc6
+msgid "**Denchar**: Density characterization."
+msgstr "**Denchar**: مشخصه‌یابی چگالی."
+
+#: ../../source/siesta-inputs.rst:192 d2f9ab4b953548bdac4786dbd6e607c0
+msgid "**NetcdfOptions**: NetCDF output options."
+msgstr "**NetcdfOptions**: گزینه‌های خروجی NetCDF."
+
+#: ../../source/siesta-inputs.rst:193 1bd58669429b42d4b0c103846cca14a8
+msgid "**MolecularDynamicsAndRelaxation**: MD and relaxation."
+msgstr "**MolecularDynamicsAndRelaxation**: دینامیک مولکولی و آرامش."
+
+#: ../../source/siesta-inputs.rst:194 1171ec4ce8d0436697d85149cd5cdbfc
+msgid "**ExternalControlAndScripting**: External control and scripting."
+msgstr "**ExternalControlAndScripting**: کنترل خارجی و اسکریپت‌نویسی."
+
+#: ../../source/siesta-inputs.rst:195 a46f22505ae640858d0bec2b41fde0bb
+msgid "**GeneralConstraints**: General constraints."
+msgstr "**GeneralConstraints**: قیدهای عمومی."
+
+#: ../../source/siesta-inputs.rst:196 66a206b8f6744214960c79a0780c4941
+msgid "**PhononCalculations**: Phonon calculations."
+msgstr "**PhononCalculations**: محاسبات فونون."
+
+#: ../../source/siesta-inputs.rst:197 e4a3aa39b9984a4e9662087a07cc281a
+msgid "**DFTU**: DFT+U settings."
+msgstr "**DFTU**: تنظیمات DFT+U."
+
+#: ../../source/siesta-inputs.rst:198 117bf13ec6ce4e14a8fbe88dc3c4c0d4
+msgid "**RTTDDFT**: Real-time TDDFT."
+msgstr "**RTTDDFT**: TDDFT زمان واقعی."
+
+#: ../../source/siesta-inputs.rst:200 dd2b7e05c5e94bfeb7b3f5c9001e83b4
+msgid ""
+"Each data class uses Python dataclasses with metadata for SIESTA "
+"keywords, units, and descriptions."
+msgstr "هر کلاس داده از dataclasses پایتون با فراداده برای کلیدواژه‌ها، واحدها و توضیحات SIESTA استفاده می‌کند."
+
+#: ../../source/siesta-inputs.rst:203 c56356a04b5c4b969ecea50952067471
+msgid "Implementation Notes"
+msgstr "یادداشت‌های پیاده‌سازی"
+
+#: ../../source/siesta-inputs.rst:205 a29fdd7750874f1a8ca03f581044fcef
+msgid ""
+"**Formatting Defaults**: Default values are formatted for display, "
+"handling ``None``, callables (e.g., ``list`` or ``dict`` factories), and "
+"empty collections."
+msgstr "**قالب‌بندی مقادیر پیش‌فرض**: مقادیر پیش‌فرض برای نمایش قالب‌بندی می‌شوند و ``None``، callables (مانند کارخانه‌های ``list`` یا ``dict``) و مجموعه‌های خالی را مدیریت می‌کنند."
+
+#: ../../source/siesta-inputs.rst:206 eb1dfdc3a6f0487e9d0ae90763ae5970
+msgid ""
+"**Metadata Usage**: Fields in dataclasses include metadata like "
+"``'description'``, ``'SIESTA keyword'``, and ``'Unit'`` for enhanced "
+"output."
+msgstr "**استفاده از فراداده**: فیلدهای dataclasses شامل فرادادهٔ‌هایی مانند ``'description'``، ``'SIESTA keyword'`` و ``'Unit'`` برای خروجی بهبودیافته می‌باشند."
+
+#: ../../source/siesta-inputs.rst:207 25b33eb0f95741e5b0225cc5138e94f7
+msgid ""
+"**Search Logic**: Uses regex for restricted searches; otherwise, "
+"substring matching. Matches are collected across all classes and "
+"displayed with context."
+msgstr "**منطق جستجو**: برای جستجوهای محدود از regex استفاده می‌کند؛ در غیر این صورت، تطابق زیررشته. تطابق‌ها در تمام کلاس‌ها جمع‌آوری و با زمینه نمایش داده می‌شوند."
+
+#: ../../source/siesta-inputs.rst:208 c6c56b6a716c40a39d6164ed916e6386
+msgid ""
+"**Color Output**: Utilizes ``click.style`` for colored terminal output "
+"(e.g., cyan for headers, green for field names)."
+msgstr "**خروجی رنگی**: از ``click.style`` برای خروجی رنگی ترمینال استفاده می‌کند (مثلاً فیروزه‌ای برای سرفصل‌ها، سبز برای نام فیلدها)."
+
+#: ../../source/siesta-inputs.rst:210 1664e07fa0344f7c83ee57efd2de5996
+msgid ""
+"For contributing or extending, refer to the Atomate2 Siesta extension "
+"source. This CLI can be integrated into larger workflows using ``sisl``, "
+"``ase``, and ``pymatgen`` for Siesta input generation."
+msgstr "برای مشارکت یا گسترش، به کد منبع افزونه Atomate2 Siesta مراجعه کنید. این رابط خط فرمان می‌تواند در گردش‌کارهای بزرگ‌تر با استفاده از ``sisl``، ``ase`` و ``pymatgen`` برای تولید ورودی Siesta یکپارچه شود."

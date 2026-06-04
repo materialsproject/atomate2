@@ -1,0 +1,361 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/siesta-pseudos.rst:3 3d66307de916481ab2052b016f559e6c
+#, fuzzy
+msgid "Pseudopotential Management CLI"
+msgstr "رابط خط فرمان شبه‌پتانسیل‌های Siesta"
+
+#: ../../source/siesta-pseudos.rst:5 349205d82601409eba0d268095b2af87
+#, fuzzy
+msgid ""
+"``atomate2siesta-pseudos`` is a command-line interface for managing "
+"SIESTA pseudopotential repositories. It supports downloading, installing,"
+" exploring, and generating basis sets from PSML pseudopotential files."
+msgstr ""
+"``siesta-pseudos`` یک رابط خط فرمان (CLI) برای مدیریت مخازن "
+"شبه‌پتانسیل‌های Siesta است. دستورات زیر در دسترس هستند:"
+
+#: ../../source/siesta-pseudos.rst:10 82250f3c8b29405b83ed312d23771ce1
+msgid "CLI Overview"
+msgstr "نمای کلی رابط خط فرمان"
+
+#: ../../source/siesta-pseudos.rst:13 eb4ada0989cd4edb919ac73c247578c6
+#, fuzzy
+msgid "Usage"
+msgstr "نحوه استفاده:"
+
+#: ../../source/siesta-pseudos.rst:20 c21a6be1c7a547deb749b2577e4891ef
+#, fuzzy
+msgid "Options"
+msgstr "گزینه‌ها:"
+
+#: ../../source/siesta-pseudos.rst:22 061cf02e32944ad7850c3ffb78587b51
+#, fuzzy
+msgid "``--version``: Show the version and exit."
+msgstr "**--version**: نمایش نسخه و خروج."
+
+#: ../../source/siesta-pseudos.rst:23 ab56ff4939f74b81b4df0617a8c02df7
+#, fuzzy
+msgid "``--help``: Show this message and exit."
+msgstr "**--help**: نمایش این پیام و خروج."
+
+#: ../../source/siesta-pseudos.rst:26 a75b4964286c422c97b90d13b009701a
+#, fuzzy
+msgid "Commands"
+msgstr "دستورات:"
+
+#: ../../source/siesta-pseudos.rst:28 eff431ba53d748fcba092bce574fabcb
+#, fuzzy
+msgid ""
+"**available**: Show available pseudopotential repositories with download "
+"info."
+msgstr "**available**: نمایش مخازن شبه‌پتانسیل موجود."
+
+#: ../../source/siesta-pseudos.rst:29 5e28929ffb364e89b462d38f33720aae
+msgid "**basis**: Generate PAO.Basis block from PSML pseudopotential file."
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:30 91aac15f5cf4425d809207721a94fbe0
+#, fuzzy
+msgid "**element**: Find all pseudos in the installed tables for a given element."
+msgstr ""
+"**element**: یافتن تمام شبه‌پتانسیل‌ها در جداول نصب شده برای یک عنصر مشخص"
+" (نماد یا znucl)."
+
+#: ../../source/siesta-pseudos.rst:31 4d613c85f2d9463aabcce2ef6b93604d
+msgid "**install**: Install pseudopotential repositories by name(s)."
+msgstr "**install**: نصب مخازن شبه‌پتانسیل با نام(ها)."
+
+#: ../../source/siesta-pseudos.rst:32 1b9b5de2e0bf407a9348f880b2846565
+#, fuzzy
+msgid "**list**: List pseudopotential repos with installation status."
+msgstr "**list**: فهرست کردن مخازن شبه‌پتانسیل نصب شده و نمایش جدول."
+
+#: ../../source/siesta-pseudos.rst:33 e56a995d56ea477b8a9321e2e53eccf5
+msgid ""
+"**plot**: Generate plots for a specified element in a pseudopotential "
+"repository."
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:34 b678160b36b64e6bb4bf4161a077217a
+#, fuzzy
+msgid "**show**: Show info on pseudopotential table(s) and valence shells."
+msgstr "**show**: نمایش اطلاعات جداول شبه‌پتانسیل."
+
+#: ../../source/siesta-pseudos.rst:35 b0a7a33e2aad4ceeb2bba891653fc323
+#, fuzzy
+msgid "**uninstall**: Uninstall pseudopotential repositories by name(s)."
+msgstr "**install**: نصب مخازن شبه‌پتانسیل با نام(ها)."
+
+#: ../../source/siesta-pseudos.rst:39 22edc21b1ba144f29c7f918ca698191e
+#, fuzzy
+msgid "Commands in Detail"
+msgstr "دستورات موجود به تفصیل"
+
+#: ../../source/siesta-pseudos.rst:42 50597d475d7a4b898718d5232ca7700e
+msgid "available"
+msgstr "موجود"
+
+#: ../../source/siesta-pseudos.rst:44 e04802f5ca6249829722d6eafc6aa037
+#, fuzzy
+msgid "Show all available pseudopotential repositories with download information."
+msgstr "نمایش تمام مخازن شبه‌پتانسیل موجود."
+
+#: ../../source/siesta-pseudos.rst:50 2d4bd9df2dcf48dab4b9053d97cae2cc
+msgid ""
+"Example output shows repository names, XC functionals, relativity type, "
+"and element coverage."
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:54 e65e2d2035bc4083afdbd43ee1b3a0aa
+msgid "install"
+msgstr "نصب"
+
+#: ../../source/siesta-pseudos.rst:56 c20389c910c14c6d9b85b9e1b1e1470f
+#, fuzzy
+msgid "Install pseudopotential repositories by name."
+msgstr "نصب یک مخزن شبه‌پتانسیل با نام آن."
+
+#: ../../source/siesta-pseudos.rst:71 52cd0ad658b44c8e97d88aed9821db29
+#, fuzzy
+msgid "uninstall"
+msgstr "نصب"
+
+#: ../../source/siesta-pseudos.rst:73 38ea7fac5e7a453d809d76adecde5e49
+#, fuzzy
+msgid "Uninstall pseudopotential repositories."
+msgstr "نصب یک مخزن شبه‌پتانسیل با نام آن."
+
+#: ../../source/siesta-pseudos.rst:88 e82c7d005ef04478a4bb22c185f58504
+msgid "list"
+msgstr "فهرست"
+
+#: ../../source/siesta-pseudos.rst:90 0f6ed7d6b7e049a2b0d8202d83f1f8a0
+#, fuzzy
+msgid "List all pseudopotential repositories with installation status."
+msgstr "نصب یک مخزن شبه‌پتانسیل با نام آن."
+
+#: ../../source/siesta-pseudos.rst:96 b0df40e2cff2453f990f7ac84875b829
+msgid ""
+"Shows a table with repository name, XC functional, relativity type, "
+"version, and installation status."
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:101 1395412d948f410b84f6a8dbf7d08c51
+msgid "show"
+msgstr "نمایش"
+
+#: ../../source/siesta-pseudos.rst:103 1bfabc35e9874988ba1f41e202ab1b4d
+#, fuzzy
+msgid ""
+"Show detailed information about a pseudopotential repository, including "
+"valence shell configuration for specific elements."
+msgstr "نمایش اطلاعات تفصیلی درباره یک مخزن شبه‌پتانسیل مشخص."
+
+#: ../../source/siesta-pseudos.rst:116 e26fe3441e4f4379ae0155cb82b44ac8
+msgid "element"
+msgstr "عنصر"
+
+#: ../../source/siesta-pseudos.rst:118 83fc890e951b4e2a8d57f1bcfeced0a4
+msgid ""
+"Find all pseudopotentials available for a given element across installed "
+"repositories."
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:130 8e8994209a3b4df7aed30911f374aee5
+msgid "basis"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:132 a240e17e4c424e68b445be2acaf9bbd4
+msgid ""
+"Generate PAO.Basis block from PSML pseudopotential file. This is useful "
+"for creating custom basis set specifications."
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:149 ../../source/siesta-pseudos.rst:202
+#: 2d61325f393b498eb12592b4d5a25715 f4f1033ba7cc4fcf9585c80cf17ca95d
+msgid "Options:"
+msgstr "گزینه‌ها:"
+
+#: ../../source/siesta-pseudos.rst:151 7c7c5943b6464fa58bf0673ea0255d00
+msgid ""
+"``--basis-size``: PAO.BasisSize to generate (SZ, DZ, DZP, TZ, TZP, TZDP)."
+" Default: DZP"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:152 da2d96221d734e2fa2bc23ce69bde1bf
+msgid ""
+"``--n-shells``: Number of n-shells per l (1=valence only, "
+"2=valence+excited)"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:153 a92a8f83f1be4bc4a9d7740b46fb3ba7
+msgid "``--rc-method``: Method to determine cutoff radii:"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:155 e65521b6f3cb4d33878fcb3fe9a01ab0
+msgid "``psml``: From wavefunction decay in PSML file (default)"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:156 b111179b121842a397026af1ee7d6def
+msgid "``scaled``: Scaled by atomic radius"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:157 38b3822cebde40f2976a03202be1ad7f
+msgid "``hydrogenic``: n²/Z_eff scaling"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:158 277c36ee612743f2bf8a37db82f25bf5
+msgid "``fixed``: Standard fixed values"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:160 463439fb10f540478026dfd7d8d88f5c
+msgid ""
+"``--rc-threshold``: Threshold for PSML wavefunction decay (default: 0.05 "
+"= 5%)"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:161 3d071f0eccf146b99763b6dbcf68681f
+msgid "``--output-file``: Output file path (default: stdout)"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:165 78b3557a42554bc29e08d37a5db9d946
+msgid "plot"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:167 56ee354dee704a68a75b6b9a09665399
+msgid "Generate visualization plots for pseudopotential data."
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:183 111d3d1f2c7346a3abf13f3b0e8389b0
+msgid "Plot types:"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:185 d1ac3358964f472fa66262a82f2983b3
+msgid "``wavefunctions``: Radial projector functions"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:186 f98288f6f3b2484a8ad66e9f79e243ee
+msgid "``potentials``: Local and semilocal potentials (polar plot)"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:187 543adc811acc48f9b53cadd11e89d544
+msgid "``3d-potential``: 3D surface plot of local potential"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:188 a3d96cf105f54289a389a071c7057f49
+msgid "``occupation``: Valence electron occupation heatmap"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:189 70c71d56394741dab117435e3dd4cece
+msgid "``density``: Radial density (projector magnitude squared)"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:190 1533b99624fd405da7f34031e92288ff
+msgid "``all``: Generate all plot types (default)"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:194 b9189c816b3b418f93561e0636748a3e
+msgid "Standalone Plotting Tool"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:196 3a69670aad504aa28eddb2f5e6139a02
+msgid "For direct plotting of PSML files without using the repository system:"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:204 12db9f73615440c3a824b3e7130bad51
+msgid ""
+"``--plot-type``: Type of plot (wavefunctions, potentials, 3d-potential, "
+"occupation, density, all)"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:205 333d17d2c3dd4c89a959ab4b5a80a3a2
+msgid "``--output-dir``: Output directory for plots"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:206 fa4fb487e5b74499b9efb6bc0c54e17b
+msgid "``--r-plot``: Maximum radial distance in bohr"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:210 eb2088ceaeda4175af79dac66f3a64be
+#, fuzzy
+msgid "Available Pseudopotential Repositories"
+msgstr "نمایش تمام مخازن شبه‌پتانسیل موجود."
+
+#: ../../source/siesta-pseudos.rst:212 396dd6c73d0d4005b4c61f66f459653d
+msgid "The following repositories are available for installation:"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:214 b163baefd1ef4d36861cd7b4c67b7ebc
+msgid "**ONCVPSP-PBE-SR-PDv0.4-Standard**: PBE scalar-relativistic (most common)"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:215 286ae21b3f2a47dba6c9135c528b5df3
+msgid "**ONCVPSP-PBE-FR-PDv0.4-Standard**: PBE fully-relativistic"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:216 6724363e9b974dffa724412adf1071ab
+msgid "**ONCVPSP-PBEsol-SR-PDv0.4-Standard**: PBEsol scalar-relativistic"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:217 19ace1d5ca50429d8ed3ac907b2e1e4d
+msgid "**ONCVPSP-PBEsol-FR-PDv0.4-Standard**: PBEsol fully-relativistic"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:218 9377e60010204d178dcb33e8fd516a4a
+msgid "**ONCVPSP-LDA-SR-PDv0.4-Standard**: LDA scalar-relativistic"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:219 f06c538c1e77442a92904448a88238c1
+msgid "**ONCVPSP-LDA-FR-PDv0.4-Standard**: LDA fully-relativistic"
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:221 58ac87e090e44c67bded223a79e798fd
+msgid ""
+"All repositories use the PSML format and are sourced from the PseudoDojo "
+"project."
+msgstr ""
+
+#: ../../source/siesta-pseudos.rst:225 14da3c928cac48df9f37023851404b47
+msgid "Quick Start Examples"
+msgstr ""
+
+#~ msgid "Contents:"
+#~ msgstr "محتویات:"
+
+#~ msgid "**mkff**: Compute form factors for pseudos and show them."
+#~ msgstr "**mkff**: محاسبه فاکتورهای فرم برای شبه‌پتانسیل‌ها و نمایش آنها."
+
+#~ msgid ""
+#~ "Find all pseudos in the installed "
+#~ "tables for the given element (symbol "
+#~ "or znucl)."
+#~ msgstr ""
+#~ "یافتن تمام شبه‌پتانسیل‌ها در جداول نصب"
+#~ " شده برای عنصر مشخص (نماد یا "
+#~ "znucl)."
+
+#~ msgid ""
+#~ "List installed pseudopotential repositories "
+#~ "and show a table of their details."
+#~ msgstr "فهرست کردن مخازن شبه‌پتانسیل نصب شده و نمایش جدول جزئیات آنها."

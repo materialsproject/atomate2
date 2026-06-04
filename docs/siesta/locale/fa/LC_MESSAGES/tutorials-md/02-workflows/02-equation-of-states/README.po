@@ -1,0 +1,709 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:1
+#: 83e223fe50044724bf4fdc0ab6d0a35a
+msgid "Tutorial: Equation of State (EOS) Workflows"
+msgstr "آموزش: Eqution of Stte (EOS) گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:3
+#: a516fd9734bd47beb50629124ef717e7
+msgid ""
+"**Category**: 02-workflows/02-equation-of-states **Difficulty**: "
+"Intermediate **Time**: ~5 min (dry-run), ~30-60 min (full workflow)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:9
+#: 55a53d7cf1724e9e991207ce750fd2ab
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:11
+#: 6baafa3aea4a4a39946681bbfe4390fe
+msgid ""
+"This tutorial demonstrates equation of state (EOS) calculations using "
+"various FlowMakers. The EOS describes how a material's energy varies with"
+" volume, providing crucial information about bulk modulus, equilibrium "
+"volume, and pressure-volume relationships."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:13
+#: f4bd13848ae24e33ac04fd7c7d7e7984
+msgid "**What EOS Calculations Tell You**:"
+msgstr "**Wht EOS محاسبهs Tell You**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:14
+#: 7873119aa92146c4b8aa1865cfb91bf3
+msgid "**Bulk modulus (B₀)**: Resistance to compression"
+msgstr "**Bulk modulus (B₀)**: Resistnce to compression"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:15
+#: b706d6a63ddd4e399da5f991d944067d
+msgid "**Equilibrium volume (V₀)**: Minimum energy volume"
+msgstr "**Equilibrium volume (V₀)**: Minimum energy volume"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:16
+#: ede5a11334514d3e9ce7571589eced21
+msgid "**Pressure derivative (B'₀)**: How bulk modulus changes with pressure"
+msgstr "**Pressure derivtive (B'₀)**: How bulk modulus chnges با pressure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:17
+#: 7700294dc7654319ada5cb88017497dc
+msgid "**Cohesive energy**: Binding energy of the crystal"
+msgstr "**Cohesive energy**: Binding energy of  crystl"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:21
+#: d007c270534a4728b6c1c440877a16d0
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:23
+#: fa5fd68381334072be224bc08c042e40
+msgid "Using `SiestaEosFlowMaker` for basic EOS workflows"
+msgstr "Using `SiestaEosFlowMaker` for basic EOS workflows"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:24
+#: 1ccca19e94d048069ab6e1729af50887
+msgid "EOS fitting with Birch-Murnaghan equation"
+msgstr "EOS fitting با Birch-Murnghn eqution"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:25
+#: ffd9918feaf64331b8c80d0bd6d5e2f8
+msgid "Combining EOS with basis set convergence"
+msgstr "Combining EOS با bsis set convergence"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:26
+#: af1452a1dcbe4d93a3866ef8a52ed516
+msgid "Automatic EOS plotting"
+msgstr "Automtic EOS plotting"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:27
+#: 79c7c6e621a1475fa1582078a82f9324
+msgid "Analyzing bulk modulus and equilibrium lattice parameters"
+msgstr "Anlyzing bulk modulus و equilibrium lttice prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:31
+#: 1d14b2de65e4447b927a3e208199b5d2
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:33
+#: f9f7f2326e9b4fc6b6243c35ddb51fee
+msgid ""
+"**Required tutorials**: "
+"[01-basics/01-RelaxMaker](../../01-basics/01-RelaxMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:34
+#: a00b4c523ab24490b0583558979431e8
+msgid "**Required knowledge**: Basic thermodynamics, bulk modulus concept"
+msgstr "**مورد نیاز knowledge**: Bsic rmodynmics, bulk modulus concept"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:35
+#: e365b9c94f9a446fb5d0eea408a1d751
+msgid ""
+"**Recommended**: [01-convergence](../01-convergence/) - Converged "
+"parameters"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:36
+#: 3c3066ddc53647899b353cee2b6dfe0d
+msgid "**Structure files**: Located in [00-structures](../../00-structures/)"
+msgstr "**Structure files**: Locted in [00-structures](../../00-structures/)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:40
+#: 810c6036f9c645efa4a3931cc1720207
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:42
+#: 81db7885cae14373a105596c40335967
+msgid "Equation of State"
+msgstr "Eqution of Stte"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:44
+#: fb7623920fb046c79ebd5192aab82831
+msgid "The EOS relates energy E to volume V:"
+msgstr "The EOS reltes energy E to volume V:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:46
+#: c91085952171442aa61ba45355fa6d08
+msgid "**Birch-Murnaghan EOS (3rd order)**:"
+msgstr "**Birch-Murnghn EOS (3rd یاder)**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:48
+#: 62f4a7cceacb4ab39c18f60a9ba1fc0e
+msgid ""
+"$$E(V) = E_0 + \\frac{B_0 V}{B'_0} \\left[\\frac{(V_0/V)^{B'_0}}{B'_0 - "
+"1} + 1\\right] - \\frac{B_0 V_0}{B'_0 - 1}$$"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:50
+#: f0abc180268f4d07b8918be673e1ba08
+msgid "Where:"
+msgstr "Where:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:51
+#: c5cad19426e4493281d8610b30235482
+msgid "$E_0$: Energy at equilibrium"
+msgstr "$E_0$: Energy t equilibrium"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:52
+#: 75506b37db2d4d97a765120bbab500d9
+msgid "$V_0$: Equilibrium volume"
+msgstr "$V_0$: Equilibrium volume"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:53
+#: 9b5c1d3fc63a494490d8325c0d13390b
+msgid "$B_0$: Bulk modulus at V₀"
+msgstr "$B_0$: Bulk modulus t V₀"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:54
+#: 5dfb4c33efd04344b3afd0e7c410f074
+msgid "$B'_0$: Pressure derivative of bulk modulus"
+msgstr "$B'_0$: Pressure derivtive of bulk modulus"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:56
+#: a1ad53031dff4b9b9deaef4f4324aa6f
+msgid "**Physical Meaning**:"
+msgstr "**Physicl Mening**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:57
+#: 53f8ce2015724a11b6b048ef5c3e898f
+msgid "$B_0$: How hard to compress (GPa)"
+msgstr "$B_0$: How hrd to compress (GP)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:58
+#: 6715c7315de6488fab40343de3c458f1
+msgid "$V_0$: Most stable volume (Å³)"
+msgstr "$V_0$: Most stble volume (Å³)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:59
+#: 7039576da3264d69893c66ffa89ef63e
+msgid "$B'_0$: Typically 3-6 for most materials"
+msgstr "$B'_0$: Typiclly 3-6 برای most mterils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:61
+#: fe970f07caa6452286e5e48879c72183
+msgid "Volume Sampling"
+msgstr "Volume Smpling"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:63
+#: c22fe5d163e04272a82a44e52d62dc5a
+msgid "Typical strategy:"
+msgstr "Typicl strtegy:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:64
+#: 3f101662c1df46d4ba163a9fe3bd3d90
+msgid "**Range**: ±6% around initial volume (0.94 to 1.06 scale factors)"
+msgstr "**Rnge**: ±6% round initil volume (0.94 to 1.06 scle fctیاs)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:65
+#: f1a065f0b5dc499b9f9ca816878b0d07
+msgid "**Points**: 7-11 volumes (more = better fit)"
+msgstr "**Points**: 7-11 volumes (mیاe = better fit)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:66
+#: 37b6092b646a49fa92dbf0e0c3318b47
+msgid "**Spacing**: Uniform in scale factor"
+msgstr "**Spcing**: Uniبرایm in scle fctیا"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:68
+#: 540fcfbe084f47e9aa5babc25d16803f
+msgid "Example scales: [0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06]"
+msgstr "مثال scles: [0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06]"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:70
+#: 2a3a5624bc9644bb801edbc319a78712
+msgid "EOS Fitting"
+msgstr "EOS Fitting"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:72
+#: f0e5233ab6604ad6a12ba649ca48f62d
+msgid "Calculate energy at each volume"
+msgstr "Clculte energy t ech volume"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:73
+#: 867675525e69493f95624c040d48108f
+msgid "Fit to Birch-Murnaghan (or other EOS)"
+msgstr "Fit to Birch-Murnghn (یا or EOS)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:74
+#: 0f50b4612c3845ceb89c97f0433a3d44
+msgid "Extract B₀, V₀, B'₀"
+msgstr "Extrct B₀, V₀, B'₀"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:75
+#: 0b80d8ad8fa84e658814e84eaa444f08
+msgid "Plot E vs V curve"
+msgstr "Plot E vs V curve"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:79
+#: b58bea79a16b45498540ebc10fb79c71
+msgid "Tutorial Subdirectories"
+msgstr "Tutیاil Subdirectیاies"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:81
+#: d7780fdc0e8f4e6bb3c8464bf1f9a0e0
+msgid "[01-SiestaEosFlowMaker](01-SiestaEosFlowMaker/)"
+msgstr "[01-SiestaEosFlowMaker](01-SiestaEosFlowMaker/)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:82
+#: bf9aeb5556d747d9acfee7f0160d7ee3
+msgid "**Description**: Basic EOS workflow with automatic plotting **Features**:"
+msgstr "**توضیحات**: Bsic EOS wیاkflow با utomtic plotting **ویژگی‌ها**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:84
+#: 6c0a7a70be04476e9b04b9675a4de418
+msgid "Volume scaling and relaxation"
+msgstr "Volume scling و relxtion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:85
+#: 9f1a5355370f42e4a3bba7faf1cf1490
+msgid "Birch-Murnaghan fitting"
+msgstr "Birch-Murnghn fitting"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:86
+#: f4de228cfda54c08bbb2209d48e50707
+msgid "Automatic EOS plot generation"
+msgstr "Automtic EOS plot genertion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:87
+#: 0a0a224d6fdd4ed3a57bbc96e97f2054
+msgid "Bulk modulus extraction"
+msgstr "Bulk modulus extrction"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:89
+#: 30e9cc20816c43d7b20f919678a0893f
+msgid "[02-EOSBasisConvergenceFlowMaker](02-EOSBasisConvergenceFlowMakere/)"
+msgstr "[02-EOSBasisConvergenceFlowMaker](02-EOSBasisConvergenceFlowMakere/)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:90
+#: d6b5b0b98fea47a191c9127ff57b3c6e
+msgid "**Description**: EOS with simultaneous basis set testing **Features**:"
+msgstr "**توضیحات**: EOS با simultneous bsis set testing **ویژگی‌ها**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:92
+#: bebe2591b3034dc69c560fe8170a76a9
+msgid "Test multiple basis sets (SZ, DZ, DZP, TZP)"
+msgstr "Test multiple bsis sets (SZ, DZ, DZP, TZP)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:93
+#: 29c0135852544eb29ef7c7d690f0461a
+msgid "EOS for each basis"
+msgstr "EOS برای ech bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:94
+#: 6218ea604c2f433f87eebc8e40b01349
+msgid "Identify basis-dependent bulk properties"
+msgstr "Identify bsis-dependent bulk properties"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:95
+#: 295dd664cd074004bfcea09d1e9501b1
+msgid "Comprehensive comparison plots"
+msgstr "Comprehensive comprison plots"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:97
+#: d213382fe66a472faed226ccd8424ac4
+msgid "[03-EOSFullBasisConvergenceFlowMaker](03-EOSFullBasisConvergenceFlowMaker/)"
+msgstr "[03-EOSFullBasisConvergenceFlowMaker](03-EOSFullBasisConvergenceFlowMaker/)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:98
+#: ba51d80d5a7b44519e9356b460331895
+msgid ""
+"**Description**: Complete basis parameter convergence with EOS "
+"**Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:100
+#: de9a45eeaa5e4009b4763afcee659cd5
+msgid "Full basis parameter space exploration"
+msgstr "Full bsis prmeter spce explیاtion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:101
+#: 171b772b01dc430eb9c17ab961a0087c
+msgid "Combined convergence + EOS workflow"
+msgstr "Combined convergence + EOS wیاkflow"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:102
+#: 6cf96e23a0724ad09505e6e7daaf9374
+msgid "Production-ready parameter determination"
+msgstr "Production-redy prmeter determintion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:106
+#: 2e2ef329aefa4a6583d3f9afa9ff1a53
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:108
+#: dc8cf4c648c943dd844bb5eba3e3107b
+msgid "Example 1: Basic EOS Calculation"
+msgstr "مثال 1: Bsic EOS محاسبه"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:136
+#: ab42a305817d4159ada7ea8e6965489b
+msgid "Example 2: Custom Volume Range"
+msgstr "مثال 2: Custom Volume Rnge"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:152
+#: ed87185f403a4b5a814cc6d5242a51da
+msgid "Example 3: With Tier Preset"
+msgstr "مثال 3: With Tier Preset"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:170
+#: fbbefed01a4540768e38bda9b3a0d3f1
+msgid "Example 4: EOS with Basis Convergence"
+msgstr "مثال 4: EOS با Bsis همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:187
+#: 767359a81fe345a0b2917ffb33e285b7
+msgid "Run Modes"
+msgstr "حالت‌های اجرا"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:189
+#: 37703bbe7da9475882dcf80b244e671e
+msgid "1. Dry-Run Mode"
+msgstr "1. Dry-Run Mode"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:195
+#: 75c67d6f6572421aaa266da08323bbe9
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:208
+#: 4a9e87320db4461890721eae9fe6cac0
+msgid "**Verify volumes**:"
+msgstr "**Verify volumes**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:216
+#: 9ef97a80a4f64f86936d2d243889e4e8
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:223
+#: b5f5b0db4094414e9a6e11af94857b9a
+msgid "**Time**: 30-60 min for 7 volumes (depends on system size)"
+msgstr "**زمان**: 30-60 min برای 7 volumes (depends on system size)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:227
+#: bf697dbfa385479688bc0fcc5a6b1fea
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:229
+#: 389fa20fd38f49cd9de2b54ac4531e73
+msgid "Automatic EOS Plot"
+msgstr "Automtic EOS Plot"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:231
+#: 8c2860b9273e453cb88a53247cbd6d9e
+msgid "After workflow completes, check analysis job folder:"
+msgstr "After wیاkflow completes, check nlysis job folder:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:240
+#: ff11557bd957450683b16e69055d7a46
+msgid "**eos_plot.png** shows:"
+msgstr "**eos_plot.png** shows:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:241
+#: 2f030379884a4f99b41efceb3d396211
+msgid "Data points (calculated E vs V)"
+msgstr "Dt points (clculted E vs V)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:242
+#: bdb79a30726c4d828b6ebf0cc1cc6dfb
+msgid "Fitted Birch-Murnaghan curve"
+msgstr "Fitted Birch-Murnghn curve"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:243
+#: d13e54996f744fd18b45f6fed3adde12
+msgid "Equilibrium volume V₀ marked"
+msgstr "Equilibrium volume V₀ mrked"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:244
+#: 1d2f2be735f447dc88a849c976596ed7
+msgid "Bulk modulus B₀ annotated"
+msgstr "Bulk modulus B₀ nnotted"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:246
+#: 2bb3856641f3492ba07212d2ec48cea7
+msgid "Analyzing EOS Results"
+msgstr "Anlyzing EOS Results"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:272
+#: 686cd2b6e7304daeb97266d955a6d5b5
+msgid "Extracting Per-Atom Properties"
+msgstr "Extrcting Per-Atom Properties"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:284
+#: 70ded5f0585e4580b9e0c7a3499a5ec2
+msgid "Comparison with Experiments"
+msgstr "Comprison با Experiments"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:300
+#: 0698362b4b574470afe841d09e3c61eb
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:302
+#: 3b6d1bf3a173421a93b77ee666df33bd
+msgid "Issue 1: \"EOS fitting fails\""
+msgstr "Issue 1: \"EOS fitting fils\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:304
+#: 4a8ef31664b6460485d44aa961d5c738
+msgid "**Symptoms**: Poor fit, unrealistic B₀ or V₀"
+msgstr "**Symptoms**: Poیا fit, unrelistic B₀ یا V₀"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:306
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:348
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:371
+#: 8045bb3fc50c42489f9b9619d7e27bd8 888a2584aee9415596b1007954bee55a
+#: f7ba0e29650d41b8b0e5c6c8290a8ead
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:308
+#: 93325a83af2244feb0642b81da875ea1
+msgid "**Increase volume range**:"
+msgstr "**Increse volume rnge**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:313
+#: 8f721bb93a794fe38ae39f4caa654dc3
+msgid "**Add more points**:"
+msgstr "**Add mیاe points**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:318
+#: c0f5489026c347c1979bb0e9147cca79
+msgid "**Check for structural instabilities**:"
+msgstr "**Check برای structurl instbilities**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:324
+#: 38cb1f160b6f4dfea8fa0a071cf2ee77
+msgid "**Try different EOS forms** (manual):"
+msgstr "**Try different EOS برایms** (mnul):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:325
+#: d57385fe10f846e8a5557da01b0afbb5
+msgid "Birch-Murnaghan (default, best for most materials)"
+msgstr "Birch-Murnghn (defult, best برای most mterils)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:326
+#: 3280ced80c724d4da102fe0c9429ae62
+msgid "Vinet (good for anharmonic materials)"
+msgstr "Vinet (good برای nhrmonic mterils)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:327
+#: a2b85c09c5184ac5ab70eebbd4754f54
+msgid "Murnaghan (simple, less accurate)"
+msgstr "Murnghn (simple, less ccurte)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:329
+#: 68ff848eb4dd4d06a8b1919c07d7ff93
+msgid "Issue 2: \"Volume at boundary of range\""
+msgstr "Issue 2: \"Volume t boundry of rnge\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:331
+#: 4b6231df43a04d93866f91d97a9ef4cb
+msgid "**Symptoms**: V₀ at or near smallest/largest volume"
+msgstr "**Symptoms**: V₀ t یا ner smllest/lrgest volume"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:333
+#: 373db5049c7140268b700dcae15d5830
+msgid "**Solution**: Expand volume range in that direction"
+msgstr "**Solution**: Expو volume rnge in tht direction"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:339
+#: 93524b657f18420b9c31eebb4f37cafe
+msgid "Issue 3: \"Energies not monotonic\""
+msgstr "Issue 3: \"Energies not monotonic\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:341
+#: 3eefb60a53dd404baf564ec6821b7bf9
+msgid "**Symptoms**: E(V) curve has unexpected jumps"
+msgstr "**Symptoms**: E(V) curve hs unexpected jumps"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:343
+#: 5b790377a69e48029f2d7ec0be4744d6
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:344
+#: 15d3528df0bd42d9996697e197480dce
+msgid "Relaxation to different structures at different volumes"
+msgstr "Relxtion to different structures t different volumes"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:345
+#: c02e24708d014b26a7807bd26e07789d
+msgid "SCF convergence failures"
+msgstr "SCF convergence filures"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:346
+#: 2af55db3fb424fb885b01dd8d84e5d6f
+msgid "Insufficient k-points or basis"
+msgstr "Insufficient k-points یا bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:349
+#: dc2017c94f5840409b2894f87cd5774e
+msgid "Check all relaxations converged:"
+msgstr "Check ll relxtions converged:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:357
+#: 7bf7f7abb758419993d16e2d2149f56b
+msgid "Use tighter parameters:"
+msgstr "Use tighter prmeters:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:367
+#: 0316459432914f09a740e912c40d8224
+msgid "Issue 4: \"Bulk modulus too high/low\""
+msgstr "Issue 4: \"Bulk modulus too high/low\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:369
+#: f980d91b24cb496d9e17393e141fc92d
+msgid "**Cause**: GGA functional, unconverged parameters"
+msgstr "**Cuse**: GGA functionl, unconverged prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:372
+#: 166ac77c6ffc430b8c0cac61140fb186
+msgid "**Accept GGA limitations**: Bulk moduli typically accurate within ~10%"
+msgstr "**Accept GGA limittions**: Bulk moduli typiclly ccurte باin ~10%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:373
+#: d7f56aeeea88440caadeb1ecf035bdf1
+msgid "**Check convergence**: Run [01-convergence](../01-convergence/) first"
+msgstr "**Check convergence**: Run [01-convergence](../01-convergence/) first"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:374
+#: 96c93265192e467598a243a11bea04e8
+msgid "**Compare trends**: Relative values more reliable than absolute"
+msgstr "**Compre trends**: Reltive vlues mیاe relible thn bsolute"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:378
+#: dbdd2f2c6df6485da254130cad9e2f6b
+msgid "EOS Analysis Best Practices"
+msgstr "EOS Anlysis بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:380
+#: a74b388133c541e6807656b38c932df8
+msgid "1. Always Use Relaxation"
+msgstr "1. Alwys Use Relxtion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:396
+#: 61f16cb090ac47968f4ca2c437db489a
+msgid "2. Use Converged Parameters"
+msgstr "2. Use Converged Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:398
+#: d62d8aace5fa404a9dcf252738c9b341
+msgid "From convergence studies ([01-convergence](../01-convergence/)):"
+msgstr "From convergence studies ([01-convergence](../01-convergence/)):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:409
+#: 0723a6c80fc54bffb1e0e299f02939fb
+msgid "3. Check Symmetry Preservation"
+msgstr "3. Check Symmetry Preservtion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:421
+#: 326fc55ab51b4bb89732d119a7396cf9
+msgid "4. Validate with Experiments"
+msgstr "4. Vlidte با Experiments"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:434
+#: e642f9a51dbc48c6b86260f0a95f85c1
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:436
+#: 636bc3d3390f454d9409f8f953f9a7fb
+#, python-format
+msgid ""
+"✅ **Use converged parameters**: Run convergence tests first ✅ **Adequate "
+"volume range**: ±6% minimum, ±8% safer ✅ **Enough points**: 7-9 minimum, "
+"11 better ✅ **Check all relaxations**: Verify convergence at each volume "
+"✅ **Compare with experiments**: Validate B₀ and V₀ ✅ **Use tier "
+"presets**: Material-specific optimized parameters"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:445
+#: 969ab2fce70a4eefbf7e2eff3aab12e6
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:447
+#: 65ac79d87c034a06bad40a46486f016b
+msgid "After completing EOS tutorials:"
+msgstr "After completing EOS tutیاils:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:449
+#: b6039e7b293e4e5da2a103f2f2e0d844
+msgid ""
+"**Mechanical properties**: [04-mechanical](../04-mechanical/) - Full "
+"elastic tensor"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:450
+#: a24e240adab44c0cacebb74081763933
+msgid ""
+"**Thermal expansion**: Combine EOS with [06-vibrational-"
+"properties/03-qha](../06-vibrational-properties/03-SiestaQhaFlowMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:451
+#: 3b5edf130ace4774b09816569e5d5dac
+msgid "**Pressure effects**: Use EOS to understand material under pressure"
+msgstr "**Pressure effects**: Use EOS to understو mteril under pressure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:452
+#: e46e37b7b4c44ffe993de764f698e636
+msgid ""
+"**Recipe book**: [03-advanced-features/08-recipe-book](../../03-advanced-"
+"features/08-recipe-book/) - One-line EOS workflows"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:456
+#: 05b5df01e0894bb49ac822f5f77f6884
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:458
+#: 6a9e4967414d4db88ab593020701b688
+msgid ""
+"**Birch-Murnaghan EOS**: Birch (1947) \"Finite Elastic Strain of Cubic "
+"Crystals\""
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:459
+#: 27ea9ac0efb145d6be0bc224a74e65cc
+msgid "**Bulk modulus**: Ashcroft & Mermin \"Solid State Physics\""
+msgstr "**Bulk modulus**: Ashcroft & Mermin \"Solid Stte Physics\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:460
+#: 4f20edfcd2b34255ad717da81954c5d7
+msgid "**EOS fitting**: Vinet et al. (1987) J. Geophys. Res."
+msgstr "**EOS fitting**: Vinet et l. (1987) J. Geophys. Res."
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/README.md:464
+#: c7e3db19d0ac40978e3fa7378332a496
+msgid ""
+"*Back to [02-workflows](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

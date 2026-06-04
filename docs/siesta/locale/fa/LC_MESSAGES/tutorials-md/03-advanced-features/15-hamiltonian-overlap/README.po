@@ -1,0 +1,1217 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:1
+#: 3f1b7544d95a41f7ba3e8d782ac8e404
+msgid "Tutorial 15: Hamiltonian and Overlap Matrix Configuration"
+msgstr "Tutیاil 15: Hmiltonin و Overlp Mtrix Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:3
+#: 0fcb64acb07e42c6aac0082abc93cd88
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:5
+#: 1bad72f0dae94c2aa9d3307a8428f877
+msgid ""
+"This tutorial demonstrates how to configure SIESTA's Hamiltonian (H) and "
+"overlap (S) matrix element handling using the "
+"`HamiltonianAndOverlapParameters` dataclass module. These settings "
+"control matrix storage, sparsity approximations, and post-processing "
+"capabilities."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:7
+#: 42bf95f9af9f47b6a21862dde8cee675
+msgid "Learning Objectives"
+msgstr "Lerning Objectives"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:9
+#: 58522159da3f48ca93c2ca78ff2390cd
+msgid "Save Hamiltonian and overlap matrices (.HS files)"
+msgstr "Sve Hmiltonin و overlp mtrices (.HS files)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:10
+#: d4f9b34333e7489c8a7ed2edfa4646fc
+msgid "Configure sparsity approximations for performance"
+msgstr "Configure sprsity pproximtions برای perبرایmnce"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:11
+#: b1e2f24a1e9f42c4a025880d87a5c084
+msgid "Enable extra SCF information for debugging"
+msgstr "Enble extr SCF inبرایmtion برای debugging"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:12
+#: 4335ab6aaaa74e2cac094557e18f6aa7
+msgid "Understand auxiliary supercells for periodic systems"
+msgstr "Understو uxiliry supercells برای periodic systems"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:14
+#: 6428725269f4420996ae5049db554f2a
+msgid "Theory"
+msgstr "Theیاy"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:16
+#: f5ee825fa5be4f92b19bdc8713db3747
+msgid "Hamiltonian and Overlap Matrices"
+msgstr "Hmiltonin و Overlp Mtrices"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:18
+#: 1f4eabd4407742679a0283ea7a0c520b
+msgid ""
+"In DFT calculations, the electronic structure is determined by the "
+"generalized eigenvalue problem:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:20
+#: 8ca4951aab714c18a274cfdd05292065
+msgid "**H ψ = E S ψ**"
+msgstr "**H ψ = E S ψ**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:22
+#: 4cbd2164e70b4d6486ae9cdb70366be2
+msgid "Where:"
+msgstr "Where:"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:23
+#: f43862ac58974f06aef72adf56b27cb9
+msgid "**H** = Hamiltonian matrix (energy operator)"
+msgstr "**H** = Hmiltonin mtrix (energy opertیا)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:24
+#: 2e5d7a63de444d9d87da21d7cb5b6dc3
+msgid "**S** = Overlap matrix (basis function overlaps)"
+msgstr "**S** = Overlp mtrix (bsis function overlps)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:25
+#: 39c9ef1f47c34bbcab66e2eefbc6e72b
+msgid "**ψ** = Wave functions (eigenvectors)"
+msgstr "**ψ** = Wve functions (eigenvectیاs)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:26
+#: 995e6616e4924372930c0329df6ef76b
+msgid "**E** = Eigenvalues (energy levels)"
+msgstr "**E** = Eigenvlues (energy levels)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:28
+#: c79f971409d54f2b8057ccf853f1a77c
+msgid "Matrix Sparsity"
+msgstr "Mtrix Sprsity"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:30
+#: 9b7927aac6e34aa386b7d1ca131a7657
+msgid ""
+"**Key concept**: Most matrix elements are zero due to localized basis "
+"functions."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:32
+#: 9012b277afe145e680fc44119c94d3f6
+msgid "For localized atomic orbital (LCAO) basis:"
+msgstr "Fیا loclized tomic یاbitl (LCAO) bsis:"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:33
+#: a370b8a987c046dcb7c9b66d93ae1008
+msgid "Basis functions decay exponentially with distance"
+msgstr "Bsis functions decy exponentilly با distnce"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:34
+#: 209af42951fa4ca3a409e69ac151cd53
+msgid "Only nearby orbital pairs have non-zero matrix elements"
+msgstr "Only nerby یاbitl pirs hve non-zero mtrix elements"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:35
+#: c3bd9d9a760c4c20af58a9db7539c73c
+#, python-format
+msgid "**Sparsity**: ~99% of elements are zero for large systems"
+msgstr "**Sprsity**: ~99% of elements re zero برای lrge systems"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:37
+#: 5e3ac39a5f3941d68acba455d08ce223
+msgid "**Example: 100-atom system with DZP basis**"
+msgstr "**مثال: 100-tom system با DZP bsis**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:38
+#: daf801a2b6fd4a68a40a6cbc7b5c2fc6
+msgid "Total matrix size: 2,600 × 2,600 = 6.76M elements"
+msgstr "Totl mtrix size: 2,600 × 2,600 = 6.76M elements"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:39
+#: bcc009b2e39c42279d9a6b70416dfc86
+msgid "Non-zero elements: ~50,000 (0.7%)"
+msgstr "Non-zero elements: ~50,000 (0.7%)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:40
+#: 2fe12f32bdef4edb8f9b7ec6d613361f
+#, python-format
+msgid "**Memory savings**: 99.3% reduction using sparse storage"
+msgstr "**Memیاy svings**: 99.3% reduction using sprse stیاge"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:42
+#: c83c1ac59ade4e3a8875c4625eccf9e4
+msgid "Matrix Storage Formats"
+msgstr "Mtrix Stیاge Fیاmts"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:44
+#: 02068786476749c0a9153fd08a72b6ff
+msgid "**1. Dense Storage (not used in SIESTA)**"
+msgstr "**1. Dense Stیاge (not used in SIESTA)**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:50
+#: 4c7e0ec652784f839cd559d5603092ad
+msgid "**2. Sparse Storage (SIESTA default)**"
+msgstr "**2. Sprse Stیاge (SIESTA defult)**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:57
+#: 6d1d7e9478d14917a78425bb1af1c84b
+msgid "Parameters"
+msgstr "Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 02b01e80f07b4df49ab4714032f69558
+msgid "Parameter"
+msgstr "Prmeter"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 6adbf9746e5c436c821e69983849e160
+msgid "Type"
+msgstr "Type"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 7d59456fb7db439dbf7a707299c93ffa
+msgid "Default"
+msgstr "Defult"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 2bc08740fe54492f97803a64e440bf4d
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 28f0acc7e19a411b864697c8c660a2b4
+msgid "`negl_non_overlap_int`"
+msgstr "`negl_non_overlap_int`"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 655adb6d4af745ae81814fb141324b43 b23694e9a843426caaeac9fc35bb843e
+#: e3644d88c9104275b334abfa4a524af5 fd562940ec3f428c8b5c1ae69d1aecb4
+msgid "bool"
+msgstr "bool"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 1dd96546115f475d94aafa047264f339 a5c443f9cdb54ab6bb07d89ce6bbb5b9
+#: c36b02c364324b609574ce017f6ddbce
+msgid "False"
+msgstr "Flse"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: ceaad07b9fd14cab9870f6e80ba2608d
+msgid "Neglect matrix elements for non-overlapping orbital pairs"
+msgstr "Neglect mtrix elements برای non-overlpping یاbitl pirs"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 7b1259296e324d6fbb7ee46e16df7bd5
+msgid "`scf_write_extra`"
+msgstr "`scf_write_extra`"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 7b246ac2c7d04150af296f5c4dab9d69
+msgid "Write extra SCF information for debugging"
+msgstr "Write extr SCF inبرایmtion برای debugging"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 870d5e6da5d14ca7bf91217c1e920512
+msgid "`save_hs`"
+msgstr "`save_hs`"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: b6ba7a81b9ba4ebdbf3d8f0f5009430c
+msgid "True"
+msgstr "True"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: c83ab43c297b4432a27b9aeb68eaf823
+msgid "Save Hamiltonian and overlap matrices to .HS file"
+msgstr "Sve Hmiltonin و overlp mtrices to .HS file"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 4a45e93f620d41998b6db3eeefad7c79
+msgid "`force_aux_cell`"
+msgstr "`force_aux_cell`"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: fd685acd47d6425cb7d145eafd07ab15
+msgid "Force use of auxiliary supercell for matrix elements"
+msgstr "Fیاce use of uxiliry supercell برای mtrix elements"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:66
+#: 4b00a83b94994b8bb5eb32102e1613cf
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:68
+#: 06f3c306b49849d195a37b544a5d7a69
+msgid "Example 1: Save Hamiltonian and Overlap Matrices"
+msgstr "مثال 1: Sve Hmiltonin و Overlp Mtrices"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:70
+#: e6bdadbec2b24657bb0b8d902950fc0d
+msgid "Enable .HS file output for post-processing:"
+msgstr "Enble .HS file output برای post-processing:"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:81
+#: 37f6521c7bfc4bc6b3e9db8aeb97c36f
+msgid "**Output files:**"
+msgstr "**Output files:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:82
+#: 67b08e3f93f34b9db7259993f843410f
+msgid "`systemLabel.HS` - Binary file with H, S matrices"
+msgstr "`systemLabel.HS` - Binary file with H, S matrices"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:83
+#: b02595c971c94eb79024b0a77392cb0f
+msgid "Contains sparse matrix in COO (coordinate) format"
+msgstr "Contins sprse mtrix in COO (coیاdinte) برایmt"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:84
+#: 4c04a9e0cdad4a01a8da3af2c50cbbdc
+msgid "Essential for transport calculations (TranSIESTA)"
+msgstr "ضروری برای trnspیاt clcultions (TrnSIESTA)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:85
+#: 41ccdfae73ae4e9aa29d0f413a4ac8f1
+msgid "Required for wannier90 interface"
+msgstr "مورد نیاز برای wnnier90 interfce"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:86
+#: a35208e976c3475eb7b3d85849f85b1d
+msgid "Useful for post-processing and analysis"
+msgstr "Useful برای post-processing و nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:88
+#: 4dd5268723bb4ce6958791e61f92b64a
+msgid "**File size estimate:**"
+msgstr "**فایل size estimte:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:89
+#: bc8d88cc183344f59aed52d18916f36d
+msgid "100 atoms, DZP: ~5 MB"
+msgstr "100 toms, DZP: ~5 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:90
+#: efdb4a5d5d814c1aaf155c61412167a9
+msgid "1000 atoms, DZP: ~50 MB"
+msgstr "1000 toms, DZP: ~50 MB"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:91
+#: 9da1ed6a7e2345c09581643f0268f7c4
+msgid "Scales linearly with system size"
+msgstr "Scles linerly با system size"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:93
+#: f344281f67da4a89944170a115c43769
+msgid "Example 2: Sparsity Approximation for Large Systems"
+msgstr "مثال 2: Sprsity Approximtion برای Lrge Systems"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:95
+#: 56abf71a49894c21b62aa0292342ef7b
+msgid "Neglect matrix elements for non-overlapping orbitals:"
+msgstr "Neglect mtrix elements برای non-overlpping یاbitls:"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:106
+#: cee05823df554323a8c85e2aa201eb17
+msgid "**Effect:**"
+msgstr "**Effect:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:107
+#: 6a5adc6a7e734ca29f9cbac5c9a3ee87
+msgid "Matrix elements computed only if orbital pairs overlap"
+msgstr "Mtrix elements computed only if یاbitl pirs overlp"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:108
+#: 924186a5913e41379a5dbc191ab5f97a
+#, python-format
+msgid "Speedup: 10-30% for large systems (>500 atoms)"
+msgstr "Speedup: 10-30% برای lrge systems (>500 toms)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:109
+#: 43a6463d3e584ca995bb3514f99fb5f9
+msgid "Accuracy: Negligible impact (<0.1 meV/atom)"
+msgstr "Accurcy: Negligible impct (<0.1 meV/tom)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:111
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:164
+#: 1325b4d788704d689d1ab599de266fc4 1ec15eace4844201865076e573a36886
+msgid "**When to use:**"
+msgstr "**When to use:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:112
+#: bc048ec65950442998216d8da98643c5
+msgid "Large systems (>200 atoms)"
+msgstr "Lrge systems (>200 toms)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:113
+#: 1e9e6925076149f1b34419a82307f1b3
+msgid "Preliminary calculations and screening"
+msgstr "Preliminry clcultions و screening"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:114
+#: 2ac66d66d7654deda580d776a9373301
+msgid "Geometries with well-separated fragments"
+msgstr "Geometries با well-seprted frgments"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:116
+#: 597863b815284296a200ddaa3a065c44
+msgid "**When NOT to use:**"
+msgstr "**When NOT to use:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:117
+#: 6aac020228d3468ea666a5b05e40859e
+msgid "High-accuracy calculations"
+msgstr "High-ccurcy clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:118
+#: 7b609bab7bd64f83859982d4333346d4
+msgid "Publication-quality results"
+msgstr "Publiction-qulity results"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:119
+#: 09ee3135b3a6463898ef3e84869bb4a3
+msgid "Systems with weak interactions (van der Waals)"
+msgstr "Systems با wek interctions (vn der Wls)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:121
+#: 2cb2faf660f84410bd99312aac64cda4
+msgid "Example 3: Debug SCF Convergence"
+msgstr "مثال 3: Debug SCF همگرایی"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:123
+#: aef84bf4c4af44c88afa866b3459351e
+msgid "Enable extra SCF information:"
+msgstr "Enble extr SCF inبرایmtion:"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:135
+#: 7ceacf79434e44f08d829e6acf09c2e2
+msgid "**Additional output:**"
+msgstr "**Additionl output:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:136
+#: ab3556dbd94e405bac76e0ef0d1a5e24
+msgid "Matrix eigenvalue spectrum"
+msgstr "Mtrix eigenvlue spectrum"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:137
+#: 02533e6528044c75affa7e492f5d94df
+msgid "Charge mixing details"
+msgstr "Chrge mixing detils"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:138
+#: a3c95b14d4fa41b89efc40527995a1d0
+msgid "Orbital populations"
+msgstr "Orbitl popultions"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:139
+#: c1e7ca7eda464ae7b266c90d1c1a3d9f
+msgid "Mulliken analysis per iteration"
+msgstr "Mulliken nlysis per itertion"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:141
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:371
+#: 810665fda5fe4b2d9f97399acf961407 f59306c0de9a43a6ad0ae55a6e2d54c9
+msgid "**Use cases:**"
+msgstr "**Use cses:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:142
+#: e1f994ba14124c6a8ccd6d5bba7ad016
+msgid "SCF convergence problems"
+msgstr "SCF convergence problems"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:143
+#: ded5e8eef5de4cd19ad175a79f92cb74
+msgid "Understanding charge transfer"
+msgstr "درک chrge trnsfer"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:144
+#: 8eb205235f794ab0b472bd6ae4550ece
+msgid "Debugging electronic structure issues"
+msgstr "Debugging electronic structure issues"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:146
+#: 6239b45550a040a1a67db25c93585cd7
+msgid "Example 4: Force Auxiliary Supercell"
+msgstr "مثال 4: Fیاce Auxiliry Supercell"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:148
+#: deca09503dc543a29e1135cd989434d9
+msgid "Manually control auxiliary cell for matrix elements:"
+msgstr "Mnully control uxiliry cell برای mtrix elements:"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:159
+#: 5ee285d4e7134800b3565bf962280eb4
+msgid "**What it does:**"
+msgstr "**Wht it does:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:160
+#: e34912cf37b34435bc5563992a4cb44e
+msgid "Forces SIESTA to use larger auxiliary cell"
+msgstr "Fیاces SIESTA to use lrger uxiliry cell"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:161
+#: 7553dc3a46014e1ead35c6bf8614788b
+msgid "Ensures matrix elements computed in supercell"
+msgstr "Ensures mtrix elements computed in supercell"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:162
+#: 5adfa5199dac473582bc34cde47b439b
+msgid "Rarely needed (automatic detection usually works)"
+msgstr "Rrely needed (utomtic detection usully wیاks)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:165
+#: 2e76cab94d74484d8b69be6135f54573
+msgid "Very small unit cells with long-range basis"
+msgstr "Very smll unit cells با long-rnge bsis"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:166
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:336
+#: 2cebbefef2fd43608d2ab31583778463 598426f4ad6c4d788ed28e109b4d3927
+msgid "Debugging matrix element issues"
+msgstr "Debugging mtrix element issues"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:167
+#: 939c4e4d45c048a18cff9df67e3e6140
+msgid "Non-standard boundary conditions"
+msgstr "Non-stوrd boundry conditions"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:169
+#: dd89c83c74e74f4bbd08cc8cdf990cae
+msgid "Hamiltonian and Overlap Matrix Files"
+msgstr "Hmiltonin و Overlp Mtrix فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:171
+#: f55180653dea45e498cbbcfa8573c99b
+msgid ".HS File Format"
+msgstr ".HS فایل Fیاmt"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:173
+#: 09103c67ca844065a862d4b18f4e3439
+msgid ""
+"The `.HS` file contains the Hamiltonian and overlap matrices in sparse "
+"format:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:175
+#: 39f50831bf1449bc8335e294336e9064
+msgid "**Structure:**"
+msgstr "**Structure:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:176
+#: aba06106b5df430c9b1a97d10443bf5b
+msgid "Header: System information (atoms, orbitals, cell)"
+msgstr "Heder: System inبرایmtion (toms, یاbitls, cell)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:177
+#: 864b502e1f61432a88b76d8b76a8e9d0
+msgid "Sparse pattern: List of non-zero element indices"
+msgstr "Sprse pttern: List of non-zero element indices"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:178
+#: 44e54539f92343e7acabf875a4c5a8f6
+msgid "Hamiltonian: Non-zero matrix elements of H"
+msgstr "Hmiltonin: Non-zero mtrix elements of H"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:179
+#: d9c86cce412047578be3fdaf05e9d9eb
+msgid "Overlap: Non-zero matrix elements of S"
+msgstr "Overlp: Non-zero mtrix elements of S"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:181
+#: 655a5968f09646bda603b234ab085f25
+msgid "**Storage format (COO - Coordinate Format):**"
+msgstr "**Stیاge برایmt (COO - Coیاdinte Fیاmt):**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:191
+#: 8ac38cabf6594701b0e829536bfa792a
+msgid "Reading .HS Files in Python"
+msgstr "Reding .HS فایلs in Python"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:193
+#: ed264163dff547c995eddc8240ce48cc
+msgid "**Using sisl library:**"
+msgstr "**استفاده از sisl librry:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:212
+#: 692fad3e75cb4ff6bd3b4ddbeaf807a2
+msgid "**Using custom Python code:**"
+msgstr "**استفاده از custom Python code:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:239
+#: e5c9cd7b8cbf4820937a4f7655bcd5dc
+msgid "Post-Processing Applications"
+msgstr "Post-Processing Applictions"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:241
+#: e57404eda7a94b1f9a87e6c073a79a2f
+msgid "**1. Density of States (DOS):**"
+msgstr "**1. چگالی حالت‌ها (DOS):**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:253
+#: 4fabd914ca9545ed8c0e966a15dad578
+msgid "**2. Band Structure:**"
+msgstr "**2. ساختار نواری:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:262
+#: 7cd1e3e208d7430980bfc4406ec4617f
+msgid "**3. Transport Calculations:**"
+msgstr "**3. Trnspیاt محاسبهs:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:269
+#: 84cb7d0f5aa74f72b8a360800b5c7c4a
+msgid "Sparsity Approximation Details"
+msgstr "Sprsity Approximtion Detils"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:271
+#: a14ca13b21804ea992cca668ddb6a268
+msgid "Negl.NonOverlap.Int Option"
+msgstr "Negl.NonOverlp.Int Option"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:273
+#: 9f9769b7952546faad77857ba0d6bfa0
+msgid "**Default behavior (False):**"
+msgstr "**Defult behviیا (Flse):**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:274
+#: d4725c9e7c5c4577b88a89dd97e1348b
+msgid "Compute all matrix elements within cutoff radius"
+msgstr "Compute ll mtrix elements باin cutoff rdius"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:275
+#: ecbae0bca3dc47fea7d4d304578adb48
+msgid "Includes elements even if orbital densities barely overlap"
+msgstr "Includes elements even if یاbitl densities brely overlp"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:276
+#: 9291601ee293476f85e08e846aad7bcd
+msgid "Most accurate, but slower"
+msgstr "Most ccurte, but slower"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:278
+#: 2ac3b39d00714c6a9be228802d39d420
+msgid "**With approximation (True):**"
+msgstr "**With pproximtion (True):**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:279
+#: 45435833dc074cfab73304c311d154c1
+msgid "Skip matrix elements if orbital overlap < threshold"
+msgstr "Skip mtrix elements if یاbitl overlp < threshold"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:280
+#: 283787f196954fa28f61c382210f2b4c
+msgid "Faster matrix construction"
+msgstr "Fster mtrix construction"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:281
+#: 6d01c7fbcde6444ebbdf141c0b3d0909
+msgid "Negligible accuracy loss"
+msgstr "Negligible ccurcy loss"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:283
+#: d3df7f3051a245d5bf6143ed49a018e8
+msgid "**Performance impact:**"
+msgstr "**Perبرایmnce impct:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 37594910e62544a493974e884266b7a1
+msgid "System Size"
+msgstr "System Size"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 74e757528fba4cb5922885f0ee457c47
+msgid "Without"
+msgstr "Without"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 62e10ef825c84663a60dae133adde86b
+msgid "With"
+msgstr "With"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: ef1502e5be41474eae5a85de0d8d72b8
+msgid "Speedup"
+msgstr "Speedup"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 7cd6cfcb293442e19053d231e3402570
+msgid "50 atoms"
+msgstr "50 toms"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 9be328518caf4af4ab1d705a3c14fe30
+msgid "100 s"
+msgstr "100 s"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 58fb7623a30e43a6a14d9ded3e5e28d8
+msgid "95 s"
+msgstr "95 s"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 983b18dbff3f4500aeb6365ce609edb3
+msgid "5%"
+msgstr "5%"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 9837bf3bf33840239c6e3a265a2ea0a0
+msgid "200 atoms"
+msgstr "200 toms"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: b3c24f508d134b9a9f585d61a98d4b2b
+msgid "450 s"
+msgstr "450 s"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: c7b3c6c4ece0475783dc51dbf4e7a039
+msgid "380 s"
+msgstr "380 s"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 6a9273615bbc48fe879c8097b005a012
+msgid "15%"
+msgstr "15%"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 6e8f54a375a94d7fb246af43bb5f52f8
+msgid "1000 atoms"
+msgstr "1000 toms"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: eb378ea3905345019625901f11824df4
+msgid "2800 s"
+msgstr "2800 s"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 28de9723d68349c9af53e6977d11674b
+msgid "2100 s"
+msgstr "2100 s"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: be51d09aef48496399437789f7a3e606
+msgid "25%"
+msgstr "25%"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:291
+#: 313baad40f704ee38d0454ae686f0d5e
+msgid "**Accuracy impact:**"
+msgstr "**Accurcy impct:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 2f5b19d0f1884fbfaeead440fa967e6a
+msgid "Property"
+msgstr "Property"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 447900e96f7a43c2acd0864daea09f05
+msgid "Difference"
+msgstr "Difference"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 2faafa56735949598ca71e43f3716247
+msgid "Total energy"
+msgstr "Totl energy"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: fa34aba5d147420e978a29d6b275f150
+msgid "<0.1 meV/atom"
+msgstr "<0.1 meV/tom"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: ea31280b80d64c26a36baab307f9e10c
+msgid "Forces"
+msgstr "Fیاces"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 4295359987e94031b420f6e2c5b17791
+msgid "<0.01 eV/Å"
+msgstr "<0.01 eV/Å"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 49fd52a66af2454782df9df7f5f22c64
+msgid "Stress"
+msgstr "Stress"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: c3fb4fc34deb4786ac8bf775d7b286ae
+msgid "<0.1 GPa"
+msgstr "<0.1 GP"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: ca9d2440624d484199ee301f8638b80b
+msgid "Band gap"
+msgstr "Bو gp"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md
+#: 3b8dd56b866c46d0b7cfd2245d9ba43e
+msgid "<0.001 eV"
+msgstr "<0.001 eV"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:300
+#: a90c622de4b34f52b631c0508e527dde
+msgid "Overlap Threshold"
+msgstr "Overlp Threshold"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:302
+#: e064b8bbac924835ac49ee3358da3abe
+msgid "Internal threshold for orbital overlap (not user-configurable):"
+msgstr "Internl threshold برای یاbitl overlp (not user-configurble):"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:303
+#: cc1f289d1794458d83ecaf84ca726ec3
+msgid "Default: 10⁻⁶ (overlap integral)"
+msgstr "Defult: 10⁻⁶ (overlp integrl)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:304
+#: 4016d4d44693445e923078047ec054f2
+msgid "Very small, affects only distant pairs"
+msgstr "Very smll, ffects only distnt pirs"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:305
+#: adea620840f04bfd90351a1c762f3147
+msgid "Conservative value ensures accuracy"
+msgstr "Conservtive vlue ensures ccurcy"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:307
+#: 6b34dee403a04f76bd6ebcd1a1d71a42
+msgid "Auxiliary Supercell"
+msgstr "Auxiliry Supercell"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:309
+#: 3fda5510db694b9a826cc5cfb267b3d9
+msgid "What is the Auxiliary Cell?"
+msgstr "Wht is  Auxiliry Cell?"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:311
+#: 632b45432bca437c8b19ac80ea55b7cb
+msgid "**Purpose**: Ensure matrix elements include all periodic images"
+msgstr "**Purpose**: Ensure mtrix elements include ll periodic imges"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:313
+#: d24763f92ac14c4a9cca5c835405c570
+msgid "For periodic systems:"
+msgstr "Fیا periodic systems:"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:314
+#: dc5ff7b974b642a49cc1b86e4a3576c1
+msgid "Orbitals can overlap across cell boundaries"
+msgstr "Orbitls cn overlp cross cell boundries"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:315
+#: cbce74b35f02461da2cff89a901094be
+msgid "Need to include neighboring cell images"
+msgstr "Need to include neighbیاing cell imges"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:316
+#: dfab4eb8af914e3e913c5e6c6ee2c227
+msgid "Auxiliary cell = enlarged supercell for matrix evaluation"
+msgstr "Auxiliry cell = enlrged supercell برای mtrix evlution"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:318
+#: 4c02a910b10d41d292c532bacfe1c787
+msgid "**Automatic determination:**"
+msgstr "**Automtic determintion:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:319
+#: ebb106a4831640d698b4b306459fe06a
+msgid "SIESTA calculates required auxiliary cell size"
+msgstr "SIESTA clcultes required uxiliry cell size"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:320
+#: e61e33b36261433686d7142663478ed2
+msgid "Based on maximum orbital cutoff radius"
+msgstr "Bsed on mximum یاbitl cutoff rdius"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:321
+#: 1bb3448ac4cf49c5b36022847985bcb9
+msgid "Typically 1-3 times unit cell in each direction"
+msgstr "Typiclly 1-3 times unit cell in ech direction"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:323
+#: 78e73b6dc590436aba8212c180b18b17
+msgid "Manual Control with ForceAuxCell"
+msgstr "Mnul Control با FیاceAuxCell"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:325
+#: d6cb0246731644ffa69e7008ae0d2b6c
+msgid "**Rarely needed**, but can force larger auxiliary cell:"
+msgstr "**Rrely needed**, but cn برایce lrger uxiliry cell:"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:333
+#: a9856f59e38a43bcab3ed30c5586cb78
+msgid "**When to consider:**"
+msgstr "**When to consider:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:334
+#: 847d1b015ea141539a0187b65b39b842
+msgid "Very small unit cells (<5 Å)"
+msgstr "Very smll unit cells (<5 Å)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:335
+#: 3fe7118e05b84191b5ca2acfe363cc7c
+msgid "Very diffuse basis functions"
+msgstr "Very diffuse bsis functions"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:338
+#: e61eb747bbfb4484b47c1a0c27ea10c9
+msgid "**Example scenario:**"
+msgstr "**مثال scenrio:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:346
+#: 0b7267b81ea741218413c09c2275c242
+msgid "SCF Extra Information"
+msgstr "SCF Extr Inبرایmtion"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:348
+#: cb0e0d0e59e94c5ba26949404ca7bd65
+msgid "SCF.WriteExtra Output"
+msgstr "SCF.WriteExtr Output"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:350
+#: 62573facbd0b43b8ab63ae22df5de7db
+msgid "**Standard output (SCF.WriteExtra=False):**"
+msgstr "**Stوrd output (SCF.WriteExtr=Flse):**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:358
+#: 97efe312d64549d68c7937ffdcfeb995
+msgid "**Extra output (SCF.WriteExtra=True):**"
+msgstr "**Extr output (SCF.WriteExtr=True):**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:372
+#: 73aeca80fe324348a027f365ab0ed44b
+msgid "Understanding electronic structure evolution during SCF"
+msgstr "درک electronic structure evolution during SCF"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:373
+#: a461b09655f64e5785cc5c2ff6d61a6e
+msgid "Debugging convergence issues"
+msgstr "Debugging convergence issues"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:374
+#: 494fb4ad65504fcb8695ccb6575c36e4
+msgid "Analyzing charge transfer"
+msgstr "Anlyzing chrge trnsfer"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:375
+#: 486dd1f1898745dfafce34f7c6e1c1c8
+msgid "Verifying orbital populations"
+msgstr "Verifying یاbitl popultions"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:377
+#: 81f2fd1513d24064b9df6352b0f96d96
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:379
+#: ff941327e5b3409c907443443c186181
+msgid "1. Standard Production Calculations"
+msgstr "1. Stوrd Production محاسبهs"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:381
+#: f422cc60378e43299e642f52d3386566
+msgid "**Default settings (recommended):**"
+msgstr "**Defult settings (recommended):**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:391
+#: 5827872b9725494f93778328d94f98bc
+msgid "2. Large System Optimization"
+msgstr "2. Lrge System Optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:393
+#: dc9844881bb9419bb7f5a4108b33c9d8
+msgid "**For systems >200 atoms:**"
+msgstr "**Fیا systems >200 toms:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:402
+#: bc892de4616e47d9930de04341500505
+msgid "**Verify accuracy:**"
+msgstr "**Verify ccurcy:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:403
+#: de96767d539d46e7b96ea74629e6b05a
+msgid "Compare with/without approximation on smaller test system"
+msgstr "Compre با/باout pproximtion on smller test system"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:404
+#: 042168a66e9a4d17add306891e15acac
+msgid "Check total energy converged to <1 meV/atom"
+msgstr "Check totl energy converged to <1 meV/tom"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:405
+#: f3224374170143eea9909c4e53b74f4c
+msgid "Verify forces agree to <0.01 eV/Å"
+msgstr "Verify برایces gree to <0.01 eV/Å"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:407
+#: 4941ece7c7f2404fbca7b7498c40862f
+msgid "3. SCF Convergence Debugging"
+msgstr "3. SCF همگرایی Debugging"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:409
+#: 023cf4053b794016addb3dbf5c5b0f72
+msgid "**For difficult convergence:**"
+msgstr "**Fیا difficult convergence:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:419
+#: cb1dd040941e4a609ec13866c081b3d2
+msgid "4. Post-Processing Workflows"
+msgstr "4. Post-Processing گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:421
+#: e27410bd76e04585bc534bce4f72da0c
+msgid "**Transport calculations (TranSIESTA):**"
+msgstr "**Trnspیاt clcultions (TrnSIESTA):**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:435
+#: feb888c8aeae46d798371a9500ab8cac
+msgid "**Band structure and DOS:**"
+msgstr "**Bو structure و DOS:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:444
+#: 9a5423f84220474b903d2bdf85edf33b
+msgid "5. Memory-Limited Systems"
+msgstr "5. Memیاy-Limited Systems"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:446
+#: 730e5393bd9340f59528405f73c2aeb8
+msgid "**Disable .HS if memory is critical:**"
+msgstr "**Disble .HS if memیاy is criticl:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:454
+#: ef1ca667accf400b811b1ae97cfc1414
+msgid "**Memory savings:**"
+msgstr "**Memیاy svings:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:455
+#: 367d75c5038f439d8d548ade1561c577
+msgid "No .HS file on disk (typically 5-50 MB)"
+msgstr "No .HS file on disk (typiclly 5-50 MB)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:456
+#: edec26a0b9b04dcab5ab8101d141b5a3
+msgid "Slightly less memory during run (~5%)"
+msgstr "Slightly less memیاy during run (~5%)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:458
+#: d24315c836df4223b43c0cebebf4ce2a
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:460
+#: df7f8218aafd491c871c5ed05ab7cda7
+msgid "Issue 1: .HS File Too Large"
+msgstr "Issue 1: .HS فایل Too Lrge"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:462
+#: 7204203ff96b49f185812dcf80045943
+msgid "**Problem:** .HS file fills disk (>1 GB)"
+msgstr "**Problem:** .HS file fills disk (>1 GB)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:464
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:515
+#: 129120b3e6b74fec89f973723a653206 d5221dfc3d56490e889425c75968d3ed
+msgid "**Causes:**"
+msgstr "**Cuses:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:465
+#: 7965a3f2e41b4eaa9a0994b53308ff7b
+msgid "Very large system (>5000 atoms)"
+msgstr "Very lrge system (>5000 toms)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:466
+#: f10dccf25d514524ba932bea6463a17e
+msgid "Dense basis (TZP or larger)"
+msgstr "Dense bsis (TZP یا lrger)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:468
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:520
+#: 13aa23f637414091ab6e276eb34a3746 c527822539874f33badf8276d7e3ea1c
+msgid "**Solutions:**"
+msgstr "**Solutions:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:480
+#: 3c3274c6cc674bef875b5c2652422a52
+msgid "Issue 2: Matrix Elements Seem Wrong"
+msgstr "Issue 2: Mtrix Elements Seem Wrong"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:482
+#: 50de2d458dd5461e8de65f734f4e00be
+msgid "**Problem:** Unexpected eigenvalues or band structure"
+msgstr "**Problem:** Unexpected eigenvlues یا bو structure"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:484
+#: 37d7834e909c428e923bd101713b2fb3
+msgid "**Debug steps:**"
+msgstr "**Debug steps:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:485
+#: 484874d64a414c928d8cca889f67d3ca
+msgid "Check auxiliary cell size (look for warnings in output)"
+msgstr "Check uxiliry cell size (look برای wrnings in output)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:486
+#: 42e38a41170640f7812a12aca1531b1e
+msgid "Try ForceAuxCell=True"
+msgstr "Try FیاceAuxCell=True"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:487
+#: 27fe4c6ad3a045979888bf8d172abdba
+msgid "Verify basis set is appropriate"
+msgstr "Verify bsis set is pproprite"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:488
+#: 28232bae344444b2b7d117f34e494874
+msgid "Check cutoff radius (PAO.EnergyShift)"
+msgstr "Check cutoff rdius (PAO.EnergyShift)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:499
+#: b85a2e3948d048febf3ca62ab8eac426
+msgid "Issue 3: SCF Convergence with Approximation"
+msgstr "Issue 3: SCF همگرایی با Approximtion"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:501
+#: c1e77a46e3534bbaa2062b80e02a6e7c
+msgid "**Problem:** Negl.NonOverlap.Int causes SCF oscillations"
+msgstr "**Problem:** Negl.NonOverlp.Int cuses SCF oscilltions"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:503
+#: e56d410333984a6b8e9cd9ef1d146cf0
+msgid "**Solution:** Disable approximation for difficult cases"
+msgstr "**Solution:** Disble pproximtion برای difficult cses"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:511
+#: d748d0fb279c48618d2054f67accf45a
+msgid "Issue 4: Reading .HS File Fails"
+msgstr "Issue 4: Reding .HS فایل Fils"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:513
+#: b2312d33488c446d89c0ddaa7df1f786
+msgid "**Problem:** Cannot read .HS file in post-processing"
+msgstr "**Problem:** Cnnot red .HS file in post-processing"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:516
+#: a29ed92fb4d74e9b99584743ddc05f41
+msgid "File corrupted (calculation crashed)"
+msgstr "فایل cیاrupted (clcultion crshed)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:517
+#: 0dc74af228f143aba1de9000c2bb1016
+msgid "Incompatible SIESTA version"
+msgstr "Incomptible SIESTA version"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:518
+#: 6b9f3c0cdfaa4122aae98a3cf2f871d3
+msgid "Incorrect file format"
+msgstr "Incیاrect file برایmt"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:533
+#: f71d264be8994567ae16b862b08f0f52
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:535
+#: 0e44d69445be412e8e8fcbc36dece1fd
+msgid "Matrix Element Analysis"
+msgstr "Mtrix Element Anlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:537
+#: e7d24d3a03004dcfb37272ddc91d1e1e
+msgid "**Extract specific matrix elements:**"
+msgstr "**Extrct specific mtrix elements:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:555
+#: 1edddcdec76744f287b272c02f032842
+msgid "Sparse Matrix Statistics"
+msgstr "Sprse Mtrix Sttistics"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:557
+#: 91a35f0e43ed4ddaac473bd5275f7bfd
+msgid "**Analyze sparsity pattern:**"
+msgstr "**Anlyze sprsity pttern:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:578
+#: dd1df3a0d2634fc092f259a89e6476d2
+msgid "**Typical results:**"
+msgstr "**Typicl results:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:586
+#: 421e730ca9994fecaec4347f48eb5a33
+msgid "Hamiltonian Visualization"
+msgstr "Hmiltonin Visuliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:588
+#: 84753786d73344c597f2069b2fc19754
+msgid "**Plot sparse pattern:**"
+msgstr "**Plot sprse pttern:**"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:604
+#: 3a11adad312348d197122dcb202278e0
+msgid "Further Reading"
+msgstr "Furr Reding"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:606
+#: 93d075ea7d0840f78aa5743fbff758db
+msgid "SIESTA Manual: Section 4.25 (Hamiltonian and Overlap)"
+msgstr "SIESTA Mnul: Section 4.25 (Hmiltonin و Overlp)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:607
+#: c44c10b97005420fbd21308f94c45264
+msgid "sisl Documentation: https://zerothi.github.io/sisl/"
+msgstr "sisl Documentation: https://zerothi.github.io/sisl/"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:608
+#: 97b4e423b0f345f69677ee029a3ed0e6
+msgid "TranSIESTA Tutorial: Transport calculations with .HS files"
+msgstr "TrnSIESTA آموزش: Trnspیاt clcultions با .HS files"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:609
+#: f9124542a2c2479b80ef9676a78f843d
+msgid "Sparse Matrix Methods: Compressed storage formats"
+msgstr "Sprse Mtrix Methods: Compressed stیاge برایmts"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:611
+#: 5725de4549294db68db416b8fca4de01
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:613
+#: 9e6d988d95e541b4af40e635ad5ab304
+msgid "Tutorial 12: Parallel Computation (optimize matrix diagonalization)"
+msgstr "Tutیاil 12: Prllel Computtion (optimize mtrix digonliztion)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:614
+#: 96df1aba34034dd5b3eb36e989fad71a
+msgid "Tutorial 14: Efficiency Options (timing matrix operations)"
+msgstr "Tutیاil 14: Efficiency Options (timing mtrix opertions)"
+
+#: ../../source/tutorials-md/03-advanced-features/15-hamiltonian-overlap/README.md:615
+#: d80fe6a7dd74435994bd4472b5245eeb
+msgid "Tutorial 10: Grid Output (complementary to matrix output)"
+msgstr "Tutیاil 10: Grid Output (complementry to mtrix output)"

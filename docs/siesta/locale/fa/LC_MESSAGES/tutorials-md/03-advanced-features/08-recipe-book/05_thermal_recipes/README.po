@@ -1,0 +1,371 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:1
+#: 44ce09845726408bb8b4da771773cba5
+msgid "Thermal Properties Recipes"
+msgstr "Therml Properties Recipes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:3
+#: 75eb7349a2584c969cc15e881c7f2ce3
+msgid "Calculate vibrational and thermal properties using RecipeBook one-liners."
+msgstr "Clculte vibrtionl و rml properties using RecipeBook one-liners."
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:5
+#: c392a73d3fb645c8bfa8b47ac427a67e
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:7
+#: d2a29dea442b454fab0ef8e9925b58d3
+msgid "Recipes for thermal and vibrational characterization:"
+msgstr "Recipes برای rml و vibrtionl chrcteriztion:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:8
+#: 3216336bc7e1475d85bc123b1844363b
+msgid "**Phonons**: Phonon band structure and DOS"
+msgstr "**فونون‌ها**: فونون bو structure و DOS"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:9
+#: dc02af7bbc354e3d92a1b1b74991a8c3
+msgid "**QHA**: Quasi-harmonic approximation for thermal expansion"
+msgstr "**QHA**: Qusi-hrmonic pproximtion برای rml expnsion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:10
+#: d52455cc2c26489e98d531a74e562c90
+msgid "**Grüneisen**: Grüneisen parameters and mode analysis"
+msgstr "**Grüneisen**: Grüneisen prmeters و mode nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:11
+#: b65663f435234314bb34596a7c6c7645
+msgid "**Complete Thermal**: All thermal properties combined"
+msgstr "**Complete Therml**: All rml properties combined"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:13
+#: ad94be0393e04ff6b6c0a89480efcec0
+msgid "Files"
+msgstr "فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:15
+#: 65887b6d7eab4c9e9a2db26f9ffe3bc9
+msgid "`phonon_recipes.py` - Phonon calculations (HIGH priority)"
+msgstr "`phonon_recipes.py` - Phonon calculations (HIGH priority)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:16
+#: f9a296be7b6a4022b90d2ddc02767af1
+msgid "`qha_recipes.py` - Quasi-harmonic approximation (MEDIUM priority)"
+msgstr "`qha_recipes.py` - Quasi-harmonic approximation (MEDIUM priority)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:17
+#: 89b3a2fe8d644fc4a33f50a4bad69f83
+msgid "`gruneisen_recipes.py` - Grüneisen parameters (MEDIUM priority)"
+msgstr "`gruneisen_recipes.py` - Grüneisen parameters (MEDIUM priority)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:18
+#: de359550b58c4279a39f4d327c9ea648
+msgid "`thermal_properties_all.py` - Complete thermal workflow (HIGH priority)"
+msgstr "`thermal_properties_all.py` - Complete thermal workflow (HIGH priority)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:19
+#: 9f10ff80f16c49f5b758d7479279f9e1
+msgid "`README.md` - This file"
+msgstr "`README.md` - This file"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:21
+#: 916d0a93b40b4af4a63afebd4ede955d
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:39
+#: 4f4f2346538b4fe8b2feff4f67cd3d46
+msgid "Properties Calculated"
+msgstr "Properties Clculted"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:41
+#: e12654071f62465daf53103ffa1dc220
+msgid "Phonon Workflow"
+msgstr "فونون گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:42
+#: d05664b106a549dc8531a85a5dd6de43
+msgid "Phonon band structure"
+msgstr "فونون bو structure"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:43
+#: 14306b3d40554e73bbfc2079f3b6fe49
+msgid "Phonon density of states"
+msgstr "فونون density of sttes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:44
+#: 04d399e6203044828fdea86af450a8dc
+msgid "Thermodynamic properties (Cv, S, F)"
+msgstr "Thermodynmic properties (Cv, S, F)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:45
+#: e01bbad0e5734a29843f3ec060792c02
+msgid "Zero-point energy"
+msgstr "Zero-point energy"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:46
+#: 2cb76fbbc66c4a8283e811f63e037753
+msgid "Automatic plots"
+msgstr "Automtic plots"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:48
+#: ce78bab9369c45b881eb37a3a99305af
+msgid "QHA Workflow"
+msgstr "QHA گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:49
+#: f3e65c22d0ab402bb53f5a359e48122d
+msgid "Thermal expansion α(T)"
+msgstr "Therml expnsion α(T)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:50
+#: 7a51044193fb4b0594838cf2d89862b5
+msgid "Temperature-dependent bulk modulus"
+msgstr "Temperture-dependent bulk modulus"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:51
+#: a3e7f980b02e44a5a815e6c875697d63
+msgid "Heat capacity at constant pressure"
+msgstr "Het cpcity t constnt pressure"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:52
+#: 4478c34129da4db081dd5664ddf8d9dc
+msgid "Gibbs free energy G(T,P)"
+msgstr "Gibbs free energy G(T,P)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:54
+#: a5c2e2845526477086281f074ba067b4
+msgid "Grüneisen Workflow"
+msgstr "Grüneisen گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:55
+#: fbba25cbea7d4ff197d82fa190dadc0f
+msgid "Mode Grüneisen parameters"
+msgstr "Mode Grüneisen prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:56
+#: a121fd08a61f4fdca3d6c2a8870a1f0b
+msgid "Average Grüneisen parameter"
+msgstr "Averge Grüneisen prmeter"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:57
+#: db893350d0ee42ebaafb0f8c1eb2d65e
+msgid "Thermal expansion from γ"
+msgstr "Therml expnsion from γ"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:58
+#: f8220edac1cc49ce98df3abd5ff9f570
+msgid "Volume-dependent phonons"
+msgstr "Volume-dependent phonons"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:60
+#: 023f460fd83b40ed976ff6f29016c0ad
+msgid "Complete Thermal Properties"
+msgstr "Complete Therml Properties"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:61
+#: 181587ee0bdd4f618430942b928d7233
+msgid "All phonon properties"
+msgstr "All phonon properties"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:62
+#: 56611be4e9eb4b22a21edeb36bda5bc5
+msgid "QHA thermal expansion"
+msgstr "QHA rml expnsion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:63
+#: 8b3b1eb74c16448286e6880b483d7598
+msgid "Grüneisen analysis"
+msgstr "Grüneisen nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:64
+#: b0ae6347e34a4ffb81cc0bcbdef2df26
+msgid "Comprehensive thermal characterization"
+msgstr "Comprehensive rml chrcteriztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:66
+#: a1913d5a22374c1087909350e26c61da
+msgid "When to Use"
+msgstr "When to Use"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:68
+#: b52e39bc9d6c445a90648f81b7dc88f0
+msgid "**Thermal stability**: Check for imaginary modes"
+msgstr "**Therml stbility**: Check برای imginry modes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:69
+#: 3d8c74674bdf4d2fb117349a97c88387
+msgid "**Thermal expansion**: Temperature-dependent lattice"
+msgstr "**Therml expnsion**: Temperture-dependent lttice"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:70
+#: 6286958fb05045f5b50491458773fc96
+msgid "**Heat capacity**: Cv and Cp calculations"
+msgstr "**Het cpcity**: Cv و Cp clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:71
+#: cc90eff6232b4b48a42738d2648bc01e
+msgid "**Phase transitions**: Temperature-induced changes"
+msgstr "**Phse trnsitions**: Temperture-induced chnges"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:72
+#: 8f26dd07994b428ab9a3c3fd1ce139d0
+msgid "**Materials design**: Thermal management applications"
+msgstr "**Mterils design**: Therml mngement pplictions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:74
+#: 9aa0a39e36cb43fdac09b03a290cd90e
+msgid "Computational Cost"
+msgstr "Computtionl Cost"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 82c2d886d9e946acb63200d6d7d46672
+msgid "Workflow"
+msgstr "گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 26c0cae914d24e13a960312262057be9
+msgid "Time (10 atoms, 4 cores)"
+msgstr "زمان (10 toms, 4 cیاes)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 5b6692d83dfc4ba5a481215345b70c3b
+msgid "Supercell Size"
+msgstr "Supercell Size"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 55e2aa1600fe44fbbc4d3fd5f733139f
+msgid "Phonons"
+msgstr "فونون‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 64c732cc4c8a484483d0a9bf2f6fa9a8
+msgid "4-8 hours"
+msgstr "4-8 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: b21639c4231943bb81cb4146a9fd78ef
+msgid "2×2×2"
+msgstr "2×2×2"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 54182d3b419c475fa9b56a3f949d5cde
+msgid "QHA"
+msgstr "QHA"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 98b9363667ea44f9883a62e8a852f1f0
+msgid "12-24 hours"
+msgstr "12-24 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 84d12c4e18f74521bda85d692deaecf4
+msgid "2×2×2 + volumes"
+msgstr "2×2×2 + volumes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: dd7b1fd1e7e144e3b36b10e61bcedb2e
+msgid "Grüneisen"
+msgstr "Grüneisen"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: e8ec983cc97e4ac9a090fcfbe3f3f9c2
+msgid "16-32 hours"
+msgstr "16-32 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 3a21c03d627e45df81b80e09c8c0361c
+msgid "Multiple volumes"
+msgstr "Multiple volumes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 580769cb04fd4f889c7058154baf9d69
+msgid "Complete thermal"
+msgstr "Complete rml"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: 5c6318ecebf4424e8d6997dad2fc3788
+msgid "20-36 hours"
+msgstr "20-36 hours"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md
+#: f837ffb9af394f33b901d8a48394e236
+msgid "All above"
+msgstr "All bove"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:83
+#: a124bab770b243058bd16f056d1a3db3
+msgid "**Note**: Computational cost scales strongly with supercell size!"
+msgstr "**توجه**: Computtionl cost scles strongly با supercell size!"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:85
+#: cd07758ae1b34bb2a0cb3bb2757c20c6
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:87
+#: 96b61fa3a6d14e24bd6c24c004aa1842
+msgid "**Start with small supercell** (2×2×2) for testing"
+msgstr "**Strt با smll supercell** (2×2×2) برای testing"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:88
+#: a089c8f03f3a4ec1a2243966e08642ff
+msgid "**Check convergence** with larger supercells (3×3×3)"
+msgstr "**Check convergence** با lrger supercells (3×3×3)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:89
+#: b05d3ef09ec24865a71e0e4f51a26fc5
+msgid "**Use tight parameters** for force calculations"
+msgstr "**Use tight prmeters** برای برایce clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:90
+#: 61d14794bbec43a7ad534499b1b6d2bc
+msgid "**Enable custodian** for automatic error handling"
+msgstr "**Enble custodin** برای utomtic errیا hوling"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:91
+#: 3ffeabef615f4e56b0c5dc09e520de13
+msgid "**Monitor disk space** (phonon calculations produce many files)"
+msgstr "**Monitیا disk spce** (phonon clcultions produce mny files)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:93
+#: 513a58783d2545dcb1c0f7f826f27b76
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:95
+#: 401ffcd4d67549bb971934cca4733ae4
+msgid "**Phonon details**: `tutorials/05-vibrational-properties/`"
+msgstr "**Phonon details**: `tutorials/05-vibrational-properties/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:96
+#: 63d69d1dcd1845b886761762231982ea
+msgid "**Electronic properties**: `03_electronic_recipes/`"
+msgstr "**Electronic properties**: `03_electronic_recipes/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/05_thermal_recipes/README.md:97
+#: 3ae76302e261478c8b92c2a70b8fce07
+msgid "**Complete study**: `02_complete_workflows/`"
+msgstr "**Complete study**: `02_complete_workflows/`"

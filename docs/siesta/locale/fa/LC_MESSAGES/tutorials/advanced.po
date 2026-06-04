@@ -1,0 +1,1101 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials/advanced.rst:3 46d05903b96143edba11240e3b395e19
+msgid "Advanced Learning Paths"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:5 14b4240d0ecd447c9682d90ad60ad294
+msgid ""
+"Complex multi-step calculations for materials properties including "
+"structural, mechanical, vibrational, and surface properties."
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:11 c0d3932ae18b44b9ad798d3b060c8c75
+msgid "Tutorial 16: Phonon Calculations ⭐ NEW"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:13
+#: ../../source/tutorials/advanced.rst:120
+#: ../../source/tutorials/advanced.rst:265
+#: ../../source/tutorials/advanced.rst:293
+#: ../../source/tutorials/advanced.rst:308
+#: ../../source/tutorials/advanced.rst:338
+#: ../../source/tutorials/advanced.rst:369
+#: ../../source/tutorials/advanced.rst:488
+#: ../../source/tutorials/advanced.rst:535
+#: ../../source/tutorials/advanced.rst:556
+#: ../../source/tutorials/advanced.rst:584
+#: ../../source/tutorials/advanced.rst:630 125434de93144a2c880eee4c64a1a855
+#: 1a55f2d87a2c49fcb74fc86b621ff63f 27cf28c4e8364a7d9cc4e8c0903033fa
+#: 3c089f431c884abba53ed7b2bf0998fc 59f340a984aa482dac4681e88078f630
+#: 5a29001dcfe446659d818d3c35faf0c7 6c108c83c55e48bba649bc0267f394f6
+#: 7ed36ddc28a441ba8fd43f94b764c93d aeb2b3d40ab0455982d65513f72ca418
+#: baab00faa1ed41838de5bd0598cc1153 d42414aa44264ce7b758943be54dc81b
+#: fe5a709812d0453d9bb9e4183c3d5578
+msgid "**Learning Objectives**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:15 60f361032b79414e9049d915a09600ef
+msgid "Perform phonon calculations with phonopy integration"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:16 b90bc444c7984464af69b2608a422296
+msgid "Analyze vibrational properties and thermal properties"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:17 8ec76c75d0c24e4d85504c6ea593bbfb
+msgid "Understand supercell convergence"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:18 dc9637075bdd4feeb148ebeb5c5f8d17
+msgid "Interpret phonon band structures and DOS"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:20
+#: ../../source/tutorials/advanced.rst:128
+#: ../../source/tutorials/advanced.rst:376
+#: ../../source/tutorials/advanced.rst:495 0042d5afc4cb4e8989bdbcbf39c8d17f
+#: 3c4cf14fcd1a4c91a99cc07a9a28bb4c 74d02634e58b4471ae67515616473417
+#: b7bdb75373ea4ca8be3e5995a123a662
+msgid "**Key Concepts**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:22 399e04c7cba04cda87bde59fbed97b9e
+msgid "Phonopy force constant calculation"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:23 c1f64516fce74fcea0b5705df1c39afb
+msgid "Supercell generation (automatic and manual)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:24 4aafe900de354508b4c228afab8dc7e2
+msgid "Symmetry-reduced displacements"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:25 10f9604abe304a7892df917f07c8bebb
+msgid "Thermal properties (heat capacity, entropy, free energy)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:26 1f510eb127934240a0c0406a7cb70709
+msgid "Automatic plotting (4 plot types)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:28 228d0d031776451c93e4f3556b821888
+msgid "**Workflow Steps**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:30 e25b22b915db43bf956d801ea72859af
+msgid "Structure relaxation (optional)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:31 fae2bc4dcbf74c4ab19a28c80a4067b4
+msgid "Supercell generation based on ``min_length``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:32 cf8a403d15454897b2f97a32ee41a047
+msgid "Displacement generation (symmetry-reduced)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:33 47eea0eaebfc4c70a6432765630fb722
+msgid "SIESTA force calculations for each displacement"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:34 198a059e4a384d8897979872273767ce
+msgid "Phonopy analysis and property calculation"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:36
+#: ../../source/tutorials/advanced.rst:271
+#: ../../source/tutorials/advanced.rst:314
+#: ../../source/tutorials/advanced.rst:344
+#: ../../source/tutorials/advanced.rst:502
+#: ../../source/tutorials/advanced.rst:604
+#: ../../source/tutorials/advanced.rst:650 1c67bbd441754623bccd6f5f6a5fb7d3
+#: 34fec5fb7a7046a399db95fd4bba6511 446d89d5ec604a868777e1cb761ec3d0
+#: 64122b260acb4bdcaeed78346ad3a246 83da28ae675d4ddab70af4c50b88cd53
+#: 8c2219721bf143a19c0e1bb0e1a90b28 a93606897f0c4f17b8bad0bc6786a31e
+msgid "**Example**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:60
+#: ../../source/tutorials/advanced.rst:186
+#: ../../source/tutorials/advanced.rst:570 0d8736fff1434eb9a4d29b8da49f2881
+#: 5ffc01c1d9734d308184671865e21660 64e4604124fc48c0afa15b2127de5d51
+msgid "**Output Files**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:62 06bd49937a4d4a588766d9ae53e7a602
+msgid "``phonon_bands.png`` - Phonon dispersion with high-symmetry path"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:63 8f7c3904a9064e96bd0db29cbc747f0a
+msgid "``phonon_dos.png`` - Phonon density of states"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:64 e62a93423afd45db923bb93b4411b580
+msgid "``thermal_properties.png`` - Cv, S, F vs Temperature"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:65 e089c486da334a5bab9818550fd7323f
+msgid "``phonon_summary.txt`` - Comprehensive text summary"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:67 fa257657b8df494faf7f83c30dac36c2
+msgid "**Convergence Guidelines**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:73 5148a7d0d96d40a7b050a12f33c3693f
+msgid "Parameter"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:74 b4213e061111441cb7ed6f1846407eda
+msgid "Recommendation"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:75 25cb21b14735442692f55c8a82fb6d9f
+msgid "Criterion"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:76 3f44af94f72240f7b7d7e86db5c20a63
+msgid "Supercell size"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:77 b831b712cd204115b364c366bb55c765
+msgid "Vectors > 10-15 Å"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:78 b5bacc52405f4481a4cc4df1994442f2
+msgid "Frequencies converged within 0.03 THz"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:79 24499c5f15394b81899757ff62506c11
+msgid "Displacement"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:80 24c94b6924854507b0fe5f097d2a50da
+msgid "0.005-0.02 Å"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:81 5d5988480d644a77b6d5e9c3b749282c
+msgid "Harmonic approximation valid"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:82 6380bdd513e84ca4953e32ca44a6e824
+msgid "Force k-points"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:83 7ca9db073f584ec0a068d8b2f454fe73
+msgid "8×8×8 minimum"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:84 fc40399ce5124d5ebf756d1493fdfff9
+msgid "Force accuracy < 0.001 eV/Å"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:85 c5b7fc1f1d46450db689e51763bbd3d6
+msgid "Mesh cutoff"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:86 6f93699e4f4a46e88e89889ebc28657c
+msgid "400-500 Ry"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:87 ec885053cd9643519016961360ecd720
+msgid "Higher than relaxation"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:89 cf0a1f707d7a41eb952314cca762a86e
+msgid "**Interpreting Results**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:91 5e840cae6e4c48fa9086f7b90235dd11
+msgid "**Positive frequencies**: Normal vibrational modes"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:92 6c5f3b42ac4b4d52bb2d66e69ae09ddb
+msgid "**Imaginary frequencies** (negative): Structural instability"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:94 2525ca067533458f8fbbd45f0c5c9bff
+msgid "Check structure relaxation convergence"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:95 9fa9508e93f142c99c6d2d26c5f8aafd
+msgid "May indicate phase transition"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:96 0c2c74b4c9a040b19c1c659b2a318904
+msgid "Could be due to insufficient supercell size"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:98 2b966648569545e0a03170de13ae01d6
+msgid "**Thermal properties**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:100 3cc5d0226c66478980a97dc7de4dc84c
+msgid "Heat capacity → 3Nk_B per atom (Dulong-Petit limit)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:101 f63679f54ab64f65908828288e2c2708
+msgid "Entropy measures vibrational disorder"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:102 f5ac546e229c464ea11ae4b28f4740bf
+msgid "Free energy F = E - TS"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:104 8f8a3e0988694450b8aa487ac5d5eec2
+msgid "📁 **Location**: ``tutorials/05-vibrational-properties/01-phonons/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:106
+#: ../../source/tutorials/advanced.rst:331 0facab2040e147e59d2733f6efdc8b8f
+#: 1307ce6499a14a468cb8dd48eea4a318
+msgid "⏱️ **Time**: 60 minutes"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:108
+#: ../../source/tutorials/advanced.rst:303
+#: ../../source/tutorials/advanced.rst:333
+#: ../../source/tutorials/advanced.rst:625
+#: ../../source/tutorials/advanced.rst:669 07781aa7cc1b43e99197fdf139545d60
+#: 19a7016281e440fc9a3b4e3f521118d4 38ff6f0646384483b5e691f46e04da44
+#: 646e8bc4c8254c7da075d802b086dce1 cd570fb7d9814473ac5f94a391a405fb
+msgid "⭐ **Difficulty**: Advanced"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:110
+#: ../../source/tutorials/advanced.rst:253
+#: ../../source/tutorials/advanced.rst:474 15a003b7da45444a86b74f6633f7bc08
+#: 82aae14b57ec4f4684d7d0e9474d2b7e a6240f6aef164ce8b013d83d4f329908
+msgid "📄 **Documentation**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:111 d73aa0f781964e7b8eb3389796d21aef
+msgid "``README.md`` - Complete tutorial (400+ lines)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:112 630fa56736f044709162d44468370322
+msgid "``IMPLEMENTATION_SUMMARY.md`` - Technical details"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:113 2352c8a5f17740d394c63165a81e75d4
+msgid "``PLOTTING_IMPLEMENTATION.md`` - Plotting system"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:118 63e394f7ab1d49cdaeeff06ab038ede1
+msgid "Tutorial 17: Surface Energy Calculations ⭐ NEW"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:122 8687b540cf184477a2481191032d5f47
+msgid "Calculate surface energies for crystalline materials"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:123 5a00ca3d143b462a8bfedaca72241e12
+msgid "Generate slabs with multiple terminations"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:124 0b5ec3d41ef14eec992024b6dab19ab9
+msgid "Understand polar vs. non-polar surfaces"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:125 ed76040e7c0942c2a77a02eb51eaf5d8
+msgid "Perform multi-surface comparison studies"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:126 f70f0ba1a1544d7fb91b9c3076f33281
+msgid "Predict equilibrium crystal morphology"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:130 f88b2c06e2eb4265a70386b1f19abcf8
+msgid "Surface energy formula: γ = (E_slab - N×E_bulk) / A"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:131 95777071d06e4b7eb29c4986305241cc
+msgid "Layer-based slab specification"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:132 21d6b56620cf42708a9a777181cd16ed
+msgid "Symmetric vs. asymmetric slabs"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:133 f882798948f3423282491ca20d3d5083
+msgid "K-point sampling for 2D-periodic systems"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:134 e2ceae4566c24709ac0429da52b314b9
+msgid "Dipole corrections for polar surfaces"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:135 f3583ed1a2124c2189e3fba8d2de719f
+msgid "Wulff construction"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:137 b4433c593124454ca15397532f084c41
+msgid "**Workflow Architecture**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:139 0cd1e99781b947cfa39383c63937016e
+msgid "**Phase 1**: Slab generation (external Python script)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:150 df8adaef0c6049d59b33548e10c5a764
+msgid "**Phase 2**: Energy calculations (atomate2siesta)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:188 752e3b5e9e8d4ddcb191b6860d35dc14
+msgid "``multi_surface_comparison.png`` - Two-panel bar/scatter plot"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:189 5d2c521dfbf44e75bcdcf6bcf92f2aa2
+msgid "``multi_surface_summary.txt`` - Complete analysis"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:190 6e39f326bf524b8ea6485fc07ef66115
+msgid "Individual slab calculation directories"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:192 d3d3ba4f1b9d46e9b4822d4a06355d02
+msgid "**Convergence Testing**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:194 37525d3a25f14821b9d24c802168ff9c
+msgid "**Slab thickness** (number of layers)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:196 6874ddc5dc2a485b9f5d97df3f7d973d
+msgid "Test: 4, 6, 8, 10 layers"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:197 eac15d3f17844d219663e09b16bc8f2d
+msgid "Criterion: γ change < 0.01 eV/Ų"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:199 25bf768debba470d9ab95045c03a41fb
+msgid "**Vacuum spacing**"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:201 d3718e6a293a4730bf97d002c87b81e1
+msgid "Test: 15, 20, 25 Å"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:202 b1af1cb42d294bbdb67b34ea17dae2e3
+msgid "Criterion: E_slab change < 0.001 eV/atom"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:204 fe19ace1960e46879592fc71c0543a5b
+msgid "**K-point sampling** (in-plane)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:206 b413d8fd681b4965bb674fb34a06aa7e
+msgid "Test: [4,4,1], [6,6,1], [8,8,1], [10,10,1]"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:207 ccf056dda0fa4ec7aea274f397dbdd77
+msgid "Criterion: γ change < 0.005 eV/Ų"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:209 dd453042fe3f4fec9f95c88eb158e6c2
+msgid "**Mesh cutoff**"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:211 8607b1f8dbca475d8098688b005d2cb6
+msgid "Use same cutoff for bulk and slab"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:212 e70e1035bd1e4cc59a8e7935db2926db
+msgid "Follow bulk convergence guidelines"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:214 60492be742e84f6e8e87226d43b7e855
+msgid "**Important Considerations**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:218 ed9b3ef549424557929d36e95688f59d
+msgid "**Polar Surfaces**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:220 17161a19335a43b3823edd872043512d
+msgid ""
+"Surfaces with net dipole moment (e.g., MgO (001), ZnO (0001)) require "
+"special treatment:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:222 982fb67c5c81435198cf958a9001d656
+msgid "Use symmetric slabs (same termination both sides)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:223 5490c9f5095e4faba6f7a28c53a5e567
+msgid "Enable dipole corrections: ``SlabDipoleCorrection True``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:224 844c27225c8f47d48bce214732430d6d
+msgid "Ensure stoichiometric slabs"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:226 9e08939646e040faa0329fe8b7ea9636
+msgid "Asymmetric polar slabs may have:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:228 07d08c11e1364de2aa64e498aceb7ee1
+msgid "Non-physical electric field"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:229 7bed76d0a72247928bcce23173f7d4bd
+msgid "Slow convergence with thickness"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:230 4bdea9a6db944c73a61ab8fe587a4b66
+msgid "Incorrect surface energies"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:232 af234963f0344484868f81d169eabac2
+msgid "**Surface Energy Units**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:234 76b78edbb9ec450096ed84f92bceae30
+msgid "eV/Ų (common in DFT)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:235 4dfc927d4d1146db80aabff77eaf5135
+msgid "J/m² (experimental)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:236 ba1f65486c5e4791a30f463cab13bf7b
+msgid "Conversion: 1 eV/Ų = 16.0218 J/m²"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:238 f2c8ecdc30a44ffcbe9aa18ec95c01f2
+msgid "**Example Results** (MgO):"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:247 2f3e2016b4644e7783a5e266c7404295
+msgid ""
+"📁 **Location**: ``tutorials/06-surfaces-and-adsorption/01-surface-"
+"energy/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:249
+#: ../../source/tutorials/advanced.rst:301 374be9cc468f479580ecafe980020e4c
+#: 8fb2dc2e574d4f3e93512980e4fffc93
+msgid "⏱️ **Time**: 90 minutes"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:251
+#: ../../source/tutorials/advanced.rst:362 e53085cc8d244f3b96a832ba147df904
+#: e9dce7e3abde40198a7789961c5b8e0a
+msgid "⭐ **Difficulty**: Expert"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:254 4b50b050ee124b69a2d31ebdd9654114
+msgid "``README.md`` - Complete tutorial (450+ lines)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:255 59ce9e6a1c5a4b219ef1f9dd197146bb
+msgid "``SURFACE_ENERGY_STRATEGY.md`` - Implementation strategy"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:260 a748564984a14ed7a142948d6f0a55b0
+msgid "Tutorial 09-12: Structural & Mechanical Properties"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:263 f2f181a896ef41678cd738a8933a07a4
+msgid "Tutorial 09: Equation of State (EOS)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:267 cfee875b1cfe4048b1f6d4156513c2cc
+msgid "Fit equation of state to energy-volume data"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:268 594ac83ddb124a3597a8e164f8942641
+msgid "Determine bulk modulus and equilibrium volume"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:269 5514041205434bb49df3edbf56150080
+msgid "Understand different EOS models (Birch-Murnaghan, Vinet, etc.)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:284 e3891e396ecd46598d3daf2f283ad16d
+msgid "📁 **Location**: ``tutorials/03-advanced-workflows/01-eos/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:286 e289363b65484dd2b54b4b4d9fa25a55
+msgid "⏱️ **Time**: 40 minutes"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:288
+#: ../../source/tutorials/advanced.rst:472
+#: ../../source/tutorials/advanced.rst:530
+#: ../../source/tutorials/advanced.rst:551
+#: ../../source/tutorials/advanced.rst:579 375c21c84001427dab115db1cfb865f7
+#: 5b89817a7cf04860bfdd472cc3ccbce4 91feb507f8f74317ba4cc83f24ddeb98
+#: 92b1409f3917409a8a4a2ef4830b1bc0 d841e50e6692455a8a1d5d1ff63d1467
+msgid "⭐ **Difficulty**: Intermediate"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:291 274658ca1db149359f04abe6b0709f0a
+msgid "Tutorial 10: EOS with Basis Convergence"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:295 d4c0362376f742ec9e4c5b2c5e10a614
+msgid "Combine EOS with basis parameter convergence"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:296 fde06b47bc284390a8547d1544cc9e72
+msgid "Understand basis size effects on bulk modulus"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:297 90395f45e0964dfabe5ff20b59301962
+msgid "Perform systematic convergence studies"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:299 c2f60363787e40a496b6259be35ea126
+msgid ""
+"📁 **Location**: ``tutorials/03-advanced-workflows/02-eos-basis-"
+"convergence/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:306 9ae894a6917d4012b77f78e2ed86b5fd
+msgid "Tutorial 11: Elastic Constants"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:310 122cca8f661a458d88e50c9cded01296
+msgid "Calculate full elastic tensor"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:311 522a893fb8af48f78dfc7237d9e8641a
+msgid "Determine mechanical properties (bulk/shear modulus, Poisson ratio)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:312 1cdbd1adaa7c40a89471e8eec0022379
+msgid "Assess mechanical stability"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:329 fc461cc991354a82a85f929aa6f15c50
+msgid "📁 **Location**: ``tutorials/03-advanced-workflows/03-elastic-constants/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:336 e17baef5274f4acb8bdb1fe0a103e060
+msgid "Tutorial 12: Nudged Elastic Band (NEB)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:340 92df760526894ab4a42d757c2b34dc64
+msgid "Calculate transition state pathways"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:341 d4e9a2144748469b93b985e3edb23e32
+msgid "Determine activation barriers"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:342 57f8314f1bc94e55b2f4bfbaa55f6876
+msgid "Understand reaction mechanisms"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:358 3f332afc10924ec18814bf5f28a5e12d
+msgid "📁 **Location**: ``tutorials/03-advanced-workflows/04-neb/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:360 c4fca4f22766456da30751a6e48c893a
+msgid "⏱️ **Time**: 120 minutes"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:367 a7be645767fd4d319dcba4f67f82f292
+msgid "Tutorial 18: Tier-Based Calculations ⭐ NEW"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:371 ffaf5cef4e224c42bdefcd72f95797ac
+msgid "Understand the 4-tier module hierarchy"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:372 62cb59e41f5045bc824933c3620e05fc
+msgid "Use material-specific presets"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:373 28f1c00e12da4138a4710fa7ecbe2abf
+msgid "Customize tier configurations"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:374 fd0dca95914b4fa0a02d6cd70c0c9956
+msgid "Optimize workflow performance"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:378 35ea242a68ba4f73872f7b47cdc290e0
+msgid "4 tiers: basic → intermediate → advanced → expert"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:379 b5d6a2574db54d79b5ca40f6115ad1d3
+msgid "24 dataclass modules organized by complexity"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:380 9f9a01d1d8e749b8aff7e833f09da8c4
+msgid "14 material-specific presets"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:381 180d5c876314436b876b2edc37991827
+msgid "Automatic module activation"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:382 fe26dc2f031c4c059593442875d6576c
+msgid "Parameter merging precedence"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:384 1fb46ff412ae4acfb5d54806cd3e4495
+msgid "**The Four Tiers**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:390 7c602e0e69f34a768aa5345ab9de0707
+msgid "Tier"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:391 a27cc5c72b184ad1a8d5c1546be0006f
+msgid "Modules"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:392 2caabd7ceaa840e98b6c4895fafeaf57
+msgid "Use Case"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:393 eaa1d1ba1c0a476e81275f6b02c1c5e4
+msgid "Performance"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:394 0289739990f4446e98efabcd688667ba
+msgid "basic"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:395 bc62031a09964cafb0d3e1446f1fb21c
+msgid "6"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:396 f2b0f447276046eaad5d5b9a82aa36bb
+msgid "Quick tests, debugging"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:397 e9150d30949d4da69b050ab49a2def32
+msgid "~17 ms"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:398 492201ecff854c53832e8e4d16fdede0
+msgid "intermediate"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:399 89a36855bae740a8b464b2d2d7d13a0e
+msgid "12"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:400 59d39a848c594c9d85604d3bfbb1f979
+msgid "Standard calculations (DEFAULT)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:401 b32b56b52bcb4941902ae55c8b587daa
+msgid "~20 ms"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:402 d362b4706fbd45afa045e1c1dbe03f26
+msgid "advanced"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:403 04a6d5e013c4490b9a29feb546f81d95
+msgid "19"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:404 bd50b1e1249442038950a3270dfd76ea
+msgid "Phonons, optical, DFT+U"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:405 3368fc7aa164412fbdd99fb43fec44ed
+msgid "~22 ms"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:406 fec45dc159284a6bb8c4444eb7f3a533
+msgid "expert"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:407 628cef49f66d4da291deb5f2487cec40
+msgid "24"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:408 b3795999a7c44a2cab7b6c96054517b5
+msgid "Performance tuning, large systems"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:409 7d1ca9acb9af48fd83133dad00451bd6
+msgid "~23 ms"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:411 ffc818980d4d45369223e287aa794b7e
+msgid "**Direct Tier Usage**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:427 d4fbcd492d594d8997aa7078dd994a9e
+msgid "**Material-Specific Presets**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:443 1a64f85a5465433fa10dfb093e09f613
+msgid "**Available Presets** (14 total):"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:445 707c54a1b9e84fa3b952bdb728ed796b
+msgid ""
+"**Structural**: ``basic_relax``, ``standard_relax``, "
+"``high_accuracy_relax``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:446 406bc20008c44089a7362986d72ea7b6
+msgid "**Surface**: ``surface_metal``, ``surface_semiconductor``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:447 860b95cff3d040d28f3b1d4eb899790e
+msgid "**Magnetic**: ``magnetic_2d``, ``magnetic_correlated``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:448 17ec7cab15264ef78fd61128eebc6c5a
+msgid "**Phonon**: ``phonon_standard``, ``phonon_high_accuracy``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:449 e4627141a8bb45ae9f9f5ff9b9fef901
+msgid "**Optical**: ``optical_response``, ``band_structure``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:450 5ef3231a4cde4ceab7ff517d43fff11e
+msgid "**Performance**: ``large_system``, ``parallel_hpc``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:451 e5054c191b6c49f89cd861f82a75c58b
+msgid "**Testing**: ``convergence_test``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:453 e01d5c200a47499eb28a7e6e58b9e98c
+msgid "**Override Preset Parameters**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:468 b9c5e09532ac4718b89878f9878d9ce8
+msgid "📁 **Location**: ``tutorials/07-advanced-features/01-tier-system/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:470
+#: ../../source/tutorials/advanced.rst:623 06847aaf5b0e424ba9f03dca35ab24d1
+#: 22cdd39ad26241e6a82e7eea7aa29df5
+msgid "⏱️ **Time**: 30 minutes"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:475 7d7c889b70a44aeea821eaa0c9c77764
+msgid "``README.md`` - Complete tutorial (370+ lines)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:476 cd0990479d7b4604b5a03cffa4308c50
+msgid "See :doc:`/tier-system` for full tier system documentation"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:481 77cc829ce413405daa1285c599d76a48
+msgid "Advanced Features Tutorials ⭐ NEW"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:483 4025f10e1b3a4df9894a790b2d57fc79
+msgid ""
+"Five comprehensive tutorials demonstrating MEDIUM priority dataclass "
+"modules with direct SIESTA FDF format."
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:486 02810453caf6424396bd24ab51e9e3e5
+msgid "Tutorial 23: DOS Calculations"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:490 9418ecd862d446baa47078e0552a7393
+msgid "Calculate density of states with StaticMaker and RelaxMaker"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:491 55e553f64a004896b30e3bee6c073739
+msgid "Use direct SIESTA FDF format for ProjectedDensityOfStates"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:492 8af3a6d882984cad94fb4500d4a8865a
+msgid "Understand automatic comment header generation"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:493 2b2f9d33024d46b68edaf479ee14cf5d
+msgid "Interpret DOS output files"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:497 ff5623c3da74476987b603aefbddb4ad
+msgid ""
+"Direct SIESTA syntax: ``\"ProjectedDensityOfStates\": [\"EF -10.000 "
+"10.000 0.100 200 eV\"]``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:498 6ce1efc1f3ac4cfaac4e4cd80363b81e
+msgid "Automatic comment headers: ``# DensityOfStatesAndBandStructure Settings``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:499 6fa106e08135431993230fa5ed91e833
+msgid "Works with all makers (StaticMaker, RelaxMaker, BandStructureMaker)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:500 d16b959c99564c43b2d1c01b16fe30c6
+msgid "Dry-run mode for preview"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:526 67e8ee95658647fb9607879f930cb1c2
+msgid "📁 **Location**: ``tutorials/07-advanced-features/05-dos-calculations/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:528 5bc3ff301cb6424c801c8df627942e11
+msgid "⏱️ **Time**: 20 minutes"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:533 27eaa0589c4e457fbb4a948bccd11099
+msgid "Tutorial 24: Phonon Inputs"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:537 cf06d56cdf0343cd965231f84f7f9b5b
+msgid "Configure force constants parameters for phonon calculations"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:538 6eb19b3656df41368437b3d8c066b5d6
+msgid "Use MD.TypeOfRun, MD.FCDispl, MD.FCfirst, MD.FClast"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:539 1c48dd31cad7456d8c6c9f5fe47df660
+msgid "Prepare structures for phonopy post-processing"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:541
+#: ../../source/tutorials/advanced.rst:563
+#: ../../source/tutorials/advanced.rst:591
+#: ../../source/tutorials/advanced.rst:637 9b9ab14e3b7846ad8d7d003c7aa514b6
+#: acf3aff3e3284a29b0582bd7258a2e2e d2271ba7fc4b4fe8a581db8338a7ed56
+#: dfb37e6f1fd541959bbf196986684909
+msgid "**Key Parameters**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:543 613a4802a6974a29842b8799b743ab92
+msgid "``MD.TypeOfRun``: \"FC\" (force constants mode)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:544 e86c4c080c224a3a91264cf29291d4a2
+msgid "``MD.FCDispl``: Atomic displacement magnitude (Å)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:545 08a70e520ab043daaca8fa43fc38fce2
+msgid "``MD.FCfirst``, ``MD.FClast``: Atom range for displacement"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:547 f1094d59c6b14aa292077fceddd68bc6
+msgid "📁 **Location**: ``tutorials/07-advanced-features/06-phonon-inputs/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:549 d56924be5a114d72ba4f2f4ed4cc16cb
+msgid "⏱️ **Time**: 15 minutes"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:554 3a027397aee24ab6b60782a06ab5487e
+msgid "Tutorial 25: Optical Properties"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:558 d8cbcfe800d346f5af3a29a721c31992
+msgid "Calculate optical absorption and dielectric function"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:559 9b2e615aba6f4fd294db6abd7d5d83f6
+msgid "Configure energy range, broadening, and scissor operator"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:560 d63062421d0647d38f4fc5c38ad0625e
+msgid "Understand band gap corrections"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:561 db06d1d25a114298a899844e413659aa
+msgid "Interpret optical output files"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:565 a1875316377349d5b9c61bacbac731a3
+msgid "``OpticalCalculation``: Enable optical calculation"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:566 cda9554a0c00469681f762eb1419edfb
+msgid "``Optical.Energy.Minimum/Maximum``: Energy range for spectrum"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:567 c6f6bb231fc5401ab12cce28a27feb56
+msgid "``Optical.Broaden``: Spectral broadening (eV)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:568 8a5aa857e0d14fe6a227a9a37373c40e
+msgid "``Optical.Scissor``: Band gap correction (eV)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:572 2b7a4c3420fc47bc846ec7f115d19029
+msgid "``siesta.EPSIMG`` - Imaginary part of dielectric function"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:573 5942a5c6747949039d8cf8a375c1bb08
+msgid "``siesta.EPSREAL`` - Real part of dielectric function"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:575 f69be84a4df24b6aabd22b6c966a46ec
+msgid "📁 **Location**: ``tutorials/07-advanced-features/07-optical-properties/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:577
+#: ../../source/tutorials/advanced.rst:667 40b0ebffe0db4096839de567414bc6b5
+#: 6c2530fbbffb486ebd43bfa29f0f1e34
+msgid "⏱️ **Time**: 25 minutes"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:582 b952dee8417c42c09a50bb6d6f3cf948
+msgid "Tutorial 26: DFT+U Calculations"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:586 c36e7893a5d64313aef238c7a7507f35
+msgid "Apply Hubbard U corrections for correlated systems"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:587 6744aa7aa1554fe18ca70851d0a928d7
+msgid "Configure DFT+U parameters for transition metals"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:588 8a24e5947a2b46eb868661fd46a4c38c
+msgid "Understand projector methods"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:589 512fa4c8b0b145f494ab62283188d70c
+msgid "Use common U values for specific elements"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:593 36380c2cccf94748bc82ed2bed7890c9
+msgid "``LDAU.UseLDAU``: Enable DFT+U"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:594 a30eebebf47f43d2b506d505fd634b46
+msgid "``LDAU.UEffective``: Effective U parameter (U-J) in eV"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:595 af4ff9bb6de949b8bbb8c20428b2e835
+msgid "``LDAU.JHund``: Hund's exchange J in eV"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:596 5411dd11142542c694d70b8238da6876
+msgid "``LDAU.ProjectorMethod``: PulaySanchez or SimplifiedLDA"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:598 942c313199734bd483a8146d6a34a12a
+msgid "**Common Systems**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:600 618bec5647574d3399850a01d10fa506
+msgid "NiO (3d transition metal oxide)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:601 0ff79d6c2a0749a391597d00e4c0a969
+msgid "3d transition metals: Ni, Co, Fe, Mn"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:602 3bd0b965f43f4951bd3a269328366124
+msgid "4f rare earths: Ce, Eu"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:621 1de83efd7b6347e896e29e88122515e3
+msgid "📁 **Location**: ``tutorials/07-advanced-features/08-dftu/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:628 f7bbae1478c249c8b02b862b0df9a464
+msgid "Tutorial 27: Charge/Dipole/Electric Field"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:632 d6969a72b80f406da1cae39f4834ba85
+msgid "Apply external electric fields to systems"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:633 ccaaf61658704609895c684cc574f753
+msgid "Calculate charged defect systems"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:634 9e1757c9367e4d59bf02e639eff3f6b1
+msgid "Enable dipole corrections for slabs"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:635 656b67c3cc654459b917706ef2f1b38a
+msgid "Understand field strength units and conventions"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:639 30b10012e25e4c3193b05f5f69e4efe3
+msgid "``ExternalElectricField``: Enable external field"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:640 7a173e9ee33540489306901910472c0b
+msgid "``Efield``: Field strength (eV/Ang)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:641 6a25484a4d804cec9819d5d5f7359fcd
+msgid "``NetCharge``: System net charge (electrons)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:642 aa10312181854a0684ce0cd036e44a40
+msgid "``SlabDipoleCorrection``: Dipole correction for slabs"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:644 258833247a364926878ace47a173e1b4
+msgid "**Example Applications**:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:646 473cf5ff4e284356a23c4dd699cba53c
+msgid "Ferroelectric materials under applied field"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:647 9c91105301f24bea81074210c9f6b855
+msgid "Charged defect calculations (vacancies, interstitials)"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:648 b184672191494914a678cdf60322c844
+msgid "Surface slab calculations with dipole correction"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:665 f685077972034258a6bf98e39240c38d
+msgid ""
+"📁 **Location**: ``tutorials/07-advanced-features/09-charge-dipole-"
+"efield/``"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:674 48e7f72699ac45ef9f66d0be980ddfac
+msgid "Next Steps"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:676 bc11a5fe079c46128e03d156175d6826
+msgid "After completing advanced tutorials:"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:678 21626196c1694b8facf6aa8722c8180f
+msgid "**Infrastructure** (Tutorials 13-15) - Production deployment"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:679 878fb1c5336e4d4da01ec4810a901038
+msgid "**Custom Workflows** - Combine makers with specific needs"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:680 08a3c888a1c141feae5b84c22c9e4d8b
+msgid "**High-Throughput** - Database integration and automation"
+msgstr ""
+
+#: ../../source/tutorials/advanced.rst:682 ce5daf847b754de88c3b1bcbd2f8f24d
+msgid "See :doc:`index` for full tutorial listing."
+msgstr ""

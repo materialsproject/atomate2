@@ -1,0 +1,3857 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/cli-tools.rst:3 91a989cccef84b13ad5f60b42f52044a
+msgid "CLI Tools Overview"
+msgstr "نمای کلی ابزارهای خط فرمان"
+
+#: ../../source/cli-tools.rst:5 08b805c615d741878a09f6abf2632519
+msgid ""
+"atomate2siesta provides a comprehensive suite of command-line interface "
+"(CLI) tools for workflow generation, database management, cluster setup, "
+"and HPC job submission."
+msgstr ""
+"atomate2siesta مجموعه جامعی از ابزارهای رابط خط فرمان (CLI) برای تولید "
+"جریان کار، مدیریت پایگاه داده، راه‌اندازی خوشه و ارسال کار HPC فراهم "
+"می‌کند."
+
+#: ../../source/cli-tools.rst:9 c750a6d982674f5499922bffc731515c
+msgid "Quick Navigation"
+msgstr "ناوبری سریع"
+
+#: ../../source/cli-tools.rst:12 ../../source/cli-tools.rst:1187
+#: 4697aa9e53244bc6a29f643d303a7f74 5feb65b881f440edbcd6822b0d301bd4
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/cli-tools.rst:14 ac4f2c589ef04c46b0f37c6638d7f559
+msgid ""
+"The CLI tools integrate seamlessly to provide a complete workflow from "
+"script generation to job execution and result storage:"
+msgstr ""
+"ابزارهای CLI به‌صورت یکپارچه ادغام می‌شوند تا جریان کار کاملی از تولید "
+"اسکریپت تا اجرای کار و ذخیره‌سازی نتایج فراهم کنند:"
+
+#: ../../source/cli-tools.rst:16 2e4acbdeb3ce4874892152422faa855b
+msgid "**Information & Discovery**"
+msgstr "**اطلاعات و کشف**"
+
+#: ../../source/cli-tools.rst:18 826803dd8d5b4555ab038a8eab48c6c7
+msgid ":ref:`info-cli` - Display capabilities and information"
+msgstr ":ref:`info-cli` - نمایش قابلیت‌ها و اطلاعات"
+
+#: ../../source/cli-tools.rst:19 79750135d29f41f7968a9fb467166783
+msgid ":ref:`tiers-cli` - Explore tier presets and defaults"
+msgstr ":ref:`tiers-cli` - کاوش پیش‌تنظیم‌ها و پیش‌فرض‌های سطحی"
+
+#: ../../source/cli-tools.rst:20 5d1260a39acc4f9397e7c1f5f0f0a773
+msgid ":ref:`recipe-cli` - Browse Recipe Book workflows"
+msgstr ":ref:`recipe-cli` - مرور جریان‌های کار کتاب دستورالعمل"
+
+#: ../../source/cli-tools.rst:22 b975265d052b4f078131c62b651f2e7b
+msgid "**Workflow Generation**"
+msgstr "**تولید جریان کار**"
+
+#: ../../source/cli-tools.rst:24 e9928989f38b480aa0d242ea19c9ebff
+msgid ":ref:`workflow-generator-cli` - Generate ready-to-run workflow scripts"
+msgstr ":ref:`workflow-generator-cli` - تولید اسکریپت‌های جریان کار آماده اجرا"
+
+#: ../../source/cli-tools.rst:26 a4cb7411d57541dfa88f1be3368fc46a
+msgid "**Infrastructure**"
+msgstr "**زیرساخت**"
+
+#: ../../source/cli-tools.rst:28 7388718a6efe4aebb9f7d58dd68a53cc
+msgid ""
+":ref:`cluster-setup-cli` - Set up remote HPC clusters with SIESTA and "
+"dependencies"
+msgstr ""
+":ref:`cluster-setup-cli` - راه‌اندازی خوشه‌های HPC راه‌دور با SIESTA و "
+"وابستگی‌ها"
+
+#: ../../source/cli-tools.rst:29 80d1258a390e4a47936e2fa232eb8559
+msgid ":ref:`jobflow-remote-cli` - Configure job submission and queue management"
+msgstr ":ref:`jobflow-remote-cli` - پیکربندی ارسال کار و مدیریت صف"
+
+#: ../../source/cli-tools.rst:30 ee8b471da8014d5e9944804a06759598
+msgid ":ref:`database-cli` - Manage MongoDB databases for result storage"
+msgstr ":ref:`database-cli` - مدیریت پایگاه‌های داده MongoDB برای ذخیره‌سازی نتایج"
+
+#: ../../source/cli-tools.rst:32 d2a6546e581e45caa244aeb1f4362a6e
+msgid "**Utilities**"
+msgstr "**ابزارها**"
+
+#: ../../source/cli-tools.rst:34 ce53a60f565241beb8b6d79d20a8ecb7
+msgid ":ref:`pseudos-cli` - Manage pseudopotentials and generate basis blocks"
+msgstr ":ref:`pseudos-cli` - مدیریت شبه‌پتانسیل‌ها و تولید بلوک‌های پایه"
+
+#: ../../source/cli-tools.rst:35 1c651df976634e77a5c775ed4e5a6744
+msgid ":ref:`plot-pseudo-cli` - Plot pseudopotential data from PSML files"
+msgstr ":ref:`plot-pseudo-cli` - رسم داده‌های شبه‌پتانسیل از فایل‌های PSML"
+
+#: ../../source/cli-tools.rst:36 40d7bfceaa92488f9a6c85d8379836a3
+msgid ":ref:`structure-info-cli` - Display structure information and symmetry"
+msgstr ":ref:`structure-info-cli` - نمایش اطلاعات ساختار و تقارن"
+
+#: ../../source/cli-tools.rst:37 b0bfc261ca234a76b5a95bba0a379509
+msgid ""
+":ref:`structure-manipulation-cli` - Crystallographic operations (scale, "
+"supercell, rotate, translate)"
+msgstr ""
+":ref:`structure-manipulation-cli` - عملیات کریستالوگرافی (مقیاس، ابرسلول،"
+" چرخش، انتقال)"
+
+#: ../../source/cli-tools.rst:38 ab2d051b1abf492c9c005718dfecba85
+msgid ":ref:`convert-cli` - Convert structure formats between sisl/pymatgen/ASE"
+msgstr ":ref:`convert-cli` - تبدیل فرمت‌های ساختار بین sisl/pymatgen/ASE"
+
+#: ../../source/cli-tools.rst:39 24a7ca2a881a44af8f5df3286805f2c8
+msgid ":ref:`inputs-cli` - Generate SIESTA input files from structure"
+msgstr ":ref:`inputs-cli` - تولید فایل‌های ورودی SIESTA از ساختار"
+
+#: ../../source/cli-tools.rst:41 f9380600c40a4413998bbf090454521e
+msgid "All CLI tools feature:"
+msgstr "تمام ابزارهای CLI دارای این ویژگی‌ها هستند:"
+
+#: ../../source/cli-tools.rst:43 7f8a37c6da5e47f1889fbd788f62aaeb
+msgid "🎨 **Rich terminal UI** with colored output and progress indicators"
+msgstr "🎨 **رابط کاربری غنی ترمینال** با خروجی رنگی و نشانگرهای پیشرفت"
+
+#: ../../source/cli-tools.rst:44 0b1de9f3bea54baaa6a2b72f4216820e
+msgid "🔒 **Safe operations** with automatic backups and confirmations"
+msgstr "🔒 **عملیات ایمن** با پشتیبان‌گیری خودکار و تأییدها"
+
+#: ../../source/cli-tools.rst:45 c7ba3c34b74146a58281b8953e233f42
+msgid "📚 **Self-documenting** with comprehensive help messages and examples"
+msgstr "📚 **خودمستندسازی** با پیام‌های راهنمای جامع و مثال‌ها"
+
+#: ../../source/cli-tools.rst:46 6a919d8001ab49d5a9ceb23738d1d9ad
+msgid "✅ **Production-ready** with extensive error handling"
+msgstr "✅ **آماده برای تولید** با مدیریت گسترده خطا"
+
+#: ../../source/cli-tools.rst:51 93074bb244d74dd08d64192a4cd51932
+msgid "Information CLI"
+msgstr "ابزار خط فرمان اطلاعات"
+
+#: ../../source/cli-tools.rst:53 df9b870837db4c86a36fadecd8a9d636
+msgid "**Command:** ``atomate2siesta-info``"
+msgstr "**دستور:** ``atomate2siesta-info``"
+
+#: ../../source/cli-tools.rst:55 5db0c89083a14eee8b14bbcfc5b03bf9
+msgid "**Purpose:** Showcase all atomate2siesta capabilities and information"
+msgstr "**هدف:** نمایش تمام قابلیت‌ها و اطلاعات atomate2siesta"
+
+#: ../../source/cli-tools.rst:58 ../../source/cli-tools.rst:149
+#: ../../source/cli-tools.rst:237 ../../source/cli-tools.rst:292
+#: ../../source/cli-tools.rst:576 ../../source/cli-tools.rst:628
+#: ../../source/cli-tools.rst:694 ../../source/cli-tools.rst:759
+#: ../../source/cli-tools.rst:1002 ../../source/cli-tools.rst:1075
+#: ../../source/cli-tools.rst:2274 ../../source/cli-tools.rst:2395
+#: 370ac3943ca2468ba96f7a9a5b093d16 4630a6f7a52e4b139f9007f6ab8ca3a0
+#: 6e2bf346ea2943c7a921a61eb91cfe46 71ece7c37241432e893512fd6e00100f
+#: 7665c81a3b7d4dc39f24a72ebc03299c 7e1ced5df9c04b6fbbcbbc8dd3918c91
+#: acd4945d2aee4289ad6c1430e7b51e34 c0cedb8aa32747a78a6b755cb17e7ccd
+#: cae15f7cf00c4421961816b215a7ed18 cebf6f4081ad4a8b8da27fea07ad2fec
+#: dad25d5df9f84595ab66f52afa134a09 f2bfb191675d4b3c9ea863bd29968367
+msgid "Key Features"
+msgstr "ویژگی‌های کلیدی"
+
+#: ../../source/cli-tools.rst:60 bee8c0c0e0e345e9904002874d4a5dc8
+msgid ""
+"**Complete overview** with quick stats (26 presets, 39 recipes, 12 CLI "
+"tools)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:61 8ab8682be88f47c59556ce9455ca88cb
+msgid "**CLI tools catalog** organized by category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:62 9dfef4bf66464f7b82d0ca3aa908336a
+msgid "**Workflow types** with runtime estimates"
+msgstr ""
+
+#: ../../source/cli-tools.rst:63 d3cf94d7f7524c6dac6e98da8789468a
+msgid "**Feature list** with descriptions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:64 ac821c3283de4a0e821d713e9a14dd06
+msgid "**Quick start examples** with code snippets"
+msgstr ""
+
+#: ../../source/cli-tools.rst:65 b693c16bc1e9492f8712d049082e8bf3
+msgid "**Version information** and configuration paths"
+msgstr ""
+
+#: ../../source/cli-tools.rst:68 ../../source/cli-tools.rst:160
+#: ../../source/cli-tools.rst:248 3e007bdc55744bc48fb9a9a5d64c5baf
+#: 70b73b87f3bd47aa9be6636f08d30677 eb48dbda2ae3450abd26deec4e48fe6e
+msgid "Available Subcommands"
+msgstr "زیردستورهای موجود"
+
+#: ../../source/cli-tools.rst:82 b6211be86be64ff59b9e622573f8f729
+msgid "Viewing Detailed Documentation"
+msgstr "مشاهده مستندات تفصیلی"
+
+#: ../../source/cli-tools.rst:84 0abfac097f6945cdbe583d73ba8daa7f
+msgid ""
+"The ``--full`` flag displays comprehensive documentation for any Maker or"
+" FlowMaker:"
+msgstr "پرچم ``--full`` مستندات جامع را برای هر Maker یا FlowMaker نمایش می‌دهد:"
+
+#: ../../source/cli-tools.rst:106 27d713cffec74cc19dc5888b2189072b
+msgid "**Full Documentation Includes:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:108 8950bc81964140e48fa56e92c8893bc8
+msgid "**Detailed scientific context** - What the calculation does and why"
+msgstr ""
+
+#: ../../source/cli-tools.rst:109 cf455ed97f5b4a9faf66f178b9eae6d8
+msgid "**Workflow steps** - Step-by-step breakdown of computation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:110 43d0607cdfb043e4b6b79ad103feefa0
+msgid "**Key results** - What outputs are generated"
+msgstr ""
+
+#: ../../source/cli-tools.rst:111 c8d5ed1e65fc4df89acb04953f600b32
+msgid "**Applications** - Real-world use cases"
+msgstr ""
+
+#: ../../source/cli-tools.rst:112 0f6235bdd82149af8ff22e566f9a46e7
+msgid "**Parameters** - All available configuration options"
+msgstr ""
+
+#: ../../source/cli-tools.rst:113 fd6e1adb5df2419b9aa89fa748c65610
+msgid "**Examples** - Practical code snippets"
+msgstr ""
+
+#: ../../source/cli-tools.rst:114 10d461cd65e14102ad74a93c8f8df0f0
+msgid "**Notes** - Best practices and convergence tips"
+msgstr ""
+
+#: ../../source/cli-tools.rst:116 b8c3c93ec3094cf18c04d818f150d6d6
+msgid ""
+"All comprehensive docstrings are displayed in beautiful Rich panels with "
+"formatted markdown sections."
+msgstr ""
+
+#: ../../source/cli-tools.rst:119 ../../source/cli-tools.rst:207
+#: ../../source/cli-tools.rst:261 ../../source/cli-tools.rst:959
+#: ../../source/cli-tools.rst:1146 204a701594e74d8baa97673d51fcb4f6
+#: 42c984b21dd7435e942da4013fb299d4 afb164609ff94d309c7606dbea05a8d6
+#: c50e7437b78646648af530458171918e e4fc9bae96714f6086b7e7a38ed0d95a
+msgid "Example Output"
+msgstr "خروجی نمونه"
+
+#: ../../source/cli-tools.rst:142 6b612cf969714da1bfa673348a633e8d
+msgid "Tier Presets CLI"
+msgstr "ابزار خط فرمان پیش‌تنظیم‌های سطحی"
+
+#: ../../source/cli-tools.rst:144 a0ba76d028c44c9f92834aaf6b619848
+msgid "**Command:** ``atomate2siesta-presets``"
+msgstr "**دستور:** ``atomate2siesta-presets``"
+
+#: ../../source/cli-tools.rst:146 2b843f88753e412287352194946aad9e
+msgid "**Purpose:** Explore and discover tier presets with automatic detection"
+msgstr "**هدف:** کاوش و کشف پیش‌تنظیم‌های سطحی با تشخیص خودکار"
+
+#: ../../source/cli-tools.rst:151 fa034f96686c4de3889f258a9df083e0
+msgid "**Automatic preset detection** - No manual updates needed!"
+msgstr ""
+
+#: ../../source/cli-tools.rst:152 00d97bd17e2c45e9bb5f24df84813074
+msgid "**Dynamic tier counting** - Automatically counts new tier levels"
+msgstr ""
+
+#: ../../source/cli-tools.rst:153 c990dea987d8401db88c06d3c04cea4d
+msgid "**26 presets** across 9 categories (2d, surface, electronic, etc.)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:154 cd71349672af4f349293b46784ce1e6d
+msgid "**Tier defaults** - View base parameter sets for all tier levels"
+msgstr ""
+
+#: ../../source/cli-tools.rst:155 f94fe0aaac134df89b208dcbe4ee7bbf
+msgid "**Category browsing** - Explore presets by category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:156 07997a81d6194479a7fca44236cbe5e1
+msgid "**Search functionality** - Find presets by tier level or category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:157 ce31dd8e1f6a427c96b697b356ea14eb
+msgid "**Rich terminal UI** with tables and panels"
+msgstr ""
+
+#: ../../source/cli-tools.rst:173 e145bd49643442f3855db991fc57c93b
+msgid "Automatic Detection"
+msgstr "تشخیص خودکار"
+
+#: ../../source/cli-tools.rst:175 b46470554c554c3dbe266c4609db003e
+msgid "**Add new presets** - They appear automatically in CLI!"
+msgstr ""
+
+#: ../../source/cli-tools.rst:188 63a3d8c8398c4724afbd8944129d5c18
+msgid "**Result:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:195 55dc20ab8f9c465d835b488e35a00c96
+msgid "**Naming conventions for automatic categorization:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:197 dc9a9dbc44164673af2036b07f2d62e4
+msgid "``2d_*`` → 2d category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:198 1eead1f7b2df47f78895b69fc705de75
+msgid "``surface_*`` → surface category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:199 c512b150453f48ceb0492ef89d613590
+msgid "``adsorbate_*`` → surface category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:200 9549574c854e4674857d460dca194685
+msgid "``magnetic_*`` → magnetic category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:201 53398edb9b7949fe9af59eb1bc4e9ec4
+msgid "``phonon_*`` → phonon category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:202 218cd4c83bdd4373b0fe1beee828bd57
+msgid "Contains ``relax`` → structural category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:204 adcfa115dc7f4a138ec933c2451a5578
+msgid "See :ref:`adding-custom-tiers-presets` for full guide."
+msgstr ""
+
+#: ../../source/cli-tools.rst:230 9ca84211b27e423aa019b52724afb4c2
+msgid "Recipe Book CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:232 50e64413168e4095b22aed31ae1ec1f7
+msgid "**Command:** ``atomate2siesta-recipe``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:234 20e836626ff14cb2ad98f07e1031e2aa
+msgid "**Purpose:** Browse and search the Recipe Book (39 one-line workflows)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:239 3081a469e3844c2dac3d43c0d6269164
+msgid ""
+"**39 recipes** across 6 categories (Complete, Electronic, Mechanical, "
+"Thermal, Surface, Convergence)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:240 ac50da5b60a947289cf6fc3529fa8168
+#, python-format
+msgid "**90-98% code reduction** - Comprehensive workflows in one line"
+msgstr ""
+
+#: ../../source/cli-tools.rst:241 80a53c3717854c849f9550728dffe671
+msgid "**Category browsing** - Explore recipes by category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:242 cc1b2fa4f5d34a588c70568378773235
+msgid "**Keyword search** - Find recipes by name or property"
+msgstr ""
+
+#: ../../source/cli-tools.rst:243 b81fcc6fe21d46619b212fca7a73637b
+msgid "**Code examples** - Ready-to-copy usage examples with line numbers"
+msgstr ""
+
+#: ../../source/cli-tools.rst:244 65777e202ec34417a40cd612791fd2b9
+msgid "**Runtime estimates** - Know how long each workflow takes"
+msgstr ""
+
+#: ../../source/cli-tools.rst:245 9f56023fa2d241fca5f8007bf366a8b8
+msgid "**Statistics** - View Recipe Book metrics"
+msgstr ""
+
+#: ../../source/cli-tools.rst:285 1053cb36f77341f9b26e645d590da961
+msgid "Workflow Script Generator CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:287 31434702ab484fafb6c35dda6cae1889
+msgid "**Command:** ``atomate2siesta-maker``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:289 0656c21f2ba143d295e0d68517a6497c
+msgid ""
+"**Purpose:** Generate ready-to-run Python workflow scripts from structure"
+" files"
+msgstr ""
+
+#: ../../source/cli-tools.rst:294 b4994d072d7943909c82829051e7ff39
+msgid "**30-second workflow setup** - From structure file to running calculation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:295 7196fb6726034cd394fce3e0415940c7
+msgid ""
+"**13 workflow templates** organized in 4 categories (Basic, Vibrational, "
+"Mechanical, Advanced)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:296 5e371ceb246d463597d34e6e0338c8aa
+msgid "**Context-specific help** for each workflow type"
+msgstr ""
+
+#: ../../source/cli-tools.rst:297 433acd7a1e194935a16536b5542575e5
+msgid "**Tier preset support** for applying material-specific parameters"
+msgstr ""
+
+#: ../../source/cli-tools.rst:298 7a2a4c93411c4f06a1b6c4e77e4586b9
+msgid "**Dry-run mode** for testing workflows without running calculations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:299 393c15181cb44a058b28b98a1b3f35e1
+msgid "**Remote submission** integration with jobflow-remote"
+msgstr ""
+
+#: ../../source/cli-tools.rst:300 09e1a4221d0c4357b12d0d5bf9481615
+msgid "**Customization sections** with commented examples in generated scripts"
+msgstr ""
+
+#: ../../source/cli-tools.rst:303 4ae97f022e5e4e32b5d96d4c61a439d6
+msgid "Available Workflows"
+msgstr ""
+
+#: ../../source/cli-tools.rst:309 b627605594cb4fc39492f627fdab7814
+msgid "Workflow"
+msgstr ""
+
+#: ../../source/cli-tools.rst:310 ../../source/cli-tools.rst:592
+#: ../../source/cli-tools.rst:645 ../../source/cli-tools.rst:711
+#: ../../source/cli-tools.rst:777 ../../source/cli-tools.rst:2410
+#: 4d5ae2be7d814e01b246f4357ebef3e4 7278d7c7dc8a4872b1b606e3766d1c5b
+#: 7afd6f27221f41559a2cc96ed1ce5cb1 8aae27c43edf4ad49110f30e45a14e81
+#: d4fbccf4910145c1abc527837c53afbb e8580a36236c42ca8217bb571765e6c6
+msgid "Description"
+msgstr ""
+
+#: ../../source/cli-tools.rst:311 071cd68aaf324c12b427d00d0da3e204
+msgid "Runtime"
+msgstr ""
+
+#: ../../source/cli-tools.rst:312 4c98f99bb89a476ebf8921305f01be0c
+msgid "**Basic Workflows (4)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:315 a934738784e94efe8605c8bf3e040b48
+msgid "``relax``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:316 27c813cdb3fe42eb8bc332253aa09a87
+msgid "Structure relaxation (fixed or variable cell)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:317 6898be08fe0a4ea094f3f15be68b9602
+msgid "5-15 min"
+msgstr ""
+
+#: ../../source/cli-tools.rst:318 ba911328e2a8470199ecc3c53b8fb3ae
+msgid "``static``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:319 ae5d8109f9274cd0a8109a61188f037a
+msgid "Single-point energy calculation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:320 5eb95aadf3ee4c4e9afda1dd4e7df9d8
+msgid "2-5 min"
+msgstr ""
+
+#: ../../source/cli-tools.rst:321 7d84cdf544fe46808bb7f49f3b319283
+msgid "``bands``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:322 72aa7601818740798bc8ab2173343332
+msgid "Electronic band structure"
+msgstr ""
+
+#: ../../source/cli-tools.rst:323 ../../source/cli-tools.rst:326
+#: ../../source/cli-tools.rst:350 310897f51c674b7794c052a3fd4431b5
+#: 5cff555876e34a8e9a458eb06e842bf2 a7acb8a6f7724f66a7928d20de045e71
+msgid "10-20 min"
+msgstr ""
+
+#: ../../source/cli-tools.rst:324 5ea9dcdb9096486192abd8f065e1cf6b
+msgid "``dos``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:325 b22d805980b44df2bf7b5e4ae6b78a21
+msgid "Density of states"
+msgstr ""
+
+#: ../../source/cli-tools.rst:327 c7e9c1c424b74b7c97f07a0b8f57d941
+msgid "**Vibrational Properties (3)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:330 a62f340d7fd64d1a883b8622469ad91b
+msgid "``phonon``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:331 56b38fef0ec943c9a92598409d02fc18
+msgid "Phonon calculation with automatic plotting"
+msgstr ""
+
+#: ../../source/cli-tools.rst:332 ../../source/cli-tools.rst:347
+#: 6f5d3b36dcbb4898bc66a3ac1bf25efe c734d6c326ac489380e78577ea014f48
+msgid "30-60 min"
+msgstr ""
+
+#: ../../source/cli-tools.rst:333 875e25f0ed9f4365a57d45ff309b3f76
+msgid "``gruneisen``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:334 fa5856f777d348d9bf6eeaf969be9fac
+msgid "Grüneisen parameters and thermal expansion"
+msgstr ""
+
+#: ../../source/cli-tools.rst:335 9e53f8f5ed09487fb6295dfb7ca35a13
+msgid "2-4 hours"
+msgstr ""
+
+#: ../../source/cli-tools.rst:336 39ec7555dd92480c8f63fa35455f9d68
+msgid "``qha``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:337 0df2556b335f44c89c41a01309b77e2d
+msgid "Quasi-harmonic approximation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:338 9eec1ae20482404fa17a1f87d2e7297d
+msgid "4-8 hours"
+msgstr ""
+
+#: ../../source/cli-tools.rst:339 a7e628d619bd4d38af236b28705334a3
+msgid "**Mechanical Properties (3)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:342 ee99e43bbf294c5ab21f91525a76066d
+msgid "``eos``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:343 734353ebbc794ce499e59ef72cf69011
+msgid "Equation of state"
+msgstr ""
+
+#: ../../source/cli-tools.rst:344 87dd1676a218450e893f9677f892a36b
+msgid "15-30 min"
+msgstr ""
+
+#: ../../source/cli-tools.rst:345 fd4e304812364b7383295481b52b5c3a
+msgid "``elastic``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:346 3b74fccaa60b4be2b65a3b4dc4253082
+msgid "Elastic constants"
+msgstr ""
+
+#: ../../source/cli-tools.rst:348 5aa2b6c6d2d04271adea21b0d0110533
+msgid "``bulk-modulus``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:349 8d97b8fb10bd4835abcc78e50e7cfa02
+msgid "Quick bulk modulus calculation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:351 c39ce4136cc44237b157dd1b752f7134
+msgid "**Advanced Workflows (3)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:354 568aaaad42ee451db827f442810a3683
+msgid "``neb``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:355 a75e29cf63dc4925a782f9577c15289a
+msgid "Nudged elastic band (transition states)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:356 1c1a4a24529c48129ae81854d18918d8
+msgid "2-6 hours"
+msgstr ""
+
+#: ../../source/cli-tools.rst:357 7130873e7583485698ac59a97fed42a8
+msgid "``surface``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:358 57ef01d61076420a8e6cd113703500da
+msgid "Surface energy calculation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:359 211b8c0f19064326bea8d493084f97d4
+msgid "30-90 min"
+msgstr ""
+
+#: ../../source/cli-tools.rst:360 be636af5506d4724954be7ef96fc31af
+msgid "``adsorption``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:361 57c0c424252a4e33b1996c8ffbdd9413
+msgid "Adsorption site scanning"
+msgstr ""
+
+#: ../../source/cli-tools.rst:362 dd8d3db2497240548bfe3300c9e05003
+msgid "1-3 hours"
+msgstr ""
+
+#: ../../source/cli-tools.rst:365 a0695faf6ea04ca5acb26f9050f10e5e
+msgid "Interactive Mode (NEW!)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:367 3864ae1ba57d47169be336cb2f7b4d8c
+msgid "**Beginner-friendly guided workflow generation:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:382 ../../source/cli-tools.rst:1533
+#: ../../source/cli-tools.rst:1592 ../../source/cli-tools.rst:1659
+#: ../../source/cli-tools.rst:1730 ../../source/cli-tools.rst:1798
+#: ../../source/cli-tools.rst:1897 ../../source/cli-tools.rst:1978
+#: ../../source/cli-tools.rst:2076 ../../source/cli-tools.rst:2161
+#: ../../source/cli-tools.rst:2238 20f428a468f743e9a9aca66e0a4052c0
+#: 214eb1e163814813a302239f8e0821a6 313db0b952204eed9871388295786e75
+#: 32d8870b87d143e880e59138db77b0ae 48d2d1c40dd94428acd7a47415eafc8b
+#: 4db921d20daa4e25aecc93012650821d 79c2731ce34341b4a7afdb08ee1a0b84
+#: 8a56a45bbf7c46e0b4a6b4cef8f4d11b b37b9944fe74408a8666580ce4f6ec6a
+#: e5050390ee0741798c3967718431fdeb fe32305e2878412ca551f8f347341826
+msgid "**Features:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:384 47cce2054ddc40a19d4873327ed2e136
+msgid "**No memorization required** - See all options as you go"
+msgstr ""
+
+#: ../../source/cli-tools.rst:385 a3bd9db733f64464936c5dfc854795e5
+msgid "**Input validation** - Validates parameters before generating"
+msgstr ""
+
+#: ../../source/cli-tools.rst:386 c0740eb1bafb4f6d93390c59c6c7271a
+msgid "**Sensible defaults** - Suggests common values"
+msgstr ""
+
+#: ../../source/cli-tools.rst:387 76cf00c75248452cb8f9d590d950fca8
+msgid "**Beautiful UI** - Colored prompts with arrow key navigation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:388 7e90e87c208a48e8a78d91e254052984
+msgid "**Cancel anytime** - Press Ctrl+C to exit"
+msgstr ""
+
+#: ../../source/cli-tools.rst:391 ../../source/cli-tools.rst:601
+#: ../../source/cli-tools.rst:660 ../../source/cli-tools.rst:726
+#: ../../source/cli-tools.rst:790 ../../source/cli-tools.rst:1023
+#: ../../source/cli-tools.rst:1086 ../../source/cli-tools.rst:2302
+#: ../../source/cli-tools.rst:2419 025411d707c348c89e21773959e56608
+#: 0cadc83e640644948c10a5306be1dcf5 196d3f54913e46e7bb092e7dd8b2c317
+#: 242a8573e8114fd2bf730f48fdeba120 2ce9d52671274a59ae77edd864f640ea
+#: 7c790b3b5fe1494ba25e9f39df59818a a4c74990630145d798daeb3c71f93a92
+#: c16d74bb317348cbba291cf709fcf9c5 c359abc0db354217a86c11c8a7630917
+msgid "Quick Examples"
+msgstr ""
+
+#: ../../source/cli-tools.rst:434 ../../source/cli-tools.rst:2596
+#: 4b621bd51f0d4a629c8420ff74af3ea6 fef836d7465a42df88a9ab273347c2cf
+msgid "Common Options"
+msgstr ""
+
+#: ../../source/cli-tools.rst:436 548d6c2bff3d4fefb98d559950aebec2
+msgid "All workflows support these options:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:447 95b7a5f86d5445fe9d2560c74dfd965b
+msgid "Workflow-Specific Options"
+msgstr ""
+
+#: ../../source/cli-tools.rst:449 d58334cb246d40af883c4a65d8bad51a
+msgid "Each workflow has specialized options:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:451 18cba688cc394df7bbd5cda86fe765d0
+msgid "**Relax:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:457 6955775a42254fa184de1cac1cbe9974
+msgid "**Bands:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:463 d5d2ba3eb02b411892586c9b81ecd082
+msgid "**Phonon:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:472 0ce4ecf50f0d478cbd6b9ec7e5f7a2a6
+msgid "**EOS:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:479 3e6ab2401aea49b781b75448788a0126
+msgid "**Elastic:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:485 3b4fd90202f347df8affdbf7df303cb6
+msgid "**NEB:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:493 94037af1c53a432ca4b8aba1a8964211
+msgid "**Surface:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:501 810b87c035754e9e9cbaaa478ffb8cfb
+msgid "**Adsorption:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:511 d49c816004f5423d81be05eca0bb3877
+msgid "Generated Script Features"
+msgstr ""
+
+#: ../../source/cli-tools.rst:513 01d406294e0842fbbce69af82aeaf0e3
+msgid "Each generated script includes:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:515 8496a08b77e0403092051a799aae9c7e
+msgid "**Header and metadata** - Timestamp, command used, workflow description"
+msgstr ""
+
+#: ../../source/cli-tools.rst:516 ff6876e1c4f2427c8c9797b5471328ab
+msgid "**Configuration validation** - Checks SIESTA_PP_PATH and SIESTA_CMD"
+msgstr ""
+
+#: ../../source/cli-tools.rst:517 052763db78bd4d36a427d984d4ea6895
+msgid "**Structure information** - Displays formula, space group, number of atoms"
+msgstr ""
+
+#: ../../source/cli-tools.rst:518 7cd26f8d7c984f249038f54ba670a9e8
+msgid "**Workflow setup** - Maker creation with all specified options"
+msgstr ""
+
+#: ../../source/cli-tools.rst:519 a6213d62210e48fd8e2eb6b359aecbdf
+msgid "**Customization section** - Commented examples for common modifications"
+msgstr ""
+
+#: ../../source/cli-tools.rst:520 f4b4fe8363dd4f70b7940b05ca454d58
+msgid "**Execution code** - Local (run_locally) or remote (submit_flow) execution"
+msgstr ""
+
+#: ../../source/cli-tools.rst:521 0fdf0ef996c54aa9bf7b5f28a243df60
+msgid "**Expected outputs** - List of files that will be generated"
+msgstr ""
+
+#: ../../source/cli-tools.rst:523 d993d8f8fc604c6ba6337520e884acad
+msgid "Example generated script:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:557 dc84b9a1f06345d9bef4dcb6bb83c885
+msgid "**Status:** ✅ Production-ready with 16 tests (100% pass rate)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:559 ../../source/cli-tools.rst:985
+#: b046e6c10aa3477da81a109f2df9bb14 dced099832f24b7cb8907b8b11010c48
+msgid "**Benefits:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:561 1162980a020648bbb68da9c975cf7284
+#, python-format
+msgid "**90% code reduction** - One command replaces 50+ lines of Python"
+msgstr ""
+
+#: ../../source/cli-tools.rst:562 e663da86020e43b39f14d1418daf90e8
+msgid "**Best practices** - Generated code follows recommended patterns"
+msgstr ""
+
+#: ../../source/cli-tools.rst:563 b31dea14bd6244afab8d28f2ad5d0ba1
+msgid "**Educational** - Scripts teach proper usage through examples"
+msgstr ""
+
+#: ../../source/cli-tools.rst:564 3de8bb063b764631bbcaf4c13011a2d8
+msgid "**Time savings** - 30 seconds from structure to running workflow"
+msgstr ""
+
+#: ../../source/cli-tools.rst:569 14856863befa434b8b804022fa1232ff
+msgid "Remote Cluster Setup CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:571 55064bf0216944e8aa60434060e43429
+msgid "**Command:** ``atomate2siesta-cluster``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:573 e6f1fd057e31437f8443c748b6af2f1e
+msgid "**Purpose:** Automate remote HPC cluster configuration via SSH"
+msgstr ""
+
+#: ../../source/cli-tools.rst:578 b33a5b3df0e04a57a02f63d95d512702
+msgid "SSH-based cluster configuration with multiple authentication methods"
+msgstr ""
+
+#: ../../source/cli-tools.rst:579 9710e2806e4f46b6ae7151030c457ed5
+msgid "Automatic conda environment creation with all dependencies"
+msgstr ""
+
+#: ../../source/cli-tools.rst:580 6f3b0170554b42ab82e2aed5bec298ac
+msgid "Optional SIESTA installation from conda-forge"
+msgstr ""
+
+#: ../../source/cli-tools.rst:581 ade3af374d7644109e0e61dd535ecd5b
+msgid "Automatic ``.atomate2siesta.yaml`` configuration file generation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:582 6dde35791ba343d3b7101feacc311f7b
+msgid "Environment status checking and verification"
+msgstr ""
+
+#: ../../source/cli-tools.rst:585 ../../source/cli-tools.rst:638
+#: ../../source/cli-tools.rst:704 ../../source/cli-tools.rst:770
+#: ../../source/cli-tools.rst:2403 130da942072a4f9384440f5081dd366e
+#: 243c0291157848bf9327a72260fd2f09 d54796f53c64433f9be6aa07899e5be5
+#: e044b721e1c54e29a7a5c85d579e181d f02a4267f8414bd28fd827cda60f0955
+msgid "Available Commands"
+msgstr ""
+
+#: ../../source/cli-tools.rst:591 ../../source/cli-tools.rst:644
+#: ../../source/cli-tools.rst:710 ../../source/cli-tools.rst:776
+#: ../../source/cli-tools.rst:2409 2cc7d982704f46a5902f98983cedfd7e
+#: 4a9e8a36fd3448869f6d3f89f012308d b8f3cd6614ea409b92a9324dd0f081f1
+#: f04e0580231341a9a98b97fc7eabc877 f09504dc74bf485f9417c93498da8487
+msgid "Command"
+msgstr ""
+
+#: ../../source/cli-tools.rst:593 ../../source/cli-tools.rst:648
+#: 10abb9aa07f6477e9a20211935ceb094 194e40dfe65b40ef8befbeed1a604e55
+msgid "``setup``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:594 52b621ba7e804542a02b1b684c66181f
+msgid "Set up conda environment with atomate2siesta and jobflow-remote"
+msgstr ""
+
+#: ../../source/cli-tools.rst:595 c525046fddc6494d998c909872eb180a
+msgid "``status``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:596 680585d5db7046139d6e44b1b888d06b
+msgid "Check status of remote cluster environment"
+msgstr ""
+
+#: ../../source/cli-tools.rst:597 ../../source/cli-tools.rst:652
+#: 3133dd5d25ef4cc58d804d6b371e4f7c eb16a9e5aa9945399920e96cd1ea18c0
+msgid "``info``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:598 6407860d2304421fb498de00f03452e1
+msgid "Show usage examples and documentation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:614 ../../source/cli-tools.rst:680
+#: ../../source/cli-tools.rst:745 ../../source/cli-tools.rst:983
+#: ../../source/cli-tools.rst:1063 ../../source/cli-tools.rst:1175
+#: ../../source/cli-tools.rst:2383 ../../source/cli-tools.rst:2432
+#: 3a30dfbd87ed4d08ab0993474fe3495d 4be029581885496fababc4415cf23c40
+#: 62c7ff5544a0436c88668a6e271f1322 72bea8fdb02b445b98a6617d90bc78fc
+#: 76e80d2368aa4659a26fe0c1e892431e 91daed4568b7442f908f1e0b04760636
+#: b109bfbcb2ba4e4eae37869064053a29 f47f1022e1c040479114c4145ce7872c
+msgid "**Status:** ✅ Production-ready"
+msgstr ""
+
+#: ../../source/cli-tools.rst:616 0615ae327f374f938ce8c04683f8b7c2
+msgid "**Full Documentation:** :doc:`cli-cluster-setup`"
+msgstr ""
+
+#: ../../source/cli-tools.rst:621 633f64f6e24b45eabf744977f94b57bd
+msgid "Jobflow Remote Setup CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:623 d83659b7224741ec8c4eb2fef937a7c8
+msgid "**Command:** ``atomate2siesta-jobflow-remote``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:625 54d6d1e16d2b46a6adfb7e9c4c3ede28
+msgid ""
+"**Purpose:** Simplified jobflow-remote installation, configuration, and "
+"management"
+msgstr ""
+
+#: ../../source/cli-tools.rst:630 84a82e95cfa64944b9adf012ce74863b
+msgid "One-command installation (stable or development version)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:631 8e9cce962624461f822c826b5d6568dd
+msgid "Multi-project configuration management"
+msgstr ""
+
+#: ../../source/cli-tools.rst:632 ab6d967637dc41598cb38446e66c71dc
+msgid "MongoDB connection settings with automatic backups"
+msgstr ""
+
+#: ../../source/cli-tools.rst:633 33ce07f6224d42879aab9898a5797b28
+msgid "Self-documenting configurations with inline comments"
+msgstr ""
+
+#: ../../source/cli-tools.rst:634 2338a3e39eaf49448083ae3709084bd7
+msgid "Test job submission for verification"
+msgstr ""
+
+#: ../../source/cli-tools.rst:635 d1695b8a03d74961ad52974eb09c7119
+msgid "Comprehensive project discovery and inspection"
+msgstr ""
+
+#: ../../source/cli-tools.rst:646 ../../source/cli-tools.rst:780
+#: 4c5645ae0baa49bda0ffb7cd7b279857 5aea4840bb4643108bf7c75b70d13594
+msgid "``install``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:647 0b26583e25074f09bbf7a2f601b28e23
+msgid "Install jobflow-remote package"
+msgstr ""
+
+#: ../../source/cli-tools.rst:649 fef484eef8704ceb9acf729bcb467512
+msgid "Generate or update project configuration"
+msgstr ""
+
+#: ../../source/cli-tools.rst:650 db10f9779cd14c34bac527e02ea62e72
+msgid "``update``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:651 77d8dd13d1d74d8a96c4a0edfb707169
+msgid "Update existing configuration with advanced options"
+msgstr ""
+
+#: ../../source/cli-tools.rst:653 b39b41a6c8104830ac6ff15572377208
+msgid "Show installation status and list all projects"
+msgstr ""
+
+#: ../../source/cli-tools.rst:654 ../../source/cli-tools.rst:712
+#: d79ea1906907401ea7846a39c5f3c7ae fe7d52a4f7d543f2974e67f7e092e035
+msgid "``test``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:655 c7acd0f410b342f782a3501c2a467e05
+msgid "Submit test job to verify setup"
+msgstr ""
+
+#: ../../source/cli-tools.rst:656 191652376dec4e8d893ecb207ad23a9a
+msgid "``runner``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:657 2432f57ef98b4ceea36b45289a4bfe00
+msgid "Display runner and job management commands"
+msgstr ""
+
+#: ../../source/cli-tools.rst:682 d9eee58912dd47d89e4049cb2398d6e1
+msgid "**Full Documentation:** :doc:`cli-jobflow-remote`"
+msgstr ""
+
+#: ../../source/cli-tools.rst:687 f69efdf2c50e434bbb3ef8655d57de94
+msgid "Database Management CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:689 b616c20ef9c1461a9d55d7e536c5b18c
+msgid "**Command:** ``atomate2siesta-database``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:691 fe9dbe3b5e514c7d8b66ea6e958b3be5
+msgid "**Purpose:** MongoDB database testing, monitoring, and management"
+msgstr ""
+
+#: ../../source/cli-tools.rst:696 c0e7d11066b34c50b045638b16316dda
+msgid "Connection testing with both PyMongo and Maggma"
+msgstr ""
+
+#: ../../source/cli-tools.rst:697 ca1725b570874bdea17457c2ce43bbd6
+msgid "Recent calculation listing with metadata tables"
+msgstr ""
+
+#: ../../source/cli-tools.rst:698 576f74aba9484e6096ef69df896989f8
+msgid "Formula-based querying"
+msgstr ""
+
+#: ../../source/cli-tools.rst:699 ca8738ba28da4e9097490e1d47bca803
+msgid "Comprehensive database and collection statistics"
+msgstr ""
+
+#: ../../source/cli-tools.rst:700 8127f57e80c142f5ad60c75261880c66
+msgid "Safe deletion with confirmation prompts"
+msgstr ""
+
+#: ../../source/cli-tools.rst:701 097fe396cca5421e97ced44931c49abc
+msgid "Configuration file generation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:713 baf2f40073934066b56067feeeae8f44
+msgid "Test MongoDB connection and show basic statistics"
+msgstr ""
+
+#: ../../source/cli-tools.rst:714 ../../source/cli-tools.rst:2411
+#: 0347bd890a884c3592bfb09722410ef7 71ddbd5169ce47399c4bfa982f77a304
+msgid "``list``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:715 5ad0c68c1c28447fb9ca2304d96f9e5f
+msgid "List recent calculation results with metadata"
+msgstr ""
+
+#: ../../source/cli-tools.rst:716 c7e406cdd2ea45f0a44de6b5e7ec9b71
+msgid "``query``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:717 4bf75c1a148d4f4dab95a5b786140971
+msgid "Query calculations by chemical formula"
+msgstr ""
+
+#: ../../source/cli-tools.rst:718 96d693268ef64ee6a62668e66619c1e9
+msgid "``stats``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:719 6075fab1ec994377b201ad07bd9870a8
+msgid "Display comprehensive database statistics"
+msgstr ""
+
+#: ../../source/cli-tools.rst:720 26e1b9f344d14fba82495c2c03afb44c
+msgid "``clear``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:721 b9ef2dce81054f96bb1598042feea7b3
+msgid "Clear collection (with safety confirmation)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:722 a415b6c492a249d8bb93b80279f158c2
+msgid "``config``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:723 9b1bf8692c1e49adad69a3a149cf6a5d
+msgid "Show configuration examples"
+msgstr ""
+
+#: ../../source/cli-tools.rst:747 d09bcaf9ee6d4ad3ba7a56e98107f6fd
+msgid "**Full Documentation:** :doc:`cli-database`"
+msgstr ""
+
+#: ../../source/cli-tools.rst:752 62832c5d8e5948f3ab8c993e20e0b7f8
+msgid "Pseudopotential Management CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:754 2a2cf07a591a46059fd416fe452c396a
+msgid "**Command:** ``atomate2siesta-pseudos``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:756 f67daeac4ae14c86b673b3f06e209c6d
+msgid ""
+"**Purpose:** Install, inspect, and generate basis blocks from PSML "
+"pseudopotentials"
+msgstr ""
+
+#: ../../source/cli-tools.rst:761 6801d55d24b743aaa8ac1b951579c3b0
+msgid ""
+"**Pseudopotential installation** - Download and install 6 available "
+"pseudopotential families"
+msgstr ""
+
+#: ../../source/cli-tools.rst:762 2a60348171ff4f9bbede878219a0ca6f
+msgid "**Shell information display** - View valence configuration from PSML files"
+msgstr ""
+
+#: ../../source/cli-tools.rst:763 653a8f2c26d646af853ab42c9c2c9181
+msgid ""
+"**PAO.Basis generation** - Generate SIESTA basis blocks from "
+"pseudopotentials"
+msgstr ""
+
+#: ../../source/cli-tools.rst:764 d3cd4004a0dd464a8827a70f83f474ff
+msgid "**Multiple basis sizes** - Support for SZ, DZ, DZP, TZ, TZP, TZDP"
+msgstr ""
+
+#: ../../source/cli-tools.rst:765 09ee89c283064230ab3dc5ed02831ad8
+msgid "**Multiple n-shells** - Generate valence + excited shell configurations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:766 c80c11ff21f2436089b05525738105d4
+msgid ""
+"**Correct rc values** - Descending cutoff radii following SIESTA "
+"conventions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:767 aa70ec61728647c3916dcc26d1b03d86
+msgid "**Rich terminal UI** - Formatted tables and panels"
+msgstr ""
+
+#: ../../source/cli-tools.rst:778 c18b083030fb42eabf252ecebca71c95
+msgid "``available``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:779 3b96331308be4a7d84e7a24599dcaef0
+msgid "List all available pseudopotential families"
+msgstr ""
+
+#: ../../source/cli-tools.rst:781 d28f9c1bd97b44c683eab5644f4752c7
+msgid "Install pseudopotential family"
+msgstr ""
+
+#: ../../source/cli-tools.rst:782 ../../source/cli-tools.rst:2415
+#: 24cf5c55b91145b2aedf054709786611 96a558b3c80743a2bcfe867779a5d22a
+msgid "``show``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:783 6774b7ec08b24fc6aa3ada357f4d30fe
+msgid "Show pseudopotential info and valence shells"
+msgstr ""
+
+#: ../../source/cli-tools.rst:784 8b23fce3a1fa471e91e630a8a868355a
+msgid "``basis``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:785 6c75e9e524294325bddddaa98968cc63
+msgid "Generate PAO.Basis block from PSML file"
+msgstr ""
+
+#: ../../source/cli-tools.rst:786 40af9522d0c44b2aa3321c5587884da3
+msgid "``plot``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:787 6257a160a4b340bfaab95ac7ca816171
+msgid "Plot pseudopotential properties"
+msgstr ""
+
+#: ../../source/cli-tools.rst:792 a842e282015e471db8b5bc58ae7dd8ca
+msgid "**Installation:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:805 91373f2050e640c2a1775706f1d99963
+msgid "**Pseudopotential Information:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:825 1eeead0585c241d2b72d3e1bccafae35
+msgid "**Basis Block Generation (NEW!):**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:851 a793b34af3da430ba57996b152403718
+msgid "Basis Block Generation Details"
+msgstr ""
+
+#: ../../source/cli-tools.rst:853 135312790d2c4da5a966e7b538118281
+msgid "**Supported Basis Sizes:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:855 332b0c435e87402fb1259eddfda8a5ac
+msgid "**SZ** - Single-ζ (1 radial function per orbital)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:856 f62a5c54a2df41fba9f88ec17291abca
+msgid "**DZ** - Double-ζ (2 radial functions per orbital)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:857 e3c02c9b6f3a467e897574c380ce7f78
+msgid "**DZP** - Double-ζ + polarization (2 + p-polarization)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:858 a9bb799454734989873c475b67a32383
+msgid "**TZ** - Triple-ζ (3 radial functions per orbital)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:859 556cf1706dc14fa7b381b258d607d69c
+msgid "**TZP** - Triple-ζ + polarization (3 + p-polarization)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:860 124a475d693942cd84b7c7e8da6fdea7
+msgid "**TZDP** - Triple-ζ + double polarization (3 + p + d)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:862 0dd7a3fc260c45c38594d3f24f91ccf3
+msgid "**Cutoff Radius (rc) Calculation Methods:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:864 6e5c7f0e79784ba785d1f8a54d9e7c14
+msgid "Four methods available for determining rc values (``--rc-method``):"
+msgstr ""
+
+#: ../../source/cli-tools.rst:866 a9bb195e784548c68addd9c551c7ca59
+msgid "**1. PSML Wavefunction Decay (DEFAULT - BEST)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:868 a592074ddeef4758a8e93e3188109634
+msgid "Extracts rc from actual pseudopotential wavefunctions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:869 0338b90966954198bce951c138e64a27
+msgid "Element-specific and orbital-specific (n, l)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:870 31fc3bf48be44652bceae3a11a004ff7
+msgid "Uses threshold parameter for decay detection (default: 5%)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:871 b30a4cf497ba419d86283ee9c9d1064b
+msgid "Example (Si): 3s → 4.92 bohr, 3p → 5.81 bohr"
+msgstr ""
+
+#: ../../source/cli-tools.rst:877 089b917193e54b5d8b917349c60bec19
+msgid "**2. Atomic Radius Scaling (Periodic Trends)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:879 6b689cfc120b44859817c6e16b54145e
+msgid "Scales by element's atomic radius relative to Si"
+msgstr ""
+
+#: ../../source/cli-tools.rst:880 696e599b459745188b7cae457acc4e90
+msgid "Follows periodic table size trends"
+msgstr ""
+
+#: ../../source/cli-tools.rst:881 01bdb98234d84cc0a1e4415c284820d2
+msgid "Example: H → 1.14 bohr (small), Fe → 6.36 bohr (large)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:887 c0dd97ac511a46e4a9de0e8a1d17209c
+msgid "**3. Hydrogenic Scaling (n²/Z_eff)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:889 1d89495c11fe46fc9e42d9b6281bc842
+msgid "Uses Slater's effective nuclear charge"
+msgstr ""
+
+#: ../../source/cli-tools.rst:890 7b2ff39879614a7da7724a75c05f9af0
+msgid "Quantum number dependent"
+msgstr ""
+
+#: ../../source/cli-tools.rst:891 3d4f570f46094f6898fd779a34c1d74b
+msgid "Example (Si): 3s → 7.43 bohr"
+msgstr ""
+
+#: ../../source/cli-tools.rst:897 0a12722421b54b709c69aa18146bc4ec
+msgid "**4. Fixed Values (Original)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:899 762b4245e5bd4e8d9ee7cd6de2d0923a
+msgid "Standard SIESTA defaults (not element-specific)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:900 7378b517c80e4c1c84463eddf3bd789d
+msgid "s=5.00, p=6.00, d=5.50, f=5.00 bohr"
+msgstr ""
+
+#: ../../source/cli-tools.rst:901 ef0d5ac1d3e34c10bac02bf855a2cc11
+msgid "Backward compatible"
+msgstr ""
+
+#: ../../source/cli-tools.rst:907 95653e07791b4afda02a9c97ed59e39a
+msgid "**Comparison Table** (s orbital, first zeta):"
+msgstr ""
+
+#: ../../source/cli-tools.rst:913 28ef1751795e463198e96e2c9cf474fe
+msgid "Element"
+msgstr ""
+
+#: ../../source/cli-tools.rst:914 ae9cc40952884c2b8b5eeaba57e0fd94
+msgid "PSML"
+msgstr ""
+
+#: ../../source/cli-tools.rst:915 e6e9ce2ffd994f49b03141bcac256c4f
+msgid "Scaled"
+msgstr ""
+
+#: ../../source/cli-tools.rst:916 00db7e4a27e14b0f9df82c159066e792
+msgid "Hydrogenic"
+msgstr ""
+
+#: ../../source/cli-tools.rst:917 82521282698d44ff90abcf21759ee086
+msgid "Fixed"
+msgstr ""
+
+#: ../../source/cli-tools.rst:918 a785beab7d67480091ea6fb78f8cb6a1
+msgid "H"
+msgstr ""
+
+#: ../../source/cli-tools.rst:919 6651cd10f43349b981e6495f831a7e7c
+msgid "2.92"
+msgstr ""
+
+#: ../../source/cli-tools.rst:920 2131edada65b4ff4928a98de2d5bc740
+msgid "1.14"
+msgstr ""
+
+#: ../../source/cli-tools.rst:921 65580e59197545a0a57eec627a4cafeb
+msgid "1.65"
+msgstr ""
+
+#: ../../source/cli-tools.rst:922 ../../source/cli-tools.rst:925
+#: ../../source/cli-tools.rst:927 ../../source/cli-tools.rst:932
+#: 18035a2e90c74bc0b3143571dcc6b708 6775ad4b4a174b19a52ce3b756ef349f
+#: 8115653c72f54374967d68cfc00d1225 df27b282534c4b2e80289ccdb2b8d649
+msgid "5.00"
+msgstr ""
+
+#: ../../source/cli-tools.rst:923 a3cc3d71a7e84328b3693c4cc307d328
+msgid "Si"
+msgstr ""
+
+#: ../../source/cli-tools.rst:924 ace818d6f87549878ef2e6b17670342f
+msgid "4.92"
+msgstr ""
+
+#: ../../source/cli-tools.rst:926 9463ac73788b4f31b6ca484bf2114350
+msgid "7.43"
+msgstr ""
+
+#: ../../source/cli-tools.rst:928 9a7c0c34dc974b93bc185b0948d0a5d1
+msgid "Fe"
+msgstr ""
+
+#: ../../source/cli-tools.rst:929 789867953e9a407097a8be5520c7e254
+msgid "3.61"
+msgstr ""
+
+#: ../../source/cli-tools.rst:930 0d3301e0614942628579d449638d6457
+msgid "6.36"
+msgstr ""
+
+#: ../../source/cli-tools.rst:931 52e1b7567afc4d4389fb03a78f9bc783
+msgid "6.60"
+msgstr ""
+
+#: ../../source/cli-tools.rst:934 516466c1aab7434eb891e8af9b9c901a
+msgid "**Descending Zeta Pattern:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:936 a64e3f9078004a1d99d4a74a39842c93
+msgid "For multiple zeta functions, rc values decrease:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:938 f3ff92ef2fb94be9b21c4a5d7f112360
+msgid "First zeta: Largest rc (most extended orbital)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:939 864be56347f8440ca30ae78106ee2c06
+msgid "Subsequent zetas: rc × 0.85^i (more localized)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:940 814741b253dd40b288e540e6294053d1
+msgid "Example: 5.00 → 4.25 → 3.61 bohr"
+msgstr ""
+
+#: ../../source/cli-tools.rst:942 efbc0e6e77c64276ae754c393ebe59c5
+msgid "**Multiple n-Shells:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:944 4999606334424aadb4c9f1bd4788801c
+msgid "Use ``--n-shells 2`` to include excited shell configurations:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:976 4f906e7d8fd642ab88ca8437cfc6ecf4
+msgid "**Features in Output:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:978 e9be3496d3d04f57be89f1479dd835b4
+msgid "Orbital name comments (3s, 3p, 3d)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:979 763c89b11e9d4b45b0bd722a34b98459
+msgid "Shell type indicators ((excited) for n > valence)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:980 72732bedc05f472c9ac984d60799d5c8
+msgid "Polarization type labels (d-polarization, f-polarization)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:981 4c860335ca614945a38a2933d1981ddc
+msgid "Descending rc values for proper convergence"
+msgstr ""
+
+#: ../../source/cli-tools.rst:987 11a42f1c0a5048a39af6ad06851a9f6a
+msgid ""
+"**Quick basis generation** - From pseudopotential to SIESTA input in "
+"seconds"
+msgstr ""
+
+#: ../../source/cli-tools.rst:988 9dc0f86b917b427a99b16c08d281fc86
+msgid "**Correct conventions** - Follows SIESTA best practices automatically"
+msgstr ""
+
+#: ../../source/cli-tools.rst:989 59f4e71a16794e2785e3c5ffea89115d
+msgid "**Flexible customization** - Control basis size and shell depth"
+msgstr ""
+
+#: ../../source/cli-tools.rst:990 feedbea0764d4b9bb9ef012285613161
+msgid "**Inspect before use** - View valence shells with ``show`` command"
+msgstr ""
+
+#: ../../source/cli-tools.rst:995 c5ece19ef8a64aa09535f39a758f5352
+msgid "Pseudopotential Plotting CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:997 42a7e31e1a344d98a89abe02722a7d73
+msgid "**Command:** ``atomate2siesta-plot-pseudo``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:999 0a34d10b35b84e7f8b9ca44db029f9d3
+msgid "**Purpose:** Generate comprehensive plots from PSML pseudopotential files"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1004 0ca0a6dae0f54aeab0b0e82ba686911f
+msgid ""
+"**Multiple plot types** - wavefunctions, potentials, 3D potential, "
+"occupation, density"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1005 18006cb55d964747af387d949d05fe64
+msgid "**Flexible output** - Individual or all plots at once"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1006 6c7d1d6d39ca49229115a5961db0b1bc
+msgid "**Customizable range** - Control radial distance for different plot types"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1007 a2ed82221ceb42df970b8d2c4a348d33
+msgid ""
+"**Rich visualization** - Uses seaborn and matplotlib for publication-"
+"quality plots"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1008 08cbd1074f464f16a2a142593f0645b4
+msgid "**PSML format support** - XML-based pseudopotential markup language"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1011 12c63cac50bd4e2bb149719000111a81
+msgid "Available Plot Types"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1040 ../../source/cli-tools.rst:1103
+#: ../../source/cli-tools.rst:2336 10358dfbba114816a0ee599605e0b22e
+#: 984ad1e6fc0b44cba236b466b28d19fa f7cbb724d9e84b58bb701f03fbccedb3
+msgid "Command Options"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1053 ../../source/cli-tools.rst:2361
+#: 02ec125a2f8140a0898fb5240190b6c1 32c87f3f67854fae9768beebf9afd366
+msgid "Generated Outputs"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1055 0d4920d0db5f47a1951f67911b09b94d
+msgid "Depending on ``--plot-type``, the following files are created:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1057 7999b051ced6421a8afea31197d1123e
+msgid "``<element>_wavefunctions.png`` - Radial wavefunctions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1058 b09bf822de3c40b9994c84b833109a45
+msgid "``<element>_potentials.png`` - Local and non-local potentials"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1059 b1dca28c5e8c4ae29cb82584f65bf985
+msgid "``<element>_potential_3d.png`` - 3D potential visualization"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1060 0afb3ecc833340e78c663421d8cdea03
+msgid "``<element>_occupation.png`` - Valence shell occupations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1061 19aeb84c79e545578dab5abdbceaa25e
+msgid "``<element>_density.png`` - Radial charge density"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1068 9056897b42e24c1faf2fd551b2482df3
+msgid "Structure Information CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1070 46fe1dad18884284a19c5d75e7ef854a
+msgid "**Command:** ``atomate2siesta-structure info``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1072 ba1671a1f1674194bf6e9ec6dbae6d54
+msgid "**Purpose:** Display comprehensive information about structure files"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1077 4c3f3369900042e88abe75683a51ceb5
+msgid "**Crystal symmetry analysis** - Space group, crystal system, point group"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1078 084799f7fe5f458c9fc0a6068b9f6c80
+msgid "**Lattice parameters** - a, b, c, α, β, γ, volume"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1079 021536dc69da4b04bc4037f3a57f5088
+msgid "**Atomic composition** - Element counts and percentages"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1080 246ba4411d204d7bbf60ccea0f10a9c4
+msgid "**Magnetic property detection** - Automatic detection of magnetic elements"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1081 80962d7183194eafbcdb9e9096803af7
+msgid "**Per-site magnetic moments** - Display individual atom moments"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1082 30d039c2444d452f8affb3ff903829c8
+msgid "**Multi-format support** - CIF, XSF, XV, FDF, POSCAR formats"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1083 69a71c3ecd9a4652a46e5b5a32f82617
+msgid "**Rich terminal UI** - Colored tables with clear organization"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1115 59a5776a228a4b3b91bda84a2ac86d37
+msgid "Output Information"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1117 ea3567673861421b8ea696685f04b9a3
+msgid "**Crystal System & Symmetry:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1119 c8f8381ce5fd411cac9f362d5403ad37
+msgid "Chemical formula (reduced and full)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1120 4a0c97c0348247babda9e1ede64f87f3
+msgid "Space group symbol and number"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1121 196a0c4803ab4f59a86b7731afdac95d
+msgid "Crystal system (cubic, orthorhombic, etc.)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1122 3c61851b16084b4982eb5d2731974962
+msgid "Point group"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1123 19f51703fb574535a1eb44e2039894cc
+msgid "Number of sites (input, primitive, conventional)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1125 8c82936e49614c7da31d53f88f7902d0
+msgid "**Lattice Parameters:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1127 acb53ecf91834294a5c5f36b465c8a06
+msgid "Lattice constants (a, b, c)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1128 ../../source/cli-tools.rst:2054
+#: 801b71fe2b1342088a6af3e326762683 c21331f0eedb4176a9282f16aa363edf
+msgid "Lattice angles (α, β, γ)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1129 2c385d4459804e44b5d21087d0b288a0
+msgid "Unit cell volume"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1131 95a870442b5941efa3c3b5a848ad3b57
+msgid "**Atomic Composition:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1133 469ff373409b4e3f90a9a6f2091945ea
+msgid "Element counts"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1134 f2934d658e7846ab857801c18ac8d02e
+msgid "Atomic percentages"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1135 09cac0412a6141e3a8150903ed3cb1bb
+msgid "Total number of atoms"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1137 cabfa2b236c5457f972d6953beb60e75
+msgid "**Magnetic Properties** (if enabled):"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1139 3c37599bbda042c0bdca4b53fb72f2d3
+msgid "Magnetic moment detection status"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1140 7186808aae50407da9fcdc6a4bc4d58c
+msgid "Number of magnetic sites"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1141 a96cb1fbeb24421b857427ba18921187
+msgid "Magnetic ordering (FM/AFM/non-magnetic)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1142 a9ae3eec9fa04fd2aecdb32fd65a94f7
+msgid "Unique magnetic moment values"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1143 32ae321275b941f6884f5a2a9a704574
+msgid "Per-site magnetic moments (first 20 shown)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1180 a35fca1ddf834c3e829ea3839ae0d641
+msgid "Structure Manipulation CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1182 16e2381efc604a0db306ba3c0aed5224
+#, python-brace-format
+msgid ""
+"**Command:** ``atomate2siesta-structure "
+"{scale|supercell|rotate|translate|slab|vacuum|stack}``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1184 a69ccf2705b248a490444220c14f3201
+msgid ""
+"**Purpose:** Crystallographic operations for structure modification and "
+"preparation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1189 f7bbdb18727e44859767826186109773
+msgid ""
+"The structure manipulation toolkit provides 16 commands organized in 4 "
+"tiers:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1191 74112e8edee448c99e3224276d327111
+msgid "**Tier 1: Basic Operations (6 commands)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1193 816cbe2f755e4e6d9bfd46a1a8c1effa
+msgid "**info** - Structure information and symmetry analysis"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1194 1b743f9e818e4236a4a2f3d67c8638b8
+msgid "**convert** - Format conversion (SIESTA ↔ CIF/POSCAR/XSF)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1195 7a213bb4f70b4a92a245e70bcfd5d1d8
+msgid "**scale** - Lattice parameter scaling (EOS, pressure, strain studies)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1196 615c9d49a97d4be4a02d91fd51ff8f7e
+msgid "**supercell** - Supercell generation (phonons, defects, surfaces)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1197 7fd1f47d1d1541f7a85087344e548c41
+msgid "**rotate** - Structure rotation (alignment, reorientation, surface cuts)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1198 878c671bb4d141d29556986df2824145
+msgid ""
+"**translate** - Atomic translation (centering, interfaces, "
+"heterostructures)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1200 67d426ab3a3d46b0ab55363ddac1e444
+msgid "**Tier 2: Surface & 2D Operations (3 commands)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1202 6c4d16fcf9f74505a3a15bf410ae4ff5
+msgid "**slab** - Surface slab generation (adsorption, catalysis)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1203 3f068675e5784b90895bcc3c153eea43
+msgid "**vacuum** - Vacuum spacing control (2D materials, surfaces)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1204 fc7486137e034db2a95e6466b7876240
+msgid "**stack** - Layer stacking (heterostructures, multilayers)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1206 e21b9178d3fc4f9d9a71e178a1c72f3b
+msgid "**Tier 3: Advanced Atomic Manipulation (4 commands)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1208 e616758db6b84d5383cbd41fa1183435
+msgid "**substitute** - Atomic substitution (doping, alloying, defects)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1209 82894ab73da74905a2d44b43d27f1284
+msgid "**remove** - Atom removal (vacancies, cleanup, proximity-based)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1210 9e73f0eff1364a17b8f2b6561f6feaa0
+msgid "**add** - Add atoms/molecules (adsorbates, dopants, oriented placement)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1211 e05441e3698248dca0dfdd2f0eac3a3d
+msgid "**perturb** - Random perturbations (MD initialization, transition states)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1213 a35d0992290043e6be1db5fe08310424
+msgid "**Tier 4: Analysis & Optimization (3 commands)**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1215 a4ad5690024b42d3b9f33abb17f78506
+msgid ""
+"**compare** - Structure comparison (RMSD, lattice differences, "
+"composition)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1216 42ad59de0e7b4dadb3125569e3b46bbd
+msgid ""
+"**standardize** - Cell standardization (conventional, primitive, "
+"international)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1217 40fba0c3cdff4aa9aa12281a1dc2027c
+msgid ""
+"**optimize-cell** - Cell optimization (Niggli reduction, "
+"orthogonalization)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1219 12aeb1ce36904df29a50a6457a878d79
+msgid "All commands share common features:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1221 aa13eb83dd7a4edface04e81b590852d
+msgid "**Multiple output formats** - CIF, POSCAR, XSF, JSON, FDF, XV"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1222 72fd9cc46cd74f67a31fff62a364d63a
+msgid "**Rich comparison tables** - Before/after with changes/multipliers"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1223 d64c46b440bd4425960e2433becc8be1
+msgid ""
+"**Site property preservation** - Magnetic moments, selective dynamics, "
+"etc."
+msgstr ""
+
+#: ../../source/cli-tools.rst:1224 57c4f1698a4847d1b181031e766ed448
+msgid ""
+"**Automatic output naming** - prefix_input.ext (e.g., "
+"scaled_structure.cif)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1225 546e6a422d3045ddab249fe8940458ab
+msgid "**Comprehensive validation** - Clear error messages and usage tips"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1226 2b1e5c53654d478d92c73184f1eb1a76
+msgid "**Beautiful terminal UI** - Color-coded output with progress indicators"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1229 3232b19fc32245ff96c45ee298c7b500
+msgid "scale - Lattice Parameter Scaling"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1231 5a8e884ddd8a433481f354c4d7d2bd11
+msgid ""
+"**Purpose:** Scale lattice parameters for equation of state (EOS) "
+"studies, pressure simulations, and strain analysis"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1233 ../../source/cli-tools.rst:1290
+#: ../../source/cli-tools.rst:1357 ../../source/cli-tools.rst:1422
+#: ../../source/cli-tools.rst:1492 ../../source/cli-tools.rst:1561
+#: ../../source/cli-tools.rst:1619 ../../source/cli-tools.rst:1688
+#: ../../source/cli-tools.rst:1756 ../../source/cli-tools.rst:1824
+#: ../../source/cli-tools.rst:1926 ../../source/cli-tools.rst:2008
+#: ../../source/cli-tools.rst:2103 ../../source/cli-tools.rst:2189
+#: 1d07c31733314e41b9634982ac674f7a 3dee636610f04b6088179153599a8cc3
+#: 9cd4316e3b7a42f496fa770295cd38fc a5b3a3cc1dda4314a08ebabf6f07db5e
+#: a6f82e6d4e824149bbc3d565c7a3f787 b4ddaa3ec3de45c5a6a3fadfb3257a0a
+#: bf29830c343b4eeba5c8a2180f3abd12 c862b0b2a72c4192a0667bb2c8b8ccc4
+#: d3fb0559852c4ecea3629beb8b751e40 d7f5fbdfc9784943800c252c055436c7
+#: eb7417fdee6d43e58b4b951c92ddc5dd fdca6c5f6d2747098a1fc7c786197f62
+#: fdea85d848e14a79a340d48b4afa27bb fe9f00b892df4002bdb75a65fb8b6434
+msgid "**Quick Examples:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1252 ../../source/cli-tools.rst:1309
+#: ../../source/cli-tools.rst:1376 ../../source/cli-tools.rst:1444
+#: 1193161240754914a22da07c9f3e72ae 1eb9ddf3d93c428d8604a286183ea1a6
+#: 2095a10f3ea94d7380eed4ee8750d3af 79fa54b18e6240baa0f4dfc455dded63
+msgid "**Command Options:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1270 ../../source/cli-tools.rst:1337
+#: ../../source/cli-tools.rst:1402 ../../source/cli-tools.rst:1473
+#: ../../source/cli-tools.rst:1542 ../../source/cli-tools.rst:1600
+#: ../../source/cli-tools.rst:1668 ../../source/cli-tools.rst:1737
+#: ../../source/cli-tools.rst:1805 ../../source/cli-tools.rst:1905
+#: ../../source/cli-tools.rst:1987 ../../source/cli-tools.rst:2084
+#: ../../source/cli-tools.rst:2169 ../../source/cli-tools.rst:2246
+#: 24014693a2c44a5aba0a9b152609ecc7 2921038210b142bb9fe720c926dbfbcc
+#: 47a0aa905d6f431f94c4974d7590612f 49014914f07d4cc1be9a8b1628598b00
+#: 7136ea08a9884463a593bff2ba2cf311 75f92b569e8d4c93940cd89dae2331a4
+#: 799f6abe560543cc8669d324119cf3be 7d24d90d76c44680a488dde21e4540fd
+#: 7ecb426ae84c4b2c8c844f39ba9b4c07 8af439cb213e46919c24d30e424cb0ea
+#: 9b8488007a6b463da2332b27de8d2aa0 c51bf3cda09d4d718633a9b5de616d09
+#: d145d34d040c478d9cd9ebfb39268087 e623266684e84de28aeca6a33e9defc6
+msgid "**Use Cases:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1272 155fb95e048d416ba8d95101de6f85b5
+msgid "**EOS workflows** - Generate 11 structures with different volumes"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1273 0e68641ba70b49a3a0801d8894554cc0
+msgid "**Pressure studies** - Simulate crystal under compression/expansion"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1274 5b87377e75834872bdb494f0b4f1d620
+msgid "**Strain engineering** - Apply controlled strain to structures"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1275 3d27ea9e66e04008a0e1595f3b7cec9a
+msgid "**Lattice optimization** - Find equilibrium lattice constants"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1277 ../../source/cli-tools.rst:1344
+#: ../../source/cli-tools.rst:1409 ../../source/cli-tools.rst:1480
+#: ../../source/cli-tools.rst:1549 ../../source/cli-tools.rst:1607
+#: ../../source/cli-tools.rst:1675 ../../source/cli-tools.rst:1744
+#: ../../source/cli-tools.rst:1812 ../../source/cli-tools.rst:1912
+#: ../../source/cli-tools.rst:1994 ../../source/cli-tools.rst:2091
+#: ../../source/cli-tools.rst:2176 ../../source/cli-tools.rst:2253
+#: 04e03684e1084da39ea188362659214b 0bd01492011c4aadb65a201e80077ffb
+#: 17873285e299485282d2f23776b3c69e 44db774036ff48209a8dc21dc5f80671
+#: 4f6c1892386f4812a62200ba919ae22b 545e41f844fe4dcdb760684055eda570
+#: 73e1ac93457f4e408ac902d67c884612 776481df969642568a3ba5936bec7014
+#: 79b7b6095fa144b9b86db0c746ed54d2 89c2cd1190bc41b2af62f4f0851bfd69
+#: 97749b4c4bc544e581dba557e01e55dc 9c5c3811795b45529e7106207556c9a4
+#: aeb20cb7c0b9410ea12434d1b4232867 bd59e932928a4347922722475bf7f162
+msgid "**Technical Details:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1279 5f70a59391b749a69b80fe0d51b8d604
+msgid "Uniform scaling: V_new = V_orig × factor³"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1280 1afd0fffcdf04058982edde28fb65ccc
+msgid "Volume scaling: Finds factor where V_new = target_volume"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1281 b6f6d7406cb344189465ae38f600ec94
+msgid "Strain scaling: V_new = V_orig × (1 + strain)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1282 6c21d9582f494203a67f302295777f51
+msgid "Series generation: Linear spacing between min and max factors"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1283 b7ba2cd49f6641bb919d79c593032029
+msgid "Preserves fractional coordinates during scaling"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1286 55b926913c8146998590e861621f91ed
+msgid "supercell - Supercell Generation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1288 7fb22668d0c048f2b3e74fd6df32e91f
+msgid ""
+"**Purpose:** Generate supercells for phonon calculations, defect studies,"
+" and surface modeling"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1324 02583a18d76346589a35c575f9c51c43
+msgid "**Automatic Sizing:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1326 4405d04429974291997abf3d84ad4a73
+msgid ""
+"**min-length mode**: Calculates nx = ceil(min_length / a), similarly for "
+"ny, nz"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1327 09a3481a2ca24c9eaf32d041d7468d55
+msgid "**min-atoms mode**: Finds cubic supercell n³ where n³ × N_unit ≥ min_atoms"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1328 bb07c3da636d4e38bcb077648f31a904
+msgid "**Manual matrix**: Direct specification for precise control"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1330 edb88de73fed4474ba9b47240e6bd278
+msgid "**Computation Estimates** (with ``--show-estimate``):"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1332 843c5403492f49c0bcedabf7c66ca761
+msgid "**Phonon displacements**: N_atoms × 3 × 2 (±x, ±y, ±z)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1333 018b64d249054ff6b8cd291ba9350df6
+msgid "**Estimated time**: ~5 min per displacement (rough estimate)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1334 41b169af81fe4832b5f7f95b92ac6a6b
+msgid "**Memory estimate**: ~100 MB per atom for wavefunctions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1335 5aaecd9246ef485ea0d49145072575e8
+msgid "**NEB estimates**: 5-7 images, ~10-30 min per image"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1339 ddf790408b0c4a5cbaf5637625e6323c
+msgid ""
+"**Phonon calculations** - Finite displacement method (typical: 2×2×2 or "
+"3×3×3)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1340 d3b2de252f404a269844dd6055d1674d
+msgid ""
+"**Defect studies** - Avoid spurious interactions (typical: 10 Å "
+"separation)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1341 761f0283b2364c5eb7029b32db3911b1
+msgid "**Surface modeling** - Periodic boundary conditions for slabs"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1342 cfac3f8f9c1e415e8dcf9cf30348d576
+msgid "**Alloying studies** - Create large cells for random substitution"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1346 3beae182ea4e4d0bb90d34f3b74f5b74
+msgid "Diagonal supercell matrices only: [[nx,0,0], [0,ny,0], [0,0,nz]]"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1347 a0a78fa8fe244b72ac0ae8ffe7896af6
+msgid "Site properties automatically propagated (magmom, selective_dynamics)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1348 f6edc810156947c185519d257a7d606c
+msgid "Pymatgen Structure.make_supercell() backend"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1349 ab2718ed52b54220ae3eb19c3ce4c74b
+msgid "Lattice multipliers: a_new = a × nx, b_new = b × ny, c_new = c × nz"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1350 d1718d7b21dc459b90e0ab835a73f46b
+msgid "Volume multiplier: V_new = V_orig × nx × ny × nz"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1353 48e1997182104a37a4bdee1089d5853e
+msgid "rotate - Structure Rotation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1355 1866ce7b946a47cca186d88867732c89
+msgid ""
+"**Purpose:** Rotate structures for surface preparation, alignment, and "
+"visualization"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1395 c0dbb641ab89438f9f38083853537cfa
+msgid "**Rotation Methods:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1397 3b307d5d3a684e078db2827058b3781f
+msgid "**Axis-angle**: Right-hand rule rotation about Cartesian axis"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1398 f90c5dcda04b4008a375acc28c24ca31
+msgid "**Euler angles**: ZXZ convention (intrinsic rotations)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1399 ffe3886403f943ce8cf622daf725c92c
+msgid "**Miller alignment**: Aligns crystallographic direction to Cartesian axis"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1400 ccb1e54184854f109fdd5a5be9c050f4
+msgid ""
+"**Atoms-only**: Rotates atomic positions, cell unchanged (fractional "
+"coords modified)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1404 9e3c0d1e83a7428989fdba4963a0e1af
+msgid ""
+"**Surface preparation** - Align direction for slab generation (e.g., "
+"[111] → z)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1405 e49a86287bc84c4cb1d957d933ebdce1
+msgid "**Grain boundaries** - Controlled misorientation between crystals"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1406 5936c42ce25d4d8eb65080f69283302c
+msgid "**Visualization** - Standard orientation for publication figures"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1407 72bf6a7a2527400e82fc019cb32c67c5
+msgid "**Nanostructure alignment** - Position before stacking/combining"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1411 f2b4b57b8bff451e849593ffdf03df12
+msgid "Uses scipy.spatial.transform.Rotation for robust matrices"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1412 27d993c731554d69b4737692c99483ce
+msgid "Pymatgen SymmOp for structure transformations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1413 8e86fecdce524ce8bc6162af96e82eef
+msgid "Volume-preserving rotations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1414 7ec3c1fa0ff340e2b6613e2254377079
+msgid "Site properties preserved during rotation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1415 5de7ba5823264b2c9e076b3f075eeb20
+msgid "Alignment uses Rodrigues rotation formula"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1418 13f39b53c0de435d973d86424b8c47d4
+msgid "translate - Atomic Position Translation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1420 d934efbf9dbd424c9afa219882fab1ef
+msgid ""
+"**Purpose:** Translate atomic positions for interface alignment, "
+"centering, and heterostructure preparation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1461 d958bf6356d14d5687395f3a19f14276
+msgid "**Translation Modes:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1463 f63e2b2be5f24d79af808705e2121ea1
+msgid "**Cartesian**: Direct translation in Å (x, y, z)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1464 34435fdf1fdb46d581c6dcf6d4dbaa1c
+msgid "**Fractional**: Translation in crystal coordinates (a, b, c)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1465 5d70c15b3572455896e195bc62fbb7b4
+msgid "**Centering**: Automatic calculation of shift to center structure"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1466 6c47f709b05043db82504bb3f407d470
+msgid "**Element-selective**: Translate only specified element type"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1468 3f8ca4f535114271b2c7fec18657b284
+msgid "**Wrapping Behavior:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1470 a3a87d47535a4fce83e90b5eb9155b4f
+msgid ""
+"**With wrapping** (default): frac_coords = frac_coords - "
+"floor(frac_coords) → [0, 1)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1471 3dd92255c24d429986969c80bb0bfa13
+msgid "**No wrapping**: Atoms can be outside unit cell (useful for interfaces)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1475 ee7383e8a78749fda6a70294bf4ef5cf
+msgid "**Interface alignment** - Position layers correctly for heterostructures"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1476 1810eaee77c74c84b829b6827c2422f7
+msgid "**Visualization** - Center structure for better viewing"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1477 0c91997052d34825a1fdeeacd29d27af
+msgid "**Defect studies** - Position dopants/vacancies at specific locations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1478 6585e26420874a9fbe8514398d566d29
+msgid "**Grain boundaries** - Relative positioning of grains"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1482 714ddd2e242749caa364349adb774b99
+msgid "Uses pymatgen Structure.translate_sites()"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1483 52f2861530cd4296a08f1df32a7a77c3
+msgid "Centering: shift = [0.5, 0.5, 0.5] - mean(frac_coords)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1484 f317da0caab1441080725e7a91749e1d
+msgid "Element selection via specie.symbol matching"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1485 a1660d7a753f472da62cf66c2076d93b
+msgid "Site properties preserved during translation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1488 4205c9fac96a42c089c63d0984996684
+msgid "slab - Surface Slab Generation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1490 b41645affcc34290acecdc2e347fc02b
+msgid ""
+"**Purpose:** Generate surface slabs from bulk structures for adsorption "
+"and catalysis studies"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1514 ../../source/cli-tools.rst:1577
+#: ../../source/cli-tools.rst:1641 ../../source/cli-tools.rst:1707
+#: ../../source/cli-tools.rst:1775 ../../source/cli-tools.rst:1852
+#: ../../source/cli-tools.rst:1948 ../../source/cli-tools.rst:2027
+#: ../../source/cli-tools.rst:2122 ../../source/cli-tools.rst:2205
+#: 0019a93633804f649159a91622669aad 1482770f04824503b3bdbd353a49eb23
+#: 1cf6d880046a4dcba3bfa37dec25a9af 406ce6cf49a54d8f9fe5da1391b108d2
+#: 84c4fbb77ca84f3face0758c981f3c90 ab92b7f07e9840d598fc421256a1e231
+#: c765d3836bef4f0f9212a0d0e0792b44 c94edd0bd8f04f9fa73bbd69e84534fd
+#: d686cc9a5ace40aeaa447ee8293883a1 dcea0d2ea6114fa5983b46832643f3a0
+msgid "**Usage:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1520 ../../source/cli-tools.rst:1583
+#: ../../source/cli-tools.rst:1647 ../../source/cli-tools.rst:1713
+#: ../../source/cli-tools.rst:1781 ../../source/cli-tools.rst:1858
+#: ../../source/cli-tools.rst:1954 ../../source/cli-tools.rst:2033
+#: ../../source/cli-tools.rst:2128 ../../source/cli-tools.rst:2211
+#: 08de7d0c4a5849a78d113e968095f867 1fbe29fd8105417ab793d529ec9544b9
+#: 4624fcbdfd054632a0d8b8527204063b 63e5dbd55b7e41b7bbb8c6ab128b5a04
+#: 792cfda416e64bbb95bd1eae702bd89b 97a20569ead04fa8b33c88d6a91372cf
+#: a068a9cbdbfe49079fa910ef295248f4 c1e4d301037f49cda99ac70012dd07fc
+#: c34373b9e89241dcbaf1395d9fa0624d c6acf4afc0f44c799a6560700b6114d0
+msgid "**Key Options:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1522 1c96e3fdd19246bf9b9559640069c56c
+msgid "``--miller h,k,l`` - Miller indices (e.g., ``1,1,1`` or ``1,0,0``)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1523 8ba6359718c64a71990ce03429b8436f
+msgid "``--layers N`` - Minimum number of layers (default: 5)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1524 d48168b1822245cca6b5612d1c4e6423
+msgid "``--vacuum THICKNESS`` - Vacuum thickness in Å (default: 15.0)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1525 194e925d4d1e4426884cceb84e0218f9
+msgid "``--termination N`` - Specific termination index (0-based)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1526 8117069a8c00421b80e52a24d912a554
+msgid "``--list-terminations`` - List all possible terminations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1527 6d1a2c6a6d5e46929c6443891e5b19a7
+msgid "``--all-terminations`` - Generate all terminations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1528 c8017dad882b43a8b209fe5f9ffb16bf
+msgid "``--all-surfaces`` - Generate all symmetry-unique surfaces"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1529 0e031a19734d492fbe6578a8075c5230
+msgid "``--orthogonal`` - Make slab orthogonal (α=90°, β=90°)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1530 a2419d5f56fe424396d6969bf1862bbc
+msgid "``--show-layers`` - Show layer information and positions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1531 ../../source/cli-tools.rst:1589
+#: ../../source/cli-tools.rst:1656 ../../source/cli-tools.rst:1720
+#: ../../source/cli-tools.rst:1788 ../../source/cli-tools.rst:1869
+#: ../../source/cli-tools.rst:1962 028384cdf8e8436f8756826a672b9767
+#: 0fdc77fafa7d40a2953d8fddc1f3ef02 396676442d1541159ae7157ede8c18ac
+#: 3ef8456ce97e4f1b8d5bc15ba407a84e 58c6de55a1174a2198f05bfa5879ac6c
+#: c624fc8313674b5f8769fb5e5f1bca0f d0e5e865d1c04a8aa49c45b6cbc2b5da
+#, python-brace-format
+msgid "``--format {cif,poscar,xsf,json,fdf,XV}`` - Output format"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1535 51c18e4d403b4424b5d6561b33275213
+msgid "**Miller index specification** - Any crystallographic surface"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1536 64acd45388734691b8e91d806cf2e901
+msgid ""
+"**Termination discovery** - Automatic detection of all possible surface "
+"cuts"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1537 647e23190e7b4d81a6e16294a9a88244
+msgid "**Bulk surface generation** - All symmetry-unique surfaces up to max index"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1538 d02dc4cf662c4fd0863cc419bbd4966a
+msgid ""
+"**Orthogonalization** - Creates orthogonal cells for better DFT "
+"compatibility"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1539 40ccb276e92e462a83e6ec462cbc7390
+msgid "**Layer analysis** - Layer-by-layer composition and thickness"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1540 c19368933c00425e8c4130944cb9104c
+msgid "**Surface composition** - Top surface species identification"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1544 b75bf41597f545ebb8f5d3fed9510f86
+msgid "**Adsorption studies** - Generate surfaces for molecule adsorption"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1545 eb415675a72d46c780ee876d33e92a2f
+msgid "**Catalysis** - Create catalyst surfaces"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1546 657ec9316d4b41f59157c28baccc7f76
+msgid "**Surface energy** - Compare different terminations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1547 f8fe9e79e5ba4e12bfc112795f1a6f3e
+msgid "**Interface studies** - Prepare substrates for heterostructures"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1551 1952c4a6a0154959b1a5c68b109ef99a
+msgid "Uses pymatgen SlabGenerator with automatic termination discovery"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1552 3b6414c8021f48fb90dc9ea9964a349e
+msgid "Orthogonalization via Structure.get_orthogonal_c_slab()"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1553 5d3da68425f244bda842760bac89fbfc
+msgid "Symmetry analysis with get_symmetrically_distinct_miller_indices()"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1554 ../../source/cli-tools.rst:1681
+#: 9056a8cbc4dd4fe0b94a521948ea1cba ae29137986db464d8ae56351149f91ea
+msgid "Supports FDF and XV formats via sisl integration"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1557 2e6a9669e8244d3480825ee4b931eb36
+msgid "vacuum - Vacuum Spacing Control"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1559 1f4a3e7c7dec4fcabbd280fb5d82a365
+msgid "**Purpose:** Add vacuum spacing to slabs and 2D materials"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1585 a9464ac49b2f4ceb81caee195382cf30
+msgid "``--thickness ANGSTROM`` - Vacuum thickness to add (required)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1586 00ec4f2fa61344699a711d7dd5b83034
+#, python-brace-format
+msgid "``--direction {a,b,c}`` - Direction to add vacuum (default: c)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1587 c6ce211a704a4b218d0aa2b5c87d7661
+msgid "``--center`` - Center structure in vacuum space (recommended)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1588 b7dd35dda2d24365a4d48f50395db481
+msgid "``--show-layers`` - Show layer positions before/after"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1590 ../../source/cli-tools.rst:1657
+#: ../../source/cli-tools.rst:1721 ../../source/cli-tools.rst:1789
+#: ../../source/cli-tools.rst:1870 ../../source/cli-tools.rst:1963
+#: 3f3195ca8f074db683c901d954278c4a 493e74f8da234df8ba9855a89072aa4d
+#: 9894d251bf364d0894da1ad636492fb8 b6dfec59f4cf4ef8861d8f15f9baf68a
+#: befb71c719dd49f69025e6c8230ee13a e684b68023cd4de8ac98d33d86204a2c
+msgid "``-o OUTPUT`` - Output filename"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1594 1d03ba7fc2ca4d6e89074f4c4df3b7fb
+msgid "**Precise vacuum control** - Add exact thickness in Ångstroms"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1595 f947f2d4553b456faae3f754a2277892
+msgid "**Structure centering** - Automatic centering in vacuum space"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1596 d656337ee16e4c6185d57ad2487abec7
+msgid "**Multi-direction** - Support for a, b, or c directions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1597 7b94b5180b974917835c968a44760081
+msgid ""
+"**Coordinate preservation** - Cartesian coordinates preserved (slab "
+"thickness unchanged)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1598 4e4cf8e4da8541f382b46560d3d612e3
+msgid "**Before/after comparison** - Lattice and thickness changes"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1602 81a31cba1d754218a0aaa7dd93d59f5d
+msgid "**2D materials** - Add vacuum for non-periodic direction"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1603 8310dcb8e7cf462cb0d9a785085a81b6
+msgid "**Surface calculations** - Ensure sufficient vacuum for DFT"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1604 035dbdc6d6eb4b72829be5ce73907e89
+msgid "**Heterostructure preparation** - Adjust vacuum before stacking"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1605 bc120bdb148d47c887c02de8fcbab7d6
+msgid "**Convergence testing** - Test vacuum thickness convergence"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1609 4eef1715435a47feb7c2e1187459f28a
+msgid "Preserves cartesian coordinates while modifying lattice"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1610 f271fa4955c54f179b9719f2beaef8e2
+msgid "Automatically calculates slab thickness and vacuum space"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1611 2a011eba906a46159ac6cdcf028253e9
+msgid "Creates new Structure with preserved site properties"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1612 4e04ffc8a2c14bf99de8cd0dac6c70ee
+msgid "Supports all output formats including FDF and XV"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1615 672085561b714d9d8f263fff1975eb2b
+msgid "stack - Layer Stacking"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1617 c8809ed667784024accf74055b066c8d
+msgid "**Purpose:** Stack layers to create heterostructures and multilayers"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1649 ../../source/cli-tools.rst:2035
+#: 1b47b83066b04327bbcdc9afbf79501e 3ec9d11a5a84443e98258f3728dc8de0
+msgid "``STRUCTURE1`` - First structure file (required)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1650 f5ac98f3712c4d0087fc457d565d9e3e
+msgid "``STRUCTURE2`` - Second structure file (for heterostructures)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1651 d889b0dd4ed94d22acfc390aaca37866
+msgid "``--spacing ANGSTROM`` - Spacing between layers (default: 3.0)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1652 c875b9911d284d62ba4d2c654984f400
+msgid "``--repetitions N`` or ``N,M`` - Repetition pattern"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1653 862cd2396ccf4de09b4ed1058e82dc0c
+#, python-brace-format
+msgid "``--direction {a,b,c}`` - Stacking direction (default: c)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1654 c28c6ba52fa2467caecbb268ff6de60a
+msgid "``--center`` - Center stack in cell (default: True)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1655 13485e925acc42b1b125c37650edc29e
+msgid "``--show-layers`` - Show layer information after stacking"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1661 fd94377a78924a49824825e00b06e01a
+msgid "**Multilayer mode** - Repeat same structure (bilayer, trilayer, etc.)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1662 a0f036fae2bd44e691db1e17277bf74f
+msgid "**Heterostructure mode** - Stack two different materials"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1663 9a91c6c0e5444eb5b7dfcb2046ef414c
+msgid "**Flexible patterns** - Custom repetitions (e.g., 2x + 3x)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1664 eb821f980fdf4e458c1eaba79a90ffcf
+msgid "**Lattice compatibility** - Warns if mismatch >5%"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1665 2cb405af1bcd4fee8363ebee92076090
+msgid "**Layer analysis** - Interlayer spacing statistics"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1666 97c6d1d2c5a9448a8cbdf134b44ff6fe
+msgid "**Automatic centering** - Optional vacuum on both sides"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1670 dc9974e24bcb4cc0811d50369b0e5e56
+msgid "**Twisted bilayers** - Create bilayer graphene, TMDs"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1671 6f48d3c0e8424286b36f172858860fe1
+msgid "**van der Waals heterostructures** - MoS2/WS2, graphene/hBN"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1672 e3d82789b3dc4cdeb16da88dd288e34b
+msgid "**Multilayer films** - Repeated layer patterns"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1673 8c0f595984da49b7a1075c2b085a71f9
+msgid "**Interface studies** - Metal/oxide, semiconductor/insulator"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1677 3091d87c666c4ac0adfddc7aad3753e3
+msgid "Preserves in-plane lattice from first structure"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1678 928ad3fc012243abb32e1c5c4be91ba2
+msgid "Automatic lattice extension in stacking direction"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1679 aa4e69dbb60a4cf196c224bc442e4273
+msgid "Lattice mismatch detection (warns if >5%)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1680 ca6394209f1e4488a86f90143de2d999
+msgid "Interlayer spacing analysis with statistics"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1684 0340ba209deb48f7882ce4fdc08c7bb5
+msgid "substitute - Atomic Substitution"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1686 7f4472c184a3441ca5b5b15458c01cc9
+msgid ""
+"**Purpose:** Replace atoms with different elements for doping, alloying, "
+"and defect studies"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1715 baac741f8a314c3e8e59abbc07b4d804
+msgid "``--replace OLD:NEW`` - Element replacement (e.g., ``Si:Ge``, ``Fe:Co``)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1716 70b718d7eae243f3bb7fd81152c97ebd
+msgid "``--fraction FLOAT`` - Fraction of atoms to substitute (0.0-1.0)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1717 8be43e601672463e8343c1935c787171
+msgid "``--sites INDICES`` - Comma-separated site indices (0-based)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1718 4672c1a34dce4cd29bcb6d3a59dea6cb
+msgid "``--n-configs N`` - Number of random configurations (default: 1)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1719 ../../source/cli-tools.rst:1960
+#: 728c590ef17246ffafe1e51de7f2b915 7335f849661042eebb446d7a961108bc
+msgid "``--seed INT`` - Random seed for reproducibility"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1723 fc778e335fd4427d8f8d6d791cec0fb9
+msgid "**Substitution Modes:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1725 6ec3ef04ba354dbaa167d35095c2dbed
+msgid ""
+"**Complete** - Replace all atoms of old element (no ``--fraction`` or "
+"``--sites``)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1726 96d3909ebec649e1bbfe550fa9894319
+msgid "**Random partial** - Replace random fraction (``--fraction 0.25``)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1727 6041916b1b0f448c87361bc6c3fdfe27
+msgid "**Site-specific** - Replace specific sites (``--sites 0,2,5``)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1728 6a73eec5ba2a4d4184c1fd75243b7100
+msgid ""
+"**Multi-configuration** - Generate multiple random configs (``--n-configs"
+" 5``)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1732 78f70c37ff61493f96d8f74df5c49d27
+msgid "**Reproducible randomness** - Use ``--seed`` for deterministic results"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1733 5681f33a72ce432d8252f26bde69ceaf
+msgid "**Site property preservation** - Maintains magnetic moments, etc."
+msgstr ""
+
+#: ../../source/cli-tools.rst:1734 7ea1bdd9b9434bccb6cdbf66979e2a88
+msgid "**Automatic validation** - Checks element exists and indices are valid"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1735 e0e9d9c9d8da40739ebf2a5e52da1fd6
+msgid "**Before/after comparison** - Shows composition changes"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1739 c795b5b7812b48f88d161340b32887d8
+msgid "**Doping studies** - Partial substitution for electronic properties"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1740 0c8a44831a224dc3a8d23af0ee85f169
+msgid "**Alloy generation** - Random mixing of elements"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1741 f2e8c016899949ecabe6a719b3b60242
+msgid "**Defect studies** - Site-specific replacement"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1742 fc5018791d89492ea0925441d7f50cdc
+msgid "**Statistical sampling** - Multiple random configurations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1746 9edf1cd8ad3043cb9b5be6e1b8731f3f
+msgid "Uses random.sample() for unbiased random selection"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1747 f6fb2879b4794bf885642563c4ae70ac
+msgid "Preserves all site properties during substitution"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1748 0477fef1f3e346f6a2fbafbdd6619532
+msgid "Automatic file naming: ``substituted_OLD_to_NEW_<input>``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1749 f8077afb2adf4f6c8fbbdf98737a4f71
+msgid "Multi-config output: ``substituted_OLD_to_NEW_config01_<input>``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1752 fda8eee33967419baeb794f1f3f42e2e
+msgid "remove - Atom Removal"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1754 f62293d0c4a94730a789da30605914f6
+msgid ""
+"**Purpose:** Remove atoms to create vacancies, clean structures, or "
+"reduce system size"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1783 d67e00e0633549b4a3ac208ed6ae9259
+msgid "``--element SYMBOL`` - Remove all atoms of this element"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1784 07534104dfb94501b9fa0d830b23b224
+msgid "``--sites INDICES`` - Comma-separated site indices to remove"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1785 4a3a554721614bdfa919a4abe64a07c7
+msgid "``--near X,Y,Z`` - Remove atoms near position (Cartesian Å or fractional)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1786 55bdb08705884b4cbfe12aedab85dad6
+msgid "``--radius FLOAT`` - Radius for proximity-based removal (Å)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1787 175b09490ff645a4bc319805ba7b7db4
+msgid "``--fractional`` - Treat ``--near`` coordinates as fractional"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1791 19643abe608c4352aa90bf9518847ec6
+msgid "**Removal Modes:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1793 f98ad0c2bb434854826f84189b18924a
+msgid "**By element** - Remove all atoms of specified element"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1794 4b7a7e37667447bc9dcdfe629c83af2c
+msgid "**By sites** - Remove specific site indices"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1795 ee41517909164293925e328d64f2743d
+msgid "**By proximity** - Remove atoms within radius of position"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1796 542f6b0947a040648ba42cede78d4282
+msgid "**Combined** - Multiple criteria (union of all matches)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1800 10622ccdba1c4ee298d15bfaa7fe1742
+msgid "**Coordinate systems** - Cartesian (Å) or fractional for proximity"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1801 e3d6279e0ba948a4a8f9640513642246
+msgid "**Multiple criteria** - Combine element, sites, and proximity"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1802 5c4b63c48c684c3b84a7ae79bedcaf66
+msgid "**Automatic validation** - Prevents removing all atoms"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1803 2d2546e09608401d8d1aa5126a7c5944
+msgid "**Before/after statistics** - Shows composition changes"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1807 21f3770b9b454f089e759b1d3bd52893
+msgid "**Vacancy creation** - Remove atoms for defect studies"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1808 45941cc231fd4734a61a8a56e6bbddcb
+msgid "**Adsorbate cleanup** - Remove unwanted molecules from surfaces"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1809 8553e1a651e74689afc4887a038b3e0c
+msgid "**Proximity cleanup** - Remove atoms near specific positions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1810 6ae415464e6042ce90b093ad872ec59f
+msgid "**Structure reduction** - Simplify structures for testing"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1814 2ee45ac827564807b21b37442fc84cbe
+msgid "Proximity uses ``np.linalg.norm()`` for distance calculation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1815 e59222d00f6d432b964767f763f01899
+msgid "Fractional coordinates converted via ``lattice.get_cartesian_coords()``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1816 3566bdceda2f4ca98cfcfcf3ed4f36e4
+msgid "Automatic validation prevents empty structures"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1817 4118d5ac10034b93a79a05638ca9f1a8
+msgid "Output naming: ``removed_<element/sites/near>_<input>``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1820 9869748ff0dd462badca31081beb1072
+msgid "add - Add Atoms/Molecules"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1822 dfd06376b3df4599ad982b4b6ab4d014
+msgid ""
+"**Purpose:** Add atoms or molecules to structures for adsorption, doping,"
+" and functionalization studies"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1860 f26344257f9a4ccd8d5518b96b2f8d35
+msgid "``--atom SYMBOL`` - Add single atom (e.g., ``O``, ``H``, ``Fe``)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1861 5064eb1281e346ef8457eca1f32cdc26
+msgid "``--molecule NAME`` - Add molecule from library or file path"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1862 f8a848dd806345068061725c9c4f9716
+msgid "``--position X,Y,Z`` - Position in Cartesian (Å) or fractional coords"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1863 d07a42d1b1ca468bbaca7cad57839d9a
+msgid "``--fractional`` - Treat position as fractional coordinates"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1864 7e05fb75d50f4ddfbaf028c03bd308b4
+msgid "``--on-top`` - Place on top of structure (auto z_max + distance)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1865 b4cd9de6108f44abb55ffe3179d6f2cf
+msgid "``--on-bottom`` - Place on bottom (auto z_min - distance)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1866 79d1d25f7b3545149fccb58dde247970
+msgid ""
+"``--distance FLOAT`` - Distance from surface for auto placement (Å, "
+"default: 2.5)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1867 93310a09b6ec4621a291e8ab2b8add5c
+msgid "``--rotate ALPHA,BETA,GAMMA`` - Euler angles in degrees (ZYZ convention)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1868 be45ad3802104306b568452da7cd774f
+#, python-brace-format
+msgid "``--align-to {x,y,z}`` - Align molecule's principal axis to x/y/z"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1872 6f51b2ed6d334dcd9224010ab32bb262
+msgid "**Molecule Library:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1874 419c652671684735b73a87498ffab788
+msgid "Built-in molecules (accurate bond lengths and angles):"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1876 16851fb922884b14b07ac9b26963c694
+msgid "``H2`` - Hydrogen (0.74 Å bond)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1877 c0ce0a85daa342e197b9193a9bed0ced
+msgid "``O2`` - Oxygen (1.21 Å bond)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1878 c419ed557ec541d886a1d74ec8db8707
+msgid "``N2`` - Nitrogen (1.10 Å bond)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1879 1a6c3f0f94a8481b952b44b1ef178c53
+msgid "``H2O`` - Water (0.96 Å OH, 104.5° angle)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1880 9b2f47a0767d42acadbfba29623c4af1
+msgid "``CO`` - Carbon monoxide (1.13 Å bond)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1881 81fe6e5d77284ea8a9307009baef32dd
+msgid "``CO2`` - Carbon dioxide (1.16 Å CO bonds, linear)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1882 6aca00f834624019afca9912bdd1d2a4
+msgid "``NH3`` - Ammonia (1.01 Å NH, 107° angles, pyramidal)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1883 f0f6355e2352443abdf22a2197762226
+msgid "``CH4`` - Methane (1.09 Å CH, tetrahedral)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1885 4abe20e500984ec5a9e2bde2accf5c67
+msgid "**Placement Modes:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1887 c926de27713a433fb8a0e2756444aa00
+msgid "**Manual** - Specify exact Cartesian or fractional position"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1888 b66867b8914d43db8373b24de1ea1dfc
+msgid "**Automatic top** - Place on top (``z_max + distance``) with x-y centering"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1889 828e226c92094725a05b4e8270a08766
+msgid ""
+"**Automatic bottom** - Place on bottom (``z_min - distance``) with x-y "
+"centering"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1891 1cf528a33b624706854b3024f0b383e1
+msgid "**Orientation Control:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1893 d36440d70868499e8a00793f6643bce1
+msgid "**Euler rotations** - ZYZ convention: ``--rotate alpha,beta,gamma``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1894 6568a7060fe9443f8717ec76436acab1
+#, python-brace-format
+msgid "**Axis alignment** - Align principal axis: ``--align-to {x,y,z}``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1895 3e34fe37642b4ca283104dfa51be84f2
+msgid "**Combined** - Apply both rotation and alignment sequentially"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1899 761d4b1cc43c431db16c31f1b053f152
+msgid "**Automatic surface detection** - Finds z_max/z_min and centers in x-y"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1900 334d221bc5604003a78a090d23d1226e
+msgid "**Distance control** - Customizable spacing from surface"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1901 48f89542e8644391bf50acfd7ad672b3
+msgid "**Molecular orientation** - Full 3D rotation control (Euler + alignment)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1902 cab45c89150a4fa481908a61f8e5f0e5
+msgid "**External molecules** - Load from XYZ, CIF, or other structure files"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1903 5ba60aea15044121a048d2bd2ad8807a
+msgid "**Site property preservation** - Maintains existing properties"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1907 4ccc32df7c634dd1966b086e1b7b03a9
+msgid ""
+"**Adsorption studies** - Add molecules to surfaces with controlled "
+"orientation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1908 97111ce6e55a4e5aadcc1f62018726ef
+msgid "**Doping** - Insert atoms at specific positions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1909 b866c02da88d461089cc89760e878e73
+msgid "**Functionalization** - Add chemical groups to surfaces"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1910 5ca775454c4e4cb0a37c814e0e7762c0
+msgid "**Molecule-surface interaction** - Study binding geometries"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1914 47190bf313c94dd5a2c44ff53b90e2f3
+msgid "Euler rotation matrix: R = Rz(γ) · Ry(β) · Rz(α) (ZYZ convention)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1915 a51400dbfe2a445d90d9245124830d66
+msgid "Axis alignment uses Rodrigues' rotation formula"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1916 88a61496c536485587edd0976f2633d4
+msgid "Automatic centering: ``x = (x_max + x_min)/2``, ``y = (y_max + y_min)/2``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1917 67a0fb48db9748a3895a31f0e0e28d30
+msgid "Molecule center preserved during rotation/alignment"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1918 252f8d31e36640faaf390a1375cb8dde
+msgid "External molecules loaded via pymatgen Structure.from_file()"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1919 a445d076cba143e69a6e052be61443ac
+msgid "Output naming: ``added_<atom/molecule>_<input>``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1922 a4b32af9a7a540f2b817a44e7b1d373a
+msgid "perturb - Random Perturbations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1924 59a0f6784e454107b791996ddcdfd872
+msgid ""
+"**Purpose:** Apply random displacements for MD initialization and "
+"transition state searches"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1956 b1e081671cc54c129d5d4f91a91d386c
+msgid "``--amplitude FLOAT`` - Uniform random displacement amplitude (Å)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1957 48a563c498a7480591dbf0ee3e880fc7
+msgid "``--temperature FLOAT`` - Temperature for thermal displacements (K)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1958 f10a229b0e104daeb588a49a1fffda39
+msgid "``--element SYMBOL`` - Only perturb atoms of this element"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1959 278651db13434a18bf83e82801840fa9
+msgid "``--n-configs N`` - Number of configurations to generate (default: 1)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1961 5908692ed4704b6499b90af128a10723
+msgid "``--show-stats`` - Show displacement statistics (RMS, mean, etc.)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1965 746302c933ad40b1b5f807e8524fbd0f
+msgid "**Perturbation Modes:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1967 75a7661e84a3411590765819f25899d8
+msgid "**Uniform random** - Isotropic random displacements with uniform amplitude"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1969 5c465634692a41c4b617653dda8251c7
+msgid "Direction: Uniform on sphere (θ ∈ [0, 2π], cos φ ∈ [-1, 1])"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1970 0d1d86f50dc0406cab661398a365c123
+msgid "Magnitude: Uniform in [0, amplitude]"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1972 eed4687a70cd44b890eaa097e85976ff
+msgid "**Thermal (Maxwell-Boltzmann)** - Temperature-based displacements"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1974 0ff81f84cdc047218a6b0ea5081cfd9d
+msgid "Per-component Gaussian: σ = √(k_B·T/m)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1975 4bf1f975f6ea45dc990b79226cf4c7db
+msgid "Mass-dependent: Lighter atoms move more"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1976 0fff012e6edc49acae0d404801548155
+msgid "k_B = 8.617×10⁻⁵ eV/K"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1980 3a4c3a87f3df4c5896649312b511fbc7
+msgid "**Two perturbation types** - Uniform random or thermal (Maxwell-Boltzmann)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1981 81a6fce05fe24035a3065e2696ef1dad
+msgid "**Element-selective** - Perturb only specified elements"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1982 1c65eb8b746c41a9a09c775b869276ff
+msgid "**Multi-configuration** - Generate ensembles for sampling"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1983 67042eceda9d40b09da4d04f3666dc97
+msgid "**Reproducible** - Use ``--seed`` for deterministic results"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1984 a15cc7c02d29470084b67c020ea9e5ac
+msgid "**Statistics** - RMS, mean, percentiles of displacements"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1985 5a5f821559314a568c1065cd67475259
+msgid "**Mass-dependent thermal** - Realistic temperature effects"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1989 be887a28f1f0422bbcf499df513b69c7
+msgid "**MD initialization** - Generate starting configurations at temperature"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1990 14e068097500492db44b0a567415012f
+msgid "**Transition state search** - Perturb around saddle points"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1991 298e0f5ef6714dee93bc2294137c8743
+msgid "**Statistical sampling** - Generate ensemble of structures"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1992 5560f136b73a4727bf5015a1cbbefc2a
+msgid "**Phonon pre-conditioning** - Small displacements for finite differences"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1996 71ffbedeb61847b8b71fdafa5732e5a0
+msgid "Uniform: Random direction (uniform on sphere) + random magnitude"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1997 7918998bf74844b2a86e704476a510b3
+msgid "Thermal: Per-axis Gaussian with σ = √(k_B·T/m) × 0.1 (unit conversion)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1998 07b031c3e78e47799a512ef6c1f21d4a
+msgid "Element selection via ``site.specie.symbol`` matching"
+msgstr ""
+
+#: ../../source/cli-tools.rst:1999 1ca5228e815a4321b507613d9d981dd2
+msgid "Displacement statistics: RMS, mean, std, 50th/90th/99th percentiles"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2000 9bbb735ea1fc4f4da4f585d8a75f4ccb
+msgid ""
+"Automatic naming: ``perturbed_amp<X>_<input>`` or "
+"``perturbed_<T>K_<input>``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2001 4b729336809f44a6b31be31c1a24de75
+msgid "Multi-config: ``perturbed_<mode>_config01_<input>``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2004 0bc0aefa0b9b4ac3abfbe12d5eb2cb20
+msgid "compare - Structure Comparison"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2006 91d44eb74ad140798126dc84342a4202
+msgid "**Purpose:** Quantitatively compare two crystal structures"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2036 9217a8fffa5b48cf8e17f3b2aacf3805
+msgid "``STRUCTURE2`` - Second structure file (required)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2037 30691d86f17b47c28636f8ea21f82c16
+msgid ""
+"``--tolerance FLOAT`` - Tolerance for structure matching (Å, default: "
+"0.01)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2038 7a10c9cf2a68469084f28d15a2b06dbb
+msgid ""
+"``--compare-lattice / --no-compare-lattice`` - Compare lattice parameters"
+" (default: True)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2039 43be85b6a8a34d9cacaf61e34ecfe79f
+msgid ""
+"``--compare-sites / --no-compare-sites`` - Compare atomic sites (default:"
+" True)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2040 40d708117d634aa68cd4319ca9efd896
+msgid ""
+"``--calculate-rmsd / --no-calculate-rmsd`` - Calculate RMSD (default: "
+"True)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2041 f3ed2a1d632e4840a2b3c620d5fa0ae4
+msgid "``--verbose`` - Show detailed site-by-site comparison"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2043 61bdde9f4c764a509574d02da4dc4293
+msgid "**Comparison Categories:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2045 c6af7771841f44bd9e0359c4dc8e1b15
+msgid "**Basic Properties**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2047 9f4c5c582a9f4fb694fb3703e01baecc
+msgid "Number of sites"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2048 dcc2fd585a0a436fb651818b2bd9e337
+msgid "Chemical formula"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2049 edca59df06684294874cc485779f86c1
+msgid "Reduced formula"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2051 c1fcec44c4664845801a489b94a3d620
+msgid "**Lattice Parameters**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2053 707cb2715d9242a483691dc2c02cf923
+msgid "Lattice lengths (a, b, c)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2055 68dfb96874194f7191f2adafa7d53cfe
+msgid "Volume"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2057 9178bad2bbd849c1b3cf101f86a86a94
+msgid "**Atomic Composition**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2059 558705f26ef841a0800f60339b193e28
+msgid "Element-by-element comparison"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2060 de38a00136fa4780a9e838f906da39bb
+msgid "Counts and percentages"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2062 1e4ef242e6e741b881dfa02963c3978b
+msgid "**Site Matching**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2064 b14627077cc947fb8eaa8a261f8b4be5
+msgid "Automatic site-by-site matching"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2065 5cb8801d5bcc42dab058f6d1fa74d032
+msgid "Considers periodic boundary conditions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2066 1da571796e1843099bb09b9d0a898b6e
+msgid "Reports matched/unmatched sites"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2067 34758413f4974e5e8e8e1bba8721cf2c
+msgid "Verbose mode shows detailed unmatched sites"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2069 7b0c5d4676d645b595d1f11f67e05944
+msgid "**RMSD Analysis**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2071 fe0d799a8f2542208a839cd4020dbd71
+msgid "Root-mean-square deviation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2072 2fe87acda2ad4263b1b5b5088cc7fe84
+msgid "Centered coordinate comparison"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2073 960e112e6ad64671b601cbd3cd2619dd
+msgid "Automatic site matching by element"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2074 cc18d5d9c2b14258ad92a05b615a4158
+msgid "Tolerance-based pass/fail"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2078 5704b8acb94042648cd528e91d9cbf45
+msgid ""
+"**Tolerance-based matching** - Configurable precision for lattice and "
+"site comparison"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2079 d8c70d616bbd4af6b9f83a3131050172
+msgid ""
+"**Automatic site pairing** - Finds closest matching sites across periodic"
+" boundaries"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2080 bc8aa50556874e699f6a52dacce7a996
+msgid "**Rich terminal output** - Color-coded tables with match indicators (✓/✗)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2081 470da3babedf4b89aafba14e37673413
+msgid ""
+"**RMSD calculation** - Centered coordinates with automatic element "
+"matching"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2082 b8281779a2c3405399dd3d44337e5218
+msgid "**Verbose mode** - Detailed analysis of unmatched sites (up to 10 shown)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2086 19d82608b2af439385ad70621fdd2f73
+msgid "**Optimization verification** - Compare before/after optimization"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2087 3c2f73571177445984c44ab0c345eef1
+msgid "**Symmetry analysis** - Check standardization results"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2088 48609c03ef2d475aaacf4071ba4bd569
+msgid "**Format conversion** - Verify structure preservation across formats"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2089 51dfdf2df9274c47a9eb490d7a2aa17f
+msgid "**Calculation validation** - Compare input/output structures"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2093 83a252778ebb4a4195c738af3c5f950c
+msgid "Site matching uses ``np.linalg.norm()`` with periodic boundary conditions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2094 c5ccc0d3bf3642eba3fb21afcc82b40a
+msgid "RMSD uses centered coordinates: ``coords - coords.mean(axis=0)``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2095 d3d4b2fcb7cc49159c63159c9322e769
+msgid "Element matching via ``site.specie`` comparison"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2096 f1d7e39b6c1541dab8f3cf174616e2a1
+msgid "Tolerance applies to both lattice and site distances"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2099 a848d4ea2f10461682137ea178841c21
+msgid "standardize - Cell Standardization"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2101 05c709da4f8e4b7f885ed954ae1ef1b6
+msgid ""
+"**Purpose:** Convert structures to conventional, primitive, or "
+"international standard cells"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2130 e9cae1aa485141d986174559927e91ea
+msgid ""
+"``--conventional`` - Convert to conventional cell (standard "
+"crystallographic cell)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2131 fd0a44b941b440429a82e8e62640bb6d
+msgid "``--primitive`` - Convert to primitive cell (smallest repeating unit)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2132 2abe1302d7e7453783576b0eb5853019
+msgid "``--international`` - Use international standard setting"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2133 4879cd6359b7458fb6f7b40bc385e6b3
+msgid "``--symprec FLOAT`` - Symmetry precision (Å, default: 0.01)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2134 bf902c456c9440fc92d1dda6f66b3e69
+msgid "``--angle-tolerance FLOAT`` - Angle tolerance (degrees, default: 5.0)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2135 ../../source/cli-tools.rst:2216
+#: 92af89a8136c471ca1b280e6b15071a9 bcafb390e362447c983f2b3d897a63d8
+msgid "``--show-before-after`` - Show before/after comparison table"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2136 ../../source/cli-tools.rst:2217
+#: 247bd4b3df154dbfa029f61fb1fb41ad b2d0e1fbd3ac4565bbcc6a63ef628c37
+msgid "``-o, --output PATH`` - Output filename (default: <mode>_<input>)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2137 ../../source/cli-tools.rst:2218
+#: 1e732a862f0843328ebec5f08eb6c795 cb18cc39c6c247f2a8167cfe8a8f90fb
+#, python-brace-format
+msgid "``--format {cif,poscar,xsf,json,fdf,XV}`` - Output format (default: cif)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2139 fb0e4241803b47999a4efb659b696437
+msgid "**Standardization Modes:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2141 97428893a21741d1a1ee7848d8aa9ae6
+msgid "**Conventional Cell**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2143 8e33100041a746108ba60f2a0bfecf7d
+msgid "Standard crystallographic cell"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2144 89e4a4188d0e4144aeff68afa20026c5
+msgid "Larger than primitive (more symmetric)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2145 7a8122fc5b87497c82fd771dc4155234
+msgid "Used in crystallographic databases"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2146 af88a00e1ae14026ae0e6ec9fa965aeb
+msgid "Generated via ``SpacegroupAnalyzer.get_conventional_standard_structure()``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2148 8025f7834c134628877eeff9b37efc07
+msgid "**Primitive Cell**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2150 ea9c09fb1f934eb4b2142b03f33b5562
+msgid "Smallest repeating unit"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2151 ef53b383e3df42c895baf22a08da9754
+msgid "Minimum number of atoms"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2152 0cf7cd3073804ca89b2035ba6020bb9f
+msgid "Most efficient for calculations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2153 d45f7a120022422bb360ff2612f66941
+msgid "Generated via ``SpacegroupAnalyzer.get_primitive_standard_structure()``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2155 27f5e02ddbe74b398399c0cd5e2b95e2
+msgid "**International Setting**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2157 9f93964c3d634da7845494236593230f
+msgid "Refined structure in standard orientation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2158 2372f8cb91e64a348bbcaff9db95b029
+msgid "Follows International Tables conventions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2159 aa292f6f5e4240e59c8dc3ebb5bd20e3
+msgid "Generated via ``SpacegroupAnalyzer.get_refined_structure()``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2163 cd2400ed6b2e45c180f10b3b7fb6927e
+msgid "**Symmetry analysis** - Displays space group, crystal system, point group"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2164 40c762f32ebf4bd5a0a4acb155b17eb8
+msgid "**Before/after comparison** - Shows lattice changes and site count"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2165 ce13715c1dad436aade04009b1dda1db
+msgid "**Multi-format output** - CIF, POSCAR, XSF, JSON, FDF, XV"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2166 41a10625180c48fabc545e7b2449fa2b
+msgid "**Configurable precision** - Symmetry tolerance and angle tolerance"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2167 c451cffaefe34f8390bcb098dd4944b9
+msgid "**Automatic validation** - Ensures only one mode selected"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2171 2f0ff545fca148578bb8996ce7acbaff
+msgid "**Database comparison** - Standardize for consistent comparison"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2172 4fab7f26ca5a4257b369bfb2f78175d5
+msgid "**Calculation efficiency** - Use primitive cell for DFT"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2173 fdbe564902f4491b93be1fbc67ea0e69
+msgid "**Symmetry analysis** - Convert to conventional for visualization"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2174 278a48d539e54cf5a21007696e353f27
+msgid "**Literature matching** - International standard for publications"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2178 53c8772b8353489b8b0995d3832767d7
+msgid "Uses pymatgen ``SpacegroupAnalyzer`` with spglib backend"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2179 99f1413b853049e7b5a8a0092eb8311d
+msgid "Symmetry precision controls spglib's ``symprec`` parameter"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2180 dbb753f9c6d446009a99682306a7329a
+msgid "Angle tolerance for lattice angle symmetry detection"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2181 45766d2569754aa897c180676d6fdfd7
+msgid "Site properties preserved during standardization"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2182 ../../source/cli-tools.rst:2260
+#: 9f6664a4bdfa4c28902d9347f1746b37 c3e8d4b8a1534c108113a374f6e3d73a
+msgid "Output naming: ``<mode>_<basename>.<ext>``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2185 043e255f264a47f0bfaab53d90c7a287
+msgid "optimize-cell - Cell Shape Optimization"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2187 ffb33bd0fc7d4590b4277faa24000e6e
+msgid "**Purpose:** Optimize cell shape for better periodic calculations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2213 f7dc1af16e6b4b3ab21668acb0383221
+msgid "``--niggli`` - Apply Niggli reduction (find most reduced cell)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2214 4e24f5457f7b4f2dadd5b8c063319520
+msgid "``--orthogonalize`` - Find most orthogonal supercell"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2215 7920453fa7674b78a9eb270158b6a84a
+msgid "``--max-atoms INT`` - Maximum atoms for orthogonalization (default: 1000)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2220 3458cdc69fc1409abf6ece64dc7a9939
+msgid "**Optimization Modes:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2222 c1540c4183644c5cadc655a98d65d93c
+msgid "**Niggli Reduction**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2224 ed325b9fa72a48fda0b86833ea1555bd
+msgid "Finds most reduced lattice representation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2225 02e094645c2948e68ef6ffa6a21b438b
+msgid "Unique reduced form for each lattice"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2226 e557b8f2309b4e088a9a1219b8e6b428
+msgid "Shortest lattice vectors"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2227 76e7d62167c04a5293e69b15252142a0
+msgid "Follows Niggli reduction algorithm"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2228 2e8e054f2e3f46e98856c740a2edef44
+msgid "Via ``lattice.get_niggli_reduced_lattice()``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2230 065b7ba1642d4e0eae73476adf5cbf95
+msgid "**Orthogonalization**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2232 4cbcdf32f76c4a42a194825da1371863
+msgid "Finds most orthogonal supercell"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2233 6000c7b919784746a356718d2ebae234
+msgid "Better for DFT calculations (FFT efficiency)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2234 23b5829edb1e46b797caa4b65217cc8d
+msgid "Searches supercells up to max_atoms limit"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2235 af7eb12429da489dbc35586c1382c8d3
+msgid "Orthogonality score: Σ(angle - 90°)²"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2236 e4eebf9458904ef59edfb98c4d3ddae2
+msgid "Lower score = more orthogonal"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2240 55c110a677b74d42a2f04c94780ba372
+msgid "**Automatic search** - Tries multiple supercell matrices (up to 5×5×5)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2241 efbddeafd00a40c688be417253b7fcb9
+msgid "**Orthogonality scoring** - Quantitative measure of cell orthogonality"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2242 84580ea54a6f43d3bd9f08e9e42da6f3
+msgid "**Size control** - Limit maximum atoms to avoid huge cells"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2243 d8540f97a82e47ab8210248ae6938b52
+msgid ""
+"**Before/after tables** - Shows lattice changes and orthogonality "
+"improvement"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2244 9c8859f68ecd4531accede680bee1ed3
+msgid "**Smart fallback** - Returns original if no better cell found"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2248 ea1e52e3b195487092d9eadaba4d00b3
+msgid "**DFT efficiency** - Orthogonal cells for faster FFT"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2249 bea29c80e97f496a95ba9d5184e2b732
+msgid "**Unique representation** - Niggli cell for database comparison"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2250 27fcbb9b649e484ea1ba5ef6227af598
+msgid "**Calculation speedup** - More orthogonal cells converge faster"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2251 bf882740a019439ebd67936b5dca4ce4
+msgid "**Standard form** - Reduced cells for consistent analysis"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2255 562c6d2841e64efc90869226363bb328
+msgid "Niggli reduction via pymatgen's ``get_niggli_reduced_lattice()``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2256 cb8c1aee01fe4b9881da136a9046d529
+msgid "Orthogonalization: exhaustive supercell search with scoring"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2257 406daad3b8ad4313a7cff3b5210b2d1a
+msgid "Orthogonality score: ``sum((angle - 90)² for angle in [α, β, γ])``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2258 09d87963addd4bd6b70058b67935e2cb
+msgid "Search space: all integer matrices [a,b,c] where a×b×c×sites ≤ max_atoms"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2259 e0e2c2a87ab245008f43e0ef41ae067f
+msgid "Best cell selected by minimum orthogonality score"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2262 6e963f9168524b038426636c923f971c
+msgid "**Status:** ✅ Complete - All 16 commands production-ready"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2267 b5f1b5f61c1a4fd49655aa3cbd95be2e
+msgid "Structure Format Conversion CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2269 4688469bf8f54519aa5e317eeedea2c9
+msgid "**Command:** ``atomate2siesta-structure convert``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2271 f02e39dafa2440e1b097e68638e8391c
+msgid ""
+"**Purpose:** Convert structure formats between sisl, pymatgen, and ASE "
+"with automatic format detection"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2276 1bb523c84c8d45c997a756f0b3355b05
+msgid ""
+"**Automatic format detection** - Detects input format from file extension"
+" (NEW!)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2277 26ec7ddb42b74f8dbd4d0fe911485ce8
+msgid "**Multi-format support** - FDF, XV, CIF, XSF, JSON, pickle"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2278 d79bab034a6b4c1e821cfde72d76c930
+msgid "**Ghost atom handling** - Separate structures with/without ghost atoms"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2279 acf6c4f1abfc4131bdf5b3affa3705a1
+msgid "**Rich terminal output** - Formatted tables with structure information"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2280 0991a454aae34d83a899496e6ee7c7b8
+msgid "**Flexible conversion** - Multiple output formats in one command"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2281 c75033bcf85e4ee9a19497a8e1a6e650
+msgid "**Metadata extraction** - Species information, atomic numbers, coordinates"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2284 12e4a541632c46c9a1e87d873d327519
+msgid "Supported Formats"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2286 04758ac675cf4396821b327e042a38a5
+msgid "**Input (automatic detection):**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2288 7ad49c9876f7412fb93242775e6f4a35
+msgid "``.fdf`` - SIESTA FDF input file"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2289 5500cb77dcff4482988f2c2b075b58c3
+msgid "``.xv`` / ``.XV`` - SIESTA XV restart geometry file"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2290 4535baa33cc345558f276b3c2140af48
+msgid "``.cif`` - Crystallographic Information File (NEW!)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2291 d13e75bad11c471bbcf7ed80b76eb383
+msgid "``.xsf`` - XCrySDen Structure File (NEW!)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2293 93eeaca0c77448dabccea4ff745c1a80
+msgid "**Output:**"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2295 a8562372000f4ca0abed3120b4b6eaa1
+msgid "CIF - Crystallographic Information File (pymatgen)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2296 43916bbb6ffa4ff4bec18c11e6d4135e
+msgid "XSF - XCrySDen format (ASE)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2297 55b79816fb05438588e9e92eb0b7a6bd
+msgid "JSON - Structure data with metadata"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2298 8fe05766d5a645e9ba88028a4a63640b
+msgid "Pickle - Python objects (sisl/ASE/pymatgen)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2299 701910150af9446b983b5bafa59ed6b8
+msgid "FDF - SIESTA input (with or without ghost atoms)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2358 f124a15b65e24087b01170e53c05d23d
+msgid ""
+"**Note:** The ``--xv`` flag has been removed. File format is now "
+"automatically detected from the file extension."
+msgstr ""
+
+#: ../../source/cli-tools.rst:2363 4661d4f003e147d683b775215a4df052
+msgid "Depending on options, creates files with pattern ``<prefix>.<extension>``:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2365 23052981dfdc4e67a400fbc43bcab074
+msgid "``<prefix>.cif`` - Pymatgen structure (no ghost)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2366 fd7cd43f21a2493391050775a7c31f32
+msgid "``<prefix>.xsf`` - ASE structure (no ghost)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2367 a9aba4fd98d14338b32f1175b88287a9
+msgid "``<prefix>.json`` - Structure metadata and coordinates"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2368 50e8e0bbbb0c41b09f14e17cd71a1020
+msgid "``<prefix>_sisl.pkl`` - Sisl geometry object"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2369 679ab42eb682444ab5c084ac24005647
+msgid "``<prefix>_ase.pkl`` / ``<prefix>_ase_with_ghost.pkl`` - ASE Atoms objects"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2370 63d11287fa454ab8bd1cb3889a41a14d
+msgid ""
+"``<prefix>_pymatgen.pkl`` / ``<prefix>_pymatgen_with_ghost.pkl`` - "
+"Pymatgen Structure objects"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2371 b7b4d73051e84da39f3b4108cf999ded
+msgid "``<prefix>.fdf`` / ``<prefix>_no_ghost.fdf`` - SIESTA input files"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2374 edbf2dfaf9dd4b7382aff58ce0bca3ea
+msgid "Terminal Output"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2376 8cb4667de878427d808a4c056568198f
+msgid "The tool displays formatted tables with:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2378 2845cbff9fbd466b90f83e9c2f623f48
+msgid "Species information (symbol, atomic number, mass)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2379 9c4340592c1646499dcecf64912ecc1c
+msgid "Structure statistics (atoms, lattice parameters)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2380 5002b9aa6471498ebf88ec02f8a4b514
+msgid "Ghost atom identification"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2381 b2a795d524fc472781b97860bb866d13
+msgid "Output file paths"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2388 dd18d1709ea94cc9b2416a5515697db1
+msgid "Data Classes Information CLI"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2390 75a86262b0764e748174fce4ba6e1027
+msgid "**Command:** ``atomate2siesta-inputs``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2392 14eb75b1b76443fab3a778b8b4bf8fa5
+msgid "**Purpose:** Explore SIESTA input dataclass structures and parameters"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2397 6fc978ff93f04960a5f6f41969192671
+msgid "**List all dataclasses** - View all 24 SIESTA input parameter dataclasses"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2398 cd01f5e4051a4991abae58a7af7b2f0f
+msgid "**Search by keyword** - Find parameters by name, type, or category"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2399 f43830cdd96a496cbd8767e3a78debbd
+msgid ""
+"**Show detailed info** - View complete parameter documentation and "
+"defaults"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2400 e24db492731d41a0973083bf576309ad
+msgid "**Rich terminal UI** - Formatted tables with clear organization"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2412 89264fee5e004f27a17ae2f2a2e98ae6
+msgid "List all available data classes"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2413 a66406176b294783829cdbaa03b81dc3
+msgid "``search``"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2414 bdf9acb19ada41b796d6d0be8813d9b1
+msgid "Search for data class attributes by keyword"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2416 6ec390d5c4f0426e9f4d7f1434b2f7fa
+msgid "Show detailed information about a specific data class"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2435 e448597e48ef413f973acb2412655e72
+msgid ""
+"For generating SIESTA input files directly, use the ``atomate2siesta-"
+"maker`` CLI tool instead. See :ref:`workflow-generator-cli`."
+msgstr ""
+
+#: ../../source/cli-tools.rst:2439 23bc5dcd4e7748f3950fb3c674d03877
+msgid "Complete Workflow Example"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2441 b9d96426c13e4d48afd07236ee926ee3
+msgid "Here's how all CLI tools work together:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2444 3c14e191d3ad4b298682a2ee8898a56b
+msgid "Step 1: Generate Workflow Script"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2459 e5492755620f4e4e8e81a21d85c58b63
+msgid "Step 2: Set Up Remote Cluster"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2475 22ce96542a114938b047f7c47ce3b0c8
+msgid "Step 3: Configure Jobflow-Remote"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2492 4fc1c0a1cedf4bb2a8937750473198ae
+msgid "Step 4: Set Up Database"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2506 629683ee20924a4ea0711ae2fe63af10
+msgid "Step 5: Submit Calculations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2508 26b94e6db4b849318d36960619b2e58f
+msgid "On remote cluster:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2516 e779ae38bfb84b26ba779e711a0545ef
+msgid "On local machine (using maker CLI):"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2527 23cff221b8d04ad1904f1a5e79cd128a
+msgid "Step 6: Monitor Results"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2540 4914a0acbc574549947748e8e8ea2ecb
+msgid "Integration with Tutorials"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2542 c219d6f190eb4e8eba84f1fb4ea4c98c
+msgid "The CLI tools complement the tutorial series:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2544 03fdcaad55664cc18601b4a5bf86f2f9
+msgid "**Tutorial 13**: Database storage configuration and usage"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2545 917c7e979efc44c2853952d6f577e6f6
+msgid "**Tutorial 14**: HPC job submission workflows"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2548 e19ca6eab16b43caa0b834cef2bcc740
+msgid "Command Reference Summary"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2551 5f5b887ecf004194a39769f479e16bd9
+msgid "Workflow Generator"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2559 278c645fd336474390421d77586873e8
+msgid "Common workflows: relax, static, bands, dos, phonon, gruneisen, qha,"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2560 57fc88d99bb047069b61ac63254b6166
+msgid "eos, elastic, bulk-modulus, neb, surface, adsorption"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2563 50fd2dbd3da44e0fa58949f87729970f
+msgid "Cluster Setup"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2572 811458576806430f99c621566956a0f9
+msgid "Jobflow-Remote"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2584 69aa31a56ce84326b97af0a40ad5de3a
+msgid "Database"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2599 dd00ea5707fb41c5a85667962df9f707
+msgid "Authentication (Cluster Setup)"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2608 a31f49ec87344258a6c05ae11a3a93b3
+msgid "Database Connection"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2617 6806195b194e4072bc7a501d2ae2790c
+msgid "Project Management"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2626 b6f21b1ad50a4071921081c8810460d0
+msgid "Tips and Best Practices"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2628 20cafa2ed6bb48eaa87dee6f50995186
+msgid ""
+"**Start with Cluster Setup** Configure your remote cluster first before "
+"setting up jobflow-remote"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2631 de7adf1ecfbd465086c96a991ea27e16
+msgid ""
+"**Test Connections First** Always use ``test`` commands to verify "
+"connectivity before operations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2634 8d562750b09b4067a16f5690853b2cd3
+msgid "**Use SSH Config** Set up ``~/.ssh/config`` for easier cluster access:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2644 a8a1b3699e4f4298a9367458f6bfb0a0
+msgid ""
+"**Enable Backups** Keep automatic backups enabled when updating "
+"configurations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2647 4ffcef6d1bab4f1586ce97a8de50f8b8
+msgid ""
+"**Add Comments** Use ``--add-comments`` to make configurations self-"
+"documenting"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2650 9972a977d2454b2599fb27efa7cd90e5
+msgid ""
+"**Regular Monitoring** Use database ``stats`` command to monitor growth "
+"and performance"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2653 150d95d1b3bd430d9e91807c4f8b1b78
+msgid ""
+"**Test Before Production** Use test jobs to verify setup before "
+"submitting real calculations"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2657 7c355b8eb8cf44e0826aedbff12620f4
+msgid "Troubleshooting"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2660 71f923302fc743a2930ef39311b3f06a
+msgid "Connection Issues"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2674 29f2e61275d5485b99b544bc08a2afec
+msgid "Installation Problems"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2688 93dbba4b82be4a25befa2247a1d87884
+msgid "Configuration Updates"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2700 0d158f72d10443618b504eee0944ccbb
+msgid "Getting Help"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2702 bd0f86afa65e40dda575d8cdb7b43697
+msgid "All commands provide comprehensive help:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2710 58247a58e34c4505a6090b3f39991724
+msgid "For detailed documentation, see the individual CLI reference pages:"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2712 0d6bc43aac1b4954abb8cdb3f974d4f3
+msgid ":doc:`cli-cluster-setup` - Full cluster setup documentation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2713 765276ce0f3d4ec9ba00f25a0357b382
+msgid ":doc:`cli-jobflow-remote` - Complete jobflow-remote guide"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2714 0faa4e0c81e746eb86a39c26374763a1
+msgid ":doc:`cli-database` - Database management reference"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2717 b0899c138e164df3a53082d8cf2d5241
+msgid "Development History"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2719 4a9d9243418e4202bfea31aeb34e1cca
+msgid "**October 2025**: Cluster Setup Enhancements"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2721 b4aaa80c25e543c7a90c659ab656f90d
+msgid "Added SIESTA installation from conda-forge"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2722 9b514b8a225d492aaf31067460e6d8d1
+msgid "Automatic ``.atomate2siesta.yaml`` configuration generation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2723 48086c89174b434ea3ff92c7fea81c5e
+msgid "Enhanced error handling with manual fallback instructions"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2725 f824e4356a1b4ab5b40a8b8655356d30
+msgid "**October 2025**: CLI Tools Introduction"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2727 44090f1191e2455ea083138e373616f1
+msgid "Database management CLI with 7 commands"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2728 c9698e9db6bf4b218baed1c21d0a0895
+msgid "Jobflow-remote setup CLI with 5 commands"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2729 5baba02a3edc48189be08131f3a70cce
+msgid "Rich terminal UI implementation"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2730 01093c1b3f88418bba251cd8351bc3cb
+msgid "Production-ready with comprehensive testing"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2733 add160a6ce674bc2bd3009673d21b286
+msgid "See Also"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2735 d7a8b392c8de41939a3b772a226bc33e
+msgid ":doc:`installation` - Installation guide"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2736 58e724a6e3f9451d8e7644a17490cfbe
+msgid ":doc:`usage` - Basic usage patterns"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2737 ef8f206b7a2946b3a5e65cd185a05168
+msgid ":doc:`tutorials/index` - Tutorial series"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2738 1cebcc284d7b4db3b37beb5ed4a0b5bf
+msgid ""
+"`Jobflow-Remote Documentation <https://matgenix.github.io/jobflow-"
+"remote/>`_"
+msgstr ""
+
+#: ../../source/cli-tools.rst:2739 bba625951d304fc7a9c1882e751001a0
+msgid "`MongoDB Documentation <https://docs.mongodb.com/>`_"
+msgstr ""
+
+#~ msgid "**Status:** ✅ Production-ready (v1.0.1)"
+#~ msgstr ""
+
+#~ msgid "**Status:** ✅ Complete (v1.0.1) - All 16 commands production-ready"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Breaking Change (v1.0.1):** The ``--xv`` "
+#~ "flag has been removed. File format "
+#~ "is now automatically detected from the"
+#~ " file extension."
+#~ msgstr ""

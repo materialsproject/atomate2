@@ -1,0 +1,385 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:1
+#: f4f046b4f51448e9a9926efa40f79581
+msgid "02: Convergence Studies"
+msgstr "02: همگرایی Studies"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:3
+#: ef0f7b540c2245b0abe2b809c7394d5c
+msgid ""
+"**Focus**: Systematic parameter optimization for production-quality "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:5
+#: b680610f38554e97a27ac0211a75aa87
+msgid "**Difficulty**: Intermediate"
+msgstr "**سطح سختی**: متوسط"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:7
+#: cebc7f58eb124da4b9a8608f80258869
+msgid "**Prerequisites**:"
+msgstr "**پیش‌نیازها**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:8
+#: 57d04cd0330d488ab1a235ee58aa576a
+msgid "Completed [01-basics](../01-basics/) tutorials"
+msgstr "Completed [01-bsics](../01-bsics/) tutیاils"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:9
+#: 5f246104c73a4784a99837e2918c8fe9
+msgid "Understanding of DFT convergence concepts"
+msgstr "درک of DFT convergence concepts"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:10
+#: f8679c94ea874f5a8e26c551727482d2
+msgid "Familiarity with k-points, mesh cutoff, and basis sets"
+msgstr "Fmilirity با k-points, mesh cutoff, و bsis sets"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:14
+#: dc11f3c8fea14ead8361d611d5c254e5
+msgid "Tutorials in This Category"
+msgstr "Tutیاils in This دسته‌بندی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:16
+#: 6ed1df7296404006b31fa96bd9cd33c8
+msgid "[01-kpoints-mesh-cutoff](01-kpoints-mesh-cutoff/)"
+msgstr "[01-kpoints-mesh-cutoff](01-kpoints-mesh-cutoff/)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:17
+#: 1d48b3511c2b427489e50b02504f444a
+msgid ""
+"**Description**: K-points and mesh cutoff convergence testing "
+"**Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~1-2 hours (full"
+" calculation) **Key Concepts**: K-point sampling, mesh cutoff, "
+"convergence criteria, automatic plotting"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:22
+#: ffc772bca1124aba8425f9a92cf39bbf
+msgid "[02-basis-parameters](02-basis-parameters/)"
+msgstr "[02-bsis-prmeters](02-bsis-prmeters/)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:23
+#: b4f38f2a8fe74f149188a08bd33605c0
+msgid ""
+"**Description**: Basis set parameter convergence (PAO.EnergyShift, "
+"PAO.SplitNorm) **Difficulty**: Intermediate **Time**: ~5 min (dry-run), "
+"~2-3 hours (full calculation) **Key Concepts**: PAO basis sets, energy "
+"shift, split norm, timing analysis"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:28
+#: c4220b95a5a2485faa19fbb8792fc021
+msgid "[03-complete-basis](03-complete-basis/)"
+msgstr "[03-complete-bsis](03-complete-bsis/)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:29
+#: 330b08a47eb549e088a7fc936725c800
+msgid ""
+"**Description**: Complete basis set convergence (size + parameters) "
+"**Difficulty**: Advanced **Time**: ~10 min (dry-run), ~4-6 hours (full "
+"calculation) **Key Concepts**: Basis size (SZ/DZ/DZP/TZP), complete "
+"parameter space exploration"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:36
+#: c1bbd9a4b29b41f6b0acebcbb77614de
+msgid "Learning Path"
+msgstr "Lerning Pth"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:38
+#: c070e574326441e6a05ff8c7a0738909
+msgid ""
+"**Important**: Convergence studies are essential before production "
+"calculations!"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:40
+#: 28799eefbe5f47c59d1bdb98cc23b84f
+msgid ""
+"**Start here**: [01-kpoints-mesh-cutoff](01-kpoints-mesh-cutoff/) - Most "
+"critical parameters"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:41
+#: fd4eaa82cb9c45ec83a174ebdb47202f
+msgid ""
+"**Next**: [02-basis-parameters](02-basis-parameters/) - Fine-tune basis "
+"quality"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:42
+#: 979663e49a9647ef862f3f25d345d5d9
+msgid ""
+"**Complete**: [03-complete-basis](03-complete-basis/) - Full basis "
+"optimization"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:46
+#: d0d6551490d54018847d84bb2dcd973e
+msgid "Why Convergence Testing?"
+msgstr "Why همگرایی Testing?"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:48
+#: c2d79e9e0638404a85fbd1f818dcd013
+msgid "Convergence testing ensures your results are:"
+msgstr "همگرایی testing ensures your results re:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:49
+#: 7ab86f1a93ab47b3a8639e12640cb528
+msgid "✅ **Reliable**: Independent of numerical parameters"
+msgstr "✅ **Relible**: Independent of numericl prmeters"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:50
+#: c286cc5776c3456cb34140fa2ba947bc
+msgid "✅ **Reproducible**: Consistent across different setups"
+msgstr "✅ **Reproducible**: Consistent cross different setups"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:51
+#: a5cf064b869c405081a82fab62dc0521
+msgid "✅ **Efficient**: Balanced accuracy vs computational cost"
+msgstr "✅ **Efficient**: Blnced ccurcy vs computtionl cost"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:52
+#: 9923871965fc499fa0921fc441774b9e
+msgid "✅ **Publishable**: Meeting scientific standards"
+msgstr "✅ **Publishble**: Meeting scientific stوrds"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:54
+#: 4ba95bd7dbec406f9f5061232af88baf
+msgid "**Rule of thumb**:"
+msgstr "**Rule of thumb**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:55
+#: a9961b11544e4dffb57c60763f916a74
+msgid "Energy convergence: < 1 meV/atom"
+msgstr "Energy convergence: < 1 meV/tom"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:56
+#: 6b062c38e82d46d4ae22bf84ecf7ac34
+msgid "Force convergence: < 0.01 eV/Å"
+msgstr "Fیاce convergence: < 0.01 eV/Å"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:60
+#: 9d02f6759c4a41c6930f565975007fe0
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:62
+#: d22fce26068c4eaf8563ee132bd1aab7
+msgid "All convergence tutorials generate automatic plots and summaries:"
+msgstr "All convergence tutیاils generte utomtic plots و summries:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:79
+#: 452cdf2bdd5941f3975f5a5b8bcdf9c2
+msgid "Common Convergence Parameters"
+msgstr "Common همگرایی Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:81
+#: 384c1d6726164a29abe89ee5e87f5580
+msgid "K-points"
+msgstr "K-points"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:82
+#: 6ff776fb51a6427390a1070e2f2dde5d
+msgid "**Metals**: Denser k-point mesh required (6×6×6 or higher)"
+msgstr "**Metls**: Denser k-point mesh required (6×6×6 یا higher)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:83
+#: 7a010bdfe8b048dfbed37d2f88f2c51a
+msgid "**Insulators**: Can use coarser mesh (4×4×4)"
+msgstr "**Insultیاs**: Cn use corser mesh (4×4×4)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:84
+#: 2ae057bc3ca84b079461e02e8ca91dab
+msgid "**2D materials**: Dense in-plane, sparse out-of-plane (8×8×1)"
+msgstr "**2D mterils**: Dense in-plne, sprse out-of-plne (8×8×1)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:86
+#: db00e149d73d4e68ab486a2d701a1626
+msgid "Mesh Cutoff"
+msgstr "Mesh Cutoff"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:87
+#: 302bd9ec2b5f438db08a3f04e5ab8693
+msgid "**Typical range**: 200-400 Ry"
+msgstr "**Typicl rnge**: 200-400 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:88
+#: e110396abbb34d84a572b448e90f85ff
+msgid "**Hard pseudopotentials**: May need 500+ Ry"
+msgstr "**Hrd pseudopotentils**: My need 500+ Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:89
+#: 63a38af88d18452e95b8d50e42d490bb
+msgid "**Start**: Test 100, 150, 200, 250, 300, 350, 400 Ry"
+msgstr "**Strt**: Test 100, 150, 200, 250, 300, 350, 400 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:91
+#: 4c44e8d9e70049bcb1bdce527a128ebb
+msgid "Basis Parameters"
+msgstr "Bsis Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:92
+#: 942183bdf0f84aa9953bbfe9a6af27b9
+msgid "**PAO.EnergyShift**: 0.01-0.05 Ry (smaller = larger basis)"
+msgstr "**PAO.EnergyShift**: 0.01-0.05 Ry (smller = lrger bsis)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:93
+#: 7ff2d3db6efb421c841341c6cb6025e0
+msgid "**PAO.SplitNorm**: 0.10-0.30 (controls polarization function size)"
+msgstr "**PAO.SplitNیاm**: 0.10-0.30 (controls polriztion function size)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:97
+#: 8dfc02b30ceb45abb0ea3007f937d885
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:99
+#: 6bf1517e02dc4e728db2e1574e866050
+msgid "Issue 1: \"Convergence tests take too long\""
+msgstr "Issue 1: \"همگرایی tests tke too long\""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:100
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:106
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:112
+#: 2a9fba2e34b1439cba6716d92d03e59b 9bfcfbd524744cbd860e3f3789873332
+#: 9e2d0d1531f44159a6d7a337e1dff85a
+msgid "**Solution**:"
+msgstr "**Solution**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:101
+#: 49f79a1a9a434b1a8f98a61b1ac79941
+msgid "Start with dry-run mode to verify test points"
+msgstr "Strt با dry-run mode to verify test points"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:102
+#: 199a0fab29064c21851ccd96328cbe04
+msgid "Use coarser initial sampling"
+msgstr "Use corser initil smpling"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:103
+#: 552122a49d2d4693ae6fd173678fc106
+msgid "Run on HPC cluster (tutorial 04-infrastructure/02-job-submission)"
+msgstr "Run on HPC cluster (tutیاil 04-infrstructure/02-job-submission)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:105
+#: 1eb9482db339493dadd17d0b3d101adf
+msgid "Issue 2: \"Results don't converge\""
+msgstr "Issue 2: \"Results don't converge\""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:107
+#: e9eaafb233bc4c848410239ef01ec2e2
+msgid "Check if system is metallic (needs denser k-points)"
+msgstr "Check if system is metllic (needs denser k-points)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:108
+#: 18ce0e04d7f0413f85db764e8d03e194
+msgid "Try different basis set (DZP → TZP)"
+msgstr "Try different bsis set (DZP → TZP)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:109
+#: 44bf87f2d1534c8eb97d85e243c38d7d
+msgid "Increase mesh cutoff range"
+msgstr "Increse mesh cutoff rnge"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:111
+#: a74a3415912c4cdba4d77fb63a257b3a
+msgid "Issue 3: \"How many test points?\""
+msgstr "Issue 3: \"How mny test points?\""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:113
+#: b50778e335fa44bcb2a4c5f9dda6c38b
+msgid "K-points: 5-7 test points (e.g., 2, 4, 6, 8, 10, 12, 14)"
+msgstr "K-points: 5-7 test points (e.g., 2, 4, 6, 8, 10, 12, 14)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:114
+#: 637e5f577f074d3ca2e8dac7ee7313f0
+msgid "Mesh cutoff: 6-8 test points (100-400 Ry)"
+msgstr "Mesh cutoff: 6-8 test points (100-400 Ry)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:115
+#: 0fda189e96a243839feba0508a0c5ad5
+msgid "Basis parameters: 4-6 test points each"
+msgstr "Bsis prmeters: 4-6 test points ech"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:119
+#: 881cdc33361b4c668c90fcc67c2d2e08
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:121
+#: 3ffd8aa82fe546e79f1eb25c59d98600
+msgid "**Always start with dry-run**: Verify test points before running"
+msgstr "**Alwys strt با dry-run**: Verify test points beبرایe running"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:122
+#: f41dfebd593e417f95d5bf90a7887714
+msgid "**One parameter at a time**: Don't vary k-points AND cutoff simultaneously"
+msgstr "**One prmeter t  time**: Don't vry k-points AND cutoff simultneously"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:123
+#: eae731cde1c049bf92500a0e25834096
+msgid "**Use reference structure**: Well-relaxed geometry"
+msgstr "**Use reference structure**: Well-relxed geometry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:124
+#: 5fa8bab801fa4769813b548932fbbd57
+msgid "**Save results**: Keep convergence plots for your paper"
+msgstr "**Sve results**: Keep convergence plots برای your pper"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:125
+#: 5786fb063500489d8812e1e920868f43
+msgid "**Document choices**: Note converged parameters in your workflow"
+msgstr "**Document choices**: توجه converged prmeters in your wیاkflow"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:129
+#: 1e03159b657c425bb4a70b4ffcff5130
+msgid "Next Category"
+msgstr "Next دسته‌بندی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:131
+#: d6528382a47e41ecbd81b40697475e13
+msgid "After completing convergence studies, proceed to:"
+msgstr "After completing convergence studies, proceed to:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:132
+#: fae9dcd1061545658f48ebdae4907da3
+msgid ""
+"**[03-advanced-workflows](../../02-workflows/)** - Apply converged "
+"parameters to production workflows"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:133
+#: f55f9edf1c374cc49f13ea240055dbf7
+msgid ""
+"**[04-infrastructure](../../03-advanced-features/03-infrastructure/)** - "
+"Set up for large-scale calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/README.md:137
+#: 8d7c99ca684d483e83ff75c3b8d0f477
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"

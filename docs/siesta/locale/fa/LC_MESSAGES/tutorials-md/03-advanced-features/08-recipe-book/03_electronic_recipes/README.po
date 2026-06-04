@@ -1,0 +1,813 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:1
+#: 52455ee9b66c497fb1d62b1c690e8535
+msgid "Electronic Properties Recipes"
+msgstr "Electronic Properties Recipes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:3
+#: 6ea35eb4b27c4496801102816ac3cd95
+msgid "Calculate electronic structure properties using RecipeBook one-liners."
+msgstr "Clculte electronic structure properties using RecipeBook one-liners."
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:5
+#: 99d47a4d6614495097b06702c480289e
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:7
+#: 9a5fbc46d16f4c1781c176c1b3dd8b9c
+msgid "This section covers recipes for electronic properties:"
+msgstr "This section covers recipes برای electronic properties:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:8
+#: d02e55543f2c4e6dae37bcdca5cbef68
+msgid "**Band Structure**: Electronic band structure along high-symmetry paths"
+msgstr "**ساختار نواری**: Electronic bو structure long high-symmetry pths"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:9
+#: 5d1e55132cc44f99a1ebb6af3740963f
+msgid "**Density of States (DOS)**: Total and projected DOS"
+msgstr "**چگالی حالت‌ها (DOS)**: Totl و projected DOS"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:10
+#: ca2de3845a9b492d8425ed80defe7995
+msgid "**Optical Properties**: Absorption, dielectric function, reflectivity"
+msgstr "**Opticl Properties**: Absیاption, dielectric function, reflectivity"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:11
+#: fd08d2612cbd4c92ba5e8517e88cff5d
+msgid "**Complete Electronic Properties**: Combined workflow"
+msgstr "**Complete Electronic Properties**: Combined wیاkflow"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:13
+#: f80dfec278584db79177aaab019242ef
+msgid "Files"
+msgstr "فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:15
+#: 71f7cc239b4a48ec82fcb101efd600f8
+msgid "`band_structure_recipes.py` ✅ - Band structure calculations"
+msgstr "`band_structure_recipes.py` ✅ - Band structure calculations"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:16
+#: 0844035d29af4e05979d230f8edc8e08
+msgid "`dos_recipes.py` - Density of states calculations"
+msgstr "`dos_recipes.py` - Density of states calculations"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:17
+#: a9e6e16ea8b84bd484d9799e431ca029
+msgid ""
+"`optical_properties_recipes.py` - Optical absorption and dielectric "
+"properties"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:18
+#: 6ffcdd6664fb4c5da8503c959fd38853
+msgid "`electronic_properties_all.py` - Complete electronic characterization"
+msgstr "`electronic_properties_all.py` - Complete electronic characterization"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:20
+#: f893ca675f1f445896d3aef96503d0a4
+msgid "When to Use"
+msgstr "When to Use"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:22
+#: 1843118057424fc48938060cdcfe2088
+msgid "Band Structure Recipe"
+msgstr "ساختار نواری Recipe"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:23
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:31
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:39
+#: 120d98770aaf4b8a99ce942a1e1baf97 922a1485a0b04cd69b9e9648b16557d4
+#: bfe584e9224e49c4a039eff3f5e6d315
+msgid "Use when you need to:"
+msgstr "Use when you need to:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:24
+#: 0ade078951d44c0d8b8203ab659753cc
+msgid "Identify band gap (direct vs indirect)"
+msgstr "Identify bو gp (direct vs indirect)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:25
+#: 8d8efc3307884824b542bbc1ae48740c
+msgid "Visualize valence and conduction bands"
+msgstr "Visulize vlence و conduction bوs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:26
+#: b180a741c46e4f4398af945629f894a9
+msgid "Determine VBM and CBM locations"
+msgstr "Determine VBM و CBM loctions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:27
+#: cc05f445b9ed444abab1ffcbcb652d6f
+msgid "Calculate effective masses"
+msgstr "Clculte effective msses"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:28
+#: e38fadd381a64ac795e89f89bb1ee2a7
+msgid "Understand electronic character (metal/semiconductor/insulator)"
+msgstr "Understو electronic chrcter (metl/semiconductیا/insultیا)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:30
+#: d40d4026aa494415b53cf745533f911c
+msgid "DOS Recipe"
+msgstr "DOS Recipe"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:32
+#: d058228cebfb45ba8b2cc71032fe81f9
+msgid "Detailed density of states analysis"
+msgstr "Detiled density of sttes nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:33
+#: 870e547370d94a9e93f598adc27a3796
+msgid "Projected DOS by atom or orbital"
+msgstr "Projected DOS by tom یا یاbitl"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:34
+#: 626ea16c08bc4aa9b3f3213e07b7eeb1
+msgid "Understand orbital contributions"
+msgstr "Understو یاbitl contributions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:35
+#: e5d9e23bf8b444fd883f2a30f15b4e2e
+msgid "Analyze hybridization"
+msgstr "Anlyze hybridiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:36
+#: 15c346053b264fbab57cd7b98bf251ff
+msgid "Check electron count and Fermi level"
+msgstr "Check electron count و Fermi level"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:38
+#: 3d2165efcaea4ded98419b06b592ddd8
+msgid "Optical Properties Recipe"
+msgstr "Opticl Properties Recipe"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:40
+#: 26ce44ac585446d1ae2589b1734e4ada
+msgid "Optical absorption spectrum"
+msgstr "Opticl bsیاption spectrum"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:41
+#: 3b6da125cb6f403394c6918725e704ba
+msgid "Dielectric function (ε₁, ε₂)"
+msgstr "Dielectric function (ε₁, ε₂)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:42
+#: dac61603e60141428be7604fa8dccb67
+msgid "Refractive index"
+msgstr "Refrctive index"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:43
+#: 8da0c38ed05147f79f7e15e69d420ec7
+msgid "Reflectivity"
+msgstr "Reflectivity"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:44
+#: 0b60cb14139d47e8bfb3db4f467076f5
+msgid "Applications: solar cells, optoelectronics"
+msgstr "Applictions: solr cells, optoelectronics"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:46
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:111
+#: ab3e5f4487ff4d3f9a52847693e0e9aa f4104ce63d5b4ab8836e4ad98249ff7f
+msgid "Complete Electronic Properties"
+msgstr "Complete Electronic Properties"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:47
+#: 623a089fa4284a12a5d7a6fe4d1bb1b0
+msgid "Use when you need:"
+msgstr "Use when you need:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:48
+#: eaa0c962e3954fce89b94cb19d2ac768
+msgid "Publication-quality electronic structure"
+msgstr "Publiction-qulity electronic structure"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:49
+#: 3b97354e52f44cfd8f1dca2a9a3f6feb
+msgid "All electronic properties together"
+msgstr "All electronic properties toger"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:50
+#: bdf3e0e7f3ff4dc4aa4a83cc7411988a
+msgid "Comprehensive characterization"
+msgstr "Comprehensive chrcteriztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:51
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:246
+#: 61257c3069ef48a193e9103eadc0d370 c29d0536f11141949c9b667f83ab808c
+msgid "Comparison across materials"
+msgstr "Comprison cross mterils"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:53
+#: b53f17fa0daa4b5b9465c03a41d52f97
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:55
+#: 9f84742f00ec4f159baa774cb6c594b3
+msgid "Band Structure"
+msgstr "ساختار نواری"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:64
+#: 5bfb6f93d3b8469b85149fbf15132816 d73ba06ba20c4ce8aadf77d1e4b2d1a6
+msgid "DOS"
+msgstr "DOS"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:69
+#: 55067b45c3ae482688a720ca034f7089
+msgid "Optical Properties"
+msgstr "Opticl Properties"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:74
+#: 7cc688c64faf405898a69c9a43483024
+msgid "All Electronic Properties"
+msgstr "All Electronic Properties"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:79
+#: 40c932c2e0d748dbb937e7bc6d00e4f9
+msgid "Key Features"
+msgstr "Key ویژگی‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:81
+#: 29deb994cd8c4199854e10a60b90d90c
+msgid ""
+"**Automatic k-path generation**: Uses material-specific high-symmetry "
+"paths"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:82
+#: 8c87763e3b5b479aae908084adc1e65d
+msgid "**Publication-quality plots**: Automatically generated figures"
+msgstr "**Publiction-qulity plots**: Automticlly generted figures"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:83
+#: 566abcf0ff4f47cd881e43c5955216f2
+msgid ""
+"**Material-specific presets**: Optimized for metals, semiconductors, "
+"insulators"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:84
+#: a99a86f7a4804b81965c9e7b09d73a00
+msgid "**Customizable parameters**: Override any setting"
+msgstr "**Customizble prmeters**: Override ny setting"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:85
+#: 256a4b757c91422aa6842ad0232d4ef4
+msgid "**Database integration**: Results automatically stored"
+msgstr "**Dtbse integrtion**: Results utomticlly stیاed"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:87
+#: 651f6ee1ebc54d19ab34f02e1544483f
+msgid "Properties Calculated"
+msgstr "Properties Clculted"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:89
+#: ab31cbdbdb334174a38c02996e1eb825
+msgid "Band Structure Workflow"
+msgstr "ساختار نواری گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:90
+#: 62ce57321a444f2aa7d877d0226644a7
+msgid "Electronic bands along k-path"
+msgstr "Electronic bوs long k-pth"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:91
+#: ac92144e1e9748fcba7458917595e7b2
+msgid "Band gap (value, type, locations)"
+msgstr "Bو gp (vlue, type, loctions)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:92
+#: 8bc51f0dac134eaca70fe92a63149f4d
+msgid "VBM and CBM energies and positions"
+msgstr "VBM و CBM energies و positions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:93
+#: 77c433b1722f40c398f365d160f76c9c
+msgid "Fermi level"
+msgstr "Fermi level"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:94
+#: b6eef03cd0f44930ae3a0f3a2cc1d057
+msgid "Band structure plot"
+msgstr "Bو structure plot"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:96
+#: b5940e176c80429281659fc4883696dd
+msgid "DOS Workflow"
+msgstr "DOS گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:97
+#: 208140ba7da849a1a0ba7faf04988a92
+msgid "Total density of states"
+msgstr "Totl density of sttes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:98
+#: e11ad14ab749486abcceaecb032399b3
+msgid "Projected DOS (by atom)"
+msgstr "Projected DOS (by tom)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:99
+#: 4f37f8a0419d47f9a2a23ccf8dea1d36
+msgid "Projected DOS (by orbital: s, p, d, f)"
+msgstr "Projected DOS (by یاbitl: s, p, d, f)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:100
+#: af163649ea304231a9b5867fc33511e0
+msgid "Integrated DOS"
+msgstr "Integrted DOS"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:101
+#: 4bd7f3533dd84b578586a3d54fe4472a
+msgid "DOS plot"
+msgstr "DOS plot"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:103
+#: 1963bd28971a499e8291834685d2ba0d
+msgid "Optical Properties Workflow"
+msgstr "Opticl Properties گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:104
+#: 975f41d5d4cd4909911cb72831b0ca6e
+msgid "Absorption coefficient α(ω)"
+msgstr "Absیاption coefficient α(ω)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:105
+#: 7ac55341c89246f38068299803a47da7
+msgid "Dielectric function ε(ω) = ε₁ + iε₂"
+msgstr "Dielectric function ε(ω) = ε₁ + iε₂"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:106
+#: b35fcb16072844e5b9445eb7377bee0a
+msgid "Refractive index n(ω)"
+msgstr "Refrctive index n(ω)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:107
+#: 58d17b657b0e4091a1131b764b83b1a6
+msgid "Reflectivity R(ω)"
+msgstr "Reflectivity R(ω)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:108
+#: b84bec8ba4cf472584c0c8d5191543e9
+msgid "Optical gap"
+msgstr "Opticl gp"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:109
+#: 60120ab33c7a4071b38e6a1d6e656b30
+msgid "Optical property plots"
+msgstr "Opticl property plots"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:112
+#: faffafa5bd2147adb01bef5db55e9047
+msgid "All of the above plus:"
+msgstr "All of  bove plus:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:113
+#: 313bfc85fae84ca7bb4f77725a3e427d
+msgid "Charge density analysis"
+msgstr "Chrge density nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:114
+#: 15114e73a3f44b649ea0fd8c658e85e2
+msgid "Electronic structure summary"
+msgstr "Electronic structure summry"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:115
+#: e0de052541ea46dfa3ed9d4db239d2ad
+msgid "Comprehensive plots"
+msgstr "Comprehensive plots"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:117
+#: fa05f2c2de734a46b42198b94f114160
+msgid "Material-Specific Considerations"
+msgstr "Mteril-Specific Considertions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:119
+#: 81078135409d440893537ff471daef47
+msgid "Metals"
+msgstr "Metls"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:126
+#: 07ce7186805442dc87811e5de405b828
+msgid "Use electronic temperature (smearing)"
+msgstr "Use electronic temperture (smering)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:127
+#: ecaf697819e94ffca55050f25bf4ec26
+msgid "No band gap"
+msgstr "No bو gp"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:128
+#: 03407975b93f40a4a3e7e9ab0bf1349d
+msgid "Check Fermi surface topology"
+msgstr "Check Fermi surfce topology"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:130
+#: be77605e1f1541658b63390b227a5c9f
+msgid "Semiconductors"
+msgstr "Semiconductیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:137
+#: 27ed3a36a6d04523b3499ac825e6e59a
+msgid "Identify gap type (direct/indirect)"
+msgstr "Identify gp type (direct/indirect)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:138
+#: 109c680f76d74ffcb62edf207b366675
+msgid "Calculate VBM/CBM effective masses"
+msgstr "Clculte VBM/CBM effective msses"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:139
+#: 8797342575aa40b4ba35bd700be7eceb
+msgid "Consider hybrid functionals for accurate gaps"
+msgstr "Consider hybrid functionls برای ccurte gps"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:141
+#: 58e28ab08dd0461c8e962f0aba7cd025
+msgid "Insulators"
+msgstr "Insultیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:148
+#: d9342509d6504b178d0cbbade31874b0
+msgid "Large band gaps (> 3 eV)"
+msgstr "Lrge bو gps (> 3 eV)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:149
+#: 61cb90b9bd4745bc89a13bc9fc2aefa4
+msgid "May need hybrid functionals"
+msgstr "My need hybrid functionls"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:150
+#: 1428bc9e06774aeeb4df48b52d9792be
+msgid "Check for localized vs delocalized states"
+msgstr "Check برای loclized vs deloclized sttes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:152
+#: 8d5a03092a17492eb25b73367ea56811
+msgid "Accuracy Considerations"
+msgstr "Accurcy Considertions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:154
+#: b6dfe180156c46df9d56fb48734aaaf9
+msgid "Standard Accuracy (Default)"
+msgstr "Stوrd Accurcy (Defult)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:155
+#: ba6a69ff5394439c93469d3dd2411b92
+msgid "k-mesh: 4×4×4 (SCF)"
+msgstr "k-mesh: 4×4×4 (SCF)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:156
+#: bec9e632eb96487c9067fb9253c70003
+msgid "Basis: DZ or DZP"
+msgstr "Bsis: DZ یا DZP"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:157
+#: d5eecae92304401f935bb6565e133132
+msgid "Cutoff: 250-300 Ry"
+msgstr "Cutoff: 250-300 Ry"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:158
+#: 309df60fc9be40dd94fe243f88e0dc04
+msgid "Good for screening"
+msgstr "Good برای screening"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:160
+#: c3c5faa94e2e4b23889f58f294b6fb93
+msgid "High Accuracy (Publications)"
+msgstr "High Accurcy (Publictions)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:175
+#: 867ee3bcf5be46ffab9abea7c417a6a5
+msgid "Common Customizations"
+msgstr "Common Customiztions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:177
+#: 526c1d94e85c4f6ca31f3e427adc3547
+msgid "Custom k-Path"
+msgstr "Custom k-Pth"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:186
+#: 1d3d5b8993a94bfa8e022e7491242336
+msgid "Energy Range for DOS"
+msgstr "Energy Rnge برای DOS"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:197
+#: 28d42c72fe0d42ba9e5eb977974af96b
+msgid "Optical Spectrum Range"
+msgstr "Opticl Spectrum Rnge"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:206
+#: 47b57278ff8e45e1bc36573e27e821f1
+msgid "Computational Cost"
+msgstr "Computtionl Cost"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:208
+#: 06a1d47885b1490da51993492bc2cde1
+msgid "Typical timing for 10-atom structure on 4 cores:"
+msgstr "Typicl timing برای 10-tom structure on 4 cیاes:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: b03b55f7d2bf42d58b9227eb9075475b
+msgid "Workflow"
+msgstr "گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: f2ce05686b9e4fb2a1dd93a324d0690e
+msgid "Time"
+msgstr "زمان"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: 3455a988b9c14198b1e92b6e2b5f9496
+msgid "Relative Cost"
+msgstr "Reltive Cost"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: b942c482708f46669d43c586851a88ea
+msgid "Band structure"
+msgstr "Bو structure"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: 3df42b5b462047d6a8390a9633e93bce
+msgid "10-15 min"
+msgstr "10-15 min"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: 42b475e2260642fb864de3f39f90c42c
+msgid "1×"
+msgstr "1×"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: afe5683fa24d4d87a91db6ee174678c7
+msgid "12-18 min"
+msgstr "12-18 min"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: 98fa9f7e170e41cda911080a7d36d588
+msgid "1.2×"
+msgstr "1.2×"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: f01b1f877f444aa4b26c8b7cdbd70e75
+msgid "Optical"
+msgstr "Opticl"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: b5712bacd3f545dc852ee3b018bc5966
+msgid "20-30 min"
+msgstr "20-30 min"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: 10726635410e467c9e0c163a8c4cef1f
+msgid "2×"
+msgstr "2×"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: 9068aaeb4f5e42b2a4d0f756ff919f11
+msgid "Complete electronic"
+msgstr "Complete electronic"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: 7bcaf8dd33914d3080dbc547a5d0096e
+msgid "45-60 min"
+msgstr "45-60 min"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md
+#: 2540530bb0c64003b71e0731eafca6d4
+msgid "4×"
+msgstr "4×"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:217
+#: f9306fd579f34d7bb424bbb830c4b929
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:219
+#: 17095dd7501641ddafcde37db36d0522
+msgid "Problem: Band gap too small"
+msgstr "Problem: Bو gp too smll"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:220
+#: ec8a1e7670c34f15aafe26f88c076be0
+msgid "Increase mesh cutoff"
+msgstr "Increse mesh cutoff"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:221
+#: bf20e61b5c144e77914de511596a1076
+msgid "Use better basis set (DZP or TZP)"
+msgstr "Use better bsis set (DZP یا TZP)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:222
+#: da48d848e0d7461a9254d59e8cba9cbc
+msgid "Consider hybrid functionals"
+msgstr "Consider hybrid functionls"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:223
+#: 6ad9810c2f8841a4a75cfddf5d09fbda
+msgid "Check structure is relaxed"
+msgstr "Check structure is relxed"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:225
+#: 5b21b6f71e204aa9a3219b787f046698
+msgid "Problem: Discontinuous bands"
+msgstr "Problem: Discontinuous bوs"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:226
+#: 35a542a8dbff4acaa372adfe30c4bc04
+msgid "Increase line_density"
+msgstr "Increse line_density"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:227
+#: 202ce3d05e4447859f8f5931e0639a79
+msgid "Use denser SCF k-mesh"
+msgstr "Use denser SCF k-mesh"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:228
+#: cc1943e8ea5a4cd59ac6d38412cc657c
+msgid "Check k-path is appropriate"
+msgstr "Check k-pth is pproprite"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:230
+#: 51156834a3c940fcb72acb1683f5dadb
+msgid "Problem: DOS shows gap but bands don't"
+msgstr "Problem: DOS shows gp but bوs don't"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:231
+#: e879d6bcb752478c881b3b1b6138f130
+msgid "k-path may not sample gap location"
+msgstr "k-pth my not smple gp loction"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:232
+#: a5a18a1ece8a496bb3f86e06535d08af
+msgid "Use automatic k-path generation"
+msgstr "Use utomtic k-pth genertion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:233
+#: 8bd3bd6f46e54b7aab824c25a7f6345b
+msgid "Verify gap is not at gamma point"
+msgstr "Verify gp is not t gmm point"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:235
+#: e2608fcc0bfb40b5aa3b077c793800c5
+msgid "Problem: Optical spectrum noisy"
+msgstr "Problem: Opticl spectrum noisy"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:236
+#: fe8a6c0dc3994da08837c90830fbd900
+msgid "Increase k-mesh density"
+msgstr "Increse k-mesh density"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:237
+#: 6dcc6e173409486c93667368b1ba786c
+msgid "Add smearing"
+msgstr "Add smering"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:238
+#: e117c9be3335482ba3bd44d5cd5a73f8
+msgid "Check convergence"
+msgstr "Check convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:240
+#: 1fdf238792ef4aaa8b9f59729f6ca2a0
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:242
+#: f8266f493acb4cef8c4ff72ed37b4af8
+msgid "See individual tutorial files for:"
+msgstr "See individul tutیاil files برای:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:243
+#: d78803750cd24503a5496a06758ca1c2
+msgid "Basic usage for each recipe"
+msgstr "Bsic usge برای ech recipe"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:244
+#: 869827255dec477f890a71e14f328f1d
+msgid "Material-specific examples"
+msgstr "Mteril-specific exmples"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:245
+#: 0dbccf7fe70b499e9ddae4752afd8b31
+msgid "High-accuracy calculations"
+msgstr "High-ccurcy clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:247
+#: 2458871f1b6c49b187b2e45484f9ea17
+msgid "Troubleshooting scenarios"
+msgstr "عیب‌یابی scenrios"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:249
+#: de79b9678639446faf33976dbee298c3
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:251
+#: a726abb389fd4a129aa620dfed3b475b
+msgid "**Start with band structure** to understand electronic character"
+msgstr "**Strt با bو structure** to understو electronic chrcter"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:252
+#: f37a4a5f34dc44d583df0b7411cf868b
+msgid "**Add DOS** for detailed orbital analysis"
+msgstr "**Add DOS** برای detiled یاbitl nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:253
+#: d8b595d699744eb3ad4008c9e7db3452
+msgid "**Include optical** if relevant to application"
+msgstr "**Include opticl** if relevnt to ppliction"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:254
+#: dce6fb39330f494a8967a7f115bc4114
+msgid "**Use complete workflow** for comprehensive study"
+msgstr "**Use complete wیاkflow** برای comprehensive study"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:255
+#: b7c953ab6d1043ca808c161489c6c72f
+msgid "**Test convergence** for k-mesh and cutoff"
+msgstr "**Test convergence** برای k-mesh و cutoff"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:256
+#: 8757b4072861423bbd7e64540b9c239d
+msgid "**Compare with experiments** for validation"
+msgstr "**Compre با experiments** برای vlidtion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:257
+#: 95ae7f66688e43d2b9ee45c87bfbd106
+msgid "**Use tier presets** for material-specific optimization"
+msgstr "**Use tier presets** برای mteril-specific optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:259
+#: 49b137952b8a49ed8a2c200635253155
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:261
+#: 8c490d53df504ae7b045c38ab5fc8674
+msgid "**Mechanical properties**: See `04_mechanical_recipes/`"
+msgstr "**Mechanical properties**: See `04_mechanical_recipes/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:262
+#: f30c3597c7b64d37a9a3dc1056dff468
+msgid "**Thermal properties**: See `05_thermal_recipes/`"
+msgstr "**Thermal properties**: See `05_thermal_recipes/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:263
+#: 2d3fa75543d245ca90daa2e9e2a49d67
+msgid "**Complete study**: See `02_complete_workflows/`"
+msgstr "**Complete study**: See `02_complete_workflows/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:264
+#: f98e1e3c413f418f8fe6cba5f3dd705d
+msgid "**Advanced features**: See `tutorials/07-advanced-features/`"
+msgstr "**Advanced features**: See `tutorials/07-advanced-features/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:266
+#: 5cc281c3cb8e4c0aa8591436aea8f550
+msgid "Further Reading"
+msgstr "Furr Reding"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:268
+#: 09ae5dba89a047a4b7d070cbc61b16c5
+msgid "RecipeBook API: `docs/source/api/recipes.rst`"
+msgstr "RecipeBook API: `docs/source/api/recipes.rst`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:269
+#: 269de674cef54fac923183810a70b29f
+msgid "Electronic structure theory: `docs/source/theory/electronic_structure.rst`"
+msgstr "Electronic structure theory: `docs/source/theory/electronic_structure.rst`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:270
+#: dcef7c6696ca41f0aafc715f5e699a36
+msgid "Convergence testing: `07_convergence_recipes/`"
+msgstr "Convergence testing: `07_convergence_recipes/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/03_electronic_recipes/README.md:271
+#: de3f530fa78e41d7b58204ba7abd57a0
+msgid "Manual approach: `tutorials/01-basics/03-band-structure/`"
+msgstr "Manual approach: `tutorials/01-basics/03-band-structure/`"

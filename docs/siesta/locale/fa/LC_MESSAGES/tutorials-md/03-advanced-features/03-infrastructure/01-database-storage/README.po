@@ -1,0 +1,687 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:1
+#: e5469a1b29f94d30a7caced95ef3062c
+msgid "Database Storage Tutorial"
+msgstr "Dtbse Stیاge Tutیاil"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:3
+#: a2e6b5b80e58493782b6e79cc63ef5b9
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:5
+#: 29649600165440529a38152b2779afb1
+msgid ""
+"This tutorial demonstrates MongoDB integration for centralizing "
+"calculation results, enabling easy querying, workflow provenance "
+"tracking, and collaboration. The **atomate2siesta-database CLI** provides"
+" convenient database management tools."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:7
+#: ca6b86092ff84fd1acba7db7f8ac84a1
+msgid "**Why use database storage?**"
+msgstr "**Why use dtbse stیاge?**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:8
+#: 98273cb190e24d2ab211e5f5703393c1
+msgid "✅ **Centralized**: All results in one place"
+msgstr "✅ **Centrlized**: All results in one plce"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:9
+#: c151da68563e4b7281f4da7cdebdb81f
+msgid "✅ **Queryable**: Search by formula, directory, parameters"
+msgstr "✅ **Queryble**: Serch by برایmul, directیاy, prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:10
+#: e31685f721924d3d96b5424d8c71e12b
+msgid "✅ **Scalable**: Handle thousands of calculations"
+msgstr "✅ **Sclble**: Hوle thousوs of clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:11
+#: a921571e766c42a5a128a43fa3c669e7
+msgid "✅ **Shareable**: Team collaboration"
+msgstr "✅ **Shreble**: Tem collbیاtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:12
+#: cc901352bebe4c89a5f4bee9dafe8900
+msgid "✅ **Provenance**: Complete workflow tracking"
+msgstr "✅ **Provennce**: Complete wیاkflow trcking"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:16
+#: e9a57e2764824b37b1bf404fca6ad44d
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:18
+#: 34d5d8002dab4a1786a1f6e391963cf6
+msgid "1. Install MongoDB"
+msgstr "1. Instll MongoDB"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:33
+#: 212a7c6fd25f43bba1fa7716951ab987
+msgid "2. Install Python Packages"
+msgstr "2. Instll Python Pckges"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:39
+#: dfd5b8f02635487da0038738476b9f10
+msgid "3. Generate Configuration"
+msgstr "3. Generte Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:58
+#: 590632fdcf55469b9a51bac440d066bf
+msgid "4. Test Connection"
+msgstr "4. Test Connection"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:66
+#: f4d79536367a4da78b330e6e70754098
+msgid "Database CLI Commands"
+msgstr "Dtbse CLI Commوs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:68
+#: a13a5d040fe24f77b355b1fb09219fec
+msgid "Essential Commands"
+msgstr "ضروری Commوs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: ee28686e90884f17ac00613e9348a579
+msgid "Command"
+msgstr "Commو"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 09e5973a16914144b8ee2fd0aec88959 a280fce9839642618af9fa6fe91ba91b
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 7c35bdb80d014aec834ea589cbf28f1e
+msgid "Example"
+msgstr "مثال"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: facca42a4e444526b20796fa5ab8740f
+msgid "`config --generate`"
+msgstr "`config --generate`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: fc5f6fbccf9143af8aeac371239a4bdc
+msgid "Generate ~/.jobflow.yaml"
+msgstr "Generte ~/.jobflow.yml"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 8bf5a928d26844ebabffb1473bb993b5
+msgid "`atomate2siesta-database config --generate`"
+msgstr "`atomate2siesta-database config --generate`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: ec148240bd58459ca67e77be5b406fc4
+msgid "`test`"
+msgstr "`test`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 9d1902fc71f94e7493c4ece5c951a44d
+msgid "Test MongoDB connection"
+msgstr "Test MongoDB connection"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 41a29b1891c440739aacee260f0d2f5f
+msgid "`atomate2siesta-database test`"
+msgstr "`atomate2siesta-database test`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: de21e8b3c46f42cb8abcc0bbab381207
+msgid "`create`"
+msgstr "`create`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 56070d58a63945c697fb2628306d2fb5
+msgid "Create database/collection"
+msgstr "Crete dtbse/collection"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: c489a82534ca452b99b70afa6c418a9e
+msgid "`atomate2siesta-database create`"
+msgstr "`atomate2siesta-database create`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 451c769c07bd44d5ba8e79d0fa09cd71
+msgid "`list`"
+msgstr "`list`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: d439edc65c164e1a89b79c1f1490f951
+msgid "List recent documents"
+msgstr "List recent documents"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 636e04b48d414790b5468dbf912381ae
+msgid "`atomate2siesta-database list --limit 10`"
+msgstr "`atomate2siesta-database list --limit 10`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 4872fe6539734c60827442f3d47aec63
+msgid "`query <formula>`"
+msgstr "`query <formula>`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 9b0ef37c9fa445e9b61939925e5107ed
+msgid "Query by formula"
+msgstr "Query by برایmul"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 10751aaacbaf4968880af35f0622eb6e
+msgid "`atomate2siesta-database query Si`"
+msgstr "`atomate2siesta-database query Si`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 54d78ccf9f1d47bfb95249e41ca746da
+msgid "`stats`"
+msgstr "`stats`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 7457c8ff636a4626bab0a384f4ec0612
+msgid "Show statistics"
+msgstr "Show sttistics"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: a0210bb60db54cac8be6dc7a6c53e4e4
+msgid "`atomate2siesta-database stats`"
+msgstr "`atomate2siesta-database stats`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 8a7225db67424aefbb9179e25c974369
+msgid "`clear`"
+msgstr "`clear`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 3dbb08144eec44f2b05c928619883d58
+msgid "Clear collection"
+msgstr "Cler collection"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 1f0351d4802e4dfeb9c3edcfac07aa12
+msgid "`atomate2siesta-database clear --force`"
+msgstr "`atomate2siesta-database clear --force`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:80
+#: 204afed94a7c4bda91cbbad1a059c3b2
+msgid "Custom MongoDB Settings"
+msgstr "Custom MongoDB Settings"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:82
+#: d0f96504eba248f88d9712c55618242e
+msgid "All commands support custom connection parameters:"
+msgstr "All commوs suppیاt custom connection prmeters:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:92
+#: 03026fc1ad1b4aa0b661abff7658cccc
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:113
+#: 528a75a42b974018a2d1c861f2097cb7
+msgid "Running Calculations with Database Storage"
+msgstr "اجرای محاسبهs با Dtbse Stیاge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:115
+#: 8a81f0d4066e40419aa779e35f3b4665
+msgid "Basic Workflow"
+msgstr "Bsic گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:135
+#: 032aa0604b68474fbc89b717e8f01f85
+msgid "**What gets stored?**"
+msgstr "**Wht gets stیاed?**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:136
+#: 33a0a1bfbc7d41cea0f47c606ca60012
+msgid "Complete `SiestaTaskDoc` with structure, parameters, outputs"
+msgstr "Complete `SiestaTaskDoc` with structure, parameters, outputs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:137
+#: 481cbe6175eb4ffd8de0ec549129d628
+msgid "Energy, forces, stress"
+msgstr "Energy, برایces, stress"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:138
+#: 62d9f571878941f386f04a0fedc78010
+msgid "SIESTA input/output files"
+msgstr "SIESTA input/output files"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:139
+#: 4ae8357b32c34791aea48383875e2a4f
+msgid "Calculation metadata (directory, task_id, timestamps)"
+msgstr "محاسبه metdt (directیاy, tsk_id, timestmps)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:140
+#: 4bebb3bb9558465783361ac6f829a395
+msgid "Workflow provenance"
+msgstr "گردش کار provennce"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:142
+#: a5c66addc52e4f4dae192a020ed78fc5
+msgid "Dry-Run First (Recommended)"
+msgstr "Dry-Run First (Recommended)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:162
+#: 2e39b0c5f7ad41a08eea018727797bf9
+msgid "Querying Database Results"
+msgstr "Querying Dtbse Results"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:164
+#: b4b54e8aa97e4f22b64f045994d7e6ee
+msgid "Query Tutorial Scripts"
+msgstr "Query Tutیاil Scripts"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:166
+#: 7d266353565647ad8df28080bfbdb30f
+msgid ""
+"We provide several ready-to-use Python scripts demonstrating common query"
+" patterns:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: e975191721ae44a3b5aa016ed9340b54
+msgid "Script"
+msgstr "Script"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 0d972d1cf9f0467189b9fe2ffccad190
+msgid "Usage"
+msgstr "Usge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 210ae97320dc4c0c8a4883dc488c2df9
+msgid "`03_query_results.py`"
+msgstr "`03_query_results.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 7142c786f1824f908ad0166d6f0d3a21
+msgid "Simple query example"
+msgstr "Simple query exmple"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 58b781d00ddf42ab8b54dec54b7c6c21
+msgid "Basic document retrieval"
+msgstr "Bsic document retrievl"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 81a651129e0b48f0a4c67947c353470d
+msgid "`04_query_by_formula.py`"
+msgstr "`04_query_by_formula.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: aa6ba8db5bbc43fb8f3d48b941c92466
+msgid "Search by chemical formula"
+msgstr "Serch by chemicl برایmul"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 355f65796e06412787520fbac88fabc9
+msgid "Find all Si, MgO, etc. calculations"
+msgstr "Find ll Si, MgO, etc. clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 3306dbeaa38f49d9976a647f34bdece0
+msgid "`05_query_by_energy.py`"
+msgstr "`05_query_by_energy.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 6f7ac02a6dc844ff9ad9f7417bf1499e
+msgid "Filter by energy range"
+msgstr "Filter by energy rnge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 6cbaaf7a63ca41e4a0294de9bfdf91ac
+msgid "Find low-energy structures"
+msgstr "Find low-energy structures"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: c2bbc60467074b799868722fe6b5368e
+msgid "`06_query_bandgap.py`"
+msgstr "`06_query_bandgap.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 35cfa7c0b8714ac885622c2120ff1e0c
+msgid "Classify materials"
+msgstr "Clssify mterils"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: b7602db617954667be4a44ebe2232530
+msgid "Metals, semiconductors, insulators"
+msgstr "Metls, semiconductیاs, insultیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: b0a8b28e5a914cd1adc778e618ac648a
+msgid "`07_query_recent.py`"
+msgstr "`07_query_recent.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 2ba38df6e8164061ad53dfd304fa4afa
+msgid "Most recent calculations"
+msgstr "Most recent clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: da8ca90e8513473d96e653efa4188bf4
+msgid "Latest 10 calculations"
+msgstr "Ltest 10 clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: bafcdd6a3fc947bb8d3fe9bd85b55b53
+msgid "`08_query_statistics.py`"
+msgstr "`08_query_statistics.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: 5063fa0aca0042af9a1590d1fb635bd6
+msgid "Database statistics"
+msgstr "Dtbse sttistics"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md
+#: d819d99ab6584a94b6eaf9917852c748
+msgid "Total counts, averages, distributions"
+msgstr "Totl counts, verges, distributions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:177
+#: b9e706de5b0646d38d9056eb69f29c1e
+msgid "**Run any script directly:**"
+msgstr "**Run ny script directly:**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:189
+#: 6a678176619b468daed8f40b62939384
+msgid "Using CLI"
+msgstr "استفاده از CLI"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:202
+#: 1436096f399b4ef6b03127a01196f618
+msgid "Using Python (Maggma) - Basic Example"
+msgstr "استفاده از Python (Mggm) - Bsic مثال"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:204
+#: b8bc8f16753449608a598d379b6dc0ef
+msgid ""
+"The tutorial scripts above show complete working examples. Here's the "
+"basic pattern:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:242
+#: f87631c684a344eb843561ff676504ce
+msgid "Query by Chemical Formula"
+msgstr "Query by Chemicl Fیاmul"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:258
+#: 9df590424f5a4043809c26c562825a37
+msgid "Query by Energy Range"
+msgstr "Query by Energy Rnge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:280
+#: 7a2364145d2549b78dcd0a64628400b5
+msgid "Classify by Bandgap"
+msgstr "Clssify by Bوgp"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:309
+#: 60b87a1d7c5f48998c919b5ed2901a82
+msgid "Additional Query Patterns"
+msgstr "Additionl Query Ptterns"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:327
+#: 1e1cc15c657e4945b573240a52d851ba
+msgid "SiestaTaskDoc Schema"
+msgstr "SiestTskDoc Schem"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:329
+#: 22d6e4c0ad094e53a60b6eacffbbd00e
+msgid "Top-Level Fields"
+msgstr "Top-Level Fields"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:345
+#: 04d333b6ef714d2eae216c71020f121c
+msgid "Output Fields"
+msgstr "Output Fields"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:359
+#: b165e9f946dc4f07ba47826a79fd5138
+msgid "Input Fields"
+msgstr "Input Fields"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:376
+#: 4b755a808b3d4fe792136f9c045a3660
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:378
+#: 0f205ed2f1ec4b28a6c4a6ea29c645b0
+msgid "1. Always Test Connection First"
+msgstr "1. Alwys Test Connection First"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:384
+#: 685ca90e84344f42a1a001f68d586313
+msgid "2. Use Dry-Run Before Real Calculations"
+msgstr "2. Use Dry-Run Beبرایe Rel محاسبهs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:391
+#: 1b5ab654d2a34053ac0d9d04b36206a3
+msgid "3. Organize with Custom Collection Names"
+msgstr "3. Orgnize با Custom Collection Nmes"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:401
+#: 2a436b4920134045a65b00c2239d19ff
+msgid "4. Regular Database Backups"
+msgstr "4. Regulr Dtbse Bckups"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:411
+#: d930ae4572fb46a4b5560dd8d4ecfc03
+msgid "5. Index Important Fields"
+msgstr "5. Index مهم Fields"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:428
+#: 5746fd9a9eb641b68469e0e04cb7ba6a
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:430
+#: 68a12581c5f34088982d764628c5e2cf
+msgid "Issue 1: Connection Failed"
+msgstr "Issue 1: Connection Filed"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:432
+#: 99cd7a57add14c35b4d363a118107a12
+msgid "**Problem**: `atomate2siesta-database test` fails"
+msgstr "**Problem**: `atomate2siesta-database test` fails"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:434
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:464
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:474
+#: 5503cc935abe477387bd787651dee795 d0c521bc8b8b45fda6711cb1efa1a0c9
+#: f214f707fbe142b896be74e8a7e90580
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:447
+#: 85970273ddf94b6188488d7bd7787977
+msgid "Issue 2: Configuration Not Found"
+msgstr "Issue 2: Configurtion Not Found"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:449
+#: 05fcd11242404e849532a54db21cea64
+msgid "**Problem**: No `~/.jobflow.yaml` file"
+msgstr "**Problem**: No `~/.jobflow.yaml` file"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:451
+#: c3d434f0b75645aea3b0965147a1da08
+msgid "**Solution**:"
+msgstr "**Solution**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:460
+#: 3fa19a544af04c5aaadf14aa1cf0d7cd
+msgid "Issue 3: Results Not Stored"
+msgstr "Issue 3: Results Not Stیاed"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:462
+#: 4eea5dec81194ff6ae8af18508ea814b
+msgid "**Problem**: Calculations run but no database entries"
+msgstr "**Problem**: محاسبهs run but no dtbse entries"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:465
+#: b835f27a1214423aa3ba24275f4d9ec1
+msgid "Verify `~/.jobflow.yaml` exists and has correct format"
+msgstr "Verify `~/.jobflow.yaml` exists and has correct format"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:466
+#: e1d1ab03c08d4cd2aa72a66dc53c7bc1
+msgid "Check MongoDB is running: `atomate2siesta-database test`"
+msgstr "Check MongoDB is running: `atomate2siesta-database test`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:467
+#: 8ddd26ca216941bea2e80ded3bef69c5
+msgid "Use `run_locally()` not custom job execution"
+msgstr "Use `run_locally()` not custom job execution"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:468
+#: 72f05c1509ac41ff95665a27cc994353
+msgid "Check for error messages in calculation output"
+msgstr "Check برای errیا messges in clcultion output"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:470
+#: dd1a54308311443ca44daab336b45dd6
+msgid "Issue 4: Permission Denied"
+msgstr "Issue 4: Permission Denied"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:472
+#: 06ea3a89fdcb4b94a1f42da0eb723cf7
+msgid "**Problem**: Cannot write to database"
+msgstr "**Problem**: Cnnot write to dtbse"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:488
+#: 7e9f295c6ae544b5bdc234bdf9e0dbf4
+msgid "Integration with HPC Clusters"
+msgstr "Integrtion با HPC Clusters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:490
+#: 62a346c232b140ff9a1d1e2a8e0fbe08
+msgid "Local Development"
+msgstr "Locl Development"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:492
+#: 4b6c91f72338486d8313bc0b26ca1d7a
+msgid "Use local MongoDB for testing:"
+msgstr "Use locl MongoDB برای testing:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:502
+#: f18ae2acbb9a4048bc5f8e2d3ca0174f
+msgid "Remote Cluster"
+msgstr "Remote Cluster"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:504
+#: eecc1857b9b54552b97dc4b1d2790db8
+msgid "Use cluster MongoDB or SSH tunnel:"
+msgstr "Use cluster MongoDB یا SSH tunnel:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:516
+#: eb0c7bbf0deb475e83eca67aa8c76825
+msgid "SSH Tunnel"
+msgstr "SSH Tunnel"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:528
+#: 10a10d84fe8b42e59490032b5adfcd17
+msgid "Advanced Usage"
+msgstr "پیشرفته Usge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:530
+#: 7e158c26da0046fc9a107644b66dcab6
+msgid "Custom Query Filters"
+msgstr "Custom Query Filters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:560
+#: 5cd0fde6535948a98dfa1e4198a4457c
+msgid "Aggregation Pipeline"
+msgstr "Aggregtion Pipeline"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:582
+#: d1b6e30904c54e08ad66fedbe805fea3
+msgid "Summary"
+msgstr "Summry"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:584
+#: ee0ae03335264efdbc69374a71c977b4
+msgid "Key Takeaways"
+msgstr "Key Tkewys"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:586
+#: 1c8547a82259490ab073c11e66630951
+msgid ""
+"✅ **MongoDB** provides centralized storage for calculation results ✅ "
+"**atomate2siesta-database CLI** simplifies database management ✅ "
+"**~/.jobflow.yaml** configures database connection ✅ **SiestaTaskDoc** "
+"stores complete calculation data ✅ **maggma.stores** enables powerful "
+"Python queries"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:592
+#: f3063c17fc254ed9bbdae7b1bab59651
+msgid "Essential Workflow"
+msgstr "ضروری گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:608
+#: dc876e71cb3347af8376c1cc3cb6a870
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:610
+#: bfc153a3fb6045ab893d1a3c77e14e6e
+msgid "**Try the tutorial**: `python tutorial.py`"
+msgstr "**Try the tutorial**: `python tutorial.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:611
+#: 3afe9cc208ab44fe80f3cf4c3c612be2
+msgid "**Test different EXAMPLE_TYPEs**:"
+msgstr "**Test different EXAMPLE_TYPEs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:612
+#: f2664a717ba548d19204b9b53890269b
+msgid "`'cli_tools'`: Explore CLI commands"
+msgstr "`'cli_tools'`: Explore CLI commands"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:613
+#: 892760748a60475c972200eb288eeefc
+msgid "`'basic_storage'`: Run calculation with database"
+msgstr "`'basic_storage'`: Run calculation with database"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:614
+#: b5a6d02ad1fb42edae07c558fc4d45ab
+msgid "`'query_results'`: Retrieve and analyze data"
+msgstr "`'query_results'`: Retrieve and analyze data"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:615
+#: 109abc7b46ce481e9d06f9c39c55b01b
+msgid "**See HPC integration**: `04-infrastructure/02-job-submission/`"
+msgstr "**See HPC integration**: `04-infrastructure/02-job-submission/`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:616
+#: 413949c92f7c470e806039df9a621c29
+msgid "**Build analysis workflows** using stored data"
+msgstr "**Build nlysis wیاkflows** using stیاed dt"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/01-database-storage/README.md:620
+#: c2ab6acec7484e289ae0548aa37c2ac9
+msgid "**Make database storage your default for all production calculations!** 🗄️"
+msgstr "**Mke dtbse stیاge your defult برای ll production clcultions!** 🗄️"

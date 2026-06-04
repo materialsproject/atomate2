@@ -1,0 +1,586 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/custodian.rst:3 b536d4d062b24571b3d092a4b36abb55
+msgid "Custodian Error Handling"
+msgstr "مدیریت خطا با Custodian"
+
+#: ../../source/custodian.rst:5 f04bd916ffef41f2be69e515fed1bd68
+msgid ""
+"Automatic error detection and recovery using the "
+"MaterialsProject/custodian library."
+msgstr "تشخیص خودکار خطا و بازیابی با استفاده از کتابخانه MaterialsProject/custodian."
+
+#: ../../source/custodian.rst:7 9f6fef50e93a41efa5a5585f9342f1e2
+msgid "Refactored to use custodian library as foundation"
+msgstr "بازسازی‌شده برای استفاده از کتابخانه custodian به‌عنوان پایه"
+
+#: ../../source/custodian.rst:13 9a2d6f05a9bd4bcdb81e668344122298
+msgid "Overview"
+msgstr "مرور کلی"
+
+#: ../../source/custodian.rst:15 a7791a821f014a429ef91ea8fd5c92ea
+msgid ""
+"The custodian error handling system provides automatic detection and "
+"recovery from common SIESTA calculation failures, built on the battle-"
+"tested **MaterialsProject/custodian** library framework."
+msgstr "سیستم مدیریت خطای Custodian تشخیص خودکار و بازیابی از خطاهای رایج محاسبات SIESTA را فراهم می‌کند، که بر پایه چارچوب کتابخانه آزمایش‌شده **MaterialsProject/custodian** ساخته شده است."
+
+#: ../../source/custodian.rst:20 37d9ce4e6d314dc7b3cbda3825b9d817
+msgid "Key Features"
+msgstr "ویژگی‌های کلیدی"
+
+#: ../../source/custodian.rst:22 ecb3c2c45415421c870b38f09d459aed
+msgid "✅ **10+ error types** automatically detected"
+msgstr "✅ تشخیص خودکار **۱۰+ نوع خطا**"
+
+#: ../../source/custodian.rst:24 fa82cd8e689d4c858a0e45300a7f143a
+msgid "✅ **Progressive correction strategies** with increasing aggressiveness"
+msgstr "✅ **استراتژی‌های اصلاح پیشرونده** با افزایش تهاجمی‌بودن"
+
+#: ../../source/custodian.rst:26 d49a278c8d2e4e0183561fa7842e7a69
+msgid "✅ **Automatic JSON logging** (``custodian.json``) with full history"
+msgstr "✅ **ثبت خودکار JSON** (``custodian.json``) با تاریخچه کامل"
+
+#: ../../source/custodian.rst:28 63ca8deb4f314a98817f1e2eebe7664d
+msgid "✅ **MSONable serialization** for jobflow compatibility"
+msgstr "✅ **سریال‌سازی MSONable** برای سازگاری با jobflow"
+
+#: ../../source/custodian.rst:30 c666f0cb8cc5442f9d60f857dcdcf986
+msgid "✅ **Validation framework** for output quality checking"
+msgstr "✅ **چارچوب اعتبارسنجی** برای بررسی کیفیت خروجی"
+
+#: ../../source/custodian.rst:32 7918c5f27e8a474ea5fa349cd8fd90f8
+msgid "✅ **Safety limits** to prevent infinite retry loops"
+msgstr "✅ **محدودیت‌های ایمنی** برای جلوگیری از حلقه‌های تلاش مجدد بی‌نهایت"
+
+#: ../../source/custodian.rst:37 bb7ca476885544ee96675512645ecf9d
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/custodian.rst:40 c03a746c7ce3443bb1f0fba6065dd0e8
+msgid "Basic Usage"
+msgstr "استفاده پایه"
+
+#: ../../source/custodian.rst:58 aca545800b4a4c769c9ad424ef6361e0
+msgid "Custom Handlers"
+msgstr "مدیریت‌کننده‌های سفارشی"
+
+#: ../../source/custodian.rst:84 a336353316b14d7aa9bc21d688235e4d
+msgid "Error Detection"
+msgstr "تشخیص خطا"
+
+#: ../../source/custodian.rst:87 600ee59076e245f984d452080f2bff1c
+msgid "Supported Error Types (10 Total)"
+msgstr "انواع خطاهای پشتیبانی‌شده (۱۰ نوع در مجموع)"
+
+#: ../../source/custodian.rst:89 103fff3915ba47fcb159d8539943ee65
+msgid "**SCF_NOT_CONV**"
+msgstr "**SCF_NOT_CONV**"
+
+#: ../../source/custodian.rst:91 5f47c559d6f44aefa2056d513c5ac0c6
+msgid "Pattern: ``\"SCF did not converge\"``"
+msgstr "الگو: ``\"SCF did not converge\"``"
+
+#: ../../source/custodian.rst:92 349fe6a5938b4a63914ff4207337b987
+msgid "Cause: Electronic convergence failure"
+msgstr "علت: شکست همگرایی الکترونی"
+
+#: ../../source/custodian.rst:93 7b53c70c1646428eb8356f95360417a6
+msgid "Handler: ``SCFConvergenceHandler`` (5-level strategy)"
+msgstr "مدیریت‌کننده: ``SCFConvergenceHandler`` (استراتژی ۵ سطحی)"
+
+#: ../../source/custodian.rst:95 046b4959af5e4c82b29d3968f4bb76eb
+msgid "**MEMORY**"
+msgstr "**MEMORY**"
+
+#: ../../source/custodian.rst:97 3bb034a8f8544436b5c2f83476e4ec0e
+msgid "Pattern: ``\"Out of memory\"``"
+msgstr "الگو: ``\"Out of memory\"``"
+
+#: ../../source/custodian.rst:98 723b60d30e9f427994d4dbbc501ea430
+msgid "Cause: Insufficient memory allocation"
+msgstr "علت: تخصیص حافظه ناکافی"
+
+#: ../../source/custodian.rst:99 f72285f406294811b6245917d7c2ec95
+msgid "Handler: ``MemoryHandler``"
+msgstr "مدیریت‌کننده: ``MemoryHandler``"
+
+#: ../../source/custodian.rst:101 78340b35d972416eb021a00896c94ae7
+msgid "**TIME_LIMIT**"
+msgstr "**TIME_LIMIT**"
+
+#: ../../source/custodian.rst:103 95e8d60215bf4306bc9aa3ae25dd3076
+msgid "Pattern: ``\"TIME LIMIT\"``"
+msgstr "الگو: ``\"TIME LIMIT\"``"
+
+#: ../../source/custodian.rst:104 5f531bd6b30a4971861ee0120d97ca17
+msgid "Cause: Job exceeded walltime"
+msgstr "علت: کار از زمان دیواری فراتر رفت"
+
+#: ../../source/custodian.rst:105 e33c57b45a4b42b2a0b94aad8daf7fb2
+msgid "Handler: ``TimeHandler`` (restart from DM)"
+msgstr "مدیریت‌کننده: ``TimeHandler`` (راه‌اندازی مجدد از DM)"
+
+#: ../../source/custodian.rst:107 a759f8787a284098829b99dfa4758b91
+msgid "**NUMERICAL**"
+msgstr "**NUMERICAL**"
+
+#: ../../source/custodian.rst:109 d6b4fb777b934d91b9e0443ea46b5a22
+msgid "Pattern: ``\"NaN\"`` or ``\"Inf\"``"
+msgstr "الگو: ``\"NaN\"`` یا ``\"Inf\"``"
+
+#: ../../source/custodian.rst:110 ec10cace6f0d4313adbced2460ab7927
+msgid "Cause: Numerical instability"
+msgstr "علت: بی‌ثباتی عددی"
+
+#: ../../source/custodian.rst:111 ../../source/custodian.rst:135
+#: ../../source/custodian.rst:141 619537ffb70a467aa99e201a42783516
+#: bf3691c9b41d422fb527c52fdcb18630 dd8bc37678ab45c19e589be03be44612
+msgid "Handler: ``NumericalHandler``"
+msgstr "مدیریت‌کننده: ``NumericalHandler``"
+
+#: ../../source/custodian.rst:113 c984a08e2c9a4531baf9192f2ff8058a
+msgid "**SINGULAR_OVERLAP**"
+msgstr "**SINGULAR_OVERLAP**"
+
+#: ../../source/custodian.rst:115 7eb3e933172f446284abcc8ca0f96b92
+msgid "Pattern: ``\"Singular overlap matrix\"``"
+msgstr "الگو: ``\"Singular overlap matrix\"``"
+
+#: ../../source/custodian.rst:116 3785ceec320b4ca897c25fb29f21a66a
+msgid "Cause: Overlap matrix not positive definite"
+msgstr "علت: ماتریس همپوشانی معین مثبت نیست"
+
+#: ../../source/custodian.rst:117 ../../source/custodian.rst:123
+#: 666dc4d5eaad460b934bdb12e3014e7b b2a00399760b4b31a43938d62e7e6502
+msgid "Handler: ``SCFConvergenceHandler``"
+msgstr "مدیریت‌کننده: ``SCFConvergenceHandler``"
+
+#: ../../source/custodian.rst:119 8dc2583acec44cec81a79f320f2543cc
+msgid "**NEGATIVE_EIGENVALUES**"
+msgstr "**NEGATIVE_EIGENVALUES**"
+
+#: ../../source/custodian.rst:121 5f257449fc3c4a648792b706b494c222
+msgid "Pattern: ``\"Negative eigenvalues in overlap\"``"
+msgstr "الگو: ``\"Negative eigenvalues in overlap\"``"
+
+#: ../../source/custodian.rst:122 828d1414c98e4b6883b8bbf464515a0f
+msgid "Cause: Overlap matrix stability issue"
+msgstr "علت: مشکل ثبات ماتریس همپوشانی"
+
+#: ../../source/custodian.rst:125 91c4d11254914343bc0995deb0bb66fc
+msgid "**GEOMETRY_OPTIMIZATION**"
+msgstr "**GEOMETRY_OPTIMIZATION**"
+
+#: ../../source/custodian.rst:127 84d25ba45f6649769e9d68a115706aeb
+msgid "Pattern: ``\"Geometry relaxation failed\"``"
+msgstr "الگو: ``\"Geometry relaxation failed\"``"
+
+#: ../../source/custodian.rst:128 c883e51bdde34ca5b5335f0b901fcb46
+msgid "Cause: Structure optimization did not converge"
+msgstr "علت: بهینه‌سازی ساختار همگرا نشد"
+
+#: ../../source/custodian.rst:129 b13522bf569143d9a9e81747da1e4115
+msgid "Handler: Custom relaxation handler"
+msgstr "مدیریت‌کننده: مدیریت‌کننده آرام‌سازی سفارشی"
+
+#: ../../source/custodian.rst:131 6b76babc70da4443a0f570693c7d7a6a
+msgid "**BASIS_GENERATION**"
+msgstr "**BASIS_GENERATION**"
+
+#: ../../source/custodian.rst:133 8ece581bf36a4413a996b01c9329fdc3
+msgid "Pattern: ``\"Error in basis set generation\"``"
+msgstr "الگو: ``\"Error in basis set generation\"``"
+
+#: ../../source/custodian.rst:134 7015ba4996c041a28fc9ae39b67ee49e
+msgid "Cause: PAO basis construction failed"
+msgstr "علت: شکست ساخت پایه PAO"
+
+#: ../../source/custodian.rst:137 aa86ba389a4f42a7b57aac3963f41921
+msgid "**GRID_INTEGRATION**"
+msgstr "**GRID_INTEGRATION**"
+
+#: ../../source/custodian.rst:139 f7606158087a463aa258c921b5a67236
+msgid "Pattern: ``\"Grid integration error\"``"
+msgstr "الگو: ``\"Grid integration error\"``"
+
+#: ../../source/custodian.rst:140 3f7539cd740f45fe93b037bf992b1f69
+msgid "Cause: Real-space grid issues"
+msgstr "علت: مشکلات شبکه فضای واقعی"
+
+#: ../../source/custodian.rst:143 91e5e2b366b547ba89432daf03c52ccd
+msgid "**FILE_IO**"
+msgstr "**FILE_IO**"
+
+#: ../../source/custodian.rst:145 bf9b97436685406e941a043111aef597
+msgid "Pattern: ``\"Error opening/reading file\"``"
+msgstr "الگو: ``\"Error opening/reading file\"``"
+
+#: ../../source/custodian.rst:146 6d61b2e83f2d438eb64a69a5e025487a
+msgid "Cause: File system issues"
+msgstr "علت: مشکلات سیستم فایل"
+
+#: ../../source/custodian.rst:147 6cbb1633df52409cab03997bc30c37c8
+msgid "Handler: Generic retry"
+msgstr "مدیریت‌کننده: تلاش مجدد عمومی"
+
+#: ../../source/custodian.rst:152 791b42a74f984a59a06582cb5a9a847f
+msgid "SCF Convergence Handler"
+msgstr "مدیریت‌کننده همگرایی SCF"
+
+#: ../../source/custodian.rst:154 0c685dd44a4e4437bece0c8e1eafecea
+msgid ""
+"The most important handler, with a **5-level progressive correction "
+"strategy**:"
+msgstr "مهم‌ترین مدیریت‌کننده، با **استراتژی اصلاح پیشرونده ۵ سطحی**:"
+
+#: ../../source/custodian.rst:157 2c487a9e2d704f51b0df4e1dc04f7560
+msgid "Level 1: Gentle Reduction"
+msgstr "سطح ۱: کاهش ملایم"
+
+#: ../../source/custodian.rst:168 512274c4447645d1824e0ee0733b5872
+msgid "Level 2: More Conservative"
+msgstr "سطح ۲: محافظه‌کارانه‌تر"
+
+#: ../../source/custodian.rst:179 4288dd8146d24e10aaa8437e74c034ed
+msgid "Level 3: Very Conservative + Perturbation"
+msgstr "سطح ۳: بسیار محافظه‌کارانه + آشفتگی"
+
+#: ../../source/custodian.rst:191 a08ca2bfcc234ab89cc1c4db0eef42d3
+msgid "Level 4: Change Algorithm (Pulay)"
+msgstr "سطح ۴: تغییر الگوریتم (Pulay)"
+
+#: ../../source/custodian.rst:202 036487fcfdd0410989c2df54e5dfe3b1
+msgid "Level 5: Last Resort (Broyden)"
+msgstr "سطح ۵: آخرین راه‌حل (Broyden)"
+
+#: ../../source/custodian.rst:213 0d5db7c1d31e43758c0f16337086f59d
+msgid "Example"
+msgstr "مثال"
+
+#: ../../source/custodian.rst:227 6b4084eaa13348d9b7ec1fd6ff1586fa
+msgid "Custodian Output"
+msgstr "خروجی Custodian"
+
+#: ../../source/custodian.rst:230 b9792e9823424209b6babfd50bca6278
+msgid "custodian.json Structure"
+msgstr "ساختار custodian.json"
+
+#: ../../source/custodian.rst:232 f4b7b57d09294af6ae1acfecc67874da
+msgid "After each run, ``custodian.json`` contains complete audit trail:"
+msgstr "پس از هر اجرا، ``custodian.json`` حاوی ردیابی کامل حسابرسی است:"
+
+#: ../../source/custodian.rst:276 6a3033bb5fa24f3695b5aa976b36d945
+msgid "Analyzing Results"
+msgstr "تحلیل نتایج"
+
+#: ../../source/custodian.rst:296 a5071f9a38134ca8a0736ebc3daac184
+msgid "Architecture"
+msgstr "معماری"
+
+#: ../../source/custodian.rst:299 fd000760e0e740dca66b80495dd8c9d2
+msgid "Built on Custodian Library"
+msgstr "ساخته‌شده بر پایه کتابخانه Custodian"
+
+#: ../../source/custodian.rst:301 b6fa808210114f6ea1985c02fc89e1c7
+msgid "atomate2siesta uses ``custodian>=2024.4.18`` as foundation:"
+msgstr "atomate2siesta از ``custodian>=2024.4.18`` به‌عنوان پایه استفاده می‌کند:"
+
+#: ../../source/custodian.rst:303 f89248baa1c949d5ab7b205f653bfc58
+msgid "**Key Classes**:"
+msgstr "**کلاس‌های کلیدی**:"
+
+#: ../../source/custodian.rst:305 29cd873256a44b63bbb87b107a727f7e
+msgid "``Custodian`` - Main orchestrator (from custodian library)"
+msgstr "``Custodian`` - هماهنگ‌کننده اصلی (از کتابخانه custodian)"
+
+#: ../../source/custodian.rst:306 1543da0a9d474db59fe634b9fe2f5af9
+msgid "``Job`` - Job execution wrapper (inherit from ``custodian.custodian.Job``)"
+msgstr "``Job`` - پوشش اجرای کار (وراثت از ``custodian.custodian.Job``)"
+
+#: ../../source/custodian.rst:307 8d71a4696d0c45c4bdf5934124dca2c5
+msgid ""
+"``ErrorHandler`` - Error detection and correction (inherit from "
+"``custodian.custodian.ErrorHandler``)"
+msgstr "``ErrorHandler`` - تشخیص و اصلاح خطا (وراثت از ``custodian.custodian.ErrorHandler``)"
+
+#: ../../source/custodian.rst:308 4b5c8ce7810c493fabd69739838443e2
+msgid ""
+"``Validator`` - Output validation (inherit from "
+"``custodian.custodian.Validator``)"
+msgstr "``Validator`` - اعتبارسنجی خروجی (وراثت از ``custodian.custodian.Validator``)"
+
+#: ../../source/custodian.rst:310 6783a826ecc8472c953c308d2f45be9b
+msgid "**Benefits**:"
+msgstr "**مزایا**:"
+
+#: ../../source/custodian.rst:312 ace9183493ce4c23bd00a9374e89605d
+msgid "~660 lines of retry logic removed (handled by library)"
+msgstr "حذف حدود ۶۶۰ خط منطق تلاش مجدد (مدیریت‌شده توسط کتابخانه)"
+
+#: ../../source/custodian.rst:313 c318eacda5d1474fb0f9c27f25d1c5fd
+msgid "Battle-tested framework from MaterialsProject"
+msgstr "چارچوب آزمایش‌شده از MaterialsProject"
+
+#: ../../source/custodian.rst:314 db3824051e26418988b0376f4a7db402
+msgid "Automatic JSON logging and tracking"
+msgstr "ثبت و ردیابی خودکار JSON"
+
+#: ../../source/custodian.rst:315 4424a566ea0b4a419384380813262913
+msgid "MSONable serialization for jobflow"
+msgstr "سریال‌سازی MSONable برای jobflow"
+
+#: ../../source/custodian.rst:318 1e77010e1d41497d81ef280ade634852
+msgid "Module Structure"
+msgstr "ساختار ماژول"
+
+#: ../../source/custodian.rst:342 14bccabfabba4ea28957982ecb8e94db
+msgid "Advanced Usage"
+msgstr "استفاده پیشرفته"
+
+#: ../../source/custodian.rst:345 f7905a1681f2460bb485cc085056efe5
+msgid "Custom Error Patterns"
+msgstr "الگوهای خطای سفارشی"
+
+#: ../../source/custodian.rst:347 430d5032ceb24f05bc49186fea6ea04d
+msgid "Add custom error detection:"
+msgstr "افزودن تشخیص خطای سفارشی:"
+
+#: ../../source/custodian.rst:360 6bc27e1cc8d14628b716343ca3f6e205
+msgid "Writing Custom Handlers"
+msgstr "نوشتن مدیریت‌کننده‌های سفارشی"
+
+#: ../../source/custodian.rst:383 53fe4e1193cd441fabc44ad2581923d0
+msgid "Custom Validators"
+msgstr "اعتبارسنج‌های سفارشی"
+
+#: ../../source/custodian.rst:398 05596e7b2b794265b2a577f0ca55de08
+msgid "Production Best Practices"
+msgstr "بهترین شیوه‌های تولید"
+
+#: ../../source/custodian.rst:401 73df8b5cea8942d283ff634143519f82
+msgid "When to Enable Custodian"
+msgstr "چه زمانی Custodian را فعال کنیم"
+
+#: ../../source/custodian.rst:403 66ea756c29394002a3c229533022cc47
+msgid "✅ **Always enable for**:"
+msgstr "✅ **همیشه فعال کنید برای**:"
+
+#: ../../source/custodian.rst:405 3b36c4895d4c4b1bb4912246a3156d7d
+msgid "Production calculations"
+msgstr "محاسبات تولید"
+
+#: ../../source/custodian.rst:406 551e43d8245145908e8f682ab843e0d9
+msgid "High-throughput workflows"
+msgstr "جریان‌های کاری با توان عملیاتی بالا"
+
+#: ../../source/custodian.rst:407 7c6f72fca57647708d3b41b2d02b47c2
+msgid "HPC batch jobs"
+msgstr "کارهای دسته‌ای HPC"
+
+#: ../../source/custodian.rst:408 a0dca13ebb584cc8b89c40f09df9faec
+msgid "Challenging systems (metals, surfaces)"
+msgstr "سیستم‌های چالش‌برانگیز (فلزات، سطوح)"
+
+#: ../../source/custodian.rst:410 781b5b73da86475da7e0ffa38374b384
+msgid "❌ **Disable for**:"
+msgstr "❌ **غیرفعال کنید برای**:"
+
+#: ../../source/custodian.rst:412 69d17fee7c7843fd90903ebe3f09f649
+msgid "Testing/debugging (want to see raw failures)"
+msgstr "آزمایش/اشکال‌زدایی (می‌خواهید خطاهای خام را ببینید)"
+
+#: ../../source/custodian.rst:413 3261a4500d0f4cab9c1de459eb8bbd44
+msgid "Very simple systems (overhead not needed)"
+msgstr "سیستم‌های بسیار ساده (سربار لازم نیست)"
+
+#: ../../source/custodian.rst:414 4ceae717b9ca47e885a746f109963be4
+msgid "Custom error handling workflows"
+msgstr "جریان‌های کاری مدیریت خطای سفارشی"
+
+#: ../../source/custodian.rst:417 586f7c2ad7ea47019f84d96871947e43
+msgid "Configuration Guidelines"
+msgstr "راهنماهای پیکربندی"
+
+#: ../../source/custodian.rst:419 445c284d8dea466e859cb770fe25285d
+msgid "**Standard Production**:"
+msgstr "**تولید استاندارد**:"
+
+#: ../../source/custodian.rst:428 f05dd18f491343d0a3ccd483d791d7f3
+msgid "**High-Throughput (Conservative)**:"
+msgstr "**توان عملیاتی بالا (محافظه‌کارانه)**:"
+
+#: ../../source/custodian.rst:444 2297b3a8c0a64533ad85117d34e94dcf
+msgid "**Testing (Aggressive)**:"
+msgstr "**آزمایش (تهاجمی)**:"
+
+#: ../../source/custodian.rst:455 0601d1f3b20c4546a77655bd66c59728
+msgid "Monitoring"
+msgstr "نظارت"
+
+#: ../../source/custodian.rst:471 bb87d4ba0e14436a960d883527b636ed
+msgid "Validation Testing"
+msgstr "آزمایش اعتبارسنجی"
+
+#: ../../source/custodian.rst:473 98aa83f3b7a743f9acf530fb5a319254
+msgid "The custodian system has been validated with:"
+msgstr "سیستم Custodian با موارد زیر اعتبارسنجی شده است:"
+
+#: ../../source/custodian.rst:475 d2aba930c5844d1a98e641c4f4b3e6b8
+msgid "**Test Results**:"
+msgstr "**نتایج آزمایش**:"
+
+#: ../../source/custodian.rst:477 e6a1c9b8fa054a519149122a6ff70be6
+msgid "✅ 10 SCF failures detected and corrected"
+msgstr "✅ ۱۰ شکست SCF تشخیص و اصلاح شد"
+
+#: ../../source/custodian.rst:479 8effade35bf94c3da51a66a31b4b7aaa
+msgid "✅ 5 correction levels applied progressively"
+msgstr "✅ ۵ سطح اصلاح به‌صورت پیشرونده اعمال شد"
+
+#: ../../source/custodian.rst:481 fbb29fad4d894716b3eb4f75b2df0f25
+msgid "✅ FDF file modifications confirmed"
+msgstr "✅ تغییرات فایل FDF تایید شد"
+
+#: ../../source/custodian.rst:483 02596cda9ae74de483b03d39fc152d38
+msgid "✅ Safety limits respected (max_attempts enforced)"
+msgstr "✅ محدودیت‌های ایمنی رعایت شد (max_attempts اعمال شد)"
+
+#: ../../source/custodian.rst:485 9d11e85d2dd14079a338731dee32a6e8
+msgid "✅ JSON logging complete and accurate"
+msgstr "✅ ثبت JSON کامل و دقیق است"
+
+#: ../../source/custodian.rst:487 35ac3ed564d64adea280bcbb0763684c
+msgid "**Example Test Case**:"
+msgstr "**مورد آزمایش نمونه**:"
+
+#: ../../source/custodian.rst:489 c4a4f64dcec543668f72684e38a4df68
+msgid "Metallic surface with intentional SCF convergence difficulty:"
+msgstr "سطح فلزی با مشکل عمدی همگرایی SCF:"
+
+#: ../../source/custodian.rst:491 44bd1e0f153745ffbc49267a440062a9
+msgid "Initial run: SCF fails (no occupation function)"
+msgstr "اجرای اولیه: SCF شکست می‌خورد (بدون تابع اشغال)"
+
+#: ../../source/custodian.rst:492 abb80d53b9de428a95b5d16fd229ffc7
+msgid "Level 1 correction: Reduce mixer weight"
+msgstr "اصلاح سطح ۱: کاهش وزن میکسر"
+
+#: ../../source/custodian.rst:493 19b54b25a437487b91a8bfc9d5329fa3
+msgid "Level 2 correction: Further reduce + history adjustment"
+msgstr "اصلاح سطح ۲: کاهش بیشتر + تنظیم تاریخچه"
+
+#: ../../source/custodian.rst:494 8a5860c3462941e687559ff003a164ce
+msgid "Result: Converges after 2 corrections"
+msgstr "نتیجه: پس از ۲ اصلاح همگرا می‌شود"
+
+#: ../../source/custodian.rst:499 13fcb0d145884bf0a257ecadc3b2adaa
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/custodian.rst:502 6369cc86016b4d1c99d379bbed1e25bd
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/custodian.rst:504 1730db8c48274a6fb45b00781d95ee20
+msgid "**Problem**: Custodian keeps retrying but never succeeds"
+msgstr "**مشکل**: Custodian به تلاش مجدد ادامه می‌دهد اما هرگز موفق نمی‌شود"
+
+#: ../../source/custodian.rst:506 ../../source/custodian.rst:513
+#: ../../source/custodian.rst:520 721fae0c45e34709b37c00aa52679571
+#: b7e424da1c46403a9387b947ddff12a8 fba100b77f9844cd9815503c5d4ef17d
+msgid "**Solution**:"
+msgstr "**راه‌حل**:"
+
+#: ../../source/custodian.rst:507 ecb4495c85b3486da925a689e601e168
+msgid "Check ``custodian.json`` to see what corrections were tried"
+msgstr "``custodian.json`` را بررسی کنید تا ببینید چه اصلاحاتی امتحان شده است"
+
+#: ../../source/custodian.rst:508 0533fc13b29345c59c39edfac58d5891
+msgid "May need to adjust initial parameters (not just corrections)"
+msgstr "ممکن است نیاز به تنظیم پارامترهای اولیه باشد (نه فقط اصلاحات)"
+
+#: ../../source/custodian.rst:509 5d097df59c0a47afa57d3a1082225c6f
+msgid "Consider if system is fundamentally problematic"
+msgstr "در نظر بگیرید که آیا سیستم اساساً مشکل‌دار است"
+
+#: ../../source/custodian.rst:511 cd102f157d4743a398e62bd126792e61
+msgid "**Problem**: Corrections not being applied"
+msgstr "**مشکل**: اصلاحات اعمال نمی‌شوند"
+
+#: ../../source/custodian.rst:514 01a294761a314932abd2764719a48002
+msgid "Verify ``use_custodian=True`` is set"
+msgstr "تایید کنید که ``use_custodian=True`` تنظیم شده است"
+
+#: ../../source/custodian.rst:515 e218e87a2d324bed8c830ca67cd407c8
+msgid "Check that handlers are correctly registered"
+msgstr "بررسی کنید که مدیریت‌کننده‌ها به‌درستی ثبت شده‌اند"
+
+#: ../../source/custodian.rst:516 3ab5436dbc5e4ed598e0cc98ec12b954
+msgid "Look for handler initialization errors in logs"
+msgstr "به دنبال خطاهای مقداردهی اولیه مدیریت‌کننده در لاگ‌ها باشید"
+
+#: ../../source/custodian.rst:518 276e4ffe8e074684b382422e3ad4cf64
+msgid "**Problem**: custodian.json not created"
+msgstr "**مشکل**: custodian.json ایجاد نشده است"
+
+#: ../../source/custodian.rst:521 d781464925504490a02edc30cc7e67d5
+msgid "Custodian may not have been invoked"
+msgstr "ممکن است Custodian فراخوانی نشده باشد"
+
+#: ../../source/custodian.rst:522 97d056b36f2d4684bf444c82c3e83c1a
+msgid "Check that calculation actually ran"
+msgstr "بررسی کنید که محاسبه واقعاً اجرا شده است"
+
+#: ../../source/custodian.rst:523 00f67bd716e54d52a75f4f41c0b7e7a0
+msgid "Verify file permissions"
+msgstr "مجوزهای فایل را بررسی کنید"
+
+#: ../../source/custodian.rst:528 256de5f4b4fd40e19bea19f70ced0274
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/custodian.rst:530 a46dc28d318b488baef8e8d03c3859a2
+msgid ":doc:`features` - Overview of custodian features"
+msgstr ":doc:`features` - مرور کلی ویژگی‌های custodian"
+
+#: ../../source/custodian.rst:531 0b464320f6594813a3eee0e97b6db8cf
+msgid ":doc:`tutorials/infrastructure` - Tutorial 15 (custodian tutorial)"
+msgstr ":doc:`tutorials/infrastructure` - آموزش ۱۵ (آموزش custodian)"
+
+#: ../../source/custodian.rst:532 5509f59285574bb78703f1ae491a68cc
+msgid ""
+"`REFACTORING_SUMMARY.md` - Complete custodian library integration guide "
+"(438 lines)"
+msgstr "`REFACTORING_SUMMARY.md` - راهنمای کامل یکپارچه‌سازی کتابخانه custodian (۴۳۸ خط)"
+
+#: ../../source/custodian.rst:533 a184239a77754fcc888977559a3af931
+msgid "MaterialsProject custodian: https://github.com/materialsproject/custodian"
+msgstr "MaterialsProject custodian: https://github.com/materialsproject/custodian"
+
+#: ../../source/custodian.rst:539 0bfc5c1835c047cdb3a2bb8e54abb5bf
+msgid ""
+"The custodian system was refactored in 2024 to use the "
+"MaterialsProject/custodian library as foundation, removing ~660 lines of "
+"custom retry logic while adding battle-tested reliability."
+msgstr "سیستم Custodian در سال ۲۰۲۴ بازسازی شد تا از کتابخانه MaterialsProject/custodian به‌عنوان پایه استفاده کند، که حدود ۶۶۰ خط منطق تلاش مجدد سفارشی را حذف کرد در حالی که قابلیت اطمینان آزمایش‌شده را اضافه کرد."

@@ -1,0 +1,607 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:1
+#: a29e068ab7a14b848fca33df348d7581
+msgid "Oxygen Vacancy Migration in MgO Tutorial"
+msgstr "Oxygen Vcncy Migrtion in MgO Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:3
+#: 84ebf2a410024731934feb19455139b6
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:5
+#: 47daf7f1301d472dacefd25a9e805ff3
+msgid ""
+"This tutorial (`10_oxygen_vacancy_mgo.py`) demonstrates a **realistic NEB"
+" calculation** for oxygen vacancy (V_O) migration in cubic MgO. This is a"
+" classic example in solid-state physics and materials science."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:7
+#: 0fbcd6e5f50d4eecb9cd4d3ecc0b6088
+msgid "Physical System"
+msgstr "Physicl System"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:9
+#: 5d7ae26d22b24519a6feece2bb955400
+msgid "**Material**: MgO (periclase, rocksalt structure)"
+msgstr "**Mteril**: MgO (periclse, rockslt structure)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:10
+#: 4275f376bfc44219926377d6af79b246
+msgid "Space group: Fm-3m (225)"
+msgstr "Spce group: Fm-3m (225)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:11
+#: 36f9a68f7f8145cbad01065f81b96900
+msgid "Lattice parameter: a = 4.212 Å"
+msgstr "Lttice prmeter:  = 4.212 Å"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:12
+#: f82d2aeb9a634fb4bcb457758818462b
+msgid "Structure: Face-centered cubic with Mg²⁺ and O²⁻ ions"
+msgstr "Structure: Fce-centered cubic با Mg²⁺ و O²⁻ ions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:14
+#: 1ea58dd4d7214bfb9d88dd9bb997ab72
+msgid "**Defect**: Oxygen vacancy (V_O)"
+msgstr "**Defect**: Oxygen vcncy (V_O)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:15
+#: cd21457af9754044adb48c3997afd6e8
+msgid "Created by removing one oxygen atom"
+msgstr "Creted by removing one oxygen tom"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:16
+#: 2cbbdf98b46b4b17b49e264c9736f8d5
+msgid ""
+"Leaves 2 excess electrons (can be neutral, V_O^0, or charged V_O^+, "
+"V_O^2+)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:17
+#: b8692f1bd0614605bcc66bd576b10302
+msgid "Important for ionic conductivity and catalysis"
+msgstr "مهم برای ionic conductivity و ctlysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:19
+#: 7de0575d7c224375964b31f6ef098310
+msgid "**Migration Path**: Nearest neighbor oxygen sites"
+msgstr "**Migrtion Pth**: Nerest neighbیا oxygen sites"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:20
+#: 45a856a7551046c1b761697675767a17
+msgid "In rocksalt structure, O atoms form FCC sublattice"
+msgstr "In rockslt structure, O toms برایm FCC sublttice"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:21
+#: 4e3c57400c15417a8971588c350ece60
+msgid "Nearest O-O distance: a/√2 ≈ 2.98 Å along <110>"
+msgstr "Nerest O-O distnce: /√2 ≈ 2.98 Å long <110>"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:22
+#: aad3680775074d719c9294e4673130a7
+msgid "Vacancy hops through octahedral interstitial site"
+msgstr "Vcncy hops through octhedrl interstitil site"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:24
+#: c63b897c1264453d902aff5671653146
+msgid "Expected Results"
+msgstr "Expected Results"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:26
+#: 0a0d3746bd6249a5a6e15bb887efb4a3
+msgid "Migration Barrier"
+msgstr "Migrtion Brrier"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:27
+#: 4e4e3a7542b747f4baebde2be87ecfdb
+msgid "**DFT-PBE**: ~2-3 eV (this calculation)"
+msgstr "**DFT-PBE**: ~2-3 eV (this clcultion)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:28
+#: e2522106ef074c509db8fdaa4d7347f9
+msgid "**DFT-HSE06**: ~2.5-3.5 eV (hybrid functional, more accurate)"
+msgstr "**DFT-HSE06**: ~2.5-3.5 eV (hybrid functionl, mیاe ccurte)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:29
+#: 8d3ceb47c46d462493506799502b54bf
+msgid "**Experimental**: ~2.2-2.8 eV (from conductivity measurements)"
+msgstr "**Experimentl**: ~2.2-2.8 eV (from conductivity mesurements)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:31
+#: c24514364eba49cab0d3ceab79c5ddf8
+msgid "Physical Meaning"
+msgstr "Physicl Mening"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:32
+#: 1e4e24dba11d42fcb30c1104fabf7a13
+msgid "**High barrier (>2 eV)** → Low oxygen mobility at room temperature"
+msgstr "**High brrier (>2 eV)** → Low oxygen mobility t room temperture"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:33
+#: 58a35a00f08746eda09c3227dafb1c95
+msgid "At 300 K: τ ≈ 10^18 s (effectively immobile)"
+msgstr "At 300 K: τ ≈ 10^18 s (effectively immobile)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:34
+#: 6265824b5470479f968f6323daa9584f
+msgid "At 1000 K: τ ≈ 10^-3 s (becomes mobile)"
+msgstr "At 1000 K: τ ≈ 10^-3 s (becomes mobile)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:36
+#: dd653c4b1da64532a7774a9858e5b23d
+msgid "Rate Constant (Arrhenius)"
+msgstr "Rte Constnt (Arrhenius)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:49
+#: 65b5fde5be5f46afbd88faaef6bc6d4b
+msgid "Key Features of This Tutorial"
+msgstr "Key ویژگی‌ها of This Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:51
+#: aa570914216248878149c27a69b0fca9
+msgid "1. Realistic System"
+msgstr "1. Relistic System"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:52
+#: be6462daf06a4b0098881c1e0b4b4761
+msgid "Uses 2×2×2 supercell (32 atoms total, 31 after vacancy)"
+msgstr "Uses 2×2×2 supercell (32 toms totl, 31 fter vcncy)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:53
+#: 83f142c4ba924fd28012a723f953e918
+msgid "Proper size to minimize vacancy-vacancy interactions"
+msgstr "Proper size to minimize vcncy-vcncy interctions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:54
+#: e44855a0f15c4922b252ec7bd7b79162
+msgid "Includes endpoint relaxation (critical for vacancies!)"
+msgstr "Includes endpoint relxtion (criticl برای vcncies!)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:56
+#: 6952d256eac7403cbb8368463c136ec1
+msgid "2. Appropriate NEB Settings"
+msgstr "2. Approprite NEB Settings"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:57
+#: cf0f3b50e9c4443d87058b2c70332c48
+msgid "**7 images**: Good resolution for ~3 Å migration"
+msgstr "**7 imges**: Good resolution برای ~3 Å migrtion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:58
+#: 9749388ee66d4f5ba3f35b3824f12a05
+msgid "**FIRE optimizer**: Often better for ionic systems"
+msgstr "**FIRE optimizer**: Often better برای ionic systems"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:59
+#: 6e9e510bd5d744d5825feb55ec2f311b
+msgid "**fmax = 0.05 eV/Å**: Tight convergence for accurate barrier"
+msgstr "**fmx = 0.05 eV/Å**: Tight convergence برای ccurte brrier"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:60
+#: ada940ba363b48c3bd13ab5f2906f4d4
+msgid "**Endpoint relaxation enabled**: Allows local relaxation around vacancy"
+msgstr "**Endpoint relxtion enbled**: Allows locl relxtion round vcncy"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:62
+#: dc07cfb3293344209e3745f0c0106085
+msgid "3. SIESTA Parameters Optimized for MgO"
+msgstr "3. SIESTA Prmeters Optimized برای MgO"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:63
+#: 90f1efb0a8e74bab8c0631e38596418b
+msgid "**DZP basis**: Balance of accuracy and speed for oxides"
+msgstr "**DZP bsis**: Blnce of ccurcy و speed برای oxides"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:64
+#: 56f7f3a9bd544bffb74de04a7639aed0
+msgid "**300 Ry cutoff**: Higher for accurate oxide energetics"
+msgstr "**300 Ry cutoff**: Higher برای ccurte oxide energetics"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:65
+#: 9e78a7d6aed34304a084f1e33c350a16
+msgid "**PBE functional**: Good for ionic systems"
+msgstr "**PBE functionl**: Good برای ionic systems"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:66
+#: 4ec4fa7643d84379a814c6d665cda2c2
+msgid "**Slower SCF mixing (0.1)**: More stable for vacancies"
+msgstr "**Slower SCF mixing (0.1)**: Mیاe stble برای vcncies"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:68
+#: 4223ff43f5e849859700fbbba3b9d0e7
+msgid "4. Complete Analysis"
+msgstr "4. Complete Anlysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:69
+#: 68e7d8a0b7114829ad86faba3d87fa18
+msgid "Live progress monitoring"
+msgstr "Live progress monitیاing"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:70
+#: efd20bb4a93d40048dad4ec238a4494f
+msgid "Energy profile plot"
+msgstr "Energy profile plot"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:71
+#: 59056510649d4b34b7a42b5feef63e44
+msgid "Structure evolution tracking"
+msgstr "Structure evolution trcking"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:72
+#: ad9624a4c9154a1daa62ac595b8d1430
+msgid "Checkpoint/resume capability"
+msgstr "Checkpoint/resume cpbility"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:74
+#: 36bf5f55f90741bb90e4f7a072e52625
+msgid "Running the Tutorial"
+msgstr "اجرای  Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:81
+#: 73930a40263544898c45ed72a3e385d0
+msgid "**Runtime**: ~30-60 minutes (depends on system and convergence)"
+msgstr "**Runtime**: ~30-60 minutes (depends on system و convergence)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:83
+#: fbe93f5ea38a43c3a0664a51b8cf5d23
+msgid "**Monitor progress**:"
+msgstr "**Monitیا progress**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:88
+#: 098f4eb387b44e79896a1fd620da5557
+msgid "Output Files"
+msgstr "Output فایلs"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:90
+#: 222bba91e4194224b42396cc6e0462fc
+msgid "Main Results"
+msgstr "Min Results"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:91
+#: d81964046ec54659ac61ad5f505a4b5c
+msgid "`neb_energy_profile.png` - Energy vs reaction coordinate"
+msgstr "`neb_energy_profile.png` - Energy vs reaction coordinate"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:92
+#: 9123ad6228a64cb39e32e6a58bdbc4eb
+msgid "`job_*_NEB_Optimization/ase_neb_info.txt` - Final barrier and TS info"
+msgstr "`job_*_NEB_Optimization/ase_neb_info.txt` - Final barrier and TS info"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:93
+#: 546114a4a6b947838d2f8b6f649b8939
+msgid "`job_*_NEB_Optimization/neb_progress.log` - Full iteration history"
+msgstr "`job_*_NEB_Optimization/neb_progress.log` - Full iteration history"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:95
+#: 190fcb1fa9344368bfb52b0dfa90d128
+msgid "Structures"
+msgstr "Structures"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:96
+#: 13d1f6d9e6a5466fbaffa2050e72d887
+msgid "`mgo_vo_initial.cif` - Initial vacancy position"
+msgstr "`mgo_vo_initial.cif` - Initial vacancy position"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:97
+#: 4451b52d717b4dfdaab30e7473adda88
+msgid "`mgo_vo_final.cif` - Final vacancy position"
+msgstr "`mgo_vo_final.cif` - Final vacancy position"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:98
+#: 3b58e51ba5984ba29ec179905599ed63
+msgid "`job_*_Generate_Images/image_*.xyz` - Interpolated NEB path"
+msgstr "`job_*_Generate_Images/image_*.xyz` - Interpolated NEB path"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:99
+#: 0cbb3697504d4d22939c9977662e0a77
+msgid "`job_*_NEB_Optimization/image_*/` - SIESTA calculations for each image"
+msgstr "`job_*_NEB_Optimization/image_*/` - SIESTA calculations for each image"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:101
+#: 8284f900b4d94500b03907ee99dc0b8e
+msgid "Checkpoint/Resume"
+msgstr "Checkpoint/Resume"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:102
+#: 2df39b736990491fa398b0fb16a9dfa1
+msgid "`job_*_NEB_Optimization/neb_checkpoint.json` - Resume data"
+msgstr "`job_*_NEB_Optimization/neb_checkpoint.json` - Resume data"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:103
+#: 7b781b1310c543e6b958dabee52ab354
+msgid "`job_*_NEB_Optimization/structure_iter_N.cif` - Structure evolution"
+msgstr "`job_*_NEB_Optimization/structure_iter_N.cif` - Structure evolution"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:105
+#: 40a619f4d795411d8d7002c52528e948
+msgid "Physical Applications"
+msgstr "Physicl Applictions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:107
+#: d7c30b79ca6d43bebe2095246b164d8d
+msgid "1. Ionic Conductivity"
+msgstr "1. Ionic Conductivity"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:108
+#: eb759210b72a449c868aeefdcff9078d
+msgid "Oxygen vacancy migration controls O²⁻ conductivity in:"
+msgstr "Oxygen vcncy migrtion controls O²⁻ conductivity in:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:109
+#: 3cf25885500e4d208b3c27795dff5dd9
+msgid "Solid oxide fuel cells (SOFC)"
+msgstr "Solid oxide fuel cells (SOFC)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:110
+#: 6463f26d95cd45ca8836a072c93869d1
+msgid "Oxygen sensors"
+msgstr "Oxygen sensیاs"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:111
+#: 0796b898ff39468a9626b77407c64702
+msgid "Resistive switching memory (ReRAM)"
+msgstr "Resistive switching memیاy (ReRAM)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:113
+#: d4a882ab8b2147debac479163efb2364
+msgid "**Conductivity relation**:"
+msgstr "**Conductivity reltion**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:118
+#: 2124acdce0304e2699184c91af8c652f
+msgid "2. Catalysis"
+msgstr "2. Ctlysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:119
+#: db2e4c52347f4a4d9aaa8517171d9870
+msgid "Oxygen vacancies are active sites for:"
+msgstr "Oxygen vcncies re ctive sites برای:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:120
+#: 7fbaa4edff1e49049c50eac665a83f02
+msgid "CO oxidation"
+msgstr "CO oxidtion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:121
+#: 839ad81d36d94192921a98eb5d1342aa
+msgid "Water splitting"
+msgstr "Wter splitting"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:122
+#: 10801e74a98048f3adbbfe7bc609840c
+msgid "Hydrogenation reactions"
+msgstr "Hydrogention rections"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:124
+#: f5d4d326c71943b48fc51d0d97f04f6b
+msgid "3. Defect Chemistry"
+msgstr "3. Defect Chemistry"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:125
+#: 9c02dbe0ab294e909b4a5c7d03bbe88b
+msgid "Vacancy concentration from thermodynamics:"
+msgstr "Vcncy concentrtion from rmodynmics:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:130
+#: 749704ed6ad2487d940a1a62b9414c78
+msgid "Combined with migration gives diffusion coefficient:"
+msgstr "Combined با migrtion gives diffusion coefficient:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:135
+#: 5437e127190346b09e14688fd543fe5a
+msgid "Variations to Try"
+msgstr "Vritions to Try"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:137
+#: d32324086b434f8d964dcdc56466faa7
+msgid "1. Different Migration Paths"
+msgstr "1. Different Migrtion Pths"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:145
+#: f30af615825243b69ed87c27886e9351
+msgid "2. Charged Vacancies"
+msgstr "2. Chrged Vcncies"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:153
+#: 67d1fed8b8c64fdbbb490f1f725878ca
+msgid "3. Climbing Image NEB"
+msgstr "3. Climbing Imge NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:161
+#: 21814dfd03b141488059f5c9d66a6ef3
+msgid "4. Temperature Effects"
+msgstr "4. Temperture Effects"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:162
+#: b46107a7471a4ad28a7a38b18bd0bb86
+msgid "Use quasi-harmonic approximation (QHA) to get free energy barriers:"
+msgstr "Use qusi-hrmonic pproximtion (QHA) to get free energy brriers:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:168
+#: 35bd9e349e6d4d3bb64d58afb0b73b4c
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:170
+#: 15e30198eba64a0db77fd2c97acd9cc7
+msgid "Issue: Barrier too high (>4 eV)"
+msgstr "Issue: Brrier too high (>4 eV)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:171
+#: 3c83d3f391564ea0856add0cf99cbafd
+msgid ""
+"**Cause**: Wrong migration path or sites not relaxed **Solution**: Check "
+"vacancy positions, ensure relax_endpoints=True"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:174
+#: 8bdfb6c473cc43628ae9faed7a2dfc7a
+msgid "Issue: Barrier too low (<1 eV)"
+msgstr "Issue: Brrier too low (<1 eV)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:175
+#: 667a815208c34b29a56e825bbd1e51fe
+msgid ""
+"**Cause**: Structures too close or same symmetry **Solution**: Check "
+"migration distance, try different neighbor site"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:178
+#: 04a610f422654e87a23ad99d4b23a420
+msgid "Issue: SCF not converging"
+msgstr "Issue: SCF not converging"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:179
+#: 1dfbec16172d4258a8d478417e78ca53
+msgid "**Cause**: Vacancy creates localized electrons **Solution**:"
+msgstr "**Cuse**: Vcncy cretes loclized electrons **Solution**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:181
+#: b40eb482f6d646eca1c98cd1a4cbdde8
+msgid "Increase MaxSCFIterations to 300"
+msgstr "Increse MxSCFItertions to 300"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:182
+#: d34910a6e0ae45aebcadfa4e38f0e8a8
+msgid "Reduce SCF.Mixer.Weight to 0.05"
+msgstr "Reduce SCF.Mixer.Weight to 0.05"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:183
+#: 125880836c254e56a266b9e3c402b88d
+msgid "Consider spin polarization"
+msgstr "Consider spin polriztion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:185
+#: e2f03a593aab41abbe0d58e63d9018c4
+msgid "Issue: Slow convergence"
+msgstr "Issue: Slow convergence"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:186
+#: 5f3b6f2f63b24de5a470cc2073ce2ad6
+msgid "**Cause**: Large structural relaxation needed **Solution**:"
+msgstr "**Cuse**: Lrge structurl relxtion needed **Solution**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:188
+#: cc40af6507984efe9fc8c413f7c18457
+msgid "Use looser fmax for first run (0.1 eV/Å)"
+msgstr "Use looser fmx برای first run (0.1 eV/Å)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:189
+#: ad72991b0c674043a916a256fe58b1c9
+msgid "Then tighten with climbing image NEB"
+msgstr "Then tighten با climbing imge NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:191
+#: 7d82a0a244f94edfb1f3f78452a1d748
+msgid "Literature References"
+msgstr "Literture References"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:193
+#: 3d4f398e43304b3082e78452e1c1a981
+msgid "**MgO Vacancy Migration**:"
+msgstr "**MgO Vcncy Migrtion**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:194
+#: 7e92528f5c9942e587cae179760a4da4
+msgid "Broqvist et al., J. Phys. Chem. C 112, 4898 (2008)"
+msgstr "Broqvist et l., J. Phys. Chem. C 112, 4898 (2008)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:195
+#: f85666f055e54d1ba5fd9043b1fe7184
+msgid "Henkelman et al., J. Chem. Phys. 113, 9901 (2000)"
+msgstr "Henkelmn et l., J. Chem. Phys. 113, 9901 (2000)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:197
+#: ddc16240d78647f89840316618a83814
+msgid "**NEB Method**:"
+msgstr "**NEB Method**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:198
+#: 951d4a930ede419d8303370b0e504180
+msgid "Jónsson et al., Classical and Quantum Dynamics (1998)"
+msgstr "Jónsson et l., Clssicl و Quntum Dynmics (1998)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:199
+#: 37856d0cc2f740c9b1876e8e3bc6eef5
+msgid "Sheppard et al., J. Chem. Phys. 128, 134106 (2008)"
+msgstr "Shepprd et l., J. Chem. Phys. 128, 134106 (2008)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:201
+#: 9d148dcfbff143af96f7abec24f017aa
+msgid "**Oxide Defects**:"
+msgstr "**Oxide Defects**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:202
+#: e6be75b37145457987ca204175947c81
+msgid "Stoneham, Theory of Defects in Solids (2001)"
+msgstr "Stonehm, Theیاy of Defects in Solids (2001)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:203
+#: 4a5a6b509d6645698b5788ebedd23fc9
+msgid "Janotti & Van de Walle, Rep. Prog. Phys. 72, 126501 (2009)"
+msgstr "Jnotti & Vn de Wlle, Rep. Prog. Phys. 72, 126501 (2009)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:205
+#: 307f687fc654468491eb2fe630c0b520
+msgid "Summary"
+msgstr "Summry"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:207
+#: d5f2b50c81c74a1b9680c5f6e1e0f096
+msgid "This tutorial provides a **production-ready** example of:"
+msgstr "This tutیاil provides  **production-redy** exmple of:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:208
+#: 533f6468d7fc4970b0f6f2d52eb70496
+msgid "✅ Realistic defect migration calculation"
+msgstr "✅ Relistic defect migrtion clcultion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:209
+#: cbe6db591de7438cba5759551f6cddc3
+msgid "✅ Proper NEB setup with endpoint relaxation"
+msgstr "✅ Proper NEB setup با endpoint relxtion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:210
+#: fa33aa549b134f3aa64f5743e83065b0
+msgid "✅ Optimized SIESTA parameters for oxides"
+msgstr "✅ Optimized SIESTA prmeters برای oxides"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:211
+#: baffd23602bc4319a98fc18f1c68bf9d
+msgid "✅ Complete analysis and visualization"
+msgstr "✅ Complete nlysis و visuliztion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:212
+#: 74fe7fc8148642f884ed9ed391addeb9
+msgid "✅ Physical interpretation of results"
+msgstr "✅ Physicl interprettion of results"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README_OXYGEN_VACANCY.md:214
+#: d74a52395d96497b93d1b44e08a737a2
+msgid ""
+"The workflow can be adapted to other oxide systems (TiO₂, ZrO₂, CeO₂, "
+"etc.) and other defect types (cation vacancies, interstitials, etc.)."
+msgstr ""

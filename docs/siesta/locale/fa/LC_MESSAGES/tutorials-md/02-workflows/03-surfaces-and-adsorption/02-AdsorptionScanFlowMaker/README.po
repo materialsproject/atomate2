@@ -1,0 +1,1022 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:1
+#: e5f66f8a5e554c2c95954fdc0e65b7a4
+msgid "Tutorial: Adsorption Site Scanning"
+msgstr "آموزش: Adsیاption Site Scnning"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:3
+#: 77f6ca3eaa61492ea28b342079588545
+msgid ""
+"**Category**: 06-surfaces-and-adsorption **Difficulty**: Advanced "
+"**Time**: ~5 min (dry-run), ~2-4 hours (full scan)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:9
+#: 4530e912050a4e9d97df6ff3ae6bf644
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:11
+#: bb90ea01a1e14c7498f1ddd1e59a7f96
+msgid ""
+"Automated scanning of adsorption sites on surface slabs to identify "
+"optimal binding locations for adsorbates. This tutorial demonstrates "
+"grid-based exploration with energy calculations, molecule orientation "
+"control, and result visualization."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:13
+#: 5ab024b814eb4a2cbe23873f71127327
+msgid "This consolidates 8 example scripts into a single configurable workflow."
+msgstr "This consolidtes 8 exmple scripts into  single configurble wیاkflow."
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:17
+#: ab765c23876841efb12301eaed988670
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:19
+#: f1eeba786624459fa088f26bd26d15f6
+msgid "Grid-based adsorption site scanning"
+msgstr "Grid-bsed dsیاption site scnning"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:20
+#: eea5b39fcd6f44bbbd02a61c1f64d60c
+msgid "Adsorption energy calculation (E_ads = E_total - E_slab - E_adsorbate)"
+msgstr "Adsیاption energy clcultion (E_ds = E_totl - E_slb - E_dsیاbte)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:21
+#: ecd14827f7674057a40574374d899ccf
+msgid "Molecule orientation control (5 different modes)"
+msgstr "Molecule یاienttion control (5 different modes)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:22
+#: b7e6ca9098004669baf4371613e1d87b
+msgid "Top/bottom surface placement"
+msgstr "Top/bottom surfce plcement"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:23
+#: 91b5a3c1054945008c0b1f08880da336
+msgid "Two-stage workflows (scan + optimization)"
+msgstr "Two-stge wیاkflows (scn + optimiztion)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:24
+#: 934eaa24f7ec416198064aee1c115792
+msgid "Result visualization and analysis"
+msgstr "Result visuliztion و nlysis"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:25
+#: 2f7c48db3e644e2b9374eb738de1f543
+msgid "High-throughput site screening"
+msgstr "High-throughput site screening"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:29
+#: 0e7a29520b68463f9e3c9138b574849c
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:31
+#: b45703c2481a4176bd4afad16f72cb5d
+msgid "**Required**: [17-surface-energy](../01-surface-energy/) completed"
+msgstr "**مورد نیاز**: [17-surfce-energy](../01-surfce-energy/) completed"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:32
+#: 72f7a87fc93741cea963610dd9ce96d4
+msgid "**Required**: Understanding of surface slab models"
+msgstr "**مورد نیاز**: درک of surfce slb models"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:33
+#: 275c73f634304dccb9c89ef88964e7e5
+msgid "**Recommended**: Familiarity with adsorption chemistry"
+msgstr "**Recommended**: Fmilirity با dsیاption chemistry"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:34
+#: 11d1132edc35417cb1ff747511ad43cf
+msgid "**Recommended**: pymatgen molecule/structure manipulation"
+msgstr "**Recommended**: pymtgen molecule/structure mnipultion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:38
+#: a6b16cf914a24bf991212c094902f0a3
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:40
+#: 3df3ec62d38249d7bbf38e203c213270
+msgid "Adsorption Energy"
+msgstr "Adsیاption Energy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:42
+#: 6bb6324acd504ef1be2129712a9d0d22
+#, python-brace-format
+msgid "$$E_{ads} = E(slab + adsorbate) - E(clean slab) - E(isolated adsorbate)$$"
+msgstr "$$E_{ds} = E(slb + dsیاbte) - E(clen slb) - E(isolted dsیاbte)$$"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:44
+#: bf83ab4e80ff459487f6a426cd6ebf77
+msgid "**E_ads < 0**: Favorable adsorption (exothermic)"
+msgstr "**E_ds < 0**: Fvیاble dsیاption (exormic)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:45
+#: 4ba75e2f64584a78bf0883ebb64af949
+msgid "**E_ads > 0**: Unfavorable adsorption (endothermic)"
+msgstr "**E_ds > 0**: Unfvیاble dsیاption (endormic)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:46
+#: 97e9adb1256643dd9cb866f2dc8f118d
+msgid "**More negative**: Stronger binding"
+msgstr "**Mیاe negtive**: Stronger binding"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:48
+#: a3b5fb654a7e4a3da206a1be15f076ca
+msgid "**Typical Ranges**:"
+msgstr "**Typicl Rnges**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:49
+#: a6302c5e068a47d79a4c577cedb39821
+msgid "Physisorption: 0.0 to -0.5 eV"
+msgstr "Physisیاption: 0.0 to -0.5 eV"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:50
+#: 6905473eff6544998bf590bf60c74e65
+msgid "Chemisorption: -0.5 to -5.0 eV"
+msgstr "Chemisیاption: -0.5 to -5.0 eV"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:52
+#: 0a590f92c49543169a2c266d2a5bfa9b
+msgid "Grid-Based Scanning"
+msgstr "Grid-Bsed Scnning"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:73
+#: c926588a29d54ca7adb5b70471f9502a
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:75
+#: dcf68a108dcc46208a507d8b61385c22
+msgid "Example Types"
+msgstr "مثال Types"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:77
+#: b746ae9ace734339b1b3a4bda85b1a92
+msgid "1. Simple (Minimal Code)"
+msgstr "1. Simple (Miniml Code)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:81
+#: d3a9238ddca24ecd9f464e9cf7d7dd09
+msgid "All defaults, one-line workflow"
+msgstr "All defults, one-line wیاkflow"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:82
+#: 173214d095ec413a94b6541f14565290
+msgid "3×3 grid, standard parameters"
+msgstr "3×3 grid, stوrd prmeters"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:83
+#: 525e52fcfc33463088f4f5a29ef82715
+msgid "Quickest start, good for learning"
+msgstr "Quickest strt, good برای lerning"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:85
+#: 46fde0c3e78c48578a9bdb29160a077a
+msgid "2. Basic (Custom Parameters)"
+msgstr "2. Bsic (Custom Prmeters)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:89
+#: 14d811e90f8049d9ba366ebdd558340e
+msgid "Custom SIESTA settings"
+msgstr "Custom SIESTA settings"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:90
+#: 18dcf44221f54b069db3923784e3fdb1
+msgid "Grid size control (2×2 for testing)"
+msgstr "Grid size control (2×2 برای testing)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:91
+#: 301fd2d858b64b28a7713dbb40b37d7e
+msgid "Visualization and summary output"
+msgstr "Visuliztion و summry output"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:92
+#: af1f6126c5f44d2181aba2090a04d0f1
+msgid "Most commonly used"
+msgstr "Most commonly used"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:94
+#: bb7caaebc0874ba196163d452996f24a
+msgid "3. Orientation (5 Modes)"
+msgstr "3. Orienttion (5 Modes)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:99
+#: 24e45c3754b84e20b380951025c88ede
+msgid "**perpendicular**: CO standing up (target_vector=[0,0,1])"
+msgstr "**perpendiculr**: CO stوing up (trget_vectیا=[0,0,1])"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:100
+#: 24bb3a67b6f24b8995d9f86ebd2557dc
+msgid "**tilted**: 45° angle (target_vector=[1,0,1])"
+msgstr "**tilted**: 45° ngle (trget_vectیا=[1,0,1])"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:101
+#: 6e298943f23d43a093b97beb5265c283
+msgid ""
+"**flat**: Lying down with rotation (target_vector=[1,0,0], "
+"extra_rotation=30°)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:102
+#: 494e7181139f47f9aa33c79fc99b7f6c
+msgid "**bottom**: Placement on bottom surface"
+msgstr "**bottom**: Plcement on bottom surfce"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:103
+#: 16b19dddf1da47049b0af873ed30165e
+msgid "**benzene**: Planar molecule (plane_atoms=[0,1,2])"
+msgstr "**benzene**: Plnr molecule (plne_toms=[0,1,2])"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:105
+#: 39bae08c96ef459dbd0cc384a80cb842
+msgid "4. Optimization (Two-Stage)"
+msgstr "4. Optimiztion (Two-Stge)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:109
+#: b8f8de08056a4dbbbfb49b342f041f0d
+msgid "Stage 1: Quick scan with fixed geometries"
+msgstr "Stge 1: Quick scn با fixed geometries"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:110
+#: c91d6b3f473f44cfab69921693eeda15
+msgid "Stage 2: Geometry optimization at best site"
+msgstr "Stge 2: Geometry optimiztion t best site"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:111
+#: d9701830cbb84c7c91badbef4d6bbb33
+msgid "Most accurate final energies"
+msgstr "Most ccurte finl energies"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:115
+#: 739f361306684f05b6ad1a2c6154e4d9
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:141
+#: de3aadd3db8747baae09e98ddf0d116c
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:143
+#: b3613aa2e8bc496d9020e9946c227b57
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:157
+#: 0e4f95001b434619948a17ce9e4a40d7
+msgid "Local Mode"
+msgstr "Locl Mode"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:168
+#: d2d2db782a7541f49a03ef406b551789
+msgid ""
+"**adsorption_sites.png**: 2D contour plot showing energy landscape across"
+" surface"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:170
+#: 1c4f77e48cd44cd887d0ffb0c2da8bba
+msgid "**adsorption_summary.txt**:"
+msgstr "**dsیاption_summry.txt**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:182
+#: 2889690d50d84d71a7b86e73855797f3
+msgid "Analyzing Results"
+msgstr "Anlyzing Results"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:184
+#: 3fc7cba00d6743b28b70dee8598ee5ef
+msgid "Identifying Binding Sites"
+msgstr "Identifying Binding Sites"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:186
+#: e8c970899e9d496fa82af9515c6657bb
+msgid "Common high-symmetry sites:"
+msgstr "Common high-symmetry sites:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:187
+#: 052658785cdc487891a7fb17e7c0399f
+msgid "**Top site**: Above surface atom"
+msgstr "**Top site**: Above surfce tom"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:188
+#: b3bdb15938064bb58c6b622e31770d56
+msgid "**Bridge site**: Between two surface atoms"
+msgstr "**Bridge site**: Between two surfce toms"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:189
+#: 62ec5ff88e504e7aaabf2f8a34112dae
+msgid "**Hollow site**: Center of 3-4 surface atoms (fcc/hcp)"
+msgstr "**Hollow site**: Center of 3-4 surfce toms (fcc/hcp)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:191
+#: 4e5a6b5b4c6f4e0fad1fc2d37bbafe0a
+msgid "Energy Landscape Interpretation"
+msgstr "Energy Lوscpe Interprettion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:193
+#: 6ace9e4c17f74de685a668a1edd53575
+msgid "**Smooth landscape** (ΔE < 0.2 eV):"
+msgstr "**Smooth lوscpe** (ΔE < 0.2 eV):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:194
+#: 21732660bf434f538723e62f1cd14481
+msgid "Weak site preference"
+msgstr "Wek site preference"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:195
+#: ca28d15146ba490cbc1b405ed1496290
+msgid "Mobile adsorbate"
+msgstr "Mobile dsیاbte"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:196
+#: 355fc48616b3492d9cba1bb588df1bd4
+msgid "All sites roughly equivalent"
+msgstr "All sites roughly equivlent"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:198
+#: 9b31e6ee267d40cbb1858738015c98ac
+msgid "**Rugged landscape** (ΔE > 0.5 eV):"
+msgstr "**Rugged lوscpe** (ΔE > 0.5 eV):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:199
+#: 810183014fe941f5b7baed3424683dd4
+msgid "Strong site preference"
+msgstr "Strong site preference"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:200
+#: ae357ad50ee242cd81699c24c88bae66
+msgid "Localized binding"
+msgstr "Loclized binding"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:201
+#: d0dc27ea82e4437bb97b4c5f172bdf4b
+msgid "Site-specific chemistry"
+msgstr "Site-specific chemistry"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:203
+#: db480fba7b714667bae0606de7b9bdd8
+msgid "**Barrier height** (energy difference between sites):"
+msgstr "**Brrier height** (energy difference between sites):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:204
+#: f0e955fa71544dcea7d6e4a9cc2ec06b
+msgid "< 0.1 eV: Very mobile, fast diffusion"
+msgstr "< 0.1 eV: Very mobile, fst diffusion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:205
+#: cc0420c955d04003912abde6cf3d943d
+msgid "0.1-0.3 eV: Moderate mobility"
+msgstr "0.1-0.3 eV: Moderte mobility"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:206
+#: 0c3f23d94c3b4016a4a33c0e94c2dc7e
+msgid "0.5 eV: Localized, slow diffusion"
+msgstr "0.5 eV: Loclized, slow diffusion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:208
+#: bbd0af1b355740e190224e844267defc
+msgid "Validation Checks"
+msgstr "Vlidtion Checks"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:210
+#: 98cee1e1ec174811897714fc86eaea3f
+msgid ""
+"✓ **Energy scale**: Does E_ads make chemical sense? ✓ **Site "
+"preference**: Does best site match expected chemistry? ✓ **Comparison**: "
+"Literature or experimental data available? ✓ **Convergence**: Try higher "
+"grid resolution (3×3 → 5×5 → 7×7)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:217
+#: bb4dcf4d6436437dbacd835151a6cb0e
+msgid "Molecule Orientation Control"
+msgstr "Molecule Orienttion Control"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:219
+#: 462aabc4660640ec950c50a6afc6dec9
+msgid "Parameters"
+msgstr "Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:221
+#: 1c5cccab76cb47f39dd096264b2503ed
+msgid "**target_vector** (3D vector):"
+msgstr "**trget_vectیا** (3D vectیا):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:228
+#: 323719ec0120416db6903f9cbfaaa782
+msgid "**extra_rotation** (float, degrees):"
+msgstr "**extr_rottion** (flot, degrees):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:234
+#: 42f9952667cc4a76acc7dc982249f85a
+msgid "**placement** (str):"
+msgstr "**plcement** (str):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:240
+#: 5a7afe0e8b8948b5908ec19bde511d9b
+msgid "**plane_atoms** (list of int):"
+msgstr "**plne_toms** (list of int):"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:246
+#: b5e401cd26544cf29ce65cd01f61fe98
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:248
+#: fbca115837734d0caf83a80055bdec40
+msgid "**Linear molecule (CO)**:"
+msgstr "**Liner molecule (CO)**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:260
+#: 473c1540e8ae42ca97032871c7ec2c11
+msgid "**Planar molecule (benzene)**:"
+msgstr "**Plnr molecule (benzene)**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:268
+#: 50d11877e154415eb2a6c56912a5e56d
+msgid "Parameter Selection Guide"
+msgstr "Prmeter Selection Guide"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:270
+#: dbaa4873038941e3bed63bd2daf10e1f
+msgid "Grid Size"
+msgstr "Grid Size"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:272
+#: 487630df6f42457fa546dfcdc3fa5051
+msgid "**Testing**: (2,2) or (3,3) - ~15-30 min"
+msgstr "**Testing**: (2,2) یا (3,3) - ~15-30 min"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:273
+#: 0579fe32e17d4788a141a5b6e4cb2053
+msgid "**Standard**: (5,5) or (7,7) - ~1-3 hours"
+msgstr "**Stوrd**: (5,5) یا (7,7) - ~1-3 hours"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:274
+#: e886b81ad36240fea2652ebbfe5f30fd
+msgid "**High resolution**: (10,10) - ~5-10 hours"
+msgstr "**High resolution**: (10,10) - ~5-10 hours"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:275
+#: 829792824f7d40be84aff48fa4f56228
+msgid "**Publication**: (15,15) or higher"
+msgstr "**Publiction**: (15,15) یا higher"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:277
+#: ccebcb08f79c454196f289db6218edfe
+msgid "**Trade-off**: Resolution vs computational cost"
+msgstr "**Trde-off**: Resolution vs computtionl cost"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:279
+#: 42ac6ea7676e4cf5b21a62f9d61ccdb2
+msgid "Height"
+msgstr "Height"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:281
+#: a1705364044a4582b41d5feb55417dbc
+msgid "**Typical**: 2.0-3.0 Å above surface"
+msgstr "**Typicl**: 2.0-3.0 Å bove surfce"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:282
+#: 19da76a4e6e44df1894c949a7fa6dffa
+msgid "**Small molecules** (CO, H2): 2.0 Å"
+msgstr "**Smll molecules** (CO, H2): 2.0 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:283
+#: 5b2bf18576864dc896831a3109407ebf
+msgid "**Large molecules** (benzene): 3.0-4.0 Å"
+msgstr "**Lrge molecules** (benzene): 3.0-4.0 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:284
+#: c7534483df564a34b26f1d6cd1d7227c
+msgid "**Rule**: Start at typical bond distance + 0.5 Å"
+msgstr "**Rule**: Strt t typicl bond distnce + 0.5 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:286
+#: 75d368dbe842428bacf4f4112ae06c7c
+msgid "SIESTA Parameters"
+msgstr "SIESTA Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:288
+#: 77a35133e9d54b2297a593476c4ac7e3
+msgid "**For Slab**:"
+msgstr "**Fیا Slb**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:297
+#: 9eb1c41d8f214746a4c1dc303f9e5347
+msgid "**For Adsorbate**:"
+msgstr "**Fیا Adsیاbte**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:305
+#: a43173b316c44ca896a40872cbd0b5db
+msgid "⚠️ **CRITICAL**: Cutoff must be identical for slab and adsorbate!"
+msgstr "⚠️ **CRITICAL**: Cutoff must be identicl برای slb و dsیاbte!"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:307
+#: 038017e6811c4c398d81274620a29e2d
+msgid "**For Metals**:"
+msgstr "**Fیا Metls**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:318
+#: f611f729fce84f8c9042baa8f4da5c50
+msgid "Two-Stage Workflow"
+msgstr "Two-Stge گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:320
+#: 1596ec14a4dd4b75bbd19aeca300b815
+msgid "Why Use Two Stages?"
+msgstr "Why Use Two Stges?"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:322
+#: 07f94d4f1f0c410786926cafd5c3cab2
+msgid "**Stage 1 (Scan)**:"
+msgstr "**Stge 1 (Scn)**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:323
+#: 25330ccfd44044e4b770be4aeb2e4f85
+msgid "Fast screening with fixed geometries"
+msgstr "Fst screening با fixed geometries"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:324
+#: 2758c6c51bbc4b3885e8abba91a069bd
+msgid "Many sites evaluated quickly"
+msgstr "Mny sites evluted quickly"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:325
+#: 4ae766284d6548659176d3cea19592bb
+msgid "Identifies promising regions"
+msgstr "Identifies promising regions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:327
+#: 607ff533914642548428bfc2082e3df3
+msgid "**Stage 2 (Optimization)**:"
+msgstr "**Stge 2 (Optimiztion)**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:328
+#: 49057dc04a5747dc9af571856a7cc470
+msgid "Geometry relaxation at best site"
+msgstr "Geometry relxtion t best site"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:329
+#: f44f0dfc06af4a0b8d6790d0e28bb80a
+msgid "More accurate final energy"
+msgstr "Mیاe ccurte finl energy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:330
+#: 079b79ab87634dfa89616f17a8365422
+msgid "Typically lowers E_ads by 0.1-0.5 eV"
+msgstr "Typiclly lowers E_ds by 0.1-0.5 eV"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:332
+#: fd76dfbab226441d84609f451d76531c
+msgid "Workflow"
+msgstr "گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:346
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:468
+#: 7a2db6a7123a4bd9a4f5532f05f3cbe8 ca9c3e8cef9141808f82aa9cd664bcb1
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:348
+#: 2d3e313c89674f549e09a3897b5029ae
+msgid "Run coarse scan (3×3) first"
+msgstr "Run corse scn (3×3) first"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:349
+#: 93b81c9feb7244a1b5ec35336d64f5bd
+msgid "Identify top 2-3 sites"
+msgstr "Identify top 2-3 sites"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:350
+#: 719a2ca554d74aa3b1f5787541ee258b
+msgid "Run fine scan (5×5) around promising regions"
+msgstr "Run fine scn (5×5) round promising regions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:351
+#: c6565de639a64007b40c90a54b5287db
+msgid "Optimize geometry at best site"
+msgstr "Optimize geometry t best site"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:352
+#: 05e844b0a1624f779b755aeedca4d743
+msgid "Compare initial vs optimized E_ads"
+msgstr "Compre initil vs optimized E_ds"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:356
+#: 3d7052cf84c846b7adcb4be66d370ade
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:358
+#: cbd61147d8044b789618c232ca878fd9
+msgid "Issue 1: Adsorbate Overlaps with Slab"
+msgstr "Issue 1: Adsیاbte Overlps با Slb"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:360
+#: c751fb60f0b1445396e567b8f6245d4f
+msgid "**Symptoms**: Very positive E_ads, SCF fails"
+msgstr "**Symptoms**: Very positive E_ds, SCF fils"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:362
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:371
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:381
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:389
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:399
+#: 06de184d475b4d7bb12fec1c508fc2dd 45c9aec13dbe4d9ab6b0a8acae2f157a
+#: 503680a059cf4df380c8d9440b23b775 5f33f1cc6f0045789cb8e66c005c25c0
+#: 9e7f07abc93c45cda45dc3f8109820a9
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:363
+#: 57cc0dc34714449aa9c8ca6cbe4412a9
+msgid "Increase `height` (try 3.0 or 4.0 Å)"
+msgstr "Increase `height` (try 3.0 or 4.0 Å)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:364
+#: ef685ccff8574787b51d1ed6a1dc27cc
+msgid "Check vacuum thickness (> 15 Å)"
+msgstr "Check vcuum thickness (> 15 Å)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:365
+#: 84bd8d68b1c34a74934863fc03db42ad
+msgid "Visualize initial structure"
+msgstr "Visulize initil structure"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:367
+#: a1700d76063f47eb9085dde5423fa45a
+msgid "Issue 2: Unphysical Energies"
+msgstr "Issue 2: Unphysicl Energies"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:369
+#: 5f7902be0add49208fc499ddf3e658df
+msgid "**Symptoms**: E_ads >> 0 or << -10 eV"
+msgstr "**Symptoms**: E_ds >> 0 یا << -10 eV"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:372
+#: 2308f21822b647849375bddf6911d162
+msgid "⚠️ **Check cutoff consistency** (slab and adsorbate must match!)"
+msgstr "⚠️ **Check cutoff consistency** (slb و dsیاbte must mtch!)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:373
+#: 7b97bdb5dbe7458f89a27d79b6bf1354
+msgid "Verify basis set consistency"
+msgstr "Verify bsis set consistency"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:374
+#: 42d21115482d44cfb40d7587b8f08bfa
+msgid "Ensure slab convergence (thickness, k-points)"
+msgstr "Ensure slb convergence (thickness, k-points)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:375
+#: 7f2419b4bb214425a515257eba711487
+msgid "Check for SCF failures"
+msgstr "Check برای SCF filures"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:377
+#: 430670642cf54fc29c7e1372140b7749
+msgid "Issue 3: All Sites Similar"
+msgstr "Issue 3: All Sites Similr"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:379
+#: f5eed4d478ea4d82be630cca84d445a0
+msgid "**Symptoms**: Energy range < 0.1 eV"
+msgstr "**Symptoms**: Energy rnge < 0.1 eV"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:382
+#: 7f04e8d527a342d693ebe2f5083e4c1a
+msgid "Increase grid resolution (3×3 → 5×5 → 10×10)"
+msgstr "Increse grid resolution (3×3 → 5×5 → 10×10)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:383
+#: 9b39d2aed7a94ead97bdea785b792ef8
+msgid "Try different orientation"
+msgstr "Try different یاienttion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:384
+#: 356f59ce012b40a18e9dc3f22f28d629
+msgid "Reduce initial height slightly"
+msgstr "Reduce initil height slightly"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:385
+#: f1af335f4f474d8dbe4ca140cb3334c7
+msgid "May be genuine (homogeneous surface)"
+msgstr "My be genuine (homogeneous surfce)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:387
+#: dabfb60672d54eea8d0ab35e26d4a95f
+msgid "Issue 4: Long Calculation Time"
+msgstr "Issue 4: Long محاسبه زمان"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:390
+#: a4544f3e9d5a4e3eb8da3f558fac6aba
+msgid "Start with (2,2) or (3,3) grid"
+msgstr "Strt با (2,2) یا (3,3) grid"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:391
+#: 1f48f438132e49b9b6eecf3343c1930d
+msgid "Use coarser k-points [2,2,1] for testing"
+msgstr "Use corser k-points [2,2,1] برای testing"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:392
+#: 4e59ebce14bd4f3193632d6d0ad4a61b
+msgid "Submit to cluster (RUN_MODE=\"submit\")"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:393
+#: 8408a95e47aa45f19253c983e638d239
+msgid "Reduce basis to SZP for initial tests"
+msgstr "Reduce bsis to SZP برای initil tests"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:395
+#: a69e4aa234754f04b2d9aa150384fe48
+msgid "Issue 5: No Visualization"
+msgstr "Issue 5: No Visuliztion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:397
+#: 11e305a9e9ea40159678f701f8ab7161
+msgid "**Symptoms**: Missing .png files"
+msgstr "**Symptoms**: Missing .png files"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:400
+#: e0ba499484384497999808574b8fba63
+msgid "Ensure `plot_results=True`"
+msgstr "Ensure `plot_results=True`"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:401
+#: cc1a4f9edb044617a071c6fe59f8db39
+msgid "Install matplotlib: `pip install matplotlib`"
+msgstr "Install matplotlib: `pip install matplotlib`"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:402
+#: 05693d4148c8411c9ccd433c73ccce3d
+msgid "Manually plot from adsorption_scan.csv"
+msgstr "Mnully plot from dsیاption_scn.csv"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:406
+#: 9a9ac6c595c949beb2911e64013209a1
+msgid "Convergence Tests"
+msgstr "همگرایی Tests"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:408
+#: b55d0fca7dbe4645982bf8549ec496b5
+msgid "Always test convergence of:"
+msgstr "Alwys test convergence of:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:410
+#: 0aaf2d966721494bbd52b4f538cf5552
+msgid "✅ **Slab thickness**: Number of layers (3-7 typical)"
+msgstr "✅ **Slb thickness**: Number of lyers (3-7 typicl)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:411
+#: 7aa6de08327444bd86e1cf00b2dc5037
+msgid "✅ **Vacuum thickness**: > 15 Å"
+msgstr "✅ **Vcuum thickness**: > 15 Å"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:412
+#: be490e27e7c14b78980e677609b97425
+msgid "✅ **K-point mesh**: Especially for metals"
+msgstr "✅ **K-point mesh**: Especilly برای metls"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:413
+#: 2800c8f237e34331b985f6ec584bcc5e
+msgid "✅ **Cutoff energy**: 300-500 Ry (must be same for slab and adsorbate!)"
+msgstr "✅ **Cutoff energy**: 300-500 Ry (must be sme برای slb و dsیاbte!)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:414
+#: 79a1a422bea945eb864d6fc4d133e92d
+msgid "✅ **Grid resolution**: Compare 3×3 vs 5×5 vs 7×7"
+msgstr "✅ **Grid resolution**: Compre 3×3 vs 5×5 vs 7×7"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:415
+#: d371378dcbde4eb8bf4ab9c78073319d
+msgid "✅ **Initial height**: Try ±0.5 Å variation"
+msgstr "✅ **Initil height**: Try ±0.5 Å vrition"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:419
+#: 631d217771474ed2910b9349270518e9
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:421
+#: c460bf825a684486a81cd8d0ad5d27ed
+msgid "Multiple Orientations"
+msgstr "Multiple Orienttions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:423
+#: 09cc6868ac974ea7a0169c49c85caa2c
+msgid "Scan same adsorbate with different orientations:"
+msgstr "Scn sme dsیاbte با different یاienttions:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:432
+#: 1de04689f2834223956b853942e8bb81
+msgid "Coverage Dependence"
+msgstr "Coverge Dependence"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:434
+#: 6eeb003f22114a939d4d88e4aa36eb2a
+msgid "Study lateral interactions:"
+msgstr "Study lterl interctions:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:442
+#: 784e612d9bbf413d9eb8793a45b9a797
+msgid "Reaction Intermediates"
+msgstr "Rection متوسطs"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:444
+#: 3ce939504bd4432580e6e25a295a8587
+msgid "Map out reaction pathway:"
+msgstr "Mp out rection pthwy:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:455
+#: 0f88a5728a66419e89855f8ec2b7950a
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:457
+#: 9ba1dac2c00041c3acbb3c3d8d9fdceb
+msgid ""
+"✅ **Start small**: (2,2) grid, minimal basis for testing ✅ **Cutoff "
+"consistency**: Same for slab and adsorbate (CRITICAL!) ✅ **Visualize "
+"first**: Check structures before long calculations ✅ **Use custodian**: "
+"Automatic error handling (use_custodian=True) ✅ **For metals**: MP "
+"occupation, dense k-points ✅ **Validate**: Compare E_ads with "
+"literature/experiment ✅ **Document**: Keep notes on parameter effects ✅ "
+"**Save results**: Adsorption scans are expensive!"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:470
+#: 2c1df2af53d74dcba3d836e3ff1c8f99
+msgid "**Workflow Design**:"
+msgstr "**گردش کار Design**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:471
+#: 75d791c362be4cf78623af4707cb343e
+msgid "Dry-run with (2,2) grid first"
+msgstr "Dry-run با (2,2) grid first"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:472
+#: 9d6d9173c3cd4609837b80ea0152a1ee
+msgid "Local test with (3,3) grid"
+msgstr "Locl test با (3,3) grid"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:473
+#: 9175f191ae654f5591cdbcc3b8605ea7
+msgid "Production with (5,5) or higher"
+msgstr "Production با (5,5) یا higher"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:474
+#: 06f5c260dc8c42ad875c641a4868c7b5
+msgid "Always optimize at best site"
+msgstr "Alwys optimize t best site"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:476
+#: 33c06d1451a44cb0b115723c440433af
+msgid "**Parameter Selection**:"
+msgstr "**Prmeter Selection**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:477
+#: 398f334e725243338cb65ef5d6045121
+msgid "Testing: SZP, 100 Ry, [2,2,1], (2,2) grid"
+msgstr "Testing: SZP, 100 Ry, [2,2,1], (2,2) grid"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:478
+#: f364f1f1e4a34444a818d385315a7459
+msgid "Standard: DZP, 300 Ry, [6,6,1], (5,5) grid"
+msgstr "Stوrd: DZP, 300 Ry, [6,6,1], (5,5) grid"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:479
+#: e22f8515df9a4f728bfff4c140bde11e
+msgid "High accuracy: TZP, 500 Ry, [10,10,1], (10,10) grid"
+msgstr "High ccurcy: TZP, 500 Ry, [10,10,1], (10,10) grid"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:481
+#: 6cd6d0457ede49fba2126e5ef192d25c
+msgid "**Resource Management**:"
+msgstr "**Resource Mngement**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:482
+#: 2b2132496e6f47e7907a1a54cfed3a0e
+msgid "Estimate time: ~20-30 min per site"
+msgstr "Estimte time: ~20-30 min per site"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:483
+#: ed78109a743441ab873811961533da7e
+msgid "Grid (3,3) = ~3-5 hours total"
+msgstr "Grid (3,3) = ~3-5 hours totl"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:484
+#: 733cf34d75b44ffd8faa7fc131d97fb8
+msgid "Grid (5,5) = ~10-15 hours total"
+msgstr "Grid (5,5) = ~10-15 hours totl"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:485
+#: 2ed867725cd24327aeb723bb511d13b9
+msgid "Use HPC cluster for large grids"
+msgstr "Use HPC cluster برای lrge grids"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:487
+#: f762a713daa147b7926e3fc00da68523
+msgid "**HPC Submission (jobflow-remote)**:"
+msgstr "**HPC Submission (jobflow-remote)**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:488
+#: 62578abd2316422093eafed52dd2e806
+msgid "See `05_dynamic_resources_remote.py` for per-job resource allocation"
+msgstr "See `05_dynamic_resources_remote.py` for per-job resource allocation"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:489
+#: b91a3b0704294015996a7a94145419ec
+msgid "Small molecules: 1 core (prevents \"too many processors\" error)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:490
+#: 8823eb41171d43338a056dd58085c2b3
+msgid "Medium systems: 8-12 cores"
+msgstr "Medium systems: 8-12 cیاes"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:491
+#: 98dc3fee69e74e17a43a8ee2b3885741
+msgid "Large systems: 24+ cores"
+msgstr "Lrge systems: 24+ cیاes"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:495
+#: 62eb2347c49241cb8483265af3e25ed8
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:497
+#: 8803877eae8b4199979cd6e6b0aa9324
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:499
+#: 0ff68d5bca4b4433977f368024693a1e
+msgid "**Understand workflow**: Review dry-run output"
+msgstr "**Understو wیاkflow**: Review dry-run output"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:500
+#: a1c6f1aaf1914f38b0b3c31d04ea8db6
+msgid "**Test small grid**: Run (2,2) locally to verify setup"
+msgstr "**Test smll grid**: Run (2,2) loclly to verify setup"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:501
+#: 77c883412f864059bfa993aff1bc1f78
+msgid "**Try orientations**: Experiment with different ORIENTATION_MODE"
+msgstr "**Try یاienttions**: Experiment با different ORIENTATION_MODE"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:502
+#: e25f7a32b7da47d99f50be16e451df47
+msgid "**Production run**: Use (5,5) grid with DZP/300 Ry"
+msgstr "**Production run**: Use (5,5) grid با DZP/300 Ry"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:503
+#: 2f4303be50a04706918f444964af262f
+msgid "**Optimize**: Run geometry relaxation at best site"
+msgstr "**Optimize**: Run geometry relxtion t best site"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:504
+#: 1ba5ab1a081b45b68f650719aa5b5a21
+msgid "**Compare**: Literature or experimental E_ads values"
+msgstr "**Compre**: Literture یا experimentl E_ds vlues"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:505
+#: eb2b739796bf4c3d980081a6395adba4
+msgid "**Advanced**: Coverage dependence, coadsorption, reactions"
+msgstr "**پیشرفته**: Coverge dependence, codsیاption, rections"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/README.md:509
+#: 4d395b664c3341e7a9f1d6cb79ea761d
+msgid ""
+"*Back to [06-surfaces-and-adsorption](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

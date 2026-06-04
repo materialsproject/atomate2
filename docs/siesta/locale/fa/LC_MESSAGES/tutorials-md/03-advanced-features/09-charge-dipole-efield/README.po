@@ -1,0 +1,388 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:1
+#: 3d6ae7708f7e4f3f9a27dc415b4fb36d
+msgid "Charge, Dipole, and Electric Field Calculations"
+msgstr "Chrge, Dipole, و Electric Field محاسبهs"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:3
+#: fc4bde41e9714c33879b56e74700504b
+msgid ""
+"Direct SIESTA FDF format for charged systems, external fields, and dipole"
+" corrections."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:5
+#: a2d1867b5bd045ec9bafd3373783f0db
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:7
+#: 628958f1992a4577b542d5053a9e2462
+msgid "This module covers three related features:"
+msgstr "This module covers three relted fetures:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:9
+#: bf5d6b5061b04498a797ac9f8a05bc0c
+msgid "**Charged Systems**: Net charge on the system (ions, defects)"
+msgstr "**Chrged Systems**: Net chrge on  system (ions, defects)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:10
+#: d1f46d6029194611bf07050ffc015610
+msgid "**External Electric Fields**: Applied electric fields"
+msgstr "**Externl Electric Fields**: Applied electric fields"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:11
+#: 899e04596ae8408181b1195dd3393221
+msgid "**Dipole Corrections**: Corrections for slab dipoles"
+msgstr "**Dipole Cیاrections**: Cیاrections برای slb dipoles"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:13
+#: f1fb26d608464c179c8454100ac672f5
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:15
+#: 910e9155659b4d87bf56d11b7f6c05b4
+msgid "External Electric Field"
+msgstr "Externl Electric Field"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:23
+#: b72b47d7403f4c7689532a08638e59ca
+msgid "Charged System"
+msgstr "Chrged System"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:30
+#: 8f2b3325fdc14c3cb14f8c1ed2dec09a
+msgid "Slab Dipole Correction"
+msgstr "Slb Dipole Cیاrection"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:37
+#: cd09efb67e3345bd832fcd90dd7182ef
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:39
+#: d7af0751e72a4a1c9eb78f6036f49368
+msgid "01_external_electric_field.py"
+msgstr "01_external_electric_field.py"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:40
+#: 009e911b9c3a49ccb374541f6a3d0bf0
+msgid "Apply external electric field to a slab geometry."
+msgstr "Apply externl electric field to  slb geometry."
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:42
+#: eb3c0108053f495e923c75e15a9a0687
+msgid "02_charged_system.py"
+msgstr "02_charged_system.py"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:43
+#: 2ff99acd19ff45e89a5decee3678b528
+msgid "Simulate a charged defect (vacancy with +2 charge)."
+msgstr "Simulte  chrged defect (vcncy با +2 chrge)."
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:45
+#: d12a707043f94f2296c57b6ed811039c
+msgid "Key Parameters"
+msgstr "Key Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 43fda0b996ef47dc87176ddfa5e90be8
+msgid "Parameter"
+msgstr "Prmeter"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 40ee3f1747b0438e88281fc4c441f600
+msgid "Type"
+msgstr "Type"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 5e993bb78be047beb745bc4d3483b103
+msgid "Default"
+msgstr "Defult"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: ff0c2ee0993a47ae9f4a480142efe64b
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: c6c15a9271a148dd894ec297cd9bcd0a
+msgid "NetCharge"
+msgstr "NetChrge"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 0c9414a11cb9414a86792b17dfe834ac cedb0902c41946c6875928fdae46fd40
+msgid "str"
+msgstr "str"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: cf861b3191d3408b845fcfc55c3c4a56
+msgid "\"0.0\""
+msgstr "\"0.0\""
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 12ad5c6051c34527b961807f76d521dc
+msgid "Net system charge (electrons removed/added)"
+msgstr "Net system chrge (electrons removed/dded)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 4cddaafab9174da691875fe1edd56c41
+msgid "ExternalElectricField"
+msgstr "ExternlElectricField"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 5d5963ada22b4f958d79a796a48b2483 eebf0deeda71402fbfd184ca44e0662e
+msgid "bool"
+msgstr "bool"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 0ebd9bb7c7e34946834bd49a63f1ef40 78ec527d0ef64e0dbd8443d47ef888c1
+msgid "false"
+msgstr "flse"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: eafb3b0cfe75400a9861ad4a45a31088
+msgid "Enable external field"
+msgstr "Enble externl field"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 0ad166e2f6814ca887392079afe040b8
+msgid "Efield"
+msgstr "Efield"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: bd0ed96a45d34bb290ecb3b551f0f3bb
+msgid "\"0.0 eV/Ang\""
+msgstr "\"0.0 eV/Ang\""
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 75cda7e142004e7793b0cfdc56cdc37f
+msgid "Field strength"
+msgstr "Field strength"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 54f729d924bd4827950ad081907aa622
+msgid "SlabDipoleCorrection"
+msgstr "SlbDipoleCیاrection"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: cfb70d5aca4642789d034853d8cb18f1
+msgid "Dipole correction for slabs"
+msgstr "Dipole cیاrection برای slbs"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:54
+#: e1dae48f0286498e8775c2f32585749d
+msgid "Common Use Cases"
+msgstr "Common Use Cses"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:56
+#: 980f03d31a4943baad9ae38e8bf2303c
+msgid "1. Field Effect in 2D Materials"
+msgstr "1. Field Effect in 2D Mterils"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:65
+#: 4b0a1112841a434a8118258f6e748f23
+msgid "2. Charged Defects (Vacancies, Interstitials)"
+msgstr "2. Chrged Defects (Vcncies, Interstitils)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:73
+#: 29be68e193a7408380c9cb82ecaa1d6a
+msgid "3. Asymmetric Slab (Surface Dipole)"
+msgstr "3. Asymmetric Slb (Surfce Dipole)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:80
+#: d96e0ab2983c40b4929ba0338bdf1b55
+msgid "4. Ferroelectric Switching"
+msgstr "4. Ferroelectric Switching"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:88
+#: df030dc942144a73922896ee7621d591
+msgid "5. Ionization Energy Calculation"
+msgstr "5. Ioniztion Energy محاسبه"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:99
+#: b66b0729937746e99b1f2220609ef113
+msgid "Important Notes"
+msgstr "مهم توجهs"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:101
+#: a87eda2855624e499a5a5e864ce75dd8
+msgid "Charged Systems"
+msgstr "Chrged Systems"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:103
+#: 8b3cb626d4644756969297b837360348
+msgid ""
+"**Background charge**: SIESTA adds uniform background charge for "
+"neutrality"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:104
+#: ee36badae17840ce90ce0c363ff4bea5
+msgid "**Large supercells needed**: Minimize interaction between periodic images"
+msgstr "**Lrge supercells needed**: Minimize interction between periodic imges"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:105
+#: 44f58b90dd6642f2a348c706a8bef164
+msgid ""
+"**Finite-size corrections**: May need correction schemes (Makov-Payne, "
+"etc.)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:107
+#: f7e2dde7c8674982b9719505b0b63be5
+msgid "Electric Fields"
+msgstr "Electric Fields"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:109
+#: 0dd501ceaba94340ae7eee0f442bda12
+msgid "**Field direction**: Typically along non-periodic direction (z for slabs)"
+msgstr "**Field direction**: Typiclly long non-periodic direction (z برای slbs)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:110
+#: 8ea88c6b62b0418c8830c9349ff507e3
+msgid "**Units**: eV/Ang or V/Ang"
+msgstr "**Units**: eV/Ang یا V/Ang"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:111
+#: 92fbeb0a4f6a4e2381866d25ce835764
+msgid "**Convergence**: Strong fields may require:"
+msgstr "**همگرایی**: Strong fields my require:"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:112
+#: d6acdc5feae4476f8768a521e7dc1ec2
+msgid "Smaller mixing: `\"SCF.Mixer.Weight\": 0.01`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:113
+#: a9c8f18dd1574d70b65abaf332278e20
+msgid "More iterations: `\"MaxSCFIterations\": 200`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:115
+#: 5e35f53c1f0c4dfdae779e69a4ff0236
+msgid "Dipole Corrections"
+msgstr "Dipole Cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:117
+#: 27d270fdfed2471ba8e89ef504084dc3
+msgid "**When to use**: Asymmetric slabs with net dipole moment"
+msgstr "**When to use**: Asymmetric slbs با net dipole moment"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:118
+#: cda6cc453c01404e995d5fe20643cb99
+msgid ""
+"**Effect**: Removes spurious electric field from periodic boundary "
+"conditions"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:119
+#: cea5e31aebd649d7aec2f52ac0897faf
+msgid "**Combine with vacuum**: Need sufficient vacuum (>10 Å)"
+msgstr "**Combine با vcuum**: Need sufficient vcuum (>10 Å)"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:121
+#: e650d1ddc2f44268ab7cbcf7cd7079e4
+msgid "Field Strength Guidelines"
+msgstr "Field Strength Guidelines"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: a5f9e51d461443b38096bb14fbceac0b
+msgid "Application"
+msgstr "Appliction"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: f673b385524448c088361dfce4e654ac
+msgid "Field Strength"
+msgstr "Field Strength"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 9b16ab7e303e475f9dd455acc169bbf1
+msgid "Notes"
+msgstr "توجهs"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 91666c4a32a64465ad72f81351b7db07
+msgid "Weak perturbation"
+msgstr "Wek perturbtion"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 28547695e34348dcb279f5a8f16e7aab
+msgid "0.001-0.01 eV/Ang"
+msgstr "0.001-0.01 eV/Ang"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 3a3dee8a09564e7f98d92e8a17e3ce98
+msgid "Linear response regime"
+msgstr "Liner response regime"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 903651de8c87442d8af53c0af3f446dc
+msgid "Moderate field"
+msgstr "Moderte field"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 84001c1cccc649fdaedbf7c89da8725f
+msgid "0.01-0.1 eV/Ang"
+msgstr "0.01-0.1 eV/Ang"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 901b100d4fc34a818a34b8eefe985ba0
+msgid "Typical simulations"
+msgstr "Typicl simultions"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: 8197745f6953448194ae8128161493fb
+msgid "Strong field"
+msgstr "Strong field"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: f8d6e800863545748480d3d4954b5912
+msgid "0.1-1.0 eV/Ang"
+msgstr "0.1-1.0 eV/Ang"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md
+#: ace9a90ec94e4b93bbfecd066a02928e
+msgid "Breakdown, switching"
+msgstr "Brekdown, switching"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:129
+#: daabcf9835154d4390d590e75b57415c
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:131
+#: f3410471eba94762be6d946363aa33a1
+msgid ""
+"**SIESTA Manual**: Sections on NetCharge, External Electric Field, Slab "
+"Dipole Correction"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/09-charge-dipole-efield/README.md:132
+#: 5a2a23cfff284ca0896a79bc3116c57f
+msgid ""
+"**Dataclass**: "
+"`src/atomate2/siesta/dataclass/charge_dipole_electric_field.py`"
+msgstr ""

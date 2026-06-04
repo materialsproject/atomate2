@@ -1,0 +1,292 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:1
+#: 123bf6d6b34a4ce5ae0cb07e8f2a597f
+msgid "Restart and Recovery Tutorial"
+msgstr "Restrt و Recovery Tutیاil"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:3
+#: 7f2a4b776a1b434e9bd7d8acc45bcad0
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:5
+#: ae320660ebe448d29e4386bb4a74184d
+msgid ""
+"Atomate2-siesta provides automatic restart capabilities through the "
+"`prev_dir` parameter and custodian error handling."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:7
+#: b64f8dbbbb0c40cda9ba4f614f835b95
+msgid "Tutorial Scripts"
+msgstr "Tutیاil Scripts"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: a32c15d025204e62b4ce8d5aa0787aa6
+msgid "Script"
+msgstr "Script"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: fa7f35fbc2fa43c29847545ef794ec5b
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 117c4503cdde4b14897c4772d44a3e91
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 706fd7a229fe4481856dfd79483e1fdc
+msgid "`01_basic_restart.py`"
+msgstr "`01_basic_restart.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 9b4bdfc9edcf4551a634b07ffda5f041
+msgid "Basic restart from previous calculation"
+msgstr "Bsic restrt from previous clcultion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 668c97a288a94070a9b0342a8bed0372
+msgid "prev_dir, density matrix reuse"
+msgstr "prev_dir, density mtrix reuse"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 121f460a8b5f44c8b9c750a6f68fe891
+msgid "`02_interrupted_calculation.py`"
+msgstr "`02_interrupted_calculation.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 3ccbe94701be439ea572b53873085f32
+msgid "Recovery from walltime/crash"
+msgstr "Recovery from wlltime/crsh"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: acfb16ea82c748a6a9c36aa3ae0bac3a
+msgid "Finding directories, continuing progress"
+msgstr "Finding directیاies, continuing progress"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 94d41845ee694acaae9eb03d49ed90bd
+msgid "`03_manual_recovery.py`"
+msgstr "`03_manual_recovery.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 08699a1335464ee99fe3dfc68dcfe0f2
+msgid "Manual parameter adjustment"
+msgstr "Mnul prmeter djustment"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 3e67e2bf1b0c492489138ae6094a5625
+msgid "Diagnosis, parameter fixes, powerups"
+msgstr "Dignosis, prmeter fixes, powerups"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 9bec54d4defb41cdb7b74500e38851d4
+msgid "`04_comparison_custodian.py`"
+msgstr "`04_comparison_custodian.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: a82b30ef93864b27ad42cb8431dd30fd
+msgid "Manual vs automatic recovery"
+msgstr "Mnul vs utomtic recovery"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md
+#: 92beaeb0c9a64e7698b0200156dc79a8
+msgid "Why custodian is recommended"
+msgstr "Why custodin is recommended"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:16
+#: 535bd6d066cc4ac8adde86687bb22120
+msgid "**Run the tutorials:**"
+msgstr "**Run  tutیاils:**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:26
+#: d79eb11224ae473c9bb1e29ecef32457
+msgid "Restart from Previous Calculation"
+msgstr "Restrt from Previous محاسبه"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:28
+#: 14536c3e0181492e8953f26a9f298d99
+msgid "Basic Restart"
+msgstr "Bsic Restrt"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:44
+#: 8315ce1c20804ad9a367f7a3d15b6604
+msgid "What Gets Reused"
+msgstr "Wht Gets Reused"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:46
+#: e5f56ca8edfb4ff2b465f171f51ae6b5
+msgid "✅ Density matrix (.DM file)"
+msgstr "✅ Density mtrix (.DM file)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:47
+#: 2b28e7a9f48049a384331d84b40ac57f
+msgid "✅ Converged electronic structure"
+msgstr "✅ Converged electronic structure"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:48
+#: 88bbc99d402a4b72920abe5d5b9e7160
+msgid "✅ Optimized geometry (if relaxation)"
+msgstr "✅ Optimized geometry (if relxtion)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:49
+#: 7c36c0437455464ebe56a8242a2f198c
+msgid "✅ Reduces SCF iterations"
+msgstr "✅ Reduces SCF itertions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:50
+#: 351cf365e4ad4872990f6a96cb667d4e
+msgid "✅ Faster convergence"
+msgstr "✅ Fster convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:52
+#: dba2912777f54d40a88f9dd7b0c65a2d
+msgid "Automatic Error Recovery"
+msgstr "Automtic Errیا Recovery"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:54
+#: fa1371c0df0d4f8ca1c52a6d51fb10cf
+msgid "Use custodian for automatic error handling:"
+msgstr "Use custodin برای utomtic errیا hوling:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:75
+#: f392e7a74653454eb007982613b47175
+msgid "Error Handling Features"
+msgstr "Errیا Hوling ویژگی‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:77
+#: f17ebe63978c453eafb652eb388ae527
+msgid "See **custodian tutorial** for comprehensive error handling:"
+msgstr "See **custodin tutیاil** برای comprehensive errیا hوling:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:79
+#: 1adc2ee59a5a4b3d84aa59c260f9ff7b
+msgid "**Tutorial**: `04-infrastructure/03-error-handling/`"
+msgstr "**Tutorial**: `04-infrastructure/03-error-handling/`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:81
+#: a881f8ba72a5497e9c016719aafbb38c
+msgid "Covers:"
+msgstr "Covers:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:82
+#: 86e899aabfd64a6dbcbec843ef395751
+msgid "✅ 4 default handlers (SCF, Walltime, Memory, Frozen)"
+msgstr "✅ 4 defult hوlers (SCF, Wlltime, Memیاy, Frozen)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:83
+#: bded82974c1148a7ba631058abf2b916
+msgid "✅ Progressive 5-level SCF correction strategy"
+msgstr "✅ Progressive 5-level SCF cیاrection strtegy"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:84
+#: 6d82ad9f8cc94c96b8a7b62597291dee
+msgid "✅ Automatic parameter adjustment"
+msgstr "✅ Automtic prmeter djustment"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:85
+#: 7c40717b0e014d02b8efb7b4373bae0a
+msgid "✅ Custom handler creation"
+msgstr "✅ Custom hوler cretion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:86
+#: 9eb04b0df40e4a2d9ab379336d702049
+msgid "✅ custodian.json logging"
+msgstr "✅ custodin.json logging"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:88
+#: 530e6827203b416499f5b8df04ade1f2
+msgid "Manual Recovery Steps"
+msgstr "Mnul Recovery Steps"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:90
+#: f8820942c8d6435eb074f36f9ffacb90
+msgid "1. Identify Failure"
+msgstr "1. Identify Filure"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:102
+#: b2c6d8c796f7405aafd5e67a6a003c17
+msgid "2. Adjust Parameters"
+msgstr "2. Adjust Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:124
+#: ed93dc2850994cfeab3e24a7e0bb694d
+msgid "3. Use Custodian"
+msgstr "3. Use Custodin"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:126
+#: 74b00b8302f14117a7b77540d0c49857
+msgid "Better approach - let custodian handle it automatically:"
+msgstr "Better pproch - let custodin hوle it utomticlly:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:135
+#: e59076e3ea3a4630b0e3abc7f35f6b6f
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:137
+#: d3e71be949f149c7be57d1f31aa3abe3
+msgid "**Always enable custodian** for production calculations"
+msgstr "**Alwys enble custodin** برای production clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:138
+#: 128f8b331f23437387a99d5d954df357
+msgid "**Check custodian.json** to see what corrections were applied"
+msgstr "**Check custodin.json** to see wht cیاrections were pplied"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:139
+#: 2f96e328f84d4826974cdf6370854280
+msgid "**Use prev_dir** for manual restarts to reuse converged data"
+msgstr "**Use prev_dir** برای mnul restrts to reuse converged dt"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:140
+#: ed86db0790604db989c73081dbb87ea5
+msgid ""
+"**Start with dry-run** to validate parameters before expensive "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:142
+#: a0d6dfc1a22b44b2a0a4c360a1c7b266
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:144
+#: b451050a1d574ff5af6cff5a39cc2aaf
+msgid "Custodian tutorial: `04-infrastructure/03-error-handling/`"
+msgstr "Custodian tutorial: `04-infrastructure/03-error-handling/`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:145
+#: c78ab16ca8e741758131e39c41d55973
+msgid "Powerups tutorial: `07-advanced-features/03-powerups/`"
+msgstr "Powerups tutorial: `07-advanced-features/03-powerups/`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/04-restart-recovery/README.md:147
+#: 52f9ad62b1b94cbf9244da937e26f9cc
+msgid ""
+"**Use custodian for automatic error recovery in all production "
+"workflows!**"
+msgstr ""

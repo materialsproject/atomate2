@@ -1,0 +1,594 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/01-basics/README.md:1
+#: 7cd0c22f4dd14dd1b6238e5ff9a13b71
+msgid "01-Basics: Fundamental Makers and Single-Job Calculations"
+msgstr "01-Basics: Fundamental Makers and Single-Job Calculations"
+
+#: ../../source/tutorials-md/01-basics/README.md:3
+#: e8f70957e8cb43fab7534a3cfcf15d9b
+msgid "**Focus**: Core SIESTA Makers for single-calculation workflows"
+msgstr "**Focus**: Core SIESTA Makers for single-calculation workflows"
+
+#: ../../source/tutorials-md/01-basics/README.md:5
+#: e39f32dcef814fb98ac517cfe70e591e
+msgid "**Difficulty**: Beginner"
+msgstr "**سطح سختی**: مبتدی"
+
+#: ../../source/tutorials-md/01-basics/README.md:7
+#: c7d748919fb1469f9559e822872baaba
+msgid "**Prerequisites**:"
+msgstr "**پیش‌نیازها**:"
+
+#: ../../source/tutorials-md/01-basics/README.md:8
+#: 90eeecf7db554475b21dde574f770358
+msgid "Python 3.9+"
+msgstr "Python 3.9+"
+
+#: ../../source/tutorials-md/01-basics/README.md:9
+#: 60eb55c8b2dc4065bda14f206a65cbea
+msgid "SIESTA installed and configured"
+msgstr "SIESTA instlled و configured"
+
+#: ../../source/tutorials-md/01-basics/README.md:10
+#: 5e0fbecd5a53411d926ff14e1fdf8412
+msgid "Basic understanding of DFT calculations"
+msgstr "Bsic understوing of DFT clcultions"
+
+#: ../../source/tutorials-md/01-basics/README.md:11
+#: ea2db15c73df44578e77786c0e8ca209
+msgid "`~/.atomate2siesta.yaml` configuration file"
+msgstr "`~/.atomate2siesta.yaml` configuration file"
+
+#: ../../source/tutorials-md/01-basics/README.md:15
+#: ea1d25092d1342c1b18f18448fbceb7b
+msgid "Tutorials in This Category"
+msgstr "Tutیاils in This دسته‌بندی"
+
+#: ../../source/tutorials-md/01-basics/README.md:17
+#: 8019de94594c431d9ed205e2cb6c954d
+msgid "[01-RelaxMaker](01-RelaxMaker/)"
+msgstr "[01-RelaxMaker](01-RelaxMaker/)"
+
+#: ../../source/tutorials-md/01-basics/README.md:18
+#: 651a96bfd4764f7789fa1980e664a96b
+msgid ""
+"**Description**: Structural relaxation with fixed and variable cell "
+"options **Difficulty**: Beginner **Time**: ~2 min (dry-run), ~10-15 min "
+"(full calculation) **Key Concepts**: RelaxMaker, fixed_cell_relaxation(),"
+" variable_cell_relaxation(), jobflow basics **Files**: 8 tutorial scripts"
+" covering basic to advanced relaxation workflows"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:24
+#: df66f56a12bb45ebae8205ace38838ab
+msgid "[02-BandStructureMaker](02-BandStructureMaker/)"
+msgstr "[02-BandStructureMaker](02-BandStructureMaker/)"
+
+#: ../../source/tutorials-md/01-basics/README.md:25
+#: cccd21d5758146eea6c018162a643995
+msgid ""
+"**Description**: Electronic band structure calculations with automatic "
+"k-path generation **Difficulty**: Beginner **Time**: ~2 min (dry-run), "
+"~15-20 min (full calculation) **Key Concepts**: BandStructureMaker, high-"
+"symmetry k-paths, electronic structure **Files**: Multiple examples for "
+"different material types"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:31
+#: bd2dccdc74544a159468faaac9483b02
+msgid "[03-LuaMaker](03-LuaMaker/)"
+msgstr "[03-LuaMaker](03-LuaMaker/)"
+
+#: ../../source/tutorials-md/01-basics/README.md:32
+#: 88323ff5bf3942f8b42069f8c86eb07c
+msgid ""
+"**Description**: Lua scripting for advanced SIESTA features (FLOS "
+"optimization, geometry constraints) **Difficulty**: Intermediate "
+"**Time**: ~2 min (dry-run), ~15-20 min (full calculation) **Key "
+"Concepts**: Lua scripting, FLOS library, geometry constraints, "
+"MD.TypeOfRun **Files**: Basic Lua integration examples"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:38
+#: 78f3c06d3b2f490a8cb6fd710a461529
+msgid "[04-RelaxMaker-StaticMaker](04-RelaxMaker-StaticMaker/)"
+msgstr "[04-RelaxMaker-StaticMaker](04-RelaxMaker-StaticMaker/)"
+
+#: ../../source/tutorials-md/01-basics/README.md:39
+#: 1f5ac684367e4726be261daca065ec14
+msgid ""
+"**Description**: Multi-step workflows combining relaxation and static "
+"calculations **Difficulty**: Beginner **Time**: ~2 min (dry-run), ~20-30 "
+"min (full calculation) **Key Concepts**: jobflow Flow, job chaining, "
+"relax → static workflows **Files**: Sequential workflow examples with job"
+" dependencies"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:45
+#: f2c61d4996f64e2aad73ab6035ef4684
+msgid "[05-DOSMaker](05-DOSMaker/)"
+msgstr "[05-DOSMaker](05-DOSMaker/)"
+
+#: ../../source/tutorials-md/01-basics/README.md:46
+#: e3eca53b82e243b39d03d019b76e7816
+msgid ""
+"**Description**: Density of states (DOS) calculations **Difficulty**: "
+"Beginner **Time**: ~2 min (dry-run), ~10-15 min (full calculation) **Key "
+"Concepts**: DOSMaker, electronic density of states, Fermi energy "
+"**Files**: Basic DOS calculation examples"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:52
+#: 97524dcc0f6042cd92b0e54a8bad08c0
+msgid "[06-PDOSMaker](06-PDOSMaker/)"
+msgstr "[06-PDOSMaker](06-PDOSMaker/)"
+
+#: ../../source/tutorials-md/01-basics/README.md:53
+#: 12cddd2393ba4237a39135a86ae58059
+msgid ""
+"**Description**: Projected density of states (PDOS) calculations "
+"**Difficulty**: Beginner **Time**: ~2 min (dry-run), ~10-15 min (full "
+"calculation) **Key Concepts**: PDOSMaker, orbital-projected DOS, atomic "
+"decomposition **Files**: PDOS calculation with orbital analysis"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:59
+#: 99d9d8d210f248bcba1c9981be02fd70
+msgid "[07-PhonopyMaker](07-PhonopyMaker/)"
+msgstr "[07-PhonopyMaker](07-PhonopyMaker/)"
+
+#: ../../source/tutorials-md/01-basics/README.md:60
+#: 38702d37bf734709b61e9d07da344952
+msgid ""
+"**Description**: Phonopy-based phonon calculations with finite "
+"differences **Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~1-2"
+" hours (full calculation) **Key Concepts**: PhonopyMaker, supercell "
+"generation, force constants, automatic plotting **Files**: Basic phonopy "
+"integration examples"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:66
+#: 6d340f0532e24738be6f91aa5a88789e
+msgid "[08-SiestaPhononMaker](08-SiestaPhononMaker/)"
+msgstr "[08-SiestaPhononMaker](08-SiestaPhononMaker/)"
+
+#: ../../source/tutorials-md/01-basics/README.md:67
+#: 2ebba095488b4c97ba22155b641b3eb1
+msgid ""
+"**Description**: Native SIESTA phonon calculations using force constant "
+"approach **Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~30-60 "
+"min (full calculation) **Key Concepts**: SiestaPhononMaker, SIESTA's "
+"built-in phonon features, MD.TypeOfRun **Files**: SIESTA-native phonon "
+"examples"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:75
+#: a28648fedf6e4707978ef187c8a24792
+msgid "Learning Path"
+msgstr "Lerning Pth"
+
+#: ../../source/tutorials-md/01-basics/README.md:77
+#: 5c8e4409292341e39881f5691391b412
+msgid "We recommend following this sequence:"
+msgstr "We recommend following this sequence:"
+
+#: ../../source/tutorials-md/01-basics/README.md:79
+#: b209b3adb5e84ec194581c91e131b377
+msgid "Core Sequence (Essential)"
+msgstr "Cیاe Sequence (ضروری)"
+
+#: ../../source/tutorials-md/01-basics/README.md:80
+#: cf57c4059ddd4b0dad7fff66a060700c
+msgid ""
+"**Start here**: [01-RelaxMaker](01-RelaxMaker/) - Learn the absolute "
+"basics of structural relaxation"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:81
+#: 45f2ccc8c29745d5b47043e2cfa4422e
+msgid ""
+"**Multi-step**: [04-RelaxMaker-StaticMaker](04-RelaxMaker-StaticMaker/) -"
+" Combine multiple jobs into workflows"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:82
+#: 98d3f69c2bc646afa7f9ede4510b2faa
+msgid ""
+"**Electronic**: [02-BandStructureMaker](02-BandStructureMaker/) - "
+"Electronic band structure analysis"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:84
+#: b77cb43ac4da4ab688105e93669c360f
+msgid "Electronic Structure Track"
+msgstr "Electronic Structure Trck"
+
+#: ../../source/tutorials-md/01-basics/README.md:85
+#: 2f69e07665a044298ac25cdf5fd2da28
+msgid "**DOS**: [05-DOSMaker](05-DOSMaker/) - Total density of states"
+msgstr "**DOS**: [05-DOSMaker](05-DOSMaker/) - Total density of states"
+
+#: ../../source/tutorials-md/01-basics/README.md:86
+#: 2260f2485aed41ceb1c7a3db9d34a572
+msgid ""
+"**PDOS**: [06-PDOSMaker](06-PDOSMaker/) - Orbital-projected density of "
+"states"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:88
+#: 20b09fa5753847c2bb08d687ccafc420
+msgid "Vibrational Properties Track"
+msgstr "Vibrtionl Properties Trck"
+
+#: ../../source/tutorials-md/01-basics/README.md:89
+#: 960aa5fdd89b4beca9ded0f91946c1c0
+msgid ""
+"**Phonopy**: [07-PhonopyMaker](07-PhonopyMaker/) - Phonon calculations "
+"with phonopy"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:90
+#: 75f77f03784046f1915c27ca6cb336fa
+msgid ""
+"**Native**: [08-SiestaPhononMaker](08-SiestaPhononMaker/) - SIESTA's "
+"built-in phonon features"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:92
+#: 0522ca83a6424a299058cdabdf510450
+msgid "Advanced Control (Optional)"
+msgstr "پیشرفته Control (اختیاری)"
+
+#: ../../source/tutorials-md/01-basics/README.md:93
+#: 673e1542852243e09ce07b88066833c8
+msgid ""
+"**Lua**: [03-LuaMaker](03-LuaMaker/) - Advanced optimization with Lua "
+"scripting"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:97
+#: dc828f28f9b448f693f2bc18165a2099
+msgid "Quick Start Pattern"
+msgstr "شروع سریع Pttern"
+
+#: ../../source/tutorials-md/01-basics/README.md:99
+#: 1f186829e7cf4970bd6c35c88fbe1212
+msgid "All tutorials in this category follow a consistent pattern:"
+msgstr "All tutیاils in this ctegیاy follow  consistent pttern:"
+
+#: ../../source/tutorials-md/01-basics/README.md:130
+#: 133b0729b09f42a4bb37e69caa814ee8
+msgid "Execution Modes"
+msgstr "Execution Modes"
+
+#: ../../source/tutorials-md/01-basics/README.md:132
+#: 8a1db04a4fb548fd91681739e1077db5
+msgid "All tutorials support three execution modes:"
+msgstr "All tutیاils suppیاt three execution modes:"
+
+#: ../../source/tutorials-md/01-basics/README.md:147
+#: 28e7e59e004c44e88e32f5f44661e8da
+msgid "**Recommendation**: Always start with `dry_run=True` to verify your setup!"
+msgstr "**Recommendation**: Always start with `dry_run=True` to verify your setup!"
+
+#: ../../source/tutorials-md/01-basics/README.md:151
+#: e0e7d9e7b1a34db78c15f4ea5b4b8d19
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/01-basics/README.md:153
+#: 4670bf943e554544a47566b6a73f43f5
+msgid "Issue 1: \"SIESTA command not found\""
+msgstr "Issue 1: \"SIESTA commو not found\""
+
+#: ../../source/tutorials-md/01-basics/README.md:154
+#: df37d5fe77ce4729bca09c5572d19519
+msgid "**Solution**: Configure `SIESTA_CMD` in `~/.atomate2siesta.yaml`:"
+msgstr "**Solution**: Configure `SIESTA_CMD` in `~/.atomate2siesta.yaml`:"
+
+#: ../../source/tutorials-md/01-basics/README.md:159
+#: d17263832d484e42ab5f4e40e8b737fc
+msgid "Issue 2: \"Pseudopotential files not found\""
+msgstr "Issue 2: \"Pseudopotentil files not found\""
+
+#: ../../source/tutorials-md/01-basics/README.md:160
+#: 390415e8c5144ef0a6754beda7cfc4c8
+msgid "**Solution**: Install pseudopotentials and configure path:"
+msgstr "**Solution**: Instll pseudopotentils و configure pth:"
+
+#: ../../source/tutorials-md/01-basics/README.md:165
+#: 32affb516ccc4c0681d3844ed25a5dd2
+msgid "Then configure in `~/.atomate2siesta.yaml`:"
+msgstr "Then configure in `~/.atomate2siesta.yaml`:"
+
+#: ../../source/tutorials-md/01-basics/README.md:170
+#: 8a349a1cdb144488890321327e8215e0
+msgid "Issue 3: \"Structure file not found\""
+msgstr "Issue 3: \"Structure file not found\""
+
+#: ../../source/tutorials-md/01-basics/README.md:171
+#: 4a3e8787b1a146d2bc0e85e305fd8072
+msgid ""
+"**Solution**: Check that `00-structures/` directory exists at tutorials "
+"root:"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:176
+#: 0c481e9251f14c8aa2b72f919435492f
+msgid "Issue 4: \"Module not found: atomate2.siesta\""
+msgstr "Issue 4: \"Module not found: tomte2.siest\""
+
+#: ../../source/tutorials-md/01-basics/README.md:177
+#: 6b967e87497f43078b2d5636a180c1d9
+msgid "**Solution**: Install atomate2siesta in development mode:"
+msgstr "**Solution**: Instll tomte2siest in development mode:"
+
+#: ../../source/tutorials-md/01-basics/README.md:185
+#: 793f80204a8c433e930c448b9141e52e
+msgid "Maker Reference"
+msgstr "Maker Reference"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 3289142838c1416b88910abc0cd85326
+msgid "Maker"
+msgstr "Maker"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 94fada6903ed47bd913b90152d63a49a
+msgid "Class Method"
+msgstr "Clss Method"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 6f34b3c2c3fa441eaa567d562e914188
+msgid "Purpose"
+msgstr "Purpose"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 22f60ec4b08d4f85af027cc4038d3094 ee6718873712420eb5a2d3188e5d42cd
+msgid "RelaxMaker"
+msgstr "RelaxMaker"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: d620dd5fa4d047bbb6711bf39a3f657f
+msgid "`fixed_cell_relaxation()`"
+msgstr "`fixed_cell_relaxation()`"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: b024624c827f4093902d4cc6a3d666aa
+msgid "Relax atomic positions only"
+msgstr "Relx tomic positions only"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 5deff4bab91b4f91a84a8567335e91a2
+msgid "`variable_cell_relaxation()`"
+msgstr "`variable_cell_relaxation()`"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: fc3415ec2fdb4683a5c54fbb2ec5dcca
+msgid "Relax atoms + cell"
+msgstr "Relx toms + cell"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: a22671228839458d8d2956d7a4059395
+msgid "BandStructureMaker"
+msgstr "BandStructureMaker"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 4b1c36ec132b422d9e13b9337b912c2f
+msgid "`band_structure()`"
+msgstr "`band_structure()`"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: d56ddc4cc0e6445c851e4b4836964f32
+msgid "Electronic band structure"
+msgstr "Electronic bو structure"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 48f82472039348949797c1adbf80c80f
+msgid "DOSMaker"
+msgstr "DOSMaker"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 516eda1818ed40e199d07786ca5d1447
+msgid "`dos()`"
+msgstr "`dos()`"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 434c4bd46534430dad9e8ea96c46afcc
+msgid "Density of states"
+msgstr "Density of sttes"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: fc9f203d64154fe5a47af07df5f5718e
+msgid "PDOSMaker"
+msgstr "PDOSMaker"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 51b06cad17704567b6ab343e54092464
+msgid "`pdos()`"
+msgstr "`pdos()`"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: ff017575de7c4d79a19467557c53f50e
+msgid "Projected DOS"
+msgstr "Projected DOS"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 646bb88e26b147c881711621ac07b013
+msgid "PhonopyMaker"
+msgstr "PhonopyMaker"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 7656744a13ce41fa89c12fc818d69663 d295088a152b4a79a8ccd144e56b38f6
+msgid "`phonon()`"
+msgstr "`phonon()`"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 5f98eb223bc6480693f18731abe4a84d
+msgid "Phonon with phonopy"
+msgstr "فونون با phonopy"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: c62dc8bf3e07427e95dec43d015b6189
+msgid "SiestaPhononMaker"
+msgstr "SiestaPhononMaker"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 81f58b3a6ad94ac2b14a94c75723fcfc
+msgid "Native SIESTA phonon"
+msgstr "Ntive SIESTA phonon"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: 69f6d46c06b346e8b6b87834f4514e6d
+msgid "LuaMaker"
+msgstr "LuaMaker"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: a0b1b91ee7004a14b0aa19b218990e43
+msgid "`lua_optimization()`"
+msgstr "`lua_optimization()`"
+
+#: ../../source/tutorials-md/01-basics/README.md
+#: f40a9f8e10b2446cb442f1db829ee9b1
+msgid "Lua-scripted optimization"
+msgstr "Lu-scripted optimiztion"
+
+#: ../../source/tutorials-md/01-basics/README.md:200
+#: c34eeb4ee34d409a98faae7902314943
+msgid "Parameter Customization"
+msgstr "Prmeter Customiztion"
+
+#: ../../source/tutorials-md/01-basics/README.md:202
+#: e21b38e2a409479db98ed5de17189767
+msgid "Using Tier Presets (Recommended)"
+msgstr "استفاده از Tier Presets (Recommended)"
+
+#: ../../source/tutorials-md/01-basics/README.md:210
+#: 28550798c78d4906a2d44364b9afeab9
+msgid "Direct Parameter Specification"
+msgstr "Direct Prmeter Specifiction"
+
+#: ../../source/tutorials-md/01-basics/README.md:221
+#: 6f7595d7e13545439da1f19277e094f5
+msgid "Override Preset Parameters"
+msgstr "Override Preset Prmeters"
+
+#: ../../source/tutorials-md/01-basics/README.md:234
+#: 82395a892ff44e7dadc38547e122df42
+msgid ""
+"See **[03-advanced-features/01-tier-system](../03-advanced-features/01"
+"-tier-system/)** for detailed tier preset documentation."
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:238
+#: b2bf72aad0dd4573885a420c07d65541
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/01-basics/README.md:240
+#: cf03a9f585774ff392e724ed35a2c51a
+msgid "After completing the basics, proceed to:"
+msgstr "After completing  bsics, proceed to:"
+
+#: ../../source/tutorials-md/01-basics/README.md:242
+#: 3d150743fa784991a7f480ae5f904a27
+msgid "Immediate Next Steps"
+msgstr "Immedite گام‌های بعدی"
+
+#: ../../source/tutorials-md/01-basics/README.md:243
+#: d9a2dd627299424a9df7d14f9b902c11
+msgid ""
+"**[02-workflows/01-convergence](../02-workflows/01-convergence/)** - "
+"Learn systematic parameter optimization"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:244
+#: 5c857fa018b94cf3aac442b5a678b16c
+msgid ""
+"**[03-advanced-features/01-tier-system](../03-advanced-features/01-tier-"
+"system/)** - Material-specific parameter presets"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:246
+#: b8c69a43a8a7488b939328daaa2ecc13
+msgid "By Research Interest"
+msgstr "By Reserch Interest"
+
+#: ../../source/tutorials-md/01-basics/README.md:247
+#: 8ba2a0687f5e45c6bccb208593175a9b
+msgid ""
+"**Electronic properties**: [02-workflows/02-equation-of-"
+"states](../02-workflows/02-equation-of-states/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:248
+#: 4929787be31142478b023a18af2ffb39
+msgid ""
+"**Vibrational properties**: [02-workflows/06-vibrational-"
+"properties](../02-workflows/06-vibrational-properties/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:249
+#: 9308187de55b4a22878eee426e6f4a07
+msgid ""
+"**Surface chemistry**: [02-workflows/03-surfaces-and-"
+"adsorption](../02-workflows/03-surfaces-and-adsorption/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:250
+#: 9a446c6c379d4f07bbe8d5ec07ecefca
+msgid ""
+"**Mechanical properties**: "
+"[02-workflows/04-mechanical](../02-workflows/04-mechanical/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/README.md:254
+#: 5741abd493394e648ca7726881c751fb
+msgid "Tutorial Metrics"
+msgstr "Tutیاil Metrics"
+
+#: ../../source/tutorials-md/01-basics/README.md:256
+#: 9cc6c368f71244cd8fd4da3808c3ccd6
+msgid "**Total tutorials**: 8 fundamental Makers"
+msgstr "**Total tutorials**: 8 fundamental Makers"
+
+#: ../../source/tutorials-md/01-basics/README.md:257
+#: 23284d4d749440e0a77ae94881e50e84
+msgid "**Total example files**: 30+ Python scripts"
+msgstr "**Totl exmple files**: 30+ Python scripts"
+
+#: ../../source/tutorials-md/01-basics/README.md:258
+#: b203aaa7f4c44285baeef4cfd478fdd1
+msgid "**Coverage**: All basic single-job Makers"
+msgstr "**Coverage**: All basic single-job Makers"
+
+#: ../../source/tutorials-md/01-basics/README.md:259
+#: 8b0a6bf3b2134e0e86c9feb2d4db5aa3
+msgid "**Difficulty**: Beginner (7 tutorials) + Intermediate (1 tutorial)"
+msgstr "**سطح سختی**: مبتدی (7 tutیاils) + متوسط (1 tutیاil)"
+
+#: ../../source/tutorials-md/01-basics/README.md:263
+#: d1c4c168c16b42dbb8502f58a353264f
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"

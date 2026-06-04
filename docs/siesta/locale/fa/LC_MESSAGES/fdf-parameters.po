@@ -1,0 +1,1542 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/fdf-parameters.rst:3 e4acf49bf28349d1b1ecca57a59aec1d
+msgid "FDF Parameter Customization"
+msgstr "سفارشی‌سازی پارامترهای FDF"
+
+#: ../../source/fdf-parameters.rst:5 df498eb3c4064db38087eb823fb7821a
+msgid ""
+"This guide explains how to customize SIESTA calculations using FDF "
+"(Flexible Data Format) parameters in atomate2siesta."
+msgstr ""
+"این راهنما نحوه سفارشی‌سازی محاسبات SIESTA با استفاده از پارامترهای FDF "
+"(قالب داده انعطاف‌پذیر) در atomate2siesta را توضیح می‌دهد."
+
+#: ../../source/fdf-parameters.rst:8 faf7b665138e42d39bff1f9d957bc3a5
+#, fuzzy
+msgid ""
+"Complete FDF parameter routing system with 444 registered parameters. "
+"User-provided FDF parameters correctly override auto-generated values."
+msgstr ""
+"**جدید در نسخه ۱.۰.۱**: سیستم کامل مسیریابی پارامترهای FDF با ۴۴۴ پارامتر"
+" ثبت‌شده. پارامترهای FDF ارائه‌شده توسط کاربر اکنون به‌درستی مقادیر "
+"تولیدشده خودکار را جایگزین می‌کنند."
+
+#: ../../source/fdf-parameters.rst:14 a2a47b3005114a2e8a9e3596052de10d
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/fdf-parameters.rst:16 1a743ff64fcc4b5fb95a14b3561feae5
+msgid ""
+"SIESTA uses FDF (Flexible Data Format) input files to control "
+"calculations. In atomate2siesta, you can provide parameters in two ways:"
+msgstr ""
+"SIESTA از فایل‌های ورودی FDF (قالب داده انعطاف‌پذیر) برای کنترل محاسبات "
+"استفاده می‌کند. در atomate2siesta، می‌توانید پارامترها را به دو روش ارائه"
+" دهید:"
+
+#: ../../source/fdf-parameters.rst:18 2b9f977bf2be44bcb5775a47d47af504
+msgid ""
+"**SIESTA FDF Parameters** (no prefix): Actual SIESTA keywords like "
+"``Mesh.Cutoff``, ``PAO.BasisSize``, ``Spin``"
+msgstr ""
+"**پارامترهای FDF سیستا** (بدون پیشوند): کلیدواژه‌های واقعی SIESTA مانند "
+"``Mesh.Cutoff``، ``PAO.BasisSize``، ``Spin``"
+
+#: ../../source/fdf-parameters.rst:19 7f510175273f4748be75b45e62bd53b3
+msgid ""
+"**atomate2siesta Internal Parameters** (prefixed): Framework controls "
+"like ``a2s_magnetic_ordering``"
+msgstr ""
+"**پارامترهای داخلی atomate2siesta** (با پیشوند): کنترل‌های چارچوب مانند "
+"``a2s_magnetic_ordering``"
+
+#: ../../source/fdf-parameters.rst:22 e3f52814f43b495d90f387ad04970a4f
+#, fuzzy
+msgid ""
+"Internal parameter naming system uses ``atomate2siesta_`` and ``a2s_`` "
+"prefixes. This clearly distinguishes framework controls from SIESTA "
+"parameters."
+msgstr ""
+"**جدید در نسخه ۱.۰.۰**: سیستم نام‌گذاری پارامترهای داخلی با پیشوندهای "
+"``atomate2siesta_`` و ``a2s_``. این به‌وضوح کنترل‌های چارچوب را از "
+"پارامترهای SIESTA متمایز می‌کند."
+
+#: ../../source/fdf-parameters.rst:28 d0ce7a940a98454bbcd2c8cba5c45154
+msgid "Internal Control Parameters"
+msgstr "پارامترهای کنترل داخلی"
+
+#: ../../source/fdf-parameters.rst:32 7695713170f54346a63e9d728ba58d35
+msgid ""
+"atomate2siesta uses special **internal control parameters** that modify "
+"framework behavior but are NOT written to SIESTA FDF files. These are "
+"distinguished by the ``atomate2siesta_`` or ``a2s_`` prefix."
+msgstr ""
+"atomate2siesta از **پارامترهای کنترل داخلی** ویژه‌ای استفاده می‌کند که "
+"رفتار چارچوب را تغییر می‌دهند اما به فایل‌های FDF سیستا نوشته نمی‌شوند. "
+"این‌ها با پیشوند ``atomate2siesta_`` یا ``a2s_`` متمایز می‌شوند."
+
+#: ../../source/fdf-parameters.rst:37 6eb1447e2db94938907e740419e203ec
+msgid "Why the Prefix?"
+msgstr "چرا پیشوند؟"
+
+#: ../../source/fdf-parameters.rst:39 d4506952753f4846a85dfc207d28a02e
+msgid ""
+"The prefix makes it immediately clear that these are **framework control "
+"parameters**, not SIESTA keywords. This prevents:"
+msgstr ""
+"پیشوند بلافاصله مشخص می‌کند که این‌ها **پارامترهای کنترل چارچوب** هستند، "
+"نه کلیدواژه‌های SIESTA. این مانع از موارد زیر می‌شود:"
+
+#: ../../source/fdf-parameters.rst:42 a5f06fd2c86d4a3289e50aedf336729a
+msgid "Accidentally writing internal parameters to FDF files"
+msgstr "نوشتن تصادفی پارامترهای داخلی به فایل‌های FDF"
+
+#: ../../source/fdf-parameters.rst:43 36410b92d7b040cb8354051de037f4f6
+msgid "Confusion between SIESTA and atomate2siesta parameters"
+msgstr "سردرگمی بین پارامترهای SIESTA و atomate2siesta"
+
+#: ../../source/fdf-parameters.rst:44 2814b011c5474df8bc25ce2809c8edb9
+msgid "Collision with future SIESTA keywords"
+msgstr "تداخل با کلیدواژه‌های آینده SIESTA"
+
+#: ../../source/fdf-parameters.rst:47 59a6e65fa5674d75ba19e63755c7b635
+msgid "Dual Prefix Support"
+msgstr "پشتیبانی از پیشوند دوگانه"
+
+#: ../../source/fdf-parameters.rst:49 43ce81bc0cba4a0f911cad1f9d421ee0
+msgid "Both prefixes work identically (user choice):"
+msgstr "هر دو پیشوند به‌طور یکسان کار می‌کنند (انتخاب کاربر):"
+
+#: ../../source/fdf-parameters.rst:66 ad2945a062674a17a4f6f677fe1689ff
+msgid "Available Internal Parameters (8 Total)"
+msgstr "پارامترهای داخلی موجود (۸ پارامتر کل)"
+
+#: ../../source/fdf-parameters.rst:68 0b3a5e96b7c749508f04f571c1b20305
+msgid ""
+"atomate2siesta provides **8 framework-specific shortcuts** that control "
+"atomate2siesta behavior (not SIESTA itself). All use the ``a2s_`` or "
+"``atomate2siesta_`` prefix."
+msgstr ""
+"atomate2siesta **۸ میانبر ویژه چارچوب** را ارائه می‌دهد که رفتار "
+"atomate2siesta را کنترل می‌کنند (نه خود SIESTA). همه از پیشوند ``a2s_`` "
+"یا ``atomate2siesta_`` استفاده می‌کنند."
+
+#: ../../source/fdf-parameters.rst:71 2b789c5146054b9d8cba653ffb430c9c
+msgid "**1. a2s_magnetic_ordering** (or **atomate2siesta_magnetic_ordering**)"
+msgstr "**۱. a2s_magnetic_ordering** (یا **atomate2siesta_magnetic_ordering**)"
+
+#: ../../source/fdf-parameters.rst:72 87f13b26c70540c8be3a2a02d6907a10
+msgid "Controls automatic DM.InitSpin generation for magnetic calculations."
+msgstr "تولید خودکار DM.InitSpin را برای محاسبات مغناطیسی کنترل می‌کند."
+
+#: ../../source/fdf-parameters.rst:74 f9a490378fae473bbe7b564378742dbc
+msgid ""
+"**Values**: ``\"ferromagnetic\"`` (or ``\"FM\"``), "
+"``\"antiferromagnetic\"`` (or ``\"AFM\"``), ``\"custom\"``"
+msgstr ""
+"**مقادیر**: ``\"ferromagnetic\"`` (یا ``\"FM\"``)، "
+"``\"antiferromagnetic\"`` (یا ``\"AFM\"``)، ``\"custom\"``"
+
+#: ../../source/fdf-parameters.rst:76 2ee87cc6ff8b45af90d9101b0a4bd0a0
+msgid "**Default**: ``\"antiferromagnetic\"``"
+msgstr "**پیش‌فرض**: ``\"antiferromagnetic\"``"
+
+#: ../../source/fdf-parameters.rst:78 ../../source/fdf-parameters.rst:107
+#: 4c065aa2fd984653ac25c6c9232d2eea a26a884db7284e838b6f8596aa1dc26a
+msgid "**Example**:"
+msgstr "**مثال**:"
+
+#: ../../source/fdf-parameters.rst:91 9b047657f9824e5cb7d0e484b3c1417b
+msgid "**Generated FDF** (DM.InitSpin block auto-generated):"
+msgstr "**FDF تولیدشده** (بلوک DM.InitSpin به‌طور خودکار تولید می‌شود):"
+
+#: ../../source/fdf-parameters.rst:102 ../../source/fdf-parameters.rst:463
+#: 09548fde3ade412c92a90f1029b3cee7 bff02359900e4b42805538775c9214a9
+msgid ""
+"See ``tutorials/07-advanced-features/16-magnetic-calculations/`` for "
+"complete examples."
+msgstr ""
+"برای مثال‌های کامل به ``tutorials/07-advanced-features/16-magnetic-"
+"calculations/`` مراجعه کنید."
+
+#: ../../source/fdf-parameters.rst:104 c80fca8cebc54c7eb4a36cd0e9d90473
+msgid "**2. a2s_kpts** (or **atomate2siesta_kpts**)"
+msgstr "**۲. a2s_kpts** (یا **atomate2siesta_kpts**)"
+
+#: ../../source/fdf-parameters.rst:105 4e0ecddb02524c53b2e7c6263dc482f7
+msgid ""
+"Shorthand for k-point grid specification (translated to ``%block "
+"kgrid.Monkhorst.Pack``)."
+msgstr ""
+"میانبر برای مشخص‌سازی شبکه نقاط k (به ``%block kgrid.Monkhorst.Pack`` "
+"ترجمه می‌شود)."
+
+#: ../../source/fdf-parameters.rst:115 08f41ca1a38f4a88bdd2aa27d3abdbd4
+msgid "**Alternative**: Use SIESTA parameter directly:"
+msgstr "**جایگزین**: استفاده مستقیم از پارامتر SIESTA:"
+
+#: ../../source/fdf-parameters.rst:128 9de9a3dc1f504519874f906a0a1bf4e5
+msgid "**3-8. Pseudopotential Parameters**"
+msgstr "**۳-۸. پارامترهای شبه‌پتانسیل**"
+
+#: ../../source/fdf-parameters.rst:129 04d31c42d1154ea1b6854dfdec5292e1
+msgid "Six parameters controlling pseudopotential selection:"
+msgstr "شش پارامتر برای کنترل انتخاب شبه‌پتانسیل:"
+
+#: ../../source/fdf-parameters.rst:131 3bffec7275ee452d8cae2cf749d53cbd
+msgid "``a2s_pseudo_path``: Custom path to pseudopotential directory"
+msgstr "``a2s_pseudo_path``: مسیر سفارشی به دایرکتوری شبه‌پتانسیل"
+
+#: ../../source/fdf-parameters.rst:132 c8bdfd0bc2694213a7e3669f9f6aff56
+msgid "``a2s_pseudo_base_path``: Base directory for pseudopotential families"
+msgstr "``a2s_pseudo_base_path``: دایرکتوری پایه برای خانواده‌های شبه‌پتانسیل"
+
+#: ../../source/fdf-parameters.rst:133 12a92bc5f79e44fe9ee456249a8c2e32
+msgid "``a2s_pseudo_family``: Family name (e.g., ``\"ONCVPSP-PBE-SR\"``)"
+msgstr "``a2s_pseudo_family``: نام خانواده (مثلاً ``\"ONCVPSP-PBE-SR\"``)"
+
+#: ../../source/fdf-parameters.rst:134 d42674aa24d44996b95043ce09190208
+msgid "``a2s_pseudo_version``: Version string (e.g., ``\"PDv0.4\"``)"
+msgstr "``a2s_pseudo_version``: رشته نسخه (مثلاً ``\"PDv0.4\"``)"
+
+#: ../../source/fdf-parameters.rst:135 7731ed0f5aac41419bb73bde33f56d6b
+msgid "``a2s_pseudo_quality``: Quality level (e.g., ``\"Standard\"``)"
+msgstr "``a2s_pseudo_quality``: سطح کیفیت (مثلاً ``\"Standard\"``)"
+
+#: ../../source/fdf-parameters.rst:136 2c4ce3ac25e84031a5e30e731689aaaf
+msgid ""
+"``a2s_pseudo_relativistic``: Relativistic treatment (``\"SR\"`` or "
+"``\"FR\"``)"
+msgstr "``a2s_pseudo_relativistic``: رفتار نسبیتی (``\"SR\"`` یا ``\"FR\"``)"
+
+#: ../../source/fdf-parameters.rst:138 ad6f5354f39747a59b5f20ee4487a9f0
+msgid "**Basic Example**:"
+msgstr "**مثال پایه**:"
+
+#: ../../source/fdf-parameters.rst:147 a23ee59835a34c2ba35a88e705f0e794
+msgid "**Advanced: Explicit Path with XC Override** (v1.0.0+):"
+msgstr "**پیشرفته: مسیر صریح با بازنویسی XC** (نسخه ۱.۰.۰+):"
+
+#: ../../source/fdf-parameters.rst:157 2e1e01c5a9dd4de69ff3f4ae05fea4b0
+msgid ""
+"**XC Mismatch**: When using explicit ``a2s_pseudo_path`` with different "
+"``xc.authors``, you'll get an automatic warning about XC functional "
+"mismatch. This is intentional for advanced users who understand the "
+"implications."
+msgstr ""
+"**عدم تطابق XC**: هنگام استفاده از ``a2s_pseudo_path`` صریح با "
+"``xc.authors`` متفاوت، هشدار خودکار درباره عدم تطابق تابعک XC دریافت "
+"خواهید کرد. این برای کاربران پیشرفته که پیامدها را درک می‌کنند، عمدی است."
+
+#: ../../source/fdf-parameters.rst:161 c5a19f5ec9af471b9fbf86a2bbc09d2d
+#, fuzzy
+msgid ""
+"Automatic XC validation checks your pseudopotential files and warns if "
+"they don't match the FDF XC functional."
+msgstr ""
+"**جدید در نسخه ۱.۰.۰**: اعتبارسنجی خودکار XC فایل‌های شبه‌پتانسیل شما را "
+"بررسی می‌کند و اگر با تابعک XC در FDF مطابقت نداشته باشند، هشدار می‌دهد."
+
+#: ../../source/fdf-parameters.rst:164 738d3c8224b84635ba47f684ed5ebaa4
+msgid "See :doc:`siesta-pseudos` for complete pseudopotential documentation."
+msgstr "برای مستندات کامل شبه‌پتانسیل به :doc:`siesta-pseudos` مراجعه کنید."
+
+#: ../../source/fdf-parameters.rst:167 7ca13c2bb2ec40a8b0be5574d852ebb0
+msgid "Legacy Support (Deprecated)"
+msgstr "پشتیبانی قدیمی (منسوخ شده)"
+
+#: ../../source/fdf-parameters.rst:170 c3ba2feb294a425391c26236a58854f0
+msgid ""
+"As of v1.0.0, unprefixed internal parameter names (like "
+"``magnetic_ordering``) are NO LONGER SUPPORTED. You MUST use prefixed "
+"versions (``a2s_magnetic_ordering`` or "
+"``atomate2siesta_magnetic_ordering``)."
+msgstr ""
+"از نسخه ۱.۰.۰، نام‌های پارامتر داخلی بدون پیشوند (مانند "
+"``magnetic_ordering``) دیگر پشتیبانی نمی‌شوند. شما باید از نسخه‌های دارای"
+" پیشوند (``a2s_magnetic_ordering`` یا "
+"``atomate2siesta_magnetic_ordering``) استفاده کنید."
+
+#: ../../source/fdf-parameters.rst:186 8359ed98259345bcb68224c7ad56aa12
+msgid "Migration Timeline"
+msgstr "جدول زمانی مهاجرت"
+
+#: ../../source/fdf-parameters.rst:188 711f152cb057489ea3824df834449cf7
+msgid "**v1.0.0+**: Only prefixed names supported (strict validation)"
+msgstr "**نسخه ۱.۰.۰+**: فقط نام‌های با پیشوند پشتیبانی می‌شوند (اعتبارسنجی دقیق)"
+
+#: ../../source/fdf-parameters.rst:193 7302f73d10664318b6dfdefcaebcb8ab
+msgid "Basic Usage"
+msgstr "استفاده پایه"
+
+#: ../../source/fdf-parameters.rst:196 3b1d88d49a1a4682b00d9453bce6c808
+msgid "Using Internal Parameters (Shortcuts)"
+msgstr "استفاده از پارامترهای داخلی (میانبرها)"
+
+#: ../../source/fdf-parameters.rst:198 021d7886f0fd47f1a6e19f3791bfa61a
+msgid ""
+"atomate2siesta provides 8 framework-specific shortcuts (``a2s_`` prefix) "
+"for parameters that control atomate2siesta behavior rather than SIESTA "
+"itself:"
+msgstr ""
+"atomate2siesta هشت میانبر ویژه چارچوب (با پیشوند ``a2s_``) برای "
+"پارامترهایی که رفتار atomate2siesta را کنترل می‌کنند و نه خود SIESTA، "
+"ارائه می‌دهد:"
+
+#: ../../source/fdf-parameters.rst:214 110417e6a5ee4eca8e23fb56ef1ca31b
+msgid ""
+"For SIESTA FDF parameters like ``PAO.BasisSize``, ``Mesh.Cutoff``, "
+"``PAO.EnergyShift``, use the direct FDF parameter names (shown in next "
+"section). These do NOT have shortcuts."
+msgstr ""
+"برای پارامترهای FDF سیستا مانند ``PAO.BasisSize``، ``Mesh.Cutoff``، "
+"``PAO.EnergyShift``، از نام‌های پارامتر FDF مستقیم استفاده کنید (در بخش "
+"بعدی نشان داده شده است). این‌ها میانبر ندارند."
+
+#: ../../source/fdf-parameters.rst:218 73207a16f82649269d415d6e4d64f27a
+msgid "Using Direct FDF Parameters"
+msgstr "استفاده از پارامترهای FDF مستقیم"
+
+#: ../../source/fdf-parameters.rst:220 ec59559f85f64cdbab02f8585a63da42
+msgid "These are the actual SIESTA keywords (case-insensitive):"
+msgstr "این‌ها کلیدواژه‌های واقعی SIESTA هستند (حساس به حروف بزرگ و کوچک نیستند):"
+
+#: ../../source/fdf-parameters.rst:233 9174f9beb2784e77b76c08fc5ed4aa31
+msgid "**Result in siesta.fdf**:"
+msgstr "**نتیجه در siesta.fdf**:"
+
+#: ../../source/fdf-parameters.rst:245 688581d51d3a42e0b8df68fe9c870305
+msgid "Block Parameters"
+msgstr "پارامترهای بلوکی"
+
+#: ../../source/fdf-parameters.rst:247 abda007ede944944b6e113bd55c81085
+msgid ""
+"SIESTA uses blocks for multi-line parameters. atomate2siesta "
+"automatically handles block formatting."
+msgstr ""
+"SIESTA از بلوک‌ها برای پارامترهای چندخطی استفاده می‌کند. atomate2siesta "
+"به‌طور خودکار قالب‌بندی بلوک‌ها را مدیریت می‌کند."
+
+#: ../../source/fdf-parameters.rst:250 012175478e52434987269eb9c354e31c
+msgid "K-Point Sampling"
+msgstr "نمونه‌برداری نقاط K"
+
+#: ../../source/fdf-parameters.rst:252 d9da6950b4bf41d1bfcc7da3b564194f
+msgid "**Method 1: Using kpts shortcut (recommended)**:"
+msgstr "**روش ۱: استفاده از میانبر kpts (توصیه می‌شود)**:"
+
+#: ../../source/fdf-parameters.rst:260 ../../source/fdf-parameters.rst:295
+#: ../../source/fdf-parameters.rst:403 1e0ee4439cec4073aaf084f95f38f505
+#: 827dafb3d4a14a06b403238d1b461251 b7f19557e42a416b8e1c795a8f2703ef
+msgid "**Generated FDF**:"
+msgstr "**FDF تولیدشده**:"
+
+#: ../../source/fdf-parameters.rst:273 ba68c7319d544300b64167d772c3345e
+msgid "**Method 2: Using block format directly**:"
+msgstr "**روش ۲: استفاده مستقیم از قالب بلوکی**:"
+
+#: ../../source/fdf-parameters.rst:285 00bab2f0efcb4790bdc86e3335ad535a
+msgid "**Same result**: Both methods produce identical FDF output!"
+msgstr "**نتیجه یکسان**: هر دو روش خروجی FDF یکسانی تولید می‌کنند!"
+
+#: ../../source/fdf-parameters.rst:287 18d3ea0e9e6b4f9c9974b1d07be8e7b6
+msgid "**Method 3: Using kgrid.Cutoff instead**:"
+msgstr "**روش ۳: استفاده از kgrid.Cutoff به جای آن**:"
+
+#: ../../source/fdf-parameters.rst:305 16f50fc66fa34f77bdbdfb8c5767ec6a
+msgid ""
+"The system automatically chooses **either** ``kgrid.Cutoff`` **or** "
+"``kgrid.Monkhorst.Pack``, never both. User-provided values always take "
+"priority over auto-generated ones."
+msgstr ""
+"سیستم به‌طور خودکار **یا** ``kgrid.Cutoff`` **یا** "
+"``kgrid.Monkhorst.Pack`` را انتخاب می‌کند، هرگز هر دو را با هم انتخاب "
+"نمی‌کند. مقادیر ارائه‌شده توسط کاربر همیشه نسبت به مقادیر تولیدشده خودکار"
+" اولویت دارند."
+
+#: ../../source/fdf-parameters.rst:309 227909d4c68f448b8e148dd115c0b90d
+msgid "Other Common Blocks"
+msgstr "بلوک‌های رایج دیگر"
+
+#: ../../source/fdf-parameters.rst:311 01eb345fb85542cb8c6cb90d660ca32f
+msgid "**Geometry Constraints**:"
+msgstr "**محدودیت‌های هندسی**:"
+
+#: ../../source/fdf-parameters.rst:322 cf13f03cf4d744d39a38d1e9ad326f44
+msgid "**DM.InitSpin** (Magnetic Moments):"
+msgstr "**DM.InitSpin** (گشتاورهای مغناطیسی):"
+
+#: ../../source/fdf-parameters.rst:335 0162aa81b2914b7dbe9561aaa9530688
+msgid "For magnetic calculations, use the automatic DM.InitSpin generation:"
+msgstr "برای محاسبات مغناطیسی، از تولید خودکار DM.InitSpin استفاده کنید:"
+
+#: ../../source/fdf-parameters.rst:354 787179e0cd80459b999714baba503a0f
+msgid "Advanced FDF Block Inputs (fdf_arguments)"
+msgstr "ورودی‌های بلوک FDF پیشرفته (fdf_arguments)"
+
+#: ../../source/fdf-parameters.rst:356 8008eeee0d2a4efb8e407437c41a25d7
+msgid ""
+"For advanced SIESTA features not directly supported by atomate2siesta's "
+"parameter system, you can use the ``fdf_arguments`` dictionary to specify"
+" **any** FDF parameter or block directly."
+msgstr ""
+"برای ویژگی‌های پیشرفته SIESTA که به‌طور مستقیم توسط سیستم پارامتر "
+"atomate2siesta پشتیبانی نمی‌شوند، می‌توانید از دیکشنری ``fdf_arguments`` "
+"برای تعیین مستقیم **هر** پارامتر یا بلوک FDF استفاده کنید."
+
+#: ../../source/fdf-parameters.rst:360 152677ac28d5486593e04c8c2d04f29f
+msgid "When to Use fdf_arguments"
+msgstr "چه زمانی از fdf_arguments استفاده کنیم"
+
+#: ../../source/fdf-parameters.rst:362 6ad5a67d6e1b43c199f3c85b8aeb3d85
+msgid "Use ``fdf_arguments`` for:"
+msgstr "از ``fdf_arguments`` برای موارد زیر استفاده کنید:"
+
+#: ../../source/fdf-parameters.rst:364 3717647d8354431b876f45236f3e558e
+msgid ""
+"**FDF Blocks**: Multi-line SIESTA input blocks (GeometryConstraints, "
+"DM.InitSpin, etc.)"
+msgstr ""
+"**بلوک‌های FDF**: بلوک‌های ورودی چندخطی SIESTA (GeometryConstraints، "
+"DM.InitSpin و غیره)"
+
+#: ../../source/fdf-parameters.rst:365 3de66970df7f4550b07f7e4089c0ab54
+msgid "**Unsupported Parameters**: SIESTA features not yet in atomate2siesta"
+msgstr ""
+"**پارامترهای پشتیبانی‌نشده**: ویژگی‌های SIESTA که هنوز در atomate2siesta "
+"نیستند"
+
+#: ../../source/fdf-parameters.rst:366 9f529ed5f8d7439ab8580fbd9c5f342d
+msgid ""
+"**Direct Control**: Bypass atomate2siesta's parameter processing when "
+"needed"
+msgstr "**کنترل مستقیم**: دور زدن پردازش پارامتر atomate2siesta در صورت نیاز"
+
+#: ../../source/fdf-parameters.rst:367 4fc54d0d033e45f292492b90960b91ed
+msgid "**Complex Configurations**: Advanced setups requiring precise FDF syntax"
+msgstr "**پیکربندی‌های پیچیده**: تنظیمات پیشرفته که به نحو دقیق FDF نیاز دارند"
+
+#: ../../source/fdf-parameters.rst:370 886bae8bf7ac4f49a27670c72d85807d
+msgid ""
+"Most common parameters have dedicated support in ``user_params``. Use "
+"``fdf_arguments`` only when necessary for maintainability."
+msgstr ""
+"اکثر پارامترهای رایج پشتیبانی اختصاصی در ``user_params`` دارند. فقط در "
+"صورت لزوم برای قابلیت نگهداری از ``fdf_arguments`` استفاده کنید."
+
+#: ../../source/fdf-parameters.rst:374 8a7273f981fc4a619eb94f76f0ebd622
+msgid "Basic Syntax"
+msgstr "نحو پایه"
+
+#: ../../source/fdf-parameters.rst:376 1c59326b14c9450d8bd39a1b9bf90fb8
+msgid ""
+"**Rule**: FDF blocks are specified as **lists of strings** in the "
+"``fdf_arguments`` dictionary."
+msgstr ""
+"**قاعده**: بلوک‌های FDF به‌عنوان **لیست‌هایی از رشته‌ها** در دیکشنری "
+"``fdf_arguments`` مشخص می‌شوند."
+
+#: ../../source/fdf-parameters.rst:426 88adedf1c7b148bfa184c839f3ec76b8
+msgid "Common FDF Blocks"
+msgstr "بلوک‌های FDF رایج"
+
+#: ../../source/fdf-parameters.rst:429 e6616b1d70774086970b2ca3951ca5bb
+msgid "1. DM.InitSpin (Magnetic Initialization)"
+msgstr "۱. DM.InitSpin (مقداردهی اولیه مغناطیسی)"
+
+#: ../../source/fdf-parameters.rst:431 2d36bf1113bd42c7b8ab9568267b1efc
+msgid "Set initial spin polarization per atom:"
+msgstr "تنظیم قطبش اسپین اولیه برای هر اتم:"
+
+#: ../../source/fdf-parameters.rst:446 b08002ce110849be9a8b0b741638cb79
+msgid "**Automatic Alternative**: Use structure magnetic moments instead!"
+msgstr "**جایگزین خودکار**: به جای آن از گشتاورهای مغناطیسی ساختار استفاده کنید!"
+
+#: ../../source/fdf-parameters.rst:466 b55106a0bd4140678dd51005fc48f49a
+msgid "2. GeometryConstraints (Fix Atoms)"
+msgstr "۲. GeometryConstraints (ثابت کردن اتم‌ها)"
+
+#: ../../source/fdf-parameters.rst:468 0cc6ba69c11d4d62b467866209481542
+msgid "Fix atoms or constrain motion directions:"
+msgstr "ثابت کردن اتم‌ها یا محدود کردن جهت‌های حرکت:"
+
+#: ../../source/fdf-parameters.rst:481 f6cd55e801814ed19a99394176584d1f
+msgid "**Common Use Cases**:"
+msgstr "**موارد استفاده رایج**:"
+
+#: ../../source/fdf-parameters.rst:483 cdf1b23fbd2d4c1da53f6b8ba49452ab
+msgid "**Surface relaxation**: Fix bottom substrate layers"
+msgstr "**آرامش سطح**: ثابت کردن لایه‌های پایینی زیرلایه"
+
+#: ../../source/fdf-parameters.rst:484 7999daae5e6f40339cdd8554462cabf8
+msgid "**Defect studies**: Fix boundary atoms"
+msgstr "**مطالعات نقص**: ثابت کردن اتم‌های مرزی"
+
+#: ../../source/fdf-parameters.rst:485 2f8d5959ee14466bb47340e60afc2509
+msgid "**2D materials**: Constrain specific directions"
+msgstr "**مواد دوبعدی**: محدود کردن جهت‌های خاص"
+
+#: ../../source/fdf-parameters.rst:488 ececc874a5cd4d289929f92224515786
+msgid "3. ExternalElectricField"
+msgstr "۳. ExternalElectricField"
+
+#: ../../source/fdf-parameters.rst:490 d203292673844495a2fa35516a506ea4
+msgid "Apply uniform electric field:"
+msgstr "اعمال میدان الکتریکی یکنواخت:"
+
+#: ../../source/fdf-parameters.rst:502 c6783b58b74b4d748109596ceea89985
+msgid "**Units**: ``V/Ang``, ``V/Bohr``, ``Ry/Bohr/e``, ``Har/Bohr/e``"
+msgstr "**واحدها**: ``V/Ang``، ``V/Bohr``، ``Ry/Bohr/e``، ``Har/Bohr/e``"
+
+#: ../../source/fdf-parameters.rst:505 56094f49b7374d42875221466329f166
+msgid "4. ProjectedDensityOfStates (PDOS)"
+msgstr "۴. ProjectedDensityOfStates (PDOS)"
+
+#: ../../source/fdf-parameters.rst:507 be2f267b851f4b12a668acef1eebed53
+msgid "Calculate orbital-projected DOS:"
+msgstr "محاسبه DOS تصویرشده اوربیتالی:"
+
+#: ../../source/fdf-parameters.rst:525 16251d22a3664856a3289bd262ef9404
+msgid "5. BandLines (Custom K-Point Paths)"
+msgstr "۵. BandLines (مسیرهای نقطه K سفارشی)"
+
+#: ../../source/fdf-parameters.rst:527 4cb908435eb14afb88340aef2d26e8e2
+msgid "Define custom k-point path for band structure:"
+msgstr "تعریف مسیر نقطه k سفارشی برای ساختار باند:"
+
+#: ../../source/fdf-parameters.rst:544 366c8952887f46a4a0e8d0bf8c2abb40
+msgid "6. MD.TargetStress (NPT Ensemble)"
+msgstr "۶. MD.TargetStress (گروه NPT)"
+
+#: ../../source/fdf-parameters.rst:546 383bfa2f59824366ad94a298f2eac85a
+msgid "Target stress tensor for variable-cell MD:"
+msgstr "تانسور تنش هدف برای MD با سلول متغیر:"
+
+#: ../../source/fdf-parameters.rst:558 1b4338fff71548bea10eaa98e13181b9
+msgid "**Stress components**: (Sxx, Syy, Szz, Sxy, Sxz, Syz)"
+msgstr "**مؤلفه‌های تنش**: (Sxx، Syy، Szz، Sxy، Sxz، Syz)"
+
+#: ../../source/fdf-parameters.rst:561 de129b9e9f6d4b4797f1b959a4cff2ca
+msgid "Combining Multiple Blocks"
+msgstr "ترکیب چندین بلوک"
+
+#: ../../source/fdf-parameters.rst:563 99a071b61353461d965cede1ed6ccd28
+msgid "You can specify multiple FDF blocks in one calculation:"
+msgstr "می‌توانید چندین بلوک FDF را در یک محاسبه مشخص کنید:"
+
+#: ../../source/fdf-parameters.rst:595 dba6b49144c7471fb893b8a9290f2e81
+msgid "**Block Compatibility**: Most blocks can coexist, but be careful with:"
+msgstr ""
+"**سازگاری بلوک**: اکثر بلوک‌ها می‌توانند همزمان وجود داشته باشند، اما "
+"مراقب موارد زیر باشید:"
+
+#: ../../source/fdf-parameters.rst:597 1d4641aab82a4665b633365179365a17
+msgid "✅ Compatible: Constraints + Electric field"
+msgstr "✅ سازگار: محدودیت‌ها + میدان الکتریکی"
+
+#: ../../source/fdf-parameters.rst:598 e2188f4cd65941f695ec4f1e158d39e4
+msgid "✅ Compatible: Spin + PDOS"
+msgstr "✅ سازگار: اسپین + PDOS"
+
+#: ../../source/fdf-parameters.rst:599 49c5c0a2083c4b15b82748dfbc15b999
+msgid ""
+"⚠️ Careful: BandLines + PDOS (both define k-points, use separate "
+"calculations)"
+msgstr ""
+"⚠️ دقت کنید: BandLines + PDOS (هر دو نقاط k را تعریف می‌کنند، از محاسبات "
+"جداگانه استفاده کنید)"
+
+#: ../../source/fdf-parameters.rst:600 16e70e9535904f4bafe24023c26a9036
+msgid ""
+"⚠️ Careful: MD.TargetStress + GeometryConstraints (constraints limit cell"
+" motion)"
+msgstr ""
+"⚠️ دقت کنید: MD.TargetStress + GeometryConstraints (محدودیت‌ها حرکت سلول "
+"را محدود می‌کنند)"
+
+#: ../../source/fdf-parameters.rst:603 a8f26fbd8ad841d38ecf671e827d511f
+msgid "Common Errors and Solutions"
+msgstr "خطاهای رایج و راه‌حل‌ها"
+
+#: ../../source/fdf-parameters.rst:605 cb6d0790a4bc406688703d6acd0bd1ee
+msgid "**Error 1: Block not appearing in FDF**"
+msgstr "**خطای ۱: بلوک در FDF ظاهر نمی‌شود**"
+
+#: ../../source/fdf-parameters.rst:619 97f904a529694638815821478485ed5b
+msgid "**Error 2: Atom indexing (0 vs 1-based)**"
+msgstr "**خطای ۲: نمایه‌گذاری اتم (۰ در مقابل ۱)**"
+
+#: ../../source/fdf-parameters.rst:629 cd744dfe2d11420bab99d35ed61ba310
+msgid "**Error 3: Missing units**"
+msgstr "**خطای ۳: واحدهای گمشده**"
+
+#: ../../source/fdf-parameters.rst:640 d2db7c2c610f4b86954f96657524e541
+msgid "Validation and Debugging"
+msgstr "اعتبارسنجی و اشکال‌زدایی"
+
+#: ../../source/fdf-parameters.rst:642 cb05b84f8ef94fe99fa55181f1c520d6
+msgid "**1. Always use dry-run first**:"
+msgstr "**۱. همیشه ابتدا از dry-run استفاده کنید**:"
+
+#: ../../source/fdf-parameters.rst:651 b31efe228d7541b9b6834baf1a075f51
+msgid "**2. Check generated FDF file**:"
+msgstr "**۲. فایل FDF تولیدشده را بررسی کنید**:"
+
+#: ../../source/fdf-parameters.rst:661 4cc6f41b2cd44cc88a9dab532bdbd9af
+msgid "**3. Verify block syntax**:"
+msgstr "**۳. نحو بلوک را تأیید کنید**:"
+
+#: ../../source/fdf-parameters.rst:663 c3caac4363354ae88a46acecbebc0968
+msgid "Expected format in FDF:"
+msgstr "قالب مورد انتظار در FDF:"
+
+#: ../../source/fdf-parameters.rst:673 ef865ea9221c4e3e8145755dfdb3e633
+msgid "Complete Reference"
+msgstr "مرجع کامل"
+
+#: ../../source/fdf-parameters.rst:675 c565bfe86fe944e08159e9bab85b5fda
+msgid "For comprehensive examples of all FDF blocks:"
+msgstr "برای مثال‌های جامع از همه بلوک‌های FDF:"
+
+#: ../../source/fdf-parameters.rst:677 508016d0378d43aeb32f44821c91304d
+msgid "**Tutorial**: ``tutorials/07-advanced-features/02-fdf-block-inputs/``"
+msgstr "**آموزش**: ``tutorials/07-advanced-features/02-fdf-block-inputs/``"
+
+#: ../../source/fdf-parameters.rst:678 2bc9e52fc18647c1a5243bd361ac1937
+msgid "**Examples**: 7 complete tutorials covering all major block types"
+msgstr "**مثال‌ها**: ۷ آموزش کامل که همه انواع بلوک‌های اصلی را پوشش می‌دهند"
+
+#: ../../source/fdf-parameters.rst:679 73aa1725b66541f5806acb9f969ad5ea
+msgid ""
+"**Documentation**: 1,050 lines covering syntax, validation, and best "
+"practices"
+msgstr "**مستندات**: ۱۰۵۰ خط که نحو، اعتبارسنجی و بهترین روش‌ها را پوشش می‌دهد"
+
+#: ../../source/fdf-parameters.rst:684 70ebd2bf06fb43ce8301b1ef180b80ef
+msgid "Complete Example"
+msgstr "مثال کامل"
+
+#: ../../source/fdf-parameters.rst:687 0485ca586f4144178c69445210297511
+msgid "Combining Multiple Parameters"
+msgstr "ترکیب پارامترهای متعدد"
+
+#: ../../source/fdf-parameters.rst:728 bbed7775c50848b6a334025b1fff3c4c
+msgid "**Generated siesta.fdf** (excerpt):"
+msgstr "**siesta.fdf تولیدشده** (قسمتی از آن):"
+
+#: ../../source/fdf-parameters.rst:774 e1d8e2ccecfa48d1a6280bab7ebea361
+msgid "Parameter Validation"
+msgstr "اعتبارسنجی پارامتر"
+
+#: ../../source/fdf-parameters.rst:777 511e2b59913842798bc13d4ea0b0f213
+msgid "Unknown Parameter Detection"
+msgstr "تشخیص پارامتر ناشناخته"
+
+#: ../../source/fdf-parameters.rst:779 2a2a6b88b04f41b5b43cf75b1338e00b
+msgid ""
+"atomate2siesta validates all FDF parameters against a registry of 444 "
+"known SIESTA keywords:"
+msgstr ""
+"atomate2siesta همه پارامترهای FDF را در برابر ثبت ۴۴۴ کلیدواژه شناخته‌شده"
+" SIESTA اعتبارسنجی می‌کند:"
+
+#: ../../source/fdf-parameters.rst:792 0f314e29acb5499f9036847a326bdf43
+msgid "**Error message** (with colored output):"
+msgstr "**پیام خطا** (با خروجی رنگی):"
+
+#: ../../source/fdf-parameters.rst:807 f0e496ce420b4aefb1c622270830a646
+msgid "Allowing Unknown Parameters"
+msgstr "مجاز کردن پارامترهای ناشناخته"
+
+#: ../../source/fdf-parameters.rst:809 00018d1ad7414cada3e65a0c19170779
+msgid "If you need to use a parameter not in the registry:"
+msgstr "اگر نیاز به استفاده از پارامتری که در ثبت نیست دارید:"
+
+#: ../../source/fdf-parameters.rst:821 4fcc4b5285b5426eb10f90a2d8aac95d
+msgid ""
+"Use ``force_unknown=True`` only when necessary. Unknown parameters bypass"
+" validation and may cause SIESTA errors if misspelled."
+msgstr ""
+"فقط در صورت لزوم از ``force_unknown=True`` استفاده کنید. پارامترهای "
+"ناشناخته از اعتبارسنجی عبور می‌کنند و در صورت اشتباه املایی ممکن است باعث"
+" خطاهای SIESTA شوند."
+
+#: ../../source/fdf-parameters.rst:825 980cd711f4fb40e9b9f263b476e42ac6
+msgid "XC Functional Validation"
+msgstr "اعتبارسنجی تابعک XC"
+
+#: ../../source/fdf-parameters.rst:829 638fbfafcfd94805829556d9b4d7562a
+msgid ""
+"atomate2siesta automatically validates that your XC functional "
+"(``XC.Functional`` and ``XC.Authors``) matches the pseudopotential files."
+" This prevents silent inconsistencies that can affect results."
+msgstr ""
+"atomate2siesta به‌طور خودکار اعتبارسنجی می‌کند که تابعک XC شما "
+"(``XC.Functional`` و ``XC.Authors``) با فایل‌های شبه‌پتانسیل مطابقت دارد."
+" این از ناسازگاری‌های ساکت که می‌توانند بر نتایج تأثیر بگذارند، جلوگیری "
+"می‌کند."
+
+#: ../../source/fdf-parameters.rst:832 296b91fa7c5d4d3da9ca1ad58eeb00de
+msgid "**How it works**:"
+msgstr "**نحوه کار**:"
+
+#: ../../source/fdf-parameters.rst:834 d96ad03c3d5a45728ce1cebe559867f3
+msgid "Reads XC information from ``.psml`` files"
+msgstr "خواندن اطلاعات XC از فایل‌های ``.psml``"
+
+#: ../../source/fdf-parameters.rst:835 2cad31188bea4a9eb4f1bfdf6a1585aa
+msgid "Compares with FDF ``XC.Authors`` parameter"
+msgstr "مقایسه با پارامتر ``XC.Authors`` در FDF"
+
+#: ../../source/fdf-parameters.rst:836 dbe2b1f1fb3f4a5ea2f11ec388b8ab62
+msgid "Warns if mismatch detected (always shown, regardless of verbosity)"
+msgstr ""
+"در صورت تشخیص عدم تطابق هشدار می‌دهد (همیشه نمایش داده می‌شود، صرف‌نظر از"
+" سطح جزئیات)"
+
+#: ../../source/fdf-parameters.rst:838 8bec464a67364606a6f22526d5bed996
+msgid "**Example Warning**:"
+msgstr "**مثال هشدار**:"
+
+#: ../../source/fdf-parameters.rst:851 5935a9ce48de431ca852c349f78b6db6
+msgid "**When you might see this**:"
+msgstr "**چه زمانی ممکن است این را ببینید**:"
+
+#: ../../source/fdf-parameters.rst:862 d0a2d50aa808472895614b3fa9d8058a
+msgid "**Resolution**:"
+msgstr "**راه‌حل**:"
+
+#: ../../source/fdf-parameters.rst:864 1f56ae88bcb44feebffa3cf6be179a17
+msgid "**Match pseudos to XC** (recommended):"
+msgstr "**تطابق شبه‌پتانسیل‌ها با XC** (توصیه می‌شود):"
+
+#: ../../source/fdf-parameters.rst:873 172e9946e9414296950ec6a0e3fa3e4c
+msgid "**Match XC to pseudos**:"
+msgstr "**تطابق XC با شبه‌پتانسیل‌ها**:"
+
+#: ../../source/fdf-parameters.rst:882 359d6a7a8c4f49be835d2d785c134405
+msgid ""
+"**Advanced users**: If you intentionally want a mismatch (e.g., for "
+"testing), you can proceed - the warning is informational only and doesn't"
+" stop execution."
+msgstr ""
+"**کاربران پیشرفته**: اگر عمداً عدم تطابق می‌خواهید (مثلاً برای تست)، "
+"می‌توانید ادامه دهید - هشدار فقط اطلاعاتی است و اجرا را متوقف نمی‌کند."
+
+#: ../../source/fdf-parameters.rst:886 2a1ed8f155b345ec8fde50b309dfe697
+msgid ""
+"**Supported formats**: Currently validates PSML files (ONCVPSP format). "
+"The XC information is extracted from the ``<exchange-correlation>`` XML "
+"element."
+msgstr ""
+"**قالب‌های پشتیبانی‌شده**: در حال حاضر فایل‌های PSML (قالب ONCVPSP) را "
+"اعتبارسنجی می‌کند. اطلاعات XC از عنصر XML ``<exchange-correlation>`` "
+"استخراج می‌شود."
+
+#: ../../source/fdf-parameters.rst:892 36f451da17674518b68452a83edb179a
+msgid "Advanced Features"
+msgstr "ویژگی‌های پیشرفته"
+
+#: ../../source/fdf-parameters.rst:895 63da870de34843678ded0e67ae5d7516
+msgid "Overriding Tier Presets"
+msgstr "بازنویسی پیش‌تنظیم‌های سطح"
+
+#: ../../source/fdf-parameters.rst:897 0976727c3ef340bfa674d71c7268b464
+msgid "When using tier presets, use ``override_params`` to modify preset values:"
+msgstr ""
+"هنگام استفاده از پیش‌تنظیم‌های سطح، از ``override_params`` برای تغییر "
+"مقادیر پیش‌تنظیم استفاده کنید:"
+
+#: ../../source/fdf-parameters.rst:915 9849c212e3284c9d9d4195344fa66a2d
+msgid "**Always use override_params** when modifying preset parameters!"
+msgstr ""
+"**همیشه از override_params استفاده کنید** هنگام تغییر پارامترهای "
+"پیش‌تنظیم!"
+
+#: ../../source/fdf-parameters.rst:917 28d9b52241a24c1e8c0d7d5f39a69cfb
+msgid "❌ **Wrong**: Passing ``user_params`` to maker before applying preset"
+msgstr "❌ **اشتباه**: ارسال ``user_params`` به سازنده قبل از اعمال پیش‌تنظیم"
+
+#: ../../source/fdf-parameters.rst:927 cb3fa6d8fa754f44ae021af8945c4f72
+msgid "✅ **Correct**: Using override_params"
+msgstr "✅ **صحیح**: استفاده از override_params"
+
+#: ../../source/fdf-parameters.rst:938 0738865811154f5e8e5f4134c8d3f2f7
+msgid "Using Powerups"
+msgstr "استفاده از Powerups"
+
+#: ../../source/fdf-parameters.rst:940 8057687b200a4899bf5b5956eb90041e
+msgid "Modify parameters after job creation:"
+msgstr "تغییر پارامترها پس از ایجاد کار:"
+
+#: ../../source/fdf-parameters.rst:960 b4cb0e7910fa4894bdd061abaa09c7d2
+msgid "FDF Registry"
+msgstr "ثبت FDF"
+
+#: ../../source/fdf-parameters.rst:963 8916af4560f44cf6a2d197f59dcb3d37
+msgid "Viewing Available Parameters"
+msgstr "مشاهده پارامترهای موجود"
+
+#: ../../source/fdf-parameters.rst:965 5e33d38af9944b22bd2121844ad3b4ff
+msgid "Use the CLI to explore all 444 registered FDF parameters:"
+msgstr "از CLI برای کاوش همه ۴۴۴ پارامتر ثبت‌شده FDF استفاده کنید:"
+
+#: ../../source/fdf-parameters.rst:978 2485a5f47f7b4cdab2bb3e30ffd0c770
+msgid "**Example output**:"
+msgstr "**خروجی نمونه**:"
+
+#: ../../source/fdf-parameters.rst:995 f8f0f96a83d7496bb3b31b7982e6ee6f
+msgid "Complete Parameter List"
+msgstr "لیست کامل پارامترها"
+
+#: ../../source/fdf-parameters.rst:997 9073a295ea1b46ba8a64debbace43fb1
+msgid "atomate2siesta registers parameters from 30 dataclass modules:"
+msgstr "atomate2siesta پارامترها را از ۳۰ ماژول کلاس داده ثبت می‌کند:"
+
+#: ../../source/fdf-parameters.rst:999 32f8dbc47ceb4d70ace06f488b965b5d
+msgid ""
+"**BasisSetsAndProjectors**: PAO.BasisSize, PAO.EnergyShift, "
+"PAO.SplitNorm, etc."
+msgstr ""
+"**BasisSetsAndProjectors**: PAO.BasisSize، PAO.EnergyShift، PAO.SplitNorm"
+" و غیره"
+
+#: ../../source/fdf-parameters.rst:1000 b04ce6dafa9f44b2a3da1db3ecef6ef9
+msgid "**KPointSampling**: kgrid.Cutoff, %block kgrid.Monkhorst.Pack"
+msgstr "**KPointSampling**: kgrid.Cutoff، %block kgrid.Monkhorst.Pack"
+
+#: ../../source/fdf-parameters.rst:1001 bb659023eabd4ba88071fe301b21bf7b
+msgid "**RealSpaceGridParameters**: Mesh.Cutoff, MeshSubDivisions, etc."
+msgstr "**RealSpaceGridParameters**: Mesh.Cutoff، MeshSubDivisions و غیره"
+
+#: ../../source/fdf-parameters.rst:1002 a0427cf69ec8496b8c05ad3a2a81d7e4
+msgid ""
+"**SCFLoopParameters**: SCF.Mixer.*, DM.NumberPulay, "
+"ElectronicTemperature, etc."
+msgstr ""
+"**SCFLoopParameters**: SCF.Mixer.*، DM.NumberPulay، ElectronicTemperature"
+" و غیره"
+
+#: ../../source/fdf-parameters.rst:1003 274a8faf2429452088c11f7036016b0b
+msgid "**SpinSettings**: Spin, %block DM.InitSpin, FixSpin, etc."
+msgstr "**SpinSettings**: Spin، %block DM.InitSpin، FixSpin و غیره"
+
+#: ../../source/fdf-parameters.rst:1004 5708dcaa2e384901b7ba8eaaed81b126
+msgid "**ExchangeCorrelationFunctionals**: XC.functional, XC.authors, etc."
+msgstr "**ExchangeCorrelationFunctionals**: XC.functional، XC.authors و غیره"
+
+#: ../../source/fdf-parameters.rst:1005 26fbef7458cf4b8a88f8863f3da6dad9
+msgid "And 24 more modules..."
+msgstr "و ۲۴ ماژول دیگر..."
+
+#: ../../source/fdf-parameters.rst:1007 5012541edd204c1699225dacacf3b62d
+msgid "See :doc:`siesta-inputs` for complete documentation."
+msgstr "برای مستندات کامل به :doc:`siesta-inputs` مراجعه کنید."
+
+#: ../../source/fdf-parameters.rst:1012 a8701165aa2649b5aedcad8c699762e1
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/fdf-parameters.rst:1014 f41a70aa9409478bad0eb198f092fab6
+msgid ""
+"**Use Direct FDF Parameters**: For SIESTA parameters, use FDF names "
+"directly"
+msgstr ""
+"**استفاده از پارامترهای FDF مستقیم**: برای پارامترهای SIESTA، از نام‌های "
+"FDF به‌طور مستقیم استفاده کنید"
+
+#: ../../source/fdf-parameters.rst:1016 4ee7ff0dce164467907be998bc6a5485
+msgid "✅ ``\"Mesh.Cutoff\": \"300 Ry\"`` (direct SIESTA parameter)"
+msgstr "✅ ``\"Mesh.Cutoff\": \"300 Ry\"`` (پارامتر مستقیم SIESTA)"
+
+#: ../../source/fdf-parameters.rst:1018 672d6173ada74b82933258e540938be6
+msgid "✅ ``\"PAO.BasisSize\": \"DZP\"`` (direct SIESTA parameter)"
+msgstr "✅ ``\"PAO.BasisSize\": \"DZP\"`` (پارامتر مستقیم SIESTA)"
+
+#: ../../source/fdf-parameters.rst:1020 5ecb4065c4424fe08f0958c739c2250c
+msgid "✅ ``\"PAO.EnergyShift\": \"0.01 Ry\"`` (direct SIESTA parameter)"
+msgstr "✅ ``\"PAO.EnergyShift\": \"0.01 Ry\"`` (پارامتر مستقیم SIESTA)"
+
+#: ../../source/fdf-parameters.rst:1022 ebcb47e27c094866b7d4b60e5895ba51
+msgid "❌ ``\"a2s_mesh_cutoff\": \"300 Ry\"`` (doesn't exist - never implemented)"
+msgstr "❌ ``\"a2s_mesh_cutoff\": \"300 Ry\"`` (وجود ندارد - هرگز پیاده‌سازی نشده)"
+
+#: ../../source/fdf-parameters.rst:1024 41be5a75b8994e8892da8d0755f9eee8
+msgid "**Case-Insensitive**: SIESTA and atomate2siesta handle case automatically"
+msgstr ""
+"**حساس به حروف نیست**: SIESTA و atomate2siesta حروف را به‌طور خودکار "
+"مدیریت می‌کنند"
+
+#: ../../source/fdf-parameters.rst:1026 6b55ba9de86a4d99a66f2a9efe082d26
+msgid ""
+"All equivalent: ``\"Mesh.Cutoff\"``, ``\"mesh.cutoff\"``, "
+"``\"MESH.CUTOFF\"``"
+msgstr ""
+"همه معادل هستند: ``\"Mesh.Cutoff\"``، ``\"mesh.cutoff\"``، "
+"``\"MESH.CUTOFF\"``"
+
+#: ../../source/fdf-parameters.rst:1028 21327dc6712b46b8938d3497ebc82732
+msgid "**Blocks Are Automatic**: Just provide the data, formatting is handled"
+msgstr "**بلوک‌ها خودکار هستند**: فقط داده را ارائه دهید، قالب‌بندی مدیریت می‌شود"
+
+#: ../../source/fdf-parameters.rst:1042 e1aba12f003142569e21ccc70fb1db5a
+msgid "**Test Your Parameters**: Use dry-run mode to preview FDF files"
+msgstr ""
+"**پارامترهای خود را تست کنید**: از حالت dry-run برای پیش‌نمایش فایل‌های "
+"FDF استفاده کنید"
+
+#: ../../source/fdf-parameters.rst:1051 b1ce614ec498418ca08fc5ee0a3ddd4c
+msgid "**Validation Helps**: Don't disable it unless necessary"
+msgstr "**اعتبارسنجی کمک می‌کند**: آن را غیرفعال نکنید مگر در صورت لزوم"
+
+#: ../../source/fdf-parameters.rst:1053 2c03806d95eb4f8089be4d23a8acb635
+msgid "✅ Let validation catch typos"
+msgstr "✅ بگذارید اعتبارسنجی اشتباهات تایپی را بگیرد"
+
+#: ../../source/fdf-parameters.rst:1055 efddf9599a44459786c231187e5a9a25
+msgid "❌ Don't use ``force_unknown=True`` by default"
+msgstr "❌ به‌طور پیش‌فرض از ``force_unknown=True`` استفاده نکنید"
+
+#: ../../source/fdf-parameters.rst:1060 fe7dbee4ce244eed812dd7c442064699
+msgid "Advanced Basis Set Customization"
+msgstr "سفارشی‌سازی پیشرفته مجموعه پایه"
+
+#: ../../source/fdf-parameters.rst:1064 ab965ed99b9744d08efbc6437a034eb1
+msgid ""
+"atomate2siesta provides powerful tools for customizing basis sets beyond "
+"simple global settings. This section covers species variants, per-atom "
+"control, and programmatic PAO.Basis generation."
+msgstr ""
+"atomate2siesta ابزارهای قدرتمندی برای سفارشی‌سازی مجموعه‌های پایه فراتر "
+"از تنظیمات ساده سراسری ارائه می‌دهد. این بخش انواع گونه‌ها، کنترل هر اتم "
+"و تولید برنامه‌نویسی PAO.Basis را پوشش می‌دهد."
+
+#: ../../source/fdf-parameters.rst:1068 47cc13f376664a07bad80a26fd351c2b
+#, fuzzy
+msgid "Species Variants"
+msgstr "✅ انواع گونه‌ها"
+
+#: ../../source/fdf-parameters.rst:1070 6a6ad7648f964d3188cd431d1d7cf3bc
+msgid ""
+"The **dict format** for ``%block PAO.BasisSizes`` enables species "
+"variants like ``O_surface``, ``O_bulk``, ``O_ghost``:"
+msgstr ""
+"**قالب دیکشنری** برای ``%block PAO.BasisSizes`` انواع گونه‌های مانند "
+"``O_surface``، ``O_bulk``، ``O_ghost`` را فعال می‌کند:"
+
+#: ../../source/fdf-parameters.rst:1101 ../../source/fdf-parameters.rst:1167
+#: ../../source/fdf-parameters.rst:1241 9deb3e3b7c8346c897be2c6253dd8ed1
+#: b10918617b5940a191711905857b3795 d828cd99e4314630bf579354a9dfd310
+msgid "**Use Cases**:"
+msgstr "**موارد استفاده**:"
+
+#: ../../source/fdf-parameters.rst:1103 3f13f5a61df649508f326735bca1c766
+msgid "**Surface calculations**: Different basis for surface vs bulk atoms"
+msgstr "**محاسبات سطح**: مجموعه پایه متفاوت برای اتم‌های سطح در مقابل اتم‌های حجمی"
+
+#: ../../source/fdf-parameters.rst:1104 9a06ff2df343448dbde230427e2c3f0d
+msgid "**Adsorption studies**: High accuracy for adsorbate + interface"
+msgstr "**مطالعات جذب سطحی**: دقت بالا برای جذب‌شونده + واسط"
+
+#: ../../source/fdf-parameters.rst:1105 b55034c1ce4144a3b8bcd13067128994
+msgid "**BSSE corrections**: Ghost atoms (Z < 0) for counterpoise method"
+msgstr "**اصلاحات BSSE**: اتم‌های شبح (Z < 0) برای روش counterpoise"
+
+#: ../../source/fdf-parameters.rst:1107 b1e52bb9429940f49bb893170268bfd8
+msgid ""
+"See ``tutorials/01-basics/07-basis-set-customization/08-10`` for detailed"
+" examples."
+msgstr ""
+"برای مثال‌های جزئی به ``tutorials/01-basics/07-basis-set-"
+"customization/08-10`` مراجعه کنید."
+
+#: ../../source/fdf-parameters.rst:1110 419607d365ad4bb3a3a1f397303bbe71
+#, fuzzy
+msgid "Per-Atom Basis Control"
+msgstr "کنترل مجموعه پایه هر اتم (فاز ۳)"
+
+#: ../../source/fdf-parameters.rst:1114 11b80e5bf8e7478183757d832e5bd7ff
+msgid "For atom-level precision control, use the **per-atom basis helpers**:"
+msgstr ""
+"برای کنترل دقیق در سطح اتم، از **کمک‌کننده‌های مجموعه پایه هر اتم** "
+"استفاده کنید:"
+
+#: ../../source/fdf-parameters.rst:1116 e316392940ca4f8597c4a95b37f23e00
+msgid "**Method 1: Direct Specification** (1-indexed like SIESTA):"
+msgstr "**روش ۱: مشخص‌سازی مستقیم** (نمایه‌گذاری از ۱ مانند SIESTA):"
+
+#: ../../source/fdf-parameters.rst:1143 65bef3afd2eb4ffc9828d41e14a0c51f
+msgid "**Method 2: Grouped Specification** (layer-based):"
+msgstr "**روش ۲: مشخص‌سازی گروهی** (بر اساس لایه):"
+
+#: ../../source/fdf-parameters.rst:1160 ../../source/fdf-parameters.rst:1233
+#: aec76dd0d7244f4092a7cc4f88e881b2 fc21b089163e43b2bdc46101884e23b7
+msgid "**Features**:"
+msgstr "**ویژگی‌ها**:"
+
+#: ../../source/fdf-parameters.rst:1162 a4ef8ec0ec1c45e1b2d50e95138080b7
+msgid "Atom-level precision control (even for same element)"
+msgstr "کنترل دقیق در سطح اتم (حتی برای عنصر یکسان)"
+
+#: ../../source/fdf-parameters.rst:1163 427431dd859848f5b22879b77c7ed00c
+msgid "Automatic species label generation (e.g., ``Ti``, ``Ti_dzp``, ``Ti_dz``)"
+msgstr "تولید خودکار برچسب گونه (مثلاً ``Ti``، ``Ti_dzp``، ``Ti_dz``)"
+
+#: ../../source/fdf-parameters.rst:1164 4f305319d7314dc28eecfde1113f5afb
+msgid "Fallback basis for unspecified atoms"
+msgstr "مجموعه پایه پشتیبان برای اتم‌های مشخص‌نشده"
+
+#: ../../source/fdf-parameters.rst:1165 6044a92bbb75473c9fa26cd3360fe5fe
+msgid "Validation (checks indices, no overlaps)"
+msgstr "اعتبارسنجی (بررسی نمایه‌ها، بدون تداخل)"
+
+#: ../../source/fdf-parameters.rst:1169 6fc89c2851dd439daf0a5cf6247be4bd
+msgid "Surface slabs with atom-level precision"
+msgstr "صفحات سطح با دقت سطح اتم"
+
+#: ../../source/fdf-parameters.rst:1170 88fc47d53d6145a8a095c7b9acc3bb95
+msgid "Defects (high accuracy around defect site)"
+msgstr "نقص‌ها (دقت بالا در اطراف محل نقص)"
+
+#: ../../source/fdf-parameters.rst:1171 30d1e9bd9ead4cdf875d46d6e70bc1f1
+msgid "Dopants (special treatment for specific atoms)"
+msgstr "ناخالصی‌ها (رفتار ویژه برای اتم‌های خاص)"
+
+#: ../../source/fdf-parameters.rst:1172 ddc63204b5024edfb1de03ecf819573b
+msgid "Layer-based systems (automatic grouping)"
+msgstr "سیستم‌های بر اساس لایه (گروه‌بندی خودکار)"
+
+#: ../../source/fdf-parameters.rst:1174 e81a9c23355242809cb8302d42037577
+msgid ""
+"See ``tutorials/01-basics/07-basis-set-customization/03_1-03_2`` for "
+"detailed examples."
+msgstr ""
+"برای مثال‌های جزئی به ``tutorials/01-basics/07-basis-set-"
+"customization/03_1-03_2`` مراجعه کنید."
+
+#: ../../source/fdf-parameters.rst:1177 69b1fc70fc0d43a7830339c91aa9ddec
+#, fuzzy
+msgid "PAO.Basis Helper Functions"
+msgstr "توابع کمک‌کننده PAO.Basis (فاز ۴)"
+
+#: ../../source/fdf-parameters.rst:1181 83f9b99d28764243b4a70f2165a439c2
+msgid ""
+"For **programmatic generation** of custom ``%block PAO.Basis`` "
+"specifications:"
+msgstr "برای **تولید برنامه‌نویسی** مشخصات سفارشی ``%block PAO.Basis``:"
+
+#: ../../source/fdf-parameters.rst:1225 1071b143458a452baba19da764902630
+msgid "**Supported PAO Flags**:"
+msgstr "**پرچم‌های PAO پشتیبانی‌شده**:"
+
+#: ../../source/fdf-parameters.rst:1227 cb149496d5f64cd3a0618a7e8d9407a8
+msgid "``polarization``: Add l+1 polarization orbitals"
+msgstr "``polarization``: اضافه کردن اوربیتال‌های قطبش l+1"
+
+#: ../../source/fdf-parameters.rst:1228 1707fda127af446cadef26464a34c97c
+msgid "``split_norm``: Control second zeta generation (0.0-1.0)"
+msgstr "``split_norm``: کنترل تولید زتای دوم (۰.۰-۱.۰)"
+
+#: ../../source/fdf-parameters.rst:1229 4c7fd2e2f4d746448eec00b358d77997
+msgid "``soft_conf``: Soft confinement potential"
+msgstr "``soft_conf``: پتانسیل محصورسازی نرم"
+
+#: ../../source/fdf-parameters.rst:1230 64f96a822e0d424188fe9747871deaa5
+msgid "``charge_conf``: Charge confinement for excited states"
+msgstr "``charge_conf``: محصورسازی بار برای حالت‌های برانگیخته"
+
+#: ../../source/fdf-parameters.rst:1231 3948134045004585baf038b37ead58e2
+msgid "``filteret``, ``screen``, ``delta``, ``contraction``"
+msgstr "``filteret``، ``screen``، ``delta``، ``contraction``"
+
+#: ../../source/fdf-parameters.rst:1235 a17383c83eaf4243821decf1fdf5bd22
+msgid "Programmatic generation (no manual FDF formatting)"
+msgstr "تولید برنامه‌نویسی (بدون قالب‌بندی دستی FDF)"
+
+#: ../../source/fdf-parameters.rst:1236 1aca4d2687a249cfa0de8264d842e22e
+msgid "Validation (nzeta vs rc length, l range, split_norm)"
+msgstr "اعتبارسنجی (nzeta در مقابل طول rc، محدوده l، split_norm)"
+
+#: ../../source/fdf-parameters.rst:1237 85567b3e1dd0488aaa80a8ef9d338346
+msgid "Type-safe dataclass-based system"
+msgstr "سیستم مبتنی بر کلاس داده ایمن از نظر نوع"
+
+#: ../../source/fdf-parameters.rst:1238 78b5ced393f24ed6bf717a4578a1df4e
+msgid "Species variants support"
+msgstr "پشتیبانی از انواع گونه‌ها"
+
+#: ../../source/fdf-parameters.rst:1239 cd7af34c189a4a3487f405225b68c318
+msgid "Returns list format (ready for ``user_params``)"
+msgstr "بازگشت قالب لیست (آماده برای ``user_params``)"
+
+#: ../../source/fdf-parameters.rst:1243 4feb168980824dee8aa06a77965e1be4
+msgid "Custom cutoff radii optimization"
+msgstr "بهینه‌سازی شعاع برش سفارشی"
+
+#: ../../source/fdf-parameters.rst:1244 c5f86bce214c44788d60ec0ad32e850f
+msgid "Species variants with different orbitals"
+msgstr "انواع گونه‌ها با اوربیتال‌های مختلف"
+
+#: ../../source/fdf-parameters.rst:1245 f8f2a6545fd84cd48ac22648b5389adf
+msgid "Advanced basis set development"
+msgstr "توسعه پیشرفته مجموعه پایه"
+
+#: ../../source/fdf-parameters.rst:1246 054e400e1c89405b985982d31d3f0b6f
+msgid "Combine with per-atom helpers for ultimate control"
+msgstr "ترکیب با کمک‌کننده‌های هر اتم برای کنترل نهایی"
+
+#: ../../source/fdf-parameters.rst:1248 da94bf2f93054a97a3a49a98b8c1a82f
+msgid ""
+"See ``tutorials/01-basics/07-basis-set-customization/11`` for detailed "
+"examples."
+msgstr ""
+"برای مثال‌های جزئی به ``tutorials/01-basics/07-basis-set-"
+"customization/11`` مراجعه کنید."
+
+#: ../../source/fdf-parameters.rst:1251 49feb3ebd8414b2dbb58d0b05aea3d48
+msgid "Complete Workflow Example"
+msgstr "مثال کامل جریان کار"
+
+#: ../../source/fdf-parameters.rst:1253 bdd9e142f1ec41b0b52ae5b2f334dd9d
+msgid "Combining all features for maximum control:"
+msgstr "ترکیب همه ویژگی‌ها برای کنترل حداکثری:"
+
+#: ../../source/fdf-parameters.rst:1294 baaab623d464422188dd82943254de23
+msgid "This provides:"
+msgstr "این موارد را فراهم می‌کند:"
+
+#: ../../source/fdf-parameters.rst:1296 49c93a295ad34050b2364f8149c5a56a
+msgid "✅ Atom-level basis size control"
+msgstr "✅ کنترل اندازه مجموعه پایه در سطح اتم"
+
+#: ../../source/fdf-parameters.rst:1297 f0940607eddc4de4a540f15dcfd6cb49
+msgid "✅ Custom orbital specifications"
+msgstr "✅ مشخصات اوربیتالی سفارشی"
+
+#: ../../source/fdf-parameters.rst:1298 5c5734a82e404e0e97a1c719c411a434
+msgid "✅ Species variants"
+msgstr "✅ انواع گونه‌ها"
+
+#: ../../source/fdf-parameters.rst:1299 f61482eba19b467cbb338fd96690abff
+msgid "✅ Validation and type safety"
+msgstr "✅ اعتبارسنجی و ایمنی نوع"
+
+#: ../../source/fdf-parameters.rst:1304 0e5f35637f6048b6914da27baa566af1
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/fdf-parameters.rst:1307 260e7fe156264540a340f4b42682f602
+msgid "Parameters Not Applied"
+msgstr "پارامترها اعمال نشدند"
+
+#: ../../source/fdf-parameters.rst:1309 b91cbef1905e4574ae93e18b1f4f3fb7
+msgid "**Problem**: User parameters don't appear in siesta.fdf"
+msgstr "**مشکل**: پارامترهای کاربر در siesta.fdf ظاهر نمی‌شوند"
+
+#: ../../source/fdf-parameters.rst:1311 b74529695e8f46a8b81e84aa447008c2
+msgid "**Solution**: Check that you're using correct parameter names:"
+msgstr "**راه‌حل**: بررسی کنید که از نام‌های پارامتر صحیح استفاده می‌کنید:"
+
+#: ../../source/fdf-parameters.rst:1318 c5f7d491290f4793af7d6d4e17d4e8f5
+msgid "**Common mistakes**:"
+msgstr "**اشتباهات رایج**:"
+
+#: ../../source/fdf-parameters.rst:1320 c8af379c324542a0b36122ccd62e6fdc
+msgid "❌ ``\"mesh_cutoff\"`` or ``\"a2s_mesh_cutoff\"`` (never existed)"
+msgstr "❌ ``\"mesh_cutoff\"`` یا ``\"a2s_mesh_cutoff\"`` (هرگز وجود نداشته)"
+
+#: ../../source/fdf-parameters.rst:1321 22125dfcc13d445c88d4ea05c06ea13f
+msgid "✅ ``\"Mesh.Cutoff\": \"300 Ry\"`` (correct SIESTA FDF parameter)"
+msgstr "✅ ``\"Mesh.Cutoff\": \"300 Ry\"`` (پارامتر صحیح FDF سیستا)"
+
+#: ../../source/fdf-parameters.rst:1322 ba882928dd7445ccacb736dbe6606ee4
+msgid "✅ ``\"a2s_kpts\": [4, 4, 4]`` (framework shortcut - valid)"
+msgstr "✅ ``\"a2s_kpts\": [4, 4, 4]`` (میانبر چارچوب - معتبر)"
+
+#: ../../source/fdf-parameters.rst:1323 75440399308149d795285df935777df1
+msgid ""
+"✅ ``\"%block kgrid.Monkhorst.Pack\": [...]`` (direct FDF block - also "
+"valid)"
+msgstr "✅ ``\"%block kgrid.Monkhorst.Pack\": [...]`` (بلوک مستقیم FDF - نیز معتبر)"
+
+#: ../../source/fdf-parameters.rst:1326 087428ef5a314c0388f9e45d87b0d8d2
+msgid "Unexpected Defaults"
+msgstr "پیش‌فرض‌های غیرمنتظره"
+
+#: ../../source/fdf-parameters.rst:1328 0eef90c0eebe45079275269dc7c3e514
+msgid "**Problem**: Auto-generated values instead of user values"
+msgstr "**مشکل**: مقادیر تولیدشده خودکار به جای مقادیر کاربر"
+
+#: ../../source/fdf-parameters.rst:1330 f454d081e77646b89d317a8ecce3c93f
+msgid ""
+"**Example**: User provides ``kpts: [2,2,2]`` but gets 18x18x18 in "
+"siesta.fdf"
+msgstr ""
+"**مثال**: کاربر ``kpts: [2,2,2]`` ارائه می‌دهد اما ۱۸x۱۸x۱۸ در siesta.fdf"
+" دریافت می‌کند"
+
+#: ../../source/fdf-parameters.rst:1332 395f36692c5b47cebaccbeb9a051eea6
+msgid "**Solution**: This was fixed in v1.0.0. Update to latest version:"
+msgstr "**راه‌حل**: این در نسخه ۱.۰.۰ اصلاح شد. به آخرین نسخه به‌روزرسانی کنید:"
+
+#: ../../source/fdf-parameters.rst:1338 354bf61cf5694369affae7fd61636bcf
+msgid ""
+"The FDF regeneration system ensures user values override auto-generated "
+"ones."
+msgstr ""
+"سیستم بازتولید FDF اطمینان می‌دهد که مقادیر کاربر بر مقادیر تولیدشده "
+"خودکار غلبه می‌کنند."
+
+#: ../../source/fdf-parameters.rst:1343 08381157db5048d98c1648d593d6d68b
+msgid "Parameter Units Reference"
+msgstr "مرجع واحدهای پارامتر"
+
+#: ../../source/fdf-parameters.rst:1347 a801e01547e2458ea7c7b5596b4f5d15
+msgid ""
+"All FDF parameters with physical dimensions now have explicit unit "
+"information in their metadata. This helps with parameter validation, "
+"documentation, and unit conversion."
+msgstr ""
+"همه پارامترهای FDF با ابعاد فیزیکی اکنون اطلاعات واحد صریح در ابرداده‌های"
+" خود دارند. این به اعتبارسنجی پارامتر، مستندات و تبدیل واحد کمک می‌کند."
+
+#: ../../source/fdf-parameters.rst:1351 bdfa1a0380ff4474b4ee516c43610b57
+msgid "Unit System Overview"
+msgstr "نمای کلی سیستم واحد"
+
+#: ../../source/fdf-parameters.rst:1353 910e0542e03c4b3a93295164162f8816
+msgid "SIESTA uses the following unit conventions:"
+msgstr "SIESTA از قراردادهای واحد زیر استفاده می‌کند:"
+
+#: ../../source/fdf-parameters.rst:1355 cf4ddd1e0c3243ba9f77ff0358060ca8
+msgid "**Energy Units**:"
+msgstr "**واحدهای انرژی**:"
+
+#: ../../source/fdf-parameters.rst:1356 a9e723253c02402eaf0897346cfb56d9
+msgid "``Ry`` (Rydberg) - Default SIESTA energy unit (1 Ry = 13.6057 eV)"
+msgstr "``Ry`` (ریدبرگ) - واحد پیش‌فرض انرژی SIESTA (۱ Ry = ۱۳.۶۰۵۷ eV)"
+
+#: ../../source/fdf-parameters.rst:1357 6a31bfdd100947fe9a60848ff6fd4b37
+msgid "``eV`` (electron volt) - Common for small energies, tolerances"
+msgstr "``eV`` (الکترون ولت) - رایج برای انرژی‌های کوچک، تلرانس‌ها"
+
+#: ../../source/fdf-parameters.rst:1358 feee473ae9cc4349bec64f9cacdd3d32
+msgid "``meV`` (millielectron volt) - Very small energy scales"
+msgstr "``meV`` (میلی‌الکترون ولت) - مقیاس‌های انرژی بسیار کوچک"
+
+#: ../../source/fdf-parameters.rst:1359 1e3ae62dfb8b4c11b74bd9f0a1df96dc
+msgid "``Hartree`` - Atomic units (1 Hartree = 2 Ry = 27.211 eV)"
+msgstr "``Hartree`` - واحدهای اتمی (۱ Hartree = ۲ Ry = ۲۷.۲۱۱ eV)"
+
+#: ../../source/fdf-parameters.rst:1361 c8d6bc1b3ac146da86e8f1e20b905b52
+msgid "**Length Units**:"
+msgstr "**واحدهای طول**:"
+
+#: ../../source/fdf-parameters.rst:1362 f40141623a7840418ed059c0b7c4b3b6
+msgid "``Ang`` (Angstrom) - Default SIESTA length unit (10⁻¹⁰ m)"
+msgstr "``Ang`` (آنگستروم) - واحد پیش‌فرض طول SIESTA (۱۰⁻¹⁰ m)"
+
+#: ../../source/fdf-parameters.rst:1363 e430e8c3120e4e7b86585f5e4c8bcedc
+msgid "``Bohr`` (Bohr radius) - Atomic length unit (1 Bohr = 0.529177 Ang)"
+msgstr "``Bohr`` (شعاع بور) - واحد طول اتمی (۱ Bohr = ۰.۵۲۹۱۷۷ Ang)"
+
+#: ../../source/fdf-parameters.rst:1365 ef89952aa315454da500be5a5db0c130
+msgid "**Time Units**:"
+msgstr "**واحدهای زمان**:"
+
+#: ../../source/fdf-parameters.rst:1366 3aae39eb26864b0086412b84b0e8a352
+msgid "``fs`` (femtoseconds) - Molecular dynamics timesteps (10⁻¹⁵ s)"
+msgstr "``fs`` (فمتوثانیه) - گام‌های زمانی دینامیک مولکولی (۱۰⁻¹⁵ s)"
+
+#: ../../source/fdf-parameters.rst:1367 d7c0c5ed2be64e37867eaec9dd71230d
+msgid "``ps`` (picoseconds) - Longer MD simulations (10⁻¹² s)"
+msgstr "``ps`` (پیکوثانیه) - شبیه‌سازی‌های MD طولانی‌تر (۱۰⁻¹² s)"
+
+#: ../../source/fdf-parameters.rst:1369 020f621816dd4d079b681519eee3d1c2
+msgid "**Temperature Units**:"
+msgstr "**واحدهای دما**:"
+
+#: ../../source/fdf-parameters.rst:1370 18ad8f44d8ee4405a81b41476ecdc0db
+msgid "``K`` (Kelvin) - Absolute temperature"
+msgstr "``K`` (کلوین) - دمای مطلق"
+
+#: ../../source/fdf-parameters.rst:1372 81f13047318c4272906b54e6e0863f44
+msgid "**Pressure Units**:"
+msgstr "**واحدهای فشار**:"
+
+#: ../../source/fdf-parameters.rst:1373 38b3703483334c06a0f57c37efc9eb63
+msgid "``GPa`` (Gigapascal) - Stress/pressure (10⁹ Pa)"
+msgstr "``GPa`` (گیگاپاسکال) - تنش/فشار (۱۰⁹ Pa)"
+
+#: ../../source/fdf-parameters.rst:1374 b71897e6e27b4e468d6627a5251cf9db
+msgid "``Ry/Bohr³`` - Atomic pressure units"
+msgstr "``Ry/Bohr³`` - واحدهای فشار اتمی"
+
+#: ../../source/fdf-parameters.rst:1375 21885a9359cc4577b2734a66c76421c6
+msgid "``eV/Ang³`` - Alternative pressure unit"
+msgstr "``eV/Ang³`` - واحد جایگزین فشار"
+
+#: ../../source/fdf-parameters.rst:1377 9cb1637009cd40c89ef08dacf1777bd5
+msgid "**Force Units**:"
+msgstr "**واحدهای نیرو**:"
+
+#: ../../source/fdf-parameters.rst:1378 2474f541b1374887a097e819e7743504
+msgid "``eV/Ang`` - Energy gradient (force)"
+msgstr "``eV/Ang`` - گرادیان انرژی (نیرو)"
+
+#: ../../source/fdf-parameters.rst:1379 f761365a7af04c3cbdeaaa6b1c2d4be7
+msgid "``Ry/Bohr`` - Atomic force units"
+msgstr "``Ry/Bohr`` - واحدهای نیروی اتمی"
+
+#: ../../source/fdf-parameters.rst:1381 ../../source/fdf-parameters.rst:1453
+#: a7bb08b717094cc794ae6b16478cb1dc fa01585a85444e95bdee861e8294c65d
+msgid "**Composite Units**:"
+msgstr "**واحدهای ترکیبی**:"
+
+#: ../../source/fdf-parameters.rst:1382 090f97e5865a40468c7bf5b389aab5a9
+msgid "``Ry*fs²`` - Mass parameters (Nosé-Hoover, Parrinello-Rahman)"
+msgstr "``Ry*fs²`` - پارامترهای جرم (Nosé-Hoover، Parrinello-Rahman)"
+
+#: ../../source/fdf-parameters.rst:1383 144a40ae75d94902a30040f726c0fe27
+msgid "``Ry/rad`` - Angular force tolerance"
+msgstr "``Ry/rad`` - تلرانس نیروی زاویه‌ای"
+
+#: ../../source/fdf-parameters.rst:1386 df55bb93059b4378a56630b5b11afb85
+msgid "Accessing Unit Information"
+msgstr "دسترسی به اطلاعات واحد"
+
+#: ../../source/fdf-parameters.rst:1388 41f77c399a0e41819ca77a647f835103
+msgid ""
+"The :class:`~atomate2.siesta.dataclass.base.FDFDataclass` base class "
+"provides helper methods to query unit information:"
+msgstr ""
+"کلاس پایه :class:`~atomate2.siesta.dataclass.base.FDFDataclass` متدهای "
+"کمک‌کننده برای جستجوی اطلاعات واحد ارائه می‌دهد:"
+
+#: ../../source/fdf-parameters.rst:1413 61e3f57a2e9243b0a39e9176cd52ed1f
+msgid "Parameters by Unit Type"
+msgstr "پارامترها بر اساس نوع واحد"
+
+#: ../../source/fdf-parameters.rst:1415 f55e6372957f4e1cae0448e37533c082
+msgid "**Energy Parameters** (Ry, eV):"
+msgstr "**پارامترهای انرژی** (Ry، eV):"
+
+#: ../../source/fdf-parameters.rst:1416 623088d5a1ac41e9add7a3a62e0eadec
+msgid "``Mesh.Cutoff`` (Ry) - Real-space grid energy cutoff"
+msgstr "``Mesh.Cutoff`` (Ry) - برش انرژی شبکه فضای واقعی"
+
+#: ../../source/fdf-parameters.rst:1417 7689666867974f86b4a9a678862a524f
+msgid "``PAO.EnergyShift`` (Ry) - Basis set confinement energy"
+msgstr "``PAO.EnergyShift`` (Ry) - انرژی محصورسازی مجموعه پایه"
+
+#: ../../source/fdf-parameters.rst:1418 6e3d34b4e7844e5589e0fbca1a23c5bf
+msgid "``PAO.EnergyCutoff`` (Ry) - PAO filtering cutoff"
+msgstr "``PAO.EnergyCutoff`` (Ry) - برش فیلترینگ PAO"
+
+#: ../../source/fdf-parameters.rst:1419 953c7e079d5c48a68a969d97aace5e06
+msgid "``SCF.H.Tolerance`` (eV) - Hamiltonian convergence tolerance"
+msgstr "``SCF.H.Tolerance`` (eV) - تلرانس همگرایی هامیلتونی"
+
+#: ../../source/fdf-parameters.rst:1420 fa1495756e27453d831f5767ef18b14e
+msgid "``SCF.EDM.Tolerance`` (eV) - Energy-density-matrix tolerance"
+msgstr "``SCF.EDM.Tolerance`` (eV) - تلرانس ماتریس چگالی-انرژی"
+
+#: ../../source/fdf-parameters.rst:1421 046fceab7f2a4ffd9c347524fdfb1fbf
+msgid "``ElectronicTemperature`` (K) - Electronic smearing temperature"
+msgstr "``ElectronicTemperature`` (K) - دمای پخش الکترونیکی"
+
+#: ../../source/fdf-parameters.rst:1422 b81537af40a942029eb66b4d4f0eeb0a
+msgid "``ON.Eta`` (eV) - Linear-scaling localization radius"
+msgstr "``ON.Eta`` (eV) - شعاع بومی‌سازی مقیاس‌بندی خطی"
+
+#: ../../source/fdf-parameters.rst:1423 0e88e801685f4a8f9758b7a927617eaa
+msgid "``BulkBiasVoltage`` (eV) - Transport bias voltage"
+msgstr "``BulkBiasVoltage`` (eV) - ولتاژ بایاس ترابرد"
+
+#: ../../source/fdf-parameters.rst:1425 9fe52fa88c6c47e1a6f28c9efa73fac1
+msgid "**Length Parameters** (Ang, Bohr):"
+msgstr "**پارامترهای طول** (Ang، Bohr):"
+
+#: ../../source/fdf-parameters.rst:1426 1dcbd48c7193446faff83324b09ca715
+msgid "``MD.MaxDispl`` (Bohr) - Maximum atomic displacement per MD step"
+msgstr "``MD.MaxDispl`` (Bohr) - حداکثر جابجایی اتمی در هر گام MD"
+
+#: ../../source/fdf-parameters.rst:1427 1ed48f4b4da9495cbaebdd76474692f8
+msgid "``PAO.SoftInnerRadius`` (Bohr) - Soft confinement inner radius"
+msgstr "``PAO.SoftInnerRadius`` (Bohr) - شعاع داخلی محصورسازی نرم"
+
+#: ../../source/fdf-parameters.rst:1428 9ab4f9e245bf4ec4b234f2a0f81a6eb5
+msgid "``RMaxRadialGrid`` (Bohr) - Maximum radius for radial grids"
+msgstr "``RMaxRadialGrid`` (Bohr) - حداکثر شعاع برای شبکه‌های شعاعی"
+
+#: ../../source/fdf-parameters.rst:1429 ccaa58b8fe414c158cf06d349741b425
+msgid "``MM.Cutoff`` (Bohr) - Molecular mechanics cutoff"
+msgstr "``MM.Cutoff`` (Bohr) - برش مکانیک مولکولی"
+
+#: ../../source/fdf-parameters.rst:1430 5ef99862e8074cf6a8e375d708959f99
+msgid "``DFTD3.2BodyCutoff`` (Bohr) - Grimme D3 2-body cutoff"
+msgstr "``DFTD3.2BodyCutoff`` (Bohr) - برش دو-جسمی Grimme D3"
+
+#: ../../source/fdf-parameters.rst:1431 cd9c20e48957416d8bc8a278ca374c96
+msgid "``ON.RcLWF`` (Bohr) - Localized wavefunction cutoff radius"
+msgstr "``ON.RcLWF`` (Bohr) - شعاع برش تابع موج بومی‌شده"
+
+#: ../../source/fdf-parameters.rst:1433 ccff9868f6c342de8850fe4fdfa91fa7
+msgid "**Time Parameters** (fs):"
+msgstr "**پارامترهای زمان** (fs):"
+
+#: ../../source/fdf-parameters.rst:1434 eae7ae5947ad425eade573aee5697ea5
+msgid "``MD.LengthTimeStep`` (fs) - Molecular dynamics timestep"
+msgstr "``MD.LengthTimeStep`` (fs) - گام زمانی دینامیک مولکولی"
+
+#: ../../source/fdf-parameters.rst:1435 79907a513d6141a188e14a9881df0f9d
+msgid "``MD.TauRelax`` (fs) - Nose-Hoover thermostat relaxation time"
+msgstr "``MD.TauRelax`` (fs) - زمان آرامش ترموستات Nose-Hoover"
+
+#: ../../source/fdf-parameters.rst:1436 402e631f5db64e0da1148028db7a396e
+msgid "``TDED.TimeStep`` (fs) - Real-time TDDFT timestep"
+msgstr "``TDED.TimeStep`` (fs) - گام زمانی TDDFT زمان-واقعی"
+
+#: ../../source/fdf-parameters.rst:1438 9ed09200b6084e21945437c7810369b0
+msgid "**Temperature Parameters** (K):"
+msgstr "**پارامترهای دما** (K):"
+
+#: ../../source/fdf-parameters.rst:1439 09d2110c80f243488234308dc2ab934c
+msgid "``MD.InitialTemperature`` (K) - Initial MD temperature"
+msgstr "``MD.InitialTemperature`` (K) - دمای اولیه MD"
+
+#: ../../source/fdf-parameters.rst:1440 5e06214908584fce820997b0d3713611
+msgid "``MD.TargetTemperature`` (K) - Target temperature for thermostat"
+msgstr "``MD.TargetTemperature`` (K) - دمای هدف برای ترموستات"
+
+#: ../../source/fdf-parameters.rst:1441 376ba32c211948dfa2bf45b54813e1a1
+msgid "``ElectronicTemperature`` (K) - Electronic occupation smearing"
+msgstr "``ElectronicTemperature`` (K) - پخش اشغال الکترونیکی"
+
+#: ../../source/fdf-parameters.rst:1443 6784a46823804aeea3a99e50fbfda965
+msgid "**Pressure/Stress Parameters** (GPa):"
+msgstr "**پارامترهای فشار/تنش** (GPa):"
+
+#: ../../source/fdf-parameters.rst:1444 6179ae78b73442af8244dcf779573c63
+msgid "``MD.MaxStressTol`` (GPa) - Maximum stress tolerance for relaxation"
+msgstr "``MD.MaxStressTol`` (GPa) - حداکثر تلرانس تنش برای آرامش"
+
+#: ../../source/fdf-parameters.rst:1445 7e86c70226814afe878bdec5253e32e3
+msgid "``MD.TargetPressure`` (GPa) - Target pressure for NPT dynamics"
+msgstr "``MD.TargetPressure`` (GPa) - فشار هدف برای دینامیک NPT"
+
+#: ../../source/fdf-parameters.rst:1446 8ca88cd3925b4acea70c1722c04a4e84
+msgid "``BasisPressure`` (GPa) - Basis set confinement pressure"
+msgstr "``BasisPressure`` (GPa) - فشار محصورسازی مجموعه پایه"
+
+#: ../../source/fdf-parameters.rst:1448 a593c65ada04491db16dd6314d15e61d
+msgid "**Force Parameters** (eV/Ang, Ry/Bohr):"
+msgstr "**پارامترهای نیرو** (eV/Ang، Ry/Bohr):"
+
+#: ../../source/fdf-parameters.rst:1449 de1918b552b74eb98c3cc2659656e623
+msgid "``MD.MaxForceTol`` (eV/Ang) - Maximum force tolerance"
+msgstr "``MD.MaxForceTol`` (eV/Ang) - حداکثر تلرانس نیرو"
+
+#: ../../source/fdf-parameters.rst:1450 d3034202f16f4c7facaa39f3537ea3a6
+msgid "``ZM.ForceTolLength`` (Ry/Bohr) - Z-matrix bond force tolerance"
+msgstr "``ZM.ForceTolLength`` (Ry/Bohr) - تلرانس نیروی پیوند Z-matrix"
+
+#: ../../source/fdf-parameters.rst:1451 bf64a18038c846659c5f80a2fbe716c7
+msgid "``ZM.ForceTolAngle`` (Ry/rad) - Z-matrix angle force tolerance"
+msgstr "``ZM.ForceTolAngle`` (Ry/rad) - تلرانس نیروی زاویه Z-matrix"
+
+#: ../../source/fdf-parameters.rst:1454 9cd787a345cb4e139713b7467fb6c1b3
+msgid "``MD.NoseMass`` (Ry*fs²) - Nosé-Hoover thermostat mass"
+msgstr "``MD.NoseMass`` (Ry*fs²) - جرم ترموستات Nosé-Hoover"
+
+#: ../../source/fdf-parameters.rst:1455 9780701e96f3480faa470020a8450d17
+msgid "``MD.ParrinelloRahmanMass`` (Ry*fs²) - Barostat mass parameter"
+msgstr "``MD.ParrinelloRahmanMass`` (Ry*fs²) - پارامتر جرم باروستات"
+
+#: ../../source/fdf-parameters.rst:1456 34390235e97a4b5abd0da8b5a6a0b946
+msgid "``MD.BulkModulus`` (Ry/Bohr³) - Bulk modulus for cell optimization"
+msgstr "``MD.BulkModulus`` (Ry/Bohr³) - مدول حجمی برای بهینه‌سازی سلول"
+
+#: ../../source/fdf-parameters.rst:1459 52186efcce1744b8a474f20e5e316ef8
+msgid "Example: Using Unit Information"
+msgstr "مثال: استفاده از اطلاعات واحد"
+
+#: ../../source/fdf-parameters.rst:1488 2cacd324d2e3428eb5b98c2dab31a7e6
+msgid "Implementation Details"
+msgstr "جزئیات پیاده‌سازی"
+
+#: ../../source/fdf-parameters.rst:1490 5828e81ab8094ae3a8f59c207fbf7f3d
+msgid ""
+"Units are stored in the ``metadata`` dictionary of each "
+":class:`dataclasses.field`:"
+msgstr ""
+"واحدها در دیکشنری ``metadata`` هر :class:`dataclasses.field` ذخیره "
+"می‌شوند:"
+
+#: ../../source/fdf-parameters.rst:1517 f4e7b78c66b640f299a9e70e2e730490
+msgid ""
+"**51 parameters** across **9 dataclass modules** now include explicit "
+"unit metadata."
+msgstr ""
+"**۵۱ پارامتر** در **۹ ماژول کلاس داده** اکنون ابرداده واحد صریح را شامل "
+"می‌شوند."
+
+#: ../../source/fdf-parameters.rst:1522 f5c65a7acb1247608b6c4b1658046030
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/fdf-parameters.rst:1524 39f35c2c29424fe29099ee5a9d6c3b5d
+msgid ":doc:`usage` - General usage guide"
+msgstr ":doc:`usage` - راهنمای استفاده عمومی"
+
+#: ../../source/fdf-parameters.rst:1525 f31bc67f16d548fda9ee1dbafe10d065
+msgid ":doc:`tier-system` - Tier-based parameter presets"
+msgstr ":doc:`tier-system` - پیش‌تنظیم‌های پارامتر بر اساس سطح"
+
+#: ../../source/fdf-parameters.rst:1526 20e031dfc7064173bb7790603655df0c
+msgid ":doc:`siesta-inputs` - Complete FDF parameter reference"
+msgstr ":doc:`siesta-inputs` - مرجع کامل پارامترهای FDF"
+
+#: ../../source/fdf-parameters.rst:1527 067985e5becf4b2ebfb8c756748d5c74
+msgid ":doc:`troubleshooting` - Detailed troubleshooting guide"
+msgstr ":doc:`troubleshooting` - راهنمای جامع عیب‌یابی"
+
+#: ../../source/fdf-parameters.rst:1528 d6b38420a09f400dbd1c099d4480c8e4
+msgid ":doc:`tutorials/index` - Tutorials with parameter examples"
+msgstr ":doc:`tutorials/index` - آموزش‌ها با مثال‌های پارامتر"
+
+#: ../../source/fdf-parameters.rst:1532 f27585782fbc419584a9acb6c52619e0
+msgid "**Questions or Issues?**"
+msgstr "**سوال یا مشکل دارید؟**"
+
+#: ../../source/fdf-parameters.rst:1534 aefb73017d294e5b90fcaef71666b085
+msgid "GitHub Issues: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgstr "مسائل GitHub: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+
+#: ../../source/fdf-parameters.rst:1535 944b5c5ca1a44528a832cfd4cf3b373a
+msgid "SIESTA Manual: https://docs.siesta-project.org/"
+msgstr "راهنمای SIESTA: https://docs.siesta-project.org/"
+
+#~ msgid "Species Variants (Phase 1 & 2)"
+#~ msgstr "انواع گونه‌ها (فاز ۱ و ۲)"

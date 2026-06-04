@@ -1,0 +1,17 @@
+{# Language switcher template for atomate2siesta documentation #}
+<div class="language-switcher">
+  <h3>{{ _('Language') }}</h3>
+  <ul>
+    {% for lang_code, lang_name in languages %}
+    <li>
+      {% if lang_code == current_language %}
+      <strong>{{ lang_name }}</strong>
+      {% else %}
+      <a href="{{ pathto('index', 1) }}{{ '../' * (pagename.count('/') + 1) }}{{ lang_code }}/{{ pagename }}.html">
+        {{ lang_name }}
+      </a>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>

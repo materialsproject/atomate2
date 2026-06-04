@@ -1,0 +1,245 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:1
+#: ec4ae0688bdb47a58f3a8ba105b90533
+msgid "Defect Recipes"
+msgstr "Defect Recipes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:3
+#: 30acec4bec4d46aeb7a87247ab5cc1ae
+msgid ""
+"This directory contains tutorials for using the Recipe Book API for point"
+" defect calculations."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:5
+#: e209a6ddf54f42b3af6b1d5de721c333
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:7
+#: 5d75bb6273544a0eb51f111a52c53f69
+msgid ""
+"The defect recipes provide the simplest way to perform defect "
+"calculations in atomate2siesta. With one-liners, you can generate "
+"complete defect studies including:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:9
+#: 66e9088bda184a3da256072d0e290364
+msgid "All symmetry-unique vacancies"
+msgstr "All symmetry-unique vcncies"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:10
+#: dfe2c1221dc548f28aca7d7190d8a127
+msgid "Antisite defects (atom swapping)"
+msgstr "Antisite defects (tom swpping)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:11
+#: 7a29049290c946209407095d609cf34a
+msgid "Substitutional dopants"
+msgstr "Substitutionl dopnts"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:12
+#: bc939d515dbf4f6fa91690860cfec225
+msgid "Interstitial defects"
+msgstr "Interstitil defects"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:14
+#: 92b0277f9a81464f87f173ef588b0620
+msgid "Key Features"
+msgstr "Key ویژگی‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:16
+#: e32748e6288d4e28a0d8d49f98fe0809
+msgid "**Automatic symmetry reduction**: Only unique sites are generated"
+msgstr "**Automtic symmetry reduction**: Only unique sites re generted"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:17
+#: 29dd082ecda446a094bfa3bd69da109e
+msgid "**Ghost atoms**: SIESTA-specific ghost atoms for vacancies (automatic)"
+msgstr "**Ghost toms**: SIESTA-specific ghost toms برای vcncies (utomtic)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:18
+#: 76f6a95e147849128a3d8c187223741e
+msgid "**Finite-size corrections**: Lany-Zunger corrections applied automatically"
+msgstr "**Finite-size cیاrections**: Lny-Zunger cیاrections pplied utomticlly"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:19
+#: 476f5e67a9654daeb6c2842d3f61f9fd
+msgid "**Dielectric constant estimation**: Auto-estimated from material type"
+msgstr "**Dielectric constnt estimtion**: Auto-estimted from mteril type"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:20
+#: 494c92fdcf6149e3a51b7a5e108ab026
+#, python-format
+msgid "**95% code reduction**: ~200 lines → ~10 lines per study"
+msgstr "**95% code reduction**: ~200 lines → ~10 lines per study"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:22
+#: 72dabf7b5adb4b189a6787d1cda97895
+msgid "Available Recipes"
+msgstr "Avilble Recipes"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:24
+#: 520c77e220044222a737b361c67ae55e
+msgid "RecipeBook.complete_defect_study()"
+msgstr "RecipeBook.complete_defect_study()"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:25
+#: 428d8c3a0747410b8bbc7bafcfd19bf1
+msgid "Generate ALL defect types in one line:"
+msgstr "Generte ALL defect types in one line:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:35
+#: b3c162be1a3b45108fc1b64e0abc6ea7
+msgid "RecipeBook.vacancy_study()"
+msgstr "RecipeBook.vcncy_study()"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:36
+#: 36d7033fa7344c9297295cbb60ee7f55
+msgid "All symmetry-unique vacancies:"
+msgstr "All symmetry-unique vcncies:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:44
+#: bfb7b9a9943d4dc79605914345ec05d7
+msgid "RecipeBook.substitution_study()"
+msgstr "RecipeBook.substitution_study()"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:45
+#: 4e78e58934474b89b92ecec35d0f8d76
+msgid "Dopant substitutions:"
+msgstr "Dopnt substitutions:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:55
+#: 7518fb3d25f24b66a8857e3b17439070
+msgid "RecipeBook.antisite_study()"
+msgstr "RecipeBook.ntisite_study()"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:56
+#: 7e08c1be22b44df5b773ea9cb5cd70ce
+msgid "Antisite defects (atom swaps):"
+msgstr "Antisite defects (tom swps):"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:64
+#: 448cec5f60834f78808579b913b4f660
+msgid "RecipeBook.interstitial_study()"
+msgstr "RecipeBook.interstitil_study()"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:65
+#: d43fbf0ba2354bd4b3aeb74ae442fa40
+msgid "Interstitial defects at high-symmetry sites:"
+msgstr "Interstitil defects t high-symmetry sites:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:74
+#: c7831e9a740049f2bf8c5db9b466cd53
+msgid "Tutorial Files"
+msgstr "فایل‌های آموزشی"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:76
+#: 55835c3c7c5c47d5a0de2db30b705ce2
+msgid "defect_recipes.py"
+msgstr "defect_recipes.py"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:77
+#: bec5ecff1344494c80a8b7a9290c1520
+msgid "Complete demonstration of all defect recipes with examples for:"
+msgstr "Complete demonstrtion of ll defect recipes با exmples برای:"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:78
+#: 6b63db990ffe4aaa912de0795f1455dd
+msgid "Complete defect study (all types)"
+msgstr "Complete defect study (ll types)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:79
+#: 27b58b15a79b4e249630a6c398460904
+msgid "Vacancy study only"
+msgstr "Vcncy study only"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:80
+#: 6df195503ef545429c25fd03c0d20aa4
+msgid "Substitution study (dopants)"
+msgstr "Substitution study (dopnts)"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:81
+#: c6c4c82b7a8243339a314cb1b2327e9b
+msgid "Antisite study"
+msgstr "Antisite study"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:82
+#: 96f66bbf266541c199936291870b95fb
+msgid "Interstitial study"
+msgstr "Interstitil study"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:83
+#: b082ca21c83f4fbcb3f42b9b172723a9
+msgid "Multiple dopants comparison"
+msgstr "Multiple dopnts comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:85
+#: bdce79e793c642e990939915f936c709
+msgid "Running the Tutorial"
+msgstr "اجرای  Tutیاil"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:94
+#: 4798eeb9d0de4b08af5fe196945080e4
+msgid "Code Comparison"
+msgstr "Code Comprison"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:96
+#: 3aeec637ec6e4d908672d250a5232ce7
+msgid "**Before** (Manual approach, ~200 lines):"
+msgstr "**Beبرایe** (Mnul pproch, ~200 lines):"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:118
+#: b6a07953ce2746269465cb27c6b7ad6f
+msgid "**After** (Recipe Book, ~10 lines):"
+msgstr "**After** (Recipe Book, ~10 lines):"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:128
+#: 86c089a9bd13427da7cac88fd07873aa
+#, python-format
+msgid "**Result**: 95% code reduction, zero manual structure manipulation"
+msgstr "**Result**: 95% code reduction, zero mnul structure mnipultion"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:130
+#: 26af8183c8ad4b5498bee02d08e096dc
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:132
+#: 489162e0501f469097cde6b28c4b5611
+msgid "Lower-level API: `tutorials/02-workflows/05-defects/03-DefectFlowMaker/`"
+msgstr "Lower-level API: `tutorials/02-workflows/05-defects/03-DefectFlowMaker/`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:133
+#: b0d982c63a2b45edb387b62a94f96215
+msgid "Defect flow documentation: `docs/source/defect-workflows.rst`"
+msgstr "Defect flow documentation: `docs/source/defect-workflows.rst`"
+
+#: ../../source/tutorials-md/03-advanced-features/08-recipe-book/09_defect_recipes/README.md:134
+#: 63e205b5ecea434b9f70705ed4ecf959
+msgid ""
+"Recipe Book overview: `tutorials/03-advanced-features/08-recipe-"
+"book/README.md`"
+msgstr ""

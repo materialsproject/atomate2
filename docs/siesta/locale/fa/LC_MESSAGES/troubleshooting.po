@@ -1,0 +1,715 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/troubleshooting.rst:2 8d8eddb4e8554eb186f6c6c3befa1be2
+msgid "Troubleshooting Guide"
+msgstr "راهنمای عیب‌یابی"
+
+#: ../../source/troubleshooting.rst:4 a4879c1205b64716ad812ecd7ee02ad9
+msgid "This guide helps you resolve common issues when using atomate2siesta."
+msgstr "این راهنما به شما کمک می‌کند مشکلات رایج هنگام استفاده از atomate2siesta را حل کنید."
+
+#: ../../source/troubleshooting.rst:8 ddfd46f9385c4475b7348ff7a038b924
+msgid "Quick Navigation"
+msgstr "ناوبری سریع"
+
+#: ../../source/troubleshooting.rst:11 d00b9de78eb9439587fedd6289c29157
+msgid "Installation Issues"
+msgstr "مشکلات نصب"
+
+#: ../../source/troubleshooting.rst:14 e311ee751e0748e7b35ba5d5bb463939
+msgid "Package Installation Fails"
+msgstr "نصب بسته ناموفق است"
+
+#: ../../source/troubleshooting.rst:16 f85bf9debb1a4f6b96d480c4cc166533
+msgid "**Symptom**: ``pip install`` fails with dependency errors"
+msgstr "**علامت**: ``pip install`` با خطاهای وابستگی ناموفق می‌شود"
+
+#: ../../source/troubleshooting.rst:18 973ae13dbb0e4a618c241d6b7330a94f
+msgid "**Common Causes**:"
+msgstr "**علل رایج:**"
+
+#: ../../source/troubleshooting.rst:20 ed405288e5f94177b09bd4afade76173
+msgid "**Outdated pip**"
+msgstr "**pip قدیمی**"
+
+#: ../../source/troubleshooting.rst:27 d630ee8205574bbe9c082a855b9ea99d
+msgid "**Python version mismatch**"
+msgstr "**عدم تطابق نسخه Python**"
+
+#: ../../source/troubleshooting.rst:37 fe230eb6d3c24bb7b256f516be1d7f4b
+msgid "**Missing build dependencies**"
+msgstr "**وابستگی‌های ساخت گم‌شده**"
+
+#: ../../source/troubleshooting.rst:48 e46f2c076fab45198c628dfb3d6d4f0b
+msgid "Import Errors"
+msgstr "خطاهای وارد کردن"
+
+#: ../../source/troubleshooting.rst:50 badba638d91e4f9091668473dcedef73
+msgid "**Symptom**: ``ModuleNotFoundError: No module named 'atomate2.siesta'``"
+msgstr "**علامت**: ``ModuleNotFoundError: No module named 'atomate2.siesta'``"
+
+#: ../../source/troubleshooting.rst:52 ../../source/troubleshooting.rst:107
+#: ../../source/troubleshooting.rst:134 ../../source/troubleshooting.rst:261
+#: ../../source/troubleshooting.rst:300 ../../source/troubleshooting.rst:339
+#: ../../source/troubleshooting.rst:369 ../../source/troubleshooting.rst:463
+#: ../../source/troubleshooting.rst:490 ../../source/troubleshooting.rst:525
+#: ../../source/troubleshooting.rst:556 ../../source/troubleshooting.rst:609
+#: 40ab705b9e89427d88d7d8f3d08a4951 4a8fc04852964855863bf760bdeb0f49
+#: 4d302430107243c196389e013da77458 83d813b8a9ef45d68923793b5d577ea4
+#: 9824d004b99841b29ed97db7d172bcc6 a71ee229f1eb4a59b1f0a3291ac32b4f
+#: cc1427ed69c5478aad21bfc070842801 cd3fe501990b44bebb089c0a1cb0c9ee
+#: e641462dc9e440d0bb22ac6ad7fb4943 ee0ed3b70bdf4d7d80118cdc54a08c10
+#: f23842e75b0345d39088f5386f4a3f42 fc123a4f0c7e4dbab0e619443cad4819
+msgid "**Solutions**:"
+msgstr "**راه‌حل‌ها:**"
+
+#: ../../source/troubleshooting.rst:54 ba856b54354b41ca8de69feb90f3a20d
+msgid "**Verify installation**:"
+msgstr "**تأیید نصب:**"
+
+#: ../../source/troubleshooting.rst:60 67897a4aeedb4792aef1779efe2aadce
+msgid "**Reinstall in development mode**:"
+msgstr "**نصب مجدد در حالت توسعه:**"
+
+#: ../../source/troubleshooting.rst:67 0804afdb8c624df88a3f1a6175805a58
+msgid "**Check Python environment**:"
+msgstr "**بررسی محیط Python:**"
+
+#: ../../source/troubleshooting.rst:75 9650fb067a2b46929337e4374edc1296
+msgid "Configuration Issues"
+msgstr "مشکلات پیکربندی"
+
+#: ../../source/troubleshooting.rst:78 0ba01046fc9c47fba3fb7eb4895f0934
+msgid "Configuration File Not Found"
+msgstr "فایل پیکربندی یافت نشد"
+
+#: ../../source/troubleshooting.rst:80 919c54ab6d9848d09de46d7ba7d91b70
+msgid "**Symptom**: Settings not loaded, defaults used instead"
+msgstr "**علامت**: تنظیمات بارگذاری نشده، به‌جای آن از پیش‌فرض‌ها استفاده می‌شود"
+
+#: ../../source/troubleshooting.rst:82 8fd5841b0b0b4215a5162527283fb851
+msgid "**Cause**: Configuration file at wrong location or wrong name"
+msgstr "**علت**: فایل پیکربندی در مکان اشتباه یا نام اشتباه"
+
+#: ../../source/troubleshooting.rst:84 629a761602664831ab5f8915c3b6f22c
+msgid "**Solution**:"
+msgstr "**راه‌حل:**"
+
+#: ../../source/troubleshooting.rst:95 005b036c4bb9416498027501c3379a20
+msgid "**Verify configuration is loaded**:"
+msgstr "**تأیید بارگذاری پیکربندی:**"
+
+#: ../../source/troubleshooting.rst:103 f11d4b5ccfb8472fabd238613f0d3d3a
+msgid "SIESTA Command Not Found"
+msgstr "دستور SIESTA یافت نشد"
+
+#: ../../source/troubleshooting.rst:105 01b54fa97e114e3b84e37dfa926498e8
+msgid "**Symptom**: ``FileNotFoundError: SIESTA executable not found``"
+msgstr "**علامت**: ``FileNotFoundError: SIESTA executable not found``"
+
+#: ../../source/troubleshooting.rst:109 b9803adf969546c2a04b3c953323a0aa
+msgid "**Use full path to SIESTA**:"
+msgstr "**استفاده از مسیر کامل به SIESTA:**"
+
+#: ../../source/troubleshooting.rst:116 7ec1ce8adc9a41a8be94fbd38f8b61b1
+msgid "**Add SIESTA to PATH**:"
+msgstr "**افزودن SIESTA به PATH:**"
+
+#: ../../source/troubleshooting.rst:123 a289854247fb4c7ba4499b96d1da727c
+msgid "**For MPI runs**:"
+msgstr "**برای اجراهای MPI:**"
+
+#: ../../source/troubleshooting.rst:130 b51ffb5ff57d4565acbba439f4976fda
+msgid "Pseudopotential Issues"
+msgstr "مشکلات شبه‌پتانسیل"
+
+#: ../../source/troubleshooting.rst:132 c715720f24d74f2d8814e1a539e789af
+msgid ""
+"**Symptom**: ``PseudopotentialError: Pseudopotential not found for "
+"element X``"
+msgstr ""
+"**علامت**: ``PseudopotentialError: Pseudopotential not found for "
+"element X``"
+
+#: ../../source/troubleshooting.rst:136 9078919257f4423a832e5cc0e3c7b3f9
+msgid "**Set pseudopotential path**:"
+msgstr "**تنظیم مسیر شبه‌پتانسیل:**"
+
+#: ../../source/troubleshooting.rst:143 7f25b67d81ec41819491d0416f6b5f60
+msgid "**Download pseudopotentials**:"
+msgstr "**دانلود شبه‌پتانسیل‌ها:**"
+
+#: ../../source/troubleshooting.rst:153 4e57db51c02c42da8e0d3f8acaabfbe5
+msgid "**Verify pseudopotentials exist**:"
+msgstr "**تأیید وجود شبه‌پتانسیل‌ها:**"
+
+#: ../../source/troubleshooting.rst:161 382578bb9a1442a3aedc954b3272ed44
+msgid "SIESTA Calculation Errors"
+msgstr "خطاهای محاسبات SIESTA"
+
+#: ../../source/troubleshooting.rst:164 0b883ed2f1bb47cdbc301246e01a3094
+msgid "SCF Not Converged"
+msgstr "SCF همگرا نشد"
+
+#: ../../source/troubleshooting.rst:166 3189f6fd96d54d93a68a90db295726b6
+msgid "**Symptom**: ``SCF not converged after N iterations``"
+msgstr "**علامت**: ``SCF not converged after N iterations``"
+
+#: ../../source/troubleshooting.rst:168 d69858fa7ba5492da690f600dc26f5a9
+msgid "This is the **most common** SIESTA error. Multiple solutions available:"
+msgstr "این **رایج‌ترین** خطای SIESTA است. راه‌حل‌های متعددی موجود است:"
+
+#: ../../source/troubleshooting.rst:170 f5d6d5ee1b8346028f4873c595185b6a
+msgid "**Solution 1: Automatic Error Handling (Recommended)**"
+msgstr "**راه‌حل ۱: مدیریت خودکار خطا (توصیه می‌شود)**"
+
+#: ../../source/troubleshooting.rst:172 d74c41351f974386b2c7130ea0cd9e2b
+msgid "Enable custodian for automatic SCF recovery:"
+msgstr "فعال کردن custodian برای بازیابی خودکار SCF:"
+
+#: ../../source/troubleshooting.rst:183 097035af4f7c407e9e2f523635e4fc57
+msgid "Custodian will automatically try 5 progressive correction strategies:"
+msgstr "Custodian به‌طور خودکار ۵ استراتژی اصلاح تدریجی را امتحان می‌کند:"
+
+#: ../../source/troubleshooting.rst:185 adb3102c38e248bb887e7228454557f9
+msgid "Reduce mixer weight (0.1 → 0.05 → 0.01)"
+msgstr "کاهش وزن میکسر (۰.۱ → ۰.۰۵ → ۰.۰۱)"
+
+#: ../../source/troubleshooting.rst:186 4c4e854b7bd746ea9204ce4f287dfcfd
+msgid "Increase Pulay history (5 → 8 → 12)"
+msgstr "افزایش تاریخچه Pulay (۵ → ۸ → ۱۲)"
+
+#: ../../source/troubleshooting.rst:187 2707adfff97e4a70b238141f77b07320
+msgid "Switch mixer method (Pulay → Linear)"
+msgstr "تغییر روش میکسر (Pulay → Linear)"
+
+#: ../../source/troubleshooting.rst:188 389ef93ed62c4cb8b6ba0b50e9c4453e
+msgid "Tighten tolerances"
+msgstr "سخت‌تر کردن تلورانس‌ها"
+
+#: ../../source/troubleshooting.rst:189 9e5bf581d2dc446ab1f7bd5048fbc609
+msgid "Restart from previous DM"
+msgstr "راه‌اندازی مجدد از DM قبلی"
+
+#: ../../source/troubleshooting.rst:191 0674c730b6164f08949d5fbc072db337
+msgid "**Solution 2: Manual Parameter Adjustment**"
+msgstr "**راه‌حل ۲: تنظیم دستی پارامترها**"
+
+#: ../../source/troubleshooting.rst:193 9e927d9a311a41328f4e32408a3d1456
+msgid "If not using custodian, adjust SCF parameters manually:"
+msgstr "اگر از custodian استفاده نمی‌کنید، پارامترهای SCF را به‌صورت دستی تنظیم کنید:"
+
+#: ../../source/troubleshooting.rst:207 7f2b21f414a741a1a802101684dc4f95
+msgid "**Solution 3: Improve Initial Guess**"
+msgstr "**راه‌حل ۳: بهبود حدس اولیه**"
+
+#: ../../source/troubleshooting.rst:219 80d33872230746098c1a119969eeade0
+msgid "**Solution 4: System-Specific Strategies**"
+msgstr "**راه‌حل ۴: استراتژی‌های ویژه سیستم**"
+
+#: ../../source/troubleshooting.rst:221 90bc538f9ef74c21a3b21c1231364d2b
+msgid "For **magnetic systems**:"
+msgstr "برای **سیستم‌های مغناطیسی:**"
+
+#: ../../source/troubleshooting.rst:231 5a36bcf8280b4b6ea6bf6cffdbfbac38
+msgid "For **metals**:"
+msgstr "برای **فلزات:**"
+
+#: ../../source/troubleshooting.rst:241 333ae740f78d49d09b49816375c2b681
+msgid "For **large band gap systems**:"
+msgstr "برای **سیستم‌های با شکاف نواری بزرگ:**"
+
+#: ../../source/troubleshooting.rst:250 6486fc075e7e4bd2bcb6db1032b027ec
+msgid "**Solution 5: Check Physical Setup**"
+msgstr "**راه‌حل ۵: بررسی تنظیمات فیزیکی**"
+
+#: ../../source/troubleshooting.rst:252 3969d7b113c543489f98c675385e9be4
+msgid "**k-point mesh too coarse**: Increase k-points"
+msgstr "**شبکه k-point خیلی درشت است**: k-pointها را افزایش دهید"
+
+#: ../../source/troubleshooting.rst:253 d44e119094134d068435898b847a1f69
+msgid "**Basis set issues**: Try different ``PAO.BasisSize`` (SZ, DZ, DZP, TZP)"
+msgstr "**مشکلات مجموعه پایه**: ``PAO.BasisSize`` مختلف را امتحان کنید (SZ، DZ، DZP، TZP)"
+
+#: ../../source/troubleshooting.rst:254 5a348aa44ac843abaf90a4d64c348673
+msgid "**Initial structure**: Ensure structure is reasonable"
+msgstr "**ساختار اولیه**: اطمینان حاصل کنید ساختار معقول است"
+
+#: ../../source/troubleshooting.rst:257 295d9098223d41cfb9ed677f9cc8103c
+msgid "Memory Errors"
+msgstr "خطاهای حافظه"
+
+#: ../../source/troubleshooting.rst:259 4e2c9b8f8a944947a674dc2e4f38802a
+msgid "**Symptom**: ``MemoryError`` or SIESTA killed by system"
+msgstr "**علامت**: ``MemoryError`` یا SIESTA توسط سیستم متوقف شد"
+
+#: ../../source/troubleshooting.rst:263 d40245a3073b4800b14f697173171545
+msgid "**Enable automatic memory handling**:"
+msgstr "**فعال کردن مدیریت خودکار حافظه:**"
+
+#: ../../source/troubleshooting.rst:276 9bef5e8dfd1748448a23e0c2ec50f764
+msgid "**Reduce memory manually**:"
+msgstr "**کاهش دستی حافظه:**"
+
+#: ../../source/troubleshooting.rst:288 69fb0221eaa04c49aff5bb4522f233b3
+msgid "**Use more processors with less memory per process**:"
+msgstr "**استفاده از پردازنده‌های بیشتر با حافظه کمتر در هر فرآیند:**"
+
+#: ../../source/troubleshooting.rst:296 ba810496256a4813844745c598ab5504
+msgid "Walltime/Timeout Errors"
+msgstr "خطاهای زمان دیواری/تایم‌اوت"
+
+#: ../../source/troubleshooting.rst:298 4952cb4a01344c3fa099d0f9a7a2ddb3
+msgid "**Symptom**: Calculation killed due to time limit"
+msgstr "**علامت**: محاسبه به دلیل محدودیت زمان متوقف شد"
+
+#: ../../source/troubleshooting.rst:302 f803cd05c5a64d5aa43d7471241f56b5
+msgid "**Enable automatic restart**:"
+msgstr "**فعال کردن راه‌اندازی مجدد خودکار:**"
+
+#: ../../source/troubleshooting.rst:312 f4797f922b2d4d44ae901c3bdf0426b3
+msgid "**Set checkpoint files**:"
+msgstr "**تنظیم فایل‌های نقطه بازرسی:**"
+
+#: ../../source/troubleshooting.rst:323 42db019136d14b6dabbfb03f0f65e18e
+msgid "**Reduce calculation cost**:"
+msgstr "**کاهش هزینه محاسبه:**"
+
+#: ../../source/troubleshooting.rst:333 116c8a812bf24288828a28b1016d807c
+msgid "Negative Eigenvalues"
+msgstr "مقادیر ویژه منفی"
+
+#: ../../source/troubleshooting.rst:335 4bcee94b165c4caf9e49b947d9bfe406
+msgid "**Symptom**: ``WARNING: Negative eigenvalues detected``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:337 f9c1975221c94f6287899fc6d45564bc
+msgid "**Cause**: Insufficient basis set or numerical issues"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:341 2a52b8a7cb394366a5ed551234e197bd
+msgid "**Increase basis quality**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:350 cfa2869065c44ed8a14d17c283991603
+msgid "**Increase mesh cutoff**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:358 cb22aeeb06a64cda8bf87356d1588f7d
+msgid "**Use custodian** (handles automatically):"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:365 64435989ea21451cb141cdee1f3f5461
+msgid "Geometry Relaxation Not Converging"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:367 2821b8aa1f274657b220a2d70b164696
+msgid "**Symptom**: Forces not decreasing, relaxation oscillating"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:371 0a2127c7a98f450ca96079e0d1f7287c
+msgid "**Adjust force tolerance**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:380 49590c11a2e14438b6450d1dc045693d
+msgid "**Change relaxation algorithm**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:390 6feeeac254dc499da759dc44570c4c60
+msgid "**Use smaller steps**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:400 eed7784ad43b48469b8a5103ccaae7d1
+msgid "File Format Issues"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:403 cb7d969dd4a940febb2f6cf76f972692
+msgid "Structure File Conversion Errors"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:405 da3be9cb3130455abbbee0a6de632b80
+msgid "**Symptom**: Cannot read XV, FDF, or XSF files"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:407 9e7358a72055483da671677238f36bec
+msgid "**Solution**: Use the structure conversion powerup:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:418 d9d1762bb05246e181e7b64d925edcae
+msgid "**Supported formats**: XV, FDF, XSF, CIF, POSCAR"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:420 8020fc78e07f41ffad11c422a86f2750
+msgid "See: ``tutorials/07-advanced-features/04-structure-conversion/``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:423 05c2e1025b2548af94ddafe36209e326
+msgid "Invalid FDF Syntax"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:425 7f52f5c131be4695b0b764f4c4cdbf26
+msgid "**Symptom**: SIESTA fails with ``FDF syntax error``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:427 8121bc48be704c59a2b4a6d4ba4bfa4c
+msgid "**Cause**: Incorrect parameter format in ``user_params``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:429 4c01bb690a9b49feacc51074bf05fc93
+msgid "**Solution**: Check FDF parameter format:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:442 bf584b8931dc40d98ca7f97db04e5a60
+msgid "**Common mistakes**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:456 9a5ed4df5614437dbbcb48370cadf611
+msgid "Workflow Execution Issues"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:459 410c3fde53a5460da29778ad78fce3a2
+msgid "Job Directory Conflicts"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:461 81c0d260c5b84f15a005b5939503e362
+msgid "**Symptom**: ``FileExistsError: job directory already exists``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:465 dbaf7757899746a4a72cd65c1f445ba1
+msgid "**Use unique names**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:475 e19669d5174e4d3da87cd15a2c7db61c
+msgid "**Clean old directories**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:481 302d2dd155264c369aa3ffc4d4a77178
+msgid "**Use database storage** (recommended for production):"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:483 ../../source/troubleshooting.rst:661
+#: 9c6bf695aa604b1a92932c9c68e3e145 a3b68fe5f6bf475caf1a00bbfd0f4cfb
+msgid "See: ``tutorials/04-infrastructure/01-database-storage/``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:486 88eeb32592f649ac89453480edd02fe1
+msgid "Jobflow Run Errors"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:488 b37c7e80b6fa4bd28c6647c7764caa14
+msgid "**Symptom**: ``run_locally()`` fails unexpectedly"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:492 055df8893cc64b4c94cec0a6be2349dd
+msgid "**Enable verbose logging**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:501 c4ac9240c46a49c58c69ae6ddf811cf7
+msgid "**Check job validity**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:512 47243ad00ef24d3490c90dda29f49768
+msgid "**Run in debug mode**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:521 6622c26e53b04124b0cf325d176e319f
+msgid "Remote Execution Issues"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:523 dba7748ebcc94517a0b13ce8489bccad
+msgid "**Symptom**: Jobs fail on HPC cluster"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:527 2dfeb6de25494765bcc08eb7956b7084
+msgid "**Verify cluster setup**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:533 8d912727586e4404839b46543c065ec1
+msgid "**Check jobflow-remote configuration**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:539 3c47c263bde141b48e9b558510f13809
+msgid "**Test locally first**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:546 6c515205933945fba776df9cddcf2d46
+msgid "See: ``tutorials/04-infrastructure/02-job-submission/``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:549 2284cd78a4a04715903613c57fa72a56
+msgid "Performance Issues"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:552 0f6288f7000a4f2e89aecedf683deeb6
+msgid "Calculation Too Slow"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:554 0fe95504fe654b7bbc91084661b31503
+msgid "**Symptoms**: Calculation taking much longer than expected"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:558 3f5eb644cc8c4a26a9cd7cea68666260
+msgid "**Check k-point mesh**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:565 a95120698df54c7c8aa17688ebe32f6f
+msgid "**Optimize parallelization**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:573 54e72de4aa9e455d95edc81ba117154f
+msgid "**Use efficiency options**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:582 05571a0a35064284b490f277717c70e0
+msgid "See: ``tutorials/07-advanced-features/14-efficiency-options/``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:585 50c5e130845b4ef79ea3ead799ba7732
+msgid "Convergence Studies Taking Forever"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:587 c3f644cf85884e2eb2deafd279fbfdab
+msgid "**Solution**: Use dry-run mode to preview first:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:599 673449b64eb146ebac4025a6cb4a2761
+msgid "See: ``tutorials/04-infrastructure/05-dry-run-preview/``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:602 d45f649f347b45c1b24dca712d030a2a
+msgid "Database Issues"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:605 e7d8f15ddf1e4b36b2017750066532e7
+msgid "MongoDB Connection Failed"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:607 e35d1ce7def546c3a14da7143286f0c7
+msgid "**Symptom**: ``ConnectionError: Could not connect to MongoDB``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:611 0a889a5ec95c43b7a127344590867fb7
+msgid "**Test connection**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:617 7e09f5dbec1c48709690fd6a02479774
+msgid "**Check MongoDB is running**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:627 75070b0102e94860812f84f040b420c1
+msgid "**Verify connection string**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:635 2a2a1b351374419b87d50191fbd24a9d
+msgid "Query Returns No Results"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:637 0eaf20281d474f0590810e5d0b7b3798
+msgid "**Symptom**: Database query finds nothing despite calculations running"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:639 79e62d2de2454558962577442addcc41
+msgid "**Cause**: Results not stored in database"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:641 47757daee0614e20b2dabfea045a6da9
+msgid "**Solution**: Ensure you're using database store:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:664 63da5e9ea4e94e218537643b87965bd7
+msgid "Debugging Tips"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:667 e221d71b01024f0e9116e74e4ba0dfc7
+msgid "Enable Detailed Logging"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:680 c7e6c47923e343f6854ae718d42e7bd8
+msgid "Inspect SIESTA Output Files"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:694 14656814433540b98d9b245b1c4578c5
+msgid "Use Dry-Run Mode"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:696 2368943f5b8640d1b613eb3be36ddaea
+msgid "Preview workflow without running expensive calculations:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:708 3292d5f9bb9c4df986ba6142182277c0
+msgid "Check Input Files"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:720 450f431db96c4501864e3664bb713be2
+msgid "Getting Help"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:723 769e9b804eb44ee788c44ee5c49e4557
+msgid "Still Stuck?"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:725 85a4bc854c0c4229ad87d293455f915a
+msgid ""
+"**Search existing issues**: https://github.com/arsalan-"
+"akhtar/atomate2siesta/issues"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:727 721e10a301744a42a977007db2ead69b
+msgid "**Check tutorials**: Most common workflows have dedicated tutorials"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:729 82af4080a1f248559844d8436f720095
+msgid "**Open a new issue** with:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:731 3443ebd2645f48c19edb390a4fdda4d6
+msgid "Minimal reproducible example"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:732 68174106669747a68a60dbec9a3c3e33
+msgid "Full error message"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:733 e826d6bcb14f40999909ab943560086a
+msgid "SIESTA version"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:734 f3185ad1eb634b86bf3dc16c0a544e09
+msgid "Python version"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:735 949251fdc75b45c7b88470f9a633263d
+msgid "Relevant configuration"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:737 ce0564ea03694cd597467db8e6f96a0a
+msgid "**Include diagnostic information**:"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:748 13a1f91fd77a465eb23317cd9a52ef42
+msgid "Common Error Messages Quick Reference"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:754 10fab93cce1f47409d4381c5d846d35d
+msgid "Error Message"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:755 1660228220ae4a24a8fe9e405aa71f5d
+msgid "Solution Section"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:756 f8ab46d5e11d4848aeb1e2e109f8d59a
+msgid "``SCF not converged``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:757 4b28b2250be54fe8b4aac08a6a451ec4
+msgid "`SCF Not Converged`_"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:758 84b596c1305f4c00a4b74b539a065f67
+msgid "``MemoryError``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:759 8f15336ea3dc4006a33073a3047f45ff
+msgid "`Memory Errors`_"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:760 6e412de7baae442b9933ab4162a2a418
+msgid "``SIESTA executable not found``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:761 1ff30bc0ad96432f84ef018785ce7727
+msgid "`SIESTA Command Not Found`_"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:762 703684aea18f47b0bb2388eb29070022
+msgid "``Pseudopotential not found``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:763 38279eb3c77f4afa8ac3ebfd073aae98
+msgid "`Pseudopotential Issues`_"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:764 d37ba0d16d64434f88cd2175ec2d842e
+msgid "``Negative eigenvalues``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:765 41af09bd2e7a48a0b6f4181173db0b8d
+msgid "`Negative Eigenvalues`_"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:766 e9589b9a17144da9b016f18ececeda00
+msgid "``FileExistsError: job directory``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:767 7f7aff06268e499897722d89b49bdbe9
+msgid "`Job Directory Conflicts`_"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:768 b8fbcfa0cfe34d53bf613554eb79369b
+msgid "``ConnectionError: MongoDB``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:769 6ae3047309b54eb8a64eae2bc7cd32e5
+msgid "`MongoDB Connection Failed`_"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:770 3a9f1295b9974a0a824a23ad4e206ebb
+msgid "``FDF syntax error``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:771 b86f07d9bf5645f1a04dc095648537fc
+msgid "`Invalid FDF Syntax`_"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:772 08a352bde4af4575b1e4ece6b224fcc2
+msgid "``Forces not converging``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:773 bb47974bca85429e8343c795ae070d4c
+msgid "`Geometry Relaxation Not Converging`_"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:776 f39a4cf556cf4819ae6a4e8b6d857210
+msgid "Additional Resources"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:778 e4eb9c15ff4449b29c8a7b5c4176bf7f
+msgid "**Full Documentation**: :doc:`index`"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:779 3220ee637ed84f9e9e2a5daa3c29435a
+msgid "**Tutorials**: ``tutorials/README.md``"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:780 0897e15b6d72406c9df1ca507d0e0702
+msgid "**Custodian Guide**: :doc:`custodian`"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:781 eb3697e3d51a412dbb564ba148414e3d
+msgid "**CLI Tools**: :doc:`cli-tools`"
+msgstr ""
+
+#: ../../source/troubleshooting.rst:782 c7f25cb931a54a0ab9fe46483de3abaf
+msgid "**GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgstr ""

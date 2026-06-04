@@ -1,0 +1,2029 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:1
+#: 00335872b79c4c1493166bf1450f1477
+msgid "EOS Basis Set Convergence Tutorial"
+msgstr "EOS Bsis Set همگرایی Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:3
+#: c32309733b634b43b571e061f2ed1618
+msgid ""
+"**Category**: Advanced Workflows **Difficulty**: Advanced **Time**: ~10 "
+"min (dry-run), ~60-240 min (full study depending on configuration) "
+"**Prerequisites**: Completed EOS tutorial (03-advanced-workflows/01-eos),"
+" understanding of basis sets (02-convergence/02-basis-parameters)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:10
+#: ead15d5fa0bf4364aee29c2992caee07
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:12
+#: 30493961dfb4457f8635cdc5b0d88024
+msgid ""
+"This tutorial demonstrates systematic testing of **basis set effects on "
+"EOS parameters**. By running multiple Equation of State calculations with"
+" different basis sets and comparing the results, you can identify the "
+"optimal basis that balances accuracy and computational cost for your "
+"material."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:14
+#: 873c16b2945747a589ed2f793145bdd8
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:16
+#: 3a2c258502874ce59bb88d60b03b6452
+msgid "Running parallel EOS calculations with different basis sets"
+msgstr "اجرای prllel EOS clcultions با different bsis sets"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:17
+#: 94d3483b6d7840948eb88e642ca74c7a
+msgid "Comparing V₀, E₀, B₀ across basis quality levels"
+msgstr "Compring V₀, E₀, B₀ cross bsis qulity levels"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:18
+#: 10d734b7f8ab434287d16baf85728ed8
+msgid "Identifying convergence in EOS parameters"
+msgstr "Identifying convergence in EOS prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:19
+#: c2d5b5265eed441ca95fc2872c5e3ff0
+msgid "Choosing optimal basis set for your material"
+msgstr "Choosing optiml bsis set برای your mteril"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:20
+#: a21ded39f8b544c3aff7c36ea9633eb6
+msgid "Understanding basis set effects on bulk properties"
+msgstr "درک bsis set effects on bulk properties"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:21
+#: 4befa82fc00c489b86fd9c22b790afb9
+msgid "Interpreting basis convergence plots"
+msgstr "Interpreting bsis convergence plots"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:23
+#: 55396ba67e4a4059bf65291f99e3c950
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:25
+#: 8515f5e58b944a4c8e6e7f646c461aa0
+msgid ""
+"**Basis Set Convergence**: Process of testing increasingly sophisticated "
+"basis sets until properties no longer change significantly"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:27
+#: 22b22e3cab6b45a7b8e0212da5c9c5ce
+msgid "**Why Test with EOS?**:"
+msgstr "**Why Test با EOS?**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:28
+#: dd322855283f4b679675953a74d8eed4
+msgid "Bulk properties (V₀, B₀) are sensitive to basis quality"
+msgstr "Bulk properties (V₀, B₀) re sensitive to bsis qulity"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:29
+#: bc66e7ca86084fb8b1130491b2f2109e
+msgid "EOS provides multiple observables for convergence assessment"
+msgstr "EOS provides multiple observbles برای convergence ssessment"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:30
+#: 24367b6d11d74863ada609a38a8d2214
+msgid "More rigorous than single-point energy convergence"
+msgstr "Mیاe rigیاous thn single-point energy convergence"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:31
+#: 140897bdf8804aa1be91cf152a83f551
+msgid "Directly relevant to structural and mechanical properties"
+msgstr "Directly relevnt to structurl و mechnicl properties"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:33
+#: e11e4a3b86fc43408daa32d09187cc7f
+msgid "**Basis Set Hierarchy**:"
+msgstr "**Bsis Set Hierrchy**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:41
+#: 407b805214b246c4a5252aa79a69b26e
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:43
+#: 22a3038e8ddb4ae39bef9bf9cbae7b55
+msgid "1. Choose Example Type"
+msgstr "1. Choose مثال Type"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:45
+#: e409f73305b1463094a13a2d63571d4f
+msgid "Edit `tutorial.py` and set:"
+msgstr "Edit `tutorial.py` and set:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:52
+#: 1b217ad05bf44bb8bb8e8169c0d42bdf
+msgid "**Available examples**:"
+msgstr "**Avilble exmples**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:53
+#: 977675896f4248c89be41cedd88eb6e7
+msgid "**`standard`**: 4 basis sets (SZ, DZ, DZP, DZDP) - recommended"
+msgstr "**`standard`**: 4 basis sets (SZ, DZ, DZP, DZDP) - recommended"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:54
+#: 7b817f86a8ae48c4a9b7d627deef6773
+msgid "**`comprehensive`**: 6 basis sets including TZ and TZP - thorough"
+msgstr "**`comprehensive`**: 6 basis sets including TZ and TZP - thorough"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:55
+#: cd3be04d043b4363b9973b5fadea52f8
+msgid "**`minimal`**: 2 basis sets for quick testing (NOT for production)"
+msgstr "**`minimal`**: 2 basis sets for quick testing (NOT for production)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:57
+#: a65c120b83cd40dcb1e55db85bb78898
+msgid "2. Select Execution Mode"
+msgstr "2. Select Execution Mode"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:59
+#: c579b8beb55842c680346c62851c3c13
+msgid "Uncomment ONE mode in `tutorial.py`:"
+msgstr "Uncomment ONE mode in `tutorial.py`:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:67
+#: ddea0f7dc645437c823a80b34852060a
+msgid "3. Run"
+msgstr "3. Run"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:76
+#: fb239ff6e03249628f3f464206601221
+msgid "Understanding Basis Set Effects"
+msgstr "درک Bsis Set Effects"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:78
+#: ec8831441d624d7c93443941c4df9948
+msgid "Why Basis Sets Matter for EOS"
+msgstr "Why Bsis Sets Mtter برای EOS"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:80
+#: b38f6e851c924306b720f05c15a727b6
+msgid "**Basis set quality affects**:"
+msgstr "**Bsis set qulity ffects**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:81
+#: 137ec25754a842ed89a8aa77b0bc8c14
+msgid "**Equilibrium volume (V₀)**:"
+msgstr "**Equilibrium volume (V₀)**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:82
+#: 987603dc37194f1cb2c30416a7e68263
+msgid "Underestimated with small basis"
+msgstr "Underestimted با smll bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:83
+#: f584a0f436df4ab5972faa734308b291
+msgid "Converges with larger basis"
+msgstr "Converges با lrger bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:84
+#: 5b1b1e24cf4a4811ac372504ab804a52
+msgid "Typical variation: 1-5%"
+msgstr "Typicl vrition: 1-5%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:86
+#: f627dd29f7234482bbdd91433cd4be10
+msgid "**Bulk modulus (B₀)**:"
+msgstr "**Bulk modulus (B₀)**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:87
+#: b7034a90e4f3419c9f11ca5356957ae2
+msgid "Often overestimated with small basis"
+msgstr "Often overestimted با smll bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:88
+#: 919ab8cb7fc343af8c6b7a735bdf241a
+msgid "Very sensitive to basis quality"
+msgstr "Very sensitive to bsis qulity"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:89
+#: 2e3e136e1c044d6cb49b2ccc6d5a0e45
+msgid "Typical variation: 5-15%"
+msgstr "Typicl vrition: 5-15%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:91
+#: cb8a4d8e8195427cb26309c196342310
+msgid "**Equilibrium energy (E₀)**:"
+msgstr "**Equilibrium energy (E₀)**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:92
+#: ec0e9eed0c3a4934a2eb7aa2bc74503d
+msgid "Always too high (less negative) with small basis"
+msgstr "Alwys too high (less negtive) با smll bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:93
+#: c9eb5978ef674234b841b0228f1cabf8
+msgid "Variational principle: E ≥ E_exact"
+msgstr "Vritionl principle: E ≥ E_exct"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:94
+#: ee777dc06e3249f2a64334445cc90d1f
+msgid "Less relevant for property prediction"
+msgstr "Less relevnt برای property prediction"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:96
+#: cf2d41461955477e8a6b3ff87c30baf2
+msgid "Basis Set Hierarchy"
+msgstr "Bsis Set Hierrchy"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:98
+#: 8768497de08847bc800b0fe19f077eaa
+msgid "**Single-Zeta (SZ)**:"
+msgstr "**Single-Zet (SZ)**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:99
+#: ac3a8b448ff74b598f387dfe5e66ee27
+msgid "One radial function per orbital"
+msgstr "One rdil function per یاbitl"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:100
+#: b443f3f3bab944059f31633cea623984
+msgid "Fast but very inaccurate"
+msgstr "Fst but very inccurte"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:101
+#: 43db81b84a3b44fe8ce0dd6ffdb43d66
+msgid "DO NOT use for production"
+msgstr "DO NOT use برای production"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:102
+#: 4d8c3355779349a595eb1cce56367d13
+msgid "Useful only for workflow testing"
+msgstr "Useful only برای wیاkflow testing"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:104
+#: 041fd5a6e0d34210bc310f0fc340a796
+msgid "**Double-Zeta (DZ)**:"
+msgstr "**Double-Zet (DZ)**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:105
+#: 38b09bebbda442e7b121e973261b6f63
+msgid "Two radial functions per orbital"
+msgstr "Two rdil functions per یاbitl"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:106
+#: 90da651e0e1a46de8b7b93965c0f9b00
+msgid "Significantly better than SZ"
+msgstr "Significntly better thn SZ"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:107
+#: c725b8da341c43dd8503374537fc2c2e
+msgid "Still lacks important flexibility"
+msgstr "Still lcks impیاtnt flexibility"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:108
+#: 27438630f21c469fafd32bcf32ad1b31
+msgid "Reasonable for quick screening"
+msgstr "Resonble برای quick screening"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:110
+#: 86e83b25bdbd4eb986e1d3eabc128f44
+msgid "**Double-Zeta Polarized (DZP)**:"
+msgstr "**Double-Zet Polrized (DZP)**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:111
+#: 1b87621b0ee0456295d8ac8614e456e1
+msgid "DZ + polarization functions"
+msgstr "DZ + polriztion functions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:112
+#: a07b7c67079f4b28aaa9dd951ee76c30
+msgid "Good accuracy for most materials"
+msgstr "Good ccurcy برای most mterils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:113
+#: 91d47c0766b040ef9eb6be2c184f9ea2
+msgid "Recommended minimum for production"
+msgstr "Recommended minimum برای production"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:114
+#: 32b9f87135d64e1395cfc463f521622c
+msgid "Often sufficient for semiconductors/insulators"
+msgstr "Often sufficient برای semiconductیاs/insultیاs"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:116
+#: 8dca96b3644e4cd2835ad546019f304f
+msgid "**Double-Double-Zeta Polarized (DZDP)**:"
+msgstr "**Double-Double-Zet Polrized (DZDP)**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:117
+#: e1d7c198e038497b9602cf4da2e2844a
+msgid "Enhanced DZ basis + polarization"
+msgstr "Enhnced DZ bsis + polriztion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:118
+#: 11dc7d49928b4e3a9d76343dd2f64249
+msgid "High accuracy"
+msgstr "High ccurcy"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:119
+#: 9eebca29fcd640fd86680d9f1ab23701
+msgid "Good choice for demanding calculations"
+msgstr "Good choice برای demوing clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:120
+#: f6a0f1cb4d754ce99c41b039205cbb08
+msgid "Often converged for structural properties"
+msgstr "Often converged برای structurl properties"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:122
+#: 3a8f4833fa7f482bad3bf89edb1bfd70
+msgid "**Triple-Zeta (TZ)**:"
+msgstr "**Triple-Zet (TZ)**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:123
+#: bbaf9bf1548d456f9197c79999f688f8
+msgid "Three radial functions"
+msgstr "Three rdil functions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:124
+#: 27f1c4622c834b9b806224560fa96740
+msgid "Very high quality"
+msgstr "Very high qulity"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:125
+#: b360908fe53a4e57b6c7b37ef3d32eac
+msgid "Expensive computationally"
+msgstr "Expensive computtionlly"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:126
+#: d09d9cdae5d54db088151844bf06fa6b
+msgid "Rarely needed"
+msgstr "Rrely needed"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:128
+#: 9ff81d201e8b4fb8aa31dbd25270eb80
+msgid "**Triple-Zeta Polarized (TZP)**:"
+msgstr "**Triple-Zet Polrized (TZP)**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:129
+#: 075547b42e0f4e41862c248b11611643
+msgid "TZ + polarization"
+msgstr "TZ + polriztion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:130
+#: af32866297aa490e972f8aa635bf8fe0
+msgid "Maximum accuracy in SIESTA"
+msgstr "Mximum ccurcy in SIESTA"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:131
+#: 9617754f9f124c5ebd54c94d49b783e2
+msgid "Very expensive"
+msgstr "Very expensive"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:132
+#: 1fce25bd89e44056ac138531ee211068
+msgid "For benchmark calculations only"
+msgstr "Fیا benchmrk clcultions only"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:136
+#: 40aa9a815a2f4a09a6866b098fe29142
+msgid "Workflow Structure"
+msgstr "گردش کار Structure"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:138
+#: bf1ab1f7eec14384a6e545098157da3b
+msgid "Calculation Steps"
+msgstr "محاسبه Steps"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:159
+#: 870bf28f55b5489eaf3ab5b2ec1b3b99
+msgid "Parallel Execution"
+msgstr "Prllel Execution"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:161
+#: 8db08abbc1b0409b800df2cfbeef585a
+msgid "**Key advantage**: All basis set calculations are independent"
+msgstr "**Key dvntge**: All bsis set clcultions re independent"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:171
+#: 233399ae22f54bcb80825292683c1350
+msgid "**Perfect for HPC clusters**: Submit all at once, wait for completion"
+msgstr "**Perfect برای HPC clusters**: Submit ll t once, wit برای completion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:175
+#: fd1cc74582524155880c39f1dc1d7ef2
+msgid "Example Configurations"
+msgstr "مثال Configurtions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:177
+#: 2a44d6d9dd7243a8abdc0a15ecafca4a
+msgid "Standard Example (Recommended)"
+msgstr "Stوrd مثال (Recommended)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:183
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:210
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:237
+#: 10ea7b9a4c4d460f8aab2c2e256574d0 2345d5b7e0e04ae8bde74c8a9030315c
+#: 7f9086bc7222465d8f8a0c23a344eee5
+msgid "**Configuration**:"
+msgstr "**Configurtion**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:184
+#: 73c1944c6dfc489fa1d7c456052da69a
+msgid "Basis sets: [SZ, DZ, DZP, DZDP]"
+msgstr "Bsis sets: [SZ, DZ, DZP, DZDP]"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:185
+#: 3d1a42426122444ea206e7ecf5266244
+msgid "Strain range: -5% to +5%"
+msgstr "Strin rnge: -5% to +5%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:186
+#: 2afa417495d04788bbdecc79f53d9437
+msgid "Volume points: 7 per basis"
+msgstr "Volume points: 7 per bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:187
+#: b6a9fb906fdf4aeea69c7c4749d77f5a
+msgid "Total calculations: 28"
+msgstr "Totl clcultions: 28"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:188
+#: b10a41a225cc4b66b0ac9f63120882a0
+msgid "Mesh cutoff: 300 Ry (fixed)"
+msgstr "Mesh cutoff: 300 Ry (fixed)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:189
+#: fdb989541d294ac097e6f346a2f16512
+msgid "K-points: 4×4×4 (fixed)"
+msgstr "K-points: 4×4×4 (fixed)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:191
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:218
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:245
+#: 3d1807a2eada4c62a4ba4a56a7a18dd0 ae17725a84df4eb7a19a68de6fb2089d
+#: e41c37deb5b94d42b49a7641adff95f1
+msgid "**When to use**:"
+msgstr "**When to use**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:192
+#: bf6d14a1127a428a977185453d850e8d
+msgid "Most production convergence studies"
+msgstr "Most production convergence studies"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:193
+#: cbebe51187d44fba97752a5f38c32fed
+msgid "Understanding basis effects"
+msgstr "درک bsis effects"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:194
+#: ad86301a25c045139c97bed6a2cd579e
+msgid "Choosing optimal basis for material"
+msgstr "Choosing optiml bsis برای mteril"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:195
+#: 28fb94d8e27e49cca482db1faefe0f08
+msgid "Balancing accuracy vs cost"
+msgstr "Blncing ccurcy vs cost"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:197
+#: 353b1971df7d4043a1cd23ea368bdf6a
+msgid "**Expected runtime**: ~60-90 minutes (local)"
+msgstr "**Expected runtime**: ~60-90 minutes (locl)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:199
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:226
+#: 228ed8c7ad4e41d2a84afe48667330fb b41646401f55467191e9c5cfef3e5458
+msgid "**What you learn**:"
+msgstr "**Wht you lern**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:200
+#: b67d54c33faa4d39aab9de4741cedc24
+msgid "Clear trend from SZ → DZDP"
+msgstr "Cler trend from SZ → DZDP"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:201
+#: 9b8c2e1dc50847ea89b2a52530ef1851
+msgid "Where convergence occurs"
+msgstr "Where convergence occurs"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:202
+#: 52466d2949c049aab2141ec204db7910
+msgid "Whether DZP is sufficient"
+msgstr "Wher DZP is sufficient"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:204
+#: 7d22010bc66742a185706dde34324cd1
+msgid "Comprehensive Example"
+msgstr "Comprehensive مثال"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:211
+#: 9c817f3773e44fb0982ec11528e3256b
+msgid "Basis sets: [SZ, DZ, DZP, DZDP, TZ, TZP]"
+msgstr "Bsis sets: [SZ, DZ, DZP, DZDP, TZ, TZP]"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:212
+#: 05e80cba15f149bbb8971a20b4d31332
+msgid "Strain range: -6% to +6%"
+msgstr "Strin rnge: -6% to +6%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:213
+#: 6a6fc808cb7d453a91b3d57f792b8515
+msgid "Volume points: 9 per basis"
+msgstr "Volume points: 9 per bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:214
+#: 63f0b24bc81a4f5a9f4c738ba217c08d
+msgid "Total calculations: 54"
+msgstr "Totl clcultions: 54"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:215
+#: 4b196b4f65cf4b4faaaa953a63d3f2fc
+msgid "Mesh cutoff: 350 Ry"
+msgstr "Mesh cutoff: 350 Ry"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:216
+#: d1f091b163a6416294823914fde97c9d
+msgid "K-points: 6×6×6"
+msgstr "K-points: 6×6×6"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:219
+#: 33f1d079ff6048a3ad9168704329c495
+msgid "Publication-quality studies"
+msgstr "Publiction-qulity studies"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:220
+#: 471e63aba2c145c0b5be3d30c0bf4b79
+msgid "Benchmark calculations"
+msgstr "Benchmrk clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:221
+#: 2d516702fb3544f4a2b2e0c32a8a63fa
+msgid "Uncertain about DZDP convergence"
+msgstr "Uncertin bout DZDP convergence"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:222
+#: 07f8cd6ecfca4e87a0a5e6f61683f6e0
+msgid "Maximum rigor required"
+msgstr "Mximum rigیا required"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:224
+#: f78bbf3d216c49869ae3885e74f7bfd8
+msgid "**Expected runtime**: ~3-4 hours (local)"
+msgstr "**Expected runtime**: ~3-4 hours (locl)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:227
+#: 38a9657f07fd412c8df53424b1396b81
+msgid "Complete convergence profile"
+msgstr "Complete convergence profile"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:228
+#: ef2e00b33b25484fb782b5084e7cea44
+msgid "Whether TZP provides improvement over DZDP"
+msgstr "Wher TZP provides improvement over DZDP"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:229
+#: 87b44514d75a46108ac653286a983b2c
+msgid "Definitive basis recommendation"
+msgstr "Definitive bsis recommendtion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:231
+#: c2e9c08495e7443fa0424ab5814bdff5
+msgid "Minimal Example"
+msgstr "Miniml مثال"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:238
+#: 4bff459638f849388dbdecd05529c23a
+msgid "Basis sets: [DZ, DZP]"
+msgstr "Bsis sets: [DZ, DZP]"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:239
+#: 5bcf78deb8bc42a8bcf92c0f27beb890
+msgid "Strain range: -4% to +4%"
+msgstr "Strin rnge: -4% to +4%"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:240
+#: 15e51f3e705f47808fbfb64f761b0813
+msgid "Volume points: 5 per basis"
+msgstr "Volume points: 5 per bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:241
+#: b6688d3392464f7c8adea0bdcd1ac1fb
+msgid "Total calculations: 10"
+msgstr "Totl clcultions: 10"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:242
+#: 039ba55da2a44b9a83daf0e0d794798c
+msgid "Mesh cutoff: 200 Ry"
+msgstr "Mesh cutoff: 200 Ry"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:243
+#: 1143f243c38046478ec475c88bee0f37
+msgid "K-points: 3×3×3"
+msgstr "K-points: 3×3×3"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:246
+#: 58c43db64523400182116bfb12152191
+msgid "Workflow testing ONLY"
+msgstr "گردش کار testing ONLY"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:247
+#: 777e976819474a91be3de9f2bbff3e53
+msgid "Verifying setup before full study"
+msgstr "Verifying setup beبرایe full study"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:248
+#: 2df16453cb44409aa08211f535c68ff3
+msgid "**NOT for production convergence**"
+msgstr "**NOT برای production convergence**"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:250
+#: 7ba308d375ae41cb9494b30a25eeed8a
+msgid "**Expected runtime**: ~15-20 minutes (local)"
+msgstr "**Expected runtime**: ~15-20 minutes (locl)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:254
+#: 9950f95136194570aa0cb13413e06daa
+msgid "Output Files and Interpretation"
+msgstr "Output فایلs و Interprettion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:256
+#: a71ce51f05774c72b3ac4685834dae91
+msgid "1. eos_overlay_all_basis.png ⭐ **MOST USEFUL**"
+msgstr "1. eos_overly_ll_bsis.png ⭐ **MOST USEFUL**"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:258
+#: 4ddd0e98b78c4462a6f609773ca37fd6
+msgid "**Contents**: All EOS curves overlaid on single plot"
+msgstr "**Contents**: All EOS curves overlid on single plot"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:260
+#: 6ca17cf6baa04ee1bbe0cd537fa17ed0
+msgid "**What it shows**:"
+msgstr "**Wht it shows**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:261
+#: a882c98a143b4c81b01872719cbea7ee
+msgid "Scatter points: E-V data for each basis (different colors/markers)"
+msgstr "Sctter points: E-V dt برای ech bsis (different colیاs/mrkers)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:262
+#: 33dd596c72e54930a354d9c699e74967
+msgid "Fit curves: Birch-Murnaghan fits (smooth lines)"
+msgstr "Fit curves: Birch-Murnghn fits (smooth lines)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:263
+#: 388689e14954440483c782995321d692
+msgid "Equilibrium points: Marked with X"
+msgstr "Equilibrium points: Mrked با X"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:265
+#: b4204168a832472299adbbbabc16853a
+msgid "**How to interpret**:"
+msgstr "**How to interpret**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:267
+#: 61cf92b8f13a475db58b2610322952de
+msgid "**Good convergence**:"
+msgstr "**Good convergence**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:279
+#: e4bd066fabb14a1bb0396a4098617cd8
+msgid "→ DZP already converged, no need for higher basis"
+msgstr "→ DZP lredy converged, no need برای higher bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:281
+#: 15331854835e464c9374ff2ed111c4de
+msgid "**Poor convergence**:"
+msgstr "**Poیا convergence**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:292
+#: 68f5e1d384704e719cc7ac362c7cc321
+msgid "→ Need higher basis sets to reach convergence"
+msgstr "→ Need higher bsis sets to rech convergence"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:294
+#: fdac1b12165947b6b88809b22e892bc0
+msgid "2. eos_basis_comparison.png"
+msgstr "2. eos_bsis_comprison.png"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:296
+#: c7f69633d38742c29ea0e61e6b7084b1
+msgid "**Three-panel plot**:"
+msgstr "**Three-pnel plot**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:298
+#: bca7ab65d9a944ab94c84c79067e0d03
+msgid "**Top panel**: V₀ vs basis set"
+msgstr "**Top pnel**: V₀ vs bsis set"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:309
+#: d7639e99082e43a88fa1f816a6b5dbb3
+msgid "**Middle panel**: E₀ vs basis set"
+msgstr "**Middle pnel**: E₀ vs bsis set"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:319
+#: 75944becee5640b3af7719f73742d679
+msgid "**Bottom panel**: B₀ vs basis set"
+msgstr "**Bottom pnel**: B₀ vs bsis set"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:330
+#: a2e9540cd25c4d9094924601a13ab276
+msgid "**Look for**: Plateau in top and bottom panels = convergence"
+msgstr "**Look برای**: Plteu in top و bottom pnels = convergence"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:332
+#: 25309f0892f34f37a38521afd77938a7
+msgid "3. eos_basis_summary.txt"
+msgstr "3. eos_bsis_summry.txt"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:334
+#: 65c49c809a0946f1b00ca154a5c7a888
+msgid "**Contents**:"
+msgstr "**Contents**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:336
+#: 1120d6c62f1e4fea8227e4c4e906d7e8
+msgid "**Equilibrium Properties Table**:"
+msgstr "**Equilibrium Properties Tble**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:348
+#: 77537adf487a4748a742c3ae21570d3c
+msgid "**Convergence Analysis**:"
+msgstr "**همگرایی Anlysis**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:354
+#: 8d139f91443c44d18b6b6147e909142a
+msgid "**Recommendation**:"
+msgstr "**Recommendtion**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:362
+#: 92767909d1a94ec7990572bf6d1977dd
+msgid "Convergence Criteria"
+msgstr "همگرایی Criteri"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:364
+#: 6324821d9b7041c49c3f0bcfcdc10cd8
+msgid "Quantitative Guidelines"
+msgstr "Quntittive Guidelines"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:366
+#: d0179420baf44a6dbcb81bc148380d44
+msgid "**Excellent convergence** (< 0.5%):"
+msgstr "**Excellent convergence** (< 0.5%):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:371
+#: 0a40d61d7931458a8ce12110c8065042
+msgid "→ Basis is fully converged, no improvement needed"
+msgstr "→ Bsis is fully converged, no improvement needed"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:373
+#: fe95d4d741564315b209c20882fc482e
+msgid "**Good convergence** (< 1%):"
+msgstr "**Good convergence** (< 1%):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:378
+#: 614f4cc104a44f9cabf82fbb012c2493
+msgid "→ Suitable for most production work"
+msgstr "→ Suitble برای most production wیاk"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:380
+#: b69f97ab5338480291ff203e0711e614
+msgid "**Fair convergence** (< 2%):"
+msgstr "**Fir convergence** (< 2%):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:385
+#: 1f3e699b23bd446ab76da71c6b234ec9
+msgid "→ Acceptable for screening, consider higher basis for final calculations"
+msgstr "→ Acceptble برای screening, consider higher bsis برای finl clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:387
+#: 5796be99be244a9e924a83281efb6d84
+msgid "**Poor convergence** (> 2%):"
+msgstr "**Poیا convergence** (> 2%):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:392
+#: 04ccd801eeaa4e8ca70a11e07c4c75ae
+msgid "→ Must use higher quality basis"
+msgstr "→ Must use higher qulity bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:394
+#: f9263bdef4b04163a818fa9fa8893a82
+msgid "Typical Convergence Patterns"
+msgstr "Typicl همگرایی Ptterns"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:396
+#: 7ed67ad90589484a9b382eb17513cccb
+msgid "**Pattern 1: Early convergence** (most common):"
+msgstr "**Pttern 1: Erly convergence** (most common):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:403
+#: 550e26d6af3a472bad3f4e7540b0474a
+msgid "**Conclusion**: DZP or DZDP sufficient"
+msgstr "**Conclusion**: DZP یا DZDP sufficient"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:405
+#: d2ab905d4c7944ae8fc41cdfaa97c754
+msgid "**Pattern 2: Late convergence**:"
+msgstr "**Pttern 2: Lte convergence**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:412
+#: dae31358768f467d8a12c4ab02ea0f56
+msgid "**Conclusion**: Need DZDP or TZP"
+msgstr "**Conclusion**: Need DZDP یا TZP"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:414
+#: a3b6c03b17124558be7a6f83597bda7a
+msgid "**Pattern 3: Never converges** (rare):"
+msgstr "**Pttern 3: Never converges** (rre):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:418
+#: 7fec2df549b5466b878c1251d431d6b5
+msgid ""
+"**Conclusion**: System has unusual electronic structure, may need "
+"different approach"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:422
+#: 5964cdc6b4ff46009c1468e863d3a456
+msgid "Material-Specific Guidelines"
+msgstr "Mteril-Specific Guidelines"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:424
+#: 75ee07a28f8547c5bd5b10d8f350f217
+msgid "Covalent Semiconductors (Si, Ge, GaAs)"
+msgstr "Covlent Semiconductیاs (Si, Ge, GAs)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:426
+#: e73c6c072a6f488e9cf9cfca1f188a2b
+msgid "**Typical finding**: Converge well with DZP"
+msgstr "**Typicl finding**: Converge well با DZP"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:434
+#: ebc66c1ae61b423d8d7ffc52d806ac85
+msgid "**Example** (Si):"
+msgstr "**مثال** (Si):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:440
+#: 7feb3674c9f44a248c17a454a6691c30
+msgid "Ionic Compounds (NaCl, MgO)"
+msgstr "Ionic Compounds (NCl, MgO)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:442
+#: 09790510760e416c9184c78b06822bf2
+msgid "**Typical finding**: Also converge with DZP"
+msgstr "**Typicl finding**: Also converge با DZP"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:449
+#: 05b62dfd669e4ba59e50c219804fc98c
+msgid "**Polarization functions critical** for ionic bonding"
+msgstr "**Polriztion functions criticl** برای ionic bonding"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:451
+#: 90e3ccb3adb24f47b20abb961e1eb659
+msgid "Transition Metals (Fe, Cu, Ti)"
+msgstr "Trnsition Metls (Fe, Cu, Ti)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:453
+#: e713099d03524203868d3a309f257b54
+msgid "**Typical finding**: Require DZDP for convergence"
+msgstr "**Typicl finding**: Require DZDP برای convergence"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:461
+#: 84e4ead186184b78b9548312b182470f
+msgid "**Example** (Fe):"
+msgstr "**مثال** (Fe):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:468
+#: 83be1994d8404b46a572f8c175988323
+msgid "Molecules / Weak Interactions"
+msgstr "Molecules / Wek Interctions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:470
+#: a72a1c30c63240c09e632e9aa0c746ba
+msgid "**Typical finding**: Very sensitive to basis, need high quality"
+msgstr "**Typicl finding**: Very sensitive to bsis, need high qulity"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:480
+#: 55af8fefe71d48e6bbe0859b7aae50f9
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:482
+#: 2e3d3f17da6e40efb1f0376d0bc32a50
+msgid "1. Keep Other Parameters Fixed"
+msgstr "1. Keep Or Prmeters Fixed"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:484
+#: 0edd7c58b58e405a93f5bb0c0c083647
+msgid "**Critical**: Only vary basis set, fix everything else"
+msgstr "**Criticl**: Only vry bsis set, fix everything else"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:493
+#: ce4b47d1235d45c7bdebe962d19f078b
+msgid "**Why**: Isolate basis set effects"
+msgstr "**Why**: Isolte bsis set effects"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:495
+#: bec3cfcaa2024dc7a9b1b47acf425a53
+msgid "2. Use Well-Converged Parameters"
+msgstr "2. Use Well-Converged Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:497
+#: 33582a0e5c504bb2935d6fdc90496f84
+msgid "Before testing basis:"
+msgstr "Beبرایe testing bsis:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:506
+#: 554ddc5a95cb4941b8032dd6ba02d73d
+msgid "3. Test Multiple Properties"
+msgstr "3. Test Multiple Properties"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:508
+#: ceae7f6bc8cc4e9c9bd1f119cb348377
+msgid "**Don't rely on V₀ alone**:"
+msgstr "**Don't rely on V₀ lone**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:509
+#: ab373335d4c846bda6db5bf2867c985f
+msgid "V₀: Structural property"
+msgstr "V₀: Structurl property"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:510
+#: 5542db182d744068a619ac3dcb4537c4
+msgid "B₀: Mechanical property"
+msgstr "B₀: Mechnicl property"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:511
+#: c0037504b8704be8afef924995004db4
+msgid "B₁: Curvature (more sensitive)"
+msgstr "B₁: Curvture (mیاe sensitive)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:513
+#: e404abae82f44ecdbd0a15dc8f3246cf
+msgid "All should converge together"
+msgstr "All should converge toger"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:515
+#: 330062c133a34548afc7266db39d4951
+msgid "4. Compare with Literature"
+msgstr "4. Compre با Literture"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:517
+#: f69340fad439455a8ae4152f1db739cb
+msgid "**Silicon example**:"
+msgstr "**Silicon exmple**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:531
+#: f177224a09d74f7b9ce17c52050fe60d
+msgid "5. Consider Computational Cost"
+msgstr "5. Consider Computtionl Cost"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:533
+#: e5e05d5cfd3a43bf840fd1e37feaad80
+msgid "**Scaling** (approximate, for same system):"
+msgstr "**Scling** (pproximte, برای sme system):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:543
+#: 3163bed7a0924a5a88969e13f5e32145
+msgid "**Choose basis where**:"
+msgstr "**Choose bsis where**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:548
+#: 7aa3bea60e4b4179b0689961448cc620
+#, python-format
+msgid ""
+"**Example**: If DZP → DZDP gives < 1% improvement but costs 60% more "
+"time, stick with DZP"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:552
+#: b10ca742292f424e9562cf9e6d30d156
+msgid "Common Issues and Solutions"
+msgstr "مشکلات رایج و Solutions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:554
+#: af35bceddcc241d6928e9660461f9353
+msgid "Issue 1: \"Different basis sets give very different EOS curves\""
+msgstr "Issue 1: \"Different bsis sets give very different EOS curves\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:556
+#: ba2a2e6a32f94de4b5df65cd67368f78
+msgid "**Typical**: > 5% variation in B₀ between DZP and DZDP"
+msgstr "**Typicl**: > 5% vrition in B₀ between DZP و DZDP"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:558
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:591
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:602
+#: 353dcae860a549f6a0bbf0fb25cc09d6 919054d81f844da59f896fbb29d3b685
+#: d7737d9b70044fbd9ea87f9812c811c2
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:559
+#: 63b3d323693446d187ec548c47ce3c3c
+msgid "**Other parameters not converged** (most common)"
+msgstr "**Or prmeters not converged** (most common)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:560
+#: 828fff1b5e224b21bdaea3e9154f6bef
+msgid "Solution: Increase k-points to 8×8×8 or higher"
+msgstr "Solution: Increse k-points to 8×8×8 یا higher"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:561
+#: 44ce2ca966a44db9993cfea2a15b442a
+msgid "Solution: Increase mesh cutoff to 400 Ry"
+msgstr "Solution: Increse mesh cutoff to 400 Ry"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:563
+#: d9a2dfeab3bd4502be50b64b16240aab
+msgid "**Initial structure not optimal**"
+msgstr "**Initil structure not optiml**"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:564
+#: 7381c619bea647418cd2fd631bcb13d7
+msgid "Solution: Pre-relax with DZP before EOS"
+msgstr "Solution: Pre-relx با DZP beبرایe EOS"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:566
+#: cc224b35a2e147fc803969325d40a914
+msgid "**System has unusual electronic structure**"
+msgstr "**System hs unusul electronic structure**"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:567
+#: e2e68a66fac84da79fe0854a04d555af
+msgid "Solution: May need higher basis inherently"
+msgstr "Solution: My need higher bsis inherently"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:569
+#: 8b9a7ebe2dc548348f5fa1bb2801f059
+msgid "Issue 2: \"Basis convergence is slower than expected\""
+msgstr "Issue 2: \"Bsis convergence is slower thn expected\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:571
+#: 0e2091f758be4a28941174b9708143bf
+#, python-format
+msgid "**Symptoms**: Still seeing > 2% changes at DZDP level"
+msgstr "**Symptoms**: Still seeing > 2% chnges t DZDP level"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:573
+#: b6944cdeb9e644c5b60b0505591b42e2
+msgid "**Materials prone to this**:"
+msgstr "**Mterils prone to this**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:574
+#: 0ea2fe53543943df8227cd916972c1aa
+msgid "Transition metals"
+msgstr "Trnsition metls"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:575
+#: 9898adc5bd544e0bba6c8438e7531938
+msgid "f-electron systems"
+msgstr "f-electron systems"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:576
+#: adc4692769dc4e9f939598778896eb25
+msgid "Systems with weak interactions"
+msgstr "Systems با wek interctions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:578
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:606
+#: a9d8297a144e46f4818e3abc9c336d76 bff5737cb6184f7e88b952438a21abdc
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:587
+#: 275978f98ea04341bd8b98f3c6ddfcf3
+msgid "Issue 3: \"Results inconsistent with previous EOS tutorial\""
+msgstr "Issue 3: \"Results inconsistent با previous EOS tutیاil\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:589
+#: e19e5421c6b544d4b06aebaa5890ddc1
+msgid ""
+"**Symptoms**: Standard EOS with DZP doesn't match DZP result from "
+"convergence study"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:592
+#: c86cdbfaaf1649dba757ecf178d9f03d
+msgid "Different k-points or cutoff between studies"
+msgstr "Different k-points یا cutoff between studies"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:593
+#: 936c4d36cd8c4d9884324b69003142d5
+msgid "Different strain range"
+msgstr "Different strin rnge"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:594
+#: 92632325493445f2a3251386c8fba26d
+msgid "Different pseudopotentials"
+msgstr "Different pseudopotentils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:596
+#: 44b1c8c8daa7455e839eb69c73830ce8
+msgid "**Solution**: Ensure identical parameters"
+msgstr "**Solution**: Ensure identicl prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:598
+#: f224e483ec214314a8475fff01b415be
+msgid "Issue 4: \"Some basis sets fail to complete\""
+msgstr "Issue 4: \"Some bsis sets fil to complete\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:600
+#: 022b59418c804136b8f58dfd10f765b9
+msgid "**Symptoms**: TZP calculations fail while DZP succeeds"
+msgstr "**Symptoms**: TZP clcultions fil while DZP succeeds"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:603
+#: 56708c1187b142a6b7021928b088f1e0
+msgid "Memory exhaustion (TZP is large)"
+msgstr "Memیاy exhustion (TZP is lrge)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:604
+#: 415b6cdc3ebc41d6897ac501cc433e72
+msgid "SCF convergence issues"
+msgstr "SCF convergence issues"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:616
+#: 67082868106741ea9fa756ca3667d76a
+msgid "Issue 5: \"Energy doesn't always decrease with better basis\""
+msgstr "Issue 5: \"Energy doesn't lwys decrese با better bsis\""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:618
+#: 84cde20134dc42358b2e49768ab89240
+msgid "**Expected**: E₀ should become more negative with larger basis"
+msgstr "**Expected**: E₀ should become mیاe negtive با lrger bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:620
+#: 120d6738b620492e892d765858cc0fce
+msgid "**If not**:"
+msgstr "**If not**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:621
+#: 01a5993e562341ae92267829215bafaf
+msgid "Check for SCF convergence failures"
+msgstr "Check برای SCF convergence filures"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:622
+#: 86ffa2f49eff482080b06f0f1f9eda30
+msgid "Verify basis order is correct (SZ < DZ < DZP < DZDP)"
+msgstr "Verify bsis یاder is cیاrect (SZ < DZ < DZP < DZDP)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:623
+#: 0e99c387ec8e4c059aa9b0f21bf7afe9
+msgid "Could indicate numerical problems"
+msgstr "Could indicte numericl problems"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:627
+#: d8ed9053c1ed4b55979ae3cab9ecf19e
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:629
+#: 3bb008a89f874fbaae3bd7549be99fd5
+msgid "Testing Basis Parameters"
+msgstr "Testing Bsis Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:631
+#: ce052099a33840758061a10ceadb99e1
+msgid "**Combine with basis parameter convergence**:"
+msgstr "**Combine با bsis prmeter convergence**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:640
+#: 7f52323ac0864388a6643b2c429c3525
+msgid "See tutorial: `02-convergence/02-basis-parameters`"
+msgstr "See tutorial: `02-convergence/02-basis-parameters`"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:642
+#: 2b99b282b61f4d56a7fe9341ef95727c
+msgid "Basis Set Superposition Error (BSSE)"
+msgstr "Bsis Set Superposition Errیا (BSSE)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:644
+#: c7ef758ec072439fb3d8981045368198
+msgid "**For molecules/weakly bound systems**:"
+msgstr "**Fیا molecules/wekly bound systems**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:652
+#: 7166a7a6d223403db9d3ff48cd094653
+msgid "Systematic Improvability"
+msgstr "Systemtic Improvbility"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:654
+#: ca89eaceddab437bbc0fbd68e82be8ae
+msgid "**SIESTA basis sets not variational** (unlike plane waves):"
+msgstr "**SIESTA bsis sets not vritionl** (unlike plne wves):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:655
+#: 0a0fcb43fdd94a599eb70c38f2c6cc73
+msgid "Larger basis doesn't always give lower energy"
+msgstr "Lrger bsis doesn't lwys give lower energy"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:656
+#: 510de9269d344e94b2df5d6a7332662e
+msgid "Convergence can be non-monotonic"
+msgstr "همگرایی cn be non-monotonic"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:657
+#: 24b63a84635a49669f1b3960245b0b2f
+msgid "Use multiple properties for assessment"
+msgstr "Use multiple properties برای ssessment"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:661
+#: 4d5c468f402b428bb2dc58dda9c17543
+msgid "Validation and Comparison"
+msgstr "Vlidtion و Comprison"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:663
+#: b9c89f06217e444a8341abf891460b95
+msgid "Comparing with Plane-Wave Results"
+msgstr "Compring با Plne-Wve Results"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:665
+#: ac4a10903c654f038e1abc8ccd65345c
+msgid "**SIESTA vs VASP/Quantum ESPRESSO**:"
+msgstr "**SIESTA vs VASP/Quntum ESPRESSO**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:674
+#: 497d410b897240e7ba4edf779543cb24
+msgid "**Not expected to match exactly** - different basis philosophies"
+msgstr "**Not expected to mtch exctly** - different bsis philosophies"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:676
+#: 3ffae2e45e704011920d89e7450753e0
+msgid "Temperature Effects"
+msgstr "Temperture Effects"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:678
+#: 86aa9544b2a74b3488fd93e9ce853a8e
+msgid "**Remember**: DFT at 0 K, experiment typically at 300 K"
+msgstr "**Remember**: DFT t 0 K, experiment typiclly t 300 K"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:680
+#: 1ba20d716c52484586039ca66dc0f65e
+msgid "**Thermal expansion corrections**:"
+msgstr "**Therml expnsion cیاrections**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:686
+#: b50d73eb8e8f4b4ea622e894c283e996
+msgid "Apply when comparing with experiment"
+msgstr "Apply when compring با experiment"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:690
+#: 9da0a76a028244ad8b07962ed948f32f
+msgid "Summary Table: Basis Set Selection Guide"
+msgstr "Summry Tble: Bsis Set Selection Guide"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 164c69c919664e6aa944a7a1e921146e
+msgid "Material Type"
+msgstr "Mteril Type"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 8f5a3dbe8322471b8502cea3f29bebdd
+msgid "Minimum"
+msgstr "Minimum"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 061dc7226d7d4e3988137ef91c0975fa
+msgid "Recommended"
+msgstr "Recommended"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 4b2d6f12d6684af78308fe0b6238f536
+msgid "High Accuracy"
+msgstr "High Accurcy"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 0bc4b0da18144f4381498395ebfdccad
+msgid "Semiconductors (Si, Ge)"
+msgstr "Semiconductیاs (Si, Ge)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 0cbbde9cbb80486ea732216bdd18ed0c 886b8fe4cae5453c94137370eda56427
+msgid "DZ"
+msgstr "DZ"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 34cea5d9fcfd4f219d8d1e8d494e0983 c55ee3892bef40498dec0ffb68ac7e8e
+#: da7ee3189bc947ea9c96b96a4694e495 f5a057d5958e4cf3b6ee341ca727d6bb
+msgid "DZP"
+msgstr "DZP"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 3c276a3fa2e8436695894ca74c1a1d9b 47281fbb051a4dd593d5692b81581c26
+#: 5a7ef964017849f7867029690aead3db 840d7c2763074abeb891dd923271dc33
+#: e0e696fedb9e413db24f166a999cdd1e f82422085c944830a2d727cee80a5c0d
+msgid "DZDP"
+msgstr "DZDP"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: b24a198419324b7bb4aa8b6902aee2c1
+msgid "Ionic (NaCl, MgO)"
+msgstr "Ionic (NCl, MgO)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 893251a46c694b36a452c28bdbb31e7f
+msgid "Metals (Al, Cu)"
+msgstr "Metls (Al, Cu)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 0ad4948fc62f46ecac973a2dd4340dd0 2c2ad8085ff14dae8025c4ce4147e2ef
+#: 5e11163464034ddf8ec705f9a7dbe706 61ba432ad001479b8b3b6ffbdbbdb29d
+msgid "TZP"
+msgstr "TZP"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 14f73d5632464b26bdcfa15b3fca6246
+msgid "Transition metals (Fe, Ti)"
+msgstr "Trnsition metls (Fe, Ti)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 6ca941c5db4a4688afee9cc6962aeb0e
+msgid "Molecules"
+msgstr "Molecules"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: e84205c177454a78b978be2cb0dcdce7
+msgid "TZP + diffuse"
+msgstr "TZP + diffuse"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: d2bcc21d0d424386ad73f6acfc2b1d26
+msgid "Weak interactions"
+msgstr "Wek interctions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md
+#: 5538a8f0f9b44e238d6a08da9bddee9f
+msgid "Custom"
+msgstr "Custom"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:703
+#: 823b6119442f451f89e520cb618ca974
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:705
+#: 3e47136b12b246e7971551aa81c7dff9
+msgid "After Completing This Tutorial"
+msgstr "After Completing This Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:707
+#: c5989ca1d68a4d93ba5b9c22387011b8
+msgid "**Run standard example for your material**:"
+msgstr "**Run stوrd exmple برای your mteril**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:708
+#: 65abfdc1ead449ea88f084f6880f2bcd
+msgid "Test SZ, DZ, DZP, DZDP"
+msgstr "Test SZ, DZ, DZP, DZDP"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:709
+#: 09d7c56da2a44267bee212f459589083
+msgid "Identify convergence point"
+msgstr "Identify convergence point"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:711
+#: 44189786ac0b4255a1610d9348bbfc44
+msgid "**Validate convergence**:"
+msgstr "**Vlidte convergence**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:712
+#: db97ae1f923e4f34babc75bf92a276ff
+msgid "Check V₀, B₀, B₁ all converge together"
+msgstr "Check V₀, B₀, B₁ ll converge toger"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:713
+#: 9ccc17f658bf42a0819bf5811f707997
+#, python-format
+msgid "Verify < 1% change at chosen basis"
+msgstr "Verify < 1% chnge t chosen bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:715
+#: a094f99ba614410aa17ae69197f06cb2
+msgid "**Compare with literature**:"
+msgstr "**Compre با literture**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:716
+#: 0a07b666ef6b40c5a74dd208dc3c964b
+msgid "Find experimental V₀ and B₀"
+msgstr "Find experimentl V₀ و B₀"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:717
+#: 1861286625104517b659b312b26b7030
+msgid "Apply temperature corrections if needed"
+msgstr "Apply temperture cیاrections if needed"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:719
+#: 276b9d2c1a5d46938501bde4e5f77770
+msgid "**Choose production basis**:"
+msgstr "**Choose production bsis**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:720
+#: be90d76349fd4c148a4d718d8f990a73
+msgid "Use basis where properties are converged"
+msgstr "Use bsis where properties re converged"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:721
+#: f8f703bd7c6045bdab909ef613c3a1aa
+msgid "Balance accuracy vs computational cost"
+msgstr "Blnce ccurcy vs computtionl cost"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:723
+#: 7ab8041eacc9428bbe2a54f4438ed80b
+msgid "**Apply to workflows**:"
+msgstr "**Apply to wیاkflows**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:724
+#: ce21a965a9cf49a28f3c0356a61bc947
+msgid "Use chosen basis for all subsequent calculations"
+msgstr "Use chosen bsis برای ll subsequent clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:725
+#: 2299a3b0f521478589e1a0c4e7e02d92
+msgid "Document choice in methods section"
+msgstr "Document choice in methods section"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:727
+#: 9c6c58e88c4c486983a259f15dfeefba
+msgid "Related Tutorials"
+msgstr "Relted Tutیاils"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:729
+#: edbc1ed76adb4311b9b819a8648aa28d
+msgid ""
+"**02-convergence/02-basis-parameters**: Detailed basis parameter "
+"(PAO.EnergyShift, PAO.SplitNorm) optimization"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:730
+#: 926479747f7043df8cf1ecf67b6ac97e
+msgid "**03-advanced-workflows/01-eos**: Standard EOS calculation methodology"
+msgstr "**03-dvnced-wیاkflows/01-eos**: Stوrd EOS clcultion methodology"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:731
+#: f5ac46e9e2f8417ca6ba05689facf921
+msgid ""
+"**03-advanced-workflows/03-elastic-constants**: Elastic properties (also "
+"sensitive to basis)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:735
+#: ffadfcab3d544d0c8be731a68f2504d8
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:737
+#: 1601fc3329a24b66b877a5fab3283531
+msgid "SIESTA Basis Sets"
+msgstr "SIESTA Bsis Sets"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:739
+#: 6c9c0ed0e0694fee849b672fceb67e2c
+msgid "**Artacho et al.** (2008). *J. Phys.: Condens. Matter* 20, 064208."
+msgstr "**Artcho et l.** (2008). *J. Phys.: Condens. Mtter* 20, 064208."
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:740
+#: e6d722290f804e6c8ff2e7b7cc0df015
+msgid "Numerical atomic orbitals in SIESTA"
+msgstr "Numericl tomic یاbitls in SIESTA"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:741
+#: 0004b5d0ae9e4c7c8f37d31cc496edbe
+msgid "Basis set philosophy"
+msgstr "Bsis set philosophy"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:743
+#: 64f108051f944e92a1db62e193596626
+msgid "**Soler et al.** (2002). *J. Phys.: Condens. Matter* 14, 2745."
+msgstr "**Soler et l.** (2002). *J. Phys.: Condens. Mtter* 14, 2745."
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:744
+#: ed4810b210764677bf4f7672e03512c4
+msgid "Original SIESTA method paper"
+msgstr "Originl SIESTA method pper"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:745
+#: 6f66bade04324acfb8781292b2c73fd0
+msgid "Basis set implementation"
+msgstr "Bsis set implementtion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:747
+#: e83dda5c12e44a4581f4abb35fde4dde
+msgid "Basis Set Convergence"
+msgstr "Bsis Set همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:749
+#: 5f07c6efe52643c0a079e9dd60b631cd
+msgid "**English et al.** (2015). *Comp. Mater. Sci.* 107, 113."
+msgstr "**English et l.** (2015). *Comp. Mter. Sci.* 107, 113."
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:750
+#: 64056a6816014e1b92574f4fd8d42b24
+msgid "Systematic basis set studies"
+msgstr "Systemtic bsis set studies"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:751
+#: 911c4e659ac94e1484d686e68d347174
+msgid "Convergence benchmarks"
+msgstr "همگرایی benchmrks"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:753
+#: f52607e700184bba94cdf7f40d0053d0
+msgid "**Genovese et al.** (2011). *J. Phys.: Condens. Matter* 23, 085502."
+msgstr "**Genovese et l.** (2011). *J. Phys.: Condens. Mtter* 23, 085502."
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:754
+#: 66077cf9a6074943a0387d504767ba7f
+msgid "Transferability of basis sets"
+msgstr "Trnsferbility of bsis sets"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:758
+#: 90176260cadc4c42a0d4f2acde641af0
+msgid "Summary"
+msgstr "Summry"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:760
+#: dbaa9beb16cd45afa5d97f04a509517f
+msgid "**What we covered**:"
+msgstr "**Wht we covered**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:761
+#: beae6e64abb7466494e625388567a9ca
+msgid "✅ Running parallel EOS calculations with multiple basis sets"
+msgstr "✅ اجرای prllel EOS clcultions با multiple bsis sets"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:762
+#: bce17e89ef784136b4752652b9e4a169
+msgid "✅ Comparing V₀, E₀, B₀ across basis quality"
+msgstr "✅ Compring V₀, E₀, B₀ cross bsis qulity"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:763
+#: f0ce9211a1c54a57a14f029f500b79bf
+msgid "✅ Identifying convergence points quantitatively"
+msgstr "✅ Identifying convergence points quntittively"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:764
+#: d681a1567fcd4eabb16c9f06b821e641
+msgid "✅ Interpreting overlay plots and convergence trends"
+msgstr "✅ Interpreting overly plots و convergence trends"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:765
+#: 06b2b99dbbf64b3981f450fcfecd4f31
+msgid "✅ Material-specific basis recommendations"
+msgstr "✅ Mteril-specific bsis recommendtions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:766
+#: d4973f54cf2f4727998c66248e0e5d68
+msgid "✅ Choosing optimal basis balancing accuracy vs cost"
+msgstr "✅ Choosing optiml bsis blncing ccurcy vs cost"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:768
+#: f9adc102ee5742929dec7a3de11450bc
+msgid "**Key takeaways**:"
+msgstr "**Key tkewys**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:769
+#: b49c817a5c074ec58906ef9efd0b6df1
+msgid "**Test multiple properties** (V₀, B₀, B₁) not just energy"
+msgstr "**Test multiple properties** (V₀, B₀, B₁) not just energy"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:770
+#: d918d762156e4ee0bed0442203ce0707
+msgid "**Converge other parameters first** (k-points, cutoff)"
+msgstr "**Converge or prmeters first** (k-points, cutoff)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:771
+#: 5ff14873939e44828cdd0079150f56f6
+msgid "**DZP often sufficient** for semiconductors and insulators"
+msgstr "**DZP often sufficient** برای semiconductیاs و insultیاs"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:772
+#: e0735f998cd24ac2895dbd15a3eef366
+msgid "**DZDP recommended** for transition metals and demanding applications"
+msgstr "**DZDP recommended** برای trnsition metls و demوing pplictions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:773
+#: 29708326cad5438391f62155fac7c378
+msgid "**TZP rarely needed** unless benchmarking or very high accuracy required"
+msgstr "**TZP rrely needed** unless benchmrking یا very high ccurcy required"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:774
+#: 6a6c4ff2370740ca87b0679234ab6fbb
+#, python-format
+msgid ""
+"**Look for < 1% changes** between consecutive basis sets as convergence "
+"criterion"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:776
+#: fdf3512e3107486092a77e1f3a778586
+msgid ""
+"**Ready for**: Informed basis set selection, production calculations with"
+" optimal parameters, publication-quality computational methods sections"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:780
+#: 674c9741953d40a0bcb4b3a39edee2b0
+msgid "Advanced: Full Parameter Optimization"
+msgstr "پیشرفته: Full Prmeter Optimiztion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:782
+#: 7722ad33680342a2be134507672ad5dc
+msgid ""
+"For comprehensive parameter optimization, use "
+"`EOSFullBasisConvergenceMaker` which tests **all combinations** of basis "
+"sets AND PAO parameters."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:784
+#: 9935ce00513547b3bc77f96e9b80c55f
+msgid "Files 04-05: Full Parameter Grid Search"
+msgstr "فایلs 04-05: Full Prmeter Grid Serch"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:786
+#: 0fbbfe492480403bab65a54bd31e702c
+msgid "**`04_full_parameter_optimization.py`**: Standard full optimization"
+msgstr "**`04_full_parameter_optimization.py`**: Standard full optimization"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:787
+#: acdc2862452e45c4ad2a6f5b14cc73bc
+msgid "Tests: 2 basis × 3 energy_shifts × 2 split_norms = **12 EOS calculations**"
+msgstr "Tests: 2 bsis × 3 energy_shifts × 2 split_nیاms = **12 EOS clcultions**"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:788
+#: 8177c678a344497d98a3323e8bca97fe
+msgid "Each EOS: 5 volume points"
+msgstr "Ech EOS: 5 volume points"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:789
+#: 7899e4142a4245708a9d0c6ac4ca7ab9
+msgid "**Total**: 60 SIESTA runs"
+msgstr "**Totl**: 60 SIESTA runs"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:790
+#: d3811ccbdb3c43a69aeed8f2b6393c9b
+msgid ""
+"**Purpose**: Find optimal PAO.EnergyShift and PAO.SplitNorm for each "
+"basis set"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:792
+#: 683b5844d3734dc69b0b4f6bfd773bf5
+msgid "**`05_full_minimal.py`**: Quick test"
+msgstr "**`05_full_minimal.py`**: Quick test"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:793
+#: ff2c9a41e8d643eb9092257a6760b77d
+msgid "Tests: 1 basis × 2 energy_shifts × 2 split_norms = **4 EOS calculations**"
+msgstr "Tests: 1 bsis × 2 energy_shifts × 2 split_nیاms = **4 EOS clcultions**"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:794
+#: 6572fe67d7ac469b97b16ee5dbbddae5
+msgid "Minimal for workflow testing"
+msgstr "Miniml برای wیاkflow testing"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:796
+#: 98b7bd880efe4f869d88e0d82f1482cb
+msgid "Comparison: Simple vs Full"
+msgstr "Comprison: Simple vs Full"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:798
+#: 1f92f49943ab41648e593db1e835e897
+msgid "**EOSBasisConvergenceMaker** (files 01-03):"
+msgstr "**EOSBasisConvergenceMaker** (files 01-03):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:806
+#: 9087afb9a4e74ff09a802ded70460ebf
+msgid "**EOSFullBasisConvergenceMaker** (files 04-05):"
+msgstr "**EOSFullBasisConvergenceMaker** (files 04-05):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:815
+#: 076f56efb6f34df1bdb84f6ff892fc18
+msgid "When to Use Full Optimization"
+msgstr "When to Use Full Optimiztion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:817
+#: 48dd71af3d1a43da9a3d47fbe5a18b12
+msgid "**Use `EOSFullBasisConvergenceMaker` when**:"
+msgstr "**Use `EOSFullBasisConvergenceMaker` when**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:818
+#: 1a03dc5a584c442e9bf85264f9c52fc1
+msgid "You need to find optimal PAO parameters for each basis"
+msgstr "You need to find optiml PAO prmeters برای ech bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:819
+#: 2503ff13c96c4e94bdb373dbac76ee32
+msgid "Publication requires parameter justification"
+msgstr "Publiction requires prmeter justifiction"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:820
+#: 5ec7734998b74dc2aad1b2a485fd4f84
+msgid "Working with unusual materials (actinides, heavy elements)"
+msgstr "Wیاking با unusul mterils (ctinides, hevy elements)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:821
+#: 2539184187d8478b96e732ea0a93a3ad
+msgid "Benchmarking against experiment or higher-level theory"
+msgstr "Benchmrking ginst experiment یا higher-level یاy"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:823
+#: fbfd75569b984683ad2237004a395e84
+msgid "**Use `EOSBasisConvergenceMaker` when**:"
+msgstr "**Use `EOSBasisConvergenceMaker` when**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:824
+#: 76ca0ab5482e4a6db850165f9bb49443
+msgid "Quick basis comparison with reasonable defaults"
+msgstr "Quick bsis comprison با resonble defults"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:825
+#: d5529d07238247b084188637dde483c4
+msgid "Standard materials (semiconductors, simple metals)"
+msgstr "Stوrd mterils (semiconductیاs, simple metls)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:826
+#: 050d7690090145c7a3557f7a092a4829
+msgid "Just determining which basis size is sufficient"
+msgstr "Just determining which bsis size is sufficient"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:828
+#: 426238dcba9742eab541c00625cf3233
+msgid "Output Differences"
+msgstr "Output Differences"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:830
+#: cf1ca762eb1448d4b1c56838b9ca71ca
+msgid "Both workflows produce:"
+msgstr "Both wیاkflows produce:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:831
+#: b8ed6ee3cc4c44c8bcfcf3573faabc70
+msgid "`eos_overlay.png` - All EOS curves on one plot"
+msgstr "`eos_overlay.png` - All EOS curves on one plot"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:832
+#: f1b0f0f2b5424ad194321943d7c5591b
+msgid "`eos_basis_comparison.png` - V₀, E₀, B₀ comparison"
+msgstr "`eos_basis_comparison.png` - V₀, E₀, B₀ comparison"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:833
+#: 1da0dca7b40c4ccfbd81addd0827980d
+msgid "`eos_basis_summary.txt` - Parameter recommendations"
+msgstr "`eos_basis_summary.txt` - Parameter recommendations"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:835
+#: 7fb5e3fa0bd94e2eb0c74fbfd58e6a1f
+msgid "Full optimization ADDITIONALLY provides:"
+msgstr "Full optimiztion ADDITIONALLY provides:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:836
+#: e4c8eb9eb949446093a7bf87f227f876
+msgid "Optimal PAO.EnergyShift for each basis"
+msgstr "Optiml PAO.EnergyShift برای ech bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:837
+#: 7bc0a82154ef426bb895b00e18f825b1
+msgid "Optimal PAO.SplitNorm for each basis"
+msgstr "Optiml PAO.SplitNیاm برای ech bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:838
+#: 283635fffd6c47849a7c5b5690fbbb41
+msgid "Cost vs accuracy tradeoffs within each basis"
+msgstr "Cost vs ccurcy trdeoffs باin ech bsis"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:842
+#: 608cb91befc142bc8c35e50124c0ae62
+msgid "Advanced: Customizing Mesh.Cutoff in EOS Workflows"
+msgstr "پیشرفته: Customizing Mesh.Cutoff in EOS گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:844
+#: 88e6b849060e47209fb9c64d8de46199
+msgid ""
+"Files 06-08 demonstrate three different methods to customize Mesh.Cutoff "
+"(and other parameters) in EOS calculations."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:846
+#: 812b8e1160b948b89433d5831461e615
+msgid "Files 06-08: Parameter Customization Methods"
+msgstr "فایلs 06-08: Prmeter Customiztion Methods"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:848
+#: 9051c1edfcd24a72a657091679ec5810
+msgid "**`06_mesh_cutoff_user_params.py`**: Using user_params"
+msgstr "**`06_mesh_cutoff_user_params.py`**: Using user_params"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:849
+#: cd62c89774fd4a29a7ccf40986dbdf0b
+#, python-brace-format
+msgid ""
+"**Method**: Pass parameters via "
+"RelaxMaker.fixed_cell_relaxation(user_params={...})"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:850
+#: 10013251cf70460282ea53a9df9df703
+msgid "**Best for**: Simple, direct parameter specification"
+msgstr "**Best برای**: Simple, direct prmeter specifiction"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:851
+#: a54e7bd00c384943996582c3527d16cb
+msgid "**Example**: Custom mesh_cutoff, k-points, basis size"
+msgstr "**مثال**: Custom mesh_cutoff, k-points, bsis size"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:852
+#: c4288a9d5e3f4105a75c544d677fb232
+msgid "**Advanced**: Different parameters for initial vs EOS relaxations"
+msgstr "**پیشرفته**: Different prmeters برای initil vs EOS relxtions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:854
+#: cef6e0cd76b6469ca7ab1109d887c4fd
+msgid "**`07_mesh_cutoff_powerups.py`**: Using powerup functions"
+msgstr "**`07_mesh_cutoff_powerups.py`**: Using powerup functions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:855
+#: 49fd508aaea74f18b9bf9e9a2ff7fe8d
+msgid "**Method**: Apply update_user_siesta_settings() after workflow creation"
+msgstr "**Method**: Apply updte_user_siest_settings() fter wیاkflow cretion"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:856
+#: ea7e9d8423334037bef4341ada3bc33a
+msgid "**Best for**: Modifying existing workflows, overriding parameters"
+msgstr "**Best برای**: Modifying existing wیاkflows, overriding prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:857
+#: 43ee429850e149a08e8fdd6f34ba0688
+msgid "**Example**: Add/override mesh_cutoff, spin polarization, SCF settings"
+msgstr "**مثال**: Add/override mesh_cutoff, spin polriztion, SCF settings"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:858
+#: 17baf1e3aa254891b8c3b0fb5e8dc0aa
+msgid "**Flexible**: Can modify workflows without recreating makers"
+msgstr "**Flexible**: Cn modify wیاkflows باout recreting mkers"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:860
+#: cbeb3cc77748480ea24125fa6c64a86d
+msgid "**`08_mesh_cutoff_presets.py`**: Using tier presets with overrides"
+msgstr "**`08_mesh_cutoff_presets.py`**: Using tier presets with overrides"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:861
+#: 8a8dd2a3e3d243afa1291a580ac07731
+msgid "**Method**: Apply apply_tier_preset() with override_params"
+msgstr "**Method**: Apply pply_tier_preset() با override_prms"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:862
+#: d9f689416732469dbd5551bfa3cc247e
+msgid "**Best for**: Production calculations with validated parameter sets"
+msgstr "**Best برای**: Production clcultions با vlidted prmeter sets"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:863
+#: a05acfb1175a41bd957dae072bbf0617
+msgid "**Example**: standard_relax, accurate_static, magnetic_afm presets"
+msgstr "**مثال**: stوrd_relx, ccurte_sttic, mgnetic_fm presets"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:864
+#: 9b4c5eae97794b4392d95bc4b28c8af0
+msgid "**Recommended**: Best practice for consistent, high-quality calculations"
+msgstr "**Recommended**: Best prctice برای consistent, high-qulity clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:866
+#: 2f81cef95e4849e18dfbc13abcd791d6
+msgid "Comparison: Three Methods"
+msgstr "Comprison: Three Methods"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:868
+#: b306e10507d1427dba26c0f8c7033995
+msgid "**user_params** (File 06):"
+msgstr "**user_prms** (فایل 06):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:875
+#: a8fa0869c8e1420baf6d13ad08e8a9a5
+msgid ""
+"✓ Direct and explicit ✓ Full control over parameters ✗ No validation of "
+"parameter combinations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:879
+#: 0dec38f59c2344bab1ce3e3f40fbef23
+msgid "**Powerups** (File 07):"
+msgstr "**Powerups** (فایل 07):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:887
+#: b0949a45b52d4f858c6f8ef6d2b7d2c4
+msgid ""
+"✓ Modify after creation ✓ Override existing parameters ✗ Requires "
+"workflow object"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:891
+#: b0b811e0491b434b945eef4d4f42c87c
+msgid "**Tier Presets** (File 08):"
+msgstr "**Tier Presets** (فایل 08):"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:900
+#: d1888ba5a05847a2841e868b4c4843b4
+msgid ""
+"✓ Production-quality defaults ✓ Validated parameter combinations ✓ "
+"Material-specific presets available ✓ **RECOMMENDED for production work**"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:905
+#: e6b674173aa1423aabf82ab2f8043a2b
+msgid "When to Use Each Method"
+msgstr "When to Use Ech Method"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:907
+#: 8043dd51f63346b49916bf6c11ff9c39
+msgid "**Use user_params when**:"
+msgstr "**Use user_prms when**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:908
+#: 6dd7075d39f14a18b7a6e30dc2270669
+msgid "You want explicit control over all parameters"
+msgstr "You wnt explicit control over ll prmeters"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:909
+#: 3db4a4d5b2b2421b8378c37336d36fb2
+msgid "Building custom workflows from scratch"
+msgstr "ساخت custom wیاkflows from scrtch"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:910
+#: 3dc57e3d7f05478bb7176504d0696782
+msgid "Testing specific parameter combinations"
+msgstr "Testing specific prmeter combintions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:912
+#: 0246f085c0b94cf5b8f09022ba5e3140
+msgid "**Use powerups when**:"
+msgstr "**Use powerups when**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:913
+#: 995dc73b762c4ae694943b90becd0006
+msgid "Modifying existing workflows"
+msgstr "Modifying existing wیاkflows"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:914
+#: 21c1c6c550fc4657bb98054607146587
+msgid "Fine-tuning parameters for specific runs"
+msgstr "Fine-tuning prmeters برای specific runs"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:915
+#: 04ef66f42839444cb3134cc3a74640f2
+msgid "Overriding parameters without recreating makers"
+msgstr "Overriding prmeters باout recreting mkers"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:917
+#: b3a08887de1543328d67debfa8db3216
+msgid "**Use tier presets when**:"
+msgstr "**Use tier presets when**:"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:918
+#: 9417810196664535858a6971440aec5b
+msgid "Running production calculations"
+msgstr "اجرای production clcultions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:919
+#: e7df98ddee0945eea40148e471baf1a3
+msgid "Want validated parameter combinations"
+msgstr "Wnt vlidted prmeter combintions"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:920
+#: 2ae0d099b2b140a7a19d0df99cad8728
+msgid "Using material-specific settings (2D, surfaces, magnetic)"
+msgstr "استفاده از mteril-specific settings (2D, surfces, mgnetic)"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:921
+#: d978529ad4ee4d3c862a871af3404299
+msgid "Need reproducible, documented workflows"
+msgstr "Need reproducible, documented wیاkflows"
+
+#: ../../source/tutorials-md/02-workflows/02-equation-of-states/02-EOSBasisConvergenceFlowMakere/README.md:925
+#: a36ff9f245634945a2bac599173a695f
+msgid ""
+"*Tutorial created: 2024-10-22* *Last updated: 2025-11-14* *Back to "
+"[Advanced Workflows](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

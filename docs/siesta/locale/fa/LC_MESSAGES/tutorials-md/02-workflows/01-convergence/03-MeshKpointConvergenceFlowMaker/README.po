@@ -1,0 +1,1200 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:1
+#: 1a6196ea9cda4ba987b5d143828803b9
+msgid "Tutorial: K-Points and Mesh Cutoff Convergence"
+msgstr "آموزش: K-Points و Mesh Cutoff همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:3
+#: ab963b7b2fb0479383cafa9314363c41
+msgid ""
+"**Category**: 02-convergence **Difficulty**: Beginner **Time**: ~5 min "
+"(dry-run), ~10-20 min (single), ~20-30 min (combined)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:9
+#: 1b1d5902a7f84c70b3a2c84f12569e23
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:11
+#: 48798f0a217d4f4cb7d3f11a8ca2acd4
+msgid ""
+"Systematic convergence studies for SIESTA computational parameters. "
+"Determine optimal k-point mesh density and real-space grid cutoff for "
+"accurate total energies with minimal computational cost."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:13
+#: a2e979fb653e401599b1179c3a181822
+msgid ""
+"This tutorial consolidates convergence examples into a single workflow "
+"with 3 configurations."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:17
+#: 7cf1c9b2757d42dfb4ac0589720e6dbb
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:19
+#: 3af113593ce34995aaeddb9ccff8248c
+msgid "Mesh cutoff convergence (real-space grid fineness)"
+msgstr "Mesh cutoff convergence (rel-spce grid fineness)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:20
+#: 073cd31557d34505b27f15d2509d3742
+msgid "K-point convergence (Brillouin zone sampling)"
+msgstr "K-point convergence (Brillouin zone smpling)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:21
+#: e723fe5215ae42a699132fd30e18dcb2
+msgid "Combined convergence workflow (best practice)"
+msgstr "Combined convergence wیاkflow (best prctice)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:22
+#: 11ec9a98612a4281894df17b2c88cfdb
+msgid "Energy convergence criteria (meV/atom)"
+msgstr "Energy convergence criteri (meV/tom)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:23
+#: f78a55173e7f4c2689dab4fc62f9f5d1
+msgid "Automatic convergence plotting"
+msgstr "Automtic convergence plotting"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:27
+#: 64e0162a72d342f1a01badb197e2298b
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:29
+#: 39b06cd95f5747e3aee7ad2765ea10f0
+msgid "**Required**: [01-relaxation](../../01-basics/01-relaxation/) completed"
+msgstr "**مورد نیاز**: [01-relxtion](../../01-bsics/01-relxtion/) completed"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:30
+#: 5f30633fa23543c0a68d1792839702d8
+msgid "**Recommended**: Basic understanding of DFT parameters"
+msgstr "**Recommended**: Bsic understوing of DFT prmeters"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:34
+#: ed2f42e7f14f4144bec1fa7bf181b849
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:36
+#: e942371e455c42b3934d719fdf64524d
+msgid "Mesh Cutoff (Mesh.Cutoff)"
+msgstr "Mesh Cutoff (Mesh.Cutoff)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:38
+#: 0b73035d0fff4c17ab5a48245f54a30b
+msgid ""
+"**Purpose**: Controls fineness of real-space grid for representing "
+"wavefunctions"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:40
+#: bae5a3d48f744472a138d0e97843f969
+msgid "**Units**: Ry (Rydberg) or eV **Conversion**: 1 Ry = 13.6057 eV"
+msgstr "**Units**: Ry (Rydberg) یا eV **Conversion**: 1 Ry = 13.6057 eV"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:43
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:56
+#: 2cd5b625f91e427d8ec2b46bf2d68a48 c9f2fd7d681d46ad887747887f498690
+msgid "**Effect**:"
+msgstr "**Effect**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:44
+#: 6909db7ba3644f8f93a45afd3f0cbb36
+msgid "Higher cutoff = finer grid = more accurate"
+msgstr "Higher cutoff = finer grid = mیاe ccurte"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:45
+#: 58f01057f28645a39d25bcd0ed4fa06c
+msgid "Computational cost scales as O(N_grid)"
+msgstr "Computtionl cost scles s O(N_grid)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:46
+#: db98914ab94c4968a55459b5d871c160
+msgid "Typical range: 100-500 Ry"
+msgstr "Typicl rnge: 100-500 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:48
+#: 38850648a52a4727b73c4bd67443a951
+msgid "**Convergence**: Energy change < 1-5 meV/atom between successive values"
+msgstr "**همگرایی**: Energy chnge < 1-5 meV/tom between successive vlues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:50
+#: 6a1b4a8bcf0c47e881af99076d45adbb
+msgid "K-Points (kpts)"
+msgstr "K-Points (kpts)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:52
+#: 9114f873ca454411af2c7d0b6b61bda0
+msgid "**Purpose**: Samples Brillouin zone for integration over k-space"
+msgstr "**Purpose**: Smples Brillouin zone برای integrtion over k-spce"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:54
+#: 9601ccafccde495a8a974a82c933058c
+msgid ""
+"**Specification**: [nx, ny, nz] - divisions along reciprocal lattice "
+"vectors"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:57
+#: 36b1a606a1df4791bfeb7d80e0475ecf
+msgid "Denser mesh = better integration = more accurate"
+msgstr "Denser mesh = better integrtion = mیاe ccurte"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:58
+#: f0040e7c61124ef3b3f49947844d71a7
+msgid "Cost scales linearly with total k-points"
+msgstr "Cost scles linerly با totl k-points"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:59
+#: 620589ff96e4442a830ddbb8fccc49b1
+msgid "Metals require denser sampling than insulators"
+msgstr "Metls require denser smpling thn insultیاs"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:61
+#: 8f6e613a0a4145ab9be2e6c8d156ca50
+msgid "**Convergence**: Energy change < 1-5 meV/atom between successive grids"
+msgstr "**همگرایی**: Energy chnge < 1-5 meV/tom between successive grids"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:63
+#: 8a8c9822e2334403b92a51d572e672f5
+msgid "Combined Convergence (Best Practice)"
+msgstr "Combined همگرایی (Best Prctice)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:65
+#: b3cfb749c4e84ea1b28ee4d62a31b78d
+msgid "**Correct order**:"
+msgstr "**Cیاrect یاder**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:66
+#: b1678e7997114380a74069e50bad0a5e
+msgid "**First**: Converge mesh cutoff with moderate k-points (e.g., 4×4×4)"
+msgstr "**First**: Converge mesh cutoff با moderte k-points (e.g., 4×4×4)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:67
+#: 4262bdd9fa474e5a8e5b6df9ad988df7
+msgid "**Second**: Converge k-points with converged cutoff"
+msgstr "**Second**: Converge k-points با converged cutoff"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:69
+#: d0cfa76214d74b0aa607cab8867354e8
+msgid "**Why this order?**"
+msgstr "**Why this یاder?**"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:70
+#: 7c5c9cf44edc46a98fda4fe3dc7c2635
+msgid "Cutoff affects basis set quality"
+msgstr "Cutoff ffects bsis set qulity"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:71
+#: db79ac1abdf74fa197815edaf1f86d4a
+msgid "K-points affect numerical integration"
+msgstr "K-points ffect numericl integrtion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:72
+#: cfd6a67c7b1043f093ffedfac7cdda0a
+msgid "Cutoff convergence is less sensitive to k-points than vice versa"
+msgstr "Cutoff convergence is less sensitive to k-points thn vice vers"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:76
+#: f4ee4794b24e4539849c3ab990933f7d
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:78
+#: 004a1222bf2e4e8799a5bb55517b1419
+msgid "Example Types"
+msgstr "مثال Types"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:80
+#: 5d79c02564d347e8acccab3b6300ce72
+msgid "1. Mesh Cutoff Only"
+msgstr "1. Mesh Cutoff Only"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:84
+#: ba5bc0e9c7bf4578ac0f0330997d956d
+msgid "Test range: 100-400 Ry (steps of 50 Ry)"
+msgstr "Test rnge: 100-400 Ry (steps of 50 Ry)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:85
+#: 92fc51f88e414cfea106717001d8cda3
+msgid "Fixed k-points: [4, 4, 4]"
+msgstr "Fixed k-points: [4, 4, 4]"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:86
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:97
+#: 091e25bfd2c240959982a83cc99f3219 67d89d9ca0764a8ebefcbca86b9bf564
+msgid "~10-15 minutes runtime"
+msgstr "~10-15 minutes runtime"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:87
+#: e13bf1743b444ef8998c17526d7c96ed
+msgid "Output: `convergence_mesh_cutoff.png`"
+msgstr "Output: `convergence_mesh_cutoff.png`"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:89
+#: 8cc5f7d2f1254d2e94196fa7e7eea9ff
+msgid "**Use when**: Testing real-space grid convergence only"
+msgstr "**Use when**: Testing rel-spce grid convergence only"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:91
+#: fcdb17bcdd8347dfa748fa075039f0d2
+msgid "2. K-Points Only"
+msgstr "2. K-Points Only"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:95
+#: c5788943605b44558fd7c45db46fe1ac
+msgid "Test range: 2×2×2 to 12×12×12"
+msgstr "Test rnge: 2×2×2 to 12×12×12"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:96
+#: 6b48ba584d0141258713cd904b5f14f4
+msgid "Fixed cutoff: 300 Ry"
+msgstr "Fixed cutoff: 300 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:98
+#: 44640e771f3a46e59dbbd436b6dcfd9f
+msgid "Output: `convergence_kpoints.png`"
+msgstr "Output: `convergence_kpoints.png`"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:100
+#: e56c97937a98451e963c76ec9098d538
+msgid "**Use when**: Testing Brillouin zone sampling only"
+msgstr "**Use when**: Testing Brillouin zone smpling only"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:102
+#: d7f58ff95dc54b55974ef4261a532919
+msgid "3. Combined (RECOMMENDED)"
+msgstr "3. Combined (RECOMMENDED)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:106
+#: a4b65e63d8fb4588b41ef3b608380b22
+msgid "Sequential: mesh cutoff → k-points"
+msgstr "Sequentil: mesh cutoff → k-points"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:107
+#: 531d29ee762847bab85bee16292ab024
+msgid "Complete convergence study"
+msgstr "Complete convergence study"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:108
+#: 47a7a0c39a38497ea0180841bd56b529
+msgid "~20-30 minutes runtime"
+msgstr "~20-30 minutes runtime"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:109
+#: 7052e4163fd84eff9d8201ee8bce6a18
+msgid "Outputs: Both plots"
+msgstr "Outputs: Both plots"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:111
+#: 7c2eca3460eb4df587f3174999e986e7
+msgid "**Use for**: Production parameter determination"
+msgstr "**Use برای**: Production prmeter determintion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:115
+#: e97995d55e844833bf00a445fb0dfcab
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:133
+#: 52858a93e4a7474988ad022cefe95aed
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:135
+#: ed4468e837244047be7d47fc945ead1a
+msgid "Convergence Plots"
+msgstr "همگرایی Plots"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:137
+#: 5e02251548104e4287bcdf1c98ce7e43
+msgid "Each plot has **two panels**:"
+msgstr "Ech plot hs **two pnels**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:139
+#: dee5ba19bef44956b59033927486e30b
+msgid "**Top Panel**: Total Energy vs Parameter"
+msgstr "**Top Pnel**: Totl Energy vs Prmeter"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:140
+#: c9ad0ce77fd1411b8b404b8c0d5f950a
+msgid "Shows absolute energies"
+msgstr "Shows bsolute energies"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:141
+#: abcc9ab56a3a41d2a5139c28d4e67580
+msgid "Look for flattening curve"
+msgstr "Look برای flttening curve"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:143
+#: 6f672411d3a44424b470b7ef94ef5e6a
+msgid "**Bottom Panel**: Energy Difference vs Parameter"
+msgstr "**Bottom Pnel**: Energy Difference vs Prmeter"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:144
+#: ac197dbbbdc2497694fd78ae8fcb0a30
+msgid "Energy change relative to finest calculation"
+msgstr "Energy chnge reltive to finest clcultion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:145
+#: d89f2a74f0e7436ea51512c49a40628d
+msgid "Convergence criteria marked with horizontal lines:"
+msgstr "همگرایی criteri mrked با hیاizontl lines:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:146
+#: c3c67bd7bc1149dca910b24366f42128
+msgid "**Green line** (1 meV): Tight convergence"
+msgstr "**Green line** (1 meV): Tight convergence"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:147
+#: 8da3f5cd26c04c29b38e8e62758f0fc1
+msgid "**Orange line** (5 meV): Standard convergence"
+msgstr "**Ornge line** (5 meV): Stوrd convergence"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:149
+#: b40c085502ee4791b128db38b5ac4ab0
+msgid "Choosing Converged Values"
+msgstr "Choosing Converged Vlues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:151
+#: e429b8ac82b54047a27fa6b6d72cd49a
+msgid "**Example interpretation**:"
+msgstr "**مثال interprettion**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:165
+#: d75a3d0e2d37427a96a5917bad261e84
+msgid "Convergence Criteria"
+msgstr "همگرایی Criteri"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:167
+#: 057a5035b4494e40aba770ba93157d7b
+msgid "By Application"
+msgstr "By Appliction"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 633089a6fe3f4b0ab3b58f864e3b4bb9
+msgid "Application"
+msgstr "Appliction"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 5bfd856eabc24361814b1baf5cd98ca2
+msgid "Criterion"
+msgstr "Criterion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 7f42acd5e4b94626b3071d2e690e4386
+msgid "Example"
+msgstr "مثال"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 43407279925e4d60a8642a23cd755056
+msgid "Qualitative"
+msgstr "Qulittive"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 626c8f7e3e2a47e08337c953454aa2dc
+msgid "< 10 meV/atom"
+msgstr "< 10 meV/tom"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: d5ebe846ffe44e48a4791060a30d1af8
+msgid "Structure screening"
+msgstr "Structure screening"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 6bd335a998ca4f808ed00cd55be25159
+msgid "Standard"
+msgstr "Stوrd"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 92f5b299c5d74f8b9a4c127e0fdd3be5
+msgid "< 5 meV/atom"
+msgstr "< 5 meV/tom"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 49d2f3b50fe747b2bbf473a18f5acbdb
+msgid "Most calculations"
+msgstr "Most clcultions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: c7331429d4774fe7bee043f55f2b1182
+msgid "High accuracy"
+msgstr "High ccurcy"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 0e958aef728d4599a5966c75a6fbfd61
+msgid "< 1 meV/atom"
+msgstr "< 1 meV/tom"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 51e03358167b41ea8f373dff61401aa1
+msgid "Reaction energies"
+msgstr "Rection energies"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: fa1b338efc7241869c36b36234e93a4e
+msgid "Publication"
+msgstr "Publiction"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 3d82ee36967e476097de85065c4e331b
+msgid "< 0.5 meV/atom"
+msgstr "< 0.5 meV/tom"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 71fddace48ab4160a1c957afe973bdd1
+msgid "Benchmark data"
+msgstr "Benchmrk dt"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:176
+#: c01949f4d08545519b5a7e5a86bb0c38
+msgid "Material-Specific Guidelines"
+msgstr "Mteril-Specific Guidelines"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:178
+#: 2473f40902284aaba5a52e308f5ea9b0
+msgid "**Metals**:"
+msgstr "**Metls**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:179
+#: b8ca8bf3996147c9b20fc2faffa7bfe8
+msgid "Mesh cutoff: 250-350 Ry"
+msgstr "Mesh cutoff: 250-350 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:180
+#: 35219c2184454b30a2b5faf449662fc4
+msgid "K-points: 8×8×8 or denser"
+msgstr "K-points: 8×8×8 یا denser"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:181
+#: afef938e11824a63a9c757a4a8db4be4
+msgid "Use Fermi smearing (OccupationFunction: MP)"
+msgstr "Use Fermi smering (OccuptionFunction: MP)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:183
+#: 5695bfccbefe4ea4b548ddf5340623a5
+msgid "**Insulators/Semiconductors**:"
+msgstr "**Insultیاs/Semiconductیاs**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:184
+#: fda14844d074465aa6cd386cd2f092af
+msgid "Mesh cutoff: 200-300 Ry"
+msgstr "Mesh cutoff: 200-300 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:185
+#: 56bdc55911aa40bcbe5e57d0f49cc181
+msgid "K-points: 4×4×4 to 6×6×6"
+msgstr "K-points: 4×4×4 to 6×6×6"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:186
+#: 4e369507b542471ca9e6d0b9c206eaa2
+msgid "Standard settings sufficient"
+msgstr "Stوrd settings sufficient"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:188
+#: b6df62571fd64000a5dfb26c3c2373b4
+msgid "**Molecular Systems**:"
+msgstr "**Moleculr Systems**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:189
+#: 52b77cd12fc6484cbb10bf93c7f73eb7
+msgid "Mesh cutoff: 300-400 Ry (localized orbitals)"
+msgstr "Mesh cutoff: 300-400 Ry (loclized یاbitls)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:190
+#: a43df1891abe4665befd83745f6a1335
+msgid "K-points: Γ-point only (if isolated molecule)"
+msgstr "K-points: Γ-point only (if isolted molecule)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:192
+#: 4687a9ec46f44b6e905eb8269b5b7019
+msgid "**Surfaces/Slabs**:"
+msgstr "**Surfces/Slbs**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:193
+#: 68d6f6dd8c6544c28aaeb9ce7b439143
+msgid "Mesh cutoff: Same as bulk"
+msgstr "Mesh cutoff: Sme s bulk"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:194
+#: a230251eba6f40eaabda0fe87f65be22
+msgid "K-points: Dense in xy, Γ in z (e.g., [6,6,1])"
+msgstr "K-points: Dense in xy, Γ in z (e.g., [6,6,1])"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:198
+#: e95a78e2db434548bb22efb03ac04189
+msgid "Typical Converged Values"
+msgstr "Typicl Converged Vlues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:200
+#: 4adc22be0a434d45aede6b1bdddbb385
+msgid "Silicon (this tutorial)"
+msgstr "Silicon (this tutیاil)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:202
+#: 241c9204dbec4334b57e9331770ef020
+msgid "**Mesh cutoff**: 250-300 Ry"
+msgstr "**Mesh cutoff**: 250-300 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:203
+#: 43d765fd7f454feb9929e041e309c9c3
+msgid "**K-points**: 6×6×6 to 8×8×8"
+msgstr "**K-points**: 6×6×6 to 8×8×8"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:204
+#: 09f34e9bc6304ae2ac5ad61d272d452e
+msgid "**Energy**: ~-214 eV (total, 2 atoms)"
+msgstr "**Energy**: ~-214 eV (totl, 2 toms)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:206
+#: de6acdf6659c4f3fae3ce839037af5be
+msgid "Other Materials"
+msgstr "Or Mterils"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: fbddc93d53a84f12ae230a09301cfb16
+msgid "Material"
+msgstr "Mteril"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 75ea31f2d20b48aabb69b725ac0628db
+msgid "Mesh Cutoff"
+msgstr "Mesh Cutoff"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 17bd2c312cc349b3a941ea4972b532db
+msgid "K-points"
+msgstr "K-points"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: a1f2adfa5ecb44d289e01a57e43b85e9
+msgid "Notes"
+msgstr "توجهs"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: f6b3921c065647618bcdd343f8954fe3
+msgid "Al (metal)"
+msgstr "Al (metl)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 539ad136560c43a58cea604afc500585 dc40c72d0bc04137a76e179e748e254c
+msgid "300 Ry"
+msgstr "300 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 846097f4589d4ec8adfb20bc78a4db32
+msgid "10×10×10"
+msgstr "10×10×10"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: a4052f955fe545debce0bc9c18f22853
+msgid "Dense k-mesh needed"
+msgstr "Dense k-mesh needed"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 1298a62a81d0428f81e9b76fdf73330d
+msgid "NaCl (ionic)"
+msgstr "NCl (ionic)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: e83182b5147f4d1aa5bf21f0054c8d98
+msgid "250 Ry"
+msgstr "250 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 1223dbf10f6d41a995d8b2141ad242f4
+msgid "6×6×6"
+msgstr "6×6×6"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 96e77052f53549858bcad7db07729730
+msgid "Moderate settings"
+msgstr "Moderte settings"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 1144eca333884f998dd48bc6c9b9e2f1
+msgid "Graphene"
+msgstr "Grphene"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 27544c9ccb424cbb9aac1627a2fdb3dc
+msgid "350 Ry"
+msgstr "350 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 8b3480df328d4adaa3f60f91c437a1cc
+msgid "12×12×1"
+msgstr "12×12×1"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 0d09295a8ab04119b2af14c71b1b3902
+msgid "High cutoff, 2D"
+msgstr "High cutoff, 2D"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: a67c655694d84b608e820d0c7acaacf3
+msgid "Diamond"
+msgstr "Dimond"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 8f6471fa29df44fabb25b63d553f5ed2
+msgid "8×8×8"
+msgstr "8×8×8"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md
+#: 5ecd4d26630d4aa7b14efa83e4d5bd2e
+msgid "Stiff bonds"
+msgstr "Stiff bonds"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:217
+#: 9d3d0d09f0bb4696b3e5e5f860215784
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:219
+#: 2ed7b61dce4b4886b77f26dda1a4f93c
+msgid "Workflow Design"
+msgstr "گردش کار Design"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:221
+#: cfcccc61a4c44007958886961976ea6f
+msgid "**1. Start with combined convergence**:"
+msgstr "**1. Strt با combined convergence**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:226
+#: 538678e410784a6081507daa2497ce2a
+msgid "**2. Test systematically**:"
+msgstr "**2. Test systemticlly**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:227
+#: 44ac040cb49b4f6b916e72d022546f59
+msgid "Mesh cutoff: 100 → 150 → 200 → 250 → 300 → 350 → 400 Ry"
+msgstr "Mesh cutoff: 100 → 150 → 200 → 250 → 300 → 350 → 400 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:228
+#: 9ec4522f19314c3e87a187fa1b9698b5
+msgid "K-points: 2×2×2 → 3×3×3 → 4×4×4 → ... → 12×12×12"
+msgstr "K-points: 2×2×2 → 3×3×3 → 4×4×4 → ... → 12×12×12"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:230
+#: 9e01d84dd9494281b11d62240bff0963
+msgid "**3. Go beyond apparent convergence**:"
+msgstr "**3. Go beyond pprent convergence**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:231
+#: e46b9f9f797d401c8bc889acf51f0432
+msgid "Test 2-3 values past \"converged\" to confirm"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:232
+#: 51bf33856fe14cb58db07c20d82cde50
+msgid "Ensures you're on the plateau, not a local minimum"
+msgstr "Ensures you're on  plteu, not  locl minimum"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:234
+#: 9e80b319124740d282f0c299540fdf96
+msgid "Parameter Ranges"
+msgstr "Prmeter Rnges"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:236
+#: 09467d08acf641f88760740a6bd8c258
+msgid "**Mesh Cutoff Starting Values**:"
+msgstr "**Mesh Cutoff Strting Vlues**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:237
+#: be700a81e08e4b99bc8f88929ec15d76
+msgid "Light elements (H, C, N, O): Start 200 Ry"
+msgstr "Light elements (H, C, N, O): Strt 200 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:238
+#: ca7259f9bf8641bdb6ffdff24043d52f
+msgid "Medium elements (Si, Al): Start 150 Ry"
+msgstr "Medium elements (Si, Al): Strt 150 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:239
+#: 9b47d8c399de43f980aab46c135884a3
+msgid "Heavy elements: Start 100 Ry"
+msgstr "Hevy elements: Strt 100 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:241
+#: 21611afb4f0049b0be22f3d3f33b168c
+msgid "**K-Point Starting Values**:"
+msgstr "**K-Point Strting Vlues**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:242
+#: 8a5dc32942ca4e84ab15c283eef676b2
+msgid "Large cells (> 10 Å): Start 2×2×2"
+msgstr "Lrge cells (> 10 Å): Strt 2×2×2"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:243
+#: 97cbf04b9b714b56b8ff0d2557abc069
+msgid "Medium cells (5-10 Å): Start 4×4×4"
+msgstr "Medium cells (5-10 Å): Strt 4×4×4"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:244
+#: 9cd72f0584dc4abd803936d1ee422049
+msgid "Small cells (< 5 Å): Start 6×6×6"
+msgstr "Smll cells (< 5 Å): Strt 6×6×6"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:246
+#: 53a8f8169acd4b90a174963ab1b880f4
+msgid "Cost Considerations"
+msgstr "Cost Considertions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:248
+#: f03a397401d444349baeb5c8bd425ae7
+msgid "**Mesh Cutoff**:"
+msgstr "**Mesh Cutoff**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:249
+#: 21d7cfed6beb4ad5995eff5e57f77c94
+msgid "Increasing 100 → 200 Ry: ~4× slower"
+msgstr "Incresing 100 → 200 Ry: ~4× slower"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:250
+#: 871240a16bf7448fba0c0f5168bd723e
+msgid "Increasing 200 → 400 Ry: ~4× slower"
+msgstr "Incresing 200 → 400 Ry: ~4× slower"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:251
+#: ebd39c62fd7a436fa9c8b55d9d1f71d2
+msgid "Cost scales as (cutoff)³"
+msgstr "Cost scles s (cutoff)³"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:253
+#: ee91cfde96804be783e5cb0b0879850a
+msgid "**K-Points**:"
+msgstr "**K-Points**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:254
+#: 3490a54d88c54870b25fa692f52fbe00
+msgid "4×4×4 (64 k-points) → 6×6×6 (216 k-points): ~3.4× slower"
+msgstr "4×4×4 (64 k-points) → 6×6×6 (216 k-points): ~3.4× slower"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:255
+#: f5015dac9daf48a386fc95fc33a3a8e8
+msgid "Cost scales linearly"
+msgstr "Cost scles linerly"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:256
+#: dd0921cdfe8348a78e550d355d8ca026
+msgid "Use symmetry to reduce k-points automatically"
+msgstr "Use symmetry to reduce k-points utomticlly"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:258
+#: 9fb1dbce03784e0394acdec338156d70
+msgid "**Trade-off**:"
+msgstr "**Trde-off**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:259
+#: 16ce5a7118f440358cec03891283fb0a
+msgid "Tight convergence (< 1 meV): May double computational cost"
+msgstr "Tight convergence (< 1 meV): My double computtionl cost"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:260
+#: 0a14bd10f6dd48f895b09205cf035544
+msgid "Standard convergence (< 5 meV): Good balance"
+msgstr "Stوrd convergence (< 5 meV): Good blnce"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:261
+#: a036014fec3b42bd8df5fd13120f9d21
+msgid "Choose based on application needs"
+msgstr "Choose bsed on ppliction needs"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:265
+#: ab4ae2eabe494e92b8ea2fa4c7eabde4
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:267
+#: 15626b61a8074b99b21f251766abc382
+msgid "Issue 1: Energy Doesn't Converge"
+msgstr "Issue 1: Energy Doesn't Converge"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:269
+#: fdff9bff9e974bb0b8dfae52beeab3dd
+msgid "**Symptoms**: Energy keeps changing even at high values"
+msgstr "**Symptoms**: Energy keeps chnging even t high vlues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:271
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:285
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:303
+#: 2bd75a34f3ad47369853620a4899c690 99fb660f5ea247a98474069eafde2ac6
+#: d3356274ac3549a485f34c84c9610f1f
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:272
+#: 63c525a8cb054fd7996b8d76f4aea5f7
+msgid "Insufficient parameter range"
+msgstr "Insufficient prmeter rnge"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:273
+#: fbe98440bcc34d28906e4b6d23d8c819
+msgid "SCF not converging properly"
+msgstr "SCF not converging properly"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:274
+#: 349460c706ed41488c361cca9dadc62c
+msgid "Numerical instabilities"
+msgstr "Numericl instbilities"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:276
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:290
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:308
+#: 1d00bb23c4534ea1b66fbe528cda0e5a 228a218c78874146b27c1e1858fe86a0
+#: 4c87fd1a97704022a012cecee81a9d95
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:277
+#: bdc48f1c1c5e4329b595453f4c871a79
+msgid "Test even higher values (mesh cutoff up to 600 Ry)"
+msgstr "Test even higher vlues (mesh cutoff up to 600 Ry)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:278
+#: fc422378e60649129c19ff98562714bf
+msgid "Check SCF convergence in each calculation"
+msgstr "Check SCF convergence in ech clcultion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:279
+#: 98474c9920e647f7905fbdff3e095d72
+msgid "Verify structure is reasonable (no overlapping atoms)"
+msgstr "Verify structure is resonble (no overlpping toms)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:281
+#: 2c3b9ee64b904f27ac25eec8d0b65799
+msgid "Issue 2: Oscillating Energies"
+msgstr "Issue 2: Oscillting Energies"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:283
+#: a1d1bcae891e4d3e95719b59e6916212
+msgid "**Symptoms**: Energy goes up and down, not monotonic"
+msgstr "**Symptoms**: Energy goes up و down, not monotonic"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:286
+#: 69bf39925e9a4bfeb3ad546747234389
+msgid "SCF convergence issues"
+msgstr "SCF convergence issues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:287
+#: e410397fc13e4828976a6e2230c98b0f
+msgid "Insufficient SCF iterations"
+msgstr "Insufficient SCF itertions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:288
+#: b804359e0c044b22823bc68f274c4931
+msgid "Poor initial guess"
+msgstr "Poیا initil guess"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:299
+#: 476b96487c7e4ff1b9e7de9e40abfbf0
+msgid "Issue 3: Very Slow K-Point Convergence"
+msgstr "Issue 3: Very Slow K-Point همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:301
+#: 494826d307fa40bf9b49f938199bbc30
+msgid "**Symptoms**: Need very dense k-mesh (> 12×12×12)"
+msgstr "**Symptoms**: Need very dense k-mesh (> 12×12×12)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:304
+#: 9cf1de4e3184497791f972b6935d231e
+msgid "Metallic system (Fermi surface)"
+msgstr "Metllic system (Fermi surfce)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:305
+#: 4a7f0a63bec94992a5888d6bcba7444a
+msgid "Nearly-free electron states"
+msgstr "Nerly-free electron sttes"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:306
+#: 558be13ce4f64d6a81b149f04d064cfa
+msgid "Topological features"
+msgstr "Topologicl fetures"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:309
+#: c728fbb2dea9482794d11deb602753fb
+msgid "Add Fermi smearing:"
+msgstr "Add Fermi smering:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:315
+#: 33cb8b47040c439db4789d5e3e325cb5
+msgid "Check if system is actually metallic"
+msgstr "Check if system is ctully metllic"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:316
+#: 924675c864ed4f0192714bedc4a65272
+msgid "Consider using finer mesh for final calculations"
+msgstr "Consider using finer mesh برای finl clcultions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:318
+#: c00a506218c743b8a5e6aa9e8b45a433
+msgid "Issue 4: Different Results from Literature"
+msgstr "Issue 4: Different Results from Literture"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:320
+#: 2d5218e78f684097bdfef395d40e9419
+msgid "**Symptoms**: Converged values don't match published data"
+msgstr "**Symptoms**: Converged vlues don't mtch published dt"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:322
+#: a19cc50c9ee44d1d84ac8a0f2dab6bd3
+msgid "**Possible reasons**:"
+msgstr "**Possible resons**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:323
+#: 379911e5975e4850ac8bfeb61ba15122
+msgid "Different functional (GGA vs LDA)"
+msgstr "Different functionl (GGA vs LDA)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:324
+#: 537aa1b1326f41b3978a8f472000037c
+msgid "Different basis set (DZP vs TZP)"
+msgstr "Different bsis set (DZP vs TZP)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:325
+#: 6f1a57713eae4295b876b488f1f55298
+msgid "Different pseudopotentials"
+msgstr "Different pseudopotentils"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:326
+#: ec14c3c59d294f36b0b85fce70cea087
+msgid "Different structure (lattice parameters)"
+msgstr "Different structure (lttice prmeters)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:328
+#: b9303722ad0549cfbaf1e6509a83a9bd
+msgid "**Verification**:"
+msgstr "**Verifiction**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:329
+#: ce92d02adfca45e48a56193ff95559cb
+msgid "Check functional used: `xc: \"GGA\"` or `\"LDA\"`"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:330
+#: 6a2f03d80f514094aca80939d88e7b19
+msgid "Compare basis: `PAO.BasisSize: \"DZP\"` vs `\"TZP\"`"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:331
+#: 4c1a2f6331bd4ee99d35b4c3a3dc79db
+msgid "Verify structure matches literature"
+msgstr "Verify structure mtches literture"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:332
+#: 3ff67ceae0bf4250af2ec3df8ffa9dfd
+msgid "Check pseudopotential library"
+msgstr "Check pseudopotentil librry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:336
+#: cbad233e59e04adaafa3617ed86223e0
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:338
+#: 823505854d4f4d0abfd06aa9b11f1456
+msgid "Anisotropic K-Point Meshes"
+msgstr "Anisotropic K-Point Meshes"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:340
+#: e549bd9a8b5949a0a55e4ef6525582ae
+msgid "For non-cubic systems or surfaces:"
+msgstr "Fیا non-cubic systems یا surfces:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:350
+#: e40be7ef48794b66a1a206881bd2c9c3
+msgid "Basis Set Convergence"
+msgstr "Bsis Set همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:352
+#: 14a0d269244e4d889ac240065b6865fd
+msgid "Also test basis set (separate tutorial):"
+msgstr "Also test bsis set (seprte tutیاil):"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:358
+#: 9fdddf88736e4f3b9a6121af0ab904cd
+msgid "Force Convergence"
+msgstr "Fیاce همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:360
+#: df32668622864301a9e1afb744e0bae8
+msgid "For geometry optimization, also converge forces:"
+msgstr "Fیا geometry optimiztion, lso converge برایces:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:361
+#: ad4cfd50aac9441ca0790b4751afa469
+msgid "Forces more sensitive than energies"
+msgstr "Fیاces mیاe sensitive thn energies"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:362
+#: 405e740a12b143408bb8c362d6bdd042
+msgid "Need tighter convergence (< 0.001 eV/Å)"
+msgstr "Need tighter convergence (< 0.001 eV/Å)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:363
+#: ff24b400cdf7429aa6448e62752ed1cc
+msgid "Important for phonons, NEB calculations"
+msgstr "مهم برای phonons, NEB clcultions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:367
+#: d1c423132fec4eab81a10e89df0eded6
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:369
+#: 072aa377f8c945a5a322592e41932ace
+msgid "✅ **Use combined convergence**: Most thorough approach"
+msgstr "✅ **Use combined convergence**: Most thیاough pproch"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:371
+#: 4bbca702e8cc4d168dd7627912d57b99
+msgid "✅ **Start with dry_run**: Check setup before long calculations"
+msgstr "✅ **Strt با dry_run**: Check setup beبرایe long clcultions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:373
+#: d4a424c7f3e9435d87b0e997afeb1faa
+msgid "✅ **Test systematically**: Don't skip intermediate values"
+msgstr "✅ **Test systemticlly**: Don't skip intermedite vlues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:375
+#: fc97da4910d543bfa7c84a3afbefa570
+msgid "✅ **Go beyond convergence**: Confirm you're on plateau"
+msgstr "✅ **Go beyond convergence**: Confirm you're on plteu"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:377
+#: 26041de963414fc4b43ccf209795aef1
+msgid "✅ **Document your criteria**: Record convergence threshold used"
+msgstr "✅ **Document your criteri**: Recیاd convergence threshold used"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:379
+#: 57b5ac44161a4a48b3401eeeaa730bf8
+msgid "✅ **Balance cost vs accuracy**: Not all applications need < 1 meV"
+msgstr "✅ **Blnce cost vs ccurcy**: Not ll pplictions need < 1 meV"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:381
+#: e49f2c9e95b24e2492ed7f0ed1bc1e05
+msgid "✅ **Check SCF convergence**: Every single calculation must converge"
+msgstr "✅ **Check SCF convergence**: Every single clcultion must converge"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:383
+#: 334b85d3fd7144dda6ce89e402b73b4d
+msgid "✅ **Compare with literature**: When available for your material"
+msgstr "✅ **Compre با literture**: When vilble برای your mteril"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:385
+#: 288c97371fe04f799751a92e9f1d5a47
+msgid "✅ **Save convergence plots**: Include in your documentation"
+msgstr "✅ **Sve convergence plots**: Include in your documenttion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:387
+#: 0817d18d8cbe44dfbad270d99517e3f4
+msgid "✅ **Reuse converged values**: For similar systems/properties"
+msgstr "✅ **Reuse converged vlues**: Fیا similr systems/properties"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:391
+#: 5d6f8ec727614332ac252cde42f83af1
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:393
+#: 7591461cde294a919f6bf314e956bfad
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:395
+#: 16170bc0a05a47de96e4238fc13cb2f7
+msgid ""
+"**Basic Usage**: → Run combined convergence for Silicon → Examine both "
+"convergence plots → Identify converged values"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:400
+#: fd40edb6e8834e72ae72fc05aaa2985b
+msgid ""
+"**Apply to Your System**: → Use same workflow for your material → Adjust "
+"parameter ranges as needed → Metal? Use denser k-points + smearing"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:405
+#: 9495c79b85ec4c92821d4274d9f632df
+msgid ""
+"**Other Parameters**: → Basis set convergence (tutorial 02-basis-"
+"parameters) → PAO.EnergyShift convergence → Complete parameter "
+"optimization"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:410
+#: 24d72164d550411287495c5ecb6cbb87
+msgid ""
+"**Use Converged Values**: → Apply to relaxation calculations → Use for "
+"phonon calculations → Production calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:417
+#: 17ed69ad25a24c43a1212ca6dfe8fa85
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:419
+#: 1b2a82b5f2184ec0b430f58d0907ebd5
+msgid ""
+"**SIESTA Manual**: Sections on MeshCutoff and k-points https://siesta-"
+"project.org/SIESTA_MATERIAL/Docs/Manuals/siesta.pdf"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:422
+#: 526ec426c2414d079f67468109a2c50f
+msgid "**Convergence Theory**:"
+msgstr "**همگرایی Theیاy**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:423
+#: 19f926e9f1044b9aa764e0256b2f8543
+msgid ""
+"Monkhorst, H. J. & Pack, J. D. (1976). \"Special points for Brillouin-"
+"zone integrations.\" *Phys. Rev. B* 13, 5188."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:425
+#: 53e7e7ce66f84dc9a543d6ee91c7ea79
+msgid "**Practical Guides**:"
+msgstr "**Prcticl Guides**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:426
+#: 59ab6198679c4e45806d912d5f279918
+msgid "SIESTA tutorials: https://docs.siesta-project.org/projects/tutorials/"
+msgstr "SIESTA tutorials: https://docs.siesta-project.org/projects/tutorials/"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/03-MeshKpointConvergenceFlowMaker/README.md:430
+#: 3b1d3b9487a941d18d7c06be5497599b
+msgid ""
+"*Back to [02-convergence](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

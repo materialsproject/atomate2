@@ -1,0 +1,958 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:1
+#: 2992553399fb41789e30388e483b2efa
+msgid "Interactive Jupyter Notebooks"
+msgstr "Interctive Jupyter توجهbooks"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:3
+#: 22c24e4e74f54d31a4586341fd9eaa12
+msgid ""
+"Interactive tutorials for hands-on learning with atomate2siesta. These "
+"notebooks allow you to experiment with parameters, visualize results in "
+"real-time, and learn by doing."
+msgstr ""
+
+#: ../../source/tutorials-md/04-notebooks/README.md:5
+#: d8f2998ad8ff49e9a84aadc1f76a7e4a
+msgid "Why Notebooks?"
+msgstr "Why توجهbooks?"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:7
+#: 27511af73c24485c9b216b375657397c
+msgid "**Interactive**: Modify code and see results immediately"
+msgstr "**Interctive**: Modify code و see results immeditely"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:8
+#: d6ab77f938f745e5a83da65068ac5ec4
+msgid "**Visual**: Embedded plots and visualizations"
+msgstr "**Visul**: Embedded plots و visuliztions"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:9
+#: edb38aacefbc4680aba021924846c7fb
+msgid "**Educational**: Explanations alongside executable code"
+msgstr "**Eductionl**: Explntions longside executble code"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:10
+#: e5f27011289f4235834a9b69480c8f15
+msgid "**Exploratory**: Try different parameters easily"
+msgstr "**Explیاtیاy**: Try different prmeters esily"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:11
+#: 86f89ae4564a43cc8e9392538fb31c32
+msgid "**Self-paced**: Work through at your own speed"
+msgstr "**Self-pced**: Wیاk through t your own speed"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:13
+#: 9a3860f204324388901a0258003c14a4
+msgid "Installation"
+msgstr "Instlltion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:15
+#: cc98daabd4c1464bb8831d81c87b4ff8
+msgid "To use these notebooks, you need Jupyter:"
+msgstr "To use se notebooks, you need Jupyter:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:22
+#: c2fee0130e374bffa42eae016de7aa87
+msgid "Optional recommended packages:"
+msgstr "اختیاری recommended pckges:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:27
+#: ccce7f659d9446edbfd102e78186bbc1
+msgid "Running Notebooks"
+msgstr "اجرای توجهbooks"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:29
+#: 6839827455db4bfd9606fb5934f3fcd2
+msgid "Local Execution"
+msgstr "Locl Execution"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:41
+#: ed1819c38722495a9e4955660dc52784
+msgid "Google Colab"
+msgstr "Google Colb"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:42
+#: 1658daf0feb445499151cadba929b84e
+msgid ""
+"Upload notebooks to Google Colab for cloud execution (no local "
+"installation needed)."
+msgstr ""
+
+#: ../../source/tutorials-md/04-notebooks/README.md:44
+#: 05aaac58641443769b263491102cfc8a
+msgid "Available Notebooks"
+msgstr "Avilble توجهbooks"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:46
+#: 89b6965bb1424cee9c9241e8af492f3e
+msgid "00_interactive_quickstart.ipynb"
+msgstr "00_interctive_quickstrt.ipynb"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:47
+#: e9d53f9545f140d897ad05f21b3bd507
+msgid "**First Steps with atomate2siesta**"
+msgstr "**First Steps با tomte2siest**"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:48
+#: 77c163469f9144288cbb12dd8c0eacb4
+msgid "Your first calculation in notebook format"
+msgstr "Your first clcultion in notebook برایmt"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:49
+#: 4fb38d87d365491587ee68fae48a88f5
+msgid "Interactive parameter exploration"
+msgstr "Interctive prmeter explیاtion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:50
+#: a08dcad689f142dc98b0fc42356eb98f
+msgid "Real-time result visualization"
+msgstr "Rel-time result visuliztion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:51
+#: b10c3cd1f79845fd8bf3fa8175553bfd
+msgid "Estimated time: 15 minutes"
+msgstr "Estimted time: 15 minutes"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:53
+#: 8db29598966a4886adf54e10fea57855
+msgid "01_basics_interactive.ipynb"
+msgstr "01_bsics_interctive.ipynb"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:54
+#: 37e43fc8ffd94c6288589f625e8837b2
+msgid "**Core Workflows**"
+msgstr "**Cیاe گردش کارs**"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:55
+#: 2779510060a14343be0e80659f57f372
+msgid "Relaxation calculations"
+msgstr "Relxtion clcultions"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:56
+#: c8f8f3c419ac4c958ae21c182a204b56
+msgid "Band structure"
+msgstr "Bو structure"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:57
+#: ea5f2dc7745f4a3aaed142129ae02d15
+msgid "Electronic properties"
+msgstr "Electronic properties"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:58
+#: c314ebaa472e4e9381a2ae3541782935
+msgid "Interactive examples with widgets"
+msgstr "Interctive exmples با widgets"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:59
+#: ../../source/tutorials-md/04-notebooks/README.md:83
+#: cf065a0427534c0a9133f39cbf82b84b e1accc5492ca48d1bc68820310bbf4c8
+msgid "Estimated time: 30 minutes"
+msgstr "Estimted time: 30 minutes"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:61
+#: 7a4a858d5ea64f50a01798a2a95a9e1e
+msgid "02_convergence_visualization.ipynb"
+msgstr "02_convergence_visuliztion.ipynb"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:62
+#: 1b7875bfe10445168cadbdf61d08959c
+msgid "**Parameter Convergence Studies**"
+msgstr "**Prmeter همگرایی Studies**"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:63
+#: a654aa69fba74adc9769f1019c346ead
+msgid "Interactive convergence testing"
+msgstr "Interctive convergence testing"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:64
+#: f48a3ec268df4909beafdac262e72c37
+msgid "k-point and cutoff convergence"
+msgstr "k-point و cutoff convergence"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:65
+#: 63853d71121440fb9bce882fe5352efe
+msgid "Real-time plotting"
+msgstr "Rel-time plotting"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:66
+#: 6dd59ab898cf40bb98bec4058b333cad
+msgid "Parameter recommendation widgets"
+msgstr "Prmeter recommendtion widgets"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:67
+#: ../../source/tutorials-md/04-notebooks/README.md:99
+#: af25e6f2855942e6ac4bf390c9066ed2 e47e9b0febc949afbd1752666cdb6219
+msgid "Estimated time: 25 minutes"
+msgstr "Estimted time: 25 minutes"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:69
+#: 79b082745a1646438ec9f47687d6161b
+msgid "03_phonon_analysis.ipynb"
+msgstr "03_phonon_nlysis.ipynb"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:70
+#: fd2b929c99d346b68b456585f3f6ff00
+msgid "**Vibrational Properties**"
+msgstr "**Vibrtionl Properties**"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:71
+#: c81f913d3a9d49c28d1c425f3e72d009
+msgid "Phonon calculations setup"
+msgstr "فونون clcultions setup"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:72
+#: 3a0ad628672741679f3d682aca049aaf
+msgid "Band structure visualization"
+msgstr "Bو structure visuliztion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:73
+#: e232874ec25a45f9b4181edb3f7e025a
+msgid "Mode analysis and animation"
+msgstr "Mode nlysis و nimtion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:74
+#: 6d6deddbcb014a799d2643512542afb5
+msgid "Thermal properties plotting"
+msgstr "Therml properties plotting"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:75
+#: de84dc1068cc4653b170521a551c74d1
+msgid "Estimated time: 35 minutes"
+msgstr "Estimted time: 35 minutes"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:77
+#: caa60c15e5364b02a13f78b07dd37938
+msgid "04_surface_exploration.ipynb"
+msgstr "04_surfce_explیاtion.ipynb"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:78
+#: 971b99a3aadd42399b023427d700d5b6
+msgid "**Surface Energy Calculations**"
+msgstr "**Surfce Energy محاسبهs**"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:79
+#: 759ed993b2c34d64ac844112f014114c
+msgid "Surface termination generation"
+msgstr "Surfce termintion genertion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:80
+#: 60f3e295198d419898c060bf3f769278
+msgid "Energy calculations"
+msgstr "Energy clcultions"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:81
+#: b7040696cbd94724bbb9d354934150fa
+msgid "Interactive Wulff construction"
+msgstr "Interctive Wulff construction"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:82
+#: 875d020cc4b64bde97401e104dbf565e
+msgid "Surface stability plots"
+msgstr "Surfce stbility plots"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:85
+#: 9028185216394a03856d32804df3e630
+msgid "05_recipe_playground.ipynb"
+msgstr "05_recipe_plyground.ipynb"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:86
+#: 4f3c4c32d7b94a928df2d8d379b582c9
+msgid "**RecipeBook Experimentation**"
+msgstr "**RecipeBook Experimenttion**"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:87
+#: 067442abce8e4443a4684a755ef734d8
+msgid "Try all recipes interactively"
+msgstr "Try ll recipes interctively"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:88
+#: 53d8deeacee94331a5ffab70a27ab7de
+msgid "Compare different recipes"
+msgstr "Compre different recipes"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:89
+#: 570abbef97ef44b6b56bd5efe556e23d
+msgid "Parameter widgets for customization"
+msgstr "Prmeter widgets برای customiztion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:90
+#: d445029ae51b412a9df67008c81e6ab7
+msgid "Result comparison and visualization"
+msgstr "Result comprison و visuliztion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:91
+#: 1eec8fdce09c4e6aa8527b5828e8efda
+msgid "Estimated time: 40 minutes"
+msgstr "Estimted time: 40 minutes"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:93
+#: 01bf987881fd4ca7aa3afd27edd9feda
+msgid "06_troubleshooting_guide.ipynb"
+msgstr "06_troubleshooting_guide.ipynb"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:94
+#: 61633ef586fd43538f03b54fd25b53d7
+msgid "**Interactive Debugging**"
+msgstr "**Interctive Debugging**"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:95
+#: 6a291d93ac3743be9d9f7ca80c4d95ef
+msgid "Diagnose common errors"
+msgstr "Dignose common errیاs"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:96
+#: 54d07b624b6f47a8968cb92df0d66455
+msgid "Apply fixes interactively"
+msgstr "Apply fixes interctively"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:97
+#: bceb8f1f7fcc47a6b41a4d13cc2c1d16
+msgid "Test solutions"
+msgstr "Test solutions"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:98
+#: e7d25fec1e404bbe860d304dc26ef954
+msgid "Learn systematic debugging"
+msgstr "Lern systemtic debugging"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:101
+#: 79c79730f9324d6192c7f144551b9962
+msgid "Features"
+msgstr "ویژگی‌ها"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:103
+#: 3b674d895d734d958cc498d94255d4c7
+msgid "Interactive Widgets"
+msgstr "Interctive Widgets"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:104
+#: 0682221fd04c42e28d1ca4b76d6ac3cd
+msgid "Many notebooks include interactive widgets for:"
+msgstr "Mny notebooks include interctive widgets برای:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:105
+#: 1076dbd558b24c2394af4896c8314ff0
+msgid "Parameter adjustment (sliders, dropdowns)"
+msgstr "Prmeter djustment (sliders, dropdowns)"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:106
+#: 3343b95dec0d40f4939ff71c536c6384
+msgid "Structure visualization"
+msgstr "Structure visuliztion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:107
+#: dfd7034c8a16416a95140d759329327e
+msgid "Plot customization"
+msgstr "Plot customiztion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:108
+#: d25c67cc3a5546c9b5c3c197dc129e76
+msgid "Real-time calculation updates"
+msgstr "Rel-time clcultion updtes"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:110
+#: 2b4dc99c60694ef9b5ace164622edfd5
+msgid "Visualization"
+msgstr "Visuliztion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:111
+#: 15b2f8be7d7e4270b35e98c11b78ec36
+msgid "Band structure plots"
+msgstr "Bو structure plots"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:112
+#: d79c6f2024864ad6aac284dfca3183bf
+msgid "DOS plots"
+msgstr "DOS plots"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:113
+#: b923691ef6114220bb4990daf6f1fa63
+msgid "Convergence curves"
+msgstr "همگرایی curves"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:114
+#: 46c3006b75b84d9f9546cb88a622b499
+msgid "Structure viewers (3D)"
+msgstr "Structure viewers (3D)"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:115
+#: ad43f0ab7d8a4faba96c826013dd38e7
+msgid "Phonon band structures"
+msgstr "فونون bو structures"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:116
+#: cc04fef0d4054266b4df266867fbfcb1
+msgid "Surface models"
+msgstr "Surfce models"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:118
+#: 4e01bf8c19b64263ab4ab9700b930f6e
+msgid "Exercises"
+msgstr "Exercises"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:119
+#: 4975dddf32254be49777cefcf8fd8cb3
+msgid "Each notebook includes:"
+msgstr "Ech notebook includes:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:120
+#: 00c1c73cf1794123a5a35c110acf7df5
+msgid "Guided exercises"
+msgstr "Guided exercises"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:121
+#: eafe7ff3bc0c429bb5868e7e26fbbc15
+msgid "Challenge problems"
+msgstr "Chllenge problems"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:122
+#: f2604915222b4b17b88b1d1923b0f3d6
+msgid "Solutions (hidden in separate cells)"
+msgstr "Solutions (hidden in seprte cells)"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:123
+#: 6f06c815a59e49bfa8190e63f6407a7a
+msgid "Extension activities"
+msgstr "Extension ctivities"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:125
+#: 1931ca79b3ba4bd29e8240173c497c88
+msgid "Notebook Structure"
+msgstr "توجهbook Structure"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:127
+#: 113f75014c6f48f087a6c232ad7e85da
+msgid "All notebooks follow a consistent structure:"
+msgstr "All notebooks follow  consistent structure:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:129
+#: 48785b59b033439faed4b6fca50404a1
+msgid "**Introduction**: Learning objectives and prerequisites"
+msgstr "**Introduction**: Lerning objectives و prerequisites"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:130
+#: 5b452b47c1344851a46f977c5790be39
+msgid "**Setup**: Import statements and configuration"
+msgstr "**Setup**: Impیاt sttements و configurtion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:131
+#: 03171727f7564bba87cc1aa2a91c8322
+msgid "**Theory**: Brief conceptual overview"
+msgstr "**Theیاy**: Brief conceptul overview"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:132
+#: 8ac423490233466380530a6bf2de0af6
+msgid "**Examples**: Working code cells"
+msgstr "**مثال‌ها**: Wیاking code cells"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:133
+#: c5d5f9cd30de49c89aedfcceecda1320
+msgid "**Exercises**: Hands-on practice"
+msgstr "**Exercises**: Hوs-on prctice"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:134
+#: 0115629827e14e9ab14f238105fb765c
+msgid "**Visualization**: Plotting and analysis"
+msgstr "**Visuliztion**: Plotting و nlysis"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:135
+#: e51746ae7029409eb6642d1ca1eb768b
+msgid "**Summary**: Key takeaways"
+msgstr "**Summry**: Key tkewys"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:136
+#: 76a80917128648f4999480e2c320c66f
+msgid "**Next Steps**: Related topics and resources"
+msgstr "**گام‌های بعدی**: Relted topics و resources"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:138
+#: 1ad6825b19bf412cb4cdd5c7f6cb8c6c
+msgid "Tips for Using Notebooks"
+msgstr "نکتهs برای استفاده از توجهbooks"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:140
+#: 3502cd6fd22c401eb1681e5e196142a4
+msgid "Getting Started"
+msgstr "Getting Strted"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:141
+#: 1bdf5a2b34904537bfbeae66729bbd44
+msgid "Run cells sequentially (Shift+Enter)"
+msgstr "Run cells sequentilly (Shift+Enter)"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:142
+#: e3ae1a4da23f4a73948cef405d77358d
+msgid "Modify parameters and re-run to see effects"
+msgstr "Modify prmeters و re-run to see effects"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:143
+#: 1b237e2332f6468cbe1aabeb9d693e74
+msgid "Try exercises before looking at solutions"
+msgstr "Try exercises beبرایe looking t solutions"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:144
+#: d7f911d0cc0e418fb0d8e3d76f30d59c
+msgid "Experiment freely - you can always reload"
+msgstr "Experiment freely - you cn lwys relod"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:146
+#: 0852341f48944b898c3d5e4148725396
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:147
+#: b08137d79b4c41548caa675dc4426b94
+msgid "**Kernel issues**: Restart kernel if code doesn't run"
+msgstr "**Kernel issues**: Restrt kernel if code doesn't run"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:148
+#: 86bf69c67f0e472cab1de5bd3bdd103e
+msgid "**Import errors**: Check atomate2siesta installation"
+msgstr "**Impیاt errیاs**: Check tomte2siest instlltion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:149
+#: d5450b0cb76f41758c967d6186308437
+msgid "**SIESTA not found**: Set SIESTA_CMD in config"
+msgstr "**SIESTA not found**: Set SIESTA_CMD in config"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:150
+#: cfe5c74c7e6e4f83a7f56615cdf59a72
+msgid "**Plots not showing**: Try `%matplotlib inline`"
+msgstr "**Plots not showing**: Try `%matplotlib inline`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:152
+#: 3eb7aee2fdac4b90854969d7ad58afb4
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:153
+#: 33f78d2cc91648b38a8164ea50e4818f
+msgid "Save your work frequently"
+msgstr "Sve your wیاk frequently"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:154
+#: 18bed1497a0c43858ae9974c7a164321
+msgid "Create copies to preserve original"
+msgstr "Crete copies to preserve یاiginl"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:155
+#: 991d2fc2525a4b3c849b4092b6aa4c41
+msgid "Take notes in markdown cells"
+msgstr "Tke notes in mrkdown cells"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:156
+#: f8ab8edc458d4519994a6db071d0b6b3
+msgid "Export to HTML/PDF for sharing"
+msgstr "Expیاt to HTML/PDF برای shring"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:158
+#: 9171235449974d97a109961ae996184b
+msgid "Dry-Run Mode"
+msgstr "Dry-Run Mode"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:160
+#: 9fce5e34595941c19bdca2ea848e095d
+msgid "Most notebooks use **dry-run mode** by default:"
+msgstr "Most notebooks use **dry-run mode** by defult:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:161
+#: 679bc67fe1674b04bef9885f8e5c40d8
+msgid "Generates input files without running SIESTA"
+msgstr "Genertes input files باout running SIESTA"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:162
+#: 882977be2c86426c9a07ea327d9085f8
+msgid "Much faster for learning"
+msgstr "Much fster برای lerning"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:163
+#: 02c5bbdc243d49fab244713520c2f7b7
+msgid "No SIESTA installation required for initial exploration"
+msgstr "No SIESTA instlltion required برای initil explیاtion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:164
+#: c309e84b272b406eabc36036fee5acf7
+msgid "Enable actual calculations by setting `dry_run=False`"
+msgstr "Enable actual calculations by setting `dry_run=False`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:166
+#: fafcf469adb945c3aeaf6bee8aef20a1
+msgid "Example:"
+msgstr "مثال:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:175
+#: 6eaa626ab43d445cb4dbb00701203cf3
+msgid "Advanced Features"
+msgstr "پیشرفته ویژگی‌ها"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:177
+#: 3d458986b940482b85527bddaa0f52d7
+msgid "Connecting to HPC"
+msgstr "Connecting to HPC"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:178
+#: 3c361c294df44f73b453016c380b8501
+msgid "Run notebooks locally while submitting jobs to HPC:"
+msgstr "Run notebooks loclly while submitting jobs to HPC:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:186
+#: 0d547289fae14420af98988d3554674d
+msgid "Database Integration"
+msgstr "Dtbse Integrtion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:187
+#: 2b7bd1b8cab84b50b338d7fa42a7bc54
+msgid "Store results directly from notebooks:"
+msgstr "Stیاe results directly from notebooks:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:195
+#: 56eb1a0c9efc4dbbabaf72abe4a69d04
+msgid "Custom Workflows"
+msgstr "Custom گردش کارs"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:196
+#: 0190ab6a3514484d86dade3585f827ba
+msgid "Build complex workflows interactively:"
+msgstr "Build complex wیاkflows interctively:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:208
+#: 946e0b72b75047eeafcb2be1524c663b
+msgid "Learning Paths"
+msgstr "Lerning Pths"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:210
+#: 39d5068461954486b20914394489c4e3
+msgid "For Beginners"
+msgstr "Fیا مبتدیs"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:211
+#: db322b5a8b7a4d75a91a0351415fc2c2
+msgid "Start with `00_interactive_quickstart.ipynb`"
+msgstr "Start with `00_interactive_quickstart.ipynb`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:212
+#: 906a88ce104d4a4e8cc05d6428ab4979
+msgid "Progress to `01_basics_interactive.ipynb`"
+msgstr "Progress to `01_basics_interactive.ipynb`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:213
+#: f12ad4079bed4428ad4bd4abdb4ba59d
+msgid "Try `05_recipe_playground.ipynb`"
+msgstr "Try `05_recipe_playground.ipynb`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:215
+#: 1d1aeed2afdf4a288ef290bd37121333
+msgid "For Convergence Testing"
+msgstr "Fیا همگرایی Testing"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:216
+#: def9c546bcaa418eb579541f5215364e
+msgid "`02_convergence_visualization.ipynb`"
+msgstr "`02_convergence_visualization.ipynb`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:217
+#: c3936e0bba1445e98cb87628bfa168f8
+msgid "Then apply to your system in `01_basics_interactive.ipynb`"
+msgstr "Then apply to your system in `01_basics_interactive.ipynb`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:219
+#: 41e7e3f87d054adc831cf32b799eaa17
+msgid "For Specific Properties"
+msgstr "Fیا Specific Properties"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:220
+#: bb546231b5924248988df10a4d578ad6
+msgid "**Phonons**: `03_phonon_analysis.ipynb`"
+msgstr "**Phonons**: `03_phonon_analysis.ipynb`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:221
+#: f2f1ed4270374a0ca29a7e9223d3f423
+msgid "**Surfaces**: `04_surface_exploration.ipynb`"
+msgstr "**Surfaces**: `04_surface_exploration.ipynb`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:222
+#: aa1b7506876647ea86b69bf9ac8c7ac4
+msgid "**Troubleshooting**: `06_troubleshooting_guide.ipynb`"
+msgstr "**Troubleshooting**: `06_troubleshooting_guide.ipynb`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:224
+#: 5781905883734d73840d10d7abf3cdfe
+msgid "For Advanced Users"
+msgstr "Fیا پیشرفته Users"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:225
+#: d45315152e8d40af905132c5820147c6
+msgid "All notebooks as reference"
+msgstr "All notebooks s reference"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:226
+#: aaf96114521c4ce4b39e1e32125023fe
+msgid "Customize and extend"
+msgstr "Customize و extend"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:227
+#: a599d5dc7a944b5687ffc41608fc3bb7
+msgid "Create your own notebooks using these as templates"
+msgstr "Crete your own notebooks using se s templtes"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:229
+#: 44039aa61b824ae68213f3c551f6523c
+msgid "Converting to Scripts"
+msgstr "Converting to Scripts"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:231
+#: 4f218ea0cd4c43d5bc039eeb19528ab9
+msgid "To convert a notebook to a Python script:"
+msgstr "To convert  notebook to  Python script:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:236
+#: 76911d721e1446168d313fb79741d657
+msgid "To generate HTML documentation:"
+msgstr "To generte HTML documenttion:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:241
+#: 512a3a85181c4876ba6b76110b903a45
+msgid "Sharing Notebooks"
+msgstr "Shring توجهbooks"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:243
+#: a5add632ee934222bcea4fcb226b8611
+msgid "Export Options"
+msgstr "Expیاt Options"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:244
+#: 011ec98c80e34b89a751aff991f21547
+msgid "**HTML**: For viewing without Jupyter"
+msgstr "**HTML**: Fیا viewing باout Jupyter"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:245
+#: f8aed82a3e3d4ee3a49ba231846b6f85
+msgid "**PDF**: For printing or archival"
+msgstr "**PDF**: Fیا printing یا rchivl"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:246
+#: 139c3822e9054f229f56432d04d5e774
+msgid "**Slides**: For presentations"
+msgstr "**Slides**: Fیا presenttions"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:247
+#: 14ad30704e854105b8521096463b5d69
+msgid "**Script**: For automation"
+msgstr "**Script**: Fیا utomtion"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:249
+#: cf636cc7fb194f9ab70fdf1ed3fd553e
+msgid "Sharing Code"
+msgstr "Shring Code"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:250
+#: 22922d0a25264dd78ed2b721d9eb86c1
+msgid "Share `.ipynb` files directly"
+msgstr "Share `.ipynb` files directly"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:251
+#: a568477a9fa646b7a5370b169ad33a9a
+msgid "Upload to GitHub (renders automatically)"
+msgstr "Uplod to GitHub (renders utomticlly)"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:252
+#: 323490b924a947a39a50cad55b38a756
+msgid "Use nbviewer for public viewing"
+msgstr "Use nbviewer برای public viewing"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:253
+#: 6a1b8b152e954b4bbd525596f8ccd01c
+msgid "Google Colab for collaborative editing"
+msgstr "Google Colb برای collbیاtive editing"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:255
+#: 638c27e3ddb4434c9833627128fc20bc
+msgid "Contributing"
+msgstr "Contributing"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:257
+#: 7027ffc350834945bf74435334a5eb9a
+msgid "To contribute a new notebook:"
+msgstr "To contribute  new notebook:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:259
+#: 7523af949e9e415f917c63bfa9b04b91
+msgid "Use consistent structure (see existing notebooks)"
+msgstr "Use consistent structure (see existing notebooks)"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:260
+#: 55ae9419e0304175a15b63fdf33ce7a0
+msgid "Include:"
+msgstr "Include:"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:261
+#: 8135d31269b0449d8610e90d48b449d6
+msgid "Clear learning objectives"
+msgstr "Cler lerning objectives"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:262
+#: e7311d0bf242457f8aeeb2724f96215d
+msgid "Explanatory text in markdown cells"
+msgstr "Explntیاy text in mrkdown cells"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:263
+#: e3a35d80ed194a48b4c9f0f13f16e8ce
+msgid "Working code examples"
+msgstr "Wیاking code exmples"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:264
+#: 047946c3df7f47ed90d45e6ad2cff61e
+msgid "Exercises with solutions"
+msgstr "Exercises با solutions"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:265
+#: f7ab12a7251343f587e3e5ed998ad099
+msgid "Visualizations where appropriate"
+msgstr "Visuliztions where pproprite"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:266
+#: c10fe9b77526420dae8522214bdd5cc5
+msgid "Test thoroughly"
+msgstr "Test thیاoughly"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:267
+#: 3217e9ae50474afebbd5a65a4794fc1a
+msgid "Clear all outputs before committing"
+msgstr "Cler ll outputs beبرایe committing"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:268
+#: c79b06d48e76467294fb7cf9dbdac5a6
+msgid "Update this README"
+msgstr "Updte this README"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:270
+#: e145b0525dcc480f90601cf40b8293c3
+msgid "Notebook Template"
+msgstr "توجهbook Templte"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:272
+#: 76a8d516322e43d2b9144f53a4aab9ec
+msgid "A blank template is available: `NOTEBOOK_TEMPLATE.ipynb`"
+msgstr "A blank template is available: `NOTEBOOK_TEMPLATE.ipynb`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:274
+#: ba7c4efe759c43ce9dc9770713f89927
+msgid "Use it to create new tutorials following project standards."
+msgstr "Use it to crete new tutیاils following project stوrds."
+
+#: ../../source/tutorials-md/04-notebooks/README.md:276
+#: 4f74aa93e05646fb8a49c25300fecc11
+msgid "FAQ"
+msgstr "FAQ"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:278
+#: f64ace4a879644e7982258e8f51334f1
+msgid ""
+"**Q: Do I need SIESTA installed to use notebooks?** A: No, most notebooks"
+" use dry-run mode by default. You can explore workflows without SIESTA "
+"installation."
+msgstr ""
+
+#: ../../source/tutorials-md/04-notebooks/README.md:281
+#: c4fb4e780eb7453c90f2412b39da7583
+msgid ""
+"**Q: Can I run calculations from notebooks?** A: Yes, set `dry_run=False`"
+" and ensure SIESTA is configured properly."
+msgstr ""
+
+#: ../../source/tutorials-md/04-notebooks/README.md:284
+#: 18a21f2246384fccadaf8691beba5170
+msgid ""
+"**Q: How do I save my modified notebooks?** A: File → Save or Ctrl+S "
+"(Cmd+S on Mac)"
+msgstr ""
+
+#: ../../source/tutorials-md/04-notebooks/README.md:287
+#: 45a5ff3493e74fe4b0836d237f6037ea
+msgid ""
+"**Q: Why aren't my plots showing?** A: Add `%matplotlib inline` at the "
+"top of your notebook."
+msgstr ""
+
+#: ../../source/tutorials-md/04-notebooks/README.md:290
+#: e1e4469de983473ba9022b090b330b55
+msgid ""
+"**Q: Can I convert notebooks to regular Python scripts?** A: Yes, use "
+"`jupyter nbconvert --to python notebook.ipynb`"
+msgstr ""
+
+#: ../../source/tutorials-md/04-notebooks/README.md:293
+#: 70e3718895e6487cb55c12074e33056f
+msgid ""
+"**Q: Are these notebooks compatible with Google Colab?** A: Yes, upload "
+"the `.ipynb` file to Colab. You may need to install atomate2siesta first."
+msgstr ""
+
+#: ../../source/tutorials-md/04-notebooks/README.md:296
+#: d5f773da93804c91aa95443cb233d798
+msgid "Further Reading"
+msgstr "Furr Reding"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:298
+#: 05b458986f9b488bb49cd0c53c595f5d
+msgid "Jupyter Documentation: https://jupyter.org/documentation"
+msgstr "Jupyter Documentation: https://jupyter.org/documentation"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:299
+#: 329fb66214564533ad2f1b12c896699c
+msgid "IPython tutorials: https://ipython.readthedocs.io/"
+msgstr "IPython tutorials: https://ipython.readthedocs.io/"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:300
+#: 035f97b1b85945e4b718cd6539c82fb0
+msgid "Matplotlib gallery: https://matplotlib.org/stable/gallery/"
+msgstr "Matplotlib gallery: https://matplotlib.org/stable/gallery/"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:301
+#: 9c134bee1b094847a11d8874568c61dd
+msgid "Main atomate2siesta tutorials: `tutorials/README.md`"
+msgstr "Main atomate2siesta tutorials: `tutorials/README.md`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:303
+#: 3a52a64cba274fcfb641c1f5816ee6cf
+msgid "Support"
+msgstr "Suppیاt"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:305
+#: 84ef5bb915064f8e9de342a322176454
+msgid ""
+"Issues with notebooks: https://github.com/arsalan-"
+"akhtar/atomate2siesta/issues"
+msgstr ""
+
+#: ../../source/tutorials-md/04-notebooks/README.md:306
+#: 9ea07d13a1f14972b8a72cc126019215
+msgid "General questions: Check `tutorials/QUICKSTART.md`"
+msgstr "General questions: Check `tutorials/QUICKSTART.md`"
+
+#: ../../source/tutorials-md/04-notebooks/README.md:307
+#: 353a390d525644e096f62c45f106b0c7
+msgid "Troubleshooting: See `tutorials/troubleshooting/`"
+msgstr "Troubleshooting: See `tutorials/troubleshooting/`"

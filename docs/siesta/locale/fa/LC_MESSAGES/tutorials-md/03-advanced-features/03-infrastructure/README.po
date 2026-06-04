@@ -1,0 +1,576 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:1
+#: 4e4d3aa9ec7b4b7ebdc62e361e05e587
+msgid "04: Infrastructure"
+msgstr "04: Infrstructure"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:3
+#: b0bbd8850f54440b98aa949171a0a736
+msgid "**Focus**: Production environment setup for large-scale calculations"
+msgstr "**Focus**: Production environment setup برای lrge-scle clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:5
+#: af8f8a185ec5495cb65da18365189b57
+msgid "**Difficulty**: Intermediate to Advanced"
+msgstr "**سطح سختی**: متوسط to پیشرفته"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:7
+#: da2bad0e25dc427085c5dc0d1cfa5ccb
+msgid "**Prerequisites**:"
+msgstr "**پیش‌نیازها**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:8
+#: 4e4802878d6c447b86743b6d205765d4
+msgid "Completed basic tutorials ([01-basics](../01-basics/))"
+msgstr "Completed bsic tutیاils ([01-bsics](../01-bsics/))"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:9
+#: cc387da7e0c541e787294b6faf1812c8
+msgid "Access to HPC cluster (for job submission tutorials)"
+msgstr "Access to HPC cluster (برای job submission tutیاils)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:10
+#: e54894a815774ead8a41c740bf474b2d
+msgid "MongoDB installation (for database tutorials)"
+msgstr "MongoDB instlltion (برای dtbse tutیاils)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:14
+#: a6a32ec74afb4f0c8ebb342b567a6236
+msgid "Tutorials in This Category"
+msgstr "Tutیاils in This دسته‌بندی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:16
+#: 626f49c49cf74de783f0281716b1e6ee
+msgid "[01-database-storage](01-database-storage/)"
+msgstr "[01-dtbse-stیاge](01-dtbse-stیاge/)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:17
+#: 23ba748302744405b16404559e4f0cd9
+msgid ""
+"**Description**: Storing calculation results in MongoDB for analysis and "
+"retrieval **Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~10 "
+"min (full setup) **Key Concepts**: MongoDB integration, jobflow stores, "
+"data persistence, querying results"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:22
+#: c53e5205c5624a16be89a82619445a88
+msgid "[02-job-submission](02-job-submission/)"
+msgstr "[02-job-submission](02-job-submission/)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:23
+#: 61345b2e97fe4437b5ab080133e6a5e8
+msgid ""
+"**Description**: Submitting jobs to HPC clusters via jobflow-remote "
+"**Difficulty**: Intermediate **Time**: ~10 min (setup), varies "
+"(execution) **Key Concepts**: jobflow-remote, HPC integration, queue "
+"systems, job management"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:28
+#: b3acd03ed5074751ac9ffbcfd9e14c62
+msgid "[03-error-handling](03-error-handling/)"
+msgstr "[03-errیا-hوling](03-errیا-hوling/)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:29
+#: bbea7b9e7f644719aa6f195976de576a
+msgid ""
+"**Description**: Automatic error detection and recovery with custodian "
+"**Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~20 min (full "
+"example) **Key Concepts**: Custodian handlers, SCF convergence, error "
+"recovery, automatic corrections"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:34
+#: 430028a5651d414b81070fe0973685c1
+msgid "[04-restart-recovery](04-restart-recovery/)"
+msgstr "[04-restrt-recovery](04-restrt-recovery/)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:35
+#: 6742326bfd064947b026c17fa1bbdd8d
+msgid ""
+"**Description**: SIESTA restart capabilities and calculation recovery "
+"**Difficulty**: Intermediate **Time**: ~5 min (dry-run), ~15 min (full "
+"example) **Key Concepts**: DM file reuse, restart mechanisms, checkpoint "
+"recovery"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:40
+#: 4fb2784eff744a0fb5dd3f191969338b
+msgid "[05-dry-run-preview](05-dry-run-preview/)"
+msgstr "[05-dry-run-preview](05-dry-run-preview/)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:41
+#: 66d402d1c2824ecbbe3a998cfca301c2
+msgid ""
+"**Description**: Preview workflows and generate input files without "
+"running calculations **Difficulty**: Beginner **Time**: ~1 min (instant "
+"preview) **Key Concepts**: Dry-run mode, input file generation, workflow "
+"validation, resource planning"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:48
+#: f48b73c6661941a5ab7fc72fc08e8efe
+msgid "Learning Path"
+msgstr "Lerning Pth"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:50
+#: f87effe872e94c3797599ecd163df69b
+msgid "For production calculations, we recommend this sequence:"
+msgstr "Fیا production clcultions, we recommend this sequence:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:52
+#: cd8175e4c47249319e216c4e98bf2634
+msgid ""
+"**Start**: [05-dry-run-preview](05-dry-run-preview/) - Always preview "
+"workflows first!"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:53
+#: 48fb82d83f6f447aace6bd248f3f6f2c
+msgid ""
+"**Data management**: [01-database-storage](01-database-storage/) - Set up"
+" result storage"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:54
+#: d5dde15af04342dabd5238d58125e003
+msgid "**HPC**: [02-job-submission](02-job-submission/) - Submit to cluster"
+msgstr "**HPC**: [02-job-submission](02-job-submission/) - Submit to cluster"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:55
+#: 8c75a29b843b451abdc4e75182fa1d40
+msgid ""
+"**Reliability**: [03-error-handling](03-error-handling/) - Enable "
+"automatic error recovery"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:56
+#: 430991b2f2ca4e5abfc3a556158a63b2
+msgid ""
+"**Advanced**: [04-restart-recovery](04-restart-recovery/) - Handle long "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:60
+#: caaed6c0c458446e96b6993e5269e08a
+msgid "Why Infrastructure Matters"
+msgstr "Why Infrstructure Mtters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:62
+#: fea8e647bd9e4734ac47490189db6bb1
+msgid "Setting up proper infrastructure:"
+msgstr "راه‌اندازی proper infrstructure:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:63
+#: 38a96a8011374d16a9adffe6133fb0ab
+msgid "✅ **Saves time**: Automatic error recovery prevents wasted calculations"
+msgstr "✅ **Sves time**: Automtic errیا recovery prevents wsted clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:64
+#: f66196a646814bb7b01a9c28b3ff07ae
+msgid "✅ **Organizes data**: Database storage makes results searchable"
+msgstr "✅ **Orgnizes dt**: Dtbse stیاge mkes results serchble"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:65
+#: 390a4d1387f84c568f8216e50d5711ea
+msgid "✅ **Scales up**: HPC submission enables large workflows"
+msgstr "✅ **Scles up**: HPC submission enbles lrge wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:66
+#: ddcbf48ddbd546d8ad8227b63f33c12c
+msgid "✅ **Reduces errors**: Dry-run previews catch mistakes early"
+msgstr "✅ **Reduces errیاs**: Dry-run previews ctch mistkes erly"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:67
+#: d6544145ac44409487234309428b9c9e
+msgid "✅ **Enables collaboration**: Centralized database for team access"
+msgstr "✅ **Enbles collbیاtion**: Centrlized dtbse برای tem ccess"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:71
+#: ce5c4d8d91f6470982990b15e00c5c4d
+msgid "Quick Start Guide"
+msgstr "شروع سریع Guide"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:73
+#: 6aac92503a6d4ce1b56985b8ce9daf1d
+msgid "Step 1: Preview First (Dry-Run)"
+msgstr "Step 1: Preview First (Dry-Run)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:81
+#: f3a42972bb8f4658853d07842e6f4067
+msgid "Step 2: Enable Database Storage"
+msgstr "Step 2: Enble Dtbse Stیاge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:90
+#: b5bbd24b9e4e4905837cb7be55af3721
+msgid "Step 3: Submit to HPC"
+msgstr "Step 3: Submit to HPC"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:98
+#: 1de4ab890c4243b7be4e01f19ae51b96
+msgid "Step 4: Enable Error Handling"
+msgstr "Step 4: Enble Errیا Hوling"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:108
+#: 2558ac5ad1784ee3b8e5ea321bc4826b
+msgid "Database Setup"
+msgstr "Dtbse Setup"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:110
+#: 6826a3e0c1be4a4f93818537a3f24c6f
+msgid "MongoDB Installation"
+msgstr "MongoDB Instlltion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:112
+#: b133792bc7224fc78ca9087f371f4b63
+msgid "**Option 1: Local MongoDB**"
+msgstr "**Option 1: Locl MongoDB**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:123
+#: be2ba8dece8b4470b74546385d575047
+msgid "**Option 2: Cloud MongoDB (Atlas)**"
+msgstr "**Option 2: Cloud MongoDB (Atls)**"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:124
+#: 8d94bca657c24687a31a932574f92a7b
+msgid "Free tier: 512 MB storage"
+msgstr "Free tier: 512 MB stیاge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:125
+#: 7d939050b4fc4665b3516cc4926642f9
+msgid "URL: https://www.mongodb.com/cloud/atlas"
+msgstr "URL: https://www.mongodb.com/cloud/atlas"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:127
+#: 2a9e6b434ff440829388f2a20ac46a92
+msgid "Configuration"
+msgstr "Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:129
+#: 67efad5259fe4e7fbe84353986ce61d0
+msgid "Create `~/.jobflow.yaml`:"
+msgstr "Create `~/.jobflow.yaml`:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:142
+#: 53affd676c844e458fda09a72ad033e7
+msgid "HPC Setup"
+msgstr "HPC Setup"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:144
+#: 1231cbdee9014866b9bd5a53b5dead29
+msgid "Jobflow-Remote Installation"
+msgstr "Jobflow-Remote Instlltion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:157
+#: 8fb85d9c000847fbac3f6f82cc8d8937
+msgid "Typical HPC Configuration"
+msgstr "Typicl HPC Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:178
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:271
+#: aa6da1ab814a452795dfd903f50fda40 f0178168bb2e490ca9ed924842ff611c
+msgid "Error Handling"
+msgstr "Errیا Hوling"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:180
+#: e80cc5ba6622448cb74eb6c4d2e0e63a
+msgid "Common Error Types"
+msgstr "Common Errیا Types"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:182
+#: 018659bc5073459b862bc1f7651a5ce1
+msgid "**SCF Convergence**: Mixer settings, occupation function"
+msgstr "**SCF همگرایی**: Mixer settings, occuption function"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:183
+#: 4743e7ebd3a54e76a376f063a8f2af46
+msgid "**Geometry Optimization**: Step size, convergence criteria"
+msgstr "**Geometry Optimiztion**: Step size, convergence criteri"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:184
+#: 184a5cf92ca34b899b000078605371d1
+msgid "**Memory Issues**: Insufficient RAM allocation"
+msgstr "**Memیاy Issues**: Insufficient RAM lloction"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:185
+#: 96d8bf88346942098ce17d1dd5ae8d5b
+msgid "**Pseudopotential**: Missing or incompatible pseudopotentials"
+msgstr "**Pseudopotentil**: Missing یا incomptible pseudopotentils"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:187
+#: 1cb0bb6a6a0846659a919284e342fbd8
+msgid "Custodian Features"
+msgstr "Custodin ویژگی‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:189
+#: a0710d7adc5448dba4173f7cf6f8b7f3
+msgid "✅ **Automatic detection**: Parses SIESTA output for errors"
+msgstr "✅ **Automtic detection**: Prses SIESTA output برای errیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:190
+#: 8189c3fc25fd4839bc3dace892fc03be
+msgid "✅ **Progressive fixes**: Tries multiple correction strategies"
+msgstr "✅ **Progressive fixes**: Tries multiple cیاrection strtegies"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:191
+#: f6e0c01446374f9eb6b66ffe693cdec2
+msgid "✅ **Logging**: Complete error history in `custodian.json`"
+msgstr "✅ **Logging**: Complete error history in `custodian.json`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:192
+#: 0c1a48123ef241b7a81e44f879c90b11
+msgid "✅ **Limits**: Prevents infinite retry loops"
+msgstr "✅ **Limits**: Prevents infinite retry loops"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:196
+#: c6605496f63b49308186ffb62ead07de
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:198
+#: 2a92bc5915884c5f8807f4013b30da24
+msgid "Database Issues"
+msgstr "Dtbse Issues"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:200
+#: 7530427adb9a492db27afee70a454910
+msgid "**Issue**: \"Connection to MongoDB failed\" **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:210
+#: 593c1a2d5ff94932b94649f9e81a7a20
+msgid "**Issue**: \"Collection not found\" **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:217
+#: d4b645aa525647fbb885fc9616fb931f
+msgid "HPC Issues"
+msgstr "HPC Issues"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:219
+#: 9bc2ab483cad4056a7a5ccd9aa9aa72a
+msgid "**Issue**: \"jobflow-remote command not found\" **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:226
+#: 553f3be504f44523993d7bc57f2bba4b
+msgid "**Issue**: \"Job submission failed\" **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:228
+#: 09e266da75d3425bb4e82e8cc33032b9
+msgid "Check scheduler type (slurm/pbs/sge)"
+msgstr "Check scheduler type (slurm/pbs/sge)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:229
+#: abcd8fd9943f4c75a4c4bed3fae64e98
+msgid "Verify work_dir exists and has write permissions"
+msgstr "Verify wیاk_dir exists و hs write permissions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:230
+#: 3a86f5f721b048afb39e7e75c29cdb11
+msgid "Test with: `atomate2siesta-jobflow-remote test`"
+msgstr "Test with: `atomate2siesta-jobflow-remote test`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:232
+#: 94b3bbb8a5db4d1fabcd0657ddc8d547
+msgid "Error Handling Issues"
+msgstr "Errیا Hوling Issues"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:234
+#: 46ca80b7b32b4e138a2c6ceb4bbc33f6
+msgid "**Issue**: \"Too many errors, calculation aborted\" **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:244
+#: decebf76c3514580a74954bf84c4d8b5
+msgid "**Issue**: \"Error handler not triggered\" **Solution**:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:246
+#: 8c05fa624b73479f9ba0d6e4c5097585
+msgid "Check error is in supported list (see tutorial 03)"
+msgstr "Check errیا is in suppیاted list (see tutیاil 03)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:247
+#: 4ca6607a5d5d46eca8d3266f908f5aa0
+msgid "Verify custodian is enabled: `use_custodian=True`"
+msgstr "Verify custodian is enabled: `use_custodian=True`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:251
+#: 9ed6480321014ba8a1a23c8c1ad96a0a
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:253
+#: 47c209c68c7046d29108e966eafc1102
+msgid "Dry-Run Workflow"
+msgstr "Dry-Run گردش کار"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:254
+#: 1097021f7e75467ea07eaaba963c4ef3
+msgid "**Always start with dry-run**: Preview before running"
+msgstr "**Alwys strt با dry-run**: Preview beبرایe running"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:255
+#: 0e8dddd19fe24cfc9e4987c328eb7460
+msgid "**Check input files**: Inspect generated `siesta.fdf`"
+msgstr "**Check input files**: Inspect generated `siesta.fdf`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:256
+#: bc471ea9a7f84583bdaa3bbea4ecb840
+msgid "**Verify structures**: Review structure transformations"
+msgstr "**Verify structures**: Review structure trnsبرایmtions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:257
+#: 5e8570d42b4a4ae9ae7f3e274841cb50
+msgid "**Estimate resources**: Calculate job requirements"
+msgstr "**Estimte resources**: Clculte job requirements"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:259
+#: 5f8c0fefb93948c8915540d6f77a23d6
+msgid "Database Management"
+msgstr "Dtbse Mngement"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:260
+#: 9a6d34a382ce4d8ca030649f3c457c0d
+msgid "**Regular backups**: Backup MongoDB regularly"
+msgstr "**Regulr bckups**: Bckup MongoDB regulrly"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:261
+#: 1bf08f7e75b642de95c2c59b2aaf2ddb
+msgid "**Indexing**: Create indexes for frequently queried fields"
+msgstr "**Indexing**: Crete indexes برای frequently queried fields"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:262
+#: 8d1e0a36e1994cf0be1fae393fe4eaf7
+msgid "**Cleanup**: Remove old test calculations"
+msgstr "**Clenup**: Remove old test clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:263
+#: 62dc2bcd5f7144de9510ea5c2a163f6b
+msgid "**Documentation**: Tag calculations with metadata"
+msgstr "**Documenttion**: Tg clcultions با metdt"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:265
+#: 6f0a6129a5054a0eb0446d0d31c53500
+msgid "HPC Usage"
+msgstr "HPC Usge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:266
+#: 123407f32bc54bcab1257308545e7c8b
+msgid "**Resource requests**: Don't over-allocate (wastes queue time)"
+msgstr "**Resource requests**: Don't over-llocte (wstes queue time)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:267
+#: ad39096ab0ba45c6add3113b00a2d881
+msgid "**Job arrays**: Use for convergence studies"
+msgstr "**Job rrys**: Use برای convergence studies"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:268
+#: e69faccc44ab416b88f844a317f8e0d9
+msgid "**Monitoring**: Check job status regularly"
+msgstr "**Monitیاing**: Check job sttus regulrly"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:269
+#: 731cfa9c826646afa205c576db4c5fc5
+msgid "**Results retrieval**: Download results promptly"
+msgstr "**Results retrievl**: Downlod results promptly"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:272
+#: 1c5d4013341e4ca7aeb3fc7183947631
+msgid "**Enable by default**: Always use `use_custodian=True` for production"
+msgstr "**Enable by default**: Always use `use_custodian=True` for production"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:273
+#: 959bc0065b6a451ab1b7ad1d539cc7f3
+msgid "**Review logs**: Check `custodian.json` for patterns"
+msgstr "**Review logs**: Check `custodian.json` for patterns"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:274
+#: 92c6dcb34a2f4a6ca4ffe5c66e55a36a
+msgid "**Custom handlers**: Add project-specific error handlers if needed"
+msgstr "**Custom hوlers**: Add project-specific errیا hوlers if needed"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:275
+#: 07149f7a65fa4d8892c64034985e3a23
+msgid "**Limits**: Set reasonable `custodian_max_errors` (10-20)"
+msgstr "**Limits**: Set reasonable `custodian_max_errors` (10-20)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:279
+#: e128446f0f0842aa98e0966d714c5d27
+msgid "CLI Tools Reference"
+msgstr "CLI Tools Reference"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:281
+#: 1ffb4c94d6684eeab44e620d277b6c06
+msgid "Database CLI"
+msgstr "Dtbse CLI"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:290
+#: 821d4bb1ab624d3c8f41bcb4cdd4d8bd
+msgid "Jobflow-Remote CLI"
+msgstr "Jobflow-Remote CLI"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:299
+#: ffcd0b3dfce242c1b5d854452630cbf6
+msgid "Cluster Setup CLI"
+msgstr "Cluster Setup CLI"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:308
+#: 490d6e1cb4054514afc0bc998d264239
+msgid "Next Category"
+msgstr "Next دسته‌بندی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:310
+#: 5a6dc881c40149eb8ad04f1e6e79faba
+msgid "After setting up infrastructure, proceed to:"
+msgstr "After setting up infrstructure, proceed to:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:311
+#: 471e798fb31742979461b7a774d4548e
+msgid ""
+"**[03-advanced-workflows](../../02-workflows/)** - Run production "
+"workflows with your new setup"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:312
+#: 718bb1c5667b47e4aec1ca523122c9d5
+msgid ""
+"**[05-vibrational-properties](../05-vibrational-properties/)** - Large-"
+"scale phonon calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:313
+#: ce5b64f27e9f4c3a8a1a6b95e94a50f5
+msgid ""
+"**[06-surfaces-and-adsorption](../../02-workflows/03-surfaces-and-"
+"adsorption/)** - High-throughput surface screening"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/README.md:317
+#: 636cf7cd9cd74c1cb5aea41cfc549afd
+msgid "*Back to [Main Tutorial Index](../README.md)*"
+msgstr "*Back to [Main Tutorial Index](../README.md)*"

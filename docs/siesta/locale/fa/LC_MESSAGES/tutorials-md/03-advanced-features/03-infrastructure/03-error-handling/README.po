@@ -1,0 +1,1750 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:1
+#: 8be743165b6648fa8932e051a0617b4d
+msgid "Tutorial: Custodian Error Handling"
+msgstr "آموزش: Custodin Errیا Hوling"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:3
+#: f0655146c3e74183a13b89057361c035
+msgid ""
+"**Category**: 04-infrastructure **Difficulty**: Intermediate **Time**: ~5"
+" min (dry-run), ~15-30 min (local with errors)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:9
+#: d9c89788839a4a0db1ef73d62a0ea707
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:11
+#: 648b50e2eb5f40f09aeb5f75452e18a9
+msgid ""
+"Automatic error detection and recovery for SIESTA calculations using the "
+"custodian framework. Enable custodian to handle common calculation "
+"failures (SCF convergence, memory issues, walltime limits) with "
+"progressive correction strategies."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:13
+#: 09cd88b3f732412598644a3978262a65
+msgid ""
+"This tutorial demonstrates how to enable robust, production-ready "
+"calculations that can automatically recover from common errors without "
+"manual intervention."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:17
+#: c77787af0ad44850bf9e9cdabbf3d8d2
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:19
+#: d75da0819c254dc99d2816c8fb48d092
+msgid "Automatic error detection from SIESTA output"
+msgstr "Automtic errیا detection from SIESTA output"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:20
+#: c1afa1f36fd64eba80c7e8de1ed505bc
+msgid "Progressive correction strategies"
+msgstr "Progressive cیاrection strtegies"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:21
+#: cf907f80f548454c8bf77375b994612d
+msgid "Default handlers: SCF, Walltime, Memory, Frozen"
+msgstr "Defult hوlers: SCF, Wlltime, Memیاy, Frozen"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:22
+#: 00ebc66e048649ea98a335a677acc1b7
+msgid "Custom handler configuration"
+msgstr "Custom hوler configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:23
+#: 3ae301b41d1a49e1ad87942f55862dea
+msgid "JSON logging of corrections"
+msgstr "JSON logging of cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:24
+#: 266604f3308e40da80917eeb8b79e554
+msgid "When to enable/disable custodian"
+msgstr "When to enble/disble custodin"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:28
+#: d1385342625a45cd80cbb7880bcdefb3
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:30
+#: 035fa525e3274290a0c7e58b24f163cd
+msgid "**Required**: [01-relaxation](../../01-basics/01-relaxation/) completed"
+msgstr "**مورد نیاز**: [01-relxtion](../../01-bsics/01-relxtion/) completed"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:31
+#: 93309ca736e84fb5948674a7161f3a57
+msgid "**Recommended**: Experience with SCF convergence issues"
+msgstr "**Recommended**: Experience با SCF convergence issues"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:35
+#: 9bf3fe3a1f7744be86202f8151427c83
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:37
+#: 0c888e7abdfd4746943658743d52bc3a
+msgid "Custodian Framework"
+msgstr "Custodin Frmewیاk"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:39
+#: 6eb8a24fb6034d3bacfca9fdefbef789
+msgid ""
+"**Purpose**: Automatic error detection and recovery for computational "
+"workflows"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:41
+#: 09f34d2b18e945ca9368a6dd4b5aa194
+msgid "**How it works**:"
+msgstr "**How it wیاks**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:42
+#: 71aa1ae2a644434baeba901ca263222f
+msgid "**Monitor**: Watch SIESTA calculation output"
+msgstr "**Monitیا**: Wtch SIESTA clcultion output"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:43
+#: 797cf427ee0c45a680b94753a9907b96
+msgid "**Detect**: Identify errors (SCF not converged, memory issues, etc.)"
+msgstr "**Detect**: Identify errیاs (SCF not converged, memیاy issues, etc.)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:44
+#: 1a6b668bde24482aae46f447a284900e
+msgid ""
+"**Correct**: Apply progressive fixes (reduce mixing, increase iterations,"
+" etc.)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:45
+#: c731e0c2a8604898a74977fa450df113
+msgid "**Retry**: Re-run calculation with corrected parameters"
+msgstr "**Retry**: Re-run clcultion با cیاrected prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:46
+#: cd3ea4795123460b9c4f4148ea5b3860
+msgid "**Log**: Record all errors and corrections in `custodian.json`"
+msgstr "**Log**: Record all errors and corrections in `custodian.json`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:48
+#: f15dfb8e58314adc86e6790db00e1f29
+msgid "**Philosophy**:"
+msgstr "**Philosophy**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:49
+#: a9ed790e531342528b258d6ac91aa872
+msgid ""
+"**Progressive corrections**: Start with minimal changes, escalate if "
+"needed"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:50
+#: f0193d45d7404a73a80d7bcb1772b7f2
+msgid "**Conservative approach**: Preserve user settings when possible"
+msgstr "**Conservtive pproch**: Preserve user settings when possible"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:51
+#: 663ff6cb00ba46bb8199bcbd931c6934
+msgid "**Transparent logging**: All actions recorded for review"
+msgstr "**Trnsprent logging**: All ctions recیاded برای review"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:53
+#: fdc96260d20c4e1ba9235e2d17e58654
+msgid "Default Handlers"
+msgstr "Defult Hوlers"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:55
+#: bdcdf933ffe14cbda13ec36da1f712ef
+msgid "Atomate2-SIESTA includes 4 default error handlers:"
+msgstr "Atomte2-SIESTA includes 4 defult errیا hوlers:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:57
+#: 30fea8fb03b143158b1a9a86acb51ce7
+msgid "1. SCFConvergenceHandler"
+msgstr "1. SCFهمگراییHوler"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:59
+#: 735493e250b042bbacc869be060ff65c
+msgid ""
+"**Detects**: `SCF_NOT_CONVERGED` error (self-consistent field not "
+"converging)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:61
+#: 1d779be8c8c14d9f8d8b08905f9f8cdd
+msgid "**Progressive correction strategy** (5 levels):"
+msgstr "**Progressive cیاrection strtegy** (5 levels):"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:63
+#: 88dde525b4414c719c49f0b0749f730b
+msgid "**Level 1**: Reduce mixing weight"
+msgstr "**Level 1**: Reduce mixing weight"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:68
+#: 4b4e69029c184dad92163519d97d06cd
+msgid "**Level 2**: Increase SCF iterations"
+msgstr "**Level 2**: Increse SCF itertions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:73
+#: ad62e23be55d4290b0a7004c09d7f9fc
+msgid "**Level 3**: Change mixer method"
+msgstr "**Level 3**: Chnge mixer method"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:78
+#: 53df6b0f575043038c5ea609dddfb303
+msgid "**Level 4**: Relax convergence tolerance"
+msgstr "**Level 4**: Relx convergence tolernce"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:83
+#: 01da69ee0481464eb6fdb65ce50201fd
+msgid "**Level 5**: Add electronic temperature (metals)"
+msgstr "**Level 5**: Add electronic temperture (metls)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:89
+#: bc1fbd200c1245c699b7ca96a4eecc25
+msgid "**Max attempts**: 5 levels"
+msgstr "**Mx ttempts**: 5 levels"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:91
+#: d16e1e95b42f421081700cac3497fa62
+msgid "2. WalltimeHandler"
+msgstr "2. WlltimeHوler"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:93
+#: c860310aea054047836e34de5917abd5
+msgid "**Detects**: Calculation exceeding walltime limit"
+msgstr "**Detects**: محاسبه exceeding wlltime limit"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:95
+#: 6389497d92254fa1a8af5a56fb1a92c9
+msgid "**Action**:"
+msgstr "**Action**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:96
+#: aec4564236dd49868e3b6b47c3922b1f
+msgid "Save current state"
+msgstr "Sve current stte"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:97
+#: 03fa8a6f6d6241ebb9dca570001df01b
+msgid "Request calculation restart from last saved state"
+msgstr "Request clcultion restrt from lst sved stte"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:98
+#: d418eb02e935402cb2fa4489117db98a
+msgid "Common on HPC systems with job time limits"
+msgstr "Common on HPC systems با job time limits"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:100
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:582
+#: 01576775e2794b6d91618a64e66b7ef2 2fc371caa5934ada9d6d50b72d071c2a
+msgid "**Use cases**:"
+msgstr "**Use cses**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:101
+#: e2f9ef5da1134d0ca64d275a7d40b901
+msgid "Long calculations on job queue systems"
+msgstr "Long clcultions on job queue systems"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:102
+#: 337999f9f4a5497da0a3405a9ac118e7
+msgid "Checkpointing large systems"
+msgstr "Checkpointing lrge systems"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:103
+#: 4e459ffc442847d1a24b19cb2817b56f
+msgid "Multi-day calculations"
+msgstr "Multi-dy clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:105
+#: c4beabb799f24c8bb707b13342a960ae
+msgid "3. MemoryHandler"
+msgstr "3. MemیاyHوler"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:107
+#: 4464c74a6e7c4b5abfe8134bb88ae80a
+msgid "**Detects**: Out of memory errors"
+msgstr "**Detects**: Out of memیاy errیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:109
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:120
+#: 242ec6020c234dbb89aa2d861a6329c9 478538c08b1a4109b14c5de46c905c1a
+msgid "**Actions**:"
+msgstr "**Actions**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:110
+#: fa58bc90282d423f88880b5ef0d211f1
+msgid "Reduce memory-intensive options"
+msgstr "Reduce memیاy-intensive options"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:111
+#: 45c97f17c83b4d24b985f855d685ea19
+msgid "Adjust buffer sizes"
+msgstr "Adjust buffer sizes"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:112
+#: f3893baa71fb422296bc277b7a1e27e9
+msgid "Suggest increasing available memory"
+msgstr "Suggest incresing vilble memیاy"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:114
+#: 1ca0ccf7fd774721a3aa3f42a738aeae
+msgid ""
+"**Note**: Rare with modern systems, but critical for very large "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:116
+#: 75eb28fbefd54cebbe1adb17a1190869
+msgid "4. FrozenHandler"
+msgstr "4. FrozenHوler"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:118
+#: 3f9f257860bc43c9aba21e8619f9e14b
+msgid "**Detects**: Calculation not making progress (frozen/hanging)"
+msgstr "**Detects**: محاسبه not mking progress (frozen/hnging)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:121
+#: 13ba9a01eb4745b2a263643fa4cbf5c2
+msgid "Kill frozen process"
+msgstr "Kill frozen process"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:122
+#: 2ff653e574024ee2a0a0b14e22ed0105
+msgid "Restart with adjusted settings"
+msgstr "Restrt با djusted settings"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:123
+#: e2d82793832a476f9ec9ed6204991f1b
+msgid "Prevent indefinite hangs"
+msgstr "Prevent indefinite hngs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:125
+#: 9f724975b63145efaf3c64f645e47ddc
+msgid "Correction Logging"
+msgstr "Cیاrection Logging"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:127
+#: 4576433f527943458151c87de73562b3
+msgid "All custodian actions are recorded in `custodian.json`:"
+msgstr "All custodian actions are recorded in `custodian.json`:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:155
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:809
+#: 1cd4485807464db8ac34bf6dd9cd9323 4c3d132513ae4f378a0515f75ecc5652
+msgid "**Benefits**:"
+msgstr "**Benefits**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:156
+#: e9b02011e31f490d94ac039139b36530
+msgid "Transparency: See exactly what custodian did"
+msgstr "Trnsprency: See exctly wht custodin did"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:157
+#: 9da2cf8968d04a8bb8f6cdc5a5ac9b31
+msgid "Debugging: Understand why calculations needed corrections"
+msgstr "Debugging: Understو why clcultions needed cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:158
+#: 6326cdcef4c94935b0e96c7a5d3f12ba
+msgid "Optimization: Identify patterns for better initial settings"
+msgstr "Optimiztion: Identify ptterns برای better initil settings"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:162
+#: 26389bd276b24aa3af817394cfe63ec7
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:164
+#: 0e258c56869143c79cb55b221def8514
+msgid "1. Basic (Default Settings)"
+msgstr "1. Bsic (Defult Settings)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:168
+#: 649b254a361540d8ae145a17189d1070
+msgid "Enable custodian with default handlers"
+msgstr "Enble custodin با defult hوlers"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:169
+#: 0e92377d62444bb9825a3a9bd0147e2a
+msgid "Max errors: 5 (standard)"
+msgstr "Mx errیاs: 5 (stوrd)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:170
+#: 7b45ea19af654400bfeb8e45ef059035
+msgid "All 4 default handlers active"
+msgstr "All 4 defult hوlers ctive"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:171
+#: 02a613a772584599a7de0c15c5f5430e
+msgid "~15 minutes runtime"
+msgstr "~15 minutes runtime"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:172
+#: d81d6ff78df14d3fa89f8a47cca2a40b
+msgid "**Use for**: Standard production calculations"
+msgstr "**Use برای**: Stوrd production clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:174
+#: 3a4cded09a0546aa88d028401cbaa7b8
+msgid "2. Custom (Increased Error Tolerance)"
+msgstr "2. Custom (Incresed Errیا Tolernce)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:178
+#: fbfd1a0c309d4d6097b1e36f2944d01f
+msgid "Max errors: 10 (increased for difficult systems)"
+msgstr "Mx errیاs: 10 (incresed برای difficult systems)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:179
+#: 682653f866d44845a56bb2ceec888bc0
+msgid "Conservative initial SCF settings"
+msgstr "Conservtive initil SCF settings"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:180
+#: 0775c041ceff469ba50df435b5795263
+msgid "More correction attempts allowed"
+msgstr "Mیاe cیاrection ttempts llowed"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:181
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:191
+#: 554ba7fd50a54103897ab57ea95b4bd1 f7d71c985415433ba33063f8bc8c4744
+msgid "~20-30 minutes runtime"
+msgstr "~20-30 minutes runtime"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:182
+#: 639bf41823504e59a5f190e221b71814
+msgid "**Use for**: Difficult SCF convergence (metals, magnetic systems)"
+msgstr "**Use برای**: Difficult SCF convergence (metls, mgnetic systems)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:184
+#: d9bda56397fd4998abc139ca8b7542eb
+msgid "3. Difficult SCF (Test Recovery)"
+msgstr "3. Difficult SCF (Test Recovery)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:188
+#: 2729001e6c544fab91a84e55aa21eabd
+msgid "Intentionally difficult initial settings"
+msgstr "Intentionlly difficult initil settings"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:189
+#: edac972c8fed457187f0f44107abffe8
+msgid "Tests custodian's recovery capabilities"
+msgstr "Tests custodin's recovery cpbilities"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:190
+#: e01bf604cf3c49d99269b317098bebf7
+msgid "Max errors: 8"
+msgstr "Mx errیاs: 8"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:192
+#: b0c91845acb84829891c6c6b9f00a1f0
+msgid "**Use for**: Understanding custodian behavior, testing robustness"
+msgstr "**Use برای**: درک custodin behviیا, testing robustness"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:196
+#: 7503b8fe8bd04814b663b747e5ecbc55
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:213
+#: 6bcb472e73ce4235abdda41c9e0eda21
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:215
+#: 730535b5084849d5b211825a640c34fc
+msgid "Successful Calculation (No Errors)"
+msgstr "Successful محاسبه (No Errیاs)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:233
+#: f3f6445aad644419b7a264e4a2ee0b9b
+msgid "**custodian.json** (no errors):"
+msgstr "**custodin.json** (no errیاs):"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:246
+#: 70091d1d00dd4bb0a2bf7ca175bf5ae3
+msgid "Calculation with SCF Errors"
+msgstr "محاسبه با SCF Errیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:248
+#: f1317bc37f6f48e5a8f4af36be3a0308
+msgid "**Console output**:"
+msgstr "**Console output**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:263
+#: 682110696d7b440a939cfd52d856d677
+msgid "**custodian.json** (with corrections):"
+msgstr "**custodin.json** (با cیاrections):"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:303
+#: 66193890031b4a7686f0ef7301a9691b
+msgid "When to Use Custodian"
+msgstr "When to Use Custodin"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:305
+#: fba2e199b5a148528e07c8c44e48da5f
+msgid "✅ Enable Custodian For:"
+msgstr "✅ Enble Custodin Fیا:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:307
+#: 591ef3ef6f3f4ae0911f91a4f49e362f
+msgid "**Production Calculations**:"
+msgstr "**Production محاسبهs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:308
+#: 177a80c7706c4789a0c5878811cc6c40
+msgid "Important calculations where robustness > speed"
+msgstr "مهم clcultions where robustness > speed"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:309
+#: 097d626713b948bd98cd8bd7af3fd761
+msgid "Want unattended completion overnight/weekend"
+msgstr "Wnt unttended completion overnight/weekend"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:310
+#: 3c57b0d3c79b4a0d9c0fd7a1e12718fb
+msgid "Can't afford manual intervention"
+msgstr "Cn't fبرایd mnul intervention"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:312
+#: f30f09dfabe24c21977b27d4cbfc3379
+msgid "**Batch Workflows**:"
+msgstr "**Btch گردش کارs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:313
+#: 677b1d55cb28467e97050b11b40a8344
+msgid "Large-scale screening (100+ structures)"
+msgstr "Lrge-scle screening (100+ structures)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:314
+#: 997c97ed8c8c4dbe982418e1fe429c46
+msgid "Automated workflows"
+msgstr "Automted wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:315
+#: 550cb500c26a41d1a76bc3a087e4c1d5
+msgid "High-throughput calculations"
+msgstr "High-throughput clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:317
+#: 226799b94b17444ba281079be7e6108e
+msgid "**HPC Job Submission**:"
+msgstr "**HPC Job Submission**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:318
+#: a8b4070b5ac048b6a8ca34a8d1ab0877
+msgid "Limited job queue access"
+msgstr "Limited job queue ccess"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:319
+#: e7ab65213580488c86263a1f76d35a28
+msgid "Expensive to re-submit failed jobs"
+msgstr "Expensive to re-submit filed jobs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:320
+#: f743ff838a10498585fb3e81087af526
+msgid "Walltime limits require checkpointing"
+msgstr "Wlltime limits require checkpointing"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:322
+#: 1234001e4edb471cac28dc2677eb11cf
+msgid "**Difficult Systems**:"
+msgstr "**Difficult Systems**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:323
+#: 61a5df5f3ded4756a2a1e279be8236eb
+msgid "Metals (Fermi surface)"
+msgstr "Metls (Fermi surfce)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:324
+#: bfa943afbe34445c9ef05e83870634b7
+msgid "Magnetic systems (spin convergence)"
+msgstr "Mgnetic systems (spin convergence)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:325
+#: a616ed03573744a0a26248644de41a18
+msgid "Systems with history of SCF issues"
+msgstr "Systems با histیاy of SCF issues"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:326
+#: 632be5e68bc04cd6b166f56d1036f08d
+msgid "Unknown/untested structures"
+msgstr "Unknown/untested structures"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:328
+#: 1311eccab6394d559ce84658e1dd3601
+msgid "**Automated Workflows**:"
+msgstr "**Automted گردش کارs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:329
+#: 7328d0415ac4452fa4cce65e6a6b0e8e
+msgid "No manual monitoring possible"
+msgstr "No mnul monitیاing possible"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:330
+#: 113d16bb33fd405299450d358d64daf5
+msgid "Need guaranteed completion"
+msgstr "Need gurnteed completion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:331
+#: daf9525a93414f01b78c95f35a907ff8
+msgid "Production pipelines"
+msgstr "Production pipelines"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:333
+#: 7ed21d2f2c16441ea1db2ccd216e9ada
+msgid "❌ Disable Custodian For:"
+msgstr "❌ Disble Custodin Fیا:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:335
+#: 90e04dfdbd104b13a8aa5b2489f663e9
+msgid "**Debugging**:"
+msgstr "**Debugging**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:336
+#: 4aa25b3d7f3a49f9886382a744f25ee4
+msgid "Understanding WHY calculation fails"
+msgstr "درک WHY clcultion fils"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:337
+#: 20dca927b64941b7ac42001d28a336d7
+msgid "Testing new parameters"
+msgstr "Testing new prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:338
+#: c1a4e8152b8b4faa8116c8c495576bb8
+msgid "Learning about failure modes"
+msgstr "Lerning bout filure modes"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:340
+#: 11b5bafb32fc491aa5c3ac3c18fc8cab
+msgid "**Parameter Testing**:"
+msgstr "**Prmeter Testing**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:341
+#: 01ed564cd4b5407f8868a9c77714517b
+msgid "Want to see raw results without corrections"
+msgstr "Wnt to see rw results باout cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:342
+#: 20ff9f3ab3014ecb831abb59bbabf8a4
+msgid "Testing convergence systematically"
+msgstr "Testing convergence systemticlly"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:343
+#: 2e5bf24454ad4797a298010bdcef9f87
+msgid "Comparing different settings"
+msgstr "Compring different settings"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:345
+#: 5e54e254470043728f2c5298918c8050
+msgid "**Quick Tests**:"
+msgstr "**Quick Tests**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:346
+#: 27aea5279b92486faeb1ee434d3e9a1b
+msgid "Dry-run mode (custodian not needed)"
+msgstr "Dry-run mode (custodin not needed)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:347
+#: 12ae4f2ba93d4207b5abaaa6d790da19
+msgid "Structure validation"
+msgstr "Structure vlidtion"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:348
+#: 89c87e20c83a48c4b4508ccc3bf6ebdc
+msgid "Quick energy estimates"
+msgstr "Quick energy estimtes"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:350
+#: bcd54bb071994463be70d74befc8e601
+msgid "**Known Good Settings**:"
+msgstr "**Known Good Settings**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:351
+#: b1108dad559047be8bdcdf4f3a7a51d4
+msgid "Well-tested parameters for your system"
+msgstr "Well-tested prmeters برای your system"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:352
+#: bb47ab49cca843b59ff4bbc4e1098aea
+msgid "Calculations that always work"
+msgstr "محاسبهs tht lwys wیاk"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:353
+#: 2bd31329ff2b4607b6a437b131152ad8
+msgid "When speed > robustness"
+msgstr "When speed > robustness"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:357
+#: 07e9a65144dd4f7b87c178fb12c33a3b
+msgid "Settings Guidelines"
+msgstr "Settings Guidelines"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:359
+#: 9daddea88d304734a1b3796176d100a7
+msgid "Standard Production"
+msgstr "Stوrd Production"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:361
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:376
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:396
+#: 177c6fc2b761428fb7473c99e17ab290 74e35abe770345b1bcabef16161fa955
+#: 88aeeb43eaed4395ac04c5b118bff193
+msgid "**Configuration**:"
+msgstr "**Configurtion**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:367
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:386
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:408
+#: 7a776a263af641d381da9ab6c5fb0222 b3a017aa014244cf92ce589590da4981
+#: e1cf76bdd7fe4bde9729b54c73b0d819
+msgid "**Use for**:"
+msgstr "**Use برای**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:368
+#: 9bfd92aedea4473fa831e75ccee3ae60
+msgid "General production calculations"
+msgstr "Generl production clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:369
+#: a2fd760bc4cc4c4fa8061b98c42dbf54
+msgid "Most materials"
+msgstr "Most mterils"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:370
+#: 148e8163481144bd8327a625cf609421
+msgid "Typical convergence behavior"
+msgstr "Typicl convergence behviیا"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:372
+#: 03ae85cb679b4f759d0459ffcfd7083d
+msgid "**Expected**: 0-2 corrections for well-behaved systems"
+msgstr "**Expected**: 0-2 cیاrections برای well-behved systems"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:374
+#: 81b9dfd7604e4f8d8976837e62fab4c9
+msgid "Difficult Convergence"
+msgstr "Difficult همگرایی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:387
+#: 5690a2f4d78f4a5c85b14088443f457c
+msgid "Metals"
+msgstr "Metls"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:388
+#: aa6193e5b0b64fafa9ce25dc48640811
+msgid "Magnetic systems"
+msgstr "Mgnetic systems"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:389
+#: bbcddf73d54c48e1948cef3380a7e79f
+msgid "Large systems (>100 atoms)"
+msgstr "Lrge systems (>100 toms)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:390
+#: 64e6f9185d2c4f159a58fce7cee45c60
+msgid "Complex structures (surfaces, interfaces)"
+msgstr "Complex structures (surfces, interfces)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:392
+#: d9105fe407fd409eb37d52900a556d58
+msgid "**Expected**: 3-8 corrections possible"
+msgstr "**Expected**: 3-8 cیاrections possible"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:394
+#: 01f339dbdd054aac9eda408db54a8170
+msgid "Very Difficult Systems"
+msgstr "Very Difficult Systems"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:409
+#: b73523091aeb4a73a5d018f440ff022a
+msgid "Pathologically difficult systems"
+msgstr "Pthologiclly difficult systems"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:410
+#: bb50dd9a482b45e8bb452d4c1c7ec488
+msgid "When all else fails"
+msgstr "When ll else fils"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:411
+#: a5e0e7416b344b8095a41bf461d8d49d
+msgid "Research into difficult convergence"
+msgstr "Reserch into difficult convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:413
+#: 056ba4525c9f4c68be4110b0bf202778
+msgid "**Note**: If needing >15 corrections, consider:"
+msgstr "**توجه**: If needing >15 cیاrections, consider:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:414
+#: 8846f55c21074ad1bce671ac56314790
+msgid "Is structure reasonable?"
+msgstr "Is structure resonble?"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:415
+#: b1fb47c1ea4f42fbba2aed59b1e6319b
+msgid "Are parameters appropriate?"
+msgstr "Are prmeters pproprite?"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:416
+#: 906f30acf2164e5cb54d71c8fae450f9
+msgid "Is SIESTA suitable for this system?"
+msgstr "Is SIESTA suitble برای this system?"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:420
+#: 45f9745114b04bc6b0fbcee54c68ba05
+msgid "Common Scenarios"
+msgstr "Common Scenrios"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:422
+#: ff93926f968a4afea272129118bd2a60
+msgid "Scenario 1: Simple Insulator"
+msgstr "Scenrio 1: Simple Insultیا"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:424
+#: a3392472c9e34509a3e6dc3e04c927bb
+msgid "**System**: Silicon, NaCl, Diamond"
+msgstr "**System**: Silicon, NCl, Dimond"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:426
+#: 51bbcde0222a45348e1d232b744c69c0
+msgid "**Expected behavior**:"
+msgstr "**Expected behviیا**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:427
+#: ccb14f2bc23841aa84907094e3bcd5f0
+msgid "Usually no errors"
+msgstr "Usully no errیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:428
+#: 62ce0f42e0b94a2398acaa1a28540410
+msgid "custodian.json shows `\"errors\": []`"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:429
+#: 5fca52f2705b43cd90aff25f9f36c586
+msgid "Completes in first run"
+msgstr "Completes in first run"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:431
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:446
+#: c7adae56814c4ab482f7c2091a3c5f1c e929ff042ba6460192dbd514dedba94a
+msgid "**Settings**: Standard (max_errors=5)"
+msgstr "**Settings**: Stوrd (mx_errیاs=5)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:433
+#: 1c30c372778e45ddaf46c8b6c8db08d0
+msgid "Scenario 2: Metal"
+msgstr "Scenrio 2: Metl"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:435
+#: da27308b4f7c426baf631bd7fa3b931a
+msgid "**System**: Al, Cu, Au"
+msgstr "**System**: Al, Cu, Au"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:437
+#: c76ca6694d914761bc4bb646bc8c155e
+msgid "**Initial error**: SCF_NOT_CONVERGED"
+msgstr "**Initil errیا**: SCF_NOT_CONVERGED"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:439
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:454
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:471
+#: 0631c05ce21d434882b051460ead5107 d8d4ac6920694a4d9394eb19fc835cfa
+#: fd52cb7fc0984dc9a36e495af1d46cef
+msgid "**Custodian actions**:"
+msgstr "**Custodin ctions**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:440
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:455
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:472
+#: 2af4686ac6fb4587a690b7ad15f24bc3 4c882013e50b443a9db99ac3a0f44ca9
+#: 772cee3154f148f5993a98b39f65d3fb
+msgid "Reduce mixing weight"
+msgstr "Reduce mixing weight"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:441
+#: 18a722d9bed24f16a5b76aeb60986057
+msgid "Add Fermi smearing (OccupationFunction: MP)"
+msgstr "Add Fermi smering (OccuptionFunction: MP)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:442
+#: edbb16087c244638ba3819aa726ff26e
+msgid "Increase MaxSCFIterations"
+msgstr "Increse MxSCFItertions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:444
+#: 5ae625877ac84138b38c324b0b22223d
+msgid "**Final result**: Converged in 2-3 corrections"
+msgstr "**Finl result**: Converged in 2-3 cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:448
+#: d744727cb2434f4aad713d841d20c890
+msgid "Scenario 3: Magnetic System"
+msgstr "Scenrio 3: Mgnetic System"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:450
+#: 24c0cd59c2dd4e519d9190b4cd4829da
+msgid "**System**: Fe, Ni, magnetic oxides"
+msgstr "**System**: Fe, Ni, mgnetic oxides"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:452
+#: 844507b4e38e437da89cf8b8220c3a57
+msgid "**Initial errors**: Multiple SCF_NOT_CONVERGED"
+msgstr "**Initil errیاs**: Multiple SCF_NOT_CONVERGED"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:456
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:473
+#: 2dd652e2230743bd842cfb3b324e3b4b e8351073d9544c4d9a96f36a83bbb941
+msgid "Increase SCF iterations"
+msgstr "Increse SCF itertions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:457
+#: 9647b1e0804a46a0878f19939c794f6c
+msgid "Change mixer method"
+msgstr "Chnge mixer method"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:458
+#: 1993906b0f6346799b1f54ecddb68f66
+msgid "Add electronic temperature"
+msgstr "Add electronic temperture"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:459
+#: 581eba0b2b1949d69e10e1aebd965bcc
+msgid "Relax DM.Tolerance"
+msgstr "Relx DM.Tolernce"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:461
+#: 845d3c71ca744a2e9992d59e227f8ead
+msgid "**Final result**: Converged in 4-6 corrections"
+msgstr "**Finl result**: Converged in 4-6 cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:463
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:478
+#: 6fe95cd8b6414e428cd981ef92eb5e8c f9c80d3f529d46678e9c6091ca6f0171
+msgid "**Settings**: Difficult (max_errors=10)"
+msgstr "**Settings**: Difficult (mx_errیاs=10)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:465
+#: 4618bea0a0fe4cf195665e801864e396
+msgid "Scenario 4: Surface/Slab"
+msgstr "Scenrio 4: Surfce/Slb"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:467
+#: 7cc766cafbf0475c9be70e205c726c07
+msgid "**System**: Metal surface with adsorbate"
+msgstr "**System**: Metl surfce با dsیاbte"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:469
+#: e4b4994f82fa44699b76b28d698666e1
+msgid "**Initial errors**: SCF_NOT_CONVERGED"
+msgstr "**Initil errیاs**: SCF_NOT_CONVERGED"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:474
+#: a1fd075394574f56bcdeebffe332ec50
+msgid "Add electronic temperature (if metal)"
+msgstr "Add electronic temperture (if metl)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:476
+#: 34ceafd1dd3f4d0e915fd6e548f3bcf0
+msgid "**Final result**: Converged in 2-4 corrections"
+msgstr "**Finl result**: Converged in 2-4 cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:482
+#: 3fa5902af7c54235a4f58b6de3977d3a
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:484
+#: db40b67427cb4300bf29de4719116113
+msgid "Workflow Strategy"
+msgstr "گردش کار Strtegy"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:486
+#: ccb30a052b35441ebf615ee239161111
+msgid "**1. Start Conservative**:"
+msgstr "**1. Strt Conservtive**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:496
+#: 0dca18a183bd4486b3ca5d7e45ef3ff9
+msgid "**2. Enable Custodian**:"
+msgstr "**2. Enble Custodin**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:502
+#: d8dbc1cea61044c8bfa2de9e9556a062
+msgid "**3. Review Corrections**:"
+msgstr "**3. Review Cیاrections**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:509
+#: 7a7641bbf01747feb2192721f15f6429
+msgid "**4. Optimize Initial Settings**:"
+msgstr "**4. Optimize Initil Settings**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:510
+#: a7681f1894cb44a3b303ecc718c4d4db
+msgid ""
+"If many corrections: Incorporate successful corrections into initial "
+"settings"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:511
+#: 0f406fbe6fe54444a70d155151678f83
+msgid "If no corrections: Can try looser settings for speed"
+msgstr "If no cیاrections: Cn try looser settings برای speed"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:512
+#: a3bcc69aae4f45d3b8f8688037303510
+msgid "Document successful parameter sets"
+msgstr "Document successful prmeter sets"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:514
+#: f49508317fc84859b8cd59b280b4a2d8
+msgid "Production Checklist"
+msgstr "Production Checklist"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:516
+#: bc3ede932d2847d182b4ef7914a5db17
+msgid "✅ **Enable custodian** for production calculations"
+msgstr "✅ **Enble custodin** برای production clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:518
+#: d34bee9282454f27a743f6f33167fd15
+msgid "✅ **Set appropriate max_errors**:"
+msgstr "✅ **Set pproprite mx_errیاs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:519
+#: 5232ee2c1fb249c1a9cf5c548fa544c7
+msgid "Standard systems: 5"
+msgstr "Stوrd systems: 5"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:520
+#: d9772d4028f14b91a4a790ef236502be
+msgid "Difficult systems: 10"
+msgstr "Difficult systems: 10"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:521
+#: 05cced44ad744b24a966b4604afb4b21
+msgid "Very difficult: 15 (rare)"
+msgstr "Very difficult: 15 (rre)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:523
+#: ef93966f4ff642a2949c33d28af8c363
+msgid "✅ **Review custodian.json** after completion:"
+msgstr "✅ **Review custodin.json** fter completion:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:524
+#: dda9d885506f4499b07bff2543201f9c
+msgid "What errors occurred?"
+msgstr "Wht errیاs occurred?"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:525
+#: 4090b6bc8b044568a10ee122ca752b09
+msgid "What corrections worked?"
+msgstr "Wht cیاrections wیاked?"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:526
+#: 65de9d6972324800864180e08cd22c76
+msgid "Can initial parameters be improved?"
+msgstr "Cn initil prmeters be improved?"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:528
+#: 974abbe2f93d4cd3b2558aa8a7ec0e70
+msgid "✅ **Document corrections** for future calculations:"
+msgstr "✅ **Document cیاrections** برای future clcultions:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:529
+#: f90fd26de5564558b32f62c70bd1900a
+msgid "Record successful parameter sets"
+msgstr "Recیاd successful prmeter sets"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:530
+#: cd4fb6e913d94e30bc08477a76097129
+msgid "Build library of working settings"
+msgstr "Build librry of wیاking settings"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:531
+#: 114dd26311fe45c6a0b1c827dca893ff
+msgid "Share with team/community"
+msgstr "Shre با tem/community"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:533
+#: a72d57748625488db0e6d26c4556e3fe
+msgid "✅ **Monitor patterns**:"
+msgstr "✅ **Monitیا ptterns**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:534
+#: 6bffb03bb45545cba3e00ff24e872b93
+msgid "Same errors repeating?"
+msgstr "Sme errیاs repeting?"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:535
+#: ba06c1e85af348f3bc539595d1fc788a
+msgid "Certain materials always need corrections?"
+msgstr "Certin mterils lwys need cیاrections?"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:536
+#: 8eaf87901bfb4aafb11e78b0ee865cd1
+msgid "Update default settings accordingly"
+msgstr "Updte defult settings ccیاdingly"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:538
+#: efbff98e8d604b9ca9792a1987bb02af
+msgid "Performance Considerations"
+msgstr "Perبرایmnce Considertions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:540
+#: b4e86010e90a4f4eb2b7fee317726776
+msgid "**Overhead**:"
+msgstr "**Overhed**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:541
+#: 6646e624b0024fd8a42eca7d7d15bbc1
+msgid "Custodian monitoring: Negligible (<1%)"
+msgstr "Custodin monitیاing: Negligible (<1%)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:542
+#: b003e52c6b614f3bbfd42cb26e4441ef
+msgid "Error detection: ~1-2 seconds per check"
+msgstr "Errیا detection: ~1-2 seconds per check"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:543
+#: be48ad96706f461ea42216cc2b927dd0
+msgid "Restart overhead: Minimal (continues from last state)"
+msgstr "Restrt overhed: Miniml (continues from lst stte)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:545
+#: bb742ac786d5481f9f322f2f5ee5816e
+msgid "**Time savings**:"
+msgstr "**زمان svings**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:546
+#: 2da017f5f6de48ef9362d58a76783932
+msgid "Avoids manual restarts: Hours to days"
+msgstr "Avoids mnul restrts: Hours to dys"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:547
+#: 133ee0df27e746a1962c6002175feedb
+msgid "Prevents job queue re-submissions: Days"
+msgstr "Prevents job queue re-submissions: Dys"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:548
+#: 5bcfcb8007c04ff5be7a270a73c0d5aa
+msgid "Enables overnight/weekend runs: Priceless"
+msgstr "Enbles overnight/weekend runs: Priceless"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:550
+#: be2c43da398649549fc1009b96127605
+msgid "**Trade-off**:"
+msgstr "**Trde-off**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:551
+#: bbca98f0279f4e9587b38f51af50b5ea
+msgid "Slightly slower individual runs (corrections)"
+msgstr "Slightly slower individul runs (cیاrections)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:552
+#: b6e0ab1fbd544d4285d7324b40442313
+msgid "Much faster overall workflow (no manual intervention)"
+msgstr "Much fster overll wیاkflow (no mnul intervention)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:553
+#: 036fe233762f475a94f97a98c0c0d387
+msgid "**Recommendation**: Enable for all production work"
+msgstr "**Recommendtion**: Enble برای ll production wیاk"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:557
+#: 97ae330f54394abeb0d132a509a742b0
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:559
+#: 6d51a866385b417da93d89bc6dce3f99
+msgid "Custom Handlers"
+msgstr "Custom Hوlers"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:561
+#: 4a818f2c9edc4179a587c9e2ddccb55c
+msgid "For specialized error handling, write custom handlers:"
+msgstr "Fیا specilized errیا hوling, write custom hوlers:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:583
+#: e60fbfde5a5d442e9ba5e64480fd4f3b
+msgid "System-specific errors"
+msgstr "System-specific errیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:584
+#: a56b64fa37f841a5b81e241c1fa85103
+msgid "Custom convergence strategies"
+msgstr "Custom convergence strtegies"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:585
+#: fb0c0547009b40f390f6f4b2861e8d17
+msgid "Integration with other codes"
+msgstr "Integrtion با or codes"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:586
+#: 9068f8c9c985431c952891ba51dd5c3e
+msgid "Specialized workflows"
+msgstr "Specilized wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:588
+#: 1764fd93e5a24feda12dbd47db8cfbc3
+msgid ""
+"**Documentation**: See `src/atomate2/siesta/custodian/handlers.py` for "
+"examples"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:590
+#: 58d21f0bdadc4690a460bffe9c67c44c
+msgid "Handler Priority"
+msgstr "Hوler Priیاity"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:592
+#: 6be13c1d8aa54cc5a8f543d3a1449c5a
+msgid "Handlers are executed in order:"
+msgstr "Hوlers re executed in یاder:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:594
+#: aed15453c3944ad2b585744c8ae7e423
+msgid "**SCFConvergenceHandler** (most common)"
+msgstr "**SCFهمگراییHوler** (most common)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:595
+#: eb257d188a9749ce93019b56950b71c5
+msgid "**WalltimeHandler** (HPC-specific)"
+msgstr "**WlltimeHوler** (HPC-specific)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:596
+#: 74e10c212e6c4232b31bc1e6174304a0
+msgid "**MemoryHandler** (resource errors)"
+msgstr "**MemیاyHوler** (resource errیاs)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:597
+#: 685f287e7f5745f1beaf91bc8b3bb02a
+msgid "**FrozenHandler** (last resort)"
+msgstr "**FrozenHوler** (lst resیاt)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:599
+#: 7dc2a9397d7d4ed2ab0f3a274d2c670d
+msgid "Custom handlers can be inserted at any position:"
+msgstr "Custom hوlers cn be inserted t ny position:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:609
+#: 596880d636c74ee69c3ad9c4b05ce84c
+msgid "Multi-Stage Corrections"
+msgstr "Multi-Stge Cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:611
+#: 2f86ca33662d430f9795975ecaeb1089
+msgid "For complex workflows, custodian can handle multi-stage corrections:"
+msgstr "Fیا complex wیاkflows, custodin cn hوle multi-stge cیاrections:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:613
+#: 58b4c1b6fe2e429990f9aa3cc9fb5d13
+msgid "**Example**: Phonon calculation with tight forces"
+msgstr "**مثال**: فونون clcultion با tight برایces"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:632
+#: 59167490e3c74300833ef4d170eb4f9d
+msgid "**Benefit**: Each stage gets appropriate error tolerance"
+msgstr "**Benefit**: Ech stge gets pproprite errیا tolernce"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:636
+#: 56cfd08a6ab344ab887a629ce7785c52
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:638
+#: 9ab493ebe6d64e57adc3c7136c4d97df
+msgid "Issue 1: Too Many Errors"
+msgstr "Issue 1: Too Mny Errیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:640
+#: 059391cf7c8c49baa38ec9d037b7ade5
+msgid "**Symptoms**: Calculation exceeds `custodian_max_errors`"
+msgstr "**Symptoms**: Calculation exceeds `custodian_max_errors`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:642
+#: 23ba5760073142469c88e0ce50f82650
+msgid "**Possible causes**:"
+msgstr "**Possible cuses**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:643
+#: 6dd108bc4a19494d9ec247ef7c89e7f8
+msgid "Structure is unreasonable (overlapping atoms, wrong lattice)"
+msgstr "Structure is unresonble (overlpping toms, wrong lttice)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:644
+#: a3a06bfcf9d24cdd9e962895eb39f1a3
+msgid "Parameters are inappropriate for system"
+msgstr "Prmeters re inpproprite برای system"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:645
+#: d117f3cd0f8840fda648b69622833be3
+msgid "System is genuinely very difficult"
+msgstr "System is genuinely very difficult"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:647
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:684
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:710
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:734
+#: 063c50a793384eed960525bd464eb212 417d6a955e6c40b59ab59a77f05ae058
+#: 556711510af74c5cb58a9280c41b544a b3fd2f11b1814cb3b14dadb213776248
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:648
+#: fdb855d97ef143e994aedd320fd84ca1
+msgid "**Check structure**:"
+msgstr "**Check structure**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:656
+#: ea49f4fae0884ac896876580e1c4ffc3
+msgid "**Try stricter initial settings**:"
+msgstr "**Try stricter initil settings**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:665
+#: a86f6b066a9e4e6abd925c34b9f75641
+msgid "**Increase max_errors** (up to 15):"
+msgstr "**Increse mx_errیاs** (up to 15):"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:670
+#: 2927a79f5c1441b7ba0c9d6fa8f8a926
+msgid "**Check if SIESTA is appropriate**:"
+msgstr "**Check if SIESTA is pproprite**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:671
+#: 74791923482f4166bf044a8f4cf8138b
+msgid "Very heavy elements? Consider other codes"
+msgstr "Very hevy elements? Consider or codes"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:672
+#: 3ffb39b19e674737b97da2c950d7d996
+msgid "Strong correlation? SIESTA may struggle"
+msgstr "Strong cیاreltion? SIESTA my struggle"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:673
+#: b2b508d595974eacb57fea9b61577d51
+msgid "Review literature for your system"
+msgstr "Review literture برای your system"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:675
+#: fe20a2e671b648889928189c3312c9eb
+msgid "Issue 2: Custodian Not Running"
+msgstr "Issue 2: Custodin Not اجرای"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:677
+#: 7df7e374bd4641998de8b0c8f3fe83ac
+msgid "**Symptoms**: No `custodian.json` file created"
+msgstr "**Symptoms**: No `custodian.json` file created"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:679
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:705
+#: 58825ee69f914a039112b741b13fd7f7 cb07f9e1ed6943ca8def428f24bcd6c0
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:680
+#: d0b9a033fb3d40fdbf17bf5eb51e4551
+msgid "Custodian only runs with actual SIESTA (not dry_run)"
+msgstr "Custodin only runs با ctul SIESTA (not dry_run)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:681
+#: de1e2a802adc433c9862f327e9cc175b
+msgid "`use_custodian=False` in settings"
+msgstr "`use_custodian=False` in settings"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:682
+#: 4951cbe755ff47a0a1f555e20ec12806
+msgid "Job failed before custodian started"
+msgstr "Job filed beبرایe custodin strted"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:685
+#: 08fe8d7f68ba4936a119886219075500
+msgid "**Check RUN_MODE**:"
+msgstr "**Check RUN_MODE**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:690
+#: 8655bb5eda424fb3b21b2640a7a73ee2
+msgid "**Verify custodian enabled**:"
+msgstr "**Verify custodin enbled**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:695
+#: 549066a568d8472384a11e838e925c72
+msgid "**Check logs**:"
+msgstr "**Check logs**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:701
+#: 2f2ac86469704f66a07d7f9b259036f6
+msgid "Issue 3: Corrections Not Effective"
+msgstr "Issue 3: Cیاrections Not Effective"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:703
+#: 55625ae4f3794fdebf570dbebbc9e2a4
+msgid "**Symptoms**: Same error repeating despite corrections"
+msgstr "**Symptoms**: Sme errیا repeting despite cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:706
+#: bf2c4e44595747b897feb3954b597758
+msgid "Correction strategy not suitable for this error type"
+msgstr "Cیاrection strtegy not suitble برای this errیا type"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:707
+#: b2f169a88b75417b83477f64f7416fb1
+msgid "System needs different approach"
+msgstr "System needs different pproch"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:708
+#: 6ec59a3b3b9b442c986d028d7a1c36f7
+msgid "Convergence impossible with current settings"
+msgstr "همگرایی impossible با current settings"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:711
+#: 9e940e0ea72b4cc4af0897a4d0ff40b4
+msgid "**Review custodian.json**:"
+msgstr "**Review custodin.json**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:717
+#: 68c759e52f734dc7bb84907b24ec2e00
+msgid "**Try manual corrections**:"
+msgstr "**Try mnul cیاrections**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:718
+#: 2d17c5cf9fbd4898b70df403aa7bb88a
+msgid "Identify pattern in corrections"
+msgstr "Identify pttern in cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:719
+#: 5a52e2d42c0e447d9c4d62a6d9aaf12b
+msgid "Apply more aggressive fixes manually"
+msgstr "Apply mیاe ggressive fixes mnully"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:720
+#: 1d3820ee6b1543a3a1acc549e6436bfe
+msgid "Test if convergence possible"
+msgstr "Test if convergence possible"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:722
+#: dd91e2a307454d9ea08c708bee8d9551
+msgid "**Consider alternatives**:"
+msgstr "**Consider lterntives**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:723
+#: f0b3d5503cee4150859a5c3fd8e02db0
+msgid "Different functional (GGA → LDA)"
+msgstr "Different functionl (GGA → LDA)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:724
+#: 7c13478834fa4e7899f5c7318ac5b351
+msgid "Different basis set (DZP → SZ)"
+msgstr "Different bsis set (DZP → SZ)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:725
+#: 70c64235fe30457cb671cb92e9f4e00d
+msgid "Different pseudopotentials"
+msgstr "Different pseudopotentils"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:726
+#: 72b5a896456e46cfa57e3fc8c74d00da
+msgid "Different DFT code"
+msgstr "Different DFT code"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:728
+#: 1940899312b1423681e744f3588cb720
+msgid "Issue 4: Slow Progress"
+msgstr "Issue 4: Slow Progress"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:730
+#: be26fcfb9233488587652048af2436f6
+msgid "**Symptoms**: Many corrections, slow convergence"
+msgstr "**Symptoms**: Mny cیاrections, slow convergence"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:732
+#: 7b8137492cbd4d7d9d145a07a1ad4639
+msgid "**Cause**: Progressive corrections starting from very conservative"
+msgstr "**Cuse**: Progressive cیاrections strting from very conservtive"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:735
+#: 19d581a6679f4d70b258174429e143eb
+msgid "**Start with better settings**:"
+msgstr "**Strt با better settings**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:744
+#: 2d03850e1b454824bc0a9e35e67b1982
+msgid "**Analyze previous corrections**:"
+msgstr "**Anlyze previous cیاrections**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:745
+#: a5dcbed5f0304167be292280abae6c23
+msgid "What final settings worked?"
+msgstr "Wht finl settings wیاked?"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:746
+#: 224b47a87dcb467b90918c2673b4ec69
+msgid "Use those as initial settings next time"
+msgstr "Use those s initil settings next time"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:748
+#: 4a2b32d262944a4f9b8483f912081834
+msgid "**Build parameter library**:"
+msgstr "**Build prmeter librry**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:749
+#: 87c413a7a1014dcdb6bb093e6d53ae4b
+msgid "Document successful settings per material type"
+msgstr "Document successful settings per mteril type"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:750
+#: 43abc698f38f46528bfab8cd70a24583
+msgid "Share within research group"
+msgstr "Shre باin reserch group"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:754
+#: 54bf32e596ca4970954e5cff1032d197
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:756
+#: b77f055a4cfe42e3886412160ee3e9b5
+msgid ""
+"✅ **Enable for production**: Always use custodian for important "
+"calculations"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:758
+#: c93fea8a78be474da3cd1fad01cc1436
+msgid "✅ **Review logs**: Check `custodian.json` after every run"
+msgstr "✅ **Review logs**: Check `custodian.json` after every run"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:760
+#: 079776ff2f9448579cc449a97e9f6ad8
+msgid "✅ **Document patterns**: Build library of successful parameter sets"
+msgstr "✅ **Document ptterns**: Build librry of successful prmeter sets"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:762
+#: 589172c99c834819a63a75b81d30dfc9
+msgid "✅ **Start conservative**: Better initial settings = fewer corrections"
+msgstr "✅ **Strt conservtive**: Better initil settings = fewer cیاrections"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:764
+#: e30ba3a754c14eddbe68c96bac91100e
+msgid ""
+"✅ **Appropriate max_errors**: Standard (5), difficult (10), very "
+"difficult (15)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:766
+#: 90cc813c1c484350a59c0b97106abb4e
+msgid "✅ **Monitor overhead**: Custodian adds minimal time (<1%)"
+msgstr "✅ **Monitیا overhed**: Custodin dds miniml time (<1%)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:768
+#: 42626226b4b84c85bbcf098243f25cca
+msgid ""
+"✅ **Test without custodian first**: Understand failure modes before "
+"automating"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:770
+#: 1008ac3f8d034939ab41ef6fc2386529
+msgid "✅ **Share knowledge**: Document working settings for your materials"
+msgstr "✅ **Shre knowledge**: Document wیاking settings برای your mterils"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:774
+#: 4fe29c7650ba4e5fb3a122ff81a5185c
+msgid "Integration with Workflows"
+msgstr "Integrtion با گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:776
+#: 48270c16942d4afdb2b78b4edc778ae3
+msgid "With Database Storage"
+msgstr "With Dtbse Stیاge"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:778
+#: b1b8efa9bfcf49cfbb13971bc77b0a27
+msgid "Custodian corrections are automatically saved in database:"
+msgstr "Custodin cیاrections re utomticlly sved in dtbse:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:795
+#: 70aa219824dd42c8a7a8b68941bab58a
+msgid "With Jobflow Remote (HPC)"
+msgstr "With Jobflow Remote (HPC)"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:797
+#: c1802df5c70b4cee9f707e115cdfb841
+msgid "Custodian runs automatically on remote systems:"
+msgstr "Custodin runs utomticlly on remote systems:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:810
+#: d0ff3ea639b442b39cd6a87ecc08c92f
+msgid "No manual intervention on cluster"
+msgstr "No mnul intervention on cluster"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:811
+#: aab9bb4dd5b443409ee85d714ac1ab67
+msgid "Automatic recovery from errors"
+msgstr "Automtic recovery from errیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:812
+#: 6c4ff948295b44c68b54f02a1ffc3ad0
+msgid "Logged corrections for review"
+msgstr "Logged cیاrections برای review"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:814
+#: 526a7a8c50c84bf9ba616c80a2fb7ed1
+msgid "With Convergence Studies"
+msgstr "With همگرایی Studies"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:816
+#: 7f52e7286ccd4a1da598e32f7d21bbec
+msgid "Enable custodian for all convergence calculations:"
+msgstr "Enble custodin برای ll convergence clcultions:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:828
+#: 1079936adbbe4e69998b57538cc1c8ad
+msgid ""
+"**Benefit**: Entire convergence study completes even if some calculations"
+" difficult"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:832
+#: b1e712a976e74cb1b27297ef29526c59
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:834
+#: 630cc97d9c4b439c8125c097a31516eb
+msgid "After completing this tutorial:"
+msgstr "After completing this tutیاil:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:836
+#: dc8eef9a6eca49e887c378b4f081ac7c
+msgid ""
+"**Run Basic Example**: → Test custodian with simple system → Review "
+"`custodian.json` output → Understand default behavior"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:841
+#: 2eeea8177b6541c0aa34574c8de2dd0b
+msgid ""
+"**Test Difficult System**: → Run `EXAMPLE_TYPE = \"difficult_scf\"` → See"
+" progressive corrections in action → Understand recovery capabilities"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:846
+#: 89557256602c4b858e19bb9906dedb76
+msgid ""
+"**Apply to Your Work**: → Enable custodian for production calculations → "
+"Document corrections for your systems → Build parameter library"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:851
+#: 630d2748c60442f0b2219b925c020066
+msgid ""
+"**Advanced Topics**: → Write custom handlers if needed → Integrate with "
+"workflows → Optimize initial parameters based on corrections"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:856
+#: d9994ade8363402bb51f785a3dcbb0fb
+msgid ""
+"**Related Tutorials**: → [Database Storage](../01-database-storage/) - "
+"Store custodian logs → [Jobflow Remote](../02-jobflow-remote/) - HPC "
+"submission with custodian → [Convergence "
+"Studies](../../../02-workflows/01-convergence/) - Custodian + convergence"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:863
+#: 3b958f94ca594f82b3b87d01e99fc217
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:865
+#: 07767c8e236e4730924cdea6bd4e4f25
+msgid "**Custodian Documentation**: MaterialsProject custodian library"
+msgstr "**Custodin Documenttion**: MterilsProject custodin librry"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:866
+#: 744b18153f56492793ccca20ce1784a7
+msgid "https://github.com/materialsproject/custodian"
+msgstr "https://github.com/materialsproject/custodian"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:867
+#: a732171627c948f08eacce31d721c11d
+msgid "General framework for error handling"
+msgstr "Generl frmewیاk برای errیا hوling"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:869
+#: e92e6eddea6648398067e5593cf07204
+msgid "**SIESTA Error Handling**: Common SIESTA errors and solutions"
+msgstr "**SIESTA Errیا Hوling**: Common SIESTA errیاs و solutions"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:870
+#: e2a108500f1f4eacb4aa162c23aa9c0a
+msgid "SIESTA manual: Error messages section"
+msgstr "SIESTA mnul: Errیا messges section"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:871
+#: 467808eadae040e592e923745363e5f2
+msgid "Community forums: siesta.icmab.es"
+msgstr "Community برایums: siest.icmb.es"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:873
+#: 2bd93b291bba41e2b3004cea0c41197b
+msgid "**Atomate2-SIESTA Handlers**: Implementation details"
+msgstr "**Atomte2-SIESTA Hوlers**: Implementtion detils"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:874
+#: 77caf3103b484c4ead70081b1bcacf10
+msgid "`src/atomate2/siesta/custodian/handlers.py`"
+msgstr "`src/atomate2/siesta/custodian/handlers.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:875
+#: 2bf0b669d0894901a67b62a53b20519b
+msgid "Source code for all handlers"
+msgstr "Source code برای ll hوlers"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:877
+#: 010ca6252e654a7c9336189b6e6ecfd6
+msgid "**Online Documentation**:"
+msgstr "**Online Documenttion**:"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:878
+#: 1228ff83c08b4fff8da9f4900212684c
+msgid "See https://github.com/arsalan-akhtar/atomate2siesta for technical details"
+msgstr "See https://github.com/arsalan-akhtar/atomate2siesta for technical details"
+
+#: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:882
+#: 42f841bb31444e1f931419345e5ce27b
+msgid ""
+"*Back to [04-infrastructure](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

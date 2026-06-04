@@ -1,0 +1,648 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:1
+#: 1e766cb14de543de802e1b6b5de1b6a9
+msgid "Tutorial: Density of States (DOS) with DOSMaker"
+msgstr "Tutorial: Density of States (DOS) with DOSMaker"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:3
+#: 0b5b5567cd404654a5ab35a1c6898485
+msgid ""
+"**Category**: 01-basics/05-DOSMaker **Difficulty**: Beginner **Time**: ~2"
+" min (dry-run), ~10-15 min (full calculation)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:9
+#: ad41ab57252e4ba78ca39c25273b7d98
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:11
+#: 9ae1980a3fe748ea83b2551f29cacc0a
+msgid ""
+"This tutorial demonstrates how to calculate the electronic density of "
+"states (DOS) using `DOSMaker`. The DOS provides crucial information about"
+" electronic structure, showing how many electronic states are available "
+"at each energy level."
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:13
+#: 57cafeba87ca408994b50b61aaa847ae
+msgid "**What DOS Tells You**:"
+msgstr "**Wht DOS Tells You**:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:14
+#: c0ce4c3f90464670bae10f590dd81fb8
+msgid "**Band gap**: Energy range with zero states (insulators/semiconductors)"
+msgstr "**Bو gp**: Energy rnge با zero sttes (insultیاs/semiconductیاs)"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:15
+#: 559041dbb4964745a90d1cd6906ee017
+msgid "**Metallic character**: Finite DOS at Fermi level = metal"
+msgstr "**Metllic chrcter**: Finite DOS t Fermi level = metl"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:16
+#: 4c8960d703a9491eae4822cd012f0df6
+msgid "**Fermi energy**: Chemical potential of electrons"
+msgstr "**Fermi energy**: Chemicl potentil of electrons"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:17
+#: bfd355084a4842edb86737aaf090b5ef
+msgid "**Electronic distribution**: How states are distributed across energy"
+msgstr "**Electronic distribution**: How sttes re distributed cross energy"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:21
+#: c8693c5762cc411aa3531e6ff29459da
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:23
+#: efa7bfcde64c4a53a2bcefd935e99a04
+msgid "Using `DOSMaker` for DOS calculations"
+msgstr "Using `DOSMaker` for DOS calculations"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:24
+#: 4d1ed2827ff84c8ea0077e8d92a9dd51
+msgid "DOS energy range and broadening parameters"
+msgstr "DOS energy rnge و brodening prmeters"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:25
+#: 3b5b1591317b42988ae8b712989d0670
+msgid "Analyzing DOS plots and Fermi energy"
+msgstr "Anlyzing DOS plots و Fermi energy"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:26
+#: 4817af355b444688bbc0865b12f90909
+msgid "Runtime parameter modification with powerups"
+msgstr "Runtime prmeter modifiction با powerups"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:27
+#: eb799c7827974765abc185cde78b643a
+msgid "Integration with relaxation workflows"
+msgstr "Integrtion با relxtion wیاkflows"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:31
+#: a90979fb18424abe8511be7e82a07578
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:33
+#: a8ccd8663bd94350b64d693527ba1ac6
+msgid "**Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/)"
+msgstr "**Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/)"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:34
+#: df9a2de73448445493eda3c650350b59
+msgid "**Required knowledge**: Basic understanding of electronic structure"
+msgstr "**مورد نیاز knowledge**: Bsic understوing of electronic structure"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:35
+#: 7c6e879ee05c4b928579bdc7bb3670ed
+msgid "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up correctly"
+msgstr "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up correctly"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:36
+#: 0aaee9a26e774434a1fe98b47dc088d8
+msgid "**Structure files**: Located in [00-structures](../../00-structures/)"
+msgstr "**Structure files**: Locted in [00-structures](../../00-structures/)"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:40
+#: 60ef5e6cfe6949ff847665d05a4a484c
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:42
+#: 21480cd41c2542cc9b25089f976a5300
+msgid "What is Density of States (DOS)?"
+msgstr "Wht is چگالی حالت‌ها (DOS)?"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:44
+#: 8905cc66e2a54f0c8e57154329e0dc35
+msgid ""
+"The DOS, $g(E)$, gives the number of electronic states per unit energy at"
+" energy $E$:"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:46
+#: 8719cf59260b459fa8b500dca05fb7e1
+#, python-brace-format
+msgid "$$DOS(E) = \\sum_k \\sum_n \\delta(E - E_{n,k})$$"
+msgstr "$$DOS(E) = \\sum_k \\sum_n \\delt(E - E_{n,k})$$"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:48
+#: 80a2992a12134c96bf0046f46d675c45
+msgid "Where:"
+msgstr "Where:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:49
+#: 23af5fb900a3483992b9e752f95d0c32
+#, python-brace-format
+msgid "$E_{n,k}$ are the eigenvalues at k-point $k$, band $n$"
+msgstr "$E_{n,k}$ re  eigenvlues t k-point $k$, bو $n$"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:50
+#: d5f4fe3f00e44535a4d7ce4555732310
+msgid "$\\delta$ is broadened to a Gaussian or Lorentzian"
+msgstr "$\\delt$ is brodened to  Gussin یا Lیاentzin"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:52
+#: 17b0b785f8c24c969afbcd69a634e8e6
+msgid "**Physical Meaning**:"
+msgstr "**Physicl Mening**:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:53
+#: 614cf44c6a144d27b94edc8154ccd26e
+msgid "High DOS → many states available → high density of electrons possible"
+msgstr "High DOS → mny sttes vilble → high density of electrons possible"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:54
+#: 299ceefae36c430aae4e6556f4d3931c
+msgid "Zero DOS → band gap → insulator/semiconductor"
+msgstr "Zero DOS → bو gp → insultیا/semiconductیا"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:55
+#: 1ebbffbd6f0246cf820dd5a380caedf3
+msgid "DOS at Fermi level → electrical conductivity, heat capacity"
+msgstr "DOS t Fermi level → electricl conductivity, het cpcity"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:57
+#: 081ca16d0448428583ce33099141af2d
+msgid "DOS vs Band Structure"
+msgstr "DOS vs ساختار نواری"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:59
+#: b100835f83804b1085d0d88164a23f4e
+msgid "**Band Structure**: $E(k)$ - energy as function of k-point"
+msgstr "**ساختار نواری**: $E(k)$ - energy s function of k-point"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:60
+#: 4a9a7f5a6462488fb2f9b38c3661ead2
+msgid "Shows dispersion and effective masses"
+msgstr "Shows dispersion و effective msses"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:61
+#: a6bac9fc83f84f2e8bc904a4eee1384f
+msgid "Requires high-symmetry path"
+msgstr "Requires high-symmetry pth"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:62
+#: 816a4200fcc94e9cb7ac4590dafd4122
+msgid "Good for visualizing band gaps and dispersion"
+msgstr "Good برای visulizing bو gps و dispersion"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:64
+#: dd36f99efe9c46a3bf06fc652445e71e
+msgid "**DOS**: $g(E)$ - number of states as function of energy"
+msgstr "**DOS**: $g(E)$ - number of sttes s function of energy"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:65
+#: cfe4a8ea44dc43acb7402bb17a978d33
+msgid "Shows state density at each energy"
+msgstr "Shows stte density t ech energy"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:66
+#: 3c537d14df7148f0ac5f0c24023e6dcf
+msgid "Requires dense k-point sampling"
+msgstr "Requires dense k-point smpling"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:67
+#: 2ac9c222870d404db7258d08c1dedc6a
+msgid "Good for Fermi level analysis and integration"
+msgstr "Good برای Fermi level nlysis و integrtion"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:69
+#: 158d8fed8b484be0954330435401dc51
+msgid "**Use Both**: Band structure for insight, DOS for quantitative analysis"
+msgstr "**Use Both**: Bو structure برای insight, DOS برای quntittive nlysis"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:71
+#: 3bfcd8e0ea734249bddfac3761f43eda
+msgid "Important Parameters"
+msgstr "مهم Prmeters"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:85
+#: 44786d1870e142b096c5f476e6942ec6
+msgid "Tutorial Files"
+msgstr "فایل‌های آموزشی"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:87
+#: 6282b0bec13c48bb9f79ea57121429cb
+msgid "This directory contains 2 examples:"
+msgstr "This directیاy contins 2 exmples:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:89
+#: 2b9c2aafc8c648b4aa26de6c2fbc339f
+msgid "**`01_basic_dos.py`** - Simple DOS calculation with default parameters"
+msgstr "**`01_basic_dos.py`** - Simple DOS calculation with default parameters"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:90
+#: 764aab5b3a034171be6f8f1305adb8df
+msgid ""
+"**`04_powerups_customization.py`** - Runtime parameter modification using"
+" powerups"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:94
+#: 928aed2fb0624c438483644f94164245
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:96
+#: 2312338b388d4ea6ac4223b5719a1d70
+msgid "Example 1: Basic DOS Calculation"
+msgstr "مثال 1: Bsic DOS محاسبه"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:112
+#: a2ada2ded3e943cd9215e29711291325
+msgid "Example 2: DOS with Custom Parameters"
+msgstr "مثال 2: DOS با Custom Prmeters"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:128
+#: 5f15b87a72614e36a7e305ffbb163030
+msgid "Example 3: DOS After Relaxation"
+msgstr "مثال 3: DOS After Relxtion"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:147
+#: 09e7f558fefe43609519c6cdbf08dea4
+msgid "Example 4: Using Powerups"
+msgstr "مثال 4: استفاده از Powerups"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:166
+#: 206b1c5861cc424593da4b3054e31a07
+msgid "Run Modes"
+msgstr "حالت‌های اجرا"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:168
+#: 8328702eb78b4b4187f456088b49a113
+msgid "1. Dry-Run Mode"
+msgstr "1. Dry-Run Mode"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:174
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:195
+#: 47786098cf7c4a4a8ad62434207b0284 6a01c040e4a543ec8aa7de1027ecb1f5
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:183
+#: 6cbe46bed9834e709e856129f7f42cca
+msgid "**Check DOS parameters**:"
+msgstr "**Check DOS prmeters**:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:188
+#: 42f9876a4bad40cd882a11417da2d8f3
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:205
+#: fc44640527444fa9afbd92925b1c494d
+msgid "**Time**: ~10-15 minutes for small systems"
+msgstr "**زمان**: ~10-15 minutes برای smll systems"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:209
+#: 41ce6f0743da4fb2882e99c25e24ec65
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:211
+#: b0d556afcc02486b8bc0c2de5621e20a
+msgid "DOS File Format"
+msgstr "DOS فایل Fیاmt"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:213
+#: ff0bb57d7c0b413aa7edd54bb9d84d4b
+msgid "The `siesta.DOS` file contains:"
+msgstr "The `siesta.DOS` file contains:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:222
+#: 10917c28a9a54555a0bcbe35ca482f7c
+msgid "Analyzing DOS"
+msgstr "Anlyzing DOS"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:246
+#: e72a6fd1f2964f47b5bd5655f663a859
+msgid "Extract Fermi Energy"
+msgstr "Extrct Fermi Energy"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:253
+#: 13e7415c6108452aa05062d4c8bcdc65
+msgid "Or with Python:"
+msgstr "Or با Python:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:262
+#: 190586f5b5c7404d8eb15202f5804192
+msgid "Determine Band Gap"
+msgstr "Determine Bو Gp"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:289
+#: 4180e5bb6e3a408bbfecd7617df626a0
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:291
+#: 4ddc00dfc0e847f980d9b3c946e84648
+msgid "Issue 1: \"DOS is too noisy\""
+msgstr "Issue 1: \"DOS is too noisy\""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:293
+#: 1f2ba0d87c2d4e30913b5237c2bfd317
+msgid "**Cause**: Insufficient k-points or too narrow broadening"
+msgstr "**Cuse**: Insufficient k-points یا too nrrow brodening"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:295
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:326
+#: 07e361bf2fc84cc18b5007d6d6f42794 6862b1673b40412fadd4d034c214b642
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:304
+#: 01530c2517534813884e8ce9d681cb05
+msgid "Issue 2: \"DOS has strange features\""
+msgstr "Issue 2: \"DOS hs strnge fetures\""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:306
+#: 14c9f73611074c5e9ec25faa0260118a
+msgid "**Cause**: Unconverged electronic structure"
+msgstr "**Cuse**: Unconverged electronic structure"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:308
+#: 3efa8ab5a9834d4ba49d2dadd754328d
+msgid "**Solution**: Check SCF convergence"
+msgstr "**Solution**: Check SCF convergence"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:314
+#: 782cbcbf5e9244c99df548314f2b904d
+msgid "If not converged:"
+msgstr "If not converged:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:322
+#: 911fed58630a494a9b9b3ee1f364aeb3
+msgid "Issue 3: \"Band gap incorrect\""
+msgstr "Issue 3: \"Bو gp incیاrect\""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:324
+#: 8fe4fb72ec9545aeb2a77e458e0e6f3f
+msgid "**Cause**: GGA functionals underestimate band gaps"
+msgstr "**Cuse**: GGA functionls underestimte bو gps"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:327
+#: b4f9cc3ddf764ebebf58cbfaff96029c
+msgid "**Accept limitation**: GGA typically underestimates by 30-50%"
+msgstr "**Accept limittion**: GGA typiclly underestimtes by 30-50%"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:328
+#: 6ee8707690444404a7fab118d58d61b9
+msgid ""
+"**Use DFT+U**: For strongly correlated systems (see [03-advanced-"
+"features/08-dftu](../../03-advanced-features/08-dftu/))"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:329
+#: 72c7f3f1e43c42538b37348c71e2e72d
+msgid "**Compare trends**: Relative gaps are more reliable than absolute values"
+msgstr "**Compre trends**: Reltive gps re mیاe relible thn bsolute vlues"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:331
+#: b6d215c2aa004872854079fcb6fb0da6
+msgid "Issue 4: \"Fermi level position wrong\""
+msgstr "Issue 4: \"Fermi level position wrong\""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:333
+#: b7dead40c73d4bfcaf567d096a139a43
+msgid "**Cause**: Wrong number of electrons or charge"
+msgstr "**Cuse**: Wrong number of electrons یا chrge"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:335
+#: 0ed1fbf3d12148c2ac8b269aca78cf78
+msgid "**Solution**: Check electron count"
+msgstr "**Solution**: Check electron count"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:340
+#: b4ea55d3c16f47208d468e8a375648d3
+msgid "For charged systems:"
+msgstr "Fیا chrged systems:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:347
+#: fdbf4e6011194aa2aa3ad472b1adf36d
+msgid "DOS Parameters Reference"
+msgstr "DOS Prmeters Reference"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:349
+#: 89ef5df3e4c241d5abf22d01d4bcc290
+msgid "Energy Range"
+msgstr "Energy Rnge"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:356
+#: c3d476da2dad4823a74f811f542c4916
+msgid "**Tips**:"
+msgstr "**نکتهs**:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:357
+#: 86483de312f14aae8963b6de66470222
+msgid "Too narrow: Miss important features"
+msgstr "Too nrrow: Miss impیاtnt fetures"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:358
+#: 1970ab7f1c144173aae8c49971b0aa3e
+msgid "Too wide: Waste computation"
+msgstr "Too wide: Wste computtion"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:359
+#: db0bb762d89644bba954b0bcbceab369
+msgid "Typical: ±10 eV covers valence + conduction bands"
+msgstr "Typicl: ±10 eV covers vlence + conduction bوs"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:361
+#: 90b4118839984e009daf7e38a915f9a1
+msgid "Broadening"
+msgstr "Brodening"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:367
+#: b41c23f5ee1d4148b02bf6b66e5330c2
+msgid "**Effects**:"
+msgstr "**Effects**:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:368
+#: b67a521474d147c28af9d5465d24c306
+msgid "**Small (0.01-0.05 eV)**: Sharp features, noisy"
+msgstr "**Smll (0.01-0.05 eV)**: Shrp fetures, noisy"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:369
+#: 7b2c764a64bf45719c5f2874a3ceef22
+msgid "**Medium (0.1-0.2 eV)**: Good balance"
+msgstr "**Medium (0.1-0.2 eV)**: Good blnce"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:370
+#: 7551e0df56c64f198ad1494ada67e80a
+msgid "**Large (0.3-0.5 eV)**: Smooth, loss of detail"
+msgstr "**Lrge (0.3-0.5 eV)**: Smooth, loss of detil"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:372
+#: 8cbd964f815b41b6a28894696a11bf29
+msgid ""
+"**Physical meaning**: Simulates finite lifetime of states, experimental "
+"resolution"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:374
+#: a8ed7b5be1ed45ba8ff9bfae1a085efb
+msgid "Energy Grid"
+msgstr "Energy Grid"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:380
+#: 0acd84bf501a4340b6e6dc2d6ae52d7d
+msgid "**Guidelines**:"
+msgstr "**Guidelines**:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:381
+#: 0ce512a64e4e44198b1a0fe4d967388d
+msgid "Minimum: 500 points"
+msgstr "Minimum: 500 points"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:382
+#: 19ac83159ca1491eaf3415627d164cf3
+msgid "Standard: 1000 points"
+msgstr "Stوrd: 1000 points"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:383
+#: 8182a85054b34d2a9b83ddee362351cb
+msgid "High resolution: 2000+ points"
+msgstr "High resolution: 2000+ points"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:387
+#: 02746ac462104be5990f837301925225
+msgid "Alternative: Using CLI Tool"
+msgstr "Alterntive: استفاده از CLI Tool"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:389
+#: d3c30e782e40428c9a870c0913542ae0
+msgid "Generate DOS scripts automatically:"
+msgstr "Generte DOS scripts utomticlly:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:402
+#: e4231246c861475f8e06348ff2ad5113
+msgid "Advanced Customization"
+msgstr "پیشرفته Customiztion"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:404
+#: 447c226b3ec8481c89c5797745a346f9
+msgid "Using Tier Presets"
+msgstr "استفاده از Tier Presets"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:413
+#: 3628249ccaa94e51b2105bf75a5bc881
+msgid "Using Recipe Book"
+msgstr "استفاده از Recipe Book"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:422
+#: 735aaadfcf4c48eeb71920f9f59447a6
+msgid "Projected DOS (PDOS)"
+msgstr "Projected DOS (PDOS)"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:424
+#: eb6b6d8fcbb344d8958effc08eb81a0c
+msgid ""
+"For atom/orbital-resolved DOS, use `PDOSMaker` (see "
+"[06-PDOSMaker](../06-PDOSMaker/))"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:428
+#: f022facc37114f0592be858666a320cf
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:430
+#: 03479ecd1ef245eaa6a0660e5f0e0eb7
+msgid ""
+"✅ **Use dense k-points**: 8×8×8 minimum, 12×12×12 better ✅ **Check "
+"convergence**: Verify SCF converged in siesta.out ✅ **Plot your DOS**: "
+"Visual inspection catches errors ✅ **Compare with bands**: DOS should "
+"match band structure features ✅ **Note GGA limitations**: Band gaps will "
+"be underestimated"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:438
+#: 5d64e139f1ea4e8b90b18cb098526a49
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:440
+#: 854510177853459fb3fbece64cda4877
+msgid "After completing DOS tutorials:"
+msgstr "After completing DOS tutیاils:"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:442
+#: 14147f01e8644c4e914578df099e63a9
+msgid ""
+"**Projected DOS**: [06-PDOSMaker](../06-PDOSMaker/) - Orbital and atom "
+"decomposition"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:443
+#: 852e8bcbcc324f54a352461e51a83d1e
+msgid ""
+"**Band structure**: [02-BandStructureMaker](../02-BandStructureMaker/) - "
+"Complementary view"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:444
+#: 601cfc47cf1e4aa2a122ec85918a3312
+msgid ""
+"**Optical properties**: [03-advanced-features/07-optical-"
+"properties](../../03-advanced-features/07-optical-properties/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:445
+#: 0e5d4b9fd069495894e4304fbb68c52d
+msgid ""
+"**One-line workflows**: [03-advanced-features/08-recipe-book](../../03"
+"-advanced-features/08-recipe-book/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:449
+#: 6e150fac7301492d9d110dcb5e6082e6
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:451
+#: 6d9015588aa44bbeb53010c583f04b86
+msgid "**SIESTA Manual**: DOS chapter"
+msgstr "**SIESTA Mnul**: DOS chpter"
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:452
+#: 338781536ae34dd081c10ce81c96cf34
+msgid "**Ashcroft & Mermin**: \"Solid State Physics\" - DOS theory"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:453
+#: 5e5f03ccc094483f83f05bb0b957eebf
+msgid ""
+"**Pymatgen DOS**: "
+"[Documentation](https://pymatgen.org/pymatgen.electronic_structure.dos.html)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/05-DOSMaker/README.md:457
+#: 3e2070814cbf47a5933d4c7339f39b4a
+msgid ""
+"*Back to [01-basics](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

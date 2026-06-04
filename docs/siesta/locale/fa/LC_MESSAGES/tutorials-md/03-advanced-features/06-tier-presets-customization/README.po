@@ -1,0 +1,362 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:1
+#: 0ff0cf92469d4cb2bcb18552dda17491
+msgid "Tutorial 06: Tier Presets and Customization"
+msgstr "Tutیاil 06: Tier Presets و Customiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:3
+#: 48f60245fd88448fa18bf3d7a331dbbc
+msgid "Learn how to use, modify, and create tier presets in atomate2siesta."
+msgstr "Lern how to use, modify, و crete tier presets in tomte2siest."
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:5
+#: e39e97f2b8df471799167b4a4874863f
+msgid "Directory Structure"
+msgstr "Directیاy Structure"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:27
+#: a32e020840cb4b2b968a598ab06d8d38
+msgid "Part 1: Apply Tier Presets"
+msgstr "Prt 1: Apply Tier Presets"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:29
+#: 06515ff6daf04cc394e9efd6361f21b6
+msgid "**Directory**: `01-apply-preset/`"
+msgstr "**Directory**: `01-apply-preset/`"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:31
+#: d045d64713af4a74ab5490a77bee5961
+msgid "Learn how to discover and apply material-specific presets."
+msgstr "Lern how to discover و pply mteril-specific presets."
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:33
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:64
+#: 36e7ee2301f944729d34701cc7907150 ac31954f4bee4f2da655a6603c6c949f
+msgid "Examples:"
+msgstr "مثال‌ها:"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:35
+#: 1733b83123314461a44f80cd541720d0
+msgid "**`01_standard_relax.py`** - Standard relaxation (intermediate tier)"
+msgstr "**`01_standard_relax.py`** - Standard relaxation (intermediate tier)"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:36
+#: 62710642df2146e4bbe624e528d1349c
+msgid "**`02_surface_metal.py`** - Metallic surfaces with MP smearing"
+msgstr "**`02_surface_metal.py`** - Metallic surfaces with MP smearing"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:37
+#: 5fb39922efdc413e916120814d866c04
+msgid "**`03_adsorbate_screening.py`** - Fast screening (basic tier)"
+msgstr "**`03_adsorbate_screening.py`** - Fast screening (basic tier)"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:38
+#: 6929d57ffd144bef9278fe5b1ea07f91
+msgid "**`04_2d_metal.py`** - 2D materials with dense in-plane kpts"
+msgstr "**`04_2d_metal.py`** - 2D materials with dense in-plane kpts"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:39
+#: 9c6345ad63844588abd354e63cfd67ae
+msgid "**`05_high_accuracy.py`** - High-quality results with TZP basis"
+msgstr "**`05_high_accuracy.py`** - High-quality results with TZP basis"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:41
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:74
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:113
+#: 1028e8b2fdf34b6681207b0a8892e590 21b20908abfa43a992515a55f9686417
+#: f2b4023656d641c285a9031c73c387a0
+msgid "Usage:"
+msgstr "Usge:"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:47
+#: 440203d745fc48ff8486a0c563b81052
+msgid "All scripts use `dry_run=True` for instant preview without running SIESTA."
+msgstr "All scripts use `dry_run=True` for instant preview without running SIESTA."
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:49
+#: 159de11a2c0741a1959f817c32f8083f
+msgid "CLI Discovery:"
+msgstr "CLI Discovery:"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:58
+#: e3f5887f61bc4e989d023648c8a04ddd
+msgid "Part 2: Modify Preset Parameters"
+msgstr "Prt 2: Modify Preset Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:60
+#: f4560bdc65f749c685cf2b3fb1d0d889
+msgid "**Directory**: `02-modify-preset/`"
+msgstr "**Directory**: `02-modify-preset/`"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:62
+#: da2380188595466f8fa24edb5e22964e
+msgid ""
+"Learn how to customize presets by modifying parameters and adding new "
+"ones."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:66
+#: 5faedacfd1e64571b86e3c879e834058
+msgid "**`01_modify_kpts.py`** - Modify single parameter (k-points)"
+msgstr "**`01_modify_kpts.py`** - Modify single parameter (k-points)"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:67
+#: 910f32c2c8a144908259bb7cb8e1c300
+msgid "**`02_modify_multiple.py`** - Modify multiple parameters at once"
+msgstr "**`02_modify_multiple.py`** - Modify multiple parameters at once"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:68
+#: e25216366e2b4eeba8fe0cab084ed937
+msgid "**`03_add_spin.py`** - Add spin polarization"
+msgstr "**`03_add_spin.py`** - Add spin polarization"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:69
+#: 928000f2567c4b42bb22ec0d467ae9eb
+msgid "**`04_add_vdw.py`** - Add van der Waals corrections"
+msgstr "**`04_add_vdw.py`** - Add van der Waals corrections"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:70
+#: b8478b7d646f4380ab06212049047c29
+msgid "**`05_add_dftu.py`** - Add DFT+U for correlated systems"
+msgstr "**`05_add_dftu.py`** - Add DFT+U for correlated systems"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:71
+#: 1bd0ee08a76f4cbfbc9ae76ce360748a
+msgid "**`06_tighten_convergence.py`** - Tighten convergence criteria"
+msgstr "**`06_tighten_convergence.py`** - Tighten convergence criteria"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:72
+#: 962f28c33138451da8ab2fc02a72ad6a
+msgid "**`07_add_constraints.py`** - Add geometry constraints"
+msgstr "**`07_add_constraints.py`** - Add geometry constraints"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:80
+#: 37b98e32dcd042f2af94147620b9be8d
+msgid "Key Pattern:"
+msgstr "Key Pttern:"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:95
+#: e92660fc5fbf4d94968ef5ded1830dda
+msgid "Part 3: Create Custom Presets"
+msgstr "Prt 3: Crete Custom Presets"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:97
+#: f8805c2fe43b480bb41c5f5e2abb0f94
+msgid "**Directory**: `03-create-preset/`"
+msgstr "**Directory**: `03-create-preset/`"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:99
+#: 5096eb653cdf4fb39aaa39495bf2e298
+msgid "Learn the structure and workflow for creating your own presets."
+msgstr "Lern  structure و wیاkflow برای creting your own presets."
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:101
+#: 67e8315de679473d8e710ef167912dbb
+msgid "File:"
+msgstr "فایل:"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:103
+#: c307363af3e24fe1b191e0df3d5c5dc3
+msgid "**`03_create_custom_preset.py`** - Documentation and examples"
+msgstr "**`03_create_custom_preset.py`** - Documentation and examples"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:105
+#: ba969b8551c24b679cb98b9244288c22
+msgid "This file shows:"
+msgstr "This file shows:"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:106
+#: 2304469431454628b87272ea9528c90b
+msgid "Preset dictionary structure"
+msgstr "Preset dictionry structure"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:107
+#: 7abf2e691a394f6f89e7c10b37238c91
+msgid "MOF screening preset example"
+msgstr "MOF screening preset exmple"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:108
+#: d3f9e0b52194491ab3121d3a793dcd2a
+msgid "Catalysis preset with vdW example"
+msgstr "Ctlysis preset با vdW exmple"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:109
+#: abe5b0f9cb5748e4b6d12a29fc9eab60
+msgid "High-throughput screening preset"
+msgstr "High-throughput screening preset"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:110
+#: 9ac31e304efb42b6b88f2e3bb8b804a3
+msgid "Naming conventions for automatic CLI detection"
+msgstr "Nming conventions برای utomtic CLI detection"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:111
+#: 9780cc31e83c48dc823f34ee32f5be43
+msgid "Testing workflow"
+msgstr "Testing wیاkflow"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:121
+#: ddad418045f74a6695da0664d8f0ac42
+msgid "Quick Reference"
+msgstr "Quick Reference"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:123
+#: 94569b197cc146c999d7c44f9b101a93
+msgid "Applying a Preset"
+msgstr "Applying  Preset"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:132
+#: 85f58ae6e050400badf1b355fe5c33f2
+msgid "Modifying Parameters"
+msgstr "Modifying Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:142
+#: 4528a78d928249c6bfca56c997b1859b
+msgid "Adding New Parameters"
+msgstr "Adding New Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:157
+#: 2b7c8495548d4878a7b4a2a6ece7d2d0
+msgid "Output Files"
+msgstr "Output فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:159
+#: 4c628639466249b5a96ed2e56701551a
+msgid "All examples generate files in:"
+msgstr "All exmples generte files in:"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:164
+#: 1f4597cdbcec4363afed9d13f83c1969
+msgid "Check these files to verify preset parameters."
+msgstr "Check se files to verify preset prmeters."
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:168
+#: f7b29fbcebef4fbcb14fb339f328e80b
+msgid "Available Presets (26 Total)"
+msgstr "Avilble Presets (26 Totl)"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:170
+#: 8e975855ab234d3ab935165a4c8fa490
+msgid "Use CLI to explore:"
+msgstr "Use CLI to explیاe:"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:178
+#: 26c439b18dd24b09b18b74bb2eb12ea2
+msgid "Categories:"
+msgstr "Ctegیاies:"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:179
+#: bad585d323f24270be019aaae8efd0d3
+msgid "**2d** (8): 2D materials (graphene, TMDs, etc.)"
+msgstr "**2d** (8): 2D mterils (grphene, TMDs, etc.)"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:180
+#: 3216b725cdd54088b81124a3090331fa
+msgid "**surface** (3): Surfaces and adsorption"
+msgstr "**surfce** (3): Surfces و dsیاption"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:181
+#: 81154a47f4f543819750e70f09aa718d
+msgid "**structural** (3): Bulk relaxation"
+msgstr "**structurl** (3): Bulk relxtion"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:182
+#: d6865daf528d46409164c711ef954b6a
+msgid "**phonon** (2): Vibrational properties"
+msgstr "**phonon** (2): Vibrtionl properties"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:183
+#: b4e96d89f85547e6ab60d63f1ec9268d
+msgid "**magnetic** (2): Spin-polarized systems"
+msgstr "**mgnetic** (2): Spin-polrized systems"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:184
+#: 0f1981ba0cd04bf5949662c1a353d595
+msgid "**electronic** (3): Band structure, DOS"
+msgstr "**electronic** (3): Bو structure, DOS"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:185
+#: faca001ce2424fdea48baf9df90d24fc
+msgid "**optical** (1): Optical properties"
+msgstr "**opticl** (1): Opticl properties"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:186
+#: 9f7ca16849b94302b05fca2f724265e2
+msgid "**molecular** (1): Gas-phase molecules"
+msgstr "**moleculr** (1): Gs-phse molecules"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:187
+#: 715a5da756044cd5bb8c672a3d72eb16
+msgid "**performance** (3): Large systems, HPC"
+msgstr "**perبرایmnce** (3): Lrge systems, HPC"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:191
+#: cc543b3db84c47e1bd567b82ee92b721
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:193
+#: 5b582ca8a43b4e36926edf4bcaf1ce6a
+msgid "Run examples in order: 01 → 02 → 03"
+msgstr "Run exmples in یاder: 01 → 02 → 03"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:194
+#: 95c8a6a949ca40b2ab7e742e21e177cf
+msgid "Inspect generated `siesta.fdf` files"
+msgstr "Inspect generated `siesta.fdf` files"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:195
+#: 61d6ccee9f3e455187bffb7d2b91343d
+msgid "Try modifying parameters for your materials"
+msgstr "Try modifying prmeters برای your mterils"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:196
+#: d94abe40e02a405dba9dea96462a7259
+msgid "Create custom presets following Part 3 guide"
+msgstr "Crete custom presets following Prt 3 guide"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:200
+#: a2f90294f10f4795aec82dadd20c39dc
+msgid "Documentation"
+msgstr "Documenttion"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:202
+#: e5a270f1d0fc4fc1b3aac327a40d6da7
+msgid "**Tier System**: `docs/source/tier-system.rst`"
+msgstr "**Tier System**: `docs/source/tier-system.rst`"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:203
+#: e235a24ad2804615a6061aa73ce2808d
+msgid "**CLI Tools**: `docs/source/cli-tools.rst`"
+msgstr "**CLI Tools**: `docs/source/cli-tools.rst`"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:204
+#: 2be3f81aea754b3ab3162faccd43fdc9
+msgid "**Parameters**: `docs/source/siesta-inputs.rst`"
+msgstr "**Parameters**: `docs/source/siesta-inputs.rst`"
+
+#: ../../source/tutorials-md/03-advanced-features/06-tier-presets-customization/README.md:208
+#: 9c0e465dd20b4ace9957a19c3f5410de
+msgid "**Last Updated**: November 2025 (v1.0.0)"
+msgstr "**Lst Updted**: November 2025 (v1.0.0)"

@@ -1,0 +1,2231 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/features.rst:3 d3a3366ab7694f2e9b83c8113498115c
+msgid "Feature Highlights"
+msgstr "برجسته‌ترین ویژگی‌ها"
+
+#: ../../source/features.rst:5 bb66d8e4257d41529a539e3f22b6eb59
+msgid ""
+"This page highlights the key features and recent enhancements in "
+"atomate2siesta, organized by functionality."
+msgstr ""
+"این صفحه ویژگی‌های کلیدی و بهبودهای اخیر در atomate2siesta را که بر اساس "
+"عملکرد سازماندهی شده‌اند، برجسته می‌کند."
+
+#: ../../source/features.rst:10 be9a7b8cf7a548e18c06a172aa45694b
+msgid "Core Workflow System"
+msgstr "سیستم هسته جریان کار"
+
+#: ../../source/features.rst:13 064ca12d52e044dba768481090760f8e
+msgid "Maker Pattern"
+msgstr "الگوی سازنده (Maker Pattern)"
+
+#: ../../source/features.rst:15 f8331a13853849748d392c1c4837f786
+msgid ""
+"All calculations follow the **Maker pattern** for consistent, composable "
+"workflows:"
+msgstr ""
+"تمام محاسبات از **الگوی سازنده** برای جریان‌های کار سازگار و ترکیب‌پذیر "
+"پیروی می‌کنند:"
+
+#: ../../source/features.rst:41 d5bf28799ac448589324526fdc48f2e2
+msgid "**Available Makers:**"
+msgstr "**سازنده‌های موجود:**"
+
+#: ../../source/features.rst:43 6f75eccd3ded4e25b2ab3bcfaa978a5a
+msgid "``RelaxMaker`` - Fixed/variable cell relaxation"
+msgstr "``RelaxMaker`` - بهینه‌سازی سلول ثابت/متغیر"
+
+#: ../../source/features.rst:44 3c6eb6917d3b49f2894811748f620824
+msgid "``StaticMaker`` - Single-point energy calculations"
+msgstr "``StaticMaker`` - محاسبات انرژی تک‌نقطه‌ای"
+
+#: ../../source/features.rst:45 db45b90eb0fc4af7b22798c4201cdb4a
+msgid "``BandStructureMaker`` - Electronic band structure"
+msgstr "``BandStructureMaker`` - ساختار نواری الکترونی"
+
+#: ../../source/features.rst:46 54ef15f1f3664d368dbf7379f226a3b5
+msgid "``PhononMaker`` - Phonon calculations with phonopy"
+msgstr "``PhononMaker`` - محاسبات فونون با phonopy"
+
+#: ../../source/features.rst:47 2fe98696b22743c38afbc4f3e61fa757
+msgid "``ElasticFlowMaker`` - Elastic constants"
+msgstr "``ElasticFlowMaker`` - ثابت‌های الاستیک"
+
+#: ../../source/features.rst:48 86c27758d13c44f394947bc6cb1249da
+msgid "``SurfaceEnergyFlowMaker`` - Surface energy calculations"
+msgstr "``SurfaceEnergyFlowMaker`` - محاسبات انرژی سطح"
+
+#: ../../source/features.rst:49 b18da4ba4fb24c6b87325f40625a1414
+msgid "``NebDirectFlowMaker`` - Nudged Elastic Band (Lua-based, SIESTA native)"
+msgstr ""
+"``NebDirectFlowMaker`` - نوار الاستیک تکان‌داده‌شده (مبتنی بر Lua، بومی "
+"SIESTA)"
+
+#: ../../source/features.rst:50 2b52cbc87fc84843a654759ce5593102
+msgid "``AseNebFlowMaker`` - Nudged Elastic Band (ASE-based, no FLOS required)"
+msgstr ""
+"``AseNebFlowMaker`` - نوار الاستیک تکان‌داده‌شده (مبتنی بر ASE، بدون نیاز"
+" به FLOS)"
+
+#: ../../source/features.rst:51 aa27d4946bc1429dbce2d15ba9258841
+msgid "``EOSMaker`` - Equation of State fitting"
+msgstr "``EOSMaker`` - برازش معادله حالت"
+
+#: ../../source/features.rst:54 5ba12cfd225b4c9389c59b55d9cf6de5
+msgid "Powerups System"
+msgstr "سیستم Powerups"
+
+#: ../../source/features.rst:56 54e3371855a4495db315fc8ef352acaf
+msgid ""
+"Powerups are runtime modification functions that allow you to dynamically"
+" update workflow parameters after job/flow creation. They work on "
+"**Makers** (single jobs), **Jobs**, and **Flows** (multi-step workflows)."
+msgstr ""
+"Powerups توابع اصلاح زمان اجرا هستند که به شما اجازه می‌دهند پارامترهای "
+"جریان کار را پس از ایجاد کار/جریان به‌صورت پویا به‌روزرسانی کنید. آنها "
+"روی **Makers** (کارهای منفرد)، **Jobs** و **Flows** (جریان‌های کار "
+"چندمرحله‌ای) کار می‌کنند."
+
+#: ../../source/features.rst:59 742b48e69315434bac657840ae3c7c93
+msgid "**When to use powerups vs other customization methods:**"
+msgstr "**چه زمانی از powerups در مقابل سایر روش‌های سفارشی‌سازی استفاده کنیم:**"
+
+#: ../../source/features.rst:61 af21136da7404328b0b465d70c559699
+msgid "**user_params** (at creation): Set base parameters before applying presets"
+msgstr ""
+"**user_params** (در زمان ایجاد): تنظیم پارامترهای پایه قبل از اعمال "
+"پیش‌تنظیم‌ها"
+
+#: ../../source/features.rst:62 549ea4878e23482f97c3ccb76e57b359
+msgid "**Tier presets** (at creation): Apply material-specific parameter sets"
+msgstr "**Tier presets** (در زمان ایجاد): اعمال مجموعه پارامترهای ویژه مواد"
+
+#: ../../source/features.rst:63 0ae8f914877f4a1891f6be9da32e8eba
+msgid ""
+"**Powerups** (after creation): Runtime modifications, conditional "
+"updates, flow-wide changes"
+msgstr ""
+"**Powerups** (پس از ایجاد): اصلاحات زمان اجرا، به‌روزرسانی‌های شرطی، "
+"تغییرات در سطح جریان"
+
+#: ../../source/features.rst:65 6779c12075074d05be7ecc7072cb3a3c
+msgid "See :doc:`makers-vs-flowmakers` for detailed comparison."
+msgstr "برای مقایسه دقیق به :doc:`makers-vs-flowmakers` مراجعه کنید."
+
+#: ../../source/features.rst:68 203d505247b74b86b995e94fdec3d848
+msgid "Available Powerup Functions"
+msgstr "توابع Powerup موجود"
+
+#: ../../source/features.rst:71 459428aa64ff4b268bf28ba9f34166f0
+msgid "1. update_user_siesta_settings"
+msgstr "۱. update_user_siesta_settings"
+
+#: ../../source/features.rst:73 02fc6d5a6cb84ad5879b8c25b60521b9
+msgid "Update FDF parameters in any job, flow, or maker."
+msgstr "به‌روزرسانی پارامترهای FDF در هر کار، جریان یا سازنده."
+
+#: ../../source/features.rst:75 ../../source/features.rst:226
+#: 2a7f4ee25ec347c5bc091d4c47d679b1 988d2cb8f8ae44ada193d45c8451cac1
+msgid "**Signature:**"
+msgstr "**امضا:**"
+
+#: ../../source/features.rst:88 ../../source/features.rst:237
+#: 85159aa950b647629ad1c72d0c51cebb 978bbfcf79934066a2c6540d06a1d54b
+msgid "**Parameters:**"
+msgstr "**پارامترها:**"
+
+#: ../../source/features.rst:90 00ffb6736e194818af2e3adf67d13e20
+#, python-brace-format
+msgid ""
+"**siesta_updates**: Dictionary of FDF parameters (e.g., "
+"``{\"PAO.BasisSize\": \"DZP\", \"a2s_kpts\": [4,4,4]}``)"
+msgstr ""
+
+#: ../../source/features.rst:91 8e0ecddff57a4f03832f9a6f0bb562f9
+msgid ""
+"**name_filter**: Only update jobs whose name contains this string (e.g., "
+"``\"relax\"``)"
+msgstr ""
+
+#: ../../source/features.rst:92 8b262fc8d66146aaba993f276459fbfa
+msgid ""
+"**class_filter**: Only update jobs from specific maker classes (default: "
+"all SIESTA jobs)"
+msgstr ""
+
+#: ../../source/features.rst:93 363ec62e16404198b87e14099205329e
+msgid "**new_fdf_flags**: Raw FDF arguments (advanced users only)"
+msgstr ""
+
+#: ../../source/features.rst:94 c0fd441a0cbf4e168e7033ffbaf1916b
+msgid ""
+"**force_unknown**: Allow parameters not registered by any dataclass (use "
+"with caution)"
+msgstr ""
+
+#: ../../source/features.rst:96 4ecd9b8bc11d4f94adbde639569bb848
+msgid "**Example 1: Update single job**"
+msgstr "**مثال ۱: به‌روزرسانی یک کار**"
+
+#: ../../source/features.rst:113 297d306f94e84b479970ce5bbcdb65d5
+msgid "**Example 2: Update entire flow**"
+msgstr "**مثال ۲: به‌روزرسانی کل جریان**"
+
+#: ../../source/features.rst:130 da7d042bc7294adf9aafd9f4390aa750
+msgid "**Example 3: Selective updates with name_filter**"
+msgstr "**مثال ۳: به‌روزرسانی انتخابی با name_filter**"
+
+#: ../../source/features.rst:153 5f97920a9a9147f49ebbd44326e09b35
+msgid "**Example 4: Conditional updates based on structure analysis**"
+msgstr "**مثال ۴: به‌روزرسانی شرطی بر اساس تحلیل ساختار**"
+
+#: ../../source/features.rst:179 f73055b4a354454a9fdeb54d5b088097
+msgid "**Example 5: Using class_filter for targeted updates**"
+msgstr "**مثال ۵: استفاده از class_filter برای به‌روزرسانی هدفمند**"
+
+#: ../../source/features.rst:205 f14fea0ebacc43fc8a143e64ce7d64ea
+msgid "**Example 6: Using force_unknown for advanced FDF parameters**"
+msgstr "**مثال ۶: استفاده از force_unknown برای پارامترهای پیشرفته FDF**"
+
+#: ../../source/features.rst:222 f52fd722b9f24e67b561a78b54e92755
+msgid "2. add_metadata"
+msgstr "۲. add_metadata"
+
+#: ../../source/features.rst:224 c18f5620e1b04d3bb332224cedd3f014
+msgid ""
+"Add custom metadata to jobs for tracking, organization, or post-"
+"processing."
+msgstr "افزودن فراداده سفارشی به کارها برای ردیابی، سازماندهی یا پس‌پردازش."
+
+#: ../../source/features.rst:239 1a4c916bf48e464f9afacb80ccb7aefe
+#, python-brace-format
+msgid ""
+"**metadata**: Dictionary of metadata to add (e.g., ``{\"project\": "
+"\"catalyst_study\", \"batch\": \"2025-01\"}``)"
+msgstr ""
+"**metadata**: دیکشنری فراداده برای افزودن (مثلاً ``{\"project\": "
+"\"catalyst_study\", \"batch\": \"2025-01\"}``)"
+
+#: ../../source/features.rst:240 841ce1360e6c4a219cdfb26ed3c07962
+msgid "**name_filter**: Only add metadata to jobs whose name contains this string"
+msgstr ""
+"**name_filter**: فقط فراداده را به کارهایی اضافه کند که نام آنها شامل این"
+" رشته باشد"
+
+#: ../../source/features.rst:241 45575af3eb3f40ebb9c902cf76f1ffe8
+msgid "**class_filter**: Only add metadata to jobs from specific maker classes"
+msgstr "**class_filter**: فقط فراداده را به کارهای کلاس‌های سازنده خاص اضافه کند"
+
+#: ../../source/features.rst:243 35fb0514624246038ddd369ab6cb72b1
+msgid "**Example 1: Add metadata to single job**"
+msgstr "**مثال ۱: افزودن فراداده به یک کار**"
+
+#: ../../source/features.rst:259 068b8bc99a5b46f5bd61abdf4409781a
+msgid "**Example 2: Add metadata to flow**"
+msgstr "**مثال ۲: افزودن فراداده به جریان**"
+
+#: ../../source/features.rst:274 61578ae7e1c24c8bb783bfe38d88386b
+msgid "**Example 3: Selective metadata with name_filter**"
+msgstr "**مثال ۳: فراداده انتخابی با name_filter**"
+
+#: ../../source/features.rst:298 57616274fd614f03b1fc964b34d63358
+msgid ""
+"**Note**: Metadata is stored in job.metadata and can be queried later "
+"from database."
+msgstr ""
+"**توجه**: فراداده در job.metadata ذخیره می‌شود و بعداً می‌توان آن را از "
+"پایگاه داده جستجو کرد."
+
+#: ../../source/features.rst:301 6eab5cc0bbc8483589233cfabab99715
+msgid "Common Powerup Patterns"
+msgstr "الگوهای رایج Powerup"
+
+#: ../../source/features.rst:304 e178e09613614b99b1fd2bcfd78fe1c7
+msgid "Pattern 1: Flow-wide parameter updates"
+msgstr "الگوی ۱: به‌روزرسانی پارامترها در سطح جریان"
+
+#: ../../source/features.rst:306 a777d7654a344f74ad842b164d1fb64c
+msgid "Apply the same settings to all jobs in a multi-step workflow:"
+msgstr "اعمال تنظیمات یکسان به تمام کارها در یک جریان کار چندمرحله‌ای:"
+
+#: ../../source/features.rst:330 59fef951ef8c4d2a8a393a99b1b126cc
+msgid "Pattern 2: Tiered parameter updates"
+msgstr "الگوی ۲: به‌روزرسانی پارامترها به‌صورت سطحی"
+
+#: ../../source/features.rst:332 374475c2d2a7475c97765ef3c3951cb8
+msgid "Apply different settings to different stages of a workflow:"
+msgstr "اعمال تنظیمات مختلف به مراحل مختلف یک جریان کار:"
+
+#: ../../source/features.rst:367 11c88f309bad417998405837259a8c06
+msgid "Pattern 3: Conditional updates"
+msgstr "الگوی ۳: به‌روزرسانی‌های شرطی"
+
+#: ../../source/features.rst:369 7040e1c6903044f28b8e5d953f43993b
+msgid "Apply powerups based on runtime structure analysis:"
+msgstr "اعمال powerups بر اساس تحلیل ساختار در زمان اجرا:"
+
+#: ../../source/features.rst:417 83c188b67a6542e9ad0a0e73672c262c
+msgid "Pattern 4: Maker-level updates"
+msgstr "الگوی ۴: به‌روزرسانی در سطح سازنده"
+
+#: ../../source/features.rst:419 63c75765ccd846e8a61cfacea6545910
+msgid "Update a maker before creating jobs (useful for factory functions):"
+msgstr "به‌روزرسانی سازنده قبل از ایجاد کارها (مفید برای توابع کارخانه‌ای):"
+
+#: ../../source/features.rst:445 199fd181d17f4b2389ba21d517bc43ac
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/features.rst:447 e6a0f1d257f742098f6f1afe953e4f08
+msgid "✅ **Do:**"
+msgstr "✅ **انجام دهید:**"
+
+#: ../../source/features.rst:449 365cb8f8d4c94251aa45ffe6fea47a6e
+msgid "Use powerups for runtime parameter modifications"
+msgstr "از powerups برای اصلاح پارامترها در زمان اجرا استفاده کنید"
+
+#: ../../source/features.rst:450 914f20590e8242e8ba3014de91ef9bb7
+msgid "Apply powerups to flows for consistent settings across all jobs"
+msgstr "powerups را به جریان‌ها برای تنظیمات سازگار در تمام کارها اعمال کنید"
+
+#: ../../source/features.rst:451 96138525322846c8aaae8d0868d60995
+msgid "Use ``name_filter`` for selective job updates"
+msgstr ""
+
+#: ../../source/features.rst:452 55ad0f382bed4300a358726806c17b49
+msgid "Combine powerups with metadata for tracking"
+msgstr ""
+
+#: ../../source/features.rst:453 7d1b01b2b3ed4d4d912e9b5105798462
+msgid "Use conditional logic based on structure analysis"
+msgstr ""
+
+#: ../../source/features.rst:454 ded022b3ed724e4cb86a7dd0f82e894b
+msgid "Document why specific powerups are applied"
+msgstr ""
+
+#: ../../source/features.rst:456 f9a219499374418bb9c90581e9afda9e
+msgid "✗ **Don't:**"
+msgstr ""
+
+#: ../../source/features.rst:458 1b6f22967c854823975b0e29ee6f5bbf
+msgid ""
+"Mix powerups with ``user_params`` for the same parameter (choose one "
+"method)"
+msgstr ""
+
+#: ../../source/features.rst:459 fb96e6e31f454f4db167d9523679b63e
+msgid "Apply conflicting powerups (last one wins)"
+msgstr ""
+
+#: ../../source/features.rst:460 da83253859ac49849ca03215ba0358aa
+msgid "Use ``force_unknown=True`` unless you understand the FDF parameter"
+msgstr ""
+
+#: ../../source/features.rst:461 04fd36f7730646d1af6a3ef692f68649
+msgid ""
+"Forget that powerups return a copy (must reassign: ``flow = "
+"update_user_siesta_settings(flow, ...)``)"
+msgstr ""
+
+#: ../../source/features.rst:464 d3bee22494864219a320e9d2834773d2
+msgid "Powerups vs Other Customization Methods"
+msgstr ""
+
+#: ../../source/features.rst:467 a183eee745164816b987ff67fa359892
+msgid "Method"
+msgstr ""
+
+#: ../../source/features.rst:467 ac77516cd73f44ac825abe42aae89611
+msgid "Timing"
+msgstr ""
+
+#: ../../source/features.rst:467 ../../source/features.rst:827
+#: 74768befad834c07b8c31328d33660a8 779533a4efb94ded8aa3b71318227b93
+msgid "Use Case"
+msgstr ""
+
+#: ../../source/features.rst:467 6e1ef7fc043e49d7bb84095021a62543
+msgid "Example"
+msgstr ""
+
+#: ../../source/features.rst:469 b91d0b747c3c476f8a9f21b8ddb0ba28
+msgid "user_params"
+msgstr ""
+
+#: ../../source/features.rst:469 ../../source/features.rst:471
+#: 42466f8a592c4140a7f25ed88133ef77 7a4591bc527f473ca966e8bb5fda2926
+msgid "At creation"
+msgstr ""
+
+#: ../../source/features.rst:469 3d180e35f2e44228a73e20d374b15a42
+msgid "Base parameters"
+msgstr ""
+
+#: ../../source/features.rst:469 34ef961d70b64ff79a7740df6aaa7515
+msgid "Basis size, k-points"
+msgstr ""
+
+#: ../../source/features.rst:471 1e7deb1a2b6947d8960f68a92ae9359f
+msgid "Tier presets"
+msgstr ""
+
+#: ../../source/features.rst:471 a13e8bee966a43be94be10ec6c9fa689
+msgid "Material-specific sets"
+msgstr ""
+
+#: ../../source/features.rst:471 a058181c26cd4158ad7a63d2bd54203c
+msgid "standard_relax"
+msgstr ""
+
+#: ../../source/features.rst:473 793f3030e63a4bb89bb1ee241c1822c9
+msgid "Powerups"
+msgstr ""
+
+#: ../../source/features.rst:473 79231508967544949ed6a396ffc8e541
+msgid "After creation"
+msgstr ""
+
+#: ../../source/features.rst:473 d134d15fcbab435c86a7e246da1d291c
+msgid "Runtime modifications"
+msgstr ""
+
+#: ../../source/features.rst:473 092ead1cd8954df5b257080b327ef3fd
+msgid "Conditional updates"
+msgstr ""
+
+#: ../../source/features.rst:476 5ca7c1778e604a1b86244791a8f922ed
+msgid "See :doc:`makers-vs-flowmakers` for comprehensive comparison and examples."
+msgstr ""
+
+#: ../../source/features.rst:479 95791dffc2be41998830542da71603d9
+msgid "Complete Example: Multi-Stage Workflow"
+msgstr ""
+
+#: ../../source/features.rst:481 396dc4b4715341a5b94831cdde02b740
+msgid "Here's a complete example showing powerups in a complex workflow:"
+msgstr ""
+
+#: ../../source/features.rst:535 0fe01c10c450468888d5512b82c03a36
+msgid "Restart Workflows"
+msgstr ""
+
+#: ../../source/features.rst:537 ../../source/features.rst:613
+#: ../../source/features.rst:715 ../../source/features.rst:814
+#: ../../source/features.rst:990 ../../source/features.rst:1103
+#: ../../source/features.rst:1240 2d43c1d8f86443ccbe231acc38ce047f
+#: 719b76337b084c1b8b0e168091a65f27 79891d778cc64fb9b495f21009216a04
+#: d66264b53d0b405993b1ad1bfbae1923 f37d0e4d74be48d788de052db46357b0
+#: f437007fb6d64356bfdb7bc866909b2d fcbda5622076494ea035039dec812a6c
+msgid "**Status**: ✅ Production-ready"
+msgstr ""
+
+#: ../../source/features.rst:539 6e03d82adfd84471989aa1ec2149aa9d
+msgid ""
+"Accelerate multi-stage calculations by reusing converged results from "
+"previous steps. Can reduce total computation time by **30-60%** for "
+"common workflows."
+msgstr ""
+
+#: ../../source/features.rst:542 c2225f4dc2434a0785a09fa61ee506d6
+msgid "**Density Matrix (DM) Restart** - Faster SCF convergence:"
+msgstr ""
+
+#: ../../source/features.rst:563 4481ba728a2e47faaee96cf85f0110fb
+msgid "**Geometry (XV) Restart** - Fewer relaxation steps:"
+msgstr ""
+
+#: ../../source/features.rst:590 ce959939554b443d9980263a55411707
+#, python-brace-format
+msgid "**Files Copied** with ``copy_siesta_kwargs={\"restart_to_input\": True}``:"
+msgstr ""
+
+#: ../../source/features.rst:592 8cbeea136ebe4285ae19957cdfbd7037
+msgid "``siesta.DM`` - Density matrix"
+msgstr ""
+
+#: ../../source/features.rst:593 46feea93280144fcba3a706efe4ba2cd
+msgid "``*.STRUCT_OUT`` - Structure outputs"
+msgstr ""
+
+#: ../../source/features.rst:594 9c1038ea385a46b6b2bf693c2f6c524d
+msgid "``*.xyz`` - Trajectories"
+msgstr ""
+
+#: ../../source/features.rst:595 fb282cbce86046c2be4756df99c3c0a8
+msgid "**NOT** ``siesta.XV`` - Must add via ``additional_siesta_files``"
+msgstr ""
+
+#: ../../source/features.rst:597 5f2d386c1c4643d181bffe73c78c9365
+msgid "**Common Use Cases**:"
+msgstr ""
+
+#: ../../source/features.rst:599 c0eda7173b9941459604889fb820bca4
+msgid "Coarse → Fine k-points (DM restart)"
+msgstr ""
+
+#: ../../source/features.rst:600 c94fba85c4ed4849bb6c2a5b3f55fe88
+msgid "Loose → Tight relaxation (XV restart)"
+msgstr ""
+
+#: ../../source/features.rst:601 7736906abb1e4baf9d3661c8c5ab9959
+msgid "DFT → DFT+U calculations (DM restart)"
+msgstr ""
+
+#: ../../source/features.rst:602 a6a487c30f5145afb89ed3a01407aa9b
+msgid "Phonon supercell forces (DM restart for each displacement)"
+msgstr ""
+
+#: ../../source/features.rst:604 a5a0dad0b22843ac9ffac40c12392c31
+msgid ""
+"📖 **Tutorials**: "
+"``tutorials/01-basics/05-workflows/02_restart_from_dm.py``, "
+"``03_restart_from_xv.py``"
+msgstr ""
+
+#: ../../source/features.rst:606 06c858e490d0436f8109923e6b25c009
+msgid ""
+"📘 **Documentation**: :doc:`advanced-workflows` (Restart Workflows for "
+"Efficiency)"
+msgstr ""
+
+#: ../../source/features.rst:611 083225e2f4254c76870e9edf79cd2b31
+msgid "🎵 Phonon Calculations"
+msgstr ""
+
+#: ../../source/features.rst:615 9f8b23c58dff44b4b3f0c46f05c5013f
+msgid "Complete phonopy integration for vibrational properties calculations."
+msgstr ""
+
+#: ../../source/features.rst:618 ../../source/features.rst:720
+#: ../../source/features.rst:995 ../../source/features.rst:1245
+#: 3339aa88d0d5412f9fbf5fdb53c4b910 7fbb6fc5e4ff4fe4b43508acaf15462d
+#: cc129cb4c9bb4bb685489c5a0874ba56 fc2d24fc7b0d4f11ac0be99580e2f366
+msgid "Key Features"
+msgstr ""
+
+#: ../../source/features.rst:620 eeb6265264704a0e82e0b9e003b53aee
+msgid "✨ **Automatic Supercell Generation**"
+msgstr ""
+
+#: ../../source/features.rst:621 2213dd6da6d44a8995beea035573648c
+msgid ""
+"Intelligent supercell sizing based on ``min_length`` criterion (default: "
+"12 Å)"
+msgstr ""
+
+#: ../../source/features.rst:623 30c7a91ff9444470a403be9213727c6b
+msgid "🔄 **Symmetry Reduction**"
+msgstr ""
+
+#: ../../source/features.rst:624 1ef8fa332b9040e69726e886cdb7bbda
+#, python-format
+msgid ""
+"Uses phonopy symmetry analysis to minimize displacement calculations "
+"(50-80% reduction)"
+msgstr ""
+
+#: ../../source/features.rst:626 33762527b1804c00b54cf400906a2a5a
+msgid "📊 **Automatic Plotting** (4 plot types)"
+msgstr ""
+
+#: ../../source/features.rst:627 e7e7e4331ae6440db2f22e050919f39e
+msgid "Phonon band structure with high-symmetry path"
+msgstr ""
+
+#: ../../source/features.rst:628 ff65326b25934a2fa644496395d812a0
+msgid "Phonon density of states"
+msgstr ""
+
+#: ../../source/features.rst:629 c0f226f478aa4d7b8ff9f4fb429ed1d6
+msgid "Thermal properties (Cv, S, F vs T)"
+msgstr ""
+
+#: ../../source/features.rst:630 af21bfc78e6f4877967559075bbc4a26
+msgid "Comprehensive text summary"
+msgstr ""
+
+#: ../../source/features.rst:632 6f7d8fffe2d1473d9cf3a171d5fd3e51
+msgid "🔥 **Thermal Properties**"
+msgstr ""
+
+#: ../../source/features.rst:633 d02c9462948142ec93c7814d28ac78c9
+msgid "Heat capacity, entropy, and free energy from 0-1000 K"
+msgstr ""
+
+#: ../../source/features.rst:636 ../../source/features.rst:759
+#: ../../source/features.rst:1161 ../../source/features.rst:1292
+#: 1dfa7d8142444856aa30c3d533c16000 56bae9f0efb0438fa6503e68257f504b
+#: 68b6a636a8074a0c9de6ebc3c46f224a 98fe1079b085455887a9155e78e7e712
+msgid "Example Usage"
+msgstr ""
+
+#: ../../source/features.rst:663 4d01c6fb149c4bcf8049b21cd0337a2a
+msgid "Output Example"
+msgstr ""
+
+#: ../../source/features.rst:665 436801cb20304078994efb5e8b8abe80
+msgid "**Phonon Document Schema**:"
+msgstr ""
+
+#: ../../source/features.rst:686 18383b3dcd9344658ecb9c736a96350e
+msgid "Convergence Guidelines"
+msgstr ""
+
+#: ../../source/features.rst:692 223f2cc8cc474a469a3d132944e20338
+msgid "Parameter"
+msgstr ""
+
+#: ../../source/features.rst:693 e791e9b7b4e9466084e7c019342d63ee
+msgid "Recommendation"
+msgstr ""
+
+#: ../../source/features.rst:694 c64b68bb970844fbb4084f755bb80c0d
+msgid "Criterion"
+msgstr ""
+
+#: ../../source/features.rst:695 463989dae8624337ab5979eef0f5db31
+msgid "Supercell"
+msgstr ""
+
+#: ../../source/features.rst:696 9357da0d0ea6424985a94382486b8fa1
+msgid "Vectors > 10-15 Å"
+msgstr ""
+
+#: ../../source/features.rst:697 c28608d9af3e41f583ffa248406080e6
+msgid "Frequencies converged within 0.03 THz"
+msgstr ""
+
+#: ../../source/features.rst:698 39e5b35008444e059e2b886edd257b8f
+msgid "Displacement"
+msgstr ""
+
+#: ../../source/features.rst:699 1e4947ab447c452ea0990b6f583f98f0
+msgid "0.005-0.02 Å"
+msgstr ""
+
+#: ../../source/features.rst:700 dd322133106e49c8b3bb7710f4206411
+msgid "Harmonic approximation valid"
+msgstr ""
+
+#: ../../source/features.rst:701 fbb2defa5ec14bf6851cac0c9808511b
+msgid "Force k-points"
+msgstr ""
+
+#: ../../source/features.rst:702 eddb9ed392ff49b1bac5056ba082314d
+msgid "8×8×8 minimum"
+msgstr ""
+
+#: ../../source/features.rst:703 3d0a4d3202d04d5181021227d3c4db1c
+msgid "Forces accurate to < 0.001 eV/Å"
+msgstr ""
+
+#: ../../source/features.rst:704 f6d7eb2e5136458b99cbf01deee255b6
+msgid "Mesh cutoff"
+msgstr ""
+
+#: ../../source/features.rst:705 6daa58dd6ec04e3cb41005b0d68d4ae4
+msgid "400-500 Ry"
+msgstr ""
+
+#: ../../source/features.rst:706 15f6feb3bb8543eaaafa60335e7f4b90
+msgid "Higher than relaxation"
+msgstr ""
+
+#: ../../source/features.rst:708 7f1f4fafc695499494e0ddd5b60cde9f
+msgid "📖 **Tutorial**: ``tutorials/16-phonon-calculations/``"
+msgstr ""
+
+#: ../../source/features.rst:713 548f77ff0c95455aa7f4791e974bf2ae
+msgid "🏔️ Surface Energy Calculations"
+msgstr ""
+
+#: ../../source/features.rst:717 413925988628486a94581b55db07d873
+msgid ""
+"Multi-surface energy workflows with automatic termination discovery and "
+"analysis."
+msgstr ""
+
+#: ../../source/features.rst:722 3a36dc6cac45400fb826e516633eff24
+msgid "🎯 **Layer-Based Specification**"
+msgstr ""
+
+#: ../../source/features.rst:723 c38427671ccd40fa830ef7009db1ca21
+msgid ""
+"Specify slab thickness in atomic layers (e.g., \"4 layers\") instead of "
+"Ångströms"
+msgstr ""
+
+#: ../../source/features.rst:725 8d747654fd4147efbfb05ff518e612e1
+msgid "🔍 **Automatic Termination Discovery**"
+msgstr ""
+
+#: ../../source/features.rst:726 c755a3680de44685929043df6e93e840
+msgid "Explores all unique surface terminations with symmetry analysis"
+msgstr ""
+
+#: ../../source/features.rst:728 5d9696a834c943f2900acc2238b09827
+msgid "📊 **Multi-Surface Comparison**"
+msgstr ""
+
+#: ../../source/features.rst:729 3e43551f9dd6444aa3c8c548214ae909
+msgid "Calculate energies for multiple Miller indices in single workflow"
+msgstr ""
+
+#: ../../source/features.rst:731 6023438b731c4397901d7eeb8ac2ad62
+msgid "📈 **Publication-Quality Plots**"
+msgstr ""
+
+#: ../../source/features.rst:732 74f64549bb2e47a0a7e8824bfcb25b96
+msgid "Bar chart of lowest energy per surface"
+msgstr ""
+
+#: ../../source/features.rst:733 ec32f350af754f76a0041048541df757
+msgid "Scatter plot of all terminations"
+msgstr ""
+
+#: ../../source/features.rst:734 d71e6ff7ebe144c795544cc57a994a73
+msgid "300 dpi, publication-ready"
+msgstr ""
+
+#: ../../source/features.rst:736 43f7ae5dbfba4f268e6224ec49af7a91
+msgid "📄 **Comprehensive Summaries**"
+msgstr ""
+
+#: ../../source/features.rst:737 cd7e5fbb162b4787b1b825a5d5a685e3
+msgid "Theoretical background and formulas"
+msgstr ""
+
+#: ../../source/features.rst:738 39a77bc8084a4d82a2443ea9fa1f9614
+msgid "Surface energy comparison tables"
+msgstr ""
+
+#: ../../source/features.rst:739 ../../source/features.rst:1412
+#: 3b81e9f441bb4b4bb20fe64c3830af0b 764b10c0e1774be1af35aa06b63c03e1
+msgid "Convergence recommendations"
+msgstr ""
+
+#: ../../source/features.rst:742 1243a67973384d6b9100504a6265f94f
+msgid "Surface Energy Formula"
+msgstr ""
+
+#: ../../source/features.rst:744 fdb6d300e28a4958835e2abe1e66bc71
+msgid "\\gamma = \\frac{E_{\\text{slab}} - N \\times E_{\\text{bulk}}}{A}"
+msgstr ""
+
+#: ../../source/features.rst:748 33b83704de094a6781fdca0a990e0755
+msgid "Where:"
+msgstr ""
+
+#: ../../source/features.rst:750 8df93d2e62ba40cc8ff388d5675385e3
+msgid ":math:`E_{\\text{slab}}` = Total energy of the slab"
+msgstr ""
+
+#: ../../source/features.rst:751 963b928298af43208d19e67254184cee
+msgid ":math:`E_{\\text{bulk}}` = Energy per formula unit of bulk"
+msgstr ""
+
+#: ../../source/features.rst:752 d790836d7a66400092888f485d8f45f1
+msgid ":math:`N` = Number of formula units in slab"
+msgstr ""
+
+#: ../../source/features.rst:753 d88afc8baf8b4962b97fcceb330c185a
+msgid ":math:`A` = Surface area"
+msgstr ""
+
+#: ../../source/features.rst:756 26f46c14c3fe411c803bc703868f442f
+msgid ""
+"For symmetric slabs (same termination on both sides), divide by "
+":math:`2A` instead of :math:`A`"
+msgstr ""
+
+#: ../../source/features.rst:801 2e5be039853e41999e0ec8949753a24d
+msgid "Output Files"
+msgstr ""
+
+#: ../../source/features.rst:803 20c2950c51dc42398e0e7c6dbc7cc00b
+msgid "``multi_surface_comparison.png`` - Two-panel visualization"
+msgstr ""
+
+#: ../../source/features.rst:804 c97a01070b7e49bf8276416a01bd4858
+msgid ""
+"``multi_surface_summary.txt`` - Complete analysis with literature "
+"comparison"
+msgstr ""
+
+#: ../../source/features.rst:805 9a22d5eafbd54ada878da08fb3350a52
+msgid "Individual slab calculation directories"
+msgstr ""
+
+#: ../../source/features.rst:807 4ba3e79603e94e2c987e60b8c229c573
+msgid "📖 **Tutorial**: ``tutorials/17-surface-energy-calculations/``"
+msgstr ""
+
+#: ../../source/features.rst:812 42401bf99bcd4a77af07daa6104b8c9b
+msgid "⚙️ Tier-Based Input Architecture"
+msgstr ""
+
+#: ../../source/features.rst:816 ab2a46df1a7f46bf8e5dff819bf20877
+msgid ""
+"Automatic activation of SIESTA parameter modules based on calculation "
+"complexity."
+msgstr ""
+
+#: ../../source/features.rst:819 c1f0e74cd9614081ad841d811219bb47
+msgid "The Four-Tier Hierarchy"
+msgstr ""
+
+#: ../../source/features.rst:825 643d736716b442e8a6ae47ed47139725
+msgid "Tier"
+msgstr ""
+
+#: ../../source/features.rst:826 07ca70147b9042029ce5822228f62887
+msgid "Modules"
+msgstr ""
+
+#: ../../source/features.rst:828 4edb6f3d38de4224801057b3e57dd6f5
+msgid "Performance"
+msgstr ""
+
+#: ../../source/features.rst:829 49ae11eddadc4dc28fceed4e61bc5e5d
+msgid "**basic**"
+msgstr ""
+
+#: ../../source/features.rst:830 0a71e1bc6ace472880faf5664430dad0
+msgid "6"
+msgstr ""
+
+#: ../../source/features.rst:831 eba62b54c2324626a481b67fda794dec
+msgid "Quick tests, workflow debugging"
+msgstr ""
+
+#: ../../source/features.rst:832 4c9b0a649c114015b578098afd477271
+msgid "~17 ms"
+msgstr ""
+
+#: ../../source/features.rst:833 e9c0e8f03cca497db001f7c929d8e4b2
+msgid "**intermediate**"
+msgstr ""
+
+#: ../../source/features.rst:834 ce0ff3a0f3fd4d4f8bdf6998b175e186
+msgid "12"
+msgstr ""
+
+#: ../../source/features.rst:835 82e72fb53e854d3685121c3c3909c0be
+msgid "Standard calculations (DEFAULT)"
+msgstr ""
+
+#: ../../source/features.rst:836 fe9027cae089472985fc64194e390d49
+msgid "~20 ms"
+msgstr ""
+
+#: ../../source/features.rst:837 a712019620ef44978527bb383f0eabc0
+msgid "**advanced**"
+msgstr ""
+
+#: ../../source/features.rst:838 3270215d79f24f92a3005d671892293f
+msgid "19"
+msgstr ""
+
+#: ../../source/features.rst:839 3392a108bb9d4602a54f055b23bf68e6
+msgid "Phonons, optical, DFT+U"
+msgstr ""
+
+#: ../../source/features.rst:840 488c6edc05a74763ab3240cb6d1fb354
+msgid "~22 ms"
+msgstr ""
+
+#: ../../source/features.rst:841 1166eee3953a4e8fa4260e02466fa265
+msgid "**expert**"
+msgstr ""
+
+#: ../../source/features.rst:842 1e9af2ba3d684b45a01407cd3c6f148a
+msgid "24"
+msgstr ""
+
+#: ../../source/features.rst:843 f9a3530ab52d49ba9d2956328706c76e
+msgid "Performance tuning, large systems"
+msgstr ""
+
+#: ../../source/features.rst:844 e220e1d433184fc8a10781bb843ad7b5
+msgid "~23 ms"
+msgstr ""
+
+#: ../../source/features.rst:847 db94e60bf21d4f72aae993c041853cde
+msgid "Module Categories"
+msgstr ""
+
+#: ../../source/features.rst:849 85410a500d634a56a029faa986628dd5
+msgid "**Basic Tier (6 modules)**:"
+msgstr ""
+
+#: ../../source/features.rst:851 4583c3d56d0844b4bb22f7953cbd02ef
+msgid "Pseudopotentials"
+msgstr ""
+
+#: ../../source/features.rst:852 f888fad4aa8647238aa176c9c01f9f90
+msgid "Basis sets (PAO parameters)"
+msgstr ""
+
+#: ../../source/features.rst:853 eef9065f5b1b416d9a015526ad49bfb6
+msgid "Exchange-correlation functional"
+msgstr ""
+
+#: ../../source/features.rst:854 a92b37f1617e40e0b18a180fc6e071c6
+msgid "K-point sampling"
+msgstr ""
+
+#: ../../source/features.rst:855 0575bfd75efe4137a50c3358c8ea9da2
+msgid "Real-space grid cutoff"
+msgstr ""
+
+#: ../../source/features.rst:856 51a3c90b172d4e79bff85681414eebc2
+msgid "General system descriptors"
+msgstr ""
+
+#: ../../source/features.rst:858 aff89a6dc9a949ce8f99fe38f228e48a
+msgid "**Intermediate Tier (+6 modules)**:"
+msgstr ""
+
+#: ../../source/features.rst:860 b65a07a251244ddc9ef567b9c7383dd4
+msgid "Spin polarization"
+msgstr ""
+
+#: ../../source/features.rst:861 16f64da17c0141ac8639873e3127b86b
+msgid "SCF convergence parameters"
+msgstr ""
+
+#: ../../source/features.rst:862 3e64a9083c744194b71ec5bc388b8621
+msgid "Occupation functions"
+msgstr ""
+
+#: ../../source/features.rst:863 149561dee0de426f9efacd56dbbecbb7
+msgid "MD/relaxation settings"
+msgstr ""
+
+#: ../../source/features.rst:864 82cd65e50b6c4f0594bc1efb7fa75b31
+msgid "Atomic constraints"
+msgstr ""
+
+#: ../../source/features.rst:865 95d944b606eb4a99879045e30761f10c
+msgid "Lua scripting"
+msgstr ""
+
+#: ../../source/features.rst:867 ece34965e80a492fa7adeca5ec589d03
+msgid "**Advanced Tier (+7 modules)**:"
+msgstr ""
+
+#: ../../source/features.rst:869 4b127382295743a5948a7bfd3f71dbb0
+msgid "Phonon calculations"
+msgstr ""
+
+#: ../../source/features.rst:870 de89cab804ff4a1db9f12d47f7311e86
+msgid "Optical properties"
+msgstr ""
+
+#: ../../source/features.rst:871 59e6fd36e852416387c757c613a51b3a
+msgid "DOS and band structure"
+msgstr ""
+
+#: ../../source/features.rst:872 1b726ef43b8d4c00a2a6e6970b3f0181
+msgid "DFT+U parameters"
+msgstr ""
+
+#: ../../source/features.rst:873 8ffd306bd877496dbac342074c679f71
+msgid "Electric fields, dipole corrections"
+msgstr ""
+
+#: ../../source/features.rst:874 29191e2fc4fa4a3890fd2e214f1a8aee
+msgid "Advanced grid settings"
+msgstr ""
+
+#: ../../source/features.rst:875 8e8e11a9bb89460ba5a4de60e9769376
+msgid "Charge density plotting"
+msgstr ""
+
+#: ../../source/features.rst:877 87361b9efc814033b7cc30e242bee777
+msgid "**Expert Tier (+5 modules)**:"
+msgstr ""
+
+#: ../../source/features.rst:879 531843a397b848328a342610e23b7cee
+msgid "MPI parallelization"
+msgstr ""
+
+#: ../../source/features.rst:880 2b11124e9219458dbd675af364eacf2b
+msgid "Diagonalization methods"
+msgstr ""
+
+#: ../../source/features.rst:881 8df29bad5deb4e6092e40a9000aff46a
+msgid "Memory and I/O optimization"
+msgstr ""
+
+#: ../../source/features.rst:882 4ebce61a3d3c466fbbc98638143bcf37
+msgid "Matrix cutoffs"
+msgstr ""
+
+#: ../../source/features.rst:883 8572678a72ab4b3ebeca20f84fdf2f7b
+msgid "NetCDF output options"
+msgstr ""
+
+#: ../../source/features.rst:886 f4dbf6159728474982e103185070249b
+msgid "Direct Tier Usage"
+msgstr ""
+
+#: ../../source/features.rst:903 c4970a322e8d4a55a9d953e6a0f4a6ce
+msgid "Material-Specific Presets (14 Total)"
+msgstr ""
+
+#: ../../source/features.rst:905 259215add4a64547a83d10f9a4578bab
+msgid "Pre-configured tier + parameter combinations:"
+msgstr ""
+
+#: ../../source/features.rst:907 246418d9a92843548443d6788c919a3e
+msgid "**Structural (3 presets)**:"
+msgstr ""
+
+#: ../../source/features.rst:909 2facbc7b7bc74d80ac306524d7b5f8a4
+msgid "``basic_relax`` - Minimal parameters for quick tests"
+msgstr ""
+
+#: ../../source/features.rst:910 45b5044edaad49c78f98561f1ac110e9
+msgid "``standard_relax`` - Default production relaxation"
+msgstr ""
+
+#: ../../source/features.rst:911 80ae588b150c460bb5970b34d29cd563
+msgid "``high_accuracy_relax`` - Tight convergence"
+msgstr ""
+
+#: ../../source/features.rst:913 b05578f7699d42f1ac8eb079903e2add
+msgid "**Surface (2 presets)**:"
+msgstr ""
+
+#: ../../source/features.rst:915 0f795b9504144488bb46e9a4f02d61e6
+msgid "``surface_metal`` - Metallic surfaces (MP smearing, tight SCF)"
+msgstr ""
+
+#: ../../source/features.rst:916 5dd19bbb582541fa97201cb374f59261
+msgid "``surface_semiconductor`` - Semiconductor surfaces (dipole corrections)"
+msgstr ""
+
+#: ../../source/features.rst:918 6bfb4004d7324f87b5f811f8b3962dd3
+msgid "**Magnetic (2 presets)**:"
+msgstr ""
+
+#: ../../source/features.rst:920 a592dc6c79464ce5bc40919661103f43
+msgid "``magnetic_2d`` - 2D magnetic materials"
+msgstr ""
+
+#: ../../source/features.rst:921 e9bd2db38c6a463594cb60bfabc9bf1a
+msgid "``magnetic_correlated`` - DFT+U for strongly correlated systems"
+msgstr ""
+
+#: ../../source/features.rst:923 81c2837727f74b369dadb88ac5748e4e
+msgid "**Phonon (2 presets)**:"
+msgstr ""
+
+#: ../../source/features.rst:925 88bd23c9b3f84957b6ee9744c5492934
+msgid "``phonon_standard`` - Standard phonon calculations"
+msgstr ""
+
+#: ../../source/features.rst:926 f7e8bdd1769e4da38d1def41b82e7417
+msgid "``phonon_high_accuracy`` - Tight forces for accurate phonons"
+msgstr ""
+
+#: ../../source/features.rst:928 73571c6f130741c69cbc7f2436c4b516
+msgid "**Optical (2 presets)**:"
+msgstr ""
+
+#: ../../source/features.rst:930 15827b51ecc4486fb8965d7a6342661b
+msgid "``optical_response`` - Optical absorption, dielectric"
+msgstr ""
+
+#: ../../source/features.rst:931 74bf27bf2ee4416e97313380914fa798
+msgid "``band_structure`` - Electronic band structure and DOS"
+msgstr ""
+
+#: ../../source/features.rst:933 b91dbc3bb4644737a4e8f808ac211d6b
+msgid "**Performance (2 presets)**:"
+msgstr ""
+
+#: ../../source/features.rst:935 99dd9b04f53242e4a06e09f467124f95
+msgid "``large_system`` - Linear-scaling for >100 atoms"
+msgstr ""
+
+#: ../../source/features.rst:936 688224a92a804632aae21de9e3254578
+msgid "``parallel_hpc`` - MPI optimization for HPC"
+msgstr ""
+
+#: ../../source/features.rst:938 17115808538b4b4ba5a67be164117cca
+msgid "**Testing (1 preset)**:"
+msgstr ""
+
+#: ../../source/features.rst:940 97b01616eb7543be9968c68a79178660
+msgid "``convergence_test`` - All modules for comprehensive testing"
+msgstr ""
+
+#: ../../source/features.rst:943 4c2d41e0754c4825b8a69c6087c10f41
+msgid "Preset Application"
+msgstr ""
+
+#: ../../source/features.rst:969 ../../source/features.rst:1219
+#: ../../source/features.rst:1354 0e9edcb64d4141fc81390efd1e72e9db
+#: 1b33d8448e4b42a981e813a671344212 5b3cb90637624672b5938a698f7b4d36
+msgid "Benefits"
+msgstr ""
+
+#: ../../source/features.rst:971 447b1f6a6e3e47488b41407cc0a6f60a
+msgid "✅ **For Users**:"
+msgstr ""
+
+#: ../../source/features.rst:972 8db2ab9242d74cecb3f7d763fa88950f
+msgid "No manual module initialization needed"
+msgstr ""
+
+#: ../../source/features.rst:973 932707ed4d404a5589ec5bfc3b2a2c22
+msgid "Material-specific recommended settings"
+msgstr ""
+
+#: ../../source/features.rst:974 2d89b5a36e304a31941b64c169cc9f6b
+msgid "Easy parameter customization"
+msgstr ""
+
+#: ../../source/features.rst:975 fd8bba37bed14d0fbf3f379d3c8e7efb
+msgid "All 24 modules work with powerups"
+msgstr ""
+
+#: ../../source/features.rst:977 ab0d8b54816146b7a6c8e638b9dd1b7c
+msgid "✅ **For Developers**:"
+msgstr ""
+
+#: ../../source/features.rst:978 287d64b52d8b488abdd232acbb4378c1
+msgid "Easy extension (registry-based)"
+msgstr ""
+
+#: ../../source/features.rst:979 d0118ef9e0b141cc8b73d8a328160ab3
+msgid "Clear organization by complexity"
+msgstr ""
+
+#: ../../source/features.rst:980 eb91df7b997d40369d9f7f3f986e80ba
+msgid "Automatic dependency ordering"
+msgstr ""
+
+#: ../../source/features.rst:981 44441e23c96b4dfd8d77b3064b890e07
+msgid "Graceful fallback handling"
+msgstr ""
+
+#: ../../source/features.rst:983 ec7560489a774536ab7cac71abd61c18
+msgid "📖 **Tutorial**: ``tutorials/18-tier-based-calculations/``"
+msgstr ""
+
+#: ../../source/features.rst:988 c73e07c7782c4b0d82db6ec0e7816475
+msgid "🧲 Magnetic Calculations"
+msgstr ""
+
+#: ../../source/features.rst:992 5736eb7beedf4cc6997e3736ff5773f2
+msgid ""
+"Comprehensive support for spin-polarized calculations with automatic "
+"magnetic moment initialization."
+msgstr ""
+
+#: ../../source/features.rst:997 424fad7880084c2c90be3ee00752a935
+msgid "✨ **Automatic DM.InitSpin Generation**"
+msgstr ""
+
+#: ../../source/features.rst:998 bf4f94720d9b40fca50de82107a72cc9
+msgid ""
+"Magnetic moments automatically detected from structure properties and "
+"converted to SIESTA format"
+msgstr ""
+
+#: ../../source/features.rst:1000 92533112b9e144ee82c43268d2604593
+msgid "🔍 **Magnetic Element Detection**"
+msgstr ""
+
+#: ../../source/features.rst:1001 90cc30fcd3d44ac0a4098df06ef4a21b
+msgid ""
+"Auto-detection of 3d (Cr, Mn, Fe, Co, Ni, Cu), 4d (Mo, Tc, Ru, Rh), and "
+"lanthanide elements"
+msgstr ""
+
+#: ../../source/features.rst:1003 641dbdd2571747f58cfa776a636498e6
+msgid "📋 **Descriptive Comments**"
+msgstr ""
+
+#: ../../source/features.rst:1004 632dc7cd85d44eb2b2ab1b3e8c76404a
+msgid ""
+"Each DM.InitSpin line includes species name, atom number, and Cartesian "
+"coordinates"
+msgstr ""
+
+#: ../../source/features.rst:1006 d564b3bf57ff47d6b3db0d94c0a3a97f
+msgid "🎯 **Magnetic Ordering Support**"
+msgstr ""
+
+#: ../../source/features.rst:1007 aac5a0ebfbb543ba89399b76b3e299d0
+msgid "Ferromagnetic (FM), antiferromagnetic (AFM), and custom ordering patterns"
+msgstr ""
+
+#: ../../source/features.rst:1010 cf2eacf0e0d2444886dd1e5ed9ed9d9e
+msgid "Automatic DM.InitSpin Generation"
+msgstr ""
+
+#: ../../source/features.rst:1012 20070613c8644de5b007b8b4e5b3999a
+msgid ""
+"The SpinSettings dataclass automatically generates SIESTA's DM.InitSpin "
+"block from pymatgen structure properties:"
+msgstr ""
+
+#: ../../source/features.rst:1040 ../../source/features.rst:1318
+#: 71fccfac375447eeb326ee7196ec0948 db08d11c57054192b66abd898dba654e
+msgid "Generated FDF Output"
+msgstr ""
+
+#: ../../source/features.rst:1042 bd191c79c65f4e11b584526d7cc9a9cf
+msgid "The DM.InitSpin block now includes informative comments:"
+msgstr ""
+
+#: ../../source/features.rst:1052 c5f205403c544571913145391ef29c1e
+msgid "Comments show:"
+msgstr ""
+
+#: ../../source/features.rst:1053 ef689fcae78e457c8ba43009b8bf4f85
+msgid "Species name (Fe, Cu, Ni, etc.)"
+msgstr ""
+
+#: ../../source/features.rst:1054 59a590c55f1441d08d6ee820c597adfc
+msgid "Atom number (1-indexed)"
+msgstr ""
+
+#: ../../source/features.rst:1055 d746c5aa2f85467aa91e2927512fdea7
+msgid "Cartesian coordinates in Angstroms"
+msgstr ""
+
+#: ../../source/features.rst:1057 20675d3da1d740d588b9d2ec908f8717
+msgid "This makes it easy to:"
+msgstr ""
+
+#: ../../source/features.rst:1058 c284c90365a64bff8ed867d09cbc2fce
+msgid "Identify which atoms have magnetic moments"
+msgstr ""
+
+#: ../../source/features.rst:1059 57f6eabc86504a3f82fa625b4c2d6812
+msgid "Verify magnetic ordering patterns (FM/AFM)"
+msgstr ""
+
+#: ../../source/features.rst:1060 d24c89fba54745289c0f8c34db9c9f2f
+msgid "Debug unexpected magnetic configurations"
+msgstr ""
+
+#: ../../source/features.rst:1061 b0985eac54574a9a85b74f4506638c53
+msgid "Locate atoms in complex structures"
+msgstr ""
+
+#: ../../source/features.rst:1064 3dd7c5c983d14f5499b8b557ec92becf
+msgid "Supported Magnetic Elements"
+msgstr ""
+
+#: ../../source/features.rst:1066 ce29912a8782475b98865a881de7fc64
+msgid "**3d Transition Metals:**"
+msgstr ""
+
+#: ../../source/features.rst:1067 ee9d41a9727e4646b71ad63a403726f3
+msgid "Cr (4.0 μB), Mn (5.0 μB), Fe (4.0 μB)"
+msgstr ""
+
+#: ../../source/features.rst:1068 6e4c15344c9845d9bc2e9a1356ddbd24
+msgid "Co (3.0 μB), Ni (2.0 μB), Cu (0.6 μB)"
+msgstr ""
+
+#: ../../source/features.rst:1070 d116c0f6ab4b44a1a5fb2508ed250649
+msgid "**4d Transition Metals:**"
+msgstr ""
+
+#: ../../source/features.rst:1071 7dfb70d4eca84c3983d9ae4b4618d1e8
+msgid "Mo, Tc, Ru, Rh (2.0 μB default)"
+msgstr ""
+
+#: ../../source/features.rst:1073 bcea881d0d254ab092f24b6209247a17
+msgid "**Lanthanides:**"
+msgstr ""
+
+#: ../../source/features.rst:1074 ee160ec227944efb89516b0c1c550874
+msgid "Gd (7.0 μB), other 4f elements (configurable)"
+msgstr ""
+
+#: ../../source/features.rst:1077 f030ac6df7904ab5acb2acca2a1ded6b
+msgid "Magnetic Ordering Options"
+msgstr ""
+
+#: ../../source/features.rst:1079 bc5d868920fa4b958559e11a0ccdb60e
+msgid "**Ferromagnetic (FM)** All magnetic moments aligned parallel (same sign)"
+msgstr ""
+
+#: ../../source/features.rst:1082 2db0ff71e5d44d4ca6c4fb9fb0f607cc
+msgid "**Antiferromagnetic (AFM)** Alternating spin directions (opposite signs)"
+msgstr ""
+
+#: ../../source/features.rst:1085 2e927c006e5a473fac66caf755de7b68
+msgid "**Custom** Preserve exact signs from structure.magmom property"
+msgstr ""
+
+#: ../../source/features.rst:1089 ../../source/features.rst:1108
+#: 0dd5952b933e4b5caf21ce321485fd6d c1e58f44a0f742ef8382adff102c4d05
+msgid "Architecture"
+msgstr ""
+
+#: ../../source/features.rst:1091 82a6eee979c2415695915651fa664703
+msgid ""
+"**Single Source of Truth**: DM.InitSpin generation is exclusively handled"
+" by the SpinSettings dataclass, ensuring:"
+msgstr ""
+
+#: ../../source/features.rst:1092 73eef0f503af4fca9bbb591a30e7ddcf
+msgid "Consistent behavior across all workflows"
+msgstr ""
+
+#: ../../source/features.rst:1093 0da641d5be384b0f9c65b5bd9191e4d6
+msgid "No duplicate generation logic"
+msgstr ""
+
+#: ../../source/features.rst:1094 9a5955e7ad93490db2f84d56e028d8d5
+msgid "Clean architectural separation"
+msgstr ""
+
+#: ../../source/features.rst:1096 e7a1bf2bf78946068fcc152a6fa275b2
+msgid ""
+"📖 **Tutorials**: ``tutorials/07-advanced-features/16-magnetic-"
+"calculations/``"
+msgstr ""
+
+#: ../../source/features.rst:1101 032c476ecc0e4604889841c568222a4e
+msgid "🛡️ Custodian Error Handling"
+msgstr ""
+
+#: ../../source/features.rst:1105 788ae24380e746d6959019fb85fa85e0
+msgid ""
+"Automatic error detection and recovery using the "
+"MaterialsProject/custodian library."
+msgstr ""
+
+#: ../../source/features.rst:1110 c248b7cadb2043718789df9506634444
+msgid "Built on the battle-tested **custodian library** from MaterialsProject:"
+msgstr ""
+
+#: ../../source/features.rst:1112 dccbe57ccf28472da69aadbb782fb5fc
+msgid "10+ error types automatically detected"
+msgstr ""
+
+#: ../../source/features.rst:1113 866be8b1087f40539f479783e5debb30
+msgid "Progressive correction strategies"
+msgstr ""
+
+#: ../../source/features.rst:1114 ac44bf9718bc4f299555e175cbd14f51
+msgid "Automatic JSON logging (``custodian.json``)"
+msgstr ""
+
+#: ../../source/features.rst:1115 6b612d6be4b04aa98d3c4e0ae99c0544
+msgid "MSONable serialization for jobflow"
+msgstr ""
+
+#: ../../source/features.rst:1116 5a6b849973d34f0cae69718f737e2328
+msgid "Validation framework for output quality"
+msgstr ""
+
+#: ../../source/features.rst:1119 4baed6b8709340d48ad6a64873d8cb16
+msgid "Error Types Detected"
+msgstr ""
+
+#: ../../source/features.rst:1121 ea19fa48b2fd41aeb9ef1e06602309e6
+msgid "**SCF_NOT_CONV** - SCF did not converge in max iterations"
+msgstr ""
+
+#: ../../source/features.rst:1122 8b9b665b94524a85824575c3f626673e
+msgid "**MEMORY** - Out of memory errors"
+msgstr ""
+
+#: ../../source/features.rst:1123 496604b6d03e462ea06d49b16d36ca4c
+msgid "**TIME_LIMIT** - Job canceled due to time limit"
+msgstr ""
+
+#: ../../source/features.rst:1124 e15fa46925da4cd4b373b4482199a89b
+msgid "**NUMERICAL** - NaN/Inf in calculations"
+msgstr ""
+
+#: ../../source/features.rst:1125 9a25e84a7152499d9d0c29f706f987c5
+msgid "**SINGULAR_OVERLAP** - Singular overlap matrix"
+msgstr ""
+
+#: ../../source/features.rst:1126 d1a3491f12f04066b6c636083c237e5e
+msgid "**NEGATIVE_EIGENVALUES** - Negative eigenvalues in overlap"
+msgstr ""
+
+#: ../../source/features.rst:1127 9d299c127eab47f7bb0ae54b14f681b6
+msgid "**GEOMETRY_OPTIMIZATION** - Relaxation failed"
+msgstr ""
+
+#: ../../source/features.rst:1128 d33595b71e0e41869f0dbe31a13339b0
+msgid "**BASIS_GENERATION** - Error in basis set generation"
+msgstr ""
+
+#: ../../source/features.rst:1129 93d1e344cc6d4bdb9034f2a19c000942
+msgid "**GRID_INTEGRATION** - Real-space grid errors"
+msgstr ""
+
+#: ../../source/features.rst:1130 f356ee0bfe9445aeafdf3f0360145838
+msgid "**FILE_IO** - File input/output errors"
+msgstr ""
+
+#: ../../source/features.rst:1133 2661c54d85b14bbda36780d8214f1cba
+msgid "SCF Convergence Correction (5-Level Strategy)"
+msgstr ""
+
+#: ../../source/features.rst:1135 b4352dc78d0a44bc8897248a5d060271
+msgid "Progressive correction applied automatically:"
+msgstr ""
+
+#: ../../source/features.rst:1141 be472be6a1ce479e8a9531b2870a9b10
+msgid "Level"
+msgstr ""
+
+#: ../../source/features.rst:1142 c4e7682507344687a2130cf95376578b
+msgid "Changes"
+msgstr ""
+
+#: ../../source/features.rst:1143 902bab01aa4548dbb8872a73f4809b0a
+msgid "Strategy"
+msgstr ""
+
+#: ../../source/features.rst:1144 e907a3199de048c89c7584ebbcf7eb49
+msgid "1"
+msgstr ""
+
+#: ../../source/features.rst:1145 5e73e568e5eb4a94942e1bf69e554b7b
+msgid "``Mixer.Weight=0.05``, ``Mix.First=True``"
+msgstr ""
+
+#: ../../source/features.rst:1146 175b9f47c56d4eb587df04b7a112d35a
+msgid "Gentle reduction"
+msgstr ""
+
+#: ../../source/features.rst:1147 10e9d37213ed4386a781fb7b29de3447
+msgid "2"
+msgstr ""
+
+#: ../../source/features.rst:1148 c6dcf75fe6c44b3f8b738cefe76cade7
+msgid "``Mixer.Weight=0.01``, ``History=5``"
+msgstr ""
+
+#: ../../source/features.rst:1149 ea3109c2ad7f4f968fd0220ab8c8ec6a
+msgid "More conservative"
+msgstr ""
+
+#: ../../source/features.rst:1150 c2b358f395f0468b82673af1a87c27b1
+msgid "3"
+msgstr ""
+
+#: ../../source/features.rst:1151 34f662e948524bc7a31654a9d7fc9750
+msgid "``Mixer.Weight=0.005``, ``History=8``, ``Kick=40``"
+msgstr ""
+
+#: ../../source/features.rst:1152 1de05065c50d47cf8604957263b94156
+msgid "Add perturbation"
+msgstr ""
+
+#: ../../source/features.rst:1153 c58764c9574f40c89719a1c60c7e09d8
+msgid "4"
+msgstr ""
+
+#: ../../source/features.rst:1154 e265e88784f8402bac5ea7bec05e5d28
+msgid "Switch to Pulay, ``History=10``"
+msgstr ""
+
+#: ../../source/features.rst:1155 d3ca2b2f8ef34ae5bd905631bd1b1597
+msgid "Change algorithm"
+msgstr ""
+
+#: ../../source/features.rst:1156 b275c2cfceab4fb192758eca5389fd09
+msgid "5"
+msgstr ""
+
+#: ../../source/features.rst:1157 36272a250d46419bac98621ba4b336ec
+msgid "Switch to Broyden, ``Weight=0.001``"
+msgstr ""
+
+#: ../../source/features.rst:1158 bce25321fc0945b8863d46d14dc35557
+msgid "Last resort"
+msgstr ""
+
+#: ../../source/features.rst:1190 2ec5a0942e204a59a2ab298110a92b22
+msgid "Custodian Output"
+msgstr ""
+
+#: ../../source/features.rst:1192 bb86eb1a401d45f0a623ab89b3d03143
+msgid "**``custodian.json``** contains full history:"
+msgstr ""
+
+#: ../../source/features.rst:1221 8714211223f54bf3b152435018cfbdae
+msgid "✅ **Automatic**: Errors detected and corrected without manual intervention"
+msgstr ""
+
+#: ../../source/features.rst:1223 20f074829e494b4b90c50d7863968cc4
+msgid "✅ **Transparent**: Full correction history in ``custodian.json``"
+msgstr ""
+
+#: ../../source/features.rst:1225 ea49a61d01b84e5abd33cd2f1dc0a580
+msgid "✅ **Configurable**: Custom handlers and correction strategies"
+msgstr ""
+
+#: ../../source/features.rst:1227 46accbadf4da4b9caa7ce5e3a0b7aeaa
+msgid "✅ **Production-tested**: Built on MaterialsProject's proven framework"
+msgstr ""
+
+#: ../../source/features.rst:1229 ba903e8b714b49328acdb8bd9d7e2f85
+msgid "✅ **Safety limits**: Respects max attempts per handler"
+msgstr ""
+
+#: ../../source/features.rst:1231 e57cab1e802b4edb960ee001a990c3dc
+msgid "📖 **Tutorial**: ``tutorials/15-custodian-error-handling/``"
+msgstr ""
+
+#: ../../source/features.rst:1233 cdbeb469ab374848bcdc2319511e748e
+msgid ""
+"📄 **Documentation**: ``REFACTORING_SUMMARY.md`` (complete custodian "
+"library integration guide)"
+msgstr ""
+
+#: ../../source/features.rst:1238 ac94034129c647819f9d157e9865a8e6
+msgid "📚 Dataclass Tutorials & Comment Headers"
+msgstr ""
+
+#: ../../source/features.rst:1242 71cc1f37020f4c3a8adb216bef514a50
+msgid ""
+"Comprehensive tutorials for MEDIUM priority dataclass modules with "
+"automatic comment header generation for FDF output files."
+msgstr ""
+
+#: ../../source/features.rst:1247 f0d3239cf43b426fb9580bd0e10a0b44
+msgid "✨ **Direct SIESTA FDF Format**"
+msgstr ""
+
+#: ../../source/features.rst:1248 b54d4a46243144fdb621336509fa08ce
+msgid "Users write native SIESTA syntax without wrapper abstractions"
+msgstr ""
+
+#: ../../source/features.rst:1250 46dfb89bed714188a032a8ed4e810894
+msgid "🔤 **Automatic Comment Headers**"
+msgstr ""
+
+#: ../../source/features.rst:1251 f09986cee53b45e194b53d56354c7bf4
+msgid ""
+"System detects FDF parameters and adds appropriate dataclass headers "
+"automatically"
+msgstr ""
+
+#: ../../source/features.rst:1253 53171607750f470b86a6c2f76d44e624
+msgid "📖 **Comprehensive Documentation**"
+msgstr ""
+
+#: ../../source/features.rst:1254 df374f6612444a08b86addd3758cad6b
+msgid ""
+"Each tutorial includes theory, best practices, parameter references, and "
+"troubleshooting"
+msgstr ""
+
+#: ../../source/features.rst:1256 140ef22f75be4633a846ef05efc55503
+msgid "🎯 **Universal Maker Support**"
+msgstr ""
+
+#: ../../source/features.rst:1257 d63167360acf4572aac6be87182d1263
+msgid ""
+"Works with StaticMaker, RelaxMaker, BandStructureMaker, and all workflow "
+"makers"
+msgstr ""
+
+#: ../../source/features.rst:1260 f96527db792645d9b702a5bb7891ca2b
+msgid "Tutorial Modules"
+msgstr ""
+
+#: ../../source/features.rst:1262 5712bfdc70a44d3d8015e6cc4d99c5b6
+msgid "Five MEDIUM priority dataclass modules are now fully documented:"
+msgstr ""
+
+#: ../../source/features.rst:1264 fca39e2e5cf24fb1bec30dbf691dd068
+msgid ""
+"**1. DOS Calculations** (``tutorials/07-advanced-features/05-dos-"
+"calculations/``)"
+msgstr ""
+
+#: ../../source/features.rst:1265 b3e66869f7034c2989fb8f87d1faa0a3
+msgid "Density of states calculation with StaticMaker and RelaxMaker"
+msgstr ""
+
+#: ../../source/features.rst:1266 d6a07218a9fd4a3faebe54a2ba5e3df1
+msgid ""
+"Direct SIESTA FDF format: ``\"ProjectedDensityOfStates\": [\"EF -10.000 "
+"10.000 0.100 200 eV\"]``"
+msgstr ""
+
+#: ../../source/features.rst:1267 c0b44d2e845f45abb606af9f1d821fd1
+msgid "Automatic comment header: ``# DensityOfStatesAndBandStructure Settings``"
+msgstr ""
+
+#: ../../source/features.rst:1269 7704329c754b49d580d1535fc86ad463
+msgid ""
+"**2. Phonon Inputs** (``tutorials/07-advanced-features/06-phonon-"
+"inputs/``)"
+msgstr ""
+
+#: ../../source/features.rst:1270 16704b2893a24cc29109dba55e85b72f
+msgid "Force constants parameters for phonon calculations"
+msgstr ""
+
+#: ../../source/features.rst:1271 ../../source/features.rst:1346
+#: 3f3980b43e01447b8c1e6eaeeb182ce6 73ee8f3472fe4702ae153cebb9366f66
+msgid "``MD.TypeOfRun``, ``MD.FCDispl``, ``MD.FCfirst``, ``MD.FClast``"
+msgstr ""
+
+#: ../../source/features.rst:1272 3518b58e8297472bba8ed3bdf6656457
+msgid "Automatic comment header: ``# PhononCalculations Settings``"
+msgstr ""
+
+#: ../../source/features.rst:1274 d32dbb66811c47978ef757936feb8c10
+msgid ""
+"**3. Optical Properties** (``tutorials/07-advanced-features/07-optical-"
+"properties/``)"
+msgstr ""
+
+#: ../../source/features.rst:1275 6084140f93e54636b51e0a5116aef8f6
+msgid "Optical absorption and dielectric function calculations"
+msgstr ""
+
+#: ../../source/features.rst:1276 2237c40fa56f47e68b1a5d10252fb586
+msgid "Energy range, broadening, scissor operator for band gap corrections"
+msgstr ""
+
+#: ../../source/features.rst:1277 5da6d80da1cc465099b7a0ab3c05250c
+msgid "Automatic comment header: ``# OpticalProperties Settings``"
+msgstr ""
+
+#: ../../source/features.rst:1278 eea542b907f54ba399373ebdaaebdb35
+msgid "Output: ``siesta.EPSIMG``, ``siesta.EPSREAL``"
+msgstr ""
+
+#: ../../source/features.rst:1280 f83ddb4dc7f947d9a61c94461910e784
+msgid "**4. DFT+U** (``tutorials/07-advanced-features/08-dftu/``)"
+msgstr ""
+
+#: ../../source/features.rst:1281 d2b21a1bb80f4a90b9bf5a8d009f7bdf
+msgid ""
+"Hubbard U corrections for correlated systems (NiO, transition metals, "
+"rare earths)"
+msgstr ""
+
+#: ../../source/features.rst:1282 ../../source/features.rst:1348
+#: 3bba3973e2544b4e841966a6c748fd14 bee0f95613fc4dc5896d2c053d98ba39
+msgid ""
+"``LDAU.UseLDAU``, ``LDAU.UEffective``, ``LDAU.JHund``, "
+"``LDAU.ProjectorMethod``"
+msgstr ""
+
+#: ../../source/features.rst:1283 9db5fc7d03d54de28cc2886f5ddafdf6
+msgid "Automatic comment header: ``# DFTU Settings``"
+msgstr ""
+
+#: ../../source/features.rst:1284 3b738834e5e244c9915fdac9dc23ee28
+msgid "Common U values documented for 3d transition metals and 4f rare earths"
+msgstr ""
+
+#: ../../source/features.rst:1286 8bb91ef0c68644ae9bce694c91a625a4
+msgid ""
+"**5. Charge/Dipole/Electric Field** (``tutorials/07-advanced-features/09"
+"-charge-dipole-efield/``)"
+msgstr ""
+
+#: ../../source/features.rst:1287 fa4a253ec74044a0ae5676b56a910d93
+msgid "External electric field application and charged system calculations"
+msgstr ""
+
+#: ../../source/features.rst:1288 9a8effc206e447a6b3ad545837c2f87a
+msgid ""
+"``ExternalElectricField``, ``Efield``, ``NetCharge``, "
+"``SlabDipoleCorrection``"
+msgstr ""
+
+#: ../../source/features.rst:1289 ee996a41764249ce9f41e55aa6957fe9
+msgid "Automatic comment header: ``# ChargeDipoleElectricField Settings``"
+msgstr ""
+
+#: ../../source/features.rst:1320 98152fe379e947cf8360d311011397ce
+msgid "The system automatically detects FDF parameters and adds comment headers:"
+msgstr ""
+
+#: ../../source/features.rst:1332 a47479309bfc4dad91ee1dd7f80316ae
+msgid "FDF Parameter Mapping"
+msgstr ""
+
+#: ../../source/features.rst:1334 ee6ab9cc71d7419c8436686063c13081
+msgid "The system includes 21 parameter mappings for automatic detection:"
+msgstr ""
+
+#: ../../source/features.rst:1340 0de601b38915493aab5b926d5cb28cef
+msgid "FDF Parameters"
+msgstr ""
+
+#: ../../source/features.rst:1341 396e7346fafa42da804cb2eccd7f3cb2
+msgid "Comment Header"
+msgstr ""
+
+#: ../../source/features.rst:1342 6749713457094ef68f0b4c49f5182e71
+msgid "``ProjectedDensityOfStates``, ``WaveFuncKKpoints``"
+msgstr ""
+
+#: ../../source/features.rst:1343 0764f7f163ac4eadaabb6227f0855e82
+msgid "DensityOfStatesAndBandStructure Settings"
+msgstr ""
+
+#: ../../source/features.rst:1344 476c2d6a2198435499b2841f631a5609
+msgid ""
+"``OpticalCalculation``, ``Optical.Energy.Minimum/Maximum``, "
+"``Optical.Broaden``, ``Optical.Scissor``"
+msgstr ""
+
+#: ../../source/features.rst:1345 21acba1e417f48af9d11029a5dc320cc
+msgid "OpticalProperties Settings"
+msgstr ""
+
+#: ../../source/features.rst:1347 66be8466573246bd8dc3117cf8b35dd1
+msgid "PhononCalculations Settings"
+msgstr ""
+
+#: ../../source/features.rst:1349 22999798d64443f6b709fb3a6b6223f1
+msgid "DFTU Settings"
+msgstr ""
+
+#: ../../source/features.rst:1350 7d2d81e97c6f48dc984a88d6afb7b606
+msgid "``ExternalElectricField``, ``NetCharge``, ``SlabDipoleCorrection``"
+msgstr ""
+
+#: ../../source/features.rst:1351 effb9a4f49d34baf84b2508e59b2451b
+msgid "ChargeDipoleElectricField Settings"
+msgstr ""
+
+#: ../../source/features.rst:1356 b99729ca6d8f49d1bc69da39934730ea
+msgid ""
+"✅ **Maximum Transparency**: Direct SIESTA syntax with no wrapper "
+"abstractions"
+msgstr ""
+
+#: ../../source/features.rst:1358 bf0bea8685b042809187265bf772dd4c
+msgid ""
+"✅ **Automatic Formatting**: Comment headers added without manual "
+"intervention"
+msgstr ""
+
+#: ../../source/features.rst:1360 a1c27678e5af4be6b4959eb3bc8ae494
+msgid ""
+"✅ **Comprehensive Guides**: Theory, best practices, troubleshooting in "
+"each README"
+msgstr ""
+
+#: ../../source/features.rst:1362 9d3f7e8fb3064719a42e19836377925f
+msgid ""
+"✅ **Dry-Run Compatible**: Preview all FDF output before running "
+"calculations"
+msgstr ""
+
+#: ../../source/features.rst:1364 3bf245272aa04395b1b5da02673ef182
+msgid "✅ **Extensible**: Easy to add new parameter mappings"
+msgstr ""
+
+#: ../../source/features.rst:1366 ccaf4c0623ee476ba887a6f78ac0eeb6
+msgid "📖 **Tutorials**: ``tutorials/07-advanced-features/05-09/``"
+msgstr ""
+
+#: ../../source/features.rst:1371 384cdadcd8364466b0cc6061175e10da
+msgid "📊 Analysis & Visualization"
+msgstr ""
+
+#: ../../source/features.rst:1374 47ee5f02018c4188ac23134e24b1c5f4
+msgid "Automatic Plotting"
+msgstr ""
+
+#: ../../source/features.rst:1376 1d2dd8254e0b4e2e8f00ef78a04a0444
+msgid "Many workflows generate publication-quality plots automatically:"
+msgstr ""
+
+#: ../../source/features.rst:1378 9a98f8afd1c148eeb8f7b1bf2c42496b
+msgid "**Phonon Calculations**:"
+msgstr ""
+
+#: ../../source/features.rst:1379 88f97c0e4e184f04992a51ed17ca4ae5
+msgid "Band structure with high-symmetry path"
+msgstr ""
+
+#: ../../source/features.rst:1380 64cfebf682ac4cfa93454c8a432dfc62
+msgid "Density of states"
+msgstr ""
+
+#: ../../source/features.rst:1381 e5422926243241ba84820c18dcda8d5f
+msgid "Thermal properties (3-panel subplot)"
+msgstr ""
+
+#: ../../source/features.rst:1383 bf68e096fc7c41a2941a80142e5de32d
+msgid "**Surface Energy**:"
+msgstr ""
+
+#: ../../source/features.rst:1384 0f52af1b96b94cbead2f739474b1e5e1
+msgid "Multi-surface comparison (eV/Ų and J/m²)"
+msgstr ""
+
+#: ../../source/features.rst:1385 31bff7d0e5eb4c67846d30b912215f9d
+msgid "Bar charts with color coding"
+msgstr ""
+
+#: ../../source/features.rst:1387 2f9b073f1e004388992ab3ecd790685d
+msgid "**EOS Workflows**:"
+msgstr ""
+
+#: ../../source/features.rst:1388 baaecea707b34cdc86a731b7ad511c1f
+msgid "Energy vs. volume with fitted curve"
+msgstr ""
+
+#: ../../source/features.rst:1389 a525a5a7da814333964040fec11914e2
+msgid "Residuals plot"
+msgstr ""
+
+#: ../../source/features.rst:1391 67ae276997914a90984c0d759b4b71ee
+msgid "**Convergence Studies**:"
+msgstr ""
+
+#: ../../source/features.rst:1392 be0640511c50484b8ce378c13187d498
+msgid "Parameter sweep results"
+msgstr ""
+
+#: ../../source/features.rst:1393 50ffffa4224d4e66b0ebda5d0a87e039
+msgid "Convergence criteria visualization"
+msgstr ""
+
+#: ../../source/features.rst:1395 3b48af2b6e0b4ef99b97f202e4a47b85
+msgid "All plots are:"
+msgstr ""
+
+#: ../../source/features.rst:1397 cc57f37ffe514752b62a40c6777fed63
+msgid "300 dpi (publication-ready)"
+msgstr ""
+
+#: ../../source/features.rst:1398 f7b3b18c607944b68cbc598613b2c80b
+msgid "Properly labeled with units"
+msgstr ""
+
+#: ../../source/features.rst:1399 9314705b6a774f4781db03b8ea6335d2
+msgid "Color-coded for clarity"
+msgstr ""
+
+#: ../../source/features.rst:1400 87678a36fa884c37b7fb90f9c99ad658
+msgid "Saved automatically to workflow directory"
+msgstr ""
+
+#: ../../source/features.rst:1403 008e2bc303564fec8874caef4189406b
+msgid "Text Summaries"
+msgstr ""
+
+#: ../../source/features.rst:1405 4d3bb2831c29457da7a733bb9a47fa43
+msgid "Comprehensive text summaries automatically generated:"
+msgstr ""
+
+#: ../../source/features.rst:1407 383a0a0951004b1fb1e959928df69148
+msgid "**Phonon Summary** (``phonon_summary.txt``):"
+msgstr ""
+
+#: ../../source/features.rst:1408 11b400f1841f434c9ee4d1954db56343
+msgid "Structure information"
+msgstr ""
+
+#: ../../source/features.rst:1409 a06a7630e4ee410683b09c4ba5a3902d
+msgid "Calculation parameters"
+msgstr ""
+
+#: ../../source/features.rst:1410 4e1096a9bf724ae5b9efb61684b51117
+msgid "Frequency analysis (min/max, imaginary modes)"
+msgstr ""
+
+#: ../../source/features.rst:1411 11f20810f3864083819d3090d42ce601
+msgid "Thermal properties table"
+msgstr ""
+
+#: ../../source/features.rst:1414 f63f15a0af4b44b48e23ee9648809ac4
+msgid "**Surface Energy Summary** (``multi_surface_summary.txt``):"
+msgstr ""
+
+#: ../../source/features.rst:1415 ce0831265b304afa94e394a6a2218eb3
+msgid "Theoretical background"
+msgstr ""
+
+#: ../../source/features.rst:1416 3c6314cc69504d88a8b9a85fba63f0d6
+msgid "Surface energy formulas"
+msgstr ""
+
+#: ../../source/features.rst:1417 4166481fab6b4de983c946d9c7e30dd6
+msgid "Comparison table"
+msgstr ""
+
+#: ../../source/features.rst:1418 0572252413854479b8855c9cfa0ce1b5
+msgid "Convergence guidelines"
+msgstr ""
+
+#: ../../source/features.rst:1419 4ddca8b7ff8b458a91d86c24144c013f
+msgid "Literature references"
+msgstr ""
+
+#: ../../source/features.rst:1421 e2f70902d2c64eaaa08430fc7197bfb4
+msgid "**Elastic Constants Summary**:"
+msgstr ""
+
+#: ../../source/features.rst:1422 27395f6c9abc4f70bba782752ecbb22b
+msgid "Full elastic tensor"
+msgstr ""
+
+#: ../../source/features.rst:1423 e3fb82a9d62144c18154e140467b836f
+msgid "Mechanical properties (bulk/shear modulus, Poisson ratio)"
+msgstr ""
+
+#: ../../source/features.rst:1424 b762811a58c34a07b1990f5db9d62f02
+msgid "Stability analysis"
+msgstr ""
+
+#: ../../source/features.rst:1427 0db7005f8eea4b82a074ff02746f1bba
+msgid "JSON Output"
+msgstr ""
+
+#: ../../source/features.rst:1429 3494a47fb387434bb27a82b505447f39
+msgid "All results available as structured data:"
+msgstr ""
+
+#: ../../source/features.rst:1448 90789be2041b45bab5e3e8f9947299b5
+msgid "🔬 Production Features"
+msgstr ""
+
+#: ../../source/features.rst:1451 5443362ae5364b619d703b8f31d348cd
+msgid "HPC Integration"
+msgstr ""
+
+#: ../../source/features.rst:1453 4f4cae82566840ec9b83765684fb0865
+msgid "Seamless integration with HPC job schedulers:"
+msgstr ""
+
+#: ../../source/features.rst:1466 23277c69ac1c408abb415e656868043e
+msgid "Supports:"
+msgstr ""
+
+#: ../../source/features.rst:1468 5de8d776511e4656900077a545c9d1ac
+msgid "SLURM"
+msgstr ""
+
+#: ../../source/features.rst:1469 5400107849a24f15b9a26516299a2a2e
+msgid "PBS/Torque"
+msgstr ""
+
+#: ../../source/features.rst:1470 e62f0546eb2e4a08a640e8cb4d9bdc76
+msgid "SGE"
+msgstr ""
+
+#: ../../source/features.rst:1471 bf00e884b4074ddda1da19d466d97dc9
+msgid "LSF"
+msgstr ""
+
+#: ../../source/features.rst:1474 b19e54d3ccb340af9ebc8ae8d5600c88
+msgid "Database Storage"
+msgstr ""
+
+#: ../../source/features.rst:1476 be7fd5c94cec4facbdd6177497ad79bb
+msgid "Store results in MongoDB for high-throughput studies:"
+msgstr ""
+
+#: ../../source/features.rst:1497 ab0b691913b94bb29cc0697c7385ad3b
+msgid "Testing & Quality"
+msgstr ""
+
+#: ../../source/features.rst:1499 1bd172a86a33437c92a460775496340e
+msgid "**Comprehensive Test Suite**:"
+msgstr ""
+
+#: ../../source/features.rst:1501 cbdea0d0c06f4b108826ed069ced125c
+#, python-format
+msgid "**750 tests** (100% passing, 44% coverage)"
+msgstr ""
+
+#: ../../source/features.rst:1502 9dade6d7776642bca9beeac8327f3bb4
+msgid "Infrastructure tests: parser (39%), file_client (86%), schemas (97%)"
+msgstr ""
+
+#: ../../source/features.rst:1503 dc12cbfa5a24490597736b5469f28fd8
+#, python-format
+msgid "Module registry validation (tier system: 100% coverage)"
+msgstr ""
+
+#: ../../source/features.rst:1504 6f0e7fa930764204ae0b6608606c0f7e
+msgid "Tier preset verification"
+msgstr ""
+
+#: ../../source/features.rst:1505 5201ae2bca844a8c8c35b9e49756f90d
+msgid "Integration tests for workflows (Grüneisen, QHA, custodian)"
+msgstr ""
+
+#: ../../source/features.rst:1506 09acc6205de249ba86d3f943d5862c0a
+msgid "Performance benchmarks"
+msgstr ""
+
+#: ../../source/features.rst:1507 5b038fa239524bf38844873671b36f3f
+msgid "**Fast execution**: 17 seconds for full test suite"
+msgstr ""
+
+#: ../../source/features.rst:1509 817cadd6c7b64a2e85ad038e8c262638
+msgid "**Coverage by Component**:"
+msgstr ""
+
+#: ../../source/features.rst:1515 fbad184319ae40db894b1ec7df26a52f
+msgid "Component"
+msgstr ""
+
+#: ../../source/features.rst:1516 b787b8221e504481873c6cf90201a571
+msgid "Coverage"
+msgstr ""
+
+#: ../../source/features.rst:1517 9c016bac202e4dec9374e6bd916b9d64
+msgid "Tests"
+msgstr ""
+
+#: ../../source/features.rst:1518 e24bc4509a4147c58d237b96d98daffb
+msgid "Status"
+msgstr ""
+
+#: ../../source/features.rst:1519 e71728be006b4b9cb8dded9ff4c8da00
+msgid "Tier System"
+msgstr ""
+
+#: ../../source/features.rst:1520 4e9e63fd38874b0390e00c9718bf915f
+msgid "100%"
+msgstr ""
+
+#: ../../source/features.rst:1521 7a1bcccd43fb42b2846f1dbb61229bd8
+msgid "74"
+msgstr ""
+
+#: ../../source/features.rst:1522 e4f1c889dfcc46958d36db01157ecd73
+msgid "✅ Complete"
+msgstr ""
+
+#: ../../source/features.rst:1523 d673f4c885c841a6b59c0032679e2209
+msgid "Task Schemas"
+msgstr ""
+
+#: ../../source/features.rst:1524 6177495132654dda86a734679395da17
+msgid "97%"
+msgstr ""
+
+#: ../../source/features.rst:1525 fcb4affdf07f453992528efb85ce20bd
+msgid "33"
+msgstr ""
+
+#: ../../source/features.rst:1526 ../../source/features.rst:1530
+#: ../../source/features.rst:1534 06551281482a4712b8213cd6fae58c59
+#: 13a7c7c8f4a8425998599a9b8659723e 560bd2e0897441ab95dcd3106a230cf1
+msgid "✅ Nearly Complete"
+msgstr ""
+
+#: ../../source/features.rst:1527 e293cfc5e3fb437db50d04f3faa5c531
+msgid "File Client (SSH/SFTP)"
+msgstr ""
+
+#: ../../source/features.rst:1528 b87e9bdf4a364962aa3cf10fed05afc6
+msgid "86%"
+msgstr ""
+
+#: ../../source/features.rst:1529 0e41a179419c43688919ab6bb23082d4
+msgid "57"
+msgstr ""
+
+#: ../../source/features.rst:1531 50571cd48a3842a5b4d4ffabd7e1b380
+msgid "Calculation Schemas"
+msgstr ""
+
+#: ../../source/features.rst:1532 7dcbbe9cce0747309f5250a1b9c20789
+msgid "87%"
+msgstr ""
+
+#: ../../source/features.rst:1533 bdb380f7db3e40f0b20cdac26217cf94
+msgid "49"
+msgstr ""
+
+#: ../../source/features.rst:1535 bba1936cac0b4db188eb447f17088b71
+msgid "Parser (SIESTA output)"
+msgstr ""
+
+#: ../../source/features.rst:1536 503937b7e34d4e0d90169acff288edb0
+msgid "39%"
+msgstr ""
+
+#: ../../source/features.rst:1537 83acbef0616d46469eb0972428552085
+msgid "63"
+msgstr ""
+
+#: ../../source/features.rst:1538 cca0e9dd0b194531b9816fb481da7dd9
+msgid "🔄 In Progress"
+msgstr ""
+
+#: ../../source/features.rst:1539 34ca87d8c4804a68bbf026322eeb88d7
+msgid "Core Jobs/Flows"
+msgstr ""
+
+#: ../../source/features.rst:1540 5d609be0319446308850bf9df7d06950
+msgid "~15%"
+msgstr ""
+
+#: ../../source/features.rst:1541 0e177262d550441ca489da5296251811
+msgid "TBD"
+msgstr ""
+
+#: ../../source/features.rst:1542 1408f803383442ce89a2a7395b4489bf
+msgid "⏭️ Next Priority"
+msgstr ""
+
+#: ../../source/features.rst:1544 6d4d4afc923440e7aa19386dab6a2ab4
+msgid "**Performance Benchmarked**:"
+msgstr ""
+
+#: ../../source/features.rst:1546 9f6884a179e945638d6541b776acb443
+msgid "Basic tier: ~17 ms"
+msgstr ""
+
+#: ../../source/features.rst:1547 a3be82a9e2ae46bba5cb518df58abf80
+msgid "Expert tier: ~23 ms"
+msgstr ""
+
+#: ../../source/features.rst:1548 55b8a0dbd7ac47cbbaedd52615c37c06
+msgid "< 25 ms overhead for all modules"
+msgstr ""
+
+#: ../../source/features.rst:1549 79f02d84075e4d6685a6a0953e3865b3
+msgid "Sub-linear scaling with structure size"
+msgstr ""
+
+#: ../../source/features.rst:1550 ad8716a575414b56bb7eef7f8b142e0d
+msgid "Test suite: 17 seconds (750 tests)"
+msgstr ""
+
+#: ../../source/features.rst:1552 9167351b75804ddf8670879184839f82
+msgid "**Testing Patterns Established**:"
+msgstr ""
+
+#: ../../source/features.rst:1554 c3888e573c8347a08c3669861b82614e
+msgid "Mock-based testing for SIESTA output parsing (no real calculations needed)"
+msgstr ""
+
+#: ../../source/features.rst:1555 2ce328da011f4ff9af523bf7519f4234
+msgid "SSH/SFTP operation testing with paramiko mocks"
+msgstr ""
+
+#: ../../source/features.rst:1556 1e9fde405f9c48dcac84f0fe2b872a54
+msgid "Pydantic schema validation techniques"
+msgstr ""
+
+#: ../../source/features.rst:1557 540296b8e90d4a969d5fa36fe0d1df19
+msgid "Edge case coverage (None values, empty structures, error conditions)"
+msgstr ""
+
+#: ../../source/features.rst:1562 32dfcd20c0054a10b5240866fa316102
+msgid "🔧 Development Tools"
+msgstr ""
+
+#: ../../source/features.rst:1565 f0543bc60a5d4215b0afa2caa1f3143e
+msgid "Module Registry"
+msgstr ""
+
+#: ../../source/features.rst:1567 83d40384bf04467f9069aa3ace955df8
+msgid "Centralized registry for all SIESTA parameter modules:"
+msgstr ""
+
+#: ../../source/features.rst:1584 6748b54c05d0466aa87ea481dd05a0ff
+msgid "Validation Framework"
+msgstr ""
+
+#: ../../source/features.rst:1586 9b9dbeb5f2c946bb88850abde51dd2e4
+msgid "Validators for output quality checking:"
+msgstr ""
+
+#: ../../source/features.rst:1588 6baa7baa565d46449a3adb676fccd9cd
+msgid "``SiestaOutputValidator`` - General SIESTA output"
+msgstr ""
+
+#: ../../source/features.rst:1589 e45a7e81c4a64ed0be8078a851dd335f
+msgid "``RelaxationValidator`` - Geometry optimization"
+msgstr ""
+
+#: ../../source/features.rst:1590 3e1c9840bea0413ab7c14830963ff208
+msgid "``BandStructureValidator`` - Electronic structure"
+msgstr ""
+
+#: ../../source/features.rst:1592 9691b617eef1416ea3c02434bb9cd806
+msgid ""
+"All validators inherit from ``custodian.custodian.Validator`` for "
+"consistency."
+msgstr ""
+
+#: ../../source/features.rst:1597 1b0054aef10c48d19909475491a58625
+msgid "See Also"
+msgstr ""
+
+#: ../../source/features.rst:1599 da25c54c43e54af78488344447c637bf
+msgid ":doc:`tier-system` - Complete tier system documentation"
+msgstr ""
+
+#: ../../source/features.rst:1600 30450956aa2745a89b976b84b228ec7a
+msgid ":doc:`custodian` - Custodian error handling details"
+msgstr ""
+
+#: ../../source/features.rst:1601 60ce498328744d1eb69c1aa1b3ca9a35
+msgid ":doc:`advanced-workflows` - Complex workflow examples"
+msgstr ""
+
+#: ../../source/features.rst:1602 8db141f725e24e7990d8233014078acd
+msgid ":doc:`tutorials/index` - Hands-on tutorials"
+msgstr ""
+
+#: ../../source/features.rst:1608 885802e77b7841c385a648a2f53c494d
+msgid ""
+"All features are production-ready and fully tested. See individual "
+"tutorials for detailed usage examples and best practices."
+msgstr ""
+
+#~ msgid "**Status**: ✅ Production-ready (v1.0.1)"
+#~ msgstr ""
+
+#~ msgid "📋 **Descriptive Comments** (v1.0.1 NEW!)"
+#~ msgstr ""
+
+#~ msgid "Generated FDF Output (v1.0.1)"
+#~ msgstr ""
+
+#~ msgid "Architecture (v1.0.1)"
+#~ msgstr ""

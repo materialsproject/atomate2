@@ -1,0 +1,1994 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:1
+#: d92a10c3216b442b9aa0b8c46c5448b7
+msgid "Nudged Elastic Band (NEB) Calculations Tutorial"
+msgstr "Nudged Elstic Bو (NEB) محاسبهs Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:3
+#: 889d2c0c581d49129e8594e98acaaf28
+msgid ""
+"**Category**: Advanced Workflows **Difficulty**: Advanced **Time**: ~5 "
+"min (dry-run), ~60-120 min (full calculation) **Prerequisites**: "
+"Completed convergence studies, familiarity with Lua scripts (tutorial "
+"01-basics/04-lua-scripts)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:10
+#: 689ee302ec95491e97834722cc9bf03c
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:12
+#: 442e607184fa4223b2dec63112b88b5a
+msgid ""
+"This tutorial demonstrates how to perform **Nudged Elastic Band (NEB)** "
+"calculations using atomate2siesta to find minimum energy paths (MEPs) and"
+" activation barriers for atomic transitions, diffusion processes, and "
+"chemical reactions."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:14
+#: 7e3ca653d0a04b0f9b6bb737101532c6
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:16
+#: 3c35ad656b644b94b57fc489249b4c8e
+msgid "Understanding the NEB method for finding MEPs"
+msgstr "درک  NEB method برای finding MEPs"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:17
+#: e75a118d444547259b093e28d9f163a4
+msgid "Setting up NEB calculations with FLOS/Lua scripts"
+msgstr "راه‌اندازی NEB clcultions با FLOS/Lu scripts"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:18
+#: defbb6b83c284de2a737e3e48e721b2d
+msgid "Generating intermediate images between initial and final states"
+msgstr "Generting intermedite imges between initil و finl sttes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:19
+#: f3e6031cfd754fd7ab261e86bd49d090
+msgid "Running NEB workflows in SIESTA"
+msgstr "اجرای NEB wیاkflows in SIESTA"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:20
+#: 777ee45a15434741beea17d9d835a9ee
+msgid "Analyzing energy profiles and extracting activation barriers"
+msgstr "Anlyzing energy profiles و extrcting ctivtion brriers"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:21
+#: 753086f9be0f40fb96dc5147bd2bf23d
+msgid "Identifying transition states"
+msgstr "Identifying trnsition sttes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:23
+#: ef84e1637fab41cd96f04469485edaf0
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:25
+#: 061e59ae9f644f14a60ea22b60ce8499
+msgid ""
+"**Nudged Elastic Band (NEB)**: Chain-of-states method for finding the "
+"minimum energy path between two configurations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:27
+#: d1d830a178964515a90141486a18c215
+msgid ""
+"**Minimum Energy Path (MEP)**: Lowest energy pathway connecting reactant "
+"and product states"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:29
+#: 7332bafb433d4a11850455c33acf6f38
+msgid ""
+"**Activation Barrier (E_barrier)**: Energy difference between transition "
+"state and initial state"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:34
+#: d42686325a0f4cff9d53265694bdd807
+msgid ""
+"**Transition State**: Highest energy point along the MEP (saddle point on"
+" potential energy surface)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:36
+#: 6efb43e376744ccca843a8201026be0c
+msgid "**Reaction Energy**: Energy difference between final and initial states"
+msgstr "**Rection Energy**: Energy difference between finl و initil sttes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:43
+#: 70503d8a51884c48889ba018dc9c4dee
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:45
+#: adb55b44236a440eb418ee7aad1a4847
+msgid "1. Prerequisites"
+msgstr "1. پیش‌نیازها"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:47
+#: 2d8f052d65554945bdd9a2e8760f842a
+msgid "**FLOS Library** (required):"
+msgstr "**FLOS Librry** (required):"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:56
+#: 42828e8cb9da40a5857108d2b29577af
+msgid "**Configure in ~/.atomate2siesta.yaml**:"
+msgstr "**Configure in ~/.tomte2siest.yml**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:61
+#: 594e53f0d49145a29868381e46a85c92
+msgid "2. Choose NEB Maker Type"
+msgstr "2. Choose NEB Maker Type"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:63
+#: 4e9e92d0231842ee84fa79cdbe267bdd
+msgid "atomate2siesta provides **two NEB makers** for different use cases:"
+msgstr "tomte2siest provides **two NEB mkers** برای different use cses:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:65
+#: ca96ffca57e04f2cb0366b0ecb921dce
+msgid "**NebDirectMaker** (Recommended for most cases)"
+msgstr "**NebDirectMaker** (Recommended for most cases)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:66
+#: a1e3a17d48334ef799bba0816e2d5efe
+msgid "Use when you have initial and final structures ready:"
+msgstr "Use when you hve initil و finl structures redy:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:77
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:95
+#: 21727536938d499097c2bf2d99377391 30d433d023dc4400b7bd2f9aba3d018b
+msgid "**Examples**:"
+msgstr "**مثال‌ها**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:78
+#: de64ac5d204841ea8d1d9ce48f2294eb
+msgid "`01_vacancy_diffusion.py`: 5 images, no endpoint relaxation"
+msgstr "`01_vacancy_diffusion.py`: 5 images, no endpoint relaxation"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:79
+#: a144a1d0e52f43b3b9e506f2cd14778b
+msgid "`02_atom_migration.py`: 7 images, with endpoint relaxation"
+msgstr "`02_atom_migration.py`: 7 images, with endpoint relaxation"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:80
+#: 48ac2969d46e41ae8a24063dc1d6a5ee
+msgid "`03_minimal.py`: 3 images, minimal example"
+msgstr "`03_minimal.py`: 3 images, minimal example"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:82
+#: bb7a84e2535e4638b99839f4abe22771
+msgid "**NebVacancyExchangeMaker** (For atom swaps)"
+msgstr "**NebVacancyExchangeMaker** (For atom swaps)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:83
+#: 6cb175e9b7764bf9a38d95aefd4552ed
+msgid "Use for vacancy exchange where you swap two atoms in a supercell:"
+msgstr "Use برای vcncy exchnge where you swp two toms in  supercell:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:96
+#: e2416713024743ccb9b05611c2b628b4
+msgid "`04_vacancy_exchange.py`: Swap atoms at indices 10 and 25"
+msgstr "`04_vacancy_exchange.py`: Swap atoms at indices 10 and 25"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:98
+#: f1166866457e415ca7398a6362d8550b
+msgid "3. Select Execution Mode"
+msgstr "3. Select Execution Mode"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:100
+#: 159497c8bd42471389de13f741f118e5
+msgid "Uncomment ONE mode in `tutorial.py`:"
+msgstr "Uncomment ONE mode in `tutorial.py`:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:108
+#: d4949020fead4f459b1c14d8de6d9b67
+msgid "4. Run"
+msgstr "4. Run"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:117
+#: 85c3b10e0fc24f2a88c06ec6fb57f825
+msgid "Understanding the NEB Method"
+msgstr "درک  NEB Method"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:119
+#: 73de351bdd8c45ffb1a69a26e64bcb69
+msgid "The NEB Algorithm"
+msgstr "The NEB Algیاithm"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:121
+#: 97cceda9612546959b38163b9546ec1d
+msgid "The NEB method finds the MEP by:"
+msgstr "The NEB method finds  MEP by:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:123
+#: 8bd63f27123f4f5fa0dc2f927278f961
+msgid "**Initial Setup**:"
+msgstr "**Initil Setup**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:124
+#: 3e831c828505413d81cbfa9e99156eb6
+msgid "Define initial state (reactant)"
+msgstr "Define initil stte (rectnt)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:125
+#: ed45319f2649446db40ab4ecd238ecb0
+msgid "Define final state (product)"
+msgstr "Define finl stte (product)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:126
+#: 931018f7ac8544fe8bcc1d0ce2807bed
+msgid "Generate N intermediate \"images\" by interpolation"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:128
+#: 8cec91a2d66244e9b1b4fd5e7424951a
+msgid "**Force Decomposition**:"
+msgstr "**Fیاce Decomposition**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:129
+#: 862f30df35ff47b5a0b1e94fcf9a6de0
+msgid "Each image feels forces from SIESTA calculation"
+msgstr "Ech imge feels برایces from SIESTA clcultion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:130
+#: e2d46b2009ae4b65b1dac736810cbd6c
+msgid "Forces decomposed into perpendicular and parallel components"
+msgstr "Fیاces decomposed into perpendiculr و prllel components"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:131
+#: f0ce8574f1aa45cda0e884037b10226a
+msgid "Perpendicular force minimizes energy"
+msgstr "Perpendiculr برایce minimizes energy"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:132
+#: 228a212602014e4785108872fb4bd230
+msgid "Parallel force (spring) maintains even spacing"
+msgstr "Prllel برایce (spring) mintins even spcing"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:134
+#: 63c6658c00564f68a736dd0360f70b5a
+msgid "**Optimization**:"
+msgstr "**Optimiztion**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:135
+#: 4b60363300a14745a83c99537dccdcd8
+msgid "Images relax perpendicular to path"
+msgstr "Imges relx perpendiculr to pth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:136
+#: 9732d2dc47af4c79b7d404fb203783a0
+msgid "Springs prevent image collapse"
+msgstr "Springs prevent imge collpse"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:137
+#: 398ecdde367443d1b6ce0d84fa870a13
+msgid "Iterate until forces converge"
+msgstr "Iterte until برایces converge"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:139
+#: c12387c5110f4c418e041f0e85f31bd3
+msgid "**Result**:"
+msgstr "**Result**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:140
+#: af391d8e58254a3b9042042e2b208a8b
+msgid "Converged path is the MEP"
+msgstr "Converged pth is  MEP"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:141
+#: 8ebfa2fa07624e858883588fa0ff7c9a
+msgid "Highest energy image ≈ transition state"
+msgstr "Highest energy imge ≈ trnsition stte"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:142
+#: c59d36d233bc4791ac49d3dc0c7b09c2
+msgid "Energy profile gives activation barrier"
+msgstr "Energy profile gives ctivtion brrier"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:144
+#: 6bb75a506b3743ed9135e12dff841806
+msgid "Mathematical Formulation"
+msgstr "Mmticl Fیاmultion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:146
+#: d8799e3cca9843e3805b54802ac1281a
+msgid "**NEB Force on Image i**:"
+msgstr "**NEB Fیاce on Imge i**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:158
+#: 0a5252f5a0764522a0a688e598664d41
+msgid "**Purpose of Each Component**:"
+msgstr "**Purpose of Ech Component**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:159
+#: b4a70a35a18046b9bd6c0bdebe16ed91
+msgid "**F^⊥**: Minimizes energy perpendicular to path"
+msgstr "**F^⊥**: Minimizes energy perpendiculr to pth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:160
+#: 0aaa1402b79a4e8ebeb922138ba6f62e
+msgid "**F^||**: Keeps images evenly distributed"
+msgstr "**F^||**: Keeps imges evenly distributed"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:161
+#: ee9584eab4e944838fb3e552ecf5d1d9
+msgid "**Result**: Smooth, evenly-spaced MEP"
+msgstr "**Result**: Smooth, evenly-spced MEP"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:163
+#: 897f2ca2d28245c4b721eafd74ad27c4
+msgid "Climbing Image NEB (CI-NEB)"
+msgstr "Climbing Imge NEB (CI-NEB)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:165
+#: c46556947af5460ea37494431099022b
+msgid "**Improvement over standard NEB**:"
+msgstr "**Improvement over stوrd NEB**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:166
+#: 72c11430ef80454892739bb3c7bbf146
+msgid "After initial convergence, highest energy image \"climbs\""
+msgstr "After initil convergence, highest energy imge \"climbs\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:167
+#: 235645bab4e545fca18de1eb7b1b870e
+msgid "This image maximizes energy along path"
+msgstr "This imge mximizes energy long pth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:168
+#: 35a2c94a3ad24ff5be6afaa5b3eb94f8
+msgid "Gives more accurate transition state geometry"
+msgstr "Gives mیاe ccurte trnsition stte geometry"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:169
+#: d9f11e44e64c466bbf2cecdc75efa5d8
+msgid "No spring force on climbing image"
+msgstr "No spring برایce on climbing imge"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:171
+#: 3bc096c5540e483fa1d61274403d2d95
+msgid "**Enable in SIESTA**:"
+msgstr "**Enble in SIESTA**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:178
+#: 63c80c2c683743a596597ce7e09df781
+msgid "Workflow Structure"
+msgstr "گردش کار Structure"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:180
+#: f401d70ede6c40668c0bf829d2c60103
+msgid "NEB Workflow Steps"
+msgstr "NEB گردش کار Steps"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:206
+#: 731d032099f342a48bb2fd35aed292ae
+msgid "Image Interpolation Methods"
+msgstr "Imge Interpoltion Methods"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:208
+#: 45efd379fd08431ab5fdb6ad40444018
+msgid "**Linear Interpolation** (default):"
+msgstr "**Liner Interpoltion** (defult):"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:214
+#: 4ef037ac04cb475f82888ada4395a937
+msgid "**IDPP (Image Dependent Pair Potential)**:"
+msgstr "**IDPP (Imge Dependent Pir Potentil)**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:215
+#: 1c35cf153c5b4631af53b67c802dce2f
+msgid "Better initial guess for complex paths"
+msgstr "Better initil guess برای complex pths"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:216
+#: 1e4fd16682964fa292e0578571a6aa6c
+msgid "Minimizes change in interatomic distances"
+msgstr "Minimizes chnge in intertomic distnces"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:217
+#: f0071cdf15c4448487a5666307110f9d
+msgid "Recommended for large structural changes"
+msgstr "Recommended برای lrge structurl chnges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:218
+#: 44ba96d2cafd42f7a4a64671b838add9
+msgid "Available in pymatgen:"
+msgstr "Avilble in pymtgen:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:228
+#: edc6e9fefc174145a8fffc8d14dad09a
+msgid "Example Configurations"
+msgstr "مثال Configurtions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:230
+#: 7569d75dec7f415ab2b93491d468ce9c
+msgid "Vacancy Diffusion Example (Recommended)"
+msgstr "Vcncy Diffusion مثال (Recommended)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:236
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:264
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:287
+#: 2e9c9c6b2f3b406591a3bc06516414cc 7df7d9b220f6410d83a1ce959f80cf12
+#: c31375adfe5a4ae4a9fa8d3efb5a6119
+msgid "**Configuration**:"
+msgstr "**Configurtion**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:237
+#: 570b7d769d134c8a926463af990350f4
+msgid "System: Graphene with vacancy"
+msgstr "System: Grphene با vcncy"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:238
+#: 6a3f8926064d4613b316a96e079280f0
+msgid "Supercell: 2×2×1 (8 atoms → 7 with vacancy)"
+msgstr "Supercell: 2×2×1 (8 toms → 7 با vcncy)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:239
+#: 2296d2749ccd47c3b815748964f35ba7
+msgid "Number of images: 5 intermediate + 2 endpoints = 7 total"
+msgstr "Number of imges: 5 intermedite + 2 endpoints = 7 totl"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:240
+#: 46529ebca4f447498f514ae3ae52fb6c
+msgid "Spring constant: 0.1 eV/Å²"
+msgstr "Spring constnt: 0.1 eV/Å²"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:241
+#: ef3107ba0216434eb59950cb16a9a435
+msgid "Basis: DZP"
+msgstr "Bsis: DZP"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:242
+#: 92329355072e4cd8b9c4e405d9c0a702
+msgid "Mesh cutoff: 300 Ry"
+msgstr "Mesh cutoff: 300 Ry"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:243
+#: c35b060f189a47dba8250e55574c4ef7
+msgid "K-points: 2×2×1 (2D material)"
+msgstr "K-points: 2×2×1 (2D mteril)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:245
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:273
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:293
+#: 29bb2373387b4738ac9b780e3bbb7590 55f5bd2ef4504227bcc0042e86750b67
+#: 9b2d0a5020f24c54980ae2fdc33570ea
+msgid "**When to use**:"
+msgstr "**When to use**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:246
+#: 6fee6a4003464ed287233027c62e7dab
+msgid "Standard vacancy diffusion studies"
+msgstr "Stوrd vcncy diffusion studies"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:247
+#: 00c6f392199d4bce8d929e4800be8037
+msgid "2D materials (graphene, MoS₂, etc.)"
+msgstr "2D mterils (grphene, MoS₂, etc.)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:248
+#: 7cb21ae92ad147c6a8658889abdeb003
+msgid "First NEB calculation on a system"
+msgstr "First NEB clcultion on  system"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:249
+#: 50e8e0bfedac4c5fba11f002b5dddf4c
+msgid "Learning NEB methodology"
+msgstr "Lerning NEB methodology"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:251
+#: 67bee716f40a4eb98c77e943e22f79ca
+msgid "**Expected runtime**: ~30-60 minutes (local)"
+msgstr "**Expected runtime**: ~30-60 minutes (locl)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:253
+#: 787f3025c4d84d23a2274c69e0abeda9
+msgid "**Physical interpretation**:"
+msgstr "**Physicl interprettion**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:254
+#: 6abc63ffd6384478a1eae60ed02ab620
+msgid "Vacancy hops from one lattice site to another"
+msgstr "Vcncy hops from one lttice site to nor"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:255
+#: eebfe7fb64d5409c8529276adf129bde
+msgid "Activation barrier typically 1-3 eV"
+msgstr "Activtion brrier typiclly 1-3 eV"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:256
+#: d0c99919d15543e5a381a6c5ddfc6a89
+msgid "Controls diffusion rate at finite temperature"
+msgstr "Controls diffusion rte t finite temperture"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:258
+#: 265ca73a20ea44b4adb169aa3fceb97c
+msgid "Atom Migration Example"
+msgstr "Atom Migrtion مثال"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:265
+#: e039464d90824bb7910ca7f8a7d9ff3c
+msgid "Same system as vacancy_diffusion"
+msgstr "Sme system s vcncy_diffusion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:266
+#: ce42537c2c2e4176bc159302c87f83bd
+msgid "Number of images: 7 intermediate + 2 endpoints = 9 total"
+msgstr "Number of imges: 7 intermedite + 2 endpoints = 9 totl"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:267
+#: f5c2727f174440fb965683819cfe6654
+msgid "Spring constant: 0.15 eV/Å² (stronger)"
+msgstr "Spring constnt: 0.15 eV/Å² (stronger)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:268
+#: 2e2c9d2242384b4c8186cf9cd5b58bf1
+msgid "Tighter parameters:"
+msgstr "Tighter prmeters:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:269
+#: 5590794e67d74ffc8af4f2afb15fe209
+msgid "Mesh cutoff: 350 Ry"
+msgstr "Mesh cutoff: 350 Ry"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:270
+#: 2951b5bdd8f647878fdbeb232d8cc692
+msgid "K-points: 3×3×1"
+msgstr "K-points: 3×3×1"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:271
+#: 6f0b0a12a65b49eeb40a7eed06b46974
+msgid "Force tolerance: 0.01 eV/Å"
+msgstr "Fیاce tolernce: 0.01 eV/Å"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:274
+#: dbf60e4a37e04160a63745af5e24e0ee
+msgid "Publication-quality results"
+msgstr "Publiction-qulity results"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:275
+#: 398cbed9cb334c03bef43fc56eec1646
+msgid "Detailed MEP characterization"
+msgstr "Detiled MEP chrcteriztion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:276
+#: 9a3abcf973fd46d1b65e9e1233b8d09c
+msgid "Systems with complex energy landscapes"
+msgstr "Systems با complex energy lوscpes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:277
+#: 4fb85508601a406cb2b637f76c0a87f1
+msgid "Validation of lower-level calculations"
+msgstr "Vlidtion of lower-level clcultions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:279
+#: 57ae38c1897d4fae91df6e8cf876d4b3
+msgid "**Expected runtime**: ~90-120 minutes (local)"
+msgstr "**Expected runtime**: ~90-120 minutes (locl)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:281
+#: a161d1814b1c4124be2a4f152cd3fb9f
+msgid "Minimal Example"
+msgstr "Miniml مثال"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:288
+#: 19bee507cec041c5ae9413ad2737e04f
+msgid "3 intermediate images (5 total)"
+msgstr "3 intermedite imges (5 totl)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:289
+#: 7e243d824285482a9ff8acb01ad50d1d
+msgid "Basis: SZ (single-zeta)"
+msgstr "Bsis: SZ (single-zet)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:290
+#: ca37f1427aea413cbccbb17ad8426c4d
+msgid "Looser convergence"
+msgstr "Looser convergence"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:291
+#: fc72b8ce45f245ab9722d95ec2fa0143
+msgid "FOR TESTING ONLY"
+msgstr "FOR TESTING ONLY"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:294
+#: 582ad6084887419cb057a3a3d9ab30e3
+msgid "Testing NEB workflow setup"
+msgstr "Testing NEB wیاkflow setup"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:295
+#: 78083c20e7db40838a7ed5e0d6bf852f
+msgid "Verifying FLOS configuration"
+msgstr "Verifying FLOS configurtion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:296
+#: 17c61c4ea470439d9c70e9675fba1c73
+msgid "Quick exploration"
+msgstr "Quick explیاtion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:297
+#: d95e36a6e5f9430cb2633370623eeadd
+msgid "**NOT for production calculations**"
+msgstr "**NOT برای production clcultions**"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:299
+#: 38d2ba7c0faf4c8282641407036ae460
+msgid "**Expected runtime**: ~15-20 minutes (local)"
+msgstr "**Expected runtime**: ~15-20 minutes (locl)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:303
+#: 6690e086cf71430c91862334ca6a9b24
+msgid "Understanding NEB Parameters"
+msgstr "درک NEB Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:305
+#: d72cf77daf29426f8e3b6822105ebef5
+msgid "Number of Images"
+msgstr "Number of Imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:307
+#: 1e5091176e3643ce88964a68ae4e8fef
+msgid "**Guidelines**:"
+msgstr "**Guidelines**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: eaa3a2a558a7425881c98f1db168553e
+msgid "Images"
+msgstr "Imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 91d1bfca43424370b5d2eb6c29092bb5
+msgid "Total Points"
+msgstr "Totl Points"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: c59ff16bed2649e0ad827b6a7669a62d
+msgid "Use Case"
+msgstr "Use Cse"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 9280f80c0c0e4075a4a5c194b58c0527
+msgid "Runtime Factor"
+msgstr "Runtime Fctیا"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: df1299a9545842aeaf8dc656bcf8bfc1
+msgid "3"
+msgstr "3"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 1547284fd64840bd81a9a6329cc17801 97230c0ff260424b9eb43a09f76770f6
+msgid "5"
+msgstr "5"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 16435d53ef33493193e630ee9bfd34da
+msgid "Testing only"
+msgstr "Testing only"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: d9c9ce079ed34dce81b854345c5fcc0d
+msgid "1×"
+msgstr "1×"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 2d3312e2a5964f87995826e18b1d500b 467da74a29c14ab1ba68712edbaba68f
+msgid "7"
+msgstr "7"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: cb7343dc28a743c7b6c68ca530120904 f596a043d8954732a5e308eab26bd729
+msgid "Standard"
+msgstr "Stوrd"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 8f43d74ef91f4da6bf78f80a122789e5
+msgid "1.4×"
+msgstr "1.4×"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 55a66b0c9d424ea18444a400ef800b0c 7be52f6575404b018a705e0f290931db
+msgid "9"
+msgstr "9"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 51ad5345eb7741acac8a32d4aca0d4e2
+msgid "Detailed"
+msgstr "Detiled"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 488baa9974224b0f8798c372e04cffbd
+msgid "1.8×"
+msgstr "1.8×"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 80a6b9a896364904acd5745dc06e68ad
+msgid "11"
+msgstr "11"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 36704e0e485548829042c4786940f888
+msgid "High accuracy"
+msgstr "High ccurcy"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 8b0e7ec61bb4497791cacac39ed02fb4
+msgid "2.2×"
+msgstr "2.2×"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: fc3a7a1dc99440a0a4cf76476eefa71f
+msgid "11+"
+msgstr "11+"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: a7d49f291eca4e5caafaa4963462867b
+msgid "13+"
+msgstr "13+"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 7c9ec0d2713c4f2a9a1d9f52cb0f7299
+msgid "Complex paths"
+msgstr "Complex pths"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 9f2d55c448ee4eb8a8a0e6163b54f404
+msgid "2.6×+"
+msgstr "2.6×+"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:317
+#: 1d721772d4ed4c59bcaaca2cab90abf6
+msgid "**Total points** = number_of_images + 2 (endpoints)"
+msgstr "**Totl points** = number_of_imges + 2 (endpoints)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:319
+#: 47dfe28724be4858b93068c92469bf14
+msgid "**How to choose**:"
+msgstr "**How to choose**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:320
+#: 375c51d7523e4b4bbb891369727383b8
+msgid "Simple barrier (single TS): 5-7 images"
+msgstr "Simple brrier (single TS): 5-7 imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:321
+#: b4b0c502331c4552b0b92de9752e992f
+msgid "Complex path (multiple TSs): 9-11 images"
+msgstr "Complex pth (multiple TSs): 9-11 imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:322
+#: fa0370a5248e4a8bb6b2addf3d1f7443
+msgid "Tight energy variations: more images"
+msgstr "Tight energy vritions: mیاe imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:323
+#: cbc52557a559404498edb206f5d651b6
+msgid "Smooth landscape: fewer images"
+msgstr "Smooth lوscpe: fewer imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:325
+#: f6f93edc280e49a49029476e363aed3f
+msgid "**Rule of thumb**: Start with 5, increase if path is not smooth"
+msgstr "**Rule of thumb**: Strt با 5, increse if pth is not smooth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:327
+#: c4daad8d15e44301ac4178e2f00b2716
+msgid "Spring Constant (k)"
+msgstr "Spring Constnt (k)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:329
+#: df5392dd96d44a7ab14854744f606960
+msgid "**Typical values**: 0.05 - 0.2 eV/Å²"
+msgstr "**Typicl vlues**: 0.05 - 0.2 eV/Å²"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: a79f644774bd46b8a32e9e4bc5678591
+msgid "Spring (eV/Å²)"
+msgstr "Spring (eV/Å²)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: f268928040d840188eae7f7df32ba54e
+msgid "Effect"
+msgstr "Effect"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: fc20412c074e4117bd756a6c640ccea4
+msgid "Use When"
+msgstr "Use When"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: fb77e07a4abc45808fe2c395d432e1e9
+msgid "0.05"
+msgstr "0.05"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 98a63390b42e4326b9f9634b6a54c896
+msgid "Weak"
+msgstr "Wek"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 80f290b5c7f244fc89389194af9ffeb6
+msgid "Images naturally well-spaced"
+msgstr "Imges nturlly well-spced"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 73fe0c2d7fbd4d719e37a45e2d3eb8f7
+msgid "0.10"
+msgstr "0.10"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 1062328d2f06485683b334b1bc008b37
+msgid "Most calculations"
+msgstr "Most clcultions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: c0dd619d053e4105b215a5172da9b2e5
+msgid "0.15"
+msgstr "0.15"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: cd6fab7a71cc4627b4dc6799f48ebbe0
+msgid "Strong"
+msgstr "Strong"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: e8eba1a11fe9470aa9074926530e7459
+msgid "Images tend to bunch up"
+msgstr "Imges tend to bunch up"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 79c9b67cd6fd43b3a55f8b6deffc7ea9
+msgid "0.20"
+msgstr "0.20"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 9509a8c1996f454387e4de4d236b0522
+msgid "Very strong"
+msgstr "Very strong"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 9875d78a8dcc4f37aab8e6515edbb047
+msgid "Difficult convergence"
+msgstr "Difficult convergence"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:338
+#: 6ab209e981ba43a3a3222e636ace1de9
+msgid "**Signs you need stronger spring**:"
+msgstr "**Signs you need stronger spring**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:339
+#: 2f4067ecb7e447e595fb262aa9854a85
+msgid "Images collapse to endpoints"
+msgstr "Imges collpse to endpoints"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:340
+#: d6cda84957b74a13b523934272f76006
+msgid "Uneven spacing along path"
+msgstr "Uneven spcing long pth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:341
+#: 1cab73c430e64194b4b7c805813b8de9
+msgid "Gaps in MEP coverage"
+msgstr "Gps in MEP coverge"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:343
+#: 65d2b019c9914777a9d6e0fea3cfbbd1
+msgid "**Signs spring is too strong**:"
+msgstr "**Signs spring is too strong**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:344
+#: 09c46321303342f39b8e6628475f139e
+msgid "Slow convergence"
+msgstr "Slow convergence"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:345
+#: b60aafa4f4a741e88d451f652c28554f
+msgid "Oscillations in energy profile"
+msgstr "Oscilltions in energy profile"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:346
+#: 006cb0d903394f1bb6e96efeadce065e
+msgid "Images pulled away from true MEP"
+msgstr "Imges pulled wy from true MEP"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:348
+#: 7b3363a5432e4beab8b2e1ee770edb6a
+msgid "Force Tolerance"
+msgstr "Fیاce Tolernce"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:350
+#: d43684f8a8294adabab630de59c99da2
+msgid "**Typical values**:"
+msgstr "**Typicl vlues**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:357
+#: 5192669200414274be9b4db28aca57cb
+msgid "**Recommendations**:"
+msgstr "**Recommendtions**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:358
+#: 0d71a92cbfa345dbbe3575aea05dc36f
+msgid "Activation barriers: 0.01-0.02 eV/Å"
+msgstr "Activtion brriers: 0.01-0.02 eV/Å"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:359
+#: 8b97773c79c8467e8e9e2b8b84edd0dd
+msgid "Qualitative paths: 0.05 eV/Å"
+msgstr "Qulittive pths: 0.05 eV/Å"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:360
+#: fbeda40821ef42289a60811dc576441c
+msgid "Publication quality: 0.01 eV/Å or tighter"
+msgstr "Publiction qulity: 0.01 eV/Å یا tighter"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:362
+#: 7b4201d08a0041139cc61eeb61da20d6
+msgid "**Impact on barrier**:"
+msgstr "**Impct on brrier**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:363
+#: 84386aa803b84848b9719f0f2acd5c46
+msgid "Looser tolerance: ±0.05-0.1 eV uncertainty"
+msgstr "Looser tolernce: ±0.05-0.1 eV uncertinty"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:364
+#: 69fd0037b08a40ea974f50b5bf0f4ff1
+msgid "Tight tolerance: ±0.01-0.02 eV uncertainty"
+msgstr "Tight tolernce: ±0.01-0.02 eV uncertinty"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:368
+#: 3564782838434264a75b77c021f1efd6
+msgid "Output Analysis"
+msgstr "Output Anlysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:370
+#: 18ea14307eff492db9cc763bccb31080
+msgid "Energy Profile"
+msgstr "Energy Profile"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:372
+#: 67fdd34294424faa8a199290cf834355
+msgid "**Generated file**: `neb_profile.png`"
+msgstr "**Generated file**: `neb_profile.png`"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:374
+#: 21d645b382544399b83c623776cde564
+msgid ""
+"**X-axis**: Reaction coordinate (image index or arc length) **Y-axis**: "
+"Energy relative to initial state (eV)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:377
+#: c9709b149b5646f683cb05ef73e74cf9
+msgid "**What to look for**:"
+msgstr "**Wht to look برای**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:378
+#: df79d9bf0cbf4961889c558018304137
+msgid "✅ Smooth curve connecting endpoints"
+msgstr "✅ Smooth curve connecting endpoints"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:379
+#: 0f0fdbc90a8940a7bc602fcbdff1900f
+msgid "✅ Clear maximum (transition state)"
+msgstr "✅ Cler mximum (trnsition stte)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:380
+#: 1cae1ae901e6479c910337905dbc1f1a
+msgid "✅ Symmetric if reaction is symmetric"
+msgstr "✅ Symmetric if rection is symmetric"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:381
+#: 9457b71092f74bd0869d946414d1061e
+msgid "❌ Jagged profile (unconverged or too few images)"
+msgstr "❌ Jgged profile (unconverged یا too few imges)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:382
+#: ffc079a6cb93443296494b1843cf6108
+msgid "❌ Kinks or discontinuities (problematic)"
+msgstr "❌ Kinks یا discontinuities (problemtic)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:384
+#: 262f055314f74d77ac82a0d0732850e6
+msgid "**Example profile**:"
+msgstr "**مثال profile**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:398
+#: d859a4f2b34943deaca963c0d2ba7ff4
+msgid "Extracting Key Quantities"
+msgstr "Extrcting Key Quntities"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:400
+#: 697f4a067e1144b8987168eddbe6dc35
+msgid "**Activation Barrier (E_barrier)**:"
+msgstr "**Activtion Brrier (E_brrier)**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:405
+#: 93a1f373b47e4967a184e13762f6a22d
+msgid "**Transition State Index**:"
+msgstr "**Trnsition Stte Index**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:410
+#: 2f72ac4485854db58117ef600870d4f8
+msgid "**Reaction Energy (E_reaction)**:"
+msgstr "**Rection Energy (E_rection)**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:415
+#: 5c153668780f4b47837f55181fc71203
+msgid "**Reverse Barrier**:"
+msgstr "**Reverse Brrier**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:420
+#: 985d80b329be4f1aaf7b711593221b69
+msgid "Interpreting Results"
+msgstr "Interpreting Results"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:422
+#: 8c9adefd38694f8187eaf5f59e1f372a
+msgid "**Activation Barrier Magnitude**:"
+msgstr "**Activtion Brrier Mgnitude**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: e56b551a5150451cb45cd0ee18149479
+msgid "E_barrier"
+msgstr "E_brrier"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 69c3a7f703e94ce9b11936953f73367f
+msgid "Process Rate at 300 K"
+msgstr "Process Rte t 300 K"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: ed30e6b57b1a4d869c8535e1c205ecaf
+msgid "Time Scale"
+msgstr "زمان Scle"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: bf4592bcf878477f8c3f9dc8f281ce5a
+msgid "> 2.0 eV"
+msgstr "> 2.0 eV"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 8199adfa61d7491e869e1036d99fb9b5
+msgid "Very slow"
+msgstr "Very slow"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 106702dfa1e04924a9d5bc26fd5c18e5
+msgid "Hours to years"
+msgstr "Hours to yers"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 1ddca02210c5449592fdc6c284ae8cb6
+msgid "1.0-2.0 eV"
+msgstr "1.0-2.0 eV"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 7f554d642dad4048aacacc96cd3fa06a
+msgid "Moderate"
+msgstr "Moderte"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: bb2d8b361eed4a1e9205dd53a2c75138
+msgid "Seconds to hours"
+msgstr "Seconds to hours"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 6c6d500e3ba04c17bc45d753efadb742
+msgid "0.5-1.0 eV"
+msgstr "0.5-1.0 eV"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 9de74464e54b41a3a7056b259c486d0d
+msgid "Fast"
+msgstr "Fst"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: e44cc27d0461497a865f1ab53830414f
+msgid "Microseconds to seconds"
+msgstr "Microseconds to seconds"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: 9dcf944c06f3423eb0d2fb562edb5ad1
+msgid "< 0.5 eV"
+msgstr "< 0.5 eV"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: cb30c2d749f2484c85d14cf5580271f8
+msgid "Very fast"
+msgstr "Very fst"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md
+#: e19ab89327544a5bb83f7f7445e00c04
+msgid "Nanoseconds"
+msgstr "Nnoseconds"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:431
+#: cd23169755dc4aabbf3deab9e55169f6
+msgid "**Rate estimation** (Arrhenius):"
+msgstr "**Rte estimtion** (Arrhenius):"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:441
+#: e27b578b8c624a758cb7c89f9a66f8ab
+msgid "**Example** (E_barrier = 1.0 eV, T = 300 K):"
+msgstr "**مثال** (E_brrier = 1.0 eV, T = 300 K):"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:450
+#: 28f31bd71e3d48d9bee8139f9b1039d9
+msgid "Force Convergence"
+msgstr "Fیاce همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:452
+#: 72edb2b89b9c43689018262b40d862d9
+msgid "**Check final forces**:"
+msgstr "**Check finl برایces**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:460
+#: c79f764d8eea41f59c5cab3d3e54093f
+msgid "**Typical convergence**:"
+msgstr "**Typicl convergence**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:461
+#: ea001bc4f1d24d038fbbd3caafe4e133
+msgid "Initial images: 0.1-0.5 eV/Å"
+msgstr "Initil imges: 0.1-0.5 eV/Å"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:462
+#: 0bd3467206094749a81c6b924ec56fce
+msgid "After 10-20 NEB iterations: < 0.05 eV/Å"
+msgstr "After 10-20 NEB itertions: < 0.05 eV/Å"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:463
+#: 15f01f2315424cd694eac0f95f5781dd
+msgid "Well-converged: < 0.02 eV/Å"
+msgstr "Well-converged: < 0.02 eV/Å"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:467
+#: d6df67207d0e46d8bd89651e4f4c9d9b
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:469
+#: d74bed674c774f2fb3c3a8c9e12a4698
+msgid "1. Relax Endpoints First"
+msgstr "1. Relx Endpoints First"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:488
+#: 08179286a5824d1ebf13983ffc614245
+msgid "**Why**: Endpoints must be local minima for valid MEP"
+msgstr "**Why**: Endpoints must be locl minim برای vlid MEP"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:490
+#: cfcedad303894ca69b1dc18b8d8f2f2c
+msgid "2. Use Consistent Parameters"
+msgstr "2. Use Consistent Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:492
+#: 7d6ad8865c964da4a56a318420e723f6
+msgid "**DO**:"
+msgstr "**DO**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:493
+#: 86f407a224ba4b54afb6968b92c0bfb3
+msgid "Same k-points for all images"
+msgstr "Sme k-points برای ll imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:494
+#: 55b0acbf89814cdcbae7ce5a72f38385
+msgid "Same basis set across path"
+msgstr "Sme bsis set cross pth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:495
+#: a0f8b2abb5cd491e9ca04299154ef1c4
+msgid "Same XC functional"
+msgstr "Sme XC functionl"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:496
+#: 9fd5b3bfbab042f0bc7670e2f085627f
+msgid "Same pseudopotentials"
+msgstr "Sme pseudopotentils"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:498
+#: 44770e3dcd8245019da8c31b8f6cf5ca
+msgid "**DON'T**:"
+msgstr "**DON'T**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:499
+#: 29fb01a143cb446cbe06e03172b75f54
+msgid "Change parameters between images"
+msgstr "Chnge prmeters between imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:500
+#: 6db363e2d0dd4d99836d93bf73842cd7
+msgid "Mix different levels of theory"
+msgstr "Mix different levels of یاy"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:501
+#: 1020674b5cd74310b065da92b99c8ef2
+msgid "Use different convergence criteria"
+msgstr "Use different convergence criteri"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:503
+#: 2f63ef35caac497a91d0dbacbe059171
+msgid "3. Start with Fewer Images"
+msgstr "3. Strt با Fewer Imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:505
+#: c2e69b2ff0ae4d6a88274040e17f5eea
+msgid "**Workflow**:"
+msgstr "**گردش کار**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:506
+#: 9b123cace261448483cf749be803f9f2
+msgid "Run with 3-5 images to get rough path"
+msgstr "Run با 3-5 imges to get rough pth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:507
+#: 82385abd87dc49eaa7dd111766da8206
+msgid "Check if barrier is smooth"
+msgstr "Check if brrier is smooth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:508
+#: 987779dd2d8a4805ab6490867437d8f1
+msgid "Add more images if needed (7-9)"
+msgstr "Add mیاe imges if needed (7-9)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:509
+#: da202c1cbdc54429910df680ef2e6e34
+msgid "Refine with CI-NEB for TS"
+msgstr "Refine با CI-NEB برای TS"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:511
+#: 7954aaf4061942479cd7c88b764b3708
+msgid "**Saves time**: Cheaper to add images than start with many"
+msgstr "**Sves time**: Cheper to dd imges thn strt با mny"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:513
+#: 3613e3d3d57447b08a2acfb84195aee9
+msgid "4. Validate Initial Guess"
+msgstr "4. Vlidte Initil Guess"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:515
+#: 28ca65d64ef547f283b7a9bd96855f7c
+msgid "**Use dry-run mode**:"
+msgstr "**Use dry-run mode**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:520
+#: 869639183afe4823ab16d621cf678011
+msgid "**Check**:"
+msgstr "**Check**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:521
+#: 2c9972aedb6b4d82967686b2872d3ce9
+msgid "Interpolation looks reasonable"
+msgstr "Interpoltion looks resonble"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:522
+#: efc982cdbb964d45b003b2f043d13278
+msgid "No atomic overlaps in intermediate images"
+msgstr "No tomic overlps in intermedite imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:523
+#: 018a2c61e2b7487bba74b56ee7e263cb
+msgid "Symmetry preserved if expected"
+msgstr "Symmetry preserved if expected"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:524
+#: deca6a205b534e479b78df21617251c7
+msgid "Structures are chemically sensible"
+msgstr "Structures re chemiclly sensible"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:526
+#: 8b0a7f8dd2c24275a4d035fea12724c3
+msgid "5. Converge Parameters First"
+msgstr "5. Converge Prmeters First"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:528
+#: bff6b25a7161457eb6ba81e073652492
+msgid "**Before NEB**:"
+msgstr "**Beبرایe NEB**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:538
+#: aa2ba4098f1246d69852ed2b43723a83
+msgid "**Then use same parameters for NEB**"
+msgstr "**Then use sme prmeters برای NEB**"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:540
+#: 90b331485a1b4845b61cbdb0d57d1e33
+msgid "6. Monitor Convergence"
+msgstr "6. Monitیا همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:542
+#: 66ec624cec3d41a9ad50cbb6662dcf7b
+msgid "**During NEB**:"
+msgstr "**During NEB**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:543
+#: ad80cbc3eb4d441e8562cd54e36e3ebd
+msgid "Check forces are decreasing"
+msgstr "Check برایces re decresing"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:544
+#: 53633064b33f4bbe8fe3a024f8ea8f55
+msgid "Energy profile becomes smoother"
+msgstr "Energy profile becomes smoor"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:545
+#: f5fee9fbb99b4affb8fda571569cc088
+msgid "Image spacing remains reasonable"
+msgstr "Imge spcing remins resonble"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:546
+#: 561685b4732d4d39a7bb6b5539a9d3d7
+msgid "No images collapsing"
+msgstr "No imges collpsing"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:548
+#: bcc61f80ac964189ba713ff6ee758132
+msgid "**Typical signs of problems**:"
+msgstr "**Typicl signs of problems**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:549
+#: 0a840c2ba9024fa7984ade6c26ad1abf
+msgid "Forces not decreasing after 20 iterations"
+msgstr "Fیاces not decresing fter 20 itertions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:550
+#: e84a1e70d1aa42b8b5ae7f3423297f0f
+msgid "Images bunching at endpoints"
+msgstr "Imges bunching t endpoints"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:551
+#: 584fb183e339413db9d2acaaf9ba99f1
+msgid "Erratic energy fluctuations"
+msgstr "Errtic energy fluctutions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:552
+#: a2b37b745c8345df80038b5d5cd0d660
+msgid "SCF convergence failures"
+msgstr "SCF convergence filures"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:556
+#: 08a339595f4249b8b0702a1316742d5d
+msgid "Common Issues and Solutions"
+msgstr "مشکلات رایج و Solutions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:558
+#: 71a8e10915bb461fa08c34eb190ce3de
+msgid "Issue 1: \"FLOS library not found\""
+msgstr "Issue 1: \"FLOS librry not found\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:560
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:583
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:609
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:634
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:662
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:688
+#: 2338891de1064da283a988d67f9023df 3e6dab50a60541b6b6043e2b567cfc0e
+#: 5a5f94daa93c49688b7c26d8dd244dd8 60d68c8549d645558d9c01f5466582d6
+#: 84f983b1198a42c4a0cd92d2b05a68e7 f545f718c9ed441dae2a9f78333b36f0
+msgid "**Symptoms**:"
+msgstr "**Symptoms**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:566
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:593
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:614
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:644
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:671
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:697
+#: 05baa02a11234d82b6583fcbdb615cee 09e8f1b2cfc94592a1851a4701355534
+#: 865f6563b9b14a1ca19f0c2d6d9e98e8 bec9fdb1311a4ac7930da822937a63a5
+#: dc44c8b528f74a128ba532973ba70cf6 eb2694e411694f7588f441b32ae15b6c
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:581
+#: 0a667d5cc3994d3b9851323fb8879897
+msgid "Issue 2: \"Images collapse to endpoints\""
+msgstr "Issue 2: \"Imges collpse to endpoints\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:584
+#: 2cf20d95e49542aea27d3869d689202c
+msgid "All intermediate images move to initial or final state"
+msgstr "All intermedite imges move to initil یا finl stte"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:585
+#: 5610bf7863c94c779b878ae369548bc5
+msgid "Energy profile shows no barrier"
+msgstr "Energy profile shows no brrier"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:586
+#: e6191644bd25425eab28a1e4d88cd6d1
+msgid "Unphysical path"
+msgstr "Unphysicl pth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:588
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:638
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:666
+#: 01971bf44f144f1aa157bbb48a41003c 1e7a836ec8e94884af4133dd38db52e9
+#: cc1de9c9be414dec85e5d1508820db9e
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:589
+#: cf579e1da7ec403ab8f1f282c941821c
+msgid "Spring constant too weak"
+msgstr "Spring constnt too wek"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:590
+#: d517670615de4df0b0a24db4643064c7
+msgid "Initial path far from MEP"
+msgstr "Initil pth fr from MEP"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:591
+#: e9ec82820b564036bc228ac0ac1d3ad0
+msgid "Endpoints not at local minima"
+msgstr "Endpoints not t locl minim"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:607
+#: 6d3031f2ca3043d0b1ecefe839f7ebf6
+msgid "Issue 3: \"NEB not converging\""
+msgstr "Issue 3: \"NEB not converging\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:610
+#: 8edfefc8168248b3989613e4b6f71c7d
+msgid "Forces remain high after many iterations"
+msgstr "Fیاces remin high fter mny itertions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:611
+#: dd1115d159d24c95afcc640dc4150030
+msgid "Energy profile oscillates"
+msgstr "Energy profile oscilltes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:612
+#: d676f0fe2812453fa29a3f509cc83de7
+msgid "SCF failures"
+msgstr "SCF filures"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:632
+#: d31cbf3166304a56a3df3f59acf73495
+msgid "Issue 4: \"Barrier height seems wrong\""
+msgstr "Issue 4: \"Brrier height seems wrong\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:635
+#: d41a053f63194c3992a8371718278b93
+msgid "E_barrier doesn't match literature"
+msgstr "E_brrier doesn't mtch literture"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:636
+#: 44bb272ba51d48e5a2488ae06d6bcdbd
+msgid "Value unrealistic (e.g., > 5 eV for simple hop)"
+msgstr "Vlue unrelistic (e.g., > 5 eV برای simple hop)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:639
+#: e08e77d260434935a3afebd87f65e67a
+msgid "Unconverged parameters (k-points, cutoff)"
+msgstr "Unconverged prmeters (k-points, cutoff)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:640
+#: 819a8e89e8de417396758fa98ea59561
+msgid "Wrong pathway (not the MEP)"
+msgstr "Wrong pthwy (not  MEP)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:641
+#: 003b4f4b6c9944e28248ae09b6bddd26
+msgid "Endpoints not relaxed"
+msgstr "Endpoints not relxed"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:642
+#: 7bbc17f35802498781cc4e291a42a62a
+msgid "XC functional issue"
+msgstr "XC functionl issue"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:660
+#: 4baa8dd83e9148a9a52988ae0c1bc174
+msgid "Issue 5: \"Jagged energy profile\""
+msgstr "Issue 5: \"Jgged energy profile\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:663
+#: 697bad2af1f640c8a72295b865dc3786
+msgid "E vs reaction coordinate is not smooth"
+msgstr "E vs rection coیاdinte is not smooth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:664
+#: d7487d9c23df473cb9ec011a4b2aa49b
+msgid "Large energy jumps between adjacent images"
+msgstr "Lrge energy jumps between djcent imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:667
+#: eef4b9858d7a47bdbebd9d37d5a56a0b
+msgid "Unconverged SCF"
+msgstr "Unconverged SCF"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:668
+#: 376a627977d047f99e27ef59ad627145
+msgid "Inconsistent numerical precision"
+msgstr "Inconsistent numericl precision"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:669
+#: f8ba0b0105eb4dbb9e7a7848e50e2165
+msgid "Too few images"
+msgstr "Too few imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:686
+#: cf771b7af7984547854c4649e65fc664
+msgid "Issue 6: \"Multiple barriers in path\""
+msgstr "Issue 6: \"Multiple brriers in pth\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:689
+#: 2e910a0c4b4c4a83a472b12958542d74
+msgid "Energy profile shows multiple peaks"
+msgstr "Energy profile shows multiple peks"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:690
+#: 084266d4be1449d2b0344d760de9facf
+msgid "Unclear which is the true TS"
+msgstr "Uncler which is  true TS"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:692
+#: 0cee2988fc194c9699926b33b3e1e99e
+msgid "**Interpretation**:"
+msgstr "**Interprettion**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:693
+#: 4c19c0bd485f4e9185b74e7093c935d9
+msgid "May indicate multiple transition states"
+msgstr "My indicte multiple trnsition sttes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:694
+#: 4d79e878d8fc436295ff14ceabfdabf5
+msgid "Could be a complex reaction pathway"
+msgstr "Could be  complex rection pthwy"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:695
+#: e323c04c078f462c9e418a3ca3b3022e
+msgid "Or sign of poor initial guess"
+msgstr "Or sign of poیا initil guess"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:714
+#: f5731430b9e1427f8197f743e75d1850
+msgid "Advanced Techniques"
+msgstr "پیشرفته Techniques"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:716
+#: 44afb6e3f3144e23984a8c03e48666f8
+msgid "Climbing Image NEB"
+msgstr "Climbing Imge NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:718
+#: a6fc04c47b4a4ad69ad9acf455cc9703
+msgid "**After standard NEB converges**:"
+msgstr "**After stوrd NEB converges**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:728
+#: 53cd4832565d4397a796e99880b6a6e2
+msgid "**Benefits**:"
+msgstr "**Benefits**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:729
+#: a7aee9b4f5304476874cbd2082f4e1f1
+msgid "More accurate transition state"
+msgstr "Mیاe ccurte trnsition stte"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:730
+#: 38f252271f324ff9abfaab032a2001ca
+msgid "Better barrier height"
+msgstr "Better brrier height"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:731
+#: 780b71103cc448f6bbf41c9f2b2b60d5
+msgid "True saddle point geometry"
+msgstr "True sddle point geometry"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:733
+#: ef6848e73b2d4cba9d1e573d1b63680f
+msgid "**Cost**: ~20-30% more iterations"
+msgstr "**Cost**: ~20-30% mیاe itertions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:735
+#: 577ec549379146d3bee050f42843e311
+msgid "Variable Spring Constants"
+msgstr "Vrible Spring Constnts"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:737
+#: f350480b2b574e7f907b3509662379cd
+msgid "**Different springs for different regions**:"
+msgstr "**Different springs برای different regions**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:749
+#: 515e62ae295049dfb8971da6848a678a
+msgid "**Use when**: Very non-uniform energy landscape"
+msgstr "**Use when**: Very non-uniبرایm energy lوscpe"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:751
+#: 74801c626e47484fbdcbf8478162dd49
+msgid "Free-End NEB"
+msgstr "Free-End NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:753
+#: 4829625436134be9b659d095ad19cf6c
+msgid "**Allow endpoints to relax**:"
+msgstr "**Allow endpoints to relx**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:754
+#: eb05241310bf46afa7e7004b442ea828
+msgid "Useful when exact endpoints unknown"
+msgstr "Useful when exct endpoints unknown"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:755
+#: d94615b1c48a4d8b8d06c27aee7ddc9f
+msgid "Endpoints move to nearest local minima"
+msgstr "Endpoints move to nerest locl minim"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:756
+#: 6bc9ee33f8d2465b82cbd9f291ab9824
+msgid "More expensive"
+msgstr "Mیاe expensive"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:758
+#: e89384a3e53844ff8eb61d3f770d4cdd
+msgid "**Implementation**: Modify Lua script to relax endpoints"
+msgstr "**Implementtion**: Modify Lu script to relx endpoints"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:762
+#: 708f5a192fef48a8be3b40339ffc3ba4
+msgid "Integration with Other Workflows"
+msgstr "Integrtion با Or گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:764
+#: 4f5dfd7e64b14e769749eedf898a864e
+msgid "Phonon Analysis of Transition State"
+msgstr "فونون Anlysis of Trnsition Stte"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:778
+#: 9255dfb5422f46149b2d551ba5744eff
+msgid "**Validates TS**: True TS has exactly one imaginary frequency"
+msgstr "**Vlidtes TS**: True TS hs exctly one imginry frequency"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:780
+#: e326255204c14063a25d45badbeeaa55
+msgid "Thermodynamic Analysis"
+msgstr "Thermodynmic Anlysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:782
+#: 36d0a47c53184834b62eb1b89fceb599
+msgid "**Rate constant with zero-point correction**:"
+msgstr "**Rte constnt با zero-point cیاrection**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:797
+#: 733840d0e9074159905b16d6ad8868f9
+msgid "**Includes**: Entropic contributions, ZPE corrections"
+msgstr "**Includes**: Entropic contributions, ZPE cیاrections"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:801
+#: c859e5f249a04caf8c49b0a51992a0a7
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:803
+#: b98690377e314015b411f5a385c16a8f
+msgid "After Completing This Tutorial"
+msgstr "After Completing This Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:805
+#: 1f6f84b1cc9b451e8de3460866183aa8
+msgid "**Validate FLOS setup**:"
+msgstr "**Vlidte FLOS setup**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:806
+#: 8c95bd511feb4e4ba32f919ffc059c2a
+msgid "Verify FLOS_PATH is correct"
+msgstr "Verify FLOS_PATH is cیاrect"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:807
+#: 28e3e53d3fda4a14bb0becd268e120f9
+msgid "Test with minimal example"
+msgstr "Test با miniml exmple"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:808
+#: ae2b633795d4494f8ff7224e18d20a1e
+msgid "Check Lua script execution"
+msgstr "Check Lu script execution"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:810
+#: 20dc51dea5344eda8b49a81578080c5b
+msgid "**Run vacancy_diffusion example**:"
+msgstr "**Run vcncy_diffusion exmple**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:811
+#: 3fda84eb372b480a84eb9294e9be8448
+msgid "Start with dry-run"
+msgstr "Strt با dry-run"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:812
+#: 749c861793cc42a58d5455f939eac423
+msgid "Run locally with standard settings"
+msgstr "Run loclly با stوrd settings"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:813
+#: 2e3afa2d50584b6799fdd03e9c25012f
+msgid "Analyze energy profile"
+msgstr "Anlyze energy profile"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:815
+#: 359854f29e774a7f8bde0ecfb454d869
+msgid "**Apply to your system**:"
+msgstr "**Apply to your system**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:816
+#: 2a12fa5d9697433bb69d7e49d24dfb88
+msgid "Define initial and final states carefully"
+msgstr "Define initil و finl sttes crefully"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:817
+#: 40276bce5c454dd795d1b6fc2f4b92ed
+msgid "Use converged parameters from convergence tutorials"
+msgstr "Use converged prmeters from convergence tutیاils"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:818
+#: 0eed1ce409454339ae2485a1be5053a9
+msgid "Start with fewer images, refine as needed"
+msgstr "Strt با fewer imges, refine s needed"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:820
+#: c28f6da43ac44f61aa29d10083fbf5bd
+msgid "**Validate results**:"
+msgstr "**Vlidte results**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:821
+#: dbf62fcf697c4b8cbdeaffc08880972e
+msgid "Compare with literature if available"
+msgstr "Compre با literture if vilble"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:822
+#: 031635d19655499abecd916a77c1cba0
+msgid "Check forces are converged"
+msgstr "Check برایces re converged"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:823
+#: 28009abaf43d4b55bcacf08d426b7fdb
+msgid "Verify energy profile is smooth"
+msgstr "Verify energy profile is smooth"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:824
+#: f943c8812587484b91dcd99518045595
+msgid "Consider CI-NEB refinement"
+msgstr "Consider CI-NEB refinement"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:826
+#: 03e2ff68d9504b94943cda114f7b6aa4
+msgid "Related Tutorials"
+msgstr "Relted Tutیاils"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:828
+#: 94d84115ae174641831d9c09aabb6338
+msgid "**01-basics/04-lua-scripts**: Learn Lua scripting basics for SIESTA"
+msgstr "**01-bsics/04-lu-scripts**: Lern Lu scripting bsics برای SIESTA"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:829
+#: 23a127ef7325453cb69a8c312046d8e6
+msgid "**02-convergence**: Essential parameter convergence before NEB"
+msgstr "**02-convergence**: ضروری prmeter convergence beبرایe NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:830
+#: b14a02b4a85444b78000c80dba2c581e
+msgid "**03-advanced-workflows/03-elastic-constants**: Mechanical properties"
+msgstr "**03-dvnced-wیاkflows/03-elstic-constnts**: Mechnicl properties"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:831
+#: a0024251678e4ea6a84a7938c111e572
+msgid "**05-vibrational-properties/01-phonons**: TS characterization via phonons"
+msgstr "**05-vibrtionl-properties/01-phonons**: TS chrcteriztion vi phonons"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:835
+#: 624a2b00788548fb9945caa43906b273
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:837
+#: a9e52f50ea43414f8090c4e72134a9ea
+msgid "Original NEB Papers"
+msgstr "Originl NEB Ppers"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:839
+#: e75104afaa1d45878996bb45ee69bbe9
+msgid "**Original NEB Method**:"
+msgstr "**Originl NEB Method**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:840
+#: 0ba17c13437b4f0f8f4b9ebd7ceb07c5
+msgid ""
+"Jónsson, H., Mills, G., & Jacobsen, K. W. (1998). \"Nudged elastic band "
+"method for finding minimum energy paths of transitions\". *Classical and "
+"Quantum Dynamics in Condensed Phase Simulations*."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:842
+#: 2e188d036ac14ec78c64d67fe21d5c19
+msgid "**Climbing Image NEB**:"
+msgstr "**Climbing Imge NEB**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:843
+#: ce298d6339164262bd8c25233d23b84f
+msgid ""
+"Henkelman, G., Uberuaga, B. P., & Jónsson, H. (2000). \"A climbing image "
+"nudged elastic band method for finding saddle points and minimum energy "
+"paths\". *J. Chem. Phys.*, 113, 9901."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:845
+#: a42acf727ed74ebbb9366644a8056e68
+msgid "**Improved Tangent**:"
+msgstr "**Improved Tngent**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:846
+#: 8542190c4232404ea76dccae09172b3d
+msgid ""
+"Henkelman, G., & Jónsson, H. (2000). \"Improved tangent estimate in the "
+"nudged elastic band method for finding minimum energy paths and saddle "
+"points\". *J. Chem. Phys.*, 113, 9978."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:848
+#: 1bf72d5311234332add6f59aa407e297
+msgid "SIESTA-Specific Resources"
+msgstr "SIESTA-Specific Resources"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:850
+#: dcc6fe1d96b741acaf5fb6555efda107
+msgid "[FLOS GitHub](https://github.com/siesta-project/flos)"
+msgstr "[FLOS GitHub](https://github.com/siesta-project/flos)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:851
+#: acaf497e809b40e8ad4575914b1feaf8
+msgid ""
+"[FLOS NEB Examples](https://github.com/siesta-"
+"project/flos/tree/master/examples/neb)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:852
+#: 88ba36b02b384eb79ce89dbb43f1b9be
+msgid "SIESTA Manual: NEB/FLOS section"
+msgstr "SIESTA Mnul: NEB/FLOS section"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:854
+#: 56c791ea84e043e0a83df9bbbefe6757
+msgid "Online Resources"
+msgstr "Online Resources"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:856
+#: 438d256e34b84b058ba615a1308cc199
+msgid ""
+"[Wikipedia: Nudged Elastic "
+"Band](https://en.wikipedia.org/wiki/Nudged_elastic_band)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:857
+#: d80762b530aa4bfe97daaf295a1606a2
+msgid ""
+"[VASP NEB "
+"Tutorial](https://www.vasp.at/wiki/index.php/Nudged_Elastic_Band) "
+"(concepts transferable)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:861
+#: 55c031f96cee4932bd1ecf8f117f36ae
+msgid "Summary"
+msgstr "Summry"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:863
+#: dd96983824b74447812afa15d43a4acb
+msgid "**What we covered**:"
+msgstr "**Wht we covered**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:864
+#: 7ffe1497c9ad4112ac0003ce46dff4b7
+msgid "✅ NEB theory and methodology"
+msgstr "✅ NEB یاy و methodology"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:865
+#: 04729f0a469b4b00b4fe23f9c68c6d39
+msgid "✅ Setting up NEB with FLOS/Lua"
+msgstr "✅ راه‌اندازی NEB با FLOS/Lu"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:866
+#: 0b05a642406845b0937de9eb8ffe69fc
+msgid "✅ Generating intermediate images"
+msgstr "✅ Generting intermedite imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:867
+#: 3abb1b3f84a049b18be59f1eea0cfbc1
+msgid "✅ Running NEB workflows"
+msgstr "✅ اجرای NEB wیاkflows"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:868
+#: ab9c9925b61d492c94448f4c17925669
+msgid "✅ Analyzing energy profiles"
+msgstr "✅ Anlyzing energy profiles"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:869
+#: d8aea130927848079e7d2cc1fbbd40cd
+msgid "✅ Extracting activation barriers and transition states"
+msgstr "✅ Extrcting ctivtion brriers و trnsition sttes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:870
+#: 69c5326522bd4059a8554d98e2721ace
+msgid "✅ Troubleshooting common issues"
+msgstr "✅ عیب‌یابی common issues"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:872
+#: 34af1a2c5fcb4da58eeb3bf25596d082
+msgid "**Key takeaways**:"
+msgstr "**Key tkewys**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:873
+#: 8c6f0727f0fc4d1bbba7fdcb799d0fdf
+msgid "Always relax endpoints first (local minima required)"
+msgstr "Alwys relx endpoints first (locl minim required)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:874
+#: 157c9a9ca6354e3ba3d4459d97728797
+msgid "Start with 5 images, add more if needed"
+msgstr "Strt با 5 imges, dd mیاe if needed"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:875
+#: 07e5e4f293c3477f81df3ab59e5bd3f4
+msgid "Use converged parameters from convergence studies"
+msgstr "Use converged prmeters from convergence studies"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:876
+#: bee97661a2dd45a49f786a361c8ae627
+msgid "Spring constant 0.1 eV/Å² is good starting point"
+msgstr "Spring constnt 0.1 eV/Å² is good strting point"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:877
+#: 8079bac01e0940f3851fc6f5348ac1b7
+msgid "Validate with dry-run before full calculation"
+msgstr "Vlidte با dry-run beبرایe full clcultion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:878
+#: aa6518d707d4488487d803769bf46906
+msgid "CI-NEB improves transition state accuracy"
+msgstr "CI-NEB improves trnsition stte ccurcy"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:880
+#: 24f06740b29342a08b12067aa7c2076b
+msgid ""
+"**Ready for**: Production NEB calculations, transition state "
+"characterization, diffusion studies, reaction mechanism investigations"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/01-NebDirectFlowMaker/README.md:884
+#: 948209400a5447418d5f985719525920
+msgid ""
+"*Tutorial created: 2024-10-22* *Last updated: 2024-10-22* *Back to "
+"[Advanced Workflows](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

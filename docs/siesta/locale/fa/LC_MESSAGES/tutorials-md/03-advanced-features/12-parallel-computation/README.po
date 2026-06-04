@@ -1,0 +1,838 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:1
+#: bd4d2b005e0646ac83db4794d53f45d2
+msgid "Tutorial 12: Parallel Computation Configuration"
+msgstr "Tutیاil 12: Prllel Computtion Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:3
+#: fc517bf0248d4ce18ea3dc6b4d46f470
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:5
+#: 904157fe111b44a9b5d1cdc1a4dc3fb8
+msgid ""
+"This tutorial demonstrates how to configure SIESTA's MPI parallelization "
+"options using the `ParallelOptions` dataclass module. These are **expert-"
+"level parameters** for optimizing parallel performance in large-scale "
+"calculations."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:7
+#: 818f2bc6fbe14ec2b841b853910c2d4a
+msgid "Learning Objectives"
+msgstr "Lerning Objectives"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:9
+#: 4dcbee24822b4b31bbca1b1f386f047a
+msgid "Configure processor grid layout and block-cyclic matrix distribution"
+msgstr "Configure processیا grid lyout و block-cyclic mtrix distribution"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:10
+#: a59f427734714690bc1aecf62cf3b9a2
+msgid "Enable domain/spatial decomposition for O(N) calculations"
+msgstr "Enble domin/sptil decomposition برای O(N) clcultions"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:11
+#: 44ccaf4d64c8494593bd154162e9f195
+msgid "Optimize parallel FFT performance"
+msgstr "Optimize prllel FFT perبرایmnce"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:12
+#: b10c69e08fe14ef9bc1f15a69d3910be
+msgid "Tune parallelization for specific hardware architectures"
+msgstr "Tune prlleliztion برای specific hrdwre rchitectures"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:14
+#: 2121a26867d94b40ac4c2ecc4f83c3fd
+msgid "Theory"
+msgstr "Theیاy"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:16
+#: 663f0f1478774f64a1f29137a432ecd5
+msgid "MPI Parallelization in SIESTA"
+msgstr "MPI Prlleliztion in SIESTA"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:18
+#: c7dfa85edd2e4460977b272f89087851
+msgid "SIESTA uses domain decomposition parallelization strategies:"
+msgstr "SIESTA uses domin decomposition prlleliztion strtegies:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:20
+#: 7440d5533af34338be458a96bfc1339a
+msgid "**2D Block-Cyclic Distribution**"
+msgstr "**2D Block-Cyclic Distribution**"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:21
+#: 0925a753e84c4189bd4326dacbec244a
+msgid "Matrices (H, S, DM) distributed across processor grid"
+msgstr "Mtrices (H, S, DM) distributed cross processیا grid"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:22
+#: f95eeafbfcc2448aad7f9e3005bbcb89
+msgid "Block size controls granularity of distribution"
+msgstr "Block size controls grnulrity of distribution"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:23
+#: ec18774f99004a488fa66a5cbcf3ecfe
+msgid "ProcessorY sets Y-dimension of 2D grid"
+msgstr "ProcessیاY sets Y-dimension of 2D grid"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:25
+#: 8e3355e2160f40dcbeea7f6ff4eb8f79
+msgid "**Domain Decomposition (O(N))**"
+msgstr "**Domin Decomposition (O(N))**"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:26
+#: 300e732dab35460391da5a836bd3f001
+msgid "Orbitals/atoms grouped and assigned to processors"
+msgstr "Orbitls/toms grouped و ssigned to processیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:27
+#: 66cfac0eb9bc45988f7a4615ba469b84
+msgid "Suitable for large, sparse systems"
+msgstr "Suitble برای lrge, sprse systems"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:28
+#: 2194e0756a70498dace20254af21c857
+msgid "Requires O(N) solution method"
+msgstr "Requires O(N) solution method"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:30
+#: 8ed10b83669b4a9187101f6ce77dba87
+msgid "**Spatial Decomposition**"
+msgstr "**Sptil Decomposition**"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:31
+#: c2f6610714db447bba9bce275587b4ad
+msgid "Real-space grid distributed among processors"
+msgstr "Rel-spce grid distributed mong processیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:32
+#: ca804eb0ebc34b43afdde359424911e9
+msgid "Better load balancing for irregular systems"
+msgstr "Better lod blncing برای irregulr systems"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:33
+#: 7d83e7de0e9345f2bff16677c0ef0348
+msgid "Communication radius controls data exchange"
+msgstr "Communiction rdius controls dt exchnge"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:35
+#: 66f788373ec34a0cb05ba487ac4ee4f6
+msgid "Parameters"
+msgstr "Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:37
+#: 8de34ae57d31475191e0edbcd00813e3
+msgid "Basic Parameters"
+msgstr "Bsic Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 45f9d569db1344549c6c93bbe573e0c0 b0a423e998594e31a69f4e652f731bbc
+msgid "Parameter"
+msgstr "Prmeter"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: e8f72d0713744513b6ec268fb2624125 f4f3ff67ff1441828caa6115fe3d8899
+msgid "Type"
+msgstr "Type"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 7f828fb2ef5744a1b52a933f528593eb c2aa32f8ce094e28a8146bd4b4b61211
+msgid "Default"
+msgstr "Defult"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 3726c0642005404a9ceda17e0be51b63 515c7f628d434f4594571df32890b162
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 00d9f2ebd83a464f96960fe63b5ad20a
+msgid "`block_size`"
+msgstr "`block_size`"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 0e5c4e7c036649849f462c62cc778fa1 e053c27e38c14ebd9edf1de232a25bb0
+msgid "int"
+msgstr "int"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 304fa117b62d43b7a9520b87cd5ec4b7 4991d9486fe64c30976dde2520b48468
+msgid "None (auto)"
+msgstr "None (uto)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: ff34c1a6c7274521b2883b4a45c13eba
+msgid "Block size for 2D block-cyclic matrix distribution"
+msgstr "Block size برای 2D block-cyclic mtrix distribution"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: a866ec046697497589d91f6b4a4d974c
+msgid "`processor_y`"
+msgstr "`processor_y`"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 31808a8cfe1d42d19d691b171663ab80
+msgid "Number of processors in Y dimension of 2D grid"
+msgstr "Number of processیاs in Y dimension of 2D grid"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 290a227c128346638f89e5c7fb500201
+msgid "`fft_processor_y_traditional`"
+msgstr "`fft_processor_y_traditional`"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 25ea67d3c4dc45dfad6351c512ee85c5 38d2c934ae8c47599e4080c92648e240
+#: 3a6de71e7b0d4b01a0c2e580010c675c
+msgid "bool"
+msgstr "bool"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 71b6dc0266a24277b991f05f45a795df a92d8a1e8fe14d7ab5e98efa4059c03f
+msgid "False"
+msgstr "Flse"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 38f380f7c6c24411a0b0985c3857782b
+msgid "Use traditional FFT parallelization scheme"
+msgstr "Use trditionl FFT prlleliztion scheme"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:45
+#: afbc3f71d92a44ee9d294d29c77d9d5d
+msgid "O(N) Parameters"
+msgstr "O(N) Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: f368d353ff2e4c3c83a0a6bfe4a0abca
+msgid "`use_domain_decomposition`"
+msgstr "`use_domain_decomposition`"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 950699338a6d4fb08539f700e8c9a6d6
+msgid "Enable domain decomposition (orbitals/atoms)"
+msgstr "Enble domin decomposition (یاbitls/toms)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: da14343757cc4535b7de2eefe85330bf
+msgid "`use_spatial_decomposition`"
+msgstr "`use_spatial_decomposition`"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 7302cf0717db4c428bfa9daa63d6a5de
+msgid "True"
+msgstr "True"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: b884a37c9f654b95932d9b7add7419d8
+msgid "Enable spatial decomposition (real-space grid)"
+msgstr "Enble sptil decomposition (rel-spce grid)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 5549610e528c4f39baa8b96389d2f80e
+msgid "`rc_spatial`"
+msgstr "`rc_spatial`"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 432ed2a728ee4a6b89d706797b2c0eb3
+msgid "float"
+msgstr "flot"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: f452407d5a874634bbfc77d6c13529c8
+msgid "None"
+msgstr "None"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: ed501b93bbfa440db2336abb69496016
+msgid "Communication radius for spatial decomposition (Bohr)"
+msgstr "Communiction rdius برای sptil decomposition (Bohr)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:53
+#: fd3a0e5514e54e5b8e0842a8d9dd890c
+msgid "Examples"
+msgstr "مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:55
+#: 5e6d0a177d704c399d68ef7303a1c7b6
+msgid "Example 1: Basic Processor Grid Configuration"
+msgstr "مثال 1: Bsic Processیا Grid Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:57
+#: a53e158e607a45af9b90c6206d20f0c9
+msgid "Manually configure 2D processor grid for better load balancing:"
+msgstr "Mnully configure 2D processیا grid برای better lod blncing:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:70
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:90
+#: cc57632f81c84f8582c4d01e67da5097 e6324ab95a1948949d7872e325964cc8
+msgid "**When to use:**"
+msgstr "**When to use:**"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:71
+#: 30c5e9f6223042c4815db32d62acbffc
+msgid "Non-square number of processors (e.g., 12 = 3×4)"
+msgstr "Non-squre number of processیاs (e.g., 12 = 3×4)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:72
+#: d04a37a4d852409dae5e2996a50d14d8
+msgid "Load imbalance with automatic distribution"
+msgstr "Lod imblnce با utomtic distribution"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:73
+#: 185be470bf5344e0b46bd1dc37134529
+msgid "Memory constraints on specific nodes"
+msgstr "Memیاy constrints on specific nodes"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:75
+#: 7d832ce4065b4d66be4614e818c0b00e
+msgid "Example 2: O(N) Calculation with Domain Decomposition"
+msgstr "مثال 2: O(N) محاسبه با Domin Decomposition"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:77
+#: 5066a386c9d84a41aa81296f9acd32fc
+msgid "Enable domain decomposition for large-scale O(N) calculations:"
+msgstr "Enble domin decomposition برای lrge-scle O(N) clcultions:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:91
+#: d19bdbabf3b8482e9a04134bb22aa277
+msgid "Systems with >1000 atoms"
+msgstr "Systems با >1000 toms"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:92
+#: e2460a99c2d74f92ba400560cb8487c6
+msgid "O(N) solution methods (OMM, PEXSI)"
+msgstr "O(N) solution methods (OMM, PEXSI)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:93
+#: 3c51159c4c244aa4a939b95d825b4d97
+msgid "Need to scale to many processors (>100)"
+msgstr "Need to scle to mny processیاs (>100)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:95
+#: 53a6ffcb49234c7783f8995f3c93a89e
+msgid "Example 3: FFT Performance Optimization"
+msgstr "مثال 3: FFT Perبرایmnce Optimiztion"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:97
+#: 1ec2c0f14ca14eac950cb171146600df
+msgid "Optimize FFT parallelization for GPU-accelerated systems:"
+msgstr "Optimize FFT prlleliztion برای GPU-ccelerted systems:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:108
+#: 6bdcd81da4284ecb87ef0078a03ba5a5
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:110
+#: c93df80980cb47558667bdbb8d46f74c
+msgid "1. Processor Grid Selection"
+msgstr "1. Processیا Grid Selection"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:112
+#: 6a896a9e46a24a12a34852f137161d35
+msgid "**Square grids** (ProcessorY = √N):"
+msgstr "**Squre grids** (ProcessیاY = √N):"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:113
+#: 563154713b114928a8cc93e230352fc6
+msgid "✅ Best for most cases"
+msgstr "✅ Best برای most cses"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:114
+#: 38cde3124649449fa42679c59b2ef315
+msgid "✅ Balanced communication patterns"
+msgstr "✅ Blnced communiction ptterns"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:115
+#: 70da9cee30f04e52b34f40444a7e7a85
+msgid "❌ Not possible for non-square processor counts"
+msgstr "❌ Not possible برای non-squre processیا counts"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:117
+#: ab61dfb28ee049b59329cd91a5cd448c
+msgid "**Rectangular grids**:"
+msgstr "**Rectngulr grids**:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:118
+#: b6a94f9120ad48de95a0ae671fed6679
+msgid "✅ Flexibility for any processor count"
+msgstr "✅ Flexibility برای ny processیا count"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:119
+#: 73c52eee59574a9eac83290499b3256d
+msgid "✅ Can optimize for specific communication patterns"
+msgstr "✅ Cn optimize برای specific communiction ptterns"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:120
+#: 3097605e24f54dd6b8dd04ed72987d98
+msgid "❌ May cause load imbalance"
+msgstr "❌ My cuse lod imblnce"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:122
+#: c8a020724d5f4bc38db6f1608e3377d7
+msgid "2. Block Size Selection"
+msgstr "2. Block Size Selection"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:124
+#: 53bcf08a5cd4495389518669f9a20b8d
+msgid "**Small blocks (8-32)**:"
+msgstr "**Smll blocks (8-32)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:125
+#: 284709ffc1114331b0783c7f85954333
+msgid "✅ Better load balancing"
+msgstr "✅ Better lod blncing"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:126
+#: 8e2bedc179014ce4ad79a00fab1231c1
+msgid "✅ Lower memory per process"
+msgstr "✅ Lower memیاy per process"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:127
+#: 597270ab01ab432298fd74aa681c2460
+msgid "❌ More communication overhead"
+msgstr "❌ Mیاe communiction overhed"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:129
+#: 4114e58ef2634d1ab0f9e0bd8a3d6d53
+msgid "**Large blocks (64-128)**:"
+msgstr "**Lrge blocks (64-128)**:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:130
+#: e6f9e187864a413c9821c0908e0bf558
+msgid "✅ Less communication"
+msgstr "✅ Less communiction"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:131
+#: c2455ad929e0440595b724ce5c01a50a
+msgid "✅ Better for GPUs"
+msgstr "✅ Better برای GPUs"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:132
+#: 18cf14606109406099e87a3ac4a5fe6a
+msgid "❌ Potential load imbalance"
+msgstr "❌ Potentil lod imblnce"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:134
+#: 8647ff570aff43b487b6a3089c2077c2
+msgid "3. O(N) Decomposition"
+msgstr "3. O(N) Decomposition"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:136
+#: c7fce453994c4184be6d0a502459c7aa
+msgid "**Domain decomposition**:"
+msgstr "**Domin decomposition**:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:137
+#: 7e10383198b64180b3ae4c7dbbd1fb81
+msgid "Use when: Orbitals/atoms naturally cluster"
+msgstr "Use when: Orbitls/toms nturlly cluster"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:138
+#: 4d33acebb5ec4226a6ec3e02b063db21
+msgid "Benefit: Minimal communication for sparse systems"
+msgstr "Benefit: Miniml communiction برای sprse systems"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:139
+#: 7383b23aaf3649dd9738ffde9b7348c2
+msgid "Requirement: O(N) solver"
+msgstr "Requirement: O(N) solver"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:141
+#: 90026761c98845598a75ec89863f6574
+msgid "**Spatial decomposition**:"
+msgstr "**Sptil decomposition**:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:142
+#: 941ce780d113444493f0ad541f807fcf
+msgid "Use when: Uniform charge distribution"
+msgstr "Use when: Uniبرایm chrge distribution"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:143
+#: fb9a3a6e9fc7436fbf4bfd8d683701bb
+msgid "Benefit: Automatic load balancing"
+msgstr "Benefit: Automtic lod blncing"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:144
+#: ad9d1370fabe4789bdf83227a0495807
+msgid "Default: Usually enabled"
+msgstr "Defult: Usully enbled"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:146
+#: f4aa71a64b9846b8985220c8893bf4cc
+msgid "Performance Guidelines"
+msgstr "Perبرایmnce Guidelines"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:148
+#: 0a3a79dd0531448c9b7cb84352180bfc
+msgid "Scaling Efficiency"
+msgstr "Scling Efficiency"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 4bd329d3e2584830b1a2f1f5f87732fa
+msgid "System Size"
+msgstr "System Size"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: c9e9906b78e94f2c8d37ab831d670b22
+msgid "Processors"
+msgstr "Processیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 1895066a782445b19b8c82a83ad7ec17
+msgid "Recommended Settings"
+msgstr "Recommended Settings"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: ad25b67a32514f519050b55960a2f117
+msgid "<100 atoms"
+msgstr "<100 toms"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 4d5e91abcf644a2ba2e338ae4a8293b8
+msgid "4-16"
+msgstr "4-16"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: e04c414ebdea49de81a5a68c72a348c0
+msgid "Default settings (automatic)"
+msgstr "Defult settings (utomtic)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 5ff50c9c3b8e480abcfe3db08c418490
+msgid "100-500 atoms"
+msgstr "100-500 toms"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: bca387adc79f4dd798a981f39da644a9
+msgid "16-64"
+msgstr "16-64"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: eb423c850ce5495682e33acf87eeefae
+msgid "BlockSize=32, ProcessorY tuning"
+msgstr "BlockSize=32, ProcessیاY tuning"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: afe688eefea94d99b52c6778b6fa3532
+msgid "500-2000 atoms"
+msgstr "500-2000 toms"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 4f0373ea47aa423b9ac11435383071f9
+msgid "64-256"
+msgstr "64-256"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: d5cae0e2e77f4760a00cb5cfaf60d1e7
+msgid "O(N) with spatial decomposition"
+msgstr "O(N) با sptil decomposition"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: a739126759cd44cd917948666c524f60
+msgid ">2000 atoms"
+msgstr ">2000 toms"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: b7b74763cf12467e8967495adf3f20db
+msgid "256+"
+msgstr "256+"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md
+#: 28f77056f38f4bdb96244d6ac85639f8
+msgid "Domain + spatial decomposition"
+msgstr "Domin + sptil decomposition"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:157
+#: 1bcf62b8f5374d04a8481ec708965ef4
+msgid "Memory Considerations"
+msgstr "Memیاy Considertions"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:159
+#: 07ab8bde5769462494cd1b1dce8c28bc
+msgid "Approximate memory per process:"
+msgstr "Approximte memیاy per process:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:164
+#: 45aa584637914585a1e912e002f635ef
+msgid "For large systems:"
+msgstr "Fیا lrge systems:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:165
+#: 9b0b1d28a93f4ad887089ecfcbf5a1a4
+msgid "Use more processors to reduce memory/process"
+msgstr "Use mیاe processیاs to reduce memیاy/process"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:166
+#: 548920cd5e984ca78a61384c33d0afe9
+msgid "Enable spatial decomposition for better distribution"
+msgstr "Enble sptil decomposition برای better distribution"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:167
+#: 4d1a6e2ba5a54573bb11c4b856bce497
+msgid "Consider O(N) methods to reduce memory scaling"
+msgstr "Consider O(N) methods to reduce memیاy scling"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:169
+#: a922d9e294b54b8f8367967a610638ab
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:171
+#: 3a1b96a5639c473b8d46d4b3adb5a132
+msgid "Issue 1: Load Imbalance"
+msgstr "Issue 1: Lod Imblnce"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:173
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:184
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:195
+#: 1fd71f86c9c047dea937676b95c78e62 7fd4445063194a94beaae37b6f1642fc
+#: c3b853c429b14679ab6974191bf45374
+msgid "**Symptoms:**"
+msgstr "**Symptoms:**"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:174
+#: 79ffc32b838745ec9bf7dca01876d6ea
+msgid "Some processors idle while others work"
+msgstr "Some processیاs idle while ors wیاk"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:175
+#: a2ea6ec9519c47a0bc128906d82c7231
+msgid "Poor scaling efficiency"
+msgstr "Poیا scling efficiency"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:177
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:188
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:199
+#: 437394b7657d4da691e7f762feac0dce 763b3a8d96b24ff980ad455f46b289f9
+#: 7b99af10f0da4a61aa2470055e185ee9
+msgid "**Solutions:**"
+msgstr "**Solutions:**"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:178
+#: de434a5f9bcf43b3979e9d80e9324002
+msgid "Adjust ProcessorY to balance grid"
+msgstr "Adjust ProcessیاY to blnce grid"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:179
+#: 84244c38e6bf4bdd89ffce83ffe9bcfe
+msgid "Use spatial decomposition"
+msgstr "Use sptil decomposition"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:180
+#: b96994b44d144ced98c32a71d730cedb
+msgid "Try different block sizes"
+msgstr "Try different block sizes"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:182
+#: 358326a7d3dc4039b4738bbd28341c67
+msgid "Issue 2: Communication Bottlenecks"
+msgstr "Issue 2: Communiction Bottlenecks"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:185
+#: 49474a6b7cab468b8573aa943b0444ca
+msgid "Scaling stops at certain processor count"
+msgstr "Scling stops t certin processیا count"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:186
+#: e3a07b5ed1b344f6aaf2febb8ecc6c5b
+msgid "High communication time in timers"
+msgstr "High communiction time in timers"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:189
+#: 386f7c40911442c685d9fdb54d4eb34c
+msgid "Increase block size to reduce messages"
+msgstr "Increse block size to reduce messges"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:190
+#: a766686e04634ba3aa729f73e829c5a7
+msgid "Use faster interconnect (InfiniBand)"
+msgstr "Use fster interconnect (InfiniBو)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:191
+#: 92cafabd63ef4e0e859b5d95293c09b8
+msgid "Optimize processor grid layout"
+msgstr "Optimize processیا grid lyout"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:193
+#: 04a47bcd9c564afa9eb82388a2a34dc0
+msgid "Issue 3: Memory Overflow"
+msgstr "Issue 3: Memیاy Overflow"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:196
+#: aae51c0080a041a78c51b4e23b14d446
+msgid "Out-of-memory errors"
+msgstr "Out-of-memیاy errیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:197
+#: ea85e460efc04ecd877ba0232e30463f
+msgid "Swapping to disk"
+msgstr "Swpping to disk"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:200
+#: b3361c51f1754b7e8182050d5f52e165
+msgid "Increase number of processors"
+msgstr "Increse number of processیاs"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:201
+#: b4fa87dcdcac42fc9da696535b76d249
+msgid "Reduce block size"
+msgstr "Reduce block size"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:202
+#: becf28d1b4ab47baa5d80f83e21ef6f4
+msgid "Enable O(N) decomposition"
+msgstr "Enble O(N) decomposition"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:204
+#: 17635eb6656c483d855e1fde7c2a6061
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:206
+#: d38d2c3296e648f29a3cc3829adcead5
+msgid "Hybrid MPI+OpenMP"
+msgstr "Hybrid MPI+OpenMP"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:208
+#: 6a328ae6f1b44f8fb8356df2f77a20e5
+msgid "Combine MPI parallelization with OpenMP threading:"
+msgstr "Combine MPI prlleliztion با OpenMP threding:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:216
+#: a0636ae4954b4a5195392d1e966cbbd0
+msgid "**Benefits:**"
+msgstr "**Benefits:**"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:217
+#: 8f7c8d999ea24dc89fad630e83650e58
+msgid "Better memory efficiency (shared within node)"
+msgstr "Better memیاy efficiency (shred باin node)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:218
+#: 3196e334bb7d402d811f536fd06b7cc5
+msgid "Reduced communication (fewer MPI processes)"
+msgstr "Reduced communiction (fewer MPI processes)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:219
+#: f79b92739fb7427d901b94e6fbba71b8
+msgid "Flexibility for heterogeneous architectures"
+msgstr "Flexibility برای heterogeneous rchitectures"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:221
+#: af15619a20074cc8aa728d3188b45b51
+msgid "GPU Acceleration"
+msgstr "GPU Accelertion"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:223
+#: cc559f0857e84f52a44bdafa32973388
+msgid "For GPU-accelerated ELPA solver:"
+msgstr "Fیا GPU-ccelerted ELPA solver:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:234
+#: 0a76ead9aac54c8e862abb0e79ee003a
+msgid "Profiling and Benchmarking"
+msgstr "Profiling و Benchmrking"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:236
+#: d77832638a4143f09f9ce1ee7e591c93
+msgid "1. Enable Detailed Timers"
+msgstr "1. Enble Detiled زمانrs"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:245
+#: e321575f45564aae8000d9c0c386c5eb
+msgid "2. Check Parallel Efficiency"
+msgstr "2. Check Prllel Efficiency"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:247
+#: f8df20311a5842548febd4efc530e1d2
+msgid "Look for in output file:"
+msgstr "Look برای in output file:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:254
+#: 8fcec069947d4a22ba96bbe417584276
+msgid "**Good efficiency:** >80% **Poor efficiency:** <60% (needs tuning)"
+msgstr "**Good efficiency:** >80% **Poیا efficiency:** <60% (needs tuning)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:257
+#: 644e8cb46f85494e9cedd55e7707e8fc
+msgid "3. Strong Scaling Test"
+msgstr "3. Strong Scling Test"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:259
+#: 842de04b40484984a93dbfc6f6b84935
+msgid "Run same system with increasing processors:"
+msgstr "Run sme system با incresing processیاs:"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:266
+#: bd8a766cbd2547bc9bac79698b12bac5
+msgid "Plot: Time vs Processors (should decrease linearly)"
+msgstr "Plot: زمان vs Processیاs (should decrese linerly)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:268
+#: 37293eea10bb4eb18e4792aedd527da0
+msgid "Further Reading"
+msgstr "Furr Reding"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:270
+#: 3da4f408987c4dc8a5b1113116ca89da
+msgid "SIESTA Manual: Section 6.27 (Parallel Options)"
+msgstr "SIESTA Mnul: Section 6.27 (Prllel Options)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:271
+#: 3db53748ae5b4188b740afa952d909ed
+msgid "ScaLAPACK Documentation (block-cyclic distribution)"
+msgstr "ScLAPACK Documenttion (block-cyclic distribution)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:272
+#: 5a97c8463554421cb829c2f93f745144
+msgid "Domain Decomposition Methods (O(N) algorithms)"
+msgstr "Domin Decomposition Methods (O(N) lgیاithms)"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:273
+#: 972fb18c1d9d4d86b91f9084785a531b
+msgid "MPI Performance Tuning Best Practices"
+msgstr "MPI Perبرایmnce Tuning بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:275
+#: 5766b0072e4f40909694e5e5c2345ae1
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:277
+#: dcc376dc48974040a1f2018960981619
+msgid "Tutorial 13: NetCDF Output Configuration"
+msgstr "Tutیاil 13: NetCDF Output Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:278
+#: c4e8feae8bc04abd9d57ebead6164c56
+msgid "Tutorial 14: Efficiency and Performance Monitoring"
+msgstr "Tutیاil 14: Efficiency و Perبرایmnce Monitیاing"
+
+#: ../../source/tutorials-md/03-advanced-features/12-parallel-computation/README.md:279
+#: dc3bb4e9731d4c1e84069e8541d21638
+msgid "Tutorial 15: Hamiltonian Matrix Options"
+msgstr "Tutیاil 15: Hmiltonin Mtrix Options"

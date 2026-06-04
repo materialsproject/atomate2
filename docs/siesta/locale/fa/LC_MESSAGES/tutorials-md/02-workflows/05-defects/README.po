@@ -1,0 +1,989 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:1
+#: 7dc7d245efa34b1fae41aedcff077a8e
+msgid "Tutorial: Defect Migration Workflows (NEB)"
+msgstr "آموزش: Defect Migrtion گردش کارs (NEB)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:3
+#: 5007ed87ac144804903afc1fa3b8289a
+msgid ""
+"**Category**: 02-workflows/05-defects **Difficulty**: Advanced **Time**: "
+"~5 min (dry-run), ~2-8 hours (full NEB calculation)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:9
+#: c3194f9af0e94a088fd69b4f8e89d0f3
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:11
+#: fbe16e40632947f2b325bc1b652b581a
+msgid ""
+"This tutorial demonstrates **defect migration** calculations using the "
+"Nudged Elastic Band (NEB) method. NEB finds minimum energy paths (MEPs) "
+"and transition states for atomic migration, diffusion, and reaction "
+"pathways. These calculations are essential for understanding ion "
+"conductivity, catalytic reactions, and defect dynamics."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:13
+#: 11a11008d81e4f9c83ffc8901a8fd91f
+msgid "**What NEB Calculations Tell You**:"
+msgstr "**Wht NEB محاسبهs Tell You**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:14
+#: 56527e9707964cf7a46de9799a4af925
+msgid "**Migration barrier (Eb)**: Energy required for defect to hop (eV)"
+msgstr "**Migrtion brrier (Eb)**: Energy required برای defect to hop (eV)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:15
+#: 686419f09ace4a9c9e589e9fe0f794e8
+msgid "**Transition state geometry**: Saddle point structure on MEP"
+msgstr "**Trnsition stte geometry**: Sddle point structure on MEP"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:16
+#: 101359ff01a44db0b1b503266cbd4c5c
+msgid "**Reaction coordinate**: Complete energy profile from initial → final"
+msgstr "**Rection coیاdinte**: Complete energy profile from initil → finl"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:17
+#: 339bd847b1d6437aa49c0cff939925ce
+msgid "**Diffusion mechanism**: Pathway and intermediate states"
+msgstr "**Diffusion mechnism**: Pthwy و intermedite sttes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:18
+#: 24feae71d0444d4f8b3cc96f6ec0dc1d
+msgid "**Pre-exponential factor**: For Arrhenius diffusion D = D₀ exp(-Eb/kT)"
+msgstr "**Pre-exponentil fctیا**: Fیا Arrhenius diffusion D = D₀ exp(-Eb/kT)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:20
+#: 5a03311010c94cfab5aa478630996026
+msgid ""
+"**Note**: This section focuses on **migration barriers** (NEB). For "
+"**defect formation energies** (vacancies, interstitials, substitutions), "
+"future tutorials are planned."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:24
+#: 9e5c02acbed741179667afcb417047e7
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:26
+#: d3c7c6ed82ce4548b02a4ca99bdc3d15
+msgid "Using `NebDirectFlowMaker` for SIESTA Lua-based NEB"
+msgstr "Using `NebDirectFlowMaker` for SIESTA Lua-based NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:27
+#: 08e12b7335ad42e8846453c200ba1589
+msgid "Using `AseNebFlowMaker` for ASE optimizer-based NEB"
+msgstr "Using `AseNebFlowMaker` for ASE optimizer-based NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:28
+#: b293d29569794f01a26e1db271fe72e7
+msgid "Using `NebVacancyExchangeFlowMaker` for atom exchange barriers"
+msgstr "Using `NebVacancyExchangeFlowMaker` for atom exchange barriers"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:29
+#: de144103d9474f19a920cfe5b33461a9
+msgid "Image generation and interpolation methods"
+msgstr "Imge genertion و interpoltion methods"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:30
+#: 36fdfff8de6f49f1bcd4cbceca7afc8d
+msgid "Convergence criteria for transition states"
+msgstr "همگرایی criteri برای trnsition sttes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:31
+#: aab3216928da4a54909d397fcf161744
+msgid "NEB checkpoint/resume capabilities"
+msgstr "NEB checkpoint/resume cpbilities"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:32
+#: 189cd75873a14aff96112182ee80764d
+msgid "Post-processing: barrier heights, reaction coordinates"
+msgstr "Post-processing: brrier heights, rection coیاdintes"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:36
+#: a4e66fd968754344a1932765cbc9922a
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:38
+#: b062ac329531456f929cb3ebcc521f8a
+msgid ""
+"**Required tutorials**: "
+"[01-basics/01-RelaxMaker](../../01-basics/01-RelaxMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:39
+#: 4926a60b710b48a48827a18d655adbf1
+msgid "**Required knowledge**:"
+msgstr "**مورد نیاز knowledge**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:40
+#: fce546cc6e0e486cbaabfd3d9f93119b
+msgid "Transition state theory"
+msgstr "Trnsition stte یاy"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:41
+#: 49463684b9974c31b6c047eacfe7c40f
+msgid "NEB method basics"
+msgstr "NEB method bsics"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:42
+#: 75174a6fbd184400aefb97524587a43e
+msgid "Defect chemistry concepts"
+msgstr "Defect chemistry concepts"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:43
+#: b989759088eb4847a9997eab37a0f1fb
+msgid ""
+"**Recommended**: [01-convergence](../01-convergence/) - Converged "
+"parameters critical for accurate barriers"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:44
+#: 8865aa9226aa4022b4a059454ec85e12
+msgid "**Structure files**: Located in [00-structures](../../00-structures/)"
+msgstr "**Structure files**: Locted in [00-structures](../../00-structures/)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:48
+#: 3a8b326387e84d70a9a153bc8fb38d7d
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:50
+#: fb56378d4d7b4642a8fa3b7ed8454b0e
+msgid "Nudged Elastic Band Method"
+msgstr "Nudged Elstic Bو Method"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:52
+#: 9e0250854c8f4188b444a54c43b2304f
+msgid "NEB finds minimum energy paths (MEPs) by:"
+msgstr "NEB finds minimum energy pths (MEPs) by:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:54
+#: b3d85bd5b92747e8a4b25bdab1fed6c8
+msgid ""
+"**Create image chain**: Interpolate N images between initial and final "
+"states"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:55
+#: eb8c72740a7f44f7a09b230d7980d3b3
+msgid ""
+"**Add spring forces**: Connect images with fictitious springs (prevent "
+"collapse)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:56
+#: c51f89e6008a4d65a88b312067c07dea
+msgid ""
+"**Project forces**: Remove spring force parallel to path, real force "
+"perpendicular to path"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:57
+#: 6939879fe2114f32b1fec5ad4be8a4c7
+msgid "**Optimize images**: Move perpendicular to path to find MEP"
+msgstr "**Optimize imges**: Move perpendiculr to pth to find MEP"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:58
+#: 45be9058e108414fbf3f5894fcaee2c3
+msgid "**Extract barrier**: Maximum energy along path = activation energy"
+msgstr "**Extrct brrier**: Mximum energy long pth = ctivtion energy"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:60
+#: 90f9ad876a2246ca8362380e766bd90d
+msgid ""
+"**Energy Expression**: $$E_{\\text{barrier}} = \\max_i E_i - "
+"E_{\\text{initial}}$$"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:63
+#: f57dad769c04437cae263d7b7253af71
+msgid "Where $E_i$ is energy of image $i$ along the path."
+msgstr "Where $E_i$ is energy of imge $i$ long  pth."
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:65
+#: 6c49757a1051452c9261559b70268bdf
+msgid "NEB Variants"
+msgstr "NEB Vrints"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:67
+#: 66d81b6172254fe4b910696bf194f449
+msgid "**Standard NEB**:"
+msgstr "**Stوrd NEB**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:68
+#: cfba0304147a43b98611ab1fd4c3605c
+msgid "All images move toward MEP simultaneously"
+msgstr "All imges move towrd MEP simultneously"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:69
+#: cafdb7ca21c54917a7cbc137ff92830e
+msgid "Good for simple barriers"
+msgstr "Good برای simple brriers"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:71
+#: 5eb70df4c60e4464ba5d91c34c1afbfb
+msgid "**Climbing Image NEB (CI-NEB)**:"
+msgstr "**Climbing Imge NEB (CI-NEB)**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:72
+#: 225ed94dde5e4adf8749b6c680ebeb2b
+msgid "Highest energy image climbs to exact saddle point"
+msgstr "Highest energy imge climbs to exct sddle point"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:73
+#: a014761fad694fa4828a84ec7c5de556
+msgid "More accurate transition state"
+msgstr "Mیاe ccurte trnsition stte"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:74
+#: 97ea6964efbf47229d3055e5f273cf80
+msgid "Slightly more expensive"
+msgstr "Slightly mیاe expensive"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:76
+#: 303e5e8fe50d4b80bc8f96953612ef1a
+msgid "**ASE vs SIESTA Lua NEB**:"
+msgstr "**ASE vs SIESTA Lu NEB**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: 335a74724b23490ab773bae1f5924957
+msgid "Aspect"
+msgstr "Aspect"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: aec94bf7ad144a5dbf10587ba18d3e32
+msgid "ASE (Python)"
+msgstr "ASE (Python)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: cd0e0d41741d4e8bae333825cc1021b0
+msgid "SIESTA Lua (FLOS)"
+msgstr "SIESTA Lu (FLOS)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: 042f704a89ca43e99fc489bc87288f40
+msgid "**Optimizer**"
+msgstr "**Optimizer**"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: f741bff357174a5486703e8e47259136
+msgid "BFGS, FIRE (ASE)"
+msgstr "BFGS, FIRE (ASE)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: 93a3834f77574b14ac0f95249071ed22
+msgid "Lua NEB script"
+msgstr "Lu NEB script"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: df4cb719f39c4a879de0efc0673b7e67
+msgid "**Flexibility**"
+msgstr "**Flexibility**"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: 591411ed071945718f69a13930a202b0
+msgid "High (custom optimizers)"
+msgstr "High (custom optimizers)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: 6137e7f1dcb7436d930ac682454aa17e
+msgid "SIESTA-native only"
+msgstr "SIESTA-ntive only"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: adbe67fc70904fb5a3c7709db3c864ea
+msgid "**Checkpoint**"
+msgstr "**Checkpoint**"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: ca2cc45cd5a540e5bb094ae0eaeea84c
+msgid "Full state saving"
+msgstr "Full stte sving"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: a1ebdbb7680c4788903e290b7543dec5
+msgid "Limited"
+msgstr "Limited"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: 944c1663527a4fe99d4f84452d16debe
+msgid "**Best for**"
+msgstr "**Best برای**"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: c23d935bafab4020b2e0afe34ba3e438
+msgid "Complex paths, CI-NEB"
+msgstr "Complex pths, CI-NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md
+#: 05f8d3ac9a304c19aabdf0f53c46ba0e
+msgid "Quick calculations"
+msgstr "Quick clcultions"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:84
+#: f71bcc9dc8a04005a79d129ae69f7860
+msgid "Number of Images"
+msgstr "Number of Imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:86
+#: f158494063ef445b8b8e0dc6b9266aa2
+msgid "**Guidelines**:"
+msgstr "**Guidelines**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:87
+#: 010987a9309a4b619357481e38b8f383
+msgid "**Simple hops** (nearest neighbor): 5-7 images"
+msgstr "**Simple hops** (nerest neighbیا): 5-7 imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:88
+#: 57f08fefbe3f48f7a916d071cf0e8d42
+msgid "**Complex paths** (multi-step): 9-13 images"
+msgstr "**Complex pths** (multi-step): 9-13 imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:89
+#: dbce3df5f0cc48a697117da0cddb1b51
+msgid "**Molecular rotations**: 7-11 images"
+msgstr "**Moleculr rottions**: 7-11 imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:90
+#: 3ad92e38dc1143abad445a672dcaf5ad
+msgid "**Rule of thumb**: Barrier peak should have ≥2 images nearby"
+msgstr "**Rule of thumb**: Brrier pek should hve ≥2 imges nerby"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:92
+#: e403166395dd4ffb9e616f3a16b84e69
+msgid ""
+"**Too few images**: Miss transition state, underestimate barrier **Too "
+"many images**: Expensive, diminishing returns"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:95
+#: 1317b6f015e045cb9d2fb589793d1207
+msgid "Convergence Criteria"
+msgstr "همگرایی Criteri"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:97
+#: f96a1eafddf04905985468f807ba48e8
+msgid "For accurate barriers:"
+msgstr "Fیا ccurte brriers:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:107
+#: 3767aefc787249d0890b1cb38590af5f
+msgid "**Typical values**:"
+msgstr "**Typicl vlues**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:108
+#: 3ff0137aea4a436592880d8f171e38c7
+msgid "Force tolerance: 0.02-0.05 eV/Å (looser than relaxation)"
+msgstr "Fیاce tolernce: 0.02-0.05 eV/Å (looser thn relxtion)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:109
+#: 95d1300e1d1b46a78ca7ef82e84f40fb
+msgid "Max iterations: 200-500 (path optimization slower)"
+msgstr "Mx itertions: 200-500 (pth optimiztion slower)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:113
+#: fd716f4a3acf42de902b3d79efeda863
+msgid "Tutorial Subdirectories"
+msgstr "Tutیاil Subdirectیاies"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:115
+#: 12272f0867154483b6a7fd79e6a065f0
+msgid "[01-NebDirectFlowMaker](01-NebDirectFlowMaker/)"
+msgstr "[01-NebDirectFlowMaker](01-NebDirectFlowMaker/)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:116
+#: ef9f7b8965e34591b3bacb8ef379a9f7
+msgid "**Description**: SIESTA Lua-based NEB calculations **Tutorial Files**:"
+msgstr "**توضیحات**: SIESTA Lu-bsed NEB clcultions **فایل‌های آموزشی**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:118
+#: 0ef03142084143fc8d929e3ceaaa6fe7
+msgid "`01_li_diffusion.py` - Li ion diffusion in MgO (5 images)"
+msgstr "`01_li_diffusion.py` - Li ion diffusion in MgO (5 images)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:119
+#: dfeca09f68ef4a6f97e7d73cafcf1e44
+msgid "`02_li_diffusion_relax.py` - With endpoint relaxation"
+msgstr "`02_li_diffusion_relax.py` - With endpoint relaxation"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:120
+#: 190aa609ae844b86af3c94b7f1880385
+msgid "`03_li_diffusion_remote.py` - HPC submission example"
+msgstr "`03_li_diffusion_remote.py` - HPC submission example"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:121
+#: 2e1ef31787114dbbbd4a0a71cba71213
+msgid "`to-test/` - Additional examples (vacancy diffusion, O vacancy, etc.)"
+msgstr "`to-test/` - Additional examples (vacancy diffusion, O vacancy, etc.)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:123
+#: 0b9b8985554e4bd5b43591ad1b17ba72
+msgid "**Features**:"
+msgstr "**ویژگی‌ها**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:124
+#: 2545b760e9a54ffdbbd10fb7aa33c8b1
+msgid "SIESTA native Lua NEB (`neb.lua`)"
+msgstr "SIESTA native Lua NEB (`neb.lua`)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:125
+#: 647a622862af4ddc81232866399cb599
+msgid "Simpler setup than ASE"
+msgstr "Simpler setup thn ASE"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:126
+#: 09646d987384458193a01656778a9688
+msgid "Automatic interpolation"
+msgstr "Automtic interpoltion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:127
+#: 45bd901b9b804cd9a9e40906f7ee4c1b
+msgid "Summary files with barrier heights"
+msgstr "Summry files با brrier heights"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:131
+#: a70bfebb4b934675bc04143109c7a620
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:133
+#: b530b0edcca2480f86679051b0ef797c
+msgid "Example 1: Basic Li Diffusion"
+msgstr "مثال 1: Bsic Li Diffusion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:166
+#: 5743b8bc82cf413ab3f723387a681fde
+msgid "Example 2: With Endpoint Relaxation"
+msgstr "مثال 2: With Endpoint Relxtion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:188
+#: 20caa28818b74db5b4b126f50355704d
+msgid "Example 3: ASE-Based NEB"
+msgstr "مثال 3: ASE-Bsed NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:206
+#: 42ce8bd1a9714d59be9a167a087f85b2
+msgid "Example 4: Vacancy Exchange"
+msgstr "مثال 4: Vcncy Exchnge"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:226
+#: ea23393206914c5e88f4ab76fd20febc
+msgid "Run Modes"
+msgstr "حالت‌های اجرا"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:228
+#: 948a8a08e07d45f1b0d4ece4cce5063d
+msgid "1. Dry-Run Mode"
+msgstr "1. Dry-Run Mode"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:234
+#: 1ef62a32f0414968b4b4415eee7f4af8
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:243
+#: c1fe10ec88f14bc3a65fbbb0ac875450
+msgid "**Check images**:"
+msgstr "**Check imges**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:249
+#: 5e49c3f55e2044e9a3d314dc32c25599
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:256
+#: 1f40218d3a564f65ac6eba19c662581f
+msgid "**What happens**:"
+msgstr "**Wht hppens**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:257
+#: 4e3fa590bc9f4514babcd71e3444a4e6
+msgid "(Optional) Relax initial and final structures"
+msgstr "(اختیاری) Relx initil و finl structures"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:258
+#: 5ec00df379a64afbbea9fa57d44c0c2f
+msgid "Generate interpolated images"
+msgstr "Generte interpolted imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:259
+#: 49e62e67f0d943859e786d62cc52e8fc
+msgid "Run NEB optimization"
+msgstr "Run NEB optimiztion"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:260
+#: 7b7c55b6ee674006bda690759f77c79e
+msgid "Extract barrier height"
+msgstr "Extrct brrier height"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:261
+#: 4f2ae5b38b3e47d1ab123f261b9bb96c
+msgid "Create `neb_summary.txt` with full analysis"
+msgstr "Create `neb_summary.txt` with full analysis"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:263
+#: 22f4617f254e4756979a99e96af63398
+msgid "**Time**: 2-8 hours depending on:"
+msgstr "**زمان**: 2-8 hours depending on:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:264
+#: 525a68f2c74c4c2fbb7d96bc73b85697
+msgid "System size (atoms in supercell)"
+msgstr "System size (toms in supercell)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:265
+#: f50af5a560cd40db99f63843e6f34d53
+msgid "Number of images (5-13 typical)"
+msgstr "Number of imges (5-13 typicl)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:266
+#: 392fe4c602f143b4a2544c31d7dfe9ab
+msgid "Convergence criteria (tighter = longer)"
+msgstr "همگرایی criteri (tighter = longer)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:267
+#: 0136e55a1db44984ac525abe63174061
+msgid "K-points and basis size"
+msgstr "K-points و bsis size"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:271
+#: 7fe224ac58b34c64859b631e1cb38ecb
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:273
+#: fc69e642aa224386ac0ea2980dbb5e90
+msgid "NEB Summary File"
+msgstr "NEB Summry فایل"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:275
+#: 40e78421514742bc86dd56360e942e99
+msgid "After calculation, check `job_neb_analysis_*/neb_summary.txt`:"
+msgstr "After calculation, check `job_neb_analysis_*/neb_summary.txt`:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:307
+#: 7ae05dd879454daa8f89508e56664e51
+msgid "Analyzing Results"
+msgstr "Anlyzing Results"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:342
+#: b7e1b5ca00564bf89d0c8990c3eb4c6d
+msgid "Diffusion Coefficient"
+msgstr "Diffusion Coefficient"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:344
+#: 6b484f66ab5e4d7da612096eb07e140c
+msgid "From barrier height, estimate diffusion coefficient:"
+msgstr "From brrier height, estimte diffusion coefficient:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:368
+#: 62fd8535e73b47969baca5fd9ce480ef
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:370
+#: 852424cf4cec42d6b47fb6841131a63f
+msgid "Issue 1: \"NEB not converging\""
+msgstr "Issue 1: \"NEB not converging\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:372
+#: 796bd4b322324cc98aedd274aaef2c41
+msgid "**Symptoms**: Exceeds max iterations, forces still high"
+msgstr "**Symptoms**: Exceeds mx itertions, برایces still high"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:374
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:408
+#: 3e775e06271f4eaf87626cfd960f07b1 fd93bdcdb76a4649997b5f6db38500fe
+msgid "**Causes & Solutions**:"
+msgstr "**Cuses & Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:376
+#: 89c2461bb30e42799fcfa9cb6109fe25
+msgid "**Images too far apart**:"
+msgstr "**Imges too fr prt**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:382
+#: d2bfe51da6924e2984820b2902371ff8
+msgid "**Initial path poor**:"
+msgstr "**Initil pth poیا**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:391
+#: ecef58f2553b49cb94d5f924a8affc29
+msgid "**Tolerance too tight**:"
+msgstr "**Tolernce too tight**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:398
+#: eba7f88d682148b0826c75d98f3e153a
+msgid "**Spring constant issues**:"
+msgstr "**Spring constnt issues**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:404
+#: c0a317d0f59043b1b61251e3335369fc
+msgid "Issue 2: \"Barrier height unrealistic\""
+msgstr "Issue 2: \"Brrier height unrelistic\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:406
+#: 5ab6b8c79ed54a4784c94978c419e322
+msgid "**Symptoms**: Eb too high/low compared to experiments"
+msgstr "**Symptoms**: Eb too high/low compred to experiments"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:410
+#: 0417b744ee554f7687be30fffe99fd0b
+msgid "**Unconverged parameters**:"
+msgstr "**Unconverged prmeters**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:411
+#: b1370ababa7f4ce3a8adba685f5c5c2a
+msgid "Run [01-convergence](../01-convergence/) first"
+msgstr "Run [01-convergence](../01-convergence/) first"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:412
+#: 99ba03588cd74298bbb4981c3d597a99
+msgid "Barriers very sensitive to k-points and basis!"
+msgstr "Brriers very sensitive to k-points و bsis!"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:420
+#: fe7ab7fa53b24d7ca68e0478bf411b11
+msgid "**Endpoints not relaxed**:"
+msgstr "**Endpoints not relxed**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:431
+#: 03bd456a0ad346be99411d34d02a1a26
+msgid "**GGA limitations**:"
+msgstr "**GGA limittions**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:432
+#: 505857584919400e8c9a646b3ac45e98
+msgid "PBE underestimates barriers by ~0.1-0.3 eV for ionic systems"
+msgstr "PBE underestimtes brriers by ~0.1-0.3 eV برای ionic systems"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:433
+#: e375e270fbd4483b94011bbbf4ae9ccf
+msgid ""
+"Consider DFT+U for transition metals (see [03-advanced-"
+"features/12-dftu](../../03-advanced-features/12-dftu/))"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:435
+#: 99e16257d9f146e5b0f8ecb4f96d45e1
+msgid "**Supercell size effects**:"
+msgstr "**Supercell size effects**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:436
+#: 6078ab15332747a1a9a38f13d52d15b4
+msgid "Defect-defect interactions if cell too small"
+msgstr "Defect-defect interctions if cell too smll"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:437
+#: 9a6b102490684d1493585c3d6058502a
+msgid "Use ≥10 Å separation between periodic images"
+msgstr "Use ≥10 Å seprtion between periodic imges"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:439
+#: 16d8bda80cff4e9d9fc285b16e023882
+msgid "Issue 3: \"Transition state at endpoint\""
+msgstr "Issue 3: \"Trnsition stte t endpoint\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:441
+#: 71d3f809631a44bc8cc6a2d422471df8
+msgid "**Symptoms**: Maximum energy at image 0 or N"
+msgstr "**Symptoms**: Mximum energy t imge 0 یا N"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:443
+#: 30f006dc02214349830c436c1f01b64d
+msgid "**Cause**: Poor initial/final structures or wrong reaction coordinate"
+msgstr "**Cuse**: Poیا initil/finl structures یا wrong rection coیاdinte"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:445
+#: a03e9a3f845b48fc8ec70b5013318437
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:447
+#: a0681da764324747aa3c21b3dd880a71
+msgid "**Verify endpoint structures**:"
+msgstr "**Verify endpoint structures**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:454
+#: 7a0597b721e34872ae73bc0f4f70e916
+msgid "**Wrong direction**:"
+msgstr "**Wrong direction**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:455
+#: 6fcc9c81841c48838d92d485907b5fca
+msgid "Swap initial ↔ final"
+msgstr "Swp initil ↔ finl"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:456
+#: cf768cccb46f403999238aaee22bb7ed
+msgid "Check that structures differ only by intended atomic position"
+msgstr "Check tht structures differ only by intended tomic position"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:458
+#: e6bab6775cc840058dc47eaa6c46bcec
+msgid "**Multiple barriers**:"
+msgstr "**Multiple brriers**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:459
+#: 0de6931c90414483850ae6994c47a962
+msgid "Path may have multiple steps"
+msgstr "Pth my hve multiple steps"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:460
+#: 637950ba98744d158a172256de13bc0b
+msgid "Run separate NEB for each elementary step"
+msgstr "Run seprte NEB برای ech elementry step"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:462
+#: 7b88d990cd234863bfcbb8081824b69a
+msgid "Issue 4: \"Images collapsing\""
+msgstr "Issue 4: \"Imges collpsing\""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:464
+#: 3d9e04b6b1354851925cc2d2972b66ef
+msgid "**Symptoms**: All images converge to same structure"
+msgstr "**Symptoms**: All imges converge to sme structure"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:466
+#: 091df053b9674868bd6ee2ea9aaae5ad
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:468
+#: 6f49cbd54e664443aab6606b32e66db2
+msgid "**Spring forces too weak** (ASE NEB):"
+msgstr "**Spring برایces too wek** (ASE NEB):"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:473
+#: 1d84d969c24641c6a36e9726538d95cc
+msgid "**Initial path degenerate**:"
+msgstr "**Initil pth degenerte**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:474
+#: 602f89c9ae784644a1748477e12a2ee5
+msgid "Verify initial ≠ final before NEB"
+msgstr "Verify initil ≠ finl beبرایe NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:475
+#: 2cff7a5b71204a63a2d51bd4a307d2c1
+msgid "Check interpolation worked correctly"
+msgstr "Check interpoltion wیاked cیاrectly"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:479
+#: de6e4ee456c44a6f86671deefbae55ee
+msgid "NEB Best Practices"
+msgstr "NEB بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:481
+#: eef5ee01d4ed4999a4a82f2dfb335f16
+msgid "1. Always Relax Endpoints First"
+msgstr "1. Alwys Relx Endpoints First"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:496
+#: aa8781a08db7410f8d6ad186dd87373d
+msgid "**Why**: Endpoint forces propagate to images → incorrect barriers"
+msgstr "**Why**: Endpoint برایces propgte to imges → incیاrect brriers"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:498
+#: 3af021786d2543dd83eced891318c03f
+msgid "2. Use Adequate Supercell"
+msgstr "2. Use Adequte Supercell"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:500
+#: bd9d654d10094d8d8be524019a22909a
+msgid "For defect migration:"
+msgstr "Fیا defect migrtion:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:515
+#: 55a59b982ee74349b6f737ab95c40600
+msgid "3. Converge NEB Parameters"
+msgstr "3. Converge NEB Prmeters"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:517
+#: b7f6b94ef7c54f3cbae0f8f785adc8e7
+msgid "Test barrier convergence with:"
+msgstr "Test brrier convergence با:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:533
+#: a833ace694ff4a7d92cf557198aaf275
+msgid "4. Checkpoint Long Calculations"
+msgstr "4. Checkpoint Long محاسبهs"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:535
+#: d49472e9d5ab40afad139dca54200076
+msgid "For NEB on HPC:"
+msgstr "Fیا NEB on HPC:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:549
+#: d229c1f70e7743a88296bb30671545f6
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:551
+#: 3b546966892c4fde89400cd6ffa8c19f
+msgid ""
+"✅ **MUST relax endpoints tightly**: Forces < 0.01 eV/Å ✅ **Adequate "
+"images**: 5-7 for simple hops, 9-13 for complex paths ✅ **Converged "
+"parameters**: k-points, basis, cutoff (see "
+"[01-convergence](../01-convergence/)) ✅ **Large supercell**: ≥10 Å "
+"separation between defect images ✅ **Reasonable tolerance**: 0.02-0.05 "
+"eV/Å (don't over-converge) ✅ **Verify initial ≠ final**: Check structures"
+" differ by intended coordinate ✅ **Use custodian**: Automatic error "
+"recovery (use_custodian=True)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:561
+#: e4752bc28d5c43e095e577ca4ee91f85
+msgid "Advanced Features"
+msgstr "پیشرفته ویژگی‌ها"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:563
+#: 973f97f34eec4055b0aa6432cb4e99b0
+msgid "Climbing Image NEB"
+msgstr "Climbing Imge NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:565
+#: 7186dad8a4dc4241b5d788f77d9584b1
+msgid "For accurate transition state geometry:"
+msgstr "Fیا ccurte trnsition stte geometry:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:577
+#: 7fcfd87964e14800a598c9a8f04989de
+msgid "**When to use**:"
+msgstr "**When to use**:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:578
+#: 83e7e744818940e899ab50f367bbd29d
+msgid "Need exact transition state structure"
+msgstr "Need exct trnsition stte structure"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:579
+#: 8c8299039c754396a7959557584f51c3
+msgid "Calculating pre-exponential factors (vibrations at TS)"
+msgstr "Clculting pre-exponentil fctیاs (vibrtions t TS)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:580
+#: 5b4d42187f4d430b83fe86408aa669be
+msgid "Comparing with experiments on TS geometry"
+msgstr "Compring با experiments on TS geometry"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:582
+#: 9ae657e7bc5a444c8102fb92c8f80481
+msgid "Variable-Cell NEB"
+msgstr "Vrible-Cell NEB"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:584
+#: 122d3fedbba048b08729d986f5676713
+msgid "For reactions involving cell changes (rare):"
+msgstr "Fیا rections involving cell chnges (rre):"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:592
+#: 41a44bb50843459f9739d214aca7bf60
+msgid "**Note**: Most defect migration occurs at fixed cell volume."
+msgstr "**توجه**: Most defect migrtion occurs t fixed cell volume."
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:594
+#: f32bb95b7ab84f40a9eeff21544a4116
+msgid "Multi-Step Reactions"
+msgstr "Multi-Step Rections"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:596
+#: 595fe7136e9a48ecb6c89c9cf55c5c14
+msgid "For complex paths (A → B → C):"
+msgstr "Fیا complex pths (A → B → C):"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:613
+#: e8f28c6b02174a2cbc9210cb7f95083d
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:615
+#: e1fd7575e6c14f519182373506da6089
+msgid "After completing NEB tutorials:"
+msgstr "After completing NEB tutیاils:"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:617
+#: 8bfd8a89bdad498790e7735e6afd7484
+msgid ""
+"**Phonons at TS**: [06-vibrational-properties](../06-vibrational-"
+"properties/) - Calculate pre-exponential factor"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:618
+#: c9e5f41f76854880ae54dc39dd241651
+msgid ""
+"**Charged defects**: Combine with [03-advanced-features/05-charged-"
+"calculations](../../03-advanced-features/05-charged-calculations/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:619
+#: 8b16a3e9ca964f9982b558a5449f4522
+msgid ""
+"**Surface diffusion**: [03-surfaces-adsorption](../03-surfaces-"
+"adsorption/) - Adsorbate migration on surfaces"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:623
+#: 0ecb126dd6e64b4ab771704f8cc42525
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:625
+#: 1d58da18c3f242d89c53deeef3901a5f
+msgid "**NEB Method**: Henkelman & Jónsson, J. Chem. Phys. 113, 9901 (2000)"
+msgstr "**NEB Method**: Henkelmn & Jónsson, J. Chem. Phys. 113, 9901 (2000)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:626
+#: 7c4806a59c97472e8caa36314af80204
+msgid "**Climbing Image**: Henkelman et al., J. Chem. Phys. 113, 9978 (2000)"
+msgstr "**Climbing Imge**: Henkelmn et l., J. Chem. Phys. 113, 9978 (2000)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:627
+#: 8600ef5e464f4522bea5c840d32e5191
+msgid "**SIESTA NEB**: SIESTA Manual, Lua scripting chapter"
+msgstr "**SIESTA NEB**: SIESTA Mnul, Lu scripting chpter"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:628
+#: 02a429c608ce43538006ade5c8c2d18d
+msgid "**ASE NEB**: ASE documentation, Transition State Tools"
+msgstr "**ASE NEB**: ASE documenttion, Trnsition Stte Tools"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:629
+#: 5f424eb90b1347d684445d85b100fd73
+msgid "**Defect Migration**: Van der Ven et al., Acc. Chem. Res. 42, 364 (2009)"
+msgstr "**Defect Migrtion**: Vn der Ven et l., Acc. Chem. Res. 42, 364 (2009)"
+
+#: ../../source/tutorials-md/02-workflows/05-defects/README.md:633
+#: 5eef57be7f30482184c5158d750da7da
+msgid ""
+"*Back to [02-workflows](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

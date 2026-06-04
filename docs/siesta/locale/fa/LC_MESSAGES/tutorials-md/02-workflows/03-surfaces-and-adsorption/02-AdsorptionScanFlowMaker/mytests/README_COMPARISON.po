@@ -1,0 +1,511 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:1
+#: 2361dde859ae48938562d1f924f2652b
+msgid "Adsorption Workflow: Three Approaches"
+msgstr "Adsیاption گردش کار: Three Approches"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:3
+#: 7420c1089dba4db0b51d96cb707fad69
+msgid ""
+"This directory contains three versions of the same adsorption workflow, "
+"showing the evolution from manual to clean, production-ready code."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:7
+#: 7a870010e59e498ba60e037c4c760712
+msgid "File Comparison"
+msgstr "فایل Comprison"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:9
+#: 2ca03aa1cd65482fb625f36cbf748b4b
+msgid "1. `04_custom_parameters_remote.py` (Manual Approach)"
+msgstr "1. `04_custom_parameters_remote.py` (Manual Approach)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:11
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:45
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:78
+#: 2625c5bb0de04d589c4ec16b8b4361e4 2ad4cc0f557846f6b384da4b0a817918
+#: 4c7b01e4c1d245d394a089c4fdef6245
+msgid "**What it does**:"
+msgstr "**Wht it does**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:12
+#: ad892a559f7941cdbd90c3b21251c2e5
+msgid "Uses `StaticSetGenerator` explicitly"
+msgstr "Uses `StaticSetGenerator` explicitly"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:13
+#: 387385a97e744f59beb4e941cbf2bd93
+msgid "Manually loops through all jobs to set resources"
+msgstr "Mnully loops through ll jobs to set resources"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:14
+#: 00acc89f1d6f4e3cbc730d7f4a110fc5
+msgid "Hardcoded if/else logic for resource assignment"
+msgstr "Hrdcoded if/else logic برای resource ssignment"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:16
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:50
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:83
+#: 2642d53189aa42c6881fdad8673c2424 8aa181a9156a42688dac8af1d2b640b2
+#: 8f9ddf91ddd14ba89c770f924e9188e2
+msgid "**Code characteristics**:"
+msgstr "**Code chrcteristics**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:37
+#: 53556a9208a44324bfbd97ac763967ce
+msgid ""
+"**Lines of code**: ~237 lines **Pros**: Explicit control **Cons**: "
+"Verbose, repetitive, hard to maintain"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:43
+#: 8d3d2015aefd46ba90957c53eb0a86d3
+msgid "2. `05_powerup_resources.py` (Powerup for Resources)"
+msgstr "2. `05_powerup_resources.py` (Powerup for Resources)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:46
+#: 1eb52255c01e46659492172fa1c2ac53
+msgid "Still uses `StaticSetGenerator` explicitly"
+msgstr "Still uses `StaticSetGenerator` explicitly"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:47
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:80
+#: 580180753b36442d8f149613aab7ef1c aa3a6bca9571420cb5674ee1bffe02b9
+msgid "Uses `update_jobflow_resources()` powerup for resource management"
+msgstr "Uses `update_jobflow_resources()` powerup for resource management"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:48
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:191
+#: 20d6ef7d88514c639b7629c9662ff154 329956b315e54e0d970e8b7175c0ddd0
+msgid "Pattern-based resource assignment"
+msgstr "Pttern-bsed resource ssignment"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:70
+#: ced0e707f8fd497a9afbf93ce6e8a51b
+msgid ""
+"**Lines of code**: ~220 lines (17 lines saved) **Pros**: Clean resource "
+"management, pattern-based **Cons**: Still verbose StaticSetGenerator "
+"setup"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:76
+#: d08a7b9b67784f08bc2d4ceb9a54b9e8
+msgid "3. `06_powerup_with_scf_maker.py` (✨ BEST APPROACH ✨)"
+msgstr "3. `06_powerup_with_scf_maker.py` (✨ BEST APPROACH ✨)"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:79
+#: 76273dd385ba4884a7cd1d56addc8e79
+msgid "Uses `StaticMaker.scf(user_params=...)` - no manual generator!"
+msgstr "Uses `StaticMaker.scf(user_params=...)` - no manual generator!"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:81
+#: 9700c55bb5e740d98b8d0998cdbc2875
+msgid "Clean, production-ready code"
+msgstr "Clen, production-redy code"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:106
+#: cb0cf7b89e1445ecbe6ef3d2b138f6e9
+msgid "**Lines of code**: ~205 lines (32 lines saved vs #1) **Pros**:"
+msgstr "**Lines of code**: ~205 lines (32 lines sved vs #1) **Pros**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:108
+#: 125f0a440daa4823a8f7205a5211f779
+msgid "✅ Cleanest code"
+msgstr "✅ Clenest code"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:109
+#: 5ecbb273eb124d75a1457154ea746371
+msgid "✅ No manual StaticSetGenerator"
+msgstr "✅ No mnul StticSetGenertیا"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:110
+#: 6698d85f984d436bb15df1f2360dc2ff
+msgid "✅ Direct parameter passing"
+msgstr "✅ Direct prmeter pssing"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:111
+#: 2d81918b4cf64369a480440bc181f730
+msgid "✅ Pattern-based resources"
+msgstr "✅ Pttern-bsed resources"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:112
+#: 65dcdd9817384fda8c70ec205b38bf74
+msgid "✅ Production-ready"
+msgstr "✅ Production-redy"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:114
+#: 0e54cf59167c49fca3f1338b81e715c5
+msgid "**Cons**: None!"
+msgstr "**Cons**: None!"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:118
+#: e0b485b782904e6482880e0de34fb8d9
+msgid "Side-by-Side Comparison"
+msgstr "Side-by-Side Comprison"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 09fd3477d5ed4ec7b2390bed93112c12
+msgid "Aspect"
+msgstr "Aspect"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: f5d8ff656923495cacbe4262cff6eb16
+msgid "#1 Manual"
+msgstr "#1 Mnul"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 25872a94668b44ee9bf29db2061fd1e2
+msgid "#2 Powerup"
+msgstr "#2 Powerup"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 1dfcdb0191c34905aacbc2293b5473bf
+msgid "#3 Best ✨"
+msgstr "#3 Best ✨"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 1722e86e13704311bf8e8554654da084
+msgid "**Lines of code**"
+msgstr "**Lines of code**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 95cfbf26137c448483205d7051756877
+msgid "237"
+msgstr "237"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 82a351dea35e4354b387c69637ad6e28
+msgid "220"
+msgstr "220"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: c59b456931cb46388658d175b126e1a9
+msgid "205"
+msgstr "205"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 5d42699ce44a4da1a965e6a11e8b5d69
+msgid "**Maker setup**"
+msgstr "**Maker setup**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 43b31c5320bb4118b4298ae33364580a 54c0366f50ce436f924907607f66377b
+msgid "StaticSetGenerator + StaticMaker"
+msgstr "StaticSetGenerator + StaticMaker"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 5272438512474102a33fc497e54380ff
+msgid "StaticMaker.scf()"
+msgstr "StaticMaker.scf()"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: e4cc9cc80a234088bb7e22753e82bf56
+msgid "**Resource mgmt**"
+msgstr "**Resource mgmt**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 6e2b84cea70542b3a997a06313fc7752
+msgid "Manual loop"
+msgstr "Mnul loop"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 8b99245822a442fbb7da1eeae5eead22 a551077ae70647e1a5f09cfa9ef1124d
+msgid "Powerup"
+msgstr "Powerup"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 2be3e32f35d34d249a7d215aa701e493
+msgid "**Readability**"
+msgstr "**Redbility**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 34dfac536f364312b624ced87e347458 68b3218984b44c37b36c44c4a7da7d2b
+msgid "Low"
+msgstr "Low"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 25cbb02651124100b3d04b9d32489cf7 8e157e46ea86440aa7de41415b6bf3eb
+msgid "Medium"
+msgstr "Medium"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 88c744e2942d4528af855a4d382077cc a26a8a390ace4b8ba2a8b9a3676a68ac
+msgid "High"
+msgstr "High"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: d3e8ed37f5ea451fa54fb7843f719464
+msgid "**Maintainability**"
+msgstr "**Mintinbility**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 099fb2986fce41c8b5865266ee6524da
+msgid "**Code smell**"
+msgstr "**Code smell**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 67a70b921b064ae38a042a5c27c584ec
+msgid "Yes"
+msgstr "Yes"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: a19a2e335d534b1eaf27d9a9a2ef5efe
+msgid "Some"
+msgstr "Some"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md
+#: 7cfd143b609041199e718bd54dd7d83c
+msgid "None"
+msgstr "None"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:131
+#: 4d017c57e833421386714e29cbb31f26
+msgid "Evolution Summary"
+msgstr "Evolution Summry"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:133
+#: d43b040988904b2696dad026a5cf8da5
+msgid "Phase 1 → Phase 2: Powerup for Resources"
+msgstr "Phse 1 → Phse 2: Powerup برای Resources"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:134
+#: e108c92a458246cf8e8ef9e117a2ea1d
+msgid ""
+"**Improvement**: Pattern-based resource management **Lines saved**: 17 "
+"lines **Key change**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:146
+#: 630759e77e8a4bdaa3ef3b9cd1092a79
+msgid "Phase 2 → Phase 3: StaticMaker.scf()"
+msgstr "Phase 2 → Phase 3: StaticMaker.scf()"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:147
+#: 9544f9e63b55491ca03f42f47c158e88
+msgid ""
+"**Improvement**: Direct parameter passing **Lines saved**: 15 more lines "
+"(32 total) **Key change**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:161
+#: 93269518583641b796902208d7b15d36
+msgid "Recommendations"
+msgstr "Recommendtions"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:163
+#: 80bae1e0311f4008807fd338597fabfb
+msgid "For Production Code"
+msgstr "Fیا Production Code"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:164
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:176
+#: 374f10a559fc4d0086a5ca263a92aea2 db5825abf66444e696dc35056d57979b
+msgid "**Use**: `06_powerup_with_scf_maker.py` approach"
+msgstr "**Use**: `06_powerup_with_scf_maker.py` approach"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:165
+#: 88cab973d2fe40918a5a6db208cae860
+msgid "Cleanest code"
+msgstr "Clenest code"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:166
+#: c38e48a50db047dfa969c95f02f2245f
+msgid "Easiest to maintain"
+msgstr "Esiest to mintin"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:167
+#: 7f787eafdaa44f3689e60e3f52296cf8
+msgid "Best practices"
+msgstr "Best prctices"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:169
+#: 754b9565339542b29d57dc5aed3ef78e
+msgid "For Learning"
+msgstr "Fیا Lerning"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:170
+#: 971b5bcccb4a478889eb265d85c028e4
+msgid "**Study in order**:"
+msgstr "**Study in یاder**:"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:171
+#: ae2fb0e8890c481fb0c765d1d49ccbe8
+msgid "`04_custom_parameters_remote.py` - Understand the manual approach"
+msgstr "`04_custom_parameters_remote.py` - Understand the manual approach"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:172
+#: 6b379c4ddc264c78bfe95eeb9a6bff8d
+msgid "`05_powerup_resources.py` - See powerup benefits"
+msgstr "`05_powerup_resources.py` - See powerup benefits"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:173
+#: 7c6f7701635e4bc08f95cf480aeafcea
+msgid "`06_powerup_with_scf_maker.py` - Learn the best practices"
+msgstr "`06_powerup_with_scf_maker.py` - Learn the best practices"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:175
+#: 157b1280e26742ba9a0e11f9256dd312
+msgid "For Quick Prototyping"
+msgstr "Fیا Quick Prototyping"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:177
+#: c835c726ad2e499885d0256c308ebcd7
+msgid "Fast to write"
+msgstr "Fst to write"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:178
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:198
+#: 3367a50615614047b4e7a5f06b26ff41 8d85a0e8665b411cbf48ec259222b3fe
+msgid "Easy to modify"
+msgstr "Esy to modify"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:179
+#: 18e987a57eeb4ae39325524a85e25598
+msgid "Clear and concise"
+msgstr "Cler و concise"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:183
+#: 78ed7b83c989411a947b9b4e5a0358f5
+msgid "Key Takeaways"
+msgstr "Key Tkewys"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:185
+#: fdc488e1bbcd49ba9686579623fbb598
+msgid "**Use `StaticMaker.scf(user_params=...)`**"
+msgstr "**Use `StaticMaker.scf(user_params=...)`**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:186
+#: f6642c56e7114c4e97cfd2f08a92d9f5
+msgid "No need for manual `StaticSetGenerator`"
+msgstr "No need for manual `StaticSetGenerator`"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:187
+#: d231268dd8c342c693de86002f2cacb4
+msgid "Direct parameter passing"
+msgstr "Direct prmeter pssing"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:188
+#: 60a277b21de54d988760078645d51ea9
+msgid "Cleaner code"
+msgstr "Clener code"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:190
+#: f0fdaddf2cc247d28d0b00ef44e13766
+msgid "**Use `update_jobflow_resources()` powerup**"
+msgstr "**Use `update_jobflow_resources()` powerup**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:192
+#: a4afb01a46f949c88805f8dbdff2c496
+msgid "No manual loops"
+msgstr "No mnul loops"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:193
+#: 36c9d4fe85a747dd946755b9ce8d0b10
+msgid "Verbose output for debugging"
+msgstr "Verbose output برای debugging"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:195
+#: efc5b275a70b4270a0ab0e34e7ce2c51
+msgid "**Configuration-driven design**"
+msgstr "**Configurtion-driven design**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:196
+#: fae3bb763e3b4380bf55a799d2ee073f
+msgid "Define all parameters in `CONFIG` dict"
+msgstr "Define all parameters in `CONFIG` dict"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:197
+#: 6487e6adb52a400788cb67c85044586e
+msgid "Separate config from logic"
+msgstr "Seprte config from logic"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:200
+#: 10b7b9c9a9864d88844527d20c5d26d4
+msgid "**Verbose mode is your friend**"
+msgstr "**Verbose mode is your friend**"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:201
+#: 5684dc8f90fb469492df20e2e3c5fcd6
+msgid "Always use `verbose=True` in `update_jobflow_resources()`"
+msgstr "Always use `verbose=True` in `update_jobflow_resources()`"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:202
+#: 1d8ab61e6e414b218fc80aa06cd7ff12
+msgid "See exactly which jobs get which resources"
+msgstr "See exctly which jobs get which resources"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:203
+#: 25a6f9b3c9fa43178cfdccc384a15ad6
+msgid "Debug resource assignments easily"
+msgstr "Debug resource ssignments esily"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:207
+#: 962c6641a3de48a1a0158c4a6ee11d82
+msgid "Migration Guide"
+msgstr "Migrtion Guide"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:209
+#: c2f6a79a1265499195132b6de1ca10d1
+msgid ""
+"If you have code like `04_custom_parameters_remote.py`, migrate to "
+"`06_powerup_with_scf_maker.py`:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:211
+#: ecb906dac8284563ac1d279625b51499
+msgid "**Step 1**: Replace StaticSetGenerator with StaticMaker.scf()"
+msgstr "**Step 1**: Replace StaticSetGenerator with StaticMaker.scf()"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:221
+#: 2d4945fb46da4f0ca2fef21f2cbcfbac
+msgid "**Step 2**: Replace manual resource loop with powerup"
+msgstr "**Step 2**: Replce mnul resource loop با powerup"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:232
+#: 0a10b2f212f04dfcacdf81ea468c0301
+msgid "**Step 3**: Test and verify"
+msgstr "**Step 3**: Test و verify"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:240
+#: 5c89b35c23f5497cab6d6f3f9e3a626e
+msgid "Related Documentation"
+msgstr "Relted Documenttion"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:242
+#: 912dfc2591fb4339b9affbef69cd0e93
+msgid "**StaticMaker API**: Check docstrings with `help(StaticMaker.scf)`"
+msgstr "**StaticMaker API**: Check docstrings with `help(StaticMaker.scf)`"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:243
+#: fa3318761c694772a26fcaa78b9165e6
+msgid "**Powerup functions**: See `atomate2.siesta.powerups` module"
+msgstr "**Powerup functions**: See `atomate2.siesta.powerups` module"
+
+#: ../../source/tutorials-md/02-workflows/03-surfaces-and-adsorption/02-AdsorptionScanFlowMaker/mytests/README_COMPARISON.md:247
+#: d25a6c78309949bc9d15c1f4e7fbbc80
+msgid ""
+"**Bottom line**: Use approach #3 (`06_powerup_with_scf_maker.py`) for all"
+" new code! 🎉"
+msgstr ""

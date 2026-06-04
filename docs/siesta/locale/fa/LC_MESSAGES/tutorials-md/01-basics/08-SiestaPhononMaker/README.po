@@ -1,0 +1,765 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:1
+#: 7fdf57de1d41479eaea381276f25ec3e
+msgid "Tutorial: Native SIESTA Phonon Calculations with SiestaPhononMaker"
+msgstr "Tutorial: Native SIESTA Phonon Calculations with SiestaPhononMaker"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:3
+#: ae53eee67a444de297423d18ff91aee7
+msgid ""
+"**Category**: 01-basics/08-SiestaPhononMaker **Difficulty**: Intermediate"
+" **Time**: ~5 min (dry-run), ~30-60 min (full calculation)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:9
+#: 445227d226564f1f843b551dd8f69082
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:11
+#: 3da0adc98cd54a6c9f3d97359e6e881b
+msgid ""
+"This tutorial demonstrates phonon calculations using SIESTA's native "
+"force constants approach via `SiestaPhononMaker`. Unlike `PhonopyMaker` "
+"which uses finite displacements with Phonopy, this method uses SIESTA's "
+"built-in capability to compute force constants directly."
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:13
+#: bd96b2f0ead7436ba5f22e713bc49f61
+msgid "**When to Use Native SIESTA Phonons**:"
+msgstr "**When to Use Ntive SIESTA فونون‌ها**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:14
+#: b1345dd1cc7647bdb55341d351fb8e25
+msgid "Quick phonon calculations for small systems"
+msgstr "Quick phonon clcultions برای smll systems"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:15
+#: 525c8bc648424642a49ca657895d409b
+msgid "SIESTA-specific phonon features"
+msgstr "SIESTA-specific phonon fetures"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:16
+#: f90cf80541d444bb935bfd87c1f54a08
+msgid "No external Phonopy dependency"
+msgstr "No externl Phonopy dependency"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:17
+#: 769af82c3fcd460ebf238153959c999e
+msgid "Comparison with Phonopy results"
+msgstr "Comprison با Phonopy results"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:19
+#: 5a6c2b8bee90487391ca1143c2127cfe
+msgid "**When to Use PhonopyMaker Instead** (Recommended):"
+msgstr "**When to Use PhonopyMaker Instead** (Recommended):"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:20
+#: 4bc4ce8b3eb74ebaaded7e972ead08fe
+msgid "Complex phonon workflows (QHA, Grüneisen)"
+msgstr "Complex phonon wیاkflows (QHA, Grüneisen)"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:21
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:327
+#: bc4d91653e3e452082c58872d8cb352b d6678e3ccb184feea76661493b1ab719
+msgid "Automatic plotting"
+msgstr "Automtic plotting"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:22
+#: 4c184ae61135498ca500ff11fdb8de90
+msgid "Better post-processing tools"
+msgstr "Better post-processing tools"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:23
+#: ba91302632e44c05b6cd82d2428763c8
+msgid "Industry-standard Phonopy ecosystem"
+msgstr "Industry-stوrd Phonopy ecosystem"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:27
+#: df4c55238ee041dbafacd28247f3e373
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:29
+#: 1ac3d811d0d6425cb199db60cce08ceb
+msgid "Using `SiestaPhononMaker` for native SIESTA phonons"
+msgstr "Using `SiestaPhononMaker` for native SIESTA phonons"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:30
+#: fdf385972f9e433c94ee2406deab5d8d
+msgid "SIESTA's force constant calculation method"
+msgstr "SIESTA's برایce constnt clcultion method"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:31
+#: 7da5e22bbe164cde9446c16029cb1dfc
+msgid "MD.TypeOfRun = \"phonon\" mode"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:32
+#: 4b3eecd2a45e4eabaccc107fc8dfbee0
+msgid "Analyzing SIESTA phonon output files"
+msgstr "Anlyzing SIESTA phonon output files"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:33
+#: 8f2553ce7b9a4391b76d57071db42127
+msgid "Comparison with PhonopyMaker approach"
+msgstr "Comparison with PhonopyMaker approach"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:37
+#: cdd976ded4d44d75adc6ebc5bb60d9ee
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:39
+#: aa95d4cea8e34cab9f0c5d3fda8d543c
+msgid ""
+"**Required tutorials**: [01-RelaxMaker](../01-RelaxMaker/), "
+"[07-PhonopyMaker](../07-PhonopyMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:40
+#: c55673894f9645a886dccf2ca1845274
+msgid "**Required knowledge**: Phonon basics, force constants"
+msgstr "**مورد نیاز knowledge**: فونون bsics, برایce constnts"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:41
+#: 219b6aca83024abc9a92a4fd6dacb850
+msgid "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up"
+msgstr "**SIESTA configuration**: `~/.atomate2siesta.yaml` set up"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:42
+#: db9bb496a84543d3bc2201fbf7899159
+msgid ""
+"**Comparison recommended**: Complete "
+"[07-PhonopyMaker](../07-PhonopyMaker/) first"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:46
+#: 17757e77a6424926b09bec015d320721
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:48
+#: 2b0dac7d0781483bbea754046461066f
+msgid "Native SIESTA Phonon Method"
+msgstr "Ntive SIESTA فونون Method"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:50
+#: 9af4b385ad9d47598452d0ea546cc5f9
+msgid "SIESTA computes force constants using:"
+msgstr "SIESTA computes برایce constnts using:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:52
+#: 70d426e7d1fe46daa0c96e881f3a12e6
+msgid "**Self-consistent calculation**: Get converged electronic structure"
+msgstr "**Self-consistent clcultion**: Get converged electronic structure"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:53
+#: bdb44086fb7d469ea34c9798ed56c077
+msgid "**Force constant calculation**: SIESTA perturbs each atom internally"
+msgstr "**Fیاce constnt clcultion**: SIESTA perturbs ech tom internlly"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:54
+#: a05ff7b54bac45a3853a1f2f93bd2144
+msgid "**Output**: Harmonic force constants → `.FC` file"
+msgstr "**Output**: Harmonic force constants → `.FC` file"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:56
+#: 3b82c072c0744eef8e931458574df403
+msgid "**Key FDF Parameters**:"
+msgstr "**Key FDF Prmeters**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:66
+#: cb66bede5c94403c94bc683e1acd1ab6
+msgid "Comparison: Native SIESTA vs Phonopy"
+msgstr "Comprison: Ntive SIESTA vs Phonopy"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: e2c80e92bbd54f159c74151c0a74cf26
+msgid "Aspect"
+msgstr "Aspect"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 3961419410a04a59bbcf072963c291ca
+msgid "Native SIESTA"
+msgstr "Ntive SIESTA"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: a40c7e17b11948af9d2ea363930dc244
+msgid "Phonopy (PhonopyMaker)"
+msgstr "Phonopy (PhonopyMaker)"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 828e95ec617d40db929719f8b68f3578
+msgid "**Method**"
+msgstr "**Method**"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 1d75782c32904f30b8b93e5fd0a3727e
+msgid "Internal force constants"
+msgstr "Internl برایce constnts"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: f1f19d1a750341299f4e6c5751a64df5
+msgid "Finite displacements"
+msgstr "Finite displcements"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 23c832f7cf2546bd83bfe56f9e5046c5
+msgid "**Calculations**"
+msgstr "**محاسبهs**"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 9cfdb6fe10cb44528e75fa03dad87e71
+msgid "~10-20 (fewer)"
+msgstr "~10-20 (fewer)"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 6e5007ed09f74271884b6caacf6b93c5
+msgid "~20-50 (more)"
+msgstr "~20-50 (mیاe)"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 3923c61165ad44099b46033b939b2570
+msgid "**Post-processing**"
+msgstr "**Post-processing**"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 6e84abb92f894e5e9f3fcbdc2507325f
+msgid "Manual"
+msgstr "Mnul"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 32372adff625494d8c89209b45ff55f9
+msgid "Automatic (3 plots)"
+msgstr "Automtic (3 plots)"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: e71a0802677841558ae3d3256ce97af4
+msgid "**QHA/Grüneisen**"
+msgstr "**QHA/Grüneisen**"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: a3b6fcdf6c7946f7a84b0253ad34e2b1
+msgid "Manual integration"
+msgstr "Mnul integrtion"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: bdc9830bfe6b4e7dadf99e64751cf541
+msgid "Built-in workflows"
+msgstr "Built-in wیاkflows"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: c1de8a10f9be43179650d86e9117ecc0
+msgid "**Supercell**"
+msgstr "**Supercell**"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: af28bc8f98634578a197a6f0d005b517
+msgid "Generated internally"
+msgstr "Generted internlly"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: d092b8a89bfe46f282a942c1734311de
+msgid "Explicit control"
+msgstr "Explicit control"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: cd84146a84b84ccb9b0089afac8c2d3b
+msgid "**Output format**"
+msgstr "**Output برایmt**"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: af7e6a4598d641a3be881a258370b423
+msgid "SIESTA .FC files"
+msgstr "SIESTA .FC files"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: d6b474051a4342389ff537a7c2d4b158
+msgid "Phonopy YAML/HDF5"
+msgstr "Phonopy YAML/HDF5"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: b6f1eb45dbd74c95aff4ac21616d5408
+msgid "**Ecosystem**"
+msgstr "**Ecosystem**"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: 6e8f4b48227f47d4bc42242d1c2b0a8e
+msgid "SIESTA-specific"
+msgstr "SIESTA-specific"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md
+#: b0487fa57fb14d07a765ad44a090a532
+msgid "Standard (works with ASE, etc.)"
+msgstr "Stوrd (wیاks با ASE, etc.)"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:78
+#: e1781eaef1cd451b8135a99c8df3c746
+msgid ""
+"**Recommendation**: Use `PhonopyMaker` for production workflows, "
+"`SiestaPhononMaker` for quick checks or SIESTA-specific features."
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:82
+#: 8ec682cd2c784a6f8a3002611f847abd
+msgid "Tutorial Files"
+msgstr "فایل‌های آموزشی"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:84
+#: ef9696f1d2514282a489134b11d8d018
+msgid "This directory contains:"
+msgstr "This directیاy contins:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:86
+#: 1245ff63a5f6477a87e00b5642e64f4f
+msgid "**`02_basic.py`** - Basic native SIESTA phonon calculation"
+msgstr "**`02_basic.py`** - Basic native SIESTA phonon calculation"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:90
+#: 4c2cb94b317741a09ca2b199b7ad9a52
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:92
+#: 84eb83fbca4b42328de8e6a3423ea521
+msgid "Example 1: Basic Native Phonon Calculation"
+msgstr "مثال 1: Bsic Ntive فونون محاسبه"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:119
+#: bd3a9ded23f64860abe2472202672e1c
+msgid "Example 2: With Tight Convergence"
+msgstr "مثال 2: With Tight همگرایی"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:137
+#: 3740bb0db293418ba07a896c72da9dad
+msgid "Example 3: After Relaxation"
+msgstr "مثال 3: After Relxtion"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:164
+#: feebf2c29d804416a6618a11b0cbb1ba
+msgid "Run Modes"
+msgstr "حالت‌های اجرا"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:166
+#: 6f9b716a58a042cbb86ecac9c9a83ee7
+msgid "1. Dry-Run Mode"
+msgstr "1. Dry-Run Mode"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:172
+#: 922beaaf03cc47afa8bc4bb955501377
+msgid "**Check parameters**:"
+msgstr "**Check prmeters**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:178
+#: 7c8b8a472dbc4eba93108f26229fa901
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:185
+#: 47347ecbe7394643b3ffe19e2b0f6e0b
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:195
+#: a650019db56c4501a66563e3affc3ed8
+msgid "**Time**: 30-60 minutes for small systems (faster than Phonopy)"
+msgstr "**زمان**: 30-60 minutes برای smll systems (fster thn Phonopy)"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:199
+#: bc78082bbb6d4940bb747b65a9d61ef7
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:201
+#: 1e40d4e66d0e4ca98b0b7dd87b88bfa9
+msgid "Force Constants File (.FC)"
+msgstr "Fیاce Constnts فایل (.FC)"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:203
+#: 356b198dd3d54329944b04c997ddc7bf
+msgid "SIESTA outputs force constants in `.FC` format:"
+msgstr "SIESTA outputs force constants in `.FC` format:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:212
+#: f6f3d44883b94e68aaeefbe827ab1f89
+msgid "Analyzing Force Constants"
+msgstr "Anlyzing Fیاce Constnts"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:246
+#: 93c6872a9d7c4077baa6257f6465976d
+msgid "Computing Phonon Dispersion"
+msgstr "Computing فونون Dispersion"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:248
+#: 0b1ffd9bd10f4fea83b9504ecdde107e
+msgid "SIESTA can compute phonon bands if requested:"
+msgstr "SIESTA cn compute phonon bوs if requested:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:266
+#: f504b9900d8a440199de10fd9240f87e
+msgid "Then analyze:"
+msgstr "Then nlyze:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:274
+#: 471a58599d2b4463a236f2dc68ef0df0
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:276
+#: 154ca9ebc4e249408e5a881d9f17ee7a
+msgid "Issue 1: \"Force constants don't satisfy sum rule\""
+msgstr "Issue 1: \"Fیاce constnts don't stisfy sum rule\""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:278
+#: 841bbca09ad94744a1a8550c95c5cd69
+msgid "**Symptoms**: Large residual in sum rule check"
+msgstr "**Symptoms**: Lrge residul in sum rule check"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:280
+#: 705c0890383647ba85714292e8933178
+msgid "**Causes & Solutions**:"
+msgstr "**Cuses & Solutions**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:282
+#: 0ed2efde584c44fa894abac142f23419
+msgid "**Electronic structure not converged**:"
+msgstr "**Electronic structure not converged**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:290
+#: f0105eec67334f8bb7993088f695413e
+msgid "**K-points insufficient**:"
+msgstr "**K-points insufficient**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:295
+#: fc8dcaaab4ae4fd3a4495886e49d3977
+msgid "**Structure not relaxed**:"
+msgstr "**Structure not relxed**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:296
+#: cd2e57d9f84c45d197cc1491011e9341
+msgid "Always relax with tight tolerance first"
+msgstr "Alwys relx با tight tolernce first"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:297
+#: 02f4dc3c25944b28af6efca990f1bcae
+msgid "Check forces < 0.01 eV/Å"
+msgstr "Check برایces < 0.01 eV/Å"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:299
+#: d490786358804820b815f61181002d9a
+msgid "Issue 2: \".FC file not generated\""
+msgstr "Issue 2: \".FC file not generted\""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:301
+#: 351f2dfe876a478b9fe25b06e1b2983e
+msgid "**Cause**: MD.TypeOfRun not set correctly"
+msgstr "**Cuse**: MD.TypeOfRun not set cیاrectly"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:303
+#: 3480fc6bde5142f498b63994d4bbb0c1
+msgid "**Solution**: Verify in siesta.fdf"
+msgstr "**Solution**: Verify in siest.fdf"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:309
+#: 0f7aab85c12745c9b01776653074b81b
+msgid "Issue 3: \"Phonon frequencies imaginary\""
+msgstr "Issue 3: \"فونون frequencies imginry\""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:311
+#: 2d62b294a1bd44fa8dc59247fc056ae7
+msgid ""
+"**Same as PhonopyMaker** - see [07-PhonopyMaker](../07-PhonopyMaker/) for"
+" solutions:"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:312
+#: 3613694dc730468b95718ff3c1d080b4
+msgid "Structure not fully relaxed"
+msgstr "Structure not fully relxed"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:313
+#: a4b048f914c74397ab28674bb296ebe8
+msgid "Force calculation not converged"
+msgstr "Fیاce clcultion not converged"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:314
+#: 03bf7c4cbefd48b0898ac04a5cf05c4c
+msgid "Need tighter parameters"
+msgstr "Need tighter prmeters"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:316
+#: 9d2703302b604dd6adcf23f4040e9bbd
+msgid "Issue 4: \"How to plot phonon bands?\""
+msgstr "Issue 4: \"How to plot phonon bوs?\""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:318
+#: c5189d9f83f941f085d01522b4aa6967
+msgid "**Challenge**: Native SIESTA output requires manual plotting"
+msgstr "**Chllenge**: Ntive SIESTA output requires mnul plotting"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:320
+#: 22659d0b6ab04e25bf6f68e1913b1b04
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:322
+#: 13d39cb5a6014296af605c2a42784632
+msgid "**Convert to Phonopy format**:"
+msgstr "**Convert to Phonopy برایmt**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:323
+#: 6be6da1cf0fa4944b2209198daa28e7b
+msgid "Use utility scripts to convert .FC → FORCE_CONSTANTS"
+msgstr "Use utility scripts to convert .FC → FORCE_CONSTANTS"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:324
+#: c38f6826d7f049b590a13a1a1011ddb1
+msgid "Then use Phonopy for plotting"
+msgstr "Then use Phonopy برای plotting"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:326
+#: 7a27cd4f31f3423babd20ed7644b0b7e
+msgid "**Use PhonopyMaker instead** (Recommended):"
+msgstr "**Use PhonopyMaker instead** (Recommended):"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:328
+#: d23913e1afd74a8ea29803741b7fe78f
+msgid "Better post-processing"
+msgstr "Better post-processing"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:329
+#: 8854b049af634b0fa70bb6d185174e77
+msgid "See [07-PhonopyMaker](../07-PhonopyMaker/)"
+msgstr "See [07-PhonopyMaker](../07-PhonopyMaker/)"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:331
+#: c439f214cc8b4791b36df35b7dd0f97d
+msgid "**Manual plotting**:"
+msgstr "**Mnul plotting**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:340
+#: 3aa23df731ad4671a6c6940749cf09df
+msgid "Comparison Example"
+msgstr "Comprison مثال"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:342
+#: be86015872e14dc99c09e03f5a088414
+msgid "Run Both Methods"
+msgstr "Run Both Methods"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:365
+#: 46905b4a21aa40839eba5724c88f9660
+msgid "**Compare**:"
+msgstr "**Compre**:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:366
+#: 95de2e077c2b4796bcdd121a0bc9a495
+msgid "Calculation time"
+msgstr "محاسبه time"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:367
+#: 8a9554fa960749e8ae6085b154d8ce00
+msgid "Force constant accuracy"
+msgstr "Fیاce constnt ccurcy"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:368
+#: 5580bc392da94a4dab43b27394be0bf0
+msgid "Phonon frequencies"
+msgstr "فونون frequencies"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:369
+#: 6744d2bb8e8f41aaaf6856f0785778a4
+msgid "Ease of analysis"
+msgstr "Ese of nlysis"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:371
+#: 577b176535434f8cb3e16debe494b434
+msgid ""
+"**Expected**: Frequencies should agree within ~5%, but Phonopy provides "
+"better post-processing."
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:375
+#: 13cd320553d7465aa1f6fad061a98538
+msgid "When to Use Native SIESTA Phonons"
+msgstr "When to Use Ntive SIESTA فونون‌ها"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:377
+#: 638831144df04748acedefdf323c7dc6
+msgid "Good Use Cases ✓"
+msgstr "Good Use Cses ✓"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:379
+#: bf49a1b1949f470791a2aeb7d04a27f7
+msgid "**Quick checks**: Fast phonon calculation for stability"
+msgstr "**Quick checks**: Fst phonon clcultion برای stbility"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:380
+#: 74d3d390c68f48229231aa8485b45acc
+msgid "**Small systems**: < 10 atoms, simple structure"
+msgstr "**Smll systems**: < 10 toms, simple structure"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:381
+#: 07cf45e624834e3a9a7d45d3762da8de
+msgid "**SIESTA-specific features**: Using SIESTA's unique phonon capabilities"
+msgstr "**SIESTA-specific fetures**: استفاده از SIESTA's unique phonon cpbilities"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:382
+#: a2eb36a1838f41369c30a6e72e834bd4
+msgid "**No Phonopy**: When Phonopy not available"
+msgstr "**No Phonopy**: When Phonopy not vilble"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:384
+#: bd6e9abb77bb466aa459f332393de5bd
+msgid "Better with PhonopyMaker ✓✓✓"
+msgstr "Better with PhonopyMaker ✓✓✓"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:386
+#: e2dbdec1c7a446c09e29e05f42bb307f
+msgid "**Production workflows**: Publication-quality results"
+msgstr "**Production wیاkflows**: Publiction-qulity results"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:387
+#: f474a28a532c484cacce8ede380ec193
+msgid "**Automatic plotting**: 3 plots generated automatically"
+msgstr "**Automtic plotting**: 3 plots generted utomticlly"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:388
+#: 8c8f399a97704c9daa335947a2137ee3
+msgid "**QHA/Grüneisen**: Built-in workflows"
+msgstr "**QHA/Grüneisen**: Built-in wیاkflows"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:389
+#: f14afd03e15142838347a12cc4a3179a
+msgid "**Large systems**: Better scaling and post-processing"
+msgstr "**Lrge systems**: Better scling و post-processing"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:390
+#: 07911896a12e468c96fd213e6f8c7200
+msgid "**Complex analysis**: Phonopy ecosystem integration"
+msgstr "**Complex nlysis**: Phonopy ecosystem integrtion"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:394
+#: c7820a71589b4aa4b22d1d9c5a53df6a
+msgid "Converting Native SIESTA Output"
+msgstr "Converting Ntive SIESTA Output"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:396
+#: 1f0ecd0f7715487392b08f5e68502cd0
+msgid "To Phonopy Format"
+msgstr "To Phonopy Fیاmt"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:398
+#: a3f435c1684c44a98b83c2b419bd216c
+msgid "If you need Phonopy features after native SIESTA calculation:"
+msgstr "If you need Phonopy fetures fter ntive SIESTA clcultion:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:427
+#: 29c81872f41b41128c52d1f7265499f9
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:429
+#: b0ee813098fa46f4aa8bf7393ea7f0cc
+msgid ""
+"✅ **Relax structure first**: Tight convergence (0.01 eV/Å) ✅ **Tight "
+"electronic convergence**: DM.Tolerance = 1e-6 ✅ **Dense k-points**: 8×8×8"
+" or higher ✅ **Check sum rule**: Verify force constants satisfy acoustic "
+"sum rule ✅ **Compare with Phonopy**: Validate results ⚠️  **Consider "
+"PhonopyMaker**: Usually better choice for production"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:438
+#: 094ff42fad7142d8b9a94b680df85692
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:440
+#: f7f39aebd23e47fd9ee776c8e3f1bd72
+msgid "After native SIESTA phonons:"
+msgstr "After ntive SIESTA phonons:"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:442
+#: b3f4ee8506ca4fb789970dae2379e207
+msgid ""
+"**Try PhonopyMaker**: [07-PhonopyMaker](../07-PhonopyMaker/) - Compare "
+"approaches"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:443
+#: 8da94a56b513478a885d6a9bb0dc283e
+msgid ""
+"**Phonon workflows**: [02-workflows/06-vibrational-"
+"properties](../../02-workflows/06-vibrational-properties/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:444
+#: ea38937714e64d489528486c6c2c9d00
+msgid ""
+"**QHA**: [02-workflows/06-vibrational-"
+"properties/03-qha](../../02-workflows/06-vibrational-"
+"properties/03-SiestaQhaFlowMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:445
+#: d1231184419444a88d32650c828c13c0
+msgid ""
+"**Grüneisen**: [02-workflows/06-vibrational-"
+"properties/02-gruneisen](../../02-workflows/06-vibrational-"
+"properties/02-SiestaGruneisenFlowMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:449
+#: 788a4a999320488e937990c1745183ed
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:451
+#: 459577e959a049c38455e0e336f93cea
+msgid "**SIESTA Manual**: MD.TypeOfRun = phonon section"
+msgstr "**SIESTA Mnul**: MD.TypeOfRun = phonon section"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:452
+#: 296b2b39e6934ba084d19ed0ad446287
+msgid "**Force constants theory**: Dove \"Introduction to Lattice Dynamics\""
+msgstr "**Fیاce constnts یاy**: Dove \"Introduction to Lttice Dynmics\""
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:453
+#: 2c0fffc2cdcd4638a1329665c8bcee63
+msgid "**Phonopy comparison**: Phonopy documentation"
+msgstr "**Phonopy comprison**: Phonopy documenttion"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:454
+#: 0f3c319a26034274821627834994088b
+msgid "**SIESTA phonon utilities**: SIESTA Util/ directory"
+msgstr "**SIESTA phonon utilities**: SIESTA Util/ directیاy"
+
+#: ../../source/tutorials-md/01-basics/08-SiestaPhononMaker/README.md:458
+#: c52d03db6c80412f8e162cc54cae79d7
+msgid ""
+"*Back to [01-basics](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

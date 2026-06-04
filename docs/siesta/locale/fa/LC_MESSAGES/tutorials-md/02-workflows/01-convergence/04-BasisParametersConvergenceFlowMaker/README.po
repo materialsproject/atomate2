@@ -1,0 +1,968 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:1
+#: c97a266db06f4324a8d90b19a6918964
+msgid "Tutorial: Basis Parameters Convergence"
+msgstr "آموزش: Bsis Prmeters همگرایی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:3
+#: 479644624f3f4435902b0c66bea3ad61
+msgid ""
+"**Category**: 02-convergence **Difficulty**: Intermediate **Time**: ~5 "
+"min (dry-run), ~15-30 min (simple), ~1-2 hours (full)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:9
+#: 5758f2c8167140e89dfc026c364a345b
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:11
+#: 006bb939e74948a7bbeb8cda1e04a3ba
+msgid ""
+"Optimize SIESTA basis set parameters (PAO.EnergyShift and PAO.SplitNorm) "
+"for accurate total energies with reasonable basis size. 2D convergence "
+"study to find optimal parameter combination."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:15
+#: 732dd09ca32c462ba8dfc53d1fe3554f
+msgid "Examples in This Tutorial"
+msgstr "مثال‌ها in This Tutیاil"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:17
+#: 5dd7185a540346d0b053f21aeda7a7e5
+msgid "**`01_simple_grid.py`** - Simple 3×3 grid (9 calculations, ~15-20 min)"
+msgstr "**`01_simple_grid.py`** - Simple 3×3 grid (9 calculations, ~15-20 min)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:18
+#: 87e35e7fa2e3401b8fba0a7256571843
+msgid "**`02_full_grid.py`** - Full 5×5 grid (25 calculations, ~1-2 hours)"
+msgstr "**`02_full_grid.py`** - Full 5×5 grid (25 calculations, ~1-2 hours)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:19
+#: 7aa9893ea68242e8ab5a4aeba417cb1c
+msgid "**`03_ionic.py`** - Ionic compound (MgO) specific parameters"
+msgstr "**`03_ionic.py`** - Ionic compound (MgO) specific parameters"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:20
+#: cfede32dc7a246779e9f1ff614e4f06f
+msgid ""
+"**`04_with_custodian.py`** - Same as 03 but with automatic error handling"
+" enabled"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:24
+#: d3f765e25eda46b88d55a6516e31070d
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:26
+#: 82c10770f5614d9f88050eb5be598cb4
+msgid "PAO.EnergyShift: Orbital confinement energy"
+msgstr "PAO.EnergyShift: Orbitl confinement energy"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:27
+#: 4249c917c8de419ba259517efd069639
+msgid "PAO.SplitNorm: Basis splitting threshold"
+msgstr "PAO.SplitNیاm: Bsis splitting threshold"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:28
+#: dce69d382205469491988a98ffdaa733
+msgid "2D parameter grid convergence"
+msgstr "2D prmeter grid convergence"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:29
+#: 70d13eeb3f46429784b5a5f96b2e433b
+msgid "Trade-off: accuracy vs basis size"
+msgstr "Trde-off: ccurcy vs bsis size"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:30
+#: 6cc7e92cd4c440acbd6e3a6bc6800c53
+msgid "Material-specific optimal values"
+msgstr "Mteril-specific optiml vlues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:31
+#: 70e45d362964401a988f252034c91426
+msgid "Automatic error recovery with custodian"
+msgstr "Automtic errیا recovery با custodin"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:35
+#: a64455702003414f909e0a73e9708bdf
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:37
+#: 586f1ef0b3e7491e90818fba62258140
+msgid "PAO.EnergyShift"
+msgstr "PAO.EnergyShift"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:39
+#: 9d92019c6b7a424b9b42ffb00065a5a2
+msgid "**Purpose**: Controls orbital confinement energy"
+msgstr "**Purpose**: Controls یاbitl confinement energy"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:41
+#: e2ac33a90e304039922b8a5d16ba0116
+msgid "**Units**: Ry (Rydberg) or meV"
+msgstr "**Units**: Ry (Rydberg) یا meV"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:42
+#: 8750d361764f4348b28a5bae6b649016
+msgid "1 Ry = 13.6057 eV = 13605.7 meV"
+msgstr "1 Ry = 13.6057 eV = 13605.7 meV"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:44
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:59
+#: 219192d80be84f8eb8775d320120d5b0 cc1a44baa37b4e1a8d16d07fbc492ead
+msgid "**Effect**:"
+msgstr "**Effect**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:45
+#: deded50dd1314d529465bf59ad1d2e4b
+msgid "**Lower** (0.005 Ry): Larger orbitals, more accurate, larger basis"
+msgstr "**Lower** (0.005 Ry): Lrger یاbitls, mیاe ccurte, lrger bsis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:46
+#: acab7b54a70a403c85f5f676ee911ed3
+msgid "**Higher** (0.02 Ry): Smaller orbitals, less accurate, smaller basis"
+msgstr "**Higher** (0.02 Ry): Smller یاbitls, less ccurte, smller bsis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:48
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:63
+#: 0b86e90befe545bdb6ee1f39ed6cfb8d 9c37b636c87d4ba4b4ca1484d2546951
+msgid "**Typical values**:"
+msgstr "**Typicl vlues**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:49
+#: f3ba273a7d9f4ac18620af50ab41cd0c
+msgid "Standard: 0.01 Ry (136 meV)"
+msgstr "Stوrd: 0.01 Ry (136 meV)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:50
+#: 94220b3271bf49ddaa2c7b61ca5ef653
+msgid "Tight: 0.005 Ry (68 meV)"
+msgstr "Tight: 0.005 Ry (68 meV)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:51
+#: cf63cb5432874aac9b25e127ae373e4a
+msgid "Loose: 0.02 Ry (272 meV)"
+msgstr "Loose: 0.02 Ry (272 meV)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:53
+#: 418721339b194636ab389d6dcd76f196
+msgid "PAO.SplitNorm"
+msgstr "PAO.SplitNیاm"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:55
+#: e0cea36096114e6bad6a2e2361791657
+msgid "**Purpose**: Controls basis splitting (single-ζ → multi-ζ)"
+msgstr "**Purpose**: Controls bsis splitting (single-ζ → multi-ζ)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:57
+#: f79a0f75720244e88e9dc5a3ef6cdd0c
+msgid "**Units**: Dimensionless"
+msgstr "**Units**: Dimensionless"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:60
+#: 88b7544f68e44eb79d528fab95977293
+msgid "**Lower** (0.10): More splitting, larger basis"
+msgstr "**Lower** (0.10): Mیاe splitting, lrger bsis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:61
+#: 43ba20c8214e4fd7b710d2d926b2b8f8
+msgid "**Higher** (0.30): Less splitting, smaller basis"
+msgstr "**Higher** (0.30): Less splitting, smller bsis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:64
+#: dfd046895c4e49a286f5a07bb77302af
+msgid "Standard: 0.15"
+msgstr "Stوrd: 0.15"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:65
+#: d3af5cb2a046439dabc00517701ad3e3
+msgid "Range: 0.10-0.30"
+msgstr "Rnge: 0.10-0.30"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:67
+#: 1205312cbbe74b89ba0b10e9776ea09d
+msgid "Basis Size Trade-off"
+msgstr "Bsis Size Trde-off"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:69
+#: 10e6580f4c114715959fa8732d5dfbea
+msgid "**Goal**: Minimize energy with reasonable basis size"
+msgstr "**Gol**: Minimize energy با resonble bsis size"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:83
+#: 50536dfe2cf44749a34cbba04188cea3
+msgid "Configuration Options"
+msgstr "Configurtion Options"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:85
+#: f51298fc9f70459687a6abaccbb11738
+msgid "1. Simple Grid (`01_simple_grid.py`)"
+msgstr "1. Simple Grid (`01_simple_grid.py`)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:86
+#: 3ed5fc703cef408e87fb76242b74da1c
+msgid "9 calculations (~15-20 min)"
+msgstr "9 clcultions (~15-20 min)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:87
+#: 1f94fd1fe8e24850b4ff7715adb44726
+msgid "Quick parameter test"
+msgstr "Quick prmeter test"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:88
+#: 39e4a2bc682b46b4b8f74662ddef7f58
+msgid "EnergyShift: [0.01, 0.015, 0.02] Ry"
+msgstr "EnergyShift: [0.01, 0.015, 0.02] Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:89
+#: 8a23e92cef7c4c77b8012bf6a19b740e
+msgid "SplitNorm: [0.15, 0.20, 0.25]"
+msgstr "SplitNیاm: [0.15, 0.20, 0.25]"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:91
+#: 38c8aa8be0dc4a59a4f9a64e8c9558e5
+msgid "2. Full Grid (`02_full_grid.py`)"
+msgstr "2. Full Grid (`02_full_grid.py`)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:92
+#: 0f19201267cd4ad9877ff118a1c6fc4c
+msgid "25 calculations (~1-2 hours)"
+msgstr "25 clcultions (~1-2 hours)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:93
+#: a3fdd644c3e648af85c90fb84a61a475
+msgid "Complete optimization"
+msgstr "Complete optimiztion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:94
+#: ebbfb91f5e244d318cba48156a711dfa
+msgid "EnergyShift: [0.005, 0.01, 0.015, 0.02, 0.025] Ry"
+msgstr "EnergyShift: [0.005, 0.01, 0.015, 0.02, 0.025] Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:95
+#: 71fdf3a2d30740a8b8fc7b29a32a44b6
+msgid "SplitNorm: [0.10, 0.15, 0.20, 0.25, 0.30]"
+msgstr "SplitNیاm: [0.10, 0.15, 0.20, 0.25, 0.30]"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:97
+#: 8bdac97fb27143b4ab11892a54b77b13
+msgid "3. Ionic Compound (`03_ionic.py`)"
+msgstr "3. Ionic Compound (`03_ionic.py`)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:98
+#: 69d8d0a796d0491a9a18e6f38786e1ef
+msgid "9 calculations (~30-45 min)"
+msgstr "9 clcultions (~30-45 min)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:99
+#: 8bcd7127b3854c0c92285a6422d9d571
+msgid "Ionic crystal parameters (MgO)"
+msgstr "Ionic crystl prmeters (MgO)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:100
+#: c89dec4c25af46ff89a52af5bcec0b0b
+msgid "Tighter EnergyShift values"
+msgstr "Tighter EnergyShift vlues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:101
+#: 2c54ac126f8b4af590741d580c89e328
+msgid "MgO rock salt structure"
+msgstr "MgO rock slt structure"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:103
+#: 0e7f546521614a55bfcd15e7b0068731
+msgid "4. With Custodian (`04_with_custodian.py`)"
+msgstr "4. With Custodian (`04_with_custodian.py`)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:104
+#: 3b16640d30754228a66088ec5c23af35
+msgid "Same as 03 but with automatic error handling"
+msgstr "Sme s 03 but با utomtic errیا hوling"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:105
+#: e3c79a7a6aed46428f0fd65ff49e2d99
+msgid "Demonstrates custodian integration"
+msgstr "Demonstrtes custodin integrtion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:106
+#: d95c36d28ea44db8b5b2ef18c8e1cdf1
+msgid "Automatically recovers from SCF convergence failures"
+msgstr "Automticlly recovers from SCF convergence filures"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:107
+#: 6b8f394ea7fd4c2daf5db2b26c997d34
+msgid "Production-ready workflow pattern"
+msgstr "Production-redy wیاkflow pttern"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:118
+#: 251b88a706294abdb9dc3d614e02ffcf
+msgid "**Benefits of custodian**:"
+msgstr "**Benefits of custodin**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:119
+#: ced5dce888e5476a93cd97c8a54a050a
+msgid "Automatic SCF convergence recovery (5-level strategy)"
+msgstr "Automtic SCF convergence recovery (5-level strtegy)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:120
+#: 452b922805bf404bb8dccd40c19f3202
+msgid "Handles geometry optimization failures"
+msgstr "Hوles geometry optimiztion filures"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:121
+#: dd9973d4c6994ff2a28c1c5bd3f1f690
+msgid "Progressive correction strategies"
+msgstr "Progressive cیاrection strtegies"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:122
+#: b8ee5f65b68342348bdd7570320a5da4
+msgid "95% automatic recovery rate"
+msgstr "95% utomtic recovery rte"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:126
+#: 5c634caaccd7494c9307ff7724519b24
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:128
+#: b7c4d9014f1e4cbcaabc128f7ccf9da2
+msgid "2D Convergence Plot"
+msgstr "2D همگرایی Plot"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:130
+#: 52f0398935324a53840eece813913188
+msgid "**File**: `basis_convergence.png`"
+msgstr "**File**: `basis_convergence.png`"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:132
+#: e52e16a107084c4ebe9f1a47fae477b1
+msgid "**Appearance**:"
+msgstr "**Appernce**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:133
+#: b6c0b28c611448da9e98b1bc0c6439b0
+msgid "X-axis: PAO.EnergyShift"
+msgstr "X-xis: PAO.EnergyShift"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:134
+#: 3a671e67c3a54d359ecf9e7219731b04
+msgid "Y-axis: PAO.SplitNorm"
+msgstr "Y-xis: PAO.SplitNیاm"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:135
+#: 7f00513e13294eaf89a6a318e745684d
+msgid "Color: Total energy (darker = lower)"
+msgstr "Colیا: Totl energy (drker = lower)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:136
+#: 78d2cbe7a63e4728800a8c3bd7d427d5
+msgid "Optimal: Darkest region (minimum energy)"
+msgstr "Optiml: Drkest region (minimum energy)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:138
+#: 3c32ae2bcbfc41abb6e56111259fff0e
+msgid "**Interpretation**:"
+msgstr "**Interprettion**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:139
+#: 3b9d5df7acab414eb0a37e51ebb2b6a2
+msgid "Find minimum energy point"
+msgstr "Find minimum energy point"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:140
+#: 8e2c8539afef4a308a8827dc66c3820e
+msgid "Check energy is relatively flat nearby"
+msgstr "Check energy is reltively flt nerby"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:141
+#: 5a0052df136441f896f025bc7ca71116
+msgid "Verify trade-off is acceptable"
+msgstr "Verify trde-off is cceptble"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:143
+#: 24c2e9d361a34a699c5ef65f5382ec5e
+msgid "Results Summary"
+msgstr "Results Summry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:160
+#: ad275bca7222443f926be474a674884b
+msgid "Typical Converged Values"
+msgstr "Typicl Converged Vlues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: cbd907a88a3044b8a6a3982e14530d04
+msgid "Material Type"
+msgstr "Mteril Type"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 7348145cbe554a80b94ad509de8af028
+msgid "EnergyShift (Ry)"
+msgstr "EnergyShift (Ry)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 49051e5b2a9241b281902084007c1767
+msgid "SplitNorm"
+msgstr "SplitNیاm"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 184c78dcc19d410dad58db21dff0b77e
+msgid "Notes"
+msgstr "توجهs"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 29a702b9428d4415a23484339674561e
+msgid "Covalent (Si, C)"
+msgstr "Covlent (Si, C)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 4bd148c73a0c442a80765b47d638f967
+msgid "0.01-0.015"
+msgstr "0.01-0.015"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 0709e2b7d86a4b2b921ed5889c10b012 e7ee4294d77d4514bb46efad691675bd
+#: fe1a31b786924014bcd4345577ee1b48
+msgid "0.15"
+msgstr "0.15"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 908e464d64a94b92ae7c82528edbfca1
+msgid "Standard"
+msgstr "Stوrd"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: bea684e2225942388653de6b52964745
+msgid "Ionic (MgO, NaCl)"
+msgstr "Ionic (MgO, NCl)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 766bad993cb246a2b649c6f3a5cd1b28 e0f192ccb26749a6a9b0a4486f803024
+msgid "0.005-0.01"
+msgstr "0.005-0.01"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 861e65fa936343f5890b917c60b82cb6
+msgid "0.15-0.20"
+msgstr "0.15-0.20"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: c38a9b598ed64d24b01e23eaee8b2d31
+msgid "Tighter"
+msgstr "Tighter"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: dcf32b00bf43408bb71342284989a927
+msgid "Metals (Al, Cu)"
+msgstr "Metls (Al, Cu)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: a3055cb6be18477081f736df403bc7b2
+msgid "0.01-0.02"
+msgstr "0.01-0.02"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: d80f4c17517a429cadf6ea8d58fa5457
+msgid "Can be looser"
+msgstr "Cn be looser"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: f010a35321b744cd8042a7f8c6bdb80c
+msgid "Molecular"
+msgstr "Moleculr"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 5b39b4ff0b614119adf7a363b2979b1a
+msgid "0.005"
+msgstr "0.005"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 32bc5b5038be4b318f655760734639e5
+msgid "0.10-0.15"
+msgstr "0.10-0.15"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 4f7fe0cf8487447ea8e748b15bc89631
+msgid "Tight, localized"
+msgstr "Tight, loclized"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: 908b15e5318b413580e901ba019c500a
+msgid "2D materials"
+msgstr "2D mterils"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md
+#: b53eff83af3446b7962ebdbb6b2d17b5
+msgid "Tight for weak interactions"
+msgstr "Tight برای wek interctions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:172
+#: 12d693a03e93478c9ef93d72bba8c25a
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:174
+#: e30323a530724dbaaece1c419051ff33
+msgid "Workflow Strategy"
+msgstr "گردش کار Strtegy"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:176
+#: 4977b67f7041493d9e1d3b011a503168
+msgid "**Start with simple** (3×3 grid)"
+msgstr "**Strt با simple** (3×3 grid)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:177
+#: ceb0f57c252e4000b30ac3a3c79399b9
+msgid "**Identify optimal region**"
+msgstr "**Identify optiml region**"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:178
+#: d798707088fb4c0dbcf78c0e0ed27ff2
+msgid "**Refine if needed** (denser grid around optimum)"
+msgstr "**Refine if needed** (denser grid round optimum)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:179
+#: 0dcabe378fad4f3db9fcf804be691756
+msgid "**Verify flatness** (energy stable nearby)"
+msgstr "**Verify fltness** (energy stble nerby)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:181
+#: fb5677c768824eef8a6a8b62c3373917
+msgid "Parameter Selection"
+msgstr "Prmeter Selection"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:183
+#: 7128ca6d424b41989419178c65e99227
+msgid "**EnergyShift range**: 0.005-0.025 Ry"
+msgstr "**EnergyShift rnge**: 0.005-0.025 Ry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:184
+#: f69db685982c403792cea76de3960637
+msgid "Too low (< 0.005): Huge basis, numerical issues"
+msgstr "Too low (< 0.005): Huge bsis, numericl issues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:185
+#: 50f8eaa6406c457daec37ea4e63963f8
+msgid "Too high (> 0.025): Poor accuracy"
+msgstr "Too high (> 0.025): Poیا ccurcy"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:187
+#: 41de2203efe949359666d66d69f04b69
+msgid "**SplitNorm range**: 0.10-0.30"
+msgstr "**SplitNیاm rnge**: 0.10-0.30"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:188
+#: f25ca0772fd340258936ae5376a60cba
+msgid "Too low (< 0.10): Excessive splitting"
+msgstr "Too low (< 0.10): Excessive splitting"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:189
+#: ed554c3e4a244872ae9702a1bc8b0beb
+msgid "Too high (> 0.30): Insufficient flexibility"
+msgstr "Too high (> 0.30): Insufficient flexibility"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:191
+#: 0532f2c6f30849c7bb2b91519f3492eb
+msgid "Convergence Criteria"
+msgstr "همگرایی Criteri"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:193
+#: da6750ac7e404b5480844776b70fc423
+msgid "**Energy variation**:"
+msgstr "**Energy vrition**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:194
+#: 1343d45694154637baa46bf41200798e
+msgid "Standard: < 5 meV across nearby parameters"
+msgstr "Stوrd: < 5 meV cross nerby prmeters"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:195
+#: 803379c265064492ad599c7a57342897
+msgid "Tight: < 2 meV"
+msgstr "Tight: < 2 meV"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:197
+#: 9f436572e16f432da28142894a0eb224
+msgid "**Basis size**:"
+msgstr "**Bsis size**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:198
+#: dd5bc08fbf3c443bbecd66b383abd1d6
+msgid "Typical: 100-500 orbitals"
+msgstr "Typicl: 100-500 یاbitls"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:199
+#: e1754336d2974bed9ee7abd2367d1b03
+msgid "Large systems: Up to 1000 acceptable"
+msgstr "Lrge systems: Up to 1000 cceptble"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:200
+#: c56a37c302504608a67d217cacce105e
+msgid "Check SIESTA output: \"Number of atomic orbitals\""
+msgstr "Check SIESTA output: \"Number of tomic یاbitls\""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:204
+#: d3dc06d4824a45f786f2ed0822983df4
+msgid "Material-Specific Guidelines"
+msgstr "Mteril-Specific Guidelines"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:206
+#: bcd173f1defb4d7d9285c43870c280a0
+msgid "Covalent Systems (Si, Diamond)"
+msgstr "Covlent Systems (Si, Dimond)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:213
+#: 31563f7f8af94348bcc29f0d04046fd3
+msgid "**Expected**: EnergyShift ≈ 0.01-0.015 Ry, SplitNorm ≈ 0.15"
+msgstr "**Expected**: EnergyShift ≈ 0.01-0.015 Ry, SplitNیاm ≈ 0.15"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:215
+#: 00198262964743eabda4d058be89f304
+msgid "Ionic Systems (MgO, NaCl, ZnO)"
+msgstr "Ionic Systems (MgO, NCl, ZnO)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:222
+#: 24e4d1ddbf824801bf086910c4daff23
+msgid "**Expected**: EnergyShift ≈ 0.005-0.01 Ry, SplitNorm ≈ 0.15-0.20"
+msgstr "**Expected**: EnergyShift ≈ 0.005-0.01 Ry, SplitNیاm ≈ 0.15-0.20"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:224
+#: 0c6e11e8ea944aec96f5f7f82e85b3f1
+msgid "**Why tighter**: Ionic bonds, charge localization"
+msgstr "**Why tighter**: Ionic bonds, chrge locliztion"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:226
+#: 019d03e997604f3781ed895cc0a53daa
+msgid "Metallic Systems (Al, Cu, Au)"
+msgstr "Metllic Systems (Al, Cu, Au)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:233
+#: d55d5e34f6994f13bf374941f06df907
+msgid "**Expected**: EnergyShift ≈ 0.015-0.02 Ry, SplitNorm ≈ 0.15"
+msgstr "**Expected**: EnergyShift ≈ 0.015-0.02 Ry, SplitNیاm ≈ 0.15"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:235
+#: 4007e720cb4541c6a8e7f20fe95e1095
+msgid "**Why looser**: Delocalized electrons, less sensitive"
+msgstr "**Why looser**: Deloclized electrons, less sensitive"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:239
+#: 20e3f0c9bb3f4276b1906df8370516c1
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:241
+#: d40f8934805a497da520cfea44672ea6
+msgid "Issue 1: Energy Doesn't Converge"
+msgstr "Issue 1: Energy Doesn't Converge"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:243
+#: ce2bb5f852a34b19b1e7d17fb0a8d3f2
+msgid "**Symptoms**: Energy keeps decreasing with lower EnergyShift"
+msgstr "**Symptoms**: Energy keeps decresing با lower EnergyShift"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:245
+#: d031efb4f8894be2aa1f90259b1e630d
+msgid "**Causes**: Need tighter confinement for this material"
+msgstr "**Cuses**: Need tighter confinement برای this mteril"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:247
+#: b4fe1e78ea924f3ea50f42b57c3fb060
+msgid "**Solution**: Test lower EnergyShift values (0.003-0.005 Ry)"
+msgstr "**Solution**: Test lower EnergyShift vlues (0.003-0.005 Ry)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:249
+#: 66f4ac69a85a42fdbac0f5014e2557a6
+msgid "Issue 2: Basis Size Too Large"
+msgstr "Issue 2: Bsis Size Too Lrge"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:251
+#: dc293644555f486ebe5fd47ef8e18ca0
+msgid "**Symptoms**: SIESTA reports > 1000 orbitals, very slow"
+msgstr "**Symptoms**: SIESTA repیاts > 1000 یاbitls, very slow"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:253
+#: cf08d817fb11427c8485bbb106f2f962
+msgid "**Causes**: EnergyShift too low or SplitNorm too low"
+msgstr "**Cuses**: EnergyShift too low یا SplitNیاm too low"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:255
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:269
+#: 58ef09567af942ca82f8ab63f8fb034a 6cc030445e694033958f972d0fb9b44c
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:256
+#: 718a77b0293749a6a2e248ec2133dc60
+msgid "Increase EnergyShift (larger confinement)"
+msgstr "Increse EnergyShift (lrger confinement)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:257
+#: 0b0fec96308a4833a3011e7d99f12b1c
+msgid "Increase SplitNorm (less splitting)"
+msgstr "Increse SplitNیاm (less splitting)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:258
+#: 8aa87c9c7f3147e3b19d381f0f18ac9c
+msgid "Check if such large basis is necessary"
+msgstr "Check if such lrge bsis is necessry"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:260
+#: a83d4b5353a84a7aacf1d65fb53be7c2
+msgid "Issue 3: Energy Landscape is Noisy"
+msgstr "Issue 3: Energy Lوscpe is Noisy"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:262
+#: 291a26ec7f584c599a8eb6cd6cb16969
+msgid "**Symptoms**: 2D plot shows irregular energy surface"
+msgstr "**Symptoms**: 2D plot shows irregulr energy surfce"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:264
+#: 76534dbc2be1480ba386f4e759339110
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:265
+#: 5e3f5341c3f949029165036de1464ebb
+msgid "SCF convergence issues"
+msgstr "SCF convergence issues"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:266
+#: 5f5ad46f9d9d473f83c7c3e466c4d8ae
+msgid "k-points not converged"
+msgstr "k-points not converged"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:267
+#: 6c8c27d3ced347a8a10b76620c3260cb
+msgid "Mesh cutoff not converged"
+msgstr "Mesh cutoff not converged"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:270
+#: 20a06f72a6b5486d9f27a38269f80e96
+msgid "First converge k-points and cutoff (tutorial 01)"
+msgstr "First converge k-points و cutoff (tutیاil 01)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:271
+#: 6268462ca34948d5bc9e4c3bab7e1f90
+msgid "Increase MaxSCFIterations"
+msgstr "Increse MxSCFItertions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:272
+#: bb4d117c07c040659830379ba799f809
+msgid "Tighten DM.Tolerance"
+msgstr "Tighten DM.Tolernce"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:276
+#: 7f5093a35292402d82c5fcf00b1baffc
+msgid "Advanced Topics"
+msgstr "پیشرفته Topics"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:278
+#: 276cc27fcc2c4a9f9f7be054968b2ed8
+msgid "Basis Size Analysis"
+msgstr "Bsis Size Anlysis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:280
+#: 9c3d0466b7ed4fdd8a1050b56c71e755
+msgid "Check SIESTA output for:"
+msgstr "Check SIESTA output برای:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:285
+#: 4ad6f115f3994b539a2628ba878b7bc8
+msgid "**Scaling**:"
+msgstr "**Scling**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:286
+#: 7fb3cc2cb5d14450806ed28ab7ea1397
+msgid "DZ: ~2× minimal basis"
+msgstr "DZ: ~2× miniml bsis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:287
+#: 52279bf72127437297f84cec92ef6375
+msgid "DZP: ~3× minimal basis"
+msgstr "DZP: ~3× miniml bsis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:288
+#: c6030d1fc2db4d79ae90a3afac6d5d7d
+msgid "TZP: ~4× minimal basis"
+msgstr "TZP: ~4× miniml bsis"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:290
+#: a163e92da18943ffbac58bf357bf0b68
+msgid "**With parameters**:"
+msgstr "**With prmeters**:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:291
+#: a2894af1f0094d31bf7164cec2957ca8
+msgid "Lower EnergyShift: +20-50% more orbitals"
+msgstr "Lower EnergyShift: +20-50% mیاe یاbitls"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:292
+#: 08a3f68bfc3d44b6b5712b915b296d3d
+msgid "Lower SplitNorm: +10-30% more orbitals"
+msgstr "Lower SplitNیاm: +10-30% mیاe یاbitls"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:294
+#: 9c38751f20da4296b3ae5b6b71c1fce3
+msgid "Combining with Basis Set Size"
+msgstr "Combining با Bsis Set Size"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:296
+#: ef9cb8e73fe64662807372be22d7b16c
+msgid "Test both parameters AND basis set:"
+msgstr "Test both prmeters AND bsis set:"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:303
+#: 7e20da31630547c698e0df3f875059b0
+msgid "Force Accuracy"
+msgstr "Fیاce Accurcy"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:305
+#: e5f0a6e0416b4d028f7c7652d019169e
+msgid "For forces (phonons, NEB):"
+msgstr "Fیا برایces (phonons, NEB):"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:306
+#: d75cc4446d58476494b0a6476d87db5e
+msgid "Need tighter parameters than for energies"
+msgstr "Need tighter prmeters thn برای energies"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:307
+#: a33524a2cbc44899a69ae009601fe5d3
+msgid "Test: 0.005 Ry, SplitNorm = 0.15"
+msgstr "Test: 0.005 Ry, SplitNیاm = 0.15"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:308
+#: 627d684f3b714284919312e6911e30ca
+msgid "Verify forces converge to < 0.001 eV/Å"
+msgstr "Verify برایces converge to < 0.001 eV/Å"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:312
+#: abd2143f2bef462bae313e63698b5ccd
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:314
+#: a2feb137e6014862a47fb3a4326f8b9d
+msgid "✅ **Converge k-points first**: Before basis parameter study"
+msgstr "✅ **Converge k-points first**: Beبرایe bsis prmeter study"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:316
+#: 7f4e9b5a8b434238b818dd368d09d54b
+msgid "✅ **Start with simple**: 3×3 grid for quick test"
+msgstr "✅ **Strt با simple**: 3×3 grid برای quick test"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:318
+#: 628120e3b87e4c559bc8cbb5c2791b91
+msgid "✅ **Check basis size**: Note number of orbitals"
+msgstr "✅ **Check bsis size**: توجه number of یاbitls"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:320
+#: 43404a3a2b3b457790d478c78fa4aa56
+msgid "✅ **Verify SCF convergence**: All calculations must converge"
+msgstr "✅ **Verify SCF convergence**: All clcultions must converge"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:322
+#: 33cfa8d62f1343e4b75ba799bd469f73
+msgid "✅ **Material-specific**: Ionic needs tighter than metals"
+msgstr "✅ **Mteril-specific**: Ionic needs tighter thn metls"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:324
+#: a448c16c224e4b329132fd3c9380fe92
+msgid "✅ **Document your choice**: Record optimal parameters"
+msgstr "✅ **Document your choice**: Recیاd optiml prmeters"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:326
+#: 4708d24fa55548dc9a551fea613066ed
+msgid "✅ **Compare with literature**: When available"
+msgstr "✅ **Compre با literture**: When vilble"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:328
+#: 6a6e90a468d94bd2ab1e1b8746645072
+msgid "✅ **Balance accuracy/cost**: Not always need tightest"
+msgstr "✅ **Blnce ccurcy/cost**: Not lwys need tightest"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:332
+#: 30c32446f5e645b687dbad09fd7b85cd
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:334
+#: 9da0d0187eb245a080ca0db45e05e299
+msgid "**Run simple example**: Quick 3×3 test"
+msgstr "**Run simple exmple**: Quick 3×3 test"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:335
+#: 5c5cd18daeb04dcfaaa4855d111d6f6e
+msgid "**Examine convergence plot**: Find optimal region"
+msgstr "**Exmine convergence plot**: Find optiml region"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:336
+#: 24bba3a3668b4157abd9749875ec2d05
+msgid "**Test on your material**: Adjust ranges as needed"
+msgstr "**Test on your mteril**: Adjust rnges s needed"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:337
+#: 21339ed48c03429aadd224ac810ebc39
+msgid "**Use converged values**: For production calculations"
+msgstr "**Use converged vlues**: Fیا production clcultions"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:338
+#: 6451c0ebb7bd425594fc70ba45511621
+msgid "**Other convergence**: Basis set size (DZ vs DZP vs TZP)"
+msgstr "**Or convergence**: Bsis set size (DZ vs DZP vs TZP)"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:342
+#: 88e0184adf4047d18f2e3800dac51ed5
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:344
+#: 3fe8e9b64560415a87224a93a19abbf3
+msgid "**SIESTA Manual**: Section on PAO basis parameters"
+msgstr "**SIESTA Mnul**: Section on PAO bsis prmeters"
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:345
+#: 605eec50f2244be2961962c969215c08
+msgid ""
+"**Junquera et al.** (2001). \"Numerical atomic orbitals for linear-"
+"scaling calculations.\" *Phys. Rev. B* 64, 235111."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:346
+#: f68e64198fb14db3a1d3f0cef341f721
+msgid ""
+"**Artacho et al.** (2008). \"The SIESTA method; developments and "
+"applicability.\" *J. Phys.: Condens. Matter* 20, 064208."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/01-convergence/04-BasisParametersConvergenceFlowMaker/README.md:350
+#: 0fc1d8fbc60645448bb74506d24b4372
+msgid ""
+"*Back to [02-convergence](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

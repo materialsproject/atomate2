@@ -1,0 +1,512 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tier-defaults-explained.rst:3 f6552929fff749f485e5f1ceef9516a5
+msgid "TIER_DEFAULTS: Complete Explanation"
+msgstr "TIER_DEFAULTS: توضیحات کامل"
+
+#: ../../source/tier-defaults-explained.rst:6 6e147c2915ef4e7fa71f321020982ba1
+msgid ""
+"**This document explains EXACTLY how TIER_DEFAULTS works with concrete "
+"examples.**"
+msgstr "**این سند دقیقاً نحوه کار TIER_DEFAULTS را با مثال‌های مشخص توضیح می‌دهد.**"
+
+#: ../../source/tier-defaults-explained.rst:11 def5e31099ba45608bdc5cfda109bf2d
+msgid "What is TIER_DEFAULTS?"
+msgstr "TIER_DEFAULTS چیست؟"
+
+#: ../../source/tier-defaults-explained.rst:13 4541760760b84e128dc1bb356ffb8ec7
+msgid ""
+"``TIER_DEFAULTS`` is a Python dictionary that provides **starting "
+"parameter values** for each tier level. Think of it as a \"quick start "
+"template\" for common calculation types."
+msgstr "``TIER_DEFAULTS`` یک دیکشنری Python است که **مقادیر اولیه پارامتر** را برای هر سطح فراهم می‌کند. آن را به عنوان \"الگوی شروع سریع\" برای انواع محاسبات رایج در نظر بگیرید."
+
+#: ../../source/tier-defaults-explained.rst:16 7a628b33e51e4f3f9fcc41f6f4a96e1d
+msgid "**Location**: ``src/atomate2/siesta/sets/tiers/defaults.py``"
+msgstr "**موقعیت**: ``src/atomate2/siesta/sets/tiers/defaults.py``"
+
+#: ../../source/tier-defaults-explained.rst:18 d0335d489afc423f88f0342ca5cab2d7
+msgid "**Content** (6 entries):"
+msgstr "**محتوا** (۶ ورودی):"
+
+#: ../../source/tier-defaults-explained.rst:58 98a8ebf995d448748a21ec3e3c30ce0d
+msgid "When Are TIER_DEFAULTS Used?"
+msgstr "TIER_DEFAULTS چه زمانی استفاده می‌شود؟"
+
+#: ../../source/tier-defaults-explained.rst:60 a0a02dbc060546d1b0746dc005b53a5c
+msgid ""
+"TIER_DEFAULTS are applied **AUTOMATICALLY** in "
+"``SiestaInputGenerator.__post_init__()`` when you create a Maker with a "
+"``tier=`` parameter."
+msgstr "TIER_DEFAULTS به صورت **خودکار** در ``SiestaInputGenerator.__post_init__()`` زمانی که یک Maker با پارامتر ``tier=`` ایجاد می‌کنید، اعمال می‌شود."
+
+#: ../../source/tier-defaults-explained.rst:64 01b1b604d64f404898327d02c324e8da
+msgid "Flow Diagram"
+msgstr "نمودار جریان"
+
+#: ../../source/tier-defaults-explained.rst:122
+#: eba4c8172c1c4a6ba19e86bad4c7c9d1
+msgid "Concrete Examples"
+msgstr "مثال‌های مشخص"
+
+#: ../../source/tier-defaults-explained.rst:125
+#: 8aca791a71ec4f99bd1007a14adadcd4
+msgid "Example 1: Using tier defaults only"
+msgstr "مثال ۱: استفاده فقط از پیش‌فرض‌های سطح"
+
+#: ../../source/tier-defaults-explained.rst:127
+#: ../../source/tier-defaults-explained.rst:152
+#: ../../source/tier-defaults-explained.rst:196
+#: ../../source/tier-defaults-explained.rst:220
+#: ../../source/tier-defaults-explained.rst:298
+#: ../../source/tier-defaults-explained.rst:317
+#: 12c562117ed6458f9fdf7f2a2f99c84f 21ad3bba1ac149c5a6eaa491e1567b51
+#: 9174fa908012449aba5b117d4f0b6c6e 92f4c56460d34c51afd596bc4d78b275
+#: a80798bcb7274c768059ce3563a00f47 f3c14eefbb2f4921b2b13c09d47678b8
+msgid "**Code**:"
+msgstr "**کد**:"
+
+#: ../../source/tier-defaults-explained.rst:135
+#: ../../source/tier-defaults-explained.rst:164
+#: ../../source/tier-defaults-explained.rst:202
+#: ../../source/tier-defaults-explained.rst:226
+#: 1f21b31355da492f9da4de3d53dffdfb 3c6cc82c471c494c8fefcd3a7510e8f6
+#: 941838fededb406ebb0f1b016cff5377 baac0dd3f9964a94a0d325a7fd39a4b6
+msgid "**What happens**:"
+msgstr "**چه اتفاقی می‌افتد**:"
+
+#: ../../source/tier-defaults-explained.rst:137
+#: ../../source/tier-defaults-explained.rst:166
+#: 0b6d1097e9024c3e87a5dbafa6b0a88e 23c18b1e86314ef9960791801dce67fe
+msgid "``tier=\"basic\"`` → Load ``TIER_DEFAULTS[\"basic\"]``"
+msgstr "``tier=\"basic\"`` ← بارگذاری ``TIER_DEFAULTS[\"basic\"]``"
+
+#: ../../source/tier-defaults-explained.rst:138
+#: f20cf4ca57544d31b7ebf6228070841a
+msgid "No ``user_params`` provided"
+msgstr "هیچ ``user_params`` ارائه نشده است"
+
+#: ../../source/tier-defaults-explained.rst:139
+#: ../../source/tier-defaults-explained.rst:182
+#: 2f55005e8269448592452e78bd9d4859 6f4bade49ac84790b06b2459cffd74da
+msgid "Final parameters:"
+msgstr "پارامترهای نهایی:"
+
+#: ../../source/tier-defaults-explained.rst:150
+#: 3ecc08c049d64cb6bbe58ba7eb05587e
+msgid "Example 2: Overriding tier defaults"
+msgstr "مثال ۲: بازنویسی پیش‌فرض‌های سطح"
+
+#: ../../source/tier-defaults-explained.rst:176
+#: 1cee96f2ac244329b581c16af0aa5469
+msgid "Merge with user_params (user wins):"
+msgstr "ادغام با user_params (کاربر برنده است):"
+
+#: ../../source/tier-defaults-explained.rst:194
+#: 6686f546f599464fa7b8a44993c02adb
+msgid "Example 3: Using tier=\"dirty\" for quick tests"
+msgstr "مثال ۳: استفاده از tier=\"dirty\" برای تست‌های سریع"
+
+#: ../../source/tier-defaults-explained.rst:204
+#: b8b9743b5590428b8ccc616934b9bca8
+msgid "``tier=\"dirty\"`` → Load ``TIER_DEFAULTS[\"dirty\"]``"
+msgstr "``tier=\"dirty\"`` ← بارگذاری ``TIER_DEFAULTS[\"dirty\"]``"
+
+#: ../../source/tier-defaults-explained.rst:205
+#: 88d86c36a6ec4127a32232a79503c325
+msgid "Final parameters (minimal settings):"
+msgstr "پارامترهای نهایی (تنظیمات حداقلی):"
+
+#: ../../source/tier-defaults-explained.rst:215
+#: 408d036b9c6646c1ab802ef096dab736
+msgid "**Use case**: Quick workflow testing, debugging, structure validation"
+msgstr "**مورد استفاده**: تست سریع جریان کار، اشکال‌زدایی، اعتبارسنجی ساختار"
+
+#: ../../source/tier-defaults-explained.rst:218
+#: e26082637961486491742b71a304ed36
+msgid "Example 4: Using tier=\"ultra\" for benchmarks"
+msgstr "مثال ۴: استفاده از tier=\"ultra\" برای معیارسنجی"
+
+#: ../../source/tier-defaults-explained.rst:228
+#: cddac1246d294cf8bdb4ed7f8c87bdfc
+msgid "``tier=\"ultra\"`` → Load ``TIER_DEFAULTS[\"ultra\"]``"
+msgstr "``tier=\"ultra\"`` ← بارگذاری ``TIER_DEFAULTS[\"ultra\"]``"
+
+#: ../../source/tier-defaults-explained.rst:229
+#: 4198092474d0475eb728e4636b7e593b
+msgid "Final parameters (very high quality):"
+msgstr "پارامترهای نهایی (کیفیت بسیار بالا):"
+
+#: ../../source/tier-defaults-explained.rst:239
+#: 90cf52e0c37c4f2ba547096094c0fd0f
+msgid ""
+"**Use case**: Benchmark calculations, publication-quality results, "
+"convergence testing"
+msgstr "**مورد استفاده**: محاسبات معیارسنجی، نتایج با کیفیت انتشار، تست همگرایی"
+
+#: ../../source/tier-defaults-explained.rst:244
+#: 26e472e5fc4d44f7a744d8877686e047
+msgid "Key Points"
+msgstr "نکات کلیدی"
+
+#: ../../source/tier-defaults-explained.rst:246
+#: c166725d22f5498fa88eb43ae2daeaec
+msgid "✅ **Automatic Application**"
+msgstr "✅ **اعمال خودکار**"
+
+#: ../../source/tier-defaults-explained.rst:248
+#: 0a0828b70bf14ce4ab8e1e2a4ffef514
+msgid ""
+"TIER_DEFAULTS are applied automatically in ``__post_init__()``. You don't"
+" need to do anything special."
+msgstr "TIER_DEFAULTS به صورت خودکار در ``__post_init__()`` اعمال می‌شود. شما نیازی به انجام کار خاصی ندارید."
+
+#: ../../source/tier-defaults-explained.rst:251
+#: 221a5822119945d68aa985272cda5af4
+msgid "✅ **User Parameters Win**"
+msgstr "✅ **پارامترهای کاربر برنده‌اند**"
+
+#: ../../source/tier-defaults-explained.rst:253
+#: cb84673babce4988bc0aeeceb9136b12
+msgid "If you provide ``user_params``, they override tier defaults."
+msgstr "اگر ``user_params`` ارائه دهید، آنها پیش‌فرض‌های سطح را بازنویسی می‌کنند."
+
+#: ../../source/tier-defaults-explained.rst:263
+#: 7ff3bc2c7ff1469d949589d353943ccd
+msgid "✅ **Tier Name = Two Functions**"
+msgstr "✅ **نام سطح = دو تابع**"
+
+#: ../../source/tier-defaults-explained.rst:265
+#: 59227fa2f4d946b8a10751a7c8b27a9e
+msgid "The ``tier`` parameter does **TWO things**:"
+msgstr "پارامتر ``tier`` **دو کار** انجام می‌دهد:"
+
+#: ../../source/tier-defaults-explained.rst:267
+#: 78b5255ba1444fc88f617ee9da823b6c
+msgid "**Module activation** (via ``tier_hierarchy`` in ``registry.py``)"
+msgstr "**فعال‌سازی ماژول** (از طریق ``tier_hierarchy`` در ``registry.py``)"
+
+#: ../../source/tier-defaults-explained.rst:269
+#: 0cee098aa74145d4ad42bb62785ea0b9
+msgid "``tier=\"basic\"`` → Activate 6 basic modules"
+msgstr "``tier=\"basic\"`` ← فعال‌سازی ۶ ماژول پایه"
+
+#: ../../source/tier-defaults-explained.rst:270
+#: 28de879540c644b98876421b8a3d03ed
+msgid "``tier=\"intermediate\"`` → Activate 13 modules"
+msgstr "``tier=\"intermediate\"`` ← فعال‌سازی ۱۳ ماژول"
+
+#: ../../source/tier-defaults-explained.rst:271
+#: 6a62b51cba7341cf9973efc7d4066509
+msgid "``tier=\"dirty\"`` → Activate 6 basic modules (maps to \"basic\")"
+msgstr "``tier=\"dirty\"`` ← فعال‌سازی ۶ ماژول پایه (نگاشت به \"basic\")"
+
+#: ../../source/tier-defaults-explained.rst:272
+#: b37e6ae7d9394911a11e22fb8597af14
+msgid "``tier=\"ultra\"`` → Activate all 28 modules (maps to \"expert\")"
+msgstr "``tier=\"ultra\"`` ← فعال‌سازی تمام ۲۸ ماژول (نگاشت به \"expert\")"
+
+#: ../../source/tier-defaults-explained.rst:274
+#: 52c20d44748e4f2489bab598eeaa7038
+msgid "**Default parameters** (via ``TIER_DEFAULTS`` in ``defaults.py``)"
+msgstr "**پارامترهای پیش‌فرض** (از طریق ``TIER_DEFAULTS`` در ``defaults.py``)"
+
+#: ../../source/tier-defaults-explained.rst:276
+#: 0050b49c64ff4129aed2a3772e6ad7f7
+msgid "``tier=\"basic\"`` → Load ``TIER_DEFAULTS[\"basic\"]`` parameters"
+msgstr "``tier=\"basic\"`` ← بارگذاری پارامترهای ``TIER_DEFAULTS[\"basic\"]``"
+
+#: ../../source/tier-defaults-explained.rst:277
+#: 9ae2d3b88ef847dab5d36343534fe961
+msgid "``tier=\"dirty\"`` → Load ``TIER_DEFAULTS[\"dirty\"]`` parameters"
+msgstr "``tier=\"dirty\"`` ← بارگذاری پارامترهای ``TIER_DEFAULTS[\"dirty\"]``"
+
+#: ../../source/tier-defaults-explained.rst:279
+#: 42a12902c9fe4131afef7c2c784d125a
+msgid "✅ **Only 3 Parameters**"
+msgstr "✅ **فقط ۳ پارامتر**"
+
+#: ../../source/tier-defaults-explained.rst:281
+#: e9f59e4b671b4c8aa115abdb64afb480
+msgid "TIER_DEFAULTS only set **3 core parameters**:"
+msgstr "TIER_DEFAULTS فقط **۳ پارامتر اصلی** را تنظیم می‌کند:"
+
+#: ../../source/tier-defaults-explained.rst:283
+#: ca2407730d574616a9e04a0c549b69fa
+msgid "``PAO.BasisSize`` - Basis set size"
+msgstr "``PAO.BasisSize`` - اندازه مجموعه پایه"
+
+#: ../../source/tier-defaults-explained.rst:284
+#: ba686f90292e45cabc3dd711231d263f
+msgid "``a2s_kpts`` - k-point sampling"
+msgstr "``a2s_kpts`` - نمونه‌برداری نقاط k"
+
+#: ../../source/tier-defaults-explained.rst:285
+#: cf1bc9ccf6ea44f6af1dad0490d43b4a
+msgid "``Mesh.Cutoff`` - Real-space grid cutoff"
+msgstr "``Mesh.Cutoff`` - برش شبکه فضای واقعی"
+
+#: ../../source/tier-defaults-explained.rst:287
+#: 500560aba46a4889bcd9de315102d235
+msgid "All other parameters use dataclass defaults or must be set by user."
+msgstr "تمام پارامترهای دیگر از پیش‌فرض‌های dataclass استفاده می‌کنند یا باید توسط کاربر تنظیم شوند."
+
+#: ../../source/tier-defaults-explained.rst:292
+#: 3fb25c1a5e1b462aaf3bd3ab792efff6
+msgid "Where TIER_DEFAULTS Are Used"
+msgstr "کجا از TIER_DEFAULTS استفاده می‌شود"
+
+#: ../../source/tier-defaults-explained.rst:294
+#: 209cfe14977b469484df407d1be650d4
+msgid "**1. In SiestaInputGenerator.__post_init__()** (MAIN USE)"
+msgstr "**۱. در SiestaInputGenerator.__post_init__()** (استفاده اصلی)"
+
+#: ../../source/tier-defaults-explained.rst:296
+#: 55bd91e9eee94875b7fbc5937dab99e8
+msgid "**File**: ``src/atomate2/siesta/sets/base.py:535-549``"
+msgstr "**فایل**: ``src/atomate2/siesta/sets/base.py:535-549``"
+
+#: ../../source/tier-defaults-explained.rst:311
+#: 07dbfbee12324457bd56470f9bf0fa45
+msgid "**When**: Every time you create a Maker with ``tier=`` parameter"
+msgstr "**چه زمانی**: هر بار که یک Maker با پارامتر ``tier=`` ایجاد می‌کنید"
+
+#: ../../source/tier-defaults-explained.rst:313
+#: 81a55cf6049b4b34a66732f7b694dba7
+msgid "**2. In CLI (atomate2siesta-presets defaults)**"
+msgstr "**۲. در CLI (atomate2siesta-presets defaults)**"
+
+#: ../../source/tier-defaults-explained.rst:315
+#: 559f25c58c1949cc99e9b4df7d4ed803
+msgid "**File**: ``src/atomate2/siesta/cli/tiers.py:398``"
+msgstr "**فایل**: ``src/atomate2/siesta/cli/tiers.py:398``"
+
+#: ../../source/tier-defaults-explained.rst:326
+#: 2889a1e1c9254d7f8f0d8ee1a13c90cb
+msgid "**When**: When you run ``atomate2siesta-presets defaults``"
+msgstr "**چه زمانی**: وقتی ``atomate2siesta-presets defaults`` را اجرا می‌کنید"
+
+#: ../../source/tier-defaults-explained.rst:331
+#: 0a39c4c88bd24da282b69041a24c3024
+msgid "Tier Name Meanings"
+msgstr "معانی نام‌های سطح"
+
+#: ../../source/tier-defaults-explained.rst:337
+#: 5e528b68209d477192d813176eb65fb8
+msgid "Tier Name"
+msgstr "نام سطح"
+
+#: ../../source/tier-defaults-explained.rst:338
+#: 3f40ac8483c84df9b52d83e632f21b93
+msgid "Basis / k-pts / Cutoff"
+msgstr "پایه / نقاط k / برش"
+
+#: ../../source/tier-defaults-explained.rst:339
+#: 69da8d380182472c887ab6f96611e128
+msgid "Speed"
+msgstr "سرعت"
+
+#: ../../source/tier-defaults-explained.rst:340
+#: c0bad75fad0a4a708ba16960d3fd93a2
+msgid "Use Case"
+msgstr "مورد استفاده"
+
+#: ../../source/tier-defaults-explained.rst:341
+#: b36f73f8746844859a7f29751b3cc0aa
+msgid "``dirty``"
+msgstr "``dirty``"
+
+#: ../../source/tier-defaults-explained.rst:342
+#: 084a4c0812fd476993501b9c4096e630
+msgid "SZ / [1,1,1] / 50 Ry"
+msgstr "SZ / [۱,۱,۱] / ۵۰ Ry"
+
+#: ../../source/tier-defaults-explained.rst:343
+#: 6721968395d44c8ab40f37bf34c8d27d
+msgid "Very Fast ⚡⚡⚡"
+msgstr "بسیار سریع ⚡⚡⚡"
+
+#: ../../source/tier-defaults-explained.rst:344
+#: 7378cfcceccf4bb78be13214fe0fd48b
+msgid "Quick testing, workflow debugging"
+msgstr "تست سریع، اشکال‌زدایی جریان کار"
+
+#: ../../source/tier-defaults-explained.rst:345
+#: 95cdfa594be6414382edb22a0a394522
+msgid "``basic``"
+msgstr "``basic``"
+
+#: ../../source/tier-defaults-explained.rst:346
+#: 0a9d1ce5e9ef4651959401b797c612cd
+msgid "DZP / [3,3,3] / 150 Ry"
+msgstr "DZP / [۳,۳,۳] / ۱۵۰ Ry"
+
+#: ../../source/tier-defaults-explained.rst:347
+#: 1ec964c2bd134b2991f9cd43f898eac2
+msgid "Fast ⚡⚡"
+msgstr "سریع ⚡⚡"
+
+#: ../../source/tier-defaults-explained.rst:348
+#: 780e90dcd9a549b5b089039e82c2e856
+msgid "Initial relaxations, structure checks"
+msgstr "آرام‌سازی اولیه، بررسی ساختار"
+
+#: ../../source/tier-defaults-explained.rst:349
+#: 25ce818c9c8a4b8aae56cf6e182a9998
+msgid "``intermediate``"
+msgstr "``intermediate``"
+
+#: ../../source/tier-defaults-explained.rst:350
+#: 72ab7182d3414b7ba487cb2a01dca571
+msgid "DZP / [6,6,6] / 200 Ry"
+msgstr "DZP / [۶,۶,۶] / ۲۰۰ Ry"
+
+#: ../../source/tier-defaults-explained.rst:351
+#: d3a047ed34fb4b12ab6ebd57c0efe1dd
+msgid "Medium ⚡"
+msgstr "متوسط ⚡"
+
+#: ../../source/tier-defaults-explained.rst:352
+#: cb9470a9eb11463fba6e462a8f91367c
+msgid "Standard production calculations"
+msgstr "محاسبات تولید استاندارد"
+
+#: ../../source/tier-defaults-explained.rst:353
+#: f8248a81b832466799b0ceffea66e849
+msgid "``advanced``"
+msgstr "``advanced``"
+
+#: ../../source/tier-defaults-explained.rst:354
+#: 840256007df74ca7a47e3d5e68b5dfd8
+msgid "TZP / [6,6,6] / 300 Ry"
+msgstr "TZP / [۶,۶,۶] / ۳۰۰ Ry"
+
+#: ../../source/tier-defaults-explained.rst:355
+#: ee71d0b3cea84978b78f44be5b8f8a74
+msgid "Slow 🐌"
+msgstr "کند 🐌"
+
+#: ../../source/tier-defaults-explained.rst:356
+#: 04a66ec53694486fa7475f0c89be1c01
+msgid "High-quality results"
+msgstr "نتایج با کیفیت بالا"
+
+#: ../../source/tier-defaults-explained.rst:357
+#: e928a91a2be84f22b1ec0af75497bfde
+msgid "``expert``"
+msgstr "``expert``"
+
+#: ../../source/tier-defaults-explained.rst:358
+#: 7736bc10ba914f3682bb54aee400bfc5
+msgid "TZP / [8,8,8] / 400 Ry"
+msgstr "TZP / [۸,۸,۸] / ۴۰۰ Ry"
+
+#: ../../source/tier-defaults-explained.rst:359
+#: 6f7a4b338c9c45a5aa42383fc3e17b2a
+msgid "Very Slow 🐌🐌"
+msgstr "بسیار کند 🐌🐌"
+
+#: ../../source/tier-defaults-explained.rst:360
+#: c18957522dd549ad8ff39f66c3e0477a
+msgid "Publication quality"
+msgstr "کیفیت انتشار"
+
+#: ../../source/tier-defaults-explained.rst:361
+#: d12787edd87e4c8daa874f4cc36102ea
+msgid "``ultra``"
+msgstr "``ultra``"
+
+#: ../../source/tier-defaults-explained.rst:362
+#: b731997749514665b6423295ea6bf3ac
+msgid "TZDP / [10,10,10] / 800 Ry"
+msgstr "TZDP / [۱۰,۱۰,۱۰] / ۸۰۰ Ry"
+
+#: ../../source/tier-defaults-explained.rst:363
+#: 2434551f39af4e288196cd3a8883dc21
+msgid "Extremely Slow 🐌🐌🐌"
+msgstr "بسیار بسیار کند 🐌🐌🐌"
+
+#: ../../source/tier-defaults-explained.rst:364
+#: 783ad0f5c6d34a88a82ff6dd9a1a263a
+msgid "Benchmark, convergence tests"
+msgstr "معیارسنجی، تست همگرایی"
+
+#: ../../source/tier-defaults-explained.rst:369
+#: 7bf50edfbd064e9593a89c30597d18d4
+msgid "Common Confusion: TIER_DEFAULTS vs TIER_PRESETS"
+msgstr "سردرگمی رایج: TIER_DEFAULTS در مقابل TIER_PRESETS"
+
+#: ../../source/tier-defaults-explained.rst:371
+#: 8ec81fdecf14463ca04f6eee8e1511c0
+msgid "**TIER_DEFAULTS** (Simple, 3 parameters)"
+msgstr "**TIER_DEFAULTS** (ساده، ۳ پارامتر)"
+
+#: ../../source/tier-defaults-explained.rst:382
+#: e389f1df912b4dd5851320740240d20f
+msgid "**TIER_PRESETS** (Complex, many parameters + module control)"
+msgstr "**TIER_PRESETS** (پیچیده، پارامترهای زیاد + کنترل ماژول)"
+
+#: ../../source/tier-defaults-explained.rst:401
+#: 36f142d1a9cb4087adcb5a5d82deac04
+msgid "**When to use each**:"
+msgstr "**چه زمانی از هر کدام استفاده کنیم**:"
+
+#: ../../source/tier-defaults-explained.rst:403
+#: 9037d34aba4c4791aaa62d92cfa7f225
+msgid "**TIER_DEFAULTS**: Quick start, minimal customization"
+msgstr "**TIER_DEFAULTS**: شروع سریع، سفارشی‌سازی حداقلی"
+
+#: ../../source/tier-defaults-explained.rst:409
+#: de223c32756943a5b46645912c6733cc
+msgid "**TIER_PRESETS**: Material-specific, comprehensive settings"
+msgstr "**TIER_PRESETS**: اختصاصی مواد، تنظیمات جامع"
+
+#: ../../source/tier-defaults-explained.rst:420
+#: 8097bf29a4c845e58de1ac53ffd424fc
+msgid "Testing TIER_DEFAULTS"
+msgstr "تست TIER_DEFAULTS"
+
+#: ../../source/tier-defaults-explained.rst:422
+#: f5dde3846e964019bd42760232b92df2
+msgid "You can inspect what parameters are loaded:"
+msgstr "می‌توانید بررسی کنید چه پارامترهایی بارگذاری شده‌اند:"
+
+#: ../../source/tier-defaults-explained.rst:448
+#: 47fc66ff3bed44dc85fb917c6fe8c535
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/tier-defaults-explained.rst:450
+#: f496c59e79854c01aa1031cfd0d28f94
+msgid ":doc:`tier-system` - Main tier system documentation"
+msgstr ":doc:`tier-system` - مستندات اصلی سیستم سطح‌بندی"
+
+#: ../../source/tier-defaults-explained.rst:451
+#: 35eaad0655974a5390c5d5681eea1c2a
+msgid ":doc:`tier-system-clarification` - Tier levels vs tier defaults"
+msgstr ":doc:`tier-system-clarification` - سطوح سطح‌بندی در مقابل پیش‌فرض‌های سطح"
+
+#: ../../source/tier-defaults-explained.rst:452
+#: fe1305372bb546e4b48520b4a7a52457
+msgid ":doc:`cli-tools` - Using ``atomate2siesta-presets`` CLI"
+msgstr ":doc:`cli-tools` - استفاده از CLI ``atomate2siesta-presets``"

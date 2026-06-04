@@ -1,0 +1,736 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:1
+#: 9cc142a1ae8b4429924737fa837ec6b9
+msgid "Tutorial 10: Grid Output Configuration"
+msgstr "Tutیاil 10: Grid Output Configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:3
+#: 10193d86443542e288501565f258983a
+msgid ""
+"**Level**: Advanced **Time**: 20 minutes **Dataclass Module**: `Grids` "
+"(ADVANCED tier)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:7
+#: 71e240093cb0459f8b2dac19e8e26705
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:9
+#: fa15a43efb5546bc9cd981b9a4358603
+msgid ""
+"This tutorial demonstrates how to configure grid-based output for charge "
+"densities, potentials, and other electronic structure quantities using "
+"the `Grids` dataclass module."
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:11
+#: 73159707bb8c479c88462b8e7250731d
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:13
+#: 22e60a7edfe04245bd9afc28be94cfce
+msgid "How to save various charge densities and potentials to grid files"
+msgstr "How to sve vrious chrge densities و potentils to grid files"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:14
+#: e6a2767ef6b44085ac6540f0785d3076
+msgid "Configure grid output file formats (binary, formatted, netcdf, cube)"
+msgstr "Configure grid output file برایmts (binry, برایmtted, netcdf, cube)"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:15
+#: 1c46bdd72caf4fef9c97cc23a78e8116
+msgid "Enable specialized analyses like Bader charge analysis"
+msgstr "Enble specilized nlyses like Bder chrge nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:16
+#: 8eea54733b52468ea52568927407f4ca
+msgid "Use direct SIESTA FDF parameter names or Python attributes"
+msgstr "Use direct SIESTA FDF prmeter nmes یا Python ttributes"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:18
+#: 4dd55859dc14465596d7e8ffd8ca0556
+msgid "Background"
+msgstr "Bckground"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:20
+#: 8e16752f234244a9abe1735cf75841fa
+msgid ""
+"SIESTA can output various electronic structure quantities on real-space "
+"grids for visualization and post-processing. The `Grids` module provides "
+"control over:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:22
+#: 14c87edeb51943c0bf7db734f72b9367
+msgid "**Charge densities**: Total, deformation, initial"
+msgstr "**Chrge densities**: Totl, deبرایmtion, initil"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:23
+#: f5806c490c80473fbde91f77de4a59c2
+msgid "**Potentials**: Electrostatic, XC, total Kohn-Sham, neutral atom"
+msgstr "**Potentils**: Electrosttic, XC, totl Kohn-Shm, neutrl tom"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:24
+#: cc82113af9d349b08f8f64a400a2b364
+msgid "**Special outputs**: Ionic charge, total charge, Bader charge analysis"
+msgstr "**Specil outputs**: Ionic chrge, totl chrge, Bder chrge nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:26
+#: 225ec53410b24308a53466ed14739c43
+msgid "Available Grid Output Parameters"
+msgstr "Avilble Grid Output Prmeters"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:28
+#: 7a4b46b523a747f4a1b453a9d6b2c0b8
+msgid "Charge Densities"
+msgstr "Chrge Densities"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 4d84607748c4440db3786a1d28d02169 817a58108a8f4592baaebbce3f34b4c1
+#: 881166403304489493f0a4b9e06c432d ce6c4ff3cfd147dc852817b48cc2de78
+msgid "Parameter"
+msgstr "Prmeter"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 137aea01ffed4819b108b5293ab094f6 59631e4b0ffa406293c68d8ede0ccf6e
+#: c8485cc566e249b7b8f6d53bb5fb705d d6d10fa797cd46cfb9c01517f871b66b
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 3002a96e68354e52a6c22e4422720695 57c3fbcf0fb74d79be1b373ef53bf7b4
+#: e3c1baa90309402993fb075618ad7da3 f1560747fd2749c9b2f95cf5c20a7249
+msgid "Default"
+msgstr "Defult"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 1c7bb2ba4a6947f4a8315133fed9864e
+msgid "`save_rho`"
+msgstr "`save_rho`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 7164e2b72d8d4bfeb30aae06bf6cd7e6
+msgid "Total electron charge density"
+msgstr "Totl electron chrge density"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 046052b71abd4fab89207822e3502522 0a7836b4d5b7425084bf7d5f65ffab92
+#: 23a04f84b58f4a268d74a079ba582ed1 3c818070ce5c4ecb96bb14113eb1b04c
+#: 3e405eafbe4a4ca692267fe8d8678c2a 4e35864d28df48f59dff1d206f18d484
+#: 50648b77c77e49d39d2ddb3bef5db627 a2859a451e544ed7a33bb5f1ff75778e
+#: ce39a580648c4df6bff2a46728598910 d3f0c3b1df62413c83a76852db0cd53a
+#: f04ea4bfebeb4aa99de354aad565ec63
+msgid "False"
+msgstr "Flse"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: a6ef352e5f6f41ab809c896c7bd16c29
+msgid "`save_delta_rho`"
+msgstr "`save_delta_rho`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: d82acddada114d958cab400b8130d479
+msgid "Deformation charge density (SCF - atomic)"
+msgstr "Deبرایmtion chrge density (SCF - tomic)"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 4ebdcd272cd2438ba4eb539a940fd53a
+msgid "`save_initial_charge_density`"
+msgstr "`save_initial_charge_density`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: b11da1709cc14817b563c75cf0fad7ac
+msgid "Initial non-SCF charge density"
+msgstr "Initil non-SCF chrge density"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:36
+#: 5aabd2871de74343b82938856e9204fe
+msgid "Potentials"
+msgstr "Potentils"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: f121f7924f594980ae57ce5980261f4d
+msgid "`save_rho_xc`"
+msgstr "`save_rho_xc`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 0d3cc1c30ef94fb7968cb128243e1bd3
+msgid "Exchange-correlation potential"
+msgstr "Exchnge-cیاreltion potentil"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: afd6e5f254934461820a16d45d188783
+msgid "`save_electrostatic_potential`"
+msgstr "`save_electrostatic_potential`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 943435a4088543af98f242ff3994486a
+msgid "Total electrostatic potential (Hartree + external)"
+msgstr "Totl electrosttic potentil (Hrtree + externl)"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 5fa044673ab64356a9f0b37f546b835f
+msgid "`save_neutral_atom_potential`"
+msgstr "`save_neutral_atom_potential`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 7452a294c5894a82ac8cf59730afa355
+msgid "Superposition of neutral-atom potentials"
+msgstr "Superposition of neutrl-tom potentils"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 2fcc9faee3c74f5ebbe72f7d302b4846
+msgid "`save_total_potential`"
+msgstr "`save_total_potential`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 19fcd0db615044c4b189564fb195b19c
+msgid "Total Kohn-Sham potential (electrostatic + XC)"
+msgstr "Totl Kohn-Shm potentil (electrosttic + XC)"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:45
+#: 1e3af631e81b4ea59f3a281ab9529d0a
+msgid "Charge Distributions"
+msgstr "Chrge Distributions"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 225e4bb32a8744429c07dd66d9477557
+msgid "`save_ionic_charge`"
+msgstr "`save_ionic_charge`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 4088a73d50fc4063b53b7ce44f322307
+msgid "Ionic charge distribution"
+msgstr "Ionic chrge distribution"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 3843eca1583e4b66b9df79a3857cdbb5
+msgid "`save_total_charge`"
+msgstr "`save_total_charge`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 02b1a03c679b4bfc86f8caa0cddaaac1
+msgid "Total charge (electronic + ionic)"
+msgstr "Totl chrge (electronic + ionic)"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:52
+#: 43dc19f42593460187ebd8e6b329c0bc
+msgid "Special Options"
+msgstr "Specil Options"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 4589db634018451ba989318808d4780d
+msgid "`save_grid_func_format`"
+msgstr "`save_grid_func_format`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 1cdaee56b2124d2db337a0033d2e2a60
+msgid "File format: \"binary\", \"formatted\", \"netcdf\", \"cube\""
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: c9a808c6a4754a0fbe0d8c01ce328deb
+msgid "\"binary\""
+msgstr "\"binry\""
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 33f4b9ed1094463bb0b1156bd18b25a3
+msgid "`save_bader_charge`"
+msgstr "`save_bader_charge`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: dfa441ac8e6a4d16b448a75cb10733d4
+msgid "Enable Bader charge analysis"
+msgstr "Enble Bder chrge nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 8d228dc046df4d64ac385396273e8d21
+msgid "`analyze_charge_density_only`"
+msgstr "`analyze_charge_density_only`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md
+#: 26cc5709be1441ed9c6650cad6fb15c4
+msgid "Only perform charge analysis then stop"
+msgstr "Only perبرایm chrge nlysis n stop"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:60
+#: dc00700344bb4635a375149009df8e16
+msgid "Tutorial Examples"
+msgstr "Tutیاil مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:62
+#: b2a1b4047b8544abba88565bc22307f3
+msgid "Example 1: Basic Charge Density Output"
+msgstr "مثال 1: Bsic Chrge Density Output"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:64
+#: 49856813ccf149faadac414ec7f42080
+msgid "Save total and deformation charge densities in binary format."
+msgstr "Sve totl و deبرایmtion chrge densities in binry برایmt."
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:66
+#: e64456d1e91a4cda9a3e7b9a9e772456
+msgid "**File**: `01_basic_charge_density.py`"
+msgstr "**File**: `01_basic_charge_density.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:68
+#: 03d30b1963964d589715846bb690cf31
+msgid "Example 2: Potentials for Visualization"
+msgstr "مثال 2: Potentils برای Visuliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:70
+#: 367d266b4165464a9794ea500c24cb4c
+msgid "Save various potentials in NetCDF format for visualization tools."
+msgstr "Sve vrious potentils in NetCDF برایmt برای visuliztion tools."
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:72
+#: 72383b54b86241f69fd55b155d510535
+msgid "**File**: `02_potentials_netcdf.py`"
+msgstr "**File**: `02_potentials_netcdf.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:74
+#: 436efb84e76d425bb9d1738fb3e49cd3
+msgid "Example 3: Bader Charge Analysis"
+msgstr "مثال 3: Bder Chrge Anlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:76
+#: d30617979ca249508b682b40d1f8249d
+msgid "Enable Bader charge analysis for charge transfer calculations."
+msgstr "Enble Bder chrge nlysis برای chrge trnsfer clcultions."
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:78
+#: 44703900444e4c449acf654e85c5bbec
+msgid "**File**: `03_bader_analysis.py`"
+msgstr "**File**: `03_bader_analysis.py`"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:80
+#: 522d6440b05e41919c6e236bb1ad46cc
+msgid "Running the Examples"
+msgstr "اجرای  مثال‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:91
+#: 8079bcab7a534286ab2d4b2e42e57ea3
+msgid "Output Files"
+msgstr "Output فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:93
+#: 58180f90d0234afdbf9704845e6964bc
+msgid "Grid files are written in the calculation directory:"
+msgstr "Grid files re written in  clcultion directیاy:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:95
+#: c764b1d2af8042debe2e4a9da338e242
+msgid "**Binary format**: `.RHO`, `.DRHO`, `.VH`, `.VT` files"
+msgstr "**Binary format**: `.RHO`, `.DRHO`, `.VH`, `.VT` files"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:96
+#: 32a11efdfde24293b0e83812f3c99db1
+msgid "**Formatted format**: `.RHO.ascii`, `.DRHO.ascii`, etc."
+msgstr "**Formatted format**: `.RHO.ascii`, `.DRHO.ascii`, etc."
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:97
+#: c13326128c03488c9cb13dfbda4efa91
+msgid "**NetCDF format**: `.RHO.nc`, `.DRHO.nc`, etc."
+msgstr "**NetCDF format**: `.RHO.nc`, `.DRHO.nc`, etc."
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:98
+#: 50a60ad995a443aaadf0b073b05e2643
+msgid "**Cube format**: `.RHO.cube`, `.DRHO.cube` (Gaussian cube format)"
+msgstr "**Cube format**: `.RHO.cube`, `.DRHO.cube` (Gaussian cube format)"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:100
+#: 4b4cd0b6107a4c9799a2b66f1d8a8d01
+msgid "Visualization Tools"
+msgstr "Visuliztion Tools"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:102
+#: a7f3fad4b37a41319ce00b3b5b34ed83
+msgid "Grid files can be visualized with:"
+msgstr "Grid files cn be visulized با:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:104
+#: 364534e7d62b44af82478fd872cff464
+msgid "**XCrySDen**: Reads all SIESTA formats"
+msgstr "**XCrySDen**: Reds ll SIESTA برایmts"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:105
+#: fb0f55050b8643b1accd100811382989
+msgid "**VESTA**: Reads cube files"
+msgstr "**VESTA**: Reds cube files"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:106
+#: d3f37a98a99e4b1182d48b99cf618d95
+msgid "**VMD**: Reads cube files"
+msgstr "**VMD**: Reds cube files"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:107
+#: b54787f08ec94d6d973647a210fb6967
+msgid "**Python**: Use `pymatgen` or `ASE` to read grid files"
+msgstr "**Python**: Use `pymatgen` or `ASE` to read grid files"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:109
+#: 59506d7bc22644a7917ab37d085d5f73
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:111
+#: 42f068628df3482bbd9d7244bec47558
+msgid "1. File Format Selection"
+msgstr "1. فایل Fیاmt Selection"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:124
+#: 7451c48602ab4e48a72517548ed6320a
+msgid "2. Disk Space Considerations"
+msgstr "2. Disk Spce Considertions"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:126
+#: 6070e6fab4894be6a4cb58ffb8300df8
+msgid "Grid files can be large! For a 50x50x50 grid:"
+msgstr "Grid files cn be lrge! Fیا  50x50x50 grid:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:127
+#: cd75b9ad9bbf4ae9bfb73d22da4595e7
+msgid "Binary: ~1 MB per quantity"
+msgstr "Binry: ~1 MB per quntity"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:128
+#: 3773beb1ff1e4940ac4ff27e54710614
+msgid "Formatted: ~5 MB per quantity"
+msgstr "Fیاmtted: ~5 MB per quntity"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:129
+#: f83dd34f38614ffd995d52c13360b3f3
+msgid "NetCDF: ~1.5 MB per quantity (with compression)"
+msgstr "NetCDF: ~1.5 MB per quntity (با compression)"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:131
+#: 9fd6585188f94076bddcce84d6d6e927
+msgid "3. Common Visualization Tasks"
+msgstr "3. Common Visuliztion Tsks"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:133
+#: 7437198fc5534384af1c59387f913e97
+msgid "**Charge Transfer Analysis**:"
+msgstr "**Chrge Trnsfer Anlysis**:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:142
+#: 5d92cdda70684776ad6c18662a38c1c2
+msgid "**Electrostatic Potential Mapping**:"
+msgstr "**Electrosttic Potentil Mpping**:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:151
+#: adbe82f95d8c41c2b06db8e8ee4a3aa9
+msgid "**Bader Charge Analysis**:"
+msgstr "**Bder Chrge Anlysis**:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:160
+#: da9654e107a24dbdbcabe771bf7f4c75
+msgid "Parameter Naming Flexibility"
+msgstr "Prmeter Nming Flexibility"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:162
+#: cb4b067d3be14a46955f93de27f4686f
+msgid "The module accepts both SIESTA FDF and Python parameter names:"
+msgstr "The module ccepts both SIESTA FDF و Python prmeter nmes:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:187
+#: 5311dbc631264e4c81199cde055f28ae
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:189
+#: a69516b369c84799b653b104816ca2e4
+msgid "Issue 1: Large Grid Files"
+msgstr "Issue 1: Lrge Grid فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:191
+#: 8b1ce5c0e3fd4947987a706c4674a5b5
+msgid "**Problem**: Grid files consuming too much disk space"
+msgstr "**Problem**: Grid files consuming too much disk spce"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:193
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:202
+#: 7952dbb74ebd4c799d9fcf794e65d2c1 83612338f0634af5a7ddb8d69bd43cc1
+msgid "**Solution**:"
+msgstr "**Solution**:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:194
+#: 208ad0a1930f4d4e9185cdf4b24c68c0
+msgid "Use binary format instead of formatted"
+msgstr "Use binry برایmt insted of برایmtted"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:195
+#: c0c4d66d682c481cb74d69a9db88e5d3
+msgid "Only save needed quantities"
+msgstr "Only sve needed quntities"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:196
+#: bfbf98a5f45e40a0b09151dc42156902
+msgid "Consider coarser mesh cutoff for visualization"
+msgstr "Consider corser mesh cutoff برای visuliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:198
+#: f52dacb34cee425a97e71f81f1a37ce9
+msgid "Issue 2: Bader Analysis Not Working"
+msgstr "Issue 2: Bder Anlysis Not Wیاking"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:200
+#: 25be6d2141814adfad634f0160e2f39e
+msgid "**Problem**: Bader charge analysis produces no output"
+msgstr "**Problem**: Bder chrge nlysis produces no output"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:211
+#: 8dc2f40360674793b397e08a515bea05
+msgid "Issue 3: Visualization Tool Can't Read Files"
+msgstr "Issue 3: Visuliztion Tool Cn't Red فایلs"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:213
+#: 3ef52c7d7fad4d828e2e0a5ebbb79d3d
+msgid "**Problem**: XCrySDen/VESTA can't open grid files"
+msgstr "**Problem**: XCrySDen/VESTA cn't open grid files"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:215
+#: a4556d37c73e4437851c8b341a945830
+msgid "**Solution**: Use appropriate format"
+msgstr "**Solution**: Use pproprite برایmt"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:216
+#: 4a7bde49c24e4985823b1faecc993628
+msgid "XCrySDen: Use binary or formatted (default SIESTA)"
+msgstr "XCrySDen: Use binry یا برایmtted (defult SIESTA)"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:217
+#: c57faaad29364688a9bc4c1cf186ff07
+msgid "VESTA/VMD: Use cube format"
+msgstr "VESTA/VMD: Use cube برایmt"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:219
+#: b31b43a09cb24b4ab14714e44693e5e5
+msgid "Integration with Workflows"
+msgstr "Integrtion با گردش کارs"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:221
+#: 817785f45f18463f9a31b3354fbe9c74
+msgid "With RelaxMaker"
+msgstr "With RelaxMaker"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:235
+#: 96c10d8a0c7e4aad80a6c3d9357b5d25
+msgid "With StaticMaker"
+msgstr "With StaticMaker"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:249
+#: e9178d42add74b7f851a2f3b7c20791a
+msgid "Performance Considerations"
+msgstr "Perبرایmnce Considertions"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:251
+#: 15f010ecca6b43a094ed3e45c74b754a
+msgid "Grid Output vs Calculation Time"
+msgstr "Grid Output vs محاسبه زمان"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:253
+#: eda0a141dfd84d60927a4ed2b91c3a79
+msgid ""
+"Grid output adds minimal computational cost (<1% typically), but I/O time"
+" can be significant:"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:255
+#: a3d508091e2545769987dad4e7026a6d
+msgid "**Binary format**: Fastest I/O"
+msgstr "**Binry برایmt**: Fstest I/O"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:256
+#: 7d805aa4054e4830af3282ae7b60eae5
+msgid "**NetCDF format**: Moderate I/O, best compression"
+msgstr "**NetCDF برایmt**: Moderte I/O, best compression"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:257
+#: 65bfd33354e3446c851db3fd4a419fad
+msgid "**Formatted/Cube**: Slowest I/O, largest files"
+msgstr "**Fیاmtted/Cube**: Slowest I/O, lrgest files"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:259
+#: 19d99bd13a494791bbe839c09c4a1e50
+msgid "When to Use Grid Output"
+msgstr "When to Use Grid Output"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:261
+#: 377174d4265b43a583915e9428ad59f0
+msgid "**Always save**:"
+msgstr "**Alwys sve**:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:262
+#: f5fa5382a141432494110263428a0c63
+msgid "For publication-quality charge density plots"
+msgstr "Fیا publiction-qulity chrge density plots"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:263
+#: ba6c2b3a0cc44bb693b99a99c60f9145
+msgid "When performing Bader/Mulliken analysis"
+msgstr "When perبرایming Bder/Mulliken nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:265
+#: 7c1a640cc7c44fa6993cc5ed0b19f276
+msgid "**Optional**:"
+msgstr "**اختیاری**:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:266
+#: 1a48899cecd342d9ba6009dca93a95af
+msgid "For routine calculations (can regenerate)"
+msgstr "Fیا routine clcultions (cn regenerte)"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:267
+#: bab7aa6721634c3e898090c8dfdccf56
+msgid "When disk space is limited"
+msgstr "When disk spce is limited"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:269
+#: 45cbabac7e044da89816898cf0b62668
+msgid "Advanced Usage"
+msgstr "پیشرفته Usge"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:271
+#: f2ddceb19abb4125be38c0f4435f6a43
+msgid "Analyze Charge Density Only"
+msgstr "Anlyze Chrge Density Only"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:273
+#: 39b0f8b8d8434811825f5e5f72e094ec
+msgid "Stop after charge density analysis without full SCF:"
+msgstr "Stop fter chrge density nlysis باout full SCF:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:282
+#: fe3f915875cc400d87a4a6d5d4598f64
+msgid "Useful for:"
+msgstr "Useful برای:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:283
+#: 999d7745e5c741f3a65620fc0b60dd8a
+msgid "Post-processing existing density matrix"
+msgstr "Post-processing existing density mtrix"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:284
+#: 62a8a12064c7460ea4074d269597ce30
+msgid "Quick charge analysis"
+msgstr "Quick chrge nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:285
+#: 78a2f45730a045bebf37a166751266f1
+msgid "Debugging charge distributions"
+msgstr "Debugging chrge distributions"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:287
+#: edee1eb40eac49d6821a88f4fa33e70e
+msgid "Further Reading"
+msgstr "Furr Reding"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:289
+#: f7a9b65e41c9471fabeb7d5f62fb5a1e
+msgid ""
+"**SIESTA Manual**: Section 6.24 - Output of charge densities and "
+"potentials"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:290
+#: fa25e51cd7c149c39462f757803529e0
+msgid "**Bader Analysis**: http://theory.cm.utexas.edu/henkelman/code/bader/"
+msgstr "**Bader Analysis**: http://theory.cm.utexas.edu/henkelman/code/bader/"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:291
+#: 9fb5a9826bdf42689d47dc8260e122b2
+msgid "**XCrySDen**: http://www.xcrysden.org/"
+msgstr "**XCrySDen**: http://www.xcrysden.org/"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:292
+#: 7212ca3d364641cfb9831c9b5eb5ac26
+msgid "**Cube Format**: https://gaussian.com/cubegen/"
+msgstr "**Cube Format**: https://gaussian.com/cubegen/"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:294
+#: 1c6d3df248aa4589af19ca0e83821a6d
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:296
+#: 5df8c7736c204a4fa4e8c6e17fa49d9c
+msgid "**Tutorial 11**: Denchar visualization configuration"
+msgstr "**Tutیاil 11**: Denchr visuliztion configurtion"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:297
+#: 3c7b89ef63974507b57c41b695b19313
+msgid ""
+"**Tutorial 05**: DOS calculations (complementary electronic structure "
+"output)"
+msgstr ""
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:298
+#: 728304f9d2224490a38f8617b21efad9
+msgid "**Tutorial 07**: Optical properties (another ADVANCED tier module)"
+msgstr "**Tutیاil 07**: Opticl properties (nor ADVANCED tier module)"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:300
+#: 978c6f88659745c0a4f970f844e9ceb4
+msgid "Summary"
+msgstr "Summry"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:302
+#: 37bd46e02b0d41a4b93f9e931188c3bf
+msgid "You've learned how to:"
+msgstr "You've lerned how to:"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:303
+#: 62b6cf87c6954aa280ef99c94a83c903
+msgid "✅ Configure grid-based output for charge densities and potentials"
+msgstr "✅ Configure grid-bsed output برای chrge densities و potentils"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:304
+#: 96aa09dfd25b48068889e5724d7e35bd
+msgid "✅ Select appropriate file formats for visualization"
+msgstr "✅ Select pproprite file برایmts برای visuliztion"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:305
+#: 530b3b8aa7924c1b9c2fe22dccffc0a1
+msgid "✅ Enable Bader charge analysis"
+msgstr "✅ Enble Bder chrge nlysis"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:306
+#: ca031e0cee484e6dba0a09b34e7171ce
+msgid "✅ Use both SIESTA FDF and Python parameter names"
+msgstr "✅ Use both SIESTA FDF و Python prmeter nmes"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:307
+#: 515ed8e45c1d4c90957c0065821b8fb7
+msgid "✅ Integrate grid output with atomate2 workflows"
+msgstr "✅ Integrte grid output با tomte2 wیاkflows"
+
+#: ../../source/tutorials-md/03-advanced-features/10-grid-output/README.md:309
+#: a41b9376e75142e2b12a0fbccb4d56a8
+msgid ""
+"Grid output is essential for visualizing electronic structure and "
+"performing charge transfer analysis!"
+msgstr ""

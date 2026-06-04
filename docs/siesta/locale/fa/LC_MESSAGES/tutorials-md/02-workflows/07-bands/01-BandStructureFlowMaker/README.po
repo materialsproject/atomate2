@@ -1,0 +1,326 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:1
+#: 41e6267ed666467f9a03f510f747a60e
+msgid "BandStructureFlowMaker Tutorials"
+msgstr "BandStructureFlowMaker Tutorials"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:3
+#: 2385a24e2bce40d984eb5b5f8315e1e2
+msgid ""
+"This directory contains tutorials for the `BandStructureFlowMaker`, a "
+"complete workflow for computing electronic band structures with SIESTA."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:6
+#: 03ad222ea4f14cd6bf4b40968a1f6114
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:8
+#: 57dc051f947c4127bc3d00acae441cd1
+msgid ""
+"`BandStructureFlowMaker` provides an automated workflow for band "
+"structure calculations:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:10
+#: d51c16c06a06484fab0bb214d9a59457
+msgid ""
+"**Structure Relaxation** (optional): Optimize geometry before band "
+"calculation"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:11
+#: 5bd6f19e380742479aa6819882d6d038
+msgid "**SCF Calculation**: Compute ground-state electronic structure"
+msgstr "**SCF محاسبه**: Compute ground-stte electronic structure"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:12
+#: d132dba561cf4ad2885505979ada8120
+msgid "**Band Structure**: Calculate eigenvalues along high-symmetry k-path"
+msgstr "**ساختار نواری**: Clculte eigenvlues long high-symmetry k-pth"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:13
+#: 1c8ddc78aee545bbb4be9913e5ebd047
+msgid "**Analysis**: Extract band gap, VBM, CBM, and generate plots"
+msgstr "**Anlysis**: Extrct bو gp, VBM, CBM, و generte plots"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:15
+#: a06d633d2fff4058a9f1bb6a0a1037d0
+msgid "Tutorials"
+msgstr "Tutیاils"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 0f4139f60e15408381f7cfc38b6be68d
+msgid "File"
+msgstr "فایل"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: dc7f4e25487d448f9d2fbde47758460a
+msgid "Description"
+msgstr "توضیحات"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: fcf275a64b7e4cfb9d4ff2fea0a9f876
+msgid "Runtime"
+msgstr "Runtime"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 65c427958e33419abeea62a3ee47d4ac
+msgid "`01_basic.py`"
+msgstr "`01_basic.py`"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: cb1e40a0ab3d4e86a81681f05b0cbd83
+msgid "Complete workflow with relaxation"
+msgstr "Complete wیاkflow با relxtion"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: f9821bd03d434b0eac85c02b493a777c
+msgid "~30 min"
+msgstr "~30 min"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 41b5c6d1e06b4580bdf099dcf55238e9
+msgid "`02_skip_relaxation.py`"
+msgstr "`02_skip_relaxation.py`"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 367723bbc0734f84bfdfd06229d8888b
+msgid "Skip relaxation for pre-relaxed structures"
+msgstr "Skip relxtion برای pre-relxed structures"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 74cb5ffafa8c4e4b9b7d35befb1d148d
+msgid "~15 min"
+msgstr "~15 min"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: a4b29985895e4cbfb53549a40cc78566
+msgid "`03_custom_parameters.py`"
+msgstr "`03_custom_parameters.py`"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 759ce5a8b40443adafd96f8822bb930c
+msgid "High-accuracy TZP settings"
+msgstr "High-ccurcy TZP settings"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 2abe270e31eb4d508c493a81dc3b2d8e
+msgid "~45-60 min"
+msgstr "~45-60 min"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 2e04bccbd2504a92bd121e2d3db1770b
+msgid "`04_with_tier_preset.py`"
+msgstr "`04_with_tier_preset.py`"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 17f0da8f0afc4510b04568d0afaba453
+msgid "Using tier presets for parameters"
+msgstr "استفاده از tier presets برای prmeters"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 899779a156c543b3a3313285f21db3af
+msgid "varies"
+msgstr "vries"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: fa0eef582e5249d7bbb4360db97ac729
+msgid "`05_dry_run.py`"
+msgstr "`05_dry_run.py`"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 0f02699dbe1343e2b1b2690add8010a6
+msgid "Preview workflow without running SIESTA"
+msgstr "Preview wیاkflow باout running SIESTA"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md
+#: 5c1e40de4145418a8608c3eeb274f716
+msgid "~2 sec"
+msgstr "~2 sec"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:25
+#: f1539bb9ed59403ba78bdaf2186dbbdc
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:38
+#: b141959c7a4b4b3ebd7ac1a1ad81ce91
+msgid "Key Features"
+msgstr "Key ویژگی‌ها"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:40
+#: 9d04c8b388ac41a4a12535a4a60e4fbe
+msgid "Automatic K-Path Generation"
+msgstr "Automtic K-Pth Genertion"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:41
+#: bd498e4ad68d44aa8cf5bec037967978
+msgid ""
+"The workflow automatically determines the high-symmetry k-path based on "
+"crystal symmetry using pymatgen/seekpath conventions. No manual k-point "
+"specification needed."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:44
+#: 2f5d16c6368448c6ad122ed3d8f852ef
+msgid "Band Gap Analysis"
+msgstr "Bو Gp Anlysis"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:45
+#: 9d3172ebcf2944feadb1bad28bdd90ee
+msgid "Automatically extracts:"
+msgstr "Automticlly extrcts:"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:46
+#: f91e3f4b46074b41912c4e83e594cfed
+msgid "Band gap (eV)"
+msgstr "Bو gp (eV)"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:47
+#: 4188c6637ef34fcda75fb1a0484ace1a
+msgid "VBM (Valence Band Maximum)"
+msgstr "VBM (Vlence Bو Mximum)"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:48
+#: a4fc7c211d744ef3bdf9269458ce8dcf
+msgid "CBM (Conduction Band Minimum)"
+msgstr "CBM (Conduction Bو Minimum)"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:49
+#: f3c542aa18f243548ec6057caf333946
+msgid "Gap type (direct/indirect/metallic)"
+msgstr "Gp type (direct/indirect/metllic)"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:51
+#: 55a82053208a4f5a8b483584a9c6e442
+msgid "Output Files"
+msgstr "Output فایلs"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:52
+#: 98357d1183df417f82fbaed978b23d59
+msgid "`band_structure_summary.txt`: Text summary of electronic properties"
+msgstr "`band_structure_summary.txt`: Text summary of electronic properties"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:53
+#: d0d6f4ab50ef40d7a4ffa1306ae2df8c
+msgid "`band_structure.png`: Publication-quality band structure plot"
+msgstr "`band_structure.png`: Publication-quality band structure plot"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:55
+#: b40e9cd7c2b14aa681364c882f470f0e
+msgid "Customization Options"
+msgstr "Customiztion Options"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:57
+#: 7b9863a5146b49babe5b8cd0584d9791
+msgid "Skip Relaxation"
+msgstr "Skip Relxtion"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:58
+#: 9e5f12961b8244cf823932932a278acc
+msgid "For pre-relaxed structures:"
+msgstr "Fیا pre-relxed structures:"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:63
+#: 58b9f840f3404d2897fcbb238576154c
+msgid "Custom Energy Range"
+msgstr "Custom Energy Rnge"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:64
+#: 4e123039eb7146beaf13463b59254aec
+msgid "For wider/narrower plot range:"
+msgstr "Fیا wider/nrrower plot rnge:"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:69
+#: cd4a1f79b08340fcbb6e6076fa63540e
+msgid "Disable Plotting"
+msgstr "Disble Plotting"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:70
+#: 82b5e58c49504e45b949bb078e06e5e6
+msgid "To skip plot generation:"
+msgstr "To skip plot genertion:"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:75
+#: a110ec93f15e4e0ea3bd93e6142b070f
+msgid "Custom Makers"
+msgstr "Custom Makers"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:76
+#: c60b4233cc0f49dc95b7eb76c8aeb649
+msgid "For fine-grained control:"
+msgstr "Fیا fine-grined control:"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:89
+#: ecf23a9ded4d4b40a345c0e0574ce8b1
+msgid "Tips"
+msgstr "نکتهs"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:91
+#: 70d9ae30cf674fbea7db844620b7fb39
+msgid ""
+"**Start with dry run**: Use `dry_run=True` to validate parameters before "
+"production"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:92
+#: 6a727c18adc84648b72191a32efbbf42
+msgid "**Match basis sets**: Use the same basis for SCF and bands for consistency"
+msgstr "**Mtch bsis sets**: Use  sme bsis برای SCF و bوs برای consistency"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:93
+#: 6621c4d11d7f4f178a8bc7e3b8f2dec3
+msgid "**Dense SCF k-grid**: Use denser k-points in SCF for accurate Fermi level"
+msgstr "**Dense SCF k-grid**: Use denser k-points in SCF برای ccurte Fermi level"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:94
+#: d0f38c535b3e4b968bd6d91c3bf7b9d2
+msgid "**Pre-relax for speed**: Skip relaxation if structure is already optimized"
+msgstr "**Pre-relx برای speed**: Skip relxtion if structure is lredy optimized"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:96
+#: 413fa42de70d42f484812a6ea6264ceb
+msgid "See Also"
+msgstr "See Also"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:98
+#: 570c7506625046fe894cb4190ec96470
+msgid ""
+"`tutorials/01-basics/02-BandStructureMaker/`: Basic band structure job "
+"(no workflow)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:99
+#: fbe0e4cc13494bae85218aaf89b82ed4
+msgid "`tutorials/01-basics/05-DOSMaker/`: Density of states calculations"
+msgstr "`tutorials/01-basics/05-DOSMaker/`: Density of states calculations"
+
+#: ../../source/tutorials-md/02-workflows/07-bands/01-BandStructureFlowMaker/README.md:100
+#: 3cd30ba9a4284321ae8cb20bb41da1e4
+msgid ""
+"`atomate2siesta-info workflows BandStructureFlowMaker --full`: Full "
+"documentation"
+msgstr ""

@@ -1,0 +1,782 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:1
+#: 219ee4c39bcc4b5db0d84b80fa1ef653
+msgid "Tutorial: Mechanical Properties Workflows"
+msgstr "آموزش: Mechnicl Properties گردش کارs"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:3
+#: 914152cbd1bb481bb37207825b6e882a
+msgid ""
+"**Category**: 02-workflows/04-mechanical **Difficulty**: Advanced "
+"**Time**: ~5 min (dry-run), ~1-2 hours (full workflow)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:9
+#: 2ac0ec4ae886450bb79a71cd8520e26d
+msgid "Overview"
+msgstr "نمای کلی"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:11
+#: d3e15fbb408941c1ac4eab7ec67a240c
+msgid ""
+"This tutorial demonstrates calculations of mechanical properties using "
+"elastic constant workflows. The elastic tensor describes how a material "
+"responds to applied stress, providing information about stiffness, "
+"stability, and anisotropy."
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:13
+#: 9366ca1a46b74e17a318805ac8f8e47e
+msgid "**What Elastic Calculations Tell You**:"
+msgstr "**Wht Elstic محاسبهs Tell You**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:14
+#: 7619f32d23964d23ba8fb9931ec9907e
+msgid "**Elastic constants (Cᵢⱼ)**: Stiffness matrix components"
+msgstr "**Elstic constnts (Cᵢⱼ)**: Stiffness mtrix components"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:15
+#: 0b17eb4089b84e6abd2b336ce74f75fa
+msgid "**Bulk modulus (B)**: Resistance to uniform compression"
+msgstr "**Bulk modulus (B)**: Resistnce to uniبرایm compression"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:16
+#: b906b9a8e9434665b2606279974d507d
+msgid "**Shear modulus (G)**: Resistance to shear deformation"
+msgstr "**Sher modulus (G)**: Resistnce to sher deبرایmtion"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:17
+#: 8e1e7a8f08a44da3b053ef9d549f559e
+msgid "**Young's modulus (E)**: Stiffness in tension"
+msgstr "**Young's modulus (E)**: Stiffness in tension"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:18
+#: a7a70712505b4e24a99ee66a237e31dc
+msgid "**Poisson's ratio (ν)**: Lateral strain response"
+msgstr "**Poisson's rtio (ν)**: Lterl strin response"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:19
+#: 7991dbe5ccb44030ac9984836be357b5
+msgid "**Mechanical stability**: Positive eigenvalues → stable"
+msgstr "**Mechnicl stbility**: Positive eigenvlues → stble"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:23
+#: 2a39b3907c1849e48199a0249d7b9182
+msgid "What You'll Learn"
+msgstr "چیزهایی که یاد خواهید گرفت"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:25
+#: b16990438fd14ecd9f9b6b0ec732cf88
+msgid "Using `ElasticFlowMaker` for elastic tensor calculations"
+msgstr "Using `ElasticFlowMaker` for elastic tensor calculations"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:26
+#: b13c5538f6e54beeb209053247425d29
+msgid "Strain perturbation method"
+msgstr "Strin perturbtion method"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:27
+#: 2da44ad41b684723beba45925ccb8787
+msgid "Extracting mechanical properties from elastic tensor"
+msgstr "Extrcting mechnicl properties from elstic tensیا"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:28
+#: 7b2ee6dec8cf4af49727ea53c49c8023
+msgid "Analyzing elastic anisotropy"
+msgstr "Anlyzing elstic nisotropy"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:29
+#: 24f8bbc1ccbe4f2c868244365d27f385
+msgid "Mechanical stability criteria"
+msgstr "Mechnicl stbility criteri"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:33
+#: 6ecaf4c2959941f7894be4be09ac3385
+msgid "Prerequisites"
+msgstr "پیش‌نیازها"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:35
+#: dbba4524412146939e07f7ec875d239b
+msgid ""
+"**Required tutorials**: "
+"[01-basics/01-RelaxMaker](../../01-basics/01-RelaxMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:36
+#: 58d1268a0b0c4808aef3405080fdb763
+msgid "**Required knowledge**: Elasticity theory basics"
+msgstr "**مورد نیاز knowledge**: Elsticity یاy bsics"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:37
+#: 158347cd70504bf88271e6d82eca4f04
+msgid ""
+"**Recommended**: [01-convergence](../01-convergence/) - Converged "
+"parameters"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:38
+#: adda3c10d61c43ad9c16f0b0806df906
+msgid "**Required**: **Fully relaxed structure** at equilibrium"
+msgstr "**مورد نیاز**: **Fully relxed structure** t equilibrium"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:42
+#: 46b5150a59d04949810f8843ee060bc1
+msgid "Key Concepts"
+msgstr "مفاهیم کلیدی"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:44
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:209
+#: 5ea48f2fa8834aaa88d8d3987974e5f2 7ad23becdf2f4bc58c936d3db6ac55f2
+msgid "Elastic Tensor"
+msgstr "Elstic Tensیا"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:46
+#: 068cb1903acd410589eb45a1623bdae4
+msgid "The elastic tensor relates stress σ to strain ε via Hooke's law:"
+msgstr "The elstic tensیا reltes stress σ to strin ε vi Hooke's lw:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:48
+#: 9add2e58a48944b9a6793c2963bc4905
+#, python-brace-format
+msgid "$$\\sigma_i = \\sum_j C_{ij} \\varepsilon_j$$"
+msgstr "$$\\sigm_i = \\sum_j C_{ij} \\vrepsilon_j$$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:50
+#: 7a7362bae2354e0c89f41db033b4028e
+msgid "For a crystal with symmetry:"
+msgstr "Fیا  crystl با symmetry:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:51
+#: 945504fe22f548ceb20eae17fe99edff
+msgid "**Cubic**: 3 independent constants (C₁₁, C₁₂, C₄₄)"
+msgstr "**Cubic**: 3 independent constnts (C₁₁, C₁₂, C₄₄)"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:52
+#: 0e36579f0810482ba876290c0fdb16d9
+msgid "**Hexagonal**: 5 independent constants"
+msgstr "**Hexgonl**: 5 independent constnts"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:53
+#: 5177079c52994d629b8c0484ac5117b9
+msgid "**Orthorhombic**: 9 independent constants"
+msgstr "**Orthیاhombic**: 9 independent constnts"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:54
+#: af334246b3744055a53e077522158fa4
+msgid "**Triclinic**: 21 independent constants"
+msgstr "**Triclinic**: 21 independent constnts"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:56
+#: 9459fd0eb2774db3a4e16bc8303ca98f
+msgid "Strain Perturbation Method"
+msgstr "Strin Perturbtion Method"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:58
+#: 6583252a6c204d4e97fe035d0c9ce1c5
+msgid "**Start with relaxed structure** (critical!)"
+msgstr "**Strt با relxed structure** (criticl!)"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:59
+#: d2276d24e81a4ac0b80e6225c0b0d5e0
+msgid "**Apply small strains**: Typically ±1% (δ = 0.01)"
+msgstr "**Apply smll strins**: Typiclly ±1% (δ = 0.01)"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:60
+#: 42becdaaddd44559948b5ad099fe5fbe
+msgid "**Calculate stress response**: Run static calculations"
+msgstr "**Clculte stress response**: Run sttic clcultions"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:61
+#: 08892e5aa93b4084a73931ad1f0c6849
+msgid "**Extract elastic constants**: From σ vs ε relationship"
+msgstr "**Extrct elstic constnts**: From σ vs ε reltionship"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:62
+#: 7936c37670ee4f3bb2eab061364ae09c
+msgid "**Compute derived properties**: B, G, E, ν"
+msgstr "**Compute derived properties**: B, G, E, ν"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:64
+#: 056a6b6fe4df47a9ad8b5452184491a2
+msgid "**Typical number of calculations**:"
+msgstr "**Typicl number of clcultions**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:65
+#: f39720a74cc741efb2119fa11b051166
+msgid "Cubic: ~6-12 strains"
+msgstr "Cubic: ~6-12 strins"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:66
+#: eb003e6c6c99409abc5cb6955ef2ffe7
+msgid "Hexagonal: ~10-16 strains"
+msgstr "Hexgonl: ~10-16 strins"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:67
+#: e1d8267d44ce4039968ae05d2a04e7b2
+msgid "Lower symmetry: 20-30 strains"
+msgstr "Lower symmetry: 20-30 strins"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:69
+#: 1d3c4fe5ab61440697ebc0cfbdec72fb
+msgid "Derived Mechanical Properties"
+msgstr "Derived Mechnicl Properties"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:71
+#: 6be8b6784eab4715a88d0a5502139ce1
+msgid "From elastic tensor C, compute:"
+msgstr "From elstic tensیا C, compute:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:73
+#: a1601b44f88b48d2b95128a1a4b0088d
+msgid "**Voigt average** (upper bound):"
+msgstr "**Voigt verge** (upper bound):"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:74
+#: f8b63e06602f4cb0a1d266fa57feffa3
+#, python-brace-format
+msgid ""
+"$B_V = \\frac{1}{9}(C_{11} + C_{22} + C_{33}) + \\frac{2}{9}(C_{12} + "
+"C_{13} + C_{23})$"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:75
+#: 1396bb4839d34858a190d9b4ddbcb00a
+#, python-brace-format
+msgid ""
+"$G_V = \\frac{1}{15}(C_{11} + C_{22} + C_{33} - C_{12} - C_{13} - C_{23})"
+" + \\frac{1}{5}(C_{44} + C_{55} + C_{66})$"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:77
+#: b92fd1bb02594bd9a42c22aa154ef12b
+msgid "**Reuss average** (lower bound):"
+msgstr "**Reuss verge** (lower bound):"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:78
+#: 63315d20bb3c4dbe9d0398697d44ab8d
+#, python-brace-format
+msgid "$B_R = 1/(S_{11} + S_{22} + S_{33} + 2(S_{12} + S_{13} + S_{23}))$"
+msgstr "$B_R = 1/(S_{11} + S_{22} + S_{33} + 2(S_{12} + S_{13} + S_{23}))$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:79
+#: 70a8004f93b0447e887bfb4d403129b3
+#, python-brace-format
+msgid ""
+"$G_R = 15/(4(S_{11} + S_{22} + S_{33}) - 4(S_{12} + S_{13} + S_{23}) + "
+"3(S_{44} + S_{55} + S_{66}))$"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:81
+#: 40dd9bf83d7348148b58e8f93c9addb6
+msgid "**Voigt-Reuss-Hill average** (recommended):"
+msgstr "**Voigt-Reuss-Hill verge** (recommended):"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:82
+#: f9354ff4863d4d25b06f3622d4575168
+msgid "$B = (B_V + B_R)/2$"
+msgstr "$B = (B_V + B_R)/2$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:83
+#: d3fbe2f8d4384cdc96395b836fa36834
+msgid "$G = (G_V + G_R)/2$"
+msgstr "$G = (G_V + G_R)/2$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:85
+#: 9a09f9b96c744a38abd030ee39227ffb
+msgid "**Young's modulus and Poisson's ratio**:"
+msgstr "**Young's modulus و Poisson's rtio**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:86
+#: 3309456fcb5042bf876ce117fa4cccd6
+#, python-brace-format
+msgid "$E = \\frac{9BG}{3B + G}$"
+msgstr "$E = \\frc{9BG}{3B + G}$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:87
+#: 3b856c4c83664e46be8ba5e269464625
+#, python-brace-format
+msgid "$\\nu = \\frac{3B - 2G}{2(3B + G)}$"
+msgstr "$\\nu = \\frc{3B - 2G}{2(3B + G)}$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:91
+#: cfbe61f794da48ab941a7cb1cb04e614
+msgid "Tutorial Subdirectories"
+msgstr "Tutیاil Subdirectیاies"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:93
+#: 1fd285b8fd3d48fbaaff2b520503700e
+msgid "[01-ElasticFlowMaker](01-ElasticFlowMaker/)"
+msgstr "[01-ElasticFlowMaker](01-ElasticFlowMaker/)"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:94
+#: 8e6bc7cf8428402295192ae17b7fd0e7
+msgid ""
+"**Description**: Complete elastic tensor calculation workflow "
+"**Features**:"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:96
+#: 17e0c3734581465e98d89440546efea3
+msgid "Automatic strain generation based on symmetry"
+msgstr "Automtic strin genertion bsed on symmetry"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:97
+#: 8abe54bd25024252be92872b096d837f
+msgid "Stress calculations for each strain"
+msgstr "Stress clcultions برای ech strin"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:98
+#: 4fa3945d6d3049bea809ac8057f864aa
+msgid "Elastic tensor fitting"
+msgstr "Elstic tensیا fitting"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:99
+#: 39440a9a070a4e73a858c3347389280c
+msgid "Mechanical properties extraction"
+msgstr "Mechnicl properties extrction"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:100
+#: 9af3e7d3bf7d42fe8108d68db84d3729
+msgid "Stability analysis"
+msgstr "Stbility nlysis"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:104
+#: 67675d243edf4705bb079f6442d70b9b
+msgid "Quick Start"
+msgstr "شروع سریع"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:106
+#: d268b86ae7634fd6a450b693977627e1
+msgid "Example 1: Basic Elastic Calculation"
+msgstr "مثال 1: Bsic Elstic محاسبه"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:134
+#: 816087b2f46c4bfdb407efbf824e2aec
+msgid "Example 2: Multiple Strain Magnitudes"
+msgstr "مثال 2: Multiple Strin Mgnitudes"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:144
+#: cc18297ad93f416ebecc1fa1a4aa2fd5
+msgid "Example 3: With Relaxation First"
+msgstr "مثال 3: With Relxtion First"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:170
+#: 5f2d2848beaf49168ff45f68ec625a19
+msgid "Run Modes"
+msgstr "حالت‌های اجرا"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:172
+#: 635cdebc4f8649e18ee017455c533637
+msgid "1. Dry-Run Mode"
+msgstr "1. Dry-Run Mode"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:178
+#: 988ff70446a44c52908e2c6f6cf2d3fb
+msgid "**Output**:"
+msgstr "**Output**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:190
+#: bbfad17495fd43acbe96c3e3b1535d31
+msgid "**Check symmetry-reduced strains**:"
+msgstr "**Check symmetry-reduced strins**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:196
+#: 7beba6d79d6a40428e0c4a2634706bfc
+msgid "2. Local Execution"
+msgstr "2. Locl Execution"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:203
+#: 9f7f2a5d000a4793a7764e2319caf9f6
+msgid ""
+"**Time**: 1-2 hours for cubic systems (depends on number of strains and "
+"system size)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:207
+#: 41d0cec11e274e10b6bf18835117c201
+msgid "Expected Output"
+msgstr "خروجی مورد انتظار"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:219
+#: 1ba8824e098b4068828f4b6335cb4555
+msgid "Analyzing Results"
+msgstr "Anlyzing Results"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:246
+#: 1df2dbfe93964a7b928784b7556e7f61
+msgid "Expected Properties for Si (Example)"
+msgstr "Expected Properties برای Si (مثال)"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:257
+#: 1915252f04894a98922bbe34b18682d7
+msgid "Common Issues"
+msgstr "مشکلات رایج"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:259
+#: 5c7734ca75164556b8e7af036ebc1b2e
+msgid "Issue 1: \"Elastic constants don't satisfy stability criteria\""
+msgstr "Issue 1: \"Elstic constnts don't stisfy stbility criteri\""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:261
+#: 144cd69d41894a44bdf8948c712d4dd9
+msgid "**Symptoms**: Negative eigenvalues or failed stability check"
+msgstr "**Symptoms**: Negtive eigenvlues یا filed stbility check"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:263
+#: cfc078e17e3e412c871b977841cb5695
+msgid "**Causes & Solutions**:"
+msgstr "**Cuses & Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:265
+#: edf5f317e1f84a718f3b938c09a058c2
+msgid "**Structure not at equilibrium**:"
+msgstr "**Structure not t equilibrium**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:276
+#: 07421e6c0dd64c06b47c4ad7bce9995c
+msgid "**Check forces/stress before elastic calculation**:"
+msgstr "**Check برایces/stress beبرایe elstic clcultion**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:285
+#: 749bdfd261ba41d99530c673d82c36af
+msgid "**Material actually unstable**:"
+msgstr "**Mteril ctully unstble**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:286
+#: bafc34d0a8474b81acf4231e7458103a
+msgid "Check phonons for imaginary modes"
+msgstr "Check phonons برای imginry modes"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:287
+#: 399384ab6f7e40bc925e0687ba38249e
+msgid "Might need different structure/phase"
+msgstr "Might need different structure/phse"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:289
+#: e7180d61fee14a0ab95d26640a11b43c
+msgid "Issue 2: \"Elastic constants vary with strain magnitude\""
+msgstr "Issue 2: \"Elstic constnts vry با strin mgnitude\""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:291
+#: 4d10caf9be1e432abfdc46e3584ad11e
+#, python-format
+msgid "**Symptoms**: Different C values for 0.5%, 1%, 1.5% strains"
+msgstr "**Symptoms**: Different C vlues برای 0.5%, 1%, 1.5% strins"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:293
+#: df216090ecb14eeea32ae1f9032f134c
+msgid "**Cause**: Nonlinear effects (strain too large)"
+msgstr "**Cuse**: Nonliner effects (strin too lrge)"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:295
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:318
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:330
+#: 87d84809cca7436594405d59b14b4efe e2be8759f3b84c818907afcc1e7ae043
+#: fa7f7d76c42b41df9466299ef8342fb7
+msgid "**Solutions**:"
+msgstr "**Solutions**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:309
+#: 20a27d2c76f54d15a375618faa2fbc1f
+msgid "Issue 3: \"Unrealistic mechanical properties\""
+msgstr "Issue 3: \"Unrelistic mechnicl properties\""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:311
+#: 60f854a268894bc4a5e29364fbce5c96
+msgid "**Symptoms**: B or G negative, or wildly off from experiments"
+msgstr "**Symptoms**: B یا G negtive, یا wildly off from experiments"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:313
+#: f38c4da0b4df4f5aa49341025a28d072
+msgid "**Causes**:"
+msgstr "**Cuses**:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:314
+#: 276065e1ad174ad385ba2d8795df7764
+msgid "**Unconverged parameters** - k-points, basis, cutoff"
+msgstr "**Unconverged prmeters** - k-points, bsis, cutoff"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:315
+#: b48b6c6cd0174d4184a0c25c98794a1d
+msgid "**Structure not relaxed**"
+msgstr "**Structure not relxed**"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:316
+#: bd2be01f92104aa9b6b653bb9b6b71fd
+msgid "**GGA functional limitations**"
+msgstr "**GGA functionl limittions**"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:319
+#: ad6766a18ffc4266b79c0ac0130855e2
+msgid "Run convergence tests first ([01-convergence](../01-convergence/))"
+msgstr "Run convergence tests first ([01-convergence](../01-convergence/))"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:320
+#: c40609c0730a42d5977a9c22813f79fc
+msgid "Use very tight relaxation criteria"
+msgstr "Use very tight relxtion criteri"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:321
+#: effcfb08ae9148ebbf0fc5e596b03eef
+#, python-format
+msgid "Accept ~10% error from GGA"
+msgstr "Accept ~10% errیا from GGA"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:322
+#: 7845e60ce9ad454bbdf4238afb39e79f
+msgid "Compare TRENDS, not absolute values"
+msgstr "Compre TRENDS, not bsolute vlues"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:324
+#: 078f924aea5a4173beab2248a49e48cb
+msgid "Issue 4: \"Elastic tensor not symmetric\""
+msgstr "Issue 4: \"Elstic tensیا not symmetric\""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:326
+#: b32c343809234a1897d45233225df94c
+#, python-brace-format
+msgid "**Symptoms**: $C_{ij} \\neq C_{ji}$"
+msgstr "**Symptoms**: $C_{ij} \\neq C_{ji}$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:328
+#: b79d26b8422a43bf802a7986d244f2c2
+msgid "**Cause**: Numerical noise, insufficient precision"
+msgstr "**Cuse**: Numericl noise, insufficient precision"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:346
+#: 4a62f32ae0e64ba28056833af37df646
+msgid "Mechanical Stability Criteria"
+msgstr "Mechnicl Stbility Criteri"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:348
+#: 9735b6bdab6b428b80ec1c659d678abc
+msgid "Cubic System"
+msgstr "Cubic System"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:350
+#: fd47009a81c04a0f899dc28cca632045
+msgid "For mechanical stability:"
+msgstr "Fیا mechnicl stbility:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:351
+#: 710c4667911f4dc7bd13afdad7f6c9e2
+#, python-brace-format
+msgid "$C_{11} > 0$"
+msgstr "$C_{11} > 0$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:352
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:360
+#: 2821e3a355ba482c84af72f66db46939 63251375aa0c44de8ef38991abeb5e41
+#, python-brace-format
+msgid "$C_{44} > 0$"
+msgstr "$C_{44} > 0$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:353
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:358
+#: 073e3758b25e4805a6b08ccbe60123f7 98e0c3b18378456e9fa61ead27050281
+#, python-brace-format
+msgid "$C_{11} > |C_{12}|$"
+msgstr "$C_{11} > |C_{12}|$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:354
+#: 62712cd5051e4776a1bc67ef2325f7ea
+#, python-brace-format
+msgid "$C_{11} + 2C_{12} > 0$"
+msgstr "$C_{11} + 2C_{12} > 0$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:356
+#: 6458963395cf4fc79bfcd99c99b05662
+msgid "Hexagonal System"
+msgstr "Hexgonl System"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:359
+#: d79576c5ed3b489daa9cb72ebc74f0ec
+#, python-brace-format
+msgid "$C_{33}(C_{11} + C_{12}) > 2C_{13}^2$"
+msgstr "$C_{33}(C_{11} + C_{12}) > 2C_{13}^2$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:361
+#: 89a38bebb2f04af2b759bddf63d06bb1
+#, python-brace-format
+msgid "$C_{66} > 0$"
+msgstr "$C_{66} > 0$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:363
+#: 298acb003cce410aae49f8a5e40c1067
+msgid "**Check automatically**: Workflow includes stability analysis in output."
+msgstr "**Check utomticlly**: گردش کار includes stbility nlysis in output."
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:367
+#: 3b2e21d4fe9c40c9a16f3704fed4e43e
+msgid "Elastic Anisotropy"
+msgstr "Elstic Anisotropy"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:369
+#: 67eddf2275304d15af96e57729f9f756
+msgid "Zener Anisotropy Ratio"
+msgstr "Zener Anisotropy Rtio"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:371
+#: 02bf74b4e2ee47c08373d659619b3fb0
+msgid "For cubic systems:"
+msgstr "Fیا cubic systems:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:373
+#: e394fd64b3eb4a63998b6e429d8bc6d9
+msgid "$$A = \\frac{2C_{44}}{C_{11} - C_{12}}$$"
+msgstr "$$A = \\frc{2C_{44}}{C_{11} - C_{12}}$$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:375
+#: 741169039f0c40e78977eac4ffff93aa
+msgid "$A = 1$: Elastically isotropic"
+msgstr "$A = 1$: Elsticlly isotropic"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:376
+#: fd40ff7d840846d1be231aa59c5329a4
+msgid "$A \\neq 1$: Anisotropic (most materials)"
+msgstr "$A \\neq 1$: Anisotropic (most mterils)"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:388
+#: 5ef89279d52c4e53ba6d72cccb76d753
+msgid "Universal Anisotropy Index"
+msgstr "Universl Anisotropy Index"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:390
+#: 44f6400e3cb24ff8b2f72047a835e910
+#, python-brace-format
+msgid "$$A^U = 5\\frac{G_V}{G_R} + \\frac{B_V}{B_R} - 6 \\geq 0$$"
+msgstr "$$A^U = 5\\frc{G_V}{G_R} + \\frc{B_V}{B_R} - 6 \\geq 0$$"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:392
+#: 0aeaf6972ed74463a6b885ad407fb289
+msgid "$A^U = 0$: Isotropic"
+msgstr "$A^U = 0$: Isotropic"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:393
+#: fa8d8ab10d074e4f9f419ea1d7b9dc3a
+msgid "$A^U > 0$: Anisotropic"
+msgstr "$A^U > 0$: Anisotropic"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:397
+#: 085ab32cc0b3463abdb887115c29cb91
+msgid "Tips for Success"
+msgstr "نکتهs برای Success"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:399
+#: f00d30d4638145b3a214ce3f196be766
+#, python-format
+msgid ""
+"✅ **MUST start with fully relaxed structure**: Forces < 0.01 eV/Å, stress"
+" < 0.1 GPa ✅ **Use very tight convergence**: This is the most critical "
+"requirement ✅ **Dense k-points**: 10×10×10 minimum, 12×12×12 better ✅ "
+"**Small strains**: 1% standard, 0.5% if nonlinearity suspected ✅ **Check "
+"stability criteria**: Verify all conditions satisfied ✅ **Compare with "
+"experiments**: Validate B, G, E ✅ **Test strain magnitude independence**:"
+" Should get same C for different strains"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:409
+#: 45d00fb18cc041b59b215aa6e145fb5b
+msgid "Best Practices"
+msgstr "بهترین روش‌ها"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:411
+#: 47dfbef3e83a4674b0eeb1730a6fd58e
+msgid "1. Multi-Stage Workflow"
+msgstr "1. Multi-Stge گردش کار"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:440
+#: a2bb777b860f4a0386b12bc7b967d8bf
+msgid "2. Verify Equilibrium"
+msgstr "2. Verify Equilibrium"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:466
+#: cb929399e203442086c7b2fd96644136
+msgid "Next Steps"
+msgstr "گام‌های بعدی"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:468
+#: 5fec46146a6c405fbeb38128b2f14d7e
+msgid "After completing elastic calculations:"
+msgstr "After completing elstic clcultions:"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:470
+#: b925a321b41b42cfa534dba57c9eec10
+msgid ""
+"**Compare with EOS**: [02-equation-of-states](../02-equation-of-states/) "
+"- Bulk modulus should agree"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:471
+#: d83aefe684c84981890f0176b1467892
+msgid ""
+"**Thermal expansion**: Combine with [06-vibrational-"
+"properties/03-qha](../06-vibrational-properties/03-SiestaQhaFlowMaker/)"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:472
+#: b96453a277bf480192719c70244cd43b
+msgid "**Pressure effects**: How elastic constants change with pressure"
+msgstr "**Pressure effects**: How elstic constnts chnge با pressure"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:473
+#: e06ff8129f5d4c63b67f8d3c04ea71fc
+msgid ""
+"**Anisotropic properties**: Sound velocity anisotropy, directional "
+"Young's modulus"
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:477
+#: 89a5e5e07efe4e7f9b70f4cfeb7fe96f
+msgid "References"
+msgstr "References"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:479
+#: e305417b32e64d51bb41db8c3c789432
+msgid "**Elasticity Theory**: Nye \"Physical Properties of Crystals\""
+msgstr "**Elsticity Theیاy**: Nye \"Physicl Properties of Crystls\""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:480
+#: 010f05b26e224b90854e399192f9ff18
+msgid "**Elastic Constants**: Wallace \"Thermodynamics of Crystals\""
+msgstr "**Elstic Constnts**: Wllce \"Thermodynmics of Crystls\""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:481
+#: 3326303e93a143fda370f307fff28b0f
+msgid ""
+"**Stability Criteria**: Born & Huang \"Dynamical Theory of Crystal "
+"Lattices\""
+msgstr ""
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:482
+#: 404c0d225c9c4201aa67134b22d0808b
+msgid "**Computational Methods**: Wu et al. PRB 76, 054115 (2007)"
+msgstr "**Computtionl Methods**: Wu et l. PRB 76, 054115 (2007)"
+
+#: ../../source/tutorials-md/02-workflows/04-mechanical/README.md:486
+#: 051dcbbe86d9435eab21340e9b46d087
+msgid ""
+"*Back to [02-workflows](../README.md) | [Main Tutorial "
+"Index](../../README.md)*"
+msgstr ""

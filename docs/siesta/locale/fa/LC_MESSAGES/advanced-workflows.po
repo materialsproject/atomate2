@@ -1,0 +1,637 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 01:18+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/advanced-workflows.rst:3 05f0789bccf24687a8aba3c0aa403221
+msgid "Advanced Workflows"
+msgstr "جریان‌های کار پیشرفته"
+
+#: ../../source/advanced-workflows.rst:5 7dd0ead7a3674050a3d87ba2fe8a1e0a
+msgid ""
+"Complex multi-step calculations for materials properties using "
+"atomate2siesta."
+msgstr "محاسبات پیچیده چند مرحله‌ای برای خواص مواد با استفاده از atomate2siesta."
+
+#: ../../source/advanced-workflows.rst:10 835620aaab254e36851d6fc23cfe17d8
+msgid "Overview"
+msgstr "مرور کلی"
+
+#: ../../source/advanced-workflows.rst:12 7b9b628ee4dd46b9ba9f4852beae4382
+msgid ""
+"This page demonstrates how to construct sophisticated workflows by "
+"combining multiple calculation types, using advanced features, and "
+"optimizing for production use."
+msgstr ""
+"این صفحه نحوه ساخت جریان‌های کار پیچیده را با ترکیب انواع محاسبات مختلف، "
+"استفاده از ویژگی‌های پیشرفته، و بهینه‌سازی برای استفاده تولیدی نشان "
+"می‌دهد."
+
+#: ../../source/advanced-workflows.rst:22 2870bff633bc474e8903b2776d2a50a5
+msgid "Multi-Property Workflows"
+msgstr "جریان‌های کار چند خاصیتی"
+
+#: ../../source/advanced-workflows.rst:25 cf7d590dfe9442349d35c4b01105ea57
+msgid "Structure → Relax → Properties"
+msgstr "ساختار ← آرام‌سازی ← خواص"
+
+#: ../../source/advanced-workflows.rst:27 70fc7c83bdeb42c28542acbb180eedbe
+msgid "Standard workflow pattern for comprehensive materials characterization:"
+msgstr "الگوی جریان کار استاندارد برای مشخصه‌یابی جامع مواد:"
+
+#: ../../source/advanced-workflows.rst:61 5db753373c3f4f25a75832c65ba56a99
+msgid "High-Throughput Screening"
+msgstr "غربالگری با توان عملیاتی بالا"
+
+#: ../../source/advanced-workflows.rst:63 6afd0732fd4a41f9b6387f4f07128e75
+msgid "Process multiple structures with same workflow:"
+msgstr "پردازش چندین ساختار با همان جریان کار:"
+
+#: ../../source/advanced-workflows.rst:95 9e33d4df68f245b786f7e65235a33a49
+msgid "Convergence-Then-Production"
+msgstr "همگرایی-سپس-تولید"
+
+#: ../../source/advanced-workflows.rst:98 500ec73da21b441aa9b9787b282a921c
+msgid "Automated Convergence Study"
+msgstr "مطالعه همگرایی خودکار"
+
+#: ../../source/advanced-workflows.rst:100 2536cb11c92b4ebd976411ed2663f70b
+msgid "Test parameters, then use converged values for production:"
+msgstr "آزمایش پارامترها، سپس استفاده از مقادیر همگرا برای تولید:"
+
+#: ../../source/advanced-workflows.rst:137 3e3e348565fc4adeb00ec288845f7062
+msgid "Restart Workflows for Efficiency"
+msgstr "جریان‌های کار راه‌اندازی مجدد برای بازدهی"
+
+#: ../../source/advanced-workflows.rst:139 ec0db0d95b344cfa9ea18e8f3930599e
+#, python-format
+msgid ""
+"SIESTA provides powerful restart capabilities to accelerate multi-stage "
+"calculations by reusing converged results from previous steps. This can "
+"reduce total computation time by 30-60% for common workflows."
+msgstr ""
+"SIESTA قابلیت‌های راه‌اندازی مجدد قدرتمندی را برای تسریع محاسبات چند "
+"مرحله‌ای از طریق استفاده مجدد از نتایج همگرای مراحل قبلی فراهم می‌کند. "
+"این می‌تواند زمان کل محاسبات را برای جریان‌های کار رایج تا ۳۰-۶۰٪ کاهش "
+"دهد."
+
+#: ../../source/advanced-workflows.rst:144 abb629ab6139470885c2211f296738b8
+msgid "Density Matrix (DM) Restart"
+msgstr "راه‌اندازی مجدد ماتریس چگالی (DM)"
+
+#: ../../source/advanced-workflows.rst:146 f249ac0724de4088a1c9df0b25d733c7
+msgid ""
+"Reuse converged electronic structure for faster SCF convergence when "
+"refining k-points or tightening tolerances:"
+msgstr ""
+"استفاده مجدد از ساختار الکترونی همگرا برای همگرایی سریع‌تر SCF هنگام "
+"اصلاح نقاط k یا سخت‌تر کردن تلرانس‌ها:"
+
+#: ../../source/advanced-workflows.rst:182 240d74627f304b469dd3401e6b1e1aa9
+#, python-format
+msgid "**Expected Speedup**: 50-70% fewer SCF iterations in Step 2"
+msgstr "**افزایش سرعت مورد انتظار**: ۵۰-۷۰٪ کاهش تکرارهای SCF در گام ۲"
+
+#: ../../source/advanced-workflows.rst:184
+#: ../../source/advanced-workflows.rst:235 0b3c6e9006d64e9d89136d6dc8eebfd6
+#: 19131591eead4cf9b4a1bb6ddccb89af
+msgid "**Requirements**:"
+msgstr "**نیازمندی‌ها**:"
+
+#: ../../source/advanced-workflows.rst:186 d3f23923a3af41cfb5ddf805611223f6
+msgid "``DM.UseSaveDM: True`` in both jobs"
+msgstr "``DM.UseSaveDM: True`` در هر دو کار"
+
+#: ../../source/advanced-workflows.rst:187 7ec62f782744474ea81575629e6bbaa0
+msgid "Same basis set (``PAO.BasisSize``) in both jobs"
+msgstr "مجموعه پایه یکسان (``PAO.BasisSize``) در هر دو کار"
+
+#: ../../source/advanced-workflows.rst:188 714f5dc5bcad409ea5b4eeb527afcd9b
+#, python-brace-format
+msgid "``copy_siesta_kwargs={\"restart_to_input\": True}`` to copy DM file"
+msgstr "``copy_siesta_kwargs={\"restart_to_input\": True}`` برای کپی فایل DM"
+
+#: ../../source/advanced-workflows.rst:189
+#: ../../source/advanced-workflows.rst:239 2e03147fcf7a42159d0c4bda044a6db5
+#: 5c9e522a23a44c73b9f46a7a5d118cbc
+msgid "Use ``prev_dir`` to link jobs"
+msgstr "استفاده از ``prev_dir`` برای پیوند کارها"
+
+#: ../../source/advanced-workflows.rst:192 06fd16e425874381b5b6c48d5ac026ab
+msgid "Geometry (XV) Restart"
+msgstr "راه‌اندازی مجدد هندسه (XV)"
+
+#: ../../source/advanced-workflows.rst:194 35307e9ed62947cebc2dc1809425de5c
+msgid ""
+"Continue geometry optimization from previous atomic positions for two-"
+"stage relaxation:"
+msgstr "ادامه بهینه‌سازی هندسه از موقعیت‌های اتمی قبلی برای آرام‌سازی دو مرحله‌ای:"
+
+#: ../../source/advanced-workflows.rst:233 e826fffdf70642e8b0b2d1750b39fff6
+#, python-format
+msgid "**Expected Speedup**: 50-70% fewer relaxation steps in Step 2"
+msgstr "**افزایش سرعت مورد انتظار**: ۵۰-۷۰٪ کاهش مراحل آرام‌سازی در گام ۲"
+
+#: ../../source/advanced-workflows.rst:237 71d2f6ac5c834c81823ec8a1efd02544
+msgid "``MD.UseSaveXV: True`` in both jobs"
+msgstr "``MD.UseSaveXV: True`` در هر دو کار"
+
+#: ../../source/advanced-workflows.rst:238 0d126da2282345a6923a87a411c9e5a6
+msgid ""
+"``copy_siesta_kwargs`` with **both** ``restart_to_input: True`` and "
+"``additional_siesta_files: [\"siesta.XV\"]``"
+msgstr ""
+"``copy_siesta_kwargs`` با **هر دو** ``restart_to_input: True`` و "
+"``additional_siesta_files: [\"siesta.XV\"]``"
+
+#: ../../source/advanced-workflows.rst:242 21e5dc85818e42508ab1416216975c40
+msgid "Files Copied by ``copy_siesta_kwargs``"
+msgstr "فایل‌های کپی‌شده توسط ``copy_siesta_kwargs``"
+
+#: ../../source/advanced-workflows.rst:244 4c2f05287df84383a9455a1007e27778
+msgid "Understanding what gets copied with different parameters:"
+msgstr "درک اینکه چه چیزی با پارامترهای مختلف کپی می‌شود:"
+
+#: ../../source/advanced-workflows.rst:246 1ecc18275ef6414b85d4bbdd43bab38b
+msgid "**With** ``restart_to_input=True`` **only**:"
+msgstr "**با** ``restart_to_input=True`` **فقط**:"
+
+#: ../../source/advanced-workflows.rst:248 5a1da337351d45fa895d46af22e27cde
+msgid "``siesta.DM`` - Density matrix (for SCF restart)"
+msgstr "``siesta.DM`` - ماتریس چگالی (برای راه‌اندازی مجدد SCF)"
+
+#: ../../source/advanced-workflows.rst:249 f57bd4847f4b4a668c8dd43bf2e95ebf
+msgid "``*.STRUCT_OUT`` - Structure output files"
+msgstr "``*.STRUCT_OUT`` - فایل‌های خروجی ساختار"
+
+#: ../../source/advanced-workflows.rst:250 0b234590ed17464f9af83e2022d61c6f
+msgid "``*.xyz`` - Trajectory files"
+msgstr "``*.xyz`` - فایل‌های مسیر"
+
+#: ../../source/advanced-workflows.rst:252 155492af7eee4673b6f3fe0b7d07150e
+msgid "**To also copy geometry restart files**, add ``additional_siesta_files``:"
+msgstr ""
+"**برای کپی فایل‌های راه‌اندازی مجدد هندسه**، ``additional_siesta_files`` "
+"را اضافه کنید:"
+
+#: ../../source/advanced-workflows.rst:261 42a9faf6bf06451b962b450969641af5
+msgid "**To copy custom files** (e.g., wavefunctions):"
+msgstr "**برای کپی فایل‌های سفارشی** (مثلاً توابع موج):"
+
+#: ../../source/advanced-workflows.rst:275 765d37cf937049908528fe3db8574e79
+msgid "Common Restart Patterns"
+msgstr "الگوهای رایج راه‌اندازی مجدد"
+
+#: ../../source/advanced-workflows.rst:277 2166decb9b574ccb87eb1960776ec84c
+msgid "**1. Coarse → Fine k-points** (DM restart):"
+msgstr "**۱. نقاط k درشت ← ظریف** (راه‌اندازی مجدد DM):"
+
+#: ../../source/advanced-workflows.rst:279 4feb71777cf043c19d6339a8e3fa1572
+msgid "Quick coarse calculation with minimal k-points"
+msgstr "محاسبه سریع درشت با حداقل نقاط k"
+
+#: ../../source/advanced-workflows.rst:280 c8fd01ef9b874fe3853dd3f44551dd57
+msgid "Refine with denser k-mesh using previous DM"
+msgstr "اصلاح با شبکه k متراکم‌تر با استفاده از DM قبلی"
+
+#: ../../source/advanced-workflows.rst:281 06b2c6e04d0a4ac29e1bbbae4f68661d
+msgid "Use case: High-throughput screening with validation"
+msgstr "مورد استفاده: غربالگری با توان عملیاتی بالا با اعتبارسنجی"
+
+#: ../../source/advanced-workflows.rst:283 41379ec5028248c8aa486103f8f51cd6
+msgid "**2. Loose → Tight relaxation** (XV restart):"
+msgstr "**۲. آرام‌سازی شل ← سفت** (راه‌اندازی مجدد XV):"
+
+#: ../../source/advanced-workflows.rst:285 6a45e39ef449489d8d5f1a3ec5261bc8
+msgid "Fast pre-relaxation with loose force tolerance"
+msgstr "پیش‌آرام‌سازی سریع با تلرانس نیروی شل"
+
+#: ../../source/advanced-workflows.rst:286 e287a74818044b0b8a0c517660219f10
+msgid "Final relaxation with tight tolerance using previous geometry"
+msgstr "آرام‌سازی نهایی با تلرانس سفت با استفاده از هندسه قبلی"
+
+#: ../../source/advanced-workflows.rst:287 d3ea2e28266843dd8080447efbb0d94a
+msgid "Use case: Complex materials, surfaces, molecular systems"
+msgstr "مورد استفاده: مواد پیچیده، سطوح، سیستم‌های مولکولی"
+
+#: ../../source/advanced-workflows.rst:289 dfe7df10a41d4f629b31ef77276b7733
+msgid "**3. DFT → DFT+U** (DM restart):"
+msgstr "**۳. DFT ← DFT+U** (راه‌اندازی مجدد DM):"
+
+#: ../../source/advanced-workflows.rst:291 72936d4e3fd3415da65554e292a6e51e
+msgid "Converge without U correction first"
+msgstr "ابتدا بدون تصحیح U همگرا شوید"
+
+#: ../../source/advanced-workflows.rst:292 6586c573dcfb441dbd695d6b7912c3fb
+msgid "Add U correction using previous DM as initial guess"
+msgstr "اضافه کردن تصحیح U با استفاده از DM قبلی به‌عنوان حدس اولیه"
+
+#: ../../source/advanced-workflows.rst:293 fb1d8f49987547e99848f1c2c5058d94
+msgid "Use case: Strongly correlated systems"
+msgstr "مورد استفاده: سیستم‌های به‌شدت همبسته"
+
+#: ../../source/advanced-workflows.rst:295 02c448cf37134ce69a75db6e51ba7a39
+msgid "**4. Phonon workflows** (DM + XV restart):"
+msgstr "**۴. جریان‌های کار فونون** (راه‌اندازی مجدد DM + XV):"
+
+#: ../../source/advanced-workflows.rst:297 42d39f6c5c05471e82c68528c8419870
+msgid "Pre-relax structure (saves DM and XV)"
+msgstr "پیش‌آرام‌سازی ساختار (ذخیره DM و XV)"
+
+#: ../../source/advanced-workflows.rst:298 c92993fbbfd746f8a1d8f6a908eb9c5d
+msgid "Supercell force calculations read DM for faster SCF"
+msgstr "محاسبات نیروی ابرسلول DM را برای SCF سریع‌تر می‌خوانند"
+
+#: ../../source/advanced-workflows.rst:299 f0f9f032880e49bc9c8f68bd7e116761
+msgid "Use case: Phonon calculations with displaced structures"
+msgstr "مورد استفاده: محاسبات فونون با ساختارهای جابجا شده"
+
+#: ../../source/advanced-workflows.rst:303 c03b67061738455fbe13f5bb5e313ca2
+msgid "Tutorial files in ``tutorials/01-basics/05-workflows/``:"
+msgstr "فایل‌های آموزشی در ``tutorials/01-basics/05-workflows/``:"
+
+#: ../../source/advanced-workflows.rst:305 9b6ac990c26640daa6e906c1f46bb9cf
+msgid "``02_restart_from_dm.py`` - DM restart example"
+msgstr "``02_restart_from_dm.py`` - نمونه راه‌اندازی مجدد DM"
+
+#: ../../source/advanced-workflows.rst:306 025c7a9e6e0943c28ce507545ffe9049
+msgid "``03_restart_from_xv.py`` - XV restart example"
+msgstr "``03_restart_from_xv.py`` - نمونه راه‌اندازی مجدد XV"
+
+#: ../../source/advanced-workflows.rst:311 d47734f5584f4e8fad6cb5e133477fe0
+msgid "Surface Science Workflows"
+msgstr "جریان‌های کار علم سطح"
+
+#: ../../source/advanced-workflows.rst:314 3ea1c9ec98eb41aebf8ba0212093b9eb
+msgid "Multi-Surface Energy Comparison"
+msgstr "مقایسه انرژی چند سطحی"
+
+#: ../../source/advanced-workflows.rst:316 7d723431dc594057ba8c4cb0d98feed2
+msgid "Calculate surface energies for multiple Miller indices:"
+msgstr "محاسبه انرژی‌های سطح برای چندین شاخص میلر:"
+
+#: ../../source/advanced-workflows.rst:351 fa356f5242d045798a301539ee14e196
+msgid "Adsorption Energy Calculation"
+msgstr "محاسبه انرژی جذب سطحی"
+
+#: ../../source/advanced-workflows.rst:353 37c0536a0f354377831a70a2e4bcf6b6
+msgid "Calculate molecule adsorption on surface:"
+msgstr "محاسبه جذب سطحی مولکول روی سطح:"
+
+#: ../../source/advanced-workflows.rst:381 d6ea41b9f3dd4d76b459757233b9503f
+msgid "Phonon-Related Workflows"
+msgstr "جریان‌های کار مرتبط با فونون"
+
+#: ../../source/advanced-workflows.rst:384 087c32a43b6647c584b3bd4048d794c2
+msgid "Temperature-Dependent Properties"
+msgstr "خواص وابسته به دما"
+
+#: ../../source/advanced-workflows.rst:386 728f9c4a2e8f4c43ba7950e83d77a8e8
+msgid "Quasi-harmonic approximation for thermal expansion:"
+msgstr "تقریب شبه‌هارمونیک برای انبساط حرارتی:"
+
+#: ../../source/advanced-workflows.rst:417 c1012ed377894773802db24087448a5c
+msgid "Phonon + Band Structure"
+msgstr "فونون + ساختار نواری"
+
+#: ../../source/advanced-workflows.rst:448 ad7d75504b3b4f87a8d99c49acd1d4f0
+msgid "Magnetic Systems"
+msgstr "سیستم‌های مغناطیسی"
+
+#: ../../source/advanced-workflows.rst:451 af315256b3b6435b9572bc1dadb683a7
+msgid "Spin-Polarized + DFT+U"
+msgstr "قطبیده‌شده اسپینی + DFT+U"
+
+#: ../../source/advanced-workflows.rst:453 63c30e6e132f49679a9f06d066235879
+msgid "For strongly correlated magnetic materials:"
+msgstr "برای مواد مغناطیسی با همبستگی قوی:"
+
+#: ../../source/advanced-workflows.rst:472 46aa7ed5f4764ea688952d449d121997
+msgid "Magnetic Anisotropy"
+msgstr "ناهمسانگردی مغناطیسی"
+
+#: ../../source/advanced-workflows.rst:474 16217bde078349d2985cc169d3f5ed72
+msgid "Calculate magnetic anisotropy energy (MAE):"
+msgstr "محاسبه انرژی ناهمسانگردی مغناطیسی (MAE):"
+
+#: ../../source/advanced-workflows.rst:505 086906370c0241aa99a8bf6686dfa76b
+msgid "Reaction Pathways"
+msgstr "مسیرهای واکنش"
+
+#: ../../source/advanced-workflows.rst:508 50a3d6707dc74f14b644314a7fe68859
+msgid "NEB (Nudged Elastic Band) Calculations"
+msgstr "محاسبات NEB (نوار کشسان هل‌داده‌شده)"
+
+#: ../../source/advanced-workflows.rst:510 17089a26f17a48518b301d811957d3fb
+msgid "Calculate minimum energy paths and transition states using two approaches:"
+msgstr "محاسبه مسیرهای انرژی حداقل و حالت‌های گذار با استفاده از دو رویکرد:"
+
+#: ../../source/advanced-workflows.rst:512 aabe53fd33e64df5ae6f11cd3a65b0ec
+msgid "**1. Lua-based NEB (SIESTA native, faster)**"
+msgstr "**۱. NEB مبتنی بر Lua (بومی SIESTA، سریع‌تر)**"
+
+#: ../../source/advanced-workflows.rst:514 867d38c4f5e443b1a0b889e56920c77c
+msgid "Uses SIESTA's FLOS library for on-the-fly optimization:"
+msgstr "استفاده از کتابخانه FLOS سیستا برای بهینه‌سازی در لحظه:"
+
+#: ../../source/advanced-workflows.rst:586 f2c8f1c24b6e4160a237002202606872
+msgid "**2. ASE-based NEB (fully iterative, no FLOS required)**"
+msgstr "**۲. NEB مبتنی بر ASE (کاملاً تکراری، بدون نیاز به FLOS)**"
+
+#: ../../source/advanced-workflows.rst:588 da1c382855d9431692702a5682cfe22c
+msgid "Uses ASE's NEB implementation with iterative SIESTA force calculations:"
+msgstr "استفاده از پیاده‌سازی NEB در ASE با محاسبات تکراری نیروی SIESTA:"
+
+#: ../../source/advanced-workflows.rst:642 92f73c76f96d4c59bda04622cb6995b0
+#, fuzzy
+msgid ""
+"**Key features of ASE NEB:** - Fully iterative optimization with NEB "
+"force convergence - Runs SIESTA static calculations in parallel for each "
+"iteration - No FLOS library dependency (more portable) - Automatic "
+"convergence checking and history tracking - Flexible endpoint relaxation "
+"(initial, final, both, or neither) - Separate RelaxMaker for each "
+"endpoint"
+msgstr ""
+"**ویژگی‌های کلیدی ASE NEB:** - بهینه‌سازی کاملاً تکراری با همگرایی نیروی "
+"NEB - اجرای محاسبات استاتیک SIESTA به‌صورت موازی برای هر تکرار - بدون "
+"وابستگی به کتابخانه FLOS (قابل حمل‌تر) - بررسی خودکار همگرایی و پیگیری "
+"تاریخچه - **جدید در v1.1.0**: آرام‌سازی انعطاف‌پذیر نقاط انتهایی (اولیه، "
+"نهایی، هر دو، یا هیچ‌کدام) - **جدید در v1.1.0**: RelaxMaker جداگانه برای "
+"هر نقطه انتهایی"
+
+#: ../../source/advanced-workflows.rst:650 6d3ed3bcd25b4f6d836b1ae40cee91ea
+msgid ""
+"**Endpoint Relaxation Options (both Lua and ASE NEB):** - "
+"``relax_endpoints=False``: No relaxation (use structures as provided) - "
+"``relax_endpoints=True``: Relax both endpoints (backward compatible) - "
+"``relax_endpoints=\"initial\"``: Relax only initial structure - "
+"``relax_endpoints=\"final\"``: Relax only final structure - "
+"``relax_endpoints=\"both\"``: Relax both (explicit, same as True) - "
+"``relax_initial_maker``: Custom RelaxMaker for initial endpoint - "
+"``relax_final_maker``: Custom RelaxMaker for final endpoint"
+msgstr ""
+"**گزینه‌های آرام‌سازی نقاط انتهایی (هم Lua و هم ASE NEB):** - "
+"``relax_endpoints=False``: بدون آرام‌سازی (استفاده از ساختارهای "
+"ارائه‌شده) - ``relax_endpoints=True``: آرام‌سازی هر دو نقطه انتهایی "
+"(سازگار با نسخه‌های قبلی) - ``relax_endpoints=\"initial\"``: آرام‌سازی "
+"فقط ساختار اولیه - ``relax_endpoints=\"final\"``: آرام‌سازی فقط ساختار "
+"نهایی - ``relax_endpoints=\"both\"``: آرام‌سازی هر دو (صریح، همان True) -"
+" ``relax_initial_maker``: RelaxMaker سفارشی برای نقطه انتهایی اولیه - "
+"``relax_final_maker``: RelaxMaker سفارشی برای نقطه انتهایی نهایی"
+
+#: ../../source/advanced-workflows.rst:659 57e4792d1abd41738d706c863fa68bb0
+#, fuzzy
+msgid ""
+"**Comparison:** - **Lua-based**: Faster (single SIESTA MD run), requires "
+"FLOS - **ASE-based**: More flexible, portable, easier to customize - "
+"**Both support**: Full endpoint relaxation control"
+msgstr ""
+"**مقایسه:** - **مبتنی بر Lua**: سریع‌تر (یک اجرای MD سیستا)، نیاز به FLOS"
+" - **مبتنی بر ASE**: انعطاف‌پذیرتر، قابل حمل، سفارشی‌سازی آسان‌تر - **هر "
+"دو پشتیبانی می‌کنند**: کنترل کامل آرام‌سازی نقاط انتهایی (v1.1.0+)"
+
+#: ../../source/advanced-workflows.rst:667 de7ce5a5b50e455e919da2406bdaeb33
+msgid "Large-Scale Systems"
+msgstr "سیستم‌های در مقیاس بزرگ"
+
+#: ../../source/advanced-workflows.rst:670 4947906895704c99943000a0f2947e27
+msgid "OrderN for Large Systems"
+msgstr "OrderN برای سیستم‌های بزرگ"
+
+#: ../../source/advanced-workflows.rst:672 6ce08584e3dd43f995d575443d52c62e
+msgid "Linear-scaling DFT for >100 atoms:"
+msgstr "DFT با مقیاس‌بندی خطی برای بیش از ۱۰۰ اتم:"
+
+#: ../../source/advanced-workflows.rst:690 8232bd9eb69c479d932b84791c4e4c68
+msgid "HPC Parallel Optimization"
+msgstr "بهینه‌سازی موازی HPC"
+
+#: ../../source/advanced-workflows.rst:709 1307dfd0ffff47e9aaed0b127852a7dd
+msgid "Error-Resilient Production Workflows"
+msgstr "جریان‌های کار تولیدی با تاب‌آوری خطا"
+
+#: ../../source/advanced-workflows.rst:712 cdfdd0db7ed2432da1faf2fdc4b8d6ed
+msgid "Full Production Stack"
+msgstr "پشته کامل تولید"
+
+#: ../../source/advanced-workflows.rst:714 882042c1b8b3411f808c98157d64535f
+msgid "Combining all infrastructure features:"
+msgstr "ترکیب تمام ویژگی‌های زیرساخت:"
+
+#: ../../source/advanced-workflows.rst:756 59f71227c1784a3b891824c55adff70e
+msgid "Automatic Retry Logic"
+msgstr "منطق تلاش مجدد خودکار"
+
+#: ../../source/advanced-workflows.rst:778 694e487e9f2f431887926ab072b96831
+msgid "Best Practices"
+msgstr "بهترین شیوه‌ها"
+
+#: ../../source/advanced-workflows.rst:781 6bb5240ccb6541b0a05728678d7a3b62
+msgid "Workflow Design"
+msgstr "طراحی جریان کار"
+
+#: ../../source/advanced-workflows.rst:783 0ac95fbea3c04d40baab3bb45f22fbcc
+msgid "**Start simple, add complexity**"
+msgstr "**شروع ساده، افزودن پیچیدگی**"
+
+#: ../../source/advanced-workflows.rst:785 97b5ed7452354fbe9e105af8c5c30a8d
+msgid "Test each step individually"
+msgstr "آزمایش هر گام به‌طور جداگانه"
+
+#: ../../source/advanced-workflows.rst:786 3b3f5b87d507414f9be2a81567244126
+msgid "Combine when confident"
+msgstr "ترکیب هنگامی که اطمینان دارید"
+
+#: ../../source/advanced-workflows.rst:788 0a26c1340a134210b4878bdf75c3e719
+msgid "**Use tier presets**"
+msgstr "**استفاده از پیش‌تنظیم‌های سطح**"
+
+#: ../../source/advanced-workflows.rst:790 6cbced46857446f1a6f334709bf4fcfa
+msgid "Material-specific starting points"
+msgstr "نقاط شروع اختصاصی برای هر ماده"
+
+#: ../../source/advanced-workflows.rst:791 a1cfc8337bf04390a3d0c51bb04c3495
+msgid "Override as needed"
+msgstr "بازنویسی در صورت نیاز"
+
+#: ../../source/advanced-workflows.rst:793 a5a4d4ce724346c8a0b8e9a5c1574f04
+msgid "**Enable custodian for production**"
+msgstr "**فعال‌سازی custodian برای تولید**"
+
+#: ../../source/advanced-workflows.rst:795 99aaeb9624ab4c498db2846541610d0d
+msgid "Automatic error recovery"
+msgstr "بازیابی خودکار از خطا"
+
+#: ../../source/advanced-workflows.rst:796 0958f4cc44e2418fa7d45befd05bf1cc
+msgid "Saves time on HPC"
+msgstr "صرفه‌جویی در زمان روی HPC"
+
+#: ../../source/advanced-workflows.rst:798 4ac80de0214b4e2985e18b1deab51306
+msgid "**Database storage for high-throughput**"
+msgstr "**ذخیره‌سازی پایگاه داده برای توان عملیاتی بالا**"
+
+#: ../../source/advanced-workflows.rst:800 63cf1d4a4eeb474390feb822d0c90fb4
+msgid "Programmatic access to results"
+msgstr "دسترسی برنامه‌نویسی به نتایج"
+
+#: ../../source/advanced-workflows.rst:801 f15698fa8bca46deb8aac335dedbc4f1
+msgid "Easy querying and analysis"
+msgstr "جستجو و تحلیل آسان"
+
+#: ../../source/advanced-workflows.rst:803 30993c3c4aae4a70b509f6d84cafe481
+msgid "**Document parameters**"
+msgstr "**مستندسازی پارامترها**"
+
+#: ../../source/advanced-workflows.rst:805 9089068a163c4c5c9e7b95a0b1607a0e
+msgid "Include in workflow scripts"
+msgstr "گنجاندن در اسکریپت‌های جریان کار"
+
+#: ../../source/advanced-workflows.rst:806 fc2090beb8754a6ba831d46f1e2785c8
+msgid "Note tier/preset used"
+msgstr "یادداشت سطح/پیش‌تنظیم استفاده‌شده"
+
+#: ../../source/advanced-workflows.rst:809 81dd9eca1ead4ccd9a34189708093c15
+msgid "Parameter Selection"
+msgstr "انتخاب پارامتر"
+
+#: ../../source/advanced-workflows.rst:811 43afed7d392245a38eb30b5594aa9a89
+msgid "**Converge first**"
+msgstr "**ابتدا همگرا شوید**"
+
+#: ../../source/advanced-workflows.rst:813 084eab081e2d470d82a6922cbca9e792
+msgid "Run convergence studies once"
+msgstr "اجرای مطالعات همگرایی یک‌بار"
+
+#: ../../source/advanced-workflows.rst:814 6a0d8d477e2141c5a7d6040aa88167fa
+msgid "Apply converged parameters to all workflows"
+msgstr "اعمال پارامترهای همگرا به تمام جریان‌های کار"
+
+#: ../../source/advanced-workflows.rst:816 db722bb7eda242a7b51a8cfc529b6d9b
+msgid "**Use appropriate tier**"
+msgstr "**استفاده از سطح مناسب**"
+
+#: ../../source/advanced-workflows.rst:818 bb3c2f3563054131aa92f18fe874f1ab
+msgid "intermediate: Most cases"
+msgstr "intermediate: اکثر موارد"
+
+#: ../../source/advanced-workflows.rst:819 a34a66ecbe664a84b39d4d4c87fa93d2
+msgid "advanced: Specialized properties"
+msgstr "advanced: خواص تخصصی"
+
+#: ../../source/advanced-workflows.rst:820 975f3a8afc3e4803a459fcc91be68500
+msgid "expert: Performance tuning only"
+msgstr "expert: فقط تنظیم عملکرد"
+
+#: ../../source/advanced-workflows.rst:822 ce3934d59ee84d9fbcfc41bde26045ef
+msgid "**Balance accuracy vs. cost**"
+msgstr "**توازن دقت در برابر هزینه**"
+
+#: ../../source/advanced-workflows.rst:824 c15ae1f9aa784e22a3e77cd27a15b628
+msgid "Screening: basic/intermediate"
+msgstr "غربالگری: basic/intermediate"
+
+#: ../../source/advanced-workflows.rst:825 3d0fd7a5385349bfa557f8b1ff89be78
+msgid "Production: intermediate/advanced"
+msgstr "تولید: intermediate/advanced"
+
+#: ../../source/advanced-workflows.rst:826 9551e66de89e49598bafd50f8da486f2
+msgid "Benchmarking: advanced/expert"
+msgstr "معیارسنجی: advanced/expert"
+
+#: ../../source/advanced-workflows.rst:829 03005bc4ec50428d8554f8226327e271
+msgid "Error Handling"
+msgstr "مدیریت خطا"
+
+#: ../../source/advanced-workflows.rst:831 7a5491e43ca348e6b31c80a031921f27
+msgid "**Always enable custodian for**:"
+msgstr "**همیشه custodian را برای موارد زیر فعال کنید**:"
+
+#: ../../source/advanced-workflows.rst:833 58b42df29d874c0a8259b135bbdff22d
+msgid "HPC batch jobs"
+msgstr "کارهای دسته‌ای HPC"
+
+#: ../../source/advanced-workflows.rst:834 6a396c5f1ce94b93b880b4f233ea10f1
+msgid "High-throughput workflows"
+msgstr "جریان‌های کار با توان عملیاتی بالا"
+
+#: ../../source/advanced-workflows.rst:835 cc95cecf4b15418fa20fb859436e6624
+msgid "Challenging systems"
+msgstr "سیستم‌های چالش‌برانگیز"
+
+#: ../../source/advanced-workflows.rst:837 b24d6ecf7ed24a53810a94e394279dfa
+msgid "**Monitor custodian.json**:"
+msgstr "**نظارت بر custodian.json**:"
+
+#: ../../source/advanced-workflows.rst:839 9648e10f0e0346e1a26334f1469bd099
+msgid "Check corrections applied"
+msgstr "بررسی تصحیحات اعمال‌شده"
+
+#: ../../source/advanced-workflows.rst:840 7f4301714dd24c70809e822a617103e6
+msgid "Identify systematic issues"
+msgstr "شناسایی مسائل سیستماتیک"
+
+#: ../../source/advanced-workflows.rst:842 ee9e28f00d31436ca982497f1ce1a61c
+msgid "**Adjust max_errors based on**:"
+msgstr "**تنظیم max_errors بر اساس**:"
+
+#: ../../source/advanced-workflows.rst:844 0b32cd53ac5c45a5a57ae543a0ad5f24
+msgid "System difficulty"
+msgstr "سختی سیستم"
+
+#: ../../source/advanced-workflows.rst:845 7dcc9222875c445c8ba4d3b18462ae91
+msgid "Throughput requirements"
+msgstr "نیازهای توان عملیاتی"
+
+#: ../../source/advanced-workflows.rst:846 767890df03cd45289b493b4a03c5080c
+msgid "Available compute time"
+msgstr "زمان محاسباتی در دسترس"
+
+#: ../../source/advanced-workflows.rst:851 710720bbd357439a8ce4f9de898a8389
+msgid "Example: Complete Characterization Workflow"
+msgstr "مثال: جریان کار مشخصه‌یابی کامل"
+
+#: ../../source/advanced-workflows.rst:900 dd3d85b7ded14a3f98b8baa39c9744a3
+msgid "See Also"
+msgstr "همچنین ببینید"
+
+#: ../../source/advanced-workflows.rst:902 7abca646359043579e872a94f2945be2
+msgid ":doc:`features` - Feature overview"
+msgstr ":doc:`features` - مرور ویژگی‌ها"
+
+#: ../../source/advanced-workflows.rst:903 a77df1088c2044ac99e1e5d102c0c235
+msgid ":doc:`tier-system` - Tier-based configuration"
+msgstr ":doc:`tier-system` - پیکربندی مبتنی بر سطح"
+
+#: ../../source/advanced-workflows.rst:904 4950368f48d14518a9f0334520cdd35f
+msgid ":doc:`custodian` - Error handling"
+msgstr ":doc:`custodian` - مدیریت خطا"
+
+#: ../../source/advanced-workflows.rst:905 837e8c359f9644c6b85f8c73a61ab181
+msgid ":doc:`tutorials/index` - Hands-on tutorials"
+msgstr ":doc:`tutorials/index` - آموزش‌های عملی"
+
+#: ../../source/advanced-workflows.rst:911 6b40b44893a043aeb1efd5ed67168aa7
+msgid ""
+"Start with simple workflows (relax → bands) and gradually add complexity."
+" Use tier presets as starting points and customize as needed."
+msgstr ""
+"با جریان‌های کار ساده (آرام‌سازی ← نوارها) شروع کنید و به‌تدریج پیچیدگی "
+"اضافه کنید. از پیش‌تنظیم‌های سطح به‌عنوان نقاط شروع استفاده کنید و در "
+"صورت نیاز سفارشی‌سازی کنید."

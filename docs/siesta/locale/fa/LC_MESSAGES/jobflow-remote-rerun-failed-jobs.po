@@ -1,0 +1,1612 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2024, Arsalan Akhtar
+# This file is distributed under the same license as the atomate2siesta
+# package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: atomate2siesta \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-28 13:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fa\n"
+"Language-Team: fa <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:3
+#: fd7e6d9c0c844e03b52a65fce3bf01d5
+msgid "Rerunning Failed Jobs in Jobflow-Remote"
+msgstr "اجرای مجدد کارهای شکست‌خورده در Jobflow-Remote"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:5
+#: b8548ee14fd74df2878d9d08f550b30d
+msgid ""
+"Complete guide to handling failed jobs using ``jf`` CLI commands with "
+"project-specific execution."
+msgstr ""
+"راهنمای کامل برای مدیریت کارهای شکست‌خورده با استفاده از دستورات CLI ``jf`` "
+"با اجرای ویژه پروژه."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:9
+#: 93c730a5a4154418a666084b839680ae
+msgid "Table of Contents"
+msgstr "فهرست مطالب"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:12
+#: 254a32de0e4043c6a98d69b889b9e364
+msgid "Overview"
+msgstr "مروری کلی"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:14
+#: 94368375c2104b1087eddb1cc7cb2944
+msgid ""
+"When a job fails in jobflow-remote, you can use the ``jf`` CLI to "
+"diagnose, modify resources, and rerun the job. All commands support the "
+"``-p PROJECT_NAME`` flag for multi-project setups."
+msgstr ""
+"هنگامی که کاری در jobflow-remote شکست می‌خورد، می‌توانید از CLI ``jf`` برای "
+"تشخیص، تغییر منابع و اجرای مجدد کار استفاده کنید. همه دستورات از پرچم "
+"``-p PROJECT_NAME`` برای پیکربندی‌های چند پروژه‌ای پشتیبانی می‌کنند."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:16
+#: 8f618e18b0864e4693f09985d08a7854
+msgid ""
+"**NEW**: atomate2siesta now provides tools for modifying FDF parameters! "
+"See :ref:`fdf-modification-tools` below."
+msgstr ""
+"**جدید**: atomate2siesta اکنون ابزارهایی برای تغییر پارامترهای FDF فراهم می‌کند! "
+"بخش :ref:`fdf-modification-tools` در زیر را مشاهده کنید."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:18
+#: 558add19effd4239b51a1c19ce716da6
+msgid ""
+"**Standard Jobflow-Remote Limitation**: The ``jf`` CLI **cannot** modify "
+"FDF parameters (like ``Mesh.Cutoff``, ``kpts``, ``SCF.Mixer.Weight``) "
+"directly. These are baked into the job definition. Use ``atomate2siesta-"
+"jobflow-remote job`` commands for FDF modifications."
+msgstr ""
+"**محدودیت استاندارد Jobflow-Remote**: CLI ``jf`` **نمی‌تواند** پارامترهای FDF "
+"(مانند ``Mesh.Cutoff``، ``kpts``، ``SCF.Mixer.Weight``) را به‌طور مستقیم تغییر دهد. "
+"این پارامترها در تعریف کار قرار گرفته‌اند. از دستورات ``atomate2siesta-jobflow-remote job`` "
+"برای تغییرات FDF استفاده کنید."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:21
+#: 411f4fe465c04ff893e7c461537eda5e
+msgid "Quick Reference"
+msgstr "مرجع سریع"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:40
+#: d58acfb001434cfa876dad4e881312f1
+msgid "Understanding Job States"
+msgstr "درک حالت‌های کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:43
+#: 0c8cbb92fd8a478ebf9a4847c8f9a524
+msgid "Job Lifecycle"
+msgstr "چرخه حیات کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:53
+#: 3e9f17dafecf4acba794f20b90b7186a
+msgid "**FAILED Jobs**"
+msgstr "**کارهای FAILED**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:54
+#: 612a9969cd6f4aa69c236f25ec51fa0c
+msgid ""
+"Job completed but failed due to calculation issues (SCF convergence, "
+"wrong parameters, etc.)"
+msgstr ""
+"کار تکمیل شد اما به دلیل مشکلات محاسباتی شکست خورد (همگرایی SCF، "
+"پارامترهای نادرست و غیره)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:56
+#: 9cd1218e0a4347dc8a55844e78054f2b
+msgid "**Solution**: Use ``jf job rerun``"
+msgstr "**راه‌حل**: از ``jf job rerun`` استفاده کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:58
+#: 7d593b6995c446839c5004f2fd7e0488
+msgid "**REMOTE_ERROR Jobs**"
+msgstr "**کارهای REMOTE_ERROR**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:59
+#: d869a42e71d94996b6fbbee4a7620a28
+msgid ""
+"Job encountered infrastructure issues (network timeout, file transfer "
+"failure, cluster problems)"
+msgstr ""
+"کار با مشکلات زیرساختی مواجه شد (timeout شبکه، شکست انتقال فایل، "
+"مشکلات خوشه)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:61
+#: e3a20dd52f5b4d8e9e1122abb56e8ac3
+msgid "**Solution**: Use ``jf job retry``"
+msgstr "**راه‌حل**: از ``jf job retry`` استفاده کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:64
+#: 0aeb35e29f0847df8ffdc8281bd6e23c
+msgid "Check Job Status"
+msgstr "بررسی وضعیت کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:93
+#: 7b99116e5c814ad1b820ca7b35f78ba7
+msgid "Commands for Failed Jobs"
+msgstr "دستورات برای کارهای شکست‌خورده"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:96
+#: b9593db11cc4450bbc41968dee78bb55
+msgid "1. jf job info - Diagnose the Failure"
+msgstr "۱. jf job info - تشخیص شکست"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:98
+#: 0cb39872564f4f18b53e523470b927e0
+msgid "**Purpose**: Get detailed information about why a job failed."
+msgstr "**هدف**: دریافت اطلاعات تفصیلی درباره دلیل شکست کار."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:100
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:242
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:292
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:845
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:912
+#: 284ca49e0ada4db1b4c7315b062a7840 37fb5806943a4c18adf14f27066ef5a3
+#: 8472f5b6d92944479bc22ddd345a31ad b314c9f7aa05417a9084da3594f71426
+#: c819f69e9095420bbb36b6a26a47c02c
+msgid "**Basic Usage:**"
+msgstr "**استفاده پایه:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:113
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:868
+#: 1ae24458abf94554a3277601bfed26e0 2455dc7feda14258af1aedea751bd206
+msgid "**Example Output:**"
+msgstr "**خروجی نمونه:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:127
+#: 2adf3bacd19c4f1b846300fe4d9cb1f3
+msgid "**Common Error Patterns:**"
+msgstr "**الگوهای رایج خطا:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:133
+#: 4c171c79fc5c4a58bb07d5a9534fdaf1
+msgid "Error Message"
+msgstr "پیام خطا"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:134
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:751
+#: 2b579cc476cb4ecb924251efab9d26ed cb03452f9b53473f84edc283f3c490bb
+msgid "Meaning"
+msgstr "معنی"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:135
+#: bfade96442ae4ac4ac9c50619059255d
+msgid "``SCF did not converge``"
+msgstr "``SCF did not converge``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:136
+#: f4b9211508054180adc389d1b974b104
+msgid "Need different convergence parameters"
+msgstr "نیاز به پارامترهای همگرایی متفاوت"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:137
+#: 74b5b79c04c64c35b6e28434ee908877
+msgid "``Exceeded memory limit``"
+msgstr "``Exceeded memory limit``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:138
+#: 50e147bd11484137b461d0f0eaf07795
+msgid "Need more resources (use ``jf job set resources``)"
+msgstr "نیاز به منابع بیشتر (از ``jf job set resources`` استفاده کنید)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:139
+#: 6a1b12c8bedf48708996f671b9d48b66
+msgid "``CANCELLED DUE TO TIME LIMIT``"
+msgstr "``CANCELLED DUE TO TIME LIMIT``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:140
+#: 4c180743d7104faea60df05cd525e94c
+msgid "Need more walltime (use ``jf job set resources``)"
+msgstr "نیاز به زمان اجرا بیشتر (از ``jf job set resources`` استفاده کنید)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:141
+#: 4605181b69c94ddfb1ffbe27965f7b87
+msgid "``kgrid: ERROR. Grid generates no points``"
+msgstr "``kgrid: ERROR. Grid generates no points``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:142
+#: fa7921b1daf84cfbb8fbe384d46fa470
+msgid "K-point issue (requires new flow)"
+msgstr "مشکل K-point (نیاز به جریان کار جدید)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:143
+#: 468fe498e7fc49bb95033f5dbac3d92b
+msgid "``PAO.Basis: Unknown basis size``"
+msgstr "``PAO.Basis: Unknown basis size``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:144
+#: 37b5ebdc80e34f0f893c54b0f194ff64
+msgid "Basis set error (requires new flow)"
+msgstr "خطای مجموعه پایه (نیاز به جریان کار جدید)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:147
+#: 150fbef2e62e4db498ad97729c98f9d6
+msgid "2. jf job set - Modify Job Resources"
+msgstr "۲. jf job set - تغییر منابع کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:149
+#: e30b0954cd174bc08876af96e8f4f566
+msgid ""
+"**Purpose**: Change computational resources before rerunning (memory, "
+"cores, walltime, worker)."
+msgstr ""
+"**هدف**: تغییر منابع محاسباتی قبل از اجرای مجدد (حافظه، "
+"هسته‌ها، زمان اجرا، worker)."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:151
+#: 6b5182bcbaab400d95e3292837f7d956
+msgid ""
+"**Important**: This **ONLY** modifies HPC resources, **NOT** FDF "
+"parameters!"
+msgstr ""
+"**مهم**: این دستور **فقط** منابع HPC را تغییر می‌دهد، **نه** پارامترهای FDF را!"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:154
+#: 2a96eb21d38743898da549bd7e42cc78
+msgid "set resources"
+msgstr "set resources"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:156
+#: 98e6f789bbd8457ea68fc662e60e9e61
+msgid "Modify computational resources (nodes, cores, memory, walltime)."
+msgstr "تغییر منابع محاسباتی (گره‌ها، هسته‌ها، حافظه، زمان اجرا)."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:183
+#: 9e40f10bbab64af3b27ef3e02173d34e
+msgid ""
+"**Available Options** (check ``jf job set resources -h`` for complete "
+"list):"
+msgstr ""
+"**گزینه‌های موجود** (برای لیست کامل ``jf job set resources -h`` را بررسی کنید):"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:185
+#: f68a882767b448919d32124632aefbfa
+msgid "``--nodes`` - Number of compute nodes"
+msgstr "``--nodes`` - تعداد گره‌های محاسباتی"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:186
+#: feb1057837c948a892573deadc0f29e2
+msgid "``--ntasks`` - Total number of tasks"
+msgstr "``--ntasks`` - تعداد کل وظایف"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:187
+#: 59f3b611be9a41d392ddacc6a3358e31
+msgid "``--mem-per-cpu`` - Memory per CPU"
+msgstr "``--mem-per-cpu`` - حافظه به ازای هر CPU"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:188
+#: df39d5a7d80e4346814a9274b6bbd679
+msgid "``--time`` - Walltime (format: ``HH:MM:SS`` or ``DD-HH:MM:SS``)"
+msgstr "``--time`` - زمان اجرا (فرمت: ``HH:MM:SS`` یا ``DD-HH:MM:SS``)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:189
+#: 39c9b500d6ad4bf0ab26f2731519852b
+msgid "``--partition`` - Queue/partition name"
+msgstr "``--partition`` - نام صف/پارتیشن"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:190
+#: 7c92bb137f9d4c34bfc56bfb4e48074b
+msgid "``--qos`` - Quality of Service"
+msgstr "``--qos`` - کیفیت سرویس"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:191
+#: ea3b98d67ed34d62a17caede0803c77c
+msgid "``--account`` - Account/project for billing"
+msgstr "``--account`` - حساب/پروژه برای صورتحساب"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:194
+#: 62e290b23d3e47578ab00b44f3765a71
+msgid "set worker"
+msgstr "set worker"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:196
+#: f456c968833b4708896566e95f69b44c
+msgid "Change which worker executes the job."
+msgstr "تغییر worker که کار را اجرا می‌کند."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:206
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:222
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:285
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:905
+#: 09afed470f514554abbd6d8da5e1b043 32f02c54b0644555b13f67cfcee7ae13
+#: 7fc4836da3b7404182dc8a0c8e89db37 ca61ef895386491c9a3f0cfc98a62837
+msgid "**When to Use:**"
+msgstr "**چه زمانی استفاده شود:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:208
+#: 2df33e2a7c764a2ea3e10ec689f072f8
+msgid "Original worker is down or overloaded"
+msgstr "worker اصلی خاموش یا بارگذاری‌شده است"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:209
+#: ef82652eb03248faa6dd064c022aef4d
+msgid "Job needs special hardware (GPUs, large memory nodes)"
+msgstr "کار به سخت‌افزار ویژه نیاز دارد (GPU، گره‌های حافظه بزرگ)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:210
+#: 99ab10c3311e4049b7dc99e52be2ab9f
+msgid "Testing on different cluster"
+msgstr "آزمایش روی خوشه متفاوت"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:213
+#: c9a8f83838fe47de88761465e3d86a0e
+msgid "set exec-config"
+msgstr "set exec-config"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:215
+#: 86689fdfc65146629ace20be88c4ab1f
+msgid "Modify execution configuration (advanced)."
+msgstr "تغییر پیکربندی اجرا (پیشرفته)."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:224
+#: 76e17278f6554f9db733c214986e2906
+msgid "Change SLURM/PBS submission options"
+msgstr "تغییر گزینه‌های ارسال SLURM/PBS"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:225
+#: f29fe9377fcc414db795511e17c497f6
+msgid "Modify environment variables"
+msgstr "تغییر متغیرهای محیطی"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:226
+#: 9f44f71183ac4c7088692fe859d08a4f
+msgid "Adjust pre/post execution scripts"
+msgstr "تنظیم اسکریپت‌های قبل/بعد از اجرا"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:228
+#: e944db77e609423093a65950cc401afc
+msgid ""
+"**Note**: Exact options depend on your jobflow-remote configuration. "
+"Check ``jf job set exec-config -h``."
+msgstr ""
+"**توجه**: گزینه‌های دقیق به پیکربندی jobflow-remote شما بستگی دارد. "
+"``jf job set exec-config -h`` را بررسی کنید."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:231
+#: 6b3570dc982c403692d6ed677b85334b
+msgid "3. jf job rerun - Restart Failed Job"
+msgstr "۳. jf job rerun - راه‌اندازی مجدد کار شکست‌خورده"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:233
+#: d2be20106a114b4588130fc10f1d85d1
+msgid "**Purpose**: Restart a FAILED job from the beginning."
+msgstr "**هدف**: راه‌اندازی مجدد کار FAILED از ابتدا."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:235
+#: 24794903d46141ae9ede5c5376052860
+msgid "**Key Behavior:**"
+msgstr "**رفتار کلیدی:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:237
+#: 5a56071755164720927926a81d7d0090
+msgid "Returns job to ``READY`` state"
+msgstr "کار را به حالت ``READY`` برمی‌گرداند"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:238
+#: 0f71c9c49dc7452a97a252d01a43d796
+msgid "**Regenerates all input files** from stored job definition"
+msgstr "**تمام فایل‌های ورودی را دوباره تولید می‌کند** از تعریف ذخیره‌شده کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:239
+#: d8718769ead449ea9f99b39604b6f526
+msgid ""
+"**By default, deletes the worker directory** (use ``--no-delete`` to "
+"preserve)"
+msgstr ""
+"**به‌طور پیش‌فرض، دایرکتوری worker را حذف می‌کند** (برای حفظ از ``--no-delete`` استفاده کنید)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:240
+#: 23990b72ba0446b0b30dbe7420b6042f
+msgid "**Cannot modify FDF parameters** (they're in the job definition)"
+msgstr "**نمی‌تواند پارامترهای FDF را تغییر دهد** (آنها در تعریف کار هستند)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:255
+#: 43ac07d15f3b4b6a98e56c9735df98f6
+msgid "**Examples:**"
+msgstr "**مثال‌ها:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:270
+#: bdc57ff80e3c44ee817ffc20959c395f
+msgid "**Batch Rerun:**"
+msgstr "**اجرای مجدد دسته‌ای:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:281
+#: bb04314d269d47dab9abe8ad22e45cc7
+msgid "4. jf job retry - Retry After Remote Error"
+msgstr "۴. jf job retry - تلاش مجدد پس از خطای راه‌دور"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:283
+#: 76105ade2d6049d9ae683756808e1410
+msgid ""
+"**Purpose**: Retry a job that encountered infrastructure issues "
+"(REMOTE_ERROR state)."
+msgstr ""
+"**هدف**: تلاش مجدد کاری که با مشکلات زیرساختی مواجه شده "
+"(حالت REMOTE_ERROR)."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:287
+#: d5600277132f4d24bb9b16cf0a17a7a4
+msgid "Network timeouts"
+msgstr "timeout های شبکه"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:288
+#: 85d45e5af227445f8804d61f6cf2a722
+msgid "File transfer failures"
+msgstr "شکست انتقال فایل"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:289
+#: df67b86950114bd99513fe75c35ba0f8
+msgid "Temporary cluster issues"
+msgstr "مشکلات موقت خوشه"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:290
+#: 81e6806a6e644e98a38e4278e36b96f4
+msgid "SSH connection problems"
+msgstr "مشکلات اتصال SSH"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:302
+#: 34feff6da9834f069698bc02a853f9ed
+msgid "**Example:**"
+msgstr "**مثال:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:314
+#: e5e9bf0129844e51a7ec46e9f3aee8f2
+msgid "**Difference from rerun:**"
+msgstr "**تفاوت با rerun:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:320
+#: 62df2483bba446608cf5f7966e5a137a
+msgid "Command"
+msgstr "دستور"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:321
+#: 8343e98427fb4f5bba7600db7c69e487
+msgid "When to Use"
+msgstr "چه زمانی استفاده شود"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:322
+#: 2aa39a2bae7745ffa1562fe5dc587841
+msgid "Behavior"
+msgstr "رفتار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:323
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:779
+#: 6d64090a68944786a841cad30aecde0b b9dfcf2b622541caa48a12aa78c3e2cb
+msgid "``retry``"
+msgstr "``retry``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:324
+#: 3dad4a3acef54841a89aeaaebbd456d2
+msgid "REMOTE_ERROR (infrastructure)"
+msgstr "REMOTE_ERROR (زیرساخت)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:325
+#: 97ab4999d3f544968eb97f489f4111d6
+msgid "Returns to previous state"
+msgstr "به حالت قبلی برمی‌گردد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:326
+#: d7ecc86fed2f4c5b98a549f565bc0bd0
+msgid "``rerun``"
+msgstr "``rerun``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:327
+#: 147fbfa452ce498d8a56690952eefb9d
+msgid "FAILED (calculation error)"
+msgstr "FAILED (خطای محاسباتی)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:328
+#: b13cadaac04e4fe08cd45b4942985401
+msgid "Starts from READY"
+msgstr "از READY شروع می‌شود"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:331
+#: 821c296eeea74d6dbc2d50b9b0a349bb
+msgid "Workflow Examples"
+msgstr "مثال‌های جریان کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:334
+#: faa1f65021094a8fa368424810b529b5
+msgid "Example 1: SCF Convergence Failure (Cannot Fix with CLI)"
+msgstr "مثال ۱: شکست همگرایی SCF (قابل رفع با CLI نیست)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:336
+#: 7da579000b0e43598deb24ac4850f210
+msgid ""
+"**Scenario**: Job failed because SCF didn't converge. You need to change "
+"``SCF.Mixer.Weight``."
+msgstr ""
+"**سناریو**: کار به دلیل عدم همگرایی SCF شکست خورد. نیاز به تغییر "
+"``SCF.Mixer.Weight`` دارید."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:344
+#: efbb7f94284843e68ae51acdc54a234f
+msgid ""
+"**⚠️ LIMITATION**: You **cannot** change FDF parameters using ``jf`` "
+"commands!"
+msgstr ""
+"**⚠️ محدودیت**: **نمی‌توانید** پارامترهای FDF را با دستورات ``jf`` تغییر دهید!"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:346
+#: 4b135ad888344b29a45d8ba743347dc7
+msgid ""
+"**Solution**: Use ``atomate2siesta-jobflow-remote job modify-db`` to "
+"modify FDF parameters (see :ref:`fdf-modification-tools` below)."
+msgstr ""
+"**راه‌حل**: از ``atomate2siesta-jobflow-remote job modify-db`` برای "
+"تغییر پارامترهای FDF استفاده کنید (بخش :ref:`fdf-modification-tools` در زیر را ببینید)."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:349
+#: c39421562459443bbb08148f1e6a4707
+msgid "Example 2: Memory Limit Exceeded (Can Fix with CLI)"
+msgstr "مثال ۲: بیش از حد حافظه (قابل رفع با CLI است)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:351
+#: 2f15b1c082444a689241f1ff0344d33d
+msgid "**Scenario**: Job cancelled because it exceeded memory allocation."
+msgstr "**سناریو**: کار به دلیل تجاوز از تخصیص حافظه لغو شد."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:369
+#: e55a8e2690b24a77b6e13ec948b7e5d0
+msgid "Example 3: Walltime Exceeded (Can Fix with CLI)"
+msgstr "مثال ۳: بیش از حد زمان اجرا (قابل رفع با CLI است)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:371
+#: 0452f332e2244044a88726452b61e816
+msgid "**Scenario**: Job cancelled due to time limit."
+msgstr "**سناریو**: کار به دلیل محدودیت زمانی لغو شد."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:385
+#: 7a06fbe6c7be4ee9b7b62859dbc0a53f
+msgid "Example 4: Network Failure (Can Fix with CLI)"
+msgstr "مثال ۴: شکست شبکه (قابل رفع با CLI است)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:387
+#: f07b10c2009d49f89765ad3e934e4af2
+msgid "**Scenario**: Job encountered network timeout during file upload."
+msgstr "**سناریو**: کار در حین بارگذاری فایل با timeout شبکه مواجه شد."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:402
+#: 3362d593349a47ed8f2f59c99be90148
+msgid "Example 5: Wrong Worker (Can Fix with CLI)"
+msgstr "مثال ۵: Worker نادرست (قابل رفع با CLI است)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:404
+#: 7eb369f9d4a74ee5a34d12642993b722
+msgid "**Scenario**: Job submitted to worker without enough memory."
+msgstr "**سناریو**: کار به worker بدون حافظه کافی ارسال شد."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:415
+#: 1891d6c81e374e018c61bfd41d2e7a6e
+msgid "Example 6: Batch Fix Multiple Jobs"
+msgstr "مثال ۶: رفع دسته‌ای چندین کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:417
+#: a657d415804e49e0adae0ebcd3bad951
+msgid "**Scenario**: Multiple jobs in a scan failed with memory issues."
+msgstr "**سناریو**: چندین کار در یک اسکن با مشکلات حافظه شکست خوردند."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:434
+#: c5baa4c75155460d90e3165660836e55
+msgid "Monitoring Jobs After Rerun"
+msgstr "نظارت بر کارها پس از اجرای مجدد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:437
+#: a4bb63e7a065402c97ac8462cb8d36bc
+msgid "Check Job Progress"
+msgstr "بررسی پیشرفت کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:451
+#: 44fe6470db234b96972b797144b95a34
+msgid "Runner Management"
+msgstr "مدیریت Runner"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:453
+#: 61e4a9e47b8947159cf10bd6e427128d
+msgid "Ensure the runner is active to process resubmitted jobs:"
+msgstr "اطمینان حاصل کنید که runner برای پردازش کارهای ارسال‌شده مجدد فعال است:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:470
+#: 2ca765a97e66471b8276ac3eb3d6f90b
+msgid "Flow Management"
+msgstr "مدیریت جریان کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:487
+#: 164f0c71f32d4aaca83a09fc3d97c704
+msgid "What You CANNOT Do with CLI"
+msgstr "آنچه نمی‌توانید با CLI انجام دهید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:489
+#: e51423cce52b407f89af6fb12a910fed
+msgid "These require creating a new flow with Python:"
+msgstr "این موارد نیاز به ایجاد جریان کار جدید با Python دارند:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:491
+#: 352db2cbe219403db625c94ef35459ab
+msgid "❌ **Cannot Modify FDF Parameters:**"
+msgstr "❌ **نمی‌تواند پارامترهای FDF را تغییر دهد:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:493
+#: d39d9b9453b74fb9b0892fdb444a243a
+msgid "``Mesh.Cutoff``"
+msgstr "``Mesh.Cutoff``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:494
+#: ca35dd87e5b54d90a772e4fcb933eaad
+msgid "``kpts`` or ``kgrid.Cutoff``"
+msgstr "``kpts`` یا ``kgrid.Cutoff``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:495
+#: ad5cfdb2565e497da376b940cf537f39
+msgid "``SCF.Mixer.Weight``"
+msgstr "``SCF.Mixer.Weight``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:496
+#: 06f2134754ff4391ac1fb61cb1ad0841
+msgid "``SCF.DM.Tolerance``"
+msgstr "``SCF.DM.Tolerance``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:497
+#: 26d553344c2548408630b582aee8962b
+msgid "``PAO.BasisSize``"
+msgstr "``PAO.BasisSize``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:498
+#: b4ca8086bc0e4a1e91eac7de34135a3b
+msgid "``ElectronicTemperature``"
+msgstr "``ElectronicTemperature``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:499
+#: 75e5f6edb52c4453b7d75dacdd0c6f6e
+msgid "Any SIESTA FDF parameter"
+msgstr "هر پارامتر FDF در SIESTA"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:501
+#: 8e89d8089d81461c80ac55ae66b1c7dc
+msgid ""
+"**Why?** These are stored in the job's ``function_kwargs`` in the "
+"database. The ``jf`` CLI doesn't provide commands to modify function "
+"arguments."
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:503
+#: 760073cad1eb40799a733cd57bac6096
+msgid "❌ **Cannot Modify User Parameters:**"
+msgstr "❌ **نمی‌تواند پارامترهای کاربر را تغییر دهد:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:505
+#: e91b235a2c0e4b439f4b4d25590185fc
+msgid "``user_params`` dictionary"
+msgstr "دیکشنری ``user_params``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:506
+#: 6953e2e220ad48bc87693d3253cdf048
+msgid "Maker-specific settings"
+msgstr "تنظیمات خاص Maker"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:507
+#: 08c4fde0b96343f29ef1ae923cad356b
+msgid "Flow-level parameters"
+msgstr "پارامترهای سطح جریان کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:509
+#: 638c67478a9247c5909890e3bbf2e849
+msgid ""
+"**Solution:** Use ``atomate2siesta-jobflow-remote job modify-db`` to "
+"modify FDF parameters (see :ref:`fdf-modification-tools` below)."
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:511
+#: 4a04f01ace8e469b9e762db15b764c1b
+msgid "✅ **CAN Modify via CLI:**"
+msgstr "✅ **می‌تواند از طریق CLI تغییر دهد:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:513
+#: 83fc6c187bb740fa91b447f3ff7dab7b
+msgid "Computational resources (nodes, cores, memory, walltime)"
+msgstr "منابع محاسباتی (گره‌ها، هسته‌ها، حافظه، زمان اجرا)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:514
+#: 8e1801cb11cc4cd5bc96adb5a27e632b
+msgid "Worker assignment"
+msgstr "تخصیص Worker"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:515
+#: 3f360825e1214cfeacb5f4a75d9446de
+msgid "Execution configuration"
+msgstr "پیکربندی اجرا"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:516
+#: 7f50d557b91e40318a85e6e816941420
+msgid "Job priority"
+msgstr "اولویت کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:519
+#: db095e3fe8b7485b876c7a57ce2f507f
+msgid "Decision Tree"
+msgstr "درخت تصمیم"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:521
+#: d8c2025d3c3744b395c3aa78ee7bfefb
+msgid "Use this to decide your approach:"
+msgstr "از این برای تصمیم‌گیری رویکرد خود استفاده کنید:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:550
+#: 2e55ab76c73c488b88e1649e30cc466f
+msgid "Multi-Project Workflow"
+msgstr "جریان کار چند پروژه‌ای"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:552
+#: 01e377548e664170ab6d8473d85a36c6
+msgid "If you manage multiple projects, always use ``-p`` flag:"
+msgstr "اگر چندین پروژه را مدیریت می‌کنید، همیشه از پرچم ``-p`` استفاده کنید:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:576
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1089
+#: ad4b72afca4645c5ac632aa013e34d41 d264dd8adf524827a5e670d979d5ee5b
+msgid "Best Practices"
+msgstr "بهترین شیوه‌ها"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:579
+#: df303510f088438ca50fb74b6067f0c9
+msgid "1. Always Diagnose Before Acting"
+msgstr "۱. همیشه قبل از اقدام تشخیص دهید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:590
+#: 0bc12779f673449f8a5dd2ae11c4c6b7
+msgid "2. Test Resource Changes with One Job First"
+msgstr "۲. ابتدا تغییرات منابع را با یک کار آزمایش کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:606
+#: 496d7a65538b4c1ebdfff3e7cc0fcd7a
+msgid "3. Keep Failed Jobs for Reference"
+msgstr "۳. کارهای شکست‌خورده را برای مرجع نگه دارید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:617
+#: 0dc8b0d4d5c346598882b0eee98752d9
+msgid "4. Monitor Runner Health"
+msgstr "۴. سلامت Runner را نظارت کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:628
+#: fee07e02494d4482a264455cd68001ba
+msgid "5. Use Descriptive Job Names"
+msgstr "۵. از نام‌های توصیفی برای کارها استفاده کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:630
+#: d1b1e2f0e4c74456ae910ea1d07cb5f9
+msgid "When creating flows, use descriptive names:"
+msgstr "هنگام ایجاد جریان‌های کار، از نام‌های توصیفی استفاده کنید:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:643
+#: d77ad3423c094d1682b5a85d804d02cf
+msgid "Then filter easily:"
+msgstr "سپس به راحتی فیلتر کنید:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:650
+#: b9f9195c5b68417e85b582e7dcf89ec4
+msgid "Troubleshooting"
+msgstr "عیب‌یابی"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:653
+#: 19bda43954f5453fb1fb4cfeee8f4283
+msgid "\"Command not found: jf\""
+msgstr "\"Command not found: jf\""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:655
+#: 28a56a5f9fd64a0aadfeeb07c8711285
+msgid "**Cause**: jobflow-remote not installed or not in PATH."
+msgstr "**علت**: jobflow-remote نصب نشده یا در PATH نیست."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:657
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:672
+#: 867371a6fefd4ec89c89f5952d2a77a5 f4ab9e4b14ea43daba547e5c74e44bc5
+msgid "**Solution**:"
+msgstr "**راه‌حل**:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:668
+#: dff3fb15719a42bdbf76d14a396956ba
+msgid "\"Project not found: PROJECTNAME\""
+msgstr "\"Project not found: PROJECTNAME\""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:670
+#: 1e469d18df5543939c22e154743dbf8f
+msgid "**Cause**: Project not configured."
+msgstr "**علت**: پروژه پیکربندی نشده است."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:686
+#: 2552664997ca45c5a5e6148c58118cc2
+msgid "\"Cannot modify job in state COMPLETED\""
+msgstr "\"Cannot modify job in state COMPLETED\""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:688
+#: 4947d18ef9bf4b14b36b436f70bb3568
+msgid "**Cause**: Job already finished."
+msgstr "**علت**: کار قبلاً به پایان رسیده است."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:690
+#: c5721941d4744b46b55cce414113f7d1
+msgid "**Solution**: Create new flow instead of trying to modify completed job."
+msgstr "**راه‌حل**: به جای تلاش برای تغییر کار تکمیل‌شده، جریان کار جدید ایجاد کنید."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:693
+#: 8612724c893b43918ae16cb89f1e140d
+msgid "\"Job rerun does nothing\""
+msgstr "\"Job rerun does nothing\""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:695
+#: 45e4dc370ff3457c9a517fd1b5e931c9
+msgid "**Possible causes**:"
+msgstr "**علل احتمالی**:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:697
+#: 6c46671def3343369f084ef5fccf46ff
+msgid "**Runner not running**:"
+msgstr "**Runner در حال اجرا نیست**:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:703
+#: cec927569fa249d3a408952d0c21a8a2
+msgid "**Job still locked**:"
+msgstr "**کار هنوز قفل است**:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:709
+#: e2280c59d5344a13b6ab8a0f4a45799b
+msgid "**Job has dependencies**:"
+msgstr "**کار وابستگی دارد**:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:711
+#: a9bfc3daea174e80a0fc099a317a5c76
+msgid "Check flow structure - parent jobs may need to rerun first."
+msgstr "ساختار جریان کار را بررسی کنید - ممکن است کارهای والد ابتدا نیاز به اجرای مجدد داشته باشند."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:714
+#: aebd8f28783c4ffe9b7b86acea025f7a
+msgid "Command Reference"
+msgstr "مرجع دستورات"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:717
+#: d20fd136bd004005a1444d0d1b54715b
+msgid "Complete ``jf job`` Command List"
+msgstr "لیست کامل دستورات ``jf job``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:744
+#: 849026d7126347b1a1b718ad576c82b7
+msgid "Job States Reference"
+msgstr "مرجع حالت‌های کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:750
+#: f4a39c88c7b04dd39c3d4a05f5a21008
+msgid "State"
+msgstr "حالت"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:752
+#: f97097fbdaf34d0abe5f40f185ecadc6
+msgid "Action"
+msgstr "اقدام"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:753
+#: 6c6b25d8e5f84953b6dca1fd6c92dc0e
+msgid "``READY``"
+msgstr "``READY``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:754
+#: 12bbea1b3d1d493982c7d7ca77373e53
+msgid "Waiting to be picked up"
+msgstr "در انتظار برداشتن"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:755
+#: c534554422d543ff85bf7e301260f5c4
+msgid "Wait for runner"
+msgstr "منتظر runner"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:756
+#: ceee40178d614dabb6564ec2695a13da
+msgid "``CHECKED_OUT``"
+msgstr "``CHECKED_OUT``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:757
+#: 9c6ff3872e194a4e83aedd2cccc529ed
+msgid "Runner preparing files"
+msgstr "Runner در حال آماده‌سازی فایل‌ها"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:758
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:761
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:764
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:767
+#: 420d030ebf8a4d2da0cd88a095bf93ee aa318c4ee93a4ebbb051aacfe89bee0d
+#: bdbc8011501e413cb37eefedf76171d8 c12689476c4049a191c4f7b725689ea5
+msgid "Monitor"
+msgstr "نظارت"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:759
+#: d9472d5d1f184bec87c7d30570210f0e
+msgid "``UPLOADED``"
+msgstr "``UPLOADED``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:760
+#: 078ff37f672f424ea056e7886269254e
+msgid "Files uploaded to worker"
+msgstr "فایل‌ها به worker بارگذاری شدند"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:762
+#: 90024ac9cc8544e9b62c9d90cfd226a5
+msgid "``SUBMITTED``"
+msgstr "``SUBMITTED``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:763
+#: 9a5bf27ec3d34655a3cbff327707a037
+msgid "Submitted to scheduler"
+msgstr "به زمان‌بند ارسال شد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:765
+#: a355b8be2efa4fa38a5b83d8c6fdca7e
+msgid "``RUNNING``"
+msgstr "``RUNNING``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:766
+#: 2ca27eae74da42b1a673422554c414a5
+msgid "Currently executing"
+msgstr "در حال اجرا"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:768
+#: 9d1ed2626b344886a3d29160546330fc
+msgid "``DOWNLOADED``"
+msgstr "``DOWNLOADED``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:769
+#: d62acce995814bb1a50f7710259d931e
+msgid "Results retrieved"
+msgstr "نتایج بازیابی شدند"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:770
+#: 2fd1637364c3440ea9a062eaff6b8d73
+msgid "Almost done"
+msgstr "تقریباً انجام شد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:771
+#: c1ede350e2a54627a4a91b91bb5da3db
+msgid "``COMPLETED``"
+msgstr "``COMPLETED``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:772
+#: 726720721caa448881e4b9cf0620669c
+msgid "Successfully finished"
+msgstr "با موفقیت به پایان رسید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:773
+#: e4e9820385af4ef98ae743a993af2273
+msgid "Done ✅"
+msgstr "انجام شد ✅"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:774
+#: d43437c5f01a4ec18f19d1d06319e61a
+msgid "``FAILED``"
+msgstr "``FAILED``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:775
+#: 0dbb11488a954e15a2ef074193378856
+msgid "Calculation failed"
+msgstr "محاسبه شکست خورد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:776
+#: af0d08d42ddb415aad675e97584ea0f6
+msgid "``rerun`` or new flow"
+msgstr "``rerun`` یا جریان کار جدید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:777
+#: cec68372e61d4dc88a640f9c0e2c5e01
+msgid "``REMOTE_ERROR``"
+msgstr "``REMOTE_ERROR``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:778
+#: 89b3b4c65c9f4564a926217fc97d5993
+msgid "Infrastructure issue"
+msgstr "مشکل زیرساخت"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:780
+#: fe0e32ce9ece43e09f634cb20d58a9ae
+msgid "``PAUSED``"
+msgstr "``PAUSED``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:781
+#: efa7821561a4441795fc93d0396bc019
+msgid "Manually paused"
+msgstr "به صورت دستی متوقف شد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:782
+#: e6e57e5eab1646dc8c988233759c99b0
+msgid "``play`` to resume"
+msgstr "``play`` برای ادامه"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:785
+#: 2c25272c53ca41658356280b2dbb579b
+msgid "Related Documentation"
+msgstr "مستندات مرتبط"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:787
+#: 40db01a8e79a4ef7a62a3d05b5026121
+msgid ":doc:`cli-jobflow-remote` - Jobflow-remote CLI setup"
+msgstr ":doc:`cli-jobflow-remote` - راه‌اندازی CLI Jobflow-remote"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:788
+#: 94132ddb97c34a359bda9ebb8d8e6031
+msgid ":doc:`troubleshooting` - General troubleshooting"
+msgstr ":doc:`troubleshooting` - عیب‌یابی عمومی"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:789
+#: a4236eaf71e7420b905bc28f87c7c1fe
+msgid ":doc:`advanced-workflows` - Complex workflow patterns"
+msgstr ":doc:`advanced-workflows` - الگوهای جریان کار پیچیده"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:792
+#: 2e7ebe51bf31436fb428b81a378cc88b
+msgid "External Resources"
+msgstr "منابع خارجی"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:794
+#: c034ff7914f04bc5b7f6d8e8849f8f80
+msgid ""
+"`Jobflow-Remote Documentation <https://matgenix.github.io/jobflow-"
+"remote/>`_"
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:795
+#: c0dc2c8f09b14b40b79cbe56f9d07669
+msgid "`Jobflow-Remote GitHub <https://github.com/Matgenix/jobflow-remote>`_"
+msgstr "`GitHub Jobflow-Remote <https://github.com/Matgenix/jobflow-remote>`_"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:796
+#: 58f9fc89fdb045c098f713047683ade4
+msgid ""
+"`Dealing with Errors Guide <https://matgenix.github.io/jobflow-"
+"remote/user/errors.html>`_"
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:799
+#: bf151f9922c64fc091e9fe171e190c31
+msgid "Summary"
+msgstr "خلاصه"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:801
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1144
+#: 3f4967dfdae2495daae086cd0172951d ab6326356e1a4a9d937d968bf1fcef1f
+msgid "**Key Points:**"
+msgstr "**نکات کلیدی:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:803
+#: 1ac160658d7744d99a94d5bdd8cf0d20
+msgid "**Use** ``-p PROJECTNAME`` **for all commands** in multi-project setups"
+msgstr "**از** ``-p PROJECTNAME`` **برای همه دستورات** در پیکربندی‌های چند پروژه‌ای **استفاده کنید**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:805
+#: 0192d615011f4deb8110c4609d826551
+msgid "**CLI can modify**: Resources, worker, exec-config (infrastructure)"
+msgstr "**CLI می‌تواند تغییر دهد**: منابع، worker، exec-config (زیرساخت)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:807
+#: 35176f27a00e4d21b0914d7f9a13a325
+msgid "**CLI cannot modify**: FDF parameters, user_params (calculation settings)"
+msgstr "**CLI نمی‌تواند تغییر دهد**: پارامترهای FDF، user_params (تنظیمات محاسبه)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:809
+#: ab0b5af24e9b42c38605e7289fc1fb58
+msgid ""
+"**For FAILED jobs**: Use ``jf job rerun`` (after setting resources if "
+"needed)"
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:811
+#: 6b56db243de74fb8928ab39446c5e8b5
+msgid "**For REMOTE_ERROR jobs**: Use ``jf job retry``"
+msgstr "**برای کارهای REMOTE_ERROR**: از ``jf job retry`` استفاده کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:813
+#: 3452254e11cd494eba1fbda3dc9df98d
+msgid "**Always diagnose first**: ``jf -p PROJECTNAME job info <db_id> --full``"
+msgstr "**همیشه ابتدا تشخیص دهید**: ``jf -p PROJECTNAME job info <db_id> --full``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:815
+#: 005e7b3e07124b2f9d51631511aa8c01
+msgid "**Quick Command Template:**"
+msgstr "**الگوی سریع دستورات:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:825
+#: c81c6f8d205945ab889f49028897bebc
+msgid "For FDF parameter changes, see :ref:`fdf-modification-tools` below."
+msgstr "برای تغییرات پارامتر FDF، بخش :ref:`fdf-modification-tools` در زیر را ببینید."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:830
+#: 414757cdc0e4424cae26d44491caae20
+msgid "FDF Parameter Modification Tools (NEW)"
+msgstr "ابزارهای تغییر پارامترهای FDF (جدید)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:832
+#: c447f58c81fc4af1b0b395d7bfe789c5
+msgid ""
+"atomate2siesta provides dedicated commands for modifying SIESTA FDF "
+"parameters in failed jobs. These commands work alongside jobflow-remote "
+"to enable parameter adjustments without manual MongoDB editing."
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:835
+#: ae7b0a460b414ca5a07299dfbf63e916
+msgid "Two-Tier Approach"
+msgstr "رویکرد دو سطحی"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:837
+#: c74c52396ae04c66a0d47ae43018d8f9
+msgid "**inspect** (Read-Only) - View job details and current FDF parameters"
+msgstr "**inspect** (فقط خواندنی) - مشاهده جزئیات کار و پارامترهای فعلی FDF"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:838
+#: aa1d5722e0f94974945f14ae406aec28
+msgid ""
+"**modify-db** (Direct Modification) - Modify parameters in MongoDB with "
+"safety features"
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:841
+#: b4b9ceb5c7594e2ca39f43df6f58d51a
+msgid "job inspect - View Job Parameters"
+msgstr "job inspect - مشاهده پارامترهای کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:843
+#: b2f4de97d72d436089eb9f6e710492df
+msgid "**Purpose**: Read-only inspection of job configuration and FDF parameters."
+msgstr "**هدف**: بازرسی فقط خواندنی از پیکربندی کار و پارامترهای FDF."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:858
+#: 7cfc4033cf914196ab7afb411df0e250
+msgid "**What It Shows**:"
+msgstr "**چه چیزی را نشان می‌دهد:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:860
+#: 5e1145eedf254ab9ba88b24ac2103598
+msgid "Job name, state, worker, UUID"
+msgstr "نام کار، حالت، worker، UUID"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:861
+#: 784a53aa9c134045868a594aa1dc492f
+msgid "SIESTA FDF input parameters (with ``--full`` or ``--fdf-only``)"
+msgstr "پارامترهای ورودی FDF SIESTA (با ``--full`` یا ``--fdf-only``)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:862
+#: ecd204e559d84a819265b9b81856b06a
+msgid "Complete job document structure"
+msgstr "ساختار کامل سند کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:864
+#: 93afadf29d97463c9bd97532e29f6587
+msgid "**Requirements**:"
+msgstr "**الزامات:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:866
+#: 0afbb97b46054d01b2f9d4ece17326c6
+msgid "``pymongo`` package for full parameter inspection: ``pip install pymongo``"
+msgstr "بسته ``pymongo`` برای بازرسی کامل پارامترها: ``pip install pymongo``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:893
+#: 5d15966aa9404785934d053ba185cb6f
+msgid "job modify-db - Direct Parameter Modification"
+msgstr "job modify-db - تغییر مستقیم پارامتر"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:895
+#: cd4261dc852e4a7e86142db0f287a6f0
+msgid "**Purpose**: Modify SIESTA FDF parameters directly in MongoDB database."
+msgstr "**هدف**: تغییر مستقیم پارامترهای FDF SIESTA در پایگاه داده MongoDB."
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:897
+#: 72e3cd4c83ef4c71a7e2b34efd0add59
+msgid "**⚠️ IMPORTANT ⚠️**"
+msgstr "**⚠️ مهم ⚠️**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:899
+#: 233e9f51a6e14bbea701bda87a77c8c3
+msgid "Modifies existing job in database"
+msgstr "کار موجود در پایگاه داده را تغییر می‌دهد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:900
+#: 254d547a86d94b63ba577048b9188d87
+msgid "Automatic backup created in ``jobs_backup`` collection before modification"
+msgstr "پشتیبان خودکار در مجموعه ``jobs_backup`` قبل از تغییر ایجاد می‌شود"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:901
+#: 380f9d6690b6414aa41fbff0b2160238
+msgid "Requires double confirmation before applying changes"
+msgstr "نیاز به تأیید دوگانه قبل از اعمال تغییرات دارد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:902
+#: 184518cd336349df9183373bda198914
+msgid "Parameter validation against 456 registered FDF parameters"
+msgstr "اعتبارسنجی پارامتر در برابر ۴۵۶ پارامتر ثبت‌شده FDF"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:903
+#: 2ba833c2e0bb40258f4c98341f44eafe
+msgid ""
+"Use when you need to change FDF parameters without recreating the entire "
+"flow"
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:907
+#: dd75864b6d01437bb898299a3a55d756
+msgid "SCF convergence failures requiring different mixer settings"
+msgstr "شکست‌های همگرایی SCF که به تنظیمات mixer متفاوت نیاز دارند"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:908
+#: fe14919b26ee4efbaa4a711ebc06523d
+msgid "K-point or mesh cutoff adjustments"
+msgstr "تنظیمات K-point یا mesh cutoff"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:909
+#: bbc475a061494610a3bd3df504249752
+msgid "Changing electronic temperature or other FDF parameters"
+msgstr "تغییر دمای الکترونیک یا سایر پارامترهای FDF"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:910
+#: 35e6334cbd6147bb9587ec2a811eb21f
+msgid "The job is in READY or FAILED state"
+msgstr "کار در حالت READY یا FAILED است"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:937
+#: 62345589ed1743d3bc894f52269bf024
+msgid "**Parameter Format:**"
+msgstr "**فرمت پارامتر:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:939
+#: bebd2c230e2449318ed41bce056a6f14
+msgid "Simple values: ``\"MaxSCFIterations=200\"``"
+msgstr "مقادیر ساده: ``\"MaxSCFIterations=200\"``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:940
+#: b3a7c542c5964219941c70127dcb8dbe
+msgid "Lists: ``\"kpts=[6,6,6]\"``"
+msgstr "لیست‌ها: ``\"kpts=[6,6,6]\"``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:941
+#: d0cc0e7adb9f496390caea2ca21d394f
+msgid "Strings with units: ``\"Mesh.Cutoff=350 Ry\"``"
+msgstr "رشته‌ها با واحد: ``\"Mesh.Cutoff=350 Ry\"``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:942
+#: e5af14b696674f9dbdee8b9a2ddf7570
+msgid "Booleans: ``\"SaveHS=true\"``"
+msgstr "بولی: ``\"SaveHS=true\"``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:943
+#: 08c4547ec05f43968b758e359cc5bc22
+msgid "Block parameters: ``\"DM.InitSpin=['1 +2.0', '2 -2.0']\"``"
+msgstr "پارامترهای بلوک: ``\"DM.InitSpin=['1 +2.0', '2 -2.0']\"``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:944
+#: cbaaa04acc8346debd8bd2b7455e2547
+msgid "Multiple: Use ``--param`` flag multiple times"
+msgstr "چندتایی: از پرچم ``--param`` چندین بار استفاده کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:946
+#: 6ac5c8cf75b14e239bc49f04fafa65a3
+msgid "**Modification Workflow:**"
+msgstr "**جریان کار تغییر:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:948
+#: d86354b042ae43baa02d00acd5dfdc67
+msgid ""
+"Command validates parameters against dataclass registry (456 registered "
+"parameters)"
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:949
+#: 4d6e83b145b843a2a1cc61b6e7510bca
+msgid "Shows preview of all changes"
+msgstr "پیش‌نمایش همه تغییرات را نشان می‌دهد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:950
+#: df8c5ef86933424bb71dc1b86fc4a2d3
+msgid "Requests first confirmation (\"Do you understand the risks?\")"
+msgstr "تأیید اول را درخواست می‌کند (\"آیا خطرات را درک می‌کنید؟\")"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:951
+#: ad63adcc94a64f638c492a5dc552e65d
+msgid "Creates timestamped backup in ``jobs_backup`` collection"
+msgstr "پشتیبان با برچسب زمانی در مجموعه ``jobs_backup`` ایجاد می‌کند"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:952
+#: 089530fea5e2411c9127e0d6395a7dfc
+msgid "Shows final confirmation with exact parameter changes"
+msgstr "تأیید نهایی را با تغییرات دقیق پارامتر نشان می‌دهد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:953
+#: 04e9b0e7cc304b42a82eb607b8c33d87
+msgid "Updates MongoDB document directly"
+msgstr "سند MongoDB را مستقیماً به‌روزرسانی می‌کند"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:954
+#: 1b1d5b2e23fb401ab25a398c5ca39542
+msgid "You rerun with ``jf -p prod job rerun 70``"
+msgstr "شما با ``jf -p prod job rerun 70`` اجرای مجدد می‌کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:956
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1134
+#: 9f196c800eea40aa97314a96e485d497 e7510250cd194d75ba751f3cd65f1e42
+msgid "**Built-in Safety Features:**"
+msgstr "**ویژگی‌های ایمنی داخلی:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:958
+#: 1c28b2eeef2240fab5905a773e840807
+msgid "**Parameter validation**: Checks against dataclass registry"
+msgstr "**اعتبارسنجی پارامتر**: بررسی در برابر رجیستری dataclass"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:959
+#: b73e67604bbd423483b3e9f0c6e18201
+msgid "**Typo detection**: Suggests similar parameters if typo detected"
+msgstr "**تشخیص غلط املایی**: اگر غلط املایی تشخیص داده شود، پارامترهای مشابه را پیشنهاد می‌کند"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:960
+#: 9da55342bf2740209d0e8d6804b451fb
+msgid "**Internal param filtering**: Strips atomate2siesta-specific parameters"
+msgstr "**فیلتر پارامتر داخلی**: پارامترهای خاص atomate2siesta را حذف می‌کند"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:961
+#: ad89e44bf4dc4e01b7357f35b99f034b
+msgid "**Double confirmation**: Two prompts before modification"
+msgstr "**تأیید دوگانه**: دو اعلان قبل از تغییر"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:962
+#: ce3c2c1dbab14fe99c31aec9fd127344
+msgid ""
+"**Automatic backup**: Timestamped backup in MongoDB (can restore if "
+"needed)"
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:963
+#: 66606817d2d24affb7f8d43adc26214c
+msgid "**Preview mode**: ``--dry-run`` flag to see changes without applying"
+msgstr "**حالت پیش‌نمایش**: پرچم ``--dry-run`` برای دیدن تغییرات بدون اعمال"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:964
+#: be87e047193c414dac7975d32d54edc1
+msgid "**Verification**: Shows exactly what will change before modification"
+msgstr "**تأیید**: دقیقاً آنچه قبل از تغییر تغییر خواهد کرد را نشان می‌دهد"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:966
+#: 5a501617a1f74bffa8c62467c05c822b
+msgid "**After Modification:**"
+msgstr "**پس از تغییر:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:968
+#: e4094e0e6a084989bfaf9018689e76e7
+msgid ""
+"Verify changes applied: ``atomate2siesta-jobflow-remote -p prod job "
+"inspect 70 --full``"
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:969
+#: aa502a9a17744b799bed147c8e598d4e
+msgid "Rerun the job: ``jf -p prod job rerun 70``"
+msgstr "اجرای مجدد کار: ``jf -p prod job rerun 70``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:970
+#: 275a2da55f644db6bcac861174fcc7f0
+msgid "Monitor progress: ``jf -p prod job info 70``"
+msgstr "نظارت بر پیشرفت: ``jf -p prod job info 70``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:973
+#: aa7835a28c3148a9a198e4171b836e06
+msgid "Parameter Validation"
+msgstr "اعتبارسنجی پارامتر"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:975
+#: b90ee25449d749fb92ea1f1e004e1d72
+msgid "All modification commands validate parameters before applying:"
+msgstr "همه دستورات تغییر پارامترها را قبل از اعمال اعتبارسنجی می‌کنند:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:977
+#: dfc5dc719dca4bb1b3226ef2be90a363
+msgid "**K-Points Validation:**"
+msgstr "**اعتبارسنجی K-Points:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:987
+#: 2665ba0f4bef47d19f8210203c7aea47
+msgid "**Mesh Cutoff Validation:**"
+msgstr "**اعتبارسنجی Mesh Cutoff:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:997
+#: 31bd12026c24427b943d686bd7d988a9
+msgid "**Common Typo Detection:**"
+msgstr "**تشخیص غلط‌های املایی رایج:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1008
+#: b5837367407149ecb3c3e5a07b9fc6a7
+msgid "Complete Workflow Examples"
+msgstr "مثال‌های کامل جریان کار"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1010
+#: 7633d4ae84c14d24b34d91949321096e
+msgid "**Scenario 1: SCF Convergence Failure (Too Coarse K-Points)**"
+msgstr "**سناریو ۱: شکست همگرایی SCF (K-Points خیلی درشت)**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1030
+#: 6dd4348afedb47088fa31eb885467276
+msgid "**Scenario 2: Mixer Weight Too Aggressive**"
+msgstr "**سناریو ۲: وزن Mixer خیلی تهاجمی**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1045
+#: 7229dee3f7de459484a857dee16b8e52
+msgid "**Scenario 3: Emergency Database Fix (Use modify-db)**"
+msgstr "**سناریو ۳: رفع اضطراری پایگاه داده (از modify-db استفاده کنید)**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1068
+#: 8fa69d6933cd462d9cbf7719426b4203
+msgid "Requirements"
+msgstr "الزامات"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1070
+#: dd2b6d9188784898b103a639b8fa9cfd
+msgid "**Basic Commands** (inspect):"
+msgstr "**دستورات پایه** (inspect):"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1072
+#: bd3f69778bd24137986ce9a0ec4a553b
+msgid "atomate2siesta package"
+msgstr "بسته atomate2siesta"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1073
+#: 7a25ed8861a84f0a81266ec57b5c76dd
+msgid "jobflow-remote configured"
+msgstr "jobflow-remote پیکربندی‌شده"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1074
+#: 2553b3033886411288b388e82c67c5d8
+msgid "Project configuration in ``~/.jfremote/``"
+msgstr "پیکربندی پروژه در ``~/.jfremote/``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1076
+#: c1685cea064e47e289bf3382999011c0
+msgid "**Full Functionality** (inspect --full, modify-db):"
+msgstr "**عملکرد کامل** (inspect --full، modify-db):"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1082
+#: 34acbdd09ead4527a92e107f69f7ab23
+msgid "**For Direct Modifications**:"
+msgstr "**برای تغییرات مستقیم**:"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1084
+#: 7e7465fef98140f09307e7b4bed3bdb2
+msgid "MongoDB access credentials in project config"
+msgstr "اعتبارنامه‌های دسترسی MongoDB در پیکربندی پروژه"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1085
+#: 55b8153dad094ebc96ddcc4af00639a0
+msgid "Understanding of jobflow-remote internals"
+msgstr "درک داخلی jobflow-remote"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1086
+#: cefc98254fca449490c910465915b88e
+msgid "Database backups (highly recommended)"
+msgstr "پشتیبان‌های پایگاه داده (بسیار توصیه می‌شود)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1091
+#: 2f3864cf1fbd484e8cf0e4d1f5342ffb
+msgid ""
+"**Always use inspect first**: Understand current parameters before "
+"modifying"
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1093
+#: d791c076e9a44bd48ce676fb2ce3cef0
+msgid "**Use dry-run mode**: Preview changes with ``--dry-run`` before applying"
+msgstr "**از حالت dry-run استفاده کنید**: قبل از اعمال، تغییرات را با ``--dry-run`` پیش‌نمایش کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1095
+#: 5db5de8e94454e568f2149b7b3858828
+msgid "**Keep backups enabled**: Database backups created automatically (default)"
+msgstr "**پشتیبان‌ها را فعال نگه دارید**: پشتیبان‌های پایگاه داده به طور خودکار ایجاد می‌شوند (پیش‌فرض)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1097
+#: f6551af9e0914cada91ac464de9575d4
+msgid "**Test modifications**: Try on single job before batch operations"
+msgstr "**تغییرات را آزمایش کنید**: قبل از عملیات دسته‌ای، روی یک کار امتحان کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1099
+#: c36ce610b0c541a0a691438d1ec847b2
+msgid "**Verify after modification**: Use ``inspect --full`` to confirm changes"
+msgstr "**پس از تغییر تأیید کنید**: از ``inspect --full`` برای تأیید تغییرات استفاده کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1101
+#: 54a5b90d082f49209e8fb07a2677889b
+msgid ""
+"**Monitor after rerun**: Check job completes successfully with new "
+"parameters"
+msgstr ""
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1103
+#: a8c47ec21b224bb8a05f8ed288ccdb0d
+msgid "**Avoid force mode**: Only use ``--force`` when automation is required"
+msgstr "**از حالت force اجتناب کنید**: فقط زمانی که اتوماسیون مورد نیاز است از ``--force`` استفاده کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1105
+#: 38db2493b7424c97aa583f57ef210ca0
+msgid "**Document changes**: Keep notes on what parameters were changed and why"
+msgstr "**تغییرات را مستندسازی کنید**: یادداشت‌هایی در مورد پارامترهایی که تغییر کردند و چرا نگه دارید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1108
+#: ed06f148a3a245e48caba8153e6b6f9d
+msgid "FDF Modification Summary"
+msgstr "خلاصه تغییر FDF"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1110
+#: b099cc85ab9e4b5d91f0616da109eec3
+msgid "**Complete Workflow for Modifying FDF Parameters:**"
+msgstr "**جریان کار کامل برای تغییر پارامترهای FDF:**"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1136
+#: 23b94cf832054e99a2c2dfc071f5c983
+msgid "✅ Double confirmation prompts (can bypass with ``--force``)"
+msgstr "✅ اعلان‌های تأیید دوگانه (می‌توان با ``--force`` دور زد)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1137
+#: c529a3a7af924b1b933e735b435657f1
+msgid "✅ Automatic backups in ``jobs_backup`` collection"
+msgstr "✅ پشتیبان‌های خودکار در مجموعه ``jobs_backup``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1138
+#: a033c55ec65f49079994523d0530596e
+msgid "✅ Parameter validation against 456 registered FDF parameters"
+msgstr "✅ اعتبارسنجی پارامتر در برابر ۴۵۶ پارامتر ثبت‌شده FDF"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1139
+#: 24696904c5bd4c329c919138b47b5a29
+msgid "✅ Typo detection with smart suggestions"
+msgstr "✅ تشخیص غلط املایی با پیشنهادات هوشمند"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1140
+#: 26241e24cfc84e57b24c866461a5902c
+msgid "✅ Internal parameter filtering (prevents deserialization errors)"
+msgstr "✅ فیلتر پارامتر داخلی (از خطاهای deserialization جلوگیری می‌کند)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1141
+#: af0f2f55bcde448298e73943450d392b
+msgid "✅ Dry-run mode for preview without changes"
+msgstr "✅ حالت dry-run برای پیش‌نمایش بدون تغییرات"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1142
+#: 8f33b79120484cf2a4e6109d8434fd7d
+msgid "✅ Full verification with ``inspect --full``"
+msgstr "✅ تأیید کامل با ``inspect --full``"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1146
+#: 33b28776c7e7487ba6c934f48662e1f8
+msgid "Always start with ``job inspect --full`` to see current parameters"
+msgstr "همیشه با ``job inspect --full`` شروع کنید تا پارامترهای فعلی را ببینید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1147
+#: 0c77360ad023498d841514200b68cd1b
+msgid "Use ``--dry-run`` to preview changes before applying"
+msgstr "از ``--dry-run`` برای پیش‌نمایش تغییرات قبل از اعمال استفاده کنید"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1148
+#: 17eaeaad6cb34247a396caf806ef3bf4
+msgid "Automatic backup created before modification (restore if needed)"
+msgstr "پشتیبان خودکار قبل از تغییر ایجاد شد (در صورت نیاز بازیابی کنید)"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1149
+#: 0f316dde79154c5db4ad22f401b7c2c4
+msgid "Supports 456 validated SIESTA FDF parameters"
+msgstr "از ۴۵۶ پارامتر اعتبارسنجی‌شده FDF SIESTA پشتیبانی می‌کند"
+
+#: ../../source/jobflow-remote-rerun-failed-jobs.rst:1150
+#: a1a22459515d4f729a3f676d546decc2
+msgid "Works for READY and FAILED jobs only"
+msgstr "فقط برای کارهای READY و FAILED کار می‌کند"
