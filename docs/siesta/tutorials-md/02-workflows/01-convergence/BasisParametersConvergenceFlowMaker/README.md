@@ -219,7 +219,7 @@ Recommendation: Use ES=0.01 Ry, SN=0.15 for production calculations
 
 When custodian is enabled, timing is extracted from `siesta_compressed/siesta.times.gz`. When disabled, timing comes from `siesta.out`.
 
-**Note**: Recent fix (Session 147) ensures timing extraction works correctly in both modes!
+**Note**: Timing extraction works correctly in both modes.
 
 ---
 
@@ -341,7 +341,7 @@ You'll see: `"SCFConvergenceHandler"` if recovery was triggered!
 
 **Cause**: Timing in compressed file with different format
 
-**Solution**: **Fixed in Session 147!** The code now checks:
+**Solution**: The code checks:
 - `siesta.out` (uncompressed)
 - `siesta.out.gz` (compressed)
 - `siesta_compressed/siesta.times.gz` (custodian compressed)

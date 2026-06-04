@@ -191,7 +191,7 @@ EXAMPLE_TYPE = "difficult_scf"
 - ~20-30 minutes runtime
 - **Use for**: Understanding custodian behavior, testing robustness
 
-### 4. Geometry Convergence (New in Session 145)
+### 4. Geometry Convergence
 ```python
 MODE = 1  # or 2, 3, 4
 ```
@@ -842,7 +842,7 @@ workflow = KpointsConvergenceMaker(
 
 ## Geometry Convergence Handling (NEW!)
 
-**New in Session 145**: Automatic geometry convergence recovery and flexible validation modes.
+Automatic geometry convergence recovery and flexible validation modes.
 
 ### The Problem
 

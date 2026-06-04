@@ -216,7 +216,7 @@ tier="relax_dirty"     # Preset name → extracts "basic" tier
 tier="surface_metal"   # Not yet supported (planned for future)
 ```
 
-**Current Limitation**: The `tier` parameter accepts tier levels (`"basic"`, `"intermediate"`, `"advanced"`, `"expert"`, `"dirty"`, `"ultra"`) and will auto-resolve preset names to their tier levels. Per-maker preset configuration is planned for a future release (see `project-plan/04-features/PRESET_SYSTEM_FLOWMAKERS.md`).
+**Current Limitation**: The `tier` parameter accepts tier levels (`"basic"`, `"intermediate"`, `"advanced"`, `"expert"`, `"dirty"`, `"ultra"`) and will auto-resolve preset names to their tier levels. Per-maker preset configuration is planned for a future release.
 
 ### MultiSurfaceEnergyFlowMaker_04_with_preset.py - Using Tier Presets
 
@@ -610,7 +610,7 @@ tier="basic"
 - `tier="basic"` ≈ standard presets (DZP, 100 Ry)
 - `tier="intermediate"` ≈ high-accuracy presets (DZP, 300 Ry)
 
-**Future Enhancement**: Automatic preset name resolution and per-maker presets planned (see `project-plan/04-features/PRESET_SYSTEM_FLOWMAKERS.md`).
+**Future Enhancement**: Automatic preset name resolution and per-maker presets planned.
 
 ---
 

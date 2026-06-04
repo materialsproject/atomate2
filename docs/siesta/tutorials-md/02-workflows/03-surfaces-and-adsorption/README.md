@@ -287,8 +287,7 @@ flow = MultiSurfaceEnergyFlowMaker(
 - `tier="intermediate"`: Production (DZP, 300 Ry, 4×4×4 k-points) - ~1-2 hours per calculation
 
 **Future Enhancement**: Automatic preset name resolution and per-maker preset configuration
-is planned. See `project-plan/04-features/PRESET_SYSTEM_FLOWMAKERS.md` for the complete
-implementation plan. This will allow:
+is planned. This will allow:
 ```python
 # Future (not yet supported):
 flow = MultiSurfaceEnergyFlowMaker(

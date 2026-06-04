@@ -32,7 +32,7 @@ maker_reverse = RelaxMaker.fixed_cell_relaxation(
         "PAO.BasisSize": "DZP",
         "a2s_kpts": [6, 6, 6],
         # Only provide the path - XC will be auto-detected!
-        "a2s_pseudo_path": "/Users/aakhtar/.siesta/pseudos/ONCVPSP-PBE-FR-PDv0.4-Standard",
+        "a2s_pseudo_path": "~/.siesta/pseudos/ONCVPSP-PBE-FR-PDv0.4-Standard",
     },
 )
 
@@ -40,7 +40,7 @@ job_reverse = maker_reverse.make(structure)
 run_locally(job_reverse, create_folders=True)
 
 print("\nInput:")
-print("  pseudo_path: /Users/aakhtar/.siesta/pseudos/ONCVPSP-PBE-FR-PDv0.4-Standard")
+print("  pseudo_path: ~/.siesta/pseudos/ONCVPSP-PBE-FR-PDv0.4-Standard")
 print("  (No XC parameters provided!)")
 print("\nOutput:")
 print("  Auto-detected: XC.Functional = GGA, XC.Authors = PBE")

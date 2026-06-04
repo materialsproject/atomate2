@@ -466,7 +466,7 @@ maker_presets={
 - `tier="basic"`: Standard (DZP, 100 Ry, 2×2×2 k-points) - ~20-30 min/site
 - `tier="intermediate"`: Production (DZP, 300 Ry, 4×4×4 k-points) - ~1-2 hours/site
 
-**Future Enhancement**: See `project-plan/04-features/PRESET_SYSTEM_FLOWMAKERS.md` for planned preset name resolution and per-maker preset configuration.
+**Future Enhancement**: Preset name resolution and per-maker preset configuration are planned.
 
 ---
 

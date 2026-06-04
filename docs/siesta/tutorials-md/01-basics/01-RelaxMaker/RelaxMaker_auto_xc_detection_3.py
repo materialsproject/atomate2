@@ -30,7 +30,7 @@ maker_override = RelaxMaker.fixed_cell_relaxation(
     user_params={
         "PAO.BasisSize": "DZP",
         "a2s_kpts": [6, 6, 6],
-        "a2s_pseudo_path": "/Users/aakhtar/.siesta/pseudos/ONCVPSP-PBE-FR-PDv0.4-Standard",
+        "a2s_pseudo_path": "~/.siesta/pseudos/ONCVPSP-PBE-FR-PDv0.4-Standard",
         # Explicitly override the PBE from path
         "xc.functional": "GGA",
         "xc.authors": "PW91",

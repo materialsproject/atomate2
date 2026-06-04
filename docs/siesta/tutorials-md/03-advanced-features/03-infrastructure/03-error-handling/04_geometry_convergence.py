@@ -8,7 +8,7 @@ Mode 2: Auto-recovery - custodian fixes non-converged geometries
 Mode 3: Strict checking - must converge or fail with clear error
 Mode 4: Paranoid - custodian + strict validation (guaranteed convergence)
 
-New in Session 145: Addresses "what happens if relaxation doesn't converge?"
+Addresses "what happens if relaxation doesn't converge?"
 """
 
 from jobflow import run_locally
