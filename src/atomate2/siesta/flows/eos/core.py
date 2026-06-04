@@ -138,6 +138,13 @@ class SiestaEosFlowMaker(BaseSiestaFlowMaker, CommonEosMaker):
     dry_run_output_dir: str = "dry_run_output"
     dry_run_format: str = "cif"
 
+    # Internal batch-workflow controls. Declared here so siesta does not depend
+    # on a customized common.flows.eos: the common EOS maker may read these
+    # attributes (to suppress the docstring panel and prefix job names in batch
+    # runs) but is not required to define them.
+    _suppress_print: bool = False
+    _global_counter: tuple[int, int, int, int] | None = None
+
     def __post_init__(self):
         """Propagate settings (dry_run, custodian, tier, manager_config) to child makers."""
         # Call parent to handle dry_run, use_custodian, tier, manager_config propagation
