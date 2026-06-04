@@ -92,6 +92,15 @@ latex_elements = {
 """
 }
 language = "en"
+
+# Internationalization. The siesta documentation ships Persian (Farsi)
+# translation catalogs under docs/siesta/locale. Build a translated site with
+# ``sphinx-build -D language=fa``.
+locale_dirs = ["siesta/locale/"]
+gettext_compact = False
+gettext_uuid = True
+gettext_auto_build = True
+
 # html_extra_path = ["images/badge.svg"]
 html_static_path = ["_static"]
 html_css_files = ["custom.css", "github.css"]
