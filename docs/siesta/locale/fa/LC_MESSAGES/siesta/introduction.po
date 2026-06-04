@@ -971,12 +971,12 @@ msgid "**Documentation**: https://atomate2siesta.readthedocs.io"
 msgstr "**مستندات**: https://atomate2siesta.readthedocs.io"
 
 #: ../../source/introduction.rst:351 66efe36c943d48d393280a5699caa6ad
-msgid "**GitHub**: https://github.com/arsalan-akhtar/atomate2siesta"
-msgstr "**GitHub**: https://github.com/arsalan-akhtar/atomate2siesta"
+msgid "**GitHub**: https://github.com/materialsproject/atomate2"
+msgstr "**GitHub**: https://github.com/materialsproject/atomate2"
 
 #: ../../source/introduction.rst:352 0d6ac7654b204b608bae1f51d913821f
-msgid "**Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
-msgstr "**مشکلات**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgid "**Issues**: https://github.com/materialsproject/atomate2/issues"
+msgstr "**مشکلات**: https://github.com/materialsproject/atomate2/issues"
 
 #: ../../source/introduction.rst:353 6dd55734f50141cf90765a620bb281c6
 msgid ""

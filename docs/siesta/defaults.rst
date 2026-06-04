@@ -535,4 +535,4 @@ See Also
 * :doc:`tier-system` - Material-specific presets
 * :doc:`installation` - Configuration setup
 * :doc:`troubleshooting` - Common issues with defaults
-* `PARAMETER_REFERENCE.md <https://github.com/arsalan-akhtar/atomate2siesta/blob/main/docs/cheatsheets/PARAMETER_REFERENCE.md>`_ - Complete SIESTA parameter guide
+* :doc:`fdf-parameters` - Complete SIESTA parameter guide

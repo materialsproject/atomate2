@@ -711,5 +711,5 @@ msgid "**CLI Tools**: :doc:`cli-tools`"
 msgstr ""
 
 #: ../../source/troubleshooting.rst:782 c7f25cb931a54a0ab9fe46483de3abaf
-msgid "**GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgid "**GitHub Issues**: https://github.com/materialsproject/atomate2/issues"
 msgstr ""

@@ -321,7 +321,7 @@ Getting Started
 
 .. code-block:: bash
 
-   pip install git+https://github.com/arsalan-akhtar/atomate2siesta.git
+   pip install atomate2[siesta]
 
 **Basic Usage**
 
@@ -348,9 +348,9 @@ Community & Support
 ===================
 
 * **Documentation**: https://atomate2siesta.readthedocs.io
-* **GitHub**: https://github.com/arsalan-akhtar/atomate2siesta
-* **Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues
-* **Discussions**: https://github.com/arsalan-akhtar/atomate2siesta/discussions
+* **GitHub**: https://github.com/materialsproject/atomate2
+* **Issues**: https://github.com/materialsproject/atomate2/issues
+* **Discussions**: https://github.com/materialsproject/atomate2/discussions
 
 ----
 

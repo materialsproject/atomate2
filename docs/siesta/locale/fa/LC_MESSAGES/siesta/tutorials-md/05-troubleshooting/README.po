@@ -846,8 +846,8 @@ msgstr "Where to Get Help"
 
 #: ../../source/tutorials-md/05-troubleshooting/README.md:612
 #: ae9087cfde6444de8b4f6e043ffd7724
-msgid "**GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
-msgstr "**GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgid "**GitHub Issues**: https://github.com/materialsproject/atomate2/issues"
+msgstr "**GitHub Issues**: https://github.com/materialsproject/atomate2/issues"
 
 #: ../../source/tutorials-md/05-troubleshooting/README.md:613
 #: 19d55bdd7419402289e01540ed956875

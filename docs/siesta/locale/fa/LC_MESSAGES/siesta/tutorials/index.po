@@ -811,7 +811,7 @@ msgid "See main documentation: :doc:`/index`"
 msgstr ""
 
 #: ../../source/tutorials/index.rst:479 8c8d922b474a48299aefe028be43fda0
-msgid "Report issues: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgid "Report issues: https://github.com/materialsproject/atomate2/issues"
 msgstr ""
 
 #: ../../source/tutorials/index.rst:480 84c08ab6c8e74e079eb35a23ca72bdc8

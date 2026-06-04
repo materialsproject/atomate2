@@ -291,9 +291,9 @@ msgid "For questions and support:"
 msgstr "برای سؤالات و پشتیبانی:"
 
 #: ../../source/usage.rst:515 60ec6181772246ffbe1240ac26a096ce
-msgid "GitHub Issues: https://github.com/arsalan-akhtar/atomate2siesta/issues"
-msgstr "مشکلات GitHub: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgid "GitHub Issues: https://github.com/materialsproject/atomate2/issues"
+msgstr "مشکلات GitHub: https://github.com/materialsproject/atomate2/issues"
 
 #: ../../source/usage.rst:516 5e4a399fa43a47d3ab5cb91c9fb20018
-msgid "Discussions: https://github.com/arsalan-akhtar/atomate2siesta/discussions"
-msgstr "بحث‌ها: https://github.com/arsalan-akhtar/atomate2siesta/discussions"
+msgid "Discussions: https://github.com/materialsproject/atomate2/discussions"
+msgstr "بحث‌ها: https://github.com/materialsproject/atomate2/discussions"

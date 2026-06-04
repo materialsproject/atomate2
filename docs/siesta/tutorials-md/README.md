@@ -290,7 +290,7 @@ atomate2siesta-presets list
 ```
 
 ### Community
-- **Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues
+- **Issues**: https://github.com/materialsproject/atomate2/issues
 - **Discussions**: GitHub Discussions
 
 ## Contributing
@@ -391,4 +391,4 @@ job = update_user_siesta_settings(job, {"kpts": [6,6,6]})
 **Happy Learning!** 🎓
 
 For questions, issues, or contributions, visit:
-https://github.com/arsalan-akhtar/atomate2siesta
+https://github.com/materialsproject/atomate2

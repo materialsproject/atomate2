@@ -862,8 +862,8 @@ msgid "Community"
 msgstr "Community"
 
 #: ../../source/tutorials-md/README.md:289 ed94da3c544144d7bf5ea7f8136334d0
-msgid "**Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
-msgstr "**Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgid "**Issues**: https://github.com/materialsproject/atomate2/issues"
+msgstr "**Issues**: https://github.com/materialsproject/atomate2/issues"
 
 #: ../../source/tutorials-md/README.md:290 79535460dc2b4192981818470de53b59
 msgid "**Discussions**: GitHub Discussions"
@@ -1010,5 +1010,5 @@ msgstr "**Hppy Lerning!** 🎓"
 #: ../../source/tutorials-md/README.md:389 7649185bffea4e1ba8511e6612de8808
 msgid ""
 "For questions, issues, or contributions, visit: https://github.com"
-"/arsalan-akhtar/atomate2siesta"
+"/materialsproject/atomate2"
 msgstr ""

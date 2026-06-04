@@ -816,8 +816,8 @@ msgstr "If you find errیاs یا hve suggestions برای improving se tutیاi
 
 #: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:448
 #: d3bbb070988445fc84dce285d38e9d13
-msgid "Open an issue: https://github.com/arsalan-akhtar/atomate2siesta/issues"
-msgstr "Open an issue: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgid "Open an issue: https://github.com/materialsproject/atomate2/issues"
+msgstr "Open an issue: https://github.com/materialsproject/atomate2/issues"
 
 #: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:449
 #: 3706cf31545c438688c9804b739490fd
@@ -855,8 +855,8 @@ msgstr ""
 
 #: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:463
 #: 6c8b93f5aa44411fbb3b1b83599753dc
-msgid "GitHub: https://github.com/arsalan-akhtar/atomate2siesta"
-msgstr "GitHub: https://github.com/arsalan-akhtar/atomate2siesta"
+msgid "GitHub: https://github.com/materialsproject/atomate2"
+msgstr "GitHub: https://github.com/materialsproject/atomate2"
 
 #: ../../source/tutorials-md/03-advanced-features/09-structure-manipulation/README.md:464
 #: 74cffeb158c74221a920c9b2126a26ca

@@ -182,7 +182,7 @@ Gather:
 - Structure: `job_*/siesta.XV`
 - System description (formula, metallic?, magnetic?)
 
-Post at: https://github.com/arsalan-akhtar/atomate2siesta/issues
+Post at: https://github.com/materialsproject/atomate2/issues
 
 ---
 

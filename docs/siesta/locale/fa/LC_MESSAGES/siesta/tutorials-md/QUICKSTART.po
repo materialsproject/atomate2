@@ -247,8 +247,8 @@ msgid "📚 **All Tutorials**: `tutorials/README.md`"
 msgstr "📚 **All Tutorials**: `tutorials/README.md`"
 
 #: ../../source/tutorials-md/QUICKSTART.md:238 c70dd1bae74149ddbcdb3fe1acf79b3a
-msgid "🐛 **Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
-msgstr "🐛 **Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgid "🐛 **Issues**: https://github.com/materialsproject/atomate2/issues"
+msgstr "🐛 **Issues**: https://github.com/materialsproject/atomate2/issues"
 
 #: ../../source/tutorials-md/QUICKSTART.md:239 4169b95aa53e4b588eceb6226b9471e2
 msgid "💬 **Discussions**: GitHub Discussions"

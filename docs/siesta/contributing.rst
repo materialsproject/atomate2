@@ -16,7 +16,7 @@ Clone the repository and install in development mode:
 
 .. code-block:: bash
 
-   git clone https://github.com/arsalan-akhtar/atomate2siesta.git
+   git clone https://github.com/materialsproject/atomate2.git
    cd atomate2siesta
    pip install -e ".[dev,tests,docs]"
 
@@ -266,7 +266,7 @@ Reporting Bugs
 
 Found a bug? Please report it:
 
-1. Check existing issues: https://github.com/arsalan-akhtar/atomate2siesta/issues
+1. Check existing issues: https://github.com/materialsproject/atomate2/issues
 2. If new, create issue with:
    * Clear description of problem
    * Steps to reproduce
@@ -279,7 +279,7 @@ Requesting Features
 
 Have a feature idea?
 
-1. Open discussion: https://github.com/arsalan-akhtar/atomate2siesta/discussions
+1. Open discussion: https://github.com/materialsproject/atomate2/discussions
 2. Provide:
    * Use case description
    * Proposed API/interface
@@ -452,8 +452,8 @@ Resources
 ---------
 
 * **Documentation**: https://atomate2siesta.readthedocs.io
-* **GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues
-* **Discussions**: https://github.com/arsalan-akhtar/atomate2siesta/discussions
+* **GitHub Issues**: https://github.com/materialsproject/atomate2/issues
+* **Discussions**: https://github.com/materialsproject/atomate2/discussions
 
 Contact
 -------

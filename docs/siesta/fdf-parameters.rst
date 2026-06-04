@@ -1531,5 +1531,5 @@ See Also
 
 **Questions or Issues?**
 
-- GitHub Issues: https://github.com/arsalan-akhtar/atomate2siesta/issues
+- GitHub Issues: https://github.com/materialsproject/atomate2/issues
 - SIESTA Manual: https://docs.siesta-project.org/

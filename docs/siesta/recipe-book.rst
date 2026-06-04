@@ -613,4 +613,4 @@ See Also
 * :doc:`usage` - Basic usage patterns
 * :doc:`tier-system` - Material-specific presets
 * :doc:`advanced-workflows` - Complex multi-step calculations
-* `GitHub Recipe Book <https://github.com/arsalan-akhtar/atomate2siesta/tree/main/tutorials/08-recipe-book>`_ - Tutorial source code
+* `GitHub Recipe Book <https://github.com/materialsproject/atomate2/tree/main/docs/siesta/tutorials-md/03-advanced-features/08-recipe-book>`_ - Tutorial source code

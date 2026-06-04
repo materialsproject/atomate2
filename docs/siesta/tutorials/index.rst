@@ -476,8 +476,8 @@ For HPC submission (Tutorial 14):
 
 * Check individual tutorial READMEs for detailed documentation
 * See main documentation: :doc:`/index`
-* Report issues: https://github.com/arsalan-akhtar/atomate2siesta/issues
-* Ask questions: https://github.com/arsalan-akhtar/atomate2siesta/discussions
+* Report issues: https://github.com/materialsproject/atomate2/issues
+* Ask questions: https://github.com/materialsproject/atomate2/discussions
 
 ----
 

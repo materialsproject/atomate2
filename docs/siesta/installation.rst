@@ -10,13 +10,13 @@ You can install `atomate2siesta` directly from its Git repository using `pip`. R
 
 .. code-block:: bash
 
-   pip install git+https://github.com/arsalan-akhtar/atomate2siesta.git
+   pip install atomate2[siesta]
 
 or
 
 .. code-block:: bash
 
-   git clone https://github.com/arsalan-akhtar/atomate2siesta.git
+   git clone https://github.com/materialsproject/atomate2.git
    cd atomate2siesta
    pip install .
 

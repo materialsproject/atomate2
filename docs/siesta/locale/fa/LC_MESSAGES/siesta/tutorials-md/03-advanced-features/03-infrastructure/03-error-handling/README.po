@@ -1739,8 +1739,8 @@ msgstr "**Online Documenttion**:"
 
 #: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:878
 #: 1228ff83c08b4fff8da9f4900212684c
-msgid "See https://github.com/arsalan-akhtar/atomate2siesta for technical details"
-msgstr "See https://github.com/arsalan-akhtar/atomate2siesta for technical details"
+msgid "See https://github.com/materialsproject/atomate2 for technical details"
+msgstr "See https://github.com/materialsproject/atomate2 for technical details"
 
 #: ../../source/tutorials-md/03-advanced-features/03-infrastructure/03-error-handling/README.md:882
 #: 42f841bb31444e1f931419345e5ce27b

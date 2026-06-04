@@ -512,5 +512,5 @@ Next Steps
 
 For questions and support:
 
-* GitHub Issues: https://github.com/arsalan-akhtar/atomate2siesta/issues
-* Discussions: https://github.com/arsalan-akhtar/atomate2siesta/discussions
+* GitHub Issues: https://github.com/materialsproject/atomate2/issues
+* Discussions: https://github.com/materialsproject/atomate2/discussions

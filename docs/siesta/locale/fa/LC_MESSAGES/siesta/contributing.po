@@ -483,7 +483,7 @@ msgstr "ایده ویژگی دارید؟"
 msgid ""
 "Open discussion: https://github.com/arsalan-"
 "akhtar/atomate2siesta/discussions"
-msgstr "بحث باز کنید: https://github.com/arsalan-akhtar/atomate2siesta/discussions"
+msgstr "بحث باز کنید: https://github.com/materialsproject/atomate2/discussions"
 
 #: ../../source/contributing.rst:283 08b4aaaacf7a40ba9e51fcfd92c0b14e
 msgid ""
@@ -692,14 +692,14 @@ msgid "**Documentation**: https://atomate2siesta.readthedocs.io"
 msgstr "**مستندات**: https://atomate2siesta.readthedocs.io"
 
 #: ../../source/contributing.rst:455 eef0eeff743c4252a0dd221486c851b4
-msgid "**GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
-msgstr "**مسائل GitHub**: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgid "**GitHub Issues**: https://github.com/materialsproject/atomate2/issues"
+msgstr "**مسائل GitHub**: https://github.com/materialsproject/atomate2/issues"
 
 #: ../../source/contributing.rst:456 1af424c23ec346c3842afd6fce427a76
 msgid ""
 "**Discussions**: https://github.com/arsalan-"
 "akhtar/atomate2siesta/discussions"
-msgstr "**بحث‌ها**: https://github.com/arsalan-akhtar/atomate2siesta/discussions"
+msgstr "**بحث‌ها**: https://github.com/materialsproject/atomate2/discussions"
 
 #: ../../source/contributing.rst:459 9f6660e79d434584bda04520709890e9
 msgid "Contact"

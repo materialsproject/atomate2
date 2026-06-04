@@ -302,6 +302,6 @@ A: Yes, upload the `.ipynb` file to Colab. You may need to install atomate2siest
 
 ## Support
 
-- Issues with notebooks: https://github.com/arsalan-akhtar/atomate2siesta/issues
+- Issues with notebooks: https://github.com/materialsproject/atomate2/issues
 - General questions: Check `tutorials/QUICKSTART.md`
 - Troubleshooting: See `tutorials/05-troubleshooting/`

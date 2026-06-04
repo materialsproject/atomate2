@@ -1531,8 +1531,8 @@ msgid "**Questions or Issues?**"
 msgstr "**سوال یا مشکل دارید؟**"
 
 #: ../../source/fdf-parameters.rst:1534 aefb73017d294e5b90fcaef71666b085
-msgid "GitHub Issues: https://github.com/arsalan-akhtar/atomate2siesta/issues"
-msgstr "مسائل GitHub: https://github.com/arsalan-akhtar/atomate2siesta/issues"
+msgid "GitHub Issues: https://github.com/materialsproject/atomate2/issues"
+msgstr "مسائل GitHub: https://github.com/materialsproject/atomate2/issues"
 
 #: ../../source/fdf-parameters.rst:1535 944b5c5ca1a44528a832cfd4cf3b373a
 msgid "SIESTA Manual: https://docs.siesta-project.org/"

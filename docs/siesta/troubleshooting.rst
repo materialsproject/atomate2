@@ -722,7 +722,7 @@ Getting Help
 Still Stuck?
 ~~~~~~~~~~~~
 
-1. **Search existing issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues
+1. **Search existing issues**: https://github.com/materialsproject/atomate2/issues
 
 2. **Check tutorials**: Most common workflows have dedicated tutorials
 
@@ -779,4 +779,4 @@ Additional Resources
 - **Tutorials**: ``tutorials/README.md``
 - **Custodian Guide**: :doc:`custodian`
 - **CLI Tools**: :doc:`cli-tools`
-- **GitHub Issues**: https://github.com/arsalan-akhtar/atomate2siesta/issues
+- **GitHub Issues**: https://github.com/materialsproject/atomate2/issues
