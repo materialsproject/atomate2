@@ -15,6 +15,12 @@ tutorials/tutorials
 ```
 
 ```{toctree}
+:caption: SIESTA
+:hidden:
+siesta/index
+```
+
+```{toctree}
 :caption: Reference
 :hidden:
 reference/index
