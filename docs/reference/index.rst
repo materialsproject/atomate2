@@ -22,5 +22,6 @@ This section gives an overview of the API for atomate2.
     lobster
     qchem
     settings
+    siesta
     utils
     vasp
