@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from jobflow import Flow, job
 
@@ -743,7 +743,6 @@ def plot_elastic_tensor_heatmap(
         cbar.set_label("Elastic Constant (GPa)", fontsize=12)
 
         # Set labels
-        labels = ["C₁₁", "C₂₂", "C₃₃", "C₄₄", "C₅₅", "C₆₆"]
         voigt_labels = ["1", "2", "3", "4", "5", "6"]
         ax.set_xticks(range(6))
         ax.set_yticks(range(6))
@@ -777,7 +776,7 @@ def plot_elastic_tensor_heatmap(
             ax.add_patch(rect)
 
         ax.set_title(
-            f"Elastic Tensor Cᵢⱼ (GPa) - {formula}\n" "IEEE Format (Voigt Notation)",
+            f"Elastic Tensor Cᵢⱼ (GPa) - {formula}\nIEEE Format (Voigt Notation)",
             fontsize=14,
             fontweight="bold",
         )
@@ -831,9 +830,10 @@ def plot_mechanical_properties_bar(
     References
     ----------
     Reference material data from:
-    [1] Simmons, G. & Wang, H. Single Crystal Elastic Constants and
-        Calculated Aggregate Properties: A Handbook. MIT Press (1971).
-    [2] de Jong, M. et al. Sci. Data 2, 150009 (2015). DOI: 10.1038/sdata.2015.9
+
+    - Simmons, G. & Wang, H. Single Crystal Elastic Constants and
+      Calculated Aggregate Properties: A Handbook. MIT Press (1971).
+    - de Jong, M. et al. Sci. Data 2, 150009 (2015). DOI: 10.1038/sdata.2015.9
     """
     try:
         import matplotlib.pyplot as plt
@@ -973,7 +973,9 @@ def plot_stress_strain_curves(
         strain_labels = ["ε₁₁", "ε₂₂", "ε₃₃", "ε₂₃", "ε₁₃", "ε₁₂"]
 
         # Group deformations by type
-        strain_stress_data = {i: {"strains": [], "stresses": []} for i in range(6)}
+        strain_stress_data: dict[int, dict[str, list]] = {
+            i: {"strains": [], "stresses": []} for i in range(6)
+        }
 
         for deform, stress in zip(deformations, stresses):
             deform_arr = np.array(deform)
@@ -1047,7 +1049,7 @@ def plot_stress_strain_curves(
             ax.set_xlabel(f"Strain {strain_labels[i]} (%)", fontsize=11)
             ax.set_ylabel(f"Stress {voigt_labels[i]} (GPa)", fontsize=11)
             ax.set_title(
-                f"Component {i+1}: {voigt_labels[i]} vs {strain_labels[i]}",
+                f"Component {i + 1}: {voigt_labels[i]} vs {strain_labels[i]}",
                 fontsize=11,
                 fontweight="bold",
             )
@@ -1167,7 +1169,7 @@ def plot_youngs_modulus_3d(
 
         # 3D surface view
         ax1 = fig.add_subplot(121, projection="3d")
-        surf = ax1.plot_surface(
+        ax1.plot_surface(
             x,
             y,
             z,
@@ -1215,7 +1217,7 @@ def plot_youngs_modulus_3d(
         plt.suptitle(
             f"Directional Young's Modulus - {formula}\n"
             f"E_min = {E_dir.min():.1f} GPa, E_max = {E_dir.max():.1f} GPa, "
-            f"Anisotropy = {E_dir.max()/E_dir.min():.2f}",
+            f"Anisotropy = {E_dir.max() / E_dir.min():.2f}",
             fontsize=13,
             fontweight="bold",
         )
@@ -1341,7 +1343,7 @@ def plot_linear_compressibility_3d(
         combined_colors = colors - colors_neg
 
         norm = plt.Normalize(vmin=combined_colors.min(), vmax=combined_colors.max())
-        surf = ax1.plot_surface(
+        ax1.plot_surface(
             x,
             y,
             z,
@@ -1429,12 +1431,13 @@ def plot_pugh_ratio_diagram(
     References
     ----------
     Reference material data from:
-    [1] de Jong, M. et al. Sci. Data 2, 150009 (2015). DOI: 10.1038/sdata.2015.9
-        - Materials Project elastic constants database
-    [2] Simmons, G. & Wang, H. Single Crystal Elastic Constants and
-        Calculated Aggregate Properties: A Handbook. MIT Press (1971).
-    [3] Every, A.G. & McCurdy, A.K. Landolt-Börnstein, Group III, Vol. 29a,
-        Second and Higher Order Elastic Constants. Springer (1992).
+
+    - de Jong, M. et al. Sci. Data 2, 150009 (2015). DOI: 10.1038/sdata.2015.9
+      (Materials Project elastic constants database)
+    - Simmons, G. & Wang, H. Single Crystal Elastic Constants and
+      Calculated Aggregate Properties: A Handbook. MIT Press (1971).
+    - Every, A.G. & McCurdy, A.K. Landolt-Börnstein, Group III, Vol. 29a,
+      Second and Higher Order Elastic Constants. Springer (1992).
     """
     try:
         import matplotlib.pyplot as plt
@@ -1450,7 +1453,7 @@ def plot_pugh_ratio_diagram(
         # - SiC: Kamitani et al., J. Appl. Phys. 82, 3152 (1997)
         # - Fe, Cu, Al, Au, Ag, Pb: Simmons & Wang, MIT Press (1971)
         # - Also cross-referenced with Materials Project (materialsproject.org)
-        references = {
+        references: dict[str, dict[str, Any]] = {
             "Diamond": {"K": 442, "G": 535, "type": "brittle"},
             "Si": {"K": 98, "G": 67, "type": "brittle"},
             "Al₂O₃": {"K": 252, "G": 163, "type": "brittle"},
