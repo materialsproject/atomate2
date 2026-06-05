@@ -25,9 +25,11 @@ from atomate2.siesta.cli.pseudo.plot_pseudopotential import (
 # Initialize rich console
 console = Console()
 
-# Define the URL to the pseudos directory (for fallback downloading)
+# Pseudopotential archives are bundled with the package (see
+# atomate2/siesta/pseudos). This URL is only a network fallback.
 BASE_URL = (
-    "https://raw.githubusercontent.com/arsalan-akhtar/atomate2siesta/main/pseudos/"
+    "https://raw.githubusercontent.com/arsalan-akhtar/atomate2/main/"
+    "src/atomate2/siesta/pseudos/"
 )
 
 # Optional: Define your GitHub Personal Access Token
@@ -884,8 +886,9 @@ PSEUDO_DIR = os.path.expanduser("~/.siesta/pseudos")
 def get_local_pseudo_path(pseudo_name):
     """Get the path to a local pseudopotential file in the project directory."""
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_dir = os.path.abspath(os.path.join(script_dir, "..", "..", "..", ".."))
-    pseudos_dir = os.path.join(project_dir, "pseudos")
+    # Pseudopotential archives are bundled with the package under
+    # atomate2/siesta/pseudos (two levels up from this cli/pseudo module).
+    pseudos_dir = os.path.abspath(os.path.join(script_dir, "..", "..", "pseudos"))
     local_file = os.path.join(pseudos_dir, PSEUDOS[pseudo_name]["local_path"])
 
     # console.print(f"[cyan]DEBUG: Script directory: {script_dir}[/cyan]")

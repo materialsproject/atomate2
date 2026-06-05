@@ -192,6 +192,7 @@ atomate2 = ["py.typed"]
 "atomate2.cp2k.sets" = ["*.yaml"]
 "atomate2.cp2k.schemas.calc_types" = ["*.yaml"]
 "atomate2.jdftx.sets" = ["*.yaml"]
+"atomate2.siesta.pseudos" = ["*.tgz"]
 
 [tool.versioningit.vcs]
 method = "git"
