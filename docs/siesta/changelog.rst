@@ -413,9 +413,42 @@ Version 0.1.0
 Citation
 ========
 
-If you use atomate2siesta in your research, please cite:
+If you use these SIESTA workflows in your research, please cite atomate2,
+the SIESTA code, and this work:
 
 .. code-block:: bibtex
+
+   @article{atomate2,
+     author = {Ganose, Alex M. and others},
+     title = {Atomate2: modular workflows for materials science},
+     journal = {Digital Discovery},
+     year = {2025},
+     doi = {10.1039/D5DD00019J}
+   }
+
+   @article{siesta2002,
+     author = {Soler, Jos\'e M. and Artacho, Emilio and Gale, Julian D. and
+               Garc\'ia, Alberto and Junquera, Javier and Ordej\'on, Pablo and
+               S\'anchez-Portal, Daniel},
+     title = {The {SIESTA} method for ab initio order-{N} materials simulation},
+     journal = {Journal of Physics: Condensed Matter},
+     volume = {14},
+     number = {11},
+     pages = {2745},
+     year = {2002},
+     doi = {10.1088/0953-8984/14/11/302}
+   }
+
+   @article{siesta2020,
+     author = {Garc\'ia, Alberto and others},
+     title = {Siesta: Recent developments and applications},
+     journal = {The Journal of Chemical Physics},
+     volume = {152},
+     number = {20},
+     pages = {204108},
+     year = {2020},
+     doi = {10.1063/5.0005077}
+   }
 
    @software{atomate2siesta,
      author = {Akhtar, Arsalan},
