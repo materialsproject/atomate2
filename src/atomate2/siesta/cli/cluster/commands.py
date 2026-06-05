@@ -1018,37 +1018,10 @@ def setup(
         console.print("[green]✓ Installed jobflow-remote[/green]")
         show_verbose_output(stdout, stderr, verbose)
 
-        # Step 6: Install atomate2siesta from GitHub
+        # Step 6: Install atomate2 with the SIESTA extra
         progress.stop()
-        console.print("\n[cyan]Installing atomate2siesta from GitHub...[/cyan]")
-
-        git_branch = "main"
-        console.print(f"  [dim]Branch: {git_branch}[/dim]")
-
-        # Build Git URL based on authentication method
-        if git_ssh:
-            # SSH URL for private repo (requires SSH key on cluster)
-            git_url = "git+ssh://git@github.com/arsalan-akhtar/atomate2siesta.git"
-            console.print(
-                "  [dim]Using SSH authentication (requires SSH key on cluster)[/dim]"
-            )
-            console.print(f"  [dim]Repository: {git_url}[/dim]")
-        elif git_token:
-            # HTTPS URL with personal access token
-            git_url = (
-                f"git+https://{git_token}@github.com/arsalan-akhtar/atomate2siesta.git"
-            )
-            # Show URL with masked token
-            masked_url = "git+https://****@github.com/arsalan-akhtar/atomate2siesta.git"
-            console.print("  [dim]Using HTTPS with personal access token[/dim]")
-            console.print(f"  [dim]Repository: {masked_url}[/dim]")
-        else:
-            # Public HTTPS URL (will fail for private repos)
-            git_url = "git+https://github.com/arsalan-akhtar/atomate2siesta.git"
-            console.print(
-                "  [dim]Using public HTTPS (may fail for private repos)[/dim]"
-            )
-            console.print(f"  [dim]Repository: {git_url}[/dim]")
+        console.print("\n[cyan]Installing atomate2[siesta]...[/cyan]")
+        console.print("  [dim]Package: atomate2[siesta] (PyPI)[/dim]")
 
         progress.start()
         task = progress.add_task("[cyan]Installing...", total=None)
@@ -1062,13 +1035,13 @@ def setup(
             install_atomate2_cmd = (
                 f"source $(conda info --base)/etc/profile.d/conda.sh && "
                 f"conda activate {env_name} && "
-                f"{proxy_env}pip install {git_url}@{git_branch}"
+                f"{proxy_env}pip install 'atomate2[siesta]'"
             )
         else:
             install_atomate2_cmd = (
                 f"source $(conda info --base)/etc/profile.d/conda.sh && "
                 f"conda activate {env_name} && "
-                f"pip install {git_url}@{git_branch}"
+                f"pip install 'atomate2[siesta]'"
             )
 
         # Note: We already have a persistent background tunnel (created with -f flag)
@@ -1151,7 +1124,7 @@ def setup(
 
         progress.update(task, completed=True)
         console.print(
-            f"[green]✓ Installed atomate2siesta from GitHub ({git_branch} branch)[/green]"
+            "[green]✓ Installed atomate2[siesta][/green]"
         )
         show_verbose_output(stdout, stderr, verbose)
 
@@ -1242,9 +1215,9 @@ def setup(
                 console.print(f"  [dim]{line}[/dim]")
             show_verbose_output(stdout, stderr, verbose)
 
-        # Step 8: Generate .atomate2siesta.yaml configuration file
+        # Step 8: Generate .atomate2.yaml configuration file
         task = progress.add_task(
-            "[cyan]Creating .atomate2siesta.yaml configuration...", total=None
+            "[cyan]Creating .atomate2.yaml configuration...", total=None
         )
 
         # Create the configuration file content with all available settings
@@ -1338,7 +1311,7 @@ ELASTIC_FITTING_METHOD: finite_difference
 
         # Create the config file on remote cluster
         create_config_cmd = (
-            f"cat > $HOME/.atomate2siesta.yaml << 'EOF'\n{config_content}EOF"
+            f"cat > $HOME/.atomate2.yaml << 'EOF'\n{config_content}EOF"
         )
 
         returncode, stdout, stderr = run_ssh_command(
@@ -1348,7 +1321,7 @@ ELASTIC_FITTING_METHOD: finite_difference
         if returncode != 0:
             progress.stop()
             console.print(
-                "\n[bold yellow]⚠ Failed to create .atomate2siesta.yaml[/bold yellow]"
+                "\n[bold yellow]⚠ Failed to create .atomate2.yaml[/bold yellow]"
             )
             console.print(f"[yellow]Error: {stderr}[/yellow]")
             console.print("\n[yellow]Note: You can create it manually later:[/yellow]")
@@ -1358,7 +1331,7 @@ ELASTIC_FITTING_METHOD: finite_difference
             show_verbose_output(stdout, stderr, verbose)
         else:
             progress.update(task, completed=True)
-            console.print("[green]✓ Created .atomate2siesta.yaml in $HOME[/green]")
+            console.print("[green]✓ Created .atomate2.yaml in $HOME[/green]")
             show_verbose_output(stdout, stderr, verbose)
 
     # Show completion message
@@ -1405,16 +1378,15 @@ ELASTIC_FITTING_METHOD: finite_difference
         f"[bold]Setup Complete![/bold]\n\n"
         f"The conda environment '{env_name}' has been created on {host}\n"
         f"{installed_msg}\n\n"
-        f"[bold]Installed from GitHub:[/bold]\n"
-        f"  • Repository: https://github.com/arsalan-akhtar/atomate2siesta.git\n"
-        f"  • Branch: main\n"
+        f"[bold]Installed package:[/bold]\n"
+        f"  • atomate2[siesta] (PyPI)\n"
         + (
             "\n[bold]SIESTA:[/bold] Installed from conda-forge\n"
             if install_siesta
             else ""
         )
         + f"\n[bold]Configuration:[/bold]\n"
-        f"  • Created ~/.atomate2siesta.yaml with default SIESTA settings\n"
+        f"  • Created ~/.atomate2.yaml with default SIESTA settings\n"
         f"  • Paths use $HOME variable for portability\n"
         f"\n[bold]To configure jobflow-remote:[/bold]\n"
         f"  [cyan]{ssh_cmd}[/cyan]\n"
@@ -1428,7 +1400,7 @@ ELASTIC_FITTING_METHOD: finite_difference
             if install_siesta
             else "2. Install SIESTA or verify executable path\n"
         )
-        + "3. Edit ~/.atomate2siesta.yaml if needed (pseudopotentials, FLOS path)\n"
+        + "3. Edit ~/.atomate2.yaml if needed (pseudopotentials, FLOS path)\n"
         "4. Start runner: [cyan]jf runner start -d[/cyan]\n"
         "5. Submit jobs from your local machine",
         title="Success",
@@ -2399,22 +2371,12 @@ conda create -y -n {env_name} python={python_version}
 echo "Installing jobflow-remote..."
 conda run -n {env_name} pip install jobflow-remote
 
-echo "Installing atomate2siesta..."
+echo "Installing atomate2[siesta]..."
 """
 
-        # Add Git URL handling
-        if git_ssh:
-            build_script += f"""
-# SSH Git clone requires SSH key to be mounted
-conda run -n {env_name} pip install 'git+ssh://git@github.com/arsalan-akhtar/atomate2siesta.git@main'
-"""
-        elif git_token:
-            build_script += f"""
-conda run -n {env_name} pip install 'git+https://{git_token}@github.com/arsalan-akhtar/atomate2siesta.git@main'
-"""
-        else:
-            build_script += f"""
-conda run -n {env_name} pip install 'git+https://github.com/arsalan-akhtar/atomate2siesta.git@main'
+        # Install atomate2 with the SIESTA extra
+        build_script += f"""
+conda run -n {env_name} pip install 'atomate2[siesta]'
 """
 
         # Add SIESTA installation if requested
@@ -2810,31 +2772,14 @@ def build_offline(
         progress.update(task, completed=True)
         console.print("[green]✓ Installed jobflow-remote[/green]")
 
-        # Step 5: Install atomate2siesta from GitHub
+        # Step 5: Install atomate2 with the SIESTA extra
         task = progress.add_task(
-            "[cyan]Installing atomate2siesta from GitHub...", total=None
+            "[cyan]Installing atomate2[siesta]...", total=None
         )
-        console.print("  [dim]Branch: main[/dim]")
-
-        # Build Git URL
-        if git_ssh:
-            git_url = "git+ssh://git@github.com/arsalan-akhtar/atomate2siesta.git"
-            console.print("  [dim]Using SSH authentication[/dim]")
-            console.print(f"  [dim]Repository: {git_url}[/dim]")
-        elif git_token:
-            git_url = (
-                f"git+https://{git_token}@github.com/arsalan-akhtar/atomate2siesta.git"
-            )
-            masked_url = "git+https://****@github.com/arsalan-akhtar/atomate2siesta.git"
-            console.print("  [dim]Using HTTPS with personal access token[/dim]")
-            console.print(f"  [dim]Repository: {masked_url}[/dim]")
-        else:
-            git_url = "git+https://github.com/arsalan-akhtar/atomate2siesta.git"
-            console.print("  [dim]Using public HTTPS[/dim]")
-            console.print(f"  [dim]Repository: {git_url}[/dim]")
+        console.print("  [dim]Package: atomate2[siesta] (PyPI)[/dim]")
 
         result = subprocess.run(
-            ["conda", "run", "-n", env_name, "pip", "install", f"{git_url}@main"],
+            ["conda", "run", "-n", env_name, "pip", "install", "atomate2[siesta]"],
             capture_output=True,
             text=True,
         )
