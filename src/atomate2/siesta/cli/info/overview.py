@@ -19,7 +19,7 @@ def show_overview():
         "🔬 Production-ready DFT workflows with intelligent error handling\n"
         "⚡ significant code reduction with Recipe Book\n"
         "🛠️ 13 CLI tools for workflow automation\n"
-        "📚 57+ tutorials and comprehensive documentation",
+        "📚 Comprehensive tutorials and documentation",
         border_style="cyan",
         box=box.DOUBLE,
     )
@@ -31,12 +31,12 @@ def show_overview():
     stats_table.add_column(style="bold yellow")
     stats_table.add_column(style="green")
 
-    stats_table.add_row("📦 Workflows", "13+ production workflows")
-    stats_table.add_row("🍳 Recipes", "39 one-line workflows")
+    stats_table.add_row("📦 Workflows", "production workflows")
+    stats_table.add_row("🍳 Recipes", "one-line workflow recipes")
     stats_table.add_row("🛠️ CLI Tools", "13 command-line utilities")
-    stats_table.add_row("🎯 Tier Presets", "26 material-specific configurations")
-    stats_table.add_row("📝 Tutorials", "57+ comprehensive guides")
-    stats_table.add_row("✅ Tests", "2,038 tests (58-60% coverage)")
+    stats_table.add_row("🎯 Tier Presets", "material-specific configurations")
+    stats_table.add_row("📝 Tutorials", "comprehensive guides")
+    stats_table.add_row("✅ Tests", "comprehensive automated test suite")
     stats_table.add_row("🔧 Default XC", "PBE (GGA)")
 
     console.print(stats_table)
@@ -52,11 +52,11 @@ def show_overview():
 
     # Links
     console.print("[bold]Resources:[/bold]")
-    console.print("  📖 Docs:   [link]https://atomate2siesta.readthedocs.io[/link]")
+    console.print("  📖 Docs:   [link]https://materialsproject.github.io/atomate2/[/link]")
     console.print(
-        "  🐙 GitHub: [link]https://github.com/arsalan-akhtar/atomate2siesta[/link]"
+        "  🐙 GitHub: [link]https://github.com/materialsproject/atomate2[/link]"
     )
     console.print(
-        "  💬 Issues: [link]https://github.com/arsalan-akhtar/atomate2siesta/issues[/link]"
+        "  💬 Issues: [link]https://github.com/materialsproject/atomate2/issues[/link]"
     )
     console.print()

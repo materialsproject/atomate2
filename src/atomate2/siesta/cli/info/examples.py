@@ -69,7 +69,7 @@ def show_examples():
 
     # Example 6: Browse tutorials
     console.print("[bold yellow]6. Browse interactive tutorials[/bold yellow]")
-    console.print("[dim]# 57+ tutorials with search and copy functionality[/dim]")
+    console.print("[dim]# Tutorials with search and copy functionality[/dim]")
     console.print("[green]$ atomate2siesta-tutorials list[/green]")
     console.print("[green]$ atomate2siesta-tutorials search phonon[/green]")
     console.print(

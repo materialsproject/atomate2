@@ -347,7 +347,7 @@ Getting Started
 Community & Support
 ===================
 
-* **Documentation**: https://atomate2siesta.readthedocs.io
+* **Documentation**: https://materialsproject.github.io/atomate2/
 * **GitHub**: https://github.com/materialsproject/atomate2
 * **Issues**: https://github.com/materialsproject/atomate2/issues
 * **Discussions**: https://github.com/materialsproject/atomate2/discussions

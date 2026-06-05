@@ -18,7 +18,7 @@ __version__ = "1.1.0"
 
 # Project information
 __project__ = "atomate2siesta"
-__url__ = "https://github.com/arsalan-akhtar/atomate2siesta"
+__url__ = "https://github.com/materialsproject/atomate2"
 __description__ = "SIESTA integration for atomate2 workflow framework"
 
 # Credits

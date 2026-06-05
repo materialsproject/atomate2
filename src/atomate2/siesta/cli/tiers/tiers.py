@@ -5,7 +5,7 @@ CLI tool to display available material-specific presets and their configurations
 Command: atomate2siesta-presets
 
 This tool provides:
-- List of all 27 material-specific presets from the codebase
+- List of all material-specific presets from the codebase
 - Preset details and parameters
 - Search by category or tier level
 - Dynamic loading from TIER_PRESETS registry

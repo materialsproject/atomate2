@@ -31,7 +31,7 @@ def show_cli_tools():
     )
     table.add_row(
         "atomate2siesta-tutorials",
-        "Browse and search 57+ tutorials",
+        "Browse and search tutorials",
         "Information",
     )
     table.add_row(
@@ -41,7 +41,7 @@ def show_cli_tools():
     )
     table.add_row(
         "atomate2siesta-recipe",
-        "Browse and search recipe book (39 recipes)",
+        "Browse and search the recipe book",
         "Information",
     )
 

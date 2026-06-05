@@ -451,7 +451,7 @@ Getting Help
 Resources
 ---------
 
-* **Documentation**: https://atomate2siesta.readthedocs.io
+* **Documentation**: https://materialsproject.github.io/atomate2/
 * **GitHub Issues**: https://github.com/materialsproject/atomate2/issues
 * **Discussions**: https://github.com/materialsproject/atomate2/discussions
 

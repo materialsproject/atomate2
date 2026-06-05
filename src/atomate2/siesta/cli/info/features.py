@@ -12,8 +12,8 @@ def show_features():
     console.print("\n[bold cyan]Major Features[/bold cyan]\n")
 
     features = [
-        ("🍳 Recipe Book", "39 one-line workflows (significant code reduction)"),
-        ("🎯 Tier System", "26 material-specific parameter presets"),
+        ("🍳 Recipe Book", "one-line workflow recipes (significant code reduction)"),
+        ("🎯 Tier System", "Material-specific parameter presets"),
         ("🛡️ Custodian", "Automatic error detection and recovery"),
         ("🔍 Convergence", "Automated k-point, basis, and cutoff testing"),
         ("📊 Visualization", "Automatic publication-quality plots"),
@@ -24,7 +24,7 @@ def show_features():
         ("📝 Schemas", "Structured output with SiestaTaskDoc"),
         ("🔬 Magnetic", "Automatic DM.InitSpin generation (FM/AFM/custom)"),
         ("📐 Structure Tools", "16 commands for structure manipulation"),
-        ("📚 Tutorials", "57+ comprehensive tutorials with MyST integration"),
+        ("📚 Tutorials", "Comprehensive tutorials with MyST integration"),
     ]
 
     table = Table(show_header=False, box=box.SIMPLE, padding=(0, 2))

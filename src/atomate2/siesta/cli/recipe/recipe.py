@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 """
-CLI tool to browse and search the Recipe Book (39 one-line workflows).
+CLI tool to browse and search the Recipe Book (one-line workflow recipes).
 
 This tool provides:
-- List of all 39 recipes by category
+- List of all recipes by category
 - Recipe details with code examples
 - Search by property type or keyword
 - Code reduction demonstrations
@@ -344,7 +344,7 @@ RECIPES = {
 @click.group(invoke_without_command=True)
 @click.pass_context
 def cli(ctx):
-    """Browse and search the Recipe Book (39 recipes)."""
+    """Browse and search the Recipe Book."""
     if ctx.invoked_subcommand is None:
         list_all()
 
@@ -353,7 +353,7 @@ def cli(ctx):
 def list():
     """List all recipes by category.
 
-    Display all 39 recipes organized into 6 categories:
+    Display all recipes organized into 6 categories:
     complete, electronic, mechanical, thermal, catalysis, convergence.
 
     Each recipe shows name, description, and estimated runtime.
@@ -503,9 +503,9 @@ def analyze(structure_file, detailed):
 
 def list_all():
     """List all recipes by category."""
-    console.print("\n[bold cyan]Recipe Book: 39 One-Line Workflows[/bold cyan]")
+    console.print("\n[bold cyan]Recipe Book: One-Line Workflows[/bold cyan]")
     console.print(
-        "[dim]significant code reduction • Production-ready • 100% documented[/dim]\n"
+        "[dim]significant code reduction • Production-ready • fully documented[/dim]\n"
     )
 
     total_recipes = 0
@@ -738,7 +738,7 @@ def show_stats():
     console.print(
         f"  • Code Reduction Range: [green]{overall_min}%-{overall_max}%[/green]"
     )
-    console.print("  • Documentation: [green]100% (16 tutorials)[/green]")
+    console.print("  • Documentation: [green]comprehensive[/green]")
     console.print("  • Status: [green]Production-ready[/green]")
     console.print()
 

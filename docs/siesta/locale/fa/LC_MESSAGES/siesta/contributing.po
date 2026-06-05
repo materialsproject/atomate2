@@ -688,8 +688,8 @@ msgid "Resources"
 msgstr "منابع"
 
 #: ../../source/contributing.rst:454 5937d69f445f4b28ba103d3a6e7c97c1
-msgid "**Documentation**: https://atomate2siesta.readthedocs.io"
-msgstr "**مستندات**: https://atomate2siesta.readthedocs.io"
+msgid "**Documentation**: https://materialsproject.github.io/atomate2"
+msgstr "**مستندات**: https://materialsproject.github.io/atomate2"
 
 #: ../../source/contributing.rst:455 eef0eeff743c4252a0dd221486c851b4
 msgid "**GitHub Issues**: https://github.com/materialsproject/atomate2/issues"

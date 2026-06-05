@@ -967,8 +967,8 @@ msgid "Community & Support"
 msgstr "جامعه و پشتیبانی"
 
 #: ../../source/introduction.rst:350 05c28a08fbdf4bae9a5c4d6002e02ab0
-msgid "**Documentation**: https://atomate2siesta.readthedocs.io"
-msgstr "**مستندات**: https://atomate2siesta.readthedocs.io"
+msgid "**Documentation**: https://materialsproject.github.io/atomate2"
+msgstr "**مستندات**: https://materialsproject.github.io/atomate2"
 
 #: ../../source/introduction.rst:351 66efe36c943d48d393280a5699caa6ad
 msgid "**GitHub**: https://github.com/materialsproject/atomate2"
