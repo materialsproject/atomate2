@@ -97,10 +97,10 @@ Common structures:
 5. **[04-structure-conversion](03-advanced-features/04-structure-conversion/)** - XV, FDF, XSF, CIF file conversion
 6. **[05-dos-calculations](03-advanced-features/05-dos-calculations/)** - Advanced DOS analysis
 7. **[06-phonon-inputs](03-advanced-features/06-phonon-inputs/)** - Phonon calculation customization
-8. **[06-tier-presets-customization](03-advanced-features/06-tier-presets-customization/)** - Material-specific presets (26 presets in 10 categories)
+8. **[06-tier-presets-customization](03-advanced-features/06-tier-presets-customization/)** - Material-specific presets (material-specific presets in 10 categories)
 9. **[07-basis-set-customization](03-advanced-features/07-basis-set-customization/)** - Custom basis sets, species variants, PAO.Basis
 10. **[07-optical-properties](03-advanced-features/07-optical-properties/)** - Optical calculations
-11. **[08-recipe-book](03-advanced-features/08-recipe-book/)** - High-level workflow system (39 recipes, significant code reduction)
+11. **[08-recipe-book](03-advanced-features/08-recipe-book/)** - High-level workflow system (significant code reduction)
 12. **[09-charge-dipole-efield](03-advanced-features/09-charge-dipole-efield/)** - Electric fields and dipole corrections
 13. **[09-structure-manipulation](03-advanced-features/09-structure-manipulation/)** - Structure tools (16 subcommands)
 14. **[10-grid-output](03-advanced-features/10-grid-output/)** - Grid-based output (charge density, potentials)
@@ -112,7 +112,7 @@ Common structures:
 20. **[16-magnetic-calculations](03-advanced-features/16-magnetic-calculations/)** - Spin-polarized calculations, DM.InitSpin, magnetic moments
 
 **Highlights**:
-- **Recipe Book (08)**: One-line workflows, 100% documented
+- **Recipe Book (08)**: One-line workflows, fully documented
 - **Tier Presets (06)**: 26 material-specific presets with automatic CLI discovery
 - **Magnetic Calculations (16)**: Automatic magnetic moment detection, FM/AFM/custom orderings
 - **Basis Customization (07)**: Species variants, per-atom basis, PAO.Basis builder
@@ -335,7 +335,7 @@ my-tutorial/
 - **FlowMakers covered**: 13 workflows (all production-ready)
 - **Makers covered**: 8+ basic Makers
 - **Advanced features**: 16 specialized topics
-- **Recipe book**: 39 one-line workflows, 16 comprehensive tutorials
+- **Recipe book**: one-line workflows, comprehensive tutorials
 - **CLI tools**: 13 command-line utilities
 
 ## Recent Additions (v1.0.0 - December 2025)

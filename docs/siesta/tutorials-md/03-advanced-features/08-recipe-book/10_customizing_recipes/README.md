@@ -50,7 +50,7 @@ All examples use `dry_run=True` to generate input files without running calculat
 
 ### Method 3: Material-Specific Presets
 **`03_presets.py`** - Optimized parameter sets
-- 26 presets for different material types
+- material-specific presets for different material types
 - Examples: `surface_metal`, `2d_vdw`, `phonon_high_accuracy`
 - View all: `atomate2siesta-presets list`
 
@@ -224,7 +224,7 @@ user_params={
 Discover presets and recipes:
 
 ```bash
-# List all 26 presets
+# List all material-specific presets
 atomate2siesta-presets list
 
 # View preset details
@@ -234,7 +234,7 @@ atomate2siesta-presets show surface_metal
 atomate2siesta-presets category 2d
 atomate2siesta-presets category magnetic
 
-# List all 39 recipes
+# List all recipes
 atomate2siesta-recipe list
 
 # View recipe details

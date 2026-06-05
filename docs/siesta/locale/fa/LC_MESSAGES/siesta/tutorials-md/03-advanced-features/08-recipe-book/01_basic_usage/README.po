@@ -43,7 +43,7 @@ msgstr "نمای کلی"
 #, python-format
 msgid ""
 "The Recipe Book provides high-level workflows for complete material "
-"characterization with 90-98% code reduction. Instead of writing 50+ lines"
+"characterization with significant code reduction. Instead of writing 50+ lines"
 " of boilerplate, you can generate complete workflows with a single "
 "function call."
 msgstr ""

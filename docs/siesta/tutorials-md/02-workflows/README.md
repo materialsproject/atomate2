@@ -355,7 +355,7 @@ After completing workflows, proceed to:
 
 ### Advanced Workflow Features
 - **[03-advanced-features/03-powerups](../03-advanced-features/03-powerups/)** - Customize workflows dynamically
-- **[03-advanced-features/08-recipe-book](../03-advanced-features/08-recipe-book/)** - High-level workflow system (39 recipes)
+- **[03-advanced-features/08-recipe-book](../03-advanced-features/08-recipe-book/)** - High-level workflow system (recipe book)
 - **[03-advanced-features/03-infrastructure](../03-advanced-features/03-infrastructure/)** - Database, HPC, error handling
 
 ### Specialized Calculations

@@ -45,7 +45,7 @@ msgstr "مرور کلی"
 #: ../../source/recipe-book.rst:14 a80ce16671d8481e9855b020eb89ac15
 #, python-format
 msgid ""
-"The Recipe Book achieves **90-98% code reduction** by encapsulating best "
+"The Recipe Book achieves **significant code reduction** by encapsulating best "
 "practices and expert knowledge into easy-to-use functions. What normally "
 "requires 50+ lines of boilerplate code can be reduced to a single line."
 msgstr ""
@@ -103,7 +103,7 @@ msgstr "✅ **آماده برای تولید**"
 
 #: ../../source/recipe-book.rst:35 dc2f859fc4c74c5b8cceffad4e356a8f
 #, python-format
-msgid "100% documented with 16 comprehensive tutorials"
+msgid "fully documented with comprehensive tutorials"
 msgstr "۱۰۰٪ مستندسازی‌شده با ۱۶ آموزش جامع"
 
 #: ../../source/recipe-book.rst:38 61cc773944024fd9b92c63e53c88bb4b
@@ -143,11 +143,11 @@ msgid "✅ Generates publication-quality plots"
 msgstr "✅ نمودارهای با کیفیت انتشار تولید می‌کند"
 
 #: ../../source/recipe-book.rst:68 8d6d1c006f0647c38c86365c6b16d2b0
-msgid "All 39 Recipes"
+msgid "All Recipes"
 msgstr "تمام ۳۹ دستورالعمل"
 
 #: ../../source/recipe-book.rst:70 2a00e809fe9e4e81b200a10ad6a7337a
-msgid "The Recipe Book contains **39 recipes** organized into **6 categories**:"
+msgid "The Recipe Book is organized into **6 categories**:"
 msgstr "کتاب دستورالعمل شامل **۳۹ دستورالعمل** سازماندهی‌شده در **۶ دسته** است:"
 
 #: ../../source/recipe-book.rst:73 ff8446e150e748648bc664e4c6783aa9
@@ -588,8 +588,8 @@ msgstr "آموزش‌ها"
 #: ../../source/recipe-book.rst:444 c85cd53a84974c008b341eba5232d36e
 #, python-format
 msgid ""
-"The Recipe Book is **100% documented** with **16 comprehensive "
-"tutorials** covering all 39 recipes:"
+"The Recipe Book is **fully documented** with **comprehensive "
+"tutorials** covering all recipes:"
 msgstr ""
 "کتاب دستورالعمل **۱۰۰٪ مستندسازی‌شده** با **۱۶ آموزش جامع** است که "
 "تمام ۳۹ دستورالعمل را پوشش می‌دهد:"
@@ -671,7 +671,7 @@ msgid "**Tutorial Location**: ``tutorials/08-recipe-book/``"
 msgstr "**موقعیت آموزش**: ``tutorials/08-recipe-book/``"
 
 #: ../../source/recipe-book.rst:471 45058b2ba7a64320b653fd37db0d4d0b
-msgid "**Total Documentation**: 7,900+ lines across 16 files"
+msgid "**Total Documentation**: extensive"
 msgstr "**مستندات کل**: بیش از ۷,۹۰۰ خط در ۱۶ فایل"
 
 #: ../../source/recipe-book.rst:474 d4a887ceb294467080f37a7fe13ce650
@@ -959,11 +959,11 @@ msgid "**Status**: ✅ Production-ready with 100% documentation coverage"
 msgstr "**وضعیت**: ✅ آماده برای تولید با پوشش مستندات ۱۰۰٪"
 
 #: ../../source/recipe-book.rst:576 7a896f8f6afa4fc7a1afbf5da7f1a3e3
-msgid "39 recipes across 6 categories"
+msgid "recipes across 6 categories"
 msgstr "۳۹ دستورالعمل در ۶ دسته"
 
 #: ../../source/recipe-book.rst:577 e90a0f7a2de347d0bdbeafda6f6a777b
-msgid "16 comprehensive tutorials (7,900+ lines)"
+msgid "comprehensive tutorials"
 msgstr "۱۶ آموزش جامع (بیش از ۷,۹۰۰ خط)"
 
 #: ../../source/recipe-book.rst:578 a8ac9f5ed5ee40caabe8a19808739374

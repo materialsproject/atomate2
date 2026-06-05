@@ -32,7 +32,7 @@ Key Benefits
    Covers all major material properties
 
 ✅ **Production-Ready**
-   100% documented with 16 comprehensive tutorials
+   fully documented with comprehensive tutorials
 
 Quick Start
 ===========
@@ -64,10 +64,10 @@ That's it! This automatically:
 * ✅ Calculates thermal properties (phonons, QHA, thermal expansion)
 * ✅ Generates publication-quality plots
 
-All 39 Recipes
+All Recipes
 ===============
 
-The Recipe Book contains **39 recipes** organized into **6 categories**:
+The Recipe Book is organized into **6 categories**:
 
 Complete Workflows (2 recipes)
 --------------------------------
@@ -468,7 +468,7 @@ Method 5: Control Phonon Calculations
 Tutorials
 =========
 
-The Recipe Book is **100% documented** with **16 comprehensive tutorials** covering all 39 recipes:
+The Recipe Book is fully documented with comprehensive tutorials covering all recipes:
 
 .. list-table::
    :header-rows: 1
@@ -495,7 +495,7 @@ The Recipe Book is **100% documented** with **16 comprehensive tutorials** cover
 
 **Tutorial Location**: ``tutorials/08-recipe-book/``
 
-**Total Documentation**: 7,900+ lines across 16 files
+**Total Documentation**: extensive
 
 Recipe Book vs Traditional Approach
 ====================================
@@ -600,8 +600,8 @@ Status
 
    **Status**: ✅ Production-ready with 100% documentation coverage
 
-   * 39 recipes across 6 categories
-   * 16 comprehensive tutorials (7,900+ lines)
+   * recipes across 6 categories
+   * comprehensive tutorials
    * comprehensive tests (fully passing)
    * ~75% code coverage
    * First computational materials science package with complete recipe documentation

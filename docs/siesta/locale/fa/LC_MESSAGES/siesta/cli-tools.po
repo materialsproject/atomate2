@@ -176,7 +176,7 @@ msgstr "ویژگی‌های کلیدی"
 
 #: ../../source/cli-tools.rst:60 bee8c0c0e0e345e9904002874d4a5dc8
 msgid ""
-"**Complete overview** with quick stats (26 presets, 39 recipes, 12 CLI "
+"**Complete overview** with quick stats (material-specific presets, recipes, 12 CLI "
 "tools)"
 msgstr ""
 
@@ -283,7 +283,7 @@ msgid "**Dynamic tier counting** - Automatically counts new tier levels"
 msgstr ""
 
 #: ../../source/cli-tools.rst:153 c990dea987d8401db88c06d3c04cea4d
-msgid "**26 presets** across 9 categories (2d, surface, electronic, etc.)"
+msgid "**material-specific presets** across 9 categories (2d, surface, electronic, etc.)"
 msgstr ""
 
 #: ../../source/cli-tools.rst:154 cd71349672af4f349293b46784ce1e6d
@@ -355,18 +355,18 @@ msgid "**Command:** ``atomate2siesta-recipe``"
 msgstr ""
 
 #: ../../source/cli-tools.rst:234 20e836626ff14cb2ad98f07e1031e2aa
-msgid "**Purpose:** Browse and search the Recipe Book (39 one-line workflows)"
+msgid "**Purpose:** Browse and search the Recipe Book (one-line workflows)"
 msgstr ""
 
 #: ../../source/cli-tools.rst:239 3081a469e3844c2dac3d43c0d6269164
 msgid ""
-"**39 recipes** across 6 categories (Complete, Electronic, Mechanical, "
+"Recipes across 6 categories (Complete, Electronic, Mechanical, "
 "Thermal, Surface, Convergence)"
 msgstr ""
 
 #: ../../source/cli-tools.rst:240 ac50da5b60a947289cf6fc3529fa8168
 #, python-format
-msgid "**90-98% code reduction** - Comprehensive workflows in one line"
+msgid "**significant code reduction** - Comprehensive workflows in one line"
 msgstr ""
 
 #: ../../source/cli-tools.rst:241 80a53c3717854c849f9550728dffe671

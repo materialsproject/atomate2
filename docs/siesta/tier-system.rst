@@ -302,7 +302,7 @@ All imports remain backward compatible. See project documentation for migration 
 .. note::
 
    The sections below show representative examples of commonly-used presets.
-   For the complete list of all 32 presets, use: ``atomate2siesta-presets list``
+   For the complete list of all presets, use: ``atomate2siesta-presets list``
 
 Structural Presets (5 total)
 -----------------------------
@@ -1128,4 +1128,4 @@ See Also
 .. note::
 
    The tier system is production-ready (2024-2025) with comprehensive
-   testing and performance validation. All 32 presets are fully functional.
+   testing and performance validation. All presets are fully functional.

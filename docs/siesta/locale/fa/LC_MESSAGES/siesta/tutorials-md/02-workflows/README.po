@@ -1037,7 +1037,7 @@ msgstr ""
 #: 6849797af4f14611a1ef07250fa9492a
 msgid ""
 "**[03-advanced-features/08-recipe-book](../03-advanced-features/08"
-"-recipe-book/)** - High-level workflow system (39 recipes)"
+"-recipe-book/)** - High-level workflow system (recipe book)"
 msgstr ""
 
 #: ../../source/tutorials-md/02-workflows/README.md:344

@@ -57,7 +57,7 @@ Information CLI
 Key Features
 ------------
 
-* **Complete overview** with quick stats (32 presets, 39 recipes, 13 CLI tools)
+* **Complete overview** with quick stats (material-specific presets, recipe book, 13 CLI tools)
 * **CLI tools catalog** organized by category
 * **Workflow types** organized by category
 * **Feature list** with descriptions
@@ -133,7 +133,7 @@ Example Output
    ╚═══════════════════════════════════════╝
 
    📦 Workflows    13+ production workflows
-   🍳 Recipes      39 one-line workflows
+   🍳 Recipes      one-line workflows
    🎯 Tier Presets 32 material-specific presets
 
 .. _tiers-cli:
@@ -150,7 +150,7 @@ Key Features
 
 * **Automatic preset detection** - No manual updates needed!
 * **Dynamic tier counting** - Automatically counts new tier levels
-* **32 presets** across 10 categories (2d, surface, electronic, phonon, etc.)
+* **Material-specific presets** across 10 categories (2d, surface, electronic, phonon, etc.)
 * **Tier defaults** - View base parameter sets for all tier levels
 * **Category browsing** - Explore presets by category
 * **Search functionality** - Find presets by tier level or category
@@ -231,12 +231,12 @@ Recipe Book CLI
 
 **Command:** ``atomate2siesta-recipe``
 
-**Purpose:** Browse and search the Recipe Book (39 one-line workflows)
+**Purpose:** Browse and search the Recipe Book (one-line workflows)
 
 Key Features
 ------------
 
-* **39 recipes** across 6 categories (Complete, Electronic, Mechanical, Thermal, Surface, Convergence)
+* Recipes across 6 categories (Complete, Electronic, Mechanical, Thermal, Surface, Convergence)
 * **significant code reduction** - Comprehensive workflows in one line
 * **Category browsing** - Explore recipes by category
 * **Keyword search** - Find recipes by name or property

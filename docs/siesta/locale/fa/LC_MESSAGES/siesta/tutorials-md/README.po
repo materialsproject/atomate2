@@ -342,7 +342,7 @@ msgstr ""
 #: ../../source/tutorials-md/README.md:95 ea9f25c331334e72a0b14c0d2207342a
 msgid ""
 "**[06-tier-presets-customization](03-advanced-features/06-tier-presets-"
-"customization/)** - Material-specific presets (26 presets in 10 "
+"customization/)** - Material-specific presets (material-specific presets in 10 "
 "categories)"
 msgstr ""
 
@@ -368,7 +368,7 @@ msgstr ""
 #, python-format
 msgid ""
 "**[08-recipe-book](03-advanced-features/08-recipe-book/)** - High-level "
-"workflow system (39 recipes, 90-98% code reduction)"
+"workflow system (significant code reduction)"
 msgstr ""
 
 #: ../../source/tutorials-md/README.md:100 0ec2815a2d004d8d8a92d6891dea1c5a
@@ -432,8 +432,8 @@ msgstr "**Highlights**:"
 
 #: ../../source/tutorials-md/README.md:111 45d0f3bd59434b6e8650b9bb391a5c6d
 #, python-format
-msgid "**Recipe Book (08)**: One-line workflows, 100% documented"
-msgstr "**Recipe Book (08)**: One-line wیاkflows, 100% documented"
+msgid "**Recipe Book (08)**: One-line workflows, fully documented"
+msgstr "**Recipe Book (08)**: One-line wیاkflows, fully documented"
 
 #: ../../source/tutorials-md/README.md:112 41cbe919537d438caabca84325ef659d
 msgid ""
@@ -950,8 +950,8 @@ msgid "**Advanced features**: 16 specialized topics"
 msgstr "**پیشرفته fetures**: 16 specilized topics"
 
 #: ../../source/tutorials-md/README.md:334 bbb548bd0aa14027a873b32ca4ca1afe
-msgid "**Recipe book**: 39 one-line workflows, 16 comprehensive tutorials"
-msgstr "**Recipe book**: 39 one-line wیاkflows, 16 comprehensive tutیاils"
+msgid "**Recipe book**: one-line workflows, comprehensive tutorials"
+msgstr "**Recipe book**: one-line wیاkflows, comprehensive tutیاils"
 
 #: ../../source/tutorials-md/README.md:335 af724aef61a94e51964b711fc46af096
 msgid "**CLI tools**: 13 command-line utilities"

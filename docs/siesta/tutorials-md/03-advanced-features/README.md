@@ -141,17 +141,17 @@ Advanced SIESTA features for Hamiltonian and overlap matrix output, COOP/COHP an
 ### 08. [Recipe Book](08-recipe-book/)
 **Topics**: High-level one-line workflows
 **Directories**: 9 (by recipe category)
-**Files**: 23 tutorials (7,900+ lines)
+**Files**: comprehensive tutorials
 **Difficulty**: Beginner to Advanced
 
-**⭐ Production-ready high-level workflow system with 39 recipes achieving significant code reduction.**
+**⭐ Production-ready high-level workflow system with one-line recipes achieving significant code reduction.**
 
 Complete material studies, electronic properties, mechanical properties, thermal analysis, catalysis, convergence testing, and more—all in single-line function calls.
 
 **Key Features**:
-- 39 recipes across 6 categories
+- recipes across 6 categories
 - One-line workflows: `RecipeBook.complete_material_study(structure)`
-- 100% documented with comprehensive tutorials
+- fully documented with comprehensive tutorials
 - significant code reduction vs manual workflows
 
 **CLI Tools**: `atomate2siesta-recipe list` and `atomate2siesta-recipe show <name>`
@@ -230,10 +230,10 @@ atomate2siesta-tutorials search "magnetic"
 ## Highlights
 
 ### Recipe Book (Group 08)
-- **39 one-line workflows** across 6 categories
+- **One-line workflows** across 6 categories
 - **significant code reduction** vs manual implementation
-- **100% documented** with 16 comprehensive tutorials
-- **7,900+ lines** of tutorial documentation
+- fully documented with comprehensive tutorials
+- extensive tutorial documentation
 
 ### Infrastructure (Group 03)
 - **24 comprehensive tutorials** for production setup

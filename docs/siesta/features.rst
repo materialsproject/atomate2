@@ -997,7 +997,7 @@ Benefits
 
 ✅ **For Users**:
    * No manual module initialization needed
-   * Material-specific recommended settings (32 presets)
+   * Material-specific recommended settings
    * Easy parameter customization
    * All 33 dataclass modules work with powerups
 

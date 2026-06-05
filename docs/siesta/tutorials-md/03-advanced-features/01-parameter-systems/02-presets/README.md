@@ -48,7 +48,7 @@ All scripts use `dry_run=True` for instant preview without running SIESTA.
 
 ### CLI Discovery:
 ```bash
-atomate2siesta-presets list                      # See all 26 presets
+atomate2siesta-presets list                      # See all material-specific presets
 atomate2siesta-presets show relax_standard       # Show preset details
 atomate2siesta-presets category surface          # List surface presets
 ```

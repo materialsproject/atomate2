@@ -178,7 +178,7 @@ msgstr "[06-tier-presets-customiztion](06-tier-presets-customiztion/)"
 #: ../../source/tutorials-md/03-advanced-features/README.md:62
 #: f20d675881fa42d393a821972e1131f5
 msgid ""
-"**Description**: Material-specific tier presets (26 presets in 10 "
+"**Description**: Material-specific tier presets (material-specific presets in 10 "
 "categories) **Difficulty**: Beginner to Intermediate **Key Concepts**: 2D"
 " materials, surfaces, magnetic, phonons, optical, mechanical, "
 "convergence, DFT+U, vdW, testing presets **Files**: Examples for each "
@@ -239,11 +239,11 @@ msgstr "[08-recipe-book](08-recipe-book/)"
 #: 6d355d9e2dd14a68979e311a16938d5d
 #, python-format
 msgid ""
-"**Description**: High-level workflow system (39 recipes, 90-98% code "
+"**Description**: High-level workflow system (recipes, 90-98% code "
 "reduction) **Difficulty**: Beginner to Advanced **Key Concepts**: One-"
 "line workflows, RecipeBook class, complete_material_study(), 16 "
-"comprehensive tutorials **Files**: 16 tutorial files covering all 39 "
-"recipes across 6 categories **Coverage**: 100% documented with 7,900+ "
+"comprehensive tutorials **Files**: tutorial files covering all 39 "
+"recipes across 6 categories **Coverage**: fully documented "
 "lines of tutorial documentation **CLI**: `atomate2siesta-recipe list` and"
 " `atomate2siesta-recipe show <name>`"
 msgstr ""
@@ -391,20 +391,20 @@ msgstr "Recipe Book (08)"
 
 #: ../../source/tutorials-md/03-advanced-features/README.md:156
 #: 443dfa0763044615ac1452c7adcd22dd
-msgid "**39 one-line workflows** across 6 categories"
-msgstr "**39 one-line wیاkflows** cross 6 ctegیاies"
+msgid "**One-line workflows** across 6 categories"
+msgstr "**one-line wیاkflows** cross 6 ctegیاies"
 
 #: ../../source/tutorials-md/03-advanced-features/README.md:157
 #: 7aca60e6beb944bd835c5790692fbc05
 #, python-format
-msgid "**90-98% code reduction** (50+ lines → 1 line)"
-msgstr "**90-98% code reduction** (50+ lines → 1 line)"
+msgid "**significant code reduction** (50+ lines → 1 line)"
+msgstr "**significant code reduction** (50+ lines → 1 line)"
 
 #: ../../source/tutorials-md/03-advanced-features/README.md:158
 #: 40caf05b51eb46c8973932dfd2d98995
 #, python-format
-msgid "**100% documented**: 16 comprehensive tutorials (7,900+ lines)"
-msgstr "**100% documented**: 16 comprehensive tutیاils (7,900+ lines)"
+msgid "fully documented with comprehensive tutorials"
+msgstr "**fully documented**: comprehensive tutیاils "
 
 #: ../../source/tutorials-md/03-advanced-features/README.md:159
 #: 329d88070aff4940bfc5d095e99253f9
@@ -624,13 +624,13 @@ msgstr "**[08-recipe-book](08-recipe-book/)** - One-line wیاkflows (START HERE
 #: ../../source/tutorials-md/03-advanced-features/README.md:207
 #: 62c83f63e5b84f12b2b0aa4b1577e8c9
 #, python-format
-msgid "39 recipes, 90-98% code reduction"
-msgstr "39 recipes, 90-98% code reduction"
+msgid "recipes, significant code reduction"
+msgstr "recipes, significant code reduction"
 
 #: ../../source/tutorials-md/03-advanced-features/README.md:208
 #: 6d4e877bbda141e5a569ede78c0b57a2
-msgid "16 comprehensive tutorials"
-msgstr "16 comprehensive tutیاils"
+msgid "comprehensive tutorials"
+msgstr "comprehensive tutیاils"
 
 #: ../../source/tutorials-md/03-advanced-features/README.md:209
 #: d8291c4be0d844a1a917ea1e6af667b6
@@ -885,8 +885,8 @@ msgstr "**Totl tutیاil files**: 100+ Python scripts"
 #: ../../source/tutorials-md/03-advanced-features/README.md:384
 #: f8fa2e71459d42fca79548decd5d52f5
 #, python-format
-msgid "**Recipe book**: 39 recipes, 16 tutorials, 100% documented"
-msgstr "**Recipe book**: 39 recipes, 16 tutیاils, 100% documented"
+msgid "**Recipe book**: recipes, comprehensive tutorials, fully documented"
+msgstr "**Recipe book**: recipes, 16 tutیاils, fully documented"
 
 #: ../../source/tutorials-md/03-advanced-features/README.md:385
 #: 59365bf6b34142989947526b944e45fc
