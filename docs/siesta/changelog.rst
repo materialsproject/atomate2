@@ -124,10 +124,36 @@ Documentation
 
 ----
 
-Version 1.0.0 (2026)
-====================
+Version 1.0.0 (January 2026)
+============================
 
 **Release Date**: January 2026
+
+New Features
+------------
+
+* **Structure Info CLI**: New ``atomate2siesta-structure info`` subcommand for comprehensive structure analysis including crystal symmetry, lattice parameters, atomic composition, and automatic magnetic property detection
+* **Automatic Format Detection**: ``atomate2siesta-structure convert`` now automatically detects input format from file extension (.fdf, .xv, .cif, .xsf) with support for CIF and XSF input formats
+* **DM.InitSpin Comments**: Automatic generation of descriptive comments for each atom showing species name, atom number, and Cartesian coordinates for easier debugging of magnetic structures
+* **Cu Magnetic Detection**: Added Cu (Z=29) to automatic magnetic element detection with default 0.6 μB moment for DFT+U calculations
+
+Architecture Improvements
+-------------------------
+
+* **Single Source of Truth**: Magnetic moment (DM.InitSpin) generation now exclusively handled by SpinSettings dataclass, eliminating duplicate logic and architectural inconsistency (~50 lines removed from ASE writer)
+* **Internal Parameter Naming System**: Introduced dual-prefix system (``a2s_`` alias and ``atomate2siesta_`` full) to clearly distinguish framework control parameters from SIESTA FDF parameters with automatic filtering
+* **CLI Reorganization**: Removed deprecated ``atomate2siesta-convert`` command in favor of structured ``atomate2siesta-structure`` group with room for future subcommands (scale, rotate, translate, etc.)
+
+Enhancements
+------------
+
+* **Recipe CLI Analyze Command**: New ``atomate2siesta-recipe analyze`` subcommand for structure analysis directly from command line (supports ``--detailed`` flag for computational estimates)
+* **Recipe CLI Help Documentation**: Enhanced all subcommands with comprehensive help text, usage examples, and detailed descriptions
+* **Recipe CLI Rename**: Renamed ``compare`` subcommand to ``demo`` for clarity (shows before/after code demonstration)
+* **Runtime Estimates Removed**: Removed workflow runtime estimates from recipe CLI and documentation (rough guesses that vary significantly by system and parameters)
+* **Structure Compare**: Enhanced ``--verbose`` flag to show comprehensive site-by-site comparison with fractional coordinates, distances, and color-coded match status for ALL sites (not just unmatched)
+* **Computational Estimates**: Made time/memory/core estimates hidden by default in ``RecipeBook.print_analysis()`` with clear warnings about rough heuristics when shown with ``detailed=True``
+* **Tutorial Documentation**: Reduced parallel performance tutorial verbosity by 70% while maintaining essential content
 
 Bug Fixes
 ---------
@@ -187,6 +213,12 @@ Bug Fixes
 * **Conversion Tutorial**: Fixed ``02_siesta_formats.py`` to work with dry_run mode by using glob pattern for nested dry_run output directories
 * **Recipe CLI Stats**: Fixed ``ValueError`` in ``atomate2siesta-recipe stats`` when recipes have text values like "high" instead of percentages
 
+
+* Fixed empty ``%block DM.InitSpin`` blocks when structure has no magnetic moments
+* Fixed duplicate DM.InitSpin generation sources (SpinSettings + ASE writer)
+* Fixed ``magnetic_ordering`` appearing as invalid SIESTA keyword in FDF files
+* Updated stale imports after CLI reorganization
+
 Breaking Changes
 ----------------
 
@@ -197,60 +229,6 @@ Breaking Changes
   - Migration: Replace ``RecipeBook.bulk_modulus_workflow(structure)`` with ``RecipeBook.eos_workflow(structure)``
   - Output remains identical: bulk_modulus, equilibrium_volume, E0, EOS_fit
 
-Enhancements
-------------
-
-* **Recipe CLI Analyze Command**: New ``atomate2siesta-recipe analyze`` subcommand for structure analysis directly from command line (supports ``--detailed`` flag for computational estimates)
-* **Recipe CLI Help Documentation**: Enhanced all subcommands with comprehensive help text, usage examples, and detailed descriptions
-* **Recipe CLI Rename**: Renamed ``compare`` subcommand to ``demo`` for clarity (shows before/after code demonstration)
-* **Runtime Estimates Removed**: Removed workflow runtime estimates from recipe CLI and documentation (rough guesses that vary significantly by system and parameters)
-* **Structure Compare**: Enhanced ``--verbose`` flag to show comprehensive site-by-site comparison with fractional coordinates, distances, and color-coded match status for ALL sites (not just unmatched)
-* **Computational Estimates**: Made time/memory/core estimates hidden by default in ``RecipeBook.print_analysis()`` with clear warnings about rough heuristics when shown with ``detailed=True``
-* **Tutorial Documentation**: Reduced parallel performance tutorial verbosity by 70% while maintaining essential content
-
-Documentation
--------------
-
-* **Structure Conversion**: Added comprehensive 316-line README with FDF vs XV distinction, dry-run mode details, workflow examples, and troubleshooting
-* **Recipe Book**: Updated documentation to explain computational estimates are hidden by default and how to enable them
-
-----
-
-Version 1.0.0 (2025)
-====================
-
-**Release Date**: December 2025
-
-New Features
-------------
-
-* **Structure Info CLI**: New ``atomate2siesta-structure info`` subcommand for comprehensive structure analysis including crystal symmetry, lattice parameters, atomic composition, and automatic magnetic property detection
-* **Automatic Format Detection**: ``atomate2siesta-structure convert`` now automatically detects input format from file extension (.fdf, .xv, .cif, .xsf) with support for CIF and XSF input formats
-* **DM.InitSpin Comments**: Automatic generation of descriptive comments for each atom showing species name, atom number, and Cartesian coordinates for easier debugging of magnetic structures
-* **Cu Magnetic Detection**: Added Cu (Z=29) to automatic magnetic element detection with default 0.6 μB moment for DFT+U calculations
-
-Architecture Improvements
--------------------------
-
-* **Single Source of Truth**: Magnetic moment (DM.InitSpin) generation now exclusively handled by SpinSettings dataclass, eliminating duplicate logic and architectural inconsistency (~50 lines removed from ASE writer)
-* **Internal Parameter Naming System**: Introduced dual-prefix system (``a2s_`` alias and ``atomate2siesta_`` full) to clearly distinguish framework control parameters from SIESTA FDF parameters with automatic filtering
-* **CLI Reorganization**: Removed deprecated ``atomate2siesta-convert`` command in favor of structured ``atomate2siesta-structure`` group with room for future subcommands (scale, rotate, translate, etc.)
-
-Bug Fixes
----------
-
-* Fixed empty ``%block DM.InitSpin`` blocks when structure has no magnetic moments
-* Fixed duplicate DM.InitSpin generation sources (SpinSettings + ASE writer)
-* Fixed ``magnetic_ordering`` appearing as invalid SIESTA keyword in FDF files
-* Updated stale imports after CLI reorganization
-
-Strategic Planning
-------------------
-
-* **Structure Manipulation Roadmap**: Comprehensive 16-command expansion plan organized in 4 priority tiers with implementation timeline, testing strategy, and success metrics
-
-Breaking Changes
-----------------
 
 * **CLI**: ``atomate2siesta-convert`` command removed; use ``atomate2siesta-structure convert`` instead
 * **CLI**: ``--xv`` flag removed from ``atomate2siesta-structure convert``; file format is now automatically detected from extension
@@ -309,6 +287,17 @@ atomate2siesta now uses prefixed parameter names to distinguish framework contro
 
 - :doc:`fdf-parameters` - Complete internal parameter documentation
 - ``README.md`` - Usage examples with new parameter names
+
+Strategic Planning
+------------------
+
+* **Structure Manipulation Roadmap**: Comprehensive 16-command expansion plan organized in 4 priority tiers with implementation timeline, testing strategy, and success metrics
+
+Documentation
+-------------
+
+* **Structure Conversion**: Added comprehensive 316-line README with FDF vs XV distinction, dry-run mode details, workflow examples, and troubleshooting
+* **Recipe Book**: Updated documentation to explain computational estimates are hidden by default and how to enable them
 
 ----
 
@@ -462,4 +451,5 @@ the SIESTA code, and this work:
 License
 =======
 
-atomate2siesta is released under the MIT License.
+The SIESTA workflows are part of atomate2 and are distributed under the same
+license as atomate2 (modified BSD, ``BSD-3-Clause-LBNL``).
