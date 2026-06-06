@@ -5,7 +5,7 @@
 **Difficulty**: Intermediate
 
 **Prerequisites**:
-- Completed [01-basics](../01-basics/) tutorials
+- Completed [01-basics](../../01-basics/) tutorials
 - Understanding of DFT convergence concepts
 - Familiarity with k-points, mesh cutoff, and basis sets
 

@@ -29,7 +29,7 @@ This tutorial focuses on **complete parameter space exploration**, testing every
 
 - **Required**: [01-RelaxMaker](../../../01-basics/01-RelaxMaker/) completed
 - **Required**: [01-SiestaEosFlowMaker](../01-SiestaEosFlowMaker/) - Basic EOS workflow
-- **Recommended**: [02-EOSBasisConvergenceFlowMaker](../02-EOSBasisConvergenceFlowMaker/) - Basis-only testing
+- **Recommended**: [02-EOSBasisConvergenceFlowMaker](../02-EOSBasisConvergenceFlowMakere/) - Basis-only testing
 - **Recommended**: Understanding of PAO parameters (PAO.EnergyShift, PAO.SplitNorm)
 
 ---
@@ -537,7 +537,7 @@ After completing full basis parameter optimization:
 ## Related Tutorials
 
 - [01-SiestaEosFlowMaker](../01-SiestaEosFlowMaker/) - Basic EOS workflow
-- [02-EOSBasisConvergenceFlowMaker](../02-EOSBasisConvergenceFlowMaker/) - Basis-only testing
+- [02-EOSBasisConvergenceFlowMaker](../02-EOSBasisConvergenceFlowMakere/) - Basis-only testing
 - [EOS Overview](../README.md) - All EOS tutorials
 
 ---

@@ -28,7 +28,7 @@ This consolidates 8 example scripts into a single configurable workflow with 5 c
 
 ## Prerequisites
 
-- **Required**: [16-phonon-calculations](../01-phonon-calculations/) completed
+- **Required**: [16-phonon-calculations](../01-SiestaPhononFlowMaker/) completed
 - **Recommended**: Understanding of phonon dispersion
 - **Recommended**: Basic thermodynamics knowledge
 

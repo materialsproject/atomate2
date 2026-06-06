@@ -269,7 +269,7 @@ cat MeshCutoffConvergenceFlowMaker/*_summary.txt
    ```
 
 2. **Run on HPC cluster**:
-   - See [Job Submission tutorials](../../../04-infrastructure/02-job-submission/)
+   - See [Job Submission tutorials](../../../03-advanced-features/03-infrastructure/02-jobflow-remote/)
 
 3. **Test subset of cutoffs first**:
    ```python

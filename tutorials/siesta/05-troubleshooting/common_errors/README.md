@@ -159,7 +159,7 @@ cat preview_output/job_*/siesta.fdf
 
 ### Tutorials
 - [debugging_workflows/01_tracing_job_failures.py](../debugging_workflows/01_tracing_job_failures.py) - General debugging
-- [03-advanced-features/04-error-handling](../../03-advanced-features/04-error-handling/) - Custodian system
+- [03-advanced-features/04-error-handling](../../03-advanced-features/03-infrastructure/03-error-handling/) - Custodian system
 - [02-workflows/01-convergence](../../02-workflows/01-convergence/) - Parameter convergence
 
 ### Documentation

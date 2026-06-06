@@ -182,7 +182,7 @@ atomate2siesta-pseudos install psf
 ```
 
 ### "SCF not converged"
-**Solution**: See the [Troubleshooting Guide](../docs/source/troubleshooting.rst) for SCF convergence tips.
+**Solution**: See the [Troubleshooting Guide](https://materialsproject.github.io/atomate2/siesta/troubleshooting.html) for SCF convergence tips.
 
 ## Quick Reference
 

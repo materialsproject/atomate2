@@ -343,7 +343,7 @@ user_params = {
 }
 ```
 
-**See**: [03-advanced-features/10-species-variants](../03-advanced-features/10-species-variants/) for custom basis
+**See**: [03-advanced-features/10-species-variants](../03-advanced-features/01-parameter-systems/03-basis/) for custom basis
 
 ---
 
@@ -421,7 +421,7 @@ maker = RelaxMaker.fixed_cell_relaxation(
 | K-point errors | Adjust k-point density | 80% |
 | Memory errors | Reduce memory usage options | 70% |
 
-**See**: [03-advanced-features/04-error-handling](../03-advanced-features/04-error-handling/) for custodian details
+**See**: [03-advanced-features/04-error-handling](../03-advanced-features/03-infrastructure/03-error-handling/) for custodian details
 
 ---
 
@@ -545,7 +545,7 @@ maker = apply_tier_preset(maker, "magnetic_correlated")
 maker = apply_tier_preset(maker, "surface_metal")
 ```
 
-**See**: [03-advanced-features/07-tier-based-parameters](../03-advanced-features/07-tier-based-parameters/)
+**See**: [03-advanced-features/07-tier-based-parameters](../03-advanced-features/01-parameter-systems/01-tier-system/)
 
 ### Enable Dry-Run First
 
@@ -667,9 +667,9 @@ After resolving issues:
 - **Mailing List**: https://siesta-project.org/SIESTA/Forum
 
 ### Troubleshooting Resources
-- Custodian documentation: [03-advanced-features/04-error-handling](../03-advanced-features/04-error-handling/)
+- Custodian documentation: [03-advanced-features/04-error-handling](../03-advanced-features/03-infrastructure/03-error-handling/)
 - Convergence testing: [02-workflows/01-convergence](../02-workflows/01-convergence/)
-- Parameter reference: [03-advanced-features/09-fdf-parameters](../03-advanced-features/09-fdf-parameters/)
+- Parameter reference: [03-advanced-features/09-fdf-parameters](../03-advanced-features/01-parameter-systems/04-fdf-blocks/)
 
 ### External Tools
 - **ASE Troubleshooting**: https://wiki.fysik.dtu.dk/ase/faq.html

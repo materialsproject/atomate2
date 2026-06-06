@@ -27,7 +27,7 @@ This tutorial consolidates surface energy calculation examples into a single con
 
 ## Prerequisites
 
-- **Required**: [01-relaxation](../../01-basics/01-relaxation/) completed
+- **Required**: [01-relaxation](../../../01-basics/01-RelaxMaker/) completed
 - **Recommended**: Understanding of crystal surfaces and Miller indices
 - **Recommended**: Basic knowledge of surface science
 

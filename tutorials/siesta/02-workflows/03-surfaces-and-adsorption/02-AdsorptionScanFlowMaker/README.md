@@ -28,7 +28,7 @@ This consolidates 8 example scripts into a single configurable workflow.
 
 ## Prerequisites
 
-- **Required**: [17-surface-energy](../01-surface-energy/) completed
+- **Required**: [17-surface-energy](../01-MultiSurfaceEnergyFlowMaker/) completed
 - **Required**: Understanding of surface slab models
 - **Recommended**: Familiarity with adsorption chemistry
 - **Recommended**: pymatgen molecule/structure manipulation

@@ -433,7 +433,7 @@ print(f"Ratio calc/exp: {D/D_exp:.1f}")
 
 3. **GGA limitations**:
    - PBE underestimates barriers by ~0.1-0.3 eV for ionic systems
-   - Consider DFT+U for transition metals (see [03-advanced-features/12-dftu](../../03-advanced-features/12-dftu/))
+   - Consider DFT+U for transition metals (see [03-advanced-features/12-dftu](../../03-advanced-features/02-physics-features/03-magnetic/))
 
 4. **Supercell size effects**:
    - Defect-defect interactions if cell too small
@@ -618,8 +618,8 @@ workflow = Flow([neb1, neb2])
 After completing NEB tutorials:
 
 1. **Phonons at TS**: [06-vibrational-properties](../06-vibrational-properties/) - Calculate pre-exponential factor
-2. **Charged defects**: Combine with [03-advanced-features/05-charged-calculations](../../03-advanced-features/05-charged-calculations/)
-3. **Surface diffusion**: [03-surfaces-adsorption](../03-surfaces-adsorption/) - Adsorbate migration on surfaces
+2. **Charged defects**: Combine with [03-advanced-features/05-charged-calculations](../../03-advanced-features/02-physics-features/05-charge/)
+3. **Surface diffusion**: [03-surfaces-adsorption](../03-surfaces-and-adsorption/) - Adsorbate migration on surfaces
 
 ---
 

@@ -14,19 +14,19 @@
 
 ## Tutorials in This Category
 
-### [01-phonons](01-phonons/)
+### [01-phonons](01-SiestaPhononFlowMaker/)
 **Description**: Phonon calculations using phonopy integration with automatic plotting
 **Difficulty**: Advanced
 **Time**: ~10 min (dry-run), ~2-6 hours (full calculation)
 **Key Concepts**: Phonopy, supercells, force constants, phonon band structure, DOS, thermal properties
 
-### [02-gruneisen-parameters](02-gruneisen-parameters/)
+### [02-gruneisen-parameters](02-SiestaGruneisenFlowMaker/)
 **Description**: Grüneisen parameters from volume-dependent phonon calculations
 **Difficulty**: Advanced
 **Time**: ~15 min (dry-run), ~6-12 hours (full calculation)
 **Key Concepts**: Grüneisen parameters, mode-by-mode analysis, thermal expansion, anharmonicity
 
-### [03-qha-thermodynamics](03-qha-thermodynamics/)
+### [03-qha-thermodynamics](03-SiestaQhaFlowMaker/)
 **Description**: Quasi-harmonic approximation (QHA) for temperature-dependent thermodynamics
 **Difficulty**: Advanced
 **Time**: ~20 min (dry-run), ~12-24 hours (full calculation)
@@ -38,9 +38,9 @@
 
 These tutorials build on each other:
 
-1. **Foundation**: [01-phonons](01-phonons/) - Master basic phonon calculations
-2. **Anharmonicity**: [02-gruneisen-parameters](02-gruneisen-parameters/) - Add volume dependence
-3. **Thermodynamics**: [03-qha-thermodynamics](03-qha-thermodynamics/) - Complete T,P-dependent properties
+1. **Foundation**: [01-phonons](01-SiestaPhononFlowMaker/) - Master basic phonon calculations
+2. **Anharmonicity**: [02-gruneisen-parameters](02-SiestaGruneisenFlowMaker/) - Add volume dependence
+3. **Thermodynamics**: [03-qha-thermodynamics](03-SiestaQhaFlowMaker/) - Complete T,P-dependent properties
 
 **Important**: Each tutorial requires the previous one as foundation!
 

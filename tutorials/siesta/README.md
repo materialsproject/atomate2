@@ -8,8 +8,8 @@ Comprehensive tutorials for learning atomate2siesta workflows, from basic calcul
 
 ## 🆘 Need Help?
 
-- **[Troubleshooting Guide](../docs/source/troubleshooting.rst)** - Solutions to common issues
-- **Cheat Sheets**: [Workflows](../docs/cheatsheets/COMMON_WORKFLOWS.md) | [CLI](../docs/cheatsheets/CLI_COMMANDS.md) | [Parameters](../docs/cheatsheets/PARAMETER_REFERENCE.md)
+- **[Troubleshooting Guide](https://materialsproject.github.io/atomate2/siesta/troubleshooting.html)** - Solutions to common issues
+- **Cheat Sheets**: [Workflows](https://materialsproject.github.io/atomate2/siesta/features.html) | [CLI](https://materialsproject.github.io/atomate2/siesta/cli-tools.html) | [Parameters](https://materialsproject.github.io/atomate2/siesta/features.html)
 
 ## Tutorial Organization
 

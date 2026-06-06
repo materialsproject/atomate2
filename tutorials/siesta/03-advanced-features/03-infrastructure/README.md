@@ -5,7 +5,7 @@
 **Difficulty**: Intermediate to Advanced
 
 **Prerequisites**:
-- Completed basic tutorials ([01-basics](../01-basics/))
+- Completed basic tutorials ([01-basics](../../01-basics/))
 - Access to HPC cluster (for job submission tutorials)
 - MongoDB installation (for database tutorials)
 
@@ -309,7 +309,7 @@ atomate2siesta-cluster info        # Show documentation
 
 After setting up infrastructure, proceed to:
 - **[03-advanced-workflows](../../02-workflows/)** - Run production workflows with your new setup
-- **[05-vibrational-properties](../05-vibrational-properties/)** - Large-scale phonon calculations
+- **[05-vibrational-properties](../../02-workflows/06-vibrational-properties/)** - Large-scale phonon calculations
 - **[06-surfaces-and-adsorption](../../02-workflows/03-surfaces-and-adsorption/)** - High-throughput surface screening
 
 ---

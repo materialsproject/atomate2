@@ -30,7 +30,7 @@ This consolidates 7 example scripts into a single configurable tutorial demonstr
 
 ## Prerequisites
 
-- **Required**: [01-relaxation](../../01-basics/01-relaxation/) completed
+- **Required**: [01-relaxation](../../../01-basics/01-RelaxMaker/) completed
 - **Recommended**: Basic understanding of SIESTA FDF format
 - **Recommended**: Familiarity with k-point meshes and band structures
 
@@ -1046,4 +1046,4 @@ After completing this tutorial:
 
 ---
 
-*Back to [07-advanced-features](../README.md) | [Main Tutorial Index](../../README.md)*
+*Back to [07-advanced-features](../../README.md) | [Main Tutorial Index](../../README.md)*

@@ -3,7 +3,7 @@
 **Category**: 03-advanced-features
 **Difficulty**: Beginner to Intermediate
 **Time**: ~2 min (dry-run), ~10-20 min (full calculation)
-**Prerequisites**: Completed [01-basics](../../01-basics/)
+**Prerequisites**: Completed [01-basics](../../../01-basics/)
 
 ---
 
@@ -224,7 +224,7 @@ maker = apply_tier_preset(maker, "relax_standard")
 ## Best Practices
 
 1. **Start with basic**: Use `tier="basic"` for initial calculations
-2. **Use presets**: Prefer tier presets over manual tier levels (see [06-tier-presets-customization](../06-tier-presets-customization/))
+2. **Use presets**: Prefer tier presets over manual tier levels (see [06-tier-presets-customization](../02-presets/))
 3. **Preview first**: Always use `dry_run=True` to preview parameters
 4. **Document tier**: Keep track of which tier you used for reproducibility
 5. **Override sparingly**: Only override tier defaults when necessary
@@ -239,7 +239,7 @@ maker = apply_tier_preset(maker, "relax_standard")
 - **When**: Internal parameter system, basic control
 - **Example**: `tier="basic"` activates 6 core modules
 
-### Tier Presets ([06-tier-presets-customization](../06-tier-presets-customization/))
+### Tier Presets ([06-tier-presets-customization](../02-presets/))
 - **What**: Material-specific parameter collections
 - **When**: Recommended for most users, includes tier + optimized params
 - **Example**: `"relax_standard"` preset contains `tier="basic"` + recommended parameters
@@ -309,9 +309,9 @@ tier="basic"  # Only 6 core modules
 
 ## Related Tutorials
 
-- **[06-tier-presets-customization](../06-tier-presets-customization/)**: Material-specific tier presets (recommended next step)
-- **[03-powerups](../03-powerups/)**: Dynamic parameter modification
-- **[02-fdf-block-inputs](../02-fdf-block-inputs/)**: Advanced FDF parameters
+- **[06-tier-presets-customization](../02-presets/)**: Material-specific tier presets (recommended next step)
+- **[03-powerups](../../04-structure-tools/03-powerups/)**: Dynamic parameter modification
+- **[02-fdf-block-inputs](../04-fdf-blocks/)**: Advanced FDF parameters
 
 ---
 
@@ -349,8 +349,8 @@ atomate2siesta-presets category 2d
 4. Prefer tier presets over raw tier levels (see tutorial 06)
 5. Use `dry_run=True` to preview parameters before running
 
-**Next step**: Proceed to [06-tier-presets-customization](../06-tier-presets-customization/) to learn about material-specific presets.
+**Next step**: Proceed to [06-tier-presets-customization](../02-presets/) to learn about material-specific presets.
 
 ---
 
-*Back to [03-advanced-features](../README.md) | [Main Tutorial Index](../../README.md)*
+*Back to [03-advanced-features](../../README.md) | [Main Tutorial Index](../../README.md)*

@@ -534,7 +534,7 @@ DZP: -31.634567 eV  (reference)
 
 **Solutions**:
 1. **Run in parallel**: If resources allow
-   - Requires HPC cluster setup (see [04-infrastructure](../../../03-advanced-features/03-infrastructure/))
+   - Requires HPC cluster setup (see [04-infrastructure](../../03-advanced-features/03-infrastructure/))
    - Use `RUN_MODE = "submit"` with jobflow-remote
 
 2. **Reduce system size**: Test with smaller structure first
@@ -624,7 +624,7 @@ atomate2siesta provides many workflow types:
 - Compare basis sets (SZ, DZ, DZP, TZP)
 - This tutorial
 
-**ConvergenceMaker** (see [02-convergence](../../../02-workflows/01-convergence/)):
+**ConvergenceMaker** (see [02-convergence](../../02-workflows/01-convergence/)):
 - K-points convergence
 - Mesh cutoff convergence
 - Systematic parameter testing
@@ -635,11 +635,11 @@ atomate2siesta provides many workflow types:
 - Relax → Static → Band structure
 - Automatic high-symmetry path
 
-**PhononMaker** (see [16-phonon-calculations](../../../02-workflows/06-vibrational-properties/)):
+**PhononMaker** (see [16-phonon-calculations](../../02-workflows/06-vibrational-properties/)):
 - Relax → Force constants → Phonon bands
 - Thermal properties calculation
 
-**EOSMaker** (see [09-equation-of-state](../../../02-workflows/02-equation-of-states/)):
+**EOSMaker** (see [09-equation-of-state](../../02-workflows/02-equation-of-states/)):
 - Multiple volumes → Fit equation of state
 - Bulk modulus, equilibrium volume
 
@@ -653,7 +653,7 @@ atomate2siesta provides many workflow types:
 - Multiple deformations → Elastic tensor
 - Mechanical properties
 
-**SurfaceEnergyMaker** (see [17-surface-energy](../../../02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/)):
+**SurfaceEnergyMaker** (see [17-surface-energy](../../02-workflows/03-surfaces-and-adsorption/01-MultiSurfaceEnergyFlowMaker/)):
 - Multiple surface orientations
 - Convergence vs slab thickness
 
@@ -733,9 +733,9 @@ workflow = Flow(jobs)
 
 After completing this tutorial:
 
-1. **Convergence studies**: [02-convergence](../../../02-workflows/01-convergence/) category
-2. **Advanced workflows**: [03-advanced-workflows](../../../02-workflows/) category
-3. **HPC submission**: [04-infrastructure/02-job-submission](../../../03-advanced-features/03-infrastructure/02-jobflow-remote/)
+1. **Convergence studies**: [02-convergence](../../02-workflows/01-convergence/) category
+2. **Advanced workflows**: [03-advanced-workflows](../../02-workflows/) category
+3. **HPC submission**: [04-infrastructure/02-job-submission](../../03-advanced-features/03-infrastructure/02-jobflow-remote/)
 4. **Custom workflows**: Learn Flow and jobflow patterns
 
 ---

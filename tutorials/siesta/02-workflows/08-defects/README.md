@@ -436,7 +436,7 @@ After completing defect calculations:
 
 - [05-barriers](../05-barriers/) - Defect migration barriers (NEB)
 - [01-convergence](../01-convergence/) - Parameter convergence (critical!)
-- [03-advanced-features/05-charged-calculations](../../03-advanced-features/05-charged-calculations/) - Charged species
+- [03-advanced-features/05-charged-calculations](../../03-advanced-features/02-physics-features/05-charge/) - Charged species
 
 ---
 

@@ -93,7 +93,7 @@ The CLI tool generates a ready-to-run Python script with the same structure as t
 - Automatic preset detection
 - Choice of execution mode (local/remote/dry-run)
 
-See the [CLI Tools documentation](../../../docs/source/cli-tools.rst) for all 13 available workflows.
+See the [CLI Tools documentation](https://materialsproject.github.io/atomate2/siesta/cli-tools.html) for all 13 available workflows.
 
 ---
 
@@ -312,9 +312,9 @@ For Silicon:
 For more sophisticated parameter control and workflow customization:
 
 **📖 Parameter Customization Methods**
-- [Makers vs FlowMakers](../../../docs/source/makers-vs-flowmakers.rst) - Comprehensive guide on when to use `user_params`, tier presets, or powerups
-- [Powerups System](../../../docs/source/features.rst#powerups-system) - Runtime parameter modifications for jobs and flows
-- [Tier System](../../../docs/source/tier-system.rst) - Material-specific parameter presets
+- [Makers vs FlowMakers](https://materialsproject.github.io/atomate2/siesta/makers-vs-flowmakers.html) - Comprehensive guide on when to use `user_params`, tier presets, or powerups
+- [Powerups System](https://materialsproject.github.io/atomate2/siesta/features.html) - Runtime parameter modifications for jobs and flows
+- [Tier System](https://materialsproject.github.io/atomate2/siesta/tier-system.html) - Material-specific parameter presets
 
 **🎯 Quick Examples**
 

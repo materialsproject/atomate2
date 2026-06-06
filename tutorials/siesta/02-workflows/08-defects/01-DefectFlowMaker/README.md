@@ -312,7 +312,7 @@ Formation energies are **very sensitive** to:
 
 #### Generator_01_vacancy.py
 
-**File**: [Generator_01_vacancy.py](Generator_01_vacancy.py)
+**File**: [Generator_01_vacancy.py](Generator_01_vacancy_MoS2.py)
 **Description**: SiestaVacancyGenerator - Programmatic vacancy generation
 **Features**:
 - Direct use of SiestaVacancyGenerator class
@@ -840,7 +840,7 @@ job = maker.make(structure)
 After completing DefectFlowMaker tutorials:
 
 1. **FormationEnergyDiagramFlowMaker**: Complete defect analysis with CTLs, Brouwer diagrams, SRH (5 tutorials!)
-2. **Combine with NEB**: Calculate defect migration barriers ([01-NebDirectFlowMaker](../01-NebDirectFlowMaker/))
+2. **Combine with NEB**: Calculate defect migration barriers ([01-NebDirectFlowMaker](../../05-barriers/01-NebDirectFlowMaker/))
 3. **Advanced corrections**: Kumagai-Oba for anisotropic materials (future)
 4. **Gaussian charge model**: More accurate charge distribution (future)
 

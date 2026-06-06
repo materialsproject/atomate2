@@ -5,7 +5,7 @@
 **Difficulty**: Advanced
 
 **Prerequisites**:
-- Completed [01-basics](../01-basics/) and [02-convergence](../../02-workflows/01-convergence/)
+- Completed [01-basics](../../01-basics/) and [02-convergence](../../02-workflows/01-convergence/)
 - Understanding of surface science concepts
 - Familiarity with Miller indices and slab models
 - Converged bulk calculation parameters
@@ -444,7 +444,7 @@ maker = RelaxMaker(user_params={"spin": "polarized"})
 ## Next Steps
 
 After mastering surfaces and adsorption:
-- Combine with [05-vibrational-properties](../05-vibrational-properties/) for surface phonons
+- Combine with [05-vibrational-properties](../06-vibrational-properties/) for surface phonons
 - Explore [07-advanced-features](../../03-advanced-features/) for workflow automation
 - Study reaction mechanisms (NEB on surfaces)
 

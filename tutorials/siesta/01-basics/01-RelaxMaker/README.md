@@ -379,7 +379,7 @@ atomate2siesta-maker relax Si.cif --preset relax_standard  # With tier preset
 - Automatic preset application
 - Choice of local/remote/dry-run execution
 
-See [CLI Tools documentation](../../../docs/source/cli-tools.rst) for all options.
+See [CLI Tools documentation](https://materialsproject.github.io/atomate2/siesta/cli-tools.html) for all options.
 
 ---
 
@@ -514,7 +514,7 @@ After completing relaxation tutorials:
 - **SIESTA Manual**: Geometry optimization section
 - **Pymatgen**: Structure manipulation and analysis
 - **Jobflow**: Workflow management
-- **atomate2siesta docs**: [Relaxation guide](../../../docs/source/features.rst)
+- **atomate2siesta docs**: [Relaxation guide](https://materialsproject.github.io/atomate2/siesta/features.html)
 
 ---
 
