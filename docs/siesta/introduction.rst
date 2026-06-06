@@ -357,12 +357,13 @@ Community & Support
 License & Citation
 ==================
 
-atomate2siesta is released under the BSD-3-Clause license.
+The SIESTA workflows are part of atomate2 and are distributed under the same
+license as atomate2 (modified BSD, ``BSD-3-Clause-LBNL``).
 
-If you use atomate2siesta in your research, please cite:
+If you use these workflows in your research, please cite:
 
-* The atomate2 framework
-* SIESTA: https://doi.org/10.1088/0953-8984/14/11/302
+* atomate2: Ganose, A. M. et al., *Digital Discovery* (2025), DOI: 10.1039/D5DD00019J
+* SIESTA: Soler, J. M. et al., *J. Phys.: Condens. Matter* **14**, 2745 (2002), DOI: 10.1088/0953-8984/14/11/302
 * Relevant feature papers (phonopy, pymatgen, custodian, jobflow)
 
 See :doc:`contributing` for guidelines on contributing to the project.
