@@ -1530,27 +1530,27 @@ msgstr "هیدروژن‌گونه"
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:941
 #: a0b5c11b991b4595a29c3ae945fd7d62
 msgid "Fixed"
-msgstr ""
+msgstr "ثابت"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:942
 #: 6a031751f8114b828a16cb2fab1ee2b3
 msgid "H"
-msgstr ""
+msgstr "H"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:943
 #: fca2734c0ae8423ba91b5e0bce588bce
 msgid "2.92"
-msgstr ""
+msgstr "۲٫۹۲"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:944
 #: 521d3b80fb2d46b5a52f0b2c9ee423f5
 msgid "1.14"
-msgstr ""
+msgstr "۱٫۱۴"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:945
 #: 7769265ddfe54d2a84c96be2207584ea
 msgid "1.65"
-msgstr ""
+msgstr "۱٫۶۵"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:946
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:949
@@ -1559,173 +1559,173 @@ msgstr ""
 #: 0209bf10d0cd44e79e19c47b21c28695 22515ab8fbea43feadaccf50bce00e8d
 #: 99076d91f74242578d1b0aef2a834e1a d206b3e9f8a04bcbad8aff0f3f4b3617
 msgid "5.00"
-msgstr ""
+msgstr "۵٫۰۰"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:947
 #: 254e7d51ef7748c093eacf0e58eef073
 msgid "Si"
-msgstr ""
+msgstr "Si"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:948
 #: 5f375ffd76ac48c0870ccff2c33ee695
 msgid "4.92"
-msgstr ""
+msgstr "۴٫۹۲"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:950
 #: 0e870ee8081b498880b7c02d6dacaa70
 msgid "7.43"
-msgstr ""
+msgstr "۷٫۴۳"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:952
 #: 7ac63b444a7e4bc09a2c9e2e0ec9bd25
 msgid "Fe"
-msgstr ""
+msgstr "Fe"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:953
 #: 2cbff9b2726c4e2bacf4b30ddc684d1a
 msgid "3.61"
-msgstr ""
+msgstr "۳٫۶۱"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:954
 #: 10566ea9b1d64263b1ab0ddd8908f1e2
 msgid "6.36"
-msgstr ""
+msgstr "۶٫۳۶"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:955
 #: f9227e72611c4f329f00d121cd02dd39
 msgid "6.60"
-msgstr ""
+msgstr "۶٫۶۰"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:958
 #: 7500f4b3fea847a2a25a2565d928e4f1
 msgid "**Descending Zeta Pattern:**"
-msgstr ""
+msgstr "**الگوی نزولی زتا:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:960
 #: 20b0e4f682214604ac3f3fb9580363fd
 msgid "For multiple zeta functions, rc values decrease:"
-msgstr ""
+msgstr "برای توابع زتای متعدد، مقادیر rc کاهش می‌یابند:"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:962
 #: 2492199ad38141aeb75030b3ef7d4797
 msgid "First zeta: Largest rc (most extended orbital)"
-msgstr ""
+msgstr "زتای اول: بزرگ‌ترین rc (گسترده‌ترین اوربیتال)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:963
 #: b6f38b48bef14d7a84ae5349bf74379a
 msgid "Subsequent zetas: rc × 0.85^i (more localized)"
-msgstr ""
+msgstr "زتاهای بعدی: rc × 0.85^i (موضعی‌تر)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:964
 #: 613c8952f9c24109a3049859c1d19d5e
 msgid "Example: 5.00 → 4.25 → 3.61 bohr"
-msgstr ""
+msgstr "مثال: ۵٫۰۰ ← ۴٫۲۵ ← ۳٫۶۱ بور"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:966
 #: dac7cd1061fc4591ac67f76ef99522e9
 msgid "**Multiple n-Shells:**"
-msgstr ""
+msgstr "**لایه‌های n متعدد:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:968
 #: de15adee806c4d4da95caa9e20d5aba4
 msgid "Use ``--n-shells 2`` to include excited shell configurations:"
-msgstr ""
+msgstr "از ``--n-shells 2`` برای گنجاندن آرایش لایه‌های برانگیخته استفاده کنید:"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1000
 #: 34139f77d76e4c2895097ace517f5c44
 msgid "**Features in Output:**"
-msgstr ""
+msgstr "**ویژگی‌ها در خروجی:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1002
 #: 0754fe6bb94c4e81bb3fb2ae09ec8549
 msgid "Orbital name comments (3s, 3p, 3d)"
-msgstr ""
+msgstr "توضیحات نام اوربیتال (3s، 3p، 3d)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1003
 #: 13594214625146a5bb42ba796265c445
 msgid "Shell type indicators ((excited) for n > valence)"
-msgstr ""
+msgstr "نشانگرهای نوع لایه ((excited) برای n > ظرفیت)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1004
 #: 792201ad43194798aa4e1d432d1ea5e2
 msgid "Polarization type labels (d-polarization, f-polarization)"
-msgstr ""
+msgstr "برچسب‌های نوع قطبش (قطبش d، قطبش f)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1005
 #: d2f8d698ac304d2b92934faa87289af9
 msgid "Descending rc values for proper convergence"
-msgstr ""
+msgstr "مقادیر نزولی rc برای همگرایی مناسب"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1011
 #: 68df6d32c6ad44beb0fd7d5c248ce544
 msgid ""
 "**Quick basis generation** - From pseudopotential to SIESTA input in "
 "seconds"
-msgstr ""
+msgstr "**تولید سریع پایه** - از شبه‌پتانسیل تا ورودی SIESTA در چند ثانیه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1012
 #: 65a0d68125dc4f52ad10341510422ef0
 msgid "**Correct conventions** - Follows SIESTA best practices automatically"
-msgstr ""
+msgstr "**قراردادهای صحیح** - به‌طور خودکار از بهترین شیوه‌های SIESTA پیروی می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1013
 #: 8ce89d3cda02499488abd3b06e677680
 msgid "**Flexible customization** - Control basis size and shell depth"
-msgstr ""
+msgstr "**سفارشی‌سازی منعطف** - کنترل اندازهٔ پایه و عمق لایه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1014
 #: 954f6bcba6b74d9c938d036312cb3623
 msgid "**Inspect before use** - View valence shells with ``show`` command"
-msgstr ""
+msgstr "**بازرسی پیش از استفاده** - مشاهدهٔ لایه‌های ظرفیت با فرمان ``show``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1019
 #: 1bc8b7c58406446092d17451e99f052a
 msgid "Pseudopotential Plotting CLI"
-msgstr ""
+msgstr "CLI رسم شبه‌پتانسیل"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1021
 #: 01d521cc9c30479cacf4a686a0fcbecc
 msgid "**Command:** ``atomate2siesta-plot-pseudo``"
-msgstr ""
+msgstr "**فرمان:** ``atomate2siesta-plot-pseudo``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1023
 #: e21228ff16e9491aa116dc0c14d60688
 msgid "**Purpose:** Generate comprehensive plots from PSML pseudopotential files"
-msgstr ""
+msgstr "**هدف:** تولید نمودارهای جامع از فایل‌های شبه‌پتانسیل PSML"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1028
 #: 153a52f9fe9d4ee6b9145349bbc42ce7
 msgid ""
 "**Multiple plot types** - wavefunctions, potentials, 3D potential, "
 "occupation, density"
-msgstr ""
+msgstr "**انواع نمودار متعدد** - توابع موج، پتانسیل‌ها، پتانسیل سه‌بعدی، اشغال، چگالی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1029
 #: 225b7b582b6f4124b4b4a8fbdbecf88b
 msgid "**Flexible output** - Individual or all plots at once"
-msgstr ""
+msgstr "**خروجی منعطف** - نمودارهای جداگانه یا همه به‌یک‌باره"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1030
 #: 39ba7266fd9e453288521ff111166f88
 msgid "**Customizable range** - Control radial distance for different plot types"
-msgstr ""
+msgstr "**بازهٔ قابل سفارشی‌سازی** - کنترل فاصلهٔ شعاعی برای انواع مختلف نمودار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1031
 #: 0fb197d9e463464aa4bb8f8f3c4e24d5
 msgid ""
 "**Rich visualization** - Uses seaborn and matplotlib for publication-"
 "quality plots"
-msgstr ""
+msgstr "**مصورسازی Rich** - استفاده از seaborn و matplotlib برای نمودارهای در سطح کیفیت انتشار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1032
 #: a6526012c571475385b8436cc119af6d
 msgid "**PSML format support** - XML-based pseudopotential markup language"
-msgstr ""
+msgstr "**پشتیبانی از قالب PSML** - زبان نشانه‌گذاری شبه‌پتانسیل مبتنی بر XML"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1035
 #: b545e6fe4680479bb8bc4c0739695fbe
 msgid "Available Plot Types"
-msgstr ""
+msgstr "انواع نمودار موجود"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1064
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1127
@@ -1733,204 +1733,204 @@ msgstr ""
 #: 026d05b32a89416d8b29037f3caa4e36 91edda8ac75b4dfbac3c8f22b2d18b2c
 #: 973d29b08f0142c0b01c3dcb66ae6d55
 msgid "Command Options"
-msgstr ""
+msgstr "گزینه‌های فرمان"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1077
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:2390
 #: c31fec818a7049c19314206831576da6 e5ce03a9782340a6b76ac842dfba3bcb
 msgid "Generated Outputs"
-msgstr ""
+msgstr "خروجی‌های تولیدشده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1079
 #: 6bb05e7619a046ebbca3d416d4d6ccab
 msgid "Depending on ``--plot-type``, the following files are created:"
-msgstr ""
+msgstr "بسته به ``--plot-type``، فایل‌های زیر ایجاد می‌شوند:"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1081
 #: c294eacc6dfb45288804eb39ee97ab18
 msgid "``<element>_wavefunctions.png`` - Radial wavefunctions"
-msgstr ""
+msgstr "``<element>_wavefunctions.png`` - توابع موج شعاعی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1082
 #: 876f1d2276274f94a06a8b2b12077d15
 msgid "``<element>_potentials.png`` - Local and non-local potentials"
-msgstr ""
+msgstr "``<element>_potentials.png`` - پتانسیل‌های موضعی و غیرموضعی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1083
 #: 16ebee6eac0a459bad36a9e33e566234
 msgid "``<element>_potential_3d.png`` - 3D potential visualization"
-msgstr ""
+msgstr "``<element>_potential_3d.png`` - مصورسازی پتانسیل سه‌بعدی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1084
 #: c8545e2a58ae418f9ab9d7831dd37947
 msgid "``<element>_occupation.png`` - Valence shell occupations"
-msgstr ""
+msgstr "``<element>_occupation.png`` - اشغال لایه‌های ظرفیت"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1085
 #: bab134ca54c74f268cc840ebb763f0cb
 msgid "``<element>_density.png`` - Radial charge density"
-msgstr ""
+msgstr "``<element>_density.png`` - چگالی بار شعاعی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1092
 #: 7b82fad3520a495493e335d9fb14d926
 msgid "Structure Information CLI"
-msgstr ""
+msgstr "CLI اطلاعات ساختار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1094
 #: 954656012a6749db9cd0fc488b63d760
 msgid "**Command:** ``atomate2siesta-structure info``"
-msgstr ""
+msgstr "**فرمان:** ``atomate2siesta-structure info``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1096
 #: 3027251219b046abab2fc39fc213339b
 msgid "**Purpose:** Display comprehensive information about structure files"
-msgstr ""
+msgstr "**هدف:** نمایش اطلاعات جامع دربارهٔ فایل‌های ساختار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1101
 #: e18cd6f8f5e046af881ecf2b162a19ad
 msgid "**Crystal symmetry analysis** - Space group, crystal system, point group"
-msgstr ""
+msgstr "**تحلیل تقارن بلوری** - گروه فضایی، سامانهٔ بلوری، گروه نقطه‌ای"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1102
 #: ec7fbff6db55442dbd70ad9b808d7194
 msgid "**Lattice parameters** - a, b, c, α, β, γ, volume"
-msgstr ""
+msgstr "**پارامترهای شبکه** - a، b، c، α، β، γ، حجم"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1103
 #: 0b1e6c706f8943e5923ccb1c55422865
 msgid "**Atomic composition** - Element counts and percentages"
-msgstr ""
+msgstr "**ترکیب اتمی** - شمار و درصد عناصر"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1104
 #: c7cdecc3608643c09bfb1413101e9d65
 msgid "**Magnetic property detection** - Automatic detection of magnetic elements"
-msgstr ""
+msgstr "**تشخیص خواص مغناطیسی** - تشخیص خودکار عناصر مغناطیسی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1105
 #: 38c45d90850a49519eefcca7bdb817bb
 msgid "**Per-site magnetic moments** - Display individual atom moments"
-msgstr ""
+msgstr "**گشتاورهای مغناطیسی هر جایگاه** - نمایش گشتاور تک‌تک اتم‌ها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1106
 #: 8cd5434e6b274615945da562aa02101d
 msgid "**Multi-format support** - CIF, XSF, XV, FDF, POSCAR formats"
-msgstr ""
+msgstr "**پشتیبانی از چند قالب** - قالب‌های CIF، XSF، XV، FDF، POSCAR"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1107
 #: 3d6d3c33e82f4416abbb2c3520a10e1c
 msgid "**Rich terminal UI** - Colored tables with clear organization"
-msgstr ""
+msgstr "**رابط کاربری ترمینال Rich** - جدول‌های رنگی با سازمان‌دهی شفاف"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1139
 #: 32fd3dc6cb4f427e96096370880f145f
 msgid "Output Information"
-msgstr ""
+msgstr "اطلاعات خروجی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1141
 #: 951a1f0b72fb4ba8a3f489227fd6aa8c
 msgid "**Crystal System & Symmetry:**"
-msgstr ""
+msgstr "**سامانهٔ بلوری و تقارن:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1143
 #: 0477647d0e0843b69f88c98962f3b73e
 msgid "Chemical formula (reduced and full)"
-msgstr ""
+msgstr "فرمول شیمیایی (تقلیل‌یافته و کامل)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1144
 #: f60f58ae98854d1498297dd8c68719b6
 msgid "Space group symbol and number"
-msgstr ""
+msgstr "نماد و شمارهٔ گروه فضایی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1145
 #: efbbf042a7c54c239ee772848d63c257
 msgid "Crystal system (cubic, orthorhombic, etc.)"
-msgstr ""
+msgstr "سامانهٔ بلوری (مکعبی، اورتورومبیک و غیره)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1146
 #: a1ed314df2444f38a14b91206391ed3c
 msgid "Point group"
-msgstr ""
+msgstr "گروه نقطه‌ای"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1147
 #: ce913cb9813f4733bc9c783e13d3636e
 msgid "Number of sites (input, primitive, conventional)"
-msgstr ""
+msgstr "تعداد جایگاه‌ها (ورودی، بدوی، قراردادی)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1149
 #: c85ab5bf92f440c5a52ed221ea82dff0
 msgid "**Lattice Parameters:**"
-msgstr ""
+msgstr "**پارامترهای شبکه:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1151
 #: 04211f17ac894c8d9e207984eaa66cd4
 msgid "Lattice constants (a, b, c)"
-msgstr ""
+msgstr "ثابت‌های شبکه (a، b، c)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1152
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:2078
 #: ad69e700ec954fcea735e2110c4751df ff72c9cc19334459a502b813c625a051
 msgid "Lattice angles (α, β, γ)"
-msgstr ""
+msgstr "زوایای شبکه (α، β، γ)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1153
 #: 9b53f506955f41ac9200963e21cc65bf
 msgid "Unit cell volume"
-msgstr ""
+msgstr "حجم سلول واحد"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1155
 #: 3d3399c649214304985544cd25ab0bbe
 msgid "**Atomic Composition:**"
-msgstr ""
+msgstr "**ترکیب اتمی:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1157
 #: f6851c11cffa4468a01b8c3ab5ba3c85
 msgid "Element counts"
-msgstr ""
+msgstr "شمار عناصر"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1158
 #: 4422be8c15f34f9fb2afa2309dfbe659
 msgid "Atomic percentages"
-msgstr ""
+msgstr "درصدهای اتمی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1159
 #: acb62f5a76e9419e883b45b0611d0685
 msgid "Total number of atoms"
-msgstr ""
+msgstr "تعداد کل اتم‌ها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1161
 #: 1f148048a70347e18cab6aab6e8cccdb
 msgid "**Magnetic Properties** (if enabled):"
-msgstr ""
+msgstr "**خواص مغناطیسی** (در صورت فعال‌بودن):"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1163
 #: 6553f8321e7e4ec2a4e37509eb9dec17
 msgid "Magnetic moment detection status"
-msgstr ""
+msgstr "وضعیت تشخیص گشتاور مغناطیسی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1164
 #: 12d961abafd44de09736b511c9619085
 msgid "Number of magnetic sites"
-msgstr ""
+msgstr "تعداد جایگاه‌های مغناطیسی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1165
 #: 7bf007148f694d509a001a8a59792b9a
 msgid "Magnetic ordering (FM/AFM/non-magnetic)"
-msgstr ""
+msgstr "آرایش مغناطیسی (FM/AFM/غیرمغناطیسی)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1166
 #: fe84a71da7ea4501b31b5bc497426e0a
 msgid "Unique magnetic moment values"
-msgstr ""
+msgstr "مقادیر یکتای گشتاور مغناطیسی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1167
 #: 79c38e6c487c4c27830e0b5134b9d698
 msgid "Per-site magnetic moments (first 20 shown)"
-msgstr ""
+msgstr "گشتاورهای مغناطیسی هر جایگاه (۲۰ مورد اول نمایش داده می‌شود)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1204
 #: ea6d226f697f455482b20faedcff4822
 msgid "Structure Manipulation CLI"
-msgstr ""
+msgstr "CLI دستکاری ساختار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1206
 #: 464d0b2cd2e7445f9127e75dd34cb6fc
@@ -1938,180 +1938,180 @@ msgstr ""
 msgid ""
 "**Command:** ``atomate2siesta-structure "
 "{scale|supercell|rotate|translate|slab|vacuum|stack}``"
-msgstr ""
+msgstr "**فرمان:** ``atomate2siesta-structure {scale|supercell|rotate|translate|slab|vacuum|stack}``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1208
 #: 4a763e6bcdca49599a8edf452c08ad2b
 msgid ""
 "**Purpose:** Crystallographic operations for structure modification and "
 "preparation"
-msgstr ""
+msgstr "**هدف:** عملیات بلورشناختی برای اصلاح و آماده‌سازی ساختار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1213
 #: 059e0e3340ac4941b087854dab3271da
 msgid ""
 "The structure manipulation toolkit provides 16 commands organized in 4 "
 "tiers:"
-msgstr ""
+msgstr "جعبه‌ابزار دستکاری ساختار ۱۶ فرمان سازمان‌دهی‌شده در ۴ لایه ارائه می‌دهد:"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1215
 #: e5481b2dc0474aeeb4101386ddf307f0
 msgid "**Tier 1: Basic Operations (6 commands)**"
-msgstr ""
+msgstr "**لایهٔ ۱: عملیات پایه (۶ فرمان)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1217
 #: cbb9ff4c3d844260b7cee3d21dacfc5e
 msgid "**info** - Structure information and symmetry analysis"
-msgstr ""
+msgstr "**info** - اطلاعات ساختار و تحلیل تقارن"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1218
 #: 5f2daf6991094563a40828c90dc6ffa4
 msgid "**convert** - Format conversion (SIESTA ↔ CIF/POSCAR/XSF)"
-msgstr ""
+msgstr "**convert** - تبدیل قالب (SIESTA ↔ CIF/POSCAR/XSF)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1219
 #: b507a9e1b6d84d51ae00e4b5b45517a6
 msgid "**scale** - Lattice parameter scaling (EOS, pressure, strain studies)"
-msgstr ""
+msgstr "**scale** - مقیاس‌بندی پارامتر شبکه (مطالعات EOS، فشار، کرنش)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1220
 #: b85149129b8044ab93a2431db9efb00f
 msgid "**supercell** - Supercell generation (phonons, defects, surfaces)"
-msgstr ""
+msgstr "**supercell** - تولید ابرسلول (فونون‌ها، نقص‌ها، سطوح)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1221
 #: 15349dc83d77443aa90e79f4d7ce8ba2
 msgid "**rotate** - Structure rotation (alignment, reorientation, surface cuts)"
-msgstr ""
+msgstr "**rotate** - چرخش ساختار (هم‌ترازی، جهت‌دهی مجدد، برش‌های سطح)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1222
 #: a4938f558b9848ffb7e80bfbd40d3192
 msgid ""
 "**translate** - Atomic translation (centering, interfaces, "
 "heterostructures)"
-msgstr ""
+msgstr "**translate** - انتقال اتمی (مرکزدهی، فصل‌مشترک‌ها، ناهمگن‌ساختارها)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1224
 #: 04321cef0b1e484ca47879ef57e1278f
 msgid "**Tier 2: Surface & 2D Operations (3 commands)**"
-msgstr ""
+msgstr "**لایهٔ ۲: عملیات سطح و دوبعدی (۳ فرمان)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1226
 #: ea65a7f207d94837bf7e11f388e503d6
 msgid "**slab** - Surface slab generation (adsorption, catalysis)"
-msgstr ""
+msgstr "**slab** - تولید اسلب سطح (جذب، کاتالیز)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1227
 #: cc9cccbdfc7e4208b5d5adfe96fb3ca5
 msgid "**vacuum** - Vacuum spacing control (2D materials, surfaces)"
-msgstr ""
+msgstr "**vacuum** - کنترل فاصلهٔ خلأ (مواد دوبعدی، سطوح)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1228
 #: bd9e4934b2c24fefb620e49d934bb89b
 msgid "**stack** - Layer stacking (heterostructures, multilayers)"
-msgstr ""
+msgstr "**stack** - چینش لایه‌ها (ناهمگن‌ساختارها، چندلایه‌ها)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1230
 #: 3e1589d2a6584b099a72d4dc8127bd13
 msgid "**Tier 3: Advanced Atomic Manipulation (4 commands)**"
-msgstr ""
+msgstr "**لایهٔ ۳: دستکاری اتمی پیشرفته (۴ فرمان)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1232
 #: 2c3c20ae083749efac7136f860d52093
 msgid "**substitute** - Atomic substitution (doping, alloying, defects)"
-msgstr ""
+msgstr "**substitute** - جانشینی اتمی (آلایش، آلیاژسازی، نقص‌ها)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1233
 #: d479c6dfb0fe4233942492d9e3608900
 msgid "**remove** - Atom removal (vacancies, cleanup, proximity-based)"
-msgstr ""
+msgstr "**remove** - حذف اتم (جای‌خالی‌ها، پاک‌سازی، مبتنی بر مجاورت)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1234
 #: b47cb3c6102e4de2a692482d39a7b251
 msgid "**add** - Add atoms/molecules (adsorbates, dopants, oriented placement)"
-msgstr ""
+msgstr "**add** - افزودن اتم‌ها/مولکول‌ها (جذب‌شونده‌ها، آلاینده‌ها، جای‌گذاری جهت‌دار)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1235
 #: 4f6952a4cdbe448a9e367cec9da8133c
 msgid "**perturb** - Random perturbations (MD initialization, transition states)"
-msgstr ""
+msgstr "**perturb** - اختلال‌های تصادفی (مقداردهی اولیهٔ MD، حالت‌های گذار)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1237
 #: 98350003e2874f928571c4210ede476a
 msgid "**Tier 4: Analysis & Optimization (3 commands)**"
-msgstr ""
+msgstr "**لایهٔ ۴: تحلیل و بهینه‌سازی (۳ فرمان)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1239
 #: 25636134bc4c4043b647bf683122e655
 msgid ""
 "**compare** - Structure comparison (RMSD, lattice differences, "
 "composition)"
-msgstr ""
+msgstr "**compare** - مقایسهٔ ساختار (RMSD، تفاوت‌های شبکه، ترکیب)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1240
 #: d6c9af556ba2466bb6a8016528b63d96
 msgid ""
 "**standardize** - Cell standardization (conventional, primitive, "
 "international)"
-msgstr ""
+msgstr "**standardize** - استانداردسازی سلول (قراردادی، بدوی، بین‌المللی)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1241
 #: 2db0ee2162084f5190e3a08536378459
 msgid ""
 "**optimize-cell** - Cell optimization (Niggli reduction, "
 "orthogonalization)"
-msgstr ""
+msgstr "**optimize-cell** - بهینه‌سازی سلول (تقلیل نیگلی، متعامدسازی)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1243
 #: 718efc2f85b24aa0b3d390e43dc468ce
 msgid "All commands share common features:"
-msgstr ""
+msgstr "همهٔ فرمان‌ها ویژگی‌های مشترکی دارند:"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1245
 #: 33dae60c843b49b385886f3b93f7c7f1
 msgid "**Multiple output formats** - CIF, POSCAR, XSF, JSON, FDF, XV"
-msgstr ""
+msgstr "**قالب‌های خروجی متعدد** - CIF، POSCAR، XSF، JSON، FDF، XV"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1246
 #: 4ca8e225ab82454d91b774e5fa0e0f18
 msgid "**Rich comparison tables** - Before/after with changes/multipliers"
-msgstr ""
+msgstr "**جدول‌های مقایسهٔ Rich** - پیش/پس با تغییرات/ضرایب"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1247
 #: 75f2fd322bf04c6182291fad89b6de36
 msgid ""
 "**Site property preservation** - Magnetic moments, selective dynamics, "
 "etc."
-msgstr ""
+msgstr "**حفظ ویژگی‌های جایگاه** - گشتاورهای مغناطیسی، دینامیک انتخابی و غیره"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1248
 #: c142bea0292a40458f161ff2dffc5b99
 msgid ""
 "**Automatic output naming** - prefix_input.ext (e.g., "
 "scaled_structure.cif)"
-msgstr ""
+msgstr "**نام‌گذاری خودکار خروجی** - prefix_input.ext (برای مثال scaled_structure.cif)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1249
 #: 1a5cc0558aa144b792ead18a8a2b5679
 msgid "**Comprehensive validation** - Clear error messages and usage tips"
-msgstr ""
+msgstr "**اعتبارسنجی جامع** - پیام‌های خطای شفاف و نکات استفاده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1250
 #: 48cace6b51bb461c8250d491ade21409
 msgid "**Beautiful terminal UI** - Color-coded output with progress indicators"
-msgstr ""
+msgstr "**رابط کاربری ترمینال زیبا** - خروجی کدگذاری‌رنگی با نشانگرهای پیشرفت"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1253
 #: 5dc573ea57ad441e8ff00cc6a80823f8
 msgid "scale - Lattice Parameter Scaling"
-msgstr ""
+msgstr "scale - مقیاس‌بندی پارامتر شبکه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1255
 #: ba31db0d912b40a28cd9c9107f347577
 msgid ""
 "**Purpose:** Scale lattice parameters for equation of state (EOS) "
 "studies, pressure simulations, and strain analysis"
-msgstr ""
+msgstr "**هدف:** مقیاس‌بندی پارامترهای شبکه برای مطالعات معادلهٔ حالت (EOS)، شبیه‌سازی‌های فشار و تحلیل کرنش"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1257
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1314
@@ -2135,7 +2135,7 @@ msgstr ""
 #: a911f4d4460a497d94429d3eb6224fe2 b4b006f3809a4d5289ce35e142ad028b
 #: b9ee48baf1954c8eb23ffa46bb7ef376 cfe8f3d98343425da615d913f74bf7b6
 msgid "**Quick Examples:**"
-msgstr ""
+msgstr "**مثال‌های سریع:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1276
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1333
@@ -2144,7 +2144,7 @@ msgstr ""
 #: 12cd9f0c148847718a76f2674ad07992 19349951b2fe48cba4fbc4ae3364a9bb
 #: a1c11caa9777422fa2d66cc42eebe31c d6e539866f654da08fe340f1d0b88563
 msgid "**Command Options:**"
-msgstr ""
+msgstr "**گزینه‌های فرمان:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1294
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1361
@@ -2168,27 +2168,27 @@ msgstr ""
 #: d845b2b5ee3846fcbf1ef297f22dd172 e77b9b43394e432491ac17fedae99465
 #: f5336b7bc4604acaa23739658d2bde21 fdd036495aee4ad1927ebc6b74162dc7
 msgid "**Use Cases:**"
-msgstr ""
+msgstr "**موارد کاربرد:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1296
 #: 7695b5113bd244f4a1d9f87997da3472
 msgid "**EOS workflows** - Generate 11 structures with different volumes"
-msgstr ""
+msgstr "**گردش‌کارهای EOS** - تولید ۱۱ ساختار با حجم‌های مختلف"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1297
 #: 4b4eb591ec904896a253932b4f1e99aa
 msgid "**Pressure studies** - Simulate crystal under compression/expansion"
-msgstr ""
+msgstr "**مطالعات فشار** - شبیه‌سازی بلور تحت فشردگی/انبساط"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1298
 #: 2b5c00420356463882d1d180641a6a69
 msgid "**Strain engineering** - Apply controlled strain to structures"
-msgstr ""
+msgstr "**مهندسی کرنش** - اعمال کرنش کنترل‌شده به ساختارها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1299
 #: eeb8179c59244db5b99434cdba6985c8
 msgid "**Lattice optimization** - Find equilibrium lattice constants"
-msgstr ""
+msgstr "**بهینه‌سازی شبکه** - یافتن ثابت‌های شبکهٔ تعادلی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1301
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1368
@@ -2212,332 +2212,332 @@ msgstr ""
 #: d9fb7517535946dc817ddc6db2633532 dbe6f8ec21394a3b96b83f1b43de634d
 #: ded4d1f47f024e11bd21e9fe2b66e56e ed85ee7e6ca245a59aec0338850539a3
 msgid "**Technical Details:**"
-msgstr ""
+msgstr "**جزئیات فنی:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1303
 #: 49e5330166e24b49bdcf92cdcaffa8bc
 msgid "Uniform scaling: V_new = V_orig × factor³"
-msgstr ""
+msgstr "مقیاس‌بندی یکنواخت: V_new = V_orig × factor³"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1304
 #: 182327c0857941b2928596efa0f3656e
 msgid "Volume scaling: Finds factor where V_new = target_volume"
-msgstr ""
+msgstr "مقیاس‌بندی حجم: ضریبی می‌یابد که در آن V_new = target_volume"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1305
 #: 4c5350da333d49adbe6c4466a1b7ec62
 msgid "Strain scaling: V_new = V_orig × (1 + strain)"
-msgstr ""
+msgstr "مقیاس‌بندی کرنش: V_new = V_orig × (1 + strain)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1306
 #: 54b9e760f65f46289c3c81b946d34466
 msgid "Series generation: Linear spacing between min and max factors"
-msgstr ""
+msgstr "تولید سری: فاصله‌گذاری خطی بین ضرایب کمینه و بیشینه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1307
 #: 8f7e426a868e4560ab31e94911925787
 msgid "Preserves fractional coordinates during scaling"
-msgstr ""
+msgstr "مختصات کسری را حین مقیاس‌بندی حفظ می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1310
 #: e99f12928a6e40758ce675172b7a6a1a
 msgid "supercell - Supercell Generation"
-msgstr ""
+msgstr "supercell - تولید ابرسلول"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1312
 #: 93644130334044c09d162177a2a195a0
 msgid ""
 "**Purpose:** Generate supercells for phonon calculations, defect studies,"
 " and surface modeling"
-msgstr ""
+msgstr "**هدف:** تولید ابرسلول‌ها برای محاسبات فونون، مطالعات نقص و مدل‌سازی سطح"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1348
 #: 01419c053cd94ebdb861fc02a5a6c634
 msgid "**Automatic Sizing:**"
-msgstr ""
+msgstr "**اندازه‌گذاری خودکار:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1350
 #: 260c4155fc024472a09bc9dc90fa9c92
 msgid ""
 "**min-length mode**: Calculates nx = ceil(min_length / a), similarly for "
 "ny, nz"
-msgstr ""
+msgstr "**حالت min-length**: nx = ceil(min_length / a) را محاسبه می‌کند، به‌همین‌ترتیب برای ny، nz"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1351
 #: 6974b7f8cf1e455dbe0bc1fb8ec2c908
 msgid "**min-atoms mode**: Finds cubic supercell n³ where n³ × N_unit ≥ min_atoms"
-msgstr ""
+msgstr "**حالت min-atoms**: ابرسلول مکعبی n³ می‌یابد که در آن n³ × N_unit ≥ min_atoms"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1352
 #: 2c980106de4b4942913b7f0fa198ae55
 msgid "**Manual matrix**: Direct specification for precise control"
-msgstr ""
+msgstr "**ماتریس دستی**: مشخص‌سازی مستقیم برای کنترل دقیق"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1354
 #: 5db7091b266d45eba238e74f7d3a067f
 msgid "**Computation Estimates** (with ``--show-estimate``):"
-msgstr ""
+msgstr "**برآوردهای محاسبه** (با ``--show-estimate``):"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1356
 #: 233b35655f5a408e9bf37525fc919cc7
 msgid "**Phonon displacements**: N_atoms × 3 × 2 (±x, ±y, ±z)"
-msgstr ""
+msgstr "**جابه‌جایی‌های فونون**: N_atoms × 3 × 2 (±x، ±y، ±z)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1357
 #: 6c9db6c67f9748f192f4b40931f4f7cc
 msgid "**Estimated time**: ~5 min per displacement (rough estimate)"
-msgstr ""
+msgstr "**زمان برآوردی**: ~۵ دقیقه به ازای هر جابه‌جایی (برآورد تقریبی)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1358
 #: 638a7609f6034df7be21f3e3bb220fdb
 msgid "**Memory estimate**: ~100 MB per atom for wavefunctions"
-msgstr ""
+msgstr "**برآورد حافظه**: ~۱۰۰ مگابایت به ازای هر اتم برای توابع موج"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1359
 #: acba7af85a8041d6af2b0a92e37e1f46
 msgid "**NEB estimates**: 5-7 images, ~10-30 min per image"
-msgstr ""
+msgstr "**برآوردهای NEB**: ۵ تا ۷ تصویر، ~۱۰ تا ۳۰ دقیقه به ازای هر تصویر"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1363
 #: dda4c8ecf1664f03b261365c117f3a74
 msgid ""
 "**Phonon calculations** - Finite displacement method (typical: 2×2×2 or "
 "3×3×3)"
-msgstr ""
+msgstr "**محاسبات فونون** - روش جابه‌جایی محدود (معمول: ۲×۲×۲ یا ۳×۳×۳)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1364
 #: b0e980fc94ff47e8a68f8af5e5bf92b9
 msgid ""
 "**Defect studies** - Avoid spurious interactions (typical: 10 Å "
 "separation)"
-msgstr ""
+msgstr "**مطالعات نقص** - اجتناب از برهم‌کنش‌های کاذب (معمول: جدایش ۱۰ آنگستروم)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1365
 #: 631b416ec7314137ab5dee185549b406
 msgid "**Surface modeling** - Periodic boundary conditions for slabs"
-msgstr ""
+msgstr "**مدل‌سازی سطح** - شرایط مرزی تناوبی برای اسلب‌ها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1366
 #: 68c57138e02044ae89011620d8c489da
 msgid "**Alloying studies** - Create large cells for random substitution"
-msgstr ""
+msgstr "**مطالعات آلیاژسازی** - ایجاد سلول‌های بزرگ برای جانشینی تصادفی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1370
 #: be347a646f824896a160c04278f2ef4b
 msgid "Diagonal supercell matrices only: [[nx,0,0], [0,ny,0], [0,0,nz]]"
-msgstr ""
+msgstr "فقط ماتریس‌های ابرسلول قطری: [[nx,0,0], [0,ny,0], [0,0,nz]]"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1371
 #: 82231b89858240f2b38b1c2e2413c361
 msgid "Site properties automatically propagated (magmom, selective_dynamics)"
-msgstr ""
+msgstr "ویژگی‌های جایگاه به‌طور خودکار منتشر می‌شوند (magmom، selective_dynamics)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1372
 #: 93b3ebe87a1c4e6e8629eecde7ae2ab9
 msgid "Pymatgen Structure.make_supercell() backend"
-msgstr ""
+msgstr "بک‌اند Pymatgen Structure.make_supercell()"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1373
 #: fcb2c328ccfd4f23833926abece901f5
 msgid "Lattice multipliers: a_new = a × nx, b_new = b × ny, c_new = c × nz"
-msgstr ""
+msgstr "ضرایب شبکه: a_new = a × nx، b_new = b × ny، c_new = c × nz"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1374
 #: e32e6e3775fe4b5a91eade8ab56622b5
 msgid "Volume multiplier: V_new = V_orig × nx × ny × nz"
-msgstr ""
+msgstr "ضریب حجم: V_new = V_orig × nx × ny × nz"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1377
 #: 8fde1b8bb5114ea2848af2dafab24d8d
 msgid "rotate - Structure Rotation"
-msgstr ""
+msgstr "rotate - چرخش ساختار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1379
 #: f5c089f4d9fa48a0b209cb1cd3e24030
 msgid ""
 "**Purpose:** Rotate structures for surface preparation, alignment, and "
 "visualization"
-msgstr ""
+msgstr "**هدف:** چرخش ساختارها برای آماده‌سازی سطح، هم‌ترازی و مصورسازی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1419
 #: 091df038c2224b12b598d529b5406c86
 msgid "**Rotation Methods:**"
-msgstr ""
+msgstr "**روش‌های چرخش:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1421
 #: cc1cc728721440fbb0813f83d5f63353
 msgid "**Axis-angle**: Right-hand rule rotation about Cartesian axis"
-msgstr ""
+msgstr "**محور-زاویه**: چرخش طبق قاعدهٔ دست راست حول محور کارتزین"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1422
 #: 0817a21d0eb74711a986c5156019572b
 msgid "**Euler angles**: ZXZ convention (intrinsic rotations)"
-msgstr ""
+msgstr "**زوایای اویلر**: قرارداد ZXZ (چرخش‌های درونی)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1423
 #: 16e1a44636824de7aa79aa867ca308d9
 msgid "**Miller alignment**: Aligns crystallographic direction to Cartesian axis"
-msgstr ""
+msgstr "**هم‌ترازی میلر**: راستای بلورشناختی را با محور کارتزین هم‌تراز می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1424
 #: 00a8c31b6a34479e8fcd0df16fdd6083
 msgid ""
 "**Atoms-only**: Rotates atomic positions, cell unchanged (fractional "
 "coords modified)"
-msgstr ""
+msgstr "**فقط اتم‌ها**: موقعیت اتم‌ها را می‌چرخاند، سلول بدون تغییر (مختصات کسری اصلاح می‌شوند)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1428
 #: 2bb087dde2de41fca1ec4b21810f15b9
 msgid ""
 "**Surface preparation** - Align direction for slab generation (e.g., "
 "[111] → z)"
-msgstr ""
+msgstr "**آماده‌سازی سطح** - هم‌تراز کردن راستا برای تولید اسلب (برای مثال [111] ← z)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1429
 #: f7ad346cdbe7466baab15e082a72cff3
 msgid "**Grain boundaries** - Controlled misorientation between crystals"
-msgstr ""
+msgstr "**مرزدانه‌ها** - بدجهت‌گیری کنترل‌شده بین بلورها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1430
 #: e09d10eae1c5405795bcd19c57010eab
 msgid "**Visualization** - Standard orientation for publication figures"
-msgstr ""
+msgstr "**مصورسازی** - جهت‌گیری استاندارد برای شکل‌های انتشار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1431
 #: 61be5f92dd6647caaa1cb5a0c5fb8151
 msgid "**Nanostructure alignment** - Position before stacking/combining"
-msgstr ""
+msgstr "**هم‌ترازی نانوساختار** - موقعیت‌دهی پیش از چینش/ترکیب"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1435
 #: 65c4d1e3b243435ab6f2c76f4e417fa4
 msgid "Uses scipy.spatial.transform.Rotation for robust matrices"
-msgstr ""
+msgstr "از scipy.spatial.transform.Rotation برای ماتریس‌های مقاوم استفاده می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1436
 #: 595c21802f9342c793e03bd8d9fe103f
 msgid "Pymatgen SymmOp for structure transformations"
-msgstr ""
+msgstr "Pymatgen SymmOp برای تبدیل‌های ساختار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1437
 #: 4901d808b7c54e7d94a4255ccdbd7429
 msgid "Volume-preserving rotations"
-msgstr ""
+msgstr "چرخش‌های حافظ حجم"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1438
 #: fb8ace56bfd74ebc88c48484069a493c
 msgid "Site properties preserved during rotation"
-msgstr ""
+msgstr "ویژگی‌های جایگاه حین چرخش حفظ می‌شوند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1439
 #: 89771e15bb30412dbbf63a2c2862fd03
 msgid "Alignment uses Rodrigues rotation formula"
-msgstr ""
+msgstr "هم‌ترازی از فرمول چرخش رودریگز استفاده می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1442
 #: 62dd589c97bb4c84b25188787e8d6dab
 msgid "translate - Atomic Position Translation"
-msgstr ""
+msgstr "translate - انتقال موقعیت اتمی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1444
 #: ebd241c56365401287fc94cbe42eaeb0
 msgid ""
 "**Purpose:** Translate atomic positions for interface alignment, "
 "centering, and heterostructure preparation"
-msgstr ""
+msgstr "**هدف:** انتقال موقعیت اتم‌ها برای هم‌ترازی فصل‌مشترک، مرکزدهی و آماده‌سازی ناهمگن‌ساختار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1485
 #: 0f809a6e4a024de6953e65eb2543838e
 msgid "**Translation Modes:**"
-msgstr ""
+msgstr "**حالت‌های انتقال:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1487
 #: fe478bc9396747ee9d0616df790b5886
 msgid "**Cartesian**: Direct translation in Å (x, y, z)"
-msgstr ""
+msgstr "**کارتزین**: انتقال مستقیم بر حسب آنگستروم (x، y، z)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1488
 #: f09869a716744c48b548d2c3ad610731
 msgid "**Fractional**: Translation in crystal coordinates (a, b, c)"
-msgstr ""
+msgstr "**کسری**: انتقال در مختصات بلوری (a، b، c)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1489
 #: 27a87c94333f400396af6e741295626c
 msgid "**Centering**: Automatic calculation of shift to center structure"
-msgstr ""
+msgstr "**مرکزدهی**: محاسبهٔ خودکار جابه‌جایی برای مرکزی‌کردن ساختار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1490
 #: b5246b4df0a84f4fad9367d2a22d595d
 msgid "**Element-selective**: Translate only specified element type"
-msgstr ""
+msgstr "**انتخابی بر اساس عنصر**: انتقال فقط نوع عنصر مشخص‌شده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1492
 #: 4cc2f2d058dc4d68b1fe9948f69a51a5
 msgid "**Wrapping Behavior:**"
-msgstr ""
+msgstr "**رفتار پیچش (wrapping):**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1494
 #: 26e0766ec1304dc48fd05e9922ee90f1
 msgid ""
 "**With wrapping** (default): frac_coords = frac_coords - "
 "floor(frac_coords) → [0, 1)"
-msgstr ""
+msgstr "**با پیچش** (پیش‌فرض): frac_coords = frac_coords - floor(frac_coords) ← [0, 1)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1495
 #: 4cff954ba97f468cba722c8841dfe1ec
 msgid "**No wrapping**: Atoms can be outside unit cell (useful for interfaces)"
-msgstr ""
+msgstr "**بدون پیچش**: اتم‌ها می‌توانند خارج از سلول واحد باشند (برای فصل‌مشترک‌ها مفید است)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1499
 #: bafc77d1d38c46568fc03374362985fd
 msgid "**Interface alignment** - Position layers correctly for heterostructures"
-msgstr ""
+msgstr "**هم‌ترازی فصل‌مشترک** - موقعیت‌دهی درست لایه‌ها برای ناهمگن‌ساختارها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1500
 #: 25ae7ae4a9554b6899191028c0b8c1fb
 msgid "**Visualization** - Center structure for better viewing"
-msgstr ""
+msgstr "**مصورسازی** - مرکزی‌کردن ساختار برای مشاهدهٔ بهتر"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1501
 #: bb81ba3ab329489591121022727b1e63
 msgid "**Defect studies** - Position dopants/vacancies at specific locations"
-msgstr ""
+msgstr "**مطالعات نقص** - موقعیت‌دهی آلاینده‌ها/جای‌خالی‌ها در مکان‌های مشخص"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1502
 #: d69c8b449abf4feba79c9328768edd44
 msgid "**Grain boundaries** - Relative positioning of grains"
-msgstr ""
+msgstr "**مرزدانه‌ها** - موقعیت‌دهی نسبی دانه‌ها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1506
 #: 829673e3836444e1b9dc8bf9b77d11ae
 msgid "Uses pymatgen Structure.translate_sites()"
-msgstr ""
+msgstr "از pymatgen Structure.translate_sites() استفاده می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1507
 #: ea4cb934394f452d95733138e2be0723
 msgid "Centering: shift = [0.5, 0.5, 0.5] - mean(frac_coords)"
-msgstr ""
+msgstr "مرکزدهی: shift = [0.5, 0.5, 0.5] - mean(frac_coords)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1508
 #: df13e94f0e8d4370ae63919fd7ff4da1
 msgid "Element selection via specie.symbol matching"
-msgstr ""
+msgstr "انتخاب عنصر از طریق تطبیق specie.symbol"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1509
 #: 26ed5e01afb84ae0b08d842d6f699b4c
 msgid "Site properties preserved during translation"
-msgstr ""
+msgstr "ویژگی‌های جایگاه حین انتقال حفظ می‌شوند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1512
 #: 97dc64fb79fc452fbc6d06b368de4b4d
 msgid "slab - Surface Slab Generation"
-msgstr ""
+msgstr "slab - تولید اسلب سطح"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1514
 #: 24b1654790d146cd8c13f6d1fc9cdf48
 msgid ""
 "**Purpose:** Generate surface slabs from bulk structures for adsorption "
 "and catalysis studies"
-msgstr ""
+msgstr "**هدف:** تولید اسلب‌های سطح از ساختارهای توده‌ای برای مطالعات جذب و کاتالیز"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1538
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1601
