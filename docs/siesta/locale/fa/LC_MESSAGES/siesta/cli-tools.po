@@ -1068,464 +1068,464 @@ msgstr "مدیریت پیکربندی چندپروژه‌ای"
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:656
 #: 29d144c8be1641b38b24364d7b4c6132
 msgid "MongoDB connection settings with automatic backups"
-msgstr ""
+msgstr "تنظیمات اتصال MongoDB با پشتیبان‌گیری خودکار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:657
 #: efc51bcc0fa34352bdd58707e8ce74d0
 msgid "Self-documenting configurations with inline comments"
-msgstr ""
+msgstr "پیکربندی‌های خودمستندساز با توضیحات درون‌خطی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:658
 #: fae8a7bb68dc4e628bd0c2cb370d716b
 msgid "Test job submission for verification"
-msgstr ""
+msgstr "ارسال کار آزمایشی برای راستی‌آزمایی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:659
 #: 0d792d2375394285b94801afc307c526
 msgid "Comprehensive project discovery and inspection"
-msgstr ""
+msgstr "کشف و بازرسی جامع پروژه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:670
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:804
 #: 49e98b0c17ac4eb59ad06bd67f56454a dfc3135ca1c74b0dbbd5c4d9a9fcef82
 msgid "``install``"
-msgstr ""
+msgstr "``install``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:671
 #: 50a81575ad99442f93ea862b0e21d72b
 msgid "Install jobflow-remote package"
-msgstr ""
+msgstr "نصب بستهٔ jobflow-remote"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:673
 #: bf4ad4b851154e07808f71d22fd65f7d
 msgid "Generate or update project configuration"
-msgstr ""
+msgstr "تولید یا به‌روزرسانی پیکربندی پروژه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:674
 #: 1d529daf7d614c709637a463c26ec3b6
 msgid "``update``"
-msgstr ""
+msgstr "``update``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:675
 #: 501ae2dab89d4db7bc95093a3ac6930f
 msgid "Update existing configuration with advanced options"
-msgstr ""
+msgstr "به‌روزرسانی پیکربندی موجود با گزینه‌های پیشرفته"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:677
 #: 9749d0e63cf1436f8cf9a3eb1f98362b
 msgid "Show installation status and list all projects"
-msgstr ""
+msgstr "نمایش وضعیت نصب و فهرست همهٔ پروژه‌ها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:678
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:736
 #: 074a19ccf12c4459afa49adbfd85ab68 21baeb931fc542a4b81d44fb4694f414
 msgid "``test``"
-msgstr ""
+msgstr "``test``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:679
 #: 2af60e34be1c4af9a22ade7c4df9c6a6
 msgid "Submit test job to verify setup"
-msgstr ""
+msgstr "ارسال کار آزمایشی برای راستی‌آزمایی راه‌اندازی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:680
 #: 3b09ee0b107f459abd5605b455ff7d26
 msgid "``runner``"
-msgstr ""
+msgstr "``runner``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:681
 #: e5a04e40bf6a4c4aad0f900412df5c89
 msgid "Display runner and job management commands"
-msgstr ""
+msgstr "نمایش فرمان‌های مدیریت runner و کار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:706
 #: 05c68e1076934665b8dd8421838f238d
 msgid "**Full Documentation:** :doc:`cli-jobflow-remote`"
-msgstr ""
+msgstr "**مستندات کامل:** :doc:`cli-jobflow-remote`"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:711
 #: 9265628364b843e79f9329772701207d
 msgid "Database Management CLI"
-msgstr ""
+msgstr "CLI مدیریت پایگاه داده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:713
 #: 11bd9b7575b34db2877427c152ed0a02
 msgid "**Command:** ``atomate2siesta-database``"
-msgstr ""
+msgstr "**فرمان:** ``atomate2siesta-database``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:715
 #: 34068187ed3043eba0cfb16452672b70
 msgid "**Purpose:** MongoDB database testing, monitoring, and management"
-msgstr ""
+msgstr "**هدف:** آزمون، پایش و مدیریت پایگاه دادهٔ MongoDB"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:720
 #: 4410669da0c94b5aaf19bda9a6a90bf2
 msgid "Connection testing with both PyMongo and Maggma"
-msgstr ""
+msgstr "آزمون اتصال با هر دو PyMongo و Maggma"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:721
 #: 6eca37fec6b84c54b17d19fd39cf3663
 msgid "Recent calculation listing with metadata tables"
-msgstr ""
+msgstr "فهرست‌کردن محاسبات اخیر با جدول‌های فراداده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:722
 #: 1d203ee345f4439182200123d5348e80
 msgid "Formula-based querying"
-msgstr ""
+msgstr "پرس‌وجوی مبتنی بر فرمول"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:723
 #: 6b27a95a84804375ba51957255f3bde4
 msgid "Comprehensive database and collection statistics"
-msgstr ""
+msgstr "آمار جامع پایگاه داده و مجموعه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:724
 #: 7f973339d8ee4443b1fa3858a12b91cb
 msgid "Safe deletion with confirmation prompts"
-msgstr ""
+msgstr "حذف ایمن با اعلان‌های تأیید"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:725
 #: 48f7a4f096a941a3b07f3cd1abb49ffc
 msgid "Configuration file generation"
-msgstr ""
+msgstr "تولید فایل پیکربندی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:737
 #: d975a8204bfe4eeba7b7a04a9540e388
 msgid "Test MongoDB connection and show basic statistics"
-msgstr ""
+msgstr "آزمون اتصال MongoDB و نمایش آمار پایه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:738
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:2440
 #: 2d3d177095414df7b533b37bdd40d89a b2e0588139ee475dbed703c558480feb
 msgid "``list``"
-msgstr ""
+msgstr "``list``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:739
 #: 131c7ebd904b44529401deb7b6bb869d
 msgid "List recent calculation results with metadata"
-msgstr ""
+msgstr "فهرست‌کردن نتایج محاسبات اخیر با فراداده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:740
 #: 586abaa50bf542db93e1d5ac99141a87
 msgid "``query``"
-msgstr ""
+msgstr "``query``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:741
 #: a43f059991e440098ea6e847ff0a8ba9
 msgid "Query calculations by chemical formula"
-msgstr ""
+msgstr "پرس‌وجوی محاسبات بر اساس فرمول شیمیایی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:742
 #: d4ed032e4d3945ad9d478f5aeefa6ad0
 msgid "``stats``"
-msgstr ""
+msgstr "``stats``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:743
 #: 557a9cccd50b4d60a3acdeb09d544598
 msgid "Display comprehensive database statistics"
-msgstr ""
+msgstr "نمایش آمار جامع پایگاه داده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:744
 #: 43b55d64ec1e4be9875bb092756586d1
 msgid "``clear``"
-msgstr ""
+msgstr "``clear``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:745
 #: 44b6eb84bb8b45a6a1bd5f20f3c2fbed
 msgid "Clear collection (with safety confirmation)"
-msgstr ""
+msgstr "پاک‌کردن مجموعه (با تأیید ایمنی)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:746
 #: c8d71fe5bcdc4f6e965e103ae5c24a00
 msgid "``config``"
-msgstr ""
+msgstr "``config``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:747
 #: cfd47b9ef1214e5f86929c517cd232af
 msgid "Show configuration examples"
-msgstr ""
+msgstr "نمایش مثال‌های پیکربندی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:771
 #: c1707f0cfc634949a198ae2e79db2f6c
 msgid "**Full Documentation:** :doc:`cli-database`"
-msgstr ""
+msgstr "**مستندات کامل:** :doc:`cli-database`"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:776
 #: 3bf5dba717fe479c9ba39fc7a6ae1ebe
 msgid "Pseudopotential Management CLI"
-msgstr ""
+msgstr "CLI مدیریت شبه‌پتانسیل"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:778
 #: 13dd4fb859944e8a8096c1d4783a53cf
 msgid "**Command:** ``atomate2siesta-pseudos``"
-msgstr ""
+msgstr "**فرمان:** ``atomate2siesta-pseudos``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:780
 #: 4742e8b07bc0428ca08b4989f6e4d579
 msgid ""
 "**Purpose:** Install, inspect, and generate basis blocks from PSML "
 "pseudopotentials"
-msgstr ""
+msgstr "**هدف:** نصب، بازرسی و تولید بلوک‌های پایه از شبه‌پتانسیل‌های PSML"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:785
 #: 155c07d8351c42dfb62ff6c079930c6d
 msgid ""
 "**Pseudopotential installation** - Download and install 6 available "
 "pseudopotential families"
-msgstr ""
+msgstr "**نصب شبه‌پتانسیل** - دانلود و نصب ۶ خانوادهٔ شبه‌پتانسیل موجود"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:786
 #: d17f7ad81c054540942955c52a29a5a3
 msgid "**Shell information display** - View valence configuration from PSML files"
-msgstr ""
+msgstr "**نمایش اطلاعات لایه** - مشاهدهٔ آرایش ظرفیت از فایل‌های PSML"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:787
 #: ba7bfabe87d44a2cb454793579adc5f8
 msgid ""
 "**PAO.Basis generation** - Generate SIESTA basis blocks from "
 "pseudopotentials"
-msgstr ""
+msgstr "**تولید PAO.Basis** - تولید بلوک‌های پایهٔ SIESTA از شبه‌پتانسیل‌ها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:788
 #: f464e863fb5d48db893a9910a6f7e875
 msgid "**Multiple basis sizes** - Support for SZ, DZ, DZP, TZ, TZP, TZDP"
-msgstr ""
+msgstr "**اندازه‌های پایهٔ متعدد** - پشتیبانی از SZ، DZ، DZP، TZ، TZP، TZDP"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:789
 #: 64f4461f40a94c469100259818f29990
 msgid "**Multiple n-shells** - Generate valence + excited shell configurations"
-msgstr ""
+msgstr "**لایه‌های n متعدد** - تولید آرایش لایه‌های ظرفیت + برانگیخته"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:790
 #: 616b32cdd5f741abaa780e06979fae73
 msgid ""
 "**Correct rc values** - Descending cutoff radii following SIESTA "
 "conventions"
-msgstr ""
+msgstr "**مقادیر صحیح rc** - شعاع‌های برش نزولی مطابق قراردادهای SIESTA"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:791
 #: 014b126d81244eacbb989b69df76503b
 msgid "**Rich terminal UI** - Formatted tables and panels"
-msgstr ""
+msgstr "**رابط کاربری ترمینال Rich** - جدول‌ها و پنل‌های قالب‌بندی‌شده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:802
 #: 279d49fb187e4ef5aca0cf3ad8589e91
 msgid "``available``"
-msgstr ""
+msgstr "``available``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:803
 #: 8ce16e2fff724eb6a518049e28c41f0d
 msgid "List all available pseudopotential families"
-msgstr ""
+msgstr "فهرست‌کردن همهٔ خانواده‌های شبه‌پتانسیل موجود"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:805
 #: 288feea4467243d8968b13c87c042b5c
 msgid "Install pseudopotential family"
-msgstr ""
+msgstr "نصب خانوادهٔ شبه‌پتانسیل"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:806
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:2444
 #: 41f2f5bc32e4445095c490e19fb0798e be30d1a3d73348fcb456af76f5d95410
 msgid "``show``"
-msgstr ""
+msgstr "``show``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:807
 #: fa32cb127b134311929f27e1240ea3d6
 msgid "Show pseudopotential info and valence shells"
-msgstr ""
+msgstr "نمایش اطلاعات شبه‌پتانسیل و لایه‌های ظرفیت"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:808
 #: 649ee5e20aa34537a3428717d53ae0bb
 msgid "``basis``"
-msgstr ""
+msgstr "``basis``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:809
 #: c8a4dd685e434b60bb9b6933c8f186e9
 msgid "Generate PAO.Basis block from PSML file"
-msgstr ""
+msgstr "تولید بلوک PAO.Basis از فایل PSML"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:810
 #: 6cf2c684b3f24afca027cabd337158f7
 msgid "``plot``"
-msgstr ""
+msgstr "``plot``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:811
 #: 3d404ae3d2bc4cbda37c4aad2529f4bb
 msgid "Plot pseudopotential properties"
-msgstr ""
+msgstr "رسم خواص شبه‌پتانسیل"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:816
 #: 5fd14371d8244ce3a8c0b8e095a825c1
 msgid "**Installation:**"
-msgstr ""
+msgstr "**نصب:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:829
 #: b7a19a8a601f4872adeee9d8fe3fa21a
 msgid "**Pseudopotential Information:**"
-msgstr ""
+msgstr "**اطلاعات شبه‌پتانسیل:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:849
 #: 32ec37fc9b974bd58cff9e9abf08625c
 msgid "**Basis Block Generation (NEW!):**"
-msgstr ""
+msgstr "**تولید بلوک پایه (جدید!):**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:875
 #: 4ec4638939524c57a19f06e361f7ae98
 msgid "Basis Block Generation Details"
-msgstr ""
+msgstr "جزئیات تولید بلوک پایه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:877
 #: 45636292530443c6ae38bbcc3dbccee8
 msgid "**Supported Basis Sizes:**"
-msgstr ""
+msgstr "**اندازه‌های پایهٔ پشتیبانی‌شده:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:879
 #: 4ea98ccbbdc6471d8b80791b840d72f9
 msgid "**SZ** - Single-ζ (1 radial function per orbital)"
-msgstr ""
+msgstr "**SZ** - تک-ζ (۱ تابع شعاعی به ازای هر اوربیتال)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:880
 #: 0e2182bbee154153b6c2460089511667
 msgid "**DZ** - Double-ζ (2 radial functions per orbital)"
-msgstr ""
+msgstr "**DZ** - دو-ζ (۲ تابع شعاعی به ازای هر اوربیتال)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:881
 #: a78f89db7c0e441990ca2367c78c6343
 msgid "**DZP** - Double-ζ + polarization (2 + p-polarization)"
-msgstr ""
+msgstr "**DZP** - دو-ζ + قطبش (۲ + قطبش p)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:882
 #: 0be6f6add0494382a92a40cf98febfae
 msgid "**TZ** - Triple-ζ (3 radial functions per orbital)"
-msgstr ""
+msgstr "**TZ** - سه-ζ (۳ تابع شعاعی به ازای هر اوربیتال)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:883
 #: 4403368e2b144b8abf0235e1f01781f8
 msgid "**TZP** - Triple-ζ + polarization (3 + p-polarization)"
-msgstr ""
+msgstr "**TZP** - سه-ζ + قطبش (۳ + قطبش p)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:884
 #: 48c62754b6054541ab2daf107c35cb6d
 msgid "**TZDP** - Triple-ζ + double polarization (3 + p + d)"
-msgstr ""
+msgstr "**TZDP** - سه-ζ + قطبش دوگانه (۳ + p + d)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:886
 #: 96cb6869cdbb4ceeb7c66696f5ceeb03
 msgid "**Cutoff Radius (rc) Calculation Methods:**"
-msgstr ""
+msgstr "**روش‌های محاسبهٔ شعاع برش (rc):**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:888
 #: ef1818bd7751476994370e10e3287470
 msgid "Four methods available for determining rc values (``--rc-method``):"
-msgstr ""
+msgstr "چهار روش برای تعیین مقادیر rc موجود است (``--rc-method``):"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:890
 #: cadf24ff4de540c3a221dc62eecac9cc
 msgid "**1. PSML Wavefunction Decay (DEFAULT - BEST)**"
-msgstr ""
+msgstr "**۱. واپاشی تابع موج PSML (پیش‌فرض - بهترین)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:892
 #: d91a65189ea441ab8638412e36f73758
 msgid "Extracts rc from actual pseudopotential wavefunctions"
-msgstr ""
+msgstr "rc را از توابع موج واقعی شبه‌پتانسیل استخراج می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:893
 #: 6757239b3e684d93ba8d7bfd4b7842e8
 msgid "Element-specific and orbital-specific (n, l)"
-msgstr ""
+msgstr "مخصوص عنصر و مخصوص اوربیتال (n، l)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:894
 #: 41898a0cd6334be0bbda58b7729fa54f
 msgid "Uses threshold parameter for decay detection (default: 5%)"
-msgstr ""
+msgstr "از پارامتر آستانه برای تشخیص واپاشی استفاده می‌کند (پیش‌فرض: ۵٪)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:895
 #: df536e73a68142e1975adb3417021c70
 msgid "Example (Si): 3s → 4.92 bohr, 3p → 5.81 bohr"
-msgstr ""
+msgstr "مثال (Si): 3s ← ۴٫۹۲ بور، 3p ← ۵٫۸۱ بور"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:901
 #: 7008e2523e7c45a68e04206aed8e7f46
 msgid "**2. Atomic Radius Scaling (Periodic Trends)**"
-msgstr ""
+msgstr "**۲. مقیاس‌بندی شعاع اتمی (روندهای تناوبی)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:903
 #: 96a454a69ad74c0392ee3a1291c6efd3
 msgid "Scales by element's atomic radius relative to Si"
-msgstr ""
+msgstr "بر اساس شعاع اتمی عنصر نسبت به Si مقیاس‌بندی می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:904
 #: c4a09df749234c8f860f751eecebea1f
 msgid "Follows periodic table size trends"
-msgstr ""
+msgstr "از روندهای اندازهٔ جدول تناوبی پیروی می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:905
 #: 9adba4ef51714c00b016e000906546ed
 msgid "Example: H → 1.14 bohr (small), Fe → 6.36 bohr (large)"
-msgstr ""
+msgstr "مثال: H ← ۱٫۱۴ بور (کوچک)، Fe ← ۶٫۳۶ بور (بزرگ)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:911
 #: 4509298f6b3c4a4baa648046c2789a52
 msgid "**3. Hydrogenic Scaling (n²/Z_eff)**"
-msgstr ""
+msgstr "**۳. مقیاس‌بندی هیدروژن‌گونه (n²/Z_eff)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:913
 #: 7635fd5fbc424212a68314dfc10f4993
 msgid "Uses Slater's effective nuclear charge"
-msgstr ""
+msgstr "از بار مؤثر هسته‌ای اسلیتر استفاده می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:914
 #: 18b7ec97f95d4478a2cade68e00f14ad
 msgid "Quantum number dependent"
-msgstr ""
+msgstr "وابسته به عدد کوانتومی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:915
 #: dee475a3d6fb48b28ec7cd0ac8dde754
 msgid "Example (Si): 3s → 7.43 bohr"
-msgstr ""
+msgstr "مثال (Si): 3s ← ۷٫۴۳ بور"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:921
 #: 4918a89aa5dc48a9952ad539a295d947
 msgid "**4. Fixed Values (Original)**"
-msgstr ""
+msgstr "**۴. مقادیر ثابت (اصلی)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:923
 #: c22d510121094f04b0ed2b07e771e9e7
 msgid "Standard SIESTA defaults (not element-specific)"
-msgstr ""
+msgstr "پیش‌فرض‌های استاندارد SIESTA (نه مخصوص عنصر)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:924
 #: 17e80cbc5d07423585401a091c3117ac
 msgid "s=5.00, p=6.00, d=5.50, f=5.00 bohr"
-msgstr ""
+msgstr "s=5.00، p=6.00، d=5.50، f=5.00 بور"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:925
 #: 4427eed834f14b40936c0dbe2150d213
 msgid "Backward compatible"
-msgstr ""
+msgstr "سازگار با نسخه‌های قبلی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:931
 #: 6cbc55094aaa418ebb06c491c73375b8
 msgid "**Comparison Table** (s orbital, first zeta):"
-msgstr ""
+msgstr "**جدول مقایسه** (اوربیتال s، زتای اول):"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:937
 #: 1c0dbdb4c84f4290b45c9f55575b3614
 msgid "Element"
-msgstr ""
+msgstr "عنصر"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:938
 #: 9137645a370243e39714ea278121f0e5
 msgid "PSML"
-msgstr ""
+msgstr "PSML"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:939
 #: 2c1d4fa3b04e4893b83eb3b2af282680
 msgid "Scaled"
-msgstr ""
+msgstr "مقیاس‌بندی‌شده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:940
 #: fb295b8ecef94aeca111cac3d8f81afd
 msgid "Hydrogenic"
-msgstr ""
+msgstr "هیدروژن‌گونه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:941
 #: a0b5c11b991b4595a29c3ae945fd7d62
