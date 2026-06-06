@@ -103,7 +103,8 @@ gettext_auto_build = True
 
 # html_extra_path = ["images/badge.svg"]
 html_static_path = ["_static"]
-html_css_files = ["custom.css", "github.css", "lang-switcher.css"]
+html_css_files = ["custom.css", "github.css", "lang-switcher.css", "rtl.css"]
+html_js_files = ["rtl.js"]
 # "myst.xref_missing" silences cross-reference warnings emitted by the vendored
 # siesta tutorial markdown under docs/siesta/tutorials-md.
 suppress_warnings = ["etoc.toctree", "myst.xref_missing"]

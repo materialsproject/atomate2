@@ -1,0 +1,31 @@
+/* Right-to-left support for the Persian (Farsi) documentation build.
+   Furo does not set a text direction, so scope RTL to the fa build via the
+   <html lang="fa"> attribute. */
+html[lang="fa"] {
+  direction: rtl;
+}
+
+html[lang="fa"] .content,
+html[lang="fa"] article {
+  text-align: right;
+}
+
+/* Code, output, math and the API signatures stay left-to-right even on RTL
+   pages — they are not natural-language text. */
+html[lang="fa"] pre,
+html[lang="fa"] code,
+html[lang="fa"] .highlight,
+html[lang="fa"] .doctest,
+html[lang="fa"] .math,
+html[lang="fa"] dt,
+html[lang="fa"] .sig,
+html[lang="fa"] .literal {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: embed;
+}
+
+/* The language switcher reads naturally in either direction. */
+html[lang="fa"] .lang-switcher {
+  margin-inline-start: 0;
+}
