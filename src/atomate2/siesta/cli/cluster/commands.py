@@ -82,15 +82,6 @@ def cli():
     help="Python version for conda environment (default: 3.11)",
 )
 @click.option(
-    "--git-ssh",
-    is_flag=True,
-    help="Use SSH URL for Git clone (default: HTTPS)",
-)
-@click.option(
-    "--git-token",
-    help="GitHub personal access token for private repo (HTTPS only)",
-)
-@click.option(
     "--verbose",
     "-v",
     is_flag=True,
@@ -143,8 +134,6 @@ def setup(
     ssh_config: bool,
     env_name: str,
     python_version: str,
-    git_ssh: bool,
-    git_token: Optional[str],
     verbose: bool,
     install_siesta: bool,
     proxy: Optional[str],
@@ -161,35 +150,32 @@ def setup(
     and installs both jobflow-remote and atomate2siesta (from GitHub repository).
 
     Examples:
-        # Using SSH config alias with Git SSH (RECOMMENDED for private repos)
-        atomate2siesta-cluster setup --host mycluster --ssh-config --git-ssh
-
-        # Using SSH config with GitHub personal access token
-        atomate2siesta-cluster setup --host mycluster --ssh-config --git-token ghp_xxxxx
+        # Using an SSH config alias
+        atomate2siesta-cluster setup --host mycluster --ssh-config
 
         # Install with SIESTA included
-        atomate2siesta-cluster setup --host mycluster --ssh-config --git-ssh --install-siesta
+        atomate2siesta-cluster setup --host mycluster --ssh-config --install-siesta
 
-        # Using SSH key authentication with Git SSH
-        atomate2siesta-cluster setup --host cluster.university.edu --user myuser -i ~/.ssh/id_rsa --git-ssh
+        # Using SSH key authentication
+        atomate2siesta-cluster setup --host cluster.university.edu --user myuser -i ~/.ssh/id_rsa
 
         # Using password authentication
-        atomate2siesta-cluster setup --host cluster.university.edu --user myuser --password --git-ssh
+        atomate2siesta-cluster setup --host cluster.university.edu --user myuser --password
 
         # Custom environment name and Python version
-        atomate2siesta-cluster setup --host mycluster --ssh-config --env-name myenv --python-version 3.11 --git-ssh
+        atomate2siesta-cluster setup --host mycluster --ssh-config --env-name myenv --python-version 3.11
 
         # Air-gapped cluster with squid proxy (persistent proxy in bashrc)
-        atomate2siesta-cluster setup --host mn5-glogin1 --ssh-config --git-ssh --use-squid --add-proxy-to-bashrc
+        atomate2siesta-cluster setup --host mn5-glogin1 --ssh-config --use-squid --add-proxy-to-bashrc
 
         # Air-gapped cluster with SSH tunnel
-        atomate2siesta-cluster setup --host mycluster --ssh-config --git-ssh --ssh-tunnel
+        atomate2siesta-cluster setup --host mycluster --ssh-config --ssh-tunnel
 
         # Explicit proxy with bashrc configuration
-        atomate2siesta-cluster setup --host mycluster --ssh-config --git-ssh --proxy http://proxy.university.edu:3128 --add-proxy-to-bashrc
+        atomate2siesta-cluster setup --host mycluster --ssh-config --proxy http://proxy.university.edu:3128 --add-proxy-to-bashrc
 
         # Verbose mode to see detailed output
-        atomate2siesta-cluster setup --host mycluster --ssh-config --git-ssh --verbose
+        atomate2siesta-cluster setup --host mycluster --ssh-config --verbose
     """
     console.print("\n[bold cyan]Remote Cluster Setup for atomate2siesta[/bold cyan]\n")
 
@@ -723,7 +709,7 @@ def setup(
                     "  [dim]Skip conda installation completely! Build full environment locally:[/dim]"
                 )
                 console.print(
-                    "    [cyan]atomate2siesta-cluster build-offline --install-siesta --git-ssh[/cyan]"
+                    "    [cyan]atomate2siesta-cluster build-offline --install-siesta[/cyan]"
                 )
                 console.print(f"    [cyan]scp atomate2siesta.tar.gz {host}:~/[/cyan]")
                 console.print(
@@ -1074,52 +1060,13 @@ def setup(
             if is_proxy_error(stderr):
                 show_proxy_error_help(proxy_url)
             else:
-                # Git/authentication specific troubleshooting
                 console.print("\n[yellow]Troubleshooting:[/yellow]")
-                if (
-                    "403" in stderr
-                    or "not granted" in stderr
-                    or "unable to access" in stderr
-                ):
-                    console.print("  • [bold]GitHub authentication failed[/bold]")
-                    if git_token:
-                        console.print("    Your token needs these permissions:")
-                        console.print(
-                            "    - For public repos: [cyan]public_repo[/cyan] scope"
-                        )
-                        console.print(
-                            "    - For private repos: [cyan]repo[/cyan] scope (full access)"
-                        )
-                        console.print(
-                            "    - Or fine-grained token with [cyan]Contents: Read[/cyan] permission"
-                        )
-                        console.print("\n  • [bold]To create a new token:[/bold]")
-                        console.print(
-                            "    1. Go to: https://github.com/settings/tokens"
-                        )
-                        console.print(
-                            "    2. Click 'Generate new token' → 'Generate new token (classic)'"
-                        )
-                        console.print("    3. Select scopes: [cyan]repo[/cyan] (full)")
-                        console.print(
-                            "    4. Copy the token and rerun with: [cyan]--git-token <token>[/cyan]"
-                        )
-                elif not git_ssh and not git_token:
-                    console.print(
-                        "  • Repository is private - use --git-ssh or --git-token"
-                    )
-                    console.print(
-                        "  • For SSH: --git-ssh (requires SSH key on cluster)"
-                    )
-                    console.print("  • For HTTPS: --git-token YOUR_TOKEN")
-                elif git_ssh:
-                    console.print(
-                        "  • Make sure SSH key is set up on cluster for GitHub"
-                    )
-                    console.print("  • Test with: ssh -T git@github.com")
-                else:
-                    console.print("  • Check if GitHub token is valid")
-                    console.print("  • Make sure Git is installed on the cluster")
+                console.print(
+                    "  • Ensure the cluster can reach PyPI (internet access or a proxy)"
+                )
+                console.print(
+                    "  • Update pip in the environment: pip install --upgrade pip"
+                )
             sys.exit(1)
 
         progress.update(task, completed=True)
@@ -2306,8 +2253,6 @@ def _build_offline_docker(
     output: str,
     env_name: str,
     python_version: str,
-    git_ssh: bool,
-    git_token: Optional[str],
     install_siesta: bool,
 ):
     """Build offline environment using Docker for Linux compatibility."""
@@ -2431,14 +2376,6 @@ ls -lh /output/{output}
             "/build/build.sh",
         ]
 
-        # If using SSH, mount SSH keys
-        if git_ssh:
-            ssh_dir = os.path.expanduser("~/.ssh")
-            if os.path.exists(ssh_dir):
-                docker_cmd.insert(2, "-v")
-                docker_cmd.insert(3, f"{ssh_dir}:/root/.ssh:ro")
-                console.print("[dim]Mounting SSH keys from ~/.ssh (read-only)[/dim]\n")
-
         console.print("[dim]Running Docker command:[/dim]")
         console.print(f"[dim]{' '.join(docker_cmd)}[/dim]\n")
 
@@ -2530,15 +2467,6 @@ def _show_offline_next_steps(output: str, env_name: str):
     help="Python version for conda environment (default: 3.11)",
 )
 @click.option(
-    "--git-ssh",
-    is_flag=True,
-    help="Use SSH URL for Git clone (requires GitHub SSH key configured locally)",
-)
-@click.option(
-    "--git-token",
-    help="GitHub personal access token for private repo (HTTPS)",
-)
-@click.option(
     "--install-siesta",
     is_flag=True,
     help="Include SIESTA in the packed environment (from conda-forge)",
@@ -2552,8 +2480,6 @@ def build_offline(
     output: str,
     env_name: str,
     python_version: str,
-    git_ssh: bool,
-    git_token: Optional[str],
     install_siesta: bool,
     use_docker: bool,
 ):
@@ -2601,7 +2527,7 @@ def build_offline(
         atomate2siesta-cluster build-offline --output mn5-env.tar.gz --install-siesta
 
         # Docker build with SIESTA and SSH authentication
-        atomate2siesta-cluster build-offline --use-docker --install-siesta --git-ssh
+        atomate2siesta-cluster build-offline --use-docker --install-siesta
     """
     console.print(
         Panel.fit(
@@ -2633,8 +2559,6 @@ def build_offline(
             output=output,
             env_name=env_name,
             python_version=python_version,
-            git_ssh=git_ssh,
-            git_token=git_token,
             install_siesta=install_siesta,
         )
         return
@@ -2785,16 +2709,15 @@ def build_offline(
         )
         if result.returncode != 0:
             progress.stop()
-            console.print("[red]✗ Failed to install atomate2siesta![/red]")
+            console.print("[red]✗ Failed to install atomate2[siesta]![/red]")
             console.print(f"[red]{result.stderr}[/red]")
-            if not git_ssh and not git_token:
-                console.print("\n[yellow]Troubleshooting:[/yellow]")
-                console.print(
-                    "  • Repository is private - use --git-ssh or --git-token"
-                )
+            console.print("\n[yellow]Troubleshooting:[/yellow]")
+            console.print(
+                "  • Ensure the cluster can reach PyPI (internet access or a proxy)"
+            )
             sys.exit(1)
         progress.update(task, completed=True)
-        console.print("[green]✓ Installed atomate2siesta[/green]")
+        console.print("[green]✓ Installed atomate2[siesta][/green]")
 
         # Step 6: Install SIESTA (optional)
         if install_siesta:
