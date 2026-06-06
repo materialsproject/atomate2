@@ -215,32 +215,32 @@ msgstr "ویژگی‌های کلیدی"
 msgid ""
 "**Complete overview** with quick stats (material-specific presets, recipe"
 " book, 13 CLI tools)"
-msgstr ""
+msgstr "**نمای کلی کامل** با آمار سریع (پیش‌تنظیم‌های مخصوص ماده، کتاب دستور، ۱۳ ابزار CLI)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:61
 #: c9b7a08098494c71bc76f5ed96afa0bc
 msgid "**CLI tools catalog** organized by category"
-msgstr ""
+msgstr "**کاتالوگ ابزارهای CLI** سازمان‌دهی‌شده بر اساس دسته"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:62
 #: ebc83d95cd31451b92c277449e354d85
 msgid "**Workflow types** organized by category"
-msgstr ""
+msgstr "**انواع گردش‌کار** سازمان‌دهی‌شده بر اساس دسته"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:63
 #: 3fd33427ac3b4dc1b90993649f51f776
 msgid "**Feature list** with descriptions"
-msgstr ""
+msgstr "**فهرست ویژگی‌ها** به‌همراه توضیحات"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:64
 #: b19905e3dade46c99370f1946bdce8a4
 msgid "**Quick start examples** with code snippets"
-msgstr ""
+msgstr "**مثال‌های شروع سریع** با قطعه‌کدها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:65
 #: f4df4f4b9908412fa149991d595feb00
 msgid "**Version information** and configuration paths"
-msgstr ""
+msgstr "**اطلاعات نسخه** و مسیرهای پیکربندی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:68
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:160
@@ -265,49 +265,49 @@ msgstr "پرچم ``--full`` مستندات جامع را برای هر Maker ی�
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:106
 #: 671a4bdaece2409fbc9d08738d9781f3
 msgid "**Full Documentation Includes:**"
-msgstr ""
+msgstr "**مستندات کامل شامل موارد زیر است:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:108
 #: c6e490ca7b65482e86e45b6f097a1639
 msgid "**Detailed scientific context** - What the calculation does and why"
-msgstr ""
+msgstr "**زمینهٔ علمی مفصل** - اینکه محاسبه چه می‌کند و چرا"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:109
 #: fc3562250ee543408493cc80327557f6
 msgid "**Workflow steps** - Step-by-step breakdown of computation"
-msgstr ""
+msgstr "**گام‌های گردش‌کار** - تفکیک گام‌به‌گام محاسبه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:110
 #: 5750283ba4334a1c99ae82a056d53a94
 msgid "**Key results** - What outputs are generated"
-msgstr ""
+msgstr "**نتایج کلیدی** - اینکه چه خروجی‌هایی تولید می‌شوند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:111
 #: 649e86d8b4934e86897b37bb4e1fd77c
 msgid "**Applications** - Real-world use cases"
-msgstr ""
+msgstr "**کاربردها** - موارد استفادهٔ دنیای واقعی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:112
 #: d16d8520347e4b1eb2e5a006a59a9808
 msgid "**Parameters** - All available configuration options"
-msgstr ""
+msgstr "**پارامترها** - همهٔ گزینه‌های پیکربندی موجود"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:113
 #: a3ea194819224e4a9a924853786535fa
 msgid "**Examples** - Practical code snippets"
-msgstr ""
+msgstr "**مثال‌ها** - قطعه‌کدهای کاربردی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:114
 #: 91f3a99cc9e943f0a11e388cbbdb31b2
 msgid "**Notes** - Best practices and convergence tips"
-msgstr ""
+msgstr "**نکات** - بهترین شیوه‌ها و نکات همگرایی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:116
 #: 52ca2d82e5f24b599090035387f44a16
 msgid ""
 "All comprehensive docstrings are displayed in beautiful Rich panels with "
 "formatted markdown sections."
-msgstr ""
+msgstr "همهٔ docstringهای جامع در پنل‌های زیبای Rich با بخش‌های markdown قالب‌بندی‌شده نمایش داده می‌شوند."
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:119
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:207
@@ -338,39 +338,39 @@ msgstr "**هدف:** کاوش و کشف پیش‌تنظیم‌های سطحی ب�
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:151
 #: c00ee7a165a34bf7af89de44b965638e
 msgid "**Automatic preset detection** - No manual updates needed!"
-msgstr ""
+msgstr "**تشخیص خودکار پیش‌تنظیم** - نیازی به به‌روزرسانی دستی نیست!"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:152
 #: 7b177daa2a6d49dbaf46e3bedc0f5add
 msgid "**Dynamic tier counting** - Automatically counts new tier levels"
-msgstr ""
+msgstr "**شمارش پویای لایه‌ها** - سطوح جدید لایه را به‌طور خودکار می‌شمارد"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:153
 #: 9fc9feb6fef443ebadf5a02f3c6f6091
 msgid ""
 "**Material-specific presets** across 10 categories (2d, surface, "
 "electronic, phonon, etc.)"
-msgstr ""
+msgstr "**پیش‌تنظیم‌های مخصوص ماده** در ۱۰ دسته (2d، سطح، الکترونیکی، فونون و غیره)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:154
 #: 596dafe2cd0d486491a4893735afd7f4
 msgid "**Tier defaults** - View base parameter sets for all tier levels"
-msgstr ""
+msgstr "**پیش‌فرض‌های لایه** - مشاهدهٔ مجموعه‌پارامترهای پایه برای همهٔ سطوح لایه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:155
 #: 60e26836f25a4fd7b38ba4286c464f9c
 msgid "**Category browsing** - Explore presets by category"
-msgstr ""
+msgstr "**مرور دسته‌ای** - کاوش پیش‌تنظیم‌ها بر اساس دسته"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:156
 #: 342bd4d05dae4048a1862e7c2bd18815
 msgid "**Search functionality** - Find presets by tier level or category"
-msgstr ""
+msgstr "**قابلیت جست‌وجو** - یافتن پیش‌تنظیم‌ها بر اساس سطح لایه یا دسته"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:157
 #: aa2ab2e7bf7e406895895d9a4563d4cf
 msgid "**Rich terminal UI** with tables and panels"
-msgstr ""
+msgstr "**رابط کاربری ترمینال Rich** با جدول‌ها و پنل‌ها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:173
 #: 4d06ab4a0da249798df22ad5cfcd3c0d
@@ -380,163 +380,163 @@ msgstr "تشخیص خودکار"
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:175
 #: c3b4b28b418749319c8c2e5a584bec69
 msgid "**Add new presets** - They appear automatically in CLI!"
-msgstr ""
+msgstr "**افزودن پیش‌تنظیم‌های جدید** - به‌طور خودکار در CLI ظاهر می‌شوند!"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:188
 #: f5234782ab1744d7baeef108dc163f45
 msgid "**Result:**"
-msgstr ""
+msgstr "**نتیجه:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:195
 #: e28a04651ff2471ca617b29fac511855
 msgid "**Naming conventions for automatic categorization:**"
-msgstr ""
+msgstr "**قراردادهای نام‌گذاری برای دسته‌بندی خودکار:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:197
 #: a7a27768529d4612a5f940fb7822ed81
 msgid "``2d_*`` → 2d category"
-msgstr ""
+msgstr "``2d_*`` ← دستهٔ 2d"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:198
 #: 5f076ada38c04b30b101d9c6f3e6c257
 msgid "``surface_*`` → surface category"
-msgstr ""
+msgstr "``surface_*`` ← دستهٔ surface"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:199
 #: 8c357636d60741f4b39af1c9151418dd
 msgid "``adsorbate_*`` → surface category"
-msgstr ""
+msgstr "``adsorbate_*`` ← دستهٔ surface"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:200
 #: df8fb24947494a0ebe166094d205d2ad
 msgid "``magnetic_*`` → magnetic category"
-msgstr ""
+msgstr "``magnetic_*`` ← دستهٔ magnetic"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:201
 #: a25e074beaf346fc9d4d767824b41588
 msgid "``phonon_*`` → phonon category"
-msgstr ""
+msgstr "``phonon_*`` ← دستهٔ phonon"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:202
 #: 0cf8a492b1ed420b96e0dad8ddf5e72a
 msgid "Contains ``relax`` → structural category"
-msgstr ""
+msgstr "شامل ``relax`` ← دستهٔ structural"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:204
 #: 92e7d95450c64a7cba33153b510f5938
 msgid "See :ref:`adding-custom-tiers-presets` for full guide."
-msgstr ""
+msgstr "برای راهنمای کامل به :ref:`adding-custom-tiers-presets` مراجعه کنید."
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:230
 #: 8e5f189521fe454ebf4f2188ed3a7574
 msgid "Recipe Book CLI"
-msgstr ""
+msgstr "CLI کتاب دستور"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:232
 #: 5f9dec2857974a04aea3fe73911d3395
 msgid "**Command:** ``atomate2siesta-recipe``"
-msgstr ""
+msgstr "**فرمان:** ``atomate2siesta-recipe``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:234
 #: 2cf36b31f61c4d108a89fb3510eff99f
 msgid "**Purpose:** Browse and search the Recipe Book (one-line workflows)"
-msgstr ""
+msgstr "**هدف:** مرور و جست‌وجوی کتاب دستور (گردش‌کارهای تک‌خطی)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:239
 #: 6e44cef97cc44c8581de8b7c7c60d980
 msgid ""
 "Recipes across 6 categories (Complete, Electronic, Mechanical, Thermal, "
 "Surface, Convergence)"
-msgstr ""
+msgstr "دستورها در ۶ دسته (کامل، الکترونیکی، مکانیکی، گرمایی، سطح، همگرایی)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:240
 #: 196f612e2fd24a28af0ae99b2b92ec19
 msgid "**significant code reduction** - Comprehensive workflows in one line"
-msgstr ""
+msgstr "**کاهش چشمگیر کد** - گردش‌کارهای جامع در یک خط"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:241
 #: 015b82670247447a9195b83ebd6d76a6
 msgid "**Category browsing** - Explore recipes by category"
-msgstr ""
+msgstr "**مرور دسته‌ای** - کاوش دستورها بر اساس دسته"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:242
 #: d40a29630dc941d4bc87b052b029cf6d
 msgid "**Keyword search** - Find recipes by name or property"
-msgstr ""
+msgstr "**جست‌وجوی کلیدواژه** - یافتن دستورها بر اساس نام یا ویژگی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:243
 #: 5ddb009f968e457eaf90583bc7924076
 msgid "**Code examples** - Ready-to-copy usage examples with line numbers"
-msgstr ""
+msgstr "**مثال‌های کد** - مثال‌های استفادهٔ آمادهٔ کپی با شماره خطوط"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:244
 #: e047f11eee114286bfac60769bc29b77
 msgid "**Statistics** - View Recipe Book metrics and code reduction percentages"
-msgstr ""
+msgstr "**آمار** - مشاهدهٔ سنجه‌های کتاب دستور و درصدهای کاهش کد"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:283
 #: b42beb386836444dbc6876b589fcee0a
 msgid "Workflow Script Generator CLI"
-msgstr ""
+msgstr "CLI تولیدکنندهٔ اسکریپت گردش‌کار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:285
 #: 34d363f7208a4fcabc6885803d504d2b
 msgid "**Command:** ``atomate2siesta-maker``"
-msgstr ""
+msgstr "**فرمان:** ``atomate2siesta-maker``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:287
 #: d4dec85caa474701922b765536c98f0e
 msgid ""
 "**Purpose:** Generate ready-to-run Python workflow scripts from structure"
 " files"
-msgstr ""
+msgstr "**هدف:** تولید اسکریپت‌های گردش‌کار پایتون آمادهٔ اجرا از فایل‌های ساختار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:292
 #: 4f62230352314ba2981233cba8e0517d
 msgid "**30-second workflow setup** - From structure file to running calculation"
-msgstr ""
+msgstr "**راه‌اندازی گردش‌کار در ۳۰ ثانیه** - از فایل ساختار تا اجرای محاسبه"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:293
 #: 2adc15f4ac074568a9bc9080da9a8049
 msgid ""
 "**13 workflow templates** organized in 4 categories (Basic, Vibrational, "
 "Mechanical, Advanced)"
-msgstr ""
+msgstr "**۱۳ قالب گردش‌کار** سازمان‌دهی‌شده در ۴ دسته (پایه، ارتعاشی، مکانیکی، پیشرفته)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:294
 #: e8f1f77f2dcc4685b0a90f4308e0baa6
 msgid "**Context-specific help** for each workflow type"
-msgstr ""
+msgstr "**راهنمای متناسب با زمینه** برای هر نوع گردش‌کار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:295
 #: 0a8e99ef4d1c49a89d21080afd1a6679
 msgid "**Tier preset support** for applying material-specific parameters"
-msgstr ""
+msgstr "**پشتیبانی از پیش‌تنظیم لایه** برای اعمال پارامترهای مخصوص ماده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:296
 #: 5a90385c253d419ca88c30899c96e4af
 msgid "**Dry-run mode** for testing workflows without running calculations"
-msgstr ""
+msgstr "**حالت اجرای آزمایشی** برای آزمودن گردش‌کارها بدون اجرای محاسبات"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:297
 #: 23af05043e9b4b8dafc70e9baceb12d0
 msgid "**Remote submission** integration with jobflow-remote"
-msgstr ""
+msgstr "**ارسال از راه دور** یکپارچه با jobflow-remote"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:298
 #: 82c4d6219f3d4f8586812f8494393e16
 msgid "**Customization sections** with commented examples in generated scripts"
-msgstr ""
+msgstr "**بخش‌های سفارشی‌سازی** با مثال‌های توضیح‌دار در اسکریپت‌های تولیدشده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:301
 #: 1908af98b1fd4802ababa6942186cc44
 msgid "Available Workflows"
-msgstr ""
+msgstr "گردش‌کارهای موجود"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:307
 #: e5db75d5640e4d6e99cc19e9822b284f
 msgid "Workflow"
-msgstr ""
+msgstr "گردش‌کار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:308
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:616
@@ -548,167 +548,167 @@ msgstr ""
 #: a4c886aa565e41ee85aaaa972f2aaf14 d39c8577e3324a67baaaf6f8a8348cb3
 #: d50395ff785b4ee7a041ec9d33d49097 db6a1b9ea1f842aeb4f2895263b15ceb
 msgid "Description"
-msgstr ""
+msgstr "توضیح"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:309
 #: 910832080f6d4933a9c6aeb53b69adc0
 msgid "**Basic Workflows (4)**"
-msgstr ""
+msgstr "**گردش‌کارهای پایه (۴)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:311
 #: 5f59eaa37627427f874bae1029718b0a
 msgid "``relax``"
-msgstr ""
+msgstr "``relax``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:312
 #: 7beab6be5064413ea779ee9e54ca2d42
 msgid "Structure relaxation (fixed or variable cell)"
-msgstr ""
+msgstr "آرام‌سازی ساختار (سلول ثابت یا متغیر)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:313
 #: 7d3a3f3117af4d448990cf25b80ce8b6
 msgid "``static``"
-msgstr ""
+msgstr "``static``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:314
 #: 5cd98d9710c541f0b7f96f6b7db55205
 msgid "Single-point energy calculation"
-msgstr ""
+msgstr "محاسبهٔ انرژی تک‌نقطه‌ای"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:315
 #: d8e79ee2f61c4442a55b7a1fb5be003e
 msgid "``bands``"
-msgstr ""
+msgstr "``bands``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:316
 #: 6dba9af2ab3a408e89f782a90536824c
 msgid "Electronic band structure"
-msgstr ""
+msgstr "ساختار نواری الکترونی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:317
 #: 29a3d3cf9ff44b8f9ba23b99f0af750d
 msgid "``dos``"
-msgstr ""
+msgstr "``dos``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:318
 #: 96dd84465ea647feb97e3ab30a21acf0
 msgid "Density of states"
-msgstr ""
+msgstr "چگالی حالات"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:319
 #: b611a10b27114c4e8b0cfd88571f0d8e
 msgid "**Vibrational Properties (3)**"
-msgstr ""
+msgstr "**خواص ارتعاشی (۳)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:321
 #: 7d41377b0947441d975e7c388d4456a6
 msgid "``phonon``"
-msgstr ""
+msgstr "``phonon``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:322
 #: 2d38d60a6c6c48228ed525f0aee33261
 msgid "Phonon calculation with automatic plotting"
-msgstr ""
+msgstr "محاسبهٔ فونون با رسم خودکار نمودار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:323
 #: 1d9e7c9873f148419854e3add3cba7de
 msgid "``gruneisen``"
-msgstr ""
+msgstr "``gruneisen``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:324
 #: 6cdbd1c4a8a44f4fa415b2fa6629f3b2
 msgid "Grüneisen parameters and thermal expansion"
-msgstr ""
+msgstr "پارامترهای گرونایزن و انبساط گرمایی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:325
 #: 6d262391f11e41059cd33a81e601cee3
 msgid "``qha``"
-msgstr ""
+msgstr "``qha``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:326
 #: 68553dbecdaf4cf3a11cac08fc2d3c2a
 msgid "Quasi-harmonic approximation"
-msgstr ""
+msgstr "تقریب شبه‌هماهنگ"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:327
 #: bb96f6ac9cc64cc9ba7d9dcb3ecee371
 msgid "**Mechanical Properties (3)**"
-msgstr ""
+msgstr "**خواص مکانیکی (۳)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:329
 #: 14c50623db2046deb2a7ea8f94b631e1
 msgid "``eos``"
-msgstr ""
+msgstr "``eos``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:330
 #: 6ec7f9f2f20f4b84b97e7652c83da452
 msgid "Equation of state"
-msgstr ""
+msgstr "معادلهٔ حالت"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:331
 #: 7bf2aad32b1940e28f7fdf3ddac10075
 msgid "``elastic``"
-msgstr ""
+msgstr "``elastic``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:332
 #: 53ffa003011545dd8126cd26af3e9a4a
 msgid "Elastic constants"
-msgstr ""
+msgstr "ثابت‌های کشسانی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:333
 #: ae6c3d074ab442b3a09835176e0f9367
 msgid "``bulk-modulus``"
-msgstr ""
+msgstr "``bulk-modulus``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:334
 #: 537669324a6e4ea9aa6382d91c63601e
 msgid "Quick bulk modulus calculation"
-msgstr ""
+msgstr "محاسبهٔ سریع مدول حجمی"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:335
 #: 50531e974cf14c10be05894c2414bb23
 msgid "**Advanced Workflows (3)**"
-msgstr ""
+msgstr "**گردش‌کارهای پیشرفته (۳)**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:337
 #: f69986caabb74177b3a9578814e8b059
 msgid "``neb``"
-msgstr ""
+msgstr "``neb``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:338
 #: 0579d3d23083411899343dc43e30d364
 msgid "Nudged elastic band (transition states)"
-msgstr ""
+msgstr "باند کشسان هل‌داده‌شده (حالت‌های گذار)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:339
 #: f09f3d1c69204554b23268c235799fe4
 msgid "``surface``"
-msgstr ""
+msgstr "``surface``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:340
 #: 8fc6c4d9171548149ab2ec76ed3118b9
 msgid "Surface energy calculation"
-msgstr ""
+msgstr "محاسبهٔ انرژی سطح"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:341
 #: 9e939b80bbc44836a5c9a78038a6615e
 msgid "``adsorption``"
-msgstr ""
+msgstr "``adsorption``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:342
 #: 98e05e9713644233aa44a73bdea12fd1
 msgid "Adsorption site scanning"
-msgstr ""
+msgstr "پویش جایگاه جذب"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:345
 #: a0cb35cf2e484504936cfa20be1ac249
 msgid "Interactive Mode (NEW!)"
-msgstr ""
+msgstr "حالت تعاملی (جدید!)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:347
 #: 1ca296c8da924c399c1a72152910d1cd
 msgid "**Beginner-friendly guided workflow generation:**"
-msgstr ""
+msgstr "**تولید گردش‌کار راهنمایی‌شده و مناسب مبتدیان:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:365
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1557
@@ -728,32 +728,32 @@ msgstr ""
 #: e212af4c7e854f9589107d6a17a8d001 e6d1b724312f4abd8d4abf23ada9d89b
 #: ef1982a9b43f4c8c892fc3d571d806dd
 msgid "**Features:**"
-msgstr ""
+msgstr "**ویژگی‌ها:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:367
 #: b7f9a49abe3249edbb037be1e4c9da51
 msgid "**No memorization required** - See all options as you go"
-msgstr ""
+msgstr "**نیازی به حفظ‌کردن نیست** - همهٔ گزینه‌ها را حین کار می‌بینید"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:368
 #: c6fda830f8bf4b5c8a8d530b92779193
 msgid "**Input validation** - Validates parameters before generating"
-msgstr ""
+msgstr "**اعتبارسنجی ورودی** - پارامترها را پیش از تولید اعتبارسنجی می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:369
 #: be4c4305d3624841bcd6a0c011b300f3
 msgid "**Sensible defaults** - Suggests common values"
-msgstr ""
+msgstr "**پیش‌فرض‌های منطقی** - مقادیر رایج را پیشنهاد می‌دهد"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:370
 #: c24d3bafe98342f1a999bd5bc9fb1348
 msgid "**Beautiful UI** - Colored prompts with arrow key navigation"
-msgstr ""
+msgstr "**رابط کاربری زیبا** - اعلان‌های رنگی با پیمایش کلیدهای جهت‌نما"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:371
 #: 8283e7fb988049d191996a8f5167d286
 msgid "**Cancel anytime** - Press Ctrl+C to exit"
-msgstr ""
+msgstr "**لغو در هر زمان** - برای خروج Ctrl+C را فشار دهید"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:374
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:625
@@ -770,130 +770,130 @@ msgstr ""
 #: beda437a220b47868f2a707728c6100a f9480cdef5bc4bd58753d053d7dbb235
 #: fbb0ab44b43744bebaa9fb1c962058f0
 msgid "Quick Examples"
-msgstr ""
+msgstr "مثال‌های سریع"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:426
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:2625
 #: 1d202b4bed874442b1437c58cc9d6696 cdd9427ebcac46e3bce6df0afeac3ac8
 msgid "Common Options"
-msgstr ""
+msgstr "گزینه‌های مشترک"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:428
 #: dadecfec81e54c27b6e6c9b366cb4aa6
 msgid "All workflows support these options:"
-msgstr ""
+msgstr "همهٔ گردش‌کارها از این گزینه‌ها پشتیبانی می‌کنند:"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:446
 #: e6baae32f2804ba5bb6a205ae7f66f80
 msgid "Workflow-Specific Options"
-msgstr ""
+msgstr "گزینه‌های مخصوص هر گردش‌کار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:448
 #: 46f061a68b434affa884d2a361438f74
 msgid "Each workflow has specialized options:"
-msgstr ""
+msgstr "هر گردش‌کار گزینه‌های تخصصی خود را دارد:"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:450
 #: c3954ce044ca44f296edaba160c1151c
 msgid "**Relax:**"
-msgstr ""
+msgstr "**Relax:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:456
 #: 168f53fdeab64f72a207969cd8b61b88
 msgid "**Bands:**"
-msgstr ""
+msgstr "**Bands:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:462
 #: 00ab4dcc9e19448c8b88d690c45e6fcb
 msgid "**Phonon:**"
-msgstr ""
+msgstr "**Phonon:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:471
 #: 0e464e80d83643beb752e308f897d634
 msgid "**EOS:**"
-msgstr ""
+msgstr "**EOS:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:478
 #: f35d0f2f5b374948bf1f384248172828
 msgid "**Elastic:**"
-msgstr ""
+msgstr "**Elastic:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:484
 #: e4eb8914624942dcb73902d753d53a84
 msgid "**NEB:**"
-msgstr ""
+msgstr "**NEB:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:492
 #: d23604ae6f714daca1893d21f02d0e57
 msgid "**Surface:**"
-msgstr ""
+msgstr "**Surface:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:500
 #: f59c3eec4c764ba9b27b536c3c5ed12b
 msgid "**Adsorption:**"
-msgstr ""
+msgstr "**Adsorption:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:510
 #: ca4e54a000544d77b5f53bd942241663
 msgid "Generated Script Features"
-msgstr ""
+msgstr "ویژگی‌های اسکریپت تولیدشده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:512
 #: 511ee59c31f5484aadbf9db55c6ec932
 msgid "Each generated script includes:"
-msgstr ""
+msgstr "هر اسکریپت تولیدشده شامل موارد زیر است:"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:514
 #: 6eeb8adf70444b689c6a6d457d0e5bfa
 msgid "**Header and metadata** - Timestamp, command used, workflow description"
-msgstr ""
+msgstr "**سرآیند و فراداده** - مهر زمانی، فرمان به‌کاررفته، توضیح گردش‌کار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:515
 #: 4a40b24f89c54b4b93e5b372f140469c
 msgid "**Configuration validation** - Checks SIESTA_PP_PATH and SIESTA_CMD"
-msgstr ""
+msgstr "**اعتبارسنجی پیکربندی** - بررسی SIESTA_PP_PATH و SIESTA_CMD"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:516
 #: 42f8ebdf50de4d238d3f92e48057bb1a
 msgid "**Structure information** - Displays formula, space group, number of atoms"
-msgstr ""
+msgstr "**اطلاعات ساختار** - نمایش فرمول، گروه فضایی، تعداد اتم‌ها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:517
 #: d9bca623222e4ca8b16458c74d89a5c8
 msgid ""
 "**Database configuration** (optional) - MongoDB JobStore setup with "
 "SETTINGS.JOB_STORE"
-msgstr ""
+msgstr "**پیکربندی پایگاه داده** (اختیاری) - راه‌اندازی MongoDB JobStore با SETTINGS.JOB_STORE"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:518
 #: 0f19819af5214a1faa4fecf212c9bfa8
 msgid "**Workflow setup** - Maker creation with all specified options"
-msgstr ""
+msgstr "**راه‌اندازی گردش‌کار** - ایجاد Maker با همهٔ گزینه‌های مشخص‌شده"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:519
 #: 106a864265a749e49be127f116643bcb
 msgid "**Customization section** - Commented examples for common modifications"
-msgstr ""
+msgstr "**بخش سفارشی‌سازی** - مثال‌های توضیح‌دار برای تغییرات رایج"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:520
 #: 755a59e27aab4deb80054b623ee2bfe5
 msgid "**Execution code** - Local (run_locally) or remote (submit_flow) execution"
-msgstr ""
+msgstr "**کد اجرا** - اجرای محلی (run_locally) یا از راه دور (submit_flow)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:521
 #: 7c24dff78a2a4c45b89267de985e224d
 msgid "**Expected outputs** - List of files that will be generated"
-msgstr ""
+msgstr "**خروجی‌های مورد انتظار** - فهرست فایل‌هایی که تولید خواهند شد"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:523
 #: b3084f8139ff4872b8002dd431f46a15
 msgid "When ``--database`` is used, the script includes:"
-msgstr ""
+msgstr "هنگامی که ``--database`` استفاده شود، اسکریپت شامل موارد زیر است:"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:547
 #: 7a8a21bd4b7d41db98fb02e2f9b30356
 msgid "Example generated script:"
-msgstr ""
+msgstr "نمونهٔ اسکریپت تولیدشده:"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:581
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:638
@@ -910,74 +910,74 @@ msgstr ""
 #: e5f94d057df34ddaae82b1380bed0649 f639f255ee2849a2a13b517b918384c6
 #: f75d674e220a48cfb1bccada4fb36960
 msgid "**Status:** ✅ Production-ready"
-msgstr ""
+msgstr "**وضعیت:** ✅ آماده برای بهره‌برداری"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:583
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:1009
 #: 23c12be523fd47df990a82868963731d 7338e52f57fa4081a7b50e78aa8bb8f6
 msgid "**Benefits:**"
-msgstr ""
+msgstr "**مزایا:**"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:585
 #: 553cb4e60ff74b98add8158d4e432b47
 #, python-format
 msgid "**90% code reduction** - One command replaces 50+ lines of Python"
-msgstr ""
+msgstr "**۹۰٪ کاهش کد** - یک فرمان جایگزین بیش از ۵۰ خط پایتون می‌شود"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:586
 #: d73a2a4baac34131a7929abf1790d065
 msgid "**Best practices** - Generated code follows recommended patterns"
-msgstr ""
+msgstr "**بهترین شیوه‌ها** - کد تولیدشده از الگوهای توصیه‌شده پیروی می‌کند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:587
 #: ab3e10c5ad5d434b9ddc4e9ab5e3ae3f
 msgid "**Educational** - Scripts teach proper usage through examples"
-msgstr ""
+msgstr "**آموزشی** - اسکریپت‌ها استفادهٔ درست را از طریق مثال آموزش می‌دهند"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:588
 #: ee4fabf3e190461d86d61eef6ca24af7
 msgid "**Time savings** - 30 seconds from structure to running workflow"
-msgstr ""
+msgstr "**صرفه‌جویی در زمان** - ۳۰ ثانیه از ساختار تا اجرای گردش‌کار"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:593
 #: 4837474a332243308320a267661bcccb
 msgid "Remote Cluster Setup CLI"
-msgstr ""
+msgstr "CLI راه‌اندازی خوشهٔ از راه دور"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:595
 #: 1527194734bd445f8f552c2e8eb88a90
 msgid "**Command:** ``atomate2siesta-cluster``"
-msgstr ""
+msgstr "**فرمان:** ``atomate2siesta-cluster``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:597
 #: b82726c9c9ec4a28bec5ff596851d6da
 msgid "**Purpose:** Automate remote HPC cluster configuration via SSH"
-msgstr ""
+msgstr "**هدف:** خودکارسازی پیکربندی خوشهٔ HPC از راه دور از طریق SSH"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:602
 #: 723f201debc74d6f8d067bc259416137
 msgid "SSH-based cluster configuration with multiple authentication methods"
-msgstr ""
+msgstr "پیکربندی خوشه مبتنی بر SSH با چند روش احراز هویت"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:603
 #: 107010e8e3d140adb3d3c2c09ab99881
 msgid "Automatic conda environment creation with all dependencies"
-msgstr ""
+msgstr "ایجاد خودکار محیط conda با همهٔ وابستگی‌ها"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:604
 #: cad94b62110847e0ae3debff3850c1b7
 msgid "Optional SIESTA installation from conda-forge"
-msgstr ""
+msgstr "نصب اختیاری SIESTA از conda-forge"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:605
 #: c42cae34e4ae41c7ba6d2a0845f31310
 msgid "Automatic ``.atomate2.yaml`` configuration file generation"
-msgstr ""
+msgstr "تولید خودکار فایل پیکربندی ``.atomate2.yaml``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:606
 #: 0fc6b8206b6e495fac0927c43b49797f
 msgid "Environment status checking and verification"
-msgstr ""
+msgstr "بررسی و راستی‌آزمایی وضعیت محیط"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:609
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:662
@@ -988,7 +988,7 @@ msgstr ""
 #: 9fb96eb0fc9f44639849e69c3504d36b e1c84049b13f4fa7bddcf17a511a7fbb
 #: fc3bff7ee264435da792ff1776a3de96
 msgid "Available Commands"
-msgstr ""
+msgstr "فرمان‌های موجود"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:615
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:668
@@ -999,71 +999,71 @@ msgstr ""
 #: 5740c6995a1e4ec1a2c16e126aa46d37 959cfa72030549eab92747070a015f5f
 #: aed6affdab2046578efe14eea90a70d5
 msgid "Command"
-msgstr ""
+msgstr "فرمان"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:617
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:672
 #: 5c21de2a7b1b45388b21ce4afc258930 99efd3da18e84e60ad3ae0d91415ef7a
 msgid "``setup``"
-msgstr ""
+msgstr "``setup``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:618
 #: 4959c16b2e814b169f7a9a747360e58d
 msgid "Set up conda environment with atomate2siesta and jobflow-remote"
-msgstr ""
+msgstr "راه‌اندازی محیط conda با atomate2siesta و jobflow-remote"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:619
 #: 0d3c3c5fac4846aa9eb8fe1af9f30b11
 msgid "``status``"
-msgstr ""
+msgstr "``status``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:620
 #: 884bc042a4ae4675aeda5db9645569ec
 msgid "Check status of remote cluster environment"
-msgstr ""
+msgstr "بررسی وضعیت محیط خوشهٔ از راه دور"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:621
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:676
 #: 77e43ccb5662454da5fb8deb96ac61d8 78f41842e86c47de84ac7e15c18e9778
 msgid "``info``"
-msgstr ""
+msgstr "``info``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:622
 #: ce58aa398b49494d820a22e56f91badc
 msgid "Show usage examples and documentation"
-msgstr ""
+msgstr "نمایش مثال‌های استفاده و مستندات"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:640
 #: 4258598c40ba42e4a120c707e2a60734
 msgid "**Full Documentation:** :doc:`cli-cluster-setup`"
-msgstr ""
+msgstr "**مستندات کامل:** :doc:`cli-cluster-setup`"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:645
 #: d7317ff39ce54306bf21fceb02a3afa7
 msgid "Jobflow Remote Setup CLI"
-msgstr ""
+msgstr "CLI راه‌اندازی Jobflow Remote"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:647
 #: 546b0aa18a604b0e8897249b9deb820e
 msgid "**Command:** ``atomate2siesta-jobflow-remote``"
-msgstr ""
+msgstr "**فرمان:** ``atomate2siesta-jobflow-remote``"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:649
 #: d65f2429a0444b7299d320ca179fc511
 msgid ""
 "**Purpose:** Simplified jobflow-remote installation, configuration, and "
 "management"
-msgstr ""
+msgstr "**هدف:** نصب، پیکربندی و مدیریت ساده‌شدهٔ jobflow-remote"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:654
 #: 0c92a1bbc0df4b758a8484df6b3ec794
 msgid "One-command installation (stable or development version)"
-msgstr ""
+msgstr "نصب تک‌فرمانی (نسخهٔ پایدار یا توسعه)"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:655
 #: bedfc7918a42421e8bf8a9515b052809
 msgid "Multi-project configuration management"
-msgstr ""
+msgstr "مدیریت پیکربندی چندپروژه‌ای"
 
 #: ../../../Users/aakhtar/2-areas/miniconda-atomira-apps/atomate2-project/atomate2/docs/siesta/cli-tools.rst:656
 #: 29d144c8be1641b38b24364d7b4c6132
