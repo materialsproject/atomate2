@@ -17,6 +17,14 @@ Basis Parameters Convergence
 
    ../tutorials-md/02-workflows/01-convergence/BasisParametersConvergenceFlowMaker/README.md
 
+Complete Basis Convergence
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. toctree::
+   :maxdepth: 1
+
+   ../tutorials-md/02-workflows/01-convergence/CompleteBasisConvergenceFlowMaker/README.md
+
 Kpoints Convergence
 ^^^^^^^^^^^^^^^^^^^
 

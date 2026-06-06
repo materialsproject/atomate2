@@ -70,23 +70,23 @@ Introduction to fundamental workflow concepts and simple calculations.
      - Time
      - Difficulty
    * - **01**
-     - :doc:`/tutorials-md/01-basics/01-RelaxMaker/README` - Relaxation basics with default settings
+     - :doc:`/siesta/tutorials-md/01-basics/01-RelaxMaker/README` - Relaxation basics with default settings
      - 10 min
      - ⭐
    * - **02**
-     - :doc:`/tutorials-md/01-basics/02-BandStructureMaker/README` - Band structure calculations
+     - :doc:`/siesta/tutorials-md/01-basics/02-BandStructureMaker/README` - Band structure calculations
      - 15 min
      - ⭐
    * - **03**
-     - :doc:`/tutorials-md/01-basics/03-LuaMaker/README` - Lua scripts for advanced features
+     - :doc:`/siesta/tutorials-md/01-basics/03-LuaMaker/README` - Lua scripts for advanced features
      - 20 min
      - ⭐⭐
    * - **04**
-     - :doc:`/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README` - Multi-step workflows
+     - :doc:`/siesta/tutorials-md/01-basics/04-RelaxMaker-StaticMaker/README` - Multi-step workflows
      - 30 min
      - ⭐⭐
    * - **05**
-     - :doc:`/tutorials-md/01-basics/05-DOSMaker/README` - DOS calculations
+     - :doc:`/siesta/tutorials-md/01-basics/05-DOSMaker/README` - DOS calculations
      - 25 min
      - ⭐⭐
 
@@ -104,11 +104,11 @@ Systematic parameter optimization for production calculations.
      - Time
      - Difficulty
    * - **06**
-     - :doc:`/tutorials-md/02-workflows/01-convergence/README` - K-points and mesh cutoff convergence
+     - :doc:`/siesta/tutorials-md/02-workflows/01-convergence/README` - K-points and mesh cutoff convergence
      - 45 min
      - ⭐⭐
    * - **07**
-     - :doc:`/tutorials-md/01-basics/07-PhonopyMaker/README` - Phonon calculations with Phonopy
+     - :doc:`/siesta/tutorials-md/01-basics/07-PhonopyMaker/README` - Phonon calculations with Phonopy
      - 60 min
      - ⭐⭐⭐
    * - **08**

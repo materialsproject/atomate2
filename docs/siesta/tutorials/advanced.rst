@@ -473,7 +473,7 @@ Tutorial 18: Tier-Based Calculations ⭐ NEW
 
 📄 **Documentation**:
    * ``README.md`` - Complete tutorial (370+ lines)
-   * See :doc:`/tier-system` for full tier system documentation
+   * See :doc:`/siesta/tier-system` for full tier system documentation
 
 ----
 

@@ -643,7 +643,7 @@ SIESTA not found on worker:
 
 ⭐ **Difficulty**: Intermediate
 
-**CLI Reference**: See :doc:`/cli-jobflow-remote` for complete CLI documentation
+**CLI Reference**: See :doc:`/siesta/cli-jobflow-remote` for complete CLI documentation
 
 ----
 
